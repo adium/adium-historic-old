@@ -100,7 +100,7 @@ struct oscar_data {
 - (void)_delayedBlistUpdate:(NSTimer *)inTimer
 {
     GaimBlistNode * node = [[inTimer userInfo] pointerValue];
-
+    
     //AIM-specific updates
     
     if(node)
@@ -117,7 +117,7 @@ struct oscar_data {
         NSMutableArray *modifiedKeys = [NSMutableArray array];
         AIHandle *theHandle = (AIHandle *)node->ui_data;
         NSMutableDictionary * statusDict = [theHandle statusDictionary];
-//        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
+        //        NSLog(@"delayed for %@",[statusDict objectForKey:@"Display Name"]);
         if (online) {
             struct oscar_data *od = gc->proto_data;
             //            struct buddyinfo *bi = g_hash_table_lookup(od->buddyinfo, gaim_normalize(buddy->name));
@@ -127,7 +127,7 @@ struct oscar_data {
                 //Update the away message and status if the contact is away (userinfo->flags & AIM_FLAG_AWAY)
                 //EDS - optimize by keeping track of the string forms separately and comparing them rather than encoding/decoding html
                 if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away_len > 0) && (userinfo->away != NULL) && (userinfo->away_encoding != NULL)) {
-//                    NSLog(@"%s",userinfo->away);
+                    //                    NSLog(@"%s",userinfo->away);
                     gchar *away_utf8 = oscar_encoding_to_utf8(userinfo->away_encoding, userinfo->away, userinfo->away_len);
                     if (away_utf8 != NULL) {
                         NSString * awayMessageString = [NSString stringWithUTF8String:away_utf8];
@@ -167,7 +167,7 @@ struct oscar_data {
                 if ( (![statusDict objectForKey:@"Signon Date"]) && ((userinfo->onlinesince) != 0) ) {
                     [statusDict setObject:[NSDate dateWithTimeIntervalSince1970:(userinfo->onlinesince)] forKey:@"Signon Date"];
                     [modifiedKeys addObject:@"Signon Date"];
-                 }
+                }
             }
         }
         
@@ -176,7 +176,19 @@ struct oscar_data {
         {
             //NSLog(@"Changed %@", modifiedKeys);
             
-            //tell the contact controller
+            //tell the contact controller, silencing if necessary
+            
+            /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
+            /*
+             [[owner contactController] handleStatusChanged:theHandle
+                                         modifiedStatusKeys:modifiedKeys
+                                                    delayed:NO
+                                                     silent:online
+                 ? (gaim_connection_get_state(gaim_account_get_connection(buddy->account)) == GAIM_CONNECTING)
+                 : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
+             */
+            
+            //Temporary hack
             [[owner contactController] handleStatusChanged:theHandle
                                         modifiedStatusKeys:modifiedKeys
                                                    delayed:silentAndDelayed
@@ -184,7 +196,6 @@ struct oscar_data {
         }
     }
 }
-
 @end
 
 /*if (isdigit(b->name[0])) {

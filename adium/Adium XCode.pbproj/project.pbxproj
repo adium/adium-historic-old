@@ -6891,6 +6891,7 @@
 				34BD9D21053146CC000AB133,
 				34BD9D22053146CC000AB133,
 				34BD9D23053146CC000AB133,
+				34FDD6E505632BFD00F5B30F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7240,6 +7241,7 @@
 				34BD9D54053146CC000AB133,
 				34BD9D55053146CC000AB133,
 				34BD9D56053146CC000AB133,
+				34FDD6E605632BFD00F5B30F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15353,6 +15355,36 @@
 			path = Plugins/Announcer/ContactAnnouncer.nib;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34FDD6E305632BFD00F5B30F = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESFileTransferController.h;
+			path = Source/ESFileTransferController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FDD6E405632BFD00F5B30F = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = ESFileTransferController.m;
+			path = Source/ESFileTransferController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34FDD6E505632BFD00F5B30F = {
+			fileRef = 34FDD6E305632BFD00F5B30F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34FDD6E605632BFD00F5B30F = {
+			fileRef = 34FDD6E405632BFD00F5B30F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //340
 //341
@@ -26584,6 +26616,8 @@
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
+				34FDD6E305632BFD00F5B30F,
+				34FDD6E405632BFD00F5B30F,
 				F57938F3033E745F01A8010A,
 				F57938AC033E737001A8010A,
 				F57938FB033E745F01A8010A,

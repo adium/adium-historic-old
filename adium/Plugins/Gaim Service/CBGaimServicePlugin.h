@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Colin Barrett on Sun Oct 19 2003.
-//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
 #include "internal.h"
@@ -25,7 +24,6 @@
 #include "util.h"
 
 @class AIServiceType;
-
 
 @interface CBGaimServicePlugin : AIPlugin <AIServiceController> {
         AIServiceType			*handleServiceType;

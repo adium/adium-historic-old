@@ -32,6 +32,7 @@
     GaimAccount *account;
     GaimConnection *gc;
     NSMutableDictionary *chatDict;
+
     NSTimer *signonTimer;
     BOOL silentAndDelayed;
 }
@@ -84,4 +85,6 @@
 - (BOOL)removeServerGroup:(NSString *)inGroup;
 // Rename a group
 - (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName;
+
+- (AIAdium *)owner;
 @end
