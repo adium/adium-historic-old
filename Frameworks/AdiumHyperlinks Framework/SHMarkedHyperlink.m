@@ -88,13 +88,14 @@
 
 -(void)setURLFromString:(NSString *)inString
 {
+    NSString    *linkString;
     [linkURL release];
     
-    NSString *linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes( NULL,
+    linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes( NULL,
                                             (CFStringRef)inString,
                                             (CFStringRef)@"#%",
                                             NULL,
-                                            kCFStringEncodingISOLatin1 );
+                                            kCFStringEncodingUTF8 ); // kCFStringEncodingISOLatin1 );
 
     linkURL = [[NSURL alloc] initWithString:linkString];
 }
