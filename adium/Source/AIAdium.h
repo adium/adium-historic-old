@@ -102,7 +102,8 @@ typedef enum {
     AIPref_Dock_General,
     AIPref_Dock_Icon,
     AIPref_Sound,
-    AIPref_Emoticons
+    AIPref_Emoticons,
+    AIPref_Alerts
 } PREFERENCE_CATEGORY;
 
 //Preference groups
