@@ -61,8 +61,7 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""),
 			   (text ? text : ""));
-	
-	
+
 	return ([[SLGaimCocoaAdapter sharedInstance] handleNotifyFormattedWithTitle:title
 																		primary:primary
 																	  secondary:secondary
