@@ -28,7 +28,6 @@ static AIListObject				*activeListObject = nil;
 - (void)configureWindow
 {
     NSMutableAttributedString	*infoString;
-	NSString					*value;
     NSDictionary				*labelAttributes, *valueAttributes, *bigValueAttributes;
     NSMutableParagraphStyle		*paragraphStyle;
     AIMutableOwnerArray			*ownerArray;
@@ -93,20 +92,27 @@ static AIListObject				*activeListObject = nil;
     //Display Name
 	//"<DisplayName>" (or) "<DisplayName> (<UID>)"
 	NSString	*displayName = [activeListObject displayName];
-	NSString	*serverDisplayName = [activeListObject serverDisplayName];
+	NSString	*formattedUID = [activeListObject formattedUID];
     [infoString appendString:@"\t" withAttributes:labelAttributes];
-    if([displayName compare:serverDisplayName] == 0){
+    if([displayName compare:formattedUID] == 0){
         [infoString appendString:[NSString stringWithFormat:@"%@",displayName] withAttributes:bigValueAttributes];
     }else{
-        [infoString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName] 
+        [infoString appendString:[NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID] 
 				  withAttributes:bigValueAttributes];
     }
     
+	//Server display name if present
+	NSString *serverDisplayName = [activeListObject statusObjectForKey:@"Server Display Name"];
+	if (serverDisplayName && [serverDisplayName length]) {
+		[infoString appendString:@"\r\r\tDisplay Name:\t" withAttributes:labelAttributes];
+		[infoString appendString:serverDisplayName withAttributes:valueAttributes];
+	}
+	
     //Client
-    value = [activeListObject statusObjectForKey:@"Client"];
-    if(value && [value length]){
+    NSString *client = [activeListObject statusObjectForKey:@"Client"];
+    if(client && [client length]){
         [infoString appendString:@"\r\r\tClient:\t" withAttributes:labelAttributes];
-        [infoString appendString:value withAttributes:valueAttributes];
+        [infoString appendString:client withAttributes:valueAttributes];
     }
     
     //Signon Date

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.56 2004/02/21 21:47:02 evands Exp $
+// $Id: AIInterfaceController.m,v 1.57 2004/02/27 00:20:09 evands Exp $
 
 #import "AIInterfaceController.h"
 
@@ -335,7 +335,7 @@
     BOOL                                isFirst = YES;
     
     NSString                            *displayName = [object displayName];
-    NSString                            *serverDisplayName = [object serverDisplayName];
+    NSString                            *formattedUID = [object formattedUID];
     
     //Configure fonts and attributes
     NSFontManager                       *fontManager = [NSFontManager sharedFontManager];
@@ -349,10 +349,10 @@
         toolTipsFont, NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if([displayName compare:serverDisplayName] == 0){
+    if([displayName compare:formattedUID] == 0){
         [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
     }else{
-        [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, serverDisplayName] withAttributes:titleDict];
+        [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
     }
     
     //Add the serviceID, three spaces away

@@ -401,6 +401,10 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 		//Correct for the offset so that row is in terms the instance can handle
         row -= [[offsetDictionary objectForKey:[object UIDAndServiceID]] intValue];
 
+		
+		//evands -- ???
+//		if (row<0) row=0;
+		
         [popUp_contactList selectItemWithRepresentedObject:activeContactObject];
 
 		//tell the instance which contact and relative row is selected

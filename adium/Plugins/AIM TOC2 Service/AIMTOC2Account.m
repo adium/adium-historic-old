@@ -764,7 +764,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.121 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.122 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1140,10 +1140,10 @@
 			[contact setStatusObject:client forKey:@"Client" notify:NO];
         }
         
-        //Display Name
-        storedString = [contact statusObjectForKey:@"Display Name"];
+        //Formatted UID
+        storedString = [contact statusObjectForKey:@"Formatted UID"];
         if(storedString == nil || [name compare:storedString] != 0){
-			[contact setStatusObject:name forKey:@"Display Name" notify:NO];
+			[contact setStatusObject:name forKey:@"Formatted UID" notify:NO];
         }
 		
         //Let the contact list know a contact's status changed

@@ -147,24 +147,18 @@
 	NSArray				*modifiedAttributes;
     NSString			*displayName = nil;
     NSString			*longDisplayName = nil;
-    NSString			*serverDisplayName = nil;
+    NSString			*formattedUID = nil;
 
-    //Setup the display names
-    if(inAlias != nil && [inAlias length] != 0) {
-		// Use the passed alias as the display name
-        displayName = inAlias;
-    } else {
-		// For purposes of constructing the long display name, we want to use any display name set elsewhere in Adium
-		// so long as that display name doesn't come from the alias plugin itself (which would happen if we were passed nil
-		// in order to clear out an alias).
-		AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
-		
-		displayName = [displayNameArray objectValue];
-		if (displayName == [displayNameArray objectWithOwner:self])
-			displayName = nil;
-	}
-    
-    //Long Display Name
+	AIMutableOwnerArray *displayNameArray = [inObject displayArrayForKey:@"Display Name"];
+	
+	//Apply the alias
+	[[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
+	[displayNameArray setObject:inAlias withOwner:self priorityLevel:High_Priority];
+
+	//Get the displayName which is now active for the object
+	displayName = [displayNameArray objectValue];
+	
+    //Build and set the Long Display Name
     switch(displayFormat)
     {
         case DISPLAY_NAME:
@@ -172,25 +166,25 @@
 		break;
             
         case DISPLAY_NAME_SCREEN_NAME:
-            serverDisplayName = [inObject serverDisplayName];
-            if(!displayName || [displayName compare:serverDisplayName] == 0){
+            formattedUID = [inObject formattedUID];
+            if(!displayName || [displayName compare:formattedUID] == 0){
                 longDisplayName = displayName;
             }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,serverDisplayName];
+                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
             }
 		break;
             
         case SCREEN_NAME_DISPLAY_NAME:
-            serverDisplayName = [inObject serverDisplayName];
-            if(!displayName || [displayName compare:serverDisplayName] == 0){
+            formattedUID = [inObject formattedUID];
+            if(!displayName || [displayName compare:formattedUID] == 0){
                 longDisplayName = displayName;
             }else{
-                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",serverDisplayName,displayName];
+                longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
             }
 		break;
             
         case SCREEN_NAME:
-            longDisplayName = [inObject serverDisplayName];
+            longDisplayName = [inObject formattedUID];
 		break;
 			
         default:
@@ -198,13 +192,10 @@
 		break;
     }
 	
-    //Apply the values
-    [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
-	if (inAlias)
-		[[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self priorityLevel:High_Priority];
+    //Apply the Long Display Name
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	
-	//notify
+	//Notify
 	modifiedAttributes = [NSArray arrayWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
 	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
 	

@@ -135,16 +135,17 @@
 					[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
 				}
 				
-				//Display Name - use the serverside buddy_alias if present
+				//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
 				{
-					char *alias = (char *)gaim_get_buddy_alias(buddy);
-					char *disp_name = (char *)[[theContact statusObjectForKey:@"Display Name"] UTF8String];
-					if(!disp_name) disp_name = "";
-					
-					if(alias && strcmp(disp_name, alias)){
-						[theContact setStatusObject:[NSString stringWithUTF8String:alias]
-											 forKey:@"Display Name"
+					NSString *gaimAlias = [NSString stringWithUTF8String:gaim_get_buddy_alias(buddy)];
+					if ([[gaimAlias compactedString] isEqualToString:UID]) {
+						[theContact setStatusObject:gaimAlias
+											 forKey:@"Formatted UID"
 											 notify:NO];
+					} else {
+						[theContact setStatusObject:gaimAlias
+											 forKey:@"Server Display Name"
+											 notify:NO];	
 					}
 				}
 			}
@@ -733,6 +734,12 @@
 		//Rename gaimside
 		gaim_blist_rename_group(group, [newName UTF8String]);
 		
+		/*
+		 //These may be necessary:
+		 serv_rename_group(gc, group, [newName UTF8String]);     //rename
+		 gaim_blist_remove_group(group);                         //remove the old one gaimside
+		 */
+		
 		//We must also update the remote grouping of all our contacts in that group
 		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup onAccount:self] objectEnumerator];
 		AIListContact	*contact;
@@ -742,7 +749,6 @@
 		}
 	}
 }
-
 
 //- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
 //{
@@ -894,19 +900,6 @@
 //															
 //        NSLog(@"remove group %@",inGroup);
 //    return YES;
-//}
-//// Rename a group
-//- (BOOL)renameServerGroup:(NSString *)inGroup to:(NSString *)newName
-//{
-//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-//    if (group != NULL) {                                        //if we find the GaimGroup
-//        NSLog(@"serv_rename_group(%@,%@)",inGroup,newName);
-//        serv_rename_group(gc, group, [newName UTF8String]);     //rename
-//        NSLog(@"gaim_blist_remove_group(%@)",inGroup);
-//        gaim_blist_remove_group(group);                         //remove the old one gaimside
-//        return YES;
-//    } else
-//        return NO;
 //}
 //
 //- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
