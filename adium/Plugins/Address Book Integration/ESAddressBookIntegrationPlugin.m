@@ -116,7 +116,8 @@
 				}
 			}
 		}
-    } else if ((automaticSync && !preferAddressBookImages && useABImages) && [inModifiedKeys containsObject: @"UserIcon"]) {
+		
+    } else if (automaticSync && [inModifiedKeys containsObject: @"UserIcon"]) {
         
 		//Find the person
         ABPerson *person = [self searchForObject:inObject];
