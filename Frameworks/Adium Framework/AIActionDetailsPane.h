@@ -14,6 +14,8 @@
 + (AIActionDetailsPane *)actionDetailsPane;
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin;
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject;
+- (void)configureForEventID:(NSString *)eventID listObject:(AIListObject *)inObject;
+
 - (NSDictionary *)actionDetails;
 
 - (void)detailsForHeaderChanged;
