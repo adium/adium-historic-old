@@ -268,7 +268,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     {
         if((long)diff % 3600 < 59) // no minutes
             return [NSString stringWithFormat:
-                ((int)diff/3600 == 1 ? @"%d hours" : @"%d hours"), (int)diff/3600];
+                ((int)diff/3600 == 1 ? @"%d hour" : @"%d hours"), (int)diff/3600];
         else // there are minutes
 	{
         if((long)diff % 3600 < 600) // make output "h:0m" when m<10
