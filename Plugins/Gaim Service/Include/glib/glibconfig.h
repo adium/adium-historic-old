@@ -78,8 +78,8 @@ typedef unsigned long gsize;
 #define g_memmove(d,s,n) G_STMT_START { memmove ((d), (s), (n)); } G_STMT_END
 
 #define GLIB_MAJOR_VERSION 2
-#define GLIB_MINOR_VERSION 4
-#define GLIB_MICRO_VERSION 0
+#define GLIB_MINOR_VERSION 6
+#define GLIB_MICRO_VERSION 1
 
 #define G_OS_UNIX
 
@@ -92,6 +92,12 @@ typedef unsigned long gsize;
 #define G_HAVE___INLINE 1
 #define G_HAVE___INLINE__ 1
 #endif	/* !__cplusplus */
+
+#ifdef	__cplusplus
+#define G_CAN_INLINE	1
+#else	/* !__cplusplus */
+#define G_CAN_INLINE	1
+#endif
 
 #ifndef __cplusplus
 # define G_HAVE_ISO_VARARGS 1
@@ -111,6 +117,7 @@ typedef unsigned long gsize;
 #define G_HAVE_GNUC_VARARGS 1
 #define G_HAVE_GROWING_STACK 0
 
+#define G_GNUC_INTERNAL
 
 #define G_THREADS_ENABLED
 #define G_THREADS_IMPL_POSIX
