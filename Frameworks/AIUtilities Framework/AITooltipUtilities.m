@@ -123,7 +123,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             imageOnRight = inImageOnRight;
             [view_tooltipImage setImage:tooltipImage];
 
-			imageSize = (tooltipImage ? NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION) : NSMakeSize(0,0));
+			imageSize = (tooltipImage ? /*NSMakeSize(IMAGE_DIMENSION,IMAGE_DIMENSION)*/[tooltipImage size] : NSMakeSize(0,0));
             
             [self _sizeTooltip];
 				
@@ -259,7 +259,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             windowWidth = neededWidth;   
         }
 		
-		imageIsTallerThanTitle = (IMAGE_DIMENSION > tooltipTitleRect.size.height);
+		imageIsTallerThanTitle = (imageSize.height > tooltipTitleRect.size.height);
         if (imageIsTallerThanTitle) {
 			//The image should not overlap the body of the tooltip, so increase the window height (the body has an origin at the bottom-left so will move with the window)
 			windowHeight = titleAndBodyMargin + imageSize.height + tooltipBodyRect.size.height + TOOLTIP_INSET*2;
