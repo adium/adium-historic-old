@@ -2,8 +2,6 @@
 // Adium 0.8 beta bugs
 //---------------------------------------------------------------------------------------------
 - List toolbar needs icon for toggle groups, add group, toggle offline contacts
-- Move window shadow preference from layout to advanced
-- Move opacity preference from layout to main pane or advanced
 - Move maximum width slider from layout to main pane
 - Status window when away preference is not implemented
 - Implement 'edit menu' sheets for deleting list layouts and themes
@@ -12,21 +10,19 @@
 - Implement emoticon menu in appearance
 - Implement emoticons customize sheet in appearance
 - Add a warning sheet about window moving/performance for non-standard styles
-- Contact menu is inconsistent with menu item naming, item grouping
 - Update included layouts, themes, and message views
 - Jabber account registration
 - The crash reporter shouldn't force people to reopen Adium after a crash.
 - Message views are ignoring variant specific info.plist keys
 - %_statusmessage script is broken
-- Status controller needs to return an offline state from activeState when we are offline
-- installation of various xtras doesn't go to the right pref pane now.
 - Should we be logging colors? (Evan: Yes?)
 - Line breaks don't work properly with ICQ
 - Get Info on a group after getting info on a contact shows the group's service as the last viewed contact's service, or nothing at all
 - Double-clicking a contact with more than one message window open opens a new tab in the first opened window (instead of the frontmost)
-- Group chat userlist is using contact list background colors
 - Dragging a group chat's tab, then clicking a user in the userlist crashes
-- Should we be logging colors?
+- Should we be logging colors? (No, we should not be -ai)
+- Some contact menu items need directions home
+- Chats are sticking in the evil duck menu
 - Setting the default download directory changes Safari's
 
 //-------------------------------------------------------------------------------------------------------
