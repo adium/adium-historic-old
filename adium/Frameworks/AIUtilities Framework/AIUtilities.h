@@ -50,3 +50,4 @@
 #import "AIFlexibleTableView.h"
 #import "AIFlexibleTableCell.h"
 #import "AIFlexibleTableColumn.h"
+#import "AIEventAdditions.h"

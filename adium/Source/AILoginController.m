@@ -13,7 +13,6 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Carbon/Carbon.h>
 #import <AIUtilities/AIUtilities.h>
 #import "AIAdium.h"
 #import "AILoginController.h"
@@ -69,7 +68,7 @@
     }
 
     //Show the login select window?
-    if((GetCurrentKeyModifiers() & 2048) || [[loginDict objectForKey:LOGIN_HIDE_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
+    if([NSEvent optionKey] || [[loginDict objectForKey:LOGIN_HIDE_WINDOW] boolValue] || [loginDict objectForKey:LOGIN_LAST_USER] == nil){
 
         //Prompt for the user
         loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
