@@ -19,7 +19,9 @@
 
 - Sorting issues
 	http://www.funmac.com/showthread.php?t=8295
-	
+
+- Double clicking two names in succession causes the first name to highlight
+  the second time.
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
@@ -36,7 +38,7 @@
 
 - [Yahoo] File transfer limitations
 	Files over 1 MB in size fail to send
-	
+
 - [AIM] Auto-reply flag being ignored
 	We seem to be passing libgaim the correct flags, but our messages are not sending as auto-replies.
 
@@ -70,7 +72,7 @@
 //------------------------------------------------------------------------------------
 - AIM chats are logging as (null)
 	Happens with both loggers.  Waiting on full multi-chat support.
-	
+
 - Event Notification window moves out of place between resolution changes.
 	Will be replaced by growl
 
@@ -80,7 +82,7 @@
 
 - [Jaguar]: Links do not appear as blue and underlined in TextViews, including the new info pane.
 	Tiger is coming
-	
+
 
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
