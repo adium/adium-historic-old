@@ -40,6 +40,22 @@
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>AdiumIcon</string>
+			</array>
+			<key>CFBundleTypeName</key>
+			<string>Adium Icon</string>
+			<key>CFBundleTypeOSTypes</key>
+			<array>
+				<string>AdIM</string>
+			</array>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
