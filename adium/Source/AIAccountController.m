@@ -464,6 +464,20 @@
     }
 }
 
+//Connects all the accounts
+- (void)connectAllAccounts
+{
+    NSEnumerator		*enumerator;
+    AIAccount			*account;
+
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([[account supportedPropertyKeys] containsObject:@"Online"]){
+            [self setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:account];
+        }
+    }
+}
+
 //Disconnects all the accounts
 - (void)disconnectAllAccounts
 {

@@ -10,6 +10,7 @@
 #import <Adium/Adium.h>
 
 @interface CSDisconnectAllPlugin : AIPlugin {
+    NSMenuItem *connectItem;
     NSMenuItem *disconnectItem;
 }
 

@@ -314,6 +314,7 @@ typedef enum {
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
+- (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 
 //Account properties
