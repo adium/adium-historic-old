@@ -18,6 +18,8 @@
 
     NSMutableArray			*eventSoundArray;
     NSString				*firstSound;
+    NSMenu                              *soundMenu_cached;
+    int                                 setRow;
 }
 
 + (id)showEventSoundCustomPanelWithOwner:(id)inOwner;

@@ -54,6 +54,7 @@ AIEventSoundCustom	*sharedInstance = nil;
 
     owner = inOwner;
     firstSound = nil;
+    soundMenu_cached = nil;
     [self showWindow:nil];
     
     return(self);
@@ -79,14 +80,6 @@ AIEventSoundCustom	*sharedInstance = nil;
     //
     [popUp_addEvent setMenu:[self eventMenu]];
 
-    //Configure the 'Sound' table column
-    dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
-    [dataCell setMenu:[self soundListMenu]];
-    [dataCell setControlSize:NSSmallControlSize];
-    [dataCell setFont:[NSFont menuFontOfSize:11]];
-    [dataCell setBordered:NO];
-    [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
-
     //Configure the table view
     [tableView_sounds setDrawsAlternatingRows:YES];
     [tableView_sounds setAlternatingRowColor:[NSColor colorWithCalibratedRed:(237.0/255.0) green:(243.0/255.0) blue:(254.0/255.0) alpha:1.0]];
@@ -96,6 +89,15 @@ AIEventSoundCustom	*sharedInstance = nil;
     //Observer preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
+    
+    //Configure the 'Sound' table column
+    dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
+    [dataCell setMenu:[self soundListMenu]];
+    [dataCell setControlSize:NSSmallControlSize];
+    [dataCell setFont:[NSFont menuFontOfSize:11]];
+    [dataCell setBordered:NO];
+    [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
+    
 }
 
 //Close this window
@@ -141,16 +143,6 @@ AIEventSoundCustom	*sharedInstance = nil;
         if(soundPath != nil && [soundPath length] != 0){
             [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
         }
-    }
-}
-
-//Select a sound from one of the sound popUp menus
-- (IBAction)selectSound:(id)sender
-{
-    NSString	*soundPath = [sender representedObject];
-
-    if(soundPath != nil && [soundPath length] != 0){
-        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
     }
 }
 
@@ -226,42 +218,95 @@ AIEventSoundCustom	*sharedInstance = nil;
 - (NSMenu *)soundListMenu
 {
     NSEnumerator	*enumerator;
-    NSDictionary	*soundSetDict;
-    NSMenu		*soundMenu = [[NSMenu alloc] init];
-
-    enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
-    while((soundSetDict = [enumerator nextObject])){
-        NSEnumerator	*soundEnumerator;
-        NSString	*soundSetPath;
-        NSString	*soundPath;
+    
+    if (!soundMenu_cached)
+    {
+        NSDictionary	*soundSetDict;
+        NSMenu		*soundMenu = [[NSMenu alloc] init];
         NSMenuItem	*menuItem;
-
-        //Add an item for the set
-        if([soundMenu numberOfItems] != 0){
-            [soundMenu addItem:[NSMenuItem separatorItem]]; //Divider
+        
+        enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
+        while((soundSetDict = [enumerator nextObject])){
+            NSEnumerator    *soundEnumerator;
+            NSString        *soundSetPath;
+            NSString        *soundPath;
+            NSArray         *soundSetContents = [soundSetDict objectForKey:KEY_SOUND_SET_CONTENTS];
+            //Add an item for the set
+            if (soundSetContents && [soundSetContents count]) {
+                if([soundMenu numberOfItems] != 0){
+                    [soundMenu addItem:[NSMenuItem separatorItem]]; //Divider
+                }
+                soundSetPath = [soundSetDict objectForKey:KEY_SOUND_SET];
+                menuItem = [[[NSMenuItem alloc] initWithTitle:[soundSetPath lastPathComponent]
+                                                       target:nil
+                                                       action:nil
+                                                keyEquivalent:@""] autorelease];
+                [menuItem setEnabled:NO];
+                [soundMenu addItem:menuItem];
+                
+                //Add an item for each sound
+                soundEnumerator = [soundSetContents objectEnumerator];
+                while((soundPath = [soundEnumerator nextObject])){
+                    NSImage	*soundImage;
+                    NSString	*soundTitle;
+                    
+                    //Keep track of our first sound (used when creating a new event)
+                    if(!firstSound) firstSound = [soundPath retain];
+                    
+                    //Get the sound title and image
+                    soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
+                    soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
+                    [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
+                    
+                    //Build the menu item
+                    menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
+                                                           target:self
+                                                           action:@selector(selectSound:)
+                                                    keyEquivalent:@""] autorelease];
+                    [menuItem setRepresentedObject:soundPath];
+                    [menuItem setImage:soundImage];
+                    
+                    [soundMenu addItem:menuItem];
+                }
+            }
         }
-        soundSetPath = [soundSetDict objectForKey:KEY_SOUND_SET];
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[soundSetPath lastPathComponent]
-                                               target:nil
-                                               action:nil
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setEnabled:NO];
+        //Add the Other... item
+        menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other..."
+                                               target:self
+                                               action:@selector(selectSound:)
+                                        keyEquivalent:@""] autorelease];            
         [soundMenu addItem:menuItem];
-
-        //Add an item for each sound
-        soundEnumerator = [[soundSetDict objectForKey:KEY_SOUND_SET_CONTENTS] objectEnumerator];
-        while((soundPath = [soundEnumerator nextObject])){
+        
+        [soundMenu setAutoenablesItems:NO];
+        soundMenu_cached = soundMenu;
+    }
+    
+    //Add custom sounds to the menu as needed
+    NSDictionary * soundRowDict;
+    enumerator = [eventSoundArray objectEnumerator];
+    while (soundRowDict = [enumerator nextObject]) {
+        //add it if it's not already in the menu
+        NSString *soundPath = [soundRowDict objectForKey:KEY_EVENT_SOUND_PATH];
+        if (soundPath && ([soundPath length] != 0) && [soundMenu_cached indexOfItemWithRepresentedObject:soundPath] == -1) {
             NSImage	*soundImage;
             NSString	*soundTitle;
-
-            //Keep track of our first sound (used when creating a new event)
-            if(!firstSound) firstSound = [soundPath retain];
-
+            NSMenuItem	*menuItem;
+            //Add an "Other" header if necessary
+            if ([soundMenu_cached indexOfItemWithTitle:@"Other"] == -1) {
+                [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
+                menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other"
+                                                       target:nil
+                                                       action:nil
+                                                keyEquivalent:@""] autorelease];
+                [menuItem setEnabled:NO];
+                [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
+            }
+            
             //Get the sound title and image
             soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
             soundImage = [[NSWorkspace sharedWorkspace] iconForFile:soundPath];
             [soundImage setSize:NSMakeSize(SOUND_MENU_ICON_SIZE,SOUND_MENU_ICON_SIZE)];
-
+            
             //Build the menu item
             menuItem = [[[NSMenuItem alloc] initWithTitle:soundTitle
                                                    target:self
@@ -269,16 +314,58 @@ AIEventSoundCustom	*sharedInstance = nil;
                                             keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:soundPath];
             [menuItem setImage:soundImage];
-
-            [soundMenu addItem:menuItem];
+            
+            [soundMenu_cached insertItem:menuItem atIndex:([soundMenu_cached numberOfItems]-1)];
         }
     }
-
-    [soundMenu setAutoenablesItems:NO];
-
-    return(soundMenu);
+    
+    return(soundMenu_cached);
 }
+//Select a sound from one of the sound popUp menus
+- (IBAction)selectSound:(id)sender
+{
+    NSString	*soundPath = [sender representedObject];
+    
+    if(soundPath != nil && [soundPath length] != 0){
+        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+    } else { //selected "Other..."
+        NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+        [openPanel 
+            beginSheetForDirectory:nil
+                              file:nil
+                             types:[NSSound soundUnfilteredFileTypes] //allow all the sounds NSSound understands
+                    modalForWindow:[self window]
+                     modalDelegate:self
+                    didEndSelector:@selector(concludeOtherPanel:returnCode:contextInfo:)
+                       contextInfo:nil];        
+    }
+}
+//Finish up the Other... panel
+- (void)concludeOtherPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+    if(returnCode == NSOKButton){
+        NSString *soundPath = [[panel filenames] objectAtIndex:0];
+        
+        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        //Set the new sound path
+        NSMutableDictionary	*selectedSoundDict = [[eventSoundArray objectAtIndex:setRow] mutableCopy];
+        [selectedSoundDict setObject:soundPath forKey:KEY_EVENT_SOUND_PATH];
 
+        [eventSoundArray replaceObjectAtIndex:setRow withObject:selectedSoundDict];
+        
+        //Save event sound preferences
+        [self saveEventSoundArray];
+        
+        //Reconfigure the 'Sound' table column
+        NSPopUpButtonCell		*dataCell;
+        dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
+        [dataCell setMenu:[self soundListMenu]];
+        [dataCell setControlSize:NSSmallControlSize];
+        [dataCell setFont:[NSFont menuFontOfSize:11]];
+        [dataCell setBordered:NO];
+        [[tableView_sounds tableColumnWithIdentifier:TABLE_COLUMN_SOUND] setDataCell:dataCell];
+    }
+}
 
 //TableView datasource --------------------------------------------------------
 //
@@ -328,8 +415,8 @@ AIEventSoundCustom	*sharedInstance = nil;
         selectedMenuItem = (NSMenuItem *)[[[tableColumn dataCell] menu] itemAtIndex:[object intValue]];
         selectedSoundDict = [[eventSoundArray objectAtIndex:row] mutableCopy];
         newSoundPath = [selectedMenuItem representedObject];
-
-        if([newSoundPath compare:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]] != 0){ //Ignore a duplicate selection
+        setRow = row;
+        if(newSoundPath && [newSoundPath compare:[selectedSoundDict objectForKey:KEY_EVENT_SOUND_PATH]] != 0){ //Ignore a duplicate selection
             //If the user just modified a premade sound set, save it as their custom set, and switch them to 'custom'.
             //[self saveEventSoundArray];
 
