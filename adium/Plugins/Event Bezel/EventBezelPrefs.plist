@@ -8,5 +8,19 @@
         <integer>0</integer>
         <key>Buddy Name Format</key>
         <integer>0</integer>
+        <key>Display if Online</key>
+        <true/>
+        <key>Display if Offline</key>
+        <true/>
+        <key>Display if Available</key>
+        <true/>
+        <key>Display if Away</key>
+        <true/>
+        <key>Display if no Longer Idle</key>
+        <true/>
+        <key>Display if Idle</key>
+        <true/>
+        <key>Display if First Message</key>
+        <true/>
 </dict>
 </plist>

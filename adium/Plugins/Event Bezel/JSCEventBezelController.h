@@ -10,9 +10,11 @@
 #import "JSCEventBezelView.h"
 
 @interface JSCEventBezelController : NSWindowController {
-    IBOutlet JSCEventBezelWindow *bezelWindow;
-    IBOutlet JSCEventBezelView *bezelView;
-    AIAdium *owner;
+    IBOutlet JSCEventBezelWindow    *bezelWindow;
+    IBOutlet JSCEventBezelView      *bezelView;
+    AIAdium                         *owner;
+    
+    int                             bezelPosition;
 }
 
 + (JSCEventBezelController *)eventBezelControllerForOwner:(id)inOwner;
@@ -20,7 +22,9 @@
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon
 forEvent:(NSString *)event
-withMessage:(NSString *)message
-atPosition:(int)position;
+withMessage:(NSString *)message;
+
+- (int)bezelPosition;
+- (void)setBezelPosition:(int)newPosition;
 
 @end

@@ -37,6 +37,8 @@ JSCEventBezelController *sharedInstance = nil;
     owner = [inOwner retain];
     
     pantherOrLater = (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
+    
+    bezelPosition = -1;
             
     return(self);
 }
@@ -65,23 +67,12 @@ JSCEventBezelController *sharedInstance = nil;
     return(YES);
 }
 
-- (void)awakeFromNib
-{
-    //NSLog(@"despertando controlador");
-}
-
 - (void)showBezelWithContact:(NSString *)contactName
 withImage:(NSImage *)buddyIcon
 forEvent:(NSString *)event
 withMessage:(NSString *)message
-atPosition:(int)position
 {
     if ([self window]) {
-        // bezel position variables
-        NSSize mainScreenSize;
-        NSRect windowSize;
-        NSPoint mainScreenOrigin, newOrigin;
-        
         [bezelView setBuddyIconImage:buddyIcon];
         
         if ([bezelWindow fadingOut]) {
@@ -123,11 +114,34 @@ atPosition:(int)position
             [bezelView setMainAwayMessage: @""];
         }
         
-        // To do: add more placement options using preferences
+        [bezelView setNeedsDisplay:YES];
+        
+        if (pantherOrLater) {
+            [[self window] invalidateShadow];
+        }
+        [self showWindow:nil];
+        [[self window] orderFront:nil];
+        
+    }
+}
+
+- (int)bezelPosition
+{
+    return bezelPosition;
+}
+
+-(void)setBezelPosition:(int)newPosition
+{
+    bezelPosition = newPosition;
+    if ([self window]) {
+        NSSize mainScreenSize;
+        NSRect windowSize;
+        NSPoint mainScreenOrigin, newOrigin;
+        
         mainScreenSize = [[NSScreen mainScreen] frame].size;
         mainScreenOrigin = [[NSScreen mainScreen] frame].origin;
         windowSize = [[self window] frame];
-        switch (position) {
+        switch (bezelPosition) {
             case 0:
                 newOrigin.x = mainScreenOrigin.x + (ceil(mainScreenSize.width / 2.0) - ceil(windowSize.size.width / 2.0));
                 newOrigin.y = mainScreenOrigin.y + 140.0;
@@ -150,15 +164,6 @@ atPosition:(int)position
             break;
         }
         [[self window] setFrameOrigin: newOrigin];
-        
-        [bezelView setNeedsDisplay:YES];
-        
-        if (pantherOrLater) {
-            [[self window] invalidateShadow];
-        }
-        [self showWindow:nil];
-        [[self window] orderFront:nil];
-        
     }
 }
 
