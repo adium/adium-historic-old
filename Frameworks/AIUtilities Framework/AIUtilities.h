@@ -42,6 +42,7 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIGradientCell.h>
+#import <AIUtilities/AIHostReachabilityDecoder.m>
 #import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AIImageGridView.h>
 #import <AIUtilities/AIImageTextCell.h>
