@@ -171,6 +171,7 @@
 				German,
 				Spanish,
 				Italian,
+				Dutch,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -431,6 +432,11 @@
 		3402E04D07CB0EB00044F818 = {
 			children = (
 				3402E04B07CB0EA70044F818,
+				3498FE9107F488EF0004B79A,
+				3498FE9707F488FD0004B79A,
+				3498FE9807F489020004B79A,
+				3498FE9907F4890A0004B79A,
+				3498FE9A07F489100004B79A,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -4960,6 +4966,46 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		3498FE9107F488EF0004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Italian;
+			path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FE9707F488FD0004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FE9807F489020004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = French;
+			path = "Plugins/Gaim Service/French.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FE9907F4890A0004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Japanese;
+			path = "Plugins/Gaim Service/Japanese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3498FE9A07F489100004B79A = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		3499F45006309AC80035B468 = {
 			explicitFileType = wrapper.cfbundle;
