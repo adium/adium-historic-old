@@ -63,10 +63,6 @@
 }
 
 //The service ID (shared by any account code accessing this service)
-- (NSString *)serviceID{
-    return(STRESS_TEST_SERVICE_IDENTIFIER);
-}
-
 - (NSString *)displayName
 {
     return(@"Stress Test");
