@@ -51,7 +51,6 @@ Message Window:
 	+ Tab-complete usernames in messages and chat
 	+ Allow cmd-shift-left/right to cycle tabs in addition to cmd left/right
 	+ Remember last X lines of previous conversation, restore to new message windows
-	- [Colin] Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
 	
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
@@ -241,3 +240,4 @@ Features & Changes:
 = WebKit: Add support for displaying buddy icons using the UserIconPath status object
 = Auto-complete aliases in New Message prompt
 = Create new account, tab from username->pass->account list.  Next tab should go back to username
+= Remove "per-contact" window position/size saving.  Use size/position of last window, cascade new ones 
