@@ -1543,7 +1543,8 @@ static id<GaimThread> gaimThread = nil;
 		AIListObject *listObject = [notification object];
 		
 		//If the notification object is a listContact belonging to this account, update the serverside information
-		if ([listObject isKindOfClass:[AIListContact class]] && 
+		if (account &&
+			[listObject isKindOfClass:[AIListContact class]] && 
 			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]] &&
 			[[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"]){
 			
@@ -1555,9 +1556,11 @@ static id<GaimThread> gaimThread = nil;
 		}
 		
 	}else if (([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
-		//Update the mail checking setting
-		[gaimThread setCheckMail:[self shouldCheckMail]
-					  forAccount:self];
+		//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
+		if (account){
+			[gaimThread setCheckMail:[self shouldCheckMail]
+						  forAccount:self];
+		}
 	}
 }
 
