@@ -573,6 +573,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Insert an account
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave
 {    
+	if(index == -1) index = [accountArray count];
+
     NSParameterAssert(inAccount != nil);
     NSParameterAssert(accountArray != nil);
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
@@ -630,6 +632,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Change the UID of an existing account
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID
 {
+#warning XXX - I hate this.  Account code should be smart enough to handle a UID change. -ai
+	//[inAccount setUID:inUID]; anyone?
+	
 	//Add an account with the new UID
 	AIAccount	*newAccount = [self createAccountWithService:[inAccount service]
 														 UID:inUID
@@ -647,7 +652,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Delete the old account
 		[self deleteAccount:inAccount save:YES];
 	}else{
-		[self insertAccount:newAccount atIndex:0 save:YES];
+		[self insertAccount:newAccount atIndex:-1 save:YES];
 	}
 	
     return(newAccount);
@@ -1253,10 +1258,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		//Default to <New Account> if a name is not available
 		if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 		
-		//Dim image depending on connectivity
-		serviceImage = [AIServiceIcons serviceIconForObject:account
-													   type:AIServiceIconSmall
-												  direction:AIIconNormal];
+		//Get the status and service icons for this account so we can add them to the menu
+		NSImage	*statusIcon = [AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal];
+		NSImage	*serviceIcon = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];
+
+		//Determine how much to dim the icons (depending on connectivity)
 		if([[account statusObjectForKey:@"Online"] boolValue]){
 			fraction = MENU_IMAGE_FRACTION_ONLINE;
 			titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
@@ -1271,15 +1277,32 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			fraction = MENU_IMAGE_FRACTION_OFFLINE;
 			titleFormat = ACCOUNT_CONNECT_MENU_TITLE;
 		}
+	
+		//Composite the status icon and service icon together
+		//We're only allowed one icon per menu item, so we need to combine our separate icons into a single image
+		NSSize	statusSize = [statusIcon size];
+		NSSize	serviceSize = [serviceIcon size];
+		NSSize	compositeSize = NSMakeSize(statusSize.width + serviceSize.width + 1,
+										   statusSize.height > serviceSize.height ? statusSize.height : serviceSize.height);
+		NSRect	compositeRect = NSMakeRect(0, 0, compositeSize.width, compositeSize.height);
 
+		//Render the composite image
+		NSImage	*composite = [[NSImage alloc] initWithSize:compositeSize];
+		[composite lockFocus];
+		[serviceIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
+		[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_RIGHT fraction:fraction];
+		[composite unlockFocus];
+		
 		//Update the menu item
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:[[NSString stringWithFormat:titleFormat,accountTitle] stringByAppendingFormat:@" (%@)",[[account service] shortDescription]]];
-		[menuItem setImage:[serviceImage imageByFadingToFraction:fraction]];
+		[menuItem setTitle:accountTitle];
+		[menuItem setImage:composite];		
 		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
 							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])];
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 
+		//Cleanup
+		[composite release];
 	}
 }
 
