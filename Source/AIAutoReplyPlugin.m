@@ -15,6 +15,7 @@
  */
 
 #import "AIAutoReplyPlugin.h"
+#import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
@@ -45,7 +46,7 @@
 - (void)installPlugin
 {
 	//Init
-	receivedAutoReply = nil;
+	receivedAutoReply = [[NSMutableArray alloc] init];
 	
 	//Add observers
 	[[adium notificationCenter] addObserver:self
@@ -57,6 +58,8 @@
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatWillClose:)
 									   name:Chat_WillClose object:nil];
+	
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 /*!
