@@ -9,9 +9,6 @@
 #import "ESGaimMSNAccount.h"
 #import "libgaim/state.h"
 
-#define KEY_MSN_HOST	@"MSN:Host"
-#define KEY_MSN_PORT	@"MSN:Port"
-
 #define DEFAULT_MSN_PASSPORT_DOMAIN @"@hotmail.com"
 
 @interface ESGaimMSNAccount (PRIVATE)
@@ -106,15 +103,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			
 	}
 	return nil;
-}
-
-- (NSString *)hostKey
-{
-	return KEY_MSN_HOST;
-}
-- (NSString *)portKey
-{
-	return KEY_MSN_PORT;
 }
 
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError

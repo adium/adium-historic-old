@@ -19,16 +19,6 @@ static BOOL didInitNovell;
     return "prpl-novell";
 }
 
-- (NSString *)hostKey
-{
-	return KEY_NOVELL_HOST;
-}
-
-- (NSString *)portKey
-{
-	return KEY_NOVELL_PORT;
-}
-
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;

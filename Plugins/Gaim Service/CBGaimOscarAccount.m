@@ -9,11 +9,8 @@
 #import "CBGaimOscarAccount.h"
 #import "SLGaimCocoaAdapter.h"
 
-#define KEY_OSCAR_HOST  @"Oscar:Host"
-#define KEY_OSCAR_PORT  @"Oscar:Port"
-
-#define DELAYED_UPDATE_INTERVAL		1.0
-#define MAX_AVAILABLE_MESSAGE_LENGTH 44
+#define DELAYED_UPDATE_INTERVAL			1.0
+#define MAX_AVAILABLE_MESSAGE_LENGTH	59
 
 @interface CBGaimOscarAccount (PRIVATE)
 - (NSString *)serversideCommentForContact:(AIListContact *)theContact;
@@ -286,15 +283,6 @@ static BOOL didInitOscar = NO;
 	}
 
 	return nil;
-}
-	
-- (NSString *)hostKey
-{
-	return KEY_OSCAR_HOST;
-}
-- (NSString *)portKey
-{
-	return KEY_OSCAR_PORT;
 }
 
 /*

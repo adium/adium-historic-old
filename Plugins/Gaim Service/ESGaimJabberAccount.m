@@ -202,16 +202,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	return nil;
 }
 
-- (NSString *)hostKey
-{
-	return KEY_JABBER_HOST;
-}
-
-- (NSString *)portKey
-{
-	return KEY_JABBER_PORT;
-}
-
 - (void)accountConnectionConnected
 {
 	[super accountConnectionConnected];

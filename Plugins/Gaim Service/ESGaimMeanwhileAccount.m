@@ -25,16 +25,6 @@ static BOOL didInitMeanwhile = NO;
     return "prpl-meanwhile";
 }
 
-- (NSString *)hostKey
-{
-	return KEY_MEANWHILE_HOST;
-}
-
-- (NSString *)portKey
-{
-	return KEY_MEANWHILE_PORT;
-}
-
 - (void)configureGaimAccount
 {
 	[super configureGaimAccount];
