@@ -30,7 +30,7 @@
 - (NSAttributedString *)attributedEmoticon;
 - (NSString *)string;
 
-- (void)setRepresentedText:(NSString *)commaDelimitedString;
+- (void)setRepresentedText:(NSString *)returnDelimitedString;
 - (void)setPath:(NSString *)inPath;
 
 @end

@@ -167,52 +167,52 @@
     AIEmoticon	*emo = nil;
     NSString	*defaultPath = [[[NSBundle bundleForClass:[self class]] bundlePath] stringByAppendingFormat:@"/Contents/Resources%@",PATH_EMOTICONS];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley00.png"] andText:@"O:-),O:),O=),o:-),o:),o=)"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley00.png"] andText:@"O:-)\rO:)\rO=)\ro:-)\ro:)\ro=)"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley01.png"] andText:@":-),:),=),:o)"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley01.png"] andText:@":-)\r:)\r=)\r:o)"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley02.png"] andText:@":-(,:(,=(("];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley02.png"] andText:@":-(\r:(\r=(("];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley03.png"] andText:@";-),;)"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley03.png"] andText:@";-)\r;)"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley04.png"] andText:@":-P,:P,=P,:-p,:p,=p"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley04.png"] andText:@":-P\r:P\r=P\r:-p\r:p\r=p"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley07.png"] andText:@">:o,>=o"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley07.png"] andText:@">:o\r>=o"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley05.png"] andText:@"=-o,=-O,:-o,:o,=o"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley05.png"] andText:@"=-o\r=-O\r:-o\r:o\r=o"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley06.png"] andText:@":-*,:*,=*"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley06.png"] andText:@":-*\r:*\r=*"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley08.png"] andText:@":-D,:D,=D"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley08.png"] andText:@":-D\r:D\r=D"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley09.png"] andText:@":-$,:$"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley09.png"] andText:@":-$\r:$"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley10.png"] andText:@":-!,:!"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley10.png"] andText:@":-!\r:!"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley11.png"] andText:@":-[,:[,=["];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley11.png"] andText:@":-[\r:[\r=["];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley12.png"] andText:@":-\\,:\\,=\\,:-/,=/,:/"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley12.png"] andText:@":-\\\r:\\\r=\\\r:-/\r=/\r:/"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley13.png"] andText:@":'(,='("];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley13.png"] andText:@":'(\r='("];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley14.png"] andText:@":-x,:x,=x,:-X,:X,=X"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley14.png"] andText:@":-x\r:x\r=x\r:-X\r:X\r=X"];
     [emoticons addObject:emo];
 
-    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley15.png"] andText:@"8-),8)"];
+    emo = [[AIEmoticon alloc] initWithPath:[defaultPath stringByAppendingString:@"/Smiley15.png"] andText:@"8-)\r8)"];
     [emoticons addObject:emo];
 }
 

@@ -269,37 +269,41 @@ static AILogViewerWindowController *sharedInstance = nil;
 
         //Get the account UID and ServiceID
         periodRange = [accountFolderName rangeOfString:@"."];
-        serviceID = [accountFolderName substringToIndex:periodRange.location];
-        accountUID = [accountFolderName substringFromIndex:periodRange.location + 1];
-
-        //Scan any account folders with matching serviceID
-        if([inServiceID compare:serviceID] == 0){
-            
-            //Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
-            accountFolderPath = [logFolderPath stringByAppendingPathComponent:accountFolderName];
-            userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:accountFolderPath] objectEnumerator];
-            while((folderName = [userEnumerator nextObject])){
-
-                //Scan any account folder with matching UID
-                if([folderName compare:inUID] == 0){
-                    subFolderPath = [accountFolderPath stringByAppendingPathComponent:folderName];
-                    fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:subFolderPath] objectEnumerator];
-                    while((fileName = [fileEnumerator nextObject])){
-                        NSDate	*logDate = [self dateFromFileName:fileName];
-
-                        if(logDate){
-                            [selectedLogArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-                                logDate, @"Date",
-                                folderName, @"To",
-                                accountUID, @"From",
-                                [subFolderPath stringByAppendingPathComponent:fileName], @"Path",
-                                nil]];
-                        }
-                        
-                    }                    
-                }
-            }
-        }
+		
+		if (periodRange.length)
+		{
+			serviceID = [accountFolderName substringToIndex:periodRange.location];
+			accountUID = [accountFolderName substringFromIndex:periodRange.location + 1];
+	
+			//Scan any account folders with matching serviceID
+			if([inServiceID compare:serviceID] == 0){
+				
+				//Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
+				accountFolderPath = [logFolderPath stringByAppendingPathComponent:accountFolderName];
+				userEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:accountFolderPath] objectEnumerator];
+				while((folderName = [userEnumerator nextObject])){
+	
+					//Scan any account folder with matching UID
+					if([folderName compare:inUID] == 0){
+						subFolderPath = [accountFolderPath stringByAppendingPathComponent:folderName];
+						fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:subFolderPath] objectEnumerator];
+						while((fileName = [fileEnumerator nextObject])){
+							NSDate	*logDate = [self dateFromFileName:fileName];
+	
+							if(logDate){
+								[selectedLogArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+									logDate, @"Date",
+									folderName, @"To",
+									accountUID, @"From",
+									[subFolderPath stringByAppendingPathComponent:fileName], @"Path",
+									nil]];
+							}
+							
+						}                    
+					}
+				}
+			}
+		}
     }
 
     //Sort the logs correctly
