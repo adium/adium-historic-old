@@ -76,6 +76,7 @@
 - (NSArray *)allChatsWithListObject:(AIListObject *)inObject;
 - (AIChat *)openChatWithContact:(AIListContact *)inContact;
 - (AIChat *)chatWithContact:(AIListContact *)inContact initialStatus:(NSDictionary *)initialStatus;
+- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account initialStatus:(NSDictionary *)initialStatus;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSArray *)chatArray;
 - (BOOL)switchToMostRecentUnviewedContent;
