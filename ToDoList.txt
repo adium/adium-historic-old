@@ -28,7 +28,6 @@
 - Adding an invisible state makes a third section in the state menu (including another custom... item)
 - Contact menu is inconsistent with menu item naming, item grouping
 - View menu is inconsistent with menu item grouping
-- Wrapped messages in minimal are indenting into the margin
 - Update included layouts, themes, and message views
 - Group spacing is incorrect for non-standard lists
 
