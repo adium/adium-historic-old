@@ -42,9 +42,25 @@
 
     NSFont			*prefixFont;
 
+    
+    //Time stamps
     NSMutableString             *timeStampFormat;
+    NSDateFormatter *timeStampFormatter;
+    
+    
+    
+    
     NSString			*prefixIncoming;
     NSString			*prefixOutgoing;
+    
+    
+    
+    
+    
+    BOOL                        showUserIcons;
+    
+    
+    
 }
 
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;

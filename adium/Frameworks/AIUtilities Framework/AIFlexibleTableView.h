@@ -32,8 +32,6 @@
     //Display
     int					oldWidth;		//Used to avoid unnecessary cell resizes calculations
     float				contentsHeight;		//Total height of our content
-    NSMutableArray			*rowHeightArray; 	//Height of every row
-    AIFlexibleTableColumn		*flexibleColumn;	//Our variable-width column
 
     //Configuration
     NSMutableArray			*rowArray;		//Our rows
@@ -52,6 +50,8 @@
 - (void)resizeRow:(AIFlexibleTableRow *)inRow;
 - (void)setContentBottomAligned:(BOOL)inValue;
 - (void)setForwardsKeyEvents:(BOOL)inValue;
+- (void)removeAllRows;
+- (AIFlexibleTableRow *)rowAtIndex:(int)index;
 
 @end
 

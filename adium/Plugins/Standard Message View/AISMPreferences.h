@@ -13,40 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIPreferencePane;
+@interface AISMPreferences : AIPreferencePane {
 
-@interface AISMPreferences : NSObject {
-    AIAdium			*owner;
-
-    //Prefixes
-    AIPreferencePane		*prefixesPane;
-    IBOutlet	NSView		*view_prefixes;
-    IBOutlet	NSButton	*button_setPrefixFont;
-    IBOutlet	NSTextField	*textField_prefixFontName;
-    IBOutlet	NSButton	*checkBox_hideDuplicatePrefixes;
-    IBOutlet	NSPopUpButton	*popUp_incomingPrefix;
-    IBOutlet	NSPopUpButton	*popUp_outgoingPrefix;
+    IBOutlet    NSButton    *checkBox_showUserIcons;
     
-    //TimeStamps
-    AIPreferencePane		*timeStampsPane;
-    IBOutlet	NSView		*view_timeStamps;
-    IBOutlet	NSButton	*checkBox_showTimeStamps;
-    IBOutlet	NSButton	*checkBox_hideDuplicateTimeStamps;
-    IBOutlet	NSButton	*checkBox_showSeconds;
-    IBOutlet	NSButton	*checkBox_showAmPm;
-    
-    //Gridding
-    AIPreferencePane		*griddingPane;
-    IBOutlet	NSView		*view_gridding;
-    IBOutlet	NSButton	*checkBox_displayGridlines;
-    IBOutlet	NSSlider	*slider_gridDarkness;
-    IBOutlet	NSButton	*checkBox_senderGradient;
-    IBOutlet	NSSlider	*slider_gradientDarkness;
-    
-    NSDictionary		*prefixColors;
 }
-
-+ (AISMPreferences *)messageViewPreferencesWithOwner:(id)inOwner;
-- (IBAction)changePreference:(id)sender;
 
 @end

@@ -22,6 +22,8 @@
 #import "AITextAttachmentExtension.h"
 #import "AIAttributedStringAdditions.h"
 
+#define USE_OPTIMIZED_LIVE_RESIZE   NO
+
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 - (NSTextStorage *)createTextSystemWithString:(NSAttributedString *)inString size:(NSSize)inSize container:(NSTextContainer **)outContainer layoutManager:(NSLayoutManager **)outLayoutManager;
@@ -114,7 +116,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Resize the content of this cell to the desired width, returns new height
 - (int)sizeContentForWidth:(float)inWidth
 {
-    if(![[tableRow tableView] inLiveResize]){        
+    if(!USE_OPTIMIZED_LIVE_RESIZE || ![[tableRow tableView] inLiveResize]){        
         //Reformat the text
         [textContainer setContainerSize:NSMakeSize(inWidth, 1e7)];
         glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];

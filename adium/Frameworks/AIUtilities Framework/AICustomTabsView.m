@@ -17,9 +17,6 @@
 #import "AICustomTabCell.h"
 #import "AIImageUtilities.h"
 #import "AIViewAdditions.h"
-#import "AIMessageWindowController.h"
-#import "AIMessageViewController.h"
-#import "AIMessageTabViewItem.h"
 #import "AIEventAdditions.h"
 
 @interface AICustomTabsView (PRIVATE)

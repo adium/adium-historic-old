@@ -28,7 +28,7 @@
 
     //Register our default preferences and install our preference view
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-    preferences = [[AISMPreferences messageViewPreferencesWithOwner:owner] retain];
+    preferences = [[AISMPreferences preferencePaneWithOwner:owner] retain];
 }
 
 //Return a message view controller
@@ -38,12 +38,4 @@
 }
 
 @end
-
-
-
-
-
-
-
-
 

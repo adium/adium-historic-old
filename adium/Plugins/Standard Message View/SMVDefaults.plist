@@ -10,6 +10,8 @@
         <false/>
 	<key>Hide Duplicate Times</key>
 	<true/>
+	<key>Show icons</key>
+	<true/>
 	<key>Show Prefix</key>
 	<true/>
 	<key>Hide Duplicate Prefixes</key>

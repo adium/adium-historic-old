@@ -2,30 +2,27 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
-            CLASS = AISMPreferences; 
+            CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_setPrefixFont" = NSButton; 
-                "checkBox_displayGridlines" = NSButton; 
-                "checkBox_hideDuplicatePrefixes" = NSButton; 
-                "checkBox_hideDuplicateTimeStamps" = NSButton; 
-                "checkBox_senderGradient" = NSButton; 
-                "checkBox_showAmPm" = NSButton; 
-                "checkBox_showSeconds" = NSButton; 
-                "checkBox_showTimeStamps" = NSButton; 
-                "popUp_incomingPrefix" = NSPopUpButton; 
-                "popUp_outgoingPrefix" = NSPopUpButton; 
-                "slider_gradientDarkness" = NSSlider; 
-                "slider_gridDarkness" = NSSlider; 
-                "textField_prefixFontName" = NSTextField; 
-                "view_gridding" = NSView; 
-                "view_prefixes" = NSView; 
-                "view_timeStamps" = NSView; 
+                delegate = id; 
+                plugin = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {
+            CLASS = AISMPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_showUserIcons" = NSButton; }; 
+            SUPERCLASS = AIPreferencePane; 
+        }, 
         {CLASS = AISMViewController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

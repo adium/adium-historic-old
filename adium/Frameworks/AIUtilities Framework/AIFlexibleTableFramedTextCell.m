@@ -60,6 +60,13 @@
 }
 
 //
+- (void)drawSides:(BOOL)inDrawSides
+{
+    drawSides = inDrawSides;
+}
+
+
+//
 - (void)setDrawTop:(BOOL)inDrawTop
 {
     drawTop = inDrawTop;
@@ -187,6 +194,8 @@
     NSPoint 		topLeft, topRight, bottomLeft, bottomRight;
     NSBezierPath	*path;
     
+    int frameRadius = FRAME_RADIUS;
+    
     //Set up a shift transformation to align our lines to a pixel (and prevent anti-aliasing)
     aliasShift = [NSAffineTransform transform];
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
@@ -199,18 +208,18 @@
     
     path = [NSBezierPath bezierPath];
     if (drawTop && !suppressTopLeftCorner){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(topLeft.x + FRAME_RADIUS, topLeft.y + FRAME_RADIUS)
-                                         radius:FRAME_RADIUS
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(topLeft.x + frameRadius, topLeft.y + frameRadius)
+                                         radius:frameRadius
                                      startAngle:180
                                        endAngle:270
                                       clockwise:NO];
     }
     if (drawTop && !suppressTopBorder) {
-        [path lineToPoint:NSMakePoint(topRight.x - FRAME_RADIUS, topRight.y)];
+        [path lineToPoint:NSMakePoint(topRight.x - frameRadius, topRight.y)];
     }
     if (drawTop && !suppressTopRightCorner) {
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(topRight.x - FRAME_RADIUS, topRight.y + FRAME_RADIUS)
-                                         radius:FRAME_RADIUS
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(topRight.x - frameRadius, topRight.y + frameRadius)
+                                         radius:frameRadius
                                      startAngle:270
                                        endAngle:0
                                       clockwise:NO];
@@ -227,34 +236,34 @@
 
     [bubbleColor set];
     [NSBezierPath fillRect:NSMakeRect(topLeft.x,
-                                      (drawTop ? topLeft.y + FRAME_RADIUS : topLeft.y),
+                                      (drawTop ? topLeft.y + frameRadius : topLeft.y),
                                       bottomRight.x - topLeft.x,
-                                      bottomRight.y - topLeft.y - (drawTop ? FRAME_RADIUS : 0) - (drawBottom ? FRAME_RADIUS : 0))];
+                                      bottomRight.y - topLeft.y - (drawTop ? frameRadius : 0) - (drawBottom ? frameRadius : 0))];
 
     if(borderColor){
         [borderColor set];
         if (drawLeft)
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(topLeft.x + ALIAS_SHIFT_X, (drawTop ? topLeft.y + FRAME_RADIUS : topLeft.y) + ALIAS_SHIFT_Y)
-                                toPoint:NSMakePoint(bottomLeft.x + ALIAS_SHIFT_X, (drawBottom ? bottomLeft.y - FRAME_RADIUS : bottomLeft.y) + ALIAS_SHIFT_Y)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(topLeft.x + ALIAS_SHIFT_X, (drawTop ? topLeft.y + frameRadius : topLeft.y) + ALIAS_SHIFT_Y)
+                                toPoint:NSMakePoint(bottomLeft.x + ALIAS_SHIFT_X, (drawBottom ? bottomLeft.y - frameRadius : bottomLeft.y) + ALIAS_SHIFT_Y)];
         if (drawRight)
-            [NSBezierPath strokeLineFromPoint:NSMakePoint(topRight.x + ALIAS_SHIFT_X, (drawTop ? topRight.y + FRAME_RADIUS : topRight.y) + ALIAS_SHIFT_Y)
-                                toPoint:NSMakePoint(bottomRight.x + ALIAS_SHIFT_X, (drawBottom ? bottomRight.y - FRAME_RADIUS : bottomRight.y) + ALIAS_SHIFT_Y)];
+            [NSBezierPath strokeLineFromPoint:NSMakePoint(topRight.x + ALIAS_SHIFT_X, (drawTop ? topRight.y + frameRadius : topRight.y) + ALIAS_SHIFT_Y)
+                                toPoint:NSMakePoint(bottomRight.x + ALIAS_SHIFT_X, (drawBottom ? bottomRight.y - frameRadius : bottomRight.y) + ALIAS_SHIFT_Y)];
     }
     
     path = [NSBezierPath bezierPath];
     if(drawBottom && !suppressBottomLeftCorner){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomLeft.x + FRAME_RADIUS, bottomLeft.y - FRAME_RADIUS)
-                                         radius:FRAME_RADIUS
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomLeft.x + frameRadius, bottomLeft.y - frameRadius)
+                                         radius:frameRadius
                                      startAngle:180
                                        endAngle:90
                                       clockwise:YES];
     }
     if(drawBottom && !suppressBottomBorder){
-        [path lineToPoint:NSMakePoint(bottomRight.x - FRAME_RADIUS, bottomRight.y)];
+        [path lineToPoint:NSMakePoint(bottomRight.x - frameRadius, bottomRight.y)];
     }
     if((drawBottom && !suppressBottomRightCorner)){
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomRight.x - FRAME_RADIUS, bottomRight.y - FRAME_RADIUS)
-                                         radius:FRAME_RADIUS
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(bottomRight.x - frameRadius, bottomRight.y - frameRadius)
+                                         radius:frameRadius
                                      startAngle:90
                                        endAngle:0
                                       clockwise:YES];

@@ -60,7 +60,6 @@
 {
     cursorTrackingRowArray = [[NSMutableArray alloc] init];
     rowArray = [[NSMutableArray alloc] init];
-    rowHeightArray = nil;
     contentsHeight = 0;
     forwardsKeyEvents = NO;
     selectClicks = 1;
@@ -81,7 +80,6 @@
     //Clean up
     [cursorTrackingRowArray release];
     [rowArray release];
-    [rowHeightArray release];
 
     [super dealloc];
 }
@@ -379,6 +377,22 @@
     //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
     if([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height){
         [self resetCursorRects];
+    }
+}
+
+- (void)removeAllRows
+{
+    [rowArray release]; rowArray = [[NSMutableArray alloc] init];
+    [self resetCursorRects];
+    [self _resizeContents:YES];
+}
+
+- (AIFlexibleTableRow *)rowAtIndex:(int)index
+{
+    if(index >= 0 && index < [rowArray count]){
+        return([rowArray objectAtIndex:index]);
+    }else{
+        return(nil);
     }
 }
 
