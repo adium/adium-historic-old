@@ -285,9 +285,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImage:(NSImage *)image
 {
 	if (displayedObject){
-		[displayedObject setPreference:[image PNGRepresentation]
-								forKey:KEY_USER_ICON
-								 group:PREF_GROUP_USERICONS];
+		[displayedObject setUserIconData:[image PNGRepresentation]];
 	}
 }
 
@@ -297,9 +295,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		NSImage *userImage;
 		
 		//Remove the preference
-		[displayedObject setPreference:nil
-								forKey:KEY_USER_ICON
-								 group:PREF_GROUP_USERICONS];
+		[displayedObject setUserIconData:nil];
 	
 		//User Icon
 		if(userImage = [displayedObject userIcon]){
