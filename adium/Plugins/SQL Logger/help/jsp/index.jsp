@@ -8,7 +8,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/index.jsp $-->
-<!--$Rev: 454 $ $Date: 2003/10/21 17:02:22 $ -->
+<!--$Rev: 459 $ $Date: 2003/10/23 21:10:16 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -157,13 +157,18 @@ try {
     String commandArray[] = new String[10];
     int aryCount = 0;
     boolean unconstrained = false;
-    
-    String queryText = "select sender_sn, recipient_sn, sender_display, " + 
-    " recipient_display, message, " +
-    " message_date, message_id from adium.message_v ";
-    
+
+    String queryText = "select sender_sn, recipient_sn, " + 
+    " message, message_date, message_id";
+    if(showDisplay) {
+       queryText += ", sender_display, recipient_display "
+        + " from adium.message_v ";
+    } else {
+        queryText += " from adium.simple_message_v ";
+    }
+
     String concurrentWhereClause = " where ";
-    
+
     if (afterDate == null) {
         queryText += "where message_date > 'now'::date ";
         concurrentWhereClause += " message_date > 'now'::date ";
@@ -175,7 +180,7 @@ try {
             unconstrained = true;
         }
     }
-    
+
     if (beforeDate != null) {
         queryText += " and message_date < ?::timestamp";
         concurrentWhereClause += "and message_date < ?::timestamp ";
@@ -220,7 +225,7 @@ try {
         concurrentWhereClause + ") messages";
 
         pstmt = conn.prepareStatement(query);
-        
+
         if(afterDate != null && beforeDate != null) {
             pstmt.setString(1, afterDate);
             pstmt.setString(2, beforeDate);
@@ -240,8 +245,7 @@ try {
         while(rset.next()) {
             if (rset.getRow() % 5 == 0) {
                 out.print("<br />");
-            }
-            else if (rset.getRow() != 1) {
+            } else if (rset.getRow() != 1) {
                 out.print(" | ");
             }
             out.print("<a href=\"index.jsp?&after=" + afterDate + 
@@ -252,10 +256,14 @@ try {
         out.println("</div><br />");
     }
     pstmt = conn.prepareStatement(queryText);
+    //out.print(queryText + "<br />");
     for(int i = 0; i < aryCount; i++) {
+      //  out.print(commandArray[i] + "<br />");
         pstmt.setString(i + 1, commandArray[i]);
     }
+    
     rset = pstmt.executeQuery();
+    
     /*
     out.println("<pre>");
     while(rset.next()) {
@@ -263,6 +271,7 @@ try {
     }
     out.println("</pre>");
     */
+
     if (!rset.isBeforeFirst()) {
         out.print("<div align=\"center\"><i>No records found.</i></div>");
     } else {
@@ -274,7 +283,7 @@ try {
     String sent_color = new String();
     String received_color = new String();
     String user = new String();
-    
+
     int cntr = 1;
     Date currentDate = null;
     while (rset.next()) {
@@ -291,18 +300,18 @@ try {
         sent_color = null;
         received_color = null;
         String message = rset.getString("message");
-        
+
         for(int i = 0; i < userArray.size(); i++) {
             if (userArray.get(i).equals(rset.getString("sender_sn"))) {
                 sent_color = colorArray[i % colorArray.length];
             }
         }
-        
+
         if (sent_color == null) {
             sent_color = colorArray[userArray.size() % colorArray.length];
             userArray.add(rset.getString("sender_sn"));
         }
-        
+
         for(int i = 0; i < userArray.size(); i++) {
             if (userArray.get(i).equals(rset.getString("recipient_sn"))) {
                 received_color = colorArray[i % colorArray.length];
@@ -343,16 +352,16 @@ try {
         if(cntr++ % 2 == 0) {
             cellColor = "#dddddd";
         }
-        
+
         out.print("<td valign=\"top\" align=\"left\" bgcolor=\"" +
         cellColor + "\" id=\"" + rset.getInt("message_id") + "\">");
- 
+
         out.print("<a href=\"index.jsp?from=" +
         rset.getString("sender_sn") + 
         "&to=" + rset.getString("recipient_sn") + 
         "&after=" + afterDate +
         "&before=" + beforeDate + "#" + rset.getInt("message_id") + "\" ");
-        if(showDisplay) {
+        if(!showDisplay) {
             out.print("title=\"" + rset.getString("sender_sn"));
         } else {
             out.print("title=\"" + rset.getString("sender_display"));
@@ -365,7 +374,6 @@ try {
             out.print(rset.getString("sender_sn"));
         }
         out.print("</font>:</a></font>\n");
-        
 
         if(to_sn == null || from_sn == null) {
             out.print("<font color=\"" +
@@ -378,7 +386,8 @@ try {
             out.print("</font>");
         }
         out.print("</td>");
-        out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + cellColor + "\">");
+        out.print("<td valign=\"top\" align=\"right\" bgcolor=\"" + cellColor
+        + "\" width=\"150\">");
         out.print(rset.getTime("message_date"));
         out.print("</td>\n");
 

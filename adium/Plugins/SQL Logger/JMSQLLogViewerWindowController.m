@@ -194,9 +194,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     NSMutableDictionary	*groupDict = [NSMutableDictionary dictionary];
     NSMutableDictionary	*contactDict = [NSMutableDictionary dictionary];
 
-    PGresult 		*userRes, *accountRes;
+    PGresult 		*accountRes;
     NSString		*sqlStatement;
-    int 		i, j;
+    int 		i;
 
     //Process each account (Every in adium.users)
     sqlStatement = [NSString stringWithString:@"select user_id, username, service from adium.users"];
@@ -207,55 +207,35 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     } else {
         for(i = 0; i < PQntuples(accountRes); i++){
             NSString	*accountUID, *serviceID;
-            NSString	*userSQL;
             NSString	*userID;
-
+            NSString	*serverGroup = nil;
+            NSString	*contactKey;
+            
             //Get the account UID and ServiceID
             accountUID = [NSString stringWithCString:PQgetvalue(accountRes, i, 1)];
             serviceID = [NSString stringWithCString:PQgetvalue(accountRes, i, 2)];
             userID = [NSString stringWithCString:PQgetvalue(accountRes, i, 0)];
             
-            //Query only pulls people who have talked to this particular user
-            userSQL = [NSString stringWithFormat:@"select user_id, username, service from adium.users where exists (select \'x\' from messages where (sender_id = %@ and recipient_id = user_id) or (recipient_id = %@ and sender_id = user_id))", userID, userID];
-
-            //Process each user folder (/Logs/SERVICE.ACCOUNT_NAME/CONTACT_NAME/)
-            userRes = PQexec(conn, [userSQL UTF8String]);
-            if (!userRes || PQresultStatus(userRes) != PGRES_TUPLES_OK) {
-                [[owner interfaceController] handleErrorMessage:@"Users Failed" withDescription:@"User Selection Failed"];
-                NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(userRes)), PQresultErrorMessage(userRes), userSQL);
-            } else {
-                for(j = 0; j < PQntuples(userRes); j++) {
-                    NSString		*serverGroup = nil;
-                    NSString		*contactKey;
-                    NSString		*contactUID;
-                    NSString		*contactUserID;
-
-                    contactUID = [NSString stringWithCString:PQgetvalue(userRes, j, 1)];
-                    contactUserID = [NSString stringWithCString:PQgetvalue(userRes, j, 0)];
-
-                    //Find the group this contact is in on our contact list
-                    AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceID UID:contactUID];
-                    if(contact){
-                        serverGroup = [[contact containingGroup] UID];
-                    }
-                    if(!serverGroup) serverGroup = @"Strangers"; //Default group
+            //Find the group this contact is in on our contact list
+            AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceID UID:accountUID];
+            if(contact){
+                serverGroup = [[contact containingGroup] UID];
+            }
+            if(!serverGroup) serverGroup = @"Strangers"; //Default group
                     
-                    //Make sure this groups is in our available group dict
-                    if(![groupDict objectForKey:serverGroup]){
-                        [groupDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:serverGroup, @"UID", [NSMutableArray array], @"Contents", nil] forKey:serverGroup];
-                    }
+            //Make sure this groups is in our available group dict
+            if(![groupDict objectForKey:serverGroup]){
+                [groupDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:serverGroup, @"UID", [NSMutableArray array], @"Contents", nil] forKey:serverGroup];
+            }
 
-                    //Make sure the handle is in our available handle array
-                    contactKey = [NSString stringWithFormat:@"%@.%@", serviceID, contactUID];
-                    if(![contactDict objectForKey:contactKey]){
-                        [contactDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:contactUID, @"UID", serviceID, @"ServiceID", serverGroup, @"Group", contactUserID, @"userID", nil] forKey:contactKey];
-                    }
-                }
+            //Make sure the handle is in our available handle array
+            contactKey = [NSString stringWithFormat:@"%@.%@", serviceID, accountUID];
+            if(![contactDict objectForKey:contactKey]){
+                [contactDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:accountUID, @"UID", serviceID, @"ServiceID", serverGroup, @"Group", userID, @"userID", nil] forKey:contactKey];
             }
         }
     }
                      
-
     //Build a sorted available log array from our dictionaries
     //Yes, it'd be easier to just use arrays above, but using dictionaries (and transfering the results to an array) gives us a very nice speed boost.
     [availableLogArray release];
