@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.74 2004/04/29 05:13:54 the_tick Exp $
+$Id: ToDoList.txt,v 1.75 2004/04/29 09:48:01 earthmkii Exp $
 
 Legend
 + Change or Addition
@@ -55,6 +55,8 @@ Unconfirmed bugs
 * Yahoo ignore list is being ignored?
 * Message history and 'ignore formatting' option is doing some odd stuff (ignoring the ignore?)
 * We can crash MSN Messenger by sending it links copied from safari?
+
+* Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
 
 -------------------------------------------------------------------------------------------------------
 Minor Changes
