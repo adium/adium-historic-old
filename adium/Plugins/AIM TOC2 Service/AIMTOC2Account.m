@@ -28,7 +28,7 @@
 
 #define AIM_PACKET_MAX_LENGTH	2048
 
-#define SIGN_ON_MAX_WAIT	5.0		//Max amount of time to wait for first sign on packet
+#define SIGN_ON_MAX_WAIT	10.0		//Max amount of time to wait for first sign on packet
 #define SIGN_ON_UPKEEP_INTERVAL	0.4		//Max wait before sign up updates
 
 #define AUTO_RECONNECT_DELAY_PING_FAILURE	2.0	//Delay in seconds
@@ -1081,6 +1081,8 @@ static char *hash_password(const char * const password);
     if(waitingForFirstUpdate){
         waitingForFirstUpdate = NO;
 
+        NSLog(@"firstSignOnUpdateReceived");
+
         if(numberOfSignOnUpdates == 0){
             //No available contacts after 5 seconds, assume noone is online and resume contact list updates
             [self waitForLastSignOnUpdate:nil];
@@ -1098,11 +1100,14 @@ static char *hash_password(const char * const password);
 - (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
 {
     if(numberOfSignOnUpdates == 0){
+        NSLog(@"sign on is complete");
+
         //No updates received, sign on is complete
         [inTimer invalidate]; //Stop this timer
         [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
         processingSignOnUpdates = NO;
     }else{
+        NSLog(@" .. (%i)",numberOfSignOnUpdates);
         numberOfSignOnUpdates = 0;
     }
 }

@@ -66,8 +66,10 @@
 //Redisplay the modified object
 - (void)contactAttributesChanged:(NSNotification *)notification
 {
+    NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
+    
     //We only need to redraw if the text color has changed
-    if([[[notification userInfo] objectForKey:@"Keys"] containsObject:@"Text Color"]){
+    if([keys containsObject:@"Text Color"] || [keys containsObject:@"Tab Left View"]){
         //This should really be optimized and cleaned up.  Right now we're assuming the tab view's delegate is our custom tabs, and telling them to display - obviously not the best solution, but good enough for now.
         [[[self tabView] delegate] setNeedsDisplay:YES];
     }
