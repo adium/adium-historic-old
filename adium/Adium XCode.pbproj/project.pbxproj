@@ -1462,6 +1462,9 @@
 				3419F34605314BA100C68BA3,
 				3419F34705314BA100C68BA3,
 				4B037C070558B5C700FF5530,
+				6C644D3805776BC700D79723,
+				6C644D3A05776BC700D79723,
+				6C644D3E05776BF000D79723,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1491,6 +1494,7 @@
 				3419F34A05314BA100C68BA3,
 				3419F34B05314BA100C68BA3,
 				4B037C110558B6CD00FF5530,
+				6CF426660577622300F27FAA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1520,6 +1524,9 @@
 				3419F34E05314BA100C68BA3,
 				3419F34F05314BA100C68BA3,
 				4B037C080558B5C700FF5530,
+				6C644D3905776BC700D79723,
+				6C644D3B05776BC700D79723,
+				6C644D3F05776BF000D79723,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5306,8 +5313,11 @@
 				346E640E051533C0003B2F21,
 				346E641405157B14003B2F21,
 				346E641505157B14003B2F21,
+				6CF42667057762AB00F27FAA,
+				6CF42668057762AC00F27FAA,
 				34ADDFFF05158D4B003B2F21,
 				34F77079052B72F7004616D4,
+				6CF4266B057762CC00F27FAA,
 				34ADE00205159186003B2F21,
 			);
 			isa = PBXGroup;
@@ -7454,6 +7464,7 @@
 				34BD9D22053146CC000AB133,
 				34BD9D23053146CC000AB133,
 				34FDD6E505632BFD00F5B30F,
+				6CF42679057763E200F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7795,6 +7806,7 @@
 				34BD9D55053146CC000AB133,
 				34BD9D56053146CC000AB133,
 				34FDD6E605632BFD00F5B30F,
+				6CF4267A057763E200F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8196,6 +8208,7 @@
 				34BD9DC305314751000AB133,
 				34BD9DC405314751000AB133,
 				348862D205645EB6003C9627,
+				6CF426830577648700F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8362,6 +8375,7 @@
 				34BD9DD905314751000AB133,
 				34BD9DDA05314751000AB133,
 				348862D105645EB5003C9627,
+				6CF426840577648700F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11175,6 +11189,7 @@
 			files = (
 				34BD9F5305314787000AB133,
 				34BD9F5405314787000AB133,
+				6CF42669057762AD00F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11197,6 +11212,7 @@
 				34BD9F5605314787000AB133,
 				34BD9F5705314787000AB133,
 				34BD9F5805314787000AB133,
+				6CF4266C057762CD00F27FAA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11224,6 +11240,7 @@
 			files = (
 				34BD9F5A05314787000AB133,
 				34BD9F5B05314787000AB133,
+				6CF4266A057762AD00F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14425,6 +14442,7 @@
 				34BDA12605314821000AB133,
 				34BDA12705314821000AB133,
 				4B791AF805350B930000969C,
+				6CF426750577638100F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14448,6 +14466,7 @@
 				34BDA12A05314821000AB133,
 				4B791AFA05350B930000969C,
 				4B791B2D05350BA20000969C,
+				6CF4266E0577631E00F27FAA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14470,6 +14489,7 @@
 				34BDA12C05314821000AB133,
 				34BDA12D05314821000AB133,
 				4B791AF905350B930000969C,
+				6CF426760577638100F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15463,6 +15483,7 @@
 				34BDA1B70531485B000AB133,
 				34BDA1B80531485B000AB133,
 				4B791A250534C4130000969C,
+				6CF4267D0577641300F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15485,6 +15506,7 @@
 				34BDA1BA0531485B000AB133,
 				34BDA1BB0531485B000AB133,
 				4B791A280534C4290000969C,
+				6CF426800577643C00F27FAA,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15507,6 +15529,7 @@
 				34BDA1BD0531485B000AB133,
 				34BDA1BE0531485B000AB133,
 				4B791A260534C4130000969C,
+				6CF4267E0577641300F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17408,6 +17431,8 @@
 		};
 		4B4F5B2F042D647C00A8010A = {
 			children = (
+				6CF426810577648600F27FAA,
+				6CF426820577648700F27FAA,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
 				F5793924033E74C301A8010A,
@@ -21951,6 +21976,7 @@
 				6C60B15E05605A3800CAD137,
 				6C60B16005605A3800CAD137,
 				6C60B16205605A3800CAD137,
+				6CF426710577635B00F27FAA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21979,6 +22005,7 @@
 				6C60B15F05605A3800CAD137,
 				6C60B16105605A3800CAD137,
 				6C60B16305605A3800CAD137,
+				6CF426720577635B00F27FAA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22109,6 +22136,8 @@
 				6CC851C10574B314008A5F66,
 				6C60B14905605A3500CAD137,
 				6C60B14A05605A3500CAD137,
+				6CF4266F0577635B00F27FAA,
+				6CF426700577635B00F27FAA,
 				6C60B14B05605A3600CAD137,
 				6C60B14C05605A3600CAD137,
 				6C60B14D05605A3600CAD137,
@@ -22351,6 +22380,96 @@
 			settings = {
 			};
 		};
+		6C644D3405776BC500D79723 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILog.h;
+			path = Plugins/Logger/AILog.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3505776BC600D79723 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILog.m;
+			path = Plugins/Logger/AILog.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3605776BC600D79723 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogFromGroup.h;
+			path = Plugins/Logger/AILogFromGroup.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3705776BC600D79723 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogFromGroup.m;
+			path = Plugins/Logger/AILogFromGroup.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3805776BC700D79723 = {
+			fileRef = 6C644D3405776BC500D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C644D3905776BC700D79723 = {
+			fileRef = 6C644D3505776BC600D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C644D3A05776BC700D79723 = {
+			fileRef = 6C644D3605776BC600D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C644D3B05776BC700D79723 = {
+			fileRef = 6C644D3705776BC600D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C644D3C05776BEF00D79723 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogToGroup.h;
+			path = Plugins/Logger/AILogToGroup.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3D05776BF000D79723 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILogToGroup.m;
+			path = Plugins/Logger/AILogToGroup.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6C644D3E05776BF000D79723 = {
+			fileRef = 6C644D3C05776BEF00D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6C644D3F05776BF000D79723 = {
+			fileRef = 6C644D3D05776BF000D79723;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		6CC070540563FA7B0013E642 = {
 			fileRef = D2547F1D050AD55B00A80164;
 			isa = PBXBuildFile;
@@ -22367,6 +22486,242 @@
 		};
 		6CC851C20574B315008A5F66 = {
 			fileRef = 6CC851C10574B314008A5F66;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426650577622300F27FAA = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = LogViewerJag.nib;
+			path = Plugins/Logger/LogViewerJag.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426660577622300F27FAA = {
+			fileRef = 6CF426650577622300F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF42667057762AB00F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESAnnouncerContactAlert.h;
+			path = Plugins/Announcer/ESAnnouncerContactAlert.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF42668057762AC00F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESAnnouncerContactAlert.m;
+			path = Plugins/Announcer/ESAnnouncerContactAlert.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF42669057762AD00F27FAA = {
+			fileRef = 6CF42667057762AB00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4266A057762AD00F27FAA = {
+			fileRef = 6CF42668057762AC00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4266B057762CC00F27FAA = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = AnnouncerContactAlert.nib;
+			path = Plugins/Announcer/AnnouncerContactAlert.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF4266C057762CD00F27FAA = {
+			fileRef = 6CF4266B057762CC00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4266D0577631E00F27FAA = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = DockBehaviorContactAlert.nib;
+			path = "Plugins/Dock Behavior/DockBehaviorContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF4266E0577631E00F27FAA = {
+			fileRef = 6CF4266D0577631E00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4266F0577635B00F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESEventBezelContactAlert.h;
+			path = "Plugins/Event Bezel/ESEventBezelContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426700577635B00F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESEventBezelContactAlert.m;
+			path = "Plugins/Event Bezel/ESEventBezelContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426710577635B00F27FAA = {
+			fileRef = 6CF4266F0577635B00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426720577635B00F27FAA = {
+			fileRef = 6CF426700577635B00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426730577638100F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDockBehaviorContactAlert.h;
+			path = "Plugins/Dock Behavior/ESDockBehaviorContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426740577638100F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESDockBehaviorContactAlert.m;
+			path = "Plugins/Dock Behavior/ESDockBehaviorContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426750577638100F27FAA = {
+			fileRef = 6CF426730577638100F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426760577638100F27FAA = {
+			fileRef = 6CF426740577638100F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF42677057763E100F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactAlertsController.h;
+			path = Source/ESContactAlertsController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF42678057763E200F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactAlertsController.m;
+			path = Source/ESContactAlertsController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF42679057763E200F27FAA = {
+			fileRef = 6CF42677057763E100F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4267A057763E200F27FAA = {
+			fileRef = 6CF42678057763E200F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4267B0577641200F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESEventSoundContactAlert.h;
+			path = "Plugins/Event Sounds/ESEventSoundContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF4267C0577641200F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESEventSoundContactAlert.m;
+			path = "Plugins/Event Sounds/ESEventSoundContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF4267D0577641300F27FAA = {
+			fileRef = 6CF4267B0577641200F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4267E0577641300F27FAA = {
+			fileRef = 6CF4267C0577641200F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF4267F0577643B00F27FAA = {
+			expectedFileType = wrapper.nib;
+			isa = PBXFileReference;
+			name = EventSoundContactAlert.nib;
+			path = "Plugins/Event Sounds/EventSoundContactAlert.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426800577643C00F27FAA = {
+			fileRef = 6CF4267F0577643B00F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426810577648600F27FAA = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactAlert.h;
+			path = "Frameworks/Adium Framework/ESContactAlert.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426820577648700F27FAA = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = ESContactAlert.m;
+			path = "Frameworks/Adium Framework/ESContactAlert.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		6CF426830577648700F27FAA = {
+			fileRef = 6CF426810577648600F27FAA;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		6CF426840577648700F27FAA = {
+			fileRef = 6CF426820577648700F27FAA;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -22679,11 +23034,18 @@
 		};
 		9C8C7FA303CBA17B00267226 = {
 			children = (
+				6C644D3405776BC500D79723,
+				6C644D3505776BC600D79723,
+				6C644D3605776BC600D79723,
+				6C644D3705776BC600D79723,
+				6C644D3C05776BEF00D79723,
+				6C644D3D05776BF000D79723,
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
 				4BD68227045B010D00A8010A,
 				4BD68228045B010D00A8010A,
 				4B3DB8FD04547A8D00A8010A,
+				6CF426650577622300F27FAA,
 				4B54D1020502865F00A8010A,
 				4B54D1030502865F00A8010A,
 				4B54D10805028DAE00A8010A,
@@ -24300,6 +24662,9 @@
 				4B791AF505350B930000969C,
 				4B791AF605350B930000969C,
 				4B791AF705350B930000969C,
+				6CF4266D0577631E00F27FAA,
+				6CF426730577638100F27FAA,
+				6CF426740577638100F27FAA,
 				4B68D3880463330600A8010A,
 				4B791B2C05350BA20000969C,
 			);
@@ -27653,6 +28018,9 @@
 				4B791A230534C4130000969C,
 				4B791A240534C4130000969C,
 				4B791A270534C4290000969C,
+				6CF4267F0577643B00F27FAA,
+				6CF4267B0577641200F27FAA,
+				6CF4267C0577641200F27FAA,
 				4BA5325D050FC5E800A8010A,
 			);
 			isa = PBXGroup;
@@ -27728,6 +28096,8 @@
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,
 				9E95316903C8E0C700415B22,
+				6CF42677057763E100F27FAA,
+				6CF42678057763E200F27FAA,
 				34FDD6E305632BFD00F5B30F,
 				34FDD6E405632BFD00F5B30F,
 				F57938F3033E745F01A8010A,
