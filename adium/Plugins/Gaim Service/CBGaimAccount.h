@@ -48,9 +48,10 @@
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
-- (AIListContact *)_contactWithUID:(NSString *)UID;
+- (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIChat *)chatWithName:(NSString *)name;
 - (AIChat *)chatWithContact:(AIListContact *)contact;
+- (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 @end
@@ -89,7 +90,6 @@
 - (NSString *)unknownGroupName;
 - (NSArray *)contactStatusFlags;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError;
-- (AIListContact *)_mainThreadContactWithUID:(NSString *)sourceUID;
 
 	//AIAccount_Files
 	//Instructs the account to accept a file transfer request
@@ -165,8 +165,10 @@
 - (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
+- (AIListContact *)_contactWithUID:(NSString *)inUID;
 - (AIChat *)chatWithName:(NSString *)name;
 - (AIChat *)chatWithContact:(AIListContact *)contact;
+- (oneway void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject;
 @end

@@ -31,9 +31,6 @@
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
 
-- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
-- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy;
-- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID;
 - (NSString *)displayServiceIDForUID:(NSString *)aUID;
 
 //- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
@@ -87,11 +84,11 @@ static id<GaimThread> gaimThread = nil;
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
-// Buddies and Contacts ------------------------------------------------------------------------------------------------
-#pragma mark Buddies and Contacts
+// Contacts ------------------------------------------------------------------------------------------------
+#pragma mark Contacts
 /*- (void)accountNewBuddy:(NSValue *)buddyValue
 {
-	[self contactAssociatedWithBuddy:[buddyValue pointerValue]]; //Create a contact and hook it to this buddy
+
 }*/
 
 - (oneway void)newContact:(AIListContact *)theContact
@@ -311,53 +308,6 @@ static id<GaimThread> gaimThread = nil;
 }
 */
 
-- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
-{
-	return ([self _contactAssociatedWithBuddy:buddy
-									 usingUID:[NSString stringWithUTF8String:(buddy->name)]]);
-}	
-
-- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID
-{
-	NSAssert(buddy != nil,@"contactAssociatedWithBuddy: passed a nil buddy");
-	
-	AIListContact	*contact = nil;
-	
-	//If a name was available for the GaimBuddy, create a contact
-	if (contactUID){
-		//Get our contact
-		contact = [self _contactWithUID:[contactUID compactedString]];
-			
-		//Evan: temporary asserts
-		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
-		NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
-		NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
-		
-		//Associate the handle with ui_data and the buddy with our statusDictionary
-		buddy->node.ui_data = [contact retain];
-//		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
-	}
-	
-	return(contact);
-}
-
-- (AIListContact *)_mainThreadContactWithUID:(NSString *)sourceUID
-{
-	[super performSelectorOnMainThread:@selector(_contactWithUID:)
-							withObject:sourceUID
-						 waitUntilDone:YES];
-	
-	AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-																		 accountID:[self uniqueObjectID]
-																			   UID:sourceUID];
-	return contact;
-}
-
-- (oneway void)testLog
-{
-	NSLog(@"TEST!!!");
-}
-
 //To allow root level buddies on protocols which don't support them, we map any buddies in a group
 //named after this account's UID to the root group.  These functions handle the mapping.  Group names should
 //be filtered through incoming before being sent to Adium - and group names from Adium should be filtered through
@@ -388,6 +338,11 @@ static id<GaimThread> gaimThread = nil;
 	   ([[inContact statusObjectForKey:@"Online"] boolValue])){
 		serv_get_info(gc, [[inContact UID] UTF8String]);
     }
+}
+
+- (oneway void)requestAddContactWithUID:(NSString *)contactUID
+{
+	[[adium contactController] requestAddContactWithUID:UID serviceID:[self serviceID]];
 }
 
 /*********************/
@@ -472,155 +427,16 @@ static id<GaimThread> gaimThread = nil;
     return([[self statusObjectForKey:@"Online"] boolValue]);
 }
 
-// GaimConversations ---------------------------------------------------------------------------------------------------
-#pragma mark GaimConversations
+//Chats ------------------------------------------------------------
+#pragma mark Chats
+
+//Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
 - (oneway void)addChat:(AIChat *)chat
 {
 	//Open the chat
 	[[adium interfaceController] openChat:chat];
 }
-/*
-- (AIChat *)chatWithListContact:(AIListContact *)listContact
-{
-	// Need to start a new chat, associating with the GaimConversation
-	AIChat *chat;
-	
-	chat = [[adium contentController] chatWithContact:sourceContact
-										initialStatus:nil];
-	return chat;
-}
-*/
 
-- (AIChat *)chatWithName:(NSString *)name
-{
-	AIChat *chat;
-	
-	chat = [[adium contentController] chatWithName:name
-										 onAccount:self
-									 initialStatus:nil];
-	
-	return chat;
-}
-
-//Typing update in an IM
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing
-{
-	AIListContact *listContact = (AIListContact*) [chat listObject];
-	NSAssert(listContact != nil, @"Conversation with no one?");
-	[self setTypingFlagOfContact:listContact to:typing];
-}
-
-//Multiuser chat update
-- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type
-{
-	
-}
-
-- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
-{
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact;
-	
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-        // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
-		// until we get this notification.
-        return;
-    }
-
-	sourceContact = (AIListContact*) [chat listObject];
-	
-	//Clear the typing flag of the listContact
-	[self setTypingFlagOfContact:sourceContact to:NO];
-	
-	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
-
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
-}
-
-- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
-{	
-	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
-	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
-
-	if ((flags & GAIM_MESSAGE_SEND) != 0) {
-		/*
-		 * TODO
-		 * gaim is telling us that our message was sent successfully. Some
-		 * day, we should avoid claiming it was until we get this
-		 * notification.
-		 */
-		return;
-	}
-	
-	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
-		
-	[self _receivedMessage:[messageDict objectForKey:@"Message"]
-					inChat:chat 
-		   fromListContact:sourceContact 
-					 flags:flags
-					  date:[messageDict objectForKey:@"Date"]];
-}
-
-- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
-{		
-	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
-		message = [self _processGaimImagesInString:message];
-	}
-	
-	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
-														   withSource:sourceContact
-														  destination:self
-																 date:date
-															  message:[AIHTMLDecoder decodeHTML:message]
-															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
-	
-	[[adium contentController] addIncomingContentObject:messageObject];
-}
-
-- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
-{
-	return ([self _contactAssociatedWithBuddy:buddy 
-									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
-}
-
-#pragma mark GaimConversation User Lists
-- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
-{
-	if (chat){
-		AIListContact *contact = [self _contactWithUID:[contactName compactedString]];
-		
-		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
-		[chat addParticipatingListObject:contact];
-		
-		NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
-	}	
-}
-- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
-{
-	NSLog(@"added a whole list!");
-}
-- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
-{
-	if (chat){
-		AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-															  accountID:[self uniqueObjectID]
-																	UID:[contactName compactedString]];
-		
-		[chat removeParticipatingListObject:contact];
-		
-	NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
-	}	
-}
-- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
-{
-	NSLog(@"removed a whole list!");
-}
-
-#pragma mark Chats
 //Open a chat for Adium
 - (BOOL)openChat:(AIChat *)chat
 {	
@@ -643,10 +459,9 @@ static id<GaimThread> gaimThread = nil;
 {
 	[gaimThread closeChat:chat];
 	
-#warning Wrong. perhaps use a chat identifier of sorts
+	//Be sure any remaining typing flag is cleared as the chat closes
 	AIListObject	*listObject = [chat listObject];
 	if (listObject){
-		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
 		[self setTypingFlagOfContact:(AIListContact *)listObject to:NO];
 	}		
 	
@@ -661,6 +476,62 @@ static id<GaimThread> gaimThread = nil;
 										initialStatus:nil];
 }
 
+- (AIChat *)chatWithName:(NSString *)name
+{
+	AIChat *chat;
+	
+	chat = [[adium contentController] chatWithName:name
+										 onAccount:self
+									 initialStatus:nil];
+	
+	return chat;
+}
+
+//Typing update in an IM
+- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(BOOL)typing
+{
+	[self setTypingFlagOfContact:(AIListContact*)[chat listObject]
+							  to:typing];
+}
+
+//Multiuser chat update
+- (oneway void)updateForChat:(AIChat *)chat type:(GaimConvUpdateType)type
+{
+	
+}
+
+#pragma mark Chat User Lists
+- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+{
+	if (chat){
+		AIListContact *contact = [self _contactWithUID:[contactName compactedString]];
+		
+		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		[chat addParticipatingListObject:contact];
+		
+		NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
+	}	
+}
+- (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
+{
+	NSLog(@"added a whole list!");
+}
+- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
+{
+	if (chat){
+		AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
+																			 accountID:[self uniqueObjectID]
+																				   UID:[contactName compactedString]];
+		
+		[chat removeParticipatingListObject:contact];
+		
+		NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
+	}	
+}
+- (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
+{
+	NSLog(@"removed a whole list!");
+}
 
 /*********************/
 /* AIAccount_Content */
@@ -726,7 +597,7 @@ static id<GaimThread> gaimThread = nil;
 }
 
 //Return YES if we're available for sending the specified content.
-//If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
+//If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
@@ -742,6 +613,72 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
     return(NO);
+}
+
+
+- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+{
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	AIListContact			*sourceContact;
+	
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+        // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
+		// until we get this notification.
+        return;
+    }
+	
+	sourceContact = (AIListContact*) [chat listObject];
+	
+	//Clear the typing flag of the listContact
+	[self setTypingFlagOfContact:sourceContact to:NO];
+	
+	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
+	
+	[self _receivedMessage:[messageDict objectForKey:@"Message"]
+					inChat:chat 
+		   fromListContact:sourceContact 
+					 flags:flags
+					  date:[messageDict objectForKey:@"Date"]];
+}
+
+- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+{	
+	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
+	AIListContact			*sourceContact = [self _contactWithUID:[[messageDict objectForKey:@"Source"] compactedString]];
+	
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
+		/*
+		 * TODO
+		 * gaim is telling us that our message was sent successfully. Some
+		 * day, we should avoid claiming it was until we get this
+		 * notification.
+		 */
+		return;
+	}
+	
+	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+	
+	[self _receivedMessage:[messageDict objectForKey:@"Message"]
+					inChat:chat 
+		   fromListContact:sourceContact 
+					 flags:flags
+					  date:[messageDict objectForKey:@"Date"]];
+}
+
+- (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
+{		
+	if ((flags & GAIM_MESSAGE_IMAGES) != 0) {
+		message = [self _processGaimImagesInString:message];
+	}
+	
+	AIContentMessage *messageObject = [AIContentMessage messageInChat:chat
+														   withSource:sourceContact
+														  destination:self
+																 date:date
+															  message:[AIHTMLDecoder decodeHTML:message]
+															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
+	
+	[[adium contentController] addIncomingContentObject:messageObject];
 }
 
 /*********************/
@@ -1552,7 +1489,7 @@ static id<GaimThread> gaimThread = nil;
     NSArray			*keyArray = [self contactStatusFlags];
 	NSEnumerator	*enumerator = [keyArray objectEnumerator];
 	NSString		*key;
-	
+
 	while(key = [enumerator nextObject]){
 		[theContact setStatusObject:nil forKey:key notify:NO];
 	}
@@ -1678,13 +1615,14 @@ static id<GaimThread> gaimThread = nil;
     return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
-- (AIListContact *)_contactWithUID:(NSString *)sourceUID
+- (AIListContact *)_contactWithUID:(NSString *)inUID
 {
-	return [super _contactWithUID:sourceUID];
+	return [super _contactWithUID:inUID];
 }
 
 - (oneway void)doSelector:(SEL)selector withObject:(id)firstObject withObject:(id)secondObject
 {
 	[self performSelector:selector withObject:firstObject withObject:secondObject];
 }
+
 @end
