@@ -26,24 +26,17 @@
     return NO;
 }
 
-- (void)awakeFromNib
-{
-    //NSLog(@"despertando ventana");
-}
-
-- (void)orderFront:(id)sender
+- (void)startTimer;
 {
     [self setAlphaValue:1.0];
     [self setFadeTimer:nil];
     [self setDisplayTimer:nil];
     [self setFadingOut:YES];
-    [[self contentView] setNeedsDisplay:YES];
     [self setDisplayTimer: [NSTimer scheduledTimerWithTimeInterval:displayDuration
                                                          target:self
                                                        selector:@selector(endDisplay:)
                                                        userInfo:nil
                                                         repeats:NO]];
-    [super orderFront:sender];
 }
 
 - (void)endDisplay:(NSTimer *)timer
@@ -64,7 +57,7 @@
     if ([self alphaValue]<=0.0) {
         [self setFadeTimer:nil];
         [self setFadingOut:NO];
-        [self orderOut:nil];
+        [self close];
     }
 }
 

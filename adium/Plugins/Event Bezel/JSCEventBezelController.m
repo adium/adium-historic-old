@@ -77,6 +77,7 @@ withMessage:(NSString *)message
         if ([bezelWindow fadingOut]) {
             [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@\n%@",
                 [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView queueField]]];
+            [bezelView setNeedsDisplay:YES];
         } else {
             [bezelView setQueueField: @""];
         }
@@ -109,7 +110,7 @@ withMessage:(NSString *)message
             [[self window] invalidateShadow];
         }
         [self showWindow:nil];
-        [[self window] orderFront:nil];
+        [bezelWindow startTimer];
         
     }
 }
