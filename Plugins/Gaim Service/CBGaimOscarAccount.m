@@ -53,7 +53,7 @@
 	contact = [[adium contactController] existingContactWithService:service
 															account:self
 																UID:sourceUID];
-	if(!contact){
+	if(!contact){		
 		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
 														account:self
 															UID:sourceUID];
