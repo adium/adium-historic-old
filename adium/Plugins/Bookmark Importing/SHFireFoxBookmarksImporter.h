@@ -11,6 +11,7 @@
 @interface SHFireFoxBookmarksImporter : NSObject <SHBookmarkImporter>{
     id       owner;
     NSDate  *lastModDate;
+    BOOL     fox9;
 }
 
 @end
