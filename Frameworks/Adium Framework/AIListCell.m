@@ -314,18 +314,13 @@
 				[listObject longDisplayName] :
 				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName])));
 	}else{
-		NSMutableString	*labelString = [NSMutableString string];
-		
 		//Combine left text, the object name, and right text
-		if(leftText) [labelString appendString:leftText];
-
-		//If useAliasesAsRequested is NO, use the formattedUID if it exists; otherwise, use the longDisplayName as normal
-		[labelString appendString:(useAliasesAsRequested ? 
-								   [listObject longDisplayName] :
-								   ([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]))];
-		if(rightText) [labelString appendString:rightText];
-		
-		return(labelString);
+		return([NSString stringWithFormat:@"%@%@%@",
+			(leftText ? leftText : @""),
+			(useAliasesAsRequested ? [listObject longDisplayName] : ([listObject formattedUID] ?
+																	 [listObject formattedUID] :
+																	 [listObject longDisplayName])),
+			(rightText ? rightText : @"")]);
 	}
 }
 

@@ -55,8 +55,8 @@
 {
 	NSSize	size = [super cellSize];
 	
-	if(userIconVisible && userIconSize > labelFontHeight){
-		return(NSMakeSize(0, size.height + userIconSize));
+	if(userIconVisible && userIconSize.height > labelFontHeight){
+		return(NSMakeSize(0, size.height + userIconSize.height));
 	}else{
 		return(NSMakeSize(0, size.height + labelFontHeight));
 	}
@@ -67,13 +67,13 @@
 	int		width = [super cellWidth];
 	
 	//Name
-	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
-																	   attributes:[self labelAttributes]];
+	NSAttributedString	*displayName = [[[NSAttributedString alloc] initWithString:[self labelString]
+																		attributes:[self labelAttributes]] autorelease];
 	width += [displayName size].width;
 	
 	//User icon
 	if(userIconVisible){
-		width += userIconSize;
+		width += userIconSize.width;
 		if(userIconPosition == IMAGE_POSITION_LEFT) width += ICON_TEXT_PADDING;
 	}	
 	
@@ -172,10 +172,11 @@
 //User Icon Size
 - (void)setUserIconSize:(int)inSize
 {
-	userIconSize = inSize;
+	userIconSize = NSMakeSize(inSize, inSize);
+	[AIUserIcons setListUserIconSize:userIconSize];
 }
 - (int)userIconSize{
-	return(userIconSize);
+	return(userIconSize.height);
 }
 
 //Extended Status Visibility
@@ -296,18 +297,21 @@
 {
 	NSRect	rect = inRect;
 	if(userIconVisible){
-		NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
+		NSImage *image;
+		NSRect	drawRect;
+		
+		image = [self userIconImage];
 		if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 		
 		rect = [image drawInRect:rect
-						  atSize:NSMakeSize(userIconSize, userIconSize)
+						  atSize:userIconSize
 						position:position];
 		if(position == IMAGE_POSITION_LEFT) rect.origin.x += ICON_TEXT_PADDING;
 		
 		//Badges
-		NSRect	drawRect = [image rectForDrawingInRect:inRect
-												atSize:NSMakeSize(userIconSize, userIconSize)
-											  position:position];
+		drawRect = [image rectForDrawingInRect:inRect
+										atSize:userIconSize
+									  position:position];
 		if(statusIconPosition == LIST_POSITION_BADGE_LEFT)
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
 		if(statusIconPosition == LIST_POSITION_BADGE_RIGHT)
@@ -416,7 +420,7 @@
 - (NSColor *)labelColor
 {
 	if(backgroundColorIsStatus){
-		NSColor *labelColor = [[listObject displayArrayForKey:@"Label Color"] objectValue];
+		NSColor *labelColor = [listObject displayArrayObjectForKey:@"Label Color"];
 		return([labelColor colorWithAlphaComponent:backgroundOpacity]);
 	}else{
 		return(nil);
@@ -426,21 +430,20 @@
 //Contact text color
 - (NSColor *)textColor
 {
-	NSColor	*theTextColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
+	NSColor	*theTextColor = [listObject displayArrayObjectForKey:@"Text Color"];
 	return(theTextColor ? theTextColor : [super textColor]);
 }
 
-//Contact user image
-- (NSImage *)userIconImageOfSize:(NSSize)inSize
+//Contact user image - AIUserIcons should already have been informed of our desired size by setUserIconSize: above.
+- (NSImage *)userIconImage
 {
-	[AIUserIcons setListUserIconSize:inSize];
 	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject]);
 }
 
 //Contact status image
 - (NSImage *)statusImage
 {
-	return([[listObject displayArrayForKey:@"Tab Status Icon"] objectValue]);
+	return([listObject displayArrayObjectForKey:@"Tab Status Icon"]);
 }
 
 //Contact service image
