@@ -559,10 +559,22 @@ int HTMLEquivalentForFontSize(int fontSize)
                     }else if([chunkString caseInsensitiveCompare:CloseB] == 0){
                         [textAttributes disableTrait:NSBoldFontMask];
 
+                    //Strong (interpreted as bold)
+                    }else if([chunkString caseInsensitiveCompare:@"STRONG"] == 0){
+                        [textAttributes enableTrait:NSBoldFontMask];
+                    }else if([chunkString caseInsensitiveCompare:@"/STRONG"] == 0){
+                        [textAttributes disableTrait:NSBoldFontMask];
+
                     //Italic
                     }else if([chunkString caseInsensitiveCompare:I] == 0){
                         [textAttributes enableTrait:NSItalicFontMask];
                     }else if([chunkString caseInsensitiveCompare:CloseI] == 0){
+                        [textAttributes disableTrait:NSItalicFontMask];
+
+                    //Emphasised (interpreted as italic)
+                    }else if([chunkString caseInsensitiveCompare:@"EM"] == 0){
+                        [textAttributes enableTrait:NSItalicFontMask];
+                    }else if([chunkString caseInsensitiveCompare:@"/EM"] == 0){
                         [textAttributes disableTrait:NSItalicFontMask];
 
                     //Underline
