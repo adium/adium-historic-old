@@ -356,4 +356,11 @@
 	[contactListController contactListDesiredSizeChanged];
 }
 
+// Printing
+#pragma mark Printing
+- (void)adiumPrint:(id)sender
+{
+	[contactListView print:sender];
+}
+
 @end
