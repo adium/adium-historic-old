@@ -469,6 +469,3 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @end
 
-
-
-
