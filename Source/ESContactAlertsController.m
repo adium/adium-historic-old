@@ -69,7 +69,7 @@ DeclareString(KeyOneTimeAlert);
 }
 
 //Return all event IDs for groups/contacts
-- (NSDictionary *)allEventIDs
+- (NSArray *)allEventIDs
 {
 	return([[eventHandlers allKeys] arrayByAddingObjectsFromArray:[globalOnlyEventHandlers allKeys]]);
 }
@@ -157,15 +157,23 @@ DeclareString(KeyOneTimeAlert);
     }
 }
 
-//Generate an event
-- (void)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo;
+/*
+ Generate an event, returning a set of the actionIDs which were performed.
+ If perviouslyPerformedActionIDs is non-nil, it indicates a set of actionIDs which should be treated as if
+	they had already been performed in this invocation.
+*/
+- (NSSet *)generateEvent:(NSString *)eventID forListObject:(AIListObject *)listObject userInfo:(id)userInfo previouslyPerformedActionIDs:(NSSet *)previouslyPerformedActionIDs
 {
 	NSArray			*alerts = [self appendEventsForObject:listObject eventID:eventID toArray:nil];
+	NSMutableSet	*performedActionIDs = nil;
 	
 	if(alerts && [alerts count]){
 		NSEnumerator		*enumerator;
 		NSDictionary		*alert;
-		NSMutableArray		*performedActionIDs = [NSMutableArray array];
+
+		performedActionIDs = (previouslyPerformedActionIDs ?
+							  [previouslyPerformedActionIDs mutableCopy] :
+							  [NSMutableSet set]);
 		
 		//We go from contact->group->root; a given action will only fire once for this event
 		enumerator = [alerts objectEnumerator];
@@ -199,6 +207,8 @@ DeclareString(KeyOneTimeAlert);
 	[[adium notificationCenter] postNotificationName:eventID
 											  object:listObject 
 											userInfo:userInfo];
+	
+	return(performedActionIDs);
 }
 
 /*
