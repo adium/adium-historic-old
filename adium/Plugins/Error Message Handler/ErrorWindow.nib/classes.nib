@@ -1,0 +1,19 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; okay = id; okayToAll = id; }; 
+            CLASS = ErrorMessageWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_okay" = NSButton; 
+                "tabView_multipleErrors" = NSTabView; 
+                "textField_errorCount" = NSTextField; 
+                "textField_errorInfo" = NSTextField; 
+                "textField_errorTitle" = NSTextField; 
+            }; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
