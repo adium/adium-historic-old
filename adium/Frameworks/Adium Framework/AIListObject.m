@@ -80,7 +80,7 @@
     return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
 }
 
-- (NSString *)formattedDisplayName
+- (NSString *)longDisplayName
 {
     return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
 }
