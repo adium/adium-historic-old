@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.38 2004/04/05 01:51:31 adamiser Exp $
+//$Id: AIPluginController.m,v 1.39 2004/04/05 06:52:19 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -21,7 +21,6 @@
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
-#define GAIM_PLUGIN						@"Gaim.AdiumPlugin"
 
 @interface AIPluginController (PRIVATE)
 - (void)unloadPlugins;
