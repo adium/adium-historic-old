@@ -8,11 +8,14 @@
 #import "WebKitPrivateDefinitions.h"
 
 @interface ESWebView : WebView {
-	id draggingDelegate;
+	id		draggingDelegate;
+	BOOL	allowsDragAndDrop;
 }
 
 - (void)setFontFamily:(NSString *)familyName;
 - (NSString *)fontFamily;
 - (void)setDraggingDelegate:(id)inDelegate;
+
+- (void)setAllowsDragAndDrop:(BOOL)flag;
 
 @end
