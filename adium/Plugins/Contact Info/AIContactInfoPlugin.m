@@ -21,16 +21,21 @@
 {
     AIMiniToolbarItem *toolbarItem;
 
-    //Install the 'view profile' menu item
+    //Install the Get Info menu item
     viewContactInfoMenuItem = [[NSMenuItem alloc] initWithTitle:@"View Contact's Info" target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
     [viewContactInfoMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
     [[owner menuController] addMenuItem:viewContactInfoMenuItem toLocation:LOC_Contact_Manage];
     
+    //Install the alternate Get Info menu item which will let us mangle the shortcut as desired
     if ([NSApp isOnPantherOrBetter]) {
         viewContactInfoMenuItem_alternate = [[NSMenuItem alloc] initWithTitle:@"View Contact's Info" target:self action:@selector(showContactInfo:) keyEquivalent:@"i"];
         [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
         [viewContactInfoMenuItem_alternate setAlternate:YES];
-        [[owner menuController] addMenuItem:viewContactInfoMenuItem_alternate toLocation:LOC_Contact_Manage];        
+        [[owner menuController] addMenuItem:viewContactInfoMenuItem_alternate toLocation:LOC_Contact_Manage];      
+        
+        //Register for the contact list notifications
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) name:Interface_ContactListDidBecomeMain object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:) name:Interface_ContactListDidResignMain object:nil];
     }
     
     //Add our get info contextual menu item
@@ -47,31 +52,22 @@
     [toolbarItem setPaletteLabel:@"Show Info"];
     [toolbarItem setDelegate:self];
     [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];    
-    
-    //Register for the contact list notifications
-    [[owner notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:) name:Interface_ContactListDidBecomeMain object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:) name:Interface_ContactListDidResignMain object:nil];
-    
 }
 
 - (void)contactListDidBecomeMain:(NSNotification *)notification
 {
-    if ([NSApp isOnPantherOrBetter]) {
-        [[owner menuController] removeItalicsKeyEquivalent];
-        [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask)];
-    }
+    [[owner menuController] removeItalicsKeyEquivalent];
+    [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask)];
 }
 
 - (void)contactListDidResignMain:(NSNotification *)notification
 {
-    if ([NSApp isOnPantherOrBetter]) {
-        //set our alternate modifier mask back to the obscure combination
-        [viewContactInfoMenuItem_alternate setKeyEquivalent:@"i"];
-        [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
-        [viewContactInfoMenuItem_alternate setAlternate:YES];
-        //Now give the italics its combination back
-        [[owner menuController] restoreItalicsKeyEquivalent];
-    }
+    //set our alternate modifier mask back to the obscure combination
+    [viewContactInfoMenuItem_alternate setKeyEquivalent:@"i"];
+    [viewContactInfoMenuItem_alternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
+    [viewContactInfoMenuItem_alternate setAlternate:YES];
+    //Now give the italics its combination back
+    [[owner menuController] restoreItalicsKeyEquivalent];
 }
 
 - (IBAction)toolbarShowInfo:(AIMiniToolbarItem *)toolbarItem
