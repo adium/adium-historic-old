@@ -22,6 +22,9 @@
 
 @interface AISendingTextView (PRIVATE)
 - (void)dealloc;
+- (void)_sendContent;
+- (void)_historyUp;
+- (void)_historyDown;
 @end
 
 /*
@@ -49,9 +52,9 @@
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
-    historyArray = [[NSMutableArray alloc] init];
+    historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
     availableForSending = YES;
-    currentHistoryLocation = -1;
+    currentHistoryLocation = 0;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
 
@@ -61,6 +64,7 @@
     return(self);
 }
 
+//
 - (void)setOwner:(id)inOwner
 {
     if(owner != inOwner){
@@ -69,6 +73,7 @@
     }
 }
 
+//If true we will invoke selector on target when a send key is pressed
 - (void)setAvailableForSending:(BOOL)inBool
 {
     availableForSending = inBool;
@@ -77,17 +82,17 @@
     return(availableForSending);
 }
 
-
+//Configure the send keys
 - (void)setSendOnReturn:(BOOL)inBool
 {
     sendOnReturn = inBool;
 }
-
 - (void)setSendOnEnter:(BOOL)inBool
 {
     sendOnEnter = inBool;
 }
 
+//Selector and target to invoke on send
 - (void)setTarget:(id)inTarget action:(SEL)inSelector
 {
     target = inTarget;
@@ -103,7 +108,7 @@
     switch (theChar)
     {
 	case '\r':
-	    if(availableForSending) [target performSelector:selector]; //Notify the target
+	    if(availableForSending) [self _sendContent]; //Send the content
 	    result = YES;
 	    break;
 	case '\E':
@@ -112,32 +117,16 @@
 	    result = YES;
 	    break;
     }
-    if ([theEvent modifierFlags] & NSCommandKeyMask) { //command is being held
-	int historyArrayCount;
-	switch (theChar)
-	{
-	case (NSUpArrowFunctionKey): 
-	    if ((historyArrayCount = [historyArray count])) {
-		if ( currentHistoryLocation == -1) {
-		    currentHistoryLocation = (historyArrayCount - 1);
-                    [self setString:@""];
-		} else if (currentHistoryLocation >= 0 ) {
-		    currentHistoryLocation--;
-		    [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
-		    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-		}
-	    }
-	    break;
-	case (NSDownArrowFunctionKey):
-	    if ((historyArrayCount = [historyArray count])) {
-		if ( (++currentHistoryLocation) > historyArrayCount) {
-		    [self setString:@""];
-		    currentHistoryLocation = -1;
-		} else {
-		    [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
-		    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-		}
-	    }
+    if([theEvent modifierFlags] & NSCommandKeyMask) { //option is being held
+        switch(theChar){
+            case NSUpArrowFunctionKey:
+                [self _historyUp];
+                result = YES;
+            break;
+
+            case NSDownArrowFunctionKey:
+                [self _historyDown];
+                result = YES;
 	    break;
 	}
     }
@@ -165,7 +154,7 @@
         NSParameterAssert([returnArray count] != 0);
 
         if([[returnArray objectAtIndex:0] boolValue]){ //if the return should send
-            if(availableForSending) [target performSelector:selector]; //Notify the target
+            if(availableForSending) [self _sendContent]; //Send the content
             insertText = NO;
         }
 
@@ -204,14 +193,28 @@
     [super interpretKeyEvents:eventArray];
 }
 
+//Notify our target that our content should be sent
+- (void)_sendContent
+{
+    //Add to history
+    [historyArray insertObject:[[self textStorage] copy] atIndex:1];
+    if([historyArray count] > MAX_HISTORY){
+        [historyArray removeLastObject];
+    }
+    currentHistoryLocation = 0; //Move back to bottom of history
 
+    //notify target
+    [target performSelector:selector];
+}
 
-// Required protocol methods ---
+// Required protocol methods --------------------------------------------------------
+//
 - (NSAttributedString *)attributedString
 {
     return([self textStorage]);
 }
 
+//
 - (void)setAttributedString:(NSAttributedString *)inAttributedString
 {
     int		length = [inAttributedString length];
@@ -233,6 +236,7 @@
     [self textDidChange:nil];
 }
 
+//
 - (void)setTypingAttributes:(NSDictionary *)attrs
 {
     NSColor	*backgroundColor;
@@ -248,12 +252,35 @@
     }
 }
 
-- (void)addToHistory:(NSAttributedString *)inString
-{
-    [historyArray addObject:inString]; //manage size?
 
-    if ([historyArray count] > MAX_HISTORY){
-	[historyArray removeObjectAtIndex:0];
+//History --------------------------------------------------------------------
+//Move up through the history
+- (void)_historyUp
+{
+    if(currentHistoryLocation == 0){ //Store current message
+        [historyArray replaceObjectAtIndex:0 withObject:[[self textStorage] copy]];
+    }
+
+    if(currentHistoryLocation < [historyArray count]-1){
+        //Move up
+        currentHistoryLocation++;
+
+        //Display history
+        [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+    }
+}
+
+//Move down through history
+- (void)_historyDown
+{
+    if(currentHistoryLocation > 0){
+        //Move down
+        currentHistoryLocation--;
+
+        //Display history
+        [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
     }
 }
 
@@ -304,7 +331,7 @@
     //Reset cache
     _desiredSizeCached = NSMakeSize(0,0); 
 
-    //Post notification if side changed
+    //Post notification if size changed
     if(!NSEqualSizes([self desiredSize], lastPostedSize)){
         [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
         lastPostedSize = [self desiredSize];
@@ -321,6 +348,5 @@
     [returnArray release]; returnArray = nil;
     [super dealloc];
 }
-
 
 @end

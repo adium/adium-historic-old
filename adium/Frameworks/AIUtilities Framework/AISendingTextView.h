@@ -49,7 +49,6 @@
 - (BOOL)availableForSending;
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
-- (void)addToHistory:(NSAttributedString *)inString;
 - (NSSize)desiredSize;
 
 @end

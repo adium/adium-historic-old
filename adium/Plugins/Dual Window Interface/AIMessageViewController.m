@@ -199,7 +199,6 @@
         if([[owner contentController] sendContentObject:message]){
             [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
         }
-	[textView_outgoing addToHistory:outgoingAttributedString];
     }
 }
 
