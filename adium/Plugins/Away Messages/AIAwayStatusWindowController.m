@@ -24,6 +24,8 @@
 
 @interface AIAwayStatusWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (void)updateAwayTime:(id)userInfo;
+//- (NSString *)getTheTime:(time_t)secs;
 @end
 
 @implementation AIAwayStatusWindowController
@@ -95,6 +97,9 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         // Update the message text
         [[textView_awayMessage textStorage] setAttributedString:awayMessage];
         
+        //Update the time text
+        [self updateAwayTime:nil];
+        
     } else {
         // No away message, hide the window
         if([self windowShouldClose:nil]){
@@ -121,7 +126,15 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     [super initWithWindowNibName:windowNibName owner:self];
 
     owner = [inOwner retain];
-
+    
+    awayDate = [[NSDate date] retain];
+    awayTimer = [[NSTimer /*scheduledTimerWithTimeInterval:60.0
+        target:self
+        selector:@selector(updateAwayTime:)
+        userInfo:nil
+        repeats:YES]*/
+    //retain];
+    alloc] init];
     return(self);
 }
 
@@ -129,6 +142,9 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 - (void)dealloc
 {
     [owner release];
+    
+    [awayDate release];
+    [awayTimer release];
 
     [super dealloc];
 }
@@ -183,6 +199,46 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 {
     return(NO);
 }
+
+/*- (void)updateAwayTime:(id)userInfo
+{
+    NSLog(@"updating");
+    //NSTimeInterval secs = [awayDate timeIntervalSinceNow];
+    
+    /*short min = secs / 60;
+    if(min == 0) min = 1;
+    
+    short hour = min / 60;
+    
+    [textField_awayTime setStringValue:
+        [NSString stringWithFormat:@"%.1hd:%.2hd", hour, min]];*/
+        /*
+        [textField_awayTime setStringValue:
+            [NSString stringWithFormat:@"Since %@ (%@)",
+                [[NSDate date] getTimestampWithSeconds:NO] , [self getTheTime:(time_t)[awayDate timeIntervalSince1970]]]];
+}*/
+
+/*- (NSString *)getTheTime:(time_t)then
+{
+    time_t t = then;
+    time_t now = time(NULL);
+    long diff = now - t;
+            
+    if(diff < 59) //less than 1 minute
+        return @"Less than a minute";
+    else if(diff < 3599) //less than 1 hour
+        return [NSString stringWithFormat:
+            ((int)diff/60 == 1 ? @"%d minute" : @"%d minutes"), (int)diff/60];
+    else
+    {
+        if((long)diff % 3600 < 59) // no minutes
+            return [NSString stringWithFormat:
+                ((int)diff/3600 == 1 ? @"%d hours" : @"%d hours"), (int)diff/3600];
+        else // there are minutes
+                return [NSString stringWithFormat:
+                @"%d:%d hours", (int)diff/3600, (int)((int)diff % 3600)/60];
+    }
+}*/
 
 @end
 

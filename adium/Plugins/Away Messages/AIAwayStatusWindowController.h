@@ -23,6 +23,9 @@
     IBOutlet NSButton 		*button_comeBack;
     IBOutlet NSTextView 	*textView_awayMessage;
     IBOutlet NSTextField	*textField_awayTime;
+    
+    NSDate	*awayDate;
+    NSTimer	*awayTimer;
 }
 
 + (AIAwayStatusWindowController *)awayStatusWindowControllerForOwner:(id)inOwner;
