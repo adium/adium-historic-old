@@ -4,10 +4,14 @@
  * 
  * Written by Stephen Holt for Adium, released under the GPL
  *
- * Optoins used:	noyywrap    : act as if yywrap always returns 1
- *			8bit        : always force 8-bit chars.
- *			caseless    : case insensitive lexer
- *			prefix=...  : replace YY_whatever with prefix - avoids symbol collisions
+ * Optoins used:	noyywrap	: act as if yywrap always returns 1
+ *			8bit		: always force 8-bit chars.
+ *			caseless	: case insensitive lexer
+ *			prefix=...	: replace YY_whatever with prefix - avoids symbol collisions
+ *			debug		: turns on debugging output (string + accepting rule)
+ *					  -- only use while editing rules, and don't commit with this on
+ *					     (it generates a lot of unnecessary output and kills any
+ *					      performace gains we might get.)
  */
 #define YY_NO_UNPUT
 #include "SHLinkLexer.h"
@@ -21,8 +25,9 @@ uTLD		(aero|coop|museum)
 domains		({ccTLD}|{sTLD}|{uTLD}|arpa)
 urlSpecifier	[^\/]+((.*:)?.*@)?(.*\/)*\.{domains}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
-jabberSpec      "xmpp:".*@.+\.{domains}(\/.*)?
-aolIMSpec       "aim:goim?screenname="[^\s&]+("&message=".+)?
+jabberSpec      xmpp:.*@.+\.{domains}(\/.*)?
+aolIMSpec       aim:goim\?screenname=[^\s&]+(&message=.+)?
+yahooIMSpec	ymsgr:sendim\?.+
 
 
 %option noyywrap 8bit caseless prefix="SHLinkLexer"
@@ -39,21 +44,22 @@ https?:\/\/	|
 ftp:\/\/	|
 ssh:\/\/        |
 telnet:\/\/	|
-rts:\/\/        |
+rts?p:\/\/	|
 irc:\/\/	|
 nntp:\/\/       |
-rstp:\/\/	|
+cifs:\/\/	|
+smb:\/\/	|
 itms:\/\/	|
 gopher:\/\/		    {BEGIN CANONICAL;}
 
 mailto:{mailSpecifier}      {return SH_MAILTO_VALID;}
-
-
 {mailSpecifier}		    {return SH_MAILTO_DEGENERATE;}	
+
 {urlSpecifier}		    {return SH_URL_DEGENERATE;}
 
 {jabberSpec}		    {return SH_URL_VALID;}
 {aolIMSpec}		    {return SH_URL_VALID;}
+{yahooIMSpec}		    {return SH_URL_VALID;}
 
 .			    {return SH_URL_INVALID;}
 %%
