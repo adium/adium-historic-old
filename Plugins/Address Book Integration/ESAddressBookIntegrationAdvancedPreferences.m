@@ -11,7 +11,7 @@
 #define ADDRESS_BOOK_FIRST_LAST_OPTION			AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg")
 #define ADDRESS_BOOK_FIRST_OPTION				AILocalizedString(@"First","Name display style, e.g. Evan")
 #define ADDRESS_BOOK_LAST_FIRST_OPTION			AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg, Evan")
-#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION	AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg Evan")
+#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION	AILocalizedString(@"Last First","Name display style, e.g. Schoenberg Evan")
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
