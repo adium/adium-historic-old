@@ -20,6 +20,7 @@
 
 #define PREFERENCE_WINDOW_NIB		@"PreferenceWindow"	//Filename of the preference window nib
 #define TOOLBAR_PREFERENCE_WINDOW	@"PreferenceWindow"	//Identifier for the preference toolbar
+#define	KEY_PREFERENCE_WINDOW_FRAME	@"Preference Window Frame"
 
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
@@ -95,9 +96,18 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+    NSString	*savedFrame;
     NSArray	*categoryArray;
 
-    [[self window] center];
+    //Restore the window position
+    savedFrame = [[owner preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }else{
+        [[self window] center];
+    }
+    
+    //
     [self installToolbar];
  
     //select the default category
@@ -116,8 +126,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    //save the preferences
-    
+    //Save the window position
+    [owner setPreference:[[self window] stringWithSavedFrame]
+                  forKey:KEY_PREFERENCE_WINDOW_FRAME
+                   group:PREF_GROUP_WINDOW_POSITIONS];
+
     //autorelease the shared instance
     [sharedInstance autorelease]; sharedInstance = nil;
 

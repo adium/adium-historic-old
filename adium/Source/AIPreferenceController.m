@@ -174,7 +174,6 @@
     [prefDict writeToPath:path withName:groupName];    
 }
 
-
 //Internal ----------------------------------------------------------------------
 //Load a preference group
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName

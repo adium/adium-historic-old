@@ -36,7 +36,6 @@
     NSScrollView			*scrollView_messages;
     NSView				*view_messages;
     AIMiniToolbar			*toolbar_bottom;
-    AISendingTextView			*textView_messageEntry;
 
     //Variables
     AIAdium			*owner;

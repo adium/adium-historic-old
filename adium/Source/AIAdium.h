@@ -62,7 +62,8 @@ typedef enum {
 //Preference groups
 #define PREF_GROUP_GENERAL 		@"General"
 #define PREF_GROUP_ACCOUNTS	 	@"Accounts"
-#define PREF_GROUP_TOOLBARS 	@"Toolbars"
+#define PREF_GROUP_TOOLBARS 		@"Toolbars"
+#define PREF_GROUP_WINDOW_POSITIONS 	@"Window Positions"
 
 
 

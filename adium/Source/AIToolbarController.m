@@ -37,7 +37,7 @@
     enumerator = [[toolbarDict allKeys] objectEnumerator];
     while((key = [enumerator nextObject])){
         if([key hasPrefix:TOOLBAR_ITEMS_PREFIX]){
-            NSString	*identifier = [key substringFromIndex:[TOOLBAR_ITEMS_PREFIX length]];
+            NSString	*identifier = [key substringFromIndex:[(NSString *)TOOLBAR_ITEMS_PREFIX length]];
             NSArray	*items = [toolbarDict objectForKey:key];
 
             [[AIMiniToolbarCenter defaultCenter] setItems:items forToolbar:identifier];        
