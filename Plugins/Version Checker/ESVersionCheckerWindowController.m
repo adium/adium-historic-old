@@ -81,14 +81,20 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 
 	//Set our panel to display the build date and age of the running copy
 	if(currentDate && newestDate){
-		NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" 
-																 allowNaturalLanguage:NO] autorelease];
-		NSString   		*newestDateString = [dateFormatter stringForObjectValue:newestDate];
+		NSDateFormatter *dateFormatter;
+		NSString   		*newestDateString;
+		NSString		*interval;
+		
+		dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" 
+											   allowNaturalLanguage:NO];
+		newestDateString = [dateFormatter stringForObjectValue:newestDate];
 		
 		//Time since last update (contains a trailing space)
-		NSString *interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:newestDate
-																				  andDate:currentDate];
+		interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:newestDate
+																		andDate:currentDate];
 		[textField_updateAvailable setStringValue:[NSString stringWithFormat:UPDATE_PROMPT, newestDateString, interval]];
+		
+		[dateFormatter release];
 	}
 	
 	[self showWindow:nil];
