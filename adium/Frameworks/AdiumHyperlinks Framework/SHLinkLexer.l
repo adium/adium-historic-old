@@ -62,6 +62,7 @@ nntp:\/\/       |
 cifs:\/\/	|
 smb:\/\/	|
 itms:\/\/	|
+see:\/\/        |
 afp:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
