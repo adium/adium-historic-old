@@ -135,8 +135,10 @@ recServe:(NSString *)r_service
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSLog(@"%s / %s", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res));
-        NSLog(@"Insert failed");
-        PQclear(res);
+        [[owner interfaceController] handleErrorMessage:@"Insertion failed." withDescription:@"Database Insert Failed"];
+        if (res != nil) {
+            PQclear(res);
+        }
     }
 
     PQclear(res);
