@@ -63,23 +63,23 @@
 
 - (void)beginGrowling
 {
-	[GrowlAppBridge setGrowlDelegate:self];
+	[GrowlApplicationBridge setGrowlDelegate:self];
 
 	//Install our contact alert
 	[[adium contactAlertsController] registerActionID:GROWL_EVENT_ALERT_IDENTIFIER withHandler:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];	
 	
 #ifdef GROWL_DEBUG
-	[GrowlAppBridge notifyWithTitle:@"We have found a witch."
-						description:@"May we burn her?"
-				   notificationName:CONTENT_MESSAGE_RECEIVED
-						   iconData:nil
-						   priority:0
-						   isSticky:YES
-					   clickContext:[NSDictionary dictionaryWithObjectsAndKeys:
-						   @"AIM.tekjew", @"internalObjectID",
-						   CONTENT_MESSAGE_RECEIVED, @"eventID",
-						   nil]];
+	[GrowlApplicationBridge notifyWithTitle:@"We have found a witch."
+								description:@"May we burn her?"
+						   notificationName:CONTENT_MESSAGE_RECEIVED
+								   iconData:nil
+								   priority:0
+								   isSticky:YES
+							   clickContext:[NSDictionary dictionaryWithObjectsAndKeys:
+								   @"AIM.tekjew", @"internalObjectID",
+								   CONTENT_MESSAGE_RECEIVED, @"eventID",
+								   nil]];
 #endif
 }
 
@@ -167,13 +167,13 @@
 																			   userInfo:userInfo
 																		 includeSubject:NO];
 
-	[GrowlAppBridge notifyWithTitle:title
-						description:description
-				   notificationName:eventID /* Use the same ID as Adium uses to keep things simple */
-						   iconData:iconData
-						   priority:0
-						   isSticky:NO
-					   clickContext:clickContext];
+	[GrowlApplicationBridge notifyWithTitle:title
+								description:description
+						   notificationName:eventID /* Use the same ID as Adium uses to keep things simple */
+								   iconData:iconData
+								   priority:0
+								   isSticky:NO
+							   clickContext:clickContext];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
