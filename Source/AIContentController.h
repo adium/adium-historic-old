@@ -78,7 +78,7 @@ typedef enum {
 @end
 
 @interface AIContentController : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
 	
 //    NSMutableArray			*outgoingContentFilterArray;
 //    NSMutableArray			*incomingContentFilterArray;
