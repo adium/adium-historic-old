@@ -24,10 +24,6 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>
 
-@interface AIAutoReplyPlugin (PRIVATE)
-- (void)activeStatusStateChanged:(NSNotification *)notification;
-@end
-
 /*!
  * @class AIAutoReplyPlugin
  * @brief Provides AutoReply functionality for the state system
@@ -51,11 +47,6 @@
 	//Init
 	receivedAutoReply = nil;
 	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(activeStatusStateChanged:)
-									   name:AIActiveStatusStateChangedNotification
-									 object:nil];
-
 	//Add observers
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(didReceiveContent:) 
@@ -79,18 +70,24 @@
 	[super dealloc];
 }
 
-/*!
- * @brief Update monitoring in response to a status change
+/*
+ * @brief Account status changed.
  *
  * Update our chat monitoring in response to account status changes.  
  *
  * TODO: If there are no accounts with an auto-reply flag set we SHOULD stop monitoring messages for optimal performance.
  */
-- (void)activeStatusStateChanged:(NSNotification *)notification
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	//Reset our list of contacts who have already received an auto-reply
-	[receivedAutoReply release];
-	receivedAutoReply = [[NSMutableArray alloc] init];
+	if([inObject isKindOfClass:[AIAccount class]] &&
+	   [inModifiedKeys containsObject:@"StatusState"]){
+			
+		//Reset our list of contacts who have already received an auto-reply
+		[receivedAutoReply release];
+		receivedAutoReply = [[NSMutableArray alloc] init];		
+	}
+    
+    return(nil);
 }
 
 /*!
