@@ -59,6 +59,7 @@
 - (void)_configureAutoResizing;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
+- (void)contactListChanged:(NSNotification *)notification;
 @end
 
 @implementation AIListWindowController
