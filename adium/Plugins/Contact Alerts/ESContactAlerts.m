@@ -102,29 +102,30 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 {
     if (object) //nil objects can't be loaded, clearly
     {
-        NSMutableArray * newActionArray =  nil;
-        NSString * UID = [object UID];
+        NSMutableArray  *newActionArray =  nil;
+        NSString        *UID = [object UID];
         
-        if (useCache)
+        //Load our cached array if available
+        if(useCache){
             newActionArray = [cachedAlertsDict objectForKey:UID];
-        
-        if (!newActionArray) //not cached yet or not using cache
-        {
-            newActionArray = [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
-            if (newActionArray)
-                [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
-            else
-                [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
         }
-        
-        if (!newActionArray)
-            newActionArray = [[NSMutableArray alloc] init];
-        
-        if ([[object UID] compare:[activeContactObject UID]] == 0) //this is our currently active contact
-        {
-            [eventActionArray release];
-            eventActionArray = newActionArray;
-            [eventActionArray retain];
+      
+        //If no cache is available (or we're not using the cache), load the array
+        if(!newActionArray){
+            newActionArray = [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:object]; //load from prefs
+            
+            //Update the cache
+            if(newActionArray){
+                [cachedAlertsDict setObject:newActionArray forKey:UID]; //cache it
+            }else{
+                [cachedAlertsDict removeObjectForKey:UID]; //pref is now clear - remove from our cache
+                newActionArray = [NSMutableArray array]; //Create a new, empty action array
+            }
+        }
+
+	//If this is our currently active contact
+        if([[object UID] compare:[activeContactObject UID]] == 0) {
+            [eventActionArray release]; eventActionArray = [newActionArray retain];
         }
     }
 }
