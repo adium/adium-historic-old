@@ -136,8 +136,6 @@
 //Preserve selection and group expansion through a reload
 - (void)reloadData
 {
-//	NSArray		*selectedItems;
-	
 	/* This code is to correct what I consider a bug with NSOutlineView.
 	Basically, if reloadData is called from 'outlineView:setObjectValue:forTableColumn:byItem:' while the last
 	row is edited in a way that will reduce the # of rows in the table view, things will crash within system code.
@@ -153,8 +151,6 @@
 		
     }else{
         needsReload = NO;
-#warning I think selected items needs to be monitored at the time selections are made and removed... this crashes.
-//		selectedItems = [self arrayOfSelectedItems];
 		[super reloadData];
 	
 		//After reloading data, we correctly expand/collapse all groups
@@ -179,9 +175,6 @@
 				}
 			}
 		}
-		
-		//Restore (if possible) the previously selected objects
-//		[self selectItemsInArray:selectedItems];
 	}
 }
 
