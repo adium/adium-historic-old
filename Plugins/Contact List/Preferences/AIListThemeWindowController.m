@@ -163,6 +163,7 @@
 	[colorWell_groupBackground setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]];
 	[colorWell_groupBackgroundGradient setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 	[colorWell_groupShadow setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
+	[checkBox_groupGradient setState:[[preferenceDict objectForKey:KEY_LIST_THEME_GROUP_GRADIENT] boolValue]];
 		
 	//
     [colorWell_statusText setColor:[[preferenceDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
@@ -416,6 +417,11 @@
                                              forKey:KEY_LIST_THEME_FADE_OFFLINE_IMAGES
                                               group:PREF_GROUP_LIST_THEME];
 		[preview_groupInverted setNeedsDisplay:YES];
+		
+    }else if(sender == checkBox_groupGradient){
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_LIST_THEME_GROUP_GRADIENT
+                                              group:PREF_GROUP_LIST_THEME];
 		
 	}
 

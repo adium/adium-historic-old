@@ -70,6 +70,7 @@
 	IBOutlet	NSColorWell				*colorWell_statusText;
 	IBOutlet	NSButton				*checkBox_fadeOfflineImages;
 
+	IBOutlet	NSButton				*checkBox_groupGradient;
 	IBOutlet	NSColorWell				*colorWell_groupText;
 	IBOutlet	NSColorWell				*colorWell_groupTextInverted;
 	IBOutlet	NSColorWell				*colorWell_groupShadow;
