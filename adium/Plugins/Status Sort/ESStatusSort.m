@@ -127,6 +127,16 @@ static BOOL	resolveAlphabetically;
 int statusSort(id objectA, id objectB, BOOL groups)
 {
 	if(!groups){
+		
+		//Always sort offline contacts to the bottom
+		BOOL onlineA = ([objectA integerStatusObjectForKey:@"Online"]);
+		BOOL onlineB = ([objectB integerStatusObjectForKey:@"Online"]);
+		if (!onlineB && onlineA){
+			return NSOrderedAscending;
+		}else if (!onlineA && onlineB){
+			return NSOrderedDescending;
+		}
+		
 		//Get the idle times now rather than potentially doing it twice below
 		double idleA = ([objectA doubleStatusObjectForKey:@"Idle"]);
 		double idleB = ([objectB doubleStatusObjectForKey:@"Idle"]);
