@@ -33,9 +33,9 @@
 	appear on the list twice until Adium is restarted.
 
 - Auto-reconnect too aggressive
-    If an AIM account fails to connect due to signing on and off too quickly, Adium
-    will continue to try and reconnect, displaying the error message over and over
-    and trying its best to get that name blocked for as long as possible.
+	If an AIM account fails to connect due to signing on and off too quickly, Adium
+	will continue to try and reconnect, displaying the error message over and over
+	and trying its best to get that name blocked for as long as possible.
     
 
 //------------------------------------------------------------------------------------
@@ -56,7 +56,7 @@
 	of the protocol ;)
 	
 - [ALL] File transfer limitations
-    File transfers often fails to navigate firewalls and routers
+	File transfers often fails to navigate firewalls and routers
 
 
 //------------------------------------------------------------------------------------
@@ -73,9 +73,9 @@
 	The included style with problems is Smooth Operator 
 
 - Bottom alignment issues
-    The simple message style has a bottom alignment issue.  Send a few messages, but
-    not enough to make the scrollbar visible, then type a two line message into the
-    entry field.  The message view will incorrectly render extra bottom margin.
+	The simple message style has a bottom alignment issue.  Send a few messages, but
+	not enough to make the scrollbar visible, then type a two line message into the
+	entry field.  The message view will incorrectly render extra bottom margin.
 
 
 //------------------------------------------------------------------------------------
@@ -88,25 +88,31 @@
 	Happens with both loggers.  Waiting on full multi-chat support.
 
 - Interface feedback must be on for sounds
-    If you uncheck the "play user interface feedback sounds" in System preferences,
-    and disable the "Use Custom Volume" checkbox in Adium, no sounds are played.
-    Waiting for core-audio sound rewrite.
+	If you uncheck the "play user interface feedback sounds" in System preferences,
+	and disable the "Use Custom Volume" checkbox in Adium, no sounds are played.
+	Waiting for core-audio sound rewrite.
 
 
 //------------------------------------------------------------------------------------
 // Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
 - User icons are still getting flipped (Icons from AIM, apparently)
-- We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
-- If one tries to change one's idle time to a lower amount, (for example, from 2:32 to :36), an update will not occur, and your idle time will stay at 2:32.
+- We have issues with preventing the user from sending messages when they might
+	actually be able to send (invisible AIM users, after we get disconnected?)
+- If one tries to change one's idle time to a lower amount, (for example, from 2:32
+	to :36), an update will not occur, and your idle time will stay at 2:32.
 - Unicode (German) messages not working over ICQ ?
-- away messages aren't going away (if we disconnect, then they come back, then we re-connect?)
+- away messages aren't going away (if we disconnect, then they come back, then we
+	re-connect?)
 - Yahoo ignore list is being ignored?
 - Apple scripts can stall Adium when iTunes 4.5's Print dialogue is open
-- Changing timezone doesn't update time stamps immediately (I'm not surprised, but this would be cool)
-- Messages with invalid looking HTML <tags> received via jabber (from ICQ user over transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
-- We aren't fetching the display names of ICQ users, some icq users, when over AIM? (They still show up in the info, apparently)
+- Changing timezone doesn't update time stamps immediately (I'm not surprised, but
+	this would be cool)
+- Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
+	transport), the invalid tags are being eaten? (Our HTML decoder isn't eating them, is libgaim?) 
+- We aren't fetching the display names of ICQ users, some icq users, when over AIM?
+	(They still show up in the info, apparently)
 - Dragging buddies on MSN account not working
 - AIM Passwords with question marks in them prevent libgaim from connecting?
-- Out of curiosity - is there a reason we use .adiumEmoticonset instead of .adiumEmoticonSet (call me a capitalization nut :)? 
-
+- Out of curiosity - is there a reason we use .adiumEmoticonset instead of
+	.adiumEmoticonSet (call me a capitalization nut :)? 
