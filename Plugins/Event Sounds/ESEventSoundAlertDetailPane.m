@@ -29,23 +29,27 @@
 - (void)addSound:(NSString *)soundPath toMenu:(NSMenu *)soundMenu;
 @end
 
+/*
+ * @class ESEventSoundAlertDetailPane
+ * @brief Details pane for the Play Sound action
 @implementation ESEventSoundAlertDetailPane
 
-//Pane Details
-- (NSString *)label{
-	return(@"");
-}
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"EventSoundContactAlert");    
 }
 
-//Configure the detail view
+/*
+ * @brief Configure the detail view
+ */
 - (void)viewDidLoad
 {
 	[label_sound setLocalizedString:AILocalizedString(@"Sound:",nil)];
 
-	//Loading and using the real file icons is slow, and all the sound files should have the same icons anyway.  So
-	//we can cheat and load a sound icon from our bundle here (for all the menu items) for a nice speed boost.
+	/* Loading and using the real file icons is slow, and all the sound files should have the same icons anyway.  So
+	 * we can cheat and load a sound icon from our bundle here (for all the menu items) for a nice speed boost. */
 	if(!soundFileIcon) soundFileIcon = [[NSImage imageNamed:@"SoundFileIcon" forClass:[self class]] retain];
 	
 	//Prepare our sound menu
@@ -54,13 +58,18 @@
 	[super viewDidLoad];
 }
 
+/*
+ * @brief View will close
+ */
 - (void)viewWillClose
 {
 	[soundFileIcon release]; soundFileIcon = nil;
 	[super viewWillClose];
 }
 
-//Configure for the action
+/*
+ * @brief Configure for the action
+ */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	//If the user has a custom sound selected, we need to create an entry in the menu for it
@@ -76,7 +85,9 @@
 	}
 }
 
-//Return our current configuration
+/*
+ * @brief Return our current configuration
+ */
 - (NSDictionary *)actionDetails
 {
 	NSString	*soundPath = [[popUp_actionDetails selectedItem] representedObject];
@@ -91,7 +102,11 @@
 
 //Sound Menu -----------------------------------------------------------------------------------------------------------
 #pragma mark Sound Menu
-//Builds and returns a sound list menu
+/*
+ * @brief Builds and returns a sound list menu
+ *
+ * The menu is organized by sound set.
+ */
 - (NSMenu *)soundListMenu
 {
 	NSMenu			*soundMenu = [[NSMenu alloc] init];
@@ -137,7 +152,9 @@
     return([soundMenu autorelease]);
 }
 
-//Add a sound menu item
+/*
+ * @brief Add a sound menu item to a menu
+ */
 - (void)addSound:(NSString *)soundPath toMenu:(NSMenu *)soundMenu
 {
 	NSString	*soundTitle = [[soundPath lastPathComponent] stringByDeletingPathExtension];
@@ -151,7 +168,11 @@
 	[soundMenu addItem:menuItem];
 }
 
-//Select a sound from one of the sound popUp menus
+/*
+ * @brief A sound was selected from a sound popUp menu
+ *
+ * Update our header and play the sound.  If "Other..." is selected, allow selection of a file.
+ */
 - (IBAction)selectSound:(id)sender
 {
     NSString	*soundPath = [sender representedObject];
@@ -175,7 +196,11 @@
     }
 }
 
-//Finish up the Other... panel
+/*
+ * @brief Finish up the Other... panel
+ *
+ * Play the selected sound and update the menu.
+ */
 - (void)concludeOtherPanel:(NSOpenPanel *)panel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     if(returnCode == NSOKButton){
