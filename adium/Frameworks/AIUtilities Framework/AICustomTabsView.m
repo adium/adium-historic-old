@@ -23,6 +23,7 @@
 - (void)awakeFromNib;
 - (id)initWithFrame:(NSRect)frameRect;
 - (void)rebuildViews;
+- (void)reorderViews;
 - (void)smoothlyArrangeViews;
 - (BOOL)arrangeViewsAbsolute:(BOOL)absolute;
 - (void)drawRect:(NSRect)rect;
@@ -41,7 +42,7 @@
 @end
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
-#define CUSTOM_TABS_OVERLAP	6		//Overlapped pixels between tabs
+#define CUSTOM_TABS_OVERLAP	7		//Overlapped pixels between tabs
 
 @implementation AICustomTabsView
 
@@ -114,6 +115,25 @@
     [self moveActiveTabToFront];
 }
 
+//Correctly sets the layering of all tabs.  Left to right, with selected tab in front.
+- (void)reorderViews
+{
+    NSEnumerator	*enumerator;
+    AICustomTab		*tab;
+
+    //Remove all tab views
+    [self removeAllSubviews];
+
+    //Add tabs right to left, so left is above right
+    enumerator = [tabArray reverseObjectEnumerator];
+    while((tab = [enumerator nextObject])){
+        [self addSubview:tab];
+    }
+
+    //Move the selected tab back front
+    [self moveActiveTabToFront];
+}
+
 //Starts a smooth animation to put the views in their correct places
 - (void)smoothlyArrangeViews
 {
@@ -172,7 +192,7 @@
         
         xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
-    
+
     [self setNeedsDisplay:YES];
     return(finished);    
 }
@@ -203,8 +223,9 @@
 - (void)tabView:(NSTabView *)inTabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
     //Set the tab view as selected
-    [self moveActiveTabToFront];
-
+//    [self moveActiveTabToFront];
+    [self reorderViews];
+    
     //Notify
     [[NSNotificationCenter defaultCenter] postNotificationName:AITabView_DidChangeSelectedItem
                                                         object:tabView
@@ -341,6 +362,9 @@
     }
 
     [tabView selectTabViewItem:selectedItem];
+
+    //Correctly order the views
+    [self reorderViews];
 
     //Notify 
     if(tabsChanged){      

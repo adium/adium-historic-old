@@ -25,8 +25,8 @@
     [super initWithUID:inUID];
 
     objectArray = [[NSMutableArray alloc] init];
-    sortedObjectArray = [[NSMutableArray alloc] init];
-    sortedCount = 0;
+//    sortedObjectArray = [[NSMutableArray alloc] init];
+    visibleCount = 0;
     expanded = NO;
     
     return(self);
@@ -36,6 +36,7 @@
 {
     return(UID);
 }
+
 
 //Contained Objects
 //Returns the specified object
@@ -64,9 +65,21 @@
 }
 
 
+//Returns the number of visible objects in this group
+- (unsigned)visibleCount
+{
+    return(visibleCount);
+}
+
+- (unsigned)count
+{
+    return([objectArray count]);
+}
+
+
 //Sorting
 //Returns the number of visible/sorted objects in this group
-- (unsigned)sortedCount
+/*- (unsigned)sortedCount
 {
     return(sortedCount);
 }
@@ -77,7 +90,7 @@
     NSParameterAssert(index >= 0 && index < [sortedObjectArray count]);
 
     return([sortedObjectArray objectAtIndex:index]);
-}
+}*/
 
 //Resorts the group contents
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController
@@ -98,21 +111,21 @@
 
     //Sort this group
     if(sortController){
-        [sortController sortListObjects:sortedObjectArray];
+        [sortController sortListObjects:objectArray];
     }
 
     //Count the number of visible items in this group
-    sortedCount = 0;
+    visibleCount = 0;
     enumerator = [objectArray objectEnumerator];
     while((object = [enumerator nextObject])){
         if(![[object displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
-            sortedCount++;
+            visibleCount++;
         }
     }
 
     //Set this group as visible if it contains anything visible
     visibleArray = [self displayArrayForKey:@"Hidden"];
-    [visibleArray setObject:[NSNumber numberWithInt:(sortedCount == 0)] withOwner:self];
+    [visibleArray setObject:[NSNumber numberWithInt:(visibleCount == 0)] withOwner:self];
 }
 
 
@@ -122,16 +135,16 @@
 {
     [inObject setContainingGroup:self];
     [objectArray addObject:inObject];
-    [sortedObjectArray addObject:inObject];
+//    [sortedObjectArray addObject:inObject];
 }
 
 //Add an object to this group
-- (void)insertObject:(AIListObject *)inObject atIndex:(int)index
+/*- (void)insertObject:(AIListObject *)inObject atIndex:(int)index
 {
     [inObject setContainingGroup:self];
     [objectArray insertObject:inObject atIndex:index];
-    [sortedObjectArray addObject:inObject]; //since the array is sorted, placement makes no difference
-}
+//    [sortedObjectArray addObject:inObject]; //since the array is sorted, placement makes no difference
+}*/
 
 //Replace an object in this group
 - (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject
@@ -141,8 +154,8 @@
     index = [objectArray indexOfObject:oldObject];
     [objectArray replaceObjectAtIndex:index withObject:newObject];
 
-    index = [sortedObjectArray indexOfObject:oldObject];
-    [sortedObjectArray replaceObjectAtIndex:index withObject:newObject];
+//    index = [sortedObjectArray indexOfObject:oldObject];
+//    [sortedObjectArray replaceObjectAtIndex:index withObject:newObject];
 }
 
 //Removes an object from this group
@@ -150,7 +163,7 @@
 {
     [inObject setContainingGroup:nil];
     [objectArray removeObject:inObject];
-    [sortedObjectArray removeObject:inObject];
+//    [sortedObjectArray removeObject:inObject];
 }
 
 //Returns the index of an object
@@ -173,8 +186,8 @@
         
     //Remove the objects
     [objectArray removeAllObjects];
-    [sortedObjectArray removeAllObjects];
-    sortedCount = 0;
+//    [sortedObjectArray removeAllObjects];
+    visibleCount = 0;
 }
 
 

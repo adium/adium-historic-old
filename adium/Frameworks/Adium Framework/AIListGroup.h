@@ -20,8 +20,8 @@
 
 @interface AIListGroup : AIListObject {
     NSMutableArray    	*objectArray;		//Manual ordered array of contents
-    NSMutableArray    	*sortedObjectArray;	//Dynamically sorted array of contents
-    int			sortedCount;		//The number of visible buddies in the sorted array
+//    NSMutableArray    	*sortedObjectArray;	//Dynamically sorted array of contents
+    int			visibleCount;		//The number of visible buddies in the sorted array
     BOOL		expanded;
 //    int			index;
 }
@@ -35,22 +35,24 @@
 //Contained Objects
 - (NSEnumerator *)objectEnumerator;
 - (id)objectAtIndex:(unsigned)index;
+- (unsigned)visibleCount;
+- (unsigned)count;
 
 //Expanded State
 - (void)setExpanded:(BOOL)inExpanded;
 - (BOOL)isExpanded;
 
 //Sorting
-- (unsigned)sortedCount;
-- (id)sortedObjectAtIndex:(unsigned)index;
+//- (unsigned)sortedCount;
+//- (id)sortedObjectAtIndex:(unsigned)index;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(id <AIListSortController>)sortController;
 
 //Editing
 - (void)addObject:(AIListObject *)inObject;
-- (void)insertObject:(AIListObject *)inObject atIndex:(int)index;
+//- (void)insertObject:(AIListObject *)inObject atIndex:(int)index;
 - (void)replaceObject:(AIListObject *)oldObject with:(AIListObject *)newObject;
 - (void)removeObject:(AIListObject *)inObject;
-- (int)indexOfObject:(AIListObject *)inObject;
+//- (int)indexOfObject:(AIListObject *)inObject;
 - (void)removeAllObjects;
 
 @end

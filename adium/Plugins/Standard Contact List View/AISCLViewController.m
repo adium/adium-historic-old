@@ -231,9 +231,9 @@
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
-        return([contactList sortedObjectAtIndex:index]);
+        return([contactList objectAtIndex:index]);
     }else{
-        return([item sortedObjectAtIndex:index]);
+        return([item objectAtIndex:index]);
     }
 }
 
@@ -249,9 +249,9 @@
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
     if(item == nil){
-        return([contactList sortedCount]);
+        return([contactList visibleCount]);
     }else{
-        return([item sortedCount]);
+        return([item visibleCount]);
     }
 }
 
