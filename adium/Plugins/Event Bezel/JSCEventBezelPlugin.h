@@ -29,6 +29,8 @@
 #define CONTACT_DISABLE_BEZEL               @"Disable Bezel For Contact"
 #define KEY_EVENT_BEZEL_SIZE                @"Size"
 #define KEY_EVENT_BEZEL_BACKGROUND          @"Background"
+#define KEY_EVENT_BEZEL_FADE_IN             @"Fade In"
+#define KEY_EVENT_BEZEL_FADE_OUT            @"Fade Out"
 
 #define SIZE_NORMAL                         0
 #define SIZE_SMALL                          1

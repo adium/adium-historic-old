@@ -22,6 +22,8 @@
     IBOutlet NSSlider       *slider_duration;
     IBOutlet NSPopUpButton  *popUp_size;
     IBOutlet NSPopUpButton  *popUp_background;
+    IBOutlet NSButton       *checkBox_fadeIn;
+    IBOutlet NSButton       *checkBox_fadeOut;
 }
 
 - (IBAction)toggleShowBezel:(id)sender;
@@ -39,5 +41,7 @@
 - (IBAction)changeDuration:(id)sender;
 - (IBAction)changeSize:(id)sender;
 - (IBAction)changeBackground:(id)sender;
+- (IBAction)toggleFadeIn:(id)sender;
+- (IBAction)toggleFadeOut:(id)sender;
 
 @end
