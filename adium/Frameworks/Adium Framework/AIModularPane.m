@@ -51,7 +51,7 @@
         //Load and configure our view
         [NSBundle loadNibNamed:[self nibName] owner:self];
         [self viewDidLoad];
-		if([self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
+		if(![self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
     }
     
     return(view);
