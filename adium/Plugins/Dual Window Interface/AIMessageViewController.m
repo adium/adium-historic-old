@@ -33,7 +33,6 @@
 - (void)dealloc;
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
-- (void)preferencesChanged:(NSNotification *)notification;
 - (float)textHeight;
 - (void)clearTextEntryView;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
@@ -248,8 +247,6 @@
 
     //Register for notifications
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(sizeAndArrangeSubviews) name:NSViewFrameDidChangeNotification object:view_contents];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];        
-    [self preferencesChanged:nil];
     
     return(self);
 }
@@ -351,14 +348,6 @@
             [self setAccountSelectionMenuVisible:NO];
         }
     }
-}
-
-//A preference did change
-- (void)preferencesChanged:(NSNotification *)notification
-{
-    //Configure the message sending keys
-    [textView_outgoing setSendOnEnter:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Enter"] boolValue]];
-    [textView_outgoing setSendOnReturn:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL] objectForKey:@"Send On Return"] boolValue]];
 }
 
 //The entered text has changed
