@@ -191,9 +191,9 @@
             
             imageCell = [AIFlexibleTableImageCell cellWithImage:messageImage];
             [imageCell setPaddingLeft:1 top:6 right:2 bottom:1];
-            [imageCell setDrawsFrame:YES];
             [imageCell setBackgroundColor:[NSColor whiteColor]];
-            [imageCell setFrameColor:[color darkenBy:0.2]];
+//            [imageCell setDrawsFrame:YES];
+//            [imageCell setFrameColor:[color darkenBy:0.2]];
             [imageCell setDesiredFrameSize:NSMakeSize(28.0,28.0)];
             [imageCell setRowSpan:2];
             lastMasterCell = imageCell;
