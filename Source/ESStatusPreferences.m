@@ -194,7 +194,7 @@
 			if([account statusState] == originalState){
 				[account setStatusStateAndRemainOffline:newState];
 				
-				[self notifyOfChangedStatusSilently:YES];
+				[account notifyOfChangedStatusSilently:YES];
 			}
 		}
 
