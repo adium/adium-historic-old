@@ -23,6 +23,9 @@
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+#import "AIListLayoutWindowController.h"
+#import "AIListThemeWindowController.h"
+
 
 #warning crosslink
 #import "AISCLViewPlugin.h"
@@ -147,7 +150,8 @@
  */
 - (IBAction)customizeListLayout:(id)sender
 {
-
+	[AIListLayoutWindowController listLayoutOnWindow:[[self view] window]
+											withName:[NSString stringWithFormat:@"%@ Copy",[popUp_listLayout titleOfSelectedItem]]];
 }
 
 /*!
@@ -155,7 +159,8 @@
  */
 - (IBAction)customizeListTheme:(id)sender
 {
-
+	[AIListThemeWindowController listThemeOnWindow:[[self view] window]
+										  withName:[NSString stringWithFormat:@"%@ Copy",[popUp_colorTheme titleOfSelectedItem]]];
 }
 
 
