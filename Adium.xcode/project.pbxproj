@@ -6851,7 +6851,6 @@
 				4BD6743206001D1F0049CAF7,
 				4BD6744206001D390049CAF7,
 				4BD6744406001D430049CAF7,
-				4BD6744606001D440049CAF7,
 				4BD6745706001D5E0049CAF7,
 				4BD6745D06001D730049CAF7,
 				4BD6746206001D750049CAF7,
@@ -7188,7 +7187,6 @@
 				34D8337707CBD808006466F2,
 				4BD6739A06001C400049CAF7,
 				4BD6742F06001D1D0049CAF7,
-				4BD6744806001D460049CAF7,
 				4BD6746606001D770049CAF7,
 				4BD6746F06001D810049CAF7,
 				4BD6747006001D820049CAF7,
@@ -7347,7 +7345,6 @@
 				4BD6743306001D200049CAF7,
 				4BD6744306001D390049CAF7,
 				4BD6744506001D430049CAF7,
-				4BD6744706001D450049CAF7,
 				4BD6745806001D5E0049CAF7,
 				4BD6745E06001D740049CAF7,
 				4BD6746306001D760049CAF7,
@@ -13584,9 +13581,6 @@
 			children = (
 				4B18A52B0459F8F200A8010A,
 				4B18A52C0459F8F200A8010A,
-				4B9267C304A7583D00A8010A,
-				4B9267C404A7583D00A8010A,
-				4B9267C104A7541200A8010A,
 				4BB826B504C8876C00A8010A,
 			);
 			isa = PBXGroup;
@@ -15715,32 +15709,6 @@
 			isa = PBXTargetDependency;
 			target = 346C9C4806004517000F5A8A;
 			targetProxy = 4B90B54D064220B400D23731;
-		};
-		4B9267C104A7541200A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DockStatusOverlaysPrefs.nib;
-			path = "Plugins/Contact Status Dock Overlays/DockStatusOverlaysPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9267C304A7583D00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIStatusOverlayPreferences.h;
-			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B9267C404A7583D00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIStatusOverlayPreferences.m;
-			path = "Plugins/Contact Status Dock Overlays/AIStatusOverlayPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B93587906DBC6D3007977AA = {
 			children = (
@@ -17961,24 +17929,6 @@
 		};
 		4BD6744506001D430049CAF7 = {
 			fileRef = 4B18A52C0459F8F200A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744606001D440049CAF7 = {
-			fileRef = 4B9267C304A7583D00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744706001D450049CAF7 = {
-			fileRef = 4B9267C404A7583D00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6744806001D460049CAF7 = {
-			fileRef = 4B9267C104A7541200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
