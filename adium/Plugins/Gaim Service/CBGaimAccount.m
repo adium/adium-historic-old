@@ -1569,4 +1569,17 @@ static id<GaimThread> gaimThread = nil;
 	return [super _contactWithUID:inUID];
 }
 
+- (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
+{
+	[self performSelectorOnMainThread:@selector(_contactWithUID:)
+						   withObject:inUID
+						waitUntilDone:YES];
+	
+	AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
+																		 accountID:[self uniqueObjectID]
+																			   UID:inUID];
+	
+	return contact;
+}
+
 @end

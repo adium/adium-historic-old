@@ -13,7 +13,7 @@
 
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID;
 
-- (AIListContact *)_contactWithUID:(NSString *)inUID;
+- (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)chatWithName:(NSString *)name;
 - (AIChat *)chatWithContact:(AIListContact *)contact;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
@@ -130,6 +130,7 @@
 - (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (AIListContact *)_contactWithUID:(NSString *)inUID;
+- (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)chatWithName:(NSString *)name;
 - (AIChat *)chatWithContact:(AIListContact *)contact;
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID;
