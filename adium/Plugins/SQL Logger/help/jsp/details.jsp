@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/details.jsp $-->
-<!--$Rev: 829 $ $Date: 2004/06/30 05:19:55 $ -->
+<!--$Rev: 838 $ $Date: 2004/07/20 19:50:04 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -681,7 +681,7 @@ try {
     out.print("</table>");
 %>
                 </div>
-                <div "class="boxWideBottom"></div>
+                <div class="boxWideBottom"></div>
 
                 <h1>Message Statistics</h1>
                 <div class="boxWideTop"></div>
