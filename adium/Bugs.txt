@@ -16,7 +16,7 @@
 	We should not be parsing script commands sent by other users (via profiles)
 
 - Spawning new windows unhides Adium
-	We don't want to spawn new windows while Adium is hidden.  Windows should be qued
+	We don't want to spawn new windows while Adium is hidden.  Windows should be queued
 	and shown when Adium is unhid.
 
 - Contact list view goes behind toolbar
