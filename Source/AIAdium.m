@@ -525,8 +525,12 @@ void Adium_HandleSignal(int i){
 
 - (BOOL)application:(NSApplication *)theApplication openTempFile:(NSString *)filename
 {
-	[self application:theApplication openFile:filename];
-	[[NSFileManager defaultManager] removeFileAtPath:filename];
+	BOOL success;
+	
+	success = [self application:theApplication openFile:filename];
+	[[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
+	
+	return(success);
 }
 
 - (void)openAppropriatePreferencesIfNeeded
