@@ -93,10 +93,9 @@ Type:  \copyright for distribution terms
 jmelloy=# alter user <i>username</i> set search_path=im,public;</pre></div>
 
 <p>At this point, you're ready to import your logs into the database.  Simply
-  use the parser-2.pl script, and it will import all of your adium 2.x
-  logfiles.  If you wish to use parser.pl (for 1.x logs) you will need to
-  install DBI and DBD::Pg.</p>
-<div class="tutorialcode"><pre>jmelloy $] ./parser-2.pl</pre></div>
+  use the parser.pl script, and it will import all of your adium 2.x
+  logfiles.</p>
+<div class="tutorialcode"><pre>jmelloy $] ./parser.pl</pre></div>
 <h3>Installing tsearch for fast searching</h3>
 <div class="tutorialcode"><pre>jmelloy $] cd <i>POSTGRES_SOURCE_LOCATION</i>/contrib/tsearch2
 jmelloy $] make
