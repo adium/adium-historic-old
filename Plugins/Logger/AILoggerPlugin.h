@@ -23,7 +23,7 @@
 #define KEY_LOGGER_ENABLE               @"Enable Logging"
 #define	KEY_LOGGER_HTML                 @"Enable HTML Logging"
 
-@class AILoggerPreferences, AILoggerAdvancedPreferences, AIAccount;
+@class AIAccount, AIChat, AILoggerPreferences, AILoggerAdvancedPreferences;
 
 @interface AILoggerPlugin : AIPlugin {
     AILoggerPreferences                 *preferences;

@@ -18,10 +18,12 @@
 
 @protocol AIListObjectObserver;
 
+@class AIAccount;
+
 @interface AIAccountViewController : AIObject {
-	//These are the views used in Adium's account preferences.  If views aren't provided by a custom account view
-	//nib, default views with the most common controls will be used.  There is no need to provide a custom nib
-	//if your account code only needs the default controls.  Avoid using the auxiliary tabs if possible.
+	/* These are the views used in Adium's account preferences.  If views aren't provided by a custom account view
+	 * nib, default views with the most common controls will be used.  There is no need to provide a custom nib
+	 * if your account code only needs the default controls.  Avoid using the auxiliary tabs if possible. */
     IBOutlet	NSView			*view_setup;              		//Account setup (UID, password, etc)
     IBOutlet	NSView			*view_profile;              	//Account profile (Alias, profile)
     IBOutlet	NSView			*view_options;              	//Account options (Host, port, mail, protocol, etc)

@@ -38,9 +38,10 @@ typedef enum {
 //General status types
 typedef enum {
 	AIAvailableStatusType = 0, /* Must be first in the enum */
-	AIAwayStatusType
+	AIAwayStatusType,
+	AIOfflineStatusType
 } AIStatusType;
-#define STATUS_TYPES_COUNT 2
+#define STATUS_TYPES_COUNT 3
 
 @interface AIStatus : AIObject<NSCoding> {
 	NSMutableDictionary	*statusDict;

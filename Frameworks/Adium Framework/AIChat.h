@@ -16,7 +16,7 @@
 
 #import "ESObjectWithStatus.h"
 
-@class AIAccount, AIContentObject;
+@class AIAccount, AIListObject, AIListContact, AIContentObject;
 @protocol AIContainingObject;
 
 #define Chat_WillClose							@"Chat_WillClose"

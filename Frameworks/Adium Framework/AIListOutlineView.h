@@ -18,7 +18,7 @@
 
 @protocol ContactListOutlineView;
 
-@class AIMultiCellOutlineView;
+@class AIListObject;
 
 typedef enum {
 	AINormalBackground = 0,

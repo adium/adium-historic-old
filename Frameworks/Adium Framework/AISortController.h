@@ -16,6 +16,8 @@
 
 #import "AIObject.h"
 
+@class AIListObject;
+
 typedef int(*sortfunc)(id, id, BOOL);
 
 #define PREF_GROUP_CONTACT_SORTING			@"Sorting"

@@ -16,7 +16,7 @@
 
 #import "AIWindowController.h"
 
-@class AILocalizationTextField, AILocalizationButton, DCJoinChatViewController;
+@class AILocalizationTextField, AILocalizationButton, AIListContact, DCJoinChatViewController;
 
 @interface DCJoinChatWindowController : AIWindowController {	
     IBOutlet		NSPopUpButton   *popUp_service;				//Account selector

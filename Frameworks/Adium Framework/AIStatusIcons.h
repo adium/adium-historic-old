@@ -19,6 +19,8 @@
 //Notifications
 #define AIStatusIconSetDidChangeNotification	@"AIStatusIconSetDidChangeNotification"
 
+@class AIListObject, AIChat;
+
 //Status icon type
 typedef enum {
 	AIStatusIconTab = 0,		//Tabs

@@ -16,7 +16,7 @@
 
 #import <Adium/AIPreferencePane.h>
 
-@class AIImageGridView;
+@class AIIconState, AIImageGridView;
 
 @interface AIDockIconPreferences : AIPreferencePane {
 	IBOutlet	AIImageGridView	*imageGridView_icons;

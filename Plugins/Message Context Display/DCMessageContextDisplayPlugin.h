@@ -60,6 +60,4 @@
 	DCMessageContextDisplayPreferences  *preferences;
 }
 
-- (NSDictionary *)savableContentObject:(AIContentObject *)content;
-
 @end

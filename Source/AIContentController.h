@@ -25,7 +25,7 @@
 
 @protocol AITextEntryView;
 
-@class AIChat, AIContentObject, NDRunLoopMessenger;
+@class AIAccount, AIChat, AIListContact, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
 	AIFilterContent = 0,		// Changes actual message and non-message content

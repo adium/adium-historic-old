@@ -17,7 +17,7 @@
 #import "AIWindowController.h"
 #import <AIUtilities/AISmoothTooltipTracker.h>
 
-@class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus;
+@class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus, AIListObject, AIChat;
 @protocol AIContainingObject;
 
 #define LIST_LAYOUT_FOLDER						@"Contact List"

@@ -37,7 +37,7 @@ typedef enum {
 	DCWebkitMessageView			//Preferred message view
 } DCMessageViewType;
 
-@class AIMenuController;
+@class AIMenuController , AIChat, AIListObject;
 
 //Sends Interface_ViewDesiredSizeDidChange notifications
 @protocol AIAutoSizingView 

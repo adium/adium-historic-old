@@ -16,6 +16,8 @@
 
 #import "AIModularPane.h"
 
+@class AIListObject;
+
 @interface AIActionDetailsPane : AIModularPane {
 
 }
