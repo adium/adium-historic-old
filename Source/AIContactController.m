@@ -147,7 +147,7 @@ DeclareString(UID);
 	//Observe content (for preferredContactForContentType:forListContact:)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
-                                       name:Content_DidSendContent
+                                       name:CONTENT_MESSAGE_SENT
                                      object:nil];	
 }
 
@@ -1922,7 +1922,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Watch outgoing content, remembering the user's choice of destination contact for contacts within metaContacts
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIChat			*chat = [notification object];
+    AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
     AIListContact	*destContact = [chat listObject];
     AIListObject	*metaContact;
 	

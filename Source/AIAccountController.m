@@ -89,7 +89,7 @@
     //Observe content (for accountForSendingContentToContact)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
-                                       name:Content_DidSendContent
+                                       name:CONTENT_MESSAGE_SENT
                                      object:nil];
 	
 	//First launch, open the account prefs
@@ -923,11 +923,12 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIChat			*chat = [notification object];
+	NSDictionary	*userInfo = [notification userInfo];
+    AIChat			*chat = [userInfo objectForKey:@"AIChat"];
     AIListObject	*destObject = [chat listObject];
     
     if(chat && destObject){
-        AIContentObject *contentObject = [[notification userInfo] objectForKey:@"Object"];
+        AIContentObject *contentObject = [userInfo objectForKey:@"AIContentObject"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
         [destObject setPreference:[NSNumber numberWithInt:[sourceAccount accountNumber]]
