@@ -243,19 +243,19 @@
 //    }
 //}
 
-//URLEncode
+//stringByEncodingURLEscapes
 // Percent escape all characters except for a-z, A-Z, 0-9, '_', and '-'
 // Convert spaces to '+'
 - (NSString *)stringByEncodingURLEscapes
 {
-    int			sourceLength = [self length];
+    int				sourceLength = [self length];
     const char		*cSource = [self cString];
-    char		*cDest;
+    char			*cDest;
     NSMutableData	*destData;
-    int			s = 0;
-    int			d = 0;
+    int				s = 0;
+    int				d = 0;
 	
-    //Worst case scenario is 3 times the origional length (every character escaped)
+    //Worst case scenario is 3 times the original length (every character escaped)
     destData = [NSMutableData dataWithLength:(sourceLength * 3)];
     cDest = [destData mutableBytes];
     
@@ -286,20 +286,20 @@
     return([NSString stringWithCString:cDest length:d]);
 }
 
-//URLEncode
-// Percent escape all characters except for a-z, A-Z, 0-9, '_', and '-'
-// Convert spaces to '+'
+//stringByDecodingURLEscapes
+// Remove percent escapes for all characters except for a-z, A-Z, 0-9, '_', and '-', converting to original character
+// Convert '+' back to a space
 - (NSString *)stringByDecodingURLEscapes
 {
-    int			sourceLength = [self length];
+    int				sourceLength = [self length];
     const char		*cSource = [self cString];
-    char		*cDest;
+    char			*cDest;
     NSMutableData	*destData;
-    int			s = 0;
-    int			d = 0;
+    int				s = 0;
+    int				d = 0;
 	
-    //Worst case scenario is 3 times the origional length (every character escaped)
-    destData = [NSMutableData dataWithLength:(sourceLength * 3)];
+    //Best case scenario is 1/3 the original length (every character escaped); worst should be the same length
+    destData = [NSMutableData dataWithLength:sourceLength];
     cDest = [destData mutableBytes];
     
     while(s < sourceLength){
