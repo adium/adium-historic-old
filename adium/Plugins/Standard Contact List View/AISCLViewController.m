@@ -137,7 +137,6 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
-
 	//Redisplay and resize
 	if(!object || object == contactList){
 		[contactList release]; contactList = [[[adium contactController] contactList] retain];
@@ -167,8 +166,10 @@
 {
 	id		object = [notification object];
 	
-	if(!object || object == contactList){
+	if(!object){
 		[contactListView reloadData];
+	}else if (object == contactList){
+		[contactListView _performFullRecalculation];
 	}else{
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
