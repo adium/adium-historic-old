@@ -789,45 +789,55 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
-	
-	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
-	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
-	//being sent and more information - but we'll do it here as well just to be safe.
-
+	AIListContact	*targetContact = inContact;
+		
+	/*
+	 If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
+	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
+	 being sent and more information - but we'll do it here as well just to be safe.
+	 */
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
-		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-															   forListContact:inContact];
+		targetContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+																   forListContact:inContact];
+		
+		/*
+		 If we have no accounts online, preferredContactForContentType:forListContact will return nil.
+		 We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
+		 preferredContact from the metaContact.
+		 */
+		if (!targetContact){
+			targetContact = [(AIMetaContact *)inContact preferredContact];
+		}
 	}
 	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
-		if([[chat uniqueChatID] isEqualToString:[inContact internalObjectID]]) {
-			if(!([chat listObject] == inContact)){
-				[self switchChat:chat toAccount:[inContact account]];
+		if([[chat uniqueChatID] isEqualToString:[targetContact internalObjectID]]) {
+			if(!([chat listObject] == targetContact)){
+				[self switchChat:chat toAccount:[targetContact account]];
 			}
 			
 			break;
 		}
 		
 		//If this object is within a meta contact, and a chat for an object in that meta contact already exists
-		if([[inContact containingObject] isKindOfClass:[AIMetaContact class]] && 
-		   [[chat listObject] containingObject] == [inContact containingObject]){
+		if([[targetContact containingObject] isKindOfClass:[AIMetaContact class]] && 
+		   [[chat listObject] containingObject] == [targetContact containingObject]){
 
 			//Switch the chat to be on this contact (and its account) now
-			[self switchChat:chat toListContact:inContact usingContactAccount:YES];
+			[self switchChat:chat toListContact:targetContact usingContactAccount:YES];
 			
 			break;
 		}
 		 
 	}
+
 	if(!chat){
-		AIAccount *account = [inContact account];
-	
 		//Create a new chat
-		chat = [AIChat chatForAccount:account];
-		[chat addParticipatingListObject:inContact];
+		chat = [AIChat chatForAccount:[targetContact account]];
+		[chat addParticipatingListObject:targetContact];
 		[chatArray addObject:chat];
 		
 		//Inform the account of its creation and post a notification if successful
@@ -837,8 +847,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 			[chatArray removeObject:chat];
 			chat = nil;
 		}
-		
-		
 	}
 	
 	return(chat);
@@ -848,23 +856,35 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
+	AIListContact	*targetContact = inContact;
 	
-	//If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
-	//It's a good idea for the caller to pick the preferred contact for us, since they know the content type
-	//being sent and more information - but we'll do it here as well just to be safe.
+	/*
+	 If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
+	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
+	 being sent and more information - but we'll do it here as well just to be safe.
+	 */
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
-		inContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+		targetContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];
+		
+		/*
+		 If we have no accounts online, preferredContactForContentType:forListContact will return nil.
+		 We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
+		 preferredContact from the metaContact.
+		 */
+		if (!targetContact){
+			targetContact = [(AIMetaContact *)inContact preferredContact];
+		}
 	}
 	
 	//Search for an existing chat
 	enumerator = [chatArray objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
-		if([chat listObject] == inContact) break;
+		if([chat listObject] == targetContact) break;
 	}
 	
-	return chat;
+	return(chat);
 }
 
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
