@@ -141,6 +141,7 @@
     AIContactObject	*selectedObject;
 
     selectedObject = [sender itemAtRow:[sender selectedRow]];
+
     if([selectedObject isKindOfClass:[AIContactGroup class]]){
         //Expand or collapse the group
         if([sender isItemExpanded:selectedObject]){
