@@ -13612,6 +13612,7 @@
 				9C8C7FA603CBA21B00267226,
 				4BD68229045B010D00A8010A,
 				4B54D1040502865F00A8010A,
+				BF01F838055980A400000202,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13622,6 +13623,7 @@
 				4B3DB8FE04547A8D00A8010A,
 				4B54D10705028BC400A8010A,
 				4B54D10905028DAE00A8010A,
+				BF01F839055980A400000202,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13632,6 +13634,7 @@
 				9C8C7FA703CBA21B00267226,
 				4BD6822A045B010D00A8010A,
 				4B54D1050502865F00A8010A,
+				BF01F83B055980B000000202,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13734,9 +13737,12 @@
 				4BD68228045B010D00A8010A,
 				4B54D1020502865F00A8010A,
 				4B54D1030502865F00A8010A,
+				BF01F836055980A400000202,
+				BF01F83A055980B000000202,
 				4B3DB8FD04547A8D00A8010A,
 				4B54D10605028BC400A8010A,
 				4B54D10805028DAE00A8010A,
+				BF01F837055980A400000202,
 			);
 			isa = PBXGroup;
 			name = Logger;
@@ -15289,6 +15295,44 @@
 //BF2
 //BF3
 //BF4
+		BF01F836055980A400000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILoggerAdvancedPreferences.h;
+			path = Plugins/Logger/AILoggerAdvancedPreferences.h;
+			refType = 4;
+		};
+		BF01F837055980A400000202 = {
+			isa = PBXFileReference;
+			name = LoggerAdvancedPrefs.nib;
+			path = Plugins/Logger/LoggerAdvancedPrefs.nib;
+			refType = 4;
+		};
+		BF01F838055980A400000202 = {
+			fileRef = BF01F836055980A400000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF01F839055980A400000202 = {
+			fileRef = BF01F837055980A400000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		BF01F83A055980B000000202 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AILoggerAdvancedPreferences.m;
+			path = Plugins/Logger/AILoggerAdvancedPreferences.m;
+			refType = 4;
+		};
+		BF01F83B055980B000000202 = {
+			fileRef = BF01F83A055980B000000202;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		BF5E05D0052FC51900000202 = {
 			fileRef = BF7BF5EE052BA13000000202;
 			isa = PBXBuildFile;
