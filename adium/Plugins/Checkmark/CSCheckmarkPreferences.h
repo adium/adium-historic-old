@@ -7,10 +7,11 @@
 //
 
 
-@interface CSCheckmarkPreferences : AIObject {
+@interface CSCheckmarkPreferences : AIPreferencePane {
 	IBOutlet	NSView		*view_prefView;
 	IBOutlet	NSButton	*checkBox_displayCheckmark;
 }
+
 + (CSCheckmarkPreferences *)checkmarkPreferences;
 - (IBAction)changePreference:(id)sender;
 

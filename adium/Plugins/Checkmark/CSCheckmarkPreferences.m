@@ -10,20 +10,29 @@
 #import "CSCheckmarkPreferences.h"
 
 
-#define	CHECKMARK_PREF_NIB		@"CheckmarkPreferences"
+#define	CHECKMARK_PREF_NIB			@"CheckmarkPreferences"
 #define CHECKMARK_PREF_TITLE		AILocalizedString(@"Checkmark Display",nil)
 
 @interface CSCheckmarkPreferences (PRIVATE)
+- (IBAction)changePreference:(id)sender;
 - (void)configureView;
 @end
 
+//Preference methods
 @implementation CSCheckmarkPreferences
+
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:CHECKMARK_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CHECKMARK];
+	return(defaultsDict);
+}
+
 
 + (CSCheckmarkPreferences *)checkmarkPreferences
 {
     return([[[self alloc] init] autorelease]);
 }
-
 
 
 - (IBAction)changePreference:(id)sender
@@ -37,6 +46,21 @@
     }
 	
 }
+
+/*
+//Configure the preference view
+- (void)viewDidLoad
+{
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHECKMARK];
+	
+    [checkBox_displayCheckmark setState:[[preferenceDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue]];
+}
+
+- (void)viewWillClose
+{
+    [[adium notificationCenter] removeObserver:self];
+}
+*/
 
 
 - (id)init
@@ -78,5 +102,6 @@
     [checkBox_displayCheckmark setState:[[preferenceDict objectForKey:KEY_DISPLAY_CHECKMARK] boolValue]];
 	
 }
+
 
 @end

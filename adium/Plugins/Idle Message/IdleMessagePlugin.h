@@ -15,7 +15,8 @@
 
 #define PREF_GROUP_IDLE_MESSAGE				@"Idle Message"
 #define KEY_IDLE_MESSAGE_ENABLED			@"Idle Message Enabled"
-#define KEY_IDLE_MESSAGE				@"Idle Message"
+#define KEY_IDLE_MESSAGE					@"Idle Message"
+#define IDLE_MESSAGE_DEFAULT_PREFS	@"IdleMessageDefaultPrefs"
 
 @class IdleMessagePreferences;
 

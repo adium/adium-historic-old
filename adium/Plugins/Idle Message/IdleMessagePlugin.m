@@ -16,8 +16,6 @@
 #import "IdleMessagePlugin.h"
 #import "IdleMessagePreferences.h"
 
-#define IDLE_MESSAGE_DEFAULT_PREFS	@"IdleMessageDefaultPrefs"
-
 @interface IdleMessagePlugin (PRIVATE)
 - (void)accountIdleStatusChanged:(NSNotification *)notification;
 @end

@@ -29,6 +29,13 @@
     return(@"TabColoringPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:TAB_COLORING_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CONTACT_STATUS_COLORING];
+	return(defaultsDict);
+}
+
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {

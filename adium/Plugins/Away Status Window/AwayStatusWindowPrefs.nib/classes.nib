@@ -1,17 +1,6 @@
 {
     IBClasses = (
         {
-            ACTIONS = {toggleFloatAway = id; toggleHideInBackground = id; toggleShowAway = id; }; 
-            CLASS = AIAwayStatusWindowPreferences; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "checkBox_floatAway" = NSButton; 
-                "checkBox_hideInBackground" = NSButton; 
-                "checkBox_showAway" = NSButton; 
-            }; 
-            SUPERCLASS = AIPreferencePane; 
-        }, 
-        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
@@ -23,6 +12,12 @@
                 "view_containerView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = CSCheckmarkPreferences; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {"checkBox_displayCheckmark" = NSButton; "view_prefView" = id; }; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

@@ -13,6 +13,7 @@
 #define KEY_AB_IMAGE_SYNC       @"AB Image Sync"
 #define KEY_AB_ENABLE_IMAGES    @"AB Enable Images"
 #define KEY_AB_USE_NICKNAME     @"AB Use NickName"
+#define AB_DISPLAYFORMAT_DEFAULT_PREFS @"AB Display Format Defaults"
 
 typedef enum {
     None = 0,

@@ -22,8 +22,6 @@
 {
     displayCheckmark = NO;
     
-    [self preferencesChanged:nil];
-    
 	//Register our default preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CHECKMARK_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CHECKMARK];
 	
@@ -31,6 +29,8 @@
     checkmarkPreferences = [[CSCheckmarkPreferences checkmarkPreferences] retain];
     [[adium contactController] registerListObjectObserver:self];
     
+	[self preferencesChanged:nil];
+		
     //Observe
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
