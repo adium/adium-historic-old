@@ -148,12 +148,6 @@
 	#endif
 #endif
 
-#ifdef DEBUG_BUILD
-#define	AILog(fmt, ...) [[[AIObject sharedAdiumInstance] debugController] adiumDebug:fmt, ## __VA_ARGS__]
-#else
-#define AILog(fmt, ...) /**/
-#endif
-
 //Static strings
 #define DeclareString(var)			static NSString * (var) = nil;
 #define InitString(var,string)		if (! (var) ) (var) = [(string) retain];

@@ -12,17 +12,16 @@
 #define	KEY_DEBUG_WINDOW_OPEN	@"Debug Window Open"
 #define	GROUP_DEBUG				@"Debug Group"
 
-@interface ESDebugController (PRIVATE)
-- (void)addMessage:(NSString *)actualMessage;
-@end
-
 @implementation ESDebugController
 
-static NSMutableArray	*debugLogArray = nil;
+#ifdef DEBUG_BUILD
+
+static ESDebugController	*sharedDebugController = nil;
 
 - (void)initController
 {
-#ifdef DEBUG_BUILD
+	sharedDebugController = self;
+	
 	//Contact list menu tem
     NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
 																			 target:self
@@ -37,7 +36,6 @@ static NSMutableArray	*debugLogArray = nil;
 												  group:GROUP_DEBUG] boolValue]){
 		[ESDebugWindowController showDebugWindow];
 	}
-#endif
 }
 
 - (void)closeController
@@ -51,9 +49,15 @@ static NSMutableArray	*debugLogArray = nil;
 	[ESDebugWindowController closeDebugWindow];
 }
 
++ (ESDebugController *)sharedDebugController
+{
+	return sharedDebugController;
+}
+
 - (void)dealloc
 {
 	[debugLogArray release];
+	sharedDebugController = nil;
 	[super dealloc];
 }
 
@@ -61,27 +65,6 @@ static NSMutableArray	*debugLogArray = nil;
 {
 	[NSApp activateIgnoringOtherApps:YES];
 	[ESDebugWindowController showDebugWindow];
-}
-
-//Called via the AILog #define declaraed in AIAdium.h, takes a format string with a variable number of arguments
-- (void)adiumDebug:(NSString *)message, ...
-{
-#ifdef DEBUG_BUILD
-	va_list		ap; /* Points to each unamed argument in turn */
-	NSString	*actualMessage;
-	
-	va_start(ap, message); /* Make ap point to the first unnamed argument */
-	actualMessage = [[NSString alloc] initWithFormat:message
-										   arguments:ap];
-	
-	/* Be careful; we should only modify debugLogArray and the windowController's view on the main thread. */
-	[self performSelectorOnMainThread:@selector(addMessage:)
-						   withObject:actualMessage
-						waitUntilDone:NO];
-
-	[actualMessage release];
-	va_end(ap); /* clean up when done */
-#endif
 }
 
 - (void)addMessage:(NSString *)actualMessage
@@ -98,5 +81,10 @@ static NSMutableArray	*debugLogArray = nil;
 {
 	return(debugLogArray);
 }
+
+#else
+	- (void)initController {};
+	- (void)closeController {};
+#endif /* DEBUG_BUILD */
 
 @end
