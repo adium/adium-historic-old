@@ -47,6 +47,7 @@
 - (int)allHandlesInGroup:(AIEditorListGroup *)group belongToCollection:(id <AIEditorCollection>)collection;
 - (AIEditorListGroup *)selectedGroup;
 - (void)scrollToAndEditObject:(AIEditorListObject *)object column:(NSTableColumn *)column;
+- (void)collectionArrayChanged:(NSNotification *)notification;
 @end
 
 @implementation AIContactListEditorWindowController
@@ -80,12 +81,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [super initWithWindowNibName:windowNibName owner:self];
     
     //Install observers
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionStatusChanged:) name:Editor_CollectionStatusChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
-
-    
 
     //Load our images
     folderImage = [[AIImageUtilities imageNamed:@"Folder" forClass:[self class]] retain];
@@ -138,15 +136,16 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [scrollView_sourceList setAutoScrollToBottom:NO];
     [scrollView_sourceList setAutoHideScrollBar:YES];
     [tableView_sourceList registerForDraggedTypes:[NSArray arrayWithObject:@"AIContactObjects"]];
-
     
     //Install our window toolbar and generate our collections
     [self installToolbar];
+    [self collectionArrayChanged:nil];
 
     //If the user has multiple collections, open the drawer
-    if([[plugin collectionsArray] count] > 1){
+    if([[plugin collectionsArray] count] > 2){
         [self toggleDrawer:nil];
     }
+
 }
 
 //Close the window
@@ -798,12 +797,11 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         //Create them a new group
         selectedGroup = [plugin createGroupNamed:@"New Group" onCollection:selectedCollection temporary:YES];
     }
-    [outlineView_contactList reloadData];
-    [outlineView_contactList expandItem:selectedGroup];
 
     //Create the new handle
     newHandle = [plugin createHandleNamed:@"New Contact" inGroup:selectedGroup onCollection:selectedCollection temporary:YES];
     [outlineView_contactList reloadData];
+    [outlineView_contactList expandItem:[newHandle containingGroup]]; //make sure it's expanded
 
     //Select, scroll to, and edit the new handle
     [self scrollToAndEditObject:newHandle column:[outlineView_contactList tableColumnWithIdentifier:@"handle"]];

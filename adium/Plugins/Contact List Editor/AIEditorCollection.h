@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIEditorListGroup, AIEditorListObject;
+@class AIEditorListGroup, AIEditorListObject, AIEditorListHandle;
 
 @protocol AIEditorCollection <NSObject>
 
@@ -26,6 +26,7 @@
 - (AIEditorListGroup *)list;		//Return an editor list group containing all objects
 
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID;	//Do you have this handle?
+- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID;
 
 - (void)addObject:(AIEditorListObject *)inObject;					//Add the object
 - (void)deleteObject:(AIEditorListObject *)inObject;					//Delete the object

@@ -21,7 +21,6 @@
     sortedObjectArray = [[NSMutableArray alloc] init];
     sortedCount = 0;
     expanded = NO;
-//    index = 0;
     
     return(self);
 }
@@ -30,16 +29,6 @@
 {
     return(UID);
 }
-
-//Manual Ordering
-/*- (void)setIndex:(int)inIndex
-{
-    index = inIndex;
-}
-- (int)index{
-    return(index);
-}
-*/
 
 //Contained Objects
 //Returns the specified object
@@ -178,6 +167,7 @@
     //Remove the objects
     [objectArray removeAllObjects];
     [sortedObjectArray removeAllObjects];
+    sortedCount = 0;
 }
 
 

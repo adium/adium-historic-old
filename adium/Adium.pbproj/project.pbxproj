@@ -586,6 +586,7 @@
 				F55B417103AB8C3201A8010A,
 				9E95316803C8E0BE00415B22,
 				4B82AB7E04576AA600A8010A,
+				4BB54FE60476794200A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -634,6 +635,7 @@
 				F55B416703AB8BFC01A8010A,
 				4BC3133503BCD2FA00A8010A,
 				9E95316A03C8E0C700415B22,
+				4BB54FE70476794200A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4888,6 +4890,32 @@
 		};
 		4BB2C23D044605CE00A8010A = {
 			fileRef = 4BB2C23B044605CE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB54FE40476794200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactListGeneration.h;
+			path = Source/AIContactListGeneration.h;
+			refType = 4;
+		};
+		4BB54FE50476794200A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIContactListGeneration.m;
+			path = Source/AIContactListGeneration.m;
+			refType = 4;
+		};
+		4BB54FE60476794200A8010A = {
+			fileRef = 4BB54FE40476794200A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BB54FE70476794200A8010A = {
+			fileRef = 4BB54FE50476794200A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -13602,6 +13630,8 @@
 				F57938AA033E737001A8010A,
 				F57938F6033E745F01A8010A,
 				F57938AB033E737001A8010A,
+				4BB54FE40476794200A8010A,
+				4BB54FE50476794200A8010A,
 				F55B415C03AB8B5601A8010A,
 				F55B415D03AB8B5601A8010A,
 				9E95316703C8E0BE00415B22,

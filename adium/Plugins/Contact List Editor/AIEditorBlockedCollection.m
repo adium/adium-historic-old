@@ -26,6 +26,11 @@
     return(NO);
 }
 
+- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return(NO);
+}
+
 - (NSString *)serviceID
 {
     return(@"");

@@ -50,6 +50,19 @@
     return(self);
 }
 
+- (void)dealloc
+{
+    //Stop observing
+    [[owner notificationCenter] removeObserver:self];
+
+    //Cleanup
+    [owner release];
+    [plugin release];
+    [list release];
+    
+    [super dealloc];
+}
+
 //Return our text description
 - (NSString *)name{
     return(@"Adium Contact List");
@@ -63,6 +76,11 @@
     }else{
         return(NO);
     }
+}
+
+- (AIEditorListHandle *)handleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
+{
+    return([self _handleNamed:UID inGroup:list]);
 }
 
 - (NSString *)subLabel{

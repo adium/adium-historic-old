@@ -97,8 +97,9 @@
 //Notified when the account list changes
 - (void)accountListChanged:(NSNotification *)notification
 {
-    //Flush the collections array
+    //Flush the collections array, and notify
     [collectionsArray release]; collectionsArray = nil;
+    [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
 }
 
 //Find a handle
@@ -149,23 +150,37 @@
 
 //List Manipulation (sends out notifications)
 //Create a handle
-- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary
+- (AIEditorListHandle *)createHandleNamed:(NSString *)inName inGroup:(AIEditorListGroup *)group onCollection:(id <AIEditorCollection>)collection temporary:(BOOL)temporary
 {
+    NSString		*serviceID = [collection serviceID];
+    AIServiceType	*serviceType;
     AIEditorListHandle	*handle;
+    NSString		*name;
 
-    if(temporary){
-        handle = [[AIEditorListHandle alloc] initWithServiceID:[collection serviceID] UID:name temporary:YES];
-        [group addObject:handle]; //We don't add the handle to the collection, since it's only temporary
+    //Filter the UID
+    serviceType = [[owner accountController] serviceTypeWithID:serviceID];
+    name = (serviceType ? [serviceType filterUID:inName] : inName);
 
+    //Make sure a handle with this UID doesn't already exist on the collection
+    if(handle = [collection handleWithUID:name serviceID:serviceID]){
+        //Move the existing handle to the new location, and return it
+        [self moveObject:handle fromCollection:collection toGroup:group collection:collection];
+        
     }else{
-        handle = [[AIEditorListHandle alloc] initWithServiceID:[collection serviceID] UID:name temporary:NO]; //Create the handle
-        [group addObject:handle];	//Add it to the list
-        [collection addObject:handle];	//Let the collection add it
+        //Create a new handle
+        if(temporary){
+            handle = [[AIEditorListHandle alloc] initWithServiceID:serviceID UID:name temporary:YES];
+            [group addObject:handle]; //We don't add the handle to the collection, since it's only temporary
 
-        //Post an object added notification
-        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+        }else{
+            handle = [[AIEditorListHandle alloc] initWithServiceID:serviceID UID:name temporary:NO]; //Create the handle
+            [group addObject:handle];	//Add it to the list
+            [collection addObject:handle];	//Let the collection add it
+
+            //Post an object added notification
+            [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:handle forKey:@"Object"]];
+        }
     }
-
 
     return(handle);
 }
@@ -175,6 +190,7 @@
 {
     AIEditorListGroup	*group;
 
+#warning avoid duplicates
     if(temporary){
         group = [[AIEditorListGroup alloc] initWithUID:name temporary:YES];
         [[collection list] addObject:group]; //We don't add the group to the collection, since it's only temporary
@@ -192,27 +208,58 @@
 }
 
 //Rename an object (correctly sets temporary objects as permanent)
-- (void)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)name
+- (void)renameObject:(AIEditorListObject *)object onCollection:(id <AIEditorCollection>)collection to:(NSString *)inName
 {
-    if([object temporary]){
-        //Temporary objects have not yet been added to the collection, so we can freely change its UID to the correct/new one before adding it.
-        [object setUID:name];
-        [collection addObject:object];
-        [object setTemporary:NO];
+    NSString		*serviceID = [collection serviceID];
+    AIServiceType	*serviceType = [[owner accountController] serviceTypeWithID:serviceID];
+    NSString		*name = (serviceType ? [serviceType filterUID:inName] : inName); //Filter the new name
+    
+    if([[object UID] compare:name] != 0){ //Ignore the rename if the name hasn't changed
+        if([object isKindOfClass:[AIEditorListHandle class]]){ //Rename of a handle
+            if([object temporary]){ //Temporary Handle
+                AIEditorListGroup	*group = [object containingGroup];
 
-        //Post an object added notification
-        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+                //If the handle was temporary, we just delete it and create a new (non temporary) one with the correct name
+                [self deleteObject:object fromCollection:collection];
+                [self createHandleNamed:inName inGroup:group onCollection:collection temporary:NO];
 
-    }else{
-        [collection renameObject:object to:name];
-        [object setUID:name]; //Rename the object after the collection has had a chance to rename
+            }else{ //Regular Handle
+                AIEditorListHandle	*handle;
+                
+                //Make sure a handle with the new UID doesn't already exist on the collection
+                if(handle = [collection handleWithUID:name serviceID:serviceID]){
+                    [self deleteObject:handle fromCollection:collection]; //Remove the existing handle
+                }
 
-        //Posta renamed notification
-        [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+                //Rename the handle
+                [collection renameObject:object to:name];
+                [object setUID:name];
+
+                //Post a renamed notification
+                [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+                
+            }
+            
+        }else if([object isKindOfClass:[AIEditorListGroup class]]){ //Rename of a Group
+            if([object temporary]){ //Temporary Group
+                //If the group was temporary, we just delete it and create a new (non temporary) one with the correct name
+                [self deleteObject:object fromCollection:collection];
+                [self createGroupNamed:inName onCollection:collection temporary:NO];
+
+            }else{ //Regular group
+                //Rename the group
+                [collection renameObject:object to:name];
+                [object setUID:name];
+
+                //Post a renamed notification
+                [[owner notificationCenter] postNotificationName:Editor_RenamedObjectOnCollection object:collection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+
+            }
+
+        }
     }
-
-    [[object containingGroup] sort]; //resort the containing group
-
+    
+    [[object containingGroup] sort]; //resort the containing editor group
 }
 
 //Move an object
@@ -220,17 +267,23 @@
 {
     [object retain]; //Temporarily hold onto the object
 
+#warning avoid duplicates
+
     if(sourceCollection == destCollection){
-        //Allow the collection to move the object
-        [sourceCollection moveObject:object toGroup:destGroup];
+        if([object containingGroup] != destGroup){
+            if(![object temporary]){
+                //Allow the collection to move the object
+                [sourceCollection moveObject:object toGroup:destGroup];
+            }
 
-        //Swap it from one group to the other
-        [[object containingGroup] removeObject:object];
-        [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:sourceCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
-
-        [destGroup addObject:object];
-        [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:destCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
-
+            //Swap it from one group to the other
+            [[object containingGroup] removeObject:object];
+            [[owner notificationCenter] postNotificationName:Editor_RemovedObjectFromCollection object:sourceCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+    
+            [destGroup addObject:object];
+            [[owner notificationCenter] postNotificationName:Editor_AddedObjectToCollection object:destCollection userInfo:[NSDictionary dictionaryWithObject:object forKey:@"Object"]];
+        }
+            
     }else{
         //Remove from the source collection
         [sourceCollection deleteObject:object];

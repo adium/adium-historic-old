@@ -142,7 +142,6 @@
 
     //
     [interfaceController finishIniting];
-    [contactController finishIniting];
     [accountController finishIniting];
 }
 
