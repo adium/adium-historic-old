@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.40 2004/04/24 07:06:16 boredzo Exp $
+// $Id: AISoundController.m,v 1.41 2004/04/30 14:45:28 adamiser Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -97,10 +97,10 @@
 		//but on Jaguar we must always use QuickTime code since our threaded sound code will crash
 		if([NSApp isOnPantherOrBetter]){
 			useCustomVolume = [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue];
-			customVolume = ([customVolumeNumber floatValue] * 512.0);
 		}else{
 			useCustomVolume = YES;
 		}
+		customVolume = ([customVolumeNumber floatValue] * 512.0);
 		
         muteSounds = ([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] ||
 					  [[preferenceDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
