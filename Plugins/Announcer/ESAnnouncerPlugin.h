@@ -25,6 +25,4 @@
     NSString					*lastSenderString;
 }
 
-- (IBAction)changedSetting:(id)sender;
-
 @end
