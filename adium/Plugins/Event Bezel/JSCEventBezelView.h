@@ -21,7 +21,7 @@
 	
 	NSBezierPath	*backgroundBorder;
 	NSBezierPath	*backgroundContent;
-	BOOL			ignoringClicks;
+	BOOL			ignoringClicks, useGradient;
 }
 
 - (NSImage *)buddyIconImage;
@@ -39,5 +39,7 @@
 
 - (BOOL)ignoringClicks;
 - (void)setIgnoringClicks:(BOOL)ignoreClicks;
+- (BOOL)useGradient;
+- (void)setUseGradient:(BOOL)newValue;
 
 @end

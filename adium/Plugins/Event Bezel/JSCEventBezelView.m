@@ -22,6 +22,9 @@
 	NSBezierPath	*tempPath;
     NSParagraphStyle    *parrafo = [NSParagraphStyle styleWithAlignment:NSCenterTextAlignment];
 	
+	ignoringClicks = NO;
+	useGradient = NO;
+	
 	// Set the attributes for the main buddy name and the other strings
 	mainAttributes = [[NSMutableDictionary dictionaryWithObjectsAndKeys:
 				[NSColor whiteColor], NSForegroundColorAttributeName,
@@ -75,8 +78,12 @@
 		[backgroundContent fill];
 	} else {
 		// Paint the opaque colored background
-		[buddyIconLabelColor set];
-		[backgroundContent fill];
+		if (useGradient) {
+			[[AIGradient gradientWithFirstColor:[buddyIconLabelColor darkenAndAdjustSaturationBy:0.4] secondColor:buddyIconLabelColor direction:AIVertical] drawInBezierPath:backgroundContent];
+		} else {
+			[buddyIconLabelColor set];
+			[backgroundContent fill];
+		}
 		// Paint the white border
 		[[NSColor whiteColor] set];
 		[backgroundBorder fill];
@@ -200,6 +207,16 @@
 - (void)setIgnoringClicks:(BOOL)ignoreClicks
 {
 	ignoringClicks = ignoreClicks;
+}
+
+- (BOOL)useGradient
+{
+	return useGradient;
+}
+
+- (void)setUseGradient:(BOOL)newValue
+{
+	useGradient = newValue;
 }
 
 - (void)mouseEntered:(NSEvent *)theEvent
