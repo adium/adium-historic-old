@@ -33,9 +33,19 @@ typedef enum {
 //with an NSNumber of the appropriate error type as its object
 #define	KEY_CHAT_ERROR			@"Chat Error"
 
+//This key may be set before sending KEY_CHAT_ERROR to provide any data the
+//the error message should make use of.  It may be of any type.
+#define	KEY_CHAT_ERROR_DETAILS	@"Chat Error Details"
+
 typedef enum {
 	AIChatUnknownError = 0,
 	AIChatUserNotAvailable,
+	AIChatMessageSendingTooLarge,
+	AIChatMessageReceivingMissedTooLarge,
+	AIChatMessageReceivingMissedInvalid,
+	AIChatMessageReceivingMissedRateLimitExceeded,
+	AIChatMessageReceivingMissedRemoteIsTooEvil,
+	AIChatMessageReceivingMissedLocalIsTooEvil
 } AIChatErrorType;
 
 @interface AIChat : ESObjectWithStatus <AIContainingObject> {
