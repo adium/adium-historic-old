@@ -62,6 +62,8 @@ Other:
 	# Rename all the classes in AIUtilities to have the prefix "AI" so that the framework is uniform.  This framework is designed to be Adium-independent, so we should make it easier to use in this way.
 	        Colin: Possibly use a different prefix, such as "AU", and rename the framework AdiumUtilities? The prefix has come to signify ownership/creatorship, so an "unused" prefix would seem more neutral/fair. Maybe I'm just being anal :P
 		Evan: Auburn University? I'm with you though if we change it... but I really think it's okay as-is.
+                Jeff: Remember that we lose CVS history if we change
+                filenames.
 
 	+ '--insensitive' flag in AIEmoticon (to be placed in the TextEquivalents.txt file) that allows emoticons' text equivalents to be case-insensitive (without applying this nature globally to all emoticons).
 
