@@ -31,6 +31,7 @@
 - (void)configureView;
 - (void)configureTransparency;
 - (void)configureTransparencyForWindow:(NSWindow *)inWindow;
+- (void)_sizeColumnToFit;
 @end
 
 @implementation AISCLOutlineView
@@ -105,6 +106,11 @@
     if([[self delegate] respondsToSelector:@selector(view:didMoveToSuperview:)]){
         [[self delegate] view:self didMoveToSuperview:[self superview]];
     }
+
+    //Size our column to fit the new superview
+    if([self superview]){
+        [self _sizeColumnToFit];
+    }
 }
 
 //Override set frame size to force our rect to always be the correct height.  Without this the scrollview will stretch too tall vertically when resized beyond the bottom of our contact list.
@@ -112,7 +118,12 @@
 {
     frameRect.size.height = [self numberOfRows] * ([self rowHeight] + [self intercellSpacing].height);
     [super setFrame:frameRect];
+    [self _sizeColumnToFit];
+}
 
+//Size our column to fit
+- (void)_sizeColumnToFit
+{
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
     [column setResizable:YES];
     [self sizeLastColumnToFit]; //Keep the table column at full width
