@@ -45,7 +45,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     //Install the menu item to manually set idle time
     NSMenuItem		*menuItem;
 
-    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Set Idle Time" target:self action:@selector(showIdleTimeWindow:) keyEquivalent:@"I"] autorelease];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:@"Set Idle…" target:self action:@selector(showIdleTimeWindow:) keyEquivalent:@"I"] autorelease];
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_File_Status];
     
     //Install all the toolbar item to manually set idle time
