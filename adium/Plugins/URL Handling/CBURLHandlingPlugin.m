@@ -16,18 +16,22 @@
 
 - (void)installPlugin
 {
+    /* TODO:
+        * Prompt the user to change Adium to be the protocol handler for aim:// and/or yahoo:// if we aren't already. Give them the option to agree, disagree, or disagree and never be asked again. 
+    */
+
     [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
                                                        andSelector:@selector(handleURLEvent:withReplyEvent:)
                                                      forEventClass:kInternetEventClass
                                                         andEventID:kAEGetURL];
 }
 
-/*
-TODO: 
-    o add suppport for "stuffing" the inputline with a particluar message 
-*/
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
+    /* TODO: 
+        * add suppport for "stuffing" the inputline with a particluar message. look @ bgannin's emoticon code for help w/ this.
+    */
+
     NSString *string = [[event descriptorAtIndex:1] stringValue];
     NSURL *url = [NSURL URLWithString:string];
     
