@@ -298,7 +298,12 @@
 
 	//Feed the style to the webview after ensuring the newContent array is clear
 	[newContent removeAllObjects];
-	[plugin loadStyle:style withName:styleName withCSS:CSS forChat:chat intoWebView:preview];
+	[plugin loadStyle:style
+			 withName:styleName
+			  variant:variant
+			  withCSS:CSS
+			  forChat:chat
+		  intoWebView:preview];
 	
 	//Set up the preferences for the style
 	[self _updateViewForStyle:style variant:variant];
