@@ -68,7 +68,7 @@
  */
 - (IBAction)showAccountWindow:(id)sender
 {
-	[[AIAccountListWindowController accountListWindowController] showWindow:nil];
+//	[[AIAccountListWindowController accountListWindowController] showWindow:nil];
 }
 
 @end
