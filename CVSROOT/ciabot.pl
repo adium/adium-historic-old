@@ -28,7 +28,8 @@
 # If it does not work, try to disable $xml_rpc in the configuration section
 # below.
 #
-# $Id: ciabot.pl,v 1.21 2004/01/23 03:39:58 ramoth4 Exp $
+#
+# $Id: ciabot.pl,v 1.22 2004/01/23 03:41:27 ramoth4 Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $rpc_uri $sendmail $sync_delay
