@@ -24,7 +24,6 @@
 												  keyEquivalent:@""];
 	//[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 	
-	
     //Add our get info contextual menu item
     blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT target:self action:@selector(blockContextContact:) keyEquivalent:@""];
     //[[adium menuController] addContextualMenuItem:blockContactContextualMenuItem toLocation:Context_Contact_NegativeAction];
@@ -52,6 +51,7 @@
 {
     if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
         if([(AIAccount <AIAccount_Privacy> *)account addListObject:contact toPrivacyList:PRIVACY_DENY]){
+            
         }else{
                 NSLog(@"Not blocked");
         }
