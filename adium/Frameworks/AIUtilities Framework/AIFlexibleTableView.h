@@ -41,7 +41,8 @@
     NSMutableArray			*rowArray;		//Our rows
     BOOL				contentBottomAligned;	//YES for bottom-aligned content
     BOOL				forwardsKeyEvents;	//Pass keypresses to next responder
-
+    NSPoint				contentOrigin;
+    
     //Cursor tracking & selecting
     NSMutableArray			*cursorTrackingRowArray;
     NSPoint				selection_startPoint;
