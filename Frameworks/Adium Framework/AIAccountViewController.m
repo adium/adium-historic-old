@@ -285,7 +285,7 @@ Adium, Copyright 2001-2005, Adam Iser
 								   keyEquivalent:@""];
 	
 	[menuItem setTag:EncryptedChat_Never];
-	[menuItemArray addObject:menuItem];
+	[encryptionMenu addItem:menuItem];
 	[menuItem release];
 
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats as requested",nil)
@@ -294,7 +294,7 @@ Adium, Copyright 2001-2005, Adam Iser
 								   keyEquivalent:@""];
 	
 	[menuItem setTag:EncryptedChat_Manually];
-	[menuItemArray addObject:menuItem];
+	[encryptionMenu addItem:menuItem];
 	[menuItem release];
 	
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Encrypt chats automatically",nil)
@@ -303,7 +303,7 @@ Adium, Copyright 2001-2005, Adam Iser
 								   keyEquivalent:@""];
 	
 	[menuItem setTag:EncryptedChat_Automatically];
-	[menuItemArray addObject:menuItem];
+	[encryptionMenu addItem:menuItem];
 	[menuItem release];
 
 	menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Force encryption and refuse plaintext",nil)
@@ -312,7 +312,7 @@ Adium, Copyright 2001-2005, Adam Iser
 								   keyEquivalent:@""];
 	
 	[menuItem setTag:EncryptedChat_RejectUnencryptedMessages];
-	[menuItemArray addObject:menuItem];
+	[encryptionMenu addItem:menuItem];
 	[menuItem release];
 	
 	return([encryptionMenu autorelease]);
