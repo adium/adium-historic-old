@@ -67,7 +67,6 @@
 	newContent = [[NSMutableArray alloc] init];
 	
 	//Configure our view
-	[self _configureChatPreview];
 	[self _buildTimeStampMenu];
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
@@ -95,6 +94,9 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
 
 	viewIsOpen = YES;
+
+	[self updatePreview];
+	[self _configureChatPreview];
 }
 
 - (void)messageStyleXtrasDidChange
