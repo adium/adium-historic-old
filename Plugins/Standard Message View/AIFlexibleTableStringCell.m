@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIFlexibleTableStringCell.h"
-#import "AIParagraphStyleAdditions.h"
+#import <AIUtilities/AIParagraphStyleAdditions.h>
 
 @interface AIFlexibleTableStringCell (PRIVATE)
 - (AIFlexibleTableStringCell *)initWithAttributedString:(NSAttributedString *)inString;
