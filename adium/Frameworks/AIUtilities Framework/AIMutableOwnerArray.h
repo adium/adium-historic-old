@@ -27,6 +27,8 @@
 - (NSColor *)averageColor;
 - (id)objectAtIndex:(unsigned)index;
 - (id)objectWithOwner:(id)inOwner;
+- (id)ownerAtIndex:(unsigned)index;
+- (id)ownerWithObject:(id)inObject;
 - (int)greatestIntegerValue;
 - (double)greatestDoubleValue;
 - (NSDate *)earliestDate;

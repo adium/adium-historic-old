@@ -47,8 +47,9 @@
     activeSoundThreads = 0;
     soundLock = [[NSLock alloc] init];
 
+#ifdef MAC_OS_X_VERSION_10_0
     voiceArray = [[SUSpeaker voiceNames] retain];  //voiceArray will be in the same order that speaker expects
-
+#endif
     
     speechArray = [[NSMutableArray alloc] init];
     resetNextTime = NO;
@@ -334,6 +335,7 @@
 //attempt to speak the next item in the queue
 - (void)speakNext
 {
+#ifdef MAC_OS_X_VERSION_10_0
     //we have items left to speak and aren't already speaking
     if ([speechArray count] && !speaking) {
 	speaking = YES;
@@ -346,30 +348,23 @@
 
 	if (voiceNumber) {
 	    if (!speaker_variableVoice) { //initVariableVoiceifNecessary
-		NSLog(@"had to init variable voice");
 		speaker_variableVoice = [[SUSpeaker alloc] init];
 		[speaker_variableVoice setDelegate:self];
 	    }
 	    theSpeaker = speaker_variableVoice;
-	    NSLog(@"setVoice");
 	    [theSpeaker setVoice:[voiceNumber intValue]];
-	    NSLog(@"done");
 	} else {
 	    [self initDefaultVoiceIfNecessary];
 	    theSpeaker = speaker_defaultVoice;
 	}
 	
 	if (pitchNumber) {
-	    NSLog(@"setPitch");
 	    [theSpeaker setPitch:[pitchNumber floatValue]];
-	    NSLog(@"done");
 	} else {
 	    [theSpeaker setPitch:defaultPitch];
 	}
 	if (rateNumber) {
-	    NSLog(@"setRate");
 	    [theSpeaker setRate:[rateNumber intValue]];
-	    NSLog(@"done");
 	} else {
 	    [theSpeaker setRate:defaultRate];
 	}
@@ -377,6 +372,7 @@
 	[theSpeaker speakText:text];
 	[speechArray removeObjectAtIndex:0];
     }
+#endif
 }
 
 - (IBAction)didFinishSpeaking:(SUSpeaker *)theSpeaker
@@ -387,12 +383,14 @@
 
 - (void)initDefaultVoiceIfNecessary
 {
+#ifdef MAC_OS_X_VERSION_10_0
     if (!speaker_defaultVoice) {
 	speaker_defaultVoice = [[SUSpeaker alloc] init];
 	[speaker_defaultVoice setDelegate:self];
 	defaultRate = [speaker_defaultVoice rate];
 	defaultPitch = [speaker_defaultVoice pitch];
     }
+#endif
 }
 
 @end

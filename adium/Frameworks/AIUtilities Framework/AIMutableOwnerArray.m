@@ -109,6 +109,18 @@
     return(nil);
 }
 
+//Returns the owner of the specified object
+- (id)ownerWithObject:(id)inObject
+{
+    if(ownerArray && contentArray){
+        int	index = [contentArray indexOfObject:inObject];
+        if(index != NSNotFound) return([ownerArray objectAtIndex:index]);
+    }
+    
+    return(nil);
+}
+
+
 //Return the number of objects
 - (unsigned)count
 {
@@ -119,6 +131,12 @@
 - (id)objectAtIndex:(unsigned)index
 {
     return([contentArray objectAtIndex:index]);
+}
+
+//Return the specific owner
+- (id)ownerAtIndex:(unsigned)index
+{
+    return ([ownerArray objectAtIndex:index]);   
 }
 
 //Return the average color

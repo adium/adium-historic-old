@@ -12,8 +12,8 @@
 #define NIB_EVENT_SOUND_CUSTOM		@"EventSoundCustomPanel"
 #define	TABLE_COLUMN_SOUND		@"sound"
 #define	TABLE_COLUMN_EVENT		@"event"
-#define SOUND_MENU_ICON_SIZE		16
 #define ADD_EVENT_MENU_ITEM		@"Add Event…"
+
 
 @interface AIEventSoundCustom (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;

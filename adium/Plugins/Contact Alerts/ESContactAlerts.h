@@ -5,7 +5,7 @@
 //  Created by Evan Schoenberg on Sun Aug 03 2003.
 //
 
-@interface ESContactAlerts : NSObject {
+@interface ESContactAlerts : NSObject <ESContactAlerts> {
     NSView				*view_main;
     AIAlternatingRowTableView		*tableView_actions;
     NSView				*view_blank;
@@ -53,8 +53,8 @@
 
 - (id)initWithDetailsView:(NSView *)inView withTable:(AIAlternatingRowTableView*)inTable withPrefView:(NSView *)inPrefView owner:(id)inOwner;
 - (void)configForObject:(AIListObject *)inObject;
-- (void)removeAllSubviews:(NSView *)view;
 - (void)configureWithSubview:(NSView *)view_inView;
+- (void)removeAllSubviews:(NSView *)view;
 - (void)oneTimeEvent:(NSButton *)inButton;
 - (void)onlyWhileActive:(NSButton *)inButton;
 - (NSMenu *)actionListMenu;
@@ -71,11 +71,14 @@
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;
+
+/*
 - (IBAction)selectSound:(id)sender;
 - (IBAction)selectBehavior:(id)sender;
 - (IBAction)selectAccount:(id)sender;
 - (IBAction)saveMessageDetails:(id)sender;
 - (IBAction)saveOpenMessageDetails:(id)sender;
+*/
 
 /*
 - (IBAction)actionBounceDock:(id)sender;
