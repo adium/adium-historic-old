@@ -29,6 +29,9 @@
     id			target;
     SEL			selector;
     BOOL		availableForSending;
+
+    NSMutableArray	*historyArray;
+    int 		currentHistoryLocation;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
@@ -43,5 +46,6 @@
 - (BOOL)availableForSending;
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
+- (void)addToHistory:(NSAttributedString *)inString;
 
 @end
