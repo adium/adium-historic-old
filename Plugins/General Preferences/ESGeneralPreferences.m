@@ -95,6 +95,23 @@
 	[checkBox_enableMenuItem setState:[[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]];
 		
     [self configureControlDimming];
+
+	[checkBox_messagesInTabs setTitle:AILocalizedString(@"Create new messages in tabs",nil)];
+    [checkBox_arrangeTabs setTitle:AILocalizedString(@"Sort tabs with the current sort options",nil)];
+    [checkBox_arrangeByGroup setTitle:AILocalizedString(@"Organize tabs into new windows by group",nil)];
+	[checkBox_enableLogging setTitle:AILocalizedString(@"Log messages",nil)];
+	[checkBox_sendOnReturn setTitle:AILocalizedString(@"Return key",nil)];
+	[checkBox_sendOnEnter setTitle:AILocalizedString(@"Enter key",nil)];
+	[checkBox_enableMenuItem setTitle:AILocalizedString(@"Show Adium status in menu bar",nil)];
+	
+	[label_logging setStringValue:AILocalizedString(@"Logging:",nil)];
+	[label_messagesSendOn setStringValue:AILocalizedString(@"Messages send on:",nil)];
+	[label_messagesTabs setStringValue:AILocalizedString(@"Message tabs:",nil)];
+	[label_menuItem setStringValue:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
+	[label_switchTabsWith setStringValue:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
+	[label_serviceIcons setStringValue:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
+	[label_statusIcons setStringValue:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
+	[label_sound setStringValue:AILocalizedString(@"Sound:",nil)];
 }
 
 
