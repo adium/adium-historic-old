@@ -194,7 +194,7 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSString *)configureSortMenuItemTitle{ 
 	NSString *configureSortWindowTitle = [self configureSortWindowTitle];
 	if(configureSortWindowTitle){
-		return([NSString stringWithFormat:@"%@%s",[self configureSortWindowTitle],"É"]);
+		return([[self configureSortWindowTitle] stringByAppendingEllipsis]);
 	}else{
 		return(nil);
 	}
