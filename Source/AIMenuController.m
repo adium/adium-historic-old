@@ -150,7 +150,7 @@
     //update the location array
     [locationArray replaceObjectAtIndex:location withObject:newItem];
 	
-	[[owner notificationCenter] postNotificationName:Menu_didChange object:[newItem menu] userInfo:nil];
+	[[adium notificationCenter] postNotificationName:Menu_didChange object:[newItem menu] userInfo:nil];
 }
 
 //Remove a menu item
@@ -193,7 +193,7 @@
         }
     }
 	
-	[[owner notificationCenter] postNotificationName:Menu_didChange object:targetMenu userInfo:nil];
+	[[adium notificationCenter] postNotificationName:Menu_didChange object:targetMenu userInfo:nil];
 }
 
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location

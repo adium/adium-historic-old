@@ -34,7 +34,7 @@ typedef enum {
 } CONTEXT_MENU_LOCATION;
 
 @interface AIMenuController : NSObject {
-    IBOutlet	AIAdium		*owner;
+    IBOutlet	AIAdium		*adium;
 	
     IBOutlet	NSMenuItem	*nilMenuItem;
     IBOutlet	NSMenuItem	*menu_Adium_About;
