@@ -92,7 +92,7 @@
         }
                 
         //update their idletime
-        if(buddy->idle != -(int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970]))
+        if(buddy->idle != (int)([[[theHandle statusDictionary] objectForKey:@"IdleSince"] timeIntervalSince1970]))
         {
             if(buddy->idle != 0)
             {
@@ -121,32 +121,22 @@
         GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
         if(buddyIcon)
         {
-            NSData *imageData = [NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) 
-                length:buddyIcon->len];
-            NSData *currentData = [[theHandle statusDictionary] objectForKey:@"BuddyImageData"];
-            
-            if([imageData length] != [currentData length]
-                || memcmp([imageData bytes], [currentData bytes], [imageData length]))
+            if(buddyIcon != [[[theHandle statusDictionary] objectForKey:@"BuddyImagePointer"] pointerValue])
             {
                 NSLog(@"Icon for %s", buddy->name);
                                 
                 //save this for convenience
                 [[theHandle statusDictionary]
-                    setObject:imageData
-                    forKey:@"BuddyImageData"];
-                    
-                NSImage *icon = [[NSImage alloc] 
-                    initWithData:imageData];
-                    
+                    setObject:[NSValue valueWithPointer:buddyIcon]
+                    forKey:@"BuddyImagePointer"];
+            
                 //set the buddy image
                 [[theHandle statusDictionary]
-                    setObject:icon
+                    setObject:[[[NSImage alloc] initWithData:[NSData dataWithBytes:gaim_buddy_icon_get_data(buddyIcon, &(buddyIcon->len)) length:buddyIcon->len]] autorelease]
                     forKey:@"BuddyImage"];
                 
-                //BuddyImageData is just for us, shh, keep it secret ;)
+                //BuddyImagePointer is just for us, shh, keep it secret ;)
                 [modifiedKeys addObject:@"BuddyImage"];
-                
-                [icon release];
             }
         }
         //if anything chnaged
@@ -163,9 +153,6 @@
                     : (buddy->present != GAIM_BUDDY_SIGNING_OFF)];
             /* the silencing code does -not- work. I either need to change the way gaim works, or get someone to change it. */
         }
-        //nothing changed. boring. :P
-        else
-            NSLog(@"Nothing Changed");
     }
 }
 
