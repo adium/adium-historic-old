@@ -371,7 +371,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //User selected the idle menu
 - (void)selectIdleMenu:(id)sender
 {
-    if([NSEvent optionKey]){ //Set custom idle... (JAGUAR)
+    if([[menuItem_setIdle title] isEqualToString:IDLE_SET_CUSTOM_IDLE_TITLE]){ //Set custom idle... (JAGUAR)
         [self showManualIdleWindow:nil];
     }else if(idleState != AINotIdle){ //Remove Idle
         [self setIdleState:AINotIdle];
