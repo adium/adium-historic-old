@@ -33,7 +33,6 @@ typedef enum {
     AIAutoIdle,
     AIManualIdle,
     AIDelayedManualIdle,
-	AIAutoAway
 } AIIdleState;
 
 typedef enum {
@@ -56,7 +55,7 @@ typedef enum {
 	
 	BOOL		autoAwayEnabled;
 	double		autoAwayThreshold;
-	
+	BOOL		didAutoAway;
 	double		autoAwayMessageIndex;
 
     NSMenuItem		*menuItem_setIdle;
