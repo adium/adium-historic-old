@@ -32,6 +32,10 @@
 - (NSString *)nibName{
     return(@"IdleMessagePrefs");
 }
+//XXX
+- (NSImage *)image{
+	return([NSImage imageNamed:@"pref-status.png" forClass:[AIPreferenceWindowController class]]);
+}
 
 - (NSDictionary *)restorablePreferences
 {
