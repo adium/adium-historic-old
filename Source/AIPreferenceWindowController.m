@@ -23,6 +23,7 @@
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIViewAdditions.h>
+#import <AIUtilities/AIWindowAdditions.h>
 
 //Preferences
 #define KEY_PREFERENCE_SELECTED_CATEGORY		@"Preference Selected Category Name"

@@ -16,6 +16,7 @@
 
 // $Id$
 
+#import "AIAppearancePreferencesPlugin.h"
 #import "AIDockController.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
@@ -25,9 +26,6 @@
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIIconState.h>
 #import <Adium/IconFamily.h>
-
-#warning crosslink
-#import "AIAppearancePreferencesPlugin.h"
 
 #define DOCK_DEFAULT_PREFS			@"DockPrefs"
 #define ICON_DISPLAY_DELAY			0.1

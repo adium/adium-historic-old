@@ -22,6 +22,8 @@
 #import "AIListWindowController.h"
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIWindowAdditions.h>
+#import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
 

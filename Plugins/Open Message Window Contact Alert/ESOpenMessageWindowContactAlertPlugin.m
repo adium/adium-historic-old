@@ -19,6 +19,7 @@
 #import "ESContactAlertsController.h"
 #import "ESOpenMessageWindowContactAlertPlugin.h"
 #import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 
 #define OPEN_MESSAGE_ALERT_SHORT	AILocalizedString(@"Open a message window",nil)

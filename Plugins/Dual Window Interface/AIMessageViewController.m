@@ -772,7 +772,7 @@
  * Here we could open a private message or display info for the user, however we perform no action
  * at the moment.
  */
-- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(id)sender
+- (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender
 {
 	//Empty
 }
