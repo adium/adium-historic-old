@@ -388,7 +388,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSMutableAttributedString *selectedString = nil;
     
-    if(selectionRange.length && ((selectionRange.location + selectionRange.length) < [string length])){
+    if(selectionRange.length && ((selectionRange.location + selectionRange.length) <= [string length])){
         //Get the selected text (Safestring converts any attachments to text)
         selectedString = [[[[string attributedSubstringFromRange:selectionRange] safeString] mutableCopy] autorelease];
 
