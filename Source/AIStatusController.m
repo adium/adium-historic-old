@@ -34,11 +34,17 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)_upgradeSavedAwaysToSavedStates;
 - (void)upgradeSVNSavedStatesToCurrent;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
-- (NSArray *)menuItemsForStatusesOfType:(AIStatusType)type withTarget:(id)target;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_removeStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)_updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState;
+
+- (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target;
+- (void)_addMenuItemsForStatusOfType:(AIStatusType)type
+				 serviceCodeUniqueID:(NSString *)serviceCodeUniqueID
+						  withTarget:(id)target
+							 toArray:(NSMutableArray *)menuItems
+				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 @end
 									
 /*!
@@ -122,11 +128,20 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[statusDicts addObject:statusDict];
 }
 
-- (NSMenu *)menuOfStatusesWithTarget:(id)target
+/*!
+ * @brief Generate and return a menu of status types (Away, Be right back, etc.)
+ *
+ * @param service The service for which to return a specific list of types, or nil to return all available types
+ * @param target The target for the menu items, which will have an action of @selector(selectStatus:)
+ *
+ * @result The menu of statuses, separated by available and away status types
+ */
+- (NSMenu *)menuOfStatusesForService:(AIService *)service withTarget:(id)target
 {
 	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
+	NSString		*serviceCodeUniqueID = [service serviceCodeUniqueID];
 
 	AIStatusType type;
 	for(type = AIAvailableStatusType ; type < STATUS_TYPES_COUNT ; type++){
@@ -136,7 +151,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		}
 
 		//Add the items for this type
-		enumerator = [[self menuItemsForStatusesOfType:type withTarget:target] objectEnumerator];
+		enumerator = [[self _menuItemsForStatusesOfType:type
+								 forServiceCodeUniqueID:serviceCodeUniqueID
+											 withTarget:target] objectEnumerator];
 		while(menuItem = [enumerator nextObject]){
 			[menu addItem:menuItem];
 		}
@@ -149,56 +166,82 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Sort by title.  We may need to do more complex sorting to put certain defaults at the top?
 int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 {
-	return [[menuItemA title] caseInsensitiveCompare:[menuItemA title]];
+	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
 }
 
-- (NSArray *)menuItemsForStatusesOfType:(AIStatusType)type withTarget:(id)target
+- (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
-	NSEnumerator	*enumerator;
-	NSString		*serviceCodeUniqueID;
-
-    //Insert a menu item for each available account
-    enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
-    while(serviceCodeUniqueID = [enumerator nextObject]){
-		NSSet	*statusDicts;
+	
+	if(inServiceCodeUniqueID){
+		//Insert a menu item for each available account on this service
+		[self _addMenuItemsForStatusOfType:type
+					   serviceCodeUniqueID:inServiceCodeUniqueID
+								withTarget:target
+								   toArray:menuItems
+						alreadyAddedTitles:alreadyAddedTitles];
 		
-		//Obtain the status dicts for this type and service code unique ID if it is online
-		if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] &&
-		   (statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
-			NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
-			NSDictionary	*statusDict;
-			
-			//Enumerate the status dicts
-			while(statusDict = [statusDictEnumerator nextObject]){
-				NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
-
-				/*
-				 * Only add if it has not already been added by another service.... Services need to use unique titles if they have
-				 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
-				 * exist.
-				 */
-				if(![alreadyAddedTitles containsObject:title]){
-					NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																								  target:target
-																								  action:@selector(selectStatus:)
-																						   keyEquivalent:@""] autorelease];
-					[menuItem setRepresentedObject:statusDict];
-					[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
-																	   type:AIStatusIconList
-																  direction:AIIconNormal] copy] autorelease]];
-					[menuItem setEnabled:YES];
-					[menuItems addObject:menuItem];
-					[alreadyAddedTitles addObject:title];
-				}
+	}else{
+		NSEnumerator	*enumerator;
+		NSString		*serviceCodeUniqueID;
+		
+		//Insert a menu item for each available account
+		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
+		while(serviceCodeUniqueID = [enumerator nextObject]){
+			//Obtain the status dicts for this type and service code unique ID if it is online
+			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID]){
+				[self _addMenuItemsForStatusOfType:type
+							   serviceCodeUniqueID:serviceCodeUniqueID
+										withTarget:target
+										   toArray:menuItems
+								alreadyAddedTitles:alreadyAddedTitles];
 			}
 		}
-    }
-
+	}
+	
 	[menuItems sortUsingFunction:statusMenuItemSort context:nil];
-
+	
 	return([menuItems autorelease]);
+}
+
+- (void)_addMenuItemsForStatusOfType:(AIStatusType)type
+				 serviceCodeUniqueID:(NSString *)serviceCodeUniqueID
+						  withTarget:(id)target
+							 toArray:(NSMutableArray *)menuItems
+				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles
+{
+	NSSet	*statusDicts;
+
+	//Obtain the status dicts for this type and service code unique ID
+	if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID]){
+		NSEnumerator	*statusDictEnumerator = [statusDicts objectEnumerator];
+		NSDictionary	*statusDict;
+		
+		//Enumerate the status dicts
+		while(statusDict = [statusDictEnumerator nextObject]){
+			NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
+			
+			/*
+			 * Only add if it has not already been added by another service.... Services need to use unique titles if they have
+			 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
+			 * exist.
+			 */
+			if(![alreadyAddedTitles containsObject:title]){
+				NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
+																							  target:target
+																							  action:@selector(selectStatus:)
+																					   keyEquivalent:@""] autorelease];
+				[menuItem setRepresentedObject:statusDict];
+				[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:((type == AIAvailableStatusType) ? @"available" : @"away")
+																	 type:AIStatusIconList
+																direction:AIIconNormal] copy] autorelease]];
+				[menuItem setEnabled:YES];
+				[menuItems addObject:menuItem];
+				[alreadyAddedTitles addObject:title];
+			}
+		}
+	}
 }
 
 /*!
