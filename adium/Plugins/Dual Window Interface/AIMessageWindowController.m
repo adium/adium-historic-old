@@ -168,7 +168,6 @@
                                                              object:[[[(AIMessageTabViewItem *)inTabViewItem messageViewController] chat] listObject]];
 
         if(savedFrame){
-            NSLog(@"setting Frame %@",savedFrame);
             [[self window] setFrameFromString:savedFrame];
         }   
     }
