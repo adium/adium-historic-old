@@ -60,10 +60,9 @@
 	if (!serverAppended){
 		server = [self host];
 		userNameWithHost = [NSString stringWithFormat:@"%@@%@",UID,server];
-		[UID release]; UID = userNameWithHost;
+		[UID release]; UID = [userNameWithHost retain];
 	}
 	
-
 	resourceAppended = ([UID rangeOfString:@"/"].location != NSNotFound);
 	if (!resourceAppended){
 		resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
