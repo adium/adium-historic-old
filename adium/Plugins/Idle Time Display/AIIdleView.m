@@ -40,6 +40,7 @@
     [super init];
 
     string = nil;
+    textColor = nil;
 
     _attributedString = nil;
     _attributedStringSize = NSMakeSize(0,0);
@@ -53,8 +54,17 @@
 - (void)dealloc
 {
     [string release];
-
+    [textColor release];
+    
     [super dealloc];
+}
+
+- (void)setColor:(NSColor *)inColor
+{
+    if(textColor != inColor){
+        [textColor release];
+        textColor = [inColor retain];
+    }    
 }
 
 //
@@ -175,7 +185,7 @@
     
     //Create the attributed string
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:
-        [NSColor colorWithCalibratedWhite:0.2 alpha:1.0], NSForegroundColorAttributeName,
+        textColor, NSForegroundColorAttributeName,
         [NSFont cachedFontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName, nil];
 

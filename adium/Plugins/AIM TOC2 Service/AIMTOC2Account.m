@@ -302,7 +302,13 @@
     AIHandle	*handle;
 
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]];
+
+        //Get the message in a sendable format (HTML or plain text)
+        if(!connectedWithICQ){
+            message = [self validCopyOfString:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message] encodeFullString:YES]];
+        }else{
+            message = [self validCopyOfString:[[(AIContentMessage *)object message] string]];
+        }
 
         if([message length] <= AIM_PACKET_MAX_LENGTH){ //Ensure the message isn't too long
 
@@ -513,6 +519,10 @@
         //Remember the account name and password
         if(screenName != [propertiesDict objectForKey:@"Handle"]){
             [screenName release]; screenName = [[propertiesDict objectForKey:@"Handle"] copy];
+
+            //Determine if this is an ICQ account
+            connectedWithICQ = ([[screenName stringByTrimmingCharactersInSet:[NSCharacterSet characterSetWithCharactersInString:@"0123456789"]] length] == 0);
+
         }
         if(password != inPassword){
             [password release]; password = [inPassword copy];
@@ -695,7 +705,10 @@
                         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
                         if(away) [self statusForKey:@"AwayMessage" willChangeTo:away];
 
-                        [self AIM_SetNick:screenName];
+                        //Format our nickname as it was entered for the account
+                        if(!connectedWithICQ){
+                            [self AIM_SetNick:screenName];
+                        }
                     }
                     
                     //Send AIM the init done message (at this point we become visible to other buddies)
@@ -812,7 +825,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.82 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.83 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1256,7 +1269,7 @@
     NSCharacterSet	*endlines = [NSCharacterSet characterSetWithCharactersInString:@"\r\n"];
     NSString		*configString = [message nonBreakingTOCStringArgumentAtIndex:1];
     NSString		*type;
-    NSString		*value;
+    NSString		*value = nil;
     NSString		*currentGroup = @"New Group";
     int			index = 0;
     
@@ -1271,8 +1284,9 @@
         if([scanner scanString:@":" intoString:nil]){
 
             //scan the value (the text after the : )
+            value = nil;
             [scanner scanUpToCharactersFromSet:endlines intoString:&value];
-            if([scanner scanCharactersFromSet:endlines intoString:nil]){
+            if([scanner scanCharactersFromSet:endlines intoString:nil] && value != nil){
                 NSRange	invalidRange;
                 
                 //Occasionally the config will have :'s appended to the end of a contact's name.  We strip any :'s from the end of the name value here.

@@ -26,6 +26,7 @@
 
     NSString		*screenName;		// Current signed on screenName
     NSString		*password;		// Current signed on password
+    BOOL		connectedWithICQ;
 
     NSMutableArray	*outQue;		// Que of outgoing packets
     NSMutableDictionary	*groupDict;		// Remembers the group each handle is in

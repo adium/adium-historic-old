@@ -121,7 +121,7 @@
 
     if(!autoResizeVertically){
         [[self window] setMaxSize:NSMakeSize(10000, 10000)];
-        [[self window] setMinSize:NSMakeSize(0, 0)];
+        [[self window] setMinSize:minWindowSize];
     }
 
     [self contactListDesiredSizeChanged:nil];
@@ -136,7 +136,7 @@
         //Set this as our window's size
         if(!autoResizeHorizontal){ //Allow horiz resizing still
             [[self window] setMaxSize:NSMakeSize(10000, newFrame.size.height)];
-            [[self window] setMinSize:NSMakeSize(0, newFrame.size.height)];
+            [[self window] setMinSize:NSMakeSize(minWindowSize.width, newFrame.size.height)];
         }else{
             [[self window] setMaxSize:newFrame.size];
             [[self window] setMinSize:newFrame.size];
@@ -215,6 +215,9 @@
         [[self window] setFrameFromString:savedFrame];
     }
 
+    //Remember the mininum size set for our list within interface builder
+    minWindowSize = [[self window] minSize];
+    
     //Add the status selection view
     contactListFrame = [scrollView_contactList frame];
     view_statusSelection = [[AIStatusSelectionView alloc] initWithFrame:NSMakeRect(contactListFrame.origin.x, contactListFrame.origin.y + contactListFrame.size.height - 16 + 1, contactListFrame.size.width, 16) owner:owner];

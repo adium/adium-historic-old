@@ -40,7 +40,13 @@
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DISPLAY_IDLE_TIME
                                               group:PREF_GROUP_IDLE_TIME_DISPLAY];
+    }else if(sender == colorWell_idleColor){
+        [[owner preferenceController] setPreference:[[colorWell_idleColor color] stringRepresentation]
+                                             forKey:KEY_IDLE_TIME_COLOR
+                                              group:PREF_GROUP_IDLE_TIME_DISPLAY];
+
     }
+
 }
 
 //Private ---------------------------------------------------------------------------
@@ -84,6 +90,7 @@
     NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 
     [checkBox_displayIdle setState:[[preferenceDict objectForKey:KEY_DISPLAY_IDLE_TIME] boolValue]];
+    [colorWell_idleColor setColor:[[preferenceDict objectForKey:KEY_IDLE_TIME_COLOR] representedColor]];
 }
 
 

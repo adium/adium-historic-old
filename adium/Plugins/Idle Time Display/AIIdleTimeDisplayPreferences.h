@@ -22,6 +22,7 @@
 
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSButton		*checkBox_displayIdle;
+    IBOutlet	NSColorWell		*colorWell_idleColor;
 }
 
 + (AIIdleTimeDisplayPreferences *)idleTimeDisplayPreferencesWithOwner:(id)inOwner;
