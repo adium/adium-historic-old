@@ -18,8 +18,9 @@
 #import "AIContactListWindowController.h"
 #import "AIAdium.h"
 
-#define CONTACT_LIST_WINDOW_NIB		@"ContactListWindow"		//Filename of the contact list window nib
-#define CONTACT_LIST_TOOLBAR		@"ContactList"			//ID of the contact list toolbar
+#define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
+#define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
+#define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
 
 @interface AIContactListWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
@@ -69,6 +70,13 @@
 - (void)windowDidLoad
 {
     NSView	*newView;
+    NSString	*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }
 
     //Swap in the contact list view
     newView = [[owner interfaceController] contactListView];
@@ -81,6 +89,16 @@
     [[self window] setExcludedFromWindowsMenu:YES];
 
     [toolbar_bottom setIdentifier:CONTACT_LIST_TOOLBAR];
+}
+
+- (BOOL)windowShouldClose:(id)sender
+{
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+
+    return(YES);
 }
 
 @end
