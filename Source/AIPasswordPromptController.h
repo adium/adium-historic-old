@@ -21,6 +21,7 @@
     SEL 		selector;
     id			target;
 
+	id			context;
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector;

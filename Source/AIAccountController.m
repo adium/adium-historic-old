@@ -935,7 +935,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Fetches a saved account password (Prompts the user to enter if no password is saved)
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     NSString	*password;
     
@@ -945,10 +945,10 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     
     if(password && [password length] != 0){
         //Invoke the target right away
-        [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
+        [inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
     }else{
         //Prompt the user for their password
-        [ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector];
+        [ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount notifyingTarget:inTarget selector:inSelector context:inContext];
     }
 }
 
@@ -967,7 +967,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return password;
 }
 
-- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
 	NSString	*password;
     
@@ -977,13 +977,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
     if(password && [password length] != 0){
         //Invoke the target right away
-        [inTarget performSelector:inSelector withObject:password afterDelay:0.0001];    
+        [inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];    
     }else{
         //Prompt the user for their password
         [ESProxyPasswordPromptController showPasswordPromptForProxyServer:server
 																 userName:userName
 														  notifyingTarget:inTarget
-																 selector:inSelector];
+																 selector:inSelector
+																  context:inContext];
     }
 }
 //Save a proxy server password
