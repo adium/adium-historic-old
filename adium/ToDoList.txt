@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.98 2004/05/06 09:25:42 evands Exp $
+$Id: ToDoList.txt,v 1.99 2004/05/06 23:07:06 evands Exp $
 
 
 Legend
@@ -22,7 +22,6 @@ Bugs
    - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
    - (Evan: We shouldn't need to write to the keychain when the uid changes now since we're using the uniqueObjectID. Maybe an observer doing something dumb?)
 * Clicking the info button with nothing selected (1 group, 0 contacts defined) shows a blank window titled "Window"
-* Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 * Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
@@ -326,6 +325,7 @@ ced preference panes.
 = Interact with libgaim via a thread to improve responsiveness during connect/disconnect/poor connectivity
 = Adding a contact that already exists on the list seems to cause problems
 = Can "add" a contact with no accounts (the button should dim with no accounts checked)
+= Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
 
 Features & Changes:
 = Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
