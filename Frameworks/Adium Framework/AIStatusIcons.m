@@ -107,7 +107,7 @@ static NSDictionary			*statusIconNames[NUMBER_OF_STATUS_ICON_TYPES];
 				}
 			}
 			
-			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:@"AIStatusIconSetDidChange"
+			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
 																			   object:nil];
 			
 			return(YES);

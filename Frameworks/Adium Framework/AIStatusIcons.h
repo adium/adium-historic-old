@@ -8,6 +8,10 @@
 #import <Cocoa/Cocoa.h>
 #import "AIServiceIcons.h"
 
+//Notifications
+#define AIStatusIconSetDidChangeNotification	@"AIStatusIconSetDidChangeNotification"
+
+//Status icon type
 typedef enum {
 	AIStatusIconTab = 0,		//Tabs
 	AIStatusIconList			//Contact List
