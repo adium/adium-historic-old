@@ -1110,10 +1110,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		while(listContact = [enumerator nextObject]){
 			NSSet		*listContactChats;
-			AILog(@"allChatsWithContact : meta : %@",listContact);
 			if (listContactChats = [self allChatsWithContact:listContact]){
 				[foundChats unionSet:listContactChats];
-				AILog(@"yields %@",foundChats);
 			}
 		}
 		
