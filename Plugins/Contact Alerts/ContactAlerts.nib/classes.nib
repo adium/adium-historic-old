@@ -54,6 +54,8 @@
                 "button_add" = NSButton; 
                 "button_delete" = NSButton; 
                 "button_edit" = NSButton; 
+                delegate = id; 
+                "scrollView_actions" = AIAutoScrollView; 
                 "tableView_actions" = AIAlternatingRowTableView; 
                 view = NSView; 
             }; 
@@ -70,7 +72,8 @@
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
