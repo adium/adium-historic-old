@@ -78,7 +78,8 @@
 
 	account = [inAccount retain];
 	deleteIfCanceled = inDeleteIfCanceled;
-
+	userIconData = nil;
+	
 	return(self);
 }
 
@@ -88,6 +89,7 @@
 - (void)dealloc
 {
 	[account release];
+	[userIconData release]; userIconData = nil;
 
 	[super dealloc];
 }
@@ -187,7 +189,7 @@
 - (void)saveConfiguration
 {
 	//User icon
-	[account setPreference:[[imageView_userIcon image] PNGRepresentation]
+	[account setPreference:(userIconData ? userIconData : [[imageView_userIcon image] PNGRepresentation])
 					forKey:KEY_USER_ICON 
 					 group:GROUP_ACCOUNT_STATUS];
 					 
@@ -310,5 +312,16 @@
     [accountViewController release]; accountViewController = nil;
 }
 
+// ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+{
+	[userIconData release];
+	userIconData = [imageData retain];
+}
+
+- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+{
+	[userIconData release]; userIconData = nil;
+}
 
 @end
