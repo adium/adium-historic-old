@@ -47,6 +47,9 @@
 //
 - (void)awakeFromNib
 {
+    [textView_details setPlaceholder:[textView_details string]];
+    [textView_details setString:@""];
+    
     //Search for an exception log
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
@@ -65,8 +68,6 @@
                                        userInfo:nil
                                         repeats:YES];
     }
-    
-    [textView_details setPlaceholder:[textView_details string]];
 }
 
 //Actively tries to kill Apple's "Report this crash" dialog
