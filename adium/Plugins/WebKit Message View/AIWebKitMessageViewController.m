@@ -223,16 +223,17 @@
                   closeStyleTagsOnFontChange:NO encodeNonASCII:YES 
                   imagesPath:nil]];
         }
-        
+		
         range = [inString rangeOfString:@"%time"];
         if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
         }
 		
 		range = [inString rangeOfString:@"%stime"];
-        if(range.location != NSNotFound){
+        if(range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range withString:[timeStampFormatterMinutesSeconds stringForObjectValue:[(AIContentMessage *)content date]]];
         }
+		
 	} else {
 #warning Statuses should be able to know what kind of status it is, for class="away" style tags.
         range = [inString rangeOfString:@"%message"];
