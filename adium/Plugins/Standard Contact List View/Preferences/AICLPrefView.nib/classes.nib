@@ -7,27 +7,6 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {
-                deleteAccount = id; 
-                editAccount = id; 
-                finishEditingAccount = id; 
-                newAccount = id; 
-                selectServiceType = id; 
-                toggleConnection = id; 
-            }; 
-            CLASS = AIAccountPreferenceViewController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "panel_editAccount" = NSPanel; 
-                "popupMenu_serviceList" = NSPopUpButton; 
-                "scrollView_accountList" = NSScrollView; 
-                "tableView_accountList" = NSTableView; 
-                "view_accountDetails" = NSView; 
-                "view_accountPreferences" = NSView; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
             ACTIONS = {changePreference = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
@@ -39,11 +18,10 @@
                 "colorWell_grid" = NSColorWell; 
                 "colorWell_group" = NSColorWell; 
                 "slider_opacity" = NSSlider; 
-                "test_1" = NSTextField; 
-                "test_2" = NSTextField; 
                 "textField_fontName" = NSTextField; 
                 "textField_opacityPercent" = NSTextField; 
-                "view_prefView" = NSView; 
+                "view_prefViewGeneral" = NSView; 
+                "view_prefViewGroups" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

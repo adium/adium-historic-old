@@ -105,7 +105,7 @@
     owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock withDelegate:self label:DOCK_BEHAVIOR_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock_General withDelegate:self label:DOCK_BEHAVIOR_PREF_TITLE]];
 
     return(self);
 }

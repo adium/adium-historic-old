@@ -52,7 +52,7 @@
     owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Display withDelegate:self label:IDLE_TIME_DISPLAY_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:IDLE_TIME_DISPLAY_PREF_TITLE]];
 
     return(self);
 }

@@ -20,7 +20,7 @@
 #import "AITextForcingPlugin.h"
 
 #define	TEXT_FORCING_PREF_NIB		@"TextForcingPrefs"
-#define TEXT_FORCING_PREF_TITLE		@"Reformat incoming messages"
+#define TEXT_FORCING_PREF_TITLE		@"Reformat Incoming Messages"
 
 
 @interface AITextForcingPreferences (PRIVATE)

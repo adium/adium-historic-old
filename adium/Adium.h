@@ -32,4 +32,5 @@
 #import "AIChat.h"
 #import "AIListChat.h"
 #import "AIPreferenceViewController.h"
+#import "AIFlippedCategoryView.h"
 

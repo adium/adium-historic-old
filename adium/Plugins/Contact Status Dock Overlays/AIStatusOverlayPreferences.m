@@ -36,7 +36,7 @@
     owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:STATUS_OVERLAY_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock_Icon withDelegate:self label:STATUS_OVERLAY_PREF_TITLE]];
 
     //Configure the view
 

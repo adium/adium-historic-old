@@ -18,6 +18,11 @@
 
 @interface AIFlippedCategoryView : NSView {
 
+    int		desiredHeight;
+    
 }
+
+- (void)setDesiredHeight:(int)inHeight;
+- (int)desiredHeight;
 
 @end

@@ -53,7 +53,7 @@
     [self _buildIconArray];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock withDelegate:self label:DOCK_ICON_SELECTION_PREF_TITLE]];
+    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Dock_Icon withDelegate:self label:DOCK_ICON_SELECTION_PREF_TITLE]];
     
     return(self);
 }
