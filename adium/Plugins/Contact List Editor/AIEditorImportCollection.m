@@ -163,7 +163,7 @@
             }
             else
             {
-                currentHandle = [[[AIEditorListHandle alloc] initWithUID:value temporary:NO] autorelease];
+                currentHandle = [[[AIEditorListHandle alloc] initWithUID:value serviceID:[self serviceID] temporary:NO] autorelease];
                 [currentGroup addHandle:currentHandle];
             }
         }

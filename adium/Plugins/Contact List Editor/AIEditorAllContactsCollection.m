@@ -149,8 +149,12 @@
             }
 
             [collection addHandleNamed:[handle UID] inGroup:localGroup index:-1 temporary:[handle temporary]];
+
+            //Set the handle's service type correctly
+            [handle setServiceID:[collection serviceID]];
         }
     }
+
 
     //
     [self _positionHandle:handle atIndex:index inGroup:group];
@@ -323,7 +327,7 @@
                     handleUID = [handle UID];
                     localHandle = [localGroup handleNamed:handleUID];
                     if(!localHandle){
-                        localHandle = [[[AIEditorListHandle alloc] initWithUID:handleUID temporary:NO] autorelease];
+                        localHandle = [[[AIEditorListHandle alloc] initWithUID:handleUID serviceID:[collection serviceID] temporary:NO] autorelease];
                         [localHandle setOrderIndex:[[owner contactController] orderIndexOfKey:[NSString stringWithFormat:@"%@.%@",[collection serviceID],[handle UID]]]];
                         [localGroup addHandle:localHandle];
                     }

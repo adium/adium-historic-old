@@ -209,7 +209,7 @@
             }
 
             //Create the handle and add it to the group
-            editorHandle = [[[AIEditorListHandle alloc] initWithUID:[handle UID] temporary:NO] autorelease];
+            editorHandle = [[[AIEditorListHandle alloc] initWithUID:[handle UID] serviceID:[self serviceID] temporary:NO] autorelease];
             [editorGroup addHandle:editorHandle];
         }
     }

@@ -19,12 +19,13 @@
 
 @interface AIEditorListHandle : NSObject {
     NSString		*UID;
+    NSString		*serviceID;
     AIEditorListGroup	*containingGroup;
     BOOL		temporary;
     float		orderIndex;
 }
 
-- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary;
+- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID temporary:(BOOL)inTemporary;
 - (NSString *)UID;
 - (void)setUID:(NSString *)inUID;
 - (BOOL)temporary;
@@ -33,5 +34,7 @@
 - (AIEditorListGroup *)containingGroup;
 - (float)orderIndex;
 - (void)setOrderIndex:(float)inIndex;
+- (void)setServiceID:(NSString *)inServiceID;
+- (NSString *)serviceID;
 
 @end

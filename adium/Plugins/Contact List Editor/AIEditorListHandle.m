@@ -20,14 +20,17 @@
 
 @implementation AIEditorListHandle
 
-- (id)initWithUID:(NSString *)inUID temporary:(BOOL)inTemporary
+- (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID temporary:(BOOL)inTemporary;
 {
     [super init];
 
     UID = [inUID retain];
+    serviceID = [inServiceID retain];
     temporary = inTemporary;
     containingGroup = nil;
     orderIndex = -1;
+
+    NSLog(@"%@ (%@)",UID,serviceID);
     
     return(self);
 }
@@ -36,7 +39,8 @@
 {
     [UID release];
     [containingGroup release];
-    
+    [serviceID release];
+
     [super dealloc];
 }
 
@@ -50,6 +54,19 @@
 {
     [UID release];
     UID = [inUID retain];
+}
+
+
+//Service ID
+- (NSString *)serviceID
+{
+    return(serviceID);
+}
+- (void)setServiceID:(NSString *)inServiceID
+{
+    NSLog(@"%@ set serviceID:%@",UID,inServiceID);
+    [serviceID release];
+    serviceID = [inServiceID retain];
 }
 
 
