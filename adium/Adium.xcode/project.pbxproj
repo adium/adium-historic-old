@@ -8690,6 +8690,7 @@
 		};
 		4B4F5B29042D63DC00A8010A = {
 			children = (
+				83DB8F21061145C400A5C28C,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -16535,6 +16536,53 @@
 //6E2
 //6E3
 //6E4
+//830
+//831
+//832
+//833
+//834
+		83DB8F21061145C400A5C28C = {
+			children = (
+				83DB8F220611460E00A5C28C,
+				83DB8F230611460E00A5C28C,
+				83DB8F240611460E00A5C28C,
+			);
+			isa = PBXGroup;
+			name = "Version Checker";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		83DB8F220611460E00A5C28C = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = CPFVersionChecker.m;
+			path = "Plugins/Version Checker/CPFVersionChecker.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		83DB8F230611460E00A5C28C = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = CPFVersionChecker.h;
+			path = "Plugins/Version Checker/CPFVersionChecker.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		83DB8F240611460E00A5C28C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = VersionChecker.nib;
+			path = "Plugins/Version Checker/VersionChecker.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//830
+//831
+//832
+//833
+//834
 //9C0
 //9C1
 //9C2
