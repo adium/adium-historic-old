@@ -170,12 +170,6 @@ typedef enum {
 								 toListObject:(AIListObject *)inObject
 									preferred:(BOOL)inPreferred;
 
-//Emoticons
-- (void)setEmoticonPacks:(NSArray *)inEmoticonPacks;
-- (NSArray *)emoticonPacks;
-- (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;
-- (NSArray *)emoticonsArray;
-
 //Encryption
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
 
