@@ -234,6 +234,7 @@ static  NSImage			*tabDivider = nil;
 		//Move the tab
 		ignoreTabNumberChange = YES;
 		[tabViewItem retain];
+		if([tabView indexOfTabViewItem:tabViewItem] < index) index--;
 		[tabView removeTabViewItem:tabViewItem];
 		[tabView insertTabViewItem:tabViewItem atIndex:index];
 		[tabViewItem release];
