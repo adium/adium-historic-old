@@ -446,11 +446,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-    if([item isKindOfClass:[AIListGroup class]]){
-        return(YES);
-    }else{
-        return(NO);
-    }
+	return [item isKindOfClass:[AIListGroup class]];
 }
 
 //
