@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AICLPreferences : AIObject {
-    AIPreferencePane		*generalPane;
+    AIPreferencePane			*generalPane;
     IBOutlet	NSView			*view_prefViewGeneral;
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
@@ -24,13 +24,10 @@
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
     
-    AIPreferencePane		*groupsPane;
+    AIPreferencePane			*groupsPane;
     IBOutlet	NSView			*view_prefViewGroups;
-    IBOutlet	NSButton		*checkBox_boldGroups;
     IBOutlet	NSButton		*checkBox_customGroupColor;
-    IBOutlet    NSTextField             *textField_noBoldWarning;
     IBOutlet	NSColorWell		*colorWell_group;
-
 }
 
 + (AICLPreferences *)contactListPreferences;

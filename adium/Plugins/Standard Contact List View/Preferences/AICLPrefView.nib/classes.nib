@@ -13,7 +13,6 @@
             OUTLETS = {
                 "button_setFont" = NSButton; 
                 "checkBox_alternatingGrid" = NSButton; 
-                "checkBox_boldGroups" = NSButton; 
                 "checkBox_customGroupColor" = NSButton; 
                 "checkBox_showLabels" = NSButton; 
                 "colorWell_background" = NSColorWell; 
@@ -21,11 +20,10 @@
                 "colorWell_grid" = NSColorWell; 
                 "colorWell_group" = NSColorWell; 
                 "textField_fontName" = NSTextField; 
-                "textField_noBoldWarning" = NSTextField; 
                 "view_prefViewGeneral" = NSView; 
                 "view_prefViewGroups" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIObject; 
         }, 
         {
             CLASS = AIMTOC2Service; 
@@ -33,6 +31,7 @@
             OUTLETS = {"view_preferences" = NSView; }; 
             SUPERCLASS = AIService; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIPlugin; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIService; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
