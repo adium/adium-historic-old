@@ -244,7 +244,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Returns the current # of seconds the user has been idle
 - (double)currentIdleTime
 {
-    return(CGSSecondsSinceLastInputEvent(-1));
+    double idleTime = CGSSecondsSinceLastInputEvent(-1);
+
+    //On MDD Powermacs, the above function will return a large value when the machine is active (-1?).
+    //Here we check for that value and correctly return a 0 idle time.
+    if(idleTime > 18446744073.0) idleTime = 0.0;
+
+    return(idleTime);
 }
 
 //Show the set manual idle time window
