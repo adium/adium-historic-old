@@ -20,6 +20,7 @@
 #import "AIEmoticonsPlugin.h"
 #import "AIEmoticon.h"
 #import "AIEmoticonPack.h"
+#import "IKTableImageCell.h"
 
 #define	EMOTICON_PREF_NIB		@"EmoticonPrefs"
 #define EMOTICON_PREF_TITLE		@"Emoticons/Smilies"
@@ -246,7 +247,8 @@
         [curColumn setResizable:false];
         [curColumn setEditable:false];
         [curColumn setTableView:table];
-        [curColumn setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
+        [curColumn setDataCell:[[[IKTableImageCell alloc] initImageCell:nil] autorelease]];
+        //[curColumn setDataCell:[[[NSImageCell alloc] initImageCell:nil] autorelease]];
         
         //NSLog (@"Adding column #%d", i);
         
@@ -362,7 +364,7 @@
 {
     if (tableView == table_curEmoticons)
     {
-        unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
+        /*unsigned long index = (row * [tableView numberOfColumns]) + [tableView indexOfTableColumn:tableColumn];
         
         BOOL	select = FALSE, dim = FALSE;
         
@@ -372,12 +374,12 @@
         
         [aCell setHighlighted:select];
         [aCell setCellAttribute:NSChangeGrayCell to:TRUE];
-        /*if (dim)
-            [aCell setValue:NSOnState];
+        if (dim)
+            [aCell setObjectEnabled:FALSE];
         else
-            [aCell setValue:NSOffState];*/
+            [aCell setObjectEnabled:TRUE];
         
-        //NSLog (@"(Dim: %d)	Select: %d", dim, select);
+        NSLog (@"(Dim: %d)	Select: %d", dim, select);*/
     }
 }
 @end
