@@ -80,9 +80,11 @@ DeclareString(sOnline)
 	
 	groupAvailable = [[prefDict objectForKey:KEY_GROUP_AVAILABLE] boolValue];
 	groupUnavailable = [[prefDict objectForKey:KEY_GROUP_UNAVAILABLE] boolValue];
+	
 	groupAway = [[prefDict objectForKey:KEY_GROUP_AWAY] boolValue];
 	groupIdle = [[prefDict objectForKey:KEY_GROUP_IDLE] boolValue];
 	groupIdleAndAway = [[prefDict objectForKey:KEY_GROUP_IDLE_AND_AWAY] boolValue];
+	
 	sortIdleTime = [[prefDict objectForKey:KEY_SORT_IDLE_TIME] boolValue];
 	resolveAlphabetically = [[prefDict objectForKey:KEY_RESOLVE_ALPHABETICALLY] boolValue];
 	resolveAlphabeticallyByLastName = [[prefDict objectForKey:KEY_RESOLVE_BY_LAST_NAME] boolValue];
@@ -90,6 +92,8 @@ DeclareString(sOnline)
 	[self pruneAndSetSortOrderFromArray:[prefDict objectForKey:KEY_SORT_ORDER]];
 }
 
+//This method completely determines how the statusSort() method will operate.
+//The sortOrder array, when it is done, contains, in order, the statuses which will be sorted upon.
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray
 {
 	NSEnumerator	*enumerator = [sortOrderArray objectEnumerator];
@@ -109,7 +113,12 @@ DeclareString(sOnline)
 	while (sortTypeNumber = [enumerator nextObject]){
 		switch ([sortTypeNumber intValue]){
 			case Available: 
-				if (groupAvailable || groupUnavailable || groupAway || groupIdle || groupIdleAndAway) sortOrder[i++] = Available;
+				/* Group available if:
+					Group available,
+					Group all unavailable, or 
+					Group separetely the idle and the away (such that the remaining alternative is Available)
+				*/
+				if (groupAvailable || groupUnavailable || (!groupUnavailable && groupAway && groupIdle)) sortOrder[i++] = Available;
 				break;
 				
 			case Away:
@@ -127,15 +136,20 @@ DeclareString(sOnline)
 			case Unavailable: 
 				//If one of groupAway or groupIdle is off, or we need a generic unavailable sort
 				if (groupUnavailable ||
-					((groupAvailable || (groupAway || groupIdle || groupIdleAndAway)) && !(groupAway && groupIdle) &&
-					 !sortIdleTime)){
+					((groupAvailable && (!groupAway || !(groupIdle || sortIdleTime))))){
 					sortOrder[i++] = Unavailable;
 				}
 				break;
 				
 			case Online:
-				if (sortIdleTime && !groupAvailable && !groupUnavailable && !groupAway && !groupIdle && !groupIdleAndAway)
+				/* Show Online category if:
+					We aren't grouping all the available ones (this would imply grouping unavailable)
+					We aren't grouping all the unavailable ones (this would imply grouping available)
+					We aren't grouping both the away and the idle ones (this would imply grouping available)
+				*/
+				if (!groupAvailable && !groupUnavailable && !(groupAway && (groupIdle || sortIdleTime))){
 					sortOrder[i++] = Online;
+				}
 				break;
 		}
 	}
