@@ -94,6 +94,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 						  encodeNonASCII:NO
 							  imagesPath:nil
 					   attachmentsAsText:YES
+		  attachmentImagesOnlyForSending:NO
 						  simpleTagsOnly:YES]);
 	}else{
 		return [inAttributedString string];

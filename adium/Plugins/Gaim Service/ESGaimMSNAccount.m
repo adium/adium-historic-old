@@ -99,6 +99,7 @@ static BOOL didInitMSN = NO;
 					  encodeNonASCII:NO
 						  imagesPath:nil
 				   attachmentsAsText:YES
+	  attachmentImagesOnlyForSending:NO
 					  simpleTagsOnly:YES]);
 }
 

@@ -138,4 +138,6 @@
 
 - (void)gotGroupForContact:(AIListContact *)contact;
 - (void)preferencesChanged:(NSNotification *)notification;
+
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage;
 @end
