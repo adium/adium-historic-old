@@ -24,12 +24,7 @@
 #define	KEY_SMV_PREFIX_OUTGOING			@"Prefix Outgoing"
 #define	KEY_SMV_COMBINE_MESSAGES		@"Combine Messages"
 
-
-
-
-
-
-
+//Old?
 #define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
 #define	KEY_SMV_SHOW_TIME_STAMPS		@"Show Time Stamps"
 #define	KEY_SMV_SHOW_TIME_SECONDS		@"Show Seconds"

@@ -15,18 +15,7 @@
 
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
-/*
-#define AISM_PREFIX_COLORS		@"PrefixColors"
 
-#define AISM_PREF_NIB			@"AISMPrefView"
-#define AISM_PREF_TITLE_PREFIX		@"Prefixes"
-#define AISM_PREF_TITLE_TIMES		@"Time Stamps"
-#define AISM_PREF_TITLE_GRID		@"Gridding"
-#define AISM_PREF_TITLE_ALIAS		@"Message Alias"
-
-#define COLOR_SAMPLE_WIDTH		16
-#define COLOR_SAMPLE_HEIGHT		10
-*/
 @interface AISMPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_buildTimeStampMenu;
@@ -109,7 +98,6 @@
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
     }
-
 }
 
 //Build the time stamp selection menu
