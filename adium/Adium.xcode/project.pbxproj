@@ -1494,6 +1494,15 @@
 				34415B9C059FA8DF0019246B,
 				34E3C8870638D40500AA3EF7,
 				34E3C8880638D40500AA3EF7,
+				34564738069F43A800F728BC,
+				3456477F069F469E00F728BC,
+				34564781069F469E00F728BC,
+				34564782069F469E00F728BC,
+				34564783069F469E00F728BC,
+				34564784069F469E00F728BC,
+				34564785069F469E00F728BC,
+				34564788069F469F00F728BC,
+				34564789069F469F00F728BC,
 			);
 			isa = PBXGroup;
 			name = Services;
@@ -2387,6 +2396,132 @@
 		};
 		34564578069F366500F728BC = {
 			fileRef = 34564576069F366500F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34564738069F43A800F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = meanwhile.png;
+			path = "Plugins/Gaim Service/meanwhile.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564739069F43A800F728BC = {
+			fileRef = 34564738069F43A800F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3456477F069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = yahoo.png;
+			path = "Plugins/Gaim Service/yahoo.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564781069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = msn.png;
+			path = "Plugins/Gaim Service/msn.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564782069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = aim.png;
+			path = "Plugins/Gaim Service/aim.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564783069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = napster.png;
+			path = "Plugins/Gaim Service/napster.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564784069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = novell.png;
+			path = "Plugins/Gaim Service/novell.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564785069F469E00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = icq.png;
+			path = "Plugins/Gaim Service/icq.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564788069F469F00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "gadu-gadu.png";
+			path = "Plugins/Gaim Service/gadu-gadu.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34564789069F469F00F728BC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = jabber.png;
+			path = "Plugins/Gaim Service/jabber.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3456478A069F469F00F728BC = {
+			fileRef = 3456477F069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3456478C069F469F00F728BC = {
+			fileRef = 34564781069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3456478D069F469F00F728BC = {
+			fileRef = 34564782069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3456478E069F469F00F728BC = {
+			fileRef = 34564783069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3456478F069F469F00F728BC = {
+			fileRef = 34564784069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34564790069F469F00F728BC = {
+			fileRef = 34564785069F469E00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34564793069F469F00F728BC = {
+			fileRef = 34564788069F469F00F728BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34564794069F469F00F728BC = {
+			fileRef = 34564789069F469F00F728BC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12773,6 +12908,15 @@
 				341E886D0648FF1B00E0C828,
 				34F59BFE0667A99300F01E8C,
 				343A7F2706935DB600150CEC,
+				34564739069F43A800F728BC,
+				3456478A069F469F00F728BC,
+				3456478C069F469F00F728BC,
+				3456478D069F469F00F728BC,
+				3456478E069F469F00F728BC,
+				3456478F069F469F00F728BC,
+				34564790069F469F00F728BC,
+				34564793069F469F00F728BC,
+				34564794069F469F00F728BC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
