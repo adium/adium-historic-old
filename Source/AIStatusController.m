@@ -73,7 +73,7 @@
 	stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
 	stateMenuPluginsArray = [[NSMutableArray alloc] init];
 	stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
-	stateMenuSelectionUpdateDelays = 0;
+	stateMenuUpdateDelays = 0;
 	_stateArrayForMenuItems = nil;
 	_activeStatusState = nil;
 	_allActiveStatusStates = nil;
@@ -588,7 +588,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount			*account;
 	int					statusTypeCount[STATUS_TYPES_COUNT];
-	AIStatusType		activeStatusType;
+	AIStatusType		activeStatusType = AIOfflineStatusType;
 	unsigned			highestCount = 0;
 	
 	unsigned i;
@@ -692,7 +692,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
 												![[adium accountController] oneOrMoreConnectedAccounts]);
 
-	[self setDelayStateMenuSelectionUpdates:YES];
+	[self setDelayStateMenuUpdates:YES];
 	while(account = [enumerator nextObject]){
 		if([account online] || ([accountsToConnect containsObject:account] || shouldConnectAllAccounts)){
 			//If this account is online, or no accounts are online, set the status completely
@@ -703,7 +703,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			[account setStatusStateAndRemainOffline:statusState];
 		}
 	}
-	[self setDelayStateMenuSelectionUpdates:NO];
+	[self setDelayStateMenuUpdates:NO];
 }
 
 /*!
@@ -1236,7 +1236,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)updateAllStateMenuSelections
 {
-	if(stateMenuSelectionUpdateDelays == 0){
+	if(stateMenuUpdateDelays == 0){
 		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 		id <StateMenuPlugin>	stateMenuPlugin;
 		
@@ -1248,19 +1248,19 @@ int _statusArraySort(id objectA, id objectB, void *context)
 }
 
 /*!
- * @brief Delay state menu selection updates
+ * @brief Delay state menu updates
  *
  * This should be called to prevent duplicative updates when multiple accounts are changing status simultaneously.
  */
-- (void)setDelayStateMenuSelectionUpdates:(BOOL)shouldDelay
+- (void)setDelayStateMenuUpdates:(BOOL)shouldDelay
 {
 	if(shouldDelay)
-		stateMenuSelectionUpdateDelays++;
+		stateMenuUpdateDelays++;
 	else
-		stateMenuSelectionUpdateDelays--;
+		stateMenuUpdateDelays--;
 	
-	if(stateMenuSelectionUpdateDelays == 0){
-		[self updateAllStateMenuSelections];
+	if(stateMenuUpdateDelays == 0){
+		[self rebuildAllStateMenus];
 	}
 }
 
@@ -1291,7 +1291,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusState"]){
 
-			[self rebuildAllStateMenus];
+			//Don't update the state menus if we are currently delaying
+			if(stateMenuUpdateDelays == 0) [self rebuildAllStateMenus];
 			
 			//We can get here without the preferencesChanged: notification if the account is automatically connected.
 			if([inModifiedKeys containsObject:@"Online"]){

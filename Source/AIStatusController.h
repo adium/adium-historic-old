@@ -114,7 +114,7 @@
 	//State menu support
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
-	int						stateMenuSelectionUpdateDelays;
+	int						stateMenuUpdateDelays;
 	NSArray					*_stateArrayForMenuItems;
 	
 	NSMutableSet			*stateMenuItemsNeedingUpdating;
@@ -161,7 +161,7 @@
 - (void)updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems;
 - (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
-- (void)setDelayStateMenuSelectionUpdates:(BOOL)shouldDelay;
+- (void)setDelayStateMenuUpdates:(BOOL)shouldDelay;
 
 - (NSMenu *)statusStatesMenu;
 
