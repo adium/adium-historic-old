@@ -11,6 +11,12 @@
 
 @implementation AIListGroupGradientCell
 
+//
+- (NSColor *)flippyColor
+{
+	return([NSColor whiteColor]);
+}
+
 //Draw a gradient behind our group
 - (void)drawBackgroundWithFrame:(NSRect)rect inView:(NSView *)controlView
 {
