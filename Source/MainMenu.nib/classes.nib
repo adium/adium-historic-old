@@ -25,6 +25,7 @@
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
                 contentController = AIContentController; 
+                debugController = ESDebugController; 
                 dockController = AIDockController; 
                 fileTransferController = ESFileTransferController; 
                 interfaceController = AIInterfaceController; 
@@ -203,6 +204,12 @@
         }, 
         {
             CLASS = ESContactAlertsController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {owner = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = ESDebugController; 
             LANGUAGE = ObjC; 
             OUTLETS = {owner = AIAdium; }; 
             SUPERCLASS = NSObject; 
