@@ -642,7 +642,7 @@
 	
     //
 	toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", @"TextEntry", @"MessageWindow", nil]] retain];
-    NSLog(@"%@",toolbarItems);
+
 	[[self window] setToolbar:toolbar];
 }
 
