@@ -2877,7 +2877,6 @@
 				3419F3F405314C1200C68BA3,
 				3419F3F505314C1200C68BA3,
 				3484645405910E7E00241F68,
-				3453667D059BA7E300A83D9E,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5991,14 +5990,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3453667A059BA7E200A83D9E = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = CLViewLabelsAdvancedPrefs.nib;
-			path = "Plugins/Standard Contact List View/Preferences/CLViewLabelsAdvancedPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3453667B059BA7E300A83D9E = {
 			fileRef = 34536678059BA7E200A83D9E;
 			isa = PBXBuildFile;
@@ -6007,12 +5998,6 @@
 		};
 		3453667C059BA7E300A83D9E = {
 			fileRef = 34536679059BA7E200A83D9E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3453667D059BA7E300A83D9E = {
-			fileRef = 3453667A059BA7E200A83D9E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6254,7 +6239,6 @@
 				3484645305910E7E00241F68,
 				34536679059BA7E200A83D9E,
 				34536678059BA7E200A83D9E,
-				3453667A059BA7E200A83D9E,
 			);
 			isa = PBXGroup;
 			name = Preferences;

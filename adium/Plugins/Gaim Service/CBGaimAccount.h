@@ -100,8 +100,13 @@
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;
 
-//Private
-- (void)setAwayMessage:(NSAttributedString *)message;
-- (void)setProfile:(NSAttributedString *)profile;
+
+
+//Account status
+- (void)setAccountIdleTo:(NSTimeInterval)idle;
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage;
+- (void)setAccountProfileTo:(NSAttributedString *)profile;
+- (void)setAccountUserImage:(NSImage *)image;
+
 
 @end

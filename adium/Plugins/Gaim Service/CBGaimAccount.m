@@ -909,46 +909,6 @@
     }
 }
 
-- (void)setAwayMessage:(NSAttributedString *)message
-{
-    char *newValue = NULL;
-    
-    if (message) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:message
-                                              headers:YES
-                                             fontTags:YES   closeFontTags:YES
-                                            styleTags:YES   closeStyleTagsOnFontChange:NO
-                                       encodeNonASCII:NO
-                                           imagesPath:nil] UTF8String];
-    }
-    
-    serv_set_away(gc, GAIM_AWAY_CUSTOM, newValue);
-}
-- (void)setProfile:(NSAttributedString *)profile
-{
-    char *newValue = NULL;
-    
-    if (profile) {
-        newValue = (char *)[[AIHTMLDecoder encodeHTML:profile
-                                              headers:YES
-                                             fontTags:YES   closeFontTags:YES
-                                            styleTags:YES   closeStyleTagsOnFontChange:NO
-                                       encodeNonASCII:NO
-                                           imagesPath:nil] UTF8String];
-    }
-    
-    serv_set_info(gc, newValue);
-}
-
-- (void)setBuddyImageFromFilename:(char *)imageFilename
-{
-    if (account != NULL) {
-        //Set to nil first
-        gaim_account_set_buddy_icon(account, nil);
-        //Set to new user icon
-        gaim_account_set_buddy_icon(account,imageFilename);
-    }
-}
 
 - (void)displayError:(NSString *)errorDesc
 {
@@ -1121,63 +1081,124 @@
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
+	NSData	*data;
+	
 	[super updateStatusForKey:key];
 
     //Now look at keys which only make sense while online
     if([[self statusObjectForKey:@"Online"] boolValue]){
 		
-        if ([key compare:@"IdleSince"] == 0){
+        if([key compare:@"IdleSince"] == 0){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
-            // Even if we're setting a non-zero idle time, set it to zero first.
-            // Some clients ignore idle time changes unless it moves to/from 0.
-            serv_set_idle(gc, 0);
-            if (idleSince != nil) {
-                int newIdle = -[idleSince timeIntervalSinceNow];
-                serv_set_idle(gc, newIdle);
-            }
-            [self setStatusObject:idleSince forKey:@"IdleSince" notify:YES];
-        }
-        else if ([key compare:@"AwayMessage"] == 0){
+			[self setAccountIdleTo:(idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil)];
+        
+		}else if ([key compare:@"AwayMessage"] == 0){
 			NSAttributedString	*awayMessage = nil;
-			NSData				*awayData;
 						
-			if(awayData = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
-				awayMessage = [NSAttributedString stringWithData:awayData];
+			if(data = [self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]){
+				awayMessage = [NSAttributedString stringWithData:data];
 			}
-			NSLog(@"%@, %@, %i",awayData, awayMessage, (awayMessage != nil));
+			[self setAccountAwayTo:awayMessage];
+        
+		}else if([key compare:@"TextProfile"] == 0){
+			NSAttributedString	*profile = nil;
 			
-			[self setAwayMessage:awayMessage];
-			[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
-			[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
-        }
-		else if([key compare:@"TextProfile"] == 0){
-			NSAttributedString	*profile = [NSAttributedString stringWithData:[self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]];
-			[self setProfile:profile];
-			[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+			if(data = [self preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS]){
+				profile = [NSAttributedString stringWithData:data];
+			}
+			[self setAccountProfileTo:profile];
+
 		}
     }
 	
 	//User Icon can be set regardless of ONLINE state
 	if([key compare:@"UserIcon"] == 0) {
-		NSData	*newIconData = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS];
-		NSImage	*newIcon = [[[NSImage alloc] initWithData:newIconData] autorelease];
-		
-		[self setStatusObject:newIcon forKey:@"UserIcon" notify:YES];
-		
-		//gaim requires a file to be used as the userIcon.  Give it its file.
-		if(newIcon) {          
-			NSData 	*data = [[newIcon JPEGRepresentation] retain];
-			NSString    *buddyImageFilename = [[self _userIconCachePath] retain];
-			if([data writeToFile:buddyImageFilename atomically:YES]){
-				[self setBuddyImageFromFilename:(char *)[buddyImageFilename UTF8String]];
-			}else{
-				NSLog(@"Error writing file %@",buddyImageFilename);   
-			}
-			[buddyImageFilename release];
-		}else{
-			[self setBuddyImageFromFilename:nil];   
+		if(data = [self preferenceForKey:@"UserIcon" group:GROUP_ACCOUNT_STATUS]){
+			[self setAccountUserImage:[[[NSImage alloc] initWithData:data] autorelease]];
 		}
 	}
 }
+
+//Set our idle (Pass nil for no idle)
+- (void)setAccountIdleTo:(NSTimeInterval)idle
+{
+	//Even if we're setting a non-zero idle time, set it to zero first.
+	//Some clients ignore idle time changes unless it moves to/from 0.
+	serv_set_idle(gc, 0);
+	if(idle) serv_set_idle(gc, idle);
+
+	//We are now idle
+	[self setStatusObject:(idle ? [NSDate dateWithTimeIntervalSinceNow:-idle] : nil)
+				   forKey:@"IdleSince" notify:YES];
+}
+
+//Set our away state and message (Pass nil for no away)
+- (void)setAccountAwayTo:(NSAttributedString *)awayMessage
+{
+    char	*awayHTML = nil;
+
+	//Convert the away message to HTML, and pass it to libgaim
+	if(awayMessage){
+        awayHTML = (char *)[[AIHTMLDecoder encodeHTML:awayMessage
+                                              headers:YES
+                                             fontTags:YES
+										closeFontTags:YES
+                                            styleTags:YES
+						   closeStyleTagsOnFontChange:NO
+                                       encodeNonASCII:NO
+                                           imagesPath:nil] UTF8String];
+    }
+    serv_set_away(gc, GAIM_AWAY_CUSTOM, awayHTML);
+	
+	//We are now away
+	[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:NO];
+	[self setStatusObject:awayMessage forKey:@"StatusMessage" notify:YES];
+}
+
+//Set our text profile (Pass nil for no profile)
+- (void)setAccountProfileTo:(NSAttributedString *)profile
+{
+    char 	*profileHTML = nil;
+    
+	//Convert the profile to HTML, and pass it to libgaim
+    if(profile){
+        profileHTML = (char *)[[AIHTMLDecoder encodeHTML:profile
+												 headers:YES
+												fontTags:YES
+										   closeFontTags:YES
+											   styleTags:YES
+							  closeStyleTagsOnFontChange:NO
+										  encodeNonASCII:NO
+											  imagesPath:nil] UTF8String];
+    }
+    serv_set_info(gc, profileHTML);
+	
+	//We now have a profile
+	[self setStatusObject:profile forKey:@"TextProfile" notify:NO];
+}
+
+//Set our user image (Pass nil for no image)
+- (void)setAccountUserImage:(NSImage *)image
+{
+	//Clear the existing icon first
+	gaim_account_set_buddy_icon(account, nil);
+
+	//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
+	//image to one, and then pass libgaim the path.
+	if(image){          
+		NSData 		*data = [[image JPEGRepresentation] retain];
+		NSString    *buddyImageFilename = [self _userIconCachePath];
+		
+		if([data writeToFile:buddyImageFilename atomically:YES]){
+			gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
+		}else{
+			NSLog(@"Error writing file %@",buddyImageFilename);   
+		}
+	}
+
+	//We now have an icon
+	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
+}
+
 
 @end

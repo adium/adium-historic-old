@@ -192,7 +192,8 @@ struct oscar_data {
     }
 }
 
-- (void)setProfile:(NSAttributedString *)profile
+//This check is against the attributed string, not the HTML it creates... so it's worthless. :)
+/*- (void)setProfile:(NSAttributedString *)profile
 {
     if (profile){
         int length = [profile length];
@@ -205,7 +206,7 @@ struct oscar_data {
     }else{
         [super setProfile:profile];
     }
-}
+}*/
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
 {
