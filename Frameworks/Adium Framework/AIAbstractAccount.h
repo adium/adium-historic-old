@@ -30,7 +30,8 @@
 - (void)silenceAllContactUpdatesForInterval:(NSTimeInterval)interval;
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)updateCommonStatusForKey:(NSString *)key;
-- (void)setStatusState:(AIStatus *)statusState;;
+- (void)setStatusState:(AIStatus *)statusState;
+- (void)setStatusStateAndRemainOffline:(AIStatus *)statusState;
 - (AIStatus *)statusState;
 
 //Auto-Refreshing Status String
@@ -49,6 +50,7 @@
 - (AIListContact *)contactWithUID:(NSString *)sourceUID;
 
 //Connectivity
+- (void)accountDidConnect;
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
 

@@ -17,9 +17,9 @@
 #import "AIStatus.h"
 
 @class AIService;
+@protocol AIListObjectObserver;
 
 //Status State Notifications
-#define AIActiveStatusStateChangedNotification	@"AIActiveStatusStateChangedNotification"
 #define AIStatusStateArrayChangedNotification	@"AIStatusStateArrayChangedNotification"
 
 //Idle Notifications
@@ -28,12 +28,12 @@
 #define AIMachineIdleUpdateNotification			@"AIMachineIdleUpdateNotification"
 
 //Preferences
-#define PREF_GROUP_SAVED_STATUS		@"Saved Status"
-#define KEY_SAVED_STATUS			@"Saved Status Array"
+#define PREF_GROUP_SAVED_STATUS					@"Saved Status"
+#define KEY_SAVED_STATUS						@"Saved Status Array"
 
-#define KEY_STATUS_NAME				@"Status Name"
-#define KEY_STATUS_DESCRIPTION		@"Status Description"
-#define	KEY_STATUS_TYPE				@"Status Type"
+#define KEY_STATUS_NAME							@"Status Name"
+#define KEY_STATUS_DESCRIPTION					@"Status Description"
+#define	KEY_STATUS_TYPE							@"Status Type"
 
 //Built-in names and descriptions, which services should use when they support identical or approximately identical states
 #define	STATUS_NAME_AVAILABLE				@"Generic Available"
@@ -86,7 +86,7 @@
 - (void)removeStateMenuItems:(NSArray *)menuItemArray;
 @end
 
-@interface AIStatusController : NSObject {
+@interface AIStatusController : NSObject<AIListObjectObserver> {
     IBOutlet	AIAdium		*adium;
 
 	//Status states
@@ -110,6 +110,7 @@
 
 - (void)initController;
 - (void)closeController;
+- (void)finishIniting;
 - (NSArray *)stateArray;
 
 - (void)registerStatus:(NSString *)statusName

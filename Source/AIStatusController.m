@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIContactController.h"
 #import "AIEditStateWindowController.h"
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
@@ -28,6 +29,7 @@
 #define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
 #define STATE_TITLE_MENU_LENGTH		30
 #define STATUS_TITLE_CUSTOM			AILocalizedString(@"Custom...",nil)
+#define STATUS_TITLE_OFFLINE		AILocalizedString(@"Offline",nil)
 
 #define BUILT_IN_STATE_ARRAY		@"BuiltInStatusStates"
 
@@ -48,6 +50,8 @@
 							 toArray:(NSMutableArray *)menuItems
 				  alreadyAddedTitles:(NSMutableSet *)alreadyAddedTitles;
 - (void)buildBuiltInStatusTypes;
+- (AIStatus *)defaultInitialStatusState;
+- (void)setInitialStatusState;
 @end
 									
 /*!
@@ -81,13 +85,14 @@
 									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
 
-	//Update the selections in our state menus when the active state changes
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(updateAllStateMenuSelections)
-									   name:AIActiveStatusStateChangedNotification
-									 object:nil];
-	
+	[[adium contactController] registerListObjectObserver:self];
+
 	[self buildBuiltInStatusTypes];
+}
+
+- (void)finishIniting
+{
+	[self setInitialStatusState];
 }
 
 /*!
@@ -98,7 +103,6 @@
 	[[adium notificationCenter] removeObserver:self];
 	[stateArray release]; stateArray = nil;
 	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
-	[activeStatusState release]; activeStatusState = nil;
 }
 
 /*!
@@ -150,18 +154,22 @@
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	NSString		*serviceCodeUniqueID = [service serviceCodeUniqueID];
+	AIStatusType	type;
 
-	AIStatusType type;
 	for(type = AIAvailableStatusType ; type < STATUS_TYPES_COUNT ; type++){
+		NSArray		*menuItemArray;
+
+		menuItemArray = [self _menuItemsForStatusesOfType:type
+								   forServiceCodeUniqueID:serviceCodeUniqueID
+											   withTarget:target];
+
 		//Add a separator between each type after available
-		if (type > AIAvailableStatusType){
+		if ((type > AIAvailableStatusType) && [menuItemArray count]){
 			[menu addItem:[NSMenuItem separatorItem]];
 		}
 
 		//Add the items for this type
-		enumerator = [[self _menuItemsForStatusesOfType:type
-								 forServiceCodeUniqueID:serviceCodeUniqueID
-											 withTarget:target] objectEnumerator];
+		enumerator = [menuItemArray objectEnumerator];
 		while(menuItem = [enumerator nextObject]){
 			[menu addItem:menuItem];
 		}		
@@ -191,6 +199,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
+	//Quick efficiency: If asked for the offline status type, just return nil as we have no offline statuses at present.
+	if(type == AIOfflineStatusType) return nil;
+	
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
 	
@@ -330,6 +341,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		case AIAwayStatusType:
 			return STATUS_NAME_AWAY;
 			break;
+		case AIOfflineStatusType:
+			return nil;
+			break;
 	}	
 	
 	return nil;
@@ -361,6 +375,12 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return(stateArray);
 }
 
+/*
+ * @brief Return the array of built-in states
+ *
+ * These are basic Available and Away states which should always be visible and are (by convention) immutable.
+ * The first state in BUILT_IN_STATE_ARRAY will be used as the default for accounts as they are created.
+ */
 - (NSArray *)builtInStateArray
 {
 	if(!builtInStateArray){
@@ -379,6 +399,14 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return(builtInStateArray);
 }
 
+/*
+ * @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
+ */
+- (AIStatus *)defaultInitialStatusState
+{
+	return [[self builtInStateArray] objectAtIndex:0];
+}
+
 /*!
  * @brief Set the active status state
  *
@@ -386,14 +414,18 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  * effective immediately.  When the active state changes, an AIActiveStateChangedNotification is broadcast.
  */ 
 - (void)setActiveStatusState:(AIStatus *)statusState
-{
-	if(activeStatusState != statusState){
-		[activeStatusState release];
-		activeStatusState = [statusState retain];
+{	
+	//Apply the state to our accounts and notify
+	[self _applyStateToAllAccounts:activeStatusState];
+}
 
-		//Apply the state to our accounts and notify
-		[self _applyStateToAllAccounts:activeStatusState];
-	}
+- (void)setInitialStatusState
+{
+	AIStatus	*statusState = [self defaultInitialStatusState];
+	
+	//Apply the state to our accounts without notifying
+	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setInitialStatusStateIfNeeded:)
+															  withObject:statusState];
 }
 
 /*!
@@ -403,6 +435,41 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */ 
 - (AIStatus *)activeStatusState
 {
+	if(!activeStatusState){
+		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		NSMutableDictionary	*statusCountDict = [NSMutableDictionary dictionary];
+		AIAccount			*account;
+		AIStatus			*statusState, *bestStatusState = nil;;
+		NSNumber			*count;
+		int					highestCount = 0;
+		BOOL				noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
+		
+		while(account = [enumerator nextObject]){
+			if([account online] || noAccountsAreOnline){
+				statusState = [account statusState];
+
+				if(count = [statusCountDict objectForKey:statusState])
+					count = [NSNumber numberWithInt:([count intValue]+1)];
+				else
+					count = [NSNumber numberWithInt:1];
+				
+				[statusCountDict setObject:count
+									forKey:statusState];
+			}
+		}
+		
+		highestCount;
+		enumerator = [statusCountDict keyEnumerator];
+		while(statusState = [enumerator nextObject]){
+			int thisCount = [[statusCountDict objectForKey:statusState] intValue];
+			if(thisCount > highestCount){
+				bestStatusState = statusState;
+			}
+		}
+		
+		activeStatusState = [bestStatusState retain];
+	}
+	
 	return(activeStatusState);
 }
 
@@ -433,9 +500,22 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */ 
 - (void)_applyStateToAllAccounts:(AIStatus *)statusState
 {
+	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	AIAccount		*account;
+	
+	BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
+
 	[self setDelayStateMenuSelectionUpdates:YES];
-	[[[adium accountController] accountArray] makeObjectsPerformSelector:@selector(setStatusState:)
-															  withObject:statusState];
+	while(account = [enumerator nextObject]){
+		if([account online] || noAccountsAreOnline){
+			//If this account is online, or no accounts are online, set the status completely
+			[account setStatusState:statusState];
+		}else{
+			//If this account should not have its state set now, perform internal bookkeeping so a future sign-on
+			//will be to the most appropriate state
+			[account setStatusStateAndRemainOffline:statusState];
+		}
+	}
 	[self setDelayStateMenuSelectionUpdates:NO];
 }
 
@@ -889,6 +969,19 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	[menuItem setTag:currentStatusType];
 	[menuItemArray addObject:menuItem];
 
+	//Now add a separator and the Offline state option
+	[menuItemArray addObject:[NSMenuItem separatorItem]];
+
+	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_OFFLINE
+										  target:self
+										  action:@selector(selectOffline:)
+								   keyEquivalent:@""];
+	[menuItem setImage:[[[AIStatusIcons statusIconForStatusID:@"offline"
+														 type:AIStatusIconList
+													direction:AIIconNormal] copy] autorelease]];
+	[menuItem setTag:AIOfflineStatusType];
+	[menuItemArray addObject:menuItem];
+
 	//Now that we are done creating the menu items, tell the plugin about them
 	[stateMenuPlugin addStateMenuItems:menuItemArray];
 
@@ -916,9 +1009,13 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 /*!
  * @brief Completely rebuild all state menus
+ *
+ * Before doing so, clear the activeStatusState, which will be regenerated when next needed
  */
 - (void)rebuildAllStateMenus
 {
+	[activeStatusState release]; activeStatusState = nil;
+
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 	id <StateMenuPlugin>	stateMenuPlugin;
 	
@@ -981,52 +1078,87 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	NSEnumerator	*enumerator = [[stateMenuItemArraysDict objectForKey:identifier] objectEnumerator];
 	NSMenuItem		*menuItem;
 	
+	BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
+
 	//Scan each menu item and correctly set it as active or non-active
 	while(menuItem = [enumerator nextObject]){
 		NSDictionary	*dict = [menuItem representedObject];
 		AIAccount		*account;
 		AIStatus		*appropiateActiveStatusState;
 		AIStatus		*menuItemStatusState;
-		
+		BOOL			shouldSelectOffline;
+
 		//Search for the account or global status state as appropriate for this menu item.
+		//Also, determine if we are looking to select the Offline menu item
 		if(account = [dict objectForKey:@"AIAccount"]){
 			appropiateActiveStatusState = [account statusState];
+			shouldSelectOffline = ![account online];
 		}else{
-			appropiateActiveStatusState = activeStatusState;
+			appropiateActiveStatusState = [self activeStatusState];
+			shouldSelectOffline = noAccountsAreOnline;
 		}
 		
 		menuItemStatusState = [dict objectForKey:@"AIStatus"];
-
-		/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
-		 * in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
-		 * we have a custom state and will be searching for the custom item of the right type, switching all other
-		 * menu items to NSOffState. */
-		if([[self stateArrayForMenuItems] containsObjectIdenticalTo:appropiateActiveStatusState]){
-			//If the search state is in the array so is a saved state, search for the match
-			if(menuItemStatusState == appropiateActiveStatusState){
+		
+		if(shouldSelectOffline){
+			//If we should select offline, set all menu items which don't have the AIOfflineStatusType tag to be off.
+			if([menuItem tag] == AIOfflineStatusType){
 				if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 			}else{
-				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];				
 			}
+
 		}else{
-			//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
-			if(menuItemStatusState){
-				//If the menu item has an associated state, it's always off.
-				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-			}else{
-				//If it doesn't, check the tag to see if it should be on or off.
-				if([menuItem tag] == [appropiateActiveStatusState statusType]){
+			/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
+			* in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
+			* we have a custom state and will be searching for the custom item of the right type, switching all other
+			* menu items to NSOffState. */
+			if([[self stateArrayForMenuItems] containsObjectIdenticalTo:appropiateActiveStatusState]){
+				//If the search state is in the array so is a saved state, search for the match
+				if(menuItemStatusState == appropiateActiveStatusState){
 					if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
 				}else{
 					if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				}
+			}else{
+				//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
+				if(menuItemStatusState){
+					//If the menu item has an associated state, it's always off.
+					if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+				}else{
+					//If it doesn't, check the tag to see if it should be on or off.
+					if([menuItem tag] == [appropiateActiveStatusState statusType]){
+						if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+					}else{
+						if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+					}
 				}
 			}
 		}
 	}
 }
 
+/*
+ * @brief Account status changed.
+ *
+ * Rebuild all our state menus
+ */
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	if([inObject isKindOfClass:[AIAccount class]]){
+		if([inModifiedKeys containsObject:@"Online"] ||
+		   [inModifiedKeys containsObject:@"IdleSince"] ||
+		   [inModifiedKeys containsObject:@"StatusState"]){
+
+			[self rebuildAllStateMenus];
+		}
+	}
+    
+    return(nil);
+}
+
 /*!
- * @brief Menu validation
+* @brief Menu validation
  *
  * Our state menu items should always be active, so always return YES for validation.
  */
@@ -1088,6 +1220,18 @@ int _statusArraySort(id objectA, id objectB, void *context)
 									  andAccount:account
 										onWindow:nil
 								 notifyingTarget:self];
+}
+
+- (void)selectOffline:(id)sender
+{
+	NSDictionary	*dict = [sender representedObject];
+	AIAccount		*account = [dict objectForKey:@"AIAccount"];
+
+	if(account){
+		[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+	}else{
+		[[adium accountController] disconnectAllAccounts];
+	}
 }
 
 /*!

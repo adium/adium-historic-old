@@ -350,9 +350,9 @@
 	AIStatus	*statusState;
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
-	statusState = (originalStatusState ? [[originalStatusState copy] autorelease] : [AIStatus status]);
+	statusState = (originalStatusState ? [[originalStatusState mutableCopy] autorelease] : [AIStatus status]);
 	[statusState setMutabilityType:AIEditableStatusState];
-	
+
 	//XXX
 	/*[statusState setTitle:]*/
 	[statusState setStatusMessageData:[[textView_statusMessage textStorage] dataRepresentation]];

@@ -56,7 +56,7 @@
     [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
     [self updateStatusForKey:@"FullNameAttr"];
     [self updateStatusForKey:@"FormattedUID"];
-    
+	
     autoRefreshingKeys = [[NSMutableArray alloc] init];
     attributedRefreshTimer = nil;
 	reconnectTimer = nil;
@@ -293,6 +293,7 @@
 		}else{
 			//XXX behavior for setting a status when account is currently offline:
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
+			[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		}
 
 	}else if([key isEqualToString:@"FullNameAttr"]) {
@@ -343,11 +344,34 @@
 
 		[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 	}
-
-	[[adium notificationCenter] postNotificationName:AIActiveStatusStateChangedNotification
-											  object:self];
 	
 	[self notifyOfChangedStatusSilently:YES];
+}
+
+/*
+ * @brief Set a status state without going online
+ *
+ * Set the status state as a status object so that if we sign on later we will update to the proper state.
+ * Do not ask the account to actually switch to the state; do not perform any notifications about the change.
+ * This is intended for use by the statusController only.
+ */
+- (void)setStatusStateAndRemainOffline:(AIStatus *)statusState
+{
+	//Store the status state as a status object so it can be easily used elsewhere
+	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];	
+}
+
+/*
+ * @brief Set a status state if no status state is currently set
+ *
+ * If the account doesn't already have a status state, call setStatusStateAndRemainOffline: with the passed statusState.
+ * This is intended for use by the statusController only.
+ */
+- (void)setInitialStatusStateIfNeeded:(AIStatus *)statusState
+{
+	if(![self statusState]){
+		[self setStatusStateAndRemainOffline:statusState];
+	}
 }
 
 /*!
@@ -662,6 +686,28 @@
 
 //Connectivity ---------------------------------------------------------------------------------------------------------
 #pragma mark Connectivity
+
+/*
+ * @brief The account did connect
+ *
+ * Subclasses should call this on self after connecting
+ */
+- (void)accountDidConnect
+{
+    //We are now online
+    [self setStatusObject:nil forKey:@"Connecting" notify:NO];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressString" notify:NO];
+	[self setStatusObject:nil forKey:@"ConnectionProgressPercent" notify:NO];	
+
+	//Apply any changes
+	[self notifyOfChangedStatusSilently:NO];
+
+	//Update our status and idle status
+	[self updateStatusForKey:@"StatusState"];
+	[self updateStatusForKey:@"IdleSince"];	
+}
+
 /*!
  * @brief Autoreconnect after delay
  *
