@@ -71,9 +71,6 @@
 
     //Observe preference changes for updating sending key settings
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];	
-	
-	//Status/service icon settings
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 }
 
 #pragma mark Sending keys
@@ -103,47 +100,6 @@
 			[self _configureSendingKeysForObject:entryView];
 		}
 		
-	}else{ /* PREF_GROUP_INTERFACE */
-		
-		//Status icons
-		if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
-			NSString *path;
-			
-			path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
-								   extension:@"AdiumStatusIcons"
-						  resourceFolderName:@"Status Icons"];
-
-			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if(!path){
-				NSString *name = [[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
-													   forClass:[self class]] objectForKey:KEY_STATUS_ICON_PACK];
-				path = [adium pathOfPackWithName:name
-									   extension:@"AdiumStatusIcons"
-							  resourceFolderName:@"Status Icons"];
-			}
-				
-			[AIStatusIcons setActiveStatusIconsFromPath:path];
-		}
-
-		//Service icons
-		if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
-			NSString *path;
-			
-			path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
-								   extension:@"AdiumServiceIcons"
-						  resourceFolderName:@"Service Icons"];
-			
-			//If the preferred pack isn't found (it was probably deleted while active), use the default one
-			if(!path){
-				NSString *name = [[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
-													   forClass:[self class]] objectForKey:KEY_SERVICE_ICON_PACK];
-				path = [adium pathOfPackWithName:name
-									   extension:@"AdiumServiceIcons"
-							  resourceFolderName:@"Service Icons"];
-			}
-			
-			[AIServiceIcons setActiveServiceIconsFromPath:path];
-		}
 	}
 }
 

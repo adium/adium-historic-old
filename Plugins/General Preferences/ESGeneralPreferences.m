@@ -59,11 +59,6 @@
     [checkBox_arrangeTabs setState:[[prefDict objectForKey:KEY_SORT_CHATS] boolValue]];
 	[checkBox_arrangeByGroup setState:[[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue]];
 
-	[popUp_statusIcons setMenu:[self statusIconsMenu]];
-	[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
-	[popUp_serviceIcons setMenu:[self serviceIconsMenu]];
-	[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
-
 	//Chat Cycling
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHAT_CYCLING];
 	[popUp_tabKeys setMenu:[self tabKeysMenu]];
@@ -100,17 +95,15 @@
     [checkBox_arrangeTabs setTitle:AILocalizedString(@"Sort tabs with the current sort options",nil)];
     [checkBox_arrangeByGroup setTitle:AILocalizedString(@"Organize tabs into new windows by group",nil)];
 	[checkBox_enableLogging setTitle:AILocalizedString(@"Log messages",nil)];
-	[checkBox_sendOnReturn setTitle:AILocalizedString(@"Return key",nil)];
-	[checkBox_sendOnEnter setTitle:AILocalizedString(@"Enter key",nil)];
+	[checkBox_sendOnReturn setTitle:AILocalizedString(@"Send on Return",nil)];
+	[checkBox_sendOnEnter setTitle:AILocalizedString(@"Send on Enter",nil)];
 	[checkBox_enableMenuItem setTitle:AILocalizedString(@"Show Adium status in menu bar",nil)];
 	
-	[label_logging setStringValue:AILocalizedString(@"Logging:",nil)];
+	[label_logging setStringValue:AILocalizedString(@"Messages:",nil)];
 	[label_messagesSendOn setStringValue:AILocalizedString(@"Messages send on:",nil)];
 	[label_messagesTabs setStringValue:AILocalizedString(@"Message tabs:",nil)];
 	[label_menuItem setStringValue:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
 	[label_switchTabsWith setStringValue:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
-	[label_serviceIcons setStringValue:AILocalizedString(@"Service icons:","Label for preference to select the icon pack to used for service (AIM, MSN, etc.)")];
-	[label_statusIcons setStringValue:AILocalizedString(@"Status icons:","Label for preference to select status icon pack")];
 	[label_sound setStringValue:AILocalizedString(@"Sound:",nil)];
 }
 
@@ -161,14 +154,7 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
 											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
 											  group:PREF_GROUP_SOUNDS];
-	}else if(sender == popUp_statusIcons){
-        [[adium preferenceController] setPreference:[[popUp_statusIcons selectedItem] title]
-                                             forKey:KEY_STATUS_ICON_PACK
-                                              group:PREF_GROUP_INTERFACE];
-	}else if(sender == popUp_serviceIcons){
-        [[adium preferenceController] setPreference:[[popUp_serviceIcons selectedItem] title]
-                                             forKey:KEY_SERVICE_ICON_PACK
-                                              group:PREF_GROUP_INTERFACE];
+
 	}else if(sender == checkBox_enableMenuItem){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
 											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
@@ -274,78 +260,4 @@
 	return ([tabKeysMenu autorelease]);		
 }
 
-
-- (NSMenu *)statusIconsMenu
-{
-	NSMenu			*statusIconsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSMenuItem		*menuItem;
-
-	NSEnumerator	*enumerator = [[self _allPacksWithExtension:@"AdiumStatusIcons" inFolder:@"Status Icons"] objectEnumerator];
-	NSString		*packPath;
-	while(packPath = [enumerator nextObject]){
-		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
-		
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:name];
-		[menuItem setImage:[AIStatusIcons previewMenuImageForStatusIconsAtPath:packPath]];
-		[statusIconsMenu addItem:menuItem];
-	}
-	
-	return(statusIconsMenu);
-}
-
-- (NSMenu *)serviceIconsMenu
-{
-	NSMenu			*serviceIconsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSMenuItem		*menuItem;
-
-	NSEnumerator	*enumerator = [[self _allPacksWithExtension:@"AdiumServiceIcons" inFolder:@"Service Icons"] objectEnumerator];
-	NSString		*packPath;
-	while(packPath = [enumerator nextObject]){
-		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
-		
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:name];
-		[menuItem setImage:[AIServiceIcons previewMenuImageForServiceIconsAtPath:packPath]];
-		[serviceIconsMenu addItem:menuItem];
-	}
-
-	return(serviceIconsMenu);	
-}
-
-- (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder
-{
-	NSFileManager	*defaultManager = [NSFileManager defaultManager];
-	NSMutableArray	*packsArray = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-	NSString		*path;
-	
-	enumerator = [[adium resourcePathsForName:inFolder] objectEnumerator];
-
-	while(path = [enumerator nextObject]){            
-		NSEnumerator	*fileEnumerator;
-		NSString		*filePath;
-		fileEnumerator = [defaultManager enumeratorAtPath:path];
-		
-		//Find all the appropriate packs
-		while((filePath = [fileEnumerator nextObject])){
-			if([[filePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame){
-				NSString		*fullPath;
-				
-				//Get the icon pack's full path and preview state
-				fullPath = [path stringByAppendingPathComponent:filePath];
-
-				[packsArray addObject:fullPath];
-			}
-		}
-	}
-	
-	return(packsArray);
-}	
 @end
