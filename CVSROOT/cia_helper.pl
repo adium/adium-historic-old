@@ -1,6 +1,10 @@
 #!/usr/bin/perl -w
 
 use strict;
+use IO::Handle;
+
+
+PIPEHANDLE->autoflush(1);
 
 my $input;
 
@@ -9,6 +13,7 @@ while(<STDIN>) {
 }
 
 print $input;
+print @ARGV;
 
 print "Running CIA\n";
 open(CIA,  "| /usr/bin/perl /cvsroot/adium/CVSROOT/ciabot.pl @ARGV") or die "shit: $!";
