@@ -70,9 +70,11 @@
 		[button_showEmail setFrame:NSMakeRect(0,0,0,0)];
 	}
 
+#warning Hook this to the account for listobject
 	[[adium contactAlertsController] generateEvent:ACCOUNT_RECEIVED_EMAIL
 									 forListObject:nil
-										  userInfo:nil];
+										  userInfo:nil
+					  previouslyPerformedActionIDs:nil];
 }
 
 - (IBAction)pressedButton:(id)sender
