@@ -8,6 +8,7 @@
 
 #import "ESGaimYahooAccountViewController.h"
 #import "ESGaimYahooAccount.h"
+#import "SLGaimCocoaAdapter.h"
 
 #include <Libgaim/yahoo_filexfer.h>
 #include <Libgaim/yahoo_friend.h>

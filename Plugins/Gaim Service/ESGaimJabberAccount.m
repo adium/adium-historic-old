@@ -8,6 +8,7 @@
 
 #import "ESGaimJabberAccountViewController.h"
 #import "ESGaimJabberAccount.h"
+#import "SLGaimCocoaAdapter.h"
 
 #include <Libgaim/buddy.h>
 #include <Libgaim/presence.h>
