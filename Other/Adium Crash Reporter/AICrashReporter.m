@@ -203,6 +203,9 @@
         //Send
         [self sendReport:crashReport];
         
+		//Relaunch Adium
+		[[NSWorkspace sharedWorkspace] launchApplication:@"Adium"];
+
         //Close our window to terminate
         [window_MainWindow performClose:nil];
     }
