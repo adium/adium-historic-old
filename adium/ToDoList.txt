@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.30 2004/04/09 04:13:03 evands Exp $
+$Id: ToDoList.txt,v 1.31 2004/04/09 04:17:36 evands Exp $
 
 Legend
 + Change or Addition
@@ -28,7 +28,7 @@ Bugs
 * Yahoo giving some users a Gaim error: unknown error 29 on connect
 * Some URLs in profiles aren't allowing clicks properly.
 * Spaces in the address book STILL don't work properly, and they really should be better now. Grr.
-
+* We have a 10.2.8 crash in contact list resize code, somehow: http://www.visualdistortion.org/crash/view.jsp?crash=8008 (There are a couple like this)
 -------------------------------------------------------------------------------------------------------
 Minor Changes
 -------------------------------------------------------------------------------------------------------
