@@ -1489,7 +1489,7 @@ static id<GaimThread> gaimThread = nil;
 
 					if ((alias && !buddy->alias) ||
 						(!alias && buddy->alias) ||
-						(strcmp(buddy->alias,alias) != 0)){
+						((buddy->alias && alias && (strcmp(buddy->alias,alias) != 0)))){
 					
 						gaim_blist_alias_buddy(buddy,alias);
 						serv_alias_buddy(buddy);

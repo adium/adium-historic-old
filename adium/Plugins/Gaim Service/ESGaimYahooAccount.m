@@ -8,7 +8,7 @@
 #import "ESGaimYahooAccountViewController.h"
 #import "ESGaimYahooAccount.h"
 
-#import <Libgaim/yahoo_filexfer.h>
+#include <Libgaim/yahoo_filexfer.h>
 #include <Libgaim/yahoo.h>
 
 #define KEY_YAHOO_HOST  @"Yahoo:Host"
@@ -59,6 +59,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
+	
 	if (disconnectionError){
 		if ([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
@@ -157,7 +158,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 
 	const char				*buddyName = [[theContact UID] UTF8String];
 	
-	if (gaim_account_is_connected(account) &&
+	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(userInfo = g_hash_table_lookup(od->friends, buddyName))) {
 		

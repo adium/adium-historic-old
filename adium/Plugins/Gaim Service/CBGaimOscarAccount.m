@@ -302,9 +302,9 @@ static BOOL didInitOscar = NO;
 	struct buddyinfo	*bi;
 	GaimBuddy			*buddy;
 	
-	const char				*buddyName = [[theContact UID] UTF8String];
+	const char			*buddyName = [[theContact UID] UTF8String];
 	
-	if (gaim_account_is_connected(account) &&
+	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, buddyName))){
 	
@@ -401,7 +401,7 @@ static BOOL didInitOscar = NO;
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if (gaim_account_is_connected(account) &&
+	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) && 
 		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
 	
@@ -657,7 +657,7 @@ aim_srv_setavailmsg(od->sess, text);
 	aim_userinfo_t		*userinfo;
 	GaimBuddy			*buddy;
 	
-	if (gaim_account_is_connected(account) &&
+	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
 		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))){
 		
