@@ -95,7 +95,6 @@
     //Swap in the contact list view
     contactListViewController = [[[adium interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
-    [scrollView_contactList setAndSizeDocumentView:contactListView];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
     [[self window] makeFirstResponder:contactListView];
@@ -126,6 +125,8 @@
     //Apply initial preference-based settings
     [self preferencesChanged:nil];
     
+	[scrollView_contactList setAndSizeDocumentView:contactListView];
+	
     //Tell the interface to open our window
 //	[interface performSelector:@selector(containerDidOpen:) withObject:self afterDelay:1];
 	[interface containerDidOpen:self];
