@@ -556,7 +556,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
     //Send the object
 	if ([inObject sendContent]){
-		if([[inObject source] sendContentObject:inObject]){
+		if([(AIAccount *)[inObject source] sendContentObject:inObject]){
 			if([inObject displayContent]){
 				//Add the object
 				[self displayContentObject:inObject];

@@ -12,12 +12,16 @@
 @implementation AIContentObject
 
 //
-- (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate{
+- (id)initWithChat:(AIChat *)inChat
+			source:(AIListObject *)inSource
+	   destination:(AIListObject *)inDest
+			  date:(NSDate*)inDate
+{
 	return([self initWithChat:inChat source:inSource destination:inDest date:inDate message:nil]);
 }
 - (id)initWithChat:(AIChat *)inChat
-			source:(id)inSource
-	   destination:(id)inDest
+			source:(AIListObject *)inSource
+	   destination:(AIListObject *)inDest
 			  date:(NSDate*)inDate
 		   message:(NSAttributedString *)inMessage
 {
