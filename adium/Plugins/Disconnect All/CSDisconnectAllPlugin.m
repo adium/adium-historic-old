@@ -18,13 +18,13 @@
     disconnectItem = [[[NSMenuItem alloc] initWithTitle:DISCONNECT_MENU_TITLE
                                                 target:self
                                                 action:@selector(disconnectAll:)
-                                         keyEquivalent:@"k"] autorelease];
-    [disconnectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+                                         keyEquivalent:@"K"] autorelease];
     
     connectItem = [[[NSMenuItem alloc] initWithTitle:CONNECT_MENU_TITLE
                                               target:self
                                               action:@selector(connectAll:)
-                                       keyEquivalent:@"K"] autorelease];
+                                       keyEquivalent:@"k"] autorelease];
+    [connectItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 
     [[owner menuController] addMenuItem:connectItem toLocation:LOC_File_Accounts];
     [[owner menuController] addMenuItem:disconnectItem toLocation:LOC_File_Accounts];
