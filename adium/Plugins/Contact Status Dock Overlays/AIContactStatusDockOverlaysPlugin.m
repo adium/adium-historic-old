@@ -40,9 +40,12 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_OVERLAYS];
     preferences = [[AIStatusOverlayPreferences preferencePane] retain];
 	
-    //Register as a contact observer (So we can catch the unviewed content status flag)
+    //Register as a contact observer (For signed on / signed off)
     [[adium contactController] registerListObjectObserver:self];
 	
+	//Register as a chat observer (for unviewed content)
+	[[adium contentController] registerChatObserver:self];
+		
     //Prefs
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
@@ -101,34 +104,55 @@
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
-    if(showStatus || showContent){ //Skip this entirely if overlays are off
+	//Skip this entirely if overlays are off or this contact is within a metaContact
+    if(showStatus && ![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){ 
 		
-		if(![[inObject containingObject] isKindOfClass:[AIMetaContact class]]){
-			
-			if([inModifiedKeys containsObject:@"UnviewedContent"] ||
-			   [inModifiedKeys containsObject:@"Signed On"] ||
-			   [inModifiedKeys containsObject:@"Signed Off"]){
+		BOOL containsSignedOn = [inModifiedKeys containsObject:@"Signed On"];
+		BOOL containsSignedOff = [inModifiedKeys containsObject:@"Signed Off"];
+		
+		if (containsSignedOn || containsSignedOff){
+			if((containsSignedOn && [inObject integerStatusObjectForKey:@"Signed On"]) ||
+			   (containsSignedOff && [inObject integerStatusObjectForKey:@"Signed Off"])){
 				
-				if((showContent && [inObject integerStatusObjectForKey:@"UnviewedContent"]) ||
-				   (showStatus && ([inObject integerStatusObjectForKey:@"Signed On"] || 
-								   [inObject integerStatusObjectForKey:@"Signed Off"]))){
-					
-					if(![unviewedObjectsArray containsObject:inObject]){
-						[unviewedObjectsArray addObject:inObject];
-					}
+				if(![unviewedObjectsArray containsObject:inObject]){
+					[unviewedObjectsArray addObject:inObject];
+				}
 
-				}else{
-					if([unviewedObjectsArray containsObject:inObject]){
-						[unviewedObjectsArray removeObject:inObject];
-					}
+			}else{
+				if([unviewedObjectsArray containsObject:inObject]){
+					[unviewedObjectsArray removeObject:inObject];
 				}
 			}
 			
-			[self _setOverlay]; //Redraw our overlay
+			[self _setOverlay];
 		}
 	}
+	
+	return(nil);
+}
 
-return(nil);
+- (NSArray *)updateChat:(AIChat *)inChat keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	if(showContent){
+		if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+			
+			if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+				if(![unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+					[unviewedObjectsArray addObject:inChat];
+					[self _setOverlay];
+				}
+				
+			}else{
+				if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+					[unviewedObjectsArray removeObjectIdenticalTo:inChat];
+					[self _setOverlay];
+				}
+			}
+			
+		}
+	}
+	
+	return nil;
 }
 
 //
@@ -152,13 +176,13 @@ return(nil);
 - (NSImage *)overlayImageFlash:(BOOL)flash
 {
     NSEnumerator		*enumerator;
-    AIListContact		*contact;
-    NSFont			*font;
-    NSParagraphStyle		*paragraphStyle;
-    float			dockIconScale;
-    int				iconHeight;
-    float			top, bottom;
-    NSImage			*image = (flash ? image1 : image2);
+    ESObjectWithStatus  *object;
+    NSFont				*font;
+    NSParagraphStyle	*paragraphStyle;
+    float				dockIconScale;
+    int					iconHeight;
+    float				top, bottom;
+    NSImage				*image = (flash ? image1 : image2);
 	
     //Pre-calc some sizes
     dockIconScale = 1.0 - [[adium dockController] dockIconScale];
@@ -182,9 +206,9 @@ return(nil);
 	
     //Draw overlays for each contact
     enumerator = [unviewedObjectsArray reverseObjectEnumerator];
-    while((contact = [enumerator nextObject]) && top >= 0 && bottom < 128){
+    while((object = [enumerator nextObject]) && top >= 0 && bottom < 128){
         float			left, right, arcRadius, stringInset;
-        NSBezierPath		*path;
+        NSBezierPath	*path;
         NSColor			*backColor = nil, *textColor = nil, *borderColor = nil;
 		
         //Create the pill frame
@@ -198,27 +222,42 @@ return(nil);
         //Top
         [path moveToPoint: NSMakePoint(left, top)];
         [path lineToPoint: NSMakePoint(right, top)];
+		
         //Right rounded cap
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, top - arcRadius) radius:arcRadius startAngle:90 endAngle:0 clockwise:YES];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, top - arcRadius) 
+										 radius:arcRadius
+									 startAngle:90
+									   endAngle:0
+									  clockwise:YES];
         [path lineToPoint: NSMakePoint(right + arcRadius, bottom + arcRadius)];
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, bottom + arcRadius) radius:arcRadius startAngle:0 endAngle:270 clockwise:YES];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(right, bottom + arcRadius) 
+										 radius:arcRadius
+									 startAngle:0
+									   endAngle:270
+									  clockwise:YES];
+		
         //Bottom
         [path moveToPoint: NSMakePoint(right, bottom)];
         [path lineToPoint: NSMakePoint(left, bottom)];
+		
         //Left rounded cap
-        [path appendBezierPathWithArcWithCenter:NSMakePoint(left, bottom + arcRadius) radius:arcRadius startAngle:270 endAngle:180 clockwise:YES];
+        [path appendBezierPathWithArcWithCenter:NSMakePoint(left, bottom + arcRadius)
+										 radius:arcRadius
+									 startAngle:270
+									   endAngle:180
+									  clockwise:YES];
         [path lineToPoint: NSMakePoint(left - arcRadius, top - arcRadius)];
         [path appendBezierPathWithArcWithCenter:NSMakePoint(left, top - arcRadius) radius:arcRadius startAngle:180 endAngle:90 clockwise:YES];
 		
 		/*
 		 //Get our colors
-		 if(!([contact integerStatusObjectForKey:@"UnviewedContent"] && flash)){
+		 if(!([contact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT] && flash)){
 			 backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
 			 textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
 		 }
 		 */
 		
-        if([contact integerStatusObjectForKey:@"UnviewedContent"]){ //Unviewed
+        if([object integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){ //Unviewed
 			if(flash){
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
@@ -226,11 +265,11 @@ return(nil);
                 backColor = backUnviewedContentColor;
                 textColor = unviewedContentColor;
             }
-        }else if([contact integerStatusObjectForKey:@"Signed On"]){ //Signed on
+        }else if([object integerStatusObjectForKey:@"Signed On"]){ //Signed on
             backColor = backSignedOnColor;
             textColor = signedOnColor;
 			
-        }else if([contact integerStatusObjectForKey:@"Signed Off"]){ //Signed off
+        }else if([object integerStatusObjectForKey:@"Signed Off"]){ //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
 			
@@ -258,8 +297,8 @@ return(nil);
         [borderColor set];
         [path stroke];
 		
-        //Get the contact's display name
-        [[contact displayName] drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)
+        //Get the object's display name
+        [[object displayName] drawInRect:NSMakeRect(0 + stringInset, bottom + 1, 128 - (stringInset * 2), top - bottom)
                            withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]];
 		/*        
 			nameString = [[[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, textColor, NSForegroundColorAttributeName, nil]] autorelease];
