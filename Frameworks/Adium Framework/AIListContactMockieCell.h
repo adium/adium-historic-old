@@ -8,7 +8,9 @@
 #import "AIListContactCell.h"
 
 @interface AIListContactMockieCell : AIListContactCell {
-
+	BOOL	drawGrid;
 }
+
+- (void)setDrawsGrid:(BOOL)inValue;
 
 @end
