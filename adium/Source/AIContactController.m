@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.164 2004/08/03 06:23:27 evands Exp $
+// $Id: AIContactController.m,v 1.165 2004/08/04 04:08:54 dchoby98 Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -891,6 +891,69 @@ DeclareString(UID);
 										 forKey:KEY_FLAT_METACONTACTS
 										  group:PREF_GROUP_CONTACT_LIST];
 //	[[owner preferenceController] delayPreferenceChangedNotifications:NO];
+}
+
+- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(NSString *)service withTarget:(id)target
+{
+	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
+	int			i;
+	
+	// If service is nil, get ALL contained contacts
+	if( service ) {
+		
+		NSArray		*contactArray = [inContact containedObjects];
+		NSImage *serviceImage = [[[[owner accountController] serviceControllerWithIdentifier:service] handleServiceType] menuImage];
+
+		for( i = 0; i < [contactArray count]; i++ ) {
+			AIListObject *current = [contactArray objectAtIndex:i];
+			if( [[current serviceID] isEqualToString:service] ) {
+				NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[current displayName]
+																  target:target
+																  action:@selector(selectContainedContact:)
+														   keyEquivalent:@""];
+				[tempItem setRepresentedObject:current];
+				[tempItem setImage:serviceImage];
+				[contactMenu addItem:tempItem];
+				[tempItem release];
+			}
+		}
+		
+	} else {
+		NSDictionary	*serviceDict = [inContact dictionaryOfServicesAndContainedObjects];
+		NSEnumerator	*enumerator = [serviceDict keyEnumerator];
+		NSString		*currentID;
+		
+		// Run through each key (i.e. service id)
+		while( currentID = [enumerator nextObject] ) {
+			NSArray *contactArray = [serviceDict objectForKey:currentID];
+			NSImage *serviceImage = [[[[owner accountController] serviceControllerWithIdentifier:currentID] handleServiceType] menuImage];
+
+			for( i = 0; i < [contactArray count]; i++ ) {
+				AIListObject *contact = [contactArray objectAtIndex:i];
+				NSMenuItem *tempItem = [[NSMenuItem alloc] initWithTitle:[contact displayName]
+															  target:target
+															  action:@selector(selectContainedContact:)
+													   keyEquivalent:@""];
+				[tempItem setRepresentedObject:contact];
+				[tempItem setImage:serviceImage];
+				[contactMenu addItem:tempItem];
+				[tempItem release];
+			}
+			
+			[contactMenu addItem:[NSMenuItem separatorItem]];
+		}
+		
+		// Remove the last separator
+		[contactMenu removeItemAtIndex:([contactMenu numberOfItems]-1)];
+		
+	}
+	
+	return contactMenu;
+}
+
+- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target
+{
+	return( [self menuOfContainedContacts:inContact forService:nil withTarget:target] );
 }
 
 //Contact Info --------------------------------------------------------------------------------
