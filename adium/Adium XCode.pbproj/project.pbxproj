@@ -11064,6 +11064,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9EF605314771000AB133,
+				4B15ED73057AF5C300A3B3D3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11134,6 +11135,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				34BD9F0005314771000AB133,
+				4B15ED72057AF5C300A3B3D3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17085,8 +17087,8 @@
 			children = (
 				4B13323D0459BDE200A8010A,
 				4B13323C0459BDD500A8010A,
-				4B13323E0459BDF900A8010A,
 				4B4F5B30042D64A100A8010A,
+				4B13323E0459BDF900A8010A,
 			);
 			isa = PBXGroup;
 			name = Accounts;
@@ -17194,6 +17196,36 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B15ED2E057AED8600A3B3D3 = {
+			expectedFileType = sourcecode.c.h;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAccountListPreferences.h;
+			path = "Plugins/Account List Preferences/AIAccountListPreferences.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B15ED2F057AED8600A3B3D3 = {
+			expectedFileType = sourcecode.c.objc;
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAccountListPreferences.m;
+			path = "Plugins/Account List Preferences/AIAccountListPreferences.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B15ED72057AF5C300A3B3D3 = {
+			fileRef = 4B15ED2F057AED8600A3B3D3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B15ED73057AF5C300A3B3D3 = {
+			fileRef = 4B15ED2E057AED8600A3B3D3;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B187A0303D59CCC00A8010A = {
 			expectedFileType = sourcecode.c.h;
@@ -28744,6 +28776,8 @@
 			children = (
 				F55B413B03AB895501A8010A,
 				F55B413C03AB895501A8010A,
+				4B15ED2E057AED8600A3B3D3,
+				4B15ED2F057AED8600A3B3D3,
 				F55B414203AB897201A8010A,
 				4BAC8C8C05011FF300A8010A,
 				4B34BA8D04FE4D8900A8010A,

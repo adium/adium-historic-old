@@ -13,36 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAccountController, AIAccount, AIAutoScrollView;
+@class AIAccountListPreferences;
 
 @interface AIAccountListPreferencesPlugin : AIPlugin {
-    IBOutlet		NSView				*view_accountPreferences;
-    IBOutlet		AIAlternatingRowTableView	*tableView_accountList;
-    IBOutlet		AIAutoScrollView		*scrollView_accountList;
-    IBOutlet		NSButton			*button_newAccount;
-    IBOutlet		NSButton			*button_deleteAccount;
-    IBOutlet		NSPopUpButton			*popupMenu_serviceList;
-    IBOutlet		NSView				*view_accountDetails;
-    IBOutlet		NSButton			*button_autoConnect;
-    IBOutlet		NSTabView			*tabView_auxilary;
-
-    NSMutableDictionary			*toolbarItems;
-
-    AIAccount				*selectedAccount;
-    id <AIAccountViewController>	accountViewController;
-
-    NSArray				*serviceArray;
-    BOOL				accountDetailsVisible;	//YES if the details view is visible
-    NSSize				accountViewPadding;	//The amount of space around the custom account view
-
-    NSSize				accountListPadding;
-    NSArray				*accountArray;
-    AIAccount				*tempDragAccount;
+    AIAccountListPreferences		*preferences;
 }
-
-- (IBAction)deleteAccount:(id)sender;
-- (IBAction)newAccount:(id)sender;
-- (IBAction)selectServiceType:(id)sender;
-- (IBAction)toggleAutoConnect:(id)sender;
 
 @end
