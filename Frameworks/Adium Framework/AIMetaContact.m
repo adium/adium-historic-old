@@ -113,7 +113,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	//Save the change of containing object so it can be restored on launch next time if we are using groups.
 	//We don't save if we are not using groups as this set will be for the contact list root and probably not desired permanently.
 	if ([[adium contactController] useContactListGroups] &&
-		![inGroupInternalObjectID isEqualToString:[[self containingObject] internalObjectID]]){
+		![inGroupInternalObjectID isEqualToString:[self preferenceForKey:KEY_CONTAINING_OBJECT_ID
+																   group:OBJECT_STATUS_CACHE
+												   ignoreInheritedValues:YES]]){
 
 		[self setPreference:inGroupInternalObjectID
 					 forKey:KEY_CONTAINING_OBJECT_ID
@@ -218,7 +220,9 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (!containsOnlyOneUniqueContact){
 			[self _determineIfWeShouldAppearToContainOnlyOneContact];
 		}
-		
+
+		[[adium contactController] _updateAllAttributesOfObject:self];
+
 		[inObject release];
 	}
 }
@@ -458,6 +462,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (void)remoteGroupingOfContainedObject:(AIListObject *)inListObject changedTo:(NSString *)inRemoteGroupName
 {
+	AILog(@"AIMetaContact: Remote grouping of %@ changed to %@",inListObject,inRemoteGroupName);
+
 	//When a contact has its remote grouping changed, this may mean it is now listed on an online account.
 	//We therefore update our containsOnlyOneContact boolean.
 	[self _determineIfWeShouldAppearToContainOnlyOneContact];
@@ -636,6 +642,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return(changed);
 }
 
+
 //Preferences -------------------------------------------------------------------------------------------------
 #pragma mark Preferences
 
@@ -693,13 +700,19 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 }
 
 #pragma mark User Icon
-//We always want to provide a userIcon if at all possible.
-//First get our userIcon as normal.
-//If that returns nil, look at our preferredContact's userIcon.
-//If that returns nil, find any userIcon of a containedContact.
+/* 
+ * @brief Return the user icon for this metaContact
+ *
+ * We always want to provide a userIcon if at all possible.
+ * First, call displayUserIcon. See below for details.
+ * If that returns nil, look at our preferredContact's userIcon.
+ * If that returns nil, find any userIcon of a containedContact.
+ *
+ * @result The <tt>NSImage</tt> to associate with this metaContact
+ */
 - (NSImage *)userIcon
 {
-	NSImage *userIcon = [super userIcon];
+	NSImage *userIcon = [self displayUserIcon];
 	if (!userIcon){
 		userIcon = [[self preferredContact] userIcon];
 	}
@@ -715,6 +728,24 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 
 	return(userIcon);
+}
+
+/* @brief Return a medium-priority or better user icon from this specific meta contact's display array
+ *
+ * If the meta contact has a medium-priority or better user icon, such as a user-specified icon or an address book
+ * supplied icon with the "prefer address book icon images" preference, return it.  Otherwise, return nil, indicating
+ * that contained contacts should be queried for a better, more preferred icon.
+ *
+ * @result An <tt>NSImage</tt> of medium priority or higher
+ */
+- (NSImage *)displayUserIcon
+{
+	AIMutableOwnerArray	*userIconArray = [self displayArrayForKey:KEY_USER_ICON create:NO];
+	NSImage	*displayUserIcon = [userIconArray objectValue];
+	if([userIconArray priorityOfObject:displayUserIcon] > Medium_Priority)
+		return displayUserIcon;
+	else
+		return nil;
 }
 
 - (NSString *)displayName
