@@ -58,6 +58,7 @@
 				   selector:@selector(preferencesChanged:)
 				       name:Preference_GroupChanged
 				     object:nil];
+
     [self preferencesChanged:nil];
 }
 
@@ -147,7 +148,14 @@
     }
 }
 
-
+- (void)chatWillClose:(NSNotification *)notification
+{
+    AIChat *chat = [notification object];
+    int chatIndex = [receivedAwayMessage indexOfObjectIdenticalTo:chat];
+    
+    if (chatIndex != NSNotFound)
+	[receivedAwayMessage removeObjectAtIndex:chatIndex];
+}
 
 //Away Menu ----------------------------------------------------------------------------------
 //Install the away message window
@@ -261,10 +269,20 @@
 			[[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
 			[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
 			[[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+			[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
 			if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] != nil){
-				[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-				[[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-				[[adium notificationCenter] addObserver:self selector:@selector(didSendContent:) name:Content_DidSendContent object:nil];
+				[[adium notificationCenter] addObserver:self
+							       selector:@selector(didReceiveContent:) 
+								   name:Content_DidReceiveContent object:nil];
+				[[adium notificationCenter] addObserver:self
+							       selector:@selector(didReceiveContent:)
+								   name:Content_FirstContentRecieved object:nil];
+				[[adium notificationCenter] addObserver:self
+							       selector:@selector(didSendContent:)
+								   name:Content_DidSendContent object:nil];
+				[[adium notificationCenter] addObserver:self
+							       selector:@selector(chatWillClose:)
+								   name:Chat_WillClose object:nil];
 			}
 			
 			//Flush our array of 'responded' contacts
