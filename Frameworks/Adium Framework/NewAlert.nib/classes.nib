@@ -6,7 +6,7 @@
             SUPERCLASS = NSTableView; 
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
-        {CLASS = AIImageTextView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
+        {CLASS = AIImageTextCellView; LANGUAGE = ObjC; SUPERCLASS = NSView; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
@@ -18,7 +18,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkbox_oneTime" = NSButton; 
-                headerView = AIImageTextView; 
+                headerView = AIImageTextCellView; 
                 "popUp_action" = NSPopUpButton; 
                 "popUp_event" = NSPopUpButton; 
                 target = id; 
