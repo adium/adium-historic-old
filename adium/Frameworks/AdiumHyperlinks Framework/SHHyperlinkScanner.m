@@ -52,7 +52,7 @@
 {
     validStatus = SH_URL_INVALID; // assume the URL is invalid
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
-NSLog(inString);
+
     // initialize the buffer (flex automatically switches to the buffer in this function)
     buf = SH_scan_string([inString UTF8String]);
 
