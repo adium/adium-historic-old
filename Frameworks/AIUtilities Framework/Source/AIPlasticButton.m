@@ -42,6 +42,13 @@
 		plasticPressedMiddle = [[NSImage imageNamed:@"PlasticButtonPressed_Middle" forClass:myClass] retain];
 		plasticDefaultCaps   = [[NSImage imageNamed:@"PlasticButtonDefault_Caps"   forClass:myClass] retain];
 		plasticDefaultMiddle = [[NSImage imageNamed:@"PlasticButtonDefault_Middle" forClass:myClass] retain];
+		
+		[plasticCaps setFlipped:YES];
+		[plasticMiddle setFlipped:YES];
+		[plasticPressedCaps setFlipped:YES];
+		[plasticPressedMiddle setFlipped:YES];
+		[plasticDefaultCaps setFlipped:YES];
+		[plasticDefaultMiddle setFlipped:YES];
 	}
 
 	return self;    
