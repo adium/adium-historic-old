@@ -78,16 +78,30 @@ static IdleTimeWindowController *sharedInstance = nil;
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
+    NSString		*originalSelection;
+
+    // store the current selection for later
+    originalSelection = [NSString stringWithFormat: @"%@", [popUp_Accounts titleOfSelectedItem]];
 
     [popUp_Accounts removeAllItems];
+    [popUp_Accounts setAutoenablesItems:FALSE];
 
     enumerator = [[[owner accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
+	// always add the account to the menu
+	[popUp_Accounts addItemWithTitle:[account accountDescription]];
+
+	// only set the item enabled if the account responds to "IdleTime"
         if([[account supportedStatusKeys] containsObject:@"IdleTime"]){
-            [popUp_Accounts addItemWithTitle:[account accountDescription]];
-        }
+	    [[popUp_Accounts itemWithTitle:[account accountDescription]] setEnabled:TRUE];
+        }else{
+	    [[popUp_Accounts itemWithTitle:[account accountDescription]] setEnabled:FALSE];
+	}
     }
 
+    // reselect the old item if it's in the list
+    [popUp_Accounts selectItemWithTitle: originalSelection];
+    
     [self configureControls:nil];
 }
 
@@ -125,6 +139,7 @@ static IdleTimeWindowController *sharedInstance = nil;
 
         [[owner accountController] setStatusObject:[NSNumber numberWithDouble:t] forKey:@"IdleTime" account:theAccount];
         [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"IdleSetManually" account:theAccount];
+	
     }else{
         [[owner accountController] setStatusObject:[NSNumber numberWithDouble:0] forKey:@"IdleTime" account:theAccount];
         [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"IdleSetManually" account:theAccount];
