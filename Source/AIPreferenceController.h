@@ -56,6 +56,8 @@ typedef enum {
     NSMutableSet			*delayedNotificationGroups;  	//Groups with delayed changes
 }
 
+- (void)movePreferenceFolderFromAdium2ToAdium;
+
 //Preference Window
 - (IBAction)showPreferenceWindow:(id)sender;
 - (void)openPreferencesToCategory:(PREFERENCE_CATEGORY)category;
