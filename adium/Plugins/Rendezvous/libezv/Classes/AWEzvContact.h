@@ -3,7 +3,7 @@
  * File:        AWEzvContact.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.h,v 1.1 2004/05/15 18:47:08 evands Exp $
+ * CVS tag:     $Id: AWEzvContact.h,v 1.2 2004/05/16 15:06:52 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -44,6 +44,7 @@
     NSString *_uniqueID;
     NSImage *_contactImage;
     AWEzvStatus _status;
+    NSDate *_idleSinceDate;
     AWEzvXMLStream *_stream;
     AWEzvRendezvousData *_rendezvous;
     NSString *_ipAddr;
@@ -61,6 +62,7 @@
 
 - (AWEzvStatus) status;
 - (NSString *) statusMessage;
+- (NSDate *) idleSinceDate;
 
 - (void)sendMessage:(NSString *)message withHtml:(NSString *)html;
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus;
