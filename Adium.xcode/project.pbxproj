@@ -436,6 +436,36 @@
 			settings = {
 			};
 		};
+		340EC2260736BF31001653BF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESRankingCell.h;
+			path = Plugins/Logger/ESRankingCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340EC2270736BF32001653BF = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESRankingCell.m;
+			path = Plugins/Logger/ESRankingCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		340EC2280736BF32001653BF = {
+			fileRef = 340EC2260736BF31001653BF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340EC2290736BF32001653BF = {
+			fileRef = 340EC2270736BF32001653BF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		340F30E206D6FD700072E2FA = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -5816,6 +5846,7 @@
 				4B935E690733E4ED00C23FC6,
 				34F102320734499700890D3B,
 				34F1023C073449D500890D3B,
+				340EC2280736BF32001653BF,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6409,6 +6440,7 @@
 				4B935E6A0733E4ED00C23FC6,
 				34F1022E0734499700890D3B,
 				34F1023B073449D500890D3B,
+				340EC2290736BF32001653BF,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16464,6 +16496,8 @@
 		};
 		4BE666CC0577AFA0007E115C = {
 			children = (
+				340EC2260736BF31001653BF,
+				340EC2270736BF32001653BF,
 				C45F7F6206C75E200056B1F2,
 				C45F7F6306C75E210056B1F2,
 				C45F7F6406C75E210056B1F2,

@@ -31,7 +31,8 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 	serviceClass = [inServiceClass retain];
     date = [inDate retain];
     dateSearchString = nil;
- 	
+ 	rankingPercentage = 0;
+	
     return(self);
 }
 
@@ -61,6 +62,13 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 }
 - (NSDate *)date{
     return(date);
+}
+
+- (float)rankingPercentage{
+	return(rankingPercentage);
+}
+- (void)setRankingPercentage:(float)inRankingPercentage{
+	rankingPercentage = inRankingPercentage;
 }
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
@@ -161,6 +169,37 @@ void scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
     }
 	
     return(result);
+}
+
+-(NSComparisonResult)compareRank:(AILog *)inLog
+{
+	NSComparisonResult  result;
+	float				otherRankingPercentage = [inLog rankingPercentage];
+	
+	if (rankingPercentage > otherRankingPercentage){
+		result = NSOrderedDescending;		
+	}else if (rankingPercentage < otherRankingPercentage){
+		result = NSOrderedAscending;	
+	}else{
+		result = [to caseInsensitiveCompare:[inLog to]];
+    }
+	
+	return(result);
+}
+-(NSComparisonResult)compareRankReverse:(AILog *)inLog
+{
+	NSComparisonResult  result;
+	float				otherRankingPercentage = [inLog rankingPercentage];
+	
+	if (rankingPercentage > otherRankingPercentage){
+		result = NSOrderedAscending;		
+	}else if (rankingPercentage < otherRankingPercentage){
+		result = NSOrderedDescending;				
+	}else{
+		result = [[inLog to] caseInsensitiveCompare:to];
+    }
+	
+	return(result);
 }
 
 //Returns the date specified by a filename

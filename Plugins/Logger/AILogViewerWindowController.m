@@ -18,6 +18,7 @@
 #import "AILog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
+#import "ESRankingCell.h"
 
 #define LOG_VIEWER_NIB						@"LogViewer"
 #define LOG_VIEWER_JAG_NIB					@"LogViewerJag"
@@ -64,6 +65,7 @@
 - (void)_logFilter:(NSString *)searchString searchID:(int)searchID mode:(LogSearchMode)mode;
 - (void)_logContentFilter:(NSString *)searchString searchID:(int)searchID;
 - (void)installToolbar;
+- (void)updateRankColumnVisibility;
 @end
 
 int _sortStringWithKey(id objectA, id objectB, void *key);
@@ -134,6 +136,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     automaticSearch = YES;
     showEmoticons = NO;
     activeSearchString = nil;
+	activeSearchStringEncoded = nil;
     displayedLog = nil;
     aggregateLogIndexProgressTimer = nil;
 	windowIsClosing = NO;
@@ -406,6 +409,10 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 	[aggregateLogIndexProgressTimer invalidate];
 	[aggregateLogIndexProgressTimer release]; aggregateLogIndexProgressTimer = nil;
 	
+	//Reset our column widths if needed
+	[activeSearchString release]; activeSearchString = nil;
+	[self updateRankColumnVisibility];
+	
     [sharedLogViewerInstance autorelease]; sharedLogViewerInstance = nil;
 	[toolbarItems release];
 	
@@ -599,7 +606,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
 
 					//Filter emoticons
 					if(showEmoticons){
-						logText = [[adium contentController] filterAttributedString:logText 
+						logText = [[adium contentController] filterAttributedString:logText
 																	usingFilterType:AIFilterMessageDisplay
 																		  direction:AIFilterOutgoing
 																			context:nil];
@@ -698,7 +705,7 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     NSRange		searchRange, foundRange;
 	
     outRange->location = NSNotFound;
-    
+
     //Search for the little string in the big string
     while(location != NSNotFound && location < [plainBigString length]){
         searchRange = NSMakeRange(location, [plainBigString length]-location);
@@ -752,7 +759,10 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     }else if([identifier isEqualToString:@"Date"]){
         [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareDateReverse:) : @selector(compareDate:))];
 		
-    }
+    }else if([identifier isEqualToString:@"Rank"]){
+	    [selectedLogArray sortUsingSelector:(sortDirection ? @selector(compareRankReverse:) : @selector(compareRank:))];
+	}
+	
     [resultsLock unlock];
     
     //Reload the data
@@ -842,6 +852,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		[NSNumber numberWithInt:activeSearchID], @"ID",
 		[NSNumber numberWithInt:searchMode], @"Mode",
 		activeSearchString, @"String",
+		activeSearchStringEncoded, @"StringEncoded",
 		nil];
     [NSThread detachNewThreadSelector:@selector(filterLogsWithSearch:) toTarget:self withObject:searchDict];
     
@@ -890,7 +901,48 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 			break;
 	}
 
+	[self updateRankColumnVisibility];
     [self buildSearchMenu];
+}
+
+- (void)updateRankColumnVisibility
+{
+	NSTableColumn	*resultsColumn = [tableView_results tableColumnWithIdentifier:@"Rank"];
+	NSArray			*tableColumns;
+	NSTableColumn	*nextDoorNeighbor;
+	
+	if ((searchMode == LOG_SEARCH_CONTENT) && ([activeSearchString length])){
+		//Add the resultsColumn and resize if it should be shown but is not at present
+		if (!resultsColumn){			
+			//Set up the results column
+			resultsColumn = [[NSTableColumn alloc] initWithIdentifier:@"Rank"];
+			[[resultsColumn headerCell] setStringValue:AILocalizedString(@"Rank",nil)];
+			[resultsColumn setDataCell:[[[ESRankingCell alloc] init] autorelease]];
+			
+			//Add it to the table
+			[tableView_results addTableColumn:resultsColumn];
+
+			//Make it half again as large as the desired width from the @"Rank" header title
+			[resultsColumn sizeToFit];
+			[resultsColumn setWidth:([resultsColumn width] * 1.5)];
+			
+			//Adjust the column to the results column's left so results is now visible
+			tableColumns = [tableView_results tableColumns];
+			nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
+			[nextDoorNeighbor setWidth:[nextDoorNeighbor width]-[resultsColumn width]];
+		}
+	}else{
+		//Remove the resultsColumn and resize if it should not be shown but is at present
+		if (resultsColumn){
+			//Adjust the column to the results column's left to take up the space again
+			tableColumns = [tableView_results tableColumns];
+			nextDoorNeighbor = [tableColumns objectAtIndex:([tableColumns indexOfObject:resultsColumn] - 1)];
+			[nextDoorNeighbor setWidth:[nextDoorNeighbor width]+[resultsColumn width]];
+
+			//Remove it
+			[tableView_results removeTableColumn:resultsColumn];
+		}
+	}
 }
 
 //Set the active search string (Does not invoke a search)
@@ -900,6 +952,31 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 		[searchField_logs setStringValue:(inString ? inString : @"")];
     }
     [activeSearchString release]; activeSearchString = [[searchField_logs stringValue] copy];
+	
+	//Our logs are stored as HTML.  Non-ASCII characters are therefore HTML-encoded.  We need to have an
+	//encoded version of our search string with which to search when doing a content-based search, as that's
+	//how they are on disk.
+	if(searchMode == LOG_SEARCH_CONTENT){
+		[activeSearchStringEncoded release];
+		activeSearchStringEncoded = [[AIHTMLDecoder encodeHTML:[[[NSAttributedString alloc] initWithString:activeSearchString] autorelease]
+													   headers:NO 
+													  fontTags:NO 
+											includingColorTags:NO
+												 closeFontTags:NO 
+													 styleTags:NO
+									closeStyleTagsOnFontChange:NO
+												encodeNonASCII:YES 
+												  encodeSpaces:NO
+													imagesPath:nil 
+											 attachmentsAsText:YES 
+								attachmentImagesOnlyForSending:NO 
+												simpleTagsOnly:NO] retain];
+		AILog(@"Search will be on %@",activeSearchStringEncoded);
+	}else{
+		[activeSearchStringEncoded release]; activeSearchStringEncoded = nil;
+	}
+
+	[self updateRankColumnVisibility];
 }
 
 //Build the search mode menu
@@ -937,10 +1014,11 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 - (void)filterLogsWithSearch:(NSDictionary *)searchInfoDict
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    int			mode = [[searchInfoDict objectForKey:@"Mode"] intValue];
-    int			searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
-    NSString		*searchString = [searchInfoDict objectForKey:@"String"];
-    
+    int					mode = [[searchInfoDict objectForKey:@"Mode"] intValue];
+    int					searchID = [[searchInfoDict objectForKey:@"ID"] intValue];
+    NSString			*searchString = [searchInfoDict objectForKey:@"String"];
+    NSString			*searchStringEncoded = [searchInfoDict objectForKey:@"StringEncoded"]; 
+
     //Lock down new thread creation until this thread is complete
     //We must be careful not to wait on performing any main thread selectors when this lock is set!!
     [searchingLock lock];
@@ -958,7 +1036,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 								mode:mode];
 					break;
 				case LOG_SEARCH_CONTENT:
-					[self _logContentFilter:searchString
+					[self _logContentFilter:searchStringEncoded
 								   searchID:searchID];
 					break;
 			}
@@ -1173,6 +1251,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 				[resultsLock lock];
 				theLog = [[logToGroupDict objectForKey:toPath] logAtPath:path];
 				if(theLog && ![selectedLogArray containsObjectIdenticalTo:theLog]){
+					[theLog setRankingPercentage:outScoresArray[i]];
 					[selectedLogArray addObject:theLog];
 				}
 				[resultsLock unlock];
@@ -1212,6 +1291,18 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
     [resultsLock unlock];
     
     return(count);
+}
+
+
+- (void)tableView:(NSTableView *)aTableView willDisplayCell:(id)aCell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
+{
+    NSString	*identifier = [tableColumn identifier];
+
+	if([identifier isEqualToString:@"Rank"] && row >= 0 && row < [selectedLogArray count]){
+		AILog       *theLog = [selectedLogArray objectAtIndex:row];
+		
+		[aCell setPercentage:[theLog rankingPercentage]];
+	}
 }
 
 //
