@@ -21,6 +21,7 @@
 #import "AIToolbarController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 
@@ -126,16 +127,37 @@
  */
 - (void)activeStateChanged:(NSNotification *)notification
 {
-	AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
 	if([[adium accountController] oneOrMoreConnectedAccounts]){
-		int	index = [popUp_state indexOfItemWithRepresentedObject:activeStatusState];
-		
-		if(index >= 0 && index < [popUp_state numberOfItems]){
-			//A saved state is active
-			[popUp_state selectItemAtIndex:index];
+		AIStatus	*activeStatusState;
+		NSArray		*stateArrayForMenuItems;
+		unsigned	index, numberOfItems;
+
+		activeStatusState = [[adium statusController] activeStatusState];;
+		stateArrayForMenuItems = [[adium statusController] stateArrayForMenuItems];
+		numberOfItems =  [popUp_state numberOfItems];;
+
+		if([stateArrayForMenuItems containsObjectIdenticalTo:activeStatusState]){
+			for(index = 0 ; index < numberOfItems ; index++){
+				NSMenuItem	*menuItem = [popUp_state itemAtIndex:index];
+				if(activeStatusState == [[menuItem representedObject] objectForKey:@"AIStatus"]){
+					[popUp_state selectItemAtIndex:index];
+					break;
+				}
+			}
 		}else{
 			//A custom state is active
-			[popUp_state selectItemAtIndex:[popUp_state indexOfItemWithTag:[activeStatusState statusType]]];
+			AIStatusType statusType = [activeStatusState statusType];
+			
+			for(index = 0 ; index < numberOfItems ; index++){
+				NSMenuItem	*menuItem = [popUp_state itemAtIndex:index];
+				
+				//Find the menu item with the appropriate tag and no AIStatus associated with it
+				if(([menuItem tag] == statusType) && ([[menuItem representedObject] objectForKey:@"AIStatus"] == nil)){
+					[popUp_state selectItemAtIndex:index];
+					break;
+				}
+				
+			}
 		}
 	}else{
 		//Offline
