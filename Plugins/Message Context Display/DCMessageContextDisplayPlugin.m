@@ -19,16 +19,22 @@
 	isObserving = NO;
 	
 	//Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS forClass:[self class]] forGroup:PREF_GROUP_CONTEXT_DISPLAY];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS
+																		forClass:[self class]] 
+										  forGroup:PREF_GROUP_CONTEXT_DISPLAY];
     preferences = [[DCMessageContextDisplayPreferences preferencePane] retain];
 	
     //Observe preference changes
-    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
+									   name:Preference_GroupChanged
+									 object:nil];
     [self preferencesChanged:nil];
 	
 	//Always observe chats closing
-	[[adium notificationCenter] addObserver:self selector:@selector(saveContextForObject:) name:Chat_WillClose object:nil];
-
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(saveContextForObject:)
+									   name:Chat_WillClose
+									 object:nil];
 }
 
 - (void)dealloc
@@ -133,25 +139,34 @@
 //ONLY handles AIContentMessage objects right now
 - (NSDictionary *)savableContentObject:(AIContentObject *)content
 {
-	
 	NSMutableDictionary	*contentDict;
-	
+	AIChat				*chat = [content chat];
+	AIAccount			*account = [chat account];
+	AIListContact		*listContact = [chat listObject];
+	NSString			*objectID;
+	NSNumber			*accountNumber;
+
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
 	
-	AIChat		*chat = [content chat];
-	NSString	*objectID = [AIListContact internalUniqueObjectIDForService:[[chat listObject] service]
-																	account:[chat account]
-																		UID:[[chat listObject] UID]];
+	objectID = [listContact internalUniqueObjectID];
+	accountNumber = [NSNumber numberWithInt:[account accountNumber]];
 	
 	// Outgoing or incoming?
-	[contentDict setObject:objectID forKey:([content isOutgoing] ? @"To" : @"From")];
+	if ([content isOutgoing]){
+		[contentDict setObject:objectID forKey:@"To"];
+		[contentDict setObject:accountNumber forKey:@"From"];
+	}else{
+		[contentDict setObject:accountNumber forKey:@"To"];
+		[contentDict setObject:objectID forKey:@"From"];
+	}
+	
 	[contentDict setObject:[NSNumber numberWithBool:[content isOutgoing]] forKey:@"Outgoing"];
 	
 	// ONLY log AIContentMessages right now... no status messages
 	[contentDict setObject:[NSNumber numberWithBool:[(AIContentMessage *)content isAutoreply]] forKey:@"Autoreply"];
 	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
-	[contentDict setObject:[[[(AIContentMessage *)content message] safeString]dataRepresentation] forKey:@"Message"];
+	[contentDict setObject:[[[(AIContentMessage *)content message] safeString] dataRepresentation] forKey:@"Message"];
 	
 	return(contentDict);
 }
@@ -159,7 +174,6 @@
 
 - (void)addContextDisplayToWindow:(NSNotification *)notification
 {
-	
 	int					cnt;
 	AIChat				*chat;
 	NSString			*type;
@@ -169,7 +183,7 @@
 	id					dest;
 		
 	chat = (AIChat *)[notification object];
-
+		
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	NSDictionary	*messageDict;
 	
@@ -211,7 +225,7 @@
 						source = [chat listObject];
 						dest = [[adium accountController] accountWithAccountNumber:[to intValue]];
 					}
-					
+
 					// Make the message response if all is well
 					if(message && source && dest) {
 						responseContent = [AIContentContext messageInChat:chat
@@ -220,7 +234,7 @@
 																	 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
 																  message:message
 																autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-						
+
 						[[adium contentController] displayContentObject:responseContent usingContentFilters:YES immediately:YES];
 					}
 					
