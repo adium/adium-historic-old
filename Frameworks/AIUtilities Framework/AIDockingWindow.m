@@ -42,7 +42,10 @@ static	BOOL alreadyMoving = NO;
 //Observe window movement
 - (id)_init
 {
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowDidMode:) name:NSWindowDidMoveNotification object:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(windowDidMove:)
+												 name:NSWindowDidMoveNotification 
+											   object:self];
 	resisted_XMotion = 0;
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
@@ -56,7 +59,7 @@ static	BOOL alreadyMoving = NO;
 }
 
 //Watch the window move.  If it gets near an edge, dock it to that edge
-- (void)windowDidMode:(NSNotification *)notification
+- (void)windowDidMove:(NSNotification *)notification
 {
 	if(!alreadyMoving){  //Our setFrame call below will cause a re-entry into this function, we must guard against this
 		alreadyMoving = YES;	
