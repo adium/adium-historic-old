@@ -13,11 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.48 2004/05/23 12:52:17 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.49 2004/05/23 17:33:50 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
-#import "AIPreferenceCategory.h"
 
 #define PREFS_DEFAULT_PREFS @"PrefsPrefs.plist"
 
@@ -116,6 +115,35 @@
 - (NSArray *)paneArray
 {
     return(paneArray);
+}
+
+//Reset the preferences of a pane
+- (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane
+{
+	NSDictionary	*allDefaults, *groupDefaults;
+	NSEnumerator	*enumerator, *keyEnumerator;
+	NSString		*group, *key;
+	
+	[self delayPreferenceChangedNotifications:YES];
+
+	//Get the restorable prefs dictionary of the pref pane
+	allDefaults = [preferencePane restorablePreferences];
+	
+	//They keys are preference groups, run through all of them
+	enumerator = [allDefaults keyEnumerator];
+	while(group = [enumerator nextObject]){
+	
+		//Get the dictionary of keys for each group, and reset them all
+		groupDefaults = [allDefaults objectForKey:group];
+		keyEnumerator = [groupDefaults keyEnumerator];
+		while(key = [keyEnumerator nextObject]){
+			[[owner preferenceController] setPreference:[groupDefaults objectForKey:key]
+												 forKey:key
+												  group:group];
+		}
+	}
+
+	[self delayPreferenceChangedNotifications:NO];
 }
 
 

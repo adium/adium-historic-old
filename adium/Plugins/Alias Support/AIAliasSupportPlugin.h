@@ -24,7 +24,7 @@
 
 #define	PREF_GROUP_DISPLAYFORMAT		@"Display Format"		//Preference group to store aliases in
 
-@interface AIAliasSupportPlugin : AIPlugin <AIListObjectObserver, AIPreferenceViewControllerDelegate> {
+@interface AIAliasSupportPlugin : AIPlugin <AIListObjectObserver> {
     IBOutlet    NSView				*view_contactAliasInfoView;
     IBOutlet	ESDelayedTextField  *textField_alias;
 

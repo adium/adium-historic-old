@@ -73,9 +73,10 @@ typedef enum {
     NSMutableArray			*sortControllerArray;
     AISortController	 	*activeSortController;
 	
-    AIPreferenceCategory	*contactInfoCategory;
+    NSMutableArray			*contactInfoPanes;
 	
     NSMenuItem				*menuItem_getInfo;
+    NSMenuItem				*menuItem_getInfoContextual;
 	
     NSMutableDictionary		*listOrderDict;
     NSMutableDictionary		*reverseListOrderDict;
@@ -133,7 +134,7 @@ typedef enum {
 
 //Contact info
 - (IBAction)showContactInfo:(id)sender;
-- (void)addContactInfoView:(AIPreferenceViewController *)inView;
+- (void)addContactInfoPane:(AIContactInfoPane *)inPane;
 - (void)updateListContactStatus:(AIListContact *)inContact;
 
 //Interface selection

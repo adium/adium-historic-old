@@ -29,8 +29,8 @@
 
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_ANNOUNCER_NIB owner:self];
-    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
-    [[adium contactController] addContactInfoView:contactView];
+//    contactView = [[AIPreferenceViewController controllerWithName:@"Announcer" categoryName:@"None" view:view_contactAnnouncerInfoView delegate:self] retain];
+#warning    [[adium contactController] addContactInfoView:contactView];
     [popUp_voice addItemsWithTitles:[[adium soundController] voices]];
     
     observingContent = NO;

@@ -38,11 +38,11 @@
     
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_NOTES_NIB owner:self];
-    contactView = [[AIPreferenceViewController controllerWithName:@"Notes" 
-                                                     categoryName:@"None" 
-                                                             view:view_contactNotesInfoView 
-                                                         delegate:self] retain];
-    [[adium contactController] addContactInfoView:contactView];
+//    contactView = [[AIPreferenceViewController controllerWithName:@"Notes" 
+//                                                     categoryName:@"None" 
+//                                                             view:view_contactNotesInfoView 
+//                                                         delegate:self] retain];
+#warning    [[adium contactController] addContactInfoView:contactView];
     [textField_notes setDelegate:self];
     
     //Install our tooltip entry

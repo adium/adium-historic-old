@@ -13,35 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIColoredBoxView, AIPreferenceViewController;
+@interface AIPreferenceCategoryView : NSView {
 
-@protocol AIPreferenceViewControllerDelegate <NSObject>
-- (void)configurePreferenceViewController:(AIPreferenceViewController *)inController forObject:(id)inObject;
-@end
-
-@interface AIPreferenceViewController : AIObject {
-    IBOutlet	NSView			*view_containerView;
-    IBOutlet	NSView			*view_containerSubView;
-    IBOutlet	NSTextField		*textField_title;
-    IBOutlet	AIColoredBoxView	*view_coloredBox;
-		
-    NSString	*name;
-    NSString	*categoryName;
-    NSView	*contentView;
-    
     int		desiredHeight;
-
-    id <AIPreferenceViewControllerDelegate>	delegate;
     
 }
 
-+ (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView;
-+ (AIPreferenceViewController *)controllerWithName:(NSString *)inName categoryName:(NSString *)inCategoryName view:(NSView *)inView delegate:(id <AIPreferenceViewControllerDelegate>)inDelegate;
-- (NSString *)name;
-- (NSView *)view;
-- (NSString *)categoryName;
+- (void)setDesiredHeight:(int)inHeight;
 - (int)desiredHeight;
-- (NSComparisonResult)compare:(AIPreferenceViewController *)inView;
-- (void)configureForObject:(id)inObject;
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.15 2004/04/02 10:07:27 overmind911 Exp $ 
+// $Id: AIPreferenceController.h,v 1.16 2004/05/23 17:33:50 adamiser Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -79,6 +79,7 @@ typedef enum {
 
 //Preference views
 - (void)addPreferencePane:(AIPreferencePane *)inPane;
+- (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane;
 
 //Defaults and access to preferences
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)groupName;
@@ -92,7 +93,6 @@ typedef enum {
 - (NSMutableDictionary *)cachedObjectPrefsForKey:(NSString *)objectKey path:(NSString *)path;
 - (void)setCachedObjectPrefs:(NSMutableDictionary *)prefs forKey:(NSString *)objectKey path:(NSString *)path;
 
-- (BOOL)tempImportOldPreferenceForKey:(NSString *)inKey group:(NSString *)groupName object:(AIListObject *)object;
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay;
 

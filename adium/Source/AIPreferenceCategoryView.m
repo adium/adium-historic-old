@@ -13,17 +13,48 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIContactHandle;
+//$Id: AIPreferenceCategoryView.m,v 1.1 2004/05/23 17:33:50 adamiser Exp $
 
-#define KEY_CONTACT_INSPECTOR_WINDOW_FRAME  @"Contact Inspector Window Frame"
+#import "AIPreferenceCategoryView.h"
 
-@interface AIContactInfoWindowController : AIWindowController {
-	AIListObject			*displayedObject;
+@implementation AIPreferenceCategoryView
+
+//Return yes so this view's origin is the top left corner, and it behaves more naturally in scroll views
+- (BOOL)isFlipped
+{
+    return(YES);
 }
 
-+ (void)showInfoWindowForListObject:(AIListObject *)listObject;
-+ (void)closeInfoWindow;
-- (void)configureForListObject:(AIListObject *)inObject;
-- (IBAction)closeWindow:(id)sender;
+//Draw
+/*- (void)drawRect:(NSRect)rect
+{
+    static NSColor *color;
+    
+    //Fill the rect with aqua stripes
+    [[NSColor windowBackgroundColor] set];
+    [NSBezierPath fillRect:rect];
+
+    //Soften the stripes by painting 50% white over them
+    if(!color){
+        color = [[NSColor colorWithCalibratedRed:1.0 green:1.0 blue:1.0 alpha:0.5] retain];
+    }
+    [color set];
+    [NSBezierPath fillRect:rect];
+}*/
+
+- (void)setDesiredHeight:(int)inHeight
+{
+    desiredHeight = inHeight;
+}
+
+- (int)desiredHeight
+{
+    return(desiredHeight);
+}
+
+- (void)dealloc
+{
+    [super dealloc];
+}
 
 @end

@@ -33,7 +33,7 @@
 
 #define CONTACT_ALERT_IDENTIFIER        @"Speak"
 
-@interface ESAnnouncerPlugin : AIPlugin <AIPreferenceViewControllerDelegate, AIActionHandler> {
+@interface ESAnnouncerPlugin : AIPlugin <AIActionHandler> {
     ESAnnouncerPreferences	*preferences;
 
     NSString 			*lastSenderString;
