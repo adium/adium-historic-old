@@ -18,6 +18,7 @@
 #import "AIMenuController.h"
 
 @interface AIMenuController (PRIVATE)
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray usingMenu:(NSMenu *)inMenu;
 @end
 
 @implementation AIMenuController
@@ -216,27 +217,88 @@
 //Pass an array of NSNumbers corresponding to the desired contextual menu locations
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject
 {
+	NSMenu		*workingMenu;
+	BOOL		separatorItem;
+	
+	//Remember what our menu is configured for
+    [contactualMenuContact release];
+    contactualMenuContact = [inObject retain];
+	
+	//Get the pre-created contextual menu items
+	workingMenu = [self contextualMenuWithLocations:inLocationArray usingMenu:contextualMenu];
+	
+	//Add any account-specific menu items
+	separatorItem = YES;
+	if([inObject isKindOfClass:[AIMetaContact class]]){
+		NSEnumerator	*enumerator;
+		AIListContact	*aListContact;
+		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+		
+		while(aListContact = [enumerator nextObject]){
+			[self addMenuItemsForContact:aListContact
+								  toMenu:workingMenu
+						   separatorItem:&separatorItem];	
+		}
+
+	}else if([inObject isKindOfClass:[AIListContact class]]){
+		[self addMenuItemsForContact:(AIListContact *)inObject
+							  toMenu:workingMenu
+					   separatorItem:&separatorItem];
+	}
+	
+	return(workingMenu);
+}
+
+//Add menuItems for a passed contact to a specified menu.  *seperatorItem can be YES to indicate that a 
+//separator item should be inserted before the menu items if desired. It will then be set to NO.
+- (void)addMenuItemsForContact:(AIListContact *)inContact toMenu:(NSMenu *)workingMenu separatorItem:(BOOL *)separatorItem
+{
+	NSArray			*itemArray = [[inContact account] menuItemsForContact:inContact];
+	
+	if(itemArray && [itemArray count]){
+		NSEnumerator	*enumerator;
+		NSMenuItem		*menuItem;
+		
+		if(*separatorItem == YES){
+			[workingMenu addItem:[NSMenuItem separatorItem]];
+			*separatorItem = NO;
+		}
+
+		enumerator = [itemArray objectEnumerator];
+		while(menuItem = [enumerator nextObject]){
+			[workingMenu addItem:menuItem];
+		}
+	}
+}
+
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
+{
+    //remember menu config
+    [contextualMenu_TextView release];
+    contextualMenu_TextView = [inObject retain];
+	
+	return([self contextualMenuWithLocations:inLocationArray usingMenu:textViewContextualMenu]);
+}
+
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray usingMenu:(NSMenu *)inMenu
+{
     NSEnumerator	*enumerator;
     NSNumber		*location;
     NSMenuItem		*menuItem;
     BOOL		itemsAbove = NO;
     
     //Remove all items from the existing menu
-    [contextualMenu removeAllItems];
-
-    //Remember what our menu is configured for
-    [contactualMenuContact release];
-    contactualMenuContact = [inObject retain];
-
+    [inMenu removeAllItems];
+ 
     //Process each specified location
     enumerator = [inLocationArray objectEnumerator];
     while((location = [enumerator nextObject])){
-        NSArray		*menuItems = [contextualMenuItemDict objectForKey:location];
+        NSArray			*menuItems = [contextualMenuItemDict objectForKey:location];
         NSEnumerator	*itemEnumerator;
         
         //Add a seperator
         if(itemsAbove && [menuItems count]){
-            [contextualMenu addItem:[NSMenuItem separatorItem]];
+            [inMenu addItem:[NSMenuItem separatorItem]];
             itemsAbove = NO;
         }
         
@@ -244,52 +306,13 @@
         itemEnumerator = [menuItems objectEnumerator];
         while((menuItem = [itemEnumerator nextObject])){
             //Add the menu item
-            [contextualMenu addItem:menuItem];
+            [inMenu addItem:menuItem];
             itemsAbove = YES;
         }
     }
 
-    return(contextualMenu);
+    return(inMenu);
 }
-
-- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject
-{
-    NSEnumerator    *enumerator;
-    NSNumber        *location;
-    NSMenuItem      *menuItem;
-    BOOL             itemsAbove = NO;
-    
-    //Remove all items from the existing menu
-    [textViewContextualMenu removeAllItems];
-    
-    //remember menu config
-    [contextualMenu_TextView release];
-    contextualMenu_TextView = [inObject retain];
-    
-    //process specified locations
-    enumerator = [inLocationArray objectEnumerator];
-    while((location = [enumerator nextObject])) {
-        NSArray         *menuItems = [contextualMenuItemDict objectForKey:location];
-        NSEnumerator    *itemEnumerator;
-        
-        
-        if(itemsAbove && [menuItems count]) {
-            [textViewContextualMenu addItem:[NSMenuItem separatorItem]];
-            itemsAbove = NO;
-        }
-        
-        //add each menu to location
-        itemEnumerator = [menuItems objectEnumerator];
-        while((menuItem = [itemEnumerator nextObject])) {
-            if([menuItems containsObject:menuItem]){
-                [textViewContextualMenu addItem:menuItem];
-            }
-            itemsAbove = YES;
-        }
-    }
-    return textViewContextualMenu;
-}
-
 
 - (AIListContact *)contactualMenuContact
 {

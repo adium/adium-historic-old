@@ -746,8 +746,6 @@ aim_srv_setavailmsg(od->sess, text);
 }
 
 #pragma mark Contact notes
-
-
 -(NSString *)serversideCommentForContact:(AIListContact *)theContact
 {	
 	NSString *serversideComment = nil;
@@ -828,8 +826,27 @@ aim_srv_setavailmsg(od->sess, text);
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
 
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if(strcmp(label, "Edit Buddy Comment") == 0){
+		return(nil);
+	}else if(strcmp(label, "Direct IM") == 0){
+		//XXX
+		if (GAIM_DEBUG && ![[[inContact service] serviceID] isEqualToString:@"ICQ"]){
+			return([NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]]);
+		}else{
+			return(nil);
+		}
+	}else if(strcmp(label, "Re-request Authorization") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
+	}
+	
+	return([super titleForContactMenuLabel:label forContact:inContact]);
+}
+
 @end
-#pragma mark Notes
+#pragma mark Coding Notes
 
 /*if (isdigit(b->name[0])) {
 char *status;

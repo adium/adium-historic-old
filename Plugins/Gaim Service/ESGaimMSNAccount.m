@@ -213,6 +213,16 @@ static BOOL didInitMSN = NO;
 	[super preferencesChanged:notification];
 }
 
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if(strcmp(label, "Initiate Chat") == 0){
+		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
+	}
+	
+	return([super titleForContactMenuLabel:label forContact:inContact]);
+}
+
 /*
  //Added to msn.c
 //**ADIUM

@@ -19,6 +19,7 @@
 #import "AIListContact.h"
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
+//#define FILTERED_STRING_REFRESH    10.0    //delay in seconds between refresh of our attributed string statuses when needed
 
 @interface AIAccount (PRIVATE)
 - (void)_setAccountAwayTo:(NSAttributedString *)awayMessage;
@@ -604,6 +605,9 @@
 - (void)deleteGroup:(AIListGroup *)group{}
 - (BOOL)contactListEditable{
 	return(NO);
+}
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact{
+	return(nil);
 }
 
 - (void)performRegisterWithPassword:(NSString *)inPassword{}

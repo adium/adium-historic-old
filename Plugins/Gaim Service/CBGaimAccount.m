@@ -1870,11 +1870,72 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 #pragma mark Group Chat
-- (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
+- (BOOL)inviteContact:(AIListContact *)inContact toChat:(AIChat *)inChat withMessage:(NSString *)inviteMessage
 {
-	[gaimThread inviteContact:contact toChat:chat withMessage:inviteMessage];
+	[gaimThread inviteContact:inContact toChat:inChat withMessage:inviteMessage];
 	
 	return YES;
+}
+
+#pragma mark Buddy Menu Items
+//Returns an array of menuItems specific for this contact based on its account and potentially status
+- (NSArray *)menuItemsForContact:(AIListContact *)inContact
+{
+	NSMutableArray			*menuItemArray = nil;
+	if (account && gaim_account_is_connected(account)){
+		GaimPluginProtocolInfo	*prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
+		GList					*l, *ll;
+		
+		GaimBuddy				*buddy;
+		
+		//Find the GaimBuddy
+		buddy = gaim_find_buddy(account, gaim_normalize(account, [[inContact UID] UTF8String]));
+		
+		if(prpl_info && prpl_info->blist_node_menu && buddy){
+			menuItemArray = [NSMutableArray array];
+			
+			//Add a NSMenuItem for each node action specified by the prpl
+			for(l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
+				GaimBlistNodeAction *act = (GaimBlistNodeAction *) l->data;
+				NSDictionary		*dict;
+				NSMenuItem			*menuItem;
+				NSString			*title;
+				
+				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
+				if(title = [self titleForContactMenuLabel:act->label
+											   forContact:inContact]){
+					menuItem = [[[NSMenuItem alloc] initWithTitle:title
+														   target:self
+														   action:@selector(performContactMenuAction:)
+													keyEquivalent:@""] autorelease];
+					dict = [NSDictionary dictionaryWithObjectsAndKeys:
+						[NSValue valueWithPointer:act],@"GaimBlistNodeAction",
+						[NSValue valueWithPointer:buddy],@"GaimBuddy",
+						nil];
+					
+					[menuItem setRepresentedObject:dict];
+					[menuItemArray addObject:menuItem];
+				}
+			}
+			g_list_free(ll);
+		}
+	}
+	
+	return(menuItemArray);
+}
+
+//Action of a dynamically-generated contact menu item
+- (void)performContactMenuAction:(NSMenuItem *)sender
+{
+	NSDictionary		*dict = [sender representedObject];
+
+	[gaimThread performContactMenuActionFromDict:dict];
+}
+
+//Subclasses may override to provide a localized label and/or prevent a specified label from being shown
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	return([NSString stringWithUTF8String:label]);
 }
 
 /********************************/

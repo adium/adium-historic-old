@@ -149,4 +149,6 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;
+
 @end
