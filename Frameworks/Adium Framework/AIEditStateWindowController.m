@@ -24,13 +24,12 @@
 #import <AIUtilities/AIWindowAdditions.h>
 
 #define CONTROL_SPACING			8
-#define WINDOW_HEIGHT_PADDING	90
+#define WINDOW_HEIGHT_PADDING	60
 
 @interface AIEditStateWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget;
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height;
 - (void)configureStateMenu;
-- (void)updateBasedOnSelectedStatus;
 @end
 
 /*!
@@ -208,6 +207,14 @@
 	[self closeWindow:nil];
 }
 
+/*
+ * @brief Update the display of the status's title in the window
+ */
+- (void)updateTitleDisplay
+{
+	[textField_title setStringValue:[workingStatusState title]];
+}
+
 /*!
  * @brief Invoked when a control value is changed
  *
@@ -216,7 +223,70 @@
  */
 - (IBAction)statusControlChanged:(id)sender
 {
+	if(sender == checkbox_autoReply){
+		[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
+		
+	}else if(sender == checkbox_customAutoReply){
+		[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];	
+	}else if(sender == checkbox_idle){
+		[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
+	}
+	
 	[self updateControlVisibilityAndResizeWindow];
+	[self updateTitleDisplay];
+}
+
+/*
+ * @brief NSTextField changed
+ */
+- (void)controlTextDidChange:(NSNotification *)notification
+{
+	id sender = [notification object];
+
+	if(sender == textField_title){
+		NSString	*newTitle = [textField_title stringValue];
+		
+		if([newTitle length]) [workingStatusState setTitle:newTitle];
+	}
+}
+
+/*
+ * @brief NSTextView changed
+ */
+- (void)textDidChange:(NSNotification *)notification
+{
+	id sender = [notification object];
+
+	if(sender == textView_statusMessage){
+		[workingStatusState setStatusMessage:[[[textView_statusMessage textStorage] copy] autorelease]];
+		
+	}else if(sender == textView_autoReply){
+		[workingStatusState setAutoReply:[[[textView_autoReply textStorage] copy] autorelease]];
+		
+	}
+	
+	[self updateTitleDisplay];
+}
+
+/*
+ * @brief NSTextField ended editing
+ *
+ * If our title is cleared out, restore it to using the default title for the rest of the configuration
+ */
+- (void)controlTextDidEndEditing:(NSNotification *)notification
+{
+	id sender = [notification object];
+
+	if(sender == textField_title){
+		NSString	*newTitle = [textField_title stringValue];
+		
+		//Set to nil if the field is cleared to get back to the automatically generated value
+		if(![newTitle length]){
+			[workingStatusState setTitle:nil];
+			
+			[self updateTitleDisplay];
+		}
+	}
 }
 
 /*!
@@ -224,7 +294,13 @@
  */
 - (IBAction)selectStatus:(id)sender
 {
-	[self updateBasedOnSelectedStatus];
+	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
+	if(stateDict){
+		[workingStatusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
+		[workingStatusState setStatusName:[stateDict objectForKey:KEY_STATUS_NAME]];
+	}
+
+	[self updateTitleDisplay];
 }
 
 /*!
@@ -242,9 +318,11 @@
 	
 	//Sizing
 	//XXX - This is quick & dirty -ai
-	id	current = popUp_state;
+	id	current = box_title;
 	int	height = WINDOW_HEIGHT_PADDING + [current frame].size.height;
 
+	current = [self _positionControl:box_separatorLine relativeTo:current height:&height];
+	current = [self _positionControl:box_state relativeTo:current height:&height];	
 	current = [self _positionControl:box_statusMessage relativeTo:current height:&height];
 	current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
 	current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
@@ -338,17 +416,8 @@
 	//Update visiblity and size
 	[self updateControlVisibilityAndResizeWindow];
 	
-	[self updateBasedOnSelectedStatus];
-}
-
-- (void)updateBasedOnSelectedStatus
-{
-/*
-	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
-	if(stateDict){
-		[statusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
-	}		
- */
+	//Update our title
+	[self updateTitleDisplay];
 }
 
 /*!
@@ -362,21 +431,15 @@
 {
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
-	[workingStatusState setMutabilityType:AIEditableStatusState];
+	[workingStatusState setMutabilityType:(([checkBox_save isHidden] || [checkBox_save state] == NSOnState) ?
+										   AIEditableStatusState :
+										   AITemporaryEditableStatusState)];
 
-	//XXX
-	/*[statusState setTitle:]*/
-	[workingStatusState setStatusMessage:[[[textView_statusMessage textStorage] copy] autorelease]];
-	[workingStatusState setAutoReply:[[[textView_autoReply textStorage] copy] autorelease]];
-	[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
-	[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];
-	[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
 	[workingStatusState setForcedInitialIdleTime:idleStart];
 
-	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
-	if(stateDict){
-		[workingStatusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
-		[workingStatusState setStatusName:[stateDict objectForKey:KEY_STATUS_NAME]];
+	//Set the title if necessary
+	if(![[workingStatusState title] isEqualToString:[textField_title stringValue]]){
+		[workingStatusState setTitle:[textField_title stringValue]];
 	}
 
 	return(workingStatusState);
