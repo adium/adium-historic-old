@@ -12,51 +12,46 @@
 
 @implementation ESGaduGaduService
 
-- (id)initWithService:(id)inService
-{
-    [super initWithService:inService];
-    
-	NSImage *image = [NSImage imageNamed:@"gadu-gadu" forClass:[self class]];
-
-    //Create our handle service type
-    handleServiceType = [[AIServiceType serviceTypeWithIdentifier:@"Gadu-Gadu"
-                                                      description:@"Gadu-Gadu"
-                                                            image:image
-														menuImage:nil
-                                                    caseSensitive:NO
-                                                allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]
-												ignoredCharacters:[NSCharacterSet characterSetWithCharactersInString:@""]
-													allowedLength:24] retain];
-    
-    //Register this service
-    [[adium accountController] registerService:self];
-    
-    return self;
+//Account Creation
+- (Class)accountClass{
+	return([ESGaimGaduGaduAccount class]);
 }
 
-- (NSString *)identifier
-{
-    return(@"GaduGadu-LIBGAIM");
-}
-- (NSString *)description
-{
-    return @"Gadu-Gadu";
-}
-
-- (id)accountWithUID:(NSString *)inUID objectID:(int)inObjectID
-{    
-    return([[[ESGaimGaduGaduAccount alloc] initWithUID:inUID service:self objectID:inObjectID] autorelease]);
-}
-
-- (AIAccountViewController *)accountView
-{
+- (AIAccountViewController *)accountView{
     return([ESGaimGaduGaduAccountViewController accountView]);
 }
 
-
-- (DCJoinChatViewController *)joinChatView
-{
+- (DCJoinChatViewController *)joinChatView{
 	return([DCGaimGaduGaduJoinChatViewController joinChatView]);
+}
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return(@"libgaim-Gadu-Gadu");
+}
+- (NSString *)serviceID{
+	return(@"Gadu-Gadu");
+}
+- (NSString *)serviceClass{
+	return(@"Gadu-Gadu");
+}
+- (NSString *)shortDescription{
+	return(@"Gadu-Gadu");
+}
+- (NSString *)longDescription{
+	return(@"Gadu-Gadu");
+}
+- (NSCharacterSet *)allowedCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]);
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+}
+- (int)allowedLength{
+	return(24);
+}
+- (BOOL)caseSensitive{
+	return(NO);
 }
 
 @end
