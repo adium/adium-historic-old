@@ -73,6 +73,24 @@ Dock contextual menu:
 // Big Stuff
 //-------------------------------------------------------------------------------------------------------
 
+Toolbar Items:
+    Contact List:
+        + Away Messages
+        + Add Group
+        + Add Contact
+        + Delete Selection
+        + Show offline contacts
+    Message Window:
+        + Show Logs
+        + Show Font Panel
+        + Show Color Panel
+        + Send File
+        + User Icon
+        + Emoticon
+        + Add Link
+        + Bookmarks
+        + Scripts
+
 Contact list display:
 	Add user icon and extended status display support to the contact list, and simplify its
 	configuration to a small subset of nice looking cell arrangements.
