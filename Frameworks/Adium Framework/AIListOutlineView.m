@@ -16,8 +16,8 @@
 #import "AIListOutlineView.h"
 #import "AIListCell.h"
 
-#define EMPTY_HEIGHT					48
-#define EMPTY_WIDTH						140
+#define MINIMUM_HEIGHT				48
+#define MINIMUM_WIDTH				140
 
 @interface AIListOutlineView (PRIVATE)
 - (void)_initListOutlineView;
@@ -119,7 +119,7 @@
 - (int)desiredHeight
 {
 	int desiredHeight = [self totalHeight]+2;
-	return(desiredHeight > EMPTY_HEIGHT ? desiredHeight : EMPTY_HEIGHT);
+	return(desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT);
 }
 
 - (int)desiredWidth
@@ -139,9 +139,13 @@
 		if(width > widestCell) widestCell = width;
 	}
 
-	return(widestCell > EMPTY_WIDTH ? widestCell : EMPTY_WIDTH);
+	return(((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH);
 }
 
+- (void)setIgnoreMinimumWidth:(BOOL)inFlag
+{
+	ignoreMinimumWidth = inFlag;
+}
 
 //Background image ---------------------------------------------------------------
 //Draw our background image or color with transparency

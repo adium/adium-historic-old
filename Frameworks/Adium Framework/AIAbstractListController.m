@@ -276,6 +276,9 @@
 	//Shadow
 	[[contactListView window] setHasShadow:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 	
+	//Desired Size determination.  For non-standard (borderless) styles, ignore the minimum width.
+	[contactListView setIgnoreMinimumWidth:(windowStyle != WINDOW_STYLE_STANDARD)];
+
 	//Theme related cell preferences
 	//We must re-apply these because we've created new cells
 	[self updateCellRelatedThemePreferencesFromDict:themeDict];

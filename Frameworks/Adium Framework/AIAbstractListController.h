@@ -179,7 +179,7 @@ typedef enum {
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;
 
-- (void)contactListDesiredSizeChanged:(NSNotification *)notification;
+- (void)contactListDesiredSizeChanged;
 - (void)updateTransparency;
 - (BOOL)useAliasesInContactListAsRequested;
 - (BOOL)shouldUseContactTextColors;
