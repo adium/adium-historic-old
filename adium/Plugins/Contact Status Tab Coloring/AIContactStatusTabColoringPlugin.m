@@ -19,7 +19,7 @@
 #import "AIContactStatusTabColoringPreferences.h"
 
 @interface AIContactStatusTabColoringPlugin (PRIVATE)
-- (NSColor *)_colorForObject:(AIListObject *)inObject;
+- (void)_applyColorToObject:(AIListObject *)inObject;
 - (void)_addToFlashArray:(AIListObject *)inObject;
 - (void)_removeFromFlashArray:(AIListObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -68,7 +68,7 @@
         [inModifiedKeys containsObject:@"Signed On"] || 
         [inModifiedKeys containsObject:@"Signed Off"]){
 
-        [[inObject displayArrayForKey:@"Tab Text Color"] setObject:[self _colorForObject:inObject] withOwner:self];
+        [self _applyColorToObject:inObject];
         modifiedAttributes = [NSArray arrayWithObject:@"Tab Text Color"];
     }
 
@@ -86,12 +86,10 @@
     return(modifiedAttributes);
 }
 
-//Determine the correct color
-// Writing this code in a way that doesn't prefetch the values needlessly and has a single return statement
-// results in something that's quite difficult to read.  I've opted to include multiple return statements
-// in exchange for some easier reading.
-- (NSColor *)_colorForObject:(AIListObject *)inObject
+//Return the correct color
+- (void)_applyColorToObject:(AIListObject *)inObject
 {
+    NSColor	*color = nil;
     int		unviewedContent, away;
     double	idle;
 
@@ -99,42 +97,44 @@
     unviewedContent = [[inObject statusArrayForKey:@"UnviewedContent"] greatestIntegerValue];
 
     //Unviewed content
-    if(unviewedContentEnabled && unviewedContent){
+    if(!color && (unviewedContentEnabled && unviewedContent)){
         if(!unviewedFlashEnabled || !([[owner interfaceController] flashState] % 2)){
-            return(unviewedContentColor);
+            color = unviewedContentColor;
         }
     }
     
     //Signed off, signed on, or typing (These do not show if there is unviewed content)
-    if(!unviewedContentEnabled || !unviewedContent){
+    if(!color && (!unviewedContentEnabled || !unviewedContent)){
         if(signedOffEnabled && ([[inObject statusArrayForKey:@"Signed Off"] greatestIntegerValue] ||
                                 ![[inObject statusArrayForKey:@"Online"] greatestIntegerValue])){
-            return(signedOffColor);
+            color = signedOffColor;
         
         }else if(signedOnEnabled && [[inObject statusArrayForKey:@"Signed On"] greatestIntegerValue]){
-            return(signedOnColor);
+            color = signedOnColor;
 
         }else if(typingEnabled && [[inObject statusArrayForKey:@"Typing"] greatestIntegerValue]){
-            return(typingColor);
+            color = typingColor;
 
         }
     }
-    
-    //Prefetch these values, we need them multiple times below
-    away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
-    idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
 
-    //Idle And Away, Away, or Idle
-    if(idleAndAwayEnabled && away && idle != 0){
-        return(idleAndAwayColor);
-    }else if(awayEnabled && away){
-        return(awayColor);
-    }else if(idleEnabled && idle != 0){
-        return(idleColor);
+    if(!color){
+        //Prefetch these values, we need them multiple times below
+        away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
+        idle = [[inObject statusArrayForKey:@"Idle"] greatestDoubleValue];
+
+        //Idle And Away, Away, or Idle
+        if(idleAndAwayEnabled && away && idle != 0){
+            color = idleAndAwayColor;
+        }else if(awayEnabled && away){
+            color = awayColor;
+        }else if(idleEnabled && idle != 0){
+            color = idleColor;
+        }
     }
-    
-    //No color
-    return(nil);
+
+    //Apply the color
+    [[inObject displayArrayForKey:@"Tab Text Color"] setObject:color withOwner:self];
 }
 
 //Flash all handles with unviewed content
@@ -147,7 +147,7 @@
         enumerator = [flashingListObjectArray objectEnumerator];
         while((object = [enumerator nextObject])){
             //Apply new color to the object
-            [[object displayArrayForKey:@"Tab Text Color"] setObject:[self _colorForObject:object] withOwner:self];
+            [self _applyColorToObject:object];
             
             //Force a redraw
             [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Tab Text Color"] forKey:@"Keys"]];
