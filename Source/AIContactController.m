@@ -736,7 +736,7 @@ DeclareString(UID);
 {
 	NSEnumerator		*enumerator;
 	NSArray				*containedContactsArray;
-	NSDictionary		*containedContactDict;
+	NSDictionary		*containedContactDict = nil;
 	NSMutableDictionary	*allMetaContactsDict;
 	NSString			*metaContactInternalObjectID = [metaContact internalObjectID];
 
@@ -764,7 +764,7 @@ DeclareString(UID);
 	}else if ([listObject isKindOfClass:[AIListContact class]]){
 		
 		NSString	*listObjectUID = [listObject UID];
-		NSString	*listObjectServiceID = [listObject serviceID];
+		NSString	*listObjectServiceID = [[listObject service] serviceID];
 		
 		while (containedContactDict = [enumerator nextObject]){
 			if ([[containedContactDict objectForKey:UID] isEqualToString:listObjectUID] &&
