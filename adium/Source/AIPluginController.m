@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.23 2004/03/11 06:26:43 evands Exp $
+//$Id: AIPluginController.m,v 1.24 2004/03/11 07:03:05 evands Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -35,7 +35,7 @@ AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlu
 AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
 AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
-AISCLViewPlugin, AISMViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
+AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
@@ -43,7 +43,7 @@ CBStatusMenuItemPlugin, CSDisconnectAllPlugin, ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin,
-JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, AIWebKitMessageViewPlugin, ESStatusSortPlugin,
+JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin,
 AIIdleTimePlugin;
 
 @implementation AIPluginController
@@ -88,7 +88,6 @@ AIIdleTimePlugin;
 	[self loadPluginWithClass:[AIOfflineContactHidingPlugin class]];
 	[self loadPluginWithClass:[AISCLViewPlugin class]];
 	[self loadPluginWithClass:[AISendingKeyPreferencesPlugin class]];
-	[self loadPluginWithClass:[AISMViewPlugin class]];
 	[self loadPluginWithClass:[AISpellCheckingPlugin class]];
 	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AIStatusChangedMessagesPlugin class]];
@@ -96,7 +95,6 @@ AIIdleTimePlugin;
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
 	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
@@ -116,6 +114,9 @@ AIIdleTimePlugin;
 	[self loadPluginWithClass:[IdleMessagePlugin class]];
 	[self loadPluginWithClass:[JSCEventBezelPlugin class]];
 	[self loadPluginWithClass:[LNStatusIconsPlugin class]];
+	
+//  [self loadPluginWithClass:[AISMViewPlugin class]];
+//	[self loadPluginWithClass:[AIWebKitMessageViewPlugin class]];
 #endif
 	
 	[self loadPluginsFromPath:[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath]];
