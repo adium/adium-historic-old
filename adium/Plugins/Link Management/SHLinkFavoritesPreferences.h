@@ -8,15 +8,16 @@
 
 
 @interface SHLinkFavoritesPreferences : AIPreferencePane {
+    IBOutlet AIAlternatingRowTableView  *favoritesTable;
 
     IBOutlet AIPlasticButton            *removeButton;
     IBOutlet AIPlasticButton            *addButton;
-    
-    IBOutlet SHLinkFavoritesManageView  *favoritesList;
 
+	NSMutableArray				*favorites;
 }
 
 - (IBAction)addLink:(id)sender;
 - (IBAction)removeLink:(id)sender;
+- (NSDictionary *)selectedLink;
 
 @end

@@ -28,23 +28,12 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
         {
-            ACTIONS = {openLinkInBrowser = id; }; 
-            CLASS = SHLinkFavoritesManageView; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                addButton = NSButton; 
-                removeButton = NSButton; 
-                table = AIAlternatingRowTableView; 
-            }; 
-            SUPERCLASS = NSView; 
-        }, 
-        {
             ACTIONS = {addLink = id; removeLink = id; }; 
             CLASS = SHLinkFavoritesPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 addButton = AIPlasticButton; 
-                favoritesList = SHLinkFavoritesManageView; 
+                favoritesTable = AIAlternatingRowTableView; 
                 removeButton = AIPlasticButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
