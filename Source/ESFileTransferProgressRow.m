@@ -148,6 +148,10 @@
 			[view setProgressDoubleValue:[inFileTransfer percentDone]];
 			break;
 		case Complete_FileTransfer:
+			[view setProgressIndeterminate:YES];
+			[view setProgressAnimation:NO];
+			transferSpeedStatus = AILocalizedString(@"Complete",nil);
+			break;
 		case Canceled_Local_FileTransfer:
 		case Canceled_Remote_FileTransfer:
 			[view setProgressIndeterminate:YES];
