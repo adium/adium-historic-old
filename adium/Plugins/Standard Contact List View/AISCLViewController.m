@@ -14,16 +14,15 @@
  \------------------------------------------------------------------------------------------------------ */
 #import <unistd.h>
 #import "AISCLViewController.h"
-#import <Adium/Adium.h>
 #import "AISCLCell.h"
 #import "AISCLOutlineView.h"
 #import "AISCLViewPlugin.h"
 
 #define TOOL_TIP_DELAY_CHECK_INTERVAL		5.0		//Check for mouse movement 5 times a second
-#define TOOL_TIP_CHECK_INTERVAL				30.0		//Check for mouse movement 30 times a second
-#define TOOL_TIP_DELAY 				3		//Number of check intervals of no movement before a tip is displayed
+#define TOOL_TIP_CHECK_INTERVAL				30.0	//Check for mouse movement 30 times a second
+#define TOOL_TIP_DELAY						3		//Number of check intervals of no movement before a tip is displayed
 
-#define MAX_DISCLOSURE_HEIGHT		13		//Max height/width for our disclosure triangles
+#define MAX_DISCLOSURE_HEIGHT				13		//Max height/width for our disclosure triangles
 
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 #define KEY_DUAL_RESIZE_HORIZONTAL			@"Autoresize Horizontal"
@@ -62,15 +61,18 @@
     [super init];
 
     //Init
-    contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
     tooltipTrackingTag = -1;
 	inDrag = NO;
+	trackingMouseMovedEvents = NO;
 	dragItems = nil;
     tooltipTimer = nil;
 	tooltipMouseLocationTimer = nil;
     tooltipCount = 0;
 	lastMouseLocation = NSMakePoint(0,0);
-    //
+
+	contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
+	
+	//
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObject:@"AIListObject"]];
 	
     //Install the necessary observers
@@ -111,17 +113,18 @@
 {    
     //Remove observers (general)
     [[adium notificationCenter] removeObserver:self];
-    [[adium notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    //Hide any open tooltips
-    [self _hideTooltip];
+	//Hide any tooltip and invalidate the timers
+	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:nil];
+	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+	[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
 
     //Close down and release the view
     [contactListView setTarget:nil];
     [contactListView setDataSource:nil];
     [contactListView setDelegate:nil];
-    [contactListView release];
+    [contactListView release]; contactListView = nil;
 
     [super dealloc];
 }
@@ -629,16 +632,16 @@
 //TOOL_TIP_DELAY.  When this happens, we begin displaying tooltips.
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-	//Start our mouse delay timer
-	tooltipCount = 0;
-	if (!tooltipTimer){
+	if (!trackingMouseMovedEvents){
+		trackingMouseMovedEvents = YES;
+		//Start our mouse delay timer
+		tooltipCount = 0;
 		tooltipTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/TOOL_TIP_DELAY_CHECK_INTERVAL)
 														 target:self
 													   selector:@selector(tooltipTimer:)
 													   userInfo:nil
 														repeats:YES] retain];
 	}
-	
 }
 
 //Increment the tooltipCount variable
@@ -684,10 +687,12 @@
 //Hide any open tooltip and reset the tracking counter
 - (void)_hideTooltip
 {
-	[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
-	[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
-	
-	[self _showTooltipAtPoint:NSMakePoint(0,0)];
+	if (trackingMouseMovedEvents){
+		trackingMouseMovedEvents = NO;
+		[tooltipTimer invalidate]; [tooltipTimer release]; tooltipTimer = nil; //Stop the tooltip timer
+		[tooltipMouseLocationTimer invalidate]; [tooltipMouseLocationTimer release]; tooltipMouseLocationTimer = nil; //Stop the mouse location timer
+		[self _showTooltipAtPoint:NSMakePoint(0,0)];
+	}
 }
 
 //Show the correctly positioned tooltip (Pass a screen point)
