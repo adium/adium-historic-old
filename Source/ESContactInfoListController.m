@@ -119,7 +119,7 @@
 			
 		}else{
 			//Disallow dragging contacts into anything besides the contact list
-			if(index == -1){
+			if(index == NSOutlineViewDropOnItemIndex){
 
 				//The contactList is 'nil' to the outlineView
 				[outlineView setDropItem:nil dropChildIndex:[outlineView rowForItem:item]];
