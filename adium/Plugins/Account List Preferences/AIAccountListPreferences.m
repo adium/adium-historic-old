@@ -35,6 +35,8 @@
 - (void)configureView;
 - (void)configureAccountOptionsView;
 - (void)accountPropertiesChanged:(NSNotification *)notification;
+- (void)configureServiceSelection;
+- (void)configureAccountList;
 @end
 
 @implementation AIAccountListPreferences
@@ -50,59 +52,17 @@
     return(@"AccountPrefView");
 }
 
-//Sort an array of services alphabetically by their description
-int alphabeticalServiceSort(id service1, id service2, void *context)
-{
-	return [(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]];
-}
-
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSEnumerator		*enumerator;
-    id <AIServiceController>	service;
-    AIImageTextCell		*cell;
-    
     //init
     accountViewController = nil;
     view_accountPreferences = nil;
     selectedAccount = nil;
-	
-    //Configure our tableView
-    cell = [[[AIImageTextCell alloc] init] autorelease];
-    [cell setFont:[NSFont systemFontOfSize:12]];
-    [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
-    [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
-    [scrollView_accountList setAutoHideScrollBar:YES];
     
-    //Configure our buttons
-    [button_newAccount setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
-    [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
-    
-    //Configure the service list
-    [popupMenu_serviceList removeAllItems];
-	enumerator = [[[[adium accountController] availableServices] sortedArrayUsingFunction:alphabeticalServiceSort 
-																				  context:nil] objectEnumerator];
-	
-    while((service = [enumerator nextObject])){
-        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
-														target:self 
-														action:@selector(selectServiceType:) 
-												 keyEquivalent:@""] autorelease];
-	
-        [item setRepresentedObject:service];
-        [[popupMenu_serviceList menu] addItem:item];
-    }
-
-    //Install our observers
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(accountListChanged:) 
-									   name:Account_ListChanged 
-									 object:nil];
-    [[adium contactController] registerListObjectObserver:self];
-    
-    //Refresh our view
-    [self accountListChanged:nil];
+    //Configure
+	[self configureServiceSelection];
+	[self configureAccountList];
 }
 
 //Preference view is closing
@@ -113,7 +73,65 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     [accountViewController release]; accountViewController = nil;
     [[adium notificationCenter] removeObserver:self];
 }
+
+
+//Service Selection ----------------------------------------------------------------------------------------------------
+#pragma mark Service Selection
+- (void)configureServiceSelection
+{
+    NSEnumerator				*enumerator;
+    id <AIServiceController>	service;
+
+    //Configure the service list
+    [popupMenu_serviceList removeAllItems];
+	enumerator = [[[adium accountController] availableServices] objectEnumerator];
+	while((service = [enumerator nextObject])){
+        NSMenuItem	*item = [[[NSMenuItem alloc] initWithTitle:[service description]
+														target:self 
+														action:@selector(selectServiceType:) 
+												 keyEquivalent:@""] autorelease];
+		
+        [item setRepresentedObject:service];
+        [[popupMenu_serviceList menu] addItem:item];
+    }
+
+	//Observe account list objects so we can enable/disable our service menu as necessary
+    [[adium contactController] registerListObjectObserver:self];
+}
+
+//Account status changed
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+    if(inObject == selectedAccount){
+		if([inModifiedKeys containsObject:@"Online"]){
+			[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
+		}
+    }
     
+    return(nil);
+}
+
+//We need to make sure all changes to the account have been saved before a service switch occurs.
+//This code is called when the service menu is opened, and takes focus away from the first responder,
+//causing it to so save any outstanding changes.
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
+}
+
+//User selected a service type from the menu
+- (IBAction)selectServiceType:(id)sender
+{
+    id <AIServiceController>	service = [sender representedObject];
+    
+    //Switch it
+    [selectedAccount autorelease];
+    selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
+}
+
+
+//Account Options ------------------------------------------------------------------------------------------------------
+#pragma mark Account Options
 //Configure the account specific options
 - (void)configureAccountOptionsView
 {
@@ -183,52 +201,6 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     }
 }
 
-//Account list changed
-- (void)accountListChanged:(NSNotification *)notification
-{
-	//
-	
-	
-    //Update our reference to the accounts
-    selectedAccount = nil;
-    [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
-    
-    //Refresh the table (if the window is loaded)
-    if(tableView_accountList != nil){
-		[tableView_accountList reloadData];
-		[self tableViewSelectionDidChange:nil];
-    }
-}
-
-//Account status changed
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
-{
-    if(inObject == selectedAccount){
-		if([inModifiedKeys containsObject:@"Online"]){
-			[popupMenu_serviceList setEnabled:![[selectedAccount statusObjectForKey:@"Online"] boolValue]];
-		}
-    }
-    
-    return(nil);
-}
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	[[popupMenu_serviceList window] makeFirstResponder:popupMenu_serviceList];
-}
-
-
-//Editing ------------------------------------------------------------------------
-//User selected a service type from the menu
-- (IBAction)selectServiceType:(id)sender
-{
-    id <AIServiceController>	service = [sender representedObject];
-    
-    //Switch it
-    [selectedAccount autorelease];
-    selectedAccount = [[[adium accountController] switchAccount:selectedAccount toService:service] retain];
-}
-
 //User toggled the autoconnect preference
 - (IBAction)toggleAutoConnect:(id)sender
 {
@@ -238,6 +210,46 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
     [selectedAccount setPreference:[NSNumber numberWithBool:autoConnect]
 							forKey:@"AutoConnect"
 							 group:GROUP_ACCOUNT_STATUS];
+}
+
+
+//Account List ---------------------------------------------------------------------------------------------------------
+#pragma mark Account List
+- (void)configureAccountList
+{
+    AIImageTextCell			*cell;
+	
+    //Configure our tableView
+    cell = [[[AIImageTextCell alloc] init] autorelease];
+    [cell setFont:[NSFont systemFontOfSize:12]];
+    [[tableView_accountList tableColumnWithIdentifier:@"description"] setDataCell:cell];
+    [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
+    [scrollView_accountList setAutoHideScrollBar:YES];
+    
+    //Configure our buttons
+    [button_newAccount setImage:[AIImageUtilities imageNamed:@"plus" forClass:[self class]]];
+    [button_deleteAccount setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
+	
+	//Keep an eye on list changes so we can update as necessary
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(accountListChanged:) 
+									   name:Account_ListChanged 
+									 object:nil];
+	[self accountListChanged:nil];
+}
+
+//Account list changed
+- (void)accountListChanged:(NSNotification *)notification
+{
+    //Update our reference to the accounts
+    selectedAccount = nil;
+    [accountArray release]; accountArray = [[[adium accountController] accountArray] retain];
+    
+    //Refresh the table (if the window is loaded)
+    if(tableView_accountList != nil){
+		[tableView_accountList reloadData];
+		[self tableViewSelectionDidChange:nil];
+    }
 }
 
 //Create a new account
@@ -300,7 +312,8 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 
-#pragma mark table view delegate
+//Account List Table Delegate ------------------------------------------------------------------------------------------
+#pragma mark Account List (Table Delegate)
 //Delete the selected row
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
