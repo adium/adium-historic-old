@@ -140,6 +140,9 @@
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject	{ return @""; }
 
-
+- (BOOL)allowMultipleActionsWithID:(NSString *)actionID
+{
+	return(YES);
+}
 
 @end
