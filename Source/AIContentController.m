@@ -428,7 +428,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     if(object){
         //Notify: Will Receive Content
         if([inObject trackContent]){
-            [[owner notificationCenter] postNotificationName:Content_WillReceiveContent
+            [[adium notificationCenter] postNotificationName:Content_WillReceiveContent
 													  object:chat
 													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
@@ -525,7 +525,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
 	//Notify: Will Send Content
     if([inObject trackContent]){
-        [[owner notificationCenter] postNotificationName:Content_WillSendContent
+        [[adium notificationCenter] postNotificationName:Content_WillSendContent
 												  object:chat 
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
@@ -540,7 +540,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 			
 			if([inObject trackContent]){
 				//Did send content
-				[[owner notificationCenter] postNotificationName:Content_DidSendContent 
+				[[adium notificationCenter] postNotificationName:Content_DidSendContent 
 														  object:chat 
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 			}
@@ -550,7 +550,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		}
 	}else{
 		//We shouldn't send the content, so something was done with it.. clear the text entry view
-		[[owner notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
+		[[adium notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
 												  object:chat 
 												userInfo:nil];
 	}
@@ -666,17 +666,17 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		//Tell the interface to open the chat
 		//For incoming messages, we don't open the chat until we're sure that new content is being received.
 		if(![chat isOpen]){
-			[[owner interfaceController] openChat:chat];
+			[[adium interfaceController] openChat:chat];
 			
 			//If the chat wasn't open before, and this is received content, post the firstContentReceived notification
 			if (contentReceived && [inObject trackContent]){
-				[[owner notificationCenter] postNotificationName:Content_FirstContentRecieved 
+				[[adium notificationCenter] postNotificationName:Content_FirstContentRecieved 
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 			}
 		}else{
 			if (contentReceived && [inObject trackContent]){
-				[[owner notificationCenter] postNotificationName:Content_DidReceiveContent
+				[[adium notificationCenter] postNotificationName:Content_DidReceiveContent
 														  object:chat
 														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject, @"Object", nil]];
 			}
@@ -686,7 +686,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		[chat addContentObject:inObject];
 		
 		//Notify: Content Object Added
-		[[owner notificationCenter] postNotificationName:Content_ContentObjectAdded
+		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
@@ -734,7 +734,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSSet *)inModifiedKeys
 {
 	//Post an attributes changed message
-	[[owner notificationCenter] postNotificationName:Chat_AttributesChanged
+	[[adium notificationCenter] postNotificationName:Chat_AttributesChanged
 											  object:inChat
 											userInfo:(inModifiedKeys ? [NSDictionary dictionaryWithObject:inModifiedKeys 
 																								   forKey:@"Keys"] : nil)];
@@ -770,7 +770,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 	
 	//Send out the notification for other observers
-	[[owner notificationCenter] postNotificationName:Chat_StatusChanged
+	[[adium notificationCenter] postNotificationName:Chat_StatusChanged
 											  object:inChat
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
 																								 forKey:@"Keys"] : nil)];
@@ -800,7 +800,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	AIChat	*chat = [self chatWithContact:inContact];
 
-	if(chat) [[owner interfaceController] openChat:chat]; 
+	if(chat) [[adium interfaceController] openChat:chat]; 
 
 	return(chat);	
 }
@@ -819,7 +819,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
-		targetContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																   forListContact:inContact];
 		
 		/*
@@ -868,7 +868,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		
 		//Inform the account of its creation and post a notification if successful
 		if([[targetContact account] openChat:chat]){
-			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
+			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
 			[chatArray removeObject:chat];
 			chat = nil;
@@ -890,7 +890,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
 	if ([inContact isKindOfClass:[AIMetaContact class]]){
-		targetContact = [[owner contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
+		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];
 		
 		/*
@@ -936,7 +936,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		
 		//Inform the account of its creation and post a notification if successful
 		if([account openChat:chat]){
-			[[owner notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
+			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
 			[chatArray removeObject:chat];
 			chat = nil;
@@ -952,7 +952,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 			[chatArray addObject:chat];
 		}
 		
-		[[owner interfaceController] openChat:chat]; 
+		[[adium interfaceController] openChat:chat]; 
 	}
 }
 
@@ -984,7 +984,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     
     //Notify the account and send out the Chat_WillClose notification
     [[inChat account] closeChat:inChat];
-    [[owner notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
+    [[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
 
     //Remove the chat
     [chatArray removeObject:inChat];
@@ -1013,7 +1013,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 			[chat setAccount:newAccount];
 			
 			//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
-			AIListContact	*newContact = [[owner contactController] contactWithService:[[chat listObject] service]
+			AIListContact	*newContact = [[adium contactController] contactWithService:[[chat listObject] service]
 																				account:[chat account]
 																					UID:[[chat listObject] UID]];
 			[chat setListObject:newContact];
@@ -1033,7 +1033,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	AIAccount		*newAccount = (useContactAccount ? [inContact account] : [chat account]);
 	
 	//Switch the inContact over to a contact on the new account so we send messages to the right place.
-	AIListContact	*newContact = [[owner contactController] contactWithService:[inContact service]
+	AIListContact	*newContact = [[adium contactController] contactWithService:[inContact service]
 																		account:newAccount
 																			UID:[inContact UID]];
 	if (newContact != [chat listObject]){
@@ -1120,7 +1120,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 	if (newActiveChat){
 		//If either the first or second choice was made, set the new active chat and return YES
-		[[owner interfaceController] setActiveChat:newActiveChat];
+		[[adium interfaceController] setActiveChat:newActiveChat];
 		return(YES);
 		
     }else{
@@ -1137,14 +1137,14 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 									   preferred:(BOOL)inPreferred
 {
 	NSMutableArray	*sourceAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[owner accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
 	while(account = [enumerator nextObject]){
 		if([inObject service] == [account service]){
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;
-			AIListContact	*contactForAccount = [[owner contactController] existingContactWithService:[inObject service]
+			AIListContact	*contactForAccount = [[adium contactController] existingContactWithService:[inObject service]
 																							   account:account
 																								   UID:[inObject UID]];
 			//Does the account know this object?
