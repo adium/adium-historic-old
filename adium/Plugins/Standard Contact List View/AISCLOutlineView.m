@@ -188,33 +188,31 @@
     NSSize			cellSize;
     NSArray			*cellSizeArray;
     BOOL			changed = NO;
-    BOOL			isVisible = [inObject isVisible] && ([self rowForItem:inObject] != NSNotFound);
     int				j;
-    
-	//
-    if(!isVisible){ //We don't cache hidden objects
-        for(j=0; j < 3; j++){ //check left, middle, and right
-            if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
-                [self performFullRecalculationFor:j];
-                changed = YES;
-            }
-        }
-    }else{ //object is in the active contact list
-        [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
-        for(j=0 ; j < 3; j++){  //check left, middle, and right
-            cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
-            cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
-            if(cellSize.width > desiredWidth[j]) {
-                desiredWidth[j] = cellSize.width;
-                hadMax[j] = inObject;
-                changed = YES;
-            } else if ((hadMax[j] == inObject) && (cellSize.width != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
-                [self performFullRecalculationFor:j];
-                changed = YES;
-            }
-        }   
-    }
-    
+	
+	if([self rowForItem:inObject] == -1){ //We don't cache hidden objects
+		for(j=0; j < 3; j++){ //check left, middle, and right
+			if(hadMax[j] == inObject){ //if this object was the largest in terms of j before but is now hidden, then we need to search for the now-largest
+				[self performFullRecalculationFor:j];
+				changed = YES;
+			}
+		}
+	}else{ //object is in the active contact list
+		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:inObject];        
+		for(j=0 ; j < 3; j++){  //check left, middle, and right
+			cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];
+			cellSize = NSSizeFromString([cellSizeArray objectAtIndex:j]);
+			if(cellSize.width > desiredWidth[j]) {
+				desiredWidth[j] = cellSize.width;
+				hadMax[j] = inObject;
+				changed = YES;
+			} else if ((hadMax[j] == inObject) && (cellSize.width != desiredWidth[j]) ) {   //if this object was the largest in terms of j before but is not now, then we need to search for the now-largest
+				[self performFullRecalculationFor:j];
+				changed = YES;
+			}
+		}   
+	}
+	
     if(changed){
         [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self]; //Resize
     }
@@ -232,15 +230,17 @@
 - (void)performFullRecalculationFor:(int)j
 {
     NSTableColumn	*column = [[self tableColumns] objectAtIndex:0];
-    AISCLCell           *cell = [column dataCell];
+    AISCLCell		*cell = [column dataCell];
     AIListObject	*object;
-    NSSize		cellSize;
-    NSArray             *cellSizeArray;
-    int                 i;
+    NSSize			cellSize;
+    NSArray			*cellSizeArray;
+    int				i;
     
-    desiredWidth[j]=0;
+	desiredWidth[j]=0;
+	hadMax[j]=nil;
     for(i = 0; i < [self numberOfRows]; i++){
         object = [self itemAtRow:i];
+
         [[self delegate] outlineView:self willDisplayCell:cell forTableColumn:column item:object];
         
         cellSizeArray = [cell cellSizeArrayForBounds:NSMakeRect(0,0,0,[self rowHeight]) inView:self];

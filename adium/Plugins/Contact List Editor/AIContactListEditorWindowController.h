@@ -21,31 +21,33 @@
 
 @interface AIContactListEditorWindowController : AIWindowController {
 
-    IBOutlet	AIAlternatingRowOutlineView	*outlineView_contactList;	//The contact list outline view
-    IBOutlet	NSScrollView			*scrollView_contactList;	//The contact list's scroll view
-    IBOutlet	NSTableView			*tableView_sourceList;	//
-    IBOutlet	AISCLEditHeaderView		*customView_tableHeader;	//The custom table header view
-
-    IBOutlet	AIAutoScrollView		*scrollView_sourceList;
-
-    IBOutlet	NSDrawer			*drawer_sourceList;
-
-    IBOutlet	NSButton		*button_newHandle;
-    IBOutlet	NSButton		*button_newGroup;
-
-    IBOutlet	NSButton		*button_import;
-    
+	IBOutlet	NSBrowser		*browser_contactList;
+	
+//    IBOutlet	AIAlternatingRowOutlineView	*outlineView_contactList;	//The contact list outline view
+//    IBOutlet	NSScrollView			*scrollView_contactList;	//The contact list's scroll view
+//    IBOutlet	NSTableView			*tableView_sourceList;	//
+//    IBOutlet	AISCLEditHeaderView		*customView_tableHeader;	//The custom table header view
+//
+//    IBOutlet	AIAutoScrollView		*scrollView_sourceList;
+//
+//    IBOutlet	NSDrawer			*drawer_sourceList;
+//
+//    IBOutlet	NSButton		*button_newHandle;
+//    IBOutlet	NSButton		*button_newGroup;
+//
+//    IBOutlet	NSButton		*button_import;
+//    
     AIContactListEditorPlugin	*plugin;			//Our owning plugin
-
-    NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
-    NSMutableArray		*dragItems;
-    AIEditorCollection		*dragSourceCollection;
-    
-    AIEditorCollection		*selectedCollection;
-
-    NSTableColumn	*indexColumn;    
-        
-    NSTableColumn	*selectedColumn;
+//
+//    NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
+//    NSMutableArray		*dragItems;
+//    AIEditorCollection		*dragSourceCollection;
+//    
+//    AIEditorCollection		*selectedCollection;
+//
+//    NSTableColumn	*indexColumn;    
+//        
+//    NSTableColumn	*selectedColumn;
 
     
 }
@@ -53,9 +55,9 @@
 + (id)contactListEditorWindowControllerForPlugin:(AIContactListEditorPlugin *)inPlugin;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
-- (IBAction)delete:(id)sender;
-- (IBAction)import:(id)sender;
-- (IBAction)group:(id)sender;
-- (IBAction)handle:(id)sender;
+//- (IBAction)delete:(id)sender;
+//- (IBAction)import:(id)sender;
+//- (IBAction)group:(id)sender;
+//- (IBAction)handle:(id)sender;
 
 @end

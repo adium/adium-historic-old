@@ -24,25 +24,25 @@
 #define Editor_ActiveCollectionChanged		@"Editor_ActiveCollectionChanged"
 
 @class AIEditorListObject, AIEditorListHandle, AIEditorListGroup, AIEditorCollection;
-
-@protocol AIListEditorColumnController <NSObject>
-- (NSString *)editorColumnLabel;
-- (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
-- (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
-@end
-
-@protocol AIListEditor
-- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
-@end
+//
+//@protocol AIListEditorColumnController <NSObject>
+//- (NSString *)editorColumnLabel;
+//- (NSString *)editorColumnStringForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+//- (BOOL)editorColumnSetStringValue:(NSString *)value forServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
+//@end
+//
+//@protocol AIListEditor
+//- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
+//@end
 
 @interface AIContactListEditorPlugin : AIPlugin {
-    NSMutableArray	*listEditorColumnControllerArray;
-    NSMutableArray	*collectionsArray;
+//    NSMutableArray	*listEditorColumnControllerArray;
+//    NSMutableArray	*collectionsArray;
 }
 
-- (NSArray *)listEditorColumnControllers;
-- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
-- (NSArray *)collectionsArray;
+//- (NSArray *)listEditorColumnControllers;
+//- (void)registerListEditorColumnController:(id <AIListEditorColumnController>)inController;
+//- (NSArray *)collectionsArray;
 //- (AIEditorListHandle *)handleNamed:(NSString *)targetHandleName onCollection:(AIEditorCollection *)collection;
 //- (AIEditorListHandle *)createHandleNamed:(NSString *)name inGroup:(AIEditorListGroup *)group onCollection:(AIEditorCollection *)collection temporary:(BOOL)temporary;
 //- (AIEditorListGroup *)createGroupNamed:(NSString *)name onCollection:(AIEditorCollection *)collection temporary:(BOOL)temporary;
@@ -50,6 +50,6 @@
 //- (void)moveHandle:(AIEditorListHandle *)handle fromCollection:(AIEditorCollection *)sourceCollection toGroup:(AIEditorListGroup *)destGroup collection:(AIEditorCollection *)destCollection;
 //- (void)deleteObject:(AIEditorListObject *)object fromCollection:(AIEditorCollection *)collection;
 //- (AIEditorListGroup *)groupNamed:(NSString *)targetGroupName onCollection:(AIEditorCollection *)collection;
-- (void)importFile:(NSString *)inPath;
+//- (void)importFile:(NSString *)inPath;
 
 @end
