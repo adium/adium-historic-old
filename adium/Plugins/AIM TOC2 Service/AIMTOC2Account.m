@@ -34,6 +34,7 @@ static char *hash_password(const char * const password);
 - (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
 - (void)AIM_AddHandle:(NSString *)handleUID toGroup:(NSString *)groupName;
 - (void)AIM_RemoveHandle:(NSString *)handleUID fromGroup:(NSString *)groupName;
+- (void)AIM_RemoveGroup:(NSString *)groupName;
 - (void)AIM_HandleUpdateBuddy:(NSString *)message;
 - (void)AIM_HandleNick:(NSString *)message;
 - (void)AIM_HandleSignOn:(NSString *)message;
@@ -113,8 +114,8 @@ static char *hash_password(const char * const password);
 // Remove a group from the specified groups
 - (BOOL)removeGroup:(AIContactGroup *)group
 {
-    //AIM automatically removes groups (once they are emptied), so nothing needs to be done here.
-
+    [self AIM_RemoveGroup:[group displayName]];
+    
     return(YES);
 }
 
@@ -599,7 +600,7 @@ static char *hash_password(const char * const password);
         keys = [addDict allKeys];
         for(loop = 0;loop < [keys count];loop++){
             NSString	*groupName;
-            NSArray		*groupArray;
+            NSArray	*groupArray;
             int		handle;
             
             //Get the group and group contents
@@ -628,6 +629,12 @@ static char *hash_password(const char * const password);
 
 }
 
+- (void)AIM_RemoveGroup:(NSString *)groupName
+{
+    NSString *message = [NSString stringWithFormat:@"toc2_del_group \"%@\"",groupName];
+    
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];    
+}
 
 //Server -> Client Command Handlers
 - (void)AIM_HandleMessageIn:(NSString *)inCommand
