@@ -85,6 +85,7 @@ typedef enum {
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group objectIgnoringInheritance:(AIListObject *)object;
 - (NSDictionary *)preferencesForGroup:(NSString *)group;
+- (id)defaultPreferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object;
 
 //Defaults
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group;
