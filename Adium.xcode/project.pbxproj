@@ -7034,7 +7034,6 @@
 				4BD673B606001C5E0049CAF7,
 				4BD673CD06001C960049CAF7,
 				4BD6741B06001CEF0049CAF7,
-				4BD6741F06001CF00049CAF7,
 				4BD6742706001D1A0049CAF7,
 				4BD6742B06001D1B0049CAF7,
 				4BD6742D06001D1C0049CAF7,
@@ -7068,22 +7067,11 @@
 				BF000238063A4D2E0019910B,
 				4B909C8B064D75400074C9A8,
 				4BBF41E30661194A001D31E1,
-				7E64084706629E10006A5552,
-				7E64084B06629E10006A5552,
-				7E64084E06629E31006A5552,
-				7E901610066ABD92005E1FD7,
-				7E5B1DCE066ACE8D00EE5E57,
-				7ED73236066B005D0069616E,
-				7EC35CAD066B0CBA002129B7,
 				4B2DC06D066F705800AD5AAD,
-				7E6FDD660672B89A00B5C3D4,
-				4B052CA6067E39BE00A43B4A,
 				34E38240068F7F2300303451,
-				4B2E560A06A33D85008866CF,
 				34A65B0606A5A15300898470,
 				9E20910C06A601A500E33E27,
 				9E20910F06A601B100E33E27,
-				4B9A684206AEB44B0010BF69,
 				344C0D5106B6D63800DA7200,
 				6E4D961306B739AC005235E9,
 				6EC1684C06C170A000F9FAD3,
@@ -7195,6 +7183,18 @@
 				34A6FB7807D6FDBA00972830,
 				344093AA07D9161B00321BB3,
 				34BFD80107E6A51D00AD984D,
+				34BFE20307E8E11500AD984D,
+				34BFE20C07E8E19000AD984D,
+				34BFE22F07E8E57A00AD984D,
+				34BFE23407E8E57A00AD984D,
+				34BFE23607E8E57A00AD984D,
+				34BFE23807E8E57A00AD984D,
+				34BFE23907E8E57A00AD984D,
+				34BFE23A07E8E57A00AD984D,
+				34BFE24507E8E5B900AD984D,
+				34BFE25107E8E5F200AD984D,
+				34BFE25D07E8E69300AD984D,
+				34BFE2D707E8E74400AD984D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7417,7 +7417,6 @@
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
 				4BC7BA3E069C8BD4001F2DD8,
-				7EBC6E5F069DE5BC00020736,
 				34A65D6E06A5ABC500898470,
 				34A65D6F06A5ABC500898470,
 				9E20910A06A601A100E33E27,
@@ -7496,6 +7495,7 @@
 				34BFDF1907E8977D00AD984D,
 				34BFDF2007E8978900AD984D,
 				34BFDF2107E8978900AD984D,
+				34BFE21A07E8E56700AD984D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7527,7 +7527,6 @@
 				4BD673B706001C5F0049CAF7,
 				4BD673CE06001C960049CAF7,
 				4BD6741C06001CEF0049CAF7,
-				4BD6742006001CF10049CAF7,
 				4BD6742806001D1A0049CAF7,
 				4BD6742C06001D1C0049CAF7,
 				4BD6742E06001D1D0049CAF7,
@@ -7562,22 +7561,11 @@
 				BF000239063A4D2E0019910B,
 				4B909C8A064D75400074C9A8,
 				4BBF41E40661194A001D31E1,
-				7E64084806629E10006A5552,
-				7E64084C06629E10006A5552,
-				7E64084D06629E2E006A5552,
-				7E901611066ABD92005E1FD7,
-				7E5B1DCF066ACE8D00EE5E57,
-				7ED73237066B005D0069616E,
-				7EC35CAE066B0CBA002129B7,
 				4B2DC06E066F705800AD5AAD,
-				7E6FDD670672B89A00B5C3D4,
-				4B052CA7067E39BE00A43B4A,
 				34E38241068F7F2300303451,
-				4B2E560B06A33D85008866CF,
 				34A65B0706A5A15300898470,
 				9E20910E06A601AF00E33E27,
 				9E20911006A601B200E33E27,
-				4B9A684306AEB44B0010BF69,
 				344C0D5006B6D63800DA7200,
 				6E4D961406B739AC005235E9,
 				6EC1684D06C170A000F9FAD3,
@@ -7689,6 +7677,18 @@
 				34A6FB7707D6FDBA00972830,
 				344093AB07D9161B00321BB3,
 				34BFD80007E6A51D00AD984D,
+				34BFE20207E8E11500AD984D,
+				34BFE20B07E8E19000AD984D,
+				34BFE22E07E8E57A00AD984D,
+				34BFE23207E8E57A00AD984D,
+				34BFE23307E8E57A00AD984D,
+				34BFE23507E8E57A00AD984D,
+				34BFE23707E8E57A00AD984D,
+				34BFE23B07E8E57A00AD984D,
+				34BFE24607E8E5B900AD984D,
+				34BFE25007E8E5F200AD984D,
+				34BFE25C07E8E69300AD984D,
+				34BFE2D807E8E74400AD984D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8741,6 +8741,408 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34BFE20007E8E11500AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIChatCyclingPlugin.m;
+			path = Source/AIChatCyclingPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34BFE20107E8E11500AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIChatCyclingPlugin.h;
+			path = Source/AIChatCyclingPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34BFE20207E8E11500AD984D = {
+			fileRef = 34BFE20007E8E11500AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE20307E8E11500AD984D = {
+			fileRef = 34BFE20107E8E11500AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE20907E8E18F00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHBookmarksImporterPlugin.m;
+			path = Source/SHBookmarksImporterPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE20A07E8E18F00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHBookmarksImporterPlugin.h;
+			path = Source/SHBookmarksImporterPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE20B07E8E19000AD984D = {
+			fileRef = 34BFE20907E8E18F00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE20C07E8E19000AD984D = {
+			fileRef = 34BFE20A07E8E18F00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE21907E8E56700AD984D = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = bookmarkToolbar.tif;
+			path = Resources/bookmarkToolbar.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE21A07E8E56700AD984D = {
+			fileRef = 34BFE21907E8E56700AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE22007E8E57800AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMSIEBookmarksImporter.m;
+			path = Source/SHMSIEBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22107E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaBookmarksImporter.h;
+			path = Source/SHMozillaBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22207E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHABBookmarksImporter.m;
+			path = Source/SHABBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22307E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHABBookmarksImporter.h;
+			path = Source/SHABBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22407E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHFireFoxBookmarksImporter.m;
+			path = Source/SHFireFoxBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22507E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHSafariBookmarksImporter.m;
+			path = Source/SHSafariBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22607E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHSafariBookmarksImporter.h;
+			path = Source/SHSafariBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22707E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHOmniWebBookmarksImporter.m;
+			path = Source/SHOmniWebBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22807E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHOmniWebBookmarksImporter.h;
+			path = Source/SHOmniWebBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22907E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHCaminoBookmarksImporter.m;
+			path = Source/SHCaminoBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22A07E8E57900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHCaminoBookmarksImporter.h;
+			path = Source/SHCaminoBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22B07E8E57A00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHFireFoxBookmarksImporter.h;
+			path = Source/SHFireFoxBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22C07E8E57A00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMSIEBookmarksImporter.h;
+			path = Source/SHMSIEBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22D07E8E57A00AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaBookmarksImporter.m;
+			path = Source/SHMozillaBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE22E07E8E57A00AD984D = {
+			fileRef = 34BFE22007E8E57800AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE22F07E8E57A00AD984D = {
+			fileRef = 34BFE22107E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23207E8E57A00AD984D = {
+			fileRef = 34BFE22407E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23307E8E57A00AD984D = {
+			fileRef = 34BFE22507E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23407E8E57A00AD984D = {
+			fileRef = 34BFE22607E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23507E8E57A00AD984D = {
+			fileRef = 34BFE22707E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23607E8E57A00AD984D = {
+			fileRef = 34BFE22807E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23707E8E57A00AD984D = {
+			fileRef = 34BFE22907E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23807E8E57A00AD984D = {
+			fileRef = 34BFE22A07E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23907E8E57A00AD984D = {
+			fileRef = 34BFE22B07E8E57A00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23A07E8E57A00AD984D = {
+			fileRef = 34BFE22C07E8E57A00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE23B07E8E57A00AD984D = {
+			fileRef = 34BFE22D07E8E57A00AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE24307E8E5B900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaCommonParser.h;
+			path = Source/SHMozillaCommonParser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE24407E8E5B900AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaCommonParser.m;
+			path = Source/SHMozillaCommonParser.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE24507E8E5B900AD984D = {
+			fileRef = 34BFE24307E8E5B900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE24607E8E5B900AD984D = {
+			fileRef = 34BFE24407E8E5B900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE24E07E8E5F100AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAutoLinkingPlugin.m;
+			path = Source/AIAutoLinkingPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE24F07E8E5F200AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAutoLinkingPlugin.h;
+			path = Source/AIAutoLinkingPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE25007E8E5F200AD984D = {
+			fileRef = 34BFE24E07E8E5F100AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE25107E8E5F200AD984D = {
+			fileRef = 34BFE24F07E8E5F200AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE25A07E8E69300AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIContactAccountsPane.m;
+			path = Source/AIContactAccountsPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE25B07E8E69300AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIContactAccountsPane.h;
+			path = Source/AIContactAccountsPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34BFE25C07E8E69300AD984D = {
+			fileRef = 34BFE25A07E8E69300AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE25D07E8E69300AD984D = {
+			fileRef = 34BFE25B07E8E69300AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE2D507E8E74400AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIChatConsolidationPlugin.h;
+			path = Source/AIChatConsolidationPlugin.h;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34BFE2D607E8E74400AD984D = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIChatConsolidationPlugin.m;
+			path = Source/AIChatConsolidationPlugin.m;
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		34BFE2D707E8E74400AD984D = {
+			fileRef = 34BFE2D507E8E74400AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE2D807E8E74400AD984D = {
+			fileRef = 34BFE2D607E8E74400AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34BFE2DB07E8E7D100AD984D = {
+			children = (
+				34BFE22307E8E57900AD984D,
+				34BFE22207E8E57900AD984D,
+			);
+			isa = PBXGroup;
+			name = Unused;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34C14CD007A8B1AB003CC138 = {
 			fileEncoding = 4;
@@ -13779,36 +14181,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B052CA4067E39BE00A43B4A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIContactAccountsPane.h;
-			path = "Plugins/Contact Accounts/AIContactAccountsPane.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B052CA5067E39BE00A43B4A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIContactAccountsPane.m;
-			path = "Plugins/Contact Accounts/AIContactAccountsPane.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B052CA6067E39BE00A43B4A = {
-			fileRef = 4B052CA4067E39BE00A43B4A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B052CA7067E39BE00A43B4A = {
-			fileRef = 4B052CA5067E39BE00A43B4A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B082CCA07D2236E0034A001 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -14260,42 +14632,14 @@
 		};
 		4B2E560406A33D85008866CF = {
 			children = (
-				4B2E560506A33D85008866CF,
-				4B2E560606A33D85008866CF,
+				34BFE20007E8E11500AD984D,
+				34BFE20107E8E11500AD984D,
 			);
 			isa = PBXGroup;
 			name = "Chat Cycling";
 			path = "Plugins/Chat Cycling";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B2E560506A33D85008866CF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AIChatCyclingPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2E560606A33D85008866CF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AIChatCyclingPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2E560A06A33D85008866CF = {
-			fileRef = 4B2E560506A33D85008866CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B2E560B06A33D85008866CF = {
-			fileRef = 4B2E560606A33D85008866CF;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B31E8C004C46A9100A8010A = {
 			fileEncoding = 30;
@@ -16226,44 +16570,14 @@
 		};
 		4B9A683D06AEB41C0010BF69 = {
 			children = (
-				4B9A684006AEB44B0010BF69,
-				4B9A684106AEB44B0010BF69,
+				34BFE2D507E8E74400AD984D,
+				34BFE2D607E8E74400AD984D,
 			);
 			isa = PBXGroup;
 			name = "Chat Consolidation";
 			path = "Plugins/Chat Cycling";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B9A684006AEB44B0010BF69 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIChatConsolidationPlugin.h;
-			path = "Plugins/Chat Consolidation/AIChatConsolidationPlugin.h";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B9A684106AEB44B0010BF69 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIChatConsolidationPlugin.m;
-			path = "Plugins/Chat Consolidation/AIChatConsolidationPlugin.m";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		4B9A684206AEB44B0010BF69 = {
-			fileRef = 4B9A684006AEB44B0010BF69;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B9A684306AEB44B0010BF69 = {
-			fileRef = 4B9A684106AEB44B0010BF69;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BA12FFC04C0A12900A8010A = {
 			children = (
@@ -18096,18 +18410,6 @@
 			settings = {
 			};
 		};
-		4BD6741F06001CF00049CAF7 = {
-			fileRef = 4BF48147049A808E00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6742006001CF10049CAF7 = {
-			fileRef = 4BF48148049A808E00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6742706001D1A0049CAF7 = {
 			fileRef = 3C73F83E04D62A2900A80106;
 			isa = PBXBuildFile;
@@ -18985,30 +19287,12 @@
 		};
 		4BF4813B049A802E00A8010A = {
 			children = (
-				4BF48147049A808E00A8010A,
-				4BF48148049A808E00A8010A,
+				34BFE24F07E8E5F200AD984D,
+				34BFE24E07E8E5F100AD984D,
 			);
 			isa = PBXGroup;
 			name = "Auto Linking";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF48147049A808E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAutoLinkingPlugin.h;
-			path = "Plugins/Auto Linking/AIAutoLinkingPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF48148049A808E00A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAutoLinkingPlugin.m;
-			path = "Plugins/Auto Linking/AIAutoLinkingPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20353,41 +20637,11 @@
 			settings = {
 			};
 		};
-		7E5B1DCC066ACE8C00EE5E57 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHFireFoxBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHFireFoxBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E5B1DCD066ACE8C00EE5E57 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHFireFoxBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHFireFoxBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E5B1DCE066ACE8D00EE5E57 = {
-			fileRef = 7E5B1DCC066ACE8C00EE5E57;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E5B1DCF066ACE8D00EE5E57 = {
-			fileRef = 7E5B1DCD066ACE8C00EE5E57;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		7E64083B06629DD7006A5552 = {
 			children = (
-				7EBC6E5E069DE5BC00020736,
-				7E64084106629E10006A5552,
-				7E64084206629E10006A5552,
+				34BFE21907E8E56700AD984D,
+				34BFE20A07E8E18F00AD984D,
+				34BFE20907E8E18F00AD984D,
 				7E64083E06629DEE006A5552,
 			);
 			isa = PBXGroup;
@@ -20397,147 +20651,26 @@
 		};
 		7E64083E06629DEE006A5552 = {
 			children = (
-				7E6FDD640672B89A00B5C3D4,
-				7E6FDD650672B89A00B5C3D4,
-				7ED1148F066D65C400E81906,
-				7ED11490066D65C500E81906,
-				7EC35CAB066B0CB9002129B7,
-				7EC35CAC066B0CB9002129B7,
-				7ED73234066B005C0069616E,
-				7ED73235066B005C0069616E,
-				7E5B1DCC066ACE8C00EE5E57,
-				7E5B1DCD066ACE8C00EE5E57,
-				7E90160E066ABD92005E1FD7,
-				7E90160F066ABD92005E1FD7,
-				7E64084306629E10006A5552,
-				7E64084406629E10006A5552,
-				7E64084506629E10006A5552,
-				7E64084606629E10006A5552,
+				34BFE24307E8E5B900AD984D,
+				34BFE24407E8E5B900AD984D,
+				34BFE22A07E8E57900AD984D,
+				34BFE22907E8E57900AD984D,
+				34BFE22B07E8E57A00AD984D,
+				34BFE22407E8E57900AD984D,
+				34BFE22107E8E57900AD984D,
+				34BFE22D07E8E57A00AD984D,
+				34BFE22C07E8E57A00AD984D,
+				34BFE22007E8E57800AD984D,
+				34BFE22807E8E57900AD984D,
+				34BFE22707E8E57900AD984D,
+				34BFE22607E8E57900AD984D,
+				34BFE22507E8E57900AD984D,
+				34BFE2DB07E8E7D100AD984D,
 			);
 			isa = PBXGroup;
 			name = Importers;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		7E64084106629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHBookmarksImporterPlugin.h;
-			path = "Plugins/Bookmark Importing/SHBookmarksImporterPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084206629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHBookmarksImporterPlugin.m;
-			path = "Plugins/Bookmark Importing/SHBookmarksImporterPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084306629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHCaminoBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHCaminoBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084406629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHCaminoBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHCaminoBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084506629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHSafariBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHSafariBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084606629E10006A5552 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHSafariBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHSafariBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E64084706629E10006A5552 = {
-			fileRef = 7E64084106629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E64084806629E10006A5552 = {
-			fileRef = 7E64084206629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E64084B06629E10006A5552 = {
-			fileRef = 7E64084506629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E64084C06629E10006A5552 = {
-			fileRef = 7E64084606629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E64084D06629E2E006A5552 = {
-			fileRef = 7E64084406629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E64084E06629E31006A5552 = {
-			fileRef = 7E64084306629E10006A5552;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E6FDD640672B89A00B5C3D4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMozillaCommonParser.h;
-			path = "Plugins/Bookmark Importing/SHMozillaCommonParser.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E6FDD650672B89A00B5C3D4 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMozillaCommonParser.m;
-			path = "Plugins/Bookmark Importing/SHMozillaCommonParser.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E6FDD660672B89A00B5C3D4 = {
-			fileRef = 7E6FDD640672B89A00B5C3D4;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E6FDD670672B89A00B5C3D4 = {
-			fileRef = 7E6FDD650672B89A00B5C3D4;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		7E7D5DE806A4DD4F00ADD4E1 = {
 			fileRef = 7ECB106806A4D1AD00812D5F;
@@ -20655,80 +20788,6 @@
 		};
 		7E824CEB06387FAF00813072 = {
 			fileRef = 7E824CDC06387FAF00813072;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E90160E066ABD92005E1FD7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMozillaBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHMozillaBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E90160F066ABD92005E1FD7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMozillaBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHMozillaBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7E901610066ABD92005E1FD7 = {
-			fileRef = 7E90160E066ABD92005E1FD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7E901611066ABD92005E1FD7 = {
-			fileRef = 7E90160F066ABD92005E1FD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7EBC6E5E069DE5BC00020736 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = bookmarkToolbar.tif;
-			path = "Plugins/Bookmark Importing/bookmarkToolbar.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7EBC6E5F069DE5BC00020736 = {
-			fileRef = 7EBC6E5E069DE5BC00020736;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7EC35CAB066B0CB9002129B7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHOmniWebBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHOmniWebBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7EC35CAC066B0CB9002129B7 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHOmniWebBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHOmniWebBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7EC35CAD066B0CBA002129B7 = {
-			fileRef = 7EC35CAB066B0CB9002129B7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7EC35CAE066B0CBA002129B7 = {
-			fileRef = 7EC35CAC066B0CB9002129B7;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20885,54 +20944,6 @@
 		};
 		7ECB108C06A4D32B00812D5F = {
 			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7ED1148F066D65C400E81906 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHABBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHABBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ED11490066D65C500E81906 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHABBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHABBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ED73234066B005C0069616E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMSIEBookmarksImporter.h;
-			path = "Plugins/Bookmark Importing/SHMSIEBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ED73235066B005C0069616E = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMSIEBookmarksImporter.m;
-			path = "Plugins/Bookmark Importing/SHMSIEBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ED73236066B005D0069616E = {
-			fileRef = 7ED73234066B005C0069616E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		7ED73237066B005D0069616E = {
-			fileRef = 7ED73235066B005C0069616E;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -23446,8 +23457,8 @@
 			children = (
 				F570A59803704B6101A8010A,
 				F570A59903704B6101A8010A,
-				4B052CA4067E39BE00A43B4A,
-				4B052CA5067E39BE00A43B4A,
+				34BFE25B07E8E69300AD984D,
+				34BFE25A07E8E69300AD984D,
 				4BBF41DD0661194A001D31E1,
 				4BBF41DE0661194A001D31E1,
 				4B2DC06B066F705800AD5AAD,

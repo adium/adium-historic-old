@@ -43,9 +43,20 @@
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item;
 @end
 
+/*!
+ * @class SHBookmarksImporterPlugin
+ * @brief Component to support reading and inserting of web browser bookmarks
+ *
+ * Bookmarks are available from the Edit menu, the message window toolbar, and from contextual menus.
+ * The bookmarks for the user's default browser are used.
+ *
+ * Bookmarks are imported from all major Mac browsers via SH*BookmarksImporter, where * is the browser name.
+ */
 @implementation SHBookmarksImporterPlugin
 
-//Install
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Prepare the importer for our default browser
@@ -91,14 +102,20 @@
 	}
 }
 
-//Uninstall
-- (void)uninstallPlugin
+/*
+ * @brief Deallocate
+ */
+- (void)dealloc
 {
     [[adium notificationCenter] removeObserver:self];
 	[importer release]; importer = nil;
 }
 
-//Once Adium has finished launching, detach our bookmark thread and start building the menu
+/*
+ * @brief Adium finished launching
+ *
+ * Once Adium has finished launching, detach our bookmark thread and start building the menu
+ */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	if (!updatingMenu){
@@ -108,7 +125,9 @@
 	}
 }
 
-//Returns the importer we'll need to use for the user's default web browser
+/*
+ * @brief Returns the importer class for the user's default web browser
+ */
 - (Class)importerClassForDefaultBrowser
 {
 	Class		importerClass = nil;
@@ -156,12 +175,14 @@
 	//We're done with Internet Config, so stop it
 	Err = ICStop(ICInst);
 
-	//AILog(@"%@ determined importer class: %@",self,NSStringFromClass(importerClass));
-
 	return(importerClass);
 }
 
-//Insert a link into the textView
+/*
+ * @brief Insert a link into the textView
+ *
+ * @param sender An NSMenuItem whose representedObject must be an SHMarkedHyperlink instance
+ */
 - (void)injectBookmarkFrom:(id)sender
 {
 	SHMarkedHyperlink	*markedLink = [sender representedObject];
@@ -203,9 +224,12 @@
 
 //Building -------------------------------------------------------------------------------------------------------------
 #pragma mark Building
-//Builds the bookmark menu (Detatch as a thread)
-//We're not allowed to create our touch any menu items from within a thread, so this thread will gather a list of 
-//bookmarks and then pass them over to another method on the main thread for menu building/inserting.
+/*
+ * @brief Builds the bookmark menu (Detatch as a thread)
+ *
+ * We're not allowed to create our touch any menu items from within a thread, so this thread will gather a list of 
+ * bookmarks and then pass them over to another method on the main thread for menu building/inserting.
+ */
 - (void)buildBookmarkMenuThread
 {
 	updatingMenu = YES;
@@ -243,7 +267,9 @@
 	[pool release];
 }
 
-//Called by the thread when the submenu NSMenu items have been generated
+/*
+ * @brief Called by the thread when the submenu NSMenu items have been generated
+ */
 - (void)gotMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
 {
 	//Apply on the next run loop to avoid threadlocking
@@ -253,7 +279,9 @@
 			   afterDelay:0.0001];
 }
 
-//Called after a delay by the main thread to actually perform our setting
+/*
+ * @brief Called after a delay by the main thread to actually perform our setting
+ */
 - (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
 {
 	[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
@@ -268,7 +296,9 @@
 	updatingMenu = NO;
 }
 
-//Insert a bookmark (or an array of bookmarks) into the menu
+/*
+ * @brief Insert a bookmark (or an array of bookmarks) into the menu
+ */
 - (void)insertBookmarks:(NSDictionary *)bookmarks intoMenu:(NSMenu *)inMenu
 {	
 	//Recursively add the contents of the group to the parent menu
@@ -298,7 +328,9 @@
 	[inMenu addItem:item];
 }
 
-//Insert a single bookmark into the menu
+/*
+ * @brief Insert a single bookmark into the menu
+ */
 - (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu
 {
 	[inMenu addItemWithTitle:[object parentString]
@@ -311,7 +343,9 @@
 
 //Validation / Updating ------------------------------------------------------------------------------------------------
 #pragma mark Validation / Updating
-//Validate our bookmark menu item
+/*
+ * @brief Validate our bookmark menu item
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
 {
 	if(sender == bookmarkRootMenuItem || sender == bookmarkRootContextualMenuItem){
@@ -335,12 +369,17 @@
 	}
 }
 
-//Dummy menu item target so we can enable/disable our main menu item
+/*
+ * @brief Dummy menu item target so we can enable/disable our main menu item
+ */
 - (IBAction)dummyTarget:(id)sender{
 }
 
 #pragma mark Toolbar Item
 
+/*
+ * @brief Register toolbar item
+ */
 - (void)registerToolbarItem
 {
 	MVMenuButton *button;
@@ -369,8 +408,11 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
-//When a toolbar item is added (it will be effectively a copy of the one we originally registered)
-//we want to set its menu initially, then track it for later menu changes
+/*
+ * @brief Toolbar item will be added
+ * When a toolbar item is added (it will be effectively a copy of the one we originally registered)
+ * we want to set its menu initially, then track it for later menu changes
+ */
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
@@ -383,7 +425,11 @@
 	}
 }
 
-//The toolbar item was removed; we should now stop tracking (and retaining) it
+/*
+ * @brief A toolbar item was removed
+ *
+ * Stop tracking (and retaining) it
+ */
 - (void)toolbarDidRemoveItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
@@ -393,7 +439,9 @@
 	}
 }
 
-//Update the menus on every toolbar item we are tracking
+/*
+ * @brief Update the menus on every toolbar item we are tracking
+ */
 - (void)updateAllToolbarItemMenus
 {
 	NSEnumerator	*enumerator;
@@ -406,6 +454,9 @@
 	
 }
 
+/*
+ * @brief Update the menu for a specific toolbar item
+ */
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item
 {
 	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
@@ -420,6 +471,5 @@
 	[mItem setTitle:(menuTitle ? menuTitle : @"")];
 	[item setMenuFormRepresentation:mItem];	
 }
-
 
 @end

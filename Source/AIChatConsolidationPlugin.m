@@ -21,8 +21,17 @@
 
 #define CONSOLIDATE_CHATS_MENU_TITLE			AILocalizedString(@"Consolidate Chats",nil)
 
+/*
+ * @class AIChatConsolidationPlugin
+ * @brief Component which provides the Conslidate Chats menu item
+ *
+ * Consolidating chats moves all open chats into a single, tabbed window
+ */
 @implementation AIChatConsolidationPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	consolidateMenuItem = [[NSMenuItem alloc] initWithTitle:CONSOLIDATE_CHATS_MENU_TITLE
@@ -32,13 +41,28 @@
 	[[adium menuController] addMenuItem:consolidateMenuItem toLocation:LOC_Window_Commands];
 }
 
+- (void)dealloc
+{
+	[consolidateMenuItem release];
+	
+	[super dealloc];
+}
+
+/*
+ * @brief Consolidate chats
+ *
+ *	The interface controller does all the work for us :)
+ */
 - (void)consolidateChats:(id)sender
 {
-	//The interface controller does all the work for us :)
 	[[adium interfaceController] consolidateChats];	
 }
 
-//Only enable the menu if more than one chat is open
+/*
+ * @brief Validate menu items
+ *
+ * Only enable the menu if more than one chat is open
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	return([[[adium interfaceController] openChats] count] > 1);
