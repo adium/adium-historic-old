@@ -18,6 +18,7 @@
 #import "AIContactStatusDockOverlaysPlugin.h"
 #import "AIContentController.h"
 #import "AIDockController.h"
+#import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIColorAdditions.h>
@@ -124,9 +125,14 @@
 	if(isMessageEvent){
 		AIChat	*inChat = [userInfo objectForKey:@"AIChat"];
 
-		if(![overlayObjectsArray containsObjectIdenticalTo:inChat]){
+		if((inChat != [[adium interfaceController] activeChat]) &&
+		   (![overlayObjectsArray containsObjectIdenticalTo:inChat])){
 			[overlayObjectsArray addObject:inChat];
-			[self _setOverlay];
+			
+			//Wait until the next run loop so this event is done processing (and our unviewed content count is right)
+			[self performSelector:@selector(_setOverlay)
+					   withObject:nil
+					   afterDelay:0];
 
 			/* The chat observer method is responsible for removing this overlay later */
 		}
@@ -151,8 +157,10 @@
 			[overlayObjectsArray addObject:listObject];
 		}
 
-		//Do set overlay now as our coloring or whatever may have changed
-		[self _setOverlay];
+		//Wait until the next run loop so this event is done processing
+		[self performSelector:@selector(_setOverlay)
+				   withObject:nil
+				   afterDelay:0];
 	}
 }
 
@@ -242,12 +250,10 @@
 		
 		if(![inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
 			if([overlayObjectsArray containsObjectIdenticalTo:inChat]){
-				NSLog(@"Removing chat %@",inChat);
 				[overlayObjectsArray removeObjectIdenticalTo:inChat];
 				[self _setOverlay];
 			}
 		}
-		
 	}
 	
 	return nil;
