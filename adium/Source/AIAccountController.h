@@ -14,9 +14,9 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.24 $
- * $Date: 2004/07/15 08:16:55 $
- * $Author: evands $
+ * $Revision: 1.25 $
+ * $Date: 2004/07/15 11:03:08 $
+ * $Author: ramoth4 $
  **/
 
 #define Account_ListChanged 					@"Account_ListChanged"
@@ -80,6 +80,10 @@
 - (AIAccount *)switchAccount:(AIAccount *)inAccount toService:(id <AIServiceController>)inService;
 - (AIAccount *)changeUIDOfAccount:(AIAccount *)inAccount to:(NSString *)inUID;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+
+//AccountMenuPlugin
+- (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
+- (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
 
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject;
