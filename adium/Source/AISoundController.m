@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AISoundController.m,v 1.29 2003/12/20 03:34:16 jmelloy Exp $
+
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
 
