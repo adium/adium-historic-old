@@ -17,16 +17,32 @@
 
 @class AISortController;
 
-@interface AIListGroup : AIListObject {
+@interface AIListGroup : AIListObject <AIContainingObject> {
     int					visibleCount;		//The number of visible buddies in the sorted array
+	
+	NSMutableArray		*containedObjects;	//Manually ordered array of contents
+    BOOL				expanded;			//Exanded/Collapsed state of this object
 }
 
 - (id)initWithUID:(NSString *)inUID;
 
+//Object Storage
+- (AIListObject *)objectWithService:(AIService *)inService UID:(NSString *)inUID;
+
+//Object Storage (PRIVATE: For contact controller only)
+- (BOOL)addObject:(AIListObject *)inObject;
+- (void)removeObject:(AIListObject *)inObject;
+
 //Sorting (PRIVATE: For contact controller only)
+- (void)sortListObject:(AIListObject *)inObject sortController:(AISortController *)sortController;
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController;
 
 //Visibility
 - (unsigned)visibleCount;
+- (void)visibilityOfContainedObject:(AIListObject *)inObject changedTo:(BOOL)inVisible;
+
+//Expanded State (PRIVATE: For the contact list view to let us know our state)
+- (void)setExpanded:(BOOL)inExpanded;
+- (BOOL)isExpanded;
 
 @end
