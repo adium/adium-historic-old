@@ -24,6 +24,7 @@
 - Status controller needs to return an offline state from activeState when we are offline
 - installation of various xtras doesn't go to the right pref pane now.
 - Adiumy dock icons don't show away/idle status, related to localization?
+- Should we be logging colors?
 
 //-------------------------------------------------------------------------------------------------------
 // Old junk
@@ -53,7 +54,7 @@
   - Enforce a larger minimum width for tabs
   - Use a chevron to display tabs that don't fit on the tab bar (like safari)
   - New close button graphic
- 
+
 //Formatted messages
   Some users like formatted and colored messages, other want messages to look
   the way they've decided in the preferences.  Let's make message formatting
@@ -66,7 +67,7 @@
   By default we will completely ignore message formatting.  Users who want
   formatting will look for a way to set their font/color and find the options
   in general preferences.
-  
+
 //Plugin Version Control
   Simple solution to compatibility with 3rd party plugins
   - Every release of Adium has a plugin version number
@@ -78,7 +79,7 @@
 
 //Offline contacts
   Add group specific offline visibility toggles to the contact list.
-  
+
 //Deferring of initial messages
   In certain situations the user may not want new messages to automatically open
   windows.
@@ -101,7 +102,7 @@
   - Fix support for sub-profile links [Evan: These work for me.  Confirmation, anyone?]
   - Use WebKit to handle the HTML unless there is some overwhelming reason we parse it
     // this should resolve several issues and gives great benefits - like tooltips & copy link
-  
+
 //Alerts
   - Display time stamps in the panel alert
   - Support %escapes in spoken alert (such as %n to speak the contact's name)
@@ -123,15 +124,15 @@
 	- A first-run Adium setup wizard [Evan: this is my inclination]
 		* Basic account setup
 		* Initial configuration of a few key preferences
-  - The Migration Assistant, with expanded program support and a revamped UI, should 
+  - The Migration Assistant, with expanded program support and a revamped UI, should
     automatically offer its services when Adium is first launched, ‡ la Mail.app's
 	importer.[Brandon: Working on it.]
-        
+
 // Address Book integration
     - Sync (optionally) contact notes to an associated AB card's Notes field
     - Ability to add a screenname into AB as a new card
     - Add People Picker & ability to add via this panel
-  
+
 //-------------------------------------------------------------------------------------------------------
 // Incomplete Thoughts
 //-------------------------------------------------------------------------------------------------------
@@ -144,7 +145,7 @@
   all blocked names and add/remove from the list.  Ignore the AIM specific block 'modes'.
 	- Add block and unblock menu items which prompt for the service and name
 	- Add "Block contacts not on my list" to AIM account preferences
-        
+
 //Sound Preferences
 	- Provide a way to manage (delete at minimum) soundsets
 
@@ -155,7 +156,7 @@
 //Contact List
 	- Easy identification of mobile users
 	- Round label caps for events
-	- Improve status hierarchy 
+	- Improve status hierarchy
 	- We need to either support contacts at the root level or not support them; we currently do a mixture
 		which is very confusing to new users.  For example, a new Jabber account has no groups, but adding
 		a contact with no groups has no visible effect.
