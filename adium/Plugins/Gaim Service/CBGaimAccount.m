@@ -20,23 +20,33 @@
 #define RECONNECTION_ATTEMPTS		4
 
 @interface CBGaimAccount (PRIVATE)
-- (void)displayError:(NSString *)errorDesc;
-- (void)setBuddyImageFromFilename:(char *)imageFilename;
-- (void)signonTimerExpired:(NSTimer*)timer;
-- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
 - (void)connect;
 - (void)disconnect;
+- (void)signonTimerExpired:(NSTimer*)timer;
+
+- (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (NSString *)_userIconCachePath;
-- (NSString *)_messageImageCachePathForID:(int)imageID;
-- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
-- (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
-- (NSString *)_processGaimImagesInString:(NSString *)inString;
+
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
+
+- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy;
+- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy;
+- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString)contactUID;
+
 - (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy;
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact;
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing;
+
+- (AIChat*)_openChatWithContact:(AIListContact *)contact andConversation:(GaimConversation*)conv;
+
 - (void)_receivedMessage:(const char *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags time:(time_t)mtime;
+- (NSString *)_processGaimImagesInString:(NSString *)inString;
+- (NSString *)_messageImageCachePathForID:(int)imageID;
+
+- (ESFileTransfer *)createFileTransferObjectForXfer:(GaimXfer *)xfer;
+
+- (void)displayError:(NSString *)errorDesc;
 @end
 
 @implementation CBGaimAccount
@@ -87,8 +97,6 @@
 {	
 //	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
-    /*int                     online;*/
-	
     AIListContact           *theContact;
 	
     //Get the node's ui_data
@@ -432,6 +440,12 @@
 			NSAssert(buddy != nil, @"buddy was nil");
 			
 			sourceContact = [self contactAssociatedWithBuddy:buddy];
+			//If creating a contact from the buddy failed, create a contact using the conversation name
+			if (!sourceContact){
+				sourceContact = [self contactAssociatedWithConversation:conv withBuddy:buddy];
+			}
+			
+			NSAssert(sourceContact != nil, @"accountConvReceivedIM: sourceContact was nil after both tries.");
 		}
 		
 		/*
@@ -447,7 +461,6 @@
 		 */
 #warning This assertion is firing almost randomly
 		
-		NSAssert(sourceContact != nil, @"contactAssociatedWithBuddy must have returned nil.");
 		// Need to start a new chat, associating with the gaim conv
 		chat = [[adium contentController] chatWithContact:sourceContact
 											initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
@@ -1165,33 +1178,44 @@
 //    }
 //    return NO;
 //}
-	
 - (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
+{
+	return ([self _contactAssociatedWithBuddy:buddy
+									 usingUID:[NSString stringWithUTF8String:(buddy->name)]]);
+}	
+
+- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
+{
+	return ([self _contactAssociatedWithBuddy:buddy 
+									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
+}
+
+- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID
 {
 	NSAssert(buddy != nil,@"contactAssociatedWithBuddy: passed a nil buddy");
 	
-	AIListContact	*contact;
-	NSString		*contactUID = [NSString stringWithUTF8String:(buddy->name)];
+	AIListContact	*contact = nil;
 	
-	//Evan: temporary assert
-	NSAssert(contactUID != nil,@"contactAssociatedWithBuddy: contactUID was nil");
-	
-	//Get our contact
-	contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-												  accountID:[self uniqueObjectID]
-														UID:[contactUID compactedString]];
-	
-	//Evan: temporary asserts
-	NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
-	NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
-	NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
-	
-    //Associate the handle with ui_data and the buddy with our statusDictionary
-    buddy->node.ui_data = [contact retain];
-    [contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
+	//If a name was available for the GaimBuddy, create a contact
+	if (contactUID){
+		//Get our contact
+		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:[contactUID compactedString]];
+		
+		//Evan: temporary asserts
+		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
+		NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
+		NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
+		
+		//Associate the handle with ui_data and the buddy with our statusDictionary
+		buddy->node.ui_data = [contact retain];
+		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
+	}
 	
 	return(contact);
 }
+
 
 /*********************/
 /* AIAccount_Privacy */
