@@ -39,7 +39,7 @@
 	int		entriesInCache;
 
 	BOOL	drawHighlightOnlyWhenMain;
-	BOOL	drawsSelectedRowHighlight;	
+	BOOL	drawsSelectedRowHighlight;
 }
 
 /*!
@@ -77,9 +77,14 @@
 
 @interface AIVariableHeightOutlineView (AIVariableHeightOutlineViewAndSubclasses)
 - (void)resetRowHeightCache;
+- (void)updateRowHeightCache;
 @end
 
 @interface NSObject (AIVariableHeightGridSupport)
 - (BOOL)drawGridBehindCell;
+@end
+
+@interface NSCell (UndocumentedHighlightDrawing)
+- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 @end
 

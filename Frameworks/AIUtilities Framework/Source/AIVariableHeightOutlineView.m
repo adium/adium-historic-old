@@ -17,13 +17,8 @@
 - (void)_initVariableHeightOutlineView;
 
 - (int)heightForRow:(int)row;
-- (void)updateRowHeightCache;
 - (void)_drawRowSelectionInRect:(NSRect)rect;
 - (NSImage *)dragImageForRows:(unsigned int[])buf count:(unsigned int)count tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset;
-@end
-
-@interface NSCell (UndocumentedHighlightDrawing)
-- (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 @end
 
 @implementation AIVariableHeightOutlineView
@@ -57,7 +52,7 @@
 	totalHeight = 0;
 	drawHighlightOnlyWhenMain = NO;
 	drawsSelectedRowHighlight = YES;
-	
+
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:self];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:self];
 }
@@ -315,25 +310,13 @@
 			if([self drawsAlternatingRows] && 
 			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
 			   (tableColumnIndex == 0)){
-/*
-				NSRect backgroundRect;
-				
-				//Account for the corner view if necessary
-				backgroundRect = NSIntersectionRect(cellFrame, rect);
-				if(tableColumnIndex == (count-1)){
-					NSView	*cornerView = [self cornerView];
-					if(cornerView){
-						backgroundRect.size.width += [cornerView frame].size.width;
-					}
-				}
-		*/		
+
 				[self _drawRowInRect:[self rectOfRow:row]
 							 colored:!(row % 2)
 							selected:selected];
 			}
 			
 			//Draw the cell
-
 			if(selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
 			[cell drawWithFrame:cellFrame inView:self];
 		}
