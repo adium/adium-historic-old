@@ -122,16 +122,19 @@ static NSArray *emptyArray;
 
 -(void)menuItemFromDict:(NSDictionary *)inDict
 {
-    SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:CAMINO_DICT_URL_KEY]
-                                                          withValidationStatus:SH_URL_VALID
-                                                                  parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
-                                                                      andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
-    
-    [caminoBookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
-                                  target:owner
-                                  action:@selector(injectBookmarkFrom:)
-                           keyEquivalent:@""
-                       representedObject:markedLink];
+	NSString			*urlKey = [inDict objectForKey:CAMINO_DICT_URL_KEY];
+	if (urlKey){
+		SHMarkedHyperlink   *markedLink = [[[SHMarkedHyperlink alloc] initWithString:urlKey
+																withValidationStatus:SH_URL_VALID
+																		parentString:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
+																			andRange:NSMakeRange(0,[(NSString *)[inDict objectForKey:CAMINO_DICT_TITLE_KEY] length])] autorelease];
+		
+		[caminoBookmarksMenu addItemWithTitle:[inDict objectForKey:CAMINO_DICT_TITLE_KEY]
+									   target:owner
+									   action:@selector(injectBookmarkFrom:)
+								keyEquivalent:@""
+							representedObject:markedLink];
+	}
 }
 
 @end
