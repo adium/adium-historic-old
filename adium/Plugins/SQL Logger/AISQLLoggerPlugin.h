@@ -18,16 +18,20 @@
 
 /**
  * 
- * $Revision: 1.5 $
- * $Date: 2003/11/09 02:32:08 $
- * $Author: adamiser $
+ * $Revision: 1.6 $
+ * $Date: 2003/11/16 02:08:54 $
+ * $Author: jmelloy $
  *
  **/
+#define KEY_SQL_LOGGER_ENABLE	@"Enable SQL Logging"
+#define PREF_GROUP_LOGGING	@"SQLLogging"
 
 #import "libpq-fe.h"
+@class JMSQLLoggerAdvancedPreferences;
 
 @interface AISQLLoggerPlugin : AIPlugin <AIPluginInfo> {
-    PGconn *conn;
+    JMSQLLoggerAdvancedPreferences  *advancedPreferences;
+    PGconn                          *conn;
 }
 
 @end

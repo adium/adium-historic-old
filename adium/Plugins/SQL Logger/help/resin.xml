@@ -7,7 +7,7 @@
     JSP servlet engine.  Several are available, but I prefer one called
     "Resin".  You can get it at <a
       href="http://www.caucho.com" class="offsite">http://www.caucho.com</a>.</p>
-    <p>Downlaod the newest 2.0 release (2.1.9) for Unix.  It's not very
+    <p>Download the newest 2.0 release (2.1.9) for Unix.  It's not very
     difficult to install at all.  Most browsers will automatically decompress
     the file, but if you need to, open up a terminal window
     and type </p>

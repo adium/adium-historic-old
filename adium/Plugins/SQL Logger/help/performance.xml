@@ -11,9 +11,9 @@
       knowing if any other process is looking at the same record its modified.
       Therefore, any process/transaction that started looking at the table
       before the record was modified see the old version, even if the record
-      hsa already been changed.</p>
+      has already been changed.</p>
     <p>This problem is very simple to solve.  All that needs to be run is
-      PostgreSQL's <code>VACCUM</code> command.  This flags all old tuples to
+      PostgreSQL's <code>VACUUM</code> command.  This flags all old tuples to
       be overwritten the next time they need to be.  It's meant to be run in
       an update/delete heavy application, and the adium stuff isn't very
       update/delete heavy under normal use, but it's still a good idea to run

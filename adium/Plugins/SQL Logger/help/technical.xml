@@ -3,7 +3,7 @@
 <page>
   <title>Adium SQL Logger Technical Details</title>
   <body>
-    <p>This page describes a few more technical details of Adium's SQL Logging
+    <p>This page describes a few more technical details of the Adium SQL Logging
     Plugin.</p>
     <div align="center">
       <a href="#adium.sql">adium.sql</a> | 
@@ -110,7 +110,7 @@
       There is not a lot of difference between
       the two, except that parser works on Adium logs before 2.0, and parser-2
       goes over Adium 2.0 logs.</p>
-    <p>The perl scripts require a few modules for talking to the database.  It
+    <p>The Perl scripts require a few modules for talking to the database.  It
       requires <code>DBI</code> and <code>DBD::Pg</code>.  DBI is a standard
       database-independant perl module.  You can download it with either CPAN
       or fink. (<a href="http://fink.sourceforge.net"
@@ -189,7 +189,7 @@ export DBI_PASS=<i>password</i></pre>
         to move the logs out and try again.</li>
       <li>If the database is Unicode-encoded, it will be very picky about
         inserting characters it doesn't know into it.  Since Adium doesn't log
-        as unicode, this could cause some problems.</li>
+        as Unicode, this could cause some problems.</li>
       <li>If you are getting undefined errors like this:
         <pre>dyld: perl Undefined symbols:
           _BIO_free
