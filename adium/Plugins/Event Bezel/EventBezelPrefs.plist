@@ -36,5 +36,7 @@
         <false/>
         <key>Fade Out</key>
         <true/>
+        <key>Show Hidden</key>
+        <true/>
 </dict>
 </plist>

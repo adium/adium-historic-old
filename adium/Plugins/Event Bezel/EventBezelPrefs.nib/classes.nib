@@ -39,6 +39,7 @@
                 toggleOffline = id; 
                 toggleOnline = id; 
                 toggleShowBezel = id; 
+                toggleShowHidden = id; 
             }; 
             CLASS = JSCEventBezelPreferences; 
             LANGUAGE = ObjC; 
@@ -56,6 +57,7 @@
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
+                "checkBox_showHidden" = NSButton; 
                 "popUp_background" = NSPopUpButton; 
                 "popUp_position" = NSPopUpButton; 
                 "popUp_size" = NSPopUpButton; 
