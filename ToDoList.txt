@@ -2,7 +2,9 @@
 // Adium 0.8
 //-------------------------------------------------------------------------------------------------------
 Log Viewer - ability to delete a contact (whole folder) at once from drawer. [brian]  // in progress
+Log Viewer - respect case of IDs for logging [brian]
 Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
+Standardize/enhance Xtras pref panes [brian]
 
 //-------------------------------------------------------------------------------------------------------
 // Possible Thoughts
@@ -159,6 +161,8 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
   - Improve link tracking and tooltips in profiles
   - Fix support for sub-profile links
   - Display profiles for other services in addition to AIM
+  - Use WedKit to handle the HTML unless there is some overwhelming reason we parse it
+    // this should resolve several issues and gives great benefits - like tooltips & copy link
   
 //Preferences
   - Improve organization of advanced preferences
@@ -184,6 +188,11 @@ Preferences -> Keys - ability to add Shift mask for Return/Enter [brian]
   - The Migration Assistant, with expanded program support and a revamped UI, should 
     automatically offer its services when Adium is first launched, ‡ la Mail.app's
 	importer.
+        
+// Address Book integration [brian - just marking it as mine if no one else beats me done]
+    - Sync (optionally) contact notes to an associated AB card's Notes field
+    - Ability to add a screenname into AB as a new card
+    - Add People Picker & ability to add via this panel
   
 //-------------------------------------------------------------------------------------------------------
 // Incomplete Thoughts
