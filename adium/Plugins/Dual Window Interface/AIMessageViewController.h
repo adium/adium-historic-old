@@ -41,6 +41,7 @@
     AIChat			*chat;
     float			currentTextEntryHeight;
     BOOL			showUserList;
+    BOOL			availableForSending;
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;

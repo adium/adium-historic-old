@@ -40,6 +40,7 @@
 - (void)clearTextEntryView;
 - (void)setChat:(AIChat *)inChat;
 - (void)chatStatusChanged:(NSNotification *)notification;
+- (void)listObjectStatusChanged:(NSNotification *)notification;
 @end
 
 @implementation AIMessageViewController
@@ -148,10 +149,6 @@
         //Config the outgoing text view
         [textView_outgoing setChat:chat];
     
-        //Config our toolbar
-        [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
-        [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inChat, @"Chat", object, @"ContactObject", textView_outgoing, @"TextEntryView", nil]];
-    
         //Register for sending notifications
         [[owner notificationCenter] removeObserver:self name:Interface_SendEnteredMessage object:nil];
         [[owner notificationCenter] removeObserver:self name:Interface_DidSendEnteredMessage object:nil];
@@ -239,7 +236,8 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
+    [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];    
+    [self listObjectStatusChanged:nil];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
@@ -318,12 +316,14 @@
 
 //Our contact's status did change
 - (void)listObjectStatusChanged:(NSNotification *)notification
-{    
-    //Enable/Disable our text view sending
-    [textView_outgoing setAvailableForSending:[[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:chat onAccount:account]];
-
-    //Update our toolbar
-    [toolbar_bottom configureForObjects:nil];
+{
+    //Update our available for sending (we cache this to avoid calling it every time a key is pressed)
+    availableForSending = [[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toChat:chat onAccount:account];
+    
+    //Enable/Disable our text view sending, and send button
+    [textView_outgoing setAvailableForSending:availableForSending];
+    [button_send setEnabled:(availableForSending && [[textView_outgoing string] length] != 0)];
+    
 }
 
 //A preference did change
@@ -340,11 +340,22 @@
 //The entered text has changed
 - (void)textDidChange:(NSNotification *)notification
 {
+    BOOL enabled;
+    
+    //Resize our contents to fit the text (If it's height has changed)
     if([self textHeight] != currentTextEntryHeight){
-        [self sizeAndArrangeSubviews]; //Resize our contents to fit the text (If it's height has changed)
+        [self sizeAndArrangeSubviews];
         [view_contents setNeedsDisplay:YES];
     }
+
+    //Enable/Disable our sending button
+    enabled = (availableForSending && [[textView_outgoing string] length] != 0);
+    if([button_send isEnabled] != enabled){
+        [button_send setEnabled:enabled];
+    }
+    
 }
+
 #define TEXT_ENTRY_PADDING 2
 #define SEND_BUTTON_PADDING 2
 //Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a contact, the account view is visible)
@@ -363,12 +374,6 @@
         [view_accountSelection setFrame:NSMakeRect(0, superFrame.size.height - height, superFrame.size.width, height)];
         superFrame.size.height -= height;
     }
-
-    //Toolbar
-    height = [toolbar_bottom frame].size.height;
-    [toolbar_bottom setFrame:NSMakeRect(0, 0, superFrame.size.width - RESIZE_CORNER_TOOLBAR_OFFSET, height)];
-    superFrame.size.height -= height;
-    superFrame.origin.y += height;
 
     //Send Button
     int buttonWidth = [button_send frame].size.width;

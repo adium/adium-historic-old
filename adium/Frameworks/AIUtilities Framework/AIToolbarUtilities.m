@@ -41,7 +41,9 @@
     // the settingSelector parameter can either be @selector(setView:) or @selector(setImage:).  Pass in the right
     // one depending upon whether your NSToolbarItem will have a custom view or an image, respectively
     // (in the itemContent parameter).  Then this next line will do the right thing automatically.
-    [item performSelector:settingSelector withObject:itemContent];
+    if(settingSelector && itemContent){
+        [item performSelector:settingSelector withObject:itemContent];
+    }
     [item setAction:action];
     // If this NSToolbarItem is supposed to have a menu "form representation" associated with it (for text-only mode),
     // we set it up here.  Actually, you have to hand an NSMenuItem (not a complete NSMenu) to the toolbar item,

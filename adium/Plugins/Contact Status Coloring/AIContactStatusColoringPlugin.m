@@ -30,7 +30,6 @@
 - (void)installPlugin
 {
     //init
-    
     awayColor = nil;
     idleColor = nil;
     idleAwayColor = nil;
@@ -89,7 +88,7 @@
 
         //Update the handle's text color
         [self applyColorToObject:inObject];
-        modifiedAttributes = [NSArray arrayWithObject:@"Text Color"];
+        modifiedAttributes = [NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Tab Back Color", nil];
     }
 
     //Update our flash array
@@ -111,9 +110,10 @@
 {
     AIMutableOwnerArray		*colorArray = [inObject displayArrayForKey:@"Text Color"];
     AIMutableOwnerArray		*invertedColorArray = [inObject displayArrayForKey:@"Inverted Text Color"];
+    AIMutableOwnerArray		*tabBackColorArray = [inObject displayArrayForKey:@"Tab Back Color"];
     int				away, warning, online, unviewedContent, signedOn, signedOff, openTab, typing;
     double			idle;
-    NSColor			*color = nil, *invertedColor = nil;
+    NSColor			*color = nil, *invertedColor = nil, *tabBackColor = nil;
 
     //Get all the values
     away = [[inObject statusArrayForKey:@"Away"] greatestIntegerValue];
@@ -165,9 +165,15 @@
         invertedColor = [NSColor colorWithCalibratedRed:(255.0/255.0) green:(255.0/255.0) blue:(255.0/255.0) alpha:1.0];
     }
 
+    //Tab Back Color
+    if(unviewedContent && !([[owner interfaceController] flashState] % 2)){
+        tabBackColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.15];
+    }
+    
     //Add the new color
     [colorArray setObject:color withOwner:self];
     [invertedColorArray setObject:invertedColor withOwner:self];
+    [tabBackColorArray setObject:tabBackColor withOwner:self];
 }
 
 //Flash all handles with unviewed content
@@ -181,7 +187,7 @@
         [self applyColorToObject:object];
         
         //Force a redraw
-        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Text Color"] forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:ListObject_AttributesChanged object:object userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"Text Color", @"Inverted Text Color", @"Tab Back Color", nil] forKey:@"Keys"]];
     }
 }
 

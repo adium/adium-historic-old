@@ -33,7 +33,7 @@
 
 #define CUSTOM_TABS_FPS		30.0		//Animation speed
 #define CUSTOM_TABS_OVERLAP	2		//Overlapped pixels between tabs
-#define CUSTOM_TABS_LEFT_INDENT	6
+#define CUSTOM_TABS_INDENT	3
 
 @implementation AICustomTabsView
 
@@ -180,7 +180,7 @@
 
         //Draw the divider
         if(tabCell != selectedCustomTabCell && (!nextTabCell || nextTabCell != selectedCustomTabCell)){
-            [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width - 1, cellFrame.origin.y) operation:NSCompositeSourceOver];
+            [tabDivider compositeToPoint:NSMakePoint(cellFrame.origin.x + cellFrame.size.width - 2, cellFrame.origin.y) operation:NSCompositeSourceOver];
         }
 
         tabCell = nextTabCell;
@@ -262,7 +262,7 @@
     AICustomTabCell	*tabCell;
     int			totalWidth = 0;
 
-    totalWidth = CUSTOM_TABS_OVERLAP;
+    totalWidth = CUSTOM_TABS_OVERLAP + (CUSTOM_TABS_INDENT * 2);
     enumerator = [tabCellArray objectEnumerator];
     while((tabCell = [enumerator nextObject])){
         totalWidth += [tabCell size].width - CUSTOM_TABS_OVERLAP;
@@ -350,7 +350,7 @@
     AICustomTabCell	*tabCell;
     int			xLocation;
     int			index = 0;
-    int			dragIndex;
+    int			dragIndex = -1;
 
     //Figure out where the user is hovering the toolbar item
     xLocation = tabXOrigin;
@@ -509,7 +509,7 @@
         reduceThreshold = (tabCell ? [tabCell size].width : 0);
     }
 
-    tabXOrigin = CUSTOM_TABS_LEFT_INDENT;
+    tabXOrigin = CUSTOM_TABS_INDENT;
 
     //Position the tabs
     xLocation = tabXOrigin;
@@ -521,34 +521,34 @@
         //Get the object's size
         size = [tabCell size];//[object frame].size;
 
-            //If this tab is > next biggest, use the 'reduced' width calculated above
-            if(size.width > reduceThreshold){
-                size.width = reducedWidth;
+        //If this tab is > next biggest, use the 'reduced' width calculated above
+        if(size.width > reduceThreshold){
+            size.width = reducedWidth;
+        }
+
+        origin = NSMakePoint(xLocation, 0 );
+
+        //Move the item closer to its desired location
+        if(!absolute){
+            if(origin.x > [tabCell frame].origin.x){
+                int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
+                if(distance < 1) distance = 1;
+
+                origin.x = [tabCell frame].origin.x + distance;
+
+                if(finished) finished = NO;
+            }else if(origin.x < [tabCell frame].origin.x){
+                int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
+                if(distance < 1) distance = 1;
+
+                origin.x = [tabCell frame].origin.x - distance;
+                if(finished) finished = NO;
             }
+        }
 
-            origin = NSMakePoint(xLocation, 0 );
+        [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
 
-            //Move the item closer to its desired location
-            if(!absolute){
-                if(origin.x > [tabCell frame].origin.x){
-                    int distance = (origin.x - [tabCell frame].origin.x) * 0.6;
-                    if(distance < 1) distance = 1;
-
-                    origin.x = [tabCell frame].origin.x + distance;
-
-                    if(finished) finished = NO;
-                }else if(origin.x < [tabCell frame].origin.x){
-                    int distance = ([tabCell frame].origin.x - origin.x) * 0.6;
-                    if(distance < 1) distance = 1;
-
-                    origin.x = [tabCell frame].origin.x - distance;
-                    if(finished) finished = NO;
-                }
-            }
-
-            [tabCell setFrame:NSMakeRect(origin.x, origin.y, size.width, size.height)];
-
-            xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
+        xLocation += size.width - CUSTOM_TABS_OVERLAP; //overlap the tabs a bit
     }
 
     [self setNeedsDisplay:YES];

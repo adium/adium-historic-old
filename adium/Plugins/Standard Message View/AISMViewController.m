@@ -342,6 +342,7 @@
         NSString		*dateString = [dateFormatter stringForObjectValue:[(AIContentMessage *)content date]];
 
         //Create the cell
+        backgroundIsDark = [[self backgroundColorOfContent:content] colorIsDark];
         cell = [AIFlexibleTableTextCell cellWithString:dateString
                                                  color:(backgroundIsDark ? [NSColor lightGrayColor] : [NSColor grayColor])
                                                   font:[NSFont cachedFontWithName:@"Helvetica" size:10]

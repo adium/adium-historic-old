@@ -68,7 +68,10 @@
     NSDictionary		*objects = [inToolbarItem configurationObjects];
     AIListContact		*object = [objects objectForKey:@"ContactObject"];
 
-    return([object isKindOfClass:[AIListContact class]]);
+    BOOL			enabled = (object && [object isKindOfClass:[AIListContact class]]);
+
+    [inToolbarItem setEnabled:enabled];
+    return(enabled);
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem

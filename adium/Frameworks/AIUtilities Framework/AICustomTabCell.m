@@ -26,9 +26,6 @@
 #define TAB_CLOSE_LEFTPAD	0
 #define TAB_CLOSE_RIGHTPAD	2
 #define TAB_CLOSE_Y_OFFSET	4
-#define TAB_BADGE_PADDING	2
-#define TAB_BADGE_X_OFFSET	0
-#define TAB_BADGE_Y_OFFSET	4
 
 @implementation AICustomTabCell
 
@@ -64,7 +61,7 @@
 //Return the desired size of this tab
 - (NSSize)size
 {
-    return( NSMakeSize([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabViewItem sizeOfLabel:NO].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabFrontRight size].width, [tabFrontLeft size].height) ); //the label is inset into each cap
+    return( NSMakeSize([tabFrontLeft size].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabViewItem sizeOfLabel:NO].width + TAB_CLOSE_LEFTPAD + [tabCloseFront size].width + TAB_CLOSE_RIGHTPAD + [tabFrontRight size].width, [tabFrontLeft size].height) );
 }
 
 - (NSComparisonResult)compareWidth:(AICustomTabCell *)tab
@@ -83,7 +80,6 @@
         
     }
 }
-
 
 
 // Private ---------------------------------------------------------------------
@@ -182,6 +178,13 @@
         [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 
     }
+
+    //Fill our content color
+    NSColor	*tabColor = [tabViewItem color];
+    if(tabColor && !selected){
+        [[tabViewItem color] set];
+        [NSBezierPath fillRect:NSMakeRect(rect.origin.x + 2, rect.origin.y, rect.size.width - 3, rect.size.height)];        
+    }
     
     //Draw the close widget
     if(selected){
@@ -200,10 +203,6 @@
                           middleWidth - tabCloseWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD,
                           labelSize.height);
     [tabViewItem drawLabel:YES inRect:destRect];
-
-    //Draw the Badge
-    destPoint = NSMakePoint(rect.origin.x + leftCapWidth + middleWidth - TAB_CLOSE_LEFTPAD - tabBadgeWidth - TAB_CLOSE_RIGHTPAD, rect.origin.y + TAB_BADGE_Y_OFFSET);
-//    [tabCloseFront compositeToPoint:destPoint operation:NSCompositeSourceOver];
 }
 
 //Mouse tracking / Clicking -------------------------------------------

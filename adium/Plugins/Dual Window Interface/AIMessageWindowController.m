@@ -35,6 +35,7 @@
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)shouldCascadeWindows;
 - (void)windowDidLoad;
+- (void)installToolbar;
 @end
 
 @implementation AIMessageWindowController
@@ -145,6 +146,9 @@
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
 
+    //Install toolbar
+//    [self installToolbar];
+
 //    [[self window] setShowsResizeIndicator:NO];
     [[self window] setBottomCornerRounded:NO]; //Sneaky lil private method
 
@@ -242,6 +246,120 @@
                                               object:[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat]
                                             userInfo:nil];
 }
+
+
+// Window toolbar ---------------------------------------------------------------
+- (void)installToolbar
+{
+    NSToolbar *toolbar;
+
+    //Setup the toolbar
+    toolbar = [[[NSToolbar alloc] initWithIdentifier:@"BrushedMessageWindow"] autorelease];
+    toolbarItems = [[NSMutableDictionary dictionary] retain];
+        
+    //Add the items
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"From"
+                                             label:@"From: resI madA"
+                                      paletteLabel:@""
+                                           toolTip:@""
+                                            target:self
+                                   settingSelector:nil
+                                       itemContent:nil
+                                            action:@selector(action:)
+                                              menu:nil];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Info"
+                                             label:@"Info"
+                                      paletteLabel:@""
+                                           toolTip:@""
+                                            target:self
+                                   settingSelector:nil
+                                       itemContent:nil
+                                            action:@selector(action:)
+                                              menu:nil];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Logs"
+                                             label:@"Logs"
+                                      paletteLabel:@""
+                                           toolTip:@""
+                                            target:self
+                                   settingSelector:nil
+                                       itemContent:nil
+                                            action:@selector(action:)
+                                              menu:nil];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"AddToList"
+                                             label:@"Add to List"
+                                      paletteLabel:@""
+                                           toolTip:@""
+                                            target:self
+                                   settingSelector:nil
+                                       itemContent:nil
+                                            action:@selector(action:)
+                                              menu:nil];
+
+    [AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+                                    withIdentifier:@"Invite"
+                                             label:@"Invite"
+                                      paletteLabel:@""
+                                           toolTip:@""
+                                            target:self
+                                   settingSelector:nil
+                                       itemContent:nil
+                                            action:@selector(action:)
+                                              menu:NULL];
+
+    //Configure the toolbar
+    [toolbar setDelegate:self];
+    [toolbar setAllowsUserCustomization:NO];
+    [toolbar setAutosavesConfiguration:YES];
+    [toolbar setDisplayMode: NSToolbarDisplayModeLabelOnly];
+    [toolbar setSizeMode:NSToolbarSizeModeSmall];
+
+    //Install it
+    [[self window] setToolbar:toolbar];
+}
+
+- (IBAction)action:(id)sender
+{
+}
+
+//Validate a toolbar item
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
+{
+/*    }else if(([[theItem itemIdentifier] compare:@"Group"] == 0) || ([[theItem itemIdentifier] compare:@"Handle"] == 0)){
+        if(selectedCollection){
+            return(YES);
+        }else{
+            return(NO);
+        }
+    }*/
+
+    return(YES);
+}
+
+//Return the requested toolbar item
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
+{
+    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+}
+
+//Return the default toolbar set
+- (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"From"/*,NSToolbarSeparatorItemIdentifier,@"AddToList",@"Invite"*/,NSToolbarFlexibleSpaceItemIdentifier,@"Info",@"Logs",nil];
+}
+
+//Return a list of allowed toolbar items
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
+{
+    return [NSArray arrayWithObjects:@"From",@"AddToList",@"Invite",@"Info",@"Logs",NSToolbarSeparatorItemIdentifier, NSToolbarSpaceItemIdentifier,NSToolbarFlexibleSpaceItemIdentifier,nil];
+}
+
 
 @end
 

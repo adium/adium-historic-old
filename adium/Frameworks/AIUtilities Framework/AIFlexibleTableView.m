@@ -758,7 +758,7 @@
 //If row heights have not been changed since the last resize, pass NO and this method will perform faster.
 - (void)_resizeCellsRowHeightsChanged:(BOOL)rowHeightsChanged
 {
-    NSEnumerator		*rowHeightEnumerator;
+    NSEnumerator		*rowHeightEnumerator = nil;
     NSEnumerator		*columnEnumerator;
     AIFlexibleTableColumn	*column;
     NSRect			cellFrame;
