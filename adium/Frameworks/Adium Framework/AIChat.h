@@ -6,6 +6,14 @@
 
 @class AIAccount, AIContentObject, AIListObject, ESObjectWithStatus;
 
+#define Chat_WillClose							@"Chat_WillClose"
+#define	Chat_Created							@"Chat_Created"
+#define Chat_DidOpen							@"Chat_DidOpen"
+#define Chat_AttributesChanged					@"Chat_AttributesChanged"
+#define Chat_StatusChanged						@"Chat_StatusChagned"
+#define Chat_ParticipatingListObjectsChanged	@"Chat_ParticipatingListObjectsChanged"
+#define Chat_AccountChanged 					@"Chat_AccountChanged"
+
 #define KEY_UNVIEWED_CONTENT	@"UnviewedContent"
 #define KEY_TYPING				@"Typing"
 
