@@ -308,8 +308,8 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 		BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
 		
-		if((prefixOnly && [stringMessage hasPrefix:keyword]) ||
-		   (!prefixOnly && [stringMessage rangeOfString:keyword].location != NSNotFound)){
+		if((prefixOnly && ([stringMessage compare:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)] == NSOrderedSame)) ||
+		   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)){
 			
 			if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 			[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
@@ -346,7 +346,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 			keywordEnd = [scanner scanLocation];		
 
 			if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
-				//Ignore the script (It was escaped), and delete the escape character
+				//Ignore the script (It was escaped) and delete the escape character
 				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
 				offset -= 1;
 				
