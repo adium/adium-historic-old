@@ -5612,36 +5612,6 @@
 			settings = {
 			};
 		};
-		34A48A2706F643CA002C7C5F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AICLPreferences.h;
-			path = "Plugins/Contact List/Preferences/AICLPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A2806F643CA002C7C5F = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AICLPreferences.m;
-			path = "Plugins/Contact List/Preferences/AICLPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A2C06F643CA002C7C5F = {
-			fileRef = 34A48A2706F643CA002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A2D06F643CA002C7C5F = {
-			fileRef = 34A48A2806F643CA002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34A48A3A06F64664002C7C5F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7085,7 +7055,6 @@
 				34A48A0506F6436D002C7C5F,
 				34A48A1706F6438F002C7C5F,
 				34A48A1A06F6438F002C7C5F,
-				34A48A2C06F643CA002C7C5F,
 				34A48A3E06F64665002C7C5F,
 				34A48A4006F64665002C7C5F,
 				34A48A4E06F6468D002C7C5F,
@@ -7579,7 +7548,6 @@
 				34A48A0406F6436D002C7C5F,
 				34A48A1806F6438F002C7C5F,
 				34A48A1906F6438F002C7C5F,
-				34A48A2D06F643CA002C7C5F,
 				34A48A3F06F64665002C7C5F,
 				34A48A4106F64665002C7C5F,
 				34A48A5006F64692002C7C5F,
@@ -19426,8 +19394,6 @@
 		};
 		4BF98DB506D1497D00E8781D = {
 			children = (
-				34A48A2706F643CA002C7C5F,
-				34A48A2806F643CA002C7C5F,
 				34A48A4D06F6468D002C7C5F,
 				34A48A4F06F64692002C7C5F,
 				34A48A5806F646BD002C7C5F,
