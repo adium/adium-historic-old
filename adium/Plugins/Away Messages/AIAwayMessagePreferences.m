@@ -530,9 +530,10 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-    if([outlineView_aways selectedRow] != -1){
+	int selectedRow = [outlineView_aways selectedRow];
+    if((selectedRow != -1) && ([outlineView_aways numberOfRows] != 0)){
         //
-        [self _displayAwayMessage:[outlineView_aways itemAtRow:[outlineView_aways selectedRow]]];
+        [self _displayAwayMessage:[outlineView_aways itemAtRow:selectedRow]];
 
         //Give focus to the text view
         [[textView_message window] makeFirstResponder:textView_message];
