@@ -33,7 +33,7 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Dock);
+    return(AIPref_Advanced);
 }
 - (NSString *)label{
     return(AILocalizedString(@"Dock Icon", nil));
