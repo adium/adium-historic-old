@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AISoundController.m,v 1.50 2004/07/11 19:33:42 evands Exp $
+// $Id: AISoundController.m,v 1.51 2004/07/12 07:26:59 evands Exp $
 
 #import "AISoundController.h"
 #import <QuickTime/QuickTime.h>
@@ -182,7 +182,9 @@
 - (void)playSoundAtPath:(NSString *)inPath
 {
     if(!muteSounds && (!muteWhileAway || ![[owner preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
-		[self _coreAudioPlaySound:inPath];
+		if (inPath){
+			[self _coreAudioPlaySound:inPath];
+		}
 	}
 
 }
