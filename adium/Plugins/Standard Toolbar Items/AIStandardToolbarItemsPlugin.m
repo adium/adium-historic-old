@@ -112,32 +112,32 @@
 - (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary	*objects = [toolbarItem configurationObjects];
-    AIContactObject	*handle = [objects objectForKey:@"ContactObject"];
+    AIListObject	*object = [objects objectForKey:@"ContactObject"];
 
-    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handle,@"To",nil]];
+    [[owner notificationCenter] postNotificationName:Interface_InitiateMessage object:nil userInfo:[NSDictionary dictionaryWithObjectsAndKeys:object,@"To",nil]];
 }
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
-    AIContactObject		*handle = [objects objectForKey:@"ContactObject"];
+    AIListObject		*object = [objects objectForKey:@"ContactObject"];
 //    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
 
 //    if(handle && /*[handle canReceiveContent...]*/ &&
 //       text && [[text attributedString] length]){
-        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:object userInfo:nil];
 //    }
 }
 
 - (IBAction)closeMessage:(AIMiniToolbarItem *)toolbarItem
 {
     NSDictionary		*objects = [toolbarItem configurationObjects];
-    AIContactObject		*handle = [objects objectForKey:@"ContactObject"];
+    AIListObject		*object = [objects objectForKey:@"ContactObject"];
 //    NSView<AITextEntryView>	*text = [objects objectForKey:@"TextEntryView"];
 
 //    if(handle && /*[handle canReceiveContent...]*/ &&
 //       text && [[text attributedString] length]){
-        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_CloseMessage object:object userInfo:nil];
 //    }
 }
 
@@ -147,16 +147,16 @@
     BOOL	enabled = YES;
 
     if([identifier compare:@"NewMessage"] == 0){
-        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
-        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && !text);
+        enabled = (object && [object isKindOfClass:[AIListContact class]] && !text);
 
     }else if([identifier compare:@"SendMessage"] == 0 || [identifier compare:@"SendMessageButton"] == 0){
-        AIContactObject		*handle = [inObjects objectForKey:@"ContactObject"];
+        AIListObject		*object = [inObjects objectForKey:@"ContactObject"];
         NSView<AITextEntryView>	*text = [inObjects objectForKey:@"TextEntryView"];
 
-        enabled = (handle && [handle isKindOfClass:[AIContactHandle class]] && text);
+        enabled = (object && [object isKindOfClass:[AIListContact class]] && text);
     }
 
     [inToolbarItem setEnabled:enabled];

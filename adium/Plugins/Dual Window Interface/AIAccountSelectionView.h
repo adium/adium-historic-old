@@ -8,12 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIAccount, AIContactHandle;
+@class AIAdium, AIAccount, AIListContact;
 
 @protocol AIAccountSelectionViewDelegate
 - (void)setAccount:(AIAccount *)inAccount;
 - (AIAccount *)account;
-- (AIContactHandle *)handle;
+- (AIListContact *)contact;
 @end
 
 @interface AIAccountSelectionView : NSView {

@@ -36,7 +36,7 @@ static char *hash_password(const char * const password);
 - (void)update:(NSTimer *)timer;
 - (void)signOnUpdate;
 - (void)flushMessageDelayQue:(NSTimer *)inTimer;
-- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle;
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle;
 - (void)AIM_AddHandle:(NSString *)handleUID toGroup:(NSString *)groupName;
 - (void)AIM_RemoveHandle:(NSString *)handleUID fromGroup:(NSString *)groupName;
 - (void)AIM_RemoveGroup:(NSString *)groupName;
@@ -54,6 +54,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_SetAway:(NSString *)away;
 - (void)AIM_SetStatus;
 - (void)AIM_GetProfile:(NSString *)handleUID;
+- (void)AIM_GetStatus:(NSString *)handleUID;
 - (NSString *)extractStringFrom:(NSString *)searchString between:(NSString *)stringA and:(NSString *)stringB;
 - (NSString *)validCopyOfString:(NSString *)inString;
 - (void)connect;
@@ -62,6 +63,8 @@ static char *hash_password(const char * const password);
 - (void)pingFailure:(NSTimer *)inTimer;
 - (void)autoReconnectAfterDelay:(int)delay;
 - (void)autoReconnectTimer:(NSTimer *)inTimer;
+- (void)firstSignOnUpdateReceived;
+- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer;
 @end
 
 @implementation AIMTOC2Account
@@ -72,11 +75,13 @@ static char *hash_password(const char * const password);
 {
     AIPreferenceController	*preferenceController = [owner preferenceController];
 
-    //Outgoing message que
+    //Init
     outQue = [[NSMutableArray alloc] init];
-
+    handleDict = [[NSMutableDictionary alloc] init];
     idleHandleArray = nil;
     pingTimer = nil;
+    pingInterval = nil;
+    firstPing = nil;
     screenName = nil;
     password = nil;
     
@@ -84,10 +89,9 @@ static char *hash_password(const char * const password);
     deleteDict = [[NSMutableDictionary alloc] init];
     addDict = [[NSMutableDictionary alloc] init];
     messageDelayTimer = nil;
-    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
 
     //
-    [[owner notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(updateHandleStatus:) name:Contact_UpdateStatus object:nil];
     
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
@@ -99,6 +103,7 @@ static char *hash_password(const char * const password);
     //    [self connect];
     //}
     //Option 2:Clearing the online state, and using the classic 'auto-Connect' option system
+    [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
     //Option 1 is very neat, but is more annoying than helpful - so we'll stick with 2 for now :)
 }
@@ -127,137 +132,99 @@ static char *hash_password(const char * const password);
     }
 }
 
-// AIAccount_GroupedContacts ---------------------------------------------------------------------------
+
+// AIAccount_Handles ---------------------------------------------------------------------------
+/*- (AIHandle *)createTemporaryHandleWithUID:(NSString *)inUID
+{
+    AIHandle	*handle;
+
+    NSLog(@"Create temp %@",inUID);
+
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier]
+                                       UID:[inUID compactedString]
+                               serverGroup:@"__Strangers"
+                                     index:0
+                                forAccount:self];
+
+    [self addHandle:handle];
+
+    return(handle);
+}*/
+
+// Add a handle
+- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
+{
+    AIHandle	*handle;
+
+    if(inTemporary) inGroup = @"__Strangers";
+    if(!inGroup) inGroup = @"Unknown";
+
+    //Check to see if the handle already exists
+    if([handleDict objectForKey:inUID]){
+        [self removeHandleWithUID:inUID]; //Remove it
+    }
+
+    //Create the handle
+    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] description] UID:inUID serverGroup:inGroup temporary:inTemporary forAccount:self];
+
+    //Add the handle
+    [self AIM_AddHandle:[handle UID] toGroup:[handle serverGroup]]; //Add it server-side
+    [handleDict setObject:handle forKey:[handle UID]]; //Add it locally
+
+    //Update the contact list
+    [[owner contactController] handle:handle addedToAccount:self];
+        
+    return(handle);
+}
+
+// Remove a handle
+- (BOOL)removeHandleWithUID:(NSString *)inUID
+{
+    AIHandle	*handle = [handleDict objectForKey:inUID];
+
+    //Remove the handle
+    [self AIM_RemoveHandle:[handle UID] fromGroup:[handle serverGroup]]; //Remove it server-side
+    [handleDict removeObjectForKey:[handle UID]]; //Remove it locally
+
+    //Update the contact list
+    [[owner contactController] handle:handle removedFromAccount:self];
+        
+    return(YES);
+}
+
+// Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
     return([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]);
 }
 
-// Add an object to the specified groups
-- (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group
+// Return a dictionary of our handles
+- (NSDictionary *)availableHandles
 {
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-    
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        //AIM automatically creates groups (when we attempt to add to them), so nothing needs to be done here.
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM automatically creates the needed containing groups, so they do not need to be added here.
-        [self AIM_AddHandle:[object UID] toGroup:[group UID]];	//Place it on the server side list
-        
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
+    return(handleDict);
 }
 
-// Remove an object from the specified groups
-- (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        [self AIM_RemoveGroup:[object UID]];
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM automatically removes unneeded containing groups, so they do not need to be removed here.
-        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object];
-        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; //Remove the handle
-        
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}
-
-
-// Rename an object
-- (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(group != nil);
-    NSParameterAssert(inName != nil); NSParameterAssert([inName length] != 0);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        NSEnumerator	*enumerator;
-        AIContactObject	*target;
-
-        enumerator = [group objectEnumerator]; //Remove all the handles from the group
-        while((target = [enumerator nextObject])){
-            if([target isKindOfClass:[AIContactHandle class]]){
-                [self AIM_RemoveHandle:[target UID] fromGroup:[object UID]];
-            }
-        }
-
-        enumerator = [group objectEnumerator]; //Re-add all the handles into a new group (with the new name)
-        while((target = [enumerator nextObject])){
-            if([target isKindOfClass:[AIContactHandle class]]){
-                [self AIM_AddHandle:[(AIContactHandle *)target UID] toGroup:inName];
-            }
-        }
-
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; 	//Remove the handle
-        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object]; 				//Remove any status flags from this account (The AIM server will automatically send an update buddy message)
-        [self AIM_AddHandle:inName toGroup:[group UID]]; 		//Re-add the handle (with the new name)
-        
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);
-}
-
-// Move an object
-- (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
-{
-    NSParameterAssert(object != nil);
-    NSParameterAssert(sourceGroup != nil);
-    NSParameterAssert(destGroup != nil);
-
-    if([object isMemberOfClass:[AIContactGroup class]]){
-        //The placement of groups is ignored
-        
-    }else if([object isMemberOfClass:[AIContactHandle class]]){
-        //AIM doesn't support moving, so we simply remove and re-add the handle.
-        [self AIM_RemoveHandle:[object UID] fromGroup:[sourceGroup UID]];
-        [self AIM_AddHandle:[object UID] toGroup:[destGroup UID]];
-        
-    }else{
-        //Unrecognized object
-    }
-
-    return(YES);    
-}
-        
+ 
 
 // AIAccount_Messaging ---------------------------------------------------------------------------
-- (BOOL)sendContentObject:(id <AIContentObject>)object toHandle:(AIContactHandle *)inHandle
+// Send a content object
+- (BOOL)sendContentObject:(id <AIContentObject>)object
 {
     if([[object type] compare:CONTENT_MESSAGE_TYPE] == 0){
-        NSString	*message;
-
-        message = [AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]];
-
-        [self AIM_SendMessage:message toHandle:[inHandle UID]];
-
-    }else{
-        NSLog(@"Unknown message object subclass");
+        [self AIM_SendMessage:[AIHTMLDecoder encodeHTML:[(AIContentMessage *)object message]]
+                     toHandle:[[object destination] UID]];
     }
     
     return(YES);
 }
 
-- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle
+// Return YES if we're available for sending the specified content
+- (BOOL)availableForSendingContentType:(NSString *)inType toHandle:(AIHandle *)inHandle
 {
     BOOL available = NO;
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
-        //If we're online, ("and the contant is online" - implement later), return YES
+        //If we're online, ("and the contant is online" or nil - implement later), return YES
         if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_ONLINE){
             available = YES;
         }
@@ -268,11 +235,13 @@ static char *hash_password(const char * const password);
 
 
 // AIAccount_Status --------------------------------------------------------------------------------
+// Returns an array of the status keys we support
 - (NSArray *)supportedStatusKeys
 {
     return([NSArray arrayWithObjects:@"Online", @"IdleTime", @"IdleManuallySet", @"TextProfile", @"AwayMessage", nil]);
 }
 
+// Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
     if([key compare:@"Online"] == 0){
@@ -311,12 +280,11 @@ static char *hash_password(const char * const password);
 
 }
 
-
-
-- (void)updateContactStatus:(NSNotification *)notification
+// Update the status of a handle
+- (void)updateHandleStatus:(NSNotification *)notification
 {
     NSArray		*desiredKeys = [[notification userInfo] objectForKey:@"Keys"];
-    AIContactHandle	*handle = [notification object];
+    AIHandle		*handle = [notification object];
     
     //AIM requires a delayed load of profiles...
     if([desiredKeys containsObject:@"TextProfile"]){
@@ -325,59 +293,36 @@ static char *hash_password(const char * const password);
     
 }
 
-// Internal --------------------------------------------------------------------------------
-//Dealloc
-- (void)dealloc
-{
-    [screenName release];
-    [password release];
 
-    [idleHandleArray release];
-    [idleHandleTimer invalidate]; [idleHandleTimer release];
 
-    [outQue release];
-    [screenName release];
-    [password release];
-    [addDict release];
-    [deleteDict release];
-    [preferencesDict release];
-    [accountViewController release];
-    [socket release];
-    [messageDelayTimer release];
-
-    [super dealloc];
-}
-
-//Connects
+// Connecting and Disconnecting ---------------------------------------------------------------------------
+// Connect
 - (void)connect
 {
-    //get password
+    //Get password
     [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
 }
 
+// Finish connecting (after the password is received)
 - (void)finishConnect:(NSString *)inPassword
 {
     if(inPassword && [inPassword length] != 0){
         NSString	*host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
         int		port = [[preferencesDict objectForKey:AIM_TOC2_KEY_PORT] intValue];
 
+        //Set our status as connecting
         [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
-        //Setup and init
-        socket = [[AISocket socketWithHost:host port:port] retain];
+        //Remember the account name and password
         if(screenName != [propertiesDict objectForKey:@"Handle"]){
-            [screenName release];
-            screenName = [[propertiesDict objectForKey:@"Handle"] copy];
+            [screenName release]; screenName = [[propertiesDict objectForKey:@"Handle"] copy];
         }
         if(password != inPassword){
-            [password release];
-            password = [inPassword copy];
+            [password release]; password = [inPassword copy];
         }
 
-        pingInterval = nil;
-        firstPing = nil;
-        
-        //Start connecting
+        //Init our socket and start connecting
+        socket = [[AISocket socketWithHost:host port:port] retain];
         connectionPhase = 1;
         updateTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0 / 10.0) //(1.0 / x) x times per second
                                                         target:self
@@ -391,46 +336,118 @@ static char *hash_password(const char * const password);
 - (void)disconnect
 {
     NSEnumerator	*enumerator;
-    AIContactHandle	*handle;
+    AIHandle		*handle;
 
+    //Set our status as disconnecting
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
-    //Delay updates until we're finished signing off
-    [[owner contactController] delayContactListUpdatesFor:5]; //Signoff shouldn't take any longer than 5 seconds
-
     //Flush all our handle status flags
-    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES ownedBy:self] objectEnumerator];
+    [[owner contactController] setHoldContactListUpdates:YES];
+    enumerator = [[handleDict allValues] objectEnumerator];
     while((handle = [enumerator nextObject])){
         [self removeAllStatusFlagsFromHandle:handle];
     }
-
+    [[owner contactController] setHoldContactListUpdates:NO];
+    
     //Clean up and close down
     [socket release]; socket = nil;
-
     [pingTimer invalidate];
     [pingTimer release]; pingTimer = nil;
-
     [updateTimer invalidate];
     [updateTimer release]; updateTimer = nil;
 
+    //Set our status as offline
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
-//Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
-- (void)removeAllStatusFlagsFromHandle:(AIContactHandle *)handle
+
+// Auto-Reconnect ------------------------------------------------------------------------
+//Attempts to auto-reconnect (after an X second delay)
+- (void)autoReconnectAfterDelay:(int)delay
 {
-    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
-    int		loop;
-    
-    for(loop = 0;loop < [keyArray count];loop++){
-        [[handle statusArrayForKey:[keyArray objectAtIndex:loop]] removeObjectsWithOwner:self];
-    }
-    
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+    //Install a timer to autoreconnect after a delay
+    [NSTimer scheduledTimerWithTimeInterval:delay
+                                     target:self
+                                   selector:@selector(autoReconnectTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+
+    NSLog(@"Auto-Reconnect in %i seconds",delay);
 }
 
-// Sends packets, receives packets, and dispatches commands 
+//
+- (void)autoReconnectTimer:(NSTimer *)inTimer
+{
+    //If we're still offline, continue with the reconnect
+    if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
+
+        NSLog(@"Attempting Auto-Reconnect");
+
+        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
+        [self finishConnect:password];
+    }
+}
+
+
+// Packet/Protocol Processing ---------------------------------------------------------------------------
+// Check for sign on packets and update status
+- (void)signOnUpdate
+{
+    AIMTOC2Packet	*packet;
+
+    switch(connectionPhase){
+        case 1: //Send the "flap on" packet
+            if([socket readyForSending]){
+                [socket sendData:[@"FLAPON\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                connectionPhase++;
+            }
+            break;
+        case 2: //Receive the server version
+            if([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:0])){
+                if([packet dataByte:0] != 0 ||
+                   [packet dataByte:1] != 0 ||
+                   [packet dataByte:2] != 0 ||
+                   [packet dataByte:3] != 1){
+                    NSLog(@"ADIUM_ERROR:Invalid Server Version");
+                    [self disconnect];
+                    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_CONNECT_ERROR];
+                    return;
+                }
+
+                //Start the sequence generators
+                remoteSequence = [packet sequence] + 1;
+                srand(time(NULL));
+                localSequence = 1+(short) (65536.0*rand()/(RAND_MAX+1.0));
+
+                connectionPhase++;
+            }
+            break;
+        case 3: //Send the sign on packets
+            if([socket readyForSending]){
+                NSString 	*message;
+                unsigned long 	a,b,d,o;
+
+                //Send the first sign on packet
+                [[AIMTOC2Packet signOnPacketForScreenName:[screenName compactedString] sequence:&localSequence] sendToSocket:socket];
+
+                //Add the sign on string, and begin the regular update loop
+                a = ([[screenName compactedString] cString][0] - 96) * 7696 + 738816; 	//first SN letter
+                b = ([[screenName compactedString] cString][0] - 96) * 746512; 		//first SN letter
+                d = ([password cString][0] - 96) * a; 			//pass first letter
+                o = d - a + b + 71665152;
+
+                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
+
+                [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+
+                connectionPhase = 0;
+            }
+            break;
+    }
+}
+
+// Sends packets, receives packets, and dispatches commands
 - (void)update:(NSTimer *)timer
 {
     AIMTOC2Packet	*packet;
@@ -463,12 +480,13 @@ static char *hash_password(const char * const password);
                     [self AIM_HandleConfig:message];
                     [self AIM_SetStatus];	//Set our status
 
-                    //Send AIM the init done message (at this point we become visible to other buddies)
-                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
-
                     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
                     [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
+                    //Send AIM the init done message (at this point we become visible to other buddies)
+                    [outQue addObject:[AIMTOC2Packet dataPacketWithString:@"toc_init_done" sequence:&localSequence]];
+
+                    
                 }else if([command compare:@"PAUSE"] == 0){
                 }else if([command compare:@"NEW_BUDDY_REPLY2"] == 0){
                 }else if([command compare:@"IM_IN2"] == 0){
@@ -513,64 +531,7 @@ static char *hash_password(const char * const password);
     }
 }
 
-//Check for sign on packets and update status
-- (void)signOnUpdate
-{
-    AIMTOC2Packet	*packet;
-
-    switch(connectionPhase){
-        case 1: //Send the "flap on" packet
-            if([socket readyForSending]){
-                [socket sendData:[@"FLAPON\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-                connectionPhase++;
-            }
-        break;
-        case 2: //Receive the server version
-            if([socket readyForReceiving] && (packet = [AIMTOC2Packet packetFromSocket:socket sequence:0])){
-                if([packet dataByte:0] != 0 ||
-                    [packet dataByte:1] != 0 ||
-                    [packet dataByte:2] != 0 ||
-                    [packet dataByte:3] != 1){
-                    NSLog(@"ADIUM_ERROR:Invalid Server Version");
-                    [self disconnect];
-                    [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_CONNECT_ERROR];
-                    return;
-                }
-    
-                //Start the sequence generators
-                remoteSequence = [packet sequence] + 1;
-                srand(time(NULL));
-                localSequence = 1+(short) (65536.0*rand()/(RAND_MAX+1.0));
-    
-                connectionPhase++;
-            }
-        break;
-        case 3: //Send the sign on packets
-            if([socket readyForSending]){
-                NSString 	*message;
-                unsigned long 	a,b,d,o;
-    
-                //Send the first sign on packet
-                [[AIMTOC2Packet signOnPacketForScreenName:[screenName compactedString] sequence:&localSequence] sendToSocket:socket];
-    
-                //Add the sign on string, and begin the regular update loop
-                a = ([[screenName compactedString] cString][0] - 96) * 7696 + 738816; 	//first SN letter
-                b = ([[screenName compactedString] cString][0] - 96) * 746512; 		//first SN letter
-                d = ([password cString][0] - 96) * a; 			//pass first letter
-                o = d - a + b + 71665152;
-    
-                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-    
-                [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
-    
-                connectionPhase = 0;
-            }
-        break;
-    }
-}
-
-
-// Buddy list modification ---------------------------------------------------------------------------
+// Contact list modification ---------------------------------------------------------------------------
 // AIM only lets us send messages so fast, sending too fast will result in an error and disconnect.
 // Unfortunately, this also applies to buddy list management and non-IM related messages.  When
 // modifying the buddy list, it's best to send as few messages as possible, and AIM helps out by
@@ -584,7 +545,6 @@ static char *hash_password(const char * const password);
 //
 // Since this happens at the lowest level, only these two functions (AIM_AddHandle and 
 // AIM_RemoveHandle need to worry about the clumping and delays.
-
 - (void)AIM_AddHandle:(NSString *)handleUID toGroup:(NSString *)groupName
 {
     NSMutableArray	*contentsArray;
@@ -731,25 +691,32 @@ static char *hash_password(const char * const password);
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];    
 }
 
-//Server -> Client Command Handlers
+
+//Server -> Client Command Handlers ------------------------------------------------------
 - (void)AIM_HandleMessageIn:(NSString *)inCommand
 {
-    AIContactHandle		*handle;
-    NSString			*name;
-    NSString			*rawMessage;
-    NSAttributedString		*messageText;
-    AIContentMessage		*messageObject;
+    AIHandle		*handle;
+    NSString		*name;
+    NSString		*rawMessage;
+    NSAttributedString	*messageText;
+    AIContentMessage	*messageObject;
 
     //Extract the handle and message from the command
     name = [inCommand TOCStringArgumentAtIndex:1];
     rawMessage = [inCommand nonBreakingTOCStringArgumentAtIndex:4];
-    
-    handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[name compactedString] forAccount:self];
-    messageText = [AIHTMLDecoder decodeHTML:rawMessage];
 
-    //Add the message
+    //Ensure a handle exists (creating a stranger if necessary)
+    handle = [handleDict objectForKey:[name compactedString]];
+    if(!handle){
+        handle = [self addHandleWithUID:[name compactedString] serverGroup:nil temporary:YES];
+    }
+
+    //Create a content object for the message
+    messageText = [AIHTMLDecoder decodeHTML:rawMessage];
     messageObject = [AIContentMessage messageWithSource:handle destination:self date:nil message:messageText];
-    [[owner contentController] addIncomingContentObject:messageObject toHandle:handle];
+
+    //Add the content object
+    [[owner contentController] addIncomingContentObject:messageObject];
 }         
 
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID
@@ -763,31 +730,34 @@ static char *hash_password(const char * const password);
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
 }
 
-
+//UPDATE_BUDDY2:<screenname>:<online>:<warning>:<signon Time>:<idletime>:<userclass>:<???>
 - (void)AIM_HandleUpdateBuddy:(NSString *)message
 {
-//UPDATE_BUDDY2:<screenname>:<online>:<warning>:<signon Time>:<idletime>:<userclass>:<???>
     NSString		*name = [message TOCStringArgumentAtIndex:1];
     NSString		*compactedName = [name compactedString];
-    AIContactHandle	*handle = nil;
+    AIHandle		*handle = nil;
     NSMutableArray	*alteredStatusKeys;
 
+    //Sign on update monitoring
+    if([[owner contactController] holdContactListUpdates]) numberOfSignOnUpdates++;
+    if(processingSignOnUpdates) [self firstSignOnUpdateReceived];
+    
     //Get the handle
-    handle = [[owner contactController] handleWithService:[service handleServiceType] UID:compactedName forAccount:self];
+    handle = [handleDict objectForKey:compactedName];
 
     if(handle){
-        NSString	*userFlags = [message TOCStringArgumentAtIndex:6];
-        BOOL		online;
-        BOOL		away;
-        int		warning;
-        double		idleTime;
-        NSDate		*signOnDate;        
-        char		clientA, clientB;
-        NSNumber	*storedValue;
-        NSDate		*storedDate;
-        NSString	*storedString;
-        NSString	*client;
-        AIMutableOwnerArray	*ownerArray;
+        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+        NSString		*userFlags = [message TOCStringArgumentAtIndex:6];
+        BOOL			online;
+        BOOL			away;
+        int			warning;
+        double			idleTime;
+        NSDate			*signOnDate;        
+        char			clientA, clientB;
+        NSNumber		*storedValue;
+        NSDate			*storedDate;
+        NSString		*storedString;
+        NSString		*client;
                 
         alteredStatusKeys = [[[NSMutableArray alloc] init] autorelease];
 
@@ -821,35 +791,29 @@ static char *hash_password(const char * const password);
             client = @"Unknown Client";
         }
         
-        //There is an extra unknown parameter at the end of the update message.  In my experience, the only possible value is '0'.  I'm sure the value has some purpose though, and if it's ever activated, this code will log.
-        if([[message TOCStringArgumentAtIndex:7] compare:@"0"] != 0){
-            NSLog(@"****%@ has a mystery value of [%@]****",name,[message TOCStringArgumentAtIndex:7]);
-        }
+        //There is an extra unknown parameter at the end of the update message.  In my experience, the only possible value is '0'.  I'm sure the value has some purpose though (Contact is typing notification?)
+//        if([[message TOCStringArgumentAtIndex:7] compare:@"0"] != 0){
+//            NSLog(@"****%@ has a mystery value of [%@]****",name,[message TOCStringArgumentAtIndex:7]);
+//        }
 
         //Online/Offline
-        ownerArray = [handle statusArrayForKey:@"Online"];
-        storedValue = [ownerArray objectWithOwner:self];
+        storedValue = [handleStatusDict objectForKey:@"Online"];
         if(storedValue == nil || online != [storedValue intValue]){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:[NSNumber numberWithInt:online] withOwner:self];
+            [handleStatusDict setObject:[NSNumber numberWithInt:online] forKey:@"Online"];
             [alteredStatusKeys addObject:@"Online"];
         }
 
         //Warning
-        ownerArray = [handle statusArrayForKey:@"Warning"];
-        storedValue = [ownerArray objectWithOwner:self];
+        storedValue = [handleStatusDict objectForKey:@"Warning"];
         if(storedValue == nil || warning != [storedValue intValue]){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:[NSNumber numberWithInt:warning] withOwner:self];
+            [handleStatusDict setObject:[NSNumber numberWithInt:warning] forKey:@"Warning"];
             [alteredStatusKeys addObject:@"Warning"];
         }
 
         //Idle time (seconds)
-        ownerArray = [handle statusArrayForKey:@"Idle"];
-        storedValue = [ownerArray objectWithOwner:self];   
+        storedValue = [handleStatusDict objectForKey:@"Idle"];
         if(storedValue == nil || idleTime != [storedValue doubleValue]){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:[NSNumber numberWithDouble:idleTime] withOwner:self];
+            [handleStatusDict setObject:[NSNumber numberWithDouble:idleTime] forKey:@"Idle"];
             [alteredStatusKeys addObject:@"Idle"];
 
             if(idleTime == 0){
@@ -868,38 +832,30 @@ static char *hash_password(const char * const password);
         }
 
         //Sign on date
-        ownerArray = [handle statusArrayForKey:@"Signon Date"];
-        storedDate = [ownerArray objectWithOwner:self];   
+        storedDate = [handleStatusDict objectForKey:@"Signon Date"];
         if(storedDate == nil || ![signOnDate isEqualToDate:storedDate]){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:signOnDate withOwner:self];
+            [handleStatusDict setObject:signOnDate forKey:@"Signon Date"];
             [alteredStatusKeys addObject:@"Signon Date"];
         }
 
         //Away
-        ownerArray = [handle statusArrayForKey:@"Away"];
-        storedValue = [ownerArray objectWithOwner:self];   
+        storedValue = [handleStatusDict objectForKey:@"Away"];
         if(storedValue == nil || away != [storedValue intValue]){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:[NSNumber numberWithBool:away] withOwner:self];
+            [handleStatusDict setObject:[NSNumber numberWithBool:away] forKey:@"Away"];
             [alteredStatusKeys addObject:@"Away"];
         }
 
         //Client
-        ownerArray = [handle statusArrayForKey:@"Client"];
-        storedString = [ownerArray objectWithOwner:self];   
+        storedString = [handleStatusDict objectForKey:@"Client"];
         if(storedString == nil || [client compare:storedString] != 0){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:client withOwner:self];
+            [handleStatusDict setObject:client forKey:@"Client"];
             [alteredStatusKeys addObject:@"Client"];
         }
         
         //Display Name
-        ownerArray = [handle statusArrayForKey:@"Display Name"];
-        storedString = [ownerArray objectWithOwner:self];   
+        storedString = [handleStatusDict objectForKey:@"Display Name"];
         if(storedString == nil || [name compare:storedString] != 0){
-            [ownerArray removeObjectsWithOwner:self];
-            [ownerArray addObject:name withOwner:self];
+            [handleStatusDict setObject:name forKey:@"Display Name"];
             [alteredStatusKeys addObject:@"Display Name"];
         }
 
@@ -909,7 +865,7 @@ static char *hash_password(const char * const password);
         }
         
     }else{
-        NSLog(@"Unknown handle %@",name);
+        NSLog(@"Unknown handle %@",compactedName);
     }
 
 }
@@ -964,10 +920,8 @@ static char *hash_password(const char * const password);
     NSString		*configString = [message nonBreakingTOCStringArgumentAtIndex:1];
     NSString		*type;
     NSString		*value;
-    AIContactGroup	*currentGroup = nil;
-
-    [[owner contactController] delayContactListUpdatesFor:10]; //Delay updates until we're finished signing on
-    //10 seconds should be long enough for even the slowest net connections.
+    NSString		*currentGroup = @"__NoGroup?";
+    int			index = 0;
 
     //Create a scanner
     scanner = [NSScanner scannerWithString:configString];
@@ -986,20 +940,22 @@ static char *hash_password(const char * const password);
                     NSLog(@"Privacy Mode:%@",value);
                     
                 }else if([type compare:@"g"] == 0){ //GROUP
-                    //Create the group
-                    if(!(currentGroup = [[owner contactController] groupWithName:value])){
-                        currentGroup = [[owner contactController] createGroupNamed:value inGroup:nil];
-                    }
-                    
-                    //Register as an owner of the group
-                    [currentGroup registerOwner:self];
+                    //Save the new group name string
+                    [currentGroup release];
+                    currentGroup = [value copy];
+                    index = 0;
 
                 }else if([type compare:@"b"] == 0){ //BUDDY
                     //Create the handle
-                    [[owner contactController] createHandleWithService:[service handleServiceType]
-                                                                   UID:[value compactedString]
-                                                               inGroup:currentGroup
-                                                            forAccount:self];
+                    [handleDict setObject:[AIHandle handleWithServiceID:[[service handleServiceType] identifier]
+                                                                    UID:[value compactedString]
+                                                            serverGroup:currentGroup
+                                                              temporary:NO
+                                                             forAccount:self]
+                                   forKey:[value compactedString]];
+
+                    index++;
+
                 }else if([type compare:@"p"] == 0){
                 }else if([type compare:@"m"] == 0){
                 }else if([type compare:@"done"] == 0){
@@ -1010,51 +966,89 @@ static char *hash_password(const char * const password);
         }
     }
 
+    [[owner contactController] handlesChangedForAccount:self];
+    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates until we're finished signing on
+
+    //Adium waits for the first sign on update, and then checks for aditional updates every .2 seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
+    //If no updates are receiced for 5 seconds, we assume 'no available contacts' and resume contact list updates.
+    processingSignOnUpdates = YES;
+    numberOfSignOnUpdates = 0;
+    [NSTimer scheduledTimerWithTimeInterval:(5.0) //5 Seconds max
+                                     target:self
+                                   selector:@selector(firstSignOnUpdateReceived)
+                                   userInfo:nil
+                                    repeats:NO];
 }
 
+- (void)firstSignOnUpdateReceived
+{
+    processingSignOnUpdates = NO;
+
+    if(numberOfSignOnUpdates == 0){
+        NSLog(@"No updates received");
+        //No available contacts after 5 seconds, assume noone is online and resume contact list updates
+        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
+    }else{
+        NSLog(@"First update received");
+        //Check every 0.2 seconds for additional updates
+        [NSTimer scheduledTimerWithTimeInterval:(0.2)
+                                         target:self
+                                       selector:@selector(waitForLastSignOnUpdate:)
+                                       userInfo:nil
+                                        repeats:YES];
+    }
+}
+
+- (void)waitForLastSignOnUpdate:(NSTimer *)inTimer
+{
+    if(numberOfSignOnUpdates == 0){
+        NSLog(@"Done.");
+        //No updates received, sign on is complete
+        [inTimer invalidate]; //Stop this timer
+        [[owner contactController] setHoldContactListUpdates:NO]; //Resume contact list updates
+    }else{
+        NSLog(@"Connecting... (%i)",(int)numberOfSignOnUpdates);
+        numberOfSignOnUpdates = 0;
+    }
+}
+
+
+//
 - (void)AIM_HandleGotoURL:(NSString *)message
 {
-    NSString	*host, *port, *path, *urlString;
-    NSURL	*url;
-    NSData	*data;
+    NSString	*host, *port, *path;
     NSString	*profileHTML, *profile;
     NSString	*userName;
-
-    //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
-    #define USERNAME_START	@"Username : <B>"
-    #define USERNAME_END	@"</B>"    
-    #define PROFILE_START	@"<hr><br>"
-    #define PROFILE_END		@"<br><hr><I>Legend:</I><br><br>"
     
-    //Piece together the URL (http://host:port/profile#)
+    //
     host = [preferencesDict objectForKey:AIM_TOC2_KEY_HOST];
     port = [preferencesDict objectForKey:AIM_TOC2_KEY_PORT];
     path = [message nonBreakingTOCStringArgumentAtIndex:2];
-    urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
-    
+    NSLog(@"URL:http://%@:%@/%@",host, port, path);
+
     //Fetch the site
-    //Just to note: this caused a crash when the user had a proxy in previous versions of Adium
-    url = [NSURL URLWithString:urlString];
-    data = [url resourceDataUsingCache:NO];
-    profileHTML = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+    profileHTML = [AIURLLoader loadHost:host port:[port intValue] path:path];
+
+    //Key pieces of HTML that mark the begining and end of the AIM profile (and the username)
+    #define USERNAME_START	@"Username : <B>"
+    #define USERNAME_END	@"</B>"
+    #define PROFILE_START	@"<hr><br>"
+    #define PROFILE_END		@"<br><hr><I>Legend:</I><br><br>"
 
     //Extract the username and profile
     userName = [self extractStringFrom:profileHTML between:USERNAME_START and:USERNAME_END];
     profile = [self extractStringFrom:profileHTML between:PROFILE_START and:PROFILE_END];
 
     if(userName && profile){
-        AIContactHandle		*handle = [[owner contactController] handleWithService:[service handleServiceType] UID:[userName compactedString] forAccount:self];
-        AIMutableOwnerArray	*ownerArray;
+        AIHandle	*handle = [handleDict objectForKey:[userName compactedString]];
 
         //Add profile to the handle
-        ownerArray = [handle statusArrayForKey:@"TextProfile"];
-        [ownerArray removeObjectsWithOwner:self];
-        [ownerArray addObject:[AIHTMLDecoder decodeHTML:profile] withOwner:self];
+        [[handle statusDictionary] setObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile"];
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"]];
-        
+
     }else{
         [[owner interfaceController] handleErrorMessage:@"Invalid Server Response" withDescription:@"The AIM server has returned HTML that Adium does not recognize."];
-        NSLog(@"%@",profileHTML);
+        NSLog(@"Profile:%@",profileHTML);
     }
 }
 
@@ -1097,7 +1091,6 @@ static char *hash_password(const char * const password);
     [self disconnect];
     [self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY_PING_FAILURE];
 }
-
 
 - (void)AIM_SetIdle:(double)inSeconds
 {
@@ -1143,6 +1136,16 @@ static char *hash_password(const char * const password);
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 }
 
+- (void)AIM_GetStatus:(NSString *)handleUID
+{
+    NSString	*message;
+
+    message = [NSString stringWithFormat:@"toc_get_status %@",handleUID];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+}
+
 - (void)AIM_SetStatus
 {
     double 		idle = [[[owner accountController] statusObjectForKey:@"IdleTime" account:self] doubleValue];
@@ -1161,8 +1164,6 @@ static char *hash_password(const char * const password);
         [self AIM_SetAway:[AIHTMLDecoder encodeHTML:away]];
     }
 }
-
-
 
 // Hashes a password for sending to AIM (to avoid sending them in plain-text)
 #define HASH "Tic/Toc"
@@ -1192,6 +1193,8 @@ static char *hash_password(const char * const password) {
     return output;
 }
 
+
+// Misc stuff --------------------------
 //Backslashes invalid characters as required by AIM
 - (NSString *)validCopyOfString:(NSString *)inString
 {
@@ -1200,7 +1203,7 @@ static char *hash_password(const char * const password) {
 
     message = [[inString mutableCopy] autorelease];
 
-    //---backslash certain characters---
+    //backslash certain characters
     while(loop < [message length]){
         char currentChar = [message characterAtIndex:loop];
 
@@ -1244,52 +1247,171 @@ static char *hash_password(const char * const password) {
     return(string);
 }
 
-//Attempts to auto-reconnect (after an X second delay)
-- (void)autoReconnectAfterDelay:(int)delay
-{
-    //Install a timer to autoreconnect after a delay
-    [NSTimer scheduledTimerWithTimeInterval:delay
-                                     target:self
-                                   selector:@selector(autoReconnectTimer:)
-                                   userInfo:nil
-                                    repeats:NO];
-
-    NSLog(@"Auto-Reconnect in %i seconds",delay);
-}
-
-//
-- (void)autoReconnectTimer:(NSTimer *)inTimer
-{
-    //If we're still offline, continue with the reconnect
-    if([[[owner accountController] statusObjectForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
-
-        NSLog(@"Attempting Auto-Reconnect");
-
-        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.  This prevents users who don't keychain passwords from having to enter them for a reconnect.
-        [self finishConnect:password];
-    }
-}
-
 - (void)updateIdleHandlesTimer:(NSTimer *)inTimer
 {
     NSEnumerator	*enumerator;
-    AIContactHandle	*handle;
-        
+    AIHandle		*handle;
+
+    [[owner contactController] setHoldContactListUpdates:YES]; //Hold updates to prevent multiple updates and re-sorts
+
     enumerator = [idleHandleArray objectEnumerator];
     while((handle = [enumerator nextObject])){
-        AIMutableOwnerArray	*ownerArray = [handle statusArrayForKey:@"Idle"];
-        double			idleValue = [[ownerArray objectWithOwner:self] doubleValue];   
+        NSMutableDictionary	*handleStatusDict = [handle statusDictionary];
+        double			idleValue = [[handleStatusDict objectForKey:@"Idle"] doubleValue];
 
         //Increase the stored idle time
-        [ownerArray removeObjectsWithOwner:self];
-        [ownerArray addObject:[NSNumber numberWithDouble:++idleValue] withOwner:self];
+        [handleStatusDict setObject:[NSNumber numberWithDouble:++idleValue] forKey:@"Idle"];
 
         //Post a status changed message
         [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Idle"]];
     }
+
+    [[owner contactController] setHoldContactListUpdates:NO]; //Resume updates
 }
+
+// Removes all the possible status flags (that are valid on AIM/TOC) from the passed handle
+- (void)removeAllStatusFlagsFromHandle:(AIHandle *)handle
+{
+    NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"Idle",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
+
+    [[handle statusDictionary] removeObjectsForKeys:keyArray];
+    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray];
+}
+
+// Dealloc
+- (void)dealloc
+{
+    [screenName release];
+    [password release];
+
+    [idleHandleArray release];
+    [idleHandleTimer invalidate]; [idleHandleTimer release];
+
+    [outQue release];
+    [screenName release];
+    [password release];
+    [addDict release];
+    [deleteDict release];
+    [preferencesDict release];
+    [accountViewController release];
+    [socket release];
+    [messageDelayTimer release];
+
+    [super dealloc];
+}
+
+
+
+
 
 @end
 
 
 
+
+
+/*- (BOOL)contactListEditable
+{
+    return([[[owner accountController] statusObjectForKey:@"Online" account:self] boolValue]);
+}
+
+// Add an object to the specified groups
+- (BOOL)addObject:(AIContactObject *)object toGroup:(AIContactGroup *)group
+{
+    NSParameterAssert(object != nil);
+    NSParameterAssert(group != nil);
+
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        //AIM automatically creates groups (when we attempt to add to them), so nothing needs to be done here.
+
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM automatically creates the needed containing groups, so they do not need to be added here.
+        [self AIM_AddHandle:[object UID] toGroup:[group UID]];	//Place it on the server side list
+
+    }else{
+        //Unrecognized object
+    }
+
+    return(YES);
+}
+
+// Remove an object from the specified groups
+- (BOOL)removeObject:(AIContactObject *)object fromGroup:(AIContactGroup *)group
+{
+    NSParameterAssert(object != nil);
+    NSParameterAssert(group != nil);
+
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        [self AIM_RemoveGroup:[object UID]];
+
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM automatically removes unneeded containing groups, so they do not need to be removed here.
+        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object];
+        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; //Remove the handle
+
+    }else{
+        //Unrecognized object
+    }
+
+    return(YES);
+}
+
+
+// Rename an object
+- (BOOL)renameObject:(AIContactObject *)object inGroup:(AIContactGroup *)group to:(NSString *)inName
+{
+    NSParameterAssert(object != nil);
+    NSParameterAssert(group != nil);
+    NSParameterAssert(inName != nil); NSParameterAssert([inName length] != 0);
+
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        NSEnumerator	*enumerator;
+        AIContactObject	*target;
+
+        enumerator = [group objectEnumerator]; //Remove all the handles from the group
+        while((target = [enumerator nextObject])){
+            if([target isKindOfClass:[AIContactHandle class]]){
+                [self AIM_RemoveHandle:[target UID] fromGroup:[object UID]];
+            }
+        }
+
+        enumerator = [group objectEnumerator]; //Re-add all the handles into a new group (with the new name)
+        while((target = [enumerator nextObject])){
+            if([target isKindOfClass:[AIContactHandle class]]){
+                [self AIM_AddHandle:[(AIContactHandle *)target UID] toGroup:inName];
+            }
+        }
+
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        [self AIM_RemoveHandle:[object UID] fromGroup:[group UID]]; 	//Remove the handle
+        [self removeAllStatusFlagsFromHandle:(AIContactHandle *)object]; 				//Remove any status flags from this account (The AIM server will automatically send an update buddy message)
+        [self AIM_AddHandle:inName toGroup:[group UID]]; 		//Re-add the handle (with the new name)
+
+    }else{
+        //Unrecognized object
+    }
+
+    return(YES);
+}
+
+// Move an object
+- (BOOL)moveObject:(AIContactObject *)object fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
+{
+    NSParameterAssert(object != nil);
+    NSParameterAssert(sourceGroup != nil);
+    NSParameterAssert(destGroup != nil);
+
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        //The placement of groups is ignored
+
+    }else if([object isMemberOfClass:[AIContactHandle class]]){
+        //AIM doesn't support moving, so we simply remove and re-add the handle.
+        [self AIM_RemoveHandle:[object UID] fromGroup:[sourceGroup UID]];
+        [self AIM_AddHandle:[object UID] toGroup:[destGroup UID]];
+
+    }else{
+        //Unrecognized object
+    }
+
+    return(YES);
+}*/

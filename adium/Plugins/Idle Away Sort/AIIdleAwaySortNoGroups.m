@@ -43,13 +43,13 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context);
     }
 }
 
-- (void)sortContactObjects:(NSMutableArray *)inObjects
+- (void)sortListObjects:(NSMutableArray *)inObjects
 {
     [inObjects sortUsingFunction:idleAwaySortNoGroups context:nil];
 }
 
 int idleAwaySortNoGroups(id objectA, id objectB, void *context)
-{
+{    
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
     BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
 
@@ -58,8 +58,8 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context)
     }else if(!invisibleA && invisibleB){
         return(NSOrderedAscending);
     }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIContactGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIContactGroup class]];
+        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 
         if(groupA && !groupB){
             return(NSOrderedAscending);
@@ -77,7 +77,7 @@ int idleAwaySortNoGroups(id objectA, id objectB, void *context)
                 return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
             }
         }else{
-            AIContactGroup	*group = [objectA containingGroup];
+            AIListGroup	*group = [objectA containingGroup];
 
             //Keep groups in manual order
             if([group indexOfObject:objectA] > [group indexOfObject:objectB]){

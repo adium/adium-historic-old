@@ -15,12 +15,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIContactHandle, AIAdium;
+@class AIAdium;
 @protocol AITextEntryView;
 
 @interface AISendingTextView : NSTextView <AITextEntryView> {
     AIAdium		*owner;
-    AIContactHandle	*handle;
+//    AIContactHandle	*handle;
 
     BOOL		sendOnEnter;
     BOOL		sendOnReturn;
@@ -39,6 +39,6 @@
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
 - (void)insertText:(NSString *)aString;
 - (void)interpretKeyEvents:(NSArray *)eventArray;
-- (void)setHandle:(AIContactHandle *)inHandle;
+//- (void)setHandle:(AIContactHandle *)inHandle;
 
 @end

@@ -17,7 +17,7 @@
 
 @class AISocket, AIGroup, AIMTOC2AccountViewController;
 
-@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_GroupedContacts> {
+@interface AIMTOC2Account : AIAccount <AIAccount_Content, AIAccount_Handles> {
     
     AIMTOC2AccountViewController	*accountViewController;
 
@@ -44,9 +44,14 @@
     
     NSDictionary	*preferencesDict;	// Our preferences dictionary
 
+    NSMutableDictionary	*handleDict;		// A dictionary of all available handles
+
     NSTimer		*pingTimer;
     NSTimeInterval	pingInterval;
     NSDate		*firstPing;
+
+    BOOL		processingSignOnUpdates;
+    int			numberOfSignOnUpdates;
 }
 
 - (void)initAccount;

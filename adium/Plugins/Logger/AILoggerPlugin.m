@@ -69,13 +69,13 @@
 
     char oString[1024];
 
-    if ([sender isKindOfClass:[AIContactHandle class]]) {
+    if ([sender isKindOfClass:[AIHandle class]]) {
         senderName = [sender UID];
     } else {
         senderName = [sender accountDescription];
     }
 
-    if ([receiver isKindOfClass:[AIContactHandle class]]) {
+    if ([receiver isKindOfClass:[AIHandle class]]) {
         receiverName = [receiver UID];
     } else {
         receiverName = [receiver accountDescription];
@@ -112,13 +112,13 @@
 
     char oString[1024];
 
-    if ([sender isKindOfClass:[AIContactHandle class]]) {
+    if ([sender isKindOfClass:[AIHandle class]]) {
         senderName = [sender UID];
     } else {
         senderName = [sender accountDescription];
     }
 
-    if ([receiver isKindOfClass:[AIContactHandle class]]) {
+    if ([receiver isKindOfClass:[AIHandle class]]) {
         receiverName = [receiver UID];
     } else {
         receiverName = [receiver accountDescription];

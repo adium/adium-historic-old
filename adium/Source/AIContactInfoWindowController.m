@@ -21,15 +21,15 @@
 #define	CONTACT_INFO_NIB	@"ContactInfoWindow"		//Filename of the contact info nib
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact;
-- (void)configureForContact:(AIContactHandle *)inContact;
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIListContact *)inContact;
+- (void)configureForContact:(AIListContact *)inContact;
 @end
 
 @implementation AIContactInfoWindowController
 
 //Return the shared contact info window
 static AIContactInfoWindowController *sharedInstance = nil;
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIContactHandle *)inContact
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory forContact:(AIListContact *)inContact
 {
     //Create the window
     if(!sharedInstance){
@@ -53,7 +53,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
 // Internal --------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIContactHandle *)inContact
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory contact:(AIListContact *)inContact
 {
     [super initWithWindowNibName:windowNibName owner:self];
 
@@ -71,7 +71,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
 }
 
 //Configure our views for the specified contact
-- (void)configureForContact:(AIContactHandle *)inContact
+- (void)configureForContact:(AIListContact *)inContact
 {
     //Configure the preference views
     [mainCategory configureForObject:inContact];

@@ -69,7 +69,7 @@
 {
     NSString				*identifier;
     NSEnumerator			*enumerator;
-    id <AIContactSortController>	controller;
+    id <AIListSortController>		controller;
     
     //Soundset popup
     [self buildSortModeMenu];
@@ -89,7 +89,7 @@
 - (void)buildSortModeMenu
 {
     NSEnumerator			*enumerator;
-    id <AIContactSortController>	controller;
+    id <AIListSortController>	controller;
 
     //Remove all menu items
     [popUp_sortMode removeAllItems];

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIContactGroup, AIMiniToolbar;
+@class AIAdium, AIMiniToolbar;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 @protocol AIContactListCleanup <NSObject>

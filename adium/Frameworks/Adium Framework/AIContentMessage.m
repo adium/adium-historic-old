@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIContentMessage.h"
-#import "AIContactHandle.h"
 #import "AIAccount.h"
 #import "AIAdium.h"
 
@@ -70,7 +69,7 @@
 {
     [super init];
     
-    NSParameterAssert([inSource isKindOfClass:[AIContactHandle class]] || [inSource isKindOfClass:[AIAccount class]]);
+//    NSParameterAssert([inSource isKindOfClass:[AIContactHandle class]] || [inSource isKindOfClass:[AIAccount class]]);
     
     //Store source and dest
     source = [inSource retain];

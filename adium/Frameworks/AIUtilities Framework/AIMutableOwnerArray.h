@@ -22,8 +22,7 @@
     
 }
 
-- (void)removeObjectsWithOwner:(id)inOwner;
-- (void)addObject:(id)anObject withOwner:(id)inOwner;
+- (void)setObject:(id)anObject withOwner:(id)inOwner;
 - (unsigned)count;
 - (BOOL)containsAnyIntegerValueOf:(int)inValue;
 - (NSColor *)averageColor;

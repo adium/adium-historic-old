@@ -24,7 +24,7 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerHandleObserver:self];
+    [[owner contactController] registerContactObserver:self];
 
     onlineDict = [[NSMutableDictionary alloc] init];
     awayDict = [[NSMutableDictionary alloc] init];
@@ -44,27 +44,24 @@
     //remove observers
 }
 
-- (NSArray *)updateHandle:(AIContactHandle *)inHandle keys:(NSArray *)inModifiedKeys
+- (NSArray *)updateContact:(AIListContact *)inContact handle:(AIHandle *)inHandle keys:(NSArray *)inModifiedKeys
 {
     //To increase the speed of heavy contact list operations (connecting/disconnecting/etc), we don't sent out any events when the contact list updates are delayed.
-    if(![[owner contactController] contactListUpdatesDelayed]){
+    if(![[owner contactController] holdContactListUpdates]){
         
         if([inModifiedKeys containsObject:@"Online"]){ //Sign on/off
-            BOOL	oldStatus = [[onlineDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = [[inHandle statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
+            BOOL	oldStatus = [[onlineDict objectForKey:[inContact UID]] boolValue]; //! UID is not unique enough !
+            BOOL	newStatus = [[inContact statusArrayForKey:@"Online"] containsAnyIntegerValueOf:1];
 
             if(newStatus != oldStatus){
-                AIMutableOwnerArray	*ownerArray;
-
+                //
                 [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO)
                                                           object:inHandle
                                                         userInfo:nil];
-                [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inHandle UID]];
-
+                [onlineDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UID]];
+                
                 //Set status flags and install timers for "Just signed on" and "Just signed off"
-                ownerArray = [inHandle statusArrayForKey:(newStatus ? @"Signed On" : @"Signed Off")];
-                [ownerArray removeObjectsWithOwner:self];
-                [ownerArray addObject:[NSNumber numberWithBool:YES] withOwner:self];
+                [[inHandle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:(newStatus ? @"Signed On" : @"Signed Off")];
                 [[owner contactController] handleStatusChanged:inHandle
                                             modifiedStatusKeys:[NSArray arrayWithObject:(newStatus ? @"Signed On" : @"Signed Off")]];
 
@@ -73,7 +70,7 @@
 
         }else if([inModifiedKeys containsObject:@"Away"]){ //Away / Unaway
             BOOL	oldStatus = [[awayDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = [[inHandle statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1];
+            BOOL	newStatus = [[inContact statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1];
 
             if(newStatus != oldStatus){
                 [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO)
@@ -84,7 +81,7 @@
             
         }else if([inModifiedKeys containsObject:@"Idle"]){ //Idle / UnIdle
             BOOL	oldStatus = [[idleDict objectForKey:[inHandle UID]] boolValue]; //! UID is not unique enough !
-            BOOL	newStatus = ([[inHandle statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+            BOOL	newStatus = ([[inContact statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
 
             if(newStatus != oldStatus){
                 [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO)
@@ -102,10 +99,10 @@
 
 - (void)clearOnlineFlags:(NSTimer *)inTimer
 {
-    AIContactHandle	*handle = [inTimer userInfo];
+    AIHandle		*handle = [inTimer userInfo];
 
-    [[handle statusArrayForKey:@"Signed On"] removeObjectsWithOwner:self];
-    [[handle statusArrayForKey:@"Signed Off"] removeObjectsWithOwner:self];
+    [[handle statusDictionary] removeObjectForKey:@"Signed On"];
+    [[handle statusDictionary] removeObjectForKey:@"Signed Off"];
 
     [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil]];
 }

@@ -30,7 +30,7 @@
 #define RESIZE_CORNER_TOOLBAR_OFFSET 	0
 
 @interface AIMessageViewController (PRIVATE)
-- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface;
+- (id)initWithOwner:(id)inOwner contact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface;
 - (void)dealloc;
 - (void)textDidChange:(NSNotification *)notification;
 - (void)sizeAndArrangeSubviews;
@@ -40,9 +40,9 @@
 @implementation AIMessageViewController
 
 //Create a new message view controller
-+ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
++ (AIMessageViewController *)messageViewControllerForContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
 {
-    return([[[self alloc] initWithOwner:inOwner handle:inHandle account:inAccount content:inContent interface:inInterface] autorelease]);
+    return([[[self alloc] initWithOwner:inOwner contact:inContact account:inAccount content:inContent interface:inInterface] autorelease]);
 }
 
 //Send the entered message
@@ -53,12 +53,16 @@
 
         //Hide the account selection menu
         [self setAccountSelectionMenuVisible:NO];
-        
+
         //Send the message
-        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:handle userInfo:nil];
-        message = [AIContentMessage messageWithSource:account destination:handle date:nil message:[[[textView_outgoing attributedString] copy] autorelease]];
-        [[owner contentController] sendContentObject:message toHandle:handle];
-        [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:contact userInfo:nil];
+        message = [AIContentMessage messageWithSource:account
+                                          destination:[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES]
+                                                 date:nil
+                                              message:[[[textView_outgoing attributedString] copy] autorelease]];
+
+        [[owner contentController] sendContentObject:message];
+        [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:contact userInfo:nil];
     
         //Clear the message entry text view
         [textView_outgoing setString:@""];
@@ -72,11 +76,12 @@
     return(view_contents);
 }
 
-//The destination handle of this message
-- (AIContactHandle *)handle
+//The destination contact of this message
+- (AIListContact *)contact
 {
-    return(handle);
+    return(contact);
 }
+
 
 //The sounce account of this message
 - (void)setAccount:(AIAccount *)inAccount
@@ -87,6 +92,8 @@
 - (AIAccount *)account{
     return(account);
 }
+
+
 
 
 //Toggle the visibility of our account selection menu
@@ -114,7 +121,7 @@
 
 
 //Private -----------------------------------------------------------------------------
-- (id)initWithOwner:(id)inOwner handle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface
+- (id)initWithOwner:(id)inOwner contact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent interface:(id <AIContainerInterface>)inInterface
 {    
     [super init];
     
@@ -122,15 +129,16 @@
     view_accountSelection = nil;
     owner = [inOwner retain];
     interface = [inInterface retain];
-    handle = [inHandle retain];
+    contact = [inContact retain];
+    
     account = [inAccount retain];
-    if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle] retain];
-
+    if(!account) account = [[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact] retain];
+        
     //view
     [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
 
     //Create the message view
-    view_messages = [[owner interfaceController] messageViewForHandle:handle];
+    view_messages = [[owner interfaceController] messageViewForContact:contact];
     [scrollView_messages setAndSizeDocumentView:view_messages];
     [view_messages setNextResponder:textView_outgoing];
 
@@ -141,13 +149,13 @@
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
-    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inHandle,@"ContactObject",textView_outgoing,@"TextEntryView",nil]];
+    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inContact,@"ContactObject",textView_outgoing,@"TextEntryView",nil]];
 
     //Resize and arrange our views
     [self sizeAndArrangeSubviews];
 
     //Register for notifications
-    [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:handle];
+    [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:contact];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSViewFrameDidChangeNotification object:view_contents];
 
@@ -175,7 +183,7 @@
     [owner release]; owner = nil;
     [interface release]; interface = nil;
     [account release]; account = nil;
-    [handle release]; handle = nil;
+    [contact release]; contact = nil;
 
     [super dealloc];
 }
@@ -184,8 +192,8 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Configure the message sending keys
-    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
-    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+    [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"Send On Enter" group:PREF_GROUP_GENERAL object:contact] boolValue]];
+    [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"Send On Return" group:PREF_GROUP_GENERAL object:contact] boolValue]];
 
     //Configure spellchecking
     [textView_outgoing setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_MESSAGE_SPELL_CHECKING] boolValue]];
@@ -197,7 +205,7 @@
     [self sizeAndArrangeSubviews]; //Resize our contents to fit the text
 }
 
-//Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a handle, the account view is visible)
+//Arrange and resize our subviews based on the current state of this view (whether or not: it's locked to a contact, the account view is visible)
 - (void)sizeAndArrangeSubviews
 {
     int		height;

@@ -11,8 +11,6 @@
 
 #define CONTENT_MESSAGE_TYPE		@"Message"		//Type ID for this content
 
-@class AIContactHandle;
-
 @interface AIContentMessage : NSObject <AIContentObject> {
 
     id 				source;

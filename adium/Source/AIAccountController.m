@@ -223,6 +223,23 @@
     return(availableServiceArray);
 }
 
+- (AIServiceType *)serviceTypeWithID:(NSString *)inServiceID
+{
+    NSEnumerator		*enumerator;
+    id <AIServiceController>	service;
+
+    enumerator = [availableServiceArray objectEnumerator];
+    while((service = [enumerator nextObject])){
+        AIServiceType	*serviceType = [service handleServiceType];
+        
+        if([[serviceType identifier] compare:inServiceID] == 0){
+            return(serviceType);
+        }
+    }
+
+    return(nil);
+}
+
 //Register service code
 - (void)registerService:(id <AIServiceController>)inService
 {
@@ -233,40 +250,57 @@
 //- The last account used to message this contact
 //- The last account used to message anyone
 //- The first available account on the account list
-- (AIAccount *)accountForSendingContentType:(NSString *)inType toHandle:(AIContactHandle *)inHandle;
+- (AIAccount *)accountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
     NSEnumerator	*enumerator;
     AIAccount		*account;
 
     // Preferred account for this contact --
-    if(inHandle){
+    // The preferred account always has priority, as long as it is available for sending content
+    if(inContact){
         NSString	*accountID = [[owner preferenceController] preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                                                             group:PREF_GROUP_ACCOUNTS
-                                                            object:inHandle];
+                                                                       group:PREF_GROUP_ACCOUNTS
+                                                                      object:inContact];
 
         if(accountID && (account = [self accountWithID:accountID])){
-            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
+            if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
                 return(account);
             }
         }
     }
-    
+
     // Last account used to message anyone --
+    // Next, the last account used to message someone is picked, as long as it is available for sending content
     if(lastAccountIDToSendContent && (account = [self accountWithID:lastAccountIDToSendContent])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
             return(account);
         }
     }
+
+    // First available account that can see the handle --
+    // If this is the first message opened in this session, the first account with the contact on it's contact list is choosen
+    if(inContact){
+        enumerator = [accountArray objectEnumerator];
+        while((account = [enumerator nextObject])){
+            AIHandle	*handle = [[owner contactController] handleOfContact:inContact forReceivingContentType:inType fromAccount:account create:NO];
     
-    // First available account --
-    enumerator = [accountArray objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:inHandle]){
-            return(account);
+            if(handle && [(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:handle]){
+                return(account);
+            }
         }
     }
         
-    //Nothing found (no accounts are available to send)
+    // If the handle does not exist on any contact lists, the first account available for sending content is used
+    // First available account that can see the handle --
+    enumerator = [accountArray objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([(AIAccount<AIAccount_Content> *)account availableForSendingContentType:CONTENT_MESSAGE_TYPE toHandle:nil]){
+            return(account);
+        }
+    }
+
+    // Nothing found (no accounts are available to send)
+    // If no accounts are available, the first one is returned
     return([accountArray objectAtIndex:0]);
 }
 
@@ -329,13 +363,13 @@
 //Watch outgoing content, remembering the user's choice of source account
 - (void)didSendContent:(NSNotification *)notification
 {
-    AIContactHandle	*destHandle = [notification object];
+    AIListContact	*destContact = [notification object];
     AIAccount		*sourceAccount = (AIAccount *)[[[notification userInfo] objectForKey:@"Object"] source];
 
     [[owner preferenceController] setPreference:[sourceAccount accountID]
                                          forKey:KEY_PREFERRED_SOURCE_ACCOUNT
                                           group:PREF_GROUP_ACCOUNTS
-                                         object:destHandle];
+                                         object:destContact];
 
     [lastAccountIDToSendContent release];
     lastAccountIDToSendContent = [[sourceAccount accountID] retain];

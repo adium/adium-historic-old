@@ -14,7 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIServiceType.h"
-#import "AIContactHandle.h"
 
 // the reason for this class is that there may be multiple instances of AIService that are compatable... so only the service types need to match.  More than one AIService can return the same service type if they are compatable.
 
@@ -58,19 +57,15 @@
     return([identifier compare:[inService identifier]]);
 }*/
 
-//Compare our UID (The passed handle shuold be of this service type!) and service to another handle
-- (NSComparisonResult)compareUID:(NSString *)inUID toHandle:(AIContactHandle *)inHandle
+//Compare one UID to another
+- (NSComparisonResult)compareUID:(NSString *)UIDA to:(NSString *)UIDB
 {
     NSComparisonResult result;
 
     if(caseSensitive){
-        result = [[inHandle UID] compare:inUID];
+        result = [UIDA compare:UIDB];
     }else{
-        result = [[inHandle UID] caseInsensitiveCompare:inUID];
-    }
-
-    if(result == 0){ //If they match, double check to ensure the service matches this one
-        result = [identifier compare:[inHandle serviceID]];
+        result = [UIDA caseInsensitiveCompare:UIDB];
     }
 
     return(result);

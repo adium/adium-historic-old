@@ -14,22 +14,22 @@
 #define DARKEN_LIGHTEN_MODIFIER		0.2
 
 @interface AISMViewController (PRIVATE)
-- (id)initForHandle:(AIContactHandle *)inHandle owner:(id)inOwner;
+- (id)initForContact:(AIListContact *)inContact owner:(id)inOwner;
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AISMViewController
-+ (AISMViewController *)messageViewControllerForHandle:(AIContactHandle *)inHandle owner:(id)inOwner
++ (AISMViewController *)messageViewControllerForContact:(AIListContact *)inContact owner:(id)inOwner
 {
-    return([[[self alloc] initForHandle:inHandle owner:inOwner] autorelease]);
+    return([[[self alloc] initForContact:inContact owner:inOwner] autorelease]);
 }
 
-- (id)initForHandle:(AIContactHandle *)inHandle owner:(id)inOwner
+- (id)initForContact:(AIListContact *)inContact owner:(id)inOwner
 {
     //init
     [super init];
     owner = [inOwner retain];
-    handle = [inHandle retain];
+    contact = [inContact retain];
 
     //observe
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
@@ -68,7 +68,7 @@
     [messageView reloadData];
     
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:handle];
+    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:contact];
 
     return(self);
 }
@@ -135,7 +135,7 @@
 
 - (AIFlexibleTableCell *)cellForColumn:(AIFlexibleTableColumn *)inCol row:(int)inRow
 {
-    NSArray			*contentArray = [handle contentObjectArray];
+    NSArray			*contentArray = [contact contentObjectArray];
     id <AIContentObject>	object;
     id <AIContentObject>	previousContent = nil;
     AIFlexibleTableCell		*cell = nil;
@@ -188,7 +188,7 @@
                 gradientColor = nil;
             }            
 
-            cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [(AIContactHandle *)messageSource displayName])]
+            cell = [AIFlexibleTableTextCell cellWithString:[NSString stringWithFormat:(outgoing ? prefixOutgoing : prefixIncoming),(outgoing ? [(AIAccount *)messageSource accountDescription] : [[(AIHandle *)messageSource containingContact] displayName])]
                                                      color:prefixColor
                                                       font:prefixFont
                                                  alignment:NSRightTextAlignment
@@ -233,7 +233,7 @@
 
 - (int)numberOfRows
 {
-    return([[handle contentObjectArray] count]);
+    return([[contact contentObjectArray] count]);
 }
 
 @end

@@ -8,13 +8,13 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIContactHandle, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn;
+@class AIListContact, AIAdium, AIFlexibleTableView, AIFlexibleTableColumn;
 @protocol AIFlexibleTableViewDelegate;
 
 @interface AISMViewController : NSObject <AIFlexibleTableViewDelegate> {
     AIAdium			*owner;
 
-    AIContactHandle		*handle;
+    AIListContact		*contact;
     AIFlexibleTableView		*messageView;
 
     AIFlexibleTableColumn	*senderCol;
@@ -53,7 +53,7 @@
     NSString			*prefixOutgoing;
 }
 
-+ (AISMViewController *)messageViewControllerForHandle:(AIContactHandle *)inHandle owner:(id)inOwner;
++ (AISMViewController *)messageViewControllerForContact:(AIListContact *)inContact owner:(id)inOwner;
 - (NSView *)messageView;
 
 @end

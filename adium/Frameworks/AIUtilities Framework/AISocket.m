@@ -124,7 +124,6 @@
     int		 	bytesRead;
     char		tempBuffer[8192];
 
-
     if([readBuffer length] >= inLength){ // this data is fully in the buffer
         //Return the correct bytes from the buffer
         *outData = [NSData dataWithBytes:[readBuffer bytes] length:inLength];
@@ -145,16 +144,10 @@
             //Append the bytes to the read buffer
             [readBuffer appendBytes:tempBuffer length:bytesRead];
 
-            if([readBuffer length] == inLength){ //We have all the data now
-                //return the data
-                *outData = readBuffer;
-                return(YES);
-            }else{ //We still need some data
-//                NSLog(@"*** Partial data read, HOLDING %i ***",bytesRead);
-                return(NO);
-            }
+            *outData = readBuffer; //Return the data read so far
+            return([readBuffer length] == inLength); //We YES if we have all the data
         }
-    }    
+    }
 }
 
 //Remove data from the buffer

@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbar, AIContactHandle, AIAdium, AIAccount, AISendingTextView;
+@class AIMiniToolbar, AIListContact, AIAdium, AIAccount, AISendingTextView, AIHandle;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate;
 
 @interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
@@ -31,14 +31,15 @@
     //Variables
     AIAdium			*owner;
     id <AIContainerInterface> 	interface;
-    AIContactHandle		*handle;
+    AIListContact		*contact;
+    AIHandle			*handle;
     AIAccount			*account;
 }
 
-+ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
++ (AIMessageViewController *)messageViewControllerForContact:(AIListContact *)inContact account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
 - (IBAction)sendMessage:(id)sender;
 - (NSView *)view;
-- (AIContactHandle *)handle;
+- (AIListContact *)contact;
 - (void)setAccountSelectionMenuVisible:(BOOL)visible;
 - (void)makeTextEntryViewFirstResponder;
 - (void)setAccount:(AIAccount *)inAccount;

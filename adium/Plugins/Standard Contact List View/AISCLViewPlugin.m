@@ -24,7 +24,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)itemDidExpand:(NSNotification *)notification;
 - (void)itemDidCollapse:(NSNotification *)notification;
-- (void)expandCollapseGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView;
+- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView;
 @end
 
 @implementation AISCLViewPlugin
@@ -71,7 +71,7 @@
     //Install the necessary observers (general)
     if([SCLViewArray count] == 1){ //If this is the first view opened
         [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(contactObjectChanged:) name:Contact_ObjectChanged object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
         [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
         [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     }
@@ -99,7 +99,7 @@
         //Remove observers (general)
         if([SCLViewArray count] == 1){ //If this is the last view closed
             [[owner notificationCenter] removeObserver:self name:Contact_ListChanged object:nil];
-            [[owner notificationCenter] removeObserver:self name:Contact_ObjectChanged object:nil];
+            [[owner notificationCenter] removeObserver:self name:Contact_OrderChanged object:nil];
             [[owner notificationCenter] removeObserver:self name:Contact_AttributesChanged object:nil];
             [[owner notificationCenter] removeObserver:self name:Preference_GroupChanged object:nil];
         }
@@ -135,9 +135,9 @@
 }
 
 //Reload the contact list (if updates aren't delayed)
-- (void)contactObjectChanged:(NSNotification *)notification
+- (void)contactOrderChanged:(NSNotification *)notification
 {
-    if(![[owner contactController] contactListUpdatesDelayed]){
+    if(![[owner contactController] holdContactListUpdates]){
         NSEnumerator		*enumerator = [SCLViewArray objectEnumerator];
         AISCLOutlineView	*SCLView;
             
@@ -151,7 +151,7 @@
 //Redisplay the modified object
 - (void)contactAttributesChanged:(NSNotification *)notification
 {
-    AIContactHandle	*handle = [notification object];
+    AIListContact	*contact = [notification object];
     NSEnumerator	*enumerator = [SCLViewArray objectEnumerator];
     AISCLOutlineView	*SCLView;
 
@@ -159,13 +159,13 @@
         //Update the entire list (since the visibility of contacts has changed
         while((SCLView = [enumerator nextObject])){
             [SCLView reloadData];
-            [self expandCollapseGroup:[handle containingGroup] subgroups:NO supergroups:YES outlineView:SCLView]; //Correctly expand/collapse the groups
+            [self expandCollapseGroup:[contact containingGroup] subgroups:NO supergroups:YES outlineView:SCLView]; //Correctly expand/collapse the groups
         }
 
     }else{
         //Simply redraw the modified contact
         while((SCLView = [enumerator nextObject])){
-            int row = [SCLView rowForItem:handle];
+            int row = [SCLView rowForItem:contact];
 
             if(row >= 0){
                 [SCLView setNeedsDisplayInRect:[SCLView rectOfRow:row]];
@@ -223,11 +223,11 @@
 //Double click in outline view
 - (IBAction)performDefaultActionOnSelectedContact:(id)sender
 {
-    AIContactObject	*selectedObject;
+    AIListObject	*selectedObject;
 
     selectedObject = [sender itemAtRow:[sender selectedRow]];
 
-    if([selectedObject isKindOfClass:[AIContactGroup class]]){
+    if([selectedObject isKindOfClass:[AIListGroup class]]){
         //Expand or collapse the group
         if([sender isItemExpanded:selectedObject]){
             [sender collapseItem:selectedObject];
@@ -256,7 +256,7 @@
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-    if([item isKindOfClass:[AIContactGroup class]]){
+    if([item isKindOfClass:[AIListGroup class]]){
         return(YES);
     }else{
         return(NO);
@@ -288,7 +288,7 @@
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-    AIContactObject	*selectedObject = nil;
+    AIListObject	*selectedObject = nil;
     NSOutlineView	*outlineView = [notification object];
     int			selectedRow;
 
@@ -311,10 +311,10 @@
 }
 
 //Correctly sets the contact groups as expanded or collapsed, depending on their saved state
-- (void)expandCollapseGroup:(AIContactGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView
+- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView
 {
     NSEnumerator	*enumerator = [inGroup objectEnumerator];
-    AIContactObject	*object;
+    AIListObject	*object;
 
     if(inGroup){
         //Group
@@ -322,7 +322,7 @@
         
         //Supergroups
         if(supergroups){
-            AIContactGroup	*containingGroup = [inGroup containingGroup];
+            AIListGroup	*containingGroup = [inGroup containingGroup];
             
             if(containingGroup){
                 //Expand the supergroup
@@ -335,13 +335,13 @@
         
         //Subgroups
         while((object = [enumerator nextObject])){
-            if([object isKindOfClass:[AIContactGroup class]]){
+            if([object isKindOfClass:[AIListGroup class]]){
                 //Correctly expand/collapse the group
-                ([(AIContactGroup *)object isExpanded] ? [inView expandItem:object] : [inView collapseItem:object]);
+                ([(AIListGroup *)object isExpanded] ? [inView expandItem:object] : [inView collapseItem:object]);
     
                 //Expand/collapse any subgroups
                 if(subgroups){
-                    [self expandCollapseGroup:(AIContactGroup *)object subgroups:YES supergroups:NO outlineView:inView];
+                    [self expandCollapseGroup:(AIListGroup *)object subgroups:YES supergroups:NO outlineView:inView];
                 }
             }
         }

@@ -30,4 +30,14 @@
     return([outName autorelease]);
 }
 
+- (int)intValueFromHex
+{
+    NSScanner		*scanner = [NSScanner scannerWithString:self];
+    int			value;
+
+    [scanner scanHexInt:&value];
+
+    return(value);
+}
+
 @end

@@ -43,9 +43,9 @@
 }
 
 //returns a NEW message view configured for the specified handle
-- (NSView *)messageViewForHandle:(AIContactHandle *)inHandle
+- (NSView *)messageViewForContact:(AIListContact *)inContact
 {
-    AISMViewController	*controller = [AISMViewController messageViewControllerForHandle:inHandle owner:owner];
+    AISMViewController	*controller = [AISMViewController messageViewControllerForContact:inContact owner:owner];
 
     [controllerArray addObject:controller];
 

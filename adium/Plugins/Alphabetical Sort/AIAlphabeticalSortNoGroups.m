@@ -39,7 +39,7 @@ int alphabeticalSortNoGroups(id objectA, id objectB, void *context);
     }
 }
 
-- (void)sortContactObjects:(NSMutableArray *)inObjects
+- (void)sortListObjects:(NSMutableArray *)inObjects
 {
     [inObjects sortUsingFunction:alphabeticalSortNoGroups context:nil];
 }
@@ -54,8 +54,8 @@ int alphabeticalSortNoGroups(id objectA, id objectB, void *context)
     }else if(!invisibleA && invisibleB){
         return(NSOrderedAscending);
     }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIContactGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIContactGroup class]];
+        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 
         if(groupA && !groupB){
             return(NSOrderedAscending);
@@ -64,7 +64,7 @@ int alphabeticalSortNoGroups(id objectA, id objectB, void *context)
         }else if(!groupA && !groupB){
             return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
         }else{
-            AIContactGroup	*group = [objectA containingGroup];
+            AIListGroup	*group = [objectA containingGroup];
 
             //Keep groups in manual order
             if([group indexOfObject:objectA] > [group indexOfObject:objectB]){

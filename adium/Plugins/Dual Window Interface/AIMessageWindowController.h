@@ -19,7 +19,7 @@
 #define AIMessageWindow_ControllerOrderChanged 		@"AIMessageWindow_ControllerOrderChanged"
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
-@class AIAdium, AIContactHandle, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController;
+@class AIAdium, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController;
 @protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : NSWindowController {

@@ -105,26 +105,26 @@
 //
 - (NSString *)labelString
 {
-    return([[messageView handle] displayName]);
+    return([[messageView contact] displayName]);
 }
 
 //
 - (NSAttributedString *)attributedLabelString
 {
-    AIContactHandle	*handle = [messageView handle];
+    AIListContact	*contact = [messageView contact];
     NSFont		*font = [NSFont systemFontOfSize:11];
     NSAttributedString	*displayName;
     NSColor		*textColor;
 
     
     //Color
-    textColor = [[handle displayArrayForKey:@"Text Color"] averageColor];
+    textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
     if(!textColor){
         textColor = [NSColor blackColor];
     }
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[handle displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
+    displayName = [[NSAttributedString alloc] initWithString:[contact displayName] attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor,NSForegroundColorAttributeName,font,NSFontAttributeName,nil]];
 
     return([displayName autorelease]);
 }

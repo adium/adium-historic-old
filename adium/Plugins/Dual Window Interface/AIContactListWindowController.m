@@ -77,7 +77,7 @@
 //Called when the user selects a new contact object
 - (void)contactSelectionChanged:(NSNotification *)notification
 {
-    AIContactObject	*object = [[notification userInfo] objectForKey:@"Object"];
+    AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
 
     //Configure our toolbar for the new object
     [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self window],@"Window",object,@"ContactObject",nil]];
