@@ -165,6 +165,13 @@
                                           group:PREF_GROUP_EVENT_BEZEL];
 }
 
+- (IBAction)toggleShowAway:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_SHOW_AWAY
+                                          group:PREF_GROUP_EVENT_BEZEL];
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
@@ -195,6 +202,7 @@
     [checkBox_fadeIn setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_IN] boolValue]];
     [checkBox_fadeOut setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FADE_OUT] boolValue]];
     [checkBox_showHidden setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]];
+    [checkBox_showAway setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [checkBox_online setEnabled: [checkBox_showBezel state]];

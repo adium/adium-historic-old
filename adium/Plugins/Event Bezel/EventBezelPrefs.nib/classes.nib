@@ -38,6 +38,7 @@
                 toggleNoIdle = id; 
                 toggleOffline = id; 
                 toggleOnline = id; 
+                toggleShowAway = id; 
                 toggleShowBezel = id; 
                 toggleShowHidden = id; 
             }; 
@@ -56,6 +57,7 @@
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 
+                "checkBox_showAway" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
                 "checkBox_showHidden" = NSButton; 
                 "popUp_background" = NSPopUpButton; 

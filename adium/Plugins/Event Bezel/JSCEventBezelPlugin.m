@@ -176,6 +176,7 @@
     AIMutableOwnerArray         *ownerArray =nil;
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
+    NSDictionary                *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
     NSDictionary                *colorPreferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     
     if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
@@ -191,9 +192,12 @@
     BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
     BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
     // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
-    BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
+    BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
+    // If you are away, check if we want it to show
+    BOOL showIfAway = ![[owner accountController] propertyForKey:@"AwayMessage" account:nil]
+        || ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
     
-    if (contactEnabled && groupEnabled && showIfHidden){
+    if (contactEnabled && groupEnabled && showIfHidden && showIfAway){
     
         ownerArray = [contact statusArrayForKey:@"BuddyImage"];
         if(ownerArray && [ownerArray count]) {

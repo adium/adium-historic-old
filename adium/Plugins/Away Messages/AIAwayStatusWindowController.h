@@ -23,6 +23,7 @@
     IBOutlet NSTextView 	*textView_awayMessage;
     IBOutlet NSTextField	*textField_awayTime;
     IBOutlet NSButton           *button_mute;
+    IBOutlet NSButton           *button_showBezel;
     
     NSDate	*awayDate;
     NSTimer	*awayTimer;
@@ -36,4 +37,5 @@
 - (void)updateWindow;
 - (void)setVisible:(bool)visible;
 - (IBAction)toggleMute:(id)sender;
+- (IBAction)toggleShowBezel:(id)sender;
 @end
