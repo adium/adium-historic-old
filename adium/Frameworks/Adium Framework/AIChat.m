@@ -247,5 +247,56 @@
     [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
 }
 
+#pragma mark Applescript Commands
+- (id)sendScriptCommand:(NSScriptCommand *)command {
+	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
+	NSString		*message = [evaluatedArguments objectForKey:@"message"];
+	NSString		*filePath = [evaluatedArguments objectForKey:@"filePath"];
+	
+	//Send any message we were told to send
+	if (message && [message length]){
+		BOOL			autoreply = [[evaluatedArguments objectForKey:@"autoreply"] boolValue];
+
+		//Take the string and turn it into an attributed string (in case we were passed HTML)
+		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];
+		AIContentMessage	*messageContent;
+		messageContent = [AIContentMessage messageInChat:self
+											  withSource:[self account]
+											 destination:[self listObject]
+													date:nil
+												 message:attributedMessage
+											   autoreply:autoreply];
+		
+		[[adium contentController] sendContentObject:messageContent];
+	}
+	
+	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
+	if (filePath && [filePath length]){
+		AIAccount		*sourceAccount = [evaluatedArguments objectForKey:@"account"];
+
+		NSEnumerator	*enumerator = [[self participatingListObjects] objectEnumerator];
+		AIListContact	*listContact;
+		
+		while (listContact = [enumerator nextObject]){
+			AIListContact   *targetFileTransferContact;
+			
+			if (sourceAccount){
+				//If we were told to use a specific account, insist upon using it no matter what account the chat is on
+				targetFileTransferContact = [[adium contactController] contactOnAccount:sourceAccount
+																		fromListContact:listContact];
+			}else{
+				//Make sure we know where we are sending the file by finding the best contact for
+				//sending FILE_TRANSFER_TYPE.
+				targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
+																					   forListContact:listContact];
+			}
+			
+			[[adium fileTransferController] sendFile:filePath toListContact:targetFileTransferContact];
+		}
+	}
+	
+	return nil;
+}
+
 
 @end

@@ -121,6 +121,26 @@
 	return(message);
 }
 
+//HTML string message
+- (void)setMessageHTML:(NSString *)inMessageString{
+	[message release];
+	message = [[AIHTMLDecoder decodeHTML:inMessageString] retain];
+}
+- (NSString *)messageHTML{
+	return [AIHTMLDecoder encodeHTML:message encodeFullString:YES];
+}
+
+//Plaintext string message
+- (void)setMessageString:(NSString *)inMessageString{
+	[message release];
+	message = [[NSAttributedString alloc] initWithString:inMessageString
+											  attributes:[[adium contentController] defaultFormattingAttributes]];
+	
+}
+- (NSString *)messageString{
+	return [message string];
+}
+
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
