@@ -123,9 +123,11 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
-		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"]){
-			
-			//Refresh this account in our list if its status has changed
+		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
+		   [inModifiedKeys containsObject:@"IdleSince"] ||
+		   [inModifiedKeys containsObject:@"StatusState"]){
+
+			//Refresh this account in our list
 			int accountRow = [accountArray indexOfObject:inObject];
 			if(accountRow >= 0 && accountRow < [accountArray count]){
 				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
@@ -265,6 +267,8 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 									   name:Account_ListChanged 
 									 object:nil];
 	[self accountListChanged:nil];
+	
+	[[adium contactController] registerListObjectObserver:self];
 }
 
 /*
@@ -275,7 +279,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
     //Update our list of accounts
     [accountArray release];
 	accountArray = [[[adium accountController] accountArray] retain];
-	
+
 	//Refresh the account table
 	[tableView_accountList reloadData];
 	[self updateControlAvailability];
