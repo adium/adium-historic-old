@@ -33,12 +33,15 @@ rm -r "build/PrefixHeaders"
 ../cvs2cl.pl --no-times --day-of-week --prune --hide-filenames --file CompleteChanges
 ../cvs2cl.pl --no-times --day-of-week -l "-d'>=$lastbuild'" --prune --hide-filenames --file ChangeLog
 cp ChangeLog ChangeLog_$prettydate
+
 #build it
 xcodebuild -target Adium GENERATE_DEBUGGING_SYMBOLS=NO COPY_PHASE_STRIP=YES DEBUGGING_SYMBOLS=NO MACOSX_DEPLOYMENT_TARGET=10.2 ZERO_LINK=NO OPTIMIZATION_CFLAGS=-Os FIX_AND_CONTINUE=NO OTHER_CFLAGS=-DDEPLOYMENT_BUILD
 #Package it
 ../buildDMG.pl -buildDir . -compressionLevel 9 -dmgName "Adium_$prettydate" -volName "Adium_$prettydate" build/Adium.app ChangeLog
 
-mkdir ~/AdiumBuilds
+if [! -f ~/AdiumBuilds]; then
+    mkdir ~/AdiumBuilds
+fi
 
 cp Adium_$prettydate.dmg ~/AdiumBuilds/Adium_$prettydate.dmg
 
@@ -53,12 +56,12 @@ scp ChangeLog_$prettydate $username@shell.sf.net:/home/groups/a/ad/adium/htdocs/
 ssh shell.sf.net chmod 664 /home/groups/a/ad/adium/htdocs/downloads/ChangeLogs/ChangeLog_$prettydate
 
 ssh shell.sf.net ln -fs \
-    /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate \
+    /home/groups/a/ad/adium/htdocs/downloads/Adium_$prettydate.dmg \
     /home/groups/a/ad/adium/htdocs/downloads/Adium2.dmg
 
 #cleanup
-rm CompleteChanges ChangeLog ChangeLog_$prettydate
-rm Adium_$prettydate.dmg
+#rm CompleteChanges ChangeLog ChangeLog_$prettydate
+#rm Adium_$prettydate.dmg
 cd ..
 rm .lastadiumbuild
 echo `date +"%Y-%m-%d"` >> .lastadiumbuild
