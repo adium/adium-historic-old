@@ -113,7 +113,7 @@
         if(notification == nil || (key && [key isEqualToString:KEY_ACTIVE_DOCK_ICON])){
             NSDictionary        *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
             NSMutableDictionary	*newAvailableIconStateDict;
-            NSString		*iconPath;
+            NSString			*iconPath;
             
             //Load the new icon pack
             iconPath = [self _pathOfIconPackWithName:[preferenceDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
