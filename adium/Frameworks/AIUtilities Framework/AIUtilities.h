@@ -92,3 +92,4 @@
 
 #import "IconFamily.h"
 #import "SUSpeaker.h"
+#import "QTSoundFilePlayer.h"
