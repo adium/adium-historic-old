@@ -47,6 +47,7 @@
 - (id)_init
 {
     stringArray = nil;
+	impliedCompletionDictionary = nil;
     minLength = 3;
     oldUserLength = 0;
 
@@ -56,7 +57,8 @@
 - (void)dealloc
 {
     [stringArray release];
-
+	[impliedCompletionDictionary release];
+	
     [super dealloc];
 }
 
@@ -79,6 +81,14 @@
     if(!stringArray) stringArray = [[NSMutableArray alloc] init];
 
     [stringArray addObject:string];
+}
+
+- (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion
+{
+	if (!impliedCompletionDictionary) impliedCompletionDictionary = [[NSMutableDictionary alloc] init];
+	
+	[impliedCompletionDictionary setObject:impliedCompletion forKey:string];
+	[self addCompletionString:string];
 }
 
 
@@ -130,6 +140,20 @@
     return(nil);
 }
 
+//Return a string which may be the actual stringValue or may be some other string implied by it
+- (NSString *)impliedStringValue
+{
+	NSString		*returnString = [self stringValue];
+	if (returnString){
+		//Check if the stringValue implies a different completion; ensure that this new completion is not itself
+		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
+		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:returnString];
 
+		if (impliedCompletion && ![impliedCompletionDictionary objectForKey:impliedCompletion])
+			returnString = impliedCompletion;
+	}
+	
+	return returnString;
+}
 
 @end
