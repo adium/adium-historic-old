@@ -79,11 +79,11 @@ extern void* objc_getClass(const char *name);
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([NSString stringWithFormat:@"iChat.%@",[[self accountDescription] compactedString]]);
+    return([NSString stringWithFormat:@"iChat.%@",[[AIMService loginID] compactedString]]);
 }
 //The user's account name
 - (NSString *)UID{
-    return([[self accountDescription] compactedString]);
+    return([[AIMService loginID] compactedString]);
 }
 //The service ID (shared by any account code accessing this service)
 - (NSString *)serviceID{
@@ -340,6 +340,11 @@ extern void* objc_getClass(const char *name);
             //Squelch sounds and updates while we sign on
 //            [[owner contactController] delayContactListUpdatesFor:10];
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+
+            //Hold onto the account name
+            [screenName release];
+            screenName = [[[AIMService loginID] compactedString] copy];
+
         break;
 
         case 4: //Online
@@ -347,10 +352,6 @@ extern void* objc_getClass(const char *name);
 
             [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
             [[owner accountController] setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
-
-            //Hold onto the account name
-            if(screenName) [screenName release];
-                screenName = [[AIMService loginID] copy];
 
             
             //Adium waits for the first sign on update, and then checks for aditional updates every .2 seconds.  When the stream of updates stops, the account can be assumed online, and contact list updates resumed.
@@ -446,34 +447,35 @@ extern void* objc_getClass(const char *name);
         AIHandle	*handle;
         NSArray		*modifiedStatusKeys;
 
-        //Sign on update monitoring
-        if(processingSignOnUpdates) numberOfSignOnUpdates++;
-        if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
-        
-        //Get the handle
-        handle = [handleDict objectForKey:compactedName];
-        if(!handle){ //If the handle doesn't exist
-            //Create and add the handle
-            handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
-                                                UID:compactedName
-                                        serverGroup:@"iChat"
-                                            temporary:![[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
-                                        forAccount:self];
-            [handleDict setObject:handle forKey:compactedName];
-
-            //Let the contact controller know about the new handle
-            // (This is not necessary when signing on, since we let the controller know about all the new handles at once after signon is complete)
-            if(!processingSignOnUpdates){
-                [[owner contactController] handle:handle addedToAccount:self];
+        if([compactedName compare:screenName] != 0){ //Ignore our own name
+            //Sign on update monitoring
+            if(processingSignOnUpdates) numberOfSignOnUpdates++;
+            if(waitingForFirstUpdate) [self firstSignOnUpdateReceived];
+            
+            //Get the handle
+            handle = [handleDict objectForKey:compactedName];
+            if(!handle){ //If the handle doesn't exist
+                //Create and add the handle
+                handle = [AIHandle handleWithServiceID:[[service handleServiceType] identifier]
+                                                    UID:compactedName
+                                            serverGroup:@"iChat"
+                                                temporary:![[buddyPropertiesDict objectForKey:@"FZPersonIsBuddy"] boolValue]
+                                            forAccount:self];
+                [handleDict setObject:handle forKey:compactedName];
+    
+                //Let the contact controller know about the new handle
+                // (This is not necessary when signing on, since we let the controller know about all the new handles at once after signon is complete)
+                if(!processingSignOnUpdates){
+                    [[owner contactController] handle:handle addedToAccount:self];
+                }
             }
-        }
-
-        //Apply the properties, and inform the contact controller of any changes
-        modifiedStatusKeys = [self applyProperties:buddyPropertiesDict toHandle:handle];
-        if([modifiedStatusKeys count]){
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys];
-        }
-        
+    
+            //Apply the properties, and inform the contact controller of any changes
+            modifiedStatusKeys = [self applyProperties:buddyPropertiesDict toHandle:handle];
+            if([modifiedStatusKeys count]){
+                [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:modifiedStatusKeys];
+            }
+        }            
     }
 }
 
