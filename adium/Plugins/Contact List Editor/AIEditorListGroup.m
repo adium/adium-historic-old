@@ -32,9 +32,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)removeObject:(AIEditorListObject *)inObject
 {
-    [contents removeObject:inObject];
     [inObject setContainingGroup:nil];
-
+    [contents removeObject:inObject];
+    
     [self sort]; //resort
 }
 

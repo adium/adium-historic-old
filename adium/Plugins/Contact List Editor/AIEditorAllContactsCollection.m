@@ -124,6 +124,11 @@
     return(editorGroup);
 }
 
+- (NSString *)serviceID
+{
+    return(@"");
+}
+
 - (void)_processListGroup:(AIListGroup *)listGroup intoEditorGroup:(AIEditorListGroup *)editorGroup
 {
     NSEnumerator	*enumerator;

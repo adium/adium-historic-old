@@ -26,6 +26,11 @@
     return(NO);
 }
 
+- (NSString *)serviceID
+{
+    return(@"");
+}
+
 //
 + (AIEditorBlockedCollection *)blockedCollectionWithOwner:(id)inOwner;
 {

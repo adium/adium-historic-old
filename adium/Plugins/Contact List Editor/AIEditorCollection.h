@@ -22,6 +22,7 @@
 - (NSString *)collectionDescription;	//Window title when collection is selected
 - (BOOL)includeInOwnershipColumn;	//Does this collection get a check box in the ownership column?
 
+- (NSString *)serviceID;		//The service ID of handles in this collection
 - (AIEditorListGroup *)list;		//Return an editor list group containing all objects
 
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID;	//Do you have this handle?

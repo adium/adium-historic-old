@@ -39,9 +39,12 @@
     NSImage			*folderImage;			//The image of a small folder
     NSMutableDictionary		*toolbarItems; 			//A dictionary of toolbar items for the login window
     NSMutableArray		*dragItems;
+    id <AIEditorCollection>	dragSourceCollection;
     
     NSMutableArray		*collectionsArray;
     id <AIEditorCollection>	selectedCollection;
+
+    
 }
 
 + (id)contactListEditorWindowControllerWithOwner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;

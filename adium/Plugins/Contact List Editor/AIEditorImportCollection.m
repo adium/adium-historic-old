@@ -82,6 +82,11 @@
     return(NO);
 }
 
+- (NSString *)serviceID
+{
+    return(@"AIM");
+}
+
 - (BOOL)containsHandleWithUID:(NSString *)UID serviceID:(NSString *)serviceID
 {
     return(NO);
