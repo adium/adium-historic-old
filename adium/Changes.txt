@@ -4,7 +4,7 @@
 Version 0.51 ()
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
 - Fixed preference window advanced pane resizing issues
-
+- Fixed crash when opening preference window
 
 
 
