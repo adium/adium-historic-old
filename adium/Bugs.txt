@@ -6,6 +6,7 @@
 - Crash when accepting an invitation to join a multiuser chat
 - Status messages have '{}' appended to them in Jaguar.
 - [MSN] Crash moving contacts between groups
+- [ICQ] Displaying raw HTML (Messages sent from iChat)
 
 //------------------------------------------------------------------------------------
 // Bugs - Adium
@@ -41,10 +42,7 @@
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
 //------------------------------------------------------------------------------------
-- [ICQ] Displaying raw HTML (Messages sent from iChat)
-	Libgaim is escaping all incoming HTML characters over ICQ. (Bug report filed 
-	on the Gaim tracker)
-	
+
 - [ICQ] Encoding problems
 	Encoding, specifically in Hebrew, is not being received properly.  Sending
 	appears to work fine.
