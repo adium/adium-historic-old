@@ -27,7 +27,7 @@
 #import "AIContactHandle.h"
 
 @interface AIContactGroup (PRIVATE)
-- (id)initWithName:(NSString *)inName;
+- (id)initWithUID:(NSString *)inUID;
 - (void)flushSortedArray;
 - (NSMutableArray *)sortedContactArray;
 @end
@@ -35,24 +35,24 @@
 @implementation AIContactGroup
 
 //Create a new contact group
-+ (id)contactGroupWithName:(NSString *)inName
++ (id)contactGroupWithUID:(NSString *)inUID
 {
-    return([[[self alloc] initWithName:inName] autorelease]);
+    return([[[self alloc] initWithUID:inUID] autorelease]);
 }
 
 //Set the group name
-- (void)setName:(NSString *)inName
+/*- (void)setName:(NSString *)inName
 {
     NSParameterAssert(inName != nil); NSParameterAssert([inName length] != nil);
 
     [name release]; name = nil;
     name = [inName retain];
-}
+}*/
 
 //Returns the group name
 - (NSString *)displayName
 {
-    return(name);
+    return(UID);
 }
 
 //Returns the number of objects
@@ -119,7 +119,7 @@
     AIMutableOwnerArray		*visibleArray;
     NSEnumerator		*enumerator;
     AIContactObject		*object;
-          
+    
     //Sort any groups within this group
     if(subGroups){
         enumerator = [contactArray objectEnumerator];
@@ -192,17 +192,12 @@
 
 // Private ---------------------------------------------------------------------------------
 //init
-- (id)initWithName:(NSString *)inName
+- (id)initWithUID:(NSString *)inUID
 {
-    [super init];
-
-    NSParameterAssert(inName != nil); NSParameterAssert([inName length] != 0);
+    [super initWithUID:inUID];
 
     //Create object array
     contactArray = [[NSMutableArray alloc] init];
-    
-    //Retain the name
-    name = [inName retain];
 
     return(self);
 }
@@ -211,7 +206,6 @@
 {
     [contactArray release];
     [sortedContactArray release];
-    [name release];
 
     [super dealloc];
 }

@@ -24,18 +24,15 @@
     NSMutableDictionary		*statusDictionary;
 
     NSString			*serviceID;
-    NSString			*UID;
     
     NSMutableArray		*contentObjectArray;
 }
 
 + (id)handleWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
-- (NSComparisonResult)compare:(AIContactObject *)object;
+//- (NSComparisonResult)compare:(AIContactObject *)object;
 - (NSString *)displayName;
 - (NSString *)serviceID;
-- (NSString *)UID;
-- (void)setUID:(NSString *)inUID;
 - (NSArray *)contentObjectArray;
 - (void)addContentObject:(id <AIContentObject>)inObject;
 

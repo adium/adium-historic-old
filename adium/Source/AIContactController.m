@@ -98,33 +98,25 @@
 
 // Accounts --------------------------------------------------------------------------------
 //Add an account to an existing object
-- (void)addAccount:(AIAccount<AIAccount_Handles> *)inAccount toObject:(AIContactObject *)inObject
+- (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject
 {
-
-    if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){ //Account supports groups
+    if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){ //Account supports groups
         AIContactGroup *containingGroup = [inObject containingGroup];
 
         //Add the containing group (if it's not yet on the account)
-        if(![containingGroup belongsToAccount:inAccount]){
-            [containingGroup registerOwner:inAccount];
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount addGroup:containingGroup];
-        }
+/*        if(containingGroup != contactList && ![containingGroup belongsToAccount:inAccount]){
+            [self addAccount:inAccount toObject:containingGroup];
+        }*/
 
         //Add the account to the object
         [inObject registerOwner:inAccount];
-        if([inObject isKindOfClass:[AIContactHandle class]]){ //Handle
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount addHandle:(AIContactHandle *)inObject toGroup:containingGroup];
-        
-        }else if([inObject isKindOfClass:[AIContactGroup class]]){ //Group
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount addGroup:(AIContactGroup *)inObject];
-        
-        }
+        [(AIAccount<AIAccount_GroupedContacts> *)inAccount addObject:inObject toGroup:containingGroup];
 
-    }else if([inAccount conformsToProtocol:@protocol(AIAccount_Handles)]){ //..doesn't support groups
+    }else if([inAccount conformsToProtocol:@protocol(AIAccount_Contacts)]){ //..doesn't support groups
         //Add the account to the handle
         if([inObject isKindOfClass:[AIContactHandle class]]){ //Handle
             [inObject registerOwner:inAccount];
-            [inAccount addHandle:(AIContactHandle *)inObject];
+            [(AIAccount<AIAccount_Contacts> *)inAccount addObject:inObject];
         }
     }
 
@@ -133,32 +125,25 @@
 }
 
 //Remove an account from an existing handle/cluster
-- (void)removeAccount:(AIAccount<AIAccount_Handles> *)inAccount fromObject:(AIContactObject *)inObject
+- (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject
 {
-    if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){ //Account supports groups
+    if([inAccount conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){ //Account supports groups
         AIContactGroup *containingGroup = [inObject containingGroup];
 
         //Remove the object from the account
         [inObject unregisterOwner:inAccount];
-        if([inObject isKindOfClass:[AIContactHandle class]]){ //Handle
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount removeHandle:(AIContactHandle *)inObject fromGroup:containingGroup];
-        
-        }else if([inObject isKindOfClass:[AIContactGroup class]]){ //Group
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount removeGroup:(AIContactGroup *)inObject];
-
-        }
+        [(AIAccount<AIAccount_GroupedContacts> *)inAccount removeObject:inObject fromGroup:containingGroup];
 
         //If the containing group no longer contains anything on this account, remove it as well
-        if([containingGroup contentsBelongToAccount:inAccount] == 0){
-            [containingGroup unregisterOwner:inAccount];
-            [(AIAccount<AIAccount_GroupedHandles> *)inAccount removeGroup:containingGroup];
-        }
-        
-    }else if([inAccount conformsToProtocol:@protocol(AIAccount_Handles)]){ //..doesn't support groups
-        //Remove the handle from the handle
+/*        if(containingGroup != contactList && [containingGroup contentsBelongToAccount:inAccount] == 0){
+            [self removeAccount:inAccount fromObject:containingGroup];
+        }*/
+
+    }else if([inAccount conformsToProtocol:@protocol(AIAccount_Contacts)]){ //..doesn't support groups
+        //Remove the handle
         if([inObject isKindOfClass:[AIContactHandle class]]){ //Handle
             [inObject unregisterOwner:inAccount];
-            [inAccount removeHandle:(AIContactHandle *)inObject];
+            [(AIAccount<AIAccount_Contacts> *)inAccount removeObject:inObject];
         }
     }
 
@@ -175,7 +160,7 @@
     if(!inGroup) inGroup = [self contactList]; //If no group is specified, we create at the root level
     
     //create the new group
-    newGroup = [AIContactGroup contactGroupWithName:inName];
+    newGroup = [AIContactGroup contactGroupWithUID:inName];
     [inGroup addObject:newGroup];
     
     //Re-order and update the list
@@ -185,191 +170,105 @@
     return(newGroup);
 }
 
-//Delete a group
-- (void)deleteGroup:(AIContactGroup *)inGroup
+//Delete an object
+- (void)deleteObject:(AIContactObject *)object
 {
-    NSArray		*accountArray;
-    AIContactGroup	*containingGroup = [inGroup containingGroup];
-    int			loop;
-
-    //Delete everything in the group
-    while([inGroup count] != 0){
-        [self deleteHandle:[inGroup objectAtIndex:0]];
-    }
-
-    //notify all accounts that the group will be deleted
-    accountArray = [[owner accountController] accountArray];
-    for(loop = 0;loop < [accountArray count];loop++){
-        AIAccount<AIAccount_GroupedHandles>	*account = [accountArray objectAtIndex:loop];
-               
-        NSParameterAssert([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]);
-
-        if([inGroup belongsToAccount:account]){
-            [account removeGroup:inGroup];
+    AIContactGroup	*containingGroup = [object containingGroup];
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
+    
+    //If this is a group, delete everything within it first
+    if([object isMemberOfClass:[AIContactGroup class]]){
+        while([(AIContactGroup *)object count] != 0){
+            [self deleteObject:[(AIContactGroup *)object objectAtIndex:0]];
         }
     }
 
-    //Delete the group
-    [[inGroup containingGroup] removeObject:inGroup];
-    
-    //Re-order and update the list
+    //Remove the object from all owning accounts
+    enumerator = [[object ownerArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([account conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){
+            [(AIAccount<AIAccount_GroupedContacts> *)account removeObject:object fromGroup:[object containingGroup]];
+        }else if([account conformsToProtocol:@protocol(AIAccount_Contacts)]){
+            [(AIAccount<AIAccount_Contacts> *)account removeObject:object];
+        }
+    }
+
+    //Delete the object locally, and update the contact list
+    [containingGroup removeObject:object];
     [self updateListForObject:containingGroup saveChanges:YES];
 }
 
-//rename a group
-- (void)renameGroup:(AIContactGroup *)inGroup to:(NSString *)newName
+//rename an object
+- (void)renameObject:(AIContactObject *)object to:(NSString *)newName
 {
-    NSArray		*accountArray;
-    int			loop;
+    AIContactGroup	*containingGroup = [object containingGroup];
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
 
-    //Notify all accounts that the group will be renamed
-    accountArray = [[owner accountController] accountArray];
-    for(loop = 0;loop < [accountArray count];loop++){
-        AIAccount<AIAccount_GroupedHandles>	*account = [accountArray objectAtIndex:loop];
-        
-        NSParameterAssert([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]);
-
-        if([inGroup belongsToAccount:account]){
-            [account renameGroup:inGroup to:newName];
+    //Filter the UID (force lowercase, and/or remove invalid characters)
+    //We let each owner account's service have a chance at filtering
+    if([object isMemberOfClass:[AIContactHandle class]]){ //we'll eventually need to filter group names too though
+        enumerator = [[object ownerArray] objectEnumerator];
+        while((account = [enumerator nextObject])){
+            newName = [[[account service] handleServiceType] filterUID:newName];
         }
     }
 
-    //Rename the group
-    [inGroup setName:newName];
-    
-    //Re-order and update the list
-    [self updateListForObject:inGroup saveChanges:YES];
+    //Rename the object on all owning accounts
+    enumerator = [[object ownerArray] objectEnumerator];
+    while((account = [enumerator nextObject])){
+        if([account conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){
+            [(AIAccount<AIAccount_GroupedContacts> *)account renameObject:object inGroup:containingGroup to:newName];
+        }else if([account conformsToProtocol:@protocol(AIAccount_Contacts)]){
+            [(AIAccount<AIAccount_Contacts> *)account renameObject:object to:newName];
+        }
+    }
+
+    //Delete the object locally, and update the contact list
+    [object setUID:newName];
+    [self updateListForObject:object saveChanges:YES];
 }
 
-//Move a group
-- (void)moveGroup:(AIContactGroup *)inGroup toGroup:(AIContactGroup *)destGroup index:(int)inIndex
+//Move an object
+- (void)moveObject:(AIContactObject *)object toGroup:(AIContactGroup *)destGroup index:(int)inIndex
 {
-    AIContactGroup	*containingGroup = [inGroup containingGroup];
+    AIContactGroup	*containingGroup = [object containingGroup];
+    NSEnumerator	*enumerator;
+    AIAccount		*account;
 
-    if(!destGroup) destGroup = [self contactList]; //If no group is specified, we move to the root level
+    //If no group is specified, we move to the root level
+    if(!destGroup) destGroup = [self contactList];
+
+    //Make sure the destination index is valid
     if(inIndex <= 0){
         inIndex = 0;
     }else if(inIndex > [destGroup count]){
         inIndex = [destGroup count]-1;
     }
 
-    if((containingGroup == destGroup) && (inIndex > [containingGroup indexOfObject:inGroup])){
-        //If an object is moving to another location within the same group that is below its current location, we need to offset the destination index for it to fall in the correct place, since the index of every object in the group will shift up one when the targeted object is removed.
+    //If an object is moving to another location within the same group that is below its current location, we need to offset the destination index for it to fall in the correct place, since the index of every object in the group will shift up one when the targeted object is removed.
+    if((containingGroup == destGroup) && (inIndex > [containingGroup indexOfObject:object])){
         inIndex -= 1;
     }
 
-    //move the group
-    [inGroup retain];				//Hold onto the group so it doesn't accidentally get released
-    [containingGroup removeObject:inGroup];
-    [destGroup insertObject:inGroup atIndex:inIndex];
-    [inGroup release];
-
-    //Re-order and update the list
-    [self updateListForObject:inGroup saveChanges:YES];
-}
-
-// Handles --------------------------------------------------------------------------------
-//Delete a handle
-- (void)deleteHandle:(AIContactHandle *)inHandle
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-    AIContactGroup	*containingGroup = [inHandle containingGroup];
-
-    //notify account(s) that the handle will be deleted
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){                
-        if([inHandle belongsToAccount:account]){
-            if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
-                [(AIAccount<AIAccount_GroupedHandles> *)account removeHandle:inHandle fromGroup:[inHandle containingGroup]];
-    
-            }else if([account conformsToProtocol:@protocol(AIAccount_Handles)]){
-                [(AIAccount<AIAccount_Handles> *)account removeHandle:inHandle];
-
-            }
-        }
-    }
-
-    //Delete the handle
-    [containingGroup removeObject:inHandle];
-    
-    //Re-order and update the list
-    [self updateListForObject:containingGroup saveChanges:YES];
-}
-
-//Rename a handle
-- (void)renameHandle:(AIContactHandle *)inHandle to:(NSString *)newName
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-
-    //Filter the UID (force lowercase, and/or remove invalid characters)
-    //We let each owner account's service have a chance at filtering
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    //Move the object on all owning accounts
+    enumerator = [[object ownerArray] objectEnumerator];
     while((account = [enumerator nextObject])){
-        if([inHandle belongsToAccount:account]){
-            newName = [[[account service] handleServiceType] filterUID:newName];
+        if([account conformsToProtocol:@protocol(AIAccount_GroupedContacts)]){
+            [(AIAccount<AIAccount_GroupedContacts> *)account moveObject:object fromGroup:containingGroup toGroup:destGroup];
         }
     }
 
-    //notify the account(s) that the handle will been renamed
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
-    while((account = [enumerator nextObject])){        
-        if([inHandle belongsToAccount:account]){
-            if([account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
-                [(AIAccount<AIAccount_GroupedHandles> *)account renameHandle:inHandle inGroup:[inHandle containingGroup] to:newName];
-    
-            }else if([account conformsToProtocol:@protocol(AIAccount_Handles)]){
-                [(AIAccount<AIAccount_Handles> *)account renameHandle:inHandle to:newName];
+    //Move the object
+    [object retain];			//Hold onto the object so it doesn't accidentally get released
+    [containingGroup removeObject:object];
+    [destGroup insertObject:object atIndex:inIndex];
+    [object release];
 
-            }
-        }
-    }
-
-    //rename the handle
-    [inHandle setUID:newName];
-    
     //Re-order and update the list
-    [self updateListForObject:inHandle saveChanges:YES];
-}
-
-//Move a handle
-- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup index:(int)inIndex
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-    AIContactGroup	*containingGroup = [inHandle containingGroup];
-
-    if(!inGroup) inGroup = [self contactList]; //If no group is specified, we move to the root level
-    if(inIndex <= 0){
-        inIndex = 0;
-    }else if(inIndex > [inGroup count]){
-        inIndex = [inGroup count]-1;
-    }
-
-    if((containingGroup == inGroup) && (inIndex > [containingGroup indexOfObject:inHandle])){
-        //If an object is moving to another location within the same group that is below its current location, we need to offset the destination index for it to fall in the correct place, since the index of every object in the group will shift up one when the targeted object is removed.
-        inIndex -= 1;
-    }
-
-    //notify the account(s) that the handle will been moved
-    if(containingGroup != inGroup){ //We don't notify the accounts when an object moves to a new location within the same group. Position information is never passed to accounts.
-        enumerator = [[[owner accountController] accountArray] objectEnumerator];
-        while((account = [enumerator nextObject])){
-            if([inHandle belongsToAccount:account] && [account conformsToProtocol:@protocol(AIAccount_GroupedHandles)]){
-                [(AIAccount<AIAccount_GroupedHandles> *)account moveHandle:inHandle fromGroup:containingGroup toGroup:inGroup];
-            }
-        }
-    }
-        
-    //move the handle
-    [inHandle retain];				//Hold onto the handle so it doesn't accidentally get released
-    [containingGroup removeObject:inHandle];
-    [inGroup insertObject:inHandle atIndex:inIndex];
-    [inHandle release];
-    
-    //Re-order and update the list
-    [self updateListForObject:inHandle saveChanges:YES];    
+    [self updateListForObject:containingGroup saveChanges:YES]; //Update the old group
+    [self updateListForObject:object saveChanges:YES]; //Update the new group
 }
     
  
@@ -605,7 +504,7 @@
 
         if([object isKindOfClass:[AIContactGroup class]]){
         
-            if([[(AIContactGroup *)object displayName] compare:inName] == 0){
+            if([[object UID] compare:inName] == 0){
                 return((AIContactGroup *)object);
             }else{
                 if((subGroupObject = [self groupInGroup:(AIContactGroup *)object withName:inName])){
@@ -651,7 +550,7 @@
     //Load & build the list
     saveDict = [[[owner preferenceController] preferencesForGroup:GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST];    
     if(!saveDict){
-        contactListGroup = [AIContactGroup contactGroupWithName:CONTACT_LIST_GROUP_NAME];
+        contactListGroup = [AIContactGroup contactGroupWithUID:CONTACT_LIST_GROUP_NAME];
     }else{
         contactListGroup = [self createGroupFromDict:saveDict];
     }
@@ -673,7 +572,7 @@
 
     //Create and config the group
     groupName = [groupDict objectForKey:@"Name"];
-    group = [AIContactGroup contactGroupWithName:groupName];
+    group = [AIContactGroup contactGroupWithUID:groupName];
 
     //Create it's contents
     contentsArray = [groupDict objectForKey:@"Contents"];
@@ -707,7 +606,7 @@
 
     //Add the group keys
     [saveDict setObject:@"Group" forKey:@"Type"];
-    [saveDict setObject:[inGroup displayName] forKey:@"Name"];
+    [saveDict setObject:[inGroup UID] forKey:@"Name"];
 
     //Add all contained objects
     enumerator = [inGroup objectEnumerator];
@@ -717,7 +616,7 @@
                 NSMutableDictionary	*objectDict = [[NSMutableDictionary alloc] init];
     
                 [objectDict setObject:@"Contact" forKey:@"Type"];
-                [objectDict setObject:[(AIContactHandle *)object UID] forKey:@"UID"];
+                [objectDict setObject:[object UID] forKey:@"UID"];
                 [objectDict setObject:[(AIContactHandle *)object serviceID] forKey:@"Service"];
     
                 [objectArray addObject:[objectDict autorelease]];

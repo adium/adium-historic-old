@@ -89,25 +89,20 @@ extern void* objc_getClass(const char *name);
     return(YES);
 }
 
-// AIAccount_Handles --------------------------------------------------------------------------------
-// Add a handle to the specified groups
-- (BOOL)addHandle:(AIContactHandle *)handle toGroup:(AIContactGroup *)group
+// AIAccount_Contacts --------------------------------------------------------------------------------
+// Add an object to the specified groups
+- (BOOL)addObject:(AIContactObject *)object
 {
     return(YES);
 }
 
 // Remove a handle from the specified groups
-- (BOOL)removeHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)group
+- (BOOL)removeObject:(AIContactObject *)object
 {
     return(YES);
 }
 
-- (BOOL)renameHandle:(AIContactHandle *)handle inGroup:(AIContactGroup *)group to:(NSString *)inName
-{
-    return(YES);
-}
-
-- (BOOL)moveHandle:(AIContactHandle *)handle fromGroup:(AIContactGroup *)sourceGroup toGroup:(AIContactGroup *)destGroup
+- (BOOL)renameObject:(AIContactObject *)object to:(NSString *)inName
 {
     return(YES);
 }
@@ -287,7 +282,7 @@ extern void* objc_getClass(const char *name);
         compactedName = [dict objectForKey:@"FZPersonID"];
 
         //(we should check the 'ISBuddy' key, and if it's NO, use the 'handleWithService' method.)
-        if([[dict objectForKey:@"ISBuddy"] boolValue]){ //Create them as a buddy
+        if([[dict objectForKey:@"FZPersonIsBuddy"] boolValue]){ //Create them as a buddy
             handle = [[owner contactController] createHandleWithService:[service handleServiceType] UID:compactedName inGroup:nil forAccount:self];
         }else{ //Create them as a stranger
             handle = [[owner contactController] handleWithService:[service handleServiceType] UID:compactedName forAccount:self];
@@ -381,37 +376,37 @@ extern void* objc_getClass(const char *name);
     }
 }
 
-- (oneway void)service:(id)service requestOutgoingFileXfer:(id)file{
+- (oneway void)service:(id)inService requestOutgoingFileXfer:(id)file{
 //    NSLog(@"Woot: requestOutgoingFileXfer (%@)",file);
 }
-- (oneway void)service:(id)service requestIncomingFileXfer:(id)file{
+- (oneway void)service:(id)inService requestIncomingFileXfer:(id)file{
 //    NSLog(@"Woot: requestIncomingFileXfer (%@)",file);
 }
-- (oneway void)service:(id)service chat:(id)chat member:(id)member statusChanged:(int)inStatus{
+- (oneway void)service:(id)inService chat:(id)chat member:(id)member statusChanged:(int)inStatus{
 //    NSLog(@"Woot: chat:member:statusChanged (%@, %@, %i)",chat,member,inStatus);
 }
-- (oneway void)service:(id)service chat:(id)chat showError:(id)error{
+- (oneway void)service:(id)inService chat:(id)chat showError:(id)error{
     [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"iChat Error (%@)", screenName] withDescription:error];
 }
-- (oneway void)service:(id)service chat:(id)chat statusChanged:(int)inStatus{
+- (oneway void)service:(id)inService chat:(id)chat statusChanged:(int)inStatus{
 //    NSLog(@"Woot: chat:statusChanged (%@, %i)",chat,inStatus);
 }
-- (oneway void)service:(id)service directIMRequestFrom:(id)from invitation:(id)invitation{
+- (oneway void)service:(id)inService directIMRequestFrom:(id)from invitation:(id)invitation{
 //    NSLog(@"Woot: directIMRequestFrom (%@, %@)",from,invitation);
 }
-- (oneway void)service:(id)service invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
+- (oneway void)service:(id)inService invitedToChat:(id)chat isChatRoom:(char)isRoom invitation:(id)invitation{
     if(!isRoom){
         //Forward new messages to the message recieve code
-        [self service:service chat:chat messageReceived:invitation];
+        [self service:inService chat:chat messageReceived:invitation];
 
     }else{
 //        NSLog(@"Woot: invitedToChat (%@, %i, %@)",chat,isRoom,invitation);
     }    
 }
-- (oneway void)service:(id)service youAreDesignatedNotifier:(char)notifier{
+- (oneway void)service:(id)inService youAreDesignatedNotifier:(char)notifier{
     NSLog(@"(iChat)Adium is designated notifier (%i)",(int)notifier);
 }
-- (oneway void)service:(id)service buddyPictureChanged:(id)buddy imageData:(id)image{
+- (oneway void)service:(id)inService buddyPictureChanged:(id)buddy imageData:(id)image{
 //    NSLog(@"Woot: buddyPictureChanged (%@)",buddy);
 }
 - (oneway void)openNotesChanged:(id)unknown{

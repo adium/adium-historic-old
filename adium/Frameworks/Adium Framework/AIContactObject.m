@@ -20,17 +20,13 @@
 
 //Any object that can be communicated with
 
-@interface AIContactObject (PRIVATE)
-- (id)init;
-@end
-
 @implementation AIContactObject
 
 // Display -------------------------------------------------
 //Returns the object's display name
 - (NSString *)displayName
 {
-    return(nil); //Arbitrary, as we should never use a non-subclasses version of this method
+    return(nil); //Arbitrary, as we should never use a non-subclassed version of this method
 }
 
 //Returns the requested display array for this object
@@ -45,6 +41,18 @@
     }
 
     return(array);
+}
+
+// UID -------------------------------------------------------
+- (NSString *)UID
+{
+    return(UID);
+}
+
+- (void)setUID:(NSString *)inUID
+{
+    [UID release]; UID = nil;
+    UID = [inUID retain];
 }
 
 
@@ -81,6 +89,11 @@
 - (void)unregisterOwner:(AIAccount *)inOwner
 {
     [ownerArray removeObject:inOwner];
+}
+
+- (NSArray *)ownerArray
+{
+    return(ownerArray);
 }
 
 //Returns YES if one of this handle's owners is the specified account.
@@ -129,13 +142,14 @@
 
 // Private -------------------------------------------------
 //Init
-- (id)init
+- (id)initWithUID:(NSString *)inUID
 {
     [super init];
     
     displayDictionary = [[NSMutableDictionary alloc] init];
     ownerArray = [[NSMutableArray alloc] init];
     containingGroup = nil;
+    UID = [inUID retain];
     
     return(self);
 }

@@ -19,14 +19,12 @@
 @class AIAccount;
 
 @interface AIContactGroup : AIContactObject {
-    NSString		*name;			//The name of this group
     NSMutableArray    	*contactArray;		//Manual ordered array of contents
     NSMutableArray    	*sortedContactArray;	//Dynamically sorted array of contents
     int			sortedCount;		//The number of visible buddies in the sorted array
 }
 
-+ (id)contactGroupWithName:(NSString *)inName;
-- (void)setName:(NSString *)inName;
++ (id)contactGroupWithUID:(NSString *)inUID;
 - (NSString *)displayName;
 - (unsigned)count;
 - (id)objectAtIndex:(unsigned)index;

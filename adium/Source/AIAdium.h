@@ -16,7 +16,7 @@
 #import <Cocoa/Cocoa.h>
 
 @class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferenceView, AIMenuController, AILoginWindowController, AIAccountWindowController, AIContactHandle, AIAccount, AIContactGroup, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactObject, AIContactInfoViewController, AIPreferenceViewController, AISoundController;
-@protocol AIContentObject, AIAccount_Handles;
+@protocol AIContentObject;
 
 @interface AIAdium : NSObject {
 
@@ -218,18 +218,15 @@ typedef enum {
 
 - (NSNotificationCenter *)contactNotificationCenter;
 
-- (void)addAccount:(AIAccount<AIAccount_Handles> *)inAccount toObject:(AIContactObject *)inObject;
-- (void)removeAccount:(AIAccount<AIAccount_Handles> *)inAccount fromObject:(AIContactObject *)inObject;
+- (void)addAccount:(AIAccount *)inAccount toObject:(AIContactObject *)inObject;
+- (void)removeAccount:(AIAccount *)inAccount fromObject:(AIContactObject *)inObject;
 
 - (AIContactHandle *)createHandleWithService:(AIServiceType *)inService UID:(NSString *)inUID inGroup:(AIContactGroup *)inGroup forAccount:(AIAccount *)inAccount;
-- (void)deleteHandle:(AIContactHandle *)inHandle;
-- (void)renameHandle:(AIContactHandle *)inHandle to:(NSString *)newName;
-- (void)moveHandle:(AIContactHandle *)inHandle toGroup:(AIContactGroup *)inGroup index:(int)inIndex;
-
 - (AIContactGroup *)createGroupNamed:(NSString *)inName inGroup:(AIContactGroup *)inGroup;
-- (void)deleteGroup:(AIContactGroup *)inGroup;
-- (void)renameGroup:(AIContactGroup *)inGroup to:(NSString *)newName;
-- (void)moveGroup:(AIContactGroup *)inGroup toGroup:(AIContactGroup *)destGroup index:(int)inIndex;
+
+- (void)deleteObject:(AIContactObject *)object;
+- (void)renameObject:(AIContactObject *)object to:(NSString *)newName;
+- (void)moveObject:(AIContactObject *)object toGroup:(AIContactGroup *)destGroup index:(int)inIndex;
 
 - (AIContactGroup *)contactList;
 - (AIContactGroup *)groupWithName:(NSString *)inName;
