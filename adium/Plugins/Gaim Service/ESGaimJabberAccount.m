@@ -20,6 +20,11 @@
 //    gaim_account_set_string(account,"connect_server","jabber.carter.to");
 }
 
+
+- (NSString *)unknownGroupName {
+    return (AILocalizedString(@"Roster","Roster - the Jabber default group"));
+}
+
 - (id <AIAccountViewController>)accountView
 {
     return([ESGaimJabberAccountViewController accountViewForAccount:self]);
