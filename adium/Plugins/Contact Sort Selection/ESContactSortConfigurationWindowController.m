@@ -18,6 +18,12 @@
 	
     if(!sharedSortConfigInstance){
         sharedSortConfigInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
+		
+		//Remove those buttons we don't want.  removeFromSuperview will confuse the window, so just make them invisible.
+		NSButton *standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowMiniaturizeButton];
+		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
+		standardWindowButton = [[sharedSortConfigInstance window] standardWindowButton:NSWindowZoomButton];
+		[standardWindowButton setFrame:NSMakeRect(0,0,0,0)];
     }
 	
 	[sharedSortConfigInstance configureForController:controller];
@@ -35,8 +41,13 @@
 	//Configure the view
 	NSView  *configureView = [controller configureView];
 
-	[[self window] setContentSize:[configureView frame].size];
+	NSSize newSize = [configureView frame].size;
+	
+	//This will resize the view to the current window size...
 	[[self window] setContentView:configureView];
+	
+	//...so restore the window to the size this view really wants to be
+	[[self window] setContentSize:newSize];
 }
 
 @end
