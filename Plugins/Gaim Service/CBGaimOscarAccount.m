@@ -17,6 +17,7 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIPreferenceController.h"
+#import "AIStatusController.h"
 #import "CBGaimOscarAccount.h"
 #import "SLGaimCocoaAdapter.h"
 #import <AIUtilities/AIHTMLDecoder.h>
