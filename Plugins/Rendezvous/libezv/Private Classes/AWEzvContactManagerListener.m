@@ -160,6 +160,8 @@
     [stream setDelegate:contact];
     [contact setStream:stream];
     [stream readAndParse];
+	[stream release];
+
     return;
 
 }
