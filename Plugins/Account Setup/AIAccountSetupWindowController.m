@@ -13,18 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIAccountListWindowController.h"
-#import "AIServiceView.h"
+#import "AIAccountSetupWindowController.h"
+#import "AIAccountSetupServiceView.h"
 
-#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
-#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
-#define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
-#define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting...",nil)						//Menu item title
-#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting...",nil)					//Menu item title
+//#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    										//ID for an account drag
+//#define	ACCOUNT_CONNECT_BUTTON_TITLE		AILocalizedString(@"Connect","Connect an account")	    	//Menu item title for the connect item
+//#define	ACCOUNT_DISCONNECT_BUTTON_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")    //Menu item title
+//#define	ACCOUNT_CONNECTING_BUTTON_TITLE		AILocaliedString(@"Connecting...",nil)						//Menu item title
+//#define	ACCOUNT_DISCONNECTING_BUTTON_TITLE	AILocalizedString(@"Disconnecting...",nil)					//Menu item title
 
-#define ACCOUNT_LIST_WINDOW_NIB				@"AccountListWindow"
+#define ACCOUNT_SETUP_WINDOW_NIB			@"AccountSetupWindow"
 
-@interface AIAccountListWindowController (PRIVATE)
+@interface AIAccountSetupWindowController (PRIVATE)
 //- (void)configureViewForAccount:(AIAccount *)inAccount;
 //- (void)configureViewForService:(AIService *)inService;
 //- (void)_addCustomViewAndTabsForController:(AIAccountViewController *)inControler;
@@ -37,15 +37,15 @@
 //- (void)passwordReturnedForRegister:(NSString *)inPassword context:(id)inContext;
 @end
 
-@implementation AIAccountListWindowController
+@implementation AIAccountSetupWindowController
 
-AIAccountListWindowController *sharedAccountWindowInstance = nil;
-+ (AIAccountListWindowController *)accountListWindowController
+AIAccountSetupWindowController *sharedAccountSetupWindowInstance = nil;
++ (AIAccountSetupWindowController *)accountSetupWindowController
 {
-    if(!sharedAccountWindowInstance){
-        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:ACCOUNT_LIST_WINDOW_NIB];
+    if(!sharedAccountSetupWindowInstance){
+        sharedAccountSetupWindowInstance = [[self alloc] initWithWindowNibName:ACCOUNT_SETUP_WINDOW_NIB];
     }
-    return(sharedAccountWindowInstance);
+    return(sharedAccountSetupWindowInstance);
 }
 
 //Init
@@ -83,7 +83,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	//Build views for active services
 	enumerator = [activeServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		NSView	*serviceView = [[AIServiceView alloc] initWithService:service];
+		NSView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
 		[serviceView setFrame:NSMakeRect(0, 0, 240, 110/*32*/)];
 		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
 		[serviceView setServiceIconSize:NSMakeSize(48,48)];
@@ -98,7 +98,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 	//Build views for inactive services
 	enumerator = [inactiveServices objectEnumerator];
 	while(service = [enumerator nextObject]){
-		NSView	*serviceView = [[AIServiceView alloc] initWithService:service];
+		NSView	*serviceView = [[AIAccountSetupServiceView alloc] initWithService:service];
 		[serviceView setFrame:NSMakeRect(0, 0, 164, 34)];
 		[serviceView addAccounts:[[adium accountController] accountsWithService:service]];
 //		[serviceView setServiceIconSize:NSMakeSize(32,32)];
@@ -166,7 +166,7 @@ AIAccountListWindowController *sharedAccountWindowInstance = nil;
 //	//Cleanup and close our shared instance
 //	[configuredForAccount release]; configuredForAccount = nil;
 //    [accountViewController release]; accountViewController = nil;
-	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
+	[sharedAccountSetupWindowInstance autorelease]; sharedAccountSetupWindowInstance = nil;
 	
 	return(YES);
 }

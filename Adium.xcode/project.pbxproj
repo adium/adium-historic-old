@@ -6071,6 +6071,10 @@
 				4BC5A5DB0764F75B0080ECF7,
 				4BC5A5DD0764F75B0080ECF7,
 				34E8298D0766B18500EFB3BC,
+				4B959574076E072C0090C905,
+				4B959576076E072C0090C905,
+				4B959578076E072C0090C905,
+				4B95957A076E072C0090C905,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6399,6 +6403,7 @@
 				34D183BF075FC6ED0075A380,
 				34D183C0075FC6ED0075A380,
 				4BC5A5DF0764F75B0080ECF7,
+				4B959573076E072C0090C905,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6670,6 +6675,10 @@
 				4BC5A5DC0764F75B0080ECF7,
 				4BC5A5DE0764F75B0080ECF7,
 				34E8298C0766B18500EFB3BC,
+				4B959575076E072C0090C905,
+				4B959577076E072C0090C905,
+				4B959579076E072C0090C905,
+				4B95957B076E072C0090C905,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10943,6 +10952,7 @@
 				F5B53FBF0333ABA701A8010A,
 				F510B76D03339ED501A8010A,
 				34C188A006CAB36400FF5FF9,
+				4B959568076E07180090C905,
 				4B81631203D1C24E00A8010A,
 				4BE8E5390483B59800A8010A,
 				BF7BF5E7052BA0EF00000202,
@@ -13631,6 +13641,157 @@
 		};
 		4B935E6A0733E4ED00C23FC6 = {
 			fileRef = 4B935E680733E4EC00C23FC6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959568076E07180090C905 = {
+			children = (
+				4B95956B076E072B0090C905,
+				4B95956C076E072B0090C905,
+				4B95956F076E072C0090C905,
+				4B959570076E072C0090C905,
+				4B95956A076E072B0090C905,
+				4B95956D076E072C0090C905,
+				4B95956E076E072C0090C905,
+				4B959571076E072C0090C905,
+				4B959572076E072C0090C905,
+			);
+			isa = PBXGroup;
+			name = "Account Setup";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956A076E072B0090C905 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AccountSetupWindow.nib;
+			path = "Plugins/Account Setup/AccountSetupWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956B076E072B0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountSetupPlugin.h;
+			path = "Plugins/Account Setup/AIAccountSetupPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956C076E072B0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountSetupPlugin.m;
+			path = "Plugins/Account Setup/AIAccountSetupPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956D076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountSetupServiceView.h;
+			path = "Plugins/Account Setup/AIAccountSetupServiceView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956E076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountSetupServiceView.m;
+			path = "Plugins/Account Setup/AIAccountSetupServiceView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B95956F076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountSetupWindowController.h;
+			path = "Plugins/Account Setup/AIAccountSetupWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B959570076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountSetupWindowController.m;
+			path = "Plugins/Account Setup/AIAccountSetupWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B959571076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIViewGridView.h;
+			path = "Plugins/Account Setup/AIViewGridView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B959572076E072C0090C905 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIViewGridView.m;
+			path = "Plugins/Account Setup/AIViewGridView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B959573076E072C0090C905 = {
+			fileRef = 4B95956A076E072B0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959574076E072C0090C905 = {
+			fileRef = 4B95956B076E072B0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959575076E072C0090C905 = {
+			fileRef = 4B95956C076E072B0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959576076E072C0090C905 = {
+			fileRef = 4B95956D076E072C0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959577076E072C0090C905 = {
+			fileRef = 4B95956E076E072C0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959578076E072C0090C905 = {
+			fileRef = 4B95956F076E072C0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B959579076E072C0090C905 = {
+			fileRef = 4B959570076E072C0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B95957A076E072C0090C905 = {
+			fileRef = 4B959571076E072C0090C905;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B95957B076E072C0090C905 = {
+			fileRef = 4B959572076E072C0090C905;
 			isa = PBXBuildFile;
 			settings = {
 			};

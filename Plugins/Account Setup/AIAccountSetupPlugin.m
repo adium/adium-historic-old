@@ -13,12 +13,12 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import "AIAccountListPreferencesPlugin.h"
-#import "AIAccountListWindowController.h"
+#import "AIAccountSetupPlugin.h"
+#import "AIAccountSetupWindowController.h"
 
-@implementation AIAccountListPreferencesPlugin
+@implementation AIAccountSetupPlugin
 
-#define ACCOUNT_MENU_TITLE		@"Accounts..."
+#define ACCOUNT_SETUP_MENU_TITLE		@"Accountz..."
 
 //Register our preference pane
 - (void)installPlugin
@@ -26,7 +26,7 @@
 	NSMenuItem	*menuItem;
 	
     //Add/Edit Link... menu item (edit menu)
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_SETUP_MENU_TITLE
 																	 target:self
 																	 action:@selector(showAccountWindow:)
 															  keyEquivalent:@"a"] autorelease];
@@ -36,7 +36,7 @@
 
 - (IBAction)showAccountWindow:(id)sender
 {
-	[[AIAccountListWindowController accountListWindowController] showWindow:nil];
+	[[AIAccountSetupWindowController accountSetupWindowController] showWindow:nil];
 }
 
 @end

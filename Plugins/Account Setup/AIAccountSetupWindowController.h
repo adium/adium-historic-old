@@ -16,7 +16,7 @@
 @class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
 @class AIViewGridView;
 
-@interface AIAccountListWindowController : AIWindowController {
+@interface AIAccountSetupWindowController : AIWindowController {
 	IBOutlet		NSBox						*box_newUserHeader;
 	IBOutlet		NSBox						*box_serviceDivider;
 	IBOutlet		AIViewGridView				*grid_activeServices;
@@ -57,7 +57,7 @@
 //    AIAccount						*tempDragAccount;
 }
 
-+ (AIAccountListWindowController *)accountListWindowController;
++ (AIAccountSetupWindowController *)accountSetupWindowController;
 - (IBAction)toggleInactiveServices:(id)sender;
 
 //- (IBAction)deleteAccount:(id)sender;

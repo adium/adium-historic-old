@@ -2,7 +2,7 @@
     IBClasses = (
         {
             ACTIONS = {toggleInactiveServices = id; }; 
-            CLASS = AIAccountListWindowController; 
+            CLASS = AIAccountSetupWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "box_newUserHeader" = NSBox; 
