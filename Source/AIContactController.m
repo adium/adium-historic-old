@@ -1674,9 +1674,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		account = [[owner accountController] preferredAccountForSendingContentType:inType
 																		 toContact:inContact];
 		if (account) {
-			returnContact = [self contactWithService:[inContact service]
-											 account:account 
-												 UID:[inContact UID]];
+			if ([inContact account] == account){
+				returnContact = inContact;
+			}else{
+				returnContact = [self contactWithService:[inContact service]
+												 account:account 
+													 UID:[inContact UID]];
+			}
 		}
  	}
 	
@@ -1687,7 +1691,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //In many cases this will be the same as inContact.
 - (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact
 {
-	if(account){
+	if(account && ([inContact account] != account)){
 		return([self contactWithService:[inContact service] account:account UID:[inContact UID]]);
 	}else{
 		return(inContact);
