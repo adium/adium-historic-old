@@ -17,9 +17,9 @@
 	accountConnectionStatusGroupingOfflineTimer = nil;
 	
 	//Register the events we generate
-	[[adium contactAlertsController] registerEventID:ACCOUNT_CONNECTED withHandler:self globalOnly:YES];
-	[[adium contactAlertsController] registerEventID:ACCOUNT_DISCONNECTED withHandler:self globalOnly:YES];
-	[[adium contactAlertsController] registerEventID:ACCOUNT_RECEIVED_EMAIL withHandler:self globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:ACCOUNT_CONNECTED withHandler:self inGroup:AIAccountsEventHandlerGroup globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:ACCOUNT_DISCONNECTED withHandler:self inGroup:AIAccountsEventHandlerGroup globalOnly:YES];
+	[[adium contactAlertsController] registerEventID:ACCOUNT_RECEIVED_EMAIL withHandler:self inGroup:AIOtherEventHandlerGroup globalOnly:YES];
 
 	//Observe status changes
     [[adium contactController] registerListObjectObserver:self];
@@ -32,11 +32,11 @@
 	NSString	*description;
 	
 	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
-		description = AILocalizedString(@"Connected",nil);
+		description = AILocalizedString(@"You connect",nil);
 	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
-		description = AILocalizedString(@"Disconnected",nil);
+		description = AILocalizedString(@"You disconnect",nil);
 	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
-		description = AILocalizedString(@"New Mail Received",nil);
+		description = AILocalizedString(@"New email notification",nil);
 	}else{
 		description = @"";	
 	}
@@ -63,7 +63,21 @@
 	return(description);
 }
 
-- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject { return @""; }
+- (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
+{
+	NSString	*description;
+	
+	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+		description = AILocalizedString(@"When you connect",nil);
+	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+		description = AILocalizedString(@"When you disconnect",nil);
+	}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+		description = AILocalizedString(@"When you receive a New eMail notification",nil);
+	}
+	
+	return(description);
+}
+
 
 //
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
