@@ -39,7 +39,7 @@ Bug fixes:
 - Fixed issue when saving account passwords in certain cases
 - Fixed issue with sounds playing too loud the first time they were played
 - Fixed problem when manually ordering contact list groups
-- Fixed bug which prevented the addition to profiles and away messages of links with "%" in them
+- Fixed bug with adding links with "%" in them to away messages and profiles
 - Fixed problem causing 10.2 users to lose color and formatting information in profiles and away messags
 - Fixed issue causing the "First Message Received" sound to be played multiple times
 - (AIM) Autoresponses to properly tell other clients that the message is an autoresponse
@@ -47,7 +47,7 @@ Bug fixes:
 - (AIM) Fixed issues with spacing and capitilization of user names, both sending and receiving
 - (Gadu-Gadu) Fixed issue with the serverside Gadu-Gadu contact list not saving
 - (ICQ, Jabber) Fixed a crash when adding a contact with no groups defined
-- (MSN)  Removed 25-character restriction on display names, adding an option to treat the display name as a status message
+- (MSN) Removed 25-character restriction on display names, adding an option to treat the display name as a status message
 
 Improvements:
 - Improved the Log Viewer, adding a drawer of available contacts' and accounts' logs along with other changes
