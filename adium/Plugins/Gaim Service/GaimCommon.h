@@ -3,7 +3,7 @@
 #define GAIM_DEBUG  FALSE
 
 //Gaim includes
-#include <libgaim/libgaim.h>
+#include <Libgaim/libgaim.h>
 
 #define KEY_ACCOUNT_GAIM_PROXY_TYPE			@"Proxy Type"
 #define KEY_ACCOUNT_GAIM_PROXY_HOST			@"Proxy Host"
@@ -27,7 +27,7 @@ typedef enum
 	GAIM_BUDDY_MISCELLANEOUS	= 0x12, /**< The buddy's service-specific miscalleneous info changed.     */
 	GAIM_BUDDY_SIGNON_TIME		= 0x14, /**< The buddy's signon time changed.     */
 	GAIM_BUDDY_EVIL				= 0x18  /**< The buddy's warning level changed.     */
-	
+
 } GaimBuddyEvent;
 
 //Proxy types
