@@ -120,14 +120,12 @@
 					
 					// Is this a group chat?
 					if( [chat name] ) {
-						NSLog(@"##  Chat %@ has a name: %@",chat,[chat name]);
 						if (!menu_chatMenu){
 							menu_chatMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 						}
 						
 						if( [menu_chatMenu indexOfItemWithTitle:[chat name]] == -1 ) {
 							NSMenuItem *menuItem;
-							NSLog(@"### and it's not in the menu - %@, %@!",chat,contact);
 							menuItem = [[NSMenuItem alloc] initWithTitle:[chat name]
 																  target:self
 																  action:@selector(inviteToChat:)
