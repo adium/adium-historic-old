@@ -49,7 +49,6 @@
                     mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
                 }
                 
-				NSLog(@"%@ -> %@",pattern,[hash objectForKey:pattern]);
                 //if key is a var go find out what the replacement text should be
                 if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
                     replaceWith = [self hashLookup:pattern contentMessage:inObject listObject:inListObject];
