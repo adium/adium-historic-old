@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 557 $ $Date: 2004/01/21 01:12:08 $
+# $Rev: 672 $ $Date: 2004/04/18 00:32:57 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -154,6 +154,7 @@ foreach my $outer_user (glob '*') {
                         } else {
                             $sender = $recdName;
                             $message = "&lt;" . $message . "&gt;";
+                            ($time) = /.*(\d\d\:\d\d\:\d\d).*/;
                         }
 
                         $message =~ s/\\/\\\\/g;

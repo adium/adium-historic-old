@@ -113,18 +113,17 @@ do instead  (
     from adium.users 
     where username = new.sender_sn
     and new.sender_display is not null
-    and new.sender_display <> ''
     and not exists (
         select 'x'
         from   adium.user_display_name udn
         where  user_id = 
                (select user_id from adium.users where username = new.sender_sn)
-         and   display_name = new.sender_display
-         and not exists (
-            select 'x'
-            from adium.user_display_name
-            where effdate > udn.effdate
-            and user_id = udn.user_id));
+            and   display_name = new.sender_display
+            and not exists (
+                select 'x'
+                from adium.user_display_name
+                where effdate > udn.effdate
+                and user_id = udn.user_id));
 
     insert into adium.user_display_name
     (user_id, display_name)
@@ -132,7 +131,6 @@ do instead  (
     from adium.users
     where username = new.recipient_sn
     and new.recipient_display is not null
-    and new.recipient_display <> ''
     and not exists (
         select 'x'
         from   adium.user_display_name udn
