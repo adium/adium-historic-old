@@ -322,7 +322,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         //Keep track of the hovered link/string
         mouseOverLink = YES;
 
-        [[NSCursor handPointCursor] set]; //Set link cursor
+        [NSCursor setHandPointCursor]; //Set link cursor
 
 		//If the link's title matches it's URL, there is no need to show the tooltip.
 		if(showTooltip &&
