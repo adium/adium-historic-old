@@ -23,7 +23,7 @@
 - (void)update:(NSTimer *)timer;
 - (void)disconnect;
 - (NSDictionary *)parseMessage:(NSData *)payload;
-- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket;
+- (BOOL)sendPayloadMessage:(NSString *)message onSocket:(AISocket *)Socket;
 - (void)sendMessageHelper:(NSTimer *)timer;
 - (void)startSBSessionHelper:(NSTimer *)timer;
 - (unsigned long)getTrid:(BOOL)increment;
@@ -57,7 +57,7 @@
             
         if(sbSocket && [sbSocket isValid])//there's already an SB session
         {
-            [self sendMessage:payload onSocket:sbSocket];
+            [self sendPayloadMessage:payload onSocket:sbSocket];
             
             return YES;
         }
@@ -96,7 +96,7 @@
             
         if(sbSocket && [sbSocket isValid])//there's already an SB session
         {
-            [self sendMessage:payload onSocket:sbSocket];
+            [self sendPayloadMessage:payload onSocket:sbSocket];
             
             return YES;
         }
@@ -853,27 +853,27 @@
                                 port:[[hostAndPort objectAtIndex:1] intValue]];
                             NSMutableDictionary *socketDict = nil;
                             
-                            [self sendMessage:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n",
-                                    screenName, [message objectAtIndex:4], [message objectAtIndex:1]]
-                                onSocket:sbSocket];
+                            //[self sendPayloadMessage:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n", screenName, [message objectAtIndex:4], [message objectAtIndex:1]]onSocket:sbSocket];
+                                
                             
                             if (socketDict = [switchBoardDict 
                                     objectForKey:[message objectAtIndex:5]])
                             {	
-                                [self manageSBSocket:socketDict 
-                                    withHandle:[message objectAtIndex:5]];
+                                // Good, already have a socket
                             }
                             else //there's no socket already
                             {
-                                [switchBoardDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:sbSocket, @"Socket", [NSNumber numberWithInt:0], @"Phase",  nil] 
-                        forKey:[message objectAtIndex:5]];
+                                [switchBoardDict setObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:sbSocket, @"Socket", [NSNumber numberWithInt:0], @"Phase",  nil] 	forKey:[message objectAtIndex:5]];
                                 
                                 socketDict = [switchBoardDict 
                                     objectForKey:[message objectAtIndex:5]];
-                                    
-                                [self manageSBSocket:socketDict 
-                                    withHandle:[message objectAtIndex:5]];
                             }
+                            
+                            [socketDict setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
+                            [socketDict setObject:[NSString stringWithFormat:@"ANS 1 %@ %@ %@\r\n",
+                                    screenName, [message objectAtIndex:4], [message objectAtIndex:1]] forKey:@"String"];
+                            
+                            [self manageSBSocket:socketDict withHandle:[message objectAtIndex:5]];
                         }
                         else if([command isEqual:@""])
                         {
@@ -1199,7 +1199,7 @@
 	return (returnDict);
 }
 
-- (BOOL)sendMessage:(NSString *)message onSocket:(AISocket *)Socket
+- (BOOL)sendPayloadMessage:(NSString *)message onSocket:(AISocket *)Socket
 {
     if([message length] > 0)
     {
@@ -1388,7 +1388,7 @@
                         
                     if(![[[timer userInfo] objectForKey:@"Type"] isEqual:@"Empty"])
                     {
-                        [self sendMessage:[[timer userInfo] objectForKey:@"Message"]
+                        [self sendPayloadMessage:[[timer userInfo] objectForKey:@"Message"]
                             onSocket:[[timer userInfo] objectForKey:@"Socket"]];
                     }
                     [timer invalidate];
