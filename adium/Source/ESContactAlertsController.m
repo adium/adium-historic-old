@@ -3,7 +3,7 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on Wed Nov 26 2003.
-//  $Id: ESContactAlertsController.m,v 1.28 2004/07/02 02:50:20 evands Exp $
+//  $Id: ESContactAlertsController.m,v 1.29 2004/07/04 21:09:46 evands Exp $
 
 
 #import "ESContactAlertsController.h"
@@ -428,9 +428,9 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 		}
 	}
 	
-	[preferenceSource setPreference:newContactAlerts
-							 forKey:KEY_CONTACT_ALERTS
-							  group:PREF_GROUP_CONTACT_ALERTS];
+	[[owner preferenceController] setPreference:newContactAlerts
+										 forKey:KEY_CONTACT_ALERTS
+										  group:PREF_GROUP_CONTACT_ALERTS];
 	[newContactAlerts release];
 }
 
