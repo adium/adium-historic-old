@@ -15,7 +15,6 @@
 
 #import "AISendingKeyPreferencesPlugin.h"
 #import "AISendingKeyPreferences.h"
-#import "AISendingKeyPreferencesAdvanced.h"
 
 @interface AISendingKeyPreferencesPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
