@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIDockController.m,v 1.44 2003/12/08 05:43:29 jmelloy Exp $
+
 #import "AIDockController.h"
 
 #define DOCK_DEFAULT_PREFS	@"DockPrefs"
