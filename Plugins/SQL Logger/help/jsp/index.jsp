@@ -10,7 +10,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/index.jsp $-->
-<!--$Rev: 899 $ $Date$ -->
+<!--$Rev: 900 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -25,7 +25,8 @@ Date today = new Date(System.currentTimeMillis());
 int chat_id = 0;
 int meta_id = 0;
 int message_id = 0;
-int time = 15;
+int bTime = 15;
+int aTime = 45;
 
 String formURL = new String("saveForm.jsp?action=saveChat.jsp");
 
@@ -122,9 +123,11 @@ try {
 }
 
 try {
-    time = Integer.parseInt(request.getParameter("time"));
+    bTime = Integer.parseInt(request.getParameter("time"));
+    aTime = Integer.parseInt(request.getParameter("time"));
 } catch (NumberFormatException e) {
-    time = 15;
+    bTime = 10;
+    aTime = 45;
 }
 
 String hlColor[] = {"#ff6","#a0ffff", "#9f9", "#f99", "#f69"};
@@ -163,7 +166,7 @@ try {
     }
 
     if(message_id != 0) {
-        pstmt = conn.prepareStatement("select message_date + '" + time + " minutes'::interval as finish, message_date - '" + time + " minutes'::interval as start from messages where message_id = ?");
+        pstmt = conn.prepareStatement("select message_date + '" + aTime + " minutes'::interval as finish, message_date - '" + bTime + " minutes'::interval as start from messages where message_id = ?");
 
         pstmt.setInt(1, message_id);
 
@@ -178,7 +181,7 @@ try {
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium SQL Logger</title>
+<title>SQL Logger: Message Viewer</title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <link rel="stylesheet" type="text/css" href="styles/layout.css" />
 <link rel="stylesheet" type="text/css" href="styles/default.css" />
@@ -206,9 +209,10 @@ try {
                 <ul id="navlist">
                     <li><span id="current">Viewer</span></li>
                     <li><a href="search.jsp">Search</a></li>
-                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="users.jsp">Users</a></li>
                     <li><a href="meta.jsp">Meta-Contacts</a></li>
+                    <li><a href="chats.jsp">Chats</a></li>
+                    <li><a href="statistics.jsp">Statistics</a></li>
                     <li><a href="query.jsp">Query</a></li>
                 </ul>
             </div>

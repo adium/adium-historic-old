@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/sqllogger/jsp/simpleViewer.jsp $-->
-<!--$Rev: 899 $ $Date$ -->
+<!--$Rev: 900 $ $Date$ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -117,12 +117,12 @@ try {
             }
         }
     } else {
-        title = "SQL Logger";
+        title = "Message Viewer";
     }
 %>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<title>Adium: <%= title %></title>
+<title>SQL Logger: <%= title %></title>
 <meta http-equiv="content-type" content="text/html; charset=iso-8859-1" />
 <style>
 body {

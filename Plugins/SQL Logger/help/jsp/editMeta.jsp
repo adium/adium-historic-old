@@ -67,8 +67,6 @@ try {
 
 %>
             </table>
-            <input type="checkbox" name="delete" id="delete" />
-            <label for="delete">Delete</label><br />
             <input type="hidden" name="meta_id" value="<%= meta_id %>">
             <div align="right">
                 <input type="reset" /><input type="submit" />
