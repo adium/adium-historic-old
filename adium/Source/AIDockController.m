@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.59 2004/06/13 21:06:37 adamiser Exp $
+// $Id: AIDockController.m,v 1.60 2004/06/14 03:23:03 adamiser Exp $
 
 #import "AIDockController.h"
 
@@ -218,7 +218,14 @@
 			NSString	*imagePath;
 			NSImage		*image;
 			
-			imagePath = [folderPath stringByAppendingPathComponent:imageName];
+#define DOCK_ICON_INTERNAL_PATH @"../Shared Images/"
+			if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
+				//Special hack for all the incorrectly made icon packs we have floating around out there :P
+				imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
+				imagePath = [NSString stringWithFormat:@"%@/Adiumy Icons/Shared Images/%@",[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS] stringByExpandingTildeInPath], imageName];
+			}else{
+				imagePath = [folderPath stringByAppendingPathComponent:imageName];
+			}
 			
 			image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
 			if(!image){
@@ -244,13 +251,22 @@
 		}
 		
 	}else{ //Static State
+		NSString	*imageName;
 		NSString	*imagePath;
-		NSImage	*image;
-		BOOL	overlay;
+		NSImage		*image;
+		BOOL		overlay;
+		
+		imageName = [stateDict objectForKey:@"Image"];
+		if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
+			//Special hack for all the incorrectly made icon packs we have floating around out there :P
+			imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
+			imagePath = [NSString stringWithFormat:@"%@/Adiumy Icons/Shared Images/%@",[[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:FOLDER_DOCK_ICONS] stringByExpandingTildeInPath], imageName];
+		}else{
+			imagePath = [folderPath stringByAppendingPathComponent:imageName];
+		}
 		
 		//Get the state information
-		imagePath = [stateDict objectForKey:@"Image"];
-		image = [[[NSImage alloc] initByReferencingFile:[folderPath stringByAppendingPathComponent:imagePath]] autorelease];
+		image = [[[NSImage alloc] initByReferencingFile:imagePath] autorelease];
 		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
 		
 		//Create the state

@@ -375,7 +375,7 @@ static void adiumGaimBlistNewNode(GaimBlistNode *node)
 			
 		[accountLookup(buddy->account) newContact:(contactLookupFromBuddy(buddy))];
 		 */
-		NSLog(@"%s",((GaimBuddy*)node) ->name);
+//		NSLog(@"%s",((GaimBuddy*)node) ->name);
     }
 }
 

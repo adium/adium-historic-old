@@ -148,7 +148,7 @@
 - (IBAction)changedPreference:(id)sender
 {
 	[super changedPreference:sender];
-	NSLog(@"set %@",sender);
+
 	if (sender == textField_hostName){
 		//If we were given a blank hostName, revert to displaying the default
 		NSString	*hostName = [textField_hostName stringValue];
