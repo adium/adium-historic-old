@@ -31,7 +31,7 @@
 //Called in response to all preference controls, applies new settings
 - (void)textDidEndEditing:(NSNotification *)notification;
 {
-    [[owner accountController] setStatusObject:[textView_textProfile textStorage] forKey:@"TextProfile" account:nil];
+    [[owner accountController] setStatusObject:[[textView_textProfile textStorage] dataRepresentation] forKey:@"TextProfile" account:nil];
 }
 
 
@@ -60,7 +60,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSAttributedString	*profile = [[owner accountController] statusObjectForKey:@"TextProfile" account:nil];
+    NSAttributedString	*profile = [NSAttributedString stringWithData:[[owner accountController] statusObjectForKey:@"TextProfile" account:nil]];
 
     if(!profile){
         profile = [[NSAttributedString alloc] initWithString:ADIUM_DEFAULT_PROFILE_STRING];

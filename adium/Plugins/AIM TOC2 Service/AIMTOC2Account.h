@@ -40,10 +40,6 @@
     NSTimer		*messageDelayTimer;	// Timer that drives the delayed handle updating
     
     NSDictionary	*preferencesDict;	// Our preferences dictionary
-    
-    BOOL		idleWasSetManually;
-    BOOL		idle;
-    
 }
 
 - (void)initAccount;
