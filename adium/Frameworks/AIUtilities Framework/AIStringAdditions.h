@@ -21,4 +21,5 @@
 - (int)intValueFromHex;
 - (NSString *)stringByExpandingBundlePath;
 - (NSString *)stringByCollapsingBundlePath;
+- (NSString *)stringByTruncatingTailToWidth:(float)inWidth;
 @end
