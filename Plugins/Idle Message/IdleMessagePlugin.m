@@ -31,57 +31,40 @@
     preferences = [[IdleMessagePreferences preferencePane] retain];
 
     //Observe
-    [[adium notificationCenter] addObserver:self
-				   selector:@selector(preferencesChanged:)
-				       name:Preference_GroupChanged
-				     object:nil];
-	
-	[self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 }
 
 //Account preferences changed
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	
-	//FIX ME!
-    //NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    
-    //if([group compare:GROUP_ACCOUNT_STATUS] == 0){
-        //NSString	*modifiedKey = [[notification userInfo] objectForKey:@"Key"];
-	
-        //if([modifiedKey compare:@"IdleSince"] == 0 ){ //We ignore account specific idle (why?)
-
-	if( notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:GROUP_ACCOUNT_STATUS] ) {
-            if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] ) {
-
-                //Remove existing content sent/received observer, and install new (if away)
-                [[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
-                [[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
-                [[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
-				[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
-
-                //Only install new observers if we're idle
-				if( [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil ) {
-
-					[[adium notificationCenter] addObserver:self 
-						   selector:@selector(didReceiveContent:) 
-						       name:Content_DidReceiveContent object:nil];
-                    [[adium notificationCenter] addObserver:self
-						   selector:@selector(didReceiveContent:)
-						       name:Content_FirstContentRecieved object:nil];
-                    [[adium notificationCenter] addObserver:self
-						   selector:@selector(didSendContent:) 
-						       name:Content_DidSendContent object:nil];
-					[[adium notificationCenter] addObserver:self
-						   selector:@selector(chatWillClose:)
-						       name:Chat_WillClose object:nil];
-                }
-
-                //Flush our array of 'responded' contacts
-                [receivedIdleMessage release]; receivedIdleMessage = [[NSMutableArray alloc] init];
-            }
-        }
-    //}
+	if([[[adium preferenceController] preferenceForKey:KEY_IDLE_MESSAGE_ENABLED group:PREF_GROUP_IDLE_MESSAGE] boolValue] ) {
+		
+		//Remove existing content sent/received observer, and install new (if away)
+		[[adium notificationCenter] removeObserver:self name:Content_DidReceiveContent object:nil];
+		[[adium notificationCenter] removeObserver:self name:Content_FirstContentRecieved object:nil];
+		[[adium notificationCenter] removeObserver:self name:Content_DidSendContent object:nil];
+		[[adium notificationCenter] removeObserver:self name:Chat_WillClose object:nil];
+		
+		//Only install new observers if we're idle
+		if([prefDict objectForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != nil ) {
+			[[adium notificationCenter] addObserver:self 
+										   selector:@selector(didReceiveContent:) 
+											   name:Content_DidReceiveContent object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(didReceiveContent:)
+											   name:Content_FirstContentRecieved object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(didSendContent:) 
+											   name:Content_DidSendContent object:nil];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatWillClose:)
+											   name:Chat_WillClose object:nil];
+		}
+		
+		//Flush our array of 'responded' contacts
+		[receivedIdleMessage release]; receivedIdleMessage = [[NSMutableArray alloc] init];
+	}
 }
 
 //Called when Adium receives content
