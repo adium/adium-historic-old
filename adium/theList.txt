@@ -12,6 +12,7 @@ Legend
 ----
 Bugs
 ----
+* If the first recieved message is a link, it is not clickable until you send another message or get sent one (I think)
 = Account name not displaying correctly after service switch
 * Create new account, tab from username->pass->account list.  Next tab should go back to username
 * Stop contact list from auto-resizing under the dock - this is a tough area.  It does not auto-resize under the dock EXCEPT for at the edges, by design, since many people use a dock which does not extend to the edges of the screen and would like the contact list to reach down there.  So far as I can tell there's no way to know how wide the dock is; only how tall it is.
@@ -280,15 +281,17 @@ Message Sending:
 		( Pros )
 		
 		( Cons )
-		
+			This may be better implemented in mass messaging from contextual clicking a group in the contact list, or some other implementation of mass messaging.
 		( Comments )
 			Evan: This should be done via "/all" or something instead of option-send... that's too close to "insert a line break" for my tastes.
 		
 	# Mass messaging
 		( Pros )
-		
+			Easily convey messages to a group
+			It's cool.
+			Great for people who work in an office.
 		( Cons )
-		
+			Possible spam
 		( Comments )
 			Tick: This does give the ability for people to be spammed, but I think the good would outweigh the evil in this feature.
 
@@ -298,6 +301,7 @@ Contact List Display:
 			Nested groups open up the potential of expanding meta contacts
 			Nested groups are good for organization
 			They're fun
+			Would be good for mass messaging
 		( Cons )
 			They make re-ordering groups difficult
 			They have a very hard to fix bug with collapse/expand memory
@@ -305,25 +309,40 @@ Contact List Display:
 			Other minor issues like draging groups into themselves
 			They limit contact list designs, some layouts won't work with nested groups
 			The group online/count totals are incorrect, difficult to calculate
+			Groups have strange names in other clients
 			They can't sort into a "by Status" sorted list very well - have to have an option to sort to the top or the bottom
+
  
  
 	# Extend labels to the full width of the list
 		( Pros )
-		
+			Easier to work with in code
 		( Cons )
+			Could make the contact list look larger than it is.	
 		
 	# Remove the rounded caps <<< PILLOWS!!!
 		( Pros )
 		
 		( Cons )
 		
+		
+Address Book Integration:
+	# Give address book icons higher priority than server-side icons 
+		( Pros )
+			This is not a bug. It's desired behavior by a lot of people.
+		( Cons )
+		
+		( Comments)
+			Tick: I personally don't see where this is not desired behavior if you have ab integration turned on.
+		
+
 Emoticon Preferences:
 	#Show a warning icon when 2 icons would overlap. This would be when you have 2 or more packs. State which would be used visually.
 		( Pros )
 		
 		( Cons )
 		
+		( Commets )
 	
 Message Window:
 	# Preference to disable sending of typing notifications
@@ -333,10 +352,16 @@ Message Window:
 		
 	# Animate Buddy Icons once when clicked
 		( Pros )
-		
+			Makes the animated icon people happy
+			Makes the people who don't like animated icons happy
+			Makes everyone happy :D
 		( Cons )
-		I'm not sure we're getting animated files from libgaim at present.		
-		
+			Probably harder to code than to just display the icon
+			Animated icons are about as annoying as <marquee> and <blink> html tags to some people
+		( Comments )
+			I'm not sure we're getting animated files from libgaim at present.		
+			Tick: Can we stop showing the icon or disable animation like gaim does?
+			
 	# Tab creation preference: Last created window, new window, group by group, group by account
 		( Pros )
 		
@@ -362,7 +387,7 @@ Meta Contacts:
 	User Defined Meta Contacts:
 		# Specify a the order of contacts, for status updates on the contact list
 			( Pros )
-			
+				This is expected behavior
 			( Cons )
 
 
