@@ -42,6 +42,27 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	return ret;
 }
 
+SecAccessRef createAccess(NSString *accessLabel)
+{
+    OSStatus err;	
+    SecAccessRef access=nil;
+	
+    //Make an exception list of trusted applications; that is,
+    // applications that are allowed to access the item without 
+    // requiring user confirmation:
+
+	//Create an access object. This function has been available since
+	// Mac OS X v10.2; however before Mac OS X v10.3, the 
+	// list of trusted applications was ignored and only the application
+	// creating the reference was added to the list:
+	
+    err = SecAccessCreate((CFStringRef)accessLabel,NULL, &access);
+	
+    if (err) return nil;
+
+    return access;	
+}
+
 // Retrieves a password from the keychain for the specified service and account
 // Returns nil if no password is found
 + (NSString *)getPasswordFromKeychainForService:(NSString *)service account:(NSString *)account
@@ -55,7 +76,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 
 	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
 	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
-		
+	
 	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
 	
     if (ret == noErr){
@@ -83,15 +104,24 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void *passw
 	if (ret == errSecItemNotFound){
 			//No item in the keychain, so add a new generic password
 		
-			ret = SecKeychainAddGenericPassword (NULL,							// default keychain
-												 strlen(serviceUTF8String),		// length of service name
-												 serviceUTF8String,				// service name
-												 strlen(accountUTF8String),		// length of account name
-												 accountUTF8String,				// account name
-												 strlen(passwordUTF8String),	// length of password
-												 passwordUTF8String,			// pointer to password data
-												 NULL							// the item reference
-												 );
+		//Create initial access control settings for the item
+		SecAccessRef access = createAccess([NSString stringWithFormat:@"Adium: %@",service]);
+		
+		// Set up attribute vector (each attribute consists of {tag, length, pointer})
+		SecKeychainAttribute attrs[] = { 
+		{ kSecAccountItemAttr, strlen(accountUTF8String), (void *)accountUTF8String },
+		{ kSecServiceItemAttr, strlen(serviceUTF8String), (void *)serviceUTF8String } };
+		
+		const SecKeychainAttributeList attributes = { sizeof(attrs) / sizeof(attrs[0]), attrs };
+
+		ret = SecKeychainItemCreateFromContent(kSecGenericPasswordItemClass,
+											   &attributes,
+											   strlen(passwordUTF8String),
+											   passwordUTF8String,
+											   NULL, // use the default keychain
+											   access,
+											   &itemRef);
+		if (access) CFRelease(access);
 		
 	}else if (ret == noErr){
 			//Item already present, so change it to the new password
