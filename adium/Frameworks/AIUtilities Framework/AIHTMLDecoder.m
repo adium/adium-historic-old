@@ -504,7 +504,19 @@ int HTMLEquivalentForFontSize(int fontSize)
             }
         }
     }
-
+	
+	//If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
+	//we want to move the NSBackgroundColorAttributeName attribute to AIBodyColorAttributeName (Things are a
+	//lot more attractive this way).
+	if([attrString length]){
+		NSRange backRange;
+		NSColor *bodyColor = [attrString attribute:NSBackgroundColorAttributeName atIndex:0 effectiveRange:&backRange];
+		if(bodyColor && (backRange.length == [attrString length])) {
+			[attrString addAttribute:AIBodyColorAttributeName value:bodyColor range:NSMakeRange(0,[attrString length])];
+			[attrString removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[attrString length])];
+		}
+	}
+	
     return([attrString autorelease]);
 }
 
