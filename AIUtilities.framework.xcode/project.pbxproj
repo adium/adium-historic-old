@@ -627,7 +627,6 @@
 				4BD1EEF006D2608000B3975E,
 				4BD1EEE106D25F4A00B3975E,
 				4BD1EEDE06D25F0300B3975E,
-				4BD1F2B106D2689300B3975E,
 				4BD1EEDB06D25EE900B3975E,
 				32C88DFF0371C24200C91783,
 				0867D69AFE84028FC02AAC07,
@@ -1174,24 +1173,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34486B6406D1DF0300DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIFlexibleLink.h;
-			path = "Frameworks/AIUtilities Framework/AIFlexibleLink.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486B6506D1DF0300DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIFlexibleLink.m;
-			path = "Frameworks/AIUtilities Framework/AIFlexibleLink.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34486B6606D1DF0300DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1387,24 +1368,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIGradientCell.m;
 			path = "Frameworks/AIUtilities Framework/AIGradientCell.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486B7C06D1DF0300DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIHTMLDecoder.h;
-			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486B7D06D1DF0300DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIHTMLDecoder.m;
-			path = "Frameworks/AIUtilities Framework/AIHTMLDecoder.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1822,24 +1785,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34486BBD06D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITextAttachmentExtension.h;
-			path = "Frameworks/AIUtilities Framework/AITextAttachmentExtension.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486BBE06D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITextAttachmentExtension.m;
-			path = "Frameworks/AIUtilities Framework/AITextAttachmentExtension.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34486BBF06D1DF0400DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1909,24 +1854,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIToolbarUtilities.m;
 			path = "Frameworks/AIUtilities Framework/AIToolbarUtilities.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486BC706D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITooltipUtilities.h;
-			path = "Frameworks/AIUtilities Framework/AITooltipUtilities.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486BC806D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITooltipUtilities.m;
-			path = "Frameworks/AIUtilities Framework/AITooltipUtilities.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2227,24 +2154,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34486BEE06D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESFileWrapperExtension.h;
-			path = "Frameworks/AIUtilities Framework/ESFileWrapperExtension.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486BEF06D1DF0400DA778C = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESFileWrapperExtension.m;
-			path = "Frameworks/AIUtilities Framework/ESFileWrapperExtension.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34486BF006D1DF0400DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -2476,14 +2385,6 @@
 			lastKnownFileType = image.tiff;
 			name = aquaTabCloseRollover.tif;
 			path = "Frameworks/AIUtilities Framework/Images/aquaTabCloseRollover.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34486C1006D1DF0400DA778C = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Clipping.png;
-			path = "Frameworks/AIUtilities Framework/Images/Clipping.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -3099,21 +3000,6 @@
 			settings = {
 			};
 		};
-		34486C6406D1DF0400DA778C = {
-			fileRef = 34486B6406D1DF0300DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486C6506D1DF0400DA778C = {
-			fileRef = 34486B6506D1DF0300DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34486C6606D1DF0400DA778C = {
 			fileRef = 34486B6606D1DF0300DA778C;
 			isa = PBXBuildFile;
@@ -3275,21 +3161,6 @@
 		};
 		34486C7B06D1DF0400DA778C = {
 			fileRef = 34486B7B06D1DF0300DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34486C7C06D1DF0400DA778C = {
-			fileRef = 34486B7C06D1DF0300DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486C7D06D1DF0400DA778C = {
-			fileRef = 34486B7D06D1DF0300DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3624,21 +3495,6 @@
 			settings = {
 			};
 		};
-		34486CBD06D1DF0400DA778C = {
-			fileRef = 34486BBD06D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486CBE06D1DF0400DA778C = {
-			fileRef = 34486BBE06D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34486CBF06D1DF0400DA778C = {
 			fileRef = 34486BBF06D1DF0400DA778C;
 			isa = PBXBuildFile;
@@ -3695,21 +3551,6 @@
 		};
 		34486CC606D1DF0400DA778C = {
 			fileRef = 34486BC606D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34486CC706D1DF0400DA778C = {
-			fileRef = 34486BC706D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486CC806D1DF0400DA778C = {
-			fileRef = 34486BC806D1DF0400DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3944,21 +3785,6 @@
 		};
 		34486CED06D1DF0400DA778C = {
 			fileRef = 34486BED06D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34486CEE06D1DF0400DA778C = {
-			fileRef = 34486BEE06D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34486CEF06D1DF0400DA778C = {
-			fileRef = 34486BEF06D1DF0400DA778C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4767,6 +4593,17 @@
 			settings = {
 			};
 		};
+		34F2E7EF07C2CC5C007EAAAB = {
+			children = (
+				34486BE606D1DF0400DA778C,
+				34486BE706D1DF0400DA778C,
+			);
+			isa = PBXGroup;
+			name = "Window with no borders";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 //340
 //341
 //342
@@ -5258,6 +5095,7 @@
 				4BD1F41006D2825300B3975E,
 				4B6DDA4A075A883B002E0BF4,
 				4BD1F34A06D26F0A00B3975E,
+				34F2E7EF07C2CC5C007EAAAB,
 			);
 			isa = PBXGroup;
 			name = "Fun New Controls";
@@ -5372,27 +5210,6 @@
 			isa = PBXGroup;
 			name = "Creating toolbar items";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BD1F2B106D2689300B3975E = {
-			children = (
-				34486BC706D1DF0400DA778C,
-				34486BC806D1DF0400DA778C,
-				34486B7C06D1DF0300DA778C,
-				34486B7D06D1DF0300DA778C,
-				34486B6406D1DF0300DA778C,
-				34486B6506D1DF0300DA778C,
-				34486BBD06D1DF0400DA778C,
-				34486BBE06D1DF0400DA778C,
-				34486BE606D1DF0400DA778C,
-				34486BE706D1DF0400DA778C,
-				34486BEE06D1DF0400DA778C,
-				34486BEF06D1DF0400DA778C,
-				34486C1006D1DF0400DA778C,
-			);
-			isa = PBXGroup;
-			name = "Fairly Adium specific-stuff (boo-hiss)";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5732,12 +5549,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BD1F5A406D28BD600B3975E = {
-			fileRef = 34486C1006D1DF0400DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD1F5A706D28BE600B3975E = {
 			children = (
 				34486B4C06D1DF0300DA778C,
@@ -5854,7 +5665,6 @@
 				34486C5E06D1DF0400DA778C,
 				34486C6006D1DF0400DA778C,
 				34486C6206D1DF0400DA778C,
-				34486C6406D1DF0400DA778C,
 				34486C6606D1DF0400DA778C,
 				34486C6806D1DF0400DA778C,
 				34486C6A06D1DF0400DA778C,
@@ -5866,7 +5676,6 @@
 				34486C7606D1DF0400DA778C,
 				34486C7806D1DF0400DA778C,
 				34486C7A06D1DF0400DA778C,
-				34486C7C06D1DF0400DA778C,
 				34486C7E06D1DF0400DA778C,
 				34486C8006D1DF0400DA778C,
 				34486C8206D1DF0400DA778C,
@@ -5889,12 +5698,10 @@
 				34486CB206D1DF0400DA778C,
 				34486CB406D1DF0400DA778C,
 				34486CB906D1DF0400DA778C,
-				34486CBD06D1DF0400DA778C,
 				34486CBF06D1DF0400DA778C,
 				34486CC106D1DF0400DA778C,
 				34486CC306D1DF0400DA778C,
 				34486CC506D1DF0400DA778C,
-				34486CC706D1DF0400DA778C,
 				34486CC906D1DF0400DA778C,
 				34486CCA06D1DF0400DA778C,
 				34486CCC06D1DF0400DA778C,
@@ -5911,7 +5718,6 @@
 				34486CE806D1DF0400DA778C,
 				34486CEA06D1DF0400DA778C,
 				34486CEC06D1DF0400DA778C,
-				34486CEE06D1DF0400DA778C,
 				34486CF006D1DF0400DA778C,
 				34486CF206D1DF0400DA778C,
 				34486CF406D1DF0400DA778C,
@@ -5992,7 +5798,6 @@
 				34486D1F06D1DF0400DA778C,
 				34486D2006D1DF0400DA778C,
 				34486D2106D1DF0400DA778C,
-				4BD1F5A406D28BD600B3975E,
 				34E2A00C07AF0CE0006735BC,
 				34E2A00D07AF0CE0006735BC,
 			);
@@ -6023,7 +5828,6 @@
 				34486C5F06D1DF0400DA778C,
 				34486C6106D1DF0400DA778C,
 				34486C6306D1DF0400DA778C,
-				34486C6506D1DF0400DA778C,
 				34486C6706D1DF0400DA778C,
 				34486C6906D1DF0400DA778C,
 				34486C6B06D1DF0400DA778C,
@@ -6036,7 +5840,6 @@
 				076CAD6D0785B62900250504,
 				34486C7906D1DF0400DA778C,
 				34486C7B06D1DF0400DA778C,
-				34486C7D06D1DF0400DA778C,
 				34486C7F06D1DF0400DA778C,
 				34486C8106D1DF0400DA778C,
 				34486C8306D1DF0400DA778C,
@@ -6061,12 +5864,10 @@
 				34486CB606D1DF0400DA778C,
 				34486CBA06D1DF0400DA778C,
 				070959870798F1ED00B140BD,
-				34486CBE06D1DF0400DA778C,
 				34486CC006D1DF0400DA778C,
 				34486CC206D1DF0400DA778C,
 				34486CC406D1DF0400DA778C,
 				34486CC606D1DF0400DA778C,
-				34486CC806D1DF0400DA778C,
 				07B7AFA00797A952003B71E1,
 				34486CCB06D1DF0400DA778C,
 				34486CCD06D1DF0400DA778C,
@@ -6083,7 +5884,6 @@
 				34486CE906D1DF0400DA778C,
 				34486CEB06D1DF0400DA778C,
 				34486CED06D1DF0400DA778C,
-				34486CEF06D1DF0400DA778C,
 				34486CF106D1DF0400DA778C,
 				34486CF306D1DF0400DA778C,
 				34486CF506D1DF0400DA778C,

@@ -7148,6 +7148,11 @@
 				3448055107AC5151006A7F7B,
 				34AC36BB07B5C51500145239,
 				34E00F7607B92B2F000DF265,
+				34F2E80907C2CD53007EAAAB,
+				34F2E81207C2CD5E007EAAAB,
+				34F2E81A07C2CD6C007EAAAB,
+				34F2E82A07C2CD9B007EAAAB,
+				34F2E83B07C2CDBE007EAAAB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7340,6 +7345,11 @@
 				3448055007AC5151006A7F7B,
 				34AC36BC07B5C51500145239,
 				34E00F7707B92B2F000DF265,
+				34F2E80807C2CD53007EAAAB,
+				34F2E81107C2CD5E007EAAAB,
+				34F2E81B07C2CD6C007EAAAB,
+				34F2E82B07C2CD9B007EAAAB,
+				34F2E83A07C2CDBE007EAAAB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10001,6 +10011,156 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34F2E80607C2CD53007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIFlexibleLink.m;
+			path = "Frameworks/Adium Framework/AIFlexibleLink.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E80707C2CD53007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIFlexibleLink.h;
+			path = "Frameworks/Adium Framework/AIFlexibleLink.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E80807C2CD53007EAAAB = {
+			fileRef = 34F2E80607C2CD53007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E80907C2CD53007EAAAB = {
+			fileRef = 34F2E80707C2CD53007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E80F07C2CD5E007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIHTMLDecoder.m;
+			path = "Frameworks/Adium Framework/AIHTMLDecoder.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E81007C2CD5E007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIHTMLDecoder.h;
+			path = "Frameworks/Adium Framework/AIHTMLDecoder.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E81107C2CD5E007EAAAB = {
+			fileRef = 34F2E80F07C2CD5E007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E81207C2CD5E007EAAAB = {
+			fileRef = 34F2E81007C2CD5E007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E81807C2CD6B007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITextAttachmentExtension.h;
+			path = "Frameworks/Adium Framework/AITextAttachmentExtension.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E81907C2CD6C007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITextAttachmentExtension.m;
+			path = "Frameworks/Adium Framework/AITextAttachmentExtension.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E81A07C2CD6C007EAAAB = {
+			fileRef = 34F2E81807C2CD6B007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E81B07C2CD6C007EAAAB = {
+			fileRef = 34F2E81907C2CD6C007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E82807C2CD9B007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITooltipUtilities.h;
+			path = "Frameworks/Adium Framework/AITooltipUtilities.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E82907C2CD9B007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITooltipUtilities.m;
+			path = "Frameworks/Adium Framework/AITooltipUtilities.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E82A07C2CD9B007EAAAB = {
+			fileRef = 34F2E82807C2CD9B007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E82B07C2CD9B007EAAAB = {
+			fileRef = 34F2E82907C2CD9B007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E83807C2CDBD007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFileWrapperExtension.m;
+			path = "Frameworks/Adium Framework/ESFileWrapperExtension.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E83907C2CDBD007EAAAB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFileWrapperExtension.h;
+			path = "Frameworks/Adium Framework/ESFileWrapperExtension.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F2E83A07C2CDBE007EAAAB = {
+			fileRef = 34F2E83807C2CDBD007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F2E83B07C2CDBE007EAAAB = {
+			fileRef = 34F2E83907C2CDBD007EAAAB;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		34F52BCB06E2AFBC00887BE2 = {
 			isa = PBXFileReference;
@@ -12714,14 +12874,16 @@
 		};
 		4B4F5B2E042D647600A8010A = {
 			children = (
-				34C6A4C9077AB3A900EB423C,
-				34C6A4CA077AB3AA00EB423C,
 				34E829820766B0FE00EFB3BC,
 				34E829830766B0FE00EFB3BC,
 				7E1E8176063A3EEC00EB00F7,
 				7E1E8177063A3EEC00EB00F7,
+				34C6A4C9077AB3A900EB423C,
+				34C6A4CA077AB3AA00EB423C,
 				4B5827E80613CE9D0004BD25,
 				4B5827E90613CE9D0004BD25,
+				34F2E82807C2CD9B007EAAAB,
+				34F2E82907C2CD9B007EAAAB,
 				3426FD0A0699D3D100751059,
 				3426FD090699D3D100751059,
 				349DDD5206406A7D00542726,
@@ -12734,16 +12896,24 @@
 		};
 		4B4F5B2F042D647C00A8010A = {
 			children = (
-				348862CD05645E94003C9627,
-				348862CE05645E95003C9627,
+				34F2E80707C2CD53007EAAAB,
+				34F2E80607C2CD53007EAAAB,
+				34F2E81007C2CD5E007EAAAB,
+				34F2E80F07C2CD5E007EAAAB,
 				3483928505E68B05002BC6C0,
 				3483928405E68B05002BC6C0,
 				4BFC33DD058D4430008F7FA2,
 				4BFC33DE058D4430008F7FA2,
 				F5793924033E74C301A8010A,
 				F5793912033E748F01A8010A,
+				34F2E81807C2CD6B007EAAAB,
+				34F2E81907C2CD6C007EAAAB,
 				34E6D38E0727354600A2643A,
 				34E6D38F0727354600A2643A,
+				348862CD05645E94003C9627,
+				348862CE05645E95003C9627,
+				34F2E83907C2CDBD007EAAAB,
+				34F2E83807C2CDBD007EAAAB,
 			);
 			isa = PBXGroup;
 			name = Other;
