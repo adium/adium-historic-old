@@ -1,8 +1,13 @@
-//Extensive debug logging
+#ifdef DEBUG_BUILD
+//Extensive debug logging is always on for a debug build
 #define GAIM_DEBUG  TRUE
+#else
+//Extensive debug logging may be preferentially turned on for Gaim for a non-debug build
+#define GAIM_DEBUG FALSE
+#endif
 
 #if GAIM_DEBUG
-	#define GaimDebug NSLog
+	#define GaimDebug AILog
 #else
 	#define GaimDebug //
 #endif
