@@ -1486,7 +1486,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListContact *)contactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
 	AIListContact	*contact = nil;
-	
+
 	if(inUID && [inUID length] && inService){ //Ignore invalid requests
 		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService account:inAccount UID:inUID];
 		
@@ -1631,7 +1631,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID 
 																service:theService];
 	AIAccount		*account = [[owner accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE 
-																					  toContact:tempListContact];
+																					  toContact:tempListContact
+																				 includeOffline:YES];
 	[tempListContact release];
 	
 	return([self contactWithService:theService account:account UID:inUID]);
