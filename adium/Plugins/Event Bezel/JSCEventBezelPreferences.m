@@ -43,6 +43,8 @@
     [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
     [checkBox_idle setEnabled: [checkBox_showBezel state]];
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
+    [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
+    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];
 }
 
 - (IBAction)changePosition:(id)sender
@@ -102,6 +104,21 @@
                                           group:PREF_GROUP_EVENT_BEZEL];
 }
 
+- (IBAction)toggleImageBadges:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_IMAGE_BADGES
+                                          group:PREF_GROUP_EVENT_BEZEL];
+
+}
+
+- (IBAction)toggleColorLabels:(id)sender
+{
+    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                         forKey:KEY_EVENT_BEZEL_COLOR_LABELS
+                                          group:PREF_GROUP_EVENT_BEZEL];
+
+}
 
 //Configure the preference view
 - (void)viewDidLoad
@@ -120,6 +137,9 @@
     [checkBox_noIdle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_NO_IDLE] boolValue]];
     [checkBox_idle setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IDLE] boolValue]];
     [checkBox_firstMessage setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_FIRST_MESSAGE] boolValue]];
+    [checkBox_imageBadges setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_IMAGE_BADGES] boolValue]];
+    [checkBox_colorLabels setState: [[preferenceDict objectForKey:KEY_EVENT_BEZEL_COLOR_LABELS] boolValue]];
+
     
     // Enable or disable checkboxes based on the "show bezel" checkbox
     [popUp_position setEnabled: [checkBox_showBezel state]];
@@ -130,6 +150,7 @@
     [checkBox_noIdle setEnabled: [checkBox_showBezel state]];
     [checkBox_idle setEnabled: [checkBox_showBezel state]];
     [checkBox_firstMessage setEnabled: [checkBox_showBezel state]];
-}
+    [checkBox_imageBadges setEnabled: [checkBox_showBezel state]];
+    [checkBox_colorLabels setEnabled: [checkBox_showBezel state]];}
 
 @end

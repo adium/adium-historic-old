@@ -83,7 +83,7 @@ withMessage:(NSString *)message
         
         [bezelView setMainBuddyName: contactName];
         
-        if ([event isEqualToString: @"is now online"] || [event isEqualToString: @"is available"] ||
+        if ((!imageBadges) || [event isEqualToString: @"is now online"] || [event isEqualToString: @"is available"] ||
                 [event isEqualToString: @"is no longer idle"] || [event isEqualToString: @"says"]) {
             [bezelView setBuddyIconBadgeType: @""];
         } else if ([event isEqualToString: @"has gone offline"]) {
@@ -156,6 +156,16 @@ withMessage:(NSString *)message
 - (void)setBuddyIconLabelColor:(NSColor *)newColor
 {
     [bezelView setBuddyIconLabelColor: newColor];
+}
+
+- (BOOL)imageBadges
+{
+    return imageBadges;
+}
+
+- (void)setImageBadges:(BOOL)b
+{
+    imageBadges = b;
 }
 
 @end

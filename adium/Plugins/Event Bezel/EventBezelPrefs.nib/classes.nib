@@ -25,8 +25,10 @@
                 changePosition = id; 
                 toggleAvailable = id; 
                 toggleAway = id; 
+                toggleColorLabels = id; 
                 toggleFirstMessage = id; 
                 toggleIdle = id; 
+                toggleImageBadges = id; 
                 toggleNoIdle = id; 
                 toggleOffline = id; 
                 toggleOnline = id; 
@@ -37,8 +39,10 @@
             OUTLETS = {
                 "checkBox_available" = NSButton; 
                 "checkBox_away" = NSButton; 
+                "checkBox_colorLabels" = NSButton; 
                 "checkBox_firstMessage" = NSButton; 
                 "checkBox_idle" = NSButton; 
+                "checkBox_imageBadges" = NSButton; 
                 "checkBox_noIdle" = NSButton; 
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 

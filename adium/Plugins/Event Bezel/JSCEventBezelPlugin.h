@@ -22,6 +22,8 @@
 #define KEY_EVENT_BEZEL_NO_IDLE             @"Display if no Longer Idle"
 #define KEY_EVENT_BEZEL_IDLE                @"Display if Idle"
 #define KEY_EVENT_BEZEL_FIRST_MESSAGE       @"Display if First Message"
+#define KEY_EVENT_BEZEL_IMAGE_BADGES        @"Show Image Badges"
+#define KEY_EVENT_BEZEL_COLOR_LABELS        @"Show Color Labels"
 
 @class JSCEventBezelPreferences;
 
@@ -30,7 +32,7 @@
     JSCEventBezelPreferences    *preferences;
     
     NSMutableArray              *eventArray;
-    BOOL                        showEventBezel;
+    BOOL                        showEventBezel, useColorLabels;
     int                         prefsPosition;
 }
 
