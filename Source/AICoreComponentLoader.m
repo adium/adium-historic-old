@@ -14,11 +14,11 @@
  */
 
 /*
- Core - Component Loader
+ * @class AICoreComponentLoader
+ * @brief Core - Component Loader
 
- Loads integrated plugins.  All integrated plugins require a _loadComponentClass statement below and their class name
- in the @class list.  In situations where the load order of plugins is important, please make note.
-
+ * Loads integrated plugins.  All integrated plugins require a _loadComponentClass statement below and their class name
+ * in the @class list.  In situations where the load order of plugins is important, please make note.
  */
 
 #import "AICoreComponentLoader.h"
@@ -87,7 +87,6 @@ ESAddressBookIntegrationPlugin,
 ESAnnouncerPlugin,
 ESApplescriptContactAlertPlugin,
 ESBlockingPlugin,
-ESContactAlertsPlugin,
 ESContactClientPlugin,
 ESContactListWindowHandlingPlugin,
 ESContactServersideDisplayName,
@@ -117,7 +116,9 @@ ESSecureMessagingPlugin;
 
 @implementation AICoreComponentLoader
 
-//Load integrated components
+/*
+ * @brief Load integrated components
+ */
 - (void)initController
 {
 	components = [[NSMutableArray alloc] init];
@@ -182,7 +183,6 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESAnnouncerPlugin class]];
 	[self _loadComponentClass:[ESApplescriptContactAlertPlugin class]];
 	[self _loadComponentClass:[ESBlockingPlugin class]];
-	[self _loadComponentClass:[ESContactAlertsPlugin class]];
 	[self _loadComponentClass:[ESContactClientPlugin class]];
 	[self _loadComponentClass:[ESContactListWindowHandlingPlugin class]];
 	[self _loadComponentClass:[ESContactServersideDisplayName class]];
@@ -206,7 +206,9 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
 }
 
-//Give all components a chance to close
+/*
+ * @brief Give all components a chance to close
+ */
 - (void)closeController
 {
 	NSEnumerator	*enumerator = [components objectEnumerator];
@@ -220,7 +222,11 @@ ESSecureMessagingPlugin;
 	components = nil;
 }
 
-//Load an integrated component plugin
+/*
+ * @brief Load an integrated component plugin
+ *
+ * @param inClass The class of the component, which  must inherit from <tt>AIPlugin</tt>
+ */
 - (void)_loadComponentClass:(Class)inClass
 {
 	id object;
