@@ -16,12 +16,17 @@
 #import <Adium/Adium.h>
 #import "AIDockController.h"
 
+@interface AIDockController (PRIVATE)
+- (void)privBounce;
+- (void)bounceWithTimer:(NSTimer *)timer;
+@end
+
 @implementation AIDockController
  
 //init and close
 - (void)initController
 {
-    
+    currentTimer = nil;
 }
 
 - (void)closeController
@@ -40,31 +45,20 @@
 }
 
 //bouncing
-- (void)bounce
+- (void)bounce //for external use only.
 {
-    if([NSApp respondsToSelector:@selector(requestUserAttention:)])
-    {
-        int temp = [NSApp requestUserAttention:NSCriticalRequest];
-        NSTimer *waitTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(cancelBouncingForTimer:) userInfo:[NSNumber numberWithInt:temp] repeats:NO];
-        NSLog(@"staring wait");
-        BOOL cont = NO;
-        while(cont)
-        {
-            if(![waitTimer isValid])
-            {
-                cont = YES;
-            }
-        }
-        NSLog(@"ending wait");
-    }
+    [self privBounce];
 }
 
 - (void)bounceWithInterval:(double)delay forever:(BOOL)booly
 {       
-    NSLog(@"5");
-    [self bounce]; // do one right away
+    if(!currentTimer)
+    {
+        NSLog(@"5");
+        [self privBounce]; // do one right away
     
-    currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:4] repeats:NO];
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithDouble:delay],@"delay",[NSNumber numberWithInt:4],@"num",nil] repeats:NO];
+    }
 }
 
 - (void)stopBouncing
@@ -72,27 +66,42 @@
     if([currentTimer isValid])
     {
         [currentTimer invalidate];
+        currentTimer = nil;
+    }
+    else if(currentTimer)
+    {
+        currentTimer = nil;
     }
 }
 
 //PRIVATE ========
 
-- (void)cancelBouncingForTimer:(NSTimer *)timer
+- (void)privBounce
 {
-    if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)] && [timer isValid])
+    if([NSApp respondsToSelector:@selector(requestUserAttention:)])
     {
-        [NSApp cancelUserAttentionRequest:[[timer userInfo] intValue]];
+        int temp = [NSApp requestUserAttention:NSCriticalRequest];
+        sleep(1);
+        if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)])
+        {
+            [NSApp cancelUserAttentionRequest:temp];
+        }
     }
 }
+
 - (void)bounceWithTimer:(NSTimer *)timer
 {
-    NSLog(@"%d", [[timer userInfo] intValue]);
+    NSLog(@"%d", [[[timer userInfo] objectForKey:@"num"] intValue]);
     
-    [self bounce];
+    [self privBounce];
     
-    if([[timer userInfo] intValue] > 1)
+    if([[[timer userInfo] objectForKey:@"num"] intValue] > 1)
     {
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:[timer timeInterval] target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:[[timer userInfo] intValue]-1] repeats:NO];    
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:[[[timer userInfo] objectForKey:@"delay"] doubleValue] target:self selector:@selector(bounceWithTimer:) userInfo:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:[[[timer userInfo] objectForKey:@"num"] intValue]-1],@"num",[[timer userInfo] objectForKey:@"delay"],@"delay",nil] repeats:NO];
+    }
+    else
+    {
+        currentTimer = nil;
     }
 
 }
