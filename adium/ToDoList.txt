@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.126 2004/05/12 22:47:32 the_tick Exp $
+$Id: ToDoList.txt,v 1.127 2004/05/12 22:54:44 bgannin Exp $
 
 
 Legend
@@ -30,6 +30,9 @@ Bugs
 * Smooth operator incorrectly displays multi-line status messages.
 * Emoticon packs flip upside down when you select them.  (The emoticon menu is causing them to flip, so only enabled packs will be flipped.  No amount of flipping and unflipping within the emoticon pack cell seems to make things correct)
 * AIM chats are logging with both loggers as having a title of (null)
+* "Customize Toolbar..." menu item remains active even when "Show Toolbar" is inactive since there isn't one. 
+* Push/pop indicator could use 1-2 px extra spacing from the right & left since its nearly flush with the scrollbar 
+    // brian now dons his flameproof pants :)
 
 Applescripts:
 * Applescript substitions (/music and friends) are parsed in other peoples' profiles and away messages.
