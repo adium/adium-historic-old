@@ -12,6 +12,7 @@
 
 - (void)installPlugin
 {
+#ifdef DEVELOPMENT_BUILD
     //Create our handle service type
     handleServiceType = [[AIServiceType serviceTypeWithIdentifier:[self identifier]
                                                       description:[self description]
@@ -22,6 +23,7 @@
 
     //Register this service
     [[adium accountController] registerService:self];
+#endif
 }
 
 //Return a new account with the specified properties
