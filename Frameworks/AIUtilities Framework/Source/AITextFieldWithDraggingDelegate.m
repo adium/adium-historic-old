@@ -19,7 +19,7 @@
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
 	if((self = [super initWithCoder:aDecoder])) {
-		self = [self _init]
+		self = [self _init];
 	}
 	return(self);
 }
