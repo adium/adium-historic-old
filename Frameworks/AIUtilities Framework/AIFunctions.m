@@ -1,5 +1,5 @@
 /*-------------------------------------------------------------------------------------------------------*\
-| Adium, Copyright (C) 2001-2004, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
+| Adium, Copyright (C) 2001-2005, Adam Iser  (adamiser@mac.com | http://www.adiumx.com)                   |
 \---------------------------------------------------------------------------------------------------------/
  | This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  | General Public License as published by the Free Software Foundation; either version 2 of the License,
@@ -30,7 +30,6 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow) {
 			UTF16HighAdditiveMask = 55296, //0b1101 1000 0000 0000
 			UTF16LowAdditiveMask  = 56320, //0b1101 1100 0000 0000
 		};
-		UTF32Char temp;
 
 		if(outHigh) {
 			*outHigh = \
