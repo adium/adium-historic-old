@@ -105,11 +105,13 @@
 	[slider_groupTopSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
 	[slider_groupBottomSpacing setIntValue:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_BOTTOM_SPACING] intValue]];
 	[self updateSliderValues];
-	
+
 	[checkBox_userIconVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 	[checkBox_extendedStatusVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 	[checkBox_statusIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
 	[checkBox_serviceIconsVisible setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
+	
+	[checkBox_windowHasShadow setState:[[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED] boolValue]];
 
 	[self configureControlDimming];
 }
@@ -199,6 +201,11 @@
 	}else if(sender == checkBox_serviceIconsVisible){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS
+											  group:PREF_GROUP_LIST_LAYOUT];
+		
+	}else if(sender == checkBox_windowHasShadow){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_LIST_LAYOUT_WINDOW_SHADOWED
 											  group:PREF_GROUP_LIST_LAYOUT];
 		
 	}

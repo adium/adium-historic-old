@@ -58,5 +58,9 @@
 	<string>50,50,50</string>
 	<key>Offline Label Color</key>
 	<string>240,240,240</string>
+	<key>Background Color</key>
+	<string>255,255,255</string>
+	<key>Grid Color</key>
+	<string>245,245,245</string>
 </dict>
 </plist>

@@ -9,6 +9,7 @@
                 "checkBox_serviceIconsVisible" = NSButton; 
                 "checkBox_statusIconsVisible" = NSButton; 
                 "checkBox_userIconVisible" = NSButton; 
+                "checkBox_windowHasShadow" = NSButton; 
                 "popUp_contactCellStyle" = NSPopUpButton; 
                 "popUp_contactTextAlignment" = NSPopUpButton; 
                 "popUp_groupCellStyle" = NSPopUpButton; 

@@ -27,6 +27,8 @@
 #define KEY_LIST_LAYOUT_CONTACT_CELL_STYLE		@"Contact Cell Style"
 #define KEY_LIST_LAYOUT_GROUP_CELL_STYLE		@"Group Cell Style"
 
+#define KEY_LIST_LAYOUT_WINDOW_SHADOWED			@"Window Shadowed"
+
 typedef enum {
 	WINDOW_STYLE_STANDARD = 0,
     WINDOW_STYLE_MOCKIE,
@@ -64,7 +66,8 @@ typedef enum {
 	IBOutlet		NSButton			*checkBox_extendedStatusVisible;
 	IBOutlet		NSButton			*checkBox_statusIconsVisible;
 	IBOutlet		NSButton			*checkBox_serviceIconsVisible;
-	
+	IBOutlet		NSButton			*checkBox_windowHasShadow;
+
 	IBOutlet		NSSlider			*slider_userIconSize;
 	IBOutlet		NSTextField			*textField_userIconSize;
 	IBOutlet		NSSlider			*slider_contactSpacing;

@@ -24,12 +24,19 @@
 - (id)initWithFrame:(NSRect)frame
 {
 	[super initWithFrame:frame];
+	
+	backgroundImage = nil;
+	backgroundFade = 1.0;
+	updateShadowsWhileDrawing = NO;
+
 	[self sizeLastColumnToFit];
+	
 	return(self);
 }
 
 - (void)dealloc
 {
+	[backgroundImage release];
 	[super dealloc];
 }
 
@@ -322,6 +329,72 @@
 //	return([image autorelease]);
 //}
 
+	
+	
+
+//Background -----------------------------------------------------------------
+//
+- (void)setBackgroundImage:(NSImage *)inImage
+{
+	[backgroundImage release]; backgroundImage = nil;
+	
+	backgroundImage = [inImage retain];
+	[backgroundImage setFlipped:YES];
+	
+	[[self superview] setCopiesOnScroll:(!backgroundImage)];
+	[self setNeedsDisplay:YES];
+}
+
+- (void)setBackgroundFade:(float)fade
+{
+	backgroundFade = fade;
+}
+
+- (void)setBackgroundColor:(NSColor *)inColor
+{
+	[backgroundColor release];
+	backgroundColor = [inColor retain];
+}
+
+
+- (void)viewWillMoveToSuperview:(NSView *)newSuperview
+{
+	[super viewWillMoveToSuperview:newSuperview];
+	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
+}
+
+//
+- (void)drawBackgroundInClipRect:(NSRect)clipRect
+{
+	NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+	
+	[super drawBackgroundInClipRect:clipRect];
+	
+	[backgroundColor set];
+	[NSBezierPath fillRect:clipRect];
+	
+//	[super draw
+	//Color
+//	[
+	
+	//Image
+	if(backgroundImage){
+		NSSize	imageSize = [backgroundImage size];
+		
+		[backgroundImage drawInRect:NSMakeRect(visRect.origin.x, visRect.origin.y, imageSize.width, imageSize.height)
+						   fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
+						  operation:NSCompositeSourceOver
+						   fraction:backgroundFade];
+	}	
+}
+
+	
+	
+	
+	
+	
+	
+	
 	
 	
 //Parent window transparency -----------------------------------------------------------------

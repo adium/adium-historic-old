@@ -30,6 +30,7 @@
 
 #define MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT @"Message Styles"
 
+#import <WebKit/WebKit.h>
 #import "ESWebKitMessageViewPreferences.h"
 #import "ESWKMVAdvancedPreferences.h"
 
