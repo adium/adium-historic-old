@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AICustomTabCell, AICustomTabsView;
+@class AIAdium, AICustomTabCell, AICustomTabsView;
 
 @protocol AICustomTabsViewDelegate <NSObject>
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem;
@@ -37,22 +37,33 @@
     //Dragging
     NSImage		*dragImage;
     NSSize		dragInitialOffset;	//Offset of the cursor on the drag image
-    AICustomTabCell	*dragTabCell;
 
     BOOL		draggingATabCell;
     BOOL		tabHasBeenDragged;
     BOOL		viewsRearranging;	//YES if our views are currently animating/rearranging
 
     int			tabXOrigin;
+    //Drag tracking and receiving
+    BOOL		focusedForDrag;		//YES if we are being dragged onto
+    NSSize		hoverSize;		//The size of that object
+    int			hoverIndex;		//The index it's hovering at
 
-
+    //Dragging source
+    NSSize		draggedSize;		//The item's size
+    NSSize		draggedOffset; //?
+    int			draggedIndex;       
+    BOOL                draggingLastItem;
+    
     NSPoint		lastClickLocation;
+    
+    AIAdium			*owner;
     
     //Delegate
     id <AICustomTabsViewDelegate>	delegate;
 }
 
 - (void)removeTabViewItem:(NSTabViewItem *)tabViewItem;
+- (void)setOwner:(AIAdium *)inOwner;
 
 @end
 

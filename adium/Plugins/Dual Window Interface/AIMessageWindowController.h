@@ -24,7 +24,7 @@
 
 @interface AIMessageWindowController : NSWindowController {
     IBOutlet	NSTabView		*tabView_messages;
-    IBOutlet	AICustomTabsView	*tabsView_customTabs;
+    IBOutlet	AICustomTabsView	*tabView_customTabs;
 
     AIAdium			*owner;
     BOOL			windowIsClosing;
@@ -44,6 +44,7 @@
 - (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;
 - (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
+- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem atIndex:(int)index;
 - (void)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 - (BOOL)containsMessageContainer:(NSTabViewItem <AIInterfaceContainer> *)tabViewItem;
 - (NSTabViewItem <AIInterfaceContainer> *)containerForListObject:(AIListObject *)inListObject;

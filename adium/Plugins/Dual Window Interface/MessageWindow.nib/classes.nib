@@ -18,8 +18,8 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 interface = id; 
+                "tabView_customTabs" = AICustomTabsView; 
                 "tabView_messages" = NSTabView; 
-                "tabsView_customTabs" = AICustomTabsView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 

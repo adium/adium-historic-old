@@ -15,7 +15,6 @@
 
 #import <Cocoa/Cocoa.h>
 
-
 @interface AICustomTabCell : NSCell {
     
     //Properties
