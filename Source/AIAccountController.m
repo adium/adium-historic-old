@@ -21,6 +21,7 @@
 #import "AIContentController.h"
 #import "AILoginController.h"
 #import "AIPreferenceController.h"
+#import "AIStatusController.h"
 #import "ESAccountPasswordPromptController.h"
 #import "ESProxyPasswordPromptController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -73,6 +74,8 @@
 - (BOOL)_account:(AIAccount *)account canSendContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
 
 - (void)_upgradePasswords;
+
+- (void)_prepareAccountMenus;
 
 @end
 
@@ -139,7 +142,8 @@
 	//First launch, open the account prefs
 //	if([accountArray count] == 0){
 //		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
-//	}	
+//	}
+	[self _prepareAccountMenus];
 }
 
 //close
@@ -1205,6 +1209,11 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Cancel: %@","Disconnecting an account prefix")
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
+- (void)_prepareAccountMenus
+{
+	[[adium statusController] registerStateMenuPlugin:self];
+}
+
 - (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
 	NSNumber	*identifier = [NSNumber numberWithInt:[accountMenuPlugin hash]];
@@ -1333,7 +1342,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		//Update the menu item
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:[NSString stringWithFormat:titleFormat,accountTitle]];
+		[menuItem setTitle:/*[NSString stringWithFormat:titleFormat,accountTitle]*/accountTitle];
 		[menuItem setImage:composite];		
 		[menuItem setEnabled:(![[account statusObjectForKey:@"Connecting"] boolValue] &&
 							  ![[account statusObjectForKey:@"Disconnecting"] boolValue])];
@@ -1353,6 +1362,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];
 		[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
 	}
+	
+	//Now recreate the status submenus
+	[[adium statusController] rebuildAllStateMenusForPlugin:self];
 }
 
 //Account status changed, update our menu
@@ -1397,6 +1409,105 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}
 	
 	return targetMenuItem;	
+}
+
+/*!
+ * @brief Add the passed state menu items
+ *
+ * When given menu items, make a submenu out of them for each account with a represented object referring to that account.
+ */
+- (void)addStateMenuItems:(NSArray *)menuItemArray
+{
+	NSArray				*originalMenuItemArray;
+	NSMutableDictionary	*temporaryMenuDict = [NSMutableDictionary dictionary];
+	NSEnumerator		*enumerator;
+	AIAccount			*account;
+	NSArray				*accountMenuItemArray;
+	
+	//Hold on to this array
+	originalMenuItemArray = [menuItemArray copy];
+
+	//Remove the menu items which we've been passed... we'll be creating our own based off of them.
+	[[adium statusController] removeAllMenuItemsForPlugin:self];
+
+	//Enumerate our accounts array
+	enumerator = [accountArray objectEnumerator];
+	while((account = [enumerator nextObject])){    
+		
+		NSMenu			*stateMenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		NSEnumerator	*menuItemEnumerator = [originalMenuItemArray objectEnumerator];
+		NSMenuItem		*menuItem;
+		NSMenuItem		*accountMenuItem;
+		
+		//Enumerate all the menu items we were originally passed
+		while(menuItem = [menuItemEnumerator nextObject]){
+			AIStatus		*status;
+			NSDictionary	*newRepresentedObject;
+
+			//Set the represented object to indicate both the right status and the right account
+			if(status = [[menuItem representedObject] objectForKey:@"AIStatus"]){
+				newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
+					status, @"AIStatus",
+					account, @"AIAccount",
+					nil];
+			}else{
+				newRepresentedObject = [NSDictionary dictionaryWithObject:account
+																   forKey:@"AIAccount"];
+			}
+			
+			accountMenuItem = [[menuItem copy] autorelease];
+			[accountMenuItem setRepresentedObject:newRepresentedObject];
+
+			//Add to our menu
+			[stateMenu addItem:accountMenuItem];		
+		}
+
+		[temporaryMenuDict setObject:stateMenu
+							  forKey:[account internalObjectID]];
+	}
+	
+	//Enumerate all arrays of menu items (for all plugins)
+	enumerator = [accountMenuItemArraysDict objectEnumerator];
+	while(accountMenuItemArray = [enumerator nextObject]){
+		NSEnumerator	*menuItemEnumerator = [accountMenuItemArray objectEnumerator];
+		NSMenuItem		*menuItem;
+		
+		//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
+		//will be for a distinct AIAccount).
+		while(menuItem = [menuItemEnumerator nextObject]){
+			AIAccount	*account = [menuItem representedObject];
+			NSMenu		*menu = [[[temporaryMenuDict objectForKey:[account internalObjectID]] copy] autorelease];
+			
+			//Remove the menu items which we've been passed... we'll be creating our own based off of them.
+			[[adium statusController] plugin:self didAddMenuItems:[menu itemArray]];
+
+			//Set the submenu
+			[menuItem setSubmenu:menu];
+		}
+	}
+
+	//Clean up
+	[originalMenuItemArray release];
+}
+
+/*!
+ * @brief Remove the passed state menu items
+ *
+ * When asked to remove state menu items, we remove all submenus off all accounts.  This is much quicker than testing
+ * each of the duplicate menu items... this ties the accountController's implementation to the current statusController's
+ * implementation, but is worthwhile.
+ *
+ * @param ignoredMenuItemArray The menu items to remove... ignored in accountController's implementation
+ */
+- (void)removeStateMenuItems:(NSArray *)ignoredMenuItemArray
+{
+	NSEnumerator	*enumerator = [accountMenuItemArraysDict objectEnumerator];
+	NSArray			*ourMenuItemArray;
+	
+	while(ourMenuItemArray = [enumerator nextObject]){
+		[ourMenuItemArray makeObjectsPerformSelector:@selector(setSubmenu:)
+										  withObject:nil];
+	}
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem

@@ -78,7 +78,7 @@
 #define STATUS_DESCRIPTION_INVISIBLE		AILocalizedString(@"Invisible",nil)
 
 //Current version state ID string
-#define STATE_SAVED_STATE			@"State"
+#define STATE_SAVED_STATE					@"State"
 
 //Protocol for state menu display
 @protocol StateMenuPlugin <NSObject>
@@ -102,7 +102,7 @@
 	//State menu support
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
-
+	int						stateMenuSelectionUpdateDelays;
 }
 
 - (void)initController;
@@ -113,7 +113,7 @@
 	   withDescription:(NSString *)description
 				ofType:(AIStatusType)type 
 			forService:(AIService *)service;
-- (NSMenu *)menuOfStatusesWithTarget:(id)target;
+- (NSMenu *)menuOfStatusesForService:(AIService *)service withTarget:(id)target;
 
 - (void)setActiveStatusState:(AIStatus *)state;
 - (AIStatus *)activeStatusState;
@@ -133,6 +133,11 @@
 - (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)rebuildAllStateMenus;
+- (void)rebuildAllStateMenusForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)updateAllStateMenuSelections;
-	
+- (void)updateStateMenuSelectionForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems;
+- (void)removeAllMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
+- (void)setDelayStateMenuSelectionUpdates:(BOOL)shouldDelay;
+
 @end
