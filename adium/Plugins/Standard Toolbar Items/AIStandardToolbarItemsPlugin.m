@@ -71,7 +71,7 @@
 
     //Close Message
     toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"message" forClass:[self class]]];
+    [toolbarItem setImage:[AIImageUtilities imageNamed:@"close" forClass:[self class]]];
     [toolbarItem setTarget:self];
     [toolbarItem setAction:@selector(closeMessage:)];
     [toolbarItem setEnabled:YES];
