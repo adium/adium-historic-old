@@ -71,7 +71,8 @@ static IdleTimeWindowController *sharedInstance = nil;
 {
     [owner release];
     [AIIdleTimePlugin release];
-
+    [[[owner accountController] accountNotificationCenter] removeObserver:self];
+    
     [super dealloc];
 }
 
