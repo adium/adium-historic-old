@@ -113,6 +113,8 @@ typedef enum {
 - (NSString *)displayName;
 - (void)setDisplayName:(NSString *)alias;
 
+- (NSString *)phoneticName;
+
 - (NSString *)notes;
 - (void)setNotes:(NSString *)notes;
 
