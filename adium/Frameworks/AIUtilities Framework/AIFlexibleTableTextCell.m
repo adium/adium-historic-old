@@ -24,8 +24,8 @@
 
 #define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 
-#define COPY_EMOTICON_TEXT  AILocalizedString(@"Copy Image Text","Copy the text of an emoticon/latex function")
-#define COPY_EMOTICON_IMAGE AILocalizedString(@"Copy Image","Copy the image of an emoticon/latex function")
+#define COPY_TEXT  AILocalizedString(@"Copy Text","Copy the text associated with an item")
+#define COPY_IMAGE AILocalizedString(@"Copy Image","Copy the image associated with an item")
 
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
@@ -394,13 +394,20 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Supply menu items
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    NSMutableArray *menuItemArray = [[[NSMutableArray alloc] init] autorelease];
+    NSArray *menuItemArray = nil;
 
-    [menuItemArray addObjectsFromArray:
-        [linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]];
-    [menuItemArray addObjectsFromArray:
-        [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset]];
-
+    //Get emoticon menu items
+    menuItemArray = [self _emoticonMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
+    
+    //Add link menu items
+    if (containsLinks){
+        NSArray *linkMenuItems = ([linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]);
+        if (menuItemArray)
+            menuItemArray = [menuItemArray arrayByAddingObjectsFromArray:linkMenuItems];
+        else
+            menuItemArray = linkMenuItems;
+    }
+    
     return(menuItemArray);
 }
 
@@ -424,26 +431,26 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 //Make an array for transmitting the items
                 menuItemArray = [[[NSMutableArray alloc] init] autorelease];
                 
-                AITextAttachmentExtension	*smileyAttachment = [textStorage attribute:NSAttachmentAttributeName 
+                AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName 
                                                                              atIndex:charIndex
                                                                       effectiveRange:nil];   
-                NSImage                         *emoticonImage = [(NSTextAttachmentCell *)[smileyAttachment attachmentCell] image];
+                NSImage                         *image = [(NSTextAttachmentCell *)[attachment attachmentCell] image];
                 
-                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_IMAGE
+                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_IMAGE
                                                        target:self
-                                                       action:@selector(copyEmoticonImage:)
+                                                       action:@selector(copyImage:)
                                                 keyEquivalent:@""] autorelease];
-                [menuItem setRepresentedObject:emoticonImage];
+                [menuItem setRepresentedObject:image];
                 [menuItemArray addObject:menuItem];
                 
                 
-                NSAttributedString *formattedEmoticonText = [[NSAttributedString alloc] initWithString:repStr
+                NSAttributedString *formattedText = [[NSAttributedString alloc] initWithString:repStr
                                                                                             attributes:[textStorage attributesAtIndex:charIndex effectiveRange:nil]];
-                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_TEXT
+                menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_TEXT
                                                        target:self
-                                                       action:@selector(copyEmoticonText:)
+                                                       action:@selector(copyText:)
                                                 keyEquivalent:@""] autorelease];
-                [menuItem setRepresentedObject:[formattedEmoticonText autorelease]];                
+                [menuItem setRepresentedObject:[formattedText autorelease]];                
                 [menuItemArray addObject:menuItem];
             } 
         }
@@ -453,24 +460,24 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             NSRange			replaceRange;
             menuItemArray = [[[NSMutableArray alloc] init] autorelease];
             
-            AITextAttachmentExtension	*smileyAttachment = [textStorage attribute:@"IKHiddenAttachment" 
+            AITextAttachmentExtension	*attachment = [textStorage attribute:@"IKHiddenAttachment" 
                                                                          atIndex:charIndex
                                                                   effectiveRange:&replaceRange];
             
-            NSAttributedString *formattedEmoticonText = [textStorage attributedSubstringFromRange:replaceRange];
-            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_TEXT
+            NSAttributedString *formattedText = [textStorage attributedSubstringFromRange:replaceRange];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY__TEXT
                                                    target:self
-                                                   action:@selector(copyEmoticonText:)
+                                                   action:@selector(copyText:)
                                             keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:formattedEmoticonText];                
+            [menuItem setRepresentedObject:formattedText];                
             [menuItemArray addObject:menuItem];
             
-            NSImage                     *emoticonImage = [(NSTextAttachmentCell *)[smileyAttachment attachmentCell] image];
-            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_EMOTICON_IMAGE
+            NSImage                     *image = [(NSTextAttachmentCell *)[attachment attachmentCell] image];
+            menuItem = [[[NSMenuItem alloc] initWithTitle:COPY_IMAGE
                                                    target:self
-                                                   action:@selector(copyEmoticonImage:)
+                                                   action:@selector(copyImage:)
                                             keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:emoticonImage];
+            [menuItem setRepresentedObject:image];
             [menuItemArray addObject:menuItem];
             
         }
@@ -478,14 +485,14 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return menuItemArray;
 }
 
-- (void)copyEmoticonText:(id)sender
+- (void)copyText:(id)sender
 {
     NSAttributedString *copyString = [sender representedObject];
     [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
     [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
 }
 
-- (void)copyEmoticonImage:(id)sender
+- (void)copyImage:(id)sender
 {
     NSImage *copyImage = [sender representedObject];
     [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSTIFFPboardType] owner:nil];
