@@ -36,6 +36,7 @@
 	backgroundBorder = [[NSBezierPath bezierPath] retain];
 	[backgroundBorder appendBezierPath: [backgroundContent bezierPathByReversingPath]];
 	[backgroundBorder appendBezierPath: tempPath];
+	[self addTrackingRect:NSMakeRect(0.0,0.0,BEZEL_SIZE,BEZEL_SIZE) owner:self userData: nil assumeInside:NO]; 
 }
 
 - (void)dealloc
@@ -200,5 +201,14 @@
 	ignoringClicks = ignoreClicks;
 }
 
+- (void)mouseEntered:(NSEvent *)theEvent
+{
+	[NSCursor setOpenGrabHandCursor];
+}
+
+- (void)mouseExited:(NSEvent *)theEvent
+{
+	[[NSCursor arrowCursor] set];
+}
 
 @end
