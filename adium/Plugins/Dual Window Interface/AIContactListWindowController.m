@@ -118,8 +118,6 @@
 	//Make sure our window is on a screen; if it isn't, center it on the main screen
 	[self centerWindowOnMainScreenIfNeeded:nil];
 	
-	topLeftAnchorPoint.x = NSMinX([[self window] frame]);
-	topLeftAnchorPoint.y = NSMaxY([[self window] frame]);
     minWindowSize = [[self window] minSize];
 	
     //Apply initial preference-based settings
@@ -143,12 +141,7 @@
     [contactListViewController release];
     [contactListView release];
     
-	//If we are auto-resizing, force the top-left point to topLeftAnchorPoint, so this value will be loaded next launch
-	if(autoResizeVertically){
-		NSRect windowFrame = [[self window] frame];
-		windowFrame.origin.y = topLeftAnchorPoint.y - windowFrame.size.height;
-		[[self window] setFrame:windowFrame display:NO];
-	}
+	//Save the window position
 	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
@@ -330,24 +323,27 @@
 //Desired frame of our window
 - (NSRect)_desiredWindowFrame
 {
-    NSRect	newFrame;
+	NSWindow    *theWindow = [self window];
+	NSRect      currentFrame = [theWindow frame];
+    NSRect		newFrame = currentFrame;
 	
     if([contactListView conformsToProtocol:@protocol(AIAutoSizingView)]){
-		NSSize      contactViewPadding;
-        NSWindow    *theWindow = [self window];
-        NSRect      currentFrame = [theWindow frame];
-        NSSize      desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
-        NSScreen     *activeScreen = [theWindow screen];
-        if (!activeScreen)
-            activeScreen = [[NSScreen screens] objectAtIndex:0];
-        NSRect      screenFrame = [activeScreen visibleFrame];
-        NSRect      totalScreenFrame = [activeScreen frame];
-        
-		//Keep track of padding around the contact view
+		NSScreen	*activeScreen;
+		NSSize      contactViewPadding, desiredSize;
+		NSRect      screenFrame, totalScreenFrame;
+
+        //Get screen frame (We'll need to stay within it)
+		activeScreen = [theWindow screen];
+        if(!activeScreen) activeScreen = [[NSScreen screens] objectAtIndex:0];
+        screenFrame = [activeScreen visibleFrame];
+        totalScreenFrame = [activeScreen frame];
+		
+		//Remember the padding around the contact list view
 		contactViewPadding.height = currentFrame.size.height - [scrollView_contactList frame].size.height;
 		contactViewPadding.width = currentFrame.size.width - [scrollView_contactList frame].size.width;
 		
         //Calculate desired width and height
+		desiredSize = [(NSView<AIAutoSizingView> *)contactListView desiredSize];
         if(autoResizeHorizontally){
             newFrame.size.width = desiredSize.width + contactViewPadding.width + SCROLL_VIEW_PADDING_X;
         }else{
@@ -362,42 +358,41 @@
             }
         }
         
-        //Adjust the X Origin
-        if(autoResizeHorizontally){
-            if((currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
-                newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width); //Expand Left
-                if((newFrame.origin.x + newFrame.size.width) < (screenFrame.origin.x + EDGE_CATCH_X)){
-                   newFrame.origin.x = screenFrame.origin.x - newFrame.size.width + EDGE_CATCH_X;
-                }
-            }else{
-                newFrame.origin.x = currentFrame.origin.x; //Expand Right
-            }
-        }else{
-            newFrame.origin.x = currentFrame.origin.x;
-        }
-        
-        //Adjust the Y Origin: Maintain the topLeftAnchorPoint corner if possible
-        BOOL useTotalScreenFrame = ((newFrame.origin.x < EDGE_CATCH_X) || (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X)) && (screenFrame.size.width == totalScreenFrame.size.width);
-        float screenOriginY;
-        
-        //Use the full screen if the x origin is along the edges and the dock is at the bottom; otherwise use the system-provided screen frame which does not include the dock and menubar
-		screenOriginY = (useTotalScreenFrame ? totalScreenFrame.origin.y : screenFrame.origin.y);
-		newFrame.origin.y = topLeftAnchorPoint.y - newFrame.size.height;
-		if(newFrame.origin.y < screenOriginY){
-			newFrame.origin.y = screenOriginY;
+        //If the window is near the right edge of the screen, keep it near that edge
+        if(autoResizeHorizontally &&
+		   (currentFrame.origin.x + currentFrame.size.width) + EDGE_CATCH_X > (screenFrame.origin.x + screenFrame.size.width)){
+
+			newFrame.origin.x = currentFrame.origin.x + (currentFrame.size.width - newFrame.size.width);
+			if((newFrame.origin.x + newFrame.size.width) < (screenFrame.origin.x + EDGE_CATCH_X)){
+				newFrame.origin.x = screenFrame.origin.x - newFrame.size.width + EDGE_CATCH_X;
+			}
 		}
+        
+		//If the window is not near the bottom edge of the screen, keep its titlebar in place
+		if(currentFrame.origin.y > screenFrame.origin.y + EDGE_CATCH_Y ||
+		   currentFrame.origin.y + currentFrame.size.height + EDGE_CATCH_Y > screenFrame.origin.y + screenFrame.size.height){
+			newFrame.origin.y += currentFrame.size.height - newFrame.size.height;
+		}
+		
+		//Because the dock is a pain, we have two different behaviors depending on the horizontal location of our list.
+		//Near the right and left edges we will stick to the bottom of the screen.  In the center we will stick to the
+		//top of the dock instead.
+		//		BOOL	stickToBottomOfScreen = ((newFrame.origin.x < EDGE_CATCH_X)||
+		//										 (newFrame.origin.x+newFrame.size.width) > (screenFrame.size.width-EDGE_CATCH_X));
+		
+		
+		//		
+//        float screenOriginY;
+//        
+//        //Use the full screen if the x origin is along the edges and the dock is at the bottom; otherwise use the system-provided screen frame which does not include the dock and menubar
+//		screenOriginY = (useTotalScreenFrame ? totalScreenFrame.origin.y : screenFrame.origin.y);
+//		newFrame.origin.y = topLeftAnchorPoint.y - newFrame.size.height;
+//		if(newFrame.origin.y < screenOriginY){
+//			newFrame.origin.y = screenOriginY;
+//		}
 	}
 	
 	return(newFrame);
-}
-
-//Remember the top-left anchor point when user moves the window.
-- (void)windowDidMove:(NSNotification *)notification
-{
-	if(autoResizeVertically){
-		topLeftAnchorPoint.x = NSMinX([[self window] frame]);
-		topLeftAnchorPoint.y = NSMaxY([[self window] frame]);
-	}
 }
 
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification
