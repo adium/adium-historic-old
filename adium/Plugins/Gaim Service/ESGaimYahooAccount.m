@@ -133,8 +133,6 @@ static NSDictionary		*presetStatusesDictionary = nil;
 #pragma mark Status Messages
 - (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
-	[super updateContact:theContact forEvent:event];
-	
 	SEL updateSelector = nil;
 	
 	switch ([event intValue]){
@@ -148,6 +146,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		[self performSelector:updateSelector
 				   withObject:theContact];
 	}
+	
+	[super updateContact:theContact forEvent:event];
 }
 
 - (void)updateStatusMessage:(AIListContact *)theContact

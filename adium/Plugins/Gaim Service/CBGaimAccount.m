@@ -95,17 +95,10 @@ static id<GaimThread> gaimThread = nil;
 	}
 	
 	[self gotGroupForContact:theContact];
-}
-
-- (oneway void)updateContact:(AIListContact *)theContact
-{
-//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
-//    GaimBuddy *buddy = [[theContact statusObjectForKey:@"GaimBuddy"] pointerValue];
 	
-	//Leave here until MSN and other protocols are patched to send a signal when the alias changes, or gaim itself is.
-	//gaimAlias - this may be either a distinct name ("Friendly Name" for example) or a formatted UID
+	//We should receive retained data
+	[groupName release];
 }
-
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
@@ -149,13 +142,16 @@ static id<GaimThread> gaimThread = nil;
 	[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 											  object:theContact
 											userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+
 																				 forKey:@"Notify"]];
-	
+	//We should receive retained data
+	[gaimAlias release];
 }
 
 - (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
-	
+	//We should receive retained data
+	[event release];
 }		
 
 
@@ -176,6 +172,9 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+
+	//We should receive retained data
+	[data release];
 }
 //Signed offline
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
@@ -194,10 +193,13 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+	
+	//We should receive retained data
+	[data release];
 }
 //Signon Time
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
-{
+{	
 	if (signonDate) {
 		//Set the signon time
 		[theContact setStatusObject:signonDate
@@ -207,16 +209,25 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+	
+	//We should receive retained data
+	[signonDate release];
 }
 
 //Away and away return
 - (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:YES];
+	
+	//We should receive retained data
+	[data release];
 }
 - (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
 {
 	[self _updateAway:theContact toAway:NO];
+	
+	//We should receive retained data
+	[data release];
 }
 - (void)_updateAway:(AIListContact *)theContact toAway:(BOOL)newAway
 {
@@ -244,6 +255,9 @@ static id<GaimThread> gaimThread = nil;
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+	
+	//We should receive retained data
+	[idleSinceDate release];
 }
 
 //Evil level (warning level)
@@ -271,6 +285,9 @@ static id<GaimThread> gaimThread = nil;
 
 		}
 	}
+	
+	//We should receive retained data
+	[evilNumber release];
 }   
 
 //Buddy Icon
@@ -288,7 +305,10 @@ static id<GaimThread> gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	
 	//Clear the UserIconData
-	[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];	
+	[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];
+	
+	//We should receive retained data
+	[userIconData release];
 }
 
 - (oneway void)removeContact:(AIListContact *)theContact
@@ -1159,12 +1179,16 @@ static id<GaimThread> gaimThread = nil;
 //Our account was disconnected, report the error
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
+	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
+
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
 	
 	//Clear status flags on all contacts
-	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:self] objectEnumerator];
+	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil
+																	   subgroups:YES 
+																	   onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
@@ -1175,7 +1199,6 @@ static id<GaimThread> gaimThread = nil;
 	
 	[[adium contactController] endListObjectNotificationDelay];
 	
-	[lastDisconnectionError release]; lastDisconnectionError = [text retain];
 }
 
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
