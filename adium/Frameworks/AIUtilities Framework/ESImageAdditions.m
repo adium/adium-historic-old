@@ -87,24 +87,35 @@
 
 - (NSImage *)imageByScalingToSize:(NSSize)size
 {
+	return ([self imageByScalingToSize:size fraction:1.0]);
+}
+
+- (NSImage *)imageByFadingToFraction:(float)delta
+{
+	return ([self imageByScalingToSize:[self size] fraction:delta]);
+}
+
+- (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
+{
 	NSSize  originalSize = [self size];
 	
-	if(!NSEqualSizes(originalSize, size)){
-		NSImage *scaledImage = [[NSImage alloc] initWithSize:size];
-
-		[scaledImage lockFocus];
+	//Proceed only if size or delta are changing
+	if((NSEqualSizes(originalSize, size)) && (delta == 1.0)){
+		return([[self copy] autorelease]);
+		
+	}else{
+		NSImage *newImage = [[NSImage alloc] initWithSize:size];
+		
+		[newImage lockFocus];
 		[self drawInRect:NSMakeRect(0,0,size.width,size.height)
 				fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
 			   operation:NSCompositeCopy
-				fraction:1.0];
-		[scaledImage unlockFocus];
+				fraction:delta];
+		[newImage unlockFocus];
 		
-		return([scaledImage autorelease]);	
-	}else{
-		return([[self copy] autorelease]);
+		return([newImage autorelease]);	
 	}
 }
-
 
 // Originally from Apple's "CocoaVideoFrameToNSImage" Sample code
 //
