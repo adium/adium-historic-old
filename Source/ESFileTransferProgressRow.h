@@ -10,7 +10,7 @@
 
 #import "ESFileTransferProgressView.h"
 
-@interface ESFileTransferProgressRow : NSObject<FileTransferDelegate> {
+@interface ESFileTransferProgressRow : AIObject<FileTransferDelegate> {
 	ESFileTransfer			*fileTransfer;
 	id						owner;
 
