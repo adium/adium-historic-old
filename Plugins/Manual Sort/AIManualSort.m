@@ -28,7 +28,7 @@ int manualSort(id objectA, id objectB, BOOL groups);
     return(@"ManualSort");
 }
 - (NSString *)displayName{
-    return(AILocalizedString(@"Manually","Sort Contacts... <Manually>"));
+    return(AILocalizedString(@"Sort Contacts Manually",nil));
 }
 - (NSString *)configureSortMenuItemTitle{ 
 	return(nil);

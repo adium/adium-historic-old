@@ -47,7 +47,7 @@ static  BOOL	sortByLastName;
     return(@"Alphabetical");
 }
 - (NSString *)displayName{
-    return(AILocalizedString(@"Alphabetically","Sort Contacts... <Alphabetically>"));
+    return(AILocalizedString(@"Sort Contacts Alphabetically",nil));
 }
 - (NSArray *)statusKeysRequiringResort{
 	return(nil);

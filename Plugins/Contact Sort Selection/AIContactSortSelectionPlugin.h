@@ -19,8 +19,6 @@
 
 @interface AIContactSortSelectionPlugin : AIPlugin {
     AIContactSortPreferences	*preferences;
-	NSMenuItem					*menuItem_sort;
-	NSMenu						*menu_sortSubmenu;
 	NSMenuItem					*menuItem_configureSort;
 	BOOL						enableConfigureSort;
 }
