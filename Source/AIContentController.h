@@ -121,6 +121,7 @@ typedef enum {
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
 - (void)receiveContentObject:(AIContentObject *)inObject;
 - (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 - (void)displayContentObject:(AIContentObject *)inObject;
 - (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
@@ -171,6 +172,9 @@ typedef enum {
 - (NSArray *)emoticonPacks;
 - (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;
 - (NSArray *)emoticonsArray;
+
+//Encryption
+- (NSMenu *)encryptionMenuNotifyingTarget:(id)target;
 
 //Private
 - (void)initController;
