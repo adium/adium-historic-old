@@ -86,7 +86,10 @@ Version 0.80 (13/-3/2525)
 	- Provided via Off-the-Record Messaging, compatible with any other participating client or client with an OTR plugin.
 	- For more information on OTR, visit http://www.cypherpunks.ca/otr/
 
-- (Sametime) Upgraded to meanwhile 0.4cvs, fixing a common crash when connecting and adding support for the Directory service.
+- (Sametime) Upgraded to meanwhile 0.4 and gaim-meanwhile 1.2.0:
+	- Fixed a common crash when connecting
+	- Added support for the Directory service.
+	- Added support for group conferences
 
 - Streamlined and cleaned up Advanced preferences
 
