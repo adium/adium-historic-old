@@ -11,4 +11,8 @@
     AIAdium		*adium;
 }
 
+- (void)windowDidLoad;
+- (BOOL)windowShouldClose:(id)sender;
+- (NSString *)adiumFrameAutosaveName;
+
 @end
