@@ -41,7 +41,7 @@
 	BOOL						combineConsecutive;
 	int							styleVersion;	
 	NSImage						*imageMask;
-	NSMutableArray				*objectsWithMaskedUserIconsArray;
+	NSMutableArray				*objectsWithUserIconsArray;
 }
 
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin;
