@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.92 2004/05/05 04:01:48 adamiser Exp $
+$Id: ToDoList.txt,v 1.93 2004/05/05 04:06:25 adamiser Exp $
 
 
 Legend
@@ -43,6 +43,7 @@ Contact List:
 * Adding an msn contact with no groups defined crashes adium.
 * Adding a group makes the contact list window reappear.
 * Auto-resizing is no longer correctly sticking to the bottom of the screen?
+* Offline contacts are not always displaying
 
 
 -------------------------------------------------------------------------------------------------------
