@@ -20,17 +20,15 @@
 
 @implementation SHLinkEditorWindowController
 
-static NSWindow *theSheet = nil;
 #pragma mark init methods
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder
 {
     if(nil != (editableView = responder)) {
         SHLinkEditorWindowController    *newLinkEditor;
         newLinkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
-        theSheet = [newLinkEditor window];
         editLink = NO; //this is for a new link to be inserted
         favoriteWindow = NO;
-        [NSApp beginSheet:theSheet
+        [NSApp beginSheet:[newLinkEditor window]
             modalForWindow:[(NSTextView *)editableView window]
             modalDelegate:nil
             didEndSelector:nil
@@ -44,10 +42,9 @@ static NSWindow *theSheet = nil;
     if(nil != (editableView = responder)) {
         SHLinkEditorWindowController    *linkEditor;
         linkEditor = [self initWithWindowNibName:LINK_EDITOR_NIB_NAME];
-        theSheet = [linkEditor window];
         editLink = YES; //this is to edit an existing link
         favoriteWindow = NO;
-        [NSApp beginSheet:theSheet
+        [NSApp beginSheet:[linkEditor window]
             modalForWindow:[(NSTextView *)editableView window]
             modalDelegate:self
             didEndSelector:nil
@@ -60,10 +57,9 @@ static NSWindow *theSheet = nil;
 {
     SHLinkEditorWindowController    *favsEditor;
     favsEditor = [self initWithWindowNibName:FAVS_EDITOR_NIB_NAME];
-    theSheet = [favsEditor window];
     editLink = NO;
     favoriteWindow = YES;
-    [NSApp beginSheet:theSheet
+    [NSApp beginSheet:[favsEditor window]
             modalForWindow:[view window]
             modalDelegate:nil
             didEndSelector:nil
@@ -170,7 +166,6 @@ static NSWindow *theSheet = nil;
         [[self window] orderOut:self];
         [[self window] close];
         [[self window] release];
-        theSheet = nil;
     }
 }
 
