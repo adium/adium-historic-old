@@ -124,7 +124,7 @@ static void adiumGaimBlistShow(GaimBuddyList *list)
 static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 {
     NSCAssert(node != nil, @"BlistUpdate on null node");
-	
+
     if (GAIM_BLIST_NODE_IS_BUDDY(node)) {
         // ui_data will be NULL if we've connected and disconnected;
         // this purges our handles but not gaim's. So look up the account.
