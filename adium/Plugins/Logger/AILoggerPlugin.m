@@ -17,17 +17,24 @@
 #import "AIAdium.h"
 #import "AILoggerPlugin.h"
 #import "AILogViewerWindowController.h"
+#import "AILoggerPreferences.h"
+
+#define LOGGING_DEFAULT_PREFS	@"LoggingDefaults"
 
 @interface AILoggerPlugin (PRIVATE)
 - (void)_addMessage:(NSString *)message betweenAccount:(AIAccount *)account andObject:(NSString *)object onDate:(NSDate *)date;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AILoggerPlugin
 
 - (void)installPlugin
 {
-    //Observe content
-    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+    observingContent = NO;
+
+    //Setup our preferences
+    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
+    preferences = [[AILoggerPreferences loggerPreferencesWithOwner:owner] retain];
 
     //Install the log viewer menu item
     logViewerMenuItem = [[NSMenuItem alloc] initWithTitle:@"Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@"l"];
@@ -44,8 +51,34 @@
     //Create a logs directory
     logBasePath = [[[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
     [AIFileUtilities createDirectory:logBasePath];
+
+    //Observe preference changes
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [self preferencesChanged:nil];
 }
 
+//
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_LOGGING] == 0){
+        BOOL	newValue = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_LOGGER_ENABLE] boolValue];
+
+        if(newValue != observingContent){
+            observingContent = newValue;
+
+            if(!observingContent){ //Stop Logging
+                //Stop Observing
+                [[owner notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
+
+            }else{ //Start Logging
+                [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:nil];
+                
+            }
+        }
+    }
+}
+
+//
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
     BOOL valid = YES;
@@ -67,6 +100,7 @@
     return(valid);
 }
 
+//
 - (void)contentObjectAdded:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"Object"];
@@ -80,10 +114,6 @@
     NSString		*dateString = nil;
     NSString		*logMessage = nil;
 
-
-    
-    
-    
     //Message Content
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         date = [content date];
