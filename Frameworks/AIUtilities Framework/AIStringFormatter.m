@@ -59,33 +59,65 @@
 - (BOOL)isPartialStringValid:(NSString **)partialStringPtr proposedSelectedRange:(NSRangePointer)proposedSelRangePtr originalString:(NSString *)origString originalSelectedRange:(NSRange)origSelRange errorDescription:(NSString **)error
 {
     BOOL	valid = YES;
-
+	BOOL	shouldIncreaseErrorCounter = NO;
+	
     //Check length
     if(length > 0 && [*partialStringPtr length] > length){
         valid = NO;
+		shouldIncreaseErrorCounter = YES;
     }
-
+	
     //Check for invalid characters
     if(characters != nil && [*partialStringPtr length] > 0){
         NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? *partialStringPtr : [*partialStringPtr lowercaseString])];
         NSString	*validSegment;
-
-        if(![scanner scanCharactersFromSet:characters intoString:&validSegment] || [validSegment length] != [*partialStringPtr length]){
+		
+        if(![scanner scanCharactersFromSet:characters intoString:&validSegment]){
             valid = NO;
-        }
-    }
-
-    if(!valid){
-        errorCount++;
-
-        if(errorMessage != nil && errorCount > ERRORS_BEFORE_DIALOG){
-            NSRunAlertPanel(@"Invalid Input", errorMessage, @"OK", nil, nil);
+			shouldIncreaseErrorCounter = YES;
+			
         }else{
-            NSBeep();
-        }
-    }
-
-    return(valid);
+			unsigned validSegmentLength = [validSegment length];
+			unsigned partialStringPtrLength = [*partialStringPtr length];
+			
+			if (validSegmentLength != partialStringPtrLength){
+				valid = NO;
+				
+				//If the string is valid except for the last character, and the last character is a newline, strip the newline and allow the change
+				if ((validSegmentLength + 1 == partialStringPtrLength) &&
+					([*partialStringPtr characterAtIndex:validSegmentLength] == '\r' ||
+					 [*partialStringPtr characterAtIndex:validSegmentLength] == '\n')){
+					*partialStringPtr = [*partialStringPtr substringToIndex:validSegmentLength];
+					
+					if ((*proposedSelRangePtr).length == 0){
+						(*proposedSelRangePtr).location = (((*proposedSelRangePtr).location) - 1);
+					}else{
+						(*proposedSelRangePtr).length = (((*proposedSelRangePtr).length) - 1);	
+					}
+					
+					shouldIncreaseErrorCounter = NO;
+					
+				}else{
+					shouldIncreaseErrorCounter = YES;
+					
+				}
+			}
+		}
+	}
+	
+	if(shouldIncreaseErrorCounter){
+		errorCount++;
+		
+		if(errorMessage != nil && errorCount > ERRORS_BEFORE_DIALOG){
+			NSRunAlertPanel(@"Invalid Input", errorMessage, @"OK", nil, nil);
+			errorCount = 0;
+			
+		}else{
+			NSBeep();
+		}
+	}
+	
+	return(valid);
 }
 
 - (void)dealloc
