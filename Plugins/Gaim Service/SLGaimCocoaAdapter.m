@@ -2372,14 +2372,10 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (oneway void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueUD
 {
 	GaimConversation *conv = [convValue pointerValue];
-	
+
 	if(conv){
-		AIChat	*chat = conv->ui_data;
-
-		[chatDict removeObjectForKey:chatUniqueUD];
+		//Tell gaim to destroy the conversation.  We don't clean up here, but in adiumGaimConvDestroy()
 		gaim_conversation_destroy(conv);
-
-		if(chat) [chat release];		
 	}
 }
 
