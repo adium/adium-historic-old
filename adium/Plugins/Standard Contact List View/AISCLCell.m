@@ -87,7 +87,7 @@
     }
 
     //Name
-    displayName = [[NSAttributedString alloc] initWithString:[listObject formattedDisplayName]
+    displayName = [[NSAttributedString alloc] initWithString:[listObject longDisplayName]
                                                   attributes:[NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil]];
     displayNameSize = [displayName size];
     cellSize.width += displayNameSize.width;
@@ -239,7 +239,7 @@
     [paragraphStyle setLineBreakMode:NSLineBreakByClipping];
 
     //Get the name string
-    name = [listObject formattedDisplayName];
+    name = [listObject longDisplayName];
     displayName = [[NSAttributedString alloc] initWithString:name attributes:[NSDictionary dictionaryWithObjectsAndKeys:textColor, NSForegroundColorAttributeName, font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil]];
 
     //Draw the name
