@@ -10,6 +10,7 @@
 #import "CBGaimServicePlugin.h"
 #import "SLGaimCocoaAdapter.h"
 #import "ESGaimRequestWindowController.h"
+#import "ESGaimRequestActionWindowController.h"
 
 #import "GaimServices.h"
 
@@ -598,33 +599,17 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		
 		[buttonNamesArray exchangeObjectAtIndex:default_action withObjectAtIndex:(actionCount-1)];
     }
-    
-    switch (actionCount)
-    { 
-		case 1:
-			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-													   [buttonNamesArray objectAtIndex:0],nil,nil);
-			break;
-		case 2:
-			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-													   [buttonNamesArray objectAtIndex:1],
-													   [buttonNamesArray objectAtIndex:0],nil);
-			break;
-		case 3:
-			alertReturn = NSRunInformationalAlertPanel(titleString,msg,
-													   [buttonNamesArray objectAtIndex:2],
-													   [buttonNamesArray objectAtIndex:1],
-													   [buttonNamesArray objectAtIndex:0]);
-			break;		    
-    }
-    
-    //Convert the return value to an array index
-    alertReturn = (alertReturn + (actionCount - 2));
 	
-    if (callBacks[alertReturn] != NULL){
-		((GaimRequestActionCb)callBacks[alertReturn])(userData, alertReturn);
-	}
-    
+	NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:actionCount],@"Count",
+							buttonNamesArray,@"Button Names",
+							[NSValue valueWithPointer:callBacks],@"callBacks",
+							[NSValue valueWithPointer:userData],@"userData",
+							titleString,@"Title String",
+							msg,@"Message",nil];
+	
+	[ESGaimRequestActionWindowController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
+														  withObject:infoDict
+													   waitUntilDone:NO];
     return(nil);
 }
 
@@ -949,7 +934,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 	[YahooJapanService release]; YahooJapanService = nil;
 	[NovellService release]; NovellService = nil;
 
-	[gaimCocoaAdapter release]; gaimCocoaAdapter = nil;
 	[kitConnection release]; kitConnection = nil;
 }
 
