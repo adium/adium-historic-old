@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.6 2004/07/13 15:05:56 evands Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.7 2004/07/14 05:19:13 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -92,7 +92,7 @@
     bodyNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"body"];
     [messageNode addChild:bodyNode];
     
-    textNode = [[AWEzvXMLNode alloc] initWithType:XMLText name:message];
+    textNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLText name:message];
     [bodyNode addChild:textNode];
     
     htmlNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLElement name:@"html"];
@@ -103,7 +103,7 @@
     [htmlBodyNode addAttribute:@"ichattextcolor" withValue:@"#000000"];
     [htmlNode addChild:htmlBodyNode];
     
-    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:XMLRaw name:html];
+    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLRaw name:html];
     [htmlBodyNode addChild:htmlMessageNode];
     
     /* send the data */

@@ -3,7 +3,7 @@
  * File:        AWEzvXMLNode.h
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLNode.h,v 1.3 2004/07/13 15:05:56 evands Exp $
+ * CVS tag:     $Id: AWEzvXMLNode.h,v 1.4 2004/07/14 05:19:13 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -35,8 +35,8 @@
 
 enum types {
     AWEzvXMLElement,
-    XMLText,
-    XMLRaw
+    AWEzvXMLText,
+    AWEzvXMLRaw
 };
 
 @interface AWEzvXMLNode : NSObject {
