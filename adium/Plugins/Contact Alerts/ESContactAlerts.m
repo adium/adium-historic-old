@@ -693,7 +693,11 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                                                    action:@selector(saveMessageDetails:)
                                             keyEquivalent:@""] autorelease];
             [menuItem setRepresentedObject:contact];
-
+            #ifdef MAC_OS_X_VERSION_10_3
+            if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
+                [menuItem setIndentationLevel:1];
+            #endif
+            
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
             {
                 NSMenuItem	*groupItem;
@@ -703,6 +707,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
                                                         action:nil
                                                  keyEquivalent:@""] autorelease];
                 [groupItem setEnabled:NO];
+                #ifdef MAC_OS_X_VERSION_10_3
+                if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
+                    [groupItem setIndentationLevel:0];
+                #endif
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }

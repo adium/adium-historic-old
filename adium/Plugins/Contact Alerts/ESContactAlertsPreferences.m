@@ -93,8 +93,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 {
     //Build the contact list
     [popUp_contactList setMenu:[self switchContactMenu]];
-    if ([popUp_contactList numberOfItems] )
-    {
+    if ([popUp_contactList numberOfItems]) {
         [popUp_contactList selectItemAtIndex:0];
         activeContactObject = [[popUp_contactList selectedItem] representedObject];
     }
@@ -128,12 +127,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     //    [[[tableView_actions tableColumns] objectAtIndex:1] sizeToFit];
     //    [[[tableView_actions tableColumns] objectAtIndex:0] sizeToFit];
 
-    if ([prefAlertsArray count]) //some alerts do exist
-    {
+    if ([prefAlertsArray count]) { //some alerts do exist
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-    }
-    else
-    {
+    } else {
         //Build the event menu (for no contact)
         [popUp_addEvent setMenu:[instance eventMenu]];
     }
@@ -149,18 +145,14 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [popUp_contactList selectItemAtIndex:[popUp_contactList indexOfItemWithRepresentedObject:activeContactObject]];
 
         int firstIndex = [prefAlertsArray indexOfObject:inContact];
-        if (firstIndex == NSNotFound)
-        {
+        if (firstIndex == NSNotFound) {
             [instance configForObject:inContact];
             [popUp_addEvent setMenu:[instance eventMenu]];
-        }
-        else
-        {
+        } else {
             [tableView_actions selectRow:firstIndex byExtendingSelection:NO];
         }
     }
-    else //got nil
-    {
+    else { //got nil
         [tableView_actions selectRow:0 byExtendingSelection:NO];
     }
 }
@@ -243,7 +235,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
                                               object:tempObject
                                             userInfo:nil]; //notify that the change occured    
-    
 }
 
 //doesn't work for grou pyet because of contactInGroup
@@ -279,7 +270,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions reloadData]; //necessary?
 }
 
-
 -(void)accountListChanged:(NSNotification *)notification
 {
     NSLog(@"account list changed");
@@ -291,8 +281,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         }
     }
 }
-
-
 
 //TableView datasource --------------------------------------------------------
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -422,9 +410,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 }
 
-
-
-
 - (BOOL)shouldSelectRow:(int)inRow
 {
     return(YES);
@@ -467,9 +452,10 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                                    target:self
                                                    action:@selector(switchToContact:)
                                             keyEquivalent:@""] autorelease];
-#ifdef MAC_OS_X_VERSION_10_3
-            [menuItem setIndentationLevel:1];
-#endif
+            #ifdef MAC_OS_X_VERSION_10_3
+            if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
+                [menuItem setIndentationLevel:1];
+            #endif
             [menuItem setRepresentedObject:contact];
 
             if ([groupName compare:[[contact containingGroup] displayName]] != 0)
@@ -481,9 +467,10 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                                         action:@selector(switchToContact:)
                                                  keyEquivalent:@""] autorelease];
                 [groupItem setRepresentedObject:[contact containingGroup]];
-#ifdef MAC_OS_X_VERSION_10_3
-                [groupItem setIndentationLevel:0];
-#endif
+                #ifdef MAC_OS_X_VERSION_10_3
+                if ([menuItem respondsToSelector:@selector(setIndentationLevel:)])
+                    [groupItem setIndentationLevel:0];
+                #endif
                 [contactMenu addItem:groupItem];
                 firstOfflineSearch = YES; //start searching for an offline contact
             }
