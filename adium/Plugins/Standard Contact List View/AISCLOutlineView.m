@@ -204,17 +204,6 @@
 }
 #endif
 
-// Context menu ------------------------------------------------------------------------
-- (NSMenu *)menuForEvent:(NSEvent *)theEvent
-{
-    //Pass this on to our delegate
-    if([[self delegate] respondsToSelector:@selector(outlineView:menuForEvent:)]){
-        return([[self delegate] outlineView:self menuForEvent:theEvent]);
-    }else{
-        return(nil);
-    }
-}
-
     
 // Auto Sizing --------------------------------------------------------------------------
 //Updates the horizontal size of several objects, posting a desired size did change notification if necessary
@@ -338,46 +327,6 @@
     }
 }
 
-
-// Keyboard Navigation ------------------------------------------------------------------
-// Navigate the contact list with the keyboard
-- (void)keyDown:(NSEvent *)theEvent
-{
-    if(!([theEvent modifierFlags] & NSCommandKeyMask)){
-        if([theEvent keyCode] == 36){ //Enter or return
-            [(AISCLViewController *)[self delegate] performDefaultActionOnSelectedContact:self];
-
-        }else if([theEvent keyCode] == 123){ //left
-            AIListObject 	*object = [self itemAtRow:[self selectedRow]];
-            
-            if(object != nil){
-                if([object isKindOfClass:[AIListGroup class]]){
-                    //Collapse
-                    if([self isItemExpanded:object]){
-                        [self collapseItem:object];
-                    }
-                } 	
-            }
-
-        }else if([theEvent keyCode] == 124){ //right
-            AIListObject 	*object = [self itemAtRow:[self selectedRow]];
-            
-            if(object != nil){
-                if([object isKindOfClass:[AIListGroup class]]){
-                    //Expand
-                    if(![self isItemExpanded:object]){
-                        [self expandItem:object];
-                    }
-                } 	   
-            }
-
-        }else{
-            [super keyDown:theEvent]; //pass it on
-        }
-    }else{
-        [super keyDown:theEvent]; //pass it on
-    }
-}    
 
 //Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.

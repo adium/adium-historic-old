@@ -13,10 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.91 2004/07/22 13:59:21 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.92 2004/07/27 16:40:09 adamiser Exp $
 
 #import "AIInterfaceController.h"
-#import "AIContactListWindowController.h"
+#import "AIStandardListWindowController.h"
 
 #define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")

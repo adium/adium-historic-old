@@ -130,7 +130,7 @@
 //attributes, giving a bit of a speed boost
 - (NSAttributedString *)displayNameStringWithAttributes:(BOOL)applyAttributes inView:(AISCLOutlineView *)controlView
 {
-	NSFont				*font = (isGroup ? [controlView groupFont] : [controlView font]);
+	NSFont				*font = /*(isGroup ? [controlView groupFont] : */[controlView font]/*)*/;
 	NSString 			*displayString;
 	NSDictionary		*attributes;
 	
@@ -182,8 +182,9 @@
 	if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
 		textColor = [[listObject displayArrayForKey:@"Text Color"] objectValue];
 		if(!textColor){
-			if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
-			else textColor = [(AISCLOutlineView *)controlView color];
+#warning 			if(isGroup) textColor = [(AISCLOutlineView *)controlView groupColor];
+#warning 			else textColor = [(AISCLOutlineView *)controlView color];
+			textColor = [NSColor blackColor];
 		}
 	}else{
 		textColor = [NSColor alternateSelectedControlTextColor];

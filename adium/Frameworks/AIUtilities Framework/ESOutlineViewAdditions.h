@@ -8,6 +8,8 @@
 
 - (id)firstSelectedItem;
 - (NSArray *)arrayOfSelectedItems;
+- (void)selectItemsInArray:(NSArray *)selectedItems;
+- (void)redisplayItem:(id)item;
 
 @end
 
