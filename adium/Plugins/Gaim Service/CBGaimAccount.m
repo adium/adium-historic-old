@@ -1087,6 +1087,37 @@ static BOOL didInitSSL = NO;
 /*****************************************************/
 #pragma mark File Transfer
 
+//Create a protocol-specific xfer object, set it up as requested, and begin sending
+- (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
+	
+	if (xfer){
+		//gaim will free filename when necessary
+		char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
+		
+		//Associate the fileTransfer and the xfer with each other
+		[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+		xfer->ui_data = [fileTransfer retain];
+		
+		//Set the filename
+		gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
+		
+		//request that the transfer begins
+		gaim_xfer_request(xfer);
+		
+		//tell the fileTransferController to display appropriately
+		[[adium fileTransferController] performSelectorOnMainThread:@selector(beganFileTransfer:)
+														 withObject:fileTransfer
+													  waitUntilDone:NO];
+	}
+}
+//By default, protocols can not create GaimXfer objects
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	return nil;
+}
+
 //The account requested that we received a file.
 //Set up the ESFileTransfer and query the fileTransferController for a save location
 - (void)accountXferRequestFileReceiveWithXfer:(GaimXfer *)xfer
@@ -1447,7 +1478,9 @@ static BOOL didInitSSL = NO;
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
 
-			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
+			[self performSelectorOnMainThread:@selector(autoReconnectAfterNumberDelay:)
+								   withObject:[NSNumber numberWithInt:AUTO_RECONNECT_DELAY]
+								waitUntilDone:YES];
 			reconnectAttemptsRemaining--;
 		}else{
 			if (lastDisconnectionError){

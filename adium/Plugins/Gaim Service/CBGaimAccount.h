@@ -49,6 +49,10 @@
 	//Instructs the account to reject a file receive request
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer;
 
+//Private (for subclasses only) file transfer methods
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer;
+
 	//AIAccount_Privacy
 -(BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type;
 -(BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type;

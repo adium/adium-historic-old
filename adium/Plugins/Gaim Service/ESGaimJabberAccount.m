@@ -139,25 +139,14 @@ static BOOL didInitJabber = NO;
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
+	[super _beginSendOfFileTransfer:fileTransfer];
+}
+
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
 	char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 	
-	GaimXfer *xfer = jabber_outgoing_xfer_new(gc,destsn);
-
-	//gaim will free filename when necessary
-	char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
-	
-	//Associate the fileTransfer and the xfer with each other
-	[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-    xfer->ui_data = [fileTransfer retain];
-	
-	//Set the filename
-	gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
-	
-    //request that the transfer begins
-	gaim_xfer_request(xfer);
-    
-	//tell the fileTransferController to display appropriately
-    [[adium fileTransferController] beganFileTransfer:fileTransfer];
+	return jabber_outgoing_xfer_new(gc,destsn);
 }
 
 - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer

@@ -79,10 +79,7 @@ static BOOL didInitMSN = NO;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
 {
 	if (disconnectionError){
-		//Remove "signed on from another location" check for libgaim 0.77
-		/*if (([disconnectionError rangeOfString:@"signed on from another location"].location != NSNotFound)) {
-			return NO;
-		}else */if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
+		if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
 			[[adium accountController] forgetPasswordForAccount:self];
 		}
 	}
