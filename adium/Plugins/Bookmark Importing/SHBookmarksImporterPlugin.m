@@ -153,6 +153,8 @@
 		
 		NSMenu				*menuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
 		NSMenu				*contextualMenuItemSubmenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
+		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
+		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		
 		while(object = [enumerator nextObject]){
 			if([object isKindOfClass:[NSDictionary class]]){
@@ -172,6 +174,9 @@
 		[bookmarkRootContextualMenuItem performSelectorOnMainThread:@selector(setSubmenu:)
 														 withObject:contextualMenuItemSubmenu
 													  waitUntilDone:YES];
+		
+		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
+		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
 		
 		[pool release];
 		updatingMenu = NO;
