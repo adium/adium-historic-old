@@ -35,10 +35,10 @@ typedef enum {
 #define GROUP_ENCRYPTION				@"Encryption"
 
 typedef enum {
-	EncryptedChat_Never,
-	EncryptedChat_Manually,
-	EncryptedChat_Automatically,
-	EncryptedChat_RejectUnencryptedMessages
+	EncryptedChat_Never = -2,
+	EncryptedChat_Manually = -1,
+	EncryptedChat_Automatically = 0, /* Automatically is the default */
+	EncryptedChat_RejectUnencryptedMessages = 1
 } AIEncryptedChatPreference;
 
 //Chat errors should be indicated by setting a status object on this key 
