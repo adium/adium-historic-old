@@ -231,9 +231,19 @@
         
     if(contactListFont)
     {
-        [textField_noBoldWarning setStringValue:[NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]]];
+		NSString *warningString = [NSString stringWithFormat:@"Warning: %@ does not have a bold variant.", [contactListFont fontName]];
+		
         [checkBox_boldGroups setEnabled:!canNotBeBold];
-        [textField_noBoldWarning setHidden:!canNotBeBold];
+		if([tabView_category respondsToSelector:@selector(setHidden:)]){
+			[textField_noBoldWarning setStringValue:warningString];
+			[textField_noBoldWarning setHidden:!canNotBeBold];
+		} else { //JAGUAR
+			if (canNotBeBold){
+				[textField_noBoldWarning setStringValue:warningString];				
+			} else {
+				[textField_noBoldWarning setStringValue:@""];	
+			}
+		}
     }
 }
 
