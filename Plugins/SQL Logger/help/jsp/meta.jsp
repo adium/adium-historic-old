@@ -84,8 +84,9 @@ try {
 
     int longDispWidth = rset.getInt(1);
 
-    pstmt = conn.prepareStatement("select meta_id, name " +
-        " from im.meta_container order by name");
+    pstmt = conn.prepareStatement("select meta_id, name, count(meta_contact.meta_id) " +
+        " from im.meta_container natural left join im.meta_contact " +
+        " group by meta_id, name order by name");
 
     rset = pstmt.executeQuery();
 
@@ -97,7 +98,8 @@ try {
     onClick="window.open('<%= editURL %>', 'Edit Meta Contact', 'width=275,height=<%= height %>')">Edit ...</a></span>
 <%
 
-        out.print("<h2>" + rset.getString("name") + "</h2>");
+        out.print("<h2>" + rset.getString("name") + " (" +
+            rset.getString("count") + ")</h2>");
         out.println("<div class=\"meta\">");
         out.print("<div class=\"personal_info\">");
 

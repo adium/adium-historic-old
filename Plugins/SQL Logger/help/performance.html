@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html xmlns:xalan="http://xml.apache.org/xslt">
+<html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=ascii">
+<meta content="text/html; charset=ascii" http-equiv="Content-Type">
 <title>Performance / Maintenance</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
@@ -10,12 +10,12 @@
 <div id="sidebar-a">
 <h4>SQL Logger<br>
 </h4>
-<a href="index.html" class="sidebar">Installation Instructions</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
+<a href="index.html" class="sidebar">Home</a><br><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a><br><a href="install.html" class="sidebar">Installation</a><br><a href="technical.html" class="sidebar">Technical
               Details</a><br><a href="performance.html" class="sidebar">Maintenance/Performance</a><br><a href="changes.txt" class="offsides">Changelog</a><br><a href="http://www.visualdistortion.org/sqllogger/sqllogger.tar.gz" class="offsides"><b>JSP/HTML package</b></a><br><h4>Adium</h4>
 <a href="http://www.adiumx.com/" class="offsides">Adium</a><br><a href="http://forums.adiumx.com" class="offsides">Adium
                 Forums</a><br><a href="http://planet.adiumx.com" class="offsides">Planet Adium</a><br><a href="http://cia.navi.cx/stats/project/adium/" class="offsides">CVS Changes</a><br><a href="http://www.visualdistortion.org/sqllogger/adium-sql.tar.gz" class="offsides">Adium Plugin</a><br><h4>Fire</h4>
 <a href="http://fire.sourceforge.net" class="offsides">Fire</a><br><h4>PostgreSQL</h4>
-<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.3/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
+<a href="http://www.postgresql.org" class="offsides">PostgreSQL</a><br><a href="http://www.postgresql.org/docs/7.4/interactive/index.html" class="offsides">PgSQL Documentation</a><br><a href="http://www.xceltech.net/products/freeware_products.html" class="offsides">PostMan Query</a><br><h4>Visual Distortion</h4>
 <a href="http://www.visualdistortion.org/" class="offsides">Visual Distortion Home</a>
 </div>
 <div id="content">
@@ -75,7 +75,7 @@ vacuumdb -z</pre></div>
    has a nasty query plan, and it's very difficult to learn anything
    constructive from it.</p>
 <p>The important parts of the example above are boldfaced.
-   I've boldfaced the term "Index Scan", because that indicates it is using
+   I've boldfaced the term &quot;Index Scan&quot;, because that indicates it is using
    the index (named adium_msg_date_sender_recipient) to determine where the
    proper dates are.  This is good.  Index Scans are much faster than
    Sequential Scans for large tables.</p>

@@ -24,7 +24,7 @@
           </div>
           <div id="sidebar-a">
             <h4>SQL Logger<br /></h4>
-              <a href="index.html" class="sidebar">Installation Instructions</a>
+              <a href="index.html" class="sidebar">Home</a>
               <br /><a href="http://www.visualdistortion.org/sqllogger/screenshots.jsp" class="offsides">Screenshots</a>
               <br /><a href="install.html"
                 class="sidebar">Installation</a>
@@ -54,7 +54,7 @@
               <br /><h4>PostgreSQL</h4>
               <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a>
               <br /><a
-                href="http://www.postgresql.org/docs/7.3/interactive/index.html"
+                href="http://www.postgresql.org/docs/7.4/interactive/index.html"
                 class="offsides">PgSQL Documentation</a>
               <br /><a
               href="http://www.xceltech.net/products/freeware_products.html"
