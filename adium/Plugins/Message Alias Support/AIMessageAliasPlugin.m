@@ -65,7 +65,7 @@
         NSString                * pattern;	
         NSString                * replaceWith;
 		NSRange					range, searchRange;
-        
+
         //This loop gets run for every key in the dictionary
 		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
@@ -75,10 +75,19 @@
 					str = [mesg mutableString];
 				}
 				replaceWith = nil;
-				searchRange = NSMakeRange(0,[inString length]);
+				searchRange = NSMakeRange(0,[str length]);
 				while(searchRange.location < [str length] && (range = [str rangeOfString:pattern options:NSLiteralSearch range:searchRange]).location != NSNotFound) {
+
 					searchRange.location = range.location + range.length;
 					searchRange.length = [str length] - searchRange.location;
+					
+					if((range.location > 0) && [str characterAtIndex:range.location-1] == '\\')
+					{
+						[str deleteCharactersInRange:NSMakeRange(range.location-1,1)];
+						searchRange.location--;
+						continue;
+					}						
+					
 					if(searchRange.location < [str length] && (isalnum([str characterAtIndex:searchRange.location]) || [str characterAtIndex:searchRange.location] == '_'))
 						continue;
 					
