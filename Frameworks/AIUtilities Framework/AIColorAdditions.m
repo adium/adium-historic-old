@@ -40,7 +40,7 @@ float _v(float m1, float m2, float hue);
 	if(*hexString == '#') ++hexString;
 	size_t hexStringLength = strlen(hexString);
 
-	NSAssert((hexStringLength == 3) || (hexStringLength == 4) || (hexStringLength == 6) || (hexStringLength == 8), @"-hexColor called on a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08)");
+	NSAssert1((hexStringLength == 3) || (hexStringLength == 4) || (hexStringLength == 6) || (hexStringLength == 8), @"-hexColor called on a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08); string: %@", self);
 
 	//long specification:  #rrggbb[aa]
 	//short specification: #rgb[a]
