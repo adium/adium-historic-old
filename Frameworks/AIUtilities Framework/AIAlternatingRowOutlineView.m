@@ -115,7 +115,7 @@
 		int		rowHeight;
 		BOOL	coloredRow;
 		int		numberOfColumns, numberOfRows;
-		
+
 		//Setup
 		numberOfRows = [self numberOfRows];
 		numberOfColumns = [self numberOfColumns];
@@ -129,7 +129,7 @@
 		}
 		
 		//Draw the grid
-		while(rowRect.origin.y < rect.origin.y + rect.size.height){
+		while(rowRect.origin.y < rect.origin.y + rect.size.height && rowHeight > 0){
 			[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
 			
 			//Move to the next row
