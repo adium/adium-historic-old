@@ -181,7 +181,10 @@
     [prefDict setObject:value forKey:inKey];
 
     path = [[owner loginController] userDirectory]; //[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:PREF_FOLDER_NAME];
-    [prefDict writeToPath:path withName:groupName];    
+    [prefDict writeToPath:path withName:groupName];
+
+    //Broadcast a group changed notification
+    [[self preferenceNotificationCenter] postNotificationName:Preference_GroupChanged object:groupName userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inKey,@"Key",nil]];
 }
 
 //Internal ----------------------------------------------------------------------

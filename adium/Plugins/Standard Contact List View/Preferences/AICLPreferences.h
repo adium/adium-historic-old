@@ -21,8 +21,6 @@
 
     IBOutlet	NSTextField		*textField_fontName;
 
-    IBOutlet	NSPopUpButton		*popUp_font;
-
 
     NSDictionary		*preferenceDict;
     
@@ -47,7 +45,7 @@
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
-- (IBAction)setFont:(id)sender;
+- (IBAction)setContactListFont:(id)sender;
 
     /*
 

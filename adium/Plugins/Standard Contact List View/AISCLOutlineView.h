@@ -29,8 +29,11 @@
     AIAdium			*owner;
     
     BOOL			editing;		//YES when the list is in edit mode... (temp)
+
+    NSFont			*font;
 }
 
-
+- (void)setFont:(NSFont *)inFont;
+- (NSFont *)font;
 
 @end

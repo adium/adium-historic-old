@@ -28,14 +28,10 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {setFont = id; }; 
+            ACTIONS = {setContactListFont = id; }; 
             CLASS = AICLPreferences; 
             LANGUAGE = ObjC; 
-            OUTLETS = {
-                "popUp_font" = NSPopUpButton; 
-                "textField_fontName" = NSTextField; 
-                "view_prefView" = NSView; 
-            }; 
+            OUTLETS = {"textField_fontName" = NSTextField; "view_prefView" = NSView; }; 
             SUPERCLASS = AIPlugin; 
         }, 
         {

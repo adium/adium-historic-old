@@ -153,11 +153,17 @@
     trackingRectTag = [self addTrackingRect:[scrollView bounds] owner:self userData:nil assumeInside:NO];*/
 }
 
-/*- (void)setFont:(NSFont *)inFont
+//We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.
+- (void)setFont:(NSFont *)inFont
 {
-	[super setFont:inFont];
-	NSLog(@"font is: %@ and should be %@", [[self font] fontName], inFont);
-}*/
+    if(font != inFont){
+        [font release];
+        font = [inFont retain];        
+    }
+}
+- (NSFont *)font{
+    return(font);
+}
 
 //Draw a custom 'no available contacts' message when the list is empty
 - (void)drawRect:(NSRect)rect
