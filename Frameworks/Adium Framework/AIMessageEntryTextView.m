@@ -156,7 +156,15 @@ static NSImage *pushIndicatorImage = nil;
 				//If !homeToStartOfLine, pass the keypress to our associated view.
 				[associatedView keyDown:inEvent];
 			}
-		}else{
+		}
+                else if([charactersIgnoringModifiers isEqual:@"\r"] == YES){
+                    if(flags & NSShiftKeyMask){
+                        [self insertText:@"\n"];
+                    }
+                    else{
+                        [super keyDown:inEvent];
+                    }
+                } else{
 			[super keyDown:inEvent];
 		}
 	}else{
