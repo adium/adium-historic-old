@@ -15,10 +15,10 @@
 
 #import "AIAccountMenuAccessPlugin.h"
 
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect","Connect an account")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect an account")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting…",nil)
-#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect","Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect","Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Connecting","Connecting an account prefix")
+#define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting","Disconnecting an account prefix")
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
 
 #define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT),[account serviceID]]
@@ -27,7 +27,7 @@
 - (void)buildAccountMenus;
 - (void)accountListChanged:(NSNotification *)notification;
 - (void)updateMenuForAccount:(AIAccount *)account;
-- (void)toggleAutoConnect:(id)sender;
+- (void)setAutoConnect:(AIAccount *)account connected:(BOOL)autoConnect;
 - (IBAction)toggleConnection:(id)sender;
 - (NSMenuItem *)_menuItemForAccount:(AIAccount *)account;
 @end
@@ -128,55 +128,40 @@
 
 - (void)updateMenuForAccount:(AIAccount *)account
 {
-    NSMenuItem		*connectToggleItem;
-    NSMenuItem		*autoConnectItem;
 	
 	NSMenuItem		*targetMenuItem = [self _menuItemForAccount:account];
 	
     if(targetMenuItem){
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
             //Update the 'connect / disconnect' menu item
-            connectToggleItem = (NSMenuItem *)[[targetMenuItem submenu] itemAtIndex:0];
 			
 			if([[account statusObjectForKey:@"Online"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Online" forClass:[self class]]];
-				[connectToggleItem setTitle:ACCOUNT_DISCONNECT_MENU_TITLE];
-				[connectToggleItem setEnabled:YES];
+				[targetMenuItem setTitle:[ACCOUNT_DISCONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[targetMenuItem setEnabled:YES];
 			}else if([[account statusObjectForKey:@"Connecting"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
-				[connectToggleItem setTitle:ACCOUNT_CONNECTING_MENU_TITLE];
-				[connectToggleItem setEnabled:NO];
+				[targetMenuItem setTitle:[ACCOUNT_CONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[targetMenuItem setEnabled:NO];
 			}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Connecting" forClass:[self class]]];
-				[connectToggleItem setTitle:ACCOUNT_DISCONNECTING_MENU_TITLE];
-				[connectToggleItem setEnabled:NO];
+				[targetMenuItem setTitle:[ACCOUNT_DISCONNECTING_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[targetMenuItem setEnabled:NO];
 			}else{
 				[targetMenuItem setImage:[AIImageUtilities imageNamed:@"Account_Offline" forClass:[self class]]];
-				[connectToggleItem setTitle:ACCOUNT_CONNECT_MENU_TITLE];
-				[connectToggleItem setEnabled:YES];
+				[targetMenuItem setTitle:[ACCOUNT_CONNECT_MENU_TITLE stringByAppendingFormat:@" %@",ACCOUNT_TITLE]];
+				[targetMenuItem setEnabled:YES];
 			}
 			
-            //Auto-connect
-            autoConnectItem = (NSMenuItem *)[[targetMenuItem submenu] itemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE];
-            if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
-                [autoConnectItem setState:NSOnState];
-            }else{
-                [autoConnectItem setState:NSOffState];
-            }
         }        
 		
-		[targetMenuItem setTitle:ACCOUNT_TITLE];
     }
 }
 
-//Toggle an account's auto-connection (called by submenu)
-- (void)toggleAutoConnect:(id)sender
+//Set an account's auto-connection
+- (void)setAutoConnect:(AIAccount *)account connected:(BOOL)autoConnect
 {
-    AIAccount	*account = [sender representedObject];
-    BOOL	autoConnect = [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue];
-	
-    //Switch it
-    [account setPreference:[NSNumber numberWithBool:!autoConnect] forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
+    [account setPreference:[NSNumber numberWithBool:autoConnect] forKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS];
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
@@ -187,6 +172,7 @@
     BOOL    	online = [[targetAccount statusObjectForKey:@"Online"] boolValue];
 	
     [targetAccount setPreference:[NSNumber numberWithBool:!online] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+
 }
 
 //Create the list of account sub menus in the file menu
@@ -207,35 +193,13 @@
     //insert a menu for each account
     enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
-        NSMenu		*subMenu;
-        
-        //Create the submenu
-        subMenu = [[[NSMenu alloc] init] autorelease];
-        [subMenu setAutoenablesItems:NO];
-		
-        //Connect/Disconnect menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_CONNECT_MENU_TITLE
+
+		//Create the account's menu item
+        menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_TITLE
 											   target:self
 											   action:@selector(toggleConnection:)
 										keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:account];
-        [subMenu addItem:menuItem];
-		
-        //Autoconnect menu item
-        [subMenu addItem:[NSMenuItem separatorItem]];
-        [subMenu addItemWithTitle:ACCOUNT_AUTO_CONNECT_MENU_TITLE
-						   target:self
-						   action:@selector(toggleAutoConnect:)
-					keyEquivalent:@""
-				representedObject:account];
-		
-        //Create the submenu's owning item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_TITLE
-											   target:nil
-											   action:nil
-										keyEquivalent:@""] autorelease];
         [menuItem setRepresentedObject:[account retain]];
-        [menuItem setSubmenu:subMenu];
         [accountMenuArray addObject:menuItem];
         
         //Add and update the item
