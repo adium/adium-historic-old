@@ -22,12 +22,17 @@
 
 @interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate, AIListControllerDelegate> {
     IBOutlet	NSView					*view_contents;
-    IBOutlet	NSScrollView			*scrollView_outgoingView;
+
+    IBOutlet	NSScrollView			*scrollView_outgoing;
     IBOutlet	AIMessageEntryTextView	*textView_outgoing;
+	float								entryMinHeight;
+		
 				NSView					*controllerView_messages;
     IBOutlet	NSView					*scrollView_messages;
+
 	IBOutlet	NSSplitView				*splitView_messages;
-	
+	IBOutlet	NSSplitView				*splitView_textEntryHorizontal;
+
 	IBOutlet	NSButton				*button_inviteUser;
 	
     IBOutlet	AIMiniToolbar			*toolbar_bottom;
@@ -46,6 +51,8 @@
     AIChat			*chat;
     BOOL			showUserList;
 	BOOL			sendMessagesToOfflineContact;
+	
+	BOOL inSizeAndArrange;
 }
 
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;

@@ -28,11 +28,11 @@
                 "button_inviteUser" = NSButton; 
                 "button_send" = AIPlasticButton; 
                 delegate = id; 
-                messageViewController = id; 
                 "scrollView_messages" = NSView; 
-                "scrollView_outgoingView" = NSScrollView; 
+                "scrollView_outgoing" = NSScrollView; 
                 "scrollView_userList" = AIAutoScrollView; 
                 "splitView_messages" = NSSplitView; 
+                "splitView_textEntryHorizontal" = NSSplitView; 
                 "textView_outgoing" = AIMessageEntryTextView; 
                 "toolbar_bottom" = AIMiniToolbar; 
                 userListView = AIListOutlineView; 
