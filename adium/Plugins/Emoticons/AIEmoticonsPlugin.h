@@ -19,6 +19,8 @@
 #define PREF_GROUP_EMOTICONS	@"Emoticons"
 #define	KEY_EMOTICON_PACK_PATH	@"EmoticonPackPath"
 #define KEY_EMOTICON_PACK_CONTENTS	@"EmoticonPackContents"
+#define KEY_EMOTICON_PACK_TITLE	@"EmoticonPackTitle"
+#define KEY_EMOTICON_PACK_SOURCE	@"EmoticonPackSource"
 
 @protocol AIContentFilter;
 @class AIEmoticonPreferences;
@@ -34,5 +36,6 @@
 }
 
 - (void)preferencesChanged:(NSNotification *)notification;
+- (void)allEmoticonPacks:(NSMutableArray *)emoticonPackArray;
 
 @end
