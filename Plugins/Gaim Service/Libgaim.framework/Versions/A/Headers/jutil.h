@@ -49,4 +49,7 @@ gboolean jabber_resourceprep_validate(const char *);
 
 GaimConversation *jabber_find_unnormalized_conv(const char *name, GaimAccount *account);
 
+//**Adium -- return a JabberID* using the account's settings rather than parsing the user name
+JabberID* jabber_id_new_full_from_account(const GaimAccount *account);
+
 #endif /* _GAIM_JABBER_JUTIL_H_ */

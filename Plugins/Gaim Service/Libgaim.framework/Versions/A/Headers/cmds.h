@@ -185,6 +185,10 @@ GList *gaim_cmd_list(GaimConversation *conv);
  */
 GList *gaim_cmd_help(GaimConversation *conv, const gchar *cmd);
 
+//*** Adium
+/* Check a command for possibly being approrpiate for a conv */
+GaimCmdStatus gaim_cmd_check_command(GaimConversation *conv, const gchar *cmdline,
+									 const gchar *markup, gchar **error);
 /*@}*/
 
 #ifdef __cplusplus

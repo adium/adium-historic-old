@@ -24,13 +24,12 @@
 #ifndef _MSN_SERVCONN_H_
 #define _MSN_SERVCONN_H_
 
-#include <libgaim/proxy.h>
-
 typedef struct _MsnServConn MsnServConn;
 
 #include "session.h"
 #include "cmdproc.h"
 
+#include "proxy.h"
 #include "httpmethod.h"
 
 /*
@@ -71,7 +70,6 @@ struct _MsnServConn
 	size_t payload_len;
 
 	void (*connect_cb)(MsnServConn *);
-/*	void (*failed_io_cb)(MsnServConn *); */
 	void (*disconnect_cb)(MsnServConn *);
 	void (*data_free_cb)(void *data);
 	void *data;
@@ -87,8 +85,6 @@ void msn_servconn_set_connect_cb(MsnServConn *servconn,
 								 void (*connect_cb)(MsnServConn *));
 void msn_servconn_set_disconnect_cb(MsnServConn *servconn,
 									void (*disconnect_cb)(MsnServConn *));
-void msn_servconn_set_failed_io_cb(MsnServConn *servconn,
-								 void (*failed_io_cb)(MsnServConn *));
 size_t msn_servconn_write(MsnServConn *servconn, const char *buf, size_t size);
 
 #endif /* _MSN_SERVCONN_H_ */

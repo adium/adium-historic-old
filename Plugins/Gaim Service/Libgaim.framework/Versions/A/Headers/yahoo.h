@@ -165,6 +165,8 @@ struct yahoo_data {
 	gboolean chat_online;
 	gboolean in_chat;
 	char *chat_name;
+	GList *webcam_queue;
+	GHashTable *webcams_viewing;
 	char *auth;
 	char *cookie_y;
 	char *cookie_t;

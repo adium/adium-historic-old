@@ -26,7 +26,7 @@
 
 typedef struct _MsnSession MsnSession;
 
-#include <libgaim/sslconn.h>
+#include "sslconn.h"
 
 #include "notification.h"
 #include "switchboard.h"
@@ -51,6 +51,8 @@ struct _MsnSession
 	int dispatch_port;
 
 	gboolean connected;
+	gboolean logged_in; /**< A temporal flag to ignore local buddy list adds. */
+	gboolean destroying; /**< A flag that states if the session is being destroyed. */
 
 	MsnNotification *notification;
 	MsnNexus *nexus;
@@ -59,6 +61,7 @@ struct _MsnSession
 	gint http_poll_timer;
 
 	MsnUserList *userlist;
+	MsnUserList *sync_userlist;
 
 	int servconns_count;
 	GList *switches;
@@ -80,8 +83,6 @@ struct _MsnSession
 
 	/* You have no idea how much I hate all that is below. */
 	/* shx: What? ;) */
-
-	GaimPlugin *prpl;
 
 	MsnSync *sync;
 
@@ -139,5 +140,7 @@ MsnSwitchBoard *msn_session_find_swboard(MsnSession *session,
 										 const char *username);
 MsnSwitchBoard *msn_session_get_swboard(MsnSession *session,
 										const char *username);
+
+void msn_session_finish_login(MsnSession *session);
 
 #endif /* _MSN_SESSION_H_ */
