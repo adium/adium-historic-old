@@ -282,7 +282,7 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 
-//Account list table view delegate ------------------------------------------------------------------------
+#pragma mark table view delegate
 //Delete the selected row
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {

@@ -314,7 +314,8 @@
     }
 }
 
-// Outline View data source methods
+#pragma mark Outline View data source methods
+
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
     if(item == nil){
