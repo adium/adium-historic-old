@@ -39,5 +39,6 @@
 - (void)sizeCellForWidth:(float)inWidth;
 - (void)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
 - (BOOL)usesCursorRects;
+- (NSRange)rangeForWordAtIndex:(int)index;
 
 @end

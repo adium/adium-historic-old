@@ -68,7 +68,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }else{
         [cell setBackgroundColor:inBackColor];
     }
-
+    NSLog(@"initing textcell with string %@",inString);
+    
     return(cell);
 }
 
@@ -178,6 +179,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     return([layoutManager characterIndexForGlyphAtIndex:glyphIndex]);
 }
 
+- (NSRange)rangeForWordAtIndex:(int)index
+{
+    return ([textStorage doubleClickAtIndex:index]);
+}
+
 //Change this cell's selection
 - (BOOL)selectFrom:(int)sourceIndex to:(int)destIndex
 {
@@ -273,17 +279,17 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 - (BOOL)handleMouseDown:(NSEvent *)theEvent
 {
     BOOL	handled = NO;
-    if(containsLinks){
-        handled = ([linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)]);
-    }else{
-        handled = (NO);
-    }
-    
-    if (TRUE) {	// Add check for emoticons being present, if too slow
-        handled = [self handleEmoticonClicks:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)];
-    }
-    
-    return	handled;
+    NSSize offset = NSMakeSize(-[self frame].origin.x, -[self frame].origin.y);
+             if(containsLinks){
+                handled = ([linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)]);
+            }else{
+                handled = (NO);
+            }
+
+            if (TRUE) {	// Add check for emoticons being present, if too slow
+                handled = [self handleEmoticonClicks:theEvent withOffset:offset];
+        }
+    return handled;
 }
 
 - (BOOL)handleEmoticonClicks:(NSEvent *)theEvent withOffset:(NSSize)offset
