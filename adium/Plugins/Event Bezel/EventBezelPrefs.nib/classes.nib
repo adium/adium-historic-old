@@ -22,7 +22,6 @@
         }, 
         {
             ACTIONS = {
-                changeBuddyNameFormat = id; 
                 changePosition = id; 
                 toggleAvailable = id; 
                 toggleAway = id; 
@@ -44,7 +43,6 @@
                 "checkBox_offline" = NSButton; 
                 "checkBox_online" = NSButton; 
                 "checkBox_showBezel" = NSButton; 
-                "popUp_buddyNameFormat" = NSPopUpButton; 
                 "popUp_position" = NSPopUpButton; 
             }; 
             SUPERCLASS = AIPreferencePane; 
