@@ -298,6 +298,7 @@
 		};
 		29B97323FDCFA39411CA2CEA = {
 			children = (
+				348E5ACA06D2A74C004C051C,
 				3448758D06D1EBDF00DA778C,
 				F531836F019E40BB01A80165,
 				34B588A0058D833A00E7EF0D,
@@ -3728,6 +3729,20 @@
 			settings = {
 			};
 		};
+		348E5ACA06D2A74C004C051C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AddressBook.framework;
+			path = /System/Library/Frameworks/AddressBook.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		348E5ACB06D2A74C004C051C = {
+			fileRef = 348E5ACA06D2A74C004C051C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34989146064C47F20095598E = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -5445,6 +5460,7 @@
 				34BD9D5A053146CC000AB133,
 				34B588A1058D833A00E7EF0D,
 				34C18B0D06CAC95400FF5FF9,
+				348E5ACB06D2A74C004C051C,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
