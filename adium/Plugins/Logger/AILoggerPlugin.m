@@ -218,7 +218,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	//Log the string, and flag the log as dirty
     if(logString){
 		NSString	*relativePath;
-		NSString	*objectUID = [[chat statusDictionary] objectForKey:@"DisplayName"];
+		NSString	*objectUID = [chat name];
 		if(!objectUID) objectUID = [[chat listObject] UID];
 		
 		relativePath = [self _writeMessage:logString betweenAccount:[chat account] andObject:objectUID onDate:[content date]];
@@ -380,7 +380,7 @@ this problem is along the lines of:
     if(logIndexingEnabled){
 		NSString    *dirtyKey = [@"LogIsDirty_" stringByAppendingString:path];
 		
-		if(dirtyLogArray && ![[[chat statusDictionary] objectForKey:dirtyKey] boolValue]){
+		if(dirtyLogArray && ![chat integerStatusObjectForKey:dirtyKey]){
 			//Add to dirty array (Lock to ensure that no one changes its content while we are)
 			[dirtyLogLock lock];
 			[dirtyLogArray addObject:path];
@@ -390,8 +390,9 @@ this problem is along the lines of:
 			[self _saveDirtyLogArray];
 			
 			//Flag the chat with 'LogIsDirty' for this filename.  On the next message we can quickly check this flag.
-			[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:dirtyKey];
-			[[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"LogIsDirty"] forKey:@"Keys"]];
+			[chat setStatusObject:[NSNumber numberWithBool:YES]
+						   forKey:dirtyKey
+						   notify:NotifyNever];
 		}	
     }
 }
