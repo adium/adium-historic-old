@@ -13,11 +13,6 @@ This list is for what needs to happen for 2.0
 
 Don't delete things from this list. Just use `=' to indicate it's done. We'll cull things all at once :)
 
----------------------------------------
-Stuff for Adam to do right this instant
----------------------------------------
-- Move user name field out of account code and into account list preferences code
-
 ----
 Bugs
 ----
@@ -42,6 +37,7 @@ Bugs
 -------------
 Minor Changes
 -------------
+= Move user name field out of account code and into account list preferences code
 - Remove contact list font preference.  Hook this up to cmd-T
 + Add Offline status coloring
 + Move idle time display preference to view menu
