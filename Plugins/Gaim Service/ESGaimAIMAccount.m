@@ -778,4 +778,17 @@
 	return supportedPropertyKeys;
 }
 
+#pragma mark Typing notifications
+
+/*!
+ * @brief Suppress typing notifications after send?
+ *
+ * AIM assumes that "typing stopped" is not explicitly stopped when the user sends.  This is particularly visible
+ * in iChat. Returning YES here prevents messages sent to iChat from jumping up and down in ichat as the typing
+ * notification is removed and then the incoming text is added.
+ */
+- (BOOL)suppressTypingNotificationChangesAfterSend
+{
+	return(YES);
+}
 @end
