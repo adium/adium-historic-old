@@ -389,9 +389,8 @@
 	[self updateCloseMenuKeys];
 	[self updateActiveWindowMenuItem];
 	
-	if(inChat){
-		[mostRecentActiveChat release]; mostRecentActiveChat = [inChat retain];
-	}
+	[mostRecentActiveChat release]; mostRecentActiveChat = nil;
+	if(inChat) mostRecentActiveChat = [inChat retain];
 }
 
 //A chat window did close: rebuild our window menu to remove the chat
