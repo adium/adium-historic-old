@@ -158,12 +158,8 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 
 - (void)contactListChanged:(NSNotification *)notification
-{
-	NSLog(@"%@ changed",[[notification object] displayName]);
-	
-	[browser_contactList reloadData];
-	
-	
+{	
+	[browser_contactList reloadData];	
 }
 
 

@@ -67,9 +67,7 @@
 	NSTableView		*table;
 	NSTableColumn	*column;
 	NSScrollView	*scroll;
-	
-	NSLog(@"new for %@",[object displayName]);
-	
+		
 	//Enclosing scroll
 	scroll = [[NSScrollView alloc] initWithFrame:NSMakeRect(0, 0, COLUMN_WIDTH, [self frame].size.height)];
 	[scroll setAutoresizingMask:NSViewHeightSizable];
