@@ -74,12 +74,6 @@ static	ABAddressBook	*sharedAddressBook = nil;
 //Adium is ready to receive our glory.
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {	
-    //Observe preferences changes
-    [[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged 
-									 object:nil];
-	
     //Observe external address book changes
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(addressBookChanged:)
@@ -92,7 +86,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									   name:Account_ListChanged
 									 object:nil];
 
-    [self preferencesChanged:nil];
+    //Observe preferences changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ADDRESSBOOK];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 }
 
 //Called as contacts are created, load their address book information
@@ -190,12 +186,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	return displayName;
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	NSDictionary	*userInfo = [notification userInfo];
-	NSString		*group = [userInfo objectForKey:@"Group"];
-	
-    if(notification == nil || [group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
+    if([group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
 		BOOL			oldCreateMetaContacts = createMetaContacts;
 		
@@ -209,7 +203,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
 		
-		if (notification == nil){
+		if(group == nil){
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 			[self rebuildAddressBookDict];
 			
@@ -237,25 +231,22 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			[self updateAllContacts];
 		}
 
-    }else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS])){
-		AIListObject	*inObject = [notification object];
-		if (inObject){
-			//Find the person
-			ABPerson *person = [self searchForObject:inObject];
+    }else if(automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object){
+		//Find the person
+		ABPerson *person = [self searchForObject:object];
+		
+		if(person){
+			//Set the person's image to the inObject's serverside User Icon.
+			NSData	*imageData = [object preferenceForKey:KEY_USER_ICON
+													group:PREF_GROUP_USERICONS
+									ignoreInheritedValues:YES];
 			
-			if (person){
-				//Set the person's image to the inObject's serverside User Icon.
-				NSData	*imageData = [inObject preferenceForKey:KEY_USER_ICON
-													  group:PREF_GROUP_USERICONS
-										  ignoreInheritedValues:YES];
-				
-				//If the pref is now nil, we should restore the address book back to the serverside icon if possible
-				if(!imageData){
-					imageData = [[inObject statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
-				}
-				
-				[person setImageData:imageData];
+			//If the pref is now nil, we should restore the address book back to the serverside icon if possible
+			if(!imageData){
+				imageData = [[object statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
 			}
+			
+			[person setImageData:imageData];
 		}
 	}
 }
