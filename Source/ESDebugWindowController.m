@@ -33,13 +33,16 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	return (sharedDebugWindowInstance);
 }
 
-+ (void)addedDebugMessage:(NSString *)message
++ (void)addedDebugMessage:(NSString *)aDebugString
 {
-	if(sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:message];
+	if(sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:aDebugString];
 }
-- (void)addedDebugMessage:(NSString *)message
+- (void)addedDebugMessage:(NSString *)aDebugString
 {
-	[mutableDebugString appendString:message];
+	[mutableDebugString appendString:aDebugString];
+	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
+		[mutableDebugString appendString:@"\n"];
+	}
 }
 
 //Close the info window
@@ -68,7 +71,9 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	enumerator = [[[adium debugController] debugLogArray] objectEnumerator];
 	while(aDebugString = [enumerator nextObject]){
 		[mutableDebugString appendString:aDebugString];
-/*		[mutableDebugString appendString:@"\n"];*/
+		if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
+			[mutableDebugString appendString:@"\n"];
+		}
 	}
 }
 
