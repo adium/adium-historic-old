@@ -197,7 +197,7 @@
 - (void)updatePreview
 {
 	NSString		*styleName, *CSS;
-	NSString		*desiredVariant;
+	NSString		*variant;
 	NSBundle		*style;
 	NSString		*loadedPreviewDirectory = nil;
 	NSDictionary	*previewDict;
@@ -210,7 +210,6 @@
 	{
 		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
 															 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		[stylePath release];
 		style = [plugin messageStyleBundleWithName:styleName];
 
 		//If the preferred style is unavailable, load the default
@@ -218,11 +217,9 @@
 			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
-		
-		//Load preferences for the style and update the popup menus
-		[plugin loadPreferencesForWebView:preview withStyleNamed:styleName];
 
 		//Retain the stylePath
+		[stylePath release];
 		stylePath = [[style resourcePath] retain];
 	}
 	
@@ -245,17 +242,11 @@
 	}
 	
 	//Load the variant
-	{
-		desiredVariant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
-																  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		CSS = (desiredVariant ? [NSString stringWithFormat:@"Variants/%@.css",desiredVariant] : @"main.css");
-	}
+	variant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
+															  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	CSS = (variant ? [NSString stringWithFormat:@"Variants/%@.css",variant] : @"main.css");
 	
-	//Set up the preferences for the style
-	{
-		[self _updateViewForStyle:style variant:desiredVariant];	
-	}
-	
+
 
 	//Create and set up our temporary chat for filling keywords in headerHTML and footerHTML
 	{
@@ -272,11 +263,10 @@
 			if (UID = [chatDict objectForKey:@"Source UID"]){
 				[chat setAccount:(AIAccount *)[previewListObjectsDict objectForKey:UID]];
 			}
+			
 		}else{
 			NSString *name;
-			if (name = [chatDict objectForKey:@"Name"]){
-				[chat setName:name];
-			}
+			if (name = [chatDict objectForKey:@"Name"]) [chat setName:name];
 		}
 
 		NSString	*dateOpened;
@@ -285,24 +275,15 @@
 		}
 	}
 
-	//Load the template, and fill it up
-	{
-		NSString		*basePath, *headerHTML, *footerHTML;
-		NSMutableString *templateHTML;
-		
-		basePath = [[NSURL fileURLWithPath:stylePath] absoluteString];	
-		headerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Header.html"]];
-		footerHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Footer.html"]];
-		templateHTML = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Template.html"]];
-
-		templateHTML = [NSMutableString stringWithFormat:templateHTML, basePath, CSS, headerHTML, footerHTML];
-		templateHTML = [plugin fillKeywords:templateHTML forStyle:style forChat:chat];
-		
-		//Feed it to the webview after ensuring the newContent array is clear
-		[newContent removeAllObjects];
-		[[preview mainFrame] loadHTMLString:templateHTML baseURL:nil];
-	}
+	//Feed the style to the webview after ensuring the newContent array is clear
+	[newContent removeAllObjects];
+	[plugin loadStyle:style withName:styleName withCSS:CSS forChat:chat intoWebView:preview];
 	
+	//Set up the preferences for the style
+	[self _updateViewForStyle:style variant:variant];
+	
+	allowColors = [plugin boolForKey:@"AllowTextColors" style:style variant:variant boolDefault:YES];
+		
 	//Load and display the desired content objects
 	[self _createPreviewConversationFromChatDict:[previewDict objectForKey:@"Preview Messages"]];
 }
@@ -334,25 +315,19 @@
 			[[submenu itemAtIndex:0] setState:NSOnState];
 		}
 	}
-	
+
 	//Set the Show User Icons checkbox (enable/disable as needed, default to checked)
-	NSNumber	*showsUserIconsNumber = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"ShowsUserIcons:%@",variant]];
-	if (!showsUserIconsNumber){
-		showsUserIconsNumber = [style objectForInfoDictionaryKey:@"ShowsUserIcons"];
-	}
-	BOOL		showsUserIcons = (showsUserIconsNumber ? [showsUserIconsNumber boolValue] : YES);
-	
+	BOOL showsUserIcons = [plugin boolForKey:@"ShowsUserIcons" style:style variant:variant boolDefault:YES];
+
 	[checkBox_showUserIcons setState:(showsUserIcons ? 
 									  [[[adium preferenceController] preferenceForKey:KEY_WEBKIT_SHOW_USER_ICONS
 																				group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] boolValue] : NSOffState)];
 	[checkBox_showUserIcons setEnabled:showsUserIcons];
 	
 	//Setup the Custom Background dropdown (enable/disable as needed, default to "Default")
-	NSNumber	*disableCustomBackgroundNumber = [style objectForInfoDictionaryKey:[NSString stringWithFormat:@"DisableCustomBackground:%@",variant]];
-	if (!disableCustomBackgroundNumber){
-		disableCustomBackgroundNumber = [style objectForInfoDictionaryKey:@"DisableCustomBackground"];
-	}
-	BOOL		allowsCustomBackground = (disableCustomBackgroundNumber ? ![disableCustomBackgroundNumber boolValue] : YES);
+	BOOL allowsCustomBackground = [plugin boolForKey:@"DisableCustomBackground" style:style variant:variant boolDefault:YES];
+
+	
 	NSString	*customBackground;
 	int			tag;
 	customBackground = (allowsCustomBackground
@@ -450,7 +425,11 @@
 	while(webViewIsReady && [newContent count]){
 		AIContentObject *content = [newContent objectAtIndex:0];
 		
-		[plugin processContent:content withPreviousContent:previousContent forWebView:preview fromStylePath:stylePath];
+		[plugin processContent:content
+		   withPreviousContent:previousContent 
+					forWebView:preview
+				 fromStylePath:stylePath
+				allowingColors:allowColors];
 		
 		//
 		[previousContent release];

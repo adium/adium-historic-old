@@ -41,8 +41,7 @@
 - (NSString *)variantKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundKeyForStyle:(NSString *)desiredStyle;
 - (NSString *)backgroundColorKeyForStyle:(NSString *)desiredStyle;
-- (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath;
-- (void)loadPreferencesForWebView:(ESWebView *)webView withStyleNamed:(NSString *)styleName;
-- (NSMutableString *)fillKeywords:(NSMutableString *)inString forStyle:(NSBundle *)style forChat:(AIChat *)chat;
-
+- (void)processContent:(AIContentObject *)content withPreviousContent:(AIContentObject *)previousContent forWebView:(WebView *)webView fromStylePath:(NSString *)stylePath allowingColors:(BOOL)allowColors;
+- (void)loadStyle:(NSBundle *)style withName:(NSString *)styleName withCSS:(NSString *)CSS forChat:(AIChat *)chat intoWebView:(WebView *)webView;
+- (BOOL)boolForKey:(NSString *)key style:(NSBundle *)style variant:(NSString *)variant boolDefault:(BOOL)defaultValue;
 @end
