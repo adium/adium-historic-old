@@ -18,9 +18,6 @@
 #define REFRESH_RATE                    300
 
 @interface AIInfoWindowController (PRIVATE)
-
-- (AIContentMessage *)contentMessageForAttributedString:(NSAttributedString *)inString;
-
 @end
 
 @implementation AIInfoWindowController
@@ -238,27 +235,8 @@ static AIInfoWindowController *sharedInstance = nil;
         NSMutableAttributedString 	*textProfile = [[ownerArray objectAtIndex:0] mutableCopy];
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
-            NSMutableParagraphStyle		*indentStyle;
-            NSRange				firstLineRange = [[textProfile string] lineRangeForRange:NSMakeRange(0,0)];
-            AIContentMessage                    *message = [self contentMessageForAttributedString:textProfile];
-            
-            //Run the profile through the filters, do both incoming and outgoing filters so we get linked and emoticons
-            [[owner contentController] filterObject:message isOutgoing:YES];
-            [[owner contentController] filterObject:message isOutgoing:NO];
-            
-            textProfile = [[message message] mutableCopy];
-            
-            //Set correct indent & tabbing on the first line of the profile
-            [textProfile addAttribute:NSParagraphStyleAttributeName value:paragraphStyle range:NSMakeRange(0,firstLineRange.length)];
-            
-            //Indent the remaining lines of profile
-            indentStyle = [paragraphStyle mutableCopy];
-            [indentStyle setFirstLineHeadIndent:InfoIndentB];
-            [textProfile addAttribute:NSParagraphStyleAttributeName value:indentStyle range:NSMakeRange(firstLineRange.length, [textProfile length] - firstLineRange.length)];
-            
-            //
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            [infoString appendAttributedString:textProfile];
+            [infoString appendAttributedString:[[owner contentController] filteredAttributedString:textProfile]];
         }
     }
     
@@ -286,16 +264,7 @@ static AIInfoWindowController *sharedInstance = nil;
     [textView_contactProfile setNeedsDisplay:YES];
 }
 
-- (AIContentMessage *)contentMessageForAttributedString:(NSAttributedString *)inString
-{
-    AIContentMessage *object = [AIContentMessage messageInChat:nil
-                                                    withSource:nil
-                                                   destination:nil
-                                                          date:nil
-                                                       message:inString
-                                                     autoreply:NO];
-    return (object);
-}
+
 
 //Private ---------------------------------------------------------------------------
 //init
