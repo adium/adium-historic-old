@@ -87,11 +87,13 @@
 }
 - (int)integerStatusObjectForKey:(NSString *)key
 {
-	return ([[statusArrayDictionary objectForKey:key] intValue]);
+	AIMutableOwnerArray *array = [statusArrayDictionary objectForKey:key];
+    return(array ? [array doubleValue] : 0);
 }
 - (double)doubleStatusObjectForKey:(NSString *)key
 {
-	return ([[statusArrayDictionary objectForKey:key] doubleValue]);
+	AIMutableOwnerArray *array = [statusArrayDictionary objectForKey:key];
+    return(array ? [array doubleValue] : 0);
 }
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
