@@ -212,7 +212,9 @@
 		id		cell = [tableColumn dataCellForRow:row];
 		
 		//Render the cell
-		[[self delegate] tableView:self willDisplayCell:cell forTableColumn:nil row:row];
+		if([[self delegate] respondsToSelector:@selector(tableView:willDisplayCell:forTableColumn:row:)]){
+			[[self delegate] tableView:self willDisplayCell:cell forTableColumn:nil row:row];
+		}
 		[cell setHighlighted:NO];
 		
 		//Draw the cell
