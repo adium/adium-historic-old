@@ -46,36 +46,35 @@
 //Send the entered message
 - (IBAction)sendMessage:(id)sender
 {
-    AIContentMessage	*message;
+    if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
+        AIContentMessage	*message;
 
-	// message length is 0, don't send
-	if([[textView_messageEntry attributedString] length] == 0)
-		return;
-	
-    //Lock this view to the specified handle (if it wasn't already locked to one)
-    if(!handle){ 
-        AIServiceType 	*serviceType = [[account service] handleServiceType];
-        AIContactHandle	*newHandle;
+        //Lock this view to the specified handle (if it wasn't already locked to one)
+        if(!handle){ 
+            AIServiceType 	*serviceType = [[account service] handleServiceType];
+            AIContactHandle	*newHandle;
+        
+            //Find the specified handle, and lock it
+            newHandle = [[owner contactController] handleWithService:serviceType UID:[textField_handle stringValue] forAccount:account];
+            [self lockToHandle:newHandle];
+        }
     
-        //Find the specified handle, and lock it
-        newHandle = [[owner contactController] handleWithService:serviceType UID:[textField_handle stringValue] forAccount:account];
-        [self lockToHandle:newHandle];
-    }
-
-    //Hide our 'from' account selector menu
-    if(accountMenuVisible){
-        [self setAccountMenuVisible:NO];
-    }
+        //Hide our 'from' account selector menu
+        if(accountMenuVisible){
+            [self setAccountMenuVisible:NO];
+        }
+        
+        //Send the message
+        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:handle userInfo:nil];
+        message = [AIContentMessage messageWithSource:account destination:handle date:nil message:[[[textView_outgoing attributedString] copy] autorelease]];
+        [[owner contentController] sendContentObject:message toHandle:handle];
+        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:handle userInfo:nil];
     
-    //Send the message
-    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:handle userInfo:nil];
-    message = [AIContentMessage messageWithSource:account destination:handle date:nil message:[[[textView_messageEntry attributedString] copy] autorelease]];
-    [[owner contentController] sendContentObject:message toHandle:handle];
-    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:handle userInfo:nil];
-
-    //Clear the message entry text view
-    [textView_messageEntry setString:@""];
-    [self textDidChange:nil]; //force the view to resize
+        //Clear the message entry text view
+        [textView_outgoing setString:@""];
+        [self textDidChange:nil]; //force the view to resize
+        
+    }
 }
 
 - (IBAction)cancel:(id)sender
@@ -104,7 +103,7 @@
 //Set keyboard focus on the enter view
 - (IBAction)setFocusOnEnterView:(id)sender
 {
-    [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
+    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 }
 
 //Set the visibility of the account menu
@@ -124,8 +123,6 @@
     scrollView_messages = nil;
     view_messages = nil;
     toolbar_bottom = nil;
-    textView_messageEntry = nil;
-    //handle = nil;
     accountMenuVisible = YES;
 
     //
@@ -161,13 +158,8 @@
     }
     
     //Put the initial content in the outgoing text view, and give it focus
-    if(inHandle){ //The view that's in use depends on if a handle has been locked or not
-        [textView_messageEntry setAttributedString:inContent];
-        [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
-    }else{
-        [textView_outgoing setAttributedString:inContent];
-        [[textView_outgoing window] makeFirstResponder:textView_outgoing];
-    }
+    [textView_outgoing setAttributedString:inContent];
+    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
     
     //Configure the rest of the view
     [[popUp_accounts menu] setAutoenablesItems:NO];
@@ -187,29 +179,11 @@
     //nib
     [view_contents removeAllSubviews];
     [view_contents release]; view_contents = nil;
-/*
-    //nib
-    [scrollView_outgoingView release]; scrollView_outgoingView = nil;
-    [view_account release]; view_account = nil;
-    [popUp_accounts release]; popUp_accounts = nil;
-    
-    [textView_outgoing release]; textView_outgoing = nil;
-    [view_handle release]; view_handle = nil;
-    [textField_handle release]; textField_handle = nil;
-    [view_buttons release]; view_buttons = nil;
-  
-    //manually created
-    [scrollView_messages release]; scrollView_messages = nil;
-    [view_messages release]; view_messages = nil;
-    [toolbar_bottom release]; toolbar_bottom = nil;
-    [textView_messageEntry release]; textView_messageEntry = nil;
-*/
 
     [owner release]; owner = nil;
     [interface release]; interface = nil;
     [account release]; account = nil;
     [handle release]; handle = nil;
-
 
 
     [super dealloc];
@@ -245,28 +219,24 @@
         [toolbar_bottom setAutoresizingMask:(NSViewWidthSizable | NSViewMaxYMargin)];
         [view_contents addSubview:[toolbar_bottom autorelease]];
 
-        //Create the text entry view
-        textView_messageEntry = [[AISendingTextView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Size is arbitrary
-        [textView_messageEntry setAttributedString:[textView_outgoing attributedString]];
-        [textView_messageEntry setAutoresizingMask:(NSViewWidthSizable)];
-        [textView_messageEntry setDelegate:self];
-        [textView_messageEntry setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
-        [textView_messageEntry setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL object:handle] boolValue]];
-        [textView_messageEntry setTarget:self action:@selector(sendMessage:)];
-        [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
+        //Create the outgoing text view
+        [textView_outgoing setAutoresizingMask:(NSViewWidthSizable)];
+        [textView_outgoing setDelegate:self];
+        [textView_outgoing setSendOnEnter:[[[owner preferenceController] preferenceForKey:@"message_send_onEnter" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+        [textView_outgoing setSendOnReturn:[[[owner preferenceController] preferenceForKey:@"message_send_onReturn" group:PREF_GROUP_GENERAL object:handle] boolValue]];
+        [textView_outgoing setTarget:self action:@selector(sendMessage:)];
+        [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 
-        //Swap it into the entry scroll view
-        [scrollView_outgoingView setAndSizeDocumentView:[textView_messageEntry autorelease]];
+        //Configure the outgoing scroll view
         [scrollView_outgoingView setHasVerticalScroller:NO];
         [scrollView_outgoingView setAutoresizingMask:(NSViewWidthSizable | NSViewMaxYMargin)];
-        textView_outgoing = nil;
     
         //Configure the toolbar
         [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];
-        [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inHandle,@"ContactObject",textView_messageEntry,@"TextEntryView",nil]];
+        [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:inHandle,@"ContactObject",textView_outgoing,@"TextEntryView",nil]];
 
     //Give the entry view focus
-//    [[textView_messageEntry window] makeFirstResponder:textView_messageEntry];
+//    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 
     //Register for notifications
     [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:handle];
@@ -338,7 +308,7 @@
 
         //Text entry
         {
-            float textHeight = [[textView_messageEntry layoutManager] usedRectForTextContainer:[textView_messageEntry textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
+            float textHeight = [[textView_outgoing layoutManager] usedRectForTextContainer:[textView_outgoing textContainer]].size.height + ENTRY_TEXTVIEW_PADDING;
     
             if(textHeight > ENTRY_TEXTVIEW_MAX_HEIGHT){
                 textHeight = ENTRY_TEXTVIEW_MAX_HEIGHT;
