@@ -13,6 +13,8 @@
     BOOL								autoResizeHorizontally;
 	int									maxWindowWidth;
 	int									forcedWindowWidth;
+
+	BOOL 								dockToBottomOfScreen;
 }
 
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;

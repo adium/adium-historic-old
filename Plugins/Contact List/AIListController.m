@@ -10,6 +10,8 @@
 #define EDGE_CATCH_X				10
 #define EDGE_CATCH_Y				40
 
+#define KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN		@"Contact List Docked To Bottom"
+
 @interface AIListController (PRIVATE)
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 - (void)contactListChanged:(NSNotification *)notification;
@@ -39,8 +41,13 @@
 									   name:ListObject_AttributesChanged
 									 object:nil];
     [self contactListChanged:nil];
+
+	//Recall how the contact list was docked last time Adium was open
+	dockToBottomOfScreen = [[[adium preferenceController] preferenceForKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+																	group:PREF_GROUP_WINDOW_POSITIONS] boolValue];
 	
-	
+
+	//Listen to when the list view changes size
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(contactListDesiredSizeChanged:)
 												 name:AIViewDesiredSizeDidChangeNotification
@@ -49,8 +56,25 @@
 	return(self);
 }
 
+//Setup the window after it has loaded
+- (void)configureViewsAndTooltips
+{
+	[super configureViewsAndTooltips];
+	
+	//Listen to when the list window moves (so we can remember which edge we're docked to)
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(windowDidMove:)
+												 name:NSWindowDidMoveNotification
+											   object:[contactListView window]];
+}
+
 - (void)dealloc
 {
+	//Remember how the contact list is currently docked for next time
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:dockToBottomOfScreen]
+										 forKey:KEY_CONTACT_LIST_DOCKED_TO_BOTTOM_OF_SCREEN
+										  group:PREF_GROUP_WINDOW_POSITIONS];
+	
     //Stop observing
     [[adium notificationCenter] removeObserver:self];
 	
@@ -70,7 +94,15 @@
 															desiredHeight:autoResizeVertically];
 
 		if(!NSEqualRects(currentFrame, desiredFrame)){
-			[theWindow setFrame:desiredFrame display:YES animate:NO];
+#warning I have resize animation on at the moment, why? ...
+/*
+ because with animation off the setFrame: method works unreliable when called from here.  Setting this
+ back to NO will cause the contact list to jump around in unpredictable ways when expanding and
+ collapsing groups when there is a list scrollbar appearing and disappearing in response to those
+ groups collapsing and expanding.  I will look into this later and see if there is a solution, but if you think you
+ have one feel free to try before then :)
+ */
+			[theWindow setFrame:desiredFrame display:YES animate:YES];
 			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
 											 (autoResizeVertically ? desiredFrame.size.height : minWindowSize.height))];
 			[theWindow setMaxSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : 10000),
@@ -85,100 +117,100 @@
     return([self _desiredWindowFrameUsingDesiredWidth:YES desiredHeight:YES]);
 }
 
+//Window moved, remember which side the user has docked it to
+- (void)windowDidMove:(NSNotification *)notification
+{
+	NSRect		windowFrame = [[contactListView window] frame];
+	NSRect		boundingFrame = [[[contactListView window] screen] visibleFrame];
+	
+	if((windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y) &&
+	   (windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y)){
+		dockToBottomOfScreen = YES;
+	}else{
+		dockToBottomOfScreen = NO;
+	}
+}
+
+
 //Desired frame of our window - if one of the BOOL values is NO, don't modify that value from the current frame
 - (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight
 {
-	NSRect      windowFrame, viewFrame, newWindowFrame, screenFrame, visibleScreenFrame;
+	NSRect      windowFrame, viewFrame, newWindowFrame, screenFrame, visibleScreenFrame, boundingFrame;
 	NSWindow	*theWindow = [contactListView window];
 	NSScreen	*currentScreen = [theWindow screen];
 	
 	windowFrame = [theWindow frame];
-	newWindowFrame = windowFrame;//NSMakeRect(windowFrame, 0, windowFrame.size.width, windowFrame.size.height);
-		viewFrame = [scrollView_contactList frame];
-		
-		screenFrame = [currentScreen frame];
-		visibleScreenFrame = [currentScreen visibleFrame];
-		
-		//Width
-		if(useDesiredWidth){
-			if (forcedWindowWidth != -1){
-				newWindowFrame.size.width = forcedWindowWidth;
-			}else{
-				//Subtract the current size of the view from our frame
-				//newWindowSize.width -= viewFrame.size.width;
-				newWindowFrame.size.width -= viewFrame.size.width;
-				
-				//Now, figure out how big the view wants to be and add that to our frame
-				//newWindowSize.width += desiredViewSize.width;
-				newWindowFrame.size.width += [contactListView desiredWidth];
-				
-				//Don't get bigger than our maxWindowWidth
-				if (newWindowFrame.size.width > maxWindowWidth) newWindowFrame.size.width = maxWindowWidth;
-				
-				if ((windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width)){
-					
-					newWindowFrame.origin.x = windowFrame.origin.x + (windowFrame.size.width - newWindowFrame.size.width);
-					if((newWindowFrame.origin.x + newWindowFrame.size.width) < (visibleScreenFrame.origin.x + EDGE_CATCH_X)){
-						newWindowFrame.origin.x = visibleScreenFrame.origin.x - newWindowFrame.size.width + EDGE_CATCH_X;
-					}
-				}
-			}
-		}
-		
-		//Height
-		if(useDesiredHeight){
-			NSRect		applicableScreenFrame;
-			
+	newWindowFrame = windowFrame;
+	viewFrame = [scrollView_contactList frame];
+	screenFrame = [currentScreen frame];
+	visibleScreenFrame = [currentScreen visibleFrame];
+	
+	//Width
+	if(useDesiredWidth){
+		if(forcedWindowWidth != -1){
+			//If auto-sizing is disabled, use the specified width
+			newWindowFrame.size.width = forcedWindowWidth;
+		}else{
 			//Subtract the current size of the view from our frame
-			//newWindowSize.width -= viewFrame.size.width;
-			newWindowFrame.size.height -= viewFrame.size.height;
+			newWindowFrame.size.width -= viewFrame.size.width;
 			
 			//Now, figure out how big the view wants to be and add that to our frame
-			//newWindowSize.width += desiredViewSize.width;
-			newWindowFrame.size.height += [contactListView desiredHeight];
+			newWindowFrame.size.width += [contactListView desiredWidth];
 			
-			/* If the window is against the left or right edges of the screen, 
-				use the screenFrame rather than the visibleScreenFrame as most users' docks do not extend all the way across
-				the bottom. */
-			if ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
-				((newWindowFrame.origin.x + newWindowFrame.size.width) < (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X))){
-				applicableScreenFrame = screenFrame;
-			}else{
-				applicableScreenFrame = visibleScreenFrame;
+			//Don't get bigger than our maxWindowWidth
+			if(newWindowFrame.size.width > maxWindowWidth){
+				newWindowFrame.size.width = maxWindowWidth;
 			}
-			
-			//Don't let the new frame be taller than the applicable screen frame's height.
-			//		if (newWindowFrame.size.height > applicableScreenFrame.size.height){
-			//			newWindowFrame.size.height = applicableScreenFrame.size.height;
-			//		}
-			
-			//If the window is not near the bottom edge of the screen, or the titlebar is near the top,
-			//keep the titlebar in place
-			if((windowFrame.origin.y > applicableScreenFrame.origin.y + EDGE_CATCH_Y) ||
-			   (windowFrame.origin.y + windowFrame.size.height > applicableScreenFrame.origin.y + applicableScreenFrame.size.height - EDGE_CATCH_Y)){
-				newWindowFrame.origin.y = windowFrame.origin.y + (windowFrame.size.height - newWindowFrame.size.height);
+
+			//Anchor to the appropriate screen edge
+			if((windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width)){
+				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
 			}else{
+				newWindowFrame.origin.x = windowFrame.origin.x;
+			}
+		}
+	}
+	
+	//Height
+	if(useDesiredHeight){
+		//Subtract the current size of the view from our frame
+		newWindowFrame.size.height -= viewFrame.size.height;
+
+		//Now, figure out how big the view wants to be and add that to our frame
+		newWindowFrame.size.height += [contactListView desiredHeight];
+	
+		//If the window is against the left or right edges of the screen, we use the full screenFrame as our
+		//bound, since most users docks will not extend to the edges of the screen.
+		if((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
+		   ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X))){
+			boundingFrame = screenFrame;
+			boundingFrame.size.height -= 22; //We still cannot violate the menubar, so account for it here.
+		}else{
+			boundingFrame = visibleScreenFrame;
+		}
+
+		//Vertical positioning and size
+		if(newWindowFrame.size.height >= boundingFrame.size.height){
+			//If the window is bigger than the screen, keep it on the screen
+			newWindowFrame.size.height = boundingFrame.size.height;
+			newWindowFrame.origin.y = boundingFrame.origin.y;
+		}else{
+			//A Non-full height window is anchrored to the appropriate screen edge
+			if(dockToBottomOfScreen){
 				newWindowFrame.origin.y = windowFrame.origin.y;
-			}
-			
-			//If the new window frame has an origin below the applicable screen frame, correct the situation
-			if (newWindowFrame.origin.y < applicableScreenFrame.origin.y + 1){
-				newWindowFrame.origin.y = applicableScreenFrame.origin.y + 1;
-			}
-			
-			//Keep the window from going off the top of the visible area (which means not under the menu bar, too)
-			float visibleScreenTop = (visibleScreenFrame.origin.y+visibleScreenFrame.size.height);
-			
-			if((newWindowFrame.origin.y + newWindowFrame.size.height) > visibleScreenTop){
-				//If the window would go above the top of the screen (the menu bar), set the origin to the origin of
-				//whichever is our applicable screen...
-				newWindowFrame.origin.y = applicableScreenFrame.origin.y + 1;
-				//...and set our height to the maximal height which will fit on the visible screen from that origin.
-				newWindowFrame.size.height = visibleScreenTop - newWindowFrame.origin.y;
+			}else{
+				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
 			}
 		}
 		
-		return(newWindowFrame);
+		//Keep the window from hanging off any screen edge (This is optional and could be removed if this annoys people)
+		if(NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
+		if(NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);
+		if(NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		if(NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
+	}
+	
+	return(newWindowFrame);
 }
 
 - (void)setMinWindowSize:(NSSize)inSize {
