@@ -87,10 +87,10 @@
     NSString		*dateString = nil;
     NSMutableString	*theMessage = nil;
 	
-	
-	if(speechEnabled) {
+
+	if(speechEnabled && [content trackContent]){
 		//Message Content
-		if(speakMessages && ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) ){
+		if(speakMessages && ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE])){
 			date = [[content date] dateWithCalendarFormat:nil timeZone:nil];
 			chat	= [notification object];
 			account	= [chat account];
@@ -98,21 +98,21 @@
 			message = [[[content message] safeString] string];
 			
 			
-			if(account && source) { //valid message
+			if(account && source){ //valid message
 				//Determine some basic info about the content
 				BOOL isOutgoing = [content isOutgoing];
 				BOOL newParagraph = NO;
-				if ( (isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming) ) {
+				if ((isOutgoing  && speakOutgoing) || (!isOutgoing && speakIncoming)){
 					
 					theMessage = [NSMutableString string];
 					
-					if (speakSender && !isOutgoing) {
+					if(speakSender && !isOutgoing) {
 						NSString	*senderString;
 
 						//Get the sender string
 						senderString = [source displayName];
 						
-						if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
+						if(!lastSenderString || ![senderString isEqualToString:lastSenderString]){
 							NSMutableString		*senderStringToSpeak;
 							
 							[lastSenderString release]; lastSenderString = [senderString retain];
@@ -129,16 +129,16 @@
 						}
 					}
 					
-					if (speakTime) {
+					if(speakTime){
 						dateString = [NSString stringWithFormat:@"%i %i and %i seconds",[date hourOfDay],[date minuteOfHour],[date secondOfMinute]];
 						[theMessage appendFormat:@" %@...",dateString];
 					}
 					
-					if (newParagraph) {
+					if(newParagraph){
 						[theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
 					}
 					
-					if (speakMessageText) {
+					if(speakMessageText){
 						[theMessage appendFormat:@" %@",message];
 					}
 				}
