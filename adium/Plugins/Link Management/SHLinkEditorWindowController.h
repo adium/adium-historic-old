@@ -4,8 +4,11 @@
 //
 //  Created by Stephen Holt on Sat Apr 17 2004.
 
-#define PREF_GROUP_LINK_FAVORITES       @"URL Favorites"
 #define LINK_MANAGEMENT_DEFAULTS        @"LinkManagementDefaults"
+#define PREF_GROUP_LINK_FAVORITES       @"URL Favorites"
+#define KEY_LINK_FAVORITES				@"Favorite Links"
+#define KEY_LINK_URL					@"URL"
+#define KEY_LINK_TITLE					@"Title"
 
 @class SHAutoValidatingTextView;
 
@@ -27,7 +30,7 @@
                 NSRange                      selectionRange;
                 NSResponder                 *editableView;
 
-                NSDictionary                *favoritesDict;
+                NSMutableArray                *favoritesDict;
 }
 
 - (void)initAddLinkWindowControllerWithResponder:(NSResponder *)responder;

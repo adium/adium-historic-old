@@ -107,16 +107,18 @@
                                                      initWithString:[(NSString *)linkURL string]]];
                 }else if([linkURL isKindOfClass:[NSURL class]]){
                     [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
-                                                     initWithString:[(NSURL *)linkURL absoluteString]]];                }
+                                                     initWithString:[(NSURL *)linkURL absoluteString]]];                
+				}
             }
             if(linkText) {
                 [textField_linkText setStringValue:linkText];
             }
         }
     
-    //retrive our favorites
-    favoritesDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LINK_FAVORITES];
-    
+    //Retrive our favorites
+	favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
+	if(!favoritesDict) favoritesDict = [[NSMutableArray alloc] init];
+		
     //notice changes
     [[adium notificationCenter] addObserver:self selector:@selector(favoritesChanged:) name:Preference_GroupChanged object:nil];
     
@@ -133,23 +135,22 @@
 
 - (void)_buildPopUpMenu
 {
-    NSString            *key;
+    NSDictionary		*favorite;
     NSEnumerator        *enumerator;
-    NSMenu              *menu = [popUp_Favorites menu];
-    NSMenuItem          *menuItem;
     
-    [popUp_Favorites removeAllItems];
-    enumerator = [favoritesDict keyEnumerator];
-    menuItem = [[[NSMenuItem alloc] init] autorelease];
-    [menu addItem:menuItem];
-    while(key = [enumerator nextObject]) {
-        menuItem = [[[NSMenuItem alloc] initWithTitle:key
-                                               target:nil
-                                               action:nil
-                                        keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:[[adium preferenceController] preferenceForKey:key group:PREF_GROUP_LINK_FAVORITES]];
-        [menu addItem:menuItem];
+	//Empty the menu and insert an empty menu item to serve as the pop-up button's selected item
+    [[popUp_Favorites menu] removeAllItemsButFirst];
+
+	//Add items for each link
+    enumerator = [favoritesDict objectEnumerator];
+    while(favorite = [enumerator nextObject]){
+		[[popUp_Favorites menu] addItemWithTitle:[favorite objectForKey:KEY_LINK_TITLE]
+										  target:self
+										  action:nil
+								   keyEquivalent:@""
+							   representedObject:favorite];
     }
+	
     [popUp_Favorites setTitle:CHOOSE_URL];
 }
 
@@ -256,30 +257,27 @@
 }
 
 #pragma mark Favorite URL Management
-- (IBAction)selectFavoriteURL:(id)sender
+//User selected a link, display it in the text fields (Called by menu item)
+- (IBAction)selectFavoriteURL:(NSPopUpButton *)sender
 {
-    NSString        *linkText = nil;
-    NSString        *linkURL = nil;
-    
-    //get our favorite and fill the text fields with it
     if([sender isKindOfClass:[NSPopUpButton class]]){
-        linkText = [[(NSPopUpButton *)sender selectedItem] title];
-
-        linkURL = [[adium preferenceController] preferenceForKey:linkText group:PREF_GROUP_LINK_FAVORITES];
-                          
-        [[textView_URL textStorage] setAttributedString:[[NSAttributedString alloc]
-                                         initWithString:linkURL]];
-        [textField_linkText setStringValue:linkText];
+		NSDictionary		*favorite = [[sender selectedItem] representedObject];
+		NSAttributedString	*attrTitle = [[[NSAttributedString alloc] initWithString:[favorite objectForKey:KEY_LINK_URL]] autorelease];
+		
+        [[textView_URL textStorage] setAttributedString:attrTitle];
+        [textField_linkText setStringValue:[favorite objectForKey:KEY_LINK_TITLE]];
     }
 }
 
 - (IBAction)addURLToFavorites:(id)sender
 {
-    NSString                    *linkString = [textField_linkText stringValue];
-    NSString                    *urlString  = [[textView_URL textStorage] string];
-    
-    //get our info form text fields and set a new pref/key for it
-    [[adium preferenceController] setPreference:urlString forKey:linkString group:PREF_GROUP_LINK_FAVORITES];
+    //get our info form text fields and set a new pref/key for it (We need to make sure we're getting copies of these,
+	//otherwise the fields will change them later, changing the copy in our dictionary)
+	[favoritesDict addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
+		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
+		nil]];
+    [[adium preferenceController] setPreference:favoritesDict forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
     
     [self favoritesChanged:nil];
 }
@@ -287,7 +285,8 @@
 - (void)favoritesChanged:(NSNotification *)notification
 {
     //refresh our favorites
-    favoritesDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LINK_FAVORITES];
+	[favoritesDict release];
+    favoritesDict = [[[adium preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
     
     [self _buildPopUpMenu];
 }

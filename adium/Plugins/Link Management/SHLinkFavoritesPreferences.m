@@ -53,7 +53,10 @@
 - (IBAction)removeLink:(id)sender
 {
     if([favoritesList favoritesCount] > 0){
-        [[[AIObject sharedAdiumInstance] preferenceController] setPreference:nil forKey:[favoritesList selectedLink] group:PREF_GROUP_LINK_FAVORITES];
+		NSMutableArray	*favoriteArray = [[[[AIObject sharedAdiumInstance] preferenceController] preferenceForKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES] mutableCopy];
+		[favoriteArray removeObject:[favoritesList selectedLink]];
+		[[[AIObject sharedAdiumInstance] preferenceController] setPreference:favoriteArray forKey:KEY_LINK_FAVORITES group:PREF_GROUP_LINK_FAVORITES];
+
         [favoritesList buildLinksList];
     }
 }
