@@ -22,6 +22,13 @@
     return(@"DockOverlayAdvancedPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DOCK_OVERLAY_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_DOCK_OVERLAYS];
+	return(defaultsDict);
+}
+
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {

@@ -17,7 +17,6 @@
 #import "AIStatusOverlayPreferences.h"
 #import "AIStatusOverlayAdvancedPreferences.h"
 
-#define DOCK_OVERLAY_DEFAULT_PREFS	@"DockOverlayDefaults"
 #define SMALLESTRADIUS				15
 #define RADIUSRANGE					36
 #define SMALLESTFONTSIZE			14

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AISendingKeyPreferencesAdvanced.h"
+#import "AISendingKeyPreferencesPlugin.h"
 
 @implementation AISendingKeyPreferencesAdvanced
 
@@ -28,13 +29,20 @@
     return(@"SendingKeyPrefsAdvanced");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_GENERAL];
+	return(defaultsDict);
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
-    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
-    [checkBox_sendOnEnter setState:[[preferenceDict objectForKey:@"Send On Enter"] intValue]];
+    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:SEND_ON_RETURN] intValue]];
+    [checkBox_sendOnEnter setState:[[preferenceDict objectForKey:SEND_ON_ENTER] intValue]];
 }
 
 //User changed a preference
@@ -42,12 +50,12 @@
 {
     if(sender == checkBox_sendOnReturn){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:@"Send On Return"
+                                             forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
         
     } else if(sender == checkBox_sendOnEnter){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:@"Send On Enter"
+                                             forKey:SEND_ON_ENTER
                                               group:PREF_GROUP_GENERAL];
         
     }    

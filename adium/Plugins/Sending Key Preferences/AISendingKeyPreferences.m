@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AISendingKeyPreferences.h"
+#import "AISendingKeyPreferencesPlugin.h"
 
 @implementation AISendingKeyPreferences
 
@@ -33,7 +34,7 @@
 {
     NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
-    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:@"Send On Return"] intValue]];
+    [checkBox_sendOnReturn setState:[[preferenceDict objectForKey:SEND_ON_RETURN] intValue]];
 }
 
 //User changed a preference
@@ -41,7 +42,7 @@
 {
     if(sender == checkBox_sendOnReturn){
         [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:@"Send On Return"
+                                             forKey:SEND_ON_ENTER
                                               group:PREF_GROUP_GENERAL];
         
     }

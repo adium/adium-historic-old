@@ -22,6 +22,13 @@
     return(@"SpellCheckingPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SPELL_CHECKING_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_SPELLING];
+	return(defaultsDict);
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {

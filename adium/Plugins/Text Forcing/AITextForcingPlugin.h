@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define PREF_GROUP_TEXT_FORCING			@"Text Forcing"
+#define TEXT_FORCING_DEFAULT_PREFS	@"TextForcingDefaults"
 
 #define KEY_FORCE_FONT				@"Force Font"
 #define KEY_FORCE_TEXT_COLOR			@"Force Text Color"

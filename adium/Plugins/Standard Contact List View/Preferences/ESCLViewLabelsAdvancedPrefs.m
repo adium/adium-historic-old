@@ -23,6 +23,24 @@
     return(@"CLViewLabelsAdvancedPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
+		[defaultPrefs objectForKey:KEY_SCL_LABEL_AROUND_CONTACT],KEY_SCL_LABEL_AROUND_CONTACT,
+		[defaultPrefs objectForKey:KEY_SCL_OUTLINE_LABELS],KEY_SCL_OUTLINE_LABELS,
+		[defaultPrefs objectForKey:KEY_SCL_LABEL_OPACITY],KEY_SCL_LABEL_OPACITY,
+		[defaultPrefs objectForKey:KEY_SCL_LABEL_GROUPS],KEY_SCL_LABEL_GROUPS,
+		[defaultPrefs objectForKey:KEY_SCL_LABEL_GROUPS_COLOR],KEY_SCL_LABEL_GROUPS_COLOR,
+		[defaultPrefs objectForKey:KEY_SCL_USE_GRADIENT],KEY_SCL_USE_GRADIENT,
+		nil];
+	
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	return(defaultsDict);
+}
+
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {

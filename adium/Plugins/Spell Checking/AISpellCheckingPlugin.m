@@ -9,8 +9,6 @@
 #import "AISpellCheckingPlugin.h"
 #import "AISpellCheckingPreferences.h"
 
-#define SPELL_CHECKING_DEFAULT_PREFS	@"SpellingDefaults"
-
 @interface AISpellCheckingPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_setSpellCheckingForObject:(id)inObject enabled:(BOOL)enabled;

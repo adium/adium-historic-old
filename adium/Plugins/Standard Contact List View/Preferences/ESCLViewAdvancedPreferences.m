@@ -23,6 +23,24 @@
     return(@"CLViewAdvancedPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
+		[defaultPrefs objectForKey:KEY_SCL_BORDERLESS],KEY_SCL_BORDERLESS,
+		[defaultPrefs objectForKey:KEY_SCL_SHADOWS],KEY_SCL_SHADOWS,
+		[defaultPrefs objectForKey:KEY_SCL_SPACING],KEY_SCL_SPACING,
+		[defaultPrefs objectForKey:KEY_SCL_OPACITY],KEY_SCL_OPACITY,
+		[defaultPrefs objectForKey:KEY_SCL_OUTLINE_GROUPS],KEY_SCL_OUTLINE_GROUPS,
+		[defaultPrefs objectForKey:KEY_SCL_OUTLINE_GROUPS_COLOR],KEY_SCL_OUTLINE_GROUPS_COLOR,
+		[defaultPrefs objectForKey:KEY_SCL_BACKGROUND_TOOLTIPS],KEY_SCL_BACKGROUND_TOOLTIPS,
+		nil];
+								
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	return(defaultsDict);
+}
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {

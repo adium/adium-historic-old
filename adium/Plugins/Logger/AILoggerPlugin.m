@@ -21,8 +21,6 @@
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
-#define LOGGING_DEFAULT_PREFS       @"LoggingDefaults"
-
 #define LOG_INDEX_PATH		    @"~/Library/Caches/Adium"
 #define LOG_INDEX_NAME		    @"Logs_%@.index"
 #define DIRTY_LOG_ARRAY_NAME	    @"DirtyLogs_%@.plist"

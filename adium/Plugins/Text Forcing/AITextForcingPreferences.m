@@ -34,6 +34,14 @@
     return(@"TextForcingPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:TEXT_FORCING_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_TEXT_FORCING];
+	return(defaultsDict);
+}
+
+
 //Configure the preference view
 - (void)viewDidLoad
 {

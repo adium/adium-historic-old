@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define PATH_LOGS		@"/Logs"
+#define LOGGING_DEFAULT_PREFS       @"LoggingDefaults"
 #define PREF_GROUP_LOGGING	@"Logging"
 #define KEY_LOGGER_ENABLE	@"Enable Logging"
 #define	KEY_LOGGER_STYLE	@"Enable Style Logging"

@@ -13,6 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+#define SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
+#define SEND_ON_RETURN				@"Send On Return"
+#define SEND_ON_ENTER				@"Send On Enter"
+
 @class AISendingKeyPreferences, AISendingKeyPreferencesAdvanced;
 
 @interface AISendingKeyPreferencesPlugin : AIPlugin {
