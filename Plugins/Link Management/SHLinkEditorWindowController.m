@@ -167,6 +167,21 @@
     [self closeWindow:nil];
 }
 
+- (IBAction)removeURL:(id)sender
+{
+    id  selectedLink;
+    if([[textView textStorage] length] &&
+       [textView selectedRange].location != NSNotFound &&
+       [textView selectedRange].location != [[textView textStorage] length]){
+            NSRange selectionRange = [textView selectedRange];
+            selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
+												 atIndex:selectionRange.location
+										  effectiveRange:&selectionRange];
+            [[textView textStorage] removeAttribute:NSLinkAttributeName range:selectionRange];
+    }
+    [self closeWindow:nil];
+}
+
 //Inform our target of the link currently in our panel
 - (void)informTargetOfLink
 {
