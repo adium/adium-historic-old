@@ -13,7 +13,7 @@
 	
     NSMutableArray		*contentObjectArray;
     NSMutableArray		*participatingListObjects;
-
+	AIListObject		*preferredListObject;
 	NSString			*name;
 	NSString			*uniqueChatID;
 }
@@ -30,6 +30,8 @@
 - (void)addParticipatingListObject:(AIListObject *)inObject;
 - (void)removeParticipatingListObject:(AIListObject *)inObject;
 - (AIListObject *)listObject;
+- (AIListObject *)preferredListObject;
+- (void)setPreferredListObject:(AIListObject *)inObject;
 
 - (NSArray *)contentObjectArray;
 - (BOOL)hasContent;

@@ -286,6 +286,11 @@ static NSImage *pushIndicatorImage = nil;
 	return([chat listObject]);
 }
 
+- (AIListObject *)preferredListObject
+{
+	return([chat preferredListObject]);
+}
+
 
 //Auto Sizing ----------------------------------------------------------------------------------------------------------
 #pragma mark Auto-sizing

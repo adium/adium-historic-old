@@ -111,6 +111,16 @@
     [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
 }
 
+- (void)setPreferredListObject:(AIListObject *)inObject
+{
+	preferredListObject = inObject;
+}
+
+- (AIListObject *)preferredListObject
+{
+	return preferredListObject;
+}
+
 //If this chat only has one participating list object, it is returned.  Otherwise, nil is returned
 - (AIListObject *)listObject
 {
