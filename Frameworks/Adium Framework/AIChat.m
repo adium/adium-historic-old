@@ -96,8 +96,7 @@
 		
 		//The uniqueChatID may depend upon the account, so clear it
 		[self clearUniqueChatID];
-		
-		[[adium notificationCenter] postNotificationName:Chat_AccountChanged object:self]; //Notify
+		[[adium notificationCenter] postNotificationName:Chat_SourceChanged object:self]; //Notify
 	}
 }
 
@@ -228,8 +227,8 @@
 - (void)setListObject:(AIListContact *)inListObject
 {
 	if(inListObject != [self listObject]){
-		
 		[self clearListObjectStatuses];
+		[[adium notificationCenter] postNotificationName:Chat_DestinationChanged object:self]; //Notify
 
 		//The uniqueChatID may depend upon the listObject, so clear it
 		[self clearUniqueChatID];

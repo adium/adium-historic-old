@@ -15,7 +15,8 @@
 #define Chat_AttributesChanged					@"Chat_AttributesChanged"
 #define Chat_StatusChanged						@"Chat_StatusChagned"
 #define Chat_ParticipatingListObjectsChanged	@"Chat_ParticipatingListObjectsChanged"
-#define Chat_AccountChanged 					@"Chat_AccountChanged"
+#define Chat_SourceChanged 						@"Chat_SourceChanged"
+#define Chat_DestinationChanged 				@"Chat_DestinationChanged"
 
 #define KEY_UNVIEWED_CONTENT	@"UnviewedContent"
 #define KEY_TYPING				@"Typing"
