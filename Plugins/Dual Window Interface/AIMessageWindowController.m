@@ -25,7 +25,7 @@
 #define	MESSAGE_WINDOW_NIB                      @"MessageWindow"			//Filename of the message window nib
 #define TAB_BAR_FPS                             20.0
 #define TAB_BAR_STEP                            0.6
-#define TOOLBAR_MESSAGE_WINDOW					@"MessageWindow"			//Toolbar identifier
+#define TOOLBAR_MESSAGE_WINDOW					@"AdiumMessageWindow"			//Toolbar identifier
 
 @interface AIMessageWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName interface:(AIDualWindowInterfacePlugin *)inInterface containerID:(NSString *)inContainerID containerName:(NSString *)inName;
@@ -326,7 +326,6 @@
 - (void)windowDidBecomeKey:(NSNotification *)notification
 {
 	[[adium interfaceController] chatDidBecomeActive:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat]];
-	NSLog(@"became key");
 }
 
 //Our selected tab is no longer the active chat
@@ -348,7 +347,6 @@
 		
         [self _updateWindowTitleAndIcon]; //Reflect change in window title
 		
-		NSLog(@"selected...");
 		[[adium interfaceController] chatDidBecomeVisible:chat inWindow:[self window]];
     }
 }
@@ -629,8 +627,10 @@
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"UserIcon",@"ShowInfo", NSToolbarSeparatorItemIdentifier, 
-		@"InsertEmoticon", @"LinkEditor", @"InsertBookmark", @"SafariLink", @"InsertScript", NSToolbarFlexibleSpaceItemIdentifier, 
+    return([NSArray arrayWithObjects:@"UserIcon",@"Encryption",  NSToolbarSeparatorItemIdentifier, 
+		@"ShowInfo", 
+		@"InsertEmoticon", @"LinkEditor", @"InsertBookmark", @"SafariLink", @"InsertScript", @"SendFile",
+		NSToolbarFlexibleSpaceItemIdentifier, NSToolbarSeparatorItemIdentifier,
 		@"ShowPreferences", NSToolbarCustomizeToolbarItemIdentifier, nil]);
 }
 
