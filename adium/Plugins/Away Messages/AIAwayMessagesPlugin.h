@@ -18,8 +18,15 @@
     AIAwayMessagePreferences	*preferences;
 
     NSMenuItem			*menuItem_away;
+    NSMenuItem			*menuItem_removeAway;
     NSMenuItem			*menuItem_customMessage;
     NSMenu			*menu_awaySubmenu;
+
+    BOOL			menuConfiguredForAway;
 }
+
+- (void)installPlugin;
+- (IBAction)enterAwayMessage:(id)sender;
+- (IBAction)removeAwayMessage:(id)sender;
 
 @end

@@ -280,14 +280,14 @@ static char *hash_password(const char * const password);
         [self AIM_SetIdle:newIdle];
 
     }else if([key compare:@"TextProfile"] == 0){
-        NSString		*profile = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]];
-
-        [self AIM_SetProfile:profile];
+        [self AIM_SetProfile:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
 
     }else if([key compare:@"AwayMessage"] == 0){
-        NSString		*away = [AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]];
-
-        [self AIM_SetAway:away];
+        if(inValue){
+            [self AIM_SetAway:[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:inValue]]];
+        }else{
+            [self AIM_SetAway:nil];
+        }
     }
 
 }

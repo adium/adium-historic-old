@@ -686,6 +686,38 @@
 			settings = {
 			};
 		};
+		4B187A0203D59B4C00A8010A = {
+			fileRef = F531836F019E40BB01A80165;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B187A0303D59CCC00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEventAdditions.h;
+			path = "Frameworks/AIUtilities Framework/AIEventAdditions.h";
+			refType = 4;
+		};
+		4B187A0403D59CCC00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIEventAdditions.m;
+			path = "Frameworks/AIUtilities Framework/AIEventAdditions.m";
+			refType = 4;
+		};
+		4B187A0503D59CCC00A8010A = {
+			fileRef = 4B187A0303D59CCC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B187A0603D59CCC00A8010A = {
+			fileRef = 4B187A0403D59CCC00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B28907503C1D14200A8010A = {
 			children = (
 				4B28909B03C1D2F900A8010A,
@@ -1402,6 +1434,7 @@
 				F5793938033E74E401A8010A,
 				F579393A033E74E401A8010A,
 				F579393E033E74E401A8010A,
+				4B187A0303D59CCC00A8010A,
 				4BBC8E4B03BA0DB900A8010A,
 				F570A5B103704C3701A8010A,
 				F579394C033E74E401A8010A,
@@ -1572,6 +1605,7 @@
 				4B70F28603D1C55B00A8010A,
 				4B70F28703D1C55B00A8010A,
 				4B70F28803D1C55C00A8010A,
+				4B187A0203D59B4C00A8010A,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3714,6 +3748,7 @@
 				4BCDEB3B03D4DC6F00A8010A,
 				4BCDEB3D03D4DC6F00A8010A,
 				4BCDEB3F03D4DC6F00A8010A,
+				4B187A0503D59CCC00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3785,6 +3820,7 @@
 				4BCDEB3C03D4DC6F00A8010A,
 				4BCDEB3E03D4DC6F00A8010A,
 				4BCDEB4003D4DC6F00A8010A,
+				4B187A0603D59CCC00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7631,6 +7667,7 @@
 				F5793939033E74E401A8010A,
 				F579393B033E74E401A8010A,
 				F579393F033E74E401A8010A,
+				4B187A0403D59CCC00A8010A,
 				4BBC8E4C03BA0DB900A8010A,
 				F570A5B203704C3701A8010A,
 				F579394D033E74E401A8010A,
