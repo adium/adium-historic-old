@@ -130,9 +130,8 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 	
 	if (updateSelector){
-		[self performSelectorOnMainThread:updateSelector
-							   withObject:theContact
-							waitUntilDone:NO];
+		[self performSelector:updateSelector
+				   withObject:theContact];
 	}
 }
 
@@ -160,10 +159,10 @@ static NSDictionary		*presetStatusesDictionary = nil;
 			
 			if (statusMsgString && [statusMsgString length]) {
 				if (![statusMsgString isEqualToString:oldStatusMsgString]) {
-					NSAttributedString *attrStr = [[NSAttributedString alloc] initWithString:statusMsgString];
+					NSAttributedString *attrStr = [[[NSAttributedString alloc] initWithString:statusMsgString] autorelease];
 					
 					[theContact setStatusObject:statusMsgString forKey:@"StatusMessageString" notify:NO];
-					[theContact setStatusObject:[attrStr autorelease] forKey:@"StatusMessage" notify:NO];
+					[theContact setStatusObject:attrStr forKey:@"StatusMessage" notify:NO];
 					
 					//apply changes
 					[theContact notifyOfChangedStatusSilently:silentAndDelayed];
