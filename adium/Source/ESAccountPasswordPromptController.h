@@ -8,6 +8,7 @@
 
 @interface ESAccountPasswordPromptController : AIPasswordPromptController {
 	IBOutlet	NSTextField	*textField_account;
+	IBOutlet	NSTextField *textField_service;
     AIAccount				*account;
 }
 
