@@ -626,7 +626,6 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = "Plists/User Icon Handling.plist";
-				OPTIMIZATION_CFLAGS = "";
 				OTHER_CFLAGS = "";
 				OTHER_REZFLAGS = "";
 				PRODUCT_NAME = "User Icon Handling";
@@ -7078,6 +7077,36 @@
 			settings = {
 			};
 		};
+		3483928405E68B05002BC6C0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIIconState.m;
+			path = "Frameworks/Adium Framework/AIIconState.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3483928505E68B05002BC6C0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIIconState.h;
+			path = "Frameworks/Adium Framework/AIIconState.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3483928605E68B05002BC6C0 = {
+			fileRef = 3483928405E68B05002BC6C0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3483928705E68B05002BC6C0 = {
+			fileRef = 3483928505E68B05002BC6C0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3484644C05910DFF00241F68 = {
 			children = (
 				F544A5DE03B3628B01A8010A,
@@ -9817,7 +9846,6 @@
 				34BD9DBC05314751000AB133,
 				34BD9DBD05314751000AB133,
 				34BD9DBE05314751000AB133,
-				34BD9DBF05314751000AB133,
 				34BD9DC005314751000AB133,
 				34BD9DC105314751000AB133,
 				34BD9DC205314751000AB133,
@@ -9833,6 +9861,7 @@
 				4B422C0B05ACB248005E720B,
 				4B09D5C205D5265800BC00F0,
 				346433BD05E408CF00498DE6,
+				3483928705E68B05002BC6C0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9908,12 +9937,6 @@
 			settings = {
 			};
 		};
-		34BD9DBF05314751000AB133 = {
-			fileRef = 4B82AB770457178E00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34BD9DC005314751000AB133 = {
 			fileRef = 4BDC17720493C90E00A8010A;
 			isa = PBXBuildFile;
@@ -9978,7 +10001,6 @@
 				34BD9DD205314751000AB133,
 				34BD9DD305314751000AB133,
 				34BD9DD405314751000AB133,
-				34BD9DD505314751000AB133,
 				34BD9DD605314751000AB133,
 				34BD9DD705314751000AB133,
 				34BD9DD805314751000AB133,
@@ -9994,6 +10016,7 @@
 				4B422C0C05ACB248005E720B,
 				4B09D5C305D5265800BC00F0,
 				346433BC05E408CF00498DE6,
+				3483928605E68B05002BC6C0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10054,12 +10077,6 @@
 		};
 		34BD9DD405314751000AB133 = {
 			fileRef = 4BFC5408043E509A00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9DD505314751000AB133 = {
-			fileRef = 4B82AB780457178E00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19015,14 +19032,14 @@
 				34B5875A058D801D00E7EF0D,
 				348862CD05645E94003C9627,
 				348862CE05645E95003C9627,
+				3483928505E68B05002BC6C0,
+				3483928405E68B05002BC6C0,
 				4BFC33DD058D4430008F7FA2,
 				4BFC33DE058D4430008F7FA2,
 				F5793924033E74C301A8010A,
 				F5793912033E748F01A8010A,
 				4BFC3412058D48A8008F7FA2,
 				4BFC3413058D48A8008F7FA2,
-				4B82AB770457178E00A8010A,
-				4B82AB780457178E00A8010A,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -20992,24 +21009,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIContentObject.m;
 			path = "Frameworks/Adium Framework/AIContentObject.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B82AB770457178E00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIIconState.h;
-			path = "Frameworks/AIUtilities Framework/AIIconState.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B82AB780457178E00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIIconState.m;
-			path = "Frameworks/AIUtilities Framework/AIIconState.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
