@@ -13,18 +13,27 @@
 @interface AIDockBehaviorPreferences : NSObject {
     AIAdium			*owner;
 
+    IBOutlet	NSTableView	*tableView_events;
+    IBOutlet	NSButton	*button_delete;
+    IBOutlet	NSPopUpButton	*popUp_addEvent;
+    
     IBOutlet	NSView		*view_prefView;
-    IBOutlet 	NSTextField	*bounceField;
+
+    NSMutableArray		*dockEventArray;
+    /*    IBOutlet 	NSTextField	*bounceField;
     IBOutlet	NSTextField	*delayField;
     IBOutlet	NSButton	*enableBouncingCheckBox;
     IBOutlet	NSButton	*enableAnimationCheckBox;
     IBOutlet	NSMatrix	*bounceMatrix;
     
-    NSDictionary		*preferenceDict;
+    NSDictionary		*preferenceDict;*/
 }
 
 + (id)dockBehaviorPreferencesWithOwner:(id)inOwner;
 
 - (IBAction)changePreference:(id)sender;
+
+- (IBAction)selectBehaviorSet:(id)sender;
+- (IBAction)deleteEvent:(id)sender;
 
 @end
