@@ -4948,6 +4948,7 @@
 				4B6C4648066FEB180082199C,
 				4B0CB2160670E07E005821CC,
 				4B0CB2170670E07E005821CC,
+				4B0118090679168700FCB992,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9563,6 +9564,20 @@
 			proxyType = 2;
 			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
 			remoteInfo = expat;
+		};
+		4B0118080679168700FCB992 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = info.png;
+			path = /Users/adamiser/Code/adium/Source/info.png;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		4B0118090679168700FCB992 = {
+			fileRef = 4B0118080679168700FCB992;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B030E52056C2D7E00C765F9 = {
 			buildActionMask = 2147483647;
@@ -23847,6 +23862,7 @@
 				F570A60803704E9701A8010A,
 				34B9BCFF064062170097AF93,
 				34B9BD00064062170097AF93,
+				4B0118080679168700FCB992,
 				4B29093F05F944BF0087D16F,
 				348E556A053A188C0021E541,
 				4BDF17240450CBDE00A8010A,
