@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.62 2004/01/07 21:23:04 adamiser Exp $
+// $Id: AIContactController.m,v 1.63 2004/01/07 21:26:03 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -48,6 +48,12 @@
 - (void)_addDelayedUpdate;
 - (void)_performDelayedUpdates:(NSTimer *)timer;
 @end
+
+//Used to suppress compiler warnings
+@interface NSObject (_RESPONDS_TO_CONTACT)
+- (AIListContact *)contact;
+@end
+
 
 @implementation AIContactController
 
@@ -347,25 +353,21 @@
 
 
 //Selected contact ------------------------------------------------
-@protocol _RESPONDS_TO_CONTACT //Just a temp protocol to suppress compiler warning when I call contact on the responders below
-- (AIListContact *)contact;
-@end
-//Returns the "selected"(represented) contact.
+//Returns the "selected"(represented) contact (By finding the first responder that returns a contact)
 - (AIListContact *)selectedContact
 {
     NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
-    //Find the first responder that returns a selected contact
     //Check the first responder
     if([responder respondsToSelector:@selector(contact)]){
-        return([(NSResponder<_RESPONDS_TO_CONTACT> *)responder contact]);
+        return([responder contact]);
     }
 
     //Search the responder chain
     do{
         responder = [responder nextResponder];
         if([responder respondsToSelector:@selector(contact)]){
-            return([(NSResponder<_RESPONDS_TO_CONTACT> *)responder contact]);
+            return([responder contact]);
         }
         
     } while(responder != nil);
@@ -373,6 +375,60 @@
     //Noone found, return nil
     return(nil);
 }
+
+
+//Contact Sorting --------------------------------------------------------------------------------
+//Register sorting code
+- (void)registerListSortController:(AISortController *)inController
+{
+    [sortControllerArray addObject:inController];
+    [[owner notificationCenter] postNotificationName:Contact_SortSelectorListChanged object:nil userInfo:nil];
+}
+- (NSArray *)sortControllerArray
+{
+    return(sortControllerArray);
+}
+
+//Set and get the active sort controller
+- (void)setActiveSortController:(AISortController *)inController
+{
+    activeSortController = inController;
+	
+    //Resort the list
+    [self sortContactList];
+}
+- (AISortController *)activeSortController
+{
+    return(activeSortController);
+}
+
+//Sort the entire contact list
+- (void)sortContactList
+{
+    [contactList sortGroupAndSubGroups:YES sortController:activeSortController];
+	[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
+}
+
+//Sort an individual object
+- (void)sortListObject:(AIListObject *)inObject
+{
+	NSEnumerator	*enumerator = [[inObject containingGroups] objectEnumerator];
+	AIListGroup		*group;
+	
+	//Sort all the groups containing this object
+	while(group = [enumerator nextObject]){		
+		[group sortListObject:inObject sortController:activeSortController];
+		[[owner notificationCenter] postNotificationName:Contact_OrderChanged object:group];
+	}
+}
+
+
+
+
+
+
+
+
 
 
 
@@ -414,29 +470,6 @@
 
 
 
-// Contact Sorting --------------------------------------------------------------------------------
-//Register code to sort contacts
-- (void)registerListSortController:(id <AIListSortController>)inController
-{
-    [sortControllerArray addObject:inController];
-    [[owner notificationCenter] postNotificationName:Contact_SortSelectorListChanged object:nil userInfo:nil];
-}
-- (NSArray *)sortControllerArray{
-    return(sortControllerArray);
-}
-
-//Sets and get the active sort controller
-- (void)setActiveSortController:(id <AIListSortController>)inController
-{
-    activeSortController = inController;
-
-    //Resort the list
-    [self sortListGroup:contactList mode:AISortGroupAndSubGroups];
-    [[owner notificationCenter] postNotificationName:Contact_OrderChanged object:nil];
-}
-- (id <AIListSortController>)activeSortController{
-    return(activeSortController);
-}
 
 
 //Ordering
