@@ -54,9 +54,6 @@
 	configuredForService = nil;
 	configuredForAccount = nil;
     
-	//Disable the unavailable controls
-	[self enableDisableControls];
-
 	//
 	[popupMenu_serviceList setMenu:[[adium accountController] menuOfServicesWithTarget:self]];
 	[self configureAccountList];
@@ -137,11 +134,25 @@
     [accountView setFrameOrigin:NSMakePoint(0,([view_accountDetails frame].size.height - accountViewHeight))];
 	
     //Hook up the responder chain
-    [popupMenu_serviceList setNextKeyView:[accountView nextKeyView]];
+#warning This responder chain stuff is not working properly.
+    [textField_accountName setNextKeyView:[accountView nextValidKeyView]];
     NSView	*nextView = accountView;
+	NSLog(@"start with %@",nextView);
     while([nextView nextKeyView]) nextView = [nextView nextKeyView];
-    [nextView setNextKeyView:button_autoConnect];
-
+	//The accountView's nextKeyView isn't registering for some reason; nextView ends up the same as it started
+	NSLog(@"telling %@",nextView);
+	//which makes this setKeyView not do anything useful (we want to be telling the password field, for example, not the view itself)
+    [nextView setNextKeyView:tableView_accountList];
+	
+	[tableView_accountList setNextKeyView:popupMenu_serviceList];
+	//this is always null
+	NSLog(@"nextValid is %@",[tableView_accountList nextValidKeyView] );
+	//which seems possibly logical if popups can't accept first responder (if accessibility features aren't on)
+	if ([tableView_accountList nextValidKeyView] != popupMenu_serviceList)
+		[tableView_accountList setNextKeyView:textField_accountName];
+	//except even after the check, the nextKeyView is set but the nextValidKeyView is null
+	NSLog(@"nextValid is now %@ versus set %@",[tableView_accountList nextValidKeyView],[tableView_accountList nextKeyView] );
+	
 	//Swap in the account auxiliary tabs
     enumerator = [[accountViewController auxiliaryTabs] objectEnumerator];
     while(tabViewItem = [enumerator nextObject]){
