@@ -1662,7 +1662,7 @@
     AIChat *chat;
     enumerator = [chatDict objectEnumerator];
     while (chat = [enumerator nextObject]) {
-        [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
+		[self closeChat:chat];
     }       
     
     //Remove our chat dictionary
@@ -1670,7 +1670,7 @@
     
     //If we were disconnected unexpectedly, attempt a reconnect
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-		if (reconnectAttemptsRemaining) {
+		if (reconnectAttemptsRemaining && [self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError]) {
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
 		}else{
@@ -1685,6 +1685,13 @@
 		}
     }
 }
+
+//By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	return YES;
+}
+
 
 //Our account has connected (called automatically by gaimServicePlugin)
 - (void)accountConnectionConnected

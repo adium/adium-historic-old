@@ -21,6 +21,7 @@
     return "prpl-msn";
 }
 
+#pragma mark Connection
 - (void)createNewGaimAccount
 {
 	[super createNewGaimAccount];
@@ -71,16 +72,26 @@
 	return KEY_MSN_PORT;
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+{
+	if (([disconnectionError rangeOfString:@"signed on from another location"].location != NSNotFound)) {
+		return NO;
+	}else{
+		return YES;
+	}
+}
+
+#pragma mark Encoding
 //MSN doesn't use HTML at all... there's a font setting in the MSN Messenger text box, but maybe it's ignored?
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
     return ([inAttributedString string]);
 }
 
+#pragma mark Status
 //Update our status
 - (void)updateStatusForKey:(NSString *)key
 {    
-	
 	[super updateStatusForKey:key];
 	
     //Now look at keys which only make sense while online
@@ -110,6 +121,7 @@
 	[super updateAllStatusKeys];
 	[self updateStatusForKey:@"FullName"];
 }
+
 /*
  //Added to msn.c
 //**ADIUM
