@@ -15,7 +15,6 @@
 
 #import "AISCLOutlineView.h"
 #import "AISCLCell.h"
-#import "AIContactListCheckBox.h"
 #import "AISCLViewPlugin.h"
 #import "AISCLViewController.h"
 
