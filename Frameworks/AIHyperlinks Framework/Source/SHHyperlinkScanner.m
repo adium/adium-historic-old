@@ -28,7 +28,7 @@ static NSMutableCharacterSet *endSet = nil;
 //default initializer - use strict checking by default
 -(id)init
 {
-	if (self = [super init]){
+	if ((self = [super init])){
 		useStrictChecking = YES;
 		SHStringOffset = 0;
 	}
@@ -39,7 +39,7 @@ static NSMutableCharacterSet *endSet = nil;
 //init with a user specified value for strict checking
 -(id)initWithStrictChecking:(BOOL)flag
 {
-	if (self = [self init]){
+	if ((self = [self init])){
 		useStrictChecking = flag;
 	}
 
@@ -205,7 +205,7 @@ static NSMutableCharacterSet *endSet = nil;
     
     //build an array of marked links.
     while([inString length] > SHStringOffset){
-        if(markedLink = [self nextURLFromString:inString]){
+        if((markedLink = [self nextURLFromString:inString])){
 			if(!rangeArray) rangeArray = [NSMutableArray array];
             [rangeArray addObject:markedLink];
         }
@@ -237,10 +237,10 @@ static NSMutableCharacterSet *endSet = nil;
 
 		//for each SHMarkedHyperlink, add the proper URL to the proper range in the string.
 		enumerator = [rangeArray objectEnumerator];
-		while(markedLink = [enumerator nextObject]){
+		while((markedLink = [enumerator nextObject])){
 			NSURL *markedLinkURL;
 			
-			if(markedLinkURL = [markedLink URL]){
+			if((markedLinkURL = [markedLink URL])){
 				[linkifiedString addAttribute:NSLinkAttributeName
 										value:markedLinkURL 
 										range:[markedLink range]];
