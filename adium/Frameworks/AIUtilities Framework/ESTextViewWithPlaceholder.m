@@ -1,0 +1,48 @@
+//
+//  ESTextViewWithPlaceholder.m
+//  Adium XCode
+//
+//  Created by Evan Schoenberg on Fri Dec 26 2003.
+//  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
+//
+
+#import "ESTextViewWithPlaceholder.h"
+
+
+@implementation ESTextViewWithPlaceholder
+
+-(void)setPlaceholder:(NSString *)inPlaceholder
+{
+    [placeholder release];
+    placeholder = [inPlaceholder copy];
+}
+
+-(NSString *)placeholder
+{
+    return placeholder;
+}
+
+- (BOOL)becomeFirstResponder
+{
+    BOOL shouldBecomeFirstResponder;
+    if (shouldBecomeFirstResponder = [super becomeFirstResponder]){
+        if ([[self string] isEqualToString:placeholder]){
+            [self setString:@""];
+            [self setTextColor:[NSColor blackColor]];
+        }
+    }
+    return shouldBecomeFirstResponder;
+}
+- (BOOL)resignFirstResponder
+{
+    BOOL shouldResignFirstResponder;
+    if (shouldResignFirstResponder = [super resignFirstResponder]){
+        if ([[self string] isEqualToString:@""]){
+            [self setString:placeholder];
+            [self setTextColor:[NSColor disabledControlTextColor]];
+        }
+    }
+    NSLog(@"%i",shouldResignFirstResponder);
+    return shouldResignFirstResponder;
+}
+@end
