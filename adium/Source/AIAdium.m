@@ -172,6 +172,9 @@ void Adium_HandleSignal(int i){
 
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
+	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
+	[preferenceController beginClosing];
+
     //Close the controllers in reverse order
     [pluginController closeController]; //should always unload first.  Plugins rely on all the controllers.
     [contactAlertsController closeController];

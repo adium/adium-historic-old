@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.h,v 1.12 2004/02/08 00:23:00 adamiser Exp $ 
+// $Id: AIPreferenceController.h,v 1.13 2004/02/26 23:22:51 adamiser Exp $ 
 
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
@@ -101,6 +101,7 @@ typedef enum {
 //Private
 - (void)initController;
 - (void)finishIniting;
+- (void)beginClosing;
 - (void)closeController;
 - (NSArray *)paneArray;
 
