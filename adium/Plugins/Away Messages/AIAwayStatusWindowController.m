@@ -78,7 +78,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 //Called when "Show event bezel" button is clicked
 - (IBAction)toggleShowBezel:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[sender state]]
+    [[owner preferenceController] setPreference: [NSNumber numberWithBool:![sender state]]
                                          forKey:KEY_EVENT_BEZEL_SHOW_AWAY
                                           group:PREF_GROUP_EVENT_BEZEL];
 }
@@ -120,7 +120,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         [self updateAwayTime:nil];
         
         [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
-        
+        [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
     } else {
         // No away message, hide the window
         if([self windowShouldClose:nil]){
@@ -196,6 +196,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     [self updateAwayTime:nil];
     
     [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+    [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
     
     // Still to Add:
     // Put the time we went away in the text field
@@ -244,7 +245,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
                 showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
 
         [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
-        [button_showBezel setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+        [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
 
 }
 // XXX replace this to use ESDateFormatter
