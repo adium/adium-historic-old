@@ -22,6 +22,13 @@
     return(@"AnnouncerPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:ANNOUNCER_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_ANNOUNCER];
+	return(defaultsDict);
+}
+
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {

@@ -24,7 +24,7 @@
 
 - (NSDictionary *)restorablePreferences
 {
-	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]];
 	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
 		[defaultPrefs objectForKey:KEY_DUAL_RESIZE_VERTICAL],KEY_DUAL_RESIZE_VERTICAL,
 		[defaultPrefs objectForKey:KEY_DUAL_RESIZE_HORIZONTAL],KEY_DUAL_RESIZE_HORIZONTAL,

@@ -8,5 +8,7 @@
 	<false/>
 	<key>Autohide Tab Bar</key>
 	<true/>
+	<key>Enable Inactive Tab Close</key>
+	<false/>
 </dict>
 </plist>

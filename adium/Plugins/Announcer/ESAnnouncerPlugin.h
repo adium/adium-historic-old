@@ -8,7 +8,7 @@
 
 #import "ESAnnouncerPreferences.h"
 
-
+#define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults"
 #define PREF_GROUP_ANNOUNCER	@"Announcer"
 #define KEY_ANNOUNCER_OUTGOING	@"Speak Outgoing"
 #define KEY_ANNOUNCER_INCOMING 	@"Speak Incoming"

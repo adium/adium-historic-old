@@ -10,7 +10,6 @@
 #import "ESAnnouncerContactAlert.h"
 
 #define	CONTACT_ANNOUNCER_NIB		@"ContactAnnouncer"		//Filename of the announcer info view
-#define ANNOUNCER_DEFAULT_PREFS 	@"AnnouncerDefaults.plist"
 
 @interface ESAnnouncerPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

@@ -30,6 +30,14 @@
 {
     return(@"EventBezelPrefs");
 }
+
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_EVENT_BEZEL];
+	return(defaultsDict);
+}
+
 //
 
 - (IBAction)changePreference:(id)sender
