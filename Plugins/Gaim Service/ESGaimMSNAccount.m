@@ -391,7 +391,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	
 	//If we are setting one of our custom statuses, don't use a status message
 	if(gaimStatusType != NULL) 	*statusMessage = nil;
-	NSLog(@"msn says %@",*statusMessage);
+
 	//If we didn't get a gaim status type, request one from super
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
