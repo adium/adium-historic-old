@@ -963,6 +963,9 @@ void gaim_conv_im_write(GaimConvIm *im, const char *who,
  */
 void gaim_conv_im_send(GaimConvIm *im, const char *message);
 
+
+void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimConvImFlags flags);
+
 /*@}*/
 
 
