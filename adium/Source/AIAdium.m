@@ -28,12 +28,17 @@
 #import "ESContactAlertsController.h"
 #import "LNAboutBoxController.h"
 
+#import <ExceptionHandling/NSExceptionHandler.h>
+
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
 
 @interface AIAdium (PRIVATE)
 - (void)applicationDidFinishLaunching:(NSNotification *)notification;
 - (void)completeLogin;
 @end
+
+/*" simple uncaught exception handler for testing "*/
+
 
 @implementation AIAdium
 
@@ -125,23 +130,7 @@
 
 
 // Internal --------------------------------------------------------------------------------
-- (void)applicationWillFinishLaunching:(NSNotification *)notification
-{
-    //init
-    notificationCenter = nil;
-    eventNotifications = [[NSMutableDictionary alloc] init];
-    //play a sound to prevent a delay later when quicktime loads
-//    [AISoundController playSoundNamed:@"Beep"];
-}
 
-- (void)applicationDidFinishLaunching:(NSNotification *)notification
-{
-    //Load and init the components
-    [loginController initController];
-
-    //Begin Login
-    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
-}
 
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
@@ -218,5 +207,83 @@
 //    }
 }
 
+- (void)applicationWillFinishLaunching:(NSNotification *)notification
+{
+    //init
+    notificationCenter = nil;
+    eventNotifications = [[NSMutableDictionary alloc] init];
+    //play a sound to prevent a delay later when quicktime loads
+    //    [AISoundController playSoundNamed:@"Beep"];
+}
+
+void exceptionHandler(NSException *exception)
+{
+    NSLog(@"You will never see this message, as NSExceptionHandler is stupid.");   
+    exit(-1);
+}
+
+- (void)applicationDidFinishLaunching:(NSNotification *)notification
+{
+    //*****BEGIN
+    
+    //Set the function which should be called to handle uncaught exceptions
+    //            NSSetUncaughtExceptionHandler((NSUncaughtExceptionHandler *)exceptionHandler);
+    
+    //Get the default settings if you're so inclined
+    //   NSExceptionHandler *handler = [NSExceptionHandler defaultExceptionHandler];
+    //defaultExceptionHandlingMask = [handler exceptionHandlingMask];
+    //defaultExceptionHangingMask = [handler exceptionHangingMask];
+    
+    //Handle all exceptions
+//    [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:( NSHandleUncaughtExceptionMask | NSHandleUncaughtSystemExceptionMask | NSHandleUncaughtRuntimeErrorMask | NSHandleTopLevelExceptionMask | NSHandleOtherExceptionMask )];
+
+    //Log all exceptions
+ /*   [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:
+        NSLogUncaughtExceptionMask|
+        NSLogUncaughtSystemExceptionMask|
+        NSLogUncaughtRuntimeErrorMask|
+        NSLogTopLevelExceptionMask|
+        NSLogOtherExceptionMask];*/
+
+    //Log and Handle all exceptions (this is a #define in NSExceptionHandler.h which combines all of the above masks)
+    //  [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
+
+    //Set up a delegate - this is not useful for our purposes
+  //     [[NSExceptionHandler defaultExceptionHandler] setDelegate:self];
+
+    
+  /*  NSArray *a = [[NSArray alloc] initWithObjects:@"test array to be release too many times", nil];
+    [a release];
+    [a release];
+    */
+
+    // NSDictionary tests
+    /* 
+    NSMutableDictionary *dict = [[NSMutableDictionary alloc] init];
+     //gets caught properly if exceptions are being handled
+     [dict setObject:nil forKey:@"evands"];
+     
+     //crashes nastily if exceptions are being handled
+     //crashes gracefully if they are not
+     [dict release];
+     [dict setObject:@"this is a test" forKey:@"evands"];
+     */
+     //*****END
+     
+     
+     
+    //Load and init the components
+    [loginController initController];
+    
+    //Begin Login
+    [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
+}
+
+//Delegate method for logging.  Unnecessary.
+- (BOOL)exceptionHandler:(NSExceptionHandler *)sender shouldLogException:(NSException *)exception
+{
+    NSLog(@"log %@",exception);
+    return NO;
+}
 @end
 

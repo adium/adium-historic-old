@@ -59,7 +59,6 @@
 - (IBAction)showAboutBox:(id)sender;
 - (IBAction)confirmQuit:(id)sender;
 
-
 @end
 
 // Public core controller typedefs and defines --------------------------------------------------
@@ -390,6 +389,8 @@ typedef enum {
     NSMutableArray		*chatArray;
     
     AIChat                      *mostRecentChat;
+    
+    NSArray                     *emoticonsArray;
 }
 
 //Chats
@@ -424,6 +425,9 @@ typedef enum {
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
 - (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString;
 
+//Emoticons
+- (void)setEmoticonsArray:(NSArray *)inEmoticonsArray;
+- (NSArray *)emoticonsArray;
 @end
 
 //*** Contact ***//
@@ -685,7 +689,6 @@ typedef enum {
     BOOL		speaking;
     int                 defaultRate;
     int                 defaultPitch;
-    
 
 #ifdef MAC_OS_X_VERSION_10_0
     SUSpeaker		*speaker_variableVoice;
