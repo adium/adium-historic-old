@@ -198,6 +198,11 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		}else{
 			if (f->msg != NULL) {
 				statusMsgString = [NSString stringWithUTF8String:f->msg];
+				
+				//Ensure the away/not away for a cusotm message is handled properly by double checking here.
+				[self _updateAwayOfContact:theContact 
+									toAway:(f->status != YAHOO_STATUS_AVAILABLE)];
+
 			} else if (f->status != YAHOO_STATUS_AVAILABLE) {
 				statusMsgString = [presetStatusesDictionary objectForKey:[NSNumber numberWithInt:f->status]];
 			}
@@ -224,6 +229,68 @@ static NSDictionary		*presetStatusesDictionary = nil;
 		//apply changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
+}
+
+/*
+ * @brief Return the gaim status type to be used for a status
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status equivalent
+ * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ *
+ * @result The gaim status equivalent
+ */
+#warning msn invisible = "Hidden"
+- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
+						  message:(NSAttributedString **)statusMessage
+{
+	NSString		*statusName = [statusState statusName];
+	AIStatusType	statusType = [statusState statusType];
+	char			*gaimStatusType = NULL;
+	
+	switch(statusType){
+		case AIAvailableStatusType:
+		{
+			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+				gaimStatusType = "Available";
+			break;
+		}
+			
+		case AIAwayStatusType:
+		{
+			if ([statusName isEqualToString:STATUS_NAME_BRB])
+				gaimStatusType = "Be Right Back";
+			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
+				gaimStatusType = "Busy";
+			else if ([statusName isEqualToString:STATUS_NAME_NOT_AT_HOME])
+				gaimStatusType = "Not At Home";
+			else if ([statusName isEqualToString:STATUS_NAME_NOT_AT_DESK])
+				gaimStatusType = "Not At Desk";
+			else if ([statusName isEqualToString:STATUS_NAME_PHONE])
+				gaimStatusType = "On The Phone";
+			else if ([statusName isEqualToString:STATUS_NAME_VACATION])
+				gaimStatusType = "On Vacation";
+			else if ([statusName isEqualToString:STATUS_NAME_LUNCH])
+				gaimStatusType = "Out To Lunch";
+			else if ([statusName isEqualToString:STATUS_NAME_STEPPED_OUT])
+				gaimStatusType = "Stepped Out";
+
+			break;
+		}
+	}
+	
+	//If we are setting one of our custom statuses, clear a @"" statusMessage to nil
+	if((gaimStatusType != NULL) && ([*statusMessage length])) *statusMessage = nil;
+	
+	//If we didn't get a gaim status type, request one from super
+	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	
+	return gaimStatusType;
 }
 
 #pragma mark Contact List Menu Items
