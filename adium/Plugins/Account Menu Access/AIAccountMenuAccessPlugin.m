@@ -21,6 +21,8 @@
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	AILocalizedString(@"Disconnecting…",nil)	//Menu item title
 #define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)   //Menu item title for the auto-connect item
 
+#define ACCOUNT_TITLE   [NSString stringWithFormat:@"%@ (%@)",[account serverDisplayName],[account serviceID]]
+
 @interface AIAccountMenuAccessPlugin (PRIVATE)
 - (void)buildAccountMenus;
 - (void)accountListChanged:(NSNotification *)notification;
@@ -39,15 +41,18 @@
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(listObjectAttributesChanged:)
-									   name:ListObject_AttributesChanged 
-									 object:nil];
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
 		
+	/*
+	 [[adium notificationCenter] addObserver:self 
+									selector:@selector(listObjectAttributesChanged:)
+										name:ListObject_AttributesChanged 
+									  object:nil];
+	 */
+	
     [[adium contactController] registerListObjectObserver:self];
     
     accountMenuArray = [[NSMutableArray alloc] init];
@@ -89,6 +94,7 @@
 }
 
 //Redisplay the modified object (Attribute change)
+/*
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
 	AIListObject *inObject = [notification object];
@@ -100,6 +106,7 @@
 		}
 	}
 }
+*/
 
 //
 - (void)preferencesChanged:(NSNotification *)notification
@@ -160,7 +167,7 @@
             }
         }        
 		
-		[targetMenuItem setTitle:[account displayName]];
+		[targetMenuItem setTitle:ACCOUNT_TITLE];
     }
 }
 
@@ -225,8 +232,8 @@
 					keyEquivalent:@""
 				representedObject:account];
 		
-        //Create the submenu's owning item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:[account displayName]
+        //Create the submenu's owning item - title will be set in updateMenuForAccount
+        menuItem = [[[NSMenuItem alloc] initWithTitle:ACCOUNT_TITLE
 											   target:nil
 											   action:nil
 										keyEquivalent:@""] autorelease];
