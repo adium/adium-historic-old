@@ -110,6 +110,7 @@ DeclareString(UID);
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_CONTACT_LIST];
     //
+	nextOrderIndex = 1;
     contactObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
     activeSortController = nil;
@@ -128,8 +129,6 @@ DeclareString(UID);
 	contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
 	
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
-	largestOrder = 1.0;
-	smallestOrder = 1.0;
 
 	//
 	[self prepareContactInfo];
@@ -244,14 +243,6 @@ DeclareString(UID);
 		
 		object = [self groupWithUID:[infoDict objectForKey:UID]];
 		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
-		
-		//Ordering
-		float orderIndex = [[infoDict objectForKey:Ordering] floatValue];
-		
-		if(orderIndex > largestOrder) largestOrder = orderIndex;
-		if(orderIndex < smallestOrder) smallestOrder = orderIndex;
-		
-		[object setOrderIndex:orderIndex];
 	}
 }
 
@@ -296,7 +287,6 @@ DeclareString(UID);
 				Group, Type,
 				[object UID], UID,
 				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], Expanded,
-				[NSNumber numberWithFloat:[object orderIndex]], Ordering,
 				nil]];
 //		}
 	}
@@ -1487,8 +1477,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			contact = [[[AIListContact alloc] initWithUID:inUID account:inAccount service:inService] autorelease];
 
 			//Place new contacts at the bottom of our list (by giving them the largest ordering index)
-			largestOrder += 1.0;
-			[contact setOrderIndex:largestOrder];
+//			largestOrder += 1.0;
+//			[contact setOrderIndex:largestOrder];
+			//Make sure this contact's order index isn't bigger than our current nextOrderIndex we'll vend to new contacts
+			float orderIndex = [contact orderIndex];
+			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
 
 			//Do the update thing
 			[self _updateAllAttributesOfObject:contact];
@@ -1634,8 +1627,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
 			
 			//Place new groups at the bottom of our list (by giving them the largest ordering index)
-			largestOrder += 1.0;
-			[group setOrderIndex:largestOrder];
+//			largestOrder += 1.0;
+//			[group setOrderIndex:largestOrder];
+			float orderIndex = [group orderIndex];
+			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
 			
 			//add
 			[self _updateAllAttributesOfObject:group];
@@ -1768,35 +1763,31 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 //Position a list object within a group
-- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListGroup *)group
+- (void)_positionObject:(AIListObject *)listObject atIndex:(int)index inGroup:(AIListObject<AIContainingObject> *)group
 {
 	if(index == 0){		
 		//Moved to the top of a group.  New index is between 0 and the lowest current index
-		smallestOrder /= 2.0;
-		[listObject setOrderIndex:smallestOrder];
+		[listObject setOrderIndex:([group smallestOrder] / 2.0)];
 		
 	}else if(index >= [group visibleCount]){
 		//Moved to the bottom of a group.  New index is one higher than the highest current index
-		largestOrder += 1.0;
-		[listObject setOrderIndex:largestOrder];
+		[listObject setOrderIndex:([group largestOrder] + 1.0)];
 		
 	}else{
 		//Moved somewhere in the middle.  New index is the average of the next largest and smallest index
-		float nextLowest = [[group objectAtIndex:index-1] orderIndex];
-		float nextHighest = [[group objectAtIndex:index] orderIndex];
-		
-		//To avoid stepping on any existing placements within that range, we will move the nextLowest value
-		//to the closest existing order below nextHighest.
-		AIListObject	*scanObject;
-		NSEnumerator	*enumerator = enumerator = [contactDict objectEnumerator];
-		while(scanObject = [enumerator nextObject]){
-			float	scanIndex = [scanObject orderIndex];
-			if(scanIndex > nextLowest && scanIndex < nextHighest) nextLowest = scanIndex;
-		}
+		AIListObject	*previousObject = [group objectAtIndex:index-1];
+		AIListObject	*nextObject = [group objectAtIndex:index];
+		float nextLowest = [previousObject orderIndex];
+		float nextHighest = [nextObject orderIndex];
 		
 		//
 		[listObject setOrderIndex:((nextHighest + nextLowest) / 2.0)];
 	}
+}
+
+- (float)nextOrderIndex
+{
+	return nextOrderIndex++;
 }
 
 @end
