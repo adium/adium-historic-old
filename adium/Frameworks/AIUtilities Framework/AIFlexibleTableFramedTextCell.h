@@ -14,12 +14,7 @@
     BOOL	drawBottom;
     BOOL        drawSides;
 
-    BOOL    suppressTopLeftCorner;
-    BOOL    suppressTopRightCorner;
-    BOOL    suppressBottomRightCorner;
-    BOOL    suppressBottomLeftCorner;
-    BOOL    suppressTopBorder;
-    BOOL    suppressBottomBorder;
+    int         framePadLeft;
     
     NSColor 	*borderColor;
     NSColor	*bubbleColor;
@@ -33,13 +28,6 @@
 - (void)setDrawTop:(BOOL)inDrawTop;
 - (void)setDrawBottom:(BOOL)inDrawBottom;
 - (void)setDrawSides:(BOOL)inDrawSides;
-
-- (void)setSuppressTopRightCorner:(BOOL)inSuppressTopRightCorner;
-- (void)setSuppressTopLeftCorner:(BOOL)inSuppressTopLeftCorner;
-- (void)setSuppressBottomRightCorner:(BOOL)inSuppressBottomRightCorner;
-- (void)setSuppressBottomLeftCorner:(BOOL)inSuppressBottomLeftCorner;
-- (void)setSuppressTopBorder:(BOOL)inSuppressTopBorder;
-- (void)setSuppressBottomBorder:(BOOL)inSuppressBottomBorder;
 
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor;
 

@@ -8,8 +8,11 @@
 
 #import "AIFlexibleTableFramedTextCell.h"
 
+//Variable padding (Depending on mode)
 #define FRAME_PAD_LEFT 		7
 #define FRAME_FLAT_PAD_LEFT     10
+
+//Fixed padding
 #define FRAME_PAD_RIGHT 	5
 #define FRAME_PAD_TOP 		2
 #define FRAME_PAD_BOTTOM 	2
@@ -48,14 +51,8 @@
 
 - (id)initWithAttributedString:(NSAttributedString *)inString
 {
-    drawTopDivider = NO;
-    drawSides = YES;    
-    suppressTopLeftCorner = NO;
-    suppressTopRightCorner = NO;
-    suppressBottomRightCorner = NO;
-    suppressBottomLeftCorner = NO;
-    suppressTopBorder = NO;
-    suppressBottomBorder = NO;
+    drawTopDivider = NO;    
+    [self setDrawSides:NO];
 
     [super initWithAttributedString:inString];
     return self;
@@ -92,37 +89,10 @@
 - (void)setDrawSides:(BOOL)inDrawSides
 {
     drawSides = inDrawSides;
+    
+    //Update our padding
+    framePadLeft = (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT);
 }   
-
-- (void)setSuppressTopRightCorner:(BOOL)inSuppressTopRightCorner
-{
-    suppressTopRightCorner = inSuppressTopRightCorner;
-}
-
-- (void)setSuppressTopLeftCorner:(BOOL)inSuppressTopLeftCorner
-{
-    suppressTopLeftCorner = inSuppressTopLeftCorner;
-}
-
-- (void)setSuppressBottomRightCorner:(BOOL)inSuppressBottomRightCorner
-{
-    suppressBottomRightCorner = inSuppressBottomRightCorner;
-}
-
-- (void)setSuppressBottomLeftCorner:(BOOL)inSuppressBottomLeftCorner
-{
-    suppressBottomLeftCorner = inSuppressBottomLeftCorner;
-}
-
-- (void)setSuppressTopBorder:(BOOL)inSuppressTopBorder
-{
-    suppressTopBorder = inSuppressTopBorder;
-}
-
-- (void)setSuppressBottomBorder:(BOOL)inSuppressBottomBorder
-{
-    suppressBottomBorder = inSuppressBottomBorder;
-}
 
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
 {
@@ -143,7 +113,7 @@
 //Adjust for our padding
 - (int)sizeContentForWidth:(float)inWidth
 {
-    inWidth -= (FRAME_PAD_LEFT + FRAME_PAD_RIGHT);
+    inWidth -= (framePadLeft + FRAME_PAD_RIGHT);
     int newHeight = [super sizeContentForWidth:inWidth] + (FRAME_PAD_TOP + FRAME_PAD_BOTTOM);
 
     if(drawBottom) newHeight++; //Give ourselves another pixel for the bottom border
@@ -158,7 +128,7 @@
 //Adjust for our padding
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
-    offset.x += FRAME_PAD_LEFT;
+    offset.x += framePadLeft;
     offset.y += FRAME_PAD_BOTTOM;
 
     return([super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView]);
@@ -167,9 +137,9 @@
 //Adjust for our padding
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    inPoint.x -= FRAME_PAD_LEFT;
+    inPoint.x -= framePadLeft;
     inPoint.y -= FRAME_PAD_BOTTOM;
-    inOffset.x += FRAME_PAD_LEFT;
+    inOffset.x += framePadLeft;
     inOffset.y += FRAME_PAD_BOTTOM;
 
     return([super handleMouseDownEvent:theEvent atPoint:inPoint offset:inOffset]);
@@ -178,9 +148,9 @@
 //Adjust for our padding
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    inPoint.x -= FRAME_PAD_LEFT;
+    inPoint.x -= framePadLeft;
     inPoint.y -= FRAME_PAD_BOTTOM;
-    inOffset.x += FRAME_PAD_LEFT;
+    inOffset.x += framePadLeft;
     inOffset.y += FRAME_PAD_BOTTOM;
 
     return([super pointIsSelected:inPoint offset:inOffset]);
@@ -189,11 +159,11 @@
 //Change this cell's selection
 - (void)selectContentFrom:(NSPoint)source to:(NSPoint)dest offset:(NSPoint)inOffset mode:(int)selectMode
 {
-    source.x -= FRAME_PAD_LEFT;
+    source.x -= framePadLeft;
     source.y -= FRAME_PAD_BOTTOM;
-    dest.x -= FRAME_PAD_LEFT;
+    dest.x -= framePadLeft;
     dest.y -= FRAME_PAD_BOTTOM;
-    inOffset.x += FRAME_PAD_LEFT;
+    inOffset.x += framePadLeft;
     inOffset.y += FRAME_PAD_BOTTOM;
 
     [super selectContentFrom:source to:dest offset:inOffset mode:selectMode];
@@ -247,8 +217,8 @@
     [self _drawBubbleMiddleInRect:cellFrame];
     
     //Draw our text content
-    inFrame.origin.x += (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT);
-    inFrame.size.width -= (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT) + FRAME_PAD_RIGHT;
+    inFrame.origin.x += (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT);
+    inFrame.size.width -= (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT) + FRAME_PAD_RIGHT;
     /*if(drawTop) */inFrame.origin.y += FRAME_PAD_TOP;
     inFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : FRAME_PAD_TOP) + (drawBottom ? FRAME_PAD_BOTTOM : FRAME_PAD_BOTTOM));
 
