@@ -25,6 +25,8 @@
 	BOOL			useGradient;
 	BOOL			updateShadowsWhileDrawing;
 	
+	BOOL			dragging;
+	
     NSFont			*font;
     NSFont			*groupFont;
     NSColor			*color;
