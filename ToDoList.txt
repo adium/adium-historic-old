@@ -19,23 +19,9 @@
   The new state system should be contained within its own window, continuing
   with the trend to move 'content' out of the preference window.
 
-//Accounts Window
-  Move account preferences to their own window
-	- Move user-icon and alias into the 'personal' tab
-	- Dim service icon slightly on selection (Similar to contact list)
-	- Use status icon to show online state instead of postfixing 'online/offline'
-
 //Auto-completion
   Tab auto-completion in the message window
 	- Contact names (Mainly for multi-user chat)
-
-//File Receive Prompt
-  The receive file prompt should be its own panel, and provide options for
-	- Save (To desktop / download folder)
-	- Save As... (Prompt for location)
-	- Ignore
-  This will solve issues with the save dialog catching keystrokes, and provides
-  an easy way to just save an incoming file to the desktop.
 
 //Fast User Switching
   The fast user switching plugin needs to provide advanced preferences for
@@ -57,8 +43,8 @@
   - New close button graphic
 	
 //Sorting Improvements
-  - Improve status sorting defaults
-  - Simplify custom sort window by removing duplicate/redundant options
+  - Improve status sorting defaults [Evan: What's wrong with the current ones?]
+  - Simplify custom sort window by removing duplicate/redundant options [Evan: What options are duplicate/redundant?]
  
 //Flashing reduction
   Make it possible to use Adium without any distracting flashing and blinking
@@ -182,9 +168,6 @@
 	- We need to either support contacts at the root level or not support them; we currently do a mixture
 		which is very confusing to new users.  For example, a new Jabber account has no groups, but adding
 		a contact with no groups has no visible effect.
-
-//Alerts
-  - Clarify wording, clean up alert panes
 
 //Status on message window
   - Show our current status on the message window
