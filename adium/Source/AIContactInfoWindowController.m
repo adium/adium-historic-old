@@ -69,8 +69,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)dealloc
 {
-	[displayedObject release];
-	[loadedPanes release];
+	[displayedObject release]; displayedObject = nil;
+	[loadedPanes release]; loadedPanes = nil;
     [super dealloc];
 }	
 
@@ -82,7 +82,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	NSString		*savedFrame;
 
     //
-	loadedPanes = [[NSMutableArray alloc] init];
+	loadedPanes = [[NSMutableSet alloc] init];
 	[[self window] setHidesOnDeactivate:NO];
 	[(NSPanel *)[self window] setFloatingPanel:NO];
 	
@@ -92,6 +92,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     if(selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
 	
     tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
+	
+	//NSTabView won't send the willSelectTabViewItem: properly when we call selectTabViewItem:
     [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
     [tabView_category selectTabViewItem:tabViewItem];    
 	
@@ -211,7 +213,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     while(pane = [enumerator nextObject]){
         if([pane contactInfoCategory] == inCategory){
             [paneArray addObject:pane];
-            [loadedPanes addObject:pane];
+			[loadedPanes addObject:pane];
         }
     }
 	
