@@ -24,6 +24,17 @@
 	
 	//Observe chat changes
 	[[adium contentController] registerChatObserver:self];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(statusIconSetDidChange:)
+									   name:@"AIStatusIconSetDidChange"
+									 object:nil];
+}
+
+- (void)statusIconSetDidChange:(NSNotification *)aNotification
+{
+	[[adium contactController] updateAllListObjectsForObserver:self];
+	[[adium contentController] updateAllChatsForObserver:self];
 }
 
 //Apply the correct tab icon according to status
