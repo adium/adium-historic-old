@@ -125,7 +125,7 @@
 	forceUpdate = YES;
 	[self gotUpdateForFileTransfer:inFileTransfer];
 	
-	[view setAllowsCancel:![self isStopped]];
+	[view setAllowsCancel:![inFileTransfer isStopped]];
 	
 	[[view window] display];
 	forceUpdate = NO;
@@ -295,7 +295,7 @@
 }
 - (void)removeRowAction:(id)sender
 {
-	if([self isStopped]){
+	if([inFileTransfer isStopped]){
 		[owner _removeFileTransferRow:self];
 	}
 }
@@ -323,7 +323,7 @@
 		
 	}	
 
-	if([self isStopped]){
+	if([fileTransfer isStopped]){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Remove from List",nil)
 																		 target:self
 																		 action:@selector(removeRowAction:)
