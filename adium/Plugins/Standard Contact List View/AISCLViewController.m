@@ -142,23 +142,31 @@
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
         NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-        NSFont		*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
-        NSColor		*groupColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
         NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
         NSColor		*gridColor = [[prefDict objectForKey:KEY_SCL_GRID_COLOR] representedColorWithAlpha:alpha];
+        NSColor		*groupColor = [[prefDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor];
+        NSFont		*font = [[prefDict objectForKey:KEY_SCL_FONT] representedFont];
         BOOL		alternatingGrid = [[prefDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue];
-
-        //Cap the font to size 12
+        BOOL		customGroupColor = [[prefDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue];
+        BOOL		boldGroups = [[prefDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue];
+        NSFont		*boldFont = nil;
         
-        
-        //Display
+        //Fonts
         [contactListView setFont:font];
+        if(boldGroups){
+            boldFont = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
+        }
+        [contactListView setGroupFont:(boldFont ? boldFont : font)];
+
+        //Colors
         [contactListView setColor:color];
-        [contactListView setGroupColor:groupColor];
-        [contactListView setRowHeight:[font defaultLineHeightForFont]];
+        [contactListView setGroupColor:(customGroupColor ? groupColor : color)];
         [contactListView setBackgroundColor:backgroundColor];
+
+        //Row Height
+        [contactListView setRowHeight:[font defaultLineHeightForFont]];
         
         //Grid
         [contactListView setDrawsAlternatingRows:alternatingGrid];

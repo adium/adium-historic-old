@@ -229,12 +229,10 @@
     }
 
     //Text Font
-    font = [(AISCLOutlineView *)controlView font];
-
-    //Add Bold for Groups
-    if(isGroup){
-	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSBoldFontMask];
-        if(!font) font = [(AISCLOutlineView *)controlView font];
+    if(!isGroup){
+        font = [(AISCLOutlineView *)controlView font];
+    }else{
+        font = [(AISCLOutlineView *)controlView groupFont];
     }
 
     //Create a paragraph Style (To turn off clipping by word)

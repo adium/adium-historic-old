@@ -32,7 +32,8 @@
 - (void)configureView;
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
-- (void)showOpacityPercent;
+//- (void)showOpacityPercent;
+- (void)configureControlDimming;
 @end
 
 @implementation AICLPreferences
@@ -84,12 +85,28 @@
                                              forKey:KEY_SCL_BACKGROUND_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];    
 
-    }else if(sender == slider_opacity){
+/*    }else if(sender == slider_opacity){
         float	opacity = (100.0 - [sender floatValue]) * 0.01;
         
         [self showOpacityPercent];
         [[owner preferenceController] setPreference:[NSNumber numberWithFloat:opacity]
                                              forKey:KEY_SCL_OPACITY
+                                              group:PREF_GROUP_CONTACT_LIST];
+        */
+    }else if(sender == checkBox_boldGroups){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_BOLD_GROUPS
+                                              group:PREF_GROUP_CONTACT_LIST];
+
+    }else if(sender == checkBox_customGroupColor){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SCL_CUSTOM_GROUP_COLOR
+                                              group:PREF_GROUP_CONTACT_LIST];
+        [self configureControlDimming];
+        
+    }else if(sender == colorWell_group){
+        [[owner preferenceController] setPreference:[[sender color] stringRepresentation]
+                                             forKey:KEY_SCL_GROUP_COLOR
                                               group:PREF_GROUP_CONTACT_LIST];
     }
     
@@ -155,12 +172,12 @@
 }
 
 //Display the current opacity percent
-- (void)showOpacityPercent
+/*- (void)showOpacityPercent
 {
     float	opacity = [slider_opacity floatValue];
 
     [textField_opacityPercent setStringValue:[NSString stringWithFormat:@"%i",(int)opacity]];
-}
+}*/
 
 //Configure our view for the current preferences
 - (void)configureView
@@ -170,16 +187,24 @@
     //Display
     [self showFont:[[preferenceDict objectForKey:KEY_SCL_FONT] representedFont] inField:textField_fontName];
     [colorWell_contact setColor:[[preferenceDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor]];
-    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
     [colorWell_background setColor:[[preferenceDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColor]];
 
     //Grid
     [checkBox_alternatingGrid setState:[[preferenceDict objectForKey:KEY_SCL_ALTERNATING_GRID] boolValue]];
     [colorWell_grid setColor:[[preferenceDict objectForKey:KEY_SCL_GRID_COLOR] representedColor]];
 
-    //Alpha
-    [slider_opacity setFloatValue:(100 * (1.0 - [[preferenceDict objectForKey:KEY_SCL_OPACITY] floatValue]))];
-    [self showOpacityPercent];
+    //Groups
+    [checkBox_boldGroups setState:[[preferenceDict objectForKey:KEY_SCL_BOLD_GROUPS] boolValue]];
+    [checkBox_customGroupColor setState:[[preferenceDict objectForKey:KEY_SCL_CUSTOM_GROUP_COLOR] boolValue]];
+    [colorWell_group setColor:[[preferenceDict objectForKey:KEY_SCL_GROUP_COLOR] representedColor]];
+
+    [self configureControlDimming];
+}
+
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [colorWell_group setEnabled:[checkBox_customGroupColor state]];
 }
 
 @end

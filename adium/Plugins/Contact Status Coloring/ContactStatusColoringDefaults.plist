@@ -2,6 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+    <key>Away Enabled</key>
+    <true/>
+    <key>Idle Enabled</key>
+    <true/>
+    <key>Signed Off Enabled</key>
+    <true/>
+    <key>Signed On Enabled</key>
+    <true/>
+    <key>Typing Enabled</key>
+    <true/>
+    <key>Unviewed Content Enabled</key>
+    <true/>
+    <key>Online Enabled</key>
+    <false/>
+    <key>Idle And Away Enabled</key>
+    <false/>
     <key>Away Color</key>
     <string>49,49,49</string>
     <key>Idle Color</key>
@@ -13,6 +29,10 @@
     <key>Typing Color</key>
     <string>255,255,255</string>
     <key>Unviewed Content Color</key>
+    <string>255,255,255</string>
+    <key>Online Color</key>
+    <string>255,255,255</string>
+    <key>Idle And Away Color</key>
     <string>255,255,255</string>
     <key>Away Background Color</key>
     <string>234,234,234</string>
@@ -26,5 +46,9 @@
     <string>255,145,71</string>
     <key>Unviewed Content Background Color</key>
     <string>0,144,197</string>
+    <key>Online Background Color</key>
+    <string>255,0,0</string>
+    <key>Idle And Away Background Color</key>
+    <string>234,234,234</string>
 </dict>
 </plist>

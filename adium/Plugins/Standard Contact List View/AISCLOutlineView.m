@@ -42,6 +42,7 @@
     [super init];
 
     font = nil;
+    groupFont = nil;
     color = nil;
     invertedColor = nil;
     groupColor = nil;
@@ -255,8 +256,7 @@
 
 //Custom font settings ------------------------------------------------------------------
 //We have to handle setting our font manually.  Outline view responds to set font, but it does nothing.
-- (void)setFont:(NSFont *)inFont
-{
+- (void)setFont:(NSFont *)inFont{
     if(font != inFont){
         [font release];
         font = [inFont retain];
@@ -264,6 +264,16 @@
 }
 - (NSFont *)font{
     return(font);
+}
+
+- (void)setGroupFont:(NSFont *)inFont{
+    if(groupFont != inFont){
+        [groupFont release];
+        groupFont = [inFont retain];
+    }
+}
+- (NSFont *)groupFont{
+    return(groupFont);
 }
 
 //Custom color settings -----------------------------------------------------------------
@@ -304,7 +314,7 @@
 
 //No available contacts -----------------------------------------------------------------
 //Draw a custom 'no available contacts' message when the list is empty
-- (void)drawRect:(NSRect)rect
+/*- (void)drawRect:(NSRect)rect
 {
     int		rowHeight = [self rowHeight] + [self intercellSpacing].height;
     int		numberOfRows = [self numberOfRows];
@@ -327,7 +337,7 @@
 
         [emptyMessage release];
     }
-}
+}*/
 
 
 

@@ -5,16 +5,20 @@
 	<key>Font</key>
 	<string>Lucida Grande,11</string>
 	<key>Alternating Grid</key>
-	<true/>
+	<false/>
 	<key>Background Color</key>
 	<string>255,255,255</string>
 	<key>Grid Color</key>
-	<string>237,237,240</string>
+	<string>237,243,254</string>
 	<key>Contact Color</key>
 	<string>0,0,0</string>
 	<key>Group Color</key>
 	<string>0,0,0</string>
 	<key>Opacity</key>
 	<real>1.0</real>
+	<key>Custom Group Color</key>
+	<false/>
+	<key>Bold Groups</key>
+	<true/>
 </dict>
 </plist>

@@ -21,20 +21,38 @@
     AIAdium			*owner;
 
     IBOutlet	NSView		*view_prefView;
-    
-    IBOutlet	NSColorWell	*colorWell_signedOff;
-    IBOutlet	NSColorWell	*colorWell_signedOn;
-    IBOutlet	NSColorWell	*colorWell_away;
-    IBOutlet	NSColorWell	*colorWell_idle;
-    IBOutlet	NSColorWell	*colorWell_typing;
-    IBOutlet	NSColorWell	*colorWell_unviewedContent;
 
+    IBOutlet	NSButton	*checkBox_signedOff;
+    IBOutlet	NSColorWell	*colorWell_signedOff;
     IBOutlet	NSColorWell	*colorWell_backSignedOff;
+
+    IBOutlet	NSButton	*checkBox_signedOn;
+    IBOutlet	NSColorWell	*colorWell_signedOn;
     IBOutlet	NSColorWell	*colorWell_backSignedOn;
+
+    IBOutlet	NSButton	*checkBox_away;
+    IBOutlet	NSColorWell	*colorWell_away;
     IBOutlet	NSColorWell	*colorWell_backAway;
+
+    IBOutlet	NSButton	*checkBox_idle;
+    IBOutlet	NSColorWell	*colorWell_idle;
     IBOutlet	NSColorWell	*colorWell_backIdle;
+
+    IBOutlet	NSButton	*checkBox_typing;
+    IBOutlet	NSColorWell	*colorWell_typing;
     IBOutlet	NSColorWell	*colorWell_backTyping;
+
+    IBOutlet	NSButton	*checkBox_unviewedContent;
+    IBOutlet	NSColorWell	*colorWell_unviewedContent;
     IBOutlet	NSColorWell	*colorWell_backUnviewedContent;
+
+    IBOutlet	NSButton	*checkBox_online;
+    IBOutlet	NSColorWell	*colorWell_online;
+    IBOutlet	NSColorWell	*colorWell_backOnline;
+
+    IBOutlet	NSButton	*checkBox_idleAndAway;
+    IBOutlet	NSColorWell	*colorWell_idleAndAway;
+    IBOutlet	NSColorWell	*colorWell_backIdleAndAway;
 }
 
 + (AIContactStatusColoringPreferences *)contactStatusColoringPreferencesWithOwner:(id)inOwner;
