@@ -85,6 +85,22 @@
     }
 }
 
+- (NSImage *)imageByScalingToSize:(NSSize)size
+{
+	NSImage *scaledImage = [[NSImage alloc] initWithSize:size];
+	NSSize  originalSize = [self size];
+	
+	[scaledImage lockFocus];
+	[self drawInRect:NSMakeRect(0,0,size.width,size.height)
+			fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
+		   operation:NSCompositeCopy
+			fraction:1.0];
+	[scaledImage unlockFocus];
+	
+	return ([scaledImage autorelease]);	
+}
+
+
 // Originally from Apple's "CocoaVideoFrameToNSImage" Sample code
 //
 //	File:		MyQuickDrawView.m
