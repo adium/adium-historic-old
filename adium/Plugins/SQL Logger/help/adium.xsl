@@ -24,9 +24,9 @@
               </td>
           </tr>
           <tr>
-            <td width="170" height="20" background="transp-change.png"
-            bgcolor="green"> </td>
-            <td height="20" background="transp-change.png"> </td>
+            <td width="170" height="20" background="images/transp-change.png"
+            bgcolor="green"></td>
+            <td height="20" background="images/transp-change.png"></td>
           </tr>
           <tr>
             <td width="170" bgcolor="green" valign="top" align="right">

@@ -1,15 +1,15 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/transitional.dtd">
-<html>
+<html xmlns:xalan="http://xml.apache.org/xslt">
 <head>
-<meta content="text/html; charset=UTF-8" http-equiv="Content-Type">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <title>Adium SQL Logging Instructions</title>
 <link rel="stylesheet" type="text/css" href="stylesheet.css">
 </head>
 <body><table border="0" cellspacing="0" cellpadding="5">
 <tr><td colspan="2" bgcolor="#000000" align="right"><h2 class="titlebar">Adium SQL Logging Instructions</h2></td></tr>
 <tr>
-<td width="170" height="20" background="transp-change.png" bgcolor="green"></td>
-<td height="20" background="transp-change.png"></td>
+<td width="170" height="20" background="images/transp-change.png" bgcolor="green"></td>
+<td height="20" background="images/transp-change.png"></td>
 </tr>
 <tr>
 <td width="170" bgcolor="green" valign="top" align="right">
@@ -35,19 +35,24 @@
     At the base level, all that is required is PostgreSQL (duh).
     It can be installed from source, via fink, or by a package.</p>
 <p>I would recommend a package by Mark Liyanage.<br>
-    You can find information and installation instructions at <a href="http://www.entropy.ch/software/macosx/postgresql/" class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.</p>
+    You can find information and installation instructions at <a href="http://www.entropy.ch/software/macosx/postgresql/" class="offsite">http://www.entropy.ch/software/macosx/postgresql/</a>.
+  This tutorial has an OS X-style installer, and has a package for starting
+  PostgreSQL up at startup.</p>
 <p>There is also a set of installation instructions for installing
-    PostgreSQL at <a href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
+    PostgreSQL from source at <a href="http://developer.apple.com/internet/macosx/postgres.html" class="offsite">http://developer.apple.com/internet/macosx/postgres.html</a>.
     That tutorial is very good.  It covers installing PostgreSQL from source, shows
   how to use PostgreSQL with Perl (necessary for parser.pl or parser-2.pl to
   work), Java (necessary for the JSP viewers to work), and PHP (not necessary
   for this).  It also covers how to administer the database using phpPgAdmin, an
   administration program with a web interface.</p>
-<p>After you have PostgreSQL set up, create a user with your username.</p>
+<p>After you have PostgreSQL set up, create a user with your username.
+      This needs to be done as the postgres user.
+      (<code>su - postgres</code>)</p>
 <div class="tutorialcode">
       <pre>createuser <i>username</i></pre>
 </div>
-<p>Then create a database with your username:</p>
+<p>Then create a database with your username, as yourself 
+      (<code>su - <i>username</i></code>):</p>
 <div class="tutorialcode">
       <pre>createdb <i>username</i></pre>
 </div>

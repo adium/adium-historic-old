@@ -22,7 +22,7 @@
 #import "libpq-fe.h"
 
 @interface AISQLLoggerPlugin (PRIVATE)
-- (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName date:(NSDate *)date sendServe:(NSString *)s_service recServe:(NSString *)r_service;
+- (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendServe:(NSString *)s_service recServe:(NSString *)r_service;
 
 @end
 
@@ -64,19 +64,19 @@
         AIChat		*chat = [content chat];
         AIAccount	*source = [content source];
         NSString	*destUID;
+        NSString	*destService;
 
-        destUID = [[chat statusDictionary] objectForKey:@"DisplayName"];
-        if(!destUID) destUID = [[chat listObject] UID];
+        destUID = [[chat listObject] UID];
+        destService = [[chat listObject] serviceID];
 
-        //Source and destination are valid (account & handle)
-        if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIListContact class]]){
+        if([chat account] && [content source]){
             //Log the message
+            //NSLog(@"Doing stuff in receivedContent: %@, %@, %@, %@, %@", [content message], destUID, [source UID], [source serviceID], destService);
             [self _addMessage:[[content message] safeString]
                          dest:destUID
                        source:[source UID]
-                         date:[content date]
-                         sendServe:[source serviceID]
-                         recServe:[destination serviceID]];
+                    sendServe:[source serviceID]
+                     recServe:destService];
         }
     }
 }
@@ -91,19 +91,20 @@
         AIChat		*chat = [content chat];
         AIAccount	*destination = [content destination];
         NSString	*srcUID;
+        NSString	*srcService;
 
-        srcUID = [[chat statusDictionary] objectForKey:@"DisplayName"];
-        if(!srcUID) srcUID = [[chat listObject] UID];
+        srcUID = [[chat listObject] UID];
+        srcService = [[chat listObject] serviceID];
         
         //Destination are valid (handle)
-        if([source isKindOfClass:[AIListContact class]]){
+        if([chat account] && [content source]){
             //Log the message
+            //NSLog(@"Doing stuff in receivedContent: %@, %@, %@, %@, %@", [content message], [destination UID], srcUID, srcService, [destination serviceID]);
             [self _addMessage:[[content message] safeString]
-                        dest:[destination UID]
+                         dest:[destination UID]
                        source:srcUID
-                         date:[content date]
-                         sendServe:[source serviceID]
-                         recServe:[destination serviceID]];
+                    sendServe:srcService
+                     recServe:[destination serviceID]];
         }
     }
 }
@@ -119,7 +120,6 @@
 (NSAttributedString *)message 
 dest:(NSString *)destName 
 source:(NSString *)sourceName
-date:(NSDate *)date
 sendServe:(NSString *)s_service
 recServe:(NSString *)r_service
 {
