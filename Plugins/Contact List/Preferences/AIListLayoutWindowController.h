@@ -47,8 +47,6 @@
 	IBOutlet		JVFontPreviewField	*fontField_status;	
 	IBOutlet		JVFontPreviewField	*fontField_group;	
 	
-	IBOutlet		NSTextField			*textField_layoutName;
-
 	IBOutlet		NSTabView			*tabView_preferences;
 	
 	//Advanced contact bubble options
@@ -59,12 +57,17 @@
 	IBOutlet		NSSlider			*slider_outlineWidth;
 	IBOutlet		NSTextField			*textField_outlineWidthIndicator;
 	
-	NSString							*layoutName;
+	id				target;
+	NSString		*layoutName;
 }
 
-+ (id)listLayoutOnWindow:(NSWindow *)parentWindow withName:(NSString *)inName;
++ (id)editListLayoutWithName:(NSString *)inName onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (void)preferenceChanged:(id)sender;
 
+@end
+
+@interface NSObject (AIListLayoutWindowTarget)
+- (void)listLayoutEditorWillCloseWithChanges:(BOOL)changes forLayoutNamed:(NSString *)name;
 @end
