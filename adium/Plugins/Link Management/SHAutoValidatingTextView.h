@@ -19,13 +19,13 @@ void SHLinkLexer_delete_buffer(SHLinkLexer_BUFFER_STATE);
     BOOL         URLIsValid;
     NSString    *urlString;
     unsigned     scanOffset;
-
+    int          validStatus;
 }
 
 - (void)setContiniousURLValidationEnabled:(BOOL)flag;
 - (void)toggleContiniousURLValidationEnabled;
 - (BOOL)isContiniousURLValidationEnabled;
-
+- (int)validationStatus;
 - (BOOL)isURLValid;
 
 @end

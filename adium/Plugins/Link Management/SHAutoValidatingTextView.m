@@ -46,7 +46,15 @@
 {
     return(continiousURLValidation);
 }
-
+#pragma mark Get URL Verification Status
+- (BOOL)isURLValid
+{
+    return(URLIsValid);
+}
+- (int)validationStatus
+{
+    return(validStatus);
+}
 #pragma mark Evaluate URL
 //catch the notification when the text in the view is edited
 - (void)textDidChange:(NSNotification *)notification
@@ -56,14 +64,9 @@
     }
 }
 
-- (BOOL)isURLValid
-{
-    return(URLIsValid);
-}
-
 - (BOOL)_validateURL // Now with FLEX!
 {
-    int state = 0;
+    validStatus = 0;
     SHLinkLexer_BUFFER_STATE buf;
     
     //init buffer to scan a string
@@ -71,8 +74,8 @@
     SHLinkLexer_switch_to_buffer(buf);
     
     //return the lexer's state
-    state = SHLinkLexerlex();
-    if( state == SH_URL_VALID || state == SH_MAILTO_VALID) {
+    validStatus = SHLinkLexerlex();
+    if( validStatus != SH_URL_INVALID) {
         SHLinkLexer_delete_buffer(buf);
         return YES;
     }else{
