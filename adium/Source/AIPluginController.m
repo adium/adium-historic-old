@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.37 2004/04/02 20:25:53 adamiser Exp $
+//$Id: AIPluginController.m,v 1.38 2004/04/05 01:51:31 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins"	//Path to the internal plugins
@@ -98,7 +98,7 @@ AIIdleTimePlugin, ESContactServersideDisplayName, AIConnectPanelPlugin, CPFVersi
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];
 	[self loadPluginWithClass:[AIVolumeControlPlugin class]];
-//	[self loadPluginWithClass:[CPFVersionChecker class]];
+	[self loadPluginWithClass:[CPFVersionChecker class]];
 	[self loadPluginWithClass:[BGThemesPlugin class]];
 	[self loadPluginWithClass:[CBActionSupportPlugin class]];
 	[self loadPluginWithClass:[CBContactCountingDisplayPlugin class]];
