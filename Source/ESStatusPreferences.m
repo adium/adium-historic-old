@@ -17,6 +17,8 @@
 
 @interface ESStatusPreferences (PRIVATE)
 - (void)configureOtherControls;
+- (void)configureAutoAwayStatusStatePopUp;
+- (void)saveTimeValues;
 @end
 
 @implementation ESStatusPreferences
@@ -137,6 +139,9 @@
 	stateArray = [[[adium statusController] stateArray] retain];
 
 	[tableView_stateList reloadData];
+	
+	//Update the auto away status pop up as necessary
+	[self configureAutoAwayStatusStatePopUp];
 }
 
 //State Editing --------------------------------------------------------------------------------------------------------
@@ -310,10 +315,18 @@
 	
 	[checkBox_idle setState:[[prefDict objectForKey:KEY_STATUS_REPORT_IDLE] boolValue]];
 	[textField_idleMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_REPORT_IDLE_INTERVAL] doubleValue] / 60.0)];
-	
-	[popUp_autoAwayStatusState setMenu:[[adium statusController] statusStatesMenu]];
 
 	[self configureControlDimming];
+}
+
+/*!
+ * @brief Configure the pop up of states for autoAway.
+ *
+ * Should be called by stateArrayChanged: both for initial set up and for updating when the states change.
+ */
+- (void)configureAutoAwayStatusStatePopUp
+{
+	[popUp_autoAwayStatusState setMenu:[[adium statusController] statusStatesMenu]];
 }
 
 /*
