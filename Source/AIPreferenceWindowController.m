@@ -35,7 +35,6 @@
 @interface AIPreferenceWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)configureToolbarItems;
-- (void)installToolbar;
 - (void)_sizeWindowToFitTabView:(NSTabView *)tabView;
 - (void)_sizeWindowToFitFlatView:(AIModularPaneCategoryView *)view;
 - (void)_sizeWindowForContentHeight:(int)height;
