@@ -240,10 +240,10 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin, ESApplescriptCo
 				
 				if(![confirmed containsObject:pluginName]){
 					//If we haven't prompted for this plugin yet
-					if(NSRunInformationalAlertPanel(@"Custom Plugin Detected",
-													[NSString stringWithFormat:@"You have a custom plugin (%@) installed in ~/Library/Application Support/Adium 2.0/Plugins\r\rIf you experience any crashes or odd behavior, please disable or remove this plugin.", pluginName],
-													@"Okay", 
-													@"Disable",
+					if(NSRunInformationalAlertPanel([NSString stringWithFormat:@"Disable %@?",[pluginName stringByDeletingPathExtension]],
+													@"External plugins may cause crashes and odd behavior after updating Adium.  Disable this plugin if you experience any issues.",
+													@"Disable", 
+													@"Cancel",
 													nil) == NSAlertAlternateReturn){
 						
 						//Disable the plugin
