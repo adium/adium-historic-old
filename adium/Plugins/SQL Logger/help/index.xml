@@ -60,6 +60,10 @@
           [<a href="http://www.visualdistortion.org/adium/changes/jsp/search.jsp.txt" class="offsite">Changes</a>]</li>
           <li>jsp/statistics.jsp (user statistics)
           [<a href="http://www.visualdistortion.org/adium/changes/jsp/statistics.jsp.txt" class="offsite">Changes</a>]</li>
+          <li>jsp/details.jsp (monthly statistics)
+            [<a
+              href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt"
+              class="offsite">Changes</a>]</li>
           <li>jsp/images/ (images for the statistics page)</li>
         </ul>
       <li>Useful Perl Scripts</li>
@@ -113,7 +117,9 @@
     and switch to the directory that contains the files you just downloaded.
     (If you don't know how to do that, I would suggest <a
       href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html" class="offsite">this
-      series of articles</a>).  Type <code>psql &lt; adium.sql</code>.  You
+      series of articles</a>).  Type:</p>
+  <div class="tutorialcode"><pre>psql &lt; adium.sql</pre></div>. 
+  <p>You
     should get messages like TABLE CREATED.  To ensure that it worked, type
     <code>psql</code>.  Then you will be connected to the database.  You
     should see something like this:</p>
@@ -143,11 +149,14 @@ jmelloy=#</pre></div>
  adium            | users                        | table    | jmelloy
  adium            | users_user_id_seq            | sequence | jmelloy
  adium            | message_v                    | view     | jmelloy
-(5 rows)</pre></div>
+ adium            | user_display_name            | table    | jmelloy
+(6 rows)</pre></div>
   <p>The users table is very simple, a column for screenname, and an id.  The
   messages table stores all the messages themselves, and a reference to the
-  users table.  Message_v contains a combination of both: the message, and the
-  screenname who sent it, instead of a number.</p>
+  users table.  User_display_name stores aliases and display names with
+  history.  Message_v contains a combination of everything: the message, the
+  screenname who sent it, and their display name at the time the message was
+  sent.</p>
 <p>At this point, you're ready to use the plugin.
   You can run <code>parser.pl</code> to insert all of your old logs into the
   database.  
@@ -172,6 +181,10 @@ jmelloy=#</pre></div>
   "Build".  Locate the built application, and control-click it.  Go to "Show
   Package Contents" navigate to the Plugin folder, and add "SQL
   Logger.AdiumPlugin" to it.  That should be all it takes to install it.
+  Alternately, you can download a compiled binary from <a
+    href="http://adium.sourceforge.net"
+    class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
+  is updated about once a week.
   </p>
   <p>You can also download a compiled plugin here: <a
       href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
