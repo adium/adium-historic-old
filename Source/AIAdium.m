@@ -305,9 +305,6 @@
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
 - (IBAction)confirmQuit:(id)sender
 {
-	//Disconnect all the accounts before quitting - but the accountController already does this in closeController....
-    //[accountController disconnectAllAccounts];
-	
 	[NSApp terminate:nil];
 }
 
