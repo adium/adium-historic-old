@@ -269,6 +269,7 @@ extern void* objc_getClass(const char *name);
             //-- Update the handle's status --
             if((storedValue = [dict objectForKey:@"FZPersonStatus"])){
                 int		buddyStatus = [storedValue intValue];
+                NSString	*awayMessage = [dict objectForKey:@"FZPersonStatusMessage"];
                 BOOL		online;
                 BOOL		away;
                 double		idleTime;
@@ -281,15 +282,22 @@ extern void* objc_getClass(const char *name);
                     break;
                     case 2: //Idle (or Idle & Away)
                         online = YES;
-                        away = NO;		//TEMP FOR NOW!
-                        idleTime = 12;		//TEMP FOR NOW!
+                        idleTime = 12; //TEMP FOR NOW
+
+                        if(awayMessage){
+                            away = YES;
+                            NSLog(@"%@ Away Message: \"%@\"",compactedName,awayMessage);
+                        }else{
+                            away = NO;
+                        }
+                        
                     break;
                     case 3: //Away
                         online = YES;
                         away = YES;
                         idleTime = 0;
 
-                        NSLog(@"%@ Away Message: \"%@\"",compactedName,[dict objectForKey:@"FZPersonStatusMessage"]);
+                        NSLog(@"%@ Away Message: \"%@\"",compactedName,awayMessage);
 
                     break;
                     case 4: //Online, signed ON (no ailments)

@@ -117,24 +117,29 @@
 - (void)sortGroupAndSubGroups:(BOOL)subGroups
 {
     AIMutableOwnerArray		*visibleArray;
+    NSEnumerator		*enumerator;
+    AIContactObject		*object;
     int 			loop;
           
-    //Make sure a contact array exists
-    if(!sortedContactArray) sortedContactArray = [contactArray mutableCopy];
+    //Sort any groups within this group
+    if(subGroups){
+        enumerator = [contactArray objectEnumerator];
+        while((object = [enumerator nextObject])){
+            if([object isMemberOfClass:[AIContactGroup class]]){
+                [(AIContactGroup *)object sortGroupAndSubGroups:YES];
+            }
+        }
+    }
 
-    //Sort the Array
-    sortedCount = 0;
+    //Make sure a contact array exists, and sort it
+    if(!sortedContactArray) sortedContactArray = [contactArray mutableCopy];
     [sortedContactArray sortUsingSelector:@selector(compare:)];
     
-    //Find any arrays it contains and sort them, and count the number of invisible items
-    for(loop = 0;loop < [contactArray count];loop++){
-        AIContactObject	*object = [sortedContactArray objectAtIndex:loop];
-
-        if(subGroups && [object isMemberOfClass:[AIContactGroup class]]){
-            [(AIContactGroup *)object sortGroupAndSubGroups:subGroups];
-        }
-        
-        if(![[(AIContactHandle *)object displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
+    //Count the number of visible items in this group
+    sortedCount = 0;
+    enumerator = [contactArray objectEnumerator];
+    while((object = [enumerator nextObject])){        
+        if(![[object displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1]){
             sortedCount++;
         }
     }
