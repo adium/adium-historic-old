@@ -2093,6 +2093,7 @@
 				6E4D961B06B73B38005235E9,
 				34416085059FC2A30019246B,
 				34416086059FC2A30019246B,
+				349448C207BB29B2000F2A03,
 				4B76473F07A07B620021CCD7,
 			);
 			isa = PBXGroup;
@@ -4139,6 +4140,20 @@
 		};
 		34943DEF07BAD918000F2A03 = {
 			fileRef = 34943DEE07BAD918000F2A03;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		349448C207BB29B2000F2A03 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ESGaimGaduGaduAccountView.nib;
+			path = "Plugins/Gaim Service/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		349448C307BB29B2000F2A03 = {
+			fileRef = 349448C207BB29B2000F2A03;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6289,7 +6304,6 @@
 				34C68B2B0778FA5C00EB423C,
 				34C68B5A0778FC6400EB423C,
 				07836212077B0CA90032D975,
-				4B2D5FBA0781C1F500315A60,
 				3452A9F807891C8A00C3C494,
 				344F4A4D078DDC9700226DFC,
 				9E399410078E82FE001E09A4,
@@ -6586,7 +6600,6 @@
 				34C68B660778FCB900EB423C,
 				34C6A3BC077A8CB500EB423C,
 				34539E9C077BD09600A83891,
-				4B2D60300781C56200315A60,
 				E0831EB20785D82300F4888E,
 				E0831EB30785D82300F4888E,
 				E0831EB40785D82300F4888E,
@@ -6618,7 +6631,6 @@
 				34DFF54807A62EB300B92233,
 				34C14D5107A8BA00003CC138,
 				4BE6174907AC67D50049C87D,
-				4BCAB59607B57D31006641B9,
 				4BCAB5F107B59967006641B9,
 				4BCAB5F207B59967006641B9,
 				4BCAB5F307B59967006641B9,
@@ -6856,7 +6868,6 @@
 				34C68B260778FA1300EB423C,
 				34C68B2C0778FA5C00EB423C,
 				34C68B5B0778FC6400EB423C,
-				4B2D5FBB0781C1F500315A60,
 				3452A9F907891C8A00C3C494,
 				344F4A4E078DDC9900226DFC,
 				9E399411078E82FE001E09A4,
@@ -12220,50 +12231,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B2D5FB80781C1F500315A60 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AITypingNotificationPreferences.h;
-			path = "Plugins/Typing Notification/AITypingNotificationPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2D5FB90781C1F500315A60 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AITypingNotificationPreferences.m;
-			path = "Plugins/Typing Notification/AITypingNotificationPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2D5FBA0781C1F500315A60 = {
-			fileRef = 4B2D5FB80781C1F500315A60;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B2D5FBB0781C1F500315A60 = {
-			fileRef = 4B2D5FB90781C1F500315A60;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B2D602F0781C56200315A60 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = TypingPrefs.nib;
-			path = "Plugins/Typing Notification/TypingPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B2D60300781C56200315A60 = {
-			fileRef = 4B2D602F0781C56200315A60;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B2DC068066F6B1200AD5AAD = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -13177,10 +13144,6 @@
 			children = (
 				4B5B152E0493BFE600A8010A,
 				4B5B152F0493BFE600A8010A,
-				4B2D5FB80781C1F500315A60,
-				4B2D5FB90781C1F500315A60,
-				4B2D602F0781C56200315A60,
-				4BCAB59507B57D31006641B9,
 			);
 			isa = PBXGroup;
 			name = "Typing Notification";
@@ -13936,6 +13899,7 @@
 				4B76479607A07C720021CCD7,
 				4BDD822207A0BAE00057DB2C,
 				4B7A565B07A1742900BDC540,
+				349448C307BB29B2000F2A03,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15877,20 +15841,6 @@
 			path = "Plugins/Spell Checking/SpellingDefaults.plist";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BCAB59507B57D31006641B9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = TypingPrefs.png;
-			path = "Plugins/Typing Notification/TypingPrefs.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BCAB59607B57D31006641B9 = {
-			fileRef = 4BCAB59507B57D31006641B9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BCAB5EE07B59967006641B9 = {
 			isa = PBXFileReference;
