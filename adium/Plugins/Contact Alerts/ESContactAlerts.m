@@ -577,11 +577,14 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 }
 - (void)autosizeAndCenterPopUpButton:(NSPopUpButton *)button
 {
-    [button sizeToFit];
-    NSRect menuFrame = [button frame];
-    menuFrame.origin.x = ([[button superview] frame].size.width / 2) - (menuFrame.size.width / 2);
-    [button setFrame:menuFrame];   
-    [[button superview] display];
+    NSString *buttonTitle = [button titleOfSelectedItem];
+    if (buttonTitle && [buttonTitle length]) {
+        [button sizeToFit];
+        NSRect menuFrame = [button frame];
+        menuFrame.origin.x = ([[button superview] frame].size.width / 2) - (menuFrame.size.width / 2);
+        [button setFrame:menuFrame];   
+        [[button superview] display];
+    }
 }
 
 //--Dock bouncing behaviors--
