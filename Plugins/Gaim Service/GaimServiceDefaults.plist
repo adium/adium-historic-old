@@ -2,90 +2,19 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>Gadu-Gadu:Host</key>
-	<string>appmsg.gadu-gadu.pl</string>
-	<key>Gadu-Gadu:Port</key>
-	<integer>80</integer>
-	
-	<key>ICQ:Encoding</key>
-	<string>ISO-8859-1</string>
-	
-	<key>Jabber:Host</key>
-	<string>jabber.org</string>
-	<key>Jabber:Port</key>
-	<integer>5222</integer>
-	<key>Jabber:Resource</key>
-	<string>Adium</string>
-	<key>Jabber:Use TLS</key>
-	<true/>
-	<key>Jabber:Force Old SSL</key>
-	<false/>
-	<key>Jabber:Allow Plaintext Authentication</key>
-	<false/>
-	
-	<key>Meanwhile:ContactList</key>
-	<integer>2</integer>
-	
-	<key>MSN:Host</key>
-	<string>messenger.hotmail.com</string>
-	<key>MSN:Port</key>
-	<integer>1863</integer>
-	<key>MSN:HTTP Connect Method</key>
-	<false/>
-	<key>MSN:Display Names As Status</key>
-	<false/>
-	<key>MSN:Conversation Closed</key>
-	<true/>	
-	<key>MSN:Conversation Timed Out</key>
-	<false/>
-
-	<key>Napster:Host</key>
-	<string>64.124.41.187</string>
-	<key>Napster:Port</key>
-	<integer>8888</integer>
-	
-	<key>Novell:Port</key>
-	<integer>8300</integer>
-
-	<key>Oscar:Host</key>
-	<string>login.oscar.aol.com</string>
-	<key>Oscar:Port</key>
-	<integer>5190</integer>
-	
-	<key>Trepia:Host</key>
-	<string>trepia.com</string>
-	<key>Trepia:Port</key>
-	<integer>8201</integer>
-	
-	<key>Yahoo:Host</key>
-	<string>scs.msg.yahoo.com</string>
-	<key>Yahoo Japan:Host</key>
-	<string>cs.yahoo.co.jp</string>
-	<key>Yahoo:Port</key>
-	<integer>5050</integer>
-	
-	<key>Zephyr:Export .anyone</key>
-	<false/>
-	<key>Zephyr:Export .zephyr.subs</key>
-	<false/>
-	<key>Zephyr:Exposure</key>
-	<string>REALM-VISIBLE</string>
-	<key>Zephyr:Encoding</key>
-	<string>ISO-8859-1</string>
-	
 	<key>Proxy Type</key>
 	<integer>1</integer>
 	<key>Proxy Needs Authentication</key>
 	<false/>
-	
+
 	<key>Check Mail</key>
 	<false/>
 	
-		<key>TextProfile</key>
-		<data>
-		e1xydGYxXG1hY1xhbnNpY3BnMTAwMDBcY29jb2FydGYx
-		MDIKe1xmb250dGJsfQp7XGNvbG9ydGJsO1xyZWQyNTVc
-		Z3JlZW4yNTVcYmx1ZTI1NTt9Cn0=
-		</data>
+	<key>TextProfile</key>
+	<data>
+	e1xydGYxXG1hY1xhbnNpY3BnMTAwMDBcY29jb2FydGYx
+	MDIKe1xmb250dGJsfQp7XGNvbG9ydGJsO1xyZWQyNTVc
+	Z3JlZW4yNTVcYmx1ZTI1NTt9Cn0=
+	</data>
 </dict>
 </plist>
