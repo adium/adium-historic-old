@@ -3,13 +3,19 @@
         {CLASS = AILinkTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {adiumDuckClicked = id; buildFieldClicked = id; closeWindow = id; }; 
+            ACTIONS = {
+                adiumDuckClicked = id; 
+                buildFieldClicked = id; 
+                closeWindow = id; 
+                visitHomepage = id; 
+            }; 
             CLASS = LNAboutBoxController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_buildButton" = NSButton; 
                 "button_duckIcon" = NSButton; 
-                "linkTextView_siteLink" = AILinkTextView; 
+                "textField_version" = NSTextField; 
+                "textView_credits" = NSTextView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }

@@ -4916,7 +4916,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`date +%m/%d/%y`\necho $buildnum \"|\" $builddate > build/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "buildnum=`./Other/buildnum`\nbuilddate=`perl -e 'print time;'`\necho $buildnum \"|\" $builddate > build/Adium.app/Contents/Resources/buildnum\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		346E640C05153395003B2F21 = {
 			children = (
@@ -7080,6 +7080,7 @@
 				4B584E1B055DD7FD00E89D48,
 				4BBEC8B90563E7CD0013C8F7,
 				4BBEC8BA0563E7CD0013C8F7,
+				4BCB9B5F0567FF5D001D3559,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19452,6 +19453,20 @@
 			settings = {
 			};
 		};
+		4BCB9B5E0567FF5D001D3559 = {
+			expectedFileType = text.rtf;
+			isa = PBXFileReference;
+			name = Credits.rtf;
+			path = Source/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BCB9B5F0567FF5D001D3559 = {
+			fileRef = 4BCB9B5E0567FF5D001D3559;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BCD96A5047E40A600A8010A = {
 			expectedFileType = sourcecode.c.h;
 			fileEncoding = 4;
@@ -23582,6 +23597,7 @@
 				D3D3D473052E5B6F00A8010B,
 				D3DA2E3A052E657600A8010B,
 				D3DA2E3C052E657C00A8010B,
+				4BCB9B5E0567FF5D001D3559,
 			);
 			isa = PBXGroup;
 			name = "About Box";
