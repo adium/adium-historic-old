@@ -69,7 +69,7 @@
 	NSArray		*modifiedAttributes = nil;
 	
 	if([inObject isKindOfClass:[AIListGroup class]]){
-		if(inModifiedKeys == nil || ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"Object Count"] || [inModifiedKeys containsObject:@"VisibleObjectCount"])))
+		if(inModifiedKeys == nil || ( (visibleCount || allCount) && ([inModifiedKeys containsObject:@"ObjectCount"] || [inModifiedKeys containsObject:@"VisibleObjectCount"])))
 		{
 			NSString *addString = nil;
 			
