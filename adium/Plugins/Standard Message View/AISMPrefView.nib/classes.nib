@@ -2,32 +2,54 @@
     IBClasses = (
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIModularPane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {plugin = id; view = NSView; }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
             CLASS = AIPreferencePane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 delegate = id; 
-                plugin = id; 
                 "textField_title" = NSTextField; 
-                view = NSView; 
                 "view_containerSubView" = NSView; 
                 "view_containerView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIModularPane; 
         }, 
         {
+            ACTIONS = {changePreference = id; createCustomColors = id; saveCustomColors = id; }; 
             CLASS = AISMPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "checkBox_combineMessages" = NSButton; 
-                "checkBox_ignoreTextStyles" = NSButton; 
-                "checkBox_showUserIcons" = NSButton; 
-                "popUp_prefixFormat" = NSPopUpButton; 
-                "popUp_timeStamps" = NSPopUpButton; 
+                "button_cancelCustom" = id; 
+                "button_saveCustom" = id; 
+                "button_setPrefixFont" = id; 
+                "checkBox_combineMessages" = id; 
+                "checkBox_ignoreTextStyles" = id; 
+                "checkBox_showUserIcons" = id; 
+                "colorWell_incomingBackground" = id; 
+                "colorWell_incomingHeader" = id; 
+                "colorWell_outgoingBackground" = id; 
+                "colorWell_outgoingHeader" = id; 
+                "popUp_messageColoring" = id; 
+                "popUp_prefixFormat" = id; 
+                "popUp_timeStamps" = id; 
+                "textField_desiredFont" = id; 
+                "window_customStyle" = id; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 
-        {CLASS = AISMViewController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = ESWebView; LANGUAGE = ObjC; SUPERCLASS = WebView; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {chooseFontWithFontPanel = id; selectFont = id; }; 
+            CLASS = JVFontPreviewField; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 

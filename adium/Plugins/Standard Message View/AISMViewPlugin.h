@@ -27,6 +27,19 @@
 #define KEY_SMV_COMBINE_MESSAGES_INDENT		@"Combine Messeages HeadIndent"
 #define	KEY_SMV_IGNORE_TEXT_STYLES			@"Ignore Text Styles"
 
+#define SMV_MESSAGE_STYLE_DEFAULTS			@"MessageStyles"
+
+#define KEY_SMV_MESSAGE_STYLE_NAME			@"Message Style Name"
+
+#define	KEY_SMV_INCOMING_PREFIX_COLOR		@"Incoming Prefix Color"
+#define	KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR	@"Incoming Prefix Light Color"
+#define	KEY_SMV_OUTGOING_PREFIX_COLOR		@"Outgoing Prefix Color"
+#define	KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR	@"Outgoing Prefix Light Color"
+#define KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR			@"Custom Incoming Prefix Color"
+#define KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR		@"Custom Incoming Prefix Light Color"
+#define KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR			@"Custom Outgoing Prefix Color"
+#define KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR		@"Custom Outgoing Prefix Light Color"
+
 
 //Old?
 #define	KEY_SMV_PREFIX_FONT			@"Prefix Font"
@@ -36,11 +49,7 @@
 #define	KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS	@"Hide Duplicate Times"
 #define	KEY_SMV_SHOW_PREFIX			@"Show Prefix"
 #define	KEY_SMV_HIDE_DUPLICATE_PREFIX		@"Hide Duplicate Prefixes"
-#define	KEY_SMV_INCOMING_PREFIX_COLOR		@"Incoming Prefix Color"
-#define	KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR	@"Incoming Prefix Light Color"
 #define	KEY_SMV_INCOMING_PREFIX_COLOR_NAME	@"Incoming Prefix Color Name"
-#define	KEY_SMV_OUTGOING_PREFIX_COLOR		@"Outgoing Prefix Color"
-#define	KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR	@"Outgoing Prefix Light Color"
 #define	KEY_SMV_OUTGOING_PREFIX_COLOR_NAME	@"Outgoing Prefix Color Name"
 #define	KEY_SMV_DISPLAY_GRID_LINES		@"Show GridLines"
 #define	KEY_SMV_GRID_DARKNESS			@"GridLine Darkness"

@@ -19,9 +19,27 @@
     IBOutlet    NSButton        *checkBox_combineMessages;
     
     IBOutlet    NSButton        *checkBox_ignoreTextStyles;
+	
+    IBOutlet	JVFontPreviewField          *textField_desiredFont;
+    IBOutlet	NSButton                    *button_setPrefixFont;
     
     IBOutlet    NSPopUpButton   *popUp_timeStamps;
     IBOutlet    NSPopUpButton   *popUp_prefixFormat;
+	IBOutlet	NSPopUpButton   *popUp_messageColoring;
+	
+	
+	// Custom Colors sheet	
+	IBOutlet	NSWindow		*window_customStyle;
+	
+	IBOutlet	NSButton		*button_saveCustom;
+	IBOutlet	NSButton		*button_cancelCustom;
+	
+	IBOutlet	NSColorWell		*colorWell_incomingBackground;
+	IBOutlet	NSColorWell		*colorWell_incomingHeader;
+	IBOutlet	NSColorWell		*colorWell_outgoingBackground;
+	IBOutlet	NSColorWell		*colorWell_outgoingHeader;
+	
+	//IBOutlet	NSTextField		*textField_customName;
     
 }
 

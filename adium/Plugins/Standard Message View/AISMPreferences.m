@@ -16,12 +16,19 @@
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
 
+#define CUSTOM_MESSAGE_STYLE_STRING AILocalizedString(@"Custom...","Title of the Custom Message Style popup menu item")
+
 @interface AISMPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
+- (IBAction)changePreference:(id)sender;
+- (IBAction)createCustomColors:(id)sender;
+- (IBAction)saveCustomColors:(id)sender;
 - (void)_buildTimeStampMenu;
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 - (void)_buildPrefixFormatMenu;
 - (void)_buildPrefixFormatMenu_AddFormat:(NSString *)format withTitle:(NSString *)title;
+- (void)_buildMessageColoringMenu;
+- (void)_buildMessageColoringMenu_AddStyle:(NSDictionary *)colorDict withTitle:(NSString *)title;
 @end
 
 @implementation AISMPreferences
@@ -40,9 +47,13 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	[textField_desiredFont setShowFontFace:NO];
+	[textField_desiredFont setShowPointSize:YES];
+	
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self _buildTimeStampMenu];
     [self _buildPrefixFormatMenu];
+	[self _buildMessageColoringMenu];
     [self preferencesChanged:nil];
 }
 
@@ -75,6 +86,18 @@
 			[popUp_timeStamps selectItem:[popUp_timeStamps lastItem]];
 		
 		[popUp_prefixFormat selectItemWithRepresentedObject:[preferenceDict objectForKey:KEY_SMV_PREFIX_INCOMING]];	
+
+		// Custom message style
+		[popUp_messageColoring selectItemWithTitle:[preferenceDict objectForKey:KEY_SMV_MESSAGE_STYLE_NAME]];
+				
+		[colorWell_incomingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR] representedColor]];
+		[colorWell_incomingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR] representedColor]];
+		[colorWell_outgoingBackground setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR] representedColor]];
+		[colorWell_outgoingHeader setColor:[[preferenceDict objectForKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR] representedColor]];
+
+		// Prefix Font
+		NSFont		*selectedFont = [[preferenceDict objectForKey:KEY_SMV_PREFIX_FONT] representedFont];
+		[textField_desiredFont setFont:selectedFont];		
 	}
 }
     
@@ -110,8 +133,91 @@
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         [[adium preferenceController] delayPreferenceChangedNotifications:NO];
         
-    }
+    }else if(sender == popUp_messageColoring){
+		[[adium preferenceController] delayPreferenceChangedNotifications:YES];
+
+		NSDictionary *colorDict = [[popUp_messageColoring selectedItem] representedObject];
+		
+		[[adium preferenceController] setPreference:[[popUp_messageColoring selectedItem] title]
+                                             forKey:KEY_SMV_MESSAGE_STYLE_NAME
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR]
+                                             forKey:KEY_SMV_INCOMING_PREFIX_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR]
+                                             forKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR]
+                                             forKey:KEY_SMV_OUTGOING_PREFIX_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR]
+                                             forKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+				
+		[[adium preferenceController] delayPreferenceChangedNotifications:NO];
+
+	}
 }
+
+- (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
+{
+    NSFontManager	*fontManager = [NSFontManager sharedFontManager];
+    NSFont		*contactListFont = [fontManager convertFont:[fontManager selectedFont]];
+	
+    //Update the displayed font string & preferences
+    [textField_desiredFont setFont:contactListFont];
+    [[adium preferenceController] setPreference:[contactListFont stringRepresentation] forKey:KEY_SMV_PREFIX_FONT group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+}
+
+- (IBAction)createCustomColors:(id)sender
+{
+	[NSApp beginSheet:window_customStyle
+	   modalForWindow:[view window]
+		modalDelegate:nil
+	   didEndSelector:nil
+		  contextInfo:nil];
+		
+    [NSApp runModalForWindow:window_customStyle];
+	[NSApp endSheet:window_customStyle];
+	[window_customStyle orderOut:self];
+}
+
+- (IBAction)saveCustomColors:(id)sender
+{
+	if( sender == button_cancelCustom) {
+		[NSApp stopModal];
+    } else if( sender == button_saveCustom ) {
+     
+		NSMutableDictionary *colorDict = [NSMutableDictionary dictionary];
+		[colorDict setObject:[[colorWell_incomingBackground color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR];
+		[colorDict setObject:[[colorWell_incomingHeader color] stringRepresentation] forKey:KEY_SMV_INCOMING_PREFIX_COLOR];
+		[colorDict setObject:[[colorWell_outgoingBackground color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR];
+		[colorDict setObject:[[colorWell_outgoingHeader color] stringRepresentation] forKey:KEY_SMV_OUTGOING_PREFIX_COLOR];
+		
+		[[popUp_messageColoring selectedItem] setRepresentedObject:colorDict];
+		
+		[self changePreference:popUp_messageColoring];
+
+		// Set the appropriate prefs
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_COLOR]
+                                             forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_INCOMING_PREFIX_LIGHT_COLOR]
+                                             forKey:KEY_SMV_CUSTOM_INCOMING_PREFIX_LIGHT_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_COLOR]
+                                             forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		[[adium preferenceController] setPreference:[colorDict objectForKey:KEY_SMV_OUTGOING_PREFIX_LIGHT_COLOR]
+                                             forKey:KEY_SMV_CUSTOM_OUTGOING_PREFIX_LIGHT_COLOR
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		
+        [NSApp stopModal];
+				
+    }
+	
+}
+
 
 //Build the time stamp selection menu
 - (void)_buildTimeStampMenu
@@ -173,6 +279,40 @@
     [menuItem setRepresentedObject:format];
     [[popUp_prefixFormat menu] addItem:menuItem];
 }
+
+//Build the message style selection menu
+- (void)_buildMessageColoringMenu
+{
+	
+	NSDictionary	*messageStyles = [[NSDictionary dictionaryNamed:SMV_MESSAGE_STYLE_DEFAULTS forClass:[self class]] retain];
+	NSEnumerator	*enumerator = [messageStyles keyEnumerator];
+	NSString		*colorName;
+	
+    //Empty the menu
+    [popUp_messageColoring removeAllItems];
+    
+	//Add in the default styles
+	while( colorName = [enumerator nextObject] ) {
+		[self _buildMessageColoringMenu_AddStyle:[messageStyles objectForKey:colorName] withTitle:colorName];
+	}
+	
+	[[popUp_messageColoring menu] addItem:[NSMenuItem separatorItem]];
+
+	NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_MESSAGE_STYLE_STRING target:self action:@selector(createCustomColors:) keyEquivalent:@""] autorelease];
+	[[popUp_messageColoring menu] addItem:menuItem];
+
+}
+
+//Add a prefix format to the menu
+- (void)_buildMessageColoringMenu_AddStyle:(NSDictionary *)colorDict withTitle:(NSString *)title
+{
+    NSMenuItem      *menuItem = [[[NSMenuItem alloc] initWithTitle:title target:nil action:nil keyEquivalent:@""] autorelease];
+    
+    [menuItem setRepresentedObject:colorDict];
+    [[popUp_messageColoring menu] addItem:menuItem];
+	
+}
+
 
 /*
 //Called in response to all preference controls, applies new settings

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>Blue and Green</key>
+	<dict>
+		<key>Incoming Prefix Color</key>
+		<string>0,32,127</string>
+		<key>Incoming Prefix Light Color</key>
+		<string>229,242,255</string>
+		<key>Outgoing Prefix Color</key>
+		<string>0,127,0</string>
+		<key>Outgoing Prefix Light Color</key>
+		<string>230,255,234</string>
+	</dict>
+	<key>Red and Purple</key>
+	<dict>
+		<key>Incoming Prefix Color</key>
+		<string>127,0,0</string>
+		<key>Incoming Prefix Light Color</key>
+		<string>255,230,230</string>
+		<key>Outgoing Prefix Color</key>
+		<string>64,0,127</string>
+		<key>Outgoing Prefix Light Color</key>
+		<string>240,210,255</string>
+	</dict>
+	<key>Black and White</key>
+	<dict>
+		<key>Incoming Prefix Color</key>
+		<string>0,0,0</string>
+		<key>Incoming Prefix Light Color</key>
+		<string>255,255,255</string>
+		<key>Outgoing Prefix Color</key>
+		<string>0,0,0</string>
+		<key>Outgoing Prefix Light Color</key>
+		<string>255,255,255</string>
+	</dict>
+	<key>Blue and Red</key>
+	<dict>
+		<key>Incoming Prefix Color</key>
+		<string>255,0,0</string>
+		<key>Incoming Prefix Light Color</key>
+		<string>255,255,255</string>
+		<key>Outgoing Prefix Color</key>
+		<string>0,0,255</string>
+		<key>Outgoing Prefix Light Color</key>
+		<string>255,255,255</string>
+	</dict>
+</dict>
+</plist>
