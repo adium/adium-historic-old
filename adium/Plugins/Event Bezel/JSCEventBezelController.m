@@ -77,15 +77,17 @@ JSCEventBezelController *sharedInstance = nil;
 - (void)showBezelWithContact:(AIListContact *)contact forEvent:(NSString *)event withMessage:(NSString *)message
 {
     if ([self window]) {
-        AIMutableOwnerArray     *ownerArray;
+        AIMutableOwnerArray         *ownerArray;
+        NSAttributedString          *status = nil;
+        NSMutableAttributedString   *statusString;
         
         ownerArray = [contact statusArrayForKey:@"BuddyImage"];
-        if(ownerArray && [ownerArray count]){
+        if(ownerArray && [ownerArray count]) {
             [bezelView setBuddyIconImage:[ownerArray objectAtIndex:0]];
         }else{
             [bezelView setBuddyIconImage:nil];
         }
-                
+        
         if ([bezelWindow fadingOut]) {
             [bezelView setQueueField: [NSString stringWithFormat:@"%@ %@ %@\n%@",
                 [bezelView mainBuddyName], [bezelView mainBuddyStatus], [bezelView mainAwayMessage], [bezelView queueField]]];
@@ -115,11 +117,20 @@ JSCEventBezelController *sharedInstance = nil;
             [bezelView setBuddyIconBadgeType: @""];
         }
         
-        // This is not working yet, the Plugin class needs to pass the message (away message or new IM)
+        // This is not working yet, the Plugin class needs to pass the message
         if (message) {
             [bezelView setMainAwayMessage: message];
         } else {
-            [bezelView setMainAwayMessage: @""];
+            ownerArray = [contact statusArrayForKey:@"StatusMessage"];
+            if(ownerArray && [ownerArray count]) {
+                status = [ownerArray objectAtIndex:0];
+            }
+            if (status) {
+                statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
+                [bezelView setMainAwayMessage: [statusString string]];
+            } else {
+                [bezelView setMainAwayMessage: @""];
+            }
         }
         
         [bezelView setNeedsDisplay:YES];
