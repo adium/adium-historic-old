@@ -11,6 +11,9 @@
             CLASS = CBOldPrefsImporterAppController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_Adium_Aliases" = NSButton; 
+                "button_Adium_Contacts" = NSButton; 
+                "button_Adium_Logs" = NSButton; 
                 "button_Cancel" = NSButton; 
                 "button_ImportAwayMessages" = NSButton; 
                 "button_OK" = NSButton; 
