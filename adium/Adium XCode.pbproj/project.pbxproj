@@ -4843,8 +4843,8 @@
 		34254F4505EC0C2E00F11AD7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
-			name = AdiumEmoticons.icns;
-			path = Source/AdiumEmoticons.icns;
+			name = AdiumEmoticonset.icns;
+			path = Source/AdiumEmoticonset.icns;
 			refType = 4;
 			sourceTree = "<group>";
 		};
