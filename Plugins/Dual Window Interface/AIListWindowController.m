@@ -86,6 +86,12 @@
     return(@"");    
 }
 
+//
+- (NSString *)adiumFrameAutosaveName
+{
+	return(KEY_DUAL_CONTACT_LIST_WINDOW_FRAME);
+}
+
 //Setup the window after it has loaded
 - (void)windowDidLoad
 {
@@ -98,32 +104,6 @@
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
     
-    //Restore the window position
-    frameString = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
-	if(frameString){
-		NSRect		windowFrame = NSRectFromString(frameString);
-		
-		
-		if(windowFrame.size.width < [[self window] minSize].width){
-			windowFrame.size.width = [[self window] minSize].width;
-		}
-		if(windowFrame.size.height < [[self window] minSize].height){
-			windowFrame.size.height = [[self window] minSize].height;
-		}
-		
-		
-		
-		NSLog(@"%i,%i  %ix%i",(int)windowFrame.origin.x, (int)windowFrame.origin.y, (int)windowFrame.size.width, (int)windowFrame.size.height);
-		//Don't allow the window to shrink smaller than its toolbar
-		
-		NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
-														   styleMask:[[self window] styleMask]];
-		
-		if(contentFrame.size.height < [[self window] toolbarHeight]) windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
-        
-		[[self window] setFrame:windowFrame display:YES];
-	}
-	
     minWindowSize = [[self window] minSize];
 	
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -167,11 +147,6 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
-	//Save the window position
-	[[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
-                                         forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
-                                          group:PREF_GROUP_WINDOW_POSITIONS];
-	
     //Tell the interface to unload our window
 	[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
 
