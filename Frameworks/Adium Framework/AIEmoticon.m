@@ -26,6 +26,17 @@
 @implementation AIEmoticon
 
 //Create a new emoticon
+/*
+ * @brief Create an autoreleased emoticon object
+ *
+ * An AIEmoticon has a path to an image, an array of string equivalents, a localized (if possible) name, and a parent
+ * <tt>AIEmoticonPack</tt> which contains it.
+ *
+ * @param inPath A full path to an image to display for this emoticon
+ * @param inTextEquivalents An <tt>NSArray</tt> of text equivalents for this emoticon
+ * @param inName A human readable name for the emoticon
+ * @param inPack The AIEmoticonPack which contains this emoticon
+ */
 + (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
     return([[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName pack:inPack] autorelease]);
@@ -58,41 +69,80 @@
 	[super dealloc];
 }
 
-//Returns an array of the text equivalents for this emoticon
+/*
+ * @brief Returns an array of the text equivalents for this emoticon
+ *
+ * @result An <tt>NSArray</tt> of <tt>NSStrings</tt> which are the equivalents for the emoticon
+ */
 - (NSArray *)textEquivalents
 {
     return(textEquivalents);
 }
 
-//Flush any cached emoticon images (and image attachment strings)
+/*
+ * @brief Flush any cached data
+ *
+ * This releases emoticon images (and image attachment strings) which were cached by the emoticon. It is primarily used
+ * after display previews of emoticon packs which are not enabled, since there is no reason to maintain a cache that
+ * will not be used.
+ */
 - (void)flushEmoticonImageCache
 {
     [_cachedAttributedString release]; _cachedAttributedString = nil;
     [_cachedImage release]; _cachedImage = nil;
 }
 
-//Returns the display name of this emoticon
+/*
+ * @brief Returns the display name of this emoticon
+ *
+ * @result The display name of the emoticon
+ */
 - (NSString *)name
 {
     return name;
 }
 
-//Enable/Disable this emoticon
+/*
+ * @brief Enable/Disable this emoticon
+ *
+ * Individual emoticons within an emoticon pack may be enabled or disabled.
+ *
+ * @param The new enabled state
+ */
 - (void)setEnabled:(BOOL)inEnabled
 {
     enabled = inEnabled;
 }
+
+/*
+ * @brief Return the enabled state
+ *
+ * @result The enabled state
+ */
 - (BOOL)isEnabled{
     return(enabled);
 }
 
-//Returns the image for this emoticon
+/*
+ * @brief Returns the image for this emoticon
+ *
+ * @result The image for this emoticon
+ */
 - (NSImage *)image
 {
     return([[[NSImage alloc] initWithContentsOfFile:path] autorelease]);
 }
 
-//Returns an attributed string containing this emoticon
+/*
+ * @brief Returns an attributed string containing this emoticon
+ *
+ * The attributed string contains an <tt>AITextAttachmntExtension</tt> which has both the emoticon image
+ * and the passed text equivalent available.  The hard work is cached, although each call results in a new
+ * NSMutableAttribtedString being returned.
+ *
+ * @param textEquivalent The text equivalent for this attributed string 
+ * @result The attributed string with the emoticon
+ */
 - (NSMutableAttributedString *)attributedStringWithTextEquivalent:(NSString *)textEquivalent
 {
     NSMutableAttributedString   *attributedString;
@@ -128,6 +178,10 @@
     return([NSString stringWithFormat:@"%@ (%@)", [[path lastPathComponent] stringByDeletingPathExtension], [[self textEquivalents] objectAtIndex:0]]);
 }
 
+/*
+ * @brief Compare two emoticons
+ *
+ * @result The result of comparing the display names of the emoticons, case insensitively
 - (NSComparisonResult)compare:(AIEmoticon *)otherEmoticon
 {
 	return([name caseInsensitiveCompare:[otherEmoticon name]]);
