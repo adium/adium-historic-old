@@ -35,6 +35,7 @@
             SUPERCLASS = NSView; 
         }, 
         {CLASS = AICustomWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
+        {CLASS = AIDockingWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
             CLASS = AIMessageSendingTextView; 
             LANGUAGE = ObjC; 
