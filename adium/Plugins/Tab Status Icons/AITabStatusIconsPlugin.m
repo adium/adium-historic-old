@@ -63,7 +63,7 @@
 		return(tabAway);
 	}else if([listObject statusObjectForKey:@"IdleSince"]){
 		return(tabIdle);
-	}else if([listObject statusObjectForKey:@"Online"]){
+	}else if([[listObject numberStatusObjectForKey:@"Online"] boolValue]){
 		return(tabAvailable);
 	}else{
 		return(tabOffline);
