@@ -133,8 +133,7 @@ static id<GaimThread> gaimThread = nil;
 	}else{
 
 		//This is the server display name.  Set it as such.
-		if(![gaimAlias isEqualToString:[theContact displayName]] &&
-		   ![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
+		if(![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"

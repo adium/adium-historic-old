@@ -443,11 +443,19 @@ static BOOL didInitOscar = NO;
 			if (profileString && [profileString length]) {
 				if (![profileString isEqualToString:oldProfileString]) {
 
+					//Due to OSCAR being silly, we can get a single control character as profileString.
+					//This passes the [profileString length] check above, but we don't want to store it as our profile.
+					NSAttributedString	*attributedProfile = [AIHTMLDecoder decodeHTML:profileString];
+					if([attributedProfile length]){
+						[theContact setStatusObject:attributedProfile
+											 forKey:@"TextProfile" 
+											 notify:NO];
+					}
+					
+					//Store the string for comparison purposes later (since [attributedProfile string] != the HTML of the string,
+					//					and we don't want to have to decode it just to compare it)
 					[theContact setStatusObject:profileString
 										 forKey:@"TextProfileString" 
-										 notify:NO];
-					[theContact setStatusObject:[AIHTMLDecoder decodeHTML:profileString]
-										 forKey:@"TextProfile" 
 										 notify:NO];
 				}
 			} else if (oldProfileString) {
