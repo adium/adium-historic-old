@@ -72,7 +72,7 @@
     [[account properties] setObject:[NSNumber numberWithBool:savePassword] forKey:@"SavedPassword"];
     
     //Broadcast a properties changed notification so everyone can update
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];
+    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged object:account userInfo:nil];
     
     [self closeWindow:nil];
 }    
@@ -112,14 +112,14 @@
     account = [inAccount retain];
     del = delo;
     //observe
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(configureStandardOptions) name:Account_PropertiesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(configureStandardOptions) name:Account_PropertiesChanged object:nil];
 
     return(self);
 }
 
 - (void)dealloc
 {
-    [[[owner accountController] accountNotificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
     [account release];
     [owner release];
     [accountViewController release];

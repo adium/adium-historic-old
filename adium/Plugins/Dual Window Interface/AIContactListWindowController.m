@@ -93,7 +93,7 @@
     [scrollView_contactList setAndSizeDocumentView:contactListView];
 
     //Register for the selection notification
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
+    [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -110,7 +110,7 @@
     [contactListView release];
 
     //Stop observing
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self name:Interface_ContactSelectionChanged object:contactListView];
+    [[owner notificationCenter] removeObserver:self name:Interface_ContactSelectionChanged object:contactListView];
 
     
     //Save the window position

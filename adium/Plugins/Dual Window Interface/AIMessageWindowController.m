@@ -59,7 +59,7 @@
     if(tabViewItem){
         [tabView_messages selectTabViewItem:tabViewItem];
 
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_SelectedControllerChanged
+        [[owner notificationCenter] postNotificationName:AIMessageWindow_SelectedControllerChanged
                                                                         object:self
                                                                       userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inController,@"Controller",nil]];
     }
@@ -143,9 +143,9 @@
     //Add the Controller
     [tabView_messages addTabViewItem:tabViewItem];
     [messageViewArray addObject:inController];
-    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_ControllersChanged
-                                                                    object:self
-                                                                  userInfo:nil];
+    [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllersChanged
+                                              object:self
+                                            userInfo:nil];
 }
 
 //remove a message controller
@@ -158,7 +158,7 @@
         //Remove the controller
         [tabView_messages removeTabViewItem:tabViewItem];
         [messageViewArray removeObject:inController];
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_ControllersChanged object:self userInfo:nil];
+        [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllersChanged object:self userInfo:nil];
     }
 
     return([messageViewArray count] == 0); //Return YES if that was our last controller    
@@ -216,9 +216,9 @@
     }
     
     //Post a 'Controller order changed' notification so the interface can update its window menu
-    [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:AIMessageWindow_ControllerOrderChanged
-                                                                    object:self
-                                                                  userInfo:nil];
+    [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllerOrderChanged
+                                              object:self
+                                            userInfo:nil];
 }
 
 - (void)windowDidLoad

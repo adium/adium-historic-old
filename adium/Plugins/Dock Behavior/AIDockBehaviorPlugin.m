@@ -27,7 +27,7 @@
     forGroup:@"DockBehavior"];
     
     //install our observers
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(messageIn:) name:Content_DidReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(messageIn:) name:Content_DidReceiveContent object:nil];
 }
 
 - (void)messageIn:(NSNotification *)notification

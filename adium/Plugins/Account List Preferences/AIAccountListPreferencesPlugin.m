@@ -51,7 +51,6 @@
 {
     AIPreferenceController	*preferenceController;
     AIAccountController		*accountController;
-    NSNotificationCenter	*accountNotificationCenter;
 
     //init
     preferenceController = [owner preferenceController];
@@ -66,16 +65,15 @@
     [tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
 
     //Install our observers
-    accountNotificationCenter = [accountController accountNotificationCenter];
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(refreshAccountList)
                                       name:Account_PropertiesChanged
                                     object:nil];
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(refreshAccountList)
                                       name:Account_StatusChanged
                                     object:nil];    
-    [accountNotificationCenter addObserver:self
+    [[owner notificationCenter] addObserver:self
                                   selector:@selector(accountListChanged:)
                                       name:Account_ListChanged
                                     object:nil];

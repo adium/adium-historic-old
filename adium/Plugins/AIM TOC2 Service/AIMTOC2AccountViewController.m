@@ -43,7 +43,7 @@
     [[account properties] setObject:[textField_handle stringValue] forKey:@"Handle"];
 
     //Broadcast a properties changed message
-    [[[owner accountController] accountNotificationCenter] postNotificationName:Account_PropertiesChanged
+    [[owner notificationCenter] postNotificationName:Account_PropertiesChanged
                                                                          object:self
                                                                        userInfo:nil];
 }
@@ -72,14 +72,14 @@
         NSLog(@"couldn't load account view bundle");
     }
 
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_StatusChanged object:account];
 
     return(self);
 }
 
 - (void)dealloc
 {
-    [[[owner accountController] accountNotificationCenter] removeObserver:self name:Account_StatusChanged object:account];
+    [[owner notificationCenter] removeObserver:self name:Account_StatusChanged object:account];
 
     [owner release];
     [account release];

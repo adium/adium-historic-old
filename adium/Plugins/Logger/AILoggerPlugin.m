@@ -39,13 +39,11 @@
 }
 
 - (void)installPlugin {
-    NSNotificationCenter *notificationCenter = [[owner contentController] contentNotificationCenter];
     NSMenuItem *logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"Log Viewer" action:@selector(showLogViewer) keyEquivalent:@"L"] autorelease];
     NSString *destination = [[[[owner loginController] userDirectory] stringByExpandingTildeInPath] stringByAppendingString:@"/Logs"];
 
-    [notificationCenter addObserver:self selector:@selector(adiumSentContent:) name:@"Content_DidSendContent" object:nil];
-
-    [notificationCenter addObserver:self selector:@selector(adiumReceivedContent:) name:@"Content_DidReceiveContent" object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(adiumSentContent:) name:@"Content_DidSendContent" object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(adiumReceivedContent:) name:@"Content_DidReceiveContent" object:nil];
 
     [self makeDir:destination];
 

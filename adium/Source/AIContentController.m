@@ -33,20 +33,8 @@
 
 //dealloc
 - (void)dealloc
-{
-    [contentNotificationCenter release]; contentNotificationCenter = nil;
-    
+{    
     [super dealloc];
-}
-
-//Notification center for content notifications
-- (NSNotificationCenter *)contentNotificationCenter
-{
-    if(contentNotificationCenter == nil){
-        contentNotificationCenter = [[NSNotificationCenter alloc] init];
-    }
-    
-    return(contentNotificationCenter);
 }
 
 // Content Handlers--
@@ -121,7 +109,7 @@
     id<AIContentFilter>	filter;
     
     //Will receive content
-    [[self contentNotificationCenter] postNotificationName:Content_WillReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    [[owner notificationCenter] postNotificationName:Content_WillReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 
     //Filter the object
     enumerator = [incomingContentFilterArray objectEnumerator];
@@ -133,10 +121,10 @@
     [inHandle addContentObject:inObject];
     
     //content object addeed
-    [[self contentNotificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
+    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:YES],@"Incoming",nil]];
 
     //Did receive content
-    [[self contentNotificationCenter] postNotificationName:Content_DidReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    [[owner notificationCenter] postNotificationName:Content_DidReceiveContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
 - (void)sendContentObject:(id <AIContentObject>)inObject toHandle:(AIContactHandle *)inHandle
@@ -145,7 +133,7 @@
     id<AIContentFilter>	filter;
 
     //Will send content
-    [[self contentNotificationCenter] postNotificationName:Content_WillSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    [[owner notificationCenter] postNotificationName:Content_WillSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 
     //Filter the object
     enumerator = [outgoingContentFilterArray objectEnumerator];
@@ -160,10 +148,10 @@
     [inHandle addContentObject:inObject];
     
     //Content object added
-    [[self contentNotificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
+    [[owner notificationCenter] postNotificationName:Content_ContentObjectAdded object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",[NSNumber numberWithBool:NO],@"Incoming",nil]];
 
     //Did send content
-    [[self contentNotificationCenter] postNotificationName:Content_DidSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+    [[owner notificationCenter] postNotificationName:Content_DidSendContent object:inHandle userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
 }
 
 @end

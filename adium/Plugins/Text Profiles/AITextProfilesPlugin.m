@@ -50,7 +50,7 @@
         activeContactObject = [inObject retain];
 
         //Let everyone know we want profile information
-        [[[owner contactController] contactNotificationCenter] postNotificationName:Contact_UpdateStatus object:activeContactObject userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"TextProfile"] forKey:@"Keys"]];
+        [[owner notificationCenter] postNotificationName:Contact_UpdateStatus object:activeContactObject userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"TextProfile"] forKey:@"Keys"]];
 
         //Fill in the profile
         ownerArray = [activeContactObject statusArrayForKey:@"TextProfile"];

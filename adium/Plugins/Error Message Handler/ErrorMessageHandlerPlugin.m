@@ -7,11 +7,8 @@
 
 - (void)installPlugin
 {
-    NSNotificationCenter	*interfaceNotificationCenter;
-
     //Install our observers
-    interfaceNotificationCenter = [[owner interfaceController] interfaceNotificationCenter];
-    [interfaceNotificationCenter addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageRecieved object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageRecieved object:nil];
 }
 
 - (void)uninstallPlugin

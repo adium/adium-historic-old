@@ -67,10 +67,10 @@
         }
         
         //Send the message
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_WillSendEnteredMessage object:handle userInfo:nil];
         message = [AIContentMessage messageWithSource:account destination:handle date:nil message:[[[textView_outgoing attributedString] copy] autorelease]];
         [[owner contentController] sendContentObject:message toHandle:handle];
-        [[[owner interfaceController] interfaceNotificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:handle userInfo:nil];
+        [[owner notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:handle userInfo:nil];
     
         //Clear the message entry text view
         [textView_outgoing setString:@""];
@@ -172,9 +172,9 @@
     [view_buttons setColor:[NSColor whiteColor]];
 
     //register for notifications
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
-    [[[owner accountController] accountNotificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_PropertiesChanged object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_StatusChanged object:nil];
     
 
     return(self);
@@ -186,8 +186,8 @@
     [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_outgoing isContinuousSpellCheckingEnabled]] forKey:KEY_MESSAGE_SPELL_CHECKING group:PREF_GROUP_SPELLING];
     
     //remove notifications
-    [[[owner interfaceController] interfaceNotificationCenter] removeObserver:self];
-    [[[owner accountController] accountNotificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
+    [[owner notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
     //nib
@@ -254,7 +254,7 @@
 //    [[textView_outgoing window] makeFirstResponder:textView_outgoing];
 
     //Register for notifications
-    [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:handle];
+    [[owner notificationCenter] addObserver:self selector:@selector(sendMessage:) name:Interface_SendEnteredMessage object:handle];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSViewFrameDidChangeNotification object:view_contents];
 
 

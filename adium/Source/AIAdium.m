@@ -83,10 +83,24 @@
     return(dockController);
 }
 
+// Notifications
+- (NSNotificationCenter *)notificationCenter
+{
+    if(notificationCenter == nil){
+        notificationCenter = [[NSNotificationCenter alloc] init];
+    }
+
+    return(notificationCenter);
+}
+
+
 // Internal --------------------------------------------------------------------------------
 
 - (void)applicationWillFinishLaunching:(NSNotification *)notification
 {
+    //init
+    notificationCenter = nil;
+    
     //play a sound to prevent a delay later when quicktime loads
 //    [AISoundController playSoundNamed:@"Beep"];
 }

@@ -78,7 +78,7 @@ static char *hash_password(const char * const password);
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
 
     //
-    [[[owner contactController] contactNotificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
     //Load our preferences
     preferencesDict = [[preferenceController preferencesForGroup:AIM_TOC2_PREFS] retain];
@@ -429,7 +429,7 @@ static char *hash_password(const char * const password);
                 NSString		*message = [packet string];
                 NSString		*command = [message TOCStringArgumentAtIndex:0];
 
-                //NSLog(@"<- %@",[packet string]);
+//                NSLog(@"<- %@",[packet string]);
 
                 if([command compare:@"SIGN_ON"] == 0){
                     [self AIM_HandleSignOn:message];
@@ -489,7 +489,7 @@ static char *hash_password(const char * const password);
     //Send any packets in the outQue
     while([outQue count] && [socket readyForSending]){
         [[outQue objectAtIndex:0] sendToSocket:socket];
-        //NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
+//        NSLog(@"-> %@",[[outQue objectAtIndex:0] string]);
         [outQue removeObjectAtIndex:0];
     }
 }

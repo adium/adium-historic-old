@@ -24,8 +24,8 @@
 {
     [[owner soundController] playSoundNamed:@"(Adium)ReceiveFirst.aif"];
 
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(messageIn:) name:Content_DidReceiveContent object:nil];
-    [[[owner contentController] contentNotificationCenter] addObserver:self selector:@selector(messageOut:) name:Content_DidSendContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(messageIn:) name:Content_DidReceiveContent object:nil];
+    [[owner notificationCenter] addObserver:self selector:@selector(messageOut:) name:Content_DidSendContent object:nil];
     [[owner contactController] registerHandleObserver:self];
 
     onlineDict = [[NSMutableDictionary alloc] init];
