@@ -4,7 +4,7 @@
 <array>
     <dict>
         <key>Name</key>
-        <string>On New Messages</string>
+        <string>On New Messages And Errors</string>
         <key>Behavior</key>
         <array>
             <dict>

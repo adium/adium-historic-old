@@ -356,6 +356,8 @@
 		localizedTitle = AILocalizedString(@"Never",nil);
 	else if([englishTitle isEqualToString:@"On New Messages"])
 		localizedTitle = AILocalizedString(@"On New Messages","Events preset for the event to occur whenever a message is received");
+	else if([englishTitle isEqualToString:@"On New Messages And Errors"])
+		localizedTitle = AILocalizedString(@"On New Messages And Errors","Events preset for the event to occur whenever a message is received or an error occurs");
 	else if([englishTitle isEqualToString:@"On New Background Messages"])
 		localizedTitle = AILocalizedString(@"On New Background Messages","Events preset for the event to occur when messages are received in a chat which is not currently active (is in the background)");
 	else if([englishTitle isEqualToString:@"On Errors"])
