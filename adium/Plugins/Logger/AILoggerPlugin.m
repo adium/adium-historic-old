@@ -175,9 +175,12 @@
 	}
 
     }else if([[content type] compare:CONTENT_STATUS_TYPE] == 0){
-        account = [content destination];
-        contact = [content source];
+        if([[content destination] isKindOfClass:[AIAccount class]] && [[content source] isKindOfClass:[AIListContact class]]){
+	    account = [content destination];
+	    contact = [content source];
 
+	}
+	
 	message = (NSString *)[content message];
 
 	//only log the status change if the contact has a currently open tab
