@@ -22,6 +22,33 @@
 
 @implementation AIImageTextCell
 
+- (id)init
+{
+    [super init];
+
+    font = nil;
+    
+    return(self);
+}
+
+- (void)dealloc
+{
+    [font release];
+
+    [super dealloc];
+}
+
+- (void)setFont:(NSFont *)obj
+{NSLog(@"setFont:%@",obj);
+    if(font != obj){
+        [font release];
+        font = [obj retain];
+    }
+}
+- (NSFont *)font{
+    return(font);
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
     NSString	*title = [self objectValue];
@@ -29,7 +56,6 @@
     NSColor 	*highlightColor;
     BOOL 	highlighted;
 
-    //Determine our highlight state and color
     highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
     highlighted = [self isHighlighted];
     if(highlighted) {
@@ -50,33 +76,43 @@
 
         [image compositeToPoint:destPoint operation:NSCompositeSourceOver];
     }
-
+    
     //Draw the cell's text
     if(title != nil){
-        NSFont	*ourFont = [self font];
-    
+        NSDictionary		*attributes;
+        int			stringHeight;
+        
         // If we are highlighted AND are drawing with the alternate color, then we want to draw our text with the alternate text color.
         // For any other case, we should draw using our normal text color.
 	if(highlighted && [highlightColor isEqual:[NSColor alternateSelectedControlColor]]){
             //Draw the text inverted
-            if(ourFont){
-                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self font],NSFontAttributeName,[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil]];
+            if(font){
+                attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil];
             }else{
-                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil]];
+                attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor alternateSelectedControlTextColor],NSForegroundColorAttributeName,nil];
             }
             
         }else{
             //Draw the text regular
             if([self isEnabled]){
-                if(ourFont){
-                    [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[self font],NSFontAttributeName,nil]];
+                if(font){
+                    attributes = [NSDictionary dictionaryWithObjectsAndKeys:font,NSFontAttributeName,nil];
                 }else{
-                    [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:nil]];
+                    attributes = [NSDictionary dictionaryWithObjectsAndKeys:nil];
                 }
             }else{
-                [title drawInRect:cellFrame withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor],NSForegroundColorAttributeName,[self font],NSFontAttributeName,nil]];
+                attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor],NSForegroundColorAttributeName,font,NSFontAttributeName,nil];
             }
         }
+
+        //Calculate the centered rect
+        stringHeight = [title sizeWithAttributes:attributes].height;
+        if(stringHeight < cellFrame.size.height){
+            cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
+        }
+        
+        //Draw the string
+        [title drawInRect:cellFrame withAttributes:attributes];
     }
 }
 

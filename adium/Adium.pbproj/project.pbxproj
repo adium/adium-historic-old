@@ -442,6 +442,7 @@
 				115C72070470BD91007DDD3A,
 				4B304912047FBD8200A8010A,
 				4BC2C6E80480540A00A8010A,
+				4BE8E5400483B5A900A8010A,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -510,6 +511,7 @@
 				115C72060470BD91007DDD3A,
 				4B304911047FBD8200A8010A,
 				4BC2C6E70480540A00A8010A,
+				4BE8E53F0483B5A900A8010A,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -610,6 +612,7 @@
 				115C72080470BD91007DDD3A,
 				4B304913047FBD8200A8010A,
 				4BC2C6E90480540A00A8010A,
+				4BE8E5410483B5A900A8010A,
 			);
 			isa = PBXApplicationTarget;
 			name = Adium;
@@ -1723,6 +1726,7 @@
 		4B13323D0459BDE200A8010A = {
 			children = (
 				4B81631203D1C24E00A8010A,
+				4BE8E5390483B59800A8010A,
 				F50F253F03B042BC01A80202,
 				4B71CD4E03CBCA2600A8010A,
 			);
@@ -2756,6 +2760,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
+				4BE8E5420483B5A900A8010A,
 				4BC2C6EA0480540A00A8010A,
 				4BDD982C047FC45100A8010A,
 				4BD7D0E304620E7300A8010A,
@@ -4604,20 +4609,16 @@
 			children = (
 				4B81631E03D1C2A600A8010A,
 				4B81631F03D1C2A600A8010A,
-				6ECE6C220474BB1700CAEAD0,
-				6ECE6C230474BB1700CAEAD0,
-				6ECE6C2004749C9600CAEAD0,
-				4B70F28903D1CA1C00A8010A,
-				4B70F28A03D1CA1C00A8010A,
-				4B70F28D03D1CC6400A8010A,
 				4B70F29103D1D13800A8010A,
 				4B70F29203D1D13800A8010A,
 				4B70F28F03D1D04900A8010A,
+				4B70F28903D1CA1C00A8010A,
+				4B70F28A03D1CA1C00A8010A,
+				4B70F28D03D1CC6400A8010A,
 				4BF1F04503D7B92D00A8010A,
 				4B187A0703D5E95500A8010A,
 				4B187A0803D5E95500A8010A,
 				4B64797A03DC321800A8010A,
-				6EE26787047EEBAB00637E34,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
@@ -4630,7 +4631,6 @@
 				4B81632003D1C2A600A8010A,
 				4B70F28B03D1CA1C00A8010A,
 				4B70F29303D1D13800A8010A,
-				6ECE6C240474BB1700CAEAD0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4644,8 +4644,6 @@
 				4B187A0A03D5E95500A8010A,
 				4BF1F04603D7B92D00A8010A,
 				4B64797B03DC321800A8010A,
-				6ECE6C2104749C9600CAEAD0,
-				6EE26788047EEBAB00637E34,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4656,7 +4654,6 @@
 				4B81632103D1C2A600A8010A,
 				4B70F28C03D1CA1C00A8010A,
 				4B70F29403D1D13800A8010A,
-				6ECE6C250474BB1700CAEAD0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6020,6 +6017,32 @@
 			settings = {
 			};
 		};
+		4BCE1B700483086F00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEditorSourceOutlineView.h;
+			path = "/Users/adamiser/Code/Adium Clippings:ToDo/AIEditorSourceOutlineView.h";
+			refType = 0;
+		};
+		4BCE1B710483086F00A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIEditorSourceOutlineView.m;
+			path = "/Users/adamiser/Code/Adium Clippings:ToDo/AIEditorSourceOutlineView.m";
+			refType = 0;
+		};
+		4BCE1B720483086F00A8010A = {
+			fileRef = 4BCE1B700483086F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCE1B730483086F00A8010A = {
+			fileRef = 4BCE1B710483086F00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BCFEC5803F5718700A8010A = {
 			children = (
 				4B25494603F6A32700A8010A,
@@ -6705,6 +6728,227 @@
 			settings = {
 			};
 		};
+		4BE8E5390483B59800A8010A = {
+			children = (
+				4BE8E54D0483B62800A8010A,
+				4BE8E54E0483B62800A8010A,
+				6ECE6C220474BB1700CAEAD0,
+				6ECE6C230474BB1700CAEAD0,
+				6ECE6C2004749C9600CAEAD0,
+				4BE8E5450483B5EE00A8010A,
+				4BE8E5460483B5EE00A8010A,
+				4BF45A970483C6CD00A8010A,
+				6EE26787047EEBAB00637E34,
+			);
+			isa = PBXGroup;
+			name = "Away Status Window";
+			path = "";
+			refType = 4;
+		};
+		4BE8E53A0483B5A900A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BE8E5470483B5EE00A8010A,
+				4BE8E54C0483B62300A8010A,
+				4BE8E54F0483B62800A8010A,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BE8E53B0483B5A900A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BE8E5490483B62200A8010A,
+				4BE8E54A0483B62200A8010A,
+				4BF45A980483C6CD00A8010A,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BE8E53C0483B5A900A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BE8E5480483B5EE00A8010A,
+				4BE8E54B0483B62200A8010A,
+				4BE8E5500483B62800A8010A,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BE8E53D0483B5A900A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+				4BF45A940483C09E00A8010A,
+				4BF45A950483C09E00A8010A,
+				4BF45A960483C09F00A8010A,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BE8E53E0483B5A900A8010A = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXRezBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		4BE8E53F0483B5A900A8010A = {
+			buildPhases = (
+				4BE8E53A0483B5A900A8010A,
+				4BE8E53B0483B5A900A8010A,
+				4BE8E53C0483B5A900A8010A,
+				4BE8E53D0483B5A900A8010A,
+				4BE8E53E0483B5A900A8010A,
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "Away Status Window";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+				4BE8E5430483B5C200A8010A,
+				4BE8E5440483B5C200A8010A,
+			);
+			isa = PBXBundleTarget;
+			name = "Away Status Window";
+			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
+			productName = "Away Status Window";
+			productReference = 4BE8E5400483B5A900A8010A;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string></string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string></string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundleName</key>
+	<string></string>
+	<key>CFBundlePackageType</key>
+	<string>BNDL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>0.0.1d1</string>
+	<key>NSPrincipalClass</key>
+	<string>AIAwayStatusWindowPlugin</string>
+</dict>
+</plist>
+";
+		};
+		4BE8E5400483B5A900A8010A = {
+			isa = PBXBundleReference;
+			path = "Away Status Window.AdiumPlugin";
+			refType = 3;
+		};
+		4BE8E5410483B5A900A8010A = {
+			isa = PBXTargetDependency;
+			target = 4BE8E53F0483B5A900A8010A;
+		};
+		4BE8E5420483B5A900A8010A = {
+			fileRef = 4BE8E5400483B5A900A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E5430483B5C200A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0E02CCED8B01A8010A;
+		};
+		4BE8E5440483B5C200A8010A = {
+			isa = PBXTargetDependency;
+			target = F53B9A0602CCED6401A8010A;
+		};
+		4BE8E5450483B5EE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowPreferences.h;
+			path = "Plugins/Away Status Window/AIAwayStatusWindowPreferences.h";
+			refType = 4;
+		};
+		4BE8E5460483B5EE00A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowPreferences.m;
+			path = "Plugins/Away Status Window/AIAwayStatusWindowPreferences.m";
+			refType = 4;
+		};
+		4BE8E5470483B5EE00A8010A = {
+			fileRef = 4BE8E5450483B5EE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E5480483B5EE00A8010A = {
+			fileRef = 4BE8E5460483B5EE00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E5490483B62200A8010A = {
+			fileRef = 6EE26787047EEBAB00637E34;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E54A0483B62200A8010A = {
+			fileRef = 6ECE6C2004749C9600CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E54B0483B62200A8010A = {
+			fileRef = 6ECE6C230474BB1700CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E54C0483B62300A8010A = {
+			fileRef = 6ECE6C220474BB1700CAEAD0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E54D0483B62800A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowPlugin.h;
+			path = "Plugins/Away Status Window/AIAwayStatusWindowPlugin.h";
+			refType = 4;
+		};
+		4BE8E54E0483B62800A8010A = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			name = AIAwayStatusWindowPlugin.m;
+			path = "Plugins/Away Status Window/AIAwayStatusWindowPlugin.m";
+			refType = 4;
+		};
+		4BE8E54F0483B62800A8010A = {
+			fileRef = 4BE8E54D0483B62800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE8E5500483B62800A8010A = {
+			fileRef = 4BE8E54E0483B62800A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BE9200A03DED0E500A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -7344,6 +7588,36 @@
 			settings = {
 			};
 		};
+		4BF45A940483C09E00A8010A = {
+			fileRef = F53B9A0702CCED6401A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF45A950483C09E00A8010A = {
+			fileRef = F53B9A0F02CCED8B01A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF45A960483C09F00A8010A = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF45A970483C6CD00A8010A = {
+			isa = PBXFileReference;
+			name = AwayStatusWindowPrefs.nib;
+			path = "Plugins/Away Status Window/AwayStatusWindowPrefs.nib";
+			refType = 4;
+		};
+		4BF45A980483C6CD00A8010A = {
+			fileRef = 4BF45A970483C6CD00A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4BF5BA0E042F3CB200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7699,12 +7973,6 @@
 			path = "Plugins/Away Messages/AwayStatusWindow.nib";
 			refType = 4;
 		};
-		6ECE6C2104749C9600CAEAD0 = {
-			fileRef = 6ECE6C2004749C9600CAEAD0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6ECE6C220474BB1700CAEAD0 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7719,30 +7987,12 @@
 			path = "Plugins/Away Messages/AIAwayStatusWindowController.m";
 			refType = 4;
 		};
-		6ECE6C240474BB1700CAEAD0 = {
-			fileRef = 6ECE6C220474BB1700CAEAD0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6ECE6C250474BB1700CAEAD0 = {
-			fileRef = 6ECE6C230474BB1700CAEAD0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6EE26787047EEBAB00637E34 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			name = AwayStatusPrefs.plist;
 			path = "Plugins/Away Messages/AwayStatusPrefs.plist";
 			refType = 4;
-		};
-		6EE26788047EEBAB00637E34 = {
-			fileRef = 6EE26787047EEBAB00637E34;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 //6E0
 //6E1
@@ -8772,6 +9022,8 @@
 				4BD0DF2E046BF84700A8010A,
 				F55B411003AB88D601A8010A,
 				F55B411103AB88D601A8010A,
+				4BCE1B700483086F00A8010A,
+				4BCE1B710483086F00A8010A,
 				4BFB1570043497E700A8010A,
 				4B4F5B31042D673500A8010A,
 				F55B411703AB88D601A8010A,
@@ -8797,6 +9049,7 @@
 				4B8434C0046E80860003BC68,
 				4B8434C1046E80870003BC68,
 				4B8434C4046E94920003BC68,
+				4BCE1B720483086F00A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8840,6 +9093,7 @@
 				4BA8005A046C63DF00C50DA9,
 				4B8434BF046E80840003BC68,
 				4B8434C5046E94920003BC68,
+				4BCE1B730483086F00A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
