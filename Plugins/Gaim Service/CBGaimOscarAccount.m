@@ -193,8 +193,6 @@ static BOOL didInitOscar = NO;
 
 		contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
 
-		NSLog(@"%@ -> %@",contactServiceID,contactService);
-
 		contact = [[adium contactController] contactWithService:contactService
 														account:self
 															UID:sourceUID];

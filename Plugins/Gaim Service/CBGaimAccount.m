@@ -804,15 +804,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					sent = YES;
 				}
 			}
+		} else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
+			AIContentTyping *contentTyping = (AIContentTyping*)object;
+			AIChat *chat = [contentTyping chat];
+			
+			[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
+			
+			sent = YES;
 		}
-		
-	}else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
-		AIContentTyping *contentTyping = (AIContentTyping*)object;
-		AIChat *chat = [contentTyping chat];
-		
-		[gaimThread sendTyping:[contentTyping typingState] inChat:chat];
-		
-		sent = YES;
 	}
 	
     return(sent);
