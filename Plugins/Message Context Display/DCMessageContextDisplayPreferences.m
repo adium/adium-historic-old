@@ -16,6 +16,7 @@
 #import "DCMessageContextDisplayPlugin.h"
 #import "DCMessageContextDisplayPreferences.h"
 
+@class AIPreferenceWindowController;
 
 @implementation DCMessageContextDisplayPreferences
 
