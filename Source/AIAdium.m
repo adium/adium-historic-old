@@ -57,6 +57,8 @@
 - (void)completeLogin;
 - (void)openAppropriatePreferencesIfNeeded;
 - (NSDictionary *)versionUpgradeDict;
+
+- (NSString *)processBetaVersionString:(NSString *)inString;
 @end
 
 @implementation AIAdium
@@ -579,25 +581,47 @@ void Adium_HandleSignal(int i){
 //If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
 - (NSDictionary *)versionUpgradeDict
 {
-	NSString	*currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
-	float	    version = [currentVersionString floatValue];
-	NSString	*lastLaunchedVersion = [[self preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
-																				group:PREF_GROUP_GENERAL];
-	NSNumber	*versionNumber = [NSNumber numberWithFloat:version];
-	
+	NSString	*currentVersionString, *lastLaunchedVersionString;
+	float	    currentVersion, lastLaunchedVersion;
+	NSNumber	*currentVersionNumber;
 	NSDictionary	*versionUpgradeDict = nil;
 	
-	if (!lastLaunchedVersion || !version || version > [lastLaunchedVersion floatValue]){
+	currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleVersion"];
+	lastLaunchedVersionString = [[self preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
+																		group:PREF_GROUP_GENERAL];	
+	// ##### BETA ONLY
+#if BETA_RELEASE
+	//Friendly reminder that we are running with the beta flag on
+	NSString	*spaces = [@"" stringByPaddingToLength:([currentVersionString length] / 2)
+											withString:@" "
+									   startingAtIndex:0];
+	
+	NSLog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces,spaces);
+	NSLog(@"#### Loading Adium X BETA Release v.%@ ####",currentVersionString);
+
+	currentVersionString = [self processBetaVersionString:currentVersionString];
+	lastLaunchedVersionString = [self processBetaVersionString:lastLaunchedVersionString];
+#endif	
+	
+	currentVersion = [currentVersionString floatValue];
+	currentVersionNumber = [NSNumber numberWithFloat:currentVersion];
+	
+	lastLaunchedVersion = [lastLaunchedVersionString floatValue];	
+	
+	NSLog(@"Last version: %@ %f",lastLaunchedVersionString,lastLaunchedVersion);
+	NSLog(@"Loading Adium X v. %@ %f",currentVersionString,currentVersion);
+	
+	if (!lastLaunchedVersion || !currentVersion || currentVersion > lastLaunchedVersion){
 		
 		if (lastLaunchedVersion){
 			
-			NSNumber		*lastLaunchedVersionNumber = [NSNumber numberWithFloat:[lastLaunchedVersion floatValue]];
+			NSNumber		*lastLaunchedVersionNumber = [NSNumber numberWithFloat:lastLaunchedVersion];
 			
 			versionUpgradeDict = [NSDictionary dictionaryWithObjectsAndKeys:lastLaunchedVersionNumber, @"lastLaunchedVersion",
-				versionNumber,@"currentVersion",
+				currentVersionNumber,@"currentVersion",
 				nil];
 		}else{
-			versionUpgradeDict = [NSDictionary dictionaryWithObject:versionNumber
+			versionUpgradeDict = [NSDictionary dictionaryWithObject:currentVersionNumber
 															 forKey:@"currentVersion"];			
 		}
 	}
@@ -610,6 +634,19 @@ void Adium_HandleSignal(int i){
 	 }
 	
 	return(versionUpgradeDict);
+}
+
+- (NSString *)processBetaVersionString:(NSString *)inString
+{
+	NSString	*returnString = nil;
+	
+	if ([inString isEqualToString:@"0.7b1"]){
+		returnString = @"0.68";
+	}else if ([inString isEqualToString:@"0.7b2"]){
+		returnString = @"0.681";
+	}
+	
+	return(returnString ? returnString : inString);
 }
 
 #pragma mark Scripting
