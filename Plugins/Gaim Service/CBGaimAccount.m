@@ -408,7 +408,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)requestAddContactWithUID:(NSString *)contactUID
 {
-	[[adium contactController] requestAddContactWithUID:UID serviceID:[self serviceID]];
+	[[adium contactController] requestAddContactWithUID:UID service:service];
 }
 
 - (void)gotGroupForContact:(AIListContact *)listContact {};
@@ -703,8 +703,8 @@ static id<GaimThread> gaimThread = nil;
 			contactName = [contactName compactedString];
 		}
 		
-		AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-																			 accountID:[self uniqueObjectID]
+		AIListContact *contact = [[adium contactController] existingContactWithService:service
+																			   account:self
 																				   UID:contactName];
 		
 		[chat removeParticipatingListObject:contact];
@@ -798,19 +798,19 @@ static id<GaimThread> gaimThread = nil;
 
 //Return YES if we're available for sending the specified content.
 //If inListObject is nil, we can return YES if we will 'most likely' be able to send the content.
-- (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
     BOOL	weAreOnline = [[self statusObjectForKey:@"Online"] boolValue];
 	
     if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
-        if(weAreOnline && (inListObject == nil || [[inListObject statusObjectForKey:@"Online"] boolValue])){ 
+        if(weAreOnline && (inContact == nil || [[inContact statusObjectForKey:@"Online"] boolValue])){ 
 			return(YES);
         }
     }else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])){
 		if(weAreOnline){
-			if (inListObject){
-				if ([[inListObject statusObjectForKey:@"Online"] boolValue]){
-					return ([self allowFileTransferWithListObject:inListObject]);
+			if(inContact){
+				if([[inContact statusObjectForKey:@"Online"] boolValue]){
+					return([self allowFileTransferWithListObject:inContact]);
 				}
 			}else{
 				return(YES);
@@ -955,8 +955,8 @@ static id<GaimThread> gaimThread = nil;
 		}
 		
 		//Get our contact, which must already exist for us to care about its removal
-		AIListContact   *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-																			   accountID:[self uniqueObjectID]
+		AIListContact   *contact = [[adium contactController] existingContactWithService:service
+																				 account:self
 																					 UID:sourceUID];
 		
 		if (contact){
@@ -1394,7 +1394,7 @@ static id<GaimThread> gaimThread = nil;
 
 - (oneway void)accountConnectionNotice:(NSString *)connectionNotice
 {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[self serviceID]]
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Connection Notice",[self UID],[service description]]
                                     withDescription:connectionNotice];
 }
 
@@ -1684,7 +1684,7 @@ static id<GaimThread> gaimThread = nil;
 	permittedContactsArray = [[NSMutableArray alloc] init];
 	deniedContactsArray = [[NSMutableArray alloc] init];
 	
-	namesAreCaseSensitive = [[[self service] handleServiceType] caseSensitive];
+	namesAreCaseSensitive = [[self service] caseSensitive];
 	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
@@ -1734,7 +1734,7 @@ static id<GaimThread> gaimThread = nil;
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
 			[listObject isKindOfClass:[AIListContact class]] && 
-			[[(AIListContact *)listObject accountID] isEqualToString:[self uniqueObjectID]] &&
+			[(AIListContact *)listObject account] == self &&
 			[[userInfo objectForKey:@"Key"] isEqualToString:@"Alias"]){
 			
 			NSString *alias = [listObject preferenceForKey:@"Alias"
@@ -1800,7 +1800,7 @@ static id<GaimThread> gaimThread = nil;
 - (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
 {
 	//The contact's uniqueObjectID and the chat's uniqueChatID will be the same in a one-on-one conversation
-	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
+	AIChat *chat = [chatDict objectForKey:[contact internalObjectID]];
 	if(chat){
 		//Enable/disable the chat
 		[chat setStatusObject:[NSNumber numberWithBool:enable] 
@@ -1811,13 +1811,13 @@ static id<GaimThread> gaimThread = nil;
 
 - (void)displayError:(NSString *)errorDesc
 {
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[self serviceID]]
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[[self service] description]]
                                     withDescription:errorDesc];
 }
 
 - (NSString *)_userIconCachePath
 {    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self uniqueObjectID], [NSString randomStringOfLength:4]];
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
     return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
 }
 
@@ -1836,8 +1836,8 @@ static id<GaimThread> gaimThread = nil;
 						   withObject:inUID
 						waitUntilDone:YES];
 	
-	AIListContact *contact = [[adium contactController] existingContactWithService:[[service handleServiceType] identifier]
-																		 accountID:[self uniqueObjectID]
+	AIListContact *contact = [[adium contactController] existingContactWithService:service
+																		   account:self
 																			   UID:inUID];
 	
 	return contact;
@@ -1860,8 +1860,9 @@ static id<GaimThread> gaimThread = nil;
 	return ([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
 }
 
-- (NSString *)uniqueObjectID
+- (NSString *)internalObjectID
 {
-	return ([super uniqueObjectID]);
+	return([super internalObjectID]);
 }
+
 @end
