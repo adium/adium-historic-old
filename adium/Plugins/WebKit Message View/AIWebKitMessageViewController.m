@@ -185,7 +185,16 @@
 
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar
 {
-
+    NSString        *stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" ofType:@"html"] stringByDeletingLastPathComponent];
+	NSMutableString *newHTML;
+    NSString	    *statusTemplate = [NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]];
+	
+	newHTML = [[statusTemplate mutableCopy] autorelease];
+	newHTML = [self fillKeywords:newHTML forContent:content];
+	newHTML = [self escapeString:newHTML];
+	
+	[webView stringByEvaluatingJavaScriptFromString:
+	   [NSString stringWithFormat:@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();", newHTML]];
 }
 
 //
@@ -193,31 +202,46 @@
 {
 	NSRange	range;
 	
-	range = [inString rangeOfString:@"%sender"];
-	if(range.location != NSNotFound){
-		[inString replaceCharactersInRange:range withString:[[content source] displayName]];
-	}
-
-	range = [inString rangeOfString:@"%senderScreenName"];
-	if(range.location != NSNotFound){
-	   [inString replaceCharactersInRange:range withString:[[content source] UID]];
-	}
-	
-	range = [inString rangeOfString:@"%service"];
-	if(range.location != NSNotFound){
-	   [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
-	}
-	
-	range = [inString rangeOfString:@"%message"];
-	if(range.location != NSNotFound){
-        [inString replaceCharactersInRange:range withString:
-		  [AIHTMLDecoder encodeHTML:[content message] 
-		      headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
-	}
-	
-	range = [inString rangeOfString:@"%time"];
-	if(range.location != NSNotFound){
-		[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
+	if ([content isKindOfClass:[AIContentMessage class]]) {
+        range = [inString rangeOfString:@"%sender"];
+        if(range.location != NSNotFound){
+            [inString replaceCharactersInRange:range withString:[[content source] displayName]];
+        }
+    
+        range = [inString rangeOfString:@"%senderScreenName"];
+        if(range.location != NSNotFound){
+           [inString replaceCharactersInRange:range withString:[[content source] UID]];
+        }
+        
+        range = [inString rangeOfString:@"%service"];
+        if(range.location != NSNotFound){
+           [inString replaceCharactersInRange:range withString:[[content source] serviceID]];
+        }
+        
+        range = [inString rangeOfString:@"%message"];
+        if(range.location != NSNotFound){
+            [inString replaceCharactersInRange:range withString:
+              [AIHTMLDecoder encodeHTML:[(AIContentMessage *)content message] 
+                  headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
+        }
+        
+        range = [inString rangeOfString:@"%time"];
+        if(range.location != NSNotFound){
+                [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentMessage *)content date]]];
+        }
+	} else {
+        range = [inString rangeOfString:@"%message"];
+        if(range.location != NSNotFound){
+            NSAttributedString *attrMessage = [[[NSAttributedString alloc] initWithString:[(AIContentStatus *)content message]] autorelease];
+            [inString replaceCharactersInRange:range withString:
+              [AIHTMLDecoder encodeHTML:attrMessage
+                  headers:NO fontTags:YES closeFontTags:YES styleTags:YES closeStyleTagsOnFontChange:YES encodeNonASCII:YES imagesPath:nil]];
+        }
+        
+        range = [inString rangeOfString:@"%time"];
+        if(range.location != NSNotFound){
+                [inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[(AIContentStatus *)content date]]];
+        }
 	}
 	
 	return(inString);
@@ -230,7 +254,7 @@
 	[inString replaceOccurrencesOfString:@"\\" withString:@"\\\\" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	[inString replaceOccurrencesOfString:@"\"" withString:@"\\\"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	[inString replaceOccurrencesOfString:@"\n" withString:@"" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
-//	[inString replaceOccurrencesOfString:@"\r" withString:@"<BR>" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
+	[inString replaceOccurrencesOfString:@"\r" withString:@"<br />" options:NSLiteralSearch range:NSMakeRange(0,[inString length])];
 	return(inString);
 }
 
