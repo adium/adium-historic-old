@@ -470,9 +470,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Execute the script, returning its output
 - (NSString *)_executeScript:(NSDictionary *)infoDict withArguments:(NSArray *)arguments
 {
-	NSURL 			*scriptURL = [infoDict objectForKey:@"Path"];
-	NSAppleScript   *script = [[[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil] autorelease];
+	NSAppleScript   *script;
 	NSString		*returnValue;
+	
+	script = [[NSAppleScript alloc] initWithContentsOfURL:[infoDict objectForKey:@"Path"]
+													error:nil];
 	
 	if([[infoDict objectForKey:@"RequiresUserInteraction"] boolValue]){
 		NSAppleEventDescriptor	*eventDescriptor;
@@ -496,6 +498,8 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}else{
 		returnValue = [[script executeFunction:@"substitute" withArguments:arguments error:nil] stringValue];		
 	}
+
+	[script release];
 	
 	return(returnValue);
 }
