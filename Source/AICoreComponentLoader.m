@@ -107,8 +107,8 @@ SAContactOnlineForPlugin,
 SHBookmarksImporterPlugin,
 SHLinkManagementPlugin,
 ESGlobalEventsPreferencesPlugin,
-ESGeneralPreferencesPlugin/*,
-JSCEventBezelPlugin*/;
+ESGeneralPreferencesPlugin,
+NEHGrowlPlugin;
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
@@ -200,12 +200,12 @@ JSCEventBezelPlugin*/;
 	[self _loadComponentClass:[ErrorMessageHandlerPlugin class]];
 	[self _loadComponentClass:[GBApplescriptFiltersPlugin class]];
 	[self _loadComponentClass:[IdleMessagePlugin class]];
-//	[self _loadComponentClass:[JSCEventBezelPlugin class]];
 	[self _loadComponentClass:[SAContactOnlineForPlugin class]];
 	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
 	[self _loadComponentClass:[ESGlobalEventsPreferencesPlugin class]];
 	[self _loadComponentClass:[ESGeneralPreferencesPlugin class]];
+	[self _loadComponentClass:[NEHGrowlPlugin class]];
 }
 
 //Give all components a chance to close
