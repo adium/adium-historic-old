@@ -16,7 +16,7 @@
 #define KEY_JABBER_ALLOW_PLAINTEXT  @"Jabber:Allow Plaintext Authentication"
 
 @interface ESGaimJabberAccount : CBGaimAccount <AIAccount_Files> {
-    NSString	*bareUID;
+
 }
 
 @end
