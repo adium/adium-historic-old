@@ -180,26 +180,37 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//Use it either as the status message or the display name.
 		if ([self useDisplayNameAsStatusMessage]){
-			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"] isEqualToString:gaimAlias]){
+			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:gaimAlias]){
 				[theContact setStatusObject:[[[NSAttributedString alloc] initWithString:gaimAlias] autorelease]
-									 forKey:@"StatusMessage" 
+									 forKey:@"ContactListStatusMessage" 
 									 notify:NO];
 				
 				changes = YES;
 			}
 			
 		}else{
-			[[theContact displayArrayForKey:@"Display Name"] setObject:gaimAlias
-															 withOwner:self
-														 priorityLevel:Low_Priority];
-			displayNameChanges = YES;
+			AIMutableOwnerArray	*displayNameArray = [theContact displayArrayForKey:@"Display Name"];
+			NSString			*oldDisplayName = [displayNameArray objectValue];
+			
+			//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
+			if(![[displayNameArray objectWithOwner:self] isEqualToString:gaimAlias]){
+				[displayNameArray setObject:gaimAlias
+								  withOwner:self
+							  priorityLevel:Low_Priority];
+				
+				//If this causes the object value to change, we need to request a manual update of the display name
+				if(oldDisplayName != [displayNameArray objectValue]){
+					displayNameChanges = YES;
+				}
+			}
 		}
+		
 	}else{
 		if(![gaimAlias isEqualToString:[theContact formattedUID]] && ![gaimAlias isEqualToString:[theContact UID]]){
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
-			
+
 			changes = YES;
 		}
 	}
