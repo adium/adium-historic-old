@@ -461,7 +461,7 @@
 
     }else if([type compare:@"Away"] == 0){ //Away message
         NSString * title = [item objectForKey:@"Title"];
-        return(title ? title : [item objectForKey:@"Message"]);
+        return(title ? title : [[item objectForKey:@"Message"] string]);
 
     }else{
         return(nil);
