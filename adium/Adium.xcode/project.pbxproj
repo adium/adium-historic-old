@@ -5248,6 +5248,7 @@
 				6EC1684C06C170A000F9FAD3,
 				6EC1684E06C170A000F9FAD3,
 				4B3E885A06C2611300ABEA43,
+				C45F7F6506C75E210056B1F2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5572,6 +5573,7 @@
 				4BA62DB806C51297001D6B3C,
 				4BA62DB906C51297001D6B3C,
 				4BA62DBA06C51298001D6B3C,
+				C45F7F6706C75E210056B1F2,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5896,6 +5898,7 @@
 				6EC1684D06C170A000F9FAD3,
 				6EC1684F06C170A000F9FAD3,
 				4B3E885B06C2611300ABEA43,
+				C45F7F6606C75E210056B1F2,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18465,6 +18468,9 @@
 		};
 		4BE666CC0577AFA0007E115C = {
 			children = (
+				C45F7F6206C75E200056B1F2,
+				C45F7F6306C75E210056B1F2,
+				C45F7F6406C75E210056B1F2,
 				6C644D3405776BC500D79723,
 				6C644D3505776BC600D79723,
 				6C644D3605776BC600D79723,
@@ -24439,6 +24445,50 @@
 			path = "Plugins/Contact Notes/BGContactNotesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		C45F7F6206C75E200056B1F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = BGContactsTable.h;
+			path = Plugins/Logger/BGContactsTable.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45F7F6306C75E210056B1F2 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = BGContactsTable.m;
+			path = Plugins/Logger/BGContactsTable.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45F7F6406C75E210056B1F2 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = showdrawer.tiff;
+			path = Plugins/Logger/showdrawer.tiff;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		C45F7F6506C75E210056B1F2 = {
+			fileRef = C45F7F6206C75E200056B1F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45F7F6606C75E210056B1F2 = {
+			fileRef = C45F7F6306C75E210056B1F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		C45F7F6706C75E210056B1F2 = {
+			fileRef = C45F7F6406C75E210056B1F2;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		C4947AFF05BD177E00780FE2 = {
 			fileEncoding = 30;

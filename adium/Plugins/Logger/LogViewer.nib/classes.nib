@@ -17,19 +17,35 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteLogs" = NSButton; 
+                "drawer_contacts" = NSDrawer; 
                 "popUp_jagSearchMode" = NSPopUpButton; 
                 progressIndicator = NSProgressIndicator; 
                 "searchField_logs" = id; 
                 "tableView_results" = NSTableView; 
                 "textField_progress" = NSTextField; 
                 "textView_content" = NSTextView; 
+                "view_SearchField" = NSView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {switchTable = id; }; 
+            CLASS = BGContactsTable; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "controller_LogViewer" = AILogViewerWindowController; 
+                "popup_switcherThingie" = NSPopUpButton; 
+                "table_accounts" = NSTableView; 
+                "table_contacts" = NSTableView; 
+                "tabs_hiddenLogSwitch" = NSTabView; 
+            }; 
+            SUPERCLASS = AIObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSWindow; LANGUAGE = ObjC; SUPERCLASS = NSResponder; }
