@@ -25,12 +25,12 @@
 #import "ESRankingCell.h" 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/AIHTMLDecoder.h>
 #import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/BZArrayAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIServiceIcons.h>
