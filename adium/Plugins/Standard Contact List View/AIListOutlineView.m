@@ -351,6 +351,7 @@
 	//We do custom highlight management when putting the label around the contact only
 	- (void)highlightSelectionInClipRect:(NSRect)clipRect
 	{
+#warning 10.3 only
 		if([[self window] isMainWindow]){
 			NSIndexSet *indices = [self selectedRowIndexes];
 			unsigned int bufSize = [indices count];
@@ -365,10 +366,10 @@
 				
 				//Process the selected rows in clumps
 #warning merging
-				/*while(i < bufSize-1 && buf[i+1] == endIndex + 1){
+				while(i < bufSize-1 && buf[i+1] == endIndex + 1){
 					i++;
 					endIndex++;
-				}*/
+				}
 				
 				NSLog(@"select from %i to %i",startIndex,endIndex);
 				
@@ -395,9 +396,10 @@
 			free(buf);
 		}
 		
-		
-		
-		
+	}
+	
+	
+	
 		
 		
 //		
@@ -425,7 +427,6 @@
 //			[super highlightSelectionInClipRect:clipRect];
 //		}
 		
-	}
 	
 	
 	
@@ -462,7 +463,6 @@
 {
 	[backgroundColor release];
 	backgroundColor = [inColor retain];
-	NSLog(@"setBackgroundColor:%@",inColor);
 }
 
 - (NSColor *)backgroundColor
