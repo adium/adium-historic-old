@@ -15,7 +15,7 @@
 
 #import "AIIdleSortNoGroups.h"
 
-int idleSortNoGroups(id objectA, id objectB, void *context);
+int idleSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups);
 
 @implementation AIIdleSortNoGroups
 
@@ -28,83 +28,53 @@ int idleSortNoGroups(id objectA, id objectB, void *context);
 - (NSString *)displayName{
     return(@"Most Idle to Bottom (Groups Not Sorted)");
 }
-
-- (BOOL)shouldSortForModifiedStatusKeys:(NSArray *)inModifiedKeys
-{
-    if([inModifiedKeys containsObject:@"Idle"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
+- (NSArray *)statusKeysRequiringResort{
+	return([NSArray arrayWithObject:@"Idle"]);
+}
+- (NSArray *)attributeKeysRequiringResort{
+	return([NSArray arrayWithObject:@"Display Name"]);
+}
+- (sortfunc)sortFunction{
+	return(&idleSortNoGroups);
 }
 
-- (BOOL)shouldSortForModifiedAttributeKeys:(NSArray *)inModifiedKeys
+int idleSortNoGroups(id objectA, id objectB, AIListGroup *containingGroup, BOOL groups)
 {
-    if([inModifiedKeys containsObject:@"Hidden"] || [inModifiedKeys containsObject:@"Display Name"]){
-        return(YES);
-    }else{
-        return(NO);
-    }
-}
-
-- (void)sortListObjects:(NSMutableArray *)inObjects
-{
-    [inObjects sortUsingFunction:idleSortNoGroups context:nil];
-}
-
-int idleSortNoGroups(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-
-    if(invisibleA && !invisibleB){
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
-        return(NSOrderedAscending);
-    }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-        if(groupA && !groupB){
-            return(NSOrderedAscending);
-        }else if(!groupA && groupB){
-            return(NSOrderedDescending);
-        }else if(!groupA && !groupB){
-            BOOL idleA = ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
-            BOOL idleB = ([[objectB statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
-            BOOL awayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1]);
-            BOOL awayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1]);
-
-            if(idleA && !idleB){
-                return(NSOrderedDescending);
-            }else if(!idleA && idleB){
-                return(NSOrderedAscending);
-            }else if(!idleA && !idleB){
-		if(awayA && !awayB){
-		    return(NSOrderedDescending);
-		}else if(!awayA && awayB){
-		    return(NSOrderedAscending);
-		}else{
-		    return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
-		}
+	if(!groups){
+		BOOL idleA = ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+		BOOL idleB = ([[objectB statusArrayForKey:@"Idle"] greatestDoubleValue] != 0);
+		BOOL awayA = ([[objectA statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1]);
+		BOOL awayB = ([[objectB statusArrayForKey:@"Away"] containsAnyIntegerValueOf:1]);
+		
+		if(idleA && !idleB){
+			return(NSOrderedDescending);
+		}else if(!idleA && idleB){
+			return(NSOrderedAscending);
+		}else if(!idleA && !idleB){
+			if(awayA && !awayB){
+				return(NSOrderedDescending);
+			}else if(!awayA && awayB){
+				return(NSOrderedAscending);
+			}else{
+				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			}
 	    }else{
-		if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] < [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
-		    return(NSOrderedAscending);
-		}else if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] > [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
-		    return(NSOrderedDescending);
-		}else{
-		    return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] < [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
+				return(NSOrderedAscending);
+			}else if ([[objectA statusArrayForKey:@"Idle"] greatestDoubleValue] > [[objectB statusArrayForKey:@"Idle"] greatestDoubleValue]){
+				return(NSOrderedDescending);
+			}else{
+				return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			}
 		}
-            }
-        }else{
-            //Keep groups in manual order
-            if([objectA orderIndex] > [objectB orderIndex]){
-                return(NSOrderedDescending);
-            }else{
-                return(NSOrderedAscending);
-            }
-        }
-    }
+	}else{
+		//Keep groups in manual order
+		if([objectA orderIndexForGroup:containingGroup] > [objectB orderIndexForGroup:containingGroup]){
+			return(NSOrderedDescending);
+		}else{
+			return(NSOrderedAscending);
+		}
+	}
 }
 
 @end
