@@ -1,6 +1,6 @@
 -- Jeffrey Melloy <jmelloy@visualdistortion.org>
 
--- $URL: http://svn.visualdistortion.org/repos/projects/adium/sql/tsearch2.sql $
+-- $URL: http://svn.visualdistortion.org/repos/projects/sqllogger/sql/tsearch2.sql $
 -- $Rev: 809 $ $Date$
 
 -- This script adds full-text index searching (fast).

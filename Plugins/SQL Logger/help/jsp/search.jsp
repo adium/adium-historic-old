@@ -147,6 +147,10 @@ try {
    window.open(c, 'link', 'width=480,height=480,scrollbars=yes,status=yes,toolbar=no');
  }
 </script>
+<script lanaguage = "JavaScript">
+    window.name='search';
+</script>
+<script language="JavaScript" src="calendar.js"></script>
 </head>
 <body>
 	<div id="container">
@@ -198,7 +202,7 @@ try {
                 <h1>Search</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">
-                    <form action="search.jsp" method="post">
+                    <form action="search.jsp" method="post" name="control">
                     <table border="0" cellpadding="3" cellspacing="0">
                         <tr>
                             <td>
@@ -304,7 +308,13 @@ try {
                                     if (date_start != null)
                                         out.print("value=\"" + date_start +
                                         "\"");
-                                        %> id="start_date" />
+                                %> id="start_date" />
+                                <a 
+                        href="javascript:show_calendar('control.start');"
+                        onmouseover="window.status='Date Picker';return true;"
+                        onmouseout="window.status='';return true;">
+                        <img src="images/calicon.jpg" border=0></a>
+
 
                                     <label for="finish_date">
                                         &nbsp;--&nbsp;
@@ -312,7 +322,14 @@ try {
                                     <input type="text" name="finish" <%
                                         if (date_finish != null)
                                             out.print("value=\"" + date_finish + "\"");
-                                        %> id="finish_date" />
+                                    %> id="finish_date" />
+                                    <a 
+                                    
+                    href="javascript:show_calendar('control.finish');"
+                    onmouseover="window.status='Date Picker';return true;"
+                    onmouseout="window.status='';return true;">
+                <img src="images/calicon.jpg" border=0></a>
+
                             </td>
                         </tr>
                         </table><br />
