@@ -178,7 +178,7 @@ ESSecureMessagingPlugin;
 	[self _loadComponentClass:[CBStatusMenuItemPlugin class]];
 	[self _loadComponentClass:[CBURLHandlingPlugin class]];
 	[self _loadComponentClass:[CPFVersionChecker class]];
-	[self _loadComponentClass:[CSDisconnectAllPlugin class]];
+//	[self _loadComponentClass:[CSDisconnectAllPlugin class]];
 	[self _loadComponentClass:[DCInviteToChatPlugin class]];
 	[self _loadComponentClass:[DCJoinChatPanelPlugin class]];
 	[self _loadComponentClass:[DCMessageContextDisplayPlugin class]];
