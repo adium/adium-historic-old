@@ -261,6 +261,10 @@
 //If silent is NO, the interface controller will be informed of the remove
 - (void)removeTabViewItem:(AIMessageTabViewItem *)inTabViewItem silent:(BOOL)silent
 {
+	//Tell the messageViewController that the tab view item will be closed so it can take action
+	//before being removed from the window
+	[[inTabViewItem messageViewController] tabViewItemWillClose];
+	
     //If the tab is selected, select the next tab before closing it (To mirror the behavior of safari)
     if(!windowIsClosing && inTabViewItem == [tabView_messages selectedTabViewItem]){
 		[tabView_messages selectNextTabViewItem:nil];
@@ -269,9 +273,12 @@
     //Remove the tab and let the interface know a container closed
 	[containedChats removeObject:[inTabViewItem chat]];
 	if(!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
+	
+	[inTabViewItem retain];
     [tabView_messages removeTabViewItem:inTabViewItem];
 	[inTabViewItem setContainer:nil];
-	
+	[inTabViewItem release];
+
 	//close if we're empty
 	if(!windowIsClosing && [containedChats count] == 0){
 		[self closeWindow:nil];
@@ -439,6 +446,7 @@
 //Close a message tab
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem
 {
+	
     [[adium interfaceController] closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
 }
 
