@@ -18,8 +18,6 @@
 - Status set state after inactivity is not implemented
 - Status delete and edit buttons don't dim correctly on panel load
 - Crash on launch in 10.2 because of AIColorAdditions use of strtof
-- Default contact list transitions to off for performance
-- Default contact list flashing to off
 - Finish implementing and commit state icons on the contact list code
 - Remove fonts/colors preference from advanced, force it to YES
 - Clean up layout in advanced messages pane

@@ -7,9 +7,9 @@
 	<key>Hide While in Background</key>
 	<false/>
 	<key>Flash Unviewed Content</key>
-	<true/>
+	<false/>
 	<key>Show Transitions</key>
-	<true/>
+	<false/>
 	<key>Show Tooltips</key>
 	<true/>
 	<key>Show Tooltips in Background</key>
