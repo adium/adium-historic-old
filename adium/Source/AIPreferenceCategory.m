@@ -13,6 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+// $Id: AIPreferenceCategory.m,v 1.6 2003/12/08 05:32:09 jmelloy Exp $
+
 #import "AIPreferenceCategory.h"
 #import "AIFlippedCategoryView.h"
 #import "AIPreferenceViewController.h"
