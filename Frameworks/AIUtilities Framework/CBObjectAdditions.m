@@ -193,6 +193,25 @@
 	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
 }
 
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 withObject:(id)argument4
+{
+	[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 withObject:argument4 waitUntilDone:NO];
+}
+- (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 withObject:(id)argument4 waitUntilDone:(BOOL)flag
+{
+	NSInvocation *invocation;
+	invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
+	
+	[invocation setSelector:aSelector];
+	[invocation setArgument:&argument1 atIndex:2];
+	[invocation setArgument:&argument2 atIndex:3];
+	[invocation setArgument:&argument3 atIndex:4];
+	[invocation setArgument:&argument4 atIndex:5];
+	[invocation retainArguments];
+	
+	[self performSelectorOnMainThread:@selector(handleInvocation:) withObject:invocation waitUntilDone:flag];
+}
+
 - (void)performSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 afterDelay:(NSTimeInterval)delay
 {
 	NSInvocation *invocation;
