@@ -2274,6 +2274,20 @@
 			settings = {
 			};
 		};
+		344C0EDF06B6DE3A00DA7200 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-unknown.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-unknown.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		344C0EE006B6DE3A00DA7200 = {
+			fileRef = 344C0EDF06B6DE3A00DA7200;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344ECA4506209C2D007256C6 = {
 			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
@@ -5255,7 +5269,6 @@
 				34BD9D2F053146CC000AB133,
 				34BD9D30053146CC000AB133,
 				34BD9D31053146CC000AB133,
-				34BD9D32053146CC000AB133,
 				34BD9D33053146CC000AB133,
 				34BD9D35053146CC000AB133,
 				34BD9D36053146CC000AB133,
@@ -5377,7 +5390,6 @@
 				4B191D8B0611C10800E8A4E7,
 				3420E6640611D80100AE67E3,
 				4B0DB3B506123423004F47D9,
-				4B5829E60613D0BD0004BD25,
 				34F58F35061A76C500B4B5D6,
 				BF99B520061D74C300BF2252,
 				344ECBAD0620F323007256C6,
@@ -5432,15 +5444,10 @@
 				4B0CB2160670E07E005821CC,
 				4B0CB2170670E07E005821CC,
 				4B0118090679168700FCB992,
-				4BF2E201067CAE9200743318,
-				4BF2E6BB067CB70E00743318,
 				4BB1E43F067F2CA100D1DB86,
-				4BB1E482067F2E9F00D1DB86,
-				4B57CDC4068498D7003FF229,
 				4B57CDCE06849ABB003FF229,
 				4B57CDCF06849ABB003FF229,
 				4B57CDD006849ABB003FF229,
-				4B57CDD106849ABB003FF229,
 				4B57CDD306849AFE003FF229,
 				4B41F9190686173A00C09B4B,
 				4BF302F206873CCE000DCA65,
@@ -5460,6 +5467,7 @@
 				9E28FDE806ADB30D0041553E,
 				344C0D4A06B6D61B00DA7200,
 				344C0D4D06B6D62600DA7200,
+				344C0EE006B6DE3A00DA7200,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5508,12 +5516,6 @@
 		};
 		34BD9D31053146CC000AB133 = {
 			fileRef = 4BDF17240450CBDE00A8010A;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34BD9D32053146CC000AB133 = {
-			fileRef = 4B24A2330482B34B00A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12134,12 +12136,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B57CDC4068498D7003FF229 = {
-			fileRef = 4B57CDB9068498D7003FF229;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B57CDC5068498E1003FF229 = {
 			fileRef = 4B57CDB9068498D7003FF229;
 			isa = PBXBuildFile;
@@ -12170,14 +12166,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B57CDCC06849ABB003FF229 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "tab-stranger.png";
-			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-stranger.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B57CDCE06849ABB003FF229 = {
 			fileRef = 4B57CDC906849ABB003FF229;
 			isa = PBXBuildFile;
@@ -12192,12 +12180,6 @@
 		};
 		4B57CDD006849ABB003FF229 = {
 			fileRef = 4B57CDCB06849ABB003FF229;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B57CDD106849ABB003FF229 = {
-			fileRef = 4B57CDCC06849ABB003FF229;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -12282,12 +12264,6 @@
 			path = Sounds;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B5829E60613D0BD0004BD25 = {
-			fileRef = 4B5829D30613D0BD0004BD25;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B5829E90613D4110004BD25 = {
 			children = (
@@ -14914,12 +14890,6 @@
 			path = Resources/Scripts;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BB1E482067F2E9F00D1DB86 = {
-			fileRef = 4BB1E47D067F2E9F00D1DB86;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BB1E493067F2EAC00D1DB86 = {
 			fileRef = 4BB1E47D067F2E9F00D1DB86;
@@ -18536,12 +18506,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BF2E201067CAE9200743318 = {
-			fileRef = 4BF2E194067CAE9200743318;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BF2E6B3067CB70E00743318 = {
 			isa = PBXFileReference;
 			lastKnownFileType = folder;
@@ -18549,12 +18513,6 @@
 			path = "Resources/Message Styles";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BF2E6BB067CB70E00743318 = {
-			fileRef = 4BF2E6B3067CB70E00743318;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BF2E6BE067CB72400743318 = {
 			children = (
@@ -18631,8 +18589,8 @@
 				4B57CDD206849AFE003FF229,
 				4B57CDC906849ABB003FF229,
 				4B57CDCA06849ABB003FF229,
+				344C0EDF06B6DE3A00DA7200,
 				4B57CDCB06849ABB003FF229,
-				4B57CDCC06849ABB003FF229,
 				4B41F9180686173A00C09B4B,
 				4BF302F106873CCE000DCA65,
 				34D509B106A4A82300334A7A,
