@@ -101,11 +101,9 @@
     NSDictionary *dict = [[owner preferenceController] preferencesForGroup: CL_PREFERENCE_GROUP];
     while((SCLView = [enumerator nextObject]))
 	{
-        NSFont *font = [NSFont fontWithName:[NSString stringWithFormat:@"%@-%@",
-            [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"],
-            [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FACE"]]
-                                       size: [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] intValue]];
-            
+        NSFont *font = [NSFont fontWithName:[NSString stringWithFormat:@"%@", [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"]] size: [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] floatValue]]; // iacas - 12/22/2002 - it expects a float, not an int
+
+		NSLog(@"font: %@", [NSFont fontWithName:[NSString stringWithFormat:@"%@", [[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"FONT"]] size: [[[dict objectForKey: CL_DEFAULT_FONT] objectForKey: @"SIZE"] floatValue]]);
         
         [SCLView setFont:font];
         [SCLView setRowHeight:[font defaultLineHeightForFont]];
