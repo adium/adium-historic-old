@@ -169,6 +169,14 @@
     //Get our value for the preference
     if(prefDict) value = [prefDict objectForKey:inKey];
     
+    //### TEMPORARY (OLD OBJECT PREFERENCE IMPORT CODE) #######
+    if(!value && [[adium preferenceController] tempImportOldPreferenceForKey:inKey group:groupName object:self]){
+	[prefDict release];
+	prefDict = [[NSMutableDictionary dictionaryWithContentsOfFile:[[[adium loginController] userDirectory] stringByAppendingPathComponent:OBJECT_PREFS_PATH]] retain];
+	if(prefDict) value = [prefDict objectForKey:inKey];
+    }
+    //#########################################################
+    
     //If we don't have a value
     if(!value){
 	if(containingGroup){
