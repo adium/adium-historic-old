@@ -67,7 +67,8 @@
 {
     [[adium contactController] unregisterListObjectObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
+	[[adium notificationCenter] removeObserver:self];
+
 	[menu_contactSubmenu release];
 }
 
@@ -86,7 +87,7 @@
 													  group:PREF_GROUP_ALIASES 
 									  ignoreInheritedValues:YES]
 						toObject:inObject
-						  notify:/*YES*/silent]);
+						  notify:NO]);
     }
 	
 	return(nil);
@@ -193,11 +194,14 @@
 		[[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
 	}
 	
-	//Notify
 	modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Long Display Name", @"Adium Alias", nil];
 	
-#warning Is this needed? I think it is redundant
-	if(notify) [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributes];
+	//If notify is YES, send out a manual listObjectAttributesChanged notice; 
+	//if NO, the observer methods will be handling it
+	if(notify){
+		[[adium contactController] listObjectAttributesChanged:inObject
+												  modifiedKeys:modifiedAttributes];
+	}
 	
 	return(modifiedAttributes);
 }
