@@ -16,28 +16,26 @@
     [[adium contentController] registerOutgoingContentFilter:self];
 }
 
-- (void)filterContentObject:(AIContentObject *)inObject
+- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject
 {
-    if([[inObject type] isEqual:CONTENT_MESSAGE_TYPE])
-    {
-        AIContentMessage *inObj = (AIContentMessage *)inObject;
-        NSRange meRange = [[[inObj message] string] rangeOfString:@"/me "];
+    NSMutableAttributedString   *ourMessage = nil;
+    if (inAttributedString) {
+        NSRange meRange = [[inAttributedString string] rangeOfString:@"/me "];
         
         if(meRange.location == 0 && meRange.length == 4)
         {
-            NSMutableAttributedString *ourMessage = [[inObj message] mutableCopy];
+            ourMessage = [[inAttributedString mutableCopyWithZone:nil] autorelease];
             
             [ourMessage replaceCharactersInRange:meRange withString:@"*"];
             
             NSAttributedString *splat = [[NSAttributedString alloc] initWithString:@"*" 
-                attributes:[ourMessage attributesAtIndex:0 effectiveRange:nil]];
+                                                                        attributes:[ourMessage attributesAtIndex:0 
+                                                                                                  effectiveRange:nil]];
             [ourMessage appendAttributedString:splat];
             [splat release];
-            
-            [inObj setMessage:ourMessage];
-            [ourMessage release];
         }
     }
+    return (ourMessage ? ourMessage : inAttributedString);
 }
 
 @end
