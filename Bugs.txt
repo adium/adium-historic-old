@@ -27,8 +27,6 @@
 	right situations.
 - Vertical resizing is initially too small by the height of the toolbar in Standard
 	with the toolbar showing
-- Need to check whether ~/L/AS/Adium 2.0/Contact List/ exists before trying to save
-	contact list themes there.
 - Vertical resizing really screws up once the scrollbar becomes visible.  The list will
     not correctly resize when opening/closing groups, and will jump randomly up and down
     on the screen.
