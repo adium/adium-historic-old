@@ -72,10 +72,13 @@
         }
         
         if([[url scheme] isEqualToString:@"aim"]){
-            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){                                
-               [self _openChatToContactWithName:[url queryArgumentForKey:@"screenname"] 
-									   onService:@"AIM" 
-									 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
+            if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
+				NSString *name = [url queryArgumentForKey:@"screenname"];
+				if (name){
+					[self _openChatToContactWithName:name
+										   onService:@"AIM" 
+										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
+				}
             } else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				
 				[[adium contactController] requestAddContactWithUID:[url queryArgumentForKey:@"screenname"]
