@@ -54,6 +54,8 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
+	AIImageTextCell *dataCell;
+
 	currentLayoutName = [@"Default" retain];
 	currentThemeName = [@"Default" retain];
 	[self updateLayouts];
@@ -75,9 +77,6 @@
 	[button_themeEdit setTitle:@"Edit"];
 	[button_layoutEdit setTitle:@"Edit"];
 	
-#warning cells
-	AIImageTextCell *dataCell;
-		
 	//
 	dataCell = [[[AIImageTextCell alloc] init] autorelease];
     [dataCell setFont:[NSFont systemFontOfSize:12]];
