@@ -15,6 +15,7 @@
                 "checkBox_alternatingGrid" = NSButton; 
                 "checkBox_boldGroups" = NSButton; 
                 "checkBox_customGroupColor" = NSButton; 
+                "checkBox_showLabels" = NSButton; 
                 "colorWell_background" = NSColorWell; 
                 "colorWell_contact" = NSColorWell; 
                 "colorWell_grid" = NSColorWell; 

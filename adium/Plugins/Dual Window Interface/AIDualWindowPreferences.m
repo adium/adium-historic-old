@@ -54,6 +54,13 @@
     return(view_resizing);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_resizing release]; view_resizing = nil;
+
+}
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {

@@ -146,6 +146,13 @@
     return(view_prefView);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefView release]; view_prefView = nil;
+
+}
+
 //Configure our preference view
 - (void)configureView
 {

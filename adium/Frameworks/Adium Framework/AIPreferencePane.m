@@ -39,6 +39,7 @@
     delegate = inDelegate;
     category = inCategory;
     label = [inLabel retain];
+    preferenceView = nil;
 
 //    NSLog(@"Init Preference Pane (%@, %i)",delegate, category);
 
@@ -75,9 +76,9 @@
 - (NSView *)view
 {
     //Setup the view
-    if(!view_containerView){
+    if(!view_containerView && [delegate respondsToSelector:@selector(viewForPreferencePane:)]){
         //Get the preference view from our delegate
-        preferenceView = [delegate viewForPreferencePane:self];
+        preferenceView = [[delegate viewForPreferencePane:self] retain];
 
         //Load the container view from our nib
         [NSBundle loadNibNamed:PREFERENCE_VIEW_NIB owner:self];
@@ -102,6 +103,18 @@
     }
     
     return(view_containerView);
+}
+
+- (void)closeView
+{
+    if([delegate respondsToSelector:@selector(closeViewForPreferencePane:)]){
+        //Tell our delegate to close its view
+        [delegate closeViewForPreferencePane:self];
+    }
+
+    [preferenceView release]; preferenceView = nil;
+    [view_containerView release]; view_containerView = nil;
+//    [view_containerSubView release]; view_containerSubView = nil;
 }
 
 

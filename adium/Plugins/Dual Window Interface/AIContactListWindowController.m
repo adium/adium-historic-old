@@ -88,7 +88,7 @@
     
     [owner release];
     [interface release];
-
+        
     [super dealloc];
 }
 
@@ -111,7 +111,7 @@
     AIListObject	*object = [[notification userInfo] objectForKey:@"Object"];
 
     //Configure our toolbar for the new object
-    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:[self window],@"Window",object,@"ContactObject",nil]];
+    [toolbar_bottom configureForObjects:[NSDictionary dictionaryWithObjectsAndKeys:object,@"ContactObject",nil]];
 }
 
 //Configure auto-resizing
@@ -223,7 +223,7 @@
     [[[self window] contentView] addSubview:view_statusSelection];
 
     [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
-        
+
     
     //Swap in the contact list view
     contactListViewController = [[[owner interfaceController] contactListViewController] retain];
@@ -251,14 +251,12 @@
 //Close the contact list window
 - (BOOL)windowShouldClose:(id)sender
 {
+    //Stop observing
+    [[owner notificationCenter] removeObserver:self];
+
     //Close the contact list view
     [contactListViewController release];
     [contactListView release];
-
-    //Stop observing
-    [[owner notificationCenter] removeObserver:self name:Interface_ContactSelectionChanged object:contactListView];
-    [[owner notificationCenter] removeObserver:self name:Interface_ViewDesiredSizeDidChange object:contactListView];
-
     
     //Save the window position
     [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]

@@ -93,6 +93,13 @@
     return(view_prefView);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefView release]; view_prefView = nil;
+
+}
+
 //Called in response to a font panel change
 - (void)changeFont:(id)sender
 {

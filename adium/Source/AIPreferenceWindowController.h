@@ -46,6 +46,8 @@
     
     IBOutlet	AIFlippedCategoryView		*view_Sound;
 
+    NSMutableArray		*loadedPanes;
+
     AIAdium			*owner;
     NSMutableDictionary		*toolbarItems;
 

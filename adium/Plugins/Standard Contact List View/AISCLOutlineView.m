@@ -41,6 +41,7 @@
 
     [super init];
 
+    showLabels = YES;
     font = nil;
     groupFont = nil;
     color = nil;
@@ -309,6 +310,13 @@
 }
 - (NSColor *)invertedGroupColor{
     return(invertedGroupColor);
+}
+
+- (void)setShowLabels:(BOOL)inValue{
+    showLabels = inValue;
+}
+- (BOOL)showLabels{
+    return(showLabels);
 }
 
 

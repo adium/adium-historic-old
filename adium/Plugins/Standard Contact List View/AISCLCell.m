@@ -124,7 +124,7 @@
     cellFrame.size.width -= RIGHT_MARGIN;
 
     //Background Color (If this cell is selected, we don't display the background color)
-    if(![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView){
+    if((![self isHighlighted] || ![[controlView window] isKeyWindow] || [[controlView window] firstResponder] != controlView) && [(AISCLOutlineView *)controlView showLabels]){
         backgroundColor = [[listObject displayArrayForKey:@"Background Color"] averageColor];
     }
 

@@ -23,6 +23,7 @@
 #define KEY_SCL_FONT			@"Font"
 #define KEY_SCL_CONTACT_COLOR		@"Contact Color"
 #define	KEY_SCL_ALTERNATING_GRID	@"Alternating Grid"
+#define	KEY_SCL_SHOW_LABELS		@"Show Labels"
 #define KEY_SCL_GRID_COLOR		@"Grid Color"
 #define KEY_SCL_BACKGROUND_COLOR	@"Background Color"
 #define KEY_SCL_OPACITY			@"Opacity"

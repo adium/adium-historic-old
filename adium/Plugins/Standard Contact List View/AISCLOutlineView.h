@@ -24,6 +24,7 @@
     int				oldSelection;		//Holds the selection when it's hidden
     BOOL			editing;		//YES when the list is in edit mode... (temp)
 
+    BOOL			showLabels;
     NSFont			*font;
     NSFont			*groupFont;
     NSColor			*color;
@@ -46,6 +47,9 @@
 - (void)setGroupColor:(NSColor *)inColor;
 - (NSColor *)groupColor;
 - (NSColor *)invertedGroupColor;
+
+- (void)setShowLabels:(BOOL)inValue;
+- (BOOL)showLabels;
 
 - (void)setGroupFont:(NSFont *)inFont;
 - (NSFont *)groupFont;

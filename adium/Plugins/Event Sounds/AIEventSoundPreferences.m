@@ -166,6 +166,17 @@
     return(view_prefView);
 }
 
+//Clean up our preference pane
+- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
+{
+    [view_prefView release]; view_prefView = nil;
+
+    //Clean up
+    [[owner notificationCenter] removeObserver:self];
+    [eventSoundArray release]; eventSoundArray = nil;
+
+}
+
 //Configures our view for the current preferences
 - (void)configureView
 {
@@ -178,7 +189,7 @@
     [popUp_soundSet setMenu:[self soundSetMenu]];
 
     //Configure the 'Sound' table column
-    dataCell = [[AITableViewPopUpButtonCell alloc] init];
+    dataCell = [[[AITableViewPopUpButtonCell alloc] init] autorelease];
     [dataCell setMenu:[self soundListMenu]];
     [dataCell setControlSize:NSSmallControlSize];
     [dataCell setFont:[NSFont menuFontOfSize:11]];

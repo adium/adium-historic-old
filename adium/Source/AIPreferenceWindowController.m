@@ -90,6 +90,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     //Retain our owner
     owner = [inOwner retain];
     toolbarItems = [[NSMutableDictionary dictionary] retain];
+    loadedPanes = [[NSMutableArray alloc] init];
 
     return(self);    
 }
@@ -98,7 +99,8 @@ static AIPreferenceWindowController *sharedInstance = nil;
 {
     [owner release];
     [toolbarItems release];
-
+    [loadedPanes release];
+    
     [super dealloc];
 }
 
@@ -123,6 +125,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [self installToolbar];
  
     //select the default category
+    [self tabView:tabView_category willSelectTabViewItem:[[tabView_category tabViewItems] objectAtIndex:0]];
+    [tabView_category selectFirstTabViewItem:nil];    
+
 /*    categoryArray = [[owner preferenceController] categoryArray];
     if([categoryArray count]){
         [self showCategory:[categoryArray objectAtIndex:0]];
@@ -141,6 +146,9 @@ static AIPreferenceWindowController *sharedInstance = nil;
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
+    NSEnumerator	*enumerator;
+    AIPreferencePane	*pane;
+    
     //Take focus away from any controls to ensure that they register changes and save
     [[self window] makeFirstResponder:tabView_category];
 
@@ -149,6 +157,12 @@ static AIPreferenceWindowController *sharedInstance = nil;
                   forKey:KEY_PREFERENCE_WINDOW_FRAME
                    group:PREF_GROUP_WINDOW_POSITIONS];
 
+    //Close all open panes
+    enumerator = [loadedPanes objectEnumerator];
+    while(pane = [enumerator nextObject]){
+        [pane closeView];
+    }
+    
     //Let everyone know we did close
     [[owner notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
 
@@ -273,6 +287,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     while(pane = [enumerator nextObject]){
         if([pane category] == inCategory){
             [paneArray addObject:pane];
+            [loadedPanes addObject:pane];
         }
     }
 
@@ -283,10 +298,12 @@ static AIPreferenceWindowController *sharedInstance = nil;
     enumerator = [paneArray objectEnumerator];
     while(pane = [enumerator nextObject]){
         NSView	*paneView = [pane view];
-    
+
         //Add the view
-        [inView addSubview:paneView];
-        [paneView setFrameOrigin:NSMakePoint(0,yPos)];
+        if([paneView superview] != inView){
+            [inView addSubview:paneView];
+            [paneView setFrameOrigin:NSMakePoint(0,yPos)];
+        }
     
         //Move down for the next view
         yPos += [paneView frame].size.height;
