@@ -24,7 +24,7 @@ fink install ant</pre></div>
   future):</p>
 <div class="tutorialcode"><pre>./configure --bindir=/usr/local/bin --mandir=/usr/local/share/man/ \
     --enable-recode --with-CXX --enable-odbc --with-java \
-    --enable-syslog \  --enable-unicode-conversion --enable-multibyte \
+    --enable-syslog --enable-unicode-conversion --enable-multibyte \
     --with-includes=/sw/include --with-libs=/sw/lib
 make
 sudo make install</pre>
