@@ -262,7 +262,7 @@
 		}
 		
     }else if(notification == nil || ([group compare:GROUP_ACCOUNT_STATUS] == 0 && [notification object] == nil)){
-		if([key compare:@"AwayMessage"] == 0){
+		if(!key || [key compare:@"AwayMessage"] == 0){
 			//Update our away menus
 			[self _updateMenusToReflectAwayState:[self shouldConfigureForAway]];
 			[self _updateAwaySubmenus];
