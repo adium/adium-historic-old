@@ -45,7 +45,7 @@
                 <h1>User Action Shots</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
-                <p>We need some cool screenshots of Adium in action.  See this <a href="http://www.funmac.com/showthread.php?s=&amp;threadid=6218">forum thread</a> for more information.</p>
+                <p>We need some cool screenshots of Adium in action.  See this <a href="http://www.funmac.com/showthread.php?s=&amp;threadid=6218&amp;styleid=10">forum thread</a> for more information.</p>
                 <p>Meanwhile, here are some samples from users like you (thanks!):</p>
                 <?php echo RandomActionShot(4); ?>
                 </div>

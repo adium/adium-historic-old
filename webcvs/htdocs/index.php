@@ -56,7 +56,7 @@
                 <h1>Community</h1>
                 <div class="boxThinTop"></div>
                 <div class="boxThinContent">
-                    <p><a href="http://www.funmac.com/forumdisplay.php?s=&amp;forumid=38">Adium Forum</a></p>
+                    <p><a href="http://forum.adiumx.com">Adium Forum</a></p>
                     <p>Discuss ideas, issues, or concerns with other users.</p>
                     <p><a href="irc://irc.freenode.net/#adium">Adium IRC Channel</a></p>
                     <p>Join us in #adium on irc.freenode.net for live chat.</p>
