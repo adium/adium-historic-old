@@ -26,12 +26,21 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 
-#define ADD_CONTACT   				AILocalizedString(@"Add Contact...",nil)
-#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group...",nil)
-#define ADD_GROUP   				AILocalizedString(@"Add Group...",nil)
+#define ADD_CONTACT					AILocalizedString(@"Add Contact",nil)
+#define ADD_CONTACT_ELLIPSIS   		[ADD_CONTACT stringByAppendingString:[NSString stringWithUTF8String:"É"]]
+
+#define ADD_CONTACT_TO_GROUP		AILocalizedString(@"Add Contact To Group",nil)
+#define ADD_CONTACT_TO_GROUP_ELLIPSIS	[ADD_CONTACT_TO_GROUP stringByAppendingString:[NSString stringWithUTF8String:"É"]]
+
+#define ADD_GROUP   				AILocalizedString(@"Add Group",nil)
+#define ADD_GROUP_ELLIPSIS			[ADD_GROUP stringByAppendingString:[NSString stringWithUTF8String:"É"]]
+
 #define DELETE_CONTACT   			AILocalizedString(@"Delete Selection",nil)
 #define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
-#define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
+
+#define RENAME_GROUP				AILocalizedString(@"Rename Group",nil)
+#define RENAME_GROUP_ELLIPSIS		[RENAME_GROUP stringByAppendingString:[NSString stringWithUTF8String:"É"]]
+
 #define INVITE_CONTACT				AILocalizedString(@"Invite to This Chat...",nil)
 
 #define	ADD_CONTACT_IDENTIFIER		@"AddContact"
@@ -57,28 +66,28 @@
 	NSToolbarItem	*toolbarItem;
 	
 	//Add contact menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																	 target:self
 																	 action:@selector(addContact:)
 															  keyEquivalent:@"+"] autorelease];
     [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Editing];
 	
 	//Add contact context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
 																	 target:self
 																	 action:@selector(addContact:)
 															  keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 	
 	//Add contact context menu item for tabs
-	menuItem_tabAddContact = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT
+	menuItem_tabAddContact = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																				   target:self 
 																				   action:@selector(addContactFromTab:)
 																			keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
 	
 	//Add group menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP_ELLIPSIS
 																	 target:self
 																	 action:@selector(addGroup:) 
 															  keyEquivalent:@"+"] autorelease];
@@ -93,14 +102,14 @@
     [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Editing];
 	
 	//Rename group context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP_ELLIPSIS
 																	 target:self
 																	 action:@selector(renameGroup:) 
 															  keyEquivalent:@""] autorelease];
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 	
 	//Delete selection context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT_ELLIPSIS
 																	 target:self
 																	 action:@selector(deleteSelectionFromTab:) 
 															  keyEquivalent:@""] autorelease];
@@ -108,8 +117,8 @@
 	
 	//Add Contact toolbar item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_CONTACT_IDENTIFIER
-														  label:AILocalizedString(@"Add Contact",nil)
-												   paletteLabel:AILocalizedString(@"Add Contact",nil)
+														  label:ADD_CONTACT
+												   paletteLabel:ADD_CONTACT
 														toolTip:AILocalizedString(@"Add a new contact",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
@@ -120,8 +129,8 @@
 	
 	//Add Contact toolbar item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_GROUP_IDENTIFIER
-														  label:AILocalizedString(@"Add Group",nil)
-												   paletteLabel:AILocalizedString(@"Add Group",nil)
+														  label:ADD_GROUP
+												   paletteLabel:ADD_GROUP
 														toolTip:AILocalizedString(@"Add a new group",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
@@ -155,9 +164,11 @@
 		//return([[adium contactController] selectedListObjectInContactList] != nil);
                 //Update the menu titles to reflect the selected contact
             if([[adium contactController] selectedListObjectInContactList] != nil){
-                [menuItem_delete setTitle:[NSString stringWithFormat:@"Delete %@",[[[adium contactController] selectedListObjectInContactList] displayName]]];
+                [menuItem_delete setTitle:[NSString stringWithFormat:
+					AILocalizedString(@"Delete %@","%@ will be a contact's name"),
+					[[[adium contactController] selectedListObjectInContactList] displayName]]];
             }else{
-                [menuItem_delete setTitle:@"Delete Selection"];
+                [menuItem_delete setTitle:DELETE_CONTACT];
                 return NO;
             }
 	}else if(menuItem == menuItem_tabAddContact){
