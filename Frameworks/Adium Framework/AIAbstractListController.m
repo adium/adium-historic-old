@@ -271,9 +271,13 @@
 		[contentCell setRightPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 	}
 	
-	//Mockie special cases
+	//Mockie special cases.  For all other layouts we use fixed group spacing
 	if(windowStyle == WINDOW_STYLE_MOCKIE){
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
+	}else{
+		//We want 2 pixels between each row.
+		[groupCell setTopSpacing:1];
+		[groupCell setBottomSpacing:1];
 	}
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own

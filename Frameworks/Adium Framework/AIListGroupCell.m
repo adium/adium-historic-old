@@ -114,14 +114,6 @@
 	return([super rightPadding] + 4);
 }
 
-//Fixed spacing around groups.  No spacing looks bad, too much spacing looks awkward
-- (int)topSpacing{
-	return(1);
-}
-- (int)bottomSpacing{
-	return(1);
-}
-
 //Cell height and width
 - (NSSize)cellSize
 {
