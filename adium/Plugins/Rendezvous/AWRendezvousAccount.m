@@ -139,7 +139,7 @@
 					       withOwner:self
 					   priorityLevel:Lowest_Priority];;
 
-    [user setRemoteGroupName:@"Rendezvous"];
+    [user setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
     [user setStatusObject:[contact statusMessage] forKey:@"StatusMessageString" notify:NO];
 
      //[user setStatusObject:nil forKey:@"StatusMessage" notify:NO];
@@ -162,6 +162,10 @@
 	[user setStatusObject:[contact idleSinceDate] forKey:@"IdleSince" notify:NO];
     else
 	[user setStatusObject:nil forKey:@"IdleSince" notify:NO];
+
+    if ([contact statusMessage])
+	[user setStatusObject:[[[NSAttributedString alloc] initWithString:[contact statusMessage]] autorelease]
+		       forKey:@"StatusMessage" notify:NO];
 
     
     [[adium contactController] listObjectAttributesChanged:user 
@@ -302,6 +306,8 @@
         NSData  *data;
         if([key compare:@"IdleSince"] == NSOrderedSame){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
+	    
+	    [self setStatus:AWEzvIdle withMessage:[self preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS]];
             [self setAccountIdleTo:idleSince];
 	    
         } else if ( ([key compare:@"AwayMessage"] == NSOrderedSame)){
@@ -311,8 +317,13 @@
                 attributedString = [NSAttributedString stringWithData:data];
             }
             
-            /* not done yet, coming soon to an adium near you */
-            
+	    if (attributedString != nil)
+		[libezv setStatus:AWEzvAway withMessage:[attributedString string]];
+	    else
+		[libezv setStatus:AWEzvOnline withMessage:nil];
+	    
+	    [self setStatusObject:[NSNumber numberWithBool:(attributedString != nil)] forKey:@"Away" notify:YES];
+	    [self setStatusObject:attributedString forKey:@"StatusMessage" notify:YES];
         }
     }
 }
