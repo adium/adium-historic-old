@@ -3,7 +3,7 @@
  * File:        AWEzvContact.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContact.m,v 1.1 2004/05/15 18:47:08 evands Exp $
+ * CVS tag:     $Id: AWEzvContact.m,v 1.2 2004/05/16 07:10:35 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -75,24 +75,10 @@
 #pragma mark Sending Messages
 - (void) sendMessage:(NSString *)message withHtml:(NSString *)html {
     AWEzvXMLNode *messageNode, *bodyNode, *textNode, *htmlNode, *htmlBodyNode, *htmlMessageNode;
-    NSMutableString *mutableString;
-    NSString *htmlString;
     
     if (_stream == nil) {
 	[self createConnection];
     }
-    
-    /* Message cleanup */
-    /* actual message */
-    mutableString = [html mutableCopy];
-    [mutableString replaceOccurrencesOfString:@"&" withString:@"&amp;"
-	    options:0 range:NSMakeRange(0, [mutableString length])];
-    [mutableString replaceOccurrencesOfString:@"<" withString:@"&lt;"
-	    options:0 range:NSMakeRange(0, [mutableString length])];
-    [mutableString replaceOccurrencesOfString:@">" withString:@"&gt;"
-	    options:0 range:NSMakeRange(0, [mutableString length])];
-    htmlString = [mutableString copy];
-    [mutableString release];
     
     /* setup XML tree */
     messageNode = [[AWEzvXMLNode alloc] initWithType:XMLElement name:@"message"];
@@ -113,7 +99,7 @@
     [htmlBodyNode addAttribute:@"ichattextcolor" withValue:@"#000000"];
     [htmlNode addChild:htmlBodyNode];
     
-    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:XMLText name:html];
+    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:XMLRaw name:html];
     [htmlBodyNode addChild:htmlMessageNode];
     
     /* send the data */
