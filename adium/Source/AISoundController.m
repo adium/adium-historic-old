@@ -170,8 +170,10 @@
 	
 	//Load and cache the sound
 	movie = [[[NSMovie alloc] initWithURL:[NSURL fileURLWithPath:inPath] byReference:YES] autorelease];
-	[soundCacheDict setObject:movie forKey:inPath];
-	[soundCacheArray insertObject:inPath atIndex:0];
+	if(movie){
+	    [soundCacheDict setObject:movie forKey:inPath];
+	    [soundCacheArray insertObject:inPath atIndex:0];
+	}
 
     }else{
 	//Reset the cached sound back to the beginning
@@ -184,8 +186,10 @@
     }
 
     //Set the volume and play sound
-    SetMovieVolume([movie QTMovie], customVolume);
-    StartMovie([movie QTMovie]);
+    if(movie){
+	SetMovieVolume([movie QTMovie], customVolume);
+	StartMovie([movie QTMovie]);
+    }
 }
 
 //Play a sound using NSSound.  Meant to be detached as a new thread.

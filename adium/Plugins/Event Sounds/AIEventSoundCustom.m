@@ -137,7 +137,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         NSString	*soundPath = [[eventSoundArray objectAtIndex:selectedRow] objectForKey:KEY_EVENT_SOUND_PATH];
 
         if(soundPath != nil && [soundPath length] != 0){
-            [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+            [[owner soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
         }
     }
 }
@@ -150,7 +150,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     //Add the new event
     soundDict = [[NSMutableDictionary alloc] init];
     [soundDict setObject:[sender representedObject] forKey:KEY_EVENT_SOUND_NOTIFICATION];
-    [soundDict setObject:firstSound forKey:KEY_EVENT_SOUND_PATH];
+    [soundDict setObject:[firstSound stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
     [eventSoundArray addObject:soundDict];
 
     //Save event sound preferences
@@ -259,7 +259,7 @@ AIEventSoundCustom	*sharedInstance = nil;
                                                            target:self
                                                            action:@selector(selectSound:)
                                                     keyEquivalent:@""] autorelease];
-                    [menuItem setRepresentedObject:soundPath];
+                    [menuItem setRepresentedObject:[soundPath stringByCollapsingBundlePath]];
                     [menuItem setImage:soundImage];
                     
                     [soundMenu addItem:menuItem];
@@ -283,12 +283,13 @@ AIEventSoundCustom	*sharedInstance = nil;
     while (soundRowDict = [enumerator nextObject]) {
         //add it if it's not already in the menu
         NSString *soundPath = [soundRowDict objectForKey:KEY_EVENT_SOUND_PATH];
-        if (soundPath && ([soundPath length] != 0) && [soundMenu_cached indexOfItemWithRepresentedObject:soundPath] == -1) {
+        if(soundPath && ([soundPath length] != 0) && [soundMenu_cached indexOfItemWithRepresentedObject:soundPath] == -1) {
             NSImage	*soundImage;
             NSString	*soundTitle;
             NSMenuItem	*menuItem;
+	    
             //Add an "Other" header if necessary
-            if ([soundMenu_cached indexOfItemWithTitle:@"Other"] == -1) {
+            if([soundMenu_cached indexOfItemWithTitle:@"Other"] == -1) {
                 [soundMenu_cached insertItem:[NSMenuItem separatorItem] atIndex:([soundMenu_cached numberOfItems]-1)]; //Divider
                 menuItem = [[[NSMenuItem alloc] initWithTitle:@"Other"
                                                        target:nil
@@ -323,7 +324,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     NSString	*soundPath = [sender representedObject];
     
     if(soundPath != nil && [soundPath length] != 0){
-        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [[owner soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
     } else { //selected "Other..."
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
         [openPanel 
@@ -345,7 +346,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
         //Set the new sound path
         NSMutableDictionary	*selectedSoundDict = [[[eventSoundArray objectAtIndex:setRow] mutableCopy] autorelease];
-        [selectedSoundDict setObject:soundPath forKey:KEY_EVENT_SOUND_PATH];
+        [selectedSoundDict setObject:[soundPath stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
 
         [eventSoundArray replaceObjectAtIndex:setRow withObject:selectedSoundDict];
         
