@@ -35,6 +35,7 @@
 
 - (void)dealloc
 {
+	[super dealloc];
 }
 
 #pragma mark Simple accessors
@@ -42,7 +43,8 @@
 
 - (NSImage *)iconAtSize:(int)iconSize
 {
-	return [clientIcon setSize:NSMakeSize(iconSize,iconSize)];
+	[clientIcon setSize:NSMakeSize(iconSize,iconSize)];
+	return clientIcon;
 }
 
 #pragma mark -

@@ -60,7 +60,7 @@
     NSString				*dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
     NSDirectoryEnumerator *enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
 	
-    while(file = [enumer nextObject])
+    while((file = [enumer nextObject]))
 	{
 		[enumer skipDescendents];
 		if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
@@ -71,7 +71,7 @@
     enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
 	[popUpButton_user removeAllItems];
 	
-    while(file = [enumer nextObject])
+    while((file = [enumer nextObject]))
 	{
 		[enumer skipDescendents];
 		if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
@@ -269,7 +269,7 @@
 	NSDictionary*appDict;
 	
 	enumerator = [apps objectEnumerator];
-	while(appDict = [enumerator nextObject]){
+	while((appDict = [enumerator nextObject])){
 		if([[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Adium"].location != NSNotFound &&
 		   [[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Importer"].location == NSNotFound){
 			//Alert
@@ -536,7 +536,7 @@
     NSString *AdiumMsgTitle, *AdiumMsgContent;
     BOOL messageAlreadyExists;
         
-    while(iChatMsgContent = [iChatEnumerator nextObject])
+    while((iChatMsgContent = [iChatEnumerator nextObject]))
         {
             
             // Create a title for the message by truncating it
@@ -546,7 +546,7 @@
             AdiumEnumerator = [AdiumMessageArray objectEnumerator];
             messageAlreadyExists = NO;
             
-            while(AdiumMessage = [AdiumEnumerator nextObject])
+            while((AdiumMessage = [AdiumEnumerator nextObject]))
             {
                 AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
                 AdiumMsgContent = [AdiumMessage objectForKey:@"Message"];
@@ -638,7 +638,7 @@
     //Get us an array of all the keys in the dictionary
         
     NSEnumerator *proteusEnumerator = [proteusMessageArray objectEnumerator];
-    while(proteusMessage = [proteusEnumerator nextObject])
+    while((proteusMessage = [proteusEnumerator nextObject]))
     {
         
         proteusMsgTitle = [proteusMessage objectForKey:@"Name"];
@@ -654,7 +654,7 @@
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
         messageAlreadyExists = NO;
         
-        while(AdiumMessage = [AdiumEnumerator nextObject])
+        while((AdiumMessage = [AdiumEnumerator nextObject]))
         {
             // If either the title or the content matches, we assume it's already been imported...
             AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
@@ -741,7 +741,7 @@
     NSArray *fireKeyArray = [[[NSArray alloc] initWithArray:[fireMessageDict allKeys]] autorelease];
               
     NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
-    while(fireMsgTitle = [fireEnumerator nextObject])
+    while((fireMsgTitle = [fireEnumerator nextObject]))
     {
         fireMessage = [fireMessageDict objectForKey:fireMsgTitle];
         
@@ -753,7 +753,7 @@
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
         messageAlreadyExists = NO;
         
-        while(AdiumMessage = [AdiumEnumerator nextObject])
+        while((AdiumMessage = [AdiumEnumerator nextObject]))
         {
             // If either the title or the content matches, we assume it's already been imported...
             AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];

@@ -184,12 +184,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB;
-					ProjectRef = 3496A8E707CE6CA30055BBAB;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
 			);
 			targets = (
@@ -8574,15 +8574,17 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks Frameworks";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Adium_1_6_Pref_Importer.plist;
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Adium 1.6 Pref Importer";
+				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = app;
 			};
 			dependencies = (
+				DA021DDD0802FA1200D5EBAE,
 			);
 			isa = PBXNativeTarget;
 			name = "Adium 1.6 Pref Importer";
@@ -22997,6 +22999,28 @@
 //D32
 //D33
 //D34
+//DA0
+//DA1
+//DA2
+//DA3
+//DA4
+		DA021DDC0802FA1200D5EBAE = {
+			containerPortal = 3448717006D1E57700DA778C;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		DA021DDD0802FA1200D5EBAE = {
+			isa = PBXTargetDependency;
+			name = "AIUtilities (from AIUtilities.framework.xcode)";
+			targetProxy = DA021DDC0802FA1200D5EBAE;
+		};
+//DA0
+//DA1
+//DA2
+//DA3
+//DA4
 //F10
 //F11
 //F12
