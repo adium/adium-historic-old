@@ -249,6 +249,7 @@
 	
 	//Now look through the results of searching with searchElement for the right ABPerson
 	compactedName = [name compactedString];
+		
 	enumerator = [[[ABAddressBook sharedAddressBook] recordsMatchingSearchElement:searchElement] objectEnumerator];
 	while(resultPerson = [enumerator nextObject]){
 		//A person may have multiple names; iterate through them
@@ -256,7 +257,6 @@
 		int				nameCount = [names count];
 		int				i;
 		for (i=0 ; i<nameCount ; i++){
-			
 			if ([[[names valueAtIndex:i] compactedString] isEqualToString:compactedName]){
 				person = resultPerson;
 				i = nameCount;

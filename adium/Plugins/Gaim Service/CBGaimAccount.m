@@ -22,10 +22,10 @@
 @interface CBGaimAccount (PRIVATE)
 - (void)connect;
 - (void)disconnect;
-- (void)signonTimerExpired:(NSTimer*)timer;
 
 - (void)setBuddyImageFromFilename:(char *)imageFilename;
 - (NSString *)_userIconCachePath;
+- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable;
 
 - (NSString *)_mapIncomingGroupName:(NSString *)name;
 - (NSString *)_mapOutgoingGroupName:(NSString *)name;
@@ -66,27 +66,8 @@
 // Subclasses must override this
 - (const char*)protocolPlugin { return NULL; }
 
-//
-- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
-{
-	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
-	if(chat){
-		//Enable/disable the chat
-		[[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
-		
-		//Notify
-		[[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
-												  object:chat 
-												userInfo:[NSDictionary dictionaryWithObject:
-												[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
-	}
-}
-
-
-/************************/
-/* accountBlist methods */
-/************************/
-#pragma mark GaimBuddies
+// Buddies and Contacts ------------------------------------------------------------------------------------------------
+#pragma mark Buddies and Contacts
 - (void)accountNewBuddy:(GaimBuddy*)buddy
 {
 //	if(GAIM_DEBUG) NSLog(@"new: %s",buddy->name);
@@ -95,7 +76,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy
 {	
-	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s",buddy->name);
     
     AIListContact           *theContact;
 	
@@ -152,7 +133,7 @@
 
 - (void)accountUpdateBuddy:(GaimBuddy*)buddy forEvent:(GaimBuddyEvent)event
 {
-	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
+//	if(GAIM_DEBUG) NSLog(@"accountUpdateBuddy: %s forEvent: %i",buddy->name,event);
     
     AIListContact           *theContact;
 	
@@ -162,11 +143,9 @@
 	//Create the contact if necessary
     if(!theContact) theContact = [self contactAssociatedWithBuddy:buddy];
 	
-	switch(event)
-	{
+	switch(event){
 		//Online / Offline
-		case GAIM_BUDDY_SIGNON:
-		{
+		case GAIM_BUDDY_SIGNON: {
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 				[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
@@ -208,8 +187,7 @@
 				 */
 			}
 		}   break;
-		case GAIM_BUDDY_SIGNOFF:
-		{
+		case GAIM_BUDDY_SIGNOFF: {
 			NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 			if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != NO)){
 				[theContact setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:NO];
@@ -222,8 +200,7 @@
 				}
 			}
 		}   break;
-		case GAIM_BUDDY_SIGNON_TIME:
-		{
+		case GAIM_BUDDY_SIGNON_TIME: {
 			if (buddy->signon != 0) {
 				//Set the signon time
 				[theContact setStatusObject:[NSDate dateWithTimeIntervalSince1970:(NSTimeInterval)buddy->signon]
@@ -234,8 +211,7 @@
 			
 			//Away status
 		case GAIM_BUDDY_AWAY:
-		case GAIM_BUDDY_AWAY_RETURN:
-		{
+		case GAIM_BUDDY_AWAY_RETURN: {
 			BOOL newAway = (event == GAIM_BUDDY_AWAY);
 			NSNumber *storedValue = [theContact statusObjectForKey:@"Away"];
 			if((!newAway && (storedValue == nil)) || newAway != [storedValue boolValue]) {
@@ -245,8 +221,7 @@
 			
 		//Idletime
 		case GAIM_BUDDY_IDLE:
-		case GAIM_BUDDY_IDLE_RETURN:
-		{
+		case GAIM_BUDDY_IDLE_RETURN: {
 			NSDate *idleDate = [theContact statusObjectForKey:@"IdleSince"];
 			int currentIdle = buddy->idle;
 			if(currentIdle != (int)([idleDate timeIntervalSince1970])){
@@ -259,8 +234,7 @@
 			}
 		}   break;
 			
-		case GAIM_BUDDY_EVIL:
-		{
+		case GAIM_BUDDY_EVIL: {
 			//Set the warning level or clear it if it's now 0.
 			int evil = buddy->evil;
 			NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning"];
@@ -280,8 +254,7 @@
 		}   break;
 			
 		//Buddy Icon
-		case GAIM_BUDDY_ICON:
-		{
+		case GAIM_BUDDY_ICON: {
 			GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
 			if(buddyIcon && (buddyIcon != [[theContact statusObjectForKey:@"BuddyImagePointer"] pointerValue])) {                            
 				//save this for convenience
@@ -332,10 +305,200 @@
 	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_MISCELLANEOUS];	
 }
 
+- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
+{
+	return ([self _contactAssociatedWithBuddy:buddy
+									 usingUID:[NSString stringWithUTF8String:(buddy->name)]]);
+}	
 
-/***********************/
-/* accountConv methods */
-/***********************/
+- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID
+{
+	NSAssert(buddy != nil,@"contactAssociatedWithBuddy: passed a nil buddy");
+	
+	AIListContact	*contact = nil;
+	
+	//If a name was available for the GaimBuddy, create a contact
+	if (contactUID){
+		//Get our contact
+		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:[contactUID compactedString]];
+		
+		//Evan: temporary asserts
+		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
+		NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
+		NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
+		
+		//Associate the handle with ui_data and the buddy with our statusDictionary
+		buddy->node.ui_data = [contact retain];
+		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
+	}
+	
+	return(contact);
+}
+
+//To allow root level buddies on protocols which don't support them, we map any buddies in a group
+//named after this account's UID to the root group.  These functions handle the mapping.  Group names should
+//be filtered through incoming before being sent to Adium - and group names from Adium should be filtered through
+//outgoing before being used.
+- (NSString *)_mapIncomingGroupName:(NSString *)name
+{
+	if(!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)){
+		return(ADIUM_ROOT_GROUP_NAME);
+	}else{
+		return(name);
+	}
+}
+- (NSString *)_mapOutgoingGroupName:(NSString *)name
+{
+	if([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0){
+		return([self UID]);
+	}else{
+		return(name);
+	}
+}
+
+//Update the status of a contact (Request their profile)
+- (void)delayedUpdateContactStatus:(AIListContact *)inContact
+{	
+    //Request profile
+    if(gc && 
+	   gaim_account_is_connected(account)/* && 
+	   ([[inContact statusObjectForKey:@"Online"] boolValue])*/){
+		serv_get_info(gc, [[inContact UID] UTF8String]);
+    }
+}
+
+/*********************/
+/* AIAccount_Handles */
+/*********************/
+#pragma mark Contact List Editing
+
+- (void)removeContacts:(NSArray *)objects
+{
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListContact	*object;
+	
+	while(object = [enumerator nextObject]){
+		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
+		GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+		
+		//Remove this contact from the server-side and gaim-side lists
+		serv_remove_buddy(gc, [[object UID] UTF8String], [groupName UTF8String]);
+		if (buddy)
+			gaim_blist_remove_buddy(buddy);
+		
+		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
+		
+		//Remove it from Adium's list
+		[object setRemoteGroupName:nil];
+	}
+}
+
+- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
+{
+	NSEnumerator	*enumerator = [objects objectEnumerator];
+	AIListContact	*object;
+	
+	while(object = [enumerator nextObject]){
+		NSString	*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
+		
+		//Get the group (Create if necessary)
+		GaimGroup *group = gaim_find_group([groupName UTF8String]);
+		if(group == NULL){
+			group = gaim_group_new([[inGroup UID] UTF8String]);
+			gaim_blist_add_group(group, NULL);
+		}
+		
+     	//verify the buddy does not already exist, and create it
+		GaimBuddy *buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
+		if(buddy == NULL){
+			buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
+		}
+		
+		//Add the buddy locally to libgaim, and then to the serverside list
+		gaim_blist_add_buddy(buddy, NULL, group, NULL);
+		serv_add_buddy(gc, [[object UID] UTF8String], group);
+		
+		//Add it to Adium's list
+		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
+	}
+}
+
+- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
+{
+	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
+	NSEnumerator	*enumerator;
+	AIListContact	*listObject;
+	
+	//Get the destionation group (creating if necessary)
+	GaimGroup 	*destGroup = gaim_find_group([groupName UTF8String]);
+	if(!destGroup) destGroup = gaim_group_new([groupName UTF8String]);
+	
+	//Move the objects to it
+	enumerator = [objects objectEnumerator];
+	while(listObject = [enumerator nextObject]){
+		if([listObject isKindOfClass:[AIListGroup class]]){
+			//Since no protocol here supports nesting, a group move is really a re-name
+			
+		}else{
+			//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
+			
+			//			NSLog(@"Old %@ ; New %@",oldGroupName,[group UID]);
+			
+			//Get the gaim buddy and group for this move
+			GaimBuddy *buddy = gaim_find_buddy(account,[[listObject UID] UTF8String]);
+			GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
+			
+			//			NSLog(@"%i %i",(oldGroup!=NULL),(buddy!=NULL));
+			
+			if(buddy){
+				if (oldGroup) {
+					//Procede to move the buddy gaim-side and locally
+					serv_move_buddy(buddy, oldGroup, destGroup);
+				} else {
+					//The buddy was not in any group before; add the buddy to the desired group
+					serv_add_buddy(gc, buddy->name, destGroup);
+				}
+				
+				[listObject setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
+			}
+		}		
+	}
+}
+
+- (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
+{
+    GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
+	
+	//If we don't have a group with this name, just ignore the rename request
+    if(group){
+		//Rename gaimside
+		gaim_blist_rename_group(group, [newName UTF8String]);
+		
+		/*
+		 //These may be necessary:
+		 serv_rename_group(gc, group, [newName UTF8String]);     //rename
+		 gaim_blist_remove_group(group);                         //remove the old one gaimside
+		 */
+		
+		//We must also update the remote grouping of all our contacts in that group
+		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup onAccount:self] objectEnumerator];
+		AIListContact	*contact;
+		
+		while(contact = [enumerator nextObject]){
+			[contact setRemoteGroupName:newName];
+		}
+	}
+}
+
+// Return YES if the contact list is editable
+- (BOOL)contactListEditable
+{
+    return([[self statusObjectForKey:@"Online"] boolValue]);
+}
+
+// GaimConversations ---------------------------------------------------------------------------------------------------
 #pragma mark GaimConversations
 - (void)accountConvDestroy:(GaimConversation*)conv
 {
@@ -348,6 +511,23 @@
 
 		[chat release]; conv->ui_data = nil;
     }
+}
+
+- (void)addChatConversation:(GaimConversation*)conv
+{
+	AIChat *chat = (AIChat*) conv->ui_data;
+	
+	//We expect !chat
+	if (!chat){
+		chat = [[adium contentController] chatWithName:[NSString stringWithUTF8String:conv->name]
+											 onAccount:self
+										 initialStatus:[NSDictionary dictionaryWithObject:[NSValue valueWithPointer:conv]
+																				   forKey:@"GaimConv"]];
+		conv->ui_data = [chat retain];
+	}
+	
+	//Open the chat
+	[[adium interfaceController] openChat:chat];
 }
 
 - (void)accountConvUpdated:(GaimConversation*)conv type:(GaimConvUpdateType)type
@@ -464,7 +644,6 @@
 		 
 		 Evan: It's the best we have to work with if conv->ui_data is nil.
 		 */
-#warning This assertion is firing almost randomly
 		
 		// Need to start a new chat, associating with the gaim conv
 		chat = [[adium contentController] chatWithContact:sourceContact
@@ -490,11 +669,7 @@
 	AIChat					*chat;
 	AIListContact			*sourceContact;
 	GaimConversationType	convType;
-	
-	if (GAIM_DEBUG) {
-		NSLog(@"Chat: Received %s from %s in %s",message,source,conv->name);
-	}
-	
+		
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
 		/*
 		 * TODO
@@ -503,6 +678,10 @@
 		 * notification.
 		 */
 		return;
+	}
+	
+	if (GAIM_DEBUG) {
+		NSLog(@"Chat: Received %s from %s in %s",message,source,conv->name);
 	}
 	
 	chat = (AIChat*) conv->ui_data;
@@ -545,64 +724,27 @@
 	[[adium contentController] addIncomingContentObject:messageObject];
 }
 
-- (NSString *)_processGaimImagesInString:(NSString *)inString
+- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
 {
-	NSScanner			*scanner;
-    NSString			*chunkString = nil;
-    NSMutableString		*newString;
-
-    int imageID;
-
-    //set up
-	newString = [[NSMutableString alloc] init];
-	
-    scanner = [NSScanner scannerWithString:inString];
-    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
-
-	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
-    
-	//Parse the incoming HTML
-    while(![scanner isAtEnd]){
-		
-		//Find the beginning of a gaim IMG ID tag
-		if ([scanner scanUpToString:@"<IMG ID=\"" intoString:&chunkString]) {
-			[newString appendString:chunkString];
-		}
-		
-		if ([scanner scanString:@"<IMG ID=\"" intoString:nil]) {
-
-			//Get the image ID from the tag
-			[scanner scanInt:&imageID];
-			
-			//Scan up to ">
-			[scanner scanString:@"\">" intoString:nil];
-			
-			//Get the image, then write it out as a png
-			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
-			NSString			*imagePath = [self _messageImageCachePathForID:imageID];
-
-			//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
-			//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
-			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
-																					  length:gaimImage->size]];
-			NSData				*imageTIFFData = [image TIFFRepresentation];
-			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
-            
-			//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
-            if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
-				[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
-			}
-			
-			[image release];
-		}
-	}
-	
-	return ([newString autorelease]);
+	return ([self _contactAssociatedWithBuddy:buddy 
+									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
 }
 
 #pragma mark GaimConversation User Lists
 - (void)accountConvAddedUser:(const char *)user inConversation:(GaimConversation *)conv
 {
+	AIChat			*chat;
+	AIListContact   *contact;
+	
+	chat = (AIChat *)conv->ui_data;
+	if (chat){
+		NSString	*contactName = [NSString stringWithUTF8String:user];
+		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:[contactName compactedString]];
+		[contact setStatusObject:contactName forKey:KEY_FORMATTED_UID notify:YES];
+		[chat addParticipatingListObject:contact];
+	}
 	NSLog(@"added user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
@@ -611,64 +753,138 @@
 }
 - (void)accountConvRemovedUser:(const char *)user inConversation:(GaimConversation *)conv
 {
-	NSLog(@"removed user %s in conversation %s (%@)",user,conv->name,conv->ui_data);	
+	AIChat			*chat;
+	AIListContact   *contact;
+	
+	chat = (AIChat *)conv->ui_data;
+	if (chat){
+		NSString	*contactName = [NSString stringWithUTF8String:user];
+		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+													  accountID:[self uniqueObjectID]
+															UID:[contactName compactedString]];
+		[chat removeParticipatingListObject:contact];
+	}
+	NSLog(@"removed user %s in conversation %s (%@)",user,conv->name,conv->ui_data);
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
 	NSLog(@"removed a whole list!");
 }
 
-
-/********************************/
-/* AIAccount subclassed methods */
-/********************************/
-#pragma mark AIAccount Subclassed Methods
-- (void)initAccount
-{
-    chatDict = [[NSMutableDictionary alloc] init];
-    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
-	lastDisconnectionError = nil;
-
-	permittedContactsArray = [[NSMutableArray alloc] init];
-	deniedContactsArray = [[NSMutableArray alloc] init];
+#pragma mark Chats
+//Open a chat for Adium
+- (BOOL)openChat:(AIChat *)chat
+{	
+	//Correctly enable/disable the chat
+#warning All opened chats assumed valid until a better system for doing this reliably is figured out.
+	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 	
-	//We will create a gaimAccount the first time we attempt to connect
-	account = NULL;
-	//gc will be set once we are connecting
-    gc = NULL;
-    
-    //ensure our user icon cache path exists
-    [AIFileUtilities createDirectory:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
+	//This is potentially problematic
+	AIListObject *listObject = [chat listObject];
 	
-	insideDealloc = NO;
-}
-
-- (void)dealloc
-{
-	//Protections are needed since removeAccount will remove us from the service account dict which will release us
-	//which will call dealloc which will... and halcyon and on and on.
-	[self retain];
-	if (!insideDealloc) {
-		insideDealloc = YES;
-		[(CBGaimServicePlugin *)service removeAccount:account];
+	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
+	if (listObject) {
+		//Associate our chat with the libgaim conversation
+		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+			
+			//Evan: Temporary asserts
+			NSAssert (listObject != nil, @"openChat: listObject was nil");
+			NSAssert ([listObject UID] != nil, @"openChat: [listObject UID] was nil");
+			NSAssert ([[listObject UID] UTF8String] != nil, @"openChat: [[listObject UID] UTF8String] was nil");
+			
+			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, [self gaimAccount], [[listObject UID] UTF8String]);
+			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
+			
+			conv->ui_data = [chat retain];
+			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+		}
+		
+		//Track
+		[chatDict setObject:chat forKey:[listObject uniqueObjectID]];
+	}else{
+		//If we opened a chat (rather than having it opened for us via accepting an invitation), we need to create
+		//the gaim structures for that chat
+		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
+			
+			const char *name = [[chat name] UTF8String];
+			
+			//Look for an existing gaimChat (for now, it had better exist already!)
+			GaimChat *gaimChat = gaim_blist_find_chat ([self gaimAccount], name);
+			if (!gaimChat){
+				NSLog(@"gotta create a chat");
+				GHashTable *components;
+				GList *tmp;
+				GaimGroup *group;
+				const char *group_name = _("Chats");
+				
+				
+				//The below is not even close to right.
+				components = g_hash_table_new_full(g_str_hash, g_str_equal,
+												   g_free, g_free);
+				
+				/*
+				 g_hash_table_replace(components,
+									  g_strdup(g_object_get_data(tmp->data, "identifier")),
+									  g_strdup_printf("%d",
+													  gtk_spin_button_get_value_as_int(tmp->data)));
+				 */
+				
+				gaimChat = gaim_chat_new(account,
+										 name,
+										 components);
+				
+				if ((group = gaim_find_group(group_name)) == NULL)
+				{
+					group = gaim_group_new(group_name);
+					gaim_blist_add_group(group, NULL);
+				}
+				
+				if (gaimChat != NULL)
+				{
+					gaim_blist_add_chat(gaimChat, group, NULL);
+					gaim_blist_save();
+				}
+				
+				//Associate our chat with the libgaim conversation
+				NSLog(@"associating the gaimconv");
+				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
+				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
+				
+				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
+				conv->ui_data = [chat retain];
+			}
+		}
+		//Track
+		[chatDict setObject:chat forKey:[chat name]];
 	}
-    [self autorelease];
 	
-    [chatDict release];
-    [filesToSendArray release];
-
-    [super dealloc];
+	//Created the chat successfully
+	return(YES);
 }
 
-- (NSString *)accountDescription {
-    return [self uniqueObjectID];
+- (BOOL)closeChat:(AIChat*)chat
+{
+    GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
+    if (conv){
+        gaim_conversation_destroy(conv);
+	}
+	
+    [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
+	
+#warning Wrong. perhaps use a chat identifier of sorts
+	AIListObject	*listObject = [chat listObject];
+	if (listObject){
+		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
+		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
+	}else{
+		NSString	*name = [chat name];
+		if (name){
+			[chatDict removeObjectForKey:[chat name]];
+		}
+	}
+	
+    return YES;
 }
-
-- (NSString *)unknownGroupName {
-    return (@"Unknown");
-}
-
-- (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
 
 
 /*********************/
@@ -756,478 +972,6 @@
 	
     return(NO);
 }
-
-//Open a chat for Adium
-- (BOOL)openChat:(AIChat *)chat
-{	
-	//Correctly enable/disable the chat
-#warning All opened chats assumed valid until a better system for doing this reliably is figured out.
-	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
-	
-	//This is potentially problematic
-	AIListObject *listObject = [chat listObject];
-	
-	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
-	if (listObject) {
-		//Associate our chat with the libgaim conversation
-		if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-			
-			//Evan: Temporary asserts
-			NSAssert (listObject != nil, @"openChat: listObject was nil");
-			NSAssert ([listObject UID] != nil, @"openChat: [listObject UID] was nil");
-			NSAssert ([[listObject UID] UTF8String] != nil, @"openChat: [[listObject UID] UTF8String] was nil");
-			
-			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, [self gaimAccount], [[listObject UID] UTF8String]);
-			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
-			
-			conv->ui_data = [chat retain];
-			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-		}
-		
-		//Track
-		[chatDict setObject:chat forKey:[listObject uniqueObjectID]];
-	}else{
-		const char *name = [[chat name] UTF8String];
-		
-		//Look for an existing gaimChat (for now, it had better exist already!)
-		GaimChat *gaimChat = gaim_blist_find_chat ([self gaimAccount], name);
-		if (!gaimChat){
-			NSLog(@"gotta create a chat");
-			GHashTable *components;
-			GList *tmp;
-			GaimGroup *group;
-			const char *group_name = _("Chats");
-			
-			
-			//The below is not even close to right.
-			components = g_hash_table_new_full(g_str_hash, g_str_equal,
-											   g_free, g_free);
-			
-			/*
-			g_hash_table_replace(components,
-								 g_strdup(g_object_get_data(tmp->data, "identifier")),
-								 g_strdup_printf("%d",
-												 gtk_spin_button_get_value_as_int(tmp->data)));
-			*/
-			
-			gaimChat = gaim_chat_new(account,
-								 name,
-								 components);
-			
-			if ((group = gaim_find_group(group_name)) == NULL)
-			{
-				group = gaim_group_new(group_name);
-				gaim_blist_add_group(group, NULL);
-			}
-			
-			if (gaimChat != NULL)
-			{
-				gaim_blist_add_chat(gaimChat, group, NULL);
-				gaim_blist_save();
-			}
-			//Associate our chat with the libgaim conversation
-			if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-				GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_CHAT, account, name);
-				NSAssert(conv != nil, @"openChat: GAIM_CONV_CHAT: gaim_conversation_new returned nil");
-				
-				[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-				conv->ui_data = [chat retain];
-			}
-		}
-	}
-	return(YES);
-}
-
-- (BOOL)closeChat:(AIChat*)chat
-{
-    GaimConversation *conv = (GaimConversation*) [[[chat statusDictionary] objectForKey:@"GaimConv"] pointerValue];
-    if (conv){
-        gaim_conversation_destroy(conv);
-	}
-	
-    [[chat statusDictionary] removeObjectForKey:@"GaimConv"];
-	
-#warning Wrong. perhaps use a chat identifier of sorts
-	AIListObject	*listObject = [chat listObject];
-	if (listObject){
-		NSAssert([listObject uniqueObjectID] != nil,@"closeChat: [listObject uniqueObjectID] was nil");
-		[chatDict removeObjectForKey:[listObject uniqueObjectID]];
-	}else{
-		NSString	*name = [chat name];
-		if (name){
-			[chatDict removeObjectForKey:[chat name]];
-		}
-	}
-	
-    return YES;
-}
-
-
-/*********************/
-/* AIAccount_Handles */
-/*********************/
-#pragma mark Contacts
-//To allow root level buddies on protocols which don't support them, we map any buddies in a group
-//named after this account's UID to the root group.  These functions handle the mapping.  Group names should
-//be filtered through incoming before being sent to Adium - and group names from Adium should be filtered through
-//outgoing before being used.
-- (NSString *)_mapIncomingGroupName:(NSString *)name
-{
-	if(!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)){
-		return(ADIUM_ROOT_GROUP_NAME);
-	}else{
-		return(name);
-	}
-}
-- (NSString *)_mapOutgoingGroupName:(NSString *)name
-{
-	if([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0){
-		return([self UID]);
-	}else{
-		return(name);
-	}
-}
-
-//Update the status of a contact (Request their profile)
-- (void)delayedUpdateContactStatus:(AIListContact *)inContact
-{	
-    //Request profile
-    if(gc && 
-	   gaim_account_is_connected(account)/* && 
-	   ([[inContact statusObjectForKey:@"Online"] boolValue])*/){
-		serv_get_info(gc, [[inContact UID] UTF8String]);
-    }
-}
-
-- (void)removeContacts:(NSArray *)objects
-{
-	NSEnumerator	*enumerator = [objects objectEnumerator];
-	AIListContact	*object;
-	
-	while(object = [enumerator nextObject]){
-		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
-		GaimBuddy 	*buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
-		
-		//Remove this contact from the server-side and gaim-side lists
-		serv_remove_buddy(gc, [[object UID] UTF8String], [groupName UTF8String]);
-		if (buddy)
-			gaim_blist_remove_buddy(buddy);
-
-		[object setStatusObject:nil forKey:@"GaimBuddy" notify:NO];
-			
-		//Remove it from Adium's list
-		[object setRemoteGroupName:nil];
-	}
-}
-
-- (void)addContacts:(NSArray *)objects toGroup:(AIListGroup *)inGroup
-{
-	NSEnumerator	*enumerator = [objects objectEnumerator];
-	AIListContact	*object;
-	
-	while(object = [enumerator nextObject]){
-		NSString	*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
-
-		//Get the group (Create if necessary)
-		GaimGroup *group = gaim_find_group([groupName UTF8String]);
-		if(group == NULL){
-			group = gaim_group_new([[inGroup UID] UTF8String]);
-			gaim_blist_add_group(group, NULL);
-		}
-		
-     	//verify the buddy does not already exist, and create it
-		GaimBuddy *buddy = gaim_find_buddy(account,[[object UID] UTF8String]);
-		if(buddy == NULL){
-			buddy = gaim_buddy_new(account, [[object UID] UTF8String], NULL);
-		}
-		
-		//Add the buddy locally to libgaim, and then to the serverside list
-		gaim_blist_add_buddy(buddy, NULL, group, NULL);
-		serv_add_buddy(gc, [[object UID] UTF8String], group);
-		
-		//Add it to Adium's list
-		[object setRemoteGroupName:[inGroup UID]]; //Use the non-mapped group name locally
-	}
-}
-
-- (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
-{
-	NSString		*groupName = [self _mapOutgoingGroupName:[group UID]];
-	NSEnumerator	*enumerator;
-	AIListContact	*listObject;
-	
-	//Get the destionation group (creating if necessary)
-	GaimGroup 	*destGroup = gaim_find_group([groupName UTF8String]);
-	if(!destGroup) destGroup = gaim_group_new([groupName UTF8String]);
-	
-	//Move the objects to it
-	enumerator = [objects objectEnumerator];
-	while(listObject = [enumerator nextObject]){
-		if([listObject isKindOfClass:[AIListGroup class]]){
-			//Since no protocol here supports nesting, a group move is really a re-name
-			
-		}else{
-//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
-			
-//			NSLog(@"Old %@ ; New %@",oldGroupName,[group UID]);
-			
-			//Get the gaim buddy and group for this move
-			GaimBuddy *buddy = gaim_find_buddy(account,[[listObject UID] UTF8String]);
-			GaimGroup *oldGroup = gaim_find_buddys_group(buddy);
-			
-//			NSLog(@"%i %i",(oldGroup!=NULL),(buddy!=NULL));
-			
-			if(buddy){
-				if (oldGroup) {
-					//Procede to move the buddy gaim-side and locally
-					serv_move_buddy(buddy, oldGroup, destGroup);
-				} else {
-					//The buddy was not in any group before; add the buddy to the desired group
-					serv_add_buddy(gc, buddy->name, destGroup);
-				}
-				
-				[listObject setRemoteGroupName:[group UID]]; //Use the non-mapped group name locally
-			}
-		}		
-	}
-}
-
-- (void)renameGroup:(AIListGroup *)inGroup to:(NSString *)newName
-{
-    GaimGroup *group = gaim_find_group([[self _mapOutgoingGroupName:[inGroup UID]] UTF8String]);
-
-	//If we don't have a group with this name, just ignore the rename request
-    if(group){
-		//Rename gaimside
-		gaim_blist_rename_group(group, [newName UTF8String]);
-		
-		/*
-		 //These may be necessary:
-		 serv_rename_group(gc, group, [newName UTF8String]);     //rename
-		 gaim_blist_remove_group(group);                         //remove the old one gaimside
-		 */
-		
-		//We must also update the remote grouping of all our contacts in that group
-		NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup onAccount:self] objectEnumerator];
-		AIListContact	*contact;
-		
-		while(contact = [enumerator nextObject]){
-			[contact setRemoteGroupName:newName];
-		}
-	}
-}
-
-//- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
-//{
-//    AIHandle	*handle;
-//    if(handle = [handleDict objectForKey:inUID]){
-//        GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
-//        GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
-//        if (newGroup == NULL) {                                                        //if the group doesn't exist yet
-//                                                                                                                                                                
-//            //           NSLog(@"Creating a new group");
-//            newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
-//        }
-//        
-//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-//        if (buddy != NULL) {
-//            serv_move_buddy(buddy,oldGroup,newGroup);
-//        } else {
-//            return NO;
-//        }
-//    }
-//    return NO;
-//}
-	
-
-
-// Return YES if the contact list is editable
-- (BOOL)contactListEditable
-{
-    return([[self statusObjectForKey:@"Online"] boolValue]);
-}
-
-
-//{
-//    AIHandle	*handle;
-//    if(handle = [handleDict objectForKey:inUID]){
-//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-//        
-//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
-//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
-//        
-//        return YES;
-//    } else 
-//        return NO;
-//}
-	
-//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
-//    
-//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-//    gaim_blist_remove_group(group);                         //remove it gaimside
-//															
-//        NSLog(@"remove group %@",inGroup);
-//    return YES;
-
-// Returns a dictionary of AIHandles available on this account
-//- (NSDictionary *)availableHandles //return nil if no contacts/list available
-//{
-//    if([[self statusObjectForKey:@"Online"] boolValue] || [[self statusObjectForKey:@"Connecting"] boolValue]){
-//        return(handleDict);
-//    }else{
-//        return(nil);
-//    }
-//}
-	
-//// Returns YES if the list is editable
-//- (BOOL)contactListEditable
-//{
-//    return YES;
-//}
-//
-//// Add a handle to this account
-//- (AIHandle *)addHandleWithUID:(NSString *)inUID serverGroup:(NSString *)inGroup temporary:(BOOL)inTemporary
-//{
-//    AIHandle	*handle;
-//    
-//    if(inTemporary) inGroup = @"__Strangers";    
-//    if(!inGroup) inGroup = @"Unknown";
-//    
-//    //Check to see if the handle already exists, and remove the duplicate if it does
-//    if(handle = [handleDict objectForKey:inUID]){
-//        [self removeHandleWithUID:inUID]; //Remove the handle
-//    }
-//    
-//    //Create the handle
-//    handle = [AIHandle handleWithServiceID:[[[self service] handleServiceType] identifier] 
-//                                       UID:inUID 
-//                               serverGroup:inGroup 
-//                                 temporary:inTemporary 
-//                                forAccount:self];
-//    NSString    *handleUID = [handle UID];
-//    NSString    *handleServerGroup = [handle serverGroup];
-//    
-//    //Add the handle
-//	[handleDict setObject:handle forKey:[handle UID]];                  //Add it locally
-//	
-//    GaimGroup *group = gaim_find_group([handleServerGroup UTF8String]); //get the GaimGroup
-//    if (group == NULL) {                                                //if the group doesn't exist yet
-//        group = gaim_group_new([handleServerGroup UTF8String]);         //create the GaimGroup
-//        gaim_blist_add_group(group, NULL);                              //add it gaimside (server will add as needed)
-//    }
-//    
-//    GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);     //verify the buddy does not already exist
-//    if (buddy == NULL) {                                                //should always be null
-//        buddy = gaim_buddy_new(account, [handleUID UTF8String], NULL);  //create a GaimBuddy
-//    }
-//	
-//    gaim_blist_add_buddy(buddy, NULL, group, NULL);                     //add the buddy to the gaimside list
-//    serv_add_buddy(gc,[handleUID UTF8String],group);                    //and add the buddy serverside
-//	
-//    //From TOC2
-//    //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
-//    
-//    //Update the contact list
-//    [[adium contactController] handle:handle addedToAccount:self];
-//	
-//    return(handle);
-//}
-//
-//// Remove a handle from this account
-//- (BOOL)removeHandleWithUID:(NSString *)inUID
-//{
-//    AIHandle	*handle;
-//    if(handle = [handleDict objectForKey:inUID]){
-//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-//        
-//        serv_remove_buddy(gc,[inUID UTF8String],[[handle serverGroup] UTF8String]); //remove it from the list serverside
-//        gaim_blist_remove_buddy(buddy);                                             //remove it gaimside
-//        
-//        return YES;
-//    } else 
-//        return NO;
-//}
-//
-//// Add a group to this account
-//- (BOOL)addServerGroup:(NSString *)inGroup
-//{
-//    GaimGroup *group = gaim_group_new([inGroup UTF8String]);    //create the GaimGroup
-//    gaim_blist_add_group(group,NULL);                           //add it gaimside (server will make it as needed)
-//                                                                
-//    //    NSLog(@"added group %@",inGroup);
-//    return NO;
-//}
-//// Remove a group
-//- (BOOL)removeServerGroup:(NSString *)inGroup
-//{
-//    serv_remove_group(gc,[inGroup UTF8String]);             //remove it from the list serverside
-//    
-//    GaimGroup *group = gaim_find_group([inGroup UTF8String]);   //get the GaimGroup
-//    gaim_blist_remove_group(group);                         //remove it gaimside
-//															
-//        NSLog(@"remove group %@",inGroup);
-//    return YES;
-//}
-//
-//- (BOOL)moveHandleWithUID:(NSString *)inUID toGroup:(NSString *)inGroup
-//{
-//    AIHandle	*handle;
-//    if(handle = [handleDict objectForKey:inUID]){
-//        GaimGroup *oldGroup = gaim_find_group([[handle serverGroup] UTF8String]);   //get the GaimGroup        
-//        GaimGroup *newGroup = gaim_find_group([inGroup UTF8String]);                //get the GaimGroup
-//        if (newGroup == NULL) {                                                        //if the group doesn't exist yet
-//                                                                                                                                                                
-//            //           NSLog(@"Creating a new group");
-//            newGroup = gaim_group_new([inGroup UTF8String]);                           //create the GaimGroup
-//        }
-//        
-//        GaimBuddy *buddy = gaim_find_buddy(account,[inUID UTF8String]);
-//        if (buddy != NULL) {
-//            serv_move_buddy(buddy,oldGroup,newGroup);
-//        } else {
-//            return NO;
-//        }
-//    }
-//    return NO;
-//}
-- (AIListContact *)contactAssociatedWithBuddy:(GaimBuddy *)buddy
-{
-	return ([self _contactAssociatedWithBuddy:buddy
-									 usingUID:[NSString stringWithUTF8String:(buddy->name)]]);
-}	
-
-- (AIListContact *)contactAssociatedWithConversation:(GaimConversation *)conv withBuddy:(GaimBuddy *)buddy
-{
-	return ([self _contactAssociatedWithBuddy:buddy 
-									 usingUID:[NSString stringWithUTF8String:(conv->name)]]);
-}
-
-- (AIListContact *)_contactAssociatedWithBuddy:(GaimBuddy *)buddy usingUID:(NSString *)contactUID
-{
-	NSAssert(buddy != nil,@"contactAssociatedWithBuddy: passed a nil buddy");
-	
-	AIListContact	*contact = nil;
-	
-	//If a name was available for the GaimBuddy, create a contact
-	if (contactUID){
-		//Get our contact
-		contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
-													  accountID:[self uniqueObjectID]
-															UID:[contactUID compactedString]];
-		
-		//Evan: temporary asserts
-		NSAssert ([[service handleServiceType] identifier] != nil,@"contactAssociatedWithBuddy: [[service handleServiceType] identifier] was nil");
-		NSAssert ([contactUID compactedString] != nil,@"contactAssociatedWithBuddy: [contactUID compactedString] was nil");
-		NSAssert (contact != nil,@"contactAssociatedWithBuddy: contact was nil");
-		
-		//Associate the handle with ui_data and the buddy with our statusDictionary
-		buddy->node.ui_data = [contact retain];
-		[contact setStatusObject:[NSValue valueWithPointer:buddy] forKey:@"GaimBuddy" notify:NO];
-	}
-	
-	return(contact);
-}
-
 
 /*********************/
 /* AIAccount_Privacy */
@@ -1387,63 +1131,6 @@
 {
     gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
     [fileTransfer release];
-}
-
-/***************************/
-/* Account private methods */
-/***************************/
-#pragma mark Private
-// Removes all the possible status flags from the passed contact
-- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact
-{
-    NSArray			*keyArray = [self contactStatusFlags];
-	NSEnumerator	*enumerator = [keyArray objectEnumerator];
-	NSString		*key;
-	
-	while(key = [enumerator nextObject]){
-		[contact setStatusObject:nil forKey:key notify:NO];
-	}
-	[contact notifyOfChangedStatusSilently:YES];
-}
-
-- (NSArray *)contactStatusFlags
-{
-	static NSArray *contactStatusFlagsArray = nil;
-	
-	if (!contactStatusFlagsArray)
-		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",nil];
-	
-	return contactStatusFlagsArray;
-}
-
-- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
-{
-    BOOL currentValue = [[contact statusObjectForKey:@"Typing"] boolValue];
-	
-    if(typing != currentValue){
-		[contact setStatusObject:[NSNumber numberWithBool:typing]
-						  forKey:@"Typing"
-						  notify:YES];
-    }
-}
-
-
-- (void)displayError:(NSString *)errorDesc
-{
-    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[self serviceID]]
-                                    withDescription:errorDesc];
-}
-
-- (NSString *)_userIconCachePath
-{    
-    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
-    return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
-}
-
-- (NSString *)_messageImageCachePathForID:(int)imageID
-{
-    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self uniqueObjectID], imageID];
-    return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
@@ -1916,7 +1603,183 @@
 	[self setStatusObject:image forKey:@"UserIcon" notify:YES];
 }
 
+/********************************/
+/* AIAccount subclassed methods */
+/********************************/
+#pragma mark AIAccount Subclassed Methods
+- (void)initAccount
+{
+    chatDict = [[NSMutableDictionary alloc] init];
+    reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+	lastDisconnectionError = nil;
+	
+	permittedContactsArray = [[NSMutableArray alloc] init];
+	deniedContactsArray = [[NSMutableArray alloc] init];
+	
+	//We will create a gaimAccount the first time we attempt to connect
+	account = NULL;
+	//gc will be set once we are connecting
+    gc = NULL;
+    
+    //ensure our user icon cache path exists
+    [AIFileUtilities createDirectory:[ACCOUNT_IMAGE_CACHE_PATH stringByExpandingTildeInPath]];
+	
+	insideDealloc = NO;
+}
+
+- (void)dealloc
+{
+	//Protections are needed since removeAccount will remove us from the service account dict which will release us
+	//which will call dealloc which will... and halcyon and on and on.
+	[self retain];
+	if (!insideDealloc) {
+		insideDealloc = YES;
+		[(CBGaimServicePlugin *)service removeAccount:account];
+	}
+    [self autorelease];
+	
+    [chatDict release];
+    [filesToSendArray release];
+	
+    [super dealloc];
+}
+
+- (NSString *)accountDescription {
+    return [self uniqueObjectID];
+}
+
+- (NSString *)unknownGroupName {
+    return (@"Unknown");
+}
+
+- (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
+
+/***************************/
+/* Account private methods */
+/***************************/
+#pragma mark Private
+// Removes all the possible status flags from the passed contact
+- (void)removeAllStatusFlagsFromContact:(AIListContact *)contact
+{
+    NSArray			*keyArray = [self contactStatusFlags];
+	NSEnumerator	*enumerator = [keyArray objectEnumerator];
+	NSString		*key;
+	
+	while(key = [enumerator nextObject]){
+		[contact setStatusObject:nil forKey:key notify:NO];
+	}
+	[contact notifyOfChangedStatusSilently:YES];
+}
+
+- (NSArray *)contactStatusFlags
+{
+	static NSArray *contactStatusFlagsArray = nil;
+	
+	if (!contactStatusFlagsArray)
+		contactStatusFlagsArray = [[NSArray alloc] initWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",nil];
+	
+	return contactStatusFlagsArray;
+}
+
+- (void)setTypingFlagOfContact:(AIListContact *)contact to:(BOOL)typing
+{
+    BOOL currentValue = [[contact statusObjectForKey:@"Typing"] boolValue];
+	
+    if(typing != currentValue){
+		[contact setStatusObject:[NSNumber numberWithBool:typing]
+						  forKey:@"Typing"
+						  notify:YES];
+    }
+}
 
 
+//
+- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
+{
+	AIChat *chat = [chatDict objectForKey:[contact uniqueObjectID]];
+	if(chat){
+		//Enable/disable the chat
+		[[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
+		
+		//Notify
+		[[adium notificationCenter] postNotificationName:Content_ChatStatusChanged
+												  object:chat 
+												userInfo:[NSDictionary dictionaryWithObject:
+												[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];            
+	}
+}
+
+- (void)displayError:(NSString *)errorDesc
+{
+    [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ (%@) : Gaim error",[self UID],[self serviceID]]
+                                    withDescription:errorDesc];
+}
+
+- (NSString *)_processGaimImagesInString:(NSString *)inString
+{
+	NSScanner			*scanner;
+    NSString			*chunkString = nil;
+    NSMutableString		*newString;
+	
+    int imageID;
+	
+    //set up
+	newString = [[NSMutableString alloc] init];
+	
+    scanner = [NSScanner scannerWithString:inString];
+    [scanner setCharactersToBeSkipped:[NSCharacterSet characterSetWithCharactersInString:@""]];
+	
+	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)	 
+    
+	//Parse the incoming HTML
+    while(![scanner isAtEnd]){
+		
+		//Find the beginning of a gaim IMG ID tag
+		if ([scanner scanUpToString:@"<IMG ID=\"" intoString:&chunkString]) {
+			[newString appendString:chunkString];
+		}
+		
+		if ([scanner scanString:@"<IMG ID=\"" intoString:nil]) {
+			
+			//Get the image ID from the tag
+			[scanner scanInt:&imageID];
+			
+			//Scan up to ">
+			[scanner scanString:@"\">" intoString:nil];
+			
+			//Get the image, then write it out as a png
+			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
+			NSString			*imagePath = [self _messageImageCachePathForID:imageID];
+			
+			//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
+			//Exception: PNG writer requires compacted components (bits/component * components/pixel = bits/pixel)
+			NSImage				*image = [[NSImage alloc] initWithData:[NSData dataWithBytes:gaimImage->data 
+																					  length:gaimImage->size]];
+			NSData				*imageTIFFData = [image TIFFRepresentation];
+			NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
+            
+			//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
+            if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
+				[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
+			}
+			
+			[image release];
+		}
+	}
+	
+	return ([newString autorelease]);
+}
+
+- (NSString *)_userIconCachePath
+{    
+    NSString    *userIconCacheFilename = [NSString stringWithFormat:USER_ICON_CACHE_NAME, [self uniqueObjectID]];
+    return([[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:userIconCacheFilename] stringByExpandingTildeInPath]);
+}
+
+- (NSString *)_messageImageCachePathForID:(int)imageID
+{
+    NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [self uniqueObjectID], imageID];
+    return([[[ACCOUNT_IMAGE_CACHE_PATH stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"] stringByExpandingTildeInPath]);	
+}
 
 @end

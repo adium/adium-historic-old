@@ -404,7 +404,7 @@
     }else if(textHeight < ENTRY_TEXTVIEW_MIN_HEIGHT){
         textHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
     }
-
+	
     [scrollView_outgoingView setHasVerticalScroller:(textHeight == ENTRY_TEXTVIEW_MAX_HEIGHT)];
     [scrollView_outgoingView setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width - (buttonWidth + SEND_BUTTON_PADDING), textHeight)];
     superFrame.size.height -= textHeight + TEXT_ENTRY_PADDING;
@@ -418,7 +418,7 @@
     }else{
         [scrollView_userList setFrame:NSMakeRect(10000, 10000, 0, 0)]; //Shove it way off screen for now
     }
-
+	
     //Messages
     [controllerView_messages setFrame:NSMakeRect(0, superFrame.origin.y, superFrame.size.width, superFrame.size.height)];
 }

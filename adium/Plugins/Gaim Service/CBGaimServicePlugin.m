@@ -349,7 +349,7 @@ static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
 
 static void adiumGaimConvWindowShow(GaimConvWindow *win)
 {
-    
+        if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowShow");
 }
 
 static void adiumGaimConvWindowHide(GaimConvWindow *win)
@@ -359,6 +359,7 @@ static void adiumGaimConvWindowHide(GaimConvWindow *win)
 
 static void adiumGaimConvWindowRaise(GaimConvWindow *win)
 {
+	    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowRaise");
 }
 
 static void adiumGaimConvWindowFlash(GaimConvWindow *win)
@@ -372,6 +373,11 @@ static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int inde
 
 static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
 {
+	    if (GAIM_DEBUG) NSLog(@"adiumGaimConvWindowAddConv");
+	//Pass chats along to the account
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+		[accountLookup(conv->account) addChatConversation:conv];
+	}
 }
 
 static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation *conv)
@@ -402,6 +408,38 @@ static GaimConvWindowUiOps adiumGaimWindowOps = {
     adiumGaimConvWindowRemoveConv,
     adiumGaimConvWindowMoveConv,
     adiumGaimConvWindowGetActiveIndex
+};
+
+#pragma mark Roomlist
+// Roomlist ----------------------------------------------------------------------------------------------------------
+static void adiumGaimRoomlistDialogShowWithAccount(GaimAccount *account)
+{
+}
+static void adiumGaimRoomlistNew(GaimRoomlist *list)
+{
+ if (GAIM_DEBUG)	NSLog(@"adiumGaimRoomlistNew");
+}
+static void adiumGaimRoomlistSetFields(GaimRoomlist *list, GList *fields)
+{
+}
+static void adiumGaimRoomlistAddRoom(GaimRoomlist *list, GaimRoomlistRoom *room)
+{
+	 if (GAIM_DEBUG)	NSLog(@"adiumGaimRoomlistAddRoom");
+}
+static void adiumGaimRoomlistInProgress(GaimRoomlist *list, gboolean flag)
+{
+}
+static void adiumGaimRoomlistDestroy(GaimRoomlist *list)
+{
+}
+
+static GaimRoomlistUiOps adiumGaimRoomlistOps = {
+	adiumGaimRoomlistDialogShowWithAccount,
+	adiumGaimRoomlistNew,
+	adiumGaimRoomlistSetFields,
+	adiumGaimRoomlistAddRoom,
+	adiumGaimRoomlistInProgress,
+	adiumGaimRoomlistDestroy
 };
 
 #pragma mark Notify
@@ -667,6 +705,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_request_set_ui_ops(&adiumGaimRequestOps);
     gaim_xfers_set_ui_ops(&adiumGaimFileTrasnferOps);
     gaim_privacy_set_ui_ops (&adiumGaimPrivacyOps);
+	gaim_roomlist_set_ui_ops (&adiumGaimRoomlistOps);
 }
 
 static void adiumGaimCoreQuit(void)

@@ -49,7 +49,7 @@ static AIPasswordPromptController	*controller = nil;
 
 - (void)windowDidLoad
 {
-    [textField_account setStringValue:[account displayName]];
+    [textField_account setStringValue:[account formattedUID]];
 	    
     [checkBox_savePassword setState:[[account preferenceForKey:[self savedPasswordKey] 
 														 group:GROUP_ACCOUNT_STATUS] boolValue]];

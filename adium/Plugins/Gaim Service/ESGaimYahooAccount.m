@@ -36,9 +36,11 @@
 {
 	if (([disconnectionError rangeOfString:@"different machine or device"].location != NSNotFound)) {
 		return NO;
-	}else{
-		return YES;
+	}else if (([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound)) {
+		[[adium accountController] forgetPasswordForAccount:self];
 	}
+		
+	return YES;
 }
 
 - (NSString *)hostKey

@@ -12,6 +12,7 @@
 #include "libgaim/privacy.h"
 #include "libgaim/proxy.h"
 #include "libgaim/request.h"
+#include "libgaim/roomlist.h"
 #include "libgaim/signals.h"
 #include "libgaim/sslconn.h"
 #include "libgaim/sound.h"

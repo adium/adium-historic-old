@@ -171,18 +171,18 @@
     selected = ([[self tabView] selectedTabViewItem] == self);
     textColor = [[listObject displayArrayForKey:@"Tab Text Color"] objectValue];
     if(!textColor) textColor = (texturedWindow ? [NSColor colorWithCalibratedWhite:0.16 alpha:1.0] : [NSColor controlTextColor]);
-
+	
     //Emboss the name (Textured window only)
     if(texturedWindow){
-	if([textColor colorIsDark]){
-	    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
+		if([textColor colorIsDark]){
+			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:1.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
-	}else{
-	    [[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
+		}else{
+			[[self attributedLabelStringWithColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.4]]
                                     drawInRect:NSOffsetRect(labelRect, 0, -1)];
-	}
+		}
     }
-
+	
     [[self attributedLabelStringWithColor:textColor] drawInRect:labelRect];
 }
 
@@ -204,21 +204,22 @@
 //
 - (NSString *)labelString
 {
-    AIChat		*chat = [messageView chat];
+    AIChat			*chat = [messageView chat];
     NSString		*displayName;
-
+	
     if(displayName = [[chat statusDictionary] objectForKey:@"DisplayName"]){
         return(displayName);
     }else{
-        return([[chat listObject] displayName]);
+		AIListObject *listObject = [chat listObject];
+        return(listObject ? [listObject displayName] : [chat name]);
     }
 }
 
 //
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor
 {
-    BOOL		    texturedWindow = [[[self tabView] window] isTextured];
-    NSFont		    *font = (texturedWindow ? [NSFont boldSystemFontOfSize:11] : [NSFont systemFontOfSize:11]);
+    BOOL					texturedWindow = [[[self tabView] window] isTextured];
+    NSFont					*font = (texturedWindow ? [NSFont boldSystemFontOfSize:11] : [NSFont systemFontOfSize:11]);
     NSAttributedString      *displayName;
     NSParagraphStyle	    *paragraphStyle;
 
