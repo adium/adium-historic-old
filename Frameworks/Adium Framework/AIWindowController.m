@@ -89,13 +89,23 @@
 }
 
 /*!
- * @brief Called before the window closes
+ * @brief Called before the window closes. This will not be called when the application quits.
  *
  * This is called before the window closes.  By default we always allow closing of our window, so YES is always
- * returned from this method.  Also we take the opportunity to save the current window position and size here.
- * When subclassing be sure to call super in this method, or window frames will not save.
+ * returned from this method.
  */
 - (BOOL)windowShouldClose:(id)sender
+{
+	return(YES);
+}
+
+/*!
+ * @brief Called immediately before the window closes.
+ * 
+ * We take the opportunity to save the current window position and size here.
+ * When subclassing be sure to call super in this method, or window frames will not save.
+ */
+- (void)windowWillClose:(id)sender
 {
 	NSString	*key = [self adiumFrameAutosaveName];
 
@@ -104,8 +114,6 @@
 											 forKey:key
 											  group:PREF_GROUP_WINDOW_POSITIONS];
 	}
-	
-	return(YES);
 }
 
 /*!
