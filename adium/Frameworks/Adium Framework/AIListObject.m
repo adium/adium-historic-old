@@ -16,6 +16,8 @@
 #import "AIListObject.h"
 #import "AIListGroup.h"
 
+#define KEY_FORMATTED_UID   @"FormattedUID"
+
 @interface AIListObject (PRIVATE)
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 @end
@@ -29,11 +31,7 @@
 
     displayDictionary = [[NSMutableDictionary alloc] init];
     containingGroup = nil;
-    UID = [inUID retain];
-	[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:PREF_GROUP_OBJECT_STATUS_CACHE ignoreInheritedValues:YES]
-				   forKey:@"FormattedUID"
-				   notify:YES];
-	
+    UID = [inUID retain];	
     serviceID = [inServiceID retain];
 
 	orderIndex = -1;
@@ -42,6 +40,15 @@
 	visible = YES;
     statusDictionary = [[NSMutableDictionary alloc] init];
     changedStatusKeys = [[NSMutableArray alloc] init];
+	
+	NSString *formattedUID = [self preferenceForKey:KEY_FORMATTED_UID 
+											  group:PREF_GROUP_OBJECT_STATUS_CACHE 
+							  ignoreInheritedValues:YES];
+	if (formattedUID){
+		[self setStatusObject:formattedUID
+					   forKey:KEY_FORMATTED_UID
+					   notify:YES];
+	}
 	
     return(self);
 }
@@ -165,9 +172,10 @@
 			[statusDictionary removeObjectForKey:key];
 		}
 
-		//Inform our containing group about the new status object value
+		//Inform our containing group and ourself (in case subclasses want to know) about the new status object value
 		if (containingGroup)
 			[containingGroup listObject:self didSetStatusObject:value forKey:key];
+		[self listObject:self didSetStatusObject:value forKey:key];
 		
 		//If notify, send out the notification now; otherwise, add it to changedStatusKeys for later notification 
 		if (notify){
@@ -374,7 +382,7 @@
 //Server-formatted UID if present, otherwise the UID
 - (NSString *)formattedUID
 {
-	NSString  *outName = [self statusObjectForKey:@"FormattedUID"];
+	NSString  *outName = [self statusObjectForKey:KEY_FORMATTED_UID];
     return(outName ? outName : UID);	
 }
 
@@ -396,8 +404,8 @@
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key
 {
 	if (inObject == self) {
-		if ([key isEqualToString:@"FormattedUID"]){
-			[self setPreference:formattedUID forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
+		if ([key isEqualToString:KEY_FORMATTED_UID]){
+			[self setPreference:value forKey:key group:PREF_GROUP_OBJECT_STATUS_CACHE];
 		}
 	}
 }
