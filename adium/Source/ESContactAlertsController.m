@@ -49,7 +49,7 @@ Plugin Contact Alert registration
 - (void)registerContactAlertProvider:(NSObject<ESContactAlertProvider> *)contactAlertProvider
 {
  //Add to our array of contact alert providers
-    [contactAlertProviderDictionary addObject:contactAlertProvider forKey:[contactAlertProvider identifier]];
+    [contactAlertProviderDictionary setObject:contactAlertProvider forKey:[contactAlertProvider identifier]];
 
     
 }
@@ -238,45 +238,46 @@ Alert Execution
         
         //if the action isn't in the completed action types yet
         if ([completedActionTypes indexOfObject:action] == NSNotFound) {
-        event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
-        status = [[inObject statusArrayForKey:event] greatestIntegerValue];
-        event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
-        status_matches = (status && event_status) || (!status && !event_status); //XOR
-        
-        if ( status_matches && [inModifiedKeys containsObject:event] ) {  //if an action with the appropriate triggering event and status is found
+            event = [actionDict objectForKey:KEY_EVENT_NOTIFICATION];
+            status = [[inObject statusArrayForKey:event] greatestIntegerValue];
+            event_status = [[actionDict objectForKey:KEY_EVENT_STATUS] intValue];
+            status_matches = (status && event_status) || (!status && !event_status); //XOR
             
-            //Only proceed if the action should proceed regardless of our active status -OR- we are active
-            if (! [[actionDict objectForKey:KEY_EVENT_ACTIVE] intValue] || 
-                (![[owner accountController] propertyForKey:@"IdleSince" account:nil] 
-                 && ![[owner accountController] propertyForKey:@"AwayMessage" account:nil])) {
+            if ( status_matches && [inModifiedKeys containsObject:event] ) {  //if an action with the appropriate triggering event and status is found
                 
-                BOOL success = NO;
-                
-                id contactAlertProvider = [contactAlertProviderDictionary objectForKey:action];
-                if (contactAlertProvider) {
-                    success = [(NSObject<ESContactAlertProvider> *)contactAlertProvider performActionWithDetails:[actionDict objectForKey:KEY_EVENT_DETAILS]
-                                                                                                   andDictionary:[actionDict objectForKey:KEY_EVENT_DETAILS_DICT]
-                                                                                                triggeringObject:inObject
-                                                                                                 triggeringEvent:event
-                                                                                                     eventStatus:event_status
-                                                                                                      actionName:[actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
-                    if (success && [(NSObject<ESContactAlertProvider> *)contactAlertProvider shouldKeepProcessing]) {
-                        [completedActionTypes addObject:action];
-                    }
-                }
-                
-                //after all tests
-                if (success && [[actionDict objectForKey:KEY_EVENT_DELETE] intValue]) { //delete the action from the array if succesful and necessary
-                    [eventActionArray removeObject:actionDict];
-                    [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+                //Only proceed if the action should proceed regardless of our active status -OR- we are active
+                if (! [[actionDict objectForKey:KEY_EVENT_ACTIVE] intValue] || 
+                    (![[owner accountController] propertyForKey:@"IdleSince" account:nil] 
+                     && ![[owner accountController] propertyForKey:@"AwayMessage" account:nil])) {
                     
-                    //Broadcast a one time event fired message
-                    [[owner notificationCenter] postNotificationName:One_Time_Event_Fired
-                                                              object:inObject
-                                                            userInfo:nil];
-                }
-            } //close active
-        } //close status_matches && containsKey
+                    BOOL success = NO;
+                    
+                    id contactAlertProvider = [contactAlertProviderDictionary objectForKey:action];
+                    if (contactAlertProvider) {
+                        success = [(NSObject<ESContactAlertProvider> *)contactAlertProvider performActionWithDetails:[actionDict objectForKey:KEY_EVENT_DETAILS]
+                                                                                                       andDictionary:[actionDict objectForKey:KEY_EVENT_DETAILS_DICT]
+                                                                                                    triggeringObject:inObject
+                                                                                                     triggeringEvent:event
+                                                                                                         eventStatus:event_status
+                                                                                                          actionName:[actionDict objectForKey:KEY_EVENT_DISPLAYNAME]];
+                        if (success && [(NSObject<ESContactAlertProvider> *)contactAlertProvider shouldKeepProcessing]) {
+                            [completedActionTypes addObject:action];
+                        }
+                    }
+                    
+                    //after all tests
+                    if (success && [[actionDict objectForKey:KEY_EVENT_DELETE] intValue]) { //delete the action from the array if succesful and necessary
+                        [eventActionArray removeObject:actionDict];
+                        [[owner preferenceController] setPreference:eventActionArray forKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:inObject];
+                        
+                        //Broadcast a one time event fired message
+                        [[owner notificationCenter] postNotificationName:One_Time_Event_Fired
+                                                                  object:inObject
+                                                                userInfo:nil];
+                    }
+                } //close active
+            } //close status_matches && containsKey
+        } //close completeActionTypes
     } //close while
 } //end function
 
