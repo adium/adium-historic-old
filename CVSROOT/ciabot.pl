@@ -24,7 +24,7 @@
 # Note that the last three parameters are optional, you can alternatively change
 # the defaults below in the configuration section.
 #
-# $Id: ciabot.pl,v 1.9 2003/12/20 03:26:41 jmelloy Exp $
+# $Id: ciabot.pl,v 1.10 2003/12/29 03:58:14 evands Exp $
 
 use strict;
 use vars qw ($project $from_email $dest_email $sendmail $max_lines $max_files
@@ -49,7 +49,7 @@ $dest_email = 'commits@picogui.org';
 $sendmail = '/usr/lib/sendmail';
 
 # The maximal number of lines the log message should have.
-$max_lines = 12;
+$max_lines = 100;
 
 # Number of files to show at once before an abbreviation (m files in n dirs) is
 # used.
