@@ -189,7 +189,7 @@ Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
 - (BOOL)move:(Player)who atRow:(unsigned)row atColumn:(unsigned)col
 {
-	if(row < 0 || row > boardSize || col < 0 || col > boardSize) {
+	if(row < 0 || row >= boardSize || col < 0 || col >= boardSize) {
 		return NO;
 	}
 	if(board[row][col] != PLAYER_NONE) {
