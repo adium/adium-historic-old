@@ -110,14 +110,17 @@ do instead  (
     insert into adium.user_display_name
     (user_id, display_name)
     select user_id, new.sender_display
-    from adium.users 
-    where username = new.sender_sn
-    and new.sender_display is not null
+    from   adium.users 
+    where  username = new.sender_sn
+     and   service = coalesce(new.sender_service, 'AIM')
+     and   new.sender_display is not null
     and not exists (
         select 'x'
         from   adium.user_display_name udn
         where  user_id = 
-               (select user_id from adium.users where username = new.sender_sn)
+               (select user_id from adium.users 
+                where  username = new.sender_sn
+                 and   service = coalesce(new.sender_service, 'AIM'))
             and   display_name = new.sender_display
             and not exists (
                 select 'x'
@@ -130,12 +133,15 @@ do instead  (
     select user_id, new.recipient_display
     from adium.users
     where username = new.recipient_sn
+     and  service = coalesce(new.sender_service, 'AIM')
     and new.recipient_display is not null
     and not exists (
         select 'x'
         from   adium.user_display_name udn
         where  user_id = 
-               (select user_id from adium.users where username = new.recipient_sn)
+               (select user_id from adium.users 
+               where username = new.recipient_sn
+                and  service = coalesce(new.sender_service, 'AIM'))
         and    display_name = new.recipient_display
         and not exists (
             select 'x'
@@ -148,9 +154,9 @@ do instead  (
         (message,sender_id,recipient_id, message_date)
     values (new.message,
     (select user_id from adium.users where username = new.sender_sn and
-    service=new.sender_service),
+    service= coalesce(new.sender_service, 'AIM')),
     (select user_id from adium.users where username = new.recipient_sn and
-    service=new.recipient_service),
+    service=coalesce(new.recipient_service, 'AIM')),
     coalesce(new.message_date, now() )
     );
 
@@ -159,9 +165,9 @@ do instead  (
     set num_messages = num_messages + 1,
     last_message = CURRENT_TIMESTAMP
     where sender_id = (select user_id from adium.users where username =
-    new.sender_sn and service = new.sender_service) 
+    new.sender_sn and service = coalesce(new.sender_service, 'AIM')) 
     and recipient_id = (select user_id from adium.users where username =
-    new.recipient_sn and service = new.recipient_service);
+    new.recipient_sn and service = coalesce(new.recipient_service, 'AIM'));
 
     -- Inserting statistics if none exist
     insert into adium.user_statistics

@@ -33,7 +33,7 @@
     <div class="tutorialcode">
       <pre>make
 sudo make install
-psql <i>USERNAME</i> &lt; tsearch.sql</pre>
+psql <i>USERNAME</i> &lt; tsearch2.sql</pre>
     </div>
     
     <p>That's all it takes to install the module itself.
@@ -81,7 +81,8 @@ select * from messages where idxfti @@ to_tsquery('search|string');
   --search OR string
 select * from messages where idxfti @@ to_tsquery('search&amp;!string'); 
   -- search AND NOT string
-  select * from messages where idxfti @@ to_tsquery('search&amp;string&amp;(carnival&amp;clowns)');
+select * from messages 
+  where idxfti @@ to_tsquery('search&amp;string&amp;(carnival&amp;clowns)');
   -- search AND string AND BOTH carnival AND clowns</pre>
     </div>
     <p>search.jsp will check to see if the tsearch or tsearch2 module is properly

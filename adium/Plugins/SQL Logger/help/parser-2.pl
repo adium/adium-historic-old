@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 672 $ $Date: 2004/04/18 00:32:57 $
+# $Rev: 689 $ $Date: 2004/04/28 05:45:38 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -199,8 +199,8 @@ foreach my $outer_user (glob '*') {
 }
 
 print OUT "insert into adium.user_display_name (user_id, display_name,
-effdate) select user_id, username, '-infinity' from users where not exists
-(select 'x' from user_display_name where user_display_name.user_id =
+effdate) select user_id, username, '-infinity' from adium.users where not exists
+(select 'x' from adium.user_display_name where user_display_name.user_id =
 users.user_id and user_display_name.effdate = '-infinity');\n";
 
 if ($vacuum) {
