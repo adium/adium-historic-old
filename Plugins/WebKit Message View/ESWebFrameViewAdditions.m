@@ -53,7 +53,7 @@
  * 12  __ZN12KWQKHTMLPart9mouseDownEP7NSEvent (in WebCore)
  * 13  -[NSWindow sendEvent:] (in AppKit)
 */
-@interface WebHTMLView (ESWebHTMLViewCrashFix)
+@implementation WebHTMLView (ESWebHTMLViewCrashFix)
 
 - (float)_destinationFloatValueForScroller:(NSScroller *)inScroller
 {
