@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccountController.m,v 1.51 2004/02/11 15:23:54 evands Exp $
+// $Id: AIAccountController.m,v 1.52 2004/02/21 15:18:37 adamiser Exp $
 
 #import "AIAccountController.h"
 #import "AILoginController.h"
@@ -261,17 +261,16 @@
 
 //Services -------------------------------------------------------------------------------------------------------
 #pragma mark Services
-//Return the available services.  These are used for account creation.
-//Passing YES will only return services for which there exists an account
-- (NSArray *)availableServices
-{
-	return([availableServiceDict allValues]);
-}
-
 //Sort an array of services alphabetically by their description
 int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	return([(NSString *)[service1 description] caseInsensitiveCompare:(NSString *)[service2 description]]);
+}
+
+//Return the available services.  These are used for account creation.
+- (NSArray *)availableServices
+{
+	return([[availableServiceDict allValues] sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
 }
 
 //Return the active service types (service types for which there is an account).  These are used for contact creation.

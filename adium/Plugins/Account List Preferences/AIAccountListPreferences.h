@@ -17,11 +17,11 @@
 
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
     IBOutlet		NSView						*view_accountPreferences;
-    IBOutlet		AIAlternatingRowTableView                       *tableView_accountList;
-    IBOutlet		AIAutoScrollView                                *scrollView_accountList;
+    IBOutlet		AIAlternatingRowTableView   *tableView_accountList;
+    IBOutlet		AIAutoScrollView			*scrollView_accountList;
     IBOutlet		NSButton					*button_newAccount;
     IBOutlet		NSButton					*button_deleteAccount;
-    IBOutlet		NSPopUpButton                                   *popupMenu_serviceList;
+    IBOutlet		NSPopUpButton				*popupMenu_serviceList;
     IBOutlet		NSView						*view_accountDetails;
     IBOutlet		NSButton					*button_autoConnect;
     IBOutlet		NSTabView					*tabView_auxiliary;
