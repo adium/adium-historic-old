@@ -696,6 +696,80 @@
 			settings = {
 			};
 		};
+		3420E65B0611D80000AE67E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAccountPasswordPromptController.h;
+			path = Source/ESAccountPasswordPromptController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3420E65C0611D80000AE67E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAccountPasswordPromptController.m;
+			path = Source/ESAccountPasswordPromptController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3420E65D0611D80000AE67E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESProxyPasswordPromptController.h;
+			path = Source/ESProxyPasswordPromptController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3420E65E0611D80000AE67E3 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESProxyPasswordPromptController.m;
+			path = Source/ESProxyPasswordPromptController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3420E65F0611D80000AE67E3 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ProxyPasswordPrompt.nib;
+			path = Source/ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3420E6600611D80100AE67E3 = {
+			fileRef = 3420E65B0611D80000AE67E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3420E6610611D80100AE67E3 = {
+			fileRef = 3420E65C0611D80000AE67E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3420E6620611D80100AE67E3 = {
+			fileRef = 3420E65D0611D80000AE67E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3420E6630611D80100AE67E3 = {
+			fileRef = 3420E65E0611D80000AE67E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3420E6640611D80100AE67E3 = {
+			fileRef = 3420E65F0611D80000AE67E3;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34254F4305EC0C2700F11AD7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.icns;
@@ -3654,6 +3728,8 @@
 				4B74D3290602629300C21B7C,
 				4B74D32F0602633700C21B7C,
 				6E5A43DF061160C60078C342,
+				3420E6600611D80100AE67E3,
+				3420E6620611D80100AE67E3,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3954,6 +4030,7 @@
 				34327CA6060D4093003D7AD9,
 				4B191D8A0611C10800E8A4E7,
 				4B191D8B0611C10800E8A4E7,
+				3420E6640611D80100AE67E3,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4266,6 +4343,8 @@
 				4B74D32A0602629300C21B7C,
 				4B74D3300602633700C21B7C,
 				6E5A43E0061160C60078C342,
+				3420E6610611D80100AE67E3,
+				3420E6630611D80100AE67E3,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21571,7 +21650,12 @@
 			children = (
 				F55B416E03AB8C3201A8010A,
 				F55B416603AB8BFC01A8010A,
+				3420E65B0611D80000AE67E3,
+				3420E65C0611D80000AE67E3,
+				3420E65D0611D80000AE67E3,
+				3420E65E0611D80000AE67E3,
 				F55B416803AB8C0501A8010A,
+				3420E65F0611D80000AE67E3,
 				F55B416A03AB8C0B01A8010A,
 			);
 			isa = PBXGroup;
