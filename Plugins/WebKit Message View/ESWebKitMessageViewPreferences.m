@@ -87,11 +87,8 @@
 	}
 	
 	//Observe preference changes and set our initial preferences
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:)
-									   name:Preference_GroupChanged
-									 object:nil];
-	[self preferencesChanged:nil];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DISPLAYFORMAT];
 	
 	viewIsOpen = YES;
 }
@@ -153,7 +150,7 @@
 {
 	viewIsOpen = NO;
 	
-    [[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	
 	[previewListObjectsDict release]; previewListObjectsDict = nil;
 	[previousContent release]; previousContent = nil;
@@ -161,14 +158,10 @@
 	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer =nil;
 }
 
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-	if(notification == nil ||
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] ||
-	   [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_DISPLAYFORMAT]){
-
-		[self updatePreview];
-	}
+	[self updatePreview];
 }
 
 #pragma mark Changing preferences

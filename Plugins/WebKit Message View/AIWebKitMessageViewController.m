@@ -118,13 +118,8 @@ DeclareString(AppendNextMessage);
 
 	//Observe preference changes. Our initial preferences are also applied by refreshView, so no need for an explicit
 	//[self prefrencesChanged:nil] call here.
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(preferencesChanged:) 
-									   name:Preference_GroupChanged
-									 object:nil];
-
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[self refreshView];
-	
 	
 	//Observe a changing participants list and apply our initial settings if needed
 	//This needs to be done AFTER refreshView
@@ -152,6 +147,7 @@ DeclareString(AppendNextMessage);
 {
 	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer = nil;	
 	[setStylesheetTimer invalidate]; [setStylesheetTimer release]; setStylesheetTimer = nil;
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	
 	//Stop being the webView's baby's daddy; the webView may attempt callbacks shortly after we dealloc
@@ -338,23 +334,18 @@ DeclareString(AppendNextMessage);
 #pragma mark WebView preferences
 //The controller observes for preferences which are applied to the WebView
 //Variant changes are applied immediately, but all other changes (except those handlded by setViewIndependentPrefsFromDict:) must wait
-- (void)preferencesChanged:(NSNotification *)notification
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict 
 {
-    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		NSString		*notificationKey = [[notification userInfo] objectForKey:@"Key"];
-		NSString		*key = [plugin variantKeyForStyle:loadedStyleID];
-
-		[self setViewIndependentPrefsFromDict:prefDict];
+	NSString		*loadedStyleKey = [plugin variantKeyForStyle:loadedStyleID];
+	
+	[self setViewIndependentPrefsFromDict:prefDict];
+	
+	if(group == nil || key == nil || [key isEqualToString:loadedStyleKey]){
+		NSString	*styleID = [prefDict objectForKey:KEY_WEBKIT_STYLE];
 		
-		if(notification == nil ||
-		   notificationKey == nil ||
-		   [notificationKey isEqualToString:key]){
-			NSString	*styleID = [prefDict objectForKey:KEY_WEBKIT_STYLE];
-			
-			if([loadedStyleID isEqualToString:styleID]){
-				[self setVariantID:[prefDict objectForKey:key]];
-			}
+		if([loadedStyleID isEqualToString:styleID]){
+			[self setVariantID:[prefDict objectForKey:loadedStyleKey]];
 		}
 	}
 }
