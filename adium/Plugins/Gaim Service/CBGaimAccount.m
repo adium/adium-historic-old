@@ -641,29 +641,14 @@ static id<GaimThread> gaimThread = nil;
 #warning All opened chats assumed valid until a better system for doing this reliably is figured out.
 	[[chat statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Enabled"];
 	
+	NSString	*chatDictKey;
+	
 	//This is potentially problematic
 	AIListObject *listObject = [chat listObject];
-//	NSLog(@"listObject is %@",listObject);
+
 	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
 	if (listObject) {
-		//Associate our chat with the libgaim conversation
-	/*	if(![[chat statusDictionary] objectForKey:@"GaimConv"]){
-			
-			//Evan: Temporary asserts
-			NSAssert (listObject != nil, @"openChat: listObject was nil");
-			NSAssert ([listObject UID] != nil, @"openChat: [listObject UID] was nil");
-			NSAssert ([[listObject UID] UTF8String] != nil, @"openChat: [[listObject UID] UTF8String] was nil");
-			
-			GaimConversation 	*conv = gaim_conversation_new(GAIM_CONV_IM, [self gaimAccount], [[listObject UID] UTF8String]);
-			NSAssert(conv != nil, @"openChat: GAIM_CONV_IM: gaim_conversation_new returned nil");
-			
-			conv->ui_data = [chat retain];
-//			[[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
-		}
-
-				*/		
-		//Track
-		[chatDict setObject:chat forKey:[listObject uniqueObjectID]];
+		chatDictKey = [listObject uniqueObjectID];
 		
 	}else{
 		//If we opened a chat (rather than having it opened for us via accepting an invitation), we need to create
@@ -717,9 +702,15 @@ static id<GaimThread> gaimThread = nil;
 				conv->ui_data = [chat retain];
 			}
 			
-			//Track
-			[chatDict setObject:chat forKey:[chat name]];
+			chatDictKey = [chat name];
 	}	
+	
+	//Track
+	[chatDict setObject:chat forKey:chatDictKey];
+
+	//Inform gaim that we have opened this chat
+	[gaimThread openChat:chat];
+	
 	//Created the chat successfully
 	return(YES);
 	

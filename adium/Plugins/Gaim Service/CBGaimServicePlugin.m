@@ -90,9 +90,6 @@ static CBGaimServicePlugin  *servicePluginInstance;
 
 - (void)uninstallPlugin
 {
-#warning evands:Need to disconnect
-//	gaim_signals_disconnect_by_handle(gaim_adium_get_handle());
-	
     [_accountDict release]; _accountDict = nil;
     
     //Services
