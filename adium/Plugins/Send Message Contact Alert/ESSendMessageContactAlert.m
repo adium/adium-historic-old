@@ -37,7 +37,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     return (menuItem);
 }
 
-//No further configuration is required
+//setup display for the sending message details
 -(IBAction)selectedAlert:(id)sender
 {  
     //Get the current dictionary
@@ -81,7 +81,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
         }
         [self saveMessageDetails:nil];
     } else { //restore the old settings
-        NSLog(@"old message");
         //Configure the buttons
         [button_anotherAccount setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
         [button_displayAlert setState:[[detailsDict objectForKey:KEY_MESSAGE_ERROR] intValue]];

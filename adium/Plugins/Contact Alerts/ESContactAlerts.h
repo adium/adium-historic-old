@@ -12,20 +12,6 @@
     NSView				*view_details;
     NSView				*view_pref;
 
-    //Menu View
-    IBOutlet	NSView			*view_details_menu;
-    IBOutlet	NSTextField		*textField_description_popUp;
-    IBOutlet	NSPopUpButton		*popUp_actionDetails;
-    //Text View
-    IBOutlet	NSView			*view_details_text;
-    IBOutlet 	NSTextField		*textField_description_textField;
-    IBOutlet	NSTextField		*textField_actionDetails;
-
-    //Open Message View
-    IBOutlet	NSView			*view_details_open_message;
-    IBOutlet	NSPopUpButton		*popUp_actionDetails_open_message;
-    IBOutlet	NSButton		*button_anotherAccount_open_message;
-    
     int					row;
 
     AIListObject			*activeContactObject;
@@ -65,23 +51,6 @@
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;
-
-/*
-- (IBAction)selectSound:(id)sender;
-- (IBAction)selectBehavior:(id)sender;
-- (IBAction)selectAccount:(id)sender;
-- (IBAction)saveMessageDetails:(id)sender;
-- (IBAction)saveOpenMessageDetails:(id)sender;
-*/
-
-/*
-- (IBAction)actionBounceDock:(id)sender;
-- (IBAction)actionDisplayAlert:(id)sender;
-- (IBAction)actionPlaySound:(id)sender;
-- (IBAction)actionSendMessage:(id)sender;
-- (IBAction)actionSpeakText:(id)sender;
-- (IBAction)actionDisplayBezel:(id)sender;
-*/
 
 - (BOOL)isEqual:(id)inInstance;
 - (unsigned) hash;
