@@ -22,6 +22,11 @@
 {
 	showingContacts = YES;
 	blankImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+	// Build the popup filter menu
+	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Contacts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:0];
+	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Accounts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:1];
+	// Need to remove the minimal menuitem needed in IB
+	[[popup_filterType menu] removeItemAtIndex:0];
 }
 
 - (void)dealloc
@@ -29,6 +34,11 @@
 	[blankImage release];
 	
 	[super dealloc];
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)anItem
+{
+	return YES;
 }
 
 //
