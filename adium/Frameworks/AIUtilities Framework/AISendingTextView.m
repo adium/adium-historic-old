@@ -25,6 +25,9 @@
 - (void)_sendContent;
 - (void)_historyUp;
 - (void)_historyDown;
+- (void)_setPushIndicatorVisible:(BOOL)visible;
+- (void)_positionIndicator:(NSNotification *)notification;
+- (void)_popPushContent;
 @end
 
 /*
@@ -36,6 +39,8 @@
     
     This fix watches for returns in the insertText method.  However, since it's impossible to distinguish a return from an enter by the characters inserted (both insert /r, 10), it also watches and remembers the keys being pressed with interpretKeyEvents... When insertText sees a /r, it checks to see what key was pressed to generate that /r, and makes a decision to send or not.  Since the sending occurs from within insertText, the returns are processed in the correct order with the text, and the problem is illiminiated.
 */
+
+static NSImage *pushIndicatorImage = nil;
 
 @implementation AISendingTextView
 
@@ -49,6 +54,7 @@
     selector = nil;
     owner = nil;
     chat = nil;
+    indicator = nil;
     sendOnReturn = YES;
     sendOnEnter = YES;
     returnArray = [[NSMutableArray alloc] init];
@@ -58,6 +64,9 @@
     currentHistoryLocation = 0;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
+
+    //
+    if(!pushIndicatorImage) pushIndicatorImage = [[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]] retain];
 
     //
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(textDidChange:) name:NSTextDidChangeNotification object:self];
@@ -111,12 +120,17 @@
 	case '\r':
 	    if(availableForSending) [self _sendContent]; //Send the content
 	    result = YES;
-	    break;
+	break;
 	case '\E':
+            //Reset entry
 	    [self setString:@""];
 	    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-	    result = YES;
-	    break;
+
+            //Pop off a pushed message if one exists
+            [self _popPushContent];
+
+            result = YES;
+        break;
     }
     if([theEvent modifierFlags] & NSCommandKeyMask) { //option is being held
         switch(theChar){
@@ -207,13 +221,8 @@
     //notify target
     [target performSelector:selector];
 
-    //Pop from the push array
-    if([pushArray count]){
-        [[self textStorage] setAttributedString:[pushArray lastObject]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-        [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
-        [pushArray removeLastObject];
-    }
+    //Pop off a pushed message if one exists
+    [self _popPushContent];
 }
 
 // Required protocol methods --------------------------------------------------------
@@ -296,9 +305,78 @@
         if([[self textStorage] length] != 0){
             [pushArray addObject:[[self textStorage] copy]];
             [self setAttributedString:[[[NSAttributedString alloc] initWithString:@"" attributes:[self typingAttributes]] autorelease]];
+            [self _setPushIndicatorVisible:YES];
         }
     }
 }
+
+//Pulls of push content if any exists
+- (void)_popPushContent
+{
+    if([pushArray count]){
+        [[self textStorage] setAttributedString:[pushArray lastObject]];
+        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+        [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
+        [pushArray removeLastObject];
+        if([pushArray count] == 0){
+            [self _setPushIndicatorVisible:NO];
+        }
+    }
+}
+
+//Push indicator
+- (void)_setPushIndicatorVisible:(BOOL)visible
+{
+    if(visible && !pushIndicatorVisible){
+        pushIndicatorVisible = visible;
+
+        //Push text over to make room for indicator
+        NSSize size = [self frame].size;
+        size.width -= [pushIndicatorImage size].width;
+        [self setFrameSize:size];
+
+        //Show indicator
+        indicator = [[NSImageView alloc] initWithFrame:
+            NSMakeRect(0, 0, [pushIndicatorImage size].width, [pushIndicatorImage size].height)];        
+        [indicator setAutoresizingMask:(NSViewMinXMargin)];
+        [indicator setImage:[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]]];
+        [indicator setImageAlignment:NSImageAlignCenter];
+        [indicator setImageScaling:NSScaleNone];
+        [indicator setImageFrameStyle:NSImageFrameNone];
+        [indicator setEditable:NO];
+        [[self superview] addSubview:indicator];
+
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewBoundsDidChangeNotification object:[self superview]];
+        [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_positionIndicator:) name:NSViewFrameDidChangeNotification object:[self superview]];
+
+        [self _positionIndicator:nil]; //Set the indicators initial position
+            
+    }else if(!visible && pushIndicatorVisible){
+        pushIndicatorVisible = visible;
+
+        //Push text back
+        NSSize size = [self frame].size;
+        size.width += [pushIndicatorImage size].width;
+        [self setFrameSize:size];
+
+        //Remove indicator
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewBoundsDidChangeNotification object:[self superview]];
+        [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:[self superview]];
+        [indicator removeFromSuperview];
+        [indicator release]; indicator = nil;
+    }
+}
+
+//Reposition indicator into lower right corner
+- (void)_positionIndicator:(NSNotification *)notification
+{
+    NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
+    NSRect indFrame = [indicator frame];
+    
+    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - indFrame.size.width, NSMaxY(visRect) - indFrame.size.height)];
+    [[self enclosingScrollView] setNeedsDisplay:YES];
+}
+
 
 
 //Contact menu ---------------------------------------------------------------
