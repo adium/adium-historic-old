@@ -337,8 +337,8 @@ static ESFileTransferPreferences *preferences;
     return(YES);
 }
 
-#warning Evan: Why is this not getting called? (And do we want it to be?)
-- (BOOL)validateToolBarItem:(NSToolbarItem *)theItem
+/*
+- (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
 	AIListContact   *listContact = nil;
 	
@@ -350,7 +350,7 @@ static ESFileTransferPreferences *preferences;
 	NSLog(@"validating %@ gives %@",theItem,listContact);
     return(listContact != nil);
 }
-
+*/
 #pragma mark File transfer progress window
 - (void)configureFileTransferProgressWindow
 {
