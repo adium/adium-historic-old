@@ -310,11 +310,9 @@ void Adium_HandleSignal(int i){
         //Trash the old file if one exists AND it isn't ourself
 		if([filename isEqualToString:destinationFilePath]) {
 			// Don't copy the file if it's already in the right place!!
-			NSLog(@"----File is already in correct directory");
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
 			alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful because the file was already in the correct location.",nil)];
 		} else {
-			NSLog(@"----File NOT OK, copy it to right place");
 			[[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
 			
 			//Perform the copy and display an alert informing the user of its success or failure
