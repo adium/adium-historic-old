@@ -65,6 +65,8 @@ typedef enum {
     AIIdleState		idleState;
     ESIdleMenuState     idleMenuState;
     double		manualIdleTime;
+	
+	UInt32		manualIdleTimeReferenceTick;
 
 }
 
