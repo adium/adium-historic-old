@@ -251,11 +251,16 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 - (void)chatClosed:(NSNotification *)notification
 {
+	AIChat	*chat = [notification object];
 	//Remove it from the array
-	[openChatsArray removeObject:[notification object]];
+	[openChatsArray removeObjectIdenticalTo:chat];
+
+	[unviewedObjectsArray removeObjectIdenticalTo:chat];
 	
-	//We need to update the menu next time we are clicked
-	needsUpdate = YES;
+	int index = [theMenu indexOfItemWithRepresentedObject:chat];
+	if(index != -1){
+		[theMenu removeItemAtIndex:index];
+	}
 }
 
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -281,7 +286,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
             //If we're tracking this object
             if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
                 //Remove it, it's not unviewed anymore
-                [unviewedObjectsArray removeObject:inChat];
+                [unviewedObjectsArray removeObjectIdenticalTo:inChat];
                 //We need to update our menu
                 needsUpdate = YES;
                 //If there are no more contacts with unviewed content, set our icon to normal
