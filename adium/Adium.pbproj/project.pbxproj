@@ -475,7 +475,7 @@
 				F501BB1203882A2901A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -655,7 +655,7 @@
 				F50CD62703603C7201A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -812,7 +812,7 @@
 				F510B77203339F1C01A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1254,7 +1254,7 @@
 				F51DEFAD032633E301A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1458,7 +1458,7 @@
 				F5370C9702D76F3B01A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -1991,7 +1991,7 @@
 				F53B9ACA02CD12CB01A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -2160,7 +2160,7 @@
 				F53EA2CC02C803C101A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -3449,7 +3449,7 @@
 				F569E39002CA88C701A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -5953,7 +5953,7 @@
 				F59F9A88032BE6B101A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6069,7 +6069,7 @@
 				F5A01D8A0379813301A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\" /Users/adamiser/Code/Adium/build";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks\"";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6249,7 +6249,7 @@
 				F5AAD08E039BA10901A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6440,7 +6440,7 @@
 				F5B53FC50333AFB501A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
@@ -6614,7 +6614,7 @@
 				F5BD46CD02D0789901A8010A,
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = /Users/adamiser/Code/Adium/build;
+				FRAMEWORK_SEARCH_PATHS = "";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = "";
 				OTHER_REZFLAGS = "";
