@@ -1251,7 +1251,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	if(menuItem){
 		NSString	*accountTitle = [account formattedUID];
-		NSImage		*serviceImage;
 		float		fraction;
 		NSString	*titleFormat;
 		
