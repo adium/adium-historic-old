@@ -43,7 +43,7 @@ AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlug
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
 CBStatusMenuItemPlugin, CBURLHandlingPlugin, CSDisconnectAllPlugin, DCMessageContextDisplayPlugin, ESAddressBookIntegrationPlugin,
-ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin,
+ESAnnouncerPlugin, ESContactAlertsPlugin, ESContactClientPlugin, ESContactListWindowHandlingPlugin, AIExtendedStatusPlugin,
 ESFastUserSwitchingSupportPlugin, ESOpenMessageWindowContactAlertPlugin, ESSendMessageContactAlertPlugin,
 ESUserIconHandlingPlugin, ErrorMessageHandlerPlugin, GBiTunerPlugin, IdleMessagePlugin, AIContactProfilePlugin,
 JSCEventBezelPlugin, LNStatusIconsPlugin, SAContactOnlineForPlugin, ESStatusSortPlugin, AIContactSettingsPlugin,
@@ -149,6 +149,7 @@ ESAccountNetworkConnectivityPlugin, ESMetaContactContentsPlugin;
 	[self loadPluginWithClass:[DCInviteToChatPlugin class]];
 	[self loadPluginWithClass:[ESAccountNetworkConnectivityPlugin class]];
 	[self loadPluginWithClass:[ESMetaContactContentsPlugin class]];
+	[self loadPluginWithClass:[AIExtendedStatusPlugin class]];
 	
 	//	[self loadPluginWithClass:[AISMViewPlugin class]];
 #endif

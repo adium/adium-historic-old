@@ -133,21 +133,19 @@
 //Font used to display status text
 - (void)setStatusFont:(NSFont *)inFont
 {
-	if(inFont && inFont != statusFont){
-		NSDictionary		*attributes;
-		NSAttributedString 	*statusString;
-
-		[statusFont release];
-		statusFont = [inFont retain];
-
-		//Calculate and cache the height of this font
-		attributes = [NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName];
-		statusString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
-		statusFontHeight = [statusString heightWithWidth:1e7];
-		
-		//Flush the status attributes cache
-		[_statusAttributes release]; _statusAttributes = nil;
-	}
+	NSDictionary		*attributes;
+	NSAttributedString 	*statusString;
+	
+	[statusFont autorelease];
+	statusFont = [inFont retain];
+	
+	//Calculate and cache the height of this font
+	attributes = [NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName];
+	statusString = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING attributes:attributes] autorelease];
+	statusFontHeight = [statusString heightWithWidth:1e7];
+	
+	//Flush the status attributes cache
+	[_statusAttributes release]; _statusAttributes = nil;
 }
 - (NSFont *)statusFont{
 	return(statusFont);
@@ -430,7 +428,7 @@
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
 	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
-		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
+		NSString 	*string = [listObject displayArrayObjectForKey:@"ExtendedStatus"];
 		
 		if(string){
 			int	halfHeight = rect.size.height / 2;
@@ -466,8 +464,8 @@
 				default:
 				break;
 			}
-			
 			int half = (drawRect.size.height - statusFontHeight) / 2.0;
+
 			[extStatus drawInRect:NSMakeRect(drawRect.origin.x,
 											 drawRect.origin.y + half,
 											 drawRect.size.width,
