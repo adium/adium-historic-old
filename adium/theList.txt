@@ -78,7 +78,7 @@ Sounds:
 iTunes Integration:
 	+ iTunes script runner should load scripts from the Application Support directory
 	= iTunes %_status script should display "Not Playing" when iTunes isn't open
-	+ Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
+	= Add /music script that shows "Hip-hoppin' to __ by DJ __ on my GhettoBlasta"
 
 Other:
 	+ Add customizable hotkey to bring Adium to the foreground
