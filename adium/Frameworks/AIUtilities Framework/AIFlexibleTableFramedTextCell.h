@@ -13,17 +13,22 @@
     BOOL	drawTop;
     BOOL	drawBottom;
     BOOL        drawSides;
-
-    int         framePadLeft;
     
     NSColor 	*borderColor;
     NSColor	*bubbleColor;
     NSColor	*dividerColor;
+    
+    int		framePadLeft;
+    int		framePadRight;
+    int		framePadTop;
+    int		framePadBottom;
+    
 }
 + (AIFlexibleTableFramedTextCell *)cellWithAttributedString:(NSAttributedString *)inString;
 
 - (id)initWithAttributedString:(NSAttributedString *)inString;
 
+- (void)setInternalPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom;
 - (void)setDrawTopDivider:(BOOL)inDrawTopDivider;
 - (void)setDrawTop:(BOOL)inDrawTop;
 - (void)setDrawBottom:(BOOL)inDrawBottom;

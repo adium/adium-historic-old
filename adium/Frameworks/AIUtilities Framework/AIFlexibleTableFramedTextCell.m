@@ -8,14 +8,12 @@
 
 #import "AIFlexibleTableFramedTextCell.h"
 
-//Variable padding (Depending on mode)
+//Default Padding
 #define FRAME_PAD_LEFT 		7
-#define FRAME_FLAT_PAD_LEFT     10
-
-//Fixed padding
 #define FRAME_PAD_RIGHT 	5
 #define FRAME_PAD_TOP 		2
 #define FRAME_PAD_BOTTOM 	2
+
 #define FRAME_RADIUS		8
 #define FRAME_FLAT_HEIGHT	1
 #define DIVIDER_FLAT_HEIGHT	1
@@ -45,6 +43,10 @@
 
     borderColor = nil;
     bubbleColor = nil;
+    framePadLeft = FRAME_PAD_LEFT;
+    framePadRight = FRAME_PAD_RIGHT;
+    framePadTop = FRAME_PAD_TOP;
+    framePadBottom = FRAME_PAD_BOTTOM;
     
     return(self);
 }
@@ -69,6 +71,15 @@
 }
 
 //
+- (void)setInternalPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom
+{
+    framePadLeft = inLeft;
+    framePadRight = inRight;
+    framePadTop = inTop;
+    framePadBottom = inBottom;
+}
+
+//
 - (void)setDrawTop:(BOOL)inDrawTop
 {
     drawTop = inDrawTop;
@@ -89,9 +100,6 @@
 - (void)setDrawSides:(BOOL)inDrawSides
 {
     drawSides = inDrawSides;
-    
-    //Update our padding
-    framePadLeft = (drawSides ? FRAME_PAD_LEFT : FRAME_FLAT_PAD_LEFT);
 }   
 
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
@@ -113,8 +121,8 @@
 //Adjust for our padding
 - (int)sizeContentForWidth:(float)inWidth
 {
-    inWidth -= (framePadLeft + FRAME_PAD_RIGHT);
-    int newHeight = [super sizeContentForWidth:inWidth] + (FRAME_PAD_TOP + FRAME_PAD_BOTTOM);
+    inWidth -= (framePadLeft + framePadRight);
+    int newHeight = [super sizeContentForWidth:inWidth] + (framePadTop + framePadBottom);
 
     if(drawBottom) newHeight++; //Give ourselves another pixel for the bottom border
     
@@ -122,14 +130,14 @@
         newHeight = (FRAME_RADIUS * 2);
     }
     
-    return([super sizeContentForWidth:inWidth] + (FRAME_PAD_TOP + FRAME_PAD_BOTTOM));
+    return([super sizeContentForWidth:inWidth] + (framePadTop + framePadBottom));
 }
 
 //Adjust for our padding
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
     offset.x += framePadLeft;
-    offset.y += FRAME_PAD_BOTTOM;
+    offset.y += framePadBottom;
 
     return([super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView]);
 }
@@ -138,9 +146,9 @@
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     inPoint.x -= framePadLeft;
-    inPoint.y -= FRAME_PAD_BOTTOM;
+    inPoint.y -= framePadBottom;
     inOffset.x += framePadLeft;
-    inOffset.y += FRAME_PAD_BOTTOM;
+    inOffset.y += framePadBottom;
 
     return([super handleMouseDownEvent:theEvent atPoint:inPoint offset:inOffset]);
 }
@@ -149,9 +157,9 @@
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     inPoint.x -= framePadLeft;
-    inPoint.y -= FRAME_PAD_BOTTOM;
+    inPoint.y -= framePadBottom;
     inOffset.x += framePadLeft;
-    inOffset.y += FRAME_PAD_BOTTOM;
+    inOffset.y += framePadBottom;
 
     return([super pointIsSelected:inPoint offset:inOffset]);
 }
@@ -160,11 +168,11 @@
 - (void)selectContentFrom:(NSPoint)source to:(NSPoint)dest offset:(NSPoint)inOffset mode:(int)selectMode
 {
     source.x -= framePadLeft;
-    source.y -= FRAME_PAD_BOTTOM;
+    source.y -= framePadBottom;
     dest.x -= framePadLeft;
-    dest.y -= FRAME_PAD_BOTTOM;
+    dest.y -= framePadBottom;
     inOffset.x += framePadLeft;
-    inOffset.y += FRAME_PAD_BOTTOM;
+    inOffset.y += framePadBottom;
 
     [super selectContentFrom:source to:dest offset:inOffset mode:selectMode];
 }
@@ -217,10 +225,10 @@
     [self _drawBubbleMiddleInRect:cellFrame];
     
     //Draw our text content
-    inFrame.origin.x += (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT);
-    inFrame.size.width -= (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT) + FRAME_PAD_RIGHT;
-    /*if(drawTop) */inFrame.origin.y += FRAME_PAD_TOP;
-    inFrame.size.height -= ((drawTop ? FRAME_PAD_TOP : FRAME_PAD_TOP) + (drawBottom ? FRAME_PAD_BOTTOM : FRAME_PAD_BOTTOM));
+    inFrame.origin.x += framePadLeft;
+    inFrame.size.width -= framePadLeft + framePadRight;
+    /*if(drawTop) */inFrame.origin.y += framePadTop;
+    inFrame.size.height -= ((drawTop ? framePadTop : framePadTop) + (drawBottom ? framePadBottom : framePadBottom));
 
     [super drawContentsWithFrame:inFrame inView:controlView];
 }
@@ -229,7 +237,7 @@
 - (void)_drawBubbleDividerInRect:(NSRect)frame
 {
     if(dividerColor){
-        float dividerSpace = (drawSides ? framePadLeft : FRAME_FLAT_PAD_LEFT) + 2;
+        float dividerSpace = framePadLeft + 2;
         
         [dividerColor set];
         [NSBezierPath fillRect:NSMakeRect(frame.origin.x+dividerSpace,frame.origin.y,frame.size.width-dividerSpace,frame.size.height)];
