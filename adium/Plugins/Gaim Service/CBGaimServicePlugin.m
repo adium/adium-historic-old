@@ -620,19 +620,19 @@ static GaimXferUiOps adiumGaimFileTrasnferOps = {
 
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
 {
-    
+	[accountLookup(account) accountPrivacyList:PRIVACY_PERMIT added:name];
 }
 static void adiumGaimPermitRemoved(GaimAccount *account, const char *name)
 {
-    
+	[accountLookup(account) accountPrivacyList:PRIVACY_PERMIT removed:name];
 }
 static void adiumGaimDenyAdded(GaimAccount *account, const char *name)
 {
-    
+	[accountLookup(account) accountPrivacyList:PRIVACY_DENY added:name];
 }
 static void adiumGaimDenyRemoved(GaimAccount *account, const char *name)
 {
-    
+	[accountLookup(account) accountPrivacyList:PRIVACY_DENY removed:name];
 }
 
 static GaimPrivacyUiOps adiumGaimPrivacyOps = {
@@ -721,7 +721,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
     if(!gaim_init_trepia_plugin()) NSLog(@"Error: No Trepia Support");
     if(!gaim_init_yahoo_plugin()) NSLog(@"Error: No Yahoo Support");
 
-    
 
 	if(/*!gaim_init_ssl_plugin() || */!gaim_init_ssl_gnutls_plugin() || !gaim_init_msn_plugin()){
 		NSLog(@"Error: No MSN/SSL Support");

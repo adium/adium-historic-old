@@ -627,6 +627,9 @@
     chatDict = [[NSMutableDictionary alloc] init];
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 	lastDisconnectionError = nil;
+
+	permittedContactsArray = [[NSMutableArray alloc] init];
+	deniedContactsArray = [[NSMutableArray alloc] init];
 	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
@@ -1243,6 +1246,30 @@
     else
         return (gaim_privacy_deny_remove(account,[[inObject UID] UTF8String],FALSE));
 }
+-(NSArray *)listObjectsOnPrivacyList:(PRIVACY_TYPE)type
+{
+	return (type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray);
+}
+
+-(void)accountPrivacyList:(PRIVACY_TYPE)type added:(const char *)name
+{
+	//Get our contact
+	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																 accountID:[self uniqueObjectID]
+																	   UID:[NSString stringWithUTF8String:name]];
+
+	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) addObject:contact];
+}
+-(void)accountPrivacyList:(PRIVACY_TYPE)type removed:(const char *)name
+{
+	//Get our contact
+	AIListContact *contact = [[adium contactController] contactWithService:[[service handleServiceType] identifier]
+																 accountID:[self uniqueObjectID]
+																	   UID:[NSString stringWithUTF8String:name]];
+	
+	[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
+}
+
 
 /*****************************************************/
 /* File transfer / AIAccount_Files inherited methods */
