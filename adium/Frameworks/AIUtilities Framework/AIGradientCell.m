@@ -32,7 +32,12 @@
 {
 	if ([self drawsGradientHighlight]) {
 		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-		
+		NSRect goodRect = cellFrame;
+		goodRect.size.height += 2;
+		goodRect.size.width += 4;
+		goodRect.origin.x -= 2;
+		goodRect.origin.y -= 1;
+
 		/* The following code changes the color to gray if the view isn't key.
 		 
 		 NSColor *highlightColor = [self highlightColorWithFrame:cellFrame inView:controlView];
@@ -44,7 +49,10 @@
 		[gradient drawInRect:cellFrame];
 		*/
 		
-		[gradient drawInRect:cellFrame];
+		[gradient drawInRect:goodRect];
+		goodRect.size.height = 1;
+		[[NSColor alternateSelectedControlColor] set];
+		NSRectFillUsingOperation(goodRect,NSCompositeSourceOver);
 	} else {
 		[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
 	}
