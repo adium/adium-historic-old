@@ -14,6 +14,7 @@
 - (BOOL)_cacheUserIconData:(NSData *)inData forObject:(AIListObject *)inObject;
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject;
 - (BOOL)destroyCacheForListObject:(AIListObject *)inObject;
+- (void)registerToolbarItem;
 @end
 
 @implementation ESUserIconHandlingPlugin
@@ -33,6 +34,15 @@
 	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) 
 									   name:Preference_GroupChanged 
 									 object:nil];	
+	
+	
+	//Toolbar item registration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
+	toolbarItem = nil;
+	[self registerToolbarItem];	
 }
 
 - (void)uninstallPlugin
@@ -220,4 +230,62 @@
 	return ([USER_ICON_CACHE_PATH stringByAppendingPathComponent:[inObject internalObjectID]]);
 }
 
+#pragma mark Toolbar Item
+- (void)registerToolbarItem
+{
+	ESImageButton *button;
+	
+	//Unregister the existing toolbar item first
+	if(toolbarItem){
+		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+		[toolbarItem release]; toolbarItem = nil;
+	}
+	
+	//Register our toolbar item
+	button = [[[ESImageButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
+	[button setImage:nil];
+	
+	toolbarItem = [[ESFlexibleToolbarItem alloc] initWithItemIdentifier:@"UserIcon"];
+    [toolbarItem setLabel:AILocalizedString(@"Icon",nil)];
+    [toolbarItem setPaletteLabel:AILocalizedString(@"Contact Icon",nil)];
+    [toolbarItem setToolTip:AILocalizedString(@"Show this contact's icon",nil)];
+    [toolbarItem setTarget:self];
+    [toolbarItem setAction:@selector(dummyAction:)];
+	[toolbarItem performSelector:@selector(setView:) withObject:button];
+
+	[toolbarItem setMinSize:NSMakeSize(32,32)];
+	[toolbarItem setMaxSize:NSMakeSize(32,32)];
+	[button setToolbarItem:toolbarItem];
+
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+}
+
+//After the toolbar has added the item we can set up the submenus
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if(!notification || ([[item itemIdentifier] isEqualToString:@"UserIcon"])){
+		NSLog(@"usericon handling got %@",item);
+		[toolbarItem setEnabled:YES];
+		
+		/*
+		NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
+		
+		//Add menu to view
+		[[item view] setMenu:menu];
+		
+		//Add menu to toolbar item (for text mode)
+		NSMenuItem	*mItem = [[[NSMenuItem alloc] init] autorelease];
+		[mItem setSubmenu:menu];
+		[mItem setTitle:[menu title]];
+		[item setMenuFormRepresentation:mItem];
+		 */
+	}
+}
+
+- (IBAction)dummyAction:(id)sender
+{
+	NSLog(@"action");
+}
 @end
