@@ -34,5 +34,6 @@
 - (NSDate *)earliestDate;
 - (NSImage *)firstImage;
 - (NSEnumerator *)objectEnumerator;
+- (NSArray *)allValues;
 
 @end
