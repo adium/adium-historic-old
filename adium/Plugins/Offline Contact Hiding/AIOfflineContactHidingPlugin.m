@@ -32,7 +32,8 @@
     showOfflineMenuItem = [[NSMenuItem alloc] initWithTitle:SHOW_OFFLINE_MENU_TITLE
 													 target:self
 													 action:@selector(toggleOfflineContactsMenu:)
-											  keyEquivalent:@""];
+											  keyEquivalent:@"h"];
+	[showOfflineMenuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
 	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Unnamed_B];		
 
 	//Observe contact and preference changes
