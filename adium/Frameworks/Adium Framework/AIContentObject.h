@@ -17,7 +17,7 @@
     
 	NSAttributedString	*message;
     NSDate  			*date;
-
+	
 	BOOL				filterContent;
 	BOOL				trackContent;
 	BOOL				displayContent;	

@@ -46,7 +46,7 @@
     [destination release];
 	[date release];
 	[message release];
-
+	
     [super dealloc];
 }
 
@@ -55,7 +55,6 @@
 {
     return(@"");
 }
-
 
 //Comparing ------------------------------------------------------------------------------------------------------------
 #pragma mark Comparing
@@ -79,7 +78,6 @@
 	
 	return([ourDate dayOfCommonEra] != [inDate dayOfCommonEra]);
 }
-
 
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content

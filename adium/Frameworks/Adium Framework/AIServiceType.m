@@ -15,10 +15,18 @@
 
 #import "AIServiceType.h"
 
-// the reason for this class is that there may be multiple instances of AIService that are compatable... so only the service types need to match.  More than one AIService can return the same service type if they are compatable.
+// The reason for this class is that there may be multiple instances of AIService that are compatable... 
+// so only the service types need to match.  More than one AIService can return the same service type if
+// they are compatable.
+
+// menuImage is an optional argument; if it is nil but an image is passed, menuImage will be created by
+// scaling image to 16x16, the size a menu item image should be.  Accordingly, if menuImage -is- passed,
+// it should be a 16x16 image.  Failure to do so will make a big mess of the menu (assuming you want the
+// menu items to look normal.
 
 @interface AIServiceType (PRIVATE)
 - (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+			   menuImage:(NSImage *)inMenuImage
 		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
 	   ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength;
 @end
@@ -27,12 +35,14 @@
 
 //Create a new service type
 + (id)serviceTypeWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+					  menuImage:(NSImage *)inMenuImage
 				  caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
 			  ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength
 {
     return([[[self alloc] initWithIdentifier:inIdentifier
 								 description:inDescription
 									   image:inImage
+								   menuImage:inMenuImage
 							   caseSensitive:inCaseSensitive
 						   allowedCharacters:inAllowedCharacters
 						   ignoredCharacters:inIgnoredCharacters
@@ -49,6 +59,10 @@
 
 - (NSImage *)image{
     return(image);
+}
+
+- (NSImage *)menuImage{
+	return(menuImage);
 }
 
 - (NSCharacterSet *)allowedCharacters
@@ -105,6 +119,7 @@
 
 //Private ---------------------------------------------------------------------------
 - (id)initWithIdentifier:(NSString *)inIdentifier description:(NSString *)inDescription image:(NSImage *)inImage
+			   menuImage:(NSImage *)inMenuImage
 		   caseSensitive:(BOOL)inCaseSensitive allowedCharacters:(NSCharacterSet *)inAllowedCharacters
 		   ignoredCharacters:(NSCharacterSet *)inIgnoredCharacters allowedLength:(int)inAllowedLength
 {
@@ -113,6 +128,25 @@
     identifier = [inIdentifier retain];
     description = [inDescription retain];
     image = [inImage retain];
+	
+	//Use the menu image if we are passed one
+	if (inMenuImage){
+		menuImage = [inMenuImage retain];
+	}else{
+		//If we aren't, but we are passed an image, create a menu image from the image
+		if (inImage){
+			menuImage = [[NSImage alloc] initWithSize:NSMakeSize(16,16)];
+			[menuImage lockFocus];
+			[image drawInRect:NSMakeRect(0,0,16,16)
+					 fromRect:NSMakeRect(0,0,[image size].width,[image size].height)
+					operation:NSCompositeCopy
+					 fraction:1.0];
+			[menuImage unlockFocus];
+		}else{
+			//No menuImage called for.
+			menuImage = nil;
+		}
+	}
     caseSensitive = inCaseSensitive;
     allowedCharacters = [inAllowedCharacters retain];
     ignoredCharacters = [inIgnoredCharacters retain];

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.66 2004/07/09 22:14:18 evands Exp $
+// $Id: AIAccount.m,v 1.67 2004/07/10 06:13:35 evands Exp $
 
 #import "AIAccount.h"
 
@@ -119,6 +119,11 @@
 - (NSImage *)serviceImage
 {
 	return [[[self service] handleServiceType] image];
+}
+
+- (NSImage *)serviceMenuImage
+{
+	return [[[self service] handleServiceType] menuImage];	
 }
 
 //Preferences ----------------------------------------------------------------------------------------------------------

@@ -148,6 +148,7 @@ typedef enum {
 - (BOOL)shouldSendAutoresponsesWhileAway;
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject;
 - (NSImage *)serviceImage;
+- (NSImage *)serviceMenuImage;
 
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID;
 - (void)updateContactStatus:(AIListContact *)inContact;

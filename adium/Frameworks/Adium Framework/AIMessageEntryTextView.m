@@ -51,7 +51,7 @@ static NSImage *pushIndicatorImage = nil;
     _desiredSizeCached = NSMakeSize(0,0);
 
     [self setAllowsUndo:YES];
-        
+	[self setImportsGraphics:YES];
 
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
@@ -559,4 +559,27 @@ static NSImage *pushIndicatorImage = nil;
     return [contextualMenu autorelease];
 }
 
+/*An NSTextView which has setImportsGraphics:YES as of 10.3 gets the following drag types by default:
+"NSColor pasteboard type"
+"NSFilenamesPboardType"
+"Apple PDF pasteboard type"
+"Apple PICT pasteboard type"
+"NeXT Encapsulated PostScript v1.2 pasteboard type"
+"NeXT TIFF v4.0 pasteboard type"
+"CorePasteboardFlavorType 0x6D6F6F76"
+"Apple HTML pasteboard type"
+"NeXT RTFD pasteboard type"
+"NeXT Rich Text Format v1.0 pasteboard type"
+"NSStringPboardType"
+"NSFilenamesPboardType"
+*/
+/*
+- (NSArray *)acceptableDragTypes;
+{
+    NSMutableArray *dragTypes;
+    
+    dragTypes = [NSMutableArray arrayWithArray:[super acceptableDragTypes]];
+    return dragTypes;
+}
+*/
 @end
