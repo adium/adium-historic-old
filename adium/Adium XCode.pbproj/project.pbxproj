@@ -4891,16 +4891,16 @@
 			settings = {
 			};
 		};
-		343FA4460567DA5E0049DFFB = {
-			expectedFileType = "compiled.mach-o.dylib";
+		343FA4520567DC460049DFFB = {
+			expectedFileType = archive.ar;
 			isa = PBXFileReference;
-			name = liboscar.dylib;
-			path = "Plugins/Gaim Service/LIBS/liboscar.dylib";
+			name = liboscar.a;
+			path = "Plugins/Gaim Service/LIBS/liboscar.a";
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		343FA4470567DA5E0049DFFB = {
-			fileRef = 343FA4460567DA5E0049DFFB;
+		343FA4530567DC460049DFFB = {
+			fileRef = 343FA4520567DC460049DFFB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17987,7 +17987,7 @@
 				4B7F279805440CB900CDFC90,
 				4B7F279905440CB900CDFC90,
 				4B7F279A05440CB900CDFC90,
-				343FA4470567DA5E0049DFFB,
+				343FA4530567DC460049DFFB,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18150,7 +18150,7 @@
 				4B7F279305440CB900CDFC90,
 				4B7F279405440CB900CDFC90,
 				4B7F279505440CB900CDFC90,
-				343FA4460567DA5E0049DFFB,
+				343FA4520567DC460049DFFB,
 				4B7F27A005440CC900CDFC90,
 			);
 			isa = PBXGroup;
