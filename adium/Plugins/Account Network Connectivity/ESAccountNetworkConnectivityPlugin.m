@@ -9,6 +9,7 @@
 
 @interface ESAccountNetworkConnectivityPlugin (PRIVATE)
 - (void)autoConnectAccounts;
+- (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable;
 
 //10.3 and above
 - (void)accountListChanged:(NSNotification *)notification;
@@ -71,7 +72,7 @@ static NSMutableSet							*accountsToConnect = nil;
 	BOOL networkIsReachable;
 	
 	if (notification){
-		networkIsReachable = [[notification userInfo] boolValue];
+		networkIsReachable = [[notification object] boolValue];
 	}else{
 		networkIsReachable = [AINetworkConnectivity networkIsReachable];
 	}
@@ -95,12 +96,10 @@ static NSMutableSet							*accountsToConnect = nil;
 		if ([accountsToConnect containsObject:account]){
 			if(![account integerStatusObjectForKey:@"Online"] &&
 			   ![account integerStatusObjectForKey:@"Connecting"]){
-				NSLog(@"Connecting %@",account);
+
 				[account setPreference:[NSNumber numberWithBool:YES] 
 							forKey:@"Online"
 							 group:GROUP_ACCOUNT_STATUS];	
-			}else{
-				NSLog(@"Not connecting %@ because %i %i",account,[account integerStatusObjectForKey:@"Online"] ,[account integerStatusObjectForKey:@"Connecting"] );
 			}
 		}
 	}else{
@@ -108,15 +107,11 @@ static NSMutableSet							*accountsToConnect = nil;
 		if (([account integerStatusObjectForKey:@"Online"] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"]){
-			NSLog(@"Disconnecting %@",account);
+
 			[account setPreference:[NSNumber numberWithBool:NO] 
 							forKey:@"Online"
 							 group:GROUP_ACCOUNT_STATUS];
 			[accountsToConnect addObject:account];
-		}else{
-			NSLog(@"not disconnecting %@ because %i %i %i",account,[account integerStatusObjectForKey:@"Online"],
-				  [account integerStatusObjectForKey:@"Connecting"],
-				  [account integerStatusObjectForKey:@"Disconnecting"]);
 		}
 	}
 }
@@ -167,7 +162,15 @@ static NSMutableSet							*accountsToConnect = nil;
 	//Attempt to connect them immediately; if this fails, they will be connected when the network
 	//becomes available.
 	if ([accountsToConnect count]){	
-		[self networkConnectivityChanged:nil];		
+		
+		[AINetworkConnectivity refreshReachabilityAndNotify];
+		/*
+		[NSTimer scheduledTimerWithTimeInterval:2.0
+										 target:[AINetworkConnectivity class]
+									   selector:@selector(refreshReachabilityAndNotify)
+									   userInfo:nil
+										repeats:NO];
+		 */
 	}
 }
 
@@ -199,14 +202,12 @@ static NSMutableSet							*accountsToConnect = nil;
 {
 	//Immediately connect accounts which are ignoring the server reachability
 	{
-		NSMutableArray	*newAccountsToConnect = nil;
+		NSMutableSet	*newAccountsToConnect = nil;
 		NSEnumerator	*enumerator = [accountsToConnect objectEnumerator];
 		AIAccount		*account;
 		
 		while (account = [enumerator nextObject]){
-			const char *customServerToCheckForReachability = [account customServerToCheckForReachability];
-			
-			if (customServerToCheckForReachability){
+			if (![account connectivityBasedOnNetworkReachability]){
 				[account setPreference:[NSNumber numberWithBool:YES] 
 								forKey:@"Online"
 								 group:GROUP_ACCOUNT_STATUS];
@@ -214,7 +215,7 @@ static NSMutableSet							*accountsToConnect = nil;
 				//Remove the account from the array of accounts we are monitoring, for efficiency (since we don't want
 				//to rack up a whole mess of accounts we'll never connect in response to network activity).
 				if (!newAccountsToConnect) newAccountsToConnect = [accountsToConnect mutableCopy];
-				[newAccountsToConnect removeObjectIdenticalTo:account];
+				[newAccountsToConnect removeObject:account];
 			}
 		}
 		
@@ -231,9 +232,11 @@ static NSMutableSet							*accountsToConnect = nil;
 		   for the network to be up. We don't always receive the 10.3 callbacks upon waking, so we just use
 		   the check 'em all 10.2 method just in case - it can't hurt. */
 		
-		[[AINetworkConnectivity class] performSelector:@selector(refreshReachabilityAndNotify)
-											withObject:nil
-											afterDelay:2.0];
+		[NSTimer scheduledTimerWithTimeInterval:2.0
+										 target:[AINetworkConnectivity class]
+									   selector:@selector(refreshReachabilityAndNotify)
+									   userInfo:nil
+										repeats:NO];
 	}
 }
 
