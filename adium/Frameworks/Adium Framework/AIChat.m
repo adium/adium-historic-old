@@ -8,23 +8,22 @@
 #import "AIChat.h"
 
 @interface AIChat (PRIVATE)
-- (id)initForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary;
+- (id)initForAccount:(AIAccount *)inAccount;
 @end
 
 @implementation AIChat
 
-+ (id)chatForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary
++ (id)chatForAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initForAccount:inAccount initialStatusDictionary:inDictionary] autorelease]);
+    return([[[self alloc] initForAccount:inAccount] autorelease]);
 }
 
-- (id)initForAccount:(AIAccount *)inAccount initialStatusDictionary:(NSDictionary *)inDictionary
+- (id)initForAccount:(AIAccount *)inAccount
 {
     [super init];
 
 	name = nil;
     account = [inAccount retain];
-    statusDictionary = (inDictionary ? [inDictionary mutableCopy] : [[NSMutableDictionary alloc] init]);
     contentObjectArray = [[NSMutableArray alloc] init];
     participatingListObjects = [[NSMutableArray alloc] init];
     dateOpened = [[NSDate date] retain];
@@ -39,7 +38,6 @@
 - (void)dealloc
 {
     [account release];
-    [statusDictionary release];
     [contentObjectArray release];
     [participatingListObjects release];
   	[dateOpened release]; 
@@ -127,19 +125,43 @@
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 //Status
-- (NSMutableDictionary *)statusDictionary
+- (void)didModifyStatusKeys:(NSArray *)keys silent:(BOOL)silent
 {
-    return(statusDictionary);
+	[[adium contentController] chatStatusChanged:self
+							  modifiedStatusKeys:keys
+										  silent:silent];	
 }
+
+- (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+{
+	//If our unviewed content changes or typing status changes, and we have a single list object, 
+	//apply the change to that object as well so it can be cleanly reflected in the contact list.
+	if ([key isEqualToString:KEY_UNVIEWED_CONTENT] ||
+		[key isEqualToString:KEY_TYPING]){
+		AIListObject	*listObject = [self listObject];
+		
+		if (listObject) [listObject setStatusObject:value forKey:key notify:notify];
+	}
+	
+	[super object:inObject didSetStatusObject:value forKey:key notify:notify];
+}
+
+//Name  ----------------------------------------------------------------------------------------------------------------
+#pragma mark Name
 - (NSString *)name
 {
-	return (name ? name : [[self listObject] displayName]);
+	return name;
 }
 - (void)setName:(NSString *)inName
 {
 	[name release]; name = [inName retain]; 
 }
 
+- (NSString *)displayName
+{
+    NSString	*outName = [self displayArrayObjectForKey:@"Display Name"];
+    return(outName ? outName : (name ? name : [[self listObject] displayName]));
+}
 
 //Participating ListObjects --------------------------------------------------------------------------------------------
 #pragma mark Participating ListObjects
@@ -150,16 +172,17 @@
 
 - (void)addParticipatingListObject:(AIListObject *)inObject
 {
-    [participatingListObjects addObject:inObject]; //Add
-    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+	if (![participatingListObjects containsObjectIdenticalTo:inObject]){
+		[participatingListObjects addObject:inObject]; //Add
+		[[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:self]; //Notify
+	}
 
 }
 
 // Invite a list object to join the chat. Returns YES if the chat joins, NO otherwise
-- (BOOL)inviteListObject:(AIListObject *)inObject
+- (BOOL)inviteListContact:(AIListContact *)inContact withMessage:(NSString *)inviteMessage
 {
-	[self addParticipatingListObject:inObject];
-	return [[self account] inviteContact:inObject toChat:self];
+	return ([[self account] inviteContact:inContact toChat:self withMessage:inviteMessage]);
 }
 
 //

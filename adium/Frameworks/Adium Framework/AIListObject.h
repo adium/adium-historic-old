@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMutableOwnerArray, AIListGroup, AISortController;
+@class AIMutableOwnerArray, AIListGroup, AISortController, ESObjectWithStatus;
 
 typedef enum {
 	AIAvailableStatus = 'avaL',
@@ -24,17 +24,11 @@ typedef enum {
 	AIUnknownStatus = 'unkN'
 } AIStatusSummary;
 
-@interface AIListObject : AIObject {
+@interface AIListObject : ESObjectWithStatus {
     NSString				*UID;
     NSString				*serviceID;
 	NSString				*uniqueObjectID;
 	BOOL					visible;				//Visibility of this object
-	
-	//Status and display
-    NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
-    NSMutableDictionary		*statusDictionary;
-    NSMutableArray			*changedStatusKeys;		//Status keys that have changed since the last notification
-	NSMutableArray			*delayedStatusTimers;
 
 	//Grouping, Manual ordering
     AIListObject			*containingObject;		//The group this object is in
@@ -42,9 +36,6 @@ typedef enum {
 	
 	NSMutableArray			*containedObjects;			//Manually ordered array of contents
 }
-
-- (NSEnumerator *)statusKeyEnumerator;
-
 
 //
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
@@ -68,8 +59,6 @@ typedef enum {
 - (NSString *)formattedUID;
 - (NSString *)longDisplayName;
 - (NSString *)displayServiceID;
-- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey;
-- (AIMutableOwnerArray *)displayArrayForKey:(NSString *)inKey create:(BOOL)create;
 
 //Prefs
 - (void)setPreference:(id)value forKey:(NSString *)inKey group:(NSString *)groupName;
@@ -77,20 +66,6 @@ typedef enum {
 - (id)preferenceForKey:(NSString *)inKey group:(NSString *)groupName;
 - (NSArray *)allPreferencesForKey:(NSString *)inKey group:(NSString *)groupName;
 - (NSString *)pathToPreferences;
-
-//Status
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
-- (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
-- (void)delayedStatusChange:(NSDictionary *)statusChangeDict;
-- (void)notifyOfChangedStatusSilently:(BOOL)silent;
-- (id)statusObjectForKey:(NSString *)key;
-- (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
-
-- (id)statusObjectForKey:(NSString *)key;
-- (int)integerStatusObjectForKey:(NSString *)key;
-- (NSDate *)earliestDateStatusObjectForKey:(NSString *)key;
-- (NSNumber *)numberStatusObjectForKey:(NSString *)key;
-- (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key;
 
 //Alter the placement of this object in a group (PRIVATE: These are for AIListGroup ONLY)
 - (void)setOrderIndex:(float)inIndex;
