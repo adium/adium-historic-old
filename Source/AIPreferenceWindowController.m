@@ -24,7 +24,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //Other
 #define PREFERENCE_WINDOW_NIB					@"PreferenceWindow"	//Filename of the preference window nib
 #define PREFERENCE_ICON_FORMAT					@"pref-%@"			//Format of the preference icon filenames
-#define ADVANCED_PANE_HEIGHT					350					//Fixed advanced pane height
+#define ADVANCED_PANE_HEIGHT					333+4				//Fixed advanced pane height
 #define ADVANCED_PANE_IDENTIFIER				@"advanced"			//Identifier of advanced tab
 
 //Localized strings
