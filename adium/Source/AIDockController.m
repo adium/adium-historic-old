@@ -42,46 +42,46 @@
 //bouncing
 - (void)bounce
 {
-    if([NSApplication instancesRespondToSelector:@selector(requestUserAttention:)])
+    if([NSApp respondsToSelector:@selector(requestUserAttention:)])
     {
-        [NSApp requestUserAttention:NSInformationalRequest];
-    }
-}
-- (void)bounceWithInterval:(double)delay times:(int)num // if num = 0, bounce forever
-{    
-    if(delay == 0 && num == 0) //bouncing is constant and forvever
-    {
-        if([NSApplication instancesRespondToSelector:@selector(requestUserAttention:)])
-        {
-            [NSApp requestUserAttention:NSCriticalRequest];
-        }
-        
-    }
-    else //there is some kind of interval, we want to bounce a certain # of times, or both
-    {
-        if(num == 0) // bounce forever!!
-        {
-            currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer) userInfo:0 repeats:YES];
-        }
-        else // bounce num # of times
-        {
-            currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer) userInfo:[NSNumber numberWithInt:num] repeats:NO];
-        }
+        int temp = [NSApp requestUserAttention:NSInformationalRequest];
+        NSTimer *waitTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(cancelBouncingForTimer:) userInfo:[NSNumber numberWithInt:temp] repeats:NO];
     }
 }
 
-- (void)stopBouncing //sketchy about whether or not this will work... 
+- (void)bounceWithInterval:(double)delay times:(int)num // if num = 0, bounce forever
+{   
+    //we aren't using NSCriticalRequest because it's a pain in the butt to cancel. 
+    
+    if(num == 0) // bounce forever!!
+    {
+        //currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:0 repeats:YES];
+    }
+    else // bounce num # of times
+    {
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:num] repeats:NO];
+    }
+}
+
+- (void)stopBouncing
 {
-        if([NSApplication instancesRespondToSelector:@selector(cancelUserAttentionRequest:)])
-        {
-            [NSApp cancelUserAttentionRequest:0];
-        }
-        
+    if([currentTimer isValid])
+    {
         [currentTimer invalidate];
+    }
 }
 
 //PRIVATE ========
 
+- (void)cancelBouncingForTimer:(NSTimer *)timer
+{
+    if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)] && [timer isValid])
+    {
+        [NSApp cancelUserAttentionRequest:[[timer userInfo] intValue]];
+        NSLog(@"canceled");
+    }
+    NSLog(@"not canclled");
+}
 - (void)bounceWithTimer:(NSTimer *)timer
 {
     [self bounce];
