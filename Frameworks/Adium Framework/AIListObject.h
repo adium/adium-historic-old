@@ -56,6 +56,7 @@ typedef enum {
 - (NSString *)UID;
 - (AIService *)service;
 - (NSString *)internalObjectID;
++ (NSString *)internalObjectIDForServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 //Visibility
 - (void)setVisible:(BOOL)inVisible;

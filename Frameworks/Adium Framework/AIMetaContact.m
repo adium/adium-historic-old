@@ -63,9 +63,14 @@
 - (NSString *)internalObjectID
 {
 	if (!internalObjectID){
-		internalObjectID = [[NSString stringWithFormat:@"MetaContact-%i",[objectID intValue]] retain];
+		internalObjectID = [[AIMetaContact internalObjectIDFromObjectID:objectID] retain];
 	}
 	return(internalObjectID);
+}
+
++ (NSString *)internalObjectIDFromObjectID:(NSNumber *)inObjectID
+{
+	return ([NSString stringWithFormat:@"MetaContact-%i",[inObjectID intValue]]);
 }
 
 //
