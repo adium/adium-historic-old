@@ -57,6 +57,29 @@
                     <p>Join us in #adium on irc.freenode.net for live chat.</p>
                 </div>
                 <div class="boxThinBottom"></div>
+                <h1>No IRC in Adium?!</h1>
+
+                <div class="boxThinTop"></div>
+                <div class="boxThinContent">
+					<p>What's up with that? I thought Adium was a multiprotocol client for the masses?!</p>
+                    <p>Here is why.</p>
+                    <p>Adium currently can't do IRC. If you want more information, please go to the following forum post:</p>
+                    <p><a href="http://www.funmac.com/showthread.php?t=7032&highlight=IRC+Adium">IRC in Adium</a></p>
+                </div>
+                <div class="boxThinBottom"></div>
+                
+                                <h1>It says my nickname is taken..</h1>
+
+                <div class="boxThinTop"></div>
+                <div class="boxThinContent">
+					<p>When you connect to IRC, it may say that your nickname is already taken.</p>
+                    <p>This means that someone else has registered that nickname.</p>
+                    <p>All you need to do is change your nickname to something else.</p>
+                    <p>To do this, type the following command to change your nickname:</p>
+                    <p><b>/nick nickname</b></p>
+                    <p>Should you be informed that the new nickname is taken, change your nickname again. Continue changing it until you get a nickname that is not taken.</p>
+                </div>
+                <div class="boxThinBottom"></div>
                 
                                 <h1>Other forms of support</h1>
 
