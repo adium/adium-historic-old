@@ -22,6 +22,17 @@
     return(@"DualWindowAdvanced");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
+		[defaultPrefs objectForKey:KEY_DUAL_RESIZE_VERTICAL],KEY_DUAL_RESIZE_VERTICAL,
+		[defaultPrefs objectForKey:KEY_DUAL_RESIZE_HORIZONTAL],KEY_DUAL_RESIZE_HORIZONTAL,
+			nil];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	return(defaultsDict);
+}
+
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {

@@ -17,8 +17,6 @@
 #import "AISendingKeyPreferences.h"
 #import "AISendingKeyPreferencesAdvanced.h"
 
-#define SENDING_KEY_DEFAULT_PREFS	@"SendingKeyDefaults"
-
 @interface AISendingKeyPreferencesPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureSendingKeysForObject:(id)inObject;

@@ -16,8 +16,6 @@
 #import "AITextForcingPlugin.h"
 #import "AITextForcingPreferences.h"
 
-#define TEXT_FORCING_DEFAULT_PREFS	@"TextForcingDefaults"
-
 @interface AITextForcingPlugin (PRIVATE)
 - (void)filterContentObject:(AIContentObject *)inObject;
 - (void)preferencesChanged:(NSNotification *)notification;

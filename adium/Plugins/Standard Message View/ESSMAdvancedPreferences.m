@@ -25,6 +25,14 @@
     return(@"ESSMAdvancedPrefView");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObject:[defaultPrefs objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] forKey:KEY_SMV_COMBINE_MESSAGES_INDENT];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+	return(defaultsDict);
+}
+
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {

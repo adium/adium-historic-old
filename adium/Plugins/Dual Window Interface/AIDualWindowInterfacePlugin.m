@@ -24,9 +24,6 @@
 #import "ESDualWindowMessageWindowPreferences.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 
-#define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
-#define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
-
 #define CONTACT_LIST_WINDOW_MENU_TITLE		AILocalizedString(@"Contact List","Title for the contact list menu item")
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
 #define CLOSE_TAB_MENU_TITLE			AILocalizedString(@"Close Tab","Title for the close tab menu item")

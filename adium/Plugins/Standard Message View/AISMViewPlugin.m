@@ -18,8 +18,6 @@
 #import "AISMPreferences.h"
 #import "ESSMAdvancedPreferences.h"
 
-#define SMV_DEFAULT_PREFS	@"SMVDefaults"
-
 @implementation AISMViewPlugin
 
 #define SMV_THEMABLE_PREFS      @"SMV Themable Prefs"

@@ -17,6 +17,7 @@
 @class AISMPreferences, ESSMAdvancedPreferences;
 
 #define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
+#define SMV_DEFAULT_PREFS					@"SMVDefaults"
 
 #define KEY_SMV_SHOW_USER_ICONS                 @"Show icons"
 #define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"

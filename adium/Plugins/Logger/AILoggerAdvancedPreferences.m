@@ -33,6 +33,14 @@
     return(@"LoggerAdvancedPrefs");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	//Note: Although the logger has regular AND advanced prefs, the regular ones are a subset of the advanced ones, so resetting all prefs is OK
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_LOGGING];
+	return(defaultsDict);
+}
+
 //Configure the preference view
 - (void)viewDidLoad
 {

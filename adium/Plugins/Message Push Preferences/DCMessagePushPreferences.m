@@ -29,6 +29,12 @@
     return(@"MessagePushPreferences");
 }
 
+- (NSDictionary *)restorablePreferences
+{
+	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:PUSH_DEFAULT_PREFS forClass:[self class]];
+	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_PUSH_PREFS];
+	return(defaultsDict);
+}
 
 //Configure the preference view
 - (void)viewDidLoad

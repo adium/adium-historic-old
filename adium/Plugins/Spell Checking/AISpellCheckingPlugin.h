@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #define KEY_SPELL_CHECKING			@"Spell Checking Enabled"
+#define SPELL_CHECKING_DEFAULT_PREFS	@"SpellingDefaults"
 
 @class AISpellCheckingPreferences;
 
