@@ -32,10 +32,6 @@
 	IBOutlet		NSButton			*checkBox_statusIconsVisible;
 	IBOutlet		NSButton			*checkBox_serviceIconsVisible;
 
-	IBOutlet		NSTextField			*textField_horizontalWidthText;
-	IBOutlet		NSSlider			*slider_horizontalWidth;
-	IBOutlet		NSTextField			*textField_horizontalWidthIndicator;
-	
 	IBOutlet		NSSlider			*slider_userIconSize;
 	IBOutlet		NSTextField			*textField_userIconSize;
 	IBOutlet		NSSlider			*slider_contactSpacing;
