@@ -119,7 +119,7 @@ static NDRunLoopMessenger   *runLoopMessenger = nil;
 
 static NSObject<AdiumGaimDO> *accountLookup(GaimAccount *acct)
 {
-	NSObject<AdiumGaimDO> *adiumGaimAccount = (NSObject<AdiumGaimDO> *)acct->ui_data;
+	NSObject<AdiumGaimDO> *adiumGaimAccount = (acct ? (NSObject<AdiumGaimDO> *)acct->ui_data : nil);
 
     return adiumGaimAccount;
 }
@@ -2073,9 +2073,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 		const char  *aliasUTF8String = [alias UTF8String];
 		
-		if ((aliasUTF8String && !buddy->alias) ||
-			(!aliasUTF8String && buddy->alias) ||
-			((buddy->alias && aliasUTF8String && (strcmp(buddy->alias,aliasUTF8String) != 0)))){
+		if (buddy && ((aliasUTF8String && !buddy->alias) ||
+					  (!aliasUTF8String && buddy->alias) ||
+					  ((buddy->alias && aliasUTF8String && (strcmp(buddy->alias,aliasUTF8String) != 0))))){
 			
 			gaim_blist_alias_buddy(buddy,aliasUTF8String);
 			serv_alias_buddy(buddy);
