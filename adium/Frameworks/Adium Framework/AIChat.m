@@ -119,6 +119,18 @@
     }
 }
 
+- (NSString *)uniqueChatID
+{
+	NSString		*firstSegmentUniqueChatID;
+	AIListObject	*listObject;
+	if (listObject = [self listObject]){
+		firstSegmentUniqueChatID = [listObject UID];
+	}else{
+		firstSegmentUniqueChatID = name;
+	}
+	
+	return ([NSString stringWithFormat:@"%@.%@",firstSegmentUniqueChatID,[account uniqueObjectID]]);
+}
 
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
