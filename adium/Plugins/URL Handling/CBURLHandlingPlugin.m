@@ -110,6 +110,7 @@
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact){
 		chat = [[adium contentController] openChatWithContact:contact];
+		[[adium interfaceController] setActiveChat:chat];
 		
 		if (message){
 			AIContentMessage	*contentMessage;
