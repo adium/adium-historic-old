@@ -14,6 +14,7 @@
 - (void)updateRowHeightCache;
 - (void)_drawRowSelectionInRect:(NSRect)rect;
 - (void)_initMultiCellOutlineView;
+- (NSImage *)dragImageForRows:(unsigned int[])buf count:(unsigned int)count tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset;
 @end
 
 @implementation AIMultiCellOutlineView
@@ -179,43 +180,37 @@
 	}
 }
 
-
-//Our default drag image will be cropped incorrectly, so we need a custom one here
-- (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
+- (NSImage *)dragImageForRows:(unsigned int[])buf count:(unsigned int)count tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
 {
 	NSImage			*image;
-	NSEnumerator	*enumerator;
-	NSNumber		*rowNumber;
 	NSRect			rowRect;
-	int				count, firstRow, row;
 	float			yOffset;
+	unsigned int	i, firstRow, row;
 	
-	count = [dragRows count];
-	firstRow = [[dragRows objectAtIndex:0] intValue];
+	firstRow = buf[0];
 	
 	//Since our cells draw outside their bounds, this drag image code will create a drag image as big as the table row
 	//and then draw the cell into it at the regular size.  This way the cell can overflow its bounds as normal and not
 	//spill outside the drag image.
 	rowRect = [self rectOfRow:firstRow];
 	image = [[[NSImage alloc] initWithSize:NSMakeSize(rowRect.size.width,
-													 rowRect.size.height*count + [self intercellSpacing].height*(count-1))] autorelease];
+													  rowRect.size.height*count + [self intercellSpacing].height*(count-1))] autorelease];
 	
 	//Draw (Since the OLV is normally flipped, we have to be flipped when drawing)
 	[image setFlipped:YES];
 	[image lockFocus];
 	
 	yOffset = 0;
-	enumerator = [dragRows objectEnumerator];
-	while (rowNumber = [enumerator nextObject]){
-
-		row = [rowNumber intValue];
+	for(i = 0; i < count; i++){
+	
+		row = buf[i];
 		id		item = [self itemAtRow:row];
 		id		cell = ([self isExpandable:item] ? groupCell : contentCell);
-
+		
 		//Render the cell
 		[[self delegate] outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		[cell setHighlighted:NO];
-
+		
 		//Draw the cell
 		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
 		[cell drawWithFrame:NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height)
@@ -234,6 +229,41 @@
 	
 	
 	return([image imageByFadingToFraction:DRAG_IMAGE_FRACTION]);
+	
+}
+
+- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+	NSImage			*image;
+	unsigned int	bufSize = [dragRows count];
+	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
+	
+	NSRange range = NSMakeRange([dragRows firstIndex], ([dragRows lastIndex]-[dragRows firstIndex]) + 1);
+	[dragRows getIndexes:buf maxCount:bufSize inIndexRange:&range];
+	
+	image = [self dragImageForRows:buf count:bufSize tableColumns:tableColumns event:dragEvent offset:dragImageOffset]; 
+	
+	free(buf);
+
+	return(image);
+}
+
+//Our default drag image will be cropped incorrectly, so we need a custom one here
+- (NSImage *)dragImageForRows:(NSArray *)dragRows event:(NSEvent *)dragEvent dragImageOffset:(NSPointPointer)dragImageOffset
+{
+	NSImage			*image;
+	unsigned int	i, bufSize = [dragRows count];
+	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
+
+	for(i = 0; i < bufSize; i++){
+		buf[i] = [[dragRows objectAtIndex:0] unsignedIntValue];
+	}
+	
+	image = [self dragImageForRows:buf count:bufSize tableColumns:nil event:dragEvent offset:dragImageOffset]; 
+	
+	free(buf);
+
+	return(image);
 }
 
 
