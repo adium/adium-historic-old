@@ -7,6 +7,7 @@
 
 #import "ESWebKitMessageViewPreferences.h"
 #import "AIWebKitMessageViewPlugin.h"
+#import "AIWebKitMessageViewController.h"
 
 #define PREVIEW_FILE	@"Preview"
 
@@ -33,7 +34,14 @@
 - (void)_buildTimeStampMenu_AddFormat:(NSString *)format;
 - (void)_updatePopupMenuSelectionsForStyle:(NSString *)styleName;
 
-- (void)_createPreviewConversationFromChatDict:(NSDictionary *)chatDict;
+- (void)_configureChatPreview;
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath;
+- (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath;
+- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
+- (void)_addContent:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants;
+
+
+
 @end
 
 @implementation ESWebKitMessageViewPreferences
@@ -52,15 +60,11 @@
 //Configure the preference view
 - (void)viewDidLoad
 {	
-	stylePath = nil;
 	previewListObjectsDict = nil;
 	newContent = [[NSMutableArray alloc] init];
 	
-	[preview setFrameLoadDelegate:self];
-	[preview setPolicyDelegate:plugin];		//Just send policy questions directly to the plugin
-	[preview setUIDelegate:self];
-	[preview setMaintainsBackForwardList:NO];
-	
+	//Configure our view
+	[self _configureChatPreview];
 	[self _buildTimeStampMenu];
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
@@ -81,13 +85,45 @@
 		
 		[popUp_styles selectItemWithTitle:[prefDict objectForKey:KEY_WEBKIT_STYLE]];
 	}
-
+	
 	//Observe preference changes and set our initial preferences
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(preferencesChanged:)
 									   name:Preference_GroupChanged
 									 object:nil];
 	[self preferencesChanged:nil];
+}
+
+
+//Configure the chat preferences preview
+- (void)_configureChatPreview
+{
+	NSDictionary	*previewDict;
+	NSString		*previewFilePath;
+	NSString		*previewPath;
+	
+	//Create our fake chat and message controller for the live preview
+	previewChat = [[AIChat chatForAccount:nil initialStatusDictionary:nil] retain];
+	[previewChat setName:@"Sample Conversation"];
+	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
+																		  withPlugin:plugin] retain];
+	
+	//Add fake users and content to our chat
+	//	previewPath = [[stylePath stringByAppendingPathComponent:PREVIEW_FILE] stringByAppendingPathExtension:@"plist"];
+	//	if([[NSFileManager defaultManager] fileExistsAtPath:previewPath]){
+	//		previewDict = [NSDictionary dictionaryWithContentsOfFile:previewFilePath];
+	//		previewPath = [previewFilePath retain];
+	//	}else{
+	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE ofType:@"plist"];
+	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
+	previewPath = [[previewFilePath stringByDeletingLastPathComponent] retain];
+	//	}
+	[self _fillContentOfChat:previewChat withDictionary:previewDict fromPath:previewPath];
+	
+	//Place the preview chat in our view
+	preview = [[previewController messageView] retain];
+	[preview setFrame:[view_previewLocation frame]];
+	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
 }
 
 //Close the preference view
@@ -104,7 +140,6 @@
 	[previousContent release]; previousContent = nil;
 	[newContent release]; newContent = nil;
 	[newContentTimer invalidate]; [newContentTimer release]; newContentTimer =nil;
-	[stylePath release]; stylePath = nil;
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
@@ -234,11 +269,7 @@
 	NSBundle		*style;
 	NSString		*loadedPreviewDirectory = nil;
 	NSDictionary	*previewDict;
-	AIChat			*chat;
-	
-	//We aren't ready for that kind of commitment yet...
-	webViewIsReady = NO;
-	
+		
 	//Load the style as per preferences
 	{
 		styleName = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
@@ -250,82 +281,17 @@
 			styleName = AILocalizedString(@"Mockie","Default message style name. Make sure this matches the localized style bundle's name!");
 			style = [plugin messageStyleBundleWithName:styleName];
 		}
+	}
 
-		//Retain the stylePath
-		[stylePath release];
-		stylePath = [[style resourcePath] retain];
-	}
-	
-	//Load the preview from the style if possible; otherwise use the bundle's own preview.plist
-	{
-		NSString		*previewFilePath;
-		
-		previewFilePath = [[stylePath stringByAppendingPathComponent:PREVIEW_FILE] stringByAppendingPathExtension:@"plist"];
-		
-		if([[NSFileManager defaultManager] fileExistsAtPath:previewFilePath]){
-			previewDict = [NSDictionary dictionaryWithContentsOfFile:previewFilePath];
-			loadedPreviewDirectory = stylePath;
-		}else{
-			previewDict = [NSDictionary dictionaryNamed:PREVIEW_FILE forClass:[self class]];
-			loadedPreviewDirectory = [[[NSBundle bundleForClass:[self class]] pathForResource:PREVIEW_FILE 
-																					   ofType:@"plist"] stringByDeletingLastPathComponent];
-		}
-		//Create the AIListObjects we will need, putting them into previewListObjectsDict 
-		[self _createListObjectsFromDict:previewDict withLoadedPreviewDirectory:loadedPreviewDirectory];
-	}
-	
 	//Load the variant
 	variant = [[adium preferenceController] preferenceForKey:[plugin variantKeyForStyle:styleName]
-															  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	CSS = (variant ? [NSString stringWithFormat:@"Variants/%@.css",variant] : @"main.css");
-	
-
-
-	//Create and set up our temporary chat for filling keywords in headerHTML and footerHTML
-	{
-		NSDictionary	*chatDict = [previewDict objectForKey:@"Chat"];
-		NSString		*type = [chatDict objectForKey:@"Type"];
-
-		chat = [AIChat chatForAccount:nil initialStatusDictionary:nil];
-		
-		if ([type isEqualToString:@"IM"]){
-			NSString *UID;
-			if (UID = [chatDict objectForKey:@"Destination UID"]){
-				[chat addParticipatingListObject:[previewListObjectsDict objectForKey:UID]];
-			}
-			if (UID = [chatDict objectForKey:@"Source UID"]){
-				[chat setAccount:(AIAccount *)[previewListObjectsDict objectForKey:UID]];
-			}
-			
-		}else{
-			NSString *name;
-			if (name = [chatDict objectForKey:@"Name"]) [chat setName:name];
-		}
-
-		NSString	*dateOpened;
-		if (dateOpened = [chatDict objectForKey:@"Date Opened"]){
-			[chat setDateOpened:[NSDate dateWithNaturalLanguageString:dateOpened]];
-		}
-	}
-
-	//Feed the style to the webview after ensuring the newContent array is clear
-	[newContent removeAllObjects];
-	[plugin loadStyle:style
-			 withName:styleName
-			  variant:variant
-			  withCSS:CSS
-			  forChat:chat
-		  intoWebView:preview];
-	
+													   group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	//Set up the preferences for the style
 	[self _updateViewForStyle:style variant:variant];
 	
-	allowColors = [plugin boolForKey:@"AllowTextColors" style:style variant:variant boolDefault:YES];
-		
-	//Load and display the desired content objects
-	[self _createPreviewConversationFromChatDict:[previewDict objectForKey:@"Preview Messages"]];
+	[(AIWebKitMessageViewController *)previewController forceReload];
 }
-
+	
 - (void)_updateViewForStyle:(NSBundle *)style variant:(NSString *)variant
 {
 	NSMenu		*submenu;
@@ -396,141 +362,6 @@
 	[fontPreviewField_currentFont setFont:font];
 	[popUp_minimumFontSize selectItemAtIndex:[[popUp_minimumFontSize menu] indexOfItemWithTag:[[preview preferences] minimumFontSize]]];
 }
-
-//Take the fake conversation contained in chatDict and send it to our webView
-- (void)_createPreviewConversationFromChatDict:(NSDictionary *)chatDict
-{
-	NSDictionary		*messageDict;
-	int					cnt;
-	NSString			*type;
-	AIContentContext	*responseContent;
-	AIListObject		*source, *dest;
-	
-	cnt = [chatDict count];
-	//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-	while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
-		cnt--;
-		type = [messageDict objectForKey:@"Type"];		
-		responseContent = nil;
-		
-		if([type isEqualToString:CONTENT_MESSAGE_TYPE]) {
-			//Create message content object
-			NSAttributedString  *message =[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
-			BOOL				outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
-			NSString			*from = [messageDict objectForKey:@"From"];
-			NSString			*to = [messageDict objectForKey:@"To"];
-			
-			// The other person is always the one we're chatting with right now
-			dest = [previewListObjectsDict objectForKey:to];
-			source =  [previewListObjectsDict objectForKey:from];
-			
-			responseContent = [AIContentMessage messageInChat:nil
-												   withSource:source
-												  destination:dest
-														 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-													  message:message
-													autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
-			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
-			//nor our destination are AIAccount objects.
-			[responseContent _setIsOutgoing:outgoing];
-			
-		}else if ([type isEqualToString:CONTENT_STATUS_TYPE]){
-			//Create status content object
-			NSString	*message = [messageDict objectForKey:@"Message"];
-			NSString	*statusMessageType = [messageDict objectForKey:@"Status Message Type"];
-			
-			NSString	*from = [messageDict objectForKey:@"From"];
-			source = (from ? [previewListObjectsDict objectForKey:from] : nil);
-			
-			//Create our content object
-			responseContent = [AIContentStatus statusInChat:nil
-												 withSource:source
-												destination:nil
-													   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-													message:[NSAttributedString stringWithString:message]
-												   withType:statusMessageType];
-		}
-		
-		if (responseContent){
-			[newContent addObject:responseContent];
-		}
-	}
-	
-	[self processNewContent];
-}
-
-- (void)processNewContent
-{
-	while(webViewIsReady && [newContent count]){
-		AIContentObject *content = [newContent objectAtIndex:0];
-		
-		//Display the content
-		[plugin processContent:content
-		   withPreviousContent:previousContent 
-					forWebView:preview
-				 fromStylePath:stylePath
-				allowingColors:allowColors];
-		
-		//Remember the last content inserted (Used mainly for combining consecutive messages)
-		[previousContent release];
-		previousContent = [content retain];
-		
-		//Remove the content we just displayed from the queue
-		if ([newContent count]){
-			[newContent removeObjectAtIndex:0];
-		}
-	}
-	
-	//cleanup previous 
-	if(newContentTimer){
-		[newContentTimer invalidate]; [newContentTimer release];
-		newContentTimer = nil;
-	}
-	
-	//if not added, Try to add this content again in a little bit
-	if([newContent count]){
-		newContentTimer = [[NSTimer scheduledTimerWithTimeInterval:NEW_CONTENT_RETRY_DELAY
-															target:self
-														  selector:@selector(processNewContent)
-														  userInfo:nil
-														   repeats:NO] retain]; 
-	}
-}
-
-- (void)_createListObjectsFromDict:(NSDictionary *)previewDict withLoadedPreviewDirectory:(NSString *)loadedPreviewDirectory
-{
-	//Create AIListObjects 
-	NSEnumerator	*enumerator = [[previewDict objectForKey:@"Participants"] objectEnumerator];
-	NSDictionary	*participant;
-	
-	[previewListObjectsDict release]; previewListObjectsDict = [[NSMutableDictionary alloc] init];
-	while (participant = [enumerator nextObject]){
-		AIListObject	*listObject;
-		NSString		*UID =[participant objectForKey:@"UID"];
-		
-		listObject = [[[AIListObject alloc] initWithUID:UID
-											  serviceID:@"AIM"] autorelease];
-		
-		//Display name
-		NSString *alias = [participant objectForKey:@"Display Name"];
-		if (alias){
-			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-													  object:listObject
-													userInfo:[NSDictionary dictionaryWithObject:alias
-																						 forKey:@"Alias"]];
-		}
-		
-		//User icon
-		NSString	*userIconName = [participant objectForKey:@"UserIcon Name"];
-		if (userIconName){
-			[listObject setStatusObject:[loadedPreviewDirectory stringByAppendingPathComponent:[participant objectForKey:@"UserIcon Name"]]
-								 forKey:@"UserIconPath"
-								 notify:YES];
-		}
-		[previewListObjectsDict setObject:listObject forKey:UID];
-	}
-}
-
 
 #pragma mark Menus
 -(NSMenu *)_fontSizeMenu
@@ -679,17 +510,144 @@
 }
 
 
-#pragma mark WebFrameLoadDelegate
-//----WebFrameLoadDelegate
-- (void)webView:(WebView *)sender didFinishLoadForFrame:(WebFrame *)frame
+//Fake Conversation ----------------------------------------------------------------------------------------------------
+#pragma mark Fake Conversation
+//Fill the content of the specified chat using content archived in the dictionary
+- (void)_fillContentOfChat:(AIChat *)inChat withDictionary:(NSDictionary *)previewDict fromPath:(NSString *)previewPath
 {
-	webViewIsReady = YES;
+	NSDictionary		*listObjects;
+	
+	//Process and create all participants
+	listObjects = [self _addParticipants:[previewDict objectForKey:@"Participants"]
+								  toChat:inChat fromPath:previewPath];
+	
+	//Setup the chat, and its source/destination
+	[self _applySettings:[previewDict objectForKey:@"Chat"]
+				  toChat:inChat withParticipants:listObjects];
+	
+	//Add the archived chat content
+	[self _addContent:[previewDict objectForKey:@"Preview Messages"]
+			   toChat:inChat withParticipants:listObjects];
 }
 
-#pragma mark WebUIDelegate
-- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems
+//Add participants
+- (NSMutableDictionary *)_addParticipants:(NSDictionary *)participants toChat:(AIChat *)inChat fromPath:(NSString *)previewPath
 {
-	return [plugin webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems forChat:nil];
+	NSMutableDictionary	*listObjectDict = [NSMutableDictionary dictionary];
+	NSEnumerator		*enumerator = [participants objectEnumerator];
+	NSDictionary		*participant;
+	
+	while(participant = [enumerator nextObject]){
+		NSString		*UID, *alias, *userIconName;
+		AIListObject	*listObject;
+		
+		//Create object
+		UID = [participant objectForKey:@"UID"];
+		listObject = [[[AIListObject alloc] initWithUID:UID
+											  serviceID:@"AIM"] autorelease];
+		
+		//Display name
+		if(alias = [participant objectForKey:@"Display Name"]){
+			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+													  object:listObject
+													userInfo:[NSDictionary dictionaryWithObject:alias forKey:@"Alias"]];
+		}
+		
+		//User icon
+		if(userIconName = [participant objectForKey:@"UserIcon Name"]){
+			[listObject setStatusObject:[previewPath stringByAppendingPathComponent:[participant objectForKey:@"UserIcon Name"]]
+								 forKey:@"UserIconPath"
+								 notify:YES];
+		}
+		
+		[listObjectDict setObject:listObject forKey:UID];
+	}
+	
+	return(listObjectDict);
+}
+
+//Chat settings
+- (void)_applySettings:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
+{
+	NSString			*dateOpened, *type, *name, *UID;
+	NSEnumerator		*enumerator;
+	NSDictionary		*messageDict, *participant;
+	
+	//Date opened
+	if(dateOpened = [chatDict objectForKey:@"Date Opened"]){
+		[inChat setDateOpened:[NSDate dateWithNaturalLanguageString:dateOpened]];
+	}
+	
+	//Source/Destination
+	type = [chatDict objectForKey:@"Type"];
+	if([type isEqualToString:@"IM"]){
+		if(UID = [chatDict objectForKey:@"Destination UID"]){
+			[inChat addParticipatingListObject:[participants objectForKey:UID]];
+		}
+		if(UID = [chatDict objectForKey:@"Source UID"]){
+			[inChat setAccount:(AIAccount *)[participants objectForKey:UID]];
+		}
+	}else{
+		if(name = [chatDict objectForKey:@"Name"]) [inChat setName:name];
+	}
+}
+
+//Chat content
+- (void)_addContent:(NSDictionary *)chatDict toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
+{
+	NSString			*dateOpened, *type, *name, *UID;
+	NSEnumerator		*enumerator;
+	NSDictionary		*messageDict, *participant;
+	
+	enumerator = [chatDict objectEnumerator];
+	while(messageDict = [enumerator nextObject]){
+		NSString 		*msgType = [messageDict objectForKey:@"Type"];
+		AIContentObject	*content = nil;
+		
+		if([msgType isEqualToString:CONTENT_MESSAGE_TYPE]){
+			AIListObject	*dest, *source;
+			
+			//Create message content object
+			NSAttributedString  *message =[NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
+			NSString			*from = [messageDict objectForKey:@"From"];
+			NSString			*to = [messageDict objectForKey:@"To"];
+			BOOL				outgoing = [[messageDict objectForKey:@"Outgoing"] boolValue];
+			
+			//The other person is always the one we're chatting with right now
+			dest = [participants objectForKey:to];
+			source =  [participants objectForKey:from];
+			content = [AIContentMessage messageInChat:nil
+										   withSource:source
+										  destination:dest
+												 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+											  message:message
+											autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+			
+			//AIContentMessage won't know whether the message is outgoing unless we tell it since neither our source
+			//nor our destination are AIAccount objects.
+			[content _setIsOutgoing:outgoing];
+			
+			NSLog(@"%@",[message string]);
+			
+		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
+			//Create status content object
+			NSString		*message = [messageDict objectForKey:@"Message"];
+			NSString		*statusMessageType = [messageDict objectForKey:@"Status Message Type"];
+			NSString		*from = [messageDict objectForKey:@"From"];
+			AIListObject	*source = (from ? [participants objectForKey:from] : nil);
+			
+			//Create our content object
+			content = [AIContentStatus statusInChat:nil
+										 withSource:source
+										destination:nil
+											   date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+											message:[NSAttributedString stringWithString:message]
+										   withType:statusMessageType];
+			
+		}
+		
+		if(content) [inChat addContentObject:content];
+	}
 }
 
 

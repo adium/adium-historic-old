@@ -37,6 +37,11 @@ typedef enum {
 	
 	NSString					*stylePath;
 	BOOL						allowColors;
+	
+	AIChat						*previewChat;
+	
+	id<AIMessageViewController> previewController;
+    IBOutlet	NSView			*view_previewLocation;
 }
 
 - (IBAction)changePreference:(id)sender;
