@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.30 2003/12/08 07:02:34 jmelloy Exp $
+// $Id: AIPreferenceController.m,v 1.31 2003/12/13 15:56:04 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -31,24 +31,31 @@
 //init
 - (void)initController
 {
-    AIMiniToolbarItem	*toolbarItem;
-
     paneArray = [[NSMutableArray alloc] init];
     groupDict = [[NSMutableDictionary alloc] init];
     delayedNotificationGroups = [[NSMutableSet alloc] init];
     shouldDelay = NO;
     
     [owner registerEventNotification:Preference_GroupChanged displayName:@"Preferences Changed"];
+    
+}
 
-    //Register our toolbar item
-    toolbarItem = [[[AIMiniToolbarItem alloc] initWithIdentifier:@"ShowPreferences"] autorelease];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"settings" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(showPreferenceWindow:)];
-    [toolbarItem setToolTip:@"Preferences"];
-    [toolbarItem setPaletteLabel:@"Open Adium's Preferences"];
-    [toolbarItem setEnabled:YES];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:toolbarItem];
+//We can't do these in initing, since the toolbar controller hasn't loaded yet
+- (void)finishIniting
+{
+    NSToolbarItem	*toolbarItem;
+
+    //Show preference window toolabr item
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowPreferences"
+					    label:@"Preferences"
+				     paletteLabel:@"Open Preferences"
+				          toolTip:@"Open Preferences"
+				           target:self
+				  settingSelector:@selector(setImage:)
+				      itemContent:[AIImageUtilities imageNamed:@"settings" forClass:[self class]]
+				           action:@selector(showPreferenceWindow:)
+					     menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 
 //close

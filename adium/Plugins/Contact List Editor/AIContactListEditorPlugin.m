@@ -28,7 +28,6 @@
 
 - (void)installPlugin
 {
-    AIMiniToolbarItem	*toolbarItem;
     NSMenuItem		*menuItem;
 
     //
@@ -39,15 +38,17 @@
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List…" target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
     [[owner menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 
-    //Register our toolbar item
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"EditContactList"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(showContactListEditor:)];
-    [toolbarItem setToolTip:@"Edit contact list"];
-    [toolbarItem setPaletteLabel:@"Edit contact list"];
-    [toolbarItem setEnabled:YES];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+    //Edit contact list toolbar item
+    NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
+									   label:@"Edit Contact List"
+								    paletteLabel:@"Edit Contact List"
+									 toolTip:@"Edit Contact List"
+									  target:self
+								 settingSelector:@selector(setImage:)
+								     itemContent:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]
+									  action:@selector(showContactListEditor:)
+									    menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 
     //Observe account changes
     [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];

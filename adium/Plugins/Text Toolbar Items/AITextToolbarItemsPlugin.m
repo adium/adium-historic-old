@@ -25,43 +25,43 @@
 
 - (void)installPlugin
 {
-    AIMiniToolbarItem	*toolbarItem;
-
+    NSToolbarItem   *toolbarItem;
+    
     //Bold
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Bold"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"Bold_Off" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(bold:)];
-    [toolbarItem setToolTip:@"Bold"];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setDelegate:self];
-    [toolbarItem setPaletteLabel:@"Bold text"];
-    [toolbarItem setAllowsDuplicatesInToolbar:NO];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Bold"
+							  label:@"Bold"
+						   paletteLabel:@"Bold text"
+							toolTip:@"Bold text"
+							 target:self
+						settingSelector:@selector(setImage:)
+						    itemContent:[AIImageUtilities imageNamed:@"Bold_Off" forClass:[self class]]
+							 action:@selector(bold:)
+							   menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+    
     //Italic
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Italic"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(italic:)];
-    [toolbarItem setToolTip:@"Italic"];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setDelegate:self];
-    [toolbarItem setPaletteLabel:@"Italic text"];
-    [toolbarItem setAllowsDuplicatesInToolbar:NO];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
-
-    //Underline
-    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"Underline"];
-    [toolbarItem setImage:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]];
-    [toolbarItem setTarget:self];
-    [toolbarItem setAction:@selector(underline:)];
-    [toolbarItem setToolTip:@"Underline"];
-    [toolbarItem setEnabled:YES];
-    [toolbarItem setDelegate:self];
-    [toolbarItem setPaletteLabel:@"Underline text"];
-    [toolbarItem setAllowsDuplicatesInToolbar:NO];
-    [[AIMiniToolbarCenter defaultCenter] registerItem:[toolbarItem autorelease]];
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Italic"
+							  label:@"Italic"
+						   paletteLabel:@"Italic text"
+							toolTip:@"Italic text"
+							 target:self
+						settingSelector:@selector(setImage:)
+						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
+							 action:@selector(italic:)
+							   menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+    
+    //Italic
+    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"Underline"
+							  label:@"Underline"
+						   paletteLabel:@"Underline text"
+							toolTip:@"Underline text"
+							 target:self
+						settingSelector:@selector(setImage:)
+						    itemContent:[AIImageUtilities imageNamed:@"Bold_On" forClass:[self class]]
+							 action:@selector(underline:)
+							   menu:nil];
+    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
 - (void)uninstallPlugin

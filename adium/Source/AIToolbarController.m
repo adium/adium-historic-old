@@ -47,6 +47,9 @@
         }
     }
 
+    //
+    toolbarItems = [[NSMutableDictionary alloc] init];
+    
     //Observe
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toolbarItemsChanged:) name:AIMiniToolbar_ItemsChanged object:nil];
     
@@ -68,6 +71,44 @@
 {
     [super dealloc];
 }
+
+
+
+
+//
+- (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
+{
+    NSMutableDictionary    *itemDict = [toolbarItems objectForKey:type];
+
+    if(!itemDict){
+	itemDict = [NSMutableDictionary dictionary];
+	[toolbarItems setObject:itemDict forKey:type];
+    }
+
+    [itemDict setObject:item forKey:[item itemIdentifier]];
+}
+
+//
+- (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types
+{
+    NSMutableDictionary *items = [NSMutableDictionary dictionary];
+    NSEnumerator	*enumerator;
+    NSString		*type;
+    
+    enumerator = [types objectEnumerator];
+    while(type = [enumerator nextObject]){
+	NSDictionary     *availableItems = [toolbarItems objectForKey:type];
+	if(availableItems){
+	    [items addEntriesFromDictionary:availableItems];
+	}
+    }
+    
+    return(items);
+}
+
+
+
+
 
 
 //Private --------------------------------------------------------

@@ -156,6 +156,7 @@
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
 
     //
+    [preferenceController finishIniting];
     [interfaceController finishIniting];
     [accountController finishIniting];
 }

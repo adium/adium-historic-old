@@ -30,8 +30,15 @@
 //-----------------------
 + (void)addToolbarItemToDictionary:(NSMutableDictionary *)theDict withIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
 {
-    NSMenuItem *mItem;
+    NSToolbarItem   *item = [self toolbarItemWithIdentifier:identifier label:label paletteLabel:paletteLabel toolTip:toolTip target:target settingSelector:settingSelector itemContent:itemContent action:action menu:menu];
 
+    [theDict setObject:item forKey:identifier];
+}
+
++ (NSToolbarItem *)toolbarItemWithIdentifier:(NSString *)identifier label:(NSString *)label paletteLabel:(NSString *)paletteLabel toolTip:(NSString *)toolTip target:(id)target settingSelector:(SEL)settingSelector itemContent:(id)itemContent action:(SEL)action menu:(NSMenu *)menu
+{
+    NSMenuItem *mItem;
+    
     //--Create and setup an NSToolbarItem--
     NSToolbarItem *item = [[[NSToolbarItem alloc] initWithItemIdentifier:identifier] autorelease];
     [item setLabel:label];
@@ -56,10 +63,8 @@
         [mItem setTitle: [menu title]];
         [item setMenuFormRepresentation:mItem];
     }
-    // Now that we've setup all the settings for this new toolbar item, we add it to the dictionary.
-    // The dictionary retains the toolbar item for us, which is why we could autorelease it when we created
-    // it (above).
-    [theDict setObject:item forKey:identifier];
+    
+    return(item);
 }
 
 + (NSToolbarItem *)toolbarItemFromDictionary:(NSDictionary *)theDict withIdentifier:(NSString *)itemIdentifier

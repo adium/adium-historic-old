@@ -44,6 +44,7 @@
 - (AIAccountController *)accountController;
 - (AIContactController *)contactController;
 - (AIContentController *)contentController;
+- (AIToolbarController *)toolbarController;
 - (AISoundController *)soundController;
 - (AIInterfaceController *)interfaceController;
 - (AIPreferenceController *)preferenceController;
@@ -708,7 +709,11 @@ typedef enum {
 //*** Toolbar ***//
 @interface AIToolbarController : NSObject {
     IBOutlet	AIAdium		*owner;
+    NSMutableDictionary		*toolbarItems;
 }
+
+- (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
+- (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types;
 
 @end
 
