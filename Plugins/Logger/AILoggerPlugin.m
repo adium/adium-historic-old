@@ -15,7 +15,7 @@
 
 #import "AILoggerPlugin.h"
 #import "AILogViewerWindowController.h"
-#import "AILog.h"
+#import "AIChatLog.h"
 #import "AILogFromGroup.h"
 #import "AILogToGroup.h"
 
@@ -581,11 +581,11 @@ this problem is along the lines of:
 - (void)_dirtyAllLogsThread
 {
     NSAutoreleasePool   *pool = [[NSAutoreleasePool alloc] init];
-    NSEnumerator	*fromEnumerator, *toEnumerator, *logEnumerator;
-    NSString		*fromName;
-    AILogFromGroup      *fromGroup = nil;
-    AILogToGroup	*toGroup;
-    AILog               *theLog;    
+    NSEnumerator		*fromEnumerator, *toEnumerator, *logEnumerator;
+    NSString			*fromName;
+    AILogFromGroup		*fromGroup = nil;
+    AILogToGroup		*toGroup;
+    AIChatLog			*theLog;    
 
     [indexingThreadLock lock];      //Prevent anything from closing until this thread is complete.
     suspendDirtyArraySave = YES;    //Prevent saving of the dirty array until we're finished building it
