@@ -83,7 +83,13 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 				   orientation:inOrientation];    
 }
 
-+ (void)showTooltipWithTitle:(NSAttributedString *)inTitle body:(NSAttributedString *)inBody image:(NSImage *)inImage imageOnRight:(BOOL)inImageOnRight onWindow:(NSWindow *)inWindow atPoint:(NSPoint)inPoint orientation:(AITooltipOrientation)inOrientation
++ (void)showTooltipWithTitle:(NSAttributedString *)inTitle
+						body:(NSAttributedString *)inBody
+					   image:(NSImage *)inImage
+				imageOnRight:(BOOL)inImageOnRight
+					onWindow:(NSWindow *)inWindow
+					 atPoint:(NSPoint)inPoint
+				 orientation:(AITooltipOrientation)inOrientation
 {    
    if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
        BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || (tooltipOrientation != inOrientation));
@@ -97,7 +103,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             [self _createTooltip]; //make the window
         }
 
-        if(!(inBody == tooltipBody) ||
+        if(!(inBody == tooltipBody)   ||
 		   !(inTitle == tooltipTitle) || 
 		   !(inImage == tooltipImage)) { //we don't exist or something changed
 
@@ -174,7 +180,6 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[container setLineFragmentPadding:1.0]; //so widths will caclulate properly
 		[layoutManager addTextContainer:container];
 		[container release];
-		[textStorage release];
 
 		textView_tooltipTitle = [[NSTextView alloc] initWithFrame:NSZeroRect textContainer:container];
 		[textView_tooltipTitle setSelectable:NO];
@@ -195,7 +200,6 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[container setLineFragmentPadding:0.0]; //so widths will caclulate properly
 		[layoutManager addTextContainer:container];
 		[container release];
-		[textStorage release];
 
 		textView_tooltipBody = [[NSTextView alloc] initWithFrame:NSZeroRect textContainer:container];
 		[textView_tooltipBody setSelectable:NO];
