@@ -124,7 +124,6 @@ static NSImage *pushIndicatorImage = nil;
 	case '\E':
             //Reset entry
 	    [self setString:@""];
-	    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
 
             //Pop off a pushed message if one exists
             [self _popPushContent];
@@ -237,7 +236,7 @@ static NSImage *pushIndicatorImage = nil;
 {
     int		length = [inAttributedString length];
     NSRange 	oldRange = [self selectedRange];
-    
+
     //Change our string
     [[self textStorage] setAttributedString:inAttributedString];
 
@@ -250,8 +249,19 @@ static NSImage *pushIndicatorImage = nil;
         }
     }
 
-    //
+    //Notify everyone that our text changed
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+    [[owner contentController] contentsChangedInTextEntryView:self];
+}
+
+//
+- (void)setString:(NSString *)string
+{
+    [super setString:string];
+
+    //Notify everyone that our text changed
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+    [[owner contentController] contentsChangedInTextEntryView:self];
 }
 
 //
@@ -285,7 +295,6 @@ static NSImage *pushIndicatorImage = nil;
 
         //Display history
         [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
     }
 }
 
@@ -298,13 +307,12 @@ static NSImage *pushIndicatorImage = nil;
 
         //Display history
         [self setAttributedString:[historyArray objectAtIndex:currentHistoryLocation]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
 
     }else{
         //Push message
         if([[self textStorage] length] != 0){
             [pushArray addObject:[[self textStorage] copy]];
-            [self setAttributedString:[[[NSAttributedString alloc] initWithString:@"" attributes:[self typingAttributes]] autorelease]];
+            [self setString:@""];
             [self _setPushIndicatorVisible:YES];
         }
     }
@@ -314,8 +322,7 @@ static NSImage *pushIndicatorImage = nil;
 - (void)_popPushContent
 {
     if([pushArray count]){
-        [[self textStorage] setAttributedString:[pushArray lastObject]];
-        [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+        [self setAttributedString:[pushArray lastObject]];
         [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
         [pushArray removeLastObject];
         if([pushArray count] == 0){
@@ -411,6 +418,7 @@ static NSImage *pushIndicatorImage = nil;
 
         if([[self textStorage] length] != 0){
             //If there is text in this view, let the container tell us its height
+            [[self layoutManager] glyphRangeForTextContainer:[self textContainer]]; //Force glyph generation.  We must do this or usedRectForTextContainer might only return a rect for a portion of our text.
             textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
 
         }else{
