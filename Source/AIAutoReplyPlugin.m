@@ -73,7 +73,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Account status changed.
  *
  * Update our chat monitoring in response to account status changes.  

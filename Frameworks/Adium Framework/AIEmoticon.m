@@ -27,7 +27,7 @@
 
 @implementation AIEmoticon
 
-/*
+/*!
  * @brief Create an autoreleased emoticon object
  *
  * An AIEmoticon has a path to an image, an array of string equivalents, a localized (if possible) name, and a parent
@@ -70,7 +70,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Returns an array of the text equivalents for this emoticon
  *
  * @result An <tt>NSArray</tt> of <tt>NSStrings</tt> which are the equivalents for the emoticon
@@ -80,7 +80,7 @@
     return(textEquivalents);
 }
 
-/*
+/*!
  * @brief Flush any cached data
  *
  * This releases emoticon images (and image attachment strings) which were cached by the emoticon. It is primarily used
@@ -93,7 +93,7 @@
     [_cachedImage release]; _cachedImage = nil;
 }
 
-/*
+/*!
  * @brief Returns the display name of this emoticon
  *
  * @result The display name of the emoticon
@@ -103,7 +103,7 @@
     return name;
 }
 
-/*
+/*!
  * @brief Enable/Disable this emoticon
  *
  * Individual emoticons within an emoticon pack may be enabled or disabled.
@@ -115,7 +115,7 @@
     enabled = inEnabled;
 }
 
-/*
+/*!
  * @brief Return the enabled state
  *
  * @result The enabled state
@@ -124,7 +124,7 @@
     return(enabled);
 }
 
-/*
+/*!
  * @brief Returns the image for this emoticon
  *
  * @result The image for this emoticon
@@ -134,7 +134,7 @@
     return([[[NSImage alloc] initWithContentsOfFile:path] autorelease]);
 }
 
-/*
+/*!
  * @brief Returns an attributed string containing this emoticon
  *
  * The attributed string contains an <tt>AITextAttachmntExtension</tt> which has both the emoticon image
@@ -179,7 +179,7 @@
     return([NSString stringWithFormat:@"%@ (%@)", [[path lastPathComponent] stringByDeletingPathExtension], [[self textEquivalents] objectAtIndex:0]]);
 }
 
-/*
+/*!
  * @brief Compare two emoticons
  *
  * @result The result of comparing the display names of the emoticons, case insensitively

@@ -98,7 +98,7 @@
 	[self buildBuiltInStatusTypes];
 }
 
-/*
+/*!
  * @brief Finish initing the status controller
  *
  * Set our initial status state, and restore our array of accounts to connect when a global state is selected.
@@ -161,11 +161,18 @@
 }
 
 /*!
- * Close the status controller
+ * @brief Close the status controller
  */
 - (void)closeController
 {
 	[[adium notificationCenter] removeObserver:self];
+}
+
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
 	[stateArray release]; stateArray = nil;
 	[_stateArrayForMenuItems release]; _stateArrayForMenuItems = nil;
 }
@@ -243,7 +250,7 @@
 	return([menu autorelease]);
 }
 
-/*
+/*!
  * @brief Sort status menu items
  *
  * Sort alphabetically by title.
@@ -253,7 +260,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
 }
 
-/*
+/*!
  * @brief Return an array of menu items for an AIStatusType and service
  *
  * @pram type The AIStatusType for which to return statuses
@@ -320,7 +327,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return([menuItems autorelease]);
 }
 
-/*
+/*!
  * @brief Add menu items for a particular type of status
  *
  * @param type The AIStatusType, used for determining the icon of the menu items
@@ -391,7 +398,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return nil;
 }
 
-/*
+/*!
  * @brief The status name to use by default for a passed type
  *
  * This is the name which will be used for new AIStatus objects of this type.
@@ -440,7 +447,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return(stateArray);
 }
 
-/*
+/*!
  * @brief Return the array of built-in states
  *
  * These are basic Available and Away states which should always be visible and are (by convention) immutable.
@@ -464,7 +471,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return(builtInStateArray);
 }
 
-/*
+/*!
  * @brief Return the <tt>AIStatus</tt> to be used by accounts as they are created
  */
 - (AIStatus *)defaultInitialStatusState
@@ -504,7 +511,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[[adium contactController] endListObjectNotificationsDelay];
 }
 
-/*
+/*!
  * @brief Account list changed
  *
  * Accounts should always have a status state. When the account list changes, ensure taht accounts have an
@@ -729,7 +736,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 
-/*
+/*!
  * @brief Upgrade saved states from January 2005 SVN to the new storage mechanism.
  *
  * This should be removed long before 0.8 ships.
@@ -967,7 +974,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[stateMenuPluginsArray removeObjectIdenticalTo:stateMenuPlugin];
 }
 
-/*
+/*!
  * @brief Remove the status controller's tracking for a plugin's menu items
  *
  * This should be called in preparation for one or more plugin:didAddMenuItems: calls to clear out the current
@@ -982,7 +989,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[menuItemArray removeAllObjects];
 }
 
-/*
+/*!
  * @brief A plugin created its own menu items it wants us to track and update
  */
 - (void)plugin:(id <StateMenuPlugin>)stateMenuPlugin didAddMenuItems:(NSArray *)addedMenuItems
@@ -1031,7 +1038,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Return a sorted state array for use in menu item creation
  *
  * The array is created by adding the built in states to the user states, then sorting using _statusArraySort
@@ -1222,7 +1229,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 }
 
 
-/*
+/*!
  * @brief Account status changed.
  *
  * Rebuild all our state menus
@@ -1246,7 +1253,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
     return(nil);
 }
 
-/*
+/*!
  * @brief Preferences changed; update our accountsToConnect tracking set
  *
  * We use the preferences changed notifications rather than the statusObject notifications because the statusObject
@@ -1513,7 +1520,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	return(title);
 }
 
-/*
+/*!
  * @brief Create and add the built-in status types
  *
  * The built-in status types are basic, generic "Available" and "Away" states.

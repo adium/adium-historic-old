@@ -15,11 +15,119 @@
  */
 
 #import "ESGaimYahooAccountViewController.h"
+#import "ESGaimYahooAccount.h"
+#import <Adium/AIAccount.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+
+@interface ESGaimYahooAccountViewController (PRIVATE)
+- (NSMenu *)chatServerMenu;
+@end
 
 @implementation ESGaimYahooAccountViewController
 
+/*!
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"ESGaimYahooAccountView");
+}
+
+/*!
+ * @brief Awake from nib
+ */
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	[popUp_chatServer setMenu:[self chatServerMenu]];
+}
+
+/*!
+ * @brief Configure controls
+ */
+- (void)configureForAccount:(AIAccount *)inAccount
+{
+	[super configureForAccount:inAccount];
+
+	[popUp_chatServer selectItemWithRepresentedObject:[inAccount preferenceForKey:KEY_YAHOO_ROOM_LIST_SERVER
+																			group:GROUP_ACCOUNT_STATUS]];
+}
+
+/*!
+ * @brief Save controls
+ */
+- (void)saveConfiguration
+{
+    [super saveConfiguration];
+	
+	[account setPreference:[[popUp_chatServer selectedItem] representedObject]
+					forKey:KEY_YAHOO_ROOM_LIST_SERVER
+					 group:GROUP_ACCOUNT_STATUS];
+}
+
+int menuItemSort(id menuItemA, id menuItemB, void *context)
+{
+	return([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
+}
+
+- (NSMenu *)chatServerMenu
+{
+	NSMenu			*chatServerMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
+	NSMutableArray	*menuItems = [NSMutableArray array];
+	NSMenuItem		*menuItem;
+	NSEnumerator	*enumerator;
+	NSString		*prefix;
+	NSDictionary	*roomListServersDict;
+
+	roomListServersDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		@"Asia", @"aa",
+		@"Argentina", @"ar",
+		@"Australia", @"au",
+		@"Brazil", @"br",
+		@"Canada", @"ca",
+		@"Central African Republic", @"cf",
+		@"China", @"cn",
+		@"Germany", @"de",
+		@"Denmark", @"dk",
+		@"Spain", @"es",
+		@"France", @"fr",
+		@"Hong Kong", @"hk",
+		@"India", @"in",
+		@"Italy", @"it",
+		@"Korea, Republic of", @"kr",
+		@"Mexico", @"mx",
+		@"Norway", @"no",
+		@"Sweden", @"se",
+		@"Singapore", @"sg",
+		@"Taiwan", @"tw",
+		@"United Kingdom", @"uk",
+		nil];
+
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"United States",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[menuItem setRepresentedObject:@"http://insider.msg.yahoo.com/ycontent"];
+	[menuItems addObject:menuItem];
+
+	enumerator = [roomListServersDict keyEnumerator];
+	while(prefix = [enumerator nextObject]){
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[roomListServersDict objectForKey:prefix]
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:[NSString stringWithFormat:@"http://%@.insider.msg.yahoo.com/ycontent",prefix]];
+		[menuItems addObject:menuItem];		
+	}
+
+	[menuItems sortUsingFunction:menuItemSort context:NULL];
+	
+	enumerator = [menuItems objectEnumerator];
+	while(menuItem = [enumerator nextObject]){
+		[chatServerMenu addItem:menuItem];
+	}
+
+	return([chatServerMenu autorelease]);
 }
 
 @end

@@ -33,7 +33,7 @@
 #define KEY_COUNT_ALL_CONTACTS					@"Count All Contacts"
 #define KEY_COUNT_ONLINE_CONTACTS				@"Count Online Contacts"
 
-/*
+/*!
  * @class CBContactCountingDisplayPlugin
  *
  * @brief Component to handle displaying counts of contacts, both online and total, next to group names
@@ -43,7 +43,7 @@
  */
 @implementation CBContactCountingDisplayPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -73,7 +73,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * PREF_GROUP_CONTACT_LIST preferences changed; update our counting display as necessary.
@@ -119,7 +119,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update the counts when a group changes its object count or a contact signs on or off
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -190,7 +190,7 @@
 	return(modifiedAttributes);
 }
 
-/*
+/*!
  * @brief User toggled one of our two menu items
  */
 - (void)toggleMenuItem:(id)sender

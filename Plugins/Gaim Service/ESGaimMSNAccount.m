@@ -35,9 +35,6 @@
 
 @implementation ESGaimMSNAccount
 
-static BOOL didInitMSN = NO;
-static NSDictionary		*presetStatusesDictionary = nil;
-
 //Intercept account creation to ensure the UID will have a domain ending -- the default is @hotmail.com
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
@@ -62,21 +59,14 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	currentFriendlyName = nil;
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
-
-	if (!presetStatusesDictionary){
-		/* Only define preset statuses which we actually want to show a string for. */
-		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
-			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:MSN_BRB],
-			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:MSN_BUSY],
-			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:MSN_PHONE],
-			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:MSN_LUNCH],nil] retain];
-	}
 }
 
 
 - (const char*)protocolPlugin
 {
-	[super initSSL];
+	static BOOL didInitMSN = NO;
+
+	[self initSSL];
 	if (!didInitMSN) didInitMSN = gaim_init_msn_plugin();
     return "prpl-msn";
 }
@@ -305,6 +295,17 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	GaimBuddy	*buddy;
 	const char	*uidUTF8String = [[theContact UID] UTF8String];
 	
+	static NSDictionary		*presetStatusesDictionary = nil;
+	
+	if (!presetStatusesDictionary){
+		/* Only define preset statuses which we actually want to show a string for. */
+		presetStatusesDictionary = [[NSDictionary dictionaryWithObjectsAndKeys:
+			STATUS_DESCRIPTION_BRB,				[NSNumber numberWithInt:MSN_BRB],
+			STATUS_DESCRIPTION_BUSY,			[NSNumber numberWithInt:MSN_BUSY],
+			STATUS_DESCRIPTION_PHONE,			[NSNumber numberWithInt:MSN_PHONE],
+			STATUS_DESCRIPTION_LUNCH,			[NSNumber numberWithInt:MSN_LUNCH],nil] retain];
+	}
+	
 	if ((gaim_account_is_connected(account)) &&
 		(buddy = gaim_find_buddy(account, uidUTF8String))) {
 
@@ -338,7 +339,7 @@ static NSDictionary		*presetStatusesDictionary = nil;
 	}
 }
 
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

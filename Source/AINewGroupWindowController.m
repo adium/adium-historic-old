@@ -19,13 +19,13 @@
 
 #define ADD_GROUP_PROMPT_NIB	@"AddGroup"
 
-/*
+/*!
  * @class AINewGroupWindowController
  * @brief Window controller for adding groups
  */
 @implementation AINewGroupWindowController
 
-/*
+/*!
  * @brief Prompt for a new group.
  *
  * @param parentWindow Window on which to show as a sheet. Pass nil for a panel prompt.
@@ -48,7 +48,7 @@
 	
 }
 
-/*
+/*!
  * @brief Stop automatic window positioning
  */
 - (BOOL)shouldCascadeWindows
@@ -56,7 +56,7 @@
     return(NO);
 }
 
-/*
+/*!
  * @brief Called as the user list edit sheet closes, dismisses the sheet
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -64,7 +64,7 @@
     [sheet orderOut:nil];
 }
 
-/*
+/*!
  * @brief Cancel
  */
 - (IBAction)cancel:(id)sender
@@ -76,7 +76,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Add the group
  */
 - (IBAction)addGroup:(id)sender

@@ -97,7 +97,7 @@
 	
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:CONTENT_MESSAGE_RECEIVED object:nil];
+									   name:CONTENT_MESSAGE_RECEIVED object:nil];	
 }
 
 #if 0

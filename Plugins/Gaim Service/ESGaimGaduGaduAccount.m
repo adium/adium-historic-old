@@ -34,11 +34,9 @@
 
 @implementation ESGaimGaduGaduAccount
 
-
-static BOOL didInitGG = NO;
-
 - (const char*)protocolPlugin
 {
+	static BOOL didInitGG = NO;
 	if (!didInitGG) didInitGG = gaim_init_gg_plugin();
     return "prpl-gg";
 }
@@ -115,7 +113,7 @@ static BOOL didInitGG = NO;
 	return statusMessage;
 }
 
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

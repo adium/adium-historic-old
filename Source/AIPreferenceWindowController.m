@@ -55,7 +55,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 @implementation AIPreferenceWindowController
 
-/*
+/*!
  * @brief Open the preference window
  */
 + (void)openPreferenceWindow
@@ -63,7 +63,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[self _preferenceWindowController] showWindow:nil];
 }
 
-/*
+/*!
  * @brief Open the preference window to a specific category
  */
 + (void)openPreferenceWindowToCategoryWithIdentifier:(NSString *)identifier
@@ -75,7 +75,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[self _preferenceWindowController] showWindow:nil];
 }
 
-/*
+/*!
  * @brief Open the preference window to a specific advanced category
  */
 + (void)openPreferenceWindowToAdvancedPane:(NSString *)advancedPane
@@ -84,7 +84,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[[self _preferenceWindowController] showWindow:nil];
 }
 
-/*
+/*!
  * @brief Close the preference window (if it is open)
  */
 + (void)closePreferenceWindow
@@ -162,7 +162,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		nil] retain];
 }
 
-/*
+/*!
  * @brief Invoked before the window opens
  */
 - (IBAction)showWindow:(id)sender

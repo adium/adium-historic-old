@@ -1840,7 +1840,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
@@ -1878,7 +1878,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return gaimStatusType;
 }
 
-/*
+/*!
  * @brief Perform the actual setting a state
  *
  * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
@@ -1909,7 +1909,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				   forKey:@"IdleSince" notify:YES];
 }
 
-/*
+/*!
  * @brief Set this account to an invisibility state
  *
  * Supported property keys must contain "Invisible" for this code to have any effecy
@@ -1957,7 +1957,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*
+/*!
  * @brief Set our user image
  *
  * Pass nil for no image. This resizes and converts the image as needed for our protocol.

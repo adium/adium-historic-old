@@ -25,7 +25,7 @@
 
 @implementation ESGaimNotifyEmailController
 
-/*
+/*!
  * @brief Handle the notification of emails
  *
  * This may be called from the gaim thread.
@@ -119,7 +119,7 @@
 	return(adium_gaim_get_handle());
 }
 
-/*
+/*!
  * @brief Show the New Mail message
  *
  * Displays the New Mail message, optionally offerring an Open Mail button (if a URL to open the webmail is passed).
@@ -148,7 +148,7 @@
 											   previouslyPerformedActionIDs:nil];	
 }
 
-/*
+/*!
  * @brief Window was closed, either by a button being clicked or the user closing it
  */
 + (void)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
@@ -166,7 +166,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief Open a URL string from the open mail window
  *
  * The urlString could either be a web address or a path to a local HTML file we are supposed to load.

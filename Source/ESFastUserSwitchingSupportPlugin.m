@@ -22,13 +22,15 @@
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIAccount.h>
 
+#warning ***FUS plugin is broken***
+
 #define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
 
 @interface ESFastUserSwitchingSupportPlugin (PRIVATE)
 -(void)switchHandler:(NSNotification*) notification;
 @end
 
-/*
+/*!
  * @class ESFastUserSwitchingSupportPlugin
  * @brief Handle Fast User Switching with a changed status and sound muting
  *
@@ -39,7 +41,7 @@
  */
 @implementation ESFastUserSwitchingSupportPlugin
 
-/*
+/*!
  * @brief Install plugin
  *
  * Has no effect on Jaguar
@@ -62,7 +64,7 @@
     }
 }
 
-/*
+/*!
  * @brief Uninstall plugin
  *
  * Has no effect on Jaguar
@@ -78,7 +80,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Handle a fast user switch event
  *
  * Calling this with (notification == nil) is the same as when the user switches back.

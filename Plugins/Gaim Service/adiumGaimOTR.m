@@ -238,7 +238,7 @@ static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *
 													withObject:responseInfo];
 }
 
-/*
+/*!
  * @brief Send the fingerprint response to OTR
  *
  * Called on the gaim thread by SLGaimCocoaAdapter.
@@ -493,7 +493,7 @@ void initGaimOTRSupprt(void)
 
 @implementation ESGaimOTRAdapter
 
-/*
+/*!
  * @brief Return the OtrlPolicy for a contact as the intValue of an NSNumber
  *
  * Look to the contact's preference, then to its account's preference, then fall back on OPPORTUNISTIC as a default

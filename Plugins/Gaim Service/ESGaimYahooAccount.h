@@ -16,6 +16,8 @@
 
 #import "CBGaimAccount.h"
 
+#define KEY_YAHOO_ROOM_LIST_SERVER @"Room List Server"
+
 @interface ESGaimYahooAccount : CBGaimAccount <AIAccount_Files>{
 
 }

@@ -276,7 +276,7 @@
     }
 }
 
-/*
+/*!
  * @brief Add a handle to the flash array
  */
 - (void)addToFlashArray:(AIListObject *)inObject
@@ -291,7 +291,7 @@
     [self flash:[[adium interfaceController] flashState]];
 }
 
-/*
+/*!
  * @brief Remove a contact from the flash array
  */
 - (void)removeFromFlashArray:(AIListObject *)inObject

@@ -348,7 +348,7 @@
 	[self notifyOfChangedStatusSilently:YES];
 }
 
-/*
+/*!
  * @brief Set a status state without going online
  *
  * Set the status state as a status object so that if we sign on later we will update to the proper state.
@@ -371,7 +371,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set a status state if no status state is currently set
  *
  * If the account doesn't already have a status state, call setStatusStateAndRemainOffline: with the passed statusState.
@@ -519,7 +519,7 @@
 											  context:contextDict];
 }
 
-/*
+/*!
  * @brief Provide the NSAttributedString which will be filtered for a given status key
  *
  * In general, returns the preference for the key as an attributed string.
@@ -697,7 +697,7 @@
 //Connectivity ---------------------------------------------------------------------------------------------------------
 #pragma mark Connectivity
 
-/*
+/*!
  * @brief The account did connect
  *
  * Subclasses should call this on self after connecting

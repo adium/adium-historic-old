@@ -24,15 +24,15 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 - (id)init
 {
-	[super init];
-	
-	statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
-	attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
-	sortFunction = [self sortFunction];
-	alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
-	
-	configureView = nil;
-	becameActiveFirstTime = NO;
+	if(self = [super init]){
+		statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
+		attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
+		sortFunction = [self sortFunction];
+		alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
+		
+		configureView = nil;
+		becameActiveFirstTime = NO;
+	}
 	
 	return(self);
 }
@@ -159,15 +159,11 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
     }
 }
 
-//For subclasses -------------------------------------------------------------------------------------------------------
-#pragma mark For Subclasses:
-- (NSString *)description{ return(nil); };
-- (NSString *)identifier{ return(nil); };
-- (NSString *)displayName{ return(nil); };
-- (NSSet *)statusKeysRequiringResort{ return(nil); };
-- (NSSet *)attributeKeysRequiringResort{ return(nil); };
-- (int (*)(id, id, BOOL))sortFunction{ return(nil); };
-- (void)didBecomeActiveFirstTime {};
+/*!
+ * @brief Did become active
+ *
+ * Called when the controller becomes active
+ */
 - (void)didBecomeActive 
 {
 	if (!becameActiveFirstTime){
@@ -176,10 +172,79 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 	}
 }
 
-//Subclasses should provide a title for configuring the sort only if configuration is possible
-- (NSString *)configureSortMenuItemTitle{ return(nil); };
+/*!
+ * @brief Title for the Configure Sort menu item  when this sort is active
+ *
+ * Subclasses should provide a title for configuring the sort only if configuration is possible.
+ * @result Localized title. If nil, the menu item will be disabled.
+ */
+- (NSString *)configureSortMenuItemTitle{ 
+	NSString *configureSortWindowTitle = [self configureSortWindowTitle];
+	if(configureSortWindowTitle){
+		return([NSString stringWithFormat:@"%@%s",[self configureSortWindowTitle],"É"]);
+	}else{
+		return(nil);
+	}
+}
+
+//For subclasses -------------------------------------------------------------------------------------------------------
+#pragma mark For Subclasses:
+
+/*!
+ * @brief Non-localized identifier
+ */
+- (NSString *)identifier{ return(nil); };
+
+/*!
+ * @brief Localized display name
+ */
+- (NSString *)displayName{ return(nil); };
+
+/*!
+ * @brief Status keys which, when changed, should trigger a resort
+ */
+- (NSSet *)statusKeysRequiringResort{ return(nil); };
+
+/*!
+ * @brief Attribute keys which, when changed, should trigger a resort
+ */
+- (NSSet *)attributeKeysRequiringResort{ return(nil); };
+
+/*!
+ * @brief Sort function
+ */
+- (int (*)(id, id, BOOL))sortFunction{ return(NULL); };
+
+/*!
+ * @brief Did become active first time
+ *
+ * Called only once; gives the sort controller an opportunity to set defaults and load preferences lazily.
+ */
+- (void)didBecomeActiveFirstTime {};
+
+/*!
+ * @brief Window title when configuring the sort
+ *
+ * Subclasses should provide a title for configuring the sort only if configuration is possible.
+ * @result Localized title. If nil, the menu item will be disabled.
+ */
 - (NSString *)configureSortWindowTitle{ return(nil); };
+
+/*!
+ * @brief Nib name for configuration
+ */
 - (NSString *)configureNibName{ return(nil); };
+
+/*!
+ * @brief View did load
+ */
 - (void)viewDidLoad{ };
+
+/*!
+ * @brief Preference changed
+ *
+ * Sort controllers should live update as preferences change.
+ */
 - (IBAction)changePreference:(id)sender{ };
+
 @end

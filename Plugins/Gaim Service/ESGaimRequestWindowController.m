@@ -62,15 +62,12 @@
 		NSString *okText = [infoDict objectForKey:@"OK Text"];
 		if ([okText isEqualToString:@"OK"]){
 			okText = AILocalizedString(@"OK",nil);
-		}else{
-			okText = AILocalizedString(okText,nil);	
 		}
 		
 		[button_okay setTitle:okText];
 		
 		//Use the supplied Cancel text, then shift the button left
 		NSString	*cancelText = [infoDict objectForKey:@"Cancel Text"];
-		cancelText = AILocalizedString(cancelText, nil);
 		
 		[button_cancel setTitle:cancelText];
 	}

@@ -30,7 +30,7 @@
 - (void)_updateIconForKey:(NSString *)key;
 @end
 
-/*
+/*!
  * @class AIDockAccountStatusPlugin
  * @brief Maintain the dock icon state in relation to global account status
  *
@@ -39,7 +39,7 @@
  */
 @implementation AIDockAccountStatusPlugin
 
-/*
+/*!
  * @brief Install plugin
  */
 - (void)installPlugin
@@ -51,17 +51,17 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 }
 
-/*
+/*!
  * @brief Uninstall plugin
  */
 - (void)uninstallPlugin
 {
-    //Remove observers (general)
+    //Remove observers
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
-/*
+/*!
  * @brief Handle preference changes
  *
  * When the active dock icon changes, call updateListObject:keys:silent: to update its state to the global account state
@@ -74,7 +74,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update the dock icon state in response to an account changing status
  *
  * If one ore more accounts are online, set the Online icon state.  Similarly, handle the Connecting, Away, and Idle
@@ -126,7 +126,7 @@
 	return(nil);
 }
 
-/*
+/*!
  * @brief Return if any accounts have a TRUE value for the specified key
  *
  * @param inKey The status key to search on
@@ -144,7 +144,7 @@
     return(NO);
 }
 
-/*
+/*!
  * @brief Return if any accounts have a non-nil value for the specified key
  *
  * @param inKey The status key to search on

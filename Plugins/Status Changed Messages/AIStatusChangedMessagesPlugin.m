@@ -25,9 +25,17 @@
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type inChats:(NSSet *)inChats;
 @end
 
+/*!
+ * @class AIStatusChangedMessagesPlugin
+ * @brief Generate <tt>AIContentStatus</tt> messages in open chats in response to contact status changes
+ */
 @implementation AIStatusChangedMessagesPlugin
 
 static	NSDictionary	*statusTypeDict = nil;
+
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	statusTypeDict = [[NSDictionary dictionaryWithObjectsAndKeys:
@@ -48,10 +56,15 @@ static	NSDictionary	*statusTypeDict = nil;
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_IDLE_YES object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactStatusChanged:) name:CONTACT_STATUS_IDLE_NO object:nil];
 
-    [[adium notificationCenter] addObserver:self selector:@selector(Contact_StatusMessage:) name:CONTACT_STATUS_MESSAGE object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contact_statusMessage:) name:CONTACT_STATUS_MESSAGE object:nil];
 }
 
-- (void)Contact_StatusMessage:(NSNotification *)notification{
+/*!
+ * @brief Notification a changed status message
+ *
+ * @param notification <tt>NSNotification</tt> whose object is the AIListContact
+ */
+- (void)contact_statusMessage:(NSNotification *)notification{
 	NSSet			*allChats;
 	AIListContact	*contact = [notification object];
 	
@@ -70,6 +83,11 @@ static	NSDictionary	*statusTypeDict = nil;
 	}
 }
 
+/*!
+ * @brief Contact status changed notification
+ *
+ * @param notification <tt>NSNotification</tt> whose object is the AIListContact and whose name is the eventID
+ */
 - (void)contactStatusChanged:(NSNotification *)notification{
 	NSSet			*allChats;
 	AIListContact	*contact = [notification object];
@@ -92,7 +110,9 @@ static	NSDictionary	*statusTypeDict = nil;
 	}
 }
 
-//Post a status message on all active chats for this object
+/*!
+ * @brief Post a status message on all active chats for this object
+ */
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type inChats:(NSSet *)inChats
 {
     NSEnumerator		*enumerator;

@@ -188,7 +188,7 @@
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Notify our target of the state changing
  *
  * Called by -[self okay:]

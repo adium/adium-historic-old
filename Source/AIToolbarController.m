@@ -31,52 +31,15 @@
 //init
 - (void)initController
 {
-    //Register Defaults
-/*    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
-    
-    NSEnumerator	*enumerator;
-    NSString		*key;
-    NSDictionary	*toolbarDict;
-
-    //Load the toolbars and register them
-    toolbarDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TOOLBARS];
-    enumerator = [[toolbarDict allKeys] objectEnumerator];
-    while((key = [enumerator nextObject])){
-        if([key hasPrefix:TOOLBAR_ITEMS_PREFIX]){
-            NSString	*identifier = [key substringFromIndex:[(NSString *)TOOLBAR_ITEMS_PREFIX length]];
-            NSArray	*items = [toolbarDict objectForKey:key];
-
-            [[AIMiniToolbarCenter defaultCenter] setItems:items forToolbar:identifier];        
-        }
-    }*/
-
-    //
     toolbarItems = [[NSMutableDictionary alloc] init];
-    
-    //Observe
-//    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(toolbarItemsChanged:) name:AIMiniToolbar_ItemsChanged object:nil];
     
 }
 
 //close
 - (void)closeController
 {
-    //Make sure the toolbar customization palette is closed
-/*    if([[AIMiniToolbarCenter defaultCenter] customizing:nil]){
-        [[AIMiniToolbarCenter defaultCenter] endCustomization:nil];
-    }*/
-    
-    //Toolbar configurations are saved as changes are made, no need to save them here.
+
 }
-
-//dealloc
-- (void)dealloc
-{
-    [super dealloc];
-}
-
-
-
 
 //
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
@@ -116,16 +79,5 @@
 	
     return(items);
 }
-
-//Private --------------------------------------------------------
-//Called when the configuration of a toolbar changes
-/*- (void)toolbarItemsChanged:(NSNotification *)notification
-{
-    NSString	*identifier = [notification object];
-    NSArray	*toolbarItems = [[AIMiniToolbarCenter defaultCenter] itemsForToolbar:identifier];
-
-    //Save the changes
-    [[adium preferenceController] setPreference:toolbarItems forKey:[NSString stringWithFormat:@"ToolbarItems_%@",identifier] group:PREF_GROUP_TOOLBARS];
-}*/
 
 @end

@@ -256,7 +256,7 @@ static ESFileTransferPreferences *preferences;
 //Prompt for a new contact with the current tab's name
 - (IBAction)contextualMenuSendFile:(id)sender
 {
-	AIListObject	*selectedObject = [[adium menuController] contactualMenuObject];
+	AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
 	AIListContact   *listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																			  forListContact:(AIListContact *)selectedObject];
 	
@@ -343,7 +343,7 @@ static ESFileTransferPreferences *preferences;
 		return(listContact != nil);
 		
 	}else if(menuItem == menuItem_sendFileContext){
-		AIListObject	*selectedObject = [[adium menuController] contactualMenuObject];
+		AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
 		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
 			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];

@@ -38,7 +38,7 @@
 - (NSDate *)dateOfThisBuild;
 @end
 
-/*
+/*!
  * @class CPFVersionChecker
  * @brief Checks for new releases of Adium
  *
@@ -51,7 +51,7 @@
  */
 @implementation CPFVersionChecker
 
-/*
+/*!
  * @brief Install the version checker
  */
 - (void)installPlugin
@@ -85,19 +85,19 @@
 											 repeats:YES] retain];
 }
 
-/*
+/*!
  * @brief Uninstall the version checker
  */
 - (void)uninstallPlugin
 {
 	[timer invalidate];
-	[timer release];
+	[timer release]; timer = nil;
 }
 
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
-/*
+/*!
  * @brief Check for a new release of Adium (Notify on failure)
  *
  * Checks for a new release of Adium.  The user will be notified when checking has completed, either with a new
@@ -110,7 +110,7 @@
 	[self _requestVersionDict];
 }
 
-/*
+/*!
  * @brief Check for a new release of Adium (Silent on failure)
  *
  * Check for a new release of Adium without notifying the user on a false result.
@@ -134,7 +134,7 @@
 	}
 }
 
-/*
+/*!
  * @brief When a network connection becomes available, check for an update if we haven't already
  */
 - (void)networkConnectivityChanged:(NSNotification *)notification
@@ -144,7 +144,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Invoked when version information is received
  *
  * Parse the version dictionary and notify the user (if necessary) of a new release or that their current
@@ -202,7 +202,7 @@
 
 //Build Dates ----------------------------------------------------------------------------------------------------------
 #pragma mark Build Dates
-/*
+/*!
  * @brief Returns the date of this build
  */
 - (NSDate *)dateOfThisBuild
@@ -222,7 +222,7 @@
 	return(nil);
 }
 
-/*
+/*!
  * @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
  */
 - (void)_requestVersionDict
@@ -230,7 +230,7 @@
 	[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
 }
 
-/*
+/*!
  * @brief Invoked when the versionDict was downloaded succesfully
  *
  * In response, we parse the received version information.
@@ -251,7 +251,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Invoked when the versionDict could not be loaded
  */
 - (void)URLResourceDidCancelLoading:(NSURL *)sender

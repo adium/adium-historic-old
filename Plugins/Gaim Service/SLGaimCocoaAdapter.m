@@ -477,7 +477,7 @@ NSMutableDictionary* get_chatDict(void)
 
 #pragma mark Notify
 // Notify ----------------------------------------------------------------------------------------------------------
-// We handle the notify messages within SLGaimCocoaAdapter so we can use AILocalizedString()
+// We handle the notify messages within SLGaimCocoaAdapter so we can use our localized string macro
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
 {
     NSString *primaryString = [NSString stringWithUTF8String:primary];
@@ -485,7 +485,7 @@ NSMutableDictionary* get_chatDict(void)
 	
 	NSString *titleString;
 	if (title){
-		titleString = [NSString stringWithFormat:@"Adium Notice: %@",[NSString stringWithUTF8String:title]];
+		titleString = [NSString stringWithFormat:AILocalizedString(@"Adium Notice: %@",nil),[NSString stringWithUTF8String:title]];
 	}else{
 		titleString = AILocalizedString(@"Adium : Notice", nil);
 	}
@@ -554,7 +554,7 @@ NSMutableDictionary* get_chatDict(void)
 	}
 	
 	GaimDebug (@"sending %@ %@ %@ %@",[adium interfaceController],([errorMessage length] ? errorMessage : primaryString),([description length] ? description : ([secondaryString length] ? secondaryString : @"") ),titleString);
-	//If we didn't grab a translated version using AILocalizedString, at least display the English version Gaim supplied
+	//If we didn't grab a translated version, at least display the English version Gaim supplied
 	[[adium interfaceController] mainPerformSelector:@selector(handleMessage:withDescription:withWindowTitle:)
 										  withObject:([errorMessage length] ? errorMessage : primaryString)
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
@@ -1268,7 +1268,7 @@ NSMutableDictionary* get_chatDict(void)
 									  onAccount:adiumAccount];
 }
 
-/*
+/*!
  * @brief Set the OSCAR available message
  *
  * @param availablePlaintext A plain text available message (not HTML)

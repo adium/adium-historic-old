@@ -62,7 +62,7 @@
 	return([self encodedAttributedString:inAttributedString forListObject:inListObject]);
 }
 
-/*
+/*!
  * @brief Setting aliases serverside would override the information Gaim is feeding us
  */
 - (BOOL)shouldSetAliasesServerside
@@ -71,7 +71,7 @@
 }
 
 #pragma mark Status
-/*
+/*!
  * @brief Get the ICQ status message when going away and coming back
  *
  * We really should have a buddy-status-message signal from libgaim, but I can't figure out where to
@@ -144,7 +144,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Return the gaim status type to be used for a status
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer

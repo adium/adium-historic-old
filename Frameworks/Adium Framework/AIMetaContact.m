@@ -205,7 +205,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return success;
 }
 
-/*
+/*!
  * @brief Remove an object from this meta contact
  *
  * Should only be called by AIContactController.
@@ -293,7 +293,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return _preferredContact;
 }
 
-/*
+/*!
  * @brief The perferred contact on a given service
  *
  * Same as [self preferredContact] but only looks at contacts on the specified service
@@ -346,7 +346,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return (returnContact);
 }
 
-/*
+/*!
  * @brief Return a flat array of contacts to be displayed to the user
  *
  * This only returns one of each 'unique' contact, whereas the containedObjects potentially contains multiple contacts
@@ -373,7 +373,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return _listContacts;
 }
 
-/*
+/*!
  * @brief Dictionary of service classes and list contacts
  *
  * @result A dictionary whose keys are serviceClass strings and whose objects are arrays of contained contacts on that serviceClass.
@@ -810,6 +810,17 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return(displayName);
 }
 
+- (NSString *)phoneticName
+{
+	NSString	*phoneticName = [[self displayArrayForKey:@"Phonetic Name"] objectValue];
+	
+	if (!phoneticName){
+		phoneticName = [[self preferredContact] ownPhoneticName];
+	}
+	
+	return(phoneticName);
+}
+
 //FormattedUID will return nil if we have multiple different UIDs contained within us
 - (NSString *)formattedUID
 {
@@ -955,7 +966,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 }
 
-/*
+/*!
  * @brief Sort contained contacts, first by order index and then by internalUniqueObjectID
  */
 int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *context)

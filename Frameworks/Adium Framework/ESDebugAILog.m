@@ -18,7 +18,7 @@
 #import "ESDebugController.h"
 #include <stdarg.h>
 
-/*
+/*!
  * @brief Adium debug log function
  *
  * Prints a message to the Adium debug window, which is only enabled in Debug and Development builds.  

@@ -37,7 +37,7 @@
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 @end
 
-/*
+/*!
  * @class AIPreferenceController
  * @brief Preference Controller
  *
@@ -45,7 +45,7 @@
  */
 @implementation AIPreferenceController
 
-/*
+/*!
  * @brief Initialize
  */
 - (void)initController
@@ -76,7 +76,7 @@
     [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 }
 
-/*
+/*!
  * @brief Finish initialization
  *
  * Sets up the toolbar items.
@@ -99,7 +99,7 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 
-/*
+/*!
  * @brief Begin closing
  * 
  * We must close the preference window before plugins and the other controllers are unloaded.
@@ -109,7 +109,7 @@
     [AIPreferenceWindowController closePreferenceWindow];
 }
 
-/*
+/*!
  * @brief Close
  */
 - (void)closeController
@@ -117,7 +117,7 @@
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
 } 
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -129,7 +129,7 @@
     [super dealloc];
 }
 
-/*
+/*!
  * @brief Adium 2 to Adium X preference migration
  *
  * This code will move the preferences from "../Adium 2.0" to "../Adium X", if we ever want to do that.
@@ -157,7 +157,7 @@
 
 //Preference Window ----------------------------------------------------------------------------------------------------
 #pragma mark Preference Window
-/*
+/*!
  * @brief Show the preference window
  */
 - (IBAction)showPreferenceWindow:(id)sender
@@ -165,7 +165,7 @@
 	[AIPreferenceWindowController openPreferenceWindow];
 }
 
-/*
+/*!
  * @brief Show a specific category of the preference window
  *
  * Opens the preference window if necessary
@@ -177,7 +177,7 @@
 	[AIPreferenceWindowController openPreferenceWindowToCategoryWithIdentifier:identifier];
 }
 
-/*
+/*!
  * @brief Show a specific category within the advanced pane of the preference window
  *
  * Opens the preference window if necessary
@@ -188,7 +188,7 @@
 	[AIPreferenceWindowController openPreferenceWindowToAdvancedPane:paneName];
 }
 
-/*
+/*!
  * @brief Add a view to the preferences
  */
 - (void)addPreferencePane:(AIPreferencePane *)inPane
@@ -196,7 +196,7 @@
     [paneArray addObject:inPane];
 }
 
-/*
+/*!
  * @brief Returns all currently available preference panes
  */
 - (NSArray *)paneArray
@@ -207,7 +207,7 @@
 
 //Observing ------------------------------------------------------------------------------------------------------------
 #pragma mark Observing
-/*
+/*!
  * @brief Register a preference observer
  *
  * The preference observer will be notified when preferences in group change and passed the preference dictionary for that group
@@ -239,7 +239,7 @@
 							   firstTime:YES];
 }
 
-/*
+/*!
  * @brief Unregister a preference observer
  */
 - (void)unregisterPreferenceObserver:(id)observer
@@ -252,7 +252,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Broadcast a key changed notification.  
  *
  * Broadcasts a group changed notification if key is nil.
@@ -284,7 +284,7 @@
     }
 }
 
-/*
+/*!
  * @brief Set if preference changed notifications should be delayed
  *
  * Changing large amounts of preferences at once causes a lot of notification overhead. This should be used like
@@ -318,7 +318,7 @@
     
 //Setting Preferences -------------------------------------------------------------------
 #pragma mark Setting Preferences
-/*
+/*!
  * @brief Set a global preference
  *
  * Set and save a preference at the global level.
@@ -331,7 +331,7 @@
 	[self setPreference:value forKey:key group:group object:nil];
 }
 
-/*
+/*!
  * @brief Set a global or object-specific preference
  *
  * Set and save a preference.  This should not be called directly from plugins or components.  To set an object-specific
@@ -359,7 +359,7 @@
 
 //Retrieving Preferences ----------------------------------------------------------------
 #pragma mark Retrieving Preferences
-/*
+/*!
  * @brief Retrieve a preference
  */
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group
@@ -367,7 +367,7 @@
 	return([self preferenceForKey:key group:group objectIgnoringInheritance:nil]);
 }
 
-/*
+/*!
  * @brief Retrieve an object specific preference with inheritance, ignoring defaults
  *
  * Should only be used within AIPreferenceController. See preferenceForKey:group:object: for details.
@@ -385,7 +385,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Retrieve an object specific default preference with inheritance
  */
 - (id)defaultPreferenceForKey:(NSString *)key group:(NSString *)group object:(AIListObject *)object
@@ -402,7 +402,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief Retrieve an object specific preference with inheritance.
  *
  * Objects inherit from their containing objects, up to the global preference.  If this entire tree has no preference
@@ -419,7 +419,7 @@
 	return(result);
 }
 
-/*
+/*!
  * @brief Retrieve an object specific preference ignoring inheritance.
  *
  * If object is nil, this returns the global preference.  Uses defaults only for the specified preference level,
@@ -433,7 +433,7 @@
 	return(result);
 }
 
-/*
+/*!
  * @brief Retrieve all the preferences in a group
  *
  * @result A dictionary of preferences for the group, including default values as appropriate
@@ -446,14 +446,14 @@
 
 //Defaults -------------------------------------------------------------------------------------------------------------
 #pragma mark Defaults
-/*
+/*!
  * @brief Register a dictionary of defaults.
  */
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group{
 	[self registerDefaults:defaultDict forGroup:group object:nil];
 }
 
-/*
+/*!
  * @brief Register a dictionary of object-specific defaults.
  */
 - (void)registerDefaults:(NSDictionary *)defaultDict forGroup:(NSString *)group object:(AIListObject *)object
@@ -489,7 +489,7 @@
 	[activeDefaultsCache removeObjectForKey:cacheKey];
 }
 
-/*
+/*!
  * @brief Reset an advanced preference pane to default values
  *
  * This only works for preference panes, and only panes in the advanced preferences have a reset defaults button.
@@ -526,7 +526,7 @@
 //Preference Cache -----------------------------------------------------------------------------------------------------
 //We cache the preferences locally to avoid loading them each time we need a value
 #pragma mark Preference Cache
-/*
+/*!
  * @brief Fetch cached preferences
  *
  * @param group The group
@@ -561,7 +561,7 @@
 	return(prefDict);
 }
 
-/*
+/*!
  * @brief Return just the defaults for a specified group and object
  *
  * @param group The group
@@ -587,7 +587,7 @@
 	return([sourceDefaultsDict objectForKey:cacheKey]);
 }
 
-/*
+/*!
  * @brief Return the result of taking the defaults and superceding them with any set preferences
  *
  * @param group The group
@@ -635,7 +635,7 @@
 	return(prefWithDefaultsDict);
 }
 
-/*
+/*!
  * @brief Write preference changes back to the cache and to disk
  *
  * @param prefDict The user-specified preferences (not including defaults)
@@ -681,7 +681,7 @@
 
 //Default download locaiton --------------------------------------------------------------------------------------------
 #pragma mark Default download location
-/*
+/*!
  * @brief Get the default download location
  *
  * This will use an Adium-specific preference if set, or the systemwide download location if not
@@ -718,7 +718,7 @@ finish:
 	return [NSString stringWithUTF8String:path];
 }
 
-/*
+/*!
  * @brief Set the location Adium should use for saving files
  *
  * @param A full path to an existing folder

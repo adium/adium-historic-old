@@ -488,7 +488,7 @@
 }
 
 #pragma mark Finder-style searching
-/*
+/*!
  * @brief Select in response to user typing
  */
 - (void)outlineView:(NSOutlineView *)outlineView userDidTypeString:(NSString *)inputString matchTargetNumber:(int)targetNumber
@@ -541,7 +541,7 @@
 }
 
 #pragma mark Drag and drop
-/*
+/*!
  * @brief Initiate drag and drop by writing items to the pasteboard
  *
  * We provide @"Private" for AIListObject, indicating we are using the private dragItems instance variable.
@@ -657,7 +657,7 @@
 	return YES;
 }
 
-/*
+/*!
  * @brief Show tooltips?
  */
 - (void)setShowTooltips:(BOOL)inShowTooltips
@@ -665,7 +665,7 @@
 	showTooltips = inShowTooltips;	
 }
 
-/*
+/*!
  * @brief Show tooltips when Adium is in the background?
  *
  * Only relevant if showTooltips is set to YES.

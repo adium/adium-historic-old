@@ -24,6 +24,7 @@
         {
             CLASS = ESGaimYahooAccountViewController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"popUp_chatServer" = NSPopUpButton; }; 
             SUPERCLASS = AIAccountViewController; 
         }, 
         {

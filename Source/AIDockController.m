@@ -99,7 +99,7 @@
 
 - (void)closeController
 {
-    NSArray		*stateArrayCopy;
+    NSArray			*stateArrayCopy;
     NSEnumerator	*enumerator;
     NSString		*iconState;
 
@@ -490,18 +490,18 @@
 	NSString	*desc;
 	
     switch(behavior){
-        case BOUNCE_NONE: desc=@"None"; break;
-        case BOUNCE_ONCE: desc=@"Once"; break;
-        case BOUNCE_REPEAT: desc=@"Repeatedly"; break;
-        case BOUNCE_DELAY5: desc=@"Every 5 Seconds"; break;
-        case BOUNCE_DELAY10: desc=@"Every 10 Seconds"; break;
-        case BOUNCE_DELAY15: desc=@"Every 15 Seconds"; break;
-        case BOUNCE_DELAY30: desc=@"Every 30 Seconds"; break;
-        case BOUNCE_DELAY60: desc=@"Every 60 Seconds"; break;
-        default: desc=@"Invalid"; break;
+        case BOUNCE_NONE: desc = AILocalizedString(@"None",nil); break;
+        case BOUNCE_ONCE: desc = AILocalizedString(@"Once",nil); break;
+        case BOUNCE_REPEAT: desc = AILocalizedString(@"Repeatedly",nil); break;
+        case BOUNCE_DELAY5: desc = AILocalizedString(@"Every 5 Seconds",nil); break;
+        case BOUNCE_DELAY10: desc = AILocalizedString(@"Every 10 Seconds",nil); break;
+        case BOUNCE_DELAY15: desc = AILocalizedString(@"Every 15 Seconds",nil); break;
+        case BOUNCE_DELAY30: desc = AILocalizedString(@"Every 30 Seconds",nil); break;
+        case BOUNCE_DELAY60: desc = AILocalizedString(@"Every 60 Seconds",nil); break;
+        default: desc=@""; break;
     }    
-	
-	return(AILocalizedString(desc,""));
+
+	return(desc);
 }
 
 //Start a delayed bounce

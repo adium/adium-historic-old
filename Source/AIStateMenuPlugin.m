@@ -56,7 +56,7 @@
 	[[adium statusController] unregisterStateMenuPlugin:self];
 }
 
-/*
+/*!
  * @brief Add state menu items to our location
  *
  * Implemented as required by the StateMenuPlugin protocol.
@@ -73,7 +73,7 @@
     }
 }
 
-/*
+/*!
  * @brief Remove state menu items from our location
  *
  * Implemented as required by the StateMenuPlugin protocol.

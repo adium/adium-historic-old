@@ -41,7 +41,7 @@
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
 @end
 
-/*
+/*!
  * @class ESUserIconHandlingPlugin
  * @brief User icon handling component
  *
@@ -50,7 +50,7 @@
  */
 @implementation ESUserIconHandlingPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -70,7 +70,7 @@
 	[self registerToolbarItem];
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -78,7 +78,7 @@
     [[adium contactController] unregisterListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Update list object
  *
  * Handle object creation and changes to the userIcon status object, which should be set by account code
@@ -142,7 +142,7 @@
 	return(nil);
 }
 
-/*
+/*!
  * @brief List object attributes changes
  *
  * A plugin, or this plugin, modified the display array for the object; ensure our cache is up to date.
@@ -175,7 +175,7 @@
 	}
 }
 
-/*
+/*!
  * @brief The user icon preference was changed
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -188,7 +188,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Cache and set the user icon from a listObject's preference
  *
  * This loads the user-set preference for a listObject, sets it at highest priority, and then caches the
@@ -250,7 +250,7 @@
  }
  */
 
-/*
+/*!
  * @brief Cache user icon data for an object
  *
  * @param inData Image data to cache
@@ -273,7 +273,7 @@
 	
 	return success;
 }
-/*
+/*!
  * @brief Trash a list object's cached icon
  *
  * @result YES if successful
@@ -292,7 +292,7 @@
 	return (success);
 }
 
-/*
+/*!
  * @brief Retrieve the path at which to cache an <tt>AIListObject</tt>'s image
  */
 - (NSString *)_cachedImagePathForObject:(AIListObject *)inObject
@@ -302,7 +302,7 @@
 
 #pragma mark Toolbar Item
 
-/*
+/*!
  * @brief Register our toolbar item
  *
  * Our toolbar item shows an image for the current chat, displaying it full size/animating if clicked.
@@ -345,7 +345,7 @@
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"MessageWindow"];
 }
 
-/*
+/*!
  * @brief After the toolbar has added the item we can set up the submenus
  */
 - (void)toolbarWillAddItem:(NSNotification *)notification
@@ -367,7 +367,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Toolbar removed an item.
  *
  * If the item is one of ours, stop tracking it.
@@ -388,7 +388,7 @@
 	}
 }
 
-/*
+/*!
  * @brief A chat became visible in a window.
  *
  * Update the item with the @"UserIcon" identifier if necessary
@@ -401,7 +401,7 @@
 						  inWindow:[[notification userInfo] objectForKey:@"NSWindow"]];
 }
 
-/*
+/*!
  * @brief Update the user image toolbar icon in a chat
  *
  * @param chat The chat for which to retrieve an image
@@ -440,7 +440,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief Empty action for menu item validation purposes
  */
 - (IBAction)dummyAction:(id)sender {};
