@@ -16,6 +16,7 @@
 #define KEY_AB_USE_IMAGES						@"AB Use AB Images"
 #define KEY_AB_USE_NICKNAME						@"AB Use NickName"
 #define KEY_AB_PREFER_ADDRESS_BOOK_IMAGES		@"AB Prefer AB Images"
+#define	KEY_AB_CREATE_METACONTACTS				@"AB Create MetaContacts"
 
 #define AB_DISPLAYFORMAT_DEFAULT_PREFS			@"AB Display Format Defaults"
 
@@ -39,11 +40,12 @@ typedef enum {
     int                 meTag;
     
     int                 displayFormat;
-    bool                enableImport;
-    bool                useNickName;
-    bool                automaticSync;
-    bool                preferAddressBookImages;
-    bool                useABImages;
+    BOOL                enableImport;
+    BOOL                useNickName;
+    BOOL                automaticSync;
+    BOOL                preferAddressBookImages;
+    BOOL                useABImages;
+	BOOL				createMetaContacts;
 }
 
 @end

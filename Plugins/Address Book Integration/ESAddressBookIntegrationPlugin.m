@@ -28,7 +28,8 @@
 	listObjectArrayForImageData = nil;
 	personArrayForImageData = nil;
 	imageLookupTimer = nil;
-
+	createMetaContacts = NO;
+	
     //Configure our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS 
 																		forClass:[self class]]  
@@ -201,6 +202,8 @@
 	
     if(notification == nil || [group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+		BOOL			oldCreateMetaContacts = createMetaContacts;
+		
         //load new displayFormat
 		enableImport = [[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue];
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
@@ -208,6 +211,8 @@
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
 		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
 		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
+
+		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
 		
 		if (notification == nil){
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
@@ -220,8 +225,15 @@
 		    [self updateSelfIncludingIcon:YES];	
 			
 		}else{
-			//If we have a notification (so this isn't the first time through), update all contacts,
-			//which will update objects and then our "me" card information
+			/* We have a notification (so this isn't the first time through): */
+
+			//If we weren't craete meta contacts before but we are now
+			if (!oldCreateMetaContacts && createMetaContacts){
+				//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
+				[self rebuildAddressBookDict];
+			}
+			
+			//Update all contacts, which will update objects and then our "me" card information
 			[self updateAllContacts];
 		}
 
@@ -457,7 +469,7 @@
 			}
 		}
 		
-		if ([UIDsArray count] > 1){
+		if (([UIDsArray count] > 1) && createMetaContacts){
 			//Got a record with multiple names
 			AIMetaContact	*metaContact = [[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
 			

@@ -121,32 +121,41 @@
 
 - (IBAction)changePreference:(id)sender
 {
-    if (sender == checkBox_syncAutomatic) {
+    if (sender == checkBox_syncAutomatic){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_IMAGE_SYNC
                                               group:PREF_GROUP_ADDRESSBOOK];
-    } else if (sender == checkBox_useABImages) {
+		
+    }else if (sender == checkBox_useABImages){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
-    } else if (sender == checkBox_useNickName) {
+		
+    }else if (sender == checkBox_useNickName){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_NICKNAME
                                               group:PREF_GROUP_ADDRESSBOOK];
-    } else if (sender == checkBox_enableImport) {
+		
+    }else if (sender == checkBox_enableImport){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMPORT
                                               group:PREF_GROUP_ADDRESSBOOK];
-    } else if (sender == checkBox_preferABImages) {
+		
+    }else if (sender == checkBox_preferABImages){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
-    }
-    else if (sender == checkBox_enableNoteSync) {
+		
+    }else if (sender == checkBox_enableNoteSync){
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
                                              forKey:KEY_AB_NOTE_SYNC
                                               group:PREF_GROUP_ADDRESSBOOK];
-    }
+		
+    }else if (sender == checkBox_metaContacts){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+                                             forKey:KEY_AB_CREATE_METACONTACTS
+                                              group:PREF_GROUP_ADDRESSBOOK];
+	}
 
     [self configureControlDimming];
 }
