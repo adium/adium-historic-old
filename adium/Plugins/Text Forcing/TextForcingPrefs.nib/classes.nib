@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIColorSelectionPopUpButton; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSPopUpButton; 
+        }, 
+        {
             CLASS = AIFlexibleTableView; 
             LANGUAGE = ObjC; 
             OUTLETS = {delegate = id; }; 
@@ -8,6 +13,18 @@
         }, 
         {
             ACTIONS = {changePreference = id; }; 
+            CLASS = AIPreferencePane; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                delegate = id; 
+                "textField_title" = NSTextField; 
+                view = NSView; 
+                "view_containerSubView" = NSView; 
+                "view_containerView" = NSView; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
             CLASS = AITextForcingPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -15,14 +32,14 @@
                 "checkBox_forceBackgroundColor" = NSButton; 
                 "checkBox_forceFont" = NSButton; 
                 "checkBox_forceTextColor" = NSButton; 
-                "colorWell_backgroundColor" = NSColorWell; 
-                "colorWell_textColor" = NSColorWell; 
+                "colorPopUp_backgroundColor" = AIColorSelectionPopUpButton; 
+                "colorPopUp_textColor" = AIColorSelectionPopUpButton; 
                 "textField_desiredFont" = NSTextField; 
-                "view_prefView" = NSView; 
             }; 
-            SUPERCLASS = NSObject; 
+            SUPERCLASS = AIPreferencePane; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }

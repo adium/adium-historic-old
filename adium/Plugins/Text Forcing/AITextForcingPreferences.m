@@ -19,23 +19,42 @@
 #import "AITextForcingPreferences.h"
 #import "AITextForcingPlugin.h"
 
-#define	TEXT_FORCING_PREF_NIB		@"TextForcingPrefs"
-#define TEXT_FORCING_PREF_TITLE		@"Reformat Incoming Messages"
-
-
 @interface AITextForcingPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)changeFont:(id)sender;
 - (void)showFont:(NSFont *)inFont inField:(NSTextField *)inTextField;
-- (void)configureView;
-- (void)configureControlDimming;
 @end
 
 @implementation AITextForcingPreferences
-//
-+ (AITextForcingPreferences *)textForcingPreferencesWithOwner:(id)inOwner
+
+//Preference pane properties
+- (PREFERENCE_CATEGORY)category{
+    return(AIPref_Advanced_Messages);
+}
+- (NSString *)label{
+    return(@"Reformat Incoming Messages");
+}
+- (NSString *)nibName{
+    return(@"TextForcingPrefs");
+}
+
+//Configure the preference view
+- (void)viewDidLoad
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
+    
+    //Font
+    [self showFont:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] inField:textField_desiredFont];
+    [checkBox_forceFont setState:[[preferenceDict objectForKey:KEY_FORCE_FONT] boolValue]];
+    
+    //Text
+    [checkBox_forceTextColor setState:[[preferenceDict objectForKey:KEY_FORCE_TEXT_COLOR] boolValue]];
+    [colorPopUp_textColor setColor:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_TEXT_COLOR] representedColor]];
+    
+    //Background
+    [checkBox_forceBackgroundColor setState:[[preferenceDict objectForKey:KEY_FORCE_BACKGROUND_COLOR] boolValue]];
+    [colorPopUp_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor]];
+    
+    [self configureControlDimming]; //disable the unavailable controls
 }
 
 //Called in response to all preference controls, applies new settings
@@ -54,13 +73,13 @@
         [fontManager setSelectedFont:selectedFont isMultiple:NO];
         [fontManager orderFrontFontPanel:self];
 
-    }else if(sender == colorWell_textColor){
-        [[owner preferenceController] setPreference:[[colorWell_textColor color] stringRepresentation]
+    }else if(sender == colorPopUp_textColor){
+        [[owner preferenceController] setPreference:[[colorPopUp_textColor color] stringRepresentation]
                                              forKey:KEY_FORCE_DESIRED_TEXT_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
 
-    }else if(sender == colorWell_backgroundColor){
-        [[owner preferenceController] setPreference:[[colorWell_backgroundColor color] stringRepresentation]
+    }else if(sender == colorPopUp_backgroundColor){
+        [[owner preferenceController] setPreference:[[colorPopUp_backgroundColor color] stringRepresentation]
                                              forKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR
                                               group:PREF_GROUP_TEXT_FORCING];
 
@@ -85,40 +104,18 @@
 
 }
 
-
-//Private ---------------------------------------------------------------------------
-//init
-- (id)initWithOwner:(id)inOwner
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
 {
-    //init
-    [super init];
-    owner = [inOwner retain];
-
-    //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Receiving withDelegate:self label:TEXT_FORCING_PREF_TITLE]];
-
-    return(self);
-}
-
-//Return the view for our preference pane
-- (NSView *)viewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    //Load our preference view nib
-    if(!view_prefView){
-        [NSBundle loadNibNamed:TEXT_FORCING_PREF_NIB owner:self];
-
-        //Configure our view
-        [self configureView];
-    }
-
-    return(view_prefView);
-}
-
-//Clean up our preference pane
-- (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
-{
-    [view_prefView release]; view_prefView = nil;
-
+    //Font
+    [button_setFont setEnabled:[checkBox_forceFont state]];
+    [textField_desiredFont setEnabled:[checkBox_forceFont state]];
+    
+    //Text
+    [colorPopUp_textColor setEnabled:[checkBox_forceTextColor state]];
+    
+    //Background
+    [colorPopUp_backgroundColor setEnabled:[checkBox_forceBackgroundColor state]];
 }
 
 //Called in response to a font panel change
@@ -142,41 +139,5 @@
     }
 }
 
-//Configures our view for the current preferences
-- (void)configureView
-{
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
-
-    //Font
-    [self showFont:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_FONT] representedFont] inField:textField_desiredFont];
-    [checkBox_forceFont setState:[[preferenceDict objectForKey:KEY_FORCE_FONT] boolValue]];
-
-    //Text
-    [checkBox_forceTextColor setState:[[preferenceDict objectForKey:KEY_FORCE_TEXT_COLOR] boolValue]];
-    [colorWell_textColor setColor:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_TEXT_COLOR] representedColor]];
-    
-    //Background
-    [checkBox_forceBackgroundColor setState:[[preferenceDict objectForKey:KEY_FORCE_BACKGROUND_COLOR] boolValue]];
-    [colorWell_backgroundColor setColor:[[preferenceDict objectForKey:KEY_FORCE_DESIRED_BACKGROUND_COLOR] representedColor]];
-
-    [self configureControlDimming]; //disable the unavailable controls
-}
-
-//Enable/disable controls that are available/unavailable
-- (void)configureControlDimming
-{
-    //Font
-    [button_setFont setEnabled:[checkBox_forceFont state]];
-    [textField_desiredFont setEnabled:[checkBox_forceFont state]];
-
-    //Text
-    [colorWell_textColor setEnabled:[checkBox_forceTextColor state]];
-
-    //Background
-    [colorWell_backgroundColor setEnabled:[checkBox_forceBackgroundColor state]];
-}
-
 @end
-
-
 

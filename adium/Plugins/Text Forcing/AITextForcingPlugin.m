@@ -43,7 +43,7 @@
     [self preferencesChanged:nil];
     
     //Our preference view
-    preferences = [[AITextForcingPreferences textForcingPreferencesWithOwner:owner] retain];
+    preferences = [[AITextForcingPreferences preferencePaneWithOwner:owner] retain];
 
     //Register our content filter
     [[owner contentController] registerIncomingContentFilter:self];
