@@ -549,7 +549,10 @@
         [self _displayAwayMessage:[outlineView_aways itemAtRow:selectedRow]];
         
         //Give focus to the text view
-        [[textView_message window] makeFirstResponder:textView_message];
+		//**Brandon** - this aggrivates the hell out of me...seriously.
+		//if anyone misses it, feel free to uncomment it.
+
+        /*[[textView_message window] makeFirstResponder:textView_message];*/
         
         //Enable delete button
         [button_delete setEnabled:YES];
