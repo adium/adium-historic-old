@@ -2,6 +2,19 @@
     IBClasses = (
         {CLASS = AIAccount; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
+            ACTIONS = {accountNameChanged = id; changedPreference = id; }; 
+            CLASS = AIAccountViewController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                account = id; 
+                "textField_accountName" = NSTextField; 
+                "textField_password" = NSTextField; 
+                "view_accountView" = NSView; 
+                "view_auxilaryTabView" = NSTabView; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {
             ACTIONS = {toggleConnection = id; togglePasswordStorage = id; }; 
             CLASS = AIMTOC2Account; 
             LANGUAGE = ObjC; 
@@ -20,20 +33,15 @@
             SUPERCLASS = AIAccount; 
         }, 
         {
-            ACTIONS = {changedPreference = id; userNameChanged = id; }; 
             CLASS = AIMTOC2AccountViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "textField_fullName" = NSTextField; 
-                "textField_handle" = NSTextField; 
                 "textField_host" = NSTextField; 
-                "textField_password" = NSTextField; 
                 "textField_port" = NSTextField; 
                 "textView_textProfile" = NSTextView; 
-                "view_accountView" = NSView; 
-                "view_auxilaryTabView" = NSTabView; 
             }; 
-            SUPERCLASS = AIObject; 
+            SUPERCLASS = AIAccountViewController; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }

@@ -8907,6 +8907,7 @@
 				4BFC3414058D48A8008F7FA2,
 				34B5875D058D801D00E7EF0D,
 				34503C81058F96C400FB7AD1,
+				4B28DDAD0599FED300343093,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9078,6 +9079,7 @@
 				4BFC3415058D48A8008F7FA2,
 				34B5875C058D801D00E7EF0D,
 				34503C80058F96C400FB7AD1,
+				4B28DDAE0599FED300343093,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17592,6 +17594,36 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B28DDAB0599FED200343093 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountViewController.h;
+			path = "Frameworks/Adium Framework/AIAccountViewController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B28DDAC0599FED200343093 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountViewController.m;
+			path = "Frameworks/Adium Framework/AIAccountViewController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B28DDAD0599FED300343093 = {
+			fileRef = 4B28DDAB0599FED200343093;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B28DDAE0599FED300343093 = {
+			fileRef = 4B28DDAC0599FED200343093;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B30490B047FBD6A00A8010A = {
 			children = (
 				4B30491A047FBDCE00A8010A,
@@ -18321,6 +18353,8 @@
 			children = (
 				F5793922033E74C301A8010A,
 				F579390B033E748F01A8010A,
+				4B28DDAB0599FED200343093,
+				4B28DDAC0599FED200343093,
 				F5793925033E74C301A8010A,
 				F5793914033E748F01A8010A,
 			);
