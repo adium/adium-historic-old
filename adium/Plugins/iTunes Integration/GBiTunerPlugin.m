@@ -228,6 +228,11 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 {
 	id<DummyStringProtocol>   mesg = nil;
 	
+	if (!hasGeneratedScriptMenu) {
+		[scriptMenuItem setSubmenu:[self loadScriptsAndBuildScriptMenu]];
+		hasGeneratedScriptMenu = YES;
+	}
+	
     if(inString){
 		NSEnumerator	*enumerator = [scriptDict keyEnumerator];
         NSString		*pattern;	

@@ -16827,65 +16827,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34D9C0E405AAACF300AC2E4D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = iTunesIntegrationPrefs.plist;
-			path = "Plugins/iTunes Integration/iTunesIntegrationPrefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D9C0E505AAACF300AC2E4D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = GBiTunerPreferences.h;
-			path = "Plugins/iTunes Integration/GBiTunerPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D9C0E605AAACF300AC2E4D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = GBiTunerPreferences.m;
-			path = "Plugins/iTunes Integration/GBiTunerPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D9C0E705AAACF400AC2E4D = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = GBiTuner.nib;
-			path = "Plugins/iTunes Integration/GBiTuner.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D9C0E805AAACF400AC2E4D = {
-			fileRef = 34D9C0E405AAACF300AC2E4D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D9C0E905AAACF400AC2E4D = {
-			fileRef = 34D9C0E505AAACF300AC2E4D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D9C0EA05AAACF400AC2E4D = {
-			fileRef = 34D9C0E605AAACF300AC2E4D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34D9C0EB05AAACF400AC2E4D = {
-			fileRef = 34D9C0E705AAACF400AC2E4D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34D9C11C05AAAF4300AC2E4D = {
 			fileRef = 34F8A7E705A8920F00577775;
 			isa = PBXBuildFile;
@@ -17227,7 +17168,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				340042D605AA98C10047226F,
-				34D9C0E905AAACF400AC2E4D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17235,8 +17175,6 @@
 		34F8A7E305A8920F00577775 = {
 			buildActionMask = 2147483647;
 			files = (
-				34D9C0E805AAACF400AC2E4D,
-				34D9C0EB05AAACF400AC2E4D,
 				4BA7F23405E2E1EF00ABF4FC,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -17246,7 +17184,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				340042D505AA98C10047226F,
-				34D9C0EA05AAACF400AC2E4D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17344,10 +17281,6 @@
 			children = (
 				340042D005AA98C00047226F,
 				340042CF05AA98C00047226F,
-				34D9C0E405AAACF300AC2E4D,
-				34D9C0E505AAACF300AC2E4D,
-				34D9C0E605AAACF300AC2E4D,
-				34D9C0E705AAACF400AC2E4D,
 				4BA7F22405E2E1EF00ABF4FC,
 			);
 			isa = PBXGroup;
