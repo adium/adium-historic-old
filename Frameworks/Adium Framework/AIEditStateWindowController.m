@@ -77,11 +77,8 @@
 {
     [super initWithWindowNibName:windowNibName];
 
-	if(inStatusState){
-		originalStatusState = [inStatusState retain];
-	}else{
-		originalStatusState = [[AIStatus statusOfType:inStatusType] retain];
-	}
+	originalStatusState = [inStatusState retain];
+	workingStatusState = (originalStatusState ? [originalStatusState mutableCopy] : [[AIStatus statusOfType:inStatusType] retain]);
 
 	target = inTarget;
 	
@@ -96,6 +93,7 @@
 - (void)dealloc
 {
 	[originalStatusState release];
+	[workingStatusState release];
 	[account release];
 
 	[super dealloc];
@@ -124,7 +122,7 @@
 	[self configureStateMenu];
 
 	//Configure our editor for the passed state
-	[self configureForState:originalStatusState];
+	[self configureForState:workingStatusState];
 }
 
 /*!
@@ -177,10 +175,23 @@
 - (IBAction)okay:(id)sender
 {
 	if(target && [target respondsToSelector:@selector(customStatusState:changedTo:forAccount:)]){
-		[target customStatusState:originalStatusState changedTo:[self currentConfiguration] forAccount:account];
+		//Perform on a delay so the sheet can beging closing immediately.
+		[self performSelector:@selector(notifyOfStateChange)
+				   withObject:nil
+				   afterDelay:0];
 	}
 	
 	[self closeWindow:nil];
+}
+
+/*
+ * @brief Notify our target of the state changing
+ *
+ * Called by -[self okay:]
+ */
+- (void)notifyOfStateChange
+{
+	[target customStatusState:originalStatusState changedTo:[self currentConfiguration] forAccount:account];
 }
 
 /*!
@@ -347,29 +358,27 @@
  */
 - (AIStatus *)currentConfiguration
 {
-	AIStatus	*statusState;
 	double		idleStart = [textField_idleHours intValue]*3600 + [textField_idleMinutes intValue]*60;
 	
-	statusState = (originalStatusState ? [[originalStatusState mutableCopy] autorelease] : [AIStatus status]);
-	[statusState setMutabilityType:AIEditableStatusState];
+	[workingStatusState setMutabilityType:AIEditableStatusState];
 
 	//XXX
 	/*[statusState setTitle:]*/
-	[statusState setStatusMessageData:[[textView_statusMessage textStorage] dataRepresentation]];
-	[statusState setAutoReplyData:[[textView_autoReply textStorage] dataRepresentation]];
-	[statusState setHasAutoReply:[checkbox_autoReply state]];
-	[statusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];
-	[statusState setInvisible:[checkbox_invisible state]];
-	[statusState setShouldForceInitialIdleTime:[checkbox_idle state]];
-	[statusState setForcedInitialIdleTime:idleStart];
+	[workingStatusState setStatusMessageData:[[textView_statusMessage textStorage] dataRepresentation]];
+	[workingStatusState setAutoReplyData:[[textView_autoReply textStorage] dataRepresentation]];
+	[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
+	[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];
+	[workingStatusState setInvisible:[checkbox_invisible state]];
+	[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
+	[workingStatusState setForcedInitialIdleTime:idleStart];
 
 	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
 	if(stateDict){
-		[statusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
-		[statusState setStatusName:[stateDict objectForKey:KEY_STATUS_NAME]];
+		[workingStatusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
+		[workingStatusState setStatusName:[stateDict objectForKey:KEY_STATUS_NAME]];
 	}
 
-	return(statusState);
+	return(workingStatusState);
 }
 
 @end

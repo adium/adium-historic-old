@@ -46,7 +46,9 @@
 	IBOutlet	NSButton		*button_OK;
 
 	AIStatus	*originalStatusState;
+	AIStatus	*workingStatusState;
 	AIAccount	*account;
+
 	id			target;
 }
 
