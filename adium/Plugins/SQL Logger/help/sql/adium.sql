@@ -181,6 +181,51 @@ do instead  (
         new.recipient_sn and service = new.recipient_service))
 );
 
+create table adium.saved_searches (
+search_id       serial primary key,
+title           text,
+notes           text,
+sender          text,
+recipient       text,
+searchString    text,
+orderBy         text,
+date_added      timestamp default now()
+);
+*/
+
+create table adium.saved_chats (
+chat_id     serial primary key,
+title           text,
+notes           text,
+sent_sn         text,
+received_sn     text,
+single_sn       text,
+date_start      timestamp,
+date_finish     timestamp,
+date_added      timestamp default now()
+);
+
+create table adium.meta_container (
+meta_id         serial primary key,
+name            text not null,
+url             text,
+email           text,
+location        text,
+notes           text
+);
+
+create table adium.meta_contact (
+meta_id int references adium.meta_container (meta_id) not null,
+user_id int references adium.users (user_id) not null
+);
+
+create table adium.message_notes (
+message_id      int references adium.messages(message_id),
+title           text not null,
+notes           text not null,
+date_added      timestamp default now()
+);
+
 create table preferences (
 rule text,
 value varchar(30)

@@ -102,8 +102,8 @@
             [<a
               href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt"
               class="offsite">Changes</a>]</dd>
-          <dt>jsp/images/</dt>
-          <dd>images for the statistics page)</dd>
+          <dt>jsp/others</dt>
+          <dd>Miscellaneous JSP support files</dd>
         </dl>
         <h4>Useful Perl Scripts</h4>
         <dl>

@@ -86,18 +86,17 @@ do instead  (
     from adium.users 
     where username = new.sender_sn
     and new.sender_display is not null
-    and new.sender_display <> ''
     and not exists (
         select 'x'
         from   adium.user_display_name udn
         where  user_id = 
                (select user_id from adium.users where username = new.sender_sn)
-         and   display_name = new.sender_display
-         and not exists (
-            select 'x'
-            from adium.user_display_name
-            where effdate > udn.effdate
-            and user_id = udn.user_id));
+            and   display_name = new.sender_display
+            and not exists (
+                select 'x'
+                from adium.user_display_name
+                where effdate > udn.effdate
+                and user_id = udn.user_id));
 
     insert into adium.user_display_name
     (user_id, display_name)
@@ -105,7 +104,6 @@ do instead  (
     from adium.users
     where username = new.recipient_sn
     and new.recipient_display is not null
-    and new.recipient_display <> ''
     and not exists (
         select 'x'
         from   adium.user_display_name udn
@@ -156,6 +154,47 @@ do instead  (
         new.recipient_sn and service = new.recipient_service))
 );
 
-create table preferences (rule text, value varchar(30));
+create table adium.saved_searches (
+search_id       serial primary key,
+title           text,
+notes           text,
+sender          text,
+recipient       text,
+searchString    text,
+orderBy         text,
+date_added      timestamp default now()
+);
+*/
 
-insert into preferences values ('scramble', 'false');
+create table adium.saved_chats (
+chat_id     serial primary key,
+title           text,
+notes           text,
+sent_sn         text,
+received_sn     text,
+single_sn       text,
+date_start      timestamp,
+date_finish     timestamp,
+date_added      timestamp default now()
+);
+
+create table adium.meta_container (
+meta_id         serial primary key,
+name            text not null,
+url             text,
+email           text,
+location        text,
+notes           text
+);
+
+create table adium.meta_contact (
+meta_id int references adium.meta_container (meta_id) not null,
+user_id int references adium.users (user_id) not null
+);
+
+create table adium.message_notes (
+message_id      int references adium.messages(message_id),
+title           text not null,
+notes           text not null,
+date_added      timestamp default now()
+);

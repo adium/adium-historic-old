@@ -101,8 +101,8 @@
         <dt>jsp/details.jsp</dt>
         <dd>monthly statistics
             [<a href="http://www.visualdistortion.org/adium/changes/jsp/details.jsp.txt" class="offsite">Changes</a>]</dd>
-          <dt>jsp/images/</dt>
-          <dd>images for the statistics page)</dd>
+          <dt>jsp/others</dt>
+          <dd>Miscellaneous JSP support files</dd>
         </dl>
         <h4>Useful Perl Scripts</h4>
         <dl>
@@ -148,7 +148,9 @@
     and switch to the directory that contains the files you just downloaded.
     (If you don't know how to do that, I would suggest <a href="http://www.macdevcenter.com/pub/a/mac/2002/12/06/terminal_osx.html" class="offsite">this
       series of articles</a>).  Type:</p>
-<div class="tutorialcode"><pre>psql &lt; adium.sql</pre></div>
+<div class="tutorialcode"><pre>psql &lt; adium.sql
+createlang plpgsql
+psql &lt; functions.sql</pre></div>
 <p>You
     should get messages like TABLE CREATED.  To ensure that it worked, type
     <code>psql</code>.  Then you will be connected to the database.  You
@@ -215,17 +217,13 @@ bare-bones: the sending and receiving screennames, the message, and a date.</p>
   Logger.AdiumPlugin" to <code>~/Library/Application Support/Adium
     2.0/Plugins"</code>.  That should be all it takes to install it.
   Alternately, you can download a compiled binary from <a href="http://adium.sourceforge.net" class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
-  is updated about once a week.
+  is updated approximately daily.
   </p>
 <p>You can also download a compiled plugin here: <a href="http://www.visualdistortion.org/adium/sql-logger.tar.gz" class="offsite">sql-logger.tar.gz</a>, uncompress it, and drop it
   in the Adium application as discussed above.  This will not work without
   PostgreSQL installed on your system, and the proper database setup.</p>
-<p>Currently, the plugin doesn't have any preferences.  If your database setup is
-  non-standard, you need to set an environmental variable (PGHOST, PGUSER,
-  etc) as described in the PostgreSQL docs.  If the plugin is installed correctly, it works very unobtrusively.  It
-  never does anything unless there is a problem, so if you start it up and
-  don't get an "Unable to Connect to Database" dialog, it's probably
-  working.</p>
+<p>If you would like to log to another machine or require a password, there
+    is a preference pane.</p>
 <p>To check that either parser.pl worked correctly, and/or it's correctly
   logging, type <code>psql</code>.  To view messages:</p>
 <div class="tutorialcode">

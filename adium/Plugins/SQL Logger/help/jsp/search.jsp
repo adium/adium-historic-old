@@ -5,25 +5,40 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/search.jsp $-->
-<!--$Rev: 679 $ $Date: 2004/04/21 01:30:36 $ -->
+<!--$Rev: 684 $ $Date: 2004/04/23 04:26:27 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
+String searchFormURL = new String("saveSearchForm.jsp?action=saveSearch.jsp");
+int search_id = 0;
+
+try {
+    search_id = Integer.parseInt(request.getParameter("search_id"));
+} catch (NumberFormatException e) {
+    search_id = 0;
+}
+
 String sender = request.getParameter("sender");
 if (sender != null && sender.equals("")) {
     sender = null;
+} else if (sender != null) {
+    searchFormURL += "&sender=" + sender;
 }
 
 String recipient = request.getParameter("recipient");
 if (recipient != null && recipient.equals("")) {
     recipient = null;
+} else if (recipient != null) {
+    searchFormURL += "&recipient=" + recipient;
 }
 
 String searchString = request.getParameter("search");
 if (searchString == null || searchString.equals("")) {
     searchString = null;
+} else {
+    searchFormURL += "&searchString=" + searchString;
 }
 
 String orderBy = request.getParameter("order_by");
@@ -35,7 +50,31 @@ if (orderBy != null && orderBy.equals("")) {
 String ascDesc = request.getParameter("asc_desc");
 if(orderBy != null){
     orderBy += ascDesc;
+    searchFormURL += "&orderBy=" + orderBy;
 }
+String title = new String();
+String notes = new String();
+
+PreparedStatement pstmt = null;
+ResultSet rset = null;
+
+try {
+    if(search_id != 0) {
+        pstmt = conn.prepareStatement("select title, notes, sender, recipient, searchstring, orderby from adium.saved_searches where search_id = ?");
+        
+        pstmt.setInt(1, search_id);
+
+        rset = pstmt.executeQuery();
+
+        if(rset != null && rset.next()) {
+            title = rset.getString("title");
+            notes = rset.getString("notes");
+            sender = rset.getString("sender");
+            recipient = rset.getString("recipient");
+            searchString = rset.getString("searchstring");
+            orderBy = rset.getString("orderby");
+        }
+    }
 
 %>
 <html>
@@ -87,7 +126,7 @@ if(orderBy != null){
                     <% if (orderBy != null && orderBy.startsWith("message")
                     && !orderBy.startsWith("message_date"))
                     %> selected="" <% ; %> >Message</option>
-                    
+
                     <option value="rank(idxfti, q)"
                     <% if (orderBy != null && orderBy.startsWith("rank"))
                     %> selected="" <% ; %> >Rank</option>
@@ -104,19 +143,36 @@ if(orderBy != null){
         <input type="reset" />
         <input type="submit" />
     </form>
-<%
-PreparedStatement pstmt = null;
-ResultSet rset = null;
+        <a href="#" onClick="window.open('<%= searchFormURL %>', 'Save Search', 'width=275,height=225')">
+        Save Search
+        </a>
+    <%
 SQLWarning warning;
 
 long beginTime = 0;
 long queryTime = 0;
 
-String searchKey = new String();;
+String searchKey = new String();
 
 searchKey = searchString;
 
-try {
+    pstmt = conn.prepareStatement("select search_id, title from adium.saved_searches");
+    rset = pstmt.executeQuery();
+
+    out.println("<form>");
+    
+    out.println("<select name=\"search_id\" />");
+    out.println("<option value=\"0\" selected=\"yes\">Choose One</option>");
+    while(rset.next()) {
+        out.println("<option value=\"" + rset.getString("search_id") +
+            "\">" + rset.getString("title") + "</option>");
+    }
+    out.println("</select>");
+
+    out.println("<input type=\"submit\">");
+
+    out.println("</form>");
+
     if (searchString != null) {
         ArrayList exactMatch = new ArrayList();
         int quoteMatch = 1;
@@ -363,7 +419,6 @@ try {
     }
 } catch (SQLException e) {
     out.print(e.getMessage() + "<br>");
-    out.print(searchKey);
 } finally {
     if (pstmt != null) {
         pstmt.close();
