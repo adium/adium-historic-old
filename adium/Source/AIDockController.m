@@ -44,23 +44,27 @@
 {
     if([NSApp respondsToSelector:@selector(requestUserAttention:)])
     {
-        int temp = [NSApp requestUserAttention:NSInformationalRequest];
+        int temp = [NSApp requestUserAttention:NSCriticalRequest];
         NSTimer *waitTimer = [NSTimer scheduledTimerWithTimeInterval:1.0 target:self selector:@selector(cancelBouncingForTimer:) userInfo:[NSNumber numberWithInt:temp] repeats:NO];
+        NSLog(@"staring wait");
+        BOOL cont = NO;
+        while(cont)
+        {
+            if(![waitTimer isValid])
+            {
+                cont = YES;
+            }
+        }
+        NSLog(@"ending wait");
     }
 }
 
-- (void)bounceWithInterval:(double)delay times:(int)num // if num = 0, bounce forever
-{   
-    //we aren't using NSCriticalRequest because it's a pain in the butt to cancel. 
+- (void)bounceWithInterval:(double)delay forever:(BOOL)booly
+{       
+    NSLog(@"5");
+    [self bounce]; // do one right away
     
-    if(num == 0) // bounce forever!!
-    {
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:0 repeats:YES];
-    }
-    else // bounce num # of times
-    {
-        currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:num] repeats:NO];
-    }
+    currentTimer = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:4] repeats:NO];
 }
 
 - (void)stopBouncing
@@ -78,20 +82,19 @@
     if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)] && [timer isValid])
     {
         [NSApp cancelUserAttentionRequest:[[timer userInfo] intValue]];
-        NSLog(@"canceled");
     }
-    NSLog(@"not canclled");
 }
 - (void)bounceWithTimer:(NSTimer *)timer
 {
+    NSLog(@"%d", [[timer userInfo] intValue]);
+    
     [self bounce];
-    if([timer isValid])
+    
+    if([[timer userInfo] intValue] > 1)
     {
-        if([[timer userInfo] intValue] > 1)
-        {
-            [self bounceWithInterval:[timer timeInterval] times:([[timer userInfo] intValue]-1)];
-        }
+        currentTimer = [NSTimer scheduledTimerWithTimeInterval:[timer timeInterval] target:self selector: @selector(bounceWithTimer:) userInfo:[NSNumber numberWithInt:[[timer userInfo] intValue]-1] repeats:NO];    
     }
+
 }
 
 @end
