@@ -27,7 +27,7 @@
 	trackContent = YES;
 	displayContent = YES;
 	sendContent = YES;
-	logContent = YES;
+	postProcessContent = YES;
 
     //Store source, dest, chat, ...
     source = [inSource retain];
