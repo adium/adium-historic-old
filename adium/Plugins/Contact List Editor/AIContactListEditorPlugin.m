@@ -24,6 +24,10 @@
 #define DELETE_CONTACT_CONTEXT		AILocalizedString(@"Delete",nil)
 #define RENAME_GROUP				AILocalizedString(@"Rename Group...",nil)
 
+@interface AIContactListEditorPlugin (PRIVATE)
+- (void)deleteFromArray:(NSArray *)array;
+@end
+
 @implementation AIContactListEditorPlugin
 
 //Install
@@ -69,7 +73,7 @@
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 
 	//Delete selection context menu item
-	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelection:) keyEquivalent:@""] autorelease];
+	menuItem = [[[NSMenuItem alloc] initWithTitle:DELETE_CONTACT_CONTEXT target:self action:@selector(deleteSelectionFromTab:) keyEquivalent:@""] autorelease];
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Contact_NegativeAction];
     
 	[[adium notificationCenter] addObserver:self 
@@ -138,6 +142,20 @@
 - (IBAction)deleteSelection:(id)sender
 {	
 	NSArray			*array = [[adium contactController] arrayOfSelectedListObjectsInContactList];
+	[self deleteFromArray:array];
+}
+
+- (IBAction)deleteSelectionFromTab:(id)sender
+{
+	AIListObject   *object = [[adium menuController] contactualMenuContact];
+	if (object){
+		NSArray		*array = [NSArray arrayWithObject:object];
+		[self deleteFromArray:array];
+	}
+}
+
+- (void)deleteFromArray:(NSArray *)array
+{
 	if(array){
 		int count = [array count];
 		
@@ -153,7 +171,7 @@
 		if(result == NSAlertDefaultReturn){
 			[[adium contactController] removeListObjects:array];
 		}
-	}
+	}	
 }
 
 //Called by a context menu
