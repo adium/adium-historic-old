@@ -29,7 +29,6 @@
 #define KEY_WEBKIT_NAME_FORMAT					@"Name Format"
 #define KEY_WEBKIT_USE_NAME_FORMAT				@"Use Custom Name Format"
 #define KEY_WEBKIT_STYLE						@"Message Style"
-#define KEY_WEBKIT_COMBINE_CONSECUTIVE			@"Combine Consecutive Messages"
 #define KEY_WEBKIT_ALLOW_BACKGROUND_COLORING 	@"Allow Background Coloring"
 #define	KEY_WEBKIT_TIME_STAMP_FORMAT			@"Time Stamp"
 #define KEY_WEBKIT_MIN_FONT_SIZE				@"Min Font Size"
