@@ -84,7 +84,7 @@
         enumerator = [eventSoundArray objectEnumerator];
         while((eventDict = [enumerator nextObject])){
             NSString	*notificationName = [eventDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
-            NSString	*soundPath = [eventDict objectForKey:KEY_EVENT_SOUND_PATH];
+            NSString	*soundPath = [[eventDict objectForKey:KEY_EVENT_SOUND_PATH] stringByExpandingBundlePath];
 
             //Observe the notification
             [[owner notificationCenter] addObserver:self
@@ -161,7 +161,10 @@
                 while((eventDict = [enumerator nextObject])){
                     if([event compare:[eventDict objectForKey:KEY_EVENT_DISPLAY_NAME]] == 0){
                         //Add this sound to our array
-                        [soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:[eventDict objectForKey:KEY_EVENT_NOTIFICATION], KEY_EVENT_SOUND_NOTIFICATION, [inPath stringByAppendingPathComponent:soundPath], KEY_EVENT_SOUND_PATH, nil]];
+                        [soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+			    [eventDict objectForKey:KEY_EVENT_NOTIFICATION], KEY_EVENT_SOUND_NOTIFICATION,
+			    [[inPath stringByAppendingPathComponent:soundPath] stringByCollapsingBundlePath], KEY_EVENT_SOUND_PATH,
+			    nil]];
                     }
                 }
             }
