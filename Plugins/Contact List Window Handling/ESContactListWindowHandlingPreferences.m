@@ -9,8 +9,10 @@
 #import "ESContactListWindowHandlingPreferences.h"
 #import "ESContactListWindowHandlingPlugin.h"
 
-#define CLWH_PREF_TITLE	AILocalizedString(@"Window Handling","Contact List Window Handling")
+#define CLWH_PREF_TITLE	AILocalizedString(@"Contact List","Contact List Window Handling")
 #define CLWH_PREF_NIB	@"ContactListWindowHandlingPrefs"
+
+@class AIPreferenceWindowController;
 
 @interface ESContactListWindowHandlingPreferences (PRIVATE)
 - (void)configureView;
@@ -28,7 +30,9 @@
 - (NSString *)nibName{
     return(CLWH_PREF_NIB);
 }
-
+- (NSImage *)image{
+	return([NSImage imageNamed:@"pref-contactList" forClass:[AIPreferenceWindowController class]]);
+}
 //
 - (void)viewDidLoad
 {
