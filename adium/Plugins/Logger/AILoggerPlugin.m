@@ -253,7 +253,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (NSString *)stringForContentStatus:(AIContentStatus *)content
 {
 	NSString		*date = [[content date] descriptionWithCalendarFormat:@"%H:%M:%S" timeZone:nil locale:nil];
-	NSString		*message = [content message];
+	NSString		*message = [[content message] string];
 	NSString		*logString = nil;
 	
 	if(date && message){
