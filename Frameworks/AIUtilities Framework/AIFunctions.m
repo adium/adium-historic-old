@@ -16,6 +16,7 @@
 #import "AIFunctions.h"
 #include <sys/types.h>
 #include <sys/mman.h>
+#include <malloc/malloc.h>
 #include <stdlib.h>
 #include <c.h>
 
