@@ -71,6 +71,7 @@
 //Status
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(BOOL)notify;
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
+- (void)delayedStatusChange:(NSDictionary *)statusChangeDict;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 - (id)statusObjectForKey:(NSString *)key;
 - (void)listObject:(AIListObject *)inObject didSetStatusObject:(id)value forKey:(NSString *)key;
