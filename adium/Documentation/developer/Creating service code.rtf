@@ -138,13 +138,16 @@ Because of the dynamic nature of accounts, their methods are implemented using p
 \
 \pard\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\li1080\ql\qnatural
 
-\fs22 \cf0 The account view controller protocol defines 2 methods:\
+\fs22 \cf0 The account view controller protocol defines 3 methods:\
 - (NSView *)view;\
 - (void)saveChanges;\
+- (void)configureViewAfterLoad;\
 \
 View should return an NSView containing fields for any information required for the service to work.  Typically this will just be an account name field, but anything else required should be included.  The view must be 350 pixels wide, but can be any height.\
 \
 The account view controller is responsible for saving changes made in the view in response to the saveChanges method.  It is also responsible for setting up the view before returning it.\
+\
+The final method is called after the view is loaded, allowing you to set up responders and take any other actions you may need to after your view has been loaded.\
 \pard\tx360\tx720\tx1080\tx1440\tx3060\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\ql\qnatural
 
 \fs24 \cf0 	\

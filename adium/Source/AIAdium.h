@@ -159,6 +159,7 @@ typedef enum {
 @protocol AIAccountViewController <NSObject>
 - (NSView *)view;
 - (void)saveChanges;
+- (void)configureViewAfterLoad;
 @end
 
 @protocol AIContactSortController <NSObject>

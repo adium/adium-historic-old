@@ -81,7 +81,7 @@
 - (void)initAccountView
 {
     NSString		*savedScreenName;
-
+                  
     //ScreenName
     savedScreenName = [[account properties] objectForKey:@"Handle"];
     if(savedScreenName != nil && [savedScreenName length] != 0){
@@ -89,9 +89,15 @@
     }else{
         [textField_handle setStringValue:@""];
     }
-
+    
     //Configure the control dimming for the current status
     [self configureViewForStatus:[account status]];
+}
+
+- (void)configureViewAfterLoad
+{
+    //highlight the accountname field
+    [[[view_accountView superview] window] setInitialFirstResponder:textField_handle];
 }
 
 @end

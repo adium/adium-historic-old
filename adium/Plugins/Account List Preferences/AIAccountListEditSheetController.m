@@ -189,6 +189,10 @@
     //Swap in the account details view
     [view_accountDetails addSubview:accountView];
     [accountView setFrameOrigin:NSMakePoint(0,0)];
+    if([accountViewController conformsToProtocol:@protocol(AIAccountViewController)])
+    {
+        [accountViewController configureViewAfterLoad]; //allow the account subview to set itself up after the window has loaded
+    }
 }
 
 // prevent the system from moving our window around
