@@ -53,7 +53,7 @@ static	NSDictionary	*statusTypeDict = nil;
 	if([allChats count]){	
 		NSString		*statusMessage = [contact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"
 																		fromAnyContainedObject:YES];
-		NSString		*statusType = @"away_message";
+		NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
 		
 		if(statusMessage && [statusMessage length] != 0){
 			[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
