@@ -328,42 +328,43 @@ static	NSImage						*adiumRedHighlightImage = nil;
 			}
         }
 
-        [menu addItem:[NSMenuItem separatorItem]];
-
-		//Add the account menu items
-        enumerator = [accountMenuItemsArray objectEnumerator];
-        menuItem = nil;
-        while(menuItem = [enumerator nextObject]){
-			NSMenu	*submenu;
+		if([accountMenuItemsArray count] > 0){
+			[menu addItem:[NSMenuItem separatorItem]];
 			
-            [menu addItem:menuItem];
-			
-			//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
-			if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
-				[[menuItem target] validateMenuItem:menuItem];
-			}
-			
-			submenu = [menuItem submenu];
-			if(submenu){
-				NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
-				NSMenuItem		*submenuItem;
-				while(submenuItem = [submenuEnumerator nextObject]){
-					//Validate the submenu items as they are added since they weren't previously validated when teh menu was clicked
-					if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
-						[[submenuItem target] validateMenuItem:submenuItem];
+			//Add the account menu items
+			enumerator = [accountMenuItemsArray objectEnumerator];
+			while(menuItem = [enumerator nextObject]){
+				NSMenu	*submenu;
+				
+				[menu addItem:menuItem];
+				
+				//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
+				if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+					[[menuItem target] validateMenuItem:menuItem];
+				}
+				
+				submenu = [menuItem submenu];
+				if(submenu){
+					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
+					NSMenuItem		*submenuItem;
+					while(submenuItem = [submenuEnumerator nextObject]){
+						//Validate the submenu items as they are added since they weren't previously validated when teh menu was clicked
+						if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+							[[submenuItem target] validateMenuItem:submenuItem];
+						}
 					}
 				}
 			}
         }
-        
-        //Prepare to add any open chats
-        enumerator = [openChatsArray objectEnumerator];
-        chat = nil;
-        
-        //If there exist any open chats, add them
+		
+		//If there exist any open chats, add them
         if([openChatsArray count] > 0){
-            //Add a seperator
+			enumerator = [openChatsArray objectEnumerator];
+			chat = nil;
+
+			//Add a seperator
             [menu addItem:[NSMenuItem separatorItem]];
+
             //Create and add the menu items
             while(chat = [enumerator nextObject]){
 				NSImage *image = nil;
@@ -393,7 +394,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
         
         //Add our last two items
         [menu addItem:[NSMenuItem separatorItem]];
-        [menu addItemWithTitle:@"Bring Adium to Front"
+        [menu addItemWithTitle:AILocalizedString(@"Bring Adium to Front",nil)
                         target:self
                         action:@selector(activateAdium:)
                  keyEquivalent:@""];
