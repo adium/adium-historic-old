@@ -238,8 +238,6 @@
 //Draw content of our cell
 - (void)drawContentWithFrame:(NSRect)rect
 {
-	NSRect			iconRect;
-
 	//Far Left
 	if(statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
 	if(serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
@@ -355,7 +353,6 @@
 {
 	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
 		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
-		NSRange 	glyphRange;
 		
 		if(string){
 			int	halfHeight = rect.size.height / 2;

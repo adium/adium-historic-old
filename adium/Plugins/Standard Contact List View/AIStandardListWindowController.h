@@ -9,7 +9,7 @@
 #import "AIListWindowController.h"
 
 @interface AIStandardListWindowController : AIListWindowController {
-	NSMutableArray		*toolbarItems;
+	NSDictionary		*toolbarItems;
 }
 
 @end

@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIListCell.h"
+#import "AIListOutlineView.h"
 
 @implementation AIListCell
 

@@ -18,7 +18,7 @@
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
 @class AIMessageSendingTextView, AIMessageTabViewItem, AIMessageViewController, AICustomTabsView, AIDualWindowInterfacePlugin;
-@protocol AIContainerInterface, AIInterfaceContainer;
+@protocol AIInterfaceContainer;
 
 @interface AIMessageWindowController : AIWindowController {
     IBOutlet	NSTabView			*tabView_messages;

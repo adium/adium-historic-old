@@ -401,13 +401,13 @@
 	[[adium interfaceController] showTooltipForListObject:nil atScreenPoint:NSMakePoint(0,0) onWindow:nil];
 }
 
-#pragma mark For Subclasses
+
+//----------------
+//For Subclasses
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification {};
 - (void)updateTransparency {};
 - (IBAction)performDefaultActionOnSelectedContact:(AIListObject *)selectedObject withSender:(id)sender {};
-
-- (BOOL)useAliasesInContactListAsRequested
-{
+- (BOOL)useAliasesInContactListAsRequested{
 	return YES;
 }
 

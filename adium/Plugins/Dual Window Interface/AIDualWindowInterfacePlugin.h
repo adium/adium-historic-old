@@ -53,14 +53,7 @@ typedef enum {
 - (void)close:(id)sender;	//Close the container
 @end
 
-@protocol AIContainerInterface <NSObject>
-- (void)containerDidOpen:(id <AIInterfaceContainer>)inContainer;
-- (void)containerDidClose:(id <AIInterfaceContainer>)inContainer;
-- (void)containerDidBecomeActive:(id <AIInterfaceContainer>)inContainer;
-- (void)containerOrderDidChange;
-@end
-
-@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController, AIContainerInterface> {
+@interface AIDualWindowInterfacePlugin : AIPlugin <AIInterfaceController> {
     
 	NSMutableArray			*delayedContainerShowArray;
 	NSMutableDictionary		*containers;

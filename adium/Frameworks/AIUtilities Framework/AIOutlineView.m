@@ -106,7 +106,7 @@
 //Preserve selection and group expansion through a reload
 - (void)reloadData
 {
-	NSArray		*selectedItems;
+//	NSArray		*selectedItems;
 	
 	/* This code is to correct what I consider a bug with NSOutlineView.
 	Basically, if reloadData is called from 'outlineView:setObjectValue:forTableColumn:byItem:' while the last

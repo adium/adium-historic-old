@@ -8,6 +8,7 @@
 
 #import "AIListContactMockieCell.h"
 #import "AIListGroupMockieCell.h"
+#import "AIListOutlineView.h"
 
 @implementation AIListContactMockieCell
 
