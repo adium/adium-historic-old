@@ -4,7 +4,6 @@
 //
 //  Created by Stephen Holt on Mon May 31 2004.
 
-
 #import "SHBookmarksImporterPlugin.h"
 
 @protocol SHBookmarksImporter;

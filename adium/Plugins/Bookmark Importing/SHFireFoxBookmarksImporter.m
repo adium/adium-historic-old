@@ -3,8 +3,6 @@
 //  Adium
 //
 //  Created by Stephen Holt on Sun May 30 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
 
 #import "SHFireFoxBookmarksImporter.h"
 
