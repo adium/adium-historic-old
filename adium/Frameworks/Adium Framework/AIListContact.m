@@ -38,16 +38,20 @@
 
 - (AIHandle *)handleForAccount:(AIAccount *)inAccount
 {
-    NSEnumerator	*enumerator;
-    AIHandle		*handle;
+    AIHandle        *handle;
     
-    //Search for an existing handle belonging to the account
-    enumerator = [handleArray objectEnumerator];
-    while((handle = [enumerator nextObject])){
-        if([handle account] == inAccount) break;
+    if (inAccount) {
+        NSEnumerator 	*enumerator;
+        
+        //Search for an existing handle belonging to the account
+        enumerator = [handleArray objectEnumerator];
+        while((handle = [enumerator nextObject])){
+            if([handle account] == inAccount) break;
+        }
+    } else {
+        handle = [handleArray objectAtIndex:0];
     }
-
-    return(handle);
+        return(handle);
 }
 
 - (void)addHandle:(AIHandle *)inHandle

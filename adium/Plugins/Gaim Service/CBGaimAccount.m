@@ -486,13 +486,21 @@
     char *newValue = NULL;
     
     if (message) {
-        newValue = g_strdup([[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+     /*   newValue = g_strdup([[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
                                                headers:YES
                                               fontTags:YES
                                          closeFontTags:YES
                                              styleTags:YES
                             closeStyleTagsOnFontChange:NO
                                         encodeNonASCII:NO] UTF8String]);
+*/
+        newValue = [[AIHTMLDecoder encodeHTML:[NSAttributedString stringWithData:message]
+                                               headers:YES
+                                              fontTags:YES
+                                         closeFontTags:YES
+                                             styleTags:YES
+                            closeStyleTagsOnFontChange:NO
+                                        encodeNonASCII:NO] UTF8String];
     }
     // gaim expects us to allocate the away message and leave it allocated;
     // it takes responsibilty for freeing it.
@@ -737,19 +745,8 @@
     [[owner accountController] 
                     setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
                          forKey:@"Status" account:self];
-    
-    //Flush all our handle status flags
-  //  enumerator = [[handleDict allValues] objectEnumerator];
- //   while((handle = [enumerator nextObject])){
- //       [self removeAllStatusFlagsFromHandle:handle];
-//    }
-    
-    //Remove all our handles
-   // [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-  //  [[owner contactController] handlesChangedForAccount:self];
-    
-    //tell gaim to disconnect
-    
+
+    //tell gaim to disconnect    
     silentAndDelayed = YES;
     NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
     gaim_account_disconnect(account); gc = NULL;

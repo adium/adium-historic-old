@@ -222,12 +222,16 @@
     NSString		*longDisplayName = nil;
     NSString            *serverDisplayName = nil;
     
+   
     //Setup the display names
     if ( inAlias != nil && [ inAlias length ] != 0 ) {
         displayName = inAlias;
     } else {
-        /* Screen Name */
-        displayName = [ inObject serverDisplayName ];
+        /* Use the screen name if no other displayName has been set externally*/
+        if ([[inObject displayArrayForKey:@"Display Name"] count] == 0)
+            displayName = [ inObject serverDisplayName ];
+        else
+            displayName = nil;
     }
     
     //Long Display Name
@@ -262,79 +266,14 @@
             
         case SCREEN_NAME:
             longDisplayName = [inObject serverDisplayName];
-
             break;
 
-        case ADDRESS_BOOK_FIRST_LAST:
-        case ADDRESS_BOOK_LAST_FIRST:
-        case ADDRESS_BOOK_FIRST: {
-            NSArray* contacts;
-            uint numberOfContacts;
-            uint currentContactIndex;
-
-            contacts = [ [ ABAddressBook sharedAddressBook ] people ];
-
-            numberOfContacts = [ contacts count ];
-
-            /* Fall-back */
-            longDisplayName = displayName;
-
-            for ( currentContactIndex = 0;
-                    currentContactIndex < numberOfContacts;
-                    currentContactIndex++ )
-            {
-                ABPerson* currentContact = [ contacts objectAtIndex:currentContactIndex ];
-                NSString* currentContactFirstName = [ currentContact valueForProperty:kABFirstNameProperty ];
-                NSString* currentContactLastName = [ currentContact valueForProperty:kABLastNameProperty ];
-                ABMultiValue* currentContactAIMScreenNames = [ currentContact valueForProperty:kABAIMInstantProperty ];
-                uint numberOfScreenNamesForContact = 0;
-                uint currentScreenNameForContactIndex = 0;
-
-                numberOfScreenNamesForContact = [ currentContactAIMScreenNames count ];
-
-                for ( currentScreenNameForContactIndex = 0;
-                        currentScreenNameForContactIndex < numberOfScreenNamesForContact;
-                        currentScreenNameForContactIndex++ )
-                {
-                    NSString* screenName;
-                    NSString* currentScreenNameForContact =
-                    [ currentContactAIMScreenNames valueAtIndex:currentScreenNameForContactIndex ];
-
-                    screenName = [ self stringWithoutWhitespace:[ inObject serverDisplayName ] ];
-                    currentScreenNameForContact = [ self stringWithoutWhitespace:currentScreenNameForContact ];
-
-                    if ( [ screenName caseInsensitiveCompare:currentScreenNameForContact ] == NSOrderedSame ) {
-                        if ( currentContactFirstName != nil && currentContactLastName != nil ) {
-                            if (displayFormat == ADDRESS_BOOK_FIRST_LAST) {
-                                longDisplayName = [ NSString stringWithFormat:@"%@ %@",
-                                    currentContactFirstName,
-                                    currentContactLastName ];
-                            } else if (displayFormat == ADDRESS_BOOK_LAST_FIRST) {
-                                longDisplayName = [ NSString stringWithFormat:@"%@, %@",
-                                    currentContactLastName,
-                                    currentContactFirstName ];
-                            } else if (displayFormat == ADDRESS_BOOK_FIRST) {
-                                longDisplayName = currentContactFirstName;
-                            }
-                        } else if ( currentContactFirstName != nil && currentContactLastName == nil ) {
-                            longDisplayName = currentContactFirstName;
-                        } else if ( currentContactFirstName == nil && currentContactLastName != nil ) {
-                            longDisplayName = currentContactLastName;
-                        } // else handled by fallback above
-
-                        break;
-                    }
-                }
-            }
-
-            break;
-        }
-            
         default: longDisplayName = nil; break;
     }
 
     //Apply the values
-    [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
+    [[inObject displayArrayForKey:@"Adium Alias"] setObject:inAlias withOwner:self];
+    [[inObject displayArrayForKey:@"Display Name"] setPrimaryObject:displayName withOwner:self];
     [[inObject displayArrayForKey:@"Long Display Name"] setObject:longDisplayName withOwner:self];
     [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
 }

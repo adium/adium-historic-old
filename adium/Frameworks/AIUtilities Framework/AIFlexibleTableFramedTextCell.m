@@ -236,7 +236,7 @@
 - (void)_drawBubbleDividerInRect:(NSRect)frame
 {
     if(dividerColor){
-        float dividerSpace = framePadLeft + 2;
+        float dividerSpace = framePadLeft + 1;
         
         [dividerColor set];
         [NSBezierPath fillRect:NSMakeRect(frame.origin.x+dividerSpace,frame.origin.y,frame.size.width-dividerSpace,frame.size.height)];
