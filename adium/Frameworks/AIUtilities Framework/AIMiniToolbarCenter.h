@@ -17,19 +17,20 @@
 
 #define MINI_TOOLBAR_ITEM_DRAGTYPE	@"AIMiniToolbarItem"
 #define MINI_TOOLBAR_TYPE		@"AIMiniToolbarType"
+#define MINI_TOOLBAR_SOURCE		@"AIMiniToolbarSource"
 
 #define AIMiniToolbar_ItemsChanged	@"AIMiniToolbar_ItemsChanged"
 #define AIMiniToolbar_RefreshItem	@"AIMiniToolbar_RefreshItem"
 
-@class AIMiniToolbarItem, AIMiniToolbar;
+@class AIMiniToolbarItem, AIMiniToolbar, AIMiniToolbarCustomizeController;
 
 @interface AIMiniToolbarCenter : NSObject {
 
-    NSMutableDictionary		*toolbarDict;
-    NSMutableDictionary		*itemDict;
+    NSMutableDictionary			*toolbarDict;
+    NSMutableDictionary			*itemDict;
 
-    NSMutableArray		*customizingArray; //array of toolbar identifiers that are customizing 
-
+    AIMiniToolbarCustomizeController	*customizeController;
+    NSString				*customizeIdentifier;
 }
 
 + (id)defaultCenter;

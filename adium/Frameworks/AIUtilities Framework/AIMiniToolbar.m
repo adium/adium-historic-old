@@ -530,11 +530,12 @@
     NSPasteboard 	*pasteboard = [sender draggingPasteboard];
     NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
 
+    //We only focus/accept a drag from ourself or the customization palette
     if(toolbarIdentifier && [identifier compare:toolbarIdentifier] == 0){
         //Stop tracking the drag
         hoverIndex = -1;
         [self setFocusedForDrag:NO];
-        
+    
         //Let all the views settle back into place
         if(!itemsRearranging){
             [self smoothlyArrangeItems];
@@ -573,9 +574,10 @@
 
         //Put information on the pasteboard
         pboard = [NSPasteboard pasteboardWithName:NSDragPboard];
-        [pboard declareTypes:[NSArray arrayWithObjects:MINI_TOOLBAR_ITEM_DRAGTYPE, MINI_TOOLBAR_TYPE,nil] owner:self];
+        [pboard declareTypes:[NSArray arrayWithObjects:MINI_TOOLBAR_ITEM_DRAGTYPE, MINI_TOOLBAR_TYPE, MINI_TOOLBAR_SOURCE, nil] owner:self];
         [pboard setString:[draggedItem identifier] forType:MINI_TOOLBAR_ITEM_DRAGTYPE];
         [pboard setString:identifier forType:MINI_TOOLBAR_TYPE];
+        [pboard setString:identifier forType:MINI_TOOLBAR_SOURCE];
 
         //Create an image of the item
         image = [[[NSImage alloc] initWithSize:viewFrame.size] autorelease];
@@ -618,7 +620,6 @@
 
     //NSDragOperationDelete - Dragged to trash can (delete)
     //NSDragOperationNone - Dragged off the toolbar, to a non receptor on the screen (POOF, delete)
- ///////////NSDragOperationCopy - Dragged to another toolbar (delete)
     //NSDragOperationPrivate - Dragged to another toolbar of the same type (nothing)
     
     //Dragged to no destination, show the animated poof
@@ -633,7 +634,6 @@
         [AIAnimatedFloater animatedFloaterWithImage:[AIImageUtilities imageNamed:MINI_TOOLBAR_POOF forClass:[self class]] size:puffSize frames:5 delay:0.08  at:puffOrigin];
     }
 
-    //Remove the item that was dragged from the toolbar
     if(operation != NSDragOperationPrivate){
         [self removeItemAtIndex:draggedIndex];
     }
@@ -650,7 +650,6 @@
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
     NSPasteboard 	*pasteboard = [sender draggingPasteboard];
-    NSString		*toolbarIdentifier = [pasteboard stringForType:MINI_TOOLBAR_TYPE];
 
     if(hoverIndex >= 0 && hoverIndex <= [itemIdentifierArray count]){
         int	dropIndex = hoverIndex;
@@ -672,7 +671,7 @@
         //Move/insert the item
         [self insertItemWithIdentifier:[[sender draggingPasteboard] stringForType:MINI_TOOLBAR_ITEM_DRAGTYPE]
                                atIndex:dropIndex
-                       allowDuplicates:(toolbarIdentifier == nil || [identifier compare:toolbarIdentifier] != 0)];
+                       allowDuplicates:!([pasteboard stringForType:MINI_TOOLBAR_SOURCE])]; //If there is no source, then this item was dragged from the customization palette - so duplicates are allowed.
 
         [self setFocusedForDrag:NO];
 

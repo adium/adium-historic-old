@@ -74,11 +74,22 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 - (IBAction)customizeToolbar:(AIMiniToolbar *)toolbar
 {
     if(![self customizing:toolbar]){ //Do nothing if this toolbar is already being customized
+        if(customizeController){
+            ///End any existing customization
+            [customizeController close];
+            [customizeController release]; customizeController = nil;
+        }
+        
         //Display the customization palette
-        [AIMiniToolbarCustomizeController showCustomizationWindowForToolbar:toolbar];
+        customizeController = [[AIMiniToolbarCustomizeController customizationWindowControllerForToolbar:toolbar] retain];
+        [customizeController showWindow:nil];
 
         //Add it to our customizing list and notify
-        [customizingArray addObject:[toolbar identifier]];
+        if(customizeIdentifier){
+            [customizeIdentifier release];
+        }
+
+        customizeIdentifier = [[toolbar identifier] retain];
         [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
     }
 }
@@ -88,7 +99,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 {
     NSString		*identifier = [toolbar identifier];
 
-    if([customizingArray containsObject:identifier]){
+    if(customizeIdentifier && [customizeIdentifier compare:identifier] == 0){
         return(YES);
     }else{
         return(NO);
@@ -98,8 +109,11 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Closes the customization palettes
 - (IBAction)endCustomization:(AIMiniToolbar *)toolbar
 {
+    //Release the customization panel
+    [customizeController autorelease]; customizeController = nil;
+
     //Remove it from our list and notify
-    [customizingArray removeObject:[toolbar identifier]];
+    [customizeIdentifier release]; customizeIdentifier = nil;
     [[NSNotificationCenter defaultCenter] postNotificationName:AIMiniToolbar_RefreshItem object:nil];
 
     //Turn customization mode off
@@ -123,7 +137,8 @@ static AIMiniToolbarCenter *defaultCenter = nil;
     
     toolbarDict = [[NSMutableDictionary alloc] init];
     itemDict = [[NSMutableDictionary alloc] init];
-    customizingArray = [[NSMutableArray alloc] init];
+    customizeIdentifier = nil;
+    customizeController = nil;
     
     return(self);
 }
@@ -132,7 +147,8 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 {
     [toolbarDict release];
     [itemDict release];
-    [customizingArray release];
+    [customizeIdentifier release];
+    [customizeController release];
 
     [super dealloc];
 }

@@ -20,6 +20,6 @@
     
 }
 
-+ (void)showCustomizationWindowForToolbar:(AIMiniToolbar *)inToolbar;
++ (AIMiniToolbarCustomizeController *)customizationWindowControllerForToolbar:(AIMiniToolbar *)inToolbar;
 
 @end
