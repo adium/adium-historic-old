@@ -247,12 +247,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 //Invalidate the enumerators to stop scanning prematurely
                 //textEnumerator = nil; emoticonEnumerator = nil;
             }
+        
+			//Move to the next possible location of an emoticon
+			currentLocation++;
         }
 		[candidateEmoticons release];
 		[candidateEmoticonTextEquivalents release];
-        
-        //Move to the next possible location of an emoticon
-        currentLocation++;
     }
     
     return(newMessage ? newMessage : inMessage);
