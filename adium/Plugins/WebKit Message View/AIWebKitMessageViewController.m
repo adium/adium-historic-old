@@ -627,15 +627,15 @@ DeclareString(AppendNextMessage);
 	//Get the correct template for what we're inserting
 	if([content isOutgoing]){
 		if(contentIsSimilar && combineConsecutive){
-			templateFile = [(isContext ? nextContextOutHTML : nextContentOutHTML) mutableCopy];
+			templateFile = (isContext ? nextContextOutHTML : nextContentOutHTML);
 		}else{
-			templateFile = [(isContext ? contextOutHTML : contentOutHTML) mutableCopy];
+			templateFile = (isContext ? contextOutHTML : contentOutHTML);
 		}
 	}else{
 		if(contentIsSimilar && combineConsecutive){
-			templateFile = [(isContext ? nextContextInHTML : nextContentInHTML) mutableCopy];
+			templateFile = (isContext ? nextContextInHTML : nextContentInHTML);
 		}else{
-			templateFile = [(isContext ? contextInHTML : contentInHTML) mutableCopy];
+			templateFile = (isContext ? contextInHTML : contentInHTML);
 		}
 	}
 	
