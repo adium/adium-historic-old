@@ -163,5 +163,13 @@
     //[eventNotifications removeAllObjects];
 }
 
+- (IBAction)showAboutBox:(id)sender
+{
+     [NSApp orderFrontStandardAboutPanelWithOptions:
+        [NSDictionary dictionaryWithObject:
+            [NSString stringWithFormat:@"2.0 - %s", __DATE__] 
+        forKey:@"Version"]];
+}
+
 @end
 

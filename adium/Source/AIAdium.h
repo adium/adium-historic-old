@@ -51,6 +51,9 @@
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;
 - (NSDictionary *)eventNotifications;
 
+- (IBAction)showAboutBox:(id)sender;
+
+
 @end
 
 // Public core controller typedefs and defines --------------------------------------------------
