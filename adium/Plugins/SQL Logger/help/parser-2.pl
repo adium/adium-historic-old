@@ -2,7 +2,7 @@
 
 # Jeffrey Melloy <jmelloy@visualdistortion.org>
 # $URL: http://svn.visualdistortion.org/repos/projects/adium/parser-2.pl $
-# $Rev: 394 $ $Date: 2003/08/21 08:12:50 $
+# $Rev: 442 $ $Date: 2003/10/12 16:30:23 $
 #
 # Script will parse Adium logs >= 2.0 and put them in postgresql table.
 # Table is created with "adium.sql"
@@ -60,10 +60,15 @@ foreach my $outer_user (glob '*') {
         $_ = $service_user;
         ($service, $user) = /(\w*).([\w\.\_\@\+\-]*)/;
         foreach my $folder (glob '*') {
-            !$quiet && print "\t" . $folder . "\n";
+            !$quiet && print "\t" . $folder;
             chdir $folder;
+            !$quiet && print "\t" . `ls -1 | wc -l`;
+            my $counter = 0;
             foreach my $file (glob '*adiumLog') {
                 $verbose && print "\t\t" . $file . "\n";
+                if (++$counter % 50 == 0) {
+                    !$quiet && print $counter . "\n";
+                }
 
                 my $date;
                 my $recdName;

@@ -31,7 +31,7 @@
           </tr>
           <tr>
             <td width="170" bgcolor="green" valign="top" align="right">
-              <h4>Adium SQL Links<br /></h4>
+              <h4>SQL Logger<br /></h4>
               <a href="index.html" class="sidebar">Installation Instructions</a>
               <br /><a href="http://www.visualdistortion.org/adium/screenshots.jsp" class="offsides">Screenshots</a>
               <br /><a href="tsearch.html" class="sidebar">TSearch Installation</a>
@@ -41,14 +41,20 @@
               <br /><a href="performance.html"
               class="sidebar">Performance/Maintenance</a>
 
-              <br /><br /><h4>Other links</h4>
+              <br /><h4>Adium</h4>
               <a href="http://www.adiumx.com/" class="offsides">Adium</a>
               <br /><a href="http://adium.sourceforge.net" class="offsides">Adium
                 2.0</a>
               <br /><a href="http://www.funmac.com/forumdisplay.php?forumid=38" 
                 class="offsides">Adium
                 Forums</a>
-              <br /><a href="http://www.postgresql.org" class="offsides">PostgreSQL</a>
+                <br /><a href="http://www.visualdistortion.org/adium/stats/"
+                class="offsides">CVS Statistics</a>
+                <br /><a href="http://www.visualdistortion.org/adium/rss.xml"
+                class="offsides">CVS Commit RSS Feed</a>
+                <br />
+                <h4>PostgreSQL</h4>
+              <a href="http://www.postgresql.org" class="offsides">PostgreSQL</a>
               <br /><a
                 href="http://www.postgresql.org/docs/7.3/interactive/index.html"
                 class="offsides">PSQL Documentation</a>
@@ -56,8 +62,7 @@
               href="http://www.xceltech.net/products/freeware_products.html"
               class="offsides">PostMan Query</a>
               <br />
-              <br />
-              <h4>Visual Distortion Links</h4>
+              <h4>Visual Distortion</h4>
               <a href="http://www.visualdistortion.org/"
               class="offsides">Visual Distortion Home</a>
               <br />

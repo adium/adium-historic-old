@@ -1,4 +1,5 @@
 <?xml version="1.0"?>
+<?xml-stylesheet href="adium.xsl" type="text/xsl"?>
 <page>
   <title>Performance / Maintenance</title>
   <body>

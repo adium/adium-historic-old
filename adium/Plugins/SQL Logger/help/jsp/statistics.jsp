@@ -5,7 +5,7 @@
 
 <!DOCTYPE HTML PUBLIC "-//W3C/DTD HTML 4.01 Transitional//EN">
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 437 $ $Date: 2003/09/25 15:02:59 $ -->
+<!--$Rev: 444 $ $Date: 2003/10/12 16:30:23 $ -->
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
 DataSource source = (DataSource) env.lookup("jdbc/postgresql");
@@ -244,18 +244,18 @@ try {
         out.print("</td></tr></table>");
 
         pstmt = conn.prepareStatement("select username, recipient_id as \"Recipient\", "+ 
-        " (select num_messages "+
+        " coalesce((select num_messages "+
         " from adium.user_statistics where " +
-        " sender_id = a.sender_id and recipient_id = a.recipient_id) " +
-        " as \"Sent\", (select num_messages "+
+        " sender_id = a.sender_id and recipient_id = a.recipient_id),0) " +
+        " as \"Sent\", coalesce((select num_messages "+
         " from adium.user_statistics where"+
-        " recipient_id = a.sender_id and sender_id = a.recipient_id) as " +
+        " recipient_id = a.sender_id and sender_id = a.recipient_id),0) as " +
         " \"Recieved\", " +
         " trunc(avg(length(message)), 2) as "+
-        " \"Avg Sent Length\", (select coalesce(trunc(avg(length(message)),2),0)"+
+        " \"Avg Sent\", (select coalesce(trunc(avg(length(message)),2),0)"+
         " from "+
         " messages where a.sender_id = recipient_id and sender_id = " +
-        " a.recipient_id) as \"Avg Recd Length\","+
+        " a.recipient_id) as \"Avg Recd\","+
         " min(length(message)) as \"Min Sent\", max(length(message))"+
         " as \"Max Sent\","+
         " (select coalesce(min(length(message)),0) from messages where "+
