@@ -65,6 +65,7 @@
     tooltipTrackingTag = -1;
 	inDrag = NO;
 	windowHidesOnDeactivate = NO;
+	alreadyDidDealloc = NO;
 	dragItems = nil;
 	tooltipMouseLocationTimer = nil;
     tooltipCount = 0;
@@ -122,16 +123,18 @@
 	//Make sure the view stops observing, too, in case the dealloc order is not the expected one
     [[NSNotificationCenter defaultCenter] removeObserver:contactListView];
 	
-	
     //Hide any open tooltips
 	[self _removeCursorRect];
+	
+	//Mark that we're done and therefore should not respond to further requests
+	alreadyDidDealloc = YES;
 	
     //Close down and release the view
     [contactListView setTarget:nil];
     [contactListView setDataSource:nil];
     [contactListView setDelegate:nil];
     [contactListView release]; contactListView = nil;
-
+	
     [super dealloc];
 }
 
@@ -606,7 +609,7 @@
 }
 
 - (void)window:(NSWindow *)inWindow didResignMain:(NSNotification *)notification
-{
+{	
 	[self _stopTrackingMouse];
 }
 
@@ -735,18 +738,20 @@
 		AIListObject	*hoveredObject = nil;
 		NSWindow		*window = [contactListView window];
 
-		if((screenPoint.x != 0 && screenPoint.y != 0) && [window isVisible] && (!windowHidesOnDeactivate || [NSApp isActive])){
-			NSPoint			viewPoint;
-			int				hoveredRow;
-			
-			//Extract data from the event
-			viewPoint = [contactListView convertPoint:[window convertScreenToBase:screenPoint] fromView:nil];
-			
-			//Get the hovered contact
-			hoveredRow = [contactListView rowAtPoint:viewPoint];
-			hoveredObject = [contactListView itemAtRow:hoveredRow];
-		}else{
-			[self _killMouseMovementTimer];
+		if (screenPoint.x != 0 && screenPoint.y != 0){
+			if([window isVisible] && (!windowHidesOnDeactivate || [NSApp isActive])){
+				NSPoint			viewPoint;
+				int				hoveredRow;
+				
+				//Extract data from the event
+				viewPoint = [contactListView convertPoint:[window convertScreenToBase:screenPoint] fromView:nil];
+				
+				//Get the hovered contact
+				hoveredRow = [contactListView rowAtPoint:viewPoint];
+				hoveredObject = [contactListView itemAtRow:hoveredRow];
+			}else{
+				[self _killMouseMovementTimer];
+			}
 		}
 		
 		[[adium interfaceController] showTooltipForListObject:hoveredObject atScreenPoint:screenPoint onWindow:window];
