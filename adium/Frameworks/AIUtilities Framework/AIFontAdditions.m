@@ -11,6 +11,37 @@
 
 @implementation NSFont (AIFontAdditions)
 
+//Returns the requested font
+//NSFont's 'FontWithName' method leaks memory.  This wrapper attempts to minimize the leaking.
++ (NSFont *)cachedFontWithName:(NSString *)fontName size:(float)fontSize
+{
+    static NSMutableDictionary	*fontDict = nil;
+    NSString			*sizeString = [NSString stringWithFormat:@"%0.2f",fontSize];
+    NSMutableDictionary		*sizeDict = nil;
+    NSFont			*font = nil;
+
+    if(!fontDict){
+        fontDict = [[NSMutableDictionary alloc] init];
+    }
+
+    sizeDict = [fontDict objectForKey:fontName];
+    if(!sizeDict){
+        sizeDict = [[NSMutableDictionary alloc] init];
+        [fontDict setObject:sizeDict forKey:fontName];
+    }
+
+    font = [sizeDict objectForKey:sizeString];
+    if(!font){
+        font = [NSFont fontWithName:fontName size:fontSize];
+
+        [sizeDict setObject:font
+                     forKey:[NSString stringWithFormat:@"%0.2f",fontSize]];
+        [fontDict setObject:sizeDict forKey:fontName];
+    }
+
+    return(font);
+}
+
 //Returns an attributed string containing this font.  Useful for saving & restoring fonts to preferences/plists
 - (NSAttributedString *)stringRepresentation
 {

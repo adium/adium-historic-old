@@ -216,7 +216,7 @@
             
             cell = [AIFlexibleTableTextCell cellWithString:dateString
                                        color:(backgroundIsDark ? [NSColor lightGrayColor] : [NSColor grayColor])
-                                        font:[NSFont fontWithName:@"Helvetica" size:10]/*[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:0 size:10]*/
+                                        font:[NSFont cachedFontWithName:@"Helvetica" size:10]/*[[NSFontManager sharedFontManager] fontWithFamily:@"Lucida Grande" traits:0 weight:0 size:10]*/
                                    alignment:NSRightTextAlignment
                                   background:backgroundColor
                                     gradient:nil];

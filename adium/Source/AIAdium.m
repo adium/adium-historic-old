@@ -27,7 +27,6 @@
 #import "AIDockController.h"
 #import <AIUtilities/AIUtilities.h>
 
-#define ADIUM_DEFAULT_PREFS 			@"Default Preferences"				//File name of Adium's default preferences
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
 
 @interface AIAdium (PRIVATE)
@@ -140,8 +139,6 @@
     [interfaceController initController];
     [dockController initController];
     [pluginController initController]; //should always load last.  Plugins rely on all the controllers.
-
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:ADIUM_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
 
     //
     [interfaceController finishIniting];

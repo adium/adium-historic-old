@@ -14,6 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIStatusCircle.h"
+#import <AIUtilities/AIUtilities.h>
 
 #define CIRCLE_SIZE_OFFSET	(-2)
 #define CIRCLE_Y_OFFSET		(1)
@@ -220,6 +221,7 @@
     NSMutableParagraphStyle	*paragraphStyle;
     NSDictionary		*attributes;
     int				fontSize;
+    NSAttributedString		*attributedString;
     
     //Create a paragraph style with the correct alignment
     paragraphStyle = [[[NSMutableParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
@@ -238,10 +240,11 @@
     //Create the attributed string
     attributes = [NSDictionary dictionaryWithObjectsAndKeys:
         [NSColor blackColor], NSForegroundColorAttributeName,
-        [NSFont fontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
+        [NSFont cachedFontWithName:@"Lucida Grande" size:fontSize], NSFontAttributeName,
         paragraphStyle, NSParagraphStyleAttributeName, nil];
 
-    return([[NSAttributedString alloc] initWithString:string attributes:attributes]);
+    attributedString = [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
+    return(attributedString);
 }
 
 @end

@@ -92,7 +92,6 @@ typedef enum {
 #define	KEY_SOUND_SET_CONTENTS		@"Sounds"
 
 //Notifications
-#define	Adium_LaunchComplete					@"Adium_LaunchComplete"
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Account_PropertiesChanged				@"Account_PropertiesChanged"
 #define Account_StatusChanged					@"Account_StatusChanged"
@@ -100,6 +99,7 @@ typedef enum {
 #define Contact_StatusChanged					@"Contact_StatusChanged"
 #define Contact_ObjectChanged					@"Contact_ObjectChanged"
 #define Contact_ListChanged					@"Contact_ListChanged"
+#define Contact_SortSelectorListChanged				@"Contact_SortSelectorListChanged"
 
 #define Contact_UpdateStatus					@"Contact_UpdateStatus"
 //Whenever possible, accounts should keep their contact's status up to date.  However, sometimes this ideal situation cannot be achieved, and the account needs to be told when 'more expensive' status keys are required so it can fetch them.  This notification instructs the accounts to do just that.  It is currently used for profiles, but may be used for more information in the future.

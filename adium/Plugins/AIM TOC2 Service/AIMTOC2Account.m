@@ -1054,6 +1054,7 @@ static char *hash_password(const char * const password);
         
     }else{
         [[owner interfaceController] handleErrorMessage:@"Invalid Server Response" withDescription:@"The AIM server has returned HTML that Adium does not recognize."];
+        NSLog(@"%@",profileHTML);
     }
 }
 
