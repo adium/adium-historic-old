@@ -527,7 +527,7 @@ static id<GaimThread> gaimThread = nil;
 	//Clear the typing flag of the listContact
 	[self setTypingFlagOfContact:sourceContact to:NO];
 	
-	if (GAIM_DEBUG) NSLog(@"Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
+	if (GAIM_DEBUG) NSLog(@"receivedIMChatMessage: Received %@ from %@",[messageDict objectForKey:@"Message"],[sourceContact UID]);
 
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
@@ -551,7 +551,7 @@ static id<GaimThread> gaimThread = nil;
 		return;
 	}
 	
-	if (GAIM_DEBUG) NSLog(@"Chat: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
+	if (GAIM_DEBUG) NSLog(@"receivedMultiChatMessage: Received %@ from %@ in %s",[messageDict objectForKey:@"Message"],[sourceContact UID],[chat name]);
 		
 	[self _receivedMessage:[messageDict objectForKey:@"Message"]
 					inChat:chat 
@@ -793,9 +793,6 @@ static id<GaimThread> gaimThread = nil;
 	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
 	
 	if (xfer){
-		//gaim will free filename when necessary
-		char *filename = g_strdup([[fileTransfer localFilename] UTF8String]);
-		
 		//Associate the fileTransfer and the xfer with each other
 		[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
 		xfer->ui_data = [fileTransfer retain];
@@ -804,11 +801,10 @@ static id<GaimThread> gaimThread = nil;
 		gaim_xfer_set_local_filename(xfer, [[fileTransfer localFilename] UTF8String]);
 		
 		//request that the transfer begins
-		gaim_xfer_request(xfer);
+		[gaimThread xferRequest:xfer];
 		
 		//tell the fileTransferController to display appropriately
 		[[adium fileTransferController] beganFileTransfer:fileTransfer];
-		
 	}
 }
 //By default, protocols can not create GaimXfer objects
@@ -890,13 +886,7 @@ static id<GaimThread> gaimThread = nil;
     NSLog(@"accept file transfer");
     GaimXfer * xfer = [[fileTransfer accountData] pointerValue];
     
-    //gaim takes responsibility for freeing cFilename at a later date
-    char * xferFileName = g_strdup([[fileTransfer localFilename] UTF8String]);
-    gaim_xfer_set_local_filename(xfer,xferFileName);
-    
-    //set the size - must be done after request is accepted?
-    [fileTransfer setSize:(xfer->size)];
-    
+
     GaimXferType xferType = gaim_xfer_get_type(xfer);
     if ( xferType == GAIM_XFER_SEND ) {
         [fileTransfer setType:Outgoing_FileTransfer];   
@@ -905,8 +895,11 @@ static id<GaimThread> gaimThread = nil;
     }
     
     //accept the request
-    gaim_xfer_request_accepted(xfer, xferFileName);
+	[gaimThread xferRequestAccepted:xfer withFileName:[fileTransfer localFilename]];
     
+	//set the size - must be done after request is accepted?
+    [fileTransfer setSize:(xfer->size)];
+	
     //tell the fileTransferController to display appropriately
     [[adium fileTransferController] beganFileTransfer:fileTransfer];
 }
@@ -914,8 +907,12 @@ static id<GaimThread> gaimThread = nil;
 //User refused a receive request.  Tell gaim, then release the ESFileTransfer object
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
-    gaim_xfer_request_denied((GaimXfer *)[[fileTransfer accountData] pointerValue]);
-    [fileTransfer autorelease];
+	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
+	if (xfer) {
+		[gaimThread xferRequestRejected:xfer];
+	}
+
+    [fileTransfer release];
 }
 
 //Account Connectivity -------------------------------------------------------------------------------------------------
