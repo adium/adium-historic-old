@@ -9,7 +9,7 @@
 #import "NEHGrowlPlugin.h"
 #import <Growl-WithInstaller/Growl.h>
 
-//#define GROWL_DEBUG TRUE
+//#define GROWL_DEBUG 1
 
 #define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
 #define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
@@ -188,12 +188,12 @@
 
 #pragma mark Growl
 
-- (NSString *)growlAppName
+- (NSString *)applicationNameForGrowl
 {
 	return @"Adium";
 }
 
-- (NSDictionary *)growlRegistrationDict
+- (NSDictionary *)registrationDictionaryForGrowl
 {
 	//Register us with Growl
 	NSArray *allNotes = [[adium contactAlertsController] allEventIDs];
