@@ -74,9 +74,12 @@
 	
 	//Retrieve the desired user from the command line if possible
 	arguments = [[NSProcessInfo processInfo] arguments];
-	argumentIndex = [arguments indexOfObject:@"--user"];
-	if((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)){
-		userName = [arguments objectAtIndex:argumentIndex+1];
+	if(arguments && ([arguments count] > 1)){
+		
+		argumentIndex = [arguments indexOfObject:@"--user"];
+		if((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)){
+			userName = [arguments objectAtIndex:argumentIndex+1];
+		}
 	}
 
     /*
