@@ -530,6 +530,18 @@
 			settings = {
 			};
 		};
+		340F423E06D7CB890072E2FA = {
+			fileRef = 4BF5264406CA736900CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		340F423F06D7CB8A0072E2FA = {
+			fileRef = 4BF5264506CA736900CDBCEB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34111A5D06BE1B370005AF5C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4744,6 +4756,7 @@
 				4BC8CB4D06CC2CB8008530E6,
 				4B74ECE406CE637B004007B2,
 				4B74EFA706CEACC8004007B2,
+				340F423E06D7CB890072E2FA,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5389,6 +5402,7 @@
 				4BC8CB4806CC2CAD008530E6,
 				4BC8CB4E06CC2CB8008530E6,
 				4B74ECE506CE637B004007B2,
+				340F423F06D7CB8A0072E2FA,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9404,8 +9418,6 @@
 		};
 		4B25363306BECC97003498D4 = {
 			children = (
-				4BF5264406CA736900CDBCEB,
-				4BF5264506CA736900CDBCEB,
 			);
 			isa = PBXGroup;
 			name = Prefs;
@@ -16218,6 +16230,8 @@
 				4B25362C06BECC8F003498D4,
 				4B74ECE206CE637B004007B2,
 				4B74ECE306CE637B004007B2,
+				4BF5264406CA736900CDBCEB,
+				4BF5264506CA736900CDBCEB,
 				4BF98DB806D1499100E8781D,
 			);
 			isa = PBXGroup;
