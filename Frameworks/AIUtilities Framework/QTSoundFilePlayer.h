@@ -14,11 +14,11 @@
  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-//
-// QTSoundFilePlayer takes a path to an audio file, and plays it through the default audio output.
-// It uses QuickTime to decode the file, but plays the samples using CoreAudio.
-// It also uses a buffering scheme to avoid dropouts in the audio playback.
-//
+/*!
+@class QTSoundFilePlayer
+@abstract Sound playing with volume control and output device selection
+@discussion QTSoundFilePlayer takes a path to an audio file, and plays it through the desired audio output.  It uses QuickTime to decode the file, but plays the samples using CoreAudio. It also uses a buffering scheme to avoid dropouts in the audio playback.
+*/
 
 #import <Foundation/Foundation.h>
 #import <AudioUnit/AudioUnit.h>

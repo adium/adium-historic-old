@@ -15,6 +15,8 @@ Adium, Copyright 2001-2004, Adam Iser
 
 #import "AIImageGridView.h"
 
+#warning Needs documentation.
+
 #define MIN_PADDING			1			//The minimum padding between images
 
 @interface AIImageGridView (PRIVATE)

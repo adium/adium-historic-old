@@ -13,8 +13,6 @@
 #define CUSTOM_TABS_INDENT		3					//Indent on left and right of tabbar
 
 @interface AICustomTabDragging (PRIVATE)
-+ (NSImage *)dragTabImageForTabCell:(AICustomTabCell *)tabCell inCustomTabsView:(AICustomTabsView *)customTabsView;
-+ (NSImage *)dragWindowImageForWindow:(NSWindow *)window customTabsView:(AICustomTabsView *)customTabsView tabCell:(AICustomTabCell *)tabCell;
 - (void)cleanupDrag;
 @end
 

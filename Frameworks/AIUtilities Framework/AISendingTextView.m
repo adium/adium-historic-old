@@ -8,8 +8,6 @@
 
 #import "AISendingTextView.h"
 
-@implementation AISendingTextView
-
 //What's going on in here?
 //
 //When the system is busy and things slow down, characters are grouped, but keys are not.  This causes problems,
@@ -25,6 +23,8 @@
 //a decision to send or not.  Since the sending occurs from within insertText, the returns are processed in the correct
 //order with the text, and the problem is illiminated.
 //
+
+@implementation AISendingTextView
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {

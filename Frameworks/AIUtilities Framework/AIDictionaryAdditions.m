@@ -53,7 +53,7 @@
 
     //if the dictionary doesn't exist, create and return a new one
     if(dictionary == nil && create){
-        dictionary = [[[NSDictionary alloc] init] autorelease];
+        dictionary = [NSDictionary dictionary];
     }
 
     return(dictionary);
@@ -67,35 +67,6 @@
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
     return ([self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES]);
-}
-
-- (BOOL)boolForKey:(NSString *)inKey{
-    BOOL value = [[self objectForKey:inKey] boolValue];
-
-    return(value);
-}
-
-- (NSString *)stringForKey:(NSString *)inKey{
-    NSString *string = [self objectForKey:inKey];
-
-    return(string ? string : @"");
-}
-
-- (int)intForKey:(NSString *)inKey{
-    int value = [[self objectForKey:inKey] intValue];
-
-    return(value);
-}
-
-- (NSColor *)colorForKey:(NSString *)inKey{
-    NSString *colorString = [self objectForKey:inKey];
-
-	return (colorString ? [colorString representedColor] : [NSColor whiteColor]);
-}
-
-- (id)objectForIntegerKey:(int)aKey
-{
-    return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
 
 @end
@@ -115,33 +86,10 @@
 
     //if the dictionary doesn't exist, create and return a new one
     if(dictionary == nil && create){
-        dictionary = [[[NSMutableDictionary alloc] init] autorelease];
+        dictionary = [NSMutableDictionary dictionary];
     }
 
     return(dictionary);
-}
-
-- (void)setBool:(BOOL)inValue forKey:(NSString *)inKey{
-    [self setObject:[NSNumber numberWithBool:inValue] forKey:inKey];
-}
-
-- (void)setString:(NSString *)inString forKey:(NSString *)inKey{
-    [self setObject:inString forKey:inKey];
-}
-
-- (void)setInt:(int)inValue forKey:(NSString *)inKey{
-    [self setObject:[NSNumber numberWithInt:inValue] forKey:inKey];
-}
-
-- (void)setColor:(NSColor *)inColor forKey:(NSString *)inKey{
-    if(inColor != nil){
-        [self setObject:[inColor stringRepresentation] forKey:inKey];
-    }
-}
-
-- (id)objectForIntegerKey:(int)aKey
-{
-    return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
 
 @end

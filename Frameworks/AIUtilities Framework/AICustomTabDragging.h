@@ -23,6 +23,9 @@
 	AICustomTabDragWindow	*tabDragWindow;			//drag window used for custom drag animations
 }
 
+@end
+
+@interface AICustomTabDragging (PRIVATE_AICustomTabsViewOnly)
 + (AICustomTabDragging *)sharedInstance;
 - (void)dragTabCell:(AICustomTabCell *)inTabCell fromCustomTabsView:(AICustomTabsView *)sourceView withEvent:(NSEvent *)inEvent selectTab:(BOOL)shouldSelect;
 - (void)setDestinationTabView:(AICustomTabsView *)inDest;
@@ -34,5 +37,4 @@
 - (NSSize)sizeOfDraggedCell;
 - (void)acceptDragIntoTabView:(AICustomTabsView *)destTabView atIndex:(int)destIndex;
 - (NSTabViewItem *)draggedTabViewItem;
-
 @end

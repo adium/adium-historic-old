@@ -13,15 +13,30 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/*!
+@class AIStringFormatter
+@abstract Formatter which restricts characters and length.
+@discussion <tt>NSFormatter</tt> subclass which formats to a specified <tt>NSCharacterSet</tt> and length.  An errorMessage may be set which will be displayed after the user makes 3 invalid input attempts.
+*/
 @interface AIStringFormatter : NSFormatter {
     NSCharacterSet	*characters;
-    int			length;
-    BOOL		caseSensitive;
+    int				length;
+    BOOL			caseSensitive;
 
     NSString		*errorMessage;
-    int			errorCount;
+    int				errorCount;
 }
 
+/*!
+	@method stringFormatterAllowingCharacters:length:caseSensitive:errorMessage:
+	@abstract Create an <tt>AIStringFormatter</tt>
+	@discussion Create an autoreleased <tt>AIStringFormatter</tt>
+	@param inCharacters An <tt>NSCharacterSet<tt> of all allowed characters
+	@param legnth The maximum allowed length of the formatted string
+	@param caseSensitive YES if the characters should be tested with respect for case; NO if not.
+	@param errorMessage A message to be displayed to the user after 3 invalid input attempts.  If nil, no error message is displayed.
+	@result An <tt>AIStringFormatter</tt> object
+ */
 + (id)stringFormatterAllowingCharacters:(NSCharacterSet *)inCharacters length:(int)inLength caseSensitive:(BOOL)inCaseSensitive errorMessage:(NSString *)errorMessage;
 
 @end

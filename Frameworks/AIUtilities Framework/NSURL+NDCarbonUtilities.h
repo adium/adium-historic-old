@@ -1,7 +1,7 @@
 /*!
 	@header NSURL+NDCarbonUtilities
 	@abstract Provides method for interacting with Carbon APIs.
-	@discussion The methods in <tt>NSURL(NDCarbonUtilities)</tt> are simply wrappers for functions that can bew found within the carbon API.
+	@discussion The methods in <tt>NSURL(NDCarbonUtilities)</tt> are simply wrappers for functions that can be found within the carbon API.
  */
 
 #import <Foundation/Foundation.h>

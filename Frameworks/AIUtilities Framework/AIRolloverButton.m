@@ -36,14 +36,14 @@
 
 #pragma mark Configuration
 //Set our delegate
-- (void)setDelegate:(id)inDelegate
+- (void)setDelegate:(NSObject<AIRolloverButtonDelegate> *)inDelegate
 {
     delegate = inDelegate;
 	
 	//Make sure this delegate responds to the required method
 	NSParameterAssert([delegate respondsToSelector:@selector(rolloverButton:mouseChangedToInsideButton:)]);
 }
-- (id)delegate{
+- (NSObject<AIRolloverButtonDelegate> *)delegate{
     return(delegate);
 }
 

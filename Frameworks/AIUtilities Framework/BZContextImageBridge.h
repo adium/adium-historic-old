@@ -5,31 +5,43 @@
 //  Created by Mac-arena the Bored Zo on Thu Feb 12 2004.
 //
 
-/*used to translate between Quartz and NSImage.
- *
- *	quick-start:
- *
- *1. create a bridge.
- *	BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
- *2. obtain the context.
- *	CGContextRef context = [bridge context];
- *	//note: the context is retained for you (see below).
- *3. draw into the context. (note: it is a bitmap context, so you cannot use PDF
- *   functions on it.)
- *
- *4. call image.
- *	NSImage *image = [bridge image];
- *	//if you call image more than once, the image will not be re-created
- *	// (although, since the image uses the same backing store as the context,
- *	//  this should not be a problem).
- *
- *you can obtain greater control over the bridge by allocating it yourself
- * ([bridge alloc]) and initing it using
- *  initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha.
- *
- *if you use bridgeWithSize:, the bridge is autoreleased.
- *
- */
+/*!
+@class BZContextImageBridge
+@abstract Used to translate between Quartz and NSImage.
+@discussion 
+	Quick-start for <tt>BZContextImageBridge</tt>:
+
+1. Create a bridge.
+	BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
+
+2. Obtain the context. The context is retained for you (see below).
+	CGContextRef context = [bridge context];
+
+3. Draw into the context. (note: it is a bitmap context, so you cannot use PDF functions on it.)
+
+4. Call image. If you call image more than once, the image will not be re-created (although, since the image uses the same backing store as the context, this should not be a problem).
+	NSImage *image = [bridge image];
+
+You can obtain greater control over the bridge by initing it using initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:.
+
+If you use bridgeWithSize:, the bridge is autoreleased.
+
+The <u>Icon Services interfaces</u> gives you a nice Cocoa interface for drawing icons in the context.
+They come in full and abstracted flavours.
+
+Summary of methods (without types):
+wrapping GetIconRef:
+  getIconWithType:
+  getIconWithType:creator:
+wrapping other GetIconRef functions:
+  [future expansion]
+wrapping PlotIconRefInContext:
+	plotIcon:inRect:
+	plotIcon:inRect:alignment:transform:labelNSColor:flags:
+	plotIcon:inRect:alignment:transform:labelIndex:flags:
+	plotIcon:inRect:alignment:transform:labelRGBColor:flags:
+For more information, read the Icon Services documentation. They all return the status code returned from the Carbon calls on which these methods are based.
+*/
 
 @interface BZContextImageBridge : NSObject
 {
@@ -45,10 +57,17 @@
 }
 
 - (id)initWithSize:(NSSize)size;
-//if hasAlpha is true, include that in componentsPerPixel. if it is false, subtract it from componentsPerPixel. IOW:
-//	hasAlpha	componentsPerPixel	result
-//	YES			4U					RGBA
-//	NO			3U					RGB
+
+/*!
+	@method initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:
+	@abstract Init the BZContextImageBridge with custom settings
+	@discussion
+		If hasAlpha is true, include that in componentsPerPixel. if it is false, subtract it from componentsPerPixel. IOW:
+			hasAlpha	componentsPerPixel	result
+			YES			4U					RGBA
+			NO			3U					RGB
+	@result  A <tt>BZContextImageBridge</tt> object
+*/
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha;
 
 //convenience.
@@ -68,7 +87,6 @@
 //if it has been created, it returns that image.
 //call refreshImage yourself if you want a guaranteed-current image (at the possible expense of performance).
 //either way, the image is autoreleased.
-
 - (NSImage *)image;
 - (NSImage *)refreshImage;
 

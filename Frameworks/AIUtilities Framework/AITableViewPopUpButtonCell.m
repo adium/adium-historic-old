@@ -15,6 +15,8 @@
 
 #import "AITableViewPopUpButtonCell.h"
 
+#warning To Adam: Does this actually do it INCORRECTLY as stated below?
+
 /*
     A small, borderless pop-up button with a menu whose items contain icons will INCORRECTLY align the icon
  next to the text.  This custom subclass overrides the drawing method to correctly align the icon - in the

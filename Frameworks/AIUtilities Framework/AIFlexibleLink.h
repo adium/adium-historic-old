@@ -21,12 +21,14 @@
     NSTrackingRectTag	trackingTag;
 }
 
+@end
+
+@interface AIFlexibleLink (PRIVATE_AILinkTrackingControllerOnly)
 - (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL title:(NSString *)inTitle;
 - (NSRect)trackingRect;
 - (void)setTrackingTag:(NSTrackingRectTag)inTrackingTag;
 - (NSTrackingRectTag)trackingTag;
 - (NSString *)url;
 - (NSString *)title;
-	
 @end
-
+	

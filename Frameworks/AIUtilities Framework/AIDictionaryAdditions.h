@@ -18,21 +18,11 @@
 + (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass;
 + (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
 - (BOOL)writeToPath:(NSString *)path withName:(NSString *)name;
-- (BOOL)boolForKey:(NSString *)inKey;
-- (NSString *)stringForKey:(NSString *)inKey;
-- (int)intForKey:(NSString *)inKey;
-- (NSColor *)colorForKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
 
 @end
 
 @interface NSMutableDictionary (AIDictionaryAdditions)
 
 + (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)setBool:(BOOL)inValue forKey:(NSString *)inKey;
-- (void)setString:(NSString *)inString forKey:(NSString *)inKey;
-- (void)setInt:(int)inValue forKey:(NSString *)inKey;
-- (void)setColor:(NSColor *)inColor forKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
 
 @end

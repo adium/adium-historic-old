@@ -3,11 +3,15 @@
 //  Adium
 //
 //  Created by Adam Iser on 8/9/04.
-//  Copyright 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIPlasticButton.h"
 
+/*!
+	@class AIPlasticMinusButton
+	@abstract "Plastic" Aqua minus (-) button
+	@discussion "Plastic" Aqua minus (-) button
+*/
 @interface AIPlasticMinusButton : AIPlasticButton {
 
 }

@@ -5,6 +5,7 @@
 //  Created by Evan Schoenberg on Sun Jun 06 2004.
 
 #import "ESImageViewWithImagePicker.h"
+#import "NSImagePicker.h"
 
 /*
  An NSImageView subclass which supports:
@@ -19,6 +20,8 @@
 @interface ESImageViewWithImagePicker (PRIVATE)
 - (void)_initImageViewWithImagePicker;
 - (void)showPickerController;
+- (void)copy:(id)sender;
+- (void)paste:(id)sender;
 - (void)delete;
 @end
 
