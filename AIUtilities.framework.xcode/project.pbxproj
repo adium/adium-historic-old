@@ -4018,6 +4018,87 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		34A274200721EC6A004F3455 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESImageButton.h;
+			path = "Frameworks/AIUtilities Framework/ESImageButton.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A274210721EC6A004F3455 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESImageButton.m;
+			path = "Frameworks/AIUtilities Framework/ESImageButton.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A274220721EC6A004F3455 = {
+			fileRef = 34A274200721EC6A004F3455;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34A274230721EC6A004F3455 = {
+			fileRef = 34A274210721EC6A004F3455;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34A274260721EC72004F3455 = {
+			children = (
+				34A274330721F231004F3455,
+				34A274340721F231004F3455,
+				34A274200721EC6A004F3455,
+				34A274210721EC6A004F3455,
+				34486C2706D1DF0400DA778C,
+				34486C2806D1DF0400DA778C,
+			);
+			isa = PBXGroup;
+			name = "Toolbar items : popup menu/image";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A274330721F231004F3455 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESFlexibleToolbarItem.h;
+			path = "Frameworks/AIUtilities Framework/ESFlexibleToolbarItem.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A274340721F231004F3455 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESFlexibleToolbarItem.m;
+			path = "Frameworks/AIUtilities Framework/ESFlexibleToolbarItem.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34A274350721F231004F3455 = {
+			fileRef = 34A274330721F231004F3455;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		34A274360721F231004F3455 = {
+			fileRef = 34A274340721F231004F3455;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //340
 //341
 //342
@@ -4311,17 +4392,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BD1EF7A06D2637800B3975E = {
-			children = (
-				34486C2706D1DF0400DA778C,
-				34486C2806D1DF0400DA778C,
-			);
-			isa = PBXGroup;
-			name = "Toolbar item with a popup menu";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BD1EF7D06D2638A00B3975E = {
 			children = (
 				34486BFA06D1DF0400DA778C,
@@ -4426,7 +4496,7 @@
 				4BD1F33306D26D4400B3975E,
 				4BD1EF7D06D2638A00B3975E,
 				4BD1F3F106D2800900B3975E,
-				4BD1EF7A06D2637800B3975E,
+				34A274260721EC72004F3455,
 				4BD1EF8006D2639400B3975E,
 			);
 			isa = PBXGroup;
@@ -5055,6 +5125,8 @@
 				4BD1F5CF06D28D2100B3975E,
 				4BD1F5D106D28D2E00B3975E,
 				348E5E1906D2F447004C051C,
+				34A274220721EC6A004F3455,
+				34A274350721F231004F3455,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5200,6 +5272,8 @@
 				4BD1F5D006D28D2200B3975E,
 				4BD1F5D206D28D2E00B3975E,
 				348E5E1A06D2F447004C051C,
+				34A274230721EC6A004F3455,
+				34A274360721F231004F3455,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
