@@ -23,14 +23,13 @@ Messages & Chat
   - Initial messages from invisible contacts sometimes don't open new message windows
   - Chat windows can re-open when contact status changed (If using cmd-n to change source
     account)
-	  
+  - Intermittent crash when closing a group chat, particularly via MSN
+
 Meta Contacts
   - To/From bar in messages can get into a weird infinite loop when multiple possible source
 	and target accounts/contacts exist on the same serviceClass
   - Source account is not always accurate when a contact within a metaContact is messaged
   - MetaContact ordering does not always restore properly
-  - Small contact list icons lead to blurry Get Info metacontact drawer icons
-  - Intermittent crash when closing a group chat, particularly via MSN
   - Away message is output multiple times when an open chat's contact goes away
 	and that contact is within a metaContact
   - Own autoresponse is sometimes sent on the wrong chat when a contact within a metaContact
