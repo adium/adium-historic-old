@@ -81,19 +81,21 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 {
     NSString * title = [[[popUp_title selectedItem] representedObject] objectForKey:@"Title"];
     NSString * message = [[textView_awayMessage textStorage] string];
-    [textField_title setStringValue:loaded_message ?  title: message];
+    [textField_title setStringValue:(loaded_message ? title : message)];
     [NSApp beginSheet:savePanel modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(saveSheetClosed:returnCode:contextInfo:) contextInfo:nil];
 }
 
 - (IBAction)endSheet:(id)sender
 {
     [savePanel orderOut:nil];
-    [NSApp endSheet:savePanel];
+    [NSApp endSheet:savePanel returnCode:([[sender title] isEqualToString:@"Cancel"] ? 0 : 1 )];
 }
 
 - (void)saveSheetClosed:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void  *)contextInfo
 {
-    NSMutableArray * tempArray;
+    if(returnCode == 1)
+    {
+        NSMutableArray * tempArray;
         NSEnumerator * enumerator;
         NSDictionary * dict;
         BOOL notFound = YES;
@@ -127,6 +129,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
 	[popUp_title setMenu:[self savedAwaysMenu]];
 	[popUp_title selectItemWithTitle:theTitle];
+    }
 }
 
 //Private ----------------------------------------------------------------
