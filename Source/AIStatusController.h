@@ -119,7 +119,7 @@
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
 	int						stateMenuUpdateDelays;
-	NSArray					*_stateArrayForMenuItems;
+	NSArray					*_sortedFullStateArray;
 	
 	NSMutableSet			*stateMenuItemsNeedingUpdating;
 }
@@ -129,7 +129,7 @@
 - (void)closeController;
 - (void)finishIniting;
 - (NSArray *)stateArray;
-- (NSArray *)stateArrayForMenuItems;
+- (NSArray *)sortedFullStateArray;
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (NSNumber *)nextUniqueStatusID;
