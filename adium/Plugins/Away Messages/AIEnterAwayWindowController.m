@@ -82,9 +82,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     NSString * title = [[[popUp_title selectedItem] representedObject] objectForKey:@"Title"];
     NSString * message = [[textView_awayMessage textStorage] string];
     if(loaded_message) {
-        [textField_title setStringValue:title];
+        [textField_title setStringValue:(title ? title : @"")];
     } else {
-        [textField_title setStringValue:message];
+        [textField_title setStringValue:(message ? message : @"")];
     }
     
     [NSApp beginSheet:savePanel modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(saveSheetClosed:returnCode:contextInfo:) contextInfo:nil];
