@@ -13,6 +13,13 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
+/**
+ * $Revision: 1.5 $
+ * $Date: 2003/10/31 07:16:07 $
+ * $Author: jmelloy $
+ **/
+
+
 #import <Cocoa/Cocoa.h>
 #import "AIAdium.h"
 
