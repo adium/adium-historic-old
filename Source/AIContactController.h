@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@protocol AIListObjectObserver;
+@protocol AIListObjectObserver, AIContainingObject;
 
 @class AIContactHandle, AIMessageObject, AIMetaContact;
 
@@ -159,9 +159,9 @@ typedef enum {
 //Editing
 - (void)addContacts:(NSArray *)contactArray toGroup:(AIListGroup *)group;
 - (void)removeListObjects:(NSArray *)objectArray;
-- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListGroup *)group index:(int)index;
 - (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService;
-- (void)moveContact:(AIListContact *)listContact toGroup:(AIListGroup *)group;
+- (void)moveListObjects:(NSArray *)objectArray toGroup:(AIListObject<AIContainingObject> *)group index:(int)index;
+- (void)moveContact:(AIListContact *)listContact toGroup:(AIListObject<AIContainingObject> *)group;
 - (void)_moveContactLocally:(AIListContact *)listContact toGroup:(AIListGroup *)group;
 
 //Contact info
