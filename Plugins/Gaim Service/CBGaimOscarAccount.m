@@ -370,7 +370,7 @@ static BOOL didInitOscar = NO;
 	if(!strcmp(gaimStatusType, "Available")){
 		return([inAttributedString string]);
 	}else{
-		return([super encodedAttributedString:inAttributedString forGaimStatusType:inAttributedString]);
+		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
 	}
 }
 
@@ -475,6 +475,7 @@ static BOOL didInitOscar = NO;
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 }
+
 - (void)updateInfo:(AIListContact *)theContact
 {
 	OscarData			*od;
