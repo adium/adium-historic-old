@@ -409,7 +409,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 			[string appendString:@"\">"];
 			
-			oldLink = link;
+			oldLink = linkString;
 		}
 
 		//Image Attachments
