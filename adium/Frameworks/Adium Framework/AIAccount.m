@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.56 2004/05/15 22:22:14 evands Exp $
+// $Id: AIAccount.m,v 1.57 2004/05/16 07:20:51 evands Exp $
 
 #import "AIAccount.h"
 
@@ -62,6 +62,21 @@
 
 	delayedUpdateStatusTimer = nil;
 	delayedUpdateStatusTarget = nil;
+	
+	disconnectedByFastUserSwitch = NO;
+	
+	if([self disconnectOnFastUserSwitch] && [NSApp isOnPantherOrBetter]) //only install on Panther
+    {
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+															   selector:@selector(switchHandler:) 
+																   name:NSWorkspaceSessionDidBecomeActiveNotification 
+																 object:nil];
+        
+        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
+															   selector:@selector(switchHandler:) 
+																   name:NSWorkspaceSessionDidResignActiveNotification
+																 object:nil];
+    }
 	
     //Init the account
     [self initAccount];
@@ -146,7 +161,25 @@
     }
 }
 
-
+- (BOOL)disconnectOnFastUserSwitch
+{
+	return NO;
+}
+- (void)switchHandler:(NSNotification *)notification
+{
+    if ([[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
+		//Deactivation
+		if ([[self statusObjectForKey:@"Online"] boolValue]){
+			[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+			disconnectedByFastUserSwitch = YES;
+		}
+		
+	}else if (disconnectedByFastUserSwitch){
+		//Activation and we disconnected before because of a fast user switch
+        [self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		disconnectedByFastUserSwitch = NO;
+	}
+}
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status
 //Enable and disable the refresh timers as our account goes online and offline; 
