@@ -25,6 +25,7 @@
     BOOL			editing;		//YES when the list is in edit mode... (temp)
 
     NSFont			*font;
+    NSFont			*groupFont;
     NSColor			*color;
     NSColor			*invertedColor;
     NSColor			*groupColor;
@@ -45,5 +46,8 @@
 - (void)setGroupColor:(NSColor *)inColor;
 - (NSColor *)groupColor;
 - (NSColor *)invertedGroupColor;
+
+- (void)setGroupFont:(NSFont *)inFont;
+- (NSFont *)groupFont;
 
 @end

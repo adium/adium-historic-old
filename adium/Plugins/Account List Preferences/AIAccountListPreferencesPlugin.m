@@ -90,7 +90,9 @@
                                    selector:@selector(accountListChanged:)
                                        name:Account_ListChanged
                                      object:nil];
-    
+
+    //Refresh our view
+    [self updateAccountList];
 }
 
 - (void)uninstallPlugin

@@ -22,19 +22,19 @@
 
     AIPreferencePane		*generalPane;
     IBOutlet	NSView			*view_prefViewGeneral;
-
-    AIPreferencePane		*groupsPane;
-    IBOutlet	NSView			*view_prefViewGroups;
-
     IBOutlet	NSButton		*button_setFont;
     IBOutlet	NSTextField		*textField_fontName;
     IBOutlet	NSButton		*checkBox_alternatingGrid;
     IBOutlet	NSColorWell		*colorWell_contact;
-    IBOutlet	NSColorWell		*colorWell_group;
     IBOutlet	NSColorWell		*colorWell_background;
     IBOutlet	NSColorWell		*colorWell_grid;
-    IBOutlet	NSSlider		*slider_opacity;
-    IBOutlet	NSTextField		*textField_opacityPercent;
+    
+    AIPreferencePane		*groupsPane;
+    IBOutlet	NSView			*view_prefViewGroups;
+    IBOutlet	NSButton		*checkBox_boldGroups;
+    IBOutlet	NSButton		*checkBox_customGroupColor;
+    IBOutlet	NSColorWell		*colorWell_group;
+
 }
 
 + (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;

@@ -24,6 +24,7 @@
 @interface AIContactStatusColoringPreferences (PRIVATE)
 - (id)initWithOwner:(id)inOwner;
 - (void)configureView;
+- (void)configureControlDimming;
 @end
 
 @implementation AIContactStatusColoringPreferences
@@ -66,6 +67,18 @@
                                              forKey:KEY_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_online){
+        [[owner preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
+                                             forKey:KEY_ONLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_idleAndAway){
+        [[owner preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
+                                             forKey:KEY_IDLE_AWAY_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+
+        
     }else if(sender == colorWell_backSignedOff){
         [[owner preferenceController] setPreference:[[colorWell_backSignedOff color] stringRepresentation]
                                              forKey:KEY_BACK_SIGNED_OFF_COLOR
@@ -96,6 +109,66 @@
                                              forKey:KEY_BACK_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
+    }else if(sender == colorWell_backOnline){
+        [[owner preferenceController] setPreference:[[colorWell_backOnline color] stringRepresentation]
+                                             forKey:KEY_BACK_ONLINE_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+
+    }else if(sender == colorWell_backIdleAndAway){
+        [[owner preferenceController] setPreference:[[colorWell_backIdleAndAway color] stringRepresentation]
+                                             forKey:KEY_BACK_IDLE_AWAY_COLOR
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        
+
+        
+    }else if(sender == checkBox_signedOff){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SIGNED_OFF_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_signedOn){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SIGNED_ON_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_away){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_AWAY_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_idle){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_IDLE_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_typing){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_TYPING_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_unviewedContent){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_UNVIEWED_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_online){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_ONLINE_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+
+    }else if(sender == checkBox_idleAndAway){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_IDLE_AWAY_ENABLED
+                                              group:PREF_GROUP_CONTACT_STATUS_COLORING];
+        [self configureControlDimming];
+        
     }
 }
 
@@ -138,6 +211,8 @@
     [colorWell_signedOn setColor:[[preferenceDict objectForKey:KEY_SIGNED_ON_COLOR] representedColor]];
     [colorWell_typing setColor:[[preferenceDict objectForKey:KEY_TYPING_COLOR] representedColor]];
     [colorWell_unviewedContent setColor:[[preferenceDict objectForKey:KEY_UNVIEWED_COLOR] representedColor]];
+    [colorWell_online setColor:[[preferenceDict objectForKey:KEY_ONLINE_COLOR] representedColor]];
+    [colorWell_idleAndAway setColor:[[preferenceDict objectForKey:KEY_IDLE_AWAY_COLOR] representedColor]];
 
     [colorWell_backAway setColor:[[preferenceDict objectForKey:KEY_BACK_AWAY_COLOR] representedColor]];
     [colorWell_backIdle setColor:[[preferenceDict objectForKey:KEY_BACK_IDLE_COLOR] representedColor]];
@@ -145,6 +220,47 @@
     [colorWell_backSignedOn setColor:[[preferenceDict objectForKey:KEY_BACK_SIGNED_ON_COLOR] representedColor]];
     [colorWell_backTyping setColor:[[preferenceDict objectForKey:KEY_BACK_TYPING_COLOR] representedColor]];
     [colorWell_backUnviewedContent setColor:[[preferenceDict objectForKey:KEY_BACK_UNVIEWED_COLOR] representedColor]];
+    [colorWell_backOnline setColor:[[preferenceDict objectForKey:KEY_BACK_ONLINE_COLOR] representedColor]];
+    [colorWell_backIdleAndAway setColor:[[preferenceDict objectForKey:KEY_BACK_IDLE_AWAY_COLOR] representedColor]];
+
+    [checkBox_signedOff setState:[[preferenceDict objectForKey:KEY_SIGNED_OFF_ENABLED] boolValue]];
+    [checkBox_signedOn setState:[[preferenceDict objectForKey:KEY_SIGNED_ON_ENABLED] boolValue]];
+    [checkBox_away setState:[[preferenceDict objectForKey:KEY_AWAY_ENABLED] boolValue]];
+    [checkBox_idle setState:[[preferenceDict objectForKey:KEY_IDLE_ENABLED] boolValue]];
+    [checkBox_typing setState:[[preferenceDict objectForKey:KEY_TYPING_ENABLED] boolValue]];
+    [checkBox_unviewedContent setState:[[preferenceDict objectForKey:KEY_UNVIEWED_ENABLED] boolValue]];
+    [checkBox_online setState:[[preferenceDict objectForKey:KEY_ONLINE_ENABLED] boolValue]];
+    [checkBox_idleAndAway setState:[[preferenceDict objectForKey:KEY_IDLE_AWAY_ENABLED] boolValue]];
+
+    [self configureControlDimming];
+}
+
+//Enable/disable controls that are available/unavailable
+- (void)configureControlDimming
+{
+    [colorWell_signedOff setEnabled:[checkBox_signedOff state]];
+    [colorWell_backSignedOff setEnabled:[checkBox_signedOff state]];
+
+    [colorWell_signedOn setEnabled:[checkBox_signedOn state]];
+    [colorWell_backSignedOn setEnabled:[checkBox_signedOn state]];
+
+    [colorWell_away setEnabled:[checkBox_away state]];
+    [colorWell_backAway setEnabled:[checkBox_away state]];
+
+    [colorWell_idle setEnabled:[checkBox_idle state]];
+    [colorWell_backIdle setEnabled:[checkBox_idle state]];
+
+    [colorWell_typing setEnabled:[checkBox_typing state]];
+    [colorWell_backTyping setEnabled:[checkBox_typing state]];
+
+    [colorWell_unviewedContent setEnabled:[checkBox_unviewedContent state]];
+    [colorWell_backUnviewedContent setEnabled:[checkBox_unviewedContent state]];
+
+    [colorWell_online setEnabled:[checkBox_online state]];
+    [colorWell_backOnline setEnabled:[checkBox_online state]];
+
+    [colorWell_idleAndAway setEnabled:[checkBox_idleAndAway state]];
+    [colorWell_backIdleAndAway setEnabled:[checkBox_idleAndAway state]];
 }
 
 @end
