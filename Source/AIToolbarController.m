@@ -31,14 +31,14 @@
 - (void)initController
 {
     //Register Defaults
-/*    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
+/*    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TOOLBAR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TOOLBARS];
     
     NSEnumerator	*enumerator;
     NSString		*key;
     NSDictionary	*toolbarDict;
 
     //Load the toolbars and register them
-    toolbarDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TOOLBARS];
+    toolbarDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TOOLBARS];
     enumerator = [[toolbarDict allKeys] objectEnumerator];
     while((key = [enumerator nextObject])){
         if([key hasPrefix:TOOLBAR_ITEMS_PREFIX]){
@@ -124,7 +124,7 @@
     NSArray	*toolbarItems = [[AIMiniToolbarCenter defaultCenter] itemsForToolbar:identifier];
 
     //Save the changes
-    [[owner preferenceController] setPreference:toolbarItems forKey:[NSString stringWithFormat:@"ToolbarItems_%@",identifier] group:PREF_GROUP_TOOLBARS];
+    [[adium preferenceController] setPreference:toolbarItems forKey:[NSString stringWithFormat:@"ToolbarItems_%@",identifier] group:PREF_GROUP_TOOLBARS];
 }*/
 
 @end
