@@ -20,4 +20,7 @@
 - (NSString *)stringByExpandingBundlePath;
 - (NSString *)stringByCollapsingBundlePath;
 - (NSString *)stringByTruncatingTailToWidth:(float)inWidth;
+- (NSString *)stringByEncodingURLEscapes;
+- (NSString *)stringByDecodingURLEscapes;
+- (BOOL)isURLEncoded;
 @end
