@@ -119,11 +119,16 @@ AIEventSoundCustom	*sharedInstance = nil;
 //Delete the selected sound
 - (IBAction)deleteEventSound:(id)sender
 {
-    //Remove the event
-    [eventSoundArray removeObjectAtIndex:[tableView_sounds selectedRow]];
-
-    //Save event sound preferences
-    [self saveEventSoundArray];
+	int row = [tableView_sounds selectedRow];
+	
+	//Proceed if a row is selected
+	if (row != -1) {
+		//Remove the event
+		[eventSoundArray removeObjectAtIndex:[tableView_sounds selectedRow]];
+		
+		//Save event sound preferences
+		[self saveEventSoundArray];
+	}
 }
 
 //Plays the selected table view sound
