@@ -17,29 +17,36 @@
 #import "AIToolbar.h"
 
 /*
- AIToolbar poses as NSToolbar to fix what I consider a bug in Apple's implementation: 
- NSToolbarDidRemoveItemNotification is not sent for the toolbar's items when the toolbar closes.
- 
- AIToolbar sends this notification for each item so observers can balance any action taken via
- the NSToolbarWillAddItemNotification notification.
- 
- Unfortunately, it also posts the notification when the customization sheet closes, unpaired with an added
- message, so watch out for that.
+ * @class AIToolbar
+ *
+ * AIToolbar poses as NSToolbar to fix what I consider a bug in Apple's implementation: 
+ * NSToolbarDidRemoveItemNotification is not sent for the toolbar's items when the toolbar closes.
+ *
+ * AIToolbar sends this notification for each item so observers can balance any action taken via
+ * the NSToolbarWillAddItemNotification notification.
+ *
+ * Unfortunately, it also posts the notification when the customization sheet closes, unpaired with an added
+ * message, so watch out for that.
  */
 @interface NSToolbar (AIPrivate)
 - (void)_postWillDeallocToolbarNotifications;
 @end
 
 @implementation AIToolbar
-/* load
-*   install ourself to intercept _postWillDeallocToolbarNotifications calls
-*/
+/* 
+ * @brief Load
+ *
+ * Install ourself to intercept _postWillDeallocToolbarNotifications calls
+ */
 + (void)load
 {
     //Anything you can do, I can do better...
-    [self poseAsClass: [NSToolbar class]];
+    [self poseAsClass:[NSToolbar class]];
 }
 
+/*
+ * @brief Called before the toolbar deallocs
+ */
 - (void)_postWillDeallocToolbarNotifications
 {
 	NSNotificationCenter	*defaultCenter = [NSNotificationCenter defaultCenter];
