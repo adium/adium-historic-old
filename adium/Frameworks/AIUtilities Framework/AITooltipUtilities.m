@@ -33,7 +33,7 @@
 static	NSPanel                 *tooltipWindow;
 static	NSTextView				*textView_tooltipTitle = nil;
 static	NSTextView				*textView_tooltipBody = nil;
-static  ESStaticView            *view_tooltipImage = nil;
+static  NSImageView				*view_tooltipImage = nil;
 static  NSWindow				*onWindow = nil;
 static	NSAttributedString      *tooltipBody;
 static	NSAttributedString      *tooltipTitle;
@@ -195,7 +195,7 @@ static	AITooltipOrientation	tooltipOrientation;
 
     [[tooltipWindow contentView] addSubview:textView_tooltipBody];
     
-    view_tooltipImage = [[ESStaticView alloc] initWithFrame:NSMakeRect(0,0,0,0)];
+    view_tooltipImage = [[NSImageView alloc] initWithFrame:NSMakeRect(0,0,0,0)];
     [[tooltipWindow contentView] addSubview:view_tooltipImage];    
 }
 

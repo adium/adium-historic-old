@@ -354,8 +354,6 @@
 			children = (
 				348E4EDB053667A40021E541,
 				348E4ED9053667A40021E541,
-				348E4EDC053667A40021E541,
-				348E4EDA053667A40021E541,
 			);
 			isa = PBXGroup;
 			name = "Still Images";
@@ -3121,15 +3119,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348E4EDA053667A40021E541 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESStaticView.m;
-			path = "Frameworks/AIUtilities Framework/ESStaticView.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		348E4EDB053667A40021E541 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -3139,35 +3128,14 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348E4EDC053667A40021E541 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESStaticView.h;
-			path = "Frameworks/AIUtilities Framework/ESStaticView.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		348E4EDD053667A40021E541 = {
 			fileRef = 348E4ED9053667A40021E541;
 			isa = PBXBuildFile;
 			settings = {
 			};
 		};
-		348E4EDE053667A40021E541 = {
-			fileRef = 348E4EDA053667A40021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348E4EDF053667A40021E541 = {
 			fileRef = 348E4EDB053667A40021E541;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348E4EE0053667A40021E541 = {
-			fileRef = 348E4EDC053667A40021E541;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4999,7 +4967,6 @@
 				34BD9E2505314755000AB133,
 				4B910DC1053588A900846781,
 				348E4EDF053667A40021E541,
-				348E4EE0053667A40021E541,
 				34E0F18B053AE56F00031341,
 				34BD83DD054E530800EB2652,
 				4BCB9ACA0567E7A9001D3559,
@@ -5659,7 +5626,6 @@
 				34BD9E8B05314755000AB133,
 				4B910DC2053588A900846781,
 				348E4EDD053667A40021E541,
-				348E4EDE053667A40021E541,
 				34E0F18A053AE56F00031341,
 				34BD83DC054E530800EB2652,
 				4BCB9ACB0567E7A9001D3559,

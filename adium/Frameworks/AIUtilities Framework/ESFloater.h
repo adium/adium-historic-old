@@ -6,11 +6,10 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ESStaticView.h"
 
 @interface ESFloater : NSObject {
-    ESStaticView	*staticView;
-    NSPanel		*panel;
+    NSImageView			*staticView;
+    NSPanel				*panel;
     BOOL                windowIsVisible;
     NSTimer             *visibilityTimer;
     float               maxOpacity;

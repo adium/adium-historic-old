@@ -50,7 +50,8 @@
     [self _setWindowOpacity:WINDOW_FADE_MIN];
     
     //Setup the static view
-    staticView = [[ESStaticView alloc] initWithFrame:frame image:inImage];
+    staticView = [[NSImageView alloc] initWithFrame:frame];
+	[staticView setImage:inImage];
     [staticView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
     [[panel contentView] addSubview:[staticView autorelease]];
     
