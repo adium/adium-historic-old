@@ -7,9 +7,9 @@ Protocols++;
 Features++;
 ################################################## Free
 Free software, and free beer
-Because instant messenging should be free
+Because instant messaging should be free
 It's free; imagine that!
-################################################## Poke the Competiton
+################################################## Poke the Competition
 We update weekly; imagine that!
 We update more than twice a year.
 Even better than last week.
