@@ -480,21 +480,20 @@
                 NSLog(@"Setting handle updates to silent and delayed (disconnecting)");
             }
         }
-    }
-    else if ([key compare:@"IdleSince"] == 0)
-    {
-        // Even if we're setting a non-zero idle time, set it to zero first.
-        // Some clients ignore idle time changes unless it moves to/from 0.
-        serv_set_idle(gc, 0);
-        if (inValue != nil) {
-            int newIdle = -[inValue timeIntervalSinceNow];
-            serv_set_idle(gc, newIdle);
+    } 
+    else if (status == STATUS_ONLINE) { //now look at keys which only make sense while online
+        if ([key compare:@"IdleSince"] == 0){
+            // Even if we're setting a non-zero idle time, set it to zero first.
+            // Some clients ignore idle time changes unless it moves to/from 0.
+            serv_set_idle(gc, 0);
+            if (inValue != nil) {
+                int newIdle = -[inValue timeIntervalSinceNow];
+                serv_set_idle(gc, newIdle);
+            }
         }
-    }
-    else if ([key compare:@"AwayMessage"] == 0)
-    {
-        if (status == STATUS_ONLINE)
+        else if ([key compare:@"AwayMessage"] == 0) {
             [self setAwayMessage:inValue];
+        }
     }
 }
 
