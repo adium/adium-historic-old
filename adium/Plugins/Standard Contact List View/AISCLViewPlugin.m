@@ -60,7 +60,7 @@
 								   selector:@selector(contactListDidClose)
 									   name:Interface_ContactListDidClose
 									 object:nil];
-
+	
     //Observe preference changes
     [[adium notificationCenter] addObserver:self
 								   selector:@selector(preferencesChanged:)

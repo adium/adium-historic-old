@@ -5419,7 +5419,6 @@
 				4BF0028606B55A5700C32219,
 				4BF002CE06B55FCF00C32219,
 				4BA0E3DC06B6BBD3001750FC,
-				4BA0E3E006B6BBDF001750FC,
 				344C0D5106B6D63800DA7200,
 				6E4D961306B739AC005235E9,
 				4B1EE92306B7E22A00A919E9,
@@ -5442,6 +5441,7 @@
 				4BC8CB4706CC2CAD008530E6,
 				4BC8CB4D06CC2CB8008530E6,
 				4B74ECE406CE637B004007B2,
+				4B74EFA706CEACC8004007B2,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -13731,6 +13731,12 @@
 			settings = {
 			};
 		};
+		4B74EFA706CEACC8004007B2 = {
+			fileRef = 4BA0E3DE06B6BBDF001750FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B7764BB03C3E78200A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -14903,12 +14909,6 @@
 			path = "Plugins/Standard Contact List View/AIBorderlessListWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BA0E3E006B6BBDF001750FC = {
-			fileRef = 4BA0E3DE06B6BBDF001750FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BA0E3E106B6BBDF001750FC = {
 			fileRef = 4BA0E3DF06B6BBDF001750FC;

@@ -51,6 +51,7 @@
 #define KEY_LIST_THEME_GROUP_BACKGROUND				@"Group Background"
 #define KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT	@"Group Background Gradient"
 #define KEY_LIST_THEME_GROUP_TEXT_COLOR				@"Group Text Color"
+#define KEY_LIST_THEME_GROUP_SHADOW_COLOR			@"Group Shadow Color"
 
 //#define KEY_LIST_THEME_
 
@@ -117,6 +118,7 @@
 	IBOutlet	NSColorWell				*colorWell_groupText;
 	IBOutlet	NSColorWell				*colorWell_groupBackground;
 	IBOutlet	NSColorWell				*colorWell_groupBackgroundGradient;
+	IBOutlet	NSColorWell				*colorWell_groupShadow;
 	IBOutlet	AITextColorPreviewView	*preview_groupBackground;
 
 	IBOutlet	NSTextField				*textField_themeName;

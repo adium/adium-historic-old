@@ -9,11 +9,14 @@
 #import "AIListGroupCell.h"
 
 @interface AIListGroupGradientCell : AIListGroupCell {
-	NSColor	*backgroundColor;
-	NSColor	*gradientColor;
+	NSColor		*backgroundColor;
+	NSColor		*gradientColor;
+	NSColor		*shadowColor;
 }
 
 - (AIGradient *)backgroundGradient;
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor;
+- (void)setShadowColor:(NSColor *)inColor;
+- (NSColor *)shadowColor;
 
 @end
