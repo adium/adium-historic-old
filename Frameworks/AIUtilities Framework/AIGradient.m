@@ -144,15 +144,15 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	//Shifts the CGPath to origin 0,0 and scale it down to an integer width (and height).
 	float wscale = ((int)inRect.size.width)  / inRect.size.width;
 	float hscale = ((int)inRect.size.height) / inRect.size.height;
-	CGAffineTransform transform = CGAffineTransformMake(
-		/*a*/ wscale, /*b*/ 0.0,
-		/*c*/ 0.0,   /*d*/ hscale,
-		/*tx*/ -(inRect.origin.x), /*ty*/ -(inRect.origin.y)
-	);
+	struct CGAffineTransform transform = {
+		.a  = wscale, .b = 0.0,
+		.c  = 0.0,    .d = hscale,
+		.tx = -(inRect.origin.x), .ty = -(inRect.origin.y),
+	};
 	cgRect->size = CGSizeApplyAffineTransform(cgRect->size, transform);
 
-	float   width = inRect.size.width,
-	height = inRect.size.height;
+	float   width  = inRect.size.width;
+	float	height = inRect.size.height;
 
 	TwoColors blendPoints;
 	NSColor *startColor = [color1 retain], *endColor = [color2 retain], *temp;

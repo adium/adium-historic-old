@@ -32,7 +32,14 @@ const BOOL defaultHasAlpha = YES;
 	buffer = calloc(bytesPerRow * (unsigned)size.height, sizeof(unsigned char));
 	if(buffer == NULL) return nil;
 
-	context = CGBitmapContextCreate(buffer, size.width, size.height, bpc, bytesPerRow, CGColorSpaceCreateDeviceRGB(), hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone);
+	CGColorSpaceRef deviceRGB = CGColorSpaceCreateDeviceRGB();
+	if(deviceRGB == NULL) {
+		free(buffer);
+		return nil;
+	}
+
+	context = CGBitmapContextCreate(buffer, size.width, size.height, bpc, bytesPerRow, deviceRGB, hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone);
+	CFRelease(deviceRGB);
 	if(context == NULL) {
 		free(buffer);
 		return nil;
