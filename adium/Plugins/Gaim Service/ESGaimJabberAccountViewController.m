@@ -85,4 +85,21 @@
 	}
 }
 
+//Update display for account status change
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
+{
+	
+	if(inObject == nil || inObject == account){
+		if(inModifiedKeys == nil || [inModifiedKeys containsObject:@"Online"]){
+			BOOL shouldEnable = ![[account statusObjectForKey:@"Online"] boolValue];
+			[checkBox_useTLS setEnabled:shouldEnable];
+			[checkBox_forceOldSSL setEnabled:shouldEnable];
+			[checkBox_allowPlaintext setEnabled:shouldEnable];
+			[textField_connectServer setEnabled:shouldEnable];
+			[textField_resource setEnabled:shouldEnable];
+		}
+	}
+	
+	return(	[super updateListObject:inObject keys:inModifiedKeys silent:silent] );
+}
 @end
