@@ -21,6 +21,8 @@
 #import "ESAccountPasswordPromptController.h"
 #import "ESProxyPasswordPromptController.h"
 
+#import <AIUtilities/AIKeychainOld.h>
+
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 #define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
@@ -52,6 +54,8 @@
 - (void)rebuildAllAccountMenuItems;
 
 - (BOOL)_account:(AIAccount *)account canSendContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
+
+- (void)_upgradePasswords;
 
 @end
 
@@ -91,12 +95,24 @@
                                    selector:@selector(didSendContent:)
                                        name:CONTENT_MESSAGE_SENT
                                      object:nil];
-	
+
+	/* Temporary upgrade code! */
+	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
+	NSNumber	*didPasswordUpgrade = [userDefaults objectForKey:@"Adium:Did Password Upgrade"];
+	if(!didPasswordUpgrade || ![didPasswordUpgrade boolValue]){
+		[userDefaults setObject:[NSNumber numberWithBool:YES]
+						 forKey:@"Adium:Did Password Upgrade"];
+		[userDefaults synchronize];
+
+		if([accountArray count]){
+			[self _upgradePasswords];
+		}
+	}
+
 	//First launch, open the account prefs
 //	if([accountArray count] == 0){
 //		[[AIAccountListWindowController accountListWindowController] showWindow:nil];
-//	}
-	
+//	}	
 }
 
 //close
@@ -1016,7 +1032,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
     if(inPassword){
         [AIKeychain putPasswordInKeychainForService:[self _passKeyForAccount:inAccount]
-                                            account:[self _accountNameForAccount:inAccount] password:inPassword];
+                                            account:[self _accountNameForAccount:inAccount]
+										   password:inPassword];
     }
 }
 
@@ -1094,6 +1111,30 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }else{
 		[AIKeychain removePasswordFromKeychainForService:[self _passKeyForProxyServer:server]
 												 account:[self _accountNameForProxyServer:server userName:userName]];
+	}
+}
+
+- (void)_upgradePasswords
+{
+	AIAccount		*account;
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	
+	NSRunInformationalAlertPanel(@"Adium Version Upgrade", @"This version of Adium fixes a common crash related to secure storage of your instant messaging passwords.  When you press OK below, Adium will automatically update any stored passwords to the new, more stable system.\n\nThis process will only occur once and will take a moment; you may be prompted to allow access for one or more passwords.\n\nIf Adium crashes during this upgrade, simply relaunch Adium; the process will not occur again.",nil,nil,nil);
+
+	while(account = [enumerator nextObject]){
+		NSString	*passKey = [self _passKeyForAccount:account];
+		NSString	*accountName = [self _accountNameForAccount:account];
+		
+		//Get from old
+		NSString	*password = [AIKeychainOld getPasswordFromKeychainForService:passKey
+																		 account:accountName];
+		
+		//Store in new
+		if(password){
+			[AIKeychain putPasswordInKeychainForService:passKey
+												account:accountName
+											   password:password];
+		}
 	}
 }
 

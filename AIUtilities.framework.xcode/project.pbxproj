@@ -562,6 +562,39 @@
 //342
 //343
 //344
+		3433564B0793699400C84B15 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIKeychainOld.m;
+			path = "Frameworks/AIUtilities Framework/AIKeychainOld.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3433564C0793699400C84B15 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIKeychainOld.h;
+			path = "Frameworks/AIUtilities Framework/AIKeychainOld.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3433564D0793699400C84B15 = {
+			fileRef = 3433564B0793699400C84B15;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3433564E0793699400C84B15 = {
+			fileRef = 3433564C0793699400C84B15;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
 		34486B3806D1DF0300DA778C = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4679,6 +4712,8 @@
 		};
 		4BD1EEDB06D25EE900B3975E = {
 			children = (
+				3433564B0793699400C84B15,
+				3433564C0793699400C84B15,
 				4BD1EEE406D25FDB00B3975E,
 				34486BD006D1DF0400DA778C,
 				34486BD106D1DF0400DA778C,
@@ -5664,6 +5699,7 @@
 				4BC5A5C30764F6ED0080ECF7,
 				079C113B0782FB500048E350,
 				076CAD6F0785B64000250504,
+				3433564E0793699400C84B15,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5823,6 +5859,7 @@
 				4B6DDA50075A8879002E0BF4,
 				34D18393075FC2390075A380,
 				4BC5A5C40764F6ED0080ECF7,
+				3433564D0793699400C84B15,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
