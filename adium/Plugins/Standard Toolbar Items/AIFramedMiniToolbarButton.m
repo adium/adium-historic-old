@@ -75,12 +75,11 @@
     return(newItem);
 }
 
-
 //Pass contextual menu events on through to the toolbar
 - (NSMenu *)menuForEvent:(NSEvent *)event
 {
-    if([[self superview] isKindOfClass:[AIMiniToolbar class]]){
-        return([(AIMiniToolbar *)[self superview] menuForEvent:event]);
+    if(toolbar){
+        return([toolbar menuForEvent:event]);
     }else{
         return([super menuForEvent:event]);
     }
@@ -89,16 +88,10 @@
 //Initiate a drag if command is held while clicking
 - (void)mouseDown:(NSEvent *)theEvent
 {
-    AIMiniToolbar	*toolbar = (AIMiniToolbar *)[self superview];
-
-    if(![[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
-        if([theEvent modifierFlags] & NSCommandKeyMask){
-            [toolbar initiateDragWithEvent:theEvent];
-        }else{
-            [super mouseDown:theEvent];
-        }
-    }else{
+    if(toolbar == nil || [[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
         [toolbar initiateDragWithEvent:theEvent];
+    }else{
+        [super mouseDown:theEvent];
     }
 }
 
@@ -108,12 +101,22 @@
     [[toolbarItem target] performSelector:[toolbarItem action] withObject:toolbarItem];
 }
 
+//By getting the superview and it's type before hand, we avoid having to fetch the
+//information it every time we draw
+- (void)viewDidMoveToSuperview
+{
+    NSView	*superview = [self superview];
+
+    if([superview isKindOfClass:[AIMiniToolbar class]]){
+        toolbar = superview;
+    }else{
+        toolbar = nil;
+    }
+}
 
 - (void)drawRect:(NSRect)rect
-{
-    AIMiniToolbar *toolbar = (AIMiniToolbar *)[self superview];
-    
-    if([[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
+{    
+    if(toolbar == nil || [[AIMiniToolbarCenter defaultCenter] customizing:toolbar]){
         [[NSColor grayColor] set];
         [NSBezierPath strokeRect:rect];
     }
