@@ -201,18 +201,11 @@
     [fileTransferController initController];
 	[applescriptabilityController initController];
 	
-//    [activityWindowController initController];
 	[componentLoader initController];
-
 	
 	[preferenceController willFinishIniting];
 	
-
     [pluginLoader initController]; //should always init last.  Plugins rely on everything else.
-	
-	
-	
-	
 	
 	/*
 	 Account controller should finish initing before the contact controller so accounts and services are available
@@ -222,13 +215,11 @@
 	[contactController finishIniting];
     [interfaceController finishIniting];
 	
-	
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
 	
     completedApplicationLoad = YES;
-	
-	
+
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 }
 
@@ -577,6 +568,22 @@
 	}
     
 	return(pathArray);
+}
+
+- (NSString *)pathOfPackWIthName:(NSString *)name extension:(NSString *)extension resourceFolderName:(NSString *)folderName
+{
+	NSFileManager	*fileManager = [NSFileManager defaultManager];
+    NSString		*packFileName = [name stringByAppendingPathExtension:extension];
+    NSEnumerator	*enumerator = [[self resourcePathsForName:folderName] objectEnumerator];
+    NSString		*resourcePath;
+
+	//Search all our resource paths for the requested pack
+    while(resourcePath = [enumerator nextObject]){
+		NSString *packPath = [resourcePath stringByAppendingPathComponent:packFileName];
+		if([fileManager fileExistsAtPath:packPath]) return([packPath stringByExpandingTildeInPath]);
+	}
+
+    return(nil);	
 }
 
 //If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
