@@ -27,6 +27,15 @@
 
 @implementation SHSafariBookmarksImporter
 
+DeclareString(safariDictTypeKey)
+DeclareString(safariDictTypeLeaf)
+DeclareString(safariDictTypeList)
+DeclareString(safariDictTitle)
+DeclareString(safariDictChild)
+DeclareString(safariDictURIDict)
+DeclareString(safariDictURITitle)
+DeclareString(safariURLString)
+
 + (id)newInstanceOfImporter
 {
     return([[[self alloc] init] autorelease]);
@@ -34,6 +43,15 @@
 
 - (id)init
 {
+        InitString(safariDictTypeKey,SAFARI_DICT_TYPE_KEY)
+        InitString(safariDictTypeLeaf,SAFARI_DICT_TYPE_LEAF)
+        InitString(safariDictTypeList,SAFARI_DICT_TYPE_LIST)
+        InitString(safariDictTitle,SAFARI_DICT_TITLE)
+        InitString(safariDictChild,SAFARI_DICT_CHILD)
+        InitString(safariDictURIDict,SAFARI_DICT_URIDICT)
+        InitString(safariDictURITitle,SAFARI_DICT_URI_TITLE)
+        InitString(safariURLString,SAFARI_DICT_URLSTRING)
+        
 	[super init];
 	lastModDate = nil;
 	return(self);
@@ -67,7 +85,7 @@
 	[lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
 	
 	//Process them
-	return([self drillPropertyList:[bookmarkDict objectForKey:SAFARI_DICT_CHILD]]);
+	return([self drillPropertyList:[bookmarkDict objectForKey:safariDictChild]]);
 }
 
 //Parse the safari bookmark file
@@ -80,14 +98,14 @@
         NSDictionary *linkDict;
 		
         while(linkDict = [enumerator nextObject]){
-            if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LEAF]){
+            if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeLeaf]){
                 //We found a link
 				[array addObject:[self hyperlinkForSafariBookmark:linkDict]];
 				
-			}else if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
+			}else if([[linkDict objectForKey:safariDictTypeKey] isEqualToString:safariDictTypeList]){
 				//We found an array of links
-				[array addObject:[self menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
-											   menuItems:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]]];
+				[array addObject:[self menuDictWithTitle:[linkDict objectForKey:safariDictTitle]
+											   menuItems:[self drillPropertyList:[linkDict objectForKey:safariDictChild]]]];
             }
         }
 	}
@@ -104,8 +122,8 @@
 //Menu Item
 - (NSDictionary *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
 {
-	NSString	*title = [[inDict objectForKey:SAFARI_DICT_URIDICT] objectForKey:SAFARI_DICT_URI_TITLE];
-    return([[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:SAFARI_DICT_URLSTRING]
+	NSString	*title = [[inDict objectForKey:safariDictURIDict] objectForKey:safariDictURITitle];
+    return([[[SHMarkedHyperlink alloc] initWithString:[inDict objectForKey:safariURLString]
 								 withValidationStatus:SH_URL_VALID
 										 parentString:title
 											 andRange:NSMakeRange(0,[title length])] autorelease]);
