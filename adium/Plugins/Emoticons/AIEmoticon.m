@@ -76,9 +76,9 @@
     }
 }
 
-- (void)setRepresentedText:(NSString *)commaDelimitedString
+- (void)setRepresentedText:(NSString *)returnDelimitedString
 {
-    NSArray		*textStrings = [commaDelimitedString componentsSeparatedByString:@","];
+    NSArray		*textStrings = [returnDelimitedString componentsSeparatedByString:@"\r"];
     NSEnumerator	*enumerator = [textStrings objectEnumerator];
     NSString		*currentString = nil;
 
