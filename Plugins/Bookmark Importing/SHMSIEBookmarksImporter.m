@@ -10,8 +10,6 @@
 
 #define MSIE_BOOKMARKS_PATH  @"~/Library/Preferences/Explorer/Favorites.html"
 
-#define MSIE_ROOT_MENU_TITLE AILocalizedString(@"Internet Explorer",nil)
-
 @class SHMozillaCommonParser;
 
 @implementation SHMSIEBookmarksImporter
