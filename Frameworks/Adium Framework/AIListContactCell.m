@@ -25,9 +25,16 @@
 #define SERVICE_ICON_LEFT_PAD		2
 #define SERVICE_ICON_RIGHT_PAD		3
 
-
 #define HULK_CRUSH_FACTOR 1
- 
+
+
+//Selections
+#define CONTACT_INVERTED_TEXT_COLOR		[NSColor whiteColor]
+#define CONTACT_INVERTED_STATUS_COLOR	[NSColor lightGrayColor]
+#define SELECTED_IMAGE_OPACITY			0.8
+#define FULL_IMAGE_OPACITY				1.0
+
+
 @implementation AIListContactCell
 
 //Copy
@@ -159,6 +166,15 @@
 	}
 	
 	return(_statusAttributes);
+}
+- (NSDictionary *)statusAttributesInverted
+{
+	if(!_statusAttributesInverted){
+		_statusAttributesInverted = [[self statusAttributes] mutableCopy];
+		[_statusAttributesInverted setObject:CONTACT_INVERTED_STATUS_COLOR forKey:NSForegroundColorAttributeName];
+	}
+	
+	return(_statusAttributesInverted);
 }
 
 //Flush status attributes when alignment is changed
@@ -316,7 +332,8 @@
 		
 		rect = [image drawInRect:rect
 						  atSize:userIconSize
-						position:position];
+						position:position
+						fraction:[self imageOpacityForDrawing]];
 		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		
 		//Badges
@@ -353,7 +370,8 @@
 		[image setFlipped:![image isFlipped]];
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(0, 0)
-						position:position];
+						position:position
+						fraction:[self imageOpacityForDrawing]];
 		[image setFlipped:![image isFlipped]];
 		
 		if(!isBadge){
@@ -378,7 +396,8 @@
 		NSImage *image = [self serviceImage];
 		rect = [image drawInRect:rect
 						  atSize:NSMakeSize(0, 0)
-						position:position];
+						position:position
+						fraction:[self imageOpacityForDrawing]];
 
 		if(!isBadge){
 			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_RIGHT_PAD;
@@ -391,7 +410,6 @@
 //User Extended Status
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
-	
 	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
 		NSString 	*string = [[listObject statusObjectForKey:@"StatusMessage"] string];
 		
@@ -407,8 +425,11 @@
 				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
-			NSAttributedString *extStatus = [[[NSAttributedString alloc] initWithString:string
-																			 attributes:[self statusAttributes]] autorelease];
+			NSDictionary		*attributes = ([self isSelectionInverted] ?
+											   [self statusAttributesInverted] :
+											   [self statusAttributes]);
+			NSAttributedString 	*extStatus = [[[NSAttributedString alloc] initWithString:string
+																			 attributes:attributes] autorelease];
 			
 			//Alignment
 			NSSize		nameSize = [extStatus size];
@@ -419,12 +440,12 @@
 			switch([self textAlignment]){
 				case NSCenterTextAlignment:
 					drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
-					break;
+				break;
 				case NSRightTextAlignment:
 					drawRect.origin.x += (drawRect.size.width - nameSize.width);
-					break;
+				break;
 				default:
-					break;
+				break;
 			}
 			
 			int half = (drawRect.size.height - statusFontHeight) / 2.0;
@@ -458,6 +479,10 @@
 	NSColor	*theTextColor = [listObject displayArrayObjectForKey:@"Text Color"];
 	return(theTextColor ? theTextColor : [super textColor]);
 }
+- (NSColor *)invertedTextColor
+{
+	return(CONTACT_INVERTED_TEXT_COLOR/*[[self textColor] colorWithInvertedLuminance]*/);
+}
 
 //Contact user image - AIUserIcons should already have been informed of our desired size by setUserIconSize: above.
 - (NSImage *)userIconImage
@@ -487,6 +512,12 @@
 - (BOOL)drawGridBehindCell
 {
 	return([self labelColor] == nil);
+}
+
+//
+- (float)imageOpacityForDrawing
+{
+	return([self isSelectionInverted] ? SELECTED_IMAGE_OPACITY : [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
 }
 
 @end
