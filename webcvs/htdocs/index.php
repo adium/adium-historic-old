@@ -62,7 +62,7 @@
                 <div class="boxThinContent">
                     <p><a href="http://forum.adiumx.com">Adium Forum</a></p>
                     <p>Discuss ideas, issues, or concerns with other users.</p>
-                    <p><a href="irc://irc.freenode.net/adium">Adium IRC Channel</a></p>
+                    <p><a href="./irc.php">Adium IRC Channel</a></p>
                     <p>Join us in #adium on irc.freenode.net for live chat.</p>
                 </div>
                 <div class="boxThinBottom"></div>
