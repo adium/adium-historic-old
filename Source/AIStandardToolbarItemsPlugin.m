@@ -21,6 +21,7 @@
 #import "AIToolbarController.h"
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 
 #define MESSAGE	AILocalizedString(@"Message", nil)

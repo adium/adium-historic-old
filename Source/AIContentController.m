@@ -34,6 +34,7 @@
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentStatus.h>
 #import <Adium/AIListContact.h>
+#import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/NDRunLoopMessenger.h>

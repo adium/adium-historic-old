@@ -20,10 +20,11 @@
 #import "AIContactListEditorPlugin.h"
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
 
 #define ALIASES_DEFAULT_PREFS		@"Alias Defaults"
 #define DISPLAYFORMAT_DEFAULT_PREFS	@"Display Format Defaults"

@@ -19,6 +19,8 @@
 #import "ESContactAlertsController.h"
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIListGroup.h>
+#import <Adium/AIMetaContact.h>
 
 @interface AIContactStatusEventsPlugin (PRIVATE)
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;

@@ -27,6 +27,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
+#import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 #import <Growl-WithInstaller/Growl.h>
