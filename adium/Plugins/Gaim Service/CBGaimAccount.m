@@ -779,7 +779,7 @@
 	
 	//This is potentially problematic
 	AIListObject *listObject = [chat listObject];
-	
+	NSLog(@"listObject is %@",listObject);
 	//If a listObject is set for the chat, then it is an IM; otherwise, it is a multiuser chat
 	if (listObject) {
 		//Associate our chat with the libgaim conversation
@@ -1309,17 +1309,21 @@
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
 	[[adium contactController] delayListObjectNotifications];
 	
-	//Remove all gaim buddies (which will call accountRemoveBuddy for each one)
+	//Clear status flags on all contacts
 	NSEnumerator    *enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
 	while (contact = [enumerator nextObject]){
+/*	//Remove all gaim buddies (which will call accountRemoveBuddy for each one)
 		GaimBuddy *buddy;
 		
 		buddy = [[contact statusObjectForKey:@"GaimBuddy"] pointerValue];
 		if (buddy){
 			gaim_blist_remove_buddy(buddy);
 		}
+		*/
+		[contact setRemoteGroupName:nil];
+		[self removeAllStatusFlagsFromContact:contact];
 	}
 	
 	[[adium contactController] endListObjectNotificationDelay];
@@ -1341,23 +1345,24 @@
     BOOL			connectionIsSuicidal = (gc ? gc->wants_to_die : NO);
 	
 	//Reset the gaim account (We don't want it tracking anything between sessions)
-    [self resetLibGaimAccount];
+//    [self resetLibGaimAccount];
 	
     //We are now offline
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Disconnecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Connecting" notify:YES];
     [self setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" notify:YES];
     
-    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
+/*    //Clear out the GaimConv pointers in the chat statusDictionaries, as they no longer have meaning
     AIChat *chat;
     enumerator = [chatDict objectEnumerator];
     while (chat = [enumerator nextObject]) {
 		[self closeChat:chat];
+		[[chat statusDictionary] removeObjectForKey:@"GaimConv"];
     }       
     
     //Remove our chat dictionary
-    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
-    
+//    [chatDict release]; chatDict = [[NSMutableDictionary alloc] init];
+*/
     //If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
     if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
@@ -1436,12 +1441,21 @@
 
 - (void)createNewGaimAccount
 {
-	NSString	*hostName;
-	int			portNumber;
-	
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
 	
+	gaim_accounts_add(account);
+	   
+	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+	
+	[self configureGaimAccountForConnect];
+}
+
+- (void)configureGaimAccountForConnect
+{
+	NSString	*hostName;
+	int			portNumber;
+
 	//Host (server)
 	hostName = [self host];
 	if (hostName && [hostName length]){
@@ -1452,11 +1466,7 @@
 	portNumber = [self port];
 	if (portNumber){
 		gaim_account_set_int(account, "port", portNumber);
-	}
-	
-    gaim_accounts_add(account);
-    
-	[(CBGaimServicePlugin *)service addAccount:self forGaimAccountPointer:account];
+	}	
 }
 
 //Account Status ------------------------------------------------------------------------------------------------------
