@@ -25,6 +25,7 @@
 - (id)_init;
 - (void)insertText:(id)insertString;
 - (NSString *)completionForString:(NSString *)inString;
+- (NSString *)impliedStringValueForString:(NSString *)aString;
 @end
 
 @implementation AICompletingTextField
@@ -50,6 +51,7 @@
 	impliedCompletionDictionary = nil;
     minLength = 1;
     oldUserLength = 0;
+	completeAfterSeparator = NO;
 
     return(self);
 }
@@ -66,6 +68,11 @@
 - (void)setMinStringLength:(int)length
 {
     minLength = length;
+}
+
+- (void)setCompletesOnlyAfterSeparator:(BOOL)split
+{
+	completeAfterSeparator = split;
 }
 
 //Set the strings that this field will use to auto-complete
@@ -100,24 +107,37 @@
 //Private ------------------------------------------------------------------------------------------
 - (void)textDidChange:(NSNotification *)notification
 {
-    NSString		*userValue, *completionValue;
-	unsigned int	userValueLength;
+    NSString		*userValue, *lastValue, *completionValue;
+	unsigned int	userValueLength, lastValueLength;
 	
     //Auto-complete
     userValue = [self stringValue];
+	lastValue = userValue;
 	userValueLength = [userValue length];
+	lastValueLength = userValueLength;
+	
+	if( completeAfterSeparator ) {
+		NSArray *tempArray = [userValue componentsSeparatedByString:@","];
+		lastValueLength = [[(NSString *)[tempArray objectAtIndex:([tempArray count]-1)] compactedString] length];
+		lastValue = [tempArray objectAtIndex:([tempArray count]-1)];
+	}
+	
+	//NSLog(@"#### userValue: '%@', lastValueLength: %d",userValue,lastValueLength);
 	
 	//We only need to attempt an autocompletion if characters have been added - deleting shouldn't autocomplete
     if(userValueLength > oldUserLength){
-        completionValue = [self completionForString:userValue];
+        completionValue = [self completionForString:lastValue];
     
-        if(completionValue != nil && [completionValue length] > userValueLength){
+		//NSLog(@"##### completionValue = %@",(completionValue != nil ? completionValue : @""));
+        if(completionValue != nil && [completionValue length] > lastValueLength){
             //Auto-complete the string - note that it retains the text that the user typed, and simply adds
             //the additional characters needed to match the completionValue
-            [self setStringValue:[userValue stringByAppendingString:[completionValue substringFromIndex:userValueLength]]];
+            [self setStringValue:[userValue stringByAppendingString:[completionValue substringFromIndex:lastValueLength]]];
+			
+			//NSLog(@"###### setting the value!");
 			
             //Select the auto-completed text
-            [self selectRange:NSMakeRange(userValueLength, [completionValue length] - userValueLength)];
+            [self selectRange:NSMakeRange(userValueLength, [completionValue length] - lastValueLength)];
         }
     }
 
@@ -158,46 +178,64 @@
 - (NSString *)completionForString:(NSString *)inString
 {
     NSEnumerator	*enumerator;
+	NSString		*compString = inString;
     NSString		*autoString;
     int				length;
     NSRange			range;
 
+	// Find only the last item in the list, if we are to autocomplete only after separators
+	if( completeAfterSeparator ) {
+		NSArray *tempArray = [inString componentsSeparatedByString:@","];
+		compString = [(NSString *)[tempArray objectAtIndex:([tempArray count]-1)] compactedString];
+	}
+	
+	//NSLog(@"## compString: %@",compString);
+	
     //Setup
-    length = [inString length];
+    length = [compString length];
     range = NSMakeRange(0, length);
-
+	
     if(length >= minLength){
         //Check each auto-complete string for a match
         enumerator = [stringSet objectEnumerator];
         while((autoString = [enumerator nextObject])){
-            if(([autoString length] > length) && [autoString compare:inString options:NSCaseInsensitiveSearch range:range] == 0){
-                return(autoString);
+            if(([autoString length] > length) && [autoString compare:compString options:NSCaseInsensitiveSearch range:range] == 0){
+				return(autoString);
             }
         }
     }
-        
+	
     return(nil);
 }
 
-//Return a string which may be the actual stringValue or may be some other string implied by it
-- (NSString *)impliedStringValue
+//Return a string which may be the actual aString or may be some other string implied by it
+- (NSString *)impliedStringValueForString:(NSString *)aString
 {
-	NSString		*returnString = [self stringValue];
-	if (returnString){
-		//Check if the stringValue implies a different completion; ensure that this new completion is not itself
+	NSLog(@"#### Given: %@",aString);
+
+	if (aString){
+		//Check if aString implies a different completion; ensure that this new completion is not itself
 		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
-		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:returnString];
-				
+		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:aString];
+		
 		NSString	*impliedCompletionOfImpliedCompletion = [impliedCompletionDictionary objectForKey:impliedCompletion];
 		//If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
 		//completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
 		//completion
 		if (impliedCompletion && (!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqualToString:impliedCompletion])){
-			returnString = impliedCompletion;
+			aString = impliedCompletion;
 		}
 	}
+	
+	NSLog(@"Implied: %@",aString);
+	return aString;	
+}
 
-	return returnString;
+//Return a string which may be the actual contents of the text field, or some other string implied by it
+- (NSString *)impliedStringValue
+{
+	NSString		*returnString = [self stringValue];
+	return [self impliedStringValueForString:returnString];
 }
 
 @end
