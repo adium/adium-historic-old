@@ -1719,8 +1719,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 		[self moveContact:listContact toGroup:group];
 			
-		//Resort to update for the new positioning
-		[[owner contactController] sortListObject:listContact];
+		//Resort
+		[[owner contactController] sortContactList];
 	}
 }
 
