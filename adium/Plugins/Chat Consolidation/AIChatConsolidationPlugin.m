@@ -17,7 +17,7 @@
 	consolidateMenuItem = [[NSMenuItem alloc] initWithTitle:CONSOLIDATE_CHATS_MENU_TITLE
 													 target:self 
 													 action:@selector(consolidateChats:)
-											  keyEquivalent:@""];
+											  keyEquivalent:@"O"];
 	[[adium menuController] addMenuItem:consolidateMenuItem toLocation:LOC_Window_Commands];
 }
 
@@ -25,6 +25,12 @@
 {
 	//The interface controller does all the work for us :)
 	[[adium interfaceController] consolidateChats];	
+}
+
+//Only enable the menu if more than one chat is open
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	return([[[adium interfaceController] openChats] count] > 1);
 }
 
 @end
