@@ -3,7 +3,7 @@
  * File:        AWEzvXMLStream.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLStream.m,v 1.3 2004/07/13 15:05:56 evands Exp $
+ * CVS tag:     $Id: AWEzvXMLStream.m,v 1.4 2004/07/14 05:19:13 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -158,7 +158,7 @@ void xml_char_data	(void *userData,
         [node addAttribute:attribute withValue:value];
     }
     
-    if ([nodeStack size] > 0 && [(AWEzvXMLNode *)[nodeStack top] type] == XMLText)
+    if ([nodeStack size] > 0 && [(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText)
         [nodeStack pop];
     
     if ([nodeStack size] > 0) {
@@ -185,7 +185,7 @@ void xml_char_data	(void *userData,
     
     nodeName = [NSString stringWithUTF8String:name];
 
-    if (([nodeStack size] > 0) && ([(AWEzvXMLNode *)[nodeStack top] type] == XMLText)) {
+    if (([nodeStack size] > 0) && ([(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText)) {
         node = [nodeStack pop];
     }
     
@@ -223,14 +223,14 @@ void xml_char_data	(void *userData,
     
     newData = [[[NSString alloc] initWithData:[NSData dataWithBytes:data length:len] encoding:NSUTF8StringEncoding] autorelease];
     
-    if ([nodeStack size] > 0 && [(AWEzvXMLNode *)[nodeStack top] type] == XMLText) {
+    if ([nodeStack size] > 0 && [(AWEzvXMLNode *)[nodeStack top] type] == AWEzvXMLText) {
         node = [nodeStack top];
         if ([node name] != nil)
             [node setName:([[node name] stringByAppendingString:newData])];
         else
             [node setName:newData];
     } else {
-        node = [[[AWEzvXMLNode alloc] initWithType:XMLText name:newData] autorelease];
+        node = [[[AWEzvXMLNode alloc] initWithType:AWEzvXMLText name:newData] autorelease];
         if ([nodeStack top] != nil)
             [[nodeStack top] addChild:node];
         [nodeStack push:node];

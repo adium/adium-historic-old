@@ -3,7 +3,7 @@
  * File:        AWEzvXMLNode.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvXMLNode.m,v 1.2 2004/05/16 07:10:36 proton Exp $
+ * CVS tag:     $Id: AWEzvXMLNode.m,v 1.3 2004/07/14 05:19:13 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -83,7 +83,7 @@
     NSString		*key;
     AWEzvXMLNode	*node;
     
-    if (type == XMLText) {
+    if (type == AWEzvXMLText) {
         string = [[name mutableCopy] autorelease];
         [string replaceOccurrencesOfString:@"&" withString:@"&amp;" 
     options:0 range:NSMakeRange(0, [string length])];
@@ -92,7 +92,7 @@
         [string replaceOccurrencesOfString:@">" withString:@"&gt;" 
     options:0 range:NSMakeRange(0, [string length])];
         return [[string copy] autorelease];
-    } else if (type == XMLRaw) {
+    } else if (type == AWEzvXMLRaw) {
 	return [[name copy] autorelease];
     }
     

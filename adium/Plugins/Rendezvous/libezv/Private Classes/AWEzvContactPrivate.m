@@ -3,7 +3,7 @@
  * File:        AWEzvContactPrivate.m
  *
  * Version:     1.0
- * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.3 2004/07/13 15:05:56 evands Exp $
+ * CVS tag:     $Id: AWEzvContactPrivate.m,v 1.4 2004/07/14 05:19:13 proton Exp $
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -170,7 +170,7 @@
                     NSEnumerator	*childs = [[node children] objectEnumerator];
                         
                     while ((node = [childs nextObject])) {
-                        if ([node type] == XMLText) {
+                        if ([node type] == AWEzvXMLText) {
                             plaintext = [node name];
                         }
                     }
