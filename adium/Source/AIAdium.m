@@ -304,25 +304,33 @@ void Adium_HandleSignal(int i){
             fileDescription,
             [[filename lastPathComponent] stringByDeletingPathExtension]];
         
-        //Trash the old file if one exists
-        [[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
-        
-        //Perform the copy and display an alert informing the user of its success or failure
-        if ([[NSFileManager defaultManager] copyPath:filename 
-                                              toPath:destinationFilePath 
-                                             handler:nil]){
-            
-            alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
-            alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful.","End of installation succesful sentence")];
-            if (requiresRestart){
-                alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" Please restart Adium.",nil)];
-            }
-            
-            success = YES;
-        }else{
-            alertTitle = AILocalizedString(@"Installation Failed","Title of installation failed window");
-            alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was unsuccessful.","End of installation failed sentence")];
-        }
+        //Trash the old file if one exists AND it isn't ourself
+		if([filename isEqualToString:destinationFilePath]) {
+			// Don't copy the file if it's already in the right place!!
+			NSLog(@"----File is already in correct directory");
+			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
+			alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful because the file was already in the correct location.",nil)];
+		} else {
+			NSLog(@"----File NOT OK, copy it to right place");
+			[[NSFileManager defaultManager] trashFileAtPath:destinationFilePath];
+			
+			//Perform the copy and display an alert informing the user of its success or failure
+			if ([[NSFileManager defaultManager] copyPath:filename 
+												  toPath:destinationFilePath 
+												 handler:nil]){
+				
+				alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
+				alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was successful.","End of installation succesful sentence")];
+				if (requiresRestart){
+					alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" Please restart Adium.",nil)];
+				}
+				
+				success = YES;
+			}else{
+				alertTitle = AILocalizedString(@"Installation Failed","Title of installation failed window");
+				alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" was unsuccessful.","End of installation failed sentence")];
+			}
+		}
         NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,nil,nil);
     }
 
