@@ -63,6 +63,7 @@
 #import "AIServiceIcons.h"
 #import "AIStatusIcons.h"
 #import "AIEditStateWindowController.h"
+#import "AIStatus.h"
 
 #import "AILocalizationAssistance.h"
 #import "ESDebugAILog.h"
