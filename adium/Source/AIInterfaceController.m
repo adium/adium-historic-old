@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIInterfaceController.m,v 1.85 2004/07/20 16:12:29 adamiser Exp $
+// $Id: AIInterfaceController.m,v 1.86 2004/07/20 17:17:10 adamiser Exp $
 
 #import "AIInterfaceController.h"
 #import "AIContactListWindowController.h"
@@ -42,6 +42,7 @@
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
+- (void)preferencesChanged:(NSNotification *)notification;
 @end
 
 @implementation AIInterfaceController
@@ -388,7 +389,7 @@ arrangeChats = YES;
 	
 	while(containerName = [containerEnumerator nextObject]){
 		NSArray			*chatsInContainer = [self openChatsInContainerNamed:containerName];
-		NSMutableArray  *listObjects;
+		NSArray  		*listObjects;
 		NSMutableArray  *sortedListObjects;
 		NSEnumerator	*objectEnumerator;
 		AIListObject	*object;

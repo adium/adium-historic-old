@@ -89,13 +89,16 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 	[[NSNotificationCenter defaultCenter] postNotificationName:AICustomTabDragWillBegin object:self];
 	
 	//Setup
-	[destTabBar release]; destTabBar = [sourceView retain];
+	[destTabBar release]; destTabBar = nil;
 	sourceTabBar = [sourceView retain];
 	dragTabCell = [inTabCell retain];
 	selectTabAfterDrag = shouldSelect;
 	
 	//Determine if the source window will hide as a result of this drag
-	sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] < 1);
+	sourceWindowWillHide = ([sourceTabBar removingLastTabHidesWindow] && [sourceTabBar numberOfTabViewItems] == 1);
+	if(!sourceWindowWillHide){
+		destTabBar = [sourceView retain];
+	}
 	
 	//Adjust the drag offset so the cursor is atleast always touching the tab drag image
 	int width = [inTabCell frame].size.width;

@@ -15,6 +15,7 @@
 
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
+#import "AIMessageWindowController.h"
 
 #define BACK_CELL_LEFT_INDENT	-1
 #define BACK_CELL_RIGHT_INDENT	3
