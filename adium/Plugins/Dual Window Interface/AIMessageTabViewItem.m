@@ -155,11 +155,11 @@
 			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
 		}else{
 			if ([listObject isKindOfClass:[AIListContact class]]){
-				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] serviceMenuImage] retain];
+				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
 			}
 		}
 	}else{
-		tabViewItemImage = [[[[messageView chat] account] serviceMenuImage] retain];
+		tabViewItemImage = [[[[messageView chat] account] menuImage] retain];
 	}
 }
 
