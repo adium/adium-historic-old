@@ -9,12 +9,13 @@
 #import "CBGaimAIMAccount.h"
 
 #warning change this to your SN to connect :-)
-#define SCREEN_NAME "otsku"
+#define SCREEN_NAME "kro26"
 
 @implementation CBGaimAIMAccount
 
 - (void)initAccount
 {
+    NSLog(@"CBGaimAIMAccount initAccount");
     screenName = @"kro26";
     [super initAccount];
 }

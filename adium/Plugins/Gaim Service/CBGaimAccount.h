@@ -33,14 +33,25 @@
 {
     NSMutableDictionary	*handleDict;
     NSString *screenName;
+    GaimAccount *account;
+    NSMutableDictionary *chatDict;
 }
 
 - (const char*)protocolPlugin;
+- (GaimAccount*)gaimAccount;
+
+// accountConnection methods
+- (void)accountConnectionReportDisconnect:(const char*)text;
+- (void)accountConnectionConnected;
+- (void)accountConnectionDisconnected;
 
 //accountBlist methods
 - (void)accountBlistNewNode:(GaimBlistNode *)node;
 - (void)accountBlistUpdate:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
 - (void)accountBlistRemove:(GaimBuddyList *)list withNode:(GaimBlistNode *)node;
+
+//accountConv methods
+- (void)accountConvReceivedIM:(const char*)message inConversation:(GaimConversation*)conv withFlags:(GaimMessageFlags)flags atTime:(time_t)mtime;
 
 //AIAccount sublcassed methods
 - (void)initAccount;
