@@ -43,7 +43,7 @@
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {
-    [super initWithWindowNibName:windowNibName];
+    self = [super initWithWindowNibName:windowNibName];
 	[self showWindowWithDict:infoDict multiline:multiline];
 	
     return(self);
@@ -56,7 +56,18 @@
 	
 	//Ensure the window is loaded
 	[self window];
-	
+
+	//If masked, replace our textField_input with a secure one
+	if([[infoDict objectForKey:@"Masked"] boolValue]){
+		NSRect				inputFrame = [textField_input frame];
+		NSSecureTextField	*secureTextField = [[[NSSecureTextField alloc] initWithFrame:inputFrame] autorelease];
+		
+		[[textField_input superview] addSubview:secureTextField];
+		[secureTextField setNeedsDisplay:YES];
+		[textField_input removeFromSuperview];
+		textField_input = secureTextField;		
+	}
+
 	//Buttons
 	{
 		//Use the supplied OK text, then shift the button left so that the right side remains in the old location in the window
