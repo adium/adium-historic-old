@@ -58,7 +58,7 @@ DeclareString(FormattedUID);
 	NSString *formattedUID = [self preferenceForKey:FormattedUID 
 											  group:ObjectStatusCache 
 							  ignoreInheritedValues:YES];
-	if (formattedUID){
+	if (formattedUID && ![formattedUID isEqualToString:UID]){
 		[self setStatusObject:formattedUID
 					   forKey:FormattedUID
 					   notify:NO];
