@@ -16,7 +16,7 @@ Adium, Copyright 2001-2005, Adam Iser
 #import "AIStateMenuPlugin.h"
 #import "AIEditStateWindowController.h"
 
-#define ELIPSIS_STRING				AILocalizedString(@"...",nil)
+#define ELIPSIS_STRING				[NSString stringWithUTF8String:"…"]
 #define STATE_TITLE_MENU_LENGTH		30
 
 /*!
@@ -39,11 +39,11 @@ Adium, Copyright 2001-2005, Adam Iser
 	//Observe changes to the state array and active state
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateStateMenuSelection)
-									   name:AIActiveStateChangedNotification
+									   name:AIActiveStatusStateChangedNotification
 									 object:nil];
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(updateStateMenu)
-									   name:AIStateArrayChangedNotification
+									   name:AIStatusStateArrayChangedNotification
 									 object:nil];
 
 	//Observe status icon pack changes
@@ -92,7 +92,7 @@ Adium, Copyright 2001-2005, Adam Iser
 {
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
-	NSDictionary	*state;
+	AIStatus		*statusState;
 	
 	//Remove any existing menu items
 	enumerator = [stateMenuItemArray objectEnumerator];
@@ -104,21 +104,17 @@ Adium, Copyright 2001-2005, Adam Iser
 	
 	//Build the updated menu
 	enumerator = [[[adium statusController] stateArray] objectEnumerator];
-	while(state = [enumerator nextObject]){
-		if([[state objectForKey:STATE_TYPE] isEqualToString:STATE_SAVED_STATE]){
-			NSString *stateTitle = [[adium statusController] titleForState:state];
-			
-			menuItem = [[NSMenuItem alloc] initWithTitle:[self truncateStateTitleForMenuDisplay:stateTitle]
-												  target:self
-												  action:@selector(selectState:)
-										   keyEquivalent:@""];
-			
-			[menuItem setImage:[[[[adium statusController] iconForState:state] copy] autorelease]];
-			[menuItem setRepresentedObject:state];
-			[stateMenuItemArray addObject:menuItem];
-			[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
-			[menuItem release];
-		}
+	while(statusState = [enumerator nextObject]){
+		menuItem = [[NSMenuItem alloc] initWithTitle:[self titleForMenuDisplayOfState:statusState]
+											  target:self
+											  action:@selector(selectState:)
+									   keyEquivalent:@""];
+		
+		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setRepresentedObject:statusState];
+		[stateMenuItemArray addObject:menuItem];
+		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
+		[menuItem release];
 	}
 	
 	//Add the "Custom..." state option
@@ -151,8 +147,8 @@ Adium, Copyright 2001-2005, Adam Iser
 	}
 	
 	//Select current one
-	if([[adium statusController] activeState]){
-		int index = [[[adium statusController] stateArray] indexOfObject:[[adium statusController] activeState]];
+	if([[adium statusController] activeStatusState]){
+		int index = [[[adium statusController] stateArray] indexOfObject:[[adium statusController] activeStatusState]];
 		
 		if(index != NSNotFound){
 			selectedStateMenuItem = [[stateMenuItemArray objectAtIndex:index] retain];
@@ -180,7 +176,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (void)selectState:(id)sender
 {
-	[[adium statusController] setActiveState:[sender representedObject]];
+	[[adium statusController] setActiveStatusState:[sender representedObject]];
 }
 
 /*!
@@ -190,7 +186,7 @@ Adium, Copyright 2001-2005, Adam Iser
  */
 - (IBAction)selectCustomState:(id)sender
 {
-	[AIEditStateWindowController editCustomState:[[adium statusController] activeState]
+	[AIEditStateWindowController editCustomState:/*[[adium statusController] activeStatusState]*/nil
 										onWindow:nil
 								 notifyingTarget:self];
 }
@@ -201,23 +197,28 @@ Adium, Copyright 2001-2005, Adam Iser
  * Invoked when the custom state window is closed by the user clicking OK.  In response this method sets the custom
  * state as the active state.
  */
-- (void)customStatusState:(NSDictionary *)originalState changedTo:(NSDictionary *)newState
+- (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState
 {
-	[[adium statusController] setActiveState:newState];
+	[[adium statusController] setActiveStatusState:newState];
 }
 
 /*!
- * @brief Prepare a string for use as a menu title
+ * @brief Determine a string to use as a menu title
  *
  * This method truncates a state title string for display as a menu item.  It also strips newlines which can cause odd
  * menu item display.  Wide menus aren't pretty and may cause crashing in certain versions of OS X, so all state
  * titles should be run through this method before being used as menu item titles.
+ *
+ * @param statusState The state for which we want a title
+ *
+ * @result An appropriate NSString title
  */
-- (NSString *)truncateStateTitleForMenuDisplay:(NSString *)title
+- (NSString *)titleForMenuDisplayOfState:(AIStatus *)statusState
 {
-	NSRange fullRange = NSMakeRange(0,0);
-	NSRange	trimRange;
-
+	NSRange		fullRange = NSMakeRange(0,0);
+	NSRange		trimRange;
+	NSString	*title = [statusState title];
+	
 	//Strip newlines, they'll screw up menu display
 	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 

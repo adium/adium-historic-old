@@ -24,6 +24,6 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (void)updateStateMenu;
 - (void)updateStateMenuSelection;
-- (NSString *)truncateStateTitleForMenuDisplay:(NSString *)title;
+- (NSString *)titleForMenuDisplayOfState:(AIStatus *)statusState;
 
 @end
