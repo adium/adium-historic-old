@@ -112,8 +112,12 @@ typedef enum {
 	NSTimer						*reconnectTimer;
 
 	//Attributed string refreshing
-    NSTimer                     *refreshTimer;
-    NSMutableDictionary         *refreshDict;
+    NSTimer                     *attributedRefreshTimer;
+    NSMutableDictionary         *attributedRefreshDict;
+	//String refreshing
+	NSTimer                     *stringRefreshTimer;
+    NSMutableDictionary         *stringRefreshDict;
+	
 
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;
@@ -149,6 +153,10 @@ typedef enum {
 
 - (void)updateAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
 - (void)setAttributedStatusString:(NSAttributedString *)inAttributedString forKey:(NSString *)key;
+
+- (void)updateStatusString:(NSString *)status forKey:(NSString *)key;
+- (void)setStatusString:(NSString *)inString forKey:(NSString *)key;
+
 
 - (void)connect;
 - (void)disconnect;

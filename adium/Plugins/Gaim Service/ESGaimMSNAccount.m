@@ -9,7 +9,7 @@
 #import "ESGaimMSNAccount.h"
 
 @interface ESGaimMSNAccount (PRIVATE)
--(void)setAliasTo:(NSString *)inAlias;
+-(void)_setFriendlyNameTo:(NSString *)inAlias;
 @end
 
 @implementation ESGaimMSNAccount
@@ -39,12 +39,19 @@
     //Now look at keys which only make sense while online
 	if([[self statusObjectForKey:@"Online"] boolValue]){
 		if([key compare:@"FullName"] == 0){
-			[self setAliasTo:[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]];
+			[self updateStatusString:[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] forKey:@"FullName"];
 		}
 	}
 }
 
--(void)setAliasTo:(NSString *)inAlias
+- (void)setStatusString:(NSString *)inString forKey:(NSString *)key
+{
+	if([key compare:@"FullName"] == 0){
+		[self _setFriendlyNameTo:inString];
+	}
+}
+
+-(void)_setFriendlyNameTo:(NSString *)inAlias
 {
 	msn_set_friendly_name(gc,[inAlias UTF8String]);
 }

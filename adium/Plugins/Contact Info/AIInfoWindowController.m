@@ -157,7 +157,8 @@ static AIListObject				*activeListObject = nil;
         }
         
         if (status) {
-            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status listObjectContext:activeListObject] mutableCopy];
+            NSMutableAttributedString   *statusString = [[[adium contentController] fullyFilteredAttributedString:status 
+																								listObjectContext:activeListObject] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];

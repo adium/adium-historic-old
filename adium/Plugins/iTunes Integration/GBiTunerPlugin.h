@@ -10,7 +10,7 @@
 @protocol AIContentFilter;
 @class GBiTunerPreferences;
 
-@interface GBiTunerPlugin : AIPlugin <AIContentFilter> {    
+@interface GBiTunerPlugin : AIPlugin <AIContentFilter, AIStringFilter> {    
     NSMutableDictionary		*scriptDict;		//Lookup dict for script usage
 	NSMutableArray			*scriptArray;		//Ordered array for script menu
 }

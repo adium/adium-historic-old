@@ -7,6 +7,11 @@
 
 #import "AIMessageAliasPlugin.h"
 
+@interface AIMessageAliasPlugin (PRIVATE)
+- (id)_filterString:(NSString *)inString originalObject:(id)originalObject contentObject:(AIContentObject *)content listObject:(AIListObject *)listObject;
+- (NSString *)hashLookup:(NSString *)pattern contentObject:(AIContentObject *)content listObject:(AIListObject *)listObject;
+@end
+
 @implementation AIMessageAliasPlugin
 
 - (void)installPlugin
@@ -14,7 +19,8 @@
     //Register us as a filter
     [[adium contentController] registerOutgoingContentFilter:self];
     [[adium contentController] registerIncomingContentFilter:self];
-    
+    [[adium contentController] registerStringFilter:self];
+	
     //Build the dictionary
     //	Eventually This Dictionary will become mutable and be updated from a preference pane 
     hash = [[NSDictionary alloc] initWithObjectsAndKeys:@"$var$", @"%n", 
@@ -29,29 +35,46 @@
 {
 	[[adium contentController] unregisterOutgoingContentFilter:self];
 	[[adium contentController] unregisterIncomingContentFilter:self];
-	[hash release]; hash=nil;
+	[[adium contentController] unregisterStringFilter:self];
+	[hash release]; hash = nil;
 }
 
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject
 {
-    NSMutableAttributedString   *mesg = nil;
-    if (inAttributedString){
-        NSString                *originalAttributedString = [inAttributedString string];
+   	return [self _filterString:[inAttributedString string] 
+				originalObject:inAttributedString
+				 contentObject:inObject
+					listObject:inListObject];
+}
+
+- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+{
+	return [self _filterString:inString
+				originalObject:inString 
+				 contentObject:inObject 
+					listObject:inListObject];
+}
+
+- (id)_filterString:(NSString *)inString originalObject:(id)originalObject contentObject:(AIContentObject *)content listObject:(AIListObject *)listObject
+{
+	id<DummyStringProtocol>   mesg = nil;
+	
+    if(inString){
         NSEnumerator            *enumerator = [hash keyEnumerator];
         NSString                *pattern;	
         NSString                *replaceWith;
         
         //This loop gets run for every key in the dictionary
-	while (pattern = [enumerator nextObject]){
+		while (pattern = [enumerator nextObject]){
             //if the original string contained this pattern
-            if ([originalAttributedString rangeOfString:pattern].location != NSNotFound){
+            if ([inString rangeOfString:pattern].location != NSNotFound){
                 if (!mesg){
-                    mesg = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+                    mesg = [[originalObject mutableCopy] autorelease];
                 }
                 
                 //if key is a var go find out what the replacement text should be
                 if([(replaceWith = [hash objectForKey:pattern]) isEqualToString:@"$var$"]){
-                    replaceWith = [self hashLookup:pattern contentMessage:inObject listObject:inListObject];
+                    replaceWith = [self hashLookup:pattern contentObject:content listObject:listObject];
                 }
                 
                 [mesg replaceOccurrencesOfString:pattern 
@@ -61,11 +84,11 @@
             }
         }
     }
-    return (mesg ? mesg : inAttributedString);
+	
+    return (mesg ? mesg : originalObject);
 }
 
-
-- (NSString*)hashLookup:(NSString*)pattern contentMessage:(AIContentObject *)content listObject:(AIListObject *)listObject
+- (NSString*)hashLookup:(NSString*)pattern contentObject:(AIContentObject *)content listObject:(AIListObject *)listObject
 {
     if([pattern isEqualToString:@"%a"]){
 		if (content) {

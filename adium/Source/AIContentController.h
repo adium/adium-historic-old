@@ -28,8 +28,21 @@
 @protocol AIContentHandler 
 @end
 
+//AIContentFilters have the opportunity to examine every attributed string.  Non-attributed strings are not passed through these filters.
 @protocol AIContentFilter
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+@end
+
+//Auxiliary filter type to the primary AIContentFilter
+//for simple filtering which uses no attributedString characteristics
+@protocol AIStringFilter
+- (NSString *)filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject;
+@end
+
+//Dummy protocol used in several filters
+@protocol DummyStringProtocol
+- (unsigned int)length;
+- (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange;
 @end
 
 @interface NSObject (AITextEntryFilter)
@@ -47,6 +60,7 @@
     NSMutableArray			*outgoingContentFilterArray;
     NSMutableArray			*incomingContentFilterArray;
     NSMutableArray			*displayingContentFilterArray;
+    NSMutableArray			*stringFilterArray;
 	
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
@@ -82,16 +96,21 @@
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 
-//Filtering content
+//Registering filters
 - (void)registerOutgoingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterOutgoingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerIncomingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterIncomingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerDisplayingContentFilter:(id <AIContentFilter>)inFilter;
 - (void)unregisterDisplayingContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerStringFilter:(id <AIStringFilter>)inFilter;
+- (void)unregisterStringFilter:(id <AIStringFilter>)inFilter;
+
+//Filtering content
 - (void)filterObject:(AIContentObject *)inObject isOutgoing:(BOOL)isOutgoing;
 - (NSAttributedString *)filteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject isOutgoing:(BOOL)isOutgoing;
 - (NSAttributedString *)fullyFilteredAttributedString:(NSAttributedString *)inString listObjectContext:(AIListObject *)inListObject;
+- (NSString *)filteredString:(NSString *)inString listObjectContext:(AIListObject *)inListObject;
 
 //Content Source & Destination
 - (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
