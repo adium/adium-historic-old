@@ -366,7 +366,7 @@
 - (void)_updateWindowTitle
 {
     if([tabView_messages numberOfTabViewItems] == 1){
-        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] labelString]]];
+        [[self window] setTitle:[NSString stringWithFormat:@"Adium : %@", [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] label]]];
     }else{
         [[self window] setTitle:@"Adium : Messages"];
     }

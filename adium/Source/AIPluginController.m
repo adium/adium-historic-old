@@ -13,7 +13,7 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-//$Id: AIPluginController.m,v 1.75 2004/06/21 03:16:46 evands Exp $
+//$Id: AIPluginController.m,v 1.76 2004/06/21 18:51:46 adamiser Exp $
 #import "AIPluginController.h"
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -38,7 +38,7 @@ AIDockIconSelectionPlugin, AIDockUnviewedContentPlugin, AIDualWindowInterfacePlu
 AIEventSoundsPlugin, AIGroupedAwayByIdleSortPlugin, AIGroupedIdleAwaySortPlugin, AIIdleAwayManualSortPlugin,
 AIIdleAwaySortPlugin, AIIdleSortPlugin, AIIdleTimeDisplayPlugin, AILaTeXPlugin, AILoggerPlugin,
 AIManualSortPlugin, AIMessageAliasPlugin, AIMessageViewSelectionPlugin, AIOfflineContactHidingPlugin, AIPlugin,
-AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin,
+AISCLViewPlugin, AISendingKeyPreferencesPlugin, AISpellCheckingPlugin, AITabStatusIconsPlugin,
 AIStandardToolbarItemsPlugin, AIStatusChangedMessagesPlugin, AIStatusCirclesPlugin,
 AITextForcingPlugin, AITextToolbarItemsPlugin, AITypingNotificationPlugin, AIContactAccountsPlugin,
 AIVolumeControlPlugin, BGThemesPlugin, CBActionSupportPlugin, CBContactCountingDisplayPlugin,
@@ -90,7 +90,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AIEventSoundsPlugin class]];
 	[self loadPluginWithClass:[AIIdleTimeDisplayPlugin class]];
 	[self loadPluginWithClass:[AIIdleTimePlugin class]];
-	[self loadPluginWithClass:[AILoggerPlugin class]];
+	[self loadPluginWithClass:[AILoggerPlugin class]];	
 	[self loadPluginWithClass:[AIManualSortPlugin class]];
 	[self loadPluginWithClass:[AIMessageAliasPlugin class]];
 //	[self loadPluginWithClass:[AIMessageViewSelectionPlugin class]];
@@ -100,6 +100,7 @@ SHOutputDeviceControlPlugin, SHLinkManagementPlugin, ESBlockingPlugin, BGEmotico
 	[self loadPluginWithClass:[AISpellCheckingPlugin class]];
 	[self loadPluginWithClass:[AIStandardToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AIStatusChangedMessagesPlugin class]];
+	[self loadPluginWithClass:[AITabStatusIconsPlugin class]];
 	[self loadPluginWithClass:[AITextForcingPlugin class]];
 	[self loadPluginWithClass:[AITextToolbarItemsPlugin class]];
 	[self loadPluginWithClass:[AITypingNotificationPlugin class]];

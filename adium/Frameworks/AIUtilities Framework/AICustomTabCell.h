@@ -26,6 +26,7 @@
     NSTrackingRectTag   closeTrackingTag;
     NSDictionary        *closeUserData;
     
+	NSAttributedString	*attributedLabel;
     NSTabViewItem		*tabViewItem;
     NSRect				frame;
 }
@@ -52,5 +53,6 @@
 - (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView;
 - (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView;
 - (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag;
+- (NSAttributedString *)attributedLabel;
 
 @end

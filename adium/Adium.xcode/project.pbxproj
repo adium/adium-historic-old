@@ -4627,6 +4627,7 @@
 				4B052CA0067E39B100A43B4A,
 				4B052CA6067E39BE00A43B4A,
 				9EE161B006819C6F00AB822A,
+				4BF3031B068746A8000DCA65,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4943,6 +4944,14 @@
 				4BF2E6BB067CB70E00743318,
 				4BB1E43F067F2CA100D1DB86,
 				4BB1E482067F2E9F00D1DB86,
+				4B57CDC4068498D7003FF229,
+				4B57CDCE06849ABB003FF229,
+				4B57CDCF06849ABB003FF229,
+				4B57CDD006849ABB003FF229,
+				4B57CDD106849ABB003FF229,
+				4B57CDD306849AFE003FF229,
+				4B41F9190686173A00C09B4B,
+				4BF302F206873CCE000DCA65,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5259,6 +5268,7 @@
 				4B052CA1067E39B100A43B4A,
 				4B052CA7067E39BE00A43B4A,
 				9EE161B106819C6F00AB822A,
+				4BF3031C068746A8000DCA65,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8918,7 +8928,7 @@
 			children = (
 				4B149D4B0678FB5300D74D43,
 				4BF2DCC7067C919300743318,
-				9EE164540682F71700AB822A,
+				4B57CCA106848F05003FF229,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -10954,6 +10964,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		4B41F9180686173A00C09B4B = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-content.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-content.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B41F9190686173A00C09B4B = {
+			fileRef = 4B41F9180686173A00C09B4B;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B422C0905ACB248005E720B = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -11000,6 +11024,7 @@
 		};
 		4B4F5B23042D636700A8010A = {
 			children = (
+				4BF303160687466D000DCA65,
 				9EB7C05703D52AFA00415B22,
 				4B30490B047FBD6A00A8010A,
 				F569E38102CA876501A8010A,
@@ -11283,6 +11308,111 @@
 			path = "Plugins/Volume Control/VolumeControlPrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4B57CCA106848F05003FF229 = {
+			fileType = "compiled.mach-o.dylib";
+			isa = PBXReferenceProxy;
+			path = libezv.dylib;
+			refType = 3;
+			remoteRef = 4B57CD7806848F26003FF229;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		4B57CD7806848F26003FF229 = {
+			containerPortal = 4947F5E90655E90C00B791E5;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
+			remoteInfo = libezv;
+		};
+		4B57CDB9068498D7003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = "Tab Icons";
+			path = "Resources/Tab Icons";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDC4068498D7003FF229 = {
+			fileRef = 4B57CDB9068498D7003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDC5068498E1003FF229 = {
+			fileRef = 4B57CDB9068498D7003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDC906849ABB003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-away.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-away.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDCA06849ABB003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-idle.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-idle.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDCB06849ABB003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-offline.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-offline.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDCC06849ABB003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-stranger.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-stranger.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDCE06849ABB003FF229 = {
+			fileRef = 4B57CDC906849ABB003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDCF06849ABB003FF229 = {
+			fileRef = 4B57CDCA06849ABB003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDD006849ABB003FF229 = {
+			fileRef = 4B57CDCB06849ABB003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDD106849ABB003FF229 = {
+			fileRef = 4B57CDCC06849ABB003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B57CDD206849AFE003FF229 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-available.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-available.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B57CDD306849AFE003FF229 = {
+			fileRef = 4B57CDD206849AFE003FF229;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4B5827E80613CE9D0004BD25 = {
 			fileEncoding = 30;
@@ -17264,6 +17394,7 @@
 				4B24A2330482B34B00A8010A,
 				4B5829D30613D0BD0004BD25,
 				4BB1E47D067F2E9F00D1DB86,
+				4B57CDB9068498D7003FF229,
 			);
 			isa = PBXGroup;
 			name = "Xtras (Built In)";
@@ -17281,6 +17412,7 @@
 				4BF2EA41067CB7A200743318,
 				4BF2EA42067CB7A200743318,
 				4BB1E493067F2EAC00D1DB86,
+				4B57CDC5068498E1003FF229,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17305,6 +17437,68 @@
 		};
 		4BF2EA42067CB7A200743318 = {
 			fileRef = 4B5829D30613D0BD0004BD25;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF302F106873CCE000DCA65 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = "tab-typing.png";
+			path = "Resources/Tab Icons/Gems.AdiumTabIcons/tab-typing.png";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF302F206873CCE000DCA65 = {
+			fileRef = 4BF302F106873CCE000DCA65;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF303160687466D000DCA65 = {
+			children = (
+				4BF30319068746A8000DCA65,
+				4BF3031A068746A8000DCA65,
+				4B57CDD206849AFE003FF229,
+				4B57CDC906849ABB003FF229,
+				4B57CDCA06849ABB003FF229,
+				4B57CDCB06849ABB003FF229,
+				4B57CDCC06849ABB003FF229,
+				4B41F9180686173A00C09B4B,
+				4BF302F106873CCE000DCA65,
+			);
+			isa = PBXGroup;
+			name = "Tab Status Icons";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF30319068746A8000DCA65 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AITabStatusIconsPlugin.h;
+			path = "Plugins/Tab Status Icons/AITabStatusIconsPlugin.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF3031A068746A8000DCA65 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AITabStatusIconsPlugin.m;
+			path = "Plugins/Tab Status Icons/AITabStatusIconsPlugin.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BF3031B068746A8000DCA65 = {
+			fileRef = 4BF30319068746A8000DCA65;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BF3031C068746A8000DCA65 = {
+			fileRef = 4BF3031A068746A8000DCA65;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -20480,21 +20674,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		9EE164540682F71700AB822A = {
-			fileType = "compiled.mach-o.dylib";
-			isa = PBXReferenceProxy;
-			path = libezv.dylib;
-			refType = 3;
-			remoteRef = 9EE164A20682F72A00AB822A;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		9EE164A20682F72A00AB822A = {
-			containerPortal = 4947F5E90655E90C00B791E5;
-			isa = PBXContainerItemProxy;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		9EE165580682F7F100AB822A = {
 			fileRef = 9EE161AE06819C6F00AB822A;
