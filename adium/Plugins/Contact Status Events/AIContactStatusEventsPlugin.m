@@ -54,6 +54,9 @@
     [owner registerEventNotification:CONTACT_STATUS_AWAY_NO displayName:@"Contact UnAway"];
     [owner registerEventNotification:CONTACT_STATUS_IDLE_YES displayName:@"Contact Idle"];
     [owner registerEventNotification:CONTACT_STATUS_IDLE_NO displayName:@"Contact UnIdle"];
+
+    //Observe
+    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)uninstallPlugin
