@@ -35,16 +35,6 @@
     return(CONTENT_STATUS_TYPE);
 }
 
-- (BOOL)filterContent
-{
-    return(NO); //There is no need to filter status content
-}
-
-- (BOOL)trackContent
-{
-    return(NO); //Status content should NOT be tracked by contacts
-}
-
 //Return our status message content
 - (NSString *)message{
     return(message);
@@ -60,6 +50,10 @@
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate *)inDate message:(NSString *)inMessage
 {
     [super initWithChat:inChat source:inSource destination:inDest];
+
+	//Don't filter or track status changes
+	filterContent = NO;
+	trackContent = NO;
 
     //Store source and dest
     source = [inSource retain];

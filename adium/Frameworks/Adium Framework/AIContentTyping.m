@@ -25,21 +25,6 @@
     return(CONTENT_TYPING_TYPE);
 }
 
-- (BOOL)filterContent
-{
-    return(NO); //There is no need to filter typing content
-}
-
-- (BOOL)trackContent
-{
-    return(NO); //Typing content should NOT be tracked by contacts
-}
-
-- (BOOL)displayContent
-{
-    return(NO); //Typing content should NOT be displayed
-}
-
 //YES if typing, NO if not typing
 - (BOOL)typing{
     return(typing);
@@ -52,7 +37,12 @@
 {
     [super initWithChat:inChat source:inSource destination:inDest];
 
-    //Store typing
+	//Typing content should NOT be filtered, tracked, or displayed
+	filterContent = NO;
+	trackContent = NO;
+	displayContent = NO;
+
+	//Store typing
     typing = inTyping;
     
     return(self);
@@ -62,6 +52,5 @@
 {
     [super dealloc];
 }
-
 
 @end

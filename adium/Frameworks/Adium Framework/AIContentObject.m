@@ -16,6 +16,11 @@
 {
     [super init];
 
+	//
+	filterContent = YES;
+	trackContent = YES;
+	displayContent = YES;
+	
     //Store source, dest, and chat
     source = [inSource retain];
     destination = [inDest retain];
@@ -68,23 +73,24 @@
 }
 
 //Is this content passed through content filters?
-- (BOOL)filterContent
-{
-    return(YES);
+- (BOOL)filterContent{
+    return(filterContent);
 }
 
 //Is this content tracked with notifications
-- (BOOL)trackContent
-{
-    return(YES);
+- (void)setTrackContent:(BOOL)inTrackContent{
+	trackContent = inTrackContent;
+}
+- (BOOL)trackContent{
+    return(trackContent);
 }
 
 //Is this content displayed?
-- (BOOL)displayContent
-{
-    return(YES);
+- (void)setDisplayContent:(BOOL)inDisplayContent{
+	displayContent = inDisplayContent;
 }
-
-
+- (BOOL)displayContent{
+    return(displayContent);
+}
 
 @end

@@ -15,6 +15,10 @@
     id		source;
     id		destination;
     BOOL	outgoing;
+
+	BOOL	filterContent;
+	BOOL	trackContent;
+	BOOL	displayContent;	
 }
 
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest;
@@ -27,5 +31,7 @@
 - (BOOL)filterContent;
 - (BOOL)trackContent;
 - (BOOL)displayContent;
+- (void)setTrackContent:(BOOL)inTrackContent;
+- (void)setDisplayContent:(BOOL)inDisplayContent;
 
 @end
