@@ -45,7 +45,6 @@ Message Window:
 		<tick> Do we really need to tab complete in a message? I can see in a chat, but not in a 1-to-1 message...
 	+ Make 'save as' menu item work
 		<tick> This could just copy the log file to somewhere the user specify if logging is on.
-	+ Put a delay on typing events... time out when typing stops.
 	
 Contact List Display:
 	+ Small contact list icon to identify mobile device users
