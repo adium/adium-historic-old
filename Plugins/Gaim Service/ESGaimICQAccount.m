@@ -34,12 +34,6 @@
 	return([self encodedAttributedString:inAttributedString forListObject:inListObject]);
 }
 
-//For ICQ the Gaim userInfo is just what the doctor ordered.
-- (BOOL)useGaimUserInfo
-{
-	return(YES);
-}
-
 //Setting aliases serverside would override the information Gaim is feeding us
 - (BOOL)shouldSetAliasesServerside
 {
