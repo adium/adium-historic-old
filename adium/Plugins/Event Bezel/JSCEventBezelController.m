@@ -78,8 +78,8 @@ JSCEventBezelController *sharedInstance = nil;
 {
     if ([self window]) {
         AIMutableOwnerArray         *ownerArray;
-        NSAttributedString          *status = nil;
-        NSMutableAttributedString   *statusString;
+        //NSAttributedString          *status = nil;
+        //NSMutableAttributedString   *statusString;
         
         ownerArray = [contact statusArrayForKey:@"BuddyImage"];
         if(ownerArray && [ownerArray count]) {

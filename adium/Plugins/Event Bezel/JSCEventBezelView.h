@@ -20,9 +20,11 @@
     NSString *queueField;
     
     NSDictionary    *mainAttributes;
-    NSDictionary    *secondaryAttributes;
     NSDictionary    *mainAttributesMask;
+    NSDictionary    *secondaryAttributes;
     NSDictionary    *secondaryAttributesMask;
+    NSDictionary    *mainStatusAttributes;
+    NSDictionary    *mainStatusAttributesMask;
 }
 
 - (NSImage *)buddyIconImage;
