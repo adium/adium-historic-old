@@ -14,68 +14,86 @@
 \------------------------------------------------------------------------------------------------------ */
 
 #import "BGEmoticonMenuPlugin.h"
-
+@interface BGEmoticonMenuPlugin(PRIVATE)
+-(void)configureEmoticonSupport;
+@end
 @implementation BGEmoticonMenuPlugin
 
 #define PREF_GROUP_EMOTICONS			@"Emoticons"
 
+//some static declarations to make things easier. Only need to add to menus once.
+static NSMenuItem   *quickMenuItem = nil;
+static NSMenuItem   *quickContextualMenuItem = nil;
+static NSMenu       *eMenu = nil;
+static NSMenu       *eContextualMenu = nil;
+
 - (void)installPlugin
 {
+    //init the menues and menuItems
     quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+    quickContextualMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+    eMenu = [[NSMenu alloc] initWithTitle:@""];
+    eContextualMenu = [[NSMenu alloc] initWithTitle:@""];
+    
+    // configure emoticon menues
+    [self configureEmoticonSupport];
+    
+    [quickMenuItem setSubmenu:eMenu];
+    [quickContextualMenuItem setSubmenu:eContextualMenu];
+    
+    //add the items to their menus.
+    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_EmoticonAction];    
+    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
+    
     //Observe prefs    
     [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [self configureEmoticonSupport];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [PREF_GROUP_EMOTICONS compare:[[notification userInfo] objectForKey:@"Group"]] == 0)
     {        
-        [[adium menuController] removeMenuItem:quickMenuItem];
         [self configureEmoticonSupport];
     }
 }
 
 -(void)configureEmoticonSupport
 {
+    [quickMenuItem setEnabled:YES];
+    [quickContextualMenuItem setEnabled:YES];
+    [eMenu removeAllItems];
+    [eContextualMenu removeAllItems];
+    
     // load active emoticons and create menu
     emoticonPacks = [[adium contentController] emoticonPacks];
-    if(emoticonPacks != nil && [emoticonPacks count] > 1)
-    {
+    if(emoticonPacks != nil && [emoticonPacks count] > 1){
         id object;
         int locTrack = 0;
         NSEnumerator *packEnum = [emoticonPacks objectEnumerator];
-        eMenu = [[NSMenu alloc] initWithTitle:@""];
-        while(object = [packEnum nextObject])
-        {
+       // eMenu = [[NSMenu alloc] initWithTitle:@""];
+        while(object = [packEnum nextObject]){
             // read out each pack, iterate it and add its contents to its menu, then add it to its menu item
             NSMenuItem *packItem = [[NSMenuItem alloc] initWithTitle:[object name] action:nil keyEquivalent:@""];
             [packItem setTag:locTrack];
             [packItem setSubmenu:[self buildMenu:object]]; 
             [eMenu addItem:packItem];
+            [eContextualMenu addItem:[packItem copy]];
             locTrack++;
         }
         // create a menu item for the menu to attach to
-        [quickMenuItem setSubmenu:eMenu];
-        // register for menus
-        [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
-    }
-    else if([emoticonPacks count] == 1)
-    {
-        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+        //[quickMenuItem setSubmenu:eMenu];
+        //[quickContextualMenuItem setSubmenu:eContextualMenu];
+    }else if([emoticonPacks count] == 1){
         eMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
+        eContextualMenu = [self buildMenu:[emoticonPacks objectAtIndex:0]];
         [quickMenuItem setSubmenu:eMenu];
-        [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];        
-        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
-    }
-    else
-    {
-        quickMenuItem = [[NSMenuItem alloc] initWithTitle:@"Emoticons" target:self action:nil keyEquivalent:@""];
+        [quickContextualMenuItem setSubmenu:eContextualMenu];
+    }else{
         [quickMenuItem setEnabled:NO];
-        [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Format_Additions];
-        [[adium menuController] addContextualMenuItem:quickMenuItem toLocation:Context_TextView_EmoticonAction];
-    }    
+        [quickContextualMenuItem setEnabled:NO];
+    }
+    [[adium notificationCenter] postNotificationName:Menu_didChange object:quickMenuItem userInfo:nil];
+    [[adium notificationCenter] postNotificationName:Menu_didChange object:quickContextualMenuItem userInfo:nil];
 }
 
 -(void)buildToolbarItem
