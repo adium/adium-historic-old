@@ -182,8 +182,6 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_STATUS_COLORING] == 0){
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
-        NSEnumerator	*enumerator;
-		AIListObject	*object;
 		
 		//Release the old values..
 		//Cache the new colors
