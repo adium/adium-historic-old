@@ -463,11 +463,13 @@ static BOOL didInitOscar = NO;
 - (void)updateMiscellaneous:(AIListContact *)theContact
 {
 	OscarData			*od;
+	NSString			*theContactUID;
 	aim_userinfo_t		*userinfo;
 
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) && 
-		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
+		(theContactUID = [theContact UID]) && 
+		(userinfo = aim_locate_finduserinfo(od->sess, [theContactUID UTF8String]))){
 	
 	/*
 	 userinfo->membersince;
