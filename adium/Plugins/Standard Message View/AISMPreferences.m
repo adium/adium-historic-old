@@ -71,6 +71,10 @@
                                              forKey:KEY_SMV_SHOW_TIME_SECONDS
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
 
+    }else if(sender == checkBox_showAmPm){
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+                                             forKey:KEY_SMV_SHOW_AMPM
+                                              group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     }else if(sender == checkBox_hideDuplicateTimeStamps){
         [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS
@@ -230,6 +234,16 @@
     //Checkboxes
     [checkBox_showTimeStamps setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_TIME_STAMPS] boolValue]];
     [checkBox_showSeconds setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_TIME_SECONDS] boolValue]];
+
+    //enabled/disable based on whether the time string even contains an AM/PM field - check should be off if disabled
+    if ([[NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:YES] rangeOfString:@"%p"].location == NSNotFound) {
+	[checkBox_showAmPm setEnabled:NO];
+	[checkBox_showAmPm setState:NSOffState];
+    } else {
+	[checkBox_showAmPm setEnabled:YES];
+	[checkBox_showAmPm setState:[[preferenceDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]];
+    }
+	    
     [checkBox_hideDuplicateTimeStamps setState:[[preferenceDict objectForKey:KEY_SMV_HIDE_DUPLICATE_TIME_STAMPS] boolValue]];
     [checkBox_hideDuplicatePrefixes setState:[[preferenceDict objectForKey:KEY_SMV_HIDE_DUPLICATE_PREFIX] boolValue]];
     [checkBox_displayGridlines setState:[[preferenceDict objectForKey:KEY_SMV_DISPLAY_GRID_LINES] boolValue]];

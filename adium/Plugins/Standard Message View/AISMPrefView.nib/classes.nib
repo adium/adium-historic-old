@@ -10,6 +10,7 @@
                 "checkBox_hideDuplicatePrefixes" = NSButton; 
                 "checkBox_hideDuplicateTimeStamps" = NSButton; 
                 "checkBox_senderGradient" = NSButton; 
+                "checkBox_showAmPm" = NSButton; 
                 "checkBox_showSeconds" = NSButton; 
                 "checkBox_showTimeStamps" = NSButton; 
                 "popUp_incomingPrefix" = NSPopUpButton; 
@@ -23,6 +24,7 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = AISMViewController; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
