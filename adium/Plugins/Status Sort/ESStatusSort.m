@@ -57,7 +57,7 @@ static BOOL resolveAlphabeticallyByLastName;
     return(AILocalizedString(@"by Status","Sort Contacts... <by Status>"));
 }
 - (NSArray *)statusKeysRequiringResort{
-	return([NSArray arrayWithObjects:@"Idle", @"Away", nil]);
+	return([NSArray arrayWithObjects:@"IdleSince", @"Away", nil]);
 }
 - (NSArray *)attributeKeysRequiringResort{
 	return([NSArray arrayWithObject:@"Display Name"]);
