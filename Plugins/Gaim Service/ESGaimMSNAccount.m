@@ -22,6 +22,8 @@ static BOOL didInitMSN = NO;
 {
 	[super initAccount];
 	currentFriendlyName = nil;
+	
+	[self preferencesChanged:nil];
 }
 
 - (const char*)protocolPlugin
@@ -152,9 +154,19 @@ static BOOL didInitMSN = NO;
 	}
 }
 
-- (BOOL)useAliasAsStatusMessage
+- (BOOL)useDisplayNameAsStatusMessage
 {
-	return YES;
+	return displayNamesAsStatus;
+}
+
+- (BOOL)displayConversationClosed
+{
+	return displayConversationClosed;
+}
+
+- (BOOL)displayConversationTimedOut
+{
+	return displayConversationTimedOut;
 }
 
 
@@ -185,7 +197,21 @@ static BOOL didInitMSN = NO;
     [super rejectFileReceiveRequest:fileTransfer];    
 }
 
-
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	NSDictionary	*userInfo = [notification userInfo];
+	NSString		*prefGroup = [userInfo objectForKey:@"Group"];
+	
+	if (notification == nil || 
+		([notification object] == self) && ([prefGroup isEqualToString:GROUP_ACCOUNT_STATUS])){
+		
+		displayNamesAsStatus = [[self preferenceForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS group:GROUP_ACCOUNT_STATUS] boolValue];
+		displayConversationClosed = [[self preferenceForKey:KEY_MSN_CONVERSATION_CLOSED group:GROUP_ACCOUNT_STATUS] boolValue];
+		displayConversationTimedOut = [[self preferenceForKey:KEY_MSN_CONVERSATION_TIMED_OUT group:GROUP_ACCOUNT_STATUS] boolValue];
+	}
+	
+	[super preferencesChanged:notification];
+}
 
 /*
  //Added to msn.c

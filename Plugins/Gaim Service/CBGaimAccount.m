@@ -143,8 +143,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 		
 		//Use it either as the status message or the display name.
-		if ([self useAliasAsStatusMessage]){
-			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"StatusMessageString"] isEqualToString:gaimAlias]){
+		if ([self useDisplayNameAsStatusMessage]){
+			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"] isEqualToString:gaimAlias]){
 				[theContact setStatusObject:[[[NSAttributedString alloc] initWithString:gaimAlias] autorelease]
 									 forKey:@"StatusMessage" 
 									 notify:NO];
@@ -153,7 +153,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			}
 			
 		}else{
-			[[theContact displayArrayForKey:@"Display Name"] setObject:[gaimAlias stringWithEllipsisByTruncatingToLength:25]
+			[[theContact displayArrayForKey:@"Display Name"] setObject:gaimAlias
 															 withOwner:self
 														 priorityLevel:Lowest_Priority];
 			displayNameChanges = YES;
@@ -179,7 +179,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-- (BOOL)useAliasAsStatusMessage
+- (BOOL)useDisplayNameAsStatusMessage
 {
 	return NO;
 }
@@ -605,13 +605,15 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSString			*key = nil;
 	switch (updateType){
 		case AIChatTimedOut:
-			key = KEY_CHAT_TIMED_OUT;
-			NSLog(@"The conversation with %@ timed out.",[[chat listObject] formattedUID]);
+			if ([self displayConversationTimedOut]){
+				key = KEY_CHAT_TIMED_OUT;
+			}
 			break;
 			
 		case AIChatClosedWindow:
-			key = KEY_CHAT_CLOSED_WINDOW;
-			NSLog(@"%@ left the conversation.",[[chat listObject] formattedUID]);
+			if ([self displayConversationClosed]){
+				key = KEY_CHAT_CLOSED_WINDOW;
+			}
 			break;
 	}
 	
@@ -1891,6 +1893,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	return ([self preferenceForKey:KEY_ACCOUNT_GAIM_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
 }
+
+- (BOOL)displayConversationClosed
+{
+	return NO;
+}
+
+- (BOOL)displayConversationTimedOut
+{
+	return NO;
+}
+
 
 - (NSString *)internalObjectID
 {

@@ -1,8 +1,5 @@
-//Compiling note: To compile on UFS, do a global find (Project and Frameworks) for "<libgaim" and replace with "<Libgaim".
-//We could change ours in CVS but it wouldn't matter since Gaim itself uses 'libgaim' instead of 'Libgaim'.
-
 //Extensive debug logging
-#define GAIM_DEBUG  FALSE
+#define GAIM_DEBUG  TRUE
 
 #if GAIM_DEBUG
 	#define GaimDebug NSLog
