@@ -37,7 +37,13 @@ There are quite a few steps involved in creating a plugin:\
 \pard\pardeftab720\li1080\ql\qnatural
 
 \f1\b0 \cf0 - In the XCode side bar, under targets, select your plugin from the list\
-- Ctrl+click, and then get info. Click on the builds tab. Then click on 'Common Settings' in the drawer. Locate 'Wrapper extension' in the 'Standard Build Settings' column, then add 'AdiumPlugin' to the 'Value' field that corresponds on the right.\
+- Ctrl+click, and then get info. Click on the builds tab. Then click on 'Common Settings' in the drawer. Locate 'Wrapper extension' in the 'Standard Build Settings' column, then add 'AdiumPlugin' to the 'Value' field that corresponds on the right.
+\f0\b \
+\pard\pardeftab720\li360\ql\qnatural
+\cf0 Set up your Info.plist\
+\pard\pardeftab720\li1080\ql\qnatural
+
+\f1\b0 \cf0 - Move to 'Customized Settings' in the drawer, and change the entry for 'Info.plist file' to 'Plists/Your_Plugin_Name.plist'. If you don't do this now, the file will be created in the Adium root directory, and won't want to move later.\
 - Move to the 'Properties' tab in the get info inspector. Under the 'Principal Class' field, add 'AI<PluginName>Plugin'. You probably should replace AI with your initials.\
 \pard\pardeftab720\li359\ql\qnatural
 
@@ -115,8 +121,9 @@ The AI<Plugin Name>Class you create will serve as the main class and initializer
 \pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\pardeftab720\ql\qnatural
 
 \f2\b0\fs20 \cf4 \CocoaLigature0 \
+\pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\tx32640\tx33600\tx34560\tx35520\tx36480\tx37440\tx38400\tx39360\tx40320\tx41280\tx42240\tx43200\tx44160\tx45120\tx46080\tx47040\tx48000\tx48960\tx49920\tx50880\tx51840\tx52800\tx53760\tx54720\tx55680\tx56640\tx57600\tx58560\tx59520\tx60480\tx61440\tx62400\tx63360\tx64320\tx65280\tx66240\tx67200\tx68160\tx69120\tx70080\tx71040\tx72000\tx72960\tx73920\tx74880\tx75840\tx76800\tx77760\tx78720\tx79680\tx80640\tx81600\tx82560\tx83520\tx84480\tx85440\tx86400\tx87360\tx88320\tx89280\tx90240\tx91200\tx92160\tx93120\tx94080\tx95040\tx96000\pardeftab720\ql\qnatural
 
-\f1 #import "AI<PluginName>Plugin.h"\cf0 \
+\f1 \cf4 #import "AI<PluginName>Plugin.h"\cf0 \
 \pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\pardeftab720\li480\fi-480\ql\qnatural
 \cf0 \CocoaLigature1 \
 \pard\tx960\tx1920\tx2880\tx3840\tx4800\tx5760\tx6720\tx7680\tx8640\tx9600\tx10560\tx11520\tx12480\tx13440\tx14400\tx15360\tx16320\tx17280\tx18240\tx19200\tx20160\tx21120\tx22080\tx23040\tx24000\tx24960\tx25920\tx26880\tx27840\tx28800\tx29760\tx30720\tx31680\pardeftab720\li480\fi-480\ql\qnatural
