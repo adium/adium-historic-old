@@ -33,7 +33,7 @@
 //- (void)highlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView usingColor:(NSColor *)inColor;
 - (void)highlightUsingColor:(NSColor *)inColor;
 - (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inRect:(NSRect)rect;
-- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inBezierPath:(NSBezierPath*)inPath;
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 withOpacity:(float)inOpacity inBezierPath:(NSBezierPath*)inPath;
 @end
 
 @implementation AISCLCell
@@ -291,7 +291,7 @@
         //Fill the label background now if it would overwrite left views if done later
         if (!labelAroundContactOnly) {
 			if ([(AISCLOutlineView *)controlView useGradient])
-				[self drawGradientWithFirstColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+				[self drawGradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] withOpacity:[(AISCLOutlineView *)controlView labelOpacity] inBezierPath:pillPath];
 			else {
 				[backgroundColor set];
 				[pillPath fill];
@@ -366,7 +366,7 @@
             [pillPath transformUsingAffineTransform:leftViewCompensation];
 		
         if ([(AISCLOutlineView *)controlView useGradient])
-			[self drawGradientWithFirstColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] secondColor:backgroundColor inBezierPath:pillPath];
+			[self drawGradientWithFirstColor:backgroundColor secondColor:[backgroundColor darkenAndAdjustSaturationBy:0.2] withOpacity:[(AISCLOutlineView *)controlView labelOpacity] inBezierPath:pillPath];
 		else {
 			[backgroundColor set];
 			[pillPath fill];
@@ -428,33 +428,37 @@
 - (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inRect:(NSRect)rect
 {
 	NSColor *currentColor;
+	NSColor *newColor1 = [color1 colorWithAlphaComponent:1.0];
+	NSColor *newColor2 = [color2 colorWithAlphaComponent:1.0];
 	float fraction;
 	int x;
 	for (x=0;x<rect.size.height;x++)
 	{
 		NSRect newRect = NSMakeRect(rect.origin.x,rect.origin.y + x,rect.size.width,1);
 		fraction = (float)(x / rect.size.height);
-		currentColor = [color1 blendedColorWithFraction:fraction ofColor:color2];
+		
+		currentColor = [newColor1 blendedColorWithFraction:fraction ofColor:newColor2];
 		[currentColor set];
 		NSRectFillUsingOperation(newRect, NSCompositeSourceAtop);
 	}
 }
 
-- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 inBezierPath:(NSBezierPath*)inPath
+- (void)drawGradientWithFirstColor:(NSColor*)color1 secondColor:(NSColor*)color2 withOpacity:(float)inOpacity inBezierPath:(NSBezierPath*)inPath
 {
 	NSImage *image = [[[NSImage alloc] initWithSize:[inPath bounds].size] autorelease];
 	NSAffineTransform *trans = [NSAffineTransform transform];
 	NSPoint keepPoint = [inPath bounds].origin;
 	NSBezierPath *tempPath = [inPath copy];
-	keepPoint.y += [tempPath bounds].size.height;
+	//keepPoint.y += [tempPath bounds].size.height;
 	[trans translateXBy:(-1.0f * [tempPath bounds].origin.x) yBy:(-1.0f * [tempPath bounds].origin.y)];
 	[tempPath transformUsingAffineTransform:trans];
 	[image lockFocus];
 	[tempPath fill];
 	[self drawGradientWithFirstColor:color1 secondColor:color2 inRect:[tempPath bounds]];
 	[image unlockFocus];
- 
-	[image compositeToPoint:keepPoint operation:NSCompositeSourceOver];
+	
+	[image setFlipped:NO];
+	[image drawAtPoint:keepPoint fromRect:NSMakeRect(0, 0, [image size].width, [image size].height) operation:NSCompositeSourceOver fraction:inOpacity];
 }
 
 //Private NSCell method which needs to be overridden to do custom highlighting properly, regardless of the false claims of the documentation.
