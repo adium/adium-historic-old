@@ -595,32 +595,6 @@
 
 
 
-// Auto-Reconnect -------------------------------------------------------------------------------------
-//Attempts to auto-reconnect (after an X second delay)
-- (void)autoReconnectAfterDelay:(int)delay
-{
-    //Install a timer to autoreconnect after a delay
-    [NSTimer scheduledTimerWithTimeInterval:delay
-                                     target:self
-                                   selector:@selector(autoReconnectTimer:)
-                                   userInfo:nil
-                                    repeats:NO];
-	
-    NSLog(@"Auto-Reconnect in %i seconds",delay);
-}
-
-//
-- (void)autoReconnectTimer:(NSTimer *)inTimer
-{
-    //If we're still offline, continue with the reconnect
-    if([[self statusObjectForKey:@"Online"] boolValue]){
-        NSLog(@"Attempting Auto-Reconnect");
-		
-        //Instead of calling connect, we directly call the second phase of connecting, passing it the user's password.
-		//This prevents users who don't keychain passwords from having to enter them for a reconnect.
-        [self connect];
-    }
-}
 
 
 
@@ -835,7 +809,7 @@
     o = d - a + b + 71665152;
 	
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.101 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.102 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu", name, [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1225,7 +1199,7 @@
 		
         //Let the contact list know a handle's status changed
         if([alteredStatusKeys count]){
-            BOOL silent = (silenceAndDelayBuddyUpdates);
+            BOOL silent = (silentAndDelayed);
 			
             //Temporary silence
             if([silenceUpdateArray count] && [silenceUpdateArray containsObject:[handle UID]]){
@@ -1233,7 +1207,7 @@
                 [silenceUpdateArray removeObject:[handle UID]];
             }
             
-            [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silenceAndDelayBuddyUpdates) silent:silent];
+            [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silentAndDelayed) silent:silent];
         }
         
     }
@@ -1602,25 +1576,6 @@
 }
 
 
-
-//Update Silencing --------------------------------------------------------------------------------------------
-//
-- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
-{
-    silenceAndDelayBuddyUpdates = YES;
-	
-    [NSTimer scheduledTimerWithTimeInterval:interval
-                                     target:self
-                                   selector:@selector(_endSilenceAllUpdates)
-                                   userInfo:nil
-                                    repeats:NO];
-}
-
-//
-- (void)_endSilenceAllUpdates
-{
-    silenceAndDelayBuddyUpdates = NO;
-}
 
 //Silence the next update from the specified handle
 - (void)silenceUpdateFromHandle:(AIHandle *)inHandle

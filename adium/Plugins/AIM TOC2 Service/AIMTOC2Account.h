@@ -44,7 +44,6 @@
     NSTimeInterval	pingInterval;
     NSDate		*firstPing;
 
-    BOOL		silenceAndDelayBuddyUpdates; // We are waiting for and processing our sign on updates
     NSMutableArray	*silenceUpdateArray; 	//Array of handle UID's who's next update should be silenced
 
     NSURLHandle		*profileURLHandle;	// URLHandle for the currently loading profile

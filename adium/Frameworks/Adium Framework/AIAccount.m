@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.23 2003/12/25 16:51:50 adamiser Exp $
+// $Id: AIAccount.m,v 1.24 2003/12/26 04:05:47 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -180,5 +180,57 @@
 - (void)disconnect{};
 - (NSView *)accountView{return(nil);};
 - (NSArray *)supportedPropertyKeys{return([NSArray array]);}
+
+
+
+
+
+
+
+
+
+//Auto-Reconnect -------------------------------------------------------------------------------------
+//Attempts to auto-reconnect (after an X second delay)
+- (void)autoReconnectAfterDelay:(int)delay
+{
+    //Install a timer to autoreconnect after a delay
+    [NSTimer scheduledTimerWithTimeInterval:delay
+                                     target:self
+                                   selector:@selector(autoReconnectTimer:)
+                                   userInfo:nil
+                                    repeats:NO];
+	
+    NSLog(@"Auto-Reconnect in %i seconds",delay);
+}
+
+//Perform the auto-reconnect
+- (void)autoReconnectTimer:(NSTimer *)inTimer
+{
+    //If we're still offline, continue with the reconnect
+    if([[self statusObjectForKey:@"Online"] boolValue]){
+        NSLog(@"Attempting Auto-Reconnect");
+        [self connect];
+    }
+}
+
+
+//Update Silencing --------------------------------------------------------------------------------------------
+//Silence update for the specified interval
+- (void)silenceAllHandleUpdatesForInterval:(NSTimeInterval)interval
+{
+    silentAndDelayed = YES;
+	
+    [NSTimer scheduledTimerWithTimeInterval:interval
+                                     target:self
+                                   selector:@selector(_endSilenceAllUpdates)
+                                   userInfo:nil
+                                    repeats:NO];
+}
+
+//Stop silencing 
+- (void)_endSilenceAllUpdates
+{
+    silentAndDelayed = NO;
+}
 
 @end
