@@ -40,6 +40,55 @@
 	//Fit the bubble to their name
 	rect.size.width = nameSize.width + [self leftPadding] + [self rightPadding];
 	
+	//Handle the icons (only works properly if they are on the same side as the text)
+	
+	//User icon
+	if(userIconVisible){
+		float userIconChange;
+
+		userIconChange = userIconSize.width;
+		userIconChange += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
+		
+		rect.size.width += userIconChange;
+		
+		//Shift left to accomodate an icon on the right
+		if (userIconPosition == LIST_POSITION_RIGHT){
+			rect.origin.x -= userIconChange;
+		}
+	}
+	
+	//Status icon
+	if(statusIconsVisible &&
+	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)){
+		float	statusIconChange;
+
+		statusIconChange = [[self statusImage] size].width;
+		statusIconChange += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
+		
+		rect.size.width += statusIconChange;
+		
+		//Shift left to accomodate an icon on the right
+		if (statusIconPosition == LIST_POSITION_RIGHT || statusIconPosition == LIST_POSITION_FAR_RIGHT){
+			rect.origin.x -= statusIconChange;
+		}
+	}
+	
+	//Service icon
+	if(serviceIconsVisible &&
+	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)){
+		float serviceIconChange;
+		
+		serviceIconChange = [[self serviceImage] size].width;
+		serviceIconChange += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
+		
+		rect.size.width += serviceIconChange;
+		
+		//Shift left to accomodate an icon on the right
+		if (serviceIconPosition == LIST_POSITION_RIGHT || serviceIconPosition == LIST_POSITION_FAR_RIGHT){
+			rect.origin.x -= serviceIconChange;
+		}
+	}
+
 	return(rect);
 }
 

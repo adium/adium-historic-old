@@ -25,6 +25,8 @@
 @interface AIAbstractListController (PRIVATE)
 - (void)configureViewsAndTooltips;
 - (BOOL)shouldShowTooltips;
+
+- (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment;
 @end
 
 @implementation AIAbstractListController
@@ -130,7 +132,8 @@
 {
 	LIST_WINDOW_STYLE	windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 	float				backgroundAlpha	= [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY] floatValue];
-
+	NSTextAlignment		contentCellAlignment;
+	
 	//Cells
 	[groupCell release];
 	[contentCell release];
@@ -162,26 +165,53 @@
 	[contentCell setShouldUseContactTextColors:[self shouldUseContactTextColors]];
 		
 	//Alignment
-	[contentCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue]];
+	contentCellAlignment = [[prefDict objectForKey:KEY_LIST_LAYOUT_ALIGNMENT] intValue];
+	[contentCell setTextAlignment:contentCellAlignment];
 	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
-	
+
 	if(windowStyle != WINDOW_STYLE_PILLOWS_FITTED){
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
 		[contentCell setServiceIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue]];
-	}else{
-		[contentCell setUserIconVisible:NO];
-		[contentCell setExtendedStatusVisible:NO];
-		[contentCell setStatusIconsVisible:NO];
-		[contentCell setServiceIconsVisible:NO];
-	}
 
-	[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
-	[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
-	[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
-	[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];
+		[contentCell setUserIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue]];
+		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
+		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
+		[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];		
+	}else{
+		//Fitted pillows + centered text = no icons
+		BOOL allowIcons = (contentCellAlignment != NSCenterTextAlignment);
+		
+		[contentCell setUserIconVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue] : NO)];
+		[contentCell setStatusIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue] : NO)];
+		[contentCell setServiceIconsVisible:(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_SERVICE_ICONS] boolValue] : NO)];
+
+		[contentCell setExtendedStatusVisible:NO /*(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue] : NO)*/];
+
+		if (allowIcons){
+			LIST_POSITION iconPosition;
+			
+			iconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue];
+			iconPosition = [self pillowsFittedIconPositionForIconPosition:iconPosition
+													 contentCellAlignment:contentCellAlignment];
+			[contentCell setUserIconPosition:iconPosition];
+			
+			iconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue];
+			iconPosition = [self pillowsFittedIconPositionForIconPosition:iconPosition
+													 contentCellAlignment:contentCellAlignment];
+			[contentCell setStatusIconPosition:iconPosition];
+			
+			iconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue];
+			iconPosition = [self pillowsFittedIconPositionForIconPosition:iconPosition
+													 contentCellAlignment:contentCellAlignment];
+			[contentCell setServiceIconPosition:iconPosition];
+			
+			//Force extended status below the name (?)
+			[contentCell setExtendedStatusIsBelowName:YES];
+		}
+	}
 	
 	//Fonts
 	NSFont	*theFont;
@@ -191,7 +221,7 @@
 	
 	theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_FONT] representedFont];
 	[contentCell setStatusFont:(theFont ? theFont : STATUS_FONT_IF_FONT_NOT_FOUND)];
-
+	
 	theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont];
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 	
@@ -243,6 +273,22 @@
 	[contactListView setNeedsDisplay:YES];
 	
 	[self contactListDesiredSizeChanged:nil];
+}
+
+//Adjust an iconPosition to be valid for a fitted aligned pillow; 
+//aligned left means the iconPosition must be on the left, and aligned right means on the right
+- (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment
+{
+	if ((contentCellAlignment == NSLeftTextAlignment) && ((iconPosition == LIST_POSITION_RIGHT) ||
+														  (iconPosition == LIST_POSITION_FAR_RIGHT))){
+		iconPosition = LIST_POSITION_LEFT;
+		
+	}else if ((contentCellAlignment == NSRightTextAlignment) && ((iconPosition == LIST_POSITION_LEFT) ||
+																 (iconPosition == LIST_POSITION_FAR_LEFT))){
+		iconPosition = LIST_POSITION_RIGHT;
+	}
+	
+	return(iconPosition);
 }
 
 - (void)updateTransparencyFromLayoutDict:(NSDictionary *)layoutDict themeDict:(NSDictionary *)themeDict

@@ -3,12 +3,12 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jul 29 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListContactCell.h"
 
 @interface AIListContactBubbleCell : AIListContactCell {
+	NSBezierPath	*lastBackgroundBezierPath;
 }
 
 - (NSRect)bubbleRectForFrame:(NSRect)rect;

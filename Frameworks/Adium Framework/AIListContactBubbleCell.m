@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Adam Iser on Thu Jul 29 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
 //
 
 #import "AIListContactBubbleCell.h"
@@ -17,11 +16,29 @@
 
 @implementation AIListContactBubbleCell
 
-//Copy
-- (id)copyWithZone:(NSZone *)zone
+- (id)init
 {
-	id newCell = [super copyWithZone:zone];
+	[super init];
+	
+	lastBackgroundBezierPath = nil;
+	
+	return(self);
+}
+
+//Copy
+- (AIListContactBubbleCell *)copyWithZone:(NSZone *)zone
+{
+	AIListContactBubbleCell *newCell = [super copyWithZone:zone];
+	newCell->lastBackgroundBezierPath = [lastBackgroundBezierPath retain];
+	
 	return(newCell);
+}
+
+- (void)dealloc
+{
+	[lastBackgroundBezierPath release]; lastBackgroundBezierPath = nil;
+	
+	[super dealloc];
 }
 
 //Give ourselves extra padding to compensate for the rounded bubble
@@ -43,8 +60,10 @@
 		labelColor = [self labelColor];
 		[(labelColor ? labelColor : [self backgroundColor]) set];
 		
-		//Draw our background with rounded corners
-		[[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] fill];
+		//Draw our background with rounded corners, retaining the bezier path for use in drawUserIconInRect:position:
+		[lastBackgroundBezierPath release];
+		lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] retain];
+		[lastBackgroundBezierPath fill];
 	}
 }
 
@@ -59,7 +78,23 @@
 		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect]];
 	}
 }
+
+//User Icon, clipping to the last bezier path (which should have been part of this same drawing operation)
+- (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position
+{
+	NSRect	returnRect;
 	
+	[NSGraphicsContext saveGraphicsState];
+
+	[lastBackgroundBezierPath setClip];
+	
+	returnRect = [super drawUserIconInRect:inRect position:position];
+
+	[NSGraphicsContext restoreGraphicsState];
+	
+	return(returnRect);
+}
+
 //Pass drawing rects through this method before drawing a bubble.  This allows us to make adjustments to bubble
 //positioning and size.
 - (NSRect)bubbleRectForFrame:(NSRect)rect
