@@ -20,6 +20,15 @@
 	return self;
 }
 
+//Copy
+- (id)copyWithZone:(NSZone *)zone
+{
+	id newCell = [super copyWithZone:zone];
+	[newCell setDrawsGradientHighlight:drawsGradient];
+	[newCell setIgnoresFocus:ignoresFocus];
+	return(newCell);
+}
+
 //Draw Gradient
 - (void)setDrawsGradientHighlight:(BOOL)inDrawsGradient{
 	drawsGradient = inDrawsGradient;

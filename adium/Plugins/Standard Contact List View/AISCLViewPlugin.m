@@ -81,7 +81,6 @@
 
 			windowStyle = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 																	group:PREF_GROUP_LIST_LAYOUT] intValue];
-			NSLog(@"style %i",windowStyle);
 			if(contactListWindowController){
 				[self closeContactList];
 				[self showContactListAndBringToFront:NO];
@@ -105,9 +104,8 @@
 			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
 		}
     }
-    [contactListWindowController makeActive:nil];
 
-    if(bringToFront) [[NSApplication sharedApplication] activateIgnoringOtherApps:YES];
+	[contactListWindowController showWindowInFront:bringToFront];
 }
 
 - (BOOL)contactListIsVisibleAndMain
