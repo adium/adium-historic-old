@@ -81,8 +81,8 @@
     {
         AIHandle *handle = [(AIListContact *)[inChat object] handleForAccount:self];
         
-        return([[[handle statusDictionary] objectForKey:@"Online"] intValue]
-                && [inType isEqual:CONTENT_MESSAGE_TYPE]);
+        return([[[handle statusDictionary] objectForKey:@"Online"] intValue] == 1
+                /*&& [inType isEqual:CONTENT_MESSAGE_TYPE]*/);
     }
     return NO;
 }
@@ -101,6 +101,8 @@
                 handle, @"Handle",
                 [NSNumber numberWithInt:0], @"Phase"]
             repeats:YES];
+            
+            return YES;
     }
     return(NO);
 }
@@ -851,8 +853,8 @@
             //now enumerate over each SB socket, and check for packets on each one.
             //if there is a packet, go to some kind of handling method
             
-            NSEnumerator	*numer = [switchBoardDict objectEnumerator];
-            AISocket		*sbSocket = nil;
+          //  NSEnumerator	*numer = [switchBoardDict objectEnumerator];
+          //  AISocket		*sbSocket = nil;
             
             //while (sbSocket = [numer nextObject])
             {
@@ -1080,10 +1082,9 @@
     switch([[[timer userInfo] objectForKey:@"Phase"] intValue])
     {
         case 0:
-            temp = [NSString stringWithFormat:@"XFR %u SB", [self getTrid:YES]];
+            temp = [NSString stringWithFormat:@"XFR %u SB\r\n", [self getTrid:YES]];
             
-            if ([socket sendData:[[NSString stringWithFormat:@"%@\r\n", temp]
-                        dataUsingEncoding:NSUTF8StringEncoding]])
+            if ([socket sendData:[temp dataUsingEncoding:NSUTF8StringEncoding]])
                 {
                     NSLog(@">>> %@", temp);
                     [[timer userInfo] setObject:[NSNumber numberWithInt:1] forKey:@"Phase"];
@@ -1106,9 +1107,6 @@
                     //it's ours, take it out of the buffer
                     [socket removeDataBytes:[inData length]];
                     
-                    //store this for later
-                    [[timer userInfo] setObject:[message objectAtIndex:5] forKey:@"IDString"];
-                    
                     //connect to the switchboard
                     NSArray *hostAndPort = [[message objectAtIndex:3]
                         componentsSeparatedByString:@":"];
@@ -1118,15 +1116,118 @@
                     //add it to the dict
                     [switchBoardDict setObject:sbSocket 
                         forKey:[[timer userInfo] objectForKey:@"Handle"]];
+                        
+                    //now, setup the command for the next phase
+                    [[timer userInfo] 
+                        setObject:[NSString stringWithFormat:@"USR 1 %@ %@",
+                            [self UID],
+                            [message objectAtIndex:5]]
+                        forKey:@"IDString"];
                     
                     //move on
                     [[timer userInfo] setObject:[NSNumber numberWithInt:2] forKey:@"Phase"];
-
                 }
             }
             break;
             
         case 2:
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    sendData:[[[timer userInfo] objectForKey:@"IDString"]
+                    dataUsingEncoding:NSUTF8StringEncoding]])
+            {
+                NSLog(@">>> %@", [[timer userInfo] objectForKey:@"IDString"]);
+                
+                //remove the temp variable
+                [[timer userInfo] removeObjectForKey:@"IDString"];
+                
+                //move on
+                [[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Phase"];
+            }
+            break;
+            
+        case 3:
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    getDataToNewline:&inData remove:YES])
+            {
+                //uhoh! error!
+                if(![[NSString stringWithCString:[inData bytes] length:[inData length]] 
+                        hasPrefix:@"USR 1 OK"])
+                {
+                    //shout at the user
+                    NSLog(@"Uhoh! Sever killed the connection!");
+                    
+                    //remove the socket
+                    [switchBoardDict removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    
+                    //stop this madness!
+                    [timer invalidate];
+                }
+                else //Everything is OK!
+                {
+                    NSLog(@"<<< %@", 
+                        [NSString stringWithCString:[inData bytes] length:[inData length]]);
+                        
+                    //prepare the message!
+                    [[timer userInfo] setObject:[NSString stringWithFormat:@"CAL 2 RINGING %@",
+                            [[[timer userInfo] objectForKey:@"Handle"] UID]]
+                        forKey:@"Ring-a-ding-ding"];
+                    
+                    //move on
+                    [[timer userInfo] setObject:[NSNumber numberWithInt:3] forKey:@"Phase"];
+                }
+            }
+            break;
+            
+        case 4:
+            //send the thing out
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    sendData:[[[timer userInfo] objectForKey:@"Ring-a-ding-ding"]
+                    dataUsingEncoding:NSUTF8StringEncoding]])
+            {
+                NSLog(@">>> %@", [[timer userInfo] objectForKey:@"Ring-a-ding-ding"]);
+                
+                //remove the temp variable
+                [[timer userInfo] removeObjectForKey:@"Ring-a-ding-ding"];
+                
+                //move on
+                [[timer userInfo] setObject:[NSNumber numberWithInt:5] forKey:@"Phase"];
+            }
+            break;
+            
+        case 5:
+            if([[switchBoardDict objectForKey:[[timer userInfo] objectForKey:@"Handle"]]
+                    getDataToNewline:&inData remove:YES])
+            {
+                //uhoh! error!
+                if(![[NSString stringWithCString:[inData bytes] length:[inData length]] 
+                        hasPrefix:@"JOI"])
+                {
+                    //shout at the user
+                    NSLog(@"Uhoh! Sever killed the connection!");
+                    
+                    //remove the socket
+                    [switchBoardDict removeObjectForKey:[[timer userInfo] objectForKey:@"Handle"]];
+                    
+                    //stop this madness!
+                    [timer invalidate];
+                }
+                else //Everything is OK!
+                {
+                    NSLog(@"<<< %@", 
+                        [NSString stringWithCString:[inData bytes] length:[inData length]]);
+                    
+                    if([[[timer userInfo] objectForKey:@"Type"] isEqual:@"Empty"])
+                    {
+                        //done!!
+                        [timer invalidate];
+                    }
+                    else
+                    {
+                        //prepare to send the message, but don't do anything different for now.
+                        [timer invalidate];
+                    }
+                }
+            }
             break;
     }
 }
