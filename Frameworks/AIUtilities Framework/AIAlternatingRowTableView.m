@@ -85,13 +85,13 @@
 - (void)keyDown:(NSEvent *)theEvent
 {
     NSString	*charString = [theEvent charactersIgnoringModifiers];
-    unichar	pressedChar = 0;
+    unichar		pressedChar = 0;
 
     //Get the pressed character
     if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
 
     //Check if 'delete' was pressed
-    if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter){ //Delete
+    if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter){ //Delete
         if([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]){
 			[[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
 		}
