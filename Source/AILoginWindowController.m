@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -54,15 +54,15 @@
 // Internal --------------------------------------------------------------------------------
 // init the login controller
 - (id)initWithOwner:(id)inOwner windowNibName:(NSString *)windowNibName
-{    
-	if((self = [super initWithWindowNibName:windowNibName]) {
+{
+	if((self = [super initWithWindowNibName:windowNibName])) {
 		//Retain our owner
 		owner = [inOwner retain];
 
 		//Get the user list
 		[self updateUserList];
 	}
-	return self;    
+	return self;
 }
 
 // deallocate the login controller
@@ -70,7 +70,7 @@
 {
     [owner release]; owner = nil;
     [userArray release]; userArray = nil;
-    
+
     [super dealloc];
 }
 
@@ -112,7 +112,7 @@
 
     //Save the 'display on launch' checkbox state
     [loginDict setObject:[NSNumber numberWithBool:[checkbox_displayOnStartup state]] forKey:LOGIN_SHOW_WINDOW];
-    
+
     //Save the login they used
     [loginDict setObject:selectedUserName forKey:LOGIN_LAST_USER];
 
@@ -128,7 +128,7 @@
 - (IBAction)editUsers:(id)sender
 {
 	[self disableLoginTimeout];
-	
+
     [NSApp beginSheet:panel_userListEditor modalForWindow:[self window] modalDelegate:self didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:) contextInfo:nil];
 }
 
@@ -165,7 +165,7 @@
 
     //Force the table view to end editing
     [tableView_editableUserList reloadData];
-    
+
     //Add a new user
     [owner addUser:NEW_USER_NAME];
 
@@ -177,8 +177,8 @@
     [tableView_editableUserList selectRow:newRow byExtendingSelection:NO];
     [tableView_editableUserList scrollRowToVisible:newRow];
     [tableView_editableUserList editColumn:0 row:newRow withEvent:nil select:YES];
-	
-	[self disableLoginTimeout];	
+
+	[self disableLoginTimeout];
 }
 
 // Rename a user
@@ -190,10 +190,10 @@
 
         //Refresh our user list
         [self updateUserList];
-		
+
 		if(loginTimer){
 			[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
-		}		
+		}
     }
 }
 
@@ -213,8 +213,8 @@
 
     //Refresh our user list
     [self updateUserList];
-	
-	[self disableLoginTimeout];	
+
+	[self disableLoginTimeout];
 }
 
 // set up the window before it is displayed
@@ -250,10 +250,10 @@
 												 selector:@selector(login:)
 												 userInfo:nil
 												  repeats:NO] retain];
-	
+
 	[tableView_userList setDelegate:self];
 	[tableView_userList setDataSource:self];
-	
+
 }
 
 // called as the window closes

@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -50,11 +50,11 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
     if(!sharedTransferProgressInstance){
         sharedTransferProgressInstance = [[self alloc] initWithWindowNibName:FILE_TRANSFER_PROGRESS_NIB];
 	}
-	
+
 	//Configure and show window
 	[sharedTransferProgressInstance showWindow:nil];
 	[[sharedTransferProgressInstance window] orderFront:nil];
-	
+
 	return (sharedTransferProgressInstance);
 }
 
@@ -70,16 +70,16 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
     if(sharedTransferProgressInstance){
         [sharedTransferProgressInstance _removeFileTransfer:inFileTransfer];
-    }	
+    }
 }
 //init
 #pragma mark Basic window controller functionality
 - (id)initWithWindowNibName:(NSString *)windowNibName
-{    
-    if((self = [super initWithWindowNibName:windowNibName]) {
+{
+    if((self = [super initWithWindowNibName:windowNibName])) {
 		progressRows = [[NSMutableArray alloc] init];
 	}
-	return self;    
+	return self;
 }
 
 - (void)dealloc
@@ -89,7 +89,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[progressRows release]; progressRows = nil;
 
     [super dealloc];
-}	
+}
 
 //
 - (NSString *)adiumFrameAutosaveName
@@ -99,12 +99,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 //Setup the window before it is displayed
 - (void)windowDidLoad
-{    
+{
 	NSEnumerator	*enumerator;
 	ESFileTransfer	*fileTransfer;
-	
+
 	[super windowDidLoad];
-	
+
 	//Set the localized title
 	[[self window] setTitle:AILocalizedString(@"File Transfers",nil)];
 
@@ -135,9 +135,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[[adium notificationCenter] addObserver:self
                                    selector:@selector(newFileTransfer:)
                                        name:FileTransfer_NewFileTransfer
-									 object:nil];	
+									 object:nil];
 
-	//Create progress rows for all existing file transfers	
+	//Create progress rows for all existing file transfers
 	enumerator = [[[adium fileTransferController] fileTransferArray] objectEnumerator];
 	while(fileTransfer = [enumerator nextObject]){
 		[self addFileTransfer:fileTransfer];
@@ -154,7 +154,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-		
+
 	//release the window controller (ourself)
     sharedTransferProgressInstance = nil;
     [self autorelease];
@@ -170,7 +170,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 	[self reloadAllData];
 
-	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];	
+	[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
 }
 
 #pragma mark Progress row details twiddle
@@ -189,7 +189,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (void)newFileTransfer:(NSNotification *)notification
 {
 	ESFileTransfer	*fileTransfer;
-	
+
 	if(fileTransfer = [notification object]){
 		[self addFileTransfer:fileTransfer];
 	}
@@ -200,10 +200,10 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (void)addFileTransfer:(ESFileTransfer *)inFileTransfer
 {
 	ESFileTransferProgressRow *progressRow;
-	
+
 	if(!(progressRow = [self existingRowForFileTransfer:inFileTransfer])){
 		progressRow = [ESFileTransferProgressRow rowForFileTransfer:inFileTransfer withOwner:self];
-		
+
 		//Depending on how the nib is loaded, we may or may not already have called progressRowDidAwakeFromNib:
 		//and added the row there.
 		if(![progressRows containsObject:progressRow]){
@@ -215,7 +215,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (void)_removeFileTransfer:(ESFileTransfer *)inFileTransfer
 {
 	ESFileTransferProgressRow	*row;
-	
+
 	if(row = [self existingRowForFileTransfer:inFileTransfer]) [self _removeFileTransferRow:row];
 }
 
@@ -223,11 +223,11 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	NSEnumerator				*enumerator = [progressRows objectEnumerator];
 	ESFileTransferProgressRow	*row;
-		
+
 	while(row = [enumerator nextObject]){
 		if([row fileTransfer] == inFileTransfer) break;
 	}
-	
+
 	return(row);
 }
 
@@ -241,31 +241,31 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	if([fileTransfer isStopped]){
 		NSClipView		*clipView = [scrollView contentView];
 		unsigned		row;
-		
+
 		//Protect
 		[progressRow retain];
-		
+
 		//Remove the row from our array, and its file transfer from the fileTransferController
 		row = [progressRows indexOfObject:progressRow];
 		[progressRows removeObject:progressRow];
 		[[adium fileTransferController] _removeFileTransfer:fileTransfer];
-		
+
 		//Refresh the outline view
 		[self reloadAllData];
-		
+
 		//Determine the row to reselect.  If the current row is valid, keep it.  If it isn't, use the last row.
 		if(row >= [progressRows count]){
 			row = [progressRows count] - 1;
 		}
 		[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:row].origin)]];
-		
+
 		//Clean up
 		[progressRow release];
-		
+
 		[self updateStatusBar];
 	}
 }
-							   
+
 #pragma mark Status bar
 //Called when a progress row changes its type, typically from Unknown to either Incoming or Outgoing
 - (void)progressRowDidChangeType:(ESFileTransferProgressRow *)progressRow
@@ -304,7 +304,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		if(uploads == 1)
 			uploadsString = AILocalizedString(@"1 upload",nil);
 		else
-			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), downloads];		
+			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), downloads];
 	}
 
 	if(downloadsString && uploadsString){
@@ -327,7 +327,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		return([progressRows objectAtIndex:index]);
 	} else {
 		return nil;
-	}	
+	}
 }
 
 - (int)outlineView:(NSOutlineView *)inOutlineView numberOfChildrenOfItem:(id)item
@@ -371,7 +371,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 			didDelete = YES;
 		}
 	}
-	
+
 	//If they tried to delete a row that isn't finished, or we got here with no valid selection, sound the system beep
 	if(!didDelete)
 		NSBeep();
@@ -380,7 +380,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (void)outlineViewSelectionIsChanging:(NSNotification *)notification
 {
 	NSOutlineView	*inOutlineView = [notification object];
-	
+
 	int	row = [inOutlineView selectedRow];
 	if(row != -1){
 		[inOutlineView setNeedsDisplayInRect:[inOutlineView rectOfRow:row]];
@@ -392,9 +392,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	NSMenu	*menu = nil;
     NSPoint	location;
     int		row;
-	
+
     //Get the clicked item
-    location = [inOutlineView convertPoint:[inEvent locationInWindow] 
+    location = [inOutlineView convertPoint:[inEvent locationInWindow]
 								  fromView:[[inOutlineView window] contentView]];
     row = [inOutlineView rowAtPoint:location];
 
@@ -402,19 +402,19 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
 		menu = [progressRow menuForEvent:inEvent];
 	}
-	
+
 	return(menu);
 }
 
 - (void)reloadAllData
 {
 	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
-	
+
 	[outlineView reloadData];
-	
+
 	NSRect	outlineFrame = [outlineView frame];
 	int		totalHeight = [outlineView totalHeight];
-	
+
 	if(outlineFrame.size.height != totalHeight){
 		outlineFrame.size.height = totalHeight;
 		[outlineView setFrame:outlineFrame];
@@ -430,19 +430,19 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	NSRect	windowFrame = oldWindowFrame;
 	NSSize	minSize = [inWindow minSize];
 	NSSize	maxSize = [inWindow maxSize];
-				
+
 	//Take the desired height and add the parts of the window which aren't in the scrollView.
 	int desiredHeight = ([outlineView totalHeight] + (windowFrame.size.height - [scrollView frame].size.height));
-	
-	windowFrame.size.height = desiredHeight;	
+
+	windowFrame.size.height = desiredHeight;
 	windowFrame.size.width = 300;
-	
+
 	//Respect the min and max sizes
 	if(windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
 	if(windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
 	if(windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
 	if(windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
-	
+
 	//Keep the top-left corner the same
 	windowFrame.origin.y = oldWindowFrame.origin.y + oldWindowFrame.size.height - windowFrame.size.height;
 

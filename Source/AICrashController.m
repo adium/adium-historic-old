@@ -1,15 +1,15 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
@@ -38,10 +38,10 @@ AICrashController *sharedCrashController = nil;
 //Init
 - (id)init
 {
-	if((self = [super init]) {
+	if((self = [super init])) {
 		//Remove any existing crash logs
 		[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
-    
+
 		//Install custom handlers which properly terminate this application if one is received
 		signal(SIGILL, CrashHandler_Signal);	/* 4:   illegal instruction (not reset when caught) */
 		signal(SIGTRAP, CrashHandler_Signal);	/* 5:   trace trap (not reset when caught) */
@@ -51,8 +51,8 @@ AICrashController *sharedCrashController = nil;
 		signal(SIGSEGV, CrashHandler_Signal);	/* 11:  segmentation violation */
 		signal(SIGSYS, CrashHandler_Signal);	/* 12:  bad argument to system call */
 		signal(SIGXCPU, CrashHandler_Signal);	/* 24:  exceeded CPU time limit */
-		signal(SIGXFSZ, CrashHandler_Signal);	/* 25:  exceeded file size limit */    
-	
+		signal(SIGXFSZ, CrashHandler_Signal);	/* 25:  exceeded file size limit */
+
 		//I think SIGABRT is an exception... we should ignore it.
 		signal(SIGABRT, SIG_IGN);
 	}
@@ -64,7 +64,7 @@ AICrashController *sharedCrashController = nil;
 void CrashHandler_Signal(int i){
 	NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 	NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
-	
+
 	[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
 	exit(-1);
 }
