@@ -842,7 +842,7 @@
     NSGraphicsContext* graphicsContext;
     BOOL wasAntialiasing;
     NSImageInterpolation previousImageInterpolation;
-    NSImage* newImage;
+    NSImage* newImage = nil;
 //    NSBitmapImageRep* newBitmapImageRep;
 //    unsigned char* bitmapData;
 //    NSImageRep* originalImageRep;
@@ -884,37 +884,39 @@
 
 #if 1   // This is the way that works.  It gives the newImage an NSCachedImageRep.
 
-    // Create a new image the size of the icon, and clear it to transparent.
-    newImage = [[NSImage alloc] initWithSize:NSMakeSize(iconWidth,iconWidth)];
-    [newImage lockFocus];
-    iconRect.origin.x = iconRect.origin.y = 0;
-    iconRect.size.width = iconRect.size.height = iconWidth;
-    [[NSColor clearColor] set];
-    NSRectFill( iconRect );
-
-    // Set current graphics context to use antialiasing and high-quality
-    // image scaling.
-    graphicsContext = [NSGraphicsContext currentContext];
-    wasAntialiasing = [graphicsContext shouldAntialias];
-    previousImageInterpolation = [graphicsContext imageInterpolation];
-    [graphicsContext setShouldAntialias:YES];
-    [graphicsContext setImageInterpolation:imageInterpolation];
-    
-    // Composite the working image into the icon bitmap, centered.
-    targetRect.origin.x = ((float)iconWidth - newSize.width ) / 2.0;
-    targetRect.origin.y = ((float)iconWidth - newSize.height) / 2.0;
-    targetRect.size.width = newSize.width;
-    targetRect.size.height = newSize.height;
-    [workingImageRep drawInRect:targetRect];
-
-    // Restore previous graphics context settings.
-    [graphicsContext setShouldAntialias:wasAntialiasing];
-    [graphicsContext setImageInterpolation:previousImageInterpolation];
-
-    [newImage unlockFocus];
+	if(iconWidth != 0){
+		// Create a new image the size of the icon, and clear it to transparent.
+		newImage = [[NSImage alloc] initWithSize:NSMakeSize(iconWidth,iconWidth)];
+		[newImage lockFocus];
+		iconRect.origin.x = iconRect.origin.y = 0;
+		iconRect.size.width = iconRect.size.height = iconWidth;
+		[[NSColor clearColor] set];
+		NSRectFill( iconRect );
+		
+		// Set current graphics context to use antialiasing and high-quality
+		// image scaling.
+		graphicsContext = [NSGraphicsContext currentContext];
+		wasAntialiasing = [graphicsContext shouldAntialias];
+		previousImageInterpolation = [graphicsContext imageInterpolation];
+		[graphicsContext setShouldAntialias:YES];
+		[graphicsContext setImageInterpolation:imageInterpolation];
+		
+		// Composite the working image into the icon bitmap, centered.
+		targetRect.origin.x = ((float)iconWidth - newSize.width ) / 2.0;
+		targetRect.origin.y = ((float)iconWidth - newSize.height) / 2.0;
+		targetRect.size.width = newSize.width;
+		targetRect.size.height = newSize.height;
+		[workingImageRep drawInRect:targetRect];
+		
+		// Restore previous graphics context settings.
+		[graphicsContext setShouldAntialias:wasAntialiasing];
+		[graphicsContext setImageInterpolation:previousImageInterpolation];
+		
+		[newImage unlockFocus];
+	}
 	
-    [workingImage release];
-
+	[workingImage release];
+	
 #else   // This was an attempt at explicitly giving the NSImage an NSBitmapImageRep
         // and drawing to that NSBitmapImageRep.  It doesn't work.  (See comments
         // in -initWithThumbnailsOfImage:)

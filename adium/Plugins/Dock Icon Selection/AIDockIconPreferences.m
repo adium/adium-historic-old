@@ -288,20 +288,21 @@
 - (void)_createActiveFrameImageFromState:(AIIconState *)iconState
 {
 	NSImage *image = [iconState image];
-	if (image) {
+	if(image){
 		NSSize  size = [image size];
-		
-		[activeFrameImage release]; activeFrameImage = nil;
-		
-		activeFrameImage = [[NSImage alloc] initWithSize:size];
-		
-		[activeFrameImage setFlipped:YES];
-		[activeFrameImage lockFocus];
-		[image drawAtPoint:NSMakePoint(0,0)
-				  fromRect:NSMakeRect(0,0,size.width,size.height)
-				 operation:NSCompositeSourceOver
-				  fraction:1.0];
-		[activeFrameImage unlockFocus];
+		if(size.width != 0 && size.height != 0){
+			[activeFrameImage release]; activeFrameImage = nil;
+			
+			activeFrameImage = [[NSImage alloc] initWithSize:size];
+			
+			[activeFrameImage setFlipped:YES];
+			[activeFrameImage lockFocus];
+			[image drawAtPoint:NSMakePoint(0,0)
+					  fromRect:NSMakeRect(0,0,size.width,size.height)
+					 operation:NSCompositeSourceOver
+					  fraction:1.0];
+			[activeFrameImage unlockFocus];
+		}
 	}
 }
 
