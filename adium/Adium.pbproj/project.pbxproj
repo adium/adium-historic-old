@@ -3886,6 +3886,58 @@
 			settings = {
 			};
 		};
+		4B33F8DC0511F45000A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IconFamily.h;
+			path = "Frameworks/AIUtilities Framework/IconFamily.h";
+			refType = 4;
+		};
+		4B33F8DD0511F45000A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = "NSString+CarbonFSSpecCreation.m";
+			path = "Frameworks/AIUtilities Framework/NSString+CarbonFSSpecCreation.m";
+			refType = 4;
+		};
+		4B33F8DE0511F45000A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = IconFamily.m;
+			path = "Frameworks/AIUtilities Framework/IconFamily.m";
+			refType = 4;
+		};
+		4B33F8DF0511F45000A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = "NSString+CarbonFSSpecCreation.h";
+			path = "Frameworks/AIUtilities Framework/NSString+CarbonFSSpecCreation.h";
+			refType = 4;
+		};
+		4B33F8E00511F45000A8010A = {
+			fileRef = 4B33F8DC0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B33F8E10511F45000A8010A = {
+			fileRef = 4B33F8DD0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B33F8E20511F45000A8010A = {
+			fileRef = 4B33F8DE0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B33F8E30511F45000A8010A = {
+			fileRef = 4B33F8DF0511F45000A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B34BA8D04FE4D8900A8010A = {
 			isa = PBXFileReference;
 			name = minus.tiff;
@@ -9693,6 +9745,10 @@
 			children = (
 				4BDB240C04AF502B00A8010A,
 				4BDB240D04AF502B00A8010A,
+				4B33F8DC0511F45000A8010A,
+				4B33F8DE0511F45000A8010A,
+				4B33F8DD0511F45000A8010A,
+				4B33F8DF0511F45000A8010A,
 			);
 			isa = PBXGroup;
 			name = Other;
@@ -14854,6 +14910,8 @@
 				4B95210504C049E900A8010A,
 				4B9AB61904D2C84700A8010A,
 				3C88C78D04D8CB8C00A80106,
+				4B33F8E00511F45000A8010A,
+				4B33F8E30511F45000A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14961,6 +15019,8 @@
 				4B95210604C049E900A8010A,
 				4B9AB61A04D2C84700A8010A,
 				3C88C78E04D8CB8C00A80106,
+				4B33F8E10511F45000A8010A,
+				4B33F8E20511F45000A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
