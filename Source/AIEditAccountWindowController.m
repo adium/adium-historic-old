@@ -17,6 +17,7 @@
 #import "AIAccountController.h"
 #import "AIAccountProxySettings.h"
 #import "AIContactController.h"
+#import "AIPreferenceController.h"
 #import "AIEditAccountWindowController.h"
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIViewAdditions.h>
@@ -78,6 +79,7 @@
 		account = [inAccount retain];
 		isNewAccount = inIsNewAccount;
 		userIconData = nil;
+		didDeleteUserIcon = NO;
 	}
 	return self;
 }
@@ -104,9 +106,11 @@
 	[[self window] center];
 
 	//Account Overview
+	/*
 	[image_serviceIcon setImage:[AIServiceIcons serviceIconForService:[account service]
 																 type:AIServiceIconLarge
 															direction:AIIconNormal]];
+	 */
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
@@ -184,11 +188,14 @@
  */
 - (void)saveConfiguration
 {
-	//User icon
-	[account setPreference:(userIconData ? userIconData : [[imageView_userIcon image] PNGRepresentation])
-					forKey:KEY_USER_ICON
-					 group:GROUP_ACCOUNT_STATUS];
-
+	/* User icon - save if we have data or we deleted
+	 * (so if we don't have data that's the desired thing to set as the pref) */
+	if(userIconData || didDeleteUserIcon){
+		[account setPreference:userIconData
+						forKey:KEY_USER_ICON
+						 group:GROUP_ACCOUNT_STATUS];
+	}
+	
 	//Auto connect
 	[account setPreference:[NSNumber numberWithBool:[checkBox_autoConnect state]]
 					forKey:@"AutoConnect"
@@ -318,6 +325,15 @@
 - (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
 {
 	[userIconData release]; userIconData = nil;
+	didDeleteUserIcon = YES;
+
+	//User icon - restore to the default icon
+	NSData	*iconData;
+	if(iconData = [[adium preferenceController] preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
+		NSImage *image = [[NSImage alloc] initWithData:iconData];
+		[imageView_userIcon setImage:image];
+		[image release];
+	}
 }
 
 @end
