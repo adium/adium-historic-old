@@ -214,6 +214,14 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							   ![familyName isEqualToString:currentFamily] ||
 							   ![color isEqualToString:currentColor] ||
 							   (currentColor && !color))){
+		
+			/*
+			 NSLog(@"%i %i %i %i",pointSize != currentSize,
+								  ![familyName isEqualToString:currentFamily],
+								  ![color isEqualToString:currentColor],
+				  (currentColor && !color));
+			 */
+			
             //Close any existing font tags, and open a new one
             if(closeFontTags && openFontTag){
                 [string appendString:CloseFontTag];
@@ -229,6 +237,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				if (simpleOnly){
 					[string appendString:[NSString stringWithFormat:@"<FONT FACE=\"%@\">",familyName]];
 				}else{
+					/*
 					int langNum = 0; 
 					
 					//(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
@@ -239,6 +248,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					}   
 					
 					[string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"%i\"",familyName,langNum]];
+					 */
+					
+					
+					//(traits | NSNonStandardCharacterSetFontMask) seems to be the proper test... but it is true for all fonts!
+					//NSMacOSRomanStringEncoding seems to be the encoding of all standard Roman fonts... and langNum="11" seems to make the others send properly.
+					//It serves us well here.  Once non-AIM HTML is coming through, this will probably need to be an option in the function call.
+					if ([font mostCompatibleStringEncoding] != NSMacOSRomanStringEncoding) {
+						[string appendString:[NSString stringWithFormat:@" FACE=\"%@\" LANG=\"11\"",familyName]];
+					} else {
+						[string appendString:[NSString stringWithFormat:@" FACE=\"%@\"",familyName]];
+					}
+					
+
 				}
                 [currentFamily release]; currentFamily = [familyName retain];
             }
