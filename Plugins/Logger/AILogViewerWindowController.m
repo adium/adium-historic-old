@@ -319,7 +319,8 @@ static NSString						*filterForContactName = nil;	//Contact name to restrictivel
     if(row >= 0 && row < [selectedLogArray count]){
         theLog = [selectedLogArray objectAtIndex:row];
     }
-
+	[resultsLock unlock];
+	
 	if (theLog){
 		//We utilize the logIndexAccessLock so we have exclusive access to the logs
 		NSLock	*logAccessLock = [plugin logAccessLock];
