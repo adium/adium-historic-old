@@ -456,6 +456,14 @@
                                                     forContact:[contactListView contact]]);
 }
 
+//- (void)outlineView:(NSOutlineView *)outlineView willDisplayOutlineCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+//{
+//	[cell setImage:[NSImage systemCloseButtonImageForState:AIButtonActive controlTint:NSDefaultControlTint]];
+//	[cell setAlternateImage:[NSImage systemCloseButtonImageForState:AIButtonPressed controlTint:NSDefaultControlTint]];
+//	[cell setImagePosition:NSImageAbove];
+//} 
+
+
 //Auto-resizing support -----------------------------------------------------------------
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
@@ -476,6 +484,7 @@
 {
     [contactListView performFullRecalculation];
 }
+
 
 // Tooltips ------------------------------------------------------------------------------------
 //Add a tracking rect to catch when the mouse enters/exits our view

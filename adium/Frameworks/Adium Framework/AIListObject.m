@@ -366,8 +366,8 @@
 
 - (NSMutableArray *)_recursivePreferencesForKey:(NSString *)inKey group:(NSString *)groupName
 {
-    id		value = nil;
-    NSMutableArray     *returnArray = [NSMutableArray arrayWithCapacity:1];
+    id				value = nil;
+    NSMutableArray  *returnArray = [NSMutableArray arrayWithCapacity:1];
     
     //Get our value for the preference
     if(prefDict) {
