@@ -221,8 +221,8 @@ notes           text
 );
 
 create table adium.meta_contact (
-meta_id int references adium.meta_container (meta_id) not null,
-user_id int references adium.users (user_id) not null
+meta_id         int references adium.meta_container (meta_id) not null,
+user_id         int references adium.users (user_id) not null
 );
 
 create table adium.message_notes (
@@ -233,8 +233,34 @@ date_added      timestamp default now()
 );
 
 create table adium.preferences (
-rule text,
-value varchar(30)
+rule            text,
+value           varchar(30)
 );
 
 insert into adium.preferences values ('scramble', 'false');
+
+create table adium.information_keys (
+key_id          serial primary key,
+key_name        text not null
+);
+
+create table adium.contact_information (
+meta_id         int references adium.meta_container (meta_id),
+user_id         int references adium.users (user_id),
+key_id          int references adium.information_keys (key_id),
+value           text,
+    constraint meta_or_user_not_null 
+        check (meta_id is not null or user_id is not null)
+);
+
+create or replace view adium.user_contact_info as 
+(select user_id, username, key_id, key_name, value 
+from adium.users natural join 
+     adium.contact_information natural join
+     adium.information_keys);
+
+create or replace view adium.meta_contact_info as 
+(select meta_id, name, key_id, key_name, value 
+from adium.meta_container natural join 
+     adium.contact_information natural join
+     adium.information_keys);

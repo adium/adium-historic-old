@@ -6,7 +6,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <!--$URL: http://svn.visualdistortion.org/repos/projects/adium/jsp/statistics.jsp $-->
-<!--$Rev: 723 $ $Date: 2004/05/07 03:03:43 $ -->
+<!--$Rev: 723 $ $Date: 2004/05/07 17:32:36 $ -->
 
 <%
 Context env = (Context) new InitialContext().lookup("java:comp/env/");
@@ -443,6 +443,23 @@ try {
                 </div>
                 <div class="boxWideBottom"></div>
 
+                <h1>Messages Sent/Received by Hour</h1>
+                <div class="boxWideTop"></div>
+                <div class="boxWideContent">
+<%
+    pstmt = conn.prepareStatement("select date_part('hour', message_date), sender_id = ? as sent, count(*) from messages where sender_id = ? or recipient_id = ? group by date_part('hour', message_date), sender_id = ?");
+
+    for(int i = 1; i <= 4; i++) {
+        pstmt.setInt(1, sender);
+    }
+
+    rset = pstmt.executeQuery();
+
+
+%>
+                </div>
+                <div class="boxWideBottom"></div>
+                
                 <h1>Most Popular Messages</h1>
                 <div class="boxWideTop"></div>
                 <div class="boxWideContent">

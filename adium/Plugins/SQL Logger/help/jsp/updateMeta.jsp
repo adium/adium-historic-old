@@ -8,10 +8,6 @@ DataSource source = (DataSource) env.lookup("jdbc/postgresql");
 Connection conn = source.getConnection();
 
 String name = request.getParameter("name");
-String url = request.getParameter("url");
-String email = request.getParameter("email");
-String location = request.getParameter("location");
-String notes = request.getParameter("notes");
 String deleteMe = request.getParameter("delete");
 
 int meta_id = 0;
@@ -22,50 +18,79 @@ try {
     meta_id = 0;
 }
 
-if(url != null && url.equals("")) {
-    url = null;
-}
-
-if(email != null && email.equals("")) {
-    email = null;
-}
-
-if(location != null && location.equals("")) {
-    location = null;
-}
-
-if (notes != null && notes.equals("")) {
-    notes = null;
-}
-
 PreparedStatement pstmt = null;
+ResultSet rset = null;
+
+PreparedStatement updateStmt = null;
 
 try {
-    
+
     if(deleteMe != null && deleteMe.equals("on")) {
-        
+
         pstmt = conn.prepareStatement("delete from adium.meta_contact where meta_id = ?");
-        
+
         pstmt.setInt(1, meta_id);
         
         pstmt.executeUpdate();
+        
+        
+        pstmt = conn.prepareStatement("delete from adium.contact_information where meta_id = ?");
+
+        pstmt.setInt(1, meta_id);
+
+        pstmt.executeUpdate();
+        
         
         pstmt = conn.prepareStatement("delete from adium.meta_container where meta_id = ?");
         pstmt.setInt(1, meta_id);
         
         pstmt.executeUpdate();
-        
+
     } else if(name != null && !name.equals("") && meta_id != 0) {
-        pstmt = conn.prepareStatement("update adium.meta_container set name = ?, url = ?, email = ?, location = ?, notes = ? where meta_id = ?");
+        
+        pstmt = conn.prepareStatement("update adium.meta_container set name = ? where meta_id = ?");
 
         pstmt.setString(1, name);
-        pstmt.setString(2, url);
-        pstmt.setString(3, email);
-        pstmt.setString(4, location);
-        pstmt.setString(5, notes);
-        pstmt.setInt(6, meta_id);
-        
+        pstmt.setInt(2, meta_id);
+
         pstmt.executeUpdate();
+
+        pstmt = conn.prepareStatement("select key_id from information_keys");
+
+        rset = pstmt.executeQuery();
+
+        while(rset.next()) {
+            String requestText = request.getParameter(rset.getString("key_id"));
+            int returnVal;
+
+            if(requestText != null && !requestText.equals("")) {
+                updateStmt = conn.prepareStatement("update adium.contact_information set value = ? where key_id = ? and meta_id = ?");
+
+                updateStmt.setString(1, requestText);
+                updateStmt.setInt(2, rset.getInt("key_id"));
+                updateStmt.setInt(3, meta_id);
+
+                returnVal = updateStmt.executeUpdate();
+
+                if(returnVal == 0) {
+                    updateStmt = conn.prepareStatement("insert into adium.contact_information (meta_id, key_id, value) values (?, ?, ?)");
+
+                    updateStmt.setInt(1, meta_id);
+                    updateStmt.setInt(2, rset.getInt("key_id"));
+                    updateStmt.setString(3, requestText);
+
+                    updateStmt.executeUpdate();
+                }
+            } else if (requestText == null || requestText.equals("")) {
+
+                updateStmt = conn.prepareStatement("delete from adium.contact_information where meta_id = ? and key_id = ?");
+
+                updateStmt.setInt(1, meta_id);
+                updateStmt.setInt(2, rset.getInt("key_id"));
+
+                updateStmt.executeUpdate();
+            }
+        }
     }
 } catch (SQLException e) {
     out.println(e.getMessage());
