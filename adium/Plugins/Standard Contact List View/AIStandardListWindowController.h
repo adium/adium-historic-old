@@ -9,7 +9,7 @@
 #import "AIListWindowController.h"
 
 @interface AIStandardListWindowController : AIListWindowController {
-
+	NSArray		*toolbarItems;
 }
 
 @end

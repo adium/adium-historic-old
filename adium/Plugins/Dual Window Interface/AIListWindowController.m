@@ -558,7 +558,7 @@
 	[contactListView redisplayItem:[notification object]];
 	
     //Resize the contact list horizontally
-    if(horizontalResizingEnabled){
+    if(autoResizeHorizontally){
 		if (object){
 			if([keys containsObject:@"Display Name"] || [keys containsObject:@"Left View"] ||
 			   [keys containsObject:@"Right View"] || [keys containsObject:@"Right Text"] ||
