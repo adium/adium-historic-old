@@ -365,7 +365,6 @@
 				F57938C1033E739101A8010A,
 				F57938C5033E73AC01A8010A,
 				F552078C033F727F01A8010A,
-				F5A137FD03421FEB01A8010A,
 				F5CDCE4C0350760A01A8010A,
 				F5CDD1180350B92801A8010A,
 				F5174D7C0376B6B101A8010A,
@@ -373,6 +372,10 @@
 				F55B416903AB8C0501A8010A,
 				F55B416B03AB8C0B01A8010A,
 				4BF1F0E903D888EB00A8010A,
+				F5A137FD03421FEB01A8010A,
+				9C82689D03D9B26500F1D4AF,
+				9C82689E03D9B26500F1D4AF,
+				9C82689F03D9B26500F1D4AF,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2613,6 +2616,52 @@
 //9C2
 //9C3
 //9C4
+		9C82689903D9B23F00F1D4AF = {
+			children = (
+				9C82689A03D9B26500F1D4AF,
+				9C82689B03D9B26500F1D4AF,
+				9C82689C03D9B26500F1D4AF,
+			);
+			isa = PBXGroup;
+			name = Icons;
+			refType = 4;
+		};
+		9C82689A03D9B26500F1D4AF = {
+			isa = PBXFileReference;
+			name = connectionsprefs.png;
+			path = Source/icons/connectionsprefs.png;
+			refType = 4;
+		};
+		9C82689B03D9B26500F1D4AF = {
+			isa = PBXFileReference;
+			name = interfaceprefs.png;
+			path = Source/icons/interfaceprefs.png;
+			refType = 4;
+		};
+		9C82689C03D9B26500F1D4AF = {
+			isa = PBXFileReference;
+			name = statusprefs.png;
+			path = Source/icons/statusprefs.png;
+			refType = 4;
+		};
+		9C82689D03D9B26500F1D4AF = {
+			fileRef = 9C82689A03D9B26500F1D4AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9C82689E03D9B26500F1D4AF = {
+			fileRef = 9C82689B03D9B26500F1D4AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		9C82689F03D9B26500F1D4AF = {
+			fileRef = 9C82689C03D9B26500F1D4AF;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		9C8C7F8803CB96CD00267226 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -9384,6 +9433,7 @@
 				F57938BB033E739101A8010A,
 				F57938BC033E739101A8010A,
 				F5A137FC03421FEB01A8010A,
+				9C82689903D9B23F00F1D4AF,
 			);
 			isa = PBXGroup;
 			name = "Preference Window";
