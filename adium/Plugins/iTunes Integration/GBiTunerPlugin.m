@@ -123,15 +123,12 @@
     return (returnString);	
 }
 
-- (void) uninstallPlugin
+- (void)uninstallPlugin
 {
-    [scriptDict release];
-}
-
-//Clean Up
-- (void)dealloc
-{    
-    [super dealloc];
+	//Unregister us as a filter
+	[[adium contentController] unregisterOutgoingContentFilter:self];
+	
+    [scriptDict release]; scriptDict = nil;
 }
 
 @end
