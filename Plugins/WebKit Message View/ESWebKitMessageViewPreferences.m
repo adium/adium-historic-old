@@ -20,6 +20,7 @@
 #import "AIInterfaceController.h"
 #import "AIWebKitMessageViewController.h"
 #import "AIWebKitMessageViewPlugin.h"
+#import "AIWebkitMessageViewStyle.h"
 #import "ESWebKitMessageViewPreferences.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
@@ -161,6 +162,13 @@
 		[colorWell_customBackgroundColor setColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])] ;
 
 		[checkBox_useCustomBackground setState:[[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]] boolValue]];
+
+		//Disable the custom background controls if the style doesn't support them
+		BOOL	allowCustomBackground = [[previewController messageStyle] allowsCustomBackground];
+		[checkBox_useCustomBackground setEnabled:allowCustomBackground];
+		[colorWell_customBackgroundColor setEnabled:allowCustomBackground];
+		[imageView_backgroundImage setEnabled:allowCustomBackground];
+		[popUp_backgroundImageType setEnabled:allowCustomBackground];
 	}
 	
 }

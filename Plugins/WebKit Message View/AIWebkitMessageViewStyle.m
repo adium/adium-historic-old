@@ -92,7 +92,7 @@ DeclareString(AppendNextMessage);
 	allowsCustomBackground = ![[styleBundle objectForInfoDictionaryKey:@"DisableCustomBackground"] boolValue];
 	combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
 	//allowsTextColors = ![[styleBundle objectForInfoDictionaryKey:@"AllowTextColors"] boolValue];		
-		
+
 	return(self);
 }
 
