@@ -25,11 +25,12 @@
 	NSMutableArray		*permittedContactsArray;
 	NSMutableArray		*deniedContactsArray;
 	
-	id					gaimThread;
+	SLGaimCocoaAdapter	*gaimThread;
 }
 
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
+- (void)setGaimThread:(SLGaimCocoaAdapter *)sender;
 
 - (void)initAccount;
 - (void)initSSL;

@@ -1628,10 +1628,18 @@ static BOOL didInitSSL = NO;
 
 - (void)createNewGaimAccount
 {
-	gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
-																	host:nil] retain];
-	[gaimThread setProtocolForProxy:@protocol(GaimThread)];
-	NSLog(@"gaimThread = %@",[gaimThread description]);
+//	gaimThread = [[NSConnection rootProxyForConnectionWithRegisteredName:@"GaimThread"
+//																	host:nil] retain];
+//  [gaimThread setProtocolForProxy:@protocol(GaimThread)];
+	{
+		NSPort 			*port1 = [NSPort port];
+		NSPort 			*port2 = [NSPort port];
+		NSConnection 	*kitConnection = [[NSConnection alloc] initWithReceivePort:port1 sendPort:port2];
+
+		[kitConnection setRootObject:self];
+		[SLGaimCocoaAdapter connectToAccountWithPorts:[NSArray arrayWithObjects:port2, port1, nil]];
+	}
+	
 	
 	//Create a fresh version of the account
     account = gaim_account_new([UID UTF8String], [self protocolPlugin]);
@@ -1644,6 +1652,13 @@ static BOOL didInitSSL = NO;
 
 	[self configureGaimAccountForConnect];
 }
+
+- (void)setGaimThread:(SLGaimCocoaAdapter *)sender
+{
+	NSLog(@"## setGaimThread: ",[sender description]);
+	gaimThread = [sender retain];
+}
+
 
 - (void)configureGaimAccountForConnect
 {
