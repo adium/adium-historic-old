@@ -317,10 +317,27 @@
 											autoreply:NO];
 			
 			if([[adium contentController] sendContentObject:message]){
+				//Let the account handle clearing the typing notification if necessary for cleaner interaction between
+				//the not-typing state and the message-received state viewed on the other side
+				[chat setStatusObject:[NSNumber numberWithBool:YES] 
+							   forKey:@"SuppressTypingNotificationChanges"
+							   notify:NotifyNever];
 				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage object:chat userInfo:nil];
+				
+				//On the next run loop (after we are finished processing all events from the keystroke or click which
+				//led to sendMessage:) clear the suppression flag
+				[self performSelector:@selector(endSuppressChatTypingNotificationChanges)
+						   withObject:nil
+						   afterDelay:0.00000001];
 			}
 		}
     }
+}
+
+- (void)endSuppressChatTypingNotificationChanges{
+	[chat setStatusObject:nil
+				   forKey:@"SuppressTypingNotificationChanges"
+				   notify:NotifyNever];
 }
 
 //The entered message was sent

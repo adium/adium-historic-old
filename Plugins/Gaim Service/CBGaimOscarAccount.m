@@ -180,9 +180,15 @@ static BOOL didInitOscar = NO;
 //Override _contactWithUID to mark mobile and ICQ users as such via the displayServiceID
 - (AIListContact *)_contactWithUID:(NSString *)sourceUID
 {
-	AIListContact	*contact = [[adium contactController] existingContactWithService:service
-																			 account:self
-																				 UID:sourceUID];
+	AIListContact	*contact;
+	
+	if (!namesAreCaseSensitive){
+		sourceUID = [sourceUID compactedString];
+	}
+	
+	contact = [[adium contactController] existingContactWithService:service
+															account:self
+																UID:sourceUID];
 	if(!contact){
 		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
 														account:self

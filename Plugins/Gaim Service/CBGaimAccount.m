@@ -657,6 +657,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
         // gaim is telling us that our message was sent successfully. Some day, we should avoid claiming it was
 		// until we get this notification.
+		
+		//We can now tell the other side that we're done typing
+		//[gaimThread sendTyping:AINotTyping inChat:chat];
+
         return;
     }
 
@@ -686,6 +690,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		 * day, we should avoid claiming it was until we get this
 		 * notification.
 		 */
+		
+		//We can now tell the other side that we're done typing
+		//[gaimThread sendTyping:AINotTyping inChat:chat];
+		
 		return;
 	}
 	
@@ -738,17 +746,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
 	if (chat){
-		if (!namesAreCaseSensitive){
-			contactName = [contactName compactedString];
-		}
-		
-		AIListContact *contact = [[adium contactController] existingContactWithService:service
-																			   account:self
-																				   UID:contactName];
+		AIListContact	*contact = [self _contactWithUID:contactName];
 		
 		[chat removeParticipatingListObject:contact];
 		
-		//NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
+		NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
@@ -1799,8 +1801,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	permittedContactsArray = [[NSMutableArray alloc] init];
 	deniedContactsArray = [[NSMutableArray alloc] init];
 	
-	namesAreCaseSensitive = [[self service] caseSensitive];
-	
 	//We will create a gaimAccount the first time we attempt to connect
 	account = NULL;
     	
@@ -1945,10 +1945,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID
 {
 	AIListContact	*contact;
-
-	if (!namesAreCaseSensitive){
-		inUID = [inUID compactedString];
-	}
 
 	contact = [self mainPerformSelector:@selector(_contactWithUID:)
 							 withObject:inUID

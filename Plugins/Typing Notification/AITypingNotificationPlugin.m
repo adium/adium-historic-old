@@ -16,7 +16,6 @@
 - (void)_removeTypingTimerForChat:(AIChat *)chat;
 @end
 
-#define CAN_RECEIVE_TYPING		@"CanReceiveTyping"
 #define WE_ARE_TYPING			@"WeAreTyping"
 
 #define ENTERED_TEXT_TIMER		@"EnteredTextTimer"
@@ -28,26 +27,7 @@
 {
     //Register as an entry filter and observe content
 	[[adium contentController] registerTextEntryFilter:self];
-    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
 }
-
-//Watch incoming content.  Once we are messaged by a contact, that contact may receive typing notifications
-- (void)didReceiveContent:(NSNotification *)notification
-{
-    AIChat		*chat = [notification object];
-    NSNumber		*cleared;
-
-    cleared = [chat statusObjectForKey:CAN_RECEIVE_TYPING];
-
-    //Clear this contact for receiving typing notifications
-    if(!cleared){
-        [chat setStatusObject:[NSNumber numberWithBool:1]
-					   forKey:CAN_RECEIVE_TYPING
-					   notify:NotifyNever];
-    }
-}
-
 
 //Text entry -----------------------------------------------------------------------------------------------------------
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -60,16 +40,12 @@
     AIChat		*chat = [inTextEntryView chat];
 	
     //Send a 'not-typing' message to this contact
-    if(([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping) && ([chat statusObjectForKey:CAN_RECEIVE_TYPING] != nil)){
+    if([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping){
         [self _sendTypingState:AINotTyping toChat:chat];
     }
 	
 	//Remove our typing timer
 	[self _removeTypingTimerForChat:chat];
-	
-    //We could choose to de-clear the contact for typing notifications here as well
-    //AIChat		*chat = [inTextEntryView chat];
-    //[[chat statusDictionary] removeObjectForKey:CAN_RECEIVE_TYPING];
 }
 
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
@@ -86,7 +62,7 @@
 {
     AIChat		*chat = [inTextEntryView chat];
 	
-    if(chat && [chat statusObjectForKey:CAN_RECEIVE_TYPING] != nil){
+    if(chat){
 		NSTimer			*enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
 		NSNumber		*previousTypingNumber = [chat statusObjectForKey:WE_ARE_TYPING];
 		AITypingState   previousTypingState = (previousTypingNumber ? [previousTypingNumber intValue] : AINotTyping);
@@ -118,16 +94,18 @@
 //Typing state ---------------------------------------------------------------------------------------------------------
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
-    AIAccount		*account = [chat account];
-    AIContentTyping	*contentObject;
+	if(![chat integerStatusObjectForKey:@"SuppressTypingNotificationChanges"]){
+		AIAccount		*account = [chat account];
+		AIContentTyping	*contentObject;
+		
+		//Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
+		contentObject = [AIContentTyping typingContentInChat:chat
+												  withSource:account
+												 destination:nil
+												 typingState:typingState];
+		[[adium contentController] sendContentObject:contentObject];
+    }
 
-    //Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
-    contentObject = [AIContentTyping typingContentInChat:chat
-                                              withSource:account
-                                             destination:nil
-											 typingState:typingState];
-    [[adium contentController] sendContentObject:contentObject];
-    
     //Remember the state
 	[chat setStatusObject:(typingState != AINotTyping ? [NSNumber numberWithInt:typingState] : nil)
 				   forKey:WE_ARE_TYPING
