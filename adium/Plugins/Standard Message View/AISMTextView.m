@@ -207,14 +207,6 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
     return(YES);
 }
 
-//Called after the view is resized.  Re-calculate the cell dimensions
-/*- (void)viewDidEndLiveResize
-{
-    //Recalculate the cell dimensions and redisplay
-    [self resizeToFillContainerView];
-    [self resizeCells];
-    [self setNeedsDisplay:YES];
-}*/
 
 //Called after we're inserted in a window
 /*- (void)viewDidMoveToSuperview
@@ -236,10 +228,19 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 - (void)frameChanged:(NSNotification *)notification
 {    
     //Resize and redisplay
-    [self resizeToFillContainerView];
     [self resizeCells]; //live resize the contents
+    [self resizeToFillContainerView];
     [self setNeedsDisplay:YES];
 }
+
+//Called after the view is resized.  Re-calculate the cell dimensions
+/*- (void)viewDidEndLiveResize
+{
+    //Recalculate the cell dimensions and redisplay
+    [self resizeToFillContainerView];
+    [self resizeCells];
+    [self setNeedsDisplay:YES];
+}*/
 
 //Flush and completely rebuild the message cell array
 - (void)buildMessageCellArray
@@ -342,10 +343,16 @@ lineColorDarkDivider = [[backColorIn darkenBy:0.2] retain];
 //Recalculate the cell dimensions
 - (void)resizeCells
 {
+    NSScrollView		*enclosingScrollView;
     NSEnumerator		*enumerator;
     AISMVMessageCell		*cell;
-    float			width = [self frame].size.width - maxSenderWidth;
+    float			width;
 
+    //Determine our width
+    enclosingScrollView = [self enclosingScrollView];
+    width = [enclosingScrollView documentVisibleRect].size.width - maxSenderWidth;
+
+    //Resize our cells
     contentsHeight = 0;
     enumerator = [messageCellArray objectEnumerator];
     while((cell = [enumerator nextObject])){
