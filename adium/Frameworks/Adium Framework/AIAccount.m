@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIAccount.m,v 1.24 2003/12/26 04:05:47 adamiser Exp $
+// $Id: AIAccount.m,v 1.25 2003/12/26 15:13:48 adamiser Exp $
 
 #import "AIAccount.h"
 
@@ -75,13 +75,15 @@
 //Monitor preferences changed for account status keys, and pass these to our subclass
 - (void)_accountPreferencesChanged:(NSNotification *)notification
 {
-    NSString    *group = [[notification userInfo] objectForKey:@"Group"];
-    
-    if([group compare:GROUP_ACCOUNT_STATUS] == 0){
-		NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+	if([notification object] == self){
+		NSString    *group = [[notification userInfo] objectForKey:@"Group"];
 		
-		[self updateStatusForKey:key];
-    }
+		if([group compare:GROUP_ACCOUNT_STATUS] == 0){
+			NSString	*key = [[notification userInfo] objectForKey:@"Key"];
+			
+			[self updateStatusForKey:key];
+		}
+	}
 }
 
 //Quickly set a status key for this account
@@ -206,8 +208,9 @@
 //Perform the auto-reconnect
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
-    //If we're still offline, continue with the reconnect
-    if([[self statusObjectForKey:@"Online"] boolValue]){
+    //If we still want to be online, and we're not yet online, continue with the reconnect
+    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
+	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
         NSLog(@"Attempting Auto-Reconnect");
         [self connect];
     }
