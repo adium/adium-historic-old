@@ -91,6 +91,11 @@
     return(contentObjectArray);
 }
 
+- (BOOL)hasContent
+{
+    return ([contentObjectArray count] != 0);
+}
+
 - (void)setContentArray:(NSArray *)inContentArray
 {
     if((NSArray *)contentObjectArray != inContentArray){
