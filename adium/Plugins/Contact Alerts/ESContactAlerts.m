@@ -421,7 +421,21 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
     AIListObject	*contact;
-    BOOL		firstOfflineSearch = YES;
+    BOOL		firstOfflineSearch = NO;
+    
+    contact = [contactArray objectAtIndex:0];
+    if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //the first contact is offline
+    {
+        NSMenuItem	*separatorItem;
+        separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
+                                                    target:nil
+                                                    action:nil
+                                             keyEquivalent:@""] autorelease];
+        [separatorItem setEnabled:NO];
+        [contactMenu addItem:separatorItem]; //add the group object manually
+        firstOfflineSearch = YES; //start off adding the Offline object algorithmically
+    }
+
     while (contact = [enumerator nextObject])
     {
         NSMenuItem		*menuItem;
@@ -446,7 +460,21 @@ int alphabeticalSort(id objectA, id objectB, void *context);
                                                      keyEquivalent:@""] autorelease];
                 [separatorItem setEnabled:NO];
                 [contactMenu addItem:separatorItem];
-                firstOfflineSearch = NO; //stop searching
+                firstOfflineSearch = NO; //search for an online contact
+            }
+        }
+        else
+        {
+            if ( ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first online contact
+            {
+                NSMenuItem	*separatorItem;
+                separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
+                                                            target:nil
+                                                            action:nil
+                                                     keyEquivalent:@""] autorelease];
+                [separatorItem setEnabled:NO];
+                [contactMenu addItem:separatorItem];
+                firstOfflineSearch = YES; //start searching for an offline contact
             }
         }
         [contactMenu addItem:menuItem];
@@ -455,6 +483,38 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
     return contactMenu;
 }
+
+
+int alphabeticalSort(id objectA, id objectB, void *context)
+{
+    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
+    BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+    BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
+
+    
+    NSString  	*groupNameA = [[objectA containingGroup] displayName];
+    NSString  	*groupNameB = [[objectB containingGroup] displayName];
+    if(groupA && !groupB){
+        return(NSOrderedAscending);
+    }else if(!groupA && groupB){
+        return(NSOrderedDescending);
+    }
+    else if ([groupNameA compare:groupNameB] == 0)
+    {
+        if(invisibleA && !invisibleB){
+            return(NSOrderedDescending);
+        }else if(!invisibleA && invisibleB){
+            return(NSOrderedAscending);
+        }else{
+            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
+        }
+    }
+    else
+        return([groupNameA caseInsensitiveCompare:groupNameB]);
+}
+
+
 
 - (NSMenu *)accountMenu
 {

@@ -279,7 +279,7 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 //builds an alphabetical menu of contacts for all online accounts; online contacts are sorted to the top and seperated
 //from offline ones by a seperator reading "Offline"
 //uses alphabeticalSort and calls switchToContact: when a selection is made
-- (NSMenu *)switchContactMenu
+- (NSMenu *)sendToContactMenu
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
@@ -288,7 +288,21 @@ static ESContactAlertsWindowController *sharedInstance = nil;
 
     NSEnumerator 	*enumerator = 	[contactArray objectEnumerator];
     AIListObject	*contact;
-    BOOL		firstOfflineSearch = YES;
+    BOOL		firstOfflineSearch = NO;
+
+    contact = [contactArray objectAtIndex:0];
+    if ( !([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //the first contact is offline
+    {
+        NSMenuItem	*separatorItem;
+        separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
+                                                    target:nil
+                                                    action:nil
+                                             keyEquivalent:@""] autorelease];
+        [separatorItem setEnabled:NO];
+        [contactMenu addItem:separatorItem]; //add the group object manually
+        firstOfflineSearch = YES; //start off adding the Offline object algorithmically
+    }
+
     while (contact = [enumerator nextObject])
     {
         NSMenuItem		*menuItem;
@@ -313,7 +327,21 @@ static ESContactAlertsWindowController *sharedInstance = nil;
                                                      keyEquivalent:@""] autorelease];
                 [separatorItem setEnabled:NO];
                 [contactMenu addItem:separatorItem];
-                firstOfflineSearch = NO; //stop searching
+                firstOfflineSearch = NO; //search for an online contact
+            }
+        }
+        else
+        {
+            if ( ([[contact statusArrayForKey:@"Online"] greatestIntegerValue]) ) //look for the first online contact
+            {
+                NSMenuItem	*separatorItem;
+                separatorItem = [[[NSMenuItem alloc] initWithTitle:[[contact containingGroup] displayName]
+                                                            target:nil
+                                                            action:nil
+                                                     keyEquivalent:@""] autorelease];
+                [separatorItem setEnabled:NO];
+                [contactMenu addItem:separatorItem];
+                firstOfflineSearch = YES; //start searching for an offline contact
             }
         }
         [contactMenu addItem:menuItem];
@@ -323,34 +351,11 @@ static ESContactAlertsWindowController *sharedInstance = nil;
     return contactMenu;
 }
 
+
 - (IBAction) switchToContact:(id) sender
 {
     [sharedInstance configureWindowforObject:[sender representedObject]];
 }
-
-int alphabeticalSort(id objectA, id objectB, void *context)
-{
-    BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-    BOOL	invisibleB = [[objectB displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
-
-    if(invisibleA && !invisibleB){
-        return(NSOrderedDescending);
-    }else if(!invisibleA && invisibleB){
-        return(NSOrderedAscending);
-    }else{
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-
-        if(groupA && !groupB){
-            return(NSOrderedAscending);
-        }else if(!groupA && groupB){
-            return(NSOrderedDescending);
-        }else{
-            return([[objectA displayName] caseInsensitiveCompare:[objectB displayName]]);
-        }
-    }
-}
-
 - (void)testSelectedEvent
 {
     //action to take when action is double-clicked in the window
