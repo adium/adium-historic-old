@@ -127,11 +127,13 @@ DeclareString(ltSign)
             if((stringLength - [linkScanner scanLocation]) > 2) [linkScanner setScanLocation:[linkScanner scanLocation] + 2];
             [linkScanner scanUpToString:gtSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:Aclose intoString:&omniTitleString];
-
-            if(omniTitleString){
+            
+            if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
                 // decode html stuff
                 omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
+            }else{
+                [omniTitleString release];
+                omniTitleString = nil;
             }
             
             omniBookmarksSupermenu = omniBookmarksMenu;
@@ -146,28 +148,29 @@ DeclareString(ltSign)
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
-
-            [linkScanner scanUpToString:gtSign intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:Aclose intoString:&omniTitleString];
+            if([linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString]){
+                [linkScanner scanUpToString:gtSign intoString:nil];
+                if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             
-            if(omniTitleString){
-                // decode html stuff
-                omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
-            }
+                if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
+                    // decode html stuff
+                    omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
+                }else{
+                    [omniTitleString release];
+                    omniTitleString = nil;
+                }
 
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
-                                                                  withValidationStatus:SH_URL_VALID
-                                                                          parentString:omniTitleString? omniTitleString : urlString
-                                                                              andRange:NSMakeRange(0,omniTitleString? [omniTitleString length] : [urlString length])] autorelease];
+                SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
+                                                                     withValidationStatus:SH_URL_VALID
+                                                                             parentString:omniTitleString? omniTitleString : urlString
+                                                                                 andRange:NSMakeRange(0,omniTitleString? [omniTitleString length] : [urlString length])] autorelease];
                                                                           
-            [omniBookmarksMenu addItemWithTitle:omniTitleString? omniTitleString : urlString
-                                            target:owner
-                                            action:@selector(injectBookmarkFrom:)
-                                     keyEquivalent:@""
-                                 representedObject:markedLink];
-        
+                [omniBookmarksMenu addItemWithTitle:omniTitleString? omniTitleString : urlString
+                                             target:owner
+                                             action:@selector(injectBookmarkFrom:)
+                                      keyEquivalent:@""
+                                  representedObject:markedLink];
+            }
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             if([omniBookmarksMenu isNotEqualTo:omniTopMenu]){
