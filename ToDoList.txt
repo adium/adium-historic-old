@@ -15,7 +15,6 @@
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Allow meta-contact creation without holding option, add a confirmation sheet
 2 - Change sound sets so that events use key sounds rather then specifing directly
-2 - Chats are sticking in the evil duck menu
 2 - Contact is offline sheet appears incorrectly for strangers
 2 - Crash reporter should provide an option for send & quit
 2 - Divide the dock menu into bundled/custom
