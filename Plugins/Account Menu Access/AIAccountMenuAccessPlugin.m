@@ -38,7 +38,7 @@
 	
     while((menuItem = [enumerator nextObject])){    
 		//Add the item
-		[[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Accounts];
+		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
     }
 }
 
