@@ -267,7 +267,7 @@
     awayMenu = [[[NSMenu alloc] initWithTitle:@""] autorelease];
     
     //Add the 'Custom away' menu item and divider
-    menuItem = [[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")];
+    menuItem = [[[NSMenuItem alloc] initWithTitle:CUSTOM_AWAY_MESSAGE_MENU_TITLE target:self action:@selector(enterAwayMessage:) keyEquivalent:(mainMenu ? AWAY_MENU_HOTKEY : @"")] autorelease];
     [awayMenu addItem:menuItem];
     [awayMenu addItem:[NSMenuItem separatorItem]];
     
