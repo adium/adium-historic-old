@@ -214,7 +214,7 @@
 	}
 
 	//Save our single-fire option
-	[alert setObject:[NSNumber numberWithInt:[checkbox_oneTime state]] forKey:KEY_ONE_TIME_ALERT];
+	[alert setObject:[NSNumber numberWithBool:([checkbox_oneTime state] == NSOnState)] forKey:KEY_ONE_TIME_ALERT];
 }
 
 //Remove details view/pane
@@ -240,8 +240,13 @@
 	//Get a new pane for the current action type, and configure it for our alert
 	detailsPane = [[actionHandler detailsPaneForActionID:actionID] retain];
 	if(detailsPane){
+		NSDictionary	*actionDetails = [alert objectForKey:KEY_ACTION_DETAILS];
+		
 		detailsView = [detailsPane view];
-		[detailsPane configureForActionDetails:[alert objectForKey:KEY_ACTION_DETAILS] listObject:listObject];
+
+		[detailsPane configureForActionDetails:actionDetails listObject:listObject];		
+		[detailsPane configureForEventID:[alert objectForKey:KEY_EVENT_ID]
+							  listObject:listObject];
 	}
 
 	//Resize our window for best fit
@@ -255,7 +260,7 @@
 	
 	//Add the details view
 	if(detailsView) [view_auxiliary addSubview:detailsView];
-
+		
 	//Pull any default values the pane set in configureForActionDetails
 	[self saveDetailsPaneChanges];
 	
@@ -266,9 +271,13 @@
 //User selected an event from the popup
 - (IBAction)selectEvent:(id)sender
 {
-	if([sender representedObject]){
-		[alert setObject:[sender representedObject] forKey:KEY_EVENT_ID];
+	NSString	*eventID;
+	if(eventID = [sender representedObject]){
+		[alert setObject:eventID forKey:KEY_EVENT_ID];
 		
+		[detailsPane configureForEventID:eventID
+							  listObject:listObject];
+				
 		[self updateHeaderView];
 	}
 }
