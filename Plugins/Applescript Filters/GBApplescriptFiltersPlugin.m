@@ -422,6 +422,12 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
     return(filteredMessage ? [filteredMessage autorelease] : inAttributedString);
 }
 
+//Filter earlier than the default
+- (float)filterPriority
+{
+	return HIGH_FILTER_PRIORITY;
+}
+
 //Perform a thorough variable replacing scan
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
 {
@@ -434,7 +440,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		//Scan for the keyword
 		while(![scanner isAtEnd]){
 			[scanner scanUpToString:keyword intoString:nil];
-			if([scanner scanString:keyword intoString:nil]){
+
+			if(([scanner scanString:keyword intoString:nil]) &&
+			   ([attributedString attribute:NSLinkAttributeName
+									atIndex:([scanner scanLocation])
+							 effectiveRange:nil] == nil)){
+				//Scan the keyword and ensure it was not found within a link
+				NSLog(@"%@ %@ %i",attributedString,[attributedString attributesAtIndex:([scanner scanLocation])
+																effectiveRange:nil], [scanner scanLocation]);
+				
 				int 		keywordStart, keywordEnd;
 				NSArray 	*argArray = nil;
 				NSString	*argString;

@@ -128,6 +128,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     return (replacementMessage ? replacementMessage : inAttributedString);
 }
 
+//Do emoticons after the default filters
+- (float)filterPriority
+{
+	return LOW_FILTER_PRIORITY;
+}
+
 //Insert graphical emoticons into a string
 - (NSMutableAttributedString *)_convertEmoticonsInMessage:(NSAttributedString *)inMessage
 {

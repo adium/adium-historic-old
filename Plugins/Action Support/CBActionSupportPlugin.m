@@ -37,4 +37,9 @@
     return (ourMessage ? ourMessage : inAttributedString);
 }
 
+- (float)filterPriority
+{
+	return DEFAULT_FILTER_PRIORITY;
+}
+
 @end
