@@ -18,7 +18,6 @@
 - Auto-resizing isn't restricting itself to the screen frame
 - Canceling a list edit sheet needs to re-apply the currently selected prefs
 - Bubble-to-fit cells don't work with any new list additions (disable when bubble is selected)
-- Preferences are changing when contact list prefs are opened
 - Status labels are ignoring window transparency
 - Status labels are covering selected cells
 - Contactlist does not allow dragging of contacts/groups

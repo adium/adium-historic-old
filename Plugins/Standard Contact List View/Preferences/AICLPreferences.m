@@ -54,15 +54,11 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-//    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	
 	currentLayoutName = [@"Default" retain];
 	currentThemeName = [@"Default" retain];
 	[self updateLayouts];
 	[self updateThemes];
-//	[self updateSelectedLayoutAndTheme];
-	
-	
+
 	//Observe for installation of new themes/layouts
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(xtrasChanged:)
@@ -78,7 +74,6 @@
 	//
 	[button_themeEdit setTitle:@"Edit"];
 	[button_layoutEdit setTitle:@"Edit"];
-	
 	
 #warning cells
 	AIImageTextCell *dataCell;
@@ -101,17 +96,6 @@
 	[dataCell setIgnoresFocus:YES];
 	[dataCell setDrawsGradientHighlight:YES];
 	[[tableView_theme tableColumnWithIdentifier:@"name"] setDataCell:dataCell];
-	
-//	dataCell = [[[AIGradientCell alloc] init] autorelease];
-//    [dataCell setFont:[NSFont systemFontOfSize:12]];
-//	[dataCell setIgnoresFocus:YES];	
-//	[dataCell setDrawsGradientHighlight:YES];
-//	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
-	
-//	dataCell = [[[AIListThemePreviewCell alloc] init] autorelease];
-//	[dataCell setIgnoresFocus:YES];	
-//	[dataCell setDrawsGradientHighlight:YES];
-//	[[tableView_theme tableColumnWithIdentifier:@"preview"] setDataCell:dataCell];
 	
 	//
     [tableView_layout setTarget:self];
@@ -160,16 +144,10 @@
 }
 
 
-
-
-
-
-
 - (void)updateLayouts
 {
 	[layoutArray release];
 	layoutArray = [[self availableSetsWithExtension:LIST_LAYOUT_EXTENSION fromFolder:LIST_LAYOUT_FOLDER] retain];
-//	NSLog(@"%@",layoutArray);
 	[tableView_layout reloadData];
 	[self updateSelectedLayoutAndTheme];
 }
@@ -178,7 +156,6 @@
 {
 	[themeArray release];
 	themeArray = [[self availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER] retain];
-//	NSLog(@"%@",themeArray);
 	[tableView_theme reloadData];
 	[self updateSelectedLayoutAndTheme];
 }
@@ -241,10 +218,6 @@
 	}
 }
 
-
-
-
-
 - (void)updateSelectedLayoutAndTheme
 {
 	NSEnumerator	*enumerator;
@@ -256,7 +229,6 @@
 	currentLayoutName = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST] retain];
 	currentThemeName = [[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST] retain];
 	
-	ignoreSelectionChanges = YES;
 	enumerator = [layoutArray objectEnumerator];
 	while(dict = [enumerator nextObject]){
 		if([[dict objectForKey:@"name"] isEqualToString:currentLayoutName]){
@@ -270,14 +242,7 @@
 			[tableView_theme selectRow:[themeArray indexOfObject:dict] byExtendingSelection:NO];
 		}
 	}
-	ignoreSelectionChanges = NO;
-	
 }
-
-
-
-
-
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
@@ -315,32 +280,29 @@
 	return(@"-");
 }
 
-- (void)tableViewSelectionDidChange:(NSNotification *)notification
+- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
-	if(!ignoreSelectionChanges){
-		NSTableView	*tableView = [notification object];
-
-		if(tableView == tableView_layout){
-			NSDictionary	*layoutDict = [layoutArray objectAtIndex:[tableView selectedRow]];
-			[self applySet:[layoutDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
-			
-			[[adium preferenceController] setPreference:[layoutDict objectForKey:@"name"]
-												 forKey:KEY_LIST_LAYOUT_NAME
-												  group:PREF_GROUP_CONTACT_LIST];
-			
-		}else if(tableView == tableView_theme){
-			NSDictionary	*themeDict = [themeArray objectAtIndex:[tableView selectedRow]];
-			[self applySet:[themeDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_THEME];
-			
-			[[adium preferenceController] setPreference:[themeDict objectForKey:@"name"]
-												 forKey:KEY_LIST_THEME_NAME
-												  group:PREF_GROUP_CONTACT_LIST];
-			
-		}
-
-		[self updateSelectedLayoutAndTheme];
-	
+	if(tableView == tableView_layout){
+		NSDictionary	*layoutDict = [layoutArray objectAtIndex:row];
+		[self applySet:[layoutDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
+		
+		[[adium preferenceController] setPreference:[layoutDict objectForKey:@"name"]
+											 forKey:KEY_LIST_LAYOUT_NAME
+											  group:PREF_GROUP_CONTACT_LIST];
+		
+	}else if(tableView == tableView_theme){
+		NSDictionary	*themeDict = [themeArray objectAtIndex:row];
+		[self applySet:[themeDict objectForKey:@"preferences"] toPreferenceGroup:PREF_GROUP_LIST_THEME];
+		
+		[[adium preferenceController] setPreference:[themeDict objectForKey:@"name"]
+											 forKey:KEY_LIST_THEME_NAME
+											  group:PREF_GROUP_CONTACT_LIST];
+		
 	}
+	
+	[self updateSelectedLayoutAndTheme];
+	
+	return(YES);
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -367,13 +329,6 @@
 	}
 	
 }
-
-
-
-
-
-
-
 
 
 

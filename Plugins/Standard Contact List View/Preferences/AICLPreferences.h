@@ -26,7 +26,6 @@
 	IBOutlet	NSButton		*button_layoutEdit;
 	IBOutlet	NSButton		*button_themeEdit;
 	
-	BOOL		ignoreSelectionChanges;
 	NSString	*currentLayoutName;
 	NSString	*currentThemeName;
 	
