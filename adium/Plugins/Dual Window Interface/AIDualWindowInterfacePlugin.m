@@ -250,14 +250,10 @@
 		//destroy the source window)
 		NSRect  oldMessageWindowFrame = [[oldMessageWindow window] frame];
 		
-		//Remove the tab
+		//Remove the tab, which will close the containiner if it becomes empty
 		[tabViewItem retain];
+	
 		[oldMessageWindow removeTabViewItem:tabViewItem];
-		
-		//Close the container if necessary
-		if([oldMessageWindow containerIsEmpty]){
-			[self closeContainer:oldMessageWindow];
-		}
 		
 		//Spawn a new window (if necessary)
 		if(!newMessageWindow){
