@@ -274,7 +274,11 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 		return(YES); //Always keep the submenu enabled so users can see the available scripts
 	}else{
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		return(responder && [responder isKindOfClass:[NSText class]]);
+		if(responder && [responder isKindOfClass:[NSText class]]){
+                    return [(NSText *)responder isEditable];
+                }else{
+                    return NO;
+                }
 	}
 }
 

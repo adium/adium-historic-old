@@ -190,7 +190,11 @@ static NSMenu       *eContextualMenu = nil;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	return(responder && [responder isKindOfClass:[NSText class]]);
+	if(responder && [responder isKindOfClass:[NSText class]]){
+            return [(NSText *)responder isEditable];
+        }else{
+            return NO;
+        }
 }
 
 -(NSMenu *)eMenu
