@@ -38,6 +38,55 @@
 	[embeddedView setFrame:cellFrame];	
 }
 
+- (void)drawEmbeddedViewWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	NSImage	*image;
+
+	if([embeddedView respondsToSelector:@selector(setIsHighlighted:)]){
+		[embeddedView setIsHighlighted:[self isHighlighted]];
+	}
+
+	if([embeddedView superview] != controlView) {
+		[controlView addSubview:embeddedView];
+	}
+
+	NSRect	frame = [embeddedView frame];
+	NSRect	usableFrame = NSMakeRect(0,0,frame.size.width,frame.size.height);
+
+	image = [[[NSImage alloc] initWithSize:frame.size] autorelease];
+	[image lockFocus];
+	[embeddedView setNeedsDisplay:YES];
+	[embeddedView drawRect:usableFrame];
+	
+	//Now draw each subview in its proper place
+	NSEnumerator	*enumerator = [[embeddedView subviews] objectEnumerator];
+	NSView			*subView;
+
+	while(subView = [enumerator nextObject]){
+		NSRect	subFrame = [subView frame];
+		NSRect	subUsableFrame = NSMakeRect(0, 0, subFrame.size.width, subFrame.size.height);
+
+		//Cache to an image
+		NSImage	*subImage = [[[NSImage alloc] initWithSize:subFrame.size] autorelease];
+		[subImage lockFocus];
+		[subView drawRect:subUsableFrame];
+		[subImage unlockFocus];
+
+		//Draw that image in the proper place
+		[subImage drawInRect:subFrame
+					fromRect:subUsableFrame
+				   operation:NSCompositeSourceOver
+					fraction:1.0];
+	}
+	[image unlockFocus];
+
+	//Draw the composited image in our current context
+	[image drawInRect:cellFrame
+			 fromRect:usableFrame
+			operation:NSCompositeSourceOver
+			 fraction:1.0];	
+}
+
 - (BOOL)drawGridBehindCell
 {
 	return(YES);
