@@ -34,7 +34,7 @@ create index adium_msg_date_sender_recipient on
    adium.messages (message_date, sender_id, recipient_id);
 create index adium_recipient on adium.messages(recipient_id);
 create index adium_display_user on adium.user_display_name(user_id);
-create index adium_display_date on adium.user_display_name(effdate);
+create index adium_message_date on adium.messages(message_date);
 
 create or replace view adium.message_v as
 select message_id,
@@ -57,14 +57,27 @@ where  m.sender_id = s.user_id
        from   adium.user_display_name udn
        where  udn.effdate > s_disp.effdate
        and    udn.user_id = s.user_id
-       and    udn.effdate <= message_date)
+       and    udn.effdate <= message_date
+       )
   and  r_disp.effdate <= message_date
   and  not exists (
        select 'x'
        from   adium.user_display_name udn
        where  udn.effdate > r_disp.effdate
        and    udn.user_id = r.user_id
-       and    udn.effdate <= message_date);
+       and    udn.effdate <= message_date
+       );
+
+create or replace view adium.simple_message_v as
+select  m.message_date,
+        s.username as sender_sn,
+        r.username as recipient_sn,
+        message
+from    adium.messages m,
+        adium.users s,
+        adium.users r
+where   m.sender_id = s.user_id
+ and    m.recipient_id = r.user_id;
 
 create or replace rule insert_message_v as
 on insert to adium.message_v
@@ -101,8 +114,8 @@ do instead  (
         from   user_display_name udn
         where  user_id = 
                (select user_id from users where username = new.sender_sn)
-        and    display_name = new.sender_display
-        and not exists (
+         and   display_name = new.sender_display
+         and not exists (
             select 'x'
             from adium.user_display_name
             where effdate > udn.effdate

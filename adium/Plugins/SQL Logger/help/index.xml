@@ -186,9 +186,9 @@ jmelloy=#</pre></div>
       class="offsite">here</a>.  To compile, open "Adium.pbproj" and hit the
     "Build" button in the top left.
     Switch the target to "SQL Logger" (it should start at "Adium") and hit
-  "Build".  Locate the built application, and control-click it.  Go to "Show
-  Package Contents" navigate to the Plugin folder, and add "SQL
-  Logger.AdiumPlugin" to it.  That should be all it takes to install it.
+  "Build".  Move the newly created "SQL
+  Logger.AdiumPlugin" to <code>~/Library/Application Support/Adium
+    2.0/Plugins"</code>.  That should be all it takes to install it.
   Alternately, you can download a compiled binary from <a
     href="http://adium.sourceforge.net"
     class="offsite">http://adium.sourceforge.net</a>.  Currently, the binary
