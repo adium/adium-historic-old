@@ -102,6 +102,7 @@
     float           relativeY = 1.0;
 	NSSize			buddyIconSize;
 	BOOL			minFontSize;
+	float			accumulator;
         
     // Clear the view and paint the backdrop image
     [[NSColor clearColor] set];
@@ -184,23 +185,26 @@
 	if (buddyIconBadge) {
         [buddyIconBadge compositeToPoint: NSMakePoint(buddyIconPoint.x -6.0, buddyIconPoint.y - 6-0) operation:NSCompositeSourceOver];
     }
-    
+	
     [mainAttributes setObject:[[NSFontManager sharedFontManager] 
         convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
     buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     
 	minFontSize = NO;
+	accumulator = 0.0;
     while(buddyNameSize.width > ((187.0*relativeX) - (buddyNameSize.height / 2.0))) {
 		minFontSize = (buddyNameFontSize<=12.0);
 		if (minFontSize) {
 			[self setMainBuddyName: [mainBuddyName substringToIndex: [mainBuddyName length]-1]];
 		} else {
-			buddyNameFontSize-= 1.0;
+			buddyNameFontSize -= 1.0;
+			accumulator += 0.5;
 		}
 		[mainAttributes setObject:[[NSFontManager sharedFontManager] 
 			convertFont:[NSFont systemFontOfSize:buddyNameFontSize] toHaveTrait: NSBoldFontMask] forKey:NSFontAttributeName];
 		buddyNameSize = [mainBuddyName sizeWithAttributes: mainAttributes];
     }
+	buddyNameRect.origin.y += ceil(accumulator);
 	if (minFontSize) {
 		[self setMainBuddyName: [NSString stringWithFormat:@"%@É",[mainBuddyName substringToIndex: [mainBuddyName length]-1]]];
 	}
