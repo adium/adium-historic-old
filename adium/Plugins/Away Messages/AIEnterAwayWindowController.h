@@ -20,7 +20,7 @@
 @interface AIEnterAwayWindowController : NSWindowController {
     AIAdium	*owner;
 
-    IBOutlet 	NSTextView		*textView_title;
+    IBOutlet 	NSTextField		*textField_title;
     IBOutlet	AISendingTextView	*textView_awayMessage;
     IBOutlet	NSButton		*button_setAwayMessage;
     IBOutlet	NSButton		*button_save;
@@ -33,5 +33,6 @@
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)setAwayMessage:(id)sender;
+- (IBAction)toggleSave:(id)sender;
 
 @end

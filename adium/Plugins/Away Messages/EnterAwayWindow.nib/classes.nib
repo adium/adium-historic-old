@@ -1,15 +1,15 @@
 {
     IBClasses = (
         {
-            ACTIONS = {cancel = id; closeWindow = id; setAwayMessage = id; }; 
+            ACTIONS = {cancel = id; closeWindow = id; setAwayMessage = id; toggleSave = id; }; 
             CLASS = AIEnterAwayWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_save" = NSButton; 
                 "button_setAwayMessage" = NSButton; 
                 "scrollView_awayMessageContainer" = NSScrollView; 
+                "textField_title" = NSTextField; 
                 "textView_awayMessage" = AISendingTextView; 
-                "textView_title" = NSTextView; 
             }; 
             SUPERCLASS = NSWindowController; 
         }, 
