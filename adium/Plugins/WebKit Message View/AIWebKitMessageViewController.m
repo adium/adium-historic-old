@@ -951,24 +951,7 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:displayServiceID];
 			}
 		} while(range.location != NSNotFound);	
-		
-		//Message (must do last)
-		range = [inString rangeOfString:@"%message%"];
-		if(range.location != NSNotFound){
-			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																				  headers:NO 
-																				 fontTags:YES
-																	   includingColorTags:allowColors
-																			closeFontTags:YES
-																				styleTags:YES
-															   closeStyleTagsOnFontChange:YES
-																		   encodeNonASCII:YES 
-																			   imagesPath:@"/tmp"
-																		attachmentsAsText:NO
-														   attachmentImagesOnlyForSending:NO
-																		   simpleTagsOnly:NO]];
-		}		
-		
+
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
 		do{
 			range = [inString rangeOfString:@"%status%"];
@@ -976,15 +959,24 @@ DeclareString(AppendNextMessage);
 				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
-		
-		//Message (must do last)
-		range = [inString rangeOfString:@"%message%"];
-		if(range.location != NSNotFound){
-			//safeString converts any attachments to text, returning an attributedString
-			[inString replaceCharactersInRange:range withString:[[[content message] safeString] string]];
-		}		
-	}			
-	
+	}
+
+	//Message (must do last)
+	range = [inString rangeOfString:@"%message%"];
+	if(range.location != NSNotFound){
+		[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
+																			  headers:NO 
+																			 fontTags:YES
+																   includingColorTags:allowColors
+																		closeFontTags:YES
+																			styleTags:YES
+														   closeStyleTagsOnFontChange:YES
+																	   encodeNonASCII:YES 
+																		   imagesPath:@"/tmp"
+																	attachmentsAsText:NO
+													   attachmentImagesOnlyForSending:NO
+																	   simpleTagsOnly:NO]];
+	}
 	
 	return(inString);
 }
