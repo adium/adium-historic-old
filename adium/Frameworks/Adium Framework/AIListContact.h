@@ -18,11 +18,12 @@
     NSMutableArray	*handleArray;
 
     NSString		*serviceID;
-//    int			index;
+    int			index;
 }
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID;
 - (NSString *)serviceID;
+- (NSString *)UIDAndServiceID;
 
 //Contained Handles
 //- (unsigned)handleCount;
@@ -40,7 +41,8 @@
 //Status
 - (AIMutableOwnerArray *)statusArrayForKey:(NSString *)inKey;
 
-/*- (int)index;
-- (void)setIndex:(int)inIndex;*/
+//Manual Ordering
+- (int)index;
+- (void)setIndex:(int)inIndex;
 
 @end

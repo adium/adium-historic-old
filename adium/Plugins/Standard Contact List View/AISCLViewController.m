@@ -288,6 +288,25 @@
     return([item isExpanded]);
 }
 
+//Manual Ordering support
+- (BOOL)outlineView:(NSOutlineView *)olv writeItems:(NSArray*)items toPasteboard:(NSPasteboard*)pboard
+{
+    return(YES);
+}
+
+- (NSDragOperation)outlineView:(NSOutlineView*)olv validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
+{
+    return(NSDragOperationPrivate);
+}
+
+- (BOOL)outlineView:(NSOutlineView*)olv acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
+{
+    return(YES);
+}
+
+
+
+
 
 // Tooltips ------------------------------------------------------------------------------------
 //Add a tracking rect to catch when the mouse enters/exits our view

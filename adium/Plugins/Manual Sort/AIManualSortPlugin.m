@@ -17,7 +17,7 @@
 
 - (void)installPlugin
 {
-    //[[owner contactController] registerListSortController:[[[AIManualSort alloc] init] autorelease]];
+    [[owner contactController] registerListSortController:[[[AIManualSort alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin

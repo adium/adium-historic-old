@@ -28,6 +28,7 @@
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
 #define GET_INFO_MENU_TITLE		@"Get Info"
 #define KEY_CONTACT_LIST_GROUP_STATE	@"Contact List Group State"	//Expand/Collapse state of groups
+#define KEY_CONTACT_LIST_ORDER		@"Contact List Order"
 
 @interface AIContactController (PRIVATE)
 - (void)_handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
@@ -44,6 +45,9 @@
 //init
 - (void)initController
 {
+    NSEnumerator	*enumerator;
+    NSNumber		*position;
+    
     //
     contactObserverArray = [[NSMutableArray alloc] init];
     sortControllerArray = [[NSMutableArray alloc] init];
@@ -58,6 +62,19 @@
     
     //
     contactInfoCategory = [[AIPreferenceCategory categoryWithName:@"" image:nil] retain];
+
+    //Load the contact ordering
+    listOrderDict = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST_ORDER] mutableCopy];
+    if(!listOrderDict) listOrderDict = [[NSMutableDictionary alloc] init];
+
+    //Find the largest order index
+    largestOrder = 0;
+    enumerator = [[listOrderDict allValues] objectEnumerator];
+    while((position = [enumerator nextObject])){
+        int order = [position intValue];
+        if(order > largestOrder) largestOrder = order;
+    }
+
 }
 
 //close
@@ -86,11 +103,15 @@
                             forKey:[group UID]];
     }
 
-    //Save
+    //Save group state
     [[owner preferenceController] setPreference:groupStateDict
                                          forKey:KEY_CONTACT_LIST_GROUP_STATE
                                           group:PREF_GROUP_CONTACT_LIST];
-    
+
+    //Save order index information
+    [[owner preferenceController] setPreference:listOrderDict
+                                         forKey:KEY_CONTACT_LIST_ORDER
+                                          group:PREF_GROUP_CONTACT_LIST];
 }
 
 //dealloc
@@ -312,7 +333,20 @@
 
         //If it wasn't in the abandoned dict, we create
         if(!contact){
+            NSNumber	*orderIndex;
+
+            //Create the contact
             contact = [[AIListContact alloc] initWithUID:handleUID serviceID:[serviceType identifier]];
+
+            //Correctly set the contact's order index
+            orderIndex = [listOrderDict objectForKey:[contact UIDAndServiceID]];
+            if(!orderIndex){ //If this contact doesn't have an index, put it at the end of the list (largest order).
+                [listOrderDict setObject:[NSNumber numberWithInt:largestOrder] forKey:[contact UIDAndServiceID]];
+                [contact setIndex:largestOrder];
+                largestOrder++;
+            }else{
+                [contact setIndex:[orderIndex intValue]];
+            }
         }
 
         //Add the contact to the correct group
