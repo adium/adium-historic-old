@@ -30,6 +30,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	IBOutlet	NSView						*view_accountProxy;
 	IBOutlet	NSView						*view_accountProfile;
 	IBOutlet	NSView						*view_accountOptions;
+	IBOutlet	NSView						*view_accountPrivacy;
 
 	//Current configuration
     AIAccountViewController		*accountViewController;

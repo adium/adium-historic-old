@@ -230,6 +230,12 @@ Adium, Copyright 2001-2005, Adam Iser
 									 toView:view_accountOptions
 					  tabViewItemIdentifier:@"options"];
 	if(heightDifference > heightChange) heightChange = heightDifference;
+
+	//Account Privacy view
+	heightDifference = [self _addCustomView:[accountViewController privacyView]
+									 toView:view_accountPrivacy
+					  tabViewItemIdentifier:@"privacy"];
+	if(heightDifference > heightChange) heightChange = heightDifference;
 	
 	//Add proxy view
 	heightDifference = [self _addCustomView:[accountProxyController view]
