@@ -58,8 +58,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     if(!view_prefView){
         [NSBundle loadNibNamed:ALERTS_PREF_NIB owner:self];
 
+        [view_prefView retain];
+        
         //Configure our view
         [self configureView];
+
+        [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Window_Changed_Alerts object:nil];
+        [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:nil];
     }
 
     return(view_prefView);
@@ -68,12 +73,12 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
-//need to release owner?
-    [prefAlertsArray release];
-    [activeContactObject release];
- //   [tableView_actions release];
+    [[owner notificationCenter] removeObserver:self];
     
     [view_prefView release]; view_prefView = nil;
+    
+    [prefAlertsArray release]; prefAlertsArray = nil;
+    [activeContactObject release];
 }
 
 //Configures our view for the current preferences, jumping to the indicated contact
@@ -83,10 +88,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     //Build the contact list
     [popUp_contactList setMenu:[self switchContactMenu]];
 
-    ESContactAlerts * thisInstance = [[ESContactAlerts alloc] init];
+    ESContactAlerts * thisInstance = [[[ESContactAlerts alloc] init] autorelease];
 
-    //Build the event menu (for no contact)
-    [popUp_addEvent setMenu:[thisInstance eventMenu]];
 
     //Build the action menu (for no contact)
     actionMenu = [thisInstance actionListMenu];
@@ -99,19 +102,22 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions setTarget:self];
     [tableView_actions setDoubleAction:@selector(testSelectedEvent:)];
     [tableView_actions setDataSource:self];
-//    [tableView_actions retain];
-
+    
     [button_delete setEnabled:NO];
     [button_oneTime setEnabled:NO];
 
+    //Update the outline view
+    [tableView_actions reloadData];
+    
     if ([prefAlertsArray count]) //some alerts do exist
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-     //   [self tableViewSelectionDidChange:nil];
     }
-
-    //Update the outline view
-    [tableView_actions reloadData];
+    else
+    {
+        //Build the event menu (for no contact)
+        [popUp_addEvent setMenu:[thisInstance eventMenu]];
+    }
 
 }
 
@@ -131,13 +137,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         else
         {
             [tableView_actions selectRow:firstIndex byExtendingSelection:NO];
-        //    [self tableViewSelectionDidChange:nil];
         }
     }
     else //got nil
     {
         [tableView_actions selectRow:0 byExtendingSelection:NO];
-    //    [self tableViewSelectionDidChange:nil];
     }
 }
 
@@ -156,7 +160,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     AIListContact * contact;
     while (contact = [enumerator nextObject])
     {
-        ESContactAlerts * thisInstance = [[ESContactAlerts alloc] initForObject:contact withDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner];
+        ESContactAlerts * thisInstance = [[[ESContactAlerts alloc] initForObject:contact withDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner] autorelease];
         [thisInstance setOffset:offset];
 
         for (arrayCounter=0 ; arrayCounter<[thisInstance count] ; arrayCounter++)
@@ -169,6 +173,13 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [actionColumn setPrefAlertsArray:prefAlertsArray];
 }
 
+-(IBAction)anInstanceChanged:(id)sender
+{
+    AIListObject * object = [[instance activeObject] autorelease];
+    [self rebuildPrefAlertsArray];
+    [self configureViewForContact:object];
+}
+
 -(IBAction)oneTimeEvent:(id)sender
 {
     [instance oneTimeEvent:button_oneTime];
@@ -176,7 +187,8 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 -(IBAction)deleteEventAction:(id)sender
 {
-
+    if ([tableView_actions selectedRow] != -1) 
+    {
     int index = [prefAlertsArray indexOfObject:instance];
     
     [prefAlertsArray removeObjectAtIndex:index]; //take one instance for this contact out of our array
@@ -198,13 +210,16 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         NSEnumerator * enumerator = [prefAlertsSet objectEnumerator];
         while (thisInstance = [enumerator nextObject])
         {
-            [thisInstance changeOffsetBy:1]; //tell each instance it has one less offset
+            [thisInstance changeOffsetBy:-1]; //tell each instance it has one less offset
         }
     }
     [instance deleteEventAction:nil]; //delete the event from the instance
-
     [self tableViewSelectionDidChange:nil];
-
+    
+    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+                                              object:[instance activeObject]
+                                            userInfo:nil];
+    }
 }
 
 //optimize me!! -eds
@@ -219,11 +234,18 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     [tableView_actions selectRow:index byExtendingSelection:NO];
 
     [tableView_actions reloadData];
-    
-//    [self tableViewSelectionDidChange:nil];
 
+    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+                                              object:[thisInstance activeObject]
+                                            userInfo:nil];
     //Update the outline view
 
+}
+
+-(void)externalChangedAlerts:(NSNotification *)notification
+{
+        [self rebuildPrefAlertsArray];
+        [tableView_actions reloadData];
 }
 
 //TableView datasource --------------------------------------------------------
@@ -302,7 +324,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    if ([tableView_actions selectedRow] != -1) [self deleteEventAction:nil]; //Delete it, using the preferences view custom deleteEventAction (which calls in the instance)
+    [self deleteEventAction:nil]; //Delete it, using the preferences view custom deleteEventAction (which calls in the instance)
 }
 
 //selection changed; update the view
@@ -327,9 +349,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         [button_delete setEnabled:YES];
         [button_oneTime setEnabled:YES];
-
-        //Update the outline view
-  //      [tableView_actions reloadData];
     }
     else //no selection
     {
@@ -351,10 +370,10 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)dealloc
 {
+//    NSLog(@"dealloc");
     [owner release];
     [prefAlertsArray release];
     [activeContactObject release];
-    [tableView_actions release];
     [super dealloc];
 }
 

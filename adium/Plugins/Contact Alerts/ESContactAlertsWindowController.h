@@ -37,5 +37,6 @@
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)oneTimeEvent:(id)sender;
+- (IBAction)addedEvent:(id)sender;
 
 @end

@@ -32,7 +32,11 @@
     IBOutlet	NSPopUpButton		*popUp_message_actionDetails_two;
     IBOutlet	NSButton		*button_anotherAccount;
     IBOutlet	NSButton		*button_displayAlert;
-
+    //Open Message View
+    IBOutlet	NSView			*view_details_open_message;
+    IBOutlet	NSPopUpButton		*popUp_actionDetails_open_message;
+    IBOutlet	NSButton		*button_anotherAccount_open_message;
+    
     int					row;
     int					offset;
 
@@ -65,11 +69,11 @@
 - (NSMutableArray *)eventActionArray;
 - (void)currentRowIs:(int)currentRow;
 - (void)setOffset:(int)inOffset;
-- (void)setOldIdentifier:(NSString *)inIdentifier;
 - (void)changeOffsetBy:(int)changeOffset;
 - (void)replaceDictAtIndex:(int)inRow withDict:(NSDictionary *)newDict;
 - (void)executeAppropriateAction:(NSString *)action inMenu:(NSMenu *)actionMenu;
 - (AIListObject *)activeObject;
+- (void)reloadFromPrefs;
 
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)newEvent:(id)sender;
@@ -77,6 +81,7 @@
 - (IBAction)selectBehavior:(id)sender;
 - (IBAction)selectAccount:(id)sender;
 - (IBAction)saveMessageDetails:(id)sender;
+- (IBAction)saveOpenMessageDetails:(id)sender;
 
 - (IBAction)actionBounceDock:(id)sender;
 - (IBAction)actionDisplayAlert:(id)sender;

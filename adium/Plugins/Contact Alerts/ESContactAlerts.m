@@ -19,8 +19,8 @@
 #define SOUND_MENU_ICON_SIZE		16
 
 @interface ESContactAlerts (PRIVATE)
-- (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier;
-- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier;
+- (void)configureForTextDetails:(NSString *)instructions;
+- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu;
 - (void)configureWithSubview:(NSView *)view_inView;
 - (void)saveEventActionArray;
 - (void)testSelectedEvent;
@@ -78,17 +78,23 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     if ( [[view_main subviews] count] == 0 ) //there are no subviews yet
         [view_main addSubview:view_blank];
     
-  
     //nothing's selected, obviously, so row = -1
     row = -1;
 
     offset = 0;
 
+    //register observer
+    [[owner notificationCenter] addObserver:self selector:@selector(oneTimeEventFired:) name:One_Time_Event_Fired object:activeContactObject];
+    
     return self;
 }
 
 - (void)dealloc
 {
+    //remove observer
+    [[owner notificationCenter] removeObserver:self name:One_Time_Event_Fired object:activeContactObject];
+    
+    
     [owner release];
     [tableView_actions release];
     [activeContactObject release];
@@ -103,7 +109,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     row = (currentRow - offset);
 
     if (row != -1) selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
-    NSLog(@"row is %i and action is %@",row,[selectedActionDict objectForKey:KEY_EVENT_ACTION]);
 }
 
 - (int)currentRow
@@ -151,20 +156,23 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 -(void)changeOffsetBy:(int)changeOffset
 {
-    offset -= changeOffset;
+    offset += changeOffset;
 }
 
--(void) setOldIdentifier:(NSString *)inIdentifier
-{
-    [oldIdentifier release];
-    oldIdentifier = inIdentifier;
-    [oldIdentifier retain];
-    NSLog(@"oldIdentifier is now %@",oldIdentifier);
-}
 - (AIListObject *)activeObject
 {
     return activeContactObject;
 }
+
+- (void)reloadFromPrefs
+{
+    [eventActionArray release];
+    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
+    if (!eventActionArray)
+        eventActionArray = [[NSMutableArray alloc] init];
+    [eventActionArray retain];    
+}
+
 //Actions!
 - (NSMenu *)actionListMenu //menu of possible actions
 {
@@ -223,26 +231,55 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 //setup display for displaying an alert
 - (IBAction)actionDisplayAlert:(id)sender
-{   	[self configureForTextDetails:@"Alert text:" identifier:@"Alert"];		}
+{   	[self configureForTextDetails:@"Alert text:"];		}
 
     //setup display for speaking text
 - (IBAction)actionSpeakText:(id)sender
-{    [self configureForTextDetails:@"Text to speak:" identifier:@"Speak"];		}
+{    [self configureForTextDetails:@"Text to speak:"];		}
 
     //setup display for playing a sound
 - (IBAction)actionPlaySound:(id)sender
-{    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu] identifier:@"Sound"];	}
+{    [self configureForMenuDetails:@"Sound to play:" menuToDisplay:[self soundListMenu]];	}
 
     //setup display for bouncing the dock
 - (IBAction)actionBounceDock:(id)sender
-{    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu] identifier:@"Bounce"];	}
+{    [self configureForMenuDetails:@"Dock behavior:" menuToDisplay:[self behaviorListMenu]];	}
 
     //setup display for opening message window
 - (IBAction)actionOpenMessage:(id)sender
 {
-    [self configureForMenuDetails:@"Open window using account:" menuToDisplay:[self accountForOpenMessageMenu] identifier:@"Open Message"];
-    AIAccount * account = [[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
-    if (account) [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:account]];
+    NSMutableDictionary * detailsDict;
+    
+    [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
+
+    detailsDict = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS_DICT];
+    
+    [popUp_actionDetails_open_message setMenu:[self accountForOpenMessageMenu]];
+    if (!detailsDict) //new message
+    {
+        [button_anotherAccount_open_message setState:NSOnState]; //default: use another account if needed
+
+        NSEnumerator * accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+        AIAccount * account;
+        while( (account = [accountEnumerator nextObject]) && ([[account statusObjectForKey:@"Status"] intValue] == STATUS_OFFLINE) );
+        if (account) //if we found an online account, set it as the default account choice
+            [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
+        [self saveOpenMessageDetails:nil];
+    }
+    else //restore the old settings
+    {
+        //Restore the account
+        AIAccount * account = [[owner accountController] accountWithID:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]];
+       [popUp_actionDetails_open_message selectItemAtIndex:[popUp_actionDetails_open_message indexOfItemWithRepresentedObject:account]];
+
+        [button_anotherAccount_open_message setState:[[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]];
+    }
+    
+    [self configureWithSubview:view_details_open_message];
+    
+
 }
 
 //setup display for sending a message
@@ -298,8 +335,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     }
 
     [self configureWithSubview:view_details_message];
-
-//    [self setOldIdentifier:@"Message"];
 }
 
 //Builds and returns an event menu
@@ -329,7 +364,8 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
 
 -(IBAction)saveMessageDetails:(id)sender
 {
-    NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];;
+    NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];
+    
     AIAccount * account = [[popUp_message_actionDetails_one selectedItem] representedObject];
     [detailsDict setObject:[account accountID] forKey:KEY_MESSAGE_SENDFROM];
     AIListContact * contact = [[popUp_message_actionDetails_two selectedItem] representedObject];
@@ -338,9 +374,19 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [detailsDict setObject:uid forKey:KEY_MESSAGE_SENDTO_UID];
     [detailsDict setObject:service forKey:KEY_MESSAGE_SENDTO_SERVICE];
 
-
     [detailsDict setObject:[NSNumber numberWithInt:[button_anotherAccount state]] forKey:KEY_MESSAGE_OTHERACCOUNT];
     [detailsDict setObject:[NSNumber numberWithInt:[button_displayAlert state]] forKey:KEY_MESSAGE_ERROR];
+
+    [selectedActionDict setObject:detailsDict forKey:KEY_EVENT_DETAILS_DICT];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+
+    [self saveEventActionArray];
+}
+
+-(IBAction)saveOpenMessageDetails:(id)sender
+{
+    NSMutableDictionary *detailsDict = [[NSMutableDictionary alloc] init];
+    [detailsDict setObject:[NSNumber numberWithInt:[button_anotherAccount_open_message state]] forKey:KEY_MESSAGE_OTHERACCOUNT];
 
     [selectedActionDict setObject:detailsDict forKey:KEY_EVENT_DETAILS_DICT];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
@@ -663,7 +709,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 }
 
-- (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier
+- (void)configureForTextDetails:(NSString *)instructions
 {
     NSString *details =  [[[NSString alloc] init] autorelease];
     
@@ -683,11 +729,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [textField_actionDetails setStringValue:(details ? details : @"")];
 
     [self configureWithSubview:view_details_text];
-
-//    [self setOldIdentifier:identifier];
 }
 
-- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier
+- (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu
 {
     [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
@@ -698,8 +742,6 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
 
     [self configureWithSubview:view_details_menu];
-
-//    [self setOldIdentifier:identifier];
 }
 
 - (void)configureWithSubview:(NSView *)view_inView
@@ -810,6 +852,20 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
     [self saveEventActionArray];
+}
+
+- (void)oneTimeEventFired:(NSNotification *)notification
+{
+    //reload eventActionArray
+    [eventActionArray release];
+    eventActionArray =  [[owner preferenceController] preferenceForKey:KEY_EVENT_ACTIONSET group:PREF_GROUP_ALERTS object:activeContactObject];
+    if (!eventActionArray)
+        eventActionArray = [[NSMutableArray alloc] init];
+    [eventActionArray retain];
+
+    if ([[tableView_actions dataSource] respondsToSelector:@selector(anInstanceChanged:)])
+        [[tableView_actions dataSource] performSelector:@selector(anInstanceChanged:) withObject:nil];
+    [tableView_actions reloadData];
 }
 
 //determine if two instances of ESContactAlerts refer to the same contact

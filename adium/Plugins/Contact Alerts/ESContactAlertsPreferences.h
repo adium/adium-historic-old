@@ -37,4 +37,5 @@
 - (IBAction)deleteEventAction:(id)sender;
 - (IBAction)oneTimeEvent:(id)sender;
 - (IBAction)addedEvent:(id)sendert;
+-(IBAction)anInstanceChanged:(id)sender;
 @end
