@@ -567,25 +567,27 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				
 			for (i = 0 ; i < nameCount ; i++){
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
-				[dict setObject:[person uniqueId] forKey:UID];
-				
-				[UIDsArray addObject:UID];
-				
-				//If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
-				if (isOSCAR){
-					const char	firstCharacter = [UID characterAtIndex:0];
+				if ([UID length]){
+					[dict setObject:[person uniqueId] forKey:UID];
 					
-					//Determine service based on UID
-					if([UID hasSuffix:@"@mac.com"]){
-						serviceID = @"Mac";
-					}else if(firstCharacter >= '0' && firstCharacter <= '9'){
-						serviceID = @"ICQ";
-					}else{
-						serviceID = @"AIM";
+					[UIDsArray addObject:UID];
+					
+					//If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
+					if (isOSCAR){
+						const char	firstCharacter = [UID characterAtIndex:0];
+						
+						//Determine service based on UID
+						if([UID hasSuffix:@"@mac.com"]){
+							serviceID = @"Mac";
+						}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+							serviceID = @"ICQ";
+						}else{
+							serviceID = @"AIM";
+						}
 					}
+					
+					[servicesArray addObject:serviceID];
 				}
-				
-				[servicesArray addObject:serviceID];
 			}
 		}
 		
