@@ -17,6 +17,8 @@
 #import "AIHandle.h"
 #import <AIUtilities/AIUtilities.h>
 
+#define CONTENT_OBJECT_SCROLLBACK	5  //Number of content object that say in the scrollback
+
 @implementation AIListContact
 
 - (id)initWithUID:(NSString *)inUID serviceID:(NSString *)inServiceID
@@ -108,6 +110,17 @@
     [contentObjectArray insertObject:inObject atIndex:0];
 
     //Keep the array under X number of objects
+/*    if([contentObjectArray count] > CONTENT_OBJECT_SCROLLBACK){
+        int i;
+
+        NSLog(@"Flush %i",([contentObjectArray count] - CONTENT_OBJECT_SCROLLBACK));
+        for(i = 0;i < ([contentObjectArray count] - CONTENT_OBJECT_SCROLLBACK); i++){
+            [contentObjectArray removeLastObject];
+        }
+
+        //let everyone know we flushed
+        //        [[owner notificationCenter] postNotificationName:Content_ContentObjectsChanged object:self userInfo:nil];
+    }*/
 
 }
 

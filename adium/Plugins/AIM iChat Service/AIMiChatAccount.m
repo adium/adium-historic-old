@@ -59,9 +59,6 @@ extern void* objc_getClass(const char *name);
     [FZDaemon addListener:self capabilities:15];
     [AIMService addListener:self signature:@"com.apple.iChat" capabilities:15];
 
-    //Register to listen to typing
-    [[owner contentController] registerTextEntryFilter:self];
-    
     //Clear the online state flag - this account should always load as offline (online state is not restored)
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
     [[owner accountController] setStatusObject:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
@@ -84,67 +81,6 @@ extern void* objc_getClass(const char *name);
 }
 - (NSString *)accountDescription{
     return([AIMService loginID]); //Readable description of this account's username
-}
-
-
-//Typing Notification (In here for now) --------------------------------------------------------------
-//This should be moved to a separate plugin later...
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView //keypress
-{
-    //Ignore
-}
-
-- (void)initTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
-{
-    //Ignore
-}
-
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView //delete,copy,paste,etc
-{
-    AIListContact	*contact = [inTextEntryView contact];
-
-    if(contact){
-        if([[inTextEntryView attributedString] length] == 0){
-            [self _sendTyping:NO to:contact]; //Not typing
-        }else{
-            if(![[typingDict objectForKey:[contact UIDAndServiceID]] boolValue]){
-                [self _sendTyping:YES to:contact]; //Typing
-            }
-        }
-    }
-}
-
-- (void)_sendTyping:(BOOL)typing to:(AIListContact *)contact
-{
-    id		messageObject;
-    AIHandle	*handle;
-    id		chat;
-
-    //Get the dest handle & cached chat
-    handle = [[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:self];
-    chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
-
-    //Send the 'typing' message
-    if(chat){
-        messageObject = [[[FZMessage alloc] initWithSender:[self accountDescription]
-                                                      time:[NSDate date]
-                                                    format:2
-                                                      body:@""
-                                                attributes:0
-                                              incomingFile:0
-                                              outgoingFile:0
-                                               inlineFiles:0
-                                                     flags:(typing ? 12 : 13)] autorelease];
-        [AIMService sendMessage:messageObject toChat:chat];
-
-    }
-
-    //Remember the state
-    if(typing){
-        [typingDict setObject:[NSNumber numberWithBool:YES] forKey:[contact UIDAndServiceID]];
-    }else{
-        [typingDict removeObjectForKey:[contact UIDAndServiceID]];
-    }
 }
 
 
@@ -241,8 +177,32 @@ extern void* objc_getClass(const char *name);
         messageObject = [[[FZMessage alloc] initWithSender:[self accountDescription] time:[NSDate date] format:2 body:message attributes:0 incomingFile:0 outgoingFile:0 inlineFiles:0 flags:5] autorelease];
         [AIMService sendMessage:messageObject toChat:chat];
 
-    }else{
-        NSLog(@"Unknown message object subclass");
+    }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+        id		messageObject;
+        AIHandle	*handle;
+        id		chat;
+        BOOL		typing;
+
+        //Get the dest handle & cached chat
+        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_TYPING_TYPE fromAccount:self];
+        chat = [[handle statusDictionary] objectForKey:@"iChat_Chat"];
+        typing = [(AIContentTyping *)object typing];
+        
+        //Send the 'typing' message
+        if(chat){
+            messageObject = [[[FZMessage alloc] initWithSender:[self accountDescription]
+                                                          time:[NSDate date]
+                                                        format:2
+                                                          body:@""
+                                                    attributes:0
+                                                  incomingFile:0
+                                                  outgoingFile:0
+                                                   inlineFiles:0
+                                                         flags:(typing ? 12 : 13)] autorelease];
+
+            [AIMService sendMessage:messageObject toChat:chat];
+        }
+
     }
     
     return(YES);

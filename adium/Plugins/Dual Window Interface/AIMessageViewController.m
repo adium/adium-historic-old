@@ -99,6 +99,8 @@
     //Set the account
     account = [inAccount retain];
 //    handle = [[[owner contactController] handleOfContact:contact forReceivingContentType:CONTENT_MESSAGE_TYPE fromAccount:account create:YES] retain];
+
+    [textView_outgoing setAccount:account];            
 }
 - (AIAccount *)account{
     return(account);
@@ -159,7 +161,8 @@
     //Config the outgoing text view
     [textView_outgoing setOwner:owner];
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
-    [textView_outgoing setContact:inContact];            
+    [textView_outgoing setContact:inContact];
+    [textView_outgoing setAccount:[self account]];            
     
     //Config the toolbar
     [toolbar_bottom setIdentifier:MESSAGE_TAB_TOOLBAR];

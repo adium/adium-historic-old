@@ -55,6 +55,7 @@ static char *hash_password(const char * const password);
 - (void)AIM_HandlePing;
 - (void)AIM_HandleClientEvent:(NSString *)inCommand;
 - (void)AIM_HandleEncMessageIn:(NSString *)inCommand;
+- (void)AIM_SendClientEvent:(int)inEvent toHandle:(NSString *)handleUID;
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SendMessageEnc:(NSString *)inMessage toHandle:(NSString *)handleUID;
 - (void)AIM_SetIdle:(double)inSeconds;
@@ -308,6 +309,18 @@ static char *hash_password(const char * const password);
 
         }
 
+    }else if([[object type] compare:CONTENT_TYPING_TYPE] == 0){
+        BOOL	typing;
+        
+        //Get the handle for receiving this content
+        handle = [[owner contactController] handleOfContact:[object destination] forReceivingContentType:CONTENT_TYPING_TYPE fromAccount:self];
+        typing = [(AIContentTyping *)object typing];
+
+        //Send the typing client event
+        if(handle){
+            [self AIM_SendClientEvent:(typing ? 2 : 0) toHandle:[handle UID]];
+            sent = YES;
+        }
     }
     
     return(sent);
@@ -549,7 +562,7 @@ static char *hash_password(const char * const password);
                 o = d - a + b + 71665152;
 
 //                message = [NSString stringWithFormat:@"toc2_signon login.oscar.aol.com 5190 %@ %s english TIC:AIMM 160 %lu",[screenName compactedString],hash_password([password cString]),o];
-                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.61 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
+                message = [NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %s English \"TIC:\\$Revision: 1.62 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString],hash_password([password cString]),o];
 
                 [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
 
@@ -858,6 +871,8 @@ static char *hash_password(const char * const password);
     //Post the correct typing state
     if(event == 0){ //Not typing
         [[handle statusDictionary] setObject:[NSNumber numberWithInt:NO] forKey:@"Typing"];
+    }else if(event == 1){ //Still typing?
+            
     }else if(event == 2){ //Typing
         [[handle statusDictionary] setObject:[NSNumber numberWithInt:YES] forKey:@"Typing"];
     }else{
@@ -937,6 +952,17 @@ static char *hash_password(const char * const password);
     //Add the content object
     [[owner contentController] addIncomingContentObject:messageObject];
 }         
+
+- (void)AIM_SendClientEvent:(int)inEvent toHandle:(NSString *)handleUID
+{
+    NSString	*command;
+
+    //Create the message string
+    command = [NSString stringWithFormat:@"toc2_client_event %@ %i",handleUID,inEvent];
+
+    //Send the message
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:command sequence:&localSequence]];
+}
 
 - (void)AIM_SendMessage:(NSString *)inMessage toHandle:(NSString *)handleUID
 {
@@ -1384,6 +1410,13 @@ static char *hash_password(const char * const password);
 
     //Send the message
     [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];
+
+}
+
+- (IBAction)sendCommand:(id)sender
+{
+    NSString	*message = [textField_trafficSendDEBUG stringValue];
+    [outQue addObject:[AIMTOC2Packet dataPacketWithString:message sequence:&localSequence]];    
 }
 
 - (void)AIM_GetStatus:(NSString *)handleUID
