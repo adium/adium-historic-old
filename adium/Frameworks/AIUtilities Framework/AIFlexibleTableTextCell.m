@@ -22,7 +22,7 @@
 #import "AITextAttachmentExtension.h"
 #import "AIAttributedStringAdditions.h"
 
-#define USE_OPTIMIZED_LIVE_RESIZE   NO
+#define USE_OPTIMIZED_LIVE_RESIZE   NO  //If YES, text layout will not be recalculated during a resize
 
 @interface AIFlexibleTableTextCell (PRIVATE)
 - (NSRange)validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
@@ -31,7 +31,6 @@
 - (void)_showTooltipForEvent:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
 - (BOOL)_handleEmoticonClicks:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)offset;
-
 - (NSRange)_validRangeFromIndex:(int)sourceIndex to:(int)destIndex;
 @end
 

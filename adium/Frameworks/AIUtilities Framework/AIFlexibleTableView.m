@@ -87,10 +87,6 @@
     [super dealloc];
 }
 
-- (void)setDelegate:(id)inDelegate
-{
-    delegate = inDelegate;
-}
 
 //Config -------------------------------------------------------------------------------
 //Set the content cells bottom aligned
@@ -110,14 +106,37 @@
     forwardsKeyEvents = inValue;
 }
 
+//Access to our delegate
+- (void)setDelegate:(id)inDelegate{
+    delegate = inDelegate;
+}
+- (id)delegate{
+    return(delegate);
+}
+
+//
+- (void)lockTable
+{
+    lockFocus = YES;
+}
+
+- (void)unlockTable
+{
+    lockFocus = NO;
+    [self resetCursorRects];
+    [self _resizeContents:YES];
+    
+    [self display];
+}
+
 
 //Drawing -------------------------------------------------------------------------------
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    if (!lockFocus) {
+    if(!lockFocus){
         NSEnumerator		*rowEnumerator;
-        AIFlexibleTableRow		*row;
+        AIFlexibleTableRow	    *row;
         NSRect			documentVisibleRect;
         NSPoint			cellPoint = contentOrigin;
         BOOL			foundVisible = NO;
@@ -142,7 +161,9 @@
     }
 }
 
-// Context menu ------------------------------------------------------------------------
+
+//Context menu ------------------------------------------------------------------------
+//Return the contextual menu for an event
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
     //Pass this on to our delegate
@@ -152,6 +173,7 @@
     return(nil);   
 }
 
+//Menu items applicable 
 - (NSArray *)arrayOfMenuItemsFromEvent:(NSEvent *)theEvent
 {
     AIFlexibleTableRow	*clickedRow;
@@ -181,6 +203,8 @@
 
     return ([returnArray count] ? returnArray : nil);
 }
+
+
 //Clicking --------------------------------------------------------------------------------
 //
 - (void)mouseDown:(NSEvent *)theEvent
@@ -299,6 +323,7 @@
                    toPoint:location];
 }
 
+//
 - (void)_dragSelectedContentWithEvent:(NSEvent *)theEvent
 {
     NSPoint		location = [self convertPoint:[theEvent locationInWindow] fromView:nil];
@@ -427,6 +452,12 @@
     [rowArray insertObject:inRow atIndex:0];
     [inRow setTableView:self];
 
+    //Resize the row above (if necessary) to update any spanning
+    if([inRow isSpannedInto]){
+	[self resizeRow:[rowArray objectAtIndex:1]];
+    }
+    
+    //Resize the new row
     [self resizeRow:inRow];
     if (!lockFocus) {  
         //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
@@ -438,6 +469,7 @@
     //   [self setNeedsDisplay:YES];
 }
 
+//Remove all rows
 - (void)removeAllRows
 {
     [rowArray release]; rowArray = [[NSMutableArray alloc] init];
@@ -449,21 +481,15 @@
     [self setNeedsDisplay:YES];
 }
 
-- (AIFlexibleTableRow *)rowAtIndex:(int)index
-{
-    if(index >= 0 && index < [rowArray count]){
-        return([rowArray objectAtIndex:index]);
-    }else{
-        return(nil);
-    }
-}
+
 
 
 //Cursor Tracking -----------------------------------------------------------------------------------
-//This method is automatically called when our size or position changes, allowing for our cells to re-configure any cursor tracking rects they've set up.
+//This method is automatically called when our size or position changes, allowing for our cells to
+//re-configure any cursor tracking rects they've set up.
 - (void)resetCursorRects
 {
-    if (!lockFocus) {
+    if(!lockFocus){
         //Reset cursor tracking for our visible rect
         [self _resetCursorRectsForVisibleRect:[[self enclosingScrollView] documentVisibleRect]];
     }
@@ -478,7 +504,8 @@
     }
 }
 
-//Reset cursor tracking for cells within the passed visible rect.  Pass an empty visible rect to remove all cursor tracking
+//Reset cursor tracking for cells within the passed visible rect
+//Pass an empty visible rect to remove all cursor tracking
 - (void)_resetCursorRectsForVisibleRect:(NSRect)visibleRect
 {
     NSPoint			cellPoint = contentOrigin;
@@ -523,8 +550,10 @@
 }
 
 
-//Key Forwarding ---------------------------------------------------------------------------------
-//When the user attempts to type into the table view, we push the keystroke to the next responder, and make it key.  This isn't required, but convienent behavior since one will never want to type into this view.
+//Key/Paste Forwarding ---------------------------------------------------------------------------------
+//When the user attempts to type into the table view, we push the keystroke to the next responder,
+//and make it key.  This isn't required, but convienent behavior since one will never want to type
+//into this view.
 - (void)keyDown:(NSEvent *)theEvent
 {
     [self forwardSelector:@selector(keyDown:) withObject:theEvent];
@@ -559,7 +588,10 @@
         [super tryToPerform:selector with:object]; //Pass it this key event
     }
 }
+
+
 //Cell, Column, and Row Access --------------------------------------------------------------------
+//Returns a row by point
 - (AIFlexibleTableRow *)_rowAtPoint:(NSPoint)inPoint rowOrigin:(NSPoint *)outOrigin
 {
     NSEnumerator		*rowEnumerator;
@@ -577,16 +609,27 @@
     return(nil);
 }
 
+//Returns a row by index
+- (AIFlexibleTableRow *)rowAtIndex:(int)index
+{
+    if(index >= 0 && index < [rowArray count]){
+        return([rowArray objectAtIndex:index]);
+    }else{
+        return(nil);
+    }
+}
+
 
 //Sizing calculations ------------------------------------------------------------------------------
-//Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect.  If YES is passed, recalculates the size of all our rows as well.
+//Recalculate our table view's dimensions so it completely fills the contianing scrollview's visible rect.
+//If YES is passed, recalculates the size of all our rows as well.
 - (void)_resizeContents:(BOOL)resizeContents
 {
-    if (!lockFocus) {
-        NSRect		documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
-        NSEnumerator	*rowEnumerator;
-        AIFlexibleTableRow	*row;
-        NSSize		size;
+    if(!lockFocus){
+        NSRect		    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
+        NSEnumerator	    *rowEnumerator;
+        AIFlexibleTableRow  *row;
+        NSSize		    size;
         
         //Get our view's new width
         size.width = documentVisibleRect.size.width;
@@ -612,24 +655,10 @@
     contentsHeight -= [inRow height];
     contentsHeight += [inRow sizeRowForWidth:[self frame].size.width];
     
-    if (!lockFocus) {        
-        //Resize our view
+    //Resize our view
+    if(!lockFocus){        
         [self _resizeViewToWidth:[self frame].size.width height:contentsHeight];
     }
-}
-
-- (void)lockTable
-{
-    lockFocus = YES;
-}
-
-- (void)unlockTable
-{
-    lockFocus = NO;
-    [self resetCursorRects];
-    [self _resizeContents:YES];
-    
-    [self display];
 }
 
 //Resize our view to the passed dimensions
@@ -659,9 +688,32 @@
     [self setNeedsDisplay:YES];
 }
 
+//
+- (int)heightOfSpanCellsAboveRow:(AIFlexibleTableRow *)startRow
+{
+    AIFlexibleTableRow  *row;
+    int rowIndex = [rowArray indexOfObject:startRow];
+    int height = 0;
+
+    do{
+	row = [rowArray objectAtIndex:rowIndex];
+	height += [row height];
+    }while(++rowIndex < [rowArray count] && ![row spansRows]);
+    
+    return(height);
+}
+
 
 //Selecting ------------------------------------------------------------------------------
-//
+//Copy all selected content
+- (void)copy:(id)sender
+{    
+    NSAttributedString *copyString = [self _selectedString];
+    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
+    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
+}
+
+//Returns the currently selected string
 - (NSAttributedString *)_selectedString
 {
     NSMutableAttributedString	*selectedString = nil;
@@ -685,13 +737,6 @@
     return(selectedString);
 }
 
-//
-- (void)copy:(id)sender
-{    
-    NSAttributedString *copyString = [self _selectedString];
-    [[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSRTFPboardType] owner:nil];
-    [[NSPasteboard generalPasteboard] setData:[copyString RTFFromRange:NSMakeRange(0,[copyString length]) documentAttributes:nil] forType:NSRTFPboardType];
-}
 
 @end
 

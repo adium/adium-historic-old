@@ -48,6 +48,7 @@
     [super dealloc];
 }
 
+//Set this cell's background color
 - (void)setBackgroundColor:(NSColor *)inColor
 {
     if(backgroundColor != inColor){
@@ -55,6 +56,7 @@
     }
 }
 
+//Set and get the row this cell is in
 - (void)setTableRow:(AIFlexibleTableRow *)inRow
 {
     tableRow = inRow;
@@ -66,6 +68,7 @@
 
 
 //Padding ------------------------------------------------------------------------------
+//Set side padding
 - (void)setPaddingLeft:(int)inLeft top:(int)inTop right:(int)inRight bottom:(int)inBottom
 {
     leftPadding = inLeft;
@@ -79,6 +82,7 @@
 
 
 //Spanning ------------------------------------------------------------------------------
+//The number of rows this cell spans
 - (void)setRowSpan:(int)inRowSpan
 {
     rowSpan = inRowSpan;
@@ -86,6 +90,12 @@
 }
 - (int)rowSpan{
     return(rowSpan);
+}
+
+//YES if this cell is spanned into
+- (BOOL)isSpannedInto
+{
+    return(NO);
 }
 
 
@@ -102,10 +112,12 @@
     return(NO);
 }
 
+//
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
     return nil;
 }
+
 //
 - (void)selectContentFrom:(NSPoint)source to:(NSPoint)dest offset:(NSPoint)inOffset mode:(int)selectMode
 {

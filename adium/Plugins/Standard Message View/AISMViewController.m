@@ -46,9 +46,6 @@
 - (NSAttributedString *)_prefixStringForContent:(AIContentMessage *)content performHeadIndent:(BOOL)performHeadIndent;
 - (NSAttributedString *)_prefixWithFormat:(NSString *)format forContent:(AIContentMessage *)content;
 - (NSString *)_prefixStringByExpandingFormat:(NSString *)format forContent:(AIContentMessage *)content;
-- (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
-- (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
-- (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class;
 - (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString;
 - (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString;
@@ -394,20 +391,20 @@
         NSEnumerator        *enumerator;
         AIFlexibleTableFramedTextCell *cell;
         
-        enumerator = [[self _cellsInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
         while (cell = [enumerator nextObject]) {
             [cell setDrawBottom:NO];
         }
 
-        enumerator = [[self _cellsInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+        enumerator = [[messageRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
         while (cell = [enumerator nextObject]) {
             [cell setDrawTop:NO];
         }
         
         //draw the between-messages divider in the last framedTextCell in the row, which should be the message
-        [[self _lastCellInRow:messageRow withClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
+        [[messageRow lastCellWithClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
         
-        if(!inlinePrefixes) [[self _cellInRow:previousRow withClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
+        if(!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
     
     previousRow = messageRow;
@@ -435,7 +432,7 @@
     
     //Add a separatorto our previous row if necessary
     AIFlexibleTableFramedTextCell *cell;
-    NSEnumerator * enumerator = [[self _cellsInRow:previousRow withClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
+    NSEnumerator * enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
     while (cell = [enumerator nextObject]) {
         [cell setDrawBottom:YES];
     }
@@ -475,6 +472,7 @@
     AIFlexibleTableCell     *leftmostCell = nil;
     NSArray		    *cellArray;
     AIFlexibleTableRow      *row;
+    
     //Empty icon span cell
     if(showUserIcons){
 	if(isHeader){
@@ -540,7 +538,7 @@
     [imageCell setPaddingLeft:3 top:6 right:3 bottom:1];
     [imageCell setBackgroundColor:[NSColor whiteColor]];
     [imageCell setDesiredFrameSize:NSMakeSize(ICON_SIZE,ICON_SIZE)];
-    if(span) [imageCell setRowSpan:2];
+//  if(span) [imageCell setRowSpan:2];
 
     return(imageCell);
 }
@@ -548,15 +546,22 @@
 //Span cell with the last image cell as it's master
 - (AIFlexibleTableCell *)_emptyImageSpanCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow
 {
-    id  cell;
+    id  masterCell;
     
-    if(cell = [self _cellInRow:thePreviousRow withClass:[AIFlexibleTableImageCell class]]){
-	return([AIFlexibleTableSpanCell spanCellFor:cell]);
-    }else if(cell = [self _cellInRow:thePreviousRow withClass:[AIFlexibleTableSpanCell class]]){
-	return([AIFlexibleTableSpanCell spanCellFor:[cell masterCell]]);
-    }
+    //Get the master cell
+    masterCell = [thePreviousRow cellWithClass:[AIFlexibleTableImageCell class]];
+    if(!masterCell) masterCell = [[thePreviousRow cellWithClass:[AIFlexibleTableSpanCell class]] masterCell];
     
-    return(nil);
+    if(masterCell){	
+	//Increase it's span height
+	[masterCell setRowSpan:[masterCell rowSpan] + 1];
+
+	//Create our span cell as one of it's children
+	return([AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1]);
+
+    }else{
+	return(nil);	
+    }    
 }
 
 - (AIFlexibleTableCell *)_emptyHeadIndentCellForPreviousRow:(AIFlexibleTableRow *)thePreviousRow content:(AIContentMessage *)content
@@ -655,7 +660,8 @@
     
     return(messageCell);
 }
-    
+
+
 //Prefix Creation --------------------------------------------------------------------------------------------------
 //Message without a prefix
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
@@ -811,63 +817,23 @@
 
 
 //Misc --------------------------------------------------------------------------------------------------
-//Finds a cell in a row with the specified class
-- (id)_cellInRow:(AIFlexibleTableRow *)row withClass:(Class)class
-{
-    NSEnumerator        *enumerator;
-    AIFlexibleTableCell *cell;
-    
-    enumerator = [[row cellArray] objectEnumerator];
-    while(cell = [enumerator nextObject]){
-        if([cell isKindOfClass:class]) return(cell);
-    }
-    
-    return(nil);
-}
-
-//Finds the last cell in a row with the specified class
-- (id)_lastCellInRow:(AIFlexibleTableRow *)row withClass:(Class)class
-{
-    NSEnumerator        *enumerator;
-    AIFlexibleTableCell *cell;
-    enumerator = [[row cellArray] reverseObjectEnumerator];
-    while(cell = [enumerator nextObject]){
-        if([cell isKindOfClass:class]) return(cell);
-    }
-    
-    return(nil);
-}
-
-//Finds multiple cells in a row with the specified class
-- (NSArray *)_cellsInRow:(AIFlexibleTableRow *)row withClass:(Class)class
-{
-    NSMutableArray      *cellArray = [[NSMutableArray alloc] init];
-    NSEnumerator        *enumerator;
-    AIFlexibleTableCell *cell;
-    
-    enumerator = [[row cellArray] objectEnumerator];
-    while(cell = [enumerator nextObject]){
-        if([cell isKindOfClass:class]) [cellArray addObject:cell];
-    }
-    
-    return([cellArray autorelease]);
-}
-
-//Forces an attributed string to the default text color
+//Remove text color from an attributed string
 - (NSAttributedString *)_stringByRemovingTextColor:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
     [mutableTemp removeAttribute:NSForegroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
     return(mutableTemp);
 }
-//Forces an attributed string to the default text color
+
+//Remove background color from an attributed string
 - (NSAttributedString *)_stringByRemovingBackgroundColor:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
     [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:NSMakeRange(0,[mutableTemp length])];
     return(mutableTemp);
 }
-//Forces an attributed string to the default text color
+
+//Remove text and background color from an attributed string
 - (NSAttributedString *)_stringByRemovingAllColors:(NSAttributedString *)inString
 {
     NSMutableAttributedString   *mutableTemp = [[inString mutableCopy] autorelease];
@@ -920,5 +886,6 @@
     }
     return nil;
 }
+
 @end
 
