@@ -8,11 +8,11 @@
 #import <Carbon/Carbon.h>
 
 /*!
-	@protocol NDScriptDataObjectSendEvent
+	@protocol NDScriptDataSendEvent
 	@abstract Protocol used by <tt><a href="../../../NDScriptDataObject/index.html" target="_top">NDScriptDataObject</a></tt>
 	@discussion The protocol <tt>NDScriptDataObjectSendEvent</tt> is implemented by any object that wishes to act as an AppleEvent send target as passed to the method <tt>setAppleEventSendTarget:</tt>.
  */
-@protocol NDScriptDataObjectSendEvent <NSObject>
+@protocol NDScriptDataSendEvent <NSObject>
 /*!
 	@method sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:
 	@abstract Passes an event to be executed by a AppleScript to the receiver
@@ -30,11 +30,11 @@
 @end
 
 /*!
-	@protocol NDScriptDataObjectActive
+	@protocol NDScriptDataActive
 	@abstract Protocol used by <tt><a href="../../../NDScriptDataObject/index.html" target="_top">NDScriptDataObject</a></tt>
 	@discussion The protocol <tt>NDScriptDataObjectActive</tt> is implemented by any object that wishes to.
  */
-@protocol NDScriptDataObjectActive <NSObject>
+@protocol NDScriptDataActive <NSObject>
 /*!
 	@method appleScriptActive
 	@abstract Method called periodical during script execution.
