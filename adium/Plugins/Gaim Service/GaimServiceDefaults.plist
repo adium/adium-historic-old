@@ -20,6 +20,12 @@
 	<integer>5222</integer>
 	<key>Jabber:Resource</key>
 	<string>Adium</string>
+	<key>Jabber:Use TLS</key>
+	<true/>
+	<key>Jabber:Force Old SSL</key>
+	<false/>
+	<key>Jabber:Allow Plaintext Authentication</key>
+	<false/>
 	
 	<key>Napster:Host</key>
 	<string>64.124.41.187</string>
