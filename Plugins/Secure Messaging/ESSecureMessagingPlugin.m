@@ -25,10 +25,12 @@
 #import <AIUtilities/MVMenuButton.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
+#import <Adium/AIListContact.h>
 
 #define	TITLE_MAKE_SECURE		AILocalizedString(@"Initiate Encrypted OTR Chat",nil)
 #define	TITLE_MAKE_INSECURE		AILocalizedString(@"Cancel Encrypted Chat",nil)
 #define TITLE_SHOW_DETAILS		AILocalizedString(@"Show Details...",nil)
+#define	TITLE_ENCRYPTION_OPTIONS AILocalizedString(@"Encryption Settings",nil)
 #define TITLE_ABOUT_ENCRYPTION	AILocalizedString(@"About Encryption...",nil)
 
 #define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
@@ -237,28 +239,81 @@
 	}
 }
 
+- (IBAction)selectedEncryptionPreference:(id)sender
+{
+	AIListContact	*listContact = [[[adium interfaceController] activeChat] listObject];
+	
+	[listContact setPreference:[NSNumber numberWithInt:[sender tag]]
+						forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+						 group:GROUP_ENCRYPTION];
+}
+
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	AISecureMessagingMenuTag tag = [menuItem tag];
 	AIChat					*chat = [[adium interfaceController] activeChat];
 
-	switch(tag){
-		case AISecureMessagingMenu_Toggle:
-			//The menu item should indicate what will happen if it is selected.. the opposite of our secure state
-			[menuItem setTitle:([chat isSecure] ? TITLE_MAKE_INSECURE : TITLE_MAKE_SECURE)];
-			return YES;
-			break;
-			
-		case AISecureMessagingMenu_ShowDetails:
-			//Only enable show details if the chat is secure
-			return [chat isSecure];
-			break;
-		case AISecureMessagingMenu_ShowAbout:
-			return [chat supportsSecureMessagingToggling];
-			break;
+	if([[[menuItem menu] title] isEqualToString:ENCRYPTION_MENU_TITLE]){
+		/* Options submenu */
+		AIEncryptedChatPreference tag = [menuItem tag];
+		switch(tag){
+			case EncryptedChat_Default:
+			{
+				AIListContact	*listContact = [chat listObject];
+				if(listContact){
+					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+																group:GROUP_ENCRYPTION];
+					//Set the state (checked or unchecked) as appropriate. Default = no pref or the actual 'default' value.
+					[menuItem setState:(!pref || (tag == [pref intValue]))];
+				}
+				return YES;
+				break;
+			}
+			case EncryptedChat_Never:
+			case EncryptedChat_Manually:
+			case EncryptedChat_Automatically:
+			case EncryptedChat_RejectUnencryptedMessages:
+			{
+				AIListContact	*listContact = [chat listObject];
+				if(listContact){
+					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
+																group:GROUP_ENCRYPTION];
+					
+					//Set the state (checked or unchecked) as appropriate
+					[menuItem setState:(pref && (tag == [pref intValue]))];
+				}
+				return YES;
+				break;
+			}
+		}
+	}else{
+		/* Items on the main menu */
+		AISecureMessagingMenuTag tag = [menuItem tag];
+		
+		switch(tag){
+			case AISecureMessagingMenu_Toggle:
+				//The menu item should indicate what will happen if it is selected.. the opposite of our secure state
+				[menuItem setTitle:([chat isSecure] ? TITLE_MAKE_INSECURE : TITLE_MAKE_SECURE)];
+				return YES;
+				break;
+				
+			case AISecureMessagingMenu_ShowDetails:
+				//Only enable show details if the chat is secure
+				return [chat isSecure];
+				break;
+				
+			case AISecureMessagingMenu_Options:
+				//Only enable options if the chat is with a single person 
+				return ([chat supportsSecureMessagingToggling] && [chat listObject] && ![chat name]);
+				break;
+				
+			case AISecureMessagingMenu_ShowAbout:
+				return [chat supportsSecureMessagingToggling];
+				break;
+				
+				
+		}
 	}
-	
 	return YES;
 }
 
@@ -284,6 +339,17 @@
 		[item setTag:AISecureMessagingMenu_ShowDetails];
 		[_secureMessagingMenu addItem:item];
 		
+		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_ENCRYPTION_OPTIONS
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+		[item setTag:AISecureMessagingMenu_Options];
+		[item setSubmenu:[[adium contentController] encryptionMenuNotifyingTarget:self
+																	  withDefault:YES]];
+		[_secureMessagingMenu addItem:item];		
+		
+		
+		[_secureMessagingMenu addItem:[NSMenuItem separatorItem]];
 		item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:TITLE_ABOUT_ENCRYPTION
 																	 target:self
 																	 action:@selector(showAbout:)
