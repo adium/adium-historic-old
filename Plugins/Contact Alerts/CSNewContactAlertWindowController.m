@@ -12,7 +12,7 @@
 #define NEW_ALERT_NIB @"NewAlert"
 
 @interface CSNewContactAlertWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
+- (id)initWithWindowNibName:(NSString *)windowNibName alert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject notifyingTarget:(id)inTarget userInfo:(id)inUserInfo;
 - (void)configureForEvent;
 - (void)saveDetailsPaneChanges;
 - (void)configureDetailsPane;
@@ -22,9 +22,9 @@
 @implementation CSNewContactAlertWindowController
 
 //Prompt for a new alert.  Pass nil for a panel prompt.
-+ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inListObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
++ (void)editAlert:(NSDictionary *)inAlert forListObject:(AIListObject *)inObject onWindow:(NSWindow *)parentWindow notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
-	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert forListObject:inListObject notifyingTarget:inTarget userInfo:inUserInfo];
+	CSNewContactAlertWindowController	*newAlertwindow = [[self alloc] initWithWindowNibName:NEW_ALERT_NIB alert:inAlert forListObject:inObject notifyingTarget:inTarget userInfo:inUserInfo];
 	
 	if(parentWindow){
 		[NSApp beginSheet:[newAlertwindow window]
