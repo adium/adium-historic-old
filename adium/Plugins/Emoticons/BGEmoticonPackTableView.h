@@ -13,20 +13,12 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-@interface AIEmoticonPack : NSObject {
-    NSString			*path;
-    NSString			*name;
+#import <Cocoa/Cocoa.h>
+#import <Adium/Adium.h>
+#import <AIUtilities/AIUtilities.h>
 
-    NSMutableArray		*emoticonArray;
-    BOOL                        enabled;
+@interface BGEmoticonPackTableView : AIAlternatingRowTableView {
+
 }
 
-+ (id)emoticonPackFromPath:(NSString *)inPath;
-- (void)setDisabledEmoticons:(NSArray *)inArray;
-- (NSArray *)emoticons;
-- (NSString *)name;
-- (NSString *)path;
-- (void)flushEmoticonImageCache;
-- (void)setIsEnabled:(BOOL)inEnabled;
-- (BOOL)isEnabled;
 @end

@@ -13,13 +13,10 @@
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {CLASS = AICheckboxList; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {removeEmoticons = id; }; 
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_addEmoticons" = NSPopUpButton; 
-                "button_removeEmoticons" = NSButton; 
-                "table_emoticonPacks" = NSTableView; 
+                "table_emoticonPacks" = BGEmoticonPackTableView; 
                 "table_emoticons" = AIAlternatingRowTableView; 
                 "textField_packTitle" = NSTextField; 
             }; 
@@ -44,6 +41,11 @@
             CLASS = AIVariableRowHeightOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAlternatingRowOutlineView; 
+        }, 
+        {
+            CLASS = BGEmoticonPackTableView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIAlternatingRowTableView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }

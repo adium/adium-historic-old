@@ -70,6 +70,12 @@
     return(name);
 }
 
+//Returns the path of this pack
+- (NSString *)path
+{
+    return(path);
+}
+
 //Returns the emoticons in this pack
 - (NSArray *)emoticons
 {

@@ -13,20 +13,28 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-@interface AIEmoticonPack : NSObject {
-    NSString			*path;
-    NSString			*name;
 
-    NSMutableArray		*emoticonArray;
-    BOOL                        enabled;
+#import "BGEmoticonPackTableView.h"
+
+@implementation BGEmoticonPackTableView
+
+//Filter keydowns looking for the delete key (to delete the current selection)
+- (void)keyDown:(NSEvent *)theEvent
+{
+        NSString	*charString = [theEvent charactersIgnoringModifiers];
+        unichar	pressedChar = 0;
+        
+        //Get the pressed character
+        if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+        
+        //Check if 'delete' was pressed (and should also check for the cmmd key)
+        // BRACKET WITH A WARNING DIALOG!
+        if(pressedChar == NSDeleteFunctionKey || pressedChar == 127){ //Delete
+                [[self dataSource] moveSelectedPacksToTrash]; // Tell preferences to move the actual packs to the trash
+        }
+        else{
+            [super keyDown:theEvent]; //Pass the key event on
+        }        
 }
 
-+ (id)emoticonPackFromPath:(NSString *)inPath;
-- (void)setDisabledEmoticons:(NSArray *)inArray;
-- (NSArray *)emoticons;
-- (NSString *)name;
-- (NSString *)path;
-- (void)flushEmoticonImageCache;
-- (void)setIsEnabled:(BOOL)inEnabled;
-- (BOOL)isEnabled;
 @end
