@@ -8,9 +8,11 @@
 #import "CPFVersionChecker.h"
 #import "ESVersionCheckerWindowController.h"
 
-#define VERSION_CHECKER_TITLE 	@"Check for Updates…"
-#define VERSION_PLIST_URL		@"http://www.adiumx.com/version.plist"
-#define VERSION_PLIST_KEY		@"adium-version"
+#define VERSION_CHECKER_TITLE		@"Check for Updates…"
+#define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
+#define VERSION_PLIST_KEY			@"adium-version"
+
+#define VERSION_CHECKER_DEFAULTS	@"VersionChecker Defaults"
 
 @interface CPFVersionChecker (PRIVATE)
 - (void)_requestVersionThread;
@@ -22,21 +24,52 @@
 //Install
 - (void)installPlugin
 {
-	//Listen to accounts for automatic update checking
-	[[adium contactController] registerListObjectObserver:self];
-	observingListUpdates = YES;
-				
-	//Manual update checking menu item
+	observingListUpdates = NO;
+	
+	//Register our defaults
+	//Setup Preferences
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:VERSION_CHECKER_DEFAULTS 
+																		forClass:[self class]]
+										  forGroup:PREF_GROUP_UPDATING];
+	
+	//Menu item for checking manually
     versionCheckerMenuItem = [[[NSMenuItem alloc] initWithTitle:VERSION_CHECKER_TITLE 
 														 target:self 
 														 action:@selector(checkForNewVersion:)
 												  keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
+	
+    //Observe preference changes
+    [[adium notificationCenter] addObserver:self
+								   selector:@selector(preferencesChanged:)
+									   name:Preference_GroupChanged
+									 object:nil];
+	[self preferencesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
 	if(observingListUpdates) [[adium contactController] unregisterListObjectObserver:self];
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+	if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_UPDATING] == 0){
+		BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
+																			 group:PREF_GROUP_UPDATING] boolValue];
+        if (updateAutomatically){
+			if (!observingListUpdates){
+				//Listen to accounts for automatic update checking
+				[[adium contactController] registerListObjectObserver:self];
+				observingListUpdates = YES;
+			}
+		}else{
+			if(observingListUpdates){
+				[[adium contactController] unregisterListObjectObserver:self];				
+				observingListUpdates = NO;
+			}
+		}
+	}
 }
 
 //

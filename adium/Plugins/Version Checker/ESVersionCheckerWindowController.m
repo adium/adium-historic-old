@@ -5,8 +5,8 @@
 //  Created by Evan Schoenberg on Mon Mar 29 2004.
 
 #import "ESVersionCheckerWindowController.h"
+#import "CPFVersionChecker.h"
 
-#define PREF_GROUP_UPDATING		@"Updating"
 #define KEY_LAST_UPDATE_ASKED	@"LastUpdateAsked"
 #define ADIUM_UPDATE_URL		@"http://download.adiumx.com/"
 
@@ -57,40 +57,53 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 #pragma mark Window display
 - (void)showWindowWithLatestBuildDate:(NSDate *)newestDate checkingManually:(BOOL)checkingManually
 {
-	NSDate	*thisDate = [self dateOfThisBuild]; //Date of this build
-	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED group:PREF_GROUP_UPDATING];
+	//Ensure the window is loaded
+	[self window];
+	
+	//Load relevant dates which we weren't passed
+	NSDate	*thisDate = [self dateOfThisBuild];
+	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
+																				group:PREF_GROUP_UPDATING];
 	
 	//If the user has already been informed of this update previously, don't bother them
-	if(checkingManually || !lastDateDisplayedToUser || ![lastDateDisplayedToUser isEqualToDate:newestDate]){
-		if(([thisDate isEqualToDate:newestDate]) || ([thisDate laterDate:newestDate])){
-			//Display an 'up to date' message if the user checked for updates manually, otherwise we are done
+	if(checkingManually /*|| !lastDateDisplayedToUser || ![lastDateDisplayedToUser isEqualToDate:newestDate]){
+		if(([thisDate isEqualToDate:newestDate]) || ([thisDate laterDate:newestDate])){*/){if(0){
+			//Display an 'up to date' message if the user checked for updates manually; otherwise we are done
 			if(checkingManually){
-
-				
 				[[self window] setTitle:AILocalizedString(@"Up to Date",nil)];
 				[textField_upToDate setStringValue:AILocalizedString(@"You have the most recent version of Adium.",nil)];
+				
+				//Select the proper hidden tabViewItem
+				[tabView_hidden selectTabViewItemAtIndex:0];
 				[self showWindow:nil];
-								[tabView_hidden selectTabViewItemAtIndex:0];				
 			}else{
 				[self closeWindow:nil];
 			}
 			
 		}else{
-			[tabView_hidden selectTabViewItemAtIndex:1];
+			
+			//'Check automatically' checkbox
+			[checkBox_checkAutomatically setState:[[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
+																							group:PREF_GROUP_UPDATING] boolValue]];
 			
 			//Formatted version of the newest release's date
-			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" allowNaturalLanguage:NO] autorelease];
+			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" 
+																	 allowNaturalLanguage:NO] autorelease];
 			NSString   		*newestDateString = [dateFormatter stringForObjectValue:newestDate];
 			
-			//Time since last update
+			//Time since last update (contains a trailing space)
 			NSString *interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:thisDate
 																					  andDate:newestDate];
 			[[self window] setTitle:AILocalizedString(@"Update Available",nil)];
-			[textField_updateAvailable setStringValue:[NSString stringWithFormat:AILocalizedString(@"A new Adium was released on %@. Your current copy is %@old.  Would you like to update?", nil), newestDateString, interval]];
+			[textField_updateAvailable setStringValue:[NSString stringWithFormat:AILocalizedString(@"The latest Adium was released on %@. Your current copy is %@old.  Would you like to update?", nil), newestDateString, interval]];
 			
-			//Remember that the user has been prompted for this version, so we don't bug them again
-			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED group:PREF_GROUP_UPDATING];
+			//Select the proper hidden tabViewItem
+			[tabView_hidden selectTabViewItemAtIndex:1];
 			[self showWindow:nil];
+			
+			//Remember that the user has been prompted for this version so we don't bug them about it again
+			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED 
+												  group:PREF_GROUP_UPDATING];
 		}
 	}
 }
@@ -102,6 +115,15 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	}
 	
 	[self closeWindow:nil];
+}
+
+- (IBAction)changePreference:(id)sender
+{
+	if (sender == checkBox_checkAutomatically){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_CHECK_AUTOMATICALLY
+											  group:PREF_GROUP_UPDATING];
+	}
 }
 
 #pragma mark Date methods
