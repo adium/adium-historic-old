@@ -6,6 +6,7 @@ Version 0.55
 - Fixed a crash when editing links that are in the view at load time
 - Fixed emoticon pack loading to ignore empty packs
 - Fixed a bug preventing Jabber names with "-" in them from connecting
+- Fixed a bug causing passwords to be cleared unnecessarily, particularly when network errors occurred while connecting
 - Disabled dragging web links into the message view
 
 Version 0.54 (5/7/2004)
