@@ -33,14 +33,7 @@ Standardize/enhance Xtras pref panes [brian]
   These preferences will go on the general pane, since they apply throughout Adium  
 
 //General Preferences
-  Create a general preferences category for several existing preferences.  If
-  more are added this pane could be split into General and Interface.
-	- Message cycling and sending keys
-	- Message logging (remove plain-text or send it to advanced)
 	- Service and status icon pack selection
-	- Message tab spawning preferences
-  These changes allow for the removal of the 'Keys' preferences, and for
-  message preferences to focus on message display over behavior.
 
 //Message window toolbar
   Additional message window toolbar items
