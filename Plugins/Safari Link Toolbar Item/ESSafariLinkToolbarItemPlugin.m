@@ -53,11 +53,16 @@
 		//If the script fails, do nothing
 		if(scriptResult && [scriptResult length]){
 			//Insert the script result - it should have returned HTML, so process it first
-			NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+			NSAttributedString	*attributedScriptResult;
+			NSDictionary		*attributes;
 			
-			NSDictionary	*attributes = [[[(NSTextView *)responder typingAttributes] copy] autorelease];
+			attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+
+			attributes = [[(NSTextView *)responder typingAttributes] copy];
 			[(NSTextView *)responder insertText:attributedScriptResult];
 			if(attributes) [(NSTextView *)responder setTypingAttributes:attributes];
+			
+			[attributes release];
 		}
 	}
 }
