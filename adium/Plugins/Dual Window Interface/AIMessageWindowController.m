@@ -19,7 +19,8 @@
 #import "AIAdium.h"
 #import "AIDualWindowInterface.h"
 
-#define	MESSAGE_WINDOW_NIB	@"MessageWindow"		//Filename of the message window nib
+#define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
+#define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
 // The tabbed window that contains messages
 
@@ -210,6 +211,14 @@
 
 - (void)windowDidLoad
 {
+    NSString	*savedFrame;
+    
+    //Restore the window position
+    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME];
+    if(savedFrame){
+        [[self window] setFrameFromString:savedFrame];
+    }
+
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
 
@@ -225,7 +234,12 @@
 // called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-/*    NSArray		*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
+    //Save the window position
+    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+                                         forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
+                                          group:PREF_GROUP_WINDOW_POSITIONS];
+
+    /*    NSArray		*viewArrayCopy = [[[tabView_messages tabViewItems] copy] autorelease]; //the array will change as we remove views, so we must work with a copy
     NSEnumerator 	*enumerator;
     NSTabViewItem	*tabViewItem;
 
