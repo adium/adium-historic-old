@@ -234,4 +234,23 @@
 	[[NSWorkspace sharedWorkspace] openFile:localFilename];
 }
 
+- (NSImage *)iconImage
+{
+	NSImage		*iconImage = nil;
+	NSString	*extension;
+	
+	extension = [[self localFilename] pathExtension];
+	
+	//Fall back on the remote filename if necessary
+	if(!extension) extension = [[self remoteFilename] pathExtension]; 
+	
+	if(extension && [extension length]){
+
+#warning Test for file transfer type, overlay a light up arrow or down arrow?
+		iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
+	}
+
+	return(iconImage);
+}	
+
 @end

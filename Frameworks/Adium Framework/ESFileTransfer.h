@@ -92,4 +92,6 @@ typedef enum {
 - (void)reveal;
 - (void)openFile;
 
+- (NSImage *)iconImage;
+
 @end

@@ -55,6 +55,9 @@ typedef enum {
 - (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact;
 - (void)requestForSendingFileToListContact:(AIListContact *)listContact;
 
+- (NSString *)stringForSize:(unsigned long long)inSize;
+- (NSString *)stringForSize:(unsigned long long)inSize of:(unsigned long long)totalSize ofString:(NSString *)totalSizeString;
+
 //Private
 - (void)initController;
 - (void)closeController;
