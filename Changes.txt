@@ -1,6 +1,10 @@
 				Adium X Version History
 				-----------------------
 
+Version 0.80 (13/-3/2525)
+- Achieved world domination
+- Obtained tasty sandwiches
+
 Version 0.72 (11/16/2004)
 - Fixed major stability issues involving Applescript filters
 - Fixed issues with erroneous autolinkification of text with multiple periods
