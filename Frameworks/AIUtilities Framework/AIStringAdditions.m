@@ -161,28 +161,34 @@
 		NSLog(@"-safeFilenameString called on a string longer than %u characters (it will be truncated): @\"%@\"", NAME_MAX, self);
 		length = NAME_MAX;
 	}
-	NSRange range = { 0, length };
-	UniChar *buf = malloc(length * sizeof(UniChar));
-	NSString *result;
-	if(!buf) {
-		//can't malloc the memory - see if NSMutableString can do it
-		NSMutableString *string = [self mutableCopy];
-
-		[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:range];
-
-		result = [string autorelease];
+	if(!length) {
+		//it will be an empty string anyway, so save the malloc and all the translation work.
+		result = [NSString string];
 	} else {
-		CFStringGetCharacters((CFStringRef)self, *(CFRange *)&range, buf);
-
-		register unsigned remaining = length;
-		register UniChar *ch = buf;
-		while(remaining--) {
-			*ch = table[*ch];
-			++ch;
+		//there are characters here; translate them.
+		NSRange range = { 0, length };
+		UniChar *buf = malloc(length * sizeof(UniChar));
+		NSString *result;
+		if(!buf) {
+			//can't malloc the memory - see if NSMutableString can do it
+			NSMutableString *string = [self mutableCopy];
+	
+			[string replaceOccurrencesOfString:@"/" withString:@"-" options:NSLiteralSearch range:range];
+	
+			result = [string autorelease];
+		} else {
+			CFStringGetCharacters((CFStringRef)self, *(CFRange *)&range, buf);
+	
+			register unsigned remaining = length;
+			register UniChar *ch = buf;
+			while(remaining--) {
+				*ch = table[*ch];
+				++ch;
+			}
+	
+			result = [NSString stringWithCharacters:buf length:length];
+			free(buf);
 		}
-
-		result = [NSString stringWithCharacters:buf length:length];
-		free(buf);
 	}
 
 	return result;
