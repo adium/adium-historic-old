@@ -29,7 +29,7 @@
 #define SCROLL_VIEW_PADDING_Y		2
 
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"
-#define KEY_CLWH_ALWAYS_ON_TOP		@"Always on Top"
+#define KEY_CLWH_WINDOW_POSITION	@"Contact Window Position"
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
 @interface AIContactListWindowController (PRIVATE)
@@ -149,9 +149,16 @@
 {
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)){
 		NSDictionary 	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
-		BOOL			alwaysOnTop = [[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue];
+		int				windowPosition = [[prefDict objectForKey:KEY_CLWH_WINDOW_POSITION] intValue];
+		int				level;
 		
-		[[self window] setLevel:(alwaysOnTop ? NSFloatingWindowLevel : NSNormalWindowLevel)];
+		switch(windowPosition){
+			case 1: level = NSFloatingWindowLevel; break;
+			case 2: level = kCGDesktopWindowLevel; break;
+			default: level = NSNormalWindowLevel; break;
+		}
+		[[self window] setLevel:level];
+
 		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CLWH_HIDE] boolValue]];
     }
 	
