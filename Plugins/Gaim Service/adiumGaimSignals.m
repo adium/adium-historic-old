@@ -20,11 +20,12 @@
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
 	if (buddy){
-		SEL updateSelector = nil;
-		id data = nil;
-		
+		SEL				updateSelector = nil;
+		id				data = nil;
+		BOOL			letAccountHandleUpdate = YES;
+		AIAccount		*account = accountLookup(buddy->account);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
-		
+
 		switch(event){
 			case GAIM_BUDDY_SIGNON: {
 				updateSelector = @selector(updateSignon:withData:);
@@ -41,14 +42,29 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				}
 				break;
 			}
-			case GAIM_BUDDY_AWAY:{
-				updateSelector = @selector(updateWentAway:withData:);
+			case GAIM_BUDDY_AWAY:
+			case GAIM_BUDDY_AWAY_RETURN: 
+			case GAIM_BUDDY_STATUS_MESSAGE: {
+				NSNumber			*statusTypeNumber;
+				NSString			*statusName;
+				NSAttributedString	*statusMessage;
+
+				statusTypeNumber = [NSNumber numberWithInt:((buddy->uc & UC_UNAVAILABLE) ? 
+															AIAwayStatusType : 
+															AIAvailableStatusType)];
+				statusName = [account statusNameForGaimBuddy:buddy];
+				statusMessage = [account statusMessageForGaimBuddy:buddy];
+
+				[account mainPerformSelector:@selector(updateStatusForContact:toStatusType:statusName:statusMessage:)
+								  withObject:theContact
+								  withObject:statusTypeNumber
+								  withObject:statusName
+								  withObject:statusMessage];
+				
+				letAccountHandleUpdate = NO;
 				break;
 			}
-			case GAIM_BUDDY_AWAY_RETURN: {
-				updateSelector = @selector(updateAwayReturn:withData:);
-				break;
-			}
+
 			case GAIM_BUDDY_IDLE:
 			case GAIM_BUDDY_IDLE_RETURN: {
 				if (buddy->idle != 0){
@@ -91,14 +107,16 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 		}
 		
-		if (updateSelector){
-			[accountLookup(buddy->account) mainPerformSelector:updateSelector
-													withObject:theContact
-													withObject:data];
-		}else{
-			[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:forEvent:)
-													withObject:theContact
-													withObject:data];
+		if(letAccountHandleUpdate){
+			if (updateSelector){
+				[account mainPerformSelector:updateSelector
+								  withObject:theContact
+								  withObject:data];
+			}else{
+				[account mainPerformSelector:@selector(updateContact:forEvent:)
+								  withObject:theContact
+								  withObject:data];
+			}
 		}
 	}
 }

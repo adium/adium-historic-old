@@ -295,22 +295,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-//Away and away return
-- (oneway void)updateWentAway:(AIListContact *)theContact withData:(void *)data
-{
-	[self _updateAwayOfContact:theContact toAway:YES];
-}
-
-- (oneway void)updateAwayReturn:(AIListContact *)theContact withData:(void *)data
-{
-	[self _updateAwayOfContact:theContact toAway:NO];
-}
-
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	[self updateStatusMessage:theContact];
-}
-
 /*
  * @brief Status name to use for a Gaim buddy
  */
@@ -330,31 +314,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 /*
  * @brief Update the status message and away state of the contact
  */
-- (void)updateStatusMessage:(AIListContact *)theContact
+- (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {
-	AIStatusType		statusType;
-	GaimBuddy			*b;
-	NSString			*statusName;
-	NSAttributedString	*statusMessage;
+	[theContact setStatusWithName:statusName
+					   statusType:[statusTypeNumber intValue]
+						   notify:NotifyLater];
+	[theContact setStatusMessage:statusMessage
+						  notify:NotifyLater];
 	
-	b = gaim_find_buddy(account, [[theContact UID] UTF8String]);
-	
-	if(b){
-		statusType = ((b->uc & UC_UNAVAILABLE) ? 
-					  AIAwayStatusType : 
-					  AIAvailableStatusType);
-		statusName = [self statusNameForGaimBuddy:b];
-		statusMessage = [self statusMessageForGaimBuddy:b];
-		
-		[theContact setStatusWithName:nil
-						   statusType:statusType
-							   notify:NotifyLater];
-		[theContact setStatusMessage:statusMessage
-							  notify:NotifyLater];
-		
-		//Apply the change
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
+	//Apply the change
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 //Idle time

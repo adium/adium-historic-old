@@ -216,7 +216,6 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	//If the node does not have ui_data yet, we need to create a contact and associate it
 	if (!theContact && buddy){
 		NSString	*UID;
-		GaimAccount	*account;
 	
 		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
 		

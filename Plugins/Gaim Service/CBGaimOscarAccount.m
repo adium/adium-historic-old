@@ -246,11 +246,6 @@
 	return (statusMessage ? [AIHTMLDecoder decodeHTML:statusMessage] : nil);
 }
 
-- (void)_updateAwayOfContact:(AIListContact *)theContact toAway:(BOOL)newAway
-{
-	[self updateStatusMessage:theContact];
-}
-
 @end
 
 #pragma mark Coding Notes
