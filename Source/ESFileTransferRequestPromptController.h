@@ -14,22 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIWindowController.h>
+#import <Adium/AIObject.h>
 
-@class ESFileTransfer;
+@class ESTextAndButtonsWindowController, ESFileTransfer;
 
-@interface ESFileTransferRequestPromptController : AIWindowController {
-	IBOutlet	NSTextView		*textView_requestTitle;
-    IBOutlet	NSScrollView	*scrollView_requestTitle;
-    
-    IBOutlet	NSTextView		*textView_requestDetails;
-    IBOutlet	NSScrollView	*scrollView_requestDetails;
-	
-	IBOutlet	NSImageView		*imageView_icon;
-	IBOutlet	NSButton		*button_save;
-	IBOutlet	NSButton		*button_saveAs;
-	IBOutlet	NSButton		*button_cancel;
-	
+@interface ESFileTransferRequestPromptController : AIObject {
+	ESTextAndButtonsWindowController *windowController;
+
 	ESFileTransfer	*fileTransfer;
 	id	target;
 	SEL	selector;
@@ -38,7 +29,5 @@
 + (void)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
 					 notifyingTarget:(id)inTarget
 							selector:(SEL)inSelector;
-
-- (IBAction)pressedButton:(id)sender;
 
 @end
