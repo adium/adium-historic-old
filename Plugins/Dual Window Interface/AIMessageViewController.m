@@ -409,7 +409,6 @@
 
     //Update the user list
     if(showUserList){
-		NSLog(@"Show user list.");
         [userListController reloadData];
     }
 }

@@ -114,7 +114,6 @@
 
 #pragma mark Controller convenience
 - (AIInterfaceController *)interfaceController{
-	NSLog(@"find it?");
     return([owner interfaceController]);
 }
 
@@ -130,11 +129,10 @@
 	contact = [[owner contactController] preferredContactWithUID:UID
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
-	NSLog(@"Created %@",contact);
+
 	if(contact){
 		//Open the chat and set it as active
 		chat = [[owner contentController] openChatWithContact:contact];
-		NSLog(@"So chat is %@",chat);
 		[[owner interfaceController] setActiveChat:chat];
 	}
 	

@@ -19,7 +19,7 @@
 	NSString		*room = [textField_roomName stringValue];
 	NSDictionary	*chatCreationInfo;
 	
-	NSLog(@"#### MSN joinChatWithAccount: %@ joining %@",inAccount,room);
+	//NSLog(@"#### MSN joinChatWithAccount: %@ joining %@",inAccount,room);
 	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",nil];
 

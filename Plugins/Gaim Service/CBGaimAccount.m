@@ -694,12 +694,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat addParticipatingListObject:contact];
 		
-		NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
+		//NSLog(@"added user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvAddedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
-	NSLog(@"added a whole list!");
+	//NSLog(@"added a whole list!");
 }
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
@@ -714,12 +714,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
+		//NSLog(@"removed user %@ in conversation %@",contactName,[chat name]);
 	}	
 }
 - (void)accountConvRemovedUsers:(GList *)users inConversation:(GaimConversation *)conv
 {
-	NSLog(@"removed a whole list!");
+	//NSLog(@"removed a whole list!");
 }
 
 /*********************/
@@ -899,7 +899,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		return ([processedString autorelease]);
 	}else{
-		NSLog(@"Sending a file to a chat.  Are you insane?");
+		//NSLog(@"Sending a file to a chat.  Are you insane?");
 		return (inString);
 	}
 }

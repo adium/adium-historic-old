@@ -327,7 +327,6 @@
 //Last chat to be active (should only be nil if no chats are open)
 - (AIChat *)mostRecentActiveChat
 {
-	NSLog(@"*** returning %@",mostRecentActiveChat);
 	return(mostRecentActiveChat);
 }
 //Solely for key-value pairing purposes

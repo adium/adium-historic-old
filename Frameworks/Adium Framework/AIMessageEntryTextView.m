@@ -651,7 +651,6 @@ static NSImage *pushIndicatorImage = nil;
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
-	NSLog(@"pasteboard is %@",pasteboard);
 	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
 	
 	if(!type){

@@ -23,10 +23,8 @@
 	chat = nil;
 	
 	NSString	*nibName = [self nibName];
-	if (nibName){
+	if(nibName){
 		[NSBundle loadNibNamed:nibName owner:self];
-	}else{
-		NSLog(@"No nib available... we shouldn't ever get here.");
 	}
 	
     return(self);

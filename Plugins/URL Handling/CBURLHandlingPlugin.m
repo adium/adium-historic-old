@@ -81,7 +81,6 @@
         if([[url scheme] isEqualToString:@"aim"]){
             if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
-				NSLog(@"Got %@",name);
 				if (name){
 					[self _openChatToContactWithName:name
 										   onService:@"AIM" 

@@ -202,7 +202,7 @@
 - (void)outlineView:(NSOutlineView *)outlineView draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {
 	if (operation == NSDragOperationNone){
-		NSLog(@"None!");
+		//None
 	}
 }
 
