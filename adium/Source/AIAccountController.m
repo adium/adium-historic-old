@@ -120,15 +120,21 @@
     //The account list is saved as changes are made, so there is no need to save it on close        
 
     [self disconnectAllAccounts]; //Disconnect all accounts
+    
+    // Release storage
+    [accountArray release];
+    [availableServiceArray release];
+    [lastAccountIDToSendContent release];
+    [accountStatusDict release];
 }
 
 // dealloc
 - (void)dealloc
 {
-    [accountArray release];
+    /*[accountArray release];
     [availableServiceArray release];
     [lastAccountIDToSendContent release];
-    [accountStatusDict release];
+    [accountStatusDict release];*/
 
     [super dealloc];
 }
