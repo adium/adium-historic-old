@@ -5,7 +5,7 @@
 	<key>Away Color</key>
 	<string>49,49,49</string>
 	<key>Away Enabled</key>
-	<true/>
+	<false/>
 	<key>Away Label Color</key>
 	<string>234,234,214</string>
 	<key>Background As Status</key>
@@ -13,19 +13,23 @@
 	<key>Background Color</key>
 	<string>255,255,255</string>
 	<key>Background Fade</key>
-	<real>1</real>
+	<real>0.80708658695220947</real>
+	<key>Background Image Path</key>
+	<string>/Users/adamiser/Code/adium/elisha.png</string>
+	<key>Contact Status Text Color</key>
+	<string>165,165,165</string>
 	<key>Grid Color</key>
-	<string>245,245,245</string>
+	<string>237,243,254</string>
 	<key>Grid Enabled</key>
 	<false/>
 	<key>Group Background</key>
-	<string>138,186,255</string>
+	<string>140,201,255</string>
 	<key>Group Background Gradient</key>
-	<string>106,169,255</string>
+	<string>97,172,255</string>
 	<key>Group Inverted Text Color</key>
 	<string>255,255,255</string>
 	<key>Group Shadow Color</key>
-	<string>128,128,128</string>
+	<string>167,167,167</string>
 	<key>Group Text Color</key>
 	<string>0,0,0</string>
 	<key>Idle And Away Color</key>
@@ -37,31 +41,31 @@
 	<key>Idle Color</key>
 	<string>49,49,49</string>
 	<key>Idle Enabled</key>
-	<true/>
+	<false/>
 	<key>Idle Label Color</key>
 	<string>234,234,234</string>
 	<key>Offline Color</key>
 	<string>50,50,50</string>
 	<key>Offline Enabled</key>
-	<true/>
+	<false/>
 	<key>Offline Label Color</key>
 	<string>240,240,240</string>
 	<key>Online Color</key>
 	<string>0,0,0</string>
 	<key>Online Enabled</key>
-	<true/>
+	<false/>
 	<key>Online Label Color</key>
 	<string>209,234,220</string>
 	<key>Signed Off Color</key>
 	<string>255,255,255</string>
 	<key>Signed Off Enabled</key>
-	<true/>
+	<false/>
 	<key>Signed Off Label Color</key>
 	<string>198,55,43</string>
 	<key>Signed On Color</key>
 	<string>255,255,255</string>
 	<key>Signed On Enabled</key>
-	<true/>
+	<false/>
 	<key>Signed On Label Color</key>
 	<string>43,198,56</string>
 	<key>Status Label Opacity</key>
@@ -69,16 +73,18 @@
 	<key>Typing Color</key>
 	<string>255,255,255</string>
 	<key>Typing Enabled</key>
-	<true/>
+	<false/>
 	<key>Typing Label Color</key>
 	<string>43,157,198</string>
 	<key>Unviewed Content Color</key>
 	<string>255,255,255</string>
 	<key>Unviewed Content Enabled</key>
-	<true/>
+	<false/>
 	<key>Unviewed Content Label Color</key>
 	<string>43,69,198</string>
 	<key>Use Background Image</key>
 	<false/>
+	<key>Window Transparency</key>
+	<real>1</real>
 </dict>
 </plist>
