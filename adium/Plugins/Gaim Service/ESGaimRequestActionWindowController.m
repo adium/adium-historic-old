@@ -129,7 +129,10 @@
 	}
 
 	if ((callBackIndex != -1) && (theCallbacks[callBackIndex] != NULL)){
-		((GaimRequestActionCb)theCallbacks[callBackIndex])([userData pointerValue], callBackIndex);
+		[[SLGaimCocoaAdapter sharedInstance] doRequestActionCbValue:[NSValue valueWithPointer:theCallbacks[callBackIndex]]
+												  withUserDataValue:userData
+													  callBackIndex:[NSNumber numberWithInt:callBackIndex]];
+		
 		[[self window] close];
 	}
 }

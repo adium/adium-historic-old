@@ -153,11 +153,11 @@
 - (IBAction)pressedButton:(id)sender
 {
 	if (sender == button_okay){
-		GaimRequestInputCb okayCallback = [okayCallbackValue pointerValue];
-		if (okayCallback){
-			okayCallback([userDataValue pointerValue],[[textField_input stringValue] UTF8String]);
-			[cancelCallbackValue release]; cancelCallbackValue = nil;
-		}
+		[[SLGaimCocoaAdapter sharedInstance] doRequestInputCbValue:okayCallbackValue
+												 withUserDataValue:userDataValue 
+													   inputString:[textField_input stringValue]];
+		[cancelCallbackValue release]; cancelCallbackValue = nil;
+		
 		[[self window] close];
 		
 	}else if (sender == button_cancel){
@@ -176,9 +176,11 @@
 
 - (BOOL)windowShouldClose:(id)sender
 {
-	GaimRequestInputCb cancelCallback = [cancelCallbackValue pointerValue];
-	if (cancelCallback){
-		cancelCallback([userDataValue pointerValue],[[textField_input stringValue] UTF8String]);
+	if (cancelCallbackValue){
+		[[SLGaimCocoaAdapter sharedInstance] doRequestInputCbValue:cancelCallbackValue
+												 withUserDataValue:userDataValue 
+													   inputString:[textField_input stringValue]];
+		
 	}
 	
 	return YES;

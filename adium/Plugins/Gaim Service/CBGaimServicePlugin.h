@@ -6,6 +6,7 @@
 //
 
 #import "GaimCommon.h"
+#import "SLGaimCocoaAdapter.h"
 
 @class AIServiceType;
 

@@ -4,7 +4,7 @@
 //
 //  Created by Evan Schoenberg on Wed May 05 2004.
 
-#import "GaimCommon.h"
+#import "CBGaimServicePlugin.h"
 
 @interface ESGaimRequestActionWindowController : AIWindowController {
     IBOutlet	NSTextField		*textField_title;
