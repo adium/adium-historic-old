@@ -188,7 +188,9 @@
 - (void)startConnect
 {
     [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
-	connectionPhase = 1;
+    
+    connectionPhase = 1;
+    
     stepTimer = [NSTimer scheduledTimerWithTimeInterval:1.0/TIMES_PER_SECOND
         target:self
         selector:@selector(update:)
@@ -199,275 +201,302 @@
 - (void)connect:(NSTimer *)timer
 {
     NSData *inData = nil;
-	if ([socket isValid] || socket == nil)
-	{
-		switch (connectionPhase)
-		{
-		case 1:
-			socket = [[AISocket socketWithHost:@"messenger.hotmail.com" port:1863] retain];
-			connectionPhase ++;
-			break;
-			
-		case 2:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
-				connectionPhase ++;
-			}
-			break;
-		
-		case 3:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				//[inData retain];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				connectionPhase ++;
-			}
-			break;
-			
-		case 4:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@", @"INF 1");
-				connectionPhase ++;
-			}
-			break;
-		
-		case 5:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]); 
-				
-				connectionPhase ++;
-			}
-			break;
-			
-		case 6:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",[screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",[screenName cString]]);
-				connectionPhase ++;
-			}
-			break;
-		
-		case 7:
-			if ([socket readyForReceiving])
-			{	// In this phase, we receive data concerning the next server to connect to, and then
-				// we connect.
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				
-				NSArray *hostAndPort = [[[[NSString stringWithCString:[inData bytes] length:[inData length]] 
-					componentsSeparatedByString:@" "]
-						objectAtIndex:3] componentsSeparatedByString:@":"];
-						
-				[socket release];
-				socket = [[AISocket 
-						socketWithHost:[hostAndPort objectAtIndex:0]
-						port:[[hostAndPort objectAtIndex:1] intValue]]
-					retain];
-				connectionPhase ++;
-			}
-			break;
-			
-		case 8:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
-				connectionPhase ++;
-			}
-			break;
-		
-		case 9:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				//[inData retain];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				connectionPhase ++;
-			}
-			break;
-			
-		case 10:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@", @"INF 1");
-				connectionPhase ++;
-			}
-			break;
-		
-		case 11:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]); 
-				
-				connectionPhase ++;
-			}
-			break;
-			
-		case 12:
-			if ([socket readyForSending])
-			{
-				[socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",[screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",[screenName cString]]);
-				connectionPhase ++;
-			}
-			break;
-		
-		case 13:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				
-				// Use the info passed by the server to produce a properly encrypted password
-				NSData *tempData = [[NSString stringWithFormat:@"%@%@",
-						[[[NSString stringWithCString:[inData bytes] length:[inData length]-2] 					componentsSeparatedByString:@" "] objectAtIndex:4], 
-						password]
-						dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
-				
-				NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
-						[tempData length], NULL) length:16];
-					
-				
-                                NSString *temp = [mdData description];
-				temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
-				temp = [temp stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
-				temp = [[temp componentsSeparatedByString:@" "] componentsJoinedByString:@""];
-				
-				NSLog (@"Password encrypted");
-				
-                                [[timer userInfo] setString:temp];
-				connectionPhase ++;
-			}
-			break;
-			
-		case 14:
-			if ([socket readyForSending])
-			{
-				NSString *temp = [timer userInfo];
-                                NSLog (@"Password being sent");
-				[socket sendData:[[NSString stringWithFormat:@"USR 3 MD5 S %@\r\n", temp] dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
-				[[timer userInfo] setString:@""];
-				connectionPhase ++;
-			}
-			break;
-		
-		case 15:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]); 
-				
-				connectionPhase ++;
-			}
-			break;
-			
-		// Contact List Update	//
-		case 16:
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				NSArray *message = [[NSString stringWithCString:[inData bytes] length:[inData length]] componentsSeparatedByString:@" "];
-				
-				
-				if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
-				{
-					NSLog(@"%d",[[message objectAtIndex:3] intValue]);
-					[[timer userInfo] setString:[message objectAtIndex:3]];
-					connectionPhase++;
-				}
-			}
-			break;
-		
-		case 17:
-			if ([socket readyForReceiving])
-			{
-				[socket getData:&inData ofLength:[[timer userInfo] intValue]];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				[[timer userInfo] setString:@""];
-				connectionPhase++;
-			}
-			break;
-		
-		case 18:
-			//now we send out our SYN, only the first time, though.
-			if ([socket readyForSending])
-			{
-				[socket sendData:[@"SYN 4 0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
-				NSLog(@">>> %@", @"SYN 4 0");
-				connectionPhase++;
-			}
-			break;
-			
-		case 19:
-		
-			if ([socket readyForReceiving])
-			{
-				[socket getDataToNewline:&inData];
-				NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				NSArray *message = [[NSString stringWithCString:[inData bytes] length:[inData length]] componentsSeparatedByString:@" "];
-				
-				if([[message objectAtIndex:0] isEqual:@"LST"]) //this is a person
-				{
-					if([[message objectAtIndex:2] isEqual:@"FL"])
-					{
-						AIHandle *theHandle = [AIHandle 
-								handleWithServiceID:[[service handleServiceType] identifier]
-								UID:[message objectAtIndex:6]
-								serverGroup:@"MSN"
-								temporary:NO
-								forAccount:self];                                                
-						[handleDict setObject:theHandle forKey:[message objectAtIndex:6]];
-						
-						[[owner contactController] handle:theHandle addedToAccount:self];
-					}
-					else if([[message objectAtIndex:2] isEqual:@"RL"])
-					{
-						//this is how we know we're done. when we get the last message of the reverse list.
-						if([[message objectAtIndex:4] isEqual:[message objectAtIndex:5]])
-						{
-							NSLog(@"done");
-							connectionPhase++;
-						}
-					}
-				}
-				else if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
-				{
-					NSLog(@"%d",[[message objectAtIndex:3] intValue]);
-					while(![socket readyForReceiving]) {}
-					[socket getData:&inData ofLength:[[message objectAtIndex:3] intValue]];
-					NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]);
-				}
-			}
-			break;
-			
-		case 20:
-			NSLog (@"MSN Last phase!");
-			connectionPhase ++;
-			break;
-			
-		default:
-			[[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-			break;
-		}
-	}
-	else
-	{
-		NSLog (@"Socket found to be invalid");
-		
-		[[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-	}
+    if ([socket isValid] || socket == nil)
+    {
+        switch (connectionPhase)
+        {
+            case 1:
+                socket = [[AISocket socketWithHost:@"messenger.hotmail.com" port:1863] retain];
+                connectionPhase ++;
+                break;
+                    
+            case 2:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n"
+                        dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 3:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 4:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"INF 1");
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 5:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]); 
+                    
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 6:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
+                        [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
+                        [screenName cString]]);
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 7:
+                if ([socket readyForReceiving])
+                {	
+                    // In this phase, we receive data concerning the next server to connect to, 
+                    // and then we connect.
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]);
+                    
+                    NSArray *hostAndPort = [[[[NSString stringWithCString:[inData bytes]
+                        length:[inData length]] 
+                            componentsSeparatedByString:@" "]
+                                    objectAtIndex:3] componentsSeparatedByString:@":"];
+                                    
+                    [socket release];
+                    socket = [[AISocket 
+                                    socketWithHost:[hostAndPort objectAtIndex:0]
+                                    port:[[hostAndPort objectAtIndex:1] intValue]]
+                            retain];
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 8:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[@"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0\r\n"
+                        dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"VER 0 MSNP7 MSNP6 MSNP5 MSNP4 CVR0");
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 9:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]);
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 10:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[@"INF 1\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"INF 1");
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 11:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes]
+                        length:[inData length]]); 
+                    
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 12:
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[[NSString stringWithFormat:@"USR 2 MD5 I %s\r\n",
+                        [screenName cString]] dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 2 MD5 I %s",
+                        [screenName cString]]);
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 13:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    
+                    // Use the info passed by the server to produce a properly encrypted password
+                    NSData *tempData = [[NSString stringWithFormat:@"%@%@",
+                        [[[NSString stringWithCString:[inData bytes] length:[inData length]-2] 						componentsSeparatedByString:@" "] objectAtIndex:4], 
+                            password]
+                        dataUsingEncoding:NSASCIIStringEncoding allowLossyConversion:YES];
+                    
+                    NSData *mdData = [NSData dataWithBytes:(const int *)MD5([tempData bytes],
+                                    [tempData length], NULL) length:16];
+                            
+                    
+                    NSString *temp = [mdData description];
+                    temp = [temp substringWithRange:NSMakeRange(1,[temp length]-2)];
+                    temp = [temp stringByTrimmingCharactersInSet:
+                        [NSCharacterSet whitespaceCharacterSet]];
+                    temp = [[temp componentsSeparatedByString:@" "] componentsJoinedByString:@""];
+                    
+                    NSLog (@"Password encrypted");
+                    
+                    [[timer userInfo] setString:temp];
+                    connectionPhase ++;
+                }
+                break;
+                    
+            case 14:
+                if ([socket readyForSending])
+                {
+                    NSString *temp = [timer userInfo];
+                    NSLog (@"Password being sent");
+                    [socket sendData:[[NSString stringWithFormat:@"USR 3 MD5 S %@\r\n", temp]
+                        dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@",[NSString stringWithFormat:@"USR 3 MD5 S %@", temp]);
+                    [[timer userInfo] setString:@""];
+                    connectionPhase ++;
+                }
+                break;
+            
+            case 15:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] length:[inData length]]); 
+                    
+                    connectionPhase ++;
+                }
+                break;
+                    
+            // Contact List Update	//
+            case 16:
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    NSArray *message = [[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]] 
+                    componentsSeparatedByString:@" "];
+                    
+                    //this is some kind of message from the server
+                    if([[message objectAtIndex:0] isEqual:@"MSG"]) 
+                    {
+                        NSLog(@"%d",[[message objectAtIndex:3] intValue]);
+                        [[timer userInfo] setString:[message objectAtIndex:3]];
+                        connectionPhase++;
+                    }
+                }
+                break;
+            
+            case 17:
+                if ([socket readyForReceiving])
+                {
+                    [socket getData:&inData ofLength:[[timer userInfo] intValue]];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    [[timer userInfo] setString:@""];
+                    connectionPhase++;
+                }
+                break;
+            
+            case 18:
+                //now we send out our SYN, only the first time, though.
+                if ([socket readyForSending])
+                {
+                    [socket sendData:[@"SYN 4 0\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"SYN 4 0");
+                    connectionPhase++;
+                }
+                break;
+                    
+            case 19:
+        
+                if ([socket readyForReceiving])
+                {
+                    [socket getDataToNewline:&inData];
+                    NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]]);
+                    NSArray *message = [[NSString stringWithCString:[inData bytes] 
+                        length:[inData length]] componentsSeparatedByString:@" "];
+                    
+                    if([[message objectAtIndex:0] isEqual:@"LST"]) //this is a person
+                    {
+                        if([[message objectAtIndex:2] isEqual:@"FL"])
+                        {
+                            AIHandle *theHandle = [AIHandle 
+                                    handleWithServiceID:[[service handleServiceType] identifier]
+                                    UID:[message objectAtIndex:6]
+                                    serverGroup:@"MSN"
+                                    temporary:NO
+                                    forAccount:self];                                                
+                            [handleDict setObject:theHandle forKey:[message objectAtIndex:6]];
+                            
+                            [[owner contactController] handle:theHandle addedToAccount:self];
+                        }
+                        else if([[message objectAtIndex:2] isEqual:@"RL"])
+                        {
+                            //this is how we know we're done. when we get the last message of the reverse list.
+                            if([[message objectAtIndex:4] isEqual:[message objectAtIndex:5]])
+                            {
+                                NSLog(@"done");
+                                connectionPhase++;
+                            }
+                        }
+                    }
+                    else if([[message objectAtIndex:0] isEqual:@"MSG"]) //this is some kind of message from the server
+                    {
+                        NSLog(@"%d",[[message objectAtIndex:3] intValue]);
+                        while(![socket readyForReceiving]) {}
+                        [socket getData:&inData ofLength:[[message objectAtIndex:3] intValue]];
+                        NSLog(@"<<< %@",[NSString stringWithCString:[inData bytes] 
+                            length:[inData length]]);
+                    }
+                }
+                break;
+                
+            case 20:
+                if([socket readyForSending])
+                {
+                    [socket sendData:[@"CHG 5 NLN\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+                    NSLog(@">>> %@", @"CHG 5 NLN");			
+                    connectionPhase ++;
+                }
+                break;
+                    
+            default:
+                [[owner accountController] 
+                    setStatusObject:[NSNumber numberWithInt:STATUS_ONLINE]
+                        forKey:@"Status" account:self];
+                break;
+        }
+    }
+    else
+    {
+        NSLog (@"Socket found to be invalid");
+        
+        [[owner accountController] setStatusObject:[NSNumber numberWithInt:STATUS_OFFLINE] 			forKey:@"Status" account:self];
+    }
 }
 
 - (void)update:(NSTimer *)timer
