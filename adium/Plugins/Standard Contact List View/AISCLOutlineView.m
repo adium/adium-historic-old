@@ -539,8 +539,8 @@
 														  dequeue:NO];
 
 		//Quick hack to hide any active tooltips
-		if([[self delegate] respondsToSelector:@selector(_hideTooltip)])
-			[[self delegate] performSelector:@selector(_hideTooltip)];
+		if([[self delegate] respondsToSelector:@selector(_endTrackingMouse)])
+			[[self delegate] performSelector:@selector(_endTrackingMouse)];
 		
 		//Pass along the event (either to ourself or our window, depending on what it is)
 		if([nextEvent type] == NSLeftMouseUp){
