@@ -94,7 +94,9 @@ static int numExecuted = 0;
 	[self buildScriptMenu]; //this also sets the submenu for the menu item.
 	
 	[[adium menuController] addMenuItem:scriptMenuItem toLocation:LOC_Edit_Additions];
-	[[adium menuController] addContextualMenuItem:[scriptMenuItem copy] toLocation:Context_TextView_Edit];
+	
+	contextualScriptMenuItem = [scriptMenuItem copy];
+	[[adium menuController] addContextualMenuItem:contextualScriptMenuItem toLocation:Context_TextView_Edit];
 }
 
 - (void)dealloc
@@ -105,6 +107,7 @@ static int numExecuted = 0;
 	[scriptArray release]; scriptArray = nil;
     [flatScriptArray release]; flatScriptArray = nil;
 	[scriptMenuItem release]; scriptMenuItem = nil;
+	[contextualScriptMenuItem release]; contextualScriptMenuItem = nil;
 	
 	[super dealloc];
 }
@@ -237,7 +240,8 @@ static int numExecuted = 0;
 	[scriptMenu release]; scriptMenu = [[NSMenu alloc] initWithTitle:TITLE_INSERT_SCRIPT];
 	[self _appendScripts:scriptArray toMenu:scriptMenu];
 	[scriptMenuItem setSubmenu:scriptMenu];
-	
+	[contextualScriptMenuItem setSubmenu:[[scriptMenu copy] autorelease]];
+		
 	[self registerToolbarItem];
 }
 
@@ -394,7 +398,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Disable the insertion if a text field is not active
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(menuItem == scriptMenuItem){
+	if((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)){
 		return(YES); //Always keep the submenu enabled so users can see the available scripts
 	}else{
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
