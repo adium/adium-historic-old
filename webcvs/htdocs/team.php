@@ -60,7 +60,7 @@
                 <div class="boxThinContent">
                     <p><a href="mailto:psiona@mac.com">Laura Natcher</a><br />
                     <span class="tiny">Duck Icon Variants, Artwork</span></p>
-                    <p><a href="mailto:tick@adiumx.com">Christopher Forsythe</a><br />
+                    <p><a href="mailto:cforsythe@gmail.com">Christopher Forsythe</a><br />
                     <span class="tiny">Community, Moderator</span></p>
                     <p><a href="mailto:ik@jasperhauser.nl">Jasper Hauser</a><br />
                     <span class="tiny">Interface Icons</span></p>
