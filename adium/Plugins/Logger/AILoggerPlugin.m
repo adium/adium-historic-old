@@ -126,7 +126,7 @@
         receiverName = [receiver accountDescription];
     }
 
-    destinationPath = [basePath stringByAppendingString:[NSString stringWithFormat:@"/%@", receiverName]];
+    destinationPath = [basePath stringByAppendingString:[NSString stringWithFormat:@"/%@", senderName]];
     [self makeDir:destinationPath];
 
     filePath = [[NSString stringWithFormat:@"%@/%i-%i-%i.log", destinationPath, [theDate monthOfYear], [theDate dayOfMonth], [theDate yearOfCommonEra]] stringByExpandingTildeInPath];
