@@ -59,7 +59,11 @@
     [checkCell setTitle:@""];
     [checkCell setRefusesFirstResponder:YES];
     [[table_emoticons tableColumnWithIdentifier:@"Enabled"] setDataCell:checkCell];
-    [[table_emoticons tableColumnWithIdentifier:@"Image"] setDataCell:[[[NSImageCell alloc] init] autorelease]];
+	
+	NSImageCell *imageCell = [[[NSImageCell alloc] init] autorelease];
+	if ([imageCell respondsToSelector:@selector(_setAnimates:)]) [imageCell _setAnimates:NO];
+	
+    [[table_emoticons tableColumnWithIdentifier:@"Image"] setDataCell:imageCell];
     [table_emoticons setDrawsAlternatingRows:YES];
         
     //Observe prefs    
