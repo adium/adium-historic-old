@@ -438,7 +438,7 @@
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:@"Background Image"];
 	
-	if([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton){
+	if([openPanel runModalForDirectory:nil file:nil types:[NSImage imageFileTypes]] == NSOKButton){
 		[[adium preferenceController] setPreference:[openPanel filename]
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH
 											  group:PREF_GROUP_LIST_THEME];
