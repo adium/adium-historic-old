@@ -6,13 +6,11 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@interface AIAliasSupportPreferences : NSObject {
+@interface AIAliasSupportPreferences : AIObject {
     IBOutlet	NSView			*view_prefView;
     IBOutlet	NSPopUpButton		*format_menu;	
-    AIAdium				*owner;
-
 }
 
-+ (AIAliasSupportPreferences *)displayFormatPreferencesWithOwner:(id)inOwner;
++ (AIAliasSupportPreferences *)displayFormatPreferences;
 
 @end

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
+@class AIHandleIdentifier, AIServiceType, AIMessageObject, AIListContact, AIHandle, AIChat, AIContentObject, AIListObject, ESFileTransfer;
 @protocol AIServiceController, AIAccountViewController;
 
 typedef enum {
@@ -93,15 +93,14 @@ typedef enum {
  * almost never need to talk directly with an AIAccount.  For information on
  * accounts, check out 'working with accounts' and 'creating service code'.
  */
-@interface AIAccount : NSObject {
-    AIAdium			*owner;
+@interface AIAccount : AIObject {
     id <AIServiceController>	service;
 
     NSMutableDictionary		*propertiesDict;
     NSImage                     *userIcon;
 }
 
-- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService owner:(id)inOwner;
+- (id)initWithProperties:(NSDictionary *)inProperties service:(id <AIServiceController>)inService;
 - (void)setProperty:(id)inValue forKey:(NSString *)key;
 - (id)propertyForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;

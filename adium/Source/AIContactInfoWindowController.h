@@ -13,19 +13,18 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIContactHandle;
+@class AIContactHandle;
 
 #define KEY_CONTACT_INSPECTOR_WINDOW_FRAME  @"Contact Inspector Window Frame"
 
-@interface AIContactInfoWindowController : NSWindowController {
+@interface AIContactInfoWindowController : AIWindowController {
     IBOutlet	NSScrollView	*scrollView_contents;
     IBOutlet	NSView		*view_noContact;
     IBOutlet	NSView		*view_contact;
-    AIAdium 			*owner;
     
     AIPreferenceCategory	*mainCategory;
 }
 
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner;
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory;
 
 @end

@@ -13,11 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class	AIAdium, AISendingTextView;
+@class	AISendingTextView;
 
-@interface AIEnterAwayWindowController : NSWindowController {
-    AIAdium	*owner;
-
+@interface AIEnterAwayWindowController : AIWindowController {
     IBOutlet 	NSPopUpButton		*popUp_title;
     IBOutlet	AISendingTextView	*textView_awayMessage;
     IBOutlet	NSButton		*button_setAwayMessage;
@@ -34,7 +32,7 @@
     BOOL	loaded_message;
 }
 
-+ (AIEnterAwayWindowController *)enterAwayWindowControllerForOwner:(id)inOwner;
++ (AIEnterAwayWindowController *)enterAwayWindowController;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)setAwayMessage:(id)sender;

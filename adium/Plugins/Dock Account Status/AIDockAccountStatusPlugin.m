@@ -25,18 +25,18 @@
 - (void)installPlugin
 {
     //Observe account status changed notification
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self accountPropertiesChanged:nil];
 }
 
 - (void)uninstallPlugin
 {
     //Remove observers (general)
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 
 }
@@ -64,7 +64,7 @@
         int			onlineAccounts = 0;
         int			connectingAccounts = 0;
 
-        enumerator = [[[owner accountController] accountArray] objectEnumerator];
+        enumerator = [[[adium accountController] accountArray] objectEnumerator];
         while((account = [enumerator nextObject])){
             int status = [[account propertyForKey:@"Status"] intValue];
 
@@ -76,28 +76,28 @@
         }
         //Online
         if(onlineAccounts || notification == nil){
-            [[owner dockController] setIconStateNamed:@"Online"];
+            [[adium dockController] setIconStateNamed:@"Online"];
         }else{
-            [[owner dockController] removeIconStateNamed:@"Online"];
+            [[adium dockController] removeIconStateNamed:@"Online"];
         }
 
         //Connecting
         if(connectingAccounts){
-            [[owner dockController] setIconStateNamed:@"Connecting"];
+            [[adium dockController] setIconStateNamed:@"Connecting"];
         }else{
-            [[owner dockController] removeIconStateNamed:@"Connecting"];
+            [[adium dockController] removeIconStateNamed:@"Connecting"];
         }
 
     }
 
     if(notification == nil || [key compare:@"AwayMessage"] == 0){
         if(changedAccount == nil){ //Global status change
-            BOOL away = ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] != nil);
+            BOOL away = ([[adium accountController] propertyForKey:@"AwayMessage" account:nil] != nil);
 
             if(away){
-                [[owner dockController] setIconStateNamed:@"Away"];
+                [[adium dockController] setIconStateNamed:@"Away"];
             }else{
-                [[owner dockController] removeIconStateNamed:@"Away"];
+                [[adium dockController] removeIconStateNamed:@"Away"];
             }
 
         }
@@ -106,12 +106,12 @@
     
     if(notification == nil || [key compare:@"IdleSince"] == 0){
         if(changedAccount == nil){ //Global status change
-            BOOL idle = ([[owner accountController] propertyForKey:@"IdleSince" account:nil] != nil);
+            BOOL idle = ([[adium accountController] propertyForKey:@"IdleSince" account:nil] != nil);
 
             if(idle){
-                [[owner dockController] setIconStateNamed:@"Idle"];
+                [[adium dockController] setIconStateNamed:@"Idle"];
             }else{
-                [[owner dockController] removeIconStateNamed:@"Idle"];
+                [[adium dockController] removeIconStateNamed:@"Idle"];
             }
 
         }

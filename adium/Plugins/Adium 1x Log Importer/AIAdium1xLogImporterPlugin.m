@@ -19,16 +19,16 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGER_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LOGGING];
 
     //Install the 'import logs' menu item
 
     //Import Adium 1.6 logs (Automatically... will probably remove this)
-    if(![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_HAS_IMPORTED_16_LOGS] boolValue]){
+    if(![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING] objectForKey:KEY_HAS_IMPORTED_16_LOGS] boolValue]){
 
-        [[AILogImporter logImporterWithOwner:owner] showWindow:nil];
+        [[AILogImporter logImporter] showWindow:nil];
 
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
                                              forKey:KEY_HAS_IMPORTED_16_LOGS
                                               group:PREF_GROUP_LOGGING];
     }    

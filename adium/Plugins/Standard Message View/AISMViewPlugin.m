@@ -25,17 +25,17 @@
 - (void)installPlugin
 {
     //Register ourself as a message list view plugin
-    [[owner interfaceController] registerMessageViewPlugin:self];
+    [[adium interfaceController] registerMessageViewPlugin:self];
 
     //Register our default preferences and install our preference view
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-    preferences = [[AISMPreferences preferencePaneWithOwner:owner] retain];
-    advancedPreferences = [[ESSMAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SMV_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+    preferences = [[AISMPreferences preferencePane] retain];
+    advancedPreferences = [[ESSMAdvancedPreferences preferencePane] retain];
         
     //Setup a time stamp format based on this user's locale
-    NSString    *format = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
+    NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
     if(!format || [format length] == 0){
-        [[owner preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
+        [[adium preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
                                              forKey:KEY_SMV_TIME_STAMP_FORMAT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     }
@@ -44,7 +44,7 @@
 //Return a message view controller
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([AISMViewController messageViewControllerForChat:inChat owner:owner]);
+    return([AISMViewController messageViewControllerForChat:inChat]);
 }
 
 @end

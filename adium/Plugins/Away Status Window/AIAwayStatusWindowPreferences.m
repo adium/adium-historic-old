@@ -33,7 +33,7 @@
 //
 - (IBAction)toggleShowAway:(id)sender
 {
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_SHOW_AWAY_STATUS_WINDOW
                                           group:PREF_GROUP_AWAY_STATUS_WINDOW];
 
@@ -49,7 +49,7 @@
 //
 - (IBAction)toggleFloatAway:(id)sender
 {
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_FLOAT_AWAY_STATUS_WINDOW
                                           group:PREF_GROUP_AWAY_STATUS_WINDOW];
 
@@ -61,7 +61,7 @@
 //
 - (IBAction)toggleHideInBackground:(id)sender
 {
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW
                                           group:PREF_GROUP_AWAY_STATUS_WINDOW];
 
@@ -73,7 +73,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW];
     
     // Set the values of the checkboxes
     [checkBox_showAway setState:[[preferenceDict objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue]];

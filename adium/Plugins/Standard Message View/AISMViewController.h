@@ -13,12 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIListContact, AIAdium, AIFlexibleTableView, AIChat, AIFlexibleTableCell, AIFlexibleTableFramedTextCell;
+@class AIListContact, AIFlexibleTableView, AIChat, AIFlexibleTableCell, AIFlexibleTableFramedTextCell;
 @protocol AIFlexibleTableViewDelegate, AIMessageViewController;
 
-@interface AISMViewController : NSObject <AIMessageViewController> {
-    AIAdium			*owner;
-
+@interface AISMViewController : AIObject <AIMessageViewController> {
     AIChat			*chat;
     AIFlexibleTableView		*messageView;
     AIFlexibleTableRow          *previousRow;
@@ -60,7 +58,7 @@
     NSMutableArray              *contentQueue;
 }
 
-+ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;
++ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (NSView *)messageView;
 - (AIChat *)chat;
 

@@ -8,9 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@class AIAccount, AIHandle, AIAdium;
+@class AIAccount, AIHandle;
 
-@interface ESFileTransfer : NSObject {
+@interface ESFileTransfer : AIObject {
     AIHandle *handle;
     AIAccount<AIAccount_Files> *account;
     NSString *localFilename;

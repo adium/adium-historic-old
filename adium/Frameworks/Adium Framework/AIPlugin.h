@@ -20,15 +20,12 @@
 - (NSString *)pluginURL;
 @end
 
-@class AIAdium;
-
-@interface AIPlugin : NSObject {
-    AIAdium 		*owner;		//The owner of this plugin (AIAdium)
+@interface AIPlugin : AIObject {
 
 }
 
 //PRIVATE
-+ (id)newInstanceOfPluginWithOwner:(id)inOwner;
++ (id)newInstanceOfPlugin;
 - (void)uninstallPlugin;
 
 @end

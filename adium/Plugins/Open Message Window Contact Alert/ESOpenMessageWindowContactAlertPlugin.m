@@ -13,13 +13,13 @@
 - (void)installPlugin
 {
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
 }
 
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 
@@ -36,24 +36,24 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESOpenMessageWindowContactAlert contactAlertWithOwner:owner];   
+    return [ESOpenMessageWindowContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
     BOOL success = YES;
-    AIAccount * account = [[owner accountController] accountWithID:details];
+    AIAccount * account = [[adium accountController] accountWithID:details];
     if ([[account propertyForKey:@"Status"] intValue] == STATUS_OFFLINE) { //desired account not available
         if ([[detailsDict objectForKey:KEY_MESSAGE_OTHERACCOUNT] intValue]) { //use another account if necessary pref
-            account = [[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
+            account = [[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:inObject];
         }
         if (!account)
             success = NO;
     }
     if (success) {
-        AIChat	*chat = [[owner contentController] openChatOnAccount:account withListObject:inObject];
-        [[owner interfaceController] setActiveChat:chat];
+        AIChat	*chat = [[adium contentController] openChatOnAccount:account withListObject:inObject];
+        [[adium interfaceController] setActiveChat:chat];
     }
     return success;
 }

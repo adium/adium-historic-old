@@ -26,7 +26,6 @@
 #define KEY_DUAL_RESIZE_HORIZONTAL              @"Autoresize Horizontal"
 
 @interface AISCLViewController (PRIVATE)
-- (AISCLViewController *)initWithOwner:(id)inOwner;
 - (void)contactListChanged:(NSNotification *)notification;
 - (void)contactOrderChanged:(NSNotification *)notification;
 - (void)contactAttributesChanged:(NSNotification *)notification;
@@ -43,28 +42,27 @@
 
 @implementation AISCLViewController
 
-+ (AISCLViewController *)contactListViewControllerWithOwner:(id)inOwner
++ (AISCLViewController *)contactListViewController
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);    
+    return([[[self alloc] init] autorelease]);    
 }
 
-- (AISCLViewController *)initWithOwner:(id)inOwner
+- (AISCLViewController *)init
 {
     [super init];
 
     //Init
     contactListView = [[AISCLOutlineView alloc] initWithFrame:NSMakeRect(0,0,100,100)]; //Arbitrary frame
-    owner = [inOwner retain];
     tooltipTrackingTag = 0;
     trackingMouseMovedEvents = NO;
     tooltipTimer = nil;
     tooltipCount = 0;
 
     //Install the necessary observers
-    [[owner notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactListChanged:) name:Contact_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
@@ -83,8 +81,8 @@
 - (void)dealloc
 {    
     //Remove observers (general)
-    [[owner notificationCenter] removeObserver:self];
-    [[owner notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
+    [[adium notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:contactListView name:ListObject_AttributesChanged object:nil];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Hide any open tooltips
@@ -95,7 +93,6 @@
     [contactListView setDataSource:nil];
     [contactListView setDelegate:nil];
     [contactListView release];
-    [owner release];
 
     [super dealloc];
 }
@@ -111,7 +108,7 @@
 - (void)contactListChanged:(NSNotification *)notification
 {
     //Fetch the new contact list
-    [contactList release]; contactList = [[[owner contactController] contactList] retain];
+    [contactList release]; contactList = [[[adium contactController] contactList] retain];
 
     //Redisplay and resize
     [contactListView reloadData];
@@ -150,7 +147,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
         float		alpha = [[prefDict objectForKey:KEY_SCL_OPACITY] floatValue];
         NSColor		*color = [[prefDict objectForKey:KEY_SCL_CONTACT_COLOR] representedColor];
         NSColor		*backgroundColor = [[prefDict objectForKey:KEY_SCL_BACKGROUND_COLOR] representedColorWithAlpha:alpha];
@@ -197,7 +194,7 @@
         //This is sloppy, we shouldn't be reading the interface plugin's preferences
         //We need to convert the desired size of SCLOutlineView to a lazy cache, so we can always tell it to resize from here
         //and not care what the interface is doing with the informatin.
-        NSDictionary    *notOurPrefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        NSDictionary    *notOurPrefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
         horizontalResizingEnabled = [[notOurPrefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
         
     }
@@ -246,8 +243,8 @@
     
     }else{
         //Open a new message with the contact
-        AIChat	*chat = [[owner contentController] openChatOnAccount:nil withListObject:selectedObject];
-        [[owner interfaceController] setActiveChat:chat];
+        AIChat	*chat = [[adium contentController] openChatOnAccount:nil withListObject:selectedObject];
+        [[adium interfaceController] setActiveChat:chat];
     }
 }
 
@@ -308,17 +305,17 @@
     //Post a 'contact list selection changed' notification on the interface center
     if(selectedObject){
         NSDictionary	*notificationDict = [NSDictionary dictionaryWithObjectsAndKeys:selectedObject, @"Object", nil];
-        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
+        [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:notificationDict];
     
     }else{
-        [[owner notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
+        [[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:outlineView userInfo:nil];
     
     }
 }
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSMutableArray      *contactArray =  [[owner contactController] allContactsInGroup:item subgroups:YES];
+    NSMutableArray      *contactArray =  [[adium contactController] allContactsInGroup:item subgroups:YES];
     NSEnumerator        *enumerator = [contactArray objectEnumerator];
     AIListObject        *object;
     [item setExpanded:state];
@@ -353,7 +350,7 @@
     [self _endTrackingMouse];
 
     //Return the context menu
-    return([[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+    return([[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
         [NSNumber numberWithInt:Context_Contact_Manage],
         [NSNumber numberWithInt:Context_Contact_Action],
         [NSNumber numberWithInt:Context_Contact_NegativeAction],
@@ -496,10 +493,10 @@
             hoveredObject = [contactListView itemAtRow:hoveredRow];
 
             //Show tooltip for it
-            [[owner interfaceController] showTooltipForListObject:hoveredObject atPoint:screenPoint];
+            [[adium interfaceController] showTooltipForListObject:hoveredObject atPoint:screenPoint];
         }
     }else{
-        [[owner interfaceController] showTooltipForListObject:nil atPoint:NSMakePoint(0,0)];
+        [[adium interfaceController] showTooltipForListObject:nil atPoint:NSMakePoint(0,0)];
     }
 }
 

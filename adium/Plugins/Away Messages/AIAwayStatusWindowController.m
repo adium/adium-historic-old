@@ -25,7 +25,7 @@
 
 
 @interface AIAwayStatusWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)updateAwayTime:(id)userInfo;
 - (NSString *)getTheTime:(time_t)secs;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -35,10 +35,10 @@
 
 //Return a new away status window controller
 AIAwayStatusWindowController	*mySharedInstance = nil;
-+ (AIAwayStatusWindowController *)awayStatusWindowControllerForOwner:(id)inOwner
++ (AIAwayStatusWindowController *)awayStatusWindowController
 {
     if(!mySharedInstance){
-        mySharedInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB owner:inOwner];
+        mySharedInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB];
     }
     
     return(mySharedInstance);
@@ -63,14 +63,14 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 // Called when "Come Back" button is clicked
 - (IBAction)comeBack:(id)sender
 {
-    [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
+    [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
     [mySharedInstance updateWindow];
 }
 
 //Called when "Mute" button is clicked
 - (IBAction)toggleMute:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:[sender state]]
+    [[adium preferenceController] setPreference: [NSNumber numberWithBool:[sender state]]
                                          forKey:KEY_EVENT_MUTE_WHILE_AWAY
                                           group:PREF_GROUP_SOUNDS];
 }
@@ -78,7 +78,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 //Called when "Show event bezel" button is clicked
 - (IBAction)toggleShowBezel:(id)sender
 {
-    [[owner preferenceController] setPreference: [NSNumber numberWithBool:![sender state]]
+    [[adium preferenceController] setPreference: [NSNumber numberWithBool:![sender state]]
                                          forKey:KEY_EVENT_BEZEL_SHOW_AWAY
                                           group:PREF_GROUP_EVENT_BEZEL];
 }
@@ -88,16 +88,16 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 {
 
     // Get the show window status
-    bool shouldShow = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue];
+    bool shouldShow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_SHOW_AWAY_STATUS_WINDOW] boolValue];
     
     // Get the window floating status
-    bool shouldFloat = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue];
+    bool shouldFloat = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_FLOAT_AWAY_STATUS_WINDOW] boolValue];
 
     // Get the hide on deactivate status
-    bool shouldHide = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue];
+    bool shouldHide = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_STATUS_WINDOW] objectForKey:KEY_HIDE_IN_BACKGROUND_AWAY_STATUS_WINDOW] boolValue];
     
     // Get the away message. Returns null string if none.
-    NSAttributedString *awayMessage = [NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]];
+    NSAttributedString *awayMessage = [NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"AwayMessage" account:nil]];
 
     // Is an away message still up?
     if(awayMessage) {
@@ -119,8 +119,8 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         //Update the time text
         [self updateAwayTime:nil];
         
-        [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
-        [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+        [button_mute setState:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+        [button_showBezel setState:![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
     } else {
         // No away message, hide the window
         if([self windowShouldClose:nil]){
@@ -142,11 +142,9 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 
 //Private ----------------------------------------------------------------
 //init the window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
-
-    owner = [inOwner retain];
+    [super initWithWindowNibName:windowNibName];
     
     awayDate = [[NSDate date] retain];
     awayTimer = [[NSTimer scheduledTimerWithTimeInterval:60.0
@@ -156,7 +154,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
         repeats:YES]
     retain];
     
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     [self preferencesChanged:nil];
     
@@ -166,12 +164,10 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 //dealloc
 - (void)dealloc
 {
-    [owner release];
-    
     [awayDate release];
     [awayTimer release];
 
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     [timeStampFormat release];
 
@@ -185,18 +181,18 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
     NSString	*savedFrame;
      
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_AWAY_STATUS_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_AWAY_STATUS_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }
     
     // Put the current away message in the text field
-    [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[owner accountController] propertyForKey:@"AwayMessage" account:nil]]];
+    [[textView_awayMessage textStorage] setAttributedString:[NSAttributedString stringWithData:[[adium accountController] propertyForKey:@"AwayMessage" account:nil]]];
     
     [self updateAwayTime:nil];
     
-    [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
-    [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+    [button_mute setState:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+    [button_showBezel setState:![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
     
     // Still to Add:
     // Put the time we went away in the text field
@@ -217,7 +213,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 {
 
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_AWAY_STATUS_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
     
@@ -234,7 +230,7 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
-            NSDictionary *prefDict = [[owner preferenceController]
+            NSDictionary *prefDict = [[adium preferenceController]
                 preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
             
             //release the old one
@@ -244,8 +240,8 @@ AIAwayStatusWindowController	*mySharedInstance = nil;
             timeStampFormat = [[NSDateFormatter localizedDateFormatStringShowingSeconds:NO
                 showingAMorPM:[[prefDict objectForKey:KEY_SMV_SHOW_AMPM] boolValue]] retain];
 
-        [button_mute setState:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
-        [button_showBezel setState:![[[[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
+        [button_mute setState:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS] objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue]];
+        [button_showBezel setState:![[[[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL] objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]];
 
 }
 // XXX replace this to use ESDateFormatter

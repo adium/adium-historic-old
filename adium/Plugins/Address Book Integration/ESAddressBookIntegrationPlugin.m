@@ -22,15 +22,15 @@
 - (void)installPlugin
 {
     //Register ourself as a handle observer
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
     
     //register default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:AB_DISPLAYFORMAT_DEFAULT_PREFS forClass:[self class]]  forGroup:PREF_GROUP_ADDRESSBOOK];
        
-    advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    advancedPreferences = [[ESAddressBookIntegrationAdvancedPreferences preferencePane] retain];
       
     //Observe preferences changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //Observe external address book changes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(addressBookChanged:) name:kABDatabaseChangedExternallyNotification object:nil];
         
@@ -43,8 +43,8 @@
 
 - (void)uninstallPlugin
 {
-    [[owner contactController] unregisterListObjectObserver:self];
-    [[owner notificationCenter] removeObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     
     [propertyDict release];
     [trackingDict release];
@@ -90,13 +90,13 @@
                     NSString *oldValue = [[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self];
                     if (!oldValue || ![oldValue isEqualToString:displayName]) {
                         [[inObject displayArrayForKey:@"Display Name"] setObject:displayName withOwner:self];
-                        [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
+                        [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];
                     } 
                 } else {
                     //Clear any stored value
                     if ([[inObject displayArrayForKey:@"Display Name"] objectWithOwner:self]) {
                         [[inObject displayArrayForKey:@"Display Name"] setObject:nil withOwner:self];
-                        [[owner contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];   
+                        [[adium contactController] listObjectAttributesChanged:inObject modifiedKeys:[NSArray arrayWithObject:@"Display Name"] delayed:delayed];   
                     }
                 }
             }
@@ -125,7 +125,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_ADDRESSBOOK] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         //load new displayFormat
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         enableImages = [[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue];
@@ -142,7 +142,7 @@
 - (void)updateAllContacts
 {
     //Update all existing contacts
-    NSEnumerator * contactEnumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    NSEnumerator * contactEnumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     AIListObject * inObject;
     while (inObject = [contactEnumerator nextObject]){
         [self updateListObject:inObject
@@ -169,7 +169,7 @@
         if (![statusDict objectForKey:@"BuddyImage"]) {
             [[handle statusDictionary] setObject:image forKey:@"BuddyImage"];
             //tell the contact controller, silencing if necessary
-            [[owner contactController] handleStatusChanged:handle
+            [[adium contactController] handleStatusChanged:handle
                                         modifiedStatusKeys:[NSArray arrayWithObject:@"BuddyImage"]
                                                    delayed:NO
                                                     silent:NO];
@@ -189,7 +189,7 @@
     if (me) {
         NSData *myImage = [me imageData];
         if (myImage) {
-            [[owner accountController] setDefaultUserIcon:[[[NSImage alloc] initWithData:myImage] autorelease]];
+            [[adium accountController] setDefaultUserIcon:[[[NSImage alloc] initWithData:myImage] autorelease]];
         }
     }
 }

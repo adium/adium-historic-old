@@ -13,11 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface AICLPreferences : NSObject {
-    AIAdium		*owner;
-
+@interface AICLPreferences : AIObject {
     AIPreferencePane		*generalPane;
     IBOutlet	NSView			*view_prefViewGeneral;
     IBOutlet	NSButton		*button_setFont;
@@ -36,7 +32,7 @@
 
 }
 
-+ (AICLPreferences *)contactListPreferencesWithOwner:(id)inOwner;
++ (AICLPreferences *)contactListPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

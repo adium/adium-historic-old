@@ -36,7 +36,7 @@
     
     //Install the 'edit contact list' menu item
     menuItem = [[[NSMenuItem alloc] initWithTitle:@"Edit Contact List…" target:self action:@selector(showContactListEditor:) keyEquivalent:@"<"] autorelease];
-    [[owner menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
+    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
 
     //Edit contact list toolbar item
     NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"EditContactList"
@@ -48,22 +48,22 @@
 								     itemContent:[AIImageUtilities imageNamed:@"AIMsettings" forClass:[self class]]
 									  action:@selector(showContactListEditor:)
 									    menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 
     //Observe account changes
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
 }
 
 - (void)uninstallPlugin
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [AIContactListEditorWindowController closeSharedInstance]; //Close the contact list editor
 }
 
 //Show the contact list editor window
 - (IBAction)showContactListEditor:(id)sender
 {
-    [[AIContactListEditorWindowController contactListEditorWindowControllerWithOwner:owner plugin:self] showWindow:nil];
+    [[AIContactListEditorWindowController contactListEditorWindowControllerForPlugin:self] showWindow:nil];
 }
 
 
@@ -72,7 +72,7 @@
 - (NSArray *)listEditorColumnControllers
 {
     //Broadcast a CONTACT_EDITOR_REGISTER_COLUMNS notification, letting all the plugins who haven't had a chance yet register their controllers
-    [[owner notificationCenter] postNotificationName:CONTACT_EDITOR_REGISTER_COLUMNS object:self];
+    [[adium notificationCenter] postNotificationName:CONTACT_EDITOR_REGISTER_COLUMNS object:self];
 
     //Now return the array of controllers
     return(listEditorColumnControllerArray);
@@ -103,11 +103,11 @@
     AIEditorImportCollection *defaultCollection;
 
     //Create a new import collection
-    defaultCollection = [AIEditorImportCollection editorCollectionWithPath:inPath owner:owner];
+    defaultCollection = [AIEditorImportCollection editorCollectionWithPath:inPath];
     [collectionsArray addObject:defaultCollection];
 
     //Let everyone know the collection list changed
-    [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
 
     //Select the new import collection
     //    selectedCollection = [[plugin collectionsArray] objectAtIndex:index]; //select it
@@ -121,7 +121,7 @@
 {
     //Flush the collections array, and notify
     [collectionsArray release]; collectionsArray = nil;
-    [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
 }
 
 //Builds the collection array
@@ -135,20 +135,20 @@
     collectionsArray = [[NSMutableArray alloc] init];
 
     //Add an 'all contacts' collection
-    [collectionsArray addObject:[AIEditorAllContactsCollection allContactsCollectionWithOwner:owner plugin:self]];
+    [collectionsArray addObject:[AIEditorAllContactsCollection allContactsCollectionForPlugin:self]];
 
     //Add a collection for each available account
-    accountEnumerator = [[[owner accountController] accountArray] objectEnumerator];
+    accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [accountEnumerator nextObject])){
         if([account conformsToProtocol:@protocol(AIAccount_Handles)]){
          //   if([(AIAccount <AIAccount_Handles> *)account availableHandles]){
-                [collectionsArray addObject:[AIEditorAccountCollection editorCollectionForAccount:account withOwner:owner]];
+                [collectionsArray addObject:[AIEditorAccountCollection editorCollectionForAccount:account]];
        //     }
         }
     }
 
     //
-    [[owner notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionArrayChanged object:nil];
 }
 
 

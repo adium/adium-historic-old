@@ -13,16 +13,14 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AICompletingTextField, AIAdium;
+@class AICompletingTextField;
 
-@interface AINewMessagePrompt : NSWindowController {
-    AIAdium	*owner;
-    
+@interface AINewMessagePrompt : AIWindowController {    
     IBOutlet	AICompletingTextField	*textField_handle;
     IBOutlet	NSPopUpButton		*popUp_service;
 }
 
-+ (void)newMessagePromptWithOwner:(id)inOwner;
++ (void)newMessagePrompt;
 + (void)closeSharedInstance;
 - (IBAction)closeWindow:(id)sender;
 - (IBAction)newMessage:(id)sender;

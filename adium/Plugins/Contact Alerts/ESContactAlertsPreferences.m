@@ -18,7 +18,6 @@
 
 
 @interface ESContactAlertsPreferences (PRIVATE)
--(id)initWithOwner:(id)inOwner;
 -(void)configureView;
 -(void)configureViewForContact:(AIListObject *)inContact;
 -(void)rebuildPrefAlertsArray;
@@ -29,25 +28,24 @@ extern int alphabeticalGroupOfflineSort_contactAlerts(id objectA, id objectB, vo
 int alphabeticalSort(id objectA, id objectB, void *context);
 
 @implementation ESContactAlertsPreferences
-+ (ESContactAlertsPreferences *)contactAlertsPreferencesWithOwner:(id)inOwner
++ (ESContactAlertsPreferences *)contactAlertsPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     offsetDictionary = [[NSMutableDictionary alloc] init];
     
     instance = nil;
     
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Alerts withDelegate:self label:ALERTS_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_Alerts withDelegate:self label:ALERTS_PREF_TITLE]];
 
     return(self);
 }
@@ -64,11 +62,11 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         //Configure our view
         [self configureView];
 
-        [[owner notificationCenter] removeObserver:self];
-        [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Window_Changed_Alerts object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:nil];
+        [[adium notificationCenter] removeObserver:self];
+        [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:Window_Changed_Alerts object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(externalChangedAlerts:) name:One_Time_Event_Fired object:nil];
         //Observe account changes
-        [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
 
     }
 
@@ -78,7 +76,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 //Clean up our preference pane
 - (void)closeViewForPreferencePane:(AIPreferencePane *)preferencePane
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [view_prefView release]; view_prefView = nil;
     [prefAlertsArray release]; prefAlertsArray = nil;
     [activeContactObject release]; activeContactObject = nil;
@@ -101,7 +99,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         activeContactObject = [[popUp_contactList selectedItem] representedObject];
     }
     
-    instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView owner:owner];
+    instance = [[ESContactAlerts alloc] initWithDetailsView:view_main withTable:tableView_actions withPrefView:view_prefView];
 
     [instance configForObject:activeContactObject];
 
@@ -163,7 +161,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     int offset = 0;
     int arrayCounter;
     int thisInstanceCount;
-    NSMutableArray *contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray *contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
     [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil];
     
     NSEnumerator    *enumerator = [contactArray objectEnumerator];
@@ -230,7 +228,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         [tableView_actions selectRow:row byExtendingSelection:NO];   
         [self tableViewSelectionDidChange:nil]; //force it to realize the change
     }
-    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+    [[adium notificationCenter] postNotificationName:Pref_Changed_Alerts
                                               object:tempObject
                                             userInfo:nil]; //notify that the change occured    
 }
@@ -241,9 +239,9 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     AIListObject * tempObject;
     NSString * UID = [activeContactObject UID];
     if ([activeContactObject isKindOfClass:[AIListContact class]]) {
-        tempObject = [[owner contactController] contactInGroup:nil withService:[activeContactObject serviceID] UID:UID];
+        tempObject = [[adium contactController] contactInGroup:nil withService:[activeContactObject serviceID] UID:UID];
     } else {
-        tempObject = [[owner contactController] groupInGroup:nil withUID:UID];
+        tempObject = [[adium contactController] groupInGroup:nil withUID:UID];
     }
     
     [self rebuildPrefAlertsArray];
@@ -257,7 +255,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
     
     [self tableViewSelectionDidChange:nil]; //force it to realize the change
     
-    [[owner notificationCenter] postNotificationName:Pref_Changed_Alerts
+    [[adium notificationCenter] postNotificationName:Pref_Changed_Alerts
                                               object:[instance activeObject]
                                             userInfo:nil];
 }
@@ -420,7 +418,7 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 {
     NSMenu		*contactMenu = [[NSMenu alloc] init];
     //Build the menu items
-    NSMutableArray		*contactArray =  [[owner contactController] allContactsInGroup:nil subgroups:YES];
+    NSMutableArray		*contactArray =  [[adium contactController] allContactsInGroup:nil subgroups:YES];
     if ([contactArray count])
     {
         [contactArray sortUsingFunction:alphabeticalGroupOfflineSort_contactAlerts context:nil]; //online buddies will end up at the top, alphabetically

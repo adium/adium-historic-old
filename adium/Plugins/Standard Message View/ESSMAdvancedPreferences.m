@@ -29,7 +29,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == slider_consolidatedIndentation){
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:[sender floatValue]]
                                              forKey:KEY_SMV_COMBINE_MESSAGES_INDENT
                                               group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
     }
@@ -38,21 +38,21 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
 //Close the preference view
 - (void)viewWillClose
 {
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
         
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         
         [slider_consolidatedIndentation setFloatValue:[[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue]];
         

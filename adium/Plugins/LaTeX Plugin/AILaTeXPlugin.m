@@ -14,7 +14,7 @@
 
 - (void)installPlugin
 {
-    [[owner contentController] registerDisplayingContentFilter:self];
+    [[adium contentController] registerDisplayingContentFilter:self];
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject

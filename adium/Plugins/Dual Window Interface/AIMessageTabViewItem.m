@@ -21,7 +21,7 @@
 #define LABEL_SIDE_PAD		0
 
 @interface AIMessageTabViewItem (PRIVATE)
-- (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
+- (id)initWithMessageView:(AIMessageViewController *)inMessageView;
 - (void)drawLabel:(BOOL)shouldTruncateLabel inRect:(NSRect)labelRect;
 - (NSSize)sizeOfLabel:(BOOL)computeMin;
 - (NSAttributedString *)attributedLabelStringWithColor:(NSColor *)textColor;
@@ -33,19 +33,18 @@
 @implementation AIMessageTabViewItem
 
 //
-+ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner
++ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView
 {
-    return([[[self alloc] initWithMessageView:inMessageView owner:inOwner] autorelease]);
+    return([[[self alloc] initWithMessageView:inMessageView] autorelease]);
 }
 
 //init
-- (id)initWithMessageView:(AIMessageViewController *)inMessageView owner:(id)inOwner
+- (id)initWithMessageView:(AIMessageViewController *)inMessageView
 {
     [super initWithIdentifier:nil];
 
     messageView = [inMessageView retain];
-    owner = [inOwner retain];
-    //color = nil;
+    adium = [AIObject sharedAdiumInstance];
 
     //Configure ourself for the message view
     [messageView setDelegate:self];
@@ -61,8 +60,7 @@
 - (void)dealloc
 {
     [messageView release];
-    [[owner notificationCenter] removeObserver:self];
-    [owner release];
+    [[adium notificationCenter] removeObserver:self];
 
     [super dealloc];
 }
@@ -77,13 +75,13 @@
 - (void)messageViewController:(AIMessageViewController *)inMessageView chatChangedTo:(AIChat *)chat
 {
     //Observe the chat status
-    [[owner notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
+    [[adium notificationCenter] removeObserver:self name:Content_ChatStatusChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(chatStatusChanged:) name:Content_ChatStatusChanged object:chat];
     [self chatStatusChanged:nil];
 
     //Observe the chat's participating list objects
-    [[owner notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
+    [[adium notificationCenter] removeObserver:self name:Content_ChatParticipatingListObjectsChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(chatParticipatingListObjectsChanged:) name:Content_ChatParticipatingListObjectsChanged object:chat];
     [self _observeListObjectAttributes:[chat listObject]];
 
 }
@@ -98,9 +96,9 @@
 - (void)_observeListObjectAttributes:(AIListObject *)inListObject
 {
     //Observe it's primary list object's status
-    [[owner notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
+    [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
     if(inListObject){
-        [[owner notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:inListObject];
+        [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) name:ListObject_AttributesChanged object:inListObject];
     }
 }
 

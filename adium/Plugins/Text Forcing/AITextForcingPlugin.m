@@ -36,17 +36,17 @@
     force_desiredBackgroundColor = nil;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TEXT_FORCING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TEXT_FORCING];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TEXT_FORCING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_TEXT_FORCING];
     [self preferencesChanged:nil];
     
     //Our preference view
-    preferences = [[AITextForcingPreferences preferencePaneWithOwner:owner] retain];
+    preferences = [[AITextForcingPreferences preferencePane] retain];
 
     //Register our content filter
-    [[owner contentController] registerIncomingContentFilter:self];
+    [[adium contentController] registerIncomingContentFilter:self];
     
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)filterContentObject:(AIContentObject *)inObject
@@ -88,7 +88,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_TEXT_FORCING] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_TEXT_FORCING];
 
         //Release the old values..
         [force_desiredFont release]; force_desiredFont = nil;

@@ -32,13 +32,13 @@
                           allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
     
     //Register this service
-    [[owner accountController] registerService:self];
+    [[adium accountController] registerService:self];
 }
 
 //Return a new account with the specified properties
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[AIMTOC2Account alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease]);
+    return([[[AIMTOC2Account alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 // Return a Plugin-specific ID and description

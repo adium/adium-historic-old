@@ -91,7 +91,7 @@
 
 // Return a view for the connection window
 - (id <AIAccountViewController>)accountView{
-    return([AIOscarAccountViewController accountViewForOwner:owner account:self]);
+    return([AIOscarAccountViewController accountViewForAccount:self]);
 }
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
@@ -716,7 +716,7 @@
         BOOL		handleIsOnline;
 
         //Create the chat
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatWithAccount:self];
 
         //NSLog(@"adding list object %@ containingContact %@",[handle UID],[handle containingContact]);
         //Set the chat participants

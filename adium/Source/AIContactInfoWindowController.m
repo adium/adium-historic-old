@@ -19,7 +19,7 @@
 #define	CONTACT_INFO_NIB	@"ContactInfoWindow"		//Filename of the contact info nib
 
 @interface AIContactInfoWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory  owner:(AIAdium*)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory;
 - (void)configureForContact:(AIListContact *)inContact;
 - (void)configureForNoContact;
 @end
@@ -28,11 +28,11 @@
 
 //Return the shared contact info window
 static AIContactInfoWindowController *sharedInstance = nil;
-+ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner
++ (AIContactInfoWindowController *)contactInfoWindowControllerWithCategory:(AIPreferenceCategory *)inCategory
 {
     //Create the window
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB category:inCategory];
     }
     
 
@@ -49,16 +49,13 @@ static AIContactInfoWindowController *sharedInstance = nil;
 
 // Internal --------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory owner:(AIAdium*)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName category:(AIPreferenceCategory *)inCategory
 {
-    [super initWithWindowNibName:windowNibName owner:self];
-
-    //Retain our owner
+    [super initWithWindowNibName:windowNibName];
     mainCategory = [inCategory retain];
-    owner = [inOwner retain];
 
     [[self window] setLevel:NSNormalWindowLevel];
-    [[owner notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(selectionChanged:) name:Interface_ContactSelectionChanged object:nil];
     
     return(self);    
 }
@@ -74,12 +71,12 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //When the contact list selection changes, then configure the window for the new contact
 - (void)selectionChanged:(NSNotification *)notification
 {
-    if ([[owner contactController] selectedContact] != nil) {
+    if ([[adium contactController] selectedContact] != nil) {
         //install the category
         [scrollView_contents setDocumentView:[mainCategory contentView]];
         [[self window] setContentView:view_contact];
 
-        [self configureForContact:[[owner contactController] selectedContact]];
+        [self configureForContact:[[adium contactController] selectedContact]];
     }else{
         [self configureForNoContact];
     }
@@ -105,12 +102,12 @@ static AIContactInfoWindowController *sharedInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    if ([[owner contactController] selectedContact]) {
+    if ([[adium contactController] selectedContact]) {
         //install the category
         [scrollView_contents setDocumentView:[mainCategory contentView]];
         [[self window] setContentView:view_contact];
         
-        [self configureForContact:[[owner contactController] selectedContact]];
+        [self configureForContact:[[adium contactController] selectedContact]];
     }else{
         [self configureForNoContact];
     }
@@ -118,7 +115,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
     NSString	*savedFrame;
     
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -136,7 +133,7 @@ static AIContactInfoWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_CONTACT_INSPECTOR_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
     return(YES);

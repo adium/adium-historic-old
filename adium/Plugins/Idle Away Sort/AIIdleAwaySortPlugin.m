@@ -20,12 +20,12 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerListSortController:[[[AIIdleAwaySortNoGroups alloc] init] autorelease]];
+    [[adium contactController] registerListSortController:[[[AIIdleAwaySortNoGroups alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterContactSortController:self];
+    //[[adium contactController] unregisterContactSortController:self];
 }
 
 

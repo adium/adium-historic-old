@@ -9,7 +9,6 @@
 #import "CBStatusMenuItemController.h"
 
 @interface CBStatusMenuItemController (PRIVATE)
-- (id)initWithOwner:(AIAdium *)inOwner;
 - (void)accountsChanged:(NSNotification *)notification;
 - (IBAction)toggleConnection:(id)sender;
 - (void)buildMenu;
@@ -19,20 +18,18 @@
 
 CBStatusMenuItemController *sharedInstance = nil;
 
-+ (CBStatusMenuItemController *)statusMenuItemControllerForOwner:(id)inOwner
++ (CBStatusMenuItemController *)statusMenuItemController
 {
     if (!sharedInstance) {
-        sharedInstance = [[self alloc] initWithOwner:inOwner];
+        sharedInstance = [[self alloc] init];
     }
     return (sharedInstance);
 }
 
-- (id)initWithOwner:(AIAdium *)inOwner
+- (id)init
 {
     if(self = [super init])
-    {
-        owner = [inOwner retain];
-        
+    {        
         //alloc and init our arrays
         accountsMenuItems = [[NSMutableArray alloc] init];
         //groupsMenuItems = [[NSMutableArray alloc] init];
@@ -56,8 +53,8 @@ CBStatusMenuItemController *sharedInstance = nil;
         [statusItem setEnabled:YES];
         
         //Install our observers
-        [[owner notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_ListChanged object:nil];
-        [[owner notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_PropertiesChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_ListChanged object:nil];
+        [[adium notificationCenter] addObserver:self selector:@selector(accountsChanged:) name:Account_PropertiesChanged object:nil];
     }
     
     return self;
@@ -65,7 +62,6 @@ CBStatusMenuItemController *sharedInstance = nil;
 
 - (void)dealloc
 {
-    [owner release];
     [accountsMenuItems release];
     //[groupsMenuItems release];
     [statusItem release];
@@ -80,7 +76,7 @@ CBStatusMenuItemController *sharedInstance = nil;
     accountsMenuItems = [[NSMutableArray alloc] init];
     
     AIAccount *account = nil;        
-    NSEnumerator *numer = [[[owner accountController] accountArray] objectEnumerator];
+    NSEnumerator *numer = [[[adium accountController] accountArray] objectEnumerator];
     NSMenuItem *item;
         
     //Add and install menu items for each account
@@ -89,7 +85,7 @@ CBStatusMenuItemController *sharedInstance = nil;
         item = [[[NSMenuItem alloc] initWithTitle:[account accountDescription] target:self action:@selector(toggleConnection:) keyEquivalent:@""] autorelease];
         [item setRepresentedObject:[account retain]];
         
-        switch([[[owner accountController] propertyForKey:@"Status" account:account] intValue])
+        switch([[[adium accountController] propertyForKey:@"Status" account:account] intValue])
         {
             case STATUS_OFFLINE:
                 [item setImage:[AIImageUtilities imageNamed:@"Account_Offline.tiff" forClass:[self class]]];
@@ -123,11 +119,11 @@ CBStatusMenuItemController *sharedInstance = nil;
 - (IBAction)toggleConnection:(id)sender
 {
     AIAccount   *targetAccount = [sender representedObject];
-    NSNumber    *status = [[owner accountController] propertyForKey:@"Status" account:targetAccount];
+    NSNumber    *status = [[adium accountController] propertyForKey:@"Status" account:targetAccount];
 
     //Toggle the connection
     BOOL newOnlineProperty = !([status intValue] == STATUS_ONLINE);
-    [[owner accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
+    [[adium accountController] setProperty:[NSNumber numberWithBool:newOnlineProperty] 
                                     forKey:@"Online" account:targetAccount];
 }
 

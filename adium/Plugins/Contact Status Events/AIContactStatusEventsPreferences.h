@@ -13,17 +13,14 @@
 | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 \------------------------------------------------------------------------------------------------------ */
 
-@interface AIContactStatusEventsPreferences : NSObject {
-    AIAdium			*owner;
-
+@interface AIContactStatusEventsPreferences : AIObject {
     IBOutlet	NSView			*view_prefView;
 
     IBOutlet	NSTextField		*textField_signedOffLength;
     IBOutlet	NSTextField		*textField_signedOnLength;
-
 }
 
-+ (AIContactStatusEventsPreferences *)contactStatusEventsPreferencesWithOwner:(id)inOwner;
++ (AIContactStatusEventsPreferences *)contactStatusEventsPreferences;
 - (IBAction)changePreference:(id)sender;
 
 @end

@@ -35,7 +35,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self configureFormatMenu];
     [self preferencesChanged:nil];
 }
@@ -84,7 +84,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [PREF_GROUP_ADDRESSBOOK compare:[[notification userInfo] objectForKey:@"Group"]] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
         
         [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
     
@@ -96,7 +96,7 @@
 //Save changed preference
 - (IBAction)changeFormat:(id)sender
 {
-        [[owner preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender tag]]
                                              forKey:KEY_AB_DISPLAYFORMAT
                                               group:PREF_GROUP_ADDRESSBOOK];
 }
@@ -104,11 +104,11 @@
 - (IBAction)changePreference:(id)sender
 {
     if (sender == checkBox_syncAutomatic) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_IMAGE_SYNC
                                               group:PREF_GROUP_ADDRESSBOOK];
     } else if (sender == checkBox_enableImages) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_ENABLE_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
     }

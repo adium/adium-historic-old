@@ -41,9 +41,9 @@
     return(handleServiceType);
 }
 
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[MSNAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease]);
+    return([[[MSNAccount alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 @end

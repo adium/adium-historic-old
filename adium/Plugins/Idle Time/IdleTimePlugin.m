@@ -51,11 +51,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
     [self _openIdleState:idleState];
 
     //Register our defaults and install the preference view
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
-    preferences = [[IdleTimePreferences idleTimePreferencesWithOwner:owner] retain]; 
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DEFAULT_PREFERENCES forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME]; //Register our default preferences
+    preferences = [[IdleTimePreferences idleTimePreferences] retain]; 
 
     //Observe preference changed notifications, and setup our initial values
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
     //Install the menu item to manually set idle time
@@ -108,7 +108,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME] == 0){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME];
 	
         //Store the new values locally
         idleEnabled = [[prefDict objectForKey:KEY_IDLE_TIME_ENABLED] boolValue];
@@ -249,18 +249,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Set the idle time of all accounts
 - (void)_setAllAccountsIdleTo:(double)inSeconds
 {
-    NSDate	*currentIdle = [[owner accountController] propertyForKey:@"IdleSince" account:nil];
+    NSDate	*currentIdle = [[adium accountController] propertyForKey:@"IdleSince" account:nil];
         
     if(inSeconds){
         NSDate	*newIdle = [NSDate dateWithTimeIntervalSinceNow:(-inSeconds)];
 
         if(![currentIdle isEqualToDate:newIdle]){
-            [[owner accountController] setProperty:newIdle forKey:@"IdleSince" account:nil];
+            [[adium accountController] setProperty:newIdle forKey:@"IdleSince" account:nil];
         }
         
     }else{
         if(currentIdle != nil){
-            [[owner accountController] setProperty:nil forKey:@"IdleSince" account:nil];
+            [[adium accountController] setProperty:nil forKey:@"IdleSince" account:nil];
         }
 
     }
@@ -282,7 +282,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 //Show the set manual idle time window
 - (void)showManualIdleWindow:(id)sender
 {
-    [[IdleTimeWindowController idleTimeWindowControllerWithOwner:self] showWindow:nil];
+    [[IdleTimeWindowController idleTimeWindowControllerForPlugin:self] showWindow:nil];
 }
 
 
@@ -296,7 +296,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
                                            action:@selector(selectIdleMenu:)
                                     keyEquivalent:@""];
     //Add it to the menubar
-    [[owner menuController] addMenuItem:menuItem_setIdle toLocation:LOC_File_Status];
+    [[adium menuController] addMenuItem:menuItem_setIdle toLocation:LOC_File_Status];
 
     //On panther, set up our extra menu items
     if ([NSApp isOnPantherOrBetter]) {
@@ -316,7 +316,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
                                                   keyEquivalent:@""];
         [menuItem_alternate setAlternate:YES];
         [menuItem_alternate setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-        [[owner menuController] addMenuItem:menuItem_alternate toLocation:LOC_File_Status];
+        [[adium menuController] addMenuItem:menuItem_alternate toLocation:LOC_File_Status];
     }
 }
 

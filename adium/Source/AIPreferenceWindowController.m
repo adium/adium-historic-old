@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceWindowController.m,v 1.28 2003/12/13 20:42:56 jmelloy Exp $
+// $Id: AIPreferenceWindowController.m,v 1.29 2003/12/15 03:25:00 adamiser Exp $
 
 #import "AIPreferenceWindowController.h"
 #import "AIPreferencePane.h"
@@ -31,7 +31,7 @@
 #define ADVANCED_PANE_HEIGHT			300
 
 @interface AIPreferenceWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)configureToolbarItems;
 - (void)installToolbar;
 - (void)_insertPanesForCategory:(PREFERENCE_CATEGORY)inCategory intoView:(AIFlippedCategoryView *)inView showContainers:(BOOL)includeContainers;
@@ -47,10 +47,10 @@
 @implementation AIPreferenceWindowController
 //The shared instance guarantees (with as little work as possible) that only one preference controller can be open at a time.  It also makes handling releasing the window very simple.
 static AIPreferenceWindowController *sharedInstance = nil;
-+ (AIPreferenceWindowController *)preferenceWindowControllerWithOwner:(id)inOwner
++ (AIPreferenceWindowController *)preferenceWindowController
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
     }
     
     return(sharedInstance);
@@ -72,7 +72,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [self window]; //make sure the window has loaded
 
     //Show the category that was selected
-    enumerator = [[[owner preferenceController] categoryArray] objectEnumerator];
+    enumerator = [[[adium preferenceController] categoryArray] objectEnumerator];
     while((category = [enumerator nextObject])){
         NSEnumerator 			*viewEnumerator;
         AIPreferenceViewController	*view;
@@ -96,12 +96,11 @@ static AIPreferenceWindowController *sharedInstance = nil;
 }
 
 // Internal --------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     //Retain our owner
-    owner = [inOwner retain];
     toolbarItems = [[NSMutableDictionary dictionary] retain];
     loadedPanes = [[NSMutableArray alloc] init];
     _advancedCategoryArray = nil;
@@ -112,7 +111,6 @@ static AIPreferenceWindowController *sharedInstance = nil;
 
 - (void)dealloc
 {
-    [owner release];
     [toolbarItems release];
     [loadedPanes release];
     [loadedAdvancedPanes release];
@@ -137,7 +135,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [coloredBox_advancedTitle setColor:[NSColor colorWithCalibratedWhite:0.0 alpha:0.15]];
  
     //Select the previously selected category
-    selectedTab = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
+    selectedTab = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_SELECTED_CATEGORY] intValue];
     if(selectedTab < 0 || selectedTab > [tabView_category numberOfTabViewItems]) selectedTab = 0;
 
     tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
@@ -150,7 +148,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_PREFERENCE_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -158,7 +156,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }
 
     //Let everyone know we will open
-    [[owner notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
+    [[adium notificationCenter] postNotificationName:Preference_WindowWillOpen object:nil];
 }
 
 //prevent the system from moving our window around
@@ -177,10 +175,10 @@ static AIPreferenceWindowController *sharedInstance = nil;
     [[self window] makeFirstResponder:tabView_category];
 
     //Save the selected category
-    [[owner preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfTabViewItem:[tabView_category selectedTabViewItem]]] forKey:KEY_PREFERENCE_SELECTED_CATEGORY group:PREF_GROUP_WINDOW_POSITIONS];
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[tabView_category indexOfTabViewItem:[tabView_category selectedTabViewItem]]] forKey:KEY_PREFERENCE_SELECTED_CATEGORY group:PREF_GROUP_WINDOW_POSITIONS];
     
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame] forKey:KEY_PREFERENCE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame] forKey:KEY_PREFERENCE_WINDOW_FRAME group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Close all open panes
     enumerator = [loadedPanes objectEnumerator];
@@ -189,7 +187,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     }
     
     //Let everyone know we did close
-    [[owner notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
+    [[adium notificationCenter] postNotificationName:Preference_WindowDidClose object:nil];
 
     //autorelease the shared instance
     [sharedInstance autorelease]; sharedInstance = nil;
@@ -306,7 +304,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
                 [outlineView_advanced reloadData];
                 
                 //Get the previously selected row
-                int previousRow = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
+                int previousRow = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW] intValue];
                 //Select it in the table
                 [outlineView_advanced selectRow:previousRow byExtendingSelection:NO];
                 //Force the view to update
@@ -439,7 +437,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
     NSMutableArray	*paneArray = [NSMutableArray array];
     
     //Get the panes for this category
-    enumerator = [[[owner preferenceController] paneArray] objectEnumerator];
+    enumerator = [[[adium preferenceController] paneArray] objectEnumerator];
     while(pane = [enumerator nextObject]){
         if([pane category] == inCategory){
             [paneArray addObject:pane];
@@ -566,7 +564,7 @@ static AIPreferenceWindowController *sharedInstance = nil;
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
     //Save the selected row number
-    [[owner preferenceController] setPreference:[NSNumber numberWithInt:[[notification object] selectedRow]] forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW group:PREF_GROUP_WINDOW_POSITIONS];
+    [[adium preferenceController] setPreference:[NSNumber numberWithInt:[[notification object] selectedRow]] forKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW group:PREF_GROUP_WINDOW_POSITIONS];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item

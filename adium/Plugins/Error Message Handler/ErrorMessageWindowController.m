@@ -19,7 +19,7 @@
 #define	ERROR_WINDOW_NIB		@"ErrorWindow"	//Filename of the error window nib
 
 @interface ErrorMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)dealloc;
 - (void)refreshErrorDialog;
 - (BOOL)shouldCascadeWindows;
@@ -33,10 +33,10 @@
 *   returns the shared instance of AIErrorController
 */
 static ErrorMessageWindowController *sharedInstance = nil;
-+ (id)errorMessageWindowControllerWithOwner:(id)inOwner
++ (id)errorMessageWindowController
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB];
     }
 
     return(sharedInstance);
@@ -95,11 +95,10 @@ static ErrorMessageWindowController *sharedInstance = nil;
 
 
 // Private --------------------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
     //init
-    owner = [inOwner retain];
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     errorTitleArray = [[NSMutableArray alloc] init];
     errorDescArray =  [[NSMutableArray alloc] init];
@@ -113,7 +112,6 @@ static ErrorMessageWindowController *sharedInstance = nil;
     [errorTitleArray release]; errorTitleArray = nil;
     [errorDescArray release]; errorDescArray = nil;
     [errorWindowTitleArray release]; errorWindowTitleArray = nil;
-    [owner release];
 
     [super dealloc];
 }

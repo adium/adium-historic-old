@@ -30,7 +30,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName handle:(AIHandle *)inHandle chatID:(NSString *)inChatID name:(NSString *)inChatName account:(AIMTOC2Account *)inAccount
 {
     //
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     //
     handle = [inHandle retain];

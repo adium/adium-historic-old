@@ -13,11 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium;
-
-@interface AILogImporter : NSWindowController {
-    AIAdium		*owner;
-
+@interface AILogImporter : AIWindowController {
     IBOutlet	NSTableView		*tableView_userList;
     
     IBOutlet	NSPanel			*panel_progress;
@@ -37,7 +33,7 @@
     NSEnumerator	*destPathEnumerator;
 }
 
-+ (id)logImporterWithOwner:(id)inOwner;
++ (id)logImporter;
 - (IBAction)closeWindow:(id)sender;
 
 - (IBAction)importLogs:(id)sender;

@@ -10,7 +10,7 @@
 
 @class AIChat;
 
-@interface AIContentObject : NSObject {
+@interface AIContentObject : AIObject {
     AIChat	*chat;
     id		source;
     id		destination;

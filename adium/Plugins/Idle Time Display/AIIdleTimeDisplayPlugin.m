@@ -34,20 +34,20 @@
     idleTextColor = nil;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:IDLE_TIME_DISPLAY_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[AIIdleTimeDisplayPreferences idleTimeDisplayPreferencesWithOwner:owner] retain];
-    [[owner contactController] registerListObjectObserver:self];
+    preferences = [[AIIdleTimeDisplayPreferences idleTimeDisplayPreferences] retain];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterHandleObserver:self];
+    //[[adium contactController] unregisterHandleObserver:self];
 }
 
 - (void)dealloc
@@ -129,7 +129,7 @@
 {
     //Optimize this...
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_IDLE_TIME_DISPLAY] == 0){
-	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_IDLE_TIME_DISPLAY];
 
         //Cache the preference values
         [idleTextColor release];
@@ -141,10 +141,10 @@
 	NSEnumerator		*enumerator;
 	AIListObject		*object;
 
-	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){
-            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
         }
     }
 }

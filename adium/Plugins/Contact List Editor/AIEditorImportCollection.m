@@ -16,7 +16,7 @@
 #import "AIEditorImportCollection.h"
 
 @interface AIEditorImportCollection (PRIVATE)
-- (id)initWithPath:(NSString *)inPath owner:(id)inOwner;
+- (id)initWithPath:(NSString *)inPath;
 - (void)importFromPath:(NSString *)inPath;
 - (NSString *)makeStringPretty:(NSString *)string;
 - (NSMutableArray *)importContactsFromPath:(NSString *)inPath;
@@ -26,15 +26,15 @@
 
 //Return an empty collection 
 //Retun collection from a path, set the name
- + (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath owner:(id)inOwner
+ + (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath
 {
-    return([[[self alloc] initWithPath:inPath owner:inOwner] autorelease]);
+    return([[[self alloc] initWithPath:inPath] autorelease]);
 }
 
 //path initializer
-- (id)initWithPath:(NSString *)inPath owner:(id)inOwner
+- (id)initWithPath:(NSString *)inPath
 {
-    [super initWithOwner:inOwner];
+    [super init];
 
     path = [inPath retain];
     [self importFromPath:path];

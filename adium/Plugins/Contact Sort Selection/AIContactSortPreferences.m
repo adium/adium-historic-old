@@ -20,16 +20,15 @@
 #define CONTACT_SORT_PREF_TITLE		@"Sorting"
 
 @interface AIContactSortPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)buildSortModeMenu;
 @end
 
 @implementation AIContactSortPreferences
 //
-+ (AIContactSortPreferences *)contactSortPreferencesWithOwner:(id)inOwner
++ (AIContactSortPreferences *)contactSortPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //User selected a sort mode
@@ -37,7 +36,7 @@
 {
     NSString	*identifier = [sender representedObject];
 
-    [[owner preferenceController] setPreference:identifier forKey:KEY_CURRENT_SORT_MODE_IDENTIFIER group:PREF_GROUP_CONTACT_SORTING];
+    [[adium preferenceController] setPreference:identifier forKey:KEY_CURRENT_SORT_MODE_IDENTIFIER group:PREF_GROUP_CONTACT_SORTING];
     
     [self configureView]; //Update the sort description
 }
@@ -45,16 +44,15 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CONTACT_SORT_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_General withDelegate:self label:CONTACT_SORT_PREF_TITLE]];
 
     //Observe changes to the sort selector list
-    [[owner notificationCenter] addObserver:self selector:@selector(configureView) name:Contact_SortSelectorListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(configureView) name:Contact_SortSelectorListChanged object:nil];
 
     return(self);
 }
@@ -89,7 +87,7 @@
     id <AIListSortController>		controller;
 
     //Load our preferences
-    preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
+    preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
     
     //Soundset popup
     [self buildSortModeMenu];
@@ -97,7 +95,7 @@
     [popUp_sortMode selectItemWithRepresentedObject:identifier];
 
     //Description
-    enumerator = [[[owner contactController] sortControllerArray] objectEnumerator];
+    enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
     while((controller = [enumerator nextObject])){
         if([identifier compare:[controller identifier]] == 0){
             [textField_description setStringValue:[controller description]];    
@@ -115,7 +113,7 @@
     [popUp_sortMode removeAllItems];
 
     //Add an item for each sort controller
-    enumerator = [[[owner contactController] sortControllerArray] objectEnumerator];
+    enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
     while((controller = [enumerator nextObject])){
         NSMenuItem	*menuItem;
 

@@ -62,7 +62,7 @@
 - (void)installPlugin
 {
     //Register our interface
-    [[owner interfaceController] registerInterfaceController:self];
+    [[adium interfaceController] registerInterfaceController:self];
 }
 
 - (void)uninstallPlugin
@@ -82,21 +82,21 @@
     windowMenuArray = [[NSMutableArray alloc] init];
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_WINDOW_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];    
     //Install Preference Views
-    preferenceController = [[AIDualWindowPreferences preferencePaneWithOwner:owner] retain];
-    preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePaneWithOwner:owner] retain];
-    preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePaneWithOwner:owner] retain];
-    preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    preferenceController = [[AIDualWindowPreferences preferencePane] retain];
+    preferenceAdvController = [[AIDualWindowAdvancedPrefs preferencePane] retain];
+    preferenceMessageController = [[ESDualWindowMessageWindowPreferences preferencePane] retain];
+    preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
    
     //Open the contact list window
     [self showContactList:nil];
 
     //Register for the necessary notifications
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_DidReceiveContent object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) name:Content_FirstContentRecieved object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     //Install our menu items
     [self addMenuItems];
@@ -117,7 +117,7 @@
     }
 
     //Stop observing
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     //Remove our menu items
     [self removeMenuItems];
@@ -137,7 +137,7 @@
 	[self showContactList:nil];
     }else{
 	//If windows are open, try switching to a tab with unviewed content
-	if(![[owner contentController] switchToMostRecentUnviewedContent]){
+	if(![[adium contentController] switchToMostRecentUnviewedContent]){
 	    NSEnumerator    *enumerator;
 	    NSWindow	    *window, *targetWindow = nil;
 	    BOOL	    unMinimizedWindows = 0;
@@ -165,7 +165,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if (notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0) {
-	NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
         //Cache the window spawning preferences
 	alwaysCreateNewWindows = [[preferenceDict objectForKey:KEY_ALWAYS_CREATE_NEW_WINDOWS] boolValue];
@@ -196,7 +196,7 @@
             
             //If a spawn point wasn't specified, we want to use the saved frame's width and height (if one has been saved)
             if(screenPoint.x == -1 || screenPoint.y == -1){
-                savedFrame = [[owner preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
+                savedFrame = [[adium preferenceController] preferenceForKey:KEY_DUAL_MESSAGE_WINDOW_FRAME 
                                                                     group:PREF_GROUP_WINDOW_POSITIONS 
                                                                     object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
             }
@@ -213,7 +213,7 @@
             //Create a new window, set the frame, and save it
             newMessageWindow = [self _createMessageWindow];
             [[newMessageWindow window] setFrame:newFrame display:NO];
-            [[owner preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
+            [[adium preferenceController] setPreference:[[newMessageWindow window] stringWithSavedFrame]
                                                     forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
                                                     group:PREF_GROUP_WINDOW_POSITIONS
                                                     object:[[[(AIMessageTabViewItem *)tabViewItem messageViewController] chat] listObject]];
@@ -230,7 +230,7 @@
 - (IBAction)showContactList:(id)sender
 {
     if(!contactListWindowController){ //Load the window
-        contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self owner:owner] retain];
+        contactListWindowController = [[AIContactListWindowController contactListWindowControllerForInterface:self] retain];
     }
     [contactListWindowController makeActive:nil];
 }
@@ -263,33 +263,33 @@
 - (IBAction)closeTab:(id)sender
 {
     if([activeContainer isKindOfClass:[AIMessageTabViewItem class]]){ //Just to make sure the active container is really a tab
-        [[owner interfaceController] closeChat:[[(AIMessageTabViewItem *)activeContainer messageViewController] chat]];    
+        [[adium interfaceController] closeChat:[[(AIMessageTabViewItem *)activeContainer messageViewController] chat]];    
     }
 }
 
 //Open chat in new window (Must ONLY be called by a context menu)
 - (IBAction)openChatInNewWindow:(id)sender
 {
-    AIListObject 	*listObject = [[owner menuController] contactualMenuContact];
+    AIListObject 	*listObject = [[adium menuController] contactualMenuContact];
     AIChat		*chat;
 
     if(listObject){
         forceIntoNewWindow = YES; //Temporarily override our preference
-        chat = [[owner contentController] openChatOnAccount:nil withListObject:listObject];
-        [[owner interfaceController] setActiveChat:chat];
+        chat = [[adium contentController] openChatOnAccount:nil withListObject:listObject];
+        [[adium interfaceController] setActiveChat:chat];
     }
 }
 
 //Open chat as tab in primary window (Must ONLY be called by a context menu)
 - (IBAction)openChatInPrimaryWindow:(id)sender
 {
-    AIListObject 	*listObject = [[owner menuController] contactualMenuContact];
+    AIListObject 	*listObject = [[adium menuController] contactualMenuContact];
     AIChat		*chat;
 
     if(listObject){
         forceIntoTab = YES; //Temporarily override our preference
-        chat = [[owner contentController] openChatOnAccount:nil withListObject:listObject];
-        [[owner interfaceController] setActiveChat:chat];
+        chat = [[adium contentController] openChatOnAccount:nil withListObject:listObject];
+        [[adium interfaceController] setActiveChat:chat];
     }
 }
 
@@ -484,7 +484,7 @@
 - (void)initiateNewMessage
 {
     //Display our new message prompt
-    [AINewMessagePrompt newMessagePromptWithOwner:owner];
+    [AINewMessagePrompt newMessagePrompt];
 }
 
 //Open a container for the chat
@@ -520,7 +520,7 @@
     }
 
     //Display the account selector if multiple accounts are available for sending to the contact
-    if ( (![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]) && ([[owner accountController] numberOfAccountsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]>1) ) {
+    if ( (![[[inChat statusDictionary] objectForKey:@"DisallowAccountSwitching"] boolValue]) && ([[adium accountController] numberOfAccountsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:listObject]>1) ) {
         [[messageTabContainer messageViewController] setAccountSelectionMenuVisible:YES];
     }
 
@@ -562,11 +562,11 @@
 {
     //Add the close menu item
     menuItem_close = [[NSMenuItem alloc] initWithTitle:CLOSE_MENU_TITLE target:self action:@selector(close:) keyEquivalent:@"w"];
-    [[owner menuController] addMenuItem:menuItem_close toLocation:LOC_File_Close];
+    [[adium menuController] addMenuItem:menuItem_close toLocation:LOC_File_Close];
 
     //Add our close tab menu item
     menuItem_closeTab = [[NSMenuItem alloc] initWithTitle:CLOSE_TAB_MENU_TITLE target:self action:@selector(closeTab:) keyEquivalent:@""];
-    [[owner menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
+    [[adium menuController] addMenuItem:menuItem_closeTab toLocation:LOC_File_Close];
 
     //Add our other menu items
     {
@@ -581,21 +581,21 @@
         NSString	*rightKey = @"]";*/
 
         menuItem_previousMessage = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE target:self action:@selector(previousMessage:) keyEquivalent:leftKey];
-        [[owner menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
+        [[adium menuController] addMenuItem:menuItem_previousMessage toLocation:LOC_Window_Commands];
 
         menuItem_nextMessage = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE target:self action:@selector(nextMessage:) keyEquivalent:rightKey];
-        [[owner menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
+        [[adium menuController] addMenuItem:menuItem_nextMessage toLocation:LOC_Window_Commands];
     }
 
     //Add contextual menu items
     menuItem_openInNewWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in New Window" target:self action:@selector(openChatInNewWindow:) keyEquivalent:@""];
-    [[owner menuController] addContextualMenuItem:menuItem_openInNewWindow toLocation:Context_Contact_Additions];
+    [[adium menuController] addContextualMenuItem:menuItem_openInNewWindow toLocation:Context_Contact_Additions];
     
     menuItem_openInPrimaryWindow = [[NSMenuItem alloc] initWithTitle:@"Chat in Primary Window" target:self action:@selector(openChatInPrimaryWindow:) keyEquivalent:@""];
-    [[owner menuController] addContextualMenuItem:menuItem_openInPrimaryWindow toLocation:Context_Contact_Additions];
+    [[adium menuController] addContextualMenuItem:menuItem_openInPrimaryWindow toLocation:Context_Contact_Additions];
 
     menuItem_consolidate = [[NSMenuItem alloc] initWithTitle:@"Consolidate All Chats" target:self action:@selector(consolidateAllChats:) keyEquivalent:@"O"];
-    [[owner menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
+    [[adium menuController] addMenuItem:menuItem_consolidate toLocation:LOC_Window_Commands];
 }
 
 //Build the contents of the 'window' menu
@@ -612,7 +612,7 @@
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
     while((item = [enumerator nextObject])){
-        [[owner menuController] removeMenuItem:item];
+        [[adium menuController] removeMenuItem:item];
     }
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
 
@@ -620,13 +620,13 @@
     //Add toolbar Menu
     item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(toggleContactList:) keyEquivalent:@"/"];
     [item setRepresentedObject:contactListWindowController];
-    [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+    [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
     [windowMenuArray addObject:[item autorelease]];
     
     //Add dock Menu
     item = [[NSMenuItem alloc] initWithTitle:CONTACT_LIST_WINDOW_MENU_TITLE target:self action:@selector(showContactListAndBringToFront:) keyEquivalent:@""];
     [item setRepresentedObject:contactListWindowController];
-    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
+    [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];    
     [windowMenuArray addObject:[item autorelease]];
 
     //Messages window and any open messasge
@@ -634,12 +634,12 @@
     {
 	//Add a 'Messages' menu item
 	item = [[NSMenuItem alloc] initWithTitle:MESSAGES_WINDOW_MENU_TITLE target:self action:@selector(showMessageWindow:) keyEquivalent:@""];
-        [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+        [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
         [windowMenuArray addObject:[item autorelease]];
 
         //Add a 'Messages' menu item to the dock
         item = [[NSMenuItem alloc] initWithTitle:MESSAGES_WINDOW_MENU_TITLE target:self action:@selector(showMessageWindow:) keyEquivalent:@""];
-        [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+        [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
         [windowMenuArray addObject:[item autorelease]];
 
         
@@ -668,7 +668,7 @@
 		    [item setRepresentedObject:tabViewItem]; //associate this item with a tab
 
 		    //Add it to the menu and array
-		    [[owner menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
+		    [[adium menuController] addMenuItem:item toLocation:LOC_Window_Fixed];
                     [windowMenuArray addObject:[item autorelease]];
 
           
@@ -676,7 +676,7 @@
                     item = [[NSMenuItem alloc] initWithTitle:[NSString stringWithFormat:@"   %@",[tabViewItem labelString]] target:self action:@selector(showMessageWindow:) keyEquivalent:windowKeyString];
                     [item setRepresentedObject:tabViewItem]; //associate this item with a tab
                     
-                    [[owner menuController] addMenuItem:item toLocation:LOC_Dock_Status];
+                    [[adium menuController] addMenuItem:item toLocation:LOC_Dock_Status];
                     [windowMenuArray addObject:[item autorelease]];
                  
 		    windowKey++;
@@ -693,9 +693,9 @@
 - (void)removeMenuItems
 {
 
-    [[owner menuController] removeMenuItem:menuItem_closeTab];
-    [[owner menuController] removeMenuItem:menuItem_nextMessage];
-    [[owner menuController] removeMenuItem:menuItem_previousMessage];
+    [[adium menuController] removeMenuItem:menuItem_closeTab];
+    [[adium menuController] removeMenuItem:menuItem_nextMessage];
+    [[adium menuController] removeMenuItem:menuItem_previousMessage];
 }
 
 //Updates the 'check' icon so it's next to the active window
@@ -766,7 +766,7 @@
         if(![messageWindowControllerArray count]) enabled = NO;
 
     }else if (menuItem == menuItem_openInNewWindow || menuItem == menuItem_openInPrimaryWindow){
-	enabled = ([[owner menuController] contactualMenuContact] != nil);
+	enabled = ([[adium menuController] contactualMenuContact] != nil);
 
     }else if (menuItem == menuItem_consolidate){
 	if([messageWindowControllerArray count] <= 1) enabled = NO; //only with more than one window open
@@ -789,7 +789,7 @@
     [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
 
     //
-    [[owner contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+    [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
 }
 
 //Clear unviewed content
@@ -805,7 +805,7 @@
 
         if([[ownerArray objectWithOwner:listObject] intValue]){
             [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:listObject];
-            [[owner contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
+            [[adium contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] delayed:NO silent:NO];
         }
     }
 }
@@ -863,8 +863,8 @@
 
     //Create the message window, view, and tab
     if(!messageWindowController) messageWindowController = [self _createMessageWindow];
-    messageViewController = [AIMessageViewController messageViewControllerForChat:inChat owner:owner];
-    messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController owner:owner];
+    messageViewController = [AIMessageViewController messageViewControllerForChat:inChat];
+    messageTabContainer = [AIMessageTabViewItem messageTabWithView:messageViewController];
     
     //Add it to the message window & rebuild the window menu
     [messageWindowController addTabViewItemContainer:messageTabContainer];
@@ -904,7 +904,7 @@
 //Create a new message window
 - (AIMessageWindowController *)_createMessageWindow
 {    
-    AIMessageWindowController	*messageWindowController = [AIMessageWindowController messageWindowControllerWithOwner:owner interface:self];
+    AIMessageWindowController	*messageWindowController = [AIMessageWindowController messageWindowControllerForInterface:self];
     
     //Register to be notified when this message window closes
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(messageWindowWillClose:) name:NSWindowWillCloseNotification object:[messageWindowController window]];

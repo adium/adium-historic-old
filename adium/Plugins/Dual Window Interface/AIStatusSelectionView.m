@@ -29,18 +29,18 @@
 
 @implementation AIStatusSelectionView
 
-- (id)initWithFrame:(NSRect)frameRect owner:(id)inOwner
+- (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
 
     //init
-    owner = [inOwner retain];
+    adium = [AIObject sharedAdiumInstance];
     [self configureView];
     [self configureStatusMenu];
 
     //Observe account status changed notification
-    [[owner notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountListChanged:) name:Account_ListChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountPropertiesChanged:) name:Account_PropertiesChanged object:nil];
     [self accountPropertiesChanged:nil];
     
     return(self);
@@ -48,8 +48,7 @@
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self];
-    [owner release];
+    [[adium notificationCenter] removeObserver:self];
 
     [super dealloc];
 }
@@ -84,7 +83,7 @@
     [popUp_status setFrameSize:NSMakeSize([popUp_status frame].size.width, 14)];
 
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     //
     [[popUp_status menu] setAutoenablesItems:NO];
@@ -116,7 +115,7 @@
     
     //Away messages
     //We read these on our own for now.  This status menu is so specialized and would be silly without away messages, so hard coding it to the away plugin's preferences shouldn't be an issue.
-    awayArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    awayArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     [self _appendAwaysFromArray:awayArray toMenu:popUpMenu];
 
     //Offline
@@ -137,15 +136,15 @@
     if(representedObject){ //Away
 	NSAttributedString	*awayMessage = [representedObject objectForKey:@"Message"];
 	NSAttributedString	*awayAutoResponse = [representedObject objectForKey:@"Autoresponse"];
-	[[owner accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
-        [[owner accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
+	[[adium accountController] setProperty:awayMessage forKey:@"AwayMessage" account:nil];
+        [[adium accountController] setProperty:awayAutoResponse forKey:@"Autoresponse" account:nil];
 
     }else if([title compare:STATUS_NAME_AVAILABLE] == 0){ //Available
-        [[owner accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
+        [[adium accountController] setProperty:nil forKey:@"AwayMessage" account:nil];
         NSLog(@"available");
         
     }else if([title compare:STATUS_NAME_OFFLINE] == 0){ //Offline
-	[[owner accountController] disconnectAllAccounts];
+	[[adium accountController] disconnectAllAccounts];
 	NSLog(@"offline");
     }
 }
@@ -190,7 +189,7 @@
     NSMenuItem		*selectedMenuItem = nil;
 
     //Get the number of accounts that are online, or connecting
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
         int status = [[account propertyForKey:@"Status"] intValue];
 
@@ -202,7 +201,7 @@
     }
 
     //Get the current away message
-    awayMessageData = [[owner accountController] propertyForKey:@"AwayMessage" account:nil];
+    awayMessageData = [[adium accountController] propertyForKey:@"AwayMessage" account:nil];
     if(awayMessageData){
         //Determine the selected away message's menu item index
         enumerator = [[[popUp_status menu] itemArray] objectEnumerator];

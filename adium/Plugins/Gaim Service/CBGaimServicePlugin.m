@@ -614,7 +614,7 @@ static GaimCoreUiOps adiumGaimCoreOps = {
                                                 allowedCharacters:[NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@."]] retain];
 
     //Register this service
-    [[owner accountController] registerService:self];
+    [[adium accountController] registerService:self];
     
     /* add more services here */
 }
@@ -622,7 +622,6 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 - (void)uninstallPlugin
 {
     [_accountDict release];
-    [owner release];
     _accountDict = nil;
 }
 
@@ -639,9 +638,9 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 }
 
 /* super gigantic hack! this should be fixed. do we have to subclass AGAIN? or do we scan inProperties */
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease];
+    CBGaimAIMAccount *anAccount = [[[CBGaimAIMAccount alloc] initWithProperties:inProperties service:self] autorelease];
     
     GaimAccount *gaimAcct = [anAccount gaimAccount];
     NSLog(@"Adding GaimAccount 0x%x to account dict", gaimAcct);

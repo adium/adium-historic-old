@@ -24,7 +24,7 @@
 #define KEY_QUICK_AWAY_MESSAGE		@"Quick Away Message"
 
 @interface AIEnterAwayWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (BOOL)windowShouldClose:(id)sender;
 - (void)loadAwayMessages;
 - (NSMutableArray *)_loadAwaysFromArray:(NSArray *)array;
@@ -35,10 +35,10 @@
 
 //Return a new contact list window controller
 AIEnterAwayWindowController	*sharedInstance = nil;
-+ (AIEnterAwayWindowController *)enterAwayWindowControllerForOwner:(id)inOwner
++ (AIEnterAwayWindowController *)enterAwayWindowController
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ENTER_AWAY_WINDOW_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:ENTER_AWAY_WINDOW_NIB];
     }
     return(sharedInstance);
 }
@@ -64,11 +64,11 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
     //Save the away message
     newAway = [[textView_awayMessage textStorage] dataRepresentation];
-    [[owner preferenceController] setPreference:newAway forKey:KEY_QUICK_AWAY_MESSAGE group:PREF_GROUP_AWAY_MESSAGES];
+    [[adium preferenceController] setPreference:newAway forKey:KEY_QUICK_AWAY_MESSAGE group:PREF_GROUP_AWAY_MESSAGES];
 
     //Set the away
-    [[owner accountController] setProperty:newAway  forKey:@"AwayMessage"   account:nil];
-    [[owner accountController] setProperty:nil      forKey:@"Autoresponse"  account:nil];
+    [[adium accountController] setProperty:newAway  forKey:@"AwayMessage"   account:nil];
+    [[adium accountController] setProperty:nil      forKey:@"Autoresponse"  account:nil];
     //Close our window
     [self closeWindow:nil];
 }
@@ -110,7 +110,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
 	
         //Load the saved away messages
-        tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+        tempArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
 
         // Or create a blank list if we've never saved one before
         if (tempArray == nil)
@@ -136,7 +136,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
         }
 
 	//Save the away message array
-        [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+        [[adium preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
 
 	[popUp_title setMenu:[self savedAwaysMenu]];
 	[popUp_title selectItemWithTitle:theTitle];
@@ -145,11 +145,9 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 
 //Private ----------------------------------------------------------------
 //init the window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
-
-    owner = [inOwner retain];
+    [super initWithWindowNibName:windowNibName];
 
     return(self);
 }
@@ -157,7 +155,6 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 //dealloc
 - (void)dealloc
 {
-    [owner release];
     [awayMessageArray release];
 
     [super dealloc];
@@ -170,13 +167,13 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     NSData	*lastAway;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ENTER_AWAY_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_ENTER_AWAY_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }
 
     //Restore the last used custom away
-    lastAway = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
+    lastAway = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_QUICK_AWAY_MESSAGE];
     if(lastAway){
         [textView_awayMessage setAttributedString:[NSAttributedString stringWithData:lastAway]];
     }else{
@@ -187,7 +184,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [textView_awayMessage setSelectedRange:NSMakeRange(0,[[textView_awayMessage textStorage] length])];
 
     //Restore spellcheck state
-    [textView_awayMessage setContinuousSpellCheckingEnabled:[[[[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_AWAY_SPELL_CHECKING] boolValue]];
+    [textView_awayMessage setContinuousSpellCheckingEnabled:[[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_AWAY_SPELL_CHECKING] boolValue]];
 
     //Configure our sending view
     [textView_awayMessage setTarget:self action:@selector(setAwayMessage:)];
@@ -207,10 +204,10 @@ AIEnterAwayWindowController	*sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save spellcheck state
-    [[owner preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]] forKey:KEY_AWAY_SPELL_CHECKING group:PREF_GROUP_SPELLING];
+    [[adium preferenceController] setPreference:[NSNumber numberWithBool:[textView_awayMessage isContinuousSpellCheckingEnabled]] forKey:KEY_AWAY_SPELL_CHECKING group:PREF_GROUP_SPELLING];
 
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_ENTER_AWAY_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
@@ -312,7 +309,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     [awayMessageArray release];
 
     //Load the saved away messages
-    tempArray = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
+    tempArray = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_AWAY_MESSAGES] objectForKey:KEY_SAVED_AWAYS];
     if(tempArray){
         //Load the aways
         awayMessageArray = [self _loadAwaysFromArray:tempArray];
@@ -333,7 +330,7 @@ AIEnterAwayWindowController	*sharedInstance = nil;
     tempArray = [self _saveArrayFromArray:awayMessageArray];
 
     //Save the away message array
-    [[owner preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
+    [[adium preferenceController] setPreference:tempArray forKey:KEY_SAVED_AWAYS group:PREF_GROUP_AWAY_MESSAGES];
 }
 
 - (NSMenu *)savedAwaysMenu

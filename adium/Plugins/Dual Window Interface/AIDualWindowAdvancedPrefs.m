@@ -25,7 +25,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     [checkBox_verticalResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue]];
     [checkBox_horizontalResize setState:[[preferenceDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue]];
@@ -35,12 +35,12 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_verticalResize){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DUAL_RESIZE_VERTICAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
     }else if(sender == checkBox_horizontalResize){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DUAL_RESIZE_HORIZONTAL
                                               group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
     }

@@ -52,7 +52,7 @@
 
 - (void)accountConnectionConnected
 {
-    [[owner accountController]
+    [[adium accountController]
         setProperty:[NSNumber numberWithInt:STATUS_ONLINE]
         forKey:@"Status" account:self];
 
@@ -71,9 +71,9 @@
 {
     //Set our correct status
     {
-        NSDate 		*idle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
-        NSData	 	*profile = [[owner accountController] propertyForKey:@"TextProfile" account:self];
-        NSData	 	*away = [[owner accountController] propertyForKey:@"AwayMessage" account:self];
+        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
+        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
+        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
         
         
         if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
@@ -82,16 +82,16 @@
     }
     
     //set the image file name, which is saved in the account preferences and generally easy to access
-    [[owner accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
+    [[adium accountController] setProperty:OWN_BUDDY_IMAGE forKey:@"BuddyImageFileName" account:self];
     
     NSImage *buddyImage = [[NSImage alloc] initWithContentsOfFile:OWN_BUDDY_IMAGE];
     if (buddyImage && [buddyImage isValid]) {
-        [[owner accountController] setUserIcon:buddyImage forAccount:self];
+        [[adium accountController] setUserIcon:buddyImage forAccount:self];
     }
     [buddyImage release];
     
     //let the accountController tell us about the default user icon filename
-    [self statusForKey:@"DefaultUserIconFilename" willChangeTo:[[owner accountController] defaultUserIconFilename]];
+    [self statusForKey:@"DefaultUserIconFilename" willChangeTo:[[adium accountController] defaultUserIconFilename]];
 }
 
 
@@ -103,13 +103,13 @@
     silentAndDelayed = NO;
     NSLog(@"Setting handle updates to loud and instantaneous (signon timer expired)");
 
-    [[owner contactController] handlesChangedForAccount:self];
+    [[adium contactController] handlesChangedForAccount:self];
 }
 
 - (void)accountConnectionDisconnected
 {
     
-    [[owner accountController] 
+    [[adium accountController] 
         setProperty:[NSNumber numberWithInt:STATUS_OFFLINE]
         forKey:@"Status" account:self];
     
@@ -145,7 +145,7 @@
             theHandle = [self createHandleAssociatingWithBuddy:buddy];
             //Update the contact list
             if (!silentAndDelayed)
-                [[owner contactController] handle:theHandle addedToAccount:self];
+                [[adium contactController] handle:theHandle addedToAccount:self];
         }
     }
     
@@ -208,10 +208,10 @@
     GaimGroup *g = gaim_find_buddys_group(buddy);
     if(g && strcmp([[theHandle serverGroup] UTF8String], g->name))
     {
-        [[owner contactController] handle:theHandle removedFromAccount:self];
+        [[adium contactController] handle:theHandle removedFromAccount:self];
 //            NSLog(@"Changed to group %s", g->name);
         [theHandle setServerGroup:[NSString stringWithUTF8String:g->name]];
-        [[owner contactController] handle:theHandle addedToAccount:self];
+        [[adium contactController] handle:theHandle addedToAccount:self];
     }
     
     //grab their data, and compare
@@ -248,7 +248,7 @@
     if([modifiedKeys count] > 0)
     {  
         //tell the contact controller, silencing if necessary
-        [[owner contactController] handleStatusChanged:theHandle
+        [[adium contactController] handleStatusChanged:theHandle
                                     modifiedStatusKeys:modifiedKeys
                                                delayed:silentAndDelayed
                                                 silent:silentAndDelayed];
@@ -264,7 +264,7 @@
         [(AIHandle *)buddy->node.ui_data release];
         buddy->node.ui_data = NULL;
         if (!silentAndDelayed)
-            [[owner contactController] handlesChangedForAccount:self];
+            [[adium contactController] handlesChangedForAccount:self];
     }
 }
 
@@ -323,7 +323,7 @@
         //NSLog(@"Changing typing state to %i", typing);
 
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
+        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
     }
 }
 
@@ -373,7 +373,7 @@
                                    date:[NSDate dateWithTimeIntervalSince1970: mtime]
                                 message:body
                               autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
-    [[owner contentController] addIncomingContentObject:messageObject];
+    [[adium contentController] addIncomingContentObject:messageObject];
 }
 
 /*****************************************************/
@@ -388,7 +388,7 @@
     
     [fileTransfer setRemoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
         
-    [[owner fileTransferController] receiveRequestForFileTransfer:fileTransfer];
+    [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
 //The account requested that we send a file, but we do not know what file yet - query the fileTransferController for a target file
@@ -396,7 +396,7 @@
 {
     ESFileTransfer * fileTransfer = [[self createFileTransferObjectForXfer:xfer] retain];
     //prompt the fileTransferController for the target filename
-    [[owner fileTransferController] sendRequestForFileTransfer:fileTransfer];
+    [[adium fileTransferController] sendRequestForFileTransfer:fileTransfer];
 }
 */
 
@@ -444,7 +444,7 @@
 //The remote side canceled the transfer, the fool.  Tell the fileTransferController then destroy the xfer
 - (void)accountXferCanceledRemotely:(GaimXfer *)xfer
 {
-    [[owner fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
+    [[adium fileTransferController] transferCanceled:(ESFileTransfer *)(xfer->ui_data)];
     gaim_xfer_destroy(xfer);
 }
 
@@ -472,7 +472,7 @@
     gaim_xfer_request_accepted(xfer, xferFileName);
     
     //tell the fileTransferController to display appropriately
-    [[owner fileTransferController] beganFileTransfer:fileTransfer];
+    [[adium fileTransferController] beganFileTransfer:fileTransfer];
 }
 
 //User refused a receive request.  Tell gaim, then release the ESFileTransfer object
@@ -520,7 +520,7 @@
         NSDictionary            *attributes;
         
         //Get the prefs
-        prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
+        prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_FORMATTING];
         font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
         textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
         backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
@@ -533,7 +533,7 @@
             attributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, backgroundColor, AIBodyColorAttributeName, subBackgroundColor, NSBackgroundColorAttributeName, nil];
         }
         NSAttributedString *profile = [[[NSAttributedString alloc] initWithString:PROFILE_STRING attributes:attributes] autorelease];
-        [[owner accountController] setProperty:[profile dataRepresentation] forKey:@"TextProfile" account:self];
+        [[adium accountController] setProperty:[profile dataRepresentation] forKey:@"TextProfile" account:self];
         
     }
         
@@ -580,7 +580,7 @@
 
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
     //Online status changed
     if([key compare:@"Online"] == 0)
@@ -696,7 +696,7 @@
     if(inPassword && [inPassword length] != 0)
     {
         //now we start to connect
-        [[owner accountController] 
+        [[adium accountController] 
             setProperty:[NSNumber numberWithInt:STATUS_CONNECTING]
             forKey:@"Status" account:self];
 
@@ -793,7 +793,7 @@
 - (BOOL)availableForSendingContentType:(NSString*)inType toListObject:(AIListObject*)inListObject
 {
     BOOL available = NO;
-    BOOL weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if ([inType compare:CONTENT_MESSAGE_TYPE] == 0 && weAreOnline) {
         // TODO: check if they are online
@@ -826,7 +826,7 @@
     //create a chat if we're passed a null conversation or the conversation we're passed doesn't have a chat associated with it
 //    if(!(chat = [chatDict objectForKey:[handle UID]])){
     if(!conv || !(chat = conv->ui_data)){
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatForAccount:self];
         AIListContact   *contact = [handle containingContact];
         
         [chat addParticipatingListObject:contact];
@@ -843,7 +843,7 @@
         conv->ui_data = chat;
         [[chat statusDictionary] setObject:[NSValue valueWithPointer:conv] forKey:@"GaimConv"];
 //        [chatDict setObject:chat forKey:[handle UID]];
-        [[owner contentController] noteChat:chat forAccount:self];
+        [[adium contentController] noteChat:chat forAccount:self];
     } 
     return chat;
 }
@@ -869,7 +869,7 @@
 // Returns a dictionary of AIHandles available on this account
 - (NSDictionary *)availableHandles //return nil if no contacts/list available
 {
-    int	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    int	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
     if(status == STATUS_ONLINE || status == STATUS_CONNECTING)
     {
@@ -925,7 +925,7 @@
     //[self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
     
     //Update the contact list
-    [[owner contactController] handle:handle addedToAccount:self];
+    [[adium contactController] handle:handle addedToAccount:self];
         
     return(handle);
 }
@@ -1024,7 +1024,7 @@
 
 - (void)displayError:(NSString *)errorDesc
 {
-    [[owner interfaceController] handleErrorMessage:@"Gaim error"
+    [[adium interfaceController] handleErrorMessage:@"Gaim error"
                                     withDescription:errorDesc];
 }
 
@@ -1057,14 +1057,14 @@
 {
     NSArray * keyArray = [self supportedPropertyKeys];
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
 }
 
 //connecting / disconnecting
 - (void)connect
 {
     //get password
-    [[owner accountController] passwordForAccount:self 
+    [[adium accountController] passwordForAccount:self 
                                   notifyingTarget:self selector:@selector(finishConnect:)];
 }
 
@@ -1074,7 +1074,7 @@
     AIHandle        *handle;
     
     //signing off
-    [[owner accountController] 
+    [[adium accountController] 
                     setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING]
                          forKey:@"Status" account:self];
 
@@ -1102,7 +1102,7 @@
     
     //Remove all our handles
     [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-    [[owner contactController] handlesChangedForAccount:self];
+    [[adium contactController] handlesChangedForAccount:self];
     
 
     gaim_account_disconnect(account); gc = NULL;

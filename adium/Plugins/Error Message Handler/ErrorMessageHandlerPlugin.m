@@ -22,17 +22,17 @@
 - (void)installPlugin
 {
     //Install our observers
-    [[owner notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(handleError:) name:Interface_ErrorMessageReceived object:nil];
     
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
     
 }
 
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
     
     [ErrorMessageWindowController closeSharedInstance]; //Close the error window
 }
@@ -54,7 +54,7 @@
     NSLog([NSString stringWithFormat:@"%@: %@ (%@)",windowTitle,errorTitle,errorDesc]);
 
     //Display an alert
-    [[ErrorMessageWindowController errorMessageWindowControllerWithOwner:owner] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
+    [[ErrorMessageWindowController errorMessageWindowController] displayError:errorTitle withDescription:errorDesc withTitle:windowTitle];
 }
 
 //*****
@@ -68,14 +68,14 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESAlertMessageContactAlert contactAlertWithOwner:owner];   
+    return [ESAlertMessageContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
 - (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict triggeringObject:(AIListObject *)inObject triggeringEvent:(NSString *)event eventStatus:(BOOL)event_status actionName:(NSString *)actionName
 {
     NSString *title = [NSString stringWithFormat:@"%@ %@", [inObject displayName], actionName];
-    [[owner interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
+    [[adium interfaceController] handleMessage:title withDescription:details withWindowTitle:@"Contact Alert"];
     return YES;
 }
 

@@ -122,7 +122,7 @@
     messageDelayTimer = nil;
 
     //
-    [[owner notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(updateContactStatus:) name:Contact_UpdateStatus object:nil];
     
     //Traffic watch debug window
     if([NSEvent controlKey]){
@@ -140,7 +140,7 @@
 
 // Return a view for the connection window
 - (id <AIAccountViewController>)accountView{
-    return([AIMTOC2AccountViewController accountViewForOwner:owner account:self]);
+    return([AIMTOC2AccountViewController accountViewForAccount:self]);
 }
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
@@ -190,7 +190,7 @@
     [self silenceUpdateFromHandle:handle]; //Silence the server's initial update command
 
     //Update the contact list
-    [[owner contactController] handle:handle addedToAccount:self];
+    [[adium contactController] handle:handle addedToAccount:self];
 
     return(handle);
 }
@@ -205,7 +205,7 @@
     [handleDict removeObjectForKey:[handle UID]]; //Remove it locally
 
     //Update the contact list
-    [[owner contactController] handle:handle removedFromAccount:self];
+    [[adium contactController] handle:handle removedFromAccount:self];
         
     return(YES);
 }
@@ -264,7 +264,7 @@
     }
     
     //Update the contact list
-    [[owner contactController] handlesChangedForAccount:self];
+    [[adium contactController] handlesChangedForAccount:self];
 
     return(YES);
 }
@@ -272,13 +272,13 @@
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    return([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 }
 
 // Return a dictionary of our handles
 - (NSDictionary *)availableHandles
 {
-    int	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    int	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
     if(status == STATUS_ONLINE || status == STATUS_CONNECTING){
         return(handleDict);
@@ -333,7 +333,7 @@
             sent = YES;
 
         }else{
-            [[owner interfaceController] handleErrorMessage:@"Message too big" withDescription:@"The message you're trying to send it too large.  Try breaking it into parts and sending them one at a time."];
+            [[adium interfaceController] handleErrorMessage:@"Message too big" withDescription:@"The message you're trying to send it too large.  Try breaking it into parts and sending them one at a time."];
 
         }
 
@@ -362,7 +362,7 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inListObject
 {
     BOOL 	available = NO;
-    BOOL	weAreOnline = ([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
+    BOOL	weAreOnline = ([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_ONLINE);
 
     if([inType compare:CONTENT_MESSAGE_TYPE] == 0){
         if(weAreOnline){
@@ -413,7 +413,7 @@
         BOOL		handleIsOnline;
 
         //Create the chat
-        chat = [AIChat chatWithOwner:owner forAccount:self];
+        chat = [AIChat chatForAccount:self];
 
         //Set the chat participants
         [chat addParticipatingListObject:containingContact];
@@ -424,7 +424,7 @@
 
         //
         [chatDict setObject:chat forKey:[handle UID]];
-        [[owner contentController] noteChat:chat forAccount:self];
+        [[adium contentController] noteChat:chat forAccount:self];
     }
 
     return(chat);
@@ -482,7 +482,7 @@
 // Respond to account status changes
 - (void)statusForKey:(NSString *)key willChangeTo:(id)inValue
 {
-    ACCOUNT_STATUS	status = [[[owner accountController] propertyForKey:@"Status" account:self] intValue];
+    ACCOUNT_STATUS	status = [[[adium accountController] propertyForKey:@"Status" account:self] intValue];
     
     if([key compare:@"Online"] == 0){
         if([inValue boolValue]){ //Connect
@@ -499,7 +499,7 @@
     //Ignore the following keys unless we're online
     if(status == STATUS_ONLINE){
        if([key compare:@"IdleSince"] == 0){
-        NSDate		*oldIdle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
+        NSDate		*oldIdle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
         NSDate		*newIdle = inValue;
 
         if(oldIdle != nil && newIdle != nil){
@@ -518,7 +518,7 @@
                                            encodeNonASCII:YES];
             
             if([profile length] > 1024){
-                [[owner interfaceController] handleErrorMessage:@"Info Size Error"
+                [[adium interfaceController] handleErrorMessage:@"Info Size Error"
                                                 withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rThis service limits info to 1024 characters (Your current info is %i characters)",[profile length]]];
             }else{
                 [self AIM_SetProfile:profile];
@@ -562,18 +562,18 @@
 - (void)connect
 {
     //Get password
-    [[owner accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
+    [[adium accountController] passwordForAccount:self notifyingTarget:self selector:@selector(finishConnect:)];
 }
 
 // Finish connecting (after the password is received)
 - (void)finishConnect:(NSString *)inPassword
 {
     if(inPassword && [inPassword length] != 0){
-        NSString	*host = [[owner accountController] propertyForKey:AIM_TOC2_KEY_HOST account:self];
-        int		port = [[[owner accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self] intValue];
+        NSString	*host = [[adium accountController] propertyForKey:AIM_TOC2_KEY_HOST account:self];
+        int		port = [[[adium accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self] intValue];
 
         //Set our status as connecting
-        [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
+        [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_CONNECTING] forKey:@"Status" account:self];
 
         //Remember the account name and password
         if(screenName != [propertiesDict objectForKey:@"Handle"]){
@@ -611,7 +611,7 @@
     AIHandle		*handle;
 
     //Set our status as disconnecting
-    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
+    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_DISCONNECTING] forKey:@"Status" account:self];
 
     //Flush all our handle status flags
     enumerator = [[handleDict allValues] objectEnumerator];
@@ -621,7 +621,7 @@
 
     //Remove all our handles
     [handleDict release]; handleDict = [[NSMutableDictionary alloc] init];
-    [[owner contactController] handlesChangedForAccount:self];
+    [[adium contactController] handlesChangedForAccount:self];
 
     //Clean up and close down
     [silenceUpdateArray release]; silenceUpdateArray = nil;
@@ -632,8 +632,8 @@
     [updateTimer release]; updateTimer = nil;
 
     //Set our status as offline
-    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
-    [[owner accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
+    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_OFFLINE] forKey:@"Status" account:self];
+    [[adium accountController] setProperty:[NSNumber numberWithBool:NO] forKey:@"Online" account:self];
 }
 
 
@@ -656,7 +656,7 @@
 - (void)autoReconnectTimer:(NSTimer *)inTimer
 {
     //If we're still offline, continue with the reconnect
-    if([[[owner accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
+    if([[[adium accountController] propertyForKey:@"Status" account:self] intValue] == STATUS_OFFLINE){
 
         NSLog(@"Attempting Auto-Reconnect");
 
@@ -751,14 +751,14 @@
                     [self silenceAllHandleUpdatesForInterval:SIGN_ON_EVENT_DURATION];
 
                     //Flag ourself as online
-                    [[owner accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
-                    [[owner accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
+                    [[adium accountController] setProperty:[NSNumber numberWithInt:STATUS_ONLINE] forKey:@"Status" account:self];
+                    [[adium accountController] setProperty:[NSNumber numberWithBool:YES] forKey:@"Online" account:self];
 
                     //Set our correct status
                     {
-                        NSDate 		*idle = [[owner accountController] propertyForKey:@"IdleSince" account:self];
-                        NSData	 	*profile = [[owner accountController] propertyForKey:@"TextProfile" account:self];
-                        NSData	 	*away = [[owner accountController] propertyForKey:@"AwayMessage" account:self];
+                        NSDate 		*idle = [[adium accountController] propertyForKey:@"IdleSince" account:self];
+                        NSData	 	*profile = [[adium accountController] propertyForKey:@"TextProfile" account:self];
+                        NSData	 	*away = [[adium accountController] propertyForKey:@"AwayMessage" account:self];
 
                         if(idle) [self statusForKey:@"IdleSince" willChangeTo:idle];
                         if(profile) [self statusForKey:@"TextProfile" willChangeTo:profile];
@@ -884,7 +884,7 @@
     o = d - a + b + 71665152;
 
     //return our login string
-    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.95 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
+    return([NSString stringWithFormat:@"toc2_login login.oscar.aol.com 29999 %@ %@ English \"TIC:\\$Revision: 1.96 $\" 160 US \"\" \"\" 3 0 30303 -kentucky -utf8 %lu",[screenName compactedString], [self hashPassword:password],o]);
 }
 
 //Hashes a password for sending to AIM (to avoid sending them in plain-text)
@@ -1004,7 +1004,7 @@
     AIChat		*chat;
 
     //Create an AIChat for this chat room
-    chat = [AIChat chatWithOwner:owner forAccount:self];
+    chat = [AIChat chatForAccount:self];
     [[chat statusDictionary] setObject:chatID forKey:@"TOC_ChatRoomID"];
 
     //Chat set participants and status
@@ -1016,8 +1016,8 @@
     
     //
     [chatRoomDict setObject:chat forKey:chatID];
-    [[owner contentController] noteChat:chat forAccount:self];
-    [[owner interfaceController] setActiveChat:chat];
+    [[adium contentController] noteChat:chat forAccount:self];
+    [[adium interfaceController] setActiveChat:chat];
 }
 
 //
@@ -1059,7 +1059,7 @@
     }
 
     //Notify
-    [[owner notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
+    [[adium notificationCenter] postNotificationName:Content_ChatParticipatingListObjectsChanged object:chat userInfo:nil];
 }
 
 - (void)AIM_HandleEncChatIn:(NSString *)inCommand
@@ -1091,7 +1091,7 @@
                                                   autoreply:NO];
     
             //Add the content object
-            [[owner contentController] addIncomingContentObject:messageObject];
+            [[adium contentController] addIncomingContentObject:messageObject];
         }
     }
 }
@@ -1110,7 +1110,7 @@
             [self setTypingFlagOfHandle:handle to:YES];
         }
 
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
+        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:NO silent:NO];
     }
 }
 
@@ -1141,7 +1141,7 @@
      //Ensure this handle is 'online'.  If we receive a message from someone offline, it's best to assume that their offline status is incorrect, and flag them as online so the user can respond to their messages.
     if(![[[handle statusDictionary] objectForKey:@"Online"] boolValue]){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:YES] forKey:@"Online"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
+        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Online"] delayed:NO silent:YES];
     }
 
     //Clear the 'typing' flag
@@ -1157,7 +1157,7 @@
                                                date:nil
                                             message:[AIHTMLDecoder decodeHTML:rawMessage]
                                           autoreply:NO];
-    [[owner contentController] addIncomingContentObject:messageObject];
+    [[adium contentController] addIncomingContentObject:messageObject];
 }
 
 //
@@ -1175,7 +1175,7 @@
             [[chat statusDictionary] setObject:[NSNumber numberWithBool:enable] forKey:@"Enabled"];
 
             //Notify
-            [[owner notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];
+            [[adium notificationCenter] postNotificationName:Content_ChatStatusChanged object:chat userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Enabled"] forKey:@"Keys"]];
 
             //Exit early
             break;
@@ -1282,7 +1282,7 @@
                 [silenceUpdateArray removeObject:[handle UID]];
             }
             
-            [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silenceAndDelayBuddyUpdates) silent:silent];
+            [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:alteredStatusKeys delayed:(silenceAndDelayBuddyUpdates) silent:silent];
         }
         
     }
@@ -1321,7 +1321,7 @@
             //If the handle is not temporary we remove it from our local handle dict
             if(![handle temporary]){
                 [handleDict removeObjectForKey:handleKey];
-                [[owner contactController] handle:handle removedFromAccount:self];
+                [[adium contactController] handle:handle removedFromAccount:self];
             }
 
             //If the handle was temporary
@@ -1339,7 +1339,7 @@
                                                 destination:self
                                                        date:[NSDate date]
                                                     message:[NSString stringWithFormat:@"Your contact list is full.\rAdium is unable to track the status of '%@'.", contactName]];
-                    [[owner contentController] addIncomingContentObject:content];
+                    [[adium contentController] addIncomingContentObject:content];
                 }                    
                 
                 //Ask the server for an update to this handle's status, since we're unable to track it on our contact list.
@@ -1365,7 +1365,7 @@
         disconnect = [[[errorDict objectForKey:@"ErrorDisc"] objectForKey:[message TOCStringArgumentAtIndex:1]] boolValue];
     
         //Display the error
-        [[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
+        [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"AIM Error %i (%@)", errorNumber, screenName] withDescription:errorMessage];
     
         //Disconnecting Errors
         if(disconnect){
@@ -1451,10 +1451,10 @@
     AIHandle *obj;
     while(obj = [walker nextObject])
     {
-        [[owner contactController] handle:obj addedToAccount:self];
+        [[adium contactController] handle:obj addedToAccount:self];
     }
     
-    [[owner contactController] handlesChangedForAccount:self];
+    [[adium contactController] handlesChangedForAccount:self];
 }
 
 - (void)AIM_HandleGotoURL:(NSString *)message
@@ -1463,7 +1463,7 @@
 
     //Set up the address
     host = [socket hostIP]; //We must request our profile from the same server that we connected to.
-    port = [[owner accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self];
+    port = [[adium accountController] propertyForKey:AIM_TOC2_KEY_PORT account:self];
     path = [message nonBreakingTOCStringArgumentAtIndex:2];
     urlString = [NSString stringWithFormat:@"http://%@:%@/%@", host, port, path];
 
@@ -1719,7 +1719,7 @@
 
         //Add profile to the handle
         [[handle statusDictionary] setObject:[AIHTMLDecoder decodeHTML:profile] forKey:@"TextProfile"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"] delayed:NO silent:NO];
+        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"TextProfile"] delayed:NO silent:NO];
     }
 
     //Cleanup
@@ -1757,13 +1757,13 @@
     int		cooldown = [[[[handleDict objectForKey:[self UID]] statusDictionary] objectForKey:@"Cooldown"] intValue];
     
     if(enemy !=nil){
-	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (%@)",[self UID],enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+	[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (%@)",[self UID],enemy] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
 
     }else if(cooldown < [level intValue]){
-	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (Anonymous)", [self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
+	[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level (Anonymous)", [self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now: %@\%",level]];
 
     }else if([level intValue] == 0){
-	[[owner interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level Cleared",[self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
+	[[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:@"%@ : Warning Level Cleared",[self UID]] withDescription:[NSString stringWithFormat:@"Your warning level is now normal"]];
     }
 }
 
@@ -1845,14 +1845,14 @@
     NSArray	*keyArray = [NSArray arrayWithObjects:@"Online",@"Warning",@"IdleSince",@"Signon Date",@"Away",@"Client",@"TextProfile",nil];
 
     [[handle statusDictionary] removeObjectsForKeys:keyArray];
-    [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
+    [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:keyArray delayed:YES silent:YES];
 }
 
 // Dealloc
 - (void)dealloc
 {
     //Stop observing
-    [[owner notificationCenter] removeObserver:self name:Contact_UpdateStatus object:nil];
+    [[adium notificationCenter] removeObserver:self name:Contact_UpdateStatus object:nil];
     
     [screenName release];
     [password release];
@@ -1876,7 +1876,7 @@
 
     if((typing && !currentValue) || (!typing && currentValue)){
         [[handle statusDictionary] setObject:[NSNumber numberWithBool:typing] forKey:@"Typing"];
-        [[owner contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
+        [[adium contactController] handleStatusChanged:handle modifiedStatusKeys:[NSArray arrayWithObject:@"Typing"] delayed:YES silent:NO];
     }
 }
 

@@ -17,15 +17,15 @@
     displayStatusIcon = NO;
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_ICONS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_ICONS];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_ICONS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_ICONS];
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[LNStatusIconsPreferences statusIconsPreferencesWithOwner:owner] retain];
-    [[owner contactController] registerListObjectObserver:self];
+    preferences = [[LNStatusIconsPreferences statusIconsPreferences] retain];
+    [[adium contactController] registerListObjectObserver:self];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     idleImage = [[AIImageUtilities imageNamed:@"IdleIcon" forClass:[self class]] retain];
     awayImage = [[AIImageUtilities imageNamed:@"AwayIcon" forClass:[self class]] retain];
@@ -117,7 +117,7 @@
 
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_ICONS] == 0){
     
-	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_ICONS];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_ICONS];
 
 	//Release the old values..
 	//Cache the preference values
@@ -127,10 +127,10 @@
 	NSEnumerator		*enumerator;
 	AIListObject		*object;
 
-	enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+	enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
 
 	while(object = [enumerator nextObject]){
-            [[owner contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
+            [[adium contactController] listObjectAttributesChanged:object modifiedKeys:[self updateListObject:object keys:nil delayed:YES silent:YES] delayed:YES];
         }
     }
 

@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.60 2003/12/14 04:59:38 jmelloy Exp $
+// $Id: AIContactController.m,v 1.61 2003/12/15 03:25:00 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -61,7 +61,7 @@
     activeSortController = nil;
     delayedUpdates = 0;
     contactList = [[AIListGroup alloc] initWithUID:CONTACT_LIST_GROUP_NAME];
-    contactListGeneration = [[AIContactListGeneration alloc] initWithContactList:contactList owner:owner];
+    contactListGeneration = [[AIContactListGeneration alloc] initWithContactList:contactList];
 
     [owner registerEventNotification:ListObject_StatusChanged displayName:@"Contact Status Changed"];
     
@@ -104,7 +104,7 @@
 //Show the info window for a contact
 - (void)showInfoForContact:(AIListContact *)inContact
 {
-    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory owner:owner] showWindow:nil];
+    [[AIContactInfoWindowController contactInfoWindowControllerWithCategory:contactInfoCategory] showWindow:nil];
 }
 
 //Add a contact info view

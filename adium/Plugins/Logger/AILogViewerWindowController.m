@@ -32,7 +32,7 @@
 #define LOG_RESULT_CLUMP_SIZE			10      //Number of logs to fetch at a time
 
 @interface AILogViewerWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(id)inPlugin;
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin;
 - (void)initLogFiltering;
 - (void)updateProgressDisplay;
 - (void)refreshResults;
@@ -60,17 +60,17 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 
 //Open the log viewer window
 static AILogViewerWindowController *sharedInstance = nil;
-+ (id)openWithOwner:(id)inOwner plugin:(id)inPlugin
++ (id)openForPlugin:(id)inPlugin
 {
-    if(!sharedInstance) sharedInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) owner:inOwner plugin:inPlugin];
+    if(!sharedInstance) sharedInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
     [sharedInstance showWindow:nil];
     return(sharedInstance);
 }
 
 //Open the log viewer window to a specific contact's logs
-+ (id)openForContact:(AIListContact *)inContact withOwner:(id)inOwner plugin:(id)inPlugin
++ (id)openForContact:(AIListContact *)inContact plugin:(id)inPlugin
 {
-    [self openWithOwner:inOwner plugin:inPlugin];
+    [self openForPlugin:inPlugin];
     if(inContact) [sharedInstance setSearchString:[inContact UID] mode:LOG_SEARCH_TO];
     return(sharedInstance);
 }
@@ -90,10 +90,9 @@ static AILogViewerWindowController *sharedInstance = nil;
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(id)inPlugin
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(id)inPlugin
 {
     //init
-    owner = [inOwner retain];
     plugin = inPlugin;
     selectedColumn = nil;
     activeSearchID = 0;
@@ -110,7 +109,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     resultsLock = [[NSLock alloc] init];
     searchingLock = [[NSLock alloc] init];
 
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     return(self);
 }
@@ -118,7 +117,6 @@ static AILogViewerWindowController *sharedInstance = nil;
 //dealloc
 - (void)dealloc
 {
-    [owner release];
     [resultsLock release];
     [searchingLock release];
     [availableLogArray release];
@@ -138,7 +136,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     NSString		*folderName;
     
     //Process each account folder (/Logs/SERVICE.ACCOUNT_NAME/)
-    logFolderPath = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
+    logFolderPath = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
     enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[AILoggerPlugin logBasePath]] objectEnumerator];
     while((folderName = [enumerator nextObject])){
 	AILogFromGroup  *logFromGroup = [[AILogFromGroup alloc] initWithPath:folderName from:folderName];
@@ -154,7 +152,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     NSString	*savedFrame;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -200,7 +198,7 @@ static AILogViewerWindowController *sharedInstance = nil;
     [plugin cleanUpLogContentSearching];
     
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_LOG_VIEWER_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 

@@ -34,7 +34,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     
     if([[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
         [slider_volume setFloatValue:0.0];
@@ -59,7 +59,7 @@
 //New value selected on the volume slider
 - (IBAction)selectVolume:(id)sender
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
     float		value = [slider_volume floatValue];
     BOOL		mute, custom;
     BOOL		playSample = NO;
@@ -78,7 +78,7 @@
 
     //Volume
     if(value != [[preferenceDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]){
-        [[owner preferenceController] setPreference:[NSNumber numberWithFloat:value]
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:value]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_GENERAL];
         playSample = YES;
@@ -86,7 +86,7 @@
 
     //Muted
     if(mute != [[preferenceDict objectForKey:KEY_SOUND_MUTE] intValue]){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:mute]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:mute]
                                              forKey:KEY_SOUND_MUTE
                                               group:PREF_GROUP_GENERAL];
         playSample = NO;
@@ -94,7 +94,7 @@
 
     //Custom
     if(custom != [[preferenceDict objectForKey:KEY_SOUND_USE_CUSTOM_VOLUME] intValue]){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:custom]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:custom]
                                              forKey:KEY_SOUND_USE_CUSTOM_VOLUME
                                               group:PREF_GROUP_GENERAL];
         playSample = YES;
@@ -102,7 +102,7 @@
 
     //Play a sample sound
     if(playSample){
-        [[owner soundController] playSoundAtPath:@"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"];
+        [[adium soundController] playSoundAtPath:@"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"];
     }
 }
 

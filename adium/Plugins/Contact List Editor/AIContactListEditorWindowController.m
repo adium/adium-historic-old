@@ -33,7 +33,7 @@
 #define INDEX_COLUMN_IDENTIFIER			@"index"
 
 @interface AIContactListEditorWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin;
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(AIContactListEditorPlugin *)inPlugin;
 - (int)_collectionsRequestingOwnership;
 - (void)_sizeContentColumnsToFit:(NSNotification *)notification;
 - (void)installToolbar;
@@ -55,10 +55,10 @@
 
 //Create and return a contact list editor window controller
 static AIContactListEditorWindowController *sharedInstance = nil;
-+ (id)contactListEditorWindowControllerWithOwner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin
++ (id)contactListEditorWindowControllerForPlugin:(AIContactListEditorPlugin *)inPlugin
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_LIST_EDITOR_NIB owner:inOwner plugin:inPlugin];
+        sharedInstance = [[self alloc] initWithWindowNibName:CONTACT_LIST_EDITOR_NIB plugin:inPlugin];
     }
 
     return(sharedInstance);
@@ -72,21 +72,19 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner plugin:(AIContactListEditorPlugin *)inPlugin
+- (id)initWithWindowNibName:(NSString *)windowNibName plugin:(AIContactListEditorPlugin *)inPlugin
 {
     //init
-    owner = [inOwner retain];
     plugin = inPlugin;
     selectedCollection = nil;
     selectedColumn = nil;
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
     
     return(self);
 }
 
 - (void)dealloc
 {
-    [owner release];
     [toolbarItems release];
 
     [super dealloc];
@@ -98,7 +96,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     NSString				*savedFrame;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -108,9 +106,9 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [button_import setTitle:@"Import"];
     
     //Observe Collection changes
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionStatusChanged:) name:Editor_CollectionStatusChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionStatusChanged:) name:Editor_CollectionStatusChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
 
     //Configure our views
     [self _configureContactListView];
@@ -183,10 +181,10 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_CONTACT_LIST_EDITOR_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
@@ -253,7 +251,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         [self configureForCollection:selectedCollection];
 
         //Notify
-        [[owner notificationCenter] postNotificationName:Editor_ActiveCollectionChanged object:selectedCollection];
+        [[adium notificationCenter] postNotificationName:Editor_ActiveCollectionChanged object:selectedCollection];
 
         //Give first responder to outline view, and select its first row
         [[self window] makeFirstResponder:outlineView_contactList];
@@ -676,7 +674,7 @@ static AIContactListEditorWindowController *sharedInstance = nil;
 
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
     NSMutableDictionary	*groupStateDict = [[preferenceDict objectForKey:KEY_CONTACT_EDITOR_GROUP_STATE] mutableCopy];
 
     if(!groupStateDict) groupStateDict = [[NSMutableDictionary alloc] init];
@@ -685,13 +683,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
     [groupStateDict setObject:[NSNumber numberWithBool:state]
                         forKey:[NSString stringWithFormat:@"%@.%@", [selectedCollection UID], [item UID]]];
 
-    [[owner preferenceController] setPreference:groupStateDict forKey:KEY_CONTACT_EDITOR_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
+    [[adium preferenceController] setPreference:groupStateDict forKey:KEY_CONTACT_EDITOR_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
     [groupStateDict release];
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
     NSMutableDictionary	*groupStateDict = [preferenceDict objectForKey:KEY_CONTACT_EDITOR_GROUP_STATE];
     NSNumber		*expandedNum;
 
@@ -764,13 +762,13 @@ static AIContactListEditorWindowController *sharedInstance = nil;
         AIServiceType	*serviceType;
     
         //Find the contact
-        serviceType = [[owner accountController] serviceTypeWithID:[(AIEditorListHandle *)selectedObject serviceID]];
-        contact = [[owner contactController] contactInGroup:nil
+        serviceType = [[adium accountController] serviceTypeWithID:[(AIEditorListHandle *)selectedObject serviceID]];
+        contact = [[adium contactController] contactInGroup:nil
                                                 withService:serviceType
                                                         UID:[selectedObject UID]];
 
         //Show its info
-        [[owner contactController] showInfoForContact:contact];
+        [[adium contactController] showInfoForContact:contact];
     }*/
 }
 

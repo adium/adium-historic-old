@@ -24,41 +24,41 @@
 - (void)installPlugin
 {
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_BEZEL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_EVENT_BEZEL];
     
     //Our preference view
-    preferences = [[JSCEventBezelPreferences preferencePaneWithOwner:owner] retain];
+    preferences = [[JSCEventBezelPreferences preferencePane] retain];
     
     // Setup the controller
-    ebc = [JSCEventBezelController eventBezelControllerForOwner:self];
+    ebc = [JSCEventBezelController eventBezelController];
     
     eventArray = [[NSMutableArray alloc] init];
     
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_ONLINE_YES
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_ONLINE_NO
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_AWAY_YES
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_AWAY_NO
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_IDLE_YES
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:CONTACT_STATUS_IDLE_NO
                                      object:nil];
-    [[owner notificationCenter] addObserver:self
+    [[adium notificationCenter] addObserver:self
                                    selector:@selector(eventNotification:)
                                        name:Content_FirstContentRecieved
                                      object:nil];
@@ -66,14 +66,14 @@
     //Install the contact info view
     [NSBundle loadNibNamed:CONTACT_BEZEL_NIB owner:self];
     contactView = [[AIPreferenceViewController controllerWithName:@"Event Bezel" categoryName:@"None" view:view_contactBezelInfoView delegate:self] retain];
-    [[owner contactController] addContactInfoView:contactView];
+    [[adium contactController] addContactInfoView:contactView];
     
     
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
     
     //watch preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     //set up preferences initially
     [self preferencesChanged:nil];
 }
@@ -81,7 +81,7 @@
 - (void)uninstallPlugin
 {
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 - (void)dealloc
@@ -95,7 +95,7 @@
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_EVENT_BEZEL] == 0){
-        NSDictionary    *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
+        NSDictionary    *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
         
         showEventBezel = [[preferenceDict objectForKey:KEY_SHOW_EVENT_BEZEL] boolValue];
         
@@ -162,8 +162,8 @@
     AIMutableOwnerArray         *ownerArray =nil;
     NSImage                     *tempBuddyIcon = nil;
     NSString                    *statusMessage = nil;
-    NSDictionary                *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
-    NSDictionary                *colorPreferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    NSDictionary                *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_EVENT_BEZEL];
+    NSDictionary                *colorPreferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
     
     if ([notificationName isEqualToString:Content_FirstContentRecieved]) {
         contact = [[[notification object] participatingListObjects] objectAtIndex:0];
@@ -173,15 +173,15 @@
     }
         
     //Check to be sure bezel for contact and for its group is enabled
-    NSNumber *contactDisabledNumber = [[owner preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:contact];
-    NSNumber *groupDisabledNumber = [[owner preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:[contact containingGroup]];
+    NSNumber *contactDisabledNumber = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:contact];
+    NSNumber *groupDisabledNumber = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:[contact containingGroup]];
     BOOL contactEnabled = !contactDisabledNumber || (![contactDisabledNumber boolValue]);
     BOOL groupEnabled = !groupDisabledNumber || (![groupDisabledNumber boolValue]);
     // If Adium is hidden, check if we want it to show (and unhide Adium in the process)
     BOOL showIfHidden = ![NSApp isHidden] || ([NSApp isHidden] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_HIDDEN] boolValue]);
     // If you are away, check if we want it to show
-    BOOL showIfAway = ![[owner accountController] propertyForKey:@"AwayMessage" account:nil]
-        || ([[owner accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
+    BOOL showIfAway = ![[adium accountController] propertyForKey:@"AwayMessage" account:nil]
+        || ([[adium accountController] propertyForKey:@"AwayMessage" account:nil] && [[preferenceDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue]);
     
     if (contactEnabled && groupEnabled && showIfHidden && showIfAway){
         if ([NSApp isHidden]) {
@@ -280,7 +280,7 @@
     [activeListObject release]; activeListObject = nil;
     activeListObject = [inObject retain];
     
-    contactDisableBezel = [[owner preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
+    contactDisableBezel = [[adium preferenceController] preferenceForKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
     if (contactDisableBezel)
         [checkBox_disableBezel setState:[contactDisableBezel boolValue]];
     else
@@ -290,7 +290,7 @@
 - (IBAction)changedSetting:(id)sender
 {
     if (sender == checkBox_disableBezel) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_disableBezel state]] forKey:CONTACT_DISABLE_BEZEL group:PREF_GROUP_EVENT_BEZEL object:activeListObject];
     }
 }
 
@@ -305,7 +305,7 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESEventBezelContactAlert contactAlertWithOwner:owner];   
+    return [ESEventBezelContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason

@@ -18,7 +18,7 @@
 #define NEW_MESSAGE_PROMPT_NIB	@"NewMessagePrompt"
 
 @interface AINewMessagePrompt (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)windowDidLoad;
 - (BOOL)shouldCascadeWindows;
 - (BOOL)windowShouldClose:(id)sender;
@@ -28,10 +28,10 @@
 @implementation AINewMessagePrompt
 
 static AINewMessagePrompt *sharedInstance = nil;
-+ (void)newMessagePromptWithOwner:(id)inOwner
++ (void)newMessagePrompt
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NEW_MESSAGE_PROMPT_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:NEW_MESSAGE_PROMPT_NIB];
     }
     [[sharedInstance window] makeKeyAndOrderFront:nil];
 }
@@ -65,7 +65,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     UID = [serviceType filterUID:[textField_handle stringValue]];
         
     //Find the contact
-    contact = [[owner contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
+    contact = [[adium contactController] contactInGroup:nil withService:[serviceType identifier] UID:UID serverGroup:nil create:YES];
     if(contact){
         AIChat	*chat;
         
@@ -73,8 +73,8 @@ static AINewMessagePrompt *sharedInstance = nil;
         [AINewMessagePrompt closeSharedInstance];
 
         //Initiate the message
-        chat = [[owner contentController] openChatOnAccount:account withListObject:contact];
-        [[owner interfaceController] setActiveChat:chat];
+        chat = [[adium contentController] openChatOnAccount:account withListObject:contact];
+        [[adium interfaceController] setActiveChat:chat];
     }
 }
 
@@ -85,20 +85,16 @@ static AINewMessagePrompt *sharedInstance = nil;
 
 
 // Private --------------------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
     //init
-    [super initWithWindowNibName:windowNibName owner:self];
-    owner = [inOwner retain];
-    
+    [super initWithWindowNibName:windowNibName];    
 
     return(self);
 }
 
 - (void)dealloc
 {
-    [owner release];
-    
     [super dealloc];
 }
 
@@ -110,7 +106,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     AIAccount			*account;
     
     //Configure the auto-complete view
-    enumerator = [[[owner contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
+    enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES] objectEnumerator];
     while((contact = [enumerator nextObject])){
         [textField_handle addCompletionString:[contact UID]];
     }
@@ -120,7 +116,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     [[popUp_service menu] setAutoenablesItems:NO];
 
     //Insert a menu item for each available account
-    enumerator = [[[owner accountController] accountArray] objectEnumerator];
+    enumerator = [[[adium accountController] accountArray] objectEnumerator];
     while((account = [enumerator nextObject])){
         NSMenuItem	*menuItem;
         
@@ -129,7 +125,7 @@ static AINewMessagePrompt *sharedInstance = nil;
         [menuItem setRepresentedObject:account];
 
         //Disabled the menu item if the account is offline
-        if(![[owner contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
+        if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil onAccount:account]){
             [menuItem setEnabled:NO];
         }else{
             [menuItem setEnabled:YES];
@@ -140,7 +136,7 @@ static AINewMessagePrompt *sharedInstance = nil;
     }
 
     //Select the last used account / Available online account
-    [popUp_service selectItemAtIndex:[popUp_service indexOfItemWithRepresentedObject:[[owner accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
+    [popUp_service selectItemAtIndex:[popUp_service indexOfItemWithRepresentedObject:[[adium accountController] accountForSendingContentType:CONTENT_MESSAGE_TYPE toListObject:nil]]];
 
     //Center the window
     [[self window] center];

@@ -25,7 +25,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
     
     [radioButton_topOfIcon setState:[[preferenceDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue]];
     [radioButton_bottomOfIcon setState:![[preferenceDict objectForKey:KEY_DOCK_OVERLAY_POSITION] boolValue]];
@@ -35,13 +35,13 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == radioButton_topOfIcon){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:YES]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
                                              forKey:KEY_DOCK_OVERLAY_POSITION
                                               group:PREF_GROUP_DOCK_OVERLAYS];
         [radioButton_bottomOfIcon setState:NSOffState];
         
     }else if(sender == radioButton_bottomOfIcon){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:NO]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:NO]
                                              forKey:KEY_DOCK_OVERLAY_POSITION
                                               group:PREF_GROUP_DOCK_OVERLAYS];
         [radioButton_topOfIcon setState:NSOffState];

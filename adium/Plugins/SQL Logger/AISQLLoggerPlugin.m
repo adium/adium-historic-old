@@ -16,9 +16,9 @@
   | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.    |
   \----------------------------------------------------------------------------------------------------------*/
 /*
- * $Revision: 1.29 $
- * $Date: 2003/12/12 16:41:39 $
- * $Author: jmelloy $
+ * $Revision: 1.30 $
+ * $Date: 2003/12/15 03:24:57 $
+ * $Author: adamiser $
  *
  */
 
@@ -42,7 +42,7 @@
 
     //Install some prefs.
 
-    //advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePaneWithOwner:owner] retain];
+    //advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
     
     //Install Menu item
     logViewerMenuItem = [[[NSMenuItem alloc] initWithTitle:@"SQL Log Viewer" target:self action:@selector(showLogViewer:) keyEquivalent:@""] autorelease];
@@ -125,7 +125,7 @@
 //Show the log viewer window
 - (void)showLogViewer:(id)sender
 {
-    [[JMSQLLogViewerWindowController logViewerWindowControllerWithOwner:owner] showWindow:nil];
+    [[JMSQLLogViewerWindowController logViewerWindowController] showWindow:nil];
 }
 
 //Insert a message

@@ -14,7 +14,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 
-@interface AIIconState : NSObject {
+@interface AIIconState : AIObject {
     BOOL		animated;
     BOOL		overlay;
 

@@ -6,17 +6,15 @@
 //  Copyright (c) 2003 __MyCompanyName__. All rights reserved.
 //
 
-@interface CBStatusMenuItemController : NSObject 
+@interface CBStatusMenuItemController : AIObject 
 {
     NSStatusItem    *statusItem;
     NSMenu          *theMenu;
     
     NSMutableArray  *accountsMenuItems;
     //NSMutableArray  *groupsMenuItems;
-    
-    AIAdium         *owner;
 }
 
-+ (CBStatusMenuItemController *)statusMenuItemControllerForOwner:(id)inOwner;
++ (CBStatusMenuItemController *)statusMenuItemController;
 
 @end

@@ -13,9 +13,9 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /*
- * $Revision: 1.9 $
- * $Date: 2003/12/12 15:16:06 $
- * $Author: jmelloy $
+ * $Revision: 1.10 $
+ * $Date: 2003/12/15 03:24:57 $
+ * $Author: adamiser $
  */
 
 #import "JMSQLLogViewerWindowController.h"
@@ -43,10 +43,10 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key);
 @implementation JMSQLLogViewerWindowController
 
 static JMSQLLogViewerWindowController *sharedInstance = nil;
-+ (id)logViewerWindowControllerWithOwner:(id)inOwner
++ (id)logViewerWindowController
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:SQL_LOG_VIEWER_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:SQL_LOG_VIEWER_NIB];
     }
 
     return(sharedInstance);
@@ -60,11 +60,9 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
     //init
-    owner = [inOwner retain];
-
     availableLogArray = nil;
     selectedLogArray = nil;
     selectedColumn = nil;
@@ -73,20 +71,18 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     conn = PQconnectdb("");
     if (PQstatus(conn) == CONNECTION_BAD)
     {
-        [[owner interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
+        [[adium interfaceController] handleErrorMessage:@"Connection to database failed." withDescription:@"Check your settings and try again."];
         NSLog(@"%s", PQerrorMessage(conn));
     }
 
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     return(self);
 }
 
 //
 - (void)dealloc
-{
-    [owner release];
-    
+{    
     PQfinish(conn);
 
     [super dealloc];
@@ -98,7 +94,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     NSString	*savedFrame;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -124,7 +120,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_LOG_VIEWER_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
@@ -201,7 +197,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     accountRes = PQexec(conn, [sqlStatement UTF8String]);
     if (!accountRes || PQresultStatus(accountRes) != PGRES_TUPLES_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(accountRes)), PQresultErrorMessage(accountRes), sqlStatement);
-        [[owner interfaceController] handleErrorMessage:@"Account Selection failed." withDescription:@"Account Selection Failed"];
+        [[adium interfaceController] handleErrorMessage:@"Account Selection failed." withDescription:@"Account Selection Failed"];
         if(accountRes) {
             PQclear(accountRes);
         }
@@ -218,7 +214,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
             userID = [NSString stringWithCString:PQgetvalue(accountRes, i, 0)];
             
             //Find the group this contact is in on our contact list
-            AIListContact	*contact = [[owner contactController] contactInGroup:nil withService:serviceID UID:accountUID];
+            AIListContact	*contact = [[adium contactController] contactInGroup:nil withService:serviceID UID:accountUID];
             if(contact){
                 serverGroup = [[contact containingGroup] UID];
             }
@@ -276,7 +272,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
 
     dateRes = PQexec(conn, [dateSQL UTF8String]);
     if (!dateRes || PQresultStatus(dateRes) != PGRES_TUPLES_OK) {
-        [[owner interfaceController] handleErrorMessage:@"Date Selection Failed" withDescription:@"Date Selection Failed"];
+        [[adium interfaceController] handleErrorMessage:@"Date Selection Failed" withDescription:@"Date Selection Failed"];
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(dateRes)), PQresultErrorMessage(dateRes), dateSQL);
         if(dateRes) {
             PQclear(dateRes);
@@ -376,7 +372,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     
     if(!logRes || PQresultStatus(logRes) != PGRES_TUPLES_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(logRes)), PQresultErrorMessage(logRes), logSQL);
-        [[owner interfaceController] handleErrorMessage:@"Log Selection failed." withDescription:@"Log Selection Failed"];
+        [[adium interfaceController] handleErrorMessage:@"Log Selection failed." withDescription:@"Log Selection Failed"];
         if(logRes) {
             PQclear(logRes);
         }
@@ -457,7 +453,7 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
 //
 - (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
     NSMutableDictionary	*groupStateDict = [[preferenceDict objectForKey:KEY_LOG_VIEWER_GROUP_STATE] mutableCopy];
 
     if(!groupStateDict) groupStateDict = [[NSMutableDictionary alloc] init];
@@ -466,14 +462,14 @@ static JMSQLLogViewerWindowController *sharedInstance = nil;
     [groupStateDict setObject:[NSNumber numberWithBool:state]
                        forKey:[item objectForKey:@"UID"]];
 
-    [[owner preferenceController] setPreference:groupStateDict forKey:KEY_LOG_VIEWER_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
+    [[adium preferenceController] setPreference:groupStateDict forKey:KEY_LOG_VIEWER_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
     [groupStateDict release];
 }
 
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
     NSMutableDictionary	*groupStateDict = [preferenceDict objectForKey:KEY_LOG_VIEWER_GROUP_STATE];
     NSNumber		*expandedNum;
 

@@ -13,15 +13,15 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMessageViewController, AIAdium;
+@class AIMessageViewController;
 @protocol AIInterfaceContainer;
 
 @interface AIMessageTabViewItem : NSTabViewItem <AIInterfaceContainer> {
     AIMessageViewController 	*messageView;
-    AIAdium			*owner;
+    AIAdium			*adium;
 }
 
-+ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView owner:(id)inOwner;
++ (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView;
 - (void)makeActive:(id)sender;
 - (void)close:(id)sender;
 - (NSString *)labelString;

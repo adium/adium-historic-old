@@ -19,7 +19,7 @@
 #define ICON_SIZE 32.0
 
 @interface AISMViewController (PRIVATE)
-- (id)initForChat:(AIChat *)inChat owner:(id)inOwner;
+- (id)initForChat:(AIChat *)inChat;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_flushPreferenceCache;
 - (void)rebuildMessageViewForContent;
@@ -55,20 +55,19 @@
 @implementation AISMViewController
 
 //Create a new message view
-+ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner
++ (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[[self alloc] initForChat:inChat owner:inOwner] autorelease]);
+    return([[[self alloc] initForChat:inChat] autorelease]);
 }
 
 //Init
-- (id)initForChat:(AIChat *)inChat owner:(id)inOwner
+- (id)initForChat:(AIChat *)inChat
 {
     //init
     [super init];
     
     rebuilding = NO;
     
-    owner = [inOwner retain];
     chat = [inChat retain];
     contentQueue = [[NSMutableArray alloc] init];
     previousRow = nil;
@@ -82,11 +81,11 @@
     [messageView setForwardsKeyEvents:YES];
     [messageView setDelegate:self];
     
-    [[owner notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
+    [[adium notificationCenter] addObserver:self selector:@selector(contentObjectAdded:) name:Content_ContentObjectAdded object:chat];
 
     //Observe preferences
     [self preferencesChanged:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     
     //Rebuild our view to include any content already in the chat
     [self rebuildMessageViewForContent];
@@ -99,7 +98,7 @@
 {
     //
     abandonRebuilding = YES;
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [self _flushPreferenceCache];
 
     //
@@ -116,7 +115,7 @@
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] == 0){
 
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
         //Release the old preference cache
 	[self _flushPreferenceCache];
 
@@ -865,7 +864,7 @@
         NSArray         *menuItemArray;
         NSEnumerator    *enumerator;
         NSMenuItem      *menuItem;
-        menu = [[owner menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+        menu = [[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],

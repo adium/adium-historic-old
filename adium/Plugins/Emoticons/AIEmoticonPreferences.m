@@ -66,7 +66,7 @@
     [button_removeEmoticons setImage:[AIImageUtilities imageNamed:@"minus" forClass:[self class]]];
     
     //Observe prefs    
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
     //

@@ -19,12 +19,12 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterHandleObserver:self];
+    //[[adium contactController] unregisterHandleObserver:self];
 }
 
 - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent

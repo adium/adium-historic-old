@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAdium, AIAccount, AIListObject;
+@class AIAccount, AIListObject;
 
 @protocol AIAccountSelectionViewDelegate <NSObject>
 - (void)setAccount:(AIAccount *)inAccount;
@@ -22,7 +22,7 @@
 @end
 
 @interface AIAccountSelectionView : NSView {
-    AIAdium				*owner;
+    AIAdium				*adium;
     
     IBOutlet	NSView			*view_contents;
     IBOutlet	NSPopUpButton		*popUp_accounts;
@@ -30,7 +30,7 @@
     id <AIAccountSelectionViewDelegate>	delegate;
 }
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate owner:(id)inOwner;
+- (id)initWithFrame:(NSRect)frameRect delegate:(id <AIAccountSelectionViewDelegate>)inDelegate;
 - (void)configureView;
 - (void)configureAccountMenu;
 - (void)updateMenu;

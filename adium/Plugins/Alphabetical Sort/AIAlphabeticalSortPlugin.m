@@ -21,13 +21,13 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
-    [[owner contactController] registerListSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
+    [[adium contactController] registerListSortController:[[[AIAlphabeticalSort alloc] init] autorelease]];
+    [[adium contactController] registerListSortController:[[[AIAlphabeticalSortNoGroups alloc] init] autorelease]];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterContactSortController:self];
+    //[[adium contactController] unregisterContactSortController:self];
 }
 
 @end

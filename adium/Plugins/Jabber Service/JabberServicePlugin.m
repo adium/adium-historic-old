@@ -33,9 +33,9 @@
     return(handleServiceType);
 }
 
-- (id)accountWithProperties:(NSDictionary *)inProperties owner:(id)inOwner
+- (id)accountWithProperties:(NSDictionary *)inProperties
 {
-    return([[[JabberAccount alloc] initWithProperties:inProperties service:self owner:inOwner] autorelease]);
+    return([[[JabberAccount alloc] initWithProperties:inProperties service:self] autorelease]);
 }
 
 @end

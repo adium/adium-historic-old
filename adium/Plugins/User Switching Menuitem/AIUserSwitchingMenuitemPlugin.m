@@ -15,7 +15,7 @@
 - (IBAction)changeUsers:(id)sender
 {
     //Prompt for the user
-    //AILoginWindowController *loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
+    //AILoginWindowController *loginWindowController = [[AILoginWindowController loginWindowController] retain];
     //[loginWindowController showWindow:nil];
     
     NSLog (@"User asked to change users.");

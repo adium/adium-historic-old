@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-//$Id: LNAboutBoxController.m,v 1.24 2003/12/14 05:28:57 jmelloy Exp $
+//$Id: LNAboutBoxController.m,v 1.25 2003/12/15 03:25:00 adamiser Exp $
 
 #import "LNAboutBoxController.h"
 
@@ -23,7 +23,7 @@
 #define DIRECTORY_INTERNAL_RESOURCES    @"/Contents/Resources/Avatars"
 
 @interface LNAboutBoxController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (BOOL)windowShouldClose:(id)sender;
 - (void)_adiumDuckOptionClicked;
 - (NSString *)_applicationVersion;
@@ -35,30 +35,27 @@
 
 //Returns the shared about box instance
 LNAboutBoxController *sharedInstance = nil;
-+ (LNAboutBoxController *)aboutBoxControllerForOwner:(id)inOwner
++ (LNAboutBoxController *)aboutBoxController
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB];
     }
     return(sharedInstance);
 }
 
 //Init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     numberOfDuckClicks = -1;
-    owner = [inOwner retain];
     
     return(self);
 }
 
 //Dealloc
 - (void)dealloc
-{
-    [owner release];
-    
+{    
     [avatarArray release];
     [buildNumber release];
     [buildDate release];
@@ -147,9 +144,9 @@ LNAboutBoxController *sharedInstance = nil;
         
         if(numberOfDuckClicks == [avatarArray count]){
             numberOfDuckClicks = -1;            
-            [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
+            [[adium soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
         }else{
-            [[owner soundController] playSoundNamed:@"/Adium/Quack.aif"];
+            [[adium soundController] playSoundNamed:@"/Adium/Quack.aif"];
         }
     }
 }
@@ -185,13 +182,13 @@ LNAboutBoxController *sharedInstance = nil;
         [button_duckIcon setImage:[AIImageUtilities imageNamed:@"Awake" forClass:[self class]]];
         [button_duckIcon setAlternateImage:nil];
         
-        [[owner soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
+        [[adium soundController] playSoundNamed:@"/Adium/Feather Ruffle.aif"];
         
     }else{
 
         [button_duckIcon setImage:[[[NSImage alloc] initWithContentsOfFile:[avatarArray objectAtIndex:numberOfDuckClicks]] autorelease]];
 
-        [[owner soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
+        [[adium soundController] playSoundNamed:@"/Aquatech/Ghost Hiss.aiff"];  
     }
 }
 

@@ -15,13 +15,13 @@
 
 #import "AIEditorCollection.h"
 
-@class AIAdium, AIAccount, AIEditorListGroup, AIEditorAccountCollection;
+@class AIAccount, AIEditorListGroup, AIEditorAccountCollection;
 @protocol AIAccount_Handles;
 
 @interface AIEditorAccountCollection : AIEditorCollection {
     AIAccount<AIAccount_Handles>	*account;
 }
 
-+ (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount withOwner:(id)inOwner;
++ (AIEditorAccountCollection *)editorCollectionForAccount:(AIAccount *)inAccount;
 
 @end

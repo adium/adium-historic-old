@@ -8,16 +8,15 @@
 
 @class MSNAccount;
 
-@interface MSNAccountViewController : NSObject <AIAccountViewController>
+@interface MSNAccountViewController : AIObject <AIAccountViewController>
 {
-    AIAdium 	*owner;
     MSNAccount	*account;
     
     IBOutlet	NSView		*view_accountView;
     IBOutlet	NSTextField	*textField_email;
     IBOutlet	NSTextField	*textField_friendlyName;
 }
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
++ (id)accountViewForAccount:(id)inAccount;
 - (NSView *)view;
 - (void)configureViewAfterLoad;
 - (IBAction)saveChanges:(id)sender;

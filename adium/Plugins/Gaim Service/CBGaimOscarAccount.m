@@ -181,7 +181,7 @@ struct oscar_data {
             if([modifiedKeys count] > 0)
             {
                 //tell the contact controller, silencing if necessary
-                [[owner contactController] handleStatusChanged:theHandle
+                [[adium contactController] handleStatusChanged:theHandle
                                             modifiedStatusKeys:modifiedKeys
                                                        delayed:silentAndDelayed
                                                         silent:silentAndDelayed];
@@ -195,7 +195,7 @@ struct oscar_data {
     if (profile) {
         int length = [[NSAttributedString stringWithData:profile] length];
         if (length > 1024) {
-            [[owner interfaceController] handleErrorMessage:@"Error Setting Profile"
+            [[adium interfaceController] handleErrorMessage:@"Error Setting Profile"
                                             withDescription:[NSString stringWithFormat:@"Your info is too large, and could not be set.\r\rAIM and ICQ limit profiles to 1024 characters (Your current profile is %i characters)",length]];
         } 
         else 

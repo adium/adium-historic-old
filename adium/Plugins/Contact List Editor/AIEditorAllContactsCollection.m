@@ -20,7 +20,7 @@
 
 
 @interface AIEditorAllContactsCollection (PRIVATE)
-- (id)initWithOwner:(id)inOwner plugin:(id)inPlugin;
+- (id)initForPlugin:(id)inPlugin;
 - (void)generateEditorListGroup;
 - (void)_positionHandle:(AIEditorListHandle *)handle atIndex:(int)index inGroup:(AIEditorListGroup *)group;
 - (void)_positionGroup:(AIEditorListGroup *)group atIndex:(int)index;
@@ -32,24 +32,24 @@
 @implementation AIEditorAllContactsCollection
 
  //Return a collection for all contacts
-+ (AIEditorAllContactsCollection *)allContactsCollectionWithOwner:(id)inOwner plugin:(id)inPlugin
++ (AIEditorAllContactsCollection *)allContactsCollectionForPlugin:(id)inPlugin
 {
-    return([[[self alloc] initWithOwner:inOwner plugin:inPlugin] autorelease]);
+    return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
 //init
-- (id)initWithOwner:(id)inOwner plugin:(id)inPlugin
+- (id)initForPlugin:(id)inPlugin
 {
-    [super initWithOwner:inOwner];
+    [super init];
 
     plugin = [inPlugin retain];
     sortMode = AISortByIndex;
 
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionAddedObject:) name:Editor_AddedObjectToCollection object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionRemovedObject:) name:Editor_RemovedObjectFromCollection object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionRenamedObject:) name:Editor_RenamedObjectOnCollection object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
-    [[owner notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionAddedObject:) name:Editor_AddedObjectToCollection object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionRemovedObject:) name:Editor_RemovedObjectFromCollection object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionRenamedObject:) name:Editor_RenamedObjectOnCollection object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionContentChanged:) name:Editor_CollectionContentChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(collectionArrayChanged:) name:Editor_CollectionArrayChanged object:nil];
     [self collectionArrayChanged:nil];
     
     return(self);
@@ -58,7 +58,7 @@
 - (void)dealloc
 {
     //Stop observing
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     //Cleanup
     [plugin release];
@@ -263,7 +263,7 @@
     }
 
     //Set the new index
-    orderIndex = [[owner contactController] setOrderIndexOfContactWithServiceID:[handle serviceID] UID:[handle UID] to:orderIndex];
+    orderIndex = [[adium contactController] setOrderIndexOfContactWithServiceID:[handle serviceID] UID:[handle UID] to:orderIndex];
     [handle setOrderIndex:orderIndex];
 }
 
@@ -284,7 +284,7 @@
     }
 
     //Set the new index
-    orderIndex = [[owner contactController] setOrderIndexOfGroupWithUID:[group UID] to:orderIndex];
+    orderIndex = [[adium contactController] setOrderIndexOfGroupWithUID:[group UID] to:orderIndex];
     [group setOrderIndex:orderIndex];
 }
 
@@ -314,7 +314,7 @@
                 localGroup = [self groupWithUID:groupUID];
                 if(!localGroup){
                     localGroup = [[[AIEditorListGroup alloc] initWithUID:groupUID temporary:NO] autorelease];
-                    [localGroup setOrderIndex:[[owner contactController] orderIndexOfKey:groupUID]];
+                    [localGroup setOrderIndex:[[adium contactController] orderIndexOfKey:groupUID]];
                     [list addObject:localGroup];
                 }
                 
@@ -327,7 +327,7 @@
                     localHandle = [localGroup handleNamed:handleUID];
                     if(!localHandle){
                         localHandle = [[[AIEditorListHandle alloc] initWithUID:handleUID serviceID:[collection serviceID] temporary:NO] autorelease];
-                        [localHandle setOrderIndex:[[owner contactController] orderIndexOfKey:[NSString stringWithFormat:@"%@.%@",[collection serviceID],[handle UID]]]];
+                        [localHandle setOrderIndex:[[adium contactController] orderIndexOfKey:[NSString stringWithFormat:@"%@.%@",[collection serviceID],[handle UID]]]];
                         [localGroup addHandle:localHandle];
                     }
                 }
@@ -348,7 +348,7 @@
         [self generateEditorListGroup];
 
         //Let the contact list know our handles changed
-        [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+        [[adium notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
     }
 }
 
@@ -358,7 +358,7 @@
     [self generateEditorListGroup];
 
     //Let the contact list know our handles changed
-    [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+    [[adium notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
 }
 
 - (void)collectionAddedObject:(NSNotification *)notification
@@ -402,7 +402,7 @@
                 [[ourHandle containingGroup] removeHandle:ourHandle];
     
                 //Let the contact list editor know our handles changed
-                [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
+                [[adium notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
             }
         }
     }

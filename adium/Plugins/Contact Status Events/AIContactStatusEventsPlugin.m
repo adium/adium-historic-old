@@ -22,33 +22,33 @@
 
 - (void)installPlugin
 {
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
     onlineDict = [[NSMutableDictionary alloc] init];
     awayDict = [[NSMutableDictionary alloc] init];
     idleDict = [[NSMutableDictionary alloc] init];
 
     //Register our default preferences
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_EVENTS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_EVENTS];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_EVENTS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_EVENTS];
     [self preferencesChanged:nil];
 
     //Our preference view
-    preferences = [[AIContactStatusEventsPreferences contactStatusEventsPreferencesWithOwner:owner] retain];
+    preferences = [[AIContactStatusEventsPreferences contactStatusEventsPreferences] retain];
 
-    [owner registerEventNotification:CONTACT_STATUS_ONLINE_YES displayName:@"Contact Signed On"];
-    [owner registerEventNotification:CONTACT_STATUS_ONLINE_NO displayName:@"Contact Signed Off"];
-    [owner registerEventNotification:CONTACT_STATUS_AWAY_YES displayName:@"Contact Away"];
-    [owner registerEventNotification:CONTACT_STATUS_AWAY_NO displayName:@"Contact UnAway"];
-    [owner registerEventNotification:CONTACT_STATUS_IDLE_YES displayName:@"Contact Idle"];
-    [owner registerEventNotification:CONTACT_STATUS_IDLE_NO displayName:@"Contact UnIdle"];
+    [adium registerEventNotification:CONTACT_STATUS_ONLINE_YES displayName:@"Contact Signed On"];
+    [adium registerEventNotification:CONTACT_STATUS_ONLINE_NO displayName:@"Contact Signed Off"];
+    [adium registerEventNotification:CONTACT_STATUS_AWAY_YES displayName:@"Contact Away"];
+    [adium registerEventNotification:CONTACT_STATUS_AWAY_NO displayName:@"Contact UnAway"];
+    [adium registerEventNotification:CONTACT_STATUS_IDLE_YES displayName:@"Contact Idle"];
+    [adium registerEventNotification:CONTACT_STATUS_IDLE_NO displayName:@"Contact UnIdle"];
 
     //Observe
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 }
 
 - (void)uninstallPlugin
 {
-    //[[owner contactController] unregisterHandleObserver:self];
+    //[[adium contactController] unregisterHandleObserver:self];
     //remove observers
 }
 
@@ -67,7 +67,7 @@
         NSNumber	*oldStatusNumber = [onlineDict objectForKey:[inObject UIDAndServiceID]];
         BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
 
-       // NSLog(@"%@ Online changed from %i to %i (Holding Updates: %i)",[inObject displayName],oldStatus,newStatus,[[owner contactController] holdContactListUpdates]);
+       // NSLog(@"%@ Online changed from %i to %i (Holding Updates: %i)",[inObject displayName],oldStatus,newStatus,[[adium contactController] holdContactListUpdates]);
 
         if(oldStatusNumber == nil || newStatus != oldStatus){
             //Save the new status
@@ -79,7 +79,7 @@
                 AIMutableOwnerArray	*signedOffArray = [inObject statusArrayForKey:@"Signed Off"];
 
                 //Post an online/offline notification
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO) object:inObject userInfo:nil];
+                [[adium notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_ONLINE_YES : CONTACT_STATUS_ONLINE_NO) object:inObject userInfo:nil];
 
                 //Clear any existing juston/just off values
                 [signedOnArray setObject:nil withOwner:inObject];
@@ -87,7 +87,7 @@
 
                 //Set status flags and install timers for "Just signed on" and "Just signed off"
                 [(newStatus ? signedOnArray : signedOffArray) setObject:[NSNumber numberWithBool:YES] withOwner:inObject];
-                [[owner contactController] listObjectStatusChanged:inObject
+                [[adium contactController] listObjectStatusChanged:inObject
                                                 modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On",@"Signed Off",nil]
                                                            delayed:delayed
                                                             silent:silent];
@@ -112,7 +112,7 @@
 
             //Take action (If this update isn't silent)
             if(!silent){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO) object:inObject userInfo:nil];
+                [[adium notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_AWAY_YES : CONTACT_STATUS_AWAY_NO) object:inObject userInfo:nil];
             }
             
         }
@@ -130,7 +130,7 @@
 
             //Take action (If this update isn't silent)
             if(!silent){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO) object:inObject userInfo:nil];
+                [[adium notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_IDLE_YES : CONTACT_STATUS_IDLE_NO) object:inObject userInfo:nil];
             }
             
         }
@@ -146,14 +146,14 @@
     [[object statusArrayForKey:@"Signed On"] setObject:nil withOwner:object];
     [[object statusArrayForKey:@"Signed Off"] setObject:nil withOwner:object];
 
-    [[owner contactController] listObjectStatusChanged:object modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil] delayed:NO silent:NO];
+    [[adium contactController] listObjectStatusChanged:object modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil] delayed:NO silent:NO];
 }
 
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
     if([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_STATUS_EVENTS] == 0){
-	NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS];
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STATUS_EVENTS];
 
 	//Release the old values..
 	//Cache the preference values

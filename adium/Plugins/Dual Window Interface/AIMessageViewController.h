@@ -13,10 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIMiniToolbar, AIListObject, AIAdium, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView;
+@class AIMiniToolbar, AIListObject, AIAccount, AISendingTextView, AIAutoScrollView, AIChat, AIPlasticButton, AIAccountSelectionView;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate, AIMessageViewController;
 
-@interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
+@interface AIMessageViewController : AIObject <AIAccountSelectionViewDelegate> {
     IBOutlet	NSView			*view_contents;
     IBOutlet	NSScrollView		*scrollView_outgoingView;
     IBOutlet	AISendingTextView	*textView_outgoing;
@@ -33,14 +33,13 @@
 
     //Variables
     id				delegate;
-    AIAdium			*owner;
     AIAccount			*account;
     AIChat			*chat;
     BOOL			showUserList;
     BOOL			availableForSending;
 }
 
-+ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat owner:(id)inOwner;
++ (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (IBAction)sendMessage:(id)sender;
 - (NSView *)view;
 - (void)setAccountSelectionMenuVisible:(BOOL)visible;

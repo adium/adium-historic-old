@@ -13,20 +13,19 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AIAccount, AIAdium;
+@class AIAccount;
 
-@interface AIPasswordPromptController : NSWindowController {
+@interface AIPasswordPromptController : AIWindowController {
     IBOutlet	NSTextField	*textField_account;
     IBOutlet	NSTextField	*textField_password;
     IBOutlet	NSButton	*checkBox_savePassword;
 
-    AIAdium		*owner;
     SEL 		selector;
     id			target;
     AIAccount		*account;
 }
 
-+ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector owner:(id)inOwner;
++ (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)closeWindow:(id)sender;

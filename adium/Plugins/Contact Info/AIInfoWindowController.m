@@ -21,15 +21,15 @@
 
 //Open a new info window
 static AIInfoWindowController *sharedInstance = nil;
-+ (id)showInfoWindowWithOwner:(id)inOwner forContact:(AIListContact *)inContact
++ (id)showInfoWindowForContact:(AIListContact *)inContact
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:INFO_WINDOW_NIB];
     }
 
     if([inContact isKindOfClass:[AIListContact class]]){ //Only allow this for contacts
         //Let everyone know we want profile information
-        [[inOwner notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"TextProfile", @"StatusMessage", nil] forKey:@"Keys"]];
+        [[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Contact_UpdateStatus object:inContact userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObjects:@"TextProfile", @"StatusMessage", nil] forKey:@"Keys"]];
     
         //Show the window and configure it for the contact
         [sharedInstance configureWindowForContact:inContact];
@@ -195,7 +195,7 @@ static AIInfoWindowController *sharedInstance = nil;
         }
         
         if (status) {
-            NSMutableAttributedString * statusString = [[[owner contentController] filteredAttributedString:status] mutableCopy];
+            NSMutableAttributedString * statusString = [[[adium contentController] filteredAttributedString:status] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[statusString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -252,7 +252,7 @@ static AIInfoWindowController *sharedInstance = nil;
         //Only show the profile is one exists
         if (textProfile && [textProfile length]) {
             [infoString appendString:@"\r\r\tProfile:\t" withAttributes:labelAttributes];
-            NSMutableAttributedString   *textProfileString = [[[owner contentController] filteredAttributedString:textProfile] mutableCopy];
+            NSMutableAttributedString   *textProfileString = [[[adium contentController] filteredAttributedString:textProfile] mutableCopy];
             NSMutableParagraphStyle     *indentStyle;
             
             NSRange                     firstLineRange = [[textProfileString string] lineRangeForRange:NSMakeRange(0,0)];
@@ -304,16 +304,15 @@ static AIInfoWindowController *sharedInstance = nil;
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     //init
-    owner = [inOwner retain];
     timer = nil;
     
     //Register ourself as a handle observer
-    [[owner contactController] registerListObjectObserver:self];
+    [[adium contactController] registerListObjectObserver:self];
 
     return(self);
 }
@@ -321,7 +320,6 @@ static AIInfoWindowController *sharedInstance = nil;
 //
 - (void)dealloc
 {
-    [owner release];
     [activeContactObject release];
 
     [super dealloc];
@@ -333,7 +331,7 @@ static AIInfoWindowController *sharedInstance = nil;
     NSString	*savedFrame;
 
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_TEXT_PROFILE_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_TEXT_PROFILE_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }else{
@@ -356,12 +354,12 @@ static AIInfoWindowController *sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_TEXT_PROFILE_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Stop observing, and release the shared instance
-    [[owner contactController] unregisterListObjectObserver:self];
+    [[adium contactController] unregisterListObjectObserver:self];
     [timer invalidate]; [timer release]; timer = nil;
 
     [sharedInstance autorelease]; sharedInstance = nil;

@@ -10,7 +10,7 @@
 #import "MSNAccount.h"
 
 @interface MSNAccountViewController (PRIVATE)
-- (id)initForOwner:(id)inOwner account:(id)inAccount;
+- (id)initForAccount:(id)inAccount;
 - (void)dealloc;
 - (void)accountStatusChanged:(NSNotification *)notification;
 - (void)initAccountView;
@@ -18,9 +18,9 @@
 
 @implementation MSNAccountViewController
 
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
++ (id)accountViewForAccount:(id)inAccount;
 {
-    return [[[self alloc] initForOwner:inOwner account:inAccount] autorelease];
+    return [[[self alloc] initForAccount:inAccount] autorelease];
 }
 
 - (NSView *)view
@@ -38,10 +38,10 @@
 //Save the changed properties
 - (IBAction)saveChanges:(id)sender
 {
-    [[owner accountController] setProperty:[textField_email stringValue]
+    [[adium accountController] setProperty:[textField_email stringValue]
                                     forKey:@"Email"
                                    account:account];
-    [[owner accountController] setProperty:[textField_friendlyName stringValue]
+    [[adium accountController] setProperty:[textField_friendlyName stringValue]
                                     forKey:@"FriendlyName"
                                    account:account];
 }
@@ -56,11 +56,10 @@
 /* PRIVATE METHODS */
 /*******************/
 
-- (id)initForOwner:(id)inOwner account:(id)inAccount
+- (id)initForAccount:(id)inAccount
 {
     [super init];
     
-    owner = [inOwner retain];
     account = [inAccount retain];
     
     if([NSBundle loadNibNamed:@"MSNAccountView" owner:self]){
@@ -69,7 +68,7 @@
         NSLog(@"couldn't load account view bundle");
     }
     
-    [[owner notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
+    [[adium notificationCenter] addObserver:self selector:@selector(accountStatusChanged:) name:Account_PropertiesChanged object:account];
     
     [textField_email setFormatter:[AIStringFormatter stringFormatterAllowingCharacters:[NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789+-._@"] length:129 caseSensitive:NO errorMessage:@"Improper Format"]];
     
@@ -80,11 +79,10 @@
 
 - (void)dealloc
 {
-    [[owner notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
+    [[adium notificationCenter] removeObserver:self name:Account_PropertiesChanged object:account];
     
     [view_accountView release];
     
-    [owner release];
     [account release];
     
     [super dealloc];
@@ -92,7 +90,7 @@
 
 - (void)accountStatusChanged:(NSNotification *)notification
 {
-    BOOL	isOnline = [[[owner accountController] propertyForKey:@"Online" account:account] boolValue];
+    BOOL	isOnline = [[[adium accountController] propertyForKey:@"Online" account:account] boolValue];
 
     //Dim unavailable controls
     [textField_email setEnabled:isOnline];
@@ -104,7 +102,7 @@
     NSString *savedFriendlyName;
     
     //Email
-    savedEmail = [[owner accountController] propertyForKey:@"Email" account:account];
+    savedEmail = [[adium accountController] propertyForKey:@"Email" account:account];
     if(savedEmail != nil && [savedEmail length] != 0){
         [textField_email setStringValue:savedEmail];
     }else{
@@ -112,7 +110,7 @@
     }
     
     //FriendlyName
-    savedFriendlyName = [[owner accountController] propertyForKey:@"FriendlyName" account:account];
+    savedFriendlyName = [[adium accountController] propertyForKey:@"FriendlyName" account:account];
     if(savedFriendlyName != nil && [savedFriendlyName length] != 0){
         [textField_friendlyName setStringValue:savedFriendlyName];
     }else{

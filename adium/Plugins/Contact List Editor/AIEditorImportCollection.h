@@ -22,6 +22,6 @@
     NSString				*path;
 }
 
-+ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath owner:(id)inOwner;
++ (AIEditorImportCollection *)editorCollectionWithPath:(NSString *)inPath;
 
 @end

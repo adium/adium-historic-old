@@ -17,24 +17,19 @@
 
 @class AIInterfaceController;
 
-@interface ErrorMessageWindowController : NSWindowController {
-
+@interface ErrorMessageWindowController : AIWindowController {
     IBOutlet	NSTextField	*textField_errorTitle;
     IBOutlet	NSTextView	*textView_errorInfo;
     IBOutlet	NSScrollView	*scrollView_errorInfo;
-
     IBOutlet	NSTabView	*tabView_multipleErrors;
-
     IBOutlet	NSButton	*button_okay;
-
 
     NSMutableArray	*errorTitleArray;
     NSMutableArray	*errorDescArray;
     NSMutableArray	*errorWindowTitleArray;
-    AIAdium	*owner;
 }
 
-+ (id)errorMessageWindowControllerWithOwner:(id)inOwner;
++ (id)errorMessageWindowController;
 + (void)closeSharedInstance;
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 - (IBAction)okay:(id)sender;

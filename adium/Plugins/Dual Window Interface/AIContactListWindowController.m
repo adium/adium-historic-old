@@ -32,7 +32,7 @@
 #define KEY_CLWH_HIDE				@"Hide While in Background"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged:(NSNotification *)notification;
 - (void)windowDidLoad;
@@ -46,9 +46,9 @@
 @implementation AIContactListWindowController
 
 //Return a new contact list window controller
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface
 {
-    return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB interface:inInterface owner:inOwner] autorelease]);
+    return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB interface:inInterface] autorelease]);
 }
 
 //Make this container active
@@ -71,15 +71,14 @@
 
 //Private ----------------------------------------------------------------
 //init the contact list window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
-    owner = [inOwner retain];
     interface = [inInterface retain];
 
     //Observe preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
     return(self);
 }
@@ -88,10 +87,9 @@
 - (void)dealloc
 {
     //Remove observers (general)
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
-    [owner release];
     [interface release];
         
     [super dealloc];
@@ -102,7 +100,7 @@
 {
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_CONTACT_LIST] == 0)){
 	//Handle window ordering
-	NSDictionary * prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+	NSDictionary * prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
 	if ([[prefDict objectForKey:KEY_CLWH_ALWAYS_ON_TOP] boolValue]) {
 	    [[self window] setLevel:NSFloatingWindowLevel]; //always on top
 	} else {
@@ -113,7 +111,7 @@
     }
 
     if((notification == nil) || ([(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DUAL_WINDOW_INTERFACE] == 0)){
-        NSDictionary	*prefDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+        NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
         autoResizeVertically = [[prefDict objectForKey:KEY_DUAL_RESIZE_VERTICAL] boolValue];
         autoResizeHorizontally = [[prefDict objectForKey:KEY_DUAL_RESIZE_HORIZONTAL] boolValue];
 
@@ -280,7 +278,7 @@
 //    NSRect	contactListFrame;
     
     //Restore the window position
-    savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
+    savedFrame = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME];
     if(savedFrame){
         [[self window] setFrameFromString:savedFrame];
     }
@@ -298,7 +296,7 @@
     [scrollView_contactList setFrameSize:NSMakeSize(contactListFrame.size.width, contactListFrame.size.height - 16)];
 */
     //Swap in the contact list view
-    contactListViewController = [[[owner interfaceController] contactListViewController] retain];
+    contactListViewController = [[[adium interfaceController] contactListViewController] retain];
     contactListView = [[contactListViewController contactListView] retain];
     [scrollView_contactList setAndSizeDocumentView:contactListView];
     [scrollView_contactList setAutoScrollToBottom:NO];
@@ -312,7 +310,7 @@
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(contactListDesiredSizeChanged:) name:AIViewDesiredSizeDidChangeNotification object:contactListView];
     
     //Register for the selection notification
-    [[owner notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
+    [[adium notificationCenter] addObserver:self selector:@selector(contactSelectionChanged:) name:Interface_ContactSelectionChanged object:contactListView];
 
     //Exclude this window from the window menu (since we add it manually)
     [[self window] setExcludedFromWindowsMenu:YES];
@@ -337,7 +335,7 @@
     [interface containerDidBecomeActive:nil];
 
     //Stop observing
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     
     //Close the contact list view
@@ -345,7 +343,7 @@
     [contactListView release];
     
     //Save the window position
-    [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
+    [[adium preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                          forKey:KEY_DUAL_CONTACT_LIST_WINDOW_FRAME
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
@@ -365,14 +363,14 @@
 - (void)windowDidBecomeMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:self];
-    [[owner notificationCenter] postNotificationName:Interface_ContactListDidBecomeMain object:self];
+    [[adium notificationCenter] postNotificationName:Interface_ContactListDidBecomeMain object:self];
 }
 
 //
 - (void)windowDidResignMain:(NSNotification *)notification
 {
     [interface containerDidBecomeActive:nil];
-    [[owner notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
+    [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
 }
 
 //Install our toolbar
@@ -389,7 +387,7 @@
     [toolbar setAutosavesConfiguration:YES];
 
     //
-    toolbarItems = [[[owner toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", nil]] retain];
+    toolbarItems = [[[adium toolbarController] toolbarItemsForToolbarTypes:[NSArray arrayWithObjects:@"General", @"ListObject", nil]] retain];
 
     //install it
     [[self window] setToolbar:toolbar];

@@ -21,7 +21,7 @@
 #define TABLE_COLUMN_EVENT		@"event"
 
 @interface AIDockBehaviorPreferences (PRIVATE)
-- (id)initWithPlugin:(id)inPlugin owner:(id)inOwner;
+- (id)initWithPlugin:(id)inPlugin;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSMenu *)behaviorSetMenu;
 @end
@@ -46,7 +46,7 @@
     [popUp_behaviorSet setMenu:[self behaviorSetMenu]];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
 
@@ -54,7 +54,7 @@
 - (void)viewWillClose
 {
     [AIDockCustomBehavior closeDockBehaviorCustomPanel];
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 }
 
 //Called when the preferences change, update our preference display
@@ -95,7 +95,7 @@
     if(newPreset){
         [AIDockCustomBehavior closeDockBehaviorCustomPanel];
     }else{
-        [AIDockCustomBehavior showDockBehaviorCustomPanelWithPlugin:plugin owner:owner];
+        [AIDockCustomBehavior showDockBehaviorCustomPanelWithPlugin:plugin];
     }
 }
 

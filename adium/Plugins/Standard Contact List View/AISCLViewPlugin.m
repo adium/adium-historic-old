@@ -27,17 +27,17 @@
 - (void)installPlugin
 {
     //Register ourself as a contact list view plugin
-    [[owner interfaceController] registerContactListViewPlugin:self];
+    [[adium interfaceController] registerContactListViewPlugin:self];
 
     //Register our default preferences and install our preference view
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
-    preferences = [[AICLPreferences contactListPreferencesWithOwner:owner] retain];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_CONTACT_LIST];
+    preferences = [[AICLPreferences contactListPreferences] retain];
 }
 
 //Return a new contact list view controller
 - (id <AIContactListViewController>)contactListViewController
 {
-    return([AISCLViewController contactListViewControllerWithOwner:owner]);
+    return([AISCLViewController contactListViewController]);
 }
 
 @end

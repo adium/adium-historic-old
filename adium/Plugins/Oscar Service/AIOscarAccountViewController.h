@@ -14,17 +14,16 @@
  \------------------------------------------------------------------------------------------------------ */
 
 
-@class AIAdium, AIOscarAccount;
+@class AIOscarAccount;
 
-@interface AIOscarAccountViewController : NSObject <AIAccountViewController> {
-    AIAdium		*owner;
+@interface AIOscarAccountViewController : AIObject <AIAccountViewController> {
     AIOscarAccount	*account;
 
     IBOutlet		NSView			*view_accountView;
     IBOutlet		NSTextField		*textField_handle;
 }
 
-+ (id)accountViewForOwner:(id)inOwner account:(id)inAccount;
++ (id)accountViewForAccount:(id)inAccount;
 - (NSView *)view;
 - (IBAction)saveChanges:(id)sender;
 - (void)configureViewAfterLoad;

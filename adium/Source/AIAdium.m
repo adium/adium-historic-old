@@ -37,6 +37,16 @@
 
 @implementation AIAdium
 
+//Returns the shared AIAdium instance
+//static AIAdium *sharedInstance = nil;
+/*+ (AIAdium *)sharedInstance{
+    return(sharedInstance);
+}*/
+- (id)init{
+    [AIObject _setSharedAdiumInstance:self];
+    return([super init]);
+}
+
 //Returns the location of Adium's preference folder (within the system's 'application support' directory)
 + (NSString *)applicationSupportDirectory
 {
@@ -184,7 +194,7 @@
 - (IBAction)showAboutBox:(id)sender
 {
 
-    [[LNAboutBoxController aboutBoxControllerForOwner:self] showWindow:nil];
+    [[LNAboutBoxController aboutBoxController] showWindow:nil];
 
      /*[NSApp orderFrontStandardAboutPanelWithOptions:
         [NSDictionary dictionaryWithObject:

@@ -14,16 +14,14 @@
 
 @implementation ESContactAlert
 
-+ (id)contactAlertWithOwner:(id)inOwner
++ (id)contactAlert
 {
-    return ([[[self alloc] initWithOwner:inOwner] autorelease]);   
+    return ([[[self alloc] init] autorelease]);   
 }
 
 
-- (id)initWithOwner:(id)inOwner
-{
-    owner = inOwner;
-    
+- (id)init
+{    
     NSString *nibName = [self nibName];
     if (nibName)
         [NSBundle loadNibNamed:nibName owner:self];
@@ -35,8 +33,8 @@
 //pass nil to remove the key
 - (void)setObject:(id)object forKey:(NSString *)key
 {
-    NSMutableArray * eventActionArray = [[owner contactAlertsController] eventActionArrayForContactAlert:self];
-    int row = [[owner contactAlertsController] rowForContactAlert:self];
+    NSMutableArray * eventActionArray = [[adium contactAlertsController] eventActionArrayForContactAlert:self];
+    int row = [[adium contactAlertsController] rowForContactAlert:self];
     NSMutableDictionary *currentDict = [[eventActionArray objectAtIndex:row] mutableCopy];
     
     if (object)
@@ -44,17 +42,17 @@
     else
         [currentDict removeObjectForKey:key];
     
-    [[[owner contactAlertsController] eventActionArrayForContactAlert:self] replaceObjectAtIndex:row withObject:currentDict];
+    [[[adium contactAlertsController] eventActionArrayForContactAlert:self] replaceObjectAtIndex:row withObject:currentDict];
 }
 
 - (void)saveEventActionArray
 {
-    [[owner contactAlertsController] saveEventActionArrayForContactAlert:self];
+    [[adium contactAlertsController] saveEventActionArrayForContactAlert:self];
 }
 
 - (void)configureWithSubview:(NSView *)view
 {
-    [[owner contactAlertsController] configureWithSubview:view forContactAlert:self];
+    [[adium contactAlertsController] configureWithSubview:view forContactAlert:self];
 }
 //overridden by subclasses
 - (NSMenuItem *)alertMenuItem

@@ -32,7 +32,7 @@
     NSString	*path;
 
     //Install our contact alert
-    [[owner contactAlertsController] registerContactAlertProvider:self];
+    [[adium contactAlertsController] registerContactAlertProvider:self];
 
     //
     behaviorDict = nil;
@@ -40,38 +40,38 @@
     presetBehavior = [[NSArray arrayWithContentsOfFile:path] retain];
     
     //Register default preferences and pre-set behavior
-    [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_BEHAVIOR_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_DOCK_BEHAVIOR];
 
     //Install our preference view
-    preferences = [[AIDockBehaviorPreferences preferencePaneWithPlugin:self owner:owner] retain];
+    preferences = [[AIDockBehaviorPreferences preferencePaneForPlugin:self] retain];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
 }
 
 - (void)uninstallPlugin
 {
-    [[owner notificationCenter] removeObserver:preferences];
+    [[adium notificationCenter] removeObserver:preferences];
     [[NSNotificationCenter defaultCenter] removeObserver:preferences];
     //Uninstall our contact alert
-    [[owner contactAlertsController] unregisterContactAlertProvider:self];
+    [[adium contactAlertsController] unregisterContactAlertProvider:self];
 }
 
 //Called when the preferences change, reregister for the notifications
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_DOCK_BEHAVIOR] == 0){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
         NSArray		*behaviorArray;
         NSString	*activeBehaviorSet;
         NSEnumerator	*enumerator;
         NSDictionary	*dictionary;
         
         //Reset our observations
-        [[owner notificationCenter] removeObserver:self];
-        [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+        [[adium notificationCenter] removeObserver:self];
+        [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
 
         //Load the behaviorSet
         activeBehaviorSet = [preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET];
@@ -91,7 +91,7 @@
             NSNumber	*behavior = [dictionary objectForKey:KEY_DOCK_EVENT_BEHAVIOR];
 
             //Observe the notification
-            [[owner notificationCenter] addObserver:self
+            [[adium notificationCenter] addObserver:self
                                            selector:@selector(eventNotification:)
                                                name:notification
                                              object:nil];
@@ -109,19 +109,19 @@
     int	behavior = [[behaviorDict objectForKey:[notification name]] intValue];
 
     //Perform the behavior
-    [[owner dockController] performBehavior:behavior];
+    [[adium dockController] performBehavior:behavior];
 }
 
 //Active behavior preset.  Pass and return nil for custom behavior
 - (void)setActivePreset:(NSString *)presetName
 {
-    [[owner preferenceController] setPreference:(presetName ? presetName : @"")
+    [[adium preferenceController] setPreference:(presetName ? presetName : @"")
                                          forKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET
                                           group:PREF_GROUP_DOCK_BEHAVIOR];
 }
 - (NSString *)activePreset
 {
-    NSDictionary *preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    NSDictionary *preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
     
     return([preferenceDict objectForKey:KEY_DOCK_ACTIVE_BEHAVIOR_SET]);
 }
@@ -162,13 +162,13 @@
 //Custom dock behavior
 - (void)setCustomBehavior:(NSArray *)inBehavior
 {
-    [[owner preferenceController] setPreference:inBehavior
+    [[adium preferenceController] setPreference:inBehavior
                                          forKey:KEY_DOCK_CUSTOM_BEHAVIOR
                                           group:PREF_GROUP_DOCK_BEHAVIOR];
 }
 - (NSArray *)customBehavior
 {
-    NSDictionary 	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
+    NSDictionary 	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_BEHAVIOR];
     
     return([preferenceDict objectForKey:KEY_DOCK_CUSTOM_BEHAVIOR]);
 }
@@ -184,7 +184,7 @@
 
 - (ESContactAlert *)contactAlert
 {
-    return [ESDockBehaviorContactAlert contactAlertWithOwner:owner];   
+    return [ESDockBehaviorContactAlert contactAlert];   
 }
 
 //performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
@@ -192,7 +192,7 @@
 {
     if (details) {
         //Perform the behavior
-        [[owner dockController] performBehavior:[details intValue]];
+        [[adium dockController] performBehavior:[details intValue]];
         return YES;
     } else {
         return NO;

@@ -25,7 +25,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SPELLING];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING];
     
     [checkBox_spellChecking setState:[[preferenceDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
 }
@@ -34,7 +34,7 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_spellChecking){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SPELL_CHECKING
                                               group:PREF_GROUP_SPELLING];
         

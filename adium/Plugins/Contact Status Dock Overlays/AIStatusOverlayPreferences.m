@@ -25,7 +25,7 @@
 //Configures our view for the current preferences
 - (void)viewDidLoad
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DOCK_OVERLAYS];
 
     [checkBox_showStatusOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_STATUS] boolValue]];
     [checkBox_showContentOverlays setState:[[preferenceDict objectForKey:KEY_DOCK_SHOW_CONTENT] boolValue]];
@@ -35,12 +35,12 @@
 - (IBAction)changePreference:(id)sender
 {
     if(sender == checkBox_showStatusOverlays){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DOCK_SHOW_STATUS
                                               group:PREF_GROUP_DOCK_OVERLAYS];
         
     }else if(sender == checkBox_showContentOverlays){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_DOCK_SHOW_CONTENT
                                               group:PREF_GROUP_DOCK_OVERLAYS];
 

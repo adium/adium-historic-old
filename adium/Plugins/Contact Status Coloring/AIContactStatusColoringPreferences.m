@@ -20,149 +20,148 @@
 #define CONTACT_STATUS_COLORING_PREF_TITLE	@"Status Coloring"
 
 @interface AIContactStatusColoringPreferences (PRIVATE)
-- (id)initWithOwner:(id)inOwner;
 - (void)configureView;
 - (void)configureControlDimming;
 @end
 
 @implementation AIContactStatusColoringPreferences
 //
-+ (AIContactStatusColoringPreferences *)contactStatusColoringPreferencesWithOwner:(id)inOwner
++ (AIContactStatusColoringPreferences *)contactStatusColoringPreferences
 {
-    return([[[self alloc] initWithOwner:inOwner] autorelease]);
+    return([[[self alloc] init] autorelease]);
 }
 
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
     if(sender == colorWell_away){
-        [[owner preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_away color] stringRepresentation]
                                              forKey:KEY_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idle){
-        [[owner preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idle color] stringRepresentation]
                                              forKey:KEY_IDLE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_signedOff){
-        [[owner preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOff color] stringRepresentation]
                                              forKey:KEY_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_signedOn){
-        [[owner preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOn color] stringRepresentation]
                                              forKey:KEY_SIGNED_ON_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_typing){
-        [[owner preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_typing color] stringRepresentation]
                                              forKey:KEY_TYPING_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_unviewedContent){
-        [[owner preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_unviewedContent color] stringRepresentation]
                                              forKey:KEY_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_online){
-        [[owner preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_online color] stringRepresentation]
                                              forKey:KEY_ONLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idleAndAway){
-        [[owner preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idleAndAway color] stringRepresentation]
                                              forKey:KEY_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
 
         
     }else if(sender == colorWell_signedOffLabel){
-        [[owner preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOffLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_SIGNED_OFF_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_signedOnLabel){
-        [[owner preferenceController] setPreference:[[colorWell_signedOnLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_signedOnLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_SIGNED_ON_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_awayLabel){
-        [[owner preferenceController] setPreference:[[colorWell_awayLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_awayLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idleLabel){
-        [[owner preferenceController] setPreference:[[colorWell_idleLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idleLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_IDLE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_typingLabel){
-        [[owner preferenceController] setPreference:[[colorWell_typingLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_typingLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_TYPING_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_unviewedContentLabel){
-        [[owner preferenceController] setPreference:[[colorWell_unviewedContentLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_unviewedContentLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_UNVIEWED_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_onlineLabel){
-        [[owner preferenceController] setPreference:[[colorWell_onlineLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_onlineLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_ONLINE_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     }else if(sender == colorWell_idleAndAwayLabel){
-        [[owner preferenceController] setPreference:[[colorWell_idleAndAwayLabel color] stringRepresentation]
+        [[adium preferenceController] setPreference:[[colorWell_idleAndAwayLabel color] stringRepresentation]
                                              forKey:KEY_LABEL_IDLE_AWAY_COLOR
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         
 
         
     }else if(sender == checkBox_signedOff){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SIGNED_OFF_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_signedOn){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SIGNED_ON_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_away){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_idle){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_typing){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TYPING_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_unviewedContent){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_UNVIEWED_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_online){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_ONLINE_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
 
     }else if(sender == checkBox_idleAndAway){
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_IDLE_AWAY_ENABLED
                                               group:PREF_GROUP_CONTACT_STATUS_COLORING];
         [self configureControlDimming];
@@ -172,14 +171,13 @@
 
 //Private ---------------------------------------------------------------------------
 //init
-- (id)initWithOwner:(id)inOwner
+- (id)init
 {
     //Init
     [super init];
-    owner = [inOwner retain];
 
     //Register our preference pane
-    [[owner preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:CONTACT_STATUS_COLORING_PREF_TITLE]];
+    [[adium preferenceController] addPreferencePane:[AIPreferencePane preferencePaneInCategory:AIPref_ContactList_Contacts withDelegate:self label:CONTACT_STATUS_COLORING_PREF_TITLE]];
 
     return(self);
 }
@@ -209,7 +207,7 @@
 //Configures our view for the current preferences
 - (void)configureView
 {
-    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
+    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_STATUS_COLORING];
 
     [colorWell_away setColor:[[preferenceDict objectForKey:KEY_AWAY_COLOR] representedColor]];
     [colorWell_idle setColor:[[preferenceDict objectForKey:KEY_IDLE_COLOR] representedColor]];

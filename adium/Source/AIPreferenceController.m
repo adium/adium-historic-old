@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIPreferenceController.m,v 1.31 2003/12/13 15:56:04 adamiser Exp $
+// $Id: AIPreferenceController.m,v 1.32 2003/12/15 03:25:00 adamiser Exp $
 
 #import "AIPreferenceController.h"
 #import "AIPreferenceWindowController.h"
@@ -85,7 +85,7 @@
 //Show the preference window
 - (IBAction)showPreferenceWindow:(id)sender
 {
-    [[AIPreferenceWindowController preferenceWindowControllerWithOwner:owner] showWindow:nil];
+    [[AIPreferenceWindowController preferenceWindowController] showWindow:nil];
 }
 
 
@@ -99,7 +99,7 @@
 
 - (void)openPreferencesToPane:(AIPreferencePane *)inPane
 {
-/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowControllerWithOwner:owner];
+/*    AIPreferenceWindowController	*preferenceWindow = [AIPreferenceWindowController preferenceWindowController];
 
     [preferenceWindow showView:inView];
     [preferenceWindow showWindow:nil];*/

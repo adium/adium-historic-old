@@ -66,7 +66,7 @@
 								     itemContent:[AIImageUtilities imageNamed:@"message" forClass:[self class]]
 									  action:@selector(newMessage:)
 									    menu:nil];
-    [[owner toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
     //Close Message
 /*    toolbarItem = [[AIMiniToolbarItem alloc] initWithIdentifier:@"CloseMessage"];
@@ -110,11 +110,11 @@
 
 - (IBAction)newMessage:(AIMiniToolbarItem *)toolbarItem
 {
-    AIListContact	*object = [[owner contactController] selectedContact];
+    AIListContact	*object = [[adium contactController] selectedContact];
     AIChat		*chat;
 
-    chat = [[owner contentController] openChatOnAccount:nil withListObject:object];
-    [[owner interfaceController] setActiveChat:chat];
+    chat = [[adium contentController] openChatOnAccount:nil withListObject:object];
+    [[adium interfaceController] setActiveChat:chat];
 }
 
 - (IBAction)sendMessage:(AIMiniToolbarItem *)toolbarItem
@@ -123,7 +123,7 @@
     AIChat		*chat = [objects objectForKey:@"Chat"];
 
     if(chat){
-        [[owner notificationCenter] postNotificationName:Interface_SendEnteredMessage object:chat userInfo:nil];
+        [[adium notificationCenter] postNotificationName:Interface_SendEnteredMessage object:chat userInfo:nil];
     }
 }
 
@@ -133,7 +133,7 @@
     AIChat		*chat = [objects objectForKey:@"Chat"];
 
     if(chat){
-        [[owner interfaceController] closeChat:chat];
+        [[adium interfaceController] closeChat:chat];
     }
 }
 

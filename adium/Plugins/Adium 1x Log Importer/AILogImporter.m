@@ -26,17 +26,16 @@
 
 @implementation AILogImporter
 
-+ (id)logImporterWithOwner:(id)inOwner
++ (id)logImporter
 {
-    return([[self alloc] initWithWindowNibName:LOG_IMPORT_NIB owner:inOwner]);
+    return([[self alloc] initWithWindowNibName:LOG_IMPORT_NIB]);
 }
 
 //init
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
     //init
-    owner = [inOwner retain];
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
     //
     sourcePathArray = nil;
@@ -53,7 +52,6 @@
 //
 - (void)dealloc
 {
-    [owner release];
     [importTimer release];
     [sourcePathArray release];
     [destPathArray release];
@@ -194,7 +192,7 @@
     
     //
     oldUserFolder = [ADIUM_1X_LOGS_PATH stringByExpandingTildeInPath];
-    newLogFolder = [[[[owner loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
+    newLogFolder = [[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath];
 
     //For every selected user
     userEnumerator = [usersToImport objectEnumerator];

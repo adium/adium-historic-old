@@ -16,7 +16,7 @@
 
 
 @interface AIEventSoundCustom (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName;
 - (NSMenu *)soundListMenu;
 - (NSMenu *)eventMenu;
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -27,10 +27,10 @@
 
 //
 AIEventSoundCustom	*sharedInstance = nil;
-+ (id)showEventSoundCustomPanelWithOwner:(id)inOwner
++ (id)showEventSoundCustomPanel
 {
     if(!sharedInstance){
-        sharedInstance = [[self alloc] initWithWindowNibName:NIB_EVENT_SOUND_CUSTOM owner:inOwner];
+        sharedInstance = [[self alloc] initWithWindowNibName:NIB_EVENT_SOUND_CUSTOM];
     }
     return(sharedInstance);
 }
@@ -45,11 +45,10 @@ AIEventSoundCustom	*sharedInstance = nil;
 }
 
 //
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    [super initWithWindowNibName:windowNibName owner:self];
+    [super initWithWindowNibName:windowNibName];
 
-    owner = inOwner;
     firstSound = nil;
     soundMenu_cached = nil;
     [self showWindow:nil];
@@ -83,7 +82,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     [tableView_sounds setDoubleAction:@selector(playSelectedSound:)];
 
     //Observer preference changes
-    [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+    [[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
     
     //Configure the 'Sound' table column
@@ -108,7 +107,7 @@ AIEventSoundCustom	*sharedInstance = nil;
 - (BOOL)windowShouldClose:(id)sender
 {
     //
-    [[owner notificationCenter] removeObserver:self];
+    [[adium notificationCenter] removeObserver:self];
 
     //Clean up shared instance
     [self autorelease];
@@ -137,7 +136,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         NSString	*soundPath = [[eventSoundArray objectAtIndex:selectedRow] objectForKey:KEY_EVENT_SOUND_PATH];
 
         if(soundPath != nil && [soundPath length] != 0){
-            [[owner soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
+            [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
         }
     }
 }
@@ -161,7 +160,7 @@ AIEventSoundCustom	*sharedInstance = nil;
 - (void)preferencesChanged:(NSNotification *)notification
 {
     if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_SOUNDS] == 0){
-        NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+        NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
 
         //Load the user's custom set
         [eventSoundArray release];
@@ -177,10 +176,10 @@ AIEventSoundCustom	*sharedInstance = nil;
 - (void)saveEventSoundArray
 {
     //save the custom soundset
-    [[owner preferenceController] setPreference:eventSoundArray forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
+    [[adium preferenceController] setPreference:eventSoundArray forKey:KEY_EVENT_CUSTOM_SOUNDSET group:PREF_GROUP_SOUNDS];
     
     //Remove the soundset preference because we now have a custom one
-    [[owner preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
+    [[adium preferenceController] setPreference:@"" forKey:KEY_EVENT_SOUND_SET group:PREF_GROUP_SOUNDS];
 }
 
 //Builds and returns an event menu
@@ -194,7 +193,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     [eventMenu addItemWithTitle:ADD_EVENT_MENU_ITEM target:nil action:nil keyEquivalent:@""];
 
     //Add a menu item for each event
-    enumerator = [[owner eventNotifications] objectEnumerator];
+    enumerator = [[adium eventNotifications] objectEnumerator];
     while((eventDict = [enumerator nextObject])){
         NSMenuItem	*menuItem;
 
@@ -221,7 +220,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         NSMenu		*soundMenu = [[NSMenu alloc] init];
         NSMenuItem	*menuItem;
         
-        enumerator = [[[owner soundController] soundSetArray] objectEnumerator];
+        enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
         while((soundSetDict = [enumerator nextObject])){
             NSEnumerator    *soundEnumerator;
             NSString        *soundSetPath;
@@ -324,7 +323,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     NSString	*soundPath = [sender representedObject];
     
     if(soundPath != nil && [soundPath length] != 0){
-        [[owner soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
+        [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
     } else { //selected "Other..."
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
         [openPanel 
@@ -343,7 +342,7 @@ AIEventSoundCustom	*sharedInstance = nil;
     if(returnCode == NSOKButton){
         NSString *soundPath = [[panel filenames] objectAtIndex:0];
         
-        [[owner soundController] playSoundAtPath:soundPath]; //Play the sound
+        [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
         //Set the new sound path
         NSMutableDictionary	*selectedSoundDict = [[[eventSoundArray objectAtIndex:setRow] mutableCopy] autorelease];
         [selectedSoundDict setObject:[soundPath stringByCollapsingBundlePath] forKey:KEY_EVENT_SOUND_PATH];
@@ -387,7 +386,7 @@ AIEventSoundCustom	*sharedInstance = nil;
         notification = [soundDict objectForKey:KEY_EVENT_SOUND_NOTIFICATION];
 
         //Get that notification's display name
-        eventDict = [[owner eventNotifications] objectForKey:notification];
+        eventDict = [[adium eventNotifications] objectForKey:notification];
         displayName = [eventDict objectForKey:KEY_EVENT_DISPLAY_NAME];
 
         return(displayName ? displayName : notification);

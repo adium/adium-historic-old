@@ -20,7 +20,7 @@
 - (void)installPlugin
 {
     //Install our tooltip entry
-    [[owner interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
+    [[adium interfaceController] registerContactListTooltipEntry:self secondaryEntry:NO];
 }
 
 //Tooltip entry ---------------------------------------------------------------------------------------
