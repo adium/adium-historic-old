@@ -41,12 +41,12 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	invertedTextColor = [[NSColor whiteColor] retain];
 	
 	useAliasesAsRequested = YES;
-	
+
 	if(!leftParagraphStyleWithTruncatingTail){
 		leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																			  lineBreakMode:NSLineBreakByTruncatingTail] retain];
 	}
-	
+
     return(self);
 }
 
@@ -280,10 +280,6 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
 																	   attributes:[self labelAttributes]];
- /*
-	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[[self labelString] stringByAppendingString:[NSString stringWithFormat:@" %f",[listObject orderIndex]]]
-																	   attributes:[self labelAttributes]];
-*/
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
 	
