@@ -924,7 +924,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				unsigned absSize = [[inArgs objectForKey:arg] intValue];
 				static int pointSizes[] = { 9, 10, 12, 14, 18, 24, 48, 72 };
 				int size = (absSize <= 8 ? pointSizes[absSize-1] : 12);
-				NSLog(@"absSize %u to size %i\n", absSize, size);
+
 				[textAttributes setFontSize:size];
 			}
 
