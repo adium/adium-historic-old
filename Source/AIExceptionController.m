@@ -92,7 +92,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason isEqualToString:@"Failed to get fache -4"] || //Thrown by NSFontManager when availableFontFamilies is called if it runs into a corrupt font
 		   [theReason rangeOfString:@"NSWindow: -_newFirstResponderAfterResigining"].location != NSNotFound || //NSAssert within system code, harmless
 		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
-
+		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
