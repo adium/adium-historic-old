@@ -417,11 +417,11 @@ NSMutableAttributedString  *str = [self mutableCopy];
 NSAttributedString *_safeString(NSAttributedString *inString)
 {
     if([inString containsAttachments]){
-        NSMutableAttributedString *safeString = [[inString mutableCopy] autorelease];
-        int currentLocation = 0;
-        NSRange attachmentRange;
+        NSMutableAttributedString	*safeString = [[inString mutableCopy] autorelease];
+        int							currentLocation = 0;
+        NSRange						attachmentRange;
 		
-		NSString	*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
+		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
 		
         //find attachment
         attachmentRange = [[safeString string] rangeOfString:attachmentCharacterString
@@ -445,7 +445,7 @@ NSAttributedString *_safeString(NSAttributedString *inString)
             //remove the attachment, replacing it with the original text
 			[safeString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
             [safeString replaceCharactersInRange:attachmentRange withString:replacement];
-				
+
             attachmentRange.length = [replacement length];
 
             currentLocation = attachmentRange.location + attachmentRange.length;
