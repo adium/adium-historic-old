@@ -351,6 +351,10 @@ static int nextChatNumber = 0;
     [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
 }
 
+- (BOOL)canSendImages
+{
+	return([[self account] canSendImagesForChat:self]);
+}
 
 //Applescript ----------------------------------------------------------------------------------------------------------
 #pragma mark Applescript
