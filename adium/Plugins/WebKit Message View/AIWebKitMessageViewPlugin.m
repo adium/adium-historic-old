@@ -1,14 +1,19 @@
-//
-//  AIWebKitMessageViewPlugin.m
-//  Adium XCode
-//
-//  Created by Adam Iser on Fri Feb 27 2004.
-//  Copyright (c) 2004 __MyCompanyName__. All rights reserved.
-//
 
 #import "AIWebKitMessageViewPlugin.h"
-
+#import "AIWebKitMessageViewController.h"
 
 @implementation AIWebKitMessageViewPlugin
+
+- (void)installPlugin
+{
+    //Register ourself as a message view plugin
+    [[adium interfaceController] registerMessageViewPlugin:self];
+}
+
+//Return a message view controller
+- (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
+{
+    return([AIWebKitMessageViewController messageViewControllerForChat:inChat]);
+}
 
 @end
