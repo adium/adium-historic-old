@@ -80,49 +80,56 @@
 	//If we have a contact (and not a meta contact), we need to make sure it's the contact for account, or 
 	//availableForSendingContentType: will return NO incorrectly.
 	//######### The core should really handle this for us. #########
-	if([contact isKindOfClass:[AIListContact class]]){
-		contact = [[adium contactController] existingContactWithService:[contact service]
-																account:account
-																	UID:[contact UID]];
+	if([contact isKindOfClass:[AIMetaContact class]]){
+		contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
+		
+	}else if([contact isKindOfClass:[AIListContact class]]){
+		contact = [[adium contactController] contactWithService:[contact service]
+														account:account 
+															UID:[contact UID]];
 	}
 	
 	//If the desired account is not available for sending, ask Adium for the best available account
-	if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact onAccount:account]){
+	if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+														toContact:contact
+														onAccount:account]){
 		if(useAnotherAccount){
-			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE toContact:contact];
+			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																			 toContact:contact];
+			//Repeat the refinement process using the newly retrieved account
+			if([contact isKindOfClass:[AIMetaContact class]]){
+				contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
+				
+			}else if([contact isKindOfClass:[AIListContact class]]){
+				contact = [[adium contactController] contactWithService:[contact service]
+																account:account 
+																	UID:[contact UID]];
+			}
 		}else{
 			account = nil;
 		}
 	}
 	
-	if(account){
-		//Find the contact listed on this account (If it's not listed, this will add it as a stranger)
-		//######### The core should really handle this for us. #########
-		contact = [[adium contactController] contactWithService:[contact service]
-														account:account 
-															UID:[contact UID]];
-		if(contact){
-			//Create and open a chat with this contact
-			AIChat					*chat;
-			NSAttributedString 		*message;
-			
-			chat = [[adium contentController] openChatWithContact:contact];
-			[[adium interfaceController] setActiveChat:chat];
-			
-			message = [NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
-				
-			//Prepare the content object we're sending
-			AIContentMessage	*content = [AIContentMessage messageInChat:chat
-																withSource:account
-															   destination:contact
-																	  date:nil
-																   message:message
-																 autoreply:NO];
-			
-			//Send the content
-			success = [[adium contentController] sendContentObject:content];
-		}
-			
+	if(account && contact){
+		//Create and open a chat with this contact
+		AIChat					*chat;
+		NSAttributedString 		*message;
+		
+		chat = [[adium contentController] openChatWithContact:contact];
+		[[adium interfaceController] setActiveChat:chat];
+		
+		message = [NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]];
+		
+		//Prepare the content object we're sending
+		AIContentMessage	*content = [AIContentMessage messageInChat:chat
+															withSource:account
+														   destination:contact
+																  date:nil
+															   message:message
+															 autoreply:NO];
+		
+		//Send the content
+		success = [[adium contentController] sendContentObject:content];
 	}
 	
 	//Display an error message if the message was not delivered
