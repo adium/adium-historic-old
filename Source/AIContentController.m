@@ -533,6 +533,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     //Send the object
 	if ([inObject sendContent]){
 		if([[inObject source] sendContentObject:inObject]){
+			if([inObject displayContent]){
+				//Add the object
+				[self displayContentObject:inObject];
+			}
+			
 			if([inObject trackContent]){
 				//Did send content
 				[[owner notificationCenter] postNotificationName:Content_DidSendContent 
@@ -551,15 +556,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	}
 	
 //    return(sent);
-}
-
-//Step 5: Invoked by the account when the object has been sent
-- (void)didSendContentObject:(AIContentObject *)inObject
-{
-	if([inObject displayContent]){
-		//Add the object
-		[self displayContentObject:inObject];
-	}
 }
 
 //Display a content object

@@ -293,8 +293,6 @@
 						 to:to 
 				   withHtml:htmlMessage];
 
-		[[adium contentController] didSendContentObject:object];
-
 		sent = YES;
 
     } else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {

@@ -46,7 +46,9 @@ typedef enum {
 	AIChatMessageReceivingMissedInvalid,
 	AIChatMessageReceivingMissedRateLimitExceeded,
 	AIChatMessageReceivingMissedRemoteIsTooEvil,
-	AIChatMessageReceivingMissedLocalIsTooEvil
+	AIChatMessageReceivingMissedLocalIsTooEvil,
+	AIChatCommandFailed,
+	AIChatInvalidNumberOfArguments
 } AIChatErrorType;
 
 @interface AIChat : ESObjectWithStatus <AIContainingObject> {

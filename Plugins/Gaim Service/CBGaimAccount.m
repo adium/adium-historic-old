@@ -679,12 +679,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if ((flags & GAIM_MESSAGE_SEND) != 0) {
         //Gaim is telling us that our message was sent successfully.		
 
-		[self _sentMessage:attributedMessage
-					inChat:chat
-  toDestinationListContact:listContact
-					 flags:flags
-					  date:date];
-		
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
     }else{
@@ -711,12 +705,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	if ((flags & GAIM_MESSAGE_SEND) != 0){
         //Gaim is telling us that our message was sent successfully.		
-		
-		[self _sentMessage:attributedMessage
-					inChat:chat
-  toDestinationListContact:nil
-					 flags:flags
-					  date:date];
 
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
@@ -729,6 +717,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		if (![source isEqualToString:[self UID]]){
 			AIListContact	*listContact;
 			
+#warning source can be (null) for system messages like topic changes
 			listContact = [self _contactWithUID:source];
 			GaimDebug (@"receivedMultiChatMessage: Received %@ from %@ in %@",[attributedMessage string],[listContact UID],[chat name]);
 			
@@ -751,25 +740,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 															autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
 	
 	[[adium contentController] receiveContentObject:messageObject];
-}
-
-- (void)_sentMessage:(NSAttributedString *)attributedMessage inChat:(AIChat *)chat toDestinationListContact:(AIListContact *)destinationContact flags:(GaimMessageFlags)flags date:(NSDate *)date
-{
-	NSString			*attributedMessageString = [attributedMessage string];
-	AIContentMessage	*messageObject = [AIContentMessage messageInChat:chat
-															  withSource:self
-															 destination:destinationContact
-																	date:date
-																 message:attributedMessage
-															   autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
-	
-	//Set the shouldDisplay flag if needed
-	if ([shouldDisplayDict objectForKey:attributedMessageString]){
-		[messageObject setDisplayContent:[[shouldDisplayDict objectForKey:attributedMessageString] boolValue]];
-		[shouldDisplayDict removeObjectForKey:attributedMessageString];
-	}
-	
-	[[adium contentController] didSendContentObject:messageObject];
 }
 
 /*********************/
@@ -823,19 +793,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							}
 							
 							AILog(@"sendContentObject: %@",encodedMessage);
-							//If the object shouldn't display, track it so we know when we get confirmation of its sending
-							//that we shouldn't attempt to display it
-							if (![object displayContent]){
-								[shouldDisplayDict setObject:[NSNumber numberWithBool:NO]
-													  forKey:thisPartString];
-							}
 
-							[gaimThread sendEncodedMessage:encodedMessage
+							sent = [gaimThread sendEncodedMessage:encodedMessage
 										   originalMessage:thisPartString
 											   fromAccount:self
 													inChat:chat
 												 withFlags:flags];
-							sent = YES;
 						}
 					}
 					
@@ -862,19 +825,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					AILog(@"sendContentObject: %@",encodedMessage);
 					messageString = [message string];
 					
-					//If the object shouldn't display, track it so we know when we get confirmation of its sending
-					//that we shouldn't attempt to display it
-					if (![object displayContent]){
-						[shouldDisplayDict setObject:[NSNumber numberWithBool:NO]
-											  forKey:messageString];
-					}
-					
-					[gaimThread sendEncodedMessage:encodedMessage
-								   originalMessage:messageString
-									   fromAccount:self
-											inChat:chat
-										 withFlags:flags];
-					sent = YES;
+					sent = [gaimThread sendEncodedMessage:encodedMessage
+										  originalMessage:messageString
+											  fromAccount:self
+												   inChat:chat
+												withFlags:flags];
 				}
 			}
 		} else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
