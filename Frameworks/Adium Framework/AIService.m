@@ -178,6 +178,20 @@ Adium, Copyright 2001-2005, Adam Iser
 	return(AIServiceUnsupported);
 }
 
+/*!
+ * @brief Default icon
+ *
+ * Service Icon packs should always include images for all the built-in Adium services.  This method allows external
+ * service plugins to specify an image which will be used when the service icon pack does not specify one.  It will
+ * also be useful if new services are added to Adium itself after a significant number of Service Icon packs exist
+ * which do not yet have an image for this service.  If the active Service Icon pack provides an image for this service,
+ * this method will not be called.
+ * @return <tt>NSImage</tt> to use for this service by default
+ */
+- (NSImage *)defaultServiceIcon
+{
+	return(nil);
+}
 
 //Service Properties ---------------------------------------------------------------------------------------------------
 #pragma mark Service Properties
