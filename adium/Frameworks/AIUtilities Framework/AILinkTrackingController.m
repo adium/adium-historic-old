@@ -17,12 +17,11 @@
  - Create an instance of AILinkTracking
  - Call resetCursorRectsInView:visibleRect: in response to resetCursorRects for your view
  - Call setContentString when your content changes
- 
  */
 
 @interface AILinkTrackingController (PRIVATE)
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
-- (BOOL)_beginCursorTrackingInRect:(NSRect)visibleRect;
+- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSSize)offset;
 - (void)_endCursorTracking;
 - (void)_setMouseOverLink:(AIFlexibleLink *)inHoveredLink atPoint:(NSPoint)inPoint;
 - (void)_showTooltipAtScreenPoint:(NSPoint)inPoint;
@@ -45,21 +44,32 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //Track links in the passed rect.  Returns YES if links exist within our text.
-- (BOOL)trackLinksInRect:(NSRect)visibleRect
+- (void)trackLinksInRect:(NSRect)visibleRect withOffset:(NSSize)offset
 {
     //remove any existing tooltips
     [self _setMouseOverLink:nil atPoint:NSMakePoint(0,0)];
 
     //Reset the cursor tracking rects
     [self _endCursorTracking];
-    return([self _beginCursorTrackingInRect:visibleRect]);
+    [self _beginCursorTrackingInRect:visibleRect withOffset:offset];
 }
 
 //Called when the mouse enters the link
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    [self _setMouseOverLink:(AIFlexibleLink *)[theEvent userData]
-                    atPoint:[[theEvent window] convertBaseToScreen:[theEvent locationInWindow]]];
+    NSWindow		*window = [theEvent window];
+    AIFlexibleLink	*link = [theEvent userData];
+    NSPoint		location;
+
+    location = [link trackingRect].origin;
+    location = [controlView convertPoint:location toView:nil];
+    location = [[theEvent window] convertBaseToScreen:location];
+
+    //Ignore the mouse entry if our view is hidden, or our window is non-main
+    if([window isMainWindow] && [controlView canDraw]){
+        [self _setMouseOverLink:link
+                        atPoint:location];
+    }
 }
 
 //Called when the mouse leaves the link
@@ -68,21 +78,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     [self _setMouseOverLink:NO atPoint:NSMakePoint(0,0)];
 }
 
-//Called when the mouse moves within the link
-/*- (void)mouseMoved:(NSEvent *)theEvent
-{
-    [self _showTooltipAtScreenPoint:[[theEvent window] convertBaseToScreen:[theEvent locationInWindow]]];
-}*/
-
-//Offset all link tracking within the view
-- (void)setOffset:(NSSize)inOffset
-{
-    offset = inOffset;
-}
-
-
 //Handle a mouse down.  Returns NO if the mouse down event should continue to be processed
-- (BOOL)handleMouseDown:(NSEvent *)theEvent
+- (BOOL)handleMouseDown:(NSEvent *)theEvent withOffset:(NSSize)offset
 {
     BOOL		success = NO;
     NSPoint		mouseLoc;
@@ -94,8 +91,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Find clicked char index
     mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouseLoc.x -= offset.width;
-    mouseLoc.y -= offset.height;
+    mouseLoc.x += offset.width;
+    mouseLoc.y += offset.height;
 
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
@@ -146,8 +143,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                         //Get the next event and mouse location
                         theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
                         mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-                        mouseLoc.x -= offset.width;
-                        mouseLoc.y -= offset.height;
+                        mouseLoc.x += offset.width;
+                        mouseLoc.y += offset.height;
 
                         switch([theEvent type]){
                             case NSRightMouseUp:		//Done Tracking Clickscr
@@ -190,7 +187,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 
 
-
 //Private ---------------------------------------------------------------------------------
 //init
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
@@ -201,8 +197,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     mouseOverLink = NO;
     hoveredLink = nil;
     hoveredString = nil;
-    oldFirstResponder = nil;
-    offset = NSMakeSize(0,0);
 
     //
     controlView = [inControlView retain];
@@ -214,61 +208,63 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 }
 
 //Begins cursor tracking, registering tracking rects for all our available links
-- (BOOL)_beginCursorTrackingInRect:(NSRect)visibleRect
+- (void)_beginCursorTrackingInRect:(NSRect)visibleRect withOffset:(NSSize)offset
 {
-    int scanLocation = 0;
-    int stringLength = [textStorage length];
-    BOOL weContainLinks = NO;
+    NSRect	visibleContainerRect;
+    NSRange	visibleGlyphRange, visibleCharRange;
+    NSRange 	scanRange;
+
+    //Get the range of visible characters
+    visibleContainerRect = visibleRect;
+    visibleContainerRect.origin.x += offset.width;
+    visibleContainerRect.origin.y += offset.height;
+    visibleGlyphRange = [layoutManager glyphRangeForBoundingRect:visibleContainerRect inTextContainer:textContainer];
+    visibleCharRange = [layoutManager characterRangeForGlyphRange:visibleGlyphRange actualGlyphRange:NULL];
 
     //Process all links
-    while(scanLocation != NSNotFound && scanLocation < stringLength){
-        NSRange		linkRange;
+    scanRange = NSMakeRange(visibleCharRange.location, 0);
+    while(NSMaxRange(scanRange) < NSMaxRange(visibleCharRange)){
         NSString	*linkURL;
 
-        //Search for a link
-        if((linkURL = [textStorage attribute:NSLinkAttributeName atIndex:scanLocation effectiveRange:&linkRange])){
+        //Get the link
+        linkURL = [textStorage attribute:NSLinkAttributeName
+                                 atIndex:NSMaxRange(scanRange)
+                          effectiveRange:&scanRange];
+        if(linkURL){
             NSRectArray		linkRects;
             int			index;
             int			linkCount;
 
             //Get an array of rects that define the location of this link
-            linkRects = [layoutManager rectArrayForCharacterRange:linkRange
-                                     withinSelectedCharacterRange:linkRange
+            linkRects = [layoutManager rectArrayForCharacterRange:scanRange
+                                     withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0)
                                                   inTextContainer:textContainer
                                                         rectCount:&linkCount];
-            weContainLinks = YES;
-            
-            //A link may be spread across multiple rects.. if so, it's okay to treat the link as multiple, seperate links.
             for(index = 0; index < linkCount; index++){
-                NSRect			linkRect = linkRects[index];
+                NSRect			linkRect;
                 NSRect			visibleLinkRect;
+                AIFlexibleLink		*link;
                 NSTrackingRectTag	trackingTag;
 
-                //Adjust the link to our view's coordinates
-                linkRect.origin.y += offset.height;
-                linkRect.origin.x += offset.width;
+                //Get the link rect
+                linkRect = linkRects[index];
 
+                //Adjust the link rect back to our view's coordinates
+                linkRect.origin.x -= offset.width;
+                linkRect.origin.y -= offset.height;
                 visibleLinkRect = NSIntersectionRect(linkRect, visibleRect);
-                if(!NSIsEmptyRect(visibleLinkRect)){ //Skip the link if it's not visible
+                
+                //Create a flexible link instance
+                link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect url:linkURL] autorelease];
+                if(!linkArray) linkArray = [[NSMutableArray alloc] init];
+                [linkArray addObject:link];
 
-                    //Create a flexible link instance
-                    AIFlexibleLink	*link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect url:linkURL] autorelease];
-                    if(!linkArray) linkArray = [[NSMutableArray alloc] init];
-                    [linkArray addObject:link];
-
-                    //Install a tracking rect for the link (The userData of each tracking rect is the AIFlexibleLink it covers)
-                    trackingTag = [controlView addTrackingRect:visibleLinkRect owner:self userData:link assumeInside:NO];
-                    [link setTrackingTag:trackingTag];
-
-                }
+                //Install a tracking rect for the link (The userData of each tracking rect is the AIFlexibleLink it covers)
+                trackingTag = [controlView addTrackingRect:visibleLinkRect owner:self userData:link assumeInside:NO];
+                [link setTrackingTag:trackingTag];
             }
         }
-
-        //Move along the string (In preperation for another search)
-        scanLocation = linkRange.location + linkRange.length;
     }
-
-    return(weContainLinks);
 }
 
 //Stops cursor tracking, removing all cursor rects
@@ -296,41 +292,21 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         [hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
         mouseOverLink = YES;
 
-        //We need to set ourself as first responder to get mouse moved events.
-        //We preserve the current first responder first, and restore it when the mouse leaves our rect
-        oldFirstResponder = [[controlView window] firstResponder];
-        [[controlView window] makeFirstResponder:controlView];
-        
-//        [[controlView window] setAcceptsMouseMovedEvents:YES]; //Start generating mouse-moved events
-        [[NSCursor handPointCursor] set]; //Set the link cursor
-        [self _showTooltipAtScreenPoint:inPoint]; //Show the tooltip
+        [[NSCursor handPointCursor] set]; //Set link cursor
+
+        inPoint.y += [inHoveredLink trackingRect].size.height + 3; //Offset the tooltip down a bit
+        inPoint.x -= 9; //And to the left a bit
+        [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint]; //Show tooltip
 
     }else if(inHoveredLink == nil && mouseOverLink == YES){
         [[NSCursor arrowCursor] set]; //Restore the regular cursor
-//        [[controlView window] setAcceptsMouseMovedEvents:NO]; //Stop generating mouse-moved events
-        [self _showTooltipAtScreenPoint:NSMakePoint(0,0)]; //Hide the tooltip
-
-        [[controlView window] makeFirstResponder:oldFirstResponder]; //Restore the original first responder
+        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)]; //Hide the tooltip
 
         [hoveredLink release]; hoveredLink = nil;
         [hoveredString release]; hoveredString = nil;
         mouseOverLink = NO;
     }
 
-}
-
-//Show the tooltip
-- (void)_showTooltipAtScreenPoint:(NSPoint)inPoint
-{
-    if(inPoint.x != 0 && inPoint.y != 0){ //Show tooltip
-        if([[controlView window] isKeyWindow]){
-            [AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint];
-        }
-
-    }else{ //Hide tooltip
-        [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0)];
-        
-    }
 }
 
 //Check for the presence of a point in multiple rects
@@ -355,6 +331,6 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
     memcpy( newArray, someRects, sizeof(NSRect)*arraySize );
     return newArray;
 }
-    
+
 
 @end

@@ -265,15 +265,12 @@
     //The controlledChanges variable is used to make things faster by avoiding unnecessary regeneration of our editor list group.  Before making changes, we set controlledChanges to the number of accountHandlesChanged messages that are expected.  If more changes are received than expected, or changes are received when none are expected, we regenerate the list.  Yah, it's a messy hack, but it give a huge speed boost that is worth it in the long run.
     
     if(!controlledChanges){
-        NSLog(@"accountHandlesChanged / generateEditorListGroup");
         //Regenerate our list
         [list release];
         list = [[self generateEditorListGroup] retain];
 
         //Let the contact list know our handles changed
         [[owner notificationCenter] postNotificationName:Editor_CollectionContentChanged object:self];
-    }else{
-        NSLog(@"(ignored)accountHandlesChanged / generateEditorListGroup");
     }
 }
 

@@ -91,6 +91,7 @@
         NSColor	*backgroundColor;
         
         //Display the string
+        [textView_contactProfile setString:@""];
         [[textView_contactProfile textStorage] setAttributedString:profile];
 
         //Set the background color

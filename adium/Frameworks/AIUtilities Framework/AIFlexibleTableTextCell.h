@@ -18,7 +18,7 @@
     int				editedRow;
 
     NSAttributedString		*string;
-
+    BOOL			containsLinks;
     
     //Link
     AILinkTrackingController	*linkTrackingController;
@@ -38,6 +38,7 @@
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView;
 - (void)editAtRow:(int)inRow column:(AIFlexibleTableColumn *)inColumn inView:(NSView *)controlView;
 - (id <NSCopying>)endEditing;
-- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
+- (void)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect;
+- (BOOL)usesCursorRects;
 
 @end

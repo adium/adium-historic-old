@@ -64,12 +64,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 - (AIFlexibleTableTextCell *)initWithAttributedString:(NSAttributedString *)inString
 {
+    NSRange	scanRange;
+    
     [super init];
 
     textStorage = nil;
     textContainer = nil;
     layoutManager = nil;
     linkTrackingController = nil;
+    containsLinks = NO;
 
     cellSize = [inString size];
     string = [inString retain];
@@ -80,6 +83,14 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     [textContainer retain];
     [layoutManager retain];
 
+    //Check if our string contains any links
+    scanRange = NSMakeRange(0, 0);
+    while(NSMaxRange(scanRange) < [textStorage length]){
+        if([textStorage attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]){
+            containsLinks = YES;
+        }
+    }
+        
     
     return(self);
 }
@@ -300,23 +311,29 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 
 // Link Tracking -------------------------------------------------------------------------------
+- (BOOL)usesCursorRects
+{
+    return(containsLinks);
+}
+
 //Reset our cursor tracking rects in the view
-- (BOOL)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
+- (void)resetCursorRectsInView:(NSView *)controlView visibleRect:(NSRect)visibleRect
 {
     if(!linkTrackingController){
         //Setup our link tracking
         linkTrackingController = [[AILinkTrackingController linkTrackingControllerForView:tableView withTextStorage:textStorage layoutManager:layoutManager textContainer:textContainer] retain];
     }
 
-    //Adjust the links so they line up with our cell
-    [linkTrackingController setOffset:NSMakeSize([self frame].origin.x, [self frame].origin.y)];
-    
-    return([linkTrackingController trackLinksInRect:visibleRect]);
+    [linkTrackingController trackLinksInRect:visibleRect withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)];
 }
 
 - (BOOL)handleMouseDown:(NSEvent *)theEvent
 {
-    return([linkTrackingController handleMouseDown:theEvent]);
+    if(containsLinks){
+        return([linkTrackingController handleMouseDown:theEvent withOffset:NSMakeSize(-[self frame].origin.x, -[self frame].origin.y)]);
+    }else{
+        return(NO);
+    }
 }
 
 

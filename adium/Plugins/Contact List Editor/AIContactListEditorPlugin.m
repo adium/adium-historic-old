@@ -353,8 +353,6 @@
     NSEnumerator	*accountEnumerator;
     AIAccount		*account;
 
-    NSLog(@"generateCollectionsArray");
-
     //Create the array
     [collectionsArray release];
     collectionsArray = [[NSMutableArray alloc] init];
