@@ -57,7 +57,7 @@
 	newContent = [[NSMutableArray alloc] init];
 	
 	[preview setFrameLoadDelegate:self];
-	[preview setPolicyDelegate:self];
+	[preview setPolicyDelegate:plugin];		//Just send policy questions directly to the plugin
 	[preview setUIDelegate:self];
 	[preview setMaintainsBackForwardList:NO];
 	
@@ -686,18 +686,11 @@
 	webViewIsReady = YES;
 }
 
-#pragma mark WebPolicyDelegate
-- (void) webView:(WebView *)sender decidePolicyForNavigationAction:(NSDictionary *)actionInformation
-		 request:(NSURLRequest *)request frame:(WebFrame *) frame
-		decisionListener:(id <WebPolicyDecisionListener>) listener {
-
-	if([[[actionInformation objectForKey:WebActionOriginalURLKey] scheme] isEqualToString:@"about"]  ) {
-		[listener use];
-	} else {
-		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
-		[[NSWorkspace sharedWorkspace] openURL:url];	
-		[listener ignore];
-	}
+#pragma mark WebUIDelegate
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems
+{
+	return [plugin webView:sender contextMenuItemsForElement:element defaultMenuItems:defaultMenuItems forChat:nil];
 }
+
 
 @end

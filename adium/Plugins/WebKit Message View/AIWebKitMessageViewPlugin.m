@@ -724,4 +724,72 @@ DeclareString(AppendNextMessage);
 	return(inString);
 }
 
+
+
+//Prevent the webview from following external links.  We direct these to the users web browser.
+#pragma mark WebPolicyDelegate
+- (void)webView:(WebView *)sender
+    decidePolicyForNavigationAction:(NSDictionary *)actionInformation
+		request:(NSURLRequest *)request
+		  frame:(WebFrame *)frame
+    decisionListener:(id<WebPolicyDecisionListener>)listener
+{
+    int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
+    if (actionKey == WebNavigationTypeOther){
+		[listener use];
+    } else {
+		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
+		[[NSWorkspace sharedWorkspace] openURL:url];
+		[listener ignore];
+    }
+}
+
+#pragma mark WebUIDelegate
+- (NSArray *)webView:(WebView *)sender contextMenuItemsForElement:(NSDictionary *)element defaultMenuItems:(NSArray *)defaultMenuItems forChat:(AIChat *)chat
+{
+	NSLog(@"%@",defaultMenuItems);
+	NSMutableArray *webViewMenuItems = [[defaultMenuItems mutableCopy] autorelease];
+	AIListObject	*chatListObject = [chat listObject];
+
+	NSImage *image;
+	if (webViewMenuItems && (image = [element objectForKey:WebElementImageKey])){
+		//Remove the first two items, which are "Open Image in New Window" and "Download Image"
+		[webViewMenuItems removeObjectAtIndex:0];
+		[webViewMenuItems removeObjectAtIndex:0];
+		
+		//XXX - Save Image As... item with the NSImage as representedObject
+	}
+	
+	if (chatListObject){
+		NSMenuItem		*menuItem;
+		NSEnumerator	*enumerator;
+		if (webViewMenuItems){
+			//Add a separator item if items already exist in webViewMenuItems
+			if ([webViewMenuItems count]){
+				[webViewMenuItems addObject:[NSMenuItem separatorItem]];
+			}
+		}else{
+			webViewMenuItems = [NSMutableArray array];
+		}
+		
+		NSMenu  *originalMenu = [[adium menuController] contextualMenuWithLocations:[NSArray arrayWithObjects:
+			[NSNumber numberWithInt:Context_Contact_Manage],
+			[NSNumber numberWithInt:Context_Contact_Action],
+			[NSNumber numberWithInt:Context_Contact_TabAction],
+			[NSNumber numberWithInt:Context_Contact_Additions], nil]
+																	  forListObject:chatListObject];
+		//Have to copy and autorelease here since the itemArray will change as we go through the items
+		enumerator = [[[[originalMenu itemArray] copy] autorelease] objectEnumerator];
+		
+		while (menuItem = [enumerator nextObject]){
+			[menuItem retain];
+			[originalMenu removeItem:menuItem];
+			[webViewMenuItems addObject:menuItem];
+			[menuItem release];
+		}
+	}
+
+	return webViewMenuItems;
+}
+
 @end
