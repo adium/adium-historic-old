@@ -142,7 +142,7 @@
 	AIListContact		*listContact = [chat listObject];
 	
 	NSString			*objectID;
-	NSNumber			*accountNumber;
+	NSString			*accountNumber;
 	
 	contentDict = [NSMutableDictionary dictionary];
 	[contentDict setObject:[content type] forKey:@"Type"];
