@@ -697,7 +697,7 @@ DeclareString(UID);
 													 target:self
 													 action:@selector(toggleShowGroups:)
 											  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Unnamed_B];		
+	[[adium menuController] addMenuItem:showGroupsMenuItem toLocation:LOC_View_Content];		
 	
 	//Toolbar
 	NSToolbarItem	*toolbarItem;

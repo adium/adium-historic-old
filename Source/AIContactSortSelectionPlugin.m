@@ -139,7 +139,7 @@
 		[menuItem setRepresentedObject:controller];
 		
 		//Add the menu item
-		[[adium menuController] addMenuItem:menuItem toLocation:LOC_View_Unnamed_A];		
+		[[adium menuController] addMenuItem:menuItem toLocation:LOC_View_Sorting];		
 	}
 	
 	//Add the menu item for configuring the sort
@@ -147,7 +147,7 @@
 																				  target:self
 																				  action:@selector(configureSort:)
 																		   keyEquivalent:@""];
-	[[adium menuController] addMenuItem:menuItem_configureSort toLocation:LOC_View_Unnamed_A];
+	[[adium menuController] addMenuItem:menuItem_configureSort toLocation:LOC_View_Sorting];
 	
 	AISortController	*activeSortController;
 	int					index;
