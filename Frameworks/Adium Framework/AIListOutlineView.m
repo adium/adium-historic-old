@@ -268,7 +268,7 @@
 	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
 	
 	//Turn our shadow drawing hack on if they're going to be visible through the transparency
-	[self setUpdateShadowsWhileDrawing:(backgroundOpacity < 0.8)];
+	[self setUpdateShadowsWhileDrawing:(backgroundOpacity < 0.9)];
 	
 	[self setNeedsDisplay:YES];
 }
