@@ -173,7 +173,6 @@
 		}
 				
 //		if ([AIAccountSelectionView multipleContactsForListObject:listObject]){
-		BOOL isMeta = [listObject isKindOfClass:[AIMetaContact class]];
 			
 			//I don't like magic numbers.  And I hate nibs.  How is this fixable?
 			[box_contacts setFrame:NSMakeRect(212,0,212,38)];
@@ -182,7 +181,7 @@
 			[popUp_contacts setMenu:[[adium contactController] menuOfContainedContacts:listObject
 																			forService:nil
 																			withTarget:self
-																		includeOffline:!isMeta]]; //If not meta, include the contact even if it's offline
+																		includeOffline:![listObject online]]]; //If the contact is not online, the menu should not be empty so include online
 			//
 			[[popUp_contacts menu] setAutoenablesItems:NO];
 			
