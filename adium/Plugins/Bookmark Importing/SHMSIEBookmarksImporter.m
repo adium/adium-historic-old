@@ -118,11 +118,12 @@ DeclareString(ltSign)
             if((stringLength - [linkScanner scanLocation]) > 3) [linkScanner setScanLocation:[linkScanner scanLocation] + 3];
             [linkScanner scanUpToString:gtSign intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:Hclose intoString:&titleString];
-
-            if(titleString){
+            if([linkScanner scanUpToString:Hclose intoString:&titleString]){
                 // decode html stuff
                 titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
+            }else{
+                [titleString release];
+                titleString = nil;
             }
             
             msieBookmarksSupermenu = msieBookmarksMenu;
@@ -137,27 +138,30 @@ DeclareString(ltSign)
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
             [linkScanner scanUpToString:hrefStr intoString:nil];
             if((stringLength - [linkScanner scanLocation]) > 6) [linkScanner setScanLocation:[linkScanner scanLocation] + 6];
-            [linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString];
-            [linkScanner scanUpToString:gtSign intoString:nil];
-            if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
-            [linkScanner scanUpToString:Aclose intoString:&titleString];
-
-            if(titleString){
-                // decode html stuff
-                titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
-            }
             
-            SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
-                                                                  withValidationStatus:SH_URL_VALID
-                                                                          parentString:titleString? titleString : urlString
-                                                                              andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
+            if([linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString]){
+                [linkScanner scanUpToString:gtSign intoString:nil];
+                if((stringLength - [linkScanner scanLocation]) > 1) [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+            
+                if([linkScanner scanUpToString:Aclose intoString:&titleString]){
+                    // decode html stuff
+                    titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
+                }else{
+                    [titleString release];
+                    titleString = nil;
+                }
+            
+                SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
+                                                                      withValidationStatus:SH_URL_VALID
+                                                                              parentString:titleString? titleString : urlString
+                                                                                  andRange:NSMakeRange(0,titleString? [titleString length] : [urlString length])] autorelease];
                                                                           
-            [msieBookmarksMenu addItemWithTitle:titleString? titleString : urlString
-                                            target:owner
-                                            action:@selector(injectBookmarkFrom:)
-                                     keyEquivalent:@""
-                                 representedObject:markedLink];
-        
+                [msieBookmarksMenu addItemWithTitle:titleString? titleString : urlString
+                                             target:owner
+                                             action:@selector(injectBookmarkFrom:)
+                                      keyEquivalent:@""
+                                  representedObject:markedLink];
+            }
         }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
             if((stringLength - [linkScanner scanLocation]) > 4) [linkScanner setScanLocation:[linkScanner scanLocation] + 4];
             if([msieBookmarksMenu isNotEqualTo:msieTopMenu]){
