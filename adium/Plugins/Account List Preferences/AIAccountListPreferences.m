@@ -192,7 +192,7 @@ int alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 //Account status changed
-- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent
+- (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent
 {
     if(inObject == selectedAccount){
 		if([inModifiedKeys containsObject:@"Online"]){

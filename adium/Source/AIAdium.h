@@ -215,7 +215,7 @@ typedef enum {
 
 // Public core controller protocols ------------------------------------------------------------
 @protocol AIListObjectObserver //notified of changes
-    - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys delayed:(BOOL)delayed silent:(BOOL)silent;
+    - (NSArray *)updateListObject:(AIListObject *)inObject keys:(NSArray *)inModifiedKeys silent:(BOOL)silent;
 @end
 
 @protocol AIAutoSizingView //Sends Interface_ViewDesiredSizeDidChange notifications
