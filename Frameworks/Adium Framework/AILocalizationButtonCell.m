@@ -8,6 +8,7 @@
 
 #import "AILocalizationButtonCell.h"
 
+#define	TARGET_CONTROL	(NSControl *)[self controlView]
 
 @implementation AILocalizationButtonCell
 //Set up our defaults
@@ -22,7 +23,7 @@
 	
 	//If the old frame is smaller than our original frame, treat the old frame as that original frame
 	//for resizing and positioning purposes
-	oldFrame  = [[self viewForSizing] frame];
+	oldFrame  = [TARGET_CONTROL frame];
 	if(oldFrame.size.width < originalFrame.size.width){
 		oldFrame = originalFrame;
 	}
@@ -31,11 +32,6 @@
 	[super setTitle:inTitle];
 	
 	[self _handleSizingWithOldFrame:oldFrame stringValue:inTitle];
-}
-
-- (NSControl *)viewForSizing
-{
-	return((NSControl *)[self controlView]);
 }
 
 #include "AILocalizationControl.m"

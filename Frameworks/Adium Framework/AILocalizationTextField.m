@@ -8,6 +8,8 @@
 
 #import "AILocalizationTextField.h"
 
+#define	TARGET_CONTROL	super
+
 @implementation AILocalizationTextField
 
 //Set up our defaults
@@ -35,7 +37,7 @@
 
 - (NSControl *)viewForSizing
 {
-	return(self);
+	return((NSTextField *)super);
 }
 
 #include "AILocalizationControl.m"
