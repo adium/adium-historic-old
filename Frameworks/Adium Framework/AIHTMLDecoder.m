@@ -697,8 +697,24 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	//Parse the HTML
 	while(![scanner isAtEnd]){
-		//Find an HTML tag or escaped character
+		/*
+		 * Scan up to an HTML tag or escaped character.
+		 *
+		 * All characters before the next HTML entity are textual characters in the current textAttributes. We append
+		 * those characters to our final attributed string with the desired attributes before continuing.
+		 */
 		if([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]){
+			id	languageValue = [textAttributes languageValue];
+			
+			/* AIM sets language value 143 for characters which are actually in the private unicode space;
+			 * the most obvious example is Wingdings messages sent from Windows AIM, where Wingdings is in the normal ASCII
+			 * range on Windows but has its special characters in the private unicode space, 0xF000 above normal.
+			 *
+			 * Handle this special case. */
+			if(languageValue && ([languageValue intValue] == 143)){
+				chunkString = [chunkString stringByTranslatingByOffset:0xF000];				
+			}
+			
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
 		}
 
@@ -780,10 +796,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						}
 
 					}else if([chunkString caseInsensitiveCompare:CloseFont] == NSOrderedSame){
-						[textAttributes setTextColor:[NSColor blackColor]];
-						[textAttributes setFontFamily:@"Helvetica"];
-						[textAttributes setFontSize:12];
-
+						[textAttributes resetFontAttributes];
+						
 					//span
 					}else if([chunkString caseInsensitiveCompare:Span] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
@@ -875,7 +889,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					//Image
 					} else if([chunkString caseInsensitiveCompare:IMG] == NSOrderedSame){
 						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
-							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
+							NSAttributedString *attachString = [self processImgTagArgs:[self parseArguments:chunkString] 
+																			attributes:textAttributes];
 							[attrString appendAttributedString:attachString];
 						}
 					} else if([chunkString caseInsensitiveCompare:CloseIMG] == NSOrderedSame){
@@ -1020,11 +1035,15 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			[textAttributes setFontSize:[[inArgs objectForKey:arg] intValue]];
 
 		}else if([arg caseInsensitiveCompare:Color] == NSOrderedSame){
-			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor blackColor]]];
+			[textAttributes setTextColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] 
+														 defaultColor:[NSColor blackColor]]];
 
 		}else if([arg caseInsensitiveCompare:Back] == NSOrderedSame){
-			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
+			[textAttributes setTextBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg]
+																   defaultColor:[NSColor whiteColor]]];
 
+		}else if([arg caseInsensitiveCompare:@"LANG"] == NSOrderedSame){
+			[textAttributes setLanguageValue:[inArgs objectForKey:arg]];
 		}
 	}
 }
