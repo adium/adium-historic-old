@@ -21,7 +21,6 @@
 
 #define KEY_SIGNED_OFF_LENGTH			@"Signed Off Length"
 #define KEY_SIGNED_ON_LENGTH			@"Signed On Length"
-#define KEY_TYPING_LENGTH			@"Typing Length"
 
 @protocol AIContactObserver;
 
@@ -33,11 +32,9 @@
     NSMutableDictionary		*onlineDict;
     NSMutableDictionary		*awayDict;
     NSMutableDictionary		*idleDict;
-    NSMutableDictionary		*typingDict;
 
     int		signedOffLength;
     int		signedOnLength;
-    int		typingLength;
 
 }
 

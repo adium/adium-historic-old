@@ -25,8 +25,6 @@
 #define CONTACT_STATUS_AWAY_NO		@"Contact_StatusAwayNo"
 #define CONTACT_STATUS_IDLE_YES		@"Contact_StatusIdleYes"
 #define CONTACT_STATUS_IDLE_NO		@"Contact_StatusIdleNo"
-#define CONTACT_STATUS_TYPING_YES	@"Contact_StatusTypingYes"
-#define CONTACT_STATUS_TYPING_NO	@"Contact_StatusTypingNo"
 
 //Generates events when a contact changes status, so other plugins may respond to them.  This plugin correctly handles multiple accounts, so a contact changing status on n accounts will only ever generate 1 event.
 
@@ -39,7 +37,6 @@
     onlineDict = [[NSMutableDictionary alloc] init];
     awayDict = [[NSMutableDictionary alloc] init];
     idleDict = [[NSMutableDictionary alloc] init];
-    typingDict = [[NSMutableDictionary alloc] init];
 
     //Register our default preferences
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_EVENTS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_STATUS_EVENTS];
@@ -140,25 +137,6 @@
                 [idleDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UIDAndServiceID]];
             }
         }
-
-        if([inModifiedKeys containsObject:@"Typing"]){ //Typing / Not Typing
-            BOOL 	newStatus = [[inContact statusArrayForKey:@"Typing"] greatestIntegerValue];
-            NSNumber	*oldStatusNumber = [typingDict objectForKey:[inContact UIDAndServiceID]];
-            BOOL	oldStatus = [oldStatusNumber boolValue]; //UID is not unique enough
-
-            if(oldStatusNumber == nil || newStatus != oldStatus){
-                [[owner notificationCenter] postNotificationName:(newStatus ? CONTACT_STATUS_TYPING_YES : CONTACT_STATUS_TYPING_NO)
-                                                          object:inContact
-                                                        userInfo:nil];
-		[typingDict setObject:[NSNumber numberWithBool:newStatus] forKey:[inContact UIDAndServiceID]];
-
-		timeInterval = typingLength;
-
-                if(timeInterval >= 0){
-		    [NSTimer scheduledTimerWithTimeInterval:timeInterval target:self selector:@selector(clearTypingFlags:) userInfo:inContact repeats:NO];
-		}
-            }
-        }
     }
 
     return(nil);
@@ -174,15 +152,6 @@
     [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObjects:@"Signed On", @"Signed Off", nil]];
 }
 
-- (void)clearTypingFlags:(NSTimer *)inTimer
-{
-    AIListContact	*contact = [inTimer userInfo];
-
-    [[contact statusArrayForKey:@"Typing"] setObject:nil withOwner:contact];
-
-    [[owner contactController] contactStatusChanged:contact modifiedStatusKeys:[NSArray arrayWithObjects:@"Typing", nil]];
-}
-
 - (void)preferencesChanged:(NSNotification *)notification
 {
     //Optimize this...
@@ -193,7 +162,6 @@
 	//Cache the preference values
 	signedOffLength = [[prefDict objectForKey:KEY_SIGNED_OFF_LENGTH] intValue];
 	signedOnLength = [[prefDict objectForKey:KEY_SIGNED_ON_LENGTH] intValue];
-	typingLength = [[prefDict objectForKey:KEY_TYPING_LENGTH] intValue];
     }
 }
 

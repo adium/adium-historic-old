@@ -7,7 +7,6 @@
             OUTLETS = {
                 "textField_signedOffLength" = NSTextField; 
                 "textField_signedOnLength" = NSTextField; 
-                "textField_typingLength" = NSTextField; 
                 "view_prefView" = NSView; 
             }; 
             SUPERCLASS = NSObject; 
