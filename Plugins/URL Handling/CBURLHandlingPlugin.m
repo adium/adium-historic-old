@@ -33,9 +33,9 @@
 
 - (void)installPlugin
 {
-    /* TODO:
-        * Prompt the user to change Adium to be the protocol handler for aim:// and/or yahoo:// if we aren't already. Give them the option to agree, disagree, or disagree and never be asked again. 
-    */
+	/* TODO:
+	 * Prompt the user to change Adium to be the protocol handler for aim:// and/or yahoo:// if we aren't already. Give them the option to agree, disagree, or disagree and never be asked again. 
+	 */
 	ICInstance ICInst;
 	OSErr Err;
 
@@ -57,10 +57,10 @@
 	//We're done with Internet Config, so stop it
 	Err = ICStop(ICInst);
 
-    [[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
-                                                       andSelector:@selector(handleURLEvent:withReplyEvent:)
-                                                     forEventClass:kInternetEventClass
-                                                        andEventID:kAEGetURL];
+	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
+	                                                   andSelector:@selector(handleURLEvent:withReplyEvent:)
+	                                                 forEventClass:kInternetEventClass
+	                                                    andEventID:kAEGetURL];
 }
 
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
@@ -86,10 +86,10 @@
 
 - (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
 {
-    NSString *string = [[event descriptorAtIndex:1] stringValue];
-    NSURL *url = [NSURL URLWithString:string];
-    
-    if(url){
+	NSString *string = [[event descriptorAtIndex:1] stringValue];
+	NSURL *url = [NSURL URLWithString:string];
+
+	if(url){
 		NSString	*scheme;
 		NSString	*service;
 		
@@ -105,13 +105,13 @@
 				nil] retain];
 		}
 		
-        if(![[url resourceSpecifier] hasPrefix:@"//"]){
-            string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
-            url = [NSURL URLWithString:string];
-        }
+		if(![[url resourceSpecifier] hasPrefix:@"//"]){
+			string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
+			url = [NSURL URLWithString:string];
+		}
 		
 		scheme = [url scheme];
-        
+
 		if(service = [schemeToServiceDict objectForKey:scheme]){
 			if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				// aim://goim?screenname=tekjew
@@ -122,7 +122,7 @@
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
 				
-            }else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+			}else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
 				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
@@ -131,11 +131,11 @@
 			}else if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
 				// ymsgr://sendim?tekjew
 				NSString *name = [[[url query] stringByDecodingURLEscapes] compactedString];
-                [self _openChatToContactWithName:name
+				[self _openChatToContactWithName:name
 									   onService:service
 									 withMessage:nil];
 				
-            }else if([url queryArgumentForKey:@"openChatToScreenName"]){
+			}else if([url queryArgumentForKey:@"openChatToScreenName"]){
 				// aim://openChatToScreenname?tekjew  [?]
 				NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
 				
@@ -145,7 +145,7 @@
 										 withMessage:nil];
 				}
 			}else{
-				//Default top opening the host as a name,
+				//Default to opening the host as a name.
 
 				NSString	*user = [url user];
 				NSString	*host = [url host];
@@ -165,19 +165,19 @@
 			
 		}else if([scheme isEqualToString:@"xmpp"]){
 			// xmpp://tekjew@jabber.com
-            NSString *name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
+			NSString *name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
 			
-            [self _openChatToContactWithName:[name compactedString]
+			[self _openChatToContactWithName:[name compactedString]
 								   onService:@"Jabber"
 								 withMessage:nil];
 
-        }else if ([scheme isEqualToString:@"adiumxtra"]){
+		}else if ([scheme isEqualToString:@"adiumxtra"]){
 			//Installs an adium extra
 			// adiumxtra://www.adiumxtras.com/path/to/xtra.zip
 
 			[[XtrasInstaller installer] installXtraAtURL:url];
 		}
-    }
+	}
 }
 
 - (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
