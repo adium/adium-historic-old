@@ -39,6 +39,8 @@
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
 static BOOL					pauseFilteringForSafety = NO;
 static BOOL					threadedFiltersInUse = NO;
+static NSLock				*filterCreationLock = nil;
+
 //init
 - (void)initController
 {
@@ -320,9 +322,13 @@ static BOOL					threadedFiltersInUse = NO;
 - (NDRunLoopMessenger *)filterRunLoopMessenger
 {
 	if (!filterRunLoopMessenger){
+		if (!filterCreationLock) filterCreationLock = [[NSLock alloc] init];
+		[filterCreationLock lock];
+		
 		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
 		
-		while (!filterRunLoopMessenger);
+		[filterCreationLock lockBeforeDate:[NSDate distantFuture]];
+		[filterCreationLock release]; filterCreationLock = nil;
 	}
 	
 	return (filterRunLoopMessenger);
@@ -376,6 +382,8 @@ static BOOL					threadedFiltersInUse = NO;
 	filterRunLoopMessenger = [NDRunLoopMessenger runLoopMessengerForCurrentRunLoop];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 	NSLog(@"thread_createFilterRunLoopMessenger: Got %@",filterRunLoopMessenger);
+	[filterCreationLock unlock];
+		
 	CFRunLoopRun();
 	
 	[pool release];
