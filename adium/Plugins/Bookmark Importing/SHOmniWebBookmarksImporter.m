@@ -96,7 +96,12 @@ static NSMenu   *omniTopMenu;
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
-                
+
+            if(omniTitleString){
+                // decode html stuff
+                omniTitleString = [[AIHTMLDecoder decodeHTML:omniTitleString] string];
+            }
+            
             omniBookmarksSupermenu = omniBookmarksMenu;
             omniBookmarksMenu = [[[NSMenu alloc] initWithTitle:omniTitleString? omniTitleString : @"untitled"] autorelease];
         
@@ -115,6 +120,11 @@ static NSMenu   *omniTopMenu;
             [linkScanner scanUpToString:@">" intoString:nil];
             [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
             [linkScanner scanUpToString:@"</a" intoString:&omniTitleString];
+            
+            if(omniTitleString){
+                // decode html stuff
+                omniTitleString = [[AIHTMLDecoder decodeHTML:omniTitleString] string];
+            }
 
             SHMarkedHyperlink *markedLink = [[[SHMarkedHyperlink alloc] initWithString:[urlString retain]
                                                                   withValidationStatus:SH_URL_VALID
