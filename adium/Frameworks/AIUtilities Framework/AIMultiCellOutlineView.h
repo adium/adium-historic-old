@@ -24,8 +24,8 @@
 
 - (void)setContentCell:(id)cell;
 - (void)setGroupCell:(id)cell;
-- (void)setRowHeight:(float)rowHeight;
 - (int)totalHeight;
+- (id)contentCell;
 - (id)groupCell;
 	
 @end

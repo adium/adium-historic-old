@@ -141,15 +141,9 @@
 	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[AIListContactCell alloc] init]];	
 
-
-	
 	//Targeting
     [contactListView setTarget:self];
 	[contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-	
-	
-#warning grr
-
 	[scrollView_contactList setDrawsBackground:NO];
     [scrollView_contactList setAutoScrollToBottom:NO];
     [scrollView_contactList setAutoHideScrollBar:YES];
