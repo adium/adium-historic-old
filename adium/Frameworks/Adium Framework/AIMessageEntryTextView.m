@@ -145,7 +145,12 @@ static NSImage *pushIndicatorImage = nil;
     if(!insertingText){ 
         [[adium contentController] contentsChangedInTextEntryView:self];
     }
-	
+    
+    //reset any link attribs if they exist
+    if((0 == [self selectedRange].location) && (0 == [self selectedRange].length)){
+        [self resetToDefaultTypingAttributes];
+    }
+        
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
 }
@@ -415,7 +420,8 @@ static NSImage *pushIndicatorImage = nil;
 	//clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
 	[[self undoManager] removeAllActions];
         
-        [self setTypingAttributes:defaultTypingAttributes];
+        //reset typing attribs
+        [self resetToDefaultTypingAttributes];
 }
 
 
@@ -532,7 +538,7 @@ static NSMenu *contextualMenu = nil;
 {
 	if (!contextualMenu){
 		NSArray			*itemsArray = nil;
-		NSEnumerator    *enumerator;
+		NSEnumerator            *enumerator;
 		NSMenuItem		*menuItem;
 		
 		//Grab NSTextView's default menu, copying so we don't mess effect menus elsewhere

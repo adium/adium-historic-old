@@ -10,30 +10,17 @@
 #import "SHLinkFavoritesPreferences.h"
 #import "SHAutoValidatingTextView.h"
 
-#define ADD_LINK_TITLE          AILocalizedString(@"Add Link...",nil)
 #define EDIT_LINK_TITLE         AILocalizedString(@"Add/Edit Link...",nil)
 
 @implementation SHLinkManagementPlugin
 
 - (void)installPlugin
 {
-    //Add Link.. menu item (edit menu)
-    /*menu_AddLink = [[[NSMenuItem alloc] initWithTitle:ADD_LINK_TITLE
-                                               target:self
-                                               action:@selector(addFormattedLink:)
-                                        keyEquivalent:@"["] autorelease];
-    [[adium menuController] addMenuItem:menu_AddLink toLocation:LOC_Edit_Bottom];
-    
-    //contextual menu
-    contextMenu_AddLink = [[menu_AddLink copy] autorelease];
-    [contextMenu_AddLink setKeyEquivalent:@""];
-    [[adium menuController] addContextualMenuItem:contextMenu_AddLink toLocation:Context_TextView_LinkAction];*/
-    
-    //Edit Link... menu item (edit menu)
+    //Add/Edit Link... menu item (edit menu)
     menu_EditLink = [[[NSMenuItem alloc] initWithTitle:EDIT_LINK_TITLE
                                                 target:self
                                                 action:@selector(editFormattedLink:)
-                                         keyEquivalent:@"]"] autorelease];
+                                         keyEquivalent:@"k"] autorelease];
     [[adium menuController] addMenuItem:menu_EditLink toLocation:LOC_Edit_Bottom];
     
     //context menu
@@ -51,19 +38,10 @@
 {
 }
 
-- (IBAction)addFormattedLink:(id)sender
-{
-    //add a new link
-    NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-    if([responder isKindOfClass:[NSTextView class]]){
-        [[[SHLinkEditorWindowController alloc] initAddLinkWindowControllerWithResponder:responder] autorelease];
-    }
-}
-
 - (IBAction)editFormattedLink:(id)sender
 {
     //edit existing link/text
-    NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+    NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
     if(([responder isKindOfClass:[NSTextView class]]) && ([(NSTextView *)responder selectedRange].length != 0)) {
         [[[SHLinkEditorWindowController alloc] initEditLinkWindowControllerWithResponder:responder] autorelease];
     }else{//if nothing selected, add link.
