@@ -351,6 +351,10 @@
 	NSMutableString *result = [NSMutableString string];
 	NSString *lastChunk = nil;
 	NSScanner *scanner = [NSScanner scannerWithString:self];
+
+	//We don't want to skip any characters; NSScanner skips whitespace and newlines by default
+	[scanner setCharactersToBeSkipped:[[[NSCharacterSet alloc] init] autorelease]];
+	
 	unsigned curLocation = 0, maxLocation = [self length];
 
 	while(1) {
@@ -358,9 +362,10 @@
 			[result appendString:lastChunk];
 			curLocation = [scanner scanLocation];
 		}
-		if(curLocation >= maxLocation)
+		if(curLocation >= maxLocation){
 			break;
-		else {
+
+		}else{
 			switch([self characterAtIndex:curLocation]) {
 				case '&':
 					[result appendString:@"&amp;"];
@@ -374,10 +379,16 @@
 				case '>':
 					[result appendString:@"&gt;"];
 					break;
+				/*
+					case ' ':
+					[result appendString:@"&nbsp;"];
+					break;
+				*/
 			}
 			[scanner setScanLocation:++curLocation];
 		}
 	}
+	
 //	NSLog(@"escaped string: %@\ninto string: %@", self, result);
 	return result;
 }
@@ -429,7 +440,7 @@
 					[result appendFormat:@"%C", (unichar)number];
 				}
 			} else {
-				//named entity. for now, we only support the four essential ones.
+				//named entity. for now, we only support the five essential ones.
 				static NSDictionary *entityNames = nil;
 				if(entityNames == nil) {
 					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
@@ -437,6 +448,7 @@
 						[NSNumber numberWithUnsignedInt:'&'], @"amp",
 						[NSNumber numberWithUnsignedInt:'<'], @"lt",
 						[NSNumber numberWithUnsignedInt:'>'], @"gt",
+						[NSNumber numberWithUnsignedInt:' '], @"nbsp",
 						nil];
 				}
 				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
