@@ -14,7 +14,7 @@
 #define DEFAULT_PORT_MESSAGE_RETRY			0.01
 
 static NSString		* kThreadDictionaryKey = @"NDRunLoopMessengerInstance";
-//static NSString	* kSendMessageException = @"NDRunLoopMessengerSendException";
+//static NSString		* kSendMessageException = @"NDRunLoopMessengerSendException";
 static NSString		* kConnectionDoesNotExistsException = @"NDRunLoopMessengerConnectionNoLongerExistsException";
 /*
  * struct message
@@ -22,7 +22,7 @@ static NSString		* kConnectionDoesNotExistsException = @"NDRunLoopMessengerConne
 struct message
 {
 	NSConditionLock		* resultLock;
-	NSInvocation			* invocation;
+	NSInvocation		* invocation;
 };
 
 /*
@@ -31,7 +31,7 @@ struct message
 @interface NDRunLoopMessengerForwardingProxy : NSProxy
 {
 	id								targetObject;
-	NDRunLoopMessenger		* owner;
+	NDRunLoopMessenger				* owner;
 	BOOL							withResult;
 }
 - (id)_initWithTarget:(id)aTarget withOwner:(NDRunLoopMessenger *)anOwner withResult:(BOOL)aFlag;
@@ -453,54 +453,24 @@ struct message
  */
 - (void)handlePortMessage:(NSPortMessage *)aPortMessage
 {
-	//Invoke the portMessage's invocation if we are not already in the middle of an invocation
-	if(!insideMessageInvocation){
-		struct message 	* theMessage;
-		NSData				* theData;
-		void					handlePerformSelectorMessage( struct message * aMessage );
-		void					handleInvocationMessage( struct message * aMessage );
-		
-		theData = [[aPortMessage components] lastObject];
-		
-		theMessage = (struct message *)[theData bytes];
-		
-		insideMessageInvocation = YES;
-		[theMessage->invocation invoke];
-		insideMessageInvocation = NO;
+	struct message 	* theMessage;
+	NSData			* theData;
+	void			handlePerformSelectorMessage( struct message * aMessage );
+	void			handleInvocationMessage( struct message * aMessage );
 
-		if( theMessage->resultLock )
-		{
-			[theMessage->resultLock lock];
-			[theMessage->resultLock unlockWithCondition:YES];
-		}
-		
-		[theMessage->invocation release];	// to balance messageInvocation:withResult:
-	}else{
-		/* 
-		 It is possible for an invocation to trigger a call which leads to HIToolbox's GetNextEventMatchingMask().
-		 If this occurs, we can end of trying to reinvoke the same message.  We want to ignore this and requeue the
-		 port message.
-		 */
-
-		if (!queuedPortMessageArray) queuedPortMessageArray = [[NSMutableArray alloc] init];
-
-		if ([queuedPortMessageArray count]){
-			[queuedPortMessageArray insertObject:aPortMessage
-										 atIndex:0];
-		}else{
-			[queuedPortMessageArray addObject:aPortMessage];
-		}
-		
-		
-		//Start the timer if necessary
-		if (!queuedPortMessageTimer){
-			queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:messageRetry
-																	   target:self 
-																	 selector:@selector(sendQueuedDataTimer:) 
-																	 userInfo:nil 
-																	  repeats:YES] retain];
-		}
+	theData = [[aPortMessage components] lastObject];
+	
+	theMessage = (struct message *)[theData bytes];
+	insideMessageInvocation = YES;
+	[theMessage->invocation invoke];
+	
+	if( theMessage->resultLock )
+	{
+		[theMessage->resultLock lock];
+		[theMessage->resultLock unlockWithCondition:YES];
 	}
+	insideMessageInvocation = NO;	
+	[theMessage->invocation release];	// to balance messageInvocation:withResult:
 }
 
 /*
@@ -532,7 +502,10 @@ struct message
 			
 			[queuedPortMessageArray addObject:thePortMessage];
 		}else{
-			if( ![thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout]] ){
+			NSDate	* sendBeforeDate = (messageRetryTimeout ? 
+										[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
+										[NSDate distantFuture]);
+			if( ![thePortMessage sendBeforeDate:sendBeforeDate] ){
 				//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
 				if (!queuedPortMessageArray){
 					queuedPortMessageArray = [[NSMutableArray alloc] init];
@@ -549,6 +522,7 @@ struct message
 				}
 			}
 		}
+		
 		[thePortMessage release];
 	}
 	else
@@ -560,16 +534,22 @@ struct message
 //Send the first item in the queue, or destroy the queue and timer if the queue is empty
 - (void)sendQueuedDataTimer:(NSTimer *)inTimer
 {
-	if ([queuedPortMessageArray count]){
-		NSPortMessage *thePortMessage = [queuedPortMessageArray objectAtIndex:0];
-//		NSLog(@"Attempting to send %@",thePortMessage);
-		if( [thePortMessage sendBeforeDate:[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout]] ){
-			[queuedPortMessageArray removeObjectAtIndex:0];
-//			NSLog(@"%i queued messages left",[queuedPortMessageArray count]);
+	//If we are inside a message invocation, do nothing; we'll be given another shot when the timer fires again
+	if(!insideMessageInvocation){
+		if ([queuedPortMessageArray count]){
+			NSPortMessage	* thePortMessage = [queuedPortMessageArray objectAtIndex:0];
+			NSDate			* sendBeforeDate = (messageRetryTimeout ? 
+												[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
+												[NSDate distantFuture]);
+
+			if( [thePortMessage sendBeforeDate:sendBeforeDate] ){
+				[queuedPortMessageArray removeObjectAtIndex:0];
+				NSLog(@"%i queued messages left",[queuedPortMessageArray count]);
+			}
+		}else{
+			[queuedPortMessageArray release]; queuedPortMessageArray = nil;
+			[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
 		}
-	}else{
-		[queuedPortMessageArray release]; queuedPortMessageArray = nil;
-		[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
 	}
 }
 

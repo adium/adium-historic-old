@@ -10,7 +10,7 @@
 
 @protocol AIContentFilter;
 
-@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter, NDAppleScriptObjectSendEvent> {    
+@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter, NDAppleScriptObjectSendEvent, NDAppleScriptObjectActive> {    
 	NSMenuItem				*scriptMenuItem;		//Script menu parent
 	NSMenu 					*scriptMenu;			//Submenu of scripts
 

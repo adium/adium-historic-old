@@ -389,7 +389,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	threadedFilterLock = [[ESExpandedRecursiveLock alloc] init];
 	mainFilterLock = [[NSRecursiveLock alloc] init];
 	
-	//Create and configure our messenger to the filter thread (in which are at present)
+	//Create and configure our messenger to the filter thread (in which we are at present)
 	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
 

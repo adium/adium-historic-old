@@ -531,12 +531,22 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	//If none is found, load and cache
 	if (!script){
-		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe.
+		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe. Each script
+		//does not need one; we can reuse the same one for every script called from this thread.
 		if (!componentInstance){
 			componentInstance = [[NDComponentInstance componentInstance] retain];
 			
 			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
 			[componentInstance setAppleEventSendTarget:self];
+			
+			/*
+			 We don't want any funny business happening while the applescript runs; if we don't set an activeTarget,
+			 the thread will appear open and invocations will come out of order.  If we wanted to disregard ordering,
+			 we'd get a huge perceived performance boost when running lengthy applescripts by removing this... but
+			 message order definitely does matter, so we must wait until Message 1 is done and displayed before doing
+			 Message 2.
+			 */
+			[componentInstance setActiveTarget:self];
 		}
 		
 		//Load the script
@@ -566,50 +576,63 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								filterProc:(AEFilterUPP)filterProc
 {
 	NSAppleEventDescriptor	*eventDescriptor;
-	
+	AEEventClass			eventClass = [appleEventDescriptor eventClass];
+	BOOL					useMainThread = NO;
 	/* 
 		We want to send certain eventClasses (those which necessitate user interaction) to the main thread
 		since the UI is not threadsafe.
 	 */
-	switch([appleEventDescriptor eventClass]){
-		case 'syso':
-		case 'gtqp':
-		{
-			NSInvocation			*invocation;
-			SEL						selector;
-			
-			selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
-			
-			invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
-			[invocation setSelector:selector];
-			[invocation setTarget:componentInstance];
-			
-			[invocation setArgument:&appleEventDescriptor atIndex:2];
-			[invocation setArgument:&sendMode atIndex:3];
-			[invocation setArgument:&sendPriority atIndex:4];
-			[invocation setArgument:&timeOutInTicks atIndex:5];
-			[invocation setArgument:&idleProc atIndex:6];
-			[invocation setArgument:&filterProc atIndex:7];
-			
-			[invocation performSelectorOnMainThread:@selector(invoke)
-										 withObject:nil
-									  waitUntilDone:YES];
-			[invocation getReturnValue:&eventDescriptor];
-			break;
+	if(eventClass == 'syso'){
+		AEEventID eventID = [appleEventDescriptor eventID];
+		
+		//For most 'syso' events we want to use the main thread, as these are the UI interaction events.
+		//We can build a list of exceptions here for potentially slow 'syso' events which don't involve the UI
+		if(eventID != 'rand'){	/*random number generation */
+			useMainThread = YES;
 		}
-		default:
-		{
-			eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
-													   sendMode:sendMode
-												   sendPriority:sendPriority
-												 timeOutInTicks:timeOutInTicks
-													   idleProc:idleProc
-													 filterProc:filterProc];
-			break;
-		}
+		
+	}else if(eventClass == 'gtqp'){
+		useMainThread = YES;
+	}
+	
+	if(useMainThread){
+		NSInvocation			*invocation;
+		SEL						selector;
+		
+		selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
+		
+		invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
+		[invocation setSelector:selector];
+		[invocation setTarget:componentInstance];
+		
+		[invocation setArgument:&appleEventDescriptor atIndex:2];
+		[invocation setArgument:&sendMode atIndex:3];
+		[invocation setArgument:&sendPriority atIndex:4];
+		[invocation setArgument:&timeOutInTicks atIndex:5];
+		[invocation setArgument:&idleProc atIndex:6];
+		[invocation setArgument:&filterProc atIndex:7];
+		
+		[invocation performSelectorOnMainThread:@selector(invoke)
+									 withObject:nil
+								  waitUntilDone:YES];
+		[invocation getReturnValue:&eventDescriptor];
+		
+	}else{
+		eventDescriptor = [componentInstance sendAppleEvent:appleEventDescriptor
+												   sendMode:sendMode
+											   sendPriority:sendPriority
+											 timeOutInTicks:timeOutInTicks
+												   idleProc:idleProc
+												 filterProc:filterProc];		
 	}
 
 	return(eventDescriptor);
+}
+
+- (BOOL)appleScriptActive
+{
+	NSLog(@"Applescript active.");
+	return(YES);
 }
 
 #pragma mark Toolbar item
