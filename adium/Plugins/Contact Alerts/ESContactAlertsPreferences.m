@@ -288,15 +288,15 @@ int alphabeticalSort(id objectA, id objectB, void *context);
         NSString		*newAction;
         
         ESContactAlerts * thisInstance = [prefAlertsArray objectAtIndex:row];
-
+        
         selectedMenuItem = [[[tableColumn dataCellForRow:row] menu] itemAtIndex:[object intValue]];
         selectedActionDict = [[thisInstance dictAtIndex:row] mutableCopy];
         newAction = [selectedMenuItem representedObject];
 
-        
         [selectedActionDict setObject:newAction forKey:KEY_EVENT_ACTION];
         [thisInstance replaceDictAtIndex:row withDict:selectedActionDict];
 
+        [thisInstance currentRowIs:row]; //tell the instance which row is selected - setting the value will end up changing the row
     }
 }
 
@@ -321,7 +321,6 @@ int alphabeticalSort(id objectA, id objectB, void *context);
 
         NSDictionary * selectedActionDict = [instance dictAtIndex:row];
         NSString *action = [selectedActionDict objectForKey:KEY_EVENT_ACTION];
-        [instance setOldIdentifier:action];
         
         [[[actionColumn dataCellForRow:row] menu] performActionForItemAtIndex:[actionMenu indexOfItemWithRepresentedObject:action]]; //will appply appropriate subview in the process
         [button_oneTime setState:[[selectedActionDict objectForKey:KEY_EVENT_DELETE] intValue]];

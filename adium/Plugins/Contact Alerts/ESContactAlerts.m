@@ -103,6 +103,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     row = (currentRow - offset);
 
     if (row != -1) selectedActionDict = [[eventActionArray objectAtIndex:row] mutableCopy];
+    NSLog(@"row is %i and action is %@",row,[selectedActionDict objectForKey:KEY_EVENT_ACTION]);
 }
 
 - (int)currentRow
@@ -158,6 +159,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     [oldIdentifier release];
     oldIdentifier = inIdentifier;
     [oldIdentifier retain];
+    NSLog(@"oldIdentifier is now %@",oldIdentifier);
 }
 - (AIListObject *)activeObject
 {
@@ -249,11 +251,17 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     NSString *details = [[[NSString alloc] init]autorelease];
     NSMutableDictionary * detailsDict;
 
-    if ([oldIdentifier compare:@"Message"] == 0) //only set the text field if the stored text is for a message
-        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
-   /* else
+    details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+
+    if ([[selectedActionDict objectForKey:KEY_EVENT_DETAILS_UNIQUE] intValue])
+    {
         details = @"";
-*/
+        [selectedActionDict setObject:@"" forKey:KEY_EVENT_DETAILS];
+        [selectedActionDict setObject:[NSNumber numberWithInt:0] forKey:KEY_EVENT_DETAILS_UNIQUE];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+        [self saveEventActionArray];
+    }
+
     [textField_message_actionDetails setStringValue:(details ? details : @"")];
     [textField_message_actionDetails setDelegate:self];
 
@@ -448,7 +456,7 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context);
     NSString	*behavior = [sender representedObject];
 
    [selectedActionDict setObject:behavior forKey:KEY_EVENT_DETAILS];
-    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+   [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
 
     //Save event preferences
     [self saveEventActionArray];
@@ -642,11 +650,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
     [actionDict setObject:@"Sound" forKey:KEY_EVENT_ACTION]; //Sound is default action
     [actionDict setObject:[NSNumber numberWithInt:NSOffState] forKey:KEY_EVENT_DELETE]; //default to recurring events
     [eventActionArray addObject:actionDict];
-
+    
     [self saveEventActionArray];
 
     [tableView_actions selectRow:(([eventActionArray count]-1)+offset) byExtendingSelection:NO]; //select the new event
-
     
     if ([[tableView_actions dataSource] respondsToSelector:@selector(addedEvent:)])
         [[tableView_actions dataSource] performSelector:@selector(addedEvent:) withObject:self];
@@ -659,12 +666,20 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 - (void)configureForTextDetails:(NSString *)instructions identifier:(NSString *)identifier
 {
     NSString *details =  [[[NSString alloc] init] autorelease];
-//    NSLog (@"old %@ new %@",oldIdentifier, identifier);
-    if ([oldIdentifier compare:identifier] == 0)
-        details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+    
+    details = [[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS];
+    if ([[selectedActionDict objectForKey:KEY_EVENT_DETAILS_UNIQUE] intValue])
+    {
+        details = @"";
+        [selectedActionDict setObject:@"" forKey:KEY_EVENT_DETAILS];
+        [selectedActionDict setObject:[NSNumber numberWithInt:0] forKey:KEY_EVENT_DETAILS_UNIQUE];
+        [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+        [self saveEventActionArray];
+    }
+    
+    [textField_description_textField setStringValue:instructions];
 
     [textField_actionDetails setDelegate:self];
-    [textField_description_textField setStringValue:instructions];
     [textField_actionDetails setStringValue:(details ? details : @"")];
 
     [self configureWithSubview:view_details_text];
@@ -674,6 +689,10 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 
 - (void)configureForMenuDetails:(NSString *)instructions menuToDisplay:(NSMenu *)detailsMenu identifier:(NSString *)identifier
 {
+    [selectedActionDict setObject:[NSNumber numberWithInt:1] forKey:KEY_EVENT_DETAILS_UNIQUE];
+    [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
+    [self saveEventActionArray];
+    
     [textField_description_popUp setStringValue:instructions];
     [popUp_actionDetails setMenu:detailsMenu];
     [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:[[eventActionArray objectAtIndex:row] objectForKey:KEY_EVENT_DETAILS]]];
@@ -779,11 +798,9 @@ int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 //- (void)controlTextDidEndEditing:(NSNotification *)notification
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-    NSLog(@"changed");
     [selectedActionDict setObject:[[notification object] stringValue] forKey:KEY_EVENT_DETAILS];
     [eventActionArray replaceObjectAtIndex:row withObject:selectedActionDict];
     [self saveEventActionArray];
-
 }
 
 - (void)oneTimeEvent:(NSButton *)inButton
