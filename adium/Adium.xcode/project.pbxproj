@@ -216,6 +216,7 @@
 				34BD9F390531477E000AB133,
 				4B7F78B50597F42400162728,
 				34BD9DE105314751000AB133,
+				7E6642C20653363A0050E8C8,
 				34BD9E9305314755000AB133,
 				520FE3A105BE1FC5002D063D,
 				34BD9EB405314758000AB133,
@@ -270,6 +271,7 @@
 				4B7F78B40597F42400162728,
 				34BD9F2C0531477E000AB133,
 				34BD9DAF05314751000AB133,
+				7E6642C10653363A0050E8C8,
 				34BD9DE205314755000AB133,
 				520FE3A005BE1FC5002D063D,
 				34BD9E9405314758000AB133,
@@ -4249,6 +4251,7 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				7E6642F9065336C70050E8C8,
 				34BD9CD3053146CC000AB133,
 				34BD9CD2053146CC000AB133,
 				520FE47005BE2494002D063D,
@@ -5237,6 +5240,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				7E6642F7065336BA0050E8C8,
 				3419FE230531586A00C68BA3,
 				3419FE240531586A00C68BA3,
 				520FE46305BE20EB002D063D,
@@ -9579,6 +9583,7 @@
 		};
 		4B4F5B2C042D642500A8010A = {
 			children = (
+				7E6642FD065337090050E8C8,
 				F53B9A1302CCEDCA01A8010A,
 				F53EA2AC02C7F2A001A8010A,
 				520FE3B305BE206D002D063D,
@@ -17116,6 +17121,247 @@
 		};
 		7E1E8179063A3EEC00EB00F7 = {
 			fileRef = 7E1E8177063A3EEC00EB00F7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E6642BD0653363A0050E8C8 = {
+			buildActionMask = 2147483647;
+			files = (
+				7E664305065337090050E8C8,
+				7E664306065337090050E8C8,
+				7E664308065337090050E8C8,
+				7E66430A065337090050E8C8,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6642BE0653363A0050E8C8 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6642BF0653363A0050E8C8 = {
+			buildActionMask = 2147483647;
+			files = (
+				7E664307065337090050E8C8,
+				7E664309065337090050E8C8,
+				7E66430B065337090050E8C8,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6642C00653363A0050E8C8 = {
+			buildActionMask = 2147483647;
+			files = (
+				7E66430C065337C80050E8C8,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7E6642C10653363A0050E8C8 = {
+			buildPhases = (
+				7E6642BD0653363A0050E8C8,
+				7E6642BE0653363A0050E8C8,
+				7E6642BF0653363A0050E8C8,
+				7E6642C00653363A0050E8C8,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_VERSION = A;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				INFOPLIST_FILE = Plists/AdiumHyperlinks_Framework.plist;
+				INSTALL_PATH = "@executable_path/../Frameworks";
+				OTHER_LDFLAGS = "-seg1addr 0x10200000";
+				PRODUCT_NAME = AdiumHyperlinks;
+				SKIP_INSTALL = YES;
+				WRAPPER_EXTENSION = framework;
+				ZERO_LINK = YES;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = AdiumHyperlinks.framework;
+			productName = AdiumHyperlinks.framework;
+			productReference = 7E6642C20653363A0050E8C8;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>AdiumHyperlinks.framework</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.AdiumHyperlinks_framework</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>FMWK</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.framework";
+		};
+		7E6642C20653363A0050E8C8 = {
+			explicitFileType = wrapper.framework;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = AdiumHyperlinks.framework;
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7E6642F7065336BA0050E8C8 = {
+			fileRef = 7E6642C20653363A0050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E6642F8065336C70050E8C8 = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 7E6642C10653363A0050E8C8;
+			remoteInfo = AdiumHyperlinks.framework;
+		};
+		7E6642F9065336C70050E8C8 = {
+			isa = PBXTargetDependency;
+			target = 7E6642C10653363A0050E8C8;
+			targetProxy = 7E6642F8065336C70050E8C8;
+		};
+		7E6642FD065337090050E8C8 = {
+			children = (
+				7E6642FE065337090050E8C8,
+				7E6642FF065337090050E8C8,
+				7E664300065337090050E8C8,
+				7E664301065337090050E8C8,
+				7E664302065337090050E8C8,
+				7E664303065337090050E8C8,
+				7E664304065337090050E8C8,
+			);
+			isa = PBXGroup;
+			name = AdiumHyperlinks.Framework;
+			path = "Frameworks/AdiumHyperlinks Framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E6642FE065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AdiumHyperlinks.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E6642FF065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHHyperlinkScanner.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664300065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHHyperlinkScanner.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664301065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHLinkLexer.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664302065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.lex;
+			path = SHLinkLexer.l;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664303065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SHMarkedHyperlink.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664304065337090050E8C8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SHMarkedHyperlink.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7E664305065337090050E8C8 = {
+			fileRef = 7E6642FE065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		7E664306065337090050E8C8 = {
+			fileRef = 7E6642FF065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E664307065337090050E8C8 = {
+			fileRef = 7E664300065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E664308065337090050E8C8 = {
+			fileRef = 7E664301065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E664309065337090050E8C8 = {
+			fileRef = 7E664302065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E66430A065337090050E8C8 = {
+			fileRef = 7E664303065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E66430B065337090050E8C8 = {
+			fileRef = 7E664304065337090050E8C8;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7E66430C065337C80050E8C8 = {
+			fileRef = 1058C7A1FEA54F0111CA2CBB;
 			isa = PBXBuildFile;
 			settings = {
 			};
