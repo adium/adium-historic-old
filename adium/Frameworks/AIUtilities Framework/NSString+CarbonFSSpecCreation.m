@@ -1,3 +1,6 @@
+//IconFamily depends heavily upon Carbon calls and thus will only work in Mac OS X
+#ifdef MAC_OS_X_VERSION_10_0
+
 #import "NSString+CarbonFSSpecCreation.h"
 
 @implementation NSString (CarbonFSSpecCreation)
@@ -64,3 +67,5 @@
 }
 
 @end
+
+#endif

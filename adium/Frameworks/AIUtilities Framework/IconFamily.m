@@ -13,6 +13,9 @@
 // This code is provided as-is, with no warranty, in the hope that it will be
 // useful.  However, it appears to work fine on Mac OS X 10.1.5 and 10.2. :-)
 
+//IconFamily depends heavily upon Carbon calls and thus will only work in Mac OS X
+#ifdef MAC_OS_X_VERSION_10_0
+
 #import "IconFamily.h"
 #import "NSString+CarbonFSSpecCreation.h"
 
@@ -1417,5 +1420,5 @@
 }
 
 @end
-
+#endif
 

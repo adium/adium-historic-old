@@ -13,7 +13,10 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, ESFileTransfer, SUSpeaker;
+@class AILoginController, AIAccountController, AIInterfaceController, AIContactController, AIPluginController, AIPreferenceController, AIPreferencePane, AIMenuController, AILoginWindowController, AIAccountWindowController, AIAccount, AIMessageObject, AIServiceType, AIPreferenceCategory, AIContactInfoView, AIMiniToolbar, AIAnimatedView, AIContentController, AIToolbarController, AIContactInfoViewController, AIPreferenceViewController, AISoundController, AIDockController, AIHandle, AIListContact, AIListGroup, AIListObject, AIIconState, AIContactListGeneration, AIChat, AIContentObject, ESFileTransferController, ESFileTransfer, ESContactAlertsController, ESContactAlert, AIMutableOwnerArray;
+#ifdef MAC_OS_X_VERSION_10_0
+@class SUSpeaker;
+#endif
 
 @interface AIAdium : NSObject {
 
@@ -29,7 +32,8 @@
     IBOutlet	AISoundController           *soundController;
     IBOutlet	AIDockController            *dockController;
     IBOutlet    ESFileTransferController    *fileTransferController;
-
+    IBOutlet    ESContactAlertsController   *contactAlertsController;
+    
     NSNotificationCenter                    *notificationCenter;
     NSMutableDictionary                     *eventNotifications;
 }
@@ -46,6 +50,7 @@
 - (AIMenuController *)menuController;
 - (AIDockController *)dockController;
 - (ESFileTransferController *)fileTransferController;
+- (ESContactAlertsController *)contactAlertsController;
 
 - (NSNotificationCenter *)notificationCenter;
 - (void)registerEventNotification:(NSString *)inNotification displayName:(NSString *)displayName;
@@ -275,6 +280,18 @@ typedef enum {
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject;
 @end
 
+//A contact alert provider performs contact alert actions and provides ESContactAlert instances as required for the contact alert UI
+@protocol ESContactAlertProvider <NSObject>
+- (NSString *)identifier;
+- (ESContactAlert *)contactAlert;
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict;
+
+- (BOOL)shouldKeepProcessing;
+@end
+
+
 @interface NSObject (AITextEntryFilter)
 //required
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
@@ -286,6 +303,7 @@ typedef enum {
 
 
 // Public core controller methods ------------------------------------------------------------
+//*** Login ***//
 @interface AILoginController : NSObject{
     IBOutlet	AIAdium		*owner;
     
@@ -300,6 +318,7 @@ typedef enum {
 
 @end
 
+//*** Account ***//
 @interface AIAccountController : NSObject{
     IBOutlet	AIAdium		*owner;	
 
@@ -340,6 +359,7 @@ typedef enum {
 
 @end
 
+//*** Content ***//
 @interface AIContentController : NSObject {
     IBOutlet	AIAdium		*owner;
 
@@ -387,6 +407,7 @@ typedef enum {
 
 @end
 
+//*** Contact ***//
 @interface AIContactController : NSObject {
     IBOutlet	AIAdium		*owner;
 
@@ -456,6 +477,7 @@ typedef enum {
         
 @end
 
+//*** Interface ***//
 @interface AIInterfaceController : NSObject {
     IBOutlet	AIAdium		*owner;
 
@@ -524,6 +546,7 @@ typedef enum {
 
 @end
 
+//*** Plugin ***//
 @interface AIPluginController : NSObject {
     IBOutlet	AIAdium		*owner;
     NSMutableArray		*pluginArray;
@@ -531,6 +554,7 @@ typedef enum {
 
 @end
 
+//*** Preference ***//
 @interface AIPreferenceController : NSObject {
     IBOutlet	AIAdium			*owner;
 
@@ -556,6 +580,7 @@ typedef enum {
 
 @end
 
+//*** Menu ***//
 @interface AIMenuController : NSObject {
     IBOutlet	AIAdium		*owner;
 
@@ -605,6 +630,7 @@ typedef enum {
 
 @end
 
+//*** Sound ***//
 @interface AISoundController : NSObject {
     IBOutlet	AIAdium		*owner;
 
@@ -617,14 +643,18 @@ typedef enum {
 
     NSLock		*soundLock;
 
-    SUSpeaker		*speaker_variableVoice;
-    SUSpeaker		*speaker_defaultVoice;
     NSMutableArray 	*speechArray;
     NSArray		*voiceArray;
     BOOL		resetNextTime;
     BOOL		speaking;
     int                 defaultRate;
     int                 defaultPitch;
+
+#ifdef MAC_OS_X_VERSION_10_0
+    SUSpeaker		*speaker_variableVoice;
+    SUSpeaker		*speaker_defaultVoice;    
+#endif
+
 }
 
 //Sounds
@@ -638,12 +668,14 @@ typedef enum {
 - (int)defaultPitch;
 @end
 
+//*** Toolbar ***//
 @interface AIToolbarController : NSObject {
     IBOutlet	AIAdium		*owner;
 }
 
 @end
 
+//*** Dock ***//
 @interface AIDockController: NSObject <AIFlashObserver> {
     IBOutlet	AIAdium 	*owner;
 
@@ -675,6 +707,7 @@ typedef enum {
 
 @end
 
+//*** File transfer ***//
 @interface ESFileTransferController : NSObject {
 
 }
@@ -684,10 +717,38 @@ typedef enum {
 - (void)transferCanceled:(ESFileTransfer *)fileTransfer;
 @end
 
+//*** Contact Alerts ***//
+//ESContactAlerts is the UI conduit to the stored actions; plugins do not need to access, create, or implement ESContactAlerts
+@protocol ESContactAlerts <NSObject>
+- (void)configureWithSubview:(NSView *)view_inView;
+@end
 
+@interface ESContactAlertsController : NSObject <AIListObjectObserver> {
+    IBOutlet            AIAdium		*owner;
+    NSMutableArray                      *contactAlertProviderArray;
+    AIMutableOwnerArray                 *arrayOfStateDictionaries;
+    AIMutableOwnerArray                 *arrayOfAlertsArrays;
+    
+    BOOL                                keepProcessingForUser;
+}
+//
+- (void)registerContactAlertProvider:(id <ESContactAlertProvider>)contactAlertProvider;
+- (void)unregisterContactAlertProvider:(id <ESContactAlertProvider>)contactAlertProvider;
+//
+- (void)createAlertsArrayWithOwner:(id <ESContactAlerts>)inOwner;
+- (void)destroyAlertsArrayWithOwner:(id <ESContactAlerts>)inOwner;
+//
+- (void)configureWithSubview:(NSView *)inView forContactAlert:(ESContactAlert *)contactAlert;
+- (NSMutableArray *)eventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
+- (NSDictionary *)currentDictForContactAlert:(ESContactAlert *)contactAlert;
+- (AIListObject *)currentObjectForContactAlert:(ESContactAlert *)contactAlert;
+- (int)rowForContactAlert:(ESContactAlert *)contactAlert;
+- (void)saveEventActionArrayForContactAlert:(ESContactAlert *)contactAlert;
+//
+- (NSMenu *)actionListMenuWithOwner:(id <ESContactAlerts>)owner;
+- (void)updateOwner:(id <ESContactAlerts>)inOwner toArray:(NSArray *)eventActionArray forObject:(AIListObject *)inObject;
+- (void)updateOwner:(id <ESContactAlerts>)inOwner toRow:(int)row;
 
-
-
-
+@end
 
 

@@ -25,6 +25,7 @@
 #import "AIMenuController.h"
 #import "AIDockController.h"
 #import "ESFileTransferController.h"
+#import "ESContactAlertsController.h"
 #import "LNAboutBoxController.h"
 
 #define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"	//Path to Adium's application support preferences
@@ -84,6 +85,10 @@
 
 - (ESFileTransferController *)fileTransferController{
     return(fileTransferController);    
+}
+
+- (ESContactAlertsController *)contactAlertsController{
+    return(contactAlertsController);
 }
 
 // Notifications --

@@ -163,7 +163,7 @@ LNAboutBoxController *sharedInstance = nil;
 //Receive the flags changed event for reversing the scroll direction via option
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if ([theEvent modifierFlags] & NSAlternateKeyMask) {
+    if ([NSEvent optionKey]) {
         scrollRate = -1.0;
     } else {
         scrollRate = 1.0;   

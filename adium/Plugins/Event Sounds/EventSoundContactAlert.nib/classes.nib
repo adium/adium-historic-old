@@ -1,0 +1,17 @@
+{
+    IBClasses = (
+        {CLASS = ESContactAlert; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            CLASS = ESEventSoundContactAlert; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "popUp_actionDetails" = NSPopUpButton; 
+                "textField_description_popUp" = NSTextField; 
+                "view_details_menu" = NSView; 
+            }; 
+            SUPERCLASS = ESContactAlert; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -13,8 +13,8 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 /** 
- * $Revision: 1.26 $
- *  $Date: 2003/11/15 23:59:53 $
+ * $Revision: 1.27 $
+ *  $Date: 2003/11/27 07:45:47 $
  *  $Author#
  *
  **/
@@ -38,3 +38,4 @@
 #import "AIPreferenceViewController.h"
 #import "AIFlippedCategoryView.h"
 #import "ESFileTransfer.h"
+#import "ESContactAlert.h"

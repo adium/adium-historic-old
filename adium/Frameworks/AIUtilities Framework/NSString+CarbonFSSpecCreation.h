@@ -1,3 +1,6 @@
+//IconFamily depends heavily upon Carbon calls and thus will only work in Mac OS X
+#ifdef MAC_OS_X_VERSION_10_0
+
 #import <Foundation/Foundation.h>
 #import <Carbon/Carbon.h>
 
@@ -18,3 +21,5 @@
 - (BOOL) getFSSpec:(FSSpec*)fsSpec createFileIfNecessary:(BOOL)createFile;
 
 @end
+
+#endif

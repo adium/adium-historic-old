@@ -23,12 +23,15 @@
 #define KEY_EVENT_SOUND_SET		@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_NOTIFICATION	@"Notification"
-#define KEY_EVENT_MUTE_WHILE_AWAY        @"Mute While Away"
+#define KEY_EVENT_MUTE_WHILE_AWAY       @"Mute While Away"
 
+#define CONTACT_ALERT_IDENTIFIER        @"Sound"
+
+#define SOUND_MENU_ICON_SIZE		16
 
 @class AIEventSoundPreferences;
 
-@interface AIEventSoundsPlugin : AIPlugin {
+@interface AIEventSoundsPlugin : AIPlugin <ESContactAlertProvider> {
     AIEventSoundPreferences	*preferences;
 
     NSArray			*eventSoundArray;

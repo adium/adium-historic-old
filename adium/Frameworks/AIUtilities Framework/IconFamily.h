@@ -13,6 +13,9 @@
 // This code is provided as-is, with no warranty, in the hope that it will be
 // useful.  However, it appears to work fine on Mac OS X 10.1.4. :-)
 
+//IconFamily depends heavily upon Carbon calls and thus will only work in Mac OS X
+#ifdef MAC_OS_X_VERSION_10_0
+
 #import <Carbon/Carbon.h>
 
 // This class is a Cocoa/Objective-C wrapper for the Mac OS X Carbon API's
@@ -180,3 +183,5 @@
 - initWithScrap;
 - (BOOL) putOnScrap;
 @end
+
+#endif

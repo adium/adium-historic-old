@@ -15,6 +15,7 @@
 
 #import "AIEventSoundsPlugin.h"
 #import "AIEventSoundPreferences.h"
+#import "ESEventSoundContactAlert.h"
 
 #define EVENT_SOUNDS_DEFAULT_PREFS	@"EventSoundDefaults"
 
@@ -30,11 +31,14 @@
     //
     soundPathDict = nil;
 
+    //Install our contact alert
+    [[owner contactAlertsController] registerContactAlertProvider:self];
+    
     //Setup our preferences
     preferences = [[AIEventSoundPreferences preferencePaneWithPlugin:self owner:owner] retain];
     [[owner preferenceController] registerDefaults:[NSDictionary dictionaryNamed:EVENT_SOUNDS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_SOUNDS];
 
-    //Observer preference changes
+    //Observe preference changes
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
     [self preferencesChanged:nil];
 }
@@ -167,5 +171,34 @@
     return(success);
 }
 
+//*****
+//ESContactAlertProvider
+//*****
 
+- (NSString *)identifier
+{
+    return CONTACT_ALERT_IDENTIFIER;
+}
+
+- (ESContactAlert *)contactAlert
+{
+    return [ESEventSoundContactAlert contactAlertWithOwner:owner];   
+}
+
+//performs an action using the information in details and detailsDict (either may be passed as nil in many cases), returning YES if the action fired and NO if it failed for any reason
+- (BOOL)performActionWithDetails:(NSString *)details andDictionary:(NSDictionary *)detailsDict 
+{
+    if (details != nil && [details length] != 0) {
+            [[owner soundController] playSoundAtPath:details]; //Play the sound
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+//continue processing after a successful action
+- (BOOL)shouldKeepProcessing
+{
+    return NO;   
+}
 @end

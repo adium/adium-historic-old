@@ -17,26 +17,23 @@
 #define KEY_EVENT_DELETE		@"Delete"		//delete after execution?
 #define KEY_EVENT_ACTIVE		@"Only While Active"
 
-#define KEY_EVENT_DETAILS_UNIQUE	@"Unique Details"	//just used for UI purposes
+//#define KEY_EVENT_DETAILS_UNIQUE	@"Unique Details"	//just used for UI purposes
 
-#define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"	//additional options' storage
+#define KEY_EVENT_DETAILS_DICT		@"Details Dictionary"	//additional options storage
 #define KEY_MESSAGE_SENDTO_UID		@"Destination UID"
 #define KEY_MESSAGE_SENDTO_SERVICE	@"Destination Service"
 #define KEY_MESSAGE_SENDFROM		@"Account ID"
 #define KEY_MESSAGE_OTHERACCOUNT	@"Allow Other"		//allow other account
 #define KEY_MESSAGE_ERROR		@"Display Error"
 
-
 #define Pref_Changed_Alerts		@"Alerts Changed in Pref Pane"
 #define Window_Changed_Alerts		@"Alerts Changed in Window"
 #define One_Time_Event_Fired 		@"One Time Event Fired"
 
 @protocol AIMiniToolbarItemDelegate;
-@protocol AIListObjectObserver;
-@class ESContactAlertsPlugin;
-@class ESContactAlertsPreferences;
+@class ESContactAlertsPlugin, ESContactAlertsPreferences;
 
-@interface ESContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate,AIListObjectObserver> {
+@interface ESContactAlertsPlugin : AIPlugin <AIMiniToolbarItemDelegate> {
     NSMenuItem				*editContactAlertsMenuItem;
     NSMenuItem				*contactAlertsContextMenuItem;
     ESContactAlertsPreferences		*prefs;

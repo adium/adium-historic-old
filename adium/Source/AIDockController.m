@@ -96,6 +96,7 @@
                 }
             }
     
+#ifdef MAC_OS_X_VERSION_10_0
             //Change the Adium application icon to this new icon
             if(notification != nil){
                 NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
@@ -109,7 +110,7 @@
                     [iconFamily writeToFile:icnsPath];
                 }            
             }
-    
+#endif
             //Recomposite the icon
             [self _setNeedsDisplay];
         }
