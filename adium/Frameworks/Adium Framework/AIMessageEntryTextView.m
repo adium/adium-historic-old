@@ -495,7 +495,7 @@ static NSImage *pushIndicatorImage = nil;
 		
         //Push text over to make room for indicator
         NSSize size = [self frame].size;
-        size.width -= [pushIndicatorImage size].width;
+        size.width -= ([pushIndicatorImage size].width + 2);
         [self setFrameSize:size];
 		
 		// Make the indicator and set its action. It is a button with no border.
@@ -538,7 +538,7 @@ static NSImage *pushIndicatorImage = nil;
     NSRect visRect = [[self enclosingScrollView] documentVisibleRect];
     NSRect indFrame = [indicator frame];
     
-    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - indFrame.size.width, NSMaxY(visRect) - indFrame.size.height)];
+    [indicator setFrameOrigin:NSMakePoint(NSMaxX(visRect) - indFrame.size.width - 2, NSMaxY(visRect) - indFrame.size.height - 2)];
     [[self enclosingScrollView] setNeedsDisplay:YES];
 }
 
