@@ -66,6 +66,7 @@
 
 //Sorting function
 #warning This can not work as expected. Furthmore, why is it in two places?
+
 int alphabeticalGroupOfflineSort(id objectA, id objectB, void *context)
 {
     BOOL	invisibleA = [[objectA displayArrayForKey:@"Hidden"] containsAnyIntegerValueOf:1];
