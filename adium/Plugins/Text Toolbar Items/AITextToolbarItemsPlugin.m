@@ -25,6 +25,7 @@
 
 - (void)installPlugin
 {
+#if 0
     NSToolbarItem   *toolbarItem;
     
     //Bold
@@ -62,6 +63,7 @@
 							 action:@selector(underline:)
 							   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
+#endif
 }
 
 - (void)uninstallPlugin
@@ -77,6 +79,7 @@
     return(tag);
 }
 
+#if 0 
 - (IBAction)bold:(AIMiniToolbarItem *)toolbarItem
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
@@ -125,5 +128,6 @@
     [inToolbarItem setEnabled:enabled];
     return(enabled);
 }
+#endif
         
 @end
