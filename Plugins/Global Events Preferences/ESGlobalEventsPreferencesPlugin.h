@@ -29,6 +29,9 @@
 }
 
 - (NSArray *)availableDockBehaviorPresets;
+- (void)updateActiveDockBehaviorSet;
+
 - (NSArray *)availableSpeechPresets;
+- (void)updateActiveSpeechPreset;
 
 @end

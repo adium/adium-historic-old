@@ -174,9 +174,20 @@
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID
 {
 	if([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]){
-		//Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom'
+		
+		NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
+																			   withActionID:SOUND_ALERT_IDENTIFIER];
+		NSMenuItem		*soundMenuItem = nil;
+		
+		//We can select "None" if there are no sounds
+		if(![alertsArray count]){
+			soundMenuItem = [(NSMenuItem *)popUp_soundSet itemWithTitle:@"None"];
+		}
+
+		//Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom',
+		//but that would probably be very expensive.
 		//For now, if sounds change, we are 'custom' even if it gets us back to a sound set
-		[self selectSoundSet:nil];
+		[self selectSoundSet:soundMenuItem];
 		
 	}else if([actionID isEqualToString:DOCK_BEHAVIOR_ALERT_IDENTIFIER]){
 		//Dock behaviors changed.
