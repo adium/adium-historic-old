@@ -31,7 +31,10 @@
 	even if you have already sent a message, if there is no message history showing
 	in the window.
         
-- Why oh why doesn't our image picker window remember its position whatsoever? 
+- Why oh why doesn't our image picker window remember its position whatsoever?
+
+- Hyperlinks that include domains will have that domain name overridden by the link parser.
+	Ref: http://www.funmac.com/showthread.php?p=75587
 
 //------------------------------------------------------------------------------------
 // Bugs - LibGaim
