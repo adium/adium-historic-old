@@ -66,7 +66,7 @@
         //Source and destination are valid (account & handle)
         if([source isKindOfClass:[AIAccount class]] && [destination isKindOfClass:[AIListContact class]]){
             //Log the message
-            [self _addMessage:[content message]
+            [self _addMessage:[[content message] safeString]
                         dest:[destination UID]
                        source:[source UID]
                          date:[content date]
@@ -89,7 +89,7 @@
         //Destination are valid (handle)
         if([source isKindOfClass:[AIListContact class]]){
             //Log the message
-            [self _addMessage:[content message]
+            [self _addMessage:[[content message] safeString]
                         dest:[destination UID]
                        source:[source UID]
                          date:[content date]
