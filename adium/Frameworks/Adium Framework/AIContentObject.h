@@ -21,6 +21,7 @@
 	BOOL				filterContent;
 	BOOL				trackContent;
 	BOOL				displayContent;	
+	BOOL				sendContent;
 }
 
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest date:(NSDate*)inDate;
@@ -47,5 +48,6 @@
 - (void)setTrackContent:(BOOL)inTrackContent;
 - (void)setDisplayContent:(BOOL)inDisplayContent;
 - (BOOL)setFilterContent:(BOOL)inFilterContent;
-
+- (void)setSendContent:(BOOL)inSendContent;
+- (BOOL)sendContent;
 @end

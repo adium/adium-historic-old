@@ -26,6 +26,7 @@
 	filterContent = YES;
 	trackContent = YES;
 	displayContent = YES;
+	sendContent = YES;
 	
     //Store source, dest, chat, ...
     source = [inSource retain];
@@ -125,4 +126,10 @@
     return(displayContent);
 }
 
+- (void)setSendContent:(BOOL)inSendContent{
+	sendContent = inSendContent;
+}
+- (BOOL)sendContent{
+	return(sendContent);
+}
 @end
