@@ -13,7 +13,7 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIContactController.m,v 1.145 2004/06/07 06:54:13 evands Exp $
+// $Id: AIContactController.m,v 1.146 2004/06/15 18:04:37 adamiser Exp $
 
 #import "AIContactController.h"
 #import "AIAccountController.h"
@@ -48,6 +48,9 @@
 - (void)prepareContactInfo;
 
 - (NSMenu *)menuOfAllContactsInGroup:(AIListGroup *)inGroup withTarget:(id)target firstLevel:(BOOL)firstLevel;
+- (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level;
+
+
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector;
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol;
@@ -937,6 +940,44 @@
 	
 	return(contactArray);
 }
+
+
+//Returns a menu containing all the groups within a group
+//- Selector called on group selection is selectGroup:
+//- The menu items represented object is the group it represents
+- (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target
+{
+	NSMenu	*menu = [[NSMenu alloc] initWithTitle:@""];
+	[self _menuOfAllGroups:menu forGroup:inGroup withTarget:target level:0];
+	return([menu autorelease]);
+}
+- (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*object;
+	
+	//Passing nil scans the entire contact list
+	if(group == nil) group = contactList;
+	
+	//Enumerate this group and process all groups we find within it
+	enumerator = [group objectEnumerator];
+	while(object = [enumerator nextObject]){
+		if([object isKindOfClass:[AIListGroup class]]){
+			NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[object displayName]
+																target:target
+																action:@selector(selectGroup:)
+														 keyEquivalent:@""] autorelease];
+			[menuItem setRepresentedObject:object];
+			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]){
+				[menuItem setIndentationLevel:level];
+			}
+			[menu addItem:menuItem];
+			
+			[self _menuOfAllGroups:menu forGroup:(AIListGroup *)object withTarget:target level:level+1];
+		}
+	}
+}
+
 
 //Returns a menu containing all the objects in a group on an account
 //- Selector called on contact selection is selectContact:

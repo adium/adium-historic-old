@@ -14,11 +14,13 @@
  \------------------------------------------------------------------------------------------------------ */
 
 @interface AIAlternatingRowTableView : NSTableView {
+	BOOL	acceptFirstMouse;
     BOOL	drawsAlternatingRows;
     NSColor	*alternatingRowColor;
 }
 
 - (void)setDrawsAlternatingRows:(BOOL)flag;
 - (void)setAlternatingRowColor:(NSColor *)color;
+- (void)setAcceptsFirstMouse:(BOOL)acceptFirstMouse;
 
 @end
