@@ -801,15 +801,8 @@
 //Increase unviewed content
 - (void)_increaseUnviewedContentOfListObject:(AIListObject *)inObject
 {
-    AIMutableOwnerArray	*ownerArray = [inObject statusArrayForKey:@"UnviewedContent"];
-    int			currentUnviewed;
-
-    //'UnviewedContent'++
-    currentUnviewed = [[ownerArray objectWithOwner:inObject] intValue];
-    [ownerArray setObject:[NSNumber numberWithInt:(currentUnviewed+1)] withOwner:inObject];
-
-    //
-    [[adium contactController] listObjectStatusChanged:inObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] silent:NO];
+    int currentUnviewed = [[inObject statusObjectForKey:@"UnviewedContent"] intValue];
+    [inObject setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)] forKey:@"UnviewedContent" notify:YES];
 }
 
 //Clear unviewed content
@@ -821,12 +814,9 @@
     //Clear the unviewed content of each list object participating in this chat
     enumerator = [[inChat participatingListObjects] objectEnumerator];
     while(listObject = [enumerator nextObject]){
-        AIMutableOwnerArray	*ownerArray = [listObject statusArrayForKey:@"UnviewedContent"];
-
-        if([[ownerArray objectWithOwner:listObject] intValue]){
-            [ownerArray setObject:[NSNumber numberWithInt:0] withOwner:listObject];
-            [[adium contactController] listObjectStatusChanged:listObject modifiedStatusKeys:[NSArray arrayWithObject:@"UnviewedContent"] silent:NO];
-        }
+		if([[listObject statusObjectForKey:@"UnviewedContent"] intValue]){
+			[listObject setStatusObject:[NSNumber numberWithInt:0] forKey:@"UnviewedContent" notify:YES];
+		}
     }
 }
 
