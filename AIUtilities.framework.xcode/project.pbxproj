@@ -4692,6 +4692,16 @@
 //4B2
 //4B3
 //4B4
+		4B0091A207BA5EAE00F0272D = {
+			children = (
+				4B84A63107B70A5000C2941D,
+				4B84A63207B70A5000C2941D,
+			);
+			isa = PBXGroup;
+			name = "Split View with thickness control";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		4B6DDA4A075A883B002E0BF4 = {
 			children = (
 				4B6DDA4D075A8879002E0BF4,
@@ -4731,6 +4741,39 @@
 		};
 		4B6DDA50075A8879002E0BF4 = {
 			fileRef = 4B6DDA4E075A8879002E0BF4;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B84A63107B70A5000C2941D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AISplitView.h;
+			path = "Frameworks/AIUtilities Framework/AISplitView.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B84A63207B70A5000C2941D = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AISplitView.m;
+			path = "Frameworks/AIUtilities Framework/AISplitView.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B84A63307B70A5000C2941D = {
+			fileRef = 4B84A63107B70A5000C2941D;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		4B84A63407B70A5000C2941D = {
+			fileRef = 4B84A63207B70A5000C2941D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5108,6 +5151,7 @@
 				4BD1EFB906D265AA00B3975E,
 				4BD1EF3006D2631300B3975E,
 				4BD1EF3606D2632300B3975E,
+				4B0091A207BA5EAE00F0272D,
 				4BD1F33006D26D0C00B3975E,
 				4B6DDA4A075A883B002E0BF4,
 				4BD1F34A06D26F0A00B3975E,
@@ -5805,6 +5849,7 @@
 				3433564E0793699400C84B15,
 				07B7AF9F0797A952003B71E1,
 				070959860798F1ED00B140BD,
+				4B84A63307B70A5000C2941D,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5967,6 +6012,7 @@
 				34D18393075FC2390075A380,
 				4BC5A5C40764F6ED0080ECF7,
 				3433564D0793699400C84B15,
+				4B84A63407B70A5000C2941D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
