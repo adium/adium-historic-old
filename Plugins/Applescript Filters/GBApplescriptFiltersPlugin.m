@@ -533,7 +533,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	if (!script){
 		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe.
 		if (!componentInstance){
-			componentInstance = [NDComponentInstance componentInstanceWithComponent:[NDComponentInstance findNextComponent]]
+			componentInstance = [[NDComponentInstance componentInstance] retain];
 			
 			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
 			[componentInstance setAppleEventSendTarget:self];
@@ -546,7 +546,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 					 forKey:@"NDAppleScriptObject"];
 	}
 	
+	static int timesExecutedScript = 0;
+	
+	NSLog(@"%i: Excecuting %@",++timesExecutedScript,[infoDict objectForKey:@"Title"]);
 	[script executeSubroutineNamed:@"substitute" argumentsArray:arguments];
+	NSLog(@"Done executing\n");
 	
 	resultDescriptor = [script resultAppleEventDescriptor];
 	
@@ -566,16 +570,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 								filterProc:(AEFilterUPP)filterProc
 {
 	NSAppleEventDescriptor	*eventDescriptor;
-				
+	
+//	NSLog(@"sendAppleEvent: %@",appleEventDescriptor);
 	if ([appleEventDescriptor eventClass] == 'syso'){
 		NSInvocation			*invocation;
 		SEL						selector;
 		
 		selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
 		
-		invocation = [NSInvocation invocationWithMethodSignature:[currentComponentInstance methodSignatureForSelector:selector]];
+		invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
 		[invocation setSelector:selector];
-		[invocation setTarget:currentComponentInstance];
+		[invocation setTarget:componentInstance];
 		
 		[invocation setArgument:&appleEventDescriptor atIndex:2];
 		[invocation setArgument:&sendMode atIndex:3];
@@ -596,7 +601,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 												   idleProc:idleProc
 												 filterProc:filterProc];
 	}
-	
+//	NSLog(@"Returning %@",eventDescriptor);
 	return(eventDescriptor);
 }
 
