@@ -143,12 +143,26 @@ static 	NSMutableDictionary	*_xtrasDict = nil;
 				
 				//If a contact list is visible and the window style has changed, update for the new window style
 				if(contactListWindowController){
-					[self closeContactList];
-					[self showContactListAndBringToFront:NO];
+#warning Evan: I really do not like this at all.  What to do?
+					//We can't close and reopen the contact list from within a preferencesChanged call, as the
+					//contact list itself is a preferences observer and will modify the array for its group as it
+					//closes... and you can't modify an array while enuemrating it, which the preferencesController is
+					//currently doing.  This isn't pretty, but it's the most efficient fix I could come up with.
+					//It has the obnoxious side effect of the contact list changing its view prefs and THEN closing and
+					//reopening with the right windowStyle.
+					[self performSelector:@selector(closeAndReopencontactList)
+							   withObject:nil
+							   afterDelay:0.00001];
 				}
 			}
 		}
 	}
+}
+
+- (void)closeAndReopencontactList
+{
+	[self closeContactList];
+	[self showContactListAndBringToFront:NO];
 }
 
 //Apply a set of preferences
