@@ -1,7 +1,7 @@
 				Adium X Version History
 				-----------------------
 				
-Version 0.53 (4/  /2004)				
+Version 0.53 (4/27/2004)				
 - Added "Novell GroupWise" protocol support
 - Added "Yahoo! Japan" protocol support
 - Added support for custom link titles (Edit->Add Link)
