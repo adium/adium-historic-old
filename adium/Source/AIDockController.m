@@ -13,12 +13,16 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-// $Id: AIDockController.m,v 1.60 2004/06/14 03:23:03 adamiser Exp $
+// $Id: AIDockController.m,v 1.61 2004/07/05 20:12:09 evands Exp $
 
 #import "AIDockController.h"
 
-#define DOCK_DEFAULT_PREFS	@"DockPrefs"
-#define ICON_DISPLAY_DELAY	0.1
+#define DOCK_DEFAULT_PREFS			@"DockPrefs"
+#define ICON_DISPLAY_DELAY			0.1
+
+#define CONTINUOUS_BOUNCE_INTERVAL  0
+#define SINGLE_BOUNCE_INTERVAL		999
+#define NO_BOUNCE_INTERVAL			1000
 
 @interface AIDockController (PRIVATE)
 - (void)_setNeedsDisplay;
@@ -45,6 +49,7 @@
     availableDynamicIconStateDict = [[NSMutableDictionary alloc] init];
     currentIconState = nil;
     currentAttentionRequest = -1;
+	currentBounceInterval = NO_BOUNCE_INTERVAL;
     animationTimer = nil;
     bounceTimer = nil;
     needsDisplay = NO;
@@ -447,16 +452,22 @@
 
 //Bouncing -------------------------------------------------------------------------------------------------------------
 #pragma mark Bouncing
+
 //Perform a bouncing behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior
 {
-    //Stop any current behavior
-    [self _stopBouncing];
-    
     //Start up the new behavior
     switch(behavior){
-        case BOUNCE_NONE: break;
-        case BOUNCE_ONCE: [self _singleBounce]; break;
+        case BOUNCE_NONE: {
+			currentBounceInterval = NO_BOUNCE_INTERVAL;
+			break;
+		}
+        case BOUNCE_ONCE: {
+			if (currentBounceInterval > SINGLE_BOUNCE_INTERVAL){
+				currentBounceInterval = SINGLE_BOUNCE_INTERVAL;
+				[self _singleBounce]; break;
+			}
+		}
         case BOUNCE_REPEAT: [self _continuousBounce]; break;
         case BOUNCE_DELAY5: [self _bounceWithInterval:5.0]; break;
         case BOUNCE_DELAY10: [self _bounceWithInterval:10.0]; break;
@@ -488,15 +499,20 @@
 }
 
 //Start a delayed bounce
-- (void)_bounceWithInterval:(double)delay
+- (void)_bounceWithInterval:(NSTimeInterval)delay
 {
-    [self _singleBounce]; // do one right away
-
-    bounceTimer = [[NSTimer scheduledTimerWithTimeInterval:delay
-                                                    target:self
-                                                  selector:@selector(bounceWithTimer:)
-                                                  userInfo:nil
-                                                   repeats:YES] retain];
+	//Bounce only if the new delay is a faster bounce than the current one
+	if (delay < currentBounceInterval){
+		[self _singleBounce]; // do one right away
+		
+		currentBounceInterval = delay;
+		
+		bounceTimer = [[NSTimer scheduledTimerWithTimeInterval:delay
+														target:self
+													  selector:@selector(bounceWithTimer:)
+													  userInfo:nil
+													   repeats:YES] retain];
+	}
 }
 
 //Activated by the time after each delay
@@ -506,7 +522,7 @@
     [self _singleBounce];
 }
 
-//Bounce once
+//Bounce once via NSApp's NSInformationalRequest (also used by the timer to perform a single bounce)
 - (void)_singleBounce
 {
     if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
@@ -514,12 +530,15 @@
     }
 }
 
-//Bounce continuously
+//Bounce continuously via NSApp's NSCriticalRequest
 - (void)_continuousBounce
 {
-    if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
-        currentAttentionRequest = [NSApp requestUserAttention:NSCriticalRequest];
-    }
+	if (CONTINUOUS_BOUNCE_INTERVAL < currentBounceInterval){
+		currentBounceInterval = CONTINUOUS_BOUNCE_INTERVAL;
+		if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
+			currentAttentionRequest = [NSApp requestUserAttention:NSCriticalRequest];
+		}
+	}
 }
 
 //Stop bouncing
@@ -537,6 +556,8 @@
         }
         currentAttentionRequest = -1;
     }
+	
+	currentBounceInterval = NO_BOUNCE_INTERVAL;
 }
 
 //
