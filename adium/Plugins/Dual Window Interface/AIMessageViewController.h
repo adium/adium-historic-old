@@ -15,44 +15,30 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMessageSendingTextView, AIMiniToolbar, AIContactHandle, AIAdium, AIColoredBoxView, AIAccount, AICompletingTextField, AISendingTextView;
-@protocol AITextEntryView, AIMessageView, AITabHoldingInterface;
+@class AIMiniToolbar, AIContactHandle, AIAdium, AIAccount, AISendingTextView;
+@protocol AIContainerInterface, AIAccountSelectionViewDelegate;
 
-@interface AIMessageViewController : NSObject <AIMessageView> {
+@interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
     IBOutlet	NSView			*view_contents;
-
-    //Present in nib
     IBOutlet	NSScrollView		*scrollView_outgoingView;
-    IBOutlet	AIColoredBoxView	*view_account;
-    IBOutlet	NSPopUpButton		*popUp_accounts;
-    
-    //Disposable
     IBOutlet	AISendingTextView	*textView_outgoing;
-    IBOutlet	AIColoredBoxView	*view_handle;
-    IBOutlet	AICompletingTextField	*textField_handle;
-    IBOutlet	AIColoredBoxView	*view_buttons;
+    IBOutlet	NSScrollView		*scrollView_messages;
+    IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
-    //Manually created
-    NSScrollView			*scrollView_messages;
     NSView				*view_messages;
-    AIMiniToolbar			*toolbar_bottom;
+    NSView				*view_accountSelection;
 
     //Variables
     AIAdium			*owner;
-    id <AITabHoldingInterface> 	interface;
+    id <AIContainerInterface> 	interface;
     AIContactHandle		*handle;
     AIAccount			*account;
-    BOOL			accountMenuVisible;
 }
 
-+ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
++ (AIMessageViewController *)messageViewControllerWithHandle:(AIContactHandle *)inHandle account:(AIAccount *)inAccount content:(NSAttributedString *)inContent owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
 - (IBAction)sendMessage:(id)sender;
-- (AIContactHandle *)handle;
-- (NSAttributedString *)title;
 - (NSView *)view;
-- (IBAction)setFocusOnEnterView:(id)sender;
-- (IBAction)selectNewAccount:(id)sender;
-- (IBAction)cancel:(id)sender;
-- (void)setAccountMenuVisible:(BOOL)visible;
+- (AIContactHandle *)handle;
+- (void)setAccountSelectionMenuVisible:(BOOL)visible;
 
 @end

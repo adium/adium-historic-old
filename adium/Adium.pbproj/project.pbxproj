@@ -756,6 +756,58 @@
 			settings = {
 			};
 		};
+		4B25494603F6A32700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIAccountSelectionView.h;
+			path = "Plugins/Dual Window Interface/AIAccountSelectionView.h";
+			refType = 4;
+		};
+		4B25494703F6A32700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AIAccountSelectionView.m;
+			path = "Plugins/Dual Window Interface/AIAccountSelectionView.m";
+			refType = 4;
+		};
+		4B25494803F6A32700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AINewMessagePrompt.h;
+			path = "Plugins/Dual Window Interface/AINewMessagePrompt.h";
+			refType = 4;
+		};
+		4B25494903F6A32700A8010A = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			name = AINewMessagePrompt.m;
+			path = "Plugins/Dual Window Interface/AINewMessagePrompt.m";
+			refType = 4;
+		};
+		4B25494A03F6A32700A8010A = {
+			fileRef = 4B25494603F6A32700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25494B03F6A32700A8010A = {
+			fileRef = 4B25494703F6A32700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25494C03F6A32700A8010A = {
+			fileRef = 4B25494803F6A32700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B25494D03F6A32700A8010A = {
+			fileRef = 4B25494903F6A32700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B28907503C1D14200A8010A = {
 			children = (
 				4B28909B03C1D2F900A8010A,
@@ -2816,6 +2868,41 @@
 		};
 		4BCDEB4403D4DC9700A8010A = {
 			fileRef = 4BCDEB4203D4DC9700A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCFEC5803F5718700A8010A = {
+			children = (
+				4B25494703F6A32700A8010A,
+				4BCFEF4C03F59F2800A8010A,
+				4B25494903F6A32700A8010A,
+				4BCFEC5903F574A400A8010A,
+			);
+			isa = PBXGroup;
+			name = Other;
+			refType = 4;
+		};
+		4BCFEC5903F574A400A8010A = {
+			isa = PBXFileReference;
+			name = NewMessagePrompt.nib;
+			path = "Plugins/Dual Window Interface/NewMessagePrompt.nib";
+			refType = 4;
+		};
+		4BCFEC5A03F574A400A8010A = {
+			fileRef = 4BCFEC5903F574A400A8010A;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BCFEF4C03F59F2800A8010A = {
+			isa = PBXFileReference;
+			name = AccountSelectionView.nib;
+			path = "Plugins/Dual Window Interface/AccountSelectionView.nib";
+			refType = 4;
+		};
+		4BCFEF4D03F59F2800A8010A = {
+			fileRef = 4BCFEF4C03F59F2800A8010A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5901,11 +5988,11 @@
 		};
 		F549EF1C036B1A0A01A8010A = {
 			children = (
-				F5793982033E756E01A8010A,
-				F570A5CE03704D3D01A8010A,
 				4BACB70203C8CB5E00A8010A,
-				F570A60503704E7201A8010A,
+				F570A5CE03704D3D01A8010A,
 				F5793984033E756E01A8010A,
+				F5793982033E756E01A8010A,
+				F570A60503704E7201A8010A,
 			);
 			isa = PBXGroup;
 			name = Messages;
@@ -6729,6 +6816,7 @@
 				F5793980033E756E01A8010A,
 				F549EF1B036B1A0801A8010A,
 				F549EF1C036B1A0A01A8010A,
+				4BCFEC5803F5718700A8010A,
 				4B64797803DC29B200A8010A,
 			);
 			isa = PBXGroup;
@@ -6744,6 +6832,8 @@
 				F5793989033E756E01A8010A,
 				F570A5D103704D3D01A8010A,
 				4BACB70303C8CB5E00A8010A,
+				4B25494A03F6A32700A8010A,
+				4B25494C03F6A32700A8010A,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6755,6 +6845,8 @@
 				F579398C033E756E01A8010A,
 				F570A60603704E7201A8010A,
 				4B64797903DC29B200A8010A,
+				4BCFEC5A03F574A400A8010A,
+				4BCFEF4D03F59F2800A8010A,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6767,6 +6859,8 @@
 				F579398A033E756E01A8010A,
 				F570A5D203704D3D01A8010A,
 				4BACB70403C8CB5E00A8010A,
+				4B25494B03F6A32700A8010A,
+				4B25494D03F6A32700A8010A,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8689,6 +8783,8 @@
 				F5793981033E756E01A8010A,
 				F570A5CD03704D3D01A8010A,
 				4BACB70103C8CB5E00A8010A,
+				4B25494603F6A32700A8010A,
+				4B25494803F6A32700A8010A,
 			);
 			isa = PBXGroup;
 			name = Headers;

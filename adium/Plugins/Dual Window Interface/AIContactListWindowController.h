@@ -16,24 +16,25 @@
 #import <Cocoa/Cocoa.h>
 
 @class AIAdium, AIContactGroup, AIMiniToolbar;
-@protocol AIContactListViewController;
+@protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 @protocol AIContactListCleanup <NSObject>
 - (void)unloadContactListWindow;
 @end
 
-@interface AIContactListWindowController : NSWindowController {
+@interface AIContactListWindowController : NSWindowController <AIInterfaceContainer> {
     IBOutlet	NSScrollView		*scrollView_contactList;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     id <AIContactListViewController>	contactListViewController;
     NSView				*contactListView;
 
-    id <AIContactListCleanup>		interface;
+    id <AIContainerInterface>		interface;
     AIAdium				*owner;
 }
 
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner;
-- (IBAction)closeWindow:(id)sender;
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
+- (void)makeActive:(id)sender;
+- (void)close:(id)sender;
 
 @end

@@ -20,39 +20,21 @@
 #define AIMessageWindow_SelectedControllerChanged 	@"AIMessageWindow_SelectedControllerChanged"
 
 @class AIAdium, AIContactHandle, AIMessageSendingTextView, AIMiniToolbar, AIMessageViewController;
-
-@protocol AIMessageView
-- (AIContactHandle *)handle;	//Return the handle associated with this tab
-- (NSAttributedString *)title;	//Return an alternate title (if handle is nil)
-- (NSView *)view;		//Return a view, the tab contents
-@end
-
-@protocol AITabHoldingInterface <NSObject>
-- (void)closeMessageViewController:(id <AIMessageView>)controller;
-@end
-
+@protocol AIContainerInterface, AIInterfaceContainer;
 
 @interface AIMessageWindowController : NSWindowController {
     IBOutlet	NSTabView	*tabView_messages;
 
-    NSMutableArray		*messageViewArray;
-
     AIAdium			*owner;
-    id <AITabHoldingInterface> 	interface;
-    
+    id <AIContainerInterface> 	interface;
 }
 
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
-- (void)selectMessageViewController:(id <AIMessageView>)inController;
-- (void)addMessageViewController:(id <AIMessageView>)inController;
-- (BOOL)removeMessageViewController:(id <AIMessageView>)inController;
-- (int)count;
-- (NSArray *)messageViewArray;
++ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
 - (IBAction)closeWindow:(id)sender;
-- (id <AIMessageView>)selectedMessageView;
-- (BOOL)selectNextController;
-- (BOOL)selectPreviousController;
-- (void)selectFirstController;
-- (void)selectLastController;
+- (NSArray *)messageContainerArray;
+- (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer;
+- (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
+- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
+- (BOOL)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem;
 
 @end

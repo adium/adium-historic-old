@@ -1,0 +1,13 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {selectNewAccount = id; }; 
+            CLASS = AIAccountSelectionView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; "popUp_accounts" = NSPopUpButton; "view_contents" = NSView; }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

@@ -15,7 +15,9 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define AITabViewDidChangeOrderOfTabViewItemsNotification	@"AITabViewDidChangeOrderOfTabViewItemsNotification"
+#define AITabView_DidChangeOrderOfItems		@"AITabView_DidChangeOrderOfItems"
+#define AITabView_DidChangeSelectedItem		@"AITabView_DidChangeSelectedItem"
+#define AITabView_DidChangeNumberOfItems	@"AITabView_DidChangeNumberOfItems"
 
 @class AICustomTab;
 

@@ -16,27 +16,26 @@
 #import <AIUtilities/AIUtilities.h>
 #import <Adium/Adium.h>
 #import "AIMessageWindowController.h"
-#import "AIMessageTabViewItem.h"
+#import "AIDualWindowInterfacePlugin.h"
 #import "AIAdium.h"
 
 #define	MESSAGE_WINDOW_NIB		@"MessageWindow"		//Filename of the message window nib
 #define KEY_DUAL_MESSAGE_WINDOW_FRAME	@"Dual Message Window Frame"
 
-// The tabbed window that contains messages
+//The tabbed window that contains messages
 
 @interface AIMessageWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface;
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface;
 - (void)dealloc;
-- (void)tabViewDidChangeOrderOfTabViewItems:(NSNotification *)notification;
-- (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
 - (BOOL)shouldCascadeWindows;
+- (void)windowDidLoad;
 @end
 
 @implementation AIMessageWindowController
 
 //Create a new message window controller
-+ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface
++ (AIMessageWindowController *)messageWindowControllerWithOwner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
 {
     return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB owner:inOwner interface:inInterface] autorelease]);
 }
@@ -49,178 +48,70 @@
     }
 }
 
-
-//Controller selection ------------------------------------------------------------------
-//select a message controller
-- (void)selectMessageViewController:(id <AIMessageView>)inController
+//Return the contained message tabs
+- (NSArray *)messageContainerArray
 {
-    NSTabViewItem	*tabViewItem = [tabView_messages tabViewItemWithIdentifier:inController];
+    return([tabView_messages tabViewItems]);
+}
 
-    if(tabViewItem){
-        [tabView_messages selectTabViewItem:tabViewItem];
+//Returns the selected container
+- (NSTabViewItem <AIInterfaceContainer> *)selectedTabViewItemContainer
+{
+    return([tabView_messages selectedTabViewItem]);
+}
 
-        [[owner notificationCenter] postNotificationName:AIMessageWindow_SelectedControllerChanged
-                                                                        object:self
-                                                                      userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inController,@"Controller",nil]];
+//Select a container
+- (void)selectTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
+{
+    [self showWindow:nil];
+
+    if(inTabViewItem){
+        [tabView_messages selectTabViewItem:inTabViewItem];
     }
 }
 
-//Select the next message controller.
-//If the current selection is last, NO is returned, and the selected tab is not changed.  Otherwise returns YES
-- (BOOL)selectNextController
+//Add a tab view item container (without changing the current selection)
+- (void)addTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
-    BOOL	selectionChanged;
-    
-    if(selectedIndex < ([tabView_messages numberOfTabViewItems] - 1)){ //Select the next tab
-        [tabView_messages selectNextTabViewItem:nil];
-        selectionChanged = YES;
-    }else{ //were at the last tab, return NO
-        selectionChanged = NO;        
-    }
-
-    return(selectionChanged);
+    [self showWindow:nil];
+    [tabView_messages addTabViewItem:inTabViewItem];
 }
 
-//Select the previous message controller.
-//If the current selection is first, NO is returned, and the selected tab is not changed.  Otherwise returns YES
-- (BOOL)selectPreviousController
+//Remove a tab view item container
+- (BOOL)removeTabViewItemContainer:(NSTabViewItem <AIInterfaceContainer> *)inTabViewItem
 {
-    int		selectedIndex = [tabView_messages indexOfTabViewItem:[tabView_messages selectedTabViewItem]];
-    BOOL	selectionChanged;
+    [tabView_messages removeTabViewItem:inTabViewItem];
+    [interface containerDidClose:inTabViewItem];
 
-    if(selectedIndex > 0){ //Select the previous tab
-        [tabView_messages selectPreviousTabViewItem:nil];
-        selectionChanged = YES;
-    }else{ //were at the first tab, return NO
-        selectionChanged = NO;
-    }
-
-    return(selectionChanged);
+    return([tabView_messages numberOfTabViewItems] == 0); //Return YES if our window is empty
 }
-
-//Select the first message controller
-- (void)selectFirstController
-{
-    [tabView_messages selectTabViewItemAtIndex:0];
-}
-
-//Select the last message controller
-- (void)selectLastController
-{
-    [tabView_messages selectTabViewItemAtIndex:[tabView_messages numberOfTabViewItems]-1 ];
-}
-
-//Returns the selected message controller
-- (id <AIMessageView>)selectedMessageView
-{
-    return([[tabView_messages selectedTabViewItem] identifier]);
-}
-
-
-
-//Add/Remove/Access controllers --------------------------------------------------------------------
-//add a message controller
-- (void)addMessageViewController:(id <AIMessageView>)inController
-{
-    AIMessageTabViewItem	*tabViewItem;
-    AIContactHandle		*handle;
-
-    //Make sure our window is loaded
-    [self window];
-    
-    //Setup the view
-    tabViewItem = [[[AIMessageTabViewItem alloc] initWithIdentifier:inController] autorelease];
-    [tabViewItem setView:[inController view]];
-    
-    handle = [inController handle];
-    if(handle){
-        [tabViewItem setLabel:[handle displayName]];
-    }else{
-        [tabViewItem setLabel:[[inController title] string]];
-    }
-
-    //Add the Controller
-    [tabView_messages addTabViewItem:tabViewItem];
-    [messageViewArray addObject:inController];
-    [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllersChanged
-                                              object:self
-                                            userInfo:nil];
-}
-
-//remove a message controller
-- (BOOL)removeMessageViewController:(id <AIMessageView>)inController
-{
-    NSTabViewItem	*tabViewItem;
-
-    tabViewItem = [tabView_messages tabViewItemWithIdentifier:inController];
-    if(tabViewItem){
-        //Remove the controller
-        [tabView_messages removeTabViewItem:tabViewItem];
-        [messageViewArray removeObject:inController];
-        [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllersChanged object:self userInfo:nil];
-    }
-
-    return([messageViewArray count] == 0); //Return YES if that was our last controller    
-}
-
-//number of contained message controllers
-- (int)count
-{
-    return([messageViewArray count]);
-}
-
-//return the contained message controllers
-- (NSArray *)messageViewArray
-{
-    return(messageViewArray);
-}
-
-
-
 
 
 //Private -----------------------------------------------------------------------------
-- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AITabHoldingInterface>)inInterface
+//init
+- (id)initWithWindowNibName:(NSString *)windowNibName owner:(id)inOwner interface:(id <AIContainerInterface>)inInterface
 {
     NSParameterAssert(windowNibName != nil && [windowNibName length] != 0);
 
     owner = [inOwner retain];
     interface = [inInterface retain];
-    messageViewArray = [[NSMutableArray alloc] init];
 
     [super initWithWindowNibName:windowNibName owner:self];
+    [self window];	//Load our window
         
     return(self);
 }
 
+//dealloc
 - (void)dealloc
 {
     [owner release];
     [interface release];
-    [messageViewArray release];
 
     [super dealloc];
 }
 
-- (void)tabViewDidChangeOrderOfTabViewItems:(NSNotification *)notification
-{
-    NSEnumerator 	*enumerator;
-    NSTabViewItem	*tabViewItem;
-
-    //Rebuild / Reorder our array
-    [messageViewArray release]; messageViewArray = [[NSMutableArray alloc] init];
-    enumerator = [[tabView_messages tabViewItems] objectEnumerator];
-    while((tabViewItem = [enumerator nextObject])){
-        [messageViewArray addObject:[tabViewItem identifier]];
-    }
-    
-    //Post a 'Controller order changed' notification so the interface can update its window menu
-    [[owner notificationCenter] postNotificationName:AIMessageWindow_ControllerOrderChanged
-                                              object:self
-                                            userInfo:nil];
-}
-
+//Setup our window before it is displayed
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
@@ -240,13 +131,14 @@
     }
 
     //observe
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeOrderOfTabViewItems:) name:AITabViewDidChangeOrderOfTabViewItemsNotification object:tabView_messages];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeOrderOfItems:) name:AITabView_DidChangeOrderOfItems object:tabView_messages];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(tabViewDidChangeSelectedItem:) name:AITabView_DidChangeSelectedItem object:tabView_messages];
 }
 
 //called as the window closes
 - (BOOL)windowShouldClose:(id)sender
 {
-    if([messageViewArray count]){ //Only close the window for real if it's empty
+    if([tabView_messages numberOfTabViewItems] == 0){ //Only close the window for real if it's empty
         //Save the window position
         [[owner preferenceController] setPreference:[[self window] stringWithSavedFrame]
                                              forKey:KEY_DUAL_MESSAGE_WINDOW_FRAME
@@ -256,9 +148,37 @@
     return(YES);
 }
 
+//Prevent the system from moving our window around
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+    [interface containerDidBecomeActive:(NSTabViewItem <AIInterfaceContainer> *)[tabView_messages selectedTabViewItem]];
+}
+
+- (void)windowDidResignMain:(NSNotification *)notification
+{
+    [interface containerDidBecomeActive:nil];
+}
+
+
+//Notifications ---------------------------------------------------------------
+//We relay these notifications from the tab view to the interface
+- (void)tabViewDidChangeOrderOfItems:(NSNotification *)notification
+{
+    [interface containerOrderDidChange];
+}
+
+- (void)tabViewDidChangeSelectedItem:(NSNotification *)notification
+{
+    id <AIInterfaceContainer>	container = [[notification userInfo] objectForKey:@"TabViewItem"];
+
+    if(container != nil){
+        [interface containerDidBecomeActive:container];
+    }
 }
 
 @end

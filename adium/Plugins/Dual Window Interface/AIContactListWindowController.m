@@ -17,13 +17,14 @@
 #import <Adium/Adium.h>
 #import "AIContactListWindowController.h"
 #import "AIAdium.h"
+#import "AIDualWindowInterfacePlugin.h"
 
 #define CONTACT_LIST_WINDOW_NIB			@"ContactListWindow"		//Filename of the contact list window nib
 #define CONTACT_LIST_TOOLBAR			@"ContactList"			//ID of the contact list toolbar
 #define	KEY_DUAL_CONTACT_LIST_WINDOW_FRAME	@"Dual Contact List Frame"
 
 @interface AIContactListWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner;
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface owner:(id)inOwner;
 - (void)contactSelectionChanged:(NSNotification *)notification;
 - (void)windowDidLoad;
 - (BOOL)windowShouldClose:(id)sender;
@@ -32,13 +33,19 @@
 @implementation AIContactListWindowController
 
 //Return a new contact list window controller
-+ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner
++ (AIContactListWindowController *)contactListWindowControllerForInterface:(id <AIContainerInterface>)inInterface owner:(id)inOwner
 {
     return([[[self alloc] initWithWindowNibName:CONTACT_LIST_WINDOW_NIB interface:inInterface owner:inOwner] autorelease]);
 }
 
-//Closes this window
-- (IBAction)closeWindow:(id)sender
+//Make this container active
+- (void)makeActive:(id)sender
+{
+    [self showWindow:nil];
+}
+
+//Close this container
+- (void)close:(id)sender
 {
     if([self windowShouldClose:nil]){
         [[self window] close];
@@ -48,7 +55,7 @@
 
 //Private ----------------------------------------------------------------
 //init the contact list window controller
-- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContactListCleanup>)inInterface owner:(id)inOwner
+- (id)initWithWindowNibName:(NSString *)windowNibName interface:(id <AIContainerInterface>)inInterface owner:(id)inOwner
 {
     [super initWithWindowNibName:windowNibName owner:self];
 
@@ -119,7 +126,7 @@
                                           group:PREF_GROUP_WINDOW_POSITIONS];
 
     //Tell the interface to unload our window
-    [interface unloadContactListWindow];
+    [interface containerDidClose:self];
     
     return(YES);
 }
@@ -127,6 +134,16 @@
 - (BOOL)shouldCascadeWindows
 {
     return(NO);
+}
+
+- (void)windowDidBecomeMain:(NSNotification *)notification
+{
+    [interface containerDidBecomeActive:self];
+}
+
+- (void)windowDidResignMain:(NSNotification *)notification
+{
+    [interface containerDidBecomeActive:nil];
 }
 
 @end

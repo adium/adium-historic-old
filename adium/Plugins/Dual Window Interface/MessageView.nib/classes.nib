@@ -8,23 +8,16 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {
-            ACTIONS = {
-                cancel = id; 
-                selectNewAccount = id; 
-                sendMessage = id; 
-                setFocusOnEnterView = id; 
-            }; 
+            ACTIONS = {sendMessage = id; }; 
             CLASS = AIMessageViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "popUp_accounts" = NSPopUpButton; 
+                interface = id; 
+                "scrollView_messages" = NSScrollView; 
                 "scrollView_outgoingView" = NSScrollView; 
-                "textField_handle" = AICompletingTextField; 
                 "textView_outgoing" = AISendingTextView; 
-                "view_account" = AIColoredBoxView; 
-                "view_buttons" = AIColoredBoxView; 
+                "toolbar_bottom" = AIMiniToolbar; 
                 "view_contents" = NSView; 
-                "view_handle" = AIColoredBoxView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 
