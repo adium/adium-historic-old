@@ -13,6 +13,8 @@
 
 @interface AIWebKitMessageViewController (PRIVATE)
 - (id)initForChat:(AIChat *)inChat;
+- (void)preferencesChanged:(NSNotification *)notification;
+- (void)_flushPreferenceCache;
 - (void)_addContentMessage:(AIContentMessage *)content similar:(BOOL)contentIsSimilar;
 - (void)_addContentStatus:(AIContentStatus *)content similar:(BOOL)contentIsSimilar;
 - (NSMutableString *)fillKeywords:(NSMutableString *)inString forContent:(AIContentObject *)content;
@@ -35,6 +37,8 @@
     [super init];
     previousContent = nil;
 	newContentTimer = nil;
+	timeStampFormat = nil;
+	timeStampFormatter = nil;
 	webViewIsReady = NO;
 	newContent = [[NSMutableArray alloc] init];
 	
@@ -53,8 +57,12 @@
 	[webView setPolicyDelegate:self];
 	[webView setUIDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
-//	[[[webView mainFrame] frameView] setAllowsHorizontalScrolling:YES];
 
+	
+	//Observe preference changes and set our initial preferences
+	[[adium notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
+	[self preferencesChanged:nil];
+		
 	//We'd load this information from a file or plist or something
 	NSString	*stylePath = [[[NSBundle bundleForClass:[self class]] pathForResource:@"template" 
 																			   ofType:@"html"] stringByDeletingLastPathComponent];
@@ -70,14 +78,6 @@
     
 	//Feed it to the webview
 	[[webView mainFrame] loadHTMLString:templateHTML baseURL:nil];
-	
-	//Time Stamps
-#define PREF_GROUP_STANDARD_MESSAGE_DISPLAY	@"Message Display"
-#define	KEY_SMV_TIME_STAMP_FORMAT		@"Time Stamp"
-	
-	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-	timeStampFormat = [[prefDict objectForKey:KEY_SMV_TIME_STAMP_FORMAT] retain];
-	timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];
 	
     return(self);
 }
@@ -101,6 +101,25 @@
 - (NSScrollView *)messageScrollView
 {
 	return([[[webView mainFrame] frameView] frameScrollView]);
+}
+
+- (void)preferencesChanged:(NSNotification *)notification
+{
+    if(notification == nil || [(NSString *)[[notification userInfo] objectForKey:@"Group"] compare:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY] == 0){
+		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
+		//Release the old preference cache
+		[self _flushPreferenceCache];
+
+		timeStampFormat = [[prefDict objectForKey:KEY_WEBKIT_TIME_STAMP_FORMAT] retain];
+		timeStampFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeStampFormat allowNaturalLanguage:NO];	
+	}
+}
+
+- (void)_flushPreferenceCache
+{
+	[timeStampFormat release];	
+	[timeStampFormatter release];
 }
 
 - (void)contentObjectAdded:(NSNotification *)notification
