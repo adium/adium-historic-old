@@ -1,4 +1,4 @@
-$Id: ToDoList.txt,v 1.83 2004/05/01 16:41:30 adamiser Exp $
+$Id: ToDoList.txt,v 1.84 2004/05/02 04:17:00 adamiser Exp $
 
 
 Legend
@@ -18,7 +18,7 @@ Bugs
    - (Adam: This is probably the keychain access, I'm not sure we can speed this up)
 
 * Only one password request dialog is allowed at a time.  This limitation causes issues for users with multiple accounts who don't save passwords.
-
+* Our 'new message' toolbar button is gooooone gone gone gone gone
 * We have issues with preventing the user from sending messages when they might actually be able to send (invisible AIM users, after we get disconnected?)
 * Multi-user chat (MSN) - sent messages appear twice.
 * MSN freezes in glib (g_ascii_strncasecmp) when sending a &
