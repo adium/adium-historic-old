@@ -1,6 +1,6 @@
 //
 //  NEHGameController.h
-//  Adium XCode
+//  Adium
 //
 //  Created by Nelson El-Hage on Sun Jan 18 2004.
 //

@@ -1,6 +1,6 @@
 //
 //  NEHGamePlugin.m
-//  Adium XCode
+//  Adium
 //
 //  Created by Nelson Elhage on Sun Jan 18 2004.
 //
