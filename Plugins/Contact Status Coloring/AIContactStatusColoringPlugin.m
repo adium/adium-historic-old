@@ -62,7 +62,8 @@
     onlineLabelColor = nil;
     idleAndAwayLabelColor = nil;
 	offlineLabelColor = nil;
-
+	
+	
     //Setup our preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_LIST_THEME];
 //    preferences = [[AIContactStatusColoringPreferences preferencePane] retain];
@@ -121,6 +122,7 @@
     NSColor			*color = nil, *invertedColor = nil, *labelColor = nil;
     int				unviewedContent, away;
     int				idle;
+	float			opacity = 1.0;
 
     //Prefetch the value for unviewed content, we need it multiple times below
     unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
@@ -140,7 +142,9 @@
 							  ![inObject integerStatusObjectForKey:@"Signed Off"])){
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
-			labelColor = offlineLabelColor;		
+			labelColor = offlineLabelColor;
+			opacity = offlineOpacity;
+			
 		}else if(signedOffEnabled && ([inObject integerStatusObjectForKey:@"Signed Off"])){
             color = signedOffColor;
             invertedColor = signedOffInvertedColor;
@@ -186,10 +190,11 @@
         labelColor = onlineLabelColor;
     }
 	
-    //Apply the color
+    //Apply the color and opacity
     [[inObject displayArrayForKey:@"Text Color"] setObject:color withOwner:self];
     [[inObject displayArrayForKey:@"Inverted Text Color"] setObject:invertedColor withOwner:self];
     [[inObject displayArrayForKey:@"Label Color"] setObject:labelColor withOwner:self];
+	[[inObject displayArrayForKey:@"Image Opacity"] setObject:[NSNumber numberWithFloat:opacity] withOwner:self];
 }
 
 //Flash all handles with unviewed content
@@ -271,6 +276,7 @@
 		
         //
         alpha = 1.0;
+		offlineOpacity = [[prefDict objectForKey:KEY_LIST_THEME_IMAGE_OPACITY] floatValue];
 		
 		//Cache the preference values
         signedOffColor = [[[prefDict objectForKey:KEY_SIGNED_OFF_COLOR] representedColor] retain];

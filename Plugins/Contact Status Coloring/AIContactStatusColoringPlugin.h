@@ -99,6 +99,7 @@
 	NSColor		*offlineLabelColor;
 	
     float		alpha;
+	float		offlineOpacity;
 }
 
 @end
