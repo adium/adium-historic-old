@@ -376,6 +376,7 @@
 				4947F5CB0655E85200B791E5,
 				BFEBDBFF0669029800CBF845,
 				52C623DA06697AC00006C387,
+				7ECB106706A4D1AD00812D5F,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -437,6 +438,7 @@
 				346C9C5306004525000F5A8A,
 				4947F5BC0655E85200B791E5,
 				52C623D906697AC00006C387,
+				7ECB106606A4D1AD00812D5F,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -15389,6 +15391,7 @@
 		};
 		4BD672C706001B560049CAF7 = {
 			children = (
+				7ECB106D06A4D21700812D5F,
 				B782F088058BB60B00AF4BBA,
 				B7AE664D0465778E0051E914,
 			);
@@ -20537,6 +20540,12 @@
 			settings = {
 			};
 		};
+		7E7D5DE806A4DD4F00ADD4E1 = {
+			fileRef = 7ECB106806A4D1AD00812D5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		7E824CCD06387FAF00813072 = {
 			children = (
 				7E824CDB06387FAF00813072,
@@ -20721,6 +20730,167 @@
 		};
 		7EC35CAE066B0CBA002129B7 = {
 			fileRef = 7EC35CAC066B0CB9002129B7;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7ECB106206A4D1AD00812D5F = {
+			buildActionMask = 2147483647;
+			files = (
+				7ECB107206A4D2FE00812D5F,
+			);
+			isa = PBXHeadersBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ECB106306A4D1AD00812D5F = {
+			buildActionMask = 2147483647;
+			files = (
+				7E7D5DE806A4DD4F00ADD4E1,
+			);
+			isa = PBXResourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ECB106406A4D1AD00812D5F = {
+			buildActionMask = 2147483647;
+			files = (
+				7ECB107306A4D2FE00812D5F,
+			);
+			isa = PBXSourcesBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ECB106506A4D1AD00812D5F = {
+			buildActionMask = 2147483647;
+			files = (
+				7ECB108C06A4D32B00812D5F,
+				7ECB108D06A4D32B00812D5F,
+			);
+			isa = PBXFrameworksBuildPhase;
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		7ECB106606A4D1AD00812D5F = {
+			buildPhases = (
+				7ECB106206A4D1AD00812D5F,
+				7ECB106306A4D1AD00812D5F,
+				7ECB106406A4D1AD00812D5F,
+				7ECB106506A4D1AD00812D5F,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = Adium.pch;
+				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
+				GCC_WARN_UNKNOWN_PRAGMAS = NO;
+				INFOPLIST_FILE = "Plists/AOLamerKiller-Info.plist";
+				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "AOLamer Killer";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost";
+				WRAPPER_EXTENSION = AdiumPlugin;
+			};
+			dependencies = (
+			);
+			isa = PBXNativeTarget;
+			name = "AOLamer Killer";
+			productName = "AOLamer Killer";
+			productReference = 7ECB106706A4D1AD00812D5F;
+			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
+<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
+<plist version=\"1.0\">
+<dict>
+	<key>CFBundleDevelopmentRegion</key>
+	<string>English</string>
+	<key>CFBundleExecutable</key>
+	<string>AOLamer Killer</string>
+	<key>CFBundleGetInfoString</key>
+	<string></string>
+	<key>CFBundleIconFile</key>
+	<string></string>
+	<key>CFBundleIdentifier</key>
+	<string>com.MySoftwareCompany.AOLamer_Killer</string>
+	<key>CFBundleInfoDictionaryVersion</key>
+	<string>6.0</string>
+	<key>CFBundlePackageType</key>
+	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string></string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
+	<key>CFBundleVersion</key>
+	<string>1.0.0d1</string>
+</dict>
+</plist>
+";
+			productType = "com.apple.product-type.bundle";
+		};
+		7ECB106706A4D1AD00812D5F = {
+			explicitFileType = wrapper.cfbundle;
+			includeInIndex = 0;
+			isa = PBXFileReference;
+			path = "AOLamer Killer.AdiumPlugin";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		7ECB106806A4D1AD00812D5F = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.xml;
+			name = "AOLamerKiller-Info.plist";
+			path = "Plists/AOLamerKiller-Info.plist";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7ECB106D06A4D21700812D5F = {
+			children = (
+				7ECB106806A4D1AD00812D5F,
+				7ECB107006A4D2FE00812D5F,
+				7ECB107106A4D2FE00812D5F,
+			);
+			isa = PBXGroup;
+			name = AOLamer;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7ECB107006A4D2FE00812D5F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHAOLamerKillerPlugin.h;
+			path = Plugins/AOLamerKiller/SHAOLamerKillerPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7ECB107106A4D2FE00812D5F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHAOLamerKillerPlugin.m;
+			path = Plugins/AOLamerKiller/SHAOLamerKillerPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		7ECB107206A4D2FE00812D5F = {
+			fileRef = 7ECB107006A4D2FE00812D5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7ECB107306A4D2FE00812D5F = {
+			fileRef = 7ECB107106A4D2FE00812D5F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7ECB108C06A4D32B00812D5F = {
+			fileRef = 34BD9DE105314751000AB133;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		7ECB108D06A4D32B00812D5F = {
+			fileRef = 34BD9E9305314755000AB133;
 			isa = PBXBuildFile;
 			settings = {
 			};
