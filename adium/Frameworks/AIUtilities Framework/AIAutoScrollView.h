@@ -10,10 +10,15 @@
 
 
 @interface AIAutoScrollView : NSScrollView {
-//    BOOL	autoScroll;
     NSRect	oldDocumentFrame;
+    
+    BOOL	autoScrollToBottom;
+    BOOL	autoHideScrollBar;
 }
 
+- (void)setAutoHideScrollBar:(BOOL)inValue;
+- (void)setAutoScrollToBottom:(BOOL)inValue;
 - (void)scrollToBottom;
+- (void)setCorrectScrollbarVisibility;
 
 @end

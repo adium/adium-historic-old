@@ -20,8 +20,6 @@
 - (void)removeObject:(AIEditorListObject *)inObject;
 - (NSEnumerator *)objectEnumerator;
 - (unsigned)count;
-- (void)setExpanded:(BOOL)inExpanded;
-- (BOOL)isExpanded;
 - (void)sort;
 
 @end

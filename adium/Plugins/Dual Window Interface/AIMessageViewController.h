@@ -15,14 +15,14 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIMiniToolbar, AIListContact, AIAdium, AIAccount, AISendingTextView, AIHandle;
+@class AIMiniToolbar, AIListContact, AIAdium, AIAccount, AISendingTextView, AIHandle, AIAutoScrollView;
 @protocol AIContainerInterface, AIAccountSelectionViewDelegate;
 
 @interface AIMessageViewController : NSObject <AIAccountSelectionViewDelegate> {
     IBOutlet	NSView			*view_contents;
     IBOutlet	NSScrollView		*scrollView_outgoingView;
     IBOutlet	AISendingTextView	*textView_outgoing;
-    IBOutlet	NSScrollView		*scrollView_messages;
+    IBOutlet	AIAutoScrollView	*scrollView_messages;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     NSView				*view_messages;

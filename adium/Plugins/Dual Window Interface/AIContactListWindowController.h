@@ -15,7 +15,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium, AIMiniToolbar;
+@class AIAdium, AIMiniToolbar, AIAutoScrollView;
 @protocol AIContactListViewController, AIInterfaceContainer, AIContainerInterface;
 
 @protocol AIContactListCleanup <NSObject>
@@ -23,7 +23,7 @@
 @end
 
 @interface AIContactListWindowController : NSWindowController <AIInterfaceContainer> {
-    IBOutlet	NSScrollView		*scrollView_contactList;
+    IBOutlet	AIAutoScrollView	*scrollView_contactList;
     IBOutlet	AIMiniToolbar		*toolbar_bottom;
 
     id <AIContactListViewController>	contactListViewController;

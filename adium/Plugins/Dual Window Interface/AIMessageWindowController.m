@@ -46,10 +46,6 @@
 - (IBAction)closeWindow:(id)sender
 {
     [[self window] performClose:nil];
-/*    NSLog(@"closeWindow:");
-    if([self windowShouldClose:nil]){
-        [[self window] orderOut:nil]; //Order out (as opposed to close)
-    }*/
 }
 
 //Return the contained message tabs
@@ -200,7 +196,10 @@
 
     if(container != nil){
         [(AIMessageTabViewItem *)container tabViewItemWasSelected]; //Let the tab know it was selected
-        [interface containerDidBecomeActive:container];
+
+        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
+            [interface containerDidBecomeActive:container];
+        }
     }
 }
 

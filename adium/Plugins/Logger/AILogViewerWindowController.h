@@ -8,12 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class AIAdium;
+@class AIAdium, AIAlternatingRowOutlineView;
 
 @interface AILogViewerWindowController : NSWindowController {
-    IBOutlet	NSOutlineView	*outlineView_contacts;
-    IBOutlet	NSTableView	*tableView_results;
-    IBOutlet	NSTextView	*textView_content;
+    IBOutlet	AIAlternatingRowOutlineView	*outlineView_contacts;
+    IBOutlet	NSTableView			*tableView_results;
+    IBOutlet	NSTextView			*textView_content;
 
     AIAdium		*owner;
 

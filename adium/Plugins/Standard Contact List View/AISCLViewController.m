@@ -21,15 +21,12 @@
 - (void)contactOrderChanged:(NSNotification *)notification;
 - (void)contactAttributesChanged:(NSNotification *)notification;
 - (void)preferencesChanged:(NSNotification *)notification;
-- (void)itemDidExpand:(NSNotification *)notification;
-- (void)itemDidCollapse:(NSNotification *)notification;
 - (void)frameDidChange:(NSNotification *)notification;
 - (void)mouseEntered:(NSEvent *)theEvent;
 - (void)mouseExited:(NSEvent *)theEvent;
 - (void)_endTrackingMouse;
 - (void)mouseMoved:(NSEvent *)theEvent;
 - (void)_showTooltipAtPoint:(NSPoint)screenPoint;
-- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView;
 - (void)updateTooltipTrackingRect;
 @end
 
@@ -60,14 +57,11 @@
     [[owner notificationCenter] addObserver:self selector:@selector(contactOrderChanged:) name:Contact_OrderChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(contactAttributesChanged:) name:Contact_AttributesChanged object:nil];
     [[owner notificationCenter] addObserver:self selector:@selector(preferencesChanged:) name:Preference_GroupChanged object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidExpand:) name:NSOutlineViewItemDidExpandNotification object:contactListView];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(itemDidCollapse:) name:NSOutlineViewItemDidCollapseNotification object:contactListView];
 
     [contactListView setTarget:self];
     [contactListView setDataSource:self];
     [contactListView setDelegate:self];
     [contactListView setDoubleAction:@selector(performDefaultActionOnSelectedContact:)];
-    [self expandCollapseGroup:contactList subgroups:YES supergroups:NO outlineView:contactListView]; //Correctly expand/collapse groups
 
     //Fetch and update the contact list
     [self contactListChanged:nil];
@@ -113,7 +107,6 @@
 
     //Redisplay
     [contactListView reloadData];
-    [self expandCollapseGroup:contactList subgroups:YES supergroups:NO outlineView:contactListView]; //Correctly expand/collapse groups
 }
 
 //Reload the contact list (if updates aren't delayed)
@@ -124,18 +117,6 @@
         
         //Redisplay
         [contactListView reloadData];
-
-        //Correctly expand/collapse the groups
-        if(!object){ //If passed nil, expand the entire contact list
-            [self expandCollapseGroup:nil subgroups:YES supergroups:NO outlineView:contactListView];
-
-        }else if([object isKindOfClass:[AIListGroup class]]){ //If passed a group, expand it and all groups above it
-            [self expandCollapseGroup:(AIListGroup *)object subgroups:NO supergroups:YES outlineView:contactListView];
-            
-        }else if([object isKindOfClass:[AIListContact class]]){ //If passed a contact, expand its containing group and all groups above it
-            [self expandCollapseGroup:[object containingGroup] subgroups:NO supergroups:YES outlineView:contactListView];
-
-        }
     }
 }
 
@@ -195,16 +176,6 @@
     //Observe the window entering and leaving key (for tooltips)
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_endTrackingMouse) name:NSWindowDidResignKeyNotification object:[inSuperview window]];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSWindowDidBecomeKeyNotification object:[inSuperview window]]; //Force a frame update when window becomes key
-}
-
-//Expand & collapse a group
-- (void)itemDidExpand:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:YES];
-}
-- (void)itemDidCollapse:(NSNotification *)notification
-{
-    [[[notification userInfo] objectForKey:@"NSObject"] setExpanded:NO];
 }
 
 //Frame changed, reinstall cursor tracking rect
@@ -305,47 +276,15 @@
     }
 }
 
-//Correctly sets the contact groups as expanded or collapsed, depending on their saved state
-- (void)expandCollapseGroup:(AIListGroup *)inGroup subgroups:(BOOL)subgroups supergroups:(BOOL)supergroups outlineView:(NSOutlineView *)inView
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
 {
-    NSEnumerator	*enumerator;
-    AIListObject	*object;
-    
-    if(!inGroup) inGroup = contactList;
-
-    //Expand/Collapse the group that was passed to us
-    if(inGroup != contactList){
-        ([inGroup isExpanded] ? [inView expandItem:inGroup] : [inView collapseItem:inGroup]);
-    }
-    
-    //Expand/Collapse its supergroups
-    if(supergroups){
-        AIListGroup	*containingGroup = [inGroup containingGroup];
-        
-        if(containingGroup){
-            //Expand the supergroup
-            [self expandCollapseGroup:containingGroup subgroups:NO supergroups:YES outlineView:inView];
-
-            //Correctly expand/collapse the group
-            ([containingGroup isExpanded] ? [inView expandItem:containingGroup] : [inView collapseItem:containingGroup]);
-        }
-    }
-    
-    //Expand/Collapse its subgroups
-    enumerator = [inGroup objectEnumerator];
-    while((object = [enumerator nextObject])){
-        if([object isKindOfClass:[AIListGroup class]]){
-            //Correctly expand/collapse the group
-            ([(AIListGroup *)object isExpanded] ? [inView expandItem:object] : [inView collapseItem:object]);
-
-            //Expand/collapse any subgroups
-            if(subgroups){
-                [self expandCollapseGroup:(AIListGroup *)object subgroups:YES supergroups:NO outlineView:inView];
-            }
-        }
-    }
+    [item setExpanded:state];
 }
 
+- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
+{
+    return([item isExpanded]);
+}
 
 
 // Tooltips ------------------------------------------------------------------------------------

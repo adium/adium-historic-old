@@ -27,6 +27,7 @@
 #define KEY_CONTACT_LIST 		@"ContactList"		//Contact list key
 #define PREF_GROUP_CONTACT_LIST		@"Contact List"		//Contact list preference group
 #define GET_INFO_MENU_TITLE		@"Get Info"
+#define KEY_CONTACT_LIST_GROUP_STATE	@"Contact List Group State"	//Expand/Collapse state of groups
 
 @interface AIContactController (PRIVATE)
 - (void)_handle:(AIHandle *)inHandle addedToAccount:(AIAccount *)inAccount;
@@ -62,8 +63,34 @@
 //close
 - (void)closeController
 {
-    //[self saveContactList]; //Save the contact list
-    //The contact list is saved as changes are made, but some changes (such as the expanding and collapsing of groups) are not saved, so we save on closing just to make sure nothing is lost.
+    NSEnumerator	*enumerator;
+    AIListGroup		*group;
+    NSDictionary	*preferences;
+    NSMutableDictionary	*groupStateDict;
+
+    //Break down the contact list to put all handles/groups in one place
+    [self breakDownContactList];
+
+    //Get the group state dict
+    preferences = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    groupStateDict = [[preferences objectForKey:KEY_CONTACT_LIST_GROUP_STATE] mutableCopy];
+    if(!groupStateDict){
+        groupStateDict = [[NSMutableDictionary alloc] init];
+    }
+    [groupStateDict autorelease];
+    
+    //Set expanded/collapsed state of groups
+    enumerator = [[abandonedGroups allValues] objectEnumerator];
+    while((group = [enumerator nextObject])){
+        [groupStateDict setObject:[NSNumber numberWithBool:[group isExpanded]]
+                            forKey:[group UID]];
+    }
+
+    //Save
+    [[owner preferenceController] setPreference:groupStateDict
+                                         forKey:KEY_CONTACT_LIST_GROUP_STATE
+                                          group:PREF_GROUP_CONTACT_LIST];
+    
 }
 
 //dealloc
@@ -329,8 +356,19 @@
 
         //If it wasn't in the abandoned dict, we create
         if(!group){
+            NSNumber	*expandedNum = [[[[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST] objectForKey:KEY_CONTACT_LIST_GROUP_STATE] objectForKey:serverGroup];
+            BOOL	expanded;
+
+            //Default to expanded
+            if(expandedNum){
+                expanded = [expandedNum boolValue];
+            }else{
+                expanded = YES;
+            }
+
+            //Create and expand the group
             group = [[[AIListGroup alloc] initWithUID:serverGroup] autorelease];	//Create the group
-            [group setExpanded:YES/*[[dict objectForKey:serverGroup boolValue]]*/]; //Correctly expand/collapse the group
+            [group setExpanded:expanded]; //Correctly expand/collapse the group
         }
 
         [contactList addObject:group];				//Add the group to our contact list

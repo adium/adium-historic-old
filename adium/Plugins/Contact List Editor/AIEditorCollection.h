@@ -12,6 +12,7 @@
 
 @protocol AIEditorCollection <NSObject>
 - (NSString *)name;
+- (NSString *)UID;
 - (NSImage *)icon;
 - (BOOL)enabled;
 - (AIEditorListGroup *)list;

@@ -14,6 +14,8 @@
 
 #define LOG_VIEWER_NIB				@"LogViewer"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
+#define	PREF_GROUP_CONTACT_LIST			@"Contact List"
+#define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
 
 
 @interface AILogViewerWindowController (PRIVATE)
@@ -70,7 +72,7 @@ static AILogViewerWindowController *sharedInstance = nil;
 - (void)windowDidLoad
 {
     NSString	*savedFrame;
-    
+
     //Restore the window position
     savedFrame = [[[owner preferenceController] preferencesForGroup:PREF_GROUP_WINDOW_POSITIONS] objectForKey:KEY_LOG_VIEWER_WINDOW_FRAME];
     if(savedFrame){
@@ -79,12 +81,14 @@ static AILogViewerWindowController *sharedInstance = nil;
         [[self window] center];
     }
 
+    //Colors and alternating rows
+    [outlineView_contacts setBackgroundColor:[NSColor colorWithCalibratedRed:(250.0/255.0) green:(250.0/255.0) blue:(250.0/255.0) alpha:1.0]];
+    [outlineView_contacts setDrawsAlternatingRows:YES];
+    [outlineView_contacts setAlternatingRowColor:[NSColor colorWithCalibratedRed:(231.0/255.0) green:(243.0/255.0) blue:(255.0/255.0) alpha:1.0]];
+    [outlineView_contacts setNeedsDisplay:YES];
 
-//    [self importAdium1xLogs];
-
+    //Scan the user's logs    
     [self _scanAvailableLogs];
-
-    
 }
 
 //Close the window
@@ -296,8 +300,6 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
 }
 
 
-
-
 // Contact list outline view
 // -----------------------------------
 // required
@@ -348,6 +350,37 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     }
 }
 
+- (void)outlineView:(NSOutlineView *)outlineView setExpandState:(BOOL)state ofItem:(id)item
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSMutableDictionary	*groupStateDict = [[preferenceDict objectForKey:KEY_LOG_VIEWER_GROUP_STATE] mutableCopy];
+
+    if(!groupStateDict) groupStateDict = [[NSMutableDictionary alloc] init];
+
+    //Save the group new state
+    [groupStateDict setObject:[NSNumber numberWithBool:state]
+                       forKey:[item objectForKey:@"UID"]];
+
+    [[owner preferenceController] setPreference:groupStateDict forKey:KEY_LOG_VIEWER_GROUP_STATE group:PREF_GROUP_CONTACT_LIST];
+    [groupStateDict release];
+}
+
+- (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
+{
+    NSDictionary	*preferenceDict = [[owner preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST];
+    NSMutableDictionary	*groupStateDict = [preferenceDict objectForKey:KEY_LOG_VIEWER_GROUP_STATE];
+    NSNumber		*expandedNum;
+
+    //Lookup the group's saved state
+    expandedNum = [groupStateDict objectForKey:[item objectForKey:@"UID"]];
+
+    //Correctly expand/collapse the group
+    if(!expandedNum || [expandedNum boolValue] == YES){ //Default to expanded
+        return(YES);
+    }else{
+        return(NO);
+    }
+}
 
 
 
@@ -400,6 +433,5 @@ int _sortLogArray(NSDictionary *objectA, NSDictionary *objectB, void *context)
     // reload the data
     // reapply the selection...
 }
-
 
 @end

@@ -1,6 +1,11 @@
 {
     IBClasses = (
         {
+            CLASS = AIAlternatingRowOutlineView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSOutlineView; 
+        }, 
+        {
             ACTIONS = {closeWindow = id; }; 
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
