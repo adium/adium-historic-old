@@ -14,8 +14,8 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /**
- * $Revision: 1.29 $
- * $Date: 2004/08/06 05:09:52 $
+ * $Revision: 1.30 $
+ * $Date: 2004/08/11 23:22:47 $
  * $Author: evands $
  **/
 
@@ -54,7 +54,6 @@
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
-    NSMutableArray			*sleepingOnlineAccounts;	//Accounts that were connected before we slept
 	NSMutableArray			*unloadableAccounts;
 	
 	NSMutableArray			*accountMenuPluginsArray;
@@ -97,7 +96,6 @@
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target includeOffline:(BOOL)includeOffline;
 
 //Connection convenience methods
-- (void)autoConnectAccounts;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
