@@ -16,7 +16,7 @@
 #import "BGThemeManageView.h"
 #import "BGThemesPlugin.h"
 
-#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	@"~/Library/Application Support/Adium 2.0"
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY		@"~/Library/Application Support/Adium 2.0"
 #define THEME_FOLDER_NAME                       @"Themes"
 #define THEME_PATH                              [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] stringByAppendingPathComponent:THEME_FOLDER_NAME]
 #define THEMES_ARE_DIRECTORIES                  NO
@@ -27,11 +27,11 @@
 
 @implementation BGThemeManageView
 
--(void)awakeFromNib
+- (void)awakeFromNib
 {        
     themes = nil;
-    defaultThemePath = [[NSBundle bundleForClass:[self class]] pathForResource:THEME_ADIUM_DEFAULT ofType:@"AdiumTheme"];
-    mgr = [NSFileManager defaultManager];
+    defaultThemePath = [[[NSBundle bundleForClass:[self class]] pathForResource:THEME_ADIUM_DEFAULT ofType:@"AdiumTheme"] retain];
+    mgr = [[NSFileManager defaultManager] retain];
 
     [table setDrawsAlternatingRows:YES];
     [table setTarget:self];
@@ -40,19 +40,24 @@
     [[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self selector:@selector(themesChanged:) name:Themes_Changed object:nil];
 }
 
--(void)dealloc
+- (void)dealloc
 {
+	[mgr release];
+	[defaultThemePath release];
+	[themes release];
 	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+	
+	[super dealloc];
 }
 
--(void)themesChanged:(NSNotification *)notification
+- (void)themesChanged:(NSNotification *)notification
 {
     [self buildThemesList];
 }
 
--(void)buildThemesList
+- (void)buildThemesList
 {
-    NSMutableArray     *tempThemesList = [NSMutableArray arrayWithCapacity:0];
+    NSMutableArray     *tempThemesList = [NSMutableArray array];
 
     if(defaultThemePath){
         [tempThemesList addObject:defaultThemePath];
@@ -135,7 +140,7 @@
     }
 }
 
--(NSString *)selectedTheme
+- (NSString *)selectedTheme
 {
 	int selectedRow = [table selectedRow];
 
@@ -164,7 +169,7 @@
 	}
 }
 
--(IBAction)removeTheme:(id)sender
+- (IBAction)removeTheme:(id)sender
 {
     NSString *warningText = [NSString stringWithFormat:@"Do you really want to permanently delete %@?", [[self selectedTheme] lastPathComponent]];
     int returnCode = NSRunAlertPanel(@"Delete Theme", warningText, @"Delete", @"Cancel",nil);
@@ -180,7 +185,7 @@
      }
 }
 
--(IBAction)applyTheme:(id)sender
+- (IBAction)applyTheme:(id)sender
 {
     if([themes count] == 0)
     {
@@ -194,7 +199,7 @@
     }
 }
 
--(void)setPlugin:(BGThemesPlugin *)newPlugin
+- (void)setPlugin:(BGThemesPlugin *)newPlugin
 {
     themesPlugin = newPlugin;
 }

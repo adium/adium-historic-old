@@ -154,7 +154,6 @@ static NSMenu       *eContextualMenu = nil;
     if([emoticonPacks count] == 1)
     {    
         AIEmoticon *selectedEmoticon = [[[emoticonPacks objectAtIndex:0] emoticons] objectAtIndex:[[sender menu] indexOfItem:sender]];
-		NSLog(@"EMOTICONS 1");
         emoString = [[selectedEmoticon textEquivalents] objectAtIndex:0];
     }
     else if([emoticonPacks count] > 1)
