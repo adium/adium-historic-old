@@ -641,6 +641,8 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
 	
+	[messageDict retain];
+	
 	[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
 										   withObject:messageDict
 										   withObject:chatLookupFromConv(conv)];
@@ -662,6 +664,8 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 	messageDict = [NSDictionary dictionaryWithObjectsAndKeys:messageString,@"Message",
 		[NSNumber numberWithInt:flags],@"GaimMessageFlags",
 		[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
+	
+	[messageDict retain];
 	
 	[adiumAccount mainPerformSelector:@selector(receivedIMChatMessage:inChat:)
 										   withObject:messageDict

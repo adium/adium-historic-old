@@ -544,6 +544,9 @@ static id<GaimThread> gaimThread = nil;
 		   fromListContact:sourceContact 
 					 flags:flags
 					  date:[messageDict objectForKey:@"Date"]];
+	
+	//We receive retained data from SLGaimCocoaAdapter
+	[messageDict release];
 }
 
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
@@ -568,6 +571,9 @@ static id<GaimThread> gaimThread = nil;
 		   fromListContact:sourceContact 
 					 flags:flags
 					  date:[messageDict objectForKey:@"Date"]];
+	
+	//We receive retained data from SLGaimCocoaAdapter
+	[messageDict release];
 }
 
 - (void)_receivedMessage:(NSString *)message inChat:(AIChat *)chat fromListContact:(AIListContact *)sourceContact flags:(GaimMessageFlags)flags date:(NSDate *)date
