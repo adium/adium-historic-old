@@ -13,8 +13,6 @@
 #define ADDRESS_BOOK_LAST_FIRST_OPTION  @"Last, First"
 #define ADDRESS_BOOK_NONE_OPTION        @"<Disabled>"
 
-#define ADDESS_BOOK_NAME_FORMAT_INSTRUCTIONS @"Address Book Name Format: "
-
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)configureFormatMenu;
@@ -76,14 +74,10 @@
     [choicesMenu addItem:menuItem];
     
     [format_menu setMenu:choicesMenu];
-    
-    [format_textField setStringValue:ADDESS_BOOK_NAME_FORMAT_INSTRUCTIONS];
-    [format_textField sizeToFit];
-    
+
+    NSRect oldFrame = [format_menu frame];
     [format_menu sizeToFit];
-    NSRect instructionFrame = [format_textField frame];
-    [format_menu setFrameOrigin:NSMakePoint(instructionFrame.size.width + instructionFrame.origin.x, 
-                                            (instructionFrame.origin.y+(instructionFrame.size.height-[format_menu frame].size.height)/2))];
+    [format_menu setFrameOrigin:oldFrame.origin];
 }
 
 //Reflect new preferences in view
@@ -95,6 +89,7 @@
         [format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
     
         [checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
+        [checkBox_enableImages setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMAGES] boolValue]];
     }
 }
 
@@ -109,8 +104,12 @@
 - (IBAction)changePreference:(id)sender
 {
     if (sender == checkBox_syncAutomatic) {
-        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([checkBox_syncAutomatic state]==NSOnState)]
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_IMAGE_SYNC
+                                              group:PREF_GROUP_ADDRESSBOOK];
+    } else if (sender == checkBox_enableImages) {
+        [[owner preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+                                             forKey:KEY_AB_ENABLE_IMAGES
                                               group:PREF_GROUP_ADDRESSBOOK];
     }
 }

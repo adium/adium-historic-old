@@ -6,5 +6,7 @@
 	<integer>1</integer>
         <key>AB Image Sync</key>
         <integer>0</integer>
+        <key>AB Enable Images</key>
+        <integer>1</integer>
 </dict>
 </plist>
