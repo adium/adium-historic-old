@@ -20,21 +20,21 @@
 @protocol AITextEntryView;
 
 @interface AISendingTextView : NSTextView <AITextEntryView> {
-    AIAdium		*adium;
-    AIChat		*chat;
+    AIAdium			*adium;
+    AIChat			*chat;
     
-    BOOL		sendOnEnter;
-    BOOL		sendOnReturn;
-	BOOL		pushPop;
+    BOOL			sendOnEnter;
+    BOOL			sendOnReturn;
+	BOOL			pushPop;
     NSMutableArray	*returnArray;
-    BOOL		insertingText;
+    BOOL			insertingText;
     
-    id			target;
-    SEL			selector;
-    BOOL		availableForSending;
+    id				target;
+    SEL				selector;
+    BOOL			availableForSending;
 
     NSMutableArray	*historyArray;
-    int 		currentHistoryLocation;
+    int				currentHistoryLocation;
 
     NSMutableArray	*pushArray;
     BOOL			pushIndicatorVisible;
@@ -42,23 +42,30 @@
     NSButton		*indicator;
 	NSMenu			*pushMenu;
         
-    NSSize		lastPostedSize;
-    NSSize		_desiredSizeCached;
+    NSSize			lastPostedSize;
+	NSSize			_desiredSizeCached;
     
-    IBOutlet		NSScrollView   *messageScrollView;
+    IBOutlet		NSScrollView	*messageScrollView;
 }
 
 - (id)initWithFrame:(NSRect)frameRect;
+- (NSSize)desiredSize;
+
 - (void)setSendOnReturn:(BOOL)inBool;
 - (void)setSendOnEnter:(BOOL)inBool;
+- (void)setPushPop:(BOOL)inBool
+
 - (void)setTarget:(id)inTarget action:(SEL)inSelector;
-- (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
+
 - (void)insertText:(id)aString;
+
 - (void)interpretKeyEvents:(NSArray *)eventArray;
+- (BOOL)performKeyEquivalent:(NSEvent *)theEvent;
+
 - (void)setAvailableForSending:(BOOL)inBool;
 - (BOOL)availableForSending;
+
 - (void)setChat:(AIChat *)inChat;
 - (AIChat *)chat;
-- (NSSize)desiredSize;
 
 @end
