@@ -13,33 +13,31 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#define PREF_GROUP_SOUNDS		@"Sounds"
+#define PREF_GROUP_SOUNDS			@"Sounds"
 
-#define SOUND_EVENT_START		@"\nSoundset:\n"	//String marking start of event list
-#define SOUND_EVENT_QUOTE		@"\""			//Character before and after event name
-#define SOUND_NEWLINE			@"\n"			//Newline character
+#define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list
+#define SOUND_EVENT_QUOTE			@"\""			//Character before and after event name
+#define SOUND_NEWLINE				@"\n"			//Newline character
 
 #define KEY_ALERT_SOUND_PATH		@"SoundPath"
 
 #define KEY_EVENT_CUSTOM_SOUNDSET	@"Event Custom Sounds"
-#define KEY_EVENT_SOUND_SET		@"Event Sound Set"
+#define KEY_EVENT_SOUND_SET			@"Event Sound Set"
 #define	KEY_EVENT_SOUND_PATH		@"Path"
 #define	KEY_EVENT_SOUND_EVENT_ID	@"Notification"
-#define KEY_EVENT_MUTE_WHILE_AWAY       @"Mute While Away"
+#define KEY_EVENT_MUTE_WHILE_AWAY   @"Mute While Away"
 
-#define SOUND_ALERT_IDENTIFIER        @"PlaySound"
+#define SOUND_ALERT_IDENTIFIER		@"PlaySound"
 
 #define SOUND_MENU_ICON_SIZE		16
 
-#define OTHER_ELLIPSIS      AILocalizedString(@"Other...",nil)
-#define OTHER		    AILocalizedString(@"Other",nil)
+#define OTHER_ELLIPSIS				AILocalizedString(@"Other...",nil)
+#define OTHER						AILocalizedString(@"Other",nil)
 
 @class AIEventSoundPreferences;
 
 @interface AIEventSoundsPlugin : AIPlugin <AIActionHandler> {
     AIEventSoundPreferences	*preferences;
-
-    NSMutableDictionary		*soundPathDict;
 }
 
 - (BOOL)loadSoundSetAtPath:(NSString *)inPath creator:(NSString **)outCreator description:(NSString **)outDesc sounds:(NSArray **)outArray;
