@@ -48,7 +48,7 @@
 	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
 
-	NapsterService		= [[ESNapsterService alloc] init];
+	NapsterService		= nil;//[[ESNapsterService alloc] init];
 	
 #ifndef TREPIA_NOT_AVAILABLE
 	TrepiaService		= [[ESTrepiaService alloc] init];
