@@ -67,9 +67,6 @@ static NSImage *pushIndicatorImage = nil;
     [self setDrawsBackground:YES];
     _desiredSizeCached = NSMakeSize(0,0);
 
-	//
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_PUSH_PREFS];
-
     //
     if(!pushIndicatorImage) pushIndicatorImage = [[AIImageUtilities imageNamed:@"stackImage" forClass:[self class]] retain];
 
@@ -127,10 +124,6 @@ static NSImage *pushIndicatorImage = nil;
 	case '\E':
 	    //Reset entry
 	    [self setString:@""];
-		
-	    if( [[prefDict objectForKey:KEY_AUTOPOP] boolValue] )
-	     	[self _popContent];
-			
 	    result = YES;
 	    break;
     }
@@ -212,9 +205,6 @@ static NSImage *pushIndicatorImage = nil;
 
     //notify target
     [target performSelector:selector];
-	
-	if( [[prefDict objectForKey:KEY_AUTOPOP] boolValue] )
-		[self _popContent];
 
 }
 

@@ -321,7 +321,6 @@
 				3419F35505314BA200C68BA3,
 				3419F36505314BAB00C68BA3,
 				3419F37305314BB500C68BA3,
-				6EB4AC3405BCB81D00D0042B,
 				34BD9EDF0531476A000AB133,
 				3419F38105314BBF00C68BA3,
 				B799BB0005793A6400338E54,
@@ -442,7 +441,6 @@
 				3419F34105314BA100C68BA3,
 				3419F35605314BAB00C68BA3,
 				3419F36605314BB400C68BA3,
-				6EB4AC3305BCB81D00D0042B,
 				34BD9ECB0531475E000AB133,
 				344AB2A40579128A00384CEE,
 				3419F37405314BBE00C68BA3,
@@ -9814,7 +9812,6 @@
 				3419FE0E0531585600C68BA3,
 				3419FE0F0531585600C68BA3,
 				3419FE100531585600C68BA3,
-				6E99205A05BDC9510070E854,
 				3419FDE30531585600C68BA3,
 				3419FE110531585600C68BA3,
 				4BED6DEF05D5F99500ACFD49,
@@ -18155,7 +18152,6 @@
 		};
 		4B13323F0459BE4500A8010A = {
 			children = (
-				6EB4AC5F05BCB91100D0042B,
 				B782F088058BB60B00AF4BBA,
 				344AB2C90579137E00384CEE,
 				9C8C7FA303CBA17B00267226,
@@ -23221,30 +23217,6 @@
 			target = 34BD9DE205314755000AB133;
 			targetProxy = 4BED6DD505D5F5DC00ACFD49;
 		};
-		4BED6DD705D5F5E200ACFD49 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		4BED6DD805D5F5E200ACFD49 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 4BED6DD705D5F5E200ACFD49;
-		};
-		4BED6DD905D5F5E200ACFD49 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DE205314755000AB133;
-			remoteInfo = AIUtilities.Framework;
-		};
-		4BED6DDA05D5F5E200ACFD49 = {
-			isa = PBXTargetDependency;
-			target = 34BD9DE205314755000AB133;
-			targetProxy = 4BED6DD905D5F5E200ACFD49;
-		};
 		4BED6DDB05D5F5E700ACFD49 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -25950,12 +25922,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6E99205A05BDC9510070E854 = {
-			fileRef = 6EB4AC3405BCB81D00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6E99206B05BDCA250070E854 = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -25965,229 +25931,7 @@
 		};
 		6E99206C05BDCA250070E854 = {
 			isa = PBXTargetDependency;
-			target = 6EB4AC3305BCB81D00D0042B;
 			targetProxy = 6E99206B05BDCA250070E854;
-		};
-		6EB4AC2F05BCB81D00D0042B = {
-			buildActionMask = 2147483647;
-			files = (
-				6EB4AC6C05BCB9D000D0042B,
-				6EB4AC6E05BCB9D000D0042B,
-			);
-			isa = PBXHeadersBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6EB4AC3005BCB81D00D0042B = {
-			buildActionMask = 2147483647;
-			files = (
-				6EB4AC7005BCB9D000D0042B,
-				6EB4AC7105BCB9D000D0042B,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6EB4AC3105BCB81D00D0042B = {
-			buildActionMask = 2147483647;
-			files = (
-				6EB4AC6D05BCB9D000D0042B,
-				6EB4AC6F05BCB9D000D0042B,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6EB4AC3205BCB81D00D0042B = {
-			buildActionMask = 2147483647;
-			files = (
-				6EB4ADA705BCC1C300D0042B,
-				6EB4AC5705BCB8F600D0042B,
-				6EB4AC5605BCB8EC00D0042B,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		6EB4AC3305BCB81D00D0042B = {
-			buildPhases = (
-				6EB4AC2F05BCB81D00D0042B,
-				6EB4AC3005BCB81D00D0042B,
-				6EB4AC3105BCB81D00D0042B,
-				6EB4AC3205BCB81D00D0042B,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Message_Push_Preferences.plist;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_LDFLAGS = "";
-				PRODUCT_NAME = "Message Push Preferences";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				4BED6DD805D5F5E200ACFD49,
-				4BED6DDA05D5F5E200ACFD49,
-			);
-			isa = PBXNativeTarget;
-			name = "Message Push Preferences";
-			productName = "Message Push Preferences";
-			productReference = 6EB4AC3405BCB81D00D0042B;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Message Push Preferences</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Message_Push_Preferences</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		6EB4AC3405BCB81D00D0042B = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Message Push Preferences.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		6EB4AC5605BCB8EC00D0042B = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC5705BCB8F600D0042B = {
-			fileRef = 34BD9E9305314755000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC5F05BCB91100D0042B = {
-			children = (
-				6EB4AC6605BCB9CC00D0042B,
-				6EB4AC6705BCB9CD00D0042B,
-				6EB4AC6805BCB9CE00D0042B,
-				6EB4AC6905BCB9CE00D0042B,
-				6EB4AC6A05BCB9CF00D0042B,
-				6EB4AC6B05BCB9CF00D0042B,
-			);
-			isa = PBXGroup;
-			name = "Message Push Preferences";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6605BCB9CC00D0042B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = DCMessagePushPreferences.h;
-			path = "Plugins/Message Push Preferences/DCMessagePushPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6705BCB9CD00D0042B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = DCMessagePushPreferences.m;
-			path = "Plugins/Message Push Preferences/DCMessagePushPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6805BCB9CE00D0042B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = DCMessagePushPreferencesPlugin.h;
-			path = "Plugins/Message Push Preferences/DCMessagePushPreferencesPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6905BCB9CE00D0042B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = DCMessagePushPreferencesPlugin.m;
-			path = "Plugins/Message Push Preferences/DCMessagePushPreferencesPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6A05BCB9CF00D0042B = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.xml;
-			name = MessagePushDefaults.plist;
-			path = "Plugins/Message Push Preferences/MessagePushDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6B05BCB9CF00D0042B = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = MessagePushPreferences.nib;
-			path = "Plugins/Message Push Preferences/MessagePushPreferences.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6EB4AC6C05BCB9D000D0042B = {
-			fileRef = 6EB4AC6605BCB9CC00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC6D05BCB9D000D0042B = {
-			fileRef = 6EB4AC6705BCB9CD00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC6E05BCB9D000D0042B = {
-			fileRef = 6EB4AC6805BCB9CE00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC6F05BCB9D000D0042B = {
-			fileRef = 6EB4AC6905BCB9CE00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC7005BCB9D000D0042B = {
-			fileRef = 6EB4AC6A05BCB9CF00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4AC7105BCB9D000D0042B = {
-			fileRef = 6EB4AC6B05BCB9CF00D0042B;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		6EB4ADA705BCC1C300D0042B = {
-			fileRef = 1058C7A1FEA54F0111CA2CBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6ECE6C2004749C9600CAEAD0 = {
 			isa = PBXFileReference;
