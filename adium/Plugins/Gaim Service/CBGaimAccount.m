@@ -210,14 +210,15 @@
 
 - (void)accountConvReceivedIM: (const char*)message inConversation: (GaimConversation*)conv withFlags: (GaimMessageFlags)flags atTime: (time_t)mtime
 {
-    /*
-     * TODO:
-     * This gets called both when after we send a message and when we receive
-     * one. This is kind of nice - Adium can be kind of premature about thinking
-     * something has been sent okay and this gives us the potential to solve
-     * this problem. Unfortunately, I don't see how to distinguish between the
-     * two types - who is always null.
-     */
+    if ((flags & GAIM_MESSAGE_SEND) != 0) {
+        /*
+         * TODO
+         * gaim is telling us that our message was sent successfully. Some
+         * day, we should avoid claiming it was until we get this
+         * notification.
+         */
+        return;
+    }
     AIChat *chat = (AIChat*) conv->ui_data;
     NSString *uid = [NSString stringWithUTF8String: conv->name];
     AIHandle *handle = [handleDict objectForKey: uid];
@@ -237,9 +238,9 @@
         [AIContentMessage messageInChat:chat
                              withSource:[handle containingContact]
                             destination:self
-                                   date:nil
+                                   date:[NSDate dateWithTimeIntervalSince1970: mtime]
                                 message:body
-                              autoreply:NO];
+                              autoreply:(flags & GAIM_MESSAGE_AUTO_RESP) != 0];
     [[owner contentController] addIncomingContentObject:messageObject];
 }
 
