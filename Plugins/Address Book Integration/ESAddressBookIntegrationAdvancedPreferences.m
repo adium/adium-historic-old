@@ -44,10 +44,18 @@
 {
 	[self configureFormatMenu];
 	
+	[textField_formatNamesAs setStringValue:AILocalizedString(@"Format name as:", "Format name as: [popup menu of choices like 'First, Last']")];
+	[checkBox_enableImport setTitle:AILocalizedString(@"Import my contacts' names from the Address Book",nil)];
+	[checkBox_useNickName setTitle:AILocalizedString(@"Use nickname if available",nil)];
+	[checkBox_useABImages setTitle:AILocalizedString(@"Use Address Book images as contacts' icons",nil)];
+	[checkBox_preferABImages setTitle:AILocalizedString(@"Even if the contact already has a contact icon",nil)];
+	[checkBox_syncAutomatic setTitle:AILocalizedString(@"Overwrite Address Book images with contacts' icons",nil)];
+	[checkBox_metaContacts setTitle:AILocalizedString(@"Consolidate contacts listed in the card",nil)];
+
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
     
 	[checkBox_enableImport setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue]];	
-	[format_menu selectItemAtIndex:[format_menu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
+	[popUp_formatMenu selectItemAtIndex:[popUp_formatMenu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
 	[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
 	[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
 	[checkBox_useABImages setState:[[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue]];
@@ -67,7 +75,7 @@
 	
 	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
 	[checkBox_useNickName setEnabled:enableImport];	
-	[format_menu setEnabled:enableImport];
+	[popUp_formatMenu setEnabled:enableImport];
 
 	//We will not allow image syncing if AB images are preferred
 	//so disable the control and uncheck the box to indicate this to the user
@@ -113,11 +121,11 @@
     [menuItem setTag:LastFirstNoComma];
     [choicesMenu addItem:menuItem];
 	
-    [format_menu setMenu:choicesMenu];
+    [popUp_formatMenu setMenu:choicesMenu];
 	
-    NSRect oldFrame = [format_menu frame];
-    [format_menu sizeToFit];
-    [format_menu setFrameOrigin:oldFrame.origin];
+    NSRect oldFrame = [popUp_formatMenu frame];
+    [popUp_formatMenu sizeToFit];
+    [popUp_formatMenu setFrameOrigin:oldFrame.origin];
 }
 
 //Save changed preference
