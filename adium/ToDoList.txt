@@ -11,7 +11,8 @@ If you are working on something big and it may take a while, please tag it with 
 //-------------------------------------------------------------------------------------------------------
 Contacts:
 	+ Allow specifying an image for a contact in the inspector (Independent of address book)
-	+ Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
+	= Add area for typing contact notes to inspector, display notes in tooltip [Brian] 
+            // core functionality is done, now I'm adding info viewer support, AB syncing, and possibly AIM Buddy Note sycing
 	+ Add keyboard shortcut for the 'add contact' menu item
 	+ Pass our aliases to libgaim so they get uploaded to the server
 
