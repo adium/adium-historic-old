@@ -42,7 +42,8 @@ extern "C" {
 // ** ADIUM	
 #include <libgaim/ft.h>
 GaimXfer *oscar_xfer_new(GaimConnection *gc, const char *destsn);
-
+void oscar_direct_im_initiate_immediately(GaimConnection *gc, const char *who);
+void *oscar_find_direct_im(GaimConnection *gc, const char *who);
 	
 /* XXX adjust these based on autoconf-detected platform */
 typedef unsigned char fu8_t;
@@ -835,6 +836,7 @@ struct aim_incomingim_ch2_args {
 	const char *msg; /* invite message or file description */
 	const char *encoding;
 	const char *language;
+	fu16_t reverseConnection;
 	union {
 		struct {
 			fu32_t checksum;
@@ -883,7 +885,7 @@ struct aim_incomingim_ch4_args {
 /* 0x0006 */ faim_export int aim_im_sendch2_icon(aim_session_t *sess, const char *sn, const fu8_t *icon, int iconlen, time_t stamp, fu16_t iconsum);
 /* 0x0006 */ faim_export int aim_im_sendch2_rtfmsg(aim_session_t *sess, struct aim_sendrtfmsg_args *args);
 /* 0x0006 */ faim_export int aim_im_sendch2_odcrequest(aim_session_t *sess, fu8_t *cookie, bool usecookie, const char *sn, const fu8_t *ip, fu16_t port);
-/* 0x0006 */ faim_export int aim_im_sendch2_sendfile_ask(aim_session_t *sess, struct aim_oft_info *oft_info);
+/* 0x0006 */ faim_export int aim_im_sendch2_sendfile_ask(aim_session_t *sess, struct aim_oft_info *oft_info, int reverseConnection);
 /* 0x0006 */ faim_export int aim_im_sendch2_sendfile_accept(aim_session_t *sess, struct aim_oft_info *info);
 /* 0x0006 */ faim_export int aim_im_sendch2_sendfile_cancel(aim_session_t *sess, struct aim_oft_info *oft_info);
 /* 0x0006 */ faim_export int aim_im_sendch2_geticqaway(aim_session_t *sess, const char *sn, int type);
@@ -941,6 +943,7 @@ struct aim_oft_info {
 	aim_session_t *sess;
 	struct aim_fileheader_t fh;
 	struct aim_oft_info *next;
+	fu8_t sendcookie;
 };
 
 faim_export fu32_t aim_oft_checksum_chunk(const fu8_t *buffer, int bufferlen, fu32_t prevcheck);
