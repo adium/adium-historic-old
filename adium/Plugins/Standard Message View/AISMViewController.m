@@ -505,8 +505,8 @@
 	//Show a date header if the messages were on different dates
 	if( !contentIsSimilar && ([(NSCalendarDate *)[previousContent date] dayOfCommonEra] != [(NSCalendarDate *)[content date] dayOfCommonEra])) {
 
-		NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];
-			
+		//NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%X" timeZone:nil locale:nil]];
+		NSString *dateMessage = [NSString stringWithFormat:@"%@",[[content date] descriptionWithCalendarFormat:@"%A, %B %d, %Y" timeZone:nil locale:nil]];	
 		dateSeparator = [AIContentStatus statusInChat:[content chat]
 											   withSource:[[content chat] listObject]
 											  destination:[[content chat] account]
@@ -649,7 +649,7 @@
 			
 			//dchoby98 -- empty indent space
 			NSColor *messageBackgroundColor;
-			if( [content isKindOfClass:[AIContentContext class]] )
+			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 				messageBackgroundColor = [[messageCell contentBackgroundColor] darkenAndAdjustSaturationBy:-0.3];
 			else
 				messageBackgroundColor = [messageCell contentBackgroundColor];
@@ -751,7 +751,7 @@
 	NSColor *currentOutgoingDividerColor = colorOutgoingDivider;
 	NSColor *currentIncomingDividerColor = colorIncomingDivider;
 	
-	if( [content isKindOfClass:[AIContentContext class]] ) {
+	if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
 		currentOutgoingDividerColor = [currentOutgoingDividerColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingDividerColor = [currentIncomingDividerColor darkenAndAdjustSaturationBy:-0.3];
 	}
@@ -836,7 +836,7 @@
 		if(ignoreTextStyles || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
 	
 			//dchoby98
-			if( [content isKindOfClass:[AIContentContext class]] )
+			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 				backgroundColor = [colorIncoming darkenAndAdjustSaturationBy:-0.3];
 			else
 				backgroundColor = colorIncoming;
@@ -851,7 +851,7 @@
 		if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
 			
 			//dchoby98
-			if( [content isKindOfClass:[AIContentContext class]] )
+			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 				backgroundColor = [colorOutgoing darkenAndAdjustSaturationBy:-0.3];
 			else
 				backgroundColor = colorOutgoing;
@@ -874,7 +874,7 @@
 - (NSAttributedString *)_messageStringForContent:(AIContentMessage *)content
 {
 	//Strip all coloring and formatting of received messages if desired
-	if([content isKindOfClass:[AIContentContext class]]) {
+	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
 		return([self _stringWithContextStyle:[content message]]);
 	}else if([content isOutgoing] || !ignoreTextStyles) {
         return([content message]);
@@ -933,7 +933,7 @@
 	NSColor		*currentOutgoingSourceColor = outgoingSourceColor;
 	NSColor		*currentIncomingSourceColor = incomingSourceColor;
 	
-	if( [content isKindOfClass:[AIContentContext class]] ) {
+	if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
 		currentOutgoingSourceColor = [currentOutgoingSourceColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingSourceColor = [currentIncomingSourceColor darkenAndAdjustSaturationBy:-0.3];
 	}
@@ -1077,6 +1077,7 @@
             [NSNumber numberWithInt:Context_Contact_Manage],
             [NSNumber numberWithInt:Context_Contact_Action],
             [NSNumber numberWithInt:Context_Contact_NegativeAction],
+			[NSNumber numberWithInt:Context_Contact_TabAction],
             [NSNumber numberWithInt:Context_Contact_Additions], nil]
 													 forListObject:selectedObject]);
     }else{

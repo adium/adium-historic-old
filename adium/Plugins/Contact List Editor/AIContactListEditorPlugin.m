@@ -39,7 +39,7 @@
 	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 
 	//Add contact context menu item for tabs
-	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContact:) keyEquivalent:@""] autorelease];
+	menuItem_tabAddContact = [[[NSMenuItem alloc] initWithTitle:ADD_CONTACT target:self action:@selector(addContactFromTab) keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_TabAction];
 	
 	//Add group menu item
@@ -85,7 +85,13 @@
 //Prompt for a new contact
 - (IBAction)addContact:(id)sender
 {
-	[AINewContactWindowController promptForNewContactOnWindow:nil];
+	[AINewContactWindowController promptForNewContactOnWindow:nil name:nil];
+}
+
+//Prompt for a new contact with the current tab's name
+- (void)addContactFromTab
+{
+	[AINewContactWindowController promptForNewContactOnWindow:nil name:[[[adium menuController] contactualMenuContact] UID]];
 }
 
 //Prompt for a new group
