@@ -101,6 +101,12 @@
     }
 }
 
+- (id)objectForIntegerKey:(int)aKey
+{
+    return([self objectForKey:[NSNumber numberWithInt:aKey]]);
+}
+
+
 /*untested
 - (NSAttributedString *)attributedStringForKey:(NSString *)inKey{
     NSData	*stringData = [self objectForKey:inKey];
@@ -151,6 +157,11 @@
     if(inColor != nil){
         [self setObject:[inColor stringRepresentation] forKey:inKey];
     }
+}
+
+- (id)objectForIntegerKey:(int)aKey
+{
+    return([self objectForKey:[NSNumber numberWithInt:aKey]]);
 }
 
 /*untested

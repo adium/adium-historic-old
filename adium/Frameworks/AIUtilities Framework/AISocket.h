@@ -22,6 +22,7 @@
 
     BOOL			isValid;
     NSString			*hostIP;
+    int				hostPort;
 }
 
 + (AISocket *)socketWithHost:(NSString *)host port:(int)port;
@@ -31,5 +32,6 @@
 - (void)removeDataBytes:(int)inLength;
 - (BOOL)isValid;
 - (NSString *)hostIP;
+- (int)hostPort;
 
 @end

@@ -377,7 +377,12 @@
     //Get the background color
     if([[content type] compare:CONTENT_MESSAGE_TYPE] == 0){
         NSAttributedString	*message = [(AIContentMessage *)content message];
-        backgroundColor = [message attribute:AIBodyColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, [message length])];
+
+        if(message && [message length] != 0){
+            backgroundColor = [message attribute:AIBodyColorAttributeName atIndex:0 longestEffectiveRange:nil inRange:NSMakeRange(0, [message length])];
+
+        }
+
     }
 
     //If no color, use white

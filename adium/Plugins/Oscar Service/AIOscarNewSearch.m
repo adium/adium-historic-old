@@ -13,28 +13,21 @@
  | write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  \------------------------------------------------------------------------------------------------------ */
 
-#import <Cocoa/Cocoa.h>
+/* PLEASE NOTE -------------------------------------------------------------------------------------------
+    The contents of this file, and the majority of this plugin, are an obj-c rewrite of Gaim's libfaim/oscar
+    library.  In fact, portions of the original Gaim code may still remain intact, and other portions may
+    have simply been re-arranged, removed, or rewritten.
 
-@interface NSDictionary (AIDictionaryAdditions)
+    More information on Gaim is available at http://gaim.sourceforge.net
+ -------------------------------------------------------------------------------------------------------*/
 
-+ (NSDictionary *)dictionaryNamed:(NSString *)name forClass:(Class)inClass;
-+ (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)writeToPath:(NSString *)path withName:(NSString *)name;
-- (BOOL)boolForKey:(NSString *)inKey;
-- (NSString *)stringForKey:(NSString *)inKey;
-- (int)intForKey:(NSString *)inKey;
-- (NSColor *)colorForKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
+#import "AIOscarNewSearch.h"
 
-@end
 
-@interface NSMutableDictionary (AIDictionaryAdditions)
-
-+ (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
-- (void)setBool:(BOOL)inValue forKey:(NSString *)inKey;
-- (void)setString:(NSString *)inString forKey:(NSString *)inKey;
-- (void)setInt:(int)inValue forKey:(NSString *)inKey;
-- (void)setColor:(NSColor *)inColor forKey:(NSString *)inKey;
-- (id)objectForIntegerKey:(int)aKey;
-
+@implementation AIOscarNewSearch
+/*mod->family = 0x000f;
+mod->version = 0x0001;
+mod->toolid = 0x0010;
+mod->toolversion = 0x0629;
+mod->flags = 0;*/
 @end
