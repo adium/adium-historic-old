@@ -295,8 +295,8 @@ Adium, Copyright 2001-2005, Adam Iser
 }
 
 
-//Presence Tracking ----------------
-#pragma mark
+//Presence Tracking ----------------------------------------------------------------------------------------------------
+#pragma mark Presence Tracking
 /*!
  * @brief Contact list editable?
  *
