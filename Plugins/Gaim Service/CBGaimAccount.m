@@ -1963,11 +1963,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 									 ignoreInheritedValues:YES];
 
 			if([listObject isKindOfClass:[AIMetaContact class]]){
-				NSEnumerator	*enumerator = [[listObject containedObjects] objectEnumerator];
-				AIListContact	*listContact;
-				while(listContact = [enumerator nextObject]){
-					if([listContact account] == self){
-						[gaimThread setAlias:alias forUID:[listObject UID] onAccount:self];
+				NSEnumerator	*enumerator = [[(AIMetaContact *)listObject containedObjects] objectEnumerator];
+				AIListContact	*containedListContact;
+				while(containedListContact = [enumerator nextObject]){
+					if([containedListContact account] == self){
+						[gaimThread setAlias:alias forUID:[containedListContact UID] onAccount:self];
 					}
 				}
 				

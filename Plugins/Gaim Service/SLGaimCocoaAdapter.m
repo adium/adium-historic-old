@@ -2459,13 +2459,12 @@ static GaimCoreUiOps adiumGaimCoreOps = {
 		const char  *uidUTF8String = [UID UTF8String];
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 		const char  *aliasUTF8String = [alias UTF8String];
-		const char	*oldAlias = gaim_buddy_get_alias(buddy);
+		const char	*oldAlias = (buddy ? gaim_buddy_get_alias(buddy) : nil);
 	
 		if (buddy && ((aliasUTF8String && !oldAlias) ||
 					  (!aliasUTF8String && oldAlias) ||
-					  ((oldAlias && aliasUTF8String && (strcmp(alias,aliasUTF8String) != 0))))){
+					  ((oldAlias && aliasUTF8String && (strcmp(oldAlias,aliasUTF8String) != 0))))){
 
-			
 			gaim_blist_alias_buddy(buddy,aliasUTF8String);
 			serv_alias_buddy(buddy);
 			
