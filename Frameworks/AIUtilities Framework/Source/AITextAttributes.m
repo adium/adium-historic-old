@@ -75,8 +75,9 @@
 		}
 	
 		[self updateFont];
+	}
 
-		return(self);
+	return self;
 }
 
 - (id)init
