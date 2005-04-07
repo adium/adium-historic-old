@@ -229,9 +229,9 @@
 //Building -------------------------------------------------------------------------------------------------------------
 #pragma mark Building
 /*
- * @brief Builds the bookmark menu (Detatch as a thread)
+ * @brief Builds the bookmark menu (Detach as a thread)
  *
- * We're not allowed to create our touch any menu items from within a thread, so this thread will gather a list of 
+ * We're not allowed to create or touch any menu items from within a thread, so this thread will gather a list of 
  * bookmarks and then pass them over to another method on the main thread for menu building/inserting.
  */
 - (void)buildBookmarkMenuThread
