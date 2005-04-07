@@ -28,10 +28,11 @@
 
 @implementation SHMozillaBookmarksImporter
 
-#pragma mark protocol methods
+#pragma mark Protocol methods
+
 + (id)newInstanceOfImporter
 {
-    return [[[self alloc] init] autorelease];
+    return [[self alloc] init];
 }
 
 - (id)init
