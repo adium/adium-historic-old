@@ -185,7 +185,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 {
     logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:LOG_VIEWER 
 																			  target:self
-																			  action:@selector(showLogViewerToSelectedContact:)
+																			  action:@selector(showLogViewer:)
 																	   keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
@@ -218,20 +218,42 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     return(YES);
 }
 
-//Show the log viewer, displaying the selected contact's logs
+/*
+ * @brief Show the log viewer for no contact
+ *
+ * Invoked from the Window menu
+ */
+- (void)showLogViewer:(id)sender
+{
+    [AILogViewerWindowController openForContact:nil  
+										 plugin:self];	
+}
+
+/*
+ * @brief Show the log viewer, displaying only the selected contact's logs
+ *
+ * Invoked from the Contact menu
+ */
 - (void)showLogViewerToSelectedContact:(id)sender
 {
     AIListObject   *selectedObject = [[adium contactController] selectedListObject];
-    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ? (AIListContact *)selectedObject : nil)  plugin:self];
+    [AILogViewerWindowController openForContact:([selectedObject isKindOfClass:[AIListContact class]] ?
+												 (AIListContact *)selectedObject : 
+												 nil)  
+										 plugin:self];
 }
 
-//Show the log viewer, displaying the selected contact's logs
+/*
+ * @brief Show the log viewer, displaying only the selected contact's logs
+ *
+ * Invoked from a contextual menu
+ */
 - (void)showLogViewerToSelectedContextContact:(id)sender
 {
 	AIListObject* object = [[adium menuController] currentContextMenuObject];
 	if([object isKindOfClass:[AIListContact class]]){
 		[NSApp activateIgnoringOtherApps:YES];
-			[[[AILogViewerWindowController openForContact:(AIListContact *)object plugin:self] window]
+		[[[AILogViewerWindowController openForContact:(AIListContact *)object plugin:self] window]
 									 makeKeyAndOrderFront:nil];
 	}
 }
