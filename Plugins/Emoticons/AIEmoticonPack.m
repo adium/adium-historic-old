@@ -31,6 +31,9 @@
 
 #define	EMOTICON_SERVICE_CLASS			@"Service Class"
 
+#define EMOTICON_LOCATION				@"Location"
+#define EMOTICON_LOCATION_SEPARATOR		@"////"
+
 @interface AIEmoticonPack (PRIVATE)
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath;
 - (void)setEmoticonArray:(NSArray *)inArray;
@@ -58,6 +61,7 @@
     path = [inPath retain];
     name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
     emoticonArray = nil;
+    emoticonLocation = [path retain];
 	enabled = NO;
     
     return(self);
@@ -69,6 +73,7 @@
     [path release];
     [name release];
     [emoticonArray release];
+    [emoticonLocation release];
 	[serviceClass release];
 
     [super dealloc];
@@ -136,6 +141,7 @@
 	newPack->serviceClass = [serviceClass retain];
 	newPack->path = [path retain];
 	newPack->name = [name retain];
+	newPack->emoticonLocation = [emoticonLocation retain];
 
     return(newPack);
 }
@@ -160,6 +166,53 @@
 	
 	//Load the emoticons
 	if(infoDict){
+		/* Handle optional location key, which allows emoticons to be loaded
+		 * from arbitrary directories. This is only used by the iChat emoticon
+		 * pack.
+		 */
+		id possiblePaths = [infoDict objectForKey:EMOTICON_LOCATION];
+		if(possiblePaths){
+			if([possiblePaths isKindOfClass:[NSString class]]){
+				possiblePaths = [NSArray arrayWithObjects:possiblePaths, nil];
+			}
+
+			NSEnumerator *pathEnumerator = [possiblePaths objectEnumerator];
+			NSString *aPath;
+
+			while((aPath = [pathEnumerator nextObject])){
+				NSString *possiblePath;
+				NSArray *splitPath = [aPath componentsSeparatedByString:EMOTICON_LOCATION_SEPARATOR];
+
+				/* Two possible formats:
+				 *
+				 * <string>/absolute/path/to/directory</string>
+				 * <string>CFBundleIdentifier////relative/path/from/bundle/to/directory</string>
+				 *
+				 * The separator in the latter is ////, defined as EMOTICON_LOCATION_SEPARATOR.
+				 */
+				if([splitPath count] == 1){
+					possiblePath = [splitPath objectAtIndex:0];
+				}else{
+					NSArray *components = [NSArray arrayWithObjects:
+						[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
+						[splitPath objectAtIndex:1],
+						nil];
+					possiblePath = [NSString pathWithComponents:components];
+				}
+
+				/* If the directory exists, then we've found the location. If we
+				 * make it all the way through the list without finding a valid
+				 * directory, then the standard location will be used.
+				 */
+				BOOL isDir;
+				if([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir){
+					[emoticonLocation release];
+					emoticonLocation = [possiblePath copy];
+					break;
+				}
+			}
+		}
+
 		int version = [[infoDict objectForKey:EMOTICON_PACK_VERSION] intValue];
 		
 		switch(version){
@@ -193,7 +246,7 @@
 	while(fileName = [enumerator nextObject]){
 		NSDictionary	*dict = [emoticons objectForKey:fileName];
 		
-		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
+		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
 													  equivalents:[dict objectForKey:EMOTICON_EQUIVALENTS]
 															 name:[dict objectForKey:EMOTICON_NAME]
 															 pack:self]];
