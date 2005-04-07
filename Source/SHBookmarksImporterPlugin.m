@@ -71,8 +71,8 @@
 	importer = [[self importerClassForBrowserAtURL:browser] newInstanceOfImporter];
 
 	updatingMenu = NO;
-    toolbarItemArray = nil;
-	
+	toolbarItemArray = nil;
+
 	//If we can't find an importer for the user's browser, we don't need to install the menu item or do anything else
 	if(importer){
 		//Main bookmark menu item
