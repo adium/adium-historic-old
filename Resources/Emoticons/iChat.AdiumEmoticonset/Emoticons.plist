@@ -6,6 +6,10 @@
 	<integer>1</integer>
 	<key>Service Class</key>
 	<string>AIM-compatible</string>
+	<key>Location</key>
+	<array>
+		<string>/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources</string>
+	</array>
 	<key>Emoticons</key>
 	<dict>
 		<key>angry.tiff</key>
