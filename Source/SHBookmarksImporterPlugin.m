@@ -483,6 +483,3 @@
 }
 
 @end
-// Local Variables:
-// coding: macintosh;
-// End:
