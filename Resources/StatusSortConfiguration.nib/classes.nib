@@ -54,7 +54,10 @@
                 "checkBox_groupAway" = NSButton; 
                 "checkBox_groupIdle" = NSButton; 
                 "checkBox_groupIdleAndAway" = NSButton; 
+                "checkBox_groupMobileSeparately" = NSButton; 
                 "checkBox_sortIdleTime" = NSButton; 
+                "label_sortWithinEachStatusGrouping" = AILocalizationTextField; 
+                "label_statusGroupOrdering" = AILocalizationTextField; 
                 "matrix_resolution" = NSMatrix; 
                 "matrix_unavailableGrouping" = NSMatrix; 
                 "tableView_sortOrder" = NSTableView; 

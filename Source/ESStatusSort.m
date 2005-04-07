@@ -24,6 +24,7 @@
 #define STATUS_SORT_DEFAULT_PREFS   @"StatusSortDefaults"
 
 #define KEY_GROUP_AVAILABLE			@"Status:Group Available"
+#define KEY_GROUP_MOBILE			@"Status:Group Mobile"
 #define KEY_GROUP_UNAVAILABLE		@"Status:Group Unavailable"
 #define KEY_GROUP_AWAY				@"Status:Group Away"
 #define KEY_GROUP_IDLE				@"Status:Group Idle"
@@ -40,20 +41,23 @@
 #define UNAVAILABLE					AILocalizedString(@"Unavailable",nil)
 #define OTHER_UNAVAILABLE			AILocalizedString(@"Other Unavailable",nil)		
 #define ONLINE						AILocalizedString(@"Online",nil)		
+#define MOBILE						AILocalizedString(@"Mobile",nil)
 
 #define STATUS_DRAG_TYPE			@"Status Sort"
 
 typedef enum {
 	Available = 0,
-	Away = 1,
-	Idle = 2,
-	Away_And_Idle = 3,
-	Unavailable = 4,
-	Online = 5
+	Away,
+	Idle,
+	Away_And_Idle,
+	Unavailable,
+	Online,
+	Mobile,
+	MAX_SORT_ORDER_DIMENSION
 } Status_Sort_Type;
-#define MAX_SORT_ORDER_DIMENSION	6
 
 static BOOL groupAvailable;
+static BOOL	groupMobile;
 static BOOL groupUnavailable;
 static BOOL	groupAway;
 static BOOL	groupIdle;
@@ -95,6 +99,7 @@ static int  sizeOfSortOrder;
 	NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_SORTING];
 	
 	groupAvailable = [[prefDict objectForKey:KEY_GROUP_AVAILABLE] boolValue];
+	groupMobile = [[prefDict objectForKey:KEY_GROUP_MOBILE] boolValue];
 	groupUnavailable = [[prefDict objectForKey:KEY_GROUP_UNAVAILABLE] boolValue];
 	
 	groupAway = [[prefDict objectForKey:KEY_GROUP_AWAY] boolValue];
@@ -117,7 +122,7 @@ static int  sizeOfSortOrder;
  */
 - (void)pruneAndSetSortOrderFromArray:(NSArray *)sortOrderArray
 {
-	NSEnumerator	*enumerator = [sortOrderArray objectEnumerator];
+	NSEnumerator	*enumerator;
 	NSNumber		*sortTypeNumber;
 	
 	unsigned int i;
@@ -132,7 +137,8 @@ static int  sizeOfSortOrder;
 	//add to sortOrder[].  Finalize sortOrder with -1.
 	
 	BOOL	groupIdleOrIdleTime = (groupIdle || sortIdleTime);
-	
+
+	enumerator = [sortOrderArray objectEnumerator];
 	while (sortTypeNumber = [enumerator nextObject]){
 		switch ([sortTypeNumber intValue]){
 			case Available: 
@@ -176,6 +182,12 @@ static int  sizeOfSortOrder;
 					sortOrder[i++] = Online;
 				}
 				break;
+				
+			case Mobile:
+				if (groupAvailable && groupMobile){
+					sortOrder[i++] = Mobile;
+				}
+				break;
 		}
 	}
 	
@@ -204,7 +216,7 @@ static int  sizeOfSortOrder;
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusType",nil]);
+	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusType",@"IsMobile",nil]);
 }
 
 /*!
@@ -239,6 +251,7 @@ static int  sizeOfSortOrder;
 - (void)viewDidLoad
 {
 	[checkBox_groupAvailable setState:groupAvailable];
+	[checkBox_groupMobileSeparately setState:groupMobile];
 	[checkBox_groupAway setState:groupAway];
 	[checkBox_groupIdle setState:groupIdle];
 	[checkBox_groupIdleAndAway setState:groupIdleAndAway];
@@ -281,11 +294,34 @@ static int  sizeOfSortOrder;
  */
 - (IBAction)changePreference:(id)sender
 {
+	NSArray	*sortOrderArray =  [[adium preferenceController] preferenceForKey:KEY_SORT_ORDER
+																		group:PREF_GROUP_CONTACT_SORTING];
 	if (sender == checkBox_groupAvailable){
 		groupAvailable = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAvailable]
                                              forKey:KEY_GROUP_AVAILABLE
+                                              group:PREF_GROUP_CONTACT_SORTING];
+
+		[self configureControlDimming];
+		
+	}else if (sender == checkBox_groupMobileSeparately){
+		groupMobile = [sender state];
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupMobile]
+                                             forKey:KEY_GROUP_MOBILE
                                               group:PREF_GROUP_CONTACT_SORTING];		
+		
+		//Ensure the mobile item is in our sort order array, as the old defaults didn't include it
+		if([sortOrderArray indexOfObject:[NSNumber numberWithInt:Mobile]] == NSNotFound){
+			NSMutableArray	*newSortOrderArray = [[sortOrderArray mutableCopy] autorelease];
+			[newSortOrderArray addObject:[NSNumber numberWithInt:Mobile]];
+			
+			[[adium preferenceController] setPreference:newSortOrderArray
+												 forKey:KEY_SORT_ORDER
+												  group:PREF_GROUP_CONTACT_SORTING];
+			
+			sortOrderArray = newSortOrderArray;
+		}
+		
 	}else if (sender == checkBox_groupAway){
 		groupAway = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAway]
@@ -335,8 +371,7 @@ static int  sizeOfSortOrder;
                                               group:PREF_GROUP_CONTACT_SORTING];
 	}
 	
-	[self pruneAndSetSortOrderFromArray:[[adium preferenceController] preferenceForKey:KEY_SORT_ORDER
-																				 group:PREF_GROUP_CONTACT_SORTING]];
+	[self pruneAndSetSortOrderFromArray:sortOrderArray];
 	
 	[[adium contactController] sortContactList];
 }
@@ -350,6 +385,8 @@ static int  sizeOfSortOrder;
 	[checkBox_groupAway setEnabled:!groupUnavailable];
 	[checkBox_groupIdle setEnabled:!groupUnavailable];
 	[checkBox_groupIdleAndAway setEnabled:!groupUnavailable];
+	
+	[checkBox_groupMobileSeparately setEnabled:groupAvailable];
 }
 
 #pragma mark Sort Order Tableview datasource
@@ -394,6 +431,10 @@ static int  sizeOfSortOrder;
 		case Online:
 			return ONLINE;
 			break;
+			
+		case Mobile:
+			return MOBILE;
+			break;
 	}
 	
 	return @"";
@@ -421,6 +462,8 @@ static int  sizeOfSortOrder;
 		equivalent = Unavailable;
 	}else if ([string isEqualToString:ONLINE]){
 		equivalent = Online;
+	}else if([string isEqualToString:MOBILE]){
+		equivalent = Mobile;
 	}
 	
 	return [NSNumber numberWithInt:equivalent];
@@ -551,6 +594,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		if (onlineA && onlineB){
 			unsigned int	i = 0;
 			BOOL			away[2];
+			BOOL			mobile[2];
 			BOOL			definitelyFinishedIfSuccessful, onlyIfWeAintGotNothinBetter, status;
 			int				idle[2];
 			int				sortIndex[2];
@@ -567,6 +611,11 @@ int statusSort(id objectA, id objectB, BOOL groups)
 					   [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			
+			if(groupMobile){
+				mobile[0] = [objectA isMobile];
+				mobile[1] = [objectB isMobile];
+			}
+
 			for (objectCounter = 0; objectCounter < 2; objectCounter++){
 				sortIndex[objectCounter] = 999;
 
@@ -580,7 +629,11 @@ int statusSort(id objectA, id objectB, BOOL groups)
 						case Available:
 							status = (!away[objectCounter] && !idle[objectCounter]); // TRUE if A is available
 							break;
-
+						
+						case Mobile:
+							status = mobile[objectCounter];
+							break;
+						
 						case Away:
 							status = away[objectCounter];
 							break;
