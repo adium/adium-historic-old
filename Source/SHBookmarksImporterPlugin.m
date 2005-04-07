@@ -135,52 +135,51 @@
  */
 - (Class)importerClassForDefaultBrowser
 {
-	Class		importerClass = nil;
-	ICInstance	ICInst;
-	ICAppSpec	Spec;
-	ICAttr		Junk;
-	OSErr		Err;
-	long		TheSize;
+	Class		 importerClass = nil;
+	struct LSItemInfoRecord	info;
+	NSURL		*URL = [NSURL URLWithString:@"http://www.adiumx.com/"];
 
-	//Start Internet Config, passing it Adium's creator code
-	Err = ICStart(&ICInst, 'AdiM');
-	
-	TheSize = sizeof(Spec);
-	
-	// Get the current http helper app, to fill the Spec and TheSize variables and determine the default browser
-	Err = ICGetPref(ICInst, "\pHelperhttp", &Junk, &Spec, &TheSize);
-	
-	switch(Spec.fCreator){
-		case 'sfri': /* Safari */
-			importerClass = [SHSafariBookmarksImporter class];
-			break;
-		case 'CHIM': /* Camino */
-			importerClass = [SHCaminoBookmarksImporter class];
-			break;
-		case 'MOZB': /* FireFox */
-			importerClass = [SHFireFoxBookmarksImporter class];
-			break;
-		case 'MOZZ': /* Mozilla */
-			importerClass = [SHMozillaBookmarksImporter class];
-			break;
-		case 'OWEB': /* OmniWeb (4.x and 5.x) */
-			importerClass = [SHOmniWebBookmarksImporter class];
-			break;
-		case 'ShiR': /* Shiira - Safari-compatible bookmarks, using Safari importer for now */
-			importerClass = [SHSafariBookmarksImporter class];
-			break;
-		case 'MSIE': /* Internet Explorer */
-			importerClass = [SHMSIEBookmarksImporter class];
-			break;			
-		default:
-			importerClass = nil;
-			break;
+	//get the URL for the default browser.
+	OSStatus	 err = LSGetApplicationForURL((CFURLRef)URL, kLSRolesAll, /*outAppRef*/ NULL, /*outAppURL*/ (CFURLRef *)&URL);
+	if(err == noErr) {
+		//get the creator code for the default browser.
+		err = LSCopyItemInfoForURL((CFURLRef)URL, kLSRequestTypeCreator, &info);
+		[URL release];
 	}
 
-	//We're done with Internet Config, so stop it
-	Err = ICStop(ICInst);
+	if(err != noErr) {
+		NSLog(@"Could not determine the default browser: LSCopyItemInfoForURL returned %li", (long)err);
+	} else {
+		switch(info.creator) {
+			case 'sfri': //Safari
+				importerClass = [SHSafariBookmarksImporter class];
+				break;
+			case 'CHIM': //Camino
+				importerClass = [SHCaminoBookmarksImporter class];
+				break;
+			case 'MOZB': //Firefox
+				importerClass = [SHFireFoxBookmarksImporter class];
+				break;
+			case 'MOZZ': //Mozilla
+				importerClass = [SHMozillaBookmarksImporter class];
+				break;
+			case 'OWEB': //OmniWeb (4.x and 5.x)
+				importerClass = [SHOmniWebBookmarksImporter class];
+				break;
+			case 'ShiR': //Shiira - Safari-compatible bookmarks, using Safari importer for now
+				importerClass = [SHSafariBookmarksImporter class];
+				break;
+			case 'MSIE': //Internet Explorer
+				importerClass = [SHMSIEBookmarksImporter class];
+				break;
 
-	return(importerClass);
+			default:
+				NSLog(@"Unrecognised default browser with creator code of %@ - bookmarks importer is disabled", NSFileTypeForHFSTypeCode(info.creator));
+				break;
+		}
+	}
+
+	return importerClass;
 }
 
 /*
