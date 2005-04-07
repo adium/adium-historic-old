@@ -52,7 +52,11 @@
 	return(@"Lotus Sametime");
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@.,_-()='/ "]);
+	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
+	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet symbolCharacterSet]];
+	
+	return([allowedCharacters autorelease]);
 }
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@""]);
