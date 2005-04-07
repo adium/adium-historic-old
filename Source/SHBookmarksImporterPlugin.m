@@ -64,7 +64,7 @@
 - (void)installPlugin
 {
 	//Prepare the importer for our default browser
-	importer = [[[self importerClassForDefaultBrowser] newInstanceOfImporter] retain];
+	importer = [[self importerClassForDefaultBrowser] newInstanceOfImporter];
 
 	updatingMenu = NO;
     toolbarItemArray = nil;
@@ -148,7 +148,7 @@
 	TheSize = sizeof(Spec);
 	
 	// Get the current http helper app, to fill the Spec and TheSize variables and determine the default browser
-	Err = ICGetPref(ICInst, "\pHelper¥http", &Junk, &Spec, &TheSize);
+	Err = ICGetPref(ICInst, "\pHelperhttp", &Junk, &Spec, &TheSize);
 	
 	switch(Spec.fCreator){
 		case 'sfri': /* Safari */
@@ -484,3 +484,6 @@
 }
 
 @end
+// Local Variables:
+// coding: macintosh;
+// End:

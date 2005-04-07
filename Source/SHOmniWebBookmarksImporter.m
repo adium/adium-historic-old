@@ -46,7 +46,7 @@ DeclareString(bookmarkDictContent)
 #pragma mark protocol methods
 + (id)newInstanceOfImporter
 {
-    return [[[self alloc] init] autorelease];
+    return [[self alloc] init];
 }
 
 
