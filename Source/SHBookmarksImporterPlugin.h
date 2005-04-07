@@ -28,10 +28,11 @@
 @interface SHBookmarksImporterPlugin : AIPlugin {	
 	NSMenuItem              *bookmarkRootMenuItem;
 	NSMenuItem              *bookmarkRootContextualMenuItem;
-        
+
 	NSToolbarItem			*toolbarItem;
 	NSMutableArray			*toolbarItemArray;
-	
+
+	NSImage					*browserIcon;
 	id <SHBookmarkImporter>  importer;
 	BOOL                     updatingMenu;
 }
