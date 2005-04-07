@@ -36,7 +36,9 @@
 @class SHMarkedHyperlink;
 
 @interface SHBookmarksImporterPlugin(PRIVATE)
-- (Class)importerClassForDefaultBrowser;
+- (NSURL *)URLForDefaultBrowser;
+- (Class)importerClassForBrowserAtURL:(NSURL *)URL;
+
 - (void)buildBookmarkMenuThread;
 - (void)insertBookmarks:(NSDictionary *)bookmarkArray;
 - (void)insertBookmark:(SHMarkedHyperlink *)bookmark;
@@ -64,7 +66,9 @@
 - (void)installPlugin
 {
 	//Prepare the importer for our default browser
-	importer = [[self importerClassForDefaultBrowser] newInstanceOfImporter];
+	NSURL *browser = [self URLForDefaultBrowser];
+	browserIcon = [[NSWorkspace sharedWorkspace] iconForFile:[browser path]];
+	importer = [[self importerClassForBrowserAtURL:browser] newInstanceOfImporter];
 
 	updatingMenu = NO;
     toolbarItemArray = nil;
@@ -130,25 +134,30 @@
 	}
 }
 
+#pragma mark -
+
+- (NSURL *)URLForDefaultBrowser
+{
+	NSURL		*URL = [NSURL URLWithString:@"http://www.adiumx.com/"];
+	OSStatus	 err = LSGetApplicationForURL((CFURLRef)URL, kLSRolesAll, /*outAppRef*/ NULL, /*outAppURL*/ (CFURLRef *)&URL);
+	if(err != noErr) {
+		NSLog(@"Could not determine the default browser: LSCopyItemInfoForURL returned %li", (long)err);
+	}
+	return [URL autorelease];
+}
+
 /*
  * @brief Returns the importer class for the user's default web browser
  */
-- (Class)importerClassForDefaultBrowser
+- (Class)importerClassForBrowserAtURL:(NSURL *)URL
 {
 	Class		 importerClass = nil;
 	struct LSItemInfoRecord	info;
-	NSURL		*URL = [NSURL URLWithString:@"http://www.adiumx.com/"];
 
-	//get the URL for the default browser.
-	OSStatus	 err = LSGetApplicationForURL((CFURLRef)URL, kLSRolesAll, /*outAppRef*/ NULL, /*outAppURL*/ (CFURLRef *)&URL);
-	if(err == noErr) {
-		//get the creator code for the default browser.
-		err = LSCopyItemInfoForURL((CFURLRef)URL, kLSRequestTypeCreator, &info);
-		[URL release];
-	}
-
+	//get the creator code for the default browser.
+	OSStatus	err = LSCopyItemInfoForURL((CFURLRef)URL, kLSRequestTypeCreator, &info);
 	if(err != noErr) {
-		NSLog(@"Could not determine the default browser: LSCopyItemInfoForURL returned %li", (long)err);
+		NSLog(@"Could not find an importer by creator code for the browser at %@: LSCopyItemInfoForURL returned %li", URL, (long)err);
 	} else {
 		switch(info.creator) {
 			case 'sfri': //Safari
@@ -181,6 +190,8 @@
 
 	return importerClass;
 }
+
+#pragma mark -
 
 /*
  * @brief Insert a link into the textView
@@ -388,7 +399,24 @@
 	
 	//Register our toolbar item
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
-	[button setImage:[NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]]];
+
+	//badge the sprocket icon with the browser's icon.
+	NSImage *icon = [NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]];
+	NSRect  srcRect = { NSZeroPoint, [browserIcon size] };
+	NSSize origIconSize = [icon size];
+	NSRect destRect = { NSZeroPoint, origIconSize };
+	//draw to the lower right corner of the icon.
+	destRect.size.width  *= 0.6;
+	destRect.size.height *= 0.6;
+	destRect.origin.x     = origIconSize.width - destRect.size.width;
+	[icon lockFocus];
+	[browserIcon drawInRect:destRect
+	               fromRect:srcRect
+	              operation:NSCompositeSourceOver
+	               fraction:0.9];
+	[icon unlockFocus];
+	[button setImage:icon];
+
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
 														   label:AILocalizedString(@"Bookmarks",nil)
 													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
