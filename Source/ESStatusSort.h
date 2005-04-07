@@ -20,6 +20,7 @@
 
 @interface ESStatusSort : AISortController {
 	IBOutlet	NSButton		*checkBox_groupAvailable;
+	IBOutlet	NSButton		*checkBox_groupMobileSeparately;
 	
 	IBOutlet	NSMatrix		*matrix_unavailableGrouping;
 	IBOutlet	NSButtonCell	*buttonCell_allUnavailable;
