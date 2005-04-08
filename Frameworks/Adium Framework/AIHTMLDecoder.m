@@ -660,7 +660,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			 *
 			 * Handle this special case. */
 			if(languageValue && ([languageValue intValue] == 143)){
-				chunkString = [chunkString stringByTranslatingByOffset:0xF000];				
+				NSString	*fontFamily = [textAttributes fontFamily];
+				int			offset;
+				
+				if([fontFamily caseInsensitiveCompare:@"Symbol"] == NSOrderedSame){
+					/* XXX - Can't figure out how to map the Symbol font. 0x0300 as an offset gets us into the Greek
+					 * letters, * which almost maps up.. except on Windows "D" = delta and "G" = gamma,
+					 * whereas delta and gamma are adjacent in the  Greek letters section of the font on OS X. */
+					offset = 0x0300;
+				}else{
+					offset = 0xF000;
+				}
+
+				chunkString = [chunkString stringByTranslatingByOffset:offset];
 			}
 			
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
@@ -753,10 +765,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							//Process the span tag if it's in a log
 							if([chunkString caseInsensitiveCompare:@" class=\"sender\""] == NSOrderedSame) {
 								if(inDiv && send) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 
+																						   green:0.5
+																							blue:0.0 
+																						   alpha:1.0]];
 									inLogSpan = YES;
 								} else if(inDiv && receive) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
+									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0
+																						   green:0.0
+																							blue:0.5 
+																						   alpha:1.0]];
 									inLogSpan = YES;
 								}
 							} else if([chunkString caseInsensitiveCompare:@" class=\"timestamp\""] == NSOrderedSame){
@@ -773,17 +791,22 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 							[textAttributes setFontSize:12];
 							inLogSpan = NO;
 						}
+						
 					//Line Break
 					}else if([chunkString caseInsensitiveCompare:BR] == NSOrderedSame || 
 							 [chunkString caseInsensitiveCompare:BRSlash] == NSOrderedSame ||
 							 [chunkString caseInsensitiveCompare:CloseBR] == NSOrderedSame){
 						[attrString appendString:Return withAttributes:nil];
-						//Make sure the tag closes, since it may have a <BR /> which stopped the scanner at the space, not the >
+						
+						/* Make sure the tag closes; it may have a <BR /> which stopped the scanner at
+						 * at the space rather than the '>'
+						 */
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
 						/* Skip any newlines following an HTML line break; if we have one we want to ignore the other.
 						 * This is generally unnecessary; it is a hack around a winAIM bug where 
-						 * newlines are sent as "<BR>\n\r" */
+						 * newlines are sent as "<BR>\n\r"
+						 */
 						charactersToSkipAfterThisTag = @"\n\r";
 
 					//Bold
@@ -932,9 +955,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}
 	}
 	
-	//If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
-	//we want to move the NSBackgroundColorAttributeName attribute to AIBodyColorAttributeName (Things are a
-	//lot more attractive this way).
+	/* If the string has a constant NSBackgroundColorAttributeName attribute and no AIBodyColorAttributeName,
+	 * we want to move the NSBackgroundColorAttributeName attribute to AIBodyColorAttributeName (Things are a
+	 * lot more attractive this way).
+	 */
 	if([attrString length]){
 		NSRange backRange;
 		NSColor *bodyColor = [attrString attribute:NSBackgroundColorAttributeName 
