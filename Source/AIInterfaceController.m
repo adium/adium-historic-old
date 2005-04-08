@@ -162,6 +162,9 @@
 	[tooltipBody release]; tooltipBody = nil;
 	[tooltipImage release]; tooltipImage = nil;
 	
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	
     [super dealloc];
 }
 
