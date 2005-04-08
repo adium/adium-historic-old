@@ -176,13 +176,13 @@
 	NSString	*description = nil;
 
 	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
-		NSString	*title = [userInfo objectForKey:@"Title"];
-		NSString	*description = [userInfo objectForKey:@"Description"];
-		if(title && description){
-			description = [NSString stringWithFormat:@"%@\n%@",title,description];
+		NSString	*errorTitle = [userInfo objectForKey:@"Title"];
+		NSString	*errorDescription = [userInfo objectForKey:@"Description"];
+		if(errorTitle && errorDescription){
+			description = [NSString stringWithFormat:@"%@\n%@",errorTitle,errorDescription];
 			
-		}else if(title || description){
-			description = (title ? title : description);
+		}else if(errorTitle || errorDescription){
+			description = (errorTitle ? errorTitle : errorDescription);
 			
 		}else{
 			description = AILocalizedString(@"An error occurred",nil);
