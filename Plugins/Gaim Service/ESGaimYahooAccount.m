@@ -284,6 +284,7 @@
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {
+	NSString			*statusMessageString = [statusMessage string];
 	char				*normalized = g_strdup(gaim_normalize(account, [[theContact UID] UTF8String]));
 	struct yahoo_data   *od;
 	YahooFriend			*f;
@@ -315,6 +316,15 @@
 	}
 
 	g_free(normalized);
+	
+	//Yahoo doesn't have an explicit mobile state; instead the status message is automatically set to indicate mobility.
+	if(statusMessageString && ([statusMessageString isEqualToString:@"I'm on SMS"] ||
+							   [statusMessageString isEqualToString:@"I'm mobile"])){
+		[theContact setIsMobile:YES notify:NotifyLater];
+
+	}else if([theContact isMobile]){
+		[theContact setIsMobile:NO notify:NotifyLater];		
+	}
 	
 	[super updateStatusForContact:theContact
 					 toStatusType:statusTypeNumber
