@@ -71,6 +71,11 @@
 - (void)setFontFamily:(NSString *)inFamilyName;
 
 /*!
+ * @brief Font family
+ */
+- (NSString *)fontFamily;
+
+/*!
  * @brief Set the font size
  *
  * Set the font size
