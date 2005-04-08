@@ -30,132 +30,81 @@
 #import <Adium/AITextAttachmentExtension.h>
 #import <Adium/ESFileWrapperExtension.h>
 
+#define HTML				@"HTML"
+#define CloseHTML			@"/HTML"
+#define Body				@"BODY"
+#define CloseBody			@"/BODY"
+#define Font				@"FONT"
+#define CloseFont			@"/FONT"
+
+#define Span				@"SPAN"
+#define CloseSpan			@"/SPAN"
+#define BR					@"BR"
+#define BRSlash				@"BR/"
+#define CloseBR				@"/BR"
+#define B					@"B"
+#define CloseB				@"/B"
+#define I					@"I"
+#define CloseI				@"/I"
+#define U					@"U"
+#define CloseU				@"/U"
+#define P					@"P"
+#define CloseP				@"/P"
+
+#define IMG					@"IMG"
+#define CloseIMG			@"/IMG"
+#define Face				@"FACE"
+#define SIZE				@"SIZE"
+#define Color				@"COLOR"
+#define Back				@"BACK"
+#define ABSZ				@"ABSZ"
+
+#define OpenFontTag			@"<FONT"
+#define CloseFontTag		@"</FONT>"
+#define SizeTag				@" ABSZ=\"%i\" SIZE=\"%i\""
+#define BRTag				@"<BR>"
+#define Return				@"\r"
+#define Newline				@"\n"
+
+#define Ampersand			@"&"
+#define AmpersandHTML		@"&amp;"
+
+#define LessThan			@"<"
+#define LessThanHTML		@"&lt;"
+
+#define GreaterThan			@">"
+#define GreaterThanHTML		@"&gt;"
+
+#define Semicolon			@";"
+#define SpaceGreaterThan	@" >"
+#define TagCharStartString	@"<&"
+
+#define Tab					@"\t"
+#define TabHTML				@" &nbsp;&nbsp;&nbsp;"
+
+#define LeadSpace			@" "
+#define LeadSpaceHTML		@"&nbsp;"
+
+#define Space				@"  "
+#define SpaceHTML			@" &nbsp;"
+
 int HTMLEquivalentForFontSize(int fontSize);
 
-@interface AIHTMLDecoder (PRIVATE)
+static AITextAttributes *_defaultTextDecodingAttributes = nil;
 
+@interface AIHTMLDecoder (PRIVATE)
 - (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
-
 - (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
-
 @end
 
 @implementation AIHTMLDecoder
 
-static AITextAttributes *_defaultTextDecodingAttributes = nil;
-
-DeclareString(HTML);
-DeclareString(CloseHTML);
-DeclareString(Body);
-DeclareString(CloseBody);
-DeclareString(Font);
-DeclareString(CloseFont);
-DeclareString(Span);
-DeclareString(CloseSpan);
-DeclareString(BR);
-DeclareString(BRSlash);
-DeclareString(CloseBR);
-DeclareString(B);
-DeclareString(CloseB);
-DeclareString(I);
-DeclareString(CloseI);
-DeclareString(U);
-DeclareString(CloseU);
-DeclareString(P);
-DeclareString(CloseP);
-DeclareString(IMG);
-DeclareString(CloseIMG);
-DeclareString(Face);
-DeclareString(SIZE);
-DeclareString(Color);
-DeclareString(Back);
-DeclareString(ABSZ);
-DeclareString(OpenFontTag);
-DeclareString(CloseFontTag);
-DeclareString(SizeTag);
-DeclareString(BRTag);
-DeclareString(Return);
-DeclareString(Newline);
-DeclareString(Ampersand);
-DeclareString(AmpersandHTML);
-DeclareString(LessThan);
-DeclareString(LessThanHTML);
-DeclareString(GreaterThan);
-DeclareString(GreaterThanHTML);
-DeclareString(Semicolon);
-DeclareString(SpaceGreaterThan);
-DeclareString(TagCharStartString);
-DeclareString(Tab);
-DeclareString(TabHTML);
-DeclareString(LeadSpace);
-DeclareString(LeadSpaceHTML);
-DeclareString(Space);
-DeclareString(SpaceHTML);
-
 + (void)initialize
 {
-	InitString(HTML,@"HTML");
-	InitString(CloseHTML,@"/HTML");
-	InitString(Body,@"BODY");
-	InitString(CloseBody,@"/BODY");
-	InitString(Font,@"FONT");
-	InitString(CloseFont,@"/FONT");
-	
-	InitString(Span,@"SPAN");
-	InitString(CloseSpan,@"/SPAN");
-	InitString(BR,@"BR");
-	InitString(BRSlash,@"BR/");
-	InitString(CloseBR,@"/BR");
-	InitString(B,@"B");
-	InitString(CloseB,@"/B");
-	InitString(I,@"I");
-	InitString(CloseI,@"/I");
-	InitString(U,@"U");
-	InitString(CloseU,@"/U");
-	InitString(P,@"P");
-	InitString(CloseP,@"/P");
-	
-	InitString(IMG,@"IMG");
-	InitString(CloseIMG,@"/IMG");
-	InitString(Face,@"FACE");
-	InitString(SIZE,@"SIZE");
-	InitString(Color,@"COLOR");
-	InitString(Back,@"BACK");
-	InitString(ABSZ,@"ABSZ");
-	
-	InitString(OpenFontTag,@"<FONT");
-	InitString(CloseFontTag,@"</FONT>");
-	InitString(SizeTag,@" ABSZ=\"%i\" SIZE=\"%i\"");
-	InitString(BRTag,@"<BR>");
-	InitString(Return,@"\r");
-	InitString(Newline,@"\n");
-	
-	InitString(Ampersand,@"&");
-	InitString(AmpersandHTML,@"&amp;");
-	
-	InitString(LessThan,@"<");
-	InitString(LessThanHTML,@"&lt;");
-	
-	InitString(GreaterThan,@">");
-	InitString(GreaterThanHTML,@"&gt;");
-	
-	InitString(Semicolon,@";");
-	InitString(SpaceGreaterThan,@" >");
-	InitString(TagCharStartString,@"<&");
-
-	InitString(Tab,@"\t");
-	InitString(TabHTML,@" &nbsp;&nbsp;&nbsp;");
-	
-	InitString(LeadSpace,@" ");
-	InitString(LeadSpaceHTML,@"&nbsp;");
-	
-	InitString(Space,@"  ");
-	InitString(SpaceHTML,@" &nbsp;");
-	
 	if (!_defaultTextDecodingAttributes){
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
