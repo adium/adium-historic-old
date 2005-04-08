@@ -50,25 +50,26 @@
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
 {
-	[super init];
-	
-	contactListView = [inContactListView retain];
-	scrollView_contactList = [inScrollView_contactList retain];
-	delegate = inDelegate;
+	if((self = [super init]))
+	{
+		contactListView = [inContactListView retain];
+		scrollView_contactList = [inScrollView_contactList retain];
+		delegate = inDelegate;
 
-	hideRoot = YES;
-	dragItems = nil;
-	showTooltips = YES;
-	showTooltipsInBackground = NO;
-	backgroundOpacity = 1.0;
+		hideRoot = YES;
+		dragItems = nil;
+		showTooltips = YES;
+		showTooltipsInBackground = NO;
+		backgroundOpacity = 1.0;
 
-	[self configureViewsAndTooltips];
-	
-	//Watch for drags ending so we can clear any cached drag data
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listControllerDragEnded:)
-									   name:@"AIListControllerDragEnded"
-									 object:nil];
+		[self configureViewsAndTooltips];
+		
+		//Watch for drags ending so we can clear any cached drag data
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listControllerDragEnded:)
+										   name:@"AIListControllerDragEnded"
+										 object:nil];
+	}
 
 	return(self);
 }
