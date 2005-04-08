@@ -63,37 +63,36 @@
  */
 - (id)initWithBundle:(NSBundle *)inBundle
 {
-	//Init
-	[super init];
-	styleBundle = [inBundle retain];
-	stylePath = [[styleBundle resourcePath] retain];
+	if ((self = [super init])) {
+		styleBundle = [inBundle retain];
+		stylePath = [[styleBundle resourcePath] retain];
 
-	//Default behavior
-	allowTextBackgrounds = YES;
-	
-	//Our styles are versioned so we can change how they work without breaking compatability
-	/*
-	 Version 0: Initial Webkit Version
-	 Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
-     	         scrollToBottom functions when inserting content.
-	 Version 2: No signigifant changes
-	 Version 3: main.css is no longer a separate style, it now serves as the base stylesheet and is imported by default.
-	             The default variant is now a separate file in /variants like all other variants.
-	 */
-	styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
+		//Default behavior
+		allowTextBackgrounds = YES;
 
-	//Pre-fetch our templates
-	[self _loadTemplates];
-	
-	//Style flags
-	allowsCustomBackground = ![[styleBundle objectForInfoDictionaryKey:@"DisableCustomBackground"] boolValue];
-	combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
-	//allowsTextColors = ![[styleBundle objectForInfoDictionaryKey:@"AllowTextColors"] boolValue];		
+		/* Our styles are versioned so we can change how they work without breaking compatibility.
+		 *
+		 * Version 0: Initial Webkit Version
+		 * Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
+		 *            scrollToBottom functions when inserting content.
+		 * Version 2: No signigifant changes
+		 * Version 3: main.css is no longer a separate style, it now serves as the base stylesheet and is imported by default.
+		 *            The default variant is now a separate file in /variants like all other variants.
+		 */
+		styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
 
-	NSNumber *tmpNum = [styleBundle objectForInfoDictionaryKey:@"ShowsUserIcons"];
-	allowsUserIcons = (tmpNum ? [tmpNum boolValue] : YES);
+		//Pre-fetch our templates
+		[self _loadTemplates];
 
-	return(self);
+		//Style flags
+		allowsCustomBackground = ![[styleBundle objectForInfoDictionaryKey:@"DisableCustomBackground"] boolValue];
+		combineConsecutive = ![[styleBundle objectForInfoDictionaryKey:@"DisableCombineConsecutive"] boolValue];
+
+		NSNumber *tmpNum = [styleBundle objectForInfoDictionaryKey:@"ShowsUserIcons"];
+		allowsUserIcons = (tmpNum ? [tmpNum boolValue] : YES);
+	}
+
+	return self;
 }
 
 /*!
