@@ -23,6 +23,18 @@
 			
 			alignChat(shouldScroll);
 		}
+		function appendMessageNoScroll(html) {
+			//Remove any existing insertion point
+			insert = document.getElementById("insert");
+			if(insert) insert.parentNode.removeChild(insert);
+
+			//Append the new message to the bottom of our chat block
+			chat = document.getElementById("Chat");
+			range = document.createRange();
+			range.selectNode(chat);
+			documentFragment = range.createContextualFragment(html);
+			chat.appendChild(documentFragment);
+		}
 		function appendNextMessage(html){
 			shouldScroll = nearBottom();
 
@@ -38,6 +50,18 @@
 			insert.parentNode.replaceChild(newNode,insert);
 			
 			alignChat(shouldScroll);
+		}
+		function appendNextMessageNoScroll(html){
+			//Locate the insertion point
+			insert = document.getElementById("insert");
+		
+			//make new node
+			range = document.createRange();
+			range.selectNode(insert.parentNode);
+			newNode = range.createContextualFragment(html);
+
+			//swap
+			insert.parentNode.replaceChild(newNode,insert);
 		}
 		
 		//Auto-scroll to bottom.  Use nearBottom to determine if a scrollToBottom is desired.
@@ -103,8 +127,9 @@
 			
 			if (shouldScroll) scrollToBottom();
 		}
+		
 		function windowDidResize(){
-			alignChat(true/*nearBottom()*/); //nearBottom buggy with inavtive tabs
+			alignChat(true/*nearBottom()*/); //nearBottom buggy with inactive tabs
 		}
 		
 		window.onresize = windowDidResize;
