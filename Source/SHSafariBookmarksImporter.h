@@ -19,8 +19,8 @@
 @protocol SHBookmarksImporter;
 
 @interface SHSafariBookmarksImporter : NSObject <SHBookmarkImporter> {
-    id               owner;
-    NSDate          *lastModDate;
+	id		owner;
+	NSDate	*lastModDate;
 }
 
 @end
