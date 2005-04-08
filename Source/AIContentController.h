@@ -15,6 +15,7 @@
  */
 
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
+#define Content_ChatDidFinishAddingUntrackedContent	@"Content_ChatDidFinishAddingUntrackedContent"
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
 
