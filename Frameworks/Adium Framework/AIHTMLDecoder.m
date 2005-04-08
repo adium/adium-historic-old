@@ -24,7 +24,6 @@
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/AIStringUtilities.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #import <Adium/AITextAttachmentExtension.h>
