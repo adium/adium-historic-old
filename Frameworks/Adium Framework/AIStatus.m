@@ -120,16 +120,17 @@
  */
 - (id)initWithCoder:(NSCoder *)decoder
 {
-	self = [super init];
-
-    if ([decoder allowsKeyedCoding]){
-        // Can decode keys in any order		
-        statusDict = [[decoder decodeObjectForKey:@"AIStatusDict"] mutableCopy];
-		
-    }else{
-        // Must decode keys in same order as encodeWithCoder:		
-        statusDict = [[decoder decodeObject] mutableCopy];
-    }
+	if((self = [super init]))
+	{
+		if ([decoder allowsKeyedCoding]){
+			// Can decode keys in any order		
+			statusDict = [[decoder decodeObjectForKey:@"AIStatusDict"] mutableCopy];
+			
+		}else{
+			// Must decode keys in same order as encodeWithCoder:		
+			statusDict = [[decoder decodeObject] mutableCopy];
+		}
+	}
 	
 	return self;
 }

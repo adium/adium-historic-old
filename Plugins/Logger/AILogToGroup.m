@@ -30,18 +30,19 @@
 //A group of logs to an specific user
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass
 {
-    [super init];
-    
-    path = [inPath retain];
-    from = [inFrom retain];
-    to = [inTo retain];
-	serviceClass = [inServiceClass retain];
-	logDict = nil;
-	partialLogDict = nil;
-	
-	defaultManager = [[NSFileManager defaultManager] retain];
+    if((self = [super init]))
+	{
+		path = [inPath retain];
+		from = [inFrom retain];
+		to = [inTo retain];
+		serviceClass = [inServiceClass retain];
+		logDict = nil;
+		partialLogDict = nil;
+		
+		defaultManager = [[NSFileManager defaultManager] retain];
+	}
 
-    return(self);
+    return self;
 }
 
 //Dealloc

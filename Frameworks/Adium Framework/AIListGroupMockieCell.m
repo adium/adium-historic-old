@@ -37,14 +37,15 @@
 //Init
 - (id)init
 {
-	[super init];
-	
-	int i;
-	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
-		_mockieGradient[i] = nil;
+	if((self = [super init]))
+	{
+		int i;
+		for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+			_mockieGradient[i] = nil;
+		}
 	}
 	
-	return(self);
+	return self;
 }
 
 //Dealloc

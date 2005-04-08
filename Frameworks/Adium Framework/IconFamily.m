@@ -77,14 +77,15 @@
 // The proper way to do this is to simply allocate a zero-sized handle (not to be confused with an empty handle) and assign it to hIconFamily.  This technique works on Mac OS X 10.2 as well as on 10.0.x and 10.1.x.  Our previous technique of allocating an IconFamily struct with a resourceSize of 0 no longer works as of Mac OS X 10.2.
 - init
 {
-    self = [super init];
-    if (self) {
+    if((self = [super init]))
+	{
         hIconFamily = (IconFamilyHandle) NewHandle( 0 );
         if (hIconFamily == NULL) {
             [self autorelease];
             return nil;
         }
     }
+	
     return self;
 }
 
@@ -1388,9 +1389,7 @@
     Size amountMem = 0;
     ScrapRef scrap;
 
-    self = [super init];
-
-    if( self )
+    if((self = [super init]))
     {
         GetCurrentScrap(&scrap);
 

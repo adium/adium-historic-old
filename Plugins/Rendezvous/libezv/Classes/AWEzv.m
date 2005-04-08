@@ -44,16 +44,19 @@
 #import "AWEzvSupportRoutines.h"
 
 @implementation AWEzv
-- (id) initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient {
-    self = [super init];
-
-    if (newClient != client) {
-	[client release];
-	client = [newClient retain];
-    }
-    
-    name = nil;
-    status = AWEzvUndefined;
+- (id) initWithClient:(id <AWEzvClientProtocol, NSObject>)newClient 
+{
+    if((self = [super init]))
+	{
+		if (newClient != client) 
+		{
+			[client release];
+			client = [newClient retain];
+		}
+		
+		name = nil;
+		status = AWEzvUndefined;
+	}	
     
     return self;
 }

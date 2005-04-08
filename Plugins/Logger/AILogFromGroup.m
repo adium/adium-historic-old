@@ -23,14 +23,15 @@
 //A group of logs from one of our accounts
 - (AILogFromGroup *)initWithPath:(NSString *)inPath fromUID:(NSString *)inFromUID serviceClass:(NSString *)inServiceClass;
 {
-    [super init];
+    if((self = [super init]))
+	{
+		path = [inPath retain];
+		fromUID = [inFromUID retain];
+		serviceClass = [inServiceClass retain];
+		toGroupArray = nil;
+	}
     
-    path = [inPath retain];
-    fromUID = [inFromUID retain];
-	serviceClass = [inServiceClass retain];
-    toGroupArray = nil;
-    
-    return(self);
+    return self;
 }
 
 //Dealloc

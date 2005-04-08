@@ -34,11 +34,13 @@
 #import "AWEzvSupportRoutines.h"
 
 @implementation AWEzvStack
-- (id) init {
-    self = [super init];
-    
-    top = NULL;
-    size = 0;
+- (id) init 
+{
+    if((self = [super init]))
+	{
+		top = NULL;
+		size = 0;
+	}
     
     return self;
 }

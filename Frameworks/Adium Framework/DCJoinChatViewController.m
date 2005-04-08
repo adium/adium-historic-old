@@ -37,17 +37,19 @@
 //Init
 - (id)init
 {
-    [super init];
-	
-	chat = nil;
-	delegate = nil;
-	
-	NSString	*nibName = [self nibName];
-	if(nibName){
-		[NSBundle loadNibNamed:nibName owner:self];
+    if((self = [super init]))
+	{
+		chat = nil;
+		delegate = nil;
+		
+		NSString	*nibName = [self nibName];
+		if(nibName)
+		{
+			[NSBundle loadNibNamed:nibName owner:self];
+		}
 	}
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc

@@ -52,16 +52,17 @@
 //Init
 - (id)init
 {
-    [super init];
+    if((self = [super init]))
+	{
+		backgroundOpacity = 1.0;
+		statusFont = [[NSFont systemFontOfSize:12] retain];
+		statusColor = nil;
+		_statusAttributes = nil;
+		_statusAttributesInverted = nil;
+		shouldUseContactTextColors = YES;
+	}
 
-	backgroundOpacity = 1.0;
-	statusFont = [[NSFont systemFontOfSize:12] retain];
-	statusColor = nil;
-	_statusAttributes = nil;
-	_statusAttributesInverted = nil;
-	shouldUseContactTextColors = YES;
-
-	return(self);
+	return self;
 }
 	
 //Dealloc

@@ -19,13 +19,15 @@
 
 - (id)init
 {
-    [super init];
-	stringRepresentation = nil;
-    shouldSaveImageForLogging = NO;
-	hasAlternate = NO;
-	shouldAlwaysSendAsText = NO;
-	imagePath = nil;
-	imageSize = NSMakeSize(0,0);
+    if((self = [super init]))
+	{
+		stringRepresentation = nil;
+		shouldSaveImageForLogging = NO;
+		hasAlternate = NO;
+		shouldAlwaysSendAsText = NO;
+		imagePath = nil;
+		imageSize = NSMakeSize(0,0);
+	}
 	
     return self;
 }

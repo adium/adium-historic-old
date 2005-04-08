@@ -37,11 +37,12 @@
 //Init
 - (id)init
 {
-	[super init];
-	
-	toolbarItems = nil;
+	if((self = [super init]))
+	{
+		toolbarItems = nil;
+	}
 
-	return(self);
+	return self;
 }
 
 - (void)dealloc

@@ -37,13 +37,15 @@
 @implementation AWEzvXMLNode
 
 
-- (id) initWithType:(int)theType name:(NSString *)theName {
-    self = [super init];
-    
-    type = theType;
-    name = [theName copy];
-    children = [[NSMutableArray alloc] initWithCapacity:DEFAULT_CAPACITY];
-    attributes = [[NSMutableDictionary alloc] initWithCapacity:DEFAULT_CAPACITY];
+- (id) initWithType:(int)theType name:(NSString *)theName 
+{
+    if((self = [super init]))
+	{
+		type = theType;
+		name = [theName copy];
+		children = [[NSMutableArray alloc] initWithCapacity:DEFAULT_CAPACITY];
+		attributes = [[NSMutableDictionary alloc] initWithCapacity:DEFAULT_CAPACITY];
+	}
     
     return self;
 }

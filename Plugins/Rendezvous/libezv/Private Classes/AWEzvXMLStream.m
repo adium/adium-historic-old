@@ -53,14 +53,16 @@ void xml_char_data	(void *userData,
 
 @implementation AWEzvXMLStream
 
-- (id) initWithFileHandle:(NSFileHandle *)myConnection initiator:(int)myInitiator {
-    self = [super init];
-    
-    connection = [myConnection retain];
-    delegate = nil;
-    nodeStack = [[AWEzvStack alloc] init];
-    initiator = myInitiator;
-    negotiated = 0;
+- (id) initWithFileHandle:(NSFileHandle *)myConnection initiator:(int)myInitiator 
+{
+    if((self = [super init]))
+	{
+		connection = [myConnection retain];
+		delegate = nil;
+		nodeStack = [[AWEzvStack alloc] init];
+		initiator = myInitiator;
+		negotiated = 0;
+	}	
     
     return self;
 }

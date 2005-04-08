@@ -40,13 +40,15 @@
 //Init
 - (id)init
 {
-	[super init];
-	shadowColor = nil;
-	backgroundColor = nil;
-	gradientColor = nil;
-	_gradient = nil;
+	if((self = [super init]))
+	{
+		shadowColor = nil;
+		backgroundColor = nil;
+		gradientColor = nil;
+		_gradient = nil;
+	}
 	
-	return(self);
+	return self;
 }
 
 //Dealloc

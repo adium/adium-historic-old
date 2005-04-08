@@ -37,10 +37,11 @@
 
 - (id)init
 {
-	[super init];
-
-	[textField_inviteUsers setDragDelegate:self];
-	[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
+	if((self = [super init]))
+	{
+		[textField_inviteUsers setDragDelegate:self];
+		[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", nil]];
+	}	
 
 	return self;
 }

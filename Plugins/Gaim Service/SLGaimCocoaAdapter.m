@@ -132,37 +132,38 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	
-	[super init];
-	
-    accountDict = [[NSMutableDictionary alloc] init];
-	chatDict = [[NSMutableDictionary alloc] init];
+	if((self = [super init]))
+	{
+		accountDict = [[NSMutableDictionary alloc] init];
+		chatDict = [[NSMutableDictionary alloc] init];
+			
+		sharedInstance = self;
 		
-	sharedInstance = self;
-	
-	[self initLibGaim];
-	
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(gotNewAccount:) 
-												 name:@"AddAccount"
-											   object:nil];
-	
-	gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
-	gaimThreadProxy = [[gaimThreadMessenger target:self] retain];
-	
-	//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
-	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
-														 target:self
-													   selector:@selector(refreshAutoreleasePool:)
-													   userInfo:nil
-														repeats:YES] retain];
+		[self initLibGaim];
+		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(gotNewAccount:) 
+													 name:@"AddAccount"
+												   object:nil];
+		
+		gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+		gaimThreadProxy = [[gaimThreadMessenger target:self] retain];
+		
+		//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
+		autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
+															 target:self
+														   selector:@selector(refreshAutoreleasePool:)
+														   userInfo:nil
+															repeats:YES] retain];
 
-	CFRunLoopRun();
+		CFRunLoopRun();
 
-	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	[gaimThreadMessenger release]; gaimThreadMessenger = nil;
-	[gaimThreadProxy release]; gaimThreadProxy = nil;
-    [currentAutoreleasePool release];
-	
+		[autoreleaseTimer invalidate]; [autoreleaseTimer release];
+		[gaimThreadMessenger release]; gaimThreadMessenger = nil;
+		[gaimThreadProxy release]; gaimThreadProxy = nil;
+		[currentAutoreleasePool release];
+	}
+			
     return self;
 }
 

@@ -26,11 +26,13 @@
 //Service specific preferences
 - (id)init
 {
-	[super init];
-	
-	MSNServicePrefs = [[AIMSNServicePreferences preferencePane] retain];
+	if((self = [super init]))
+	{
+			MSNServicePrefs = [[AIMSNServicePreferences preferencePane] retain];
 
-	return(self);
+	}
+
+	return self;
 }
 
 //Account Creation

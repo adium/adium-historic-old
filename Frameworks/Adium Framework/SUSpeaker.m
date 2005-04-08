@@ -30,27 +30,30 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 -init
 {
     NSRunLoop *loop = [NSRunLoop currentRunLoop];
-    [super init];
-
-    // we have 2 options here : we use a port or we don't.
-    // using a port means delegate message are invoked from the main 
-    // thread (runloop in which this object is created), otherwise, those message 
-    // are asynchronous.
-    if(loop != nil) {
-        _port = [[NSPort port] retain];
-        // we use a port so that the speech manager callbacks can talk to the main thread.
-        // That way, we can safely access interface elements from the delegate methods
-        
-        [_port setDelegate:self];
-        [loop addPort:_port forMode:NSDefaultRunLoopMode];
-        _usePort = YES;
-    }
-    else _usePort = NO;
-    
-    NewSpeechChannel(NULL, &_speechChannel); // NULL voice is default voice
-    [self setCallbacks];
+    if((self = [super init]))
+	{
+		// we have 2 options here : we use a port or we don't.
+		// using a port means delegate message are invoked from the main 
+		// thread (runloop in which this object is created), otherwise, those message 
+		// are asynchronous.
+		if(loop != nil) {
+			_port = [[NSPort port] retain];
+			// we use a port so that the speech manager callbacks can talk to the main thread.
+			// That way, we can safely access interface elements from the delegate methods
+			
+			[_port setDelegate:self];
+			[loop addPort:_port forMode:NSDefaultRunLoopMode];
+			_usePort = YES;
+		}
+		else _usePort = NO;
+		
+		NewSpeechChannel(NULL, &_speechChannel); // NULL voice is default voice
+		[self setCallbacks];
+	}
+	
     return self;
 }
+
 -(void)dealloc
 {
 

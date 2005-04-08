@@ -31,12 +31,13 @@
 //Init the plugin
 - (id)init
 {
-    [super init];
+    if((self = [super init]))
+	{
+		//Install the plugin
+		[self installPlugin];
+	}
 
-    //Install the plugin
-    [self installPlugin];
-
-    return(self);
+    return self;
 }
 
 - (void)dealloc

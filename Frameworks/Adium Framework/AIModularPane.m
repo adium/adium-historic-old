@@ -40,9 +40,12 @@
 //Init
 - (id)init
 {
-    [super init];
-    view = nil;
-    return(self);
+    if((self = [super init]))
+	{
+		view = nil;
+	}
+    
+    return self;
 }
 
 //Compare to another category view (for sorting on the preference window)

@@ -436,24 +436,26 @@
 - (id)initWithOwner:(id)inOwner
 {
     //Init
-    [super init];
-    owner = [inOwner retain];
-    prefixColors = [[NSDictionary dictionaryNamed:AISM_PREFIX_COLORS forClass:[self class]] retain];
+    if((self = [super init]))
+	{
+		owner = [inOwner retain];
+		prefixColors = [[NSDictionary dictionaryNamed:AISM_PREFIX_COLORS forClass:[self class]] retain];
 
-    //Register our preference panes
-    //Prefixes
-    prefixesPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_PREFIX] retain];
-    [[adium preferenceController] addPreferencePane:prefixesPane];
+		//Register our preference panes
+		//Prefixes
+		prefixesPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_PREFIX] retain];
+		[[adium preferenceController] addPreferencePane:prefixesPane];
 
-    //TimeStamps
-    timeStampsPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_TIMES] retain];
-    [[adium preferenceController] addPreferencePane:timeStampsPane];
+		//TimeStamps
+		timeStampsPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_TIMES] retain];
+		[[adium preferenceController] addPreferencePane:timeStampsPane];
 
-    //Gridding
-    griddingPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_GRID] retain];
-    [[adium preferenceController] addPreferencePane:griddingPane];
+		//Gridding
+		griddingPane = [[AIPreferencePane preferencePaneInCategory:AIPref_Messages_Display withDelegate:self label:AISM_PREF_TITLE_GRID] retain];
+		[[adium preferenceController] addPreferencePane:griddingPane];
+	}
 
-    return(self);
+    return self;
 }
 
 //
