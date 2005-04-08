@@ -75,6 +75,9 @@
 #define	KEY_HIDE_CONTACT_LIST_GROUPS	@"Hide Contact List Groups"
 #define	PREF_GROUP_CONTACT_LIST_DISPLAY	@"Contact List Display"
 
+#define SERVICE_ID_KEY					@"ServiceID"
+#define UID_KEY							@"UID"
+
 @interface AIContactController (PRIVATE)
 - (AIListGroup *)processGetGroupNamed:(NSString *)serverGroup;
 - (void)_performDelayedUpdates:(NSTimer *)timer;
@@ -119,24 +122,11 @@
 - (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts;
 @end
 
-//Used to suppress compiler warnings
-@interface NSObject (_RESPONDS_TO_LIST_OBJECT)
-- (AIListObject *)listObject;
-@end
-
-DeclareString(ServiceID);
-DeclareString(AccountID);
-DeclareString(UID);
-
 @implementation AIContactController
 
 //init
 - (void)initController
 {
-    InitString(ServiceID,@"ServiceID");
-	InitString(AccountID,@"AccountID");
-	InitString(UID,@"UID");
-
 	//Default account preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS
 																		forClass:[self class]]
@@ -268,7 +258,7 @@ DeclareString(UID);
 	while(infoDict = [enumerator nextObject]) {
 		AIListObject	*object = nil;
 
-		object = [self groupWithUID:[infoDict objectForKey:UID]];
+		object = [self groupWithUID:[infoDict objectForKey:UID_KEY]];
 		[(AIListGroup *)object setExpanded:[[infoDict objectForKey:Expanded] boolValue]];
 	}
 }
@@ -299,7 +289,7 @@ DeclareString(UID);
 	while(object = [enumerator nextObject]) {
 			[array addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 				Group, Type,
-				[object UID], UID,
+				[object UID], UID_KEY,
 				[NSNumber numberWithBool:[(AIListGroup *)object isExpanded]], Expanded,
 				nil]];
 	}
@@ -836,8 +826,8 @@ DeclareString(UID);
 			//Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
 			//As listObjects are loaded/created/requested which match this internalObjectID, they will be inserted into the metaContact.
 			[contactToMetaContactLookupDict setObject:metaContact
-											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:ServiceID]
-																							 UID:[containedContact objectForKey:UID]]];
+											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:SERVICE_ID_KEY]
+																							 UID:[containedContact objectForKey:UID_KEY]]];
 		}
 	}
 
@@ -914,8 +904,8 @@ DeclareString(UID);
 
 	} else if ([listObject isKindOfClass:[AIListContact class]]) {
 		containedContactDict = [NSDictionary dictionaryWithObjectsAndKeys:
-			[[listObject service] serviceID],ServiceID,
-			[listObject UID],UID,nil];
+			[[listObject service] serviceID],SERVICE_ID_KEY,
+			[listObject UID],UID_KEY,nil];
 	}
 
 	//Only add if this dict isn't already in the array
@@ -1023,8 +1013,8 @@ DeclareString(UID);
 		NSString	*listObjectServiceID = [[listObject service] serviceID];
 
 		while (containedContactDict = [enumerator nextObject]) {
-			if ([[containedContactDict objectForKey:UID] isEqualToString:listObjectUID] &&
-				[[containedContactDict objectForKey:ServiceID] isEqualToString:listObjectServiceID]) {
+			if ([[containedContactDict objectForKey:UID_KEY] isEqualToString:listObjectUID] &&
+				[[containedContactDict objectForKey:SERVICE_ID_KEY] isEqualToString:listObjectServiceID]) {
 				break;
 			}
 		}
@@ -2100,7 +2090,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)requestAddContactWithUID:(NSString *)contactUID service:(AIService *)inService
 {
-	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:contactUID, UID, inService, @"service",nil];
+	NSDictionary *userInfo = [NSDictionary dictionaryWithObjectsAndKeys:contactUID, UID_KEY, inService, @"service",nil];
 	[[adium notificationCenter] postNotificationName:Contact_AddNewContact
 											  object:nil
 											userInfo:userInfo];
