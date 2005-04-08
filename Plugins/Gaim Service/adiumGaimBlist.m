@@ -95,7 +95,11 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 			   (![oldAliasString isEqualToString:aliasString]))){
 
 				//Store the new string in our aliasDict
-				[aliasDict setObject:aliasString forKey:buddyValue];
+				if(aliasString){
+					[aliasDict setObject:aliasString forKey:buddyValue];
+				}else{
+					[aliasDict removeObjectForKey:buddyValue];
+				}
 				
 				//Send it to the main thread
 				[accountLookup(buddy->account) mainPerformSelector:@selector(updateContact:toAlias:)
