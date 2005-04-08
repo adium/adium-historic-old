@@ -515,9 +515,8 @@ static	NSMutableDictionary	*controllerDict = nil;
 	//Strings
 	NSAttributedString	*statusMessage = [statusState statusMessage];
 	NSAttributedString	*autoReply = [statusState autoReply];
-	NSAttributedString	*blankString;
-	
-	if(!statusMessage || !autoReply) blankString = [NSAttributedString stringWithString:@""];
+
+	NSAttributedString	*blankString = [NSAttributedString stringWithString:@""];
 	
 	[[textView_statusMessage textStorage] setAttributedString:(statusMessage ? statusMessage : blankString)];
 	[[textView_autoReply textStorage] setAttributedString:(autoReply ? autoReply : blankString)];

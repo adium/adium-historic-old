@@ -264,7 +264,7 @@
 	if(title != nil){
 		NSColor			*textColor;
 		NSDictionary	*attributes;
-		float			 stringHeight;
+		float			 stringHeight = 0.0;
 
 		//Determine the correct text color
 		if(highlighted){

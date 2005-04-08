@@ -57,7 +57,7 @@
 //Control Size (Allows us to dynamically size for a small or big toolbar)
 - (void)setControlSize:(NSControlSize)inControlSize
 {
-	NSSize		targetSize;
+	NSSize		targetSize = NSMakeSize(0, 0);
 	NSSize		bigImageSize;
 	
 	controlSize = inControlSize;

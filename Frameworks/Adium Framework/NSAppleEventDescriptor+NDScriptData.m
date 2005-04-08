@@ -649,7 +649,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 + (NSAppleEventDescriptor *)userRecordDescriptorWithDictionary:(NSDictionary *)aDictionary
 {
-	NSAppleEventDescriptor	* theUserRecord;
+	NSAppleEventDescriptor	* theUserRecord = nil;
 
 	if( [aDictionary count] > 0 && (theUserRecord = [self listDescriptor]) != nil )
 	{
@@ -926,7 +926,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 - (NSNumber *)numberValue
 {
-	NSNumber		* theNumber;
+	NSNumber		* theNumber = nil;
 
 	switch([self descriptorType])
 	{

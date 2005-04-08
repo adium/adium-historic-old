@@ -108,7 +108,7 @@
 - (void)insertText:(id)aString
 {
 	BOOL 		insertText = YES;
-	NSString	*theString;
+	NSString	*theString = nil;
 	
 	if([aString isKindOfClass:[NSString class]]){
         theString = aString;
