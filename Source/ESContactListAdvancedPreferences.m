@@ -73,6 +73,7 @@
 	[checkBox_showTooltipsInBackground setState:[[preferenceDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
 	[checkBox_windowHasShadow setState:[[preferenceDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 	
+	[checkBox_hide setLocalizedString:AILocalizedString(@"Hide while Adium is in the background","Refers to a window hiding when Adium is not the foreground application")];
 	[checkBox_flash setLocalizedString:AILocalizedString(@"Flash names with unviewed messages",nil)];
 	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
