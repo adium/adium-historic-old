@@ -18,49 +18,40 @@
 #import "SHMozillaCommonParser.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 
-#define OW45_BOOKMARKS_PATH     @"~/Library/Application Support/OmniWeb/Bookmarks.html"
-#define OW5_BOOKMARKS_PATH      @"~/Library/Application Support/OmniWeb 5/Favorites.html"
+#define OW45_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb/Bookmarks.html"
+#define OW5_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb 5/Favorites.html"
 
-@class SHMozillaCommonParser;
+// Parser constants
+#define HEADER3		@"h3"
+#define A_OPEN		@"a "
+#define A_CLOSE		@"</a"
+#define HREF_STRING	@"href="
+#define DL_CLOSE	@"/dl>"
+#define CLOSE_TAG	@">"
+#define OPEN_TAG	@"<"
 
-@interface SHOmniWebBookmarksImporter(PRIVATE)
+@interface SHOmniWebBookmarksImporter (PRIVATE)
 - (NSArray *)parseBookmarksFile:(NSString *)inString;
--(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
--(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
+- (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
 
 @implementation SHOmniWebBookmarksImporter
 
-DeclareString(gtSign)
-DeclareString(Hopen)
-DeclareString(Aopen)
-DeclareString(hrefStr)
-DeclareString(closeQuote)
-DeclareString(Aclose)
-DeclareString(DLclose)
-DeclareString(ltSign)
-//DeclareString(untitledString)
-DeclareString(bookmarkDictTitle)
-DeclareString(bookmarkDictContent)
-
 #pragma mark protocol methods
+
 + (id)newInstanceOfImporter
 {
     return [[self alloc] init];
 }
 
-
 - (id)init
 {
-	[super init];
-	
-    useOW5 = [[NSFileManager defaultManager] fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-    
-    InitString(bookmarkDictTitle,SH_BOOKMARK_DICT_TITLE)
-    InitString(bookmarkDictContent,SH_BOOKMARK_DICT_CONTENT)
-    
-	lastModDate = nil;
-    
+	if ((self = [super init])) {
+		useOW5 = [[NSFileManager defaultManager] fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+		lastModDate = nil;
+	}
+
 	return self;
 }
 
@@ -82,13 +73,13 @@ DeclareString(bookmarkDictContent)
 }
 
 
--(BOOL)bookmarksExist
+- (BOOL)bookmarksExist
 {
     return(useOW5 || [[NSFileManager defaultManager] fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]]);
 }
 
 
--(BOOL)bookmarksUpdated
+- (BOOL)bookmarksUpdated
 {
     NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[(useOW5 ? OW5_BOOKMARKS_PATH : OW45_BOOKMARKS_PATH) stringByExpandingTildeInPath]
 																	  traverseLink:YES];
@@ -98,110 +89,99 @@ DeclareString(bookmarkDictContent)
 }
 
 #pragma mark private methods
+
 - (NSArray *)parseBookmarksFile:(NSString *)inString
 {
-    NSMutableArray	*bookmarksArray = [NSMutableArray array];
-    NSMutableArray	*arrayStack = [NSMutableArray array];
-    NSScanner		*linkScanner = [NSScanner scannerWithString:inString];
-    NSString		*omniTitleString = nil;
-    NSString		*urlString = nil;
+	NSMutableArray	*bookmarksArray = [NSMutableArray array];
+	NSMutableArray	*arrayStack = [NSMutableArray array];
+	NSScanner		*linkScanner = [NSScanner scannerWithString:inString];
+	NSString		*omniTitleString = nil;
+	NSString		*urlString = nil;
 	
-    unsigned int	stringLength = [inString length];
-    
-    NSCharacterSet  *quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
-    
-    [linkScanner setCaseSensitive:NO];
-    
-    InitString(gtSign,@">")
-    InitString(Hopen,@"h3")
-    InitString(Aopen,@"a ")
-    InitString(hrefStr,@"href=")
-    InitString(closeQuote,@"\"")
-    InitString(Aclose,@"</a")
-    InitString(DLclose,@"/dl>")
-    InitString(ltSign,@"<")
-    //InitString(untitledString,@"untitled")
-    
-    while(![linkScanner isAtEnd]){
-        if((stringLength - [linkScanner scanLocation]) < 4){
-            [linkScanner setScanLocation:[inString length]];
-			
-        }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Hopen]){
-            
+	unsigned int	stringLength = [inString length];
+
+	NSCharacterSet	*quotesSet = [NSCharacterSet characterSetWithCharactersInString:@"'\""];
+
+	[linkScanner setCaseSensitive:NO];
+
+	while(![linkScanner isAtEnd]){
+		if((stringLength - [linkScanner scanLocation]) < 4){
+			[linkScanner setScanLocation:[inString length]];
+		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:HEADER3]){
 			if((stringLength - [linkScanner scanLocation]) > 2){
 				[linkScanner setScanLocation:[linkScanner scanLocation] + 2];
 			}
-			
-            [linkScanner scanUpToString:Aopen intoString:nil];
-			
-            if((stringLength - [linkScanner scanLocation]) > 2){
+
+			[linkScanner scanUpToString:A_OPEN intoString:nil];
+
+			if((stringLength - [linkScanner scanLocation]) > 2){
 				[linkScanner setScanLocation:[linkScanner scanLocation] + 2];
 			}
-			
-            [linkScanner scanUpToString:gtSign intoString:nil];
-			
-            if((stringLength - [linkScanner scanLocation]) > 1){
+
+			[linkScanner scanUpToString:CLOSE_TAG intoString:nil];
+
+			if((stringLength - [linkScanner scanLocation]) > 1){
 				[linkScanner setScanLocation:[linkScanner scanLocation] + 1];
 			}
             
-            if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
-                // decode html stuff
-                omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
-            }else{
+			if([linkScanner scanUpToString:A_CLOSE intoString:&omniTitleString]){
+				// decode html stuff
+				omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
+			}else{
 				// invalid; reset to nil
-                omniTitleString = nil;
-            }
+				omniTitleString = nil;
+			}
             
-            [arrayStack addObject:bookmarksArray];
-            bookmarksArray = [NSMutableArray array];
-            [(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
+			[arrayStack addObject:bookmarksArray];
+			bookmarksArray = [NSMutableArray array];
+			[(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
 																			   menuItems:bookmarksArray]];
-                                                             
-        }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:Aopen]){
-            [linkScanner scanUpToString:hrefStr intoString:nil];
-			
-            if((stringLength - [linkScanner scanLocation]) > 6){
+		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:A_OPEN]){
+			[linkScanner scanUpToString:HREF_STRING intoString:nil];
+
+			if((stringLength - [linkScanner scanLocation]) > 6){
 				[linkScanner setScanLocation:[linkScanner scanLocation] + 6];
 			}
-			
-            if([linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString]){
-                [linkScanner scanUpToString:gtSign intoString:nil];
-                if((stringLength - [linkScanner scanLocation]) > 1){
+
+			if([linkScanner scanUpToCharactersFromSet:quotesSet intoString:&urlString]){
+				[linkScanner scanUpToString:CLOSE_TAG intoString:nil];
+
+				if((stringLength - [linkScanner scanLocation]) > 1){
 					[linkScanner setScanLocation:[linkScanner scanLocation] + 1];
 				}
-            
-                if([linkScanner scanUpToString:Aclose intoString:&omniTitleString]){
-                    // decode html stuff
-                    omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
-                }else{
+
+				if([linkScanner scanUpToString:A_CLOSE intoString:&omniTitleString]){
+					// decode html stuff
+					omniTitleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:omniTitleString];
+				}else{
 					// invalid; reset to nil
-                    omniTitleString = nil;
-                }
+					omniTitleString = nil;
+				}
 
-                [bookmarksArray addObject:[self hyperlinkForTitle:omniTitleString URL:urlString]];
-            }
-
-        }else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DLclose]){
-            if((stringLength - [linkScanner scanLocation]) > 4){
+				[bookmarksArray addObject:[self hyperlinkForTitle:omniTitleString URL:urlString]];
+			}
+		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DL_CLOSE]){
+			if((stringLength - [linkScanner scanLocation]) > 4){
 				[linkScanner setScanLocation:[linkScanner scanLocation] + 4];
 			}
-			
-            if([arrayStack count]){
-                bookmarksArray = [arrayStack lastObject];
-                [arrayStack removeLastObject];
-            }
 
-        }else{
-            [linkScanner scanUpToString:ltSign intoString:nil];
-            if(![linkScanner isAtEnd]){
-                [linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+			if([arrayStack count]){
+				bookmarksArray = [arrayStack lastObject];
+				[arrayStack removeLastObject];
 			}
-        }
-    }
-    return bookmarksArray;
+		}else{
+			[linkScanner scanUpToString:OPEN_TAG intoString:nil];
+
+			if(![linkScanner isAtEnd]){
+				[linkScanner setScanLocation:[linkScanner scanLocation] + 1];
+			}
+		}
+	}
+
+	return bookmarksArray;
 }
 
--(SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
+- (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
 {
     NSString    *title = (inString ? inString : @"untitled");
     return [[[SHMarkedHyperlink alloc] initWithString:inURLString
@@ -210,10 +190,12 @@ DeclareString(bookmarkDictContent)
                                              andRange:NSMakeRange(0,[title length])] autorelease];
 }
 
--(NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
-    NSString    *titleString = (inTitle ? inTitle : @"untitled");
-    return([NSDictionary dictionaryWithObjectsAndKeys:titleString, bookmarkDictTitle, inMenuItems, bookmarkDictTitle, nil]);
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		(inTitle ? inTitle : @"untitled"), SH_BOOKMARK_DICT_TITLE,
+		inMenuItems, SH_BOOKMARK_DICT_CONTENT,
+		nil];
 }
 
 @end
