@@ -143,6 +143,8 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     if([theEvent optionKey]) {
         scrollRate = -ABOUT_SCROLL_RATE;
+    }else if([theEvent controlKey]){
+        scrollRate = 0;
     }else{
         scrollRate = ABOUT_SCROLL_RATE;   
     }
