@@ -35,18 +35,18 @@
 //
 #define KEY_WEBKIT_VERSION				@"MessageViewVersion"
 
+//BOM scripts for appending content. These are shared between all AIWebkitMessageViewStyle instances.
+#define APPEND_MESSAGE_WITH_SCROLL		@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();"
+#define APPEND_NEXT_MESSAGE_WITH_SCROLL	@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();"
+#define APPEND_MESSAGE					@"appendMessage(\"%@\");"
+#define APPEND_NEXT_MESSAGE				@"appendNextMessage(\"%@\");"
+
 @interface AIWebkitMessageViewStyle (PRIVATE)
 - (id)initWithBundle:(NSBundle *)inBundle;
 - (void)_loadTemplates;
 - (NSMutableString *)_escapeStringForPassingToScript:(NSMutableString *)inString;
 - (NSString *)noVariantName;
 @end
-
-//Cached BOM scripts for appending content
-DeclareString(AppendMessageWithScroll);
-DeclareString(AppendNextMessageWithScroll);
-DeclareString(AppendMessage);
-DeclareString(AppendNextMessage);
 
 @implementation AIWebkitMessageViewStyle
 
@@ -70,14 +70,6 @@ DeclareString(AppendNextMessage);
 
 	//Default behavior
 	allowTextBackgrounds = YES;
-	
-	//Prepare our append content BOM scripts.  These are shared between all AIWebkitMessageViewStyle instances.
-	if(!AppendMessageWithScroll){
-		InitString(AppendMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();");
-		InitString(AppendNextMessageWithScroll,@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();");
-		InitString(AppendMessage,@"appendMessage(\"%@\");");
-		InitString(AppendNextMessage,@"appendNextMessage(\"%@\");");
-	}
 	
 	//Our styles are versioned so we can change how they work without breaking compatability
 	/*
@@ -407,9 +399,9 @@ DeclareString(AppendNextMessage);
 	
 	//BOM scripts vary by style version
 	if(styleVersion >= 1){
-		script = (contentIsSimilar ? AppendNextMessage : AppendMessage);
+		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 	}else{
-		script = (contentIsSimilar ? AppendNextMessageWithScroll : AppendMessageWithScroll);
+		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
 	}
 	
 	return([NSString stringWithFormat:script, [self _escapeStringForPassingToScript:newHTML]]); 
