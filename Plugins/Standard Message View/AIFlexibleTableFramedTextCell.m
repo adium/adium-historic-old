@@ -48,16 +48,17 @@
 //init
 - (id)init
 {
-    [super init];
-
-    borderColor = nil;
-    bubbleColor = nil;
-    framePadLeft = FRAME_PAD_LEFT;
-    framePadRight = FRAME_PAD_RIGHT;
-    framePadTop = FRAME_PAD_TOP;
-    framePadBottom = FRAME_PAD_BOTTOM;
+    if((self = [super init]))
+	{
+		borderColor = nil;
+		bubbleColor = nil;
+		framePadLeft = FRAME_PAD_LEFT;
+		framePadRight = FRAME_PAD_RIGHT;
+		framePadTop = FRAME_PAD_TOP;
+		framePadBottom = FRAME_PAD_BOTTOM;
+	}
     
-    return(self);
+    return self;
 }
 
 //init

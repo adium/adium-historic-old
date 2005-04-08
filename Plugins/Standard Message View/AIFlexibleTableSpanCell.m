@@ -30,16 +30,16 @@
 //Init
 - (id)initForCell:(AIFlexibleTableCell *)inCell spannedIndex:(int)inIndex
 {
-    [super init];
+    if((self = [super init]))
+	{
+		masterCell = [inCell retain];
+		spannedIndex = inIndex;
 
-    //
-    masterCell = [inCell retain];
-    spannedIndex = inIndex;
-
-    //Set width to the width of our master cell
-    [self sizeCellForWidth:[masterCell cellSize].width];
+		//Set width to the width of our master cell
+		[self sizeCellForWidth:[masterCell cellSize].width];
+	}
     
-    return(self);
+    return self;
 }
 
 //Dealloc

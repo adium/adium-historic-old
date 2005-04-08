@@ -53,12 +53,13 @@
 //Init
 - (AIFlexibleTableStringCell *)initWithAttributedString:(NSAttributedString *)inString
 {
-    [super init];
+    if((self = [super init]))
+	{
+		string = [inString retain];
+		contentSize = [string size];
+	}
 
-    string = [inString retain];
-    contentSize = [string size];
-
-    return(self);
+    return self;
 }
 
 //Dealloc

@@ -55,9 +55,11 @@
 
 - (id)init
 {
-    [super init];
-    [self _initFlexibleTableView];
-    return(self);
+    if((self = [super init]))
+	{
+		[self _initFlexibleTableView];
+	}
+    return self;
 }
 
 - (void)_initFlexibleTableView

@@ -30,14 +30,15 @@
 
 - (id)init
 {
-	[super init];
+	if((self = [super init]))
+	{
+		lastBackgroundBezierPath = nil;
+		outlineBubble = NO;
+		outlineBubbleLineWidth = 1.0;
+		drawWithGradient = NO;
+	}	
 	
-	lastBackgroundBezierPath = nil;
-	outlineBubble = NO;
-	outlineBubbleLineWidth = 1.0;
-	drawWithGradient = NO;
-	
-	return(self);
+	return self;
 }
 
 //Copy

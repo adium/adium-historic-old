@@ -26,19 +26,20 @@ static	NSTimeZone	*defaultTimeZone = nil;
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
 {
-    [super init];
-	
-	if(!defaultTimeZone) defaultTimeZone = [[NSTimeZone defaultTimeZone] retain];
+    if((self = [super init]))
+	{
+		if(!defaultTimeZone) defaultTimeZone = [[NSTimeZone defaultTimeZone] retain];
+			
+		path = [inPath retain];
+		from = [inFrom retain];
+		to = [inTo retain];
+		serviceClass = [inServiceClass retain];
+		date = [inDate retain];
+		dateSearchString = nil;
+		rankingPercentage = 0;
+	}
 		
-    path = [inPath retain];
-    from = [inFrom retain];
-    to = [inTo retain];
-	serviceClass = [inServiceClass retain];
-    date = [inDate retain];
-    dateSearchString = nil;
- 	rankingPercentage = 0;
-	
-    return(self);
+    return self;
 }
 
 - (void)dealloc
