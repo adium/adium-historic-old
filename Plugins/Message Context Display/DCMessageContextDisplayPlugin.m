@@ -286,19 +286,21 @@
 							[responseContent setTrackContent:NO];
 						}
 
-						if(responseContent)
-							[[adium contentController] displayContentObject:responseContent usingContentFilters:YES immediately:YES];
-
+						if(responseContent){
+							[[adium contentController] displayContentObject:responseContent
+														usingContentFilters:YES
+																immediately:YES];
+						}
 					}
-					
 				}
-				
-			}
-			
-		}
-		
-	}
-	
+			} /* end while() */
+
+		//We finished adding untracked content
+		[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
+												  object:chat];
+
+		} /* [self contextShouldBeDisplayed:mostRecentMessage] */
+	} /* chatDict && shouldDisplay && linesToDisplay > 0  */
 }
 
 - (BOOL)contextShouldBeDisplayed:(NSCalendarDate *)inDate
