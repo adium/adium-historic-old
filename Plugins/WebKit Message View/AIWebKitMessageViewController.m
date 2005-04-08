@@ -48,8 +48,8 @@
 - (void)_updateWebViewForCurrentPreferences;
 - (void)_updateVariantWithoutPrimingView;
 - (void)processQueuedContent;
-- (void)_processContentObject:(AIContentObject *)content;
-- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
+- (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
+- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (void)_updateUserIconForObject:(AIListObject *)inObject;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject;
 - (void)participatingListObjectsChanged:(NSNotification *)notification;
@@ -110,6 +110,16 @@
 										   name:Content_ContentObjectAdded 
 										 object:inChat];
 	}
+	
+	//Observe content additons
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(contentObjectAdded:)
+									   name:Content_ContentObjectAdded 
+									 object:inChat];
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(chatDidFinishAddingUntrackedContent:)
+									   name:Content_ChatDidFinishAddingUntrackedContent 
+									 object:inChat];
 	
     return self;
 }
@@ -460,7 +470,20 @@
  */
 - (void)contentObjectAdded:(NSNotification *)notification
 {
-	[contentQueue addObject:[[notification userInfo] objectForKey:@"AIContentObject"]];
+	AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
+	[contentQueue addObject:contentObject];
+	
+	//If this content object is tracked, immediately update our display
+	if([contentObject trackContent]){
+		[self processQueuedContent];
+	}
+}
+
+/*!
+ * @brief Our chat finished adding untracked content
+ */
+- (void)chatDidFinishAddingUntrackedContent:(NSNotification *)notification
+{
 	[self processQueuedContent];	
 }
 
@@ -469,20 +492,38 @@
  */
 - (void)processQueuedContent
 {
-	while(webViewIsReady && [contentQueue count]){
+	unsigned	contentQueueCount, objectsAdded = 0;
+	BOOL		willAddMoreContentObjects = NO;
+	
+	contentQueueCount = [contentQueue count];
+	while(webViewIsReady && contentQueueCount){
 		AIContentObject *content = [contentQueue objectAtIndex:0];
+
+		willAddMoreContentObjects = (contentQueueCount > 1);
 		
 		//Display the content
-		[self _processContentObject:content];
+		[self _processContentObject:content willAddMoreContentObjects:willAddMoreContentObjects];
 
 		//Remove the content we just displayed from the queue
-		if([contentQueue count]){
-			[contentQueue removeObjectAtIndex:0];
+		objectsAdded++;
+		[contentQueue removeObjectAtIndex:0];
+		
+		contentQueueCount = [contentQueue count];
+	}
+	
+	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
+	 * was added.
+	 */
+	if(objectsAdded > 1){
+		NSString	*scrollToBottomScript;
+		
+		if(scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects]){
+			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
 		}
 	}
 	
 	//If there is still content to process, we'll try again after a brief delay
-	if([contentQueue count]){
+	if(contentQueueCount){
 		[self performSelector:@selector(processQueuedContent) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
 	}
 }
@@ -490,7 +531,7 @@
 /*!
  * @brief Process and then append a content object
  */
-- (void)_processContentObject:(AIContentObject *)content
+- (void)_processContentObject:(AIContentObject *)content willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSString		*dateMessage = nil;
 	AIContentStatus *dateSeparator = nil;
@@ -512,22 +553,28 @@
 																					   attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
 											 withType:@"date_separator"];
 		//Add the date header
-		[self _appendContent:dateSeparator similar:NO];
+		[self _appendContent:dateSeparator 
+					 similar:NO
+			willAddMoreContentObjects:YES];
 		[previousContent release]; previousContent = [dateSeparator retain];
 	}
 	
 	//Add the content object
-	[self _appendContent:content similar:(previousContent && [content isSimilarToContent:previousContent])];
+	[self _appendContent:content 
+				 similar:(previousContent && [content isSimilarToContent:previousContent])
+	willAddMoreContentObjects:willAddMoreContentObjects];
+	
 	[previousContent release]; previousContent = [content retain];
 }
 
 /*!
  * @brief Append a content object
  */
-- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
+- (void)_appendContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForAppendingContent:content
-																					similar:contentIsSimilar]];
+																					similar:contentIsSimilar
+																  willAddMoreContentObjects:willAddMoreContentObjects]];
 }
 
 
