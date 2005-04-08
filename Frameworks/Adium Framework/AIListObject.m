@@ -22,45 +22,37 @@
 #import "AIUserIcons.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 
+#define ObjectStatusCache	@"Object Status Cache"
+#define DisplayName			@"Display Name"
+#define LongDisplayName		@"Long Display Name"
+#define Key					@"Key"
+#define Group				@"Group"
+#define DisplayServiceID	@"DisplayServiceID"
+#define FormattedUID		@"FormattedUID"
+
 @interface AIListObject (PRIVATE)
 - (void)determineOrderIndex;
 @end
 
 @implementation AIListObject
 
-DeclareString(ObjectStatusCache);
-DeclareString(DisplayName);
-DeclareString(LongDisplayName);
-DeclareString(Key);
-DeclareString(Group);
-DeclareString(DisplayServiceID);
-DeclareString(FormattedUID);
-
 //Init
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService
-{	
-    [super init];
+{
+	if ((self = [super init])) {
+		containingObject = nil;
+		UID = [inUID retain];	
+		service = inService;
 
-	InitString(ObjectStatusCache,@"Object Status Cache");
-	InitString(DisplayName,@"Display Name");
-	InitString(LongDisplayName,@"Long Display Name");
-	InitString(Key,@"Key");
-	InitString(Group,@"Group");
-	InitString(DisplayServiceID,@"DisplayServiceID");
-	InitString(FormattedUID,@"FormattedUID");
+		visible = YES;
+		orderIndex = 0;
+	}
 
-    containingObject = nil;
-    UID = [inUID retain];	
-	service = inService;
-
-	visible = YES;
-	orderIndex = 0;
-
-    return(self);
+	return self;
 }
 
 - (void)dealloc
-{	
+{
 	//
 	[UID release]; UID = nil;
 	[internalObjectID release]; internalObjectID = nil;
