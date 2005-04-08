@@ -28,7 +28,7 @@ Defaults:
 3 - Message views are ignoring variant specific info.plist keys
 3 - ESTextAndButtonsWindowController does incorrect positioning in 10.2
 2 - Only allow one Rendezvous account to be created
-2 - Add an xtras management preference pane for everything installed by the user, enable/disable and add/remove
+2 - Add an xtras management preference pane for everything installed by the user, enable/disable and add/remove [samsamoa]
 2 - Account online checkboxes have incorrect state after canceling a password prompt
 2 - Change sound sets so that events use key sounds rather then specifing directly
 2 - Sound action should remember last sound selected as default
