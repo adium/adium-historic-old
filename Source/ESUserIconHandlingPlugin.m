@@ -370,7 +370,7 @@
 			
 			blankMenuItem = [[NSMenuItem alloc] initWithTitle:@"" 
 													   target:self
-													   action:@selector(dummyTarget:)
+													   action:@selector(dummyAction:)
 												keyEquivalent:@""];
 			[blankMenuItem setRepresentedObject:item];
 			[blankMenuItem setEnabled:YES];
