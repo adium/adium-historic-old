@@ -14,7 +14,7 @@ Version 0.80 (13/-3/2525)
 - Background image options for message windows (tiled, scaled, centered)
 - Added support for custom Service Icon AdiumXtra packs
 - Added support for custom Status Icon AdiumXtra packs, and added a second built-in pack, "Chat Bubbles"
-- Removed games (see http://imgames.sourceforge.net/)
+- Removed games (see http://mykogames.info)
 - %_uptime returns actual uptime
 - %_adiumVersion returns Adium version as a link to www.adiumx.com
 - Added support for completely hiding groups in the contact list
