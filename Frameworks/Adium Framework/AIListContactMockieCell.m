@@ -24,11 +24,12 @@
 
 - (id)init
 {
-	[super init];
+	if(self = [super init])
+	{
+			lastBackgroundBezierPath = nil;
+	}
 	
-	lastBackgroundBezierPath = nil;
-	
-	return(self);
+	return self;
 }
 
 //Copy
