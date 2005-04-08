@@ -38,7 +38,7 @@
 
 - (id)init
 {
-	if ((self == [super init])) {
+	if ((self = [super init])) {
 		emptyArray = [[NSArray alloc] init];
 		lastModDate = nil;
 	}
