@@ -33,15 +33,11 @@
  */
 @implementation AIContactIdlePlugin
 
-DeclareString(Idle);
-
 /*!
  * @brief Install
  */
 - (void)installPlugin
 {
-	InitString(Idle,@"Idle");
-	
     idleObjectArray = nil;
 
     //Install our tooltip entry
