@@ -19,22 +19,19 @@
 
 //ESObjectWithStatus is an abstract superclass for use by any subclass which needs a system of status objects
 
-@implementation ESObjectWithStatus
+#define Key		@"Key"
+#define Value	@"Value"
 
-DeclareString(Key);
-DeclareString(Value);
+@implementation ESObjectWithStatus
 
 - (id)init
 {
-	[super init];
-	
-	InitString(Key,@"Key");
-	InitString(Value,@"Value");
-	
-    statusDictionary = [[NSMutableDictionary alloc] init];
-	displayDictionary = [[NSMutableDictionary alloc] init];
-	delayedStatusTimers = nil;
-	
+	if ((self = [super init])) {
+		statusDictionary = [[NSMutableDictionary alloc] init];
+		displayDictionary = [[NSMutableDictionary alloc] init];
+		delayedStatusTimers = nil;
+	}
+
 	return self;
 }
 
