@@ -318,8 +318,8 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
 			
 			//associate the AIChat with the gaim conv
-			imChatLookupFromConv(conv);
-			
+			if(conv) imChatLookupFromConv(conv);
+
 			g_free(destination);
 			
 		}else{
