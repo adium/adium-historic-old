@@ -121,6 +121,11 @@
 	}
 }
 
+- (NSString *)fontFamily
+{
+	return(fontFamilyName);
+}
+
 //Set the font size
 - (void)setFontSize:(int)inSize
 {
