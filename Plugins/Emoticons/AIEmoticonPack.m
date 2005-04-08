@@ -57,14 +57,16 @@
 //Init
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath
 {
-    [super init];
-    path = [inPath retain];
-    name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
-    emoticonArray = nil;
-    emoticonLocation = [path retain];
-	enabled = NO;
+    if((self = [super init]))
+	{
+		path = [inPath retain];
+		name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
+		emoticonArray = nil;
+		emoticonLocation = [path retain];
+		enabled = NO;
+	}
     
-    return(self);
+    return self;
 }
 
 //Dealloc

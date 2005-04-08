@@ -37,25 +37,26 @@
 			  date:(NSDate*)inDate
 		   message:(NSAttributedString *)inMessage
 {
-    [super init];
-	
-	//Default Behavior
-	filterContent = YES;
-	trackContent = YES;
-	displayContent = YES;
-	sendContent = YES;
-	postProcessContent = YES;
+    if((self = [super init]))
+	{
+		//Default Behavior
+		filterContent = YES;
+		trackContent = YES;
+		displayContent = YES;
+		sendContent = YES;
+		postProcessContent = YES;
 
-    //Store source, dest, chat, ...
-    source = [inSource retain];
-    destination = [inDest retain];
-	message = [inMessage retain];
-	date = [(inDate ? inDate : [NSDate date]) retain];
-	
-    chat = [inChat retain];
-    outgoing = ([source isKindOfClass:[AIAccount class]]);
+		//Store source, dest, chat, ...
+		source = [inSource retain];
+		destination = [inDest retain];
+		message = [inMessage retain];
+		date = [(inDate ? inDate : [NSDate date]) retain];
+		
+		chat = [inChat retain];
+		outgoing = ([source isKindOfClass:[AIAccount class]]);
+	}
     
-    return(self);
+    return self;
 }
 
 - (void)dealloc

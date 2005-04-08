@@ -83,32 +83,33 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSRange	scanRange;
     
-    [super init];
+    if((self = [super init]))
+	{
+		textStorage = nil;
+		textContainer = nil;
+		layoutManager = nil;
+		linkTrackingController = nil;
+		containsLinks = NO;
+		uniqueEmoticonID = 0;
 
-    textStorage = nil;
-    textContainer = nil;
-    layoutManager = nil;
-    linkTrackingController = nil;
-    containsLinks = NO;
-    uniqueEmoticonID = 0;
+		string = [inString retain];
 
-    string = [inString retain];
+		//Create the text system
+		textStorage = [[self createTextSystemWithString:string 
+												   size:NSMakeSize(1e7, 1e7)
+											  container:&textContainer
+										  layoutManager:&layoutManager] retain];
 
-    //Create the text system
-    textStorage = [[self createTextSystemWithString:string 
-											   size:NSMakeSize(1e7, 1e7)
-										  container:&textContainer
-									  layoutManager:&layoutManager] retain];
+		//Check if our string contains any links
+		scanRange = NSMakeRange(0, 0);
+		while(NSMaxRange(scanRange) < [textStorage length]){
+			if([textStorage attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]){
+				containsLinks = YES;
+			}
+		}
+	}
 
-    //Check if our string contains any links
-    scanRange = NSMakeRange(0, 0);
-    while(NSMaxRange(scanRange) < [textStorage length]){
-        if([textStorage attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]){
-            containsLinks = YES;
-        }
-    }
-        
-    return(self);
+    return self;
 }
 
 //Create a text system

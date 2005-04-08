@@ -27,9 +27,11 @@
 //Init
 - (id)init
 {
-    [super init];
-    [[adium contactController] addContactInfoPane:self];
-    return(self);
+    if((self = [super init]))
+	{
+		[[adium contactController] addContactInfoPane:self];
+	}
+    return self;
 }
 
 

@@ -31,29 +31,30 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Init
 - (id)init
 {
-    [super init];
-	
-	topSpacing = 0;
-	bottomSpacing = 0;
-	topPadding = 0;
-	bottomPadding = 0;
-	leftPadding = 0;
-	rightPadding = 0;
-	leftSpacing = 0;
-	rightSpacing = 0;
-	
-	font = [[NSFont systemFontOfSize:12] retain];
-	textColor = [[NSColor blackColor] retain];
-	invertedTextColor = [[NSColor whiteColor] retain];
-	
-	useAliasesAsRequested = YES;
+    if((self = [super init]))
+	{
+		topSpacing = 0;
+		bottomSpacing = 0;
+		topPadding = 0;
+		bottomPadding = 0;
+		leftPadding = 0;
+		rightPadding = 0;
+		leftSpacing = 0;
+		rightSpacing = 0;
+		
+		font = [[NSFont systemFontOfSize:12] retain];
+		textColor = [[NSColor blackColor] retain];
+		invertedTextColor = [[NSColor whiteColor] retain];
+		
+		useAliasesAsRequested = YES;
 
-	if(!leftParagraphStyleWithTruncatingTail){
-		leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
-																			  lineBreakMode:NSLineBreakByTruncatingTail] retain];
+		if(!leftParagraphStyleWithTruncatingTail){
+			leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
+																				  lineBreakMode:NSLineBreakByTruncatingTail] retain];
+		}
 	}
-
-    return(self);
+		
+    return self;
 }
 
 //Copy

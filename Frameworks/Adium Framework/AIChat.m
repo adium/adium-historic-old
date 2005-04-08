@@ -48,22 +48,24 @@ static int nextChatNumber = 0;
 
 - (id)initForAccount:(AIAccount *)inAccount
 {
-    self = [super init];
-	AILog(@"[%@ initForAccount]",self);
+    if((self = [super init]))
+	{
+		AILog(@"[%@ initForAccount]",self);
 
-	name = nil;
-    account = [inAccount retain];
-    contentObjectArray = [[NSMutableArray alloc] init];
-    participatingListObjects = [[NSMutableArray alloc] init];
-    dateOpened = [[NSDate date] retain];
-	uniqueChatID = nil;
-	isOpen = NO;
-	expanded = YES;
+		name = nil;
+		account = [inAccount retain];
+		contentObjectArray = [[NSMutableArray alloc] init];
+		participatingListObjects = [[NSMutableArray alloc] init];
+		dateOpened = [[NSDate date] retain];
+		uniqueChatID = nil;
+		isOpen = NO;
+		expanded = YES;
 
-	//Observe preferences changes for typing enable/disable
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+		//Observe preferences changes for typing enable/disable
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	}
 
-    return(self);
+    return self;
 }
 
 /*

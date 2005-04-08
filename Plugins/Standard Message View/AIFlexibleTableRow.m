@@ -39,24 +39,26 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell	*cell;
 
     //Init
-    [super init];
-    cellArray = [inCells retain];
-    representedObject = [inRepresentedObject retain];
-    tableView = nil;
-    spansRows = NO;
-    isSpannedInto = NO;
-    tag = -1;
-    
-    //Let all the cells know we are their row
-    enumerator = [cellArray objectEnumerator];
-    while(cell = [enumerator nextObject]){
-        [cell setTableRow:self];
-    }
-    
-    //Update spanning
-    [self updateSpanningAndResizeRow:NO];
+    if((self = [super init]))
+	{
+		cellArray = [inCells retain];
+		representedObject = [inRepresentedObject retain];
+		tableView = nil;
+		spansRows = NO;
+		isSpannedInto = NO;
+		tag = -1;
+		
+		//Let all the cells know we are their row
+		enumerator = [cellArray objectEnumerator];
+		while(cell = [enumerator nextObject]){
+			[cell setTableRow:self];
+		}
+		
+		//Update spanning
+		[self updateSpanningAndResizeRow:NO];
+	}
 
-    return(self);
+    return self;
 }
 
 //Dealloc

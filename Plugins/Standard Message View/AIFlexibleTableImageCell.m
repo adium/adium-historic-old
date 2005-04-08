@@ -34,17 +34,18 @@
 //Init
 - (id)initWithImage:(NSImage *)inImage
 {
-    [super init];
+    if((self = [super init]))
+	{
+		image = [inImage retain];
+		
+		contentSize = [image size]; //defaults to the size of the image
+		imageSize = [image size];
 
-    image = [inImage retain];
-    
-    contentSize = [image size]; //defaults to the size of the image
-    imageSize = [image size];
+		drawFrame = NO;
+		borderColor = nil;
+	}
 
-    drawFrame = NO;
-    borderColor = nil;
-    
-    return(self);
+    return self;
 }
 
 //Dealloc

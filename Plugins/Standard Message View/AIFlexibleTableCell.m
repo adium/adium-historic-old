@@ -26,21 +26,22 @@
 //init
 - (id)init
 {
-    [super init];
-
-    contentSize = NSMakeSize(0,0);
-    variableWidth = NO;
-    backgroundColor = nil;
-    leftPadding = 0;
-    rightPadding = 0;
-    topPadding = 0;
-    leftPadding = 0;
-    rowSpan = 1;
+    if((self = [super init]))
+	{
+		contentSize = NSMakeSize(0,0);
+		variableWidth = NO;
+		backgroundColor = nil;
+		leftPadding = 0;
+		rightPadding = 0;
+		topPadding = 0;
+		leftPadding = 0;
+		rowSpan = 1;
+		
+		opacity = 1.0;
+		isOpaque = YES;
+	}
     
-    opacity = 1.0;
-    isOpaque = YES;
-    
-    return(self);
+    return self;
 }
 
 //dealloc

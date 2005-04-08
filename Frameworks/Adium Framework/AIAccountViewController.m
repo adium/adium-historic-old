@@ -55,21 +55,23 @@
 	NSBundle		*ourBundle = [NSBundle bundleForClass:[AIAccountViewController class]];
 	NSDictionary	*nameTable = [NSDictionary dictionaryWithObject:self forKey:@"NSOwner"];
 	
-    [super init];
-    account = nil;
-    
-	//Load custom views for our subclass (If our subclass specifies a nib name)
-	if([self nibName]){
-		[NSBundle loadNibNamed:[self nibName] owner:self];
+    if((self = [super init]))
+	{
+		account = nil;
+		
+		//Load custom views for our subclass (If our subclass specifies a nib name)
+		if([self nibName]){
+			[NSBundle loadNibNamed:[self nibName] owner:self];
+		}
+		
+		//Load our default views if necessary
+		if(!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
+		if(!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
+		if(!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
+		if(!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
 	}
-	
-	//Load our default views if necessary
-	if(!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
-	if(!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
-	if(!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
-	if(!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
 
-    return(self);
+    return self;
 }
 
 /*!
