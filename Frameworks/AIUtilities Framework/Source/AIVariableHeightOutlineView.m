@@ -328,7 +328,7 @@
 	NSImage			*image;
 	NSRect			rowRect;
 	float			yOffset;
-	unsigned int	i, firstRow, row, tableColumnsCount;
+	unsigned int	i, firstRow, row = 0, tableColumnsCount;
 
 	firstRow = buf[0];
 

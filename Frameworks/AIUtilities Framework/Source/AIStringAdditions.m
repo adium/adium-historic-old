@@ -93,8 +93,7 @@
 {
 	NSMutableString 	*outName;
 	unsigned			pos = 0, len;
-	NSRange				range;
-	range.length = 0;
+	NSRange				range = NSMakeRange(0, 0);
 	
 	outName = [self mutableCopy];
 	CFStringLowercase((CFMutableStringRef)outName, /*locale*/ NULL);
