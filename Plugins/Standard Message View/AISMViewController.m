@@ -94,65 +94,66 @@
 - (id)initForChat:(AIChat *)inChat
 {
     //init
-    [super init];
-    
-    rebuilding = NO;
-    lockContentThreadQueue = NO;
-	
-    chat = [inChat retain];
-    contentThreadQueue = [[NSMutableArray alloc] init];
-    previousRow = nil;
-    
-    //Cache our icons (temp?)
-    iconIncoming = [[NSImage imageNamed:@"blue" forClass:[self class]] retain];
-	[iconIncoming setFlipped:YES];
-    iconOutgoing = [[NSImage imageNamed:@"green" forClass:[self class]] retain];
-	[iconOutgoing setFlipped:YES];
-    
-    //Configure our table view
-    messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
-    [messageView setForwardsKeyEvents:YES];
-    [messageView setDelegate:self];
-	[messageView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-
-	scrollView_messages = [[AIAutoScrollView alloc] init];
-	[scrollView_messages setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
-	[scrollView_messages setAndSizeDocumentView:messageView];
-	[scrollView_messages setAutoScrollToBottom:YES];
-	[scrollView_messages setAutoHideScrollBar:NO];
-	[scrollView_messages setHasVerticalScroller:YES];
-	[scrollView_messages setBorderType:NSBezelBorder];
-   	[scrollView_messages setPassKeysToDocumentView:YES];
+    if((self = [super init]))
+	{
+		rebuilding = NO;
+		lockContentThreadQueue = NO;
 		
-	//Observe source/destination changes
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(sourceOrDestinationChanged:)
-									   name:Chat_SourceChanged 
-									 object:inChat];
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(sourceOrDestinationChanged:)
-									   name:Chat_DestinationChanged 
-									 object:inChat];
+		chat = [inChat retain];
+		contentThreadQueue = [[NSMutableArray alloc] init];
+		previousRow = nil;
+		
+		//Cache our icons (temp?)
+		iconIncoming = [[NSImage imageNamed:@"blue" forClass:[self class]] retain];
+		[iconIncoming setFlipped:YES];
+		iconOutgoing = [[NSImage imageNamed:@"green" forClass:[self class]] retain];
+		[iconOutgoing setFlipped:YES];
+		
+		//Configure our table view
+		messageView = [[AIFlexibleTableView alloc] initWithFrame:NSZeroRect];
+		[messageView setForwardsKeyEvents:YES];
+		[messageView setDelegate:self];
+		[messageView setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
 
-    [[adium notificationCenter] addObserver:self
-								   selector:@selector(contentObjectAdded:)
-									   name:Content_ContentObjectAdded
-									 object:chat];
+		scrollView_messages = [[AIAutoScrollView alloc] init];
+		[scrollView_messages setAutoresizingMask:(NSViewWidthSizable | NSViewHeightSizable)];
+		[scrollView_messages setAndSizeDocumentView:messageView];
+		[scrollView_messages setAutoScrollToBottom:YES];
+		[scrollView_messages setAutoHideScrollBar:NO];
+		[scrollView_messages setHasVerticalScroller:YES];
+		[scrollView_messages setBorderType:NSBezelBorder];
+		[scrollView_messages setPassKeysToDocumentView:YES];
+			
+		//Observe source/destination changes
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(sourceOrDestinationChanged:)
+										   name:Chat_SourceChanged 
+										 object:inChat];
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(sourceOrDestinationChanged:)
+										   name:Chat_DestinationChanged 
+										 object:inChat];
 
-	//Observe participants list changes
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(participatingListObjectsChanged:)
-									   name:Chat_ParticipatingListObjectsChanged 
-									 object:inChat];
-	[self participatingListObjectsChanged:nil];
-	
-    //Observe preferences
-   	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
-	
-    //Rebuild our view to include any content already in the chat
-    [self rebuildMessageViewForContent];
-    
-    return(self);
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(contentObjectAdded:)
+										   name:Content_ContentObjectAdded
+										 object:chat];
+
+		//Observe participants list changes
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(participatingListObjectsChanged:)
+										   name:Chat_ParticipatingListObjectsChanged 
+										 object:inChat];
+		[self participatingListObjectsChanged:nil];
+		
+		//Observe preferences
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];
+		
+		//Rebuild our view to include any content already in the chat
+		[self rebuildMessageViewForContent];
+	}
+		    
+    return self;
 }
 
 //Dealloc

@@ -27,16 +27,17 @@
 
 - (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 {
-    [super init];
-    
-    //Retain our information
-    contact = [inContact retain];
-    account = [inAccount retain];
-    type = Unknown_FileTransfer;
-	status = Unknown_Status_FileTransfer;
-    delegate = nil;
+    if((self = [super init]))
+	{
+		//Retain our information
+		contact = [inContact retain];
+		account = [inAccount retain];
+		type = Unknown_FileTransfer;
+		status = Unknown_Status_FileTransfer;
+		delegate = nil;
+	}
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc

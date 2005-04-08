@@ -43,12 +43,14 @@ NSString	*subn = @"subn\x00\x00\x00\x01";
 /*                        Reserved unknown       */
 NSString	*endn = @"\x00\x00\x00\x00";
 
-/* initialisation, create our dictionary */
--(AWEzvRendezvousData *) init {
-    self = [super init];
-    
-    keys = [[NSMutableDictionary dictionary] retain];
-    serial = 1;
+/* initialization, create our dictionary */
+-(AWEzvRendezvousData *) init 
+{
+    if((self = [super init]))
+	{
+		keys = [[NSMutableDictionary dictionary] retain];
+		serial = 1;
+	}
 
     return self;
 }
@@ -188,11 +190,13 @@ NSString	*endn = @"\x00\x00\x00\x00";
 }
 
 /* initialise object with a dictionary */
-- (AWEzvRendezvousData *)initWithDictionary:(NSDictionary *)dictionary {
-    self = [super init];
-    
-    keys = [dictionary retain];
-    serial++;
+- (AWEzvRendezvousData *)initWithDictionary:(NSDictionary *)dictionary 
+{
+    if((self = [super init]))
+	{
+		keys = [dictionary retain];
+		serial++;
+	}	
     
     return self;
 }

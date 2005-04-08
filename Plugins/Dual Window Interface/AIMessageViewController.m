@@ -85,56 +85,57 @@
  */
 - (id)initForChat:(AIChat *)inChat
 {
-    [super init];
+    if((self = [super init]))
+	{
+		//Init
+		chat = [inChat retain];
+		view_accountSelection = nil;
+		userListController = nil;
+		sendMessagesToOfflineContact = NO;
 
-    //Init
-	chat = [inChat retain];
-    view_accountSelection = nil;
-	userListController = nil;
-	sendMessagesToOfflineContact = NO;
-
-    //Load the view containing our controls
-    [NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
+		//Load the view containing our controls
+		[NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
+			
+		//Register for the various notification we need
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(sendMessage:) 
+										   name:Interface_SendEnteredMessage
+										 object:chat];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(didSendMessage:)
+										   name:Interface_DidSendEnteredMessage 
+										 object:chat];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(chatStatusChanged:) 
+										   name:Chat_StatusChanged
+										 object:chat];
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(chatParticipatingListObjectsChanged:)
+										   name:Chat_ParticipatingListObjectsChanged
+										 object:chat];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(redisplaySourceAndDestinationSelector:) 
+										   name:Chat_SourceChanged
+										 object:chat];
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(redisplaySourceAndDestinationSelector:) 
+										   name:Chat_DestinationChanged
+										 object:chat];
 		
-	//Register for the various notification we need
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(sendMessage:) 
-									   name:Interface_SendEnteredMessage
-									 object:chat];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(didSendMessage:)
-									   name:Interface_DidSendEnteredMessage 
-									 object:chat];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatStatusChanged:) 
-									   name:Chat_StatusChanged
-									 object:chat];
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(chatParticipatingListObjectsChanged:)
-									   name:Chat_ParticipatingListObjectsChanged
-									 object:chat];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(redisplaySourceAndDestinationSelector:) 
-									   name:Chat_SourceChanged
-									 object:chat];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(redisplaySourceAndDestinationSelector:) 
-									   name:Chat_DestinationChanged
-									 object:chat];
-	
-	//
-	[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
-	[splitView_textEntryHorizontal setDrawsDivider:NO];
-	
-    //Configure our views
-	[self _configureMessageDisplay];
-	[self _configureTextEntryView];
-	
-	//Update chat status and participating list objects to configure the user list if necessary
-	[self chatStatusChanged:nil];
-	[self chatParticipatingListObjectsChanged:nil];
+		//
+		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
+		[splitView_textEntryHorizontal setDrawsDivider:NO];
+		
+		//Configure our views
+		[self _configureMessageDisplay];
+		[self _configureTextEntryView];
+		
+		//Update chat status and participating list objects to configure the user list if necessary
+		[self chatStatusChanged:nil];
+		[self chatParticipatingListObjectsChanged:nil];
+	}
 
-    return(self);
+    return self;
 }
 
 /*!

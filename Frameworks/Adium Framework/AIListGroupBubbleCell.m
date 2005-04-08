@@ -24,13 +24,14 @@
 
 - (id)init
 {
-	[super init];
+	if((self = [super init]))
+	{
+		outlineBubble = NO;
+		outlineBubbleLineWidth = 1.0;
+		drawBubble = YES;
+	}
 	
-	outlineBubble = NO;
-	outlineBubbleLineWidth = 1.0;
-	drawBubble = YES;
-	
-	return(self);
+	return self;
 }
 //Copy
 - (id)copyWithZone:(NSZone *)zone

@@ -73,43 +73,45 @@
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
-    self = [super init];
-	[self _initWebView];
+    if((self = [super init]))
+	{
+		[self _initWebView];
 
-	chat = [inChat retain];
-	plugin = [inPlugin retain];
-	contentQueue = [[NSMutableArray alloc] init];
-	shouldReflectPreferenceChanges = NO;
+		chat = [inChat retain];
+		plugin = [inPlugin retain];
+		contentQueue = [[NSMutableArray alloc] init];
+		shouldReflectPreferenceChanges = NO;
 
-	//Observe preference changes.
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
-	
-	//Observe participants list changes
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(participatingListObjectsChanged:)
-									   name:Chat_ParticipatingListObjectsChanged 
-									 object:inChat];
-	[self participatingListObjectsChanged:nil];
+		//Observe preference changes.
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
+		
+		//Observe participants list changes
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(participatingListObjectsChanged:)
+										   name:Chat_ParticipatingListObjectsChanged 
+										 object:inChat];
+		[self participatingListObjectsChanged:nil];
 
-	//Observe source/destination changes
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(sourceOrDestinationChanged:)
-									   name:Chat_SourceChanged 
-									 object:inChat];
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(sourceOrDestinationChanged:)
-									   name:Chat_DestinationChanged 
-									 object:inChat];
-	[self sourceOrDestinationChanged:nil];
+		//Observe source/destination changes
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(sourceOrDestinationChanged:)
+										   name:Chat_SourceChanged 
+										 object:inChat];
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(sourceOrDestinationChanged:)
+										   name:Chat_DestinationChanged 
+										 object:inChat];
+		[self sourceOrDestinationChanged:nil];
+		
+		//Observe content additons
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(contentObjectAdded:)
+										   name:Content_ContentObjectAdded 
+										 object:inChat];
+	}
 	
-	//Observe content additons
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(contentObjectAdded:)
-									   name:Content_ContentObjectAdded 
-									 object:inChat];
-	
-    return(self);
+    return self;
 }
 
 /*!
