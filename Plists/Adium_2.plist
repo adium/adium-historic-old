@@ -182,7 +182,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>0.8b78, Copyright 2001-2005 The Adium Team</string>
+	<string>0.8b8, Copyright 2001-2005 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
