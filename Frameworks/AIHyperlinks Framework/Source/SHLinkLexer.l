@@ -38,7 +38,7 @@ mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
 yahooIMSpec	ymsgr:sendim\?.+
-rdarSpec	rdar:\/\/problems?\/[0-9]+(&[0-9]+)*
+rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 
 
 %option noyywrap 8bit caseless never-interactive prefix="SH"
