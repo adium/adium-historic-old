@@ -80,8 +80,9 @@ typedef enum {
 //Templates
 - (NSString *)baseTemplateWithVariant:(NSString *)variant chat:(AIChat *)chat;
 - (NSString *)templateForContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar;
+- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects;
 - (NSString *)scriptForChangingVariant:(NSString *)variant;
+- (NSString *)scriptForScrollingAfterAddingMultipleContentObjects;
 
 //Settings
 - (BOOL)allowsCustomBackground;

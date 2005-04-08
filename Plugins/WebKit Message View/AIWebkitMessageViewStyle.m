@@ -35,11 +35,13 @@
 //
 #define KEY_WEBKIT_VERSION				@"MessageViewVersion"
 
-//BOM scripts for appending content. These are shared between all AIWebkitMessageViewStyle instances.
+//BOM scripts for appending content.
 #define APPEND_MESSAGE_WITH_SCROLL		@"checkIfScrollToBottomIsNeeded(); appendMessage(\"%@\"); scrollToBottomIfNeeded();"
 #define APPEND_NEXT_MESSAGE_WITH_SCROLL	@"checkIfScrollToBottomIsNeeded(); appendNextMessage(\"%@\"); scrollToBottomIfNeeded();"
 #define APPEND_MESSAGE					@"appendMessage(\"%@\");"
 #define APPEND_NEXT_MESSAGE				@"appendNextMessage(\"%@\");"
+#define APPEND_MESSAGE_NO_SCROLL		@"appendMessageNoScroll(\"%@\");"
+#define	APPEND_NEXT_MESSAGE_NO_SCROLL	@"appendNextMessageNoScroll(\"%@\");"
 
 @interface AIWebkitMessageViewStyle (PRIVATE)
 - (id)initWithBundle:(NSBundle *)inBundle;
@@ -384,7 +386,7 @@
 /*!
  * @brief Returns the BOM script for appending content
  */
-- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar
+- (NSString *)scriptForAppendingContent:(AIContentObject *)content similar:(BOOL)contentIsSimilar willAddMoreContentObjects:(BOOL)willAddMoreContentObjects
 {
 	NSMutableString	*newHTML;
 	NSString		*script;
@@ -398,7 +400,11 @@
 	
 	//BOM scripts vary by style version
 	if(styleVersion >= 1){
-		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+		if(willAddMoreContentObjects){
+			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
+		}else{
+			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+		}
 	}else{
 		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
 	}
@@ -412,6 +418,20 @@
 - (NSString *)scriptForChangingVariant:(NSString *)variant
 {
 	return([NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]]);
+}
+
+/*!
+ * @brief Returns the BOM script for scrolling after adding multiple content objects
+ *
+ * Only applicable for styles which use the internal template
+ */
+- (NSString *)scriptForScrollingAfterAddingMultipleContentObjects
+{
+	if(styleVersion >= 1){
+		return(@"alignChat(true);");
+	}
+
+	return nil;
 }
 
 /*!
