@@ -18,6 +18,7 @@
 #import "AIStatusController.h"
 #import "AIStatusIcons.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.H>
 
 @implementation AIStatus
 
@@ -490,7 +491,10 @@
 
 - (NSString *)description
 {
-	return([NSString stringWithFormat:@"%@ : %@",[super description], statusDict]);
+	return([NSString stringWithFormat:@"<%@: %x [%@]>",
+		NSStringFromClass([self class]),
+		self,
+		[[self title] stringWithEllipsisByTruncatingToLength:20]]);
 }
 
 @end
