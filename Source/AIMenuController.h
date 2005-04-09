@@ -107,10 +107,23 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_pasteFormatted;
 	IBOutlet	NSMenuItem	*menuItem_clear;
 	IBOutlet	NSMenuItem	*menuItem_selectAll;
-	IBOutlet	NSMenuItem	*menuItem_find;
-	IBOutlet	NSMenuItem	*menuItem_spelling;
-	IBOutlet	NSMenuItem	*menuItem_speech;
 	
+	IBOutlet	NSMenuItem	*menuItem_find;
+	IBOutlet	NSMenuItem	*menuItem_findCommand;
+	IBOutlet	NSMenuItem	*menuItem_findNext;
+	IBOutlet	NSMenuItem	*menuItem_findPrevious;
+	IBOutlet	NSMenuItem	*menuItem_findUseSelectionForFind;
+	IBOutlet	NSMenuItem	*menuItem_findJumpToSelection;
+	
+	IBOutlet	NSMenuItem	*menuItem_spelling;
+	IBOutlet	NSMenuItem	*menuItem_spellingCommand;
+	IBOutlet	NSMenuItem	*menuItem_spellingCheckSpelling;
+	IBOutlet	NSMenuItem	*menuItem_spellingCheckSpellingAsYouType;
+		
+	IBOutlet	NSMenuItem	*menuItem_speech;
+	IBOutlet	NSMenuItem	*menuItem_startSpeaking;
+	IBOutlet	NSMenuItem	*menuItem_stopSpeaking;
+
 	//View menu
 	IBOutlet	NSMenuItem	*menuItem_customizeToolbar;
 	
