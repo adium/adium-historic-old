@@ -2058,21 +2058,6 @@
 			settings = {
 			};
 		};
-		343EB40708086D9100E27095 = {
-			children = (
-				34A48A4706F64680002C7C5F,
-			);
-			isa = PBXVariantGroup;
-			name = ListLayoutSheet.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		343EB40808086D9100E27095 = {
-			fileRef = 343EB40708086D9100E27095;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		343EB40908086D9100E27095 = {
 			children = (
 				342E2B1A072976060054D77A,
@@ -2114,21 +2099,6 @@
 		};
 		343EB40F08086D9100E27095 = {
 			fileRef = 343EB40E08086D9100E27095;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		343EB41008086D9100E27095 = {
-			children = (
-				34A48A4906F64685002C7C5F,
-			);
-			isa = PBXVariantGroup;
-			name = ListThemeSheet.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		343EB41108086D9100E27095 = {
-			fileRef = 343EB41008086D9100E27095;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -2264,6 +2234,52 @@
 		};
 		343EB42308086D9200E27095 = {
 			fileRef = 343EB42208086D9200E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB4270808709E00E27095 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB4280808709E00E27095 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB42B080870A200E27095 = {
+			children = (
+				343EB4270808709E00E27095,
+			);
+			isa = PBXVariantGroup;
+			name = ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB42C080870A200E27095 = {
+			fileRef = 343EB42B080870A200E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB42D080870A300E27095 = {
+			children = (
+				343EB4280808709E00E27095,
+			);
+			isa = PBXVariantGroup;
+			name = ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB42E080870A300E27095 = {
+			fileRef = 343EB42D080870A300E27095;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -6094,22 +6110,6 @@
 			settings = {
 			};
 		};
-		34A48A4706F64680002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = English;
-			path = "Plugins/Contact List/Preferences/ListLayoutSheet.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A4906F64685002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = file;
-			name = English;
-			path = "Plugins/Contact List/Preferences/ListThemeSheet.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A48A4D06F6468D002C7C5F = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -7771,8 +7771,6 @@
 				6EC1685006C170A000F9FAD3,
 				34A48A0C06F64376002C7C5F,
 				34A48A1006F64382002C7C5F,
-				343EB40808086D9100E27095,
-				343EB41108086D9100E27095,
 				34F1022F0734499700890D3B,
 				4BE9FFE8055981AB00359B15,
 				4BCB9B5F0567FF5D001D3559,
@@ -7872,6 +7870,8 @@
 				34BFDF2107E8978900AD984D,
 				34BFE21A07E8E56700AD984D,
 				34BFE30107E8FA7900AD984D,
+				343EB42C080870A200E27095,
+				343EB42E080870A300E27095,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17744,10 +17744,10 @@
 				4B08399B07D235190034A001,
 				34A48A3A06F64664002C7C5F,
 				34A48A3D06F64665002C7C5F,
-				343EB40708086D9100E27095,
+				343EB42B080870A200E27095,
+				343EB42D080870A300E27095,
 				34A48A3C06F64664002C7C5F,
 				34A48A3B06F64664002C7C5F,
-				343EB41008086D9100E27095,
 				F5F0FE9C04B12CAC01A80106,
 				F5F0FE9D04B12CAC01A80106,
 				F5F0FEA004B1336C01A80106,
