@@ -91,6 +91,9 @@
 	[fontPreviewField_currentFont setShowFontFace:NO];
 	[fontPreviewField_currentFont setShowPointSize:YES];
 
+	//We want to be able to obtain bigger images than the image picker will feed us
+	[imageView_backgroundImage setUseNSImagePickerController:NO];
+		
 	//Configure the chat preview
 	[self _configureChatPreview];
 
