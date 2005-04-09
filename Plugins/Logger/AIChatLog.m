@@ -22,14 +22,10 @@ BOOL scandate(const char *sample, unsigned long *outyear, unsigned long *outmont
 
 @implementation AIChatLog
 
-static	NSTimeZone	*defaultTimeZone = nil;
-
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
 {
     if((self = [super init]))
 	{
-		if(!defaultTimeZone) defaultTimeZone = [[NSTimeZone defaultTimeZone] retain];
-			
 		path = [inPath retain];
 		from = [inFrom retain];
 		to = [inTo retain];
