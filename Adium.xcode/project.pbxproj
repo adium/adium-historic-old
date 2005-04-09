@@ -3866,7 +3866,6 @@
 				347E783307CA967100350507,
 				347E791F07CAA52300350507,
 				347E791E07CAA52300350507,
-				347E783907CA968400350507,
 			);
 			isa = PBXGroup;
 			name = Sorting;
@@ -4018,20 +4017,6 @@
 		};
 		347E783407CA967100350507 = {
 			fileRef = 347E783307CA967100350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		347E783907CA968400350507 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = SortConfiguration.nib;
-			path = Resources/SortConfiguration.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		347E783A07CA968500350507 = {
-			fileRef = 347E783907CA968400350507;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5243,11 +5228,11 @@
 		};
 		349C6E8207C9728B005EB896 = {
 			children = (
-				347E77CE07CA93B200350507,
 				9E57141405B2168100283CAD,
 				F50CD61C03603BE201A8010A,
 				4BB5CBB006EDF04D009B4517,
 				F53B9AC502CD12AB01A8010A,
+				347E77CE07CA93B200350507,
 				3479A83B05DC9F2400998B3D,
 			);
 			isa = PBXGroup;
@@ -7484,7 +7469,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				349C7C7A07C9AE1B005EB896,
-				347E783A07CA968500350507,
 				34E0EA0807CC53ED00A82198,
 				347E781A07CA962100350507,
 				347E783407CA967100350507,
@@ -14532,7 +14516,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				GCC_ALTIVEC_EXTENSIONS = NO;
-				GCC_DEBUGGING_SYMBOLS = used;
+				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -23697,7 +23681,7 @@
 			sourceTree = "<group>";
 		};
 		F59DB3D7033EA9CD01A8010A = {
-			fileEncoding = 30;
+			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIAdium.m;
