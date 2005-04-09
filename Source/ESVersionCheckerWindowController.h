@@ -19,6 +19,10 @@
 @interface ESVersionCheckerWindowController : AIWindowController {
 	IBOutlet	NSTextField *textField_updateAvailable;
 	IBOutlet	NSButton	*checkBox_checkAutomatically;
+	
+	IBOutlet	NSTextField	*textField_isUpToDateTitle;
+	IBOutlet	NSTextField	*textField_isUpToDateExplanation;
+	IBOutlet	NSButton	*button_okay;
 }
 
 + (void)showUpToDateWindow;
