@@ -28,6 +28,7 @@
 #define CONNECT_ERROR_NIB           @"VersionCannotConnect"
 
 @interface ESVersionCheckerWindowController (PRIVATE)
+- (void)localizeUpToDateWindow;
 - (void)showWindowFromBuild:(NSDate *)currentDate toBuild:(NSDate *)newestDate;
 @end
 
@@ -51,6 +52,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 {
 	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
 	sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:VERSION_UPTODATE_NIB];
+	[sharedVersionCheckerInstance localizeUpToDateWindow];
 	[sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
 
@@ -91,7 +93,9 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	if(BETA_RELEASE){
 		[checkBox_checkAutomatically setState:YES];
 		[checkBox_checkAutomatically setEnabled:NO];
-	}	
+	}
+	
+	[checkBox_checkAutomatically setLocalizedString:AILocalizedString(@"Check for updates automatically")];
 }
 
 /*!
@@ -131,10 +135,9 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 		NSString   		*newestDateString;
 		NSString		*interval;
 		
-		dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:@"%B %e, %Y" 
-											   allowNaturalLanguage:NO];
+		dateFormatter = [NSDateFormatter localizedDateFormatter];
 		newestDateString = [dateFormatter stringForObjectValue:newestDate];
-		
+	
 		//Time since last update (contains a trailing space)
 		interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:newestDate
 																		andDate:currentDate];
@@ -169,6 +172,16 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 											 forKey:KEY_CHECK_AUTOMATICALLY
 											  group:PREF_GROUP_UPDATING];
 	}
+}
+
+/*
+ * @brief Localize the strings in the up to date window
+ */
+- (void)localizeUpToDateWindow
+{
+	[textField_isUpToDateTitle setStringValue:AILocalizedString(@"Your Adium is up to date",nil)];
+	[textField_isUpToDateExplanation setStringValue:AILocalizedString(@"No updates are available.  Please try again later.",nil)];
+	[button_okay setLocalizedString:AILocalizedString(@"OK",nil)];
 }
 
 @end
