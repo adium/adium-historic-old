@@ -312,7 +312,6 @@ static int nextChatNumber = 0;
 
 - (NSString *)uniqueChatID
 {
-	NSLog(@"-uniqueChatID");
 	if (!uniqueChatID) {
 		AIListObject	*listObject;
 		if ((listObject = [self listObject])){
