@@ -77,9 +77,11 @@
 		nil];
 	if(shadow) [attributes setObject:shadow forKey:NSShadowAttributeName];
 	
-	sample = [[[NSAttributedString alloc] initWithString:@"Sample Text" attributes:attributes] autorelease];
+	sample = [[[NSAttributedString alloc] initWithString:AILocalizedString(@"Sample",nil)
+											  attributes:attributes] autorelease];
 	int	sampleHeight = [sample size].height;
 	
+#warning todo: center the string in the rect
 	[sample drawInRect:NSMakeRect(rect.origin.x,
 								  rect.origin.y + (rect.size.height - sampleHeight) / 2.0,
 								  rect.size.width,
