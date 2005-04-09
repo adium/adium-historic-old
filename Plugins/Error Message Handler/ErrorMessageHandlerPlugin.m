@@ -23,8 +23,8 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIListObject.h>
 
-#define ERROR_MESSAGE_ALERT_SHORT	@"Display an alert"
-#define ERROR_MESSAGE_ALERT_LONG	@"Display the alert \"%@\""
+#define ERROR_MESSAGE_ALERT_SHORT	AILocalizedString(@"Display an alert",nil)
+#define ERROR_MESSAGE_ALERT_LONG	AILocalizedString(@"Display the alert \"%@\"",nil)
 
 @implementation ErrorMessageHandlerPlugin
 
