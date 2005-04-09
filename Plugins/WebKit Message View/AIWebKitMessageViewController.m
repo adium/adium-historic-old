@@ -109,17 +109,11 @@
 									   selector:@selector(contentObjectAdded:)
 										   name:Content_ContentObjectAdded 
 										 object:inChat];
+		[[adium notificationCenter] addObserver:self 
+									   selector:@selector(chatDidFinishAddingUntrackedContent:)
+										   name:Content_ChatDidFinishAddingUntrackedContent 
+										 object:inChat];
 	}
-	
-	//Observe content additons
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(contentObjectAdded:)
-									   name:Content_ContentObjectAdded 
-									 object:inChat];
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(chatDidFinishAddingUntrackedContent:)
-									   name:Content_ChatDidFinishAddingUntrackedContent 
-									 object:inChat];
 	
     return self;
 }
