@@ -17,11 +17,12 @@
 // $Id$
 
 #import "AIMenuController.h"
-#import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface AIMenuController (PRIVATE)
 - (void)localizeMenuTitles;
