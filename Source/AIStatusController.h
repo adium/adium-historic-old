@@ -103,7 +103,6 @@
 	//Status states
 	NSMutableArray			*stateArray;
 	NSMutableArray			*builtInStateArray;
-	NSMutableSet			*temporaryStateArray;
 
 	AIStatus				*offlineStatusState; //Shared state used to symbolize the offline 'status'
 	

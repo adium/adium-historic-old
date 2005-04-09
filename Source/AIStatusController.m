@@ -66,6 +66,8 @@
  */
 @implementation AIStatusController
 
+static 	NSMutableSet			*temporaryStateArray = nil;
+
 /*!
  * Init the status controller
  */
@@ -224,7 +226,6 @@
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
-	
 }
 
 /*!
@@ -653,7 +654,6 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return offlineStatusState;
 }
 
-
 //Sort the status array
 int _statusArraySort(id objectA, id objectB, void *context)
 {
@@ -676,20 +676,33 @@ int _statusArraySort(id objectA, id objectB, void *context)
 			//Sort locked status states to the top, as these are our built-in presets
 			if(mutabilityTypeA == AILockedStatusState){
 				return NSOrderedAscending;
+				
 			}else{
 				return NSOrderedDescending;
 			}
 		}else{
-			NSArray	*originalArray = (NSArray *)context;
+			//Check to see if either is temporary; temporary items go above permanent ones
+			BOOL	isTemporaryA = [temporaryStateArray containsObject:objectA];
+			BOOL	isTemporaryB = [temporaryStateArray containsObject:objectB];
 
-			//Return them in the same relative order as the original array if they are of the same type
-			int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
-			int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
-
-			if(indexA > indexB){
-				return NSOrderedDescending;
-			}else{
+			if(isTemporaryA && !isTemporaryB){
 				return NSOrderedAscending;
+				
+			}else if(isTemporaryB && !isTemporaryA){
+				return NSOrderedDescending;
+				
+			}else{
+				NSArray	*originalArray = (NSArray *)context;
+				
+				//Return them in the same relative order as the original array if they are of the same type
+				int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
+				int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+				
+				if(indexA > indexB){
+					return NSOrderedDescending;
+				}else{
+					return NSOrderedAscending;
+				}
 			}
 		}
 	}
@@ -705,11 +718,14 @@ int _statusArraySort(id objectA, id objectB, void *context)
 - (NSArray *)sortedFullStateArray
 {
 	if(!_sortedFullStateArray){
-		NSMutableArray	*tempArray = [[self stateArray] mutableCopy];
+		NSArray			*originalStateArray = [self stateArray];
+		NSMutableArray	*tempArray = [originalStateArray mutableCopy];
 		[tempArray addObjectsFromArray:[self builtInStateArray]];
 		[tempArray addObjectsFromArray:[temporaryStateArray allObjects]];
-		[tempArray sortUsingFunction:_statusArraySort context:tempArray];
-		 
+		
+		//Pass the original array so its indexes can be used for comparison of saved state ordering
+		[tempArray sortUsingFunction:_statusArraySort context:originalStateArray];
+
 		_sortedFullStateArray = tempArray;
 	}
 
@@ -878,7 +894,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  * @brief Remove a state
  *
  * Remove a new state from Adium's state array.
- * @param state AIState to remove
+ * @param state AIStatus to remove
  */
 - (void)removeStatusState:(AIStatus *)statusState
 {
@@ -890,12 +906,12 @@ int _statusArraySort(id objectA, id objectB, void *context)
  * @brief Move a state
  *
  * Move a state that already exists in Adium's state array to another index
- * @param state AIState to move
+ * @param state AIStatus to move
  * @param destIndex Destination index
  */
 - (int)moveStatusState:(AIStatus *)statusState toIndex:(int)destIndex
 {
-    int sourceIndex = [stateArray indexOfObject:statusState];
+    int sourceIndex = [stateArray indexOfObjectIdenticalTo:statusState];
 
     //Remove the state
     [statusState retain];
@@ -915,8 +931,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
  * @brief Replace a state
  *
  * Replace a state in Adium's state array with another state.
- * @param oldState AIState state that is in Adium's state array
- * @param newState AIState state with which to replace oldState
+ * @param oldState AIStatus state that is in Adium's state array
+ * @param newState AIStatus state with which to replace oldState
  */
 - (void)replaceExistingStatusState:(AIStatus *)oldStatusState withStatusState:(AIStatus *)newStatusState
 {
