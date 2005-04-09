@@ -36,7 +36,7 @@
 #define ADVANCED_PANE_IDENTIFIER				@"advanced"			//Identifier of advanced tab
 
 //Localized strings
-#define PREFERENCE_WINDOW_TITLE					@"Preferences"
+#define PREFERENCE_WINDOW_TITLE					AILocalizedString(@"Preferences",nil)
 
 @interface AIPreferenceWindowController (PRIVATE)
 + (AIPreferenceWindowController *)_preferenceWindowController;
@@ -146,10 +146,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[super windowDidLoad];
 
 	//Configure window
-	[[self window] setTitle:AILocalizedString(@"Preferences",nil)];
+	[[self window] setTitle:PREFERENCE_WINDOW_TITLE];
 	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
 	[self _configureAdvancedPreferencesTable];
-	[self _configreTabViewItemLabels];
 	[[self window] betterCenter];
 
 	//Prepare our array of preference views.  We place these in an array to cut down on a ton of duplicate code.
@@ -320,27 +319,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	return _identifierToLabelDict;
 }
 
-/*!
-* @brief Configure tab view item labels
- *
- * Use the tab view item identifiers to set the (localized) labels for the tab view items.
- */
-- (void)_configreTabViewItemLabels
-{
-	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
-	NSTabViewItem	*tabViewItem;
-	NSDictionary	*identifierToLabelDict = [self identifierToLabelDict];
-
-	while(tabViewItem = [enumerator nextObject]){
-		NSString	*localizedLabel;
-		
-		if(localizedLabel = [identifierToLabelDict objectForKey:[tabViewItem identifier]]){
-			[tabViewItem setLabel:localizedLabel];
-		}
-	}
-}
-
-
 //Toolbar tab view -----------------------------------------------------------------------------------------------------
 #pragma mark Toolbar tab view
 /*!
@@ -393,7 +371,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 /*!
  * @brief Returns the localized label for the tab view item
  */
-- (NSString *)tabView:(NSTabView *)tabView labelForTabView:(NSTabViewItem *)tabViewItem
+- (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if(tabView == tabView_category){
 		NSString	*identifier;
