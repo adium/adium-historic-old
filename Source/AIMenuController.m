@@ -316,10 +316,25 @@
 	[menuItem_pasteFormatted setTitle:AILocalizedString(@"Paste Formatted",nil)];
 	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
 	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];
-	[menuItem_find setTitle:AILocalizedString(@"Find",nil)];
-	[menuItem_spelling setTitle:AILocalizedString(@"Spelling",nil)];
-	[menuItem_speech setTitle:AILocalizedString(@"Speech",nil)];
+	
+#define TITLE_FIND AILocalizedString(@"Find",nil)
+	[menuItem_find setTitle:TITLE_FIND];
+	[menuItem_findCommand setTitle:[TITLE_FIND stringByAppendingEllipsis]];
+	[menuItem_findNext setTitle:AILocalizedString(@"Find Next",nil)];
+	[menuItem_findPrevious setTitle:AILocalizedString(@"Find Previous",nil)];
+	[menuItem_findUseSelectionForFind setTitle:AILocalizedString(@"Use Selection for Find",nil)];
+	[menuItem_findJumpToSelection setTitle:AILocalizedString(@"Jump to Selection",nil)];
+	
+#define TITLE_SPELLING AILocalizedString(@"Spelling",nil)
+	[menuItem_spelling setTitle:TITLE_SPELLING];
+	[menuItem_spellingCommand setTitle:[TITLE_SPELLING stringByAppendingEllipsis]];
+	[menuItem_spellingCheckSpelling setTitle:AILocalizedString(@"Check Spelling",nil)];
+	[menuItem_spellingCheckSpellingAsYouType setTitle:AILocalizedString(@"Check Spelling As You Type",nil)];
 
+	[menuItem_speech setTitle:AILocalizedString(@"Speech",nil)];
+	[menuItem_startSpeaking setTitle:AILocalizedString(@"Start Speaking",nil)];
+	[menuItem_stopSpeaking setTitle:AILocalizedString(@"Stop Speaking",nil)];
+	
 	//View menu
 	[menuItem_customizeToolbar setTitle:AILocalizedString(@"Customize Toolbar...",nil)];
 
