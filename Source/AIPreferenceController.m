@@ -29,6 +29,7 @@
 #import <Adium/AIPreferencePane.h>
 
 #define PREFS_DEFAULT_PREFS 	@"PrefsPrefs.plist"
+#define TITLE_OPEN_PREFERENCES	AILocalizedString(@"Open Preferences",nil)
 
 @interface AIPreferenceController (PRIVATE)
 - (NSMutableDictionary *)loadPreferenceGroup:(NSString *)groupName;
@@ -88,9 +89,9 @@
 
     //Show preference window toolabr item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowPreferences"
-														  label:@"Preferences"
-												   paletteLabel:@"Open Preferences"
-														toolTip:@"Open Preferences"
+														  label:AILocalizedString(@"Preferences",nil)
+												   paletteLabel:TITLE_OPEN_PREFERENCES
+														toolTip:TITLE_OPEN_PREFERENCES
 														 target:self
 												settingSelector:@selector(setImage:)
 													itemContent:[NSImage imageNamed:@"settings" forClass:[self class]]
