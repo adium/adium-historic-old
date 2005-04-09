@@ -48,7 +48,6 @@
 }
 + (NSString *)browserBundleIdentifier
 {
-#warning Im not sure that this is the correct bundle ID. someone double-check it, please? --boredzo
 	return @"org.mozilla.mozilla";
 }
 
