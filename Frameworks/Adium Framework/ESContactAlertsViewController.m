@@ -91,8 +91,14 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 - (void)dealloc
 {
-    [listObject release]; listObject = nil;
+	[contactAlertsEvents release]; contactAlertsEvents = nil;
+	[contactAlertsActions release]; contactAlertsActions = nil;
+	[listObject release]; listObject = nil;
 	[expandStateDict release]; expandStateDict = nil;
+
+	// I don't think this needs to be released, because the contact-specific
+	// alerts view does not appear to get released. But anyway...
+	[targetEventID release]; targetEventID = nil;
 
 	[super dealloc];
 }
