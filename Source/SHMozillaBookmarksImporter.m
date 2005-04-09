@@ -16,65 +16,16 @@
 
 #import "SHMozillaBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define MOZILLA_BOOKMARKS_PATH  @"~/Library/Mozilla/Profiles/default"
 #define MOZILLA_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
 @class SHMozillaCommonParser;
 
-@interface SHMozillaBookmarksImporter(PRIVATE)
-- (NSString *)bookmarkPath;
-@end
-
 @implementation SHMozillaBookmarksImporter
 
-#pragma mark Protocol methods
-
-+ (id)newInstanceOfImporter
-{
-    return [[self alloc] init];
-}
-
-- (id)init
-{
-	[super init];
-	
-	lastModDate = nil;
-	return self;
-}
-
-- (void)dealloc
-{
-	[lastModDate release];
-	[super dealloc];
-}
-
-- (NSArray *)availableBookmarks
-{
-    NSString		*bookmarkString = [NSString stringWithContentsOfFile:[self bookmarkPath]];
-    
-    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath]
-																		 traverseLink:YES];
-    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
-}
-
--(BOOL)bookmarksExist
-{
-    return [[NSFileManager defaultManager] fileExistsAtPath:[self bookmarkPath]];
-}
-
--(BOOL)bookmarksUpdated
-{
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[self bookmarkPath] traverseLink:YES];
-    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
-    
-    return ![modDate isEqualToDate:lastModDate];
-}
-
-#pragma mark private methods
-- (NSString *)bookmarkPath
++ (NSString *)bookmarksPath
 {
     NSEnumerator *enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[MOZILLA_BOOKMARKS_PATH stringByExpandingTildeInPath]] objectEnumerator];
     NSString    *directory;
@@ -85,6 +36,39 @@
             return [NSString stringWithFormat:@"%@/%@/%@",[MOZILLA_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, MOZILLA_BOOKMARKS_FILE_NAME];
     }
     return MOZILLA_BOOKMARKS_PATH;
+}
+
++ (NSString *)browserName
+{
+	return @"Mozilla";
+}
++ (NSString *)browserSignature
+{
+	return @"MOZZ";
+}
++ (NSString *)browserBundleIdentifier
+{
+#warning Im not sure that this is the correct bundle ID. someone double-check it, please? --boredzo
+	return @"org.mozilla.mozilla";
+}
+
+#pragma mark -
+
++ (void)load
+{
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
+}
+
+- (NSArray *)availableBookmarks
+{
+	NSString		*bookmarksPath = [[self class] bookmarksPath];
+    NSString		*bookmarkString = [NSString stringWithContentsOfFile:bookmarksPath];
+    
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath
+																		 traverseLink:YES];
+    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+    
+    return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
 }
 
 @end

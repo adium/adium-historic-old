@@ -16,6 +16,7 @@
 
 #import "SHSafariBookmarksImporter.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define SAFARI_BOOKMARKS_PATH	@"~/Library/Safari/Bookmarks.plist"
 #define SAFARI_HISTORY_PATH		@"~/Library/Safari/History.plist"
@@ -36,57 +37,55 @@
 
 @implementation SHSafariBookmarksImporter
 
-+ (id)newInstanceOfImporter
++ (NSString *)bookmarksPath
 {
-	return [[self alloc] init];
+	return [[NSFileManager defaultManager] pathIfNotDirectory:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
 }
 
-- (id)init
++ (NSString *)browserName
 {
-	if ((self = [super init])) {
-		lastModDate = nil;
-	}
-
-	return self;
+	return @"Safari";
+}
++ (NSString *)browserSignature
+{
+	return @"sfri";
+}
++ (NSString *)browserBundleIdentifier
+{
+	return @"com.apple.Safari";
 }
 
-- (void)dealloc
-{
-	[lastModDate release];
-	[super dealloc];
-}
+#pragma mark -
 
-//Returns YES if the bookmarks have changed
-- (BOOL)bookmarksUpdated
++ (void)load
 {
-	NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-	NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
-
-	return (![modDate isEqualToDate:lastModDate]);
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
 }
 
 //Return an array of the available bookmarks
 - (NSArray *)availableBookmarks
 {
-	NSString	*bookmarkPath = [SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	NSString	*bookmarksPath = [[self class] bookmarksPath];
 
 	//Open the bookmarks
-	NSDictionary *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:bookmarkPath];
+	NSDictionary *bookmarksDict = [NSDictionary dictionaryWithContentsOfFile:bookmarksPath];
+	if(!bookmarksDict) return nil;
 
 	//Remember when they were last modified
-	NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+	NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
 	[lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
 
 	//Process them
-	return [self drillPropertyList:[bookmarkDict objectForKey:SAFARI_DICT_CHILD]];
+	return [self drillPropertyList:[bookmarksDict objectForKey:SAFARI_DICT_CHILD]];
 }
 
-//Parse the safari bookmark file
+//Parse the Safari bookmarks file
 - (NSArray *)drillPropertyList:(id)inObject
 {
-	NSMutableArray	*array = [NSMutableArray array];
+	NSMutableArray	*array = nil;
 
-	if([inObject isKindOfClass:[NSArray class]]){
+	if([inObject isKindOfClass:[NSArray class]]) {
+		array = [NSMutableArray arrayWithCapacity:[inObject count]];
 		NSEnumerator *enumerator = [(NSArray *)inObject objectEnumerator];
 		NSDictionary *linkDict;
 		
@@ -102,16 +101,24 @@
 				if(menuDict) [array addObject:menuDict];
 			}
 		}
+	} else {
+		//provide an empty array
+		array = [NSArray array];
 	}
 	
 	return array;
 }
 
+#warning XXX move this to AIBookmarksImporter, as it looks quite useful
+
 //Menu
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
 	if(!inTitle || !inMenuItems) return nil;
-	return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, SH_BOOKMARK_DICT_TITLE, inMenuItems, SH_BOOKMARK_DICT_CONTENT, nil];
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		inTitle,     ADIUM_BOOKMARK_DICT_TITLE,
+		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
+		nil];
 }
 
 //Menu Item

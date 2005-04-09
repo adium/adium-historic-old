@@ -16,6 +16,7 @@
 
 #import "SHMSIEBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define MSIE_BOOKMARKS_PATH  @"~/Library/Preferences/Explorer/Favorites.html"
 
@@ -23,10 +24,31 @@
 
 @implementation SHMSIEBookmarksImporter
 
-#pragma mark protocol methods
-+ (id)newInstanceOfImporter
++ (NSString *)bookmarksPath
 {
-    return [[self alloc] init];
+	return [[NSFileManager defaultManager] pathIfNotDirectory:MSIE_BOOKMARKS_PATH];
+}
+
++ (NSString *)browserName
+{
+	return @"Internet Explorer";
+}
++ (NSString *)browserSignature
+{
+	return @"MSIE";
+}
+/*
++ (NSString *)browserBundleIdentifier
+{
+	return nil;
+}
+*/
+
+#pragma mark -
+
++ (void)load
+{
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
 }
 
 - (NSArray *)availableBookmarks
@@ -38,19 +60,6 @@
     [lastModDate autorelease]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
 
     return [SHMozillaCommonParser parseBookmarksfromString:bookmarkString];
-}
-
--(BOOL)bookmarksExist
-{
-    return [[NSFileManager defaultManager] fileExistsAtPath:[MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-}
-
--(BOOL)bookmarksUpdated
-{
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
-    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
-    
-    return ![modDate isEqualToDate:lastModDate];
 }
 
 @end

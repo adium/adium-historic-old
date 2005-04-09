@@ -157,8 +157,8 @@
 + (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-		(inTitle ? inTitle : @"untitled"), SH_BOOKMARK_DICT_TITLE,
-		inMenuItems, SH_BOOKMARK_DICT_CONTENT,
+		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
+		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
 		nil];
 }
 

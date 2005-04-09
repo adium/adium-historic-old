@@ -17,6 +17,7 @@
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define OW45_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb/Bookmarks.html"
 #define OW5_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb 5/Favorites.html"
@@ -31,7 +32,7 @@
 #define OPEN_TAG	@"<"
 
 @interface SHOmniWebBookmarksImporter (PRIVATE)
-- (NSArray *)parseBookmarksFile:(NSString *)inString;
+- (NSArray *)parseBookmarksString:(NSString *)inString;
 - (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
@@ -40,57 +41,77 @@
 
 #pragma mark protocol methods
 
-+ (id)newInstanceOfImporter
+- (BOOL)browserIsAvailable
 {
-    return [[self alloc] init];
-}
-
-- (id)init
-{
-	if ((self = [super init])) {
-		useOW5 = [[NSFileManager defaultManager] fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-		lastModDate = nil;
+	NSFileManager *mgr = [NSFileManager defaultManager];
+	BOOL exists, isDir = NO;
+	exists = ([mgr fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] isDirectory:&isDir] && !isDir);
+	if(!exists) {
+		exists = ([mgr fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath] isDirectory:&isDir] && !isDir);
 	}
-
-	return self;
+	return exists;
 }
 
-- (void)dealloc
++ (NSString *)browserName
 {
-	[lastModDate release];
-	[super dealloc];
+	return @"Firefox";
+}
++ (NSString *)browserSignature
+{
+	return @"MOZB";
+}
++ (NSString *)browserBundleIdentifier
+{
+	return @"org.mozilla.firefox";
+}
+
+#pragma mark -
+
++ (void)load
+{
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
+}
+
+#pragma mark -
+
++ (NSString *)bookmarksPathForOmniWeb5
+{
+	return [[NSFileManager defaultManager] pathIfNotDirectory:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+}
++ (NSString *)bookmarksPathForOmniWeb4Point5
+{
+	return [[NSFileManager defaultManager] pathIfNotDirectory:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+}
++ (NSString *)bookmarksPath
+{
+	NSString *path = [self bookmarksPathForOmniWeb5];
+	if(!path) path = [self bookmarksPathForOmniWeb4Point5];
+	return path;
 }
 
 - (NSArray *)availableBookmarks
 {
-    NSString    *bookmarkPath = [(useOW5 ? OW5_BOOKMARKS_PATH : OW45_BOOKMARKS_PATH) stringByExpandingTildeInPath];
+    NSString    *bookmarkPath = [[self class] bookmarksPath];
+#warning this uses the ephemeral C string encoding. it should use an explicit encoding.
+	/*further note: my historical OmniWeb 5 Favorites file has UTF-8 in its Content-Type header.
+	 *I don't know what 4.5 uses, though, and we shouldn't assume the value of Content-Type anyway.
+	 *the right way would be to proceed in a strict 8-bit encoding like ISO 8859-1,
+	 *	read the Content-Type, and then reread the file as whatever encoding is found.
+	 *the hard part of that is mapping an HTTP encoding name to an NSStringEncoding.
+	 *--boredzo
+	 */
     NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
-    
+
     NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    return([self parseBookmarksFile:bookmarkString]);
+
+    return([self parseBookmarksString:bookmarkString]);
 }
 
 
-- (BOOL)bookmarksExist
-{
-    return(useOW5 || [[NSFileManager defaultManager] fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]]);
-}
+#pragma mark Private methods
 
-
-- (BOOL)bookmarksUpdated
-{
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[(useOW5 ? OW5_BOOKMARKS_PATH : OW45_BOOKMARKS_PATH) stringByExpandingTildeInPath]
-																	  traverseLink:YES];
-    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
-    
-    return(![modDate isEqualToDate:lastModDate]);
-}
-
-#pragma mark private methods
-
-- (NSArray *)parseBookmarksFile:(NSString *)inString
+- (NSArray *)parseBookmarksString:(NSString *)inString
 {
 	NSMutableArray	*bookmarksArray = [NSMutableArray array];
 	NSMutableArray	*arrayStack = [NSMutableArray array];
@@ -193,8 +214,8 @@
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
 	return [NSDictionary dictionaryWithObjectsAndKeys:
-		(inTitle ? inTitle : @"untitled"), SH_BOOKMARK_DICT_TITLE,
-		inMenuItems, SH_BOOKMARK_DICT_CONTENT,
+		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
+		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
 		nil];
 }
 
