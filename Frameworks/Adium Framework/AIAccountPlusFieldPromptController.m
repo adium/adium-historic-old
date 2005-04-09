@@ -119,6 +119,8 @@
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
+	
 	[textField_handle setMinStringLength:2];
 	
     //Configure the handle type menu
@@ -136,7 +138,7 @@
 		//Configure the autocompleting field
 		[self _configureTextFieldForAccount:preferredAccount];
 	}
-	
+
     //Center the window
     [[self window] center];
 }
