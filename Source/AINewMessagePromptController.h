@@ -17,7 +17,8 @@
 #import "AIAccountPlusFieldPromptController.h"
 
 @interface AINewMessagePromptController : AIAccountPlusFieldPromptController {    
-
+	IBOutlet	NSTextField	*label_from;
+	IBOutlet	NSTextField	*label_to;
 }
 
 @end

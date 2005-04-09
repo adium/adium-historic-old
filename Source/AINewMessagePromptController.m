@@ -57,6 +57,19 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 }
 
 /*
+ * @brief Window did load
+ */
+- (void)windowDidLoad
+{
+	[super windowDidLoad];
+	
+	[label_from setLocalizedString:AILocalizedString(@"From:",nil)];
+	[label_to setLocalizedString:AILocalizedString(@"To:",nil)];
+	
+	[[self window] setTitle:AILocalizedString(@"New Message",nil)];
+}
+
+/*
  * @brief Open a chat with the desired contact
  */
 - (IBAction)okay:(id)sender
