@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIBookmarksImporterController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AICoreComponentLoader.h"
