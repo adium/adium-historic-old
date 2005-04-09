@@ -102,17 +102,27 @@
  */
 - (void)dealloc
 {	
+	[styleBundle release];
+	[stylePath release];
+
 	//Templates
+	[headerHTML release];
+	[footerHTML release];
+	[baseHTML release];
 	[contentInHTML release];
 	[nextContentInHTML release];
-	[contentOutHTML release];
-	[nextContentOutHTML release];
 	[contextInHTML release];
 	[nextContextInHTML release];
+	[contentOutHTML release];
+	[nextContentOutHTML release];
 	[contextOutHTML release];
 	[nextContextOutHTML release];
 	[statusHTML release];	
-	[baseHTML release];
+
+	[timeStampFormatter release];
+
+	[customBackgroundPath release];
+	[customBackgroundColor release];
 	
 	[super dealloc];
 }
