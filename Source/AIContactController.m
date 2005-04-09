@@ -61,6 +61,8 @@
 #define GET_INFO_MASK					(NSCommandKeyMask | NSShiftKeyMask)
 #define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask)
 
+#define	TITLE_SHOW_INFO					AILocalizedString(@"Show Info",nil)
+
 #define UPDATE_CLUMP_INTERVAL			1.0
 
 #define TOP_METACONTACT_ID				@"TopMetaContactID"
@@ -1365,9 +1367,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	//Add our get info toolbar item
 	NSToolbarItem   *toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowInfo"
-																		   label:@"Info"
-																	paletteLabel:@"Show Info"
-																		 toolTip:@"Show Info"
+																		   label:AILocalizedString(@"Info",nil)
+																	paletteLabel:TITLE_SHOW_INFO
+																		 toolTip:TITLE_SHOW_INFO
 																		  target:self
 																 settingSelector:@selector(setImage:)
 																	 itemContent:[NSImage imageNamed:@"info" forClass:[self class]]
