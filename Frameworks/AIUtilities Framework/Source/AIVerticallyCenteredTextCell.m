@@ -80,6 +80,8 @@
 
 		//Draw the string
 		[attributedTitle drawInRect:cellFrame];
+
+		[attributedTitle release];
 	}
 }
 
