@@ -117,4 +117,32 @@
 	return(count > 0);
 }
 
+#pragma mark -
+
+//returns the pathname passed in if it exists on disk (test -e). Doesn't care whether the path is a file or a directory.
+- (NSString *)pathIfExists:(NSString *)path
+{
+	BOOL exists = [self fileExistsAtPath:path];
+	if(!exists) path = nil;
+	return path;
+}
+
+//returns the pathname passed in if it exists on disk as a directory (test -d).
+- (NSString *)pathIfDirectory:(NSString *)path
+{
+	BOOL  isDir = NO;
+	BOOL exists = ([self fileExistsAtPath:path isDirectory:&isDir] && isDir);
+	if(!exists) path = nil;
+	return path;
+}
+
+//returns the pathname passed in if it exists on disk as a non-directory (test ! -d).
+- (NSString *)pathIfNotDirectory:(NSString *)path
+{
+	BOOL  isDir = NO;
+	BOOL exists = ([self fileExistsAtPath:path isDirectory:&isDir] && !isDir);
+	if(!exists) path = nil;
+	return path;
+}
+
 @end

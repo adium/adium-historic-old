@@ -40,4 +40,25 @@
  * @param moveToTrash If YES, move the files to the trash. If NO, delete them permanently.
  */
 - (void)removeFilesInDirectory:(NSString *)dirPath withPrefix:(NSString *)prefix movingToTrash:(BOOL)moveToTrash;
+
+#pragma mark -
+
+/*
+ * @brief Returns the pathname passed in if it exists on disk (test -e). Doesn't care whether the path is a file or a directory.
+ * @result The pathname passed in, or nil.
+ */
+- (NSString *)pathIfExists:(NSString *)path;
+
+/*
+ * @brief Returns the pathname passed in if it exists on disk as a directory (test -d).
+ * @result The pathname passed in, or nil.
+ */
+- (NSString *)pathIfDirectory:(NSString *)path;
+
+/*
+ * @brief Returns the pathname passed in if it exists on disk as a non-directory (test ! -d).
+ * @result The pathname passed in, or nil.
+ */
+- (NSString *)pathIfNotDirectory:(NSString *)path;
+
 @end
