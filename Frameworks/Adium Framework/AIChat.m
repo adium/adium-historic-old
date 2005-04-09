@@ -312,17 +312,16 @@ static int nextChatNumber = 0;
 
 - (NSString *)uniqueChatID
 {
+	NSLog(@"-uniqueChatID");
 	if (!uniqueChatID) {
 		AIListObject	*listObject;
 		if ((listObject = [self listObject])){
-			uniqueChatID = [listObject internalObjectID];
+			uniqueChatID = [[listObject internalObjectID] retain];
 		}else{
-			uniqueChatID = [NSString stringWithFormat:@"%@.%i",name,nextChatNumber++];
+			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",name,nextChatNumber++];
 		}
 		
 		NSAssert(uniqueChatID != nil, @"nil uniqueChatID");
-		
-		[uniqueChatID retain];
 	}
 	
 	return (uniqueChatID);
