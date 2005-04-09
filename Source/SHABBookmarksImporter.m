@@ -20,23 +20,38 @@
 - (void)getUrlsFromAB;
 @end
 
-@implementation SHABBookmarksImporter
-
 static NSMenu   *abBookmarksMenu;
 static NSMenu   *abBookmarksSupermenu;
 static NSMenu   *abTopMenu;
 
-+ (id)newInstanceOfImporter
+@implementation SHABBookmarksImporter
+
++ (NSString *)browserName
 {
-    return [[self alloc] init];
+	return @"Address Book";
+}
++ (NSString *)browserSignature
+{
+	return @"adrb";
+}
++ (NSString *)browserBundleIdentifier
+{
+	return @"com.apple.AddressBook";
 }
 
-+(NSString *)importerTitle
+- (BOOL)bookmarksHaveChanged
+{
+    return YES;
+}
+
+#pragma mark -
+
++ (NSString *)importerTitle
 {
     return AB_ROOT_MENU_TITLE;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject
+- (NSMenu *)parseBookmarksForOwner:(id)inObject
 {
     owner = inObject;
     //NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
@@ -56,16 +71,6 @@ static NSMenu   *abTopMenu;
     [self getUrlsFromAB];
         
     return abBookmarksMenu;
-}
-
--(BOOL)bookmarksExist
-{
-    return YES;
-}
-
--(BOOL)bookmarksUpdated
-{
-    return YES;
 }
 
 - (void)getUrlsFromAB
@@ -97,4 +102,5 @@ static NSMenu   *abTopMenu;
         }
     }
 }
+
 @end

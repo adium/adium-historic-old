@@ -62,7 +62,6 @@
 #import "GBApplescriptFiltersPlugin.h"
 #import "NEHGrowlPlugin.h"
 #import "SAContactOnlineForPlugin.h"
-#import "SHBookmarksImporterPlugin.h"
 #import "ESAccountEvents.h"
 #import "ESAccountNetworkConnectivityPlugin.h"
 #import "ESAddressBookIntegrationPlugin.h"
@@ -232,7 +231,6 @@
 	[self _loadComponentClass:[ErrorMessageHandlerPlugin class]];
 	[self _loadComponentClass:[GBApplescriptFiltersPlugin class]];
 	[self _loadComponentClass:[SAContactOnlineForPlugin class]];
-	[self _loadComponentClass:[SHBookmarksImporterPlugin class]];
 	[self _loadComponentClass:[SHLinkManagementPlugin class]];
 	[self _loadComponentClass:[ESGlobalEventsPreferencesPlugin class]];
 	[self _loadComponentClass:[ESGeneralPreferencesPlugin class]];

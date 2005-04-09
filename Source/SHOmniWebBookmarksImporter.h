@@ -14,14 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "SHBookmarksImporterPlugin.h"
+#import "AIBookmarksImporterController.h"
+#import "AIBookmarksImporter.h"
 
-@protocol SHBookmarksImporter;
-
-@interface SHOmniWebBookmarksImporter : NSObject <SHBookmarksImporter> {
-    id       owner;
-    NSDate  *lastModDate;
-    BOOL     useOW5;
+@interface SHOmniWebBookmarksImporter : AIBookmarksImporter
+{
+	id       owner;
 }
 
 @end

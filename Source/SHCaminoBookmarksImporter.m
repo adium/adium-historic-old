@@ -16,6 +16,7 @@
 
 #import "SHCaminoBookmarksImporter.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
 #define CAMINO_DICT_CHILD_KEY   @"Children"
@@ -31,16 +32,35 @@
 
 @implementation SHCaminoBookmarksImporter
 
-+ (id)newInstanceOfImporter
++ (NSString *)bookmarksPath
 {
-	return [[self alloc] init];
+	return [[NSFileManager defaultManager] pathIfNotDirectory:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+}
+
++ (NSString *)browserName
+{
+	return @"Camino";
+}
++ (NSString *)browserSignature
+{
+	return @"CHIM";
+}
++ (NSString *)browserBundleIdentifier
+{
+	return @"org.mozilla.navigator";
+}
+
+#pragma mark -
+
++ (void)load
+{
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
 }
 
 - (id)init
 {
 	if ((self = [super init])) {
 		emptyArray = [[NSArray alloc] init];
-		lastModDate = nil;
 	}
 
 	return self;
@@ -48,36 +68,32 @@
 
 - (void)dealloc
 {
-	[lastModDate release];
 	[emptyArray release];
 	[super dealloc];
 }
 
+#pragma mark -
+
 - (NSArray *)availableBookmarks
 {
-    NSString        *bookmarkPath = [CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath];
-    NSDictionary    *bookmarkDict = [NSDictionary dictionaryWithContentsOfFile:bookmarkPath];
-    
-    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+    NSString        *bookmarksPath = [[self class] bookmarksPath];
+    NSDictionary    *bookmarksDict = [NSDictionary dictionaryWithContentsOfFile:bookmarksPath];
+
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
-    
-    return [self drillPropertyList:[bookmarkDict objectForKey:CAMINO_DICT_CHILD_KEY]];
+
+    return [self drillPropertyList:[bookmarksDict objectForKey:CAMINO_DICT_CHILD_KEY]];
 }
 
--(BOOL)bookmarksExist
+- (BOOL)bookmarksHaveChanged
 {
-    return [[NSFileManager defaultManager] fileExistsAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
-}
-
--(BOOL)bookmarksUpdated
-{
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath] traverseLink:YES];
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[[self class] bookmarksPath] traverseLink:YES];
     NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
     
     return ![modDate isEqualToDate:lastModDate];
 }
 
--(NSArray *)drillPropertyList:(id)inObject
+- (NSArray *)drillPropertyList:(id)inObject
 {
     NSMutableArray  *caminoArray = [NSMutableArray array];
     
@@ -104,7 +120,7 @@
 - (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
 	if(!inTitle || !inMenuItems) return(nil);
-    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, SH_BOOKMARK_DICT_TITLE, inMenuItems, SH_BOOKMARK_DICT_CONTENT, nil];
+    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, ADIUM_BOOKMARK_DICT_TITLE, inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT, nil];
 }
 
 - (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict

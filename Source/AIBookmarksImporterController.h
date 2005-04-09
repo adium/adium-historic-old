@@ -16,25 +16,32 @@
 
 #import <Adium/AIPlugin.h>
 
-#define SH_BOOKMARK_DICT_TITLE      @"Title"
-#define SH_BOOKMARK_DICT_CONTENT    @"Content"
+#define ADIUM_BOOKMARK_DICT_TITLE      @"Title"
+#define ADIUM_BOOKMARK_DICT_CONTENT    @"Content"
 
-@protocol SHBookmarkImporter <NSObject>
-+ (id)newInstanceOfImporter;
-- (NSArray *)availableBookmarks;	//All available bookmarks
-- (BOOL)bookmarksUpdated; 			//YES if bookmarks have changed since last call to availableBookmarks
-@end
+@class AIBookmarksImporter;
 
-@interface SHBookmarksImporterPlugin : AIPlugin {	
+@interface AIBookmarksImporterController: NSObject
+{
 	NSMenuItem              *bookmarkRootMenuItem;
 	NSMenuItem              *bookmarkRootContextualMenuItem;
 
 	NSToolbarItem			*toolbarItem;
 	NSMutableArray			*toolbarItemArray;
 
-	NSImage					*browserIcon;
-	id <SHBookmarkImporter>  importer;
+	//instances of AIBookmarksImporter.
+	NSMutableArray			*importers;
+
+	NSTimer					*menuUpdateTimer;
+
 	BOOL                     updatingMenu;
 }
+
++ (id)sharedController;
+
+- (void)initController;
+
+- (void)addImporter:(AIBookmarksImporter *)importerToAdd;
+- (void)removeImporter:(AIBookmarksImporter *)importerToRemove;
 
 @end

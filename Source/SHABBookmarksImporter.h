@@ -15,17 +15,14 @@
  */
 
 #import <AddressBook/AddressBook.h>
-#import "SHBookmarksImporterPlugin.h"
+#import "AIBookmarksImporterController.h"
+#import "AIBookmarksImporter.h"
 
-@protocol SHBookmarksImporter;
-
-@interface SHABBookmarksImporter : NSObject <SHBookmarksImporter>{
+@interface SHABBookmarksImporter : AIBookmarksImporter
+{
     id               owner;
-    NSDate          *lastModDate;
 }
 
--(NSMenu *)parseBookmarksForOwner:(id)inObject;
--(BOOL)bookmarksExist;
--(BOOL)bookmarksUpdated;
+- (NSMenu *)parseBookmarksForOwner:(id)inObject;
 
 @end
