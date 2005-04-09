@@ -1,21 +1,36 @@
 {
     IBClasses = (
         {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {changePreference = id; closeWindow = id; update = id; }; 
+            ACTIONS = {changePreference = id; update = id; }; 
             CLASS = ESVersionCheckerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_okay" = NSButton; 
                 "checkBox_checkAutomatically" = NSButton; 
+                "textField_isUpToDateExplanation" = NSTextField; 
+                "textField_isUpToDateTitle" = NSTextField; 
                 "textField_updateAvailable" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
 }
