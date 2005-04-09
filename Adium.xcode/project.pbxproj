@@ -5570,22 +5570,6 @@
 			settings = {
 			};
 		};
-		349DDCF30640650B00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = LittleDelete.png;
-			path = "Plugins/Away Messages/LittleDelete.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDCF40640650B00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = LittleAdd.png;
-			path = "Plugins/Away Messages/LittleAdd.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		349DDD5206406A7D00542726 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -14987,18 +14971,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B1332390459BCFA00A8010A = {
-			children = (
-				4B81631203D1C24E00A8010A,
-				4BE8E5390483B59800A8010A,
-				6E97F12F04A94C0100472FFF,
-			);
-			isa = PBXGroup;
-			name = Accounts;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B15ED2E057AED8600A3B3D3 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -15333,7 +15305,6 @@
 		};
 		4B3717000510D19400A8010A = {
 			children = (
-				4B1332390459BCFA00A8010A,
 				7ECB106D06A4D21700812D5F,
 			);
 			includeInIndex = 0;
@@ -16833,17 +16804,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4B81631203D1C24E00A8010A = {
-			children = (
-				349DDCF30640650B00542726,
-				349DDCF40640650B00542726,
-			);
-			isa = PBXGroup;
-			name = "Away Messages";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4B82138E049CA6CC00A8010A = {
 			fileEncoding = 4;
@@ -19558,15 +19518,6 @@
 			settings = {
 			};
 		};
-		4BE8E5390483B59800A8010A = {
-			children = (
-			);
-			isa = PBXGroup;
-			name = "Away Status Window";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BE9200A03DED0E500A8010A = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -20593,55 +20544,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		6E97F12F04A94C0100472FFF = {
-			children = (
-				6E97F13D04A94C5400472FFF,
-				6E97F13F04A94C5400472FFF,
-				6E97F14004A94C5400472FFF,
-				6E97F13C04A94C5400472FFF,
-			);
-			isa = PBXGroup;
-			name = "Idle Message";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F13C04A94C5400472FFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = IdleMessageDefaultPrefs.plist;
-			path = "Plugins/Idle Message/IdleMessageDefaultPrefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F13D04A94C5400472FFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = IdleMessagePlugin.h;
-			path = "Plugins/Idle Message/IdleMessagePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F13F04A94C5400472FFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = IdleMessagePreferences.h;
-			path = "Plugins/Idle Message/IdleMessagePreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F14004A94C5400472FFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = IdleMessagePreferences.m;
-			path = "Plugins/Idle Message/IdleMessagePreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		6EA3688206B73E7D009CA81A = {
 			isa = PBXFileReference;
