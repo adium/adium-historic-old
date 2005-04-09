@@ -193,13 +193,21 @@ static NSString                             *filterForContactName = nil;	//Conta
     [fromServiceArray release];
     [toArray release];
     [toServiceArray release];
-    [availableLogArray release];
+    //[availableLogArray release];
     [selectedLogArray release];
     [selectedColumn release];
     [dateFormatter release];
     [displayedLog release];
     [blankImage release];
+    [activeSearchStringEncoded release];
+    [activeSearchString release];
+
+    //toolbarItems?
+    //aggregateLogIndexProgressTimer?
     
+	[logFromGroupDict release]; logFromGroupDict = nil;
+	[logToGroupDict release]; logToGroupDict = nil;
+
     [filterForContactName release]; filterForContactName = nil;
     [filterForAccountName release]; filterForAccountName = nil;
 
