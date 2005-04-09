@@ -20,12 +20,8 @@
     NSString	    *to;
 	NSString		*serviceClass;
     NSDate			*date;
-    NSString	    *dateSearchString;
 	float			rankingPercentage;
 }
-
-//Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
-+ (NSCalendarDate *)dateFromFileName:(NSString *)fileName;
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate;
 

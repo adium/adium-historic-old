@@ -20,9 +20,13 @@
 
 #define OLD_SUFFIX  @".adiumLog.html"
 
+static BOOL scandate(const char *sample, unsigned long *outyear,
+	unsigned long *outmonth, unsigned long *outdate);
+
 @interface AILogToGroup (PRIVATE)
 - (NSDictionary *)logDict;
 - (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName;
++ (NSCalendarDate *)dateFromFileName:(NSString *)fileName;
 @end
 
 @implementation AILogToGroup
@@ -151,11 +155,10 @@
 	//Create & add the log
 
 	if(date = [fileAttributes fileModificationDate]){
-		NSDate	*fileNameDate = [AIChatLog dateFromFileName:(fileName ?
-															 fileName :
-															 [relativeLogPath lastPathComponent])];
+		NSDate	*fileNameDate = [[self class] dateFromFileName:(fileName ? fileName : [relativeLogPath lastPathComponent])];
 		
 		NSTimeInterval dateTimeIntervalSinceFileNameDate = [date timeIntervalSinceDate:fileNameDate];
+
 		if (dateTimeIntervalSinceFileNameDate < 0){
 			//Date is earlier than the filename date; simply use the fileNameDate. 
 			//This is clearly a misrepresentation; the date on which the log was written according to Adium
@@ -168,11 +171,11 @@
 			date = [NSDate dateWithTimeIntervalSinceReferenceDate:([fileNameDate timeIntervalSinceReferenceDate] + 86399)];
 		}
 
-		theLog = [[[AIChatLog allocWithZone:nil] initWithPath:relativeLogPath
-														 from:from
-														   to:to
-												 serviceClass:serviceClass
-														 date:date] autorelease];
+		theLog = [[[AIChatLog alloc] initWithPath:relativeLogPath
+											 from:from
+											   to:to
+									 serviceClass:serviceClass
+											 date:date] autorelease];
 	}
 	
 	return(theLog);
@@ -201,4 +204,85 @@
 	return(theLog);
 }
 
+//Given an Adium log file name, return an NSCalendarDate with year, month, and day specified
++ (NSCalendarDate *)dateFromFileName:(NSString *)fileName
+{
+	unsigned long   year = 0;
+	unsigned long   month = 0;
+	unsigned long   day = 0;
+	
+	if(scandate([fileName UTF8String], &year, &month, &day)) {
+		if(year && month && day) {
+			return [NSCalendarDate dateWithYear:year month:month day:day hour:0 minute:0 second:0 timeZone:[NSTimeZone defaultTimeZone]];
+		}
+	}
+
+	return nil;
+}
+
 @end
+
+//Scan an Adium date string, supahfast C style
+static BOOL scandate(const char *sample, unsigned long *outyear,
+	unsigned long *outmonth, unsigned long *outdate)
+{
+	BOOL success = YES;
+	unsigned long component;
+    //read three numbers, starting after:
+	
+	//a space...
+	while(*sample != ' ') {
+    	if(!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+
+	//...followed by a (
+	while(*sample != '(') {
+    	if(!*sample) {
+    		success = NO;
+    		goto fail;
+		} else {
+			++sample;
+		}
+    }
+
+	//current character is a '(' now, so skip over it.
+    ++sample; //start with the next character
+
+    /*get the year*/ {
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outyear) *outyear = component;
+    }
+    
+    /*get the month*/ {
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outmonth) *outmonth = component;
+    }
+    
+    /*get the date*/ {
+		while(*sample && (*sample < '0' || *sample > '9')) ++sample;
+		if(!*sample) {
+			success = NO;
+			goto fail;
+		}
+		component = strtoul(sample, (char **)&sample, 10);
+		if(outdate) *outdate = component;
+    }
+
+fail:
+	return success;
+}
