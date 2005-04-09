@@ -95,7 +95,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 		[checkBox_checkAutomatically setEnabled:NO];
 	}
 	
-	[checkBox_checkAutomatically setLocalizedString:AILocalizedString(@"Check for updates automatically")];
+	[checkBox_checkAutomatically setLocalizedString:AILocalizedString(@"Check for updates automatically", nil)];
 }
 
 /*!
