@@ -1783,8 +1783,8 @@
 		342E2B1A072976060054D77A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DCGaimZephyrJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimZephyrJoinChatView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/DCGaimZephyrJoinChatView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1843,10 +1843,10 @@
 				343A7F2C06935DC500150CEC,
 				6E4D962806B73C18005235E9,
 				6E4D962906B73C18005235E9,
-				6E4D962706B73C18005235E9,
+				343EB41408086D9100E27095,
 				343A7F2B06935DC500150CEC,
 				343A7F2A06935DC500150CEC,
-				343A7F2606935DB600150CEC,
+				343EB41E08086D9100E27095,
 				4B76474C07A07B900021CCD7,
 			);
 			isa = PBXGroup;
@@ -1857,16 +1857,10 @@
 		343A7F2606935DB600150CEC = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimMeanwhileAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimMeanwhileAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimMeanwhileAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		343A7F2706935DB600150CEC = {
-			fileRef = 343A7F2606935DB600150CEC;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		343A7F2A06935DC500150CEC = {
 			fileEncoding = 30;
@@ -1988,6 +1982,291 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		343EB3FD08086D2F00E27095 = {
+			children = (
+				4BCAB5EF07B59967006641B9,
+			);
+			isa = PBXVariantGroup;
+			name = AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB3FE08086D2F00E27095 = {
+			fileRef = 343EB3FD08086D2F00E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB3FF08086D9000E27095 = {
+			children = (
+				4B7A565A07A1742900BDC540,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimNovellAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40008086D9000E27095 = {
+			fileRef = 343EB3FF08086D9000E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40108086D9000E27095 = {
+			children = (
+				4BAE6D5D07CFA1D7007E2820,
+			);
+			isa = PBXVariantGroup;
+			name = AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40208086D9000E27095 = {
+			fileRef = 343EB40108086D9000E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40308086D9000E27095 = {
+			children = (
+				349448C207BB29B2000F2A03,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimGaduGaduAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40408086D9000E27095 = {
+			fileRef = 343EB40308086D9000E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40508086D9000E27095 = {
+			children = (
+				34F1529405E9FDDB00B32FD7,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimMSNAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40608086D9100E27095 = {
+			fileRef = 343EB40508086D9000E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40708086D9100E27095 = {
+			children = (
+				34A48A4706F64680002C7C5F,
+			);
+			isa = PBXVariantGroup;
+			name = ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40808086D9100E27095 = {
+			fileRef = 343EB40708086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40908086D9100E27095 = {
+			children = (
+				342E2B1A072976060054D77A,
+			);
+			isa = PBXVariantGroup;
+			name = DCGaimZephyrJoinChatView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40A08086D9100E27095 = {
+			fileRef = 343EB40908086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40C08086D9100E27095 = {
+			children = (
+				6E4D961506B73A96005235E9,
+			);
+			isa = PBXVariantGroup;
+			name = DCGaimOscarJoinChatView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40D08086D9100E27095 = {
+			fileRef = 343EB40C08086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB40E08086D9100E27095 = {
+			children = (
+				6EA3688E06B73F67009CA81A,
+			);
+			isa = PBXVariantGroup;
+			name = DCGaimYahooJoinChatView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB40F08086D9100E27095 = {
+			fileRef = 343EB40E08086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41008086D9100E27095 = {
+			children = (
+				34A48A4906F64685002C7C5F,
+			);
+			isa = PBXVariantGroup;
+			name = ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41108086D9100E27095 = {
+			fileRef = 343EB41008086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41208086D9100E27095 = {
+			children = (
+				348D8D2306CC07BC00449EBB,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimZephyrAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41308086D9100E27095 = {
+			fileRef = 343EB41208086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41408086D9100E27095 = {
+			children = (
+				6E4D962706B73C18005235E9,
+			);
+			isa = PBXVariantGroup;
+			name = DCGaimMeanwhileJoinChatView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41508086D9100E27095 = {
+			fileRef = 343EB41408086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41608086D9100E27095 = {
+			children = (
+				347E791F07CAA52300350507,
+			);
+			isa = PBXVariantGroup;
+			name = StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41708086D9100E27095 = {
+			fileRef = 343EB41608086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41808086D9100E27095 = {
+			children = (
+				6E4D962106B73BDF005235E9,
+			);
+			isa = PBXVariantGroup;
+			name = DCGaimJabberJoinChatView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41908086D9100E27095 = {
+			fileRef = 343EB41808086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41A08086D9100E27095 = {
+			children = (
+				34F52BCB06E2AFBC00887BE2,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimICQAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41B08086D9100E27095 = {
+			fileRef = 343EB41A08086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41C08086D9100E27095 = {
+			children = (
+				34B9197F062DEC99004F1223,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimOscarAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41D08086D9100E27095 = {
+			fileRef = 343EB41C08086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB41E08086D9100E27095 = {
+			children = (
+				343A7F2606935DB600150CEC,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimMeanwhileAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB41F08086D9200E27095 = {
+			fileRef = 343EB41E08086D9100E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB42008086D9200E27095 = {
+			children = (
+				348A901A062A13AB00FC6E03,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimYahooAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB42108086D9200E27095 = {
+			fileRef = 343EB42008086D9200E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EB42208086D9200E27095 = {
+			children = (
+				348A8A190629A68C00FC6E03,
+			);
+			isa = PBXVariantGroup;
+			name = ESGaimJabberAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EB42308086D9200E27095 = {
+			fileRef = 343EB42208086D9200E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		344092CC07D8FF8F00321BB3 = {
 			fileEncoding = 4;
@@ -2206,10 +2485,10 @@
 				9EA125E8055B630900ECF349,
 				6E4D961606B73A96005235E9,
 				6E4D961706B73A96005235E9,
-				6E4D961506B73A96005235E9,
+				343EB40C08086D9100E27095,
 				34B9194B062DEC29004F1223,
 				34B9194A062DEC29004F1223,
-				34B9197F062DEC99004F1223,
+				343EB41C08086D9100E27095,
 				4B76459307A06CB60021CCD7,
 				34F52BD506E2B22800887BE2,
 			);
@@ -2229,7 +2508,7 @@
 				6E4D962D06B73C4D005235E9,
 				344159B3059F977F0019246B,
 				344159B4059F97800019246B,
-				34F1529405E9FDDB00B32FD7,
+				343EB40508086D9000E27095,
 				4B7644DD07A05E7E0021CCD7,
 				4B388E080719C351004DE713,
 			);
@@ -2336,10 +2615,10 @@
 				34415BCF059FA9CD0019246B,
 				6EA3688F06B73F67009CA81A,
 				6EA3689006B73F67009CA81A,
-				6EA3688E06B73F67009CA81A,
+				343EB40E08086D9100E27095,
 				342928080628BB4200BB9217,
 				342928090628BB4200BB9217,
-				348A901A062A13AB00FC6E03,
+				343EB42008086D9200E27095,
 				4B76471707A079A40021CCD7,
 				4B76459907A06E210021CCD7,
 			);
@@ -2386,10 +2665,10 @@
 				344160C4059FC3080019246B,
 				6E4D962206B73BE0005235E9,
 				6E4D962306B73BE0005235E9,
-				6E4D962106B73BDF005235E9,
+				343EB41808086D9100E27095,
 				344160B4059FC2F50019246B,
 				344160B5059FC2F50019246B,
-				348A8A190629A68C00FC6E03,
+				343EB42208086D9200E27095,
 				4BB19298079EE90900DAA523,
 				349FF9FF0750752100E36B3B,
 			);
@@ -2409,7 +2688,7 @@
 				6E4D961B06B73B38005235E9,
 				34416085059FC2A30019246B,
 				34416086059FC2A30019246B,
-				349448C207BB29B2000F2A03,
+				343EB40308086D9000E27095,
 				4B76473F07A07B620021CCD7,
 			);
 			isa = PBXGroup;
@@ -3864,7 +4143,7 @@
 				347E790F07CAA51400350507,
 				347E791D07CAA52300350507,
 				347E783307CA967100350507,
-				347E791F07CAA52300350507,
+				343EB41608086D9100E27095,
 				347E791E07CAA52300350507,
 			);
 			isa = PBXGroup;
@@ -4363,8 +4642,8 @@
 		347E791F07CAA52300350507 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = StatusSortConfiguration.nib;
-			path = Resources/StatusSortConfiguration.nib;
+			name = English;
+			path = Resources/English.lproj/StatusSortConfiguration.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4387,12 +4666,6 @@
 		};
 		347E792307CAA52300350507 = {
 			fileRef = 347E791E07CAA52300350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		347E792407CAA52300350507 = {
-			fileRef = 347E791F07CAA52300350507;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -4775,30 +5048,18 @@
 		348A8A190629A68C00FC6E03 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimJabberAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimJabberAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimJabberAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		348A8A1A0629A68C00FC6E03 = {
-			fileRef = 348A8A190629A68C00FC6E03;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		348A901A062A13AB00FC6E03 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimYahooAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimYahooAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimYahooAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		348A901B062A13AB00FC6E03 = {
-			fileRef = 348A901A062A13AB00FC6E03;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		348D8D1A06CC079F00449EBB = {
 			fileEncoding = 30;
@@ -4842,8 +5103,8 @@
 		348D8D2306CC07BC00449EBB = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimZephyrAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimZephyrAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimZephyrAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4898,12 +5159,6 @@
 			settings = {
 			};
 		};
-		348D8D2A06CC07BE00449EBB = {
-			fileRef = 348D8D2306CC07BC00449EBB;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348D8D2B06CC07BE00449EBB = {
 			fileRef = 348D8D2406CC07BD00449EBB;
 			isa = PBXBuildFile;
@@ -4942,10 +5197,10 @@
 				348D8D2606CC07BD00449EBB,
 				348D8D2706CC07BD00449EBB,
 				348D8D2506CC07BD00449EBB,
-				342E2B1A072976060054D77A,
+				343EB40908086D9100E27095,
 				348D8D2406CC07BD00449EBB,
 				348D8D2206CC07BC00449EBB,
-				348D8D2306CC07BC00449EBB,
+				343EB41208086D9100E27095,
 				4B7646CE07A078E60021CCD7,
 			);
 			isa = PBXGroup;
@@ -5010,16 +5265,10 @@
 		349448C207BB29B2000F2A03 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimGaduGaduAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimGaduGaduAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		349448C307BB29B2000F2A03 = {
-			fileRef = 349448C207BB29B2000F2A03;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		3496A8BF07CE6B3D0055BBAB = {
 			fileEncoding = 10;
@@ -5334,14 +5583,6 @@
 			lastKnownFileType = image.png;
 			name = LittleAdd.png;
 			path = "Plugins/Away Messages/LittleAdd.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		349DDCF50640650B00542726 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = AwayIcon.png;
-			path = "Plugins/Away Messages/AwayIcon.png";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5871,31 +6112,19 @@
 		};
 		34A48A4706F64680002C7C5F = {
 			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ListLayoutSheet.nib;
+			lastKnownFileType = file;
+			name = English;
 			path = "Plugins/Contact List/Preferences/ListLayoutSheet.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34A48A4806F64680002C7C5F = {
-			fileRef = 34A48A4706F64680002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34A48A4906F64685002C7C5F = {
 			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ListThemeSheet.nib;
+			lastKnownFileType = file;
+			name = English;
 			path = "Plugins/Contact List/Preferences/ListThemeSheet.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34A48A4A06F64685002C7C5F = {
-			fileRef = 34A48A4906F64685002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34A48A4D06F6468D002C7C5F = {
 			fileEncoding = 30;
@@ -6678,16 +6907,10 @@
 		34B9197F062DEC99004F1223 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimOscarAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimOscarAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimOscarAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34B91980062DEC99004F1223 = {
-			fileRef = 34B9197F062DEC99004F1223;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34B919C9062DEF15004F1223 = {
 			fileEncoding = 30;
@@ -7480,7 +7703,7 @@
 				347E787B07CA975900350507,
 				347E787C07CA975900350507,
 				347E792307CAA52300350507,
-				347E792407CAA52300350507,
+				343EB41708086D9100E27095,
 				347E792507CAA52300350507,
 				347E792607CAA52300350507,
 				3402E01B07CB0CED0044F818,
@@ -7564,8 +7787,8 @@
 				6EC1685006C170A000F9FAD3,
 				34A48A0C06F64376002C7C5F,
 				34A48A1006F64382002C7C5F,
-				34A48A4806F64680002C7C5F,
-				34A48A4A06F64685002C7C5F,
+				343EB40808086D9100E27095,
+				343EB41108086D9100E27095,
 				34F1022F0734499700890D3B,
 				4BE9FFE8055981AB00359B15,
 				4BCB9B5F0567FF5D001D3559,
@@ -7615,7 +7838,7 @@
 				34DFF54307A62EB200B92233,
 				34C14D5107A8BA00003CC138,
 				4BCAB5F107B59967006641B9,
-				4BCAB5F207B59967006641B9,
+				343EB3FE08086D2F00E27095,
 				4BCAB5F307B59967006641B9,
 				4BCAC4CF07B59AFE006641B9,
 				4BCAC4D907B59B2E006641B9,
@@ -7638,7 +7861,7 @@
 				4BAE6C4C07CF941C007E2820,
 				4BAE6C4D07CF941C007E2820,
 				4BAE6C9507CF94C4007E2820,
-				4BAE6D5E07CFA1D7007E2820,
+				343EB40208086D9000E27095,
 				4BF3CB4207D1771E00A8112A,
 				4BF3CBED07D192F500A8112A,
 				4B082CCB07D2236E0034A001,
@@ -9796,7 +10019,7 @@
 				6EA3688206B73E7D009CA81A,
 				34C2E6870634CF940018E5D2,
 				34C2E6880634CF940018E5D2,
-				4B7A565A07A1742900BDC540,
+				343EB3FF08086D9000E27095,
 				4B76476007A07BC90021CCD7,
 			);
 			isa = PBXGroup;
@@ -12768,16 +12991,10 @@
 		34F1529405E9FDDB00B32FD7 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimMSNAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimMSNAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34F1529605E9FDF200B32FD7 = {
-			fileRef = 34F1529405E9FDDB00B32FD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34F2BD24059CF8070005B238 = {
 			isa = PBXFileReference;
@@ -13169,16 +13386,10 @@
 		34F52BCB06E2AFBC00887BE2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimICQAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimICQAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimICQAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34F52BCC06E2AFBC00887BE2 = {
-			fileRef = 34F52BCB06E2AFBC00887BE2;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34F52BCF06E2AFF700887BE2 = {
 			fileEncoding = 4;
@@ -13218,7 +13429,7 @@
 				34F52BD906E2B24200887BE2,
 				34F52BCF06E2AFF700887BE2,
 				34F52BD006E2AFF700887BE2,
-				34F52BCB06E2AFBC00887BE2,
+				343EB41A08086D9100E27095,
 				4B7644DC07A05E7E0021CCD7,
 			);
 			isa = PBXGroup;
@@ -15124,7 +15335,6 @@
 			children = (
 				4B1332390459BCFA00A8010A,
 				7ECB106D06A4D21700812D5F,
-				BFEBDBF90669025600CBF845,
 			);
 			includeInIndex = 0;
 			isa = PBXGroup;
@@ -15796,15 +16006,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B64797A03DC321800A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
-			name = AwaySpellingDefaults.plist;
-			path = "Plugins/Away Messages/AwaySpellingDefaults.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B68D3880463330600A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -15823,58 +16024,6 @@
 			isa = PBXGroup;
 			name = "Default Formatting";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F28903D1CA1C00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAwayMessagePreferences.h;
-			path = "Plugins/Away Messages/AIAwayMessagePreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F28A03D1CA1C00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAwayMessagePreferences.m;
-			path = "Plugins/Away Messages/AIAwayMessagePreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F28D03D1CC6400A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AwayMessagePrefs.nib;
-			path = "Plugins/Away Messages/AwayMessagePrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F28F03D1D04900A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = EnterAwayWindow.nib;
-			path = "Plugins/Away Messages/EnterAwayWindow.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F29103D1D13800A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIEnterAwayWindowController.h;
-			path = "Plugins/Away Messages/AIEnterAwayWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B70F29203D1D13800A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIEnterAwayWindowController.m;
-			path = "Plugins/Away Messages/AIEnterAwayWindowController.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15978,12 +16127,6 @@
 		};
 		4B7646CF07A078E60021CCD7 = {
 			fileRef = 4B7646CE07A078E60021CCD7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B7646D007A078FA0021CCD7 = {
-			fileRef = 342E2B1A072976060054D77A;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -16117,16 +16260,10 @@
 		4B7A565A07A1742900BDC540 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = ESGaimNovellAccountView.nib;
-			path = "Plugins/Gaim Service/ESGaimNovellAccountView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/ESGaimNovellAccountView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B7A565B07A1742900BDC540 = {
-			fileRef = 4B7A565A07A1742900BDC540;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B7A567707A1754400BDC540 = {
 			fileEncoding = 30;
@@ -16242,31 +16379,31 @@
 		4B7F277F05440C0800CDFC90 = {
 			buildActionMask = 2147483647;
 			files = (
-				34F1529605E9FDF200B32FD7,
+				343EB40608086D9100E27095,
 				34327CA9060D40A1003D7AD9,
-				348A8A1A0629A68C00FC6E03,
-				348A901B062A13AB00FC6E03,
-				34B91980062DEC99004F1223,
+				343EB42308086D9200E27095,
+				343EB42108086D9200E27095,
+				343EB41D08086D9100E27095,
 				34C2CF87063340540018E5D2,
 				34C2CF88063340540018E5D2,
-				343A7F2706935DB600150CEC,
-				6E4D961806B73A96005235E9,
+				343EB41F08086D9200E27095,
+				343EB40D08086D9100E27095,
 				6E4D961E06B73B38005235E9,
-				6E4D962406B73BE0005235E9,
-				6E4D962A06B73C18005235E9,
+				343EB41908086D9100E27095,
+				343EB41508086D9100E27095,
 				6E4D963006B73C4D005235E9,
 				6EA3688506B73E7D009CA81A,
 				6EA3688B06B73F28009CA81A,
-				6EA3689106B73F67009CA81A,
-				348D8D2A06CC07BE00449EBB,
-				34F52BCC06E2AFBC00887BE2,
+				343EB40F08086D9100E27095,
+				343EB41308086D9100E27095,
+				343EB41B08086D9100E27095,
 				4B388E4D0719C445004DE713,
 				4BB19299079EE90900DAA523,
 				4B7635A607A0581E0021CCD7,
 				4B7644DE07A05E7E0021CCD7,
 				4B7644DF07A05E7E0021CCD7,
 				4B7646CF07A078E60021CCD7,
-				4B7646D007A078FA0021CCD7,
+				343EB40A08086D9100E27095,
 				4B76471807A079A40021CCD7,
 				4B76472F07A07A340021CCD7,
 				4B76474007A07B630021CCD7,
@@ -16275,8 +16412,8 @@
 				4B76478607A07C440021CCD7,
 				4B76479607A07C720021CCD7,
 				4BDD822207A0BAE00057DB2C,
-				4B7A565B07A1742900BDC540,
-				349448C307BB29B2000F2A03,
+				343EB40008086D9000E27095,
+				343EB40408086D9000E27095,
 				3402E04E07CB0EB00044F818,
 				3440931E07D914F500321BB3,
 			);
@@ -16699,40 +16836,12 @@
 		};
 		4B81631203D1C24E00A8010A = {
 			children = (
-				4B81631E03D1C2A600A8010A,
-				4B81631F03D1C2A600A8010A,
-				4B70F29103D1D13800A8010A,
-				4B70F29203D1D13800A8010A,
-				4B70F28F03D1D04900A8010A,
-				4B70F28903D1CA1C00A8010A,
-				4B70F28A03D1CA1C00A8010A,
-				4B70F28D03D1CC6400A8010A,
-				4B64797A03DC321800A8010A,
 				349DDCF30640650B00542726,
 				349DDCF40640650B00542726,
-				349DDCF50640650B00542726,
 			);
 			isa = PBXGroup;
 			name = "Away Messages";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B81631E03D1C2A600A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAwayMessagesPlugin.h;
-			path = "Plugins/Away Messages/AIAwayMessagesPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B81631F03D1C2A600A8010A = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAwayMessagesPlugin.m;
-			path = "Plugins/Away Messages/AIAwayMessagesPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -17669,16 +17778,16 @@
 				4BAE6D4107CFA0CB007E2820,
 				4BAE6D3A07CFA0BC007E2820,
 				4BAE6D3B07CFA0BC007E2820,
-				4BAE6D5D07CFA1D7007E2820,
+				343EB40108086D9000E27095,
 				4B08399207D2350D0034A001,
 				4B08399307D2350D0034A001,
 				4B08399B07D235190034A001,
 				34A48A3A06F64664002C7C5F,
 				34A48A3D06F64665002C7C5F,
-				34A48A4706F64680002C7C5F,
+				343EB40708086D9100E27095,
 				34A48A3C06F64664002C7C5F,
 				34A48A3B06F64664002C7C5F,
-				34A48A4906F64685002C7C5F,
+				343EB41008086D9100E27095,
 				F5F0FE9C04B12CAC01A80106,
 				F5F0FE9D04B12CAC01A80106,
 				F5F0FEA004B1336C01A80106,
@@ -17753,16 +17862,10 @@
 		4BAE6D5D07CFA1D7007E2820 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = AppearancePrefs.nib;
-			path = Resources/AppearancePrefs.nib;
+			name = English;
+			path = Resources/English.lproj/AppearancePrefs.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BAE6D5E07CFA1D7007E2820 = {
-			fileRef = 4BAE6D5D07CFA1D7007E2820;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BAFD57706E0091100FF7FBC = {
 			fileEncoding = 30;
@@ -18315,8 +18418,8 @@
 		4BCAB5EF07B59967006641B9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = AccountProxy.nib;
-			path = Resources/AccountProxy.nib;
+			name = English;
+			path = Resources/English.lproj/AccountProxy.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18330,12 +18433,6 @@
 		};
 		4BCAB5F107B59967006641B9 = {
 			fileRef = 4BCAB5EE07B59967006641B9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BCAB5F207B59967006641B9 = {
-			fileRef = 4BCAB5EF07B59967006641B9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -19463,55 +19560,10 @@
 		};
 		4BE8E5390483B59800A8010A = {
 			children = (
-				6E4F2B1605CA013000C11243,
-				4BE8E54D0483B62800A8010A,
-				4BE8E54E0483B62800A8010A,
-				6ECE6C220474BB1700CAEAD0,
-				6ECE6C230474BB1700CAEAD0,
-				6ECE6C2004749C9600CAEAD0,
-				4BE8E5450483B5EE00A8010A,
-				4BE8E5460483B5EE00A8010A,
-				4BF45A970483C6CD00A8010A,
 			);
 			isa = PBXGroup;
 			name = "Away Status Window";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BE8E5450483B5EE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAwayStatusWindowPreferences.h;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowPreferences.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BE8E5460483B5EE00A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAwayStatusWindowPreferences.m;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowPreferences.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BE8E54D0483B62800A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAwayStatusWindowPlugin.h;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BE8E54E0483B62800A8010A = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAwayStatusWindowPlugin.m;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -19666,14 +19718,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		4BF45A970483C6CD00A8010A = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AwayStatusWindowPrefs.nib;
-			path = "Plugins/Away Status Window/AwayStatusWindowPrefs.nib";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4BF4813B049A802E00A8010A = {
 			children = (
@@ -20261,8 +20305,8 @@
 		6E4D961506B73A96005235E9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DCGaimOscarJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimOscarJoinChatView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/DCGaimOscarJoinChatView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20283,12 +20327,6 @@
 			path = "Plugins/Gaim Service/DCGaimOscarJoinChatViewController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6E4D961806B73A96005235E9 = {
-			fileRef = 6E4D961506B73A96005235E9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6E4D961906B73A96005235E9 = {
 			fileRef = 6E4D961606B73A96005235E9;
@@ -20349,8 +20387,8 @@
 		6E4D962106B73BDF005235E9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DCGaimJabberJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimJabberJoinChatView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/DCGaimJabberJoinChatView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20372,12 +20410,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		6E4D962406B73BE0005235E9 = {
-			fileRef = 6E4D962106B73BDF005235E9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		6E4D962506B73BE0005235E9 = {
 			fileRef = 6E4D962206B73BE0005235E9;
 			isa = PBXBuildFile;
@@ -20393,8 +20425,8 @@
 		6E4D962706B73C18005235E9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DCGaimMeanwhileJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/DCGaimMeanwhileJoinChatView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20415,12 +20447,6 @@
 			path = "Plugins/Gaim Service/DCGaimMeanwhileJoinChatViewController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6E4D962A06B73C18005235E9 = {
-			fileRef = 6E4D962706B73C18005235E9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6E4D962B06B73C18005235E9 = {
 			fileRef = 6E4D962806B73C18005235E9;
@@ -20477,15 +20503,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		6E4F2B1605CA013000C11243 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = AwayStatusPrefs.plist;
-			path = "Plugins/Away Status Window/AwayStatusPrefs.plist";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		6E5A43DC0611604B0078C342 = {
 			children = (
@@ -20580,23 +20597,13 @@
 		6E97F12F04A94C0100472FFF = {
 			children = (
 				6E97F13D04A94C5400472FFF,
-				6E97F13E04A94C5400472FFF,
 				6E97F13F04A94C5400472FFF,
 				6E97F14004A94C5400472FFF,
-				6E97F13B04A94C5400472FFF,
 				6E97F13C04A94C5400472FFF,
 			);
 			isa = PBXGroup;
 			name = "Idle Message";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F13B04A94C5400472FFF = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = IdleMessagePrefs.nib;
-			path = "Plugins/Idle Message/IdleMessagePrefs.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20615,15 +20622,6 @@
 			lastKnownFileType = sourcecode.c.h;
 			name = IdleMessagePlugin.h;
 			path = "Plugins/Idle Message/IdleMessagePlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6E97F13E04A94C5400472FFF = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = IdleMessagePlugin.m;
-			path = "Plugins/Idle Message/IdleMessagePlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20736,8 +20734,8 @@
 		6EA3688E06B73F67009CA81A = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = DCGaimYahooJoinChatView.nib;
-			path = "Plugins/Gaim Service/DCGaimYahooJoinChatView.nib";
+			name = English;
+			path = "Plugins/Gaim Service/English.lproj/DCGaimYahooJoinChatView.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20758,12 +20756,6 @@
 			path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		6EA3689106B73F67009CA81A = {
-			fileRef = 6EA3688E06B73F67009CA81A;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		6EA3689206B73F67009CA81A = {
 			fileRef = 6EA3688F06B73F67009CA81A;
@@ -20907,32 +20899,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		6ECE6C2004749C9600CAEAD0 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AwayStatusWindow.nib;
-			path = "Plugins/Away Messages/AwayStatusWindow.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6ECE6C220474BB1700CAEAD0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIAwayStatusWindowController.h;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowController.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6ECE6C230474BB1700CAEAD0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIAwayStatusWindowController.m;
-			path = "Plugins/Away Status Window/AIAwayStatusWindowController.m";
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		6ECFABC40622370D001C7E93 = {
 			fileEncoding = 30;
@@ -22282,160 +22248,6 @@
 			settings = {
 			};
 		};
-		BFEBDBF90669025600CBF845 = {
-			children = (
-				BFEBDC010669029900CBF845,
-				BFEBDC0A066903A600CBF845,
-				BFEBDC0C0669054800CBF845,
-				BFEBDC0D0669054800CBF845,
-				BFEBDC0E0669054900CBF845,
-				BFEBDC0F0669054900CBF845,
-				BFEBDC100669054900CBF845,
-				BFEBDC110669054900CBF845,
-				BFEBDC120669054900CBF845,
-				BFEBDC130669054900CBF845,
-				BFEBDC140669054A00CBF845,
-				BFEBDC150669054A00CBF845,
-				BFEBDC160669054A00CBF845,
-				BFEBDC170669054A00CBF845,
-				BFEBDC180669054A00CBF845,
-			);
-			isa = PBXGroup;
-			name = WebAdium;
-			path = "";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		BFEBDC010669029900CBF845 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "WebAdium-Info.plist";
-			path = "WebAdium/WebAdium-Info.plist";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		BFEBDC0A066903A600CBF845 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = WebAdium.pch;
-			path = WebAdium/WebAdium.pch;
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
-		BFEBDC0C0669054800CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSWebAdium.h;
-			path = WebAdium/CSWebAdium.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC0D0669054800CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSWebAdium.m;
-			path = WebAdium/CSWebAdium.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC0E0669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSWebTabViewItem.h;
-			path = WebAdium/CSWebTabViewItem.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC0F0669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSWebTabViewItem.m;
-			path = WebAdium/CSWebTabViewItem.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC100669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSWebViewController.h;
-			path = WebAdium/CSWebViewController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC110669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSWebViewController.m;
-			path = WebAdium/CSWebViewController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC120669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = CSWebWindowController.h;
-			path = WebAdium/CSWebWindowController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC130669054900CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = CSWebWindowController.m;
-			path = WebAdium/CSWebWindowController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC140669054A00CBF845 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = main.m;
-			path = WebAdium/main.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC150669054A00CBF845 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.icns;
-			name = WebAdium.icns;
-			path = WebAdium/WebAdium.icns;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC160669054A00CBF845 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = WebAdium.nib;
-			path = WebAdium/WebAdium.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC170669054A00CBF845 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = WebAdiumView.nib;
-			path = WebAdium/WebAdiumView.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BFEBDC180669054A00CBF845 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = WebWindow.nib;
-			path = WebAdium/WebWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 //BF0
 //BF1
 //BF2
@@ -23781,7 +23593,7 @@
 				4BCAB5F007B59967006641B9,
 				4BDAF69507A1560F00276D68,
 				4BDAF69607A1561000276D68,
-				4BCAB5EF07B59967006641B9,
+				343EB3FD08086D2F00E27095,
 			);
 			isa = PBXGroup;
 			name = "Accounts Preferences";
