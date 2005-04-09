@@ -76,14 +76,10 @@
 			modalDelegate:controller
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
+
 	}else{
 		[controller showWindow:nil];
 		[[controller window] makeKeyAndOrderFront:nil];
-		
-		//Bounce once after displaying our window if we are not active and not hidden
-		if(![NSApp isActive] && ![NSApp isHidden]){
-			[[[AIObject sharedAdiumInstance] dockController] performBehavior:BOUNCE_ONCE];
-		}
 	}
 	
 	return controller;
