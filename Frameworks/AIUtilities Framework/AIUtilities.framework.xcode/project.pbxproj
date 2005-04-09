@@ -4509,7 +4509,7 @@
 				0750FF3E073A0625000D8A1F,
 			);
 			isa = PBXGroup;
-			name = "Toolbar item with a popup menu";
+			name = "Button with a popup menu for toolbar items";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
