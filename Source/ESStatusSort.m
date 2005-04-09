@@ -269,22 +269,6 @@ static int  sizeOfSortOrder;
 	[tableView_sortOrder setDataSource:self];
 	[tableView_sortOrder setDelegate:self];
     [tableView_sortOrder registerForDraggedTypes:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
-
-	[checkBox_groupAvailable setLocalizedString:AILocalizedString(@"Group available contacts","Status sort configuration")];
-	[buttonCell_allUnavailable setLocalizedString:AILocalizedString(@"Group all unavailable contacts together","Status sort configuration")];
-	[buttonCell_separateUnavailable setLocalizedString:AILocalizedString(@"Group unavailable contact separately","Status sort configuration")];
-	[checkBox_groupAway setLocalizedString:AILocalizedString(@"Group all away contacts","Status sort configuration")];
-	[checkBox_groupIdle setLocalizedString:AILocalizedString(@"Group all idle contacts","Status sort configuration")];
-	[checkBox_groupIdleAndAway setLocalizedString:AILocalizedString(@"Group all idle+away contacts","Status sort configuration")];
-	
-	[checkBox_sortIdleTime setLocalizedString:AILocalizedString(@"Sort idle contacts by ascending idle time","Status sort configuration")];
-
-	[label_sortWithinEachStatusGrouping setLocalizedString:AILocalizedString(@"Sort within each status grouping:","Status sort configuration")];
-	[buttonCell_alphabetically setLocalizedString:AILocalizedString(@"Alphabetically","Status sort configuration")];
-	[checkBox_alphabeticallyByLastName setLocalizedString:AILocalizedString(@"...by last name","Status sort configuration: [Alphabetically]... by last name")];
-	[buttonCell_manually setLocalizedString:AILocalizedString(@"Manually","Status sort configuration")];
-	
-	[label_statusGroupOrdering setLocalizedString:AILocalizedString(@"Status group ordering:","Status sort configuration")];
 }
 
 /*!
