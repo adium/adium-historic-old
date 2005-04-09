@@ -139,7 +139,7 @@
 {
 	//Get the new groups
 	NSMenu		*groupMenu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
-	NSMenuItem	*unlistedItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@"(Not Listed)"
+	NSMenuItem	*unlistedItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"(Not Listed)",nil)
 																					  target:self
 																					  action:@selector(selectGroup:)
 																			   keyEquivalent:@""] autorelease];
@@ -227,7 +227,7 @@
 				[cell selectItemAtIndex:0];			
 			}
 		}else{
-			[cell setTitle:@"(Unavailable)"];
+			[cell setTitle:AILocalizedString(@"(Unavailable)",nil)];
 		}
 	}
 	
