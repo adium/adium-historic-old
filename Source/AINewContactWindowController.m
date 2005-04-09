@@ -127,6 +127,7 @@
 
 	[[adium contactController] registerListObjectObserver:self];
 
+	[[self window] setTitle:AILocalizedString(@"Add Contact",nil)];
 	[[self window] center];
 }
 
