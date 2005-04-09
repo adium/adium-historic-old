@@ -17,10 +17,21 @@
 #import "DCMessageContextDisplayPlugin.h"
 #import "DCMessageContextDisplayPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 
 #warning crosslink
 #import "AIPreferenceWindowController.h"
+
+typedef enum {
+	AIMessageHistory_Always = 0,
+	AIMessageHistory_HaveTalkedInInterval,
+	AIMessageHistory_HaveNotTalkedInInterval
+} AIMessageHistoryDispalyPref;
+
+@interface DCMessageContextDisplayPreferences (PRIVATE)
+- (NSMenu *)intervalUnitsMenu;
+@end
 
 @implementation DCMessageContextDisplayPreferences
 
@@ -58,9 +69,14 @@
 	[textField_haveTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue]];
 	[textField_haveNotTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue]];
 	[matrix_radioButtons selectCellAtRow:[[preferenceDict objectForKey:KEY_DISPLAY_MODE] intValue] column:0];
+	
+	NSMenu	*intervalUnitsMenu = [self intervalUnitsMenu];
+	[menu_haveTalkedUnits setMenu:intervalUnitsMenu];
+	[menu_haveNotTalkedUnits setMenu:[[intervalUnitsMenu copy] autorelease]];
+
 	[menu_haveTalkedUnits selectItemAtIndex:[[preferenceDict objectForKey:KEY_HAVE_TALKED_UNITS] intValue]];
 	[menu_haveNotTalkedUnits selectItemAtIndex:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_UNITS] intValue]];
-		
+
 	[self configureControlDimming];
 }
 
@@ -109,44 +125,27 @@
 
 - (void)configureControlDimming
 {
+	int		selectedRow = [matrix_radioButtons selectedRow];
+	BOOL	contextEnabled =[checkBox_showContext state];
 	
-	int selectedRow = [matrix_radioButtons selectedRow];
+	[checkBox_doNotDim setEnabled:contextEnabled];
 	
-	if( [checkBox_showContext state] ) {
-		[checkBox_doNotDim setEnabled:YES];
-		
-		[textField_linesToDisplay setEnabled:YES];
-		[stepper_linesToDisplay setEnabled:YES];
-		
-		[textField_haveTalkedDays setEnabled:YES];
-		[stepper_haveTalkedDays setEnabled:YES];
-		[textField_haveNotTalkedDays setEnabled:YES];
-		[stepper_haveNotTalkedDays setEnabled:YES];
-		
-		[menu_haveTalkedUnits setEnabled:YES];
-		[menu_haveNotTalkedUnits setEnabled:YES];
-		
-		[matrix_radioButtons setEnabled:YES];
-	}else{
-		[checkBox_doNotDim setEnabled:NO];
-
-		[textField_linesToDisplay setEnabled:NO];
-		[stepper_linesToDisplay setEnabled:NO];
-		
-		[textField_haveTalkedDays setEnabled:NO];
-		[stepper_haveTalkedDays setEnabled:NO];
-		[textField_haveNotTalkedDays setEnabled:NO];
-		[stepper_haveNotTalkedDays setEnabled:NO];
-		
-		[menu_haveTalkedUnits setEnabled:NO];
-		[menu_haveNotTalkedUnits setEnabled:NO];
-		
-		[matrix_radioButtons setEnabled:NO];
-	}
+	[textField_linesToDisplay setEnabled:contextEnabled];
+	[stepper_linesToDisplay setEnabled:contextEnabled];
+	
+	[textField_haveTalkedDays setEnabled:contextEnabled];
+	[stepper_haveTalkedDays setEnabled:contextEnabled];
+	[textField_haveNotTalkedDays setEnabled:contextEnabled];
+	[stepper_haveNotTalkedDays setEnabled:contextEnabled];
+	
+	[menu_haveTalkedUnits setEnabled:contextEnabled];
+	[menu_haveNotTalkedUnits setEnabled:contextEnabled];
+	
+	[matrix_radioButtons setEnabled:contextEnabled];
 	
 	if( [checkBox_showContext state] ) {
 		switch( selectedRow ) {
-			case 0:
+			case AIMessageHistory_Always:
 				[textField_haveTalkedDays setEnabled:NO];
 				[stepper_haveTalkedDays setEnabled:NO];
 				[textField_haveNotTalkedDays setEnabled:NO];
@@ -154,7 +153,8 @@
 				[menu_haveTalkedUnits setEnabled:NO];
 				[menu_haveNotTalkedUnits setEnabled:NO];
 				break;
-			case 1:
+				
+			case AIMessageHistory_HaveTalkedInInterval:
 				[textField_haveTalkedDays setEnabled:YES];
 				[stepper_haveTalkedDays setEnabled:YES];
 				[textField_haveNotTalkedDays setEnabled:NO];
@@ -162,7 +162,8 @@
 				[menu_haveTalkedUnits setEnabled:YES];
 				[menu_haveNotTalkedUnits setEnabled:NO];
 				break;
-			case 2:
+				
+			case AIMessageHistory_HaveNotTalkedInInterval:
 				[textField_haveTalkedDays setEnabled:NO];
 				[stepper_haveTalkedDays setEnabled:NO];
 				[textField_haveNotTalkedDays setEnabled:YES];
@@ -171,5 +172,27 @@
 				[menu_haveNotTalkedUnits setEnabled:YES];
 		}
 	}
+}
+
+- (NSMenu *)intervalUnitsMenu
+{
+	NSMenu		*intervalUnitsMenu;
+	NSMenuItem	*menuItem;
+	
+	intervalUnitsMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Days",nil)
+																 target:nil
+																 action:nil
+														  keyEquivalent:@""] autorelease];
+	[intervalUnitsMenu addItem:menuItem];
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Hours",nil)
+																	 target:nil
+																	 action:nil
+															  keyEquivalent:@""] autorelease];
+	[intervalUnitsMenu addItem:menuItem];
+
+	return [intervalUnitsMenu autorelease];
 }
 @end
