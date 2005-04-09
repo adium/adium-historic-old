@@ -53,7 +53,14 @@
  */
 - (void)windowDidLoad
 {
-	[[self window] center];
+	NSWindow	*window = [self window];
+	[window setTitle:AILocalizedString(@"Add Group",nil)];
+	
+	[label_groupName setLocalizedString:AILocalizedString(@"Group Name:",nil)];
+	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
+
+	[window center];
 }
 
 /*!
