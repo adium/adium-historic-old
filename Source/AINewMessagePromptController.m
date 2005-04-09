@@ -66,6 +66,8 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	[label_from setLocalizedString:AILocalizedString(@"From:",nil)];
 	[label_to setLocalizedString:AILocalizedString(@"To:",nil)];
 	
+	[button_okay setLocalizedString:AILocalizedString(@"Message",nil)];
+	
 	[[self window] setTitle:AILocalizedString(@"New Message",nil)];
 }
 
