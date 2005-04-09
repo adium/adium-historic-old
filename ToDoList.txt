@@ -40,6 +40,7 @@ Defaults:
 2 - Improve behavior when adding a new account and clicking OK without entering a UID
 2 - Minor control alignment in account preference sheet
 2 - Minor control alignment in advanced preferences
+2 - Restore Shiira support (did it ever work? we were just using the Safari importer before.)
 1 - First launch wizard
 1 - Add priority support for jabber connections
 1 - Add resize widget to borderless, remove width slider by overloading window resizing
