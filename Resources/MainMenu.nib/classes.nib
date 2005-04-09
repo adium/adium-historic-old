@@ -22,7 +22,6 @@
             OUTLETS = {
                 accountController = AIAccountController; 
                 applescriptabilityController = ESApplescriptabilityController; 
-                bookmarksImporterController = AIBookmarksImporterController; 
                 componentLoader = AICoreComponentLoader; 
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
@@ -40,12 +39,6 @@
                 statusController = AIStatusController; 
                 toolbarController = AIToolbarController; 
             }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIBookmarksImporterController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {importer = id; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -149,6 +142,11 @@
                 "menuItem_edit" = NSMenuItem; 
                 "menuItem_file" = NSMenuItem; 
                 "menuItem_find" = NSMenuItem; 
+                "menuItem_findCommand" = NSMenuItem; 
+                "menuItem_findJumpToSelection" = NSMenuItem; 
+                "menuItem_findNext" = NSMenuItem; 
+                "menuItem_findPrevious" = NSMenuItem; 
+                "menuItem_findUseSelectionForFind" = NSMenuItem; 
                 "menuItem_format" = NSMenuItem; 
                 "menuItem_help" = NSMenuItem; 
                 "menuItem_hideAdium" = NSMenuItem; 
@@ -170,7 +168,12 @@
                 "menuItem_showFonts" = NSMenuItem; 
                 "menuItem_speech" = NSMenuItem; 
                 "menuItem_spelling" = NSMenuItem; 
+                "menuItem_spellingCheckSpelling" = NSMenuItem; 
+                "menuItem_spellingCheckSpellingAsYouType" = NSMenuItem; 
+                "menuItem_spellingCommand" = NSMenuItem; 
+                "menuItem_startSpeaking" = NSMenuItem; 
                 "menuItem_status" = NSMenuItem; 
+                "menuItem_stopSpeaking" = NSMenuItem; 
                 "menuItem_underline" = NSMenuItem; 
                 "menuItem_view" = NSMenuItem; 
                 "menuItem_window" = NSMenuItem; 

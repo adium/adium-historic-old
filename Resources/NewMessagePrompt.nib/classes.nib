@@ -1,10 +1,15 @@
 {
     IBClasses = (
         {
-            ACTIONS = {closeWindow = id; okay = id; }; 
+            ACTIONS = {okay = id; }; 
             CLASS = AIAccountPlusFieldPromptController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"popUp_service" = NSPopUpButton; "textField_handle" = AICompletingTextField; }; 
+            OUTLETS = {
+                "button_cancel" = NSButton; 
+                "button_okay" = NSButton; 
+                "popUp_service" = NSPopUpButton; 
+                "textField_handle" = AICompletingTextField; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {CLASS = AICompletingTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
@@ -31,8 +36,9 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
-            CLASS = AINewMessagePrompt; 
+            CLASS = AINewMessagePromptController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {"label_from" = NSTextField; "label_to" = NSTextField; }; 
             SUPERCLASS = AIAccountPlusFieldPromptController; 
         }, 
         {
@@ -40,7 +46,9 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
 }
