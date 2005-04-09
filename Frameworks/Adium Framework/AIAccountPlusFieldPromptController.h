@@ -21,6 +21,9 @@
 @interface AIAccountPlusFieldPromptController : AIWindowController {
     IBOutlet	AICompletingTextField	*textField_handle;
     IBOutlet	NSPopUpButton			*popUp_service;
+	
+	IBOutlet	NSButton				*button_okay;
+	IBOutlet	NSButton				*button_cancel;
 }
 
 + (void)showPrompt;
