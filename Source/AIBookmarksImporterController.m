@@ -16,7 +16,7 @@
 
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
-#import "SHBookmarksImporterPlugin.h"
+#import "AIBookmarksImporterController.h"
 #import "SHSafariBookmarksImporter.h"
 #import "SHCaminoBookmarksImporter.h"
 #import "SHFireFoxBookmarksImporter.h"
@@ -38,9 +38,6 @@
 @class SHMarkedHyperlink;
 
 @interface AIBookmarksImporterController(PRIVATE)
-- (NSURL *)URLForDefaultBrowser; //XXX DeleteMe
-- (Class)importerClassForBrowserAtURL:(NSURL *)URL; //XXX DeleteMe
-
 - (void)buildBookmarksMenuIfNecessaryThread;
 
 - (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer;
