@@ -2227,6 +2227,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						
 						[menuItemArray addObject:menuItem];
 						addedAnAction = YES;
+					}else{
+						g_free(action);
 					}
 					
 				}else{
