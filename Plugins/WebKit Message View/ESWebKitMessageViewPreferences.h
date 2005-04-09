@@ -16,7 +16,8 @@
 
 #import <Adium/AIPreferencePane.h>
 
-@class ESWebView, JVFontPreviewField, AIContentObject, AIAutoScrollView, AIWebKitMessageViewController;
+@class ESWebView, AIContentObject, AIAutoScrollView, AIWebKitMessageViewController;
+@class JVFontPreviewField, ESImageViewWithImagePicker;
 
 @interface ESWebKitMessageViewPreferences : AIPreferencePane {
 	IBOutlet	JVFontPreviewField  *fontPreviewField_currentFont;
@@ -24,7 +25,7 @@
 	IBOutlet	NSPopUpButton   	*popUp_variants;
 	IBOutlet	NSPopUpButton   	*popUp_backgroundImageType;
 	IBOutlet	NSColorWell			*colorWell_customBackgroundColor;
-	IBOutlet	NSImageView			*imageView_backgroundImage;
+	IBOutlet	ESImageViewWithImagePicker	*imageView_backgroundImage;
 	IBOutlet    NSButton        	*checkBox_showUserIcons;
 	IBOutlet    NSButton        	*checkBox_showHeader;
 	IBOutlet	NSButton			*checkBox_showMessageColors;
