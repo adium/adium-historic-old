@@ -317,6 +317,8 @@ static NSString                             *filterForContactName = nil;	//Conta
 {
 	[super windowDidLoad];
     
+	[[self window] setTitle:AILocalizedString(@"Log Viewer",nil)];
+	
     //Set emoticon filtering
     showEmoticons = [[[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_EMOTICONS
                                                               group:PREF_GROUP_LOGGING] boolValue];
