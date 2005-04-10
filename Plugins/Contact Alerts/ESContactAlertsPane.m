@@ -17,20 +17,35 @@
 #import "ESContactAlertsPane.h"
 #import <Adium/ESContactAlertsViewController.h>
 
+/*
+ * @class ESContactAlertsPane
+ * @brief Get Info window pane which configures an ESContactAlertsViewController instance
+ */
 @implementation ESContactAlertsPane
 
-//Preference pane properties
+/*
+ * @brief Category
+ */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Alerts);
 }
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"ContactAlerts");
 }
 
+/*
+ * @brief Configure the ESContactAlertsViewController for a list object
+ */
 - (void)configureForListObject:(AIListObject *)inObject{
 	[contactAlertsViewController configureForListObject:inObject];
 }
 
+/*
+ * @brief View will close
+ */
 - (void)viewWillClose
 {
 	[contactAlertsViewController viewWillClose];
