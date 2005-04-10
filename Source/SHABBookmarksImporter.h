@@ -15,7 +15,6 @@
  */
 
 #import <AddressBook/AddressBook.h>
-#import "AIBookmarksImporterController.h"
 #import "AIBookmarksImporter.h"
 
 @interface SHABBookmarksImporter : AIBookmarksImporter
