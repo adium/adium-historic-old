@@ -29,7 +29,7 @@
 #define SAFARI_DICT_TITLE		@"Title"
 #define SAFARI_DICT_URI_TITLE	@"title"
 
-@interface SHSafariBookmarksImporter(PRIVATE)
+@interface SHSafariBookmarksImporter (PRIVATE)
 - (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
 - (NSArray *)drillPropertyList:(id)inObject;
 @end

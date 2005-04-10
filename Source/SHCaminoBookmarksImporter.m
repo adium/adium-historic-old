@@ -56,21 +56,6 @@
 	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
 }
 
-- (id)init
-{
-	if ((self = [super init])) {
-		emptyArray = [[NSArray alloc] init];
-	}
-
-	return self;
-}
-
-- (void)dealloc
-{
-	[emptyArray release];
-	[super dealloc];
-}
-
 #pragma mark -
 
 - (NSArray *)availableBookmarks
@@ -108,7 +93,7 @@
             }else{
                 NSArray 		*outArray = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
 				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
-																  menuItems:[self drillPropertyList:outArray? outArray : emptyArray]];
+																  menuItems:[self drillPropertyList:(outArray ? outArray : [NSArray array])]];
                 if(menuDict) [caminoArray addObject:menuDict];
             }
         }
