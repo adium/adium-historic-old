@@ -77,9 +77,12 @@
 		 * Version 0: Initial Webkit Version
 		 * Version 1: Template.html now handles all scroll-to-bottom functionality.  It is no longer required to call the
 		 *            scrollToBottom functions when inserting content.
-		 * Version 2: No signigifant changes
+		 * Version 2: No signifiant changes
 		 * Version 3: main.css is no longer a separate style, it now serves as the base stylesheet and is imported by default.
 		 *            The default variant is now a separate file in /variants like all other variants.
+		 *			  Template.html now includes appendMessageNoScroll() and appendNextMessageNoScroll() which behave
+		 *				the same as appendMessage() and appendNextMessage() in Versions 1 and 2 but without scrolling.
+		 *
 		 */
 		styleVersion = [[styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue];
 
@@ -409,12 +412,15 @@
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	
 	//BOM scripts vary by style version
-	if(styleVersion >= 1){
+	if(styleVersion >= 3){
 		if(willAddMoreContentObjects){
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
 		}else{
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 		}
+	}else if(styleVersion >= 1){
+		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
+		
 	}else{
 		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
 	}
@@ -437,7 +443,7 @@
  */
 - (NSString *)scriptForScrollingAfterAddingMultipleContentObjects
 {
-	if(styleVersion >= 1){
+	if(styleVersion >= 3){
 		return(@"alignChat(true);");
 	}
 
