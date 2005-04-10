@@ -22,7 +22,7 @@
 
 /*!
  * @class CBActionSupportPlugin
- * @brief Simple outgoing content filter to turn "/me blah" into *blah*
+ * @brief Simple outgoing content filter to turn "/me blah" into "*blah*"
  */
 @implementation CBActionSupportPlugin
 
@@ -45,12 +45,9 @@
         
         if(meRange.location == 0 && meRange.length == 4)
         {
-        	NSString *displayName = [[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "];
-        	NSString *prefix = displayName ? [@"*" stringByAppendingString:displayName] : @"*";
-
             ourMessage = [[inAttributedString mutableCopyWithZone:nil] autorelease];
             
-            [ourMessage replaceCharactersInRange:meRange withString:prefix];
+            [ourMessage replaceCharactersInRange:meRange withString:@"*"];
             
             NSAttributedString *splat = [[NSAttributedString alloc] initWithString:@"*" 
                                                                         attributes:[ourMessage attributesAtIndex:0 
