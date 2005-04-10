@@ -270,23 +270,27 @@
 						// Make the message appear as context if isContext is true or it was a context object
 						// last time or if we should always dim recent context. Make a regular message otherwise
 						if(isContext || [type isEqualToString:CONTENT_CONTEXT_TYPE] || dimRecentContext) {
-							responseContent =[AIContentContext messageInChat:chat
-																  withSource:source
-																 destination:dest
-																		date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-																	 message:message
-																   autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
+							responseContent = [AIContentContext messageInChat:chat
+																   withSource:source
+																  destination:dest
+																		 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+																	  message:message
+																	autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];
 						} else {	
-							responseContent =[AIContentMessage messageInChat:chat
-																  withSource:source
-																 destination:dest
-																		date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
-																	 message:message
-																   autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];							
+							responseContent = [AIContentMessage messageInChat:chat
+																   withSource:source
+																  destination:dest
+																		 date:[NSDate dateWithNaturalLanguageString:[messageDict objectForKey:@"Date"]]
+																	  message:message
+																	autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];							
 							[responseContent setTrackContent:NO];
 						}
-
+						
 						if(responseContent){
+							/* Don't display immediately, so the message view can aggregate multiple message history items.
+							 * As required, we post Content_ChatDidFinishAddingUntrackedContent when finished adding. */
+							[responseContent setDisplayContentImmediately:NO];
+							
 							[[adium contentController] displayContentObject:responseContent
 														usingContentFilters:YES
 																immediately:YES];
