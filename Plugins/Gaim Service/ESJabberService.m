@@ -55,15 +55,36 @@
 - (NSString *)longDescription{
 	return(@"Jabber");
 }
+
+/*
+ * @brief Allowed characters
+ * 
+ * Jabber IDs are generally of the form username@server.org
+ *
+ * Some rare Jabber servers assign actual IDs with %. Allow this for transport names such as
+ * username%hotmail.com@msn.blah.jabber.org as well.
+ */
 - (NSCharacterSet *)allowedCharacters{
-	/* Some rare Jabber servers assign actual IDs with %. */
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%|"]);
+	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+
+	[allowedCharacters addCharactersInString:@"._@-()%|"];
+	
+	return([allowedCharacters autorelease]);
 }
+
+/*
+ * @brief Allowed characters for UIDs
+ *
+ * Same as allowedCharacters, but also allow / for specifying a resource.
+ */
 - (NSCharacterSet *)allowedCharactersForUIDs{ 
-	/* Allow % for use in transport names, username%hotmail.com@msn.blah.jabber.org */
-	/* Allow / for specifying a resource */
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-()%/|"]);
+	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
+	
+	[allowedCharacters addCharactersInString:@"._@-()%|/"];
+	
+	return([allowedCharacters autorelease]);
 }
+
 - (NSCharacterSet *)ignoredCharacters{
 	return([NSCharacterSet characterSetWithCharactersInString:@""]);
 }
