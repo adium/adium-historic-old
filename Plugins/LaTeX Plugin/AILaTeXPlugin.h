@@ -18,10 +18,7 @@
 
 @protocol AIContentFilter;
 
-@interface AILaTeXPlugin : AIPlugin <AIContentFilter>
-{
+@interface AILaTeXPlugin : AIPlugin <AIContentFilter> {
 }
-
-- (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent;
 
 @end
