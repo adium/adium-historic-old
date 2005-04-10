@@ -23,6 +23,7 @@
 #import "SHMozillaBookmarksImporter.h"
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMSIEBookmarksImporter.h"
+#import "SHABBookmarksImporter.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
