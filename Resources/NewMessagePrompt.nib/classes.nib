@@ -36,6 +36,7 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AINewMessagePromptController; 
             LANGUAGE = ObjC; 
             OUTLETS = {"label_from" = NSTextField; "label_to" = NSTextField; }; 
