@@ -29,7 +29,8 @@
 	
 	BOOL				filterContent;
 	BOOL				trackContent;
-	BOOL				displayContent;	
+	BOOL				displayContent;
+	BOOL				displayContentImmediately;
 	BOOL				sendContent;
 	BOOL				postProcessContent;
 }
@@ -62,13 +63,20 @@
 
 //Behavior
 - (BOOL)filterContent;
-- (BOOL)trackContent;
-- (BOOL)displayContent;
-- (void)setTrackContent:(BOOL)inTrackContent;
-- (void)setDisplayContent:(BOOL)inDisplayContent;
 - (void)setFilterContent:(BOOL)inFilterContent;
-- (void)setSendContent:(BOOL)inSendContent;
+
+- (BOOL)trackContent;
+- (void)setTrackContent:(BOOL)inTrackContent;
+
+- (BOOL)displayContent;
+- (void)setDisplayContent:(BOOL)inDisplayContent;
+
+- (BOOL)displayContentImmediately;
+- (void)setDisplayContentImmediately:(BOOL)inDisplayContentImmediately;
+
 - (BOOL)sendContent;
-- (void)setPostProcessContent:(BOOL)inPostProcessContent;
+- (void)setSendContent:(BOOL)inSendContent;
+
 - (BOOL)postProcessContent;
+- (void)setPostProcessContent:(BOOL)inPostProcessContent;
 @end

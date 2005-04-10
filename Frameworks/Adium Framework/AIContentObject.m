@@ -43,9 +43,10 @@
 		filterContent = YES;
 		trackContent = YES;
 		displayContent = YES;
+		displayContentImmediately = YES;
 		sendContent = YES;
 		postProcessContent = YES;
-
+	
 		//Store source, dest, chat, ...
 		source = [inSource retain];
 		destination = [inDest retain];
@@ -102,104 +103,176 @@
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
 //Message Source and destination
-- (AIListObject *)source{
+- (AIListObject *)source
+{
     return(source);
 }
-- (AIListObject *)destination{
+- (AIListObject *)destination
+{
     return(destination);
 }
 
 //Date and time of this message
-- (NSDate *)date{
+- (NSDate *)date
+{
     return(date);
 }
 
 //Is this content incoming or outgoing?
-- (BOOL)isOutgoing{
+- (BOOL)isOutgoing
+{
     return(outgoing);
 }
-- (void)_setIsOutgoing:(BOOL)inOutgoing{ //Hack for message view preferences
+- (void)_setIsOutgoing:(BOOL)inOutgoing
+{ //Hack for message view preferences
 	outgoing = inOutgoing;
 }
 
 //Chat containing this content
-- (void)setChat:(AIChat *)inChat{
+- (void)setChat:(AIChat *)inChat
+{
     chat = inChat;
 }
-- (AIChat *)chat{
+- (AIChat *)chat
+{
     return(chat);
 }
 
 //Attributed Message
-- (void)setMessage:(NSAttributedString *)inMessage{
+- (void)setMessage:(NSAttributedString *)inMessage
+{
 	if(message != inMessage){
 		[message release];
 		message = [inMessage retain];
 	}
 }
-- (NSAttributedString *)message{
+- (NSAttributedString *)message
+{
 	return(message);
 }
 
 //HTML string message
-- (void)setMessageHTML:(NSString *)inMessageString{
+- (void)setMessageHTML:(NSString *)inMessageString
+{
 	[message release];
 	message = [[AIHTMLDecoder decodeHTML:inMessageString] retain];
 }
-- (NSString *)messageHTML{
+- (NSString *)messageHTML
+{
 	return [AIHTMLDecoder encodeHTML:message encodeFullString:YES];
 }
 
 //Plaintext string message
-- (void)setMessageString:(NSString *)inMessageString{
+- (void)setMessageString:(NSString *)inMessageString
+{
 	[message release];
 	message = [[NSAttributedString alloc] initWithString:inMessageString
 											  attributes:[[adium contentController] defaultFormattingAttributes]];
 	
 }
-- (NSString *)messageString{
+- (NSString *)messageString
+{
 	return [message string];
 }
 
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
-//Is this content passed through content filters?
-- (void)setFilterContent:(BOOL)inFilterContent{
+/*
+ * @brief Set if this content is passed through content filters
+ */
+- (void)setFilterContent:(BOOL)inFilterContent
+{
 	filterContent = inFilterContent;
 }
-- (BOOL)filterContent{
-    return(filterContent);
+/*
+ * @brief Is this content passed through content filters?
+ */
+- (BOOL)filterContent
+{
+    return filterContent;
 }
 
-//Is this content tracked with notifications?
-- (void)setTrackContent:(BOOL)inTrackContent{
+/*
+ * @brief Set if this content is tracked
+ */
+- (void)setTrackContent:(BOOL)inTrackContent
+{
 	trackContent = inTrackContent;
 }
-- (BOOL)trackContent{
-    return(trackContent);
+/*
+ * @brief Is this content tracked with notifications?
+ *
+ * If NO, the content will not trigger message sent/message received events such as a sound playing.
+ */
+- (BOOL)trackContent
+{
+    return trackContent;
 }
 
-//Is this content displayed?
-- (void)setDisplayContent:(BOOL)inDisplayContent{
+/*
+ * @brief Set if this content is displayed
+ */
+- (void)setDisplayContent:(BOOL)inDisplayContent
+{
 	displayContent = inDisplayContent;
 }
-- (BOOL)displayContent{
-    return(displayContent);
+/*
+ * @brief Is this content displayed?
+ *
+ * This will be NO for a content object such as an AIContentTyping object which is sent but not displayed
+ */
+- (BOOL)displayContent
+{
+    return displayContent;
 }
 
+/*
+ * @brief Set if this content is displayed immediately
+ */
+- (void)setDisplayContentImmediately:(BOOL)inDisplayContentImmediately
+{
+	displayContentImmediately = inDisplayContentImmediately;
+}
+/*
+ * @brief Should this content be displayed immediately?
+ *
+ * If NO, the object which created this content is responsible for posting Content_ChatDidFinishAddingUntrackedContent
+ * with an object of the associated AIChat to [adium notificationCenter] at some point in the future to request display.
+ */
+- (BOOL)displayContentImmediately
+{
+	return displayContentImmediately;
+}
+
+/*
+ * @brief Set if the content should be sent
+ */
 - (void)setSendContent:(BOOL)inSendContent{
 	sendContent = inSendContent;
 }
+/*
+ * @brief Send the content?
+ */
 - (BOOL)sendContent{
-	return(sendContent);
+	return sendContent;
 }
 
-- (void)setPostProcessContent:(BOOL)inPostProcessContent{
+/*
+ * @brief Set if this content is post processed
+ */
+- (void)setPostProcessContent:(BOOL)inPostProcessContent
+{
 	postProcessContent = inPostProcessContent;
 }
-- (BOOL)postProcessContent{
-	return(postProcessContent);
+/*
+ * @brief Post process this content?
+ *
+ * For example, this should be YES if the content is to be logged and NO if it is not.
+ */
+- (BOOL)postProcessContent
+{
+	return postProcessContent;
 }
 
 @end
