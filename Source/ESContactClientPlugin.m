@@ -54,7 +54,7 @@
     NSAttributedString	*entry = nil;
 	
     //Get the client
-    client = [inObject statusObjectForKey:@"Client"];
+    client = [inObject statusObjectForKey:@"Client" fromAnyContainedObject:NO];
     
     //Return the correct string
     if(client){
