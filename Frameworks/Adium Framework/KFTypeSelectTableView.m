@@ -1,6 +1,6 @@
 //
 //  KFTypeSelectTableView.m
-//  KFTypeSelectTableView v1.0.3
+//  KFTypeSelectTableView v1.0.4
 //
 //  ------------------------------------------------------------------------
 //  Copyright (c) 2005, Ken Ferry All rights reserved.
@@ -115,6 +115,8 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent);
 - (void)setKfCanExtendFind:(BOOL)flag;
 - (id)kfLastConfiguredDelegate;
 - (void)setKfLastConfiguredDelegate:(id)anObject;
+- (NSInvocation *)kfTimeoutInvocation;
+- (void)setKfTimeoutInvocation:(NSInvocation *)anInvocation;
 - (void)setPattern:(NSString *)pattern;
 @end
 
@@ -130,7 +132,10 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent);
 
 - (void)dealloc
 {
-    [[self class] cancelPreviousPerformRequestsWithTarget:self];
+    NSInvocation *timeoutInvocation = [self kfTimeoutInvocation];
+    [[timeoutInvocation class] cancelPreviousPerformRequestsWithTarget:[self kfTimeoutInvocation]
+                                                              selector:@selector(invoke) 
+                                                                object:nil];
     [self kfTearDownSimulatedIvars];
     [super dealloc];
 }
@@ -660,7 +665,7 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
     }
 }
 
-- (NSTimeInterval)kfPatternTimeout
+- (NSTimeInterval)kfPatternTimeoutInterval
 {
     // from Dan Wood's 'Table Techniques Taught Tastefully', as pointed out by someone
     // on cocoadev.com
@@ -855,7 +860,10 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
 
 -(void)kfPatternDidChange:(id)sender 
 {
-    [[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(kfResetSearch) object:nil];
+    NSInvocation *timeoutInvocation = [self kfTimeoutInvocation];
+    [[timeoutInvocation class] cancelPreviousPerformRequestsWithTarget:[self kfTimeoutInvocation]
+                                                              selector:@selector(invoke) 
+                                                                object:nil];
     
     id delegate = [self delegate];
     if ([delegate respondsToSelector:@selector(typeSelectTableViewPatternDidChange:)])
@@ -884,11 +892,11 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
         [self kfScrollRectToCenter:[self rectOfRow:row] vertical:YES horizontal:NO];
     }
     
-    // start pattern timeout timer
-    [self performSelector:@selector(kfResetSearch)
-               withObject:nil
-               afterDelay:[self kfPatternTimeout] 
-                  inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSModalPanelRunLoopMode, nil]];
+    // start pattern timeout timer (see kfTimeoutInvocation for details)
+    [[self kfTimeoutInvocation] performSelector:@selector(invoke)
+                                     withObject:nil
+                                     afterDelay:[self kfPatternTimeoutInterval] 
+                                        inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSModalPanelRunLoopMode, nil]];
 
     
     // inform the delegate
@@ -906,10 +914,11 @@ static BOOL KFKeyEventIsCancelEvent(NSEvent *keyEvent)
         [self setKfSavedRowForExtensionSearch:row];
     }
     
-    [self performSelector:@selector(kfResetSearch)
-               withObject:nil
-               afterDelay:[self kfPatternTimeout] 
-                  inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSModalPanelRunLoopMode, nil]];
+    // start pattern timeout timer (see kfTimeoutInvocation for details)
+    [[self kfTimeoutInvocation] performSelector:@selector(invoke)
+                                     withObject:nil
+                                     afterDelay:[self kfPatternTimeoutInterval] 
+                                        inModes:[NSArray arrayWithObjects:NSDefaultRunLoopMode, NSModalPanelRunLoopMode, nil]];
 
     
     id delegate = [self delegate];
@@ -1111,6 +1120,44 @@ static NSMutableDictionary *idToSimulatedIvarsMap = nil;
         [[self kfSimulatedIvars] setObject:[NSValue valueWithNonretainedObject:anObject] forKey:@"lastConfiguredDelegate"];
 }
 
+//
+//  the timeoutNotification encapsulates the message that we send to self when the timeout
+//  (for clearing the input buffer) expires.  Invoke it with a delayed message send.
+//
+//  Why do we use an invocation instead of doing the delayed message send directly?   
+//  -[NSObject performSelector:afterDelay:] retains the receiver until after the message send is
+//  performed.  That can extend the life of the tableView past the life of the delegate, which is
+//  bad mojo.  Yielded a crash in Adium.  By buffering with an invocation that doesn't retain its
+//  target, we can avoid the problem.  Any pending delayed messages are canceled when the table
+//  table is dealloc'd.
+//
+- (NSInvocation *)kfTimeoutInvocation
+{
+    NSInvocation *invocation = [[self kfSimulatedIvars] objectForKey:@"timeoutInvocation"];
+    
+    // defaults to a message to kfResetSearch
+    if (invocation == nil)
+    {
+        SEL selector = @selector(kfResetSearch);
+        invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:selector]];
+        [invocation setTarget:self];
+        [invocation setSelector:selector];
+        
+        [self setKfTimeoutInvocation:invocation];
+    }
+    
+    return invocation;
+}
+
+- (void)setKfTimeoutInvocation:(NSInvocation *)anInvocation
+{
+    if (anInvocation == nil)
+        [[self kfSimulatedIvars] removeObjectForKey:@"timeoutInvocation"];
+    else
+        [[self kfSimulatedIvars] setObject:anInvocation forKey:@"timeoutInvocation"];    
+}
+
+
 -(void)setPattern:(NSString *)pattern
 {
     NSString *oldPattern = [self pattern];
@@ -1203,7 +1250,6 @@ static KFTypeSelectMatchAlgorithm defaultMatchAlgorith = KFPrefixMatchAlgorithm;
     else
         [[self kfSimulatedIvars] setObject:identifiers forKey:@"searchColumnIdentifiers"];
 }
-
 
 @end
 
