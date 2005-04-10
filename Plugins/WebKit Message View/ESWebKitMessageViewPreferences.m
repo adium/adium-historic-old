@@ -596,10 +596,15 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		if(content){			
 			[content setTrackContent:NO];
 			[content setPostProcessContent:NO];
+			[content setDisplayContentImmediately:NO];
 			
 			[[adium contentController] displayContentObject:content];
 		}
 	}
+
+	//We finished adding untracked content
+	[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
+											  object:inChat];
 }
 
 @end
