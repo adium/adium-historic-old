@@ -480,8 +480,7 @@
 			NSDictionary		*attributes = ([self cellIsSelected] ?
 											   [self statusAttributesInverted] :
 											   [self statusAttributes]);
-			NSAttributedString 	*extStatus = [[[NSAttributedString alloc] initWithString:string
-																			 attributes:attributes] autorelease];
+			NSAttributedString 	*extStatus = [[NSAttributedString alloc] initWithString:string attributes:attributes];
 			
 			//Alignment
 			NSSize		nameSize = [extStatus size];
@@ -514,6 +513,8 @@
 											 drawRect.origin.y + half + offset,
 											 drawRect.size.width,
 											 drawRect.size.height - (half + offset))];
+
+			[extStatus release];
 			
 			if(drawUnder){
 				rect.origin.y -= halfHeight;
