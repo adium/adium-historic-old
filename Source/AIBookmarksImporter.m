@@ -154,12 +154,13 @@
 
 #pragma mark Useful methods
 
-+ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
++ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
-		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
-		nil];
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:3];
+	[dict setObject:(inTitle ? inTitle : @"untitled") forKey:ADIUM_BOOKMARK_DICT_TITLE];
+	if(inContent) [dict setObject:inContent forKey:ADIUM_BOOKMARK_DICT_CONTENT];
+	if(inImage)   [dict setObject:inImage   forKey:ADIUM_BOOKMARK_DICT_FAVICON];
+	return dict;
 }
 
 + (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
@@ -186,20 +187,27 @@
 {	
 	//Recursively add the contents of the group to the parent menu
 	NSMenu			*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
-	NSEnumerator	*enumerator = [[bookmarks objectForKey:ADIUM_BOOKMARK_DICT_CONTENT] objectEnumerator];
-	id				object;
+	id				content = [bookmarks objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+	if([content respondsToSelector:@selector(objectEnumerator)]) {
+		NSEnumerator	*enumerator = [content objectEnumerator];
+		id				object;
 	
-	while(object = [enumerator nextObject]) {		
-		if([object isKindOfClass:[SHMarkedHyperlink class]]) {
-			//Add a menu item for this link
-			if([(SHMarkedHyperlink *)object URL])
-				[self insertMenuItemForBookmark:object intoMenu:menu];
-		} else if([object isKindOfClass:[NSDictionary class]]) {
-			//Add another submenu
-			[self insertBookmarks:object intoMenu:menu];
+		while(object = [enumerator nextObject]) {		
+			if([object isKindOfClass:[SHMarkedHyperlink class]]) {
+				//Add a menu item for this link
+				if([(SHMarkedHyperlink *)object URL])
+					[self insertMenuItemForBookmark:object intoMenu:menu];
+			} else if([object isKindOfClass:[NSDictionary class]]) {
+				//Add another submenu
+				[self insertBookmarks:object intoMenu:menu];
+			}
 		}
+	} else {
+		//it's a single link
+		if([(SHMarkedHyperlink *)content URL])
+			[self insertMenuItemForBookmark:content intoMenu:menu];
 	}
-	
+
 	//Insert the submenu we built into the menu
 	NSMenuItem		*item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[bookmarks objectForKey:ADIUM_BOOKMARK_DICT_TITLE] 
 																				  action:nil

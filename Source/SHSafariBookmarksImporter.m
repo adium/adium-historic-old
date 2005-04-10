@@ -96,7 +96,8 @@
 			}else if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
 				//We found an array of links
 				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
-																  menuItems:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]];
+																	content:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]
+																	  image:nil];
 				if(menuDict) [array addObject:menuDict];
 			}
 		}

@@ -89,21 +89,29 @@
 
 - (NSArray *)availableBookmarks
 {
-    NSString    *bookmarkPath = [[self class] bookmarksPath];
+    NSString    *bookmarksPath = [[self class] bookmarksPath];
 #warning this uses the ephemeral C string encoding. it should use an explicit encoding.
 	/*further note: my historical OmniWeb 5 Favorites file has UTF-8 in its Content-Type header.
 	 *I don't know what 4.5 uses, though, and we shouldn't assume the value of Content-Type anyway.
 	 *the right way would be to proceed in a strict 8-bit encoding like ISO 8859-1,
 	 *	read the Content-Type, and then reread the file as whatever encoding is found.
-	 *the hard part of that is mapping an HTTP encoding name to an NSStringEncoding.
+	 *unfinished solution:
+
+	Str255 encodingNamePstr; //fill this in from the Content-Type
+	TextEncoding tecEncoding;
+	OSStatus err = TECGetTextEncodingFromInternetName(&tecEncoding, encodingNamePstr);
+	NSStringEncoding encoding = CFStringConvertEncodingToNSStringEncoding(tecEncoding);
+	NSData *bookmarksData = [NSData dataWithContentsOfFile:bookmarkPath];
+	NSString *bookmarksString = [NSString stringWithData:bookmarksData encoding:encoding];
+
 	 *--boredzo
 	 */
-    NSString    *bookmarkString = [NSString stringWithContentsOfFile:bookmarkPath];
+    NSString    *bookmarksString = [NSString stringWithContentsOfFile:bookmarksPath];
 
-    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarkPath traverseLink:YES];
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
     [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
 
-    return([self parseBookmarksString:bookmarkString]);
+    return [self parseBookmarksString:bookmarksString];
 }
 
 
@@ -154,7 +162,8 @@
 			[arrayStack addObject:bookmarksArray];
 			bookmarksArray = [NSMutableArray array];
 			[(NSMutableArray *)[arrayStack lastObject] addObject:[[self class] menuDictWithTitle:omniTitleString
-																					   menuItems:bookmarksArray]];
+																						 content:bookmarksArray
+																						   image:nil]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:A_OPEN]){
 			[linkScanner scanUpToString:HREF_STRING intoString:nil];
 

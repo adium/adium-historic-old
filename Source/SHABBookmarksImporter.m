@@ -65,9 +65,21 @@
 			}else{
 				nameString = [NSString stringWithString:[person valueForProperty:kABOrganizationProperty]];
 			}
+			NSImage *image = nil;
+			NSData *imageData = [person imageData];
+			if(imageData) {
+				image = [[[NSImage alloc] initWithData:imageData] autorelease];
+				[image setScalesWhenResized:YES];
+				[image setSize:NSMakeSize(16.0, 16.0)];
+			}
 
 			SHMarkedHyperlink	*menuLink = [[self class] hyperlinkForTitle:nameString URL:urlString];
-			if(menuLink) [hyperlinks addObject:menuLink];
+			if(menuLink) {
+				NSDictionary		*menuDict = [[self class] menuDictWithTitle:nameString
+																		content:menuLink
+																		  image:image];
+				[hyperlinks addObject:menuDict];
+			}
 		}
 	}
 

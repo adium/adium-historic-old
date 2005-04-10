@@ -86,7 +86,8 @@
 			[bookmarksArray release];
 			bookmarksArray = [[NSMutableArray alloc] init];
 			[(NSMutableArray *)[arrayStack lastObject] addObject:[AIBookmarksImporter menuDictWithTitle:titleString
-																							  menuItems:bookmarksArray]];
+																								content:bookmarksArray
+																								  image:nil]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] caseInsensitiveCompare:Aopen] == NSOrderedSame){
 			[linkScanner scanUpToString:hrefStr intoString:nil];
 
