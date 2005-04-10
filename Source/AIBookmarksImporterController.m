@@ -229,6 +229,8 @@ static AIBookmarksImporterController *sharedController;
 {
 	updatingMenu = YES;
 
+	BOOL menuHasChanged = NO;
+
 	NSMenu				*menuItemSubmenu = nil;
 	NSMenu				*contextualMenuItemSubmenu = nil;
 
@@ -241,14 +243,19 @@ static AIBookmarksImporterController *sharedController;
 		 *IOW, menuItemSubmenu and contextualMenuItemSubmenu are two separate objects after this message.
 		 *so, DO NOT change this to a chained assignment (a = b = c) or otherwise cut it down to one message.
 		 */
-		menuItemSubmenu           = [importer menuWithAvailableBookmarks];
-		contextualMenuItemSubmenu = [importer menuWithAvailableBookmarks];
+		if([importer bookmarksHaveChanged]) {
+			menuItemSubmenu           = [importer menuWithAvailableBookmarks];
+			contextualMenuItemSubmenu = [importer menuWithAvailableBookmarks];
+			menuHasChanged = YES;
+		}
 	} else {
 		menuItemSubmenu           = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
 		contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
 
 		NSEnumerator		*importersEnum = [importers objectEnumerator];
 		while((importer = [importersEnum nextObject])) {
+			if(![importer bookmarksHaveChanged]) continue;
+
 			Class   importerClass = [importer class];
 			NSString *browserName = [importerClass browserName];
 			NSImage  *browserIcon = [importerClass browserIcon];
@@ -269,44 +276,36 @@ static AIBookmarksImporterController *sharedController;
 			[menuItem setImage:browserIcon];
 			[menuItem setSubmenu:menu];
 			[contextualMenuItemSubmenu addItem:menuItem];
+
+			menuHasChanged = YES;
 		}
 	}
 
-	[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
-	[menuItemSubmenu setAutoenablesItems:NO];
+	if(menuHasChanged) {
+		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
+		[menuItemSubmenu setAutoenablesItems:NO];
 
-	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
-	[contextualMenuItemSubmenu setAutoenablesItems:NO];
+		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
+		[contextualMenuItemSubmenu setAutoenablesItems:NO];
 
-	if([menuItemSubmenu respondsToSelector:@selector(setDelegate:)]) {
-		//10.2 doesn't have menu delegates.
-		[menuItemSubmenu setDelegate:self];
-		[contextualMenuItemSubmenu setDelegate:self];
+		if([menuItemSubmenu respondsToSelector:@selector(setDelegate:)]) {
+			//10.2 doesn't have menu delegates.
+			[menuItemSubmenu setDelegate:self];
+			[contextualMenuItemSubmenu setDelegate:self];
+		}
+
+		[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
+					   withObject:menuItemSubmenu
+					   withObject:contextualMenuItemSubmenu];
 	}
-
-	[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
-				   withObject:menuItemSubmenu
-				   withObject:contextualMenuItemSubmenu];
 }
 
 - (void) buildBookmarksMenuIfNecessaryThread
 {
 	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
 
-	//Does the bookmark menu need an update?
-
-	//XXX - have the importers notify the controller somehow when their bookmarks change
-	//(oh, how I wish we could use kevent) --boredzo
-
-	BOOL isNeeded = NO;
-	NSEnumerator *importersEnum = [importers objectEnumerator];
-	AIBookmarksImporter *importer;
-	while((importer = [importersEnum nextObject])) {
-		isNeeded = [importer bookmarksHaveChanged];
-		if(isNeeded) break;
-	}
-
-	if(isNeeded) [self buildBookmarksMenu];
+	//-buildBookmarksMenu does the if-necessary parts itself now.
+	[self buildBookmarksMenu];
 
 	[pool release];
 }
