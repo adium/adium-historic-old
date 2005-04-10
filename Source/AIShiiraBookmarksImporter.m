@@ -74,7 +74,8 @@
 			} else {
 				//We found an array of links
 				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:SHIIRA_DICT_TITLE]
-																  menuItems:[self drillPropertyList:[linkDict objectForKey:SHIIRA_DICT_CHILD]]];
+																	content:[self drillPropertyList:[linkDict objectForKey:SHIIRA_DICT_CHILD]]
+																	  image:nil];
 				if(menuDict) [array addObject:menuDict];
 			}
 		}

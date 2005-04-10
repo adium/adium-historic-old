@@ -93,7 +93,8 @@
             }else{
                 NSArray 		*outArray = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
 				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
-																  menuItems:[self drillPropertyList:(outArray ? outArray : [NSArray array])]];
+																	content:[self drillPropertyList:(outArray ? outArray : [NSArray array])]
+																	  image:nil];
                 if(menuDict) [caminoArray addObject:menuDict];
             }
         }
