@@ -44,8 +44,6 @@
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"
 
-#define KEY_TAB_SWITCH_KEYS					@"Tab Switching Keys"
-
 @protocol AIInterfaceContainer <NSObject>
 - (void)makeActive:(id)sender;	//Make the container active/front
 - (void)close:(id)sender;	//Close the container
