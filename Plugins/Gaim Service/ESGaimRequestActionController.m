@@ -15,6 +15,8 @@
  */
 
 #import "ESGaimRequestActionController.h"
+#import "GaimCommon.h"
+#import "SLGaimCocoaAdapter.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>

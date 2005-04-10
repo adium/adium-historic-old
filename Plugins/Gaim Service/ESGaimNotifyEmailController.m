@@ -14,9 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESContactAlertsController.h"
 #import "ESGaimNotifyEmailController.h"
+#import "SLGaimCocoaAdapter.h"
+#import "GaimCommon.h"
 #import "ESTextAndButtonsWindowController.h"
+#import "ESContactAlertsController.h"
 #import <AIUtilities/CBObjectAdditions.h>
 
 @interface ESGaimNotifyEmailController (PRIVATE)

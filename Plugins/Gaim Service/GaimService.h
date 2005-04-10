@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimServicePlugin.h"
-#import "CBGaimAccount.h"
 #import <Adium/AIService.h>
+#import "GaimCommon.h"
+#import "CBGaimAccount.h"
 
 @interface GaimService : AIService {
 
