@@ -1,6 +1,6 @@
 //
 //  KFTypeSelectTableView.h
-//  KFTypeSelectTableView v1.0.3
+//  KFTypeSelectTableView v1.0.4
 //
 //  Keyboard navigation enabled table view.  Suitable for 
 //  class posing as well as normal use.
