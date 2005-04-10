@@ -20,6 +20,10 @@
 #import "AILaTeXPlugin.h"
 #import <Adium/AITextAttachmentExtension.h>
 
+@interface AILaTeXPlugin (PRIVATE)
++ (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent;
+@end
+
 /*!
  * @class AILaTeXPlugin
  * @brief Filter plugin which converts $$xxx$$, where xxx is a LaTeX expression, to LaTeX
@@ -73,7 +77,7 @@
 					NSMutableAttributedString   *replacement;
 					
 					fullLaTeX = [NSString stringWithFormat:@"$$%@$$", innerLaTeX];
-					replacement = [self attributedStringWithPasteboard:pb 
+					replacement = [[self class] attributedStringWithPasteboard:pb 
 														textEquivalent:fullLaTeX];
 					
 					// grab the original attributes, to ensure that the background is not lost in a message consisting only of LaTeX
@@ -105,7 +109,7 @@
 /*!
  * @brief Returns an attributed string containing the LaTeX image
  */
-- (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent
++ (NSMutableAttributedString *)attributedStringWithPasteboard:(NSPasteboard *)pb textEquivalent:(NSString *)textEquivalent
 {
     NSImage						*img = [[NSImage alloc] initWithPasteboard:pb];
     NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
