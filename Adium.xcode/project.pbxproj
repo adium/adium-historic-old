@@ -2308,6 +2308,50 @@
 			settings = {
 			};
 		};
+		343EC6A70809DEC700E27095 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESContactAlertsPane.m;
+			path = Source/ESContactAlertsPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EC6A80809DEC700E27095 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESContactAlertsPane.h;
+			path = Source/ESContactAlertsPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EC6A90809DEC800E27095 = {
+			fileRef = 343EC6A70809DEC700E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EC6AA0809DEC800E27095 = {
+			fileRef = 343EC6A80809DEC700E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		343EC6B20809DEEB00E27095 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = ContactAlerts.nib;
+			path = Resources/ContactAlerts.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343EC6B30809DEEB00E27095 = {
+			fileRef = 343EC6B20809DEEB00E27095;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		344092CC07D8FF8F00321BB3 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -6599,24 +6643,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34A6FE7607D7E06A00972830 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = "KFTypeSelectTableView+Posing.m";
-			path = "Frameworks/Adium Framework/KFTypeSelectTableView+Posing.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A6FE7707D7E06A00972830 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = "KFTypeSelectTableView+Posing.h";
-			path = "Frameworks/Adium Framework/KFTypeSelectTableView+Posing.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A6FE7807D7E06A00972830 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -6637,8 +6663,6 @@
 		};
 		34A6FE8007D7E07300972830 = {
 			children = (
-				34A6FE7607D7E06A00972830,
-				34A6FE7707D7E06A00972830,
 				34A6FE7807D7E06A00972830,
 				34A6FE7907D7E06A00972830,
 			);
@@ -6647,21 +6671,6 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34A6FEB907D7E2E200972830 = {
-			fileRef = 34A6FE7707D7E06A00972830;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		34A6FEBA07D7E2E300972830 = {
-			fileRef = 34A6FE7607D7E06A00972830;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34A6FEBB07D7E2E400972830 = {
 			fileRef = 34A6FE7907D7E06A00972830;
@@ -7440,7 +7449,6 @@
 				6CF42679057763E200F27FAA,
 				4BD6737306001BF00049CAF7,
 				4BD6737506001BF00049CAF7,
-				4BD6739906001C3F0049CAF7,
 				4BD673B606001C5E0049CAF7,
 				4BD673CD06001C960049CAF7,
 				4BD6741B06001CEF0049CAF7,
@@ -7596,6 +7604,7 @@
 				34BFE25D07E8E69300AD984D,
 				34BFE2D707E8E74400AD984D,
 				34C1F21507F7A63500DB6645,
+				343EC6AA0809DEC800E27095,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7777,7 +7786,6 @@
 				34D8337507CBD808006466F2,
 				34D8337607CBD808006466F2,
 				34D8337707CBD808006466F2,
-				4BD6739A06001C400049CAF7,
 				4BD6742F06001D1D0049CAF7,
 				4BD6746606001D770049CAF7,
 				4BD6746F06001D810049CAF7,
@@ -7896,6 +7904,7 @@
 				34BFE30107E8FA7900AD984D,
 				343EB42C080870A200E27095,
 				343EC6920809DD3400E27095,
+				343EC6B30809DEEB00E27095,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7924,7 +7933,6 @@
 				6CF4267A057763E200F27FAA,
 				4BD6737406001BF00049CAF7,
 				4BD6737606001BF10049CAF7,
-				4BD6739B06001C410049CAF7,
 				4BD673B706001C5F0049CAF7,
 				4BD673CE06001C960049CAF7,
 				4BD6741C06001CEF0049CAF7,
@@ -8091,6 +8099,7 @@
 				34BFE25C07E8E69300AD984D,
 				34BFE2D807E8E74400AD984D,
 				34C1F21407F7A63500DB6645,
+				343EC6A90809DEC800E27095,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8372,7 +8381,6 @@
 				34D8350807CBE889006466F2,
 				34D8350907CBE889006466F2,
 				34D8350B07CBE889006466F2,
-				34A6FEB907D7E2E200972830,
 				34A6FEBB07D7E2E400972830,
 				34BFD7F507E6A22700AD984D,
 				34BFDB2E07E7710C00AD984D,
@@ -8594,7 +8602,6 @@
 				34F2E81B07C2CD6C007EAAAB,
 				34F2E83A07C2CDBE007EAAAB,
 				34EF54A407CE8EC300A685F1,
-				34A6FEBA07D7E2E300972830,
 				34A6FEBC07D7E2E500972830,
 				34BFD7F707E6A22700AD984D,
 				34BFDB2F07E7710C00AD984D,
@@ -18831,24 +18838,6 @@
 			settings = {
 			};
 		};
-		4BD6739906001C3F0049CAF7 = {
-			fileRef = F52707A104E203EA0114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739A06001C400049CAF7 = {
-			fileRef = F5148D9604C8B4AA018B6CC7;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6739B06001C410049CAF7 = {
-			fileRef = F52707A004E203EA0114B3C0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD673B606001C5E0049CAF7 = {
 			fileRef = 4B31E8C004C46A9100A8010A;
 			isa = PBXBuildFile;
@@ -22811,15 +22800,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		F5148D9604C8B4AA018B6CC7 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = ContactAlerts.nib;
-			path = "Plugins/Contact Alerts/ContactAlerts.nib";
-			refType = 4;
-			sourceTree = "<group>";
-			usesTabs = 0;
-		};
 		F51DEC0D03262FB501A8010A = {
 			children = (
 				F57938FA033E745F01A8010A,
@@ -22829,24 +22809,6 @@
 			isa = PBXGroup;
 			name = "Login Window";
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52707A004E203EA0114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESContactAlertsPane.m;
-			path = "Plugins/Contact Alerts/ESContactAlertsPane.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		F52707A104E203EA0114B3C0 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESContactAlertsPane.h;
-			path = "Plugins/Contact Alerts/ESContactAlertsPane.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23608,14 +23570,14 @@
 				4BBF41DE0661194A001D31E1,
 				4B2DC06B066F705800AD5AAD,
 				4B2DC06C066F705800AD5AAD,
-				F52707A104E203EA0114B3C0,
-				F52707A004E203EA0114B3C0,
+				343EC6A80809DEC700E27095,
+				343EC6A70809DEC700E27095,
 				34CEBE6006F117DF00A89DDE,
 				34CEBE6106F117DF00A89DDE,
 				34D8328E07CBD5E2006466F2,
 				34D8328F07CBD5E2006466F2,
 				34BFE30007E8FA7800AD984D,
-				F5148D9604C8B4AA018B6CC7,
+				343EC6B20809DEEB00E27095,
 				34575E3207CBA7CC004A4FFF,
 				4BBF41E10661194A001D31E1,
 				4B2DC068066F6B1200AD5AAD,
