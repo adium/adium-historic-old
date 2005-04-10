@@ -22,6 +22,7 @@
             OUTLETS = {
                 accountController = AIAccountController; 
                 applescriptabilityController = ESApplescriptabilityController; 
+                bookmarksImporterController = AIBookmarksImporterController; 
                 componentLoader = AICoreComponentLoader; 
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
@@ -39,6 +40,11 @@
                 statusController = AIStatusController; 
                 toolbarController = AIToolbarController; 
             }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIBookmarksImporterController; 
+            LANGUAGE = ObjC; 
             SUPERCLASS = NSObject; 
         }, 
         {
