@@ -26,7 +26,7 @@
 
 @interface SHCaminoBookmarksImporter(PRIVATE)
 - (NSArray *)drillPropertyList:(id)inObject;
-- (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict;
+- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict;
 @end
 
 @implementation SHCaminoBookmarksImporter
@@ -102,7 +102,7 @@
         
         while(linkDict = [enumerator nextObject]){
             if(nil == [linkDict objectForKey:CAMINO_DICT_FOLDER_KEY]){
-				SHMarkedHyperlink	*menuLink = [self hyperlinkForBookmark:linkDict];
+				SHMarkedHyperlink	*menuLink = [self hyperlinkForCaminoBookmark:linkDict];
                 if(menuLink) [caminoArray addObject:menuLink];
 				
             }else{
@@ -116,16 +116,11 @@
     return caminoArray;
 }
 
-- (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict
+- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict
 {
-    NSString    *title = [inDict objectForKey:CAMINO_DICT_TITLE_KEY];
+	NSString	*title = [inDict objectForKey:CAMINO_DICT_TITLE_KEY];
 	NSString	*url = [inDict objectForKey:CAMINO_DICT_URL_KEY];
-	
-	if(!title || !url) return(nil);
-    return  [[[SHMarkedHyperlink alloc] initWithString:url
-                                  withValidationStatus:SH_URL_VALID
-                                          parentString:title
-                                              andRange:NSMakeRange(0,[title length])] autorelease];
+	return [[self class] hyperlinkForTitle:title URL:url];
 }
 
 @end

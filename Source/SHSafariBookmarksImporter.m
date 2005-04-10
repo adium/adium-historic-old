@@ -113,12 +113,7 @@
 {
 	NSString	*title = [[inDict objectForKey:SAFARI_DICT_URIDICT] objectForKey:SAFARI_DICT_URI_TITLE];
 	NSString	*url = [inDict objectForKey:SAFARI_DICT_URLSTRING];
-
-	if(!title || !url) return nil;
-	return [[[SHMarkedHyperlink alloc] initWithString:url
-								 withValidationStatus:SH_URL_VALID
-										 parentString:title
-											 andRange:NSMakeRange(0,[title length])] autorelease];
+	return [[self class] hyperlinkForTitle:title URL:url];
 }
 
 @end

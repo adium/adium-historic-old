@@ -58,15 +58,12 @@
 	NSEnumerator		*enumerator = [[self availableBookmarks] objectEnumerator];
 	id					object;
 
-	Class				NSDictionaryClass = [NSDictionary class];
-	Class				SHMarkedHyperlinkClass = [SHMarkedHyperlink class];
-
 	NSMenu *menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:[[self class] browserName]] autorelease];
 
-	while(object = [enumerator nextObject]){
-		if([object isKindOfClass:NSDictionaryClass]){
+	while((object = [enumerator nextObject])){
+		if([object isKindOfClass:[NSDictionary class]]){
 			[self insertBookmarks:object intoMenu:menu];
-		}else if([object isKindOfClass:SHMarkedHyperlinkClass]){
+		}else if([object isKindOfClass:[SHMarkedHyperlink class]]){
 			[self insertMenuItemForBookmark:object intoMenu:menu];
 		}	
 	}
@@ -155,7 +152,7 @@
 	return [NSURL fileURLWithPath:[self browserPath]];
 }
 
-#pragma mark Menu creation
+#pragma mark Useful methods
 
 + (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
 {
@@ -164,6 +161,20 @@
 		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
 		nil];
 }
+
++ (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
+{
+	NSString	*title = inString ? inString : @"untitled";
+
+	if(!inURLString) return nil;
+
+	return [[[SHMarkedHyperlink alloc] initWithString:inURLString
+								 withValidationStatus:SH_URL_VALID
+										 parentString:title
+											 andRange:NSMakeRange(0, [title length])] autorelease];
+}
+
+#pragma mark Menu creation
 
 /*
  * @brief Insert a bookmark (or a group of bookmarks) into the menu

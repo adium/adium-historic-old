@@ -14,10 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-#import <Cocoa/Cocoa.h>
-#include <CoreFoundation/CoreFoundation.h>
 #import <Adium/AIObject.h>
+
+@class SHMarkedHyperlink;
 
 #define ADIUM_BOOKMARK_DICT_TITLE      @"Title"
 #define ADIUM_BOOKMARK_DICT_CONTENT    @"Content"
@@ -37,9 +36,8 @@
  *see below for further details.
  */
 
-@interface AIBookmarksImporter: AIObject
-{
-	NSDate *lastModDate;
+@interface AIBookmarksImporter : AIObject {
+	NSDate	*lastModDate;
 }
 
 #pragma mark -
@@ -66,6 +64,7 @@
 + (NSString *)bookmarksPath;
 
 + (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
++ (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
 
 #pragma mark -
 
