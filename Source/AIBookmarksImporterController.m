@@ -227,7 +227,6 @@ static AIBookmarksImporterController *sharedController;
  */
 - (void)buildBookmarksMenu
 {
-	NSLog(@"(AIBookmarksImporterController) %@", @"building bookmarks menu");
 	updatingMenu = YES;
 
 	NSMenu				*menuItemSubmenu = nil;
