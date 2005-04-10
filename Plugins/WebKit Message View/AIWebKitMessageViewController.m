@@ -440,8 +440,9 @@
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
 	if(reprocessContent){
-		//Just in case we are in the middle of adding content, clean out the  newContent array.
-		//The chat's contentObjectArray will have the new object; we won't lose anything.
+		/* Just in case we are in the middle of adding content, clean out the  newContent array.
+		 * The chat's contentObjectArray will have the new object; we won't lose anything.
+		 */
 		[contentQueue removeAllObjects];
 		
 		//The first object in the chat's contentObjectArray is the most recent; we want to add chronologically, so reverse the array.
@@ -467,8 +468,11 @@
 	AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
 	[contentQueue addObject:contentObject];
 	
-	//If this content object is tracked, immediately update our display
-	if([contentObject trackContent]){
+	/* Immediately update our display if the content requires it.
+	 * This is NO, for example, when we receive an entire block of message history content so that we can avoid scrolling
+	 * after each one.
+	 */
+	if([contentObject displayContentImmediately]){
 		[self processQueuedContent];
 	}
 }
@@ -489,20 +493,23 @@
 	unsigned	contentQueueCount, objectsAdded = 0;
 	BOOL		willAddMoreContentObjects = NO;
 	
-	contentQueueCount = [contentQueue count];
-	while(webViewIsReady && contentQueueCount){
-		AIContentObject *content = [contentQueue objectAtIndex:0];
-
-		willAddMoreContentObjects = (contentQueueCount > 1);
-		
-		//Display the content
-		[self _processContentObject:content willAddMoreContentObjects:willAddMoreContentObjects];
-
-		//Remove the content we just displayed from the queue
-		objectsAdded++;
-		[contentQueue removeObjectAtIndex:0];
-		
+	if(webViewIsReady){
 		contentQueueCount = [contentQueue count];
+
+		while(contentQueueCount > 0){
+			AIContentObject *content;
+
+			willAddMoreContentObjects = (contentQueueCount > 1);
+			
+			//Display the content
+			content = [contentQueue objectAtIndex:0];
+			[self _processContentObject:content willAddMoreContentObjects:willAddMoreContentObjects];
+			
+			//Remove the content we just displayed from the queue
+			[contentQueue removeObjectAtIndex:0];
+			objectsAdded++;
+			contentQueueCount--;
+		}
 	}
 	
 	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
@@ -516,7 +523,7 @@
 		}
 	}
 	
-	//If there is still content to process, we'll try again after a brief delay
+	//If there is still content to process (the webview wasn't ready), we'll try again after a brief delay
 	if(contentQueueCount){
 		[self performSelector:@selector(processQueuedContent) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
 	}
