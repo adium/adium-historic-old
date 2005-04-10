@@ -33,7 +33,6 @@
 
 @interface SHOmniWebBookmarksImporter (PRIVATE)
 - (NSArray *)parseBookmarksString:(NSString *)inString;
-- (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
 @end
 
 @implementation SHOmniWebBookmarksImporter
@@ -178,7 +177,7 @@
 					omniTitleString = nil;
 				}
 
-				[bookmarksArray addObject:[self hyperlinkForTitle:omniTitleString URL:urlString]];
+				[bookmarksArray addObject:[[self class] hyperlinkForTitle:omniTitleString URL:urlString]];
 			}
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DL_CLOSE]){
 			if((stringLength - [linkScanner scanLocation]) > 4){
@@ -199,15 +198,6 @@
 	}
 
 	return bookmarksArray;
-}
-
-- (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
-{
-    NSString    *title = (inString ? inString : @"untitled");
-    return [[[SHMarkedHyperlink alloc] initWithString:inURLString
-                                 withValidationStatus:SH_URL_VALID
-                                         parentString:title
-                                             andRange:NSMakeRange(0,[title length])] autorelease];
 }
 
 @end

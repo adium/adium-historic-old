@@ -47,10 +47,6 @@
 #define bMdash				@"-"
 #define bMdashHTML			@"MDASH"
 
-@interface SHMozillaCommonParser (PRIVATE)
-+ (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
-@end
-
 @implementation SHMozillaCommonParser
 
 + (NSArray *)parseBookmarksfromString:(NSString *)inString
@@ -112,7 +108,7 @@
 					titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
 				}
 
-				[bookmarksArray addObject:[self hyperlinkForTitle:titleString URL:urlString]];
+				[bookmarksArray addObject:[AIBookmarksImporter hyperlinkForTitle:titleString URL:urlString]];
 			}
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] caseInsensitiveCompare:DLclose] == NSOrderedSame){
 			if((stringLength - [linkScanner scanLocation]) > 4){
@@ -141,16 +137,6 @@
 	}
 
 	return [bookmarksArray autorelease];
-}
-
-+ (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString
-{
-	NSString	*title = inString ? inString : @"untitled";
-
-	return [[[SHMarkedHyperlink alloc] initWithString:inURLString
-								 withValidationStatus:SH_URL_VALID
-										 parentString:title
-											 andRange:NSMakeRange(0,[title length])] autorelease];
 }
 
 #pragma mark HTML replacement        
