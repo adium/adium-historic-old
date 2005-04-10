@@ -34,12 +34,13 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 
 + (void)enableExceptionCatching
 {
-    //Remove any existing exception logs
-    [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
-
     //Log and Handle all exceptions
     [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
 	catchExceptions = YES;
+    [self poseAsClass:[NSException class]];
+
+	//Remove any existing exception logs
+    [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
 
 	//Set up exceptions to except
 	//More of these (matched by substring) can be found in -raise
@@ -67,12 +68,6 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"NSObjectInaccessibleException", //We don't use DO, but spell checking does; AppleScript execution requires multiple run loops, and the HIToolbox can get confused and try to spellcheck in the applescript thread. Silly Apple.
 			nil];
 	}
-}
-
-//This class works by posing as NSException, which we want to do as soon as possible
-+ (void)load
-{
-    [self poseAsClass: [NSException class]];
 }
 
 //Raise an exception.  This gets called once with no stack trace, then a second time after the stack trace is
