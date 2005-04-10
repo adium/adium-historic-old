@@ -14,14 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <AddressBook/AddressBook.h>
 #import "AIBookmarksImporter.h"
 
-@interface SHABBookmarksImporter : AIBookmarksImporter
-{
-    id               owner;
+@interface SHABBookmarksImporter : AIBookmarksImporter {
 }
-
-- (NSMenu *)parseBookmarksForOwner:(id)inObject;
 
 @end
