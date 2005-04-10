@@ -28,9 +28,7 @@
 //Adjust the bubble rect to tightly fit our label string
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
-	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
-																	   attributes:[self labelAttributes]];
-	NSSize				nameSize = [displayName size];
+	NSSize				nameSize = [[self labelString] sizeWithAttributes:[self labelAttributes]];
 	float				originalWidth = rect.size.width;
 
 	//Alignment
