@@ -157,6 +157,14 @@
 
 #pragma mark Menu creation
 
++ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
+{
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
+		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
+		nil];
+}
+
 /*
  * @brief Insert a bookmark (or a group of bookmarks) into the menu
  *

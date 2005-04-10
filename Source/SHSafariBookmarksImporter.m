@@ -30,7 +30,6 @@
 #define SAFARI_DICT_URI_TITLE	@"title"
 
 @interface SHSafariBookmarksImporter(PRIVATE)
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 - (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
 - (NSArray *)drillPropertyList:(id)inObject;
 @end
@@ -96,8 +95,8 @@
 				if(menuLink) [array addObject:menuLink];
 			}else if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
 				//We found an array of links
-				NSDictionary	*menuDict = [self menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
-														  menuItems:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]];
+				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
+																  menuItems:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]];
 				if(menuDict) [array addObject:menuDict];
 			}
 		}
@@ -107,18 +106,6 @@
 	}
 	
 	return array;
-}
-
-#warning XXX move this to AIBookmarksImporter, as it looks quite useful
-
-//Menu
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
-{
-	if(!inTitle || !inMenuItems) return nil;
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		inTitle,     ADIUM_BOOKMARK_DICT_TITLE,
-		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
-		nil];
 }
 
 //Menu Item

@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIBookmarksImporterController.h"
+#import "AIBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 
@@ -49,7 +49,6 @@
 
 @interface SHMozillaCommonParser (PRIVATE)
 + (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
-+ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
 
 @implementation SHMozillaCommonParser
@@ -90,8 +89,8 @@
 			[arrayStack addObject:bookmarksArray];
 			[bookmarksArray release];
 			bookmarksArray = [[NSMutableArray alloc] init];
-			[(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:titleString
-																			   menuItems:bookmarksArray]];
+			[(NSMutableArray *)[arrayStack lastObject] addObject:[AIBookmarksImporter menuDictWithTitle:titleString
+																							  menuItems:bookmarksArray]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] caseInsensitiveCompare:Aopen] == NSOrderedSame){
 			[linkScanner scanUpToString:hrefStr intoString:nil];
 
@@ -152,14 +151,6 @@
 								 withValidationStatus:SH_URL_VALID
 										 parentString:title
 											 andRange:NSMakeRange(0,[title length])] autorelease];
-}
-
-+ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
-{
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
-		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
-		nil];
 }
 
 #pragma mark HTML replacement        
