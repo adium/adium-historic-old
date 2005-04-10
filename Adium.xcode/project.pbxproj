@@ -8061,6 +8061,7 @@
 				34BFE23707E8E57A00AD984D,
 				34BFE23B07E8E57A00AD984D,
 				34BFE24607E8E5B900AD984D,
+				DA70E8F40808C8D900093196,
 				34BFE25007E8E5F200AD984D,
 				34BFE25C07E8E69300AD984D,
 				34BFE2D807E8E74400AD984D,
@@ -9451,16 +9452,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		34BFE2DB07E8E7D100AD984D = {
-			children = (
-				34BFE22307E8E57900AD984D,
-				34BFE22207E8E57900AD984D,
-			);
-			isa = PBXGroup;
-			name = Unused;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		34BFE30007E8FA7800AD984D = {
 			isa = PBXFileReference;
@@ -15217,7 +15208,7 @@
 			);
 			isa = PBXGroup;
 			name = "Auto-Reply";
-			path = Plugins/AutoReply;
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15272,7 +15263,7 @@
 			);
 			isa = PBXGroup;
 			name = "Chat Cycling";
-			path = "Plugins/Chat Cycling";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -15844,7 +15835,7 @@
 			);
 			isa = PBXGroup;
 			name = "Preset State Menu";
-			path = Plugins/AutoReply;
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -17060,7 +17051,7 @@
 			);
 			isa = PBXGroup;
 			name = "Chat Consolidation";
-			path = "Plugins/Chat Cycling";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18210,7 +18201,7 @@
 			);
 			isa = PBXGroup;
 			name = "Auto-Idle";
-			path = Plugins/AutoReply;
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -20924,7 +20915,8 @@
 				34BFE22707E8E57900AD984D,
 				34BFE22607E8E57900AD984D,
 				34BFE22507E8E57900AD984D,
-				34BFE2DB07E8E7D100AD984D,
+				34BFE22307E8E57900AD984D,
+				34BFE22207E8E57900AD984D,
 			);
 			isa = PBXGroup;
 			name = Importers;
@@ -22672,6 +22664,12 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = DA021E4B0802FD9C00D5EBAE;
+		};
+		DA70E8F40808C8D900093196 = {
+			fileRef = 34BFE22207E8E57900AD984D;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 //DA0
 //DA1
