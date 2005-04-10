@@ -34,7 +34,6 @@
 @interface SHOmniWebBookmarksImporter (PRIVATE)
 - (NSArray *)parseBookmarksString:(NSString *)inString;
 - (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 @end
 
 @implementation SHOmniWebBookmarksImporter
@@ -155,8 +154,8 @@
             
 			[arrayStack addObject:bookmarksArray];
 			bookmarksArray = [NSMutableArray array];
-			[(NSMutableArray *)[arrayStack lastObject] addObject:[self menuDictWithTitle:omniTitleString
-																			   menuItems:bookmarksArray]];
+			[(NSMutableArray *)[arrayStack lastObject] addObject:[[self class] menuDictWithTitle:omniTitleString
+																					   menuItems:bookmarksArray]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:A_OPEN]){
 			[linkScanner scanUpToString:HREF_STRING intoString:nil];
 
@@ -209,14 +208,6 @@
                                  withValidationStatus:SH_URL_VALID
                                          parentString:title
                                              andRange:NSMakeRange(0,[title length])] autorelease];
-}
-
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
-{
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		(inTitle ? inTitle : @"untitled"), ADIUM_BOOKMARK_DICT_TITLE,
-		inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT,
-		nil];
 }
 
 @end

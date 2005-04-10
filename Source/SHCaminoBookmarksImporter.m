@@ -26,7 +26,6 @@
 
 @interface SHCaminoBookmarksImporter(PRIVATE)
 - (NSArray *)drillPropertyList:(id)inObject;
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
 - (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict;
 @end
 
@@ -108,19 +107,13 @@
 				
             }else{
                 NSArray 		*outArray = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
-				NSDictionary	*menuDict = [self menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
-														  menuItems:[self drillPropertyList:outArray? outArray : emptyArray]];
+				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
+																  menuItems:[self drillPropertyList:outArray? outArray : emptyArray]];
                 if(menuDict) [caminoArray addObject:menuDict];
             }
         }
     }
     return caminoArray;
-}
-
-- (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems
-{
-	if(!inTitle || !inMenuItems) return(nil);
-    return [NSDictionary dictionaryWithObjectsAndKeys:inTitle, ADIUM_BOOKMARK_DICT_TITLE, inMenuItems, ADIUM_BOOKMARK_DICT_CONTENT, nil];
 }
 
 - (SHMarkedHyperlink *)hyperlinkForBookmark:(NSDictionary *)inDict

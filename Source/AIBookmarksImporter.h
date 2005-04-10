@@ -65,6 +65,8 @@
 //+bookmarksPath should return a path to a file that exists (i.e. not a directory or a 404).
 + (NSString *)bookmarksPath;
 
++ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle menuItems:(NSArray *)inMenuItems;
+
 #pragma mark -
 
 - (NSArray *)availableBookmarks;
