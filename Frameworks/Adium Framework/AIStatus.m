@@ -279,6 +279,7 @@
 	NSAttributedString	*statusMessage, *autoReply;
 	NSString			*title = nil;
 	AIStatusType		statusType;
+	NSRange				linebreakRange;
 	
 	//If the state has a title, we simply use it
 	if(!title){
@@ -320,6 +321,12 @@
 	
 	//If the state is none of the above, use the string "Available"
 	if(!title) title = AILocalizedString(@"Available",nil);
+	
+	//Only use the first line of a multi-line title
+	linebreakRange = [title rangeOfString:@"\n" options:NSLiteralSearch];
+	if(linebreakRange.location != NSNotFound){
+		title = [title substringToIndex:linebreakRange.location];
+	}
 	
 	return(title);
 }
