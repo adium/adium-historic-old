@@ -5,6 +5,30 @@
 	};
 	objectVersion = 39;
 	objects = {
+		0741F6EC0809002400CD06BC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIShiiraBookmarksImporter.h;
+			path = Source/AIShiiraBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0741F6ED0809002400CD06BC = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIShiiraBookmarksImporter.m;
+			path = Source/AIShiiraBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0741F6EF0809002400CD06BC = {
+			fileRef = 0741F6ED0809002400CD06BC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		074DDB5C07CB413F0033AFF7 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -232,12 +256,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -8054,14 +8078,15 @@
 				34BFD80007E6A51D00AD984D,
 				34BFE20207E8E11500AD984D,
 				07E062C90806624B00782319,
+				DA70E8F40808C8D900093196,
 				34BFE22E07E8E57A00AD984D,
 				34BFE23207E8E57A00AD984D,
 				34BFE23307E8E57A00AD984D,
 				34BFE23507E8E57A00AD984D,
+				0741F6EF0809002400CD06BC,
 				34BFE23707E8E57A00AD984D,
 				34BFE23B07E8E57A00AD984D,
 				34BFE24607E8E5B900AD984D,
-				DA70E8F40808C8D900093196,
 				34BFE25007E8E5F200AD984D,
 				34BFE25C07E8E69300AD984D,
 				34BFE2D807E8E74400AD984D,
@@ -20915,6 +20940,8 @@
 				34BFE22707E8E57900AD984D,
 				34BFE22607E8E57900AD984D,
 				34BFE22507E8E57900AD984D,
+				0741F6EC0809002400CD06BC,
+				0741F6ED0809002400CD06BC,
 				34BFE22307E8E57900AD984D,
 				34BFE22207E8E57900AD984D,
 			);
