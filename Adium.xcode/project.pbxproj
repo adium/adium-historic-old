@@ -256,12 +256,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -3824,7 +3824,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				347065E506015DC5004F0D20,
-				34C2D8C10633BBA80018E5D2,
+				348EE1B4080A57480015E0FC,
 				34C2DBE6063449AF0018E5D2,
 				34C2DF02063498ED0018E5D2,
 				34C2DF03063498EF0018E5D2,
@@ -5328,6 +5328,21 @@
 		};
 		348E5ACB06D2A74C004C051C = {
 			fileRef = 348E5ACA06D2A74C004C051C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		348EE1B3080A57480015E0FC = {
+			children = (
+				34C2D8C00633BBA80018E5D2,
+			);
+			isa = PBXVariantGroup;
+			name = WebKitPreferencesView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		348EE1B4080A57480015E0FC = {
+			fileRef = 348EE1B3080A57480015E0FC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9961,16 +9976,10 @@
 		34C2D8C00633BBA80018E5D2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = WebKitPreferencesView.nib;
-			path = "Plugins/WebKit Message View/WebKitPreferencesView.nib";
+			name = English;
+			path = "Plugins/WebKit Message View/English.lproj/WebKitPreferencesView.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34C2D8C10633BBA80018E5D2 = {
-			fileRef = 34C2D8C00633BBA80018E5D2;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34C2DBE5063449AF0018E5D2 = {
 			fileEncoding = 4;
@@ -21325,7 +21334,7 @@
 				4BD62D7F07CE8F240099EBA2,
 				34C2D70306338E2E0018E5D2,
 				34C2D70406338E2E0018E5D2,
-				34C2D8C00633BBA80018E5D2,
+				348EE1B3080A57480015E0FC,
 				347065E406015DC5004F0D20,
 				34C2DBE5063449AF0018E5D2,
 				34C2DF00063498ED0018E5D2,
