@@ -228,16 +228,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 	//Setup the incoming message as a regular string, and get its length
 	NSString		*inMessageString = [inMessage string];
-	int				messageLength = [inMessageString length];
+	unsigned		 messageLength = [inMessageString length];
 		
 	//Setup the default attributes
 	NSString		*currentFamily = [@"Helvetica" retain];
 	NSString		*currentColor = nil;
-	int				currentSize = 12;
-	BOOL			currentItalic = NO;
-	BOOL			currentBold = NO;
-	BOOL			currentUnderline = NO;
-	BOOL			currentStrikethrough = NO;
+	int				 currentSize = 12;
+	BOOL			 currentItalic = NO;
+	BOOL			 currentBold = NO;
+	BOOL			 currentUnderline = NO;
+	BOOL			 currentStrikethrough = NO;
 	NSString		*link = nil;
 	NSString		*oldLink = nil;
 	
@@ -255,15 +255,15 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		NSFont			*font = [attributes objectForKey:NSFontAttributeName];
 		NSString		*color = [[attributes objectForKey:NSForegroundColorAttributeName] hexString];
 		NSString		*familyName = [font familyName];
-		float			pointSize = [font pointSize];
+		float			 pointSize = [font pointSize];
 
-		NSFontTraitMask	traits = [fontManager traitsOfFont:font];
-		BOOL			hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-		BOOL			hasStrikethrough = ([NSApp isOnPantherOrBetter] ? 
+		NSFontTraitMask	 traits = [fontManager traitsOfFont:font];
+		BOOL			 hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
+		BOOL			 hasStrikethrough = ([NSApp isOnPantherOrBetter] ? 
 											[[attributes objectForKey:NSStrikethroughStyleAttributeName] intValue] :
 											NO);
-		BOOL			isBold = (traits & NSBoldFontMask);
-		BOOL			isItalic = (traits & NSItalicFontMask);
+		BOOL			 isBold = (traits & NSBoldFontMask);
+		BOOL			 isItalic = (traits & NSItalicFontMask);
 		
 		link = [attributes objectForKey:NSLinkAttributeName];
 		
