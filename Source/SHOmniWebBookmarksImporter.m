@@ -37,30 +37,27 @@
 
 @implementation SHOmniWebBookmarksImporter
 
-#pragma mark protocol methods
-
-- (BOOL)browserIsAvailable
-{
-	NSFileManager *mgr = [NSFileManager defaultManager];
-	BOOL exists, isDir = NO;
-	exists = ([mgr fileExistsAtPath:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath] isDirectory:&isDir] && !isDir);
-	if(!exists) {
-		exists = ([mgr fileExistsAtPath:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath] isDirectory:&isDir] && !isDir);
-	}
-	return exists;
-}
-
 + (NSString *)browserName
 {
-	return @"Firefox";
+	return @"OmniWeb";
 }
 + (NSString *)browserSignature
 {
-	return @"MOZB";
+	return @"OWEB";
 }
 + (NSString *)browserBundleIdentifier
 {
-	return @"org.mozilla.firefox";
+	NSString *bundleID = @"com.omnigroup.OmniWeb5";
+	OSStatus err = LSFindApplicationForInfo(kLSUnknownCreator, (CFStringRef)bundleID, /*name*/ NULL, /*outAppRef*/ NULL, /*outAppURL*/ NULL);
+	if(err == kLSApplicationNotFoundErr) {
+		bundleID = @"com.omnigroup.OmniWeb";
+		err = LSFindApplicationForInfo(kLSUnknownCreator, (CFStringRef)bundleID, /*name*/ NULL, /*outAppRef*/ NULL, /*outAppURL*/ NULL);
+		if(err == kLSApplicationNotFoundErr) {
+			//switch back to the OmniWeb 5 bundle ID
+			bundleID = @"com.omnigroup.OmniWeb5";
+		}
+	}
+	return bundleID;
 }
 
 #pragma mark -

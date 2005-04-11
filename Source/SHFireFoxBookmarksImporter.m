@@ -29,17 +29,6 @@
 
 @implementation SHFireFoxBookmarksImporter
 
-+ (BOOL)browserIsAvailable
-{
-	NSFileManager *mgr = [NSFileManager defaultManager];
-	BOOL exists, isDir = NO;
-	exists = ([mgr fileExistsAtPath:[self fox9BookmarksPath] isDirectory:&isDir] && !isDir);
-	if(!exists) {
-		exists = ([mgr fileExistsAtPath:[self fox8OrLessBookmarksPath] isDirectory:&isDir] && !isDir);
-	}
-	return exists;
-}
-
 + (NSString *)browserName
 {
 	return @"Firefox";

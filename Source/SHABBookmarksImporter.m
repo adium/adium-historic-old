@@ -34,6 +34,11 @@
 	return @"com.apple.AddressBook";
 }
 
++ (BOOL)browserIsAvailable
+{
+	return ([self browserPath] != nil);
+}
+
 // +bookmarksPath intentionally not implemented
 - (BOOL)bookmarksHaveChanged
 {
