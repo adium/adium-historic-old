@@ -302,34 +302,25 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 + (NSArray *)availableSetsWithExtension:(NSString *)extension fromFolder:(NSString *)folder
 {
 	NSMutableArray	*setArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] resourcePathsForName:folder] objectEnumerator];
-	NSString		*resourcePath;
+	NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:folder withExtensions:extension] objectEnumerator];
 	NSMutableArray	*alreadyAddedArray = [NSMutableArray array];
+	NSString		*filePath;
 	
-    while(resourcePath = [enumerator nextObject]) {
-        NSEnumerator 	*fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourcePath] objectEnumerator];
-        NSString		*filePath;
+    while(filePath = [enumerator nextObject]) {
+		NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		
-        //Find all the sets
-        while((filePath = [fileEnumerator nextObject])){
-            if([[filePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame){					
-				NSString		*themePath = [resourcePath stringByAppendingPathComponent:filePath];
-				NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:themePath];
-				
-				if(themeDict){
-					NSString	*name = [filePath stringByDeletingPathExtension];
-					
-					//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
-					//already added, we allow precedence to occur rather than conflict.
-					if ([alreadyAddedArray indexOfObject:name] == NSNotFound){
-						[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
-							name, @"name",
-							themePath, @"path",
-							themeDict, @"preferences",
-							nil]];
-						[alreadyAddedArray addObject:name];
-					}
-				}
+		if(themeDict){
+			NSString	*name = [[filePath lastPathComponent] stringByDeletingPathExtension];
+			
+			//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
+			//already added, we allow precedence to occur rather than conflict.
+			if ([alreadyAddedArray indexOfObject:name] == NSNotFound){
+				[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
+					name, @"name",
+					filePath, @"path",
+					themeDict, @"preferences",
+					nil]];
+				[alreadyAddedArray addObject:name];
 			}
 		}
 	}

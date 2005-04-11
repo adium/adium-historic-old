@@ -632,6 +632,47 @@ static NSString	*prefsCategory;
 	return(pathArray);
 }
 
+
+/*!
+ * @brief Returns an array of the paths to all of the resources for a given name, filtering out those without a certain extension
+ * @param name The full name (including extension as appropriate) of the resource for which to search
+ * @param extensions The extension(s) of the resources for which to search, either an NSString or an NSArray
+ */
+- (NSArray *)allResourcesForName:(NSString *)name withExtensions:(id)extensions {
+	NSMutableArray *resources = [[NSMutableArray alloc] init];
+	NSEnumerator *pathEnumerator;
+	NSEnumerator *resourceEnumerator;
+	NSString *resourceDir;
+	NSString *resourcePath;
+	BOOL extensionsArray = [extensions isKindOfClass:[NSArray class]];
+	NSEnumerator *extensionsEnumerator;
+	NSString *extension;
+	
+	// Get every path that can contain these resources
+	pathEnumerator = [[self resourcePathsForName:name] objectEnumerator];
+	
+	while (resourceDir = [pathEnumerator nextObject]) {
+		resourceEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourceDir] objectEnumerator];
+		
+		while (resourcePath = [resourceEnumerator nextObject]) {
+			// Add each resource to the array
+			if (extensionsArray) {
+				extensionsEnumerator = [extensions objectEnumerator];
+				while (extension = [extensionsEnumerator nextObject]) {
+					if ([[resourcePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame)
+						[resources addObject:[resourceDir stringByAppendingPathComponent:resourcePath]];
+				}
+			}
+			else {
+				if ([[resourcePath pathExtension] caseInsensitiveCompare:extensions] == NSOrderedSame)
+					[resources addObject:[resourceDir stringByAppendingPathComponent:resourcePath]];
+			}
+		}
+	}
+
+	return resources;
+}
+
 /*!
  * @brief Return the path to be used for caching files for this user.
  *
