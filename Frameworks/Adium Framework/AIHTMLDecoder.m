@@ -218,9 +218,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 - (NSString *)encodeHTML:(NSAttributedString *)inMessage imagesPath:(NSString *)imagesPath
 {
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
-	NSRange			searchRange;
+	NSRange			 searchRange;
 	NSColor			*pageColor = nil;
-	BOOL           openFontTag = NO;
+	BOOL			 openFontTag = NO;
 
 	//Setup the destination HTML string
 	NSMutableString *string = [NSMutableString string];
