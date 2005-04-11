@@ -21,8 +21,6 @@
 #define MOZILLA_BOOKMARKS_PATH  @"~/Library/Mozilla/Profiles/default"
 #define MOZILLA_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
-@class SHMozillaCommonParser;
-
 @implementation SHMozillaBookmarksImporter
 
 + (NSString *)bookmarksPath

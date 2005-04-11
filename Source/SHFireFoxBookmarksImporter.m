@@ -22,8 +22,6 @@
 #define FIREFOX_9_BOOKMARKS_PATH @"~/Library/Application Support/Firefox/Profiles"
 #define FIREFOX_BOOKMARKS_FILE_NAME @"bookmarks.html"
 
-@class SHMozillaCommonParser;
-
 @interface SHFireFoxBookmarksImporter(PRIVATE)
 + (NSString *)fox8OrLessBookmarksPath;
 + (NSString *)fox9BookmarksPath;
