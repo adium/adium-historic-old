@@ -264,14 +264,15 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		unsigned		index;
 		unsigned		count = [theContainedObjects count];
 		
-		//Search for an available contact
+		//Search for an available contact who is not mobile
 		for (index = 0; index < count; index++){
 			thisContact = [theContainedObjects objectAtIndex:index];
-			if ([thisContact statusSummary] == AIAvailableStatus){
+			if (([thisContact statusSummary] == AIAvailableStatus) &&
+				(![thisContact isMobile])){
 				preferredContact = thisContact;
 				break;
 			}
-		}			
+		}
 		
 		//If no available contacts, find the first online contact
 		if (!preferredContact){
@@ -310,11 +311,12 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		unsigned		index;
 		unsigned		count = [listContactsArray count];
 		
-		//Search for an available contact
+		//Search for an available contact who is not mobile
 		for (index = 0; index < count; index++){
 			thisContact = [listContactsArray objectAtIndex:index];
 			if (([thisContact service] == inService) &&
-				([thisContact statusSummary] == AIAvailableStatus)){
+				([thisContact statusSummary] == AIAvailableStatus) &&
+				(![thisContact isMobile])){
 				returnContact = thisContact;
 				break;
 			}
