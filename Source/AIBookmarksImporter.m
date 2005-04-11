@@ -93,7 +93,7 @@
 
 + (BOOL)browserIsAvailable
 {
-	return [self browserPath] != nil;
+	return [self bookmarksPath] != nil;
 }
 
 + (NSString *)browserName

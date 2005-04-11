@@ -25,15 +25,23 @@
 
 + (NSString *)bookmarksPath
 {
-    NSEnumerator *enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:[MOZILLA_BOOKMARKS_PATH stringByExpandingTildeInPath]] objectEnumerator];
-    NSString    *directory;
-    
-    while(directory = [enumerator nextObject]){
-        NSRange found = [directory rangeOfString:@".slt"];
-        if(found.location != NSNotFound)
-            return [NSString stringWithFormat:@"%@/%@/%@",[MOZILLA_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, MOZILLA_BOOKMARKS_FILE_NAME];
-    }
-    return MOZILLA_BOOKMARKS_PATH;
+	NSString *path = nil;
+
+	NSFileManager *mgr = [NSFileManager defaultManager];
+	NSString *defaultProfileDir = [MOZILLA_BOOKMARKS_PATH stringByExpandingTildeInPath];
+
+	NSEnumerator *enumerator = [[mgr directoryContentsAtPath:defaultProfileDir] objectEnumerator];
+	NSString    *directory;
+
+	while(directory = [enumerator nextObject]){
+		NSRange found = [directory rangeOfString:@".slt"];
+		if(found.location != NSNotFound) {
+			NSString *path = [NSString stringWithFormat:@"%@/%@/%@", defaultProfileDir, directory, MOZILLA_BOOKMARKS_FILE_NAME];
+			path = [mgr pathIfNotDirectory:path];
+			if(path) break;
+		}
+	}
+	return path;
 }
 
 + (NSString *)browserName
