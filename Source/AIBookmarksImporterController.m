@@ -141,8 +141,36 @@
 #pragma mark -
 
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd {
-	[importers addObject:importerToAdd];
+	NSString *nameOfNewImporter = [[importerToAdd class] browserName];
 
+	//insort the importer. order is important for display purposes.
+	BOOL ranOut = YES;
+	unsigned count = [importers count], i = count;
+	while(i) {
+		AIBookmarksImporter *importer = [importers objectAtIndex:--i];
+		if(importer == importerToAdd) return;
+
+		NSComparisonResult comparison = [nameOfNewImporter compare:[[importer class] browserName]];
+		if(comparison == NSOrderedSame) {
+			NSLog(@"AIBookmarksImporterController: replaced importer %@ with importer %@", importer, importerToAdd);
+			[importers replaceObjectAtIndex:i withObject:importerToAdd];
+			return;
+		} else if(comparison == NSOrderedAscending) {
+			//insert here
+			ranOut = NO;
+			break;
+		}
+	}
+	if(ranOut) {
+		//add to the end
+		i = count;
+	}
+	[importers insertObject:importerToAdd atIndex:i];
+
+	/*update the menus after a delay. (this is done because the importers load
+	 *at launch, and otherwise, we're reloading the menus multiple times for no
+	 *good reason.)
+	 */
 	[self armMenuUpdateTimer];
 }
 
@@ -234,7 +262,7 @@
 		 */
 		if([importer bookmarksHaveChanged]) {
 			menuItemSubmenu           = [importer menuWithAvailableBookmarks];
-			contextualMenuItemSubmenu = [[menuItemSubmenu copy] autorelease];
+			contextualMenuItemSubmenu = [[menuItemSubmenu copyWithZone:[NSMenu menuZone]] autorelease];
 			menuHasChanged = YES;
 		}
 	} else {
@@ -268,7 +296,7 @@
 			[menuItem setImage:browserIcon];
 			[menuItem setSubmenu:menu];
 			[menuItemSubmenu addItem:menuItem];
-			[contextualMenuItemSubmenu addItem:[[menuItem copy] autorelease]];
+			[contextualMenuItemSubmenu addItem:[[menuItem copyWithZone:[NSMenu menuZone]] autorelease]];
 
 			menuHasChanged = YES;
 		}
@@ -505,7 +533,7 @@
  */
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item
 {
-	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
+	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copyWithZone:[NSMenu menuZone]] autorelease];
 	NSString	*menuTitle = [menu title];
 
 	//Add menu to view
