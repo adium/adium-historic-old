@@ -15,17 +15,10 @@
  */
 
 #import "AIBookmarksImporterController.h"
+#import "AIBookmarksImporter.h"
 
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
-
-#import "SHSafariBookmarksImporter.h"
-#import "SHCaminoBookmarksImporter.h"
-#import "SHFireFoxBookmarksImporter.h"
-#import "SHMozillaBookmarksImporter.h"
-#import "SHOmniWebBookmarksImporter.h"
-#import "SHMSIEBookmarksImporter.h"
-#import "SHABBookmarksImporter.h"
 
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 
