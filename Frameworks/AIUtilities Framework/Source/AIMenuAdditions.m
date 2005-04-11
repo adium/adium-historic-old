@@ -42,16 +42,18 @@
 
 - (void)removeAllItems
 {
-    while([self numberOfItems] != 0){
-        [self removeItemAtIndex:0];
-    }
+	int count = [self numberOfItems];
+	while(count--) {
+		[self removeItemAtIndex:0];
+	}
 }
 
 - (void)removeAllItemsButFirst
 {
-    while([self numberOfItems] > 1){
-        [self removeItemAtIndex:1];
-    }
+	int count = [self numberOfItems];
+	while(--count) {
+		[self removeItemAtIndex:1];
+	}
 }
 
 @end
@@ -61,7 +63,7 @@
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode
 {
     if(!aString) aString = @"";
-    [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
+    self = [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
 
     [self setTarget:target];
     
@@ -71,7 +73,7 @@
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode keyMask:(unsigned int)keyMask
 {
     if (!aString) aString = @"";
-    [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
+    self = [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
 
     [self setTarget:target];
     [self setKeyEquivalentModifierMask:keyMask];
@@ -79,14 +81,14 @@
     return self;
 }
 
-//Remove the key equivalent from a menu item
-//
-//Because of a bug with NSMenuItem (Yay), we can't just do this:
-// [menuItem_closeTab setKeyEquivalent:@""];
-//
-//Instead, we'll need to remove the menu item, remove its key
-//equivalant, and then re-add it to the menu.  *sigh*
-//
+/*Remove the key equivalent from a menu item
+ *
+ *Because of a bug with NSMenuItem (yay), we can't just do this:
+ *	[menuItem_closeTab setKeyEquivalent:@""];
+ *
+ *Instead, we'll need to remove the menu item, remove its key
+ *	equivalent, and then re-add it to the menu.  *sigh*
+ */
 - (void)removeKeyEquivalent
 {
 	NSMenu	*menu = [self menu];
@@ -173,13 +175,35 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 }
 
 //Swap two menu items
-+ (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem
++ (void)swapMenuItem:(NSMenuItem *)itemA with:(NSMenuItem *)itemB
 {
-    NSMenu	*containingMenu = [existingItem menu];
-    int		menuItemIndex = [containingMenu indexOfItem:existingItem];
-    
-    [containingMenu removeItem:existingItem];
-    [containingMenu insertItem:newItem atIndex:menuItemIndex];
+	if(itemA == itemB) return;
+
+	NSMenu	*menuA  = [[itemA retain] menu];
+	int		 indexA = menuA ? [menuA indexOfItem:itemA] : -1;
+
+	NSMenu	*menuB  = [[itemB retain] menu];
+	int		 indexB = menuB ? [menuB indexOfItem:itemB] : -1;
+
+	if((menuA == menuB) && (indexA < indexB)) {
+		if(indexB > -1) {
+			[menuB removeItemAtIndex:indexB];
+			[menuA insertItem:itemB atIndex:indexA++];
+		}
+		if(indexA > -1) {
+			[menuA removeItemAtIndex:indexA];
+			[menuB insertItem:itemA atIndex:indexB];
+		}
+	} else {
+		if(indexA > -1) {
+			[menuA removeItemAtIndex:indexA];
+			[menuB insertItem:itemA atIndex:indexB];
+		}
+		if(indexB > -1) {
+			[menuB removeItemAtIndex:indexB];
+			[menuA insertItem:itemB atIndex:indexA];
+		}
+	}
 }
 
 //Alternate menu items are supposed to 'collapse into' their primary item, showing only one menu item

@@ -27,7 +27,7 @@
 - (void)setAllMenuItemsToState:(int)state;
 
 //Swap two menu items
-+ (void)swapMenuItem:(NSMenuItem *)existingItem with:(NSMenuItem *)newItem;
++ (void)swapMenuItem:(NSMenuItem *)itemA with:(NSMenuItem *)itemB;
 
 //Recollapse an alternate menu item
 + (void)updateAlternateMenuItem:(NSMenuItem *)alternateItem;
