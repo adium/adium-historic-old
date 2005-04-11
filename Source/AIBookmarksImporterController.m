@@ -14,9 +14,11 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIBookmarksImporterController.h"
+
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
-#import "AIBookmarksImporterController.h"
+
 #import "SHSafariBookmarksImporter.h"
 #import "SHCaminoBookmarksImporter.h"
 #import "SHFireFoxBookmarksImporter.h"
@@ -24,21 +26,21 @@
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMSIEBookmarksImporter.h"
 #import "SHABBookmarksImporter.h"
+
 #import <AIHyperlinks/SHMarkedHyperlink.h>
+
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/CBObjectAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 
-#define ROOT_MENU_TITLE     		AILocalizedString(@"Insert Bookmark",nil)
-#define BOOKMARK_MENU_TITLE     	AILocalizedString(@"Bookmark",nil)
+#define ROOT_MENU_TITLE				AILocalizedString(@"Insert Bookmark", nil)
+#define BOOKMARK_MENU_TITLE			AILocalizedString(@"Bookmark", nil)
 
 #define DELAY_FOR_MENU_UPDATE		0.4 /*seconds*/
 
-@class SHMarkedHyperlink;
-
-@interface AIBookmarksImporterController(PRIVATE)
+@interface AIBookmarksImporterController (PRIVATE)
 - (void)buildBookmarksMenuIfNecessaryThread;
 
 - (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer;
@@ -54,8 +56,6 @@
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item;
 @end
 
-static AIBookmarksImporterController *sharedController;
-
 /*!
  * @class AIBookmarksImporterController
  * @brief Component to support reading and inserting of web browser bookmarks
@@ -67,17 +67,6 @@ static AIBookmarksImporterController *sharedController;
  * register with the controller.
  */
 @implementation AIBookmarksImporterController
-
-- (void)awakeFromNib {
-	sharedController = [self retain];
-}
-
-+ (id)sharedController
-{
-	return sharedController;
-}
-
-#pragma mark -
 
 /*
  * @brief Initialisation
@@ -91,7 +80,7 @@ static AIBookmarksImporterController *sharedController;
 
 	menuUpdateTimer = nil;
 
-	AIMenuController *menuController = [[AIObject sharedAdiumInstance] menuController];
+	AIMenuController *menuController = [adium menuController];
 
 	//Main bookmark menu item
 	bookmarkRootMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
@@ -100,7 +89,7 @@ static AIBookmarksImporterController *sharedController;
 																		  keyEquivalent:@""] autorelease];
 	[bookmarkRootMenuItem setRepresentedObject:self];
 	[menuController addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
-		
+
 	//Contextual bookmark menu item
 	bookmarkRootContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
 																						   target:self
@@ -108,13 +97,13 @@ static AIBookmarksImporterController *sharedController;
 																					keyEquivalent:@""] autorelease];
 	[bookmarkRootContextualMenuItem setRepresentedObject:self];
 	[menuController addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
-		
+
 	//Wait for Adium to finish launching before we build the content of our menus
-	[[[AIObject sharedAdiumInstance] notificationCenter] addObserver:self
+	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
 									   name:Adium_CompletedApplicationLoad
 									 object:nil];
-		
+
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
 												 name:NSToolbarWillAddItemNotification
@@ -132,7 +121,7 @@ static AIBookmarksImporterController *sharedController;
  */
 - (void)dealloc
 {
-	[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 	[menuUpdateTimer release];
 	[super dealloc];
 }
@@ -158,6 +147,7 @@ static AIBookmarksImporterController *sharedController;
 
 	[self armMenuUpdateTimer];
 }
+
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove {
 	[importers removeObjectIdenticalTo:importerToRemove];
 
@@ -217,8 +207,9 @@ static AIBookmarksImporterController *sharedController;
 	}
 }
 
-//Building -------------------------------------------------------------------------------------------------------------
+#pragma mark -
 #pragma mark Building
+
 /*
  * @brief Builds the bookmark menu (Detach as a thread)
  *
@@ -394,7 +385,7 @@ static AIBookmarksImporterController *sharedController;
  */
 - (void)registerToolbarItem
 {
-	AIToolbarController *toolbarController = [[AIObject sharedAdiumInstance] toolbarController];
+	AIToolbarController *toolbarController = [adium toolbarController];
 	MVMenuButton *button;
 	
 	//Unregister the existing toolbar item first
@@ -472,7 +463,7 @@ static AIBookmarksImporterController *sharedController;
 - (void)toolbarDidRemoveItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	
+
 	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
 		[toolbarItemArray removeObject:item];
 	}
@@ -490,7 +481,6 @@ static AIBookmarksImporterController *sharedController;
 	while(aToolbarItem = [enumerator nextObject]){
 		[self updateMenuForToolbarItem:aToolbarItem];
 	}
-	
 }
 
 /*
@@ -514,9 +504,11 @@ static AIBookmarksImporterController *sharedController;
 	[item setMenuFormRepresentation:mItem];	
 }
 
+#pragma mark NSMenu delegate methods
+
 - (void)menuNeedsUpdate:(NSMenu *)menu
-{	
-	if(!updatingMenu) {
+{
+	if(!updatingMenu){
 		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
 								 toTarget:self
 							   withObject:nil];
