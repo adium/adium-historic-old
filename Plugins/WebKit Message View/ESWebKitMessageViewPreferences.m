@@ -387,15 +387,15 @@ int menuTitleSort(id objectA, id objectB, void *context)
 {
 	NSMenu	*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];	
 
-	[self _addBackgroundImageTypeChoice:BackgroundNormal toMenu:menu withTitle:@"Normal"];
-	[self _addBackgroundImageTypeChoice:BackgroundCenter toMenu:menu withTitle:@"Centered"];
-	[self _addBackgroundImageTypeChoice:BackgroundTile toMenu:menu withTitle:@"Tiled"];
+	[self _addBackgroundImageTypeChoice:BackgroundNormal toMenu:menu withTitle:AILocalizedString(@"Normal",nil)];
+	[self _addBackgroundImageTypeChoice:BackgroundCenter toMenu:menu withTitle:AILocalizedString(@"Centered",nil)];
+	[self _addBackgroundImageTypeChoice:BackgroundTile toMenu:menu withTitle:AILocalizedString(@"Tiled",nil)];
 		
 	return([menu autorelease]);
 }
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title
 {
-	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(title, nil)
+	NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																				 action:nil
 																		  keyEquivalent:@""];
 	[menuItem setTag:tag];
