@@ -122,7 +122,12 @@
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
+
+	[toolbarItem release];
+	[toolbarItemArray release];
+	[importers release];
 	[menuUpdateTimer release];
+
 	[super dealloc];
 }
 
@@ -133,7 +138,7 @@
  */
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	if (!updatingMenu){
+	if(!updatingMenu){
 		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
 								 toTarget:self
 							   withObject:nil];
@@ -300,6 +305,7 @@
 
 	[pool release];
 }
+
 - (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer
 {
 	[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
@@ -307,6 +313,8 @@
 						   withObject:nil];
 	[self disarmMenuUpdateTimer];
 }
+
+#pragma mark -
 
 - (void)armMenuUpdateTimer
 {
@@ -322,6 +330,7 @@
 	//otherwise, this sets the fire date for the first time.
 	[menuUpdateTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:DELAY_FOR_MENU_UPDATE]];
 }
+
 - (void)disarmMenuUpdateTimer
 {
 	[menuUpdateTimer invalidate];
@@ -360,8 +369,9 @@
 	updatingMenu = NO;
 }
 
-//Validation / Updating ------------------------------------------------------------------------------------------------
+#pragma mark -
 #pragma mark Validation / Updating
+
 /*
  * @brief Validate our bookmark menu item
  */
@@ -378,6 +388,7 @@
 - (IBAction)dummyTarget:(id)sender{
 }
 
+#pragma mark -
 #pragma mark Toolbar Item
 
 /*
@@ -387,13 +398,13 @@
 {
 	AIToolbarController *toolbarController = [adium toolbarController];
 	MVMenuButton *button;
-	
+
 	//Unregister the existing toolbar item first
 	if(toolbarItem) {
 		[toolbarController unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 		[toolbarItem release]; toolbarItem = nil;
 	}
-	
+
 	//Register our toolbar item
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 
@@ -478,7 +489,7 @@
 	NSToolbarItem	*aToolbarItem;
 
 	enumerator = [toolbarItemArray objectEnumerator];
-	while(aToolbarItem = [enumerator nextObject]){
+	while((aToolbarItem = [enumerator nextObject])){
 		[self updateMenuForToolbarItem:aToolbarItem];
 	}
 }
@@ -493,10 +504,10 @@
 		[menu setDelegate:self];
 	}
 	NSString	*menuTitle = [menu title];
-	
+
 	//Add menu to view
 	[[item view] setMenu:menu];
-	
+
 	//Add menu to toolbar item (for text mode)
 	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 	[mItem setSubmenu:menu];
@@ -504,6 +515,7 @@
 	[item setMenuFormRepresentation:mItem];	
 }
 
+#pragma mark -
 #pragma mark NSMenu delegate methods
 
 - (void)menuNeedsUpdate:(NSMenu *)menu
