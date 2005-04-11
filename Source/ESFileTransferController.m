@@ -209,7 +209,7 @@ static ESFileTransferPreferences *preferences;
 
 	//Pass nil to cancel, if the user didn't press OK
 	[self  _finishReceiveRequestForFileTransfer:fileTransfer
-									 withObject:localFilename];
+								  localFilename:localFilename];
 	
 	//Match the retain made when invoking the save panel above
 	[fileTransfer release];
