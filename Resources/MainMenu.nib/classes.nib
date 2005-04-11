@@ -45,6 +45,7 @@
         {
             CLASS = AIBookmarksImporterController; 
             LANGUAGE = ObjC; 
+            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
