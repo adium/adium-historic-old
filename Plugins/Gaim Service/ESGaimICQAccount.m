@@ -40,7 +40,7 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
 	//As an ICQ account we should always send plain text, so no more complex checking is needed
-	return ([inAttributedString string]);
+	return ([inAttributedString safeString]);
 }
 
 //CBGaimOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
