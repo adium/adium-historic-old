@@ -266,6 +266,7 @@
 			menuHasChanged = YES;
 		}
 	} else {
+#warning oops! this code removes unchanged browsers from the menu. it needs to not do that.
 		menuItemSubmenu = [bookmarkRootMenuItem submenu];
 		if(menuItemSubmenu) {
 			[menuItemSubmenu removeAllItems];
@@ -404,16 +405,18 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
 {
+	//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
+	NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+	BOOL isInEditor = (responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
+
 	//Update the menu if neessary
-	if(!updatingMenu){
+	if(isInEditor && !updatingMenu){
 		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
 								 toTarget:self
 							   withObject:nil];
 	}
-	
-	//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
-	NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	return(responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
+
+	return isInEditor;
 }
 
 /*
