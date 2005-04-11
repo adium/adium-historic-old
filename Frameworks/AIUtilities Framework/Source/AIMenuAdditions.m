@@ -51,8 +51,10 @@
 - (void)removeAllItemsButFirst
 {
 	int count = [self numberOfItems];
-	while(--count) {
-		[self removeItemAtIndex:1];
+	if(count > 1) {
+		while(--count) {
+			[self removeItemAtIndex:1];
+		}
 	}
 }
 
