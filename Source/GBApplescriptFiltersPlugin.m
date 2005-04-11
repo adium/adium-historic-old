@@ -39,7 +39,6 @@
 @interface GBApplescriptFiltersPlugin (PRIVATE)
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
-- (NSArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray;
 - (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments;
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)toObject;
@@ -150,104 +149,76 @@ static int numExecuted = 0;
 - (void)loadScripts
 {
 	NSEnumerator	*enumerator;
-	NSString 		*path;
-	
+	NSString 		*filePath;
+	NSBundle		*scriptBundle;
+
 	//
 	[scriptArray release]; scriptArray = [[NSMutableArray alloc] init];
 	[flatScriptArray release]; flatScriptArray = [[NSMutableArray alloc] init];
 	
-	//Load scripts
-	enumerator = [[adium resourcePathsForName:@"Scripts"] objectEnumerator];
-	while(path = [enumerator nextObject]){
-		[scriptArray addObjectsFromArray:[self _loadScriptsFromDirectory:path intoUsageArray:flatScriptArray]];
-	}
-}
-
-/*
- * @brief Load a subset of scripts
- *
- * @param dirPath The directory from which to load scripts
- * @param useArray The array into which to directly insert loaded scripts
- * @result The scripts which were loaded as an <tt>NSArray</tt>
- */
-- (NSArray *)_loadScriptsFromDirectory:(NSString *)dirPath intoUsageArray:(NSMutableArray *)useArray
-{
- 	NSMutableArray		*scripts = [NSMutableArray array];
-	NSEnumerator		*fileEnumerator;
-    NSString			*filePath;
-	NSBundle			*scriptBundle;
-	NSString			*AdiumScripts = SCRIPT_BUNDLE_EXTENSION;
-	
-	fileEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:dirPath] objectEnumerator];
-	
-	//Find all the script bundles at this path
-	while((filePath = [fileEnumerator nextObject])){
-
-		if([[filePath pathExtension] caseInsensitiveCompare:AdiumScripts] == 0){
-
-			if(scriptBundle = [NSBundle bundleWithPath:[dirPath stringByAppendingPathComponent:filePath]]){
+	// Load scripts
+	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
+	while(filePath = [enumerator nextObject]){
+		if(scriptBundle = [NSBundle bundleWithPath:filePath]){
+			
+			NSString		*scriptsSetName;
+			NSEnumerator	*scriptEnumerator;
+			NSDictionary	*scriptDict;
+			
+			//Get the name of the set these scripts will go into
+			scriptsSetName = [scriptBundle objectForInfoDictionaryKey:@"Set"];
+			
+			//Now enumerate each script the bundle claims as its own
+			scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
+			
+			while (scriptDict = [scriptEnumerator nextObject]){
+				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
+				NSArray			*arguments;
+				NSURL			*scriptURL;
+				NSNumber		*prefixOnlyNumber;
+				NSNumber		*requiresUserInteractionNumber;
 				
-				NSString		*scriptsSetName;
-				NSEnumerator	*scriptEnumerator;
-				NSDictionary	*scriptDict;
-				
-				//Get the name of the set these scripts will go into
-				scriptsSetName = [scriptBundle objectForInfoDictionaryKey:@"Set"];
-				
-				//Now enumerate each script the bundle claims as its own
-				scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
-				
-				while (scriptDict = [scriptEnumerator nextObject]){
-					NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
-					NSArray			*arguments;
-					NSURL			*scriptURL;
-					NSNumber		*prefixOnlyNumber;
-					NSNumber		*requiresUserInteractionNumber;
+				if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
+					(scriptFilePath = [scriptBundle pathForResource:scriptFileName
+															 ofType:SCRIPT_EXTENSION])){
 					
-					if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
-						(scriptFilePath = [scriptBundle pathForResource:scriptFileName
-																 ofType:SCRIPT_EXTENSION])){
+					scriptURL = [NSURL fileURLWithPath:scriptFilePath];
+					keyword = [scriptDict objectForKey:@"Keyword"];
+					title = [scriptDict objectForKey:@"Title"];
+					
+					if(scriptURL && keyword && [keyword length] && title && [title length]){
+						NSMutableDictionary	*infoDict;
 						
-						scriptURL = [NSURL fileURLWithPath:scriptFilePath];
-						keyword = [scriptDict objectForKey:@"Keyword"];
-						title = [scriptDict objectForKey:@"Title"];
+						arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
 						
-						if(scriptURL && keyword && [keyword length] && title && [title length]){
-							NSMutableDictionary	*infoDict;
-							
-							arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
-							
-							//Assume "Prefix Only" is NO unless told otherwise
-							prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
-							if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
-							
-							requiresUserInteractionNumber = [scriptDict objectForKey:@"Requires User Interaction"];
-							if (!requiresUserInteractionNumber) requiresUserInteractionNumber = [NSNumber numberWithBool:NO];
-							
-							infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-								scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
-								prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
-							
-							//The bundle may not be part of (or for defining) a set of scripts
-							if (scriptsSetName){
-								[infoDict setObject:scriptsSetName forKey:@"Set"];
-							}
-							//Arguments may be nil
-							if (arguments){
-								[infoDict setObject:arguments forKey:@"Arguments"];
-							}
-							
-							//Place the entry in our script arrays
-							[scripts addObject:infoDict];
-							[useArray addObject:infoDict];
+						//Assume "Prefix Only" is NO unless told otherwise
+						prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
+						if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
+						
+						requiresUserInteractionNumber = [scriptDict objectForKey:@"Requires User Interaction"];
+						if (!requiresUserInteractionNumber) requiresUserInteractionNumber = [NSNumber numberWithBool:NO];
+						
+						infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+							scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
+							prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
+						
+						//The bundle may not be part of (or for defining) a set of scripts
+						if (scriptsSetName){
+							[infoDict setObject:scriptsSetName forKey:@"Set"];
 						}
+						//Arguments may be nil
+						if (arguments){
+							[infoDict setObject:arguments forKey:@"Arguments"];
+						}
+						
+						//Place the entry in our script arrays
+						[scriptArray addObject:infoDict];
+						[flatScriptArray addObject:infoDict];
 					}
 				}
 			}
-		}
+		}		
 	}
-	
-	return(scripts);
 }
 
 

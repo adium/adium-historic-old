@@ -50,7 +50,6 @@ typedef enum {
 - (NSMenu *)_colorThemeMenu;
 - (void)_rebuildEmoticonMenuAndSelectActivePack;
 - (NSMenu *)_iconPackMenuForPacks:(NSArray *)packs class:(Class)iconClass;
-- (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder;
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu;
 - (void)_updateSliderValues;
 - (void)xtrasChanged:(NSNotification *)notification;
@@ -858,8 +857,7 @@ typedef enum {
  */
 - (NSMenu *)_statusIconsMenu
 {
-	return([self _iconPackMenuForPacks:[self _allPacksWithExtension:@"AdiumStatusIcons" inFolder:@"Status Icons"]
-								 class:[AIStatusIcons class]]);
+	return([self _iconPackMenuForPacks:[adium allResourcesForName:@"Status Icons" withExtensions:@"AdiumStatusIcons"] class:[AIStatusIcons class]]);
 }
 
 /*!
@@ -867,8 +865,7 @@ typedef enum {
  */
 - (NSMenu *)_serviceIconsMenu
 {
-	return([self _iconPackMenuForPacks:[self _allPacksWithExtension:@"AdiumServiceIcons" inFolder:@"Service Icons"]
-								 class:[AIServiceIcons class]]);
+	return([self _iconPackMenuForPacks:[adium allResourcesForName:@"Service Icons" withExtensions:@"AdiumServiceIcons"] class:[AIServiceIcons class]]);
 }
 
 /*!
@@ -895,36 +892,6 @@ typedef enum {
 	}
 	
 	return(serviceIconsMenu);	
-}
-
-- (NSArray *)_allPacksWithExtension:(NSString *)extension inFolder:(NSString *)inFolder
-{
-	NSFileManager	*defaultManager = [NSFileManager defaultManager];
-	NSMutableArray	*packsArray = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-	NSString		*path;
-	
-	enumerator = [[adium resourcePathsForName:inFolder] objectEnumerator];
-
-	while(path = [enumerator nextObject]){            
-		NSEnumerator	*fileEnumerator;
-		NSString		*filePath;
-		fileEnumerator = [defaultManager enumeratorAtPath:path];
-		
-		//Find all the appropriate packs
-		while((filePath = [fileEnumerator nextObject])){
-			if([[filePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame){
-				NSString		*fullPath;
-				
-				//Get the icon pack's full path and preview state
-				fullPath = [path stringByAppendingPathComponent:filePath];
-
-				[packsArray addObject:fullPath];
-			}
-		}
-	}
-	
-	return(packsArray);
 }
 
 @end

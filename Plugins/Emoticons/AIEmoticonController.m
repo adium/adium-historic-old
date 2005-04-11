@@ -459,10 +459,15 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         _availableEmoticonPacks = [[NSMutableArray alloc] init];
         
 		//Load emoticon packs
-		enumerator = [[adium resourcePathsForName:EMOTICONS_PATH_NAME] objectEnumerator];
+		enumerator = [[adium allResourcesForName:EMOTICONS_PATH_NAME withExtensions:[NSArray arrayWithObjects:EMOTICON_PACK_PATH_EXTENSION,ADIUM_EMOTICON_SET_PATH_EXTENSION,PROTEUS_EMOTICON_SET_PATH_EXTENSION,nil]] objectEnumerator];
 		
 		while(path = [enumerator nextObject]) {
-			[_availableEmoticonPacks addObjectsFromArray:[self _emoticonsPacksAvailableAtPath:path]];
+			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:path];
+			
+			if([[pack emoticons] count]) {
+				[_availableEmoticonPacks addObject:pack];
+				[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
+			}
 		}
 		
 		//Sort as per the saved ordering
@@ -495,35 +500,6 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		[self resetAvailableEmoticons];
 		[prefs emoticonXtrasDidChange];
 	}
-}
-
-//Returns an array of the emoticon packs at the specified path
-- (NSArray *)_emoticonsPacksAvailableAtPath:(NSString *)inPath
-{
-    NSMutableArray          *emoticonPackArray = [NSMutableArray array];
-    NSEnumerator			*enumerator;
-    NSString                *file;
-	
-    //Scan the directory
-    enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:inPath] objectEnumerator];
-    while((file = [enumerator nextObject])){
-		
-        if([[file lastPathComponent] characterAtIndex:0] != '.' &&                              //Ignore invisible files
-				(([[file pathExtension] caseInsensitiveCompare:EMOTICON_PACK_PATH_EXTENSION] == 0) ||   //Only accept emoticon packs
-				 ([[file pathExtension] caseInsensitiveCompare:ADIUM_EMOTICON_SET_PATH_EXTENSION] == 0) ||
-				 ([[file pathExtension] caseInsensitiveCompare:PROTEUS_EMOTICON_SET_PATH_EXTENSION] == 0))){    
-
-            NSString        *fullPath = [inPath stringByAppendingPathComponent:file];
-			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:fullPath];
-			
-			if([[pack emoticons] count]) {
-				[emoticonPackArray addObject:pack];
-				[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
-			}
-        }
-    }
-    
-    return(emoticonPackArray);
 }
 
 

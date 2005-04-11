@@ -71,29 +71,21 @@
 - (NSDictionary *)availableMessageStyles
 {
 	if(!styleDictionary){
-		NSString		*AdiumMessageStyle = @"AdiumMessageStyle";
-		NSFileManager	*defaultManager = [NSFileManager defaultManager];
-		NSEnumerator	*enumerator, *fileEnumerator;
-		NSString		*filePath, *resourcePath;
+		NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT withExtensions: @"AdiumMessageStyle"];
+		NSEnumerator	*stylesEnumerator;
 		NSBundle		*style;
+		NSString		*resourcePath;
 		
 		//Clear the current dictionary of styles and ready a new mutable dictionary
 		styleDictionary = [[NSMutableDictionary alloc] init];
 		
 		//Get all resource paths to search
-		enumerator = [[adium resourcePathsForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT] objectEnumerator];
-		while(resourcePath = [enumerator nextObject]) {
-			fileEnumerator = [[defaultManager directoryContentsAtPath:resourcePath] objectEnumerator];
-			
-			//Find all the message styles
-			while((filePath = [fileEnumerator nextObject])){
-				if([[filePath pathExtension] caseInsensitiveCompare:AdiumMessageStyle] == NSOrderedSame){
-					if(style = [NSBundle bundleWithPath:[resourcePath stringByAppendingPathComponent:filePath]]){
-						NSString	*styleIdentifier = [style bundleIdentifier];
-						if(styleIdentifier && [styleIdentifier length]){
-							[styleDictionary setObject:style forKey:styleIdentifier];
-						}
-					}
+		stylesEnumerator = [stylesArray objectEnumerator];
+		while(resourcePath = [stylesEnumerator nextObject]) {
+			if(style = [NSBundle bundleWithPath:resourcePath]){
+				NSString	*styleIdentifier = [style bundleIdentifier];
+				if(styleIdentifier && [styleIdentifier length]){
+					[styleDictionary setObject:style forKey:styleIdentifier];
 				}
 			}
 		}
