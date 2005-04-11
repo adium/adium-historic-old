@@ -18,6 +18,7 @@
 #import "ESGaimICQAccount.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 @interface ESGaimICQAccount (PRIVATE)
 - (void)updateStatusMessage:(AIListContact *)theContact;
