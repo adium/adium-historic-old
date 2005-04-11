@@ -18,66 +18,55 @@
 
 #import "AIToolbarController.h"
 
-#define TOOLBAR_DEFAULT_PREFS                   @"ToolbarPrefs"
+#define TOOLBAR_DEFAULT_PREFS			@"ToolbarPrefs"
 #define TOOLBAR_ITEMS_PREFIX			@"ToolbarItems_"
-
-@interface AIToolbarController (PRIVATE)
-- (void)toolbarItemsChanged:(NSNotification *)notification;
-@end
 
 @implementation AIToolbarController
 
-//Internal --------------------------------------------------------
-//init
 - (void)initController
 {
-    toolbarItems = [[NSMutableDictionary alloc] init];
-    
+	toolbarItems = [[NSMutableDictionary alloc] init];
 }
 
-//close
 - (void)closeController
 {
-
+	[toolbarItems release];
 }
 
-//
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
 {
-    NSMutableDictionary    *itemDict = [toolbarItems objectForKey:type];
-	
-    if(!itemDict){
+	NSMutableDictionary		*itemDict = [toolbarItems objectForKey:type];
+
+	if(!itemDict){
 		itemDict = [NSMutableDictionary dictionary];
-		[toolbarItems setObject:itemDict forKey:type];
-    }
-	
-    [itemDict setObject:item forKey:[item itemIdentifier]];
+	}
+
+	[itemDict setObject:item forKey:[item itemIdentifier]];
+	[toolbarItems setObject:itemDict forKey:type];
 }
 
 - (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type
 {
-    NSMutableDictionary    *itemDict = [toolbarItems objectForKey:type];
-    [itemDict removeObjectForKey:[item itemIdentifier]];
+	NSMutableDictionary		*itemDict = [toolbarItems objectForKey:type];
+	[itemDict removeObjectForKey:[item itemIdentifier]];
 }
 
-
-//
 - (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types
 {
-    NSMutableDictionary *items = [NSMutableDictionary dictionary];
-    NSEnumerator	*enumerator;
-    NSString		*type;
-    
-    //Add our toolbar items
-    enumerator = [types objectEnumerator];
-    while(type = [enumerator nextObject]){
-		NSDictionary     *availableItems = [toolbarItems objectForKey:type];
-		if(availableItems){
+	NSMutableDictionary	*items = [NSMutableDictionary dictionary];
+
+	NSEnumerator		*enumerator = [types objectEnumerator];
+	NSString			*type;
+	NSDictionary		*availableItems;
+
+	//Add our toolbar items
+	while((type = [enumerator nextObject])){
+		if((availableItems = [toolbarItems objectForKey:type])){
 			[items addEntriesFromDictionary:availableItems];
 		}
-    }
-	
-    return(items);
+	}
+
+	return items;
 }
 
 @end
