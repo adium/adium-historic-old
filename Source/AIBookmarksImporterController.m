@@ -234,7 +234,7 @@
 		 */
 		if([importer bookmarksHaveChanged]) {
 			menuItemSubmenu           = [importer menuWithAvailableBookmarks];
-			contextualMenuItemSubmenu = [importer menuWithAvailableBookmarks];
+			contextualMenuItemSubmenu = [[menuItemSubmenu copy] autorelease];
 			menuHasChanged = YES;
 		}
 	} else {
@@ -257,14 +257,7 @@
 			[menuItem setImage:browserIcon];
 			[menuItem setSubmenu:menu];
 			[menuItemSubmenu addItem:menuItem];
-
-			menu = [importer menuWithAvailableBookmarks]; //creates a new menu object
-			menuItem = [[[NSMenuItem alloc] initWithTitle:browserName
-															   action:NULL
-														keyEquivalent:@""] autorelease];
-			[menuItem setImage:browserIcon];
-			[menuItem setSubmenu:menu];
-			[contextualMenuItemSubmenu addItem:menuItem];
+			[contextualMenuItemSubmenu addItem:[[menuItem copy] autorelease]];
 
 			menuHasChanged = YES;
 		}
@@ -276,12 +269,6 @@
 
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		[contextualMenuItemSubmenu setAutoenablesItems:NO];
-
-		if([menuItemSubmenu respondsToSelector:@selector(setDelegate:)]) {
-			//10.2 doesn't have menu delegates.
-			[menuItemSubmenu setDelegate:self];
-			[contextualMenuItemSubmenu setDelegate:self];
-		}
 
 		[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
 					   withObject:menuItemSubmenu
@@ -370,6 +357,13 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
 {
+	//Update the menu if neessary
+	if(!updatingMenu){
+		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
+								 toTarget:self
+							   withObject:nil];
+	}
+	
 	//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
 	NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	return(responder && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]);
@@ -493,9 +487,6 @@
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item
 {
 	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copy] autorelease];
-	if([menu respondsToSelector:@selector(setDelegate:)]) {
-		[menu setDelegate:self];
-	}
 	NSString	*menuTitle = [menu title];
 
 	//Add menu to view
@@ -508,16 +499,5 @@
 	[item setMenuFormRepresentation:mItem];	
 }
 
-#pragma mark -
-#pragma mark NSMenu delegate methods
-
-- (void)menuNeedsUpdate:(NSMenu *)menu
-{
-	if(!updatingMenu){
-		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
-								 toTarget:self
-							   withObject:nil];
-	}
-}
 
 @end
