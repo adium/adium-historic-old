@@ -207,19 +207,45 @@
  */
 - (NSDate *)dateOfThisBuild
 {
-	char *path, unixDate[256], num[256], whoami[256];
-	
-    //Grab the current buildDate from our buildnum script
-	if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation]){
-		FILE *f = fopen(path, "r");
-		fscanf(f, "%s | %s | %s", num, unixDate, whoami);
-		fclose(f);
-		if(*unixDate){
-			return([NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]]);
-		}
+	NSDate *date = nil;
+
+	NSString *path = [[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil];
+	NSMutableData *data = [NSMutableData dataWithContentsOfFile:path];
+	if(data) {
+		[data increaseLengthBy:1]; //nul-terminates.
+
+		const char *ptr = [data bytes];
+		char *nextptr;
+		unsigned len    = [data length];
+		unsigned i      = 0;
+
+		//first character: 'r'. skip it.
+		++i;
+		if(i >= len) goto end;
+		//grab the build number.
+		unsigned long buildnum = strtoul(ptr+i, &nextptr, 10);
+#		pragma unused(buildnum)
+		i = nextptr - ptr;
+		//skip the '|' (with a space on each side of it).
+		i += 3;
+		if(i >= len) goto end;
+		//grab the date number. this is a UNIX date (seconds since 1970-1-1).
+		NSTimeInterval unixDate = strtod(ptr+i, &nextptr);
+		date = [NSDate dateWithTimeIntervalSince1970:unixDate];
+		/*we actually don't need any more information here. if we did, here's what we'd do...
+		i = nextptr - ptr;
+		//skip the '|'.
+		i += 3;
+		if(i >= len) goto end;
+		//grab the author.
+		NSRange range = { i, len - i };
+		[data replaceBytesInRange:NSMakeRange(0, i) withBytes:NULL length:0];
+		NSString *username = [NSString stringWithData:data encoding:NSUTF8StringEncoding];
+		 */
 	}
-	
-	return(nil);
+
+end:
+	return date;
 }
 
 /*!
