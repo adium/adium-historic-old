@@ -22,6 +22,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 
+#define	NEW_PRESET_NAME				AILocalizedString(@"New Event Set",nil)
+
 //Sound set defines
 #define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list
 #define SOUND_EVENT_QUOTE			@"\""			//Character before and after event name
@@ -302,14 +304,34 @@
  */
 - (void)saveEventPreset:(NSMutableDictionary *)eventPreset
 {
+	NSString	*name = [eventPreset objectForKey:@"Name"];
 	//Assign the next order index to this preset if it doesn't have one yet
 	if(![eventPreset objectForKey:@"OrderIndex"]){
 		[eventPreset setObject:[NSNumber numberWithFloat:[self nextOrderIndex]]
 						forKey:@"OrderIndex"];
 	}
+
+	//If we don't have a name at this point, simply assign one
+	if(!name){
+		name = NEW_PRESET_NAME;
+		
+		//Make sure we're not using a name which is already in use
+		if([storedEventPresets objectForKey:name]){
+			unsigned i = 1;
+			name = [NEW_PRESET_NAME stringByAppendingFormat:@" (%i)",i];
+			
+			while([storedEventPresets objectForKey:name] != nil){
+				i++;
+				name = [NEW_PRESET_NAME stringByAppendingFormat:@" (%i)",i];
+			}
+		}
+		
+		[eventPreset setObject:name
+						forKey:@"Name"];
+	}
 	
 	[storedEventPresets setObject:eventPreset
-						   forKey:[eventPreset objectForKey:@"Name"]];
+						   forKey:name];
 
 	[[adium preferenceController] setPreference:storedEventPresets
 										 forKey:@"Event Presets"
