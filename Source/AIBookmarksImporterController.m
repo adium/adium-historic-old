@@ -238,8 +238,19 @@
 			menuHasChanged = YES;
 		}
 	} else {
-		menuItemSubmenu           = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		menuItemSubmenu = [bookmarkRootMenuItem submenu];
+		if(menuItemSubmenu) {
+			[menuItemSubmenu removeAllItems];
+		} else {
+			menuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		}
+
+		contextualMenuItemSubmenu = [bookmarkRootContextualMenuItem submenu];
+		if(contextualMenuItemSubmenu) {
+			[contextualMenuItemSubmenu removeAllItems];
+		} else {
+			contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		}
 
 		NSEnumerator		*importersEnum = [importers objectEnumerator];
 		while((importer = [importersEnum nextObject])) {
