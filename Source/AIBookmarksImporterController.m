@@ -348,14 +348,22 @@
  */
 - (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
 {
-	[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
-	[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
-	
-	[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
-	[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
+	BOOL submenuChanged = NO;
+	if(menuItemSubmenu != [bookmarkRootMenuItem submenu]) {
+		[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
+		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
+		submenuChanged = YES;
+	}
+	if(contextualMenuItemSubmenu != [bookmarkRootContextualMenuItem submenu]) {
+		[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
+		submenuChanged = YES;
+		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
+	}
 
-	//Update the menus of existing toolbar items
-	[self updateAllToolbarItemMenus];
+	if(submenuChanged) {
+		//Update the menus of existing toolbar items
+		[self updateAllToolbarItemMenus];
+	}
 
 	updatingMenu = NO;
 }
