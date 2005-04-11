@@ -106,8 +106,13 @@
 		{
 			localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:[fileTransfer remoteFilename]];
 			
-			finished = YES;
-			break;
+			/* If the file doesn't exist, we're done.  If it does, fall through to AITextAndButtonsOtherReturn
+			 * triggering a Save As... panel.
+			*/
+			if(![[NSFileManager defaultManager] fileExistsAtPath:localFilename]){
+				finished = YES;
+				break;
+			}
 		}
 		case AITextAndButtonsOtherReturn: /* Save As... */
 		{
