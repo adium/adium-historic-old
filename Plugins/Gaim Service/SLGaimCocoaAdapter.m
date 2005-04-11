@@ -1117,11 +1117,12 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
 	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
+	const char *profileHTMLUTF8 = [profileHTML UTF8String];
 
-	gaim_account_set_user_info(account, [profileHTML UTF8String]);
+	gaim_account_set_user_info(account, profileHTMLUTF8);
 
-	if(account->gc != NULL && gaim_account_is_connected(account)){
-		serv_set_info(account->gc, [profileHTML UTF8String]);
+	if(account->gc != NULL && gaim_account_is_connected(account)) {
+		serv_set_info(account->gc, profileHTMLUTF8);
 	}
 }
 - (oneway void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
