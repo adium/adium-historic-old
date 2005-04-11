@@ -169,10 +169,27 @@ static ESFileTransferPreferences *preferences;
 
 	if((autoAcceptType == AutoAccept_All) ||
 	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))){
-		//If we should autoaccept, determine the local filename  and proceed to accept the request
-		localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:[fileTransfer remoteFilename]];
+		NSString	*preferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
+		NSString	*remoteFilename = [fileTransfer remoteFilename];
 		
-		[self _finishReceiveRequestForFileTransfer:fileTransfer localFilename:localFilename];
+		//If we should autoaccept, determine the local filename  and proceed to accept the request
+		localFilename = [preferredDownloadFolder stringByAppendingPathComponent:remoteFilename];
+		
+		/* If the file does not exist, immediately accept the receive request.
+		 * If it does, display a Save As dialog.
+		 */
+		if(![[NSFileManager defaultManager] fileExistsAtPath:localFilename]){
+			[self _finishReceiveRequestForFileTransfer:fileTransfer localFilename:localFilename];
+			
+		}else{
+			//Prompt for a location to save; savePanelDidEnd will release the retained fileTransfer
+			[[NSSavePanel savePanel] beginSheetForDirectory:preferredDownloadFolder
+													   file:remoteFilename
+											 modalForWindow:nil
+											  modalDelegate:self
+											 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+												contextInfo:[fileTransfer retain]];
+		}
 	}else{
 		//Prompt to accept/deny
 		[ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
@@ -181,6 +198,32 @@ static ESFileTransferPreferences *preferences;
 	}
 }
 
+
+- (void)savePanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(ESFileTransfer *)fileTransfer
+{
+	NSString	*localFilename = nil;
+	
+	if(returnCode == NSOKButton){
+		localFilename = [savePanel filename];
+	}
+
+	//Pass nil to cancel, if the user didn't press OK
+	[self  _finishReceiveRequestForFileTransfer:fileTransfer
+									 withObject:localFilename];
+	
+	//Match the retain made when invoking the save panel above
+	[fileTransfer release];
+}
+
+/*
+ * @brief Finish the receive request process
+ *
+ * Called by either ESFileTransferRequestPromptController or self, this method is the last step in accepting or
+ * refusing a request to be sent a file.
+ *
+ * @param fileTransfer The file transfer in question
+ * @param localFilename Full path at which to save the file.  If anything exists at this path it will be overwritten without further confirmation.  Pass nil to deny the transfer.
+ */
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename
 {	
 	if(localFilename){
