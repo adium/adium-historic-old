@@ -146,10 +146,10 @@
 #import "CBStatusMenuItemPlugin.h"
 
 /* Plugins/URL Handling */
-#import "AIVideoChatInterfacePlugin.h"
+#import "CBURLHandlingPlugin.h"
 
 /* Plugins/Video Chat Interface */
-#import "CBURLHandlingPlugin.h"
+#import "AIVideoChatInterfacePlugin.h"
 
 @interface AICoreComponentLoader (PRIVATE)
 - (void)_loadComponentClass:(Class)inClass;
