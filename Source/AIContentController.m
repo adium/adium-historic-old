@@ -1391,7 +1391,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSParameterAssert([userInfo isKindOfClass:[NSDictionary class]]);
 	
 	contentObject = [(NSDictionary *)userInfo objectForKey:@"AIContentObject"];
-	messageText = [[[contentObject message] safeString] string];
+	messageText = [[[contentObject message] attributedStringByConvertingAttachmentsToStrings] string];
 	
 	if(includeSubject){
 		
