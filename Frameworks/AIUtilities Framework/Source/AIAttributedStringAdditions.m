@@ -285,10 +285,11 @@
 
 - (void)addFormattingForLinks
 {
-	NSRange searchRange;
+	NSRange		searchRange;
+	unsigned	length = [self length];
 	
 	searchRange = NSMakeRange(0,0);
-	while(searchRange.location < [self length])	{
+	while(searchRange.location < length){
 		NSDictionary	*attributes = [self attributesAtIndex:searchRange.location effectiveRange:&searchRange];
 		if([attributes objectForKey:NSLinkAttributeName] != nil) {
 			[self addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:searchRange];
@@ -382,25 +383,26 @@
 	return(returnValue);
 }
 
-- (NSAttributedString *)safeString
+- (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings
 {
     if([self containsAttachments]){
-        NSMutableAttributedString	*safeString = [[self mutableCopy] autorelease];
+        NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];
         int							currentLocation = 0;
         NSRange						attachmentRange;
 		
 		NSString					*attachmentCharacterString = [NSString stringWithFormat:@"%C",NSAttachmentCharacter];
 		
         //find attachment
-        attachmentRange = [[safeString string] rangeOfString:attachmentCharacterString
-													 options:0 
-													   range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
-
+        attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
+															  options:0 
+																range:NSMakeRange(currentLocation,
+																				  [newAttributedString length] - currentLocation)];
+		
         while(attachmentRange.length != 0){ //if we found an attachment
 
-			NSTextAttachment	*attachment = [safeString attribute:NSAttachmentAttributeName
-															atIndex:attachmentRange.location
-													 effectiveRange:nil];
+			NSTextAttachment	*attachment = [newAttributedString attribute:NSAttachmentAttributeName
+																	 atIndex:attachmentRange.location
+															  effectiveRange:nil];
             NSString *replacement = nil;
 			if ([attachment respondsToSelector:@selector(string)]){
 				replacement = [attachment performSelector:@selector(string)];
@@ -411,24 +413,50 @@
             }
 
             //remove the attachment, replacing it with the original text
-			[safeString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
-            [safeString replaceCharactersInRange:attachmentRange withString:replacement];
+			[newAttributedString removeAttribute:NSAttachmentAttributeName range:attachmentRange];
+            [newAttributedString replaceCharactersInRange:attachmentRange withString:replacement];
 
             attachmentRange.length = [replacement length];
 
             currentLocation = attachmentRange.location + attachmentRange.length;
 
             //find the next attachment
-            attachmentRange = [[safeString string] rangeOfString:attachmentCharacterString
-														 options:0
-														   range:NSMakeRange(currentLocation,[safeString length] - currentLocation)];
+            attachmentRange = [[newAttributedString string] rangeOfString:attachmentCharacterString
+																  options:0
+																	range:NSMakeRange(currentLocation,
+																					  [newAttributedString length] - currentLocation)];
         }
 
-        return safeString;
+        return newAttributedString;
 
     }else{
         return self;
     }
+}
+
+- (NSAttributedString *)attributedStringByConvertingLinksToStrings
+{
+	NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];	
+	NSRange						searchRange = NSMakeRange(0,0);
+	unsigned					length = [self length];
+
+	while(searchRange.location < length){
+		NSDictionary	*attributes = [newAttributedString attributesAtIndex:searchRange.location
+															  effectiveRange:&searchRange];
+		NSURL			*URL = [attributes objectForKey:NSLinkAttributeName];
+
+		if(URL != nil) {
+			//Replace the URL with the NSString of where it was pointing
+            [newAttributedString replaceCharactersInRange:searchRange 
+											   withString:[URL absoluteString]];
+
+			//Now remove the URL
+			[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
+		}
+		searchRange.location += searchRange.length;
+	}
+
+	return newAttributedString;
 }
 
 - (NSAttributedString *)stringByAddingFormattingForLinks
