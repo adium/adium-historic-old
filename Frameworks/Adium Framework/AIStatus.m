@@ -18,7 +18,7 @@
 #import "AIStatusController.h"
 #import "AIStatusIcons.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/AIStringAdditions.H>
+#import <AIUtilities/AIStringAdditions.h>
 
 @implementation AIStatus
 
