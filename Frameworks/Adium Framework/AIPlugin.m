@@ -22,12 +22,6 @@
 
 @implementation AIPlugin
 
-//Return a new instance of the plugin
-+ (id)newInstanceOfPlugin
-{
-    return([[[self alloc] init] autorelease]);
-}
-
 //Init the plugin
 - (id)init
 {

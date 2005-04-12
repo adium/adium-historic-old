@@ -267,18 +267,16 @@
 /*!
  * @brief Load an integrated component plugin
  *
- * @param inClass The class of the component, which  must inherit from <tt>AIPlugin</tt>
+ * @param inClass The class of the component, which must inherit from <tt>AIPlugin</tt>
  */
 - (void)_loadComponentClass:(Class)inClass
 {
-	id object;
+	id object = [[inClass alloc] init];
 
-	if(object = [inClass newInstanceOfPlugin]){
-		[components addObject:object];
+	NSAssert1(object, @"Failed to load %@", NSStringFromClass(inClass));
 
-	}else{
-		NSAssert1(object, @"Failed to load %@", NSStringFromClass(inClass));
-	}
+	[components addObject:object];
+	[object release];
 }
 
 @end

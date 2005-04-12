@@ -28,7 +28,6 @@
 }
 
 //PRIVATE
-+ (id)newInstanceOfPlugin;
 - (void)uninstallPlugin;
 
 @end
