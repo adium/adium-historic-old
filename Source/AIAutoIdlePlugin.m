@@ -39,6 +39,11 @@
 - (void)installPlugin
 {
 	automaticIdleSet = NO;
+
+	//Ensure no idle time is set as we load
+	[[adium preferenceController] setPreference:nil
+										 forKey:@"IdleSince"
+										  group:GROUP_ACCOUNT_STATUS];
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(machineIdleUpdate:)
@@ -48,6 +53,7 @@
 								   selector:@selector(machineIsActive:)
 									   name:AIMachineIsActiveNotification
 									 object:nil];
+				
 	
 	//Observe preference changes for updating if and when we should report being idle
 	[[adium preferenceController] registerPreferenceObserver:self 
