@@ -32,7 +32,7 @@
 -(void) speakText:(NSString*)text;
 -(void) stopSpeaking;
 -(void) resetToDefaults;
--(int) pitch;
+-(float) pitch;
 -(int) rate;
 -(NSString *)demoTextForVoiceAtIndex:(int)voiceIndex;
 
