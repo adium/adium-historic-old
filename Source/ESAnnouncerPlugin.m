@@ -154,7 +154,7 @@
 		//Handle messages in a custom manner
 		if([[adium contactAlertsController] isMessageEvent:eventID]){
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
-			NSString			*message = [[[content message] safeString] string];
+			NSString			*message = [[[content message] attributedStringByConvertingAttachmentsToStrings] string];
 			AIListObject		*source = [content source];
 			BOOL				isOutgoing = [content isOutgoing];
 			BOOL				newParagraph = NO;
