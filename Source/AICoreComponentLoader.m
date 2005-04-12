@@ -157,13 +157,20 @@
 
 @implementation AICoreComponentLoader
 
+- (id)init
+{
+	if((self = [super init])){
+		components = [[NSMutableArray alloc] init];
+	}
+
+	return self;
+}
+
 /*!
  * @brief Load integrated components
  */
 - (void)initController
 {
-	components = [[NSMutableArray alloc] init];
-
 	[self _loadComponentClass:[AIAccountListPreferencesPlugin class]];
 	[self _loadComponentClass:[AIAccountMenuAccessPlugin class]];
 	[self _loadComponentClass:[AIAliasSupportPlugin class]];
