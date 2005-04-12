@@ -159,7 +159,7 @@
         
         if(account && source){
             //Log the message
-            [self _addMessage:[[content message] safeString]
+            [self _addMessage:[[content message] attributedStringByConvertingAttachmentsToStrings]
                          dest:destUID
                        source:srcUID
                   sendDisplay:srcDisplay
