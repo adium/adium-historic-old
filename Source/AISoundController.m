@@ -450,14 +450,12 @@
 {
     //we have items left to speak and aren't already speaking
     if([speechArray count] && !speaking){
-		//If we are on Panther and can easily check, don't speak on top of other apps; instead, wait 1 second and try again
-		if([NSApp isOnPantherOrBetter]){
-			if([NSClassFromString(@"NSSpeechSynthesizer") isAnyApplicationSpeaking]){
-				[self performSelector:@selector(speakNext)
-						   withObject:nil
-						   afterDelay:1.0];
-				return;
-			}
+		//don't speak on top of other apps; instead, wait 1 second and try again
+		if(SpeechBusySystemWide() > 0){
+			[self performSelector:@selector(speakNext)
+					   withObject:nil
+					   afterDelay:1.0];
+			return;
 		}
 
 		speaking = YES;
