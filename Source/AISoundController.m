@@ -152,8 +152,6 @@
 		[soundCacheDict removeAllObjects];
 		[soundCacheArray removeAllObjects];
 	}
-	
-	muteWhileAway = [[prefDict objectForKey:KEY_EVENT_MUTE_WHILE_AWAY] boolValue];
 }
 
 
@@ -188,7 +186,7 @@
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+    if(!muteSounds){
 		if (inPath){
 			[self _coreAudioPlaySound:inPath];
 		}
@@ -426,7 +424,7 @@
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
 {
     if(text && [text length]){
-		if(!muteSounds && (!muteWhileAway || ![[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS])){
+		if(!muteSounds){
 			NSMutableDictionary *dict;
 			
 			dict = [[NSMutableDictionary alloc] init];
