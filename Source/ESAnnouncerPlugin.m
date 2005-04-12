@@ -235,11 +235,11 @@
 		float		pitch = 0;
 		int			rate = 0;
 		
-		voice = [details objectForKey:KEY_VOICE_STRING];			
+		voice =  [details objectForKey:KEY_VOICE_STRING];			
 		pitch = [[details objectForKey:KEY_PITCH] floatValue];
-		rate = [[details objectForKey:KEY_RATE] intValue];
+		rate  = [[details objectForKey:KEY_RATE]  floatValue];
 
-		[[adium soundController] speakText:textToSpeak withVoice:voice andPitch:pitch andRate:rate];
+		[[adium soundController] speakText:textToSpeak withVoice:voice pitch:pitch rate:rate];
 	}
 }
 

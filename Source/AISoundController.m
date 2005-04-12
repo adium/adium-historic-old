@@ -24,6 +24,7 @@
 #import <Adium/QTSoundFilePlayer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#include <float.h>
 
 #define	PATH_SOUNDS					@"/Sounds"
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
@@ -421,7 +422,7 @@
 //pass voice as nil to use default voice
 //pass pitch as 0 to use default pitch
 //pass rate as 0 to use default rate
-- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate
 {
     if(text && [text length]){
 		if(!muteSounds){
@@ -434,8 +435,8 @@
 			}
 			
 			if(voiceString) [dict setObject:voiceString forKey:VOICE];			
-			if(pitch) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
-			if(rate) [dict setObject:[NSNumber numberWithInt:rate] forKey:RATE];
+			if(pitch > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
+			if(rate  > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:rate]  forKey:RATE];
 
 			[speechArray addObject:dict];
 			[dict release];
@@ -466,7 +467,7 @@
 		SUSpeaker 			*theSpeaker = [self _speakerForVoice:[dict objectForKey:VOICE] index:NULL];
 
 		[theSpeaker setPitch:(pitchNumber ? [pitchNumber floatValue] : defaultPitch)];
-		[theSpeaker setRate:(rateNumber ? [rateNumber intValue] : defaultRate)];
+		[theSpeaker setRate:  (rateNumber ?  [rateNumber floatValue] : defaultRate)];
 
 		[theSpeaker speakText:text];
 		[speechArray removeObjectAtIndex:0];

@@ -69,7 +69,7 @@ typedef enum{
 - (void)playSoundAtPath:(NSString *)inPath;
 - (NSArray *)soundSetArray;
 - (void)speakText:(NSString *)text;
-- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString andPitch:(float)pitch andRate:(int)rate;
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
 
 - (NSArray *)voices;
 - (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
