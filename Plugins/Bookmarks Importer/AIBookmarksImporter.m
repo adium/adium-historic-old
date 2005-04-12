@@ -15,7 +15,7 @@
  */
 
 #import "AIBookmarksImporter.h"
-#import "AIBookmarksImporterController.h"
+#import "AIBookmarksImporterPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <Adium/AIObject.h>

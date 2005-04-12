@@ -1098,12 +1098,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		341017DD080B53DC00A7344D = {
-			fileRef = 341017D9080B53DB00A7344D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		341017DE080B53DC00A7344D = {
 			fileRef = 341017DA080B53DC00A7344D;
 			isa = PBXBuildFile;
@@ -1112,12 +1106,6 @@
 		};
 		341017DF080B53DC00A7344D = {
 			fileRef = 341017DB080B53DC00A7344D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		341017E0080B53DC00A7344D = {
-			fileRef = 341017DC080B53DC00A7344D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5358,20 +5346,7 @@
 		348EF16C080B2CA20015E0FC = {
 			buildActionMask = 2147483647;
 			files = (
-				348EF1B5080B2F3D0015E0FC,
-				348EF1B6080B2F3D0015E0FC,
-				348EF1B8080B2F3D0015E0FC,
-				348EF1BA080B2F3E0015E0FC,
 				348EF1BE080B2F3E0015E0FC,
-				348EF1BF080B2F3E0015E0FC,
-				348EF1C2080B2F3E0015E0FC,
-				348EF1C4080B2F3E0015E0FC,
-				348EF1C6080B2F3E0015E0FC,
-				348EF1C7080B2F3E0015E0FC,
-				348EF1C9080B2F3E0015E0FC,
-				348EF1CA080B2F3E0015E0FC,
-				341017DD080B53DC00A7344D,
-				341017E0080B53DC00A7344D,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5687,8 +5662,8 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			name = AIBookmarksImporterController.h;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporterController.h";
+			name = AIBookmarksImporterPlugin.h;
+			path = "Plugins/Bookmarks Importer/AIBookmarksImporterPlugin.h";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5696,22 +5671,10 @@
 			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
-			name = AIBookmarksImporterController.m;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporterController.m";
+			name = AIBookmarksImporterPlugin.m;
+			path = "Plugins/Bookmarks Importer/AIBookmarksImporterPlugin.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		348EF1B5080B2F3D0015E0FC = {
-			fileRef = 348EF19E080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1B6080B2F3D0015E0FC = {
-			fileRef = 348EF19F080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		348EF1B7080B2F3D0015E0FC = {
 			fileRef = 348EF1A0080B2F3C0015E0FC;
@@ -5719,20 +5682,8 @@
 			settings = {
 			};
 		};
-		348EF1B8080B2F3D0015E0FC = {
-			fileRef = 348EF1A1080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348EF1B9080B2F3E0015E0FC = {
 			fileRef = 348EF1A2080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1BA080B2F3E0015E0FC = {
-			fileRef = 348EF1A3080B2F3C0015E0FC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5761,12 +5712,6 @@
 			settings = {
 			};
 		};
-		348EF1BF080B2F3E0015E0FC = {
-			fileRef = 348EF1A8080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348EF1C0080B2F3E0015E0FC = {
 			fileRef = 348EF1A9080B2F3C0015E0FC;
 			isa = PBXBuildFile;
@@ -5779,20 +5724,8 @@
 			settings = {
 			};
 		};
-		348EF1C2080B2F3E0015E0FC = {
-			fileRef = 348EF1AB080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348EF1C3080B2F3E0015E0FC = {
 			fileRef = 348EF1AC080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C4080B2F3E0015E0FC = {
-			fileRef = 348EF1AD080B2F3D0015E0FC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5803,32 +5736,8 @@
 			settings = {
 			};
 		};
-		348EF1C6080B2F3E0015E0FC = {
-			fileRef = 348EF1AF080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C7080B2F3E0015E0FC = {
-			fileRef = 348EF1B0080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348EF1C8080B2F3E0015E0FC = {
 			fileRef = 348EF1B1080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C9080B2F3E0015E0FC = {
-			fileRef = 348EF1B2080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1CA080B2F3E0015E0FC = {
-			fileRef = 348EF1B3080B2F3D0015E0FC;
 			isa = PBXBuildFile;
 			settings = {
 			};
