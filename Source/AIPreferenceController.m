@@ -347,17 +347,24 @@
 			   object:(AIListObject *)object
 {
 	NSMutableDictionary	*prefDict = [self cachedPreferencesForGroup:group object:object];
-	
+	BOOL				changed = YES;
+
     //Set the new value
     if(value != nil){
         [prefDict setObject:value forKey:key];
     }else{
-        [prefDict removeObjectForKey:key];
+		if([prefDict objectForKey:key]){
+			[prefDict removeObjectForKey:key];
+		}else{
+			changed = NO;
+		}
     }
-	
+
 	//Update the preference cache with our changes
-	[self updateCachedPreferences:prefDict forGroup:group object:object];
-	[self informObserversOfChangedKey:key inGroup:group object:object];
+	if(changed){
+		[self updateCachedPreferences:prefDict forGroup:group object:object];
+		[self informObserversOfChangedKey:key inGroup:group object:object];
+	}
 }
 
 
