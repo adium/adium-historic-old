@@ -34,13 +34,13 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 		// using a port means delegate message are invoked from the main 
 		// thread (runloop in which this object is created), otherwise, those message 
 		// are asynchronous.
+		NSRunLoop *loop = [NSRunLoop currentRunLoop];
 		if(loop != nil) {
 			_port = [[NSPort port] retain];
 			// we use a port so that the speech manager callbacks can talk to the main thread.
 			// That way, we can safely access interface elements from the delegate methods
 			
 			[_port setDelegate:self];
-			NSRunLoop *loop = [NSRunLoop currentRunLoop];
 			[loop addPort:_port forMode:NSDefaultRunLoopMode];
 			_usePort = YES;
 		} else {
@@ -169,7 +169,7 @@ Note that extreme value can make your app crash..."  */
 -(void)speakText:(NSString*)text
 {
     if(_speechChannel && text) {
-		NSData *MacRomanData = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES]
+		NSData *MacRomanData = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES];
 		SpeakText(_speechChannel, [MacRomanData bytes], [MacRomanData length]);
     }
 }
