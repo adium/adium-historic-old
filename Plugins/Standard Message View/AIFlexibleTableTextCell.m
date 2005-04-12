@@ -395,8 +395,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     NSMutableAttributedString *selectedString = nil;
     
     if(selectionRange.length && ((selectionRange.location + selectionRange.length) <= [string length])){
-        //Get the selected text (Safestring converts any attachments to text)
-        selectedString = [[[[string attributedSubstringFromRange:selectionRange] safeString] mutableCopy] autorelease];
+        //Get the selected text (attributedStringByConvertingAttachmentsToStrings converts any attachments to text)
+        selectedString = [[[[string attributedSubstringFromRange:selectionRange] attributedStringByConvertingAttachmentsToStrings] mutableCopy] autorelease];
 
         //Strip any attributes we don't want to return
         [selectedString removeAttribute:NSBackgroundColorAttributeName
