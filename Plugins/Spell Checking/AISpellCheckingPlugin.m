@@ -25,8 +25,15 @@
 - (void)_setSpellCheckingForObject:(id)inObject enabled:(BOOL)enabled;
 @end
 
+/*!
+ * @class AISpellCheckingPlugin
+ * @brief Component to save continuous spell checking preferences and apply them to text entry views
+ */
 @implementation AISpellCheckingPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //Setup our preferences
@@ -41,6 +48,11 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SPELLING];
 }
 
+/*
+ * @brief A text entry view was opened
+ *
+ * Set the continuous spell checking setting as per our preference
+ */
 - (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     BOOL	spellEnabled = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_SPELL_CHECKING] boolValue];
@@ -49,6 +61,11 @@
     [self _setSpellCheckingForObject:inTextEntryView enabled:spellEnabled];
 }
 
+/*
+ * @brief A text entry view will close
+ *
+ * Save its continuous spell checking setting as our preference
+ */
 - (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
     //Save spellcheck state
@@ -64,6 +81,11 @@
     }
 }
 
+/*
+ * @brief Preferences changed
+ *
+ * Update all open views to match the new spell checking preference
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -78,7 +100,11 @@
 	}
 }
 
-//
+/*
+ * @brief Set the continuous spell checking for an object
+ *
+ * @param enabled Is continuous spell checking enabled?
+ */
 - (void)_setSpellCheckingForObject:(id)inObject enabled:(BOOL)enabled
 {
     if([inObject respondsToSelector:@selector(setContinuousSpellCheckingEnabled:)]){
