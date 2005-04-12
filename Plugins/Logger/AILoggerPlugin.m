@@ -300,7 +300,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 																													 showingAMorPM:YES]
 																 timeZone:nil
 																   locale:nil];
-	NSAttributedString      *message = [[content message] safeString];
+	NSAttributedString      *message = [[content message] attributedStringByConvertingAttachmentsToStrings];
 	AIListObject			*source = [content source];
 	NSString				*logString = nil;
 
