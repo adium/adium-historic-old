@@ -87,9 +87,14 @@
     while((plugin = [enumerator nextObject])){
         [plugin uninstallPlugin];
     }
-	
-    [pluginArray release];
+}
+
+- (void)dealloc
+{
+	[pluginArray release];
 	pluginArray = nil;
+
+	[super dealloc];
 }
 
 //Load plugins from the specified path
@@ -118,13 +123,14 @@
 		if(pluginBundle = [NSBundle bundleWithPath:pluginPath]){						
 			Class principalClass = [pluginBundle principalClass];
 			if(principalClass){
-				plugin = [principalClass newInstanceOfPlugin];
+				plugin = [[principalClass alloc] init];
 			}else{
 				NSLog(@"Failed to obtain principal class from plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
 			}
 			
 			if(plugin){
 				[pluginArray addObject:plugin];
+				[plugin release];
 			}else{
 				NSLog(@"Failed to initialize Plugin \"%@\" (\"%@\")!",[pluginPath lastPathComponent],pluginPath);
 			}
