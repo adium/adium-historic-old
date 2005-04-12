@@ -4175,6 +4175,7 @@
 				34F8A7FA05A8927F00577775,
 				9E4CF9D104AA69B000415B22,
 				4B6D0E43047D490700A8010A,
+				4BC8AFD604FD3C1000A8010A,
 				4B0473B7043E43F200A8010A,
 				4B5B15220493BF9A00A8010A,
 			);
@@ -15825,7 +15826,6 @@
 				6E5A43DC0611604B0078C342,
 				34A65AF606A5A0C400898470,
 				34DFF46607A5EAC800B92233,
-				4BC8AFD604FD3C1000A8010A,
 			);
 			isa = PBXGroup;
 			name = Messaging;
@@ -18638,7 +18638,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AISpellCheckingPlugin.h;
-			path = "Plugins/Spell Checking/AISpellCheckingPlugin.h";
+			path = Source/AISpellCheckingPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -18647,16 +18647,16 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AISpellCheckingPlugin.m;
-			path = "Plugins/Spell Checking/AISpellCheckingPlugin.m";
+			path = Source/AISpellCheckingPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		4BC8AFEC04FD413900A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
-			lastKnownFileType = text.plist;
+			lastKnownFileType = text.xml;
 			name = SpellingDefaults.plist;
-			path = "Plugins/Spell Checking/SpellingDefaults.plist";
+			path = Resources/SpellingDefaults.plist;
 			refType = 4;
 			sourceTree = "<group>";
 		};
