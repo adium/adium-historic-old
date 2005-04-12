@@ -24,17 +24,25 @@
     unsigned int _reserved2;
 }
 
-+(NSArray*) voiceNames;
++ (NSArray *)voiceNames;
 //+(NSString*) defaultVoiceName;
--(void) setPitch:(float)pitch;
--(void) setRate:(int)rate;
--(void) setVoice:(int)index;
--(void) speakText:(NSString*)text;
--(void) stopSpeaking;
--(void) resetToDefaults;
--(float) pitch;
--(int) rate;
--(NSString *)demoTextForVoiceAtIndex:(int)voiceIndex;
+
+//pitch is in Hertz.
+- (void) setPitch:(float)pitch;
+- (float) pitch;
+//rate is in words per minute.
+- (void) setRate:(float)rate;
+- (float) rate;
+//voice is an index into +voiceNames. pass -1 for the default voice.
+- (void) setVoice:(int)index;
+
+- (void) speakText:(NSString*)text;
+- (void) stopSpeaking;
+
+- (void) resetToDefaults;
+
+//e.g., for Bad News: 'The light you see at the end of the tunnel is the headlamp of a fast approaching train.' (remember that Bad News is a singing voice...)
+- (NSString *)demoTextForVoiceAtIndex:(int)voiceIndex;
 
 -(void) setDelegate:(id)delegate;
 -(id) delegate;

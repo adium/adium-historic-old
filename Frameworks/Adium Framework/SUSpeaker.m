@@ -29,9 +29,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 
 -init
 {
-    NSRunLoop *loop = [NSRunLoop currentRunLoop];
-    if((self = [super init]))
-	{
+	if((self = [super init])) {
 		// we have 2 options here : we use a port or we don't.
 		// using a port means delegate message are invoked from the main 
 		// thread (runloop in which this object is created), otherwise, those message 
@@ -42,16 +40,18 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 			// That way, we can safely access interface elements from the delegate methods
 			
 			[_port setDelegate:self];
+			NSRunLoop *loop = [NSRunLoop currentRunLoop];
 			[loop addPort:_port forMode:NSDefaultRunLoopMode];
 			_usePort = YES;
+		} else {
+			_usePort = NO;
 		}
-		else _usePort = NO;
 		
 		NewSpeechChannel(NULL, &_speechChannel); // NULL voice is default voice
 		[self setCallbacks];
 	}
-	
-    return self;
+
+	return self;
 }
 
 -(void)dealloc
@@ -82,14 +82,12 @@ Note that extreme value can make your app crash..."  */
     /* I don't know what Apple means with pitch between 30 and 65, so I convert that range to [90, 300].
 		I did not test frequencies correspond, though. */
 
-	if(_speechChannel) {
-		SetSpeechPitch (_speechChannel, FloatToFixed(pitch));
-	}
+	if(_speechChannel) SetSpeechPitch (_speechChannel, FloatToFixed(pitch));
 }
 -(float)pitch
 {
-	Fixed fixedPitch;
-	GetSpeechInfo(_speechChannel, soPitchBase, &fixedPitch);
+	Fixed fixedPitch = 0;
+	if(_speechChannel) GetSpeechInfo(_speechChannel, soPitchBase, &fixedPitch);
 
 	//perform needed conversion to reasonable numbers
 	return (FixedToFloat(fixedPitch) - 30.0)*(210.0/35.0) + 90.0;
@@ -97,87 +95,71 @@ Note that extreme value can make your app crash..."  */
 
 //---Rate
 //normal is 150 to 220
--(void)setRate:(int)rate
+-(void)setRate:(float)rate
 {
-    int fixedRate;
-    fixedRate = (int)rate;
-
-    fixedRate = fixedRate << 16; // fixed point
-    
-    if(_speechChannel != NULL) {
-    SetSpeechRate(_speechChannel, fixedRate);
-    }
+	if(_speechChannel) SetSpeechRate(_speechChannel, FloatToFixed(rate));
 }
-//float vs. int?
--(int)rate
+-(float)rate
 {
-    int fixedRate;
-    
-    fixedRate = fixedRate << 16; // fixed point
-    
-    GetSpeechInfo(_speechChannel, soRate, &fixedRate);
-    
-    fixedRate = fixedRate >> 16; // fixed point to int (float?)
-    return ( fixedRate );
+	Fixed fixedRate = 0;
+	if(_speechChannel) GetSpeechInfo(_speechChannel, soRate, &fixedRate);
+
+	return FixedToFloat(fixedRate);
 }
 
 //---Voice
 //set index=-1 for default voice
 -(void)setVoice:(int)index
 {
-    VoiceSpec voice;
-    OSErr error = noErr;
-    
-    if (index>=0)
-    {
-        error = GetIndVoice(index+1, &voice);
-        if(error == noErr) {
-            SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
-        }
-    }
+	VoiceSpec voice;
+	OSErr error = noErr;
+
+	if(index >= 0) {
+		error = GetIndVoice(index+1, &voice);
+		if(error == noErr) {
+			if(_speechChannel) SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
+		}
+	}
 }
+
 /*"Returns the voice names in the same order as expected by setVoice:."*/
 +(NSArray*)voiceNames
 {
-    NSMutableArray *voices = nil;
-    short voiceCount;
-    OSErr error = noErr;
-    int voiceIndex;
-    
-    error = CountVoices(&voiceCount);
-    
-    if(error != noErr) return voices;
+	NSMutableArray *voices = nil;
+	short voiceCount;
+	OSErr error = noErr;
+	int voiceIndex;
 
-    voices = [NSMutableArray arrayWithCapacity:voiceCount];
-    for(voiceIndex=0; voiceIndex<voiceCount; voiceIndex++)
-    {
-        VoiceSpec	voiceSpec;
-        VoiceDescription voiceDescription;
-        
-        error = GetIndVoice(voiceIndex+1, &voiceSpec);
-        if(error != noErr) return voices;
-        error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
-        if(error == noErr)
-        {
-            NSString *voiceName = [NSString stringWithUTF8String:(char *)&(voiceDescription.name[1])];
-            
-            [voices addObject:voiceName];
-        }
-        else return voices;
-    }
-    return voices;
+	error = CountVoices(&voiceCount);
+	if(error != noErr) return voices;
+
+	voices = [NSMutableArray arrayWithCapacity:voiceCount];
+	for(voiceIndex=0; voiceIndex<voiceCount; voiceIndex++) {
+		VoiceSpec	voiceSpec;
+		VoiceDescription voiceDescription;
+
+		error = GetIndVoice(voiceIndex+1, &voiceSpec);
+		if(error != noErr) return voices;
+		error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
+		if(error == noErr) {
+			NSString *voiceName = [[NSString alloc] initWithBytes:(const char *)&(voiceDescription.name[1]) length:voiceDescription.name[0] encoding:NSMacOSRomanStringEncoding];
+			[voices addObject:voiceName];
+			[voiceName release];
+		} else {
+			return voices;
+		}
+	}
+	return voices;
 }
 /*
 +(NSString*)defaultVoiceName
 {
-    NSString *voiceName;
     VoiceSpec	voiceSpec;
     VoiceDescription voiceDescription;
     
-    GetIndVoice(NULL, &voiceSpec);
+    GetIndVoice(0, &voiceSpec);
     GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
-    voiceName = [[NSString alloc] initWithUTF8String:&(voiceDescription.name[1]) length:voiceDescription.name[0]];
-    return voiceName;
+    return [[[NSString alloc] initWithBytes:(const char *)&(voiceDescription.name[1]) length:voiceDescription.name[0] encoding:NSMacOSRomanStringEncoding] autorelease];
 }*/
 
 
@@ -186,15 +168,14 @@ Note that extreme value can make your app crash..."  */
 //---Speech
 -(void)speakText:(NSString*)text
 {
-    if(_speechChannel != NULL && text != nil) {
-	/*FUNCTION SpeakText (chan: SpeechChannel; textBuf: Ptr;
-textBytes: LongInt): OSErr;*/
-	SpeakText(_speechChannel, [text UTF8String], [text length]);
+    if(_speechChannel && text) {
+		NSData *MacRomanData = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES]
+		SpeakText(_speechChannel, [MacRomanData bytes], [MacRomanData length]);
     }
 }
 -(void)stopSpeaking
 {
-    if(_speechChannel != NULL) {
+    if(_speechChannel) {
         StopSpeech(_speechChannel);
         if([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
@@ -209,18 +190,18 @@ textBytes: LongInt): OSErr;*/
 	VoiceSpec	voiceSpec;
 	VoiceDescription voiceDescription;
 	
-	if(voiceIndex >= 0){
+	if(voiceIndex >= 0) {
 		error = GetIndVoice(voiceIndex+1, &voiceSpec);
 		if(error == noErr){
 			error = GetVoiceDescription( &voiceSpec, &voiceDescription, sizeof(voiceDescription));
 		}
-	}else{
+	} else {
 		error = GetVoiceDescription( NULL, &voiceDescription, sizeof(voiceDescription));		
 	}
 
 	
 	if(error == noErr){
-		demoText = [NSString stringWithUTF8String:(char *)&(voiceDescription.comment[1])];
+		demoText = [[[NSString alloc] initWithBytes:(const char *)&(voiceDescription.comment[1]) length:voiceDescription.comment[0] encoding:NSMacOSRomanStringEncoding] autorelease];
 	}
 	
 	return demoText;
