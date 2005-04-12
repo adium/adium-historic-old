@@ -1,0 +1,112 @@
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+#import "SHCaminoBookmarksImporter.h"
+#import <AIHyperlinks/SHMarkedHyperlink.h>
+#import <AIUtilities/AIFileManagerAdditions.h>
+
+#define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
+#define CAMINO_DICT_CHILD_KEY   @"Children"
+#define CAMINO_DICT_FOLDER_KEY  @"FolderType"
+#define CAMINO_DICT_TITLE_KEY   @"Title"
+#define CAMINO_DICT_URL_KEY     @"URL"
+
+@interface SHCaminoBookmarksImporter(PRIVATE)
+- (NSArray *)drillPropertyList:(id)inObject;
+- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict;
+@end
+
+@implementation SHCaminoBookmarksImporter
+
++ (NSString *)bookmarksPath
+{
+	return [[NSFileManager defaultManager] pathIfNotDirectory:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+}
+
++ (NSString *)browserName
+{
+	return @"Camino";
+}
++ (NSString *)browserSignature
+{
+	return @"CHIM";
+}
++ (NSString *)browserBundleIdentifier
+{
+	return @"org.mozilla.navigator";
+}
+
+#pragma mark -
+
++ (void)load
+{
+	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
+}
+
+#pragma mark -
+
+- (NSArray *)availableBookmarks
+{
+    NSString        *bookmarksPath = [[self class] bookmarksPath];
+    NSDictionary    *bookmarksDict = [NSDictionary dictionaryWithContentsOfFile:bookmarksPath];
+
+    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
+    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+
+    return [self drillPropertyList:[bookmarksDict objectForKey:CAMINO_DICT_CHILD_KEY]];
+}
+
+- (BOOL)bookmarksHaveChanged
+{
+    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[[self class] bookmarksPath] traverseLink:YES];
+    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
+    
+    return ![modDate isEqualToDate:lastModDate];
+}
+
+- (NSArray *)drillPropertyList:(id)inObject
+{
+    NSMutableArray  *caminoArray = [NSMutableArray array];
+    
+    if([inObject isKindOfClass:[NSArray class]]){
+        NSEnumerator    *enumerator = [(NSArray *)inObject objectEnumerator];
+        NSDictionary    *linkDict;
+        
+        while((linkDict = [enumerator nextObject])){
+            if([linkDict objectForKey:CAMINO_DICT_FOLDER_KEY] == nil){
+				SHMarkedHyperlink	*menuLink = [self hyperlinkForCaminoBookmark:linkDict];
+                if(menuLink) [caminoArray addObject:menuLink];
+				
+            }else{
+                NSArray 		*outArray = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
+				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
+																	content:[self drillPropertyList:(outArray ? outArray : [NSArray array])]
+																	  image:nil];
+                if(menuDict) [caminoArray addObject:menuDict];
+            }
+        }
+    }
+    return caminoArray;
+}
+
+- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict
+{
+	NSString	*title = [inDict objectForKey:CAMINO_DICT_TITLE_KEY];
+	NSString	*url = [inDict objectForKey:CAMINO_DICT_URL_KEY];
+	return [[self class] hyperlinkForTitle:title URL:url];
+}
+
+@end
