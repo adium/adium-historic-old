@@ -45,11 +45,19 @@
 
 @implementation AICorePluginLoader
 
+- (id)init
+{
+	if((self = [super init])){
+		pluginArray = [[NSMutableArray alloc] init];
+	}
+
+	return self;
+}
+
 //init
 - (void)initController
 {
 	//Init
-    pluginArray = [[NSMutableArray alloc] init];
 	[adium createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];
 
 	//If the Adium version has changed since our last run, warn the user that their external plugins may no longer work
