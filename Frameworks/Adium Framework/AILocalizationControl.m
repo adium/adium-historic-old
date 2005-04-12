@@ -61,7 +61,7 @@
  * There's a lot of magic in this method, unfortunately, but it does what it does quite well.
  * The goal: Start off with a nicely positioned control.  It looks good containing the text it contains; it is positioned
  * properly in relation to other controls.  Then, change its string value, generally bringing in a localized string from
- * the Localizable.strings file via AILocalizedString() or the like.  The control should 'magically' be resized, maintaining
+ * the Localizable.strings file via XXLocalizedString().  The control should 'magically' be resized, maintaining
  * its position [including taking into account its alignment].  Furthermore, if the control is informed of other views
  * relative to it via having its view_anchorTo* outlets connected, take into account these other views.  Resize them if possible
  * to maintain the same relative spacing as they had originally.  If the control has a window it is allowed to resize,
