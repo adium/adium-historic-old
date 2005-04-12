@@ -13,6 +13,6 @@
 	<key>CFBundleVersion</key>
 	<string>1.0.0d1</string>
 	<key>NSPrincipalClass</key>
-	<string>AIBookmarksImporterController</string>
+	<string>AIBookmarksImporterPlugin</string>
 </dict>
 </plist>
