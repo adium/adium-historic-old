@@ -23,7 +23,7 @@
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController, AIBookmarksImporterController;
+		AIEmoticonController;
 
 @interface AIAdium : NSObject {
     IBOutlet	AIAccountController				*accountController;
@@ -42,7 +42,6 @@
     IBOutlet	ESDebugController				*debugController;
     IBOutlet    ESContactAlertsController		*contactAlertsController;
     IBOutlet    ESFileTransferController		*fileTransferController;
-	IBOutlet	AIBookmarksImporterController	*bookmarksImporterController;
 
 	IBOutlet	AICoreComponentLoader			*componentLoader;
 	IBOutlet	AICorePluginLoader				*pluginLoader;
@@ -73,7 +72,6 @@
 - (ESContactAlertsController *)contactAlertsController;
 - (ESDebugController *)debugController;
 - (ESFileTransferController *)fileTransferController;
-- (AIBookmarksImporterController *)bookmarksImporterController;
 
 - (NSNotificationCenter *)notificationCenter;
 

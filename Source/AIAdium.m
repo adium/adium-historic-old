@@ -15,7 +15,6 @@
  */
 
 #import "AIAccountController.h"
-#import "AIBookmarksImporterController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AICoreComponentLoader.h"
@@ -159,9 +158,6 @@ static NSString	*prefsCategory;
 - (AIStatusController *)statusController{
     return(statusController);
 }
-- (AIBookmarksImporterController *)bookmarksImporterController {
-	return bookmarksImporterController;
-}
 
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
@@ -235,7 +231,6 @@ static NSString	*prefsCategory;
     [fileTransferController initController];
 	[applescriptabilityController initController];
 	[statusController initController];
-	[bookmarksImporterController initController];
 
 	[componentLoader initController];
 	
