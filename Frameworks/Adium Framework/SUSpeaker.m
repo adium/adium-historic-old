@@ -78,34 +78,21 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 Note that extreme value can make your app crash..."  */
 -(void)setPitch:(float)pitch
 {
-    int fixedPitch;
-    
     pitch = (pitch-90.0)/(300.0-90.0)*(65.0 - 30.0) + 30.0;  //conversion from hertz
     /* I don't know what Apple means with pitch between 30 and 65, so I convert that range to [90, 300].
 		I did not test frequencies correspond, though. */
-    
-    fixedPitch = (int)pitch;
-    
-    fixedPitch = fixedPitch << 16; // fixed point
-    
-    if(_speechChannel != NULL) {
-        SetSpeechPitch (_speechChannel, fixedPitch);
-    }
+
+	if(_speechChannel) {
+		SetSpeechPitch (_speechChannel, FloatToFixed(pitch));
+	}
 }
-//float vs. int?
--(int)pitch
+-(float)pitch
 {
-    int fixedPitch;
-    
-    fixedPitch = fixedPitch << 16; // fixed point
-    
-    GetSpeechInfo(_speechChannel, soPitchBase, &fixedPitch);
-    
-    fixedPitch = fixedPitch >> 16; // fixed point to int (float?)
-    
-    fixedPitch = (fixedPitch - 30.0)*(210.0/35.0) + 90.0; //perform needed conversion to reasonable numbers
-     
-    return ( fixedPitch );
+	Fixed fixedPitch;
+	GetSpeechInfo(_speechChannel, soPitchBase, &fixedPitch);
+
+	//perform needed conversion to reasonable numbers
+	return (FixedToFloat(fixedPitch) - 30.0)*(210.0/35.0) + 90.0;
 }
 
 //---Rate
