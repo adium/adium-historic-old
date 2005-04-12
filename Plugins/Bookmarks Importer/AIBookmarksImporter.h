@@ -80,11 +80,11 @@
  *this function takes the 'info' argument as a Class object for a subclass of
  *	AIBookmarksImporter.
  *it then calls [info browserIsAvailable], and if that returns non-NO, calls
- *	[[info alloc] init] and passes that to -[AIBookmarksImporterController addImporter:]
+ *	[[info alloc] init] and passes that to -[AIBookmarksImporterPlugin addImporter:]
  *	(if it's non-nil, of course).
  *finally, it autoreleases the timer ([timer autorelease]).
  *this function is intended to be called from a +load method. see below.
- *the idea is to allow time for the shared AIBookmarksImporterController to be
+ *the idea is to allow time for the shared AIBookmarksImporterPlugin to be
  *	created. note that NSTimer cannot be used for the above because the Cocoa
  *	docs explicitly do not guarantee the existence of any other class when +load is called.
  *(see: http://developer.apple.com/documentation/Cocoa/Reference/Foundation/ObjC_classic/Classes/NSObject.html#//apple_ref/occ/clm/NSObject/load )
