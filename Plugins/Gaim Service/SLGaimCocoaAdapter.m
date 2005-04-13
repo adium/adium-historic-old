@@ -605,7 +605,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount		*account = accountLookupFromAdiumAccount(adiumAccount); 
 	GaimConnection	*gc;
-	GaimDebug(@"Gaim thread: %@ lookup gave account %x",adiumAccount,account)
+	GaimDebug(@"Gaim thread: %@ lookup gave account %x",adiumAccount,account);
 	gc = gaim_account_connect(account);
 	GaimDebug(@"Gaim thread: gaim_account_connect(%x) gave %x [%x]",account,gc,account->gc);
 }
