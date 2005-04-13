@@ -67,7 +67,7 @@
  */
 - (void)dealloc
 {
-	[[adium preferenceController] unregisterListObjectObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 	[receivedAutoReply release];
 	
 	[super dealloc];
