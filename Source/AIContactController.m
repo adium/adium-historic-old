@@ -110,7 +110,6 @@
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID;
 - (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences;
 - (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences;
-- (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
@@ -758,6 +757,11 @@
 				metaContact = nil;
 			}
 		}
+		
+		/* As with contactWithService:account:UID, update all attributes so observers are initially informed of
+		 * this object's existence.
+		 */
+		[self _updateAllAttributesOfObject:metaContact];
 	}
 
 	return (metaContact);
@@ -947,9 +951,6 @@
 
 		[self _listChangedGroup:metaContact object:listObject];
 
-		//Update the meta contact's attributes
-		[self _updateAllAttributesOfObject:metaContact];
-
 		//If the metaContact isn't in a group yet, use the group of the object we just added
 		if ((![metaContact containingObject]) && localGroup) {
 			//Add the new meta contact to our list
@@ -1046,11 +1047,16 @@
 
 
 /*
- UIDsArray and servicesArray should be a paired set of arrays, with each index corresponding to
- a UID and a service, respectively, which together define a contact which should be included in the grouping
-
- Assumption: This is only called after the contact list is finished loading, which occurs via
- -(void)finishIniting above.
+ * @brief Groups UIDs for services into a single metacontact
+ *
+ * UIDsArray and servicesArray should be a paired set of arrays, with each index corresponding to
+ * a UID and a service, respectively, which together define a contact which should be included in the grouping.
+ *
+ * Assumption: This is only called after the contact list is finished loading, which occurs via
+ * -(void)finishIniting above.
+ *
+ * @param UIDsArray NSArray of UIDs
+ * @param servicesArray NSArray of serviceIDs corresponding to entries in UIDsArray
  */
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray
 {
@@ -1069,8 +1075,11 @@
 	return([self groupListContacts:contactsToGroupArray]);
 }
 
-//Group an NSArray of AIListContacts, returning the meta contact into which they are added.
-//This will reuse an existing metacontact (for one of the contacts in the array) if possible.
+/* @brief Group an NSArray of AIListContacts, returning the meta contact into which they are added.
+ *
+ * This will reuse an existing metacontact (for one of the contacts in the array) if possible.
+ * @param contactsToGroupArray Contacts to group together
+ */
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray
 {
 	NSEnumerator	*enumerator;
@@ -1091,14 +1100,15 @@
 	if (!metaContact) {
 		metaContact = [self metaContactWithObjectID:nil];
 	}
-
-	//Add all these contacts to our MetaContact (some may already be present,
-	//but that's fine, as nothing will happen).
+	
+	/* Add all these contacts to our MetaContact.
+		* Some may already be present, but that's fine, as nothing will happen.
+		*/
 	enumerator = [contactsToGroupArray objectEnumerator];
 	while (listContact = [enumerator nextObject]) {
 		[self addListObject:listContact toMetaContact:metaContact];
 	}
-
+	
 	return(metaContact);
 }
 
@@ -1634,6 +1644,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		id <AIListObjectObserver>	observer;
 		
 		observer = [observerValue nonretainedObjectValue];
+
 		[observer updateListObject:inObject keys:nil silent:YES];
 	}
 }
