@@ -108,7 +108,9 @@
 
 - (void)windowDidBecomeKey:(NSNotification *)aNotification
 {
-	[[self window] makeFirstResponder:textField_password];
+	[[self window] performSelector:@selector(makeFirstResponder:)
+						withObject:textField_password
+						afterDelay:0];
 }
 
 @end
