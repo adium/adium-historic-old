@@ -434,6 +434,13 @@
     }
 }
 
+/* Deprecated */
+- (NSAttributedString *)safeString
+{
+	NSLog(@"**** You are using an out of date external Adium plugin [most likely the SQL Logger]. Please recompile and reinstall the plugin. This will crash in a future release. ****");
+	return [self attributedStringByConvertingAttachmentsToStrings];
+}
+
 - (NSAttributedString *)attributedStringByConvertingLinksToStrings
 {
 	NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];	
