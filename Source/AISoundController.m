@@ -378,7 +378,7 @@
 //Convenience method: speak the given text with default values
 - (void)speakText:(NSString *)text
 {
-    [self speakText:text withVoice:nil andPitch:0 andRate:0];
+    [self speakText:text withVoice:nil pitch:0 rate:0];
 }
 
 //Speak a voice-specific sample text at the passed settings
@@ -394,8 +394,8 @@
 
 	[self speakText:demoText
 		  withVoice:voiceString
-		   andPitch:pitch
-			andRate:rate];
+			  pitch:pitch
+			   rate:rate];
 }
 
 //Return an array of voices in the same order as expected by SUSpeaker
