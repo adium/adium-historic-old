@@ -5475,7 +5475,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"/Users/evands/adium/Frameworks/AIHyperlinks Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
@@ -14114,8 +14114,8 @@
 				4947F5D00655E90C00B791E5,
 			);
 			isa = PBXGroup;
-			name = Rendezvous;
-			path = Plugins/Rendezvous;
+			name = Bonjour;
+			path = Plugins/Bonjour;
 			refType = 4;
 			sourceTree = "<group>";
 		};
