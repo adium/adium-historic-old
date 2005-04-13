@@ -232,12 +232,15 @@
 	//Do the speech, with custom voice/pitch/rate as desired
 	if(textToSpeak){
 		NSString	*voice = nil;
+		NSNumber	*pitchNumber = [details objectForKey:KEY_PITCH];
+		NSNumber	*floatNumber = [details objectForKey:KEY_RATE];
+
 		float		pitch = 0;
 		int			rate = 0;
 		
 		voice =  [details objectForKey:KEY_VOICE_STRING];			
-		pitch = [[details objectForKey:KEY_PITCH] floatValue];
-		rate  = [[details objectForKey:KEY_RATE]  floatValue];
+		pitch = (pitchNumber ? [pitchNumber floatValue] : 0.0);
+		rate  = (floatNumber ? [floatNumber floatValue] : 0.0);
 
 		[[adium soundController] speakText:textToSpeak withVoice:voice pitch:pitch rate:rate];
 	}
