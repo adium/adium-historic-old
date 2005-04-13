@@ -386,12 +386,6 @@
     if([modifiedAttributeKeys count]) {
 		[self listObjectAttributesChanged:inObject modifiedKeys:modifiedAttributeKeys];
     }
-
-	//If this object is within a meta contact, we'll process the meta contact for these status changes
-    AIListObject	*containingObject = [inObject containingObject];
-    if(containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
-		[self listObjectStatusChanged:containingObject modifiedStatusKeys:inModifiedKeys silent:silent];
-	}
 }
 
 //Call after modifying an object's display attributes
@@ -527,10 +521,14 @@
 		}
 	}
 
-	[inContact setStatusObject:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
-					   forKey:@"NotAStranger"
-					   notify:NotifyLater];
-	[inContact notifyOfChangedStatusSilently:YES];
+	BOOL	isCurrentlyAStranger = [inContact isStranger];
+	if((isCurrentlyAStranger && (remoteGroupName != nil)) ||
+	   (!isCurrentlyAStranger && (remoteGroupName == nil))){
+		[inContact setStatusObject:(remoteGroupName ? [NSNumber numberWithBool:YES] : nil)
+							forKey:@"NotAStranger"
+							notify:NotifyLater];
+		[inContact notifyOfChangedStatusSilently:YES];
+	}
 
 	[inContact release];
 }
@@ -1581,6 +1579,13 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
     //Reset all groups
 	enumerator = [groupDict objectEnumerator];
+	while(listObject = [enumerator nextObject]) {
+		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
+	}
+
+	//Reset all accounts
+	enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	while(listObject = [enumerator nextObject]) {
 		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
