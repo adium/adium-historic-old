@@ -721,7 +721,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NSEnumerator		*peopleEnumerator;
 	NSArray				*allServiceKeys;
 	ABPerson			*person;
-	
+
 	//Delay listObjectNotifications to speed up metaContact creation
 	[[adium contactController] delayListObjectNotifications];
 
@@ -816,11 +816,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
 		
 		if (([UIDsArray count] > 1) && createMetaContacts){
-			/* Got a record with multiple names */
-			[[adium contactController] groupUIDs:UIDsArray forServices:servicesArray];
+			/* Got a record with multiple names. Group the names together, adding them to the meta contact. */
+			[[adium contactController] groupUIDs:UIDsArray 
+									 forServices:servicesArray];
 		}
 	}
-	
+
 	//Stop delaying list object notifications since we are done
 	[[adium contactController] endListObjectNotificationsDelay];
 }
