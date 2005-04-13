@@ -28,18 +28,18 @@
 //init
 - (id)initWithUID:(NSString *)inUID
 {
-    [super initWithUID:inUID service:nil];
-	
-    containedObjects = [[NSMutableArray alloc] init];
-	expanded = YES;
+    if((self = [super initWithUID:inUID service:nil])){
+		containedObjects = [[NSMutableArray alloc] init];
+		expanded = YES;
 
-	largestOrder = 1.0;
-	smallestOrder = 1.0;
+		largestOrder = 1.0;
+		smallestOrder = 1.0;
+
+		//Default invisible
+		visibleCount = 0;
+		visible = NO;
+    }
 	
-	//Default invisible
-    visibleCount = 0;
-	visible = NO;
-    
     return(self);
 }
 
@@ -77,15 +77,14 @@
 //Set this group as visible if it contains anything visible
 - (void)_setVisibleCount:(int)newCount
 {
-//	if((newCount && !visibleCount) || (!newCount && visibleCount)){
-//		[self setVisible:(newCount != 0)];
-//	}
-	visibleCount = newCount;
-	
-	//
-	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
-				   forKey:@"VisibleObjectCount"
-				   notify:NotifyNow];
+	if(visibleCount != newCount){
+		visibleCount = newCount;
+		
+		//
+		[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+					   forKey:@"VisibleObjectCount"
+					   notify:NotifyNow];
+	}
 }
 
 //Called when the visibility of an object in this group changes
