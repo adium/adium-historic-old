@@ -174,6 +174,16 @@
 	}
 }
 
+/*!
+ * @brief Should set aliases serverside?
+ *
+ * Jabber supports serverside aliases.
+ */
+- (BOOL)shouldSetAliasesServerside
+{
+	return(YES);
+}
+
 #pragma mark Status
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
