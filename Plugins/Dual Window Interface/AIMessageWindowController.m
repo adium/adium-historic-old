@@ -100,7 +100,6 @@
 									 object:nil];
 	
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 	
 	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
     [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
@@ -250,11 +249,6 @@
 		[window setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
 		[window setHidesOnDeactivate:[[prefDict objectForKey:KEY_WINDOW_HIDE] boolValue]];
     }
-
-	//XXX - Temporary setup for multiple windows
-    if([group isEqualToString:PREF_GROUP_INTERFACE]){
-		if(![[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue]) alwaysShowTabs = NO;
-	}
 }
 
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem
@@ -522,7 +516,7 @@
 {
     if(tabView_messages != nil){
         BOOL    shouldShowTabs = (supressHiding || alwaysShowTabs || ([tabView_messages numberOfTabViewItems] > 1));
-		
+
         if(shouldShowTabs != tabBarIsVisible){
             tabBarIsVisible = shouldShowTabs;
             
@@ -569,14 +563,14 @@
     tabSize.height += distance;
     [tabView_customTabs setFrameSize:tabSize];
     [tabView_customTabs setNeedsDisplay:YES];
-	
+
     //Adjust other views
     newFrame = [tabView_messages frame];
     newFrame.size.height -= distance;
     newFrame.origin.y += distance;
     [tabView_messages setFrame:newFrame];
     [tabView_messages setNeedsDisplay:YES];
-	
+
 	//[[self window] displayIfNeeded];
 	
     //Return YES when the desired height is reached
