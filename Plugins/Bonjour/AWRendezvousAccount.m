@@ -91,7 +91,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		threadPreparednessLock = [[NSLock alloc] init];
 		[threadPreparednessLock lock];
 		
-		//Deatch the thread, which will unlock threadPreparednessLock when it is ready
+		//Detach the thread, which will unlock threadPreparednessLock when it is ready
 		[NSThread detachNewThreadSelector:@selector(prepareRendezvousThread)
 								 toTarget:self
 							   withObject:nil];
@@ -548,7 +548,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	rendezvousThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
 	libezvThreadProxy = [[rendezvousThreadMessenger target:libezv] retain];
 	
-	//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
+	//Use a timer to periodically release our autorelease pool so we don't continually grow in memory usage
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
 														 target:self
 													   selector:@selector(refreshAutoreleasePool:)
@@ -565,7 +565,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 }
 
 /*
- * @brief Releae and recreate our autorelease pool
+ * @brief Release and recreate our autorelease pool
  *
  * Our autoreleased objects will only be released when the outermost autorelease pool is released.
  * This is handled automatically in the main thread, but we need to do it manually here.
