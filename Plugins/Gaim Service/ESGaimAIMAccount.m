@@ -656,7 +656,8 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
 {
 	if(!strcmp(gaimStatusType, "Available")){
-		return([[[inAttributedString attributedStringByConvertingLinksToStrings] string] stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
+		NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+		return([messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
 	}else{
 		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
 	}
