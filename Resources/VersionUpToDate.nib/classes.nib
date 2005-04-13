@@ -12,6 +12,7 @@
             SUPERCLASS = NSButton; 
         }, 
         {
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
