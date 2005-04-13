@@ -17,8 +17,8 @@ Contact List
 Contacts
 	- MSN Authorization requests seem to fail to show up at least sometimes.
 
-Rendezvous
-	- Messages with line breaks break the Rendezvous connection with the destination contact
+Bonjour
+	- Messages with line breaks break the Bonjour connection with the destination contact
 
 Message window
 	- Minimum size pref is wonky
