@@ -184,12 +184,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -1046,66 +1046,6 @@
 		};
 		34101729080B366300A7344D = {
 			fileRef = 348E5ACA06D2A74C004C051C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		341017D7080B53B800A7344D = {
-			children = (
-				341017D9080B53DB00A7344D,
-				341017DA080B53DC00A7344D,
-				341017DB080B53DC00A7344D,
-				341017DC080B53DC00A7344D,
-			);
-			isa = PBXGroup;
-			name = "File modification notification";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341017D9080B53DB00A7344D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = UKKQueue.h;
-			path = "Plugins/Bookmarks Importer/UKKQueue.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341017DA080B53DC00A7344D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = UKKQueue.m;
-			path = "Plugins/Bookmarks Importer/UKKQueue.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341017DB080B53DC00A7344D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = UKMainThreadProxy.m;
-			path = "Plugins/Bookmarks Importer/UKMainThreadProxy.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341017DC080B53DC00A7344D = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = UKMainThreadProxy.h;
-			path = "Plugins/Bookmarks Importer/UKMainThreadProxy.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		341017DE080B53DC00A7344D = {
-			fileRef = 341017DA080B53DC00A7344D;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		341017DF080B53DC00A7344D = {
-			fileRef = 341017DB080B53DC00A7344D;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -5410,8 +5350,6 @@
 				348EF1C5080B2F3E0015E0FC,
 				348EF1C8080B2F3E0015E0FC,
 				348EF1CB080B2F3E0015E0FC,
-				341017DE080B53DC00A7344D,
-				341017DF080B53DC00A7344D,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5507,7 +5445,6 @@
 				348EF1A1080B2F3C0015E0FC,
 				348EF1A5080B2F3C0015E0FC,
 				348EF1D0080B2F560015E0FC,
-				341017D7080B53B800A7344D,
 				348EF1A7080B2F3C0015E0FC,
 			);
 			isa = PBXGroup;

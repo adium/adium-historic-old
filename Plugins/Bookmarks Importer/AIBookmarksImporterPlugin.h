@@ -19,7 +19,7 @@
 
 #import <Adium/AIPlugin.h>
 
-@class AIBookmarksImporter, UKKQueue;
+@class AIBookmarksImporter;
 
 @interface AIBookmarksImporterPlugin : AIPlugin
 {
@@ -31,14 +31,14 @@
 
 	//instances of AIBookmarksImporter.
 	NSMutableArray			*importers;
-	UKKQueue				*fileChangedNotificationQueue;
+
 	NSTimer					*menuUpdateTimer;
 
 	BOOL					updatingMenu;
-	BOOL					menuNeedsUpdate;
 }
 
 + (AIBookmarksImporterPlugin *)sharedInstance;
+
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd;
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove;
 

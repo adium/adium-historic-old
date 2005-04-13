@@ -20,8 +20,6 @@
 #import "AIMenuController.h"
 #import "AIToolbarController.h"
 
-#import "UKKQueue.h"
-
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #import <AIUtilities/AIMenuAdditions.h>
@@ -67,12 +65,9 @@ static AIBookmarksImporterPlugin *myself = nil;
 - (void)installPlugin
 {
 	myself = self;
-	
+
 	importers = [[NSMutableArray alloc] init];
-	fileChangedNotificationQueue = [[UKKQueue alloc] init];
-	[fileChangedNotificationQueue setDelegate:self];
 	updatingMenu = NO;
-	menuNeedsUpdate = NO;
 	toolbarItemArray = nil;
 
 	menuUpdateTimer = nil;
@@ -118,7 +113,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[toolbarItemArray release];
 	[importers release];
 	[menuUpdateTimer release];
-	[fileChangedNotificationQueue release];
 	
 	[super dealloc];
 }
@@ -132,12 +126,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd {
 	NSString *nameOfNewImporter = [[importerToAdd class] browserName];
-	
-	/* Observe for changes to this importer's bookmarks path.
-	 * We observe for the folder being written to rather than the file as observing for the file
-	 * does not seem to work and gives false positives on unmodified files. */
-	[fileChangedNotificationQueue addPathToQueue:[[importerToAdd class] bookmarksPath]/*
-								  notifyingAbout:(UKKQueueNotifyAboutWrite | UKKQueueNotifyAboutSizeIncrease)*/];
 	
 	//Insert the importer into our importer array, respecting alphabetical order for display purposes
 	BOOL ranOut = YES;
@@ -170,10 +158,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 }
 
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove {
-	//Stop observing for changes to this importer's bookmarks path
-	NSLog(@"NO LONGER OBSERVING %@",[[importerToRemove class] bookmarksPath]);
-	[fileChangedNotificationQueue removePathFromQueue:[[importerToRemove class] bookmarksPath]];
-
 	[importers removeObjectIdenticalTo:importerToRemove];
 
 	//Aggregate multiple remove requests
@@ -332,16 +316,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[self disarmMenuUpdateTimer];
 }
 
-/*
- * @brief One of our bookmark files changed
- */
-- (void)kqueue:(UKKQueue *)inQueue receivedNotification:(NSString *)notificationName forFile:(NSString *)filePath
-{
-	NSLog(@"*** %@: %@ [%i]",filePath,notificationName,updatingMenu);
-
-	menuNeedsUpdate = YES;
-}
-
 #pragma mark -
 
 - (void)armMenuUpdateTimer
@@ -418,12 +392,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 	BOOL		enable = (responder && 
 						  [responder isKindOfClass:[NSTextView class]] &&
 						  [(NSTextView *)responder isEditable]);
-	if(enable && menuNeedsUpdate){
-		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
-								 toTarget:self
-							   withObject:nil];
-		menuNeedsUpdate = NO;		
-	}
 	
 	return enable;
 }
