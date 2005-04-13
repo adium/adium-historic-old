@@ -1507,7 +1507,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	if(!proxyEnabled){
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
-		GaimDebug(@"Connecting with no proxy.");
+		GaimDebug(@"Adium: Connect: %@ Connecting with no proxy.",[self UID]);
 		[invocation invoke];
 		
 	}else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
