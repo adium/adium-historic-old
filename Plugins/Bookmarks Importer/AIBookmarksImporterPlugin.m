@@ -42,10 +42,6 @@
 - (void)armMenuUpdateTimer;
 - (void)disarmMenuUpdateTimer;
 
-- (void)insertBookmarks:(NSDictionary *)bookmarkArray;
-- (void)insertBookmark:(SHMarkedHyperlink *)bookmark;
-- (void)insertBookmarks:(NSDictionary *)bookmarks intoMenu:(NSMenu *)inMenu;
-- (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu;
 - (void)registerToolbarItem;
 - (void)updateAllToolbarItemMenus;
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item;
@@ -250,6 +246,8 @@ static AIBookmarksImporterPlugin *myself = nil;
 {
 	updatingMenu = YES;
 
+	NSDate *start, *end;
+
 	BOOL menuHasChanged = NO;
 
 	NSMenu				*menuItemSubmenu = nil;
@@ -257,6 +255,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 	AIBookmarksImporter	*importer = nil;
 	NSLog(@"Importing %@",importers);
+	start = [NSDate date];
 	if([importers count] == 1) {
 		importer = [importers lastObject];
 
@@ -305,9 +304,12 @@ static AIBookmarksImporterPlugin *myself = nil;
 		[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
 					   withObject:menuItemSubmenu
 					   withObject:contextualMenuItemSubmenu];
-	}else{
+	} else {
 		updatingMenu = NO;
 	}
+
+	end = [NSDate date];
+	NSLog(@"Imported in %g seconds", [end timeIntervalSinceDate:start]);
 }
 
 - (void) buildBookmarksMenuIfNecessaryThread
