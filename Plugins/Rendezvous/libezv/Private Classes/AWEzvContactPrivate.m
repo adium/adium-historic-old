@@ -124,7 +124,7 @@
         return;
 
     if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	AWEzvLog(@"Could not create socket to connect to contact for iChat Rendezvous");
+	AWEzvLog(@"Could not create socket to connect to contact for iChat Bonjour");
 	return;
     }
 

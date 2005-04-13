@@ -60,7 +60,7 @@
     /* NSFileHandle's acceptConnectionInBackgroundAndNotify method expects a
        socket that is bound and listening */
     if((fd = socket(AF_INET, SOCK_STREAM, 0)) == -1) {
-	AWEzvLog(@"Could not create listening socket for iChat Rendezvous");
+	AWEzvLog(@"Could not create listening socket for iChat Bonjour");
 	return -1;
     }
 

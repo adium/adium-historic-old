@@ -29,19 +29,19 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"rvous-libezv");
+	return(@"bonjour-libezv");
 }
 - (NSString *)serviceID{
-	return(@"Rendezvous");
+	return(@"Bonjour");
 }
 - (NSString *)serviceClass{
-	return(@"Rendezvous");
+	return(@"Bonjour");
 }
 - (NSString *)shortDescription{
-	return(@"Rendezvous");
+	return(@"Bonjour");
 }
 - (NSString *)longDescription{
-	return(@"Rendezvous");
+	return(@"Bonjour");
 }
 - (NSCharacterSet *)allowedCharacters{
 	return([[NSCharacterSet illegalCharacterSet] invertedSet]);
