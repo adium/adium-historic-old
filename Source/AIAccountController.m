@@ -221,6 +221,11 @@
 			serviceID = @"libgaim-Yahoo!-Japan";
 		}
 		//####################################
+
+		//XXX: Temporary Rendezvous -> Bonjour code
+		if([serviceID isEqualToString:@"rvous-libezv"]){
+			serviceID = @"bonjour-libezv";
+		}
 		
 		//Fetch the account service, UID, and ID
 		service = [self serviceWithUniqueID:serviceID];
