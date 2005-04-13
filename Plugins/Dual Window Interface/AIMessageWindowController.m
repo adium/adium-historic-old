@@ -229,6 +229,8 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
     if([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
+		NSWindow	*window = [self window];
+		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_customTabs setAllowsInactiveTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
 			
@@ -244,8 +246,9 @@
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
 			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
 		}
-		[[self window] setLevel:level];
-		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+		[window setLevel:level];
+		[window setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
+		[window setHidesOnDeactivate:[[prefDict objectForKey:KEY_WINDOW_HIDE] boolValue]];
     }
 
 	//XXX - Temporary setup for multiple windows

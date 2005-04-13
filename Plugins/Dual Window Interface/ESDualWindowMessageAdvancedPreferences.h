@@ -34,6 +34,7 @@
 	IBOutlet	NSPopUpButton	*popUp_minimumFontSize;
 	IBOutlet	NSPopUpButton	*popUp_timeStampFormat;
 	
+	IBOutlet	NSButton		*checkBox_hide;
 	IBOutlet	NSPopUpButton	*popUp_windowPosition;
 }
 
