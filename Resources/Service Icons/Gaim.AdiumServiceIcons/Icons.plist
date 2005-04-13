@@ -66,7 +66,7 @@
 		<key>Trepia</key>
 		<string>trepia-small.png</string>
 		<key>Bonjour</key>
-		<string>rendezvous-small.png</string>
+		<string>bonjour-small.png</string>
 		<key>Stress Test</key>
 		<string>yahoo-small.png</string>
 	</dict>
@@ -99,7 +99,7 @@
 		<key>Trepia</key>
 		<string>trepia-small.png</string>
 		<key>Bonjour</key>
-		<string>rendezvous-small.png</string>
+		<string>bonjour-small.png</string>
 		<key>Stress Test</key>
 		<string>yahoo-small.png</string>
 	</dict>
