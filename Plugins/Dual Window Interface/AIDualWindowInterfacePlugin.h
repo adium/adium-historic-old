@@ -40,6 +40,7 @@
 #define KEY_KEEP_TABS_ARRANGED				@"Keep Tabs Arranged"
 #define KEY_ARRANGE_TABS_BY_GROUP			@"Arrange Tabs By Group"
 #define	KEY_WINDOW_LEVEL					@"Window Level"
+#define KEY_WINDOW_HIDE						@"Hide While in Background"
 
 #define PREF_GROUP_CONTACT_LIST_DISPLAY		@"Contact List Display"
 #define KEY_SCL_BORDERLESS					@"Borderless"

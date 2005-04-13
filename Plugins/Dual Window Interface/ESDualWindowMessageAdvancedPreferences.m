@@ -74,10 +74,16 @@
 											 forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
+	}else if(sender == checkBox_hide){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+											 forKey:KEY_WINDOW_HIDE
+											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
 	}else if(sender == checkBox_customNameFormatting){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_WEBKIT_USE_NAME_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
 	}else if(sender == popUp_nameFormat){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_NAME_FORMAT
@@ -86,11 +92,12 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_MIN_FONT_SIZE
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		
 	}else if(sender == popUp_timeStampFormat){
 		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
 											 forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}		
+	}
 	
 	[self configureControlDimming];
 }
@@ -122,6 +129,8 @@
 		[popUp_windowPosition selectItemAtIndex:menuIndex];
 	}
 	
+	[checkBox_hide setState:[[prefDict objectForKey:KEY_WINDOW_HIDE] boolValue]];
+
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 	[popUp_nameFormat compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_WEBKIT_NAME_FORMAT] intValue]];
 	[checkBox_customNameFormatting setState:[[prefDict objectForKey:KEY_WEBKIT_USE_NAME_FORMAT] boolValue]];
