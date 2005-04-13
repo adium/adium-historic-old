@@ -67,6 +67,7 @@
 {
 	[automaticIdleDate release];
 	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] removePreferenceObserver:self];
 
 	[super dealloc];
 }
