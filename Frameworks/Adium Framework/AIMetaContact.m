@@ -364,14 +364,21 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	if (!_listContacts){
 		NSMutableArray	*listContacts = [[NSMutableArray alloc] init];
 		NSMutableArray	*uniqueObjectIDs = [NSMutableArray array];
+		unsigned		count;
+		
 		[self _addListContacts:[self containedObjects] toArray:listContacts uniqueObjectIDs:uniqueObjectIDs];
 
 		_listContacts = listContacts;
 
-		//
-		[self setStatusObject:[NSNumber numberWithInt:[listContacts count]]
-					   forKey:@"VisibleObjectCount"
-					   notify:YES];
+		/* Only notify if there is a change.
+		 * Use super's implementation as we don't need to be searching our contained objects...
+		 */
+		count = [listContacts count];
+		if([super integerStatusObjectForKey:@"VisibleObjectCount"] != count){
+			[self setStatusObject:(count ? [NSNumber numberWithInt:count] : nil)
+						   forKey:@"VisibleObjectCount"
+						   notify:NotifyNow];
+		}
 	}
 	
 	return _listContacts;
