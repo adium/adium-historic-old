@@ -603,7 +603,11 @@ NSMutableDictionary* get_chatDict(void)
 #pragma mark Thread accessors
 - (void)gaimThreadConnectAccount:(id)adiumAccount
 {
-	gaim_account_connect(accountLookupFromAdiumAccount(adiumAccount));
+	GaimAccount		*account = accountLookupFromAdiumAccount(adiumAccount); 
+	GaimConnection	*gc;
+	GaimDebug(@"Gaim thread: %@ lookup gave account %x",adiumAccount,account)
+	gc = gaim_account_connect(account);
+	GaimDebug(@"Gaim thread: gaim_account_connect(%x) gave %x [%x]",account,gc,account->gc);
 }
 - (void)connectAccount:(id)adiumAccount
 {
