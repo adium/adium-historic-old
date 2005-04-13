@@ -141,7 +141,7 @@
 	}
 	
 	if (nonHTMLUser){
-		returnString = [inAttributedString string];
+		returnString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 	}else{
 		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
 															  imagesPath:nil];
@@ -159,7 +159,7 @@
 		
 		if (nonHTMLUser){
 			//We don't want to send HTML to ICQ users, or mobile phone users
-			return ([inAttributedString string]);
+			return ([[inAttributedString attributedStringByConvertingLinksToStrings] string]);
 			
 		}else{
 			if (GAIM_DEBUG){
@@ -656,7 +656,7 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
 {
 	if(!strcmp(gaimStatusType, "Available")){
-		return([[inAttributedString string] stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
+		return([[[inAttributedString attributedStringByConvertingLinksToStrings] string] stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
 	}else{
 		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
 	}
