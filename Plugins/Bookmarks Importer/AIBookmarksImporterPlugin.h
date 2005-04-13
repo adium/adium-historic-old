@@ -23,22 +23,25 @@
 
 @interface AIBookmarksImporterPlugin : AIPlugin
 {
+	//for both of these, the menu is set by -buildBookmarksMenu, and is cleared upon retrieval by -menuNeedsUpdate.
 	NSMenuItem				*bookmarkRootMenuItem;
+	NSMenu					*bookmarksMainSubmenu;
 	NSMenuItem				*bookmarkRootContextualMenuItem;
+	NSMenu					*bookmarksContextualSubmenu;
+	NSLock					*menuLock;
 
 	NSToolbarItem			*toolbarItem;
 	NSMutableArray			*toolbarItemArray;
 
 	//instances of AIBookmarksImporter.
 	NSMutableArray			*importers;
-
 	NSTimer					*menuUpdateTimer;
 
 	BOOL					updatingMenu;
+	BOOL					menuNeedsUpdate;
 }
 
 + (AIBookmarksImporterPlugin *)sharedInstance;
-
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd;
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove;
 

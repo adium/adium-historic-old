@@ -65,9 +65,10 @@ static AIBookmarksImporterPlugin *myself = nil;
 - (void)installPlugin
 {
 	myself = self;
-
+	
 	importers = [[NSMutableArray alloc] init];
 	updatingMenu = NO;
+	menuNeedsUpdate = NO;
 	toolbarItemArray = nil;
 
 	menuUpdateTimer = nil;
@@ -81,6 +82,10 @@ static AIBookmarksImporterPlugin *myself = nil;
 																		  keyEquivalent:@""] autorelease];
 	[bookmarkRootMenuItem setRepresentedObject:self];
 	[menuController addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
+	NSMenu *menu = [bookmarkRootMenuItem menu];
+	if([menu respondsToSelector:@selector(setDelegate:)]) {
+		[menu setDelegate:self];
+	}
 
 	//Contextual bookmark menu item
 	bookmarkRootContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
@@ -90,14 +95,21 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[bookmarkRootContextualMenuItem setRepresentedObject:self];
 	[menuController addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
 
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarWillAddItem:)
-												 name:NSToolbarWillAddItemNotification
-											   object:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(toolbarDidRemoveItem:)
-												 name:NSToolbarDidRemoveItemNotification
-											   object:nil];
+	menuLock = [[NSLock alloc] init];
+
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+	[notificationCenter addObserver:self
+						   selector:@selector(toolbarWillAddItem:)
+							   name:NSToolbarWillAddItemNotification
+							 object:nil];
+	[notificationCenter addObserver:self
+						   selector:@selector(toolbarDidRemoveItem:)
+							   name:NSToolbarDidRemoveItemNotification
+							 object:nil];
+	[notificationCenter addObserver:self
+						   selector:@selector(applicationDidBecomeActive:)
+							   name:NSApplicationDidBecomeActiveNotification
+							 object:NSApp];
 					
 	[self registerToolbarItem];
 }
@@ -109,6 +121,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 {
 	[[adium notificationCenter] removeObserver:self];
 
+	[menuLock release];
 	[toolbarItem release];
 	[toolbarItemArray release];
 	[importers release];
@@ -126,7 +139,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd {
 	NSString *nameOfNewImporter = [[importerToAdd class] browserName];
-	
+
 	//Insert the importer into our importer array, respecting alphabetical order for display purposes
 	BOOL ranOut = YES;
 	unsigned count = [importers count], i = count;
@@ -138,7 +151,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 		if(comparison == NSOrderedSame) {
 			NSLog(@"AIBookmarksImporterController: replaced importer %@ with importer %@", importer, importerToAdd);
 			[importers replaceObjectAtIndex:i withObject:importerToAdd];
-			return;
+			goto end;
 		} else if(comparison == NSOrderedAscending) {
 			//insert here
 			ranOut = NO;
@@ -151,6 +164,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 	}
 	[importers insertObject:importerToAdd atIndex:i];
 
+end:
 	/* Update the menus after a delay to allow any other importers which are about to load to also
 	 * be added, aggregating the building into a single time instead of multiple times.
 	 */
@@ -238,15 +252,12 @@ static AIBookmarksImporterPlugin *myself = nil;
 	NSMenu				*contextualMenuItemSubmenu = nil;
 
 	AIBookmarksImporter	*importer = nil;
-	NSLog(@"Importing %@",importers);
+	AILog(@"AIBookmarksImporterPlugin: Importing %@",importers);
+
 	start = [NSDate date];
 	if([importers count] == 1) {
 		importer = [importers lastObject];
 
-		/*note that each of these messages creates an object.
-		 *IOW, menuItemSubmenu and contextualMenuItemSubmenu are two separate objects after this message.
-		 *so, DO NOT change this to a chained assignment (a = b = c) or otherwise cut it down to one message.
-		 */
 		if([importer bookmarksHaveChanged]) {
 			menuItemSubmenu           = [importer menuWithAvailableBookmarks];
 			contextualMenuItemSubmenu = [[menuItemSubmenu copyWithZone:[NSMenu menuZone]] autorelease];
@@ -255,8 +266,8 @@ static AIBookmarksImporterPlugin *myself = nil;
 	} else {
 		/* This code rebuilds all importers, not just those which have changed... It should keep
 		 * usable, unchanged submenus. */
-		menuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		menuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
+		contextualMenuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
 
 		NSEnumerator		*importersEnum = [importers objectEnumerator];
 		while((importer = [importersEnum nextObject])) {
@@ -284,16 +295,19 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
 		[contextualMenuItemSubmenu setAutoenablesItems:NO];
-
-		[self mainPerformSelector:@selector(gotMenuItemSubmenu:contextualMenuItemSubmenu:)
-					   withObject:menuItemSubmenu
-					   withObject:contextualMenuItemSubmenu];
 	} else {
 		updatingMenu = NO;
 	}
 
 	end = [NSDate date];
-	NSLog(@"Imported in %g seconds", [end timeIntervalSinceDate:start]);
+	AILog(@"AIBookmarksImporterPlugin: Imported bookmarks in %g seconds", [end timeIntervalSinceDate:start]);
+
+	[menuLock lock];
+	[bookmarksMainSubmenu release];
+	 bookmarksMainSubmenu = menuItemSubmenu;
+	[bookmarksContextualSubmenu release];
+	 bookmarksContextualSubmenu = contextualMenuItemSubmenu;
+	[menuLock unlock];
 }
 
 - (void) buildBookmarksMenuIfNecessaryThread
@@ -314,6 +328,13 @@ static AIBookmarksImporterPlugin *myself = nil;
 							   withObject:nil];
 	}
 	[self disarmMenuUpdateTimer];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+	[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
+							 toTarget:self
+						   withObject:nil];
 }
 
 #pragma mark -
@@ -360,15 +381,15 @@ static AIBookmarksImporterPlugin *myself = nil;
 - (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
 {
 	BOOL submenuChanged = NO;
-	if(menuItemSubmenu != [bookmarkRootMenuItem submenu]) {
+	if(menuItemSubmenu && (menuItemSubmenu != [bookmarkRootMenuItem submenu])) {
 		[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
 		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
 		submenuChanged = YES;
 	}
-	if(contextualMenuItemSubmenu != [bookmarkRootContextualMenuItem submenu]) {
+	if(contextualMenuItemSubmenu && (contextualMenuItemSubmenu != [bookmarkRootContextualMenuItem submenu])) {
 		[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
-		submenuChanged = YES;
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
+		submenuChanged = YES;
 	}
 
 	if(submenuChanged) {
@@ -392,7 +413,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 	BOOL		enable = (responder && 
 						  [responder isKindOfClass:[NSTextView class]] &&
 						  [(NSTextView *)responder isEditable]);
-	
 	return enable;
 }
 
@@ -400,6 +420,23 @@ static AIBookmarksImporterPlugin *myself = nil;
  * @brief Dummy menu item target so we can enable/disable our main menu item
  */
 - (IBAction)dummyTarget:(id)sender{
+}
+
+#pragma mark -
+
+//we don't want to get -menuNeedsUpdate: called on every keystroke. this method suppresses that.
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action {
+	*target = nil;  //use menu's target
+	*action = NULL; //use menu's action
+	return NO;
+}
+
+- (void)menuNeedsUpdate:(NSMenu *)menu {
+	[menuLock lock];
+	[self doSetOfMenuItemSubmenu:[bookmarksMainSubmenu autorelease]
+	   contextualMenuItemSubmenu:[bookmarksContextualSubmenu autorelease]];
+	bookmarksMainSubmenu = bookmarksContextualSubmenu = nil;
+	[menuLock unlock];
 }
 
 #pragma mark -
