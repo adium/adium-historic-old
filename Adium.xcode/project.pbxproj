@@ -293,6 +293,12 @@
 			settings = {
 			};
 		};
+		3402D5A5080DBC91004E50B4 = {
+			fileRef = 347E791D07CAA52300350507;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3402E01807CB0CE40044F818 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -8373,6 +8379,7 @@
 				343EB42C080870A200E27095,
 				343EC6920809DD3400E27095,
 				343EC6B30809DEEB00E27095,
+				3402D5A5080DBC91004E50B4,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11505,6 +11512,8 @@
 				34A6FE8007D7E07300972830,
 				34D8346E07CBE6F5006466F2,
 				34D8346D07CBE6F5006466F2,
+				34D8344407CBE6E2006466F2,
+				34D8344307CBE6E1006466F2,
 				34D8344007CBE6E1006466F2,
 				34D8343F07CBE6E1006466F2,
 				34D8346C07CBE6F4006466F2,
@@ -11772,8 +11781,6 @@
 				34C1F4FB07F8148300DB6645,
 				34D8344607CBE6E2006466F2,
 				34D8344507CBE6E2006466F2,
-				34D8344407CBE6E2006466F2,
-				34D8344307CBE6E1006466F2,
 				34C1F4F907F8148300DB6645,
 				34C1F4F307F8148200DB6645,
 				34C1F4F607F8148200DB6645,
@@ -15579,7 +15586,6 @@
 		};
 		4B3717000510D19400A8010A = {
 			children = (
-				7ECB106D06A4D21700812D5F,
 			);
 			includeInIndex = 0;
 			isa = PBXGroup;
@@ -21264,44 +21270,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		7ECB106806A4D1AD00812D5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.xml;
-			name = "AOLamerKiller-Info.plist";
-			path = "Plists/AOLamerKiller-Info.plist";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ECB106D06A4D21700812D5F = {
-			children = (
-				7ECB106806A4D1AD00812D5F,
-				7ECB107006A4D2FE00812D5F,
-				7ECB107106A4D2FE00812D5F,
-			);
-			isa = PBXGroup;
-			name = AOLamer;
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ECB107006A4D2FE00812D5F = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHAOLamerKillerPlugin.h;
-			path = Plugins/AOLamerKiller/SHAOLamerKillerPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		7ECB107106A4D2FE00812D5F = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHAOLamerKillerPlugin.m;
-			path = Plugins/AOLamerKiller/SHAOLamerKillerPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 //7E0
 //7E1
