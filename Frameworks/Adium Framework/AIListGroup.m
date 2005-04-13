@@ -39,7 +39,6 @@
 	//Default invisible
     visibleCount = 0;
 	visible = NO;
-//	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
     
     return(self);
 }
@@ -84,7 +83,9 @@
 	visibleCount = newCount;
 	
 	//
-	[self setStatusObject:[NSNumber numberWithInt:visibleCount] forKey:@"VisibleObjectCount" notify:YES];
+	[self setStatusObject:(visibleCount ? [NSNumber numberWithInt:visibleCount] : nil)
+				   forKey:@"VisibleObjectCount"
+				   notify:NotifyNow];
 }
 
 //Called when the visibility of an object in this group changes
@@ -190,7 +191,7 @@
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]] 
 					   forKey:@"ObjectCount"
-					   notify:YES];
+					   notify:NotifyNow];
 		
 		success = YES;
 	}
@@ -214,7 +215,7 @@
 		//
 		[self setStatusObject:[NSNumber numberWithInt:[containedObjects count]]
 					   forKey:@"ObjectCount" 
-					   notify:YES];
+					   notify:NotifyNow];
 	}
 }
 
