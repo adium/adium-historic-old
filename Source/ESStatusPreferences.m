@@ -355,6 +355,8 @@
 	[checkBox_autoAway setState:[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue]];
 	[textField_autoAwayMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue] / 60.0)];
 
+	[checkBox_showStatusWindow setState:[[prefDict objectForKey:KEY_STATUS_SHOW_STATUS_WINDOW] boolValue]];
+
 	[self configureControlDimming];
 }
 
@@ -426,11 +428,18 @@
 											 forKey:KEY_STATUS_REPORT_IDLE
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
+		
 	}else if(sender == checkBox_autoAway){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_AUTO_AWAY
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
+		
+	}else if(sender == checkBox_showStatusWindow){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_SHOW_STATUS_WINDOW
+											  group:PREF_GROUP_STATUS_PREFERENCES];		
+		
 	}else if(sender == popUp_autoAwayStatusState){
 		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
 
