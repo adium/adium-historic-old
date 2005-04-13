@@ -68,6 +68,7 @@
 #import "ESAnnouncerPlugin.h"
 #import "ESApplescriptContactAlertPlugin.h"
 #import "ESAutoAwayPlugin.h"
+#import "ESAwayStatusWindowPlugin.h"
 #import "ESBlockingPlugin.h"
 #import "ESContactClientPlugin.h"
 #import "ESContactServersideDisplayName.h"
@@ -245,6 +246,7 @@
 	[self _loadComponentClass:[ESSecureMessagingPlugin class]];
 	[self _loadComponentClass:[ESStatusPreferencesPlugin class]];
 	[self _loadComponentClass:[ESAutoAwayPlugin class]];
+	[self _loadComponentClass:[ESAwayStatusWindowPlugin class]];
 }
 
 /*!
