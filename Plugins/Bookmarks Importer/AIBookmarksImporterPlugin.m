@@ -272,19 +272,8 @@ static AIBookmarksImporterPlugin *myself = nil;
 	} else {
 		/* This code rebuilds all importers, not just those which have changed... It should keep
 		 * usable, unchanged submenus. */
-		menuItemSubmenu = [bookmarkRootMenuItem submenu];
-		if(menuItemSubmenu) {
-			[menuItemSubmenu removeAllItems];
-		} else {
-			menuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		}
-
-		contextualMenuItemSubmenu = [bookmarkRootContextualMenuItem submenu];
-		if(contextualMenuItemSubmenu) {
-			[contextualMenuItemSubmenu removeAllItems];
-		} else {
-			contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
-		}
+		menuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
+		contextualMenuItemSubmenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE] autorelease];
 
 		NSEnumerator		*importersEnum = [importers objectEnumerator];
 		while((importer = [importersEnum nextObject])) {
