@@ -1505,6 +1505,7 @@
 			);
 			isa = PBXGroup;
 			name = "Status Preferences";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1600,6 +1601,7 @@
 			children = (
 				3428392407D2D013004F01C9,
 				34A6FD0207D7A6F000972830,
+				347C5559080C8C0D00E69674,
 			);
 			isa = PBXVariantGroup;
 			name = "Shared Dock Icon Images";
@@ -4168,6 +4170,86 @@
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		347C5559080C8C0D00E69674 = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = German;
+			path = "Resources/German.lproj/Shared Dock Icon Images";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C693D080C8F0200E69674 = {
+			children = (
+				347C6940080C8F2B00E69674,
+				347C6941080C8F2B00E69674,
+				347C6946080C8F3A00E69674,
+				347C6947080C8F3A00E69674,
+			);
+			isa = PBXGroup;
+			name = "Away Status Window";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C6940080C8F2B00E69674 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAwayStatusWindowPlugin.h;
+			path = Source/ESAwayStatusWindowPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C6941080C8F2B00E69674 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAwayStatusWindowPlugin.m;
+			path = Source/ESAwayStatusWindowPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C6942080C8F2B00E69674 = {
+			fileRef = 347C6940080C8F2B00E69674;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347C6943080C8F2B00E69674 = {
+			fileRef = 347C6941080C8F2B00E69674;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347C6946080C8F3A00E69674 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESAwayStatusWindowController.h;
+			path = Source/ESAwayStatusWindowController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C6947080C8F3A00E69674 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESAwayStatusWindowController.m;
+			path = Source/ESAwayStatusWindowController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		347C6948080C8F3B00E69674 = {
+			fileRef = 347C6946080C8F3A00E69674;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		347C6949080C8F3B00E69674 = {
+			fileRef = 347C6947080C8F3A00E69674;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		347E778507CA825F00350507 = {
 			children = (
@@ -8091,6 +8173,8 @@
 				34BFE2D707E8E74400AD984D,
 				34C1F21507F7A63500DB6645,
 				343EC6AA0809DEC800E27095,
+				347C6942080C8F2B00E69674,
+				347C6948080C8F3B00E69674,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8574,6 +8658,8 @@
 				34BFE2D807E8E74400AD984D,
 				34C1F21407F7A63500DB6645,
 				343EC6A90809DEC800E27095,
+				347C6943080C8F2B00E69674,
+				347C6949080C8F3B00E69674,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -16118,11 +16204,12 @@
 		};
 		4B587C3707ABFCA8001832A9 = {
 			children = (
-				3428328307D263F0004F01C9,
+				347C693D080C8F0200E69674,
 				3440938707D915D300321BB3,
 				4BC32F7107AABC3500DDED66,
 				4B292D4707A9C92D00C5F882,
 				4B587C6C07ABFD2E001832A9,
+				3428328307D263F0004F01C9,
 			);
 			isa = PBXGroup;
 			name = "State & Status";
