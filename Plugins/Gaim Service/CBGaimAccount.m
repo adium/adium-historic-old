@@ -625,7 +625,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Correctly enable/disable the chat
 	[chat setStatusObject:[NSNumber numberWithBool:YES]
 				   forKey:@"Enabled" 
-				   notify:YES];
+				   notify:NotifyNow];
 	
 	//Track
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
@@ -650,7 +650,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Correctly enable/disable the chat
 	[chat setStatusObject:[NSNumber numberWithBool:YES]
 				   forKey:@"Enabled" 
-				   notify:YES];
+				   notify:NotifyNow];
 	
 	//Track
 	AILog(@"gaim openChat:%@ for %@",chat,[chat uniqueChatID]);
@@ -743,7 +743,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	if (key){
-		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:YES];
+		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:NotifyNow];
 		[chat setStatusObject:nil forKey:key notify:NotifyNever];
 		
 	}
@@ -751,7 +751,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (oneway void)errorForChat:(AIChat *)chat type:(NSNumber *)type
 {
-	[chat setStatusObject:type forKey:KEY_CHAT_ERROR notify:YES];
+	[chat setStatusObject:type forKey:KEY_CHAT_ERROR notify:NotifyNow];
 	[chat setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
 
@@ -1056,7 +1056,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		(contact = [self contactWithUID:contactName])){
 
 		if (!namesAreCaseSensitive){
-			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 		}
 
 		[chat addParticipatingListObject:contact];
@@ -1399,7 +1399,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
 	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredGaimAccount)];
@@ -1620,7 +1620,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_proxy_info_set_username(proxy_info, NULL);
 		
 		//We are no longer connecting
-		[self setStatusObject:nil forKey:@"Connecting" notify:YES];
+		[self setStatusObject:nil forKey:@"Connecting" notify:NotifyNow];
 	}
 }
 
@@ -1683,7 +1683,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[super disconnect];
 
 		[self setStatusObject:nil forKey:@"Connecting" notify:NO];
-		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
 		//Tell libgaim to disconnect
@@ -1700,7 +1700,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[lastDisconnectionError autorelease]; lastDisconnectionError = [text retain];
 
 	//We are disconnecting
-    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
+    [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 	
 	GaimDebug(@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
 }
@@ -1777,7 +1777,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
 	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueRegisterWithConfiguredGaimAccount)];
@@ -1948,7 +1948,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//We now should update our idle status object
 	[self setStatusObject:([idleSince timeIntervalSinceNow] ? idleSince : nil)
-				   forKey:@"IdleSince" notify:YES];
+				   forKey:@"IdleSince"
+				   notify:NotifyNow];
 }
 
 //Set the profile, then invoke the passed invocation to return control to the target/selector specified
@@ -1974,7 +1975,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		[gaimThread setInfo:profileHTML onAccount:self];
 		
 		//We now have a profile
-		[self setStatusObject:profile forKey:@"TextProfile" notify:YES];
+		[self setStatusObject:profile forKey:@"TextProfile" notify:NotifyNow];
 	}
 }
 
@@ -2101,7 +2102,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//We now have an icon
-	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
+	[self setStatusObject:image forKey:KEY_USER_ICON notify:NotifyNow];
 }
 
 #pragma mark Group Chat
@@ -2410,14 +2411,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 #pragma mark Private
 - (void)setTypingFlagOfChat:(AIChat *)chat to:(NSNumber *)typingStateNumber
 {
-    NSNumber *currentValue = [chat statusObjectForKey:KEY_TYPING];
+    AITypingState currentTypingState = [chat integerStatusObjectForKey:KEY_TYPING];
+	AITypingState newTypingState = [typingStateNumber intValue];
 
-    if((typingStateNumber && !currentValue) ||
-	   (!typingStateNumber && currentValue) ||
-	   (!([typingStateNumber compare:currentValue] == 0))){
-		[chat setStatusObject:typingStateNumber
+    if(currentTypingState != newTypingState){
+		[chat setStatusObject:(newTypingState ? typingStateNumber : nil)
 					   forKey:KEY_TYPING
-					   notify:YES];
+					   notify:NotifyNow];
     }
 }
 
@@ -2429,9 +2429,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIChat *chat = [chatDict objectForKey:[contact internalObjectID]];
 	if(chat){
 		//Enable/disable the chat
-		[chat setStatusObject:[NSNumber numberWithBool:enable] 
+		[chat setStatusObject:(enable ? [NSNumber numberWithBool:enable] : nil)
 					   forKey:@"Enabled"
-					   notify:YES];
+					   notify:NotifyNow];
 	}
 }
 
