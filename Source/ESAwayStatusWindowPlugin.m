@@ -82,8 +82,6 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if(!inModifiedKeys || [inModifiedKeys containsObject:@"StatusMessage"]) NSLog(@"%@: %@",inObject,inModifiedKeys);
-
 	if([inObject isKindOfClass:[AIAccount class]] &&
 	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"])){
 		
