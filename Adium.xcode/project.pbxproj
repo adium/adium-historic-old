@@ -3224,18 +3224,6 @@
 			settings = {
 			};
 		};
-		344C0F0706B7099F00DA7200 = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
-			remoteInfo = Rendezvous;
-		};
-		344C0F0806B7099F00DA7200 = {
-			isa = PBXTargetDependency;
-			target = 4947F5BC0655E85200B791E5;
-			targetProxy = 344C0F0706B7099F00DA7200;
-		};
 		344C0F0D06B709AC00DA7200 = {
 			fileRef = 4947F5CB0655E85200B791E5;
 			isa = PBXBuildFile;
@@ -7976,7 +7964,7 @@
 				34BD9CD2053146CC000AB133,
 				4B215DB0059896B000305B3C,
 				4B7845EC059B50820048A8BA,
-				344C0F0806B7099F00DA7200,
+				DA70F2B2080CAE8200C72D8B,
 				346C9D46060046AB000F5A8A,
 				4B90B54E064220B400D23731,
 				34677B3F07CC3E8400F59F7B,
@@ -14145,7 +14133,7 @@
 			isa = PBXNativeTarget;
 			name = Bonjour;
 			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
-			productName = Rendezvous;
+			productName = Bonjour;
 			productReference = 4947F5CB0655E85200B791E5;
 			productType = "com.apple.product-type.bundle";
 		};
@@ -22873,6 +22861,18 @@
 			isa = PBXTargetDependency;
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = DA021E4B0802FD9C00D5EBAE;
+		};
+		DA70F2B1080CAE8200C72D8B = {
+			containerPortal = 29B97313FDCFA39411CA2CEA;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
+			remoteInfo = Bonjour;
+		};
+		DA70F2B2080CAE8200C72D8B = {
+			isa = PBXTargetDependency;
+			target = 4947F5BC0655E85200B791E5;
+			targetProxy = DA70F2B1080CAE8200C72D8B;
 		};
 //DA0
 //DA1
