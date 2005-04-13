@@ -184,12 +184,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB;
-					ProjectRef = 3496A8E707CE6CA30055BBAB;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
 			);
 			targets = (
@@ -14134,16 +14134,16 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				INFOPLIST_FILE = Plists/Rendezvous.plist;
+				INFOPLIST_FILE = Plists/Bonjour.plist;
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
-				PRODUCT_NAME = Rendezvous;
+				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
 			dependencies = (
 				4947F5BD0655E85200B791E5,
 			);
 			isa = PBXNativeTarget;
-			name = Rendezvous;
+			name = Bonjour;
 			productInstallPath = "$(USER_LIBRARY_DIR)/Bundles";
 			productName = Rendezvous;
 			productReference = 4947F5CB0655E85200B791E5;
@@ -14265,7 +14265,7 @@
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = Rendezvous.AdiumPlugin;
+			path = Bonjour.AdiumPlugin;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};

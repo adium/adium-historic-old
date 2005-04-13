@@ -173,7 +173,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 															UID:[self UIDForContact:contact]];  
 	
 	if (![listContact remoteGroupName]){
-		[listContact setRemoteGroupName:AILocalizedString(@"Rendezvous", @"Rendezvous group name")];
+		[listContact setRemoteGroupName:AILocalizedString(@"Bonjour", @"Bonjour group name")];
 	}
 	
 	//We only get state change updates on Online contacts
@@ -537,7 +537,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return([contact uniqueID]);
 }
 
-#pragma mark Rendezvous Thread
+#pragma mark Bonjour Thread
+
 - (void)prepareRendezvousThread
 {
 	NSTimer	*autoreleaseTimer;

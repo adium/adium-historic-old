@@ -329,8 +329,8 @@ void av_resolve_reply (struct sockaddr	*interface,
     /* register it */
     errorCode = DNSServiceRegistrationUpdateRecord(dnsRef, 0, [mydata length], [mydata bytes], 3600);
     if (errorCode < 0) {
-	AWEzvLog(@"Received Rendezvous error %d when updating TXT record", errorCode);
-	[[client client] reportError:@"Received Rendezvous errorwhen updating TXT record"
+	AWEzvLog(@"Received Bonjour error %d when updating TXT record", errorCode);
+	[[client client] reportError:@"Received Bonjour error when updating TXT record"
 		ofLevel:AWEzvError];
 	[self disconnect];
     }
@@ -341,8 +341,8 @@ void av_resolve_reply (struct sockaddr	*interface,
     /* register it */
     errorCode = DNSServiceRegistrationUpdateRecord(avDnsRef, 0, [mydata length], [mydata bytes], 3600);
     if (errorCode < 0) {
-	AWEzvLog(@"Received Rendezvous error %d when updating AV TXT record", errorCode);
-	[[client client] reportError:@"Received Rendezvous errorwhen updating AV TXT record"
+	AWEzvLog(@"Received Bonjour error %d when updating AV TXT record", errorCode);
+	[[client client] reportError:@"Received Bonjour error when updating AV TXT record"
 			     ofLevel:AWEzvError];
 	[self disconnect];
     }
@@ -877,11 +877,11 @@ NSData *decode_dns(char* buffer, int len )
     if (errorCode != 0) {
 	switch (errorCode) {
 	    case kDNSServiceDiscoveryUnknownErr:
-		[[[self client] client] reportError:@"Unknown error in Rendezvous Registration"
+		[[[self client] client] reportError:@"Unknown error in Bonjour Registration"
 				        ofLevel:AWEzvError];
 		break;
 	    case kDNSServiceDiscoveryNameConflict:
-		[[[self client] client] reportError:@"A user with your Rendezvous data is already online"
+		[[[self client] client] reportError:@"A user with your Bonjour data is already online"
 				        ofLevel:AWEzvError];
 		break;
 	    default:
