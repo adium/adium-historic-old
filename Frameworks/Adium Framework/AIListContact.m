@@ -134,7 +134,7 @@
  */
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify
 {
-	[self setStatusObject:[NSNumber numberWithBool:isMobile]
+	[self setStatusObject:(isMobile ? [NSNumber numberWithBool:isMobile] : nil)
 				   forKey:@"IsMobile"
 				   notify:notify];
 }
