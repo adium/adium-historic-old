@@ -553,8 +553,10 @@
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
 {
-	[self setStatusObject:statusMessage forKey:@"StatusMessage" notify:notify];
-	
+	if(!statusMessage ||
+	   ![[self statusObjectForKey:@"StatusMessage"] isEqualToAttributedString:statusMessage]){
+		[self setStatusObject:statusMessage forKey:@"StatusMessage" notify:notify];
+	}
 }
 
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify
