@@ -257,32 +257,6 @@
     }
 }
 
-//Convert any NSURL objects attached to an attributed string to their absoluteString equivalents
-- (BOOL)convertNSURLtoString
-{
-	//Check if our string contains any NSURL-carrying links
-    NSRange scanRange = NSMakeRange(0, 0);
-	id		potentialNSURL;
-	BOOL	changed = NO;
-	
-    while(NSMaxRange(scanRange) < [self length]){
-        if((potentialNSURL = [self attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]) &&
-		   [potentialNSURL isKindOfClass:[NSURL class]]){
-
-			[self removeAttribute:NSLinkAttributeName range:scanRange];
-			
-			NSDictionary		*attributesDict = [self attributesAtIndex:scanRange.location effectiveRange:nil];
-			NSAttributedString  *replacement = [[[NSAttributedString alloc] initWithString:[(NSURL *)potentialNSURL absoluteString] 
-																				attributes:attributesDict] autorelease];
-			
-			[self replaceCharactersInRange:scanRange withAttributedString:replacement];
-			changed = YES;
-        }
-    }
-	
-	return changed;
-}
-
 - (void)addFormattingForLinks
 {
 	NSRange		searchRange;
@@ -454,12 +428,18 @@
 											   effectiveRange:&searchRange];
 
 		if(URL) {
+			NSString	*replacementString = [URL absoluteString];
+			
 			//Replace the URL with the NSString of where it was pointing
             [newAttributedString replaceCharactersInRange:searchRange 
-											   withString:[URL absoluteString]];
+											   withString:replacementString];
 
 			//Now remove the URL
 			[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
+
+			/* The attributed string may have changed length; modify our searchRange to reflect the string 
+			 * we just inserted. */
+			searchRange.length = [replacementString length];
 		}
 		searchRange.location += searchRange.length;
 	}
