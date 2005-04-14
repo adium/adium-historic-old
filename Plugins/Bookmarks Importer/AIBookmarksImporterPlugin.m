@@ -269,6 +269,12 @@ end:
 		menuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
 		contextualMenuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
 
+		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
+		[menuItemSubmenu setAutoenablesItems:NO];
+		
+		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
+		[contextualMenuItemSubmenu setAutoenablesItems:NO];
+
 		NSEnumerator		*importersEnum = [importers objectEnumerator];
 		while((importer = [importersEnum nextObject])) {
 			Class   importerClass = [importer class];
@@ -288,17 +294,7 @@ end:
 			menuHasChanged = YES;
 		}
 	}
-
-	if(menuHasChanged) {
-		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		[menuItemSubmenu setAutoenablesItems:NO];
-
-		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		[contextualMenuItemSubmenu setAutoenablesItems:NO];
-	} else {
-		updatingMenu = NO;
-	}
-
+	
 	end = [NSDate date];
 	AILog(@"AIBookmarksImporterPlugin: Imported bookmarks in %g seconds", [end timeIntervalSinceDate:start]);
 
@@ -308,6 +304,8 @@ end:
 	[bookmarksContextualSubmenu release];
 	 bookmarksContextualSubmenu = contextualMenuItemSubmenu;
 	[menuLock unlock];
+	
+	updatingMenu = NO;
 }
 
 - (void) buildBookmarksMenuIfNecessaryThread
@@ -366,18 +364,6 @@ end:
 #pragma mark -
 
 /*
- * @brief Called by the thread when the submenu NSMenu items have been generated
- */
-- (void)gotMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
-{
-	//Apply on the next run loop to avoid threadlocking
-	[self performSelector:@selector(doSetOfMenuItemSubmenu:contextualMenuItemSubmenu:)
-			   withObject:menuItemSubmenu
-			   withObject:contextualMenuItemSubmenu
-			   afterDelay:0.0001];
-}
-
-/*
  * @brief Called after a delay by the main thread to actually perform our setting
  */
 - (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
@@ -398,8 +384,6 @@ end:
 		//Update the menus of existing toolbar items
 		[self updateAllToolbarItemMenus];
 	}
-
-	updatingMenu = NO;
 }
 
 #pragma mark -
@@ -510,7 +494,7 @@ end:
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
 	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
-		[self performSelector:@selector(updateMenuForToolbarItem:)
+		[self performSelector:@selector(obtainMenuLockAndUpdateMenuForToolbarItem:)
 				   withObject:item
 				   afterDelay:0];
 
@@ -565,5 +549,14 @@ end:
 	[item setMenuFormRepresentation:mItem];	
 }
 
+/*
+ * @brief Obtain the menuLock so our menus can be safely accesed, then update the menu for a toolbar item
+ */
+- (void)obtainMenuLockAndUpdateMenuForToolbarItem:(NSToolbarItem *)item
+{
+	[menuLock lock];
+	[self updateMenuForToolbarItem:item];
+	[menuLock unlock];
+}
 
 @end
