@@ -59,13 +59,6 @@
 }
 
 #pragma mark Contact updates
-/*!
- * We really should have a buddy-status-message signal from libgaim, but I can't figure out where to
- * add it to the libgaim code.... so this ghetto fix will do for now, pending the status rewrite for gaim
- * when we'll revisit this.  Only problem with this method is that an ICQ user going from one away state
- * to another isn't going to get updated properly... so this should be fixed eventually. -eds
- */
-
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
 	NSAttributedString	*statusMessage;
