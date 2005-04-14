@@ -21,18 +21,7 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 
-@interface CBGaimServicePlugin (PRIVATE)
-- (void)_initGaim;
-@end
-
 @implementation CBGaimServicePlugin
-
-- (void)_initGaim
-{
-	[NSThread detachNewThreadSelector:@selector(createThreadedGaimCocoaAdapter)
-							 toTarget:[SLGaimCocoaAdapter class]
-						   withObject:nil];
-}
 
 #pragma mark Plugin Installation
 //  Plugin Installation ------------------------------------------------------------------------------------------------
@@ -45,7 +34,9 @@
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:GAIM_DEFAULTS
 																		forClass:[self class]]
 										  forGroup:GROUP_ACCOUNT_STATUS];
-	[self _initGaim];
+	
+	//Prepare the shared instance of the gaim thread adapter
+	[SLGaimCocoaAdapter prepareSharedInstance];
 	
     //Install the services
 	AIMService			= [[ESAIMService alloc] init];

@@ -31,6 +31,7 @@
 
 }
 
++ (void)prepareSharedInstance;
 + (SLGaimCocoaAdapter *)sharedInstance;
 + (NDRunLoopMessenger *)gaimThreadMessenger;
 
