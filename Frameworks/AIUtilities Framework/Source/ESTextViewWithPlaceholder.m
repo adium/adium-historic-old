@@ -31,6 +31,13 @@
     return [placeholder string];
 }
 
+- (void)dealloc
+{
+	[plcaeholder release];
+	
+	[super dealloc];
+}
+
 - (void)drawRect:(NSRect)rect
 {
 	[super drawRect:rect];
