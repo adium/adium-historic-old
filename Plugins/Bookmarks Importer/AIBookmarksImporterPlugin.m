@@ -370,13 +370,13 @@ end:
 {
 	BOOL submenuChanged = NO;
 	if(menuItemSubmenu && (menuItemSubmenu != [bookmarkRootMenuItem submenu])) {
-		[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
 		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
+		[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
 		submenuChanged = YES;
 	}
 	if(contextualMenuItemSubmenu && (contextualMenuItemSubmenu != [bookmarkRootContextualMenuItem submenu])) {
-		[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
 		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
+		[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
 		submenuChanged = YES;
 	}
 
