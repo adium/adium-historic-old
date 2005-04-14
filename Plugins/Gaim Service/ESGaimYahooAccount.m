@@ -378,9 +378,7 @@
 	switch(statusType){
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
-				gaimStatusType = "Available";
-			break;
+			gaimStatusType = "Available";
 		}
 			
 		case AIAwayStatusType:
