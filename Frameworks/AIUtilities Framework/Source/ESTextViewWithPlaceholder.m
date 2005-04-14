@@ -33,7 +33,7 @@
 
 - (void)dealloc
 {
-	[plcaeholder release];
+	[placeholder release];
 	
 	[super dealloc];
 }
