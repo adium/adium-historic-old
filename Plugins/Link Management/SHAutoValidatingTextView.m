@@ -36,21 +36,21 @@
 
 //Set Validation Attribs -----------------------------------------------------------------------------------------------
 #pragma mark Set Validation Attribs
-- (void)setContiniousURLValidationEnabled:(BOOL)flag
+- (void)setContinuousURLValidationEnabled:(BOOL)flag
 {
     //set the validation BOOL, and immeditely reevaluate view
-    continiousURLValidation = flag;
+    continuousURLValidation = flag;
 }
 
-- (void)toggleContiniousURLValidationEnabled
+- (void)toggleContinuousURLValidationEnabled
 {
     //toggle the validation BOOL, and immeditely re-evaluate view
-    continiousURLValidation = !continiousURLValidation;
+    continuousURLValidation = !continuousURLValidation;
 }
 
-- (BOOL)isContiniousURLValidationEnabled
+- (BOOL)isContinuousURLValidationEnabled
 {
-    return(continiousURLValidation);
+    return(continuousURLValidation);
 }
 
 
@@ -71,7 +71,7 @@
 //Catch the notification when the text in the view is edited
 - (void)textDidChange:(NSNotification *)notification
 {
-    if(continiousURLValidation) {//call the URL validatation if set
+    if(continuousURLValidation) {//call the URL validatation if set
         SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
         
         URLIsValid = [laxScanner isStringValidURL:[[self textStorage] string]];

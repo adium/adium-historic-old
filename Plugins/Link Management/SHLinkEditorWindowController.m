@@ -119,7 +119,7 @@
 	}
     
     //Turn on URL validation for our textView
-    [textView_URL setContiniousURLValidationEnabled:YES];
+    [textView_URL setContinuousURLValidationEnabled:YES];
     
 	//In 10.2 the hidden flag will be ignored, so we'll need to set the blank image on launch to ghetto hide it
     if(![NSApp isOnPantherOrBetter]) {
