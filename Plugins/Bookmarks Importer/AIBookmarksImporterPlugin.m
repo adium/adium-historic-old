@@ -332,9 +332,11 @@ end:
 
 - (void)applicationDidBecomeActive:(NSNotification *)notification
 {
-	[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
-							 toTarget:self
-						   withObject:nil];
+	if(!updatingMenu){
+		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
+								 toTarget:self
+							   withObject:nil];
+	}
 }
 
 #pragma mark -
