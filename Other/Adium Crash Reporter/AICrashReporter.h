@@ -18,14 +18,17 @@
 #define EXCEPTIONS_PATH					[@"~/Library/Logs/CrashReporter/Adium.exception.log" stringByExpandingTildeInPath]
 #define CRASHES_PATH					[@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
-@class ESTextViewWithPlaceholder;
+@class AIAutoScrollView, ESTextViewWithPlaceholder;
 
 @interface AICrashReporter : NSObject {
     IBOutlet	NSWindow                    *window_MainWindow;
     IBOutlet	NSTextField                 *textField_emailAddress;
     IBOutlet	NSTextField                 *textField_accountIM;
     IBOutlet	NSTextField                 *textField_description;
+	
+	IBOutlet	AIAutoScrollView			*scrollView_details;
     IBOutlet	ESTextViewWithPlaceholder   *textView_details;
+
     IBOutlet	NSProgressIndicator         *progress_sending;
     IBOutlet	NSButton					*button_close;
 	
