@@ -7,45 +7,56 @@
 
 #import "ESTextViewWithPlaceholder.h"
 
+#define PLACEHOLDER_SPACING		2
 
 @implementation ESTextViewWithPlaceholder
 
--(void)setPlaceholder:(NSString *)inPlaceholder
+//Current implementation suggested by Philippe Mougin on the cocoadev mailing list
+
+- (void)setPlaceholder:(NSString *)inPlaceholder
 {
-    [placeholder release];
-    placeholder = [inPlaceholder copy];
-    
-    if ([[self string] isEqualToString:@""]){
-        [self setString:placeholder];
-        [self setTextColor:[NSColor disabledControlTextColor]];
-    }
+    NSDictionary *attributes;
+	
+	[placeholder release];
+
+	attributes = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor grayColor], NSForegroundColorAttributeName, nil];
+    placeholder = [[NSAttributedString alloc] initWithString:inPlaceholder
+												  attributes:attributes];
+	
+	[self setNeedsDisplay:YES];
 }
 
--(NSString *)placeholder
+- (NSString *)placeholder
 {
-    return placeholder;
+    return [placeholder string];
+}
+
+- (void)drawRect:(NSRect)rect
+{
+	[super drawRect:rect];
+
+	if (([[self string] isEqualToString:@""]) && 
+		([[self window] firstResponder] != self)){
+		NSSize	size = [self frame].size;
+		
+		[placeholder drawInRect:NSMakeRect(PLACEHOLDER_SPACING, 
+										   PLACEHOLDER_SPACING, 
+										   size.width - (PLACEHOLDER_SPACING*2),
+										   size.height - (PLACEHOLDER_SPACING*2))];
+	}
 }
 
 - (BOOL)becomeFirstResponder
 {
-    BOOL shouldBecomeFirstResponder;
-    if ((shouldBecomeFirstResponder = [super becomeFirstResponder])){
-        if ([[self string] isEqualToString:placeholder]){
-            [self setString:@""];
-            [self setTextColor:[NSColor blackColor]];
-        }
-    }
-    return shouldBecomeFirstResponder;
+	[self setNeedsDisplay:YES];
+
+	return [super becomeFirstResponder];
 }
+
 - (BOOL)resignFirstResponder
 {
-    BOOL shouldResignFirstResponder;
-    if ((shouldResignFirstResponder = [super resignFirstResponder])){
-        if ([[self string] isEqualToString:@""]){
-            [self setString:placeholder];
-            [self setTextColor:[NSColor disabledControlTextColor]];
-        }
-    }
-    return shouldResignFirstResponder;
+	[self setNeedsDisplay:YES];
+	
+	return [super resignFirstResponder];
 }
 @end
