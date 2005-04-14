@@ -142,7 +142,7 @@
 /*
  * @brief Generate an NSAttributedString without attachments
  *
- * Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)) and, if not, substituting a characterstic string.
+ * Generate an NSAttributedString without attachments by substituting their string value if possible (if the attachment responds to @selector(string)), and if not, substituting a characteristic string.
  * @return An <tt>NSAttributedString</tt> without attachments; it may be identical to the original object.
  */
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings;
@@ -150,8 +150,7 @@
 /*
  * @brief Generate an NSAttributedString without links
  *
- * The resulting attributed string has the NSString absolutePath values of any URLs 
- * rather than NSLinkAttributeName attributes
+ * @return An autoreleased copy of the receiver with each link expanded to its URI.
  */
 - (NSAttributedString *)attributedStringByConvertingLinksToStrings;
 

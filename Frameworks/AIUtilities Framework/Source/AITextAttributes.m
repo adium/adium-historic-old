@@ -224,7 +224,7 @@
 	}
 }
 
-- (void)setLinkURL:(NSString *)inURL
+- (void)setLinkURL:(NSURL *)inURL
 {
     if(inURL){
         [dictionary setObject:inURL forKey:NSLinkAttributeName];

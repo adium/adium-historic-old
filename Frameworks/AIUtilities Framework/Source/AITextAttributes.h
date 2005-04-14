@@ -158,10 +158,10 @@
 /*!
  * @brief Set a link attribute
  *
- * Set a URL (as an <tt>NSString</tt>) to be associated with these attributes
- * @param inURL An <tt>NSString</tt> of the link URL
+ * Set a URL to be associated with these attributes.
+ * @param inURL An <tt>NSURL</tt> of the link URL
  */
-- (void)setLinkURL:(NSString *)inURL;
+- (void)setLinkURL:(NSURL *)inURL;
 
 /*!
  * @brief Set the language value

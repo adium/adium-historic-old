@@ -29,7 +29,7 @@
 @interface SHLinkEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forTextView:(NSTextView *)inTextView notifyingTarget:(id)inTarget;
 - (void)_buildPopUpMenu;
-- (void)insertLinkTo:(NSString *)urlString withText:(NSString *)linkString inView:(NSTextView *)inView;
+- (void)insertLinkTo:(NSURL *)urlString withText:(NSString *)linkString inView:(NSTextView *)inView;
 - (void)informTargetOfLink;
 @end
 
@@ -170,7 +170,7 @@
         }
 
         //Insert it into the text view
-        [self insertLinkTo:[urlString string] withText:linkString inView:textView];
+        [self insertLinkTo:[NSURL URLWithString:urlString] withText:linkString inView:textView];
 	}
 
 	//Inform our target of the new link and close up
@@ -185,9 +185,11 @@
        [textView selectedRange].location != NSNotFound &&
        [textView selectedRange].location != [[textView textStorage] length]){
             NSRange selectionRange = [textView selectedRange];
+            //get range
             selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
 												 atIndex:selectionRange.location
 										  effectiveRange:&selectionRange];
+			//remove the link from it
             [[textView textStorage] removeAttribute:NSLinkAttributeName range:selectionRange];
     }
     [self closeWindow:nil];
@@ -209,7 +211,7 @@
 }
 
 //Insert a link into a text view
-- (void)insertLinkTo:(NSString *)linkURL withText:(NSString *)linkTitle inView:(NSTextView *)inView
+- (void)insertLinkTo:(NSURL *)linkURL withText:(NSString *)linkTitle inView:(NSTextView *)inView
 {
     NSDictionary				*typingAttributes = [inView typingAttributes];
 	NSMutableAttributedString	*linkString;

@@ -448,11 +448,12 @@
 	unsigned					length = [self length];
 
 	while(searchRange.location < length){
-		NSDictionary	*attributes = [newAttributedString attributesAtIndex:searchRange.location
-															  effectiveRange:&searchRange];
-		NSURL			*URL = [attributes objectForKey:NSLinkAttributeName];
+		NSLog(@"in attributedStringByConvertingLinksToStrings: checking character %u of %u", searchRange.location, length);
+		NSURL			*URL = [newAttributedString attribute:NSLinkAttributeName
+													  atIndex:searchRange.location
+											   effectiveRange:&searchRange];
 
-		if(URL != nil) {
+		if(URL) {
 			//Replace the URL with the NSString of where it was pointing
             [newAttributedString replaceCharactersInRange:searchRange 
 											   withString:[URL absoluteString]];
