@@ -91,14 +91,14 @@
 		id   	 	linkURL = nil;
 		
 		//Get the selected link (We have to be careful when the selection is at the very end of our text view)
-		if(selectedRange.location >= 0 && NSMaxRange(selectedRange) < [[textView textStorage] length]){
+		if(selectedRange.location >= 0 && NSMaxRange(selectedRange) < [[textView textStorage] length]) {
 			linkURL = [[textView textStorage] attribute:NSLinkAttributeName
 												atIndex:selectedRange.location
 										 effectiveRange:&rangeOfLinkAttribute];
 		}
 		
 		//If a link exists at our selection, expand the selection to encompass that entire link
-		if(linkURL){
+		if(linkURL) {
 			[textView setSelectedRange:rangeOfLinkAttribute];
 			selectedRange = rangeOfLinkAttribute;
 		}
@@ -107,13 +107,13 @@
 		linkText = [[textView attributedSubstringFromRange:selectedRange] string];
 		
 		//Place the link title and URL in our panel
-		if(linkURL){
+		if(linkURL) {
 			BOOL		isString = [linkURL isKindOfClass:[NSString class]];
 			NSString	*tmpString = (isString ? [(NSString *)linkURL string] : [(NSURL *)linkURL absoluteString]);
 			
 			[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc] initWithString:tmpString] autorelease]];                
 		}
-		if(linkText){
+		if(linkText) {
 			[textField_linkText setStringValue:linkText];
 		}
 	}
@@ -122,7 +122,7 @@
     [textView_URL setContiniousURLValidationEnabled:YES];
     
 	//In 10.2 the hidden flag will be ignored, so we'll need to set the blank image on launch to ghetto hide it
-    if(![NSApp isOnPantherOrBetter]){
+    if(![NSApp isOnPantherOrBetter]) {
         [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
     }
 	
