@@ -19,6 +19,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
 
 #define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
 #define KEY_CRASH_EMAIL_ADDRESS			@"AdiumCrashReporterEmailAddress"
@@ -57,8 +58,10 @@
 //
 - (void)awakeFromNib
 {
-    [textView_details setPlaceholder:[textView_details string]];
-    
+    [textView_details setPlaceholder:AILocalizedString(@"A detailed explanation of what you were doing when Adium crashed (optional)",nil)];
+
+    [scrollView_details setAlwaysDrawFocusRingIfFocused:YES];
+	
     //Search for an exception log
     if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
