@@ -14,7 +14,7 @@
  */
 
 @interface ESTextViewWithPlaceholder : NSTextView {
-    NSString *placeholder;
+    NSAttributedString *placeholder;
 }
 
 /*
