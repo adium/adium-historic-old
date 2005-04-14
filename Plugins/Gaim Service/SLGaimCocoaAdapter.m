@@ -59,15 +59,16 @@
  * can't be ObjC methods. The ObjC callbacks do need to be ObjC methods. This
  * allows the C ones to call the ObjC ones.
  **/
-static SLGaimCocoaAdapter   *sharedInstance;
+static SLGaimCocoaAdapter   *sharedInstance = nil;
 
 //Dictionaries to track gaim<->adium interactions
 NSMutableDictionary *accountDict = nil;
 //NSMutableDictionary *contactDict = nil;
 NSMutableDictionary *chatDict = nil;
 
-static NDRunLoopMessenger					*gaimThreadMessenger = nil;
-static SLGaimCocoaAdapter					*gaimThreadProxy = nil;
+static NDRunLoopMessenger		*gaimThreadMessenger = nil;
+static SLGaimCocoaAdapter		*gaimThreadProxy = nil;
+static NSLock					*gaimThreadCreationLock = nil;
 
 //The autorelease pool presently in use; it will be periodically released and recreated
 static NSAutoreleasePool *currentAutoreleasePool = nil;
@@ -75,7 +76,12 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 @implementation SLGaimCocoaAdapter
 
-+ (void)createThreadedGaimCocoaAdapter
+/*
+ * @brief Create the instance of SLGaimCocoaAdapter used throughout this program session
+ *
+ * Called on the Gaim thread, never returns until the program terminates
+ */
++ (void)_createThreadedGaimCocoaAdapter
 {
 	SLGaimCocoaAdapter  *gaimCocoaAdapter;
 
@@ -83,12 +89,42 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     gaimCocoaAdapter = [[self alloc] init];
 	
 	[gaimCocoaAdapter release];
-	
-    return;
 }
 
+/*
+ * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
+ *
+ * Should only be called once.  Creates and locks gaimThreadCreationLock so later activity can relock in order to wait
+ * on the thread to be ready for use.
+ */
++ (void)prepareSharedInstance
+{
+	//Create the lock to be able to wait for the gaim thread to be ready
+	gaimThreadCreationLock = [[NSLock alloc] init];
+	
+	//Obtain it
+	[gaimThreadCreationLock lock];
+	
+	//Detach the thread which will serve for all gaim messaging in the future
+	[NSThread detachNewThreadSelector:@selector(_createThreadedGaimCocoaAdapter)
+							 toTarget:[self class]
+						   withObject:nil];
+}
+
+/*
+ * @brief Return the shared instance
+ *
+ * Should only be called once and then cached by CBGaimAccount.  Locks gaimThreadCreationLock, which will only be
+ * unlocked once the gaim thread is fully ready for use.
+ */
 + (SLGaimCocoaAdapter *)sharedInstance
 {
+	//Wait for the lock to be unlocked once the thread is ready
+	[gaimThreadCreationLock lock];
+	
+	//No further need for the lock
+	[gaimThreadCreationLock release]; gaimThreadCreationLock = nil;
+	
 	return sharedInstance;
 }
 
@@ -155,6 +191,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 														   selector:@selector(refreshAutoreleasePool:)
 														   userInfo:nil
 															repeats:YES] retain];
+
+		//We're ready now, so unlock the creation lock which is being waited upon in the main thread
+		[gaimThreadCreationLock unlock];
 
 		CFRunLoopRun();
 
