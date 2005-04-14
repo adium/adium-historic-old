@@ -265,7 +265,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		BOOL			 isBold = (traits & NSBoldFontMask);
 		BOOL			 isItalic = (traits & NSItalicFontMask);
 		
-		link = [attributes objectForKey:NSLinkAttributeName];
+		link = [[attributes objectForKey:NSLinkAttributeName] absoluteString];
 		
 		//If we had a link on the last pass, and we don't now or we have a different one, close the link tag
 		if (oldLink &&
@@ -1041,7 +1041,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"HREF"] == NSOrderedSame){
-			[textAttributes setLinkURL:[inArgs objectForKey:arg]];
+			[textAttributes setLinkURL:[NSURL URLWithString:[inArgs objectForKey:arg]]];
 		}
 	}
 }
