@@ -24,10 +24,11 @@
 
 void CrashHandler_Signal(int i);
 
+//Enable crash catching for the crash reporter
+static AICrashController *sharedCrashController = nil;
+
 @implementation AICrashController
 
-//Enable crash catching for the crash reporter
-AICrashController *sharedCrashController = nil;
 + (void)enableCrashCatching
 {
 	if(!sharedCrashController){
@@ -38,7 +39,7 @@ AICrashController *sharedCrashController = nil;
 //Init
 - (id)init
 {
-	if((self = [super init])) {
+	if((self = [super init])){
 		//Remove any existing crash logs
 		[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
 
@@ -60,13 +61,14 @@ AICrashController *sharedCrashController = nil;
 	return self;
 }
 
+@end
+
 //When a signal occurs, load the crash reporter and close this application
-void CrashHandler_Signal(int i){
+void CrashHandler_Signal(int i)
+{
 	NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 	NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
 
 	[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
 	exit(-1);
 }
-
-@end
