@@ -17,6 +17,7 @@
 #import "AIAccount.h"
 #import "AIChat.h"
 #import "AIContentMessage.h"
+#import "AIContentTyping.h"
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
 #import "AIHTMLDecoder.h"
@@ -519,11 +520,21 @@ static int nextChatNumber = 0;
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
 #pragma mark Typing notifications
-- (BOOL)sendTypingNotifications
+/*
+ * @brief Send typing notifications given the new typing state?
+ *
+ * We never send typing notifications if we are currently suppressing them.
+ * If we are not suppressing them, any new typing state should be sent if typing notifications are enabled; only a not-typing
+ * state should be sent if typing notifications are not enabled, as this may be necessary to clear a state we set while
+ * they were enabled.
+ */
+- (BOOL)sendTypingNotificationsForNewTypingState:(AITypingState)newTypingState
 {
-	return(enableTypingNotifications && ![self integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS]);
+	BOOL suppressTypingNotifications = [self integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS];
+	
+	return(!suppressTypingNotifications && (enableTypingNotifications || (newTypingState == AINotTyping)));
 }
- 
+
 #pragma mark Comparison
 - (BOOL)isEqual:(AIChat *)inChat
 {
