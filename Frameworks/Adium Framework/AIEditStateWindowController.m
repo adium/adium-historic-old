@@ -518,8 +518,12 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	NSAttributedString	*blankString = [NSAttributedString stringWithString:@""];
 	
-	[[textView_statusMessage textStorage] setAttributedString:(statusMessage ? statusMessage : blankString)];
-	[[textView_autoReply textStorage] setAttributedString:(autoReply ? autoReply : blankString)];
+	if(!statusMessage) statusMessage = blankString;
+	[[textView_statusMessage textStorage] setAttributedString:statusMessage];
+	[textView_statusMessage setSelectedRange:NSMakeRange(0, [statusMessage length])];
+
+	if(!autoReply) autoReply = blankString;
+	[[textView_autoReply textStorage] setAttributedString:autoReply];
 
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
