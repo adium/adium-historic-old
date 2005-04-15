@@ -179,14 +179,16 @@
 //Typing state ---------------------------------------------------------------------------------------------------------
 /*
  * @brief Send an AIContentTyping object for an AITypingState on a given chat
+ *
+ * The chat determines whether the notification should be sent or not, based on the account preference and, possibly,
+ * the temporary suppression  status object.
  */
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
-	if([chat sendTypingNotifications] ||
-	   ([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping && typingState == AINotTyping)){ //We need this to allow 'stop typing' changes incase the user turns off the preference while they're typing
+	if([chat sendTypingNotificationsForNewTypingState:typingState]){
 		AIAccount		*account = [chat account];
 		AIContentTyping	*contentObject;
-		
+
 		//Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
 		contentObject = [AIContentTyping typingContentInChat:chat
 												  withSource:account
