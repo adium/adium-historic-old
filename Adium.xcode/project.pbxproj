@@ -7781,6 +7781,7 @@
 		34BD9CD1053146CC000AB133 = {
 			buildPhases = (
 				34E9DCF2078FC79900662E8E,
+				DA4B5CEF080FCCA00017BF17,
 				34BD9D10053146CC000AB133,
 				34BD9D24053146CC000AB133,
 				34BD9D42053146CC000AB133,
@@ -8126,6 +8127,7 @@
 		34BD9D24053146CC000AB133 = {
 			buildActionMask = 2147483647;
 			files = (
+				DA4B5CDF080FCC080017BF17,
 				349C7C7A07C9AE1B005EB896,
 				34E0EA0807CC53ED00A82198,
 				347E781A07CA962100350507,
@@ -22698,6 +22700,34 @@
 			name = "AIUtilities (from AIUtilities.framework.xcode)";
 			targetProxy = DA021E4B0802FD9C00D5EBAE;
 		};
+		DA4B5CDE080FCC080017BF17 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text.xml;
+			name = CoreComponents.plist;
+			path = Resources/CoreComponents.plist;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		DA4B5CDF080FCC080017BF17 = {
+			fileRef = DA4B5CDE080FCC080017BF17;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		DA4B5CEF080FCCA00017BF17 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/include\"\n/usr/bin/python \"${SRCROOT}/Utilities/cc2header.py\" \"${SRCROOT}/Resources/CoreComponents.plist\" > \"${TARGET_BUILD_DIR}/include/CoreComponents.h\"";
+		};
 		DA70F2B1080CAE8200C72D8B = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -23516,6 +23546,7 @@
 		};
 		F5B53FBB0333AB5C01A8010A = {
 			children = (
+				DA4B5CDE080FCC080017BF17,
 				4B0149050733D3A4001A4C57,
 				4B0149060733D3A5001A4C57,
 				4B587C0507ABFC87001832A9,
