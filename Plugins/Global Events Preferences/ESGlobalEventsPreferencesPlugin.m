@@ -24,6 +24,12 @@
 
 #define	NEW_PRESET_NAME				AILocalizedString(@"New Event Set",nil)
 
+#define KEY_ACTIVE_EVENT_SET		@"Active Event Set"
+#define KEY_STORED_EVENT_PRESETS	@"Event Presets"
+#define	KEY_EVENT_SET_NAME			@"Name"
+#define KEY_ORDER_INDEX				@"OrderIndex"
+#define KEY_NEXT_ORDER_INDEX		@"NextOrderIndex"
+
 //Sound set defines
 #define SOUND_EVENT_START			@"\nSoundset:\n"	//String marking start of event list
 #define SOUND_EVENT_QUOTE			@"\""			//Character before and after event name
@@ -78,16 +84,22 @@
 
 - (void)installPlugin
 {
+	NSString	*activeEventSet;
+	
 	builtInEventPresets = [[NSDictionary dictionaryNamed:@"BuiltInEventPresets" forClass:[self class]] retain];
-	storedEventPresets = [[[adium preferenceController] preferenceForKey:@"Event Presets"
+	storedEventPresets = [[[adium preferenceController] preferenceForKey:KEY_STORED_EVENT_PRESETS
 																   group:PREF_GROUP_EVENT_PRESETS] mutableCopy];
 	if(!storedEventPresets) storedEventPresets = [[NSMutableDictionary alloc] init];
 
-	NSNumber	*setDefaults = [[NSUserDefaults standardUserDefaults] objectForKey:@"Adium:RegisteredDefaultEvents"];
-	if(!setDefaults || ![setDefaults boolValue]){
-		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];
-		[[NSUserDefaults standardUserDefaults] setObject:[NSNumber numberWithBool:YES]
-												  forKey:@"Adium:RegisteredDefaultEvents"];
+	/* If there is no active event set, or the active event set is not present in our built in or stored event sets
+	 * then we are in one of two conditions: either this is a first-launch, or the user has deleted the event preferences.
+	 * Either way, we want to set ourselves to the default notification set before proceeding.
+	 */
+	activeEventSet = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
+															  group:PREF_GROUP_EVENT_PRESETS];
+	if(!activeEventSet || (![builtInEventPresets objectForKey:activeEventSet] &&
+						   ![storedEventPresets objectForKey:activeEventSet])){
+		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];		
 	}
 
 	//Install our preference view
@@ -276,21 +288,21 @@
 	}
 	
 	//Set the name of the now-active event set, which includes sounds and all other events
-	[[adium preferenceController] setPreference:[eventPreset objectForKey:@"Name"]
-										 forKey:@"Active Event Set"
+	[[adium preferenceController] setPreference:[eventPreset objectForKey:KEY_EVENT_SET_NAME]
+										 forKey:KEY_ACTIVE_EVENT_SET
 										  group:PREF_GROUP_EVENT_PRESETS];
 }
 
 - (float)nextOrderIndex
 {
-	NSNumber *nextOrderIndexNumber = [[adium preferenceController] preferenceForKey:@"NextOrderIndex"
+	NSNumber *nextOrderIndexNumber = [[adium preferenceController] preferenceForKey:KEY_NEXT_ORDER_INDEX
 																			  group:PREF_GROUP_EVENT_PRESETS];
 	float	nextOrderIndex;
 	
 	nextOrderIndex = (nextOrderIndexNumber ? [nextOrderIndexNumber floatValue] : 1.0);
 	
 	[[adium preferenceController] setPreference:[NSNumber numberWithFloat:(nextOrderIndex + 1)]
-										 forKey:@"NextOrderIndex"
+										 forKey:KEY_NEXT_ORDER_INDEX
 										  group:PREF_GROUP_EVENT_PRESETS];	
 
 	return nextOrderIndex;
@@ -304,11 +316,11 @@
  */
 - (void)saveEventPreset:(NSMutableDictionary *)eventPreset
 {
-	NSString	*name = [eventPreset objectForKey:@"Name"];
+	NSString	*name = [eventPreset objectForKey:KEY_EVENT_SET_NAME];
 	//Assign the next order index to this preset if it doesn't have one yet
-	if(![eventPreset objectForKey:@"OrderIndex"]){
+	if(![eventPreset objectForKey:KEY_ORDER_INDEX]){
 		[eventPreset setObject:[NSNumber numberWithFloat:[self nextOrderIndex]]
-						forKey:@"OrderIndex"];
+						forKey:KEY_ORDER_INDEX];
 	}
 
 	//If we don't have a name at this point, simply assign one
@@ -327,14 +339,14 @@
 		}
 		
 		[eventPreset setObject:name
-						forKey:@"Name"];
+						forKey:KEY_EVENT_SET_NAME];
 	}
 	
 	[storedEventPresets setObject:eventPreset
 						   forKey:name];
 
 	[[adium preferenceController] setPreference:storedEventPresets
-										 forKey:@"Event Presets"
+										 forKey:KEY_STORED_EVENT_PRESETS
 										  group:PREF_GROUP_EVENT_PRESETS];
 }
 
@@ -343,10 +355,10 @@
  */
 - (void)deleteEventPreset:(NSDictionary *)eventPreset
 {
-	[storedEventPresets removeObjectForKey:[eventPreset objectForKey:@"Name"]];
+	[storedEventPresets removeObjectForKey:[eventPreset objectForKey:KEY_EVENT_SET_NAME]];
 	
 	[[adium preferenceController] setPreference:storedEventPresets
-										 forKey:@"Event Presets"
+										 forKey:KEY_STORED_EVENT_PRESETS
 										  group:PREF_GROUP_EVENT_PRESETS];	
 }
 
@@ -377,15 +389,15 @@
 
 int eventPresetsSort(id eventPresetA, id eventPresetB, void *context)
 {
-	float orderIndexA = [[eventPresetA objectForKey:@"OrderIndex"] floatValue];
-	float orderIndexB = [[eventPresetB objectForKey:@"OrderIndex"] floatValue];
+	float orderIndexA = [[eventPresetA objectForKey:KEY_ORDER_INDEX] floatValue];
+	float orderIndexB = [[eventPresetB objectForKey:KEY_ORDER_INDEX] floatValue];
 	
 	if(orderIndexA > orderIndexB){
 		return(NSOrderedDescending);
 	}else if (orderIndexA < orderIndexB){
 		return(NSOrderedAscending);
 	}else{
-		return([[eventPresetA objectForKey:@"Name"] caseInsensitiveCompare:[eventPresetB objectForKey:@"Name"]]);
+		return([[eventPresetA objectForKey:KEY_EVENT_SET_NAME] caseInsensitiveCompare:[eventPresetB objectForKey:KEY_EVENT_SET_NAME]]);
 	}
 }
 
