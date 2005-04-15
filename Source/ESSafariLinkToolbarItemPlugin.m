@@ -63,6 +63,7 @@
 - (void)dealloc
 {
 	[safariLinkScript release]; safariLinkScript = nil;
+	[super dealloc];
 }
 
 /*
