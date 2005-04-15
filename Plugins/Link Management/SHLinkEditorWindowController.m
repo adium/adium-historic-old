@@ -97,10 +97,36 @@
 										 effectiveRange:&rangeOfLinkAttribute];
 		}
 		
-		//If a link exists at our selection, expand the selection to encompass that entire link
 		if(linkURL) {
+			//If a link exists at our selection, expand the selection to encompass that entire link
 			[textView setSelectedRange:rangeOfLinkAttribute];
 			selectedRange = rangeOfLinkAttribute;
+		}else{
+			//Fill the URL field from the pasteboard if possible
+			NSPasteboard		*pboard = [NSPasteboard generalPasteboard];
+			NSString			*availableType = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, NSStringPboardType, nil]];
+			
+			if(availableType){
+				if([availableType isEqualToString:NSURLPboardType]){
+					linkURL = [[NSURL URLFromPasteboard:pboard] absoluteString];
+
+				}else{ /* NSStringPboardType */
+					linkURL = [pboard stringForType:NSStringPboardType];
+				}
+			}
+
+			if(linkURL){
+				//Only use the pasteboard if it contains a valid URL; otherwise it most likely is not intended for us.
+				SHHyperlinkScanner  *laxScanner;
+				
+				laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
+				
+				if(![laxScanner isStringValidURL:linkURL]){
+					linkURL = nil;
+				}
+				
+				[laxScanner release];
+			}
 		}
 		
 		//Get the selected text
@@ -108,9 +134,10 @@
 		
 		//Place the link title and URL in our panel
 		if(linkURL) {
-			BOOL		isString = [linkURL isKindOfClass:[NSString class]];
-			NSString	*tmpString = (isString ? [(NSString *)linkURL string] : [(NSURL *)linkURL absoluteString]);
-			
+			NSString	*tmpString = ([linkURL isKindOfClass:[NSString class]] ? 
+									  (NSString *)linkURL : 
+									  [(NSURL *)linkURL absoluteString]);
+
 			[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc] initWithString:tmpString] autorelease]];                
 		}
 		if(linkText) {
@@ -214,26 +241,30 @@
 - (void)insertLinkTo:(NSURL *)linkURL withText:(NSString *)linkTitle inView:(NSTextView *)inView
 {
     NSDictionary				*typingAttributes = [inView typingAttributes];
+	NSTextStorage				*textStorage = [inView textStorage];
 	NSMutableAttributedString	*linkString;
-
+	
 	//Create the link string
 	linkString = [[[NSMutableAttributedString alloc] initWithString:linkTitle
-															attributes:typingAttributes] autorelease];
+														 attributes:typingAttributes] autorelease];
     [linkString addAttribute:NSLinkAttributeName value:linkURL range:NSMakeRange(0,[linkString length])];
     
 	//Insert it into the text view, replacing the current selection
-	[[inView textStorage] replaceCharactersInRange:[inView selectedRange] withAttributedString:linkString];
+	[textStorage replaceCharactersInRange:[inView selectedRange] withAttributedString:linkString];
 		
 	//If this link was inserted at the end of our text view, add a space and set the formatting back to normal
-	//This preferents the link attribute from bleeding into newly entered text
-	if(NSMaxRange([(NSTextView *)inView selectedRange]) == [[(NSTextView *)inView textStorage] length]){
+	//This prevents the link attribute from bleeding into newly entered text
+	if(NSMaxRange([inView selectedRange]) == [textStorage length]){
 		NSAttributedString	*tmpString = [[[NSAttributedString alloc] initWithString:@" "
 																		  attributes:typingAttributes] autorelease];
-		[[inView textStorage] appendAttributedString:tmpString];
+		[textStorage appendAttributedString:tmpString];
 	}
+	
+	//Notify that a change occurred since NSTextStorage won't do it for us
+	[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
+														object:inView
+													  userInfo:nil];
 }
-
-
 
 //URL Validation and other Delegate Oddities ---------------------------------------------------------------------------
 #pragma mark URL Validation and other Delegate Oddities
