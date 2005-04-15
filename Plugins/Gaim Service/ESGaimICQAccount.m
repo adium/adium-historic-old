@@ -158,6 +158,9 @@
 				gaimStatusType = "Online";
 			}
 			
+			//No available status message for ICQ, sadly
+			*statusMessage = nil;
+			
 			break;
 		}
 
@@ -180,11 +183,15 @@
 			
 		case AIInvisibleStatusType: 
 			gaimStatusType = "Invisible";
+			
+			//No invisible status message
+			*statusMessage = nil;
+
 			break;
 	}
 
 	//If we are setting one of our custom statuses, don't use a status message
-	if(gaimStatusType != NULL) 	*statusMessage = nil;
+//	if(gaimStatusType != NULL) 	*statusMessage = nil;
 
 	//If we didn't get a gaim status type, request one from super
 	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
