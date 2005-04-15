@@ -4191,6 +4191,7 @@
 				34F8A7FA05A8927F00577775,
 				9E4CF9D104AA69B000415B22,
 				4B6D0E43047D490700A8010A,
+				34A65AF606A5A0C400898470,
 				4BC8AFD604FD3C1000A8010A,
 				4B0473B7043E43F200A8010A,
 				4B5B15220493BF9A00A8010A,
@@ -6831,74 +6832,16 @@
 		};
 		34A65AF606A5A0C400898470 = {
 			children = (
-				34A65B0406A5A15300898470,
-				34A65B0506A5A15300898470,
-				34A65D6C06A5ABC500898470,
-				34A65D6D06A5ABC500898470,
+				34F46784080F7FFB007800AB,
+				34F46783080F7FFB007800AB,
+				34F46778080F49C5007800AB,
+				34F46779080F49C5007800AB,
 			);
 			isa = PBXGroup;
 			name = "Safari Link Toolbar Item";
 			path = "";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		34A65B0406A5A15300898470 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = ESSafariLinkToolbarItemPlugin.h;
-			path = "Plugins/Safari Link Toolbar Item/ESSafariLinkToolbarItemPlugin.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A65B0506A5A15300898470 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = ESSafariLinkToolbarItemPlugin.m;
-			path = "Plugins/Safari Link Toolbar Item/ESSafariLinkToolbarItemPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A65B0606A5A15300898470 = {
-			fileRef = 34A65B0406A5A15300898470;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A65B0706A5A15300898470 = {
-			fileRef = 34A65B0506A5A15300898470;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A65D6C06A5ABC500898470 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = Safari.png;
-			path = "Plugins/Safari Link Toolbar Item/Safari.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A65D6D06A5ABC500898470 = {
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.scpt;
-			name = Safari.scpt;
-			path = "Plugins/Safari Link Toolbar Item/Safari.scpt";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A65D6E06A5ABC500898470 = {
-			fileRef = 34A65D6C06A5ABC500898470;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A65D6F06A5ABC500898470 = {
-			fileRef = 34A65D6D06A5ABC500898470;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34A6E9AB07D635B100972830 = {
 			fileEncoding = 10;
@@ -7959,7 +7902,6 @@
 				4BBF41E30661194A001D31E1,
 				4B2DC06D066F705800AD5AAD,
 				34E38240068F7F2300303451,
-				34A65B0606A5A15300898470,
 				9E20910C06A601A500E33E27,
 				9E20910F06A601B100E33E27,
 				344C0D5106B6D63800DA7200,
@@ -8080,6 +8022,7 @@
 				343EC6AA0809DEC800E27095,
 				347C6942080C8F2B00E69674,
 				347C6948080C8F3B00E69674,
+				34F46786080F7FFB007800AB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8297,8 +8240,6 @@
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
 				4BC7BA3E069C8BD4001F2DD8,
-				34A65D6E06A5ABC500898470,
-				34A65D6F06A5ABC500898470,
 				9E20910A06A601A100E33E27,
 				9E20910D06A601AD00E33E27,
 				9E217B7B06A74CA8002A3F27,
@@ -8380,6 +8321,8 @@
 				343EC6920809DD3400E27095,
 				343EC6B30809DEEB00E27095,
 				3402D5A5080DBC91004E50B4,
+				34F4677A080F49C5007800AB,
+				34F4677B080F49C5007800AB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8445,7 +8388,6 @@
 				4BBF41E40661194A001D31E1,
 				4B2DC06E066F705800AD5AAD,
 				34E38241068F7F2300303451,
-				34A65B0706A5A15300898470,
 				9E20910E06A601AF00E33E27,
 				9E20911006A601B200E33E27,
 				344C0D5006B6D63800DA7200,
@@ -8566,6 +8508,7 @@
 				343EC6A90809DEC800E27095,
 				347C6943080C8F2B00E69674,
 				347C6949080C8F3B00E69674,
+				34F46785080F7FFB007800AB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -12161,47 +12104,6 @@
 			settings = {
 			};
 		};
-		34DF006707A788AC00B92233 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = ESRendezvousAccountViewController.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DF006807A788AD00B92233 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = ESRendezvousAccountViewController.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DF006907A788AD00B92233 = {
-			fileRef = 34DF006707A788AC00B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DF006A07A788AD00B92233 = {
-			fileRef = 34DF006807A788AD00B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34DF00BC07A7FE8E00B92233 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			path = ESRendezvousAccountView.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34DF00BD07A7FE8E00B92233 = {
-			fileRef = 34DF00BC07A7FE8E00B92233;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34DFF46007A5EABF00B92233 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -13652,6 +13554,190 @@
 			settings = {
 			};
 		};
+		34F46755080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = ESBonjourAccountViewController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46756080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = ESBonjourAccountViewController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46757080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWBonjourPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46758080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWBonjourPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46759080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWBonjourAccount.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4675A080F46AB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWBonjourAccount.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4675B080F46AC007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = ESBonjourAccountView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4675C080F46AC007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = AWBonjourService.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4675D080F46AC007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = AWBonjourService.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4675E080F46AC007800AB = {
+			fileRef = 34F46755080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F4675F080F46AC007800AB = {
+			fileRef = 34F46756080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46760080F46AC007800AB = {
+			fileRef = 34F46757080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46761080F46AC007800AB = {
+			fileRef = 34F46758080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46762080F46AC007800AB = {
+			fileRef = 34F46759080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46763080F46AC007800AB = {
+			fileRef = 34F4675A080F46AB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46764080F46AC007800AB = {
+			fileRef = 34F4675B080F46AC007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46765080F46AC007800AB = {
+			fileRef = 34F4675C080F46AC007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46766080F46AC007800AB = {
+			fileRef = 34F4675D080F46AC007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46778080F49C5007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.scpt;
+			name = Safari.scpt;
+			path = Resources/Safari.scpt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46779080F49C5007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = Safari.png;
+			path = Resources/Safari.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F4677A080F49C5007800AB = {
+			fileRef = 34F46778080F49C5007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F4677B080F49C5007800AB = {
+			fileRef = 34F46779080F49C5007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46783080F7FFB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESSafariLinkToolbarItemPlugin.m;
+			path = Source/ESSafariLinkToolbarItemPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46784080F7FFB007800AB = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESSafariLinkToolbarItemPlugin.h;
+			path = Source/ESSafariLinkToolbarItemPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F46785080F7FFB007800AB = {
+			fileRef = 34F46783080F7FFB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34F46786080F7FFB007800AB = {
+			fileRef = 34F46784080F7FFB007800AB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34F52BCB06E2AFBC00887BE2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -14005,17 +14091,17 @@
 //494
 		4947F5BB0655E7C400B791E5 = {
 			children = (
-				34DF006707A788AC00B92233,
-				34DF006807A788AD00B92233,
-				34DF00BC07A7FE8E00B92233,
-				4947F5CE0655E90C00B791E5,
-				4947F5CF0655E90C00B791E5,
-				4BAFD5BD06E00B6C00FF7FBC,
-				4BAFD5BE06E00B6C00FF7FBC,
-				4947F5CC0655E90C00B791E5,
-				4947F5CD0655E90C00B791E5,
-				3402E05807CB0EEE0044F818,
+				34F4675A080F46AB007800AB,
+				34F46759080F46AB007800AB,
+				34F46758080F46AB007800AB,
+				34F46757080F46AB007800AB,
+				34F4675D080F46AC007800AB,
+				34F4675C080F46AC007800AB,
+				34F4675B080F46AC007800AB,
+				34F46756080F46AB007800AB,
+				34F46755080F46AB007800AB,
 				4947F5D00655E90C00B791E5,
+				3402E05807CB0EEE0044F818,
 			);
 			isa = PBXGroup;
 			name = Bonjour;
@@ -14063,8 +14149,6 @@
 			files = (
 				4947F5C00655E85200B791E5,
 				4947F5C10655E85200B791E5,
-				4947F6060655E90D00B791E5,
-				4947F6080655E90D00B791E5,
 				4947F60A0655E90D00B791E5,
 				4947F60C0655E90D00B791E5,
 				4947F60F0655E90D00B791E5,
@@ -14091,8 +14175,10 @@
 				4947F6320655E90D00B791E5,
 				4947F6340655E90D00B791E5,
 				4947F6370655E90D00B791E5,
-				4BAFD5BF06E00B6C00FF7FBC,
-				34DF006907A788AD00B92233,
+				34F4675F080F46AC007800AB,
+				34F46761080F46AC007800AB,
+				34F46763080F46AC007800AB,
+				34F46766080F46AC007800AB,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14113,8 +14199,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				4947F60E0655E90D00B791E5,
-				34DF00BD07A7FE8E00B92233,
 				3402E05907CB0EEF0044F818,
+				34F46764080F46AC007800AB,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14122,8 +14208,6 @@
 		4947F5C30655E85200B791E5 = {
 			buildActionMask = 2147483647;
 			files = (
-				4947F9530655F2E600B791E5,
-				4947F9540655F2E600B791E5,
 				4947F60B0655E90D00B791E5,
 				4947F60D0655E90D00B791E5,
 				4947F6180655E90D00B791E5,
@@ -14140,8 +14224,10 @@
 				4947F6330655E90D00B791E5,
 				4947F6350655E90D00B791E5,
 				4947F6360655E90D00B791E5,
-				4BAFD5C006E00B6C00FF7FBC,
-				34DF006A07A788AD00B92233,
+				34F4675E080F46AC007800AB,
+				34F46760080F46AC007800AB,
+				34F46762080F46AC007800AB,
+				34F46765080F46AC007800AB,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -14170,38 +14256,6 @@
 			path = Bonjour.AdiumPlugin;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4947F5CC0655E90C00B791E5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AWRendezvousAccount.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4947F5CD0655E90C00B791E5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AWRendezvousAccount.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4947F5CE0655E90C00B791E5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AWRendezvousPlugin.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4947F5CF0655E90C00B791E5 = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AWRendezvousPlugin.m;
-			refType = 4;
-			sourceTree = "<group>";
 		};
 		4947F5D00655E90C00B791E5 = {
 			children = (
@@ -14689,18 +14743,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4947F6060655E90D00B791E5 = {
-			fileRef = 4947F5CC0655E90C00B791E5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4947F6080655E90D00B791E5 = {
-			fileRef = 4947F5CE0655E90C00B791E5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4947F60A0655E90D00B791E5 = {
 			fileRef = 4947F5D20655E90C00B791E5;
 			isa = PBXBuildFile;
@@ -14955,18 +14997,6 @@
 		};
 		4947F6370655E90D00B791E5 = {
 			fileRef = 4947F6050655E90D00B791E5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4947F9530655F2E600B791E5 = {
-			fileRef = 4947F5CD0655E90C00B791E5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4947F9540655F2E600B791E5 = {
-			fileRef = 4947F5CF0655E90C00B791E5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -15811,7 +15841,6 @@
 				F1D0C631051AC2380000000E,
 				34E38235068F7F0300303451,
 				6E5A43DC0611604B0078C342,
-				34A65AF606A5A0C400898470,
 				34DFF46607A5EAC800B92233,
 			);
 			isa = PBXGroup;
@@ -18227,34 +18256,6 @@
 		};
 		4BAFD5AC06E00AD300FF7FBC = {
 			fileRef = 4BAFD5A606E00AD200FF7FBC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BAFD5BD06E00B6C00FF7FBC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			path = AWRendezvousService.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BAFD5BE06E00B6C00FF7FBC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			path = AWRendezvousService.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BAFD5BF06E00B6C00FF7FBC = {
-			fileRef = 4BAFD5BD06E00B6C00FF7FBC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BAFD5C006E00B6C00FF7FBC = {
-			fileRef = 4BAFD5BE06E00B6C00FF7FBC;
 			isa = PBXBuildFile;
 			settings = {
 			};

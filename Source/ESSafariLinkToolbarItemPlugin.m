@@ -30,8 +30,15 @@
 - (NSString *)_executeSafariLinkScript;
 @end
 
+/*
+ * @class ESSafariLinkToolbarItemPlugin
+ * @brief Component to add a toolbar item which inserts a link to the active Safari web page
+ */
 @implementation ESSafariLinkToolbarItemPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	safariLinkScript = nil;
@@ -50,11 +57,17 @@
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
-- (void)uninstallPlugin
+/*
+ * @brief Deallocate
+ */
+- (void)dealloc
 {
 	[safariLinkScript release]; safariLinkScript = nil;
 }
 
+/*
+ * @brief Insert a link to the active Safari page into the first responder if it is an NSTextView
+ */
 - (IBAction)insertSafariLink:(id)sender
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
@@ -65,7 +78,7 @@
 																			   performSelector:@selector(_executeSafariLinkScript)
 																					withResult:YES];
 
-		//If the script fails, do nothing
+		//If the script returns nil or fails, do nothing
 		if(scriptResult && [scriptResult length]){
 			//Insert the script result - it should have returned HTML, so process it first
 			NSAttributedString	*attributedScriptResult;
@@ -81,7 +94,10 @@
 	}
 }
 
-//Execute the script, returning its output
+/*
+ * @brief Execute the script our Safari applescript
+ * @result NSString containing an HTML link to the active Safari web page
+ */
 - (NSString *)_executeSafariLinkScript
 {
 	//Create the NSAppleScript object if necessary
