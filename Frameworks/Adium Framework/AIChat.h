@@ -128,7 +128,7 @@ typedef enum {
 - (NSImage *)chatImage;
 - (NSImage *)chatMenuImage;
 
-- (BOOL)sendTypingNotifications;
+- (BOOL)sendTypingNotificationsForNewTypingState:(AITypingState)newTypingState;
 
 - (void)setSecurityDetails:(NSDictionary *)securityDetails;
 - (NSDictionary *)securityDetails;
