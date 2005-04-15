@@ -709,9 +709,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     if([inObject displayContent]){
 		AIChat			*chat = [inObject chat];
 		NSDictionary	*userInfo;
-		
-		BOOL		contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
+		BOOL			contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
 
+		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
+		if(!chat) return;
+		
 		chatIsOpen = [chat isOpen];
 		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
 						   (![inObject isOutgoing]));
