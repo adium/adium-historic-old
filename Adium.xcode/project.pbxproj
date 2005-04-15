@@ -1967,6 +1967,7 @@
 		343EB3FF08086D9000E27095 = {
 			children = (
 				4B7A565A07A1742900BDC540,
+				34F468E9080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimNovellAccountView.nib;
@@ -1997,6 +1998,7 @@
 		343EB40308086D9000E27095 = {
 			children = (
 				349448C207BB29B2000F2A03,
+				34F468E3080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimGaduGaduAccountView.nib;
@@ -2012,6 +2014,7 @@
 		343EB40508086D9000E27095 = {
 			children = (
 				34F1529405E9FDDB00B32FD7,
+				34F468E8080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMSNAccountView.nib;
@@ -2027,6 +2030,7 @@
 		343EB40908086D9100E27095 = {
 			children = (
 				342E2B1A072976060054D77A,
+				34F468EC080FA988007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimZephyrJoinChatView.nib;
@@ -2042,6 +2046,7 @@
 		343EB40C08086D9100E27095 = {
 			children = (
 				6E4D961506B73A96005235E9,
+				34F468E0080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimOscarJoinChatView.nib;
@@ -2057,6 +2062,7 @@
 		343EB40E08086D9100E27095 = {
 			children = (
 				6EA3688E06B73F67009CA81A,
+				34F468EA080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimYahooJoinChatView.nib;
@@ -2072,6 +2078,7 @@
 		343EB41208086D9100E27095 = {
 			children = (
 				348D8D2306CC07BC00449EBB,
+				34F468ED080FA988007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimZephyrAccountView.nib;
@@ -2087,6 +2094,7 @@
 		343EB41408086D9100E27095 = {
 			children = (
 				6E4D962706B73C18005235E9,
+				34F468E6080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimMeanwhileJoinChatView.nib;
@@ -2117,6 +2125,7 @@
 		343EB41808086D9100E27095 = {
 			children = (
 				6E4D962106B73BDF005235E9,
+				34F468E4080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimJabberJoinChatView.nib;
@@ -2132,6 +2141,7 @@
 		343EB41A08086D9100E27095 = {
 			children = (
 				34F52BCB06E2AFBC00887BE2,
+				34F468E2080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimICQAccountView.nib;
@@ -2147,6 +2157,7 @@
 		343EB41C08086D9100E27095 = {
 			children = (
 				34B9197F062DEC99004F1223,
+				34F468E1080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimOscarAccountView.nib;
@@ -2162,6 +2173,7 @@
 		343EB41E08086D9100E27095 = {
 			children = (
 				343A7F2606935DB600150CEC,
+				34F468E7080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMeanwhileAccountView.nib;
@@ -2177,6 +2189,7 @@
 		343EB42008086D9200E27095 = {
 			children = (
 				348A901A062A13AB00FC6E03,
+				34F468EB080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimYahooAccountView.nib;
@@ -2192,6 +2205,7 @@
 		343EB42208086D9200E27095 = {
 			children = (
 				348A8A190629A68C00FC6E03,
+				34F468E5080FA987007800AB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimJabberAccountView.nib;
@@ -13708,6 +13722,118 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34F468E0080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E1080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimOscarAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E2080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimICQAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E3080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E4080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/DCGaimJabberJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E5080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimJabberAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E6080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/DCGaimMeanwhileJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E7080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimMeanwhileAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E8080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimMSNAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468E9080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimNovellAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468EA080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/DCGaimYahooJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468EB080FA987007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimYahooAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468EC080FA988007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/DCGaimZephyrJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34F468ED080FA988007800AB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/Gaim Service/German.lproj/ESGaimZephyrAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34F52BCB06E2AFBC00887BE2 = {
 			isa = PBXFileReference;
