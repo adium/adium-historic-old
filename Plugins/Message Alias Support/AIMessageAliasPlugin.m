@@ -59,7 +59,7 @@
 																					 effectiveRange:&scanRange];
 			NSString *linkURLString;
 			if(linkURL && [linkURL isKindOfClass:[NSURL class]]) linkURLString = [(NSURL *)linkURL absoluteString];
-			else linkURLString = linkURL;
+			else linkURLString = (NSString *)linkURL;
 			
 			//If we found a URL, replace any keywords within it
 			if(linkURL){
