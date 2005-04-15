@@ -15,6 +15,7 @@
  */
 
 #import "ESObjectWithStatus.h"
+#import "AIContentTyping.h"
 
 @class AIAccount, AIListObject, AIListContact, AIContentObject;
 @protocol AIContainingObject;
