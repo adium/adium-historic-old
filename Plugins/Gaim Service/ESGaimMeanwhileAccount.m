@@ -49,25 +49,21 @@
 #pragma mark Status Messages
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
-	NSAttributedString	*statusMessage = nil;
-	GaimConnection		*gc = b->account->gc;
-	char				*normalized = g_strdup(gaim_normalize(b->account, b->name));
+	NSString				*statusMessageString;
+	NSAttributedString		*statusMessage = nil;
+	const char				*statusMessageText;
+	GaimConnection			*gc = b->account->gc;
+	struct mwGaimPluginData	*pd = ((struct mwGaimPluginData *)(gc->proto_data));
+	struct mwAwareIdBlock	t = { mwAware_USER,  b->name, NULL };
+	
+	statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
+	statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);
 
-	struct mw_plugin_data	*pd = ((struct mw_plugin_data *)(gc->proto_data));
-	struct mwAwareIdBlock	t = { mwAware_USER, (char *)normalized, NULL };
-	
-	const char				*statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
-	NSString				*statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);
-	
 	if (statusMessageString && [statusMessageString length]){
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
 
-	g_free(normalized);
-	
-	NSLog(@"%s status message is %@",b->name,statusMessage);
-	
 	return statusMessage;
 }
 

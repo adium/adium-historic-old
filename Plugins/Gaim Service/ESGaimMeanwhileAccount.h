@@ -26,34 +26,50 @@ enum Meanwhile_CL_Choice {
 	Meanwhile_CL_Load_And_Save = 3
 };
 
-//From mwgaim.c
-struct mw_plugin_data {
+/** the gaim plugin data.
+available as gc->proto_data and mwSession_getClientData */
+struct mwGaimPluginData {
 	struct mwSession *session;
 	
 	struct mwServiceAware *srvc_aware;
-	
-	struct mwServiceConf *srvc_conf;
-	
-	struct mwServiceIM *srvc_im;
-	
+	struct mwServiceConference *srvc_conf;
+	struct mwServiceDirectory *srvc_dir;
+	struct mwServiceFileTransfer *srvc_ft;
+	struct mwServiceIm *srvc_im;
+	struct mwServiceResolve *srvc_resolve;
 	struct mwServiceStorage *srvc_store;
 	
-	GHashTable *list_map;
-	GHashTable *convo_map;
+	/** map of GaimGroup:mwAwareList and mwAwareList:GaimGroup */
+	GHashTable *group_list_map;
 	
+	/** event id for the buddy list save callback */
 	guint save_event;
+	
+	/** socket fd */
+	int socket;
+	
+	GaimConnection *gc;
 };
 
+/* 8.3.8.2 Awareness Presence Types */
 
-//From libmeanwhile's common.h
+/* @todo move mwAwareType, mwAwareIdBlock and mwAwareSnapshot into the
+aware service and out of common */
+
+/** type codes for mwAwareIdBlock */
 enum mwAwareType {
-	mwAware_USER  = 0x0002
+	mwAware_USER    = 0x0002,  /**< a single user */
+	mwAware_GROUP   = 0x0003,  /**< a group */
+	mwAware_SERVER  = 0x0008,  /**< a server */
 };
+
+/* 8.4.2 Awareness Messages */
+/* 8.4.2.1 Awareness ID Block */
 
 struct mwAwareIdBlock {
-	enum mwAwareType type;
-	char *user;
-	char *community;
+	guint16 type;     /**< @see mwAwareType */
+	char *user;       /**< user id */
+	char *community;  /**< community id (NULL for same community) */
 };
 
 @interface ESGaimMeanwhileAccount : CBGaimAccount {
