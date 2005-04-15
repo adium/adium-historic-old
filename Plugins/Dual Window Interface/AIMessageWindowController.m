@@ -104,15 +104,23 @@
 		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
 		[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 	}
-	
+
     return(self);
 }
 
 //dealloc
 - (void)dealloc
 {
-	NSLog(@"Dealloc %@",self);
 	[[adium notificationCenter] removeObserver:self];
+
+	/* Ensure our window is quite clear we have no desire to ever hear from it again.  sendEvent: with a flags changed
+	 * event is being sent to this AIMessageWindowController instance by the window after dallocing, for some reason.
+	 * It seems likely a double-release is involved.  I can't reproduce this locally, either... but calling
+	 * [self setWindow:nil] appears to fix the problem where it was being experienced..
+	 *
+	 * Something is wrong elsewhere that this could be necessary, but this doesn't hurt I don't believe. */
+	[self setWindow:nil];
+
     [tabView_customTabs setDelegate:nil];
 	[containedChats release];
 	[toolbarItems release];
@@ -525,11 +533,9 @@
 			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
 			//is momentarily told to hide and then quickly to become visible again
 			if(animate){
-				NSLog(@"Will call _resizeTabBarAbsolute:YES");
 				[self performSelector:@selector(_resizeTabBarAbsolute:)
 						   withObject:[NSNumber numberWithBool:YES]
 						   afterDelay:0.0001];
-				NSLog(@"%@ finished queuing _resizeTabBarAbsolute:YES",self);
 			}else{
 				[self _resizeTabBarAbsolute:[NSNumber numberWithBool:YES]];
 			}
@@ -553,7 +559,6 @@
 //Resize the tab bar towards it's desired height
 - (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute
 {   
-	NSLog(@"_resizeTabBarAbsolute: talking to tabView_customTabs");
     NSSize              tabSize = [tabView_customTabs frame].size;
     double              destHeight;
     NSRect              newFrame;
@@ -570,7 +575,6 @@
     [tabView_customTabs setNeedsDisplay:YES];
 
     //Adjust other views
-	NSLog(@" _resizeTabBarAbsolute: now talking to tabView_messages");
     newFrame = [tabView_messages frame];
     newFrame.size.height -= distance;
     newFrame.origin.y += distance;
@@ -671,14 +675,6 @@
 			NSToolbarShowColorsItemIdentifier,
 			NSToolbarShowFontsItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
-}
-
-//XXX debug logging
-- (id)performSelector:(SEL)selector withObject:(id)object
-{
-	NSLog(@"performSelector: %@ withObject: %@",NSStringFromSelector(selector),object);
-	
-	return [super performSelector:selector withObject:object];
 }
 
 @end
