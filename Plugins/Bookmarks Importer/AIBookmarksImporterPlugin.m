@@ -571,6 +571,9 @@ end:
 - (void)obtainMenuLockAndUpdateMenuForToolbarItem:(NSToolbarItem *)item
 {
 	[menuLock lock];
+	[self doSetOfMenuItemSubmenu:[bookmarksMainSubmenu autorelease]
+	   contextualMenuItemSubmenu:[bookmarksContextualSubmenu autorelease]];
+	bookmarksMainSubmenu = bookmarksContextualSubmenu = nil;
 	[self updateMenuForToolbarItem:item];
 	[menuLock unlock];
 }
