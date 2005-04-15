@@ -215,47 +215,45 @@ static NSString	*prefsCategory;
 //Called by the login controller when a user has been selected, continue logging in
 - (void)completeLogin
 {
-    //Init the controllers.
-    [preferenceController initController]; //should init first to allow other controllers access to their prefs
-    [toolbarController initController];
-    [menuController initController];
+	//Init the controllers.
+	[preferenceController initController]; //should init first to allow other controllers access to their prefs
+	[toolbarController initController];
+	[menuController initController];
 	[debugController initController]; //should init after the menuController to add its menu item if needed
 	[contactAlertsController initController];
-    [soundController initController];
+	[soundController initController];
 	[emoticonController initController];
-    [accountController initController];
+	[accountController initController];
 	[contactController initController];
-    [contentController initController];
-    [interfaceController initController];
-    [dockController initController];
-    [fileTransferController initController];
+	[contentController initController];
+	[interfaceController initController];
+	[dockController initController];
+	[fileTransferController initController];
 	[applescriptabilityController initController];
 	[statusController initController];
 
+	//should always init last.  Plugins rely on everything else.
 	[componentLoader initController];
-	
-	[preferenceController willFinishIniting];
-	
-    [pluginLoader initController]; //should always init last.  Plugins rely on everything else.
-	
-	/*
-	 Account controller should finish initing before the contact controller so accounts and services are available
-	 for contact creation
+	[pluginLoader initController];
+
+	/* Account controller should finish initing before the contact controller
+	 * so accounts and services are available for contact creation.
 	 */
-    [accountController finishIniting];
+	[preferenceController finishIniting];
+	[accountController finishIniting];
 	[contactController finishIniting];
-    [statusController finishIniting];
+	[statusController finishIniting];
 	[interfaceController finishIniting];
-	
+
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
-	
+
 	//If no accounts are setup, open the account prefs
 	if([[accountController accountArray] count] == 0){
 		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
 	}
-	
-    completedApplicationLoad = YES;
+
+	completedApplicationLoad = YES;
 
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];
 }

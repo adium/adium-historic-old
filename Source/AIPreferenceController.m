@@ -83,7 +83,7 @@
  * Sets up the toolbar items.
  * We can't do these in initing, since the toolbar controller hasn't loaded yet at that point.
  */
-- (void)willFinishIniting
+- (void)finishIniting
 {
     NSToolbarItem	*toolbarItem;
 

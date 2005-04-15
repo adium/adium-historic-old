@@ -57,7 +57,7 @@ typedef enum {
 }
 
 - (void)initController;
-- (void)willFinishIniting;
+- (void)finishIniting;
 - (void)beginClosing;
 - (void)closeController;
 
