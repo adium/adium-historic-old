@@ -75,35 +75,36 @@
 				containerID:(NSString *)inContainerID
 					   containerName:(NSString *)inName
 {
-    interface = [inInterface retain];
-	containerName = [inName retain];
-	containerID = [inContainerID retain];
-	containedChats = [[NSMutableArray alloc] init];
-	hasShownDocumentButton = NO;
-
-    //Load our window
-    [super initWithWindowNibName:windowNibName];
-    [self window];
-
-	//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
-    tabBarIsVisible = YES;
-    supressHiding = NO;
-	[[NSNotificationCenter defaultCenter] addObserver:self 
-											 selector:@selector(tabDraggingEnded:)
-												 name:AICustomTabDragDidComplete
-											   object:nil];
+	if((self = [super initWithWindowNibName:windowNibName])){
+		interface = [inInterface retain];
+		containerName = [inName retain];
+		containerID = [inContainerID retain];
+		containedChats = [[NSMutableArray alloc] init];
+		hasShownDocumentButton = NO;
+		
+		//Load our window
+		[self window];
+		
+		//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
+		tabBarIsVisible = YES;
+		supressHiding = NO;
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(tabDraggingEnded:)
+													 name:AICustomTabDragDidComplete
+												   object:nil];
+		
+		//Prefs
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(updateTabArrangingBehavior)
+										   name:Interface_TabArrangingPreferenceChanged 
+										 object:nil];
+		
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+		
+		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
+		[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+	}
 	
-    //Prefs
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(updateTabArrangingBehavior)
-									   name:Interface_TabArrangingPreferenceChanged 
-									 object:nil];
-	
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-	
-	//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
-    [[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
-    	
     return(self);
 }
 
@@ -670,6 +671,14 @@
 			NSToolbarShowColorsItemIdentifier,
 			NSToolbarShowFontsItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+}
+
+//XXX debug logging
+- (id)performSelector:(SEL)selector withObject:(id)object
+{
+	NSLog(@"performSelector: %@ withObject: %@",NSStringFromSelector(selector),object);
+	
+	return [super performSelector:selector withObject:object];
 }
 
 @end
