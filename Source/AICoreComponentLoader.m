@@ -25,8 +25,6 @@
 #import "AICoreComponentLoader.h"
 #import <Adium/AIPlugin.h>
 
-#import "CoreComponents.h"
-
 #define VERSION_KEY			@"Version"
 #define COMPONENTS_KEY		@"Components"
 

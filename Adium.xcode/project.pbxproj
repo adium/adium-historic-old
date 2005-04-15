@@ -7781,7 +7781,6 @@
 		34BD9CD1053146CC000AB133 = {
 			buildPhases = (
 				34E9DCF2078FC79900662E8E,
-				DA4B5CEF080FCCA00017BF17,
 				34BD9D10053146CC000AB133,
 				34BD9D24053146CC000AB133,
 				34BD9D42053146CC000AB133,
@@ -22714,19 +22713,6 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
-		};
-		DA4B5CEF080FCCA00017BF17 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			isa = PBXShellScriptBuildPhase;
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "mkdir -p \"${TARGET_BUILD_DIR}/include\"\n/usr/bin/python \"${SRCROOT}/Utilities/cc2header.py\" \"${SRCROOT}/Resources/CoreComponents.plist\" > \"${TARGET_BUILD_DIR}/include/CoreComponents.h\"";
 		};
 		DA70F2B1080CAE8200C72D8B = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
