@@ -71,15 +71,15 @@
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	if(responder && [responder isKindOfClass:[NSTextView class]]){
-            if([[menuItem title] isEqualToString:RM_LINK_TITLE]){
-                // only make remove link menu item active if slection is a link.
-                return [self textViewSelectionIsLink:(NSTextView *)responder];
-            }else{
-                //Update the menu item's title to reflect the current action
-		[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
-
-		return [(NSTextView *)responder isEditable];
-            }
+		if([[menuItem title] isEqualToString:RM_LINK_TITLE]){
+			// only make remove link menu item active if slection is a link.
+			return [self textViewSelectionIsLink:(NSTextView *)responder];
+		}else{
+			//Update the menu item's title to reflect the current action
+			[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
+			
+			return [(NSTextView *)responder isEditable];
+		}
 	}else{
 		return(NO); //Disable the menu item if a text field is not key
 	}
