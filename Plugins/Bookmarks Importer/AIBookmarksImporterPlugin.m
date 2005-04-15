@@ -194,39 +194,52 @@ end:
 		
 		//if the first responder is a text view...
 		if(responder && [responder isKindOfClass:[NSTextView class]]){
-			NSTextView      *topView = (NSTextView *)responder;
-			NSDictionary    *typingAttributes = [topView typingAttributes];
-			NSRange			 linkRange = [markedLink range];
-
+			NSTextView      *textView = (NSTextView *)responder;
+			NSTextStorage	*textStorage = [textView textStorage];
+			NSDictionary    *typingAttributes = [textView typingAttributes];
+			NSRange			linkRange = [markedLink range];
+			unsigned		linkStringLength, changeInLength;
+			
 			//new mutable string to build the link with
 			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:[markedLink parentString]
 			                                                                                  attributes:typingAttributes] autorelease];
 			[linkString addAttribute:NSLinkAttributeName value:[markedLink URL] range:linkRange];
 
-			//insert the link to the text view..
-			NSRange selRange = [topView selectedRange];
-			[[topView textStorage] replaceCharactersInRange:selRange withAttributedString:linkString];
+			//Insert the link to the text view..
+			NSRange selRange = [textView selectedRange];
+			[textStorage replaceCharactersInRange:selRange withAttributedString:linkString];
 
-			//special cases for insertion:
+			//Determine the change in length
+			linkStringLength = [linkString length];
+			changeInLength = linkStringLength - selRange.length;
+			
+			//Special cases for insertion:
 			NSAttributedString  *space = [[[NSAttributedString alloc] initWithString:@" "
 																		  attributes:typingAttributes] autorelease];
-			NSString *str = [topView string];
-			NSTextStorage *storage = [topView textStorage];
+			NSString *str = [textView string];
+
 			unsigned afterIndex = selRange.location + linkRange.length;
 			if(([str length] > afterIndex) && ([str characterAtIndex:afterIndex] != ' ')) {
-				/*if we insert a link, we're not at the end of the string, and the next char isn't a space,
-				 *	insert a space.
+				/* If we insert a link, we're not at the end of the string, and the next char isn't a space,
+				 * insert a space.
 				 */
-				[storage insertAttributedString:space
-				                        atIndex:afterIndex];
+				[textStorage insertAttributedString:space
+											atIndex:afterIndex];
+				changeInLength++;
             }
 			if(selRange.location > 0 && [str characterAtIndex:(selRange.location - 1)] != ' ') {
-				/*if we insert a link, we're not at the start of the string, and the previous char isn't a space,
-				 *insert a space.
+				/* If we insert a link, we're not at the start of the string, and the previous char isn't a space,
+				 * insert a space.
 				 */
-				[storage insertAttributedString:space
-				                        atIndex:selRange.location];
+				[textStorage insertAttributedString:space
+											atIndex:selRange.location];
+				changeInLength++;
             }
+			
+			//Notify that a change occurred since NSTextStorage won't do it for us
+			[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
+																object:textView
+															  userInfo:nil];
 		}
 	}
 }
