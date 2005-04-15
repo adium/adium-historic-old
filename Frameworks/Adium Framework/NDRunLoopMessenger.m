@@ -154,7 +154,6 @@ struct message
 		[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
 		port = nil;
 		[[NSNotificationCenter defaultCenter] removeObserver:self];
-		NSAssert(FALSE,@"threadWillExit!");
 	}
 }
 
