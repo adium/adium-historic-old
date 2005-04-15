@@ -464,10 +464,12 @@
 //A chat has become visible: send out a notification for components and plugins to take action
 - (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow
 {
+	NSLog(@"interfaceController: Posting chat %@ became visible",inChat);
 	[[adium notificationCenter] postNotificationName:@"AIChatDidBecomeVisible"
 											  object:inChat
 											userInfo:[NSDictionary dictionaryWithObject:inWindow
 																				 forKey:@"NSWindow"]];
+	NSLog(@"interfaceController: Done posting chat %@ became visible",inChat);
 }
 
 - (NSWindow *)windowForChat:(AIChat *)inChat
