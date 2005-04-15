@@ -1,5 +1,5 @@
 //
-//  AWRendezvousService.m
+//  AWBonjourService.m
 //  Adium
 //
 //  Created by Adam Iser on 8/26/04.
@@ -7,20 +7,20 @@
 //
 
 #import "AIStatusController.h"
-#import "AWRendezvousAccount.h"
-#import "AWRendezvousService.h"
-#import "ESRendezvousAccountViewController.h"
+#import "AWBonjourAccount.h"
+#import "AWBonjourService.h"
+#import "ESBonjourAccountViewController.h"
 #import <Adium/DCJoinChatViewController.h>
 
-@implementation AWRendezvousService
+@implementation AWBonjourService
 
 //Account Creation
 - (Class)accountClass{
-	return([AWRendezvousAccount class]);
+	return([AWBonjourAccount class]);
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESRendezvousAccountViewController accountViewController]);
+    return([ESBonjourAccountViewController accountViewController]);
 }
 
 - (DCJoinChatViewController *)joinChatView{

@@ -16,7 +16,7 @@
  
 #import <Adium/AIAccountViewController.h>
 
-@interface ESRendezvousAccountViewController : AIAccountViewController {
+@interface ESBonjourAccountViewController : AIAccountViewController {
 
 }
 

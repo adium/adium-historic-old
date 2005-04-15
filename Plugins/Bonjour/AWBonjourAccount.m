@@ -1,6 +1,6 @@
 /*
- * Project:     Adium Rendezvous Plugin
- * File:        AWRendezvousAccount.m
+ * Project:     Adium Bonjour Plugin
+ * File:        AWBonjourAccount.m
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -28,8 +28,8 @@
 #import "AWEzv.h"
 #import "AWEzvContact.h"
 #import "AWEzvDefines.h"
-#import "AWRendezvousAccount.h"
-#import "AWRendezvousPlugin.h"
+#import "AWBonjourAccount.h"
+#import "AWBonjourPlugin.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentTyping.h>
@@ -41,13 +41,12 @@
 #import <AIUtilities/CBObjectAdditions.h>
 
 static	NSLock				*threadPreparednessLock = nil;
-static	NDRunLoopMessenger	*rendezvousThreadMessenger = nil;
-static	AWEzv				*libezvThreadProxy = nil;
+static	AWEzv				*_libezvThreadProxy = nil;
 static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
-@interface AWRendezvousAccount (PRIVATE)
+@interface AWBonjourAccount (PRIVATE)
 - (NSString *)UIDForContact:(AWEzvContact *)contact;
 
 - (void)setAccountIdleTo:(NSDate *)idle;
@@ -55,7 +54,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 - (void)setAccountUserImage:(NSImage *)image;
 @end
 
-@implementation AWRendezvousAccount
+@implementation AWBonjourAccount
 //
 - (void)initAccount
 {
@@ -78,21 +77,21 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return(YES);
 }
 
-//No need for a password for Rendezvous accounts
+//No need for a password for Bonjour accounts
 - (BOOL)requiresPassword
 {
 	return(NO);
 }
 
-- (void)connect
+- (AWEzv *)libezvThreadProxy
 {
-	if(!libezvThreadProxy){
+	if(!_libezvThreadProxy){
 		//Obtain the lock
 		threadPreparednessLock = [[NSLock alloc] init];
 		[threadPreparednessLock lock];
 		
 		//Detach the thread, which will unlock threadPreparednessLock when it is ready
-		[NSThread detachNewThreadSelector:@selector(prepareRendezvousThread)
+		[NSThread detachNewThreadSelector:@selector(prepareBonjourThread)
 								 toTarget:self
 							   withObject:nil];
 		
@@ -100,13 +99,18 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		[threadPreparednessLock lock];
 		[threadPreparednessLock release]; threadPreparednessLock = nil;
 	}
+
+	return _libezvThreadProxy;
+}
+- (void)connect
+{
 	
     // Say we're connecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 
-    [libezvThreadProxy setName:[self displayName]];
-	AILog(@"%@: Logging in using libezvThreadProxy %@",self, libezvThreadProxy);
-    [libezvThreadProxy login];
+    [[self libezvThreadProxy] setName:[self displayName]];
+	AILog(@"%@: Logging in using libezvThreadProxy %@",self, [self libezvThreadProxy]);
+    [[self libezvThreadProxy] login];
 }
 
 - (void)disconnect
@@ -117,7 +121,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     // Say we're disconnecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:YES];
     
-    [libezvThreadProxy logout];
+    [[self libezvThreadProxy] logout];
 }
 
 - (void)removeContacts:(NSArray *)objects
@@ -387,9 +391,9 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezvThreadProxy sendMessage:message 
-									to:to 
-							  withHtml:htmlMessage];
+		[[self libezvThreadProxy] sendMessage:message 
+										   to:to 
+									 withHtml:htmlMessage];
 
 		sent = YES;
 
@@ -399,8 +403,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		AIListObject    *listObject = [chat listObject];
 		NSString		*to = [listObject UID];
 		
-		[libezvThreadProxy sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
-											   to:to];
+		[[self libezvThreadProxy] sendTypingNotification:(([contentTyping typingState] == AITyping) ? AWEzvIsTyping : AWEzvNotTyping)
+													  to:to];
 		sent = YES;
     }
 	
@@ -442,8 +446,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
         if([key isEqualToString:@"IdleSince"]){
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
-			[libezvThreadProxy setStatus:AWEzvIdle
-							 withMessage:[[self statusMessage] string]];
+			[[self libezvThreadProxy] setStatus:AWEzvIdle
+									withMessage:[[self statusMessage] string]];
             [self setAccountIdleTo:idleSince];
 			
         }else if([key isEqualToString:KEY_USER_ICON]){
@@ -472,7 +476,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)setAccountIdleTo:(NSDate *)idle
 {
-	[libezvThreadProxy setIdleTime:idle];
+	[[self libezvThreadProxy] setIdleTime:idle];
 
 	//We are now idle
 	[self setStatusObject:idle forKey:@"IdleSince" notify:YES];
@@ -482,9 +486,9 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 {
 	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
 		if (awayMessage != nil)
-		    [libezvThreadProxy setStatus:AWEzvAway withMessage:[awayMessage string]];
+		    [[self libezvThreadProxy] setStatus:AWEzvAway withMessage:[awayMessage string]];
 		else
-		    [libezvThreadProxy setStatus:AWEzvOnline withMessage:nil];
+		    [[self libezvThreadProxy] setStatus:AWEzvOnline withMessage:nil];
 		
 		//We are now away or not
 		[self setStatusObject:[NSNumber numberWithBool:(awayMessage != nil)] forKey:@"Away" notify:YES];
@@ -499,7 +503,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
  */
 - (void)setAccountUserImage:(NSImage *)image
 {
-	[libezvThreadProxy setContactImage:image];	
+	[[self libezvThreadProxy] setContactImage:image];	
 
 	//We now have an icon
 	[self setStatusObject:image forKey:KEY_USER_ICON notify:YES];
@@ -539,14 +543,15 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 #pragma mark Bonjour Thread
 
-- (void)prepareRendezvousThread
+- (void)prepareBonjourThread
 {
-	NSTimer	*autoreleaseTimer;
-	
+	NDRunLoopMessenger	*BonjourThreadMessenger;
+	NSTimer				*autoreleaseTimer;
+
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
-		
-	rendezvousThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
-	libezvThreadProxy = [[rendezvousThreadMessenger target:libezv] retain];
+
+	BonjourThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+	_libezvThreadProxy = [[BonjourThreadMessenger target:libezv] retain];
 	
 	//Use a timer to periodically release our autorelease pool so we don't continually grow in memory usage
 	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
@@ -559,8 +564,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	CFRunLoopRun();
 	
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	[rendezvousThreadMessenger release]; rendezvousThreadMessenger = nil;
-	[libezvThreadProxy release]; libezvThreadProxy = nil;
+	[BonjourThreadMessenger release]; BonjourThreadMessenger = nil;
+	[_libezvThreadProxy release]; _libezvThreadProxy = nil;
     [currentAutoreleasePool release];
 }
 

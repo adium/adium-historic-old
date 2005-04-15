@@ -1,6 +1,6 @@
 /*
- * Project:     Adium Rendezvous Plugin
- * File:        AWRendezvousAccount.h
+ * Project:     Adium Bonjour Plugin
+ * File:        AWBonjourPlugin.h
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -21,16 +21,11 @@
  * with this program; if not, write to the Free Software Foundation, Inc.,
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
- 
-#import <Adium/AIAccount.h>
 
-@protocol AWEzvClientProtocol;
-@class AWEzv;
+#import <Adium/AIPlugin.h>
 
-@interface AWRendezvousAccount : AIAccount <AWEzvClientProtocol> {
-    AWEzv				*libezv;
-    NSMutableSet		*libezvContacts;
-    NSString *savedAwayMessage;
+@interface AWBonjourPlugin : AIPlugin {
+
 }
 
 @end

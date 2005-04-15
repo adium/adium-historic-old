@@ -1,6 +1,6 @@
 /*
  * Project:     Adium Rendezvous Plugin
- * File:        AWRendezvousPlugin.h
+ * File:        AWRendezvousPlugin.m
  * Author:      Andrew Wellington <proton[at]wiretapped.net>
  *
  * License:
@@ -22,10 +22,16 @@
  * 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import "AWBonjourAccount.h"
+#import "AWBonjourPlugin.h"
+#import "AWBonjourService.h"
 
-@interface AWRendezvousPlugin : AIPlugin {
+@implementation AWBonjourPlugin
 
+- (void)installPlugin
+{
+	[[AWBonjourService alloc] init];
 }
 
 @end
+
