@@ -11305,38 +11305,6 @@
 			settings = {
 			};
 		};
-		34D8334507CBD7AF006466F2 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = info4.png;
-			path = Resources/info4.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D8334607CBD7AF006466F2 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = info3.png;
-			path = Resources/info3.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D8334707CBD7AF006466F2 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = info2.png;
-			path = Resources/info2.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34D8334807CBD7B0006466F2 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = info1.png;
-			path = Resources/info1.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34D8336607CBD807006466F2 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -18945,18 +18913,6 @@
 			settings = {
 			};
 		};
-		4BCC20A6066B99F4007C8449 = {
-			children = (
-				34D8334507CBD7AF006466F2,
-				34D8334607CBD7AF006466F2,
-				34D8334707CBD7AF006466F2,
-				34D8334807CBD7B0006466F2,
-			);
-			isa = PBXGroup;
-			name = Icons;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BCDEB4103D4DC9700A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -23680,7 +23636,6 @@
 				34575E3207CBA7CC004A4FFF,
 				4BBF41E10661194A001D31E1,
 				4B2DC068066F6B1200AD5AAD,
-				4BCC20A6066B99F4007C8449,
 			);
 			isa = PBXGroup;
 			name = "Contact Info Window";
