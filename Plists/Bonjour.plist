@@ -25,6 +25,6 @@
 	<key>CFBundleVersion</key>
 	<string>0.0.1d1</string>
 	<key>NSPrincipalClass</key>
-	<string>AWRendezvousPlugin</string>
+	<string>AWBonjourPlugin</string>
 </dict>
 </plist>
