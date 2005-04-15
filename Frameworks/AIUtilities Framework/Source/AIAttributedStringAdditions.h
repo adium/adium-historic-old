@@ -71,14 +71,6 @@
 - (void)adjustColorsToShowOnBackgroundRelativeToOriginalBackground:(NSColor *)backgroundColor;
 
 /*!
- * @brief Convert NSURLs in the attributed string to strings
- *
- * Convert any <tt>NSURL</tt> objects attached to an attributed string to their absoluteString equivalents
- * @return YES if any changes were made; NO if none were needed
- */
-- (BOOL)convertNSURLtoString;
-
-/*!
  * @brief Apply link appearance attributes where appropriate
  *
  * Sets color and underline attributes for any areas with NSLinkAttributeName set
