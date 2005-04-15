@@ -1,5 +1,5 @@
 //
-//  AWRendezvousService.h
+//  AWBonjourService.h
 //  Adium
 //
 //  Created by Adam Iser on 8/26/04.
@@ -8,7 +8,7 @@
 
 #import <Adium/AIService.h>
 
-@interface AWRendezvousService : AIService {
+@interface AWBonjourService : AIService {
 
 }
 
