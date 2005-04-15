@@ -110,6 +110,7 @@
 //dealloc
 - (void)dealloc
 {
+	NSLog(@"Dealloc %@",self);
 	[[adium notificationCenter] removeObserver:self];
     [tabView_customTabs setDelegate:nil];
 	[containedChats release];
@@ -523,9 +524,11 @@
 			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
 			//is momentarily told to hide and then quickly to become visible again
 			if(animate){
+				NSLog(@"Will call _resizeTabBarAbsolute:YES");
 				[self performSelector:@selector(_resizeTabBarAbsolute:)
 						   withObject:[NSNumber numberWithBool:YES]
 						   afterDelay:0.0001];
+				NSLog(@"%@ finished queuing _resizeTabBarAbsolute:YES",self);
 			}else{
 				[self _resizeTabBarAbsolute:[NSNumber numberWithBool:YES]];
 			}
@@ -549,6 +552,7 @@
 //Resize the tab bar towards it's desired height
 - (BOOL)_resizeTabBarAbsolute:(NSNumber *)absolute
 {   
+	NSLog(@"_resizeTabBarAbsolute: talking to tabView_customTabs");
     NSSize              tabSize = [tabView_customTabs frame].size;
     double              destHeight;
     NSRect              newFrame;
@@ -565,6 +569,7 @@
     [tabView_customTabs setNeedsDisplay:YES];
 
     //Adjust other views
+	NSLog(@" _resizeTabBarAbsolute: now talking to tabView_messages");
     newFrame = [tabView_messages frame];
     newFrame.size.height -= distance;
     newFrame.origin.y += distance;
