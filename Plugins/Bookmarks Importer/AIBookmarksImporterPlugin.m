@@ -33,6 +33,8 @@
 
 #define DELAY_FOR_MENU_UPDATE		0.4 /*seconds*/
 
+#define TOOLBAR_ITEM_IDENTIFIER		@"InsertBookmark"
+
 @interface AIBookmarksImporterPlugin (PRIVATE)
 - (void)buildBookmarksMenuIfNecessaryThread;
 
@@ -120,6 +122,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 - (void)dealloc
 {
 	[[adium notificationCenter] removeObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[menuLock release];
 	[toolbarItem release];
@@ -482,7 +485,7 @@ end:
 	}
 	[button setImage:icon];
 
-	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertBookmark"
+	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
 														   label:AILocalizedString(@"Bookmarks",nil)
 													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
 														 toolTip:AILocalizedString(@"Insert Bookmark",nil)
@@ -505,8 +508,8 @@ end:
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	
-	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
+
+	if([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]){
 		[self performSelector:@selector(obtainMenuLockAndUpdateMenuForToolbarItem:)
 				   withObject:item
 				   afterDelay:0];
@@ -525,7 +528,7 @@ end:
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 
-	if([[item itemIdentifier] isEqualToString:@"InsertBookmark"]){
+	if([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]){
 		[toolbarItemArray removeObject:item];
 	}
 }
