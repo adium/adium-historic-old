@@ -17,7 +17,6 @@
 #import "AIAccount.h"
 #import "AIChat.h"
 #import "AIContentMessage.h"
-#import "AIContentTyping.h"
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
 #import "AIHTMLDecoder.h"
