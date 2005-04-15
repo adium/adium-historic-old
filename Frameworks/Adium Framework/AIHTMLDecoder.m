@@ -1329,3 +1329,20 @@ int HTMLEquivalentForFontSize(int fontSize)
 		return(7);
 	}
 }
+
+@implementation NSString (AIHTMLDecoderAdditions)
+
+/*
+ * @brief Allow absoluteString to be called on NSString objects
+ *
+ * This exists to work around an incompatibilty with older, buggy versions of Adium which would incorrectly set
+ * an NSString for the NSLinkAttributeName attribute of an NSAttributedString.  This should always be an NUSRL.
+ * Rather than figure out upgrade code in every possible lcoation, we just allow NSString to have absoluteString called
+ * upon it, which is how we get the string value of NSURL objects.
+ */
+- (NSString *)absoluteString
+{
+	return self;
+}
+
+@end
