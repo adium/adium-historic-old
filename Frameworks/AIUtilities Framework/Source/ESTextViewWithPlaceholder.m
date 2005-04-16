@@ -45,11 +45,12 @@
 	if (([[self string] isEqualToString:@""]) && 
 		([[self window] firstResponder] != self)){
 		NSSize	size = [self frame].size;
+		NSSize textContainerInset = [self textContainerInset];
 		
-		[placeholder drawInRect:NSMakeRect(PLACEHOLDER_SPACING, 
-										   PLACEHOLDER_SPACING, 
-										   size.width - (PLACEHOLDER_SPACING*2),
-										   size.height - (PLACEHOLDER_SPACING*2))];
+		[placeholder drawInRect:NSMakeRect(textContainerInset.width, 
+										   textContainerInset.height, 
+										   size.width - (textContainerInset.width * 2),
+										   size.height - (textContainerInset.height * 2))];
 	}
 }
 
