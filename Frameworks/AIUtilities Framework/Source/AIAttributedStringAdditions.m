@@ -422,7 +422,6 @@
 	unsigned					length = [self length];
 
 	while(searchRange.location < length){
-		NSLog(@"in attributedStringByConvertingLinksToStrings: checking character %u of %u", searchRange.location, length);
 		NSURL			*URL = [newAttributedString attribute:NSLinkAttributeName
 													  atIndex:searchRange.location
 											   effectiveRange:&searchRange];
