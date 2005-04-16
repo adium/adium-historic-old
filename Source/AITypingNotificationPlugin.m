@@ -35,6 +35,8 @@
 #define ENTERED_TEXT_TIMER		@"EnteredTextTimer"
 #define ENTERED_TEXT_INTERVAL   3.0
 
+#define CONTENT_CHANGED_PROCESS_DELAY	2.0
+
 /*
  * @class AITypingNotificationPlugin
  * @brief Component to send typing notifications in open chats
@@ -98,7 +100,19 @@
  */
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
 {
-    [self _processTypingInView:inTextEntryView];
+	if([inTextEntryView isSendingContent]){
+		[self _processTypingInView:inTextEntryView];
+	}else{
+		/* Delay one second before processing the large typing change, to prevent 'flickering' if the view is cleared
+		 * and then typing begins again. Cancel previous delayed changes before queuing this one. */
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(_processTypingInView:)
+												   object:inTextEntryView];
+
+		[self performSelector:@selector(_processTypingInView:)
+				   withObject:inTextEntryView
+				   afterDelay:CONTENT_CHANGED_PROCESS_DELAY];
+	}
 }
 
 /*
@@ -150,6 +164,8 @@
  * Some protocols require a 'Stopped typing' notification to be sent along with an instant message.  Other protocols
  * implicitly assume that typing has stopped with an incoming message and the extraneous typing notification may cause
  * strange behavior.  To prevent this, we allow accounts to suppress these typing notifications. 
+ *
+ * This notification will be received before the text entry view is cleared after sending.
  */
 - (void)didSendMessage:(NSNotification *)notification
 {
