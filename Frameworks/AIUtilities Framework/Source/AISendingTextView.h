@@ -21,14 +21,14 @@
     id				target;
     SEL				selector;
     BOOL			sendingEnabled;
-	
+	BOOL			isSendingContent;
+
     BOOL			sendOnEnter;
     BOOL			sendOnReturn;
 	
 	BOOL			nextIsReturn;
     BOOL			nextIsEnter;
     BOOL			optionPressedWithNext;
-	
 }
 
 /*!
