@@ -136,7 +136,7 @@
 														toolTip:AILocalizedString(@"Add a new group",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"AddGroup" forClass:[self class]]
+													itemContent:[NSImage imageNamed:@"addGroup" forClass:[self class]]
 														 action:@selector(addGroup:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
