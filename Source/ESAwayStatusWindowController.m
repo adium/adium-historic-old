@@ -11,9 +11,9 @@
 
 @implementation ESAwayStatusWindowController
 
-+ (void)setStatusWindowVisible:(BOOL)shouldBeVisibile
++ (void)setStatusWindowVisible:(BOOL)shouldBeVisible
 {
-	NSLog(@"The status window should now be %@",(shouldBeVisibile ? @"visible" : @"hidden"));
+	NSLog(@"The status window should now be %@",(shouldBeVisible ? @"visible" : @"hidden"));
 }
 
 @end
