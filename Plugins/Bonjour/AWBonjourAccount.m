@@ -562,7 +562,9 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	//We're good to go; release that lock
 	[threadPreparednessLock unlock];
 	CFRunLoopRun();
-	
+
+	NSAssert(FALSE, @"prepareBonjourThread: CFRunLoopRun() stopped running.");
+			 
 	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
 	[BonjourThreadMessenger release]; BonjourThreadMessenger = nil;
 	[_libezvThreadProxy release]; _libezvThreadProxy = nil;
