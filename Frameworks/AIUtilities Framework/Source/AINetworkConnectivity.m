@@ -71,7 +71,7 @@ static BOOL									networkIsReachable = NO;
 													  &sourceRef);
 		
 		//Add it to the run loop so we will receive the notifications
-		if((status = noErr) && sourceRef){
+		if((status == noErr) && sourceRef){
 			CFRunLoopAddSource(CFRunLoopGetCurrent(),
 							   sourceRef,
 							   kCFRunLoopDefaultMode);
