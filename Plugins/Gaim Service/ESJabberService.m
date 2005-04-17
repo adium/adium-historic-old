@@ -67,7 +67,7 @@
 - (NSCharacterSet *)allowedCharacters{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 
-	[allowedCharacters addCharactersInString:@"._@-()%|"];
+	[allowedCharacters addCharactersInString:@"._@-()[]%|"];
 	
 	return([allowedCharacters autorelease]);
 }
@@ -80,7 +80,7 @@
 - (NSCharacterSet *)allowedCharactersForUIDs{ 
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	
-	[allowedCharacters addCharactersInString:@"._@-()%|/"];
+	[allowedCharacters addCharactersInString:@"._@-()[]%|/"];
 	
 	return([allowedCharacters autorelease]);
 }
