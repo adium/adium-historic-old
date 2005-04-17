@@ -148,9 +148,13 @@
 - (AIStatus *)statusStateWithUniqueStatusID:(NSNumber *)uniqueStatusID;
 
 - (void)setActiveStatusState:(AIStatus *)state;
+- (void)applyState:(AIStatus *)statusState toAccounts:(NSArray *)accountArray;
 - (AIStatus *)activeStatusState;
 - (NSSet *)allActiveStatusStates;
 - (AIStatusType)activeStatusType;
+- (NSSet *)activeUnavailableStatusesAndType:(AIStatusType *)activeUnvailableStatusType 
+								   withName:(NSString **)activeUnvailableStatusName
+			 allOnlineAccountsAreUnvailable:(BOOL *)allOnlineAccountsAreUnvailable;
 - (AIStatus *)defaultInitialStatusState;
 
 - (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
