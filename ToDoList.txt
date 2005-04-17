@@ -1,11 +1,10 @@
-5 - Contact list toolbar icons for toggle groups, add group, toggle offline
-5 - Implement status window when away preference
+5 - Contact list toolbar icons for toggle groups and toggle offline
 5 - Preference importing wherever possible for .7x -> 0.80
 4 - Short message between +/- and edit in the events pane
 4 - Icons for .AdiumStatusIcons and .AdiumServiceIcons file types
 4 - www.adiumxtras.com category for Status/Service Icons (perhaps make it a Miscellaneous catch-all category?)
 4 - Implement jabber account registration from the account prefs
-4 - Check idle time defaults; add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
+4 - Add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
 4 - OTR over Jabber is broken
 
 Defaults:
@@ -16,7 +15,6 @@ Defaults:
 
 ----
 
-3 - Focus on password entry field is incorrect when multiple dialogs appear at once
 3 - AIM and MSN blocking behavior depends on serverside settings specified in official client
 3 - Scroll behavior in events needs to be fixed - follow the current selection
 3 - Reconsider double click behavior for events
@@ -41,7 +39,8 @@ Defaults:
 2 - Minor control alignment in account preference sheet
 2 - Minor control alignment in advanced preferences
 2 - Restore Shiira support (did it ever work? we were just using the Safari importer before.)
-1 - First launch wizard
+2 - First launch wizard
+1 - Implement Get Info on contacts which aren't in your buddy list
 1 - Add priority support for jabber connections
 1 - Add resize widget to borderless, remove width slider by overloading window resizing
 1 - Deferred messaging, allow for windows to not open immediately
