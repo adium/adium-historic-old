@@ -18,8 +18,8 @@
 #define AIServiceIconSetDidChangeNotification	@"AIServiceIconSetDidChangeNotification"
 
 typedef enum {
-	AIServiceIconSmall = 0,		//Interface large
-	AIServiceIconLarge,			//Interface small
+	AIServiceIconSmall = 0,		//Interface small
+	AIServiceIconLarge,			//Interface large
 	AIServiceIconList			//Contact List
 } AIServiceIconType;
 #define NUMBER_OF_SERVICE_ICON_TYPES 	3
