@@ -1,0 +1,26 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {returnFromAway = id; }; 
+            CLASS = ESAwayStatusWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "button_return" = NSButton; 
+                "scrollView_multiStatus" = NSScrollView; 
+                "scrollView_singleStatus" = NSScrollView; 
+                "tabView_configuration" = NSTabView; 
+                "tableView_multiStatus" = NSTableView; 
+                "textView_singleStatus" = NSTextView; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
