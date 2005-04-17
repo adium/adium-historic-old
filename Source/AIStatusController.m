@@ -23,6 +23,7 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>
@@ -40,7 +41,6 @@
 - (NSArray *)builtInStateArray;
 
 - (void)_saveStateArrayAndNotifyOfChanges;
-- (void)_applyStateToAllAccounts:(AIStatus *)state;
 - (void)_upgradeSavedAwaysToSavedStates;
 - (void)_setMachineIsIdle:(BOOL)inIdle;
 - (void)_addStateMenuItemsForPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
@@ -514,8 +514,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (void)setActiveStatusState:(AIStatus *)statusState
 {
 	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
-	[self performSelector:@selector(_applyStateToAllAccounts:)
+	[self performSelector:@selector(applyState:toAccounts:)
 			   withObject:statusState
+			   withObject:[[adium accountController] accountArray]
 			   afterDelay:0];
 }
 
@@ -544,11 +545,9 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 }
 
 /*!
- * @brief Apply a state to all accounts
- *
- * Applies the passed state to all accounts
+ * @brief Apply a state to multiple accounts
  */
-- (void)_applyStateToAllAccounts:(AIStatus *)statusState
+- (void)applyState:(AIStatus *)statusState toAccounts:(NSArray *)accountArray
 {
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
@@ -563,7 +562,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	isProcessingGlobalChange = YES;
 	[self setDelayStateMenuUpdates:YES];
 	
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	enumerator = [accountArray objectEnumerator];
 	while(account = [enumerator nextObject]){
 		if([account online] ||
 		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
@@ -819,6 +818,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
  *
  * A status state is active if any online account is currently in that state.
  *
+ * The return value of this method is cached.
+ *
  * @result An <tt>NSSet</tt> of <tt>AIStatus</tt> objects
  */
 - (NSSet *)allActiveStatusStates
@@ -829,7 +830,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		AIAccount			*account;
 
 		while(account = [enumerator nextObject]){
-			if([account online]){
+			if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
 		}
@@ -837,6 +838,76 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	return _allActiveStatusStates;
 }
+
+/*
+ * @brief Return the set of all unavailable statuses in use by online or connection accounts
+ *
+ * @param activeUnvailableStatusType Pointer to an AIStatusType; returns by reference the most popular unavailable type
+ * @param activeUnvailableStatusName Pointer to an NSString*; returns by reference a status name if all states are in the same name, or nil if they differ
+ * @param allOnlineAccountsAreUnvailable Pointer to a BOOL; returns by reference YES is all online accounts are unavailable, NO if one or more is available
+ */
+- (NSSet *)activeUnavailableStatusesAndType:(AIStatusType *)activeUnvailableStatusType withName:(NSString **)activeUnvailableStatusName allOnlineAccountsAreUnvailable:(BOOL *)allOnlineAccountsAreUnvailable
+{
+	NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	AIAccount			*account;
+	NSMutableSet		*activeUnvailableStatuses = [NSMutableSet set];
+	BOOL				foundStatusName = NO;
+	int					statusTypeCount[STATUS_TYPES_COUNT];
+
+	statusTypeCount[AIAwayStatusType] = 0;
+	statusTypeCount[AIInvisibleStatusType] = 0;
+	
+	//Assume all accounts are unavailable until proven otherwise
+	if(allOnlineAccountsAreUnvailable != NULL){
+		*allOnlineAccountsAreUnvailable = YES;
+	}
+	
+	while(account = [enumerator nextObject]){
+		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+			AIStatus	*statusState = [account statusState];
+			AIStatusType statusType = [statusState statusType];
+			
+			if((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)){
+				NSString	*statusName = [statusState statusName];
+				
+				[activeUnvailableStatuses addObject:statusState];
+				
+				statusTypeCount[statusType]++;
+				
+				if(foundStatusName){
+					//Once we find a status name, we only want to return it if all our status names are the same.
+					if((activeUnvailableStatusName != NULL) &&
+					   (*activeUnvailableStatusName != nil) && 
+					   ![*activeUnvailableStatusName isEqualToString:statusName]){
+						*activeUnvailableStatusName = nil;
+					}
+				}else{
+					//We haven't found a status name yet, so store this one as the active status name
+					if(activeUnvailableStatusName != NULL){
+						*activeUnvailableStatusName = [statusState statusName];
+					}
+					foundStatusName = YES;
+				}
+			}else{
+				//An online account isn't unavailable
+				if(allOnlineAccountsAreUnvailable != NULL){
+					*allOnlineAccountsAreUnvailable = NO;
+				}
+			}
+		}
+	}
+	
+	if(activeUnvailableStatusType != NULL){
+		if(statusTypeCount[AIAwayStatusType] > statusTypeCount[AIInvisibleStatusType]){
+			*activeUnvailableStatusType = AIAwayStatusType;
+		}else{
+			*activeUnvailableStatusType = AIInvisibleStatusType;		
+		}
+	}
+	
+	return activeUnvailableStatuses;
+}
+
 
 /*!
  * @brief Next available unique status ID
@@ -1497,7 +1568,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		BOOL shouldRebuild;
 		
 		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
-		NSLog(@"Should rebuild %i",shouldRebuild);
 		[account setStatusState:statusState];
 
 		//Rebuild our menusif there was a change
