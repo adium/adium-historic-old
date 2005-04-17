@@ -184,12 +184,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -3403,6 +3403,20 @@
 			settings = {
 			};
 		};
+		345ACC960811C20F008E4D22 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AwayStatusWindow.nib;
+			path = Resources/AwayStatusWindow.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345ACC970811C20F008E4D22 = {
+			fileRef = 345ACC960811C20F008E4D22;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		345DFF4A05564DB200CEE7B3 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -4133,6 +4147,7 @@
 				347C6941080C8F2B00E69674,
 				347C6946080C8F3A00E69674,
 				347C6947080C8F3A00E69674,
+				345ACC960811C20F008E4D22,
 			);
 			isa = PBXGroup;
 			name = "Away Status Window";
@@ -8338,6 +8353,7 @@
 				3402D5A5080DBC91004E50B4,
 				34F4677A080F49C5007800AB,
 				34F4677B080F49C5007800AB,
+				345ACC970811C20F008E4D22,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
