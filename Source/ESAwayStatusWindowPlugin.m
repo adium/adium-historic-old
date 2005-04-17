@@ -64,7 +64,7 @@
 		
 		}else{
 			//Hide the status window if it is currently visible
-			[ESAwayStatusWindowController setStatusWindowVisible:NO];
+			[ESAwayStatusWindowController updateStatusWindowWithVisibility:NO];
 			
 			//Clear our away account tracking
 			[awayAccounts removeAllObjects];
@@ -83,19 +83,34 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if([inObject isKindOfClass:[AIAccount class]] &&
-	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"])){
-		
+	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"] || [inModifiedKeys containsObject:@"Online"])){
+		NSLog(@"%@: %@",inObject,inModifiedKeys);
 		if([inObject online] && ([inObject statusType] != AIAvailableStatusType)){
 			[awayAccounts addObject:inObject];
 		}else{
 			[awayAccounts removeObject:inObject];
 		}
-		
-		[ESAwayStatusWindowController setStatusWindowVisible:([awayAccounts count] > 0)];
+
+		/* We wait until the next run loop so we can have processed multiple changing accounts at once before updating
+		 * our display, preventing flickering through changes as the global state changes and thereby modifies multiple
+		 * account states in a single invocation.
+		 */
+		[NSObject cancelPreviousPerformRequestsWithTarget:self
+												 selector:@selector(processStatusUpdate)
+												   object:nil];
+		[self performSelector:@selector(processStatusUpdate)
+				   withObject:nil
+				   afterDelay:0];
 	}
-	
+
 	//We don't modify any keys
 	return nil;
+}
+
+- (void)processStatusUpdate
+{
+	//Tell the window to update, showing/hiding as necessary
+	[ESAwayStatusWindowController updateStatusWindowWithVisibility:([awayAccounts count] > 0)];	
 }
 
 @end
