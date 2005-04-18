@@ -75,6 +75,8 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 	menuUpdateTimer = nil;
 
+	menuLock = [[NSLock alloc] init];
+
 	AIMenuController *menuController = [adium menuController];
 
 	//Main bookmark menu item
