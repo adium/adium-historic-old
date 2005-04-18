@@ -222,21 +222,27 @@
 		//first character: 'r'. skip it.
 		++i;
 		if(i >= len) goto end;
+
 		//grab the build number.
 		unsigned long buildnum = strtoul(ptr+i, &nextptr, 10);
 #		pragma unused(buildnum)
 		i = nextptr - ptr;
+
 		//skip the '|' (with a space on each side of it).
 		i += 3;
 		if(i >= len) goto end;
+
 		//grab the date number. this is a UNIX date (seconds since 1970-1-1).
 		NSTimeInterval unixDate = strtod(ptr+i, &nextptr);
 		date = [NSDate dateWithTimeIntervalSince1970:unixDate];
+
 		/*we actually don't need any more information here. if we did, here's what we'd do...
 		i = nextptr - ptr;
+
 		//skip the '|'.
 		i += 3;
 		if(i >= len) goto end;
+
 		//grab the author.
 		NSRange range = { i, len - i };
 		[data replaceBytesInRange:NSMakeRange(0, i) withBytes:NULL length:0];
