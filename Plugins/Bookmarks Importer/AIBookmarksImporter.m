@@ -224,11 +224,15 @@
  */
 - (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu
 {
-	[inMenu addItemWithTitle:[object parentString]
-					  target:[AIBookmarksImporterPlugin sharedInstance]
-					  action:@selector(injectBookmarkFrom:)
-			   keyEquivalent:@""
-		   representedObject:object];
+	NSString	*title = [object parentString];
+
+	if(title && [title length]){
+		[inMenu addItemWithTitle:title
+						  target:[AIBookmarksImporterPlugin sharedInstance]
+						  action:@selector(injectBookmarkFrom:)
+				   keyEquivalent:@""
+			   representedObject:object];
+	}
 }
 
 @end
