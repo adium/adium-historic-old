@@ -1043,13 +1043,21 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		if([arg caseInsensitiveCompare:@"HREF"] == NSOrderedSame){
 			NSString	*linkString = [inArgs objectForKey:arg];
 			
-			linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
-																			 (CFStringRef)linkString,
-																			 /* characters to leave unescaped */ NULL,
-																			 /* legal characters to escape */ NULL,
-																			 kCFStringEncodingUTF8);
+			/* Replace any AIM-specific %n occurances with their escaped version.
+			 * Note: It seems like this would be a good place to use CFURLCreateStringByReplacingPercentEscapes()
+			 * and then CFURLCreateStringByAddingPercentEscapes().  Unfortunately, CFURLCreateStringByReplacingPercentEscapes()
+			 * returns NULL if any percent escapes are invalid... and %n is decidedly invalid.
+			 */
+			if([linkString rangeOfString:@"%n"].location != NSNotFound){
+				NSMutableString	*newLinkString = [[linkString mutableCopy] autorelease];
+				[newLinkString replaceOccurrencesOfString:@"%n"
+											   withString:@"%25n"
+												  options:NSLiteralSearch
+													range:NSMakeRange(0, [newLinkString length])];
+				linkString = newLinkString;
+			}
+
 			[textAttributes setLinkURL:[NSURL URLWithString:linkString]];
-			[linkString release];
 		}
 	}
 }
