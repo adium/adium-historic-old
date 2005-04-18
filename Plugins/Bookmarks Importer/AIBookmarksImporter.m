@@ -17,6 +17,7 @@
 #import "AIBookmarksImporter.h"
 #import "AIBookmarksImporterPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIWorkspaceAdditions.h>
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <Adium/AIObject.h>
 
@@ -121,7 +122,7 @@
 
 	NSString *bundleID = [self browserBundleIdentifier];
 	if(bundleID) {
-		path = [workspace absolutePathForAppBundleWithIdentifier:bundleID];
+		path = [workspace compatibleAbsolutePathForAppBundleWithIdentifier:bundleID];
 	}
 
 	if(!path) {

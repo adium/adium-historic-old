@@ -18,6 +18,7 @@
 #import "AIEmoticonPack.h"
 #import "AIEmoticonController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
+#import <AIUtilities/AIWorkspaceAdditions.h>
 
 #define EMOTICON_PATH_EXTENSION			@"emoticon"
 #define EMOTICON_PACK_TEMP_EXTENSION	@"AdiumEmoticonOld"
@@ -196,7 +197,7 @@
 					possiblePath = [splitPath objectAtIndex:0];
 				}else{
 					NSArray *components = [NSArray arrayWithObjects:
-						[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
+						[[NSWorkspace sharedWorkspace] compatibleAbsolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
 						[splitPath objectAtIndex:1],
 						nil];
 					possiblePath = [NSString pathWithComponents:components];

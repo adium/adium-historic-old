@@ -340,43 +340,41 @@
 // Convert spaces to '+'
 - (NSString *)stringByEncodingURLEscapes
 {
-    unsigned		sourceLength = [self length];
-    const char		*cSource = [self cString];
-    char			*cDest;
-    NSMutableData	*destData;
-    unsigned		s = 0;
-    unsigned		d = 0;
-	
-    //Worst case scenario is 3 times the original length (every character escaped)
-    destData = [NSMutableData dataWithLength:(sourceLength * 3)];
-    cDest = [destData mutableBytes];
-    
-    while(s < sourceLength){
-        char	ch = cSource[s];
-		
-        if( (ch >= 'a'  &&  ch <= 'z') ||
-            (ch >= 'A'  &&  ch <= 'Z') ||
-            (ch >= '0'  &&  ch <= '9') ||
-            (ch == '_') || (ch == '-'))
+	const char			*UTF8 = [self UTF8String];
+	char				*destPtr;
+	NSMutableData		*destData;
+	unsigned			 sourceIndex = 0;
+	unsigned			 sourceLength = strlen(UTF8);
+	register unsigned	 destIndex = 0;
+
+	//Worst case scenario is 3 times the original length (every character escaped)
+	destData = [NSMutableData dataWithLength:(sourceLength * 3)];
+	destPtr  = [destData mutableBytes];
+
+	while(sourceIndex < sourceLength) {
+		char	ch = UTF8[sourceIndex];
+
+		if((ch >= 'a'  &&  ch <= 'z')
+		|| (ch >= 'A'  &&  ch <= 'Z')
+		|| (ch >= '0'  &&  ch <= '9')
+		|| (ch == '_') || (ch == '-'))
 		{
-            
-            cDest[d] = ch;
-            d++;
-        }else if(ch == ' '){
-            cDest[d] = '+';
-            d++;
-			
-        }else{
-            cDest[d] = '%';
-            cDest[d+1] = intToHex(ch / 16);
-            cDest[d+2] = intToHex(ch % 16);
-            d += 3;
-        }
-		
-        s++;
-    }
-	
-    return [[[NSString alloc] initWithBytes:cDest length:d encoding:NSASCIIStringEncoding] autorelease];
+			//keep it raw.
+			destPtr[destIndex++] = ch;
+		} else if(ch == ' ') {
+			//change space to +.
+			destPtr[destIndex++] = '+';
+		} else {
+			//hex-encode.
+			destPtr[destIndex++] = '%';
+			destPtr[destIndex++] = intToHex(ch / 16);
+			destPtr[destIndex++] = intToHex(ch % 16);
+		}
+
+		sourceIndex++;
+	}
+
+	return [[[NSString alloc] initWithBytes:cDest length:d encoding:NSASCIIStringEncoding] autorelease];
 }
 
 //stringByDecodingURLEscapes
@@ -384,12 +382,12 @@
 // Convert '+' back to a space
 - (NSString *)stringByDecodingURLEscapes
 {
-    unsigned		sourceLength = [self length];
-    const char		*cSource = [self cString];
-    char			*cDest;
-    NSMutableData	*destData;
-    unsigned		s = 0;
-    unsigned		d = 0;
+	const char			*UTF8 = [self UTF8String];
+	char				*destPtr;
+	NSMutableData		*destData;
+	unsigned			 sourceIndex = 0;
+	unsigned			 sourceLength = strlen(UTF8);
+	register unsigned	 destIndex = 0;
 	
     //Best case scenario is 1/3 the original length (every character escaped); worst should be the same length
     destData = [NSMutableData dataWithLength:sourceLength];
