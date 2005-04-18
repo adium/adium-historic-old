@@ -48,6 +48,7 @@
 	//Configure the protocols we want.
 	[self setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
 	[self setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+	[self setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
 	[self setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
 	[self setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
 	[self setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
