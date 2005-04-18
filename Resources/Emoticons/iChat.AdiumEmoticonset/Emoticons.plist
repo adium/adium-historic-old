@@ -8,8 +8,8 @@
 	<string>AIM-compatible</string>
 	<key>Location</key>
 	<array>
-		<string>com.apple.iChat////Contents/Resources</string>
 		<string>/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources</string>
+		<string>com.apple.iChat////Contents/Resources</string>
 	</array>
 	<key>Emoticons</key>
 	<dict>
