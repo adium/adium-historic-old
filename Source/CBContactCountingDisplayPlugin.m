@@ -127,12 +127,15 @@
 {    
 	NSSet		*modifiedAttributes = nil;
 
+	//We never update for an AIAccount object
+	if([inObject isKindOfClass:[AIAccount class]]) return nil;
+
 	/* We check against a nil inModifiedKeys so we can remove our Counting information from the display when the user
 	 * toggles it off.
 	 *
 	 * We update for any group which isn't the root group when its contained objects count changes.
 	 * We update a contact's containing group when its online state changes.
-	 */
+	 */	
 	if((inModifiedKeys == nil) ||
 	   ((countOnlineObjects || countAllObjects) &&
 		(([inObject isKindOfClass:[AIListGroup class]] && [inModifiedKeys containsObject:@"ObjectCount"] && ![[inObject UID] isEqualToString:ADIUM_ROOT_GROUP_NAME]) ||
