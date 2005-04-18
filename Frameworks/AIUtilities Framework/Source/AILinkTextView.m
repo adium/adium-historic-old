@@ -50,7 +50,10 @@
 - (void)_initLinkTextView
 {
     linkTrackingController = [[AILinkTrackingController linkTrackingControllerForTextView:self] retain];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(frameDidChange:) name:NSViewFrameDidChangeNotification object:self];
+    [[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(frameDidChange:)
+												 name:NSViewFrameDidChangeNotification 
+											   object:self];
     [[self window] resetCursorRects];
 }
 
