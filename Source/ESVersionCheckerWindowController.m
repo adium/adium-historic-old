@@ -124,28 +124,25 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 {
 	//Ensure the window is loaded
 	[[self window] center];
-	
+
 	//'Check automatically' checkbox
 	[checkBox_checkAutomatically setState:[[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																					group:PREF_GROUP_UPDATING] boolValue]];
-
 	//Set our panel to display the build date and age of the running copy
 	if(currentDate && newestDate){
 		NSDateFormatter *dateFormatter;
 		NSString   		*newestDateString;
 		NSString		*interval;
-		
+
 		dateFormatter = [NSDateFormatter localizedDateFormatter];
 		newestDateString = [dateFormatter stringForObjectValue:newestDate];
-	
+
 		//Time since last update (contains a trailing space)
 		interval = [NSDateFormatter stringForApproximateTimeIntervalBetweenDate:newestDate
 																		andDate:currentDate];
 		[textField_updateAvailable setStringValue:[NSString stringWithFormat:UPDATE_PROMPT, newestDateString, interval]];
-		
-		[dateFormatter release];
 	}
-	
+
 	[self showWindow:nil];
 }
 
