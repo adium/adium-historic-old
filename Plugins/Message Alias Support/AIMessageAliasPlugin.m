@@ -64,6 +64,7 @@
 					linkURLString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
 																						   (CFStringRef)[(NSURL *)linkURL absoluteString],
 																						   /* characters to leave escaped */ CFSTR(""));
+					NSAssert1(linkURLString != nil, @"%@ failed CFURLCreateStringByReplacingPercentEscapes()",[(NSURL *)linkURL absoluteString]);
 					[linkURLString autorelease];
 					
 				}else{
@@ -75,10 +76,23 @@
 															 context:context] string];
 				
 				if(result){
+					NSURL		*newURL;
+					NSString	*escapedLinkURLString;
+					
 					if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+					escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
+																							   (CFStringRef)result,
+																							   /* characters to leave unescaped */ NULL,
+																							   /* legal characters to escape */ NULL,
+																							   kCFStringEncodingUTF8);
+					newURL = [NSURL URLWithString:escapedLinkURLString];
+					
+					NSAssert2(newURL != nil,@"%@ failed CFURLCreateStringByAddingPercentEscapes() yielding %@",result,escapedLinkURLString);
+
 					[filteredMessage addAttribute:NSLinkAttributeName
-											value:[NSURL URLWithString:result]
+											value:
 											range:scanRange];
+					[escapedLinkURLString release];
 				}
 			}
 		}
