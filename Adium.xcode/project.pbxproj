@@ -184,12 +184,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB;
-					ProjectRef = 3496A8E707CE6CA30055BBAB;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
 			);
 			targets = (
@@ -5935,9 +5935,9 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = AIHyperlinks.framework;
-			path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework";
-			refType = 4;
-			sourceTree = "<group>";
+			path = "../Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		3496A8F407CE6D050055BBAB = {
 			fileRef = 3496A8F207CE6CFB0055BBAB;
@@ -12089,9 +12089,9 @@
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
 			name = AIUtilities.framework;
-			path = "Frameworks/AIUtilities Framework/build/AIUtilities.framework";
-			refType = 4;
-			sourceTree = "<group>";
+			path = "../Frameworks/AIUtilities Framework/build/AIUtilities.framework";
+			refType = 3;
+			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		34D837FE07CC339D006466F2 = {
 			fileRef = 34D8379307CC3222006466F2;
