@@ -163,12 +163,13 @@
     [self showContactList:nil];
 
 	//Contact list menu tem
-    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_TITLE
-																			 target:self
-																			 action:@selector(toggleContactList:)
-																	  keyEquivalent:@"/"] autorelease];
-	[menuController addMenuItem:item toLocation:LOC_Window_Fixed];
-	[menuController addMenuItem:[[item copy] autorelease] toLocation:LOC_Dock_Status];
+    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTACT_LIST_TITLE
+																				target:self
+																				action:@selector(toggleContactList:)
+																		 keyEquivalent:@"/"];
+	[menuController addMenuItem:menuItem toLocation:LOC_Window_Fixed];
+	[menuController addMenuItem:[[menuItem copy] autorelease] toLocation:LOC_Dock_Status];
+	[menuItem release];
 
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
@@ -559,16 +560,14 @@
 	
 	while(containerID = [containerEnumerator nextObject]){
 		NSArray			*chatsInContainer;
-		NSArray  		*listObjects;
 		NSArray			*sortedListObjects;
 		NSEnumerator	*objectEnumerator;
 		AIListObject	*object;
 		int				index = 0;
 		
 		//Sort the chats in this container
-		chatsInContainer = [[[self openChatsInContainerWithID:containerID] copy] autorelease];
-		listObjects = [[[self _listObjectsForChatsInContainerWithID:containerID] copy] autorelease];
-		sortedListObjects = [sortController sortListObjects:listObjects];
+		chatsInContainer = [[self openChatsInContainerWithID:containerID] copy];
+		sortedListObjects = [sortController sortListObjects:[self _listObjectsForChatsInContainerWithID:containerID]];
 		
 		//Sync the container with the sorted chats
 		objectEnumerator = [sortedListObjects objectEnumerator];
@@ -582,6 +581,8 @@
 			//Move that chat to the correct spot, and step along to the next listobject
 			if(chat) [interfacePlugin moveChat:chat toContainerWithID:containerID index:index++];
 		}
+		
+		[chatsInContainer release];
 	}
 }
 
@@ -691,11 +692,12 @@
 		
 		//Add a menu item for the container
 		if([contentArray count] > 1){
-			item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:containerName
-																		 target:nil
-																		 action:nil
-																  keyEquivalent:@""] autorelease];
+			item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:containerName
+																		target:nil
+																		action:nil
+																 keyEquivalent:@""];
 			[self _addItemToMainMenuAndDock:item];
+			[item release];
 		}
 		
 		//Add items for the chats it contains
@@ -711,15 +713,16 @@
 				windowKeyString = [NSString stringWithString:@""];
 			}
 			
-			item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
-																		 target:self
-																		 action:@selector(showChatWindow:)
-																  keyEquivalent:windowKeyString] autorelease];
+			item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[chat displayName]
+																		target:self
+																		action:@selector(showChatWindow:)
+																 keyEquivalent:windowKeyString];
 			if([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
 			[item setRepresentedObject:chat];
 			[item setImage:[chat chatMenuImage]];
 			[self _addItemToMainMenuAndDock:item];
-			
+			[item release];
+
 			windowKey++;
 		}
 	}
@@ -735,10 +738,11 @@
 	[windowMenuArray addObject:item];
 	
 	//Make a copy, and add to the dock
-	item = [[item copy] autorelease];
+	item = [item copy];
 	[item setKeyEquivalent:@""];
 	[menuController addMenuItem:item toLocation:LOC_Dock_Status];
 	[windowMenuArray addObject:item];
+	[item release];
 }
 
 
@@ -1104,6 +1108,7 @@
 		[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])];
         [titleString appendAttributedString:entryString];
     }
+
     return [titleString autorelease];
 }
 
@@ -1162,8 +1167,8 @@
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
     while((entryString = [enumerator nextObject])){
-        NSMutableAttributedString *labelString = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
-                                                                                         attributes:labelDict] autorelease];
+        NSMutableAttributedString *labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
+																						attributes:labelDict];
         
         if (firstEntry) {
             firstEntry = NO;
@@ -1174,7 +1179,8 @@
         
         //Add the label (with its spacing)
         [tipString appendAttributedString:labelString];
-        
+        [labelString release];
+
         NSRange fullLength = NSMakeRange(0, [entryString length]);
         
         //remove any background coloration
@@ -1190,16 +1196,17 @@
             fullLength = NSMakeRange(0, [entryString length]);
 		
         //Run the entry through the filters and add it to tipString
-		entryString = [[[[adium contentController] filterAttributedString:entryString
-														usingFilterType:AIFilterDisplay
-															  direction:AIFilterIncoming
-																context:object] mutableCopy] autorelease];
-
+		entryString = [[[adium contentController] filterAttributedString:entryString
+														 usingFilterType:AIFilterDisplay
+															   direction:AIFilterIncoming
+																 context:object] mutableCopy];
+		
 		[entryString addAttributes:entryDict range:NSMakeRange(0,[entryString length])];
         [tipString appendAttributedString:entryString];
+		[entryString release];
     }
 
-    return([tipString autorelease]);
+    return [tipString autorelease];
 }
 
 //Custom pasting ----------------------------------------------------------------------------------------------------
@@ -1318,7 +1325,7 @@
 		
 	}else if(menuItem == menuItem_print){
 		return([[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)]);
-
+		
 	}else{
 		return(YES);
 	}
@@ -1329,34 +1336,37 @@
 {
 	NSMenu		*windowPositionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];
 	NSMenuItem	*menuItem;
-
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Above other windows",nil)
-																	 target:target
-																	 action:@selector(selectedWindowLevel:)
-															  keyEquivalent:@""] autorelease];
+	
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Above other windows",nil)
+																	target:target
+																	action:@selector(selectedWindowLevel:)
+															 keyEquivalent:@""];
 	[menuItem setEnabled:YES];
 	[menuItem setTag:AIFloatingWindowLevel];
 	[windowPositionMenu addItem:menuItem];
+	[menuItem release];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normally",nil)
-																	 target:target
-																	 action:@selector(selectedWindowLevel:)
-															  keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Normally",nil)
+																	target:target
+																	action:@selector(selectedWindowLevel:)
+															 keyEquivalent:@""];
 	[menuItem setEnabled:YES];
 	[menuItem setTag:AINormalWindowLevel];
 	[windowPositionMenu addItem:menuItem];
+	[menuItem release];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Below other windows",nil)
-																	 target:target
-																	 action:@selector(selectedWindowLevel:)
-															  keyEquivalent:@""] autorelease];
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Below other windows",nil)
+																	target:target
+																	action:@selector(selectedWindowLevel:)
+															 keyEquivalent:@""];
 	[menuItem setEnabled:YES];
 	[menuItem setTag:AIDesktopWindowLevel];
 	[windowPositionMenu addItem:menuItem];
-	
+	[menuItem release];
 	
 	[windowPositionMenu setAutoenablesItems:NO];
-	return([windowPositionMenu autorelease]);
+
+	return [windowPositionMenu autorelease];
 }
 
 @end

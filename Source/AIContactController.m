@@ -191,7 +191,7 @@
 - (void)clearAllMetaContactData
 {
 	NSString		*path;
-	NSDictionary	*metaContactDictCopy = [[metaContactDict copy] autorelease];
+	NSDictionary	*metaContactDictCopy = [metaContactDict copy];
 	NSEnumerator	*enumerator;
 	AIMetaContact	*metaContact;
 
@@ -226,6 +226,8 @@
 	[[NSFileManager defaultManager] removeFilesInDirectory:@"~/Library/Caches/Adium"
 												withPrefix:@"MetaContact"
 											 movingToTrash:NO];
+
+	[metaContactDictCopy release];
 }
 
 //Local Contact List Storage -------------------------------------------------------------------------------------------
@@ -656,7 +658,7 @@
 				NSEnumerator	*groupEnumerator;
 				AIListObject	*containedListObject;
 
-				containedObjects = [[[(AIListGroup *)listObject containedObjects] copy] autorelease];
+				containedObjects = [[(AIListGroup *)listObject containedObjects] copy];
 				groupEnumerator = [containedObjects objectEnumerator];
 				while(containedListObject = [groupEnumerator nextObject]) {
 					if([containedListObject isKindOfClass:[AIListContact class]]) {
@@ -664,6 +666,7 @@
 										  toGroup:contactList];
 					}
 				}
+				[containedObjects release];
 			}
 		}
 	}
@@ -741,7 +744,7 @@
 
 	metaContact = [metaContactDict objectForKey:metaContactDictKey];
 	if (!metaContact) {
-		metaContact = [[[AIMetaContact alloc] initWithObjectID:inObjectID] autorelease];
+		metaContact = [[AIMetaContact alloc] initWithObjectID:inObjectID];
 
 		//Keep track of it in our metaContactDict for retrieval by objectID
 		[metaContactDict setObject:metaContact forKey:metaContactDictKey];
@@ -762,6 +765,8 @@
 		 * this object's existence.
 		 */
 		[self _updateAllAttributesOfObject:metaContact];
+		
+		[metaContact release];
 	}
 
 	return (metaContact);
@@ -807,8 +812,8 @@
 			NSString		*objectID;
 
 			if(!allMetaContactsDict) {
-				allMetaContactsDict = [[[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
-																				 group:PREF_GROUP_CONTACT_LIST] mutableCopy] autorelease];
+				allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
+																				group:PREF_GROUP_CONTACT_LIST] mutableCopy];
 			}
 
 			//Retrieve the containedContactsArray for the metaContact with the specified objectID
@@ -839,6 +844,9 @@
 		AILog(@"MetaContacts: Should save for %@",containedContactsArray);
 		[self _saveMetaContacts:allMetaContactsDict];
 	}
+	
+	//Clean up
+	[allMetaContactsDict release];
 }
 
 
@@ -1219,7 +1227,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 					 offlineContacts:YES];
 	}
 
-	return ([contactMenu autorelease]);
+	return [contactMenu autorelease];
 }
 
 //Add the contacts from contactArray to the specified menu.  If offlineContacts is NO, only add online ones.
@@ -1696,9 +1704,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target
 {
 	NSMenu	*menu = [[NSMenu alloc] initWithTitle:@""];
+
 	[menu setAutoenablesItems:NO];
 	[self _menuOfAllGroups:menu forGroup:inGroup withTarget:target level:0];
-	return([menu autorelease]);
+
+	return [menu autorelease];
 }
 - (void)_menuOfAllGroups:(NSMenu *)menu forGroup:(AIListGroup *)group withTarget:(id)target level:(int)level
 {
@@ -1712,16 +1722,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	enumerator = [group objectEnumerator];
 	while(object = [enumerator nextObject]) {
 		if([object isKindOfClass:[AIListGroup class]]) {
-			NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
-																						  target:target
-																						  action:@selector(selectGroup:)
-																				   keyEquivalent:@""] autorelease];
+			NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[object displayName]
+																						 target:target
+																						 action:@selector(selectGroup:)
+																				  keyEquivalent:@""];
 			[menuItem setRepresentedObject:object];
 			if([menuItem respondsToSelector:@selector(setIndentationLevel:)]) {
 				[menuItem setIndentationLevel:level];
 			}
 			[menu addItem:menuItem];
-
+			[menuItem release];
+			
 			[self _menuOfAllGroups:menu forGroup:(AIListGroup *)object withTarget:target level:level+1];
 		}
 	}
@@ -1765,16 +1776,16 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			needToCreateSubmenu = (isValidGroup ||
 								   ([object isKindOfClass:[AIMetaContact class]] && ([[(AIMetaContact *)object listContacts] count] > 1)));
 
-
+			
 			menuServiceImage = [AIUserIcons menuUserIconForObject:object];
-
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(needToCreateSubmenu ?
-																					 [object displayName] :
-																					 [object formattedUID])
-																			 target:target
-																			 action:@selector(selectContact:)
-																	  keyEquivalent:@""] autorelease];
-
+			
+			menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(needToCreateSubmenu ?
+																					[object displayName] :
+																					[object formattedUID])
+																			target:target
+																			action:@selector(selectContact:)
+																	 keyEquivalent:@""];
+			
 			if(needToCreateSubmenu) {
 				[menuItem setSubmenu:[self menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)object withTarget:target firstLevel:NO]];
 			}
@@ -1782,10 +1793,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[menuItem setRepresentedObject:object];
 			[menuItem setImage:menuServiceImage];
 			[menu addItem:menuItem];
+			[menuItem release];
 		}
 	}
 
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 //Retrieving Specific Contacts -----------------------------------------------------------------------------------------
@@ -2051,7 +2063,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 			//If the metaContact only has one listContact, we will remove that contact from all accounts
 			if([[(AIMetaContact *)listObject listContacts] count] == 1) {
-				objectsToRemove = [[[(AIMetaContact *)listObject containedObjects] copy] autorelease];
+				objectsToRemove = [[(AIMetaContact *)listObject containedObjects] copy];
 			}
 
 			//Now break the metaContact down, taking out all contacts and putting them back in the main list
@@ -2060,6 +2072,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//And actually remove the single contact if applicable
 			if(objectsToRemove) {
 				[self removeListObjects:objectsToRemove];
+				
+				[objectsToRemove release];
 			}
 
 		} else if([listObject isKindOfClass:[AIListGroup class]]) {

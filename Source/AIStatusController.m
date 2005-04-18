@@ -318,7 +318,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		}
 	}
 
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 /*!
@@ -395,7 +395,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 	[menuItems sortUsingFunction:statusMenuItemSort context:nil];
 
-	return([menuItems autorelease]);
+	return [menuItems autorelease];
 }
 
 /*!
