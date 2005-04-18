@@ -133,7 +133,7 @@
 												 keyEquivalent:@""] autorelease];
 	
 	[menuItem setImage:[activeStatus icon]];
-	NSLog(@"Active state changed to %@",[activeStatus title]);
+
 	[[popUp_state cell] setMenuItem:menuItem];
 }
 
