@@ -99,8 +99,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[bookmarkRootContextualMenuItem setRepresentedObject:self];
 	[menuController addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
 
-	menuLock = [[NSLock alloc] init];
-
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
 	[notificationCenter addObserver:self
 						   selector:@selector(toolbarWillAddItem:)
