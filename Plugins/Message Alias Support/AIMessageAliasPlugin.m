@@ -54,22 +54,30 @@
 		int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
 		NSRange scanRange = NSMakeRange(0, 0);
 		while(NSMaxRange(scanRange) < length){
-			NSURL *linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
-																							atIndex:NSMaxRange(scanRange)
-																					 effectiveRange:&scanRange];
-			NSString *linkURLString;
-			if(linkURL && [linkURL isKindOfClass:[NSURL class]]) linkURLString = [(NSURL *)linkURL absoluteString];
-			else linkURLString = (NSString *)linkURL;
-			
-			//If we found a URL, replace any keywords within it
+			id linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
+																					 atIndex:NSMaxRange(scanRange)
+																			  effectiveRange:&scanRange];
 			if(linkURL){
+				NSString	*linkURLString;
+				
+				if([linkURL isKindOfClass:[NSURL class]]){
+					linkURLString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
+																						   (CFStringRef)[(NSURL *)linkURL absoluteString],
+																						   /* characters to leave escaped */ CFSTR(""));
+					[linkURLString autorelease];
+					
+				}else{
+					linkURLString = (NSString *)linkURL;
+				}
+				
+				//If we found a URL, replace any keywords within it
 				NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURLString]
 															 context:context] string];
 				
 				if(result){
 					if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 					[filteredMessage addAttribute:NSLinkAttributeName
-											value:result
+											value:[NSURL URLWithString:result]
 											range:scanRange];
 				}
 			}
