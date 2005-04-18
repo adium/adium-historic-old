@@ -1041,7 +1041,15 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	enumerator = [[inArgs allKeys] objectEnumerator];
 	while((arg = [enumerator nextObject])){
 		if([arg caseInsensitiveCompare:@"HREF"] == NSOrderedSame){
-			[textAttributes setLinkURL:[NSURL URLWithString:[inArgs objectForKey:arg]]];
+			NSString	*linkString = [inArgs objectForKey:arg];
+			
+			linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
+																			 (CFStringRef)linkString,
+																			 /* characters to leave unescaped */ NULL,
+																			 /* legal characters to escape */ NULL,
+																			 kCFStringEncodingUTF8);
+			[textAttributes setLinkURL:[NSURL URLWithString:linkString]];
+			[linkString release];
 		}
 	}
 }
