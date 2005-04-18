@@ -181,7 +181,7 @@
 - (IBAction)acceptURL:(id)sender
 {
 	if(textView){
-		NSMutableString *urlString = [NSMutableString stringWithString:[[textView_URL textStorage] string]];
+		NSMutableString *urlString = [[textView_URL linkURL] mutableCopy];
         NSString		*linkString  = [textField_linkText stringValue];
 
 		//Pre-fix the url if necessary
@@ -198,6 +198,7 @@
 
         //Insert it into the text view
         [self insertLinkTo:[NSURL URLWithString:urlString] withText:linkString inView:textView];
+		[urlString release];
 	}
 
 	//Inform our target of the new link and close up
@@ -229,7 +230,7 @@
 	//copy in our dictionary
 	NSDictionary	*linkDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[[[textField_linkText stringValue] copy] autorelease], KEY_LINK_TITLE,
-		[[[[textView_URL textStorage] string] copy] autorelease], KEY_LINK_URL,
+		[textView_URL linkURL], KEY_LINK_URL,
 		nil];
 	
 	if([target respondsToSelector:@selector(linkEditorLinkDidChange:)]){

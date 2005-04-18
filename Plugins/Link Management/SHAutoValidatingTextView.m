@@ -81,4 +81,25 @@
     }
 }
 
+#pragma mark Retrieving URL
+/*
+ * @brief Link URL
+ */
+- (NSString *)linkURL
+{
+	NSString	*linkURL = [[self textStorage] string];
+	if([linkURL rangeOfString:@"%n"].location == NSNotFound){
+		NSMutableString	*newLinkURL = [linkURL mutableCopy];
+		[newLinkURL replaceOccurrencesOfString:@"%n"
+									withString:@"%25n"
+									   options:NSLiteralSearch
+										 range:NSMakeRange(0, [newLinkURL length])];
+		linkURL = newLinkURL;
+		
+	}else{
+		linkURL = [linkURL copy];
+	}
+	
+	return([linkURL autorelease]);
+}
 @end
