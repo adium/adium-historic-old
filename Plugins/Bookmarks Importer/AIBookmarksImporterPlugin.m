@@ -275,8 +275,8 @@ end:
 		importer = [importers lastObject];
 
 		if([importer bookmarksHaveChanged]) {
-			menuItemSubmenu           = [importer menuWithAvailableBookmarks];
-			contextualMenuItemSubmenu = [[menuItemSubmenu copyWithZone:[NSMenu menuZone]] autorelease];
+			menuItemSubmenu           = [[importer menuWithAvailableBookmarks] retain];
+			contextualMenuItemSubmenu = [menuItemSubmenu copyWithZone:[NSMenu menuZone]];
 			menuHasChanged = YES;
 		}
 	} else {
