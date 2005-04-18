@@ -162,27 +162,23 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 		/* Show the multistatus tableview tab if accounts are in different states, which includes the case of only one
 		 * away state being in use but not all online accounts currently making use of it.
 		 */
-		NSTabViewItem	*selectedTabViewItem = [tabView_configuration selectedTabViewItem];
-		
+		int				requiredHeight;
+
 		_awayAccounts = [[self awayAccounts] retain];
-		
+
 		[tableView_multiStatus reloadData];
 
-		/* Only need to resize if we are currently in the single status tab... if we are already in the multistatus,
-		 * we shouldn't change whatever size the user has set. */
-		if(![[selectedTabViewItem identifier] isEqualToString:@"multistatus"]){
-			int requiredHeight = (([tableView_multiStatus rowHeight] + [tableView_multiStatus intercellSpacing].height) *
-								  [_awayAccounts count]);
+		requiredHeight = (([tableView_multiStatus rowHeight] + [tableView_multiStatus intercellSpacing].height) *
+						  [_awayAccounts count]);
 
-			newHeight = requiredHeight + 65;
-			frame.origin.y -= (newHeight - frame.size.height);
-			frame.size.height = newHeight;
+		newHeight = requiredHeight + 65;
+		frame.origin.y -= (newHeight - frame.size.height);
+		frame.size.height = newHeight;
 
-			/* Multiple statuses */
-			[tabView_configuration selectTabViewItemWithIdentifier:@"multistatus"];
-		}
+		/* Multiple statuses */
+		[tabView_configuration selectTabViewItemWithIdentifier:@"multistatus"];
 	}
-	
+
 	//Perform the window resizing as needed
 	if ([NSApp isOnPantherOrBetter]){
 		[window setFrame:frame display:YES animate:YES];
@@ -191,6 +187,11 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
+/*
+ * @brief Return the attributed status title for a status
+ *
+ * This method puts statusIcon into an NSTextAttachment and prefixes statusState's title with it.
+ */
 - (NSAttributedString *)attributedStatusTitleForStatus:(AIStatus *)statusState withIcon:(NSImage *)statusIcon
 {
 	NSMutableAttributedString	*statusTitle;
@@ -217,6 +218,9 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	return statusTitle;
 }
 
+/*
+ * @brief Return an array of all away accounts
+ */
 - (NSArray *)awayAccounts
 {	
 	NSMutableArray	*awayAccounts = [NSMutableArray array];	
@@ -266,6 +270,9 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
+/*
+ * @brief Perform initial setup for the multistatus table
+ */
 - (void)setupMultistatusTable
 {
 	AIImageTextCell	*imageTextCell;
