@@ -30,5 +30,6 @@
 - (BOOL)isContinuousURLValidationEnabled;
 - (URI_VERIFICATION_STATUS)validationStatus;
 - (BOOL)isURLValid;
+- (NSString *)linkURL;
 
 @end
