@@ -767,17 +767,20 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
 {
-	AIContentStatus	*content;
-
+	AIContentStatus		*content;
+	NSAttributedString	*attributedMessage;
+	
 	//Create our content object
+	attributedMessage = [[NSAttributedString alloc] initWithString:message
+														attributes:[self defaultFormattingAttributes]];
 	content = [AIContentStatus statusInChat:inChat
 								 withSource:[inChat listObject]
 								destination:[inChat account]
 									   date:[NSDate date]
-									message:[[[NSAttributedString alloc] initWithString:message
-																			 attributes:[self defaultFormattingAttributes]] autorelease]
+									message:attributedMessage
 								   withType:type];
-	
+	[attributedMessage release];
+
 	//Add the object
 	[self receiveContentObject:content];
 }
@@ -1482,7 +1485,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		[menuItem release];
 	}
 	
-	return([encryptionMenu autorelease]);
+	return [encryptionMenu autorelease];
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID

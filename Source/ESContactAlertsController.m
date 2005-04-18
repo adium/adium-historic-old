@@ -178,18 +178,21 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 {	
 	NSEnumerator		*enumerator;
 	NSString			*eventID;
-	NSMenuItem			*item;
+	NSMenuItem			*menuItem;
 	
 	enumerator = [inEventHandlers keyEnumerator];
 	while((eventID = [enumerator nextObject])){
 		id <AIEventHandler>	eventHandler = [inEventHandlers objectForKey:eventID];		
 		
-        item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(global ? [eventHandler globalShortDescriptionForEventID:eventID] : [eventHandler shortDescriptionForEventID:eventID])
-																	 target:target 
-																	 action:@selector(selectEvent:) 
-															  keyEquivalent:@""] autorelease];
-        [item setRepresentedObject:eventID];
-		[menuItemArray addObject:item];
+        menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(global ?
+																				[eventHandler globalShortDescriptionForEventID:eventID] :
+																				[eventHandler shortDescriptionForEventID:eventID])
+																		target:target 
+																		action:@selector(selectEvent:) 
+																 keyEquivalent:@""];
+        [menuItem setRepresentedObject:eventID];
+		[menuItemArray addObject:menuItem];
+		[menuItem release];
     }
 }
 
@@ -431,7 +434,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 {
     NSEnumerator	*enumerator;
     NSString		*actionID;
-	NSMenuItem		*item;
+	NSMenuItem		*menuItem;
 	NSMenu			*menu;
 	NSMutableArray	*menuItemArray;
 	
@@ -439,32 +442,35 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
 	
-	menuItemArray = [NSMutableArray array];
+	menuItemArray = [[NSMutableArray alloc] init];
 	
     //Insert a menu item for each available action
 	enumerator = [actionHandlers keyEnumerator];
 	while((actionID = [enumerator nextObject])){
 		id <AIActionHandler> actionHandler = [actionHandlers objectForKey:actionID];		
 		
-        item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
-																	 target:target 
-																	 action:@selector(selectAction:) 
-															  keyEquivalent:@""] autorelease];
-        [item setRepresentedObject:actionID];
-		[item setImage:[[actionHandler imageForActionID:actionID] imageByScalingToSize:NSMakeSize(16,16)]];
-
-        [menuItemArray addObject:item];
+        menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[actionHandler shortDescriptionForActionID:actionID]
+																		target:target 
+																		action:@selector(selectAction:) 
+																 keyEquivalent:@""];
+        [menuItem setRepresentedObject:actionID];
+		[menuItem setImage:[[actionHandler imageForActionID:actionID] imageByScalingToSize:NSMakeSize(16,16)]];
+		
+        [menuItemArray addObject:menuItem];
+		[menuItem release];
     }
 
 	//Sort the array of menuItems alphabetically by title
 	[menuItemArray sortUsingFunction:actionMenuItemSort context:nil];
 	
 	enumerator = [menuItemArray objectEnumerator];
-	while(item = [enumerator nextObject]){
-		[menu addItem:item];
+	while(menuItem = [enumerator nextObject]){
+		[menu addItem:menuItem];
 	}
 	
-	return([menu autorelease]);
+	[menuItemArray release];
+
+	return [menu autorelease];
 }	
 
 - (NSString *)defaultActionID
@@ -560,14 +566,13 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		[eventArray addObject:newAlert];
 		
 		//Put the modified event array back into the contact alert dict, and save our changes
-		[contactAlerts setObject:[eventArray autorelease] forKey:newAlertEventID];
+		[contactAlerts setObject:eventArray forKey:newAlertEventID];
 		[[adium preferenceController] setPreference:contactAlerts
 											 forKey:KEY_CONTACT_ALERTS
 											  group:PREF_GROUP_CONTACT_ALERTS
 											 object:listObject];	
 	}
-	[contactAlerts release];
-	
+
 	//Update the default events if requested
 	if(setAsNewDefaults){
 		[[adium preferenceController] setPreference:newAlertEventID
@@ -577,6 +582,10 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 											 forKey:KEY_DEFAULT_ACTION_ID
 											  group:PREF_GROUP_CONTACT_ALERTS];	
 	}
+	
+	//Cleanup
+	[contactAlerts release];
+	[eventArray release];
 	
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 }
@@ -649,7 +658,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 			//We found an alertDict which needs to be removed
 			if ([[alertDict objectForKey:KEY_ACTION_ID] isEqualToString:actionID]){
 				//If this is the first modification to the current eventArray, make a mutableCopy with which to work
-				if (!newEventArray) newEventArray = [[eventArray mutableCopy] autorelease];
+				if (!newEventArray) newEventArray = [eventArray mutableCopy];
 				[newEventArray removeObject:alertDict];
 			}
 		}
@@ -661,6 +670,9 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 			}else{
 				[newContactAlerts removeObjectForKey:victimEventID];	
 			}
+			
+			//Clean up
+			[newEventArray release];
 		}
 	}
 	
@@ -692,8 +704,8 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		 * with an NSMutableArray.
 		 */
 		eventArray = [contactAlerts objectForKey:eventID];
-		if(!eventArray) eventArray = [[[NSMutableArray alloc] init] autorelease];		
-		
+		if(!eventArray) eventArray = [NSMutableArray array];		
+
 		//Add the new alert
 		[eventArray addObject:eventDict];
 		

@@ -327,7 +327,7 @@
 		[image release];
 	}
 
-	return ([iconState autorelease]);
+	return [iconState autorelease];
 }
 
 //Set an icon state from our currently loaded icon pack

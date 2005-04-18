@@ -35,12 +35,13 @@ static ESDebugController	*sharedDebugController = nil;
 	sharedDebugController = self;
 	
 	//Contact list menu tem
-    NSMenuItem *item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
-																			 target:self
-																			 action:@selector(showDebugWindow:)
-																	  keyEquivalent:@""] autorelease];
-	[[adium menuController] addMenuItem:item toLocation:LOC_Adium_About];
-	
+    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
+																				target:self
+																				action:@selector(showDebugWindow:)
+																		 keyEquivalent:@""];
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_About];
+	[menuItem release];
+
 	debugLogArray = [[NSMutableArray alloc] init];
 	
 	//Restore the debug window if it was open when we quit last time

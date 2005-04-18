@@ -219,8 +219,8 @@
 		}
 		
 		//Load and cache the sound
-		justCrushAlot = [[[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
-											 usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)] autorelease];
+		justCrushAlot = [[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
+												   usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)];
 		if(justCrushAlot){
 			/*
 			 It's important that we are caching, not so much because of the overhead but because:
@@ -233,6 +233,8 @@
 					this implies having one QTSoundFilePlayer per path, which requires caching into a lookup dict.
 			*/
 			[soundCacheDict setObject:justCrushAlot forKey:inPath];
+			[justCrushAlot release];
+
 			[soundCacheArray insertObject:inPath atIndex:0];
 		}
 		
@@ -309,7 +311,7 @@
 		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
 	}
     
-    return([soundSetArray autorelease]);
+    return [soundSetArray autorelease];
 }
 
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray
@@ -321,7 +323,7 @@
 
     //Start things off with a valid set path and contents, incase any sounds aren't in subfolders
     soundSetPath = soundFolderPath;
-    soundSetContents = [[[NSMutableArray alloc] init] autorelease];
+    soundSetContents = [[NSMutableArray alloc] init];
 
     //Scan the directory
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:soundFolderPath];
@@ -337,6 +339,7 @@
             fullPath = [soundFolderPath stringByAppendingPathComponent:file];
             [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
             if(isDirectory){
+				//Only add the soundset if it contains sounds
                 if([soundSetContents count] != 0){
                     //Close the current soundset, adding it to our sound set array
                     [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
@@ -344,7 +347,9 @@
 
                 //Open a new soundset for this directory
                 soundSetPath = fullPath;
-                soundSetContents = [[[NSMutableArray alloc] init] autorelease];
+
+				[soundSetContents release];
+                soundSetContents = [[NSMutableArray alloc] init];
 
             }else{
                 //Add the sound
@@ -355,7 +360,8 @@
     }
 
     //Close the last soundset, adding it to our sound set array
-    [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];    
+    [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
+	[soundSetContents release];
 }
 
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray
