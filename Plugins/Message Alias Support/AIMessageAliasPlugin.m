@@ -90,7 +90,7 @@
 					NSAssert2(newURL != nil,@"%@ failed CFURLCreateStringByAddingPercentEscapes() yielding %@",result,escapedLinkURLString);
 
 					[filteredMessage addAttribute:NSLinkAttributeName
-											value:
+											value:newURL
 											range:scanRange];
 					[escapedLinkURLString release];
 				}
