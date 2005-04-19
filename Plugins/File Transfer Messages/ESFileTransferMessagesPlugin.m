@@ -57,14 +57,14 @@
 	AIListContact	*listContact = [notification object];
 	NSString		*message = nil;
 	NSString		*type = nil;
-	
+	NSString		*notificationName = [notification name];
 	NSString		*filename = [[fileTransfer localFilename] lastPathComponent];
 	
-	if ([[notification name] isEqualToString:FILE_TRANSFER_CANCELED]){
+	if ([notificationName isEqualToString:FILE_TRANSFER_CANCELED]){
 		type = @"file_transfer_canceled";
 		message = [NSString stringWithFormat:AILocalizedString(@"%@ canceled the transfer of %@",nil),[listContact formattedUID],filename];
 		
-	}else if ([[notification name] isEqualToString:FILE_TRANSFER_COMPLETE]){
+	}else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]){
 		type = @"file_transfer_complete";
 		if ([fileTransfer type] == Incoming_FileTransfer){
 			message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];
@@ -72,7 +72,7 @@
 			message = [NSString stringWithFormat:AILocalizedString(@"Successfully sent %@",nil),filename];			
 		}
 		
-	}else if ([[notification name] isEqualToString:FILE_TRANSFER_BEGAN]){
+	}else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]){
 		type = @"file_transfer_began";
 		if ([fileTransfer type] == Incoming_FileTransfer){
 			message = [NSString stringWithFormat:AILocalizedString(@"Began receiving %@",nil),filename];
