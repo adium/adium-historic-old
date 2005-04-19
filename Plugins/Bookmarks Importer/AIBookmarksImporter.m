@@ -140,12 +140,12 @@
 			}
 			//note: despite the name, LSGetApplicationForInfo implicitly retains URL. don't remove this release call.
 			[URL release];
-
-			if(!path) {
-				NSString *appName = [self browserName];
-				path = [workspace fullPathForApplication:appName];
-			}
 		}
+	}
+
+	if(!path) {
+		NSString *appName = [self browserName];
+		path = [workspace fullPathForApplication:appName];
 	}
 
 	return path;
