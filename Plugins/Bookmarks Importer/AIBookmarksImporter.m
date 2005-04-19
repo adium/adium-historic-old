@@ -138,7 +138,7 @@
 			if(err == noErr) {
 				path = [URL path];
 			}
-			if(URL) [URL release];
+			[URL release];
 
 			if(!path) {
 				NSString *appName = [self browserName];
