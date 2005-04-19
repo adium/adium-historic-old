@@ -242,7 +242,11 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSString		*oldLink = nil;
 	
 	//Append the body tag (If there is a background color)
-	if(thingsToInclude.headers && messageLength > 0 && (pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
+	if(thingsToInclude.headers &&
+	   (messageLength > 0) &&
+	   (pageColor = [inMessage attribute:AIBodyColorAttributeName
+								 atIndex:0
+						  effectiveRange:nil])){
 		[string appendString:@"<BODY BGCOLOR=\"#"];
 		[string appendString:[pageColor hexString]];
 		[string appendString:@"\">"];
@@ -599,16 +603,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	if(thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
 	
 	//KBOTC's odd hackish body background thingy for WMV since no one else will add it
-	if(thingsToInclude.bodyBackground){
+	if(thingsToInclude.bodyBackground &&
+	   (messageLength > 0)){
 		[string setString:@""];
 		if((pageColor = [inMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil])){
-		[string setString:[pageColor hexString]];
-		[string replaceOccurrencesOfString:@"\"" withString:@"" options:NSLiteralSearch range:NSMakeRange(0, [string length])];
+			[string setString:[pageColor hexString]];
+			[string replaceOccurrencesOfString:@"\"" 
+									withString:@"" 
+									   options:NSLiteralSearch
+										 range:NSMakeRange(0, [string length])];
 		}
 	}
-/*	NSLog(@"encoded %@", inMessage);
-	NSLog(@"to HTML %@", string);
-*/
+
 	return string;
 }
 
