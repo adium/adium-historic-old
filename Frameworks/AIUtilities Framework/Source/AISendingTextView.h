@@ -48,6 +48,11 @@
 - (BOOL)isSendingEnabled;
 
 /*!
+ * @brief Is the text view in the middle of sending content?
+ */
+- (BOOL)isSendingContent;
+
+/*!
  * @brief Set if Return triggers a send
  *
  * Set if Return triggers a send. If it does, the send will be performed instead of a newline being inserted.
