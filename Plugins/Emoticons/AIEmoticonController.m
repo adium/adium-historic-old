@@ -240,7 +240,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                                                                   range:NSMakeRange(0,1)];
                                     
                 //insert the emoticon
-                if(!newMessage) newMessage = [[inMessage mutableCopy] autorelease];
+                if(!newMessage) newMessage = [inMessage mutableCopy];
 				[newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength)
                                 withAttributedString:replacement];
                 //Update where we are in the original and replacement messages
@@ -259,7 +259,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		[candidateEmoticonTextEquivalents release];
     }
 
-    return(newMessage ? newMessage : inMessage);
+    return(newMessage ? [newMessage autorelease] : inMessage);
 }
 
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
@@ -349,9 +349,9 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 - (void)setEmoticon:(AIEmoticon *)inEmoticon inPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
 {
     NSString                *packKey = [self _keyForPack:inPack];
-    NSMutableDictionary     *packDict = [[[[adium preferenceController] preferenceForKey:packKey
-																				   group:PREF_GROUP_EMOTICONS] mutableCopy] autorelease];
-    NSMutableArray          *disabledArray = [[[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy] autorelease];
+    NSMutableDictionary     *packDict = [[[adium preferenceController] preferenceForKey:packKey
+																				  group:PREF_GROUP_EMOTICONS] mutableCopy];
+    NSMutableArray          *disabledArray = [[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy];
 	
     if(!packDict) packDict = [NSMutableDictionary dictionary];
     if(!disabledArray) disabledArray = [NSMutableArray array];
@@ -368,7 +368,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     
     //Save changes
     [packDict setObject:disabledArray forKey:KEY_EMOTICON_DISABLED];
+	[disabledArray release];
+
     [[adium preferenceController] setPreference:packDict forKey:packKey group:PREF_GROUP_EMOTICONS];
+	[packDict release];
 }
 
 //Returns the disabled emoticons in a pack
