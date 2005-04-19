@@ -107,7 +107,7 @@
 			BOOL found = (([directory rangeOfString:@"default."].location != NSNotFound) || /* Fox 0.9 up to but not including 1.0 */
 						  ([directory rangeOfString:@".default"].location != NSNotFound));
 			if(found) {
-				fox9BookmarksPath = [[NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_9_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME] retain];
+				fox9BookmarksPath = [NSString stringWithFormat:@"%@/%@/%@",[FIREFOX_9_BOOKMARKS_PATH stringByExpandingTildeInPath], directory, FIREFOX_BOOKMARKS_FILE_NAME];
 				break;
 			}
 		}
