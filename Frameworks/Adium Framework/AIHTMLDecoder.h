@@ -32,6 +32,8 @@
 		unsigned bodyBackground: 1;
 
 		unsigned simpleTagsOnly: 1;
+		
+		unsigned allowAIMsubprofileLinks: 1;
 	} thingsToInclude;
 }
 
@@ -123,6 +125,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 - (BOOL)bodyBackground;
 - (void)bodyBackground:(BOOL)bodyBackground;
+
+- (BOOL)allowAIMsubprofileLinks;
+- (void)setAllowAIMsubprofileLinks:(BOOL)newValue;
 
 @end
 

@@ -127,17 +127,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	   bodyBackground:(BOOL)bodyBackground
 {
 	if((self = [self init])) {
-		thingsToInclude.headers                        = includeHeaders;
-		thingsToInclude.fontTags                       = includeFontTags;
-		thingsToInclude.closingFontTags                = closeFontTags;
-		thingsToInclude.colorTags                      = includeColorTags;
-		thingsToInclude.styleTags                      = includeStyleTags;
-		thingsToInclude.nonASCII                       = encodeNonASCII;
-		thingsToInclude.allSpaces                      = encodeSpaces;
-		thingsToInclude.attachmentTextEquivalents      = attachmentsAsText;
-		thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
-		thingsToInclude.simpleTagsOnly                 = simpleOnly;
-		thingsToInclude.bodyBackground                 = bodyBackground;
+		thingsToInclude.headers							= includeHeaders;
+		thingsToInclude.fontTags						= includeFontTags;
+		thingsToInclude.closingFontTags					= closeFontTags;
+		thingsToInclude.colorTags						= includeColorTags;
+		thingsToInclude.styleTags						= includeStyleTags;
+		thingsToInclude.nonASCII						= encodeNonASCII;
+		thingsToInclude.allSpaces						= encodeSpaces;
+		thingsToInclude.attachmentTextEquivalents		= attachmentsAsText;
+		thingsToInclude.attachmentImagesOnlyForSending	= attachmentImagesOnlyForSending;
+		thingsToInclude.simpleTagsOnly					= simpleOnly;
+		thingsToInclude.bodyBackground					= bodyBackground;
+		
+		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
 	return self;
 }
@@ -377,6 +379,22 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			NSString	*linkString = ([link isKindOfClass:[NSURL class]] ? [(NSURL *)link absoluteString] : link);
 
 			[string appendString:@"<a href=\""];
+			
+			/* AIM can handle %n in links, which is highly invalid for a real URL.
+			 * If thingsToInclude.allowAIMsubprofileLinks is YES, and a %25n is in the link, replace the escaped version
+			 * which was used within Adium [so that NSURL didn't balk] with %n, which is what other AIM clients will
+			 * be expecting.
+			 */
+			if(thingsToInclude.allowAIMsubprofileLinks && 
+			   ([linkString rangeOfString:@"%25n"].location != NSNotFound)){
+				NSMutableString	*fixedLinkString = [[linkString mutableCopy] autorelease];
+				[fixedLinkString replaceOccurrencesOfString:@"%25n"
+												 withString:@"%n"
+													options:NSLiteralSearch
+													  range:NSMakeRange(0, [fixedLinkString length])];
+				linkString = fixedLinkString;
+			}
+			
 			[string appendString:linkString];
 			if (!thingsToInclude.simpleTagsOnly){
 				[string appendString:@"\" title=\""];
@@ -1237,6 +1255,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 {
 	thingsToInclude.bodyBackground = newValue;
 }
+
+- (BOOL)allowAIMsubprofileLinks
+{
+	return thingsToInclude.allowAIMsubprofileLinks;
+}
+- (void)setAllowAIMsubprofileLinks:(BOOL)newValue
+{
+	thingsToInclude.allowAIMsubprofileLinks = newValue;
+}
+
 @end
 
 static AIHTMLDecoder *classMethodInstance = nil;
@@ -1267,6 +1295,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = 
 	classMethodInstance->thingsToInclude.simpleTagsOnly = 
 	classMethodInstance->thingsToInclude.bodyBackground =
+	classMethodInstance->thingsToInclude.allowAIMsubprofileLinks =
 		NO;
 	
 	return [classMethodInstance encodeHTML:inMessage imagesPath:nil];
@@ -1311,6 +1340,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	classMethodInstance->thingsToInclude.attachmentImagesOnlyForSending = attachmentImagesOnlyForSending;
 	classMethodInstance->thingsToInclude.simpleTagsOnly = simpleOnly;
 	classMethodInstance->thingsToInclude.bodyBackground = bodyBackground;
+	classMethodInstance->thingsToInclude.allowAIMsubprofileLinks = NO;
+
 	return [classMethodInstance encodeHTML:inMessage imagesPath:imagesPath];
 }
 
