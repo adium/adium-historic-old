@@ -180,30 +180,39 @@
 #pragma mark AttributedString Wrangleing Methods
 - (IBAction)acceptURL:(id)sender
 {
-	if(textView){
-		NSMutableString *urlString = [[textView_URL linkURL] mutableCopy];
-        NSString		*linkString  = [textField_linkText stringValue];
+	NSMutableString *urlString = [[textView_URL linkURL] mutableCopy];
+	NSString		*linkString  = [textField_linkText stringValue];
+	NSURL			*URL;
+	
+	//Pre-fix the url if necessary
+	switch([textView_URL validationStatus]){
+		case SH_URL_DEGENERATE:
+			[urlString insertString:@"http://" atIndex:0];
+			break;
+		case SH_MAILTO_DEGENERATE:
+			[urlString insertString:@"mailto:" atIndex:0];
+			break;
+		default:
+			break;
+	}
+	
+	//Insert it into the text view
+	URL = [NSURL URLWithString:urlString];
 
-		//Pre-fix the url if necessary
-        switch([textView_URL validationStatus]){
-            case SH_URL_DEGENERATE:
-                [urlString insertString:@"http://" atIndex:0];
-				break;
-            case SH_MAILTO_DEGENERATE:
-                [urlString insertString:@"mailto:" atIndex:0];
-				break;
-            default:
-				break;
-        }
-
-        //Insert it into the text view
-        [self insertLinkTo:[NSURL URLWithString:urlString] withText:linkString inView:textView];
-		[urlString release];
+	if(URL){
+		[self insertLinkTo:URL
+				  withText:linkString
+					inView:textView];
+		//Inform our target of the new link and close up
+		[self informTargetOfLink];
+		[self closeWindow:nil];
+		
+	}else{
+		//If the URL is invalid enough that we can't create an NSURL, just beep
+		NSBeep();
 	}
 
-	//Inform our target of the new link and close up
-	[self informTargetOfLink];
-    [self closeWindow:nil];
+	[urlString release];
 }
 
 - (IBAction)removeURL:(id)sender
@@ -271,10 +280,12 @@
 #pragma mark URL Validation and other Delegate Oddities
 - (void)textDidChange:(NSNotification *)aNotification
 {
-    //validate our URL's
+    //validate our URL
     [textView_URL textDidChange:aNotification];
+	
 	if([imageView_invalidURLAlert respondsToSelector:@selector(setHidden:)]){
         [imageView_invalidURLAlert setHidden:[textView_URL isURLValid]];
+
     }else{ //for those stuck in jag, we can't use setHidden
         if([textView_URL isURLValid]) {
             [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];

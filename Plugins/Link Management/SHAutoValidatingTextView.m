@@ -73,10 +73,12 @@
 {
     if(continuousURLValidation) {//call the URL validatation if set
         SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
-        
-        URLIsValid = [laxScanner isStringValidURL:[[self textStorage] string]];
+		NSString			*linkURL = [self linkURL];
+
+        URLIsValid = ([laxScanner isStringValidURL:linkURL] &&
+					  ([NSURL URLWithString:linkURL] != nil));
         validStatus = [laxScanner validationStatus];
-		
+
 		[laxScanner release];
     }
 }
@@ -88,7 +90,8 @@
 - (NSString *)linkURL
 {
 	NSString	*linkURL = [[self textStorage] string];
-	if([linkURL rangeOfString:@"%n"].location == NSNotFound){
+
+	if([linkURL rangeOfString:@"%n"].location != NSNotFound){
 		NSMutableString	*newLinkURL = [linkURL mutableCopy];
 		[newLinkURL replaceOccurrencesOfString:@"%n"
 									withString:@"%25n"
@@ -102,4 +105,5 @@
 	
 	return([linkURL autorelease]);
 }
+
 @end
