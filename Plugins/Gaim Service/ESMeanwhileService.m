@@ -55,7 +55,8 @@
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet punctuationCharacterSet]];
 	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet symbolCharacterSet]];
-	
+	[allowedCharacters addCharactersInString:@" "];
+
 	return([allowedCharacters autorelease]);
 }
 - (NSCharacterSet *)ignoredCharacters{
