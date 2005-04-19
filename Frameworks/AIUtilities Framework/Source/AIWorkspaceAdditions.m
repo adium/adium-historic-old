@@ -35,7 +35,7 @@
 	if (status != noErr)
 		appPath = [appURL path];
 
-	//note: despite the name, LSGetApplicationForInfo implicitly retains URL. don't remove this release call.
+	//note: despite the name, LSGetApplicationForInfo implicitly retains appURL. don't remove this release call.
 	return [appPath autorelease];
 }
 
