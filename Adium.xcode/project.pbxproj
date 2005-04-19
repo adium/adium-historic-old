@@ -8689,7 +8689,6 @@
 			dstSubfolderSpec = 13;
 			files = (
 				348EF1F6080B31280015E0FC,
-				348EF1F5080B311F0015E0FC,
 				4B7F27C705440DE900CDFC90,
 				344C0F0D06B709AC00DA7200,
 				4B90B54C064220AB00D23731,
@@ -16155,6 +16154,7 @@
 			dstPath = "../PlugIns Disabled";
 			dstSubfolderSpec = 7;
 			files = (
+				348EF1F5080B311F0015E0FC,
 			);
 			isa = PBXCopyFilesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
