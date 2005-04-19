@@ -35,6 +35,7 @@
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
 - (void)_removeCustomViewAndTabs;
+- (void)_localizeTabViewItemLabels;
 - (void)saveConfiguration;
 @end
 
@@ -126,6 +127,7 @@
 	//Insert the custom controls for this account
 	[self _removeCustomViewAndTabs];
 	[self _addCustomViewAndTabsForAccount:account];
+	[self _localizeTabViewItemLabels];
 }
 
 /*!
@@ -312,6 +314,18 @@
     //Close any currently open controllers
     [view_accountSetup removeAllSubviews];
     [accountViewController release]; accountViewController = nil;
+}
+
+/*
+ * @brief Localization
+ */
+- (void)_localizeTabViewItemLabels
+{
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"account"] setLabel:AILocalizedString(@"Account",nil)];
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"profile"] setLabel:AILocalizedString(@"Personal",nil)];
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"options"] setLabel:AILocalizedString(@"Options",nil)];
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"privacy"] setLabel:AILocalizedString(@"Privcay",nil)];
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"proxy"] setLabel:AILocalizedString(@"Proxy",nil)];
 }
 
 // ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
