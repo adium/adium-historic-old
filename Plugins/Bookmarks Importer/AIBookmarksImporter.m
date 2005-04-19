@@ -138,6 +138,7 @@
 			if(err == noErr) {
 				path = [URL path];
 			}
+			//note: despite the name, LSGetApplicationForInfo implicitly retains URL. don't remove this release call.
 			[URL release];
 
 			if(!path) {
