@@ -18,11 +18,12 @@
 
 @implementation SHMarkedHyperlink
 
-#pragma mark init
+#pragma mark init and dealloc
+
 // one really big init method that does it all...
--(id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
+- (id)initWithString:(NSString *)inString withValidationStatus:(URI_VERIFICATION_STATUS)status parentString:(NSString *)pInString andRange:(NSRange)inRange
 {
-    if((self = [self init])) {
+	if((self = [self init])) {
 		[self setURLFromString:inString];
 		linkRange = inRange;
 		[self setParentString:pInString];
@@ -42,92 +43,94 @@
 	return self;
 }
 
--(void)dealloc
+- (void)dealloc
 {
-    [linkURL release];
-    [pString release];
+	[linkURL release];
+	[pString release];
 
-    [super dealloc];
+	[super dealloc];
 }
 
-#pragma mark accessors
+#pragma mark Accessors
 
--(NSRange)range
+- (NSRange)range
 {
-    return linkRange;
+	return linkRange;
 }
 
--(NSString *)parentString
+- (NSString *)parentString
 {
-    return pString;
+	return pString;
 }
 
--(NSURL *)URL
+- (NSURL *)URL
 {
-    return linkURL;
+	return linkURL;
 }
 
--(URI_VERIFICATION_STATUS)validationStatus
+- (URI_VERIFICATION_STATUS)validationStatus
 {
-    return urlStatus;
+	return urlStatus;
 }
 
--(BOOL)parentStringMatchesString:(NSString *)inString
+- (BOOL)parentStringMatchesString:(NSString *)inString
 {
-    return [pString isEqualToString:inString];
+	return [pString isEqualToString:inString];
 }
 
-#pragma mark transformers
--(void)setRange:(NSRange)inRange
+#pragma mark Transformers
+
+- (void)setRange:(NSRange)inRange
 {
-    linkRange = inRange;
+	linkRange = inRange;
 }
 
--(void)setURL:(NSURL *)inURL
+- (void)setURL:(NSURL *)inURL
 {
-    if(linkURL != inURL){
-        [linkURL release];
-        linkURL = [inURL retain];
-    }
+	if(linkURL != inURL){
+		[linkURL release];
+		linkURL = [inURL retain];
+	}
 }
 
--(void)setURLFromString:(NSString *)inString
+- (void)setURLFromString:(NSString *)inString
 {
-    NSString    *linkString;
-    [linkURL release];
+	NSString	*linkString;
 
-    linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes( NULL,
-                                            (CFStringRef)inString,
-                                            (CFStringRef)@"#%",
-                                            NULL,
-                                            kCFStringEncodingUTF8 ); // kCFStringEncodingISOLatin1 );
+	linkString = (NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault,
+	                                        (CFStringRef)inString,
+	                                        (CFStringRef)@"#%",
+	                                        NULL,
+	                                        kCFStringEncodingUTF8); // kCFStringEncodingISOLatin1 );
 
-    linkURL = [[NSURL alloc] initWithString:linkString];
+	[linkURL release];
+	linkURL = [[NSURL alloc] initWithString:linkString];
 
 	[linkString release];
 }
 
--(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
+- (void)setValidationStatus:(URI_VERIFICATION_STATUS)status
 {
-    urlStatus = status;
+	urlStatus = status;
 }
 
--(void)setParentString:(NSString *)pInString
+- (void)setParentString:(NSString *)pInString
 {
-    if(pString != pInString){
-        [pString release];
-        pString = [pInString retain];
-    }
+	if(pString != pInString){
+		[pString release];
+		pString = [pInString retain];
+	}
 }
 
-#pragma mark copying
+#pragma mark Copying
+
 - (id)copyWithZone:(NSZone *)zone
 {
-    SHMarkedHyperlink   *newLink = [[[self class] allocWithZone:zone] initWithString:[[self URL] absoluteString]
-                                                                withValidationStatus:[self validationStatus]
-                                                                        parentString:[self parentString]
-                                                                            andRange:[self range]];
-    return newLink;
+	SHMarkedHyperlink   *newLink = [[[self class] allocWithZone:zone] initWithString:[[self URL] absoluteString]
+	                                                            withValidationStatus:[self validationStatus]
+	                                                                    parentString:[self parentString]
+	                                                                        andRange:[self range]];
+	return newLink;
 }
 
 @end
