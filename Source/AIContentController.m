@@ -80,7 +80,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	emoticonsArray = nil;
 	
     //Chat tracking
-    chatArray = [[NSMutableArray alloc] init];
+    openChats = [[NSMutableSet alloc] init];
+	objectsBeingReceived = [[NSMutableSet alloc] init];
 
     //Emoticons array
     emoticonsArray = nil;
@@ -106,9 +107,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     [textEntryFilterArray release];
     [textEntryContentFilterArray release];
     [textEntryViews release];
-    [chatArray release];
+    [openChats release];
 	[chatObserverArray release]; chatObserverArray = nil;
-	
+	[objectsBeingReceived release];
+
     [super dealloc];
 }
 
@@ -479,6 +481,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
         }
 		
+		//Track that we are in the process of receiving this object
+		[objectsBeingReceived addObject:inObject];
+
 		//Run the object through our incoming content filters
         if([inObject filterContent]){
 			[self filterAttributedString:[inObject message]
@@ -761,8 +766,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat
-												userInfo:userInfo];
+												userInfo:userInfo];		
     }
+
+	//We are no longer in the process of receiving this object
+	[objectsBeingReceived addObject:inObject];
 }
 
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
@@ -836,7 +844,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Send a chatStatusChanged message for each open chat with a nil modifiedStatusKeys array
 - (void)updateAllChatsForObserver:(id <AIChatObserver>)observer
 {
-	NSEnumerator	*enumerator = [chatArray objectEnumerator];
+	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
 	while (chat = [enumerator nextObject]){
@@ -931,7 +939,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	if(!targetContact) return nil;
 	
 	//Search for an existing chat we can switch instead of replacing
-	enumerator = [chatArray objectEnumerator];
+	enumerator = [openChats objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
 		if([[chat uniqueChatID] isEqualToString:[targetContact internalObjectID]]) {
@@ -962,13 +970,13 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
 		[chat addParticipatingListObject:targetContact];
-		[chatArray addObject:chat];
+		[openChats addObject:chat];
 		
 		//Inform the account of its creation and post a notification if successful
 		if([[targetContact account] openChat:chat]){
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
-			[chatArray removeObject:chat];
+			[openChats removeObject:chat];
 			chat = nil;
 		}
 	}
@@ -1002,7 +1010,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	}
 	
 	//Search for an existing chat
-	enumerator = [chatArray objectEnumerator];
+	enumerator = [openChats objectEnumerator];
 	while(chat = [enumerator nextObject]){
 		//If a chat for this object already exists
 		if([chat listObject] == targetContact) break;
@@ -1022,7 +1030,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
 		[chat setName:inName];
-		[chatArray addObject:chat];
+		[openChats addObject:chat];
 		
 		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
 											 forKey:@"ChatCreationInfo"
@@ -1036,7 +1044,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		if([account openChat:chat]){
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
-			[chatArray removeObject:chat];
+			[openChats removeObject:chat];
 			chat = nil;
 		}
 	}
@@ -1046,9 +1054,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)openChat:(AIChat *)chat
 {
 	if(chat){		
-		if (![chatArray containsObjectIdenticalTo:chat]){
-			[chatArray addObject:chat];
-		}
+		[openChats addObject:chat];
 		
 		[[adium interfaceController] openChat:chat]; 
 	}
@@ -1059,7 +1065,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
 	
-	enumerator = [chatArray objectEnumerator];
+	enumerator = [openChats objectEnumerator];
 
 	while(chat = [enumerator nextObject]){
 		if(([chat account] == account) &&
@@ -1076,7 +1082,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
 	
-	enumerator = [chatArray objectEnumerator];
+	enumerator = [openChats objectEnumerator];
 	
 	while(chat = [enumerator nextObject]){
 		if([[chat uniqueChatID] isEqualToString:uniqueChatID]){
@@ -1090,20 +1096,38 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {	
-    if(mostRecentChat == inChat)
-        mostRecentChat = nil;
-    
-    //Notify the account and send out the Chat_WillClose notification
-    [[inChat account] closeChat:inChat];
-    [[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
+	BOOL	shouldClose = YES;
+	
+	/* If we are currently passing a content object for this chat through our content filters, don't close the chat
+	 * as we will be reopening it in a moment anyways. */
+	NSEnumerator	*objectsBeingReceivedEnumerator = [objectsBeingReceived objectEnumerator];
+	AIContentObject	*contentObject;
+	while(contentObject = [objectsBeingReceivedEnumerator nextObject]){
+		if([contentObject chat] == inChat){
+			shouldClose = NO;
+			break;
+		}
+	}
 
-	//Remove the chat's content (it retains the chat, so this must be done separately)
-	[inChat removeAllContent];
-
-    //Remove the chat
-    [chatArray removeObjectIdenticalTo:inChat];
-
-    return(YES);
+	if(shouldClose){
+		if(mostRecentChat == inChat)
+			mostRecentChat = nil;
+    	
+		//Notify the account and send out the Chat_WillClose notification
+		[[inChat account] closeChat:inChat];
+		[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
+		
+		//Remove the chat's content (it retains the chat, so this must be done separately)
+		[inChat removeAllContent];
+		
+		//Remove the chat
+		[openChats removeObject:inChat];
+		
+		return YES;
+		
+	}else{
+		return NO;
+	}
 }
 
 //Switch a chat from one account to another, updating the target list contact to be an 'identical' one on the target account.
@@ -1187,7 +1211,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		}
 		
 	}else{
-		NSEnumerator	*chatEnumerator = [chatArray objectEnumerator];
+		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
 		AIChat			*chat;
 		while((chat = [chatEnumerator nextObject])){
 			if(![chat name] &&
@@ -1201,9 +1225,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     return(foundChats);
 }
 
-- (NSArray *)chatArray
+- (NSSet *)openChats
 {
-    return chatArray;
+    return openChats;
 }
 
 //Switch to a chat with the most recent unviewed content.  Returns YES if one existed
@@ -1217,7 +1241,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		
 	}else{
 		//Second choice: switch to the first chat we can find which has unviewed content
-		NSEnumerator	*enumerator = [chatArray objectEnumerator];
+		NSEnumerator	*enumerator = [openChats objectEnumerator];
 		AIChat			*chat;
 		while ((chat = [enumerator nextObject]) && ![chat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]);
 		
