@@ -82,7 +82,8 @@ typedef enum {
     NSMutableArray			*textEntryViews;
 	NSDictionary			*defaultFormattingAttributes;
 	
-    NSMutableArray			*chatArray;
+    NSMutableSet			*openChats;
+	NSMutableSet			*objectsBeingReceived;
 	NSMutableArray			*chatObserverArray;
 
     AIChat					*mostRecentChat;
@@ -104,7 +105,7 @@ typedef enum {
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
 - (void)openChat:(AIChat *)chat;
 - (BOOL)closeChat:(AIChat *)inChat;
-- (NSArray *)chatArray;
+- (NSSet *)openChats;
 - (BOOL)switchToMostRecentUnviewedContent;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
 - (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount;
