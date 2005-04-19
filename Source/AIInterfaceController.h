@@ -84,6 +84,7 @@
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;
+- (BOOL)isSendingContent;
 - (AIChat *)chat;
 @end
 
