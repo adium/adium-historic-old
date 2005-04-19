@@ -516,7 +516,12 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	//Update our most recent chat
 	if([inObject trackContent]){
-		mostRecentChat = [inObject chat];
+		AIChat	*chat = [inObject chat];
+		
+		if(chat != mostRecentChat){
+			[mostRecentChat release];
+			mostRecentChat = [chat retain];
+		}
 	}
 }
 
@@ -597,7 +602,10 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 								  previouslyPerformedActionIDs:nil];				
 			}
 			
-			mostRecentChat = chat;
+			if(mostRecentChat != chat){
+				[mostRecentChat release];
+				mostRecentChat = [chat retain];
+			}
 //			sent = YES;
 		}
 	}else{
@@ -1110,9 +1118,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	}
 
 	if(shouldClose){
-		if(mostRecentChat == inChat)
+		if(mostRecentChat == inChat){
+			[mostRecentChat release];
 			mostRecentChat = nil;
-    	
+    	}
+		
 		//Notify the account and send out the Chat_WillClose notification
 		[[inChat account] closeChat:inChat];
 		[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
