@@ -593,10 +593,12 @@
 				if(date) {
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 					
-					NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																			 allowNaturalLanguage:NO] autorelease];
+					NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																			allowNaturalLanguage:NO];
 					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
-											withString:[dateFormatter stringForObjectValue:date]];						
+											withString:[dateFormatter stringForObjectValue:date]];
+					[dateFormatter release];
+					
 				} else {
 					[inString deleteCharactersInRange:NSUnionRange(range, endRange)];
 				}
@@ -614,7 +616,7 @@
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
 			if(range.location != NSNotFound){
-				NSString    *userIconPath ;
+				NSString    *userIconPath;
 				NSString	*replacementString;
 				
 				userIconPath = [contentSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
@@ -639,7 +641,10 @@
 			range = [inString rangeOfString:@"%senderScreenName%"];
 			if(range.location != NSNotFound){
 				NSString *formattedUID = [contentSource formattedUID];
-				[inString replaceCharactersInRange:range withString:[(formattedUID ? formattedUID : [contentSource displayName]) stringByEscapingForHTML]];
+				[inString replaceCharactersInRange:range 
+										withString:[(formattedUID ?
+													 formattedUID :
+													 [contentSource displayName]) stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
         
@@ -724,7 +729,8 @@
 							red = (rgb & 0xff0000) >> 16;
 							green = (rgb & 0x00ff00) >> 8;
 							blue = rgb & 0x0000ff;
-							[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
+							[inString replaceCharactersInRange:NSUnionRange(range, endRange)
+													withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
 						}
 					}else{
 						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
@@ -746,9 +752,11 @@
 											attachmentImagesOnlyForSending:NO
 															simpleTagsOnly:NO
 															bodyBackground:YES];
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
+												withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
 					}else{
-						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
+						[inString replaceCharactersInRange:NSUnionRange(range, endRange)
+												withString:@""];
 					}	
 				}
 			}
@@ -759,8 +767,12 @@
 		if(range.location != NSNotFound){
 			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
 																				  headers:NO 
-																				 fontTags:([content isOutgoing] ? YES : showIncomingFonts)
-																	   includingColorTags:([content isOutgoing] ? YES : showIncomingColors)
+																				 fontTags:([content isOutgoing] ?
+																						   YES :
+																						   showIncomingFonts)
+																	   includingColorTags:([content isOutgoing] ? 
+																						   YES : 
+																						   showIncomingColors)
 																			closeFontTags:YES
 																				styleTags:YES
 															   closeStyleTagsOnFontChange:YES
