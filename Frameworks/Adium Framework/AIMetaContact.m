@@ -534,7 +534,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	}
 	
 	if([key isEqualToString:@"StatusType"] ||
-	   [key isEqualToString:@"IdleSince"]){
+	   [key isEqualToString:@"IdleSince"] ||
+	   [key isEqualToString:@"IsMobile"]){
 		_preferredContact = nil;
 	}
 	
