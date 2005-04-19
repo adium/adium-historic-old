@@ -632,7 +632,7 @@ static NSString	*prefsCategory;
  * @param extensions The extension(s) of the resources for which to search, either an NSString or an NSArray
  */
 - (NSArray *)allResourcesForName:(NSString *)name withExtensions:(id)extensions {
-	NSMutableArray *resources = [[NSMutableArray alloc] init];
+	NSMutableArray *resources = [NSMutableArray array];
 	NSEnumerator *pathEnumerator;
 	NSEnumerator *resourceEnumerator;
 	NSString *resourceDir;
