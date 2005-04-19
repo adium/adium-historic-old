@@ -84,6 +84,9 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	}else{
 		NSString	*theReason = [self reason];
 		NSString	*theName = [self name];
+		NSString	*backtrace = [self decodedExceptionStackTrace];
+
+		BOOL		shouldLaunchCrashReporter = YES;
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if((!theReason) || //Harmless
@@ -100,36 +103,42 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
-			[super raise];
+			shouldLaunchCrashReporter = NO;
+		}
+		
+		//Check the stack trace for a third set of known offenders
+		if(!backtrace ||
+		   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
+		   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
+		   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
+		   )
+		{
+			   shouldLaunchCrashReporter = NO;
+		}
+			   
+		if(shouldLaunchCrashReporter){
+			NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
+			NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
+			NSString	*versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
+
+			NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
 			
+			//Pass the exception to the crash reporter and close this application
+			[[NSString stringWithFormat:@"OS Version:\t%@\nException:\t%@\nReason:\t%@\nStack trace:\n%@",
+				versionString,theName,theReason,backtrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
+			
+			[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
+			exit(-1);
+
 		}else{
-			NSString	*backtrace = [self decodedExceptionStackTrace];
-			
-			//Check the stack trace for a third set of known offenders
-			if(!backtrace ||
-			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
-			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
-			   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
-			   )
-				
-			{
-				[super raise];
-				
-			}else{
-				NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
-				NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
-				NSString	*versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
-				
-				NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
-				AILog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
-				
-				//Pass the exception to the crash reporter and close this application
-				[[NSString stringWithFormat:@"OS Version:\t%@\nException:\t%@\nReason:\t%@\nStack trace:\n%@",
-					versionString,theName,theReason,backtrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
-				
-				[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
-				exit(-1);
-			}
+			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
+				  theName,
+				  theReason,
+				  backtrace);
+			AILog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
+				  theName,
+				  theReason,
+				  backtrace);
 		}
 	}
 }
