@@ -34,7 +34,10 @@
 
 - (id)init
 {
-	self = [super init];
+	if((self = [super init])){
+		linkURL = nil;
+		pString = nil;
+	}
 
 	return self;
 }
@@ -100,6 +103,8 @@
                                             kCFStringEncodingUTF8 ); // kCFStringEncodingISOLatin1 );
 
     linkURL = [[NSURL alloc] initWithString:linkString];
+
+	[linkString release];
 }
 
 -(void)setValidationStatus:(URI_VERIFICATION_STATUS)status;
