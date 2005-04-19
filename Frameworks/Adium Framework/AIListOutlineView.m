@@ -255,21 +255,31 @@
 - (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle
 {
 	backgroundStyle = inBackgroundStyle;
+
 	[self setNeedsDisplay:YES];
 }
 
 //
-- (void)setBackgroundOpacity:(float)opacity
+- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(LIST_WINDOW_STYLE)windowStyle
 {
 	backgroundOpacity = opacity;
-	
+
 	//Reset all our opacity dependent values
 	[_backgroundColorWithOpacity release]; _backgroundColorWithOpacity = nil;
 	[_rowColorWithOpacity release]; _rowColorWithOpacity = nil;
 	
 	//Turn our shadow drawing hack on if they're going to be visible through the transparency
-	[self setUpdateShadowsWhileDrawing:(backgroundOpacity < 0.9)];
-	
+	[self setUpdateShadowsWhileDrawing:((backgroundOpacity < 0.9) ||
+										(windowStyle == WINDOW_STYLE_PILLOWS_FITTED))];
+
+	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
+	//the user has requested transparency.
+	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+		[[self window] setOpaque:NO];
+	}else{
+		[[self window] setOpaque:(backgroundOpacity == 1.0)];
+	}
+
 	[self setNeedsDisplay:YES];
 }
 
