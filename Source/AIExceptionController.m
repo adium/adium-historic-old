@@ -134,11 +134,13 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
 				  theReason,
-				  backtrace);
+				  (backtrace ? backtrace : @"(Unavailable)"));
 			AILog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
 				  theReason,
-				  backtrace);
+				  (backtrace ? backtrace : @"(Unavailable)"));
+
+			[super raise];
 		}
 	}
 }
