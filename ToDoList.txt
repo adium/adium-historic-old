@@ -17,6 +17,7 @@ Defaults:
 
 3 - AIM and MSN blocking behavior depends on serverside settings specified in official client
 3 - Scroll behavior in events needs to be fixed - follow the current selection
+3 - Re-implement mute while away in some form, possibly by integrating event presets into the status system
 3 - Reconsider double click behavior for events
 3 - %_statusmessage script is broken
 3 - Add movement threshold to the borderless window [Evan: this should be small if it exists at all]
