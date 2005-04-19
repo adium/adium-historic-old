@@ -52,7 +52,7 @@
 }
 - (NSArray *)chats
 {
-	return ([[adium contentController] chatArray]);
+	return ([[[adium contentController] openChats] allObjects]);
 }
 
 #pragma mark Attributes
