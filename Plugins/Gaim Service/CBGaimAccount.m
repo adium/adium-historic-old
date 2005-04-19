@@ -459,25 +459,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 }
 
-/*
-- (void)_updateAllEventsForBuddy:(GaimBuddy*)buddy
-{	
-	//Set their online/available state
-	if (GAIM_BUDDY_IS_ONLINE(buddy)) {
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON];
-	} else {
-		[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNOFF];
-	}
-	
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_SIGNON_TIME];
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_AWAY];	
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_IDLE];	
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_EVIL];
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_ICON];
-	[self accountUpdateBuddy:buddy forEvent:GAIM_BUDDY_MISCELLANEOUS];	
-}
-*/
-
 //To allow root level buddies on protocols which don't support them, we map any buddies in a group
 //named after this account's UID to the root group.  These functions handle the mapping.  Group names should
 //be filtered through incoming before being sent to Adium - and group names from Adium should be filtered through
