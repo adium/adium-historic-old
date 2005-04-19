@@ -20,7 +20,6 @@
 #import <AIUtilities/AIWorkspaceAdditions.h>
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <Adium/AIObject.h>
-#import <Adium/IconFamily.h>
 
 @interface AIBookmarksImporter (PRIVATE)
 
@@ -105,12 +104,8 @@
 }
 + (NSImage  *)browserIcon
 {
-	NSImage *image = nil;
 	NSString *browserPath = [self browserPath];
-	if(browserPath) {
-		image = [[IconFamily iconFamilyWithIconOfFile:browserPath] imageWithAllReps];
-	}
-	return image;
+	return browserPath ? [[NSWorkspace sharedWorkspace] iconForFile:browserPath] : nil;
 }
 + (NSString *)browserSignature
 {
