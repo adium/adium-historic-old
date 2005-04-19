@@ -812,4 +812,10 @@ static NSImage *pushIndicatorImage = nil;
 										  group:PREF_GROUP_FORMATTING];
 }
 
+//Silence the compiler warnings
+- (BOOL)isSendingContent
+{
+	return [super isSendingContent];
+}
+
 @end
