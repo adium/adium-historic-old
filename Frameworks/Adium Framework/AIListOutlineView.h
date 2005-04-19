@@ -15,6 +15,7 @@
  */
 
 #import <AIUtilities/AIMultiCellOutlineView.h>
+#import <Adium/AIAbstractListController.h>
 
 @protocol ContactListOutlineView;
 
@@ -65,7 +66,7 @@ typedef enum {
 //Backgrounds
 - (void)setBackgroundImage:(NSImage *)inImage;
 - (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle;
-- (void)setBackgroundOpacity:(float)opacity;
+- (void)setBackgroundOpacity:(float)opacity forWindowStyle:(LIST_WINDOW_STYLE)windowStyle;
 - (void)setBackgroundFade:(float)fade;
 - (void)setBackgroundColor:(NSColor *)inColor;
 - (NSColor *)backgroundColor;

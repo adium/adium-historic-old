@@ -342,16 +342,7 @@
 
 	//Update our view and content cell for the new opacity.  Group cells are kept opaque.
 	[contentCell setBackgroundOpacity:backgroundOpacity];
-	[contactListView setBackgroundOpacity:backgroundOpacity];
-	
-	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
-	//the user has requested transparency.
-	LIST_WINDOW_STYLE	windowStyle = [self windowStyle];
-	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
-		[[contactListView window] setOpaque:NO];
-	}else{
-		[[contactListView window] setOpaque:(backgroundOpacity == 1.0)];
-	}
+	[contactListView setBackgroundOpacity:backgroundOpacity forWindowStyle:[self windowStyle]];	
 }
 
 //Adjust an iconPosition to be valid for a fitted aligned pillow; 
