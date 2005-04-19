@@ -706,7 +706,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)finishDisplayContentObject:(AIContentObject *)inObject
 {
     //Check if the object should display
-    if([inObject displayContent]){
+    if([inObject displayContent] && ([[inObject message] length] > 0)){
 		AIChat			*chat = [inObject chat];
 		NSDictionary	*userInfo;
 		BOOL			contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
