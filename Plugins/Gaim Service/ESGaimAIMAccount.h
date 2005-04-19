@@ -23,10 +23,6 @@ struct oscar_direct_im {
 @interface ESGaimAIMAccount : CBGaimOscarAccount <AIAccount_Files> {
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
-	
-	AIHTMLDecoder *encoderCloseFontTagsAttachmentsAsText;
-	AIHTMLDecoder *encoderCloseFontTags;
-	AIHTMLDecoder *encoderAttachmentsAsText;
 }
 
 @end

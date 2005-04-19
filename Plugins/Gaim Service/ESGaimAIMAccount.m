@@ -29,6 +29,11 @@
 
 @implementation ESGaimAIMAccount
 
+static BOOL				createdEncoders = NO;
+static AIHTMLDecoder	*encoderCloseFontTagsAttachmentsAsText = nil;
+static AIHTMLDecoder	*encoderCloseFontTags = nil;
+static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
+
 #pragma mark Initialization and setup
 - (void)initAccount
 {
@@ -37,53 +42,55 @@
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
 	
-	encoderCloseFontTagsAttachmentsAsText = [[AIHTMLDecoder alloc] init];
-	[encoderCloseFontTagsAttachmentsAsText setIncludesHeaders:YES];
-	[encoderCloseFontTagsAttachmentsAsText setIncludesFontTags:YES];
-	[encoderCloseFontTagsAttachmentsAsText setClosesFontTags:YES];
-	[encoderCloseFontTagsAttachmentsAsText setIncludesStyleTags:YES];
-	[encoderCloseFontTagsAttachmentsAsText setIncludesColorTags:YES];
-	[encoderCloseFontTagsAttachmentsAsText setEncodesNonASCII:NO];
-	[encoderCloseFontTagsAttachmentsAsText setPreservesAllSpaces:NO];
-	[encoderCloseFontTagsAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
-	[encoderCloseFontTagsAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-	[encoderCloseFontTagsAttachmentsAsText setOnlyUsesSimpleTags:NO];
-	
-	encoderCloseFontTags = [[AIHTMLDecoder alloc] init];
-	[encoderCloseFontTags setIncludesHeaders:YES];
-	[encoderCloseFontTags setIncludesFontTags:YES];
-	[encoderCloseFontTags setClosesFontTags:YES];
-	[encoderCloseFontTags setIncludesStyleTags:YES];
-	[encoderCloseFontTags setIncludesColorTags:YES];
-	[encoderCloseFontTags setEncodesNonASCII:NO];
-	[encoderCloseFontTags setPreservesAllSpaces:NO];
-	[encoderCloseFontTags setUsesAttachmentTextEquivalents:NO];
-	[encoderCloseFontTags setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-	[encoderCloseFontTags setOnlyUsesSimpleTags:NO];
-	
-	encoderAttachmentsAsText = [[AIHTMLDecoder alloc] init];
-	[encoderAttachmentsAsText setIncludesHeaders:YES];
-	[encoderAttachmentsAsText setIncludesFontTags:YES];
-	[encoderAttachmentsAsText setClosesFontTags:NO];
-	[encoderAttachmentsAsText setIncludesStyleTags:YES];
-	[encoderAttachmentsAsText setIncludesColorTags:YES];
-	[encoderAttachmentsAsText setEncodesNonASCII:NO];
-	[encoderAttachmentsAsText setPreservesAllSpaces:NO];
-	[encoderAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
-	[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
-	[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
-	
+	if(!createdEncoders){
+		encoderCloseFontTagsAttachmentsAsText = [[AIHTMLDecoder alloc] init];
+		[encoderCloseFontTagsAttachmentsAsText setIncludesHeaders:YES];
+		[encoderCloseFontTagsAttachmentsAsText setIncludesFontTags:YES];
+		[encoderCloseFontTagsAttachmentsAsText setClosesFontTags:YES];
+		[encoderCloseFontTagsAttachmentsAsText setIncludesStyleTags:YES];
+		[encoderCloseFontTagsAttachmentsAsText setIncludesColorTags:YES];
+		[encoderCloseFontTagsAttachmentsAsText setEncodesNonASCII:NO];
+		[encoderCloseFontTagsAttachmentsAsText setPreservesAllSpaces:NO];
+		[encoderCloseFontTagsAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
+		[encoderCloseFontTagsAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+		[encoderCloseFontTagsAttachmentsAsText setOnlyUsesSimpleTags:NO];
+		[encoderCloseFontTagsAttachmentsAsText setAllowAIMsubprofileLinks:YES];
+		
+		encoderCloseFontTags = [[AIHTMLDecoder alloc] init];
+		[encoderCloseFontTags setIncludesHeaders:YES];
+		[encoderCloseFontTags setIncludesFontTags:YES];
+		[encoderCloseFontTags setClosesFontTags:YES];
+		[encoderCloseFontTags setIncludesStyleTags:YES];
+		[encoderCloseFontTags setIncludesColorTags:YES];
+		[encoderCloseFontTags setEncodesNonASCII:NO];
+		[encoderCloseFontTags setPreservesAllSpaces:NO];
+		[encoderCloseFontTags setUsesAttachmentTextEquivalents:NO];
+		[encoderCloseFontTags setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+		[encoderCloseFontTags setOnlyUsesSimpleTags:NO];
+		[encoderCloseFontTags setAllowAIMsubprofileLinks:YES];
+		
+		encoderAttachmentsAsText = [[AIHTMLDecoder alloc] init];
+		[encoderAttachmentsAsText setIncludesHeaders:YES];
+		[encoderAttachmentsAsText setIncludesFontTags:YES];
+		[encoderAttachmentsAsText setClosesFontTags:NO];
+		[encoderAttachmentsAsText setIncludesStyleTags:YES];
+		[encoderAttachmentsAsText setIncludesColorTags:YES];
+		[encoderAttachmentsAsText setEncodesNonASCII:NO];
+		[encoderAttachmentsAsText setPreservesAllSpaces:NO];
+		[encoderAttachmentsAsText setUsesAttachmentTextEquivalents:YES];
+		[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+		[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
+		[encoderAttachmentsAsText setAllowAIMsubprofileLinks:YES];
+		
+		createdEncoders = YES;
+	}
+
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_NOTES];
 }
 
 - (void)dealloc
 {
-	//Hmm.. we can't actually get here since we are retained by the preference controller as an observer.
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
-	[encoderCloseFontTagsAttachmentsAsText release];
-	[encoderCloseFontTags release];
-	[encoderAttachmentsAsText release];
 	
 	[super dealloc];
 }
@@ -521,7 +528,7 @@
 											 forKey:@"TextProfile" 
 											 notify:NO];
 					}
-					
+
 					//Store the string for comparison purposes later (since [attributedProfile string] != the HTML of the string,
 					//					and we don't want to have to decode it just to compare it)
 					[theContact setStatusObject:profileString
