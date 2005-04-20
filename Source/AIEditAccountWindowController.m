@@ -324,7 +324,7 @@
 	[[tabView_auxiliary tabViewItemWithIdentifier:@"account"] setLabel:AILocalizedString(@"Account",nil)];
 	[[tabView_auxiliary tabViewItemWithIdentifier:@"profile"] setLabel:AILocalizedString(@"Personal",nil)];
 	[[tabView_auxiliary tabViewItemWithIdentifier:@"options"] setLabel:AILocalizedString(@"Options",nil)];
-	[[tabView_auxiliary tabViewItemWithIdentifier:@"privacy"] setLabel:AILocalizedString(@"Privcay",nil)];
+	[[tabView_auxiliary tabViewItemWithIdentifier:@"privacy"] setLabel:AILocalizedString(@"Privacy",nil)];
 	[[tabView_auxiliary tabViewItemWithIdentifier:@"proxy"] setLabel:AILocalizedString(@"Proxy",nil)];
 }
 
