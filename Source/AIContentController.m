@@ -739,7 +739,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			 */
 			[[adium interfaceController] openChat:chat];
 		}
-		
+
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
 		if(shouldPostContentReceivedEvents){
@@ -778,7 +778,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     }
 
 	//We are no longer in the process of receiving this object
-	[objectsBeingReceived addObject:inObject];
+	[objectsBeingReceived removeObject:inObject];
 }
 
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
@@ -972,7 +972,6 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 	if(!chat){
 		AIAccount	*account;
-		
 		account = [targetContact account];
 		
 		//Create a new chat
@@ -988,7 +987,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			chat = nil;
 		}
 	}
-	
+
 	return(chat);
 }
 
