@@ -1104,40 +1104,40 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Close a chat
 - (BOOL)closeChat:(AIChat *)inChat
 {	
-	BOOL	shouldClose = YES;
+	BOOL	shouldRemove = YES;
 	
-	/* If we are currently passing a content object for this chat through our content filters, don't close the chat
-	 * as we will be reopening it in a moment anyways. */
+	/* If we are currently passing a content object for this chat through our content filters, don't remove it from
+	 * our openChats set as it will become needed soon. If we were to remove it, and a second message came in which was
+	 * also before the first message is done filtering, we would otherwise mistakenly think we needed to create a new
+	 * chat, generating a duplicate.
+	 */
 	NSEnumerator	*objectsBeingReceivedEnumerator = [objectsBeingReceived objectEnumerator];
 	AIContentObject	*contentObject;
 	while(contentObject = [objectsBeingReceivedEnumerator nextObject]){
 		if([contentObject chat] == inChat){
-			shouldClose = NO;
+			shouldRemove = NO;
 			break;
 		}
 	}
 
-	if(shouldClose){
-		if(mostRecentChat == inChat){
-			[mostRecentChat release];
-			mostRecentChat = nil;
-    	}
-		
-		//Notify the account and send out the Chat_WillClose notification
-		[[inChat account] closeChat:inChat];
-		[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
-		
-		//Remove the chat's content (it retains the chat, so this must be done separately)
-		[inChat removeAllContent];
-		
-		//Remove the chat
-		[openChats removeObject:inChat];
-		
-		return YES;
-		
-	}else{
-		return NO;
+	if(mostRecentChat == inChat){
+		[mostRecentChat release];
+		mostRecentChat = nil;
 	}
+	
+	//Notify the account and send out the Chat_WillClose notification
+	[[inChat account] closeChat:inChat];
+	[[adium notificationCenter] postNotificationName:Chat_WillClose object:inChat userInfo:nil];
+	
+	//Remove the chat's content (it retains the chat, so this must be done separately)
+	[inChat removeAllContent];
+
+	//Remove the chat
+	if(shouldRemove){
+		[openChats removeObject:inChat];
+	}
+
+	return YES;
 }
 
 //Switch a chat from one account to another, updating the target list contact to be an 'identical' one on the target account.
