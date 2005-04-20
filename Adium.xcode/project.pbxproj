@@ -183,12 +183,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB;
-					ProjectRef = 3496A8E707CE6CA30055BBAB;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
 			);
 			targets = (
@@ -1944,6 +1944,14 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		343C45E20816C0FE00FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = "Plugins/WebKit Message View/Italian.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		343C89B005704DEC005E0632 = {
 			children = (
@@ -5371,6 +5379,7 @@
 		348EE1B3080A57480015E0FC = {
 			children = (
 				34C2D8C00633BBA80018E5D2,
+				343C45E20816C0FE00FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = WebKitPreferencesView.nib;
