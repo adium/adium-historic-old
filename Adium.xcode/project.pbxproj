@@ -279,6 +279,8 @@
 		3402D38A07CB04FC0044F818 = {
 			children = (
 				3402D38307CB04DB0044F818,
+				343C45EB0816C18000FF5FA7,
+				343C45EC0816C19700FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -423,6 +425,7 @@
 				34BFDDB607E7A43D00AD984D,
 				34FD5BEB07F1F92900687C70,
 				341DE03B07FE10B600EB7B06,
+				343C45E50816C13300FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -524,6 +527,7 @@
 		3402E07507CB0FAA0044F818 = {
 			children = (
 				3402E06C07CB0F9D0044F818,
+				343C45E80816C13D00FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -1950,6 +1954,38 @@
 			lastKnownFileType = wrapper.nib;
 			name = Italian;
 			path = "Plugins/WebKit Message View/Italian.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C45E50816C13300FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = Resources/Dutch.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C45E80816C13D00FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = "Plugins/WebKit Message View/Dutch.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C45EB0816C18000FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Dutch;
+			path = "Frameworks/Adium Framework/Dutch.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C45EC0816C19700FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = Italian;
+			path = "Frameworks/Adium Framework/Italian.lproj/Localizable.strings";
 			refType = 4;
 			sourceTree = "<group>";
 		};
