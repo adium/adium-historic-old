@@ -109,7 +109,7 @@
 	
 	//Register our toolbar item
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
-	[button setImage:[NSImage imageNamed:@"emoticonToolbar" forClass:[self class]]];
+	[button setImage:[NSImage imageNamed:@"emoticon32" forClass:[self class]]];
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
 														   label:TITLE_EMOTICON
 													paletteLabel:TITLE_INSERT_EMOTICON
@@ -155,7 +155,12 @@
 			[emoticonMenu setMenuChangedMessagesEnabled:YES];
 		}
 
+		if([emoticonMenu respondsToSelector:@selector(setDelegate:)]){
+			[emoticonMenu setDelegate:self];
+		}
+
 		return(emoticonMenu);
+
 	}else{
 		return([[emoticonMenu copy] autorelease]);
 	}
@@ -223,14 +228,6 @@
 	if(menuItem == quickMenuItem || menuItem == quickContextualMenuItem){
 		BOOL	haveEmoticons = ([[[adium emoticonController] activeEmoticonPacks] count] != 0);
 
-		//Build the emoticon menus if necessary
-		if(needToRebuildMenus){
-			NSMenu	*theEmoticonMenu = [self emoticonMenu];
-			[quickMenuItem setSubmenu:theEmoticonMenu];
-			[quickContextualMenuItem setSubmenu:[[theEmoticonMenu copy] autorelease]];
-			needToRebuildMenus = NO;
-		}
-
 		//Disable the main emoticon menu items if no emoticons are available
 		return(haveEmoticons);
 		
@@ -245,5 +242,23 @@
 		
 	}
 }
+
+//we don't want to get -menuNeedsUpdate: called on every keystroke. this method suppresses that.
+- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action {
+	*target = nil;  //use menu's target
+	*action = NULL; //use menu's action
+	return NO;
+}
+
+- (void)menuNeedsUpdate:(NSMenu *)inMenu
+{	
+	//Build the emoticon menus if necessary
+	if(needToRebuildMenus){
+		NSMenu	*theEmoticonMenu = [self emoticonMenu];
+		[quickMenuItem setSubmenu:theEmoticonMenu];
+		[quickContextualMenuItem setSubmenu:[[theEmoticonMenu copy] autorelease]];
+		needToRebuildMenus = NO;
+	}
+}	
 
 @end

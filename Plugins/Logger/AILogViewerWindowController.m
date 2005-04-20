@@ -60,8 +60,8 @@
 #define HIDE_EMOTICONS					AILocalizedString(@"Hide Emoticons",nil)
 #define SHOW_EMOTICONS					AILocalizedString(@"Show Emoticons",nil)
 
-#define IMAGE_EMOTICONS_OFF				@"emoticonsOff"
-#define IMAGE_EMOTICONS_ON				@"emoticonsOn"
+#define IMAGE_EMOTICONS_OFF				@"emoticons32"
+#define IMAGE_EMOTICONS_ON				@"emoticons32transparent"
 
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 

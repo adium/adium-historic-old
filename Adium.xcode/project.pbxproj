@@ -89,7 +89,6 @@
 				3C73F83F04D62A2900A80106,
 				C4243C920638E4EA007AD2D9,
 				C4243C930638E4EA007AD2D9,
-				4BC7BA3D069C8BD4001F2DD8,
 				4B737B4B065D4FDC0062AB94,
 			);
 			isa = PBXGroup;
@@ -184,12 +183,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -1565,6 +1564,34 @@
 		};
 		3428392507D2D013004F01C9 = {
 			fileRef = 3428392307D2D012004F01C9;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428B33E0815E1FB00C0D3DC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticon32.png;
+			path = Resources/emoticon32.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428B33F0815E1FB00C0D3DC = {
+			fileRef = 3428B33E0815E1FB00C0D3DC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3428B3400815E22A00C0D3DC = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticon32trasparent.png;
+			path = Resources/emoticon32trasparent.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3428B3410815E22A00C0D3DC = {
+			fileRef = 3428B3400815E22A00C0D3DC;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8269,7 +8296,6 @@
 				4BAA1B530632EF0000D8B92C,
 				4BAA1B610632EFE700D8B92C,
 				4BAA1B630632F00000D8B92C,
-				4BC7BA3E069C8BD4001F2DD8,
 				9E20910A06A601A100E33E27,
 				9E20910D06A601AD00E33E27,
 				9E217B7B06A74CA8002A3F27,
@@ -8278,8 +8304,6 @@
 				9E28FDE806ADB30D0041553E,
 				C45F7F6706C75E210056B1F2,
 				4BF98DCD06D149EE00E8781D,
-				4B1AB2A806E101FF00FB5EAD,
-				4B1AB2A906E101FF00FB5EAD,
 				34A48A6506F646C7002C7C5F,
 				34A48A6606F646C7002C7C5F,
 				34A48A6706F646C7002C7C5F,
@@ -8354,6 +8378,8 @@
 				34F4677A080F49C5007800AB,
 				34F4677B080F49C5007800AB,
 				345ACC970811C20F008E4D22,
+				3428B33F0815E1FB00C0D3DC,
+				3428B3410815E22A00C0D3DC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -15485,34 +15511,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B1AB2A606E101FF00FB5EAD = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = emoticonsOff.png;
-			path = Plugins/Logger/emoticonsOff.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1AB2A706E101FF00FB5EAD = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = emoticonsOn.png;
-			path = Plugins/Logger/emoticonsOn.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4B1AB2A806E101FF00FB5EAD = {
-			fileRef = 4B1AB2A606E101FF00FB5EAD;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4B1AB2A906E101FF00FB5EAD = {
-			fileRef = 4B1AB2A706E101FF00FB5EAD;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4B215DAF059896B000305B3C = {
 			containerPortal = 29B97313FDCFA39411CA2CEA;
 			isa = PBXContainerItemProxy;
@@ -18698,20 +18696,6 @@
 			settings = {
 			};
 		};
-		4BC7BA3D069C8BD4001F2DD8 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = emoticonToolbar.tif;
-			path = "Plugins/Emoticon Menu/emoticonToolbar.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BC7BA3E069C8BD4001F2DD8 = {
-			fileRef = 4BC7BA3D069C8BD4001F2DD8;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BC8AABA059A33B400F940E1 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -19835,8 +19819,6 @@
 				C45F7F6206C75E200056B1F2,
 				C45F7F6306C75E210056B1F2,
 				C45F7F6406C75E210056B1F2,
-				4B1AB2A606E101FF00FB5EAD,
-				4B1AB2A706E101FF00FB5EAD,
 				4B3B125707AC411D00187CCF,
 				4B3B125807AC411D00187CCF,
 				6C644D3605776BC600D79723,
@@ -22978,6 +22960,8 @@
 				34D832AB07CBD62C006466F2,
 				34D832AC07CBD62C006466F2,
 				34D832AD07CBD62C006466F2,
+				3428B33E0815E1FB00C0D3DC,
+				3428B3400815E22A00C0D3DC,
 			);
 			isa = PBXGroup;
 			name = Resources;
