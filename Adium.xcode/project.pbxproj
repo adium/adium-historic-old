@@ -528,6 +528,7 @@
 			children = (
 				3402E06C07CB0F9D0044F818,
 				343C45E80816C13D00FF5FA7,
+				343C47790816FBE500FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -2098,6 +2099,22 @@
 			lastKnownFileType = wrapper.nib;
 			name = Italian;
 			path = "Plugins/Gaim Service/Italian.lproj/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C47760816FBDA00FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Plugins/WebKit Message View/German.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		343C47790816FBE500FF5FA7 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = German;
+			path = "Plugins/WebKit Message View/German.lproj/Localizable.strings";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5542,6 +5559,7 @@
 			children = (
 				34C2D8C00633BBA80018E5D2,
 				343C45E20816C0FE00FF5FA7,
+				343C47760816FBDA00FF5FA7,
 			);
 			isa = PBXVariantGroup;
 			name = WebKitPreferencesView.nib;
@@ -6934,62 +6952,6 @@
 		};
 		34A48A5B06F646BD002C7C5F = {
 			fileRef = 34A48A5906F646BD002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A6106F646C7002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "style-standard.png";
-			path = "Plugins/Contact List/Preferences/style-standard.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A6206F646C7002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "style-pillows.png";
-			path = "Plugins/Contact List/Preferences/style-pillows.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A6306F646C7002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "style-mockie.png";
-			path = "Plugins/Contact List/Preferences/style-mockie.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A6406F646C7002C7C5F = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = "style-borderless.png";
-			path = "Plugins/Contact List/Preferences/style-borderless.png";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34A48A6506F646C7002C7C5F = {
-			fileRef = 34A48A6106F646C7002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A6606F646C7002C7C5F = {
-			fileRef = 34A48A6206F646C7002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A6706F646C7002C7C5F = {
-			fileRef = 34A48A6306F646C7002C7C5F;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		34A48A6806F646C7002C7C5F = {
-			fileRef = 34A48A6406F646C7002C7C5F;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8475,10 +8437,6 @@
 				9E28FDE806ADB30D0041553E,
 				C45F7F6706C75E210056B1F2,
 				4BF98DCD06D149EE00E8781D,
-				34A48A6506F646C7002C7C5F,
-				34A48A6606F646C7002C7C5F,
-				34A48A6706F646C7002C7C5F,
-				34A48A6806F646C7002C7C5F,
 				3461621406FB482D009181D8,
 				3461621706FB482D009181D8,
 				9E6A9BF70732CB500032C9F6,
@@ -20338,22 +20296,9 @@
 				34A48A5906F646BD002C7C5F,
 				34D8329F07CBD61A006466F2,
 				34878F710518289B003B2F21,
-				4BF98DB806D1499100E8781D,
 			);
 			isa = PBXGroup;
 			name = Preferences;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BF98DB806D1499100E8781D = {
-			children = (
-				34A48A6106F646C7002C7C5F,
-				34A48A6206F646C7002C7C5F,
-				34A48A6306F646C7002C7C5F,
-				34A48A6406F646C7002C7C5F,
-			);
-			isa = PBXGroup;
-			name = Images;
 			refType = 4;
 			sourceTree = "<group>";
 		};
