@@ -31,6 +31,7 @@ p {
 }
 
 #menu1 {
+	background: #99CCFF url(images/background.png) repeat-x top right;
 	position: fixed;
 	top: 0px;
 	right: 0px;
@@ -41,6 +42,7 @@ p {
 
 
 #menu2 {
+	background: #99CCFF url(images/background.png) repeat-x top right;
 	position: fixed;
 	top: 0px;
 	right: 0px;
@@ -99,7 +101,7 @@ p {
 	color: white;
 	font-size: 22px;
 	font-weight: bold;
-	font-family: arial;
+	font-family: Arial;
 	position: absolute;
 	right: 111px;
 	bottom: 6px;
@@ -120,7 +122,7 @@ p {
 	left: 58px;
 	right:-41px;
 	text-align: left;
-	margin: 0px 0px 0px 0px;
+	margin: 0;
 	overflow:hidden;
 	height:18px;
 	}
@@ -133,7 +135,7 @@ p {
 	top: 60px;
 	left:108px;
 	right:-106px;
-	margin: 0px 20px 0px 0px;
+	margin: 0 20px 0 0;
     overflow:hidden;
     height: 35px;
 	}
@@ -142,7 +144,11 @@ p {
 	margin-top: 3px;
 	padding-top: 3px;
 	border-top: 1px solid #EBEBEB;
-
+	background: url("images/shadow_right.png") top right repeat-y;
+	margin-right: -15px;
+	padding-right: 15px;
+	margin-left: -15px;
+	padding-left: 15px;
 }
 
 .next_text {
@@ -153,6 +159,8 @@ p {
 
 .next_timestamp {
 	float: right;
+	position:relative;
+	right:-5px;
 
 	color: rgba(0, 0, 0, 0.3);
 
@@ -160,7 +168,7 @@ p {
 	font-size: 9px;
 	font-weight: bold;
 
-	margin: 0 2px 0 4px;
+	margin: 0 2px 0 -1px;
 }
 
 
@@ -327,11 +335,12 @@ p {
 
 .left {
 	background: url("images/shadow_left.png") top right repeat-y;
-	width: 5px;
 	height: 100%;
 	position: absolute;
-	left: 0px;
+	top: 0px;
+	width: 5px;
 }
+
 .left_status {
 	background: url("images/shadow_left.png") top right repeat-y;
 	width: 5px;
@@ -343,11 +352,18 @@ p {
 
 .right {
 	background: url("images/shadow_right.png") top right repeat-y;
-	width: 5px;
-	position: absolute;
-	right: 0px;
-	top:21px;
-	bottom:0px;
+	margin-right: -15px;
+	padding-right: 15px;
+}
+
+.middle_right {
+	background: url("images/shadow_right.png") top right repeat-y;
+	float: right;
+	position: relative;
+	right: -12px;
+	top: -7px;
+	height: 4px;
+	width:5px;
 }
 
 .top {
