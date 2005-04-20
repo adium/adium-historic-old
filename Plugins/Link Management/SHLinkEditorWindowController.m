@@ -132,19 +132,27 @@
 		//Get the selected text
 		linkText = [[textView attributedSubstringFromRange:selectedRange] string];
 		
-		//Place the link title and URL in our panel
+		//Place the link title and URL in our panel. Automatically select the URL.
 		if(linkURL) {
 			NSString	*tmpString = ([linkURL isKindOfClass:[NSString class]] ? 
 									  (NSString *)linkURL : 
 									  [(NSURL *)linkURL absoluteString]);
 
-			[[textView_URL textStorage] setAttributedString:[[[NSAttributedString alloc] initWithString:tmpString] autorelease]];                
+			if([tmpString length]){
+				NSAttributedString	*initialURL;
+				
+				initialURL = [[NSAttributedString alloc] initWithString:tmpString];
+				[[textView_URL textStorage] setAttributedString:initialURL];
+				[textView_URL setSelectedRange:NSMakeRange(0,[initialURL length])];
+				[initialURL release];
+			}
 		}
-		if(linkText) {
+
+		if(linkText && [linkText length]) {
 			[textField_linkText setStringValue:linkText];
 		}
 	}
-    
+
     //Turn on URL validation for our textView
     [textView_URL setContinuousURLValidationEnabled:YES];
     
