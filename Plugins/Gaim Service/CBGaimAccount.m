@@ -250,7 +250,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
 		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-		[self _setInstantMessagesWithContact:theContact enabled:YES];
 		
 		if(!silentAndDelayed){
 			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed On" notify:NO];
@@ -267,9 +266,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
-	if(contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)){
-		[self _setInstantMessagesWithContact:theContact enabled:NO];
-		
+	if(contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)){		
 		if(!silentAndDelayed){
 			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed Off" notify:NO];
 			[theContact setStatusObject:nil forKey:@"Signed On" notify:NO];			
@@ -603,14 +600,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
 - (oneway void)addChat:(AIChat *)chat
 {
-	//Correctly enable/disable the chat
-	[chat setStatusObject:[NSNumber numberWithBool:YES]
-				   forKey:@"Enabled" 
-				   notify:NotifyNow];
-	
-	//Track
-	[chatDict setObject:chat forKey:[chat uniqueChatID]];
-	
 	//Open the chat
 	[[adium contentController] openChat:chat];
 }
@@ -628,14 +617,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 #endif
 	
-	//Correctly enable/disable the chat
-	[chat setStatusObject:[NSNumber numberWithBool:YES]
-				   forKey:@"Enabled" 
-				   notify:NotifyNow];
-	
-	//Track
 	AILog(@"gaim openChat:%@ for %@",chat,[chat uniqueChatID]);
-	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
 	//Inform gaim that we have opened this chat
 	[gaimThread openChat:chat onAccount:self];
@@ -651,7 +633,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Be sure any remaining typing flag is cleared as the chat closes
 	[self setTypingFlagOfChat:chat to:nil];
 	AILog(@"gaim closeChat:%@",[chat uniqueChatID]);
-	[chatDict removeObjectForKey:[chat uniqueChatID]];
 	
     return YES;
 }
@@ -2288,8 +2269,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 	
 	//Defaults
-    chatDict = [[NSMutableDictionary alloc] init];
-
     reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
 	lastDisconnectionError = nil;
 	
@@ -2322,7 +2301,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {	
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
-    [chatDict release];
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
 		
 	[permittedContactsArray release];
@@ -2400,20 +2378,6 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					   forKey:KEY_TYPING
 					   notify:NotifyNow];
     }
-}
-
-
-//
-- (void)_setInstantMessagesWithContact:(AIListContact *)contact enabled:(BOOL)enable
-{
-	//The contact's uniqueObjectID and the chat's uniqueChatID will be the same in a one-on-one conversation
-	AIChat *chat = [chatDict objectForKey:[contact internalObjectID]];
-	if(chat){
-		//Enable/disable the chat
-		[chat setStatusObject:(enable ? [NSNumber numberWithBool:enable] : nil)
-					   forKey:@"Enabled"
-					   notify:NotifyNow];
-	}
 }
 
 - (void)displayError:(NSString *)errorDesc
