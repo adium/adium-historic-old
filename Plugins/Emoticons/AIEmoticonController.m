@@ -662,7 +662,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 							if([subIndex objectAtIndex:i] equivelentLength] < ourLength]) break;
 						}*/
                         
-						//Instead of adding the emoticon, add all of it's equivelants... ?
+						//Instead of adding the emoticon, add all of its equivalents... ?
 						
 						[subIndex addObject:emoticon];
                     }
