@@ -71,6 +71,7 @@
 //Catch the notification when the text in the view is edited
 - (void)textDidChange:(NSNotification *)notification
 {
+	NSLog(@"Text changed.");
     if(continuousURLValidation) {//call the URL validatation if set
         SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
 		NSString			*linkURL = [self linkURL];
