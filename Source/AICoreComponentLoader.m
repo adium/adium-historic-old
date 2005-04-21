@@ -33,16 +33,42 @@
 #define COMPONENT_HEADER	@"Header"
 #define COMPONENT_LOCATION	@"Location"
 
+static AICoreComponentLoader *singleton = nil;
+
 @implementation AICoreComponentLoader
+
++ (id)sharedComponentLoader
+{
+	if(!singleton) [[AICoreComponentLoader alloc] init];
+	return singleton;
+}
 
 - (id)init
 {
+	if(singleton) {
+		[self release];
+		return singleton;
+	}
+
 	if((self = [super init])){
-		components = [[NSMutableArray alloc] init];
+		components = [[NSMutableDictionary alloc] init];
+		singleton = self;
 	}
 
 	return self;
 }
+
+/*!
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[components release];
+
+	[super dealloc];
+}
+
+#pragma mark -
 
 /*!
  * @brief Load integrated components
@@ -73,7 +99,7 @@
 
 			NSAssert1(object, @"Failed to load %@", className);
 
-			[components addObject:object];
+			[components setObject:object forKey:className];
 			[object release];
 		}
 	}
@@ -84,23 +110,21 @@
  */
 - (void)closeController
 {
-	NSEnumerator	*enumerator = [components objectEnumerator];
-	AIPlugin		*plugin;
+	NSArray			*keys = [components allKeys];
+	NSEnumerator	*enumerator = [keys objectEnumerator];
+	NSString		*className;
 
-	while (plugin = [enumerator nextObject]) {
+	while (className = [enumerator nextObject]) {
+		AIPlugin	*plugin = [components objectForKey:className];
 		[plugin uninstallPlugin];
+		[components removeObjectForKey:className];
 	}
 }
 
-/*!
- * @brief Deallocate
- */
-- (void)dealloc
-{
-	[components release];
-	components = nil;
+#pragma mark -
 
-	[super dealloc];
+- (AIPlugin *)pluginWithClassName:(NSString *)className {
+	return [components objectForKey:className];
 }
 
 @end
