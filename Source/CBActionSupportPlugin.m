@@ -34,17 +34,18 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
 }
 
-/*output when YES: *Mac-arena the Bored Zo winks
- *output when NO:  *winks*
- *(note also the disappearance of the ending *.)
- *
- *this method can be overridden from a subclass (in a plug-in, for example), or
- *	modified in the future to read a preference.
- */
-- (BOOL)includeDisplayNameInReplacement
+#pragma mark -
+
+- (BOOL)includesDisplayNameInReplacement
 {
-	return NO;
+	return includesDisplayName;
 }
+- (void)setIncludesDisplayNameInReplacement:(BOOL)flag
+{
+	includesDisplayName = YES;
+}
+
+#pragma mark -
 
 /*!
  * @brief Filter
@@ -67,8 +68,7 @@
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
 		str = [ourMessage mutableString];
 
-		includeDisplayName = [self includeDisplayNameInReplacement];
-		if(includeDisplayName) {
+		if(includesDisplayName) {
 			startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
 			endReplacement = @"";
 		}
