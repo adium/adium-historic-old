@@ -8,6 +8,7 @@
 
 #import "ESGaimAIMAccount.h"
 #import "AIContactController.h"
+#import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "SLGaimCocoaAdapter.h"
 #import <Adium/AIHTMLDecoder.h>
@@ -564,17 +565,24 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 		
 		if(userinfo->present & AIM_USERINFO_PRESENT_FLAGS){
 			if(userinfo->capabilities & AIM_CAPS_HIPTOP){
-				client = @"AIM via Hiptop";
+				client = AILocalizedString(@"AIM via Hiptop", "A 'Hiptop' is a mobile device; this phrase descibes a contact who is connected to AIM through a hiptop.");
 				isMobile = YES;
 				
 			}else if(userinfo->flags & AIM_FLAG_WIRELESS){
-				client = @"AOL Mobile Device";
-				isMobile = YES;
+				/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
+				 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
+				 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
+				 */
+				if(![[adium contentController] contactIsInGroupChat:theContact]){
+					client = AILocalizedString(@"AOL Mobile Device", "Phrase to describe the client through which a contact is connected mobilely; cell phones, for example, may be AOL Mobile Devices.");
+					isMobile = YES;
+				}
 				
 			}else if(userinfo->flags & AIM_FLAG_ADMINISTRATOR){
-				client = @"AOL Administrator";
+				client = AILocalizedString(@"AOL Administrator", nil);
+				
 			}else if (userinfo->flags & AIM_FLAG_AOL){
-				client = @"America Online";
+				client = AILocalizedString(@"America Online", nil);
 			}/* else if((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)){
 							client = @"AOL Instant Messenger";
 			}*/
