@@ -4765,14 +4765,6 @@
 			settings = {
 			};
 		};
-		347E787107CA975900350507 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = inspect.png;
-			path = Resources/inspect.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		347E787207CA975900350507 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -4786,14 +4778,6 @@
 			lastKnownFileType = image.png;
 			name = addGroup.png;
 			path = Resources/addGroup.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		347E787407CA975900350507 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = addHandle.png;
-			path = Resources/addHandle.png;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -4813,12 +4797,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		347E787707CA975900350507 = {
-			fileRef = 347E787107CA975900350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		347E787807CA975900350507 = {
 			fileRef = 347E787207CA975900350507;
 			isa = PBXBuildFile;
@@ -4827,24 +4805,6 @@
 		};
 		347E787907CA975900350507 = {
 			fileRef = 347E787307CA975900350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		347E787A07CA975900350507 = {
-			fileRef = 347E787407CA975900350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		347E787B07CA975900350507 = {
-			fileRef = 347E787507CA975900350507;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		347E787C07CA975900350507 = {
-			fileRef = 347E787607CA975900350507;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8335,12 +8295,8 @@
 				347E781A07CA962100350507,
 				347E783407CA967100350507,
 				347E786C07CA972100350507,
-				347E787707CA975900350507,
 				347E787807CA975900350507,
 				347E787907CA975900350507,
-				347E787A07CA975900350507,
-				347E787B07CA975900350507,
-				347E787C07CA975900350507,
 				347E792307CAA52300350507,
 				343EB41708086D9100E27095,
 				347E792507CAA52300350507,
@@ -23113,10 +23069,8 @@
 		};
 		F5361E3103058E2A01A8010A = {
 			children = (
-				347E787107CA975900350507,
 				347E787207CA975900350507,
 				347E787307CA975900350507,
-				347E787407CA975900350507,
 				347E787507CA975900350507,
 				347E787607CA975900350507,
 			);
