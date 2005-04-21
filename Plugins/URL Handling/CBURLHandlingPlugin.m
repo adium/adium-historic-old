@@ -122,7 +122,7 @@
 		if(service = [schemeToServiceDict objectForKey:scheme]){
 			if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				// aim://goim?screenname=tekjew
-				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
+				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] stringByReplacingString:@"+" withString:@" "] compactedString];
 				if (name){
 					[self _openChatToContactWithName:name
 										   onService:service 
@@ -131,7 +131,7 @@
 				
 			}else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
-				NSString *name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];				
+				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:" "] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
 															service:[[adium accountController] firstServiceWithServiceID:service]];
 
@@ -144,7 +144,7 @@
 				
 			}else if([url queryArgumentForKey:@"openChatToScreenName"]){
 				// aim://openChatToScreenname?tekjew  [?]
-				NSString *name = [[url queryArgumentForKey:@"openChatToScreenname"] compactedString];
+				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByReplacingString:@"+" withString:" "] compactedString];
 				
 				if (name){
 					[self _openChatToContactWithName:name
