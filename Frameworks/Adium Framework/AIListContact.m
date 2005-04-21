@@ -126,7 +126,7 @@
  */
 - (BOOL)isMobile
 {
-	return [self integerStatusObjectForKey:@"IsMobile"];
+	return [self integerStatusObjectForKey:@"IsMobile" fromAnyContainedObject:NO];
 }
 
 /*!
