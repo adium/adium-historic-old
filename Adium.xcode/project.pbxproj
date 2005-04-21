@@ -8466,7 +8466,6 @@
 				4BCAC71807B5A50F006641B9,
 				4BCAC71907B5A50F006641B9,
 				3496A8C207CE6B880055BBAB,
-				34EF54A207CE8E4700A685F1,
 				4BAE6C1F07CF9389007E2820,
 				4BAE6C2007CF9389007E2820,
 				4BAE6C2107CF9389007E2820,
@@ -13080,20 +13079,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
-		};
-		34EF54A107CE8E4700A685F1 = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = settings.png;
-			path = Resources/settings.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34EF54A207CE8E4700A685F1 = {
-			fileRef = 34EF54A107CE8E4700A685F1;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		34EF54A407CE8EC300A685F1 = {
 			fileRef = 34D8344C07CBE6E2006466F2;
@@ -23853,7 +23838,6 @@
 				4B292D3107A9C8E100C5F882,
 				F570A60703704E9701A8010A,
 				F570A60803704E9701A8010A,
-				34EF54A107CE8E4700A685F1,
 				34D8326307CBD598006466F2,
 				34D8326507CBD598006466F2,
 				34D8326707CBD598006466F2,
