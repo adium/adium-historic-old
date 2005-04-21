@@ -52,31 +52,45 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	NSMutableAttributedString   *ourMessage = nil;
-	if (inAttributedString && [inAttributedString length]) {
+	
+	if (inAttributedString && 
+		[inAttributedString length] &&
+		[[inAttributedString string] rangeOfString:@"/me"
+										   options:NSLiteralSearch
+											 range:NSMakeRange(0, [inAttributedString length])].location != NSNotFound) {
+		NSMutableString *str;
+		NSString		*startReplacement = @"*", *endReplacement = @"*";
+		NSRange			extent;
+		BOOL			includeDisplayName;
+		unsigned		replacementLength;
+		
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
-		NSMutableString *str = [ourMessage mutableString];
+		str = [ourMessage mutableString];
 
-		BOOL includeDisplayName = [self includeDisplayNameInReplacement];
-		NSString *startReplacement = @"*", *endReplacement = @"*";
+		includeDisplayName = [self includeDisplayNameInReplacement];
 		if(includeDisplayName) {
 			startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
 			endReplacement = @"";
 		}
-		const unsigned replacementLength = [startReplacement length] + [endReplacement length];
+		replacementLength = [startReplacement length] + [endReplacement length];
 
-		NSRange extent = { 0, [str length] };
+		extent = NSMakeRange(0, [str length]);
 		do { //while(extent.length)
+			NSRange lineRange, searchRange, meRange;
 			signed shift = 0;
-
-			NSRange lineRange = { extent.location, 1 };
-			unsigned endInsertPoint = 0;
+			unsigned endInsertPoint;
+			
+			lineRange = NSMakeRange(extent.location, 1);
+			endInsertPoint = 0;
 			[str getLineStart:&lineRange.location
 			              end:&lineRange.length
 			      contentsEnd:&endInsertPoint
 			         forRange:lineRange];
 			lineRange.length -= lineRange.location;
-			NSRange searchRange = { lineRange.location, endInsertPoint - lineRange.location };
-			NSRange meRange = [str rangeOfString:@"/me " options:0 range:searchRange];
+			
+			searchRange = NSMakeRange(lineRange.location, endInsertPoint - lineRange.location);
+			meRange = [str rangeOfString:@"/me " options:NSLiteralSearch range:searchRange];
+			
 			if(meRange.location == lineRange.location && meRange.length == 4) {
 				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 
 																			attributes:[ourMessage attributesAtIndex:endInsertPoint-1
@@ -88,12 +102,14 @@
 
 				shift = meRange.length - replacementLength;
 			}
+			
 			shift += lineRange.length;
 			if(shift > extent.length) shift = extent.length;
 			extent.location += shift;
 			extent.length   -= shift;
 		} while(extent.length);
 	}
+	
 	return (ourMessage ? ourMessage : inAttributedString);
 }
 
