@@ -40,20 +40,38 @@
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
 	NSMutableAttributedString   *ourMessage = nil;
-	if (inAttributedString) {
-		NSRange meRange = [[inAttributedString string] rangeOfString:@"/me "];
+	if (inAttributedString && [inAttributedString length]) {
+		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
+		NSMutableString *str = [ourMessage mutableString];
+		NSRange extent = { 0, [str length] };
+		do { //while(extent.length)
+			signed shift = 0;
 
-		if(meRange.location == 0 && meRange.length == 4) {
-			ourMessage = [[inAttributedString mutableCopyWithZone:nil] autorelease];
+			NSRange lineRange = { extent.location, 1 };
+			unsigned endInsertPoint = 0;
+			[str getLineStart:&lineRange.location
+			              end:&lineRange.length
+			      contentsEnd:&endInsertPoint
+			         forRange:lineRange];
+			lineRange.length -= lineRange.location;
+			NSRange searchRange = { lineRange.location, endInsertPoint - lineRange.location };
+			NSRange meRange = [str rangeOfString:@"/me " options:0 range:searchRange];
+			if(meRange.location == lineRange.location && meRange.length == 4) {
+				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:@"*" 
+																			attributes:[ourMessage attributesAtIndex:endInsertPoint-1
+																									  effectiveRange:nil]];
+				[ourMessage insertAttributedString:endSplat atIndex:endInsertPoint];
+				[endSplat release];
 
-			[ourMessage replaceCharactersInRange:meRange withString:@"*"];
+				[ourMessage replaceCharactersInRange:meRange withString:@"*"];
 
-			NSAttributedString *splat = [[NSAttributedString alloc] initWithString:@"*" 
-			                                                            attributes:[ourMessage attributesAtIndex:0 
-			                                                                                      effectiveRange:nil]];
-			[ourMessage appendAttributedString:splat];
-			[splat release];
-		}
+				shift = meRange.length - 2; //the 2 being subtracted: **
+			}
+			shift += lineRange.length;
+			if(shift > extent.length) shift = extent.length;
+			extent.location += shift;
+			extent.length   -= shift;
+		} while(extent.length);
 	}
 	return (ourMessage ? ourMessage : inAttributedString);
 }
