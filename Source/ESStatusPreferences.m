@@ -22,6 +22,7 @@
 - (void)configureOtherControls;
 - (void)configureAutoAwayStatusStatePopUp;
 - (void)saveTimeValues;
+- (void)_selectStatusWithUniqueID:(NSNumber *)uniqueID inPopUpButton:(NSPopUpButton *)inPopUpButton;
 @end
 
 @implementation ESStatusPreferences
@@ -355,6 +356,8 @@
 	[checkBox_autoAway setState:[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue]];
 	[textField_autoAwayMinutes setDoubleValue:([[prefDict objectForKey:KEY_STATUS_AUTO_AWAY_INTERVAL] doubleValue] / 60.0)];
 
+	[checkBox_fastUserSwitching setState:[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue]];
+
 	[checkBox_showStatusWindow setState:[[prefDict objectForKey:KEY_STATUS_SHOW_STATUS_WINDOW] boolValue]];
 
 	[self configureControlDimming];
@@ -367,25 +370,38 @@
  */
 - (void)configureAutoAwayStatusStatePopUp
 {
+	NSMenu		*statusStatesMenu;
 	NSNumber	*targetUniqueStatusIDNumber;
-	int			index = -1;
 
-	[popUp_autoAwayStatusState setMenu:[[adium statusController] statusStatesMenu]];
+	statusStatesMenu = [[adium statusController] statusStatesMenu];
+	[popUp_autoAwayStatusState setMenu:statusStatesMenu];
+	[popUp_fastUserSwitchingStatusState setMenu:[[statusStatesMenu copy] autorelease]];
 
 	//Now select the proper state, or deselect all items if there is no chosen state or the chosen state doesn't exist
 	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
 																		  group:PREF_GROUP_STATUS_PREFERENCES];
-	if(targetUniqueStatusIDNumber){
+	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_autoAwayStatusState];
+	
+	targetUniqueStatusIDNumber = [[adium preferenceController] preferenceForKey:KEY_STATUS_FUS_STATUS_STATE_ID
+																		  group:PREF_GROUP_STATUS_PREFERENCES];
+	[self _selectStatusWithUniqueID:targetUniqueStatusIDNumber inPopUpButton:popUp_fastUserSwitchingStatusState];	
+}
+
+- (void)_selectStatusWithUniqueID:(NSNumber *)uniqueID inPopUpButton:(NSPopUpButton *)inPopUpButton
+{
+	int			index = -1;
+
+	if(uniqueID){
 		NSArray		*itemArray;
 		int			targetUniqueStatusID;
 		unsigned	itemArrayCount, i;
-
-		targetUniqueStatusID = [targetUniqueStatusIDNumber intValue];
-
-		itemArray = [popUp_autoAwayStatusState itemArray];
+		
+		targetUniqueStatusID = [uniqueID intValue];
+		
+		itemArray = [inPopUpButton itemArray];
 		itemArrayCount = [itemArray count];
 		for(i = 0; i < itemArrayCount; i++){
-			NSMenuItem	*menuItem = [popUp_autoAwayStatusState itemAtIndex:i];
+			NSMenuItem	*menuItem = [itemArray objectAtIndex:i];
 			AIStatus	*statusState = [[menuItem representedObject] objectForKey:@"AIStatus"];
 			
 			//Found the right status by matching its status ID to our preferred one
@@ -396,7 +412,7 @@
 		}
 	}
 	
-	[popUp_autoAwayStatusState selectItemAtIndex:index];
+	[inPopUpButton selectItemAtIndex:index];
 }
 
 /*
@@ -413,7 +429,9 @@
 	autoAwayControlsEnabled = ([checkBox_autoAway state] == NSOnState);
 	[popUp_autoAwayStatusState setEnabled:autoAwayControlsEnabled];
 	[textField_autoAwayMinutes setEnabled:autoAwayControlsEnabled];
-	[stepper_autoAwayMinutes setEnabled:autoAwayControlsEnabled];	
+	[stepper_autoAwayMinutes setEnabled:autoAwayControlsEnabled];
+	
+	[popUp_fastUserSwitchingStatusState setEnabled:([checkBox_fastUserSwitching state] == NSOnState)];
 }
 
 /*
@@ -440,11 +458,24 @@
 											 forKey:KEY_STATUS_SHOW_STATUS_WINDOW
 											  group:PREF_GROUP_STATUS_PREFERENCES];		
 		
+	}else if(sender == checkBox_fastUserSwitching){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+											 forKey:KEY_STATUS_FUS
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		[self configureControlDimming];
+		
 	}else if(sender == popUp_autoAwayStatusState){
 		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
 
 		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
 											 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
+											  group:PREF_GROUP_STATUS_PREFERENCES];
+		
+	}else if(sender == popUp_fastUserSwitchingStatusState){
+		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
+		
+		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
+											 forKey:KEY_STATUS_FUS_STATUS_STATE_ID
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 	}
 }
