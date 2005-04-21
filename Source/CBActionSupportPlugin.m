@@ -34,6 +34,18 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
 }
 
+/*output when YES: *Mac-arena the Bored Zo winks
+ *output when NO:  *winks*
+ *(note also the disappearance of the ending *.)
+ *
+ *this method can be overridden from a subclass (in a plug-in, for example), or
+ *	modified in the future to read a preference.
+ */
+- (BOOL)includeDisplayNameInReplacement
+{
+	return NO;
+}
+
 /*!
  * @brief Filter
  */
@@ -43,6 +55,15 @@
 	if (inAttributedString && [inAttributedString length]) {
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
 		NSMutableString *str = [ourMessage mutableString];
+
+		BOOL includeDisplayName = [self includeDisplayNameInReplacement];
+		NSString *startReplacement = @"*", *endReplacement = @"*";
+		if(includeDisplayName) {
+			startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
+			endReplacement = @"";
+		}
+		const unsigned replacementLength = [startReplacement length] + [endReplacement length];
+
 		NSRange extent = { 0, [str length] };
 		do { //while(extent.length)
 			signed shift = 0;
@@ -57,15 +78,15 @@
 			NSRange searchRange = { lineRange.location, endInsertPoint - lineRange.location };
 			NSRange meRange = [str rangeOfString:@"/me " options:0 range:searchRange];
 			if(meRange.location == lineRange.location && meRange.length == 4) {
-				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:@"*" 
+				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 
 																			attributes:[ourMessage attributesAtIndex:endInsertPoint-1
 																									  effectiveRange:nil]];
 				[ourMessage insertAttributedString:endSplat atIndex:endInsertPoint];
 				[endSplat release];
 
-				[ourMessage replaceCharactersInRange:meRange withString:@"*"];
+				[ourMessage replaceCharactersInRange:meRange withString:startReplacement];
 
-				shift = meRange.length - 2; //the 2 being subtracted: **
+				shift = meRange.length - replacementLength;
 			}
 			shift += lineRange.length;
 			if(shift > extent.length) shift = extent.length;

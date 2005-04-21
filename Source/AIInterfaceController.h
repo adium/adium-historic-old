@@ -93,7 +93,7 @@
 - (void)closeInterface;
 - (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerName atIndex:(int)index;
 - (void)closeChat:(AIChat *)chat;
-//- (AIChat *)activeChat;
+- (AIChat *)activeChat;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
 - (NSArray *)openContainersAndChats;
