@@ -382,11 +382,7 @@
 		//
 		[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
 	}
-	
-	[chat setStatusObject:[NSNumber numberWithBool:YES]
-				   forKey:@"Enabled"
-				   notify:YES];
-	
+
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
     return(YES);
