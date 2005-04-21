@@ -94,7 +94,8 @@
 														toolTip:TITLE_OPEN_PREFERENCES
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"settings" forClass:[self class]]
+													itemContent:[NSImage imageNamed:@"pref-general"
+																		   forClass:[self class]]
 														 action:@selector(showPreferenceWindow:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
