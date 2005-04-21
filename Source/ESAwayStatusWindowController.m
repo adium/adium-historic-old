@@ -190,7 +190,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 /*
  * @brief Return the attributed status title for a status
  *
- * This method puts statusIcon into an NSTextAttachment and prefixes statusState's title with it.
+ * This method puts statusIcon into an NSTextAttachment and prefixes statusState's status message or title with it.
  */
 - (NSAttributedString *)attributedStatusTitleForStatus:(AIStatus *)statusState withIcon:(NSImage *)statusIcon
 {
@@ -198,6 +198,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSTextAttachment			*attachment;
 	NSTextAttachmentCell		*cell;
 	NSDictionary				*attributesDict;
+	NSString					*statusMessageOrTitle;
 
 	cell = [[NSTextAttachmentCell alloc] init];
 	[cell setImage:statusIcon];
@@ -208,7 +209,14 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	
 	attributesDict = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:0]
 												 forKey:NSFontAttributeName];
-	statusTitle = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",[statusState title]]
+	
+	//Use the status message if it is set
+	statusMessageOrTitle = [statusState statusMessage];
+	
+	//If it isn't, use the title
+	if(!statusMessageOrTitle) statusMessageOrTitle = [statusState title];
+
+	statusTitle = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",statusMessageOrTitle]
 														  attributes:attributesDict] autorelease];
 
 	//Insert the image at the beginning
