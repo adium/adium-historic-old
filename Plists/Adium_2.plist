@@ -171,6 +171,8 @@
 			<array>
 				<string>AdiumServiceIcons</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumServiceIcons.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium Service Icons</string>
 			<key>CFBundleTypeOSTypes</key>
