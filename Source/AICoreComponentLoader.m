@@ -33,26 +33,12 @@
 #define COMPONENT_HEADER	@"Header"
 #define COMPONENT_LOCATION	@"Location"
 
-static AICoreComponentLoader *singleton = nil;
-
 @implementation AICoreComponentLoader
-
-+ (id)sharedComponentLoader
-{
-	if(!singleton) [[AICoreComponentLoader alloc] init];
-	return singleton;
-}
 
 - (id)init
 {
-	if(singleton) {
-		[self release];
-		return singleton;
-	}
-
 	if((self = [super init])){
 		components = [[NSMutableDictionary alloc] init];
-		singleton = self;
 	}
 
 	return self;

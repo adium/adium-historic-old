@@ -20,8 +20,6 @@
 	NSMutableDictionary	*components;
 }
 
-+ (id)sharedComponentLoader;
-
 - (void)initController;
 - (void)closeController;
 

@@ -159,6 +159,14 @@ static NSString	*prefsCategory;
     return(statusController);
 }
 
+//Loaders --------------------------------------------------------------------------------------------------------
+#pragma mark Loaders
+
+- (AICoreComponentLoader *)componentLoader
+{
+	return componentLoader;
+}
+
 //Notifications --------------------------------------------------------------------------------------------------------
 #pragma mark Notifications
 //Return the shared Adium notification center
