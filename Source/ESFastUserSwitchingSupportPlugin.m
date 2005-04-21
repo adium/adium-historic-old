@@ -14,15 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
+#import "AIAccountController.h"
+//#import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "AISoundController.h"
+#import "AIStatusController.h"
 #import "ESFastUserSwitchingSupportPlugin.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIAccount.h>
-
-#warning ***FUS plugin is broken***
 
 #define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")
 
@@ -55,16 +55,38 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
     {
         setAwayThroughFastUserSwitch = NO;
         setMuteThroughFastUserSwitch = NO;
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-                                                            selector:@selector(switchHandler:) 
-                                                                name:NSWorkspaceSessionDidBecomeActiveNotification 
-                                                                object:nil];
+		monitoringFastUserSwitch = NO;
+		
+		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
+															   selector:@selector(switchHandler:) 
+																   name:NSWorkspaceSessionDidBecomeActiveNotification 
+																 object:nil];
         
         [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
-                                                            selector:@selector(switchHandler:) 
-                                                                name:NSWorkspaceSessionDidResignActiveNotification
-                                                                object:nil];
-    }
+															   selector:@selector(switchHandler:) 
+																   name:NSWorkspaceSessionDidResignActiveNotification
+																 object:nil];
+		
+		//Observe preference changes for updating when and how we should automatically change our state
+		[[adium preferenceController] registerPreferenceObserver:self 
+														forGroup:PREF_GROUP_STATUS_PREFERENCES];
+		
+	}
+}
+
+/*
+ * @brief Preferences changed
+ *
+ * Note whether we are supposed to change states on FUS.
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	fastUserSwitchStatusID = [prefDict objectForKey:KEY_STATUS_FUS_STATUS_STATE_ID];
+	
+	monitoringFastUserSwitch = (fastUserSwitchStatusID ? 
+								[[prefDict objectForKey:KEY_STATUS_FUS] boolValue] :
+								NO);
 }
 
 /*!
@@ -97,18 +119,35 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		[[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
 		//Deactivation - go away
  
-        //Go away if we aren't already away
-        if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] == nil) {
-            NSAttributedString *away = [[NSAttributedString alloc] initWithString:FAST_USER_SWITCH_AWAY_STRING
-																	   attributes:[[adium contentController] defaultFormattingAttributes]];
-            [[adium preferenceController] setPreference:[away dataRepresentation] 
-												 forKey:@"AwayMessage"
-												  group:GROUP_ACCOUNT_STATUS];
-//			[[adium preferenceController] setPreference:[away dataRepresentation] forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
-			[away release];
-            setAwayThroughFastUserSwitch = YES;
-        }
+        //Go away if we aren't already away, noting the current status states for restoration later
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+		AIStatus		*targetStatusState;
 		
+		if(!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
+		
+		targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
+		
+		if(targetStatusState){
+			enumerator = [[[adium accountController] accountArray] objectEnumerator];
+			while(account = [enumerator nextObject]){
+				AIStatus	*currentStatusState = [account statusState];
+				if([currentStatusState statusType] == AIAvailableStatusType){
+					//Store the state the account is in at present
+					[previousStatusStateDict setObject:currentStatusState
+												forKey:[NSNumber numberWithUnsignedInt:[account hash]]];
+					
+					if([account online]){
+						//If online, set the state
+						[account setStatusState:targetStatusState];
+					}else{
+						//If offline, set the state without coming online
+						[account setStatusStateAndRemainOffline:targetStatusState];
+					}
+				}
+			}
+		}
+
 		//Set a temporary mute if none already exists
 		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
 																		 group:PREF_GROUP_SOUNDS];
@@ -122,12 +161,27 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		//Activation - return from away
         
 		//Remove the away status flag if we set it originally
-        if (setAwayThroughFastUserSwitch) {
-            //Remove the away status flag	
-            [[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-            [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
-            setAwayThroughFastUserSwitch = NO;
-        }
+		NSEnumerator	*enumerator;
+		AIAccount		*account;
+		
+		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		while(account = [enumerator nextObject]){
+			AIStatus		*targetStatusState;
+			NSNumber		*accountHash = [NSNumber numberWithUnsignedInt:[account hash]];
+			
+			targetStatusState = [previousStatusStateDict objectForKey:accountHash];
+			if(targetStatusState){
+				if([account online]){
+					//If online, set the state
+					[account setStatusState:targetStatusState];
+				}else{
+					//If offline, set the state without coming online
+					[account setStatusStateAndRemainOffline:targetStatusState];
+				}
+				
+				[previousStatusStateDict removeObjectForKey:accountHash];
+			}
+		}
 		
 		//Clear the temporary mute if necessary
 		if (setMuteThroughFastUserSwitch) {

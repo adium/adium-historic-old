@@ -30,6 +30,9 @@
 	IBOutlet	NSTextField		*textField_autoAwayMinutes;
 	IBOutlet    NSStepper       *stepper_autoAwayMinutes;
 
+	IBOutlet	NSButton		*checkBox_fastUserSwitching;
+	IBOutlet	NSPopUpButton	*popUp_fastUserSwitchingStatusState;
+	
 	IBOutlet	NSButton		*checkBox_showStatusWindow;
 }
 
