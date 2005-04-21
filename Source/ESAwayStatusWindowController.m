@@ -197,33 +197,39 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSMutableAttributedString	*statusTitle;
 	NSTextAttachment			*attachment;
 	NSTextAttachmentCell		*cell;
-	NSDictionary				*attributesDict;
-	NSString					*statusMessageOrTitle;
+	NSAttributedString			*statusMessage;
+	
+	if((statusMessage = [statusState statusMessage]) &&
+	   ([statusMessage length])){
+		//Use the status message if it is set
+		statusTitle = [statusMessage mutableCopy];
+		[[statusTitle mutableString] insertString:@" "
+										  atIndex:0];
 
+	}else{
+		//If it isn't, use the title
+		NSDictionary				*attributesDict;
+
+		attributesDict = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:0]
+													 forKey:NSFontAttributeName];
+
+		statusTitle = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",[statusState title]]
+															  attributes:attributesDict];
+	}
+
+	//Insert the image at the beginning
 	cell = [[NSTextAttachmentCell alloc] init];
 	[cell setImage:statusIcon];
-	
+
 	attachment = [[NSTextAttachment alloc] init];
 	[attachment setAttachmentCell:cell];
 	[cell release];
-	
-	attributesDict = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:0]
-												 forKey:NSFontAttributeName];
-	
-	//Use the status message if it is set
-	statusMessageOrTitle = [statusState statusMessage];
-	
-	//If it isn't, use the title
-	if(!statusMessageOrTitle) statusMessageOrTitle = [statusState title];
 
-	statusTitle = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@" %@",statusMessageOrTitle]
-														  attributes:attributesDict] autorelease];
-
-	//Insert the image at the beginning
 	[statusTitle insertAttributedString:[NSAttributedString attributedStringWithAttachment:attachment]
 								atIndex:0];
+	[attachment release];
 
-	return statusTitle;
+	return [statusTitle autorelease];
 }
 
 /*
