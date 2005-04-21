@@ -20,7 +20,14 @@
 
 @interface CBActionSupportPlugin : AIPlugin <AIContentFilter>
 {
-
+	/*output when YES: *Mac-arena the Bored Zo winks
+	 *output when NO:  *winks*
+	 *(note also the disappearance of the ending *.)
+	 */
+	BOOL includesDisplayName;
 }
+
+- (BOOL)includesDisplayNameInReplacement;
+- (void)setIncludesDisplayNameInReplacement:(BOOL)flag;
 
 @end
