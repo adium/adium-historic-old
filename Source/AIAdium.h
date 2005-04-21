@@ -73,6 +73,8 @@
 - (ESDebugController *)debugController;
 - (ESFileTransferController *)fileTransferController;
 
+- (AICoreComponentLoader *)componentLoader;
+
 - (NSNotificationCenter *)notificationCenter;
 
 - (IBAction)showAboutBox:(id)sender;
