@@ -807,6 +807,12 @@
 			}
 		} while(range.location != NSNotFound);
 		
+		do{
+			range = [inString rangeOfString:@"%statusSender%"];
+			if(range.location != NSNotFound) {
+				[inString replaceCharactersInRange:range withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
+			}
+		} while(range.location != NSNotFound);
 		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
