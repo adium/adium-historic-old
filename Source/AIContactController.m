@@ -697,8 +697,11 @@
 														toolTip:AILocalizedString(@"Toggle display of groups",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"showGroups" forClass:[self class]]
-														 action:@selector(toggleShowGroups:)
+													itemContent:[NSImage imageNamed:(useContactListGroups ?
+																					 @"togglegroups_transparent" :
+																					 @"togglegroups")
+																		   forClass:[self class]]
+														 action:@selector(toggleShowGroupsToolbar:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
 }
@@ -713,6 +716,16 @@
 	[self performSelector:@selector(_performChangeOfUseContactListGroups)
 			   withObject:nil
 			   afterDelay:0.000001];
+}
+
+- (IBAction)toggleShowGroupsToolbar:(id)sender
+{
+	[self toggleShowGroups:sender];
+
+	[sender setImage:[NSImage imageNamed:(useContactListGroups ?
+										  @"togglegroups_transparent" :
+										  @"togglegroups")
+								forClass:[self class]]];
 }
 
 #pragma mark Meta Contacts
