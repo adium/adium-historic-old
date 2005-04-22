@@ -57,6 +57,7 @@
 - (void)uninstallPlugin
 {
     //Remove observers
+	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }

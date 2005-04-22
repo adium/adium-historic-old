@@ -33,14 +33,19 @@
 													forGroup:PREF_GROUP_STATUS_PREFERENCES];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
+}
+
 /*
  * @brief Deallocate
  */
 - (void)dealloc
 {
 	[awayAccounts release];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
+
 	[super dealloc];
 }
 
@@ -61,7 +66,6 @@
 			/* Register as a list object observer, which will update all objects for us immediately leading to the proper
 			 * status window toggling. */
 			[[adium contactController] registerListObjectObserver:self];
-		
 		}else{
 			//Hide the status window if it is currently visible
 			[ESAwayStatusWindowController updateStatusWindowWithVisibility:NO];
