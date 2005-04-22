@@ -1597,20 +1597,6 @@
 			settings = {
 			};
 		};
-		3428B3400815E22A00C0D3DC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = emoticon32trasparent.png;
-			path = Resources/emoticon32trasparent.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3428B3410815E22A00C0D3DC = {
-			fileRef = 3428B3400815E22A00C0D3DC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		342910CA07AE228600C815F6 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -4052,6 +4038,76 @@
 		};
 		345F58C7081990FF001F733C = {
 			fileRef = 345F58C6081990FF001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		345F58EB0819967A001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = offlinecontacts.png;
+			path = Resources/offlinecontacts.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58EC0819967A001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = offlinecontacts_transparent.png;
+			path = Resources/offlinecontacts_transparent.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58ED0819967A001F733C = {
+			fileRef = 345F58EB0819967A001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		345F58EE0819967A001F733C = {
+			fileRef = 345F58EC0819967A001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		345F58F108199727001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = togglegroups_transparent.png;
+			path = Resources/togglegroups_transparent.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58F208199727001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = togglegroups.png;
+			path = Resources/togglegroups.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58F308199727001F733C = {
+			fileRef = 345F58F108199727001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		345F58F408199727001F733C = {
+			fileRef = 345F58F208199727001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		345F590608199746001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = emoticon32_transparent.png;
+			path = Resources/emoticon32_transparent.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F590708199746001F733C = {
+			fileRef = 345F590608199746001F733C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -8871,11 +8927,15 @@
 				34F4677B080F49C5007800AB,
 				345ACC970811C20F008E4D22,
 				3428B33F0815E1FB00C0D3DC,
-				3428B3410815E22A00C0D3DC,
 				345F566B08178356001F733C,
 				345F57400817FF80001F733C,
 				345F583E08197E74001F733C,
 				345F58C7081990FF001F733C,
+				345F58ED0819967A001F733C,
+				345F58EE0819967A001F733C,
+				345F58F308199727001F733C,
+				345F58F408199727001F733C,
+				345F590708199746001F733C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -23349,7 +23409,7 @@
 				34D832AC07CBD62C006466F2,
 				34D832AD07CBD62C006466F2,
 				3428B33E0815E1FB00C0D3DC,
-				3428B3400815E22A00C0D3DC,
+				345F590608199746001F733C,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -23475,6 +23535,8 @@
 			children = (
 				F579398F033E759C01A8010A,
 				F5793990033E759C01A8010A,
+				345F58EB0819967A001F733C,
+				345F58EC0819967A001F733C,
 			);
 			isa = PBXGroup;
 			name = "Offline Contact Hiding";
@@ -24126,6 +24188,8 @@
 				34D8326307CBD598006466F2,
 				34D8326507CBD598006466F2,
 				34D8326707CBD598006466F2,
+				345F58F108199727001F733C,
+				345F58F208199727001F733C,
 				34D8326107CBD598006466F2,
 				34D8326207CBD598006466F2,
 				34D8326407CBD598006466F2,
