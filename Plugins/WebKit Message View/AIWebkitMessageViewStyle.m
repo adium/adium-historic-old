@@ -95,6 +95,10 @@
 
 		NSNumber *tmpNum = [styleBundle objectForInfoDictionaryKey:@"ShowsUserIcons"];
 		allowsUserIcons = (tmpNum ? [tmpNum boolValue] : YES);
+		
+		//User icon masking
+		NSString *tmpName = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_USER_ICON_MASK];
+		if(tmpName) userIconMask = [[NSImage alloc] initWithContentsOfFile:[stylePath stringByAppendingPathComponent:tmpName]];
 	}
 
 	return self;
@@ -126,6 +130,8 @@
 
 	[customBackgroundPath release];
 	[customBackgroundColor release];
+	
+	[userIconMask release];
 	
 	[super dealloc];
 }
@@ -181,6 +187,14 @@
 - (BOOL)hasHeader
 {
 	return(headerHTML && [headerHTML length]);
+}
+
+/*!
+ * @brief Style's user icon mask
+ */
+- (NSImage *)userIconMask
+{
+	return(userIconMask);
 }
 
 
