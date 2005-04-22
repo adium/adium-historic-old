@@ -174,6 +174,7 @@
 				Spanish,
 				Italian,
 				Dutch,
+				"Traditional Chinese",
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -315,6 +316,7 @@
 				34FD5BBA07F1F87400687C70,
 				341DE02F07FE104700EB7B06,
 				341DE03407FE105600EB7B06,
+				345F587D08198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESFileTransferProgressView.nib;
@@ -350,6 +352,7 @@
 				34FD5BE407F1F91400687C70,
 				341DE03707FE107300EB7B06,
 				341DE03807FE107900EB7B06,
+				345F587F08198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ProxyPasswordPrompt.nib;
@@ -369,6 +372,7 @@
 				34FD5BE307F1F90400687C70,
 				341DE03507FE106400EB7B06,
 				341DE03607FE106B00EB7B06,
+				345F588108198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = PasswordPrompt.nib;
@@ -2152,6 +2156,9 @@
 		343EB3FD08086D2F00E27095 = {
 			children = (
 				4BCAB5EF07B59967006641B9,
+				345F585208198E2E001F733C,
+				345F586308198E7F001F733C,
+				345F586408198E87001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = AccountProxy.nib;
@@ -2169,6 +2176,7 @@
 				4B7A565A07A1742900BDC540,
 				34F468E9080FA987007800AB,
 				343C460C0816CCAE00FF5FA7,
+				345F587C08198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimNovellAccountView.nib;
@@ -2184,6 +2192,8 @@
 		343EB40108086D9000E27095 = {
 			children = (
 				4BAE6D5D07CFA1D7007E2820,
+				345F587808198ED6001F733C,
+				345F589B08198F15001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = AppearancePrefs.nib;
@@ -2201,6 +2211,7 @@
 				349448C207BB29B2000F2A03,
 				34F468E3080FA987007800AB,
 				343C46180816CCEC00FF5FA7,
+				345F588808198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimGaduGaduAccountView.nib;
@@ -2218,6 +2229,7 @@
 				34F1529405E9FDDB00B32FD7,
 				34F468E8080FA987007800AB,
 				343C460D0816CCB600FF5FA7,
+				345F587E08198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMSNAccountView.nib;
@@ -2235,6 +2247,7 @@
 				342E2B1A072976060054D77A,
 				34F468EC080FA988007800AB,
 				343C46070816CC8000FF5FA7,
+				345F587408198ED5001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimZephyrJoinChatView.nib;
@@ -2252,6 +2265,7 @@
 				6E4D961506B73A96005235E9,
 				34F468E0080FA987007800AB,
 				343C461F0816CD0400FF5FA7,
+				345F587508198ED5001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimOscarJoinChatView.nib;
@@ -2269,6 +2283,7 @@
 				6EA3688E06B73F67009CA81A,
 				34F468EA080FA987007800AB,
 				343C460B0816CC9F00FF5FA7,
+				345F588608198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimYahooJoinChatView.nib;
@@ -2286,6 +2301,7 @@
 				348D8D2306CC07BC00449EBB,
 				34F468ED080FA988007800AB,
 				343C46040816CC6800FF5FA7,
+				345F588308198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimZephyrAccountView.nib;
@@ -2303,6 +2319,7 @@
 				6E4D962706B73C18005235E9,
 				34F468E6080FA987007800AB,
 				343C46130816CCD100FF5FA7,
+				345F588008198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimMeanwhileJoinChatView.nib;
@@ -2318,6 +2335,8 @@
 		343EB41608086D9100E27095 = {
 			children = (
 				347E791F07CAA52300350507,
+				345F587708198ED6001F733C,
+				345F589C08198F15001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = StatusSortConfiguration.nib;
@@ -2335,6 +2354,7 @@
 				6E4D962106B73BDF005235E9,
 				34F468E4080FA987007800AB,
 				343C46170816CCE300FF5FA7,
+				345F585108198E2E001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimJabberJoinChatView.nib;
@@ -2352,6 +2372,7 @@
 				34F52BCB06E2AFBC00887BE2,
 				34F468E2080FA987007800AB,
 				343C461B0816CCF300FF5FA7,
+				345F588508198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimICQAccountView.nib;
@@ -2369,6 +2390,7 @@
 				34B9197F062DEC99004F1223,
 				34F468E1080FA987007800AB,
 				343C461E0816CCFD00FF5FA7,
+				345F587908198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimOscarAccountView.nib;
@@ -2386,6 +2408,7 @@
 				343A7F2606935DB600150CEC,
 				34F468E7080FA987007800AB,
 				343C46120816CCC700FF5FA7,
+				345F588908198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMeanwhileAccountView.nib;
@@ -2403,6 +2426,7 @@
 				348A901A062A13AB00FC6E03,
 				34F468EB080FA987007800AB,
 				343C460A0816CC9500FF5FA7,
+				345F587308198ED5001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimYahooAccountView.nib;
@@ -2420,6 +2444,7 @@
 				348A8A190629A68C00FC6E03,
 				34F468E5080FA987007800AB,
 				343C46140816CCDA00FF5FA7,
+				345F587A08198ED6001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimJabberAccountView.nib;
@@ -2443,6 +2468,8 @@
 		343EB42B080870A200E27095 = {
 			children = (
 				343EB4270808709E00E27095,
+				345F588408198ED7001F733C,
+				345F589A08198F15001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ListThemeSheet.nib;
@@ -2466,6 +2493,8 @@
 		343EC6910809DD3400E27095 = {
 			children = (
 				343EC68F0809DD2900E27095,
+				345F587B08198ED6001F733C,
+				345F589908198F15001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = ListLayoutSheet.nib;
@@ -2629,6 +2658,7 @@
 				34FD5BD407F1F8B700687C70,
 				341DE09A07FE111100EB7B06,
 				341DE09B07FE111500EB7B06,
+				345F588708198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = MessageContextDisplayPrefs.nib;
@@ -3685,6 +3715,270 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		345F585108198E2E001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/DCGaimJabberJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F585208198E2E001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/AccountProxy.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F586308198E7F001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Resources/Dutch.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F586408198E87001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587308198ED5001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimYahooAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587408198ED5001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/DCGaimZephyrJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587508198ED5001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587608198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Adium Crash Reporter/Traditional Chinese.lproj/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587708198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/StatusSortConfiguration.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587808198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/AppearancePrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587908198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimOscarAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587A08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimJabberAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587B08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/ListLayoutSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587C08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimNovellAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587D08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/ESFileTransferProgressView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587E08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimMSNAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F587F08198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/ProxyPasswordPrompt.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588008198ED6001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/DCGaimMeanwhileJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588108198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/PasswordPrompt.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588208198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/WebKit Message View/Traditional Chinese.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588308198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimZephyrAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588408198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/ListThemeSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588508198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimICQAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588608198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/DCGaimYahooJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588708198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/MessageContextDisplayPrefs.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588808198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588908198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/ESGaimMeanwhileAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F588A08198ED7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/GeneralPreferences.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F589908198F15001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F589A08198F15001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F589B08198F15001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F589C08198F15001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F589D08198F15001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Adium Crash Reporter/German.lproj/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		3461621006FB482C009181D8 = {
 			fileEncoding = 30;
@@ -5562,6 +5856,7 @@
 				34C2D8C00633BBA80018E5D2,
 				343C45E20816C0FE00FF5FA7,
 				343C47760816FBDA00FF5FA7,
+				345F588208198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = WebKitPreferencesView.nib;
@@ -7074,6 +7369,7 @@
 				34FD5BC707F1F89400687C70,
 				341DE03907FE108C00EB7B06,
 				341DE03A07FE109400EB7B06,
+				345F588A08198ED7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = GeneralPreferences.nib;
@@ -12435,6 +12731,8 @@
 			children = (
 				4B7F78C10597F5B700162728,
 				34A24E1E07DE2B51009854E1,
+				345F587608198ED6001F733C,
+				345F589D08198F15001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = MainMenu.nib;
