@@ -282,6 +282,7 @@
 				3402D38307CB04DB0044F818,
 				343C45EB0816C18000FF5FA7,
 				343C45EC0816C19700FF5FA7,
+				345F58B208198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -430,6 +431,7 @@
 				34FD5BEB07F1F92900687C70,
 				341DE03B07FE10B600EB7B06,
 				343C45E50816C13300FF5FA7,
+				345F58B408198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -459,6 +461,7 @@
 				3498FE9807F489020004B79A,
 				3498FE9907F4890A0004B79A,
 				3498FE9A07F489100004B79A,
+				345F58B308198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -483,6 +486,7 @@
 		3402E05807CB0EEE0044F818 = {
 			children = (
 				3402E05607CB0EDE0044F818,
+				345F58B708198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -507,6 +511,7 @@
 		3402E06607CB0F3B0044F818 = {
 			children = (
 				3402E06407CB0F2E0044F818,
+				345F58B508198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -533,6 +538,7 @@
 				3402E06C07CB0F9D0044F818,
 				343C45E80816C13D00FF5FA7,
 				343C47790816FBE500FF5FA7,
+				345F58B108198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -3977,6 +3983,62 @@
 			lastKnownFileType = wrapper.nib;
 			name = German;
 			path = "Adium Crash Reporter/German.lproj/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B108198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Plugins/WebKit Message View/Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B208198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Frameworks/Adium Framework/Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B308198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Plugins/Gaim Service/Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B408198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Resources/Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B508198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B608198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Adium Crash Reporter/Traditional Chinese.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58B708198FA7001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = "Traditional Chinese";
+			path = "Traditional Chinese.lproj/Localizable.strings";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -12715,6 +12777,7 @@
 		34E0E9B707CC4B3600A82198 = {
 			children = (
 				34E0E9B007CC4B1800A82198,
+				345F58B608198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
