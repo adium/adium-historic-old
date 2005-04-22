@@ -3672,6 +3672,20 @@
 			settings = {
 			};
 		};
+		345F583D08197E74001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.icns;
+			name = AdiumStatusIcons.icns;
+			path = Resources/AdiumStatusIcons.icns;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F583E08197E74001F733C = {
+			fileRef = 345F583D08197E74001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3461621006FB482C009181D8 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -8489,6 +8503,7 @@
 				3428B3410815E22A00C0D3DC,
 				345F566B08178356001F733C,
 				345F57400817FF80001F733C,
+				345F583E08197E74001F733C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -22968,6 +22983,7 @@
 				34D832A907CBD62C006466F2,
 				345F566A08178356001F733C,
 				34D832AA07CBD62C006466F2,
+				345F583D08197E74001F733C,
 				34D832AB07CBD62C006466F2,
 				34D832AC07CBD62C006466F2,
 				34D832AD07CBD62C006466F2,
