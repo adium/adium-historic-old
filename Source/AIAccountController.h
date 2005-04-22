@@ -95,6 +95,7 @@ typedef enum
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (NSArray *)accountsWithService:(AIService *)service;
 - (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
+- (AIAccount *)firstAccountWithService:(AIService *)service;
 - (AIAccount *)defaultAccount;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID;
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
