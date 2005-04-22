@@ -270,8 +270,7 @@
 	if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
 	newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 	[button_editAccount setFrame:newFrame];
-	
-	
+
 	//Configure our table view
 	[tableView_accountList setTarget:self];
 	[tableView_accountList setDoubleAction:@selector(editAccount:)];
@@ -390,7 +389,12 @@
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
 	if([identifier isEqualToString:@"icon"]){
-		return([AIServiceIcons serviceIconForObject:account type:AIServiceIconLarge direction:AIIconNormal]);
+		return([[account userIcon] imageByScalingToSize:NSMakeSize(28,28)]);
+
+	}else if([identifier isEqualToString:@"service"]){
+		return([[AIServiceIcons serviceIconForObject:account
+												type:AIServiceIconLarge
+										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)]);
 
 	}else if([identifier isEqualToString:@"name"]){
 		return([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT);
