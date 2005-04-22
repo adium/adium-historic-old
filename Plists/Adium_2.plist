@@ -155,6 +155,8 @@
 			<array>
 				<string>AdiumStatusIcons</string>
 			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumStatusIcons</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium Status Icons</string>
 			<key>CFBundleTypeOSTypes</key>
