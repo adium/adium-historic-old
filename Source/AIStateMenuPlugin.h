@@ -19,10 +19,7 @@
 @protocol StateMenuPlugin;
 
 @interface AIStateMenuPlugin : AIPlugin <StateMenuPlugin> {	
-	NSMutableArray	*stateMenuItemArray;
-	NSMenuItem		*customStateMenuItem;
-	NSMenuItem		*selectedStateMenuItem;
-	NSMenuItem		*editStatusMenuItem;
+	NSMenuItem		*dockStatusMenuRoot;
 }
 
 @end

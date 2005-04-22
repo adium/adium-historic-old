@@ -18,8 +18,7 @@
 #import "AIMenuController.h"
 #import "AIStateMenuPlugin.h"
 #import "AIStatusController.h"
-
-#define STATE_TITLE_MENU_LENGTH		30
+#import <AIUtilities/AIMenuAdditions.h>
 
 /*!
  * @class AIStateMenuPlugin
@@ -47,6 +46,12 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
+	dockStatusMenuRoot = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Status",nil)
+																			  target:self
+																			  action:@selector(dummyAction:)
+																	   keyEquivalent:@""];
+	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
+
 	[[adium statusController] registerStateMenuPlugin:self];
 }
 
@@ -58,15 +63,17 @@
 /*!
  * @brief Add state menu items to our location
  *
- * Implemented as required by the StateMenuPlugin protocol.
+ * Implemented as required by the StateMenuPlugin protocol.  Also assigns key equivalents to appropriate
+ * menu items depending on the current status.
  *
  * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
-
+	NSMenu			*dockStatusMenu = [[NSMenu alloc] init];
+		
 	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
 	AIStatusType	targetStatusType = AIAvailableStatusType;
 	AIStatus		*targetStatusState = nil;
@@ -86,13 +93,15 @@
 		assignKeyEquivalents = YES;
 		
 	}
-	   
+	
+	enumerator = [menuItemArray objectEnumerator];
     while((menuItem = [enumerator nextObject])){
 		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
 		int			tag = [menuItem tag];
 
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
-		
+		[dockStatusMenu addItem:[[menuItem copy] autorelease]];
+
 		if(assignKeyEquivalents){
 			if((tag == targetStatusType) && 
 			   (representedStatus == targetStatusState)){
@@ -105,6 +114,8 @@
 			}
 		}
     }
+	
+	[dockStatusMenuRoot setSubmenu:dockStatusMenu];
 }
 
 /*!
@@ -122,6 +133,10 @@
     while((menuItem = [enumerator nextObject])){    
         [[adium menuController] removeMenuItem:menuItem];
     }
+	
+	[dockStatusMenuRoot setSubmenu:nil];
 }
+
+- (void)dummyAction:(id)sender {};
 
 @end
