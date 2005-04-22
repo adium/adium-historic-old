@@ -21,6 +21,7 @@
 #define KEY_WEBKIT_USER_ICON 				@"WebKitUserIconPath"
 #define KEY_WEBKIT_DEFAULT_FONT_FAMILY		@"DefaultFontFamily"
 #define KEY_WEBKIT_DEFAULT_FONT_SIZE		@"DefaultFontSize"
+#define KEY_WEBKIT_USER_ICON_MASK			@"ImageMask"
 
 typedef enum {
 	Display_Name = 1,
@@ -72,6 +73,7 @@ typedef enum {
 	int					customBackgroundType;
 	NSString			*customBackgroundPath;
 	NSColor				*customBackgroundColor;
+	NSImage				*userIconMask;
 }
 
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle;

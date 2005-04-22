@@ -896,9 +896,9 @@
 	}
 	
 	//Apply the mask
-	if (userIcon){
-		if (imageMask){
-			webKitUserIcon = [[imageMask copy] autorelease];
+	if(userIcon){
+		if([messageStyle userIconMask]){
+			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
 			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
 						fromRect:NSMakeRect(0,0,[userIcon size].width,[userIcon size].height)
@@ -912,7 +912,6 @@
 		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
 		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
 												  atomically:YES]){
-			
 			[inObject setStatusObject:webKitUserIconPath
 							   forKey:KEY_WEBKIT_USER_ICON
 							   notify:NO];
