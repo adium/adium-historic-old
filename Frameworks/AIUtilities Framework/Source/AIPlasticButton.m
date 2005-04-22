@@ -14,6 +14,16 @@
 #define IMAGE_OFFSET_X	0
 #define IMAGE_OFFSET_Y	0
 
+#define PLASTIC_ARROW_WIDTH		8
+#define PLASTIC_ARROW_HEIGHT	(PLASTIC_ARROW_WIDTH/2.0)
+#define PLASTIC_ARROW_XOFFSET	12
+#define PLASTIC_ARROW_YOFFSET	12
+#define PLASTIC_ARROW_PADDING	8
+
+@interface AIPlasticButton (PRIVATE)
+- (NSBezierPath *)popUpArrowPath;
+@end
+
 @implementation AIPlasticButton
 
 //
@@ -147,11 +157,13 @@
         NSSize	size = [image size];
         NSRect	centeredRect;
 
+		if([self menu]) frame.size.width -= PLASTIC_ARROW_PADDING;
+		
         centeredRect = NSMakeRect(frame.origin.x + (int)((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
                                   frame.origin.y + (int)((frame.size.height - size.height) / 2.0) + IMAGE_OFFSET_Y,
                                   size.width,
                                   size.height);
-
+		
         [image setFlipped:YES];
         [image drawInRect:centeredRect
 				 fromRect:NSMakeRect(0,0,size.width,size.height) 
@@ -159,7 +171,37 @@
 				 fraction:([self isEnabled] ? 1.0 : 0.5)];
     }
     
+	//Draw the arrow, if needed
+	if([self menu]){
+		[[[NSColor blackColor] colorWithAlphaComponent:0.70] set];
+		[[self popUpArrowPath] fill];
+	}
 }
+
+//Path for the little popup arrow (Cached, dependent upon our current frame)
+- (NSBezierPath *)popUpArrowPath
+{
+	if(!arrowPath){
+		NSRect frame = [self frame];
+		
+		arrowPath = [[NSBezierPath bezierPath] retain];
+		[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-PLASTIC_ARROW_XOFFSET, NSHeight(frame)-PLASTIC_ARROW_YOFFSET)];
+		[arrowPath relativeLineToPoint:NSMakePoint( PLASTIC_ARROW_WIDTH, 0)];
+		[arrowPath relativeLineToPoint:NSMakePoint(-(PLASTIC_ARROW_WIDTH/2.0), (PLASTIC_ARROW_WIDTH/2.0))];
+		[arrowPath closePath];
+	}
+	
+	return arrowPath;
+}
+
+//If our frame changes, release and clear the arrowPath cache so it will be recalculated when we next draw.
+- (void)setFrame:(NSRect)inFrame
+{
+	[arrowPath release]; arrowPath = nil;
+	
+	[super setFrame:inFrame];
+}
+
 
 //Mouse Tracking -------------------------------------------------------------------------------------------------------
 #pragma mark Mouse Tracking
@@ -218,7 +260,8 @@
     [plasticPressedMiddle release];
     [plasticDefaultCaps release];
     [plasticDefaultMiddle release];    
-
+	[arrowPath release];
+	
     [super dealloc];
 }
 
