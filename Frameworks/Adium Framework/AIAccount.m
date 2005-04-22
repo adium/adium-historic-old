@@ -515,4 +515,14 @@
 	return NO;
 }
 
+
+//Display Name Convenience Methods -------------------------------------------------------------------------------------
+#pragma mark Display Name Convenience Methods
+- (NSImage *)userIcon
+{
+	NSData	*iconData = [self userIconData];
+	return(iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
+}
+
+
 @end
