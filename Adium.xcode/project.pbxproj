@@ -4042,6 +4042,20 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		345F58C6081990FF001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.png;
+			name = LogViewer.png;
+			path = Resources/LogViewer.png;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		345F58C7081990FF001F733C = {
+			fileRef = 345F58C6081990FF001F733C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3461621006FB482C009181D8 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -8793,7 +8807,6 @@
 				3461621706FB482D009181D8,
 				9E6A9BF70732CB500032C9F6,
 				9E6A9BF80732CB500032C9F6,
-				C4C63A09073889B2005E076D,
 				34082690075B5CB900703011,
 				34082691075B5CB900703011,
 				4BC5A5DF0764F75B0080ECF7,
@@ -8862,6 +8875,7 @@
 				345F566B08178356001F733C,
 				345F57400817FF80001F733C,
 				345F583E08197E74001F733C,
+				345F58C7081990FF001F733C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21812,10 +21826,10 @@
 		};
 		9C8C7FA303CBA17B00267226 = {
 			children = (
-				C4C63A08073889B1005E076D,
 				4BE666CC0577AFA0007E115C,
 				9C8C7FA403CBA21B00267226,
 				9C8C7FA503CBA21B00267226,
+				345F58C6081990FF001F733C,
 				4B54D10605028BC400A8010A,
 			);
 			isa = PBXGroup;
@@ -22754,20 +22768,6 @@
 		};
 		C45F7F6706C75E210056B1F2 = {
 			fileRef = C45F7F6406C75E210056B1F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		C4C63A08073889B1005E076D = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.png;
-			name = LogViewer.png;
-			path = Plugins/Logger/LogViewer.png;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		C4C63A09073889B2005E076D = {
-			fileRef = C4C63A08073889B1005E076D;
 			isa = PBXBuildFile;
 			settings = {
 			};
