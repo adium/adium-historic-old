@@ -68,6 +68,7 @@ typedef enum{
 - (void)playSoundNamed:(NSString *)inName;
 - (void)playSoundAtPath:(NSString *)inPath;
 - (NSArray *)soundSetArray;
+- (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation;
 - (void)speakText:(NSString *)text;
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
 
