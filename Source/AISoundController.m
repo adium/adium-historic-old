@@ -408,16 +408,13 @@
 
 			enumerator = [sounds objectEnumerator];
 			while(soundName = [enumerator nextObject]){
-				NSLog(@"Adding %@",[soundLocation stringByAppendingPathComponent:soundName]);
 				[soundSetContents addObject:[soundLocation stringByAppendingPathComponent:soundName]];
 			}
 			
 			break;	
 		}
 		default: break;
-	}
-	
-	NSLog(@"So finished with %@",soundSetContents);
+	}	
 }
 
 - (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation
