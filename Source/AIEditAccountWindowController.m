@@ -117,12 +117,7 @@
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 
 	//User icon
-	if(iconData = [account preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-		NSImage *image = [[NSImage alloc] initWithData:iconData];
-		[imageView_userIcon setImage:image];
-		[image release];
-	}
-
+	[imageView_userIcon setImage:[account userIcon]];
 
 	//Insert the custom controls for this account
 	[self _removeCustomViewAndTabs];
@@ -341,12 +336,7 @@
 	didDeleteUserIcon = YES;
 
 	//User icon - restore to the default icon
-	NSData	*iconData;
-	if(iconData = [[adium preferenceController] preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]){
-		NSImage *image = [[NSImage alloc] initWithData:iconData];
-		[imageView_userIcon setImage:image];
-		[image release];
-	}
+	[imageView_userIcon setImage:[account userIcon]];
 }
 
 @end
