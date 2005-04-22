@@ -24,6 +24,7 @@
 #import <Adium/QTSoundFilePlayer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIWorkspaceAdditions.h>
 #include <float.h>
 
 #define	PATH_SOUNDS					@"/Sounds"
@@ -39,12 +40,17 @@
 
 #define	SOUND_CACHE_CLEANUP_INTERVAL	60.0
 
+#define SOUND_LOCATION					@"Location"
+#define SOUND_LOCATION_SEPARATOR		@"////"
+#define	SOUND_PACK_VERSION				@"AdiumSetVersion"
+#define SOUND_NAMES						@"Sounds"
+
 @interface AISoundController (PRIVATE)
 - (void)_removeSystemAlertIDs;
 - (void)_coreAudioPlaySound:(NSString *)inPath;
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
-- (void)preferencesChanged:(NSNotification *)notification;
+- (void)addSoundsIndicatedByDictionary:(NSDictionary *)infoDict toArray:(NSMutableArray *)soundSetContents;
 
 - (void)loadVoiceArray;
 - (SUSpeaker *)_speakerForVoice:(NSString *)voiceString index:(int *)voiceIndex;
@@ -330,9 +336,11 @@
     while((file = [enumerator nextObject])){
         BOOL			isDirectory;
         NSString		*fullPath;
+		NSString		*fileName = [file lastPathComponent];
 
-        if([[file lastPathComponent] characterAtIndex:0] != '.' &&
-           [[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] != 0 &&
+		//Skip .*, *.txt, and .svn
+        if([fileName characterAtIndex:0] != '.' &&
+           [[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] != NSOrderedSame &&
            ![[file pathComponents] containsObject:@".svn"]){ //Ignore certain files
 
             //Determine if this is a file or a directory
@@ -352,9 +360,14 @@
                 soundSetContents = [[NSMutableArray alloc] init];
 
             }else{
-                //Add the sound
-                [soundSetContents addObject:fullPath];
-
+				if([fileName isEqualToString:@"Info.plist"]){
+					[self addSoundsIndicatedByDictionary:[NSDictionary dictionaryWithContentsOfFile:fullPath]
+												 toArray:soundSetContents];
+					
+				}else{
+					//Add the sound
+					[soundSetContents addObject:fullPath];
+				}
             }
         }
     }
@@ -371,6 +384,102 @@
 	}
 }
 
+/*!
+ * @brief Add sounds indicated dynamically by a dictionary to an array
+ *
+ * Handle optional location key, which allows emoticons to be loaded from arbitrary directories.
+ * This is only used by the iChat sound pack.
+ */
+- (void)addSoundsIndicatedByDictionary:(NSDictionary *)infoDict toArray:(NSMutableArray *)soundSetContents
+{
+	int version = [[infoDict objectForKey:SOUND_PACK_VERSION] intValue];
+
+	switch(version){
+		case 1:
+		{
+			NSDictionary	*sounds;
+			NSEnumerator	*enumerator;
+			NSString		*soundName, *soundLocation;
+
+			sounds = [self soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
+			
+			//If we don't have a sound location, return
+			if(!sounds) return;
+
+			enumerator = [sounds objectEnumerator];
+			while(soundName = [enumerator nextObject]){
+				NSLog(@"Adding %@",[soundLocation stringByAppendingPathComponent:soundName]);
+				[soundSetContents addObject:[soundLocation stringByAppendingPathComponent:soundName]];
+			}
+			
+			break;	
+		}
+		default: break;
+	}
+	
+	NSLog(@"So finished with %@",soundSetContents);
+}
+
+- (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation
+{
+	NSString		*soundLocation = nil, *fullSoundLocation = nil;
+	NSDictionary	*sounds;
+
+	id			possiblePaths = [infoDict objectForKey:SOUND_LOCATION];
+
+	if(possiblePaths){
+		if([possiblePaths isKindOfClass:[NSString class]]){
+			possiblePaths = [NSArray arrayWithObjects:possiblePaths, nil];
+		}
+		
+		NSEnumerator	*pathEnumerator = [possiblePaths objectEnumerator];
+		NSString		*aPath;
+		
+		while((aPath = [pathEnumerator nextObject])){
+			NSString	*possiblePath;
+			NSArray		*splitPath = [aPath componentsSeparatedByString:SOUND_LOCATION_SEPARATOR];
+			
+			/* Two possible formats:
+				*
+				* <string>/absolute/path/to/directory</string>
+				* <string>CFBundleIdentifier////relative/path/from/bundle/to/directory</string>
+				*
+				* The separator in the latter is ////, defined as SOUND_LOCATION_SEPARATOR.
+				*/
+			if([splitPath count] == 1){
+				possiblePath = [splitPath objectAtIndex:0];
+			}else{
+				NSArray *components = [NSArray arrayWithObjects:
+					[[NSWorkspace sharedWorkspace] compatibleAbsolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
+					[splitPath objectAtIndex:1],
+					nil];
+				possiblePath = [NSString pathWithComponents:components];
+			}
+			
+			/* If the directory exists, then we've found the location. If we
+				* make it all the way through the list without finding a valid
+				* directory, then the standard location will be used.
+				*/
+			BOOL isDir;
+			if([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir){
+				soundLocation = possiblePath;
+				
+				/* Keep the 'full sound location', which is what was indicated in the dictionary, for generation of
+				 * the SOUND_NAMES key on a by-location basis later on.
+				 */
+				fullSoundLocation = aPath;
+				break;
+			}
+		}
+	}
+		
+	sounds = [infoDict objectForKey:[NSString stringWithFormat:@"%@:%@",SOUND_NAMES,fullSoundLocation]];
+	if(!sounds) sounds = [infoDict objectForKey:SOUND_NAMES];
+	
+	if(outSoundLocation) *outSoundLocation = soundLocation;
+	
+	return sounds;
+}
 
 //Text to Speech -------------------------------------------------------------------------------------------------------
 #pragma mark Text to Speech
