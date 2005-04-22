@@ -55,6 +55,9 @@
 											  keyEquivalent:@"H"];
 	[[adium menuController] addMenuItem:showOfflineMenuItem toLocation:LOC_View_Toggles];		
 
+	//Register preference observer first so values will be correct for the following calls
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	
 	//Toolbar
 	NSToolbarItem	*toolbarItem;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:OFFLINE_CONTACTS_IDENTIFER
@@ -63,13 +66,13 @@
 														toolTip:AILocalizedString(@"Toggle display of offline contacts",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"offlineContacts" forClass:[self class]]
-														 action:@selector(toggleOfflineContactsMenu:)
+													itemContent:[NSImage imageNamed:(showOfflineContacts ?
+																					 @"offlinecontacts_transparent" :
+																					 @"offlinecontacts")
+																		   forClass:[self class]]
+														 action:@selector(toggleOfflineContactsToolbar:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
-
-	//Register preference observer first so values will be correct for the following calls
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
 }
 
 /*!
@@ -123,6 +126,16 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:!showOfflineContacts]
 										 forKey:KEY_SHOW_OFFLINE_CONTACTS
 										  group:PREF_GROUP_CONTACT_LIST_DISPLAY];
+}
+
+- (IBAction)toggleOfflineContactsToolbar:(id)sender
+{
+	[self toggleOfflineContactsMenu:sender];
+	
+	[sender setImage:[NSImage imageNamed:(showOfflineContacts ?
+										  @"offlinecontacts_transparent" :
+										  @"offlinecontacts")
+								forClass:[self class]]];
 }
 
 /*!
