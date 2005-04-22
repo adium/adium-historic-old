@@ -13,15 +13,14 @@
  * <tt>AIPlasticButton</tt> must be subclassed to call -[self setImage:] with the image to be displayed, in initWithFrame: method. It will then display a "plastic" Aqua button within its frame, with the designated image centered within the button.
  */
 @interface AIPlasticButton : NSButton {
+    NSImage			*plasticCaps;
+    NSImage			*plasticMiddle;
+    NSImage			*plasticPressedCaps;
+    NSImage			*plasticPressedMiddle;
+    NSImage			*plasticDefaultCaps;
+    NSImage			*plasticDefaultMiddle;
 
-    NSImage	*plasticCaps;
-    NSImage	*plasticMiddle;
-    NSImage	*plasticPressedCaps;
-    NSImage	*plasticPressedMiddle;
-    NSImage	*plasticDefaultCaps;
-    NSImage	*plasticDefaultMiddle;
+	NSBezierPath 	*arrowPath;
 }
-
-
 
 @end
