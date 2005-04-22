@@ -22,8 +22,6 @@
 
 @implementation AIDockingWindow
 
-static	BOOL alreadyMoving = NO;
-
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)aStyle backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
 	self = [super initWithContentRect:contentRect styleMask:aStyle backing:bufferingType defer:flag];
@@ -53,6 +51,7 @@ static	BOOL alreadyMoving = NO;
 	resisted_XMotion = 0;
 	resisted_YMotion = 0;
 	oldWindowFrame = NSMakeRect(0,0,0,0);
+	alreadyMoving = NO;
 
 	return self;
 }

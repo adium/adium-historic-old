@@ -17,6 +17,7 @@
 	NSRect			oldWindowFrame;
 	unsigned int	resisted_XMotion;
 	unsigned int	resisted_YMotion;
+	BOOL 			alreadyMoving;
 }
 
 @end
