@@ -19,6 +19,7 @@
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
+#import "AIStatusController.h"
 #import "ESApplescriptabilityController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAccount.h>
@@ -56,6 +57,7 @@
 }
 
 #pragma mark Attributes
+#warning Quite a bit in here is broken and needs to be rewritten for the new status system -eds
 - (NSTimeInterval)myIdleTime
 {
 	NSDate  *idleSince = [[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
@@ -84,10 +86,9 @@
 - (AIStatusSummary)myStatus
 {
 	if ([[adium accountController] oneOrMoreConnectedAccounts]){
+		AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
 		
-		//Of course, it's AIM-centric to assume that an AwayMessage = "I am away"... but pending a status rewrite, this'll work.
-		if ([[adium preferenceController] preferenceForKey:@"AwayMessage"
-													 group:GROUP_ACCOUNT_STATUS]){
+		if ([activeStatusState statusType] != AIAvailableStatus){
 			if ([self myIdleTime]){
 				return AIAwayAndIdleStatus;
 			}else{
@@ -105,28 +106,51 @@
 	}
 }
 
-//Incomplete - use setMyIdleTime and setMyStatusMessage
+//Incomplete - make AIStatus scriptable, pass that in
 - (void)setMyStatus:(AIStatusSummary)newStatus
 {
-	if (newStatus == AIAvailableStatus){
-		[[adium preferenceController] setPreference:nil forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
+	AIStatus	*activeStatusState = [[[adium statusController] activeStatusState] mutableCopy];
+	
+	switch(newStatus){
+		case AIAvailableStatus:
+			[activeStatusState setStatusType:AIAvailableStatusType];
+			break;
+			
+		case AIAwayStatus:
+			[activeStatusState setStatusType:AIAwayStatusType];
+			break;
+
+		case AIIdleStatus:
+		case AIAwayAndIdleStatus:
+		case AIOfflineStatus:
+			break;
+			
+		case AIUnknownStatus:
+			break;
 	}
+	
+	[[adium statusController] setActiveStatusState:activeStatusState];
+	
+	[activeStatusState release];
 }
 
 - (NSString *)myStatusMessage
 {
-	return [[[[adium preferenceController] preferenceForKey:@"AwayMessage"
-													  group:GROUP_ACCOUNT_STATUS] attributedString] string];
+	AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
+	
+	return([[activeStatusState statusMessage] string]);
 }
+
 - (void)setMyStatusMessage:(NSString *)statusMessage
 {
-	//Take the string and turn it into an attributed string (in case we were passed HTML)
-	NSData  *attributedStatusMessage = [[AIHTMLDecoder decodeHTML:statusMessage] dataRepresentation];
+	AIStatus	*activeStatusState = [[[adium statusController] activeStatusState] mutableCopy];
 
-	//Set the away
-    [[adium preferenceController] setPreference:attributedStatusMessage forKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS];
-    [[adium preferenceController] setPreference:nil forKey:@"Autoresponse" group:GROUP_ACCOUNT_STATUS];
+	//Take the string and turn it into an attributed string (in case we were passed HTML)
+	[activeStatusState setStatusMessage:[AIHTMLDecoder decodeHTML:statusMessage]];
+		
+	[[adium statusController] setActiveStatusState:activeStatusState];
 	
+	[activeStatusState release];	
 }
 
 #pragma mark Controller convenience
