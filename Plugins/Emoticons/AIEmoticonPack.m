@@ -210,7 +210,7 @@
 				BOOL isDir;
 				if([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir){
 					[emoticonLocation release];
-					emoticonLocation = [possiblePath copy];
+					emoticonLocation = [possiblePath retain];
 					break;
 				}
 			}
