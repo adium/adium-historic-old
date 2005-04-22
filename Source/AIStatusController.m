@@ -372,12 +372,15 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}else{
 		NSEnumerator	*enumerator;
 		NSString		*serviceCodeUniqueID;
+		BOOL			oneOrMoreConnectedAccounts = [[adium accountController] oneOrMoreConnectedAccounts];
 
 		//Insert a menu item for each available account
 		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
 		while(serviceCodeUniqueID = [enumerator nextObject]){
-			//Obtain the status dicts for this type and service code unique ID if it is online
-			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID]){
+			/* Obtain the status dicts for this type and service code unique ID if it is online or
+			 * if no accounts are online but an account of this service code is configured*/
+			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
+				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])){
 				NSSet	*statusDicts;
 
 				//Obtain the status dicts for this type and service code unique ID
