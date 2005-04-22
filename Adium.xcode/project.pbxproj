@@ -486,7 +486,6 @@
 		3402E05807CB0EEE0044F818 = {
 			children = (
 				3402E05607CB0EDE0044F818,
-				345F58B708198FA7001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -3989,14 +3988,6 @@
 			sourceTree = "<group>";
 		};
 		345F58B508198FA7001F733C = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = "Traditional Chinese";
-			path = "Traditional Chinese.lproj/Localizable.strings";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		345F58B708198FA7001F733C = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
 			name = "Traditional Chinese";
