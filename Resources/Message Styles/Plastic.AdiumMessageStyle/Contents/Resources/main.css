@@ -144,11 +144,10 @@ p {
 	margin-top: 3px;
 	padding-top: 3px;
 	border-top: 1px solid #EBEBEB;
-	background: url("images/shadow_right.png") top right repeat-y;
-	margin-right: -15px;
-	padding-right: 15px;
-	margin-left: -15px;
-	padding-left: 15px;
+	margin-right: 0px;
+	padding-right: 0px;
+	margin-left: 0px;
+	padding-left: 0px;
 }
 
 .next_text {
@@ -356,13 +355,19 @@ p {
 	padding-right: 15px;
 }
 
+.right2 {
+	background: url("images/shadow_right.png") top right repeat-y;
+	margin-right: -15px;
+	padding-right: 15px;
+}
+
 .middle_right {
 	background: url("images/shadow_right.png") top right repeat-y;
 	float: right;
 	position: relative;
 	right: -12px;
 	top: -7px;
-	height: 4px;
+	height: 7px;
 	width:5px;
 }
 
