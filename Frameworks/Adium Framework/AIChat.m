@@ -75,14 +75,14 @@ static int nextChatNumber = 0;
 {
 	AILog(@"[%@ dealloc]",self);
 
-    [account release];
-    [contentObjectArray release];
-    [participatingListObjects release];
-  	[dateOpened release]; 
-	[uniqueChatID release]; uniqueChatID = nil;
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[account release];
+	[contentObjectArray release];
+	[participatingListObjects release];
+	[dateOpened release]; 
+	[uniqueChatID release]; uniqueChatID = nil;
 
-    [super dealloc];
+	[super dealloc];
 }
 
 //Big image
