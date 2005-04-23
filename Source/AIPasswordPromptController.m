@@ -102,6 +102,10 @@
 // called as the window closes
 - (void)windowWillClose:(id)sender
 {
+	[NSObject cancelPreviousPerformRequestsWithTarget:[self window]
+											 selector:@selector(makeFirstResponder:)
+											   object:textField_password];
+
 	[super windowWillClose:sender];
     [self autorelease];
 }
