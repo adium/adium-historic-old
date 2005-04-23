@@ -282,12 +282,12 @@
 			}
 			
 			image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
-			if(!image){
+			if(!image && imagePath){
 				image = [[[NSImage alloc] initByReferencingFile:imagePath] autorelease];
 				if(image) [tempIconCache setObject:image forKey:imagePath];
 			}
 			
-			[imageArray addObject:image];
+			if(image) [imageArray addObject:image];
 		}
 		
 		//Create the state
