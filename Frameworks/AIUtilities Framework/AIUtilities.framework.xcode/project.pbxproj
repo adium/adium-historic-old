@@ -516,6 +516,8 @@
 				German,
 				Italian,
 				Dutch,
+				"Traditional Chinese",
+				zh_TW,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07;
 			productRefGroup = 034768DFFF38A50411DB9C8B;
@@ -3333,6 +3335,14 @@
 				);
 			};
 		};
+		345F5CF4081AFD51001F733C = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = zh_TW;
+			path = Resources/zh_TW.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		348E5E1706D2F447004C051C = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -3510,6 +3520,7 @@
 				3498FEAF07F489770004B79A,
 				3498FEB007F4897A0004B79A,
 				3498FEB107F4897D0004B79A,
+				345F5CF4081AFD51001F733C,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
