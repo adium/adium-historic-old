@@ -131,17 +131,17 @@
 - (void)trashContactConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     if(returnCode == NSOKButton) {
-        int dLoop = 0;
         // loop through all accounts & find this contact, remove as needed
         // -> if you can think of a more efficient solution please do, this is all that came to mind
-        while(dLoop < [[controller_LogViewer fromArray] count])
+		int dLoop;
+		int dLoopCount = [[controller_LogViewer fromArray] count];
+        for(dLoop = 0; dLoop < dLoopCount; dLoop++)
         {
             NSString *deleteString = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@/%@/", [[controller_LogViewer fromServiceArray] objectAtIndex:dLoop], [[controller_LogViewer fromArray] objectAtIndex:dLoop], [[controller_LogViewer toArray] objectAtIndex:[table_filterList selectedRow]]]];
             if([[NSFileManager defaultManager] fileExistsAtPath:deleteString])
             {
                 [[NSFileManager defaultManager] trashFileAtPath:deleteString];
             } 
-            dLoop++;
         }
         [controller_LogViewer rebuildIndices];
         [table_filterList reloadData];
