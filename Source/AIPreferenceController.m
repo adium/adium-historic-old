@@ -38,8 +38,6 @@
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 @end
 
-#define TRACK_PREFERENCE_OBSERVERS 1 /*TEMP*/
-
 /*!
  * @class AIPreferenceController
  * @brief Preference Controller
