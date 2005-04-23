@@ -61,7 +61,7 @@
 #define SHOW_EMOTICONS					AILocalizedString(@"Show Emoticons",nil)
 
 #define IMAGE_EMOTICONS_OFF				@"emoticon32"
-#define IMAGE_EMOTICONS_ON				@"emoticon32transparent"
+#define IMAGE_EMOTICONS_ON				@"emoticon32_transparent"
 
 #define	REFRESH_RESULTS_INTERVAL		0.5 //Interval between results refreshes while searching
 
