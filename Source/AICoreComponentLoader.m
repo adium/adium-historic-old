@@ -33,8 +33,6 @@
 #define COMPONENT_HEADER	@"Header"
 #define COMPONENT_LOCATION	@"Location"
 
-#define TRACK_COMPONENTS 1 /*TEMP*/
-
 @implementation AICoreComponentLoader
 
 - (id)init
@@ -108,7 +106,7 @@
 	while (className = [enumerator nextObject]) {
 		AIPlugin	*plugin = [components objectForKey:className];
 #ifdef TRACK_COMPONENTS
-		NSLog(@"%@: removing component: %@", [self class], object);
+		NSLog(@"%@: removing component: %@", [self class], plugin);
 #endif
 		[plugin uninstallPlugin];
 		[components removeObjectForKey:className];
