@@ -301,9 +301,8 @@ static NSImage *pushIndicatorImage = nil;
 - (void)setTypingAttributes:(NSDictionary *)attrs
 {
     NSColor	*backgroundColor;
-
     [super setTypingAttributes:attrs];
-
+	
     //Correctly set our background color
     backgroundColor = [attrs objectForKey:AIBodyColorAttributeName];
     if(backgroundColor){
@@ -311,6 +310,14 @@ static NSImage *pushIndicatorImage = nil;
     }else{
         [self setBackgroundColor:[NSColor whiteColor]];
     }
+	
+	//Use this to save the current font color. Why oh why Apple do I have to do this?
+	if([self selectedRange].location != NSNotFound)
+	{
+		[[adium preferenceController] setPreference:[[attrs objectForKey:NSForegroundColorAttributeName] stringRepresentation]
+											 forKey:KEY_FORMATTING_TEXT_COLOR
+											  group:PREF_GROUP_FORMATTING];
+	}
 }
 
 //Paste as rich text without altering our typing attributes
@@ -774,43 +781,31 @@ static NSImage *pushIndicatorImage = nil;
 }
 
 #pragma mark Font Panel color-selection (10.3 and later only)
-
 //Apple Supported Background Color Change from NSFontPanel in Panther and later!
 - (void)changeDocumentBackgroundColor:(id)sender
 {
-	//XXX - move this part to a category on NSText
-	NSColor					*newColor = [sender color];
-	NSEnumerator			*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	NSText<AITextEntryView>	*textEntryView;
-	AIChat					*activeChat = [[adium interfaceController] activeChat];
-
-	while((textEntryView = [enumerator nextObject]) && ([textEntryView chat] != activeChat));
-
-	[textEntryView setBackgroundColor:newColor];
-
+	NSColor						*newColor = [sender color];
+	NSMutableAttributedString	*attrStorageString = [[[self attributedString] mutableCopy] autorelease];
+	NSMutableDictionary			*textAttrDict;
+	
+	[self setBackgroundColor:newColor];
+	
+	textAttrDict = [[[self typingAttributes] mutableCopy] autorelease];
+	[textAttrDict setValue:newColor forKey:AIBodyColorAttributeName];
+	[self setTypingAttributes:textAttrDict];
+	if([[attrStorageString string] length] > 0)
+	{
+		[attrStorageString setAttributes:textAttrDict range:NSMakeRange(0, [[attrStorageString string] length])];	
+	}
+	[self setAttributedString:attrStorageString];
+	
 	//XXX - not this part
 	[[adium preferenceController] setPreference:[newColor stringRepresentation]
 										 forKey:KEY_FORMATTING_BACKGROUND_COLOR
 										  group:PREF_GROUP_FORMATTING];
 }
-//Apple Supported Font Color Change from NSFontPanel in Panther and later!
-- (void)changeColor:(id)sender
-{
-	//XXX - move this part to a category on NSText
-	NSColor					*newColor = [sender color];
-	NSEnumerator			*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	NSText<AITextEntryView>	*textEntryView;
-	AIChat					*activeChat = [[adium interfaceController] activeChat];
 
-	while((textEntryView = [enumerator nextObject]) && ([textEntryView chat] != activeChat));
-
-	[textEntryView setTextColor:newColor range:[textEntryView selectedRange]];
-
-	//XXX - not this part
-	[[adium preferenceController] setPreference:[newColor stringRepresentation]
-										 forKey:KEY_FORMATTING_TEXT_COLOR
-										  group:PREF_GROUP_FORMATTING];
-}
+//Apple's dumb. I'm using the setTextAttributes: to save the font color until Tiger gets a larger adoption base. See there.
 
 //Silence the compiler warnings
 - (BOOL)isSendingContent
