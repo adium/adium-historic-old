@@ -111,9 +111,6 @@
 //Draw the alternating colors and grid below the "bottom" of the outlineview
 - (void)drawRect:(NSRect)rect
 {
-#warning Lots of debug logging
-	NSLog(@"drawRect: drawsBackground %i drawsAlternatingRows %i",drawsBackground,drawsAlternatingRows);
-	NSLog(@"%@: calling super",self);
 	//Draw the rest of the outline view first
 	[super drawRect:rect];
 	
@@ -124,7 +121,6 @@
 		int		numberOfColumns, numberOfRows;
 
 		//Setup
-		NSLog(@"Setup");
 		numberOfRows = [self numberOfRows];
 		numberOfColumns = [self numberOfColumns];
 		rowHeight = [self rowHeight];// + [self intercellSpacing].height;
@@ -138,7 +134,6 @@
 		
 		//Draw the grid
 		while(rowRect.origin.y < rect.origin.y + rect.size.height && rowHeight > 0){
-			NSLog(@"Draw the grid %@",NSStringFromRect(rowRect));
 			[self _drawRowInRect:rowRect colored:coloredRow selected:NO];
 			
 			//Move to the next row
@@ -147,11 +142,9 @@
 		}
 		
 		if([self drawsGrid]){
-			NSLog(@"Drawing the grid %@",NSStringFromRect(rect));
 			[self _drawGridInClipRect:rect];
 		}
 	}
-	NSLog(@"%@: Finished drawRect:",self);
 }
 
 //Draw alternating colors
