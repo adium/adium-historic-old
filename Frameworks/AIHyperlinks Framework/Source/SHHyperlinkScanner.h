@@ -16,7 +16,6 @@
 
 #import "SHLinkLexer.h"
 
-extern char* SHtext;
 extern int SHleng;
 extern int SHlex();
 typedef struct SH_buffer_state *SH_BUFFER_STATE;
@@ -27,26 +26,24 @@ void SH_delete_buffer(SH_BUFFER_STATE);
 extern unsigned int SHStringOffset;
 
 @class SHMarkedHyperlink;
-@interface SHHyperlinkScanner : NSObject {
 
-    BOOL                        useStrictChecking;
-    URI_VERIFICATION_STATUS     validStatus;
-
+@interface SHHyperlinkScanner : NSObject
+{
+	BOOL						useStrictChecking;
+	URI_VERIFICATION_STATUS		validStatus;
 }
 
--(id)init;
--(id)initWithStrictChecking:(BOOL)flag;
+- (id)init;
+- (id)initWithStrictChecking:(BOOL)flag;
 
--(void)setStrictChecking:(BOOL)flag;
--(BOOL)isStrictCheckingEnabled;
--(URI_VERIFICATION_STATUS)validationStatus;
+- (URI_VERIFICATION_STATUS)validationStatus;
 
--(BOOL)isStringValidURL:(NSString *)inString;
--(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
+- (BOOL)isStringValidURL:(NSString *)inString;
+- (SHMarkedHyperlink *)nextURLFromString:(NSString *)inString;
 
--(NSArray *)allURLsFromString:(NSString *)inString;
--(NSArray *)allURLsFromTextView:(NSTextView *)inView;
--(NSAttributedString *)linkifyString:(NSAttributedString *)inString;
--(void)linkifyTextView:(NSTextView *)inView;
+- (NSArray *)allURLsFromString:(NSString *)inString;
+- (NSArray *)allURLsFromTextView:(NSTextView *)inView;
+- (NSAttributedString *)linkifyString:(NSAttributedString *)inString;
+- (void)linkifyTextView:(NSTextView *)inView;
 
 @end

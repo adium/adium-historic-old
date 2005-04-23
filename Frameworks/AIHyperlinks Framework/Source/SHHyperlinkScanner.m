@@ -1,22 +1,22 @@
-/* 
+/*
  * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
- * 
+ *
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
  * General Public License as published by the Free Software Foundation; either version 2 of the License,
  * or (at your option) any later version.
- * 
+ *
  * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
  * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
  * Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "SHHyperlinkScanner.h"
 #import "SHLinkLexer.h"
 #import "SHMarkedHyperlink.h"
-#import "SHHyperlinkScanner.h"
 
 static NSMutableCharacterSet *skipSet = nil;
 static NSMutableCharacterSet *startSet = nil;
@@ -25,46 +25,35 @@ static NSMutableCharacterSet *endSet = nil;
 @implementation SHHyperlinkScanner
 
 #pragma mark Init
+
 //default initializer - use strict checking by default
--(id)init
+- (id)init
 {
-	if ((self = [super init])){
-		useStrictChecking = YES;
-		SHStringOffset = 0;
-	}
-	
-    return(self);
+	return [self initWithStrictChecking:YES];
 }
 
 //init with a user specified value for strict checking
--(id)initWithStrictChecking:(BOOL)flag
+- (id)initWithStrictChecking:(BOOL)flag
 {
-	if ((self = [self init])){
+	if((self = [super init])){
 		useStrictChecking = flag;
+		SHStringOffset = 0;
 	}
 
-    return(self);
+	return self;
 }
 
 #pragma mark utility
--(void)setStrictChecking:(BOOL)flag
+
+- (URI_VERIFICATION_STATUS)validationStatus
 {
-    useStrictChecking = flag;
+	return validStatus;
 }
 
--(BOOL)isStrictCheckingEnabled
-{
-    return useStrictChecking;
-}
-
--(URI_VERIFICATION_STATUS)validationStatus
-{
-    return validStatus;
-}
-#pragma mark primative methods
+#pragma mark primitive methods
 
 // method to determine the validity of a given string, only place where flex is called
--(BOOL)isStringValidURL:(NSString *)inString
+- (BOOL)isStringValidURL:(NSString *)inString
 {
     SH_BUFFER_STATE buf;  // buffer for flex to scan from
 	const char		*inStringUTF8;
@@ -108,7 +97,7 @@ static NSMutableCharacterSet *endSet = nil;
     return NO;
 }
 
--(SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
+- (SHMarkedHyperlink *)nextURLFromString:(NSString *)inString
 {
     NSString    *scanString = nil;
     int location = SHStringOffset; //get our location from SHStringOffset, so we can pick up where we left off.
@@ -256,14 +245,15 @@ static NSMutableCharacterSet *endSet = nil;
 }
 
 // scan a textView for URL's, as above
--(void)linkifyTextView:(NSTextView *)inView
+- (void)linkifyTextView:(NSTextView *)inView
 {
-    NSAttributedString *newAttributedString;
+	NSAttributedString *newAttributedString;
 
-    // like allURLsFromTextView before it, we can just call the linkifyString: method here
-    // then replace the NSTextView's contents with it.
-    newAttributedString = [self linkifyString:[inView attributedSubstringFromRange:NSMakeRange(0,[[inView string] length])]];
+	// like allURLsFromTextView before it, we can just call the linkifyString: method here
+	// then replace the NSTextView's contents with it.
+	newAttributedString = [self linkifyString:[inView attributedSubstringFromRange:NSMakeRange(0,[[inView string] length])]];
 
 	[[inView textStorage] setAttributedString:newAttributedString];
 }
+
 @end
