@@ -38,6 +38,8 @@
 - (NSDictionary *)cachedPreferencesWithDefaultsForGroup:(NSString *)group object:(AIListObject *)object;
 @end
 
+#define TRACK_PREFERENCE_OBSERVERS 1 /*TEMP*/
+
 /*!
  * @class AIPreferenceController
  * @brief Preference Controller
@@ -231,6 +233,9 @@
 	}
 
 	//Add our new observer
+#ifdef TRACK_PREFERENCE_OBSERVERS
+	NSLog(@"adding observer: %@", observer);
+#endif
 	[groupObservers addObject:[NSValue valueWithNonretainedObject:observer]];
 	
 	//Blanket change notification for initialization
@@ -251,7 +256,13 @@
 	NSValue			*observerValue = [NSValue valueWithNonretainedObject:observer];
 
 	while(observerArray = [enumerator nextObject]){
+#ifdef TRACK_PREFERENCE_OBSERVERS
+		NSLog(@"removing observer: %p", [observerValue pointerValue]);
+#endif
 		[observerArray removeObject:observerValue];
+#ifdef TRACK_PREFERENCE_OBSERVERS
+		NSLog(@"...removed");
+#endif
 	}
 }
 
@@ -279,6 +290,9 @@
 
 		while(observerValue = [enumerator nextObject]){
 			id observer = [observerValue nonretainedObjectValue];
+#ifdef TRACK_PREFERENCE_OBSERVERS
+			NSLog(@"informing observer %p", [observer pointerValue]);
+#endif
 
 			[observer preferencesChangedForGroup:group
 											 key:key
