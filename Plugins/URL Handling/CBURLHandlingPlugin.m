@@ -23,6 +23,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/ESURLAdditions.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/NSString+NDUtilities.h>
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
@@ -131,7 +132,7 @@
 				
 			}else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
-				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:" "] stringByDecodingURLEscapes] compactedString];				
+				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:@" "] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
 															service:[[adium accountController] firstServiceWithServiceID:service]];
 
@@ -144,7 +145,7 @@
 				
 			}else if([url queryArgumentForKey:@"openChatToScreenName"]){
 				// aim://openChatToScreenname?tekjew  [?]
-				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByReplacingString:@"+" withString:" "] compactedString];
+				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByReplacingString:@"+" withString:@" "] compactedString];
 				
 				if (name){
 					[self _openChatToContactWithName:name

@@ -91,6 +91,7 @@ typedef enum {
 - (NSString *)defaultFontFamily;
 - (NSNumber *)defaultFontSize;
 - (BOOL)hasHeader;
+- (NSImage *)userIconMask;
 - (BOOL)allowsUserIcons;
 
 //Behavior
