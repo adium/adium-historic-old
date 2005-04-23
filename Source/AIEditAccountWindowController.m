@@ -101,8 +101,6 @@
  */
 - (void)windowDidLoad
 {
-	NSData	*iconData;
-
 	//Center our window if we're not a sheet (or opening a sheet failed)
 	[[self window] center];
 
