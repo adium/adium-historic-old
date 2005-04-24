@@ -1580,6 +1580,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)unregisterListObjectObserver:(id)inObserver
 {
     [contactObserverArray removeObject:[NSValue valueWithNonretainedObject:inObserver]];
+#warning why do we sort the contact list when an observer is unregistered? (comment or remove, I say.) --boredzo
 	[self sortContactList];
 }
 
