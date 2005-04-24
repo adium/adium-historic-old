@@ -255,7 +255,7 @@
 
 	while(observerArray = [enumerator nextObject]){
 #ifdef TRACK_PREFERENCE_OBSERVERS
-		NSLog(@"removing observer: %p", [observerValue pointerValue]);
+		NSLog(@"removing observer: %p", [observerValue nonretainedObjectValue]);
 #endif
 		[observerArray removeObject:observerValue];
 #ifdef TRACK_PREFERENCE_OBSERVERS
@@ -289,7 +289,7 @@
 		while(observerValue = [enumerator nextObject]){
 			id observer = [observerValue nonretainedObjectValue];
 #ifdef TRACK_PREFERENCE_OBSERVERS
-			NSLog(@"informing observer %p", [observer pointerValue]);
+			NSLog(@"informing observer %p", observer);
 #endif
 
 			[observer preferencesChangedForGroup:group
