@@ -62,7 +62,6 @@
 		NSMutableString *str;
 		NSString		*startReplacement = @"*", *endReplacement = @"*";
 		NSRange			extent;
-		BOOL			includeDisplayName;
 		unsigned		replacementLength;
 		
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
