@@ -118,7 +118,8 @@
 	 * It seems likely a double-release is involved.  I can't reproduce this locally, either... but calling
 	 * [self setWindow:nil] appears to fix the problem where it was being experienced..
 	 *
-	 * Something is wrong elsewhere that this could be necessary, but this doesn't hurt I don't believe. */
+	 * Something is wrong elsewhere that this could be necessary, but this doesn't hurt I don't believe.
+	 */
 	[self setWindow:nil];
 
     [tabView_customTabs setDelegate:nil];
@@ -126,6 +127,8 @@
 	[toolbarItems release];
 	[containerName release];
 	[containerID release];
+
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 
     [super dealloc];
 }

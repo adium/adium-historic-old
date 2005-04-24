@@ -78,25 +78,30 @@
     //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
     [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
     
+    AIPreferenceController *preferenceController = [adium preferenceController];
+
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_SOUNDS];
     
     //Ensure the temporary mute is off
-	if([[[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
-												 group:PREF_GROUP_SOUNDS] boolValue]){
-		[[adium preferenceController] setPreference:nil
-											 forKey:KEY_SOUND_TEMPORARY_MUTE
-											  group:PREF_GROUP_SOUNDS];
+	if([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+	                                     group:PREF_GROUP_SOUNDS] boolValue])
+	{
+		[preferenceController setPreference:nil
+		                             forKey:KEY_SOUND_TEMPORARY_MUTE
+		                              group:PREF_GROUP_SOUNDS];
 	}
 
     //observe pref changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
 
 //close
 - (void)closeController
 {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
 	//Stop speaking
 	[self _stopSpeakingNow];
 

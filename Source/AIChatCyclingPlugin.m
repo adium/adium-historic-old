@@ -41,21 +41,28 @@
  */
 - (void)installPlugin
 {
+	AIMenuController *menuController = [adium menuController];
+
 	//Cycling menu items
 	previousChatMenuItem = [[NSMenuItem alloc] initWithTitle:PREVIOUS_MESSAGE_MENU_TITLE
 													  target:self 
 													  action:@selector(previousChat:)
 											   keyEquivalent:@""];
-	[[adium menuController] addMenuItem:previousChatMenuItem toLocation:LOC_Window_Commands];
-	
+	[menuController addMenuItem:previousChatMenuItem toLocation:LOC_Window_Commands];
+
 	nextChatMenuItem = [[NSMenuItem alloc] initWithTitle:NEXT_MESSAGE_MENU_TITLE 
 												  target:self
 												  action:@selector(nextChat:)
 										   keyEquivalent:@""];
-	[[adium menuController] addMenuItem:nextChatMenuItem toLocation:LOC_Window_Commands];
-	
+	[menuController addMenuItem:nextChatMenuItem toLocation:LOC_Window_Commands];
+
 	//Prefs
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CHAT_CYCLING];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*

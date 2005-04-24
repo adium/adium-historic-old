@@ -112,29 +112,31 @@
 															   name:NSApplicationDidChangeScreenParametersNotification 
 															 object:nil];
 
+	AIPreferenceController *preferenceController = [adium preferenceController];
     //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
 	//Preference code below assumes layout is done before theme.
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
 
 //Close the contact list window
-- (void)windowWillClose:(id)sender
+- (void)windowWillClose:(NSNotification *)notification
 {
-	[super windowWillClose:sender];
-		
+	[super windowWillClose:notification];
+
     //Stop observing
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
 
     //Tell the interface to unload our window
-    [[adium notificationCenter] postNotificationName:Interface_ContactListDidResignMain object:self];
-	[[adium notificationCenter] postNotificationName:Interface_ContactListDidClose object:self];
+    NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
+    [adiumNotificationCenter postNotificationName:Interface_ContactListDidResignMain object:self];
+	[adiumNotificationCenter postNotificationName:Interface_ContactListDidClose object:self];
 }
 
 //Preferences have changed

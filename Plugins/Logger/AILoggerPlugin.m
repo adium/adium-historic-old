@@ -82,46 +82,53 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 - (void)installPlugin
 {
     //Init
-    observingContent = NO;
-    index_Content = nil;
-    stopIndexingThreads = NO;
-    suspendDirtyArraySave = NO;
-    logIndexingEnabled = NO;
-    dirtyLogArray = nil;
-    indexingThreadLock = [[NSLock alloc] init];
-    dirtyLogLock = [[NSLock alloc] init];
+	observingContent = NO;
+	index_Content = nil;
+	stopIndexingThreads = NO;
+	suspendDirtyArraySave = NO;
+	logIndexingEnabled = NO;
+	dirtyLogArray = nil;
+	indexingThreadLock = [[NSLock alloc] init];
+	dirtyLogLock = [[NSLock alloc] init];
 	logAccessLock = [[NSLock alloc] init];
+
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
+	//Setup our preferences
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
+	                              forClass:[self class]] 
+	                              forGroup:PREF_GROUP_LOGGING];
+
+	//Install the log viewer menu items
+	[self configureMenuItems];
 	
-    //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:LOGGING_DEFAULT_PREFS 
-                                                                        forClass:[self class]] 
-                                                                        forGroup:PREF_GROUP_LOGGING];
+	//Create a logs directory
+	logBasePath = [[[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
+	[[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
 
-    //Install the log viewer menu items
-    [self configureMenuItems];
-	
-    //Create a logs directory
-    logBasePath = [[[[[adium loginController] userDirectory] stringByAppendingPathComponent:PATH_LOGS] stringByExpandingTildeInPath] retain];
-    [[NSFileManager defaultManager] createDirectoriesForPath:logBasePath];
+	//Observe preference changes
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LOGGING];
 
-    //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LOGGING];
-
-    //Toolbar item
+	//Toolbar item
 	NSToolbarItem	*toolbarItem;
-    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
-                                                        label:AILocalizedString(@"Logs",nil)
-                                                   paletteLabel:AILocalizedString(@"View Logs",nil)
-                                                        toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
-                                                         target:self
-                                                settingSelector:@selector(setImage:)
-                                                    itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
-                                                         action:@selector(showLogViewerToSelectedContact:)
-                                                           menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
+	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:LOG_VIEWER_IDENTIFIER
+	                                                    label:AILocalizedString(@"Logs",nil)
+	                                               paletteLabel:AILocalizedString(@"View Logs",nil)
+	                                                    toolTip:AILocalizedString(@"View logs of this contact or chat",nil)
+	                                                     target:self
+	                                            settingSelector:@selector(setImage:)
+	                                                itemContent:[NSImage imageNamed:@"LogViewer" forClass:[self class]]
+	                                                     action:@selector(showLogViewerToSelectedContact:)
+	                                                       menu:nil];
+	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
-    //Init index searching
-    if([NSApp isOnPantherOrBetter]) [self initLogIndexing];
+	//Init index searching
+	if([NSApp isOnPantherOrBetter]) [self initLogIndexing];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Update for the new preferences

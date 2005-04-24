@@ -84,23 +84,25 @@
 	offlineImageFading = NO;
 	
 	opacityUpdateDict = [[NSMutableDictionary alloc] init];
-	
+
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:CONTACT_STATUS_COLORING_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_LIST_THEME];
     
     //Observe preferences and list objects
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_CONTACT_LIST];
 	[[adium contactController] registerListObjectObserver:self];
 }
 
 - (void)uninstallPlugin
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
-	[[adium contactController] unregisterListObjectObserver:self];
-	[[adium interfaceController] unregisterFlashObserver:self];
+	[[adium    contactController] unregisterListObjectObserver:self];
+	[[adium  interfaceController] unregisterFlashObserver:self];
 	
 	[opacityUpdateTimer invalidate]; 
 	[opacityUpdateTimer release]; opacityUpdateTimer = nil;
@@ -108,10 +110,10 @@
 
 - (void)dealloc
 {
-	[super dealloc];
-	
 	[flashingListObjectArray release]; flashingListObjectArray = nil;
 	[opacityUpdateDict release]; opacityUpdateDict = nil;
+
+	[super dealloc];
 }
 
 //

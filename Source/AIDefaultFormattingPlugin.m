@@ -43,25 +43,36 @@
  */
 - (void)installPlugin
 {
-    //Preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
+	//Preferences
+	AIPreferenceController *preferenceController = [adium preferenceController];
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
 
 	//Reset formatting menu item
 	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Restore Default Formatting",nil)
 																				  target:self
 																				  action:@selector(restoreDefaultFormat:)
 																		   keyEquivalent:@""] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Format_Additions];
-	
+	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Format_Additions];
+
 	//Register as an entry filter, so we can prepare textviews as they open
-    [[adium contentController] registerTextEntryFilter:self];
+	[[adium contentController] registerTextEntryFilter:self];
 
 	//Observe content sending so we can save the user's formatting
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(didSendContent:)
-                                       name:CONTENT_MESSAGE_SENT
-                                     object:nil];
+	[[adium notificationCenter] addObserver:self
+	                               selector:@selector(didSendContent:)
+	                                   name:CONTENT_MESSAGE_SENT
+	                                 object:nil];
+}
+
+/*!
+ * @brief Uninstall the default formatting plugin
+ */
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium contentController] unregisterTextEntryFilter:self];
+	[[adium notificationCenter] removeObserver:self];
 }
 
 /*!

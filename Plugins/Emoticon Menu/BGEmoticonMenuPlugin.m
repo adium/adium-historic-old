@@ -38,7 +38,7 @@
 
 - (void)installPlugin
 {
-    //init the menues and menuItems
+    //init the menus and menuItems
     quickMenuItem = [[NSMenuItem alloc] initWithTitle:TITLE_INSERT_EMOTICON
 											   target:self
 											   action:@selector(dummyTarget:) 
@@ -50,8 +50,9 @@
 	needToRebuildMenus = YES;
 	
     //add the items to their menus.
-    [[adium menuController] addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
-    [[adium menuController] addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
+    AIMenuController *menuController = [adium menuController];
+    [menuController addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
+    [menuController addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
 
 	
 	//
@@ -62,6 +63,12 @@
 
 	//Observe prefs    
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
+}
+
+- (void)uninstallPlugin
+{
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Add emoticon menu as item goes into toolbar
