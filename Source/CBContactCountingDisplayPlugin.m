@@ -221,6 +221,7 @@
     //we are no longer an observer
     [[adium notificationCenter] removeObserver:self];
     [[adium contactController] unregisterListObjectObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 @end
