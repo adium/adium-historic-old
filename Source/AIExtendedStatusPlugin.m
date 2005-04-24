@@ -48,6 +48,14 @@
 }
 
 /*!
+ * @brief Uninstall
+ */
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
+/*!
  * @brief Preferences changes
  *
  * PREF_GROUP_LIST_LAYOUT changed; update our list objects if needed.

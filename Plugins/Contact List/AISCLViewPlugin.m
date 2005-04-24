@@ -55,31 +55,40 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 									   name:Interface_ContactListDidClose
 									 object:nil];
 
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
 	/* Apply the default contact list layout and style (If no style is currently active)
-	 * We don't just do this via the defaults system because setting a theme or layout in turn sets many other prefs. */
-	if(![[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
-		[[adium preferenceController] setPreference:DEFAULT_LIST_THEME_NAME
-											 forKey:KEY_LIST_THEME_NAME
-											  group:PREF_GROUP_CONTACT_LIST];
+	 * We don't just do this via the defaults system because setting a theme or layout in turn sets many other prefs.
+	 */
+	if(![preferenceController preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
+		[preferenceController setPreference:DEFAULT_LIST_THEME_NAME
+		                             forKey:KEY_LIST_THEME_NAME
+		                              group:PREF_GROUP_CONTACT_LIST];
 	}
-	if(![[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST]){
-		[[adium preferenceController] setPreference:DEFAULT_LIST_LAYOUT_NAME
-											 forKey:KEY_LIST_LAYOUT_NAME
-											  group:PREF_GROUP_CONTACT_LIST];
+	if(![preferenceController preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST]){
+		[preferenceController setPreference:DEFAULT_LIST_LAYOUT_NAME
+		                             forKey:KEY_LIST_LAYOUT_NAME
+		                              group:PREF_GROUP_CONTACT_LIST];
 	}
 
 	//Now register our other defaults, which are 
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
-																		forClass:[self class]]
-										  forGroup:PREF_GROUP_CONTACT_LIST];
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
+	                              forClass:[self class]]
+	                              forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	//Observe window style changes
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 }
 
-
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
+
 //Show contact list
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {

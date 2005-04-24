@@ -36,8 +36,10 @@
  */
 - (void)installPlugin
 {
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
     //Setup our preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SPELL_CHECKING_DEFAULT_PREFS 
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:SPELL_CHECKING_DEFAULT_PREFS 
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_SPELLING];
 
@@ -45,7 +47,16 @@
     [[adium contentController] registerTextEntryFilter:self];
 
     //Observe preference changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SPELLING];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SPELLING];
+}
+
+/*
+ * @brief Uninstall
+ */
+- (void)uninstallPlugin
+{
+    [[adium    contentController] unregisterTextEntryFilter:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*

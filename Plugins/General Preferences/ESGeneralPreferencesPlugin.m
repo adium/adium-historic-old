@@ -51,22 +51,29 @@
 - (void)installPlugin
 {
 	//Defaults
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_INTERFACE];
+	AIPreferenceController *preferenceController = [adium preferenceController];
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:TAB_DEFAULT_PREFS
+	                                                            forClass:[self class]]
+	                                                            forGroup:PREF_GROUP_INTERFACE];
 	
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
-																		forClass:[self class]]
-										  forGroup:PREF_GROUP_GENERAL];
-	
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
+	                                                            forClass:[self class]]
+	                                                            forGroup:PREF_GROUP_GENERAL];
+
 	//Install our preference view
-    preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	
+	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	
 
-    //Register as a text entry filter for sending key setting purposes
-    [[adium contentController] registerTextEntryFilter:self];
+	//Register as a text entry filter for sending key setting purposes
+	[[adium contentController] registerTextEntryFilter:self];
 
-    //Observe preference changes for updating sending key settings
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];	
+	//Observe preference changes for updating sending key settings
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];	
+}
+
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterTextEntryFilter:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];	
 }
 
 #pragma mark Sending keys

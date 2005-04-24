@@ -44,20 +44,26 @@
 	[[adium preferenceController] setPreference:nil
 										 forKey:@"IdleSince"
 										  group:GROUP_ACCOUNT_STATUS];
-	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(machineIdleUpdate:)
-									   name:AIMachineIdleUpdateNotification
-									 object:nil];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(machineIsActive:)
-									   name:AIMachineIsActiveNotification
-									 object:nil];
-				
-	
+
+	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
+	[adiumNotificationCenter addObserver:self
+	                            selector:@selector(machineIdleUpdate:)
+	                                name:AIMachineIdleUpdateNotification
+	                              object:nil];
+	[adiumNotificationCenter addObserver:self
+	                            selector:@selector(machineIsActive:)
+	                                name:AIMachineIsActiveNotification
+	                              object:nil];
+
 	//Observe preference changes for updating if and when we should report being idle
 	[[adium preferenceController] registerPreferenceObserver:self 
 													forGroup:PREF_GROUP_STATUS_PREFERENCES];	
+}
+
+- (void)uninstallPlugin
+{
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*!
@@ -66,8 +72,6 @@
 - (void)dealloc
 {
 	[automaticIdleDate release];
-	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
 
 	[super dealloc];
 }

@@ -59,9 +59,9 @@
 - (void)installPlugin
 {
 	//Register our observers
-    [[adium contactController] registerListObjectObserver:self];
+	[[adium contactController] registerListObjectObserver:self];
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
-	[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
+	[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
 									   name:ListObject_AttributesChanged
 									 object:nil];
 
@@ -73,7 +73,8 @@
  */
 - (void)uninstallPlugin
 {
-    [[adium contactController] unregisterListObjectObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*!
@@ -83,23 +84,21 @@
  * when a user icon is retrieved for the object.
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{    
-    if(inModifiedKeys == nil){
+{
+	if(inModifiedKeys == nil){
 		//At object creation, load the user icon.
-		
+
 		//Only load the cached image file if we do not load from a preference
 		if (![self cacheAndSetUserIconFromPreferenceForListObject:inObject]){
-
 			//Load the cached image file by reference into the display array;
 			//It will only be loaded into memory if needed
 			NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
 			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
 				NSImage				*cachedImage;
-				
+
 				cachedImage = [[NSImage alloc] initByReferencingFile:cachedImagePath];
-				
+
 				if (cachedImage) {
-					
 					//A cache image is used at lowest priority, since it is outdated data
 					[inObject setDisplayUserIcon:cachedImage
 									   withOwner:self
@@ -108,21 +107,20 @@
 									   forKey:@"UserIconPath"
 									   notify:NotifyNever];
 				}
-				
+
 				[cachedImage release];
 			}
 		}
-		
 	}else if([inModifiedKeys containsObject:KEY_USER_ICON]){
 		//The status UserIcon object is set by account code; apply this to the display array and cache it if necesssary
 		NSImage				*userIcon;
 		NSImage				*statusUserIcon = [inObject statusObjectForKey:KEY_USER_ICON];
-		
+
 		//Apply the image at medium priority
 		[inObject setDisplayUserIcon:statusUserIcon
 						   withOwner:self
 					   priorityLevel:Medium_Priority];
-		
+
 		//If the new objectValue is what we just set, notify and cache
 		userIcon = [inObject displayUserIcon];
 
@@ -136,7 +134,7 @@
 													  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
 		}
 	}
-	
+
 	return(nil);
 }
 
@@ -147,26 +145,26 @@
  */
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    AIListObject	*inObject = [notification object];
-    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
-	
+	AIListObject	*inObject = [notification object];
+	NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
+
 	if([keys containsObject:KEY_USER_ICON]){
 		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
 		NSImage *userIcon = [userIconDisplayArray objectValue];
 		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
-		
-		//If the new user icon is not the same as the one we set in updateListObject: 
+
+		//If the new user icon is not the same as the one we set in updateListObject:
 		//(either cached or not), update the cache
 		if (userIcon != ownedUserIcon){
 			AIChat	*chat;
-			
+
 			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
 
 			//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
 			if(([toolbarItems count] > 0) &&
 			   [inObject isKindOfClass:[AIListContact class]] &&
 			   (chat = [[adium contentController] existingChatWithContact:(AIListContact *)inObject])){
-				[self _updateToolbarIconOfChat:chat 
+				[self _updateToolbarIconOfChat:chat
 									  inWindow:[[adium interfaceController] windowForChat:chat]];
 			}
 		}
@@ -197,31 +195,31 @@
  */
 - (BOOL)cacheAndSetUserIconFromPreferenceForListObject:(AIListObject *)inObject
 {
-	NSData  *imageData = [inObject preferenceForKey:KEY_USER_ICON 
+	NSData  *imageData = [inObject preferenceForKey:KEY_USER_ICON
 											  group:PREF_GROUP_USERICONS
 							  ignoreInheritedValues:YES];
-	
+
 	//A preference is used at highest priority
 	if (imageData){
 		NSImage	*image;
-		
+
 		image = [[NSImage alloc] initWithData:imageData];
 		[inObject setDisplayUserIcon:image
 						   withOwner:self
 					   priorityLevel:Highest_Priority];
 		[image release];
-		
+
 		return YES;
 	}else{
 		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
 		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority){
-			
+
 			[inObject setDisplayUserIcon:nil
 							   withOwner:self
 						   priorityLevel:Highest_Priority];
 		}
 	}
-	
+
 	return NO;
 }
 
@@ -230,20 +228,19 @@
  {
 	 BOOL		success = NO;
 	 NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-	 
-	 
+
 	 NSBitmapImageRep* imageRep = [[inImage representations] objectAtIndex:0];
 	 unsigned char *imageBytes = [imageRep bitmapData];
-	 NSData  *imageData = [NSData dataWithBytes:imageBytes 
+	 NSData  *imageData = [NSData dataWithBytes:imageBytes
 										 length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
 	 success = ([imageData writeToFile:cachedImagePath
 							atomically:YES]);
 	 if (success){
-		 [inObject setStatusObject:cachedImagePath 
+		 [inObject setStatusObject:cachedImagePath
 							forKey:@"UserIconPath"
 							notify:YES];
 	 }
-	 
+
 	 return success;
  }
  */
@@ -264,11 +261,11 @@
 	success = ([inData writeToFile:cachedImagePath
 						atomically:YES]);
 	if (success){
-		[inObject setStatusObject:cachedImagePath 
+		[inObject setStatusObject:cachedImagePath
 						   forKey:@"UserIconPath"
 						   notify:YES];
 	}
-	
+
 	return success;
 }
 /*!
@@ -280,13 +277,13 @@
 {
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
 	BOOL		success;
-	
+
 	if(success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath]){
-		[inObject setStatusObject:nil 
+		[inObject setStatusObject:nil
 						   forKey:@"UserIconPath"
 						   notify:YES];
 	}
-	
+
 	return (success);
 }
 
@@ -309,9 +306,9 @@
 {
 	ESImageButton	*button;
 	NSToolbarItem	*toolbarItem;
-	
+
 	toolbarItems = [[NSMutableSet alloc] init];
-	
+
 	//Toolbar item registration
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(toolbarWillAddItem:)
@@ -349,11 +346,11 @@
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	
+
 	if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
-		
+
 		[item setEnabled:YES];
-		
+
 		/* Add menu to toolbar item (for text mode)
 		 *
 		 * We depend on menuNeedsUpdate: for efficient safe updating, so only proceed if setDelegate is available.
@@ -361,26 +358,26 @@
 		if([NSMenu instancesRespondToSelector:@selector(setDelegate:)]){
 			NSMenuItem	*menuFormRepresentation, *blankMenuItem;
 			NSMenu		*menu;
-			
+
 			menuFormRepresentation = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
-			
+
 			menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 			[menu setDelegate:self];
 			[menu setAutoenablesItems:NO];
-			
-			blankMenuItem = [[NSMenuItem alloc] initWithTitle:@"" 
+
+			blankMenuItem = [[NSMenuItem alloc] initWithTitle:@""
 													   target:self
 													   action:@selector(dummyAction:)
 												keyEquivalent:@""];
 			[blankMenuItem setRepresentedObject:item];
 			[blankMenuItem setEnabled:YES];
 			[menu addItem:blankMenuItem];
-			
+
 			[menuFormRepresentation setSubmenu:menu];
 			[menuFormRepresentation setTitle:[item label]];
 			[item setMenuFormRepresentation:menuFormRepresentation];
 		}
-		
+
 		//If this is the first item added, start observing for chats becoming visible so we can update the icon
 		if([toolbarItems count] == 0){
 			[[adium notificationCenter] addObserver:self
@@ -388,7 +385,7 @@
 											   name:@"AIChatDidBecomeVisible"
 											 object:nil];
 		}
-		
+
 		[toolbarItems addObject:item];
 	}
 }
@@ -405,7 +402,7 @@
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	if([toolbarItems containsObject:item]){
 		[toolbarItems removeObject:item];
-		
+
 		if([toolbarItems count] == 0){
 			[[adium notificationCenter] removeObserver:self
 												  name:@"AIChatDidBecomeVisible"
@@ -419,7 +416,7 @@
  *
  * Update the item with the @"UserIcon" identifier if necessary
  *
- * @param notification Notification with an AIChat object and an @"NSWindow" userInfo key 
+ * @param notification Notification with an AIChat object and an @"NSWindow" userInfo key
  */
 - (void)chatDidBecomeVisible:(NSNotification *)notification
 {
@@ -438,15 +435,15 @@
 	NSToolbar		*toolbar = [window toolbar];
 	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
 	NSToolbarItem	*item;
-	
+
 	while(item = [enumerator nextObject]){
 		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
 			AIListContact	*listContact;
 			NSImage			*image;
-			
+
 			if((listContact = [chat listObject]) && ![chat name]){
 				image = [listContact userIcon];
-				
+
 				//Use the serviceIcon if no image can be found
 				if(!image) image = [AIServiceIcons serviceIconForObject:listContact
 																   type:AIServiceIconLarge
@@ -458,11 +455,11 @@
 														type:AIServiceIconLarge
 												   direction:AIIconNormal];
 			}
-			
-			[(ESImageButton *)[item view] setImage:image];			
+
+			[(ESImageButton *)[item view] setImage:image];
 			break;
 		}
-	}	
+	}
 }
 
 /*!
@@ -479,7 +476,7 @@
  */
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
-	//The first item is a root item inserted by the system. The second item is the single item 
+	//The first item is a root item inserted by the system. The second item is the single item
 	NSMenuItem		*menuItem = [menu itemAtIndex:1];
 	NSToolbarItem	*toolbarItem = [menuItem representedObject];
 

@@ -51,26 +51,26 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  */
 - (void)installPlugin
 {
-    if([NSApp isOnPantherOrBetter]) //only install on Panther
-    {
-        setAwayThroughFastUserSwitch = NO;
-        setMuteThroughFastUserSwitch = NO;
+	//only install on Panther.
+	if([NSApp isOnPantherOrBetter]) {
+		setAwayThroughFastUserSwitch = NO;
+		setMuteThroughFastUserSwitch = NO;
 		monitoringFastUserSwitch = NO;
-		
-		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-															   selector:@selector(switchHandler:) 
-																   name:NSWorkspaceSessionDidBecomeActiveNotification 
-																 object:nil];
-        
-        [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
-															   selector:@selector(switchHandler:) 
-																   name:NSWorkspaceSessionDidResignActiveNotification
-																 object:nil];
-		
+
+		NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
+		[workspaceCenter addObserver:self
+		                    selector:@selector(switchHandler:)
+		                        name:NSWorkspaceSessionDidBecomeActiveNotification
+		                      object:nil];
+
+		[workspaceCenter addObserver:self
+		                    selector:@selector(switchHandler:)
+		                        name:NSWorkspaceSessionDidResignActiveNotification
+		                      object:nil];
+
 		//Observe preference changes for updating when and how we should automatically change our state
-		[[adium preferenceController] registerPreferenceObserver:self 
+		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_STATUS_PREFERENCES];
-		
 	}
 }
 
@@ -83,8 +83,8 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	fastUserSwitchStatusID = [prefDict objectForKey:KEY_STATUS_FUS_STATUS_STATE_ID];
-	
-	monitoringFastUserSwitch = (fastUserSwitchStatusID ? 
+
+	monitoringFastUserSwitch = (fastUserSwitchStatusID ?
 								[[prefDict objectForKey:KEY_STATUS_FUS] boolValue] :
 								NO);
 }
@@ -94,14 +94,15 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  *
  * Has no effect on Jaguar
  */
--(void)uninstallPlugin
+- (void)uninstallPlugin
 {
-	if([NSApp isOnPantherOrBetter]) //only uninstall on Panther
-    {
+	//only uninstall on Panther
+	if([NSApp isOnPantherOrBetter]) {
 		//Clear the fast switch away if we had it up before
 		[self switchHandler:nil];
-		
+
 		[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+		[[adium preferenceController] unregisterPreferenceObserver:self];
 	}
 }
 
@@ -115,19 +116,19 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  */
 -(void)switchHandler:(NSNotification*) notification
 {
-    if (notification && 
+	if (notification &&
 		[[notification name] isEqualToString:NSWorkspaceSessionDidResignActiveNotification]) {
 		//Deactivation - go away
- 
-        //Go away if we aren't already away, noting the current status states for restoration later
+
+		//Go away if we aren't already away, noting the current status states for restoration later
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		AIStatus		*targetStatusState;
-		
+
 		if(!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
-		
+
 		targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
-		
+
 		if(targetStatusState){
 			enumerator = [[[adium accountController] accountArray] objectEnumerator];
 			while(account = [enumerator nextObject]){
@@ -136,7 +137,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 					//Store the state the account is in at present
 					[previousStatusStateDict setObject:currentStatusState
 												forKey:[NSNumber numberWithUnsignedInt:[account hash]]];
-					
+
 					if([account online]){
 						//If online, set the state
 						[account setStatusState:targetStatusState];
@@ -152,23 +153,23 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
 																		 group:PREF_GROUP_SOUNDS];
 		if (!oldTempMute || ![oldTempMute boolValue]) {
-			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES] 
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
 												  group:PREF_GROUP_SOUNDS];
 			setMuteThroughFastUserSwitch = YES;
 		}
-    } else {  
+	} else {
 		//Activation - return from away
-        
+
 		//Remove the away status flag if we set it originally
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
-		
+
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		while(account = [enumerator nextObject]){
 			AIStatus		*targetStatusState;
 			NSNumber		*accountHash = [NSNumber numberWithUnsignedInt:[account hash]];
-			
+
 			targetStatusState = [previousStatusStateDict objectForKey:accountHash];
 			if(targetStatusState){
 				if([account online]){
@@ -178,18 +179,18 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 					//If offline, set the state without coming online
 					[account setStatusStateAndRemainOffline:targetStatusState];
 				}
-				
+
 				[previousStatusStateDict removeObjectForKey:accountHash];
 			}
 		}
-		
+
 		//Clear the temporary mute if necessary
 		if (setMuteThroughFastUserSwitch) {
 			[[adium preferenceController] setPreference:nil
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
 												  group:PREF_GROUP_SOUNDS];
 		}
-    }    
+	}
 }
 
 @end

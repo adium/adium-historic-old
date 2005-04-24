@@ -132,7 +132,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 //Text Entry Filtering -------------------------------------------------------------------------------------------------
 #pragma mark Text Entry Filtering
+
 //Text entry filters process content as it is entered by the user.
+
 - (void)registerTextEntryFilter:(id)inFilter
 {
 	NSParameterAssert([inFilter respondsToSelector:@selector(didOpenTextEntryView:)] &&

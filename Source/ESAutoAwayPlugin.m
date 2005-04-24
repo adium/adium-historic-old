@@ -53,7 +53,7 @@
 {
 	[previousStatusStateDict release];
 	[[adium notificationCenter] removeObserver:self];
-	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[super dealloc];
 }
 

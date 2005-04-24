@@ -117,7 +117,6 @@ typedef enum {
 - (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 - (void)updateAllChatsForObserver:(id <AIChatObserver>)observer;
 
-
 //Unviewed Content Status
 - (void)increaseUnviewedContentOfChat:(AIChat *)inChat;
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat;
@@ -135,6 +134,7 @@ typedef enum {
 
 //Filtering / Tracking text entry
 - (void)registerTextEntryFilter:(id)inFilter;
+- (void)unregisterTextEntryFilter:(id)inFilter;
 - (NSArray *)openTextEntryViews;
 - (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
 - (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;

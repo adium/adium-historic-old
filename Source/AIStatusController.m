@@ -88,15 +88,17 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	//Init
 	[self _setMachineIsIdle:NO];
 
+	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
+
 	//Update our state menus when the state array or status icon set changes
-	[[adium notificationCenter] addObserver:self
+	[adiumNotificationCenter addObserver:self
 								   selector:@selector(rebuildAllStateMenus)
 									   name:AIStatusStateArrayChangedNotification
 									 object:nil];
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(rebuildAllStateMenus)
-									   name:AIStatusIconSetDidChangeNotification
-									 object:nil];
+	[adiumNotificationCenter addObserver:self
+								selector:@selector(rebuildAllStateMenus)
+									name:AIStatusIconSetDidChangeNotification
+								  object:nil];
 	[[adium contactController] registerListObjectObserver:self];
 
 	//Watch account status preference changes for our accountsToConnect set
@@ -234,6 +236,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 - (void)closeController
 {
 	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*!

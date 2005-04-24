@@ -506,6 +506,11 @@ void initGaimOTRSupprt(void)
 	return self;
 }
 
+- (void)dealloc {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[super dealloc];
+}
+
 /*!
  * @brief Preferences changed
  *

@@ -26,29 +26,29 @@
 
 - (void)installPlugin
 {
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
 	//Prepare our preferences
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAUT_PREFS
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_APPEARANCE];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];	
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:APPEARANCE_DEFAUT_PREFS
+	                              forClass:[self class]] 
+	                              forGroup:PREF_GROUP_APPEARANCE];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];	
 
 	preferences = [[AIAppearancePreferences preferencePaneForPlugin:self] retain];	
 
-	
-	
-	
-	
-	//	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
-//																		forClass:[self class]] 
-//										  forGroup:PREF_GROUP_INTERFACE];
+//	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
+//	                              forClass:[self class]] 
+//	                              forGroup:PREF_GROUP_INTERFACE];
 //	
-//	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
-//																		forClass:[self class]]
-//										  forGroup:PREF_GROUP_GENERAL];
-//	
-	//Install our preference view
+//	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SENDING_KEY_DEFAULT_PREFS
+//	                              forClass:[self class]]
+//	                              forGroup:PREF_GROUP_GENERAL];
 }	
 
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
 
 /*!
  * @brief Apply changed preferences

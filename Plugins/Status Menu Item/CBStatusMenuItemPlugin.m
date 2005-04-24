@@ -58,7 +58,14 @@
 
 - (void)uninstallPlugin
 {
-    if([NSApp isOnPantherOrBetter]){
+	/*itemController is set to non-nil when we are notified that prefs changed,
+	 *	which only happens when we are registered as an observer,
+	 *	which only happens when -adiumFinishedLaunching: is called,
+	 *	which only happens when we are registered as an observer in Adium's notification center,
+	 *	which only happens under Panther in -installPlugin.
+	 *so we don't need to undo the first two items under non-Panther.
+	 */
+	if([NSApp isOnPantherOrBetter]){
 		[[adium preferenceController] unregisterPreferenceObserver:self];
         [itemController release]; itemController = nil;
     }

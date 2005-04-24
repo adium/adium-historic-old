@@ -55,7 +55,7 @@
 {
 	overlayObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
-	
+
     //Register as a contact observer (For signed on / signed off)
     [[adium contactController] registerListObjectObserver:self];
 	
@@ -76,6 +76,14 @@
 	
 	//Install our contact alert
 	[[adium contactAlertsController] registerActionID:DOCK_OVERLAY_ALERT_IDENTIFIER withHandler:self];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium contentController] unregisterChatObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*!

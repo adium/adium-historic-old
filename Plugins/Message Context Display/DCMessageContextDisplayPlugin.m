@@ -35,9 +35,9 @@
 @end
 
 @implementation DCMessageContextDisplayPlugin
+
 - (void)installPlugin
 {
-
 	isObserving = NO;
 	
 	//Setup our preferences
@@ -54,6 +54,12 @@
 								   selector:@selector(saveContextForObject:)
 									   name:Chat_WillClose
 									 object:nil];
+}
+
+- (void)uninstallPlugin
+{
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 }
 
 - (void)dealloc

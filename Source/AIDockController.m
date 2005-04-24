@@ -70,25 +70,28 @@
     bounceTimer = nil;
     needsDisplay = NO;
 
+	AIPreferenceController *preferenceController = [adium preferenceController];
+	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
+
     //Register our default preferences
-    [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_APPEARANCE];
+    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
+	                              forClass:[self class]] 
+	                              forGroup:PREF_GROUP_APPEARANCE];
     
     //Observe pref changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
 	
     //We always want to stop bouncing when Adium is made active
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(appWillChangeActive:) 
-												 name:NSApplicationWillBecomeActiveNotification 
-											   object:nil];
+    [notificationCenter addObserver:self
+	                       selector:@selector(appWillChangeActive:) 
+	                           name:NSApplicationWillBecomeActiveNotification 
+	                         object:nil];
 
     //We also stop bouncing when Adium is no longer active
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(appWillChangeActive:) 
-												 name:NSApplicationWillResignActiveNotification 
-											   object:nil];
+    [notificationCenter addObserver:self
+	                       selector:@selector(appWillChangeActive:) 
+	                           name:NSApplicationWillResignActiveNotification 
+	                         object:nil];
 
 	//If Adium has been upgraded since the last time we ran, re-apply the user's custom icon
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_ICON_UPDATE_VERSION];
@@ -100,21 +103,23 @@
 
 - (void)closeController
 {
-    NSArray			*stateArrayCopy;
-    NSEnumerator	*enumerator;
-    NSString		*iconState;
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 
-    //Reset our icon by removing all icon states (except for the base state)
-    stateArrayCopy = [activeIconStateArray copy]; //Work with a copy, since this array will change as we remove states
-    enumerator = [stateArrayCopy objectEnumerator];
-    [enumerator nextObject]; //Skip the first icon
-    while(iconState = [enumerator nextObject]){
-        [self removeIconStateNamed:iconState];
-    }
+	NSArray			*stateArrayCopy;
+	NSEnumerator	*enumerator;
+	NSString		*iconState;
 
-    //Force the icon to update
-    [self _buildIcon];
-	
+	//Reset our icon by removing all icon states (except for the base state)
+	stateArrayCopy = [activeIconStateArray copy]; //Work with a copy, since this array will change as we remove states
+	enumerator = [stateArrayCopy objectEnumerator];
+	[enumerator nextObject]; //Skip the first icon
+	while(iconState = [enumerator nextObject]){
+		[self removeIconStateNamed:iconState];
+	}
+
+	//Force the icon to update
+	[self _buildIcon];
+
 	[stateArrayCopy release];
 }
 

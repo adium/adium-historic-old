@@ -65,6 +65,10 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_MSN_SERVICE];
 }
 
+- (void)dealloc {
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[super dealloc];
+}
 
 - (const char*)protocolPlugin
 {

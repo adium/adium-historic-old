@@ -107,9 +107,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
     [trackingDict release]; trackingDict = nil;
 	[trackingDictPersonToTagNumber release]; trackingDictPersonToTagNumber = nil;
 	[trackingDictTagNumberToPerson release]; trackingDictTagNumberToPerson = nil;
-	
+
 	[sharedAddressBook release]; sharedAddressBook = nil;
-	
+
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
 	[super dealloc];
 }
 
@@ -134,8 +136,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									 object:nil];
 
     //Observe preferences changes
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_ADDRESSBOOK];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
+    AIPreferenceController *preferenceController = [adium preferenceController];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_ADDRESSBOOK];
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_USERICONS];
 }
 
 /*!
