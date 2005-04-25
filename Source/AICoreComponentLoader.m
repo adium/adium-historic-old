@@ -109,7 +109,6 @@
 		NSLog(@"%@: removing component: %@", [self class], plugin);
 #endif
 		[plugin uninstallPlugin];
-		[components removeObjectForKey:className];
 	}
 }
 
