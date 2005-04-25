@@ -499,31 +499,6 @@
 			settings = {
 			};
 		};
-		3402E06407CB0F2E0044F818 = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = English;
-			path = English.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3402E06607CB0F3B0044F818 = {
-			children = (
-				3402E06407CB0F2E0044F818,
-				345F5BAC081AC4F2001F733C,
-			);
-			isa = PBXVariantGroup;
-			name = Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3402E06707CB0F3C0044F818 = {
-			fileRef = 3402E06607CB0F3B0044F818;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		3402E06C07CB0F9D0044F818 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -1132,7 +1107,7 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "/usr/local/pgsql/include \"Frameworks/AIUtilities Framework/build\"";
+				HEADER_SEARCH_PATHS = /usr/local/pgsql/include;
 				INFOPLIST_FILE = Plists/SQL_Logger.plist;
 				INSTALL_PATH = /Adium.app/Contents/Plugins/;
 				LIBRARY_SEARCH_PATHS = "/usr/local/pgsql/lib /sw/lib /opt/local/lib";
@@ -1176,7 +1151,6 @@
 			files = (
 				341591E405463DA800291275,
 				B7FD6C170596550F000C4D9D,
-				3402E06707CB0F3C0044F818,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4008,14 +3982,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		345F5BAC081AC4F2001F733C = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = zh_TW;
-			path = zh_TW.lproj/Localizable.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		345F5BAD081AC4F2001F733C = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
@@ -4373,7 +4339,6 @@
 				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
 				PRODUCT_NAME = "Standard Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -4479,7 +4444,6 @@
 				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
 				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
 				PRODUCT_NAME = "WebKit Message View";
@@ -6033,7 +5997,6 @@
 				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
 				INFOPLIST_FILE = Plists/Bookmarks_Importer.plist;
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				OTHER_CFLAGS = "";
@@ -8398,7 +8361,6 @@
 				GCC_USE_GCC3_PFE_SUPPORT = YES;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"Frameworks\"";
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
@@ -9723,7 +9685,6 @@
 				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Stress Test";
@@ -14735,7 +14696,6 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
-				HEADER_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				INFOPLIST_FILE = Plists/Bonjour.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
@@ -22627,7 +22587,6 @@
 				B7AE664F0465778E0051E914,
 				B7AE66500465778E0051E914,
 				341591E105463DA800291275,
-				3402E06607CB0F3B0044F818,
 			);
 			isa = PBXGroup;
 			name = "SQL Logger";
