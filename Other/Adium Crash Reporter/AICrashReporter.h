@@ -21,24 +21,26 @@
 @class AIAutoScrollView, ESTextViewWithPlaceholder;
 
 @interface AICrashReporter : NSObject {
-    IBOutlet	NSWindow                    *window_MainWindow;
-    IBOutlet	NSTextField                 *textField_emailAddress;
-    IBOutlet	NSTextField                 *textField_accountIM;
-    IBOutlet	NSTextField                 *textField_description;
+	IBOutlet	NSWindow                    *window_MainWindow;
+	IBOutlet	NSTextField                 *textField_emailAddress;
+	IBOutlet	NSTextField                 *textField_accountIM;
+	IBOutlet	NSTextField                 *textField_description;
 	
 	IBOutlet	AIAutoScrollView			*scrollView_details;
-    IBOutlet	ESTextViewWithPlaceholder   *textView_details;
+	IBOutlet	ESTextViewWithPlaceholder   *textView_details;
 
-    IBOutlet	NSProgressIndicator         *progress_sending;
-    IBOutlet	NSButton					*button_close;
+	IBOutlet	NSProgressIndicator         *progress_sending;
+	IBOutlet	NSButton					*button_close;
 	
-    IBOutlet	NSPanel                     *panel_privacySheet;
-    IBOutlet	NSTextView                  *textView_crashLog;
+	IBOutlet	NSPanel                     *panel_privacySheet;
+	IBOutlet	NSTextView                  *textView_crashLog;
     
-    NSString                                *crashLog;		//Current crash log
+	NSString                                *crashLog;		//Current crash log
     
-    NSString                                *buildNumber, *buildDate, *buildUser;
-    NSAppleScript			    *slayerScript;
+	NSString                                *buildNumber, *buildDate, *buildUser;
+	NSAppleScript                           *slayerScript;
+
+    NSString                                *adiumPath;
 }
 
 - (void)awakeFromNib;

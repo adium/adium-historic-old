@@ -69,6 +69,7 @@ void CrashHandler_Signal(int i)
 	NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 	NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
 
-	[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
+	[[NSWorkspace sharedWorkspace] openFile:bundlePath withApplication:crashReporterPath];
+
 	exit(-1);
 }
