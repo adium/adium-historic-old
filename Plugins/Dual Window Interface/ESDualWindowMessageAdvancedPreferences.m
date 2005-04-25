@@ -194,10 +194,10 @@
 {
 	NSMenu		*menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
 	NSMenuItem	*menuItem;
-	
-	int sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
-	int loopCounter;
-	
+
+	unsigned sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
+	unsigned loopCounter;
+
 	for(loopCounter = 0; loopCounter < 23; loopCounter++){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
 																		 target:nil
