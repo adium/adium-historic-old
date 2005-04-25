@@ -1091,6 +1091,29 @@
 			settings = {
 			};
 		};
+		34167FE5081D700B00E35678 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34167FEC081D706200E35678 = {
+			children = (
+				34167FE5081D700B00E35678,
+			);
+			isa = PBXVariantGroup;
+			name = DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34167FED081D706300E35678 = {
+			fileRef = 34167FEC081D706200E35678;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3419F3A605314BE000C68BA3 = {
 			buildPhases = (
 				3419F3A705314BE000C68BA3,
@@ -8759,7 +8782,6 @@
 				4BD6753906001E100049CAF7,
 				4BD6753B06001E120049CAF7,
 				4BD6753F06001E150049CAF7,
-				4BD6755106001E1D0049CAF7,
 				4BD6758506001E450049CAF7,
 				4BD6758806001E460049CAF7,
 				7E824CDD06387FAF00813072,
@@ -8873,6 +8895,7 @@
 				345F58F408199727001F733C,
 				345F590708199746001F733C,
 				345F5C5F081ACCB2001F733C,
+				34167FED081D706300E35678,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17864,14 +17887,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4B970BFC0535B879002F28F9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = DualWindowMessageAdvanced.nib;
-			path = "Plugins/Dual Window Interface/DualWindowMessageAdvanced.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4B97DB6606AC123A0003EE49 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.png;
@@ -17900,7 +17915,7 @@
 			children = (
 				4B970BF80535B864002F28F9,
 				4B970BF90535B864002F28F9,
-				4B970BFC0535B879002F28F9,
+				34167FEC081D706200E35678,
 				34D43504051ADC10003B2F21,
 			);
 			isa = PBXGroup;
@@ -19908,12 +19923,6 @@
 		};
 		4BD6755006001E1D0049CAF7 = {
 			fileRef = 4B970BF90535B864002F28F9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		4BD6755106001E1D0049CAF7 = {
-			fileRef = 4B970BFC0535B879002F28F9;
 			isa = PBXBuildFile;
 			settings = {
 			};
