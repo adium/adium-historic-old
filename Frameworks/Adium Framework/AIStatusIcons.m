@@ -157,13 +157,12 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 					
 				}else{
 					/* If we get here for a status name which is a default name, the pack doesn't have an image for us. */
-					NSAssert2(FALSE, @"Invalid status icon pack %@: Missing required item %@",
-							  [statusIconBasePath lastPathComponent], 
+					NSAssert2(FALSE, @"Invalid status icon pack \"%@\": Missing required item \"%@\"",
+							  statusIconBasePath,
 							  defaultStatusName);
 				}
 			}
 		}
-
 	}
 	
 	return(statusIcon);
