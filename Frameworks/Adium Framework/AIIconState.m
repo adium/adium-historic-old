@@ -164,6 +164,8 @@
 - (void)nextFrame
 {
     if(animated){
+		unsigned imageArrayCount = [imageArray count];
+
         //Next frame
         currentFrame++;
         if(currentFrame >= numberOfFrames){
@@ -171,12 +173,16 @@
         }
 
         //Get the new image (compositing if necessary)
-        if(currentFrame >= [imageArray count] && iconRendering_states && iconRendering_baseState && iconRendering_animationState){
+        if((currentFrame >= imageArrayCount) &&
+		   iconRendering_states &&
+		   iconRendering_baseState &&
+		   iconRendering_animationState){
             [imageArray addObject:[self _compositeStates:iconRendering_states 
 										   withBaseState:iconRendering_baseState 
 										  animatingState:iconRendering_animationState
 												forFrame:currentFrame]];
-            
+			imageArrayCount++;
+
             //After rendering the last frame, we can release our icon rendering information (it's no longer needed)
             if(currentFrame >= (numberOfFrames - 1)){
                 [iconRendering_states release]; iconRendering_states = nil;
@@ -185,8 +191,10 @@
             }
         }
 
-        [image release];
-        image = [[imageArray objectAtIndex:currentFrame] retain];
+		if(currentFrame < imageArrayCount){
+			[image release];
+			image = [[imageArray objectAtIndex:currentFrame] retain];
+		}
     }
 }
 
