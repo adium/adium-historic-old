@@ -107,10 +107,10 @@
 	[contactListController setMinWindowSize:minWindowSize];
 
     //Watch for resolution and screen configuration changes
-    [[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-														   selector:@selector(screenParametersChanged:) 
-															   name:NSApplicationDidChangeScreenParametersNotification 
-															 object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(screenParametersChanged:) 
+												 name:NSApplicationDidChangeScreenParametersNotification 
+											   object:nil];
 
 	AIPreferenceController *preferenceController = [adium preferenceController];
     //Observe preference changes

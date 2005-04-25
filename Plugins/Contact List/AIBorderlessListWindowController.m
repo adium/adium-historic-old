@@ -29,10 +29,10 @@
 	{
 		//Unlike a normal window, the system doesn't assist us in keeping the borderless contact list on a visible screen
 		//So we'll observe screen changes and ensure that the contact list stays on a valid screen
-		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self
-															   selector:@selector(centerWindowOnMainScreenIfNeeded:) 
-																   name:NSApplicationDidChangeScreenParametersNotification 
-																 object:nil];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(centerWindowOnMainScreenIfNeeded:) 
+													 name:NSApplicationDidChangeScreenParametersNotification 
+												   object:nil];
 	}
 
 	return self;
