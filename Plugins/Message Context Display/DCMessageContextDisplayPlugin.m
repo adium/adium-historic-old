@@ -290,6 +290,7 @@
 																	  message:message
 																	autoreply:[[messageDict objectForKey:@"Autoreply"] boolValue]];							
 							[responseContent setTrackContent:NO];
+							[responseContent setPostProcessContent:NO];
 						}
 						
 						if(responseContent){
