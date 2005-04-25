@@ -62,7 +62,8 @@
 {
 	[super windowDidLoad];
 	[self _configureToolbar];
-	
+	[[self window] setTitle:AILocalizedString(@"Contacts","Contact List window title")];
+
 	//Configure the state menu
 	[[adium statusController] registerStateMenuPlugin:self];
 	[[popUp_state cell] setUsesItemFromMenu:NO];
