@@ -167,8 +167,7 @@
 		unsigned imageArrayCount = [imageArray count];
 
         //Next frame
-        currentFrame++;
-        if(currentFrame >= numberOfFrames){
+        if(++currentFrame >= numberOfFrames){
             currentFrame = 0;
         }
 
