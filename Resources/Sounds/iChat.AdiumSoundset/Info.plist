@@ -9,20 +9,20 @@
 		<string>/System/Library/PrivateFrameworks/InstantMessage.framework/Versions/A/Resources</string>
 		<string>com.apple.iChat////Contents/Resources</string>
 	</array>
-    <key>Sounds</key>
-    <dict>
+	<key>Sounds</key>
+	<dict>
 		<key>Connected</key>
-        <string>Logged In.aiff</string>
+		<string>Logged In.aiff</string>
 		<key>Contact Signed On</key>
-        <string>Buddy Logging In.aiff</string>
+		<string>Buddy Logging In.aiff</string>
 		<key>Contact Signed Off</key>
-        <string>Buddy Logging Out.aiff</string>
+		<string>Buddy Logging Out.aiff</string>
 		<key>Message Received (New)</key>
-        <string>Invitation.aiff</string>
+		<string>Invitation.aiff</string>
 		<key>Message Received</key>
-        <string>Received Message.aiff</string>
+		<string>Received Message.aiff</string>
 		<key>Message Sent</key>
-        <string>Sent Message.aiff</string>
-    </dict>
+		<string>Sent Message.aiff</string>
+	</dict>
 </dict>
 </plist>
