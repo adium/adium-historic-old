@@ -1256,8 +1256,8 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
 	
-	filterForContactName = [inContactName retain];
-	
+	filterForContactName = [[inContactName safeFilenameString] retain];
+
 	//If the search mode is currently the TO field, switch it to content, which is what it should now intuitively do
 	if (searchMode == LOG_SEARCH_TO){
 		[self setSearchMode:LOG_SEARCH_CONTENT];
@@ -1275,7 +1275,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key){
 	[filterForContactName release]; filterForContactName = nil;
 	[filterForAccountName release]; filterForAccountName = nil;
 
-	filterForAccountName = [inAccountName retain];
+	filterForAccountName = [[inAccountName safeFilenameString] retain];
 
 	//If the search mode is currently the FROM field, switch it to content, which is what it should now intuitively do
 	if (searchMode == LOG_SEARCH_FROM){
