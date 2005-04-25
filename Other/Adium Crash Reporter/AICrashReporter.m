@@ -51,6 +51,7 @@
 	[buildNumber release];
 	[crashLog release];
 	[slayerScript release];
+	[adiumPath release];
 
 	[super dealloc];
 }
@@ -86,6 +87,11 @@
 	if([progress_sending respondsToSelector:@selector(setHidden:)]){
 		[progress_sending setHidden:YES];
 	}
+}
+
+- (void)application:(NSApplication *)app openFile:(NSString *)path {
+	[adiumPath release];
+	adiumPath = [path retain];
 }
 
 //Actively tries to kill Apple's "Report this crash" dialog
@@ -185,41 +191,45 @@
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-    if([[textField_emailAddress stringValue] isEqualToString:@""] &&
+	if([[textField_emailAddress stringValue] isEqualToString:@""] &&
 	   [[textField_accountIM stringValue] isEqualToString:@""]){
-        NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
+		NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
 								  @"OK", nil, nil, window_MainWindow, nil, nil, nil, NULL,
 								  AILocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
-    }else{
-        NSString	*shortDescription = [textField_description stringValue];
-        
-        //Truncate description field to 300 characters
-        if([shortDescription length] > 300){
-            shortDescription = [shortDescription substringToIndex:300];
-        }
-        
-        //Load the build information
-        [self _loadBuildInformation];
-        
-        //Build the report
-        NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
-            [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
-            [textField_emailAddress stringValue], @"email",
-            [textField_accountIM stringValue], @"service_name",
-            shortDescription, @"short_desc",
-            [textView_details string], @"desc",
-            crashLog, @"log",
-            nil];
-        
-        //Send
-        [self sendReport:crashReport];
-        
-		//Relaunch Adium
-		[[NSWorkspace sharedWorkspace] launchApplication:@"Adium"];
+	}else{
+		NSString	*shortDescription = [textField_description stringValue];
 
-        //Close our window to terminate
-        [window_MainWindow performClose:nil];
-    }
+		//Truncate description field to 300 characters
+		if([shortDescription length] > 300){
+		    shortDescription = [shortDescription substringToIndex:300];
+		}
+
+		//Load the build information
+		[self _loadBuildInformation];
+
+		//Build the report
+		NSDictionary	*crashReport = [NSDictionary dictionaryWithObjectsAndKeys:
+		    [NSString stringWithFormat:@"%@	(%@)",buildDate,(buildUser ? buildUser : buildNumber)], @"build",
+		    [textField_emailAddress stringValue], @"email",
+		    [textField_accountIM stringValue], @"service_name",
+		    shortDescription, @"short_desc",
+		    [textView_details string], @"desc",
+		    crashLog, @"log",
+		    nil];
+
+		//Send
+		[self sendReport:crashReport];
+
+		//Relaunch Adium
+		if(adiumPath) {
+			[[NSWorkspace sharedWorkspace] openFile:adiumPath];
+		} else {
+			[[NSWorkspace sharedWorkspace] launchApplication:@"Adium"];
+		}
+
+		//Close our window to terminate
+		[window_MainWindow performClose:nil];
+	}
 }
 
 - (void)sendReport:(NSDictionary *)crashReport

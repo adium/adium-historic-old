@@ -86,6 +86,8 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		NSString	*theName = [self name];
 		NSString	*backtrace = [self decodedExceptionStackTrace];
 
+		NSLog(@"Caught exception: %@ - %@",theName,theReason);
+
 		BOOL		shouldLaunchCrashReporter = YES;
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
@@ -122,14 +124,14 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			NSString	*versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
 
 			NSLog(@"Launching the Adium Crash Reporter because an exception of type %@ occurred:\n%@", theName,theReason);
-			
+
 			//Pass the exception to the crash reporter and close this application
 			[[NSString stringWithFormat:@"OS Version:\t%@\nException:\t%@\nReason:\t%@\nStack trace:\n%@",
 				versionString,theName,theReason,backtrace] writeToFile:EXCEPTIONS_PATH atomically:YES];
-			
-			[[NSWorkspace sharedWorkspace] launchApplication:crashReporterPath];
-			exit(-1);
 
+			[[NSWorkspace sharedWorkspace] openFile:bundlePath withApplication:crashReporterPath];
+
+			exit(-1);
 		}else{
 			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
