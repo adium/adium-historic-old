@@ -388,7 +388,7 @@
 	destPtr  = [destData mutableBytes];
 
 	while(sourceIndex < sourceLength) {
-		char	ch = UTF8[sourceIndex];
+		unsigned char	ch = UTF8[sourceIndex];
 		destPtr[destIndex++] = translationTable[ch];
 
 		if(!translationTable[ch]) {
@@ -457,7 +457,7 @@
 	destPtr = [destData mutableBytes];
 	
 	while(sourceIndex < sourceLength){
-		char	ch = UTF8[sourceIndex++];
+		unsigned char	ch = UTF8[sourceIndex++];
 
 		if(ch == '%') {
 			destPtr[destIndex] = ( hexToInt(UTF8[sourceIndex]) * 0x10 ) + hexToInt(UTF8[sourceIndex+1]);
