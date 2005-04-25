@@ -42,6 +42,7 @@
 
 #define SOUND_LOCATION					@"Location"
 #define SOUND_LOCATION_SEPARATOR		@"////"
+#define	SOUND_PACK_PATHNAME				@"AdiumSetPathname_Private"
 #define	SOUND_PACK_VERSION				@"AdiumSetVersion"
 #define SOUND_NAMES						@"Sounds"
 
@@ -366,7 +367,9 @@
 
             }else{
 				if([fileName isEqualToString:@"Info.plist"]){
-					[self addSoundsIndicatedByDictionary:[NSDictionary dictionaryWithContentsOfFile:fullPath]
+					NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithContentsOfFile:fullPath];
+					[infoDict setObject:soundSetPath forKey:SOUND_PACK_PATHNAME];
+					[self addSoundsIndicatedByDictionary:infoDict
 												 toArray:soundSetContents];
 					
 				}else{
@@ -393,7 +396,7 @@
  * @brief Add sounds indicated dynamically by a dictionary to an array
  *
  * Handle optional location key, which allows emoticons to be loaded from arbitrary directories.
- * This is only used by the iChat sound pack.
+ * This is currently only used by the iChat sound pack.
  */
 - (void)addSoundsIndicatedByDictionary:(NSDictionary *)infoDict toArray:(NSMutableArray *)soundSetContents
 {
@@ -418,7 +421,13 @@
 			
 			break;	
 		}
-		default: break;
+
+		default:
+			NSRunAlertPanel(AILocalizedString(@"Cannot open sound set", nil),
+			                AILocalizedString(@"The sound set at %@ is version %i, and this version of Adium does not know how to handle that; perhaps try a later version of Adium.", nil),
+			                /*defaultButton*/ nil, /*alternateButton*/ nil, /*otherButton*/ nil,
+			                [infoDict objectForKey:SOUND_PACK_PATHNAME], version);
+			break;
 	}	
 }
 
