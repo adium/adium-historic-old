@@ -2148,6 +2148,7 @@
 				345F586308198E7F001F733C,
 				345F586408198E87001F733C,
 				345F5B97081AC4F1001F733C,
+				3458B500081DD44B0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = AccountProxy.nib;
@@ -2183,6 +2184,7 @@
 				4BAE6D5D07CFA1D7007E2820,
 				345F589B08198F15001F733C,
 				345F5B98081AC4F1001F733C,
+				3458B503081DD44B0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = AppearancePrefs.nib;
@@ -2326,6 +2328,7 @@
 				347E791F07CAA52300350507,
 				345F589C08198F15001F733C,
 				345F5BB3081AC4F3001F733C,
+				3458B502081DD44B0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = StatusSortConfiguration.nib;
@@ -2459,6 +2462,7 @@
 				343EB4270808709E00E27095,
 				345F589A08198F15001F733C,
 				345F5BAA081AC4F2001F733C,
+				3458B501081DD44B0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = ListThemeSheet.nib;
@@ -2484,6 +2488,7 @@
 				343EC68F0809DD2900E27095,
 				345F589908198F15001F733C,
 				345F5BA9081AC4F2001F733C,
+				3458B4FF081DD44B0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = ListLayoutSheet.nib;
@@ -3635,6 +3640,46 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		3458B4FF081DD44B0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Japanese;
+			path = Resources/Japanese.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B500081DD44B0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Japanese;
+			path = Resources/Japanese.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B501081DD44B0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Japanese;
+			path = Resources/Japanese.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B502081DD44B0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Japanese;
+			path = Resources/Japanese.lproj/StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B503081DD44B0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = file;
+			name = Japanese;
+			path = Resources/Japanese.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		345ACC960811C20F008E4D22 = {
 			isa = PBXFileReference;
