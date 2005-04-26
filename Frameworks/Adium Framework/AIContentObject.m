@@ -55,6 +55,7 @@
 		
 		chat = [inChat retain];
 		outgoing = ([source isKindOfClass:[AIAccount class]]);
+		userInfo = nil;
 	}
     
     return self;
@@ -67,7 +68,8 @@
 	[date release]; date = nil;
 	[message release]; message = nil;
 	[chat release]; chat = nil;
-	
+	[userInfo release]; userInfo = nil;
+
     [super dealloc];
 }
 
@@ -75,6 +77,19 @@
 - (NSString *)type
 {
     return(@"");
+}
+
+- (id)userInfo
+{
+	return userInfo;
+}
+
+- (void)setUserInfo:(id)inUserInfo
+{
+	if(userInfo != inUserInfo){
+		[userInfo release];
+		userInfo = [inUserInfo retain];
+	}
 }
 
 //Comparing ------------------------------------------------------------------------------------------------------------
