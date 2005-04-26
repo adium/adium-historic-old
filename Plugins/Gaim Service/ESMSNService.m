@@ -85,37 +85,37 @@
 
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
-							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_AWAY
-							 withDescription:STATUS_DESCRIPTION_AWAY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_BRB
-							 withDescription:STATUS_DESCRIPTION_BRB
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_BRB]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_BUSY
-							 withDescription:STATUS_DESCRIPTION_BUSY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_BUSY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_PHONE
-							 withDescription:STATUS_DESCRIPTION_PHONE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_PHONE]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_LUNCH
-							 withDescription:STATUS_DESCRIPTION_LUNCH
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_LUNCH]
 									  ofType:AIAwayStatusType
 								  forService:self];
 
 	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
-							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_INVISIBLE]
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 	/*

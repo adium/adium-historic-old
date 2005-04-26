@@ -109,32 +109,32 @@
 
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
-							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_AWAY
-							 withDescription:STATUS_DESCRIPTION_AWAY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_FREE_FOR_CHAT
-							 withDescription:STATUS_DESCRIPTION_FREE_FOR_CHAT
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_FREE_FOR_CHAT]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_DND
-							 withDescription:STATUS_DESCRIPTION_DND
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_EXTENDED_AWAY
-							 withDescription:STATUS_DESCRIPTION_EXTENDED_AWAY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_EXTENDED_AWAY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
-							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_INVISIBLE]
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 }
