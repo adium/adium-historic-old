@@ -341,7 +341,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		}
 		
 		//Update the window title
-		[[self window] setTitle:[NSString stringWithFormat:@"%@ : %@", PREFERENCE_WINDOW_TITLE, [tabViewItem label]]];    	
+		[[self window] setTitle:[NSString stringWithFormat:@"%@ : %@",
+			PREFERENCE_WINDOW_TITLE,
+			[self tabView:tabView labelForTabViewItem:tabViewItem]]];
    }
 }
 
