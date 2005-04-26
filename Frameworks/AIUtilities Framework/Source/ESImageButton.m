@@ -26,14 +26,14 @@
 	ESImageButton	*newButton = [super copyWithZone:zone];
 
 	newButton->imageFloater = [imageFloater retain];
-	
+
 	return(newButton);
 }
 
 - (void)dealloc
 {
 	[imageFloater release];
-	
+
 	[super dealloc];
 }
 
@@ -45,14 +45,14 @@
 	if([self isEnabled]){
 		NSWindow	*window = [self window];
 		float		maxXOrigin;
-		
+
 		[self highlight:YES];
-		
+
 		//Find our display point, the bottom-left of our button, in screen coordinates
 		NSPoint point = [window convertBaseToScreen:[self convertPoint:[self bounds].origin toView:nil]];
 		point.y -= NSHeight([self frame]) + 2;
 		point.x -= 1;
-		
+
 		//Move the display point down by the height of our image
 		point.y -= [bigImage size].height;
 
@@ -60,7 +60,7 @@
 			[imageFloater close:nil];
 			[imageFloater release];
 		}
-		
+
 		/* If the image would go off the right side of the screen from its origin, shift the origin left
 		 * so it won't.
 		 */
@@ -81,17 +81,17 @@
 - (void)mouseUp:(NSEvent *)theEvent
 {
 	[self highlight:NO];
-	
+
 	if(imageFloater){
 		[imageFloater setVisible:NO animate:YES];
 		imageFloaterShouldBeOpen = FALSE;
-		
+
 		//Let it stay around briefly before closing so the animation fades it out
 		[self performSelector:@selector(destroyImageFloater)
 				   withObject:nil
 				   afterDelay:0.5];
 	}
-	
+
 	[super mouseUp:theEvent];
 }
 
