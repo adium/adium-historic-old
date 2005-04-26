@@ -33,6 +33,8 @@
 	BOOL				displayContentImmediately;
 	BOOL				sendContent;
 	BOOL				postProcessContent;
+	
+	NSDictionary		*userInfo;
 }
 
 - (id)initWithChat:(AIChat *)inChat
@@ -60,6 +62,9 @@
 - (void)setChat:(AIChat *)inChat;
 - (void)setMessage:(NSAttributedString *)inMessage;
 - (NSAttributedString *)message;
+
+- (id)userInfo;
+- (void)setUserInfo:(id)inUserInfo;
 
 //Behavior
 - (BOOL)filterContent;
