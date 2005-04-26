@@ -105,7 +105,8 @@
 - (void)configureViewsAndTooltips
 {
 	//Configure the contact list view
-	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList withDelegate:self] retain];
+	tooltipTracker = [[AISmoothTooltipTracker smoothTooltipTrackerForView:scrollView_contactList
+															 withDelegate:self] retain];
 
 	[[[contactListView tableColumns] objectAtIndex:0] setDataCell:[[[AIListContactCell alloc] init] autorelease]];
 	
