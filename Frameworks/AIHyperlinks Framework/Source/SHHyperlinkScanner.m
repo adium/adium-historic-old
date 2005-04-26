@@ -18,9 +18,12 @@
 #import "SHLinkLexer.h"
 #import "SHMarkedHyperlink.h"
 
-static NSMutableCharacterSet *skipSet = nil;
-static NSMutableCharacterSet *startSet = nil;
-static NSMutableCharacterSet *endSet = nil;
+static NSMutableCharacterSet	*skipSet = nil;
+static NSMutableCharacterSet	*startSet = nil;
+static NSCharacterSet			*endSet = nil;
+static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
+
+#define	DEFAULT_URL_SCHEME	@"http"
 
 @implementation SHHyperlinkScanner
 
@@ -36,11 +39,20 @@ static NSMutableCharacterSet *endSet = nil;
 - (id)initWithStrictChecking:(BOOL)flag
 {
 	if((self = [super init])){
+		urlSchemes = [[NSDictionary alloc] initWithObjectsAndKeys:
+			@"ftp://", @"ftp",
+			nil];
 		useStrictChecking = flag;
 		SHStringOffset = 0;
 	}
 
 	return self;
+}
+
+- (void)dealloc
+{
+	[urlSchemes release];
+	[super dealloc];
 }
 
 #pragma mark utility
@@ -117,6 +129,10 @@ static NSMutableCharacterSet *endSet = nil;
     if(!endSet){
         endSet = [[NSCharacterSet characterSetWithCharactersInString:@"\"',;>)]}.?!"] retain];
     }
+
+   	if(!hostnameComponentSeparatorSet) {
+   		hostnameComponentSeparatorSet = [[NSCharacterSet characterSetWithCharactersInString:@"./"] retain];
+   	}
 	
     // scan upto the next whitespace char so that we don't unnecessarity confuse flex
     // otherwise we end up validating urls that look like this "http://www.adiumx.com/ <--cool"
@@ -156,8 +172,26 @@ static NSMutableCharacterSet *endSet = nil;
             //insert typical specifiers if the URL is degenerate
             switch(validStatus){
                 case SH_URL_DEGENERATE:
-                    scanString = [@"http://" stringByAppendingString:scanString];
+                {
+                    NSString *scheme = @"http://";
+                    NSScanner *dotScanner = [[NSScanner alloc] initWithString:scanString];
+
+                    NSString *firstComponent = nil;
+                    [dotScanner scanUpToCharactersFromSet:hostnameComponentSeparatorSet
+                                               intoString:&firstComponent];
+
+                    if(firstComponent) {
+                    	NSString *hostnameScheme = [urlSchemes objectForKey:firstComponent];
+                    	if(hostnameScheme) scheme = hostnameScheme;
+                    }
+
+                    scanString = [scheme stringByAppendingString:scanString];
+
+                    [dotScanner release];
+
                     break;
+                }
+
                 case SH_MAILTO_DEGENERATE:
 					scanString = [@"mailto:" stringByAppendingString:scanString];
                     break;

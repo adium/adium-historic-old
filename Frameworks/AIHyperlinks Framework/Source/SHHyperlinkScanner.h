@@ -29,8 +29,9 @@ extern unsigned int SHStringOffset;
 
 @interface SHHyperlinkScanner : NSObject
 {
-	BOOL						useStrictChecking;
-	URI_VERIFICATION_STATUS		validStatus;
+	NSDictionary				*urlSchemes;
+	BOOL						 useStrictChecking;
+	URI_VERIFICATION_STATUS		 validStatus;
 }
 
 - (id)init;
