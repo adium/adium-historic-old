@@ -116,6 +116,9 @@
     }
 	
 	[dockStatusMenuRoot setSubmenu:dockStatusMenu];
+	
+	//Tell the status controller to update these items as necessary
+	[[adium statusController] plugin:self didAddMenuItems:[dockStatusMenu itemArray]];
 }
 
 /*!
