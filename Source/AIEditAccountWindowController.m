@@ -19,6 +19,7 @@
 #import "AIContactController.h"
 #import "AIPreferenceController.h"
 #import "AIEditAccountWindowController.h"
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIViewAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
@@ -115,7 +116,7 @@
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
 	[checkBox_autoConnect setLocalizedString:AILocalizedString(@"Automatically connect on launch","Accounts preferences: When Adium loads, connect this account immediately.")];
 	[button_chooseIcon setLocalizedString:[AILocalizedString(@"Choose Icon",nil) stringByAppendingEllipsis]];
-	[button_ok setLocalizedString:AILocalizedString(@"OK",nil)];
+	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
 	//User icon
