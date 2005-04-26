@@ -21,12 +21,15 @@
 @interface AIEditAccountWindowController : AIWindowController {
 	//Account preferences
 	IBOutlet	NSImageView					*image_serviceIcon;
+	IBOutlet	NSButton					*button_chooseIcon;
 	IBOutlet	NSTextField					*textField_accountDescription;
 	IBOutlet	NSTextField					*textField_serviceName;
 	IBOutlet	ESImageViewWithImagePicker  *imageView_userIcon;
     IBOutlet	NSTabView					*tabView_auxiliary;
 	IBOutlet	NSButton					*checkBox_autoConnect;
-
+	IBOutlet	NSButton					*button_cancel;
+	IBOutlet	NSButton					*button_OK;
+	
 	//Replacable views
 	IBOutlet	NSView						*view_accountSetup;
 	IBOutlet	NSView						*view_accountProxy;
