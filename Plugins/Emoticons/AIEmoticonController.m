@@ -354,8 +354,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 																				  group:PREF_GROUP_EMOTICONS] mutableCopy];
     NSMutableArray          *disabledArray = [[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy];
 	
-    if(!packDict) packDict = [NSMutableDictionary dictionary];
-    if(!disabledArray) disabledArray = [NSMutableArray array];
+    if(!packDict) packDict = [[NSMutableDictionary alloc] init];
+    if(!disabledArray) disabledArray = [[NSMutableArray alloc] init];
     
     //Enable/Disable the emoticon
     if(enabled){
