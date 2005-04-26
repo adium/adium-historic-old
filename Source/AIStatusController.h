@@ -160,6 +160,7 @@
 - (AIStatus *)defaultInitialStatusState;
 
 - (NSString *)descriptionForStateOfStatus:(AIStatus *)statusState;
+- (NSString *)localizedDescriptionForCoreStatusName:(NSString *)statusName;
 - (NSString *)defaultStatusNameForType:(AIStatusType)statusType;
 
 //State Editing
