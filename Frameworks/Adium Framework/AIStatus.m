@@ -189,6 +189,14 @@
 }
 
 /*!
+ * @brief Return the status message as a string
+ */
+- (NSString *)statusMessageString
+{
+	return([[self statusMessage] string]);
+}
+
+/*!
  * @brief Set the status message
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage
@@ -199,6 +207,16 @@
 	}else{
 		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
 	}
+}
+
+/*!
+ * @brief Set the status message as a string
+ *
+ * @param statusMessageString The status message as a string; HTML may be passed if desired
+ */
+- (void)setStatusMessageString:(NSString *)statusMessageString
+{
+	[self setStatusMessage:[AIHTMLDecoder decodeHTML:statusMessageString]];
 }
 
 /*!
@@ -315,13 +333,16 @@
 		title = AILocalizedString(@"Idle",nil);
 	}
 
-	if(!title && statusType == AIOfflineStatusType){
-		title = STATUS_DESCRIPTION_OFFLINE;
+	if(!title && (statusType == AIOfflineStatusType)){
+		title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE];
 	}
-	
+
 	//If the state is none of the above, use the string "Available"
-	if(!title) title = AILocalizedString(@"Available",nil);
+	if(!title) title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE];
 	
+	//Strip newlines and whitespace from the beginning and the end
+	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+
 	//Only use the first line of a multi-line title
 	linebreakRange = [title rangeOfString:@"\n" options:NSLiteralSearch];
 	if(linebreakRange.location != NSNotFound){

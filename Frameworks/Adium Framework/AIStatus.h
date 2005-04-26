@@ -59,6 +59,9 @@ typedef enum {
 - (NSAttributedString *)statusMessage;
 - (void)setStatusMessage:(NSAttributedString *)statusMessage;
 
+- (NSString *)statusMessageString;
+- (void)setStatusMessageString:(NSString *)statusMessageString;
+
 - (NSAttributedString *)autoReply;
 - (void)setAutoReply:(NSAttributedString *)autoReply;
 
