@@ -24,7 +24,7 @@
 #import <AIUtilities/ESDateFormatterAdditions.h>
 
 #define ABOUT_BOX_NIB					@"AboutBox"
-#define	ADIUM_SITE_LINK					@"http://www.adiumx.com/"
+#define	ADIUM_SITE_LINK					AILocalizedString(@"http://www.adiumx.com/","Adium homepage. Only localize if a translated version of the page exists.")
 
 #define ABOUT_SCROLL_FPS				30.0
 #define ABOUT_SCROLL_RATE				1.0
