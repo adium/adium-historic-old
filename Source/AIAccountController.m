@@ -1427,6 +1427,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	while((account = [enumerator nextObject])){    
 		
 		NSMenu			*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		[accountSubmenu setMenuChangedMessagesEnabled:NO];
 		BOOL			addedStatusItems = NO;
 		
 		//Add status items if we have more than one account
@@ -1513,6 +1514,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 								  forKey:[account internalObjectID]];
 			
 		}
+		
+		[accountSubmenu setMenuChangedMessagesEnabled:YES];
 	}
 	
 	//Enumerate all arrays of menu items (for all plugins)
