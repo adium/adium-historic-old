@@ -66,22 +66,22 @@
 	[super registerStatuses];
 
 	[[adium statusController] registerStatus:STATUS_NAME_FREE_FOR_CHAT
-							 withDescription:STATUS_DESCRIPTION_FREE_FOR_CHAT
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_FREE_FOR_CHAT]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 
 	[[adium statusController] registerStatus:STATUS_NAME_DND
-							 withDescription:STATUS_DESCRIPTION_DND
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_DND]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_NOT_AVAILABLE
-							 withDescription:STATUS_DESCRIPTION_NOT_AVAILABLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_NOT_AVAILABLE]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_OCCUPIED
-							 withDescription:STATUS_DESCRIPTION_OCCUPIED
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OCCUPIED]
 									  ofType:AIAwayStatusType
 								  forService:self];
 }

@@ -69,12 +69,12 @@
 
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
-							 withDescription:STATUS_DESCRIPTION_AVAILABLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_AWAY
-							 withDescription:STATUS_DESCRIPTION_AWAY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
@@ -89,22 +89,22 @@
 	*/
 
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE_FRIENDS_ONLY
-							 withDescription:STATUS_DESCRIPTION_AVAILABLE_FRIENDS_ONLY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE_FRIENDS_ONLY]
 									  ofType:AIAvailableStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_AWAY_FRIENDS_ONLY
-							 withDescription:STATUS_DESCRIPTION_AWAY_FRIENDS_ONLY
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY_FRIENDS_ONLY]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_NOT_AVAILABLE
-							 withDescription:STATUS_DESCRIPTION_NOT_AVAILABLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_NOT_AVAILABLE]
 									  ofType:AIAwayStatusType
 								  forService:self];
 	
 	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
-							 withDescription:STATUS_DESCRIPTION_INVISIBLE
+							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_INVISIBLE]
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 }
