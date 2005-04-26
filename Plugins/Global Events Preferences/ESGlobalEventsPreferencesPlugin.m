@@ -178,6 +178,7 @@
 		NSEnumerator	*enumerator;
 		NSString		*event, *soundName, *soundLocation;
 			
+		soundArray = [NSMutableArray array];
 		infoDict = [NSDictionary dictionaryWithContentsOfFile:infoPlistPath];
 		sounds = [[adium soundController] soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 		
@@ -186,7 +187,6 @@
 			NSString	*eventID = [[adium contactAlertsController] eventIDForEnglishDisplayName:event];
 
 			soundName = [sounds objectForKey:event];
-
 			if(eventID){
 				[soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					eventID, KEY_EVENT_SOUND_EVENT_ID,
@@ -245,7 +245,7 @@
 			}
 		}
 	}
-	
+
     return(soundArray);
 }
 

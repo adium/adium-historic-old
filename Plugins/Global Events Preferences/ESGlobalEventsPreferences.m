@@ -643,23 +643,21 @@
     
     enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
     while((soundSetDict = [enumerator nextObject])){
-        NSString	*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
-        NSMenuItem	*menuItem;
-        NSString	*soundSetFile;
-		
-        //Ensure this folder contains a soundset file (Otherwise, we ignore it)
-        soundSetFile = [NSString stringWithContentsOfFile:
-			[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]];
-        if(soundSetFile && [soundSetFile length] != 0){
-			
+        NSString		*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
+        NSFileManager	*defaultManager = [NSFileManager defaultManager];
+        NSMenuItem		*menuItem;
+	
+		//Ensure this folder contains a soundset file (Otherwise, we ignore it)
+		if([defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]] ||
+		   [defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:@"Info.plist"]]){
+
             //Add a menu item for the set
             menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]
 																			 target:self
 																			 action:@selector(selectSoundSet:)
 																	  keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:[soundSetDict objectForKey:KEY_SOUND_SET]];
+            [menuItem setRepresentedObject:setPath];
             [soundSetMenu addItem:menuItem];
-			
         }
     }
 
