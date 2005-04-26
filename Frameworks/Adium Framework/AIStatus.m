@@ -17,6 +17,7 @@
 #import "AIStatus.h"
 #import "AIStatusController.h"
 #import "AIStatusIcons.h"
+#import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
