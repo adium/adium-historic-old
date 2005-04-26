@@ -23,7 +23,7 @@ static NSMutableCharacterSet	*startSet = nil;
 static NSCharacterSet			*endSet = nil;
 static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
 
-#define	DEFAULT_URL_SCHEME	@"http"
+#define	DEFAULT_URL_SCHEME	@"http://"
 
 @implementation SHHyperlinkScanner
 
@@ -173,7 +173,7 @@ static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
             switch(validStatus){
                 case SH_URL_DEGENERATE:
                 {
-                    NSString *scheme = @"http://";
+                    NSString *scheme = DEFAULT_URL_SCHEME;
                     NSScanner *dotScanner = [[NSScanner alloc] initWithString:scanString];
 
                     NSString *firstComponent = nil;
