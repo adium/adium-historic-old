@@ -53,6 +53,7 @@
 - (void)uninstallPlugin
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 }
 
 /*!
