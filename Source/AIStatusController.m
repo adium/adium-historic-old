@@ -484,6 +484,39 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	return nil;
 }
 
+- (NSString *)localizedDescriptionForCoreStatusName:(NSString *)statusName
+{
+	static NSDictionary	*coreLocalizedStatusDescriptions = nil;
+	if(!coreLocalizedStatusDescriptions){
+		coreLocalizedStatusDescriptions = [[NSDictionary dictionaryWithObjectsAndKeys:
+			STATUS_DESCRIPTION_AVAILABLE, STATUS_NAME_AVAILABLE,
+			STATUS_DESCRIPTION_FREE_FOR_CHAT, STATUS_NAME_FREE_FOR_CHAT,
+			STATUS_DESCRIPTION_AVAILABLE_FRIENDS_ONLY, STATUS_NAME_AVAILABLE_FRIENDS_ONLY,
+			STATUS_DESCRIPTION_AWAY, STATUS_NAME_AWAY,
+			STATUS_DESCRIPTION_EXTENDED_AWAY, STATUS_NAME_EXTENDED_AWAY,
+			STATUS_DESCRIPTION_AWAY_FRIENDS_ONLY, STATUS_NAME_AWAY_FRIENDS_ONLY,
+			STATUS_DESCRIPTION_DND, STATUS_NAME_DND,
+			STATUS_DESCRIPTION_NOT_AVAILABLE, STATUS_NAME_NOT_AVAILABLE,
+			STATUS_DESCRIPTION_OCCUPIED, STATUS_NAME_OCCUPIED,
+			STATUS_DESCRIPTION_BRB, STATUS_NAME_BRB,
+			STATUS_DESCRIPTION_BUSY, STATUS_NAME_BUSY,
+			STATUS_DESCRIPTION_PHONE, STATUS_NAME_PHONE,
+			STATUS_DESCRIPTION_LUNCH, STATUS_NAME_LUNCH,
+			STATUS_DESCRIPTION_NOT_AT_HOME, STATUS_NAME_NOT_AT_HOME,
+			STATUS_DESCRIPTION_NOT_AT_DESK, STATUS_NAME_NOT_AT_DESK,
+			STATUS_DESCRIPTION_NOT_IN_OFFICE, STATUS_NAME_NOT_IN_OFFICE,
+			STATUS_DESCRIPTION_VACATION, STATUS_NAME_VACATION,
+			STATUS_DESCRIPTION_STEPPED_OUT, STATUS_NAME_STEPPED_OUT,
+			STATUS_DESCRIPTION_INVISIBLE, STATUS_NAME_INVISIBLE,
+			STATUS_DESCRIPTION_OFFLINE, STATUS_NAME_OFFLINE,
+			nil] retain];
+	}
+
+	return([coreLocalizedStatusDescriptions objectForKey:statusName]);
+}
+
+
+
 /*!
  * @brief The status name to use by default for a passed type
  *
@@ -1720,8 +1753,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 /*!
  * @brief Determine a string to use as a menu title
  *
- * This method truncates a state title string for display as a menu item.  It also strips newlines which can cause odd
- * menu item display.  Wide menus aren't pretty and may cause crashing in certain versions of OS X, so all state
+ * This method truncates a state title string for display as a menu item.
+ * Wide menus aren't pretty and may cause crashing in certain versions of OS X, so all state
  * titles should be run through this method before being used as menu item titles.
  *
  * @param statusState The state for which we want a title
@@ -1730,20 +1763,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (NSString *)_titleForMenuDisplayOfState:(AIStatus *)statusState
 {
-	NSRange		fullRange = NSMakeRange(0,0);
-	NSRange		trimRange;
 	NSString	*title = [statusState title];
 
-	//Strip newlines, they'll screw up menu display
-	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-
-	//Truncate by length
-	trimRange = [title lineRangeForRange:fullRange];
-	if(!NSEqualRanges(trimRange, NSMakeRange(0, [title length]-1))){
-		title = [title substringWithRange:trimRange];
-	}
 	if([title length] > STATE_TITLE_MENU_LENGTH){
-		title = [[title substringToIndex:STATE_TITLE_MENU_LENGTH] stringByAppendingString:[NSString ellipsis]];
+		title = [title stringWithEllipsisByTruncatingToLength:STATE_TITLE_MENU_LENGTH];
 	}
 
 	return(title);
