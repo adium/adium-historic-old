@@ -526,21 +526,26 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
 	//Clear our cached _preferredContact if a contained object's online, away, or idle status changed
-
+	BOOL	shouldNotify = NO;
+	
 	//If the online status of a contained object changed, we should also check if our one-contact-only
 	//in terms of online contacts has changed
 	if ([key isEqualToString:@"Online"]){
 		[self _determineIfWeShouldAppearToContainOnlyOneContact];
+		shouldNotify = YES;
 	}
 	
 	if([key isEqualToString:@"StatusType"] ||
 	   [key isEqualToString:@"IdleSince"] ||
 	   [key isEqualToString:@"IsMobile"]){
 		_preferredContact = nil;
+		shouldNotify = YES;
 	}
 	
-	//Only tell super that we changed if _cacheStatusValue returns YES indicating we did
-	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify]){
+	/* Only tell super that we changed if _cacheStatusValue returns YES indicating we did or if our
+	 * preferred contact changed. */
+	if([self _cacheStatusValue:value forObject:inObject key:key notify:notify] ||
+	   shouldNotify){
 		[super object:self didSetStatusObject:value forKey:key notify:notify];
 	}
 }
