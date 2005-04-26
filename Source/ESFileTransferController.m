@@ -185,13 +185,13 @@ static ESFileTransferPreferences *preferences;
 			[self _finishReceiveRequestForFileTransfer:fileTransfer localFilename:localFilename];
 			
 		}else{
-			//Prompt for a location to save; savePanelDidEnd will release the retained fileTransfer
-			[[NSSavePanel savePanel] beginSheetForDirectory:preferredDownloadFolder
-													   file:remoteFilename
-											 modalForWindow:nil
-											  modalDelegate:self
-											 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
-												contextInfo:[fileTransfer retain]];
+			//Prompt for a location to save; savePanelDidEnd::: will release the retained fileTransfer and the savePanel
+			[[[NSSavePanel savePanel] retain] beginSheetForDirectory:preferredDownloadFolder
+			                                                    file:remoteFilename
+			                                          modalForWindow:nil
+			                                           modalDelegate:self
+			                                          didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+			                                             contextInfo:[fileTransfer retain]];
 		}
 	}else{
 		//Prompt to accept/deny
@@ -216,6 +216,9 @@ static ESFileTransferPreferences *preferences;
 	
 	//Match the retain made when invoking the save panel above
 	[fileTransfer release];
+
+	//release the save panel too
+	[savePanel release];	
 }
 
 /*
