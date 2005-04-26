@@ -195,10 +195,24 @@ typedef enum {
 
 		//Selected menu items
 		if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
-			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];		
+			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
+			
+			//If the prefDict's item isn't present, we're using the default, so select that one
+			if(![popUp_serviceIcons selectedItem]){
+				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
+																										group:PREF_GROUP_APPEARANCE
+																									   object:nil]];
+			}			
 		}
 		if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
 			[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
+			
+			//If the prefDict's item isn't present, we're using the default, so select that one
+			if(![popUp_serviceIcons selectedItem]){
+				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
+																										group:PREF_GROUP_APPEARANCE
+																									   object:nil]];
+			}
 		}		
 		if(firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
 			[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
