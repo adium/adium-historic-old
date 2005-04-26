@@ -100,12 +100,15 @@
 #define CRASHES_PATH                  [@"~/Library/Logs/CrashReporter/Adium.crash.log" stringByExpandingTildeInPath]
 
 //Debugging
-#if BETA_RELEASE			/* Automatically turn on DEBUG_BUILD for all BETA_RELEASE builds */
-	#ifndef DEBUG_BUILD
-		#define DEBUG_BUILD
+/* Enable to automatically turn on DEBUG_BUILD for all BETA_RELEASE builds */
+#if 0
+	#if BETA_RELEASE
+		#ifndef DEBUG_BUILD
+			#define DEBUG_BUILD
+		#endif
 	#endif
 #endif
-
+ 
 //Adium events
 #define KEY_EVENT_DISPLAY_NAME		@"DisplayName"
 #define KEY_EVENT_NOTIFICATION		@"Notification"
