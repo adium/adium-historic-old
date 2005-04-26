@@ -43,10 +43,13 @@
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	if([self isEnabled]){
+		NSWindow	*window = [self window];
+		float		maxXOrigin;
+		
 		[self highlight:YES];
 		
 		//Find our display point, the bottom-left of our button, in screen coordinates
-		NSPoint point = [[self window] convertBaseToScreen:[self convertPoint:[self bounds].origin toView:nil]];
+		NSPoint point = [window convertBaseToScreen:[self convertPoint:[self bounds].origin toView:nil]];
 		point.y -= NSHeight([self frame]) + 2;
 		point.x -= 1;
 		
@@ -56,6 +59,14 @@
 		if(imageFloater){
 			[imageFloater close:nil];
 			[imageFloater release];
+		}
+		
+		/* If the image would go off the right side of the screen from its origin, shift the origin left
+		 * so it won't.
+		 */
+		maxXOrigin = NSMaxX([[window screen] frame]) - [bigImage size].width;
+		if(point.x  > maxXOrigin){
+			point.x = maxXOrigin;
 		}
 
 		imageFloater = [[ESFloater floaterWithImage:bigImage styleMask:NSBorderlessWindowMask] retain];
