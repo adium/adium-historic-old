@@ -45,4 +45,6 @@ void AILog (NSString *format, ...) {
 	[actualMessage release];
 	va_end(ap); /* clean up when done */
 }
+#else
+void AILog (NSString *format, ...) {};
 #endif
