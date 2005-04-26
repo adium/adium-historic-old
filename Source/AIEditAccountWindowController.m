@@ -113,6 +113,10 @@
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
+	[checkBox_autoConnect setLocalizedString:AILocalizedString(@"Automatically connect on launch","Accounts preferences: When Adium loads, connect this account immediately.")];
+	[button_chooseIcon setLocalizedString:[AILocalizedString(@"Choose Icon",nil) stringByAppendingEllipsis]];
+	[button_ok setLocalizedString:AILocalizedString(@"OK",nil)];
+	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
 	//User icon
 	[imageView_userIcon setImage:[account userIcon]];
