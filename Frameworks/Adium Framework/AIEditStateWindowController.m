@@ -60,7 +60,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  * @param inStatusState Initial AIStatus
  * @param inStatusType AIStatusType to use initially if inStatusState is nil
  * @param inAccount The account which to configure the custom state window; nil to configure globally
- * @param showSaveCheckbox YES if the save checkbox should be shown; NO if it should not
+ * @param showSaveCheckbox YES if the save checkbox should be shown; NO if it should not. If YES, the title on an incoming status will be cleared to make it auto-update.
  * @param parentWindow Parent window for a sheet, nil for a stand alone editor
  * @param inTarget Target object to notify when editing is complete
  */
@@ -107,12 +107,12 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget showSaveCheckbox:(BOOL)inShowSaveCheckbox
 {
     if((self = [super initWithWindowNibName:windowNibName])){
-		[self setOriginalStatusState:inStatusState forType:inStatusType];
-		[self setAccount:inAccount];
-		
 		target = inTarget;
 		isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 		showSaveCheckbox = inShowSaveCheckbox;
+
+		[self setOriginalStatusState:inStatusState forType:inStatusType];
+		[self setAccount:inAccount];
 	}
 	
 	return(self);
@@ -120,8 +120,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 /*!
  * @brief Set our original status state
- 
+ *
  * Also create the working state if we don't have one or the original status state is of the wrong statusType.
+ * If showSaveCheckbox is YES, clear workingStatusState's title so it will autoupdate.
  */
 - (void)setOriginalStatusState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType
 {
@@ -135,6 +136,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 		workingStatusState = (originalStatusState ? 
 							  [originalStatusState mutableCopy] :
 							  [[AIStatus statusOfType:inStatusType] retain]);
+		
+		//Clear the title if the save checkbox is showing so it will autoupdate.
+		if(showSaveCheckbox) [workingStatusState setTitle:nil];
 	}
 }
 
