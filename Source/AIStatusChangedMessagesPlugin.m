@@ -22,7 +22,10 @@
 #import <Adium/AIContentStatus.h>
 
 @interface AIStatusChangedMessagesPlugin (PRIVATE)
-- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type inChats:(NSSet *)inChats;
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
+			 withType:(NSString *)type
+ phraseWithoutSubject:(NSString *)statusPhrase
+			  inChats:(NSSet *)inChats;
 @end
 
 /*!
@@ -78,6 +81,7 @@ static	NSDictionary	*statusTypeDict = nil;
 				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
 						 forContact:contact
 						   withType:statusType
+			   phraseWithoutSubject:statusMessage
 							inChats:allChats];
 			}
 		}
@@ -95,18 +99,22 @@ static	NSDictionary	*statusTypeDict = nil;
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
 	if([allChats count]){
-		NSString		*description;
+		NSString		*description, *phraseWithoutSubject;
 		NSString		*name = [notification name];
+		NSDictionary	*userInfo = [notification userInfo];
 		
 		description = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:name
 																				 listObject:contact
-																				   userInfo:[notification userInfo]
+																				   userInfo:userInfo
 																			 includeSubject:YES];
-		
-		
+		phraseWithoutSubject = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:name
+																						  listObject:contact
+																							userInfo:userInfo
+																					  includeSubject:NO];		
 		[self statusMessage:description
 				 forContact:contact
 				   withType:[statusTypeDict objectForKey:name]
+	   phraseWithoutSubject:phraseWithoutSubject
 					inChats:allChats];
 	}
 }
@@ -128,7 +136,10 @@ static	NSDictionary	*statusTypeDict = nil;
 /*!
  * @brief Post a status message on all active chats for this object
  */
-- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type inChats:(NSSet *)inChats
+- (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact 
+			 withType:(NSString *)type
+ phraseWithoutSubject:(NSString *)statusPhrase
+			  inChats:(NSSet *)inChats
 {
     NSEnumerator		*enumerator;
     AIChat				*chat;
@@ -147,6 +158,12 @@ static	NSDictionary	*statusTypeDict = nil;
 										message:attributedMessage
 									   withType:type];
 		
+		if(statusPhrase){
+			NSDictionary	*userInfo = [NSDictionary dictionaryWithObject:statusPhrase
+																	forKey:@"Status Phrase"];
+			[content setUserInfo:userInfo];
+		}
+
 		//Add the object
 		[[adium contentController] receiveContentObject:content];
 	}
