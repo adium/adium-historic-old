@@ -1102,6 +1102,7 @@
 		34167FEC081D706200E35678 = {
 			children = (
 				34167FE5081D700B00E35678,
+				3458B882081FF7CA0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = DualWindowMessageAdvanced.nib;
@@ -3678,6 +3679,14 @@
 			lastKnownFileType = file;
 			name = Japanese;
 			path = Resources/Japanese.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B882081FF7CA0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = zh_TW;
+			path = Resources/zh_TW.lproj/DualWindowMessageAdvanced.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
