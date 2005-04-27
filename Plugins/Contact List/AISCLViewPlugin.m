@@ -27,9 +27,6 @@
 #warning crosslink
 #import "AIAppearancePreferencesPlugin.h"
 
-#define DEFAULT_LIST_THEME_NAME		@"Pastel Blue"
-#define DEFAULT_LIST_LAYOUT_NAME	@"Normal"
-
 int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context);
 
 @interface AISCLViewPlugin (PRIVATE)
@@ -56,24 +53,10 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 									 object:nil];
 
 	AIPreferenceController *preferenceController = [adium preferenceController];
-
-	/* Apply the default contact list layout and style (If no style is currently active)
-	 * We don't just do this via the defaults system because setting a theme or layout in turn sets many other prefs.
-	 */
-	if(![preferenceController preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST]){
-		[preferenceController setPreference:DEFAULT_LIST_THEME_NAME
-		                             forKey:KEY_LIST_THEME_NAME
-		                              group:PREF_GROUP_CONTACT_LIST];
-	}
-	if(![preferenceController preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_CONTACT_LIST]){
-		[preferenceController setPreference:DEFAULT_LIST_LAYOUT_NAME
-		                             forKey:KEY_LIST_LAYOUT_NAME
-		                              group:PREF_GROUP_CONTACT_LIST];
-	}
-
+	
 	//Now register our other defaults, which are 
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS
-	                              forClass:[self class]]
+																forClass:[self class]]
 	                              forGroup:PREF_GROUP_CONTACT_LIST];
 	
 	//Observe window style changes
@@ -131,7 +114,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-
 	if(firstTime || [group isEqualToString:PREF_GROUP_APPEARANCE]){
 		//Theme
 		if(firstTime || !key || [key isEqualToString:KEY_LIST_THEME_NAME]){
