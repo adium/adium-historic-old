@@ -407,7 +407,7 @@
 		{
 			NSDictionary	*sounds;
 			NSEnumerator	*enumerator;
-			NSString		*soundName, *soundLocation;
+			NSString		*soundName, *soundLocation = nil;
 
 			sounds = [self soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 			
