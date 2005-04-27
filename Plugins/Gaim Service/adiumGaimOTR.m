@@ -268,10 +268,12 @@ static void otrg_adium_dialog_connected(ConnContext *context)
 		conv = gaim_conversation_new(GAIM_CONV_IM, account, context->username);	
 	}
 	
-	securityDetailsDict = details_for_context(context);
-
-	[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
-									   setSecurityDetails:securityDetailsDict];
+	if(conv){
+		securityDetailsDict = details_for_context(context);
+		
+		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
+										   setSecurityDetails:securityDetailsDict];
+	}
 }
 
 /* Call this when a context transitions from CONN_CONNECTED to
@@ -282,8 +284,10 @@ static void otrg_adium_dialog_disconnected(ConnContext *context)
 
 	conv = gaim_find_conversation_with_account(context->username,
 											   gaim_accounts_find(context->accountname, context->protocol));
-	[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
-									   setSecurityDetails:nil];
+	if(conv){
+		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
+										   setSecurityDetails:nil];
+	}
 }
 
 /* Call this when we receive a Key Exchange message that doesn't cause
