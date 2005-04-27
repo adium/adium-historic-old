@@ -102,6 +102,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
 		   [theReason rangeOfString:@"Delete invalid attribute range"].location != NSNotFound || //NSAttributedString's initWithCoder can throw this
+		   [theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
 		   (!theName) || //Harmless
 		   [safeExceptionNames containsObject:theName])
 		{
@@ -155,11 +156,11 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 
 	//Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
 	if(dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) {
-		NSString			*processedStackTrace;
+		NSMutableString		*processedStackTrace;
 		NSString			*str;
 		
 		//We use two command line apps to decode our exception
-		str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | %s | cat -n",
+		str = [NSString stringWithFormat:@"\"%s\" -p %d %@ | tail -n +3 | head -n +%d | \"%s\" | cat -n",
 			[[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] stringByEscapingForShell] fileSystemRepresentation], //atos arg 0
 			[[NSProcessInfo processInfo] processIdentifier], //atos arg 2 (argument to -p)
 			stackTrace, //atos arg 3..inf
@@ -183,8 +184,14 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		//we use ISO 8859-1 because it preserves all bytes. UTF-8 doesn't (beacuse
 		//	certain sequences of bytes may get added together or cause the string to be rejected).
 		//and it shouldn't matter; we shouldn't be getting high-ASCII in the backtrace anyway. :)
-		processedStackTrace = [[[NSString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
+		processedStackTrace = [[[NSMutableString alloc] initWithData:data encoding:NSISOLatin1StringEncoding] autorelease];
 		[data release];
+		
+		//Clear out a useless string inserted into some stack traces as of 10.4 to improve crashlog readability
+		[processedStackTrace replaceOccurrencesOfString:@"ask_start_peeking: can't suspend failed  (ipc/send) invalid destination port"
+											 withString:@""
+												options:NSLiteralSearch
+												  range:NSMakeRange(0, [processedStackTrace length])];
 		
 		return(processedStackTrace);
 	}
