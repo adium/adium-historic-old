@@ -27,8 +27,8 @@
 #warning crosslink
 #import "AIAppearancePreferencesPlugin.h"
 
-#define DEFAULT_LIST_THEME_NAME		@"Aqua (Tiger)"
-#define DEFAULT_LIST_LAYOUT_NAME	@"Standard"
+#define DEFAULT_LIST_THEME_NAME		@"Pastel Blue"
+#define DEFAULT_LIST_LAYOUT_NAME	@"Normal"
 
 int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context);
 
