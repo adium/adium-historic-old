@@ -412,7 +412,7 @@
 			sounds = [self soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 			
 			//If we don't have a sound location, return
-			if(!sounds) return;
+			if(!sounds || !soundLocation) return;
 
 			enumerator = [sounds objectEnumerator];
 			while(soundName = [enumerator nextObject]){
