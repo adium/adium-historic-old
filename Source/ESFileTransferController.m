@@ -239,7 +239,7 @@ static ESFileTransferPreferences *preferences;
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
 		
 		if(showProgressWindow){
-			[self showProgressWindow:nil];
+			[self showProgressWindowIfNotOpen:nil];
 		}
 		
 	}else{
@@ -279,7 +279,7 @@ static ESFileTransferPreferences *preferences;
 		[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
 		
 		if(showProgressWindow){
-			[self showProgressWindow:nil];
+			[self showProgressWindowIfNotOpen:nil];
 		}
 	}
 }
@@ -324,7 +324,7 @@ static ESFileTransferPreferences *preferences;
 							  previouslyPerformedActionIDs:nil];
 
 			if(showProgressWindow){
-				[self showProgressWindow:nil];
+				[self showProgressWindowIfNotOpen:nil];
 			}
 			
 			break;
@@ -434,6 +434,11 @@ static ESFileTransferPreferences *preferences;
 - (void)showProgressWindow:(id)sender
 {
 	[ESFileTransferProgressWindowController showFileTransferProgressWindow];
+}
+
+- (void)showProgressWindowIfNotOpen:(id)sender
+{
+	[ESFileTransferProgressWindowController showFileTransferProgressWindowIfNotOpen];	
 }
 
 #pragma mark Preferences
