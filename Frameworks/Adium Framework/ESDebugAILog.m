@@ -46,5 +46,7 @@ void AILog (NSString *format, ...) {
 	va_end(ap); /* clean up when done */
 }
 #else
+//Insert a fake symbol so that plugins using AILog() don't crash.
+#undef AILog
 void AILog (NSString *format, ...) {};
 #endif
