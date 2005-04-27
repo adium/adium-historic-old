@@ -800,54 +800,62 @@
 		}
 		
 	}else if ([content isKindOfClass:[AIContentStatus class]]) {
+		NSString	*statusPhrase;
+		BOOL		replacedStatusPhrase = NO;
+		
 		do{
 			range = [inString rangeOfString:@"%status%"];
 			if(range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
+				[inString replaceCharactersInRange:range
+										withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
 		
 		do{
 			range = [inString rangeOfString:@"%statusSender%"];
 			if(range.location != NSNotFound) {
-				[inString replaceCharactersInRange:range withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
+				[inString replaceCharactersInRange:range
+										withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
 			}
 		} while(range.location != NSNotFound);
+
+		if(statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"]){
+			do{
+				range = [inString rangeOfString:@"%statusPhrase%"];
+				if(range.location != NSNotFound) {
+					[inString replaceCharactersInRange:range 
+											withString:[statusPhrase stringByEscapingForHTML]];
+					replacedStatusPhrase = YES;
+				}
+			} while(range.location != NSNotFound);
+		}
 		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
 		if(range.location != NSNotFound){
-			if(allowTextBackgrounds && showIncomingColors){
-				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																					  headers:NO 
-																					 fontTags:NO
-																		   includingColorTags:YES
-																				closeFontTags:YES
-																					styleTags:NO
-																   closeStyleTagsOnFontChange:YES
-																			   encodeNonASCII:YES
-																				 encodeSpaces:YES
-																				   imagesPath:@"/tmp"
-																			attachmentsAsText:NO
-															   attachmentImagesOnlyForSending:NO
-																			   simpleTagsOnly:NO
-																			   bodyBackground:NO]];
+			NSString	*messageString;
+
+			if(replacedStatusPhrase){
+				//If the status phrase was used, clear the message tag
+				messageString = @"";
 			}else{
-				[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
-																					  headers:NO 
-																					 fontTags:NO
-																		   includingColorTags:YES
-																				closeFontTags:YES
-																					styleTags:NO
-																   closeStyleTagsOnFontChange:YES
-																			   encodeNonASCII:YES
-																				 encodeSpaces:YES
-																				   imagesPath:@"/tmp"
-																			attachmentsAsText:NO
-															   attachmentImagesOnlyForSending:NO
-																			   simpleTagsOnly:NO
-																			   bodyBackground:NO]];
+				messageString = [AIHTMLDecoder encodeHTML:[content message]
+												  headers:NO 
+												 fontTags:NO
+									   includingColorTags:YES
+											closeFontTags:YES
+												styleTags:NO
+							   closeStyleTagsOnFontChange:YES
+										   encodeNonASCII:YES
+											 encodeSpaces:YES
+											   imagesPath:@"/tmp"
+										attachmentsAsText:NO
+						   attachmentImagesOnlyForSending:NO
+										   simpleTagsOnly:NO
+										   bodyBackground:NO];
 			}
+			
+			[inString replaceCharactersInRange:range withString:messageString];
 		}
 	}
 
