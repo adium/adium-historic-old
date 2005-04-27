@@ -1403,44 +1403,47 @@ NSMutableDictionary* get_chatDict(void)
 
 - (void)gaimConversation:(GaimConversation *)conv setSecurityDetails:(NSDictionary *)securityDetailsDict
 {
-	AIChat					*chat = imChatLookupFromConv(conv);
-	NSMutableDictionary		*fullSecurityDetailsDict;
+	AIChat	*chat = (conv ? imChatLookupFromConv(conv) : nil);
 
-	if(securityDetailsDict){
-		NSString				*format, *description;
-		fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];
+	if(chat){
+		NSMutableDictionary	*fullSecurityDetailsDict;
 		
-		/* Encrypted by Off-the-Record Messaging
-			*
-			* Fingerprint for TekJew:
-			* <Fingerprint>
-			*
-			* Secure ID for this session:
-			* Incoming: <Incoming SessionID>
-			* Outgoing: <Outgoing SessionID>
-			*/
-		format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
-		format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
+		if(securityDetailsDict){
+			NSString				*format, *description;
+			fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];
+			
+			/* Encrypted by Off-the-Record Messaging
+				*
+				* Fingerprint for TekJew:
+				* <Fingerprint>
+				*
+				* Secure ID for this session:
+				* Incoming: <Incoming SessionID>
+				* Outgoing: <Outgoing SessionID>
+				*/
+			format = [@"%@\n\n" stringByAppendingString:AILocalizedString(@"Fingerprint for %@:","Fingerprint for <name>:")];
+			format = [format stringByAppendingString:@"\n%@\n\n%@\n%@ %@\n%@ %@"];
+			
+			description = [NSString stringWithFormat:format,
+				AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
+				[[chat listObject] formattedUID],
+				[securityDetailsDict objectForKey:@"Fingerprint"],
+				AILocalizedString(@"Secure ID for this session:",nil),
+				AILocalizedString(@"Incoming:",nil),
+				[securityDetailsDict objectForKey:@"Incoming SessionID"],
+				AILocalizedString(@"Outgoing:",nil),
+				[securityDetailsDict objectForKey:@"Outgoing SessionID"],
+				nil];
+			
+			[fullSecurityDetailsDict setObject:description
+										forKey:@"Description"];
+		}else{
+			fullSecurityDetailsDict = nil;	
+		}
 		
-		description = [NSString stringWithFormat:format,
-			AILocalizedString(@"Encrypted by Off-the-Record Messaging",nil),
-			[[chat listObject] formattedUID],
-			[securityDetailsDict objectForKey:@"Fingerprint"],
-			AILocalizedString(@"Secure ID for this session:",nil),
-			AILocalizedString(@"Incoming:",nil),
-			[securityDetailsDict objectForKey:@"Incoming SessionID"],
-			AILocalizedString(@"Outgoing:",nil),
-			[securityDetailsDict objectForKey:@"Outgoing SessionID"],
-			nil];
-		
-		[fullSecurityDetailsDict setObject:description
-									forKey:@"Description"];
-	}else{
-		fullSecurityDetailsDict = nil;	
+		[chat mainPerformSelector:@selector(setSecurityDetails:)
+					   withObject:fullSecurityDetailsDict];
 	}
-
-	[chat mainPerformSelector:@selector(setSecurityDetails:)
-				   withObject:fullSecurityDetailsDict];
 }
 
 - (void)refreshedSecurityOfGaimConversation:(GaimConversation *)conv
