@@ -15,7 +15,7 @@ Version 0.80
 - Improved support for sending and receiving colors in messages
 - Added Pure Plastic and Smooth Operator 1.0 message views; removed some older message views (old views are available on adiumxtras.com)
 - Expanded toolbar buttons and improved icon art
-- German, Japanese, French, Italian, Dutch, and Traditional Chinese translations
+- Danish, Dutch, French, German, Italian, Japanese, and Traditional Chinese translations
 - Removed Tic Tac Toe; see http://mykogames.info for information on the new Myko instant messaging games project
 - Added support for custom Service Icon and Status Icon AdiumXtras packs
 - Added "Contact Last Seen" information tracking
