@@ -66,13 +66,17 @@
 														toolTip:AILocalizedString(@"Toggle display of offline contacts",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:(showOfflineContacts ?
-																					 @"offlinecontacts_transparent" :
-																					 @"offlinecontacts")
+													itemContent:[NSImage imageNamed:@"offlinecontacts"
 																		   forClass:[self class]]
 														 action:@selector(toggleOfflineContactsToolbar:)
 														   menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
+    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];
+	
+	//Toolbar item registration
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarWillAddItem:)
+												 name:NSToolbarWillAddItemNotification
+											   object:nil];
 }
 
 /*!
@@ -90,6 +94,7 @@
 - (void)dealloc
 {
 	[showOfflineMenuItem release]; showOfflineMenuItem = nil;
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	
 	[super dealloc];
 }
@@ -137,6 +142,21 @@
 										  @"offlinecontacts_transparent" :
 										  @"offlinecontacts")
 								forClass:[self class]]];
+}
+
+/*!
+* @brief After the toolbar has added the item we can set up the submenus
+ */
+- (void)toolbarWillAddItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	
+	if([[item itemIdentifier] isEqualToString:OFFLINE_CONTACTS_IDENTIFER]){
+		[item setImage:[NSImage imageNamed:(showOfflineContacts ?
+											@"offlinecontacts_transparent" :
+											@"offlinecontacts")
+								  forClass:[self class]]];
+	}
 }
 
 /*!
