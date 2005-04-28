@@ -41,14 +41,17 @@
 
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement options:(unsigned)opts range:(NSRange)searchRange
 {
-    NSRange theRange;
-    int numberOfReplacements = 0;
-    while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
+    NSRange		theRange;
+    unsigned	numberOfReplacements = 0, replacementLength = [replacement length];
+
+    while ( (theRange = [[self string] rangeOfString:target 
+											 options:opts
+											   range:searchRange]).location != NSNotFound ) {
         [self replaceCharactersInRange:theRange withString:replacement];
         numberOfReplacements++;
         searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
         
-        searchRange.location = theRange.location + [replacement length];
+        searchRange.location = theRange.location + replacementLength;
         if (searchRange.length - searchRange.location < 1)
             break;
     }
@@ -57,18 +60,20 @@
 
 - (unsigned int)replaceOccurrencesOfString:(NSString *)target withString:(NSString*)replacement attributes:(NSDictionary*)attributes options:(unsigned)opts range:(NSRange)searchRange
 {
-    NSRange theRange;
-    int numberOfReplacements = 0;
+    NSRange				theRange;
+    unsigned			numberOfReplacements = 0, replacementLength = [replacement length];
+    NSAttributedString	*replacementString = [[NSAttributedString alloc] initWithString:replacement 
+																			 attributes:attributes];
     
-    NSAttributedString * replacementString = [[NSAttributedString alloc] initWithString:replacement attributes:attributes];
-    
-    while ( (theRange = [[self string] rangeOfString:target options:opts range:searchRange]).location != NSNotFound ) {
-        
+    while ( (theRange = [[self string] rangeOfString:target
+											 options:opts
+											   range:searchRange]).location != NSNotFound ) {
+		
         [self replaceCharactersInRange:theRange withAttributedString:replacementString];
         numberOfReplacements++;
         searchRange.length = searchRange.length - ((theRange.location + theRange.length) - searchRange.location);
         
-        searchRange.location = theRange.location + [replacement length];
+        searchRange.location = theRange.location + replacementLength;
         if (searchRange.length - searchRange.location < 1)
             break;
     }
