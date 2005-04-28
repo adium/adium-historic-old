@@ -166,6 +166,16 @@
     return [super removeListObject:inObject fromPrivacyList:type]; 
 }
 
+#pragma mark Contact List Menu Items
+- (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
+{
+	if(strcmp(label, "Edit Buddy Comment") == 0){
+		return(nil);
+	}
+
+	return([super titleForContactMenuLabel:label forContact:inContact]);
+}
+
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
