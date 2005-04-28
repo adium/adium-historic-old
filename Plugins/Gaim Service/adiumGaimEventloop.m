@@ -17,7 +17,6 @@
 #import "adiumGaimEventloop.h"
 #import <AIUtilities/CBApplicationAdditions.h>
 
-static BOOL					isOnTigerOrBetter = NO;
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
 
@@ -140,14 +139,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     // Build the CFSocket-style callback flags to use from the gaim ones
     CFOptionFlags callBackTypes = 0;
     if ((condition & GAIM_INPUT_READ ) != 0) callBackTypes |= kCFSocketReadCallBack;
-    if ((condition & GAIM_INPUT_WRITE) != 0){
-		if (isOnTigerOrBetter){
-			callBackTypes |= kCFSocketWriteCallBack | kCFSocketConnectCallBack;
-		}else{
-			callBackTypes |= kCFSocketWriteCallBack;
-		}
-	}
-	
+    if ((condition & GAIM_INPUT_WRITE) != 0) callBackTypes |= kCFSocketWriteCallBack;	
 	//	if ((condition & GAIM_INPUT_CONNECT) != 0) callBackTypes |= kCFSocketConnectCallBack;
 	
     // And likewise the entire CFSocket
@@ -227,9 +219,6 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 
 GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
 {
-	//Cache the isOnTigerOrBetter so we don't have to check it each callback
-	isOnTigerOrBetter = [NSApp isOnTigerOrBetter];
-
 	if(!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
 
 	return &adiumEventLoopUiOps;
