@@ -41,7 +41,6 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 //Create a new invite to chat window
 + (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact
 {
-	
     if(!sharedInviteToChatInstance){
         sharedInviteToChatInstance = [[self alloc] initWithWindowNibName:INVITE_NIB_NAME];
     }
@@ -60,7 +59,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {	
-    [super initWithWindowNibName:windowNibName];    
+    self = [super initWithWindowNibName:windowNibName];    
 	
 	contact = nil;
 	service = nil;
@@ -82,24 +81,6 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-    //Configure the contact menu (primarily for handling metacontacts)
-	//If the contact is not online, we should include offline so it will be shown; if it is, we don't need 'em
-    [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact
-																   forService:service
-																   withTarget:self
-															   includeOffline:![contact online]]];
-	
-	if( [contact isKindOfClass:[AIMetaContact class]] ) {
-		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
-	} else {
-		[menu_contacts selectItemAtIndex:0];
-	}
-	
-	contact = [[menu_contacts selectedItem] representedObject];
-	
-	// Set the chat's name in the window
-	[textField_chatName setStringValue:[chat name]];
-
     //Center the window
     [[self window] center];
 }
@@ -121,13 +102,37 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	[self closeWindow:nil];
 }
 
+- (void)configureForChatAndContact
+{
+	//Ensure the window is loaded
+	[self window];
+		
+	//Configure the contact menu (primarily for handling metacontacts)
+	//If the contact is not online, we should include offline so it will be shown; if it is, we don't need 'em
+    [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact
+																   forService:service
+																   withTarget:self
+															   includeOffline:![contact online]]];
+	
+	if( [contact isKindOfClass:[AIMetaContact class]] ) {
+		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
+	} else {
+		[menu_contacts selectItemAtIndex:0];
+	}
+
+	//Update to know that we are working with this contact
+	[self setContact:[[menu_contacts selectedItem] representedObject]];
+	
+	// Set the chat's name in the window
+	[textField_chatName setStringValue:[chat name]];	
+}
+
 //Setting methods
 #pragma mark Setting methods
 - (IBAction)selectContainedContact:(id)sender
 {
 	[self setContact:[[menu_contacts selectedItem] representedObject]];
 }
-
 
 - (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact
 {
@@ -137,6 +142,8 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		[chat release]; chat = [inChat retain];
 		[service release]; service = [[[chat account] service] retain];
 	}
+	
+	[self configureForChatAndContact];
 }
 
 - (void)setContact:(AIListContact *)inContact
