@@ -17,6 +17,7 @@
 #import "AIContactAwayPlugin.h"
 #import "AIInterfaceController.h"
 #import <Adium/AIListObject.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 #define	AWAY_LABEL			AILocalizedString(@"Away",nil)
 #define	AWAY_MESSAGE_LABEL	AILocalizedString(@"Away Message",nil)
@@ -108,7 +109,22 @@
 		}
 	}else{
 		if(statusMessage != nil && [statusMessage length] != 0){
-			entry = statusMessage;
+			if([[statusMessage string] rangeOfString:@"\t" options:NSLiteralSearch].location == NSNotFound){
+				entry = statusMessage;
+				
+			}else{
+				/* We don't display tabs well in the tooltips because we use them for alignment, so
+				 * turn them into 4 spaces. */
+				NSMutableAttributedString	*mutableStatusMessage = [[statusMessage mutableCopy] autorelease];
+				[mutableStatusMessage replaceOccurrencesOfString:@"\t"
+													  withString:@"    "
+														 options:NSLiteralSearch
+														   range:NSMakeRange(0, [mutableStatusMessage length])];
+				entry = mutableStatusMessage;
+			}
+			
+			
+			
 		}else if(away){
 			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
 		}
