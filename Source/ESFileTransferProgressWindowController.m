@@ -63,7 +63,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	//Create the window and show it if it is not already open
     if(!sharedTransferProgressInstance){
-		[self sharedTransferProgressInstance];
+		[self showFileTransferProgressWindow];
 	}
 	
 	return (sharedTransferProgressInstance);
