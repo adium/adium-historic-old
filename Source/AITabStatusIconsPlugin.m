@@ -54,6 +54,16 @@
 									 object:nil];
 }
 
+/*!
+ * @brief Uninstall
+ */
+- (void)uninstallPlugin
+{
+	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium contentController] unregisterChatObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+}
+
 /*
  * @brief The status icon set changed; update our objects and chats.
  */
