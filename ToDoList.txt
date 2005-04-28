@@ -1,7 +1,5 @@
-5 - Contact list toolbar icons for toggle groups and toggle offline
 5 - Preference importing wherever possible for .7x -> 0.80
 4 - Short message between +/- and edit in the events pane
-4 - Icons for .AdiumStatusIcons and .AdiumServiceIcons file types
 4 - www.adiumxtras.com category for Status/Service Icons (perhaps make it a Miscellaneous catch-all category?)
 4 - Implement jabber account registration from the account prefs
 4 - Add formatters for the time fields for Custom Status and Status preferences to force them to whole numbers
