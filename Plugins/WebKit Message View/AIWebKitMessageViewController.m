@@ -628,14 +628,24 @@
 {
 	NSMutableArray *webViewMenuItems = [[defaultMenuItems mutableCopy] autorelease];
 	AIListContact	*chatListObject = [chat listObject];
-	
-	NSImage *image;
-	if (webViewMenuItems && (image = [element objectForKey:WebElementImageKey])){
-		//Remove the first two items, which are "Open Image in New Window" and "Download Image"
-		[webViewMenuItems removeObjectAtIndex:0];
-		[webViewMenuItems removeObjectAtIndex:0];
+
+	if (webViewMenuItems){
+		NSImage			*image;
 		
-		//XXX - Save Image As... item with the NSImage as representedObject
+		if((image = [element objectForKey:WebElementImageKey])){
+			//Remove the first two items, which are "Open Image in New Window" and "Download Image"
+			[webViewMenuItems removeObjectAtIndex:0];
+			[webViewMenuItems removeObjectAtIndex:0];
+			
+			//XXX - Save Image As... item with the NSImage as representedObject
+		}
+
+		NSString	*nextMenuItemTitle = [[webViewMenuItems objectAtIndex:0] title];
+		if(nextMenuItemTitle &&
+		   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)){
+			//Remove the next item, which is "Reload"
+			[webViewMenuItems removeObjectAtIndex:0];			
+		}
 	}
 	
 	if (chatListObject){
