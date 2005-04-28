@@ -28,6 +28,11 @@
 	[[adium contentController] registerChatObserver:self];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contentController] unregisterChatObserver:self];
+}
+
 #pragma mark Message event handling
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
