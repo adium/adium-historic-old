@@ -11,6 +11,7 @@
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
 #import "SLGaimCocoaAdapter.h"
+#import <Adium/AIChat.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIService.h>
@@ -163,7 +164,9 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 	return returnString;
 }
 
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString
+						forListObject:(AIListObject *)inListObject
+					   contentMessage:(AIContentMessage *)contentMessage
 {		
 	if(inListObject){
 		BOOL		nonHTMLUser = NO;
@@ -202,7 +205,17 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 						oscar_direct_im_initiate_immediately(account->gc, who);
 						
 						//Add this content message to the sending queue for this contact to be sent once a connection is established
-						//XXX
+						if(!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
+						
+						NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[inListObject internalObjectID]];
+						if(!thisContactQueue){
+							thisContactQueue = [NSMutableArray array];
+							
+							[directIMQueue setObject:thisContactQueue
+											  forKey:[inListObject internalObjectID]];
+						}
+						
+						[thisContactQueue addObject:contentMessage];
 						
 						//Return nil for now to indicate that the message should not be sent
 						returnString = nil;
@@ -225,9 +238,28 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 	}
 }
 
+/*
+ * @brief Can we send images for this chat?
+ *
+ * @result YES if we are currently in a direct IM session or are connecting to one
+ */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
-	return /*YES*/GAIM_DEBUG;
+	if(inChat && [inChat listObject]){
+		//Check for a oscar_direct_im (dim) currently open
+		struct oscar_direct_im  *dim;
+		const char				*who = [[[inChat listObject] UID] UTF8String];
+
+		if(account && account->gc && who){
+			dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+			
+			if (dim) {
+				return YES;
+			}
+		}
+	}
+	
+	return NO;
 }
 
 #pragma mark Delayed updates
@@ -363,11 +395,9 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Edit Buddy Comment") == 0){
-		return(nil);
-	}else if(strcmp(label, "Direct IM") == 0){
+	if(strcmp(label, "Direct IM") == 0){
 		//XXX
-		if (GAIM_DEBUG && ![[[inContact service] serviceID] isEqualToString:@"ICQ"]){
+		if (/*GAIM_DEBUG && */![[[inContact service] serviceID] isEqualToString:@"ICQ"]){
 			return([NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]]);
 		}else{
 			return(nil);
@@ -397,12 +427,37 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 //We are now connected via DirectIM to theContact
 - (void)directIMConnected:(AIListContact *)theContact
 {
-	//Send any pending directIM messages
-	NSLog(@"Direct IM Connected: %@",[theContact UID]);
+	AILog(@"Direct IM Connected: %@",[theContact UID]);
+
+	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
+											 ofType:@"directIM"
+											 inChat:[[adium contentController] chatWithContact:theContact]];
+	//Send any pending directIM messages for this contact
+	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
+	if(thisContactQueue){
+		NSEnumerator	*enumerator;
+		AIContentObject	*contentObject;
+		
+		enumerator = [thisContactQueue objectEnumerator];
+		while(contentObject = [enumerator nextObject]){
+			[[adium contentController] sendContentObject:contentObject];
+		}
+		
+		[directIMQueue removeObjectForKey:[theContact internalObjectID]];
+		
+		if(![directIMQueue count]){
+			[directIMQueue release]; directIMQueue = nil;
+		}
+	}
 }
+
 - (void)directIMDisconnected:(AIListContact *)theContact
 {
-	NSLog(@"Direct IM Disconnected: %@",[theContact UID]);	
+	AILog(@"Direct IM Disconnected: %@",[theContact UID]);	
+
+	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
+											 ofType:@"directIM"
+											 inChat:[[adium contentController] chatWithContact:theContact]];	
 }
 
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
