@@ -177,7 +177,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 															UID:[self UIDForContact:contact]];  
 	
 	if (![listContact remoteGroupName]){
-		[listContact setRemoteGroupName:AILocalizedString(@"Bonjour", @"Bonjour group name")];
+		[listContact setRemoteGroupName:@"Bonjour"];
 	}
 	
 	//We only get state change updates on Online contacts
