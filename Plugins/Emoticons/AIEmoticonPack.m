@@ -247,12 +247,14 @@
 	NSString		*fileName;
 	
 	while(fileName = [enumerator nextObject]){
-		NSDictionary	*dict = [emoticons objectForKey:fileName];
+		id	dict = [emoticons objectForKey:fileName];
 		
-		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
-													  equivalents:[dict objectForKey:EMOTICON_EQUIVALENTS]
-															 name:[dict objectForKey:EMOTICON_NAME]
-															 pack:self]];
+		if([dict isKindOfClass:[NSDictionary class]]){
+			[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
+														  equivalents:[(NSDictionary *)dict objectForKey:EMOTICON_EQUIVALENTS]
+																 name:[(NSDictionary *)dict objectForKey:EMOTICON_NAME]
+																 pack:self]];
+		}
 	}
 }
 
