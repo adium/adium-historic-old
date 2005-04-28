@@ -64,7 +64,8 @@
 
 - (void)uninstallPlugin
 {
-	
+	[[adium contentController] unregisterChatObserver:self];
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)registerToolbarItem
