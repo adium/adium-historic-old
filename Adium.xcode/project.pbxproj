@@ -1103,6 +1103,7 @@
 			children = (
 				34167FE5081D700B00E35678,
 				3458B882081FF7CA0005BCF6,
+				3458B9960820DAE10005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = DualWindowMessageAdvanced.nib;
@@ -2150,6 +2151,7 @@
 				345F586408198E87001F733C,
 				345F5B97081AC4F1001F733C,
 				3458B500081DD44B0005BCF6,
+				3458B96E0820DAC40005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = AccountProxy.nib;
@@ -2186,6 +2188,7 @@
 				345F589B08198F15001F733C,
 				345F5B98081AC4F1001F733C,
 				3458B503081DD44B0005BCF6,
+				3458B9820820DAD30005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = AppearancePrefs.nib;
@@ -2330,6 +2333,7 @@
 				345F589C08198F15001F733C,
 				345F5BB3081AC4F3001F733C,
 				3458B502081DD44B0005BCF6,
+				3458B9C10820DB000005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = StatusSortConfiguration.nib;
@@ -2464,6 +2468,7 @@
 				345F589A08198F15001F733C,
 				345F5BAA081AC4F2001F733C,
 				3458B501081DD44B0005BCF6,
+				3458B9AC0820DAF50005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = ListThemeSheet.nib;
@@ -2490,6 +2495,7 @@
 				345F589908198F15001F733C,
 				345F5BA9081AC4F2001F733C,
 				3458B4FF081DD44B0005BCF6,
+				3458B9AD0820DAF50005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = ListLayoutSheet.nib;
@@ -3687,6 +3693,62 @@
 			lastKnownFileType = wrapper.nib;
 			name = zh_TW;
 			path = Resources/zh_TW.lproj/DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9540820D8EC0005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = "Plugins/WebKit Message View/French.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B96E0820DAC40005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9820820DAD30005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9960820DAE10005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9AC0820DAF50005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9AD0820DAF50005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3458B9C10820DB000005BCF6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/StatusSortConfiguration.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -6004,6 +6066,7 @@
 				343C45E20816C0FE00FF5FA7,
 				343C47760816FBDA00FF5FA7,
 				345F5BB4081AC4F3001F733C,
+				3458B9540820D8EC0005BCF6,
 			);
 			isa = PBXVariantGroup;
 			name = WebKitPreferencesView.nib;
