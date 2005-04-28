@@ -38,7 +38,8 @@
 
 - (void)uninstallPlugin
 {
-
+	[[adium contentController] unregisterChatObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 }
 
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
