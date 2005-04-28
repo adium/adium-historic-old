@@ -45,6 +45,7 @@
 - (void)_saveControlChanges;
 - (void)_configureAdvancedPreferencesTable;
 - (void)_configreTabViewItemLabels;
+- (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem;
 @end
 
 static AIPreferenceWindowController *sharedPreferenceInstance = nil;
