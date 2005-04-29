@@ -46,7 +46,7 @@ typedef enum {
     return(@"MessageContextDisplayPrefs");
 }
 - (NSImage *)image{
-	return([NSImage imageNamed:@"LogViewer" forClass:[self class]]);
+	return([NSImage imageNamed:@"pref-messagehistory" forClass:[self class]]);
 }
 
 - (NSDictionary *)restorablePreferences
