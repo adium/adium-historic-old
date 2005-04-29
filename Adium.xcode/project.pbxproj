@@ -11311,14 +11311,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		34C2A4E90821861800F3363F = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = Danish;
-			path = "Adium Crash Reporter/Danish.lproj/Localizable.strings";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34C2A4EA0821861800F3363F = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
@@ -13515,7 +13507,6 @@
 		34E0E9B707CC4B3600A82198 = {
 			children = (
 				34E0E9B007CC4B1800A82198,
-				34C2A4E90821861800F3363F,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -16333,8 +16324,7 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				OPTIMIZATION_CFLAGS = "-O0";
-				OTHER_CFLAGS = "-DDEBUG_BUILD";
+				OTHER_CFLAGS = "-DDEBUG_BUILD -g3";
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				ZERO_LINK = YES;
 			};
