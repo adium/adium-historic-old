@@ -640,11 +640,13 @@
 			//XXX - Save Image As... item with the NSImage as representedObject
 		}
 
-		NSString	*nextMenuItemTitle = [[webViewMenuItems objectAtIndex:0] title];
-		if(nextMenuItemTitle &&
-		   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)){
-			//Remove the next item, which is "Reload"
-			[webViewMenuItems removeObjectAtIndex:0];			
+		if([webViewMenuItems count] >= 1){
+			NSString	*nextMenuItemTitle = [[webViewMenuItems objectAtIndex:0] title];
+			if(nextMenuItemTitle &&
+			   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)){
+				//Remove the next item, which is "Reload"
+				[webViewMenuItems removeObjectAtIndex:0];			
+			}
 		}
 	}
 	
