@@ -253,8 +253,10 @@
     if(sortController){
 		NSMutableArray	*sortedListObjects;
 		
-		sortedListObjects = [[sortController sortListObjects:containedObjects] mutableCopy];
-		[containedObjects release]; containedObjects = sortedListObjects;
+		if([containedObjects count] > 1){
+			sortedListObjects = [[sortController sortListObjects:containedObjects] mutableCopy];
+			[containedObjects release]; containedObjects = sortedListObjects;
+		}
     }
 }
 
