@@ -611,27 +611,42 @@
 {
 	int		height = [self _textEntryViewProperHeightIgnoringUserMininum:NO];
 	int		heightWithDivider = [splitView_textEntryHorizontal dividerThickness] + height;
-	NSRect	tempFrame;
-
+	NSRect	tempFrame, newFrame;
+	BOOL	changed = NO;
+	
 	//Display the vertical scroller if our view is not tall enough to display all the entered text
 	[scrollView_outgoing setHasVerticalScroller:(height < [textView_outgoing desiredSize].height)];
 
 	//Size the outgoing text view to the desired height
 	tempFrame = [scrollView_outgoing frame];
-	[scrollView_outgoing setFrame:NSMakeRect(tempFrame.origin.x,
-											 [splitView_textEntryHorizontal frame].size.height - height,
-											 tempFrame.size.width,
-											 height)];
-	
+	newFrame = NSMakeRect(tempFrame.origin.x,
+						  [splitView_textEntryHorizontal frame].size.height - height,
+						  tempFrame.size.width,
+						  height);
+	if(!NSEqualRects(tempFrame, newFrame)){
+		[scrollView_outgoing setFrame:newFrame];
+		[scrollView_outgoing setNeedsDisplay:YES];
+		changed = YES;
+	}
+
 	//Size the message split view to fill the remaining space
 	tempFrame = [splitView_messages frame];
-	[splitView_messages setFrame:NSMakeRect(tempFrame.origin.x,
-											tempFrame.origin.y,
-											tempFrame.size.width,
-											[splitView_textEntryHorizontal frame].size.height - heightWithDivider)];
+	newFrame = NSMakeRect(tempFrame.origin.x,
+						  tempFrame.origin.y,
+						  tempFrame.size.width,
+						  [splitView_textEntryHorizontal frame].size.height - heightWithDivider);
+	if(!NSEqualRects(tempFrame, newFrame)){
+		[splitView_messages setFrame:newFrame];
+		[splitView_messages setNeedsDisplay:YES];
+		changed = YES;
+	}
 
-	//Redisplay both views and the divider
-	[splitView_textEntryHorizontal setNeedsDisplay:YES];
+	if(changed){		
+		//Redisplay the window on the next run loop
+		[[splitView_textEntryHorizontal window] performSelector:@selector(display)
+													 withObject:nil
+													 afterDelay:0];
+	}
 }
 
 /*!
