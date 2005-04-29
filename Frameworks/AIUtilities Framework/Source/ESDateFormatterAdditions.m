@@ -216,10 +216,31 @@ typedef enum {
 + (NSString *)stringForApproximateTimeIntervalBetweenDate:(NSDate *)firstDate andDate:(NSDate *)secondDate
 {
 	NSString	*timeString = nil;
-	int			hours = [firstDate timeIntervalSinceDate:secondDate] / 60.0 / 60.0;
-	int			days = hours / 24.0;
-	int			weeks = days / 7.0;
+	double		seconds = [firstDate timeIntervalSinceDate:secondDate];
+    int			weeks = 0, days = 0, hours = 0, minutes = 0; 
+
+	//Weeks
+	weeks = (int)((seconds / 86400) / 7);
+	seconds -= (weeks * 86400 * 7);
+
+	//Days
+	if(seconds){
+		days = (int)(seconds / 86400);
+		seconds -= days * 86400;
+	}
 	
+	//Hours
+    if(seconds){
+        hours = (int)(seconds / 3600);
+        seconds -= hours * 3600;
+    }
+	
+	//Minutes
+    if(seconds){
+        minutes = (int)(seconds / 60);
+        seconds -= minutes * 60;
+    }
+
 	if(weeks >= 1){
 		if(weeks == 1){
 			timeString = ONE_WEEK;
@@ -241,6 +262,15 @@ typedef enum {
 			timeString = ONE_HOUR;
 		}else{
 			timeString = [NSString stringWithFormat:MULTIPLE_HOURS, hours];
+		}
+	}
+
+	//If we get here, display either 1 minute or some number of minutes (approximate, we don't want to go into seconds)
+	if(!timeString){
+		if(minutes > 1){
+			timeString = [NSString stringWithFormat:MULTIPLE_MINUTES, minutes];
+		}else{
+			timeString = ONE_MINUTE;
 		}
 	}
 
