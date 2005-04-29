@@ -20,6 +20,12 @@
 			settings = {
 			};
 		};
+		0779934F08221D9700F698DC = {
+			fileRef = 4BAFD5E806E00D1700FF7FBC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07836212077B0CA90032D975 = {
 			fileRef = 4B970BF80535B864002F28F9;
 			isa = PBXBuildFile;
@@ -186,12 +192,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 			);
 			targets = (
@@ -1544,32 +1550,6 @@
 		};
 		342838EE07D2D004004F01C9 = {
 			fileRef = 342838ED07D2D004004F01C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3428392307D2D012004F01C9 = {
-			children = (
-				3428392407D2D013004F01C9,
-				34A6FD0207D7A6F000972830,
-				347C5559080C8C0D00E69674,
-			);
-			isa = PBXVariantGroup;
-			name = "Shared Dock Icon Images";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3428392407D2D013004F01C9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = English;
-			path = "Resources/English.lproj/Shared Dock Icon Images";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3428392507D2D013004F01C9 = {
-			fileRef = 3428392307D2D012004F01C9;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -3690,7 +3670,7 @@
 		};
 		3458B4FF081DD44B0005BCF6 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = Resources/Japanese.lproj/ListLayoutSheet.nib;
 			refType = 4;
@@ -3698,7 +3678,7 @@
 		};
 		3458B500081DD44B0005BCF6 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = Resources/Japanese.lproj/AccountProxy.nib;
 			refType = 4;
@@ -3706,7 +3686,7 @@
 		};
 		3458B501081DD44B0005BCF6 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = Resources/Japanese.lproj/ListThemeSheet.nib;
 			refType = 4;
@@ -3714,7 +3694,7 @@
 		};
 		3458B502081DD44B0005BCF6 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = Resources/Japanese.lproj/StatusSortConfiguration.nib;
 			refType = 4;
@@ -3722,7 +3702,7 @@
 		};
 		3458B503081DD44B0005BCF6 = {
 			isa = PBXFileReference;
-			lastKnownFileType = file;
+			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = Resources/Japanese.lproj/AppearancePrefs.nib;
 			refType = 4;
@@ -5273,14 +5253,6 @@
 			isa = PBXGroup;
 			name = Tooltips;
 			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		347C5559080C8C0D00E69674 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = German;
-			path = "Resources/German.lproj/Shared Dock Icon Images";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -8134,14 +8106,6 @@
 			settings = {
 			};
 		};
-		34A6FD0207D7A6F000972830 = {
-			isa = PBXFileReference;
-			lastKnownFileType = folder;
-			name = French;
-			path = "Resources/French.lproj/Shared Dock Icon Images";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A6FE7807D7E06A00972830 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -9363,7 +9327,6 @@
 				4B08399C07D235190034A001,
 				3428328D07D2644F004F01C9,
 				342838EE07D2D004004F01C9,
-				3428392507D2D013004F01C9,
 				4BB5B78207D2DC4900CFE06F,
 				9E124DF107D34C9100AA91C5,
 				9E124DF207D34C9100AA91C5,
@@ -9401,6 +9364,7 @@
 				345F590708199746001F733C,
 				345F5C5F081ACCB2001F733C,
 				34167FED081D706300E35678,
+				0779934F08221D9700F698DC,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19529,12 +19493,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BAFD68406E00D1700FF7FBC = {
-			fileRef = 4BAFD5E806E00D1700FF7FBC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BB19298079EE90900DAA523 = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -21047,7 +21005,6 @@
 		};
 		4BF2E6BE067CB72400743318 = {
 			children = (
-				3428392307D2D012004F01C9,
 				342838ED07D2D004004F01C9,
 				3408254D075B078B00703011,
 				34A29D9406ED68BF00E1366C,
@@ -21072,7 +21029,6 @@
 			files = (
 				34082675075B079800703011,
 				4BA62D8E06C51257001D6B3C,
-				4BAFD68406E00D1700FF7FBC,
 				34A29DB706ED68C000E1366C,
 				4BF2EA3F067CB7A200743318,
 				4BF2EA40067CB7A200743318,
