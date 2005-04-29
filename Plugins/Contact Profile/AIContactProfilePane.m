@@ -23,12 +23,23 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AILocalizationTextField.h>
 
+/*
+ * @class AIContactProfilePane
+ * @brief Pane for contact info and profile
+ *
+ * Man, this is ugly.
+ */
 @implementation AIContactProfilePane
 
-//Preference pane properties
+/*
+ * @brief Category
+ */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Profile);
 }
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName{
     return(@"ContactProfilePane");
 }
@@ -56,9 +67,11 @@
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	//New list object
-	[listObject release];
-	listObject = [inObject retain];
-
+	if(inObject != listObject){
+		[listObject release];
+		listObject = [inObject retain];
+	}
+	
 	//Display what we have now
 	[self updatePane];
 	
