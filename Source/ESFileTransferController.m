@@ -47,6 +47,7 @@ static ESFileTransferPreferences *preferences;
 @interface ESFileTransferController (PRIVATE)
 - (void)configureFileTransferProgressWindow;
 - (void)showProgressWindow:(id)sender;
+- (void)showProgressWindowIfNotOpen:(id)sender;
 
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename;
 
