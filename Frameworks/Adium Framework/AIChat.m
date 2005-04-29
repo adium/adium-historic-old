@@ -51,6 +51,8 @@ static int nextChatNumber = 0;
     if((self = [super init]))
 	{
 		AILog(@"[%@ initForAccount]",self);
+		//this release is only needed as long as this AILog call exists.
+		[uniqueChatID release];
 
 		name = nil;
 		account = [inAccount retain];
