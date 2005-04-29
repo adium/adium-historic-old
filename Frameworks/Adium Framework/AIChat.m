@@ -50,10 +50,6 @@ static int nextChatNumber = 0;
 {
     if((self = [super init]))
 	{
-		AILog(@"[%@ initForAccount]",self);
-		//this release is only needed as long as this AILog call exists.
-		[uniqueChatID release];
-
 		name = nil;
 		account = [inAccount retain];
 		contentObjectArray = [[NSMutableArray alloc] init];
@@ -62,6 +58,8 @@ static int nextChatNumber = 0;
 		uniqueChatID = nil;
 		isOpen = NO;
 		expanded = YES;
+
+		AILog(@"[%@ initForAccount]",self);
 
 		//Observe preferences changes for typing enable/disable
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
