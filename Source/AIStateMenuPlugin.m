@@ -97,10 +97,14 @@
 	enumerator = [menuItemArray objectEnumerator];
     while((menuItem = [enumerator nextObject])){
 		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
+		NSMenuItem	*dockMenuItem;
 		int			tag = [menuItem tag];
 
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
-		[dockStatusMenu addItem:[[menuItem copy] autorelease]];
+		
+		dockMenuItem = [menuItem copy];
+		[dockStatusMenu addItem:dockMenuItem];
+		[dockMenuItem release];
 
 		if(assignKeyEquivalents){
 			if((tag == targetStatusType) && 
@@ -116,9 +120,10 @@
     }
 	
 	[dockStatusMenuRoot setSubmenu:dockStatusMenu];
-	
+
 	//Tell the status controller to update these items as necessary
 	[[adium statusController] plugin:self didAddMenuItems:[dockStatusMenu itemArray]];
+	[dockStatusMenu release];
 }
 
 /*!
