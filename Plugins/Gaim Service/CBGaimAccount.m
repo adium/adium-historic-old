@@ -1626,9 +1626,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     account = gaim_account_new([[self formattedUID] UTF8String], [self protocolPlugin]);
 	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
 
+	[self finishCreateNewGaimAccount];
+}
+
+- (void)finishCreateNewGaimAccount
+{
 	if (!gaimThread){
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];	
-	}
+	}	
 	
 	[gaimThread addAdiumAccount:self];
 }
@@ -1756,7 +1761,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 	
-	GaimDebug(@"Adium: Connect: %@ initiating connection.",[self UID]);
+	GaimDebug(@"Adium: Register: %@ initiating connection.",[self UID]);
 	
 	[gaimThread registerAccount:self];
 }

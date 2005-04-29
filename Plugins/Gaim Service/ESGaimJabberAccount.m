@@ -24,6 +24,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/ESTextAndButtonsWindowController.h>
 #include <Libgaim/buddy.h>
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
@@ -109,9 +110,11 @@
 	BOOL		forceOldSSL, useTLS, allowPlaintext;
 	
 	//'Connect via' server (nil by default)
-	if ((connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS])){
-		gaim_account_set_string(account, "connect_server", [connectServer UTF8String]);
-	}
+	connectServer = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS];
+	
+	gaim_account_set_string(account, "connect_server", (connectServer ?
+														[connectServer UTF8String] :
+														""));
 	
 	//Force old SSL usage? (off by default)
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
@@ -128,8 +131,6 @@
 
 - (void)createNewGaimAccount
 {
-	[super createNewGaimAccount];
-	
 	NSString	*resource, *userNameWithHost = nil, *completeUserName = nil;
 	BOOL		serverAppendedToUID;
 	
@@ -152,8 +153,13 @@
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 
-	AILog(@"Jabber user name: \"%@\"",completeUserName);
-	gaim_account_set_username(account, [completeUserName UTF8String]);
+	//Create a fresh version of the account
+    account = gaim_account_new([completeUserName UTF8String], [self protocolPlugin]);
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+
+	[self finishCreateNewGaimAccount];
+
+	AILog(@"%x: Jabber user name: \"%@\"",account, completeUserName);
 }
 
 /*!
@@ -258,7 +264,24 @@
 	
 	if (disconnectionError){
 		if ([disconnectionError rangeOfString:@"401"].location != NSNotFound) {
+			shouldReconnect = NO;
+			
+			/* Automatic registration attempt? Doesn't work at present... */
+#if 0
+			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
+																  defaultButton:AILocalizedString(@"Register",nil)
+																alternateButton:AILocalizedString(@"Cancel",nil)
+																	otherButton:nil
+																	   onWindow:nil
+															  withMessageHeader:nil
+																	 andMessage:[NSAttributedString stringWithString:
+																		 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
+																		 target:self
+																	   userInfo:nil];
+#else
 			[[adium accountController] forgetPasswordForAccount:self];
+#endif
+			
 		}else if ([disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
 			shouldReconnect = NO;
 		}else if ([disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound){
@@ -267,6 +290,24 @@
 	}
 	
 	return shouldReconnect;
+}
+
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+{
+	switch(returnCode){
+		case AITextAndButtonsDefaultReturn:
+			NSLog(@"Performing register");
+			[self performSelector:@selector(performRegisterWithPassword:)
+					   withObject:password
+					   afterDelay:1];
+			break;
+
+		default:
+			[[adium accountController] forgetPasswordForAccount:self];
+			break;
+	}
+	
+	return YES;
 }
 
 #pragma mark File transfer
