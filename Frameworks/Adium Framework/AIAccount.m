@@ -104,11 +104,14 @@
 /*!
  * @brief The account will be deleted
  *
- * The default implemented disconnects the account.  Subclasses should call super's implementation.
+ * The default implementation disconnects the account.  Subclasses should call super's implementation.
  */
 - (void)willBeDeleted
 {
-	[self disconnect];
+	//Disconnect
+	[self setPreference:nil
+				 forKey:@"Online"
+				  group:GROUP_ACCOUNT_STATUS];
 
 	//Remove our contacts immediately.
 	[self removeAllContacts];
