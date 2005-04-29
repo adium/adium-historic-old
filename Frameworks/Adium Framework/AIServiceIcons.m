@@ -30,7 +30,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	if(self == [AIServiceIcons class]){
 		int i, j;
-		
+
 		//Allocate our service icon cache
 		for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
 			for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
@@ -45,7 +45,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	return([self serviceIconForService:[inObject service] type:iconType direction:iconDirection]);
 }
-	
+
 //Retrieve the correct service icon for a service
 + (NSImage *)serviceIconForService:(AIService *)service type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
@@ -58,10 +58,10 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 + (NSImage *)serviceIconForServiceID:(NSString *)serviceID type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
 	NSImage				*serviceIcon;
-		
+
 	//Retrieve the service icon from our cache
 	serviceIcon = [serviceIcons[iconType][iconDirection] objectForKey:serviceID];
-	
+
 	//Load the service icon if necessary
 	if(!serviceIcon){
 		NSString	*path = [serviceIconBasePath stringByAppendingPathComponent:[serviceIconNames[iconType] objectForKey:serviceID]];
@@ -73,11 +73,11 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 				if(iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
 				[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:serviceID];
 			}
-			
+
 			[serviceIcon release];
 		}
 	}
-	
+
 	return(serviceIcon);
 }
 
@@ -86,32 +86,32 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	if(!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]){
 		NSDictionary	*serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
-		
+
 		if(serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
 			[serviceIconBasePath release];
 			serviceIconBasePath = [inPath retain];
-			
+
 			[serviceIconNames[AIServiceIconSmall] release];
 			serviceIconNames[AIServiceIconSmall] = [[serviceIconDict objectForKey:@"Interface-Small"] retain];
 
 			[serviceIconNames[AIServiceIconLarge] release];
 			serviceIconNames[AIServiceIconLarge] = [[serviceIconDict objectForKey:@"Interface-Large"] retain];
-			
+
 			[serviceIconNames[AIServiceIconList] release];
 			serviceIconNames[AIServiceIconList] = [[serviceIconDict objectForKey:@"List"] retain];
 
 			//Clear out the service icon cache
 			int i, j;
-			
+
 			for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
 				for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
 					[serviceIcons[i][j] removeAllObjects];
 				}
 			}
-			
+
 			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIServiceIconSetDidChangeNotification
 																			   object:nil];
-			
+
 			return YES;
 		}
 	}
@@ -126,53 +126,53 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	NSImage			*image;
 	NSDictionary	*iconDict;
-	
+
 	image = [[NSImage alloc] initWithSize:NSMakeSize((PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN) * 4,
 													 PREVIEW_MENU_IMAGE_SIZE)];
-	
+
 	iconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
-	
+
 	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
 		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
 		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:@"AIM",@"Jabber",@"MSN",@"Yahoo!",nil] objectEnumerator];
 		NSString		*iconID;
 		int				xOrigin = 0;
-		
+
 		[image lockFocus];
 		while((iconID = [enumerator nextObject])){
 			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
 			NSImage		*anIcon;
-			
+
 			if((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])){
 				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
-				
+
 				if(anIconSize.width < targetRect.size.width){
 					float difference = (targetRect.size.width - anIconSize.width)/2;
-					
+
 					targetRect.size.width -= difference;
 					targetRect.origin.x += difference;
 				}
-				
+
 				if(anIconSize.height < targetRect.size.height){
 					float difference = (targetRect.size.height - anIconSize.height)/2;
-					
+
 					targetRect.size.height -= difference;
 					targetRect.origin.y += difference;
 				}
-				
+
 				[anIcon drawInRect:targetRect
 							fromRect:NSMakeRect(0,0,anIconSize.width,anIconSize.height)
 						   operation:NSCompositeCopy
 							fraction:1.0];
-				
+
 				//Shift right in preparation for next image
 				xOrigin += PREVIEW_MENU_IMAGE_SIZE + PREVIEW_MENU_IMAGE_MARGIN;
 			}
 		}
 		[image unlockFocus];
 	}
-	
+
 	return([image autorelease]);
 }
 
