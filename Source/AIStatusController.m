@@ -591,7 +591,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 	AIStatus		*aStatusState;
-	
+	BOOL			shouldRebuild = NO;
 	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedAccounts];
 
 	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
@@ -621,11 +621,22 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	while(aStatusState = [enumerator nextObject]){
 		if(aStatusState != statusState){
 			[temporaryStateArray removeObject:aStatusState];
+			shouldRebuild = YES;
 		}
 	}
 
-	[self setDelayStateMenuUpdates:NO];
 	isProcessingGlobalChange = NO;
+
+	if(shouldRebuild){
+		//Manually decrease the update delays counter as we don't want to call [self updateAllStateMenuSelections]
+		stateMenuUpdateDelays--;
+		[self rebuildAllStateMenus];
+	}else{
+		/* Allow setDelayStateMenuUpdates to decreate the counter and call
+		 * [self updateAllStateMenuSelections] as appropriate.
+		 */
+		[self setDelayStateMenuUpdates:NO];				
+	}
 }
 
 #pragma mark Retrieving Status States
@@ -707,19 +718,20 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	}else if(statusTypeB > statusTypeA){
 		return NSOrderedAscending;
 	}else{
-		AIStatusMutabilityType mutabilityTypeA = [objectA mutabilityType];
-		AIStatusMutabilityType mutabilityTypeB = [objectB mutabilityType];
+		BOOL isLockedMutabilityTypeA = ([objectA mutabilityType] == AILockedStatusState);
+		BOOL isLockedMutabilityTypeB = ([objectB mutabilityType] == AILockedStatusState);
 
-		if(mutabilityTypeA != mutabilityTypeB){
-			//Sort locked status states to the top, as these are our built-in presets
-			if(mutabilityTypeA == AILockedStatusState){
-				return NSOrderedAscending;
-				
-			}else{
-				return NSOrderedDescending;
-			}
+		//Put locked (built in) statuses at the top
+		if(isLockedMutabilityTypeA && !isLockedMutabilityTypeB){
+			return NSOrderedAscending;
+			
+		}else if(!isLockedMutabilityTypeA && isLockedMutabilityTypeB){
+			return NSOrderedDescending;
+
 		}else{
-			//Check to see if either is temporary; temporary items go above permanent ones
+			/* Check to see if either is temporary; temporary items go above saved ones and below
+			 * built-in ones.
+			 */
 			BOOL	isTemporaryA = [temporaryStateArray containsObject:objectA];
 			BOOL	isTemporaryB = [temporaryStateArray containsObject:objectB];
 
@@ -1386,10 +1398,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 		id <StateMenuPlugin>	stateMenuPlugin;
 
-		[stateMenuItemsNeedingUpdating release]; stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
 		while(stateMenuPlugin = [enumerator nextObject]){
 			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
 		}
+		
+		[self _resetActiveStatusState];
 	}
 }
 
@@ -1406,7 +1419,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		stateMenuUpdateDelays--;
 
 	if(stateMenuUpdateDelays == 0){
-		[self rebuildAllStateMenus];
+		[self updateAllStateMenuSelections];
 	}
 }
 
@@ -1420,7 +1433,6 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
 	NSArray			*stateMenuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
-
 	[stateMenuItemsNeedingUpdating addObjectsFromArray:stateMenuItemArray];
 }
 
@@ -1438,7 +1450,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		   [inModifiedKeys containsObject:@"StatusState"]){
 
 			//Don't update the state menus if we are currently delaying
-			if(stateMenuUpdateDelays == 0) [self rebuildAllStateMenus];
+			if(stateMenuUpdateDelays == 0) [self updateAllStateMenuSelections];
 
 			//We can get here without the preferencesChanged: notification if the account is automatically connected.
 			if([inModifiedKeys containsObject:@"Online"]){
@@ -1609,9 +1621,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
 		[account setStatusState:statusState];
 
-		//Rebuild our menusif there was a change
 		if(shouldRebuild){
-			//Now rebuild our menus to include this temporary item
+			//Rebuild our menus if there was a change
 			[self rebuildAllStateMenus];
 		}
 		
@@ -1690,11 +1701,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		while(account = [enumerator nextObject]){
-			if([account statusState] == originalState){
+			if([account actualStatusState] == originalState){
 				if(++count > 1) break;
 			}
 		}
-		NSLog(@"%i are using %@",count,originalState);
+
 		if(count <= 1){
 			[temporaryStateArray removeObject:originalState];
 			didRemove = YES;
