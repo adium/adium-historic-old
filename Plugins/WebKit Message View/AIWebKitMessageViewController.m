@@ -324,7 +324,17 @@
 	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
 	
-	NSArray *draggedTypes = [NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil];
+	NSArray *draggedTypes = [NSArray arrayWithObjects:
+		NSFilenamesPboardType,
+		NSTIFFPboardType,
+		NSPDFPboardType,
+		NSPICTPboardType,
+		NSHTMLPboardType,
+		NSFileContentsPboardType,
+		NSRTFPboardType,
+		NSStringPboardType,
+		NSPostScriptPboardType,
+		nil];
 	[webView registerForDraggedTypes:draggedTypes];
 }
 
@@ -716,6 +726,26 @@
 	}
 	
 	return responder;
+}
+
+/*!
+ * @brief Dragging entered
+ */
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
+{
+	NSPasteboard	*pasteboard = [sender draggingPasteboard];
+
+	return(([pasteboard availableTypeFromArray:[webView registeredDraggedTypes]]) ?
+		   NSDragOperationCopy :
+		   NSDragOperationNone);
+}
+
+/*!
+* @brief Dragging updated
+ */
+- (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
+{
+	return [self draggingEntered:sender];
 }
 
 /*!
