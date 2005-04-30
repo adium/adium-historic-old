@@ -193,13 +193,13 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:LOG_VIEWER 
 																			  target:self
 																			  action:@selector(showLogViewer:)
-																	   keyEquivalent:@"l"] autorelease];
+																	   keyEquivalent:@"L"] autorelease];
     [[adium menuController] addMenuItem:logViewerMenuItem toLocation:LOC_Window_Auxiliary];
 
     viewContactLogsMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS 
 																					target:self
 																					action:@selector(showLogViewerToSelectedContact:) 
-																			 keyEquivalent:@"L"] autorelease];
+																			 keyEquivalent:@"l"] autorelease];
     [[adium menuController] addMenuItem:viewContactLogsMenuItem toLocation:LOC_Contact_Info];
 
     viewContactLogsContextMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_LOGS
