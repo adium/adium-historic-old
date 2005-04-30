@@ -53,6 +53,11 @@
 	NSEnumerator			*enumerator;
 	NSToolbarItem			*item;
 
+	/* Before proceeding, set our delegate to nil so we don't attempt to message it (it most likely
+	 * is a window controller which will have already dealloced by the time we get here... braaaains.)
+	 */
+	[self setDelegate:nil];
+	
 	//Post the notification for each item
 	enumerator = [[self items] objectEnumerator];
 
