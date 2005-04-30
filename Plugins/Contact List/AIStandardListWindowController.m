@@ -95,7 +95,7 @@
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
-    NSMenu			*menu = [[[NSMenu alloc] init] autorelease];
+    NSMenu			*menu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
@@ -108,6 +108,7 @@
 	}
 	
 	[popUp_state setMenu:menu];
+	[menu release];
 }
 
 /*!
@@ -128,14 +129,15 @@
 - (void)activeStateChanged:(NSNotification *)notification
 {
 	AIStatus	*activeStatus = [[adium statusController] activeStatusState];
-	NSMenuItem	*menuItem = [[[NSMenuItem alloc] initWithTitle:[activeStatus title]
-														target:self
-														action:@selector(selectCustomState:)
-												 keyEquivalent:@""] autorelease];
+	NSMenuItem	*menuItem = [[NSMenuItem alloc] initWithTitle:[activeStatus title]
+													   target:self
+													   action:@selector(selectCustomState:)
+												keyEquivalent:@""];
 	
 	[menuItem setImage:[activeStatus icon]];
 
 	[[popUp_state cell] setMenuItem:menuItem];
+	[menuItem release];
 }
 
 
