@@ -21,21 +21,31 @@
 #import "BGEmoticonMenuPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
+#import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 #import <Adium/AIEmoticon.h>
 
 @interface BGEmoticonMenuPlugin(PRIVATE)
-- (void)preferencesChanged:(NSNotification *)notification;
 - (void)registerToolbarItem;
+- (void)menuNeedsUpdate:(NSMenu *)inMenu;
 @end
 
+/*
+ * @class BGEmoticonMenuPlugin
+ * @brief Component to manage the Emoticons menu in its various forms
+ */
 @implementation BGEmoticonMenuPlugin
 
 #define PREF_GROUP_EMOTICONS			@"Emoticons"
 #define	TITLE_INSERT_EMOTICON			AILocalizedString(@"Insert Emoticon",nil)
 #define	TITLE_EMOTICON					AILocalizedString(@"Emoticon",nil)
 
+#define	TOOLBAR_EMOTICON_IDENTIFIER		@"InsertEmoticon"
+
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //init the menus and menuItems
@@ -49,48 +59,103 @@
 												  keyEquivalent:@""];
 	needToRebuildMenus = YES;
 	
+	if([NSApp isOnPantherOrBetter]){
+		/* On Panther and better, create a submenu for these so menuNeedsUpdate will be called 
+		 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
+		 */
+		NSMenu	*tempMenu = [[NSMenu alloc] init];
+		[tempMenu setDelegate:self];
+		
+		[quickMenuItem setSubmenu:tempMenu];
+		[quickContextualMenuItem setSubmenu:[[tempMenu copy] autorelease]];
+		[tempMenu release];
+
+	}else{
+		/* On Jaguar, call menu needs update immediately to make the menus initially populate. They won't autoupdate in
+		 * the future, but that's yet another cost of living in 1986.  Then again, they do get to hear Run D.M.C.'s
+		 * awesome "Walk This Way" cover, so maybe that's worth it to them.
+		 */
+		[self menuNeedsUpdate:nil];
+	}
+	
     //add the items to their menus.
     AIMenuController *menuController = [adium menuController];
     [menuController addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
     [menuController addMenuItem:quickMenuItem toLocation:LOC_Edit_Additions];
-
+	
+	toolbarItems = [[NSMutableSet alloc] init];
+	[self registerToolbarItem];
 	
 	//
 	[[NSNotificationCenter defaultCenter] addObserver:self
                                                 selector:@selector(toolbarWillAddItem:)
                                                     name:NSToolbarWillAddItemNotification
                                                   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(toolbarDidRemoveItem:)
+												 name:NSToolbarDidRemoveItemNotification
+											   object:nil];
 
 	//Observe prefs    
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 }
 
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
-//Add emoticon menu as item goes into toolbar
+/*
+ * @brief Deallocate
+ */
+- (void)dealloc
+{
+	[toolbarItems release];
+	
+	[super dealloc];
+}
+
+/*
+ * @brief Add the emoticon menu as an item goes into a toolbar
+ */
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
-	if([[item itemIdentifier] isEqualToString:@"InsertEmoticon"]){
-		NSMenu		*menu = [self emoticonMenu];
-		
+	if([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]){
+		NSMenu		*theEmoticonMenu = [self emoticonMenu];
+
 		//Add menu to view
-		[[item view] setMenu:menu];
+		[[item view] setMenu:theEmoticonMenu];
 		
 		//Add menu to toolbar item (for text mode)
 		NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
-		[mItem setSubmenu:menu];
+		[mItem setSubmenu:theEmoticonMenu];
 		[mItem setTitle:AILocalizedString(@"Emoticon",nil)];
 		[item setMenuFormRepresentation:mItem];
+		
+		[toolbarItems addObject:item];
 	}
 }
 
-//Emoticons changed
+/*
+ * @brief Stop tracking when an item is removed from a toolbar
+ */
+- (void)toolbarDidRemoveItem:(NSNotification *)notification
+{
+	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
+	if([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]){
+		[toolbarItems removeObject:item];
+	}
+}
+
+/*
+ * @brief Emoticons changed
+ */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
@@ -98,26 +163,21 @@
 	[emoticonMenu release]; emoticonMenu = nil;
 	
 	//Flag our menus as dirty
-	[self registerToolbarItem];
 	needToRebuildMenus = YES;
 }
 
-//Register our toolbar item with the most current emoticon menu
-//We cannot change the menu dynamically because there is no reliable way to keep track of all the allocated toolbar items
+/*
+ * @brief Register our toolbar item
+ */
 - (void)registerToolbarItem
 {
-	MVMenuButton *button;
-	
-	//Unregister the existing toolbar item first
-	if(toolbarItem){
-		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-		[toolbarItem release]; toolbarItem = nil;
-	}
-	
+	NSToolbarItem	*toolbarItem;
+	MVMenuButton	*button;
+
 	//Register our toolbar item
 	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
 	[button setImage:[NSImage imageNamed:@"emoticon32" forClass:[self class]]];
-	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:@"InsertEmoticon"
+	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_EMOTICON_IDENTIFIER
 														   label:TITLE_EMOTICON
 													paletteLabel:TITLE_INSERT_EMOTICON
 														 toolTip:TITLE_INSERT_EMOTICON
@@ -135,9 +195,17 @@
 
 //Menu Generation ------------------------------------------------------------------------------------------------------
 #pragma mark Menu Generation
-//Build the entire emoticon menu
+/*
+ * @brief Build the emoticon menu
+ *
+ * Generation of the menu itself is cached.
+ *
+ * @result An autoreleased copy of the cached emoticon menu
+ */
 - (NSMenu *)emoticonMenu
 {
+	NSMenu	*emoticonMenuCopy;
+	
 	if(!emoticonMenu){
 		NSArray		*emoticonPacks = [[adium emoticonController] activeEmoticonPacks];
 
@@ -161,19 +229,22 @@
 			}
 			[emoticonMenu setMenuChangedMessagesEnabled:YES];
 		}
-
-		if([emoticonMenu respondsToSelector:@selector(setDelegate:)]){
-			[emoticonMenu setDelegate:self];
-		}
-
-		return(emoticonMenu);
-
-	}else{
-		return([[emoticonMenu copy] autorelease]);
 	}
+	
+	//Always return a copy so we can freely modify the menu's item array without messing up our cached copy
+	emoticonMenuCopy = [emoticonMenu copy];
+	if([emoticonMenuCopy respondsToSelector:@selector(setDelegate:)]){
+		[emoticonMenuCopy setDelegate:self];
+	}
+	
+	return [emoticonMenuCopy autorelease];
 }
 
-//Build a flat emoticon menu for a single pack
+/*
+ * @brief Build a flat emoticon menu for a single pack
+ *
+ * @result A menu for the pack
+ */
 - (NSMenu *)flatEmoticonMenuForPack:(AIEmoticonPack *)incomingPack
 {
     NSMenu			*packMenu = [[NSMenu alloc] initWithTitle:TITLE_EMOTICON];
@@ -207,6 +278,13 @@
 
 //Menu Control ---------------------------------------------------------------------------------------------------------
 #pragma mark Menu Control
+/*
+ * @brief Insert an emoticon into the first responder if possible
+ *
+ * First responder must be an editable NSTextView.
+ *
+ * @param sender An NSMenuItem whose representedObject is an AIEmoticon
+ */
 - (void)insertEmoticon:(id)sender
 {
 	if([sender isKindOfClass:[NSMenuItem class]]){
@@ -223,13 +301,19 @@
     }
 }
 
-//Just a target so we get the validateMenuItem: call for the emoticon menu
+/*
+ * @brief Just a target so we get the validateMenuItem: call for the emoticon menu
+ */
 - (IBAction)dummyTarget:(id)sender
 {
 	//Empty
 }
 
-//Disable the emoticon menu if a text field is not active
+/*
+ * @brief Validate menu item
+ *
+ * Disable the emoticon menu if a text field is not active
+ */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if(menuItem == quickMenuItem || menuItem == quickContextualMenuItem){
@@ -250,20 +334,93 @@
 	}
 }
 
-//we don't want to get -menuNeedsUpdate: called on every keystroke. this method suppresses that.
+/*
+ * @brief We don't want to get -menuNeedsUpdate: called on every keystroke. This method suppresses that.
+ */
 - (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action {
 	*target = nil;  //use menu's target
 	*action = NULL; //use menu's action
 	return NO;
 }
 
+/*
+ * @brief Update our menus if necessary
+ *
+ * Called each time before any of our menus are displayed.  If needToRebuildMenus is YES, rebuild them all now,
+ * then set needToRebuildMenus to NO so we don't have to do it next time.
+ *
+ * We set the delegate each time we copy because it seems that NSMenu doesn't do so itself when copying. Odd.
+ */
 - (void)menuNeedsUpdate:(NSMenu *)inMenu
 {	
 	//Build the emoticon menus if necessary
 	if(needToRebuildMenus){
-		NSMenu	*theEmoticonMenu = [self emoticonMenu];
-		[quickMenuItem setSubmenu:theEmoticonMenu];
-		[quickContextualMenuItem setSubmenu:[[theEmoticonMenu copy] autorelease]];
+		NSMenu			*theEmoticonMenu, *tempMenu;
+		NSMenuItem		*menuItem;
+		NSEnumerator	*enumerator;
+		NSToolbarItem	*toolbarItem;
+		
+		//Build the new emoticon menu
+		theEmoticonMenu = [self emoticonMenu];
+		
+		/* For each item, only set its submenu (so we won't have to worry about it in the future) if its current
+		 * submenu isn't the one for which we are currently updating. One of them WILL be identical to inMenu, as
+		 * that's why we got here (the delegate call) in the first place.  For that one, we'll remove inMenu's items
+		 * and then add the items from emoticonMenu. */
+		if([quickMenuItem submenu] != inMenu){
+			tempMenu = [theEmoticonMenu copy];
+			[quickMenuItem setSubmenu:tempMenu];
+			if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+				[tempMenu setDelegate:self];
+			}
+			[tempMenu release];
+		}
+		
+		if([quickContextualMenuItem submenu] != inMenu){
+			tempMenu = [theEmoticonMenu copy];
+			[quickContextualMenuItem setSubmenu:tempMenu];
+			if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+				[tempMenu setDelegate:self];
+			}
+			[tempMenu release];
+		}
+		
+		enumerator = [toolbarItems objectEnumerator];
+		while(toolbarItem = [enumerator nextObject]){
+			if([[toolbarItem view] menu] != inMenu){
+				//We can use the same menu for both
+				tempMenu = [theEmoticonMenu copy];
+
+				if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+					[tempMenu setDelegate:self];
+				}
+				
+				//Add menu to view
+				[[toolbarItem view] setMenu:tempMenu];
+				
+				//Add menu to toolbar item (for text mode)
+				[[toolbarItem menuFormRepresentation] setSubmenu:tempMenu];
+				
+				[tempMenu release];
+			}
+		}
+		
+		/* Now update inMenu.  We update the menu rather than replacing it with another menu so that
+		 * the menu will appear properly immediately rather than next time it is viewed.  Also, I suspect
+		 * it's a bad idea to release inMenu (by replacing it with another one) in the middle of this
+		 * delegate call.
+		 * 
+		 * Have to copy and autorelease here since the itemArray will change as we go through the items.
+		 */
+		[inMenu removeAllItems];
+		enumerator = [[[[theEmoticonMenu itemArray] copy] autorelease] objectEnumerator];
+		while (menuItem = [enumerator nextObject]){
+			[menuItem retain];
+			[theEmoticonMenu removeItem:menuItem];
+			[inMenu addItem:menuItem];
+			[menuItem release];
+		}
+		
 		needToRebuildMenus = NO;
 	}
 }	

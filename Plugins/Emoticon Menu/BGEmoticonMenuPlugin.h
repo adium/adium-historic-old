@@ -23,8 +23,8 @@
 	NSMenuItem			*quickContextualMenuItem;
 	BOOL				needToRebuildMenus;
 	
-    NSToolbarItem 		*toolbarItem;			//Cached toolbar item
 	NSMenu				*emoticonMenu;			//Cached emoticon menu
+	NSMutableSet		*toolbarItems;
 }
 
 - (NSMenu *)emoticonMenu;
