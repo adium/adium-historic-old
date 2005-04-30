@@ -57,6 +57,8 @@
 - (BOOL)shouldHandleDragWithPasteboard:(NSPasteboard *)pasteboard;
 @end
 
+static NSArray *draggedTypes = nil;
+
 @implementation AIWebKitMessageViewController
 
 /*!
@@ -324,17 +326,19 @@
 	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
 	
-	NSArray *draggedTypes = [NSArray arrayWithObjects:
-		NSFilenamesPboardType,
-		NSTIFFPboardType,
-		NSPDFPboardType,
-		NSPICTPboardType,
-		NSHTMLPboardType,
-		NSFileContentsPboardType,
-		NSRTFPboardType,
-		NSStringPboardType,
-		NSPostScriptPboardType,
-		nil];
+	if(!draggedTypes){
+		draggedTypes = [[NSArray alloc] initWithObjects:
+			NSFilenamesPboardType,
+			NSTIFFPboardType,
+			NSPDFPboardType,
+			NSPICTPboardType,
+			NSHTMLPboardType,
+			NSFileContentsPboardType,
+			NSRTFPboardType,
+			NSStringPboardType,
+			NSPostScriptPboardType,
+			nil];
+	}
 	[webView registerForDraggedTypes:draggedTypes];
 }
 
@@ -735,7 +739,7 @@
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 
-	return(([pasteboard availableTypeFromArray:[webView registeredDraggedTypes]]) ?
+	return(([pasteboard availableTypeFromArray:draggedTypes]) ?
 		   NSDragOperationCopy :
 		   NSDragOperationNone);
 }
