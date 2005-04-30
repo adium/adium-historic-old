@@ -32,6 +32,7 @@
 - (void)updateContactStatus:(AIListContact *)inContact;
 - (void)updateCommonStatusForKey:(NSString *)key;
 - (AIStatus *)statusState;
+- (AIStatus *)actualStatusState;
 - (void)setStatusState:(AIStatus *)statusState;
 - (void)setStatusStateAndRemainOffline:(AIStatus *)statusState;
 

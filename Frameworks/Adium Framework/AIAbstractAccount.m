@@ -476,6 +476,14 @@
 	}
 }
 
+/*
+ * @brief The status state this account is set to regardless of whether or not it is online
+ */
+- (AIStatus *)actualStatusState
+{
+	return [self statusObjectForKey:@"StatusState"];
+}
+
 - (NSString *)statusName
 {
 	return([[self statusState] statusName]);
