@@ -92,17 +92,47 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	return (allowsDragAndDrop ? NSDragOperationCopy : NSDragOperationNone);
+	NSDragOperation dragOperation;
+	
+	if(allowsDragAndDrop){
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingEntered:)]){
+			dragOperation = [draggingDelegate draggingEntered:sender];
+		}else{
+			dragOperation = [super draggingEntered:sender];
+		}
+	}else{
+		dragOperation = NSDragOperationNone;
+	}
+	
+	return dragOperation;
 }
 
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-	return (allowsDragAndDrop ? NSDragOperationCopy : NSDragOperationNone);
+	NSDragOperation dragOperation;
+	
+	if(allowsDragAndDrop){
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingUpdated:)]){
+			dragOperation = [draggingDelegate draggingUpdated:sender];
+		}else{
+			dragOperation = [super draggingUpdated:sender];
+		}
+	}else{
+		dragOperation = NSDragOperationNone;
+	}
+	
+	return dragOperation;
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	
+	if (draggingDelegate){
+		if([draggingDelegate respondsToSelector:@selector(draggingExited:)]){
+			[draggingDelegate draggingExited:sender];
+		}
+	}else{
+		[super draggingExited:sender];
+	}
 }
 
 //Dragging
