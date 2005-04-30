@@ -34,7 +34,8 @@
 	
 	//Configure defaults as necessary
 	[newStatus setAutoReplyIsStatusMessage:YES];
-	
+	[newStatus setHasAutoReply:YES];
+
 	return(newStatus);
 }
 
