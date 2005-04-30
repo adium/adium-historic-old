@@ -14,14 +14,21 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "adiumGaimRequest.h"
 #import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
-#import "adiumGaimRequest.h"
+#import "ESGaimMeanwhileContactAdditionController.h"
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 
 //Jabber registration
 #include <Libgaim/jabber.h>
+
+/* resolved id for Meanwhile */
+struct resolved_id {
+	char *id;
+	char *name;
+};
 
 static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, gchar *hint,const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
@@ -131,7 +138,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
 	NSString *titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
-	
+
     if (titleString && 
 		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
 		/* Jabber registration request. Instead of displaying a request dialogue, we fill in the information automatically. */
@@ -156,8 +163,11 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {
 					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
+						NSLog(@"username %s",gaim_account_get_username(account));
+						
 						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
 					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
+						NSLog(@"pass %s",gaim_account_get_password(account));
 						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
 					}
 				}
@@ -166,7 +176,76 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		}
 		((GaimRequestFieldsCb)okCb)(userData, fields);
 		
-	}else{
+	}else if(titleString &&
+			 [titleString rangeOfString:@"select user to add"].location != NSNotFound){
+		/* Meanwhile ambiguous ID... hack implementation until a full request fields UI exists */
+		GList					*gl, *fl, *field_list;
+		GaimRequestField		*field;
+		GaimRequestFieldGroup	*group;
+		NSMutableArray			*possibleUsers = [NSMutableArray array];
+		NSDictionary			*infoDict;
+		NSValue					*fieldsValue = [NSValue valueWithPointer:fields];
+		NSValue					*listFieldValue = nil;
+		
+		//Look through each group, processing each field, searching for the user field
+		for (gl = gaim_request_fields_get_groups(fields);
+			 gl != NULL;
+			 gl = gl->next) {
+			
+			group = gl->data;
+			field_list = gaim_request_field_group_get_fields(group);
+			
+			for (fl = field_list; fl != NULL; fl = fl->next) {
+				GaimRequestFieldType type;
+				
+				field = (GaimRequestField *)fl->data;
+				type = gaim_request_field_get_type(field);
+				if (type == GAIM_REQUEST_FIELD_LIST) {
+					if (strcasecmp("user", gaim_request_field_get_id(field)) == 0){
+						//Found the user field, which is a list of names and IDs
+						const GList *l;
+						
+						//Get all items
+						for (l = gaim_request_field_list_get_items(field); l != NULL; l = l->next){
+							const char			*name = (const char *)l->data;
+							struct resolved_id	*res = gaim_request_field_list_get_data(field, name);
+							[possibleUsers addObject:[NSValue valueWithPointer:res]];
+						}
+						
+						//Store the reference to this field so we don't have to find it again
+						listFieldValue = [NSValue valueWithPointer:field];
+					}
+				}
+			}
+		}
+		
+		/* secondary is 
+		 * ("The identifier '%s' may possibly refer to any of the following"
+		 * " users. Please select the correct user from the list below to"
+		 * " add them to your buddy list.");
+		 */
+		NSString	*secondaryString = [NSString stringWithUTF8String:secondary];
+		NSString	*originalName;
+		NSRange		preRange,postRange;
+		preRange = [secondaryString rangeOfString:@"The identifier '"];
+		postRange = [secondaryString rangeOfString:@"' may possibly refer to any of the following"];
+		originalName = [secondaryString substringWithRange:NSMakeRange(preRange.location+preRange.length,
+																	   postRange.location - (preRange.location+preRange.length))];		
+		
+		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			[NSValue valueWithPointer:okCb],@"OK Callback",
+			[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
+			[NSValue valueWithPointer:userData],@"userData",
+			listFieldValue,@"listFieldValue",
+			fieldsValue,@"fieldsValue",
+			possibleUsers, @"Possible Users",
+			originalName, @"Original Name",
+			nil];
+
+		[ESGaimMeanwhileContactAdditionController performSelectorOnMainThread:@selector(showContactAdditionListWithDict:)
+																   withObject:infoDict
+																waitUntilDone:YES];
+	}else{		
 		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
 				   (primary ? primary : ""),
