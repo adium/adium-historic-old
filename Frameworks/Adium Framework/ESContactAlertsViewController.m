@@ -283,12 +283,13 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	imageCell = [[AIGradientImageCell alloc] init];
 	[imageCell setDrawsGradientHighlight:YES];
 	[imageCell setAlignment:NSCenterTextAlignment];
-	[imageCell setMaxSize:NSMakeSize(32, 32)];
+	[imageCell setMaxSize:NSMakeSize(MINIMUM_ROW_HEIGHT, MINIMUM_ROW_HEIGHT)];
 	[[outlineView_summary tableColumnWithIdentifier:@"image"] setDataCell:imageCell];
 	[imageCell release];
-	
+
 	imageTextCell = [[AIImageTextCell alloc] init];
 	[imageTextCell setDrawsGradientHighlight:YES];
+	[imageTextCell setMaxImageWidth:MINIMUM_ROW_HEIGHT];
 	[imageTextCell setLineBreakMode:NSLineBreakByWordWrapping];
 	[[outlineView_summary tableColumnWithIdentifier:@"event"] setDataCell:imageTextCell];
 	[imageTextCell release];
@@ -451,6 +452,10 @@ int actionSort(id objectA, id objectB, void *context)
 {
 	[expandStateDict setObject:[NSNumber numberWithBool:state]
 						forKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
+	
+	/* XXX this is because the variable height table view creates some display glitches...
+	 * hack for now to make it look okay. Mea culpa. -eds */
+	[outlineView display];
 }
 
 /*
