@@ -59,7 +59,7 @@ static int nextChatNumber = 0;
 		isOpen = NO;
 		expanded = YES;
 
-		AILog(@"[%@ initForAccount]",self);
+		AILog(@"[AIChat: %x initForAccount]",self);
 
 		//Observe preferences changes for typing enable/disable
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
@@ -316,11 +316,9 @@ static int nextChatNumber = 0;
 		AIListObject	*listObject;
 		if ((listObject = [self listObject])){
 			uniqueChatID = [[listObject internalObjectID] retain];
-		}else{
+		}else if (name){
 			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",name,nextChatNumber++];
 		}
-		
-		NSAssert(uniqueChatID != nil, @"nil uniqueChatID");
 	}
 	
 	return (uniqueChatID);
@@ -543,7 +541,11 @@ static int nextChatNumber = 0;
 #pragma mark Debugging
 - (NSString *)description
 {
-	return([NSString stringWithFormat:@"%@:%@",[super description],[self uniqueChatID]]);
+	NSString	*myUniqueChatID = [self uniqueChatID];
+	
+	return([NSString stringWithFormat:@"%@:%@",
+		[super description],
+		(myUniqueChatID ? myUniqueChatID : @"<new>")]);
 }
 
 @end
