@@ -188,7 +188,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		[data release];
 		
 		//Clear out a useless string inserted into some stack traces as of 10.4 to improve crashlog readability
-		[processedStackTrace replaceOccurrencesOfString:@"ask_start_peeking: can't suspend failed  (ipc/send) invalid destination port"
+		[processedStackTrace replaceOccurrencesOfString:@"task_start_peeking: can't suspend failed  (ipc/send) invalid destination port"
 											 withString:@""
 												options:NSLiteralSearch
 												  range:NSMakeRange(0, [processedStackTrace length])];
