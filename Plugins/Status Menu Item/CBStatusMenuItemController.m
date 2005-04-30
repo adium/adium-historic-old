@@ -330,7 +330,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
         while(menuItem = [enumerator nextObject]){
             [menu addItem:menuItem];
 			
-			//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
+			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
 			if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
 				[[menuItem target] validateMenuItem:menuItem];
 			}
@@ -346,7 +346,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 				
 				[menu addItem:menuItem];
 				
-				//Validate the menu items as they are added since they weren't previously validated when teh menu was clicked
+				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
 				if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
 					[[menuItem target] validateMenuItem:menuItem];
 				}
@@ -356,7 +356,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
 					NSMenuItem		*submenuItem;
 					while(submenuItem = [submenuEnumerator nextObject]){
-						//Validate the submenu items as they are added since they weren't previously validated when teh menu was clicked
+						//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
 						if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
 							[[submenuItem target] validateMenuItem:submenuItem];
 						}
