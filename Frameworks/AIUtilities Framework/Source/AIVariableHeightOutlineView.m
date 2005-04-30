@@ -347,9 +347,10 @@
 
 	yOffset = 0;
 	for(i = 0; i < count; i++){
-
-		id		item = [self itemAtRow:row];
+		id		item;
 		row = buf[i];
+
+		item = [self itemAtRow:row];
 
 		//Draw each table column
 		unsigned tableColumnIndex;
