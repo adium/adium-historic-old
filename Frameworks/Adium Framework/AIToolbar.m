@@ -36,7 +36,7 @@
 /* 
  * @brief Load
  *
- * Install ourself to intercept _postWillDeallocToolbarNotifications calls
+ * Install ourself to intercept dealloc calls so we can post as items will be 'removed' by closing
  */
 + (void)load
 {
@@ -47,7 +47,7 @@
 /*
  * @brief Called before the toolbar deallocs
  */
-- (void)_postWillDeallocToolbarNotifications
+- (void)dealloc
 {
 	NSNotificationCenter	*defaultCenter = [NSNotificationCenter defaultCenter];
 	NSEnumerator			*enumerator;
@@ -55,6 +55,7 @@
 
 	//Post the notification for each item
 	enumerator = [[self items] objectEnumerator];
+
 	while((item = [enumerator nextObject])){
 		[defaultCenter postNotificationName:NSToolbarDidRemoveItemNotification
 									 object:self
@@ -63,7 +64,7 @@
 	}
 
 	//Now perform super's _toolbarWillDeallocNotification
-	[super _postWillDeallocToolbarNotifications];
+	[super dealloc];
 }
 
 @end
