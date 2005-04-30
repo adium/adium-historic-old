@@ -156,10 +156,15 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 					
 				}else{
-					/* If we get here for a status name which is a default name, the pack doesn't have an image for us. */
-					NSAssert2(FALSE, @"Invalid status icon pack \"%@\": Missing required item \"%@\"",
-							  statusIconBasePath,
-							  defaultStatusName);
+					NSString	*errorMessage;
+					
+					errorMessage = [NSString stringWithFormat:
+						@"The active status icon pack \"%@\" installed located at \"%@\" is invalid.  It is missing the required status icon \"%@\".  Please remove the pack from this location and restart Adium; if you received this pack from adiumxtras.com, please contact its author.",
+						[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
+						statusIconBasePath,
+						defaultStatusName];
+						
+					NSRunCriticalAlertPanel(@"Invalid status icon pack",errorMessage,nil,nil,nil);
 				}
 			}
 		}
