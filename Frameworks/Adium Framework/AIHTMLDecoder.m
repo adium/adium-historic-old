@@ -676,6 +676,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		 * those characters to our final attributed string with the desired attributes before continuing.
 		 */
 		if([scanner scanUpToCharactersFromSet:tagCharStart intoString:&chunkString]){
+			/* XXX not quite right yet; ends up throwing exceptions in Tiger when rendering the 'translated'
+			 * characters */
+#if 0
 			id	languageValue = [textAttributes languageValue];
 			
 			/* AIM sets language value 143 for characters which are actually in the private unicode space;
@@ -698,7 +701,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 				chunkString = [chunkString stringByTranslatingByOffset:offset];
 			}
-			
+#endif
+
 			[attrString appendString:chunkString withAttributes:[textAttributes dictionary]];
 		}
 
