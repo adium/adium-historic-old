@@ -192,12 +192,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB;
-					ProjectRef = 3496A8E707CE6CA30055BBAB;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2;
 					ProjectRef = 3448717006D1E57700DA778C;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB;
+					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
 			);
 			targets = (
@@ -11319,6 +11319,9 @@
 				341E88690648FF1B00E0C828,
 				34C2CF85063340540018E5D2,
 				34C2CF86063340540018E5D2,
+				34C9A6360822930D004F912C,
+				34C9A6370822930D004F912C,
+				34C9A64408229348004F912C,
 			);
 			isa = PBXGroup;
 			name = "Request UI";
@@ -11732,6 +11735,50 @@
 		};
 		34C899AC07E51B18009357F6 = {
 			fileRef = 34C899AB07E51B18009357F6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C9A6360822930D004F912C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimMeanwhileContactAdditionController.h;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C9A6370822930D004F912C = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimMeanwhileContactAdditionController.m;
+			path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C9A6380822930D004F912C = {
+			fileRef = 34C9A6360822930D004F912C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C9A6390822930D004F912C = {
+			fileRef = 34C9A6370822930D004F912C;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34C9A64408229348004F912C = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimMeanwhileContactAdditionWindow.nib;
+			path = "Plugins/Gaim Service/GaimMeanwhileContactAdditionWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34C9A64508229348004F912C = {
+			fileRef = 34C9A64408229348004F912C;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -17854,6 +17901,7 @@
 				34E0110E07B9E30B000DF265,
 				34E0EB8F07CD349200A82198,
 				344092CE07D8FF8F00321BB3,
+				34C9A6380822930D004F912C,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17898,6 +17946,7 @@
 				343EB40408086D9000E27095,
 				3402E04E07CB0EB00044F818,
 				3440931E07D914F500321BB3,
+				34C9A64508229348004F912C,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -17977,6 +18026,7 @@
 				34E0110F07B9E30C000DF265,
 				34E0EB9007CD349200A82198,
 				344092CF07D8FF8F00321BB3,
+				34C9A6390822930D004F912C,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
