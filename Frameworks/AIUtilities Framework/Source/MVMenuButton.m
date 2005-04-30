@@ -175,7 +175,9 @@
 //Custom mouse down tracking to display our menu and highlight
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if(![self menu]){
+	NSMenu	*menu = [self menu];
+	
+	if(!menu){
 		[super mouseDown:theEvent];
 	}else{
 		if([self isEnabled]){
@@ -194,7 +196,7 @@
 											 eventNumber:[theEvent eventNumber]
 											  clickCount:[theEvent clickCount]
 												pressure:[theEvent pressure]];
-			[NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
+			[NSMenu popUpContextMenu:menu withEvent:event forView:self];
 			
 			[self mouseUp:[[NSApplication sharedApplication] currentEvent]];
 		}
