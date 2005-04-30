@@ -105,18 +105,19 @@
 		if((maxSize.height != 0) && (ourMaxSize.height > maxSize.height)){
 			ourMaxSize.height = maxSize.height;
 		}
-		
+
 		if ((imgSize.height > ourMaxSize.height) ||
 			(imgSize.width  >  ourMaxSize.width)) {
 			
 			if (imgSize.width > imgSize.height){
 				//Give width priority: Make the height change by the same proportion as the width will change
+				targetRect.size.width = ourMaxSize.width;
 				targetRect.size.height = imgSize.height * (targetRect.size.width / imgSize.width);
 			}else{
 				//Give height priority: Make the width change by the same proportion as the height will change
+				targetRect.size.height = ourMaxSize.height;
 				targetRect.size.width = imgSize.width * (targetRect.size.height / imgSize.height);
 			}
-
 		}else{
 			targetRect.size.width = imgSize.width;
 			targetRect.size.height = imgSize.height;
