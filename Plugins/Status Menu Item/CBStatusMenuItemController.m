@@ -146,7 +146,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 {
     //Unregister ourself
     [[adium accountController] unregisterAccountMenuPlugin:self];
-    [[adium statusController] unregisterStateMenuPlugin:self];
+    [[adium  statusController] unregisterStateMenuPlugin:self];
 	[[adium contentController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 		
