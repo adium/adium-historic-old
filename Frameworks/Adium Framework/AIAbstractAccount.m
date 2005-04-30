@@ -498,22 +498,28 @@
 /*!
  * @brief Password entered callback
  *
- * Callback after the user enters their password for connecting, finish the connect process.
+ * Callback after the user enters her password for connecting; finish the connect process.
  */
 - (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
 {
     //If a password was returned, and we're still waiting to connect
-    if(inPassword && [inPassword length] != 0 &&
-       ![[self statusObjectForKey:@"Online"] boolValue] &&
-       ![[self statusObjectForKey:@"Connecting"] boolValue]){
-        //Save the new password
-        if(password != inPassword){
-            [password release]; password = [inPassword retain];
-        }
-        
-        //Tell the account to connect
-        [self connect];
-    }
+    if(inPassword && [inPassword length] != 0){
+		if(![[self statusObjectForKey:@"Online"] boolValue] &&
+		   ![[self statusObjectForKey:@"Connecting"] boolValue]){
+			//Save the new password
+			if(password != inPassword){
+				[password release]; password = [inPassword retain];
+			}
+			
+			//Tell the account to connect
+			[self connect];
+		}
+
+    }else{
+		[self setPreference:nil
+					 forKey:@"Online"
+					  group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 
