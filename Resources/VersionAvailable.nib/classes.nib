@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {closeWindow = id; }; 
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
@@ -13,11 +14,15 @@
             SUPERCLASS = NSObject; 
         }, 
         {
-            ACTIONS = {changePreference = id; closeWindow = id; update = id; }; 
+            ACTIONS = {changePreference = id; update = id; }; 
             CLASS = ESVersionCheckerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_okay" = NSButton; 
                 "checkBox_checkAutomatically" = NSButton; 
+                "scrollView_upateAvailable" = NSScrollView; 
+                "textField_isUpToDateExplanation" = NSTextField; 
+                "textField_isUpToDateTitle" = NSTextField; 
                 "textField_updateAvailable" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
