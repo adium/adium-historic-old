@@ -23416,7 +23416,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = BGEmoticonMenuPlugin.h;
-			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.h";
+			path = Source/BGEmoticonMenuPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -23425,7 +23425,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = BGEmoticonMenuPlugin.m;
-			path = "Plugins/Emoticon Menu/BGEmoticonMenuPlugin.m";
+			path = Source/BGEmoticonMenuPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
