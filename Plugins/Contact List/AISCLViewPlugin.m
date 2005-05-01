@@ -66,7 +66,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 - (void)uninstallPlugin
 {
 	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_APPEARANCE];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 //Contact List Controller ----------------------------------------------------------------------------------------------
