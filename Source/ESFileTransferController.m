@@ -121,8 +121,6 @@ static ESFileTransferPreferences *preferences;
 	
 	[safeFileExtensions release]; safeFileExtensions = nil;
 	[fileTransferArray release]; fileTransferArray = nil;
-
-	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 #pragma mark Access to file transfer objects

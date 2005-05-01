@@ -237,6 +237,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 {
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 }
 
 /*!

@@ -149,6 +149,7 @@
     
     //Remove observers (otherwise, every account added will be a duplicate next time around)
     [[adium notificationCenter] removeObserver:self];
+	[[adium contactController] unregisterListObjectObserver:self];
 }
 
 - (void)dealloc

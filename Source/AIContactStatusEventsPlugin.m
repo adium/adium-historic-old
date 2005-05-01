@@ -57,6 +57,11 @@
     [[adium contactController] registerListObjectObserver:self];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium contactController] unregisterListObjectObserver:self];
+}
+
 /*!
  * @brief Short description
  * @result A short localized description of the passed event

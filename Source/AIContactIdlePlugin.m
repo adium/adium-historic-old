@@ -54,6 +54,7 @@
 {
     //Stop tracking all idle handles
     [idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
+	[[adium contactController] unregisterListObjectObserver:self];
 }
 
 /*
