@@ -545,7 +545,6 @@ struct message
 
 			if( [thePortMessage sendBeforeDate:sendBeforeDate] ){
 				[queuedPortMessageArray removeObjectAtIndex:0];
-				NSLog(@"%i queued messages left",[queuedPortMessageArray count]);
 			}
 		}else{
 			[queuedPortMessageArray release]; queuedPortMessageArray = nil;
