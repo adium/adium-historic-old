@@ -70,7 +70,7 @@
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
-	NSLog(@"Autoreleasing");
+
 	[self autorelease];
 }
 
