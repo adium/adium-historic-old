@@ -136,7 +136,8 @@
 	customVolume = ([[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]);
 				
 	muteSounds = ([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] ||
-				  [[prefDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue]);
+				  [[prefDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue] ||
+				  [[prefDict objectForKey:KEY_SOUND_STATUS_MUTE] intValue]);
 	
 	oldSoundDeviceType = soundDeviceType;
 	soundDeviceType = [[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
