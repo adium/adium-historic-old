@@ -92,9 +92,6 @@
 {
 	if (!aNotification || [aNotification object] == contactListView){
 		int selectedRow = [contactListView selectedRow];
-		NSLog(@"Selectedrow %i so %@",selectedRow,((selectedRow != -1) ?
-												   [contactListView itemAtRow:selectedRow] :
-												   contactList));
 		[(AIContactInfoWindowController *)delegate configureForListObject:((selectedRow != -1) ?
 																		   [contactListView itemAtRow:selectedRow] :
 																		   contactList)];
