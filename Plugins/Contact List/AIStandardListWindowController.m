@@ -78,15 +78,6 @@
 }
 
 /*!
- * @brief Window should close?
- */
-- (void)windowWillClose:(id)sender
-{
-	[super windowWillClose:sender];
-	[[adium contactController] unregisterListObjectObserver:self];
-}
-
-/*!
  * @brief Add state menu items to our location
  *
  * Implemented as required by the StateMenuPlugin protocol.
