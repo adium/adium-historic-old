@@ -8,6 +8,8 @@
 
 #import "ESAwayStatusWindowController.h"
 #import "AIAccountController.h"
+#import "AIPreferenceController.h"
+#import "AISoundController.h"
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIStatus.h>
@@ -25,6 +27,7 @@
 
 @interface ESAwayStatusWindowController (PRIVATE)
 - (void)configureStatusWindow;
+- (void)configureMuteWhileAway;
 - (NSAttributedString *)attributedStatusTitleForStatus:(AIStatus *)statusState withIcon:(NSImage *)statusIcon;
 - (NSArray *)awayAccounts;
 - (void)setupMultistatusTable;
@@ -88,9 +91,10 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
     [textView_singleStatus setDrawsBackground:NO];
 	[textView_singleStatus setMinSize:NSZeroSize];
     [scrollView_singleStatus setDrawsBackground:NO];
-	
+
 	[self setupMultistatusTable];
-	
+	[self configureMuteWhileAway];
+
 	[self configureStatusWindow];
 }
 
@@ -101,6 +105,13 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
  */
 - (void)windowWillClose:(id)sender
 {
+	//If we are muting while this window is open, remove the mute before closing
+	if([button_muteWhileAway state]){
+		[[adium preferenceController] setPreference:nil
+											 forKey:KEY_SOUND_STATUS_MUTE
+											  group:PREF_GROUP_SOUNDS];
+	}
+
 	[super windowWillClose:sender];
 
     //Clean up and release the shared instance
@@ -331,6 +342,34 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 													 type:AIServiceIconSmall
 												direction:AIIconNormal]];
 	[cell setSubString:[[account statusState] title]];
+}
+
+- (void)configureMuteWhileAway
+{
+	NSNumber	*shouldMuteWhileWindowIsOpen = [[adium preferenceController] preferenceForKey:@"Mute While Away Status Window is Open"
+																					group:PREF_GROUP_STATUS_PREFERENCES];
+	//Apply the mute to the sound controller by setting a preference for it
+	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
+										 forKey:KEY_SOUND_STATUS_MUTE
+										  group:PREF_GROUP_SOUNDS];
+	[button_muteWhileAway setState:([shouldMuteWhileWindowIsOpen boolValue] ? NSOnState : NSOffState)];
+}
+
+- (IBAction)toggleMuteWhileAway:(id)sender
+{
+	NSNumber	*shouldMuteWhileWindowIsOpen;
+	
+	shouldMuteWhileWindowIsOpen = ([sender state] ?
+								   [NSNumber numberWithBool:YES] :
+								   nil);
+	//Store for restoring here
+	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
+										 forKey:@"Mute While Away Status Window is Open"
+										  group:PREF_GROUP_STATUS_PREFERENCES];
+	//And apply the mute to the sound controller by setting a preference for it
+	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
+										 forKey:KEY_SOUND_STATUS_MUTE
+										  group:PREF_GROUP_SOUNDS];	
 }
 
 @end

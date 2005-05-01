@@ -10,7 +10,8 @@
 
 @interface ESAwayStatusWindowController : AIWindowController {
 	IBOutlet	NSButton		*button_return;
-	
+	IBOutlet	NSButton		*button_muteWhileAway;
+
 	IBOutlet	NSTabView		*tabView_configuration;
 	
 	//Single status tab
@@ -27,4 +28,5 @@
 + (void)updateStatusWindowWithVisibility:(BOOL)shouldBeVisibile;
 - (IBAction)returnFromAway:(id)sender;
 
+- (IBAction)toggleMuteWhileAway:(id)sender;
 @end

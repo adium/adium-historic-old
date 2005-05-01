@@ -10,6 +10,7 @@
 #import "ESAwayStatusWindowController.h"
 #import "AIContactController.h"
 #import "AIPreferenceController.h"
+#import "AISoundController.h"
 #import "AIStatusController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
@@ -17,6 +18,9 @@
 /*
  * @class ESAwayStatusWindowPlugin
  * @brief Component to manage the status window optionally displayed when one or more accounts are away
+ *
+ * XXX - This comopnent should move to being an external, included, disabled by default plugin, with more
+ * options added when it is enabled.
  */
 @implementation ESAwayStatusWindowPlugin
 
@@ -28,6 +32,11 @@
 	showStatusWindow = FALSE;
 	awayAccounts = [[NSMutableSet alloc] init];
 
+	//Remove any mute-while-stauts-window-is-open mute from the sound controller's preferences
+	[[adium preferenceController] setPreference:nil
+										 forKey:KEY_SOUND_STATUS_MUTE
+										  group:PREF_GROUP_SOUNDS];
+	
 	//Observe preference changes for updating if we should show the status window
 	[[adium preferenceController] registerPreferenceObserver:self 
 													forGroup:PREF_GROUP_STATUS_PREFERENCES];
