@@ -36,7 +36,7 @@
  */
 @implementation AIChatCyclingPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -65,7 +65,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Update the key equivalents for our previous and next chat menu items
@@ -105,7 +105,7 @@
 	[[previousChatMenuItem menu] setMenuChangedMessagesEnabled:YES];
 }
 
-/*
+/*!
  * @brief Menu item validation
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
@@ -113,7 +113,7 @@
 	return([[[adium interfaceController] openChats] count] != 0);
 }
 
-/*
+/*!
  * @brief Select the next chat
  */
 - (IBAction)nextChat:(id)sender
@@ -121,7 +121,7 @@
 	[[adium interfaceController] nextMessage:nil];
 }
 
-/*
+/*!
  * @brief Select the previous chat
  */
 - (IBAction)previousChat:(id)sender

@@ -28,7 +28,7 @@
 - (NSString *)_statusIDForListObject:(AIListObject *)listObject;
 @end
 
-/*
+/*!
  * @class AITabStatusIconsPlugin
  * @brief Tab status icons component
  *
@@ -37,7 +37,7 @@
  */
 @implementation AITabStatusIconsPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -64,7 +64,7 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
-/*
+/*!
  * @brief The status icon set changed; update our objects and chats.
  */
 - (void)statusIconSetDidChange:(NSNotification *)aNotification
@@ -73,7 +73,7 @@
 	[[adium contentController] updateAllChatsForObserver:self];
 }
 
-/*
+/*!
  * @brief Apply the correct tab icon according to status
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
@@ -106,7 +106,7 @@
 	return(modifiedAttributes);
 }
 
-/*
+/*!
  * @brief Update a chat for typing and unviewed content icons
  */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent

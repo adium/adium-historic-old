@@ -31,7 +31,7 @@
 - (void)menuNeedsUpdate:(NSMenu *)inMenu;
 @end
 
-/*
+/*!
  * @class BGEmoticonMenuPlugin
  * @brief Component to manage the Emoticons menu in its various forms
  */
@@ -43,7 +43,7 @@
 
 #define	TOOLBAR_EMOTICON_IDENTIFIER		@"InsertEmoticon"
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -100,7 +100,7 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -109,7 +109,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -119,7 +119,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Add the emoticon menu as an item goes into a toolbar
  */
 - (void)toolbarWillAddItem:(NSNotification *)notification
@@ -142,7 +142,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Stop tracking when an item is removed from a toolbar
  */
 - (void)toolbarDidRemoveItem:(NSNotification *)notification
@@ -153,7 +153,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Emoticons changed
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -166,7 +166,7 @@
 	needToRebuildMenus = YES;
 }
 
-/*
+/*!
  * @brief Register our toolbar item
  */
 - (void)registerToolbarItem
@@ -195,7 +195,7 @@
 
 //Menu Generation ------------------------------------------------------------------------------------------------------
 #pragma mark Menu Generation
-/*
+/*!
  * @brief Build the emoticon menu
  *
  * Generation of the menu itself is cached.
@@ -240,7 +240,7 @@
 	return [emoticonMenuCopy autorelease];
 }
 
-/*
+/*!
  * @brief Build a flat emoticon menu for a single pack
  *
  * @result A menu for the pack
@@ -278,7 +278,7 @@
 
 //Menu Control ---------------------------------------------------------------------------------------------------------
 #pragma mark Menu Control
-/*
+/*!
  * @brief Insert an emoticon into the first responder if possible
  *
  * First responder must be an editable NSTextView.
@@ -301,7 +301,7 @@
     }
 }
 
-/*
+/*!
  * @brief Just a target so we get the validateMenuItem: call for the emoticon menu
  */
 - (IBAction)dummyTarget:(id)sender
@@ -309,7 +309,7 @@
 	//Empty
 }
 
-/*
+/*!
  * @brief Validate menu item
  *
  * Disable the emoticon menu if a text field is not active
@@ -334,7 +334,7 @@
 	}
 }
 
-/*
+/*!
  * @brief We don't want to get -menuNeedsUpdate: called on every keystroke. This method suppresses that.
  */
 - (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action {
@@ -343,7 +343,7 @@
 	return NO;
 }
 
-/*
+/*!
  * @brief Update our menus if necessary
  *
  * Called each time before any of our menus are displayed.  If needToRebuildMenus is YES, rebuild them all now,

@@ -22,13 +22,13 @@
 
 static AINewMessagePromptController *sharedNewMessageInstance = nil;
 
-/*
+/*!
  * @class AINewMessagePromptController
  * @brief Controller for the New Message prompt, which allows messaging an arbitrary contact
  */
 @implementation AINewMessagePromptController
 
-/*
+/*!
  * @brief Return our shared instance
  * @result The shared instance
  */
@@ -37,7 +37,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	return sharedNewMessageInstance;
 }
 
-/*
+/*!
  * @brief Create the shared instance
  * @result The shared instance
  */
@@ -48,7 +48,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	return sharedNewMessageInstance;
 }
 
-/*
+/*!
  * @brief Destroy the shared instance
  */
 + (void)destroySharedInstance 
@@ -56,7 +56,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	[sharedNewMessageInstance autorelease]; sharedNewMessageInstance = nil;
 }
 
-/*
+/*!
  * @brief Window did load
  */
 - (void)windowDidLoad
@@ -71,7 +71,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	[[self window] setTitle:AILocalizedString(@"New Message",nil)];
 }
 
-/*
+/*!
  * @brief Open a chat with the desired contact
  */
 - (IBAction)okay:(id)sender

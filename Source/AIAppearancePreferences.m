@@ -494,7 +494,7 @@ typedef enum {
 	}
 }
 
-/*
+/*!
  * @brief Manage available themes
  */
 - (void)manageListThemes:(id)sender
@@ -509,7 +509,7 @@ typedef enum {
 																							   group:PREF_GROUP_APPEARANCE]];		
 }
 
-/*
+/*!
  * @brief Create a new layout
  */
 - (IBAction)createListLayout:(id)sender
@@ -563,7 +563,7 @@ typedef enum {
 	}
 }
 
-/*
+/*!
  * @brief Manage available layouts
  */
 - (void)manageListLayouts:(id)sender

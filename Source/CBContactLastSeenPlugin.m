@@ -28,13 +28,13 @@
 - (void)update:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class CBContactLastSeenPlugin
  * @brief Component to track and display as a tooltip the last time contacts were seen online
  */
 @implementation CBContactLastSeenPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -62,7 +62,7 @@
 									 
 }
 
-/*
+/*!
  * @brief Contact status change notification
  *
  * @param notification A notificaiton with an AIListObject object and an eventID name

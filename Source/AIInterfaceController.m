@@ -69,7 +69,7 @@
 - (void)contactOrderChanged:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class AIInterfaceController
  * @brief Interface controller
  *
@@ -93,7 +93,7 @@
  */
 @implementation AIInterfaceController
 
-/*
+/*!
  * @brief Initialize the controller
  */
 - (void)initController

@@ -74,7 +74,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 	}
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Note whether we are supposed to change states on FUS.

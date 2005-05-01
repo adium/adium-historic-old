@@ -18,20 +18,20 @@
 #import "ESAnnouncerPlugin.h"
 #import <Adium/AILocalizationTextField.h>
 
-/*
+/*!
  * @class ESAnnouncerSpeakTextAlertDetailPane
  * @brief Speak Text details pane
  */
 @implementation ESAnnouncerSpeakTextAlertDetailPane
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"AnnouncerSpeakTextContactAlert");    
 }
 
-/*
+/*!
  * @brief View loaded
  */
 - (void)viewDidLoad
@@ -41,7 +41,7 @@
 	[textView_textToSpeakLabel setLocalizedString:AILocalizedString(@"Text To Speak:",nil)];
 }
 
-/*
+/*!
  * @brief Configure for the action
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
@@ -52,7 +52,7 @@
 	[super configureForActionDetails:inDetails listObject:inObject];
 }
 
-/*
+/*!
  * @brief Return our current configuration
  */
 - (NSDictionary *)actionDetails
@@ -70,7 +70,7 @@
 	return([self actionDetailsFromDict:actionDetails]);
 }
 	
-/*
+/*!
  * @brief Key on which to store our defaults
  */
 - (NSString *)defaultDetailsKey

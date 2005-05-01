@@ -119,7 +119,7 @@ static	NSDictionary	*statusTypeDict = nil;
 	}
 }
 
-/*
+/*!
  * @brief Special handling for away changes
  *
  * We only display the "Went away" message if a status message for the away hasn't already been printed

@@ -128,7 +128,7 @@
 
 - (void)dummyAction:(id)sender {};
 
-/*
+/*!
  * @brief Update key equivalents for our main status menu
  *
  * When available, cmd-y is mapped to custom away.
@@ -178,7 +178,7 @@
 	}
 }
 
-/*
+/*!
  * @brief State menu selections changed
  */
 - (void)stateMenuSelectionsChanged:(NSNotification *)notification

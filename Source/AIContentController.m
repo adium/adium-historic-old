@@ -1269,7 +1269,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	}
 }
 
-/*
+/*!
  * @brief Is the passed contact in a group chat?
  *
  * @result YES if the contact is in an open group chat; NO if not.

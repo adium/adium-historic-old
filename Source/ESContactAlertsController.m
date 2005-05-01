@@ -34,7 +34,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context);
 static	NSMutableDictionary		*eventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_COUNT];
 
-/*
+/*!
  * @brief Initialize
  */
 + (void)initialize
@@ -682,7 +682,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[newContactAlerts release];
 }
 
-/*
+/*!
  * @brief Remove all current global alerts and replace them with the alerts in allGlobalAlerts
  *
  * Used for setting a preset of events

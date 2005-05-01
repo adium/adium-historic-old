@@ -24,13 +24,13 @@
 
 #define META_TOOLTIP_ICON_SIZE NSMakeSize(10,10)
 
-/*
+/*!
  * @class ESMetaContactContentsPlugin
  * @brief Tooltip component: Show the contacts contained by metaContacts, with service and status state.
  */
 @implementation ESMetaContactContentsPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin

@@ -31,7 +31,7 @@
 - (void)preferencesChanged:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class AIEventSoundsPlugin
  *
  * @brief Component for the Play Sound action
@@ -118,7 +118,7 @@
 	return(NO);
 }
 
-/*
+/*!
  * @brief Alert was selected in the preferences
  *
  *  Play the sound for this alert when the alert is selected

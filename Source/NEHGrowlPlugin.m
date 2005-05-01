@@ -54,7 +54,7 @@
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate;
 @end
 
-/*
+/*!
  * @class NEHGrowlPlugin
  * @brief Implements Growl functionality in Adium
  *
@@ -62,7 +62,7 @@
  */
 @implementation NEHGrowlPlugin
 
-/*
+/*!
  * @brief Initialize the Growl plugin
  *
  * Waits for Adium to finish launching before we perform further actions so all events are registered.
@@ -78,7 +78,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -88,7 +88,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Adium finished launching
  *
  * Delays one more run loop so any events which are registered on this notification are guaranteed to be complete
@@ -105,7 +105,7 @@
 										object:nil];
 }
 
-/*
+/*!
  * @brief Begin accepting Growl events
  */
 - (void)beginGrowling
@@ -130,7 +130,7 @@
 #endif
 }
 
-/*
+/*!
  * @brief Called when preferences changes
  *
  * Used to get the value of the Show While Away preference. 
@@ -142,7 +142,7 @@
 }
 
 #pragma mark AIActionHandler
-/*
+/*!
  * @brief Returns a short description of Growl events
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
@@ -150,7 +150,7 @@
 	return(GROWL_ALERT);
 }
 
-/*
+/*!
  * @brief Returns a long description of Growl events
  *
  * The long description reflects the "sticky"-ness of the notification.
@@ -164,7 +164,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Returns the image associated with the Growl event
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
@@ -172,7 +172,7 @@
 	return([NSImage imageNamed:@"GrowlAlert" forClass:[self class]]);
 }
 
-/*
+/*!
  * @brief Post a notification for Growl for display
  *
  * This method is called when by Adium when a Growl alert is activated. It passes this information on to Growl, which displays a notificaion.
@@ -276,7 +276,7 @@
 							   clickContext:clickContext];
 }
 
-/*
+/*!
  * @brief Returns our details pane, an instance of <tt>CBGrowlAlertDetailPane</tt>
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
@@ -284,7 +284,7 @@
     return([CBGrowlAlertDetailPane actionDetailsPane]);
 }
 
-/*
+/*!
  * @brief Allow multiple actions?
  *
  * This action should not be performed multiple times for the same triggering event.
@@ -296,7 +296,7 @@
 
 #pragma mark Growl
 
-/*
+/*!
  * @brief Returns the application name Growl will use
  */
 - (NSString *)applicationNameForGrowl
@@ -304,7 +304,7 @@
 	return(@"Adium");
 }
 
-/*
+/*!
  * @brief Registration information for Growl
  *
  * Returns information that Growl needs, like which notifications we will post and our application name.
@@ -322,7 +322,7 @@
 	return(growlReg);
 }
 
-/*
+/*!
  * @brief Called when Growl is ready
  *
  * Currently, this is just used for debugging Growl.
@@ -334,7 +334,7 @@
 #endif
 }
 
-/*
+/*!
  * @brief Called when a Growl notification is clicked
  *
  * When a Growl notificaion is clicked, this method is called, allowing us to take action (e.g. open a new window, make
@@ -382,7 +382,7 @@
 	}
 }
 
-/*
+/*!
  * @brief The title of the window shown if Growl needs to be installed
  */
 - (NSString *)growlInstallationWindowTitle
@@ -390,7 +390,7 @@
 	return(GROWL_INSTALLATION_WINDOW_TITLE);	
 }
 
-/*
+/*!
  * @brief The title of the window shown if Growl needs to be updated
  */
 - (NSString *)growlUpdateWindowTitle
@@ -398,7 +398,7 @@
 	return(GROWL_UPDATE_WINDOW_TITLE);
 }
 
-/*
+/*!
  * @brief The body of the window shown if Growl needs to be installed
  *
  * This method calls _growlInformationForUpdate.
@@ -408,7 +408,7 @@
 	return([self _growlInformationForUpdate:NO]);
 }
 
-/*
+/*!
  * @brief The body of the window shown if Growl needs to be update
  *
  * This method calls _growlInformationForUpdate.
@@ -418,7 +418,7 @@
 	return([self _growlInformationForUpdate:YES]);
 }
 
-/*
+/*!
  * @brief Returns the body text for the window displayed when Growl needs to be installed or updated
  *
  * @param isUpdate YES generates the message for the update window, NO likewise for the install window.

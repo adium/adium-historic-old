@@ -15,13 +15,13 @@
 
 #define	STATUS_DEFAULT_PREFS @"StatusDefaults"
 
-/*
+/*!
  * @class ESStatusPreferencesPlugin
  * @brief Component to install our status preferences pane
  */
 @implementation ESStatusPreferencesPlugin
 
-/*
+/*!
  * @brief Install
  *
  * Install our preference pane, and add a menu item to the Status menu which opens it.

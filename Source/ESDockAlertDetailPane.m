@@ -25,20 +25,20 @@
 - (NSMenu *)behaviorListMenu;
 @end
 
-/*
+/*!
  * @class ESDockAlertDetailPane
  * @brief Details pane for the Bounce Dock action
  */
 @implementation ESDockAlertDetailPane
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"DockBehaviorContactAlert");    
 }
 
-/*
+/*!
  * @brief Configure the detail view
  */
 - (void)viewDidLoad
@@ -50,7 +50,7 @@
     [popUp_actionDetails setMenu:[self behaviorListMenu]];
 }
 
-/*
+/*!
  * @brief Configure for the action
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
@@ -61,7 +61,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Return our current configuration
  */
 - (NSDictionary *)actionDetails
@@ -75,7 +75,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief The user selected a behavior
  */
 - (IBAction)selectBehavior:(id)sender
@@ -83,7 +83,7 @@
 	[self detailsForHeaderChanged];
 }
 
-/*
+/*!
  * @brief Builds and returns a dock behavior list menu
  */
 - (NSMenu *)behaviorListMenu
@@ -101,7 +101,7 @@
     return(behaviorMenu);
 }
 
-/*
+/*!
  * @brief Convenience behaviorListMenu method
  * @result An NSMenuItem
  */

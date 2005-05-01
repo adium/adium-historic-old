@@ -29,20 +29,20 @@
 - (void)addSound:(NSString *)soundPath toMenu:(NSMenu *)soundMenu;
 @end
 
-/*
+/*!
  * @class ESEventSoundAlertDetailPane
  * @brief Details pane for the Play Sound action
  */
 @implementation ESEventSoundAlertDetailPane
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"EventSoundContactAlert");    
 }
 
-/*
+/*!
  * @brief Configure the detail view
  */
 - (void)viewDidLoad
@@ -59,7 +59,7 @@
 	[super viewDidLoad];
 }
 
-/*
+/*!
  * @brief View will close
  */
 - (void)viewWillClose
@@ -68,7 +68,7 @@
 	[super viewWillClose];
 }
 
-/*
+/*!
  * @brief Configure for the action
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
@@ -86,7 +86,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Return our current configuration
  */
 - (NSDictionary *)actionDetails
@@ -103,7 +103,7 @@
 
 //Sound Menu -----------------------------------------------------------------------------------------------------------
 #pragma mark Sound Menu
-/*
+/*!
  * @brief Builds and returns a sound list menu
  *
  * The menu is organized by sound set.
@@ -153,7 +153,7 @@
     return([soundMenu autorelease]);
 }
 
-/*
+/*!
  * @brief Add a sound menu item to a menu
  */
 - (void)addSound:(NSString *)soundPath toMenu:(NSMenu *)soundMenu
@@ -169,7 +169,7 @@
 	[soundMenu addItem:menuItem];
 }
 
-/*
+/*!
  * @brief A sound was selected from a sound popUp menu
  *
  * Update our header and play the sound.  If "Other..." is selected, allow selection of a file.
@@ -197,7 +197,7 @@
     }
 }
 
-/*
+/*!
  * @brief Finish up the Other... panel
  *
  * Play the selected sound and update the menu.

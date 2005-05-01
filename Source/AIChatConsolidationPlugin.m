@@ -21,7 +21,7 @@
 
 #define CONSOLIDATE_CHATS_MENU_TITLE			AILocalizedString(@"Consolidate Chats",nil)
 
-/*
+/*!
  * @class AIChatConsolidationPlugin
  * @brief Component which provides the Conslidate Chats menu item
  *
@@ -29,7 +29,7 @@
  */
 @implementation AIChatConsolidationPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -48,7 +48,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Consolidate chats
  *
  *	The interface controller does all the work for us :)
@@ -58,7 +58,7 @@
 	[[adium interfaceController] consolidateChats];	
 }
 
-/*
+/*!
  * @brief Validate menu items
  *
  * Only enable the menu if more than one chat is open

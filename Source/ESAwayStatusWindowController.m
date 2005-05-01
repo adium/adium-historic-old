@@ -33,7 +33,7 @@
 - (void)setupMultistatusTable;
 @end
 
-/*
+/*!
  * @class ESAwayStatusWindowController
  * @brief Window controller for the status window which optionally shows when one or more accounts are away or invisible
  */
@@ -41,7 +41,7 @@
 
 static ESAwayStatusWindowController	*sharedInstance = nil;
 
-/*
+/*!
  * @brief Update the visibility of the status window
  *
  * Opens or closes the window if necessary.
@@ -69,7 +69,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief Window size and position autosave name
  */
 - (NSString *)adiumFrameAutosaveName
@@ -77,7 +77,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	return(KEY_AWAY_STATUS_WINDOW_FRAME);
 }
 
-/*
+/*!
  * @brief Window loaded
  */
 - (void)windowDidLoad
@@ -98,7 +98,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	[self configureStatusWindow];
 }
 
-/*
+/*!
  * @brief Window will close
  *
  * Release and clear the reference to our shared instance
@@ -118,7 +118,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
     [sharedInstance autorelease]; sharedInstance = nil;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -128,7 +128,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Configure status window for the current account status(es)
  */
  - (void)configureStatusWindow
@@ -198,7 +198,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief Return the attributed status title for a status
  *
  * This method puts statusIcon into an NSTextAttachment and prefixes statusState's status message or title with it.
@@ -243,7 +243,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	return [statusTitle autorelease];
 }
 
-/*
+/*!
  * @brief Return an array of all away accounts
  */
 - (NSArray *)awayAccounts
@@ -264,7 +264,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	return awayAccounts;
 }
 
-/*
+/*!
  * @brief Return from away
  */
 - (IBAction)returnFromAway:(id)sender
@@ -295,7 +295,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 }
 
-/*
+/*!
  * @brief Perform initial setup for the multistatus table
  */
 - (void)setupMultistatusTable

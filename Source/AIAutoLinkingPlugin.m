@@ -18,7 +18,7 @@
 #import "AIContentController.h"
 #import <AIHyperlinks/AIHyperlinks.h>
  
-/*
+/*!
  * @class AIAutoLinkingPlugin
  * @brief Filter component to automatically create links within attributed strings as appropriate
  *
@@ -26,7 +26,7 @@
  */
 @implementation AIAutoLinkingPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -42,7 +42,7 @@
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -52,7 +52,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Filter an attributed string to add links as appropriate
  */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
@@ -85,7 +85,7 @@
     return (replacementMessage);
 }
 
-/*
+/*!
  * @brief Filter priority
  *
  * Auto linking overrides other potential filters; do it first

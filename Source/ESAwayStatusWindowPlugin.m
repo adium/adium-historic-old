@@ -15,7 +15,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 
-/*
+/*!
  * @class ESAwayStatusWindowPlugin
  * @brief Component to manage the status window optionally displayed when one or more accounts are away
  *
@@ -24,7 +24,7 @@
  */
 @implementation ESAwayStatusWindowPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -48,7 +48,7 @@
 	[[adium contactController] unregisterListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -58,7 +58,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Note whether we are supposed to should show the status window, and toggle it if necessary

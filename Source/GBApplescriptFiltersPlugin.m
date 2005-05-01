@@ -60,7 +60,7 @@ static int numExecuted = 0;
  */
 @implementation GBApplescriptFiltersPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -121,7 +121,7 @@ static int numExecuted = 0;
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Xtras changes
  *
  * If the scripts xtras changed, rebuild our menus.
@@ -141,7 +141,7 @@ static int numExecuted = 0;
 
 //Script Loading -------------------------------------------------------------------------------------------------------
 #pragma mark Script Loading
-/*
+/*!
  * @brief Load our scripts
  *
  * This will clear out and then load from available scripts (external and internal) into flatScriptArray and scriptArray.
@@ -224,7 +224,7 @@ static int numExecuted = 0;
 
 //Script Menu ----------------------------------------------------------------------------------------------------------
 #pragma mark Script Menu
-/*
+/*!
  * @brief Build the script menu
  *
  * Loads the scrpts as necessary, sorts them, then builds menus for the menu bar, the contextual menu,
@@ -247,7 +247,7 @@ static int numExecuted = 0;
 	[self registerToolbarItem];
 }
 
-/*
+/*!
  * @brief Sort first by set, then by title within sets
  */
 int _scriptTitleSort(id scriptA, id scriptB, void *context){
@@ -278,7 +278,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context){
 	return(result);
 }
 
-/*
+/*!
  * @brief Sort by descending length so the longest keywords are at the beginning of the array
  */
 int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
@@ -298,7 +298,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return result;
 }
 
-/*
+/*!
  * @brief Append an array of scripts to a menu
  *
  * @param scripts The scripts, each of which is represented by an NSDictionary instance
@@ -354,7 +354,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Insert a script's keyword into the text entry area
  *
  * This will be called by an NSMenuItem when it is clicked.
@@ -406,13 +406,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Fake target to allow validateMenuItem: to be called
  */
 -(IBAction)dummyTarget:(id)sender{
 }
 
-/*
+/*!
  * @brief Validate menu item
  * Disable the insertion if a text field is not active
  */
@@ -433,7 +433,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 //Message Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Message Filtering
-/*
+/*!
  * @brief Filter messages for keywords to replace
  *
  * Replace any script keywords with the result of running the script (with arguments as appropriate)
@@ -475,7 +475,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
     return(filteredMessage ? [filteredMessage autorelease] : inAttributedString);
 }
 
-/*
+/*!
  * @brief Filter priority
  *
  * Filter earlier than the default
@@ -485,7 +485,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return HIGH_FILTER_PRIORITY;
 }
 
-/*
+/*!
  * @brief Perform a thorough variable replacing scan
  */
 - (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
@@ -561,7 +561,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Determine the arguments for a script execution
  *
  * @param inString The string of potential arguments
@@ -611,7 +611,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(argArray);
 }
 
-/*
+/*!
  * @brief Execute the script, returning its output
  */
 - (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
@@ -672,7 +672,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	return(result);
 }
 
-/*
+/*!
  * @brief Receive apple events while running an applescript
  */
 - (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)appleEventDescriptor 
@@ -721,7 +721,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 }
 
 #pragma mark Toolbar item
-/*
+/*!
  * @brief Register our insert script toolbar item
  */
 - (void)registerToolbarItem
@@ -752,7 +752,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
-/*
+/*!
  * @brief After the toolbar has added the item we can set up the submenus
  */
 - (void)toolbarWillAddItem:(NSNotification *)notification

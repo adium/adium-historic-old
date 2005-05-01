@@ -19,13 +19,13 @@
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
 
-/*
+/*!
  * @class SAContactOnlineForPlugin
  * @brief Tooltip component: Online for
  */
 @implementation SAContactOnlineForPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin

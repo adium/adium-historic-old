@@ -18,7 +18,7 @@
 #import "AIInterfaceController.h"
 #import <Adium/AIListObject.h>
 
-/*
+/*!
  * @class ESContactClientPlugin
  * @brief Tooltip component: Client
  */

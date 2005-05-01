@@ -25,13 +25,13 @@
 
 #define AWAY_YES			AILocalizedString(@"Yes",nil)
 
-/*
+/*!
  * @class AIContactAwayPlugin
  * @brief Tooltip component: Away messages and states
  */
 @implementation AIContactAwayPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
