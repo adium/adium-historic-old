@@ -190,7 +190,7 @@
 	<key>CFBundleExecutable</key>
 	<string>Adium</string>
 	<key>CFBundleGetInfoString</key>
-	<string>0.8rc2, Copyright 2001-2005 The Adium Team</string>
+	<string>0.8rc3, Copyright 2001-2005 The Adium Team</string>
 	<key>CFBundleHelpBookFolder</key>
 	<string>Adium Help</string>
 	<key>CFBundleHelpBookName</key>
@@ -206,7 +206,7 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.8rc2</string>
+	<string>0.8rc3</string>
 	<key>CFBundleSignature</key>
 	<string>AdIM</string>
 	<key>CFBundleURLTypes</key>
@@ -233,7 +233,7 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
-	<string>0.8rc2</string>
+	<string>0.8rc3</string>
 	<key>NSAppleScriptEnabled</key>
 	<true/>
 	<key>NSMainNibFile</key>
