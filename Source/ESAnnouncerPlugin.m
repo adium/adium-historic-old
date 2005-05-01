@@ -34,13 +34,13 @@
 #define	ANNOUNCER_EVENT_ALERT_SHORT	AILocalizedString(@"Speak Event","short phrase for the contact alert which speaks the event")
 #define	ANNOUNCER_EVENT_ALERT_LONG	AILocalizedString(@"Speak the event aloud","short phrase for the contact alert which speaks the event")
 
-/*
+/*!
  * @class ESAnnouncerPlugin
  * @brief Component which provides Speak Event and Speak Text actions
  */
 @implementation ESAnnouncerPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -135,6 +135,13 @@
 	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
 		NSString	*userText = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 
+		/*
+		[[adium contentController] filterAttributedString:(NSAttributedString *)attributedString
+usingFilterType:(AIFilterType)type
+direction:(AIFilterDirection)direction
+context:(id)filterContext
+		*/	
+		
 		if(timeFormat){
 			NSString	*timeString;
 			

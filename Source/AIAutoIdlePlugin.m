@@ -76,7 +76,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Note whether we are supposed to report idle time, and, if so, after how much time.

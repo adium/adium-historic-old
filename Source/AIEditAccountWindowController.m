@@ -314,7 +314,7 @@
     [accountViewController release]; accountViewController = nil;
 }
 
-/*
+/*!
  * @brief Localization
  */
 - (void)_localizeTabViewItemLabels

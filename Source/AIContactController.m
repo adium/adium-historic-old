@@ -1067,7 +1067,7 @@
 }
 
 
-/*
+/*!
  * @brief Groups UIDs for services into a single metacontact
  *
  * UIDsArray and servicesArray should be a paired set of arrays, with each index corresponding to

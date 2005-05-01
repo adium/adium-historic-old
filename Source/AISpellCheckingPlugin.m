@@ -31,7 +31,7 @@
  */
 @implementation AISpellCheckingPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -50,7 +50,7 @@
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SPELLING];
 }
 
-/*
+/*!
  * @brief Uninstall
  */
 - (void)uninstallPlugin
@@ -59,7 +59,7 @@
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
-/*
+/*!
  * @brief A text entry view was opened
  *
  * Set the continuous spell checking setting as per our preference
@@ -72,7 +72,7 @@
     [self _setSpellCheckingForObject:inTextEntryView enabled:spellEnabled];
 }
 
-/*
+/*!
  * @brief A text entry view will close
  *
  * Save its continuous spell checking setting as our preference
@@ -92,7 +92,7 @@
     }
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Update all open views to match the new spell checking preference
@@ -111,7 +111,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the continuous spell checking for an object
  *
  * @param enabled Is continuous spell checking enabled?

@@ -46,7 +46,7 @@
 	return(NO);
 }
 
-/*
+/*!
  * @brief Manual sort
  */
 int manualSort(id objectA, id objectB, BOOL groups)
@@ -65,7 +65,7 @@ int manualSort(id objectA, id objectB, BOOL groups)
 	
 }
 
-/*
+/*!
  * @brief Sort function
  */
 - (sortfunc)sortFunction{

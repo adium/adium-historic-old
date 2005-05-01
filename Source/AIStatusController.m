@@ -891,7 +891,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	return _allActiveStatusStates;
 }
 
-/*
+/*!
  * @brief Return the set of all unavailable statuses in use by online or connection accounts
  *
  * @param activeUnvailableStatusType Pointer to an AIStatusType; returns by reference the most popular unavailable type

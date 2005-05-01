@@ -17,7 +17,7 @@
 #import "CBGrowlAlertDetailPane.h"
 #import "NEHGrowlPlugin.h"
 
-/*
+/*!
  * @class CBGrowlAlertDetailPane
  * @brief Provide and manage custom controls for configuring the Growl contact alert
  *
@@ -26,7 +26,7 @@
  */
 @implementation CBGrowlAlertDetailPane
 
-/*
+/*!
  * @brief Returns the name of our pane
  *
  * Since this is a detail pain, we return @"".
@@ -36,7 +36,7 @@
 	return(@"");
 }
 
-/*
+/*!
  * @brief Returns the name of the Nib to load
  */
 - (NSString *)nibName
@@ -44,7 +44,7 @@
 	return(@"GrowlAlert");
 }
 
-/*
+/*!
  * @brief Configure the detail view, and set up our localized controls
  */
 - (void)viewDidLoad
@@ -54,7 +54,7 @@
 	[checkBox_sticky setLocalizedString:AILocalizedString(@"Sticky","Growl contact alert label")];
 }
 
-/*
+/*!
  * @brief Load the state of our controls
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
@@ -62,7 +62,7 @@
 	[checkBox_sticky setState:([[inDetails objectForKey:KEY_GROWL_ALERT_STICKY] boolValue] ? NSOnState : NSOffState)];
 }
 
-/*
+/*!
  * @brief Return the state of our controls
  */
 - (NSDictionary *)actionDetails
@@ -71,7 +71,7 @@
 									   forKey:KEY_GROWL_ALERT_STICKY]);
 }
 
-/*
+/*!
  * @brief Called when any of our controls change
  */
 - (IBAction)changePreference:(id)sender

@@ -26,13 +26,13 @@
 - (NSMenu *)voicesMenu;
 @end
 
-/*
+/*!
  * @class ESAnnouncerAbstractDetailPane
  * @brief Abstract superclass for Announcer action (Speak Event and Speak Text) detail panes
  */
 @implementation ESAnnouncerAbstractDetailPane
 
-/*
+/*!
  * @brief View did load
  */
 - (void)viewDidLoad
@@ -44,7 +44,7 @@
 	[popUp_voices setMenu:[self voicesMenu]];
 }
 
-/*
+/*!
  * @brief Configure for the action
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
@@ -81,7 +81,7 @@
 	[checkBox_speakContactName setState:speakContactName];
 }
 
-/*
+/*!
  * @brief Configure controls specially for message events.
  *
  * Speaking of the name is only disable-able for message events.
@@ -96,7 +96,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Return action details
  *
  * Should be overridden, with the subclass returning [self actionDetailsDromDict:actionDetails]
@@ -114,7 +114,7 @@
 	return(actionDetails);
 }
 
-/*
+/*!
  * @brief Used by subclasses; adds the general information managed by the superclass to the details dictionary.
  */
 - (NSDictionary *)actionDetailsFromDict:(NSMutableDictionary *)actionDetails
@@ -153,7 +153,7 @@
 	return actionDetails;
 }
 
-/*
+/*!
  * @brief Key on which to store our defaults
  *
  * Must be overridden by subclasses
@@ -163,7 +163,7 @@
 	return nil;
 }
 
-/*
+/*!
  * @brief Speech voices menu
  */
 - (NSMenu *)voicesMenu
@@ -195,7 +195,7 @@
 	return(voicesMenu);
 }
 
-/*
+/*!
  * @brief Preference changed
  */
 -(IBAction)changePreference:(id)sender

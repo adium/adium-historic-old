@@ -23,20 +23,20 @@
 - (void)setScriptPath:(NSString *)inPath;
 @end
 
-/*
+/*!
  * @class ESPanelApplescriptDetailPane
  * @brief Details pane for the Run Applescript action
  */
 @implementation ESPanelApplescriptDetailPane
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"ApplescriptContactAlert");    
 }
 
-/*
+/*!
  * @brief Configure the details view
  */
 - (void)viewDidLoad
@@ -49,7 +49,7 @@
 	[button_browse setLocalizedString:AILocalizedString(@"Browse...",nil)];
 }
 
-/*
+/*!
  * @brief View will close
  */
 - (void)viewWillClose
@@ -68,7 +68,7 @@
 	[self setScriptPath:[inDetails objectForKey:KEY_APPLESCRIPT_TO_RUN]];
 }
 
-/*
+/*!
  * @brief Return our current configuration
  */
 - (NSDictionary *)actionDetails
@@ -78,7 +78,7 @@
 		   nil);
 }
 
-/*
+/*!
  * @brief Choose the applescript to run
  */
 - (IBAction)chooseFile:(id)sender
@@ -93,7 +93,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set the path to the applescript
  *
  * This also updates our display

@@ -57,7 +57,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Preferences changed
  *
  * Note whether we are supposed to change states after a specified time.

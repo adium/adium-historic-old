@@ -220,7 +220,7 @@ static ESFileTransferPreferences *preferences;
 	[savePanel release];	
 }
 
-/*
+/*!
  * @brief Finish the receive request process
  *
  * Called by either ESFileTransferRequestPromptController or self, this method is the last step in accepting or

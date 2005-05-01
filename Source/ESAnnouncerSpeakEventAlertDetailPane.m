@@ -17,20 +17,20 @@
 #import "ESAnnouncerSpeakEventAlertDetailPane.h"
 #import "ESAnnouncerPlugin.h"
 
-/*
+/*!
  * @brief ESAnnouncerSpeakEventAlertDetailPane
  * @class Speak Event action details pane
  */
 @implementation ESAnnouncerSpeakEventAlertDetailPane
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"AnnouncerSpeakEventContactAlert");    
 }
 
-/*
+/*!
  * @brief Key on which to store our defaults
  */
 - (NSString *)defaultDetailsKey

@@ -18,7 +18,7 @@
 #import "ESContactServersideDisplayName.h"
 #import <Adium/AIListObject.h>
 
-/*
+/*!
  * @class ESContactServersideDisplayName
  * @brief Tooltip component: Serverside Display Name
  *
@@ -26,7 +26,7 @@
  */
 @implementation ESContactServersideDisplayName
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin

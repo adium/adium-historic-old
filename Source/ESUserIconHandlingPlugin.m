@@ -467,7 +467,7 @@
  */
 - (IBAction)dummyAction:(id)sender{};
 
-/*
+/*!
  * @brief Menu needs update
  *
  * Should only be called for a menu off one of our toolbar items in text-only mode, and only when that menu is about

@@ -26,13 +26,13 @@
 - (BOOL)updateCache:(NSMutableDictionary *)cache forKey:(NSString *)key newValue:(id)newStatus listObject:(AIListObject *)inObject performCompare:(BOOL)performCompare;
 @end
 
-/*
+/*!
  * @class AIContactStatusEventsPlugin
  * @brief Component to provide events for contact status changes (online, offline, away, idle, etc.)
  */
 @implementation AIContactStatusEventsPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -268,7 +268,7 @@
 }
 
 #pragma mark Caching and event generation
-/*
+/*!
  * @brief Cache list object updates
  *
  * We cache list object updates so we can avoid generating the same event for the same contact on two accounts
@@ -376,7 +376,7 @@
 	return(nil);	
 }
 
-/*
+/*!
  * @brief Update the cache
  *
  * @param cache The cache

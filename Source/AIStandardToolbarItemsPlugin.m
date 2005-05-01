@@ -26,7 +26,7 @@
 
 #define MESSAGE	AILocalizedString(@"Message", nil)
 
-/*
+/*!
  * @class AIStandardToolbarItemsPlugin
  * @brief Component to provide general-use toolbar items
  *
@@ -34,7 +34,7 @@
  */
 @implementation AIStandardToolbarItemsPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -53,7 +53,7 @@
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 }
 
-/*
+/*!
  * @brief New chat with the selected list object
  */
 - (IBAction)newMessage:(NSToolbarItem *)toolbarItem

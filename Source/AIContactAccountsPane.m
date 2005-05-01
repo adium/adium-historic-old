@@ -32,7 +32,7 @@
 - (void)updateGroupList;
 @end
 
-/*
+/*!
  * @class AIContactAccountsPane
  * @brief Accounts pane in the contact info window
  *
@@ -41,21 +41,21 @@
 @implementation AIContactAccountsPane
 
 //Preference pane properties
-/*
+/*!
  * @brief Category
  */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Accounts);
 }
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"ContactAccounts");
 }
 
-/*
+/*!
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
@@ -83,7 +83,7 @@
 	[self updateAccountList];
 }
 
-/*
+/*!
  * @brief Preference view is closing
  */
 - (void)viewWillClose
@@ -93,7 +93,7 @@
 	[[adium notificationCenter] removeObserver:self]; 
 }
 
-/*
+/*!
  * @brief Configure the pane for a list object
  */
 - (void)configureForListObject:(AIListObject *)inObject
@@ -106,7 +106,7 @@
 	[self updateAccountList];
 }
 
-/*
+/*!
  * @brief Update our list of accounts
  */
 - (void)updateAccountList
@@ -132,7 +132,7 @@
 	[tableView_accounts reloadData];
 }
 
-/*
+/*!
  * @brief Update our list of groups
  */
 - (void)updateGroupList
@@ -155,7 +155,7 @@
 
 //Table View Data Sources ----------------------------------------------------------------------------------------------
 #pragma mark TableView Data Sources
-/*
+/*!
  * @brief Number of table view rows
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
@@ -163,7 +163,7 @@
 	return([accounts count]);
 }
 
-/*
+/*!
  * @brief Table view object value
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -189,7 +189,7 @@
 	return(@"");
 }
 
-/*
+/*!
  * @brief Table view will display a cell
  */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -233,12 +233,12 @@
 	
 }
 
-/*
+/*!
  * @brief Empty.  This method is the target of our menus, and needed for menu validation.
  */
 - (void)selectGroup:(id)sender {};
 
-/*
+/*!
  * @brief Table view set object value
  */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row

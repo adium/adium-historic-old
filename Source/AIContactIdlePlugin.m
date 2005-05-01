@@ -27,7 +27,7 @@
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer;
 @end
 
-/*
+/*!
  * @class AIContactIdlePlugin
  * @brief Contact idle time updating, and idle time tooltip component
  */
@@ -57,7 +57,7 @@
 	[[adium contactController] unregisterListObjectObserver:self];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -67,7 +67,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Update list object
  *
  * When the idleSince status key changes, we start or stop tracking the object as appropriate.
@@ -111,7 +111,7 @@
     return(nil);
 }
         
-/*
+/*!
  * @brief Updates the idle duration of all idle contacts
  */
 - (void)updateIdleObjectsTimer:(NSTimer *)inTimer
@@ -133,7 +133,7 @@
 	[[adium contactController] endListObjectNotificationsDelay];
 }
 
-/*
+/*!
  * @brief Give a contact its correct idle value
  */
 - (void)setIdleForObject:(AIListObject *)inObject silent:(BOOL)silent

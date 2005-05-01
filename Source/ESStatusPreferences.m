@@ -27,27 +27,27 @@
 
 @implementation ESStatusPreferences
 
-/*
+/*!
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Status);
 }
-/*
+/*!
  * @brief Label
  */
 - (NSString *)label{
     return(AILocalizedString(@"Status",nil));
 }
 
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"StatusPreferences");
 }
 
-/*
+/*!
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
@@ -67,7 +67,7 @@
 	[self configureOtherControls];
 }
 
-/*
+/*!
  * @brief Preference view is closing
  */
 - (void)viewWillClose
@@ -76,7 +76,7 @@
 	[[adium notificationCenter] removeObserver:self];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -342,7 +342,7 @@
 
 #pragma mark Other status-related controls
 
-/*
+/*!
  * @brief Configure initial values for idle, auto-away, etc., preferences.
  */
 
@@ -415,7 +415,7 @@
 	[inPopUpButton selectItemAtIndex:index];
 }
 
-/*
+/*!
  * @brief Configure control dimming for idle, auto-away, etc., preferences.
  */
 - (void)configureControlDimming
@@ -434,7 +434,7 @@
 	[popUp_fastUserSwitchingStatusState setEnabled:([checkBox_fastUserSwitching state] == NSOnState)];
 }
 
-/*
+/*!
  * @brief Change preference
  *
  * Sent when controls are clicked
@@ -480,7 +480,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Control text did end editing
  *
  * In an attempt to get closer to a live-apply of preferences, save the preference when the
@@ -491,7 +491,7 @@
 	[self saveTimeValues];
 }
 
-/*
+/*!
  * @brief Save time text field values
  *
  * We can't get notified when the associated NSStepper is clicked, so we just save as requested.

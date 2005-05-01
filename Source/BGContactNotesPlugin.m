@@ -24,13 +24,13 @@
 
 #define KEY_AB_NOTE_SYNC			@"AB Note Sync"
 
-/*
+/*!
  * @class BGContactNotesPlugin
  * @brief Component to show contact notes in tooltips
  */
 @implementation BGContactNotesPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin

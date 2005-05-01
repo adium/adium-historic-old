@@ -486,7 +486,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	return(menu);
 }
 
-/*
+/*!
  * @brief Reload all data
  *
  * After removing the subviews of the outline view, reload the data.
