@@ -188,8 +188,7 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
 					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
 					//and sending after it is if one is established
-					NSLog(@"No Direct Connect for you! Come back two year!");
-					
+
 					//Check for a oscar_direct_im (dim) currently open
 					struct oscar_direct_im  *dim;
 					const char				*who = [[inListObject UID] UTF8String];
