@@ -23,6 +23,7 @@ Ian Krieg
 Thomas Kunze
 Scott Lamb
 Jack M.H. Lin
+Sam McCandlish
 Nicola Del Monaco
 David Munch
 Daisuke Okada
@@ -34,6 +35,7 @@ Laura Natcher
 Daisuke Okada
 Stephen Poprocki
 Evan Schoenberg
+David Smith
 Greg Smith
 Vinay Venkatesh
 Wesley Underwood
