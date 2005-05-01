@@ -155,7 +155,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[self gotGroupForContact:theContact];
 	}else{
-		NSLog(@"Got %@ for %@ while not online",groupName,theContact);
+		GaimDebug(@"Got %@ for %@ while not online",groupName,theContact);
 	}
 }
 
@@ -2270,7 +2270,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
 	}else{
-		NSLog(@"Failed to load defaults for %@",[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]);
+		GaimDebug(@"Failed to load defaults for %@",[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]);
 	}
 	
 	//Defaults

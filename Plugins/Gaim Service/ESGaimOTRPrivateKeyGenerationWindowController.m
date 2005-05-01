@@ -100,7 +100,6 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	ESGaimOTRPrivateKeyGenerationWindowController	*controller;
 
 	controller = [keyGenerationControllerDict objectForKey:inIdentifier];
-	NSLog(@"Retrieved %@",controller);
 	[controller closeWindow:nil];
 	
 	[keyGenerationControllerDict removeObjectForKey:inIdentifier];

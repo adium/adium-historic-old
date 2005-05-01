@@ -81,7 +81,6 @@
  */
 + (void)gaimThreadUnknownFingerprintResponseInfo:(NSDictionary *)responseInfo wasAccepted:(NSNumber *)fingerprintAcceptedNumber
 {
-	NSLog(@"moved to %x",[NSRunLoop currentRunLoop]);
 	otrg_adium_unknown_fingerprint_response(responseInfo, [fingerprintAcceptedNumber boolValue]);
 }
 
