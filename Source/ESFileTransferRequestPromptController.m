@@ -117,12 +117,12 @@
 		case AITextAndButtonsOtherReturn: /* Save As... */
 		{
 			//Prompt for a location to save
-			[[NSSavePanel savePanel] beginSheetForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
-													   file:[fileTransfer remoteFilename]
-											 modalForWindow:[windowController window]
-											  modalDelegate:self
-											 didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
-												contextInfo:nil];
+			[[[NSSavePanel savePanel] retain] beginSheetForDirectory:[[adium preferenceController] userPreferredDownloadFolder]
+																file:[fileTransfer remoteFilename]
+													  modalForWindow:[windowController window]
+													   modalDelegate:self
+													  didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
+														 contextInfo:nil];
 			break;
 		}
 		case AITextAndButtonsAlternateReturn: /* Cancel */			
@@ -165,6 +165,8 @@
 							   afterDelay:0];
 		[self autorelease];
 	}
+
+	[savePanel release];
 }
 
 @end
