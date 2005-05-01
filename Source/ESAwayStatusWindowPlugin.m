@@ -97,7 +97,6 @@
 {
 	if([inObject isKindOfClass:[AIAccount class]] &&
 	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"] || [inModifiedKeys containsObject:@"Online"])){
-		NSLog(@"%@: %@",inObject,inModifiedKeys);
 		if([inObject online] && ([inObject statusType] != AIAvailableStatusType)){
 			[awayAccounts addObject:inObject];
 		}else{
