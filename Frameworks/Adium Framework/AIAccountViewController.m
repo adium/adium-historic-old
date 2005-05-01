@@ -83,7 +83,6 @@
 	[view_profile release];
 	[view_options release];
 
-    [[adium contactController] unregisterListObjectObserver:self];
     [[adium notificationCenter] removeObserver:self];
     
     [super dealloc];
