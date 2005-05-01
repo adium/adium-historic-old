@@ -1460,7 +1460,7 @@
 				3428328607D2643F004F01C9,
 				3428328507D2643F004F01C9,
 				34A250B507E0F822009854E1,
-				3428328C07D2644F004F01C9,
+				3474E0900825634300BF30F0,
 			);
 			isa = PBXGroup;
 			name = "Status Preferences";
@@ -1531,16 +1531,10 @@
 		3428328C07D2644F004F01C9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = StatusPreferences.nib;
-			path = Resources/StatusPreferences.nib;
+			name = English;
+			path = Resources/English.lproj/StatusPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		3428328D07D2644F004F01C9 = {
-			fileRef = 3428328C07D2644F004F01C9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		342838ED07D2D004004F01C9 = {
 			isa = PBXFileReference;
@@ -5250,6 +5244,36 @@
 			settings = {
 			};
 		};
+		3474E0900825634300BF30F0 = {
+			children = (
+				3428328C07D2644F004F01C9,
+			);
+			isa = PBXVariantGroup;
+			name = StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474E0910825634300BF30F0 = {
+			fileRef = 3474E0900825634300BF30F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		3474E0940825638300BF30F0 = {
+			children = (
+				4B588C9807AC23A9001832A9,
+			);
+			isa = PBXVariantGroup;
+			name = EditStateSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474E0950825638300BF30F0 = {
+			fileRef = 3474E0940825638300BF30F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3477CAD10776E55800995429 = {
 			fileRef = 4BBF41ED066119A8001D31E1;
 			isa = PBXBuildFile;
@@ -6987,7 +7011,6 @@
 		3496A8C107CE6B880055BBAB = {
 			children = (
 				3496A8BF07CE6B3D0055BBAB,
-				34B07A7707F297F10082D9EB,
 			);
 			isa = PBXVariantGroup;
 			name = InfoPlist.strings;
@@ -8215,14 +8238,6 @@
 			settings = {
 			};
 		};
-		34B07A7707F297F10082D9EB = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.plist.strings;
-			name = French;
-			path = Resources/French.lproj/InfoPlist.strings;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34B4B5A10708B049002C4C6D = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -9356,7 +9371,7 @@
 				4BF3CB4207D1771E00A8112A,
 				4BF3CBED07D192F500A8112A,
 				4B08399C07D235190034A001,
-				3428328D07D2644F004F01C9,
+				3474E0910825634300BF30F0,
 				342838EE07D2D004004F01C9,
 				4BB5B78207D2DC4900CFE06F,
 				9E124DF107D34C9100AA91C5,
@@ -9998,7 +10013,7 @@
 				4BDD81EA07A0B6D30057DB2C,
 				4BDD81EB07A0B6D30057DB2C,
 				4BDD81EC07A0B6D30057DB2C,
-				4B588C9907AC23A9001832A9,
+				3474E0950825638300BF30F0,
 				34E00F8707B92B89000DF265,
 				34943DEF07BAD918000F2A03,
 				3402D38B07CB04FC0044F818,
@@ -17479,7 +17494,7 @@
 				34AC36BA07B5C51400145239,
 				4B588C9B07AC23B2001832A9,
 				4B588C9C07AC23B2001832A9,
-				4B588C9807AC23A9001832A9,
+				3474E0940825638300BF30F0,
 			);
 			isa = PBXGroup;
 			name = "State & Status";
@@ -17489,16 +17504,10 @@
 		4B588C9807AC23A9001832A9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = EditStateSheet.nib;
-			path = "Frameworks/Adium Framework/EditStateSheet.nib";
+			name = English;
+			path = "Frameworks/Adium Framework/English.lproj/EditStateSheet.nib";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B588C9907AC23A9001832A9 = {
-			fileRef = 4B588C9807AC23A9001832A9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4B588C9B07AC23B2001832A9 = {
 			fileEncoding = 30;
