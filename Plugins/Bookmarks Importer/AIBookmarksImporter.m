@@ -245,7 +245,6 @@ void addBookmarksImporter_CFTimer(CFRunLoopTimerRef timer, void *info)
 	Class importerClass = (Class)info;
 	if([importerClass browserIsAvailable]) {
 		AIBookmarksImporter *importer = [[importerClass alloc] init];
-		NSLog(@"Attempting to add %@",importer);
 		[[AIBookmarksImporterPlugin sharedInstance] addImporter:importer];
 		[importer release];
 	}
