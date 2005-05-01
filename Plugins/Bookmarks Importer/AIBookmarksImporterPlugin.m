@@ -152,7 +152,6 @@ static AIBookmarksImporterPlugin *myself = nil;
 
 		NSComparisonResult comparison = [nameOfNewImporter compare:[[importer class] browserName]];
 		if(comparison == NSOrderedSame) {
-			NSLog(@"AIBookmarksImporterController: replaced importer %@ with importer %@", importer, importerToAdd);
 			[importers replaceObjectAtIndex:i withObject:importerToAdd];
 			goto end;
 		} else if(comparison == NSOrderedAscending) {
