@@ -470,7 +470,7 @@ void adium_gaim_otr_connect_conv(GaimConversation *conv)
 	/* Do nothing if this isn't an IM conversation */
 	if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){ 
 		otrg_plugin_send_default_query_conv(conv);
-	}		
+	}
 }
 
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
