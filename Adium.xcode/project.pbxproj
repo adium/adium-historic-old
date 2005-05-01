@@ -1102,6 +1102,7 @@
 				3458B9960820DAE10005BCF6,
 				3458BA99082178430005BCF6,
 				34C2A4910821859800F3363F,
+				3474DD6F0824699D00BF30F0,
 			);
 			isa = PBXVariantGroup;
 			name = DualWindowMessageAdvanced.nib;
@@ -5215,6 +5216,14 @@
 			);
 			isa = PBXGroup;
 			name = "WebKit Additions";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474DD6F0824699D00BF30F0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/DualWindowMessageAdvanced.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
