@@ -823,7 +823,7 @@
 	}
 }
 
-/*
+/*!
  * @brief User icon cell
  *
  * To prevent ridiculous flipping from occurring, we keep a copy of the user icon for ourselves.

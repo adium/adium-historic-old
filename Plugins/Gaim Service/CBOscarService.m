@@ -19,7 +19,7 @@
 #import "CBOscarService.h"
 #import "DCGaimOscarJoinChatViewController.h"
 
-/*
+/*!
  * @class CBOscarService
  * @brief Superclass for ESAIMService and ESICQService
  *
@@ -68,7 +68,7 @@
 }
 
 #pragma mark Statuses
-/*
+/*!
  * @brief Register statuses
  */
 - (void)registerStatuses{

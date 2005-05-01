@@ -323,7 +323,7 @@
 	return (statusName);
 }
 
-/*
+/*!
  * @brief Update the status message and away state of the contact
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage

@@ -237,7 +237,7 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 	}
 }
 
-/*
+/*!
  * @brief Can we send images for this chat?
  *
  * @result YES if we are currently in a direct IM session or are connecting to one
@@ -351,7 +351,7 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 
 #pragma mark File transfer
 
-/*
+/*!
  * @brief Allow a file transfer with an object?
  *
  * Only return YES if the user's capabilities include AIM_CAPS_SENDFILE indicating support for file transfer

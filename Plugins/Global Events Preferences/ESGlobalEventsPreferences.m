@@ -60,26 +60,26 @@
 @end
 
 @implementation ESGlobalEventsPreferences
-/*
+/*!
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
     return(AIPref_Events);
 }
-/*
+/*!
  * @brief Label
  */
 - (NSString *)label{
     return(EVENTS_TITLE);
 }
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{
     return(@"GlobalEventsPreferences");
 }
 
-/*
+/*!
  * @brief Configure the preference view
  */
 - (void)viewDidLoad
@@ -110,7 +110,7 @@
 	[self updateSoundSetSelection];
 }
 
-/*
+/*!
  * @brief Preference view is closing
  */
 - (void)viewWillClose
@@ -122,7 +122,7 @@
     [[adium notificationCenter] removeObserver:self];
 }
 
-/*
+/*!
  * @brief PREF_GROUP_CONTACT_ALERTS changed; update our summary data
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -136,7 +136,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Set if a popup should have a "Custom" menu item
  */
 - (void)popUp:(NSPopUpButton *)inPopUp shouldShowCustom:(BOOL)showCustom
@@ -160,7 +160,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Update our soundset menu if a new sound set is instaled
  */
 - (void)xtrasChanged:(NSNotification *)notification
@@ -173,7 +173,7 @@
 
 #pragma mark Event presets
 
-/*
+/*!
  * @brief Buld and return the event presets menu
  *
  * The menu will have built in presets, a divider, user-set presets, a divider, and then the preset management item(s)
@@ -243,7 +243,7 @@
 																					group:PREF_GROUP_EVENT_PRESETS]];
 }
 
-/*
+/*!
  * @brief Selected an event preset
  *
  * Pass it to the plugin, which will perform necessary changes to our contact alerts
@@ -284,7 +284,7 @@
 																					group:PREF_GROUP_EVENT_PRESETS]];	
 }
 
-/*
+/*!
  * @brief Manage presets
  *
  * Called by the "Edit Presets..." menu item
@@ -409,7 +409,7 @@
 	[self contactAlertsDidChangeForActionID:[deletedAlert objectForKey:KEY_ACTION_ID]];	
 }
 
-/*
+/*!
  * @brief Contact alerts were changed by the user
  */
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID
@@ -441,7 +441,7 @@
 }
 
 #pragma mark Sound sets
-/*
+/*!
  * @brief Called when an item in the sound set popUp is selected.
  *
  * Also called after the user changes sounds manually, by -[ESGlobalEventsPreferences contactAlertsDidChangeForActionID].
@@ -466,7 +466,7 @@
 	[self saveCurrentEventPreset];
 }
 
-/*
+/*!
  * @brief Revert the event set to how it was before the last attempted operation
  */
 - (void)revertToSavedEventSet
@@ -483,7 +483,7 @@
 	[self updateSoundSetSelection];
 }
 
-/*
+/*!
  * @brief Build and return the event set as it should be saved
  */
 - (NSMutableDictionary *)currentEventSetForSaving
@@ -513,7 +513,7 @@
 
 #pragma mark Preset saving
 
-/*
+/*!
  * @brief Save the current event preset
  *
  * Called after each event change to immediately update the current preset.
@@ -535,7 +535,7 @@
 	}		
 }
 
-/*
+/*!
  * @brief Show the sheet for naming the preset created by an attempt to modify a built-in set
  *
  * @param originalPresetName The name of the original set, used as a base for the new name.
@@ -630,7 +630,7 @@
 	[self updateSoundSetSelectionForSoundSetPath:soundSetPath];
 }
 
-/*
+/*!
  * @brief Build and return a menu of sound set choices
  *
  * The menu items have an action of -[self selectSoundSet:].

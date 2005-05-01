@@ -714,7 +714,7 @@ static NSArray *draggedTypes = nil;
 
 //Dragging delegate ----------------------------------------------------------------------------------------------------
 #pragma mark Dragging delegate
-/*
+/*!
  * @brief If possible, return the first NSTextView in the message view's responder chain
  *
  * This is used for drag and drop behavior.

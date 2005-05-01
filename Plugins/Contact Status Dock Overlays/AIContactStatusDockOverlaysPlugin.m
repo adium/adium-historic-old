@@ -264,7 +264,7 @@
 	return(nil);
 }
 
-/*
+/*!
  * @brief When a chat no longer has unviewed content, remove it from display
  */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent

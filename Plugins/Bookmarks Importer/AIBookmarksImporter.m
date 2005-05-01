@@ -180,7 +180,7 @@
 
 #pragma mark Menu creation
 
-/*
+/*!
  * @brief Insert a bookmark (or a group of bookmarks) into the menu
  *
  * Adds a menu item to the menu, containing a hierarchical submenu with at least one leaf menu item within it.
@@ -221,7 +221,7 @@
 	[inMenu addItem:item];
 }
 
-/*
+/*!
  * @brief Insert a single bookmark into the menu
  */
 - (void)insertMenuItemForBookmark:(SHMarkedHyperlink *)object intoMenu:(NSMenu *)inMenu

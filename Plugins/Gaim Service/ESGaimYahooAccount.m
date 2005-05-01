@@ -146,7 +146,7 @@
 
 #pragma mark Status Messages
 
-/*
+/*!
  * @brief Status name to use for a Gaim buddy
  */
 - (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
@@ -208,7 +208,7 @@
 	return statusName;
 }
 
-/*
+/*!
  * @brief Status message for a contact
  */
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
@@ -282,7 +282,7 @@
 	return statusMessage;
 }
 
-/*
+/*!
  * @brief Update the status message and away state of the contact
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
