@@ -81,7 +81,7 @@ struct resolved_id {
 	return [NSString stringWithUTF8String:res->name];	
 }
 
-/*
+/*!
  * @brief Only enable the OK button if there is a selection
  */
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
@@ -119,7 +119,7 @@ struct resolved_id {
 	}
 }
 
-/*
+/*!
  * @brief Double click works the same as pressing OK
  */
 - (void)doubleClickInTableView:(id)sender
@@ -129,7 +129,7 @@ struct resolved_id {
 	}
 }
 
-/*
+/*!
  * @brief Call the gaim callback to finish up the window
  *
  * @param inCallBackValue The cb to use

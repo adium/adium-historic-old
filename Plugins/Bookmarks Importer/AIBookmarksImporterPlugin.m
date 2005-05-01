@@ -61,7 +61,7 @@
 
 static AIBookmarksImporterPlugin *myself = nil;
 
-/*
+/*!
  * @brief Initialization
  */
 - (void)installPlugin
@@ -116,7 +116,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[self registerToolbarItem];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -182,7 +182,7 @@ end:
 
 #pragma mark -
 
-/*
+/*!
  * @brief Insert a link into the textView
  *
  * @param sender An NSMenuItem whose representedObject must be an SHMarkedHyperlink instance
@@ -249,7 +249,7 @@ end:
 #pragma mark -
 #pragma mark Building
 
-/*
+/*!
  * @brief Builds the bookmark menu (Detach as a thread)
  *
  * We're not allowed to create or touch any menu items from within a thread, so this thread will gather a list of 
@@ -378,7 +378,7 @@ end:
 
 #pragma mark -
 
-/*
+/*!
  * @brief Called after a delay by the main thread to actually perform our setting
  */
 - (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
@@ -404,7 +404,7 @@ end:
 #pragma mark -
 #pragma mark Validation / Updating
 
-/*
+/*!
  * @brief Validate our bookmark menu item
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)sender
@@ -417,7 +417,7 @@ end:
 	return enable;
 }
 
-/*
+/*!
  * @brief Dummy menu item target so we can enable/disable our main menu item
  */
 - (IBAction)dummyTarget:(id)sender{
@@ -443,7 +443,7 @@ end:
 #pragma mark -
 #pragma mark Toolbar Item
 
-/*
+/*!
  * @brief Register toolbar item
  */
 - (void)registerToolbarItem
@@ -499,7 +499,7 @@ end:
 	[toolbarController registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 }
 
-/*
+/*!
  * @brief Toolbar item will be added
  * When a toolbar item is added (it will be effectively a copy of the one we originally registered)
  * we want to set its menu initially, then track it for later menu changes
@@ -518,7 +518,7 @@ end:
 	}
 }
 
-/*
+/*!
  * @brief A toolbar item was removed
  *
  * Stop tracking (and retaining) it
@@ -532,7 +532,7 @@ end:
 	}
 }
 
-/*
+/*!
  * @brief Update the menus on every toolbar item we are tracking
  */
 - (void)updateAllToolbarItemMenus
@@ -546,7 +546,7 @@ end:
 	}
 }
 
-/*
+/*!
  * @brief Update the menu for a specific toolbar item
  */
 - (void)updateMenuForToolbarItem:(NSToolbarItem *)item
@@ -564,7 +564,7 @@ end:
 	[item setMenuFormRepresentation:mItem];	
 }
 
-/*
+/*!
  * @brief Obtain the menuLock so our menus can be safely accesed, then update the menu for a toolbar item
  */
 - (void)obtainMenuLockAndUpdateMenuForToolbarItem:(NSToolbarItem *)item

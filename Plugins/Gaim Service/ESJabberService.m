@@ -56,7 +56,7 @@
 	return(@"Jabber");
 }
 
-/*
+/*!
  * @brief Allowed characters
  * 
  * Jabber IDs are generally of the form username@server.org
@@ -72,7 +72,7 @@
 	return([allowedCharacters autorelease]);
 }
 
-/*
+/*!
  * @brief Allowed characters for UIDs
  *
  * Same as allowedCharacters, but also allow / for specifying a resource.

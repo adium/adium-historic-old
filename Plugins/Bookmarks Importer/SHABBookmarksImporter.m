@@ -17,7 +17,7 @@
 #import "SHABBookmarksImporter.h"
 #import <AddressBook/AddressBook.h>
 
-/*
+/*!
  * @class SHABBookmarksImporter
  * @brief Address Book bookmarks importer
  *

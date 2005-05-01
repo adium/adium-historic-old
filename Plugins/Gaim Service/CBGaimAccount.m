@@ -292,7 +292,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*
+/*!
  * @brief Status name to use for a Gaim buddy
  *
  * Called by SLGaimCocoaAdapter on the gaim thread
@@ -302,7 +302,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return nil;
 }
 
-/*
+/*!
  * @brief Status message for a contact
  *
  * Called by SLGaimCocoaAdapter on the gaim thread
@@ -312,7 +312,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return nil;
 }
 
-/*
+/*!
  * @brief Update the status message and away state of the contact
  *
  *  Called by SLGaimCocoaAdapter on the main thread
@@ -440,7 +440,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
-/*
+/*!
  * @brief Gaim removed a contact from the local blist
  *
  * This can happen in many situations:
@@ -1640,7 +1640,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 #pragma mark Disconnect
 
-/*
+/*!
  * @brief Disconnect this account
  */
 - (void)disconnect
@@ -1658,7 +1658,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	}
 }
 
-/*
+/*!
  * @brief Our account was unexpectedly disconnected with an error message
  */
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
@@ -1679,7 +1679,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 
-/*
+/*!
  * @brief Our account has disconnected
  *
  * This is called after the accoutn disconnects for any reason

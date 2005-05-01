@@ -76,7 +76,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 @implementation SLGaimCocoaAdapter
 
-/*
+/*!
  * @brief Create the instance of SLGaimCocoaAdapter used throughout this program session
  *
  * Called on the Gaim thread, never returns until the program terminates
@@ -91,7 +91,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[gaimCocoaAdapter release];
 }
 
-/*
+/*!
  * @brief Called early in the startup process by CBGaimServicePlugin to begin initializing Gaim
  *
  * Should only be called once.  Creates and locks gaimThreadCreationLock so later activity can relock in order to wait
@@ -111,7 +111,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 						   withObject:nil];
 }
 
-/*
+/*!
  * @brief Return the shared instance
  *
  * Should only be called once and then cached by CBGaimAccount.  Locks gaimThreadCreationLock, which will only be

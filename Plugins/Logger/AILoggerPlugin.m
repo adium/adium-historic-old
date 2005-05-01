@@ -225,7 +225,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
     return(YES);
 }
 
-/*
+/*!
  * @brief Show the log viewer for no contact
  *
  * Invoked from the Window menu
@@ -236,7 +236,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 										 plugin:self];	
 }
 
-/*
+/*!
  * @brief Show the log viewer, displaying only the selected contact's logs
  *
  * Invoked from the Contact menu
@@ -250,7 +250,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 										 plugin:self];
 }
 
-/*
+/*!
  * @brief Show the log viewer, displaying only the selected contact's logs
  *
  * Invoked from a contextual menu

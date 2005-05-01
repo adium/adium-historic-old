@@ -129,7 +129,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 }
 
 #pragma mark Libezv Callbacks
-/*
+/*!
  * @brief Logged in, called on the main thread
  */
 - (void)mainThreadReportLoggedIn
@@ -140,7 +140,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     [self updateStatusForKey:KEY_USER_ICON];	
 }
 
-/*
+/*!
  * @brief libezv: we logged in
  *
  * Sent on the libezv thread
@@ -151,7 +151,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	[self mainPerformSelector:@selector(mainThreadReportLoggedIn)];
 }
 
-/*
+/*!
  * @brief libezv: we logged out
  *
  * Sent on the libezv thread
@@ -254,7 +254,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     [listContact notifyOfChangedStatusSilently:silentAndDelayed];	
 }
 
-/*
+/*!
  * @brief libezv: A contact was updated 
  *
  * Sent on the libezv thread
@@ -570,7 +570,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     [currentAutoreleasePool release];
 }
 
-/*
+/*!
  * @brief Release and recreate our autorelease pool
  *
  * Our autoreleased objects will only be released when the outermost autorelease pool is released.

@@ -16,7 +16,7 @@
 
 static NSMutableDictionary	*keyGenerationControllerDict = nil;
 
-/*
+/*!
  * @brief We started generating a private key.
  *
  * Create a window controller for inIdentifier and tell it to display.
@@ -46,7 +46,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	}
 }
 
-/*
+/*!
  * @brief Initialize
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forIdentifier:(NSString *)inIdentifier
@@ -57,7 +57,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	return self;
 }
 
-/*
+/*!
  * @brief Window loaded
  *
  * Start our spinning progress indicator and set up our window
@@ -74,7 +74,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 		[NSString stringWithFormat:AILocalizedString(@"Generating private encryption key for %@",nil),identifier]];
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -83,7 +83,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Finished generating a private key
  *
  * Closes the window assosiated with inIdentifier, if it is open.

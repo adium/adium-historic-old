@@ -94,7 +94,7 @@
     return(path);
 }
 
-/*
+/*!
  * @brief Service class of this emoticon pack
  *
  * @result A service class, or nil if the emoticon pack is not associated with any service class

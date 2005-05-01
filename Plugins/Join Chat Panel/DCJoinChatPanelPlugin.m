@@ -22,13 +22,13 @@
 
 #define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Group Chat...",nil)
 
-/*
+/*!
  * @class DCJoinChatPanelPlugin
  * @brief Component to manage the Join Group Chat menu item
  */
 @implementation DCJoinChatPanelPlugin
 
-/*
+/*!
  * @brief Install
  */
 - (void)installPlugin
@@ -40,7 +40,7 @@
 	[[adium menuController] addMenuItem:joinChatMenuItem toLocation:LOC_File_New];
 }	
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -50,7 +50,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Show the join group chat window
  */
 - (IBAction)joinChat:(id)sender
@@ -58,7 +58,7 @@
 	[DCJoinChatWindowController joinChatWindow];
 }
 
-/*
+/*!
  * @brief Validate menu item
  *
  * Disable the menu item if no online accounts could make use of it

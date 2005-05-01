@@ -389,7 +389,7 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 										  group:PREF_GROUP_EVENT_PRESETS];	
 }
 
-/*
+/*!
  * @brief Apply a sound set
  */
 - (void)applySoundSetWithPath:(NSString *)soundSetPath

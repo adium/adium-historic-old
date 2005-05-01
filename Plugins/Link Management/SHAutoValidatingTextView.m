@@ -84,7 +84,7 @@
 }
 
 #pragma mark Retrieving URL
-/*
+/*!
  * @brief Link URL
  */
 - (NSString *)linkURL

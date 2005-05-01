@@ -23,7 +23,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AILocalizationTextField.h>
 
-/*
+/*!
  * @class AIContactProfilePane
  * @brief Pane for contact info and profile
  *
@@ -31,13 +31,13 @@
  */
 @implementation AIContactProfilePane
 
-/*
+/*!
  * @brief Category
  */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
     return(AIInfo_Profile);
 }
-/*
+/*!
  * @brief Nib name
  */
 - (NSString *)nibName{

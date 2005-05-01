@@ -534,7 +534,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	[inChat setIsOpen:YES];
 }
 
-/*
+/*!
  * @brief Chat content
  */
 - (void)_addContent:(NSArray *)chatArray toChat:(AIChat *)inChat withParticipants:(NSDictionary *)participants
