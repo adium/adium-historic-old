@@ -20,6 +20,10 @@
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
+@interface AIStateMenuPlugin (PRIVATE)
+- (void)updateKeyEquivalents;
+@end
+
 /*!
  * @class AIStateMenuPlugin
  * @brief Implements a list of preset states in the status menu
@@ -53,11 +57,18 @@
 	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
 
 	[[adium statusController] registerStateMenuPlugin:self];
+	
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(stateMenuSelectionsChanged:)
+									   name:AIStatusStateMenuSelectionsChangedNotification
+									 object:nil];
+		
 }
 
 - (void)uninstallPlugin
 {
 	[[adium statusController] unregisterStateMenuPlugin:self];
+	[[adium notificationCenter] removeObserver:self];
 }
 
 /*!
@@ -73,50 +84,16 @@
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	NSMenu			*dockStatusMenu = [[NSMenu alloc] init];
-		
-	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
-	AIStatusType	targetStatusType = AIAvailableStatusType;
-	AIStatus		*targetStatusState = nil;
-	BOOL			assignKeyEquivalents = NO;
-	BOOL			assignOptionCmdY = NO;
-	
-	if(activeStatusType == AIAvailableStatusType){
-		targetStatusType = AIAwayStatusType;
-		targetStatusState = nil;
-		assignOptionCmdY = NO;
-		assignKeyEquivalents = YES;
-		
-	}else if((activeStatusType == AIAwayStatusType) || (activeStatusType == AIInvisibleStatusType)){
-		targetStatusType = AIAvailableStatusType;		
-		targetStatusState = [[adium statusController] defaultInitialStatusState];
-		assignOptionCmdY = YES;
-		assignKeyEquivalents = YES;
-		
-	}
-	
+
 	enumerator = [menuItemArray objectEnumerator];
     while((menuItem = [enumerator nextObject])){
-		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
 		NSMenuItem	*dockMenuItem;
-		int			tag = [menuItem tag];
 
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
 		
 		dockMenuItem = [menuItem copy];
 		[dockStatusMenu addItem:dockMenuItem];
 		[dockMenuItem release];
-
-		if(assignKeyEquivalents){
-			if((tag == targetStatusType) && 
-			   (representedStatus == targetStatusState)){
-				[menuItem setKeyEquivalent:@"y"];
-				
-			}else if(assignOptionCmdY && ((tag == AIAwayStatusType) && (representedStatus == nil))){
-				[menuItem setKeyEquivalent:@"y"];
-				[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-				
-			}
-		}
     }
 	
 	[dockStatusMenuRoot setSubmenu:dockStatusMenu];
@@ -124,6 +101,9 @@
 	//Tell the status controller to update these items as necessary
 	[[adium statusController] plugin:self didAddMenuItems:[dockStatusMenu itemArray]];
 	[dockStatusMenu release];
+	
+	[currentMenuItemArray release]; currentMenuItemArray = [menuItemArray retain];
+	[self updateKeyEquivalents];
 }
 
 /*!
@@ -143,8 +123,67 @@
     }
 	
 	[dockStatusMenuRoot setSubmenu:nil];
+	[currentMenuItemArray release]; currentMenuItemArray = nil;
 }
 
 - (void)dummyAction:(id)sender {};
+
+/*
+ * @brief Update key equivalents for our main status menu
+ *
+ * When available, cmd-y is mapped to custom away.
+ * When away, cmd-y is mapped to available and cmd-option-y is always mapped to custom away.
+ */
+- (void)updateKeyEquivalents
+{
+	NSEnumerator	*enumerator;
+	NSMenuItem		*menuItem;
+
+	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
+	AIStatusType	targetStatusType = AIAvailableStatusType;
+	AIStatus		*targetStatusState = nil;
+	BOOL			assignCmdOptionY;
+	
+	if(activeStatusType == AIAvailableStatusType){
+		//If currently available, set an equivalent for the base away
+		targetStatusType = AIAwayStatusType;
+		targetStatusState = nil;
+		assignCmdOptionY = NO;
+
+	}else{
+		//If away, invisible, or offline, set an equivalent for the available state
+		targetStatusType = AIAvailableStatusType;		
+		targetStatusState = [[adium statusController] defaultInitialStatusState];
+		assignCmdOptionY = YES;
+	}
+
+	enumerator = [currentMenuItemArray objectEnumerator];
+    while((menuItem = [enumerator nextObject])){
+		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
+
+		int			tag = [menuItem tag];
+		if((tag == targetStatusType) && 
+		   (representedStatus == targetStatusState)){			
+			[menuItem setKeyEquivalent:@"y"];
+			[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask];
+
+		}else if(assignCmdOptionY && ((tag == AIAwayStatusType) && (representedStatus == nil))){
+			[menuItem setKeyEquivalent:@"y"];
+			[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+			
+		}else{
+			[menuItem setKeyEquivalent:@""];
+			
+		}
+	}
+}
+
+/*
+ * @brief State menu selections changed
+ */
+- (void)stateMenuSelectionsChanged:(NSNotification *)notification
+{
+	[self updateKeyEquivalents];
+}
 
 @end
