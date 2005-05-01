@@ -19,7 +19,7 @@
 #pragma mark Webcam
 static void adiumGaimWebcamNew(GaimWebcam *gwc)
 {
-	NSLog(@"adiumGaimWebcamNew");
+	GaimDebug(@"adiumGaimWebcamNew");
 	//	GaimGtkWebcam *c;
 	//	char *tmp;
 	//	
@@ -60,7 +60,7 @@ static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 								  const unsigned char *image, unsigned int size,
 								  unsigned int timestamp, unsigned int id)
 {
-	NSLog(@"adiumGaimWebcamUpdate (Frame %i , %i bytes)", id, size);
+	GaimDebug(@"adiumGaimWebcamUpdate (Frame %i , %i bytes)", id, size);
 	
 	if(!frameData){
 		frameData = [[NSMutableData alloc] init];		
@@ -92,7 +92,7 @@ static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 
 static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 {
-	NSLog(@"adiumGaimWebcamFrameFinished");
+	GaimDebug(@"adiumGaimWebcamFrameFinished");
 	
 	NSBitmapImageRep *rep;
 	rep = [[NSBitmapImageRep alloc] initWithBitmapDataPlanes:(unsigned char **)[frameData bytes]
@@ -106,7 +106,7 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 												 bytesPerRow:0
 												bitsPerPixel:0]; 
 	
-	NSLog(@"rep = %@",rep);
+	GaimDebug(@"rep = %@",rep);
 	
 	//	[[AIObject sharedAdiumInstance] performSelectorOnMainThread:@selector(showImage:) withObject:rep waitUntilDone:NO];
 	
@@ -125,7 +125,7 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 	
 	
 	
-	//	NSLog(@"Bitmap?: %@",[NSImage initWithData:frameData]);
+	//	GaimDebug(@"Bitmap?: %@",[NSImage initWithData:frameData]);
 	
 	//	GaimGtkWebcam *cam;
 	//	WCFrame *f;
@@ -143,7 +143,7 @@ static void adiumGaimWebcamFrameFinished(GaimWebcam *wc, unsigned int id)
 
 static void adiumGaimWebcamClose(GaimWebcam *gwc)
 {
-	NSLog(@"adiumGaimWebcamClose");
+	GaimDebug(@"adiumGaimWebcamClose");
 	//	GaimGtkWebcam *cam;
 	//	
 	//	cam = gwc->ui_data;
@@ -156,7 +156,7 @@ static void adiumGaimWebcamClose(GaimWebcam *gwc)
 
 static void adiumGaimWebcamGotInvite(GaimConnection *gc, const gchar *who)
 {
-	NSLog(@"adiumGaimWebcamGotInvite");
+	GaimDebug(@"adiumGaimWebcamGotInvite");
 	
 	gaim_webcam_invite_accept(gc, who);
 	
