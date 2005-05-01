@@ -2,7 +2,6 @@ Adium
 Copyright (C) 2001-2005 by the following:
 
 Adam Atlas
-ATMB
 Colin Barrett
 Erik J. Barzeski
 Max Bertrand
