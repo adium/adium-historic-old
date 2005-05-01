@@ -147,19 +147,19 @@
 			
 			//Save the new formatting (if it's changed)
 			if(![[font stringRepresentation] isEqualToString:newFont]){
-				NSLog(@"newfont:%@  (was %@)",newFont,[font stringRepresentation]);
+				AILog(@"newfont:%@  (was %@)",newFont,[font stringRepresentation]);
 				[[adium preferenceController] setPreference:newFont
 													 forKey:KEY_FORMATTING_FONT
 													  group:PREF_GROUP_FORMATTING];
 			}
 			if(![[textColor stringRepresentation] isEqualToString:newTextColor]){
-				NSLog(@"newcolor:%@ (was %@)",newTextColor,[textColor stringRepresentation]);
+				AILog(@"newcolor:%@ (was %@)",newTextColor,[textColor stringRepresentation]);
 				[[adium preferenceController] setPreference:newTextColor
 													 forKey:KEY_FORMATTING_TEXT_COLOR
 													  group:PREF_GROUP_FORMATTING];
 			}
 			if(![[backgroundColor stringRepresentation] isEqualToString:newBodyColor]){
-				NSLog(@"newbackgroundcolor:%@ (was %@)",newBodyColor,[backgroundColor stringRepresentation]);
+				AILog(@"newbackgroundcolor:%@ (was %@)",newBodyColor,[backgroundColor stringRepresentation]);
 				[[adium preferenceController] setPreference:newBodyColor
 													 forKey:KEY_FORMATTING_TEXT_COLOR
 													  group:PREF_GROUP_FORMATTING];
