@@ -7,10 +7,11 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
-            ACTIONS = {returnFromAway = id; }; 
+            ACTIONS = {returnFromAway = id; toggleMuteWhileAway = id; }; 
             CLASS = ESAwayStatusWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_muteWhileAway" = NSButton; 
                 "button_return" = NSButton; 
                 "scrollView_multiStatus" = NSScrollView; 
                 "scrollView_singleStatus" = NSScrollView; 
