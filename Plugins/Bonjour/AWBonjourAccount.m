@@ -104,7 +104,6 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 }
 - (void)connect
 {
-	
     // Say we're connecting...
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:YES];
 
