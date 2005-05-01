@@ -5,6 +5,7 @@ Adam Atlas
 ATMB
 Colin Barrett
 Erik J. Barzeski
+Max Bertrand
 Adam Betts
 Jorge Salvador Caffarena
 David Clark
@@ -21,16 +22,20 @@ Severin Klaus
 Ian Krieg
 Thomas Kunze
 Scott Lamb
+Jack M.H. Lin
+Nicola Del Monaco
+David Munch
 Daisuke Okada
 Mac-arena the Bored Zo
 Chris Serino
 Jeffrey Melloy
+Roeland Nas
 Laura Natcher
+Daisuke Okada
 Stephen Poprocki
 Evan Schoenberg
 Greg Smith
 Vinay Venkatesh
 Wesley Underwood
-Zeu Maxou
 
 If you have contributed to Adium and are not on this list, please contact us.
