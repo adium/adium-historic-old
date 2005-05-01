@@ -221,6 +221,7 @@
 				4B191D8C0611C11000E8A4E7,
 				34B5EBA106589A88007B9A56,
 				4B191D8E0611C11400E8A4E7,
+				3474DFFC08254F3500BF30F0,
 				4BE9FFE7055981AB00359B15,
 				F59DB3D6033EA9CD01A8010A,
 				F59DB3D7033EA9CD01A8010A,
@@ -5227,6 +5228,28 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3474DFFC08254F3500BF30F0 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = Copyright.txt;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474DFFF082550FD00BF30F0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.rtf;
+			name = Credits.rtf;
+			path = Resources/Credits.rtf;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3474E000082550FD00BF30F0 = {
+			fileRef = 3474DFFF082550FD00BF30F0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		3477CAD10776E55800995429 = {
 			fileRef = 4BBF41ED066119A8001D31E1;
 			isa = PBXBuildFile;
@@ -9271,7 +9294,6 @@
 				34A48A1006F64382002C7C5F,
 				34F1022F0734499700890D3B,
 				4BE9FFE8055981AB00359B15,
-				4BCB9B5F0567FF5D001D3559,
 				34536751059BA8EE00A83D9E,
 				34F2BD25059CF8070005B238,
 				4BD6743106001D1E0049CAF7,
@@ -9374,6 +9396,7 @@
 				345F5C5F081ACCB2001F733C,
 				34167FED081D706300E35678,
 				0779934F08221D9700F698DC,
+				3474E000082550FD00BF30F0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -20161,20 +20184,6 @@
 			settings = {
 			};
 		};
-		4BCB9B5E0567FF5D001D3559 = {
-			isa = PBXFileReference;
-			lastKnownFileType = text.rtf;
-			name = Credits.rtf;
-			path = Source/Credits.rtf;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		4BCB9B5F0567FF5D001D3559 = {
-			fileRef = 4BCB9B5E0567FF5D001D3559;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BCDEB4103D4DC9700A8010A = {
 			fileEncoding = 30;
 			isa = PBXFileReference;
@@ -23859,7 +23868,7 @@
 				3402E02D07CB0DBB0044F818,
 				3408268E075B5CB900703011,
 				3408268F075B5CB900703011,
-				4BCB9B5E0567FF5D001D3559,
+				3474DFFF082550FD00BF30F0,
 			);
 			isa = PBXGroup;
 			name = "About Box";
