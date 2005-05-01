@@ -969,7 +969,6 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			
 			break;
 		}
-		 
 	}
 
 	if(!chat){
