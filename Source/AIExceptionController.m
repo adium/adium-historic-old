@@ -14,16 +14,19 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/*
- Catches application exceptions and forwards them to the crash reporter application
- */
-
 #import "AICrashReporter.h"
 #import "AIExceptionController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <ExceptionHandling/NSExceptionHandler.h>
 
+/*
+ * @class AIExceptionController
+ * @brief Catches application exceptions and forwards them to the crash reporter application
+ *
+ * Once configured, poses as NSException to decode the stack traces generated via NSExceptionHandler,
+ * write them to a file, and launch the crash reporter.
+ */
 @implementation AIExceptionController
 
 //Enable exception catching for the crash reporter
