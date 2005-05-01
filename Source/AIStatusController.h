@@ -20,8 +20,9 @@
 @protocol AIListObjectObserver;
 
 //Status State Notifications
-#define AIStatusStateArrayChangedNotification	@"AIStatusStateArrayChangedNotification"
-#define AIStatusActiveStateChangedNotification	@"AIStatusActiveStateChangedNotification"
+#define AIStatusStateArrayChangedNotification			@"AIStatusStateArrayChangedNotification"
+#define AIStatusActiveStateChangedNotification			@"AIStatusActiveStateChangedNotification"
+#define AIStatusStateMenuSelectionsChangedNotification	@"AIStatusStateMenuSelectionsChangedNotification"
 
 //Idle Notifications
 #define AIMachineIsIdleNotification				@"AIMachineIsIdleNotification"

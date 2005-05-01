@@ -1403,6 +1403,14 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		}
 		
 		[self _resetActiveStatusState];
+		
+		/* Let any relevant plugins respond to the to-be-changed state menu selection. Technically we
+		 * haven't changed it yet, since we'll do that in validateMenuItem:, but the fact that we will now
+		 * need to change it is useful if, for example, key equivalents change in a menu alongside selection
+		 * changes, since we need key equivalents set immediately.
+		 */
+		[[adium notificationCenter] postNotificationName:AIStatusStateMenuSelectionsChangedNotification
+												  object:nil];
 	}
 }
 
