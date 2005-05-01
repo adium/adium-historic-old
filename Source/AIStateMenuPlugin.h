@@ -20,6 +20,8 @@
 
 @interface AIStateMenuPlugin : AIPlugin <StateMenuPlugin> {	
 	NSMenuItem		*dockStatusMenuRoot;
+	
+	NSArray			*currentMenuItemArray;
 }
 
 @end
