@@ -48,8 +48,6 @@
 
 - (void)editEventsWithEventID:(NSString *)eventID;
 
-- (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector;
-
 - (NSString *)_localizedTitle:(NSString *)englishTitle;
 
 - (void)saveCurrentEventPreset;
@@ -101,6 +99,7 @@
 	//Presets menu
 	[self setAndConfigureEventPresetsMenu];
 
+	[label_eventPreset setLocalizedString:AILocalizedString(@"Event preset:",nil)];
 	[label_soundSet setLocalizedString:AILocalizedString(@"Sound set:",nil)];
 
 	//And event presets to update our presets menu
@@ -191,7 +190,7 @@
 		NSString		*name = [eventPreset objectForKey:@"Name"];
 		
 		//Add a menu item for the set
-		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:name]
 																		 target:self
 																		 action:@selector(selectEventPreset:)
 																  keyEquivalent:@""] autorelease];
@@ -527,7 +526,7 @@
 		/* Perform after a delay so that if we got here as a result of a sheet-based add or edit of an event
 		 * the sheet will close before we try to open a new one. */
 		[self performSelector:@selector(showPresetCopySheet:)
-				   withObject:[eventPreset objectForKey:@"Name"]
+				   withObject:[self _localizedTitle:[eventPreset objectForKey:@"Name"]]
 				   afterDelay:0];
 	}else{	
 		//Now save the current settings
@@ -652,7 +651,7 @@
 		   [defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:@"Info.plist"]]){
 
             //Add a menu item for the set
-            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]
+            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]]
 																			 target:self
 																			 action:@selector(selectSoundSet:)
 																	  keyEquivalent:@""] autorelease];
@@ -676,36 +675,12 @@
 	
 	if([englishTitle isEqualToString:@"None"])
 		localizedTitle = AILocalizedString(@"None",nil);
+	else if([englishTitle isEqualToString:@"Default Notifications"])
+		localizedTitle = AILocalizedString(@"Default Notifications",nil);
+	else if([englishTitle isEqualToString:@"Visual Notifications"])
+		localizedTitle = AILocalizedString(@"Visual Notifications",nil);
 
 	return (localizedTitle ? localizedTitle : englishTitle);
-}
-
-- (NSMenu *)_setMenuFromArray:(NSArray *)array selector:(SEL)selector
-{
-    NSEnumerator	*enumerator;
-    NSString		*setName;
-    NSMenu			*setMenu;
-	
-    //Create the behavior set menu
-    setMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-	
-    //Add all the premade behavior sets
-    enumerator = [array objectEnumerator];
-    while((setName = [enumerator nextObject])){
-        NSMenuItem	*menuItem;
-		
-        //Create the menu item
-        menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:setName]
-																		 target:self
-																		 action:selector
-																  keyEquivalent:@""] autorelease];
-		
-        //
-        [menuItem setRepresentedObject:setName];
-        [setMenu addItem:menuItem];
-    }
-	
-    return(setMenu);
 }
 
 @end
