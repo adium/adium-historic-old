@@ -1104,6 +1104,7 @@
 				3458BA99082178430005BCF6,
 				34C2A4910821859800F3363F,
 				3474DD6F0824699D00BF30F0,
+				3421138008261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DualWindowMessageAdvanced.nib;
@@ -1451,6 +1452,62 @@
 			lastKnownFileType = wrapper.nib;
 			name = Italian;
 			path = Resources/Italian.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421137C08261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421137D08261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421137E08261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421137F08261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421138008261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421138108261B2E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421138208261B2F00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = "Adium Crash Reporter/Italian.lproj/MainMenu.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2161,6 +2218,7 @@
 				3458B500081DD44B0005BCF6,
 				3458B96E0820DAC40005BCF6,
 				3458BA97082178430005BCF6,
+				3421137E08261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = AccountProxy.nib;
@@ -2202,6 +2260,7 @@
 				3458B503081DD44B0005BCF6,
 				3458B9820820DAD30005BCF6,
 				3458BA9C082178430005BCF6,
+				3421137D08261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = AppearancePrefs.nib;
@@ -2369,6 +2428,7 @@
 				3458B502081DD44B0005BCF6,
 				3458B9C10820DB000005BCF6,
 				3458BA9A082178430005BCF6,
+				3421137F08261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = StatusSortConfiguration.nib;
@@ -2523,6 +2583,7 @@
 				3458B501081DD44B0005BCF6,
 				3458B9AC0820DAF50005BCF6,
 				3458BA8D082178420005BCF6,
+				3421138108261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ListThemeSheet.nib;
@@ -2551,6 +2612,7 @@
 				3458B4FF081DD44B0005BCF6,
 				3458B9AD0820DAF50005BCF6,
 				3458BA9B082178430005BCF6,
+				3421137C08261B2E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ListLayoutSheet.nib;
@@ -13625,6 +13687,7 @@
 			children = (
 				4B7F78C10597F5B700162728,
 				34A24E1E07DE2B51009854E1,
+				3421138208261B2F00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = MainMenu.nib;
