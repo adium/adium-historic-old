@@ -16,7 +16,7 @@
 
 #import "AIToolbar.h"
 
-/*
+/*!
  * @class AIToolbar
  *
  * AIToolbar poses as NSToolbar to fix what I consider a bug in Apple's implementation: 
@@ -44,7 +44,7 @@
     [self poseAsClass:[NSToolbar class]];
 }
 
-/*
+/*!
  * @brief Called before the toolbar deallocs
  */
 - (void)dealloc

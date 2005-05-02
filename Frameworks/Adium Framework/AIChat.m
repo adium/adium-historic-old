@@ -68,7 +68,7 @@ static int nextChatNumber = 0;
     return self;
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -517,7 +517,7 @@ static int nextChatNumber = 0;
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
 #pragma mark Typing notifications
-/*
+/*!
  * @brief Send typing notifications given the new typing state?
  *
  * We never send typing notifications if we are currently suppressing them.

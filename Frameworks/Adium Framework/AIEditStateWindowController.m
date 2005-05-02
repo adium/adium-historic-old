@@ -301,7 +301,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[self closeWindow:nil];
 }
 
-/*
+/*!
  * @brief Update the display of the status's title in the window
  */
 - (void)updateTitleDisplay
@@ -330,7 +330,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[self updateTitleDisplay];
 }
 
-/*
+/*!
  * @brief NSTextField changed
  */
 - (void)controlTextDidChange:(NSNotification *)notification
@@ -344,7 +344,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	}
 }
 
-/*
+/*!
  * @brief NSTextView changed
  */
 - (void)textDidChange:(NSNotification *)notification
@@ -362,7 +362,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[self updateTitleDisplay];
 }
 
-/*
+/*!
  * @brief NSTextField ended editing
  *
  * If our title is cleared out, restore it to using the default title for the rest of the configuration

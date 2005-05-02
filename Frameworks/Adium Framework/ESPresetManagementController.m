@@ -16,13 +16,13 @@
 - (void)tableViewSelectionDidChange:(NSNotification *)notification;
 @end
 
-/*
+/*!
  * @class ESPresetManagementController
  * @brief Generic controller for managing presets
  */
 @implementation ESPresetManagementController
 
-/*
+/*!
  * @brief Begin managing presets
  *
  * @param inPresets An array of either NSString or NSDictionary objects.
@@ -69,7 +69,7 @@
 	return(self);	
 }
 
-/*
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
@@ -80,7 +80,7 @@
 	[super dealloc];
 }
 
-/*
+/*!
  * @brief Window did load
  */
 - (void)windowDidLoad
@@ -122,7 +122,7 @@
 	[self autorelease];
 }
 
-/*
+/*!
  * @brief Duplicate the selected preset
  */
 - (IBAction)duplicatePreset:(id)sender
@@ -166,7 +166,7 @@
 	}	
 }
 
-/*
+/*!
  * @brief Delete the selected preset
  */
 - (IBAction)deletePreset:(id)sender
@@ -191,7 +191,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Rename the selected preset
  */
 - (IBAction)renamePreset:(id)sender
@@ -202,7 +202,7 @@
 	}
 }
 
-/*
+/*!
  * @brief Configure control dimming
  */
 - (void)configureControlDimming

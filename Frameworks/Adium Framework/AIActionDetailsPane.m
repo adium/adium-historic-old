@@ -19,7 +19,7 @@
 
 @implementation AIActionDetailsPane
 
-/*
+/*!
  * @brief Return a new action details pane
 */
 + (AIActionDetailsPane *)actionDetailsPane
@@ -27,7 +27,7 @@
     return([[[self alloc] init] autorelease]);
 }
 
-/*
+/*!
  * @brief Return a new action details pane, passing plugin
  * @param inPlugin The plugin associated with this pane
  */
@@ -36,7 +36,7 @@
     return([[[self alloc] initForPlugin:inPlugin] autorelease]);
 }
 
-/*
+/*!
  * @brief Called by subclasses when the header should be updated
  */
 - (void)detailsForHeaderChanged
@@ -58,7 +58,7 @@
 	
 }
 
-/*
+/*!
  * @brief Configure for an event
  *
  * Called whenever the event changes.  Most subclasses will have no no need for this method;

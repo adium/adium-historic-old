@@ -1387,7 +1387,7 @@ int HTMLEquivalentForFontSize(int fontSize)
 
 @implementation NSString (AIHTMLDecoderAdditions)
 
-/*
+/*!
  * @brief Allow absoluteString to be called on NSString objects
  *
  * This exists to work around an incompatibilty with older, buggy versions of Adium which would incorrectly set

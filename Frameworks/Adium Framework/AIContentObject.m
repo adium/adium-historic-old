@@ -193,14 +193,14 @@
 
 //Behavior -------------------------------------------------------------------------------------------------------------
 #pragma mark Behavior
-/*
+/*!
  * @brief Set if this content is passed through content filters
  */
 - (void)setFilterContent:(BOOL)inFilterContent
 {
 	filterContent = inFilterContent;
 }
-/*
+/*!
  * @brief Is this content passed through content filters?
  */
 - (BOOL)filterContent
@@ -208,14 +208,14 @@
     return filterContent;
 }
 
-/*
+/*!
  * @brief Set if this content is tracked
  */
 - (void)setTrackContent:(BOOL)inTrackContent
 {
 	trackContent = inTrackContent;
 }
-/*
+/*!
  * @brief Is this content tracked with notifications?
  *
  * If NO, the content will not trigger message sent/message received events such as a sound playing.
@@ -225,14 +225,14 @@
     return trackContent;
 }
 
-/*
+/*!
  * @brief Set if this content is displayed
  */
 - (void)setDisplayContent:(BOOL)inDisplayContent
 {
 	displayContent = inDisplayContent;
 }
-/*
+/*!
  * @brief Is this content displayed?
  *
  * This will be NO for a content object such as an AIContentTyping object which is sent but not displayed
@@ -242,14 +242,14 @@
     return displayContent;
 }
 
-/*
+/*!
  * @brief Set if this content is displayed immediately
  */
 - (void)setDisplayContentImmediately:(BOOL)inDisplayContentImmediately
 {
 	displayContentImmediately = inDisplayContentImmediately;
 }
-/*
+/*!
  * @brief Should this content be displayed immediately?
  *
  * If NO, the object which created this content is responsible for posting Content_ChatDidFinishAddingUntrackedContent
@@ -260,27 +260,27 @@
 	return displayContentImmediately;
 }
 
-/*
+/*!
  * @brief Set if the content should be sent
  */
 - (void)setSendContent:(BOOL)inSendContent{
 	sendContent = inSendContent;
 }
-/*
+/*!
  * @brief Send the content?
  */
 - (BOOL)sendContent{
 	return sendContent;
 }
 
-/*
+/*!
  * @brief Set if this content is post processed
  */
 - (void)setPostProcessContent:(BOOL)inPostProcessContent
 {
 	postProcessContent = inPostProcessContent;
 }
-/*
+/*!
  * @brief Post process this content?
  *
  * For example, this should be YES if the content is to be logged and NO if it is not.
