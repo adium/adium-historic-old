@@ -349,11 +349,8 @@
 			//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
 			//here isn't a speed problem.  We previously used AIHTMLDecoder to handle Jaguar old-data unarchiving...
 			//but that's in Adium.framework and the cross over most certainly isn't worth it.
-			if([NSApp isOnPantherOrBetter]){
-				
-				returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
-													 documentAttributes:nil] autorelease]);
-			}
+			returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
+												 documentAttributes:nil] autorelease]);
 		}
 		
 		[unarchiver release];
