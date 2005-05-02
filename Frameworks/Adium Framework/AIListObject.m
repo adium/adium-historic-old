@@ -357,10 +357,22 @@
 	
 	//If the displayUserIcon changed, flush our cache and send out a notification
 	if (oldImage != [self displayUserIcon]){
+		AIListObject	*myContainingObject = [self containingObject];
+		NSSet			*modifiedKeys = [NSSet setWithObject:KEY_USER_ICON];
+		
 		[AIUserIcons flushCacheForContact:(AIListContact *)self];
+
 		//Notify
 		[[adium contactController] listObjectAttributesChanged:self
-												  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
+												  modifiedKeys:modifiedKeys];		
+		
+		if([myContainingObject isKindOfClass:[AIListContact class]]){
+			[AIUserIcons flushCacheForContact:(AIListContact *)myContainingObject];
+
+			//Notify
+			[[adium contactController] listObjectAttributesChanged:myContainingObject
+													  modifiedKeys:modifiedKeys];
+		}		
 	}
 }
 
