@@ -59,24 +59,15 @@
 												  keyEquivalent:@""];
 	needToRebuildMenus = YES;
 	
-	if([NSApp isOnPantherOrBetter]){
-		/* On Panther and better, create a submenu for these so menuNeedsUpdate will be called 
-		 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
-		 */
-		NSMenu	*tempMenu = [[NSMenu alloc] init];
-		[tempMenu setDelegate:self];
+	/* Create a submenu for these so menuNeedsUpdate will be called 
+	 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
+	 */
+	NSMenu	*tempMenu = [[NSMenu alloc] init];
+	[tempMenu setDelegate:self];
 		
-		[quickMenuItem setSubmenu:tempMenu];
-		[quickContextualMenuItem setSubmenu:[[tempMenu copy] autorelease]];
-		[tempMenu release];
-
-	}else{
-		/* On Jaguar, call menu needs update immediately to make the menus initially populate. They won't autoupdate in
-		 * the future, but that's yet another cost of living in 1986.  Then again, they do get to hear Run D.M.C.'s
-		 * awesome "Walk This Way" cover, so maybe that's worth it to them.
-		 */
-		[self menuNeedsUpdate:nil];
-	}
+	[quickMenuItem setSubmenu:tempMenu];
+	[quickContextualMenuItem setSubmenu:[[tempMenu copy] autorelease]];
+	[tempMenu release];
 	
     //add the items to their menus.
     AIMenuController *menuController = [adium menuController];
