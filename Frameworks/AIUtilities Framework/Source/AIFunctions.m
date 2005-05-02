@@ -104,7 +104,7 @@ void AISetRangeInMemory(void *buf, NSRange range, int ch)
 
 float AICoordinateForRect_edge_(const NSRect rect, const NSRectEdge edge)
 {
-	float coordinate;
+	float coordinate = 0.0;
 	switch (edge) {
 		case NSMinXEdge : coordinate = NSMinX(rect); break;
 		case NSMinYEdge : coordinate = NSMinY(rect); break;
@@ -119,7 +119,7 @@ float AICoordinateForRect_edge_(const NSRect rect, const NSRectEdge edge)
 // on the interior side of the edge, the number returned will be negative
 float AISignedExteriorDistanceRect_edge_toPoint_(const NSRect rect, const NSRectEdge edge, const NSPoint point)
 {
-	float distanceOutside;
+	float distanceOutside = 0.0;
 	float rectEdgeCoordinate = AICoordinateForRect_edge_(rect, edge);
 	switch (edge) {
 		case NSMinXEdge: distanceOutside = rectEdgeCoordinate - point.x; break;
