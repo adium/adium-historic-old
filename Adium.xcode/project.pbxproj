@@ -7052,18 +7052,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348EF1F2080B30F20015E0FC = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 348EF16F080B2CA20015E0FC;
-			remoteInfo = "Bookmarks Importer";
-		};
-		348EF1F3080B30F20015E0FC = {
-			isa = PBXTargetDependency;
-			target = 348EF16F080B2CA20015E0FC;
-			targetProxy = 348EF1F2080B30F20015E0FC;
-		};
 		348EF1F5080B311F0015E0FC = {
 			fileRef = 348EF170080B2CA20015E0FC;
 			isa = PBXBuildFile;
@@ -9036,7 +9024,6 @@
 				346C9D46060046AB000F5A8A,
 				4B90B54E064220B400D23731,
 				34677B3F07CC3E8400F59F7B,
-				348EF1F3080B30F20015E0FC,
 			);
 			isa = PBXNativeTarget;
 			name = Adium;
