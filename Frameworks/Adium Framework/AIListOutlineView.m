@@ -344,6 +344,8 @@
 	[(NSClipView *)newSuperview setCopiesOnScroll:(!backgroundImage)];
 }
 
+#warning Adam, fix this!
+
 /*	######################## Crappy code alert ########################
  *	Drawing the background image/color should be as simple as subclassing
  *	drawBackgroundInClipRect: but that method is only called in 10.3 and
