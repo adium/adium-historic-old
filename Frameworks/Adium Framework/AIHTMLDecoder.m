@@ -265,9 +265,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		NSFontTraitMask	 traits = [fontManager traitsOfFont:font];
 		BOOL			 hasUnderline = [[attributes objectForKey:NSUnderlineStyleAttributeName] intValue];
-		BOOL			 hasStrikethrough = ([NSApp isOnPantherOrBetter] ? 
-											[[attributes objectForKey:NSStrikethroughStyleAttributeName] intValue] :
-											NO);
+		BOOL			 hasStrikethrough = [[attributes objectForKey:NSStrikethroughStyleAttributeName] intValue];
 		BOOL			 isBold = (traits & NSBoldFontMask);
 		BOOL			 isItalic = (traits & NSItalicFontMask);
 		
