@@ -95,7 +95,7 @@
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
 			name = bookmarkToolbar.tif;
-			path = Source/bookmarkToolbar.tif;
+			path = Resources/bookmarkToolbar.tif;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -443,6 +443,20 @@
 			settings = {
 			};
 		};
+		07F8AD4308265C32009CCBB5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AIHyperlinks.framework;
+			path = "../AIHyperlinks Framework/build/AIHyperlinks.framework";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		07F8AD4408265C32009CCBB5 = {
+			fileRef = 07F8AD4308265C32009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -563,6 +577,7 @@
 		1058C7B0FEA5585E11CA2CBB = {
 			children = (
 				1058C7B1FEA5585E11CA2CBB,
+				07F8AD4308265C32009CCBB5,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -637,6 +652,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
+				FRAMEWORK_SEARCH_PATHS = "\"/Users/boredzo/Projects/@otherpeoplesprojects/adium/Frameworks/AIHyperlinks Framework/build\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -727,6 +743,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF570486A6940098B216,
+				07F8AD4408265C32009CCBB5,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
