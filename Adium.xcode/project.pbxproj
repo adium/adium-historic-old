@@ -9294,7 +9294,6 @@
 				4BD6742F06001D1D0049CAF7,
 				4BD6746606001D770049CAF7,
 				4BD6746F06001D810049CAF7,
-				4BD6747006001D820049CAF7,
 				4BD6753906001E100049CAF7,
 				4BD6753B06001E120049CAF7,
 				4BD6753F06001E150049CAF7,
@@ -20548,12 +20547,6 @@
 			settings = {
 			};
 		};
-		4BD6747006001D820049CAF7 = {
-			fileRef = 6CF426650577622300F27FAA;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		4BD6747106001D820049CAF7 = {
 			fileRef = 9C8C7FA403CBA21B00267226;
 			isa = PBXBuildFile;
@@ -20975,7 +20968,6 @@
 				4BD68227045B010D00A8010A,
 				4BD68228045B010D00A8010A,
 				4B3DB8FD04547A8D00A8010A,
-				6CF426650577622300F27FAA,
 			);
 			isa = PBXGroup;
 			name = "Log Viewer";
@@ -21564,14 +21556,6 @@
 			lastKnownFileType = sourcecode.c.objc;
 			name = AILogToGroup.m;
 			path = Plugins/Logger/AILogToGroup.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		6CF426650577622300F27FAA = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = LogViewerJag.nib;
-			path = Plugins/Logger/LogViewerJag.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
