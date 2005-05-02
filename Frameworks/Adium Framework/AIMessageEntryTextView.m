@@ -40,52 +40,56 @@
 - (void)_resetCacheAndPostSizeChanged;
 @end
 
-static NSImage *pushIndicatorImage = nil;
-
 @implementation AIMessageEntryTextView
+
+static NSImage	*pushIndicatorImage = nil;
+static NSColor	*cachedWhiteColor = nil;
 
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-    self = [super initWithFrame:frameRect];
-
-    //
-    adium = [AIObject sharedAdiumInstance];
-	associatedView = nil;
-    chat = nil;
-    indicator = nil;
-	pushPopEnabled = YES;
-	clearOnEscape = NO;
-	homeToStartOfLine = YES;
-    insertingText = NO;
-	resizing = NO;
-    historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
-    pushArray = [[NSMutableArray alloc] init];
-    currentHistoryLocation = 0;
-    [self setDrawsBackground:YES];
-    _desiredSizeCached = NSMakeSize(0,0);
-
-	if([self respondsToSelector:@selector(setAllowsUndo:)]) {
-		[self setAllowsUndo:YES];
+	if((self = [super initWithFrame:frameRect])){
+		adium = [AIObject sharedAdiumInstance];
+		associatedView = nil;
+		chat = nil;
+		indicator = nil;
+		pushPopEnabled = YES;
+		clearOnEscape = NO;
+		homeToStartOfLine = YES;
+		insertingText = NO;
+		resizing = NO;
+		historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
+		pushArray = [[NSMutableArray alloc] init];
+		currentHistoryLocation = 0;
+		
+		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
+		if(!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
+		
+		[self setDrawsBackground:YES];
+		_desiredSizeCached = NSMakeSize(0,0);
+		
+		if([self respondsToSelector:@selector(setAllowsUndo:)]) {
+			[self setAllowsUndo:YES];
+		}
+		if([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
+			[self setAllowsDocumentBackgroundColorChange:YES];
+		}
+		
+		[self setImportsGraphics:YES];
+		
+		//
+		if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
+		
+		//
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(textDidChange:)
+													 name:NSTextDidChangeNotification 
+												   object:self];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(frameDidChange:) 
+													 name:NSViewFrameDidChangeNotification 
+												   object:self];
 	}
-	if([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
-		[self setAllowsDocumentBackgroundColorChange:YES];
-	}
-
-	[self setImportsGraphics:YES];
-
-    //
-    if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
-
-    //
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-											 selector:@selector(textDidChange:)
-												 name:NSTextDidChangeNotification 
-											   object:self];
-    [[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(frameDidChange:) 
-												 name:NSViewFrameDidChangeNotification 
-											   object:self];
 	
     return(self);
 }
@@ -300,23 +304,14 @@ static NSImage *pushIndicatorImage = nil;
 //Set our typing format
 - (void)setTypingAttributes:(NSDictionary *)attrs
 {
-    NSColor	*backgroundColor;
-    [super setTypingAttributes:attrs];
+	NSColor	*backgroundColor;
+	[super setTypingAttributes:attrs];
 	
-    //Correctly set our background color
-    backgroundColor = [attrs objectForKey:AIBodyColorAttributeName];
-    if(backgroundColor){
-        [self setBackgroundColor:backgroundColor];
-    }else{
-        [self setBackgroundColor:[NSColor whiteColor]];
-    }
-	
-	//Use this to save the current font color. Why oh why Apple do I have to do this?
-	if([self selectedRange].location != NSNotFound)
-	{
-		[[adium preferenceController] setPreference:[[attrs objectForKey:NSForegroundColorAttributeName] stringRepresentation]
-											 forKey:KEY_FORMATTING_TEXT_COLOR
-											  group:PREF_GROUP_FORMATTING];
+	//Correctly set our background color
+	if((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])){
+		[self setBackgroundColor:backgroundColor];
+	}else{
+		[self setBackgroundColor:cachedWhiteColor];
 	}
 }
 
