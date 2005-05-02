@@ -389,14 +389,10 @@ static NSString	*prefsCategory;
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
-		if ([NSApp isOnPantherOrBetter]){
-			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
-			fileDescription = AILocalizedString(@"message style",nil);
-			prefsButton = AILocalizedString(@"Open Message Prefs",nil);
-			prefsCategory = @"messages";
-		}else{
-			errorMessage = AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar).",nil);
-		}
+		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
+		fileDescription = AILocalizedString(@"message style",nil);
+		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
+		prefsCategory = @"messages";
 	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame){
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
