@@ -36,11 +36,7 @@
 		ctlFrame.size.height = PROGRESS_VIEW_FIELD_HEIGHT;
 		ctlFrame.origin.y += PROGRESS_VIEW_GUTTER + ctlFrame.size.height;
 		float fontSize;
-		if([NSApp isOnPantherOrBetter]) {
-			fontSize = [NSFont systemFontSizeForControlSize:NSSmallControlSize];
-		} else {
-			fontSize = [NSFont smallSystemFontSize];
-		}
+		fontSize = [NSFont systemFontSizeForControlSize:NSSmallControlSize];
 		NSFont *font = [NSFont systemFontOfSize:fontSize];
 		statusField = [[NSTextField alloc] initWithFrame:ctlFrame];
 		[[statusField cell] setControlSize:NSSmallControlSize];
