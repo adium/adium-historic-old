@@ -146,6 +146,12 @@
 	//Preference code below assumes layout is done before theme.
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_LAYOUT];
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
+    
+    //Decide whether the contact list needs to hide when the app is about to deactivate
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(updateWindowHidesOnDeactivate:) 
+                                                 name:NSApplicationWillResignActiveNotification 
+                                               object:nil];
 }
 
 //Close the contact list window
@@ -432,7 +438,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-- (void)updateWindowHidesOnDeactivate
+- (void)updateWindowHidesOnDeactivate:(id)sender
 {
 	[[self window] setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
 }
