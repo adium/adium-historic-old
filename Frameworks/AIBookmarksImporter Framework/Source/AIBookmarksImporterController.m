@@ -35,7 +35,7 @@
 
 #define TOOLBAR_ITEM_IDENTIFIER		@"InsertBookmark"
 
-@interface AIBookmarksImporterPlugin (PRIVATE)
+@interface AIBookmarksImporterController (PRIVATE)
 - (void)buildBookmarksMenuIfNecessaryThread;
 
 - (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer;
@@ -48,7 +48,7 @@
 @end
 
 /*!
- * @class AIBookmarksImporterPlugin
+ * @class AIBookmarksImporterController
  * @brief Component to support reading and inserting of web browser bookmarks
  *
  * Bookmarks are available from the Edit menu, the message window toolbar, and from contextual menus.
@@ -57,9 +57,9 @@
  * Bookmarks are imported from all major Mac browsers via subclasses of AIBookmarksImporter, which must
  * register with the controller.
  */
-@implementation AIBookmarksImporterPlugin
+@implementation AIBookmarksImporterController
 
-static AIBookmarksImporterPlugin *myself = nil;
+static AIBookmarksImporterController *myself = nil;
 
 /*!
  * @brief Initialization
@@ -133,7 +133,7 @@ static AIBookmarksImporterPlugin *myself = nil;
 	[super dealloc];
 }
 
-+ (AIBookmarksImporterPlugin *)sharedInstance
++ (AIBookmarksImporterController *)sharedInstance
 {
 	return myself;
 }
@@ -267,7 +267,7 @@ end:
 	NSMenu				*contextualMenuItemSubmenu = nil;
 
 	AIBookmarksImporter	*importer = nil;
-	AILog(@"AIBookmarksImporterPlugin: Importing %@",importers);
+	AILog(@"AIBookmarksImporterController: Importing %@",importers);
 
 	start = [NSDate date];
 	if([importers count] == 1) {
@@ -311,7 +311,7 @@ end:
 	}
 	
 	end = [NSDate date];
-	AILog(@"AIBookmarksImporterPlugin: Imported bookmarks in %g seconds", [end timeIntervalSinceDate:start]);
+	AILog(@"AIBookmarksImporterController: Imported bookmarks in %g seconds", [end timeIntervalSinceDate:start]);
 
 	[menuLock lock];
 	[bookmarksMainSubmenu release];
