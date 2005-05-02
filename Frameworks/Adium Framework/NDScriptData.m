@@ -1262,7 +1262,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 
 @end
 
-/*
+/*!
  * @implementation NDScriptContext (NDExtended)
  */
 @implementation NDScriptContext (NDExtended)

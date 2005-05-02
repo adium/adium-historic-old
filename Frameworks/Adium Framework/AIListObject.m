@@ -422,7 +422,7 @@
     return(outName ? outName : [self formattedUID]);	
 }
 
-/*
+/*!
  * @brief The way this object's name should be spoken
  *
  * If not found, the display name is returned.

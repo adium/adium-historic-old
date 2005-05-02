@@ -175,7 +175,7 @@
 }
 
 
-/*
+/*!
  * @brief Is this emoticon appropriate for a service class?
  *
  * @result YES if this emoticon is not associated with any service class or is associated with the passed one.
@@ -186,7 +186,7 @@
 	return(!ourServiceClass || [ourServiceClass isEqualToString:inServiceClass]);
 }
 
-/*
+/*!
  * @brief A more useful debug description
  */
 - (NSString *)description

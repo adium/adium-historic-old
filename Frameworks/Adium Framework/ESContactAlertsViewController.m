@@ -238,7 +238,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	}
 }
 
-/*
+/*!
  * @brief Warning sheet for deleting multiple events ended
  *
  * If the user pressed OK, go ahead with deleting the events.
@@ -271,7 +271,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 }
 
 #pragma mark Outline view
-/*
+/*!
  * @brief Configure the event summary outline view
  */
 - (void)configureEventSummaryOutlineView
@@ -314,7 +314,7 @@ int actionSort(id objectA, id objectB, void *context)
 	return([(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]]);
 }
 
-/*
+/*!
  * @brief Reload the information for our summary table, then update it
  */
 - (void)reloadSummaryData
@@ -380,7 +380,7 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief A row in the outline view was double clicked
  *
  * If an event was double clicked, add an action. If an action was double clicked, edit it.
@@ -426,7 +426,7 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Is an item expandable?
  *
  * Events are expandable.  Actions are not.
@@ -440,7 +440,7 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief An item's expanded state was set
  *
  * Cache this so we can use it in outlineView:expandStateOfItem:
@@ -458,7 +458,7 @@ int actionSort(id objectA, id objectB, void *context)
 	[outlineView display];
 }
 
-/*
+/*!
  * @brief Should an item be expanded?
  *
  * Used when reloading to determine if items should be expanded or not.
@@ -689,7 +689,7 @@ int actionSort(id objectA, id objectB, void *context)
 	}
 }
 
-/*
+/*!
  * @brief Outline view selection changed
  *
  * Update the enabled state of our buttons as appropriate.

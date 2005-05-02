@@ -55,7 +55,7 @@
 	[(id)super setFrame:inFrame];
 }
 
-/*
+/*!
  * @brief Handle automatic sizing and positioning
  *
  * There's a lot of magic in this method, unfortunately, but it does what it does quite well.

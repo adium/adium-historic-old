@@ -476,7 +476,7 @@
 	}
 }
 
-/*
+/*!
  * @brief The status state this account is set to regardless of whether or not it is online
  */
 - (AIStatus *)actualStatusState
@@ -832,7 +832,7 @@
 	reconnectTimer = nil;
 }
 
-/*
+/*!
  * @brief Allow the system to sleep if it wants to
  *
  * Removes the hold on system sleep placed previously
@@ -843,7 +843,7 @@
 														object:nil];	
 }
 
-/*
+/*!
  * @brief Remove the status objects from a listContact which we placed there
  *
  * Called for each contact to reduce our memory footprint after a contact signs off or an account disconnects.
@@ -883,7 +883,7 @@
 	[[adium contactController] endListObjectNotificationsDelay];
 }
 
-/*
+/*!
  * @brief Contact status object keys
  *
  * @result An NSSet of the keys we should clear from contacts when signing off
@@ -899,7 +899,7 @@
 	return _contactStatusObjectKeys;
 }
 
-/*
+/*!
  * @brief Did disconnect
  */
 - (void)didDisconnect

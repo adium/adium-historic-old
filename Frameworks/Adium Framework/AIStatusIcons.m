@@ -232,7 +232,7 @@ static NSString *statusNameForChat(AIChat *inChat)
 	return(nil);
 }
 
-/*
+/*!
  * @brief Return the status name to use for looking up and caching this object's image
  *
  * Offline objects always use the STATUS_NAME_OFFLINE name.
