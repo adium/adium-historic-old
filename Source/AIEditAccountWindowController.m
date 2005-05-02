@@ -31,7 +31,7 @@
 #import <Adium/AIServiceIcons.h>
 
 @interface AIEditAccountWindowController (PRIVATE)
-- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount isNewAccount:(BOOL)inIsNewAccount;
+- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount notifyingTarget:(id)inTarget;
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount;
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
@@ -51,15 +51,15 @@
  *
  * @param inAccount The account to edit
  * @param parentWindow A window on which to show the edit account window as a sheet.  If nil, account editing takes place in an independent window.
- * @param inIsNewAccount If YES and the user presses cancel, inAccount is deleted. This should be passed as YES when the method is called as a result of creating a new account.
+ * @param notifyingTarget Target to notify when editing is complete.
  */
-+ (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow isNewAccount:(BOOL)inIsNewAccount
++ (void)editAccount:(AIAccount *)inAccount onWindow:(id)parentWindow notifyingTarget:(id)inTarget
 {
 	AIEditAccountWindowController	*controller;
 
 	controller = [[self alloc] initWithWindowNibName:@"EditAccountSheet"
 											 account:inAccount
-									isNewAccount:inIsNewAccount];
+									 notifyingTarget:inTarget];
 
 	if(parentWindow){
 		[NSApp beginSheet:[controller window]
@@ -75,11 +75,11 @@
 /*!
  * @brief Init the window controller
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount isNewAccount:(BOOL)inIsNewAccount
+- (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount notifyingTarget:(id)inTarget
 {
 	if((self = [super initWithWindowNibName:windowNibName])) {
 		account = [inAccount retain];
-		isNewAccount = inIsNewAccount;
+		notifyTarget = inTarget;
 		userIconData = nil;
 		didDeleteUserIcon = NO;
 	}
@@ -148,16 +148,11 @@
 /*!
  * @brief Cancel
  *
- * Close without saving changes. If isNewAccount is YES, delete the account at this time.
- * isNewAccount should only be YES if we were called to edit a newly created account. Canceling the process should
- * delete the account which we were passed.
+ * Close without saving changes.
  */
 - (IBAction)cancel:(id)sender
 {
-	if(isNewAccount){
-		[[adium accountController] deleteAccount:account save:YES];
-	}
-
+	if(notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:NO];
 	[self closeWindow:nil];
 }
 
@@ -171,13 +166,9 @@
 	[self saveConfiguration];
 	[accountViewController saveConfiguration];
 	[accountProxyController saveConfiguration];
-	[self closeWindow:nil];
 
-	//Put new accounts online by default
-	if(isNewAccount){
-		[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-	}
-	
+	if(notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:YES];
+	[self closeWindow:nil];
 }
 
 /*!

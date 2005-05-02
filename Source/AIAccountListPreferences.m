@@ -15,7 +15,7 @@
  */
 
 #import "AIAccountController.h"
-#import "AIAccountListWindowController.h"
+#import "AIAccountListPreferences.h"
 #import "AIContactController.h"
 #import "AIStatusController.h"
 #import "AIEditAccountWindowController.h"
@@ -127,20 +127,13 @@
  */
 - (IBAction)selectServiceType:(id)sender
 {
-    AIAccount	*account;
-	int			accountRow;
+	AIAccount	*account = [[adium accountController] createAccountWithService:[sender representedObject]
+																		   UID:@""
+															  internalObjectID:nil];
 	
-	//Create the new account.  Our list will automatically update in response to the account being created
-	account = [[adium accountController] newAccountAtIndex:-1 forService:[sender representedObject]];
-
-	//And then, we can select and edit the new account
-	accountRow = [accountArray indexOfObject:account];
-	[tableView_accountList selectRow:accountRow byExtendingSelection:NO];
-	[tableView_accountList scrollRowToVisible:accountRow];
-
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[[self view] window]
-								  isNewAccount:YES];
+							   notifyingTarget:self];
 }
 
 /*!
@@ -152,8 +145,24 @@
 	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
 		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
 										  onWindow:[[self view] window]
-									  isNewAccount:NO];
+								   notifyingTarget:self];
     }
+}
+
+/*!
+ * @brief Editing of an account completed
+ */
+- (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful
+{
+	BOOL existingAccount = ([[[adium accountController] accountArray] containsObject:inAccount]);
+	
+	if(!existingAccount && successful){
+		//New accounts need to be added to our account list once they're configured
+		[[adium accountController] insertAccount:inAccount atIndex:-1 save:YES];
+		
+		//Put new accounts online by default
+		[inAccount setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+	}
 }
 
 /*!
