@@ -21,12 +21,12 @@
 
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
 	//Account list
-    IBOutlet		AIAutoScrollView			*scrollView_accountList;
-    IBOutlet		NSTableView					*tableView_accountList;
-	IBOutlet		NSButton					*button_newAccount;
-    IBOutlet		NSButton					*button_deleteAccount;
-	IBOutlet		NSButton					*button_editAccount;
-	IBOutlet		NSTextField					*textField_overview;
+    IBOutlet		NSScrollView			*scrollView_accountList;
+    IBOutlet		NSTableView				*tableView_accountList;
+	IBOutlet		NSButton				*button_newAccount;
+    IBOutlet		NSButton				*button_deleteAccount;
+	IBOutlet		NSButton				*button_editAccount;
+	IBOutlet		NSTextField				*textField_overview;
 
     //Account List
     NSArray							*accountArray;

@@ -243,7 +243,6 @@
 	[tableView_accountList setTarget:self];
 	[tableView_accountList setDoubleAction:@selector(editAccount:)];
 	[tableView_accountList setIntercellSpacing:NSMakeSize(4,4)];
-    [scrollView_accountList setAutoHideScrollBar:YES];
 
 	//Enable dragging of accounts
 	[tableView_accountList registerForDraggedTypes:[NSArray arrayWithObjects:ACCOUNT_DRAG_TYPE,nil]];
