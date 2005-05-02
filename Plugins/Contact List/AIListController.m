@@ -193,8 +193,15 @@ typedef enum {
 	windowFrame = [theWindow frame];
 	newWindowFrame = windowFrame;
 	viewFrame = [scrollView_contactList frame];
-	screenFrame = [currentScreen frame];
-	visibleScreenFrame = [currentScreen visibleFrame];
+    if (currentScreen != nil)
+    {
+        screenFrame = [currentScreen frame]; 
+        visibleScreenFrame = [currentScreen visibleFrame];
+    }
+    else
+    {
+        visibleScreenFrame = screenFrame = NSMakeRect(0,0,0,0); 
+    }
 	toolbarHeight = [theWindow toolbarHeight];
 	
 	//Width
@@ -217,7 +224,8 @@ typedef enum {
 			}
 
 			//Anchor to the appropriate screen edge
-			anchorToRightEdge = (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width);
+			anchorToRightEdge = (    (currentScreen != nil) 
+                                  && (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
 			if(anchorToRightEdge){
 				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
 			}else{
@@ -227,33 +235,43 @@ typedef enum {
 		}		
 	}
 	
-	/*
-	 If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
-		we use the full screenFrame as our bound.
-	 The edge check is used since most users' docks will not extend to the edges of the screen.
-	 Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
-		on the edge.
-	*/
-	BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
-						 ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
-
-	if((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
-	   (dockToBottomOfScreen == AIDockToBottom_TotalFrame)){
-		NSArray *screens;
-		
-		boundingFrame = screenFrame;
-		
-		//We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
-		if ((screens = [NSScreen screens]) &&
-			([screens count]) &&
-			(currentScreen == [screens objectAtIndex:0])){
-			boundingFrame.size.height -= MENU_BAR_HEIGHT;
-		}
-		
-	}else{
-		boundingFrame = visibleScreenFrame;
-	}
 	
+    // compute boundingFrame for window
+    if (currentScreen == nil)
+    {
+        // no bound
+        boundingFrame = NSMakeRect(FLT_MAX*-0.5f, FLT_MAX*-0.5f, FLT_MAX, FLT_MAX);
+    }
+    else
+    {        
+        /*
+         If the window is against the left or right edges of the screen AND the user did not dock to the visibleFrame last,
+            we use the full screenFrame as our bound.
+         The edge check is used since most users' docks will not extend to the edges of the screen.
+         Alternately, if the user docked to the total frame last, we can safely use the full screen even if we aren't
+            on the edge.
+        */
+        BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
+                             ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
+
+        if((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
+           (dockToBottomOfScreen == AIDockToBottom_TotalFrame)){
+            NSArray *screens;
+            
+            boundingFrame = screenFrame;
+            
+            //We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
+            if ((screens = [NSScreen screens]) &&
+                ([screens count]) &&
+                (currentScreen == [screens objectAtIndex:0])){
+                boundingFrame.size.height -= MENU_BAR_HEIGHT;
+            }
+            
+        }else{
+            boundingFrame = visibleScreenFrame;
+        }
+    }
+
 	//Height
 	if(useDesiredHeight){
 		//Subtract the current size of the view from our frame
