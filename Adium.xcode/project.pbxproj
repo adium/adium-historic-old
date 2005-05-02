@@ -1415,14 +1415,6 @@
 			settings = {
 			};
 		};
-		34210FAC0826019B00A3B0FB = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = zh_TW;
-			path = "Frameworks/Adium Framework/zh_TW.lproj/EditStateSheet.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34210FC0082601AE00A3B0FB = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -1436,14 +1428,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = zh_TW;
 			path = Resources/zh_TW.lproj/StatusPreferences.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3421105E0826044200A3B0FB = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = Italian;
-			path = "Frameworks/Adium Framework/Italian.lproj/EditStateSheet.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -1524,6 +1508,73 @@
 			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = "Adium Crash Reporter/French.lproj/MainMenu.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342114B40826D37100A3B0FB = {
+			children = (
+				4B588C9807AC23A9001832A9,
+				342114C40826D37B00A3B0FB,
+				342114D30826D38500A3B0FB,
+				342114E20826D38E00A3B0FB,
+				342114F10826D39900A3B0FB,
+			);
+			isa = PBXVariantGroup;
+			name = EditStateSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342114B50826D37100A3B0FB = {
+			fileRef = 342114B40826D37100A3B0FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342114C40826D37B00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = "Frameworks/Adium Framework/Italian.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342114D30826D38500A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = "Frameworks/Adium Framework/German.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342114E20826D38E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = zh_TW;
+			path = "Frameworks/Adium Framework/zh_TW.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342114F10826D39900A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Danish;
+			path = "Frameworks/Adium Framework/Danish.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342115050826D3A800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = German;
+			path = Resources/German.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342115140826D3FB00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Danish;
+			path = Resources/Danish.lproj/StatusPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -5368,6 +5419,8 @@
 				34210FC0082601AE00A3B0FB,
 				34210FCF082601B900A3B0FB,
 				342110720826044E00A3B0FB,
+				342115050826D3A800A3B0FB,
+				342115140826D3FB00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
@@ -5376,23 +5429,6 @@
 		};
 		3474E0910825634300BF30F0 = {
 			fileRef = 3474E0900825634300BF30F0;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		3474E0940825638300BF30F0 = {
-			children = (
-				4B588C9807AC23A9001832A9,
-				34210FAC0826019B00A3B0FB,
-				3421105E0826044200A3B0FB,
-			);
-			isa = PBXVariantGroup;
-			name = EditStateSheet.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3474E0950825638300BF30F0 = {
-			fileRef = 3474E0940825638300BF30F0;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -10114,7 +10150,7 @@
 				4BDD81EA07A0B6D30057DB2C,
 				4BDD81EB07A0B6D30057DB2C,
 				4BDD81EC07A0B6D30057DB2C,
-				3474E0950825638300BF30F0,
+				342114B50826D37100A3B0FB,
 				34E00F8707B92B89000DF265,
 				34943DEF07BAD918000F2A03,
 				3402D38B07CB04FC0044F818,
@@ -17561,7 +17597,7 @@
 				34AC36BA07B5C51400145239,
 				4B588C9B07AC23B2001832A9,
 				4B588C9C07AC23B2001832A9,
-				3474E0940825638300BF30F0,
+				342114B40826D37100A3B0FB,
 			);
 			isa = PBXGroup;
 			name = "State & Status";
