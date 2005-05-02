@@ -1414,6 +1414,30 @@
 			settings = {
 			};
 		};
+		34210FAC0826019B00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = zh_TW;
+			path = "Frameworks/Adium Framework/zh_TW.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34210FC0082601AE00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = Resources/French.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34210FCF082601B900A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = zh_TW;
+			path = Resources/zh_TW.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		3421D3AB0753EE2F00EBCF4F = {
 			fileRef = 349FE2FE074D01D300E36B3B;
 			isa = PBXBuildFile;
@@ -5247,6 +5271,8 @@
 		3474E0900825634300BF30F0 = {
 			children = (
 				3428328C07D2644F004F01C9,
+				34210FC0082601AE00A3B0FB,
+				34210FCF082601B900A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
@@ -5262,6 +5288,7 @@
 		3474E0940825638300BF30F0 = {
 			children = (
 				4B588C9807AC23A9001832A9,
+				34210FAC0826019B00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = EditStateSheet.nib;
