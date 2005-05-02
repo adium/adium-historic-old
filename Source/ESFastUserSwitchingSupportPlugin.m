@@ -86,8 +86,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 /*!
  * @brief Uninstall plugin
- *
- * Has no effect on Jaguar
  */
 - (void)uninstallPlugin
 {
