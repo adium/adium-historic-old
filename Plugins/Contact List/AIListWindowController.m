@@ -22,6 +22,7 @@
 #import "AIListWindowController.h"
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AIFunctions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
@@ -49,14 +50,38 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
+#define SLIDE_ALLOWED_RECT_EDGE_MASK  (AIMinXEdgeMask | AIMaxXEdgeMask)
+
+
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
 - (void)_configureAutoResizing;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (void)_configureToolbar;
++ (void)updateScreenSlideBoundaryRect:(id)sender;
+- (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy;
+- (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy;
+- (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
+- (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
+- (void)setPermitSlidingInForeground:(BOOL)flag;
+- (BOOL)windowShouldHideOnDeactivate;
 @end
 
 @implementation AIListWindowController
+
+
++ (void)initialize
+{
+	if([self isEqual:[AIListWindowController class]]) {
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(updateScreenSlideBoundaryRect:) 
+													 name:NSApplicationDidChangeScreenParametersNotification 
+												   object:nil];
+		
+		[self updateScreenSlideBoundaryRect:nil];
+	}
+}
+
 
 //Return a new contact list window controller
 + (AIListWindowController *)listWindowController
@@ -128,6 +153,9 @@
 {
 	[super windowWillClose:notification];
 
+	[slideWindowIfNeededTimer invalidate];
+	[self slideWindowOnScreen]; // don't let the window's saved position be offscreen
+	
     //Stop observing
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -154,8 +182,24 @@
 		}
 		[[self window] setLevel:level];
 		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
-		[[self window] setHidesOnDeactivate:[[prefDict objectForKey:KEY_CL_HIDE] boolValue]];
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
+		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
+		[self setPermitSlidingInForeground:[[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue]];	
+		
+		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground)
+		{
+            slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+																		target:self
+																	  selector:@selector(slideWindowIfNeeded:)
+																	  userInfo:nil
+																	   repeats:YES];            
+		}
+		else if(slideWindowIfNeededTimer != nil)
+		{
+            [slideWindowIfNeededTimer invalidate];
+			slideWindowIfNeededTimer = nil;
+		}
+
 
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
@@ -363,6 +407,223 @@
 - (void)adiumPrint:(id)sender
 {
 	[contactListView print:sender];
+}
+
+// Dock-like hiding -----------------------------------------------------------------------------------------------------
+#pragma mark Dock-like hiding
+
+// screenSlideBoundaryRect is the rect that the contact list slides in and out of for dock-like hiding
+// screenSlideBoundaryRect = (menubarScreen frame without menubar) union (union of frames of all other screens) 
+static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
++ (void)updateScreenSlideBoundaryRect:(id)sender
+{
+	NSArray *screens = [NSScreen screens];
+	int numScreens = [screens count];
+	int i;
+	
+	if(numScreens > 0) {
+		// menubar screen is a special case - the menubar is not a part of the rect we're interested in
+		NSScreen *menubarScreen = [screens objectAtIndex:0];
+		screenSlideBoundaryRect = [menubarScreen frame];
+		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
+		for(i = 1; i < numScreens; i++) {
+			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
+		}		
+	}
+}
+
+- (void)updateWindowHidesOnDeactivate
+{
+	[[self window] setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
+}
+
+// this refers to the value of [[self window] hidesOnDeactivate]
+// this should return NO if we're going to do dock-like sliding
+// instead of orderOut:-type hiding.
+- (BOOL)windowShouldHideOnDeactivate
+{
+	BOOL shouldHideOnDeactivate = NO;
+		
+	if(!windowShouldBeVisibleInBackground) {
+		shouldHideOnDeactivate = YES; // unless..
+		
+		// window is slid off the screen
+		if(windowSlidOffScreenEdgeMask != 0) {
+			shouldHideOnDeactivate = NO;
+		}
+		
+		// or window is in position to slide off of the screen
+		if([self slidableEdgesAdjacentToWindow] != 0) {
+			shouldHideOnDeactivate = NO;
+		}
+	}
+
+	return shouldHideOnDeactivate;
+}
+
+- (void)slideWindowIfNeeded:(id)sender
+{
+	if([self shouldSlideWindowOnScreen])
+		[self slideWindowOnScreen];
+	else if([self shouldSlideWindowOffScreen])
+		[self slideWindowOffScreenEdges:[self slidableEdgesAdjacentToWindow]];
+}
+
+- (BOOL)shouldSlideWindowOnScreen
+{
+	BOOL shouldSlide = NO;
+	
+	if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
+		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
+	}
+	else if(!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0))
+	{
+		shouldSlide = YES;
+	}
+	
+	return shouldSlide;
+}
+
+- (BOOL)shouldSlideWindowOffScreen
+{
+	BOOL shouldSlide = NO;
+	
+	if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
+		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+	}
+	
+	return shouldSlide;
+}
+
+// slide off screen if the window is aligned to a screen edge and the mouse is not in the strip of screen 
+// you'd get by translating the window along the screen edge.  This is the dock's behavior.
+- (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy
+{
+	BOOL shouldSlideOffScreen = NO;
+	
+	NSWindow *window = [self window];
+	NSRect windowFrame = [window frame];
+	NSPoint mouseLocation = [NSEvent mouseLocation];
+	
+	AIRectEdgeMask slidableEdgesAdjacentToWindow = [self slidableEdgesAdjacentToWindow];
+	NSRectEdge screenEdge;
+	for(screenEdge = 0; screenEdge < 4; screenEdge++) {		
+		if(slidableEdgesAdjacentToWindow & (1 << screenEdge)) {
+			float distanceMouseOutsideWindow = AISignedExteriorDistanceRect_edge_toPoint_(windowFrame, AIOppositeRectEdge_(screenEdge), mouseLocation);
+			if(distanceMouseOutsideWindow > 0)
+				shouldSlideOffScreen = YES;
+		}
+	}
+	
+	// don't allow the window to slide off if the user is dragging
+	// this method is hacky and does not completely work.  is there a way to detect if the mouse is down?
+	NSEventType currentEventType = [[NSApp currentEvent] type];
+	if(currentEventType == NSLeftMouseDragged || currentEventType == NSRightMouseDragged || currentEventType == NSOtherMouseDragged) {
+		shouldSlideOffScreen = NO;
+	}	
+	
+	return shouldSlideOffScreen;
+}
+
+// sliding onscreen
+// slide the window onscreen if the mouse is against all edges of the screen where we previously slid the window
+- (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy
+{
+	BOOL shouldSlideOnScreen = (windowSlidOffScreenEdgeMask != 0);
+	
+	NSPoint mouseLocation = [NSEvent mouseLocation];
+	
+	NSRectEdge screenEdge;
+	for(screenEdge = 0; screenEdge < 4; screenEdge++) {
+		if(windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
+			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
+			if(mouseOutsideSlideBoundaryRectDistance < -1.1f) {
+				shouldSlideOnScreen = NO;
+			}
+		}
+	}
+	
+	return shouldSlideOnScreen;
+}
+
+// ----------------------------------
+// ------------------- window sliding
+// ----------------------------------
+
+- (AIRectEdgeMask)slidableEdgesAdjacentToWindow
+{
+	AIRectEdgeMask slidableEdges = 0;
+
+	NSWindow *window = [self window];
+	NSRect windowFrame = [window frame];
+	
+	NSRectEdge edge;
+	for(edge = 0; edge < 4; edge++) {
+		if(   (SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge))
+		   && (AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame, edge, screenSlideBoundaryRect, edge, 2.0f))) 
+		{
+			slidableEdges |= (1 << edge);
+		}
+	}
+	
+	return slidableEdges;
+}
+
+- (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask
+{
+	NSWindow *window = [self window];
+	NSRect newWindowFrame = [window frame];
+	NSRectEdge edge;
+	
+	if(rectEdgeMask == 0)
+		return;
+	
+	for(edge = 0; edge < 4; edge++) {
+		if(rectEdgeMask & (1 << edge)) {
+			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
+		}
+	}
+	
+	[window setFrame:newWindowFrame display:NO animate:YES];
+	[window orderOut:nil]; // otherwise we cast a shadow on the screen
+	windowSlidOffScreenEdgeMask |= rectEdgeMask;
+}
+
+- (void)slideWindowOnScreen
+{
+	NSWindow *window = [self window];
+	NSRect newWindowFrame = [window frame];
+	
+	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
+	
+	[window orderFront:nil];
+	[window setFrame:newWindowFrame display:NO animate:YES];
+	
+	// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
+	// necessarily on screen
+	if([window screen] == nil)
+	{
+		[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
+	}
+	
+	// now the window is on screen, but it might not be entirely on screen
+	[window constrainFrameRect:[window frame] toScreen:[window screen]];
+		
+	windowSlidOffScreenEdgeMask = 0;
+}
+
+// commented out because we are not using the accessor at present, 
+// so it's somewhat misleading to have it here (even if it balances out the setter)
+//- (BOOL)permitSlidingInForeground
+//{
+//	return permitSlidingInForeground;
+//}
+
+- (void)setPermitSlidingInForeground:(BOOL)flag
+{
+	if(!flag)
+		[self slideWindowOnScreen];
+	permitSlidingInForeground = flag;
 }
 
 @end

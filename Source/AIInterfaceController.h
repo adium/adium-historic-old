@@ -34,6 +34,7 @@
 #define PREF_GROUP_CONTACT_LIST				@"Contact List"
 #define KEY_CL_WINDOW_LEVEL					@"Window Level"
 #define KEY_CL_HIDE							@"Hide While in Background"
+#define KEY_CL_EDGE_SLIDE					@"Hide On Screen Edges"
 #define KEY_CL_FLASH_UNVIEWED_CONTENT		@"Flash Unviewed Content"
 #define KEY_CL_SHOW_TRANSITIONS				@"Show Transitions"
 #define KEY_CL_SHOW_TOOLTIPS				@"Show Tooltips"

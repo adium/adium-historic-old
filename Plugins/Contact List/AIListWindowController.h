@@ -16,6 +16,7 @@
 
 #import "AIListController.h"
 #import <Adium/AIWindowController.h>
+#import <AIUtilities/AIFunctions.h>
 
 @protocol AIContactListViewController, AIInterfaceContainer;
 
@@ -31,11 +32,27 @@
 	IBOutlet	AIAutoScrollView		*scrollView_contactList;
     IBOutlet	AIListOutlineView		*contactListView;
 	AIListController					*contactListController;
+	
+	// refers to the GUI preference.  Sometimes this is expressed as dock-like 
+	// sliding instead, sometimes as orderOut:-type hiding.
+	BOOL								windowShouldBeVisibleInBackground; 
+	
+	BOOL								permitSlidingInForeground;
+	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
+	NSTimer								*slideWindowIfNeededTimer;
 }
 
 + (AIListWindowController *)listWindowController;
 - (NSString *)nibName;
 - (void)close:(id)sender;
 - (void)showWindowInFront:(BOOL)inFront;
+
+// Dock-like hiding
+- (BOOL)shouldSlideWindowOnScreen;
+- (BOOL)shouldSlideWindowOffScreen;
+
+- (AIRectEdgeMask)slidableEdgesAdjacentToWindow;
+- (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask;
+- (void)slideWindowOnScreen;
 
 @end

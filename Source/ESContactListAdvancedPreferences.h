@@ -10,7 +10,8 @@
 
 @interface ESContactListAdvancedPreferences : AIPreferencePane {
 	IBOutlet	NSPopUpButton   *popUp_windowPosition;
-    IBOutlet	NSButton		*checkBox_hide;
+    IBOutlet	NSButton		*checkBox_hide; //when in background
+	IBOutlet	NSButton		*checkBox_edgeSlide; //hide on edges whether in background or not
 	
 	IBOutlet	NSButton		*checkBox_flash;
 	IBOutlet	NSButton		*checkBox_showTransitions;
@@ -21,6 +22,7 @@
 	IBOutlet	NSTextField		*label_appearance;
 	IBOutlet	NSTextField		*label_tooltips;
 	IBOutlet	NSTextField		*label_windowHandling;
+	IBOutlet	NSTextField		*label_hide;
 	IBOutlet	NSTextField		*label_orderTheContactList;	
 }
 
