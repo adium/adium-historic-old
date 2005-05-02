@@ -952,7 +952,7 @@
  */
 - (void)initFUSDisconnecting
 {
-	if([self disconnectOnFastUserSwitch] && [NSApp isOnPantherOrBetter]){
+	if([self disconnectOnFastUserSwitch]){
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
 															   selector:@selector(fastUserSwitchLeave:) 
 																   name:NSWorkspaceSessionDidResignActiveNotification
