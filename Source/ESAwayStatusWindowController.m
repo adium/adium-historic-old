@@ -191,11 +191,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	}
 
 	//Perform the window resizing as needed
-	if ([NSApp isOnPantherOrBetter]){
-		[window setFrame:frame display:YES animate:YES];
-	}else{
-		[window setFrame:frame display:YES]; //animate:YES can crash in 10.2
-	}
+	[window setFrame:frame display:YES animate:YES];
 }
 
 /*!
