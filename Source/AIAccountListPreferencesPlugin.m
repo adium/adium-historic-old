@@ -21,54 +21,16 @@
 
 /*!
  * @class AIAccountListPreferencesPlugin
- * @brief Manages the accounts configuration window and provides menu item access to it
- *
- * We actually have two menu items for accessing the account preferences.  A lot of users will instinctively check
- * the "Adium" menu for accounts.  Others will be looking in "Adium" for preferences, incorrectly assuming our accounts are
- * in preferences, and find the accounts menu item in the process.  Adding an "Edit accounts" in the status menu
- * keeps consistency with the "Edit status" menu item, in addition to providing a nearby way to edit the account
- * list visible in that menu.
+ * @brief Manages the accounts configuration preferences
  */
 @implementation AIAccountListPreferencesPlugin
-
-#define ACCOUNT_MENU_TITLE		@"Accounts..."
-#define ACCOUNT_EDIT_MENU_TITLE	@"Edit Accounts..."
 
 /*!
  * @brief Install the plugin
  */
 - (void)installPlugin
 {
-//	NSMenuItem	*menuItem;
-//	
-//    //Adium menu item
-//    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_MENU_TITLE
-//																	 target:self
-//																	 action:@selector(showAccountWindow:)
-//															  keyEquivalent:@"a"] autorelease];
-//	[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask | NSShiftKeyMask];
-//    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_Preferences];
-//
-//	//Status menu item
-//	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ACCOUNT_EDIT_MENU_TITLE
-//																	target:self
-//																	action:@selector(showAccountWindow:)
-//															 keyEquivalent:@""];
-//	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Additions];
-
-	
-    [[AIAccountListWindowController preferencePaneForPlugin:self] retain];	
-
-}
-
-/*!
- * @brief Show the accounts management window
- *
- * @param sender The menu item which was clicked to show the window
- */
-- (IBAction)showAccountWindow:(id)sender
-{
-//	[[AIAccountListWindowController accountListWindowController] showWindow:nil];
+    [[AIAccountListPreferences preferencePaneForPlugin:self] retain];	
 }
 
 @end
