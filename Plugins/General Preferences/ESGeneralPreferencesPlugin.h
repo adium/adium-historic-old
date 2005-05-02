@@ -24,6 +24,12 @@ typedef enum {
 	AIBrackets
 } AITabKeys;
 
+typedef enum {
+	AISendOnEnter = 0,
+	AISendOnReturn,
+	AISendOnBoth
+} AISendKeys;
+
 #define PREF_GROUP_CHAT_CYCLING			@"Chat Cycling"
 #define KEY_TAB_SWITCH_KEYS				@"Tab Switching Keys"
 
