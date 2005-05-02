@@ -56,9 +56,6 @@
 //Other
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
 
-//XXX
-#import "AIAccountListWindowController.h"
-
 @interface AIAccountController (PRIVATE)
 - (void)loadAccounts;
 - (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
