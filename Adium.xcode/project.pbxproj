@@ -7088,12 +7088,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348EF1F5080B311F0015E0FC = {
-			fileRef = 348EF170080B2CA20015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		348EF1F6080B31280015E0FC = {
 			fileRef = 349ECD2007C1BE2A0014623E;
 			isa = PBXBuildFile;
@@ -9024,7 +9018,6 @@
 				4BF2E91F067CB76300743318,
 				34BD9D6A053146CC000AB133,
 				34677B3607CC3D6200F59F7B,
-				4B53CD9206B08A9700FCDA0C,
 				6C15E63106DF3BB600E5A50E,
 				345DFF4A05564DB200CEE7B3,
 			);
@@ -17431,16 +17424,6 @@
 			path = "Plugins/WebKit Message View/AIWebKitMessageViewController.m";
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4B53CD9206B08A9700FCDA0C = {
-			buildActionMask = 12;
-			dstPath = "../PlugIns Disabled";
-			dstSubfolderSpec = 7;
-			files = (
-				348EF1F5080B311F0015E0FC,
-			);
-			isa = PBXCopyFilesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
 		};
 		4B54D10605028BC400A8010A = {
 			fileEncoding = 30;
