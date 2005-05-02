@@ -48,7 +48,7 @@
 {
 	NSMutableDictionary	*attributes;
 	NSAttributedString	*sample;
-	id					shadow = nil;
+	NSShadow			*shadow = nil;
 
 	//Background
 	if(backgroundGradientColor){
@@ -61,9 +61,8 @@
 	}
 
 	//Shadow
-	if([NSApp isOnPantherOrBetter] && [textShadowColor color]){
-		Class 	shadowClass = NSClassFromString(@"NSShadow"); //Weak Linking for 10.2 compatability
-		shadow = [[[shadowClass alloc] init] autorelease];
+	if([textShadowColor color]){
+		shadow = [[[NSShadow alloc] init] autorelease];
 		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 		[shadow setShadowBlurRadius:2.0];
 		[shadow setShadowColor:[textShadowColor color]];

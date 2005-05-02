@@ -103,15 +103,7 @@
 //Enable/disable controls that are available/unavailable
 - (void)configureControlDimming
 {
-//    NSDictionary	*preferenceDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CONTACT_LIST_DISPLAY];
-    
-    //Outlining of groups uses NSStrokeColorAttributeName, which was introduced in Panther
-    if (![NSApp isOnPantherOrBetter]) {
-        [checkbox_outlineGroups setEnabled:NO];
-        [colorWell_outlineGroupsColor setEnabled:NO];
-    } else {
-        [colorWell_outlineGroupsColor setEnabled:[checkbox_outlineGroups state]];
-    }
+	[colorWell_outlineGroupsColor setEnabled:[checkbox_outlineGroups state]];
 }
 
 @end
