@@ -35,26 +35,23 @@
  * @brief Install plugin
  */
 - (void)installPlugin
-{	
-	//This plugin will ONLY work in 10.3 or newer
-	if([NSApp isOnPantherOrBetter]){
-		styleDictionary = nil;
-		[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
-		
-		//Setup our preferences
-		[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
-											  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
-		
-		//Observe for installation of new styles
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(xtrasChanged:)
-										   name:Adium_Xtras_Changed
-										 object:nil];
-		
-		//Register ourself as a message view plugin
-		[[adium interfaceController] registerMessageViewPlugin:self];
-	}
+{
+	styleDictionary = nil;
+	[adium createResourcePathForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT];
+
+	//Setup our preferences
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	preferences = [[ESWebKitMessageViewPreferences preferencePaneForPlugin:self] retain];
+
+	//Observe for installation of new styles
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(xtrasChanged:)
+									   name:Adium_Xtras_Changed
+									 object:nil];
+
+	//Register ourself as a message view plugin
+	[[adium interfaceController] registerMessageViewPlugin:self];
 }
 
 /*!
