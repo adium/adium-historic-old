@@ -108,7 +108,6 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
     if((self = [super initWithWindowNibName:windowNibName])){
 		target = inTarget;
-		isOnPantherOrBetter = [NSApp isOnPantherOrBetter];
 		showSaveCheckbox = inShowSaveCheckbox;
 
 		[self setOriginalStatusState:inStatusState forType:inStatusType];
@@ -203,12 +202,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	*/
 
 	if(!showSaveCheckbox){
-		if(isOnPantherOrBetter){
-			[checkBox_save setHidden:YES];
-		}else{
-			[checkBox_save setFrame:NSZeroRect];
-			[checkBox_save setNeedsDisplay:YES];
-		}
+		[checkBox_save setHidden:YES];
 	}
 	
 	[super windowDidLoad];
@@ -412,39 +406,29 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (void)updateControlVisibilityAndResizeWindow
 {
 	//Visibility
-	if(isOnPantherOrBetter){
-		NSWindow	*window = [self window];
+	NSWindow	*window = [self window];
 		
-		[scrollView_autoReply setHidden:(![checkbox_autoReply state] || ![checkbox_customAutoReply state])];
-		[checkbox_customAutoReply setHidden:![checkbox_autoReply state]];
-		[box_idle setHidden:![checkbox_idle state]];
+	[scrollView_autoReply setHidden:(![checkbox_autoReply state] || ![checkbox_customAutoReply state])];
+	[checkbox_customAutoReply setHidden:![checkbox_autoReply state]];
+	[box_idle setHidden:![checkbox_idle state]];
 		
-		//Sizing
-		//XXX - This is quick & dirty -ai
-		id	current = box_title;
-		int	height = WINDOW_HEIGHT_PADDING + [current frame].size.height;
-		
-		current = [self _positionControl:box_separatorLine relativeTo:current height:&height];
-		current = [self _positionControl:box_state relativeTo:current height:&height];	
-		current = [self _positionControl:box_statusMessage relativeTo:current height:&height];
-		current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
-		current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
-		current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
-		current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
-		current = [self _positionControl:box_idle relativeTo:current height:&height];
+	//Sizing
+	//XXX - This is quick & dirty -ai
+	id	current = box_title;
+	int	height = WINDOW_HEIGHT_PADDING + [current frame].size.height;
 
-		[window setContentSize:NSMakeSize([[window contentView] frame].size.width, height)
-					   display:YES
-					   animate:NO];
+	current = [self _positionControl:box_separatorLine relativeTo:current height:&height];
+	current = [self _positionControl:box_state relativeTo:current height:&height];	
+	current = [self _positionControl:box_statusMessage relativeTo:current height:&height];
+	current = [self _positionControl:checkbox_autoReply relativeTo:current height:&height];
+	current = [self _positionControl:checkbox_customAutoReply relativeTo:current height:&height];
+	current = [self _positionControl:scrollView_autoReply relativeTo:current height:&height];
+	current = [self _positionControl:checkbox_idle relativeTo:current height:&height];
+	current = [self _positionControl:box_idle relativeTo:current height:&height];
 
-	}else{
-		/* Jaguar gets to be ugly.  Enable/disable controls rather than hiding them. Upgrade, fools! */
-		[textView_autoReply setEditable:([checkbox_autoReply state] && [checkbox_customAutoReply state])];
-		[checkbox_customAutoReply setEnabled:[checkbox_autoReply state]];
-		
-		[textField_idleMinutes setEnabled:[checkbox_idle state]];
-		[textField_idleHours setEnabled:[checkbox_idle state]];
-	}
+	[window setContentSize:NSMakeSize([[window contentView] frame].size.width, height)
+				   display:YES
+				   animate:NO];
 }
 
 /*!
