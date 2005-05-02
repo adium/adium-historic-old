@@ -58,7 +58,6 @@
 
 	id			target;
 	
-	BOOL		isOnPantherOrBetter;
 	BOOL		showSaveCheckbox;
 }
 
