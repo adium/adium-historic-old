@@ -28,3 +28,40 @@ void *AIReallocWired(void *oldBuf, size_t newLen);
 
 //sets every byte in buf within range to ch.
 void AISetRangeInMemory(void *buf, NSRange range, int ch);
+
+
+#pragma mark Rect utilities
+
+typedef enum {
+	AIMaxXEdgeMask = (1 << NSMaxXEdge),
+	AIMaxYEdgeMask = (1 << NSMaxYEdge),
+	AIMinXEdgeMask = (1 << NSMinXEdge),
+	AIMinYEdgeMask = (1 << NSMinYEdge),
+} AIRectEdgeMask;
+
+// e.g., AICoordinateForRect_edge_(rect, NSMaxXEdge) is the same as NSMaxX(rect)
+float AICoordinateForRect_edge_(NSRect rect, NSRectEdge edge);
+
+// returns the distance that a point lies outside of a rect on a particular side.  If the point lies 
+// on the interior side of that edge, the number returned will be negative
+float AISignedExteriorDistanceRect_edge_toPoint_(NSRect rect, NSRectEdge edge, NSPoint point);
+
+// e.g., AIOppositeRectEdge_(NSMaxXEdge) is the same as NSMinXEdge
+NSRectEdge AIOppositeRectEdge_(NSRectEdge edge);
+
+// translate mobileRect so that it aligns with stationaryRect
+// undefined if aligning left to top or something else that does not make sense
+NSRect AIRectByAligningRect_edge_toRect_edge_(NSRect mobileRect, 
+											  NSRectEdge mobileRectEdge, 
+											  NSRect stationaryRect, 
+											  NSRectEdge stationaryRectEdge);
+
+
+BOOL AIRectIsAligned_edge_toRect_edge_tolerance_(NSRect rect1, 
+												 NSRectEdge edge1, 
+												 NSRect rect2, 
+												 NSRectEdge edge2, 
+												 float tolerance);
+
+// minimally translate mobileRect so that it lies within stationaryRect
+NSRect AIRectByMovingRect_intoRect_(NSRect mobileRect, NSRect stationaryRect);
