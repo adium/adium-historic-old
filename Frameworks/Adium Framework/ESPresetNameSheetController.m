@@ -139,11 +139,7 @@
 	frame.origin.y -= heightChange;
 	
 	//Perform the window resizing as needed
-	if ([NSApp isOnPantherOrBetter]){
-		[[self window] setFrame:frame display:YES animate:YES];
-	}else{
-		[[self window] setFrame:frame display:YES]; //animate:YES can crash in 10.2
-	}	
+	[[self window] setFrame:frame display:YES animate:YES];
 }
 
 @end
