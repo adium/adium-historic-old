@@ -92,10 +92,7 @@
 		urlToDownload = [[NSURL alloc] initWithScheme:@"http" host:[url host] path:[url path]];
 		dest = [NSTemporaryDirectory() stringByAppendingPathComponent:[[urlToDownload path] lastPathComponent]];
 
-		Class NSURLDownloadClass = NSClassFromString(@"NSURLDownload");
-		Class NSURLRequestClass = NSClassFromString(@"NSURLRequest");
-
-		download = [[NSURLDownloadClass alloc] initWithRequest:[NSURLRequestClass requestWithURL:urlToDownload] delegate:self];
+		download = [[NSURLDownload alloc] initWithRequest:[NSURLRequest requestWithURL:urlToDownload] delegate:self];
 		[download setDestination:dest allowOverwrite:YES];
 
 		[urlToDownload release];
