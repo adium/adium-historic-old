@@ -9344,7 +9344,6 @@
 				34DFF53907A62EB200B92233,
 				34DFF54307A62EB200B92233,
 				34C14D5107A8BA00003CC138,
-				4BCAB5F107B59967006641B9,
 				343EB3FE08086D2F00E27095,
 				4BCAB5F307B59967006641B9,
 				4BCAC4CF07B59AFE006641B9,
@@ -9412,6 +9411,7 @@
 				34167FED081D706300E35678,
 				0779934F08221D9700F698DC,
 				3474E000082550FD00BF30F0,
+				4B8C3CE90825F60B004B9F45,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18457,6 +18457,20 @@
 			settings = {
 			};
 		};
+		4B8C3CE80825F60B004B9F45 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = AccountListPreferences.nib;
+			path = Resources/AccountListPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B8C3CE90825F60B004B9F45 = {
+			fileRef = 4B8C3CE80825F60B004B9F45;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		4B909C8A064D75400074C9A8 = {
 			fileRef = C4243C930638E4EA007AD2D9;
 			isa = PBXBuildFile;
@@ -19927,14 +19941,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		4BCAB5EE07B59967006641B9 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = AccountListWindow.nib;
-			path = Resources/AccountListWindow.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		4BCAB5EF07B59967006641B9 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -19950,12 +19956,6 @@
 			path = Resources/EditAccountSheet.nib;
 			refType = 4;
 			sourceTree = "<group>";
-		};
-		4BCAB5F107B59967006641B9 = {
-			fileRef = 4BCAB5EE07B59967006641B9;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 		4BCAB5F307B59967006641B9 = {
 			fileRef = 4BCAB5F007B59967006641B9;
@@ -24791,7 +24791,7 @@
 				F55B413C03AB895501A8010A,
 				4B8C3C970825EAF9004B9F45,
 				4B8C3C980825EAF9004B9F45,
-				4BCAB5EE07B59967006641B9,
+				4B8C3CE80825F60B004B9F45,
 				4B7A567707A1754400BDC540,
 				4B7A567807A1754400BDC540,
 				4BCAB5F007B59967006641B9,
