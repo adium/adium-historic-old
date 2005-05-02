@@ -496,8 +496,7 @@
 //Text to Speech -------------------------------------------------------------------------------------------------------
 #pragma mark Text to Speech
 /* Text to Speech
- * We use SUSpeaker to provide maximum flexibility over speech.  NSSpeechSynthesizer does not gives us pitch/rate controls,
- * and is not compatible with 10.2, as well.
+ * We use SUSpeaker to provide maximum flexibility over speech.  NSSpeechSynthesizer does not gives us pitch/rate controls.
  * The only significant bug in SUSpeaker is that it does not reset to the system default voice when it is asked to. We
  * therefore use 2 instances of SUSpeaker: one for default settings, and one for custom settings.
  */
