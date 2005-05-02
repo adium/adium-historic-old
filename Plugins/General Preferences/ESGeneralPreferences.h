@@ -24,9 +24,7 @@
 	IBOutlet	NSButton		*checkBox_enableLogging;
 	
 	IBOutlet	NSPopUpButton	*popUp_tabKeys;
-	
-	IBOutlet	NSButton		*checkBox_sendOnReturn;
-	IBOutlet	NSButton		*checkBox_sendOnEnter;
+	IBOutlet	NSPopUpButton	*popUp_sendKeys;
 
 	IBOutlet	NSSlider		*slider_volume;
 	IBOutlet	NSPopUpButton   *popUp_outputDevice; 	

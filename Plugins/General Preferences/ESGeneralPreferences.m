@@ -51,6 +51,7 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
+	BOOL			sendOnEnter, sendOnReturn;
     NSDictionary	*prefDict;
 	
 	//Interface
@@ -63,12 +64,19 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_CHAT_CYCLING];
 	[popUp_tabKeys setMenu:[self tabKeysMenu]];
 	[popUp_tabKeys compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]];
-	
-	
+
 	//General
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-    [checkBox_sendOnReturn setState:[[prefDict objectForKey:SEND_ON_RETURN] intValue]];
-	[checkBox_sendOnEnter setState:[[prefDict objectForKey:SEND_ON_ENTER] intValue]];
+	sendOnEnter = [[prefDict objectForKey:SEND_ON_ENTER] boolValue];
+	sendOnReturn = [[prefDict objectForKey:SEND_ON_RETURN] boolValue];
+
+	if(sendOnEnter && sendOnReturn){
+		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnBoth];
+	}else if(sendOnEnter){
+		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnEnter];			
+	}else if(sendOnReturn){
+		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
+	}
 
 	//Sounds
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
@@ -94,12 +102,10 @@
     [checkBox_arrangeTabs setLocalizedString:AILocalizedString(@"Sort tabs with the current sort options",nil)];
     [checkBox_arrangeByGroup setLocalizedString:AILocalizedString(@"Organize tabs into new windows by group",nil)];
 	[checkBox_enableLogging setLocalizedString:AILocalizedString(@"Log messages",nil)];
-	[checkBox_sendOnReturn setLocalizedString:AILocalizedString(@"Send on Return",nil)];
-	[checkBox_sendOnEnter setLocalizedString:AILocalizedString(@"Send on Enter",nil)];
 	[checkBox_enableMenuItem setLocalizedString:AILocalizedString(@"Show Adium status in menu bar",nil)];
 	
 	[label_logging setLocalizedString:AILocalizedString(@"Messages:",nil)];
-	[label_messagesSendOn setLocalizedString:AILocalizedString(@"Messages send on:",nil)];
+	[label_messagesSendOn setLocalizedString:AILocalizedString(@"Send messages with:",nil)];
 	[label_messagesTabs setLocalizedString:AILocalizedString(@"Message tabs:",nil)];
 	[label_menuItem setLocalizedString:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
 	[label_switchTabsWith setLocalizedString:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
@@ -137,14 +143,16 @@
 											 forKey:KEY_TAB_SWITCH_KEYS
 											  group:PREF_GROUP_CHAT_CYCLING];
 		
-	}else if(sender == checkBox_sendOnReturn){
-        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:SEND_ON_RETURN
-                                              group:PREF_GROUP_GENERAL];
-        
-    }else if(sender == checkBox_sendOnEnter){
-        [[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender state]]
-                                             forKey:SEND_ON_ENTER
+	}else if(sender == popUp_sendKeys){
+		AISendKeys 	keySelection = [[sender selectedItem] tag];
+		BOOL		sendOnEnter = (keySelection == AISendOnEnter || keySelection == AISendOnBoth);
+		BOOL		sendOnReturn = (keySelection == AISendOnReturn || keySelection == AISendOnBoth);
+		
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:sendOnEnter]
+											 forKey:SEND_ON_ENTER
+											  group:PREF_GROUP_GENERAL];
+		[[adium preferenceController] setPreference:[NSNumber numberWithInt:sendOnReturn]
+											 forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
 		
     }else if(sender == popUp_outputDevice){
