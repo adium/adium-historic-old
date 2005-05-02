@@ -123,7 +123,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	[[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
 
 	//Init index searching
-	if([NSApp isOnPantherOrBetter]) [self initLogIndexing];
+	[self initLogIndexing];
 }
 
 - (void)uninstallPlugin

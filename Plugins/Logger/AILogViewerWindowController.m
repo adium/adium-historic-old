@@ -38,7 +38,6 @@
 #import "KFTypeSelectTableView.h"
 
 #define LOG_VIEWER_NIB					@"LogViewer"
-#define LOG_VIEWER_JAG_NIB				@"LogViewerJag"
 #define KEY_LOG_VIEWER_WINDOW_FRAME		@"Log Viewer Frame"
 #define	PREF_GROUP_CONTACT_LIST			@"Contact List"
 #define KEY_LOG_VIEWER_GROUP_STATE		@"Log Viewer Group State"	//Expand/Collapse state of groups
@@ -107,7 +106,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 + (id)openForPlugin:(id)inPlugin
 {
     if(!sharedLogViewerInstance){
-		sharedLogViewerInstance = [[self alloc] initWithWindowNibName:([NSApp isOnPantherOrBetter] ? LOG_VIEWER_NIB : LOG_VIEWER_JAG_NIB) plugin:inPlugin];
+		sharedLogViewerInstance = [[self alloc] initWithWindowNibName:LOG_VIEWER_NIB plugin:inPlugin];
 	}
 
     [sharedLogViewerInstance showWindow:nil];
