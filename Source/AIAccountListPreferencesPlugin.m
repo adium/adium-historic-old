@@ -15,7 +15,7 @@
  */
 
 #import "AIAccountListPreferencesPlugin.h"
-#import "AIAccountListWindowController.h"
+#import "AIAccountListPreferences.h"
 #import "AIMenuController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
