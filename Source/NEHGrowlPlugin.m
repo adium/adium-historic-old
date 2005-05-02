@@ -69,13 +69,10 @@
  */
 - (void)installPlugin
 {
-	//Growl only works in 10.3 and later
-	if([NSApp isOnPantherOrBetter]){
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(adiumFinishedLaunching:)
-										   name:Adium_CompletedApplicationLoad
-										 object:nil];	
-	}
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
 }
 
 /*!
