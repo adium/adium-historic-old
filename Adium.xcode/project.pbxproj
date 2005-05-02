@@ -1438,6 +1438,22 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
+		3421105E0826044200A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = "Frameworks/Adium Framework/Italian.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342110720826044E00A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Italian;
+			path = Resources/Italian.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		3421D3AB0753EE2F00EBCF4F = {
 			fileRef = 349FE2FE074D01D300E36B3B;
 			isa = PBXBuildFile;
@@ -5273,6 +5289,7 @@
 				3428328C07D2644F004F01C9,
 				34210FC0082601AE00A3B0FB,
 				34210FCF082601B900A3B0FB,
+				342110720826044E00A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
@@ -5289,6 +5306,7 @@
 			children = (
 				4B588C9807AC23A9001832A9,
 				34210FAC0826019B00A3B0FB,
+				3421105E0826044200A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = EditStateSheet.nib;
