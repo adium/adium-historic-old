@@ -9,7 +9,7 @@
 #import "ESImageAdditions.h"
 
 #define LABEL_OFFSET_X	1
-#define LABEL_OFFSET_Y	0
+#define LABEL_OFFSET_Y	-1
 
 #define IMAGE_OFFSET_X	0
 #define IMAGE_OFFSET_Y	0
