@@ -1503,11 +1503,27 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		3421138208261B2F00A3B0FB = {
+		342113CD08261FB900A3B0FB = {
+			children = (
+				4B7F78C10597F5B700162728,
+				342113DD08261FC100A3B0FB,
+			);
+			isa = PBXVariantGroup;
+			name = MainMenu.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342113CE08261FB900A3B0FB = {
+			fileRef = 342113CD08261FB900A3B0FB;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		342113DD08261FC100A3B0FB = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
-			name = Italian;
-			path = "Adium Crash Reporter/Italian.lproj/MainMenu.nib";
+			name = French;
+			path = "Adium Crash Reporter/French.lproj/MainMenu.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -7647,14 +7663,6 @@
 			settings = {
 			};
 		};
-		34A24E1E07DE2B51009854E1 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = French;
-			path = "Adium Crash Reporter/French.lproj/MainMenu.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		34A250B507E0F822009854E1 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -13683,23 +13691,6 @@
 			settings = {
 			};
 		};
-		34E0E9B907CC4B4500A82198 = {
-			children = (
-				4B7F78C10597F5B700162728,
-				34A24E1E07DE2B51009854E1,
-				3421138208261B2F00A3B0FB,
-			);
-			isa = PBXVariantGroup;
-			name = MainMenu.nib;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		34E0E9BA07CC4B4500A82198 = {
-			fileRef = 34E0E9B907CC4B4500A82198;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		34E0EA0707CC53EC00A82198 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -17313,7 +17304,7 @@
 				4B7F78BD0597F44D00162728,
 				4B7F78BE0597F44D00162728,
 				34E0E9B707CC4B3600A82198,
-				34E0E9B907CC4B4500A82198,
+				342113CD08261FB900A3B0FB,
 				4B215DBD0598A71400305B3C,
 				4BB7670C05B31DBA00E89FA2,
 			);
@@ -18336,7 +18327,7 @@
 		4B7F78B10597F42400162728 = {
 			buildActionMask = 2147483647;
 			files = (
-				34E0E9BA07CC4B4500A82198,
+				342113CE08261FB900A3B0FB,
 				4B215DBE0598A71400305B3C,
 				4BB7670D05B31DBA00E89FA2,
 				34E0E9B807CC4B3600A82198,
