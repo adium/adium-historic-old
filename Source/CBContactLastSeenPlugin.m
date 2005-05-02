@@ -144,18 +144,29 @@
 																group:PREF_GROUP_LAST_SEEN
 															   object:inObject];
 		if(lastSeenStatus && lastSeenDate){
+			NSString	*timeElapsed;
+			NString		*timeElapsedWithDesignation;
 			
 			sinceDateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSString stringWithFormat:@"%@, %@", 
 																				[[NSDateFormatter localizedShortDateFormatter] dateFormat],
 																				[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:YES]]
 														 allowNaturalLanguage:YES] autorelease];
 			
+			//stringForTimeIntervalSinceDate may return @"" if it's too short of an interval.
+			timeElapsed = [NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate showingSeconds:NO abbreviated:NO];
+			if(timeElapsed && [timeElapsed length]){
+				timeElapsedWithDesignation = [NSString stringWithFormat:@"%@ %@\n",
+					timeElapsed,
+					[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] lastObject]];
+			}else{
+				timeElapsedWithDesignation = @"";
+			}
+			
 			entry = [[NSAttributedString alloc] 
 						initWithString:[NSString stringWithFormat:
-							@"%@\n%@ %@\n%@", 
+							@"%@\n%@%@", 
 							lastSeenStatus,
-							[NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate showingSeconds:NO abbreviated:NO],
-							[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] lastObject],
+							timeElapsedWithDesignation,
 							[sinceDateFormatter stringForObjectValue:lastSeenDate]]]; 
 		}
 	}
