@@ -19,7 +19,7 @@
 @class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
 @protocol AIListObjectObserver;
 
-@interface AIAccountListWindowController : /*AIWindowController*/AIPreferencePane <AIListObjectObserver> {
+@interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
 	//Account list
     IBOutlet		AIAutoScrollView			*scrollView_accountList;
     IBOutlet		NSTableView					*tableView_accountList;

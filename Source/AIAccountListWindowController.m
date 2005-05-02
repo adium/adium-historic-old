@@ -31,16 +31,16 @@
 
 #define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    			//ID for an account drag
 
-@interface AIAccountListWindowController (PRIVATE)
+@interface AIAccountListPreferences (PRIVATE)
 - (void)configureAccountList;
 - (void)accountListChanged:(NSNotification *)notification;
 @end
 
 /*!
- * @class AIAccountListWindowController
+ * @class AIAccountListPreferences
  * @brief Shows a list of accounts and provides for management of them
  */
-@implementation AIAccountListWindowController
+@implementation AIAccountListPreferences
 
 /*!
 * @brief Preference pane properties
@@ -49,46 +49,17 @@
     return(AIPref_Accounts);
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Accounts","Appearance preferences label"));
+    return(AILocalizedString(@"Accounts","Accounts preferences label"));
 }
 - (NSString *)nibName{
     return(@"AccountListWindow");
 }
 
-
-//AIAccountListWindowController *sharedAccountWindowInstance = nil;
-///*!
-// * @brief Return a shared instance of AIAccountListWindowController.
-// *
-// * @result The shared instance, created if necessary
-// */
-//+ (AIAccountListWindowController *)accountListWindowController
-//{
-//    if(!sharedAccountWindowInstance){
-//        sharedAccountWindowInstance = [[self alloc] initWithWindowNibName:@"AccountListWindow"];
-//    }
-//    return(sharedAccountWindowInstance);
-//}
-//
-///*!
-// * @brief Auto save name for AIWindowController
-// */
-//- (NSString *)adiumFrameAutosaveName
-//{
-//	return(@"AIAccountListWindow");
-//}
-
 /*!
- * @brief Configure the window initially
- *
- * Center the window on screen and then configure the list and menus
+ * @brief Configure the view initially
  */
-//- (void)windowDidLoad
 - (void)viewDidLoad
 {
-	//Center this panel
-//	[[[self view] window] center];
-
 	//Configure the account list
 	[self configureAccountList];
 	[self updateAccountOverview];
@@ -106,25 +77,15 @@
 								   selector:@selector(statusIconsChanged:)
 									   name:AIStatusIconSetDidChangeNotification
 									 object:nil];
-
-//	[super windowDidLoad];
 }
 
 /*!
- * @brief Perform actions before the window closes
+ * @brief Perform actions before the view closes
  */
-//- (BOOL)windowShouldClose:(id)sender
-- (void)viewWillClose;
+- (void)viewWillClose
 {
 	[[adium contactController] unregisterListObjectObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-	
-	//Cleanup and close our shared instance
-//	[sharedAccountWindowInstance autorelease]; sharedAccountWindowInstance = nil;
-	
-//	[super windowShouldClose:sender];
-	
-//	return(YES);
 }
 
 /*!
@@ -179,7 +140,7 @@
 
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[[self view] window]
-							  isNewAccount:YES];
+								  isNewAccount:YES];
 }
 
 /*!
@@ -191,7 +152,7 @@
 	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
 		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
 										  onWindow:[[self view] window]
-								  isNewAccount:NO];
+									  isNewAccount:NO];
     }
 }
 
@@ -202,7 +163,7 @@
  */
 - (IBAction)deleteAccount:(id)sender
 {
-    int 		index = [tableView_accountList selectedRow];
+    int index = [tableView_accountList selectedRow];
 
     if(index != -1){		
 		AIAccount	*targetAccount;
@@ -218,8 +179,6 @@
 						  @"",[[self view] window], self, 
 						  @selector(deleteAccountSheetDidEnd:returnCode:contextInfo:), nil, targetAccount, 
 						  AILocalizedString(@"Delete the account %@?",nil), ([accountFormattedUID length] ? accountFormattedUID : NEW_ACCOUNT_DISPLAY_TEXT));
-	}else{
-		NSBeep();
 	}
 }
 
@@ -519,4 +478,5 @@
 {
     [tableView setSearchColumnIdentifiers:[NSSet setWithObject:@"name"]];
 }
+
 @end
