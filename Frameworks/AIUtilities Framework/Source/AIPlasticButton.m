@@ -32,7 +32,13 @@
 	AIPlasticButton	*newButton = [[[self class] allocWithZone:zone] initWithFrame:[self frame]];
 	
 	[newButton setMenu:[[[self menu] copy] autorelease]];
-	
+	[newButton->plasticCaps retain];
+	[newButton->plasticMiddle retain];
+	[newButton->plasticPressedCaps retain];
+	[newButton->plasticPressedMiddle retain];
+	[newButton->plasticDefaultCaps retain];
+	[newButton->plasticDefaultMiddle retain];
+
 	return(newButton);
 }
 
