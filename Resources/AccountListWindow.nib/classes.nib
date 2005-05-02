@@ -2,7 +2,7 @@
     IBClasses = (
         {
             ACTIONS = {deleteAccount = id; editAccount = id; }; 
-            CLASS = AIAccountListWindowController; 
+            CLASS = AIAccountListPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_deleteAccount" = NSButton; 
@@ -15,30 +15,9 @@
             SUPERCLASS = AIPreferencePane; 
         }, 
         {
-            CLASS = AIAlternatingRowOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIOutlineView; 
-        }, 
-        {
             CLASS = AIAlternatingRowTableView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSTableView; 
-        }, 
-        {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
-        {
-            ACTIONS = {okay = id; }; 
-            CLASS = AIEditAccountWindowController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                "button_autoConnect" = NSButton; 
-                "imageView_userIcon" = ESImageViewWithImagePicker; 
-                "image_serviceIcon" = NSImageView; 
-                "tabView_auxiliary" = NSTabView; 
-                "textField_accountDescription" = NSTextField; 
-                "textField_serviceName" = NSTextField; 
-                "view_accountDetails" = NSView; 
-            }; 
-            SUPERCLASS = AIWindowController; 
         }, 
         {
             ACTIONS = {changePreference = id; }; 
@@ -47,41 +26,11 @@
             OUTLETS = {plugin = id; view = NSView; }; 
             SUPERCLASS = AIObject; 
         }, 
-        {
-            CLASS = AIMultiCellOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIVariableHeightOutlineView; 
-        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = AIOutlineView; LANGUAGE = ObjC; SUPERCLASS = NSOutlineView; }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSPopUpButton; }, 
-        {
-            CLASS = AIPlasticDropDownButton; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIPlasticButton; 
-        }, 
         {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {CLASS = AIPreferencePane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
-        {
-            CLASS = AIVariableHeightOutlineView; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAlternatingRowOutlineView; 
-        }, 
-        {CLASS = AIVerticallyCenteredTextCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
-        {
-            CLASS = AIWindowController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = NSWindowController; 
-        }, 
-        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
-        {
-            ACTIONS = {copy = id; paste = id; }; 
-            CLASS = ESImageViewWithImagePicker; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {delegate = id; }; 
-            SUPERCLASS = NSImageView; 
-        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
