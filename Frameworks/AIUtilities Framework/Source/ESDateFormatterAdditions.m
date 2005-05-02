@@ -79,26 +79,15 @@ typedef enum {
 
     //use system-wide defaults for date format
     NSMutableString *localizedDateFormatString = [currentTimeFormatString mutableCopy];
+
     if(!showAmPm){ 
         //potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
         [localizedDateFormatString replaceOccurrencesOfString:@" %p" 
                                                 withString:@"" 
                                                 options:NSLiteralSearch 
                                                 range:NSMakeRange(0,[localizedDateFormatString length])];
-    } else if (![NSApp isOnPantherOrBetter]){
-        //Jaguar doesn't usually include the " %p" in the localized time string for 12-hour time.  This is dumb.
-        NSRange range = [localizedDateFormatString rangeOfString:@"I"
-                                                         options:NSLiteralSearch
-                                                           range:NSMakeRange(0,[localizedDateFormatString length])];
-        if (range.location != NSNotFound) {
-            range = [localizedDateFormatString rangeOfString:@"%p"
-                                                     options:NSLiteralSearch
-                                                       range:NSMakeRange(0,[localizedDateFormatString length])];
-            if (range.location == NSNotFound) {
-                [localizedDateFormatString appendString:@" %p"];
-            }
-        }
     }
+
     if(!seconds){
         int secondSeparatorIndex = [localizedDateFormatString rangeOfString:@"%S" options:NSBackwardsSearch].location;
         
