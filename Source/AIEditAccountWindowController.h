@@ -44,13 +44,16 @@
 	
 	NSData						*userIconData;
 	BOOL						didDeleteUserIcon;
-
-	//Delete if the sheet is canceled (should be YES when called on a new account, NO otherwise)
-	BOOL	isNewAccount;
+	
+	id							notifyTarget;
 }
 
-+ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow isNewAccount:(BOOL)inisNewAccount;
++ (void)editAccount:(AIAccount *)account onWindow:(id)parentWindow notifyingTarget:(id)inTarget;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 
+@end
+
+@interface NSObject (AIEditAccountWindowControllerTarget)
+- (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful;
 @end
