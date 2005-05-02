@@ -159,6 +159,9 @@
 	if(!existingAccount && successful){
 		//New accounts need to be added to our account list once they're configured
 		[[adium accountController] insertAccount:inAccount atIndex:-1 save:YES];
+
+		//Scroll the new account visible so that the user can see we added it
+		[tableView_accountList scrollRowToVisible:[accountArray indexOfObject:inAccount]];
 		
 		//Put new accounts online by default
 		[inAccount setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
