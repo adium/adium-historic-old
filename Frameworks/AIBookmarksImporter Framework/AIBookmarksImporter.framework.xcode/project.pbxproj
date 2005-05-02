@@ -50,6 +50,404 @@
 //032
 //033
 //034
+//070
+//071
+//072
+//073
+//074
+		07F8ACDD08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBookmarksImporter.h;
+			path = Source/AIBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACDE08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBookmarksImporter.m;
+			path = Source/AIBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACDF08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIShiiraBookmarksImporter.h;
+			path = Source/AIShiiraBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE008265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIShiiraBookmarksImporter.m;
+			path = Source/AIShiiraBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE108265350009CCBB5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = image.tiff;
+			name = bookmarkToolbar.tif;
+			path = Source/bookmarkToolbar.tif;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE208265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHABBookmarksImporter.h;
+			path = Source/SHABBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE308265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHABBookmarksImporter.m;
+			path = Source/SHABBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE408265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHCaminoBookmarksImporter.h;
+			path = Source/SHCaminoBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE508265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHCaminoBookmarksImporter.m;
+			path = Source/SHCaminoBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE608265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHFireFoxBookmarksImporter.h;
+			path = Source/SHFireFoxBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE708265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHFireFoxBookmarksImporter.m;
+			path = Source/SHFireFoxBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE808265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaBookmarksImporter.h;
+			path = Source/SHMozillaBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACE908265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaBookmarksImporter.m;
+			path = Source/SHMozillaBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACEA08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMozillaCommonParser.h;
+			path = Source/SHMozillaCommonParser.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACEB08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMozillaCommonParser.m;
+			path = Source/SHMozillaCommonParser.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACEC08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHMSIEBookmarksImporter.h;
+			path = Source/SHMSIEBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACED08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHMSIEBookmarksImporter.m;
+			path = Source/SHMSIEBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACEE08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHOmniWebBookmarksImporter.h;
+			path = Source/SHOmniWebBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACEF08265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHOmniWebBookmarksImporter.m;
+			path = Source/SHOmniWebBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACF008265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = SHSafariBookmarksImporter.h;
+			path = Source/SHSafariBookmarksImporter.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACF108265350009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = SHSafariBookmarksImporter.m;
+			path = Source/SHSafariBookmarksImporter.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8ACF208265350009CCBB5 = {
+			fileRef = 07F8ACDD08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF308265350009CCBB5 = {
+			fileRef = 07F8ACDE08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF408265350009CCBB5 = {
+			fileRef = 07F8ACDF08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF508265350009CCBB5 = {
+			fileRef = 07F8ACE008265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF608265350009CCBB5 = {
+			fileRef = 07F8ACE108265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF708265350009CCBB5 = {
+			fileRef = 07F8ACE208265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF808265350009CCBB5 = {
+			fileRef = 07F8ACE308265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACF908265350009CCBB5 = {
+			fileRef = 07F8ACE408265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFA08265350009CCBB5 = {
+			fileRef = 07F8ACE508265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFB08265350009CCBB5 = {
+			fileRef = 07F8ACE608265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFC08265350009CCBB5 = {
+			fileRef = 07F8ACE708265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFD08265350009CCBB5 = {
+			fileRef = 07F8ACE808265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFE08265350009CCBB5 = {
+			fileRef = 07F8ACE908265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8ACFF08265350009CCBB5 = {
+			fileRef = 07F8ACEA08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0008265350009CCBB5 = {
+			fileRef = 07F8ACEB08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0108265350009CCBB5 = {
+			fileRef = 07F8ACEC08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0208265350009CCBB5 = {
+			fileRef = 07F8ACED08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0308265350009CCBB5 = {
+			fileRef = 07F8ACEE08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0408265350009CCBB5 = {
+			fileRef = 07F8ACEF08265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0508265350009CCBB5 = {
+			fileRef = 07F8ACF008265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0608265350009CCBB5 = {
+			fileRef = 07F8ACF108265350009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD0808265409009CCBB5 = {
+			children = (
+				07F8ACDD08265350009CCBB5,
+				07F8ACDE08265350009CCBB5,
+				07F8ACE208265350009CCBB5,
+				07F8ACE308265350009CCBB5,
+				07F8AD0B08265475009CCBB5,
+				07F8AD0C082654A4009CCBB5,
+				07F8ACEC08265350009CCBB5,
+				07F8ACED08265350009CCBB5,
+			);
+			isa = PBXGroup;
+			name = Importers;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD0B08265475009CCBB5 = {
+			children = (
+				07F8ACF008265350009CCBB5,
+				07F8ACF108265350009CCBB5,
+				07F8ACEE08265350009CCBB5,
+				07F8ACEF08265350009CCBB5,
+				07F8ACDF08265350009CCBB5,
+				07F8ACE008265350009CCBB5,
+			);
+			isa = PBXGroup;
+			name = "WebKit browsers";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD0C082654A4009CCBB5 = {
+			children = (
+				07F8ACE808265350009CCBB5,
+				07F8ACE908265350009CCBB5,
+				07F8ACE608265350009CCBB5,
+				07F8ACE708265350009CCBB5,
+				07F8ACE408265350009CCBB5,
+				07F8ACE508265350009CCBB5,
+			);
+			isa = PBXGroup;
+			name = "Gecko browsers";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD0D082654D7009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBookmarksImporterController.h;
+			path = Source/AIBookmarksImporterController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD0E082654D7009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBookmarksImporterController.m;
+			path = Source/AIBookmarksImporterController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD0F082654D7009CCBB5 = {
+			fileRef = 07F8AD0D082654D7009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AD10082654D7009CCBB5 = {
+			fileRef = 07F8AD0E082654D7009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//070
+//071
+//072
+//073
+//074
 //080
 //081
 //082
@@ -112,6 +510,7 @@
 		};
 		089C1665FE841158C02AAC07 = {
 			children = (
+				07F8ACE108265350009CCBB5,
 				8DC2EF5A0486A6940098B216,
 				089C1666FE841158C02AAC07,
 			);
@@ -140,6 +539,11 @@
 		};
 		08FB77AEFE84172EC02AAC07 = {
 			children = (
+				07F8AD0D082654D7009CCBB5,
+				07F8AD0E082654D7009CCBB5,
+				07F8ACEA08265350009CCBB5,
+				07F8ACEB08265350009CCBB5,
+				07F8AD0808265409009CCBB5,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -271,6 +675,17 @@
 		8DC2EF500486A6940098B216 = {
 			buildActionMask = 2147483647;
 			files = (
+				07F8ACF208265350009CCBB5,
+				07F8ACF408265350009CCBB5,
+				07F8ACF708265350009CCBB5,
+				07F8ACF908265350009CCBB5,
+				07F8ACFB08265350009CCBB5,
+				07F8ACFD08265350009CCBB5,
+				07F8ACFF08265350009CCBB5,
+				07F8AD0108265350009CCBB5,
+				07F8AD0308265350009CCBB5,
+				07F8AD0508265350009CCBB5,
+				07F8AD0F082654D7009CCBB5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -279,6 +694,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF530486A6940098B216,
+				07F8ACF608265350009CCBB5,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,6 +708,17 @@
 		8DC2EF540486A6940098B216 = {
 			buildActionMask = 2147483647;
 			files = (
+				07F8ACF308265350009CCBB5,
+				07F8ACF508265350009CCBB5,
+				07F8ACF808265350009CCBB5,
+				07F8ACFA08265350009CCBB5,
+				07F8ACFC08265350009CCBB5,
+				07F8ACFE08265350009CCBB5,
+				07F8AD0008265350009CCBB5,
+				07F8AD0208265350009CCBB5,
+				07F8AD0408265350009CCBB5,
+				07F8AD0608265350009CCBB5,
+				07F8AD10082654D7009CCBB5,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
