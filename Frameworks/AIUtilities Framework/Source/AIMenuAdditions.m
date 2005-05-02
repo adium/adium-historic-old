@@ -28,6 +28,17 @@
     return([theMenuItem autorelease]);
 }
 
+- (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode tag:(int)tag
+{
+    NSMenuItem	*theMenuItem = [[NSMenuItem alloc] initWithTitle:aString action:aSelector keyEquivalent:charCode];
+    [theMenuItem setTarget:target];
+	[theMenuItem setTag:tag];
+	
+    [self addItem:theMenuItem];
+    
+    return([theMenuItem autorelease]);
+}
+
 - (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
 {
     NSMenuItem	*theMenuItem = [[NSMenuItem alloc] initWithTitle:aString action:aSelector keyEquivalent:charCode];
