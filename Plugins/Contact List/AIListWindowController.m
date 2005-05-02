@@ -148,10 +148,15 @@
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
     
     //Decide whether the contact list needs to hide when the app is about to deactivate
-    [[NSNotificationCenter defaultCenter] addObserver:self
-                                             selector:@selector(updateWindowHidesOnDeactivate:) 
-                                                 name:NSApplicationWillResignActiveNotification 
-                                               object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
+												 name:NSApplicationWillResignActiveNotification 
+											   object:nil];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(updateWindowHidesOnDeactivateWithNotification:) 
+												 name:NSApplicationWillBecomeActiveNotification 
+											   object:nil];
+    
 }
 
 //Close the contact list window
@@ -190,8 +195,8 @@
 		[[self window] setIgnoresExpose:(windowLevel == AIDesktopWindowLevel)]; //Ignore expose while on the desktop
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
-		[self setPermitSlidingInForeground:[[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue]];	
-		
+		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
+
 		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground)
 		{
             slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
@@ -438,9 +443,15 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	}
 }
 
-- (void)updateWindowHidesOnDeactivate:(id)sender
+- (void)updateWindowHidesOnDeactivateWithNotification:(NSNotification *)notification
 {
-	[[self window] setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
+    if ([notification isKindOfClass:[NSNotification class]] && [[notification name] isEqualToString:NSApplicationWillResignActiveNotification]) {
+        [[self window] setHidesOnDeactivate:[self windowShouldHideOnDeactivate]];
+    }
+    else {
+        [[self window] setHidesOnDeactivate:NO];
+        [[[self window] contentView] setNeedsDisplay:YES];
+    }
 }
 
 // this refers to the value of [[self window] hidesOnDeactivate]
@@ -616,20 +627,6 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	[window constrainFrameRect:[window frame] toScreen:[window screen]];
 		
 	windowSlidOffScreenEdgeMask = 0;
-}
-
-// commented out because we are not using the accessor at present, 
-// so it's somewhat misleading to have it here (even if it balances out the setter)
-//- (BOOL)permitSlidingInForeground
-//{
-//	return permitSlidingInForeground;
-//}
-
-- (void)setPermitSlidingInForeground:(BOOL)flag
-{
-	if(!flag)
-		[self slideWindowOnScreen];
-	permitSlidingInForeground = flag;
 }
 
 @end
