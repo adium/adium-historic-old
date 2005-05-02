@@ -145,7 +145,7 @@
 															   object:inObject];
 		if(lastSeenStatus && lastSeenDate){
 			NSString	*timeElapsed;
-			NString		*timeElapsedWithDesignation;
+			NSString	*timeElapsedWithDesignation;
 			
 			sinceDateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:[NSString stringWithFormat:@"%@, %@", 
 																				[[NSDateFormatter localizedShortDateFormatter] dateFormat],
