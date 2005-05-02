@@ -27,23 +27,18 @@
 
 - (void)installPlugin
 {
-    //We're Panther only
-    if([NSApp isOnPantherOrBetter]){
-    
-        //Just in case
-        itemController = nil;
-        
-        //Register our defaults
-        [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS 
-                                              forClass:[self class]]
-                                              forGroup:PREF_GROUP_STATUS_MENU_ITEM];
+	//Just in case
+	itemController = nil;
 
-		//Wait for Adium to finish launching before we perform further actions
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(adiumFinishedLaunching:)
-										   name:Adium_CompletedApplicationLoad
-										 object:nil];
-	}		
+	//Register our defaults
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_STATUS_MENU_ITEM];
+
+	//Wait for Adium to finish launching before we perform further actions
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(adiumFinishedLaunching:)
+									   name:Adium_CompletedApplicationLoad
+									 object:nil];
 }
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
@@ -65,10 +60,8 @@
 	 *	which only happens under Panther in -installPlugin.
 	 *so we don't need to undo the first two items under non-Panther.
 	 */
-	if([NSApp isOnPantherOrBetter]){
-		[[adium preferenceController] unregisterPreferenceObserver:self];
-        [itemController release]; itemController = nil;
-    }
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[itemController release]; itemController = nil;
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
