@@ -492,7 +492,7 @@
 				034768DFFF38A50411DB9C8B,
 			);
 			isa = PBXGroup;
-			name = "AIBookmarksImporter Framework";
+			name = "AIBookmarksImport Framework";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -626,7 +626,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = "AIBookmarksImporter Framework_Prefix.pch";
+			path = "AIBookmarksImport_Prefix.pch";
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -659,7 +659,7 @@
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AIBookmarksImporter Framework_Prefix.pch";
+				GCC_PREFIX_HEADER = "AIBookmarksImport_Prefix.pch";
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -676,15 +676,15 @@
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				PREBINDING = NO;
-				PRODUCT_NAME = AIBookmarksImporter;
+				PRODUCT_NAME = AIBookmarksImport;
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
 			);
 			isa = PBXNativeTarget;
-			name = AIBookmarksImporter;
+			name = AIBookmarksImport;
 			productInstallPath = "$(HOME)/Library/Frameworks";
-			productName = "AIBookmarksImporter Framework";
+			productName = "AIBookmarksImport Framework";
 			productReference = 8DC2EF5B0486A6940098B216;
 			productType = "com.apple.product-type.framework";
 		};
@@ -766,7 +766,7 @@
 			explicitFileType = wrapper.framework;
 			includeInIndex = 0;
 			isa = PBXFileReference;
-			path = AIBookmarksImporter.framework;
+			path = AIBookmarksImport.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
