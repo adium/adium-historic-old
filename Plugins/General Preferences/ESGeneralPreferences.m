@@ -28,6 +28,7 @@
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)outputDeviceMenu;
 - (NSMenu *)tabKeysMenu;
+- (NSMenu *)sendKeysMenu;
 
 - (NSMenu *)statusIconsMenu;
 - (NSMenu *)serviceIconsMenu;
@@ -69,7 +70,8 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
 	sendOnEnter = [[prefDict objectForKey:SEND_ON_ENTER] boolValue];
 	sendOnReturn = [[prefDict objectForKey:SEND_ON_RETURN] boolValue];
-
+	[popUp_sendKeys setMenu:[self sendKeysMenu]];
+	
 	if(sendOnEnter && sendOnReturn){
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnBoth];
 	}else if(sendOnEnter){
@@ -211,59 +213,82 @@
     }
 }
 
+/*!
+ * @brief Construct our menu by hand for easy localization
+ */
 - (NSMenu *)outputDeviceMenu
 {
-	NSMenu		*outputDeviceMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSMenuItem  *menuItem;
+	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Play through default device",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:SOUND_SYTEM_OUTPUT_DEVICE];                
-	[outputDeviceMenu addItem:menuItem];
-	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Play through alert device",nil)
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:SOUND_SYTEM_ALERT_DEVICE];                
-	[outputDeviceMenu addItem:menuItem];
-	
-	return ([outputDeviceMenu autorelease]);
+	[menu addItemWithTitle:AILocalizedString(@"Play through default device",nil)
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:SOUND_SYTEM_OUTPUT_DEVICE];
+
+	[menu addItemWithTitle:AILocalizedString(@"Play through alert device",nil)
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:SOUND_SYTEM_ALERT_DEVICE];
+
+	return([menu autorelease]);
 }
 
+/*!
+ * @brief Construct our menu by hand for easy localization
+ */
 - (NSMenu *)tabKeysMenu
 {
-	NSMenu		*tabKeysMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSMenuItem  *menuItem;
-	NSString	*title;
+	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
 	
-	title = [AILocalizedString(@"Arrows","Directional arrow keys word") stringByAppendingString:[NSString stringWithUTF8String:"  (⌘← and ⌘→)"]];
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:AISwitchArrows];                
-	[tabKeysMenu addItem:menuItem];
-
-	title = [AILocalizedString(@"Shift + Arrows","Shift key word + Directional arrow keys word") stringByAppendingString:[NSString stringWithUTF8String:"  (⇧⌘← and ⇧⌘→)"]];
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:AISwitchShiftArrows];                
-	[tabKeysMenu addItem:menuItem];
-
-	title = [AILocalizedString(@"Brackets","Word for [ and ] keys") stringByAppendingString:[NSString stringWithUTF8String:"  (⌘[ and ⌘])"]];
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
-																	 target:nil
-																	 action:nil
-															  keyEquivalent:@""] autorelease];
-	[menuItem setTag:AIBrackets];                
-	[tabKeysMenu addItem:menuItem];
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Arrows (%@ and %@)","Directional arrow keys word"), [NSString stringWithUTF8String:"⌘←"], [NSString stringWithUTF8String:"⌘→"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AISwitchArrows];
 	
-	return ([tabKeysMenu autorelease]);		
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Shift + Arrows (%@ and %@)","Shift key word + Directional arrow keys word"), [NSString stringWithUTF8String:"⇧⌘←"], [NSString stringWithUTF8String:"⇧⌘→"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AISwitchShiftArrows];
+	
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for [ and ] keys"), [NSString stringWithUTF8String:"⌘["], [NSString stringWithUTF8String:"⌘]"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AIBrackets];
+	
+	return([menu autorelease]);		
+}
+
+/*!
+ * @brief Construct our menu by hand for easy localization
+ */
+- (NSMenu *)sendKeysMenu
+{
+	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Enter","Enter key for sending messages"), [NSString stringWithUTF8String:"⌘←"], [NSString stringWithUTF8String:"⌘→"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AISendOnEnter];
+		
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Return","Return key for sending messages"), [NSString stringWithUTF8String:"⇧⌘←"], [NSString stringWithUTF8String:"⇧⌘→"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AISendOnReturn];
+	
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Enter and Return","Enter and return key for sending messages"), [NSString stringWithUTF8String:"⌘["], [NSString stringWithUTF8String:"⌘]"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AISendOnBoth];
+	
+	return([menu autorelease]);		
 }
 
 @end
