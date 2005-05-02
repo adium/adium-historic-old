@@ -1352,38 +1352,28 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
 									   toLocation:Context_Group_Manage];
 
-	//Install the Get Info menu item
-//	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
-//																			target:self
-//																			action:@selector(showContactInfo:)
-//																	 keyEquivalent:@"i"];
-//	[menuItem_getInfo setKeyEquivalentModifierMask:GET_INFO_MASK];
-//	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
+	//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
+	menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
+																					 target:self
+																					 action:@selector(showContactInfo:)
+																			  keyEquivalent:@"i"];
+	[menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
+	[menuItem_getInfoAlternate setAlternate:YES];
+	[[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Info];
 
-	if([NSApp isOnPantherOrBetter]) {
-		//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
-		menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO															   target:self
-																						 action:@selector(showContactInfo:)
-																				  keyEquivalent:@"i"];
-        [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
-        [menuItem_getInfoAlternate setAlternate:YES];
-        [[adium menuController] addMenuItem:menuItem_getInfoAlternate toLocation:LOC_Contact_Info];
+	//Register for the contact list notifications
+	[[adium notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:)
+									   name:Interface_ContactListDidBecomeMain
+									 object:nil];
+	[[adium notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
+									   name:Interface_ContactListDidResignMain
+									 object:nil];
 
-        //Register for the contact list notifications
-        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidBecomeMain:)
-										   name:Interface_ContactListDidBecomeMain
-										 object:nil];
-        [[adium notificationCenter] addObserver:self selector:@selector(contactListDidResignMain:)
-										   name:Interface_ContactListDidResignMain
-										 object:nil];
-
-		//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
-		//(it will expand into showing both the normal and the alternate items when the menu changes)
-		[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
-										   name:Menu_didChange
-										 object:[menuItem_getInfoAlternate menu]];
-
-    }
+	//Watch changes in viewContactInfoMenuItem_alternate's menu so we can maintain its alternate status
+	//(it will expand into showing both the normal and the alternate items when the menu changes)
+	[[adium notificationCenter] addObserver:self selector:@selector(menuChanged:)
+									   name:Menu_didChange
+									 object:[menuItem_getInfoAlternate menu]];
 
 #ifdef CONTACTS_INFO_WITH_PROMPT
 	//Install the Get Info (prompting for a contact name) menu item
