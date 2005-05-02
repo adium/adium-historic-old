@@ -201,18 +201,17 @@
 //Add a simple shadow to our text attributes
 - (NSDictionary *)additionalLabelAttributes
 {
-	if([NSApp isOnPantherOrBetter] && shadowColor){
-		Class 	shadowClass = NSClassFromString(@"NSShadow"); //Weak Linking for 10.2 compatability
-		id		shadow = [[[shadowClass alloc] init] autorelease];
-		
-		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
-		[shadow setShadowBlurRadius:2.0];
-		[shadow setShadowColor:shadowColor];
-		
-		return([NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName]);
-	}else{
-		return(nil);
+	if(!shadowColor){
+		return nil;
 	}
+
+	NSShadow	*shadow = [[[NSShadow alloc] init] autorelease];
+
+	[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
+	[shadow setShadowBlurRadius:2.0];
+	[shadow setShadowColor:shadowColor];
+
+	return [NSDictionary dictionaryWithObject:shadow forKey:NSShadowAttributeName];
 }
 
 
