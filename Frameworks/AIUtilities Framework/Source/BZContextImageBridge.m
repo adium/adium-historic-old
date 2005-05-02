@@ -70,8 +70,8 @@ const BOOL defaultHasAlpha = YES;
 
 - (void)dealloc
 {
-	free(buffer);
-	CGContextRelease(context);
+	if(buffer) free(buffer);
+	if(context) CGContextRelease(context);
 	[image release];
 
 	[super dealloc];
