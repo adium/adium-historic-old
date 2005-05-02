@@ -46,32 +46,27 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 /*!
  * @brief Install plugin
- *
- * Has no effect on Jaguar
  */
 - (void)installPlugin
 {
-	//only install on Panther.
-	if([NSApp isOnPantherOrBetter]) {
-		setAwayThroughFastUserSwitch = NO;
-		setMuteThroughFastUserSwitch = NO;
-		monitoringFastUserSwitch = NO;
+	setAwayThroughFastUserSwitch = NO;
+	setMuteThroughFastUserSwitch = NO;
+	monitoringFastUserSwitch = NO;
 
-		NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
-		[workspaceCenter addObserver:self
-		                    selector:@selector(switchHandler:)
-		                        name:NSWorkspaceSessionDidBecomeActiveNotification
-		                      object:nil];
+	NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
+	[workspaceCenter addObserver:self
+	                    selector:@selector(switchHandler:)
+	                        name:NSWorkspaceSessionDidBecomeActiveNotification
+	                      object:nil];
 
-		[workspaceCenter addObserver:self
-		                    selector:@selector(switchHandler:)
-		                        name:NSWorkspaceSessionDidResignActiveNotification
-		                      object:nil];
+	[workspaceCenter addObserver:self
+	                    selector:@selector(switchHandler:)
+	                        name:NSWorkspaceSessionDidResignActiveNotification
+	                      object:nil];
 
-		//Observe preference changes for updating when and how we should automatically change our state
-		[[adium preferenceController] registerPreferenceObserver:self
+	//Observe preference changes for updating when and how we should automatically change our state
+	[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:PREF_GROUP_STATUS_PREFERENCES];
-	}
 }
 
 /*!
@@ -96,14 +91,11 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
  */
 - (void)uninstallPlugin
 {
-	//only uninstall on Panther
-	if([NSApp isOnPantherOrBetter]) {
-		//Clear the fast switch away if we had it up before
-		[self switchHandler:nil];
+	//Clear the fast switch away if we had it up before
+	[self switchHandler:nil];
 
-		[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
-		[[adium preferenceController] unregisterPreferenceObserver:self];
-	}
+	[[[NSWorkspace sharedWorkspace] notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
 /*!
