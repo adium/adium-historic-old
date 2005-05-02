@@ -66,6 +66,7 @@
 		[popUp_windowPosition selectItemAtIndex:menuIndex];
 	}
     [checkBox_hide setState:[[preferenceDict objectForKey:KEY_CL_HIDE] boolValue]];
+	[checkBox_edgeSlide setState:[[preferenceDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue]];
 	
 	[checkBox_flash setState:[[preferenceDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue]];
 	[checkBox_showTransitions setState:[[preferenceDict objectForKey:KEY_CL_SHOW_TRANSITIONS] boolValue]];
@@ -73,7 +74,8 @@
 	[checkBox_showTooltipsInBackground setState:[[preferenceDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
 	[checkBox_windowHasShadow setState:[[preferenceDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 	
-	[checkBox_hide setLocalizedString:AILocalizedString(@"Hide while Adium is in the background","Refers to a window hiding when Adium is not the foreground application")];
+	[checkBox_hide setLocalizedString:AILocalizedString(@"While Adium is in the background","Refers to a window hiding when Adium is not the foreground application")];
+	[checkBox_edgeSlide setLocalizedString:AILocalizedString(@"Automatically on screen edges", "Refers to a window sliding off the edge of the screen like the Dock")];
 	[checkBox_flash setLocalizedString:AILocalizedString(@"Flash names with unviewed messages",nil)];
 	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
@@ -84,7 +86,8 @@
 	[label_appearance setLocalizedString:AILocalizedString(@"Appearance",nil)];
 	[label_tooltips setLocalizedString:AILocalizedString(@"Tooltips",nil)];
 	[label_windowHandling setLocalizedString:AILocalizedString(@"Window Handling",nil)];
-	[label_orderTheContactList setLocalizedString:AILocalizedString(@"Order the contact list:",nil)];
+	[label_hide setLocalizedString:AILocalizedString(@"Hide",nil)];
+	[label_orderTheContactList setLocalizedString:AILocalizedString(@"Show the contact list:",nil)];
 	
 	[self configureControlDimming];
 }
@@ -99,7 +102,11 @@
 											 forKey:KEY_CL_HIDE
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-    }else if(sender == checkBox_flash){
+    }else if(sender == checkBox_edgeSlide){
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
+											 forKey:KEY_CL_EDGE_SLIDE
+											  group:PREF_GROUP_CONTACT_LIST];
+	}else if(sender == checkBox_flash){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_FLASH_UNVIEWED_CONTENT
 											  group:PREF_GROUP_CONTACT_LIST];
@@ -146,7 +153,7 @@
 {
 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS forClass:[self class]];
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CONTACT_LIST];	
-	return(defaultsDict);
+	return defaultsDict;
 }
 
 /*!

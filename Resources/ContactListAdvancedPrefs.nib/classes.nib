@@ -45,6 +45,7 @@
             CLASS = ESContactListAdvancedPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_edgeSlide" = NSButton; 
                 "checkBox_flash" = NSButton; 
                 "checkBox_hide" = NSButton; 
                 "checkBox_showTooltips" = NSButton; 
@@ -52,6 +53,7 @@
                 "checkBox_showTransitions" = NSButton; 
                 "checkBox_windowHasShadow" = NSButton; 
                 "label_appearance" = NSTextField; 
+                "label_hide" = NSTextField; 
                 "label_orderTheContactList" = NSTextField; 
                 "label_tooltips" = NSTextField; 
                 "label_windowHandling" = NSTextField; 
