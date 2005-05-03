@@ -153,6 +153,9 @@
 			sourceTree = "<group>";
 		};
 		07FC98340827D355006C56D6 = {
+			children = (
+				34FD94300828253E00040AC6,
+			);
 			isa = PBXGroup;
 			name = Products;
 			refType = 4;
@@ -8861,7 +8864,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" Frameworks \"/Users/boredzo/Projects/@otherpeoplesprojects/adium/Frameworks/AIBookmarksImport Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" Frameworks \"Frameworks/AIBookmarksImport Framework/build\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -15226,6 +15229,21 @@
 			path = Resources/Italian.lproj/Localizable.strings;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		34FD94300828253E00040AC6 = {
+			fileType = wrapper.framework;
+			isa = PBXReferenceProxy;
+			path = AIBookmarksImport.framework;
+			refType = 3;
+			remoteRef = 34FD94910828255100040AC6;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		34FD94910828255100040AC6 = {
+			containerPortal = 07FC98330827D355006C56D6;
+			isa = PBXContainerItemProxy;
+			proxyType = 2;
+			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
+			remoteInfo = AIBookmarksImport;
 		};
 		34FDD6E305632BFD00F5B30F = {
 			fileEncoding = 4;
