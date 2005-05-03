@@ -36,9 +36,8 @@
 #define ADD_GROUP							AILocalizedString(@"Add Group",nil)
 #define ADD_GROUP_ELLIPSIS					[ADD_GROUP stringByAppendingEllipsis]
 
-#define DELETE_CONTACT						AILocalizedString(@"Remove Contact",nil)
-#define DELETE_CONTACT_CONTEXT				AILocalizedString(@"Remove",nil)
-#define DELETE_CONTACT_CONTEXT_ELLIPSIS		[DELETE_CONTACT_CONTEXT stringByAppendingEllipsis]
+#define DELETE_CONTACT_ELLIPSIS				[AILocalizedString(@"Remove Contact",nil) stringByAppendingEllipsis]
+#define DELETE_CONTACT_CONTEXT_ELLIPSIS		[AILocalizedString(@"Remove",nil) stringByAppendingEllipsis]
 
 #define RENAME_GROUP						AILocalizedString(@"Rename Group",nil)
 #define RENAME_GROUP_ELLIPSIS				[RENAME_GROUP stringByAppendingEllipsis]
@@ -95,7 +94,7 @@
     [[adium menuController] addMenuItem:menuItem_addGroup toLocation:LOC_Contact_Manage];
 	
 	//Delete selection menu item
-    menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT
+    menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_ELLIPSIS
 																		   target:self
 																		   action:@selector(deleteSelection:) 
 																	keyEquivalent:@"\b"];
@@ -109,7 +108,7 @@
     //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
 	
 	//Delete selection context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT_ELLIPSIS
 																	 target:self
 																	 action:@selector(deleteSelectionFromTab:) 
 															  keyEquivalent:@""] autorelease];
@@ -161,17 +160,16 @@
 {
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
-		//return([[adium contactController] selectedListObjectInContactList] != nil);
-                //Update the menu titles to reflect the selected contact
-            if([[adium contactController] selectedListObjectInContactList] != nil){
-                [menuItem_delete setTitle:[NSString stringWithFormat:
-					AILocalizedString(@"Remove %@","%@ will be a contact's name"),
-					[[[adium contactController] selectedListObjectInContactList] displayName]]];
-            }else{
-                [menuItem_delete setTitle:DELETE_CONTACT];
-                return NO;
-            }
-
+		//Update the menu titles to reflect the selected contact
+		if([[adium contactController] selectedListObjectInContactList] != nil){
+			[menuItem_delete setTitle:[NSString stringWithFormat:
+				AILocalizedString(@"Remove %@","%@ will be a contact's name"),
+				[[[adium contactController] selectedListObjectInContactList] displayName]]];
+		}else{
+			[menuItem_delete setTitle:DELETE_CONTACT_ELLIPSIS];
+			return NO;
+		}
+		
 	}else if(menuItem == menuItem_tabAddContact){
 		return([[adium menuController] currentContextMenuObject] != nil);
 	
