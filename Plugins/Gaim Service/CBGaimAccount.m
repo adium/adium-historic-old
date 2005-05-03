@@ -1704,7 +1704,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
 	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
 		if (reconnectAttemptsRemaining && 
-			[self shouldAttemptReconnectAfterDisconnectionError:lastDisconnectionError] && !(connectionIsSuicidal)) {
+			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
 			
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
@@ -1725,7 +1725,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 //By default, always attempt to reconnect.  Subclasses may override this to manage reconnect behavior.
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	return YES;
 }

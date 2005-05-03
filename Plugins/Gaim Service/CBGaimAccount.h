@@ -46,7 +46,7 @@
 - (void)updateStatusForKey:(NSString *)key;
 - (NSDictionary *)defaultProperties;
 - (NSString *)unknownGroupName;
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError;
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 - (BOOL)useDisplayNameAsStatusMessage;
 - (BOOL)displayConversationClosed;
 - (BOOL)displayConversationTimedOut;

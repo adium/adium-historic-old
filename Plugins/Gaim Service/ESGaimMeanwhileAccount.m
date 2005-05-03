@@ -67,12 +67,12 @@
 	return statusMessage;
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldReconnect = YES;
 	
-	if (disconnectionError){
-		if ([disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
+	if (disconnectionError && *disconnectionError){
+		if ([*disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
 		}
 	}

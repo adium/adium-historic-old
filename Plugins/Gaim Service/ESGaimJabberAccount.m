@@ -258,15 +258,15 @@
 	[super accountConnectionConnected];
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldReconnect = YES;
 	
-	if (disconnectionError){
-		if ([disconnectionError rangeOfString:@"401"].location != NSNotFound) {
+	if (disconnectionError && *disconnectionError){
+		if ([*disconnectionError rangeOfString:@"401"].location != NSNotFound) {
 			shouldReconnect = NO;
 			
-			/* Automatic registration attempt? Doesn't work at present... */
+			/* Automatic registration attempt? Doesn't work for jabber.org at present... */
 #if 0
 			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
 																  defaultButton:AILocalizedString(@"Register",nil)
@@ -282,9 +282,9 @@
 			[[adium accountController] forgetPasswordForAccount:self];
 #endif
 			
-		}else if ([disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
+		}else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
 			shouldReconnect = NO;
-		}else if ([disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound){
+		}else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound){
 			shouldReconnect = NO;			
 		}
 	}
