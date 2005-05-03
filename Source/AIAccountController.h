@@ -57,6 +57,7 @@ typedef enum
 @protocol AccountMenuPlugin <NSObject>
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
+- (BOOL)showStatusSubmenu;
 @end
 
 @interface AIAccountController : NSObject<AIListObjectObserver, StateMenuPlugin>{
@@ -70,7 +71,7 @@ typedef enum
 	
 	NSMutableArray			*unloadableAccounts;
 	
-	NSMutableArray			*accountMenuPluginsArray;
+	NSMutableDictionary		*accountMenuPluginsDict;
 	NSMutableDictionary		*accountMenuItemArraysDict;
 	
 	NSArray					*_cachedActiveServices;

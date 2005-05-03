@@ -67,7 +67,7 @@
 	NSMenuItem		*menuItem;
 	
     while((menuItem = [enumerator nextObject])){    
-		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
+		[[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Additions];
     }
 }
 
@@ -95,6 +95,11 @@
 {
     //Stop observing/receiving notifications
 	[[adium accountController] unregisterAccountMenuPlugin:self];
+}
+
+- (BOOL)showStatusSubmenu
+{
+	return NO;
 }
 
 @end
