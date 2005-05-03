@@ -187,6 +187,19 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 	}
 }
 
+//Finds and returns the first enabled menu item, or nil if there are none
+- (NSMenuItem *)firstEnabledMenuItem
+{
+	NSEnumerator	*enumerator = [[self itemArray] objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+	while(menuItem = [enumerator nextObject]){
+		if([menuItem isEnabled]) return(menuItem);
+	}
+	
+	return(nil);
+}
+
 //Swap two menu items
 + (void)swapMenuItem:(NSMenuItem *)itemA with:(NSMenuItem *)itemB
 {
