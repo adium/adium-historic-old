@@ -91,7 +91,8 @@ typedef enum {
 + (id)existingWindowController;
 - (IBAction)updateSearch:(id)sender;
 - (IBAction)selectSearchType:(id)sender;
-- (IBAction)deleteSelectedLogs:(id)sender;
+- (IBAction)deleteAllLogs:(id)sender;
+- (IBAction)deleteSelectedLog:(id)sender;
 - (IBAction)toggleEmoticonFiltering:(id)sender;
 - (void)setSearchString:(NSString *)inString mode:(LogSearchMode)inMode;
 - (void)setSearchMode:(LogSearchMode)inMode;

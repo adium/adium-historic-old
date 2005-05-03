@@ -12,13 +12,7 @@
         }, 
         {CLASS = AIAutoScrollView; LANGUAGE = ObjC; SUPERCLASS = NSScrollView; }, 
         {
-            ACTIONS = {
-                closeWindow = id; 
-                deleteSelectedLogs = id; 
-                selectSearchType = id; 
-                toggleEmoticonFiltering = id; 
-                updateSearch = id; 
-            }; 
+            ACTIONS = {selectSearchType = id; toggleEmoticonFiltering = id; updateSearch = id; }; 
             CLASS = AILogViewerWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
