@@ -22,12 +22,13 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
-            ACTIONS = {addContact = id; cancel = id; closeWindow = id; }; 
+            ACTIONS = {addContact = id; cancel = id; }; 
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "button_add" = AILocalizationButton; 
                 "button_cancel" = AILocalizationButton; 
+                "imageView_service" = NSImageView; 
                 "popUp_contactType" = NSPopUpButton; 
                 "popUp_targetGroup" = NSPopUpButton; 
                 "tableView_accounts" = NSTableView; 

@@ -28,10 +28,11 @@
 	IBOutlet	NSTextField					*textField_contactName;
 	IBOutlet	NSTextField					*textField_contactAlias;
 	IBOutlet	NSTableView					*tableView_accounts;
+	IBOutlet	NSImageView					*imageView_service;
 
 	IBOutlet	AILocalizationButton		*button_add;
 	IBOutlet	AILocalizationButton		*button_cancel;
-	
+
 	IBOutlet	AILocalizationTextField		*textField_type;
 	IBOutlet	AILocalizationTextField		*textField_alias;
 	IBOutlet	AILocalizationTextField		*textField_inGroup;
@@ -41,8 +42,6 @@
 	NSArray							*accounts;
 	NSString						*contactName;
 	AIService						*service;
-	
-	NSRect							originalContactNameLabelFrame;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;

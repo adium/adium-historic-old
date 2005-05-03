@@ -17,29 +17,25 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AINewContactWindowController.h"
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AILocalizationTextField.h>
 #import <Adium/AIService.h>
+#import <Adium/AIServiceIcons.h>
 
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
 
 @interface AINewContactWindowController (PRIVATE)
-- (void)buildContactTypeMenu;
+- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService;
 - (void)buildGroupMenu;
-- (void)_buildGroupMenu:(NSMenu *)menu forGroup:(AIListGroup *)group level:(int)level;
-- (void)validateEnteredName;
-- (void)updateAccountList;
-- (void)configureNameAndService;
+- (void)buildContactTypeMenu;
 - (void)configureForCurrentServiceType;
-- (void)setContactName:(NSString *)contact;
-- (void)setService:(AIService *)inService;
-- (void)selectGroup:(id)sender;
-- (void)selectFirstValidServiceType;
-- (void)selectServiceType:(id)sender;
-- (void)updateContactNameLabel;
+- (void)ensureValidContactTypeSelection;
+- (void)updateAccountList;
+- (void)_setServiceType:(AIService *)inService;
 @end
 
 /*!
@@ -59,9 +55,7 @@
 {
 	AINewContactWindowController	*newContactWindow;
 	
-	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB];
-	[newContactWindow setContactName:inName];
-	[newContactWindow setService:inService];
+	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB contactName:inName service:inService];
 	
 	if(parentWindow){
 		[parentWindow makeKeyAndOrderFront:nil];
@@ -81,10 +75,13 @@
 /*!
  * @brief Initialize
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName
+- (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService
 {
     self = [super initWithWindowNibName:windowNibName];
 
+	service = [inService retain];
+	contactName = [inName retain];
+	
 	return self;
 }
 
@@ -105,30 +102,29 @@
  */
 - (void)windowDidLoad
 {
+	[[self window] center];
+
+	//Localized Strings
+	[[self window] setTitle:AILocalizedString(@"Add Contact",nil)];
 	[textField_type setLocalizedString:AILocalizedString(@"Contact Type:","Contact type service dropdown label in Add Contact")];
 	[textField_alias setLocalizedString:AILocalizedString(@"Alias:",nil)];
 	[textField_inGroup setLocalizedString:AILocalizedString(@"In Group:",nil)];
-	[textField_addToAccounts setLocalizedString:AILocalizedString(@"Add to Accounts:",nil)];
-
+	[textField_addToAccounts setLocalizedString:AILocalizedString(@"On Accounts:",nil)];
 	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
-	originalContactNameLabelFrame = [textField_contactNameLabel frame];
-	
-	[self buildContactTypeMenu];
+	//Configure the rest of the window
 	[self buildGroupMenu];
-
-	[self configureNameAndService];
+	[self buildContactTypeMenu];
+	[self configureForCurrentServiceType];
+	if(contactName) [textField_contactName setStringValue:contactName];	
 	
+	//Observe account list and status changes
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(accountListChanged:)
 									   name:Account_ListChanged
 									 object:nil];
-
 	[[adium contactController] registerListObjectObserver:self];
-
-	[[self window] setTitle:AILocalizedString(@"Add Contact",nil)];
-	[[self window] center];
 }
 
 /*!
@@ -154,11 +150,7 @@
  */
 - (IBAction)cancel:(id)sender
 {
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
+	[self closeWindow:nil];
 }
 
 /*!
@@ -167,39 +159,35 @@
 - (IBAction)addContact:(id)sender
 {
 	NSString		*UID = [service filterUID:[textField_contactName stringValue] removeIgnoredCharacters:YES];
-	NSEnumerator	*enumerator = [accounts objectEnumerator];
-	AIListGroup		*group ;
+	NSString		*alias = [textField_contactAlias stringValue];
+	NSEnumerator	*enumerator;
+	AIListGroup		*group;
 	AIAccount		*account;
-	NSString		*alias;
 	NSMutableArray	*contactArray = [NSMutableArray array];
 	
-	alias = [textField_contactAlias stringValue];
-	if([alias length] == 0) alias = nil; 
-
+	//Group
 	group = ([popUp_targetGroup numberOfItems] ?
 			[[popUp_targetGroup selectedItem] representedObject] : 
 			nil);
 	
+	//Add contact to our accounts
+	enumerator = [accounts objectEnumerator];
 	while(account = [enumerator nextObject]){
 		if([account contactListEditable] &&
 		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
 			AIListContact	*contact = [[adium contactController] contactWithService:service
 																			 account:account
 																				 UID:UID];
-			if(alias) [contact setDisplayName:alias];
+			if(alias && [alias length]) [contact setDisplayName:alias];
 			
-			[contactArray addObject:contact];
+			if(contact) [contactArray addObject:contact];
 		}
 	}
 
-	[[adium contactController] addContacts:contactArray
-								   toGroup:group];
+	//Add them to our local group
+	[[adium contactController] addContacts:contactArray toGroup:group];
 
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
+	[self closeWindow:nil];
 }
 
 
@@ -210,47 +198,80 @@
  */
 - (void)buildContactTypeMenu
 {
-	NSMenuItem	*selectedItem;
-	
+	//Rebuild the menu
 	[popUp_contactType setMenu:[[adium accountController] menuOfServicesWithTarget:self 
 																activeServicesOnly:YES
 																   longDescription:NO
 																			format:nil]];
 	
-	//- (BOOL)validateMenuItem:(NSMenuItem *)menuItem below will automatically manage the enabling/disabling 
-	//when we call update.
-	[[popUp_contactType menu] update];
-	
-	//If there is no selection or the current selection is now disabled, select the first valid service type
-	if (!service ||
-		!(selectedItem = (NSMenuItem *)[popUp_contactType selectedItem]) ||
-		(![selectedItem isEnabled])){
-		[self selectFirstValidServiceType];
-	}else{
-		//Otherwise, just perform needed configuration for the current selection
-		[self configureForCurrentServiceType];
-	}
+	//Ensure our selection is still valid
+	[self ensureValidContactTypeSelection];
 }
 
 /*!
- * @brief Select the first valid service type
- *
- * 'valid' in this context means that an account on the appropriate service is online.
+ * @breif Ensures that the selected contact type is valid, selecting another if it isn't
  */
-- (void)selectFirstValidServiceType
+- (void)ensureValidContactTypeSelection
 {
-	NSEnumerator		*enumerator;
+	int			serviceIndex;
 	
-	enumerator = [[popUp_contactType itemArray] objectEnumerator];
-	NSMenuItem			*menuItem;
-	while(menuItem = [enumerator nextObject]) {
-		if([menuItem isEnabled]) {
-			[popUp_contactType selectItem:menuItem];
-			break;
-		}
+	//Force our menu to update.. it needs to be correctly validated for the code below to work
+	[[popUp_contactType menu] update];
+
+	//Find the menu item for our current service
+	if(service) serviceIndex = [popUp_contactType indexOfItemWithRepresentedObject:service];		
+
+	//If our service is not available we'll have to pick another one
+	if(service && (serviceIndex == -1 || ![[popUp_contactType itemAtIndex:serviceIndex] isEnabled])){
+		[self _setServiceType:nil];
 	}
+
+	//If we don't have a service, pick the first availbale one
+	if(!service){
+		[self _setServiceType:[[[popUp_contactType menu] firstEnabledMenuItem] representedObject]];
+	}
+
+	//Update our menu and window for the current service
+	[popUp_contactType selectItemWithRepresentedObject:service];
+	[self configureForCurrentServiceType];
+}
+
+/*!
+ * @brief Configure any service-dependent controls in our window for the current service
+ */
+- (void)configureForCurrentServiceType
+{
+	NSString	*userNameLabel = [service userNameLabel];
 	
-	[self selectServiceType:nil];
+	//Update the service icon
+	[imageView_service setImage:[AIServiceIcons serviceIconForService:service
+																 type:AIServiceIconLarge
+															direction:AIIconNormal]];
+	[textField_contactNameLabel setStringValue:[(userNameLabel ? userNameLabel :
+												 AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
+
+	//And the list of accounts
+	[self updateAccountList];
+}
+
+/*!
+ * @brief User selected a new service type
+ */
+- (void)selectServiceType:(id)sender
+{	
+	[self _setServiceType:[[popUp_contactType selectedItem] representedObject]];
+	[self configureForCurrentServiceType];
+}
+
+/*!
+ * @brief Set the current service type
+ */
+- (void)_setServiceType:(AIService *)inService
+{
+	if(inService != service){
+		[service release];
+		service = [inService retain];
+	}
 }
 
 /*
@@ -258,37 +279,34 @@
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	NSEnumerator	*enumerator;
+	NSEnumerator	*enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
 	AIAccount		*account;
 	
-	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
 	while(account = [enumerator nextObject]){
-		if([account contactListEditable]){
-			return YES;
-		}
+		if([account contactListEditable]) return(YES);
 	}
-	return NO;
+	
+	return(NO);
 }
 
 /*!
- * @brief Service type was selected from the menu
+ * @brief Update our contact type menu when user accounts change
  */
-- (void)selectServiceType:(id)sender
-{	
-	service = [[popUp_contactType selectedItem] representedObject];
-
-	[self configureForCurrentServiceType];
-}
-
-/*!
- * @brief Configure for the current service type
- */
-- (void)configureForCurrentServiceType
+- (void)accountListChanged:(NSNotification *)notification
 {
-	[self updateContactNameLabel];
-	[self updateAccountList];
-	[self validateEnteredName];
+	[self buildContactTypeMenu];
 }
+
+/*!
+ * @brief Update our contact type when account availability changes
+ */
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
+{
+	[self ensureValidContactTypeSelection];
+	
+	return(nil);
+}
+
 
 //Add to Group ---------------------------------------------------------------------------------------------------------
 #pragma mark Add to Group
@@ -305,126 +323,18 @@
 
 	//Select the group of the currently selected object on the contact list
 	selectedObject = [[adium contactController] selectedListObject];
+	while(selectedObject && ![selectedObject isKindOfClass:[AIListGroup class]]){
+		selectedObject = [(AIListGroup *)selectedObject containingObject];
+	}
 
-	if(selectedObject != nil) {
-		//Find the first containing object which is an AIListGroup, starting with the selected object itself
-		group = (AIListGroup*)selectedObject;
-		while (group && ![group isKindOfClass:[AIListGroup class]]){
-			group = (AIListGroup*)[group containingObject];
-		}
-		
-		if(group){
-			[popUp_targetGroup selectItemWithRepresentedObject:group];			
-		}else if([popUp_targetGroup numberOfItems] > 0){
-			[popUp_targetGroup selectItemAtIndex:0];
-		}
-		
+	//If there was no selected group, just select the first item
+	if(selectedObject){
+		[popUp_targetGroup selectItemWithRepresentedObject:group];			
+	}else if([popUp_targetGroup numberOfItems] > 0){
+		[popUp_targetGroup selectItemAtIndex:0];
 	}
 }
 
-//Contact Name ---------------------------------------------------------------------------------------------------------
-#pragma mark Contact Name
-/*!
- * @brief Fill in the name field if we came from a tab
- */
-- (void)configureNameAndService
-{
-	if(contactName) {
-		[textField_contactName setStringValue:contactName];
-	}
-	
-	if(service){
-		NSMenuItem		*item;
-		NSEnumerator	*enumerator = [[popUp_contactType itemArray] objectEnumerator];
-		
-		while (item = [enumerator nextObject]){
-			if([item representedObject] == service){
-				[popUp_contactType selectItem:item];
-				break;
-			}
-		}
-	}
-	
-	[self configureForCurrentServiceType];
-}
-
-/*!
- * @brief Set the contact name
- *
- * This does not perform subsequent validation.
- */
-- (void)setContactName:(NSString *)contact
-{
-    if(contactName != contact){
-	   [contactName release];
-	   contactName = [contact retain];
-	}
-}
-
-/*
- * Set the service
- *
- * This does not perform subsequent validation.
- */
-- (void)setService:(AIService *)inService
-{
-    if(service != inService){
-        [service release];
-        service = [inService retain];
-    }
-}
-
-/*!
- * @brief Entered name is changing; validate it.
- */
-- (void)controlTextDidChange:(NSNotification *)notification
-{
-	if([notification object] == textField_contactName){
-		[self validateEnteredName];
-	}
-}
-
-/*!
- * @brief Validate the entered name, enabling the add button if it is valid
- */
-- (void)validateEnteredName
-{
-	NSString	*name = [textField_contactName stringValue];
-	BOOL		enabled = YES;
-	
-	if([name length] != 0 && [name length] <= [service allowedLengthForUIDs]){
-		BOOL		caseSensitive = [service caseSensitive];
-		NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? name : [name lowercaseString])];
-		NSString	*validSegment = nil;
-		
-		[scanner scanCharactersFromSet:[service allowedCharactersForUIDs] intoString:&validSegment];
-		if(!validSegment || [validSegment length] != [name length]){
-			enabled = NO;
-		}
-	}else{
-		enabled = NO;
-	}
-
-	//If enabled so far, make sure an account is checked
-	if (enabled){
-		NSEnumerator	*enumerator = [accounts objectEnumerator];
-		AIAccount		*account;
-		
-		BOOL anAccountIsChecked = NO;
-		
-		while(account = [enumerator nextObject]){
-			if([account contactListEditable] &&
-			   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
-				anAccountIsChecked = YES;
-				break;
-			}
-		}	
-		
-		enabled = anAccountIsChecked;
-	}
-
-	[button_add setEnabled:enabled];
-}
 
 //Add to Accounts ------------------------------------------------------------------------------------------------------
 #pragma mark Add to Accounts
@@ -443,118 +353,14 @@
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];
 	while(account = [enumerator nextObject]) {
-		addTo = [account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT];
-		if(!addTo)
-			[account setPreference:[NSNumber numberWithBool:YES] forKey:KEY_ADD_CONTACT_TO 
-							 group:PREF_GROUP_ADD_CONTACT];
+		if(![account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT]){
+			[account setPreference:[NSNumber numberWithBool:YES]
+							forKey:KEY_ADD_CONTACT_TO 
+							 group:PREF_GROUP_ADD_CONTACT];			
+		}
 	}
+	
 	[tableView_accounts reloadData];
-}
-
-/*!
- * @brief The account list changed
- */
-- (void)accountListChanged:(NSNotification *)notification
-{
-	//Attempt to retain the current contact type selection
-	id representedObject = [[popUp_contactType selectedItem] representedObject];
-	[self buildContactTypeMenu];
-	
-	int index = [popUp_contactType indexOfItemWithRepresentedObject:representedObject];
-	if (index != NSNotFound){
-		[popUp_contactType selectItemAtIndex:index];
-	}
-	
-	[self updateAccountList];
-}
-
-/*!
- * @brief Update when account connectivity changes
- *
- * If the selected service is still valid, just reload the accounts table view to update it.
- * If it is no longer valid (the last account on this service just signed off), select the first valid one.
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if ([inObject isKindOfClass:[AIAccount class]] && [inModifiedKeys containsObject:@"Online"]){
-		if([self validateMenuItem:(NSMenuItem *)[popUp_contactType selectedItem]]){
-			//If the current selection in the contact type menu is still valid (an account is still online), reload the accounts data
-			[tableView_accounts reloadData];
-		}else{
-			//If it is not, switch to the first valid contact type and update accordingly
-			[self selectFirstValidServiceType];
-		}
-	}
-	
-	return nil;
-}
-
-/*!
- * @brief Update the contact name label
- *
- * The label is customized for the selected service as well as localized.
- * Updating the label may resize the window to fit.
- */
-- (void)updateContactNameLabel
-{
-	NSRect          oldFrame;
-	NSRect          newFrame;
-	
-	oldFrame = [textField_contactNameLabel frame];
-
-	//If the old frame is smaller than our original frame, treat the old frame as that original frame
-	//for resizing and positioning purposes
-	if(oldFrame.size.width < originalContactNameLabelFrame.size.width){
-			oldFrame = originalContactNameLabelFrame;
-	}
-	
-	NSString	*userNameLabel = (service ? [service userNameLabel] : nil);
-
-	//Set to the userNameLabel, using a default value if we have no userNameLabel, then sizeToFit
-	[textField_contactNameLabel setStringValue:[(userNameLabel ? userNameLabel : AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
-	[textField_contactNameLabel sizeToFit];
-	newFrame = [textField_contactNameLabel frame];
-
-	//Enforce a minimum width of the original contact name label frame width
-	if(newFrame.size.width < originalContactNameLabelFrame.size.width){
-		newFrame.size.width = originalContactNameLabelFrame.size.width;
-	}
-
-	//Only use integral widths to keep alignment correct;
-	//round up as an extra pixel of whitespace never hurt anybody
-	newFrame.size.width = round(newFrame.size.width + 0.5);
-
-	//Keep the right edge in the same place at all times
-	newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
-
-	[textField_contactNameLabel setFrame:newFrame];	
-	[textField_contactNameLabel setNeedsDisplay:YES];
-
-	//Resize the window to fit the contactNameLabel if the current origin is not correct; the resut
-	if(newFrame.origin.x < 17){
-		NSRect	windowFrame = [[self window] frame];
-		float	difference = 17 - newFrame.origin.x;
-
-		windowFrame.origin.x -= difference;
-		windowFrame.size.width += difference;
-		[[self window] setFrame:windowFrame display:YES animate:YES];
-
-	}else if(oldFrame.origin.x <= 17){
-		NSRect	windowFrame = [[self window] frame];
-		float	difference = oldFrame.origin.x - newFrame.origin.x;
-		
-		if(newFrame.origin.x + difference < originalContactNameLabelFrame.origin.x){
-			difference = originalContactNameLabelFrame.origin.x - newFrame.origin.x;
-		}
-		
-		windowFrame.origin.x -= difference;
-		windowFrame.size.width += difference;
-		[[self window] setFrame:windowFrame display:YES animate:YES];
-
-	}else{
-		//Display to remove any artifacts from the frame changing
-		[[self window] display];
-	}
 }
 
 /*!
@@ -574,13 +380,15 @@
 	
 	if([identifier isEqualToString:@"check"]){
 		return([[accounts objectAtIndex:row] contactListEditable] ?
-			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO 
-														group:PREF_GROUP_ADD_CONTACT] :
+			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
 			   [NSNumber numberWithBool:NO]);
+	
 	}else if([identifier isEqualToString:@"account"]){
 		return([[accounts objectAtIndex:row] formattedUID]);
+		
 	}else{
 		return(@"");
+
 	}
 }
 
@@ -591,7 +399,11 @@
  */
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	[cell setEnabled:[[accounts objectAtIndex:row] contactListEditable]];
+	NSString	*identifier = [tableColumn identifier];
+	
+	if([identifier isEqualToString:@"check"]){
+		[cell setEnabled:[[accounts objectAtIndex:row] contactListEditable]];
+	}
 }
 
 /*!
@@ -605,30 +417,7 @@
 		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] 
 											 forKey:KEY_ADD_CONTACT_TO 
 											  group:PREF_GROUP_ADD_CONTACT];
-		[self validateEnteredName];
 	}
-}
-
-/* 
- * @brief Selection is changing
- *
- * Adam: I don't want the table to display its selection.
- * Returning NO from 'shouldSelectRow' would work, but if we do that the checkbox cells stop working.
- * The best solution I've come up with so far is to just force a deselect here :( .
- */
-- (void)tableViewSelectionIsChanging:(NSNotification *)notification{
-	[tableView_accounts deselectAll:nil];
-}
-
-/* 
- * @brief Selection is changing
- *
- * Adam: I don't want the table to display its selection.
- * Returning NO from 'shouldSelectRow' would work, but if we do that the checkbox cells stop working.
- * The best solution I've come up with so far is to just force a deselect here :( .
- */
-- (void)tableViewSelectionDidChange:(NSNotification *)notification{
-	[tableView_accounts deselectAll:nil];
 }
 
 /*!
@@ -636,6 +425,7 @@
  */
 - (void)selectGroup:(id)sender
 {
+
 }
 
 @end
