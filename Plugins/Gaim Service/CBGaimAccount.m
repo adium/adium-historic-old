@@ -1717,6 +1717,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			
 			//Reset reconnection attempts
 			reconnectAttemptsRemaining = RECONNECTION_ATTEMPTS;
+			
+			//Clear our desire to be online.
+			[self setPreference:nil
+						 forKey:@"Online"
+						  group:GROUP_ACCOUNT_STATUS];
 		}
 	}
 	
