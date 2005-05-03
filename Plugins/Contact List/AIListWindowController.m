@@ -162,11 +162,15 @@
 //Close the contact list window
 - (void)windowWillClose:(NSNotification *)notification
 {
+	// don't let the window's saved position be offscreen
+	// need to do this before calling -[AIWindowController windowWillClose:], because it's
+	// that method that does the saving.  
+	[self slideWindowOnScreen]; 
 	[super windowWillClose:notification];
 
+	// kill dock-like hiding timer, if it isn't nil
 	[slideWindowIfNeededTimer invalidate];
-	[self slideWindowOnScreen]; // don't let the window's saved position be offscreen
-	
+
     //Stop observing
 	[[adium preferenceController] unregisterPreferenceObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
