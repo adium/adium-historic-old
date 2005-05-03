@@ -63,51 +63,46 @@
 {
     NSMenuItem		*menuItem;
 	NSToolbarItem	*toolbarItem;
-	
-	//Add contact menu item
+
+	//Add Contact
     menuItem_addContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																				target:self
 																				action:@selector(addContact:)
 																		 keyEquivalent:@"+"];
     [[adium menuController] addMenuItem:menuItem_addContact toLocation:LOC_Contact_Manage];
 	
-	//Add contact context menu item
 	menuItem_addContactContext = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
 																					  target:self
 																					  action:@selector(addContact:)
 																			   keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_addContactContext toLocation:Context_Group_Manage];
 	
-	//Add contact context menu item for tabs
 	menuItem_tabAddContact = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
 																				   target:self 
 																				   action:@selector(addContactFromTab:)
 																			keyEquivalent:@""] autorelease];
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
+
+	[[adium notificationCenter] addObserver:self 
+								   selector:@selector(addContactRequest:) 
+									   name:Contact_AddNewContact 
+									 object:nil];
 	
-	//Add group menu item
+	//Add Group
     menuItem_addGroup = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP_ELLIPSIS
 																			 target:self
 																			 action:@selector(addGroup:) 
 																	  keyEquivalent:@"+"];
 	[menuItem_addGroup setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
     [[adium menuController] addMenuItem:menuItem_addGroup toLocation:LOC_Contact_Manage];
-	
-	//Delete selection menu item
+
+	//Delete Selection
     menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_ELLIPSIS
 																		   target:self
 																		   action:@selector(deleteSelection:) 
 																	keyEquivalent:@"\b"];
     [[adium menuController] addMenuItem:menuItem_delete toLocation:LOC_Contact_Manage];
-	
-	//Rename group context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP_ELLIPSIS
-																	 target:self
-																	 action:@selector(renameGroup:) 
-															  keyEquivalent:@""] autorelease];
-    //[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
-	
-	//Delete selection context menu item
+
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT_CONTEXT_ELLIPSIS
 																	 target:self
 																	 action:@selector(deleteSelectionFromTab:) 
@@ -126,7 +121,7 @@
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];	
 	
-	//Add Contact toolbar item
+	//Add Group toolbar item
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:ADD_GROUP_IDENTIFIER
 														  label:ADD_GROUP
 												   paletteLabel:ADD_GROUP
@@ -138,11 +133,12 @@
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ContactList"];	
 	
-	[[adium notificationCenter] addObserver:self 
-								   selector:@selector(addContactRequest:) 
-									   name:Contact_AddNewContact 
-									 object:nil];
-	
+	//Rename Group
+	//	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:RENAME_GROUP_ELLIPSIS
+	//																	 target:self
+	//																	 action:@selector(renameGroup:) 
+	//															  keyEquivalent:@""] autorelease];
+	//  [[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];	
 }
 
 /*!
@@ -158,7 +154,6 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
 		return([[adium contactController] selectedListObjectInContactList] != nil);
 		
@@ -173,25 +168,22 @@
 	return(YES);
 }
 
+//Called by a context menu
+- (IBAction)renameGroup:(id)sender
+{
+	//	AIListObject	*object = [[adium menuController] currentContextMenuObject];
+	//<renameGroup> : I wish I worked... :(	
+}
+
+
+//Add Contact ----------------------------------------------------------------------------------------------------------
+#pragma mark Add Contact
 /*!
  * @brief Prompt for a new contact
  */
 - (IBAction)addContact:(id)sender
 {
-	//Get the "selected" list object (contact list or message window)
-	AIListContact	*stranger = nil;
-	AIListObject	*selectedObject;
-	
-	selectedObject = [[adium contactController] selectedListObject];	
-	
-	//Pass this selectedObject only if it's a listContact and a stranger
-	if ([selectedObject isKindOfClass:[AIListContact class]] &&
-		[(AIListContact *)selectedObject isStranger]){
-		stranger = (AIListContact *)selectedObject;
-	}
-	
-	[self promptForNewContactOnWindow:nil
-				  strangerListContact:stranger];
+	[self promptForNewContactOnWindow:nil selectedListObject:[[adium contactController] selectedListObject]];
 }
 
 /*!
@@ -199,24 +191,25 @@
  */
 - (IBAction)addContactFromTab:(id)sender
 {
-	AIListObject *object = [[adium menuController] currentContextMenuObject];
-	if([object isKindOfClass:[AIListContact class]]){
-		[self promptForNewContactOnWindow:nil
-					  strangerListContact:(AIListContact *)object];
-	}
+	[self promptForNewContactOnWindow:nil selectedListObject:[[adium menuController] currentContextMenuObject]];
 }
 
 /*!
  * @brief Prompt for a new contact
  *
  * @param inWindow If non-nil, display the new contact prompt as a sheet on inWindow
- * @param inListContact If non-nil, autofill the new contact prompt with information from inListContact
+ * @param inListObject If a contact and a stranger, will be autofilled into the new contact window
  */
-- (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact
+- (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject
 {
+	//We only autofill if the selected list object is a contact and a stranger
+	if(![inListObject isKindOfClass:[AIListContact class]] || ![(AIListContact *)inListObject isStranger]){
+		inListObject = nil;
+	}
+	
 	[AINewContactWindowController promptForNewContactOnWindow:inWindow
-														 name:(inListContact ? [inListContact UID] : nil)
-													  service:(inListContact ? [inListContact service] : nil)];
+														 name:(inListObject ? [inListObject UID] : nil)
+													  service:(inListObject ? [(AIListContact *)inListObject service] : nil)];
 }
 
 /*!
@@ -235,6 +228,9 @@
 	}
 }
 
+
+//Add Group ------------------------------------------------------------------------------------------------------------
+#pragma mark Add Group
 /*!
  * @brief Prompt for a new group
  */
@@ -243,13 +239,15 @@
 	[AINewGroupWindowController promptForNewGroupOnWindow:nil];
 }
 
+
+//Delete Selection -----------------------------------------------------------------------------------------------------
+#pragma mark Delete Selection
 /*!
  * @brief Delete the list objects selected in the contact list
  */
 - (IBAction)deleteSelection:(id)sender
 {	
-	NSArray			*array = [[adium contactController] arrayOfSelectedListObjectsInContactList];
-	[self deleteFromArray:array];
+	[self deleteFromArray:[[adium contactController] arrayOfSelectedListObjectsInContactList]];
 }
 
 /*!
@@ -258,8 +256,7 @@
 - (IBAction)deleteSelectionFromTab:(id)sender
 {
 	AIListObject   *currentContextMenuObject;
-	if (currentContextMenuObject = [[adium menuController] currentContextMenuObject]){
-		[NSApp activateIgnoringOtherApps:YES];
+	if(currentContextMenuObject = [[adium menuController] currentContextMenuObject]){
 		[self deleteFromArray:[NSArray arrayWithObject:currentContextMenuObject]];
 	}
 }
@@ -280,7 +277,10 @@
 							 [[array objectAtIndex:0] displayName] : 
 							 [NSString stringWithFormat:AILocalizedString(@"%i contacts",nil),count]);
 		
-		//Guard deletion with a warning prompt
+		//Make sure we're in the front so our prompt is visible
+		[NSApp activateIgnoringOtherApps:YES];
+		
+		//Guard deletion with a warning prompt		
 		int result = NSRunAlertPanel(AILocalizedString(@"Remove from list?",nil),
 									 [NSString stringWithFormat:AILocalizedString(@"This will remove %@ from the contact lists of your online accounts.",nil), name],
 									 AILocalizedString(@"Remove",nil),
@@ -291,14 +291,6 @@
 			[[adium contactController] removeListObjects:array];
 		}
 	}	
-}
-
-
-//Called by a context menu
-- (IBAction)renameGroup:(id)sender
-{
-//	AIListObject	*object = [[adium menuController] currentContextMenuObject];
-	
 }
 
 @end
