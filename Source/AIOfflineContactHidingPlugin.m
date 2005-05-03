@@ -167,19 +167,22 @@
     if(inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
+	   [inModifiedKeys containsObject:@"New Object"] ||
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
 
 		if([inObject isKindOfClass:[AIListContact class]]){
 			BOOL	online = [inObject online];
 			BOOL	justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
+			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
 
 			if([inObject isKindOfClass:[AIMetaContact class]]){
 				[inObject setVisible:((online) || 
 									  (justSignedOff) || 
+									  (newObject) ||
 									  (showOfflineContacts && ([(AIMetaContact *)inObject visibleCount] > 0)))];
 				
 			}else{
-				[inObject setVisible:(showOfflineContacts || online || justSignedOff)];
+				[inObject setVisible:(showOfflineContacts || online || justSignedOff || newObject)];
 			}
 
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
