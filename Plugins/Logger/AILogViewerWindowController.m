@@ -55,6 +55,7 @@
 #define DATE							AILocalizedString(@"Date",nil)
 #define CONTENT							AILocalizedString(@"Content",nil)
 #define DELETE							AILocalizedString(@"Delete",nil)
+#define DELETEALL						AILocalizedString(@"Delete All",nil)
 #define SEARCH							AILocalizedString(@"Search",nil)
 
 #define HIDE_EMOTICONS					AILocalizedString(@"Hide Emoticons",nil)
@@ -371,17 +372,76 @@ static NSString                             *filterForContactName = nil;	//Conta
 	[drawer_contacts setMinContentSize:NSMakeSize(100.0, 0)];
 }
 
-//Delete selected log
-- (IBAction)deleteSelectedLogs:(id)sender
+
+//This is less than ideal for performance, but it's very simple and I don't see purge logs as being particularly performance critical.
+- (IBAction)deleteAllLogs:(id)sender
+{
+	NSAlert * alert = [[NSAlert alloc] init];
+	[alert setMessageText:@"Delete Logs?"];
+	[alert setInformativeText:@"Warning: Are you sure you want to delete your logs? This operation cannot be undone."];
+	[alert addButtonWithTitle:@"Delete"]; 
+	[alert addButtonWithTitle:@"Cancel"];
+	if([alert runModal] == NSAlertFirstButtonReturn)
+	{
+		int row = [[tableView_results dataSource] numberOfRowsInTableView:tableView_results];
+		//We utilize the logIndexAccessLock so we have exclusive access to the logs
+		NSLock              *logAccessLock = [plugin logAccessLock];
+		
+		//Remember that this locks and unlocks the logAccessLock
+		SKIndexRef          logSearchIndex = [plugin logContentIndex];
+		SKDocumentRef       document;
+		for(; row >= 0; row--)
+		{
+			AIChatLog   *theLog = nil;
+			[resultsLock lock];
+			if(row >= 0 && row < [selectedLogArray count]){
+				theLog = [selectedLogArray objectAtIndex:row];
+				sameSelection = (row - 1);
+			}
+			[resultsLock unlock];
+			
+			if (theLog){
+				useSame = YES;
+				[theLog retain];
+				
+				[resultsLock lock];
+				[selectedLogArray removeObjectAtIndex:row];
+				[resultsLock unlock];
+				
+				[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
+				
+				[logAccessLock lock];
+				document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
+				SKIndexRemoveDocument(logSearchIndex, document);
+				CFRelease(document);
+				[logAccessLock unlock];
+				
+				[theLog release];
+			}
+		}
+		//Update the log index
+		[logAccessLock lock];
+
+		SKIndexFlush(logSearchIndex);
+		[logAccessLock unlock];
+		
+		//Rebuild the 'global' log indexes
+		[self rebuildIndices];
+		
+		[self updateProgressDisplay];
+	}	
+}
+
+//Delete selected logs
+- (IBAction)deleteSelectedLog:(id)sender
 {
     AIChatLog   *theLog = nil;
-    int     row = [tableView_results selectedRow];
-
-    [resultsLock lock];
-    if(row >= 0 && row < [selectedLogArray count]){
-        theLog = [selectedLogArray objectAtIndex:row];
-        sameSelection = (row - 1);
-    }
+	int row = [tableView_results selectedRow];
+	[resultsLock lock];
+	if(row >= 0 && row < [selectedLogArray count]){
+		theLog = [selectedLogArray objectAtIndex:row];
+		sameSelection = (row - 1);
+	}
 	[resultsLock unlock];
 	
 	if (theLog){
@@ -392,15 +452,15 @@ static NSString                             *filterForContactName = nil;	//Conta
 		SKIndexRef          logSearchIndex = [plugin logContentIndex];
 		SKDocumentRef       document;
 		
-                useSame = YES;
+		useSame = YES;
 		[theLog retain];
-
+		
 		[resultsLock lock];
 		[selectedLogArray removeObjectAtIndex:row];
 		[resultsLock unlock];
-
+		
 		[[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[theLog path]]];
-
+		
 		//Update the log index
 		[logAccessLock lock];
 		document = SKDocumentCreate((CFStringRef)@"file", NULL, (CFStringRef)[theLog path]);
@@ -408,10 +468,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 		CFRelease(document);
 		SKIndexFlush(logSearchIndex);
 		[logAccessLock unlock];
-
+		
 		//Rebuild the 'global' log indexes
 		[self rebuildIndices];
-
+		
 		[self updateProgressDisplay];
 		
 		[theLog release];
@@ -1499,7 +1559,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    [self deleteSelectedLogs:nil];
+    [self deleteSelectedLog:nil];
 }
 
 - (void)configureTypeSelectTableView:(KFTypeSelectTableView *)tableView
@@ -1566,34 +1626,48 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
                                                 target:self
                                        settingSelector:@selector(setImage:)
                                            itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
-                                                action:@selector(deleteSelectedLogs:)
+                                                action:@selector(deleteSelectedLog:)
                                                   menu:nil];
+	
+	//Delete All Logs
+	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
+									withIdentifier:@"deleteall"
+											 label:DELETEALL
+									  paletteLabel:DELETEALL
+										   toolTip:AILocalizedString(@"Delete all logs",nil)
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:@"remove" forClass:[self class]]
+											action:@selector(deleteAllLogs:)
+											  menu:nil];
+	
 	//Search
 	[self window]; //Ensure the window is loaded, since we're pulling the search view from our nib
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"search"
-                                                              label:SEARCH
-                                                       paletteLabel:SEARCH
-                                                            toolTip:AILocalizedString(@"Search or filter logs",nil)
-                                                             target:self
-                                                    settingSelector:@selector(setView:)
-                                                        itemContent:view_SearchField
-                                                            action:@selector(updateSearch:)
-                                                               menu:nil];
+														  label:SEARCH
+												   paletteLabel:SEARCH
+														toolTip:AILocalizedString(@"Search or filter logs",nil)
+														 target:self
+												settingSelector:@selector(setView:)
+													itemContent:view_SearchField
+														 action:@selector(updateSearch:)
+														   menu:nil];
+	
 	[toolbarItem setMinSize:NSMakeSize(150, NSHeight([view_SearchField frame]))];
 	[toolbarItem setMaxSize:NSMakeSize(230, NSHeight([view_SearchField frame]))];
 	[toolbarItems setObject:toolbarItem forKey:[toolbarItem itemIdentifier]];
 
 	//Toggle Emoticons
 	[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
-                                        withIdentifier:@"toggleemoticons"
-                                                 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
-                                          paletteLabel:AILocalizedString(@"Show/Hide Emoticons",nil)
-                                               toolTip:AILocalizedString(@"Show or hide emoticons in logs",nil)
-                                                target:self
-                                       settingSelector:@selector(setImage:)
-                                           itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
-                                                action:@selector(toggleEmoticonFiltering:)
-                                                  menu:nil];
+									withIdentifier:@"toggleemoticons"
+											 label:(showEmoticons ? HIDE_EMOTICONS : SHOW_EMOTICONS)
+									  paletteLabel:AILocalizedString(@"Show/Hide Emoticons",nil)
+										   toolTip:AILocalizedString(@"Show or hide emoticons in logs",nil)
+											target:self
+								   settingSelector:@selector(setImage:)
+									   itemContent:[NSImage imageNamed:(showEmoticons ? IMAGE_EMOTICONS_ON : IMAGE_EMOTICONS_OFF) forClass:[self class]]
+											action:@selector(toggleEmoticonFiltering:)
+											  menu:nil];
 
 	[[self window] setToolbar:toolbar];
 }
@@ -1605,7 +1679,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"toggledrawer", nil]);
+    return([NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"deleteall", @"toggledrawer", nil]);
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
