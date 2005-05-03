@@ -563,22 +563,28 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 - (BOOL)anOnlineAccountCanCreateGroupChats
 {
-	NSEnumerator	*enumerator;
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
 	AIAccount		*account;
-	BOOL			anOnlineAccountCanCreateGroupChats;
 	
-	anOnlineAccountCanCreateGroupChats = NO;
-	
-    enumerator = [accountArray objectEnumerator];
     while(account = [enumerator nextObject]){	
-		if ([account online] && [[account service] canCreateGroupChats]){
-			anOnlineAccountCanCreateGroupChats = YES;
-			break;
-		}
+		if([account online] && [[account service] canCreateGroupChats]) return(YES);
 	}
 	
-	return(anOnlineAccountCanCreateGroupChats);
+	return(NO);
 }
+
+- (BOOL)anOnlineAccountCanEditContacts
+{
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	AIAccount		*account;
+	
+    while(account = [enumerator nextObject]){	
+		if([account contactListEditable]) return(YES);
+	}
+	
+	return(NO);
+}
+
 
 //Account Editing ------------------------------------------------------------------------------------------------------
 #pragma mark Account Editing
