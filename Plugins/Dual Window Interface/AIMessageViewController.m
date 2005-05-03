@@ -198,6 +198,9 @@
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:userListMinWidth]
 										 forKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+	
+#warning Wrong as per the third XXX above, but a crash fix for now.
+	[userListController contactListWillBeRemoved];
 }
 
 /*!
