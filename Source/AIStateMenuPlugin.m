@@ -14,9 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIStateMenuPlugin.h"
+#import "AIAccountController.h"
 #import "AIEditStateWindowController.h"
 #import "AIMenuController.h"
-#import "AIStateMenuPlugin.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
@@ -29,7 +30,8 @@
  * @brief Implements a list of preset states in the status menu
  *
  * This plugin places a list of preset states in the status menu, allowing the user to easily view and change the
- * active state.
+ * active state.  It also manages a list of accounts in the status menu with associate statuses for setting account
+ * statuses individually.
  */
 @implementation AIStateMenuPlugin
 
@@ -57,7 +59,8 @@
 	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
 
 	[[adium statusController] registerStateMenuPlugin:self];
-	
+	[[adium accountController] registerAccountMenuPlugin:self];
+
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(stateMenuSelectionsChanged:)
 									   name:AIStatusStateMenuSelectionsChangedNotification
@@ -68,6 +71,7 @@
 - (void)uninstallPlugin
 {
 	[[adium statusController] unregisterStateMenuPlugin:self];
+	[[adium accountController] unregisterAccountMenuPlugin:self];
 	[[adium notificationCenter] removeObserver:self];
 }
 
@@ -186,4 +190,44 @@
 	[self updateKeyEquivalents];
 }
 
+#pragma mark Account menu items
+
+/*!
+* @brief Add account menu items to our location
+ *
+ * Implemented as required by the AccountMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
+ */
+- (void)addAccountMenuItems:(NSArray *)menuItemArray
+{
+	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+    while((menuItem = [enumerator nextObject])){    
+		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
+    }
+}
+
+/*!
+* @brief Remove account menu items from our location
+ *
+ * Implemented as required by the AccountMenuPlugin protocol.
+ *
+ * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
+ */
+- (void)removeAccountMenuItems:(NSArray *)menuItemArray
+{
+	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSMenuItem		*menuItem;
+	
+    while((menuItem = [enumerator nextObject])){    
+        [[adium menuController] removeMenuItem:menuItem];
+    }
+}
+
+- (BOOL)showStatusSubmenu
+{
+	return YES;
+}
 @end

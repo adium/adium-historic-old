@@ -63,7 +63,7 @@
 
 - (void)_addAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
 - (void)_removeAccountMenuItemsForPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
-- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account;
+- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account forPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
 - (NSMenuItem *)_menuItemForAccount:(AIAccount *)account fromArray:(NSArray *)accountMenuItemArray;
 - (void)rebuildAllAccountMenuItems;
 
@@ -72,6 +72,7 @@
 - (void)_upgradePasswords;
 
 - (void)_prepareAccountMenus;
+- (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount;
 
 @end
 
@@ -85,7 +86,7 @@
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
 	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
-	accountMenuPluginsArray = [[NSMutableArray alloc] init];
+	accountMenuPluginsDict = [[NSMutableDictionary alloc] init];
 	_cachedActiveServices = nil;
 
 	[[adium notificationCenter] addObserver:self
@@ -156,7 +157,9 @@
 	[unloadableAccounts release];
     [availableServiceDict release];
     [lastAccountIDToSendContent release];
-	
+	[accountMenuItemArraysDict release];
+	[accountMenuPluginsDict release];
+
 	[_cachedActiveServices release]; _cachedActiveServices = nil;
 	
 	[super dealloc];
@@ -1211,7 +1214,8 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	[accountMenuItemArraysDict setObject:[NSMutableArray array]
 								  forKey:identifier];
-	[accountMenuPluginsArray addObject:accountMenuPlugin];
+	[accountMenuPluginsDict setObject:accountMenuPlugin
+								forKey:identifier];
 	
 	[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
 	
@@ -1224,7 +1228,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 	[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];	
 	[accountMenuItemArraysDict removeObjectForKey:identifier];
-	[accountMenuPluginsArray removeObjectIdenticalTo:accountMenuPlugin];
+	[accountMenuPluginsDict removeObjectForKey:identifier];
 }
 
 //Togle the connection of the selected account (called by the connect/disconnnect menu item)
@@ -1271,7 +1275,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			[menuItemArray addObject:menuItem];
 			[menuItem release];
 			
-			[self _updateMenuItem:menuItem forAccount:account];
+			[self _updateMenuItem:menuItem forAccount:account forPlugin:accountMenuPlugin];
 		}
     }
 	
@@ -1294,7 +1298,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 }
 
 // Connected / Connecting / Disconnecting / Disconnected update
-- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account
+- (void)_updateMenuItem:(NSMenuItem *)menuItem forAccount:(AIAccount *)account forPlugin:(id<AccountMenuPlugin>)accountMenuPlugin
 {
 	if(menuItem){
 		NSString	*accountTitle = [account formattedUID];
@@ -1313,6 +1317,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
 			titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
+			
+		}else if(![accountMenuPlugin showStatusSubmenu]){
+			//Only show Connect or Disconnect before the name if we aren't showing the status menu
+			if([account online]){
+				titleFormat = ACCOUNT_DISCONNECT_MENU_TITLE;
+			}else{
+				titleFormat = ACCOUNT_CONNECT_MENU_TITLE;				
+			}
 		}
 
 		//Composite the status icon and service icon together
@@ -1346,7 +1358,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 //Remove all current account menu items for all account menu item plugins, then create a new, current set.
 - (void)rebuildAllAccountMenuItems
 {
-	NSEnumerator			*enumerator = [accountMenuPluginsArray objectEnumerator];
+	NSEnumerator			*enumerator = [accountMenuPluginsDict objectEnumerator];
 	id<AccountMenuPlugin>   accountMenuPlugin;
 	while (accountMenuPlugin = [enumerator nextObject]) {
 		[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];
@@ -1368,15 +1380,37 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		 [inModifiedKeys containsObject:@"StatusState"])){
 		
 		//Enumerate all arrays of menu items (for all plugins)
-		NSEnumerator			*enumerator = [accountMenuItemArraysDict objectEnumerator];
-		NSArray					*accountMenuItemArray;
+		NSEnumerator	*enumerator;
+		NSArray			*accountMenuItemArray;
+		NSMenu			*actionsSubmenu = nil;		
+		NSNumber		*identifier;
+		BOOL			onlineChanged = [inModifiedKeys containsObject:@"Online"];
+
+		if(onlineChanged){
+			//If we are online, find the actions submenu if appropriate; if not, it remains nil to clear the submenu
+			if([inObject online]){
+				actionsSubmenu = [self actionsMenuForAccount:(AIAccount *)inObject];
+			}
+		}
 		
-		while (accountMenuItemArray = [enumerator nextObject]) {
+		enumerator = [accountMenuItemArraysDict keyEnumerator];
+		while(identifier = [enumerator nextObject]){
+			id<AccountMenuPlugin>	accountMenuPlugin;
+			NSMenuItem				*menuItem;
+
+			accountMenuItemArray = [accountMenuItemArraysDict objectForKey:identifier];
+			accountMenuPlugin = [accountMenuPluginsDict objectForKey:identifier];
+			
 			//Find the menu item for this account in this array
-			NSMenuItem  *menuItem = [self _menuItemForAccount:(AIAccount *)inObject
-													fromArray:accountMenuItemArray];
+			menuItem = [self _menuItemForAccount:(AIAccount *)inObject
+									   fromArray:accountMenuItemArray];
 			//Update it
-			[self _updateMenuItem:menuItem forAccount:(AIAccount *)inObject];
+			[self _updateMenuItem:menuItem forAccount:(AIAccount *)inObject forPlugin:accountMenuPlugin];
+
+			//Update the actions submenu if the online state changed and this is not a status-submenu-showing menuItem
+			if(onlineChanged && ![accountMenuPlugin showStatusSubmenu]){
+				[menuItem setSubmenu:[[actionsSubmenu copy] autorelease]];
+			}
 		}
     }
 	
@@ -1403,6 +1437,29 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	return targetMenuItem;	
 }
 
+- (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount
+{
+	NSArray	*accountActionMenuItems = [inAccount accountActionMenuItems];
+	NSMenu	*actionsSubmenu = nil;
+
+	//Only proceed if we got at least one menu item
+	if(accountActionMenuItems && [accountActionMenuItems count]){
+		NSEnumerator	*enumerator;
+		NSMenuItem		*menuItem;
+
+		actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		[actionsSubmenu setTitle:@"Actions"]; //Not localized, just used internally
+
+		//Now add each item to the submenu
+		enumerator = [accountActionMenuItems objectEnumerator];
+		while(menuItem = [enumerator nextObject]){
+			[actionsSubmenu addItem:menuItem];
+		}
+	}
+
+	return actionsSubmenu;
+}	
+
 /*!
  * @brief Add the passed state menu items; also take this opportunity to add account-specific items for online accounts
  *
@@ -1428,11 +1485,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	//Enumerate our accounts array
 	enumerator = [accountArray objectEnumerator];
-	while((account = [enumerator nextObject])){    
-		
+	while((account = [enumerator nextObject])){    		
 		NSMenu			*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
 		[accountSubmenu setMenuChangedMessagesEnabled:NO];
-		BOOL			addedStatusItems = NO;
 		
 		//Add status items if we have more than one account
 		if(accountArrayCount > 1){
@@ -1461,58 +1516,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				
 				//Add to our menu
 				[accountSubmenu addItem:accountMenuItem];
-				addedStatusItems = YES;
 			}
 		}
-		
-		//Add account action menu items to an Actions submenuif the account is online
-		if([account online]){
-			NSArray	*accountActionMenuItems = [account accountActionMenuItems];
-			
-			//Only proceed if we got at least one menu item
-			if(accountActionMenuItems && [accountActionMenuItems count]){
-				if(addedStatusItems){
-					/* If we have status items, add these actions in an "Actions" submenu */
 
-					NSMenu			*actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-					NSEnumerator	*enumerator;
-					NSMenuItem		*menuItem, *actionsSubmenuItem;
-					
-					//Add a separator
-					[accountSubmenu addItem:[NSMenuItem separatorItem]];
-					
-					//Now add each item to the submenu
-					enumerator = [accountActionMenuItems objectEnumerator];
-					while(menuItem = [enumerator nextObject]){
-						[actionsSubmenu addItem:menuItem];
-					}
-					
-					//Create the submenu's parent item
-					actionsSubmenuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Actions",nil)
-																							  target:self
-																							  action:@selector(dummyAction:)
-																					   keyEquivalent:@""];
-					[actionsSubmenuItem setSubmenu:actionsSubmenu];
-					
-					//Add it to our account submenu
-					[accountSubmenu addItem:actionsSubmenuItem];
-					[actionsSubmenuItem release];
-
-				}else{
-					/* If we have don't status items, add these actions to the menu directly */
-				
-					NSEnumerator	*enumerator;
-					NSMenuItem		*menuItem;
-					
-					//Add each item to the menu
-					enumerator = [accountActionMenuItems objectEnumerator];
-					while(menuItem = [enumerator nextObject]){
-						[accountSubmenu addItem:menuItem];
-					}
-				}				
-			}
-		}
-		
 		if([accountSubmenu numberOfItems] > 0){
 			[temporaryMenuDict setObject:accountSubmenu
 								  forKey:[account internalObjectID]];
@@ -1523,26 +1529,35 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}
 	
 	//Enumerate all arrays of menu items (for all plugins)
-	enumerator = [accountMenuItemArraysDict objectEnumerator];
-	while(accountMenuItemArray = [enumerator nextObject]){
-		NSEnumerator	*accountMenuItemEnumerator = [accountMenuItemArray objectEnumerator];
-		NSMenuItem		*accountMenuItem;
+	NSNumber	*identifier;
+	
+	enumerator = [accountMenuItemArraysDict keyEnumerator];
+	while(identifier = [enumerator nextObject]){
+		id<AccountMenuPlugin> accountMenuPlugin = [accountMenuPluginsDict objectForKey:identifier];
 		
-		//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
-		//will be for a distinct AIAccount).
-		while(accountMenuItem = [accountMenuItemEnumerator nextObject]){
-			AIAccount	*account = [accountMenuItem representedObject];
-			NSMenu		*generatedAccountSubmenu;
+		if([accountMenuPlugin showStatusSubmenu]){
+			NSEnumerator	*accountMenuItemEnumerator;
+			NSMenuItem		*accountMenuItem;
 			
-			if(generatedAccountSubmenu = [temporaryMenuDict objectForKey:[account internalObjectID]]){
-				NSMenu		*accountSubmenu = [generatedAccountSubmenu copy];
+			accountMenuItemArray = [accountMenuItemArraysDict objectForKey:identifier];
+			
+			//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
+			//will be for a distinct AIAccount).
+			accountMenuItemEnumerator = [accountMenuItemArray objectEnumerator];
+			while(accountMenuItem = [accountMenuItemEnumerator nextObject]){
+				AIAccount	*account = [accountMenuItem representedObject];
+				NSMenu		*generatedAccountSubmenu;
 				
-				//Tell the status controller to update these items as necessary
-				[[adium statusController] plugin:self didAddMenuItems:[accountSubmenu itemArray]];
-				
-				//Set the submenu
-				[accountMenuItem setSubmenu:accountSubmenu];
-				[accountSubmenu release];
+				if(generatedAccountSubmenu = [temporaryMenuDict objectForKey:[account internalObjectID]]){
+					NSMenu		*accountSubmenu = [generatedAccountSubmenu copy];
+					
+					//Tell the status controller to update these items as necessary
+					[[adium statusController] plugin:self didAddMenuItems:[accountSubmenu itemArray]];
+					
+					//Set the submenu
+					[accountMenuItem setSubmenu:accountSubmenu];
+					[accountSubmenu release];
+				}
 			}
 		}
 	}

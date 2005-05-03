@@ -224,6 +224,10 @@ static	NSImage						*adiumRedHighlightImage = nil;
     needsUpdate = YES;
 }
 
+- (BOOL)showStatusSubmenu
+{
+	return YES;
+}
 
 //Twiddle visibility --------------------------------------------------------
 #pragma mark Twiddle visibility
