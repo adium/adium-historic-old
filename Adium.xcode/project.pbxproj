@@ -1518,6 +1518,7 @@
 				342114D30826D38500A3B0FB,
 				342114E20826D38E00A3B0FB,
 				342114F10826D39900A3B0FB,
+				342116D50827529000A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = EditStateSheet.nib;
@@ -1575,6 +1576,14 @@
 			lastKnownFileType = wrapper.nib;
 			name = Danish;
 			path = Resources/Danish.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342116D50827529000A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = French;
+			path = "Frameworks/Adium Framework/French.lproj/EditStateSheet.nib";
 			refType = 4;
 			sourceTree = "<group>";
 		};
