@@ -30,14 +30,14 @@
     return "prpl-novell";
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError) {
-		if ([disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
+	if (disconnectionError && *disconnectionError){
+		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if ([disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
+		}else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
 	}

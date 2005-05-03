@@ -88,7 +88,7 @@
 	
 #pragma mark Account Connection
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
 

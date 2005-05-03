@@ -74,14 +74,14 @@
 	return nil;
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError){
-		if ([disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
+	if (disconnectionError && *disconnectionError){
+		if ([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if ([disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
+		}else if ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
 	}

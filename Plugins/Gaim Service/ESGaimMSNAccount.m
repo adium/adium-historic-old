@@ -121,14 +121,14 @@
 	return nil;
 }
 
-- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString *)disconnectionError
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError){
-		if (([disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
+	if (disconnectionError && *disconnectionError){
+		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if (([disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
+		}else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
 			shouldAttemptReconnect = NO;
 		}
 	}
