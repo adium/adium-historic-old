@@ -21,6 +21,7 @@
 
 @interface AIBookmarksImporterController: NSObject
 {
+#ifdef OLD_VERSION
 	//for both of these, the menu is set by -buildBookmarksMenu, and is cleared upon retrieval by -menuNeedsUpdate.
 	NSMenuItem				*bookmarkRootMenuItem;
 	NSMenu					*bookmarksMainSubmenu;
@@ -37,10 +38,25 @@
 
 	BOOL					updatingMenu;
 	BOOL					menuNeedsUpdate;
+#endif //def OLD_VERSION
+
+	IBOutlet NSPanel		*bookmarksPanel;
+	IBOutlet NSPopUpButton	*popUpButton;
+	IBOutlet NSOutlineView	*outlineView;
+	IBOutlet NSButton		*insertButton;
+
+	NSArray					*bookmarks;
+
+	NSMutableArray			*importers;
+	unsigned				 selectedImporterIndex;
 }
 
-+ (AIBookmarksImporterController *)sharedInstance;
++ (AIBookmarksImporterController *)sharedController;
 - (void)addImporter:(AIBookmarksImporter *)importerToAdd;
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove;
+
+#pragma mark -
+
+- (IBAction)orderFrontBookmarksPanel:(id)sender;
 
 @end

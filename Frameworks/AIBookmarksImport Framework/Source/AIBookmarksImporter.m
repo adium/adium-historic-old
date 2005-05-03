@@ -15,11 +15,10 @@
  */
 
 #import "AIBookmarksImporter.h"
-#import "AIBookmarksImporterPlugin.h"
+#import "AIBookmarksImporterController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIWorkspaceAdditions.h>
 #import <AIHyperlinks/SHMarkedHyperlink.h>
-#import <Adium/AIObject.h>
+//#import <Adium/AIObject.h>
 
 @interface AIBookmarksImporter (PRIVATE)
 
@@ -30,16 +29,24 @@
 
 @implementation AIBookmarksImporter
 
++ (AIBookmarksImporter *)importer
+{
+	return [[[self alloc] init] autorelease];
+}
+
 - (id)init
 {
 	if((self = [super init])) {
-		lastModDate = nil;		
+		lastModDate = nil;
+
+		[[AIBookmarksImporterController sharedController] addImporter:self];
 	}
 	return self;
 }
 
 - (void)dealloc
 {
+	[[AIBookmarksImporterController sharedController] removeImporter:self];
 	[lastModDate release];
 	[super dealloc];
 }
@@ -122,7 +129,7 @@
 
 	NSString *bundleID = [self browserBundleIdentifier];
 	if(bundleID) {
-		path = [workspace compatibleAbsolutePathForAppBundleWithIdentifier:bundleID];
+		path = [workspace absolutePathForAppBundleWithIdentifier:bundleID];
 	}
 
 	if(!path) {
@@ -230,7 +237,7 @@
 
 	if(title && [title length]){
 		[inMenu addItemWithTitle:title
-						  target:[AIBookmarksImporterPlugin sharedInstance]
+						  target:[AIBookmarksImporterController sharedController]
 						  action:@selector(injectBookmarkFrom:)
 				   keyEquivalent:@""
 			   representedObject:object];
@@ -239,14 +246,16 @@
 
 @end
 
+#ifdef OLD_VERSION
 void addBookmarksImporter_CFTimer(CFRunLoopTimerRef timer, void *info)
 {
 	//this is assumed to be a subclass of AIBookmarksImporter.
 	Class importerClass = (Class)info;
 	if([importerClass browserIsAvailable]) {
 		AIBookmarksImporter *importer = [[importerClass alloc] init];
-		[[AIBookmarksImporterPlugin sharedInstance] addImporter:importer];
+		[[AIBookmarksImporterController sharedController] addImporter:importer];
 		[importer release];
 	}
 	[(NSObject *)timer autorelease];
 }
+#endif

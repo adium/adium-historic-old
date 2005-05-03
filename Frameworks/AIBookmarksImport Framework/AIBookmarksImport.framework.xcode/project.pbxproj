@@ -12,7 +12,6 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
 				GCC_OPTIMIZATION_LEVEL = 0;
-				ZERO_LINK = YES;
 			};
 			isa = PBXBuildStyle;
 			name = Development;
@@ -55,6 +54,20 @@
 //072
 //073
 //074
+		07A44FE3082752A700B76F11 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = ApplicationServices.framework;
+			path = /System/Library/Frameworks/ApplicationServices.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		07A44FE4082752A700B76F11 = {
+			fileRef = 07A44FE3082752A700B76F11;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07F8ACDD08265350009CCBB5 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -247,16 +260,13 @@
 			fileRef = 07F8ACDD08265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		07F8ACF308265350009CCBB5 = {
 			fileRef = 07F8ACDE08265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07F8ACF408265350009CCBB5 = {
-			fileRef = 07F8ACDF08265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -273,20 +283,8 @@
 			settings = {
 			};
 		};
-		07F8ACF708265350009CCBB5 = {
-			fileRef = 07F8ACE208265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07F8ACF808265350009CCBB5 = {
 			fileRef = 07F8ACE308265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07F8ACF908265350009CCBB5 = {
-			fileRef = 07F8ACE408265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -297,20 +295,8 @@
 			settings = {
 			};
 		};
-		07F8ACFB08265350009CCBB5 = {
-			fileRef = 07F8ACE608265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07F8ACFC08265350009CCBB5 = {
 			fileRef = 07F8ACE708265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07F8ACFD08265350009CCBB5 = {
-			fileRef = 07F8ACE808265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -325,16 +311,13 @@
 			fileRef = 07F8ACEA08265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		07F8AD0008265350009CCBB5 = {
 			fileRef = 07F8ACEB08265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07F8AD0108265350009CCBB5 = {
-			fileRef = 07F8ACEC08265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -345,20 +328,8 @@
 			settings = {
 			};
 		};
-		07F8AD0308265350009CCBB5 = {
-			fileRef = 07F8ACEE08265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07F8AD0408265350009CCBB5 = {
 			fileRef = 07F8ACEF08265350009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		07F8AD0508265350009CCBB5 = {
-			fileRef = 07F8ACF008265350009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -435,6 +406,9 @@
 			fileRef = 07F8AD0D082654D7009CCBB5;
 			isa = PBXBuildFile;
 			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
 			};
 		};
 		07F8AD10082654D7009CCBB5 = {
@@ -456,6 +430,119 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		07F8AD790826675E009CCBB5 = {
+			children = (
+				07F8AD7A0826675E009CCBB5,
+			);
+			isa = PBXVariantGroup;
+			name = BookmarksPanel.nib;
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD7A0826675E009CCBB5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = English;
+			path = Resources/English.lproj/BookmarksPanel.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AD7B0826675E009CCBB5 = {
+			fileRef = 07F8AD790826675E009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AEB008268FD1009CCBB5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AIUtilities.framework;
+			path = "../AIUtilities Framework/build/AIUtilities.framework";
+			refType = 2;
+			sourceTree = SOURCE_ROOT;
+		};
+		07F8AEB108268FD1009CCBB5 = {
+			fileRef = 07F8AEB008268FD1009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AF0208269192009CCBB5 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AddressBook.framework;
+			path = /System/Library/Frameworks/AddressBook.framework;
+			refType = 0;
+			sourceTree = "<absolute>";
+		};
+		07F8AF0308269192009CCBB5 = {
+			fileRef = 07F8AF0208269192009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AF06082691DC009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBookmarksImport.h;
+			path = Source/AIBookmarksImport.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AF07082691DC009CCBB5 = {
+			fileRef = 07F8AF06082691DC009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		07F8AF1108269256009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSApplication+AIBookmarksImport.h";
+			path = "Source/NSApplication+AIBookmarksImport.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AF1208269256009CCBB5 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSApplication+AIBookmarksImport.m";
+			path = "Source/NSApplication+AIBookmarksImport.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07F8AF1308269256009CCBB5 = {
+			fileRef = 07F8AF1108269256009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		07F8AF1408269256009CCBB5 = {
+			fileRef = 07F8AF1208269256009CCBB5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07F8AF2B08269342009CCBB5 = {
+			children = (
+				07F8AF1108269256009CCBB5,
+				07F8AF1208269256009CCBB5,
+			);
+			isa = PBXGroup;
+			name = Additions;
+			refType = 4;
+			sourceTree = "<group>";
 		};
 //070
 //071
@@ -486,6 +573,7 @@
 		0867D691FE84028FC02AAC07 = {
 			children = (
 				08FB77AEFE84172EC02AAC07,
+				07F8AF2B08269342009CCBB5,
 				32C88DFF0371C24200C91783,
 				089C1665FE841158C02AAC07,
 				0867D69AFE84028FC02AAC07,
@@ -527,6 +615,7 @@
 				07F8ACE108265350009CCBB5,
 				8DC2EF5A0486A6940098B216,
 				089C1666FE841158C02AAC07,
+				07F8AD790826675E009CCBB5,
 			);
 			isa = PBXGroup;
 			name = Resources;
@@ -576,7 +665,10 @@
 //104
 		1058C7B0FEA5585E11CA2CBB = {
 			children = (
+				07A44FE3082752A700B76F11,
 				1058C7B1FEA5585E11CA2CBB,
+				07F8AF0208269192009CCBB5,
+				07F8AEB008268FD1009CCBB5,
 				07F8AD4308265C32009CCBB5,
 			);
 			isa = PBXGroup;
@@ -616,6 +708,7 @@
 		32C88DFF0371C24200C91783 = {
 			children = (
 				32DBCF5E0370ADEE00C91783,
+				07F8AF06082691DC009CCBB5,
 			);
 			isa = PBXGroup;
 			name = "Other Sources";
@@ -626,7 +719,7 @@
 			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
-			path = "AIBookmarksImport_Prefix.pch";
+			path = AIBookmarksImport_Prefix.pch;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -652,14 +745,14 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"/Users/boredzo/Projects/@otherpeoplesprojects/adium/Frameworks/AIHyperlinks Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"../AIHyperlinks Framework/build\" \"../AIUtilities Framework/build\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_MODEL_TUNING = G4;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AIBookmarksImport_Prefix.pch";
+				GCC_PREFIX_HEADER = AIBookmarksImport_Prefix.pch;
 				GCC_WARN_ABOUT_MISSING_NEWLINE = YES;
 				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
@@ -675,6 +768,7 @@
 				INFOPLIST_FILE = Info.plist;
 				INSTALL_PATH = "$(HOME)/Library/Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PREBINDING = NO;
 				PRODUCT_NAME = AIBookmarksImport;
 				WRAPPER_EXTENSION = framework;
@@ -691,17 +785,11 @@
 		8DC2EF500486A6940098B216 = {
 			buildActionMask = 2147483647;
 			files = (
-				07F8ACF208265350009CCBB5,
-				07F8ACF408265350009CCBB5,
-				07F8ACF708265350009CCBB5,
-				07F8ACF908265350009CCBB5,
-				07F8ACFB08265350009CCBB5,
-				07F8ACFD08265350009CCBB5,
-				07F8ACFF08265350009CCBB5,
-				07F8AD0108265350009CCBB5,
-				07F8AD0308265350009CCBB5,
-				07F8AD0508265350009CCBB5,
+				07F8AF07082691DC009CCBB5,
 				07F8AD0F082654D7009CCBB5,
+				07F8AF1308269256009CCBB5,
+				07F8ACFF08265350009CCBB5,
+				07F8ACF208265350009CCBB5,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -710,6 +798,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF530486A6940098B216,
+				07F8AD7B0826675E009CCBB5,
 				07F8ACF608265350009CCBB5,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -724,6 +813,8 @@
 		8DC2EF540486A6940098B216 = {
 			buildActionMask = 2147483647;
 			files = (
+				07F8AD10082654D7009CCBB5,
+				07F8AF1408269256009CCBB5,
 				07F8ACF308265350009CCBB5,
 				07F8ACF508265350009CCBB5,
 				07F8ACF808265350009CCBB5,
@@ -734,7 +825,6 @@
 				07F8AD0208265350009CCBB5,
 				07F8AD0408265350009CCBB5,
 				07F8AD0608265350009CCBB5,
-				07F8AD10082654D7009CCBB5,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -744,6 +834,9 @@
 			files = (
 				8DC2EF570486A6940098B216,
 				07F8AD4408265C32009CCBB5,
+				07F8AEB108268FD1009CCBB5,
+				07F8AF0308269192009CCBB5,
+				07A44FE4082752A700B76F11,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

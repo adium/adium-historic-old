@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
+//#import <Adium/AIObject.h>
 
 @class SHMarkedHyperlink;
 
@@ -36,7 +36,7 @@
  *see below for further details.
  */
 
-@interface AIBookmarksImporter : AIObject {
+@interface AIBookmarksImporter : NSObject {
 	NSDate	*lastModDate;
 }
 
@@ -72,6 +72,11 @@
 - (NSMenu *)menuWithAvailableBookmarks;
 - (BOOL)bookmarksHaveChanged;
 
+#pragma mark -
+
+//convenience factory method
++ (AIBookmarksImporter *)importer;
+
 @end
 
 /* @function addBookmarksImporter_CFTimer
@@ -91,6 +96,8 @@
  *--boredzo
  */
 extern void addBookmarksImporter_CFTimer(CFRunLoopTimerRef timer, void *info);
+
+#ifdef OLD_VERSION
 
 /* @defined AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER
  *
@@ -117,3 +124,9 @@ do { \
 												   &context); \
 	CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes); \
 } while(0)
+
+#else
+
+#define AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER() /*remove me*/
+
+#endif

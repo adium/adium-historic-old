@@ -17,103 +17,93 @@
 #import "AIBookmarksImporterController.h"
 #import "AIBookmarksImporter.h"
 
-#import "AIMenuController.h"
-#import "AIToolbarController.h"
-
+#import <ApplicationServices/ApplicationServices.h>
 #import <AIHyperlinks/SHMarkedHyperlink.h>
 
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/CBObjectAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/MVMenuButton.h>
-
-#define ROOT_MENU_TITLE				AILocalizedString(@"Insert Bookmark", nil)
-#define BOOKMARK_MENU_TITLE			AILocalizedString(@"Bookmark", nil)
-
-#define DELAY_FOR_MENU_UPDATE		0.4 /*seconds*/
-
-#define TOOLBAR_ITEM_IDENTIFIER		@"InsertBookmark"
+#define TOOLBAR_ITEM_IDENTIFIER		@"com.adiumx.bookmarksimporter"
 
 @interface AIBookmarksImporterController (PRIVATE)
-- (void)buildBookmarksMenuIfNecessaryThread;
 
-- (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer;
-- (void)armMenuUpdateTimer;
-- (void)disarmMenuUpdateTimer;
-
+#ifdef PROVIDE_TOOLBAR_ITEM
 - (void)registerToolbarItem;
-- (void)updateAllToolbarItemMenus;
-- (void)updateMenuForToolbarItem:(NSToolbarItem *)item;
+#endif
+
+- (NSMutableArray *)loadBuiltInImporters;
+- (void)loadBookmarks;
+
+- (void)setSelectedImporterIndex:(unsigned)newIndex;
+- (IBAction)takeBrowserSelectionFrom:(id)sender;
+
+- (NSMenuItem *)browserMenuItemWithName:(NSString *)name icon:(NSImage *)icon;
+
+- (void)getDefaultBrowserBundleIdentifier:(out NSString **)outBundleID signature:(out NSString **)outSignature;
+
 @end
+
+#import "SHABBookmarksImporter.h"
+#import "SHSafariBookmarksImporter.h"
+#import "SHOmniWebBookmarksImporter.h"
+#import "AIShiiraBookmarksImporter.h"
+#import "SHMozillaBookmarksImporter.h"
+#import "SHFireFoxBookmarksImporter.h"
+#import "SHCaminoBookmarksImporter.h"
+#import "SHMSIEBookmarksImporter.h"
+
+static AIBookmarksImporterController *myself = nil;
 
 /*!
  * @class AIBookmarksImporterController
  * @brief Component to support reading and inserting of web browser bookmarks
  *
- * Bookmarks are available from the Edit menu, the message window toolbar, and from contextual menus.
- * The bookmarks for the user's default browser are used.
+ * Bookmarks are available to the user from the Bookmarks panel.
  *
  * Bookmarks are imported from all major Mac browsers via subclasses of AIBookmarksImporter, which must
  * register with the controller.
  */
 @implementation AIBookmarksImporterController
 
-static AIBookmarksImporterController *myself = nil;
-
-/*!
- * @brief Initialization
- */
-- (void)installPlugin
+- (id)init
 {
-	myself = self;
-	
-	importers = [[NSMutableArray alloc] init];
-	updatingMenu = NO;
-	menuNeedsUpdate = NO;
-	toolbarItemArray = nil;
-
-	menuUpdateTimer = nil;
-
-	menuLock = [[NSLock alloc] init];
-
-	AIMenuController *menuController = [adium menuController];
-
-	//Main bookmark menu item
-	bookmarkRootMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
-																				 target:self
-																				 action:@selector(dummyTarget:)
-																		  keyEquivalent:@""] autorelease];
-	[bookmarkRootMenuItem setRepresentedObject:self];
-	[menuController addMenuItem:bookmarkRootMenuItem toLocation:LOC_Edit_Additions];
-	NSMenu *menu = [bookmarkRootMenuItem menu];
-	if([menu respondsToSelector:@selector(setDelegate:)]) {
-		[menu setDelegate:self];
+	if(myself) {
+		[self release];
+		return myself;
 	}
 
-	//Contextual bookmark menu item
-	bookmarkRootContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ROOT_MENU_TITLE
-																						   target:self
-																						   action:@selector(dummyTarget:)
-																					keyEquivalent:@""] autorelease];
-	[bookmarkRootContextualMenuItem setRepresentedObject:self];
-	[menuController addContextualMenuItem:bookmarkRootContextualMenuItem toLocation:Context_TextView_Edit];
+	if((self = [super init])) {
+		myself = [self retain];
 
-	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-	[notificationCenter addObserver:self
-						   selector:@selector(toolbarWillAddItem:)
-							   name:NSToolbarWillAddItemNotification
-							 object:nil];
-	[notificationCenter addObserver:self
-						   selector:@selector(toolbarDidRemoveItem:)
-							   name:NSToolbarDidRemoveItemNotification
-							 object:nil];
-	[notificationCenter addObserver:self
-						   selector:@selector(applicationDidBecomeActive:)
-							   name:NSApplicationDidBecomeActiveNotification
-							 object:NSApp];
-					
-	[self registerToolbarItem];
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(applicationDidBecomeActive:)
+													 name:NSApplicationDidBecomeActiveNotification
+												   object:NSApp];
+
+		importers = [[self loadBuiltInImporters] retain];
+
+		//XXX - post a notification here calling for importers to register.
+
+		[[NSBundle bundleForClass:[AIBookmarksImporterController class]] loadNibFile:@"BookmarksPanel.nib" externalNameTable:nil withZone:[self zone]];
+
+		[outlineView setDoubleAction:@selector(_insertBookmarkFromOutlineViewSelection:)];
+		[outlineView setTarget:self];
+
+		[bookmarksPanel setBecomesKeyOnlyIfNeeded:YES];
+	}
+
+	return self;
+}
+
+- (NSMutableArray *)loadBuiltInImporters
+{
+	return [NSMutableArray arrayWithObjects:
+		[SHABBookmarksImporter      importer],
+		[SHSafariBookmarksImporter  importer],
+		[SHOmniWebBookmarksImporter importer],
+		[AIShiiraBookmarksImporter  importer],
+		[SHMozillaBookmarksImporter importer],
+		[SHFireFoxBookmarksImporter importer],
+		[SHCaminoBookmarksImporter  importer],
+		[SHMSIEBookmarksImporter    importer],
+		nil];
 }
 
 /*!
@@ -121,27 +111,25 @@ static AIBookmarksImporterController *myself = nil;
  */
 - (void)dealloc
 {
-	[[adium notificationCenter] removeObserver:self];
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
-
-	[menuLock release];
-	[toolbarItem release];
-	[toolbarItemArray release];
+	[bookmarksPanel release];
 	[importers release];
-	[menuUpdateTimer release];
+	[bookmarks release];
 	
 	[super dealloc];
 }
 
-+ (AIBookmarksImporterController *)sharedInstance
++ (AIBookmarksImporterController *)sharedController
 {
 	return myself;
 }
 
 #pragma mark -
+#pragma mark Mutating the importer list
 
-- (void)addImporter:(AIBookmarksImporter *)importerToAdd {
-	NSString *nameOfNewImporter = [[importerToAdd class] browserName];
+- (void)addImporter:(AIBookmarksImporter *)importerToAdd
+{
+	Class classOfNewImporter = [importerToAdd class];
+	NSString *nameOfNewImporter = [classOfNewImporter browserName];
 
 	//Insert the importer into our importer array, respecting alphabetical order for display purposes
 	BOOL ranOut = YES;
@@ -150,7 +138,7 @@ static AIBookmarksImporterController *myself = nil;
 		AIBookmarksImporter *importer = [importers objectAtIndex:--i];
 		if(importer == importerToAdd) return;
 
-		NSComparisonResult comparison = [nameOfNewImporter compare:[[importer class] browserName]];
+		NSComparisonResult comparison = [nameOfNewImporter caseInsensitiveCompare:[[importer class] browserName]];
 		if(comparison == NSOrderedSame) {
 			[importers replaceObjectAtIndex:i withObject:importerToAdd];
 			goto end;
@@ -161,36 +149,150 @@ static AIBookmarksImporterController *myself = nil;
 		}
 	}
 	if(ranOut) {
-		//add to the end
+		//add to the end of the menu
 		i = count;
 	}
+
 	[importers insertObject:importerToAdd atIndex:i];
+	NSMenuItem *item = [self browserMenuItemWithName:nameOfNewImporter icon:[classOfNewImporter browserIcon]];
+	[[popUpButton menu] insertItem:item atIndex:i];
 
 end:
-	/* Update the menus after a delay to allow any other importers which are about to load to also
-	 * be added, aggregating the building into a single time instead of multiple times.
-	 */
-	[self armMenuUpdateTimer];
+	;
 }
 
-- (void)removeImporter:(AIBookmarksImporter *)importerToRemove {
+- (void)removeImporter:(AIBookmarksImporter *)importerToRemove
+{
+	BOOL needReload = NO;
+
+	NSString *browserNameToRemove = [[importerToRemove class] browserName];
+	int count = [popUpButton numberOfItems];
+	for(int i = 0; i < count; ++i) {
+		if([browserNameToRemove isEqualToString:[popUpButton itemTitleAtIndex:i]]) {
+			[popUpButton removeItemAtIndex:i];
+			needReload = (selectedImporterIndex == (unsigned)i);
+			break;
+		}
+	}
+
+	/*we can't use removeObjectAtIndex: here because importers is a list of *all* registered importers, whereas
+	 *	the pop-up button contains only available importers (+browserIsAvailable = YES).
+	 */
 	[importers removeObjectIdenticalTo:importerToRemove];
 
-	//Aggregate multiple remove requests
-	[self armMenuUpdateTimer];
+	if((int)selectedImporterIndex >= count) {
+		selectedImporterIndex -= ((selectedImporterIndex - count) + 1);
+	}
+	[popUpButton selectItemAtIndex:selectedImporterIndex];
+
+	if(needReload) [self loadBookmarks];
 }
 
 #pragma mark -
+#pragma mark Getting importers and using them
 
-/*!
- * @brief Insert a link into the textView
- *
- * @param sender An NSMenuItem whose representedObject must be an SHMarkedHyperlink instance
- */
-- (void)injectBookmarkFrom:(id)sender
+- (void)fillOutPopUpButton
 {
-	SHMarkedHyperlink	*markedLink = [sender representedObject];
-	
+	[popUpButton removeAllItems];
+
+	//get info about the default browser.
+	NSString *bundleID = nil, *signature = nil;
+	[self getDefaultBrowserBundleIdentifier:&bundleID signature:&signature];
+
+	NSMenu *menu = [popUpButton menu];
+
+	int selectedIndex = 0, currentIndex = -1;
+
+	NSEnumerator *importersEnum = [importers objectEnumerator];
+	AIBookmarksImporter *importer;
+	while((importer = [importersEnum nextObject])) {
+		Class importerClass = [importer class];
+		if([importerClass browserIsAvailable]) {
+			NSMenuItem *item = [self browserMenuItemWithName:[importerClass browserName]
+														icon:[importerClass browserIcon]];
+			[item setTag:++currentIndex];
+			[menu addItem:item];
+
+			NSString *importerBundleID = [importerClass browserBundleIdentifier], *importerSignature = [importerClass browserSignature];
+			if((importerBundleID && bundleID && [importerBundleID isEqualToString:bundleID])
+			|| (importerSignature && signature && [importerSignature isEqualToString:signature]))
+			{
+				selectedIndex = currentIndex;
+			}
+		}
+	}
+
+	/*select the default browser.
+	 *if we didn't find any browsers, currentIndex is -1 because there are no items in the pop-up button, so we
+	 *	shouldn't select any item (use -1).
+	 */
+	if(currentIndex == -1) selectedIndex = -1;
+	[self setSelectedImporterIndex:selectedIndex];
+}
+- (void)loadBookmarks
+{
+	NSArray *oldBookmarks = [bookmarks autorelease];
+	NSArray *newBookmarks = [[importers objectAtIndex:selectedImporterIndex] availableBookmarks];
+
+	BOOL lengthsDontMatch = ([oldBookmarks count] != [newBookmarks count]);
+	if(lengthsDontMatch || ![oldBookmarks isEqualToArray:newBookmarks]) {
+		bookmarks = [newBookmarks retain];
+
+		int selection = lengthsDontMatch ? -1 : [outlineView selectedRow];
+		[outlineView reloadData];
+		[outlineView selectRow:selection byExtendingSelection:NO];
+	}
+}
+
+#pragma mark -
+#pragma mark When to refresh the imported bookmarks
+
+- (IBAction)orderFrontBookmarksPanel:(id)sender
+{
+	[self fillOutPopUpButton];
+	[bookmarksPanel orderFront:sender];
+
+	[self performSelector:@selector(loadBookmarks)
+			   withObject:nil
+			   afterDelay:0.0];
+}
+
+- (void)applicationDidBecomeActive:(NSNotification *)notification
+{
+	if([bookmarksPanel isVisible]) {
+		[self performSelector:@selector(loadBookmarks)
+				   withObject:nil
+				   afterDelay:0.0];
+	}
+}
+
+- (void)setSelectedImporterIndex:(unsigned)newIndex
+{
+	unsigned numImporters = [importers count];
+	if(((signed)newIndex) != -1) {
+		NSAssert2(newIndex < numImporters, @"Could not select importer with index %u; there are only %u importers", newIndex, numImporters);
+	}
+
+	selectedImporterIndex = newIndex;
+	[popUpButton selectItemWithTag:selectedImporterIndex];
+	//update the enabled-state of the Insert button
+	[self outlineViewSelectionDidChange:nil];
+
+	[self loadBookmarks];
+}
+
+#pragma mark -
+#pragma mark Actions
+
+- (IBAction)takeBrowserSelectionFrom:(id)sender
+{
+	[self setSelectedImporterIndex:[sender tag]];
+}
+
+- (IBAction)_insertBookmarkFromOutlineViewSelection:(id)sender
+{
+	SHMarkedHyperlink	*markedLink = [outlineView itemAtRow:[outlineView selectedRow]];
+
 	if(markedLink && [markedLink isKindOfClass:[SHMarkedHyperlink class]]){
 		NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		
@@ -206,11 +308,11 @@ end:
 			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:[markedLink parentString]
 			                                                                                  attributes:typingAttributes] autorelease];
 			[linkString addAttribute:NSLinkAttributeName value:[markedLink URL] range:linkRange];
-
+			
 			//Insert the link to the text view..
 			NSRange selRange = [textView selectedRange];
 			[textStorage replaceCharactersInRange:selRange withAttributedString:linkString];
-
+			
 			//Determine the change in length
 			linkStringLength = [linkString length];
 			changeInLength = linkStringLength - selRange.length;
@@ -219,20 +321,20 @@ end:
 			NSAttributedString  *space = [[[NSAttributedString alloc] initWithString:@" "
 																		  attributes:typingAttributes] autorelease];
 			NSString *str = [textView string];
-
+			
 			unsigned afterIndex = selRange.location + linkRange.length;
 			if(([str length] > afterIndex) && ([str characterAtIndex:afterIndex] != ' ')) {
 				/* If we insert a link, we're not at the end of the string, and the next char isn't a space,
-				 * insert a space.
-				 */
+				* insert a space.
+				*/
 				[textStorage insertAttributedString:space
 											atIndex:afterIndex];
 				changeInLength++;
             }
 			if(selRange.location > 0 && [str characterAtIndex:(selRange.location - 1)] != ' ') {
 				/* If we insert a link, we're not at the start of the string, and the previous char isn't a space,
-				 * insert a space.
-				 */
+				* insert a space.
+				*/
 				[textStorage insertAttributedString:space
 											atIndex:selRange.location];
 				changeInLength++;
@@ -247,198 +349,120 @@ end:
 }
 
 #pragma mark -
-#pragma mark Building
+#pragma mark Utilities
 
-/*!
- * @brief Builds the bookmark menu (Detach as a thread)
- *
- * We're not allowed to create or touch any menu items from within a thread, so this thread will gather a list of 
- * bookmarks and then pass them over to another method on the main thread for menu building/inserting.
- */
-- (void)buildBookmarksMenu
+- (void)getDefaultBrowserBundleIdentifier:(out NSString **)outBundleID signature:(out NSString **)outSignature
 {
-	updatingMenu = YES;
-
-	NSDate *start, *end;
-
-	BOOL menuHasChanged = NO;
-
-	NSMenu				*menuItemSubmenu = nil;
-	NSMenu				*contextualMenuItemSubmenu = nil;
-
-	AIBookmarksImporter	*importer = nil;
-	AILog(@"AIBookmarksImporterController: Importing %@",importers);
-
-	start = [NSDate date];
-	if([importers count] == 1) {
-		importer = [importers lastObject];
-
-		if([importer bookmarksHaveChanged]) {
-			menuItemSubmenu           = [[importer menuWithAvailableBookmarks] retain];
-			contextualMenuItemSubmenu = [menuItemSubmenu copyWithZone:[NSMenu menuZone]];
-			menuHasChanged = YES;
-		}
+	NSString *bundleID = nil, *signature = nil;
+	NSURL *browserURL = nil;
+	OSStatus err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://www.adiumx.com/"],
+										  kLSRolesViewer,
+										  /*outAppRef*/ NULL,
+										  (CFURLRef *)&browserURL);
+	if(err != noErr) {
+		NSLog(@"Bookmarks Importer Controller: Could not ascertain default browser (LSGetApplicationForURL returned %li).", (long)err);
 	} else {
-		/* This code rebuilds all importers, not just those which have changed... It should keep
-		 * usable, unchanged submenus. */
-		menuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
-		contextualMenuItemSubmenu = [[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:BOOKMARK_MENU_TITLE];
+		NSBundle *bundle = [NSBundle bundleWithPath:[browserURL path]];
+		bundleID = [bundle bundleIdentifier];
 
-		[menuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		[menuItemSubmenu setAutoenablesItems:NO];
-		
-		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:NO];
-		[contextualMenuItemSubmenu setAutoenablesItems:NO];
+		//get type and creator (so we can return the latter)
+		struct LSItemInfoRecord rec;
+		err = LSCopyItemInfoForURL((CFURLRef)browserURL,
+								   kLSRequestTypeCreator,
+								   /*outItemInfo*/ &rec);
+		if(err == noErr) signature = [(NSString *)UTCreateStringForOSType(rec.creator) autorelease];
+	}
 
-		NSEnumerator		*importersEnum = [importers objectEnumerator];
-		while((importer = [importersEnum nextObject])) {
-			Class   importerClass = [importer class];
-			NSString *browserName = [importerClass browserName];
-			NSImage  *browserIcon = [importerClass browserIcon];
-			[browserIcon setSize:NSMakeSize(16.0, 16.0)];
+	if(outBundleID)  *outBundleID  = bundleID;
+	if(outSignature) *outSignature = signature;
+}
 
-			NSMenu *menu = [importer menuWithAvailableBookmarks]; //creates a new menu object
-			NSMenuItem *menuItem = [[[NSMenuItem alloc] initWithTitle:browserName
-															   action:NULL
-														keyEquivalent:@""] autorelease];
-			[menuItem setImage:browserIcon];
-			[menuItem setSubmenu:menu];
-			[menuItemSubmenu addItem:menuItem];
-			[contextualMenuItemSubmenu addItem:[[menuItem copyWithZone:[NSMenu menuZone]] autorelease]];
+- (NSMenuItem *)browserMenuItemWithName:(NSString *)name icon:(NSImage *)icon
+{
+	NSMenuItem *item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+														action:@selector(takeBrowserSelectionFrom:)
+												 keyEquivalent:@""];
+	[item setTarget:self];
 
-			menuHasChanged = YES;
+	icon = [icon copy];
+	[icon setSize:NSMakeSize(16.0, 16.0)];
+	[item setImage:icon];
+	[icon release];
+
+	return [item autorelease];
+}
+
+#pragma mark -
+#pragma mark NSOutlineView data source conformance
+
+- (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
+{
+#pragma unused(outlineView)
+	if(!item) {
+		return [bookmarks count];
+	} else if(![item respondsToSelector:@selector(objectForKey:)]) {
+		return 0;
+	} else {
+		id sub = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+		return [sub respondsToSelector:@selector(count)] ? (int)[sub count] : 0;
+	}
+}
+
+- (id)outlineView:(NSOutlineView *)outlineView child:(int)idx ofItem:(id)item
+{
+#pragma unused(outlineView)
+	if(!item) {
+		return [bookmarks objectAtIndex:idx];
+	} else {
+		id sub = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+		return [sub respondsToSelector:@selector(objectAtIndex:)] ? [sub objectAtIndex:(unsigned)idx] : 0;
+	}
+}
+- (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)col byItem:(id)item
+{
+#pragma unused(outlineView)
+	id result = nil;
+	BOOL isDict = [item respondsToSelector:@selector(objectForKey:)]; //if not, it's a link
+
+	NSString *identifier = [col identifier];
+	if([identifier isEqualToString:@"icon"]) {
+		result = isDict ? [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON] : nil;
+
+	} else if([identifier isEqualToString:@"name"]) {
+		result = isDict ? [item objectForKey:ADIUM_BOOKMARK_DICT_TITLE] : [item parentString];
+
+	} else if([identifier isEqualToString:@"uri"]) {
+		if(isDict) item = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+		if([item respondsToSelector:@selector(URL)]) {
+			result = [[item URL] absoluteString];
 		}
 	}
-	
-	end = [NSDate date];
-	AILog(@"AIBookmarksImporterController: Imported bookmarks in %g seconds", [end timeIntervalSinceDate:start]);
 
-	[menuLock lock];
-	[bookmarksMainSubmenu release];
-	 bookmarksMainSubmenu = menuItemSubmenu;
-	[bookmarksContextualSubmenu release];
-	 bookmarksContextualSubmenu = contextualMenuItemSubmenu;
-	[menuLock unlock];
-	
-	updatingMenu = NO;
+	return result;
 }
-
-- (void) buildBookmarksMenuIfNecessaryThread
+- (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
-	NSAutoreleasePool *pool = [[NSAutoreleasePool alloc] init];
-
-	//-buildBookmarksMenu does the if-necessary parts itself now.
-	[self buildBookmarksMenu];
-
-	[pool release];
-}
-
-- (void)buildBookmarksMenuIfNecessaryTimer:(NSTimer *)timer
-{
-	if(!updatingMenu){
-		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
-								 toTarget:self
-							   withObject:nil];
+#pragma unused(outlineView)
+	if(![item respondsToSelector:@selector(objectForKey:)]) {
+		//it's a link
+		return NO;
 	}
-	[self disarmMenuUpdateTimer];
-}
-
-- (void)applicationDidBecomeActive:(NSNotification *)notification
-{
-	if(!updatingMenu){
-		[NSThread detachNewThreadSelector:@selector(buildBookmarksMenuIfNecessaryThread)
-								 toTarget:self
-							   withObject:nil];
-	}
+	id sub = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+	return [sub respondsToSelector:@selector(count)] ? (int)[sub count] : -1;
 }
 
 #pragma mark -
+#pragma mark NSOutlineView delegate conformance
 
-- (void)armMenuUpdateTimer
+- (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-	if(!menuUpdateTimer) {
-		menuUpdateTimer = [[NSTimer timerWithTimeInterval:DELAY_FOR_MENU_UPDATE
-												  target:self
-												selector:@selector(buildBookmarksMenuIfNecessaryTimer:)
-												userInfo:nil
-												 repeats:NO] retain];
-		[[NSRunLoop currentRunLoop] addTimer:menuUpdateTimer forMode:NSDefaultRunLoopMode];
-	}
-	//if we already have a timer, then we simply postpone the fire date.
-	//otherwise, this sets the fire date for the first time.
-	[menuUpdateTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:DELAY_FOR_MENU_UPDATE]];
+#pragma unused(notification)
+
+	SHMarkedHyperlink	*markedLink = [outlineView itemAtRow:[outlineView selectedRow]];
+	[insertButton setEnabled:(markedLink && [markedLink respondsToSelector:@selector(URL)])];
 }
 
-- (void)disarmMenuUpdateTimer
-{
-	[menuUpdateTimer invalidate];
-	[menuUpdateTimer release];
-	menuUpdateTimer = nil;
-}
-
-#pragma mark -
-
-/*!
- * @brief Called after a delay by the main thread to actually perform our setting
- */
-- (void)doSetOfMenuItemSubmenu:(NSMenu *)menuItemSubmenu contextualMenuItemSubmenu:(NSMenu *)contextualMenuItemSubmenu
-{
-	BOOL submenuChanged = NO;
-	if(menuItemSubmenu && (menuItemSubmenu != [bookmarkRootMenuItem submenu])) {
-		[menuItemSubmenu setMenuChangedMessagesEnabled:YES];
-		[bookmarkRootMenuItem setSubmenu:menuItemSubmenu];
-		submenuChanged = YES;
-	}
-	if(contextualMenuItemSubmenu && (contextualMenuItemSubmenu != [bookmarkRootContextualMenuItem submenu])) {
-		[contextualMenuItemSubmenu setMenuChangedMessagesEnabled:YES];
-		[bookmarkRootContextualMenuItem setSubmenu:contextualMenuItemSubmenu];
-		submenuChanged = YES;
-	}
-
-	if(submenuChanged) {
-		//Update the menus of existing toolbar items
-		[self updateAllToolbarItemMenus];
-	}
-}
-
-#pragma mark -
-#pragma mark Validation / Updating
-
-/*!
- * @brief Validate our bookmark menu item
- */
-- (BOOL)validateMenuItem:(id <NSMenuItem>)sender
-{
-	//We only care to disable the main menu item (The rest are hidden within it, and do not matter)
-	NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	BOOL		enable = (responder && 
-						  [responder isKindOfClass:[NSTextView class]] &&
-						  [(NSTextView *)responder isEditable]);
-	return enable;
-}
-
-/*!
- * @brief Dummy menu item target so we can enable/disable our main menu item
- */
-- (IBAction)dummyTarget:(id)sender{
-}
-
-#pragma mark -
-
-//we don't want to get -menuNeedsUpdate: called on every keystroke. this method suppresses that.
-- (BOOL)menuHasKeyEquivalent:(NSMenu *)menu forEvent:(NSEvent *)event target:(id *)target action:(SEL *)action {
-	*target = nil;  //use menu's target
-	*action = NULL; //use menu's action
-	return NO;
-}
-
-- (void)menuNeedsUpdate:(NSMenu *)menu {
-	[menuLock lock];
-	[self doSetOfMenuItemSubmenu:[bookmarksMainSubmenu autorelease]
-	   contextualMenuItemSubmenu:[bookmarksContextualSubmenu autorelease]];
-	bookmarksMainSubmenu = bookmarksContextualSubmenu = nil;
-	[menuLock unlock];
-}
+#ifdef PROVIDE_TOOLBAR_ITEM
 
 #pragma mark -
 #pragma mark Toolbar Item
@@ -532,49 +556,6 @@ end:
 	}
 }
 
-/*!
- * @brief Update the menus on every toolbar item we are tracking
- */
-- (void)updateAllToolbarItemMenus
-{
-	NSEnumerator	*enumerator;
-	NSToolbarItem	*aToolbarItem;
-
-	enumerator = [toolbarItemArray objectEnumerator];
-	while((aToolbarItem = [enumerator nextObject])){
-		[self updateMenuForToolbarItem:aToolbarItem];
-	}
-}
-
-/*!
- * @brief Update the menu for a specific toolbar item
- */
-- (void)updateMenuForToolbarItem:(NSToolbarItem *)item
-{
-	NSMenu		*menu = [[[bookmarkRootMenuItem submenu] copyWithZone:[NSMenu menuZone]] autorelease];
-	NSString	*menuTitle = [menu title];
-
-	//Add menu to view
-	[[item view] setMenu:menu];
-
-	//Add menu to toolbar item (for text mode)
-	NSMenuItem	*mItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
-	[mItem setSubmenu:menu];
-	[mItem setTitle:(menuTitle ? menuTitle : @"")];
-	[item setMenuFormRepresentation:mItem];	
-}
-
-/*!
- * @brief Obtain the menuLock so our menus can be safely accesed, then update the menu for a toolbar item
- */
-- (void)obtainMenuLockAndUpdateMenuForToolbarItem:(NSToolbarItem *)item
-{
-	[menuLock lock];
-	[self doSetOfMenuItemSubmenu:[bookmarksMainSubmenu autorelease]
-	   contextualMenuItemSubmenu:[bookmarksContextualSubmenu autorelease]];
-	bookmarksMainSubmenu = bookmarksContextualSubmenu = nil;
-	[self updateMenuForToolbarItem:item];
-	[menuLock unlock];
-}
+#endif //def PROVIDE_TOOLBAR_ITEM
 
 @end
