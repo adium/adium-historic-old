@@ -14,31 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#define ADIUM_BOOKMARK_DICT_TITLE		@"Title"
-#define ADIUM_BOOKMARK_DICT_CONTENT		@"Content"
-
 @class AIBookmarksImporter;
 
 @interface AIBookmarksImporterController: NSObject
 {
-#ifdef OLD_VERSION
-	//for both of these, the menu is set by -buildBookmarksMenu, and is cleared upon retrieval by -menuNeedsUpdate.
-	NSMenuItem				*bookmarkRootMenuItem;
-	NSMenu					*bookmarksMainSubmenu;
-	NSMenuItem				*bookmarkRootContextualMenuItem;
-	NSMenu					*bookmarksContextualSubmenu;
-	NSLock					*menuLock;
-
-	NSToolbarItem			*toolbarItem;
-	NSMutableArray			*toolbarItemArray;
-
-	//instances of AIBookmarksImporter.
-	NSMutableArray			*importers;
-	NSTimer					*menuUpdateTimer;
-
-	BOOL					updatingMenu;
-	BOOL					menuNeedsUpdate;
-#endif //def OLD_VERSION
 
 	IBOutlet NSPanel		*bookmarksPanel;
 	IBOutlet NSPopUpButton	*popUpButton;
@@ -58,5 +37,6 @@
 #pragma mark -
 
 - (IBAction)orderFrontBookmarksPanel:(id)sender;
+- (IBAction)toggleBookmarksPanel:(id)sender;
 
 @end

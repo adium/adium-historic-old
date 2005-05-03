@@ -59,11 +59,6 @@
 
 #pragma mark -
 
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
-}
-
 - (NSArray *)availableBookmarks
 {
 	NSString		*bookmarksPath = [[self class] bookmarksPath];

@@ -15,7 +15,6 @@
  */
 
 #import "SHSafariBookmarksImporter.h"
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #define SAFARI_BOOKMARKS_PATH	@"~/Library/Safari/Bookmarks.plist"
@@ -30,7 +29,6 @@
 #define SAFARI_DICT_URI_TITLE	@"title"
 
 @interface SHSafariBookmarksImporter (PRIVATE)
-- (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict;
 - (NSArray *)drillPropertyList:(id)inObject;
 @end
 
@@ -56,11 +54,6 @@
 
 #pragma mark -
 
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
-}
-
 //Return an array of the available bookmarks
 - (NSArray *)availableBookmarks
 {
@@ -83,23 +76,29 @@
 {
 	NSMutableArray	*array = nil;
 
-	if([inObject isKindOfClass:[NSArray class]]) {
+	if(inObject && [inObject isKindOfClass:[NSArray class]]) {
 		array = [NSMutableArray arrayWithCapacity:[inObject count]];
 		NSEnumerator *enumerator = [(NSArray *)inObject objectEnumerator];
 		NSDictionary *linkDict;
 		
 		while((linkDict = [enumerator nextObject])){
-			if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LEAF]){
+			NSString *type = [linkDict objectForKey:SAFARI_DICT_TYPE_KEY];
+			NSDictionary *dict = nil;
+
+			if([type isEqualToString:SAFARI_DICT_TYPE_LEAF]) {
 				//We found a link
-				SHMarkedHyperlink	*menuLink = [self hyperlinkForSafariBookmark:linkDict];
-				if(menuLink) [array addObject:menuLink];
-			}else if([[linkDict objectForKey:SAFARI_DICT_TYPE_KEY] isEqualToString:SAFARI_DICT_TYPE_LIST]){
-				//We found an array of links
-				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:SAFARI_DICT_TITLE]
-																	content:[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]]
-																	  image:nil];
-				if(menuDict) [array addObject:menuDict];
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					[[linkDict objectForKey:SAFARI_DICT_URIDICT] objectForKey:SAFARI_DICT_URI_TITLE], ADIUM_BOOKMARK_DICT_TITLE,
+					[NSURL URLWithString:[linkDict objectForKey:SAFARI_DICT_URLSTRING]], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
+			} else if([type isEqualToString:SAFARI_DICT_TYPE_LIST]) {
+				//We found a group
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					[linkDict objectForKey:SAFARI_DICT_TITLE], ADIUM_BOOKMARK_DICT_TITLE,
+					[self drillPropertyList:[linkDict objectForKey:SAFARI_DICT_CHILD]], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
 			}
+			if(dict) [array addObject:dict];
 		}
 	} else {
 		//provide an empty array
@@ -107,14 +106,6 @@
 	}
 	
 	return array;
-}
-
-//Menu Item
-- (SHMarkedHyperlink *)hyperlinkForSafariBookmark:(NSDictionary *)inDict
-{
-	NSString	*title = [[inDict objectForKey:SAFARI_DICT_URIDICT] objectForKey:SAFARI_DICT_URI_TITLE];
-	NSString	*url = [inDict objectForKey:SAFARI_DICT_URLSTRING];
-	return [[self class] hyperlinkForTitle:title URL:url];
 }
 
 @end

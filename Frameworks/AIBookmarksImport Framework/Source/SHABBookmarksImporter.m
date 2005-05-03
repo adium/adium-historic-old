@@ -53,15 +53,9 @@
 
 #pragma mark -
 
-/*
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
-}
-*/
-
 - (NSArray *)availableBookmarks
 {
+#warning XXX make this use groups --boredzo
 	NSString		*nameString, *urlString;
 	NSArray			*abPeople = [[ABAddressBook sharedAddressBook] people];
 	NSEnumerator	*enumerator = [abPeople objectEnumerator];
@@ -72,10 +66,15 @@
 		urlString = [person valueForProperty:kABHomePageProperty];
 		if(urlString){
 			id firstName = [person valueForProperty:kABFirstNameProperty];
-			id lastName = [person valueForProperty:kABLastNameProperty];
-			if(firstName || lastName){
+			id  lastName = [person valueForProperty:kABLastNameProperty];
+			if(firstName && lastName) {
+				//we have both; join them with a space.
 				nameString = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-			}else{
+			} else if(firstName || lastName) {
+				//we only have one.
+				nameString = [[(firstName ? firstName : lastName) retain] autorelease];
+			} else {
+				//we have neither; use the organisation name and hope it's a company's card.
 				nameString = [NSString stringWithString:[person valueForProperty:kABOrganizationProperty]];
 			}
 			NSImage *image = nil;
@@ -86,13 +85,10 @@
 				[image setSize:NSMakeSize(16.0, 16.0)];
 			}
 
-			SHMarkedHyperlink	*menuLink = [[self class] hyperlinkForTitle:nameString URL:urlString];
-			if(menuLink) {
-				NSDictionary		*menuDict = [[self class] menuDictWithTitle:nameString
-																		content:menuLink
-																		  image:image];
-				[hyperlinks addObject:menuDict];
-			}
+			NSDictionary *dict = [[self class] dictionaryForBookmarksItemWithTitle:nameString
+																		   content:[NSURL URLWithString:urlString]
+																			 image:image];
+			if(dict) [hyperlinks addObject:dict];
 		}
 	}
 

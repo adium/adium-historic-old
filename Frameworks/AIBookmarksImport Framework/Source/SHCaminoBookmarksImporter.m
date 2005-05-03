@@ -15,7 +15,6 @@
  */
 
 #import "SHCaminoBookmarksImporter.h"
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
@@ -26,7 +25,6 @@
 
 @interface SHCaminoBookmarksImporter(PRIVATE)
 - (NSArray *)drillPropertyList:(id)inObject;
-- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict;
 @end
 
 @implementation SHCaminoBookmarksImporter
@@ -51,62 +49,56 @@
 
 #pragma mark -
 
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
-}
-
-#pragma mark -
-
 - (NSArray *)availableBookmarks
 {
-    NSString        *bookmarksPath = [[self class] bookmarksPath];
-    NSDictionary    *bookmarksDict = [NSDictionary dictionaryWithContentsOfFile:bookmarksPath];
+	NSString        *bookmarksPath = [[self class] bookmarksPath];
+	NSDictionary    *bookmarksDict = [NSDictionary dictionaryWithContentsOfFile:bookmarksPath];
 
-    NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
-    [lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
+	NSDictionary    *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:bookmarksPath traverseLink:YES];
+	[lastModDate release]; lastModDate = [[fileProps objectForKey:NSFileModificationDate] retain];
 
-    return [self drillPropertyList:[bookmarksDict objectForKey:CAMINO_DICT_CHILD_KEY]];
+	return [self drillPropertyList:[bookmarksDict objectForKey:CAMINO_DICT_CHILD_KEY]];
 }
 
 - (BOOL)bookmarksHaveChanged
 {
-    NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[[self class] bookmarksPath] traverseLink:YES];
-    NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
-    
-    return ![modDate isEqualToDate:lastModDate];
+	NSDictionary *fileProps = [[NSFileManager defaultManager] fileAttributesAtPath:[[self class] bookmarksPath] traverseLink:YES];
+	NSDate *modDate = [fileProps objectForKey:NSFileModificationDate];
+
+	return ![modDate isEqualToDate:lastModDate];
 }
 
 - (NSArray *)drillPropertyList:(id)inObject
 {
-    NSMutableArray  *caminoArray = [NSMutableArray array];
-    
-    if([inObject isKindOfClass:[NSArray class]]){
-        NSEnumerator    *enumerator = [(NSArray *)inObject objectEnumerator];
-        NSDictionary    *linkDict;
-        
-        while((linkDict = [enumerator nextObject])){
-            if([linkDict objectForKey:CAMINO_DICT_FOLDER_KEY] == nil){
-				SHMarkedHyperlink	*menuLink = [self hyperlinkForCaminoBookmark:linkDict];
-                if(menuLink) [caminoArray addObject:menuLink];
-				
-            }else{
-                NSArray 		*outArray = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
-				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:CAMINO_DICT_TITLE_KEY]
-																	content:[self drillPropertyList:(outArray ? outArray : [NSArray array])]
-																	  image:nil];
-                if(menuDict) [caminoArray addObject:menuDict];
+	NSMutableArray  *array = [NSMutableArray array];
+
+	if([inObject isKindOfClass:[NSArray class]]){
+		NSEnumerator    *enumerator = [(NSArray *)inObject objectEnumerator];
+		NSDictionary    *linkDict;
+
+		while((linkDict = [enumerator nextObject])){
+			NSDictionary *dict = nil;
+
+			NSString *title = [linkDict objectForKey:CAMINO_DICT_TITLE_KEY];
+
+			if([linkDict objectForKey:CAMINO_DICT_FOLDER_KEY] == nil) {
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					title, ADIUM_BOOKMARK_DICT_TITLE,
+					[NSURL URLWithString:[linkDict objectForKey:CAMINO_DICT_URL_KEY]], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
+			} else {
+				NSArray 		*children = [linkDict objectForKey:CAMINO_DICT_CHILD_KEY];
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					title, ADIUM_BOOKMARK_DICT_TITLE,
+					[self drillPropertyList:(children ? children : [NSArray array])], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
             }
+
+			if(dict) [array addObject:dict];
         }
     }
-    return caminoArray;
-}
 
-- (SHMarkedHyperlink *)hyperlinkForCaminoBookmark:(NSDictionary *)inDict
-{
-	NSString	*title = [inDict objectForKey:CAMINO_DICT_TITLE_KEY];
-	NSString	*url = [inDict objectForKey:CAMINO_DICT_URL_KEY];
-	return [[self class] hyperlinkForTitle:title URL:url];
+    return array;
 }
 
 @end
