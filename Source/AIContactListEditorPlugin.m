@@ -68,18 +68,18 @@
 	NSToolbarItem	*toolbarItem;
 	
 	//Add contact menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
-																	 target:self
-																	 action:@selector(addContact:)
-															  keyEquivalent:@"+"] autorelease];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Manage];
+    menuItem_addContact = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
+																				target:self
+																				action:@selector(addContact:)
+																		 keyEquivalent:@"+"];
+    [[adium menuController] addMenuItem:menuItem_addContact toLocation:LOC_Contact_Manage];
 	
 	//Add contact context menu item
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
-																	 target:self
-																	 action:@selector(addContact:)
-															  keyEquivalent:@""] autorelease];
-	[[adium menuController] addContextualMenuItem:menuItem toLocation:Context_Group_Manage];
+	menuItem_addContactContext = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_TO_GROUP_ELLIPSIS
+																					  target:self
+																					  action:@selector(addContact:)
+																			   keyEquivalent:@""];
+	[[adium menuController] addContextualMenuItem:menuItem_addContactContext toLocation:Context_Group_Manage];
 	
 	//Add contact context menu item for tabs
 	menuItem_tabAddContact = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_CONTACT_ELLIPSIS
@@ -89,12 +89,12 @@
     [[adium menuController] addContextualMenuItem:menuItem_tabAddContact toLocation:Context_Contact_Stranger_TabAction];
 	
 	//Add group menu item
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP_ELLIPSIS
-																	 target:self
-																	 action:@selector(addGroup:) 
-															  keyEquivalent:@"+"] autorelease];
-	[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
-    [[adium menuController] addMenuItem:menuItem toLocation:LOC_Contact_Manage];
+    menuItem_addGroup = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_GROUP_ELLIPSIS
+																			 target:self
+																			 action:@selector(addGroup:) 
+																	  keyEquivalent:@"+"];
+	[menuItem_addGroup setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
+    [[adium menuController] addMenuItem:menuItem_addGroup toLocation:LOC_Contact_Manage];
 	
 	//Delete selection menu item
     menuItem_delete = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:DELETE_CONTACT
@@ -173,8 +173,13 @@
                 [menuItem_delete setTitle:DELETE_CONTACT];
                 return NO;
             }
+
 	}else if(menuItem == menuItem_tabAddContact){
 		return([[adium menuController] currentContextMenuObject] != nil);
+	
+	}else if(menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext){
+		return([[adium accountController] anOnlineAccountCanEditContacts]);
+		
 	}
 	
 	return(YES);
