@@ -199,13 +199,14 @@
 
 		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground)
 		{
-            slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
-																		target:self
-																	  selector:@selector(slideWindowIfNeeded:)
-																	  userInfo:nil
-																	   repeats:YES];            
+			if (slideWindowIfNeededTimer == nil)
+				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+																			target:self
+																		  selector:@selector(slideWindowIfNeeded:)
+																		  userInfo:nil
+																		   repeats:YES];            
 		}
-		else if(slideWindowIfNeededTimer != nil)
+		else
 		{
             [slideWindowIfNeededTimer invalidate];
 			slideWindowIfNeededTimer = nil;
