@@ -113,6 +113,7 @@ static AIBookmarksImporterController *myself = nil;
 
 + (AIBookmarksImporterController *)sharedController
 {
+	if(!myself) [[[self alloc] init] release];
 	return myself;
 }
 
@@ -411,7 +412,7 @@ end:
 
 - (NSString *)bookmarksInterfaceItemTitle
 {
-	NSString *keys[]    = { @"Hide Bookmarks", @"Show Bookmarks" };
+	NSString *keys[]    = { @"Show Bookmarks", @"Hide Bookmarks" };
 	BOOL      isVisible = [self bookmarksPanelVisible];
 	return NSLocalizedStringFromTableInBundle(keys[isVisible], /*table*/ nil, /*bundle*/ [NSBundle bundleForClass:[self class]], /*comment*/ nil);
 }
@@ -419,6 +420,15 @@ end:
 - (NSImage *)bookmarksImporterIcon
 {
 	return [[[NSImage alloc] initByReferencingFile:[[NSBundle bundleForClass:[self class]] pathForImageResource:@"BookmarksImporterIcon"]] autorelease];
+}
+
+#pragma mark -
+#pragma mark NSMenuItem validation
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	[menuItem setTitle:[self bookmarksInterfaceItemTitle]];
+	return YES;
 }
 
 #pragma mark -
