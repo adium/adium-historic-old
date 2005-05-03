@@ -263,12 +263,12 @@
 		float				delay;
 		
 		//Get the state information
-		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
-		looping = [[stateDict objectForKey:@"Looping"] intValue];
-		delay = [[stateDict objectForKey:@"Delay"] floatValue];
+		overlay = [[stateDict objectForKey:@"Overlay"] boolValue];
+		looping = [[stateDict objectForKey:@"Looping"] boolValue];
+		delay   = [[stateDict objectForKey:@"Delay"]  floatValue];
 		imageNameArray = [stateDict objectForKey:@"Images"];
 		imageNameEnumerator = [imageNameArray objectEnumerator];
-		
+
 		//Load the images
 		imageArray = [NSMutableArray arrayWithCapacity:[imageNameArray count]];
 		while((imageName = [imageNameEnumerator nextObject])){
@@ -325,7 +325,7 @@
 
 		//Get the state information
 		image = [[NSImage alloc] initByReferencingFile:imagePath];
-		overlay = [[stateDict objectForKey:@"Overlay"] intValue];
+		overlay = [[stateDict objectForKey:@"Overlay"] boolValue];
 		
 		//Create the state
 		iconState = [[AIIconState alloc] initWithImage:image overlay:overlay];		
