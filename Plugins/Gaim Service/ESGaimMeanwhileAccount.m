@@ -137,10 +137,13 @@
 {
 	if(strcmp(label, "Set Active Message...") == 0){
 		return(nil);
-		
+
+	}else if(strcmp(label, "Set Status Messages...") == 0){
+		return(nil);
+
 	}else if(strcmp(label, "Import Sametime List...") == 0){
 		return(AILocalizedString(@"Import Sametime List...",nil));
-		
+
 	}else if(strcmp(label, "Export Sametime List...") == 0){
 		return(AILocalizedString(@"Export Sametime List...",nil));
 	}
