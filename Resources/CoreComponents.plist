@@ -36,6 +36,10 @@
 		</dict>
 		<dict>
 			<key>Class</key>
+			<string>AIBookmarksImporterPlugin</string>
+		</dict>
+		<dict>
+			<key>Class</key>
 			<string>AIChatConsolidationPlugin</string>
 		</dict>
 		<dict>
