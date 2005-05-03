@@ -23,13 +23,11 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 
-#define BLOCK_CONTACT	AILocalizedString(@"Block",@"Block Contact menu item")
-#define UNBLOCK_CONTACT AILocalizedString(@"Unblock",@"Unblock Contact menu item")
+#define BLOCK_CONTACT	AILocalizedString(@"Block","Block Contact menu item")
+#define UNBLOCK_CONTACT AILocalizedString(@"Unblock","Unblock Contact menu item")
 
 @interface ESBlockingPlugin(PRIVATE)
-- (void)_blockObject:(AIListObject *)object unblock:(BOOL)unblock;
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock;
-- (BOOL)_searchPrivacyListsForListObject:(AIListObject *)object withDesiredResult:(BOOL)desiredResult;
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult;
 @end
 
@@ -43,12 +41,6 @@
 														 action:@selector(blockContact:)
 												  keyEquivalent:@""];
 	[[adium menuController] addMenuItem:blockContactMenuItem toLocation:LOC_Contact_NegativeAction];
-	
-	unblockContactMenuItem = [[NSMenuItem alloc] initWithTitle:UNBLOCK_CONTACT
-														 target:self
-														 action:@selector(unblockContact:)
-												  keyEquivalent:@""];
-	[[adium menuController] addMenuItem:unblockContactMenuItem toLocation:LOC_Contact_NegativeAction];
 
     //Add our get info contextual menu items
     blockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:BLOCK_CONTACT
@@ -56,13 +48,6 @@
 																action:@selector(blockContact:)
 														 keyEquivalent:@""];
     [[adium menuController] addContextualMenuItem:blockContactContextualMenuItem toLocation:Context_Contact_NegativeAction];
-
-    unblockContactContextualMenuItem = [[NSMenuItem alloc] initWithTitle:UNBLOCK_CONTACT
-																target:self
-																action:@selector(unblockContact:)
-														 keyEquivalent:@""];
-    [[adium menuController] addContextualMenuItem:unblockContactContextualMenuItem toLocation:Context_Contact_NegativeAction];
-
 }
 
 - (void)uninstallPlugin
@@ -75,6 +60,7 @@
 - (IBAction)blockContact:(id)sender
 {
 	AIListObject *object;
+	BOOL unblock;
 	
 	if(sender == blockContactMenuItem){
 		object = [[adium contactController] selectedListObject];
@@ -82,49 +68,8 @@
 		object = [[adium menuController] currentContextMenuObject];
 	}
 	
-	[self _blockObject:object unblock:NO];
-}
+	unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
 
-- (IBAction)unblockContact:(id)sender
-{
-	AIListObject *object;
-	
-	if(sender == unblockContactMenuItem){
-		object = [[adium contactController] selectedListObject];
-	}else{
-		object = [[adium menuController] currentContextMenuObject];
-	}
-
-	[self _blockObject:object unblock:YES];
-}
-
-- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
-{
-	AIListObject *object;
-	
-	if(menuItem == blockContactMenuItem || menuItem == blockContactContextualMenuItem){
-		if(menuItem == blockContactMenuItem){
-			object = [[adium contactController] selectedListObject];
-		}else{
-			object = [[adium menuController] currentContextMenuObject];
-		}
-		return [self _searchPrivacyListsForListObject:object withDesiredResult:NO];
-		
-	}else{
-		if(menuItem == unblockContactMenuItem){
-			object = [[adium contactController] selectedListObject];
-		}else{
-			object = [[adium menuController] currentContextMenuObject];
-		}
-		return [self _searchPrivacyListsForListObject:object withDesiredResult:YES];
-	}
-}
-
-#pragma mark Private
-//Private --------------------------------------------------------------------------------------------------------------
-
-- (void)_blockObject:(AIListObject *)object unblock:(BOOL)unblock
-{
 	//Don't do groups
 	if([object isKindOfClass:[AIListContact class]]){
 		AIListContact *contact = (AIListContact *)object;
@@ -148,44 +93,28 @@
 				AIListContact *containedContact = nil;
 				
 				while(containedContact = [enumerator nextObject]){
-					[self _blockContact:containedContact unblock:unblock];
+					[[containedContact account] addListObject:containedContact toPrivacyList:PRIVACY_DENY];
 				}
 			}else{
 				AIListContact *contact = (AIListContact *)object;
-				[self _blockContact:contact unblock:unblock];
+				[[contact account] addListObject:contact toPrivacyList:PRIVACY_DENY];
 			}
 		}
 	}
 }
 
-- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
-		//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
-		NSEnumerator *enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
-		AIAccount *account = nil;
-
-		while(account = [enumerator nextObject]){
-			if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
-				AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-				if([privacyAccount privacyOptions] == PRIVACY_DENY_USERS){
-					if(unblock){
-						if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
-							[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
-						}
-					}else{
-						if(![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
-							[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
-						}
-					}
-				}
-			}
-		}
+	AIListObject *object;
+	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_CONTACT];
+	BOOL anyAccount = NO;
+	
+	if(menuItem == blockContactMenuItem){
+		object = [[adium contactController] selectedListObject];
+	}else{
+		object = [[adium menuController] currentContextMenuObject];
 	}
-}
-
-- (BOOL)_searchPrivacyListsForListObject:(AIListObject *)object withDesiredResult:(BOOL)desiredResult
-{
+	
 	//Don't do groups
 	if([object isKindOfClass:[AIListContact class]]){
 		//Handle metas
@@ -197,35 +126,85 @@
 			AIListContact *contact = nil;
 			
 			while(contact = [enumerator nextObject]){
-				if([self _searchPrivacyListsForListContact:contact withDesiredResult:desiredResult]){
-					return YES;
+				if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
+					anyAccount = YES;
+					if([[[contact account] listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+						if(!unblock){
+							[menuItem setTitle:UNBLOCK_CONTACT];
+						}
+						return YES;
+					}
 				}
 			}
-			return NO;
+			if(anyAccount){
+				if(unblock){
+					[menuItem setTitle:BLOCK_CONTACT];
+				}
+				return YES;
+			}else{
+				[menuItem setTitle:BLOCK_CONTACT];
+				return NO;
+			}
 		}else{
 			AIListContact *contact = (AIListContact *)object;
-			return [self _searchPrivacyListsForListContact:contact withDesiredResult:desiredResult];
+			if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
+				if([[[contact account] listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					if(!unblock){
+						[menuItem setTitle:UNBLOCK_CONTACT];
+					}
+					return YES;
+				}else{
+					if(unblock){
+						[menuItem setTitle:BLOCK_CONTACT];
+					}
+					return YES;
+				}
+			}else{
+				[menuItem setTitle:BLOCK_CONTACT];
+				return NO;
+			}
 		}
 	}
 	return NO;
 }
 
+#pragma mark Private
+//Private --------------------------------------------------------------------------------------------------------------
+
+- (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
+{
+	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
+	NSEnumerator *enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
+	AIAccount *account = nil;
+
+	while(account = [enumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
+			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
+			if(unblock){
+				if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
+				}
+			}else{
+				if(![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
+				}
+			}
+		}
+	}
+}
+
 - (BOOL)_searchPrivacyListsForListContact:(AIListContact *)contact withDesiredResult:(BOOL)desiredResult
 {
-	if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
-		AIAccount *account = nil;
-		NSEnumerator *enumerator;
-		
-		enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
-		
-		while(account = [enumerator nextObject]){
-			if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
-				AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-				if([privacyAccount privacyOptions] == PRIVACY_DENY_USERS){
-					if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){
-						return YES;
-					}
-				}
+	AIAccount *account = nil;
+	NSEnumerator *enumerator;
+	
+	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
+	
+	while(account = [enumerator nextObject]){
+		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
+			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
+			if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){
+				return YES;
 			}
 		}
 	}

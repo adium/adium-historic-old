@@ -18,12 +18,9 @@
 
 @interface ESBlockingPlugin : AIPlugin {
 	NSMenuItem  *blockContactMenuItem;
-	NSMenuItem  *unblockContactMenuItem;
 	NSMenuItem  *blockContactContextualMenuItem;
-	NSMenuItem  *unblockContactContextualMenuItem;
 }
 
 - (IBAction)blockContact:(id)sender;
-- (IBAction)unblockContact:(id)sender;
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem;
 @end
