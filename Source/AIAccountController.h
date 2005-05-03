@@ -104,6 +104,7 @@ typedef enum
 									 withTarget:(id)target
 								 includeOffline:(BOOL)includeOffline;
 - (BOOL)anOnlineAccountCanCreateGroupChats;
+- (BOOL)anOnlineAccountCanEditContacts;
 
 //Account Editing
 - (AIAccount *)newAccountAtIndex:(int)index;
