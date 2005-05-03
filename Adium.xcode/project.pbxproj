@@ -130,6 +130,64 @@
 			settings = {
 			};
 		};
+		07FC98310827D33C006C56D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.framework;
+			name = AIBookmarksImport.framework;
+			path = "Frameworks/AIBookmarksImport Framework/build/AIBookmarksImport.framework";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07FC98320827D33C006C56D6 = {
+			fileRef = 07FC98310827D33C006C56D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07FC98330827D355006C56D6 = {
+			isa = PBXFileReference;
+			lastKnownFileType = "wrapper.pb-project";
+			name = AIBookmarksImport.framework.xcode;
+			path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcode";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07FC98340827D355006C56D6 = {
+			isa = PBXGroup;
+			name = Products;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		07FC98350827D373006C56D6 = {
+			containerPortal = 07FC98330827D355006C56D6;
+			isa = PBXContainerItemProxy;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIBookmarksImport;
+		};
+		07FC98360827D373006C56D6 = {
+			isa = PBXTargetDependency;
+			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcode)";
+			targetProxy = 07FC98350827D373006C56D6;
+		};
+		07FC98430827D39E006C56D6 = {
+			fileRef = 07FC98310827D33C006C56D6;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07FC987B0827D73F006C56D6 = {
+			fileRef = 348EF1B4080B2F3D0015E0FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		07FC987C0827D747006C56D6 = {
+			fileRef = 348EF1B3080B2F3D0015E0FC;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 //070
 //071
 //072
@@ -196,7 +254,6 @@
 				3499F45106309AC80035B468,
 				4947F5CB0655E85200B791E5,
 				349ECD2007C1BE2A0014623E,
-				348EF170080B2CA20015E0FC,
 			);
 			isa = PBXGroup;
 			name = Products;
@@ -250,6 +307,10 @@
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
 				},
+				{
+					ProductGroup = 07FC98340827D355006C56D6;
+					ProjectRef = 07FC98330827D355006C56D6;
+				},
 			);
 			targets = (
 				34BD9CD1053146CC000AB133,
@@ -263,7 +324,6 @@
 				346C9C4806004517000F5A8A,
 				346C9C5306004525000F5A8A,
 				4947F5BC0655E85200B791E5,
-				348EF16F080B2CA20015E0FC,
 			);
 		};
 		29B97314FDCFA39411CA2CEA = {
@@ -301,6 +361,7 @@
 			children = (
 				34D8379307CC3222006466F2,
 				3496A8F207CE6CFB0055BBAB,
+				07FC98310827D33C006C56D6,
 				348E5ACA06D2A74C004C051C,
 				F5819CE9032124CE01A8010A,
 				34D8370007CBF97A006466F2,
@@ -1085,12 +1146,6 @@
 				ATTRIBUTES = (
 					Public,
 				);
-			};
-		};
-		34101729080B366300A7344D = {
-			fileRef = 348E5ACA06D2A74C004C051C;
-			isa = PBXBuildFile;
-			settings = {
 			};
 		};
 		34111A5D06BE1B370005AF5C = {
@@ -6865,459 +6920,37 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348EF16C080B2CA20015E0FC = {
-			buildActionMask = 2147483647;
-			files = (
-				348EF1BE080B2F3E0015E0FC,
-			);
-			isa = PBXResourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		348EF16D080B2CA20015E0FC = {
-			buildActionMask = 2147483647;
-			files = (
-				348EF1B7080B2F3D0015E0FC,
-				348EF1B9080B2F3E0015E0FC,
-				348EF1BB080B2F3E0015E0FC,
-				348EF1BC080B2F3E0015E0FC,
-				348EF1BD080B2F3E0015E0FC,
-				348EF1C0080B2F3E0015E0FC,
-				348EF1C1080B2F3E0015E0FC,
-				348EF1C3080B2F3E0015E0FC,
-				348EF1C5080B2F3E0015E0FC,
-				348EF1C8080B2F3E0015E0FC,
-				348EF1CB080B2F3E0015E0FC,
-			);
-			isa = PBXSourcesBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		348EF16E080B2CA20015E0FC = {
-			buildActionMask = 2147483647;
-			files = (
-				34101729080B366300A7344D,
-				348EF277080B33A20015E0FC,
-				348EF26D080B31F60015E0FC,
-				348EF26E080B31F60015E0FC,
-				348EF26F080B31F60015E0FC,
-			);
-			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		348EF16F080B2CA20015E0FC = {
-			buildPhases = (
-				348EF16C080B2CA20015E0FC,
-				348EF16D080B2CA20015E0FC,
-				348EF16E080B2CA20015E0FC,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Bookmarks_Importer.plist;
-				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_CFLAGS = "";
-				OTHER_LDFLAGS = "-framework Foundation -framework AppKit";
-				PRODUCT_NAME = "Bookmarks Importer";
-				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				348EF173080B2CC00015E0FC,
-			);
-			isa = PBXNativeTarget;
-			name = "Bookmarks Importer";
-			productName = "Bookmarks Importer";
-			productReference = 348EF170080B2CA20015E0FC;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Bookmarks Importer</string>
-	<key>CFBundleIdentifier</key>
-	<string>com.yourcompany.Bookmarks_Importer</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
-		348EF170080B2CA20015E0FC = {
-			explicitFileType = wrapper.cfbundle;
-			includeInIndex = 0;
-			isa = PBXFileReference;
-			path = "Bookmarks Importer.AdiumPlugin";
-			refType = 3;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		348EF172080B2CC00015E0FC = {
-			containerPortal = 29B97313FDCFA39411CA2CEA;
-			isa = PBXContainerItemProxy;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
-		348EF173080B2CC00015E0FC = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133;
-			targetProxy = 348EF172080B2CC00015E0FC;
-		};
 		348EF197080B2F230015E0FC = {
 			children = (
 				348EF1B3080B2F3D0015E0FC,
 				348EF1B4080B2F3D0015E0FC,
-				348EF1A1080B2F3C0015E0FC,
-				348EF1A5080B2F3C0015E0FC,
-				348EF1D0080B2F560015E0FC,
-				348EF1A7080B2F3C0015E0FC,
 			);
 			isa = PBXGroup;
 			name = "Bookmarks Importing";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF19E080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMSIEBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHMSIEBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF19F080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMozillaCommonParser.h;
-			path = "Plugins/Bookmarks Importer/SHMozillaCommonParser.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A0080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMozillaBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHMozillaBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A1080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A2080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHSafariBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHSafariBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A3080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHMozillaBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHMozillaBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A4080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHABBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHABBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A5080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A6080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHFireFoxBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHFireFoxBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A7080B2F3C0015E0FC = {
-			isa = PBXFileReference;
-			lastKnownFileType = image.tiff;
-			name = bookmarkToolbar.tif;
-			path = "Plugins/Bookmarks Importer/bookmarkToolbar.tif";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A8080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHSafariBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHSafariBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1A9080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMozillaCommonParser.m;
-			path = "Plugins/Bookmarks Importer/SHMozillaCommonParser.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AA080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHOmniWebBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHOmniWebBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AB080B2F3C0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHFireFoxBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHFireFoxBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AC080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIShiiraBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/AIShiiraBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AD080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHOmniWebBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHOmniWebBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AE080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHCaminoBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHCaminoBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1AF080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHABBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHABBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1B0080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIShiiraBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/AIShiiraBookmarksImporter.h";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1B1080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = SHMSIEBookmarksImporter.m;
-			path = "Plugins/Bookmarks Importer/SHMSIEBookmarksImporter.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1B2080B2F3D0015E0FC = {
-			fileEncoding = 30;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = SHCaminoBookmarksImporter.h;
-			path = "Plugins/Bookmarks Importer/SHCaminoBookmarksImporter.h";
+			path = "";
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		348EF1B3080B2F3D0015E0FC = {
-			fileEncoding = 30;
+			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.h;
 			name = AIBookmarksImporterPlugin.h;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporterPlugin.h";
+			path = Source/AIBookmarksImporterPlugin.h;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		348EF1B4080B2F3D0015E0FC = {
-			fileEncoding = 30;
+			fileEncoding = 4;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.c.objc;
 			name = AIBookmarksImporterPlugin.m;
-			path = "Plugins/Bookmarks Importer/AIBookmarksImporterPlugin.m";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348EF1B7080B2F3D0015E0FC = {
-			fileRef = 348EF1A0080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1B9080B2F3E0015E0FC = {
-			fileRef = 348EF1A2080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1BB080B2F3E0015E0FC = {
-			fileRef = 348EF1A4080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1BC080B2F3E0015E0FC = {
-			fileRef = 348EF1A5080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1BD080B2F3E0015E0FC = {
-			fileRef = 348EF1A6080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1BE080B2F3E0015E0FC = {
-			fileRef = 348EF1A7080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C0080B2F3E0015E0FC = {
-			fileRef = 348EF1A9080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C1080B2F3E0015E0FC = {
-			fileRef = 348EF1AA080B2F3C0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C3080B2F3E0015E0FC = {
-			fileRef = 348EF1AC080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C5080B2F3E0015E0FC = {
-			fileRef = 348EF1AE080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1C8080B2F3E0015E0FC = {
-			fileRef = 348EF1B1080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1CB080B2F3E0015E0FC = {
-			fileRef = 348EF1B4080B2F3D0015E0FC;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF1D0080B2F560015E0FC = {
-			children = (
-				348EF1B0080B2F3D0015E0FC,
-				348EF1AC080B2F3D0015E0FC,
-				348EF1AF080B2F3D0015E0FC,
-				348EF1A4080B2F3C0015E0FC,
-				348EF1B2080B2F3D0015E0FC,
-				348EF1AE080B2F3D0015E0FC,
-				348EF1AB080B2F3C0015E0FC,
-				348EF1A6080B2F3C0015E0FC,
-				348EF1A3080B2F3C0015E0FC,
-				348EF1A0080B2F3C0015E0FC,
-				348EF19F080B2F3C0015E0FC,
-				348EF1A9080B2F3C0015E0FC,
-				348EF19E080B2F3C0015E0FC,
-				348EF1B1080B2F3D0015E0FC,
-				348EF1AD080B2F3D0015E0FC,
-				348EF1AA080B2F3C0015E0FC,
-				348EF1A8080B2F3C0015E0FC,
-				348EF1A2080B2F3C0015E0FC,
-			);
-			isa = PBXGroup;
-			name = Importers;
+			path = Source/AIBookmarksImporterPlugin.m;
 			refType = 4;
 			sourceTree = "<group>";
 		};
 		348EF1F6080B31280015E0FC = {
 			fileRef = 349ECD2007C1BE2A0014623E;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF26D080B31F60015E0FC = {
-			fileRef = 34D834D207CBE7B2006466F2;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF26E080B31F60015E0FC = {
-			fileRef = 3448758D06D1EBDF00DA778C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF26F080B31F60015E0FC = {
-			fileRef = 34BD9DE105314751000AB133;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348EF277080B33A20015E0FC = {
-			fileRef = 3496A8F207CE6CFB0055BBAB;
 			isa = PBXBuildFile;
 			settings = {
 			};
@@ -9228,7 +8861,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"Frameworks\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" Frameworks \"/Users/boredzo/Projects/@otherpeoplesprojects/adium/Frameworks/AIBookmarksImport Framework/build\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -9251,6 +8884,7 @@
 				34D8353907CBEA21006466F2,
 				3496A8EF07CE6CD40055BBAB,
 				34BD9CD2053146CC000AB133,
+				07FC98360827D373006C56D6,
 				4B215DB0059896B000305B3C,
 				4B7845EC059B50820048A8BA,
 				DA70F2B2080CAE8200C72D8B,
@@ -9451,6 +9085,7 @@
 				347C6948080C8F3B00E69674,
 				34F46786080F7FFB007800AB,
 				4B8C3C990825EAF9004B9F45,
+				07FC987C0827D747006C56D6,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -9933,6 +9568,7 @@
 				347C6949080C8F3B00E69674,
 				34F46785080F7FFB007800AB,
 				4B8C3C9A0825EAF9004B9F45,
+				07FC987B0827D73F006C56D6,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10045,6 +9681,7 @@
 				34C18B0D06CAC95400FF5FF9,
 				348E5ACB06D2A74C004C051C,
 				9E124DF607D34CF500AA91C5,
+				07FC98320827D33C006C56D6,
 			);
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10071,6 +9708,7 @@
 				34D837FE07CC339D006466F2,
 				3496AB7307CE7DD10055BBAB,
 				3419FE230531586A00C68BA3,
+				07FC98430827D39E006C56D6,
 				9E12765407D38B5000AA91C5,
 			);
 			isa = PBXCopyFilesBuildPhase;
@@ -17448,6 +17086,7 @@
 				34D8342B07CBE6A4006466F2,
 				3496A8E707CE6CA30055BBAB,
 				3448717006D1E57700DA778C,
+				07FC98330827D355006C56D6,
 			);
 			isa = PBXGroup;
 			name = Frameworks;
@@ -20347,6 +19986,7 @@
 		};
 		4BCAC53407B59F9C006641B9 = {
 			children = (
+				348EF197080B2F230015E0FC,
 				83DB8F21061145C400A5C28C,
 			);
 			isa = PBXGroup;
@@ -20625,7 +20265,6 @@
 		};
 		4BD672C706001B560049CAF7 = {
 			children = (
-				348EF197080B2F230015E0FC,
 				B782F088058BB60B00AF4BBA,
 				B7AE664D0465778E0051E914,
 			);
