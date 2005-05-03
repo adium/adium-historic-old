@@ -41,6 +41,14 @@
 
 #pragma mark -
 
+//returns YES if the bookmarks panel is on the screen; NO if it is not.
+- (BOOL)bookmarksPanelVisible;
+
+//returns a string suitable for, say, a menu item.
+- (NSString *)bookmarksInterfaceItemTitle;
+
+#pragma mark -
+
 //this can be used on, say, a toolbar item.
 - (NSImage *)bookmarksImporterIcon;
 

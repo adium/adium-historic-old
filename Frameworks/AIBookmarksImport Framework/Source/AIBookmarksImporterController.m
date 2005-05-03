@@ -19,13 +19,7 @@
 
 #import <ApplicationServices/ApplicationServices.h>
 
-#define TOOLBAR_ITEM_IDENTIFIER		@"com.adiumx.bookmarksimporter"
-
 @interface AIBookmarksImporterController (PRIVATE)
-
-#ifdef PROVIDE_TOOLBAR_ITEM
-- (void)registerToolbarItem;
-#endif
 
 - (NSMutableArray *)loadBuiltInImporters;
 - (void)loadBookmarks;
@@ -410,16 +404,21 @@ end:
 #pragma mark -
 #pragma mark Accessors
 
-- (BOOL)bookmarksPanelVisible {
+- (BOOL)bookmarksPanelVisible
+{
 	return [bookmarksPanel isVisible];
 }
 
-//XXX needed: a bindings accessor for a localized menu item name (e.g. Show Bookmarks) --boredzo
-
+- (NSString *)bookmarksInterfaceItemTitle
+{
+	NSString *keys[]    = { @"Hide Bookmarks", @"Show Bookmarks" };
+	BOOL      isVisible = [self bookmarksPanelVisible];
+	return NSLocalizedStringFromTableInBundle(keys[isVisible], /*table*/ nil, /*bundle*/ [NSBundle bundleForClass:[self class]], /*comment*/ nil);
+}
 
 - (NSImage *)bookmarksImporterIcon
 {
-	return [[[NSImage alloc] initByReferencingFile:[[NSBundle bundleForClass:[self class]] pathForImageResource:@"BookmarksImporterIcon"] autorelease];
+	return [[[NSImage alloc] initByReferencingFile:[[NSBundle bundleForClass:[self class]] pathForImageResource:@"BookmarksImporterIcon"]] autorelease];
 }
 
 #pragma mark -
@@ -492,101 +491,5 @@ end:
 	NSURL *URL = [[outlineView itemAtRow:[outlineView selectedRow]] objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
 	[insertButton setEnabled:(URL && [URL isKindOfClass:[NSURL class]])];
 }
-
-#ifdef PROVIDE_TOOLBAR_ITEM
-
-#pragma mark -
-#pragma mark Toolbar Item
-
-/*!
- * @brief Register toolbar item
- */
-- (void)registerToolbarItem
-{
-	AIToolbarController *toolbarController = [adium toolbarController];
-	MVMenuButton *button;
-
-	//Unregister the existing toolbar item first
-	if(toolbarItem) {
-		[toolbarController unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-		[toolbarItem release]; toolbarItem = nil;
-	}
-
-	//Register our toolbar item
-	button = [[[MVMenuButton alloc] initWithFrame:NSMakeRect(0,0,32,32)] autorelease];
-
-	NSImage *icon = [NSImage imageNamed:@"bookmarkToolbar" forClass:[self class]];
-	if([importers count] == 1U) {
-		//only one importer is active, so badge the sprocket icon with the importer's browser icon.
-		AIBookmarksImporter *importer = [importers lastObject];
-		NSImage *browserIcon = [[importer class] browserIcon];
-
-		NSRect  srcRect = { NSZeroPoint, [browserIcon size] };
-		NSSize origIconSize = [icon size];
-		NSRect destRect = { NSZeroPoint, origIconSize };
-
-		//draw to the lower right corner of the icon.
-		destRect.size.width  *= 0.6;
-		destRect.size.height *= 0.6;
-		destRect.origin.x     = origIconSize.width - destRect.size.width;
-
-		[icon lockFocus];
-		[browserIcon drawInRect:destRect
-					   fromRect:srcRect
-					  operation:NSCompositeSourceOver
-					   fraction:0.9];
-		[icon unlockFocus];
-	}
-	[button setImage:icon];
-
-	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
-														   label:AILocalizedString(@"Bookmarks",nil)
-													paletteLabel:AILocalizedString(@"Insert Bookmark",nil)
-														 toolTip:AILocalizedString(@"Insert Bookmark",nil)
-														  target:self
-												 settingSelector:@selector(setView:)
-													 itemContent:button
-														  action:@selector(injectBookmarkFrom:)
-															menu:nil] retain];
-	[toolbarItem setMinSize:NSMakeSize(32,32)];
-	[toolbarItem setMaxSize:NSMakeSize(32,32)];
-	[button setToolbarItem:toolbarItem];
-	[toolbarController registerToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
-}
-
-/*!
- * @brief Toolbar item will be added
- * When a toolbar item is added (it will be effectively a copy of the one we originally registered)
- * we want to set its menu initially, then track it for later menu changes
- */
-- (void)toolbarWillAddItem:(NSNotification *)notification
-{
-	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-
-	if([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]){
-		[self performSelector:@selector(obtainMenuLockAndUpdateMenuForToolbarItem:)
-				   withObject:item
-				   afterDelay:0];
-
-		if (!toolbarItemArray) toolbarItemArray = [[NSMutableArray alloc] init];
-		[toolbarItemArray addObject:item];
-	}
-}
-
-/*!
- * @brief A toolbar item was removed
- *
- * Stop tracking (and retaining) it
- */
-- (void)toolbarDidRemoveItem:(NSNotification *)notification
-{
-	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-
-	if([[item itemIdentifier] isEqualToString:TOOLBAR_ITEM_IDENTIFIER]){
-		[toolbarItemArray removeObject:item];
-	}
-}
-
-#endif //def PROVIDE_TOOLBAR_ITEM
 
 @end
