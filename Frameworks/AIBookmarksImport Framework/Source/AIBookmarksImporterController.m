@@ -427,7 +427,11 @@ end:
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	[menuItem setTitle:[self bookmarksInterfaceItemTitle]];
+	if([menuItem menu] != [popUpButton menu]) {
+		//this is a client application's menu, not our browser-picker.
+		[menuItem setTitle:[self bookmarksInterfaceItemTitle]];
+	}
+
 	return YES;
 }
 
