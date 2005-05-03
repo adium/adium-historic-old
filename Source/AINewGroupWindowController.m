@@ -54,9 +54,10 @@
 - (void)windowDidLoad
 {
 	NSWindow	*window = [self window];
+	
 	[window setTitle:AILocalizedString(@"Add Group",nil)];
 	
-	[label_groupName setLocalizedString:AILocalizedString(@"Group Name:",nil)];
+	[label_groupName setLocalizedString:AILocalizedString(@"Enter group name:",nil)];
 	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
@@ -76,11 +77,7 @@
  */
 - (IBAction)cancel:(id)sender
 {
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
+	[self closeWindow:nil];
 }
 
 /*!
@@ -89,12 +86,8 @@
 - (IBAction)addGroup:(id)sender
 {
 	[[adium contactController] groupWithUID:[textField_groupName stringValue]];
-	
-	if([[self window] isSheet]){
-		[NSApp endSheet:[self window]];
-	}else{
-		[self closeWindow:nil];
-	}
+
+	[self closeWindow:nil];
 }
 
 @end
