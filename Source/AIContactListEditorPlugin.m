@@ -160,15 +160,7 @@
 {
 	//Disable 'delete selection' if nothing is selected or the contact list isn't in front
 	if(menuItem == menuItem_delete){
-		//Update the menu titles to reflect the selected contact
-		if([[adium contactController] selectedListObjectInContactList] != nil){
-			[menuItem_delete setTitle:[NSString stringWithFormat:
-				AILocalizedString(@"Remove %@","%@ will be a contact's name"),
-				[[[adium contactController] selectedListObjectInContactList] displayName]]];
-		}else{
-			[menuItem_delete setTitle:DELETE_CONTACT_ELLIPSIS];
-			return NO;
-		}
+		return([[adium contactController] selectedListObjectInContactList] != nil);
 		
 	}else if(menuItem == menuItem_tabAddContact){
 		return([[adium menuController] currentContextMenuObject] != nil);
@@ -289,9 +281,9 @@
 							 [NSString stringWithFormat:AILocalizedString(@"%i contacts",nil),count]);
 		
 		//Guard deletion with a warning prompt
-		int result = NSRunAlertPanel([NSString stringWithFormat:AILocalizedString(@"Remove %@ from your list?",nil),name],
-									 AILocalizedString(@"Be careful. You cannot undo this action.",nil),
-									 AILocalizedString(@"OK",nil),
+		int result = NSRunAlertPanel(AILocalizedString(@"Remove from list?",nil),
+									 [NSString stringWithFormat:AILocalizedString(@"This will remove %@ from the contact lists of your online accounts.",nil), name],
+									 AILocalizedString(@"Remove",nil),
 									 AILocalizedString(@"Cancel",nil),
 									 nil);
 
