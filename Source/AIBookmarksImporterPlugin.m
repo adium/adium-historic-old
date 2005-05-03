@@ -81,7 +81,6 @@
 - (void)dealloc
 {
 	[toolbarItem release];
-	[toolbarItemArray release];
 	
 	[super dealloc];
 }
