@@ -163,11 +163,20 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {
 					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
-						NSLog(@"username %s",gaim_account_get_username(account));
+						const char	*username;
+						NSString	*usernameString;
+						NSRange		serverAndResourceBeginningRange;
 						
-						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
+						//Process the username to remove the server and the resource
+						username = gaim_account_get_username(account);
+						usernameString = [NSString stringWithUTF8String:username];
+						serverAndResourceBeginningRange = [usernameString rangeOfString:@"@"];
+						if(serverAndResourceBeginningRange.location != NSNotFound){
+							usernameString = [usernameString substringToIndex:serverAndResourceBeginningRange.location];
+						}
+						
+						gaim_request_field_string_set_value(field, [usernameString UTF8String]);
 					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
-						NSLog(@"pass %s",gaim_account_get_password(account));
 						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
 					}
 				}
