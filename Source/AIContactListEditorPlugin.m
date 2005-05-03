@@ -37,13 +37,11 @@
 #define ADD_GROUP_ELLIPSIS					[ADD_GROUP stringByAppendingEllipsis]
 
 #define DELETE_CONTACT						AILocalizedString(@"Remove Contact",nil)
-#define DELETE_CONTACT_CONTEXT				AILocalizedString(@"Delete",nil)
+#define DELETE_CONTACT_CONTEXT				AILocalizedString(@"Remove",nil)
 #define DELETE_CONTACT_CONTEXT_ELLIPSIS		[DELETE_CONTACT_CONTEXT stringByAppendingEllipsis]
 
 #define RENAME_GROUP						AILocalizedString(@"Rename Group",nil)
 #define RENAME_GROUP_ELLIPSIS				[RENAME_GROUP stringByAppendingEllipsis]
-
-#define INVITE_CONTACT						[AILocalizedString(@"Invite to This Chat",nil) stringByAppendingEllipsis]
 
 #define	ADD_CONTACT_IDENTIFIER				@"AddContact"
 #define ADD_GROUP_IDENTIFIER				@"AddGroup"
