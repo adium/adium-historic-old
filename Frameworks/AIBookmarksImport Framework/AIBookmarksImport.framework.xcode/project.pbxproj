@@ -107,8 +107,8 @@
 		07F8ACE108265350009CCBB5 = {
 			isa = PBXFileReference;
 			lastKnownFileType = image.tiff;
-			name = bookmarkToolbar.tif;
-			path = Resources/bookmarkToolbar.tif;
+			name = BookmarksImporterIcon.tiff;
+			path = Resources/BookmarksImporterIcon.tiff;
 			refType = 4;
 			sourceTree = "<group>";
 		};

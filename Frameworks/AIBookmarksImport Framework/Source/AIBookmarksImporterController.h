@@ -39,4 +39,9 @@
 - (IBAction)orderFrontBookmarksPanel:(id)sender;
 - (IBAction)toggleBookmarksPanel:(id)sender;
 
+#pragma mark -
+
+//this can be used on, say, a toolbar item.
+- (NSImage *)bookmarksImporterIcon;
+
 @end
