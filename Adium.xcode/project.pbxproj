@@ -5,6 +5,57 @@
 	};
 	objectVersion = 39;
 	objects = {
+		071C56310827933000399C0F = {
+			children = (
+				071C56320827933000399C0F,
+				071C563E0827936500399C0F,
+				071C56420827937400399C0F,
+			);
+			isa = PBXVariantGroup;
+			name = "Shared Dock Icon Images";
+			path = "";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		071C56320827933000399C0F = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = English;
+			path = "Resources/English.lproj/Shared Dock Icon Images";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		071C56330827933100399C0F = {
+			fileRef = 071C56310827933000399C0F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		071C56390827933A00399C0F = {
+			children = (
+				071C56310827933000399C0F,
+			);
+			isa = PBXGroup;
+			name = Localized;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		071C563E0827936500399C0F = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = French;
+			path = "Resources/French.lproj/Shared Dock Icon Images";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		071C56420827937400399C0F = {
+			isa = PBXFileReference;
+			lastKnownFileType = folder;
+			name = German;
+			path = "Resources/German.lproj/Shared Dock Icon Images";
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		074DDB5C07CB413F0033AFF7 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -9551,6 +9602,7 @@
 				0779934F08221D9700F698DC,
 				3474E000082550FD00BF30F0,
 				4B8C3CE90825F60B004B9F45,
+				071C56330827933100399C0F,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -21188,6 +21240,7 @@
 		};
 		4BF2E6BE067CB72400743318 = {
 			children = (
+				071C56390827933A00399C0F,
 				342838ED07D2D004004F01C9,
 				3408254D075B078B00703011,
 				34A29D9406ED68BF00E1366C,
