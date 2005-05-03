@@ -265,7 +265,7 @@ int eventIDSort(id objectA, id objectB, void *context){
 		NSDictionary		*alert;
 
 		performedActionIDs = (previouslyPerformedActionIDs ?
-							  [previouslyPerformedActionIDs mutableCopy] :
+							  [[previouslyPerformedActionIDs mutableCopy] autorelease]:
 							  [NSMutableSet set]);
 		
 		//We go from contact->group->root; a given action will only fire once for this event
@@ -301,7 +301,10 @@ int eventIDSort(id objectA, id objectB, void *context){
 											  object:listObject 
 											userInfo:userInfo];
 	
-	return(performedActionIDs);
+	/* If we generated a new perfromedActionIDs, return it.  If we didn't, return the original
+	 * previouslyPerformedActionIDs, which may also be nil or may be actionIDs performed on some previous invocation.
+	 */
+	return (performedActionIDs ? performedActionIDs : previouslyPerformedActionIDs);
 }
 
 /*
