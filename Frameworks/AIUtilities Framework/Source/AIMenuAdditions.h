@@ -32,6 +32,10 @@
 
 //Recollapse an alternate menu item
 + (void)updateAlternateMenuItem:(NSMenuItem *)alternateItem;
+
+//Find the first enabled menu item
+- (NSMenuItem *)firstEnabledMenuItem;
+
 @end
 
 @interface NSMenuItem (ItemCreationAdditions)
