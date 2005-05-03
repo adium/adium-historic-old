@@ -101,6 +101,23 @@
     [super dealloc];
 }
 
+/*
+ * @brief If the contact list will be removed but the window won't go away, call this before releasing.
+ *
+ * Note that for this to be useful for preventing Cocoa tracking rect oddity, it must be called
+ * while contactListView is still within its window.  The reason we have to do this is that if the view is removed
+ * from the window but this contorller is released in the process, the tracking rect won't be removed from the window
+ * when the tooltipTracker removes it from the view.  After that, a simple mouseEntered: or mouseExited: event will
+ * send that message on to the deallocated AISmoothTooltipTracker instance.  Braaains.
+ */
+- (void)contactListWillBeRemoved
+{
+	if (tooltipTracker){
+		[tooltipTracker setDelegate:nil];
+		[tooltipTracker release]; tooltipTracker = nil;
+	}	
+}
+
 //Setup the window after it has loaded
 - (void)configureViewsAndTooltips
 {
