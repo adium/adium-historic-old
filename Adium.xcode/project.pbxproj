@@ -1570,6 +1570,7 @@
 				342114E20826D38E00A3B0FB,
 				342114F10826D39900A3B0FB,
 				342116D50827529000A3B0FB,
+				3421186C0827D8B100A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = EditStateSheet.nib;
@@ -1635,6 +1636,134 @@
 			lastKnownFileType = wrapper.nib;
 			name = French;
 			path = "Frameworks/Adium Framework/French.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421180D0827D86700A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimZephyrAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421180E0827D86700A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/DCGaimJabberJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421180F0827D86700A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/DCGaimYahooJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118100827D86700A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimNovellAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118110827D86700A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimYahooAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118120827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimICQAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118130827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimMeanwhileAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118140827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimMSNAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118150827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118160827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/DCGaimZephyrJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118170827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimJabberAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118180827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118190827D86800A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/DCGaimMeanwhileJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421181A0827D86900A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Plugins/Gaim Service/Dutch.lproj/ESGaimOscarAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		3421186C0827D8B100A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = "Frameworks/Adium Framework/Dutch.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		342118800827D8C300A3B0FB = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = Dutch;
+			path = Resources/Dutch.lproj/StatusPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -2367,6 +2496,7 @@
 				3458BA19082174540005BCF6,
 				3458BA9D082178430005BCF6,
 				34C2A4950821859800F3363F,
+				342118100827D86700A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimNovellAccountView.nib;
@@ -2409,6 +2539,7 @@
 				3458BA1A082174540005BCF6,
 				3458BA90082178420005BCF6,
 				34C2A48A0821859700F3363F,
+				342118150827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimGaduGaduAccountView.nib;
@@ -2430,6 +2561,7 @@
 				3458BA18082174540005BCF6,
 				3458BA8E082178420005BCF6,
 				34C2A48E0821859700F3363F,
+				342118140827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMSNAccountView.nib;
@@ -2451,6 +2583,7 @@
 				3458BA1E082174540005BCF6,
 				3458BAA1082178430005BCF6,
 				34C2A4940821859800F3363F,
+				342118160827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimZephyrJoinChatView.nib;
@@ -2472,6 +2605,7 @@
 				3458BA21082174540005BCF6,
 				3458BA93082178420005BCF6,
 				34C2A48B0821859700F3363F,
+				342118180827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimOscarJoinChatView.nib;
@@ -2493,6 +2627,7 @@
 				3458BA1F082174540005BCF6,
 				3458BA92082178420005BCF6,
 				34C2A4890821859700F3363F,
+				3421180F0827D86700A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimYahooJoinChatView.nib;
@@ -2514,6 +2649,7 @@
 				3458BA1C082174540005BCF6,
 				3458BA89082178420005BCF6,
 				34C2A48C0821859700F3363F,
+				3421180D0827D86700A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimZephyrAccountView.nib;
@@ -2535,6 +2671,7 @@
 				3458BA1D082174540005BCF6,
 				3458BA95082178430005BCF6,
 				34C2A4900821859800F3363F,
+				342118190827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimMeanwhileJoinChatView.nib;
@@ -2577,6 +2714,7 @@
 				3458BA20082174540005BCF6,
 				3458BA9F082178430005BCF6,
 				34C2A4920821859800F3363F,
+				3421180E0827D86700A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimJabberJoinChatView.nib;
@@ -2598,6 +2736,7 @@
 				3458BA23082174540005BCF6,
 				3458BA8A082178420005BCF6,
 				34C2A4880821859700F3363F,
+				342118120827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimICQAccountView.nib;
@@ -2619,6 +2758,7 @@
 				3458BA24082174540005BCF6,
 				3458BA98082178430005BCF6,
 				34C2A4930821859800F3363F,
+				3421181A0827D86900A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimOscarAccountView.nib;
@@ -2640,6 +2780,7 @@
 				3458BA22082174540005BCF6,
 				3458BA96082178430005BCF6,
 				34C2A48F0821859800F3363F,
+				342118130827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMeanwhileAccountView.nib;
@@ -2661,6 +2802,7 @@
 				3458BA17082174540005BCF6,
 				3458BA8B082178420005BCF6,
 				34C2A4870821859700F3363F,
+				342118110827D86700A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimYahooAccountView.nib;
@@ -2682,6 +2824,7 @@
 				3458BA1B082174540005BCF6,
 				3458BAA0082178430005BCF6,
 				34C2A48D0821859700F3363F,
+				342118170827D86800A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimJabberAccountView.nib;
@@ -5481,6 +5624,7 @@
 				342110720826044E00A3B0FB,
 				342115050826D3A800A3B0FB,
 				342115140826D3FB00A3B0FB,
+				342118800827D8C300A3B0FB,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
