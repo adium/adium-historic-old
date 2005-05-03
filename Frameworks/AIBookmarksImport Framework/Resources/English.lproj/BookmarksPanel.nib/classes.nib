@@ -1,0 +1,22 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {
+                "_insertBookmarkFromOutlineViewSelection" = id; 
+                orderFrontBookmarksPanel = id; 
+                takeBrowserSelectionFrom = id; 
+            }; 
+            CLASS = AIBookmarksImporterController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                bookmarksPanel = NSPanel; 
+                insertButton = NSButton; 
+                outlineView = NSOutlineView; 
+                popUpButton = NSPopUpButton; 
+            }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
