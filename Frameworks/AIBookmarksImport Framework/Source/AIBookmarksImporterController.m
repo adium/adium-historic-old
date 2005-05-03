@@ -18,7 +18,6 @@
 #import "AIBookmarksImporter.h"
 
 #import <ApplicationServices/ApplicationServices.h>
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #define TOOLBAR_ITEM_IDENTIFIER		@"com.adiumx.bookmarksimporter"
 
@@ -231,11 +230,12 @@ end:
 }
 - (void)loadBookmarks
 {
-	NSArray *oldBookmarks = [bookmarks autorelease];
+	NSArray *oldBookmarks = bookmarks;
 	NSArray *newBookmarks = [[importers objectAtIndex:selectedImporterIndex] availableBookmarks];
 
 	BOOL lengthsDontMatch = ([oldBookmarks count] != [newBookmarks count]);
 	if(lengthsDontMatch || ![oldBookmarks isEqualToArray:newBookmarks]) {
+		[bookmarks release];
 		bookmarks = [newBookmarks retain];
 
 		int selection = lengthsDontMatch ? -1 : [outlineView selectedRow];
@@ -284,6 +284,16 @@ end:
 #pragma mark -
 #pragma mark Actions
 
+- (IBAction)toggleBookmarksPanel:(id)sender
+{
+	if([bookmarksPanel isVisible]) {
+		[bookmarksPanel orderOut:sender];
+	} else {
+		//be sure to use ours, since we do extra stuff here.
+		[self orderFrontBookmarksPanel:sender];
+	}
+}
+
 - (IBAction)takeBrowserSelectionFrom:(id)sender
 {
 	[self setSelectedImporterIndex:[sender tag]];
@@ -291,25 +301,30 @@ end:
 
 - (IBAction)_insertBookmarkFromOutlineViewSelection:(id)sender
 {
-	SHMarkedHyperlink	*markedLink = [outlineView itemAtRow:[outlineView selectedRow]];
+	NSDictionary *bookmark = [outlineView itemAtRow:[outlineView selectedRow]];
+	NSURL *URL = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
 
-	if(markedLink && [markedLink isKindOfClass:[SHMarkedHyperlink class]]){
+	if(URL && [URL isKindOfClass:[NSURL class]]) {
 		NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		
 		//if the first responder is a text view...
-		if(responder && [responder isKindOfClass:[NSTextView class]]){
+		if(responder && [responder isKindOfClass:[NSTextView class]]) {
 			NSTextView      *textView = (NSTextView *)responder;
 			NSTextStorage	*textStorage = [textView textStorage];
 			NSDictionary    *typingAttributes = [textView typingAttributes];
-			NSRange			linkRange = [markedLink range];
-			unsigned		linkStringLength, changeInLength;
-			
+			NSString		*URLString = [URL absoluteString];
+			unsigned		 linkStringLength, changeInLength;
+
+			NSString		*linkTitle = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
+			if(!linkTitle)   linkTitle = URLString;
+			NSRange			 linkRange = { 0, [linkTitle length] };
+
 			//new mutable string to build the link with
-			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:[markedLink parentString]
+			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:linkTitle
 			                                                                                  attributes:typingAttributes] autorelease];
-			[linkString addAttribute:NSLinkAttributeName value:[markedLink URL] range:linkRange];
+			[linkString addAttribute:NSLinkAttributeName value:URL range:linkRange];
 			
-			//Insert the link to the text view..
+			//Insert the link into the text view
 			NSRange selRange = [textView selectedRange];
 			[textStorage replaceCharactersInRange:selRange withAttributedString:linkString];
 			
@@ -325,16 +340,16 @@ end:
 			unsigned afterIndex = selRange.location + linkRange.length;
 			if(([str length] > afterIndex) && ([str characterAtIndex:afterIndex] != ' ')) {
 				/* If we insert a link, we're not at the end of the string, and the next char isn't a space,
-				* insert a space.
-				*/
+				 * insert a space.
+				 */
 				[textStorage insertAttributedString:space
 											atIndex:afterIndex];
 				changeInLength++;
             }
 			if(selRange.location > 0 && [str characterAtIndex:(selRange.location - 1)] != ' ') {
 				/* If we insert a link, we're not at the start of the string, and the previous char isn't a space,
-				* insert a space.
-				*/
+				 * insert a space.
+				 */
 				[textStorage insertAttributedString:space
 											atIndex:selRange.location];
 				changeInLength++;
@@ -393,6 +408,15 @@ end:
 }
 
 #pragma mark -
+#pragma mark Accessors
+
+- (BOOL)bookmarksPanelVisible {
+	return [bookmarksPanel isVisible];
+}
+
+//XXX needed: a bindings accessor for a localized menu item name (e.g. Show Bookmarks) --boredzo
+
+#pragma mark -
 #pragma mark NSOutlineView data source conformance
 
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
@@ -411,30 +435,35 @@ end:
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)idx ofItem:(id)item
 {
 #pragma unused(outlineView)
+	id obj = nil;
 	if(!item) {
-		return [bookmarks objectAtIndex:idx];
+		obj = [bookmarks objectAtIndex:idx];
 	} else {
 		id sub = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
-		return [sub respondsToSelector:@selector(objectAtIndex:)] ? [sub objectAtIndex:(unsigned)idx] : 0;
+		obj = ([sub respondsToSelector:@selector(objectAtIndex:)] ? [sub objectAtIndex:(unsigned)idx] : nil);
 	}
+	return obj;
 }
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)col byItem:(id)item
 {
 #pragma unused(outlineView)
 	id result = nil;
-	BOOL isDict = [item respondsToSelector:@selector(objectForKey:)]; //if not, it's a link
 
 	NSString *identifier = [col identifier];
 	if([identifier isEqualToString:@"icon"]) {
-		result = isDict ? [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON] : nil;
-
+		result = [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON];
 	} else if([identifier isEqualToString:@"name"]) {
-		result = isDict ? [item objectForKey:ADIUM_BOOKMARK_DICT_TITLE] : [item parentString];
-
+		result = [item objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
+		if(!result) {
+			NSFont *font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
+			font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
+			NSDictionary *attrs = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+			result = [[[NSAttributedString alloc] initWithString:@"untitled" attributes:attrs] autorelease];
+		}
 	} else if([identifier isEqualToString:@"uri"]) {
-		if(isDict) item = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
-		if([item respondsToSelector:@selector(URL)]) {
-			result = [[item URL] absoluteString];
+		NSURL *content = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+		if([content respondsToSelector:@selector(absoluteString)]) {
+			result = [content absoluteString];
 		}
 	}
 
@@ -443,12 +472,8 @@ end:
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
 #pragma unused(outlineView)
-	if(![item respondsToSelector:@selector(objectForKey:)]) {
-		//it's a link
-		return NO;
-	}
 	id sub = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
-	return [sub respondsToSelector:@selector(count)] ? (int)[sub count] : -1;
+	return [sub respondsToSelector:@selector(count)];
 }
 
 #pragma mark -
@@ -458,8 +483,8 @@ end:
 {
 #pragma unused(notification)
 
-	SHMarkedHyperlink	*markedLink = [outlineView itemAtRow:[outlineView selectedRow]];
-	[insertButton setEnabled:(markedLink && [markedLink respondsToSelector:@selector(URL)])];
+	NSURL *URL = [[outlineView itemAtRow:[outlineView selectedRow]] objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+	[insertButton setEnabled:(URL && [URL isKindOfClass:[NSURL class]])];
 }
 
 #ifdef PROVIDE_TOOLBAR_ITEM

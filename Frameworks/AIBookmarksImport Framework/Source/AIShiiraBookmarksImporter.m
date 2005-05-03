@@ -15,7 +15,6 @@
  */
 
 #import "AIShiiraBookmarksImporter.h"
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #define SHIIRA_BOOKMARKS_PATH	@"~/Library/Shiira/Bookmarks.plist"
@@ -23,10 +22,6 @@
 #define SHIIRA_DICT_CHILD		@"Children"
 #define SHIIRA_DICT_URLSTRING	@"URLString"
 #define SHIIRA_DICT_TITLE		@"Title"
-
-@interface AIShiiraBookmarksImporter (PRIVATE)
-- (SHMarkedHyperlink *)hyperlinkForShiiraBookmark:(NSDictionary *)inDict;
-@end
 
 @implementation AIShiiraBookmarksImporter
 
@@ -50,11 +45,6 @@
 
 #pragma mark -
 
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
-}
-
 //Parse the Shiira bookmarks file
 - (NSArray *)drillPropertyList:(id)inObject
 {
@@ -66,18 +56,25 @@
 		NSDictionary *linkDict;
 		
 		while((linkDict = [enumerator nextObject])) {
-			NSArray *children = [linkDict objectForKey:SHIIRA_DICT_CHILD];
+			NSDictionary	*dict = nil;
+
+			NSString *title    = [linkDict objectForKey:SHIIRA_DICT_TITLE];
+			NSArray  *children = [linkDict objectForKey:SHIIRA_DICT_CHILD];
 			if(!children) {
 				//We found a link
-				SHMarkedHyperlink	*menuLink = [self hyperlinkForShiiraBookmark:linkDict];
-				if(menuLink) [array addObject:menuLink];
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					title, ADIUM_BOOKMARK_DICT_TITLE,
+					[NSURL URLWithString:[linkDict objectForKey:SHIIRA_DICT_URLSTRING]], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
 			} else {
-				//We found an array of links
-				NSDictionary	*menuDict = [[self class] menuDictWithTitle:[linkDict objectForKey:SHIIRA_DICT_TITLE]
-																	content:[self drillPropertyList:[linkDict objectForKey:SHIIRA_DICT_CHILD]]
-																	  image:nil];
-				if(menuDict) [array addObject:menuDict];
+				//We found a group
+				dict = [NSDictionary dictionaryWithObjectsAndKeys:
+					title, ADIUM_BOOKMARK_DICT_TITLE,
+					[self drillPropertyList:[linkDict objectForKey:SHIIRA_DICT_CHILD]], ADIUM_BOOKMARK_DICT_CONTENT,
+					nil];
 			}
+
+			if(dict) [array addObject:dict];
 		}
 	} else {
 		//provide an empty array
@@ -85,14 +82,6 @@
 	}
 	
 	return array;
-}
-
-//Menu Item
-- (SHMarkedHyperlink *)hyperlinkForShiiraBookmark:(NSDictionary *)inDict
-{
-	NSString	*title = [inDict objectForKey:SHIIRA_DICT_TITLE];
-	NSString	*url   = [inDict objectForKey:SHIIRA_DICT_URLSTRING];
-	return [[self class] hyperlinkForTitle:title URL:url];
 }
 
 @end

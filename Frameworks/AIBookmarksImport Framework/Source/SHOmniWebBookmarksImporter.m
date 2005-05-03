@@ -16,7 +16,6 @@
 
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 
 #define OW45_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb/Bookmarks.html"
@@ -58,13 +57,6 @@
 		}
 	}
 	return bundleID;
-}
-
-#pragma mark -
-
-+ (void)load
-{
-	AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER();
 }
 
 #pragma mark -
@@ -158,9 +150,9 @@
             
 			[arrayStack addObject:bookmarksArray];
 			bookmarksArray = [NSMutableArray array];
-			[(NSMutableArray *)[arrayStack lastObject] addObject:[[self class] menuDictWithTitle:omniTitleString
-																						 content:bookmarksArray
-																						   image:nil]];
+			[(NSMutableArray *)[arrayStack lastObject] addObject:[[self class] dictionaryForBookmarksItemWithTitle:omniTitleString
+																										   content:bookmarksArray
+																											 image:nil]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] isEqualToString:A_OPEN]){
 			[linkScanner scanUpToString:HREF_STRING intoString:nil];
 
@@ -183,7 +175,7 @@
 					omniTitleString = nil;
 				}
 
-				[bookmarksArray addObject:[[self class] hyperlinkForTitle:omniTitleString URL:urlString]];
+				[bookmarksArray addObject:[[self class] dictionaryForBookmarksItemWithTitle:omniTitleString content:[NSURL URLWithString:urlString] image:nil]];
 			}
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] isEqualToString:DL_CLOSE]){
 			if((stringLength - [linkScanner scanLocation]) > 4){

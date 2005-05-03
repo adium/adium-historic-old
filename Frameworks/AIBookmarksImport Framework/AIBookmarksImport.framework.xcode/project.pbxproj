@@ -425,12 +425,6 @@
 			refType = 2;
 			sourceTree = SOURCE_ROOT;
 		};
-		07F8AD4408265C32009CCBB5 = {
-			fileRef = 07F8AD4308265C32009CCBB5;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
 		07F8AD790826675E009CCBB5 = {
 			children = (
 				07F8AD7A0826675E009CCBB5,
@@ -766,11 +760,12 @@
 				GCC_WARN_UNUSED_VALUE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				INFOPLIST_FILE = Info.plist;
-				INSTALL_PATH = "$(HOME)/Library/Frameworks";
+				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PREBINDING = NO;
 				PRODUCT_NAME = AIBookmarksImport;
+				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
@@ -833,7 +828,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8DC2EF570486A6940098B216,
-				07F8AD4408265C32009CCBB5,
 				07F8AEB108268FD1009CCBB5,
 				07F8AF0308269192009CCBB5,
 				07A44FE4082752A700B76F11,

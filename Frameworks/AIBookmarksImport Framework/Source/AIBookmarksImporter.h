@@ -14,10 +14,6 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-//#import <Adium/AIObject.h>
-
-@class SHMarkedHyperlink;
-
 #define ADIUM_BOOKMARK_DICT_TITLE      @"Title"
 #define ADIUM_BOOKMARK_DICT_CONTENT    @"Content"
 #define ADIUM_BOOKMARK_DICT_FAVICON    @"Favicon"
@@ -63,8 +59,8 @@
 //+bookmarksPath should return a path to a file that exists (i.e. not a directory or a 404).
 + (NSString *)bookmarksPath;
 
-+ (NSDictionary *)menuDictWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
-+ (SHMarkedHyperlink *)hyperlinkForTitle:(NSString *)inString URL:(NSString *)inURLString;
+//inContent should be either an array of sub-items (for a group) or an URL.
++ (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
 
 #pragma mark -
 
@@ -78,55 +74,3 @@
 + (AIBookmarksImporter *)importer;
 
 @end
-
-/* @function addBookmarksImporter_CFTimer
- *
- *callback function for a CFRunLoopTimer.
- *this function takes the 'info' argument as a Class object for a subclass of
- *	AIBookmarksImporter.
- *it then calls [info browserIsAvailable], and if that returns non-NO, calls
- *	[[info alloc] init] and passes that to -[AIBookmarksImporterPlugin addImporter:]
- *	(if it's non-nil, of course).
- *finally, it autoreleases the timer ([timer autorelease]).
- *this function is intended to be called from a +load method. see below.
- *the idea is to allow time for the shared AIBookmarksImporterPlugin to be
- *	created. note that NSTimer cannot be used for the above because the Cocoa
- *	docs explicitly do not guarantee the existence of any other class when +load is called.
- *(see: http://developer.apple.com/documentation/Cocoa/Reference/Foundation/ObjC_classic/Classes/NSObject.html#//apple_ref/occ/clm/NSObject/load )
- *--boredzo
- */
-extern void addBookmarksImporter_CFTimer(CFRunLoopTimerRef timer, void *info);
-
-#ifdef OLD_VERSION
-
-/* @defined AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER
- *
- *when writing a subclass of AIBookmarksImporter, use this macro somewhere in
- *	your +load method to get your subclass registered with the bookmarks
- *	importer controller.
- *this macro sets up a CFRunLoopTimer that calls addBookmarksImporter_CFTimer. 
- */
-#define AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER() \
-do { \
-	CFRunLoopTimerContext context = { \
-		.version         = 0, \
-		.info            = self, \
-		.retain          = NULL, \
-		.release         = NULL, \
-		.copyDescription = NULL \
-	}; \
-	CFRunLoopTimerRef timer = CFRunLoopTimerCreate(kCFAllocatorDefault, \
-												   CFAbsoluteTimeGetCurrent() + 0.1, /*fireDate*/ \
-												   0.0, /*interval (0 = do not repeat)*/ \
-												   0, /*flags*/ \
-												   0, /*order*/ \
-												   addBookmarksImporter_CFTimer,  \
-												   &context); \
-	CFRunLoopAddTimer(CFRunLoopGetCurrent(), timer, kCFRunLoopCommonModes); \
-} while(0)
-
-#else
-
-#define AIBOOKMARKSIMPORTER_REGISTERWITHCONTROLLER() /*remove me*/
-
-#endif

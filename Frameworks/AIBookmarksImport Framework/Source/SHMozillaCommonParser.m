@@ -16,7 +16,6 @@
 
 #import "AIBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIHyperlinks/SHMarkedHyperlink.h>
 
 #define gtSign				@">"
 #define Hclose				@"</H"
@@ -85,7 +84,7 @@
 			[arrayStack addObject:bookmarksArray];
 			[bookmarksArray release];
 			bookmarksArray = [[NSMutableArray alloc] init];
-			[(NSMutableArray *)[arrayStack lastObject] addObject:[AIBookmarksImporter menuDictWithTitle:titleString
+			[(NSMutableArray *)[arrayStack lastObject] addObject:[AIBookmarksImporter dictionaryForBookmarksItemWithTitle:titleString
 																								content:bookmarksArray
 																								  image:nil]];
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],2)] caseInsensitiveCompare:Aopen] == NSOrderedSame){
@@ -109,7 +108,9 @@
 					titleString = [SHMozillaCommonParser simplyReplaceHTMLCodes:titleString];
 				}
 
-				[bookmarksArray addObject:[AIBookmarksImporter hyperlinkForTitle:titleString URL:urlString]];
+				[bookmarksArray addObject:[AIBookmarksImporter dictionaryForBookmarksItemWithTitle:titleString
+																						   content:[NSURL URLWithString:urlString]
+																							 image:nil]];
 			}
 		}else if([[[linkScanner string] substringWithRange:NSMakeRange([linkScanner scanLocation],4)] caseInsensitiveCompare:DLclose] == NSOrderedSame){
 			if((stringLength - [linkScanner scanLocation]) > 4){
