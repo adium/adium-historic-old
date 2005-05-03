@@ -416,6 +416,12 @@ end:
 
 //XXX needed: a bindings accessor for a localized menu item name (e.g. Show Bookmarks) --boredzo
 
+
+- (NSImage *)bookmarksImporterIcon
+{
+	return [[[NSImage alloc] initByReferencingFile:[[NSBundle bundleForClass:[self class]] pathForImageResource:@"BookmarksImporterIcon"] autorelease];
+}
+
 #pragma mark -
 #pragma mark NSOutlineView data source conformance
 
