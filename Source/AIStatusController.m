@@ -1312,6 +1312,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
 		[menuItem setTag:currentStatusType];
+		[menuItem setToolTip:[statusState statusMessageString]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
 		[menuItemArray addObject:menuItem];
