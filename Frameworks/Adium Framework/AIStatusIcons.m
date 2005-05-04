@@ -34,6 +34,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject);
 static NSString *statusNameForChat(AIChat *inChat);
 
 static BOOL					statusIconsReady = NO;
+static BOOL					displayedInvalidStatusIconPackError = NO;
 
 + (void)initialize
 {
@@ -140,31 +141,38 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 
 			if(![defaultStatusName isEqualToString:statusName]){
 				/* If the pack doesn't provide an icon for this specific status name, fall back on and then cache the default. */
-				statusIcon = [self statusIconForStatusName:defaultStatusName
-												statusType:statusType
-												  iconType:iconType
-												 direction:iconDirection];
-				[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
+				if((statusIcon = [self statusIconForStatusName:defaultStatusName
+													statusType:statusType
+													  iconType:iconType
+													 direction:iconDirection])){
+					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
+				}
 
 			}else{
 				if(statusType == AIInvisibleStatusType){
 					/* If we get here with an invisible status type, fall back on AIAwayStatusType */
-					statusIcon = [self statusIconForStatusName:nil
-													statusType:AIAwayStatusType
-													  iconType:iconType
-													 direction:iconDirection];
-					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
+					if((statusIcon = [self statusIconForStatusName:nil
+														statusType:AIAwayStatusType
+														  iconType:iconType
+														 direction:iconDirection])){
+						[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
+					}
 					
 				}else{
-					NSString	*errorMessage;
-					
-					errorMessage = [NSString stringWithFormat:
-						@"The active status icon pack \"%@\" installed located at \"%@\" is invalid.  It is missing the required status icon \"%@\".  Please remove the pack from this location and restart Adium; if you received this pack from adiumxtras.com, please contact its author.",
-						[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
-						statusIconBasePath,
-						defaultStatusName];
+					//Only display the error once per session
+					if(!displayedInvalidStatusIconPackError){
+						NSString	*errorMessage;
 						
-					NSRunCriticalAlertPanel(@"Invalid status icon pack",errorMessage,nil,nil,nil);
+						errorMessage = [NSString stringWithFormat:
+							AILocalizedString(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  Please remove the pack from this location and restart Adium; if you received this pack from adiumxtras.com, please contact its author.",nil),
+							[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
+							statusIconBasePath,
+							defaultStatusName];
+						
+						displayedInvalidStatusIconPackError = YES;
+
+						NSRunCriticalAlertPanel(AILocalizedString(@"Invalid status icon pack",nil),errorMessage,nil,nil,nil);
+					}
 				}
 			}
 		}
@@ -197,7 +205,8 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			}
 			
 			statusIconsReady = YES;
-			
+			displayedInvalidStatusIconPackError = NO;
+
 			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
 																			   object:nil];
 			
