@@ -72,6 +72,10 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Contact List Controller ----------------------------------------------------------------------------------------------
 #pragma mark Contact List Controller
 
+- (AIListWindowController *)contactListWindowController {
+	return contactListWindowController;
+}
+
 //Show contact list
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {

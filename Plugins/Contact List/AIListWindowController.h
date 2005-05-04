@@ -36,6 +36,10 @@
 	// refers to the GUI preference.  Sometimes this is expressed as dock-like 
 	// sliding instead, sometimes as orderOut:-type hiding.
 	BOOL								windowShouldBeVisibleInBackground; 
+
+	// used by the "show contact list" event behavior to prevent the contact list
+	// from hiding during the amount of time it is to be shown
+	BOOL								preventHiding;
 	
 	BOOL								permitSlidingInForeground;
 	AIRectEdgeMask						windowSlidOffScreenEdgeMask;
@@ -54,5 +58,7 @@
 - (AIRectEdgeMask)slidableEdgesAdjacentToWindow;
 - (void)slideWindowOffScreenEdges:(AIRectEdgeMask)rectEdgeMask;
 - (void)slideWindowOnScreen;
+- (void)setPreventHiding:(BOOL)newPreventHiding;
+- (BOOL)windowShouldHideOnDeactivate;
 
 @end

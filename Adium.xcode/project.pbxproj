@@ -303,12 +303,12 @@
 					ProjectRef = 4947F5E90655E90C00B791E5;
 				},
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2;
-					ProjectRef = 3448717006D1E57700DA778C;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB;
 					ProjectRef = 3496A8E707CE6CA30055BBAB;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2;
+					ProjectRef = 3448717006D1E57700DA778C;
 				},
 				{
 					ProductGroup = 07FC98340827D355006C56D6;
@@ -9088,6 +9088,8 @@
 				347C6948080C8F3B00E69674,
 				34F46786080F7FFB007800AB,
 				4B8C3C990825EAF9004B9F45,
+				B079F7680828087A0058B452,
+				B079F76A0828087A0058B452,
 				07FC987C0827D747006C56D6,
 			);
 			isa = PBXHeadersBuildPhase;
@@ -9384,6 +9386,7 @@
 				0779934F08221D9700F698DC,
 				3474E000082550FD00BF30F0,
 				4B8C3CE90825F60B004B9F45,
+				B079F7670828087A0058B452,
 				071C56330827933100399C0F,
 			);
 			isa = PBXResourcesBuildPhase;
@@ -9571,6 +9574,8 @@
 				347C6949080C8F3B00E69674,
 				34F46785080F7FFB007800AB,
 				4B8C3C9A0825EAF9004B9F45,
+				B079F7690828087A0058B452,
+				B079F76B0828087A0058B452,
 				07FC987B0827D73F006C56D6,
 			);
 			isa = PBXSourcesBuildPhase;
@@ -17349,6 +17354,7 @@
 				34E29FCE07AF091C006735BC,
 				34E2A2FD07B0193B006735BC,
 				349C6E8207C9728B005EB896,
+				B079F761082808790058B452,
 				347E77A907CA909E00350507,
 				34E0EA1507CC541A00A82198,
 				347E778507CA825F00350507,
@@ -23070,6 +23076,99 @@
 //9E2
 //9E3
 //9E4
+//B00
+//B01
+//B02
+//B03
+//B04
+		B079F761082808790058B452 = {
+			children = (
+				B079F7630828087A0058B452,
+				B079F7640828087A0058B452,
+				B079F762082808790058B452,
+				B079F7650828087A0058B452,
+				B079F7660828087A0058B452,
+			);
+			isa = PBXGroup;
+			name = "Contact List Show Behavior";
+			path = "Plugins/Contact List Show Behavior";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F762082808790058B452 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			path = ContactListShowBehavior.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F7630828087A0058B452 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SMContactListShowBehaviorPlugin.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F7640828087A0058B452 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SMContactListShowBehaviorPlugin.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F7650828087A0058B452 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = SMContactListShowDetailsPane.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F7660828087A0058B452 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			path = SMContactListShowDetailsPane.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		B079F7670828087A0058B452 = {
+			fileRef = B079F762082808790058B452;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B079F7680828087A0058B452 = {
+			fileRef = B079F7630828087A0058B452;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B079F7690828087A0058B452 = {
+			fileRef = B079F7640828087A0058B452;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B079F76A0828087A0058B452 = {
+			fileRef = B079F7650828087A0058B452;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		B079F76B0828087A0058B452 = {
+			fileRef = B079F7660828087A0058B452;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+//B00
+//B01
+//B02
+//B03
+//B04
 //B70
 //B71
 //B72
