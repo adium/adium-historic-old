@@ -4377,8 +4377,6 @@
 				34486BCD06D1DF0400DA778C,
 				34486BCE06D1DF0400DA778C,
 				34486BCF06D1DF0400DA778C,
-				BE1E20D508139F9200A8B07F,
-				BE1E20D608139F9200A8B07F,
 				34486BD606D1DF0400DA778C,
 				34486BD706D1DF0400DA778C,
 				34486BDE06D1DF0400DA778C,
@@ -5249,7 +5247,6 @@
 				34D835D007CBED06006466F2,
 				3459C58F07E291EC005F284E,
 				34BFE58207E9180500AD984D,
-				BE1E20D708139F9200A8B07F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5394,7 +5391,6 @@
 				34D835CF07CBED06006466F2,
 				3459C58E07E291EC005F284E,
 				34BFE58307E9180500AD984D,
-				BE1E20D808139F9200A8B07F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -5427,49 +5423,6 @@
 			path = AIUtilities.framework;
 			refType = 3;
 			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-//8D0
-//8D1
-//8D2
-//8D3
-//8D4
-//BE0
-//BE1
-//BE2
-//BE3
-//BE4
-		BE1E20D508139F9200A8B07F = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AIWorkspaceAdditions.h;
-			path = Source/AIWorkspaceAdditions.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BE1E20D608139F9200A8B07F = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AIWorkspaceAdditions.m;
-			path = Source/AIWorkspaceAdditions.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		BE1E20D708139F9200A8B07F = {
-			fileRef = BE1E20D508139F9200A8B07F;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		BE1E20D808139F9200A8B07F = {
-			fileRef = BE1E20D608139F9200A8B07F;
-			isa = PBXBuildFile;
-			settings = {
-			};
 		};
 	};
 	rootObject = 0867D690FE84028FC02AAC07;
