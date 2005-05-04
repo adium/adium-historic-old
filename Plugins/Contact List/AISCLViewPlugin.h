@@ -33,6 +33,7 @@
 }
 
 //Contact List Controller
+- (AIListWindowController *)contactListWindowController;
 - (void)contactListDidClose;
 - (void)showContactListAndBringToFront:(BOOL)bringToFront;
 - (BOOL)contactListIsVisibleAndMain;

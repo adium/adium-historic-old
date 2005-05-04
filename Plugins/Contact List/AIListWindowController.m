@@ -64,7 +64,6 @@
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
 - (void)setPermitSlidingInForeground:(BOOL)flag;
-- (BOOL)windowShouldHideOnDeactivate;
 @end
 
 @implementation AIListWindowController
@@ -93,6 +92,7 @@
 - (id)init
 {	
     [super initWithWindowNibName:[self nibName]];
+	preventHiding = NO;
     return(self);
 }
 
@@ -510,7 +510,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
+	if((!preventHiding) && (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible]))) {
 		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 	}
 	
@@ -635,4 +635,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	[contactListController contactListDesiredSizeChanged];
 }
 
+- (void)setPreventHiding:(BOOL)newPreventHiding {
+	preventHiding = newPreventHiding;
+}
 @end

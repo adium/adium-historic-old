@@ -310,6 +310,10 @@
 			<key>Class</key>
 			<string>ESAwayStatusWindowPlugin</string>
 		</dict>
+		<dict>
+			<key>Class</key>
+			<string>SMContactListShowBehaviorPlugin</string>
+		</dict>
 	</array>
 </dict>
 </plist>
