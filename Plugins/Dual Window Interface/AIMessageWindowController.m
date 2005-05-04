@@ -94,11 +94,6 @@
 												   object:nil];
 		
 		//Prefs
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(updateTabArrangingBehavior)
-										   name:Interface_TabArrangingPreferenceChanged 
-										 object:nil];
-		
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
 		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
@@ -245,8 +240,8 @@
 		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
 		[tabView_customTabs setAllowsInactiveTabClosing:[[prefDict objectForKey:KEY_ENABLE_INACTIVE_TAB_CLOSE] boolValue]];
-			
-		[self updateTabArrangingBehavior];
+		[tabView_customTabs setAllowsTabRearranging:YES];
+		
 		[self updateTabBarVisibilityAndAnimate:!firstTime];
 		[self _updateWindowTitleAndIcon];
 
@@ -269,12 +264,6 @@
 	if(tabViewItem == [tabView_messages selectedTabViewItem]){
 		[self _updateWindowTitleAndIcon];
 	}
-}
-
-//Update our tabs to match the current tab arranging behavior / limitations
-- (void)updateTabArrangingBehavior
-{
-	[tabView_customTabs setAllowsTabRearranging:[[adium interfaceController] allowChatOrdering]];
 }
 
 
