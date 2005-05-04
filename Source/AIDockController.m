@@ -272,7 +272,6 @@
 		//Load the images
 		imageArray = [NSMutableArray arrayWithCapacity:[imageNameArray count]];
 		while((imageName = [imageNameEnumerator nextObject])){
-			NSURL		*imageURL;
 			NSString	*imagePath;
 			NSImage		*image;
 			
@@ -280,11 +279,9 @@
 			if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
 				//Special hack for all the incorrectly made icon packs we have floating around out there :P
 				imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
-				imageURL  = [(NSURL *)CFBundleCopyResourceURL(CFBundleGetMainBundle(),
-				                                              (CFStringRef)imageName,
-				                                              /*resourceType*/ NULL,
-				                                              /*subDirName*/ (CFStringRef)@"Shared Dock Icon Images") autorelease];
-				imagePath = [imageURL path];
+				imagePath = [[NSBundle mainBundle] pathForResource:imageName
+				                                            ofType:@""
+				                                       inDirectory:@"Shared Dock Icon Images"];
 			}else{
 				imagePath = [folderPath stringByAppendingPathComponent:imageName];
 			}
@@ -310,7 +307,6 @@
 		
 	}else{ //Static State
 		NSString	*imageName;
-		NSURL		*imageURL;
 		NSString	*imagePath;
 		NSImage		*image;
 		BOOL		overlay;
@@ -320,11 +316,9 @@
 		if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
 			//Special hack for all the incorrectly made icon packs we have floating around out there :P
 			imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
-			imageURL  = [(NSURL *)CFBundleCopyResourceURL(CFBundleGetMainBundle(),
-			                                              (CFStringRef)imageName,
-			                                              /*resourceType*/ NULL,
-			                                              /*subDirName*/ (CFStringRef)@"Shared Dock Icon Images") autorelease];
-			imagePath = [imageURL path];
+			imagePath = [[NSBundle mainBundle] pathForResource:imageName
+			                                            ofType:@""
+			                                       inDirectory:@"Shared Dock Icon Images"];
 		}else{
 			imagePath = [folderPath stringByAppendingPathComponent:imageName];
 		}
