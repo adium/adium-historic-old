@@ -186,8 +186,10 @@
 			}
 
 		}else if([inObject isKindOfClass:[AIListGroup class]]){
+			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
+
 			[inObject setVisible:((useContactListGroups) &&
-								  (showOfflineContacts || [(AIListGroup *)inObject visibleCount] > 0))];
+								  ([(AIListGroup *)inObject visibleCount] > 0 || newObject))];
 		}
 	}
 	

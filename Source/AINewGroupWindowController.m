@@ -85,7 +85,11 @@
  */
 - (IBAction)addGroup:(id)sender
 {
-	[[adium contactController] groupWithUID:[textField_groupName stringValue]];
+	AIListGroup *group = [[adium contactController] groupWithUID:[textField_groupName stringValue]];
+	
+	//Force this new group to be visible.  Obviously the user created it for a reason, so let's keep
+	//it visible and give them time to stick something inside.
+	[group setStatusObject:[NSNumber numberWithBool:YES] forKey:@"New Object" notify:YES];
 
 	[self closeWindow:nil];
 }
