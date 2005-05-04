@@ -383,7 +383,7 @@ int actionSort(id objectA, id objectB, void *context)
 /*!
  * @brief A row in the outline view was double clicked
  *
- * If an event was double clicked, add an action. If an action was double clicked, edit it.
+ * If an event was double clicked, expand or collapse the disclosure triangle. If an action was double clicked, edit it.
  */
 - (IBAction)didDoubleClick:(id)sender
 {
@@ -393,8 +393,11 @@ int actionSort(id objectA, id objectB, void *context)
 		id item = [outlineView_summary itemAtRow:row];
 		
 		if([contactAlertsActions containsObjectIdenticalTo:item]){
-			[self addAlert:nil];
-			
+			if([outlineView_summary isItemExpanded:item]){
+				[outlineView_summary collapseItem:item];
+			}else{
+				[outlineView_summary expandItem:item];
+			}
 		}else{
 			[self editAlert:nil];
 		}
