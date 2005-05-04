@@ -24,7 +24,6 @@
 
 #define	NEW_PRESET_NAME				AILocalizedString(@"New Event Set",nil)
 
-#define KEY_ACTIVE_EVENT_SET		@"Active Event Set"
 #define KEY_STORED_EVENT_PRESETS	@"Event Presets"
 #define	KEY_EVENT_SET_NAME			@"Name"
 #define KEY_ORDER_INDEX				@"OrderIndex"
@@ -365,10 +364,12 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 			}
 		}
 		
+		NSAssert(name != nil, @"name is nil");
 		[eventPreset setObject:name
 						forKey:KEY_EVENT_SET_NAME];
 	}
 	
+	NSAssert(eventPreset != nil, @"eventPreset is nil");
 	[storedEventPresets setObject:eventPreset
 						   forKey:name];
 
