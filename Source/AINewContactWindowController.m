@@ -352,7 +352,6 @@
 {	
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
-	NSNumber		*addTo;
 	
 	[accounts release];
 	accounts = [[[adium accountController] accountsWithServiceClassOfService:service] retain];
