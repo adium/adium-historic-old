@@ -24,7 +24,6 @@
 #import <Adium/QTSoundFilePlayer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIWorkspaceAdditions.h>
 #include <float.h>
 
 #define	PATH_SOUNDS					@"/Sounds"
