@@ -37,7 +37,6 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 "checkBox_arrangeByGroup" = NSButton; 
-                "checkBox_arrangeTabs" = NSButton; 
                 "checkBox_enableLogging" = NSButton; 
                 "checkBox_enableMenuItem" = NSButton; 
                 "checkBox_messagesInTabs" = NSButton; 

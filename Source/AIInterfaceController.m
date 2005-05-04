@@ -221,17 +221,6 @@
 	//Update prefs
 	tabbedChatting = [[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue];
 	groupChatsByContactGroup = [[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue];
-	arrangeChats = [[prefDict objectForKey:KEY_SORT_CHATS] boolValue];
-	
-	//Observe contact order changes if auto-arranging is enabled
-	if(arrangeChats){
-		[[adium notificationCenter] addObserver:self 
-									   selector:@selector(contactOrderChanged:)
-										   name:Contact_OrderChanged 
-										 object:nil];
-		[self contactOrderChanged:nil];
-	}
-	[[adium notificationCenter] postNotificationName:Interface_TabArrangingPreferenceChanged object:nil];
 }
 
 //Handle a reopen/dock icon click
@@ -311,7 +300,6 @@
 {
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
 	NSString	*containerID;
-	int			index = -1;
 	
 	//Determine the correct container for this chat
 	if(groupChatsByContactGroup){
@@ -337,12 +325,8 @@
 
 	
 	//Determine the correct placement for this chat within the container
-	if(arrangeChats){
-		index = [self indexForInsertingChat:inChat intoContainerWithID:containerID];
-	}
-	
-	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:index];
-	if (![inChat isOpen]){
+	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:-1];
+	if(![inChat isOpen]){
 		[inChat setIsOpen:YES];
 		
 		//Post the notification last, so observers receive a chat whose isOpen flag is yes.
@@ -376,8 +360,7 @@
 		while(chat = [chatEnumerator nextObject]){
 			[interfacePlugin moveChat:chat
 					toContainerWithID:firstContainerID
-								index:(arrangeChats ? [self indexForInsertingChat:chat
-															  intoContainerWithID:firstContainerID] : -1)];
+								index:-1];
 		}
 		
 		[openChats release];
@@ -429,12 +412,6 @@
 - (void)_resetOpenChatsCache
 {
 	[_cachedOpenChats release]; _cachedOpenChats = nil;
-}
-
-//Allow the user to change chat order?
-- (BOOL)allowChatOrdering
-{
-	return(!arrangeChats);
 }
 
 
@@ -513,104 +490,6 @@
 	if(chat != activeChat){
 		[[adium contentController] increaseUnviewedContentOfChat:chat];
 	}
-}
-
-
-//Dynamically ordering / grouping tabs ---------------------------------------------------------------------------------
-- (void)contactOrderChanged:(NSNotification *)notification
-{
-	if(arrangeChats){
-		AIListObject		*changedObject = [notification object];
-		
-		if(changedObject){
-			NSEnumerator	*enumerator = [[self openChats] objectEnumerator];
-			AIChat			*chat;
-			
-			//Check if we have a chat window open with this contact.  If we do, re-sort that chat
-			//Unfortunately we need to enumerate all our chats to determine this - Stupid group chats screwing everything up
-			while(chat = [enumerator nextObject]){
-				if([chat listObject] == changedObject) break;
-			}
-			if(chat) [self _resortChat:chat];
-			
-		}else{
-			//Entire list was resorted, resort all our chats
-			[self _resortAllChats];
-		}
-	}
-	
-}
-
-//
-- (void)_resortChat:(AIChat *)chat
-{
-	NSString	*containerID = [interfacePlugin containerIDForChat:chat];
-		
-	[interfacePlugin moveChat:chat toContainerWithID:containerID
-						index:[self indexForInsertingChat:chat intoContainerWithID:containerID]];
-	
-}
-
-//
-- (void)_resortAllChats
-{
-	AISortController	*sortController = [[adium contactController] activeSortController];
-	NSEnumerator		*containerEnumerator = [[[[interfacePlugin openContainers] copy] autorelease] objectEnumerator];
-	NSString			*containerID;
-	
-	while(containerID = [containerEnumerator nextObject]){
-		NSArray			*chatsInContainer;
-		NSArray			*sortedListObjects;
-		NSEnumerator	*objectEnumerator;
-		AIListObject	*object;
-		int				index = 0;
-		
-		//Sort the chats in this container
-		chatsInContainer = [[self openChatsInContainerWithID:containerID] copy];
-		sortedListObjects = [sortController sortListObjects:[self _listObjectsForChatsInContainerWithID:containerID]];
-		
-		//Sync the container with the sorted chats
-		objectEnumerator = [sortedListObjects objectEnumerator];
-		while(object = [objectEnumerator nextObject]){
-			NSEnumerator	*chatEnumerator = [chatsInContainer objectEnumerator];
-			AIChat			*chat;
-
-			//Find the chat associated with this list object
-			while((chat = [chatEnumerator nextObject]) && [chat listObject] != object);
-			
-			//Move that chat to the correct spot, and step along to the next listobject
-			if(chat) [interfacePlugin moveChat:chat toContainerWithID:containerID index:index++];
-		}
-		
-		[chatsInContainer release];
-	}
-}
-
-- (int)indexForInsertingChat:(AIChat *)chat intoContainerWithID:(NSString *)containerID
-{
-	AISortController	*sortController = [[adium contactController] activeSortController];
-
-	return([sortController indexForInserting:[chat listObject]
-								 intoObjects:[self _listObjectsForChatsInContainerWithID:containerID]]);
-}
-
-//Build array of list objects to sort
-//We can't keep track of this easily since participating list objects may change due to multi-user chat
-//Multi-user chats make this so difficult :(
-- (NSArray *)_listObjectsForChatsInContainerWithID:(NSString *)containerID
-{
-	NSMutableArray	*listObjects = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-	AIChat			*chat;
-	AIListObject	*listObject;
-
-	enumerator = [[self openChatsInContainerWithID:containerID] objectEnumerator];
-	while(chat = [enumerator nextObject]){
-		listObject = [chat listObject];
-		if(listObject) [listObjects addObject:listObject];
-	}
-	
-	return(listObjects);
 }
 
 

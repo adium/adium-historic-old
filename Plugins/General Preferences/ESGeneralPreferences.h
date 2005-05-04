@@ -18,7 +18,6 @@
 
 @interface ESGeneralPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_messagesInTabs;
-    IBOutlet	NSButton		*checkBox_arrangeTabs;
     IBOutlet	NSButton		*checkBox_arrangeByGroup;
 
 	IBOutlet	NSButton		*checkBox_enableLogging;

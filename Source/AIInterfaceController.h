@@ -28,7 +28,6 @@
 
 #define PREF_GROUP_INTERFACE			@"Interface"
 #define KEY_TABBED_CHATTING				@"Tabbed Chatting"
-#define KEY_SORT_CHATS					@"Sort Chats"
 #define KEY_GROUP_CHATS_BY_GROUP		@"Group Chats By Group"
 
 #define PREF_GROUP_CONTACT_LIST				@"Contact List"
@@ -175,7 +174,6 @@ typedef enum {
 	id <AIContactListController> contactListPlugin;
 		
 	BOOL	groupChatsByContactGroup;
-	BOOL	arrangeChats;
 }
 
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
@@ -196,8 +194,6 @@ typedef enum {
 - (AIChat *)activeChat;
 - (NSArray *)openChats;
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID;
-- (BOOL)allowChatOrdering;
-- (int)indexForInsertingChat:(AIChat *)chat intoContainerWithID:(NSString *)containerID;
 
 //Interface plugin callbacks
 - (void)chatDidOpen:(AIChat *)inChat;

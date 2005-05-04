@@ -58,7 +58,6 @@
 	//Interface
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_INTERFACE];
     [checkBox_messagesInTabs setState:[[prefDict objectForKey:KEY_TABBED_CHATTING] boolValue]];
-    [checkBox_arrangeTabs setState:[[prefDict objectForKey:KEY_SORT_CHATS] boolValue]];
 	[checkBox_arrangeByGroup setState:[[prefDict objectForKey:KEY_GROUP_CHATS_BY_GROUP] boolValue]];
 
 	//Chat Cycling
@@ -101,7 +100,6 @@
     [self configureControlDimming];
 
 	[checkBox_messagesInTabs setLocalizedString:AILocalizedString(@"Create new messages in tabs",nil)];
-    [checkBox_arrangeTabs setLocalizedString:AILocalizedString(@"Sort tabs with the current sort options",nil)];
     [checkBox_arrangeByGroup setLocalizedString:AILocalizedString(@"Organize tabs into new windows by group",nil)];
 	[checkBox_enableLogging setLocalizedString:AILocalizedString(@"Log messages",nil)];
 	[checkBox_enableMenuItem setLocalizedString:AILocalizedString(@"Show Adium status in menu bar",nil)];
@@ -122,11 +120,6 @@
                                              forKey:KEY_TABBED_CHATTING
                                               group:PREF_GROUP_INTERFACE];
 		[self configureControlDimming];
-		
-	}else if(sender == checkBox_arrangeTabs){
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-											 forKey:KEY_SORT_CHATS
-											  group:PREF_GROUP_INTERFACE];
 		
 	}else if(sender == checkBox_arrangeByGroup){
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
@@ -173,7 +166,6 @@
 //Dim controls as needed
 - (void)configureControlDimming
 {
-	[checkBox_arrangeTabs setEnabled:[checkBox_messagesInTabs state]];
 	[checkBox_arrangeByGroup setEnabled:[checkBox_messagesInTabs state]];
 }
 
