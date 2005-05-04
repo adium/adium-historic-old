@@ -52,7 +52,7 @@
     return(AILocalizedString(@"Accounts","Accounts preferences label"));
 }
 - (NSString *)nibName{
-    return(@"AccountListWindow");
+    return(@"AccountListPreferences");
 }
 
 /*!
