@@ -235,11 +235,23 @@
 	return([eventPresetsMenu autorelease]);
 }
 
+- (void)selectActiveEventInPopUp
+{
+	NSString	*activeEventSetName = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
+																			   group:PREF_GROUP_EVENT_PRESETS];
+
+	//First try to set the localized version
+	[popUp_eventPreset selectItemWithTitle:[self _localizedTitle:activeEventSetName]];
+	//If that fails, look for one exactly matching
+	if(![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemWithTitle:activeEventSetName];
+	//And if that fails, select the first item (something went wrong, we should at least have a selection)
+	if(![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemAtIndex:0];	
+}
+
 - (void)setAndConfigureEventPresetsMenu
 {
 	[popUp_eventPreset setMenu:[self eventPresetsMenu]];
-	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
-																					group:PREF_GROUP_EVENT_PRESETS]];
+	[self selectActiveEventInPopUp];
 }
 
 /*!
@@ -267,8 +279,8 @@
 	NSString	*explanatoryText;
 	
 	defaultName = [NSString stringWithFormat:@"%@ (%@)",
-		[[adium preferenceController] preferenceForKey:@"Active Event Set"
-												 group:PREF_GROUP_EVENT_PRESETS],
+		[self _localizedTitle:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
+																	   group:PREF_GROUP_EVENT_PRESETS]],
 		AILocalizedString(@"Copy",nil)];
 	explanatoryText = AILocalizedString(@"Enter a unique name for this new event set.",nil);
 
@@ -279,8 +291,7 @@
 														   userInfo:nil];
 
 	//Get our event presets menu back to its proper selection
-	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
-																					group:PREF_GROUP_EVENT_PRESETS]];	
+	[self selectActiveEventInPopUp];
 }
 
 /*!
@@ -296,31 +307,33 @@
 								   withDelegate:self];
 
 	//Get our event presets menu back to its proper selection
-	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
-																					group:PREF_GROUP_EVENT_PRESETS]];
+	[self selectActiveEventInPopUp];
 }
 
 - (BOOL)allowDeleteOfPreset:(NSDictionary *)preset
 {
-	NSString				*name = [preset objectForKey:@"Name"];
+	NSString	*name = [preset objectForKey:@"Name"];
+	NSString	*localizedTitle;
 	
+	localizedTitle = [self _localizedTitle:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
+																					group:PREF_GROUP_EVENT_PRESETS]];
 	//Don't allow the active preset to be deleted
-	return (![[[adium preferenceController] preferenceForKey:@"Active Event Set"
-													   group:PREF_GROUP_EVENT_PRESETS] isEqualToString:name]);
+	return (![localizedTitle isEqualToString:name]);
 }
 
 - (NSArray *)renamePreset:(NSDictionary *)preset toName:(NSString *)newName inPresets:(NSArray *)presets renamedPreset:(id *)renamedPreset
 {
 	NSString				*oldPresetName = [preset objectForKey:@"Name"];
 	NSMutableDictionary		*newPreset = [preset mutableCopy];
+	NSString				*localizedCurrentName = [self _localizedTitle:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
+																												   group:PREF_GROUP_EVENT_PRESETS]];
 	[newPreset setObject:newName
 				  forKey:@"Name"];
 
 	//Mark the newly created (but still functionally identical) event set as active if the old one was active
-	if([[[adium preferenceController] preferenceForKey:@"Active Event Set"
-												 group:PREF_GROUP_EVENT_PRESETS] isEqualToString:oldPresetName]){
+	if([localizedCurrentName isEqualToString:oldPresetName]){
 		[[adium preferenceController] setPreference:newName
-											 forKey:@"Active Event Set"
+											 forKey:KEY_ACTIVE_EVENT_SET
 											  group:PREF_GROUP_EVENT_PRESETS];
 	}
 	
@@ -472,8 +485,7 @@
 {
 	NSDictionary		*eventPreset;
 
-	[popUp_eventPreset selectItemWithTitle:[[adium preferenceController] preferenceForKey:@"Active Event Set"
-																					group:PREF_GROUP_EVENT_PRESETS]];	
+	[self selectActiveEventInPopUp];
 	eventPreset = [[popUp_eventPreset selectedItem] representedObject];
 
 	[plugin setEventPreset:eventPreset];
@@ -580,7 +592,7 @@
 			
 			//Presets menu
 			[[adium preferenceController] setPreference:newName
-												 forKey:@"Active Event Set"
+												 forKey:KEY_ACTIVE_EVENT_SET
 												  group:PREF_GROUP_EVENT_PRESETS];
 			[popUp_eventPreset setMenu:[self eventPresetsMenu]];
 			[popUp_eventPreset selectItemWithTitle:newName];
