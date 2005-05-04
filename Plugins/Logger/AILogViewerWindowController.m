@@ -1393,7 +1393,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 	[logAccessLock lock];
 	indexArray = CFArrayCreate(NULL, indexPtr, 1, &kCFTypeArrayCallBacks);
 	searchGroup = SKSearchGroupCreate(indexArray);
-	
+
 	searchResults = SKSearchResultsCreateWithQuery(
 												   searchGroup,
 												   (CFStringRef)searchString,
@@ -1416,10 +1416,10 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			
 			//Get the next LOG_RESULT_CLUMP_SIZE results
 			count = SKSearchResultsGetInfoInRange(searchResults,
-                                                              CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
-                                                              outDocumentsArray,
-                                                              NULL,
-                                                              outScoresArray);
+												  CFRangeMake(resultRange.location, LOG_RESULT_CLUMP_SIZE),
+												  outDocumentsArray,
+												  NULL,
+												  outScoresArray);
 			
 			//Process the results
 			for(i = 0; (i < count) && (searchID == activeSearchID); i++){
@@ -1449,6 +1449,9 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			resultRange.location += LOG_RESULT_CLUMP_SIZE;
 			resultRange.length -= LOG_RESULT_CLUMP_SIZE;
 		}
+		
+		free(outDocumentsArray);
+		free(outScoresArray);
 	}
 
 	CFRelease(indexArray);
