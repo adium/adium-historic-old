@@ -65,11 +65,6 @@
     return _webkitAvailable;	
 }
 
-- (BOOL)isURLLoadingAvailable
-{
-    return (NSFoundationVersionNumber >= 462.6);	
-}
-
 - (NSString *)applicationVersion
 {
 	return([[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]);
