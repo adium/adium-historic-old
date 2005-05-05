@@ -31,15 +31,15 @@
 	IBOutlet	NSPopUpButton		*popUp_state;
 	BOOL		needToRebuildPopUpState;
 	
-	IBOutlet	NSTextField			*label_statusMessage;
-	IBOutlet	NSBox				*box_statusMessage;
-	IBOutlet	AISendingTextView	*textView_statusMessage;
-	IBOutlet	AIAutoScrollView	*scrollView_statusMessage;
+	IBOutlet	NSTextField				*label_statusMessage;
+	IBOutlet	NSBox					*box_statusMessage;
+	IBOutlet	AISendingTextView		*textView_statusMessage;
+	IBOutlet	AIAutoScrollView		*scrollView_statusMessage;
 
-	IBOutlet	NSButton			*checkbox_autoReply;
-	IBOutlet	NSButton			*checkbox_customAutoReply;
-	IBOutlet	AIAutoScrollView	*scrollView_autoReply;
-	IBOutlet	AISendingTextView	*textView_autoReply;
+	IBOutlet	NSButton				*checkbox_autoReply;
+	IBOutlet	NSButton				*checkbox_customAutoReply;
+	IBOutlet	AISendingTextView		*textView_autoReply;
+	IBOutlet	AIAutoScrollView		*scrollView_autoReply;
 
 	IBOutlet	NSButton			*checkbox_idle;
 	IBOutlet	NSBox				*box_idle;

@@ -21,9 +21,9 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
-#import <AIUtilities/AISendingTextView.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
+#import <Adium/AIMessageEntryTextView.h>
 
 #define CONTROL_SPACING			8
 #define WINDOW_HEIGHT_PADDING	60
@@ -178,18 +178,28 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	[textView_statusMessage setSendOnReturn:NO];
 	[textView_statusMessage setSendOnEnter:sendOnEnter];
-
+	
+	if([textView_statusMessage isKindOfClass:[AIMessageEntryTextView class]]){
+		[(AIMessageEntryTextView *)textView_statusMessage setClearOnEscape:NO];
+		[(AIMessageEntryTextView *)textView_statusMessage setPushPopEnabled:NO];
+	}
+	
 	[scrollView_autoReply setAutoHideScrollBar:YES];
 	[scrollView_autoReply setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_autoReply setTarget:self action:@selector(okay:)];
 
 	//Return inserts a new line
 	[textView_autoReply setSendOnReturn:NO];
-	
+
 	/* Enter follows the user's preference. By default, then, enter will send the okay: selector.
 	 * If the user expects enter to insert a newline in a message, however, it will do that here, too. */
 	[textView_autoReply setSendOnEnter:sendOnEnter];
 
+	if([textView_autoReply isKindOfClass:[AIMessageEntryTextView class]]){
+		[(AIMessageEntryTextView *)textView_autoReply setClearOnEscape:NO];
+		[(AIMessageEntryTextView *)textView_autoReply setPushPopEnabled:NO];
+	}
+	
 	[self configureForAccountAndWorkingStatusState];
 	
 	/*
