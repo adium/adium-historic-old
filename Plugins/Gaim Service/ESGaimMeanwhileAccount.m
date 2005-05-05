@@ -19,6 +19,8 @@
 #import "AIStatusController.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
+#import <Adium/ESFileTransfer.h>
+#import <Libgaim/mwgaim-adium.h>
 
 @interface ESGaimMeanwhileAccount (PRIVATE)
 - (NSAttributedString *)statusMessageForContact:(AIListContact *)theContact;
@@ -149,6 +151,38 @@
 	}
 
 	return([super titleForAccountActionMenuLabel:label]);
+}
+
+#pragma mark File transfer
+- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super _beginSendOfFileTransfer:fileTransfer];
+}
+
+- (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	if (gaim_account_is_connected(account)){
+		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
+		
+		return mwgaim_xfer_new(account->gc,destsn);
+	}
+	
+	return nil;
+}
+
+- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
+{
+    [super acceptFileTransferRequest:fileTransfer];    
+}
+
+- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
+{
+    [super rejectFileReceiveRequest:fileTransfer];    
+}
+
+- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
+{
+	[super cancelFileTransfer:fileTransfer];
 }
 
 #endif /* #ifndef MEANWHILE_NOT_AVAILABLE */
