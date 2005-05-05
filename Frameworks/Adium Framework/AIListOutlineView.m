@@ -358,7 +358,7 @@
  */
 - (void)drawRect:(NSRect)rect
 {	
-	if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
+	//if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
 	[super drawRect:rect];
 
 	/*	#################### More Crappy Code ###################

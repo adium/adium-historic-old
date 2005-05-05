@@ -42,37 +42,24 @@
 
 	NSMutableArray 	*itemArray = [NSMutableArray array];
 	id 				item;
-	
+
 	//Apple wants us to do some pretty crazy stuff for selections in 10.3
-	//We'll continue to use the old simpler cleaner safer easier method for 10.2
-	if([NSApp isOnPantherOrBetter]){
-		NSIndexSet *indices = [self selectedRowIndexes];
-		unsigned int bufSize = [indices count];
-		unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
-		unsigned int i;
+	NSIndexSet *indices = [self selectedRowIndexes];
+	unsigned int bufSize = [indices count];
+	unsigned int *buf = malloc(bufSize + sizeof(unsigned int));
+	unsigned int i;
+
+	NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+	[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
-		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
-		
-		for(i = 0; i != bufSize; i++){
-			if((item = [sourceArray objectAtIndex:buf[i]])){
-				[itemArray addObject:item];
-			}
+	for(i = 0; i != bufSize; i++){
+		if((item = [sourceArray objectAtIndex:buf[i]])){
+			[itemArray addObject:item];
 		}
-		
-		free(buf);
-		
-	}else{
-		NSEnumerator 	*enumerator = [self selectedRowEnumerator]; 
-		NSNumber 		*row;
-		
-		while((row = [enumerator nextObject])){
-			if((item = [sourceArray objectAtIndex:[row intValue]])){
-				[itemArray addObject:item]; 
-			}
-		} 
 	}
-	
+
+	free(buf);
+
 	return(itemArray);
 }
 
