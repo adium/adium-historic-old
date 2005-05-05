@@ -32,12 +32,16 @@ void AISetRangeInMemory(void *buf, NSRange range, int ch);
 
 #pragma mark Rect utilities
 
-typedef enum {
+typedef enum AIRectEdgeMask {
 	AIMaxXEdgeMask = (1 << NSMaxXEdge),
 	AIMaxYEdgeMask = (1 << NSMaxYEdge),
 	AIMinXEdgeMask = (1 << NSMinXEdge),
 	AIMinYEdgeMask = (1 << NSMinYEdge),
 } AIRectEdgeMask;
+
+enum {
+	AINotARectEdge = -1
+};
 
 // e.g., AICoordinateForRect_edge_(rect, NSMaxXEdge) is the same as NSMaxX(rect)
 float AICoordinateForRect_edge_(NSRect rect, NSRectEdge edge);
