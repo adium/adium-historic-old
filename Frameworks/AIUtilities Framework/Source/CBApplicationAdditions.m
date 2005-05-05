@@ -8,10 +8,6 @@
 #import "CBApplicationAdditions.h"
 
 //Make sure the version number defines exist - compiling in 10.3, for example, NSAppKitVersionNumber10_3 isn't defined.
-#ifndef NSAppKitVersionNumber10_1
-#define NSAppKitVersionNumber10_1 620
-#endif
-
 #ifndef NSAppKitVersionNumber10_2
 #define NSAppKitVersionNumber10_2 663
 #endif
@@ -38,15 +34,6 @@
 - (BOOL)isOnPantherOrBetter
 {
     return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
-}
-
-+ (BOOL)isOnJaguarOrBetter
-{
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_1);
-}
-- (BOOL)isOnJaguarOrBetter
-{
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_1);
 }
 
 - (BOOL)isWebKitAvailable

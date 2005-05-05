@@ -13,9 +13,6 @@
 + (BOOL)isOnPantherOrBetter;
 - (BOOL)isOnPantherOrBetter;
 
-+ (BOOL)isOnJaguarOrBetter;
-- (BOOL)isOnJaguarOrBetter;
-
 - (BOOL)isWebKitAvailable;
 - (BOOL)isURLLoadingAvailable;
 - (NSString *)applicationVersion;
