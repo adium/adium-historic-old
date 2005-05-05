@@ -35,7 +35,7 @@
 	if((self = [super init])) {
 		floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
 		floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
-		useFancyAnimations = ([NSApp isOnPantherOrBetter] && floaterWindowImage);
+		useFancyAnimations = (floaterWindowImage != nil);
 
 		if(useFancyAnimations){
 			//Create a floating window for our tab
