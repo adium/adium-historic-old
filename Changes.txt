@@ -1,7 +1,20 @@
 				Adium X Version History
 				-----------------------
+Version 0.81
+- Added accounts back to the File menu, fixing the Actions submenus in the process
+- Added support for tooltips in the Status menu
+- Added support for automatic ZIP compression of folders and bundles when they are selected for file transfer
+- Improved blocking support
+- Improved handling of invalid status icon packs
+- Fixed a crash during OTR sessions (German)
+- Fixed a crash when changing Soundset or Events preferences on many localizations
+- Fixed a crash when configuring Sametime accounts in Mac OS X Jaguar
+- Fixed issues with the Away and Idle dock icon overlays
+- Fixed issues with duplicate sounds playing for Message Received and Message Received (Initial) events
+- Fixed issues with autoresponse messages changing the sending font
+- Updated Danish, Dutch, French, Italian, Traditional Chinese translations
 
-Version 0.80
+Version 0.80 (5/2/2005)
 
 - Complete Status system rewrite, with support for all status states on all protocols (including Available messages and Invisible status)
 - Improved the Events system, with new triggering events, new actions, and per-contact and per-group control over voice and pitch for speech
@@ -13,7 +26,7 @@ Version 0.80
 - Improved Log Viewer
 - Improved, expanded, and redesigned preferences and account configuration
 - Improved support for sending and receiving colors in messages
-- Added Pure Plastic and Smooth Operator 1.0 message views; removed some older message views (old views are available on adiumxtras.com)
+- Added Pure Plastic message view; removed some older message views (old views are available on adiumxtras.com)
 - Expanded toolbar buttons and improved icon art
 - Danish, Dutch, French, German, Italian, Japanese, and Traditional Chinese translations
 - Removed Tic Tac Toe; see http://mykogames.info for information on the new Myko instant messaging games project
