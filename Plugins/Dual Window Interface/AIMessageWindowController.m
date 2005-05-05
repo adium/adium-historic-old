@@ -482,7 +482,9 @@
 //
 - (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerWithID:containerID]);
+	return [[[adium interfaceController] openChats] count];
+#warning the method called below was removed in [11724]. the above is tentative until we can be sure of a replacement. --boredzo
+//	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerWithID:containerID]);
 }
 
 //Close a message tab
