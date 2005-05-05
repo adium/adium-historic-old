@@ -38,13 +38,9 @@
 
 - (id)init
 {
-	if(self = [super init]){
+	if((self = [super init])){
 		download = nil;
 		window = nil;
-		
-		if(![NSApp isURLLoadingAvailable]){
-			self = nil; 
-		}
 	}
 
 	return(self);
