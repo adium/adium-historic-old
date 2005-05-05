@@ -368,8 +368,8 @@ static NSColor	*cachedWhiteColor = nil;
 			[newTypingAttributes release];
 		}
 	}
-	
 }
+
 //Contact menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact menu
 //Set and return the selected chat (to auto-configure the contact menu)
@@ -394,7 +394,6 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	return([chat preferredListObject]);
 }
-
 
 //Auto Sizing ----------------------------------------------------------------------------------------------------------
 #pragma mark Auto-sizing
