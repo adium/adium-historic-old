@@ -72,7 +72,9 @@ struct mwAwareIdBlock {
 	char *community;  /**< community id (NULL for same community) */
 };
 
-@interface ESGaimMeanwhileAccount : CBGaimAccount {
+@protocol AIAccount_Files;
+
+@interface ESGaimMeanwhileAccount : CBGaimAccount <AIAccount_Files> {
 
 }
 

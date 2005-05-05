@@ -19,6 +19,10 @@
 /* OS X has OPEN_SSL */
 #define HAVE_OPENSSL TRUE
 
+/* OS X 10.2.x does not have poll() */
+/* Define to 1 if you have the `poll' function. */
+/* #define HAVE_POLL 1 */
+
 /* Define to the version of this package. */
 #define PACKAGE_VERSION VERSION
 
@@ -242,9 +246,6 @@
 
 /* Define to 1 if you have the `mempcpy' function. */
 /* #undef HAVE_MEMPCPY */
-
-/* Define to 1 if you have the `poll' function. */
-#define HAVE_POLL 1
 
 /* Have POSIX function getpwuid_r */
 #define HAVE_POSIX_GETPWUID_R 1
