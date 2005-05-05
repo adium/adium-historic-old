@@ -34,6 +34,7 @@
 	//Retrieve the items which should be added to the bottom of the default menu
 	NSMenu  *adiumMenu = [[[AIObject sharedAdiumInstance] menuController] contextualMenuWithLocations:[NSArray arrayWithObject:
 		[NSNumber numberWithInt:Context_TextView_Edit]] forTextView:self];
+
 	itemsArray = [adiumMenu itemArray];
 	
 	if([itemsArray count] > 0) {
@@ -41,7 +42,14 @@
 		int i = [(NSMenu *)contextualMenu numberOfItems];
 		enumerator = [itemsArray objectEnumerator];
 		while((menuItem = [enumerator nextObject])){
-//			[adiumMenu removeItem:menuItem];
+			//We're going to be copying; call menu needs update now since it won't be called later.
+			NSMenu	*submenu = [menuItem submenu];
+			if(submenu &&
+			   [submenu respondsToSelector:@selector(delegate)] &&
+			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]){
+				[[submenu delegate] menuNeedsUpdate:submenu];
+			}
+			
 			[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
 		}
 	}
