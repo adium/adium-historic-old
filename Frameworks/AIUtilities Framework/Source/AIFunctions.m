@@ -133,12 +133,13 @@ float AISignedExteriorDistanceRect_edge_toPoint_(const NSRect rect, const NSRect
 
 NSRectEdge AIOppositeRectEdge_(const NSRectEdge edge)
 {
-	NSRectEdge oppositeEdge;
+	NSRectEdge oppositeEdge = AINotARectEdge;
+
 	switch (edge) {
-		case NSMinXEdge : oppositeEdge = NSMaxXEdge; break;
-		case NSMinYEdge : oppositeEdge = NSMaxYEdge; break;
-		case NSMaxXEdge : oppositeEdge = NSMinXEdge; break;
-		case NSMaxYEdge : oppositeEdge = NSMinYEdge; break;
+		case NSMinXEdge: oppositeEdge = NSMaxXEdge; break;
+		case NSMinYEdge: oppositeEdge = NSMaxYEdge; break;
+		case NSMaxXEdge: oppositeEdge = NSMinXEdge; break;
+		case NSMaxYEdge: oppositeEdge = NSMinYEdge; break;
 	}
 	
 	return oppositeEdge;	
