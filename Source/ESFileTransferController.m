@@ -258,27 +258,100 @@ static ESFileTransferPreferences *preferences;
 	}
 }
 
+- (NSString *)pathToArchiveOfFolder:(NSString *)inPath
+{
+	NSString		*pathToArchive = nil;
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSString		*tmpDir;
+
+	//Desired folder: /private/tmp/$UID/`uuidgen`
+	tmpDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[[NSProcessInfo processInfo] globallyUniqueString]];
+	if (tmpDir) {
+		NSString	*launchPath = [[[@"/" stringByAppendingPathComponent:@"usr"] stringByAppendingPathComponent:@"bin"] stringByAppendingPathComponent:@"zip"];
+
+		//Proceed only if /usr/bin/zip exists
+		if ([defaultManager fileExistsAtPath:launchPath]) {
+			NSString	*folderName = [inPath lastPathComponent];
+			NSString	*destinationName = folderName;
+			NSArray		*arguments;
+			NSTask		*zipTask;
+			int			uniqueNameCounter = 0;
+			BOOL		success = NO;
+
+			//Ensure our temporary directory exists [it never will the first time this method is called]
+			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
+
+			//Get a unique name if necessary. This could happen if we are sending this folder multiple times.
+			while([defaultManager fileExistsAtPath:[tmpDir stringByAppendingPathComponent:destinationName]]){
+				destinationName = [NSString stringWithFormat:@"%@-%i",folderName,++uniqueNameCounter];
+			}
+
+			arguments = [NSArray arrayWithObjects:
+				@"-r", //we'll want to store recursively
+				@"-1", //use the fastest level of compression that isn't storage; the user can compress manually to do better
+				@"-q", //shhh!
+				[tmpDir stringByAppendingPathComponent:[destinationName stringByAppendingPathExtension:@"zip"]],   //output to our destination name
+				folderName, //store the folder
+				nil];
+			
+			zipTask = [[NSTask alloc] init];
+			[zipTask setLaunchPath:launchPath];
+			[zipTask setArguments:arguments];
+			[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
+			
+			NS_DURING
+				[zipTask launch];
+				[zipTask waitUntilExit];
+				success = ([zipTask terminationStatus] == 0);
+			NS_HANDLER
+				/* No exception handler needed */
+			NS_ENDHANDLER
+			[zipTask release];
+				
+			if(success){
+				pathToArchive = [tmpDir stringByAppendingPathComponent:destinationName];
+			}
+		}
+	}
+		NSLog(@"Path to archive: %@",pathToArchive);
+	return pathToArchive;
+}
+
 //Initiate sending a file at a specified path to listContact
-- (void)sendFile:(NSString *)inFile toListContact:(AIListContact *)listContact
+- (void)sendFile:(NSString *)inPath toListContact:(AIListContact *)listContact
 {
 	AIAccount		*account;
 	ESFileTransfer	*fileTransfer;
 	
 	if (account = [[adium accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
 																		 toContact:listContact]){
+		NSFileManager	*defaultManager = [NSFileManager defaultManager];
+		BOOL			isDir;
+		
 		//Set up a fileTransfer object
 		fileTransfer = [self newFileTransferWithContact:listContact
 											 forAccount:account];
 		[fileTransfer setType:Outgoing_FileTransfer];
-		[fileTransfer setLocalFilename:inFile];
-		[fileTransfer setSize:[[[[NSFileManager defaultManager] fileAttributesAtPath:inFile
-																		traverseLink:YES] objectForKey:NSFileSize] longValue]];
+		NSLog(@"looking at %@",inPath);
+		if([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]){
+			//If we get a directory, compress it first (this could be specified on a per-account basis later if we have services supporting folder transfer)
+			if(isDir){
+				inPath = [self pathToArchiveOfFolder:inPath];
+			}
+			NSLog(@"%i: %@",isDir,inPath);
 			
-		//The fileTransfer object should now have everything the account needs to begin transferring
-		[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
-		
-		if(showProgressWindow){
-			[self showProgressWindowIfNotOpen:nil];
+			if(inPath){
+				[fileTransfer setLocalFilename:inPath];
+				[fileTransfer setSize:[[[defaultManager fileAttributesAtPath:inPath
+																traverseLink:YES] objectForKey:NSFileSize] longValue]];
+				
+				//The fileTransfer object should now have everything the account needs to begin transferring
+				[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
+				
+				if(showProgressWindow){
+					[self showProgressWindowIfNotOpen:nil];
+				}
+			}
 		}
 	}
 }
