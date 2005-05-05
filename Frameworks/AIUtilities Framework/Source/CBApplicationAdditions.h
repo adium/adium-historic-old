@@ -7,13 +7,12 @@
 //
 
 @interface NSApplication (CBApplicationAdditions)
+
 + (BOOL)isOnTigerOrBetter;
 - (BOOL)isOnTigerOrBetter;
 
-+ (BOOL)isOnPantherOrBetter;
-- (BOOL)isOnPantherOrBetter;
-
 - (BOOL)isWebKitAvailable;
+
 - (NSString *)applicationVersion;
 
 @end

@@ -7,11 +7,8 @@
 
 #import "CBApplicationAdditions.h"
 
-//Make sure the version number defines exist - compiling in 10.3, for example, NSAppKitVersionNumber10_3 isn't defined.
-#ifndef NSAppKitVersionNumber10_2
-#define NSAppKitVersionNumber10_2 663
-#endif
-
+// Make sure the version number defines exist; when compiling in 10.3,
+// NSAppKitVersionNumber10_3 isn't defined
 #ifndef NSAppKitVersionNumber10_3
 #define NSAppKitVersionNumber10_3 743
 #endif
@@ -20,49 +17,31 @@
 
 + (BOOL)isOnTigerOrBetter
 {
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
-}
-- (BOOL)isOnTigerOrBetter
-{
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);	
+	return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
 }
 
-+ (BOOL)isOnPantherOrBetter
+- (BOOL)isOnTigerOrBetter
 {
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
-}
-- (BOOL)isOnPantherOrBetter
-{
-    return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2);
+	return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
 }
 
 - (BOOL)isWebKitAvailable
 {
-    static BOOL _webkitAvailable = NO;
-    static BOOL _initialized = NO;
-//    NSBundle	*webKitBundle;
-	
-    if (_initialized)
-        return _webkitAvailable;
-	
-/*
- webKitBundle = [NSBundle bundleWithPath:@"/System/Library/Frameworks/WebKit.framework"];
+	static BOOL _initialized = NO;
+	static BOOL _webkitAvailable = NO;
 
-    if (webKitBundle){		
-        _webkitAvailable = [webKitBundle load];
-    }
-*/
-	NSFileManager   *manager = [NSFileManager defaultManager];
-	NSString		*fontPath = @"/System/Library/Frameworks/WebKit.framework";
-	BOOL			isDir;
-	
-	if ([manager fileExistsAtPath:fontPath isDirectory:&isDir] && isDir){
-		_webkitAvailable = YES;
+	if(_initialized == NO){
+		NSString		*webkitPath = @"/System/Library/Frameworks/WebKit.framework";
+		BOOL			isDir;
+
+		if([[NSFileManager defaultManager] fileExistsAtPath:webkitPath isDirectory:&isDir] && isDir){
+			_webkitAvailable = YES;
+		}
+
+		_initialized = YES;
 	}
-		
-    _initialized = YES;
 
-    return _webkitAvailable;	
+	return _webkitAvailable;
 }
 
 - (NSString *)applicationVersion
