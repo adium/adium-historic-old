@@ -528,7 +528,8 @@ NSMutableDictionary* get_chatDict(void)
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound)){
+			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
+			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)){
 			return;
 		}
 	}
