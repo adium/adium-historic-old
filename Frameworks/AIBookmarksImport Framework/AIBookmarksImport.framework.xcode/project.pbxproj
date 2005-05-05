@@ -789,6 +789,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
+				OTHER_LDFLAGS = "-seg1addr 0x13000000";
 				PREBINDING = YES;
 				PRODUCT_NAME = AIBookmarksImport;
 				SKIP_INSTALL = YES;
