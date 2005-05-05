@@ -789,7 +789,7 @@
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				PREBINDING = NO;
+				PREBINDING = YES;
 				PRODUCT_NAME = AIBookmarksImport;
 				SKIP_INSTALL = YES;
 				WRAPPER_EXTENSION = framework;
