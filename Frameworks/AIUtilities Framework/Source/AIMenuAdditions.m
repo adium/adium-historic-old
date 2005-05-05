@@ -193,7 +193,7 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 	NSEnumerator	*enumerator = [[self itemArray] objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-	while(menuItem = [enumerator nextObject]){
+	while((menuItem = [enumerator nextObject])){
 		if([menuItem isEnabled]) return(menuItem);
 	}
 	
