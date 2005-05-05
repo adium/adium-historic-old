@@ -18,7 +18,8 @@
 #import "AIStatus.h" //For AIStatusType
 
 //Notifications
-#define AIStatusIconSetDidChangeNotification	@"AIStatusIconSetDidChangeNotification"
+#define AIStatusIconSetDidChangeNotification		@"AIStatusIconSetDidChangeNotification"
+#define AIStatusIconSetInvalidSetNotification		@"AIStatusIconSetInvalidSetNotification"
 
 @class AIListObject, AIChat;
 
