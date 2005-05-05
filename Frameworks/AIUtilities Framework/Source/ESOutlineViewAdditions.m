@@ -63,35 +63,22 @@
 //
 - (void)selectItemsInArray:(NSArray *)selectedItems
 {
-	Class 			NSMutableIndexSetClass = NSClassFromString(@"NSMutableIndexSet");	
 	NSEnumerator	*enumerator = [selectedItems objectEnumerator];
 	id				selectedItem;
 	int 			selectedRow;
-	
-	if([NSApp isOnPantherOrBetter]){
-		id  indexSet = [NSMutableIndexSetClass indexSet];
-		
-		//Build an index set
-		while((selectedItem = [enumerator nextObject])){
-			selectedRow = [self rowForItem:selectedItem];
-			if(selectedRow != NSNotFound){
-				[indexSet addIndex:selectedRow];
-			}
+
+	id  indexSet = [NSMutableIndexSet indexSet];
+
+	//Build an index set
+	while((selectedItem = [enumerator nextObject])){
+		selectedRow = [self rowForItem:selectedItem];
+		if(selectedRow != NSNotFound){
+			[indexSet addIndex:selectedRow];
 		}
-		
-		//Select the indexes
-		[self selectRowIndexes:indexSet byExtendingSelection:NO];
-		
-	}else{
-		//Selected each previously selected row if possible
-		while((selectedItem = [enumerator nextObject])){
-			selectedRow = [self rowForItem:selectedItem];
-			if(selectedRow != NSNotFound){
-				[self selectRow:selectedRow byExtendingSelection:[self allowsMultipleSelection]];
-			}
-		}			
 	}
-	
+
+	//Select the indexes
+	[self selectRowIndexes:indexSet byExtendingSelection:NO];
 }
 
 @end
