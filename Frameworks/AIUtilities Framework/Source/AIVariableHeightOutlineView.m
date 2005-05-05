@@ -449,29 +449,19 @@
 {
 	if(drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])){
 		//Apple wants us to do some pretty crazy stuff for selections in 10.3
-		//We'll continue to use the old simpler cleaner safer easier method for 10.2
-		if([NSApp isOnPantherOrBetter]){
-			NSIndexSet *indices = [self selectedRowIndexes];
-			unsigned int bufSize = [indices count];
-			unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
-			unsigned int i;
+		NSIndexSet *indices = [self selectedRowIndexes];
+		unsigned int bufSize = [indices count];
+		unsigned int *buf = malloc(bufSize * sizeof(unsigned int));
+		unsigned int i;
 
-			NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
-			[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
+		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
+		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 
-			for(i = 0; i < bufSize; i++) {
-				[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
-			}
-
-			free(buf);
-		}else{
-			NSEnumerator	*enumerator = [self selectedRowEnumerator];
-			NSNumber		*rowNumber;
-
-			while((rowNumber = [enumerator nextObject])){
-				[self _drawRowSelectionInRect:[self rectOfRow:[rowNumber intValue]]];
-			}
+		for(i = 0; i < bufSize; i++) {
+			[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
 		}
+
+		free(buf);
 	}
 }
 
