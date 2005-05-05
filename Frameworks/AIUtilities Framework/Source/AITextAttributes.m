@@ -191,12 +191,10 @@
 
 // Enable or disable strikethrough
 - (void)setStrikethrough:(BOOL)inStrikethrough{
-	if([NSApp isOnPantherOrBetter]){
-		if(inStrikethrough){
-			[dictionary setObject:[NSNumber numberWithBool:inStrikethrough] forKey:NSStrikethroughStyleAttributeName];
-		}else{
-			[dictionary removeObjectForKey:NSStrikethroughStyleAttributeName];
-		}
+	if(inStrikethrough){
+		[dictionary setObject:[NSNumber numberWithBool:inStrikethrough] forKey:NSStrikethroughStyleAttributeName];
+	}else{
+		[dictionary removeObjectForKey:NSStrikethroughStyleAttributeName];
 	}
 } 
 
