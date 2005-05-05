@@ -62,13 +62,17 @@
 	/* Create a submenu for these so menuNeedsUpdate will be called 
 	 * to populate them later. Don't need to check respondsToSelector:@selector(setDelegate:).
 	 */
-	NSMenu	*tempMenu = [[NSMenu alloc] init];
+	NSMenu	*tempMenu;
+	tempMenu = [[NSMenu alloc] init];
 	[tempMenu setDelegate:self];
-		
 	[quickMenuItem setSubmenu:tempMenu];
-	[quickContextualMenuItem setSubmenu:[[tempMenu copy] autorelease]];
 	[tempMenu release];
 	
+	tempMenu = [[NSMenu alloc] init];
+	[tempMenu setDelegate:self];
+	[quickContextualMenuItem setSubmenu:tempMenu];
+	[tempMenu release];
+
     //add the items to their menus.
     AIMenuController *menuController = [adium menuController];
     [menuController addContextualMenuItem:quickContextualMenuItem toLocation:Context_TextView_Edit];    
