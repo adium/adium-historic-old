@@ -156,9 +156,9 @@
 	}
 	
 	//Display an error message if the message was not delivered
-	if(!success){
-        [[adium interfaceController] handleMessage:@"Contact Alert Error"
-								   withDescription:[NSString stringWithFormat:@"Unable to send message to %@.", [contact displayName]]
+	if(!success && contact){
+        [[adium interfaceController] handleMessage:AILocalizedString(@"Contact Alert Error",nil)
+								   withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to send message to %@.",nil), [contact displayName]]
 								   withWindowTitle:@""];
 	}
 }
