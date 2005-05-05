@@ -323,7 +323,6 @@
 - (void)buildGroupMenu
 {
 	AIListObject	*selectedObject;
-	AIListGroup		*group;
 	
 	//Rebuild the menu
 	[popUp_targetGroup setMenu:[[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self]];
@@ -336,7 +335,7 @@
 
 	//If there was no selected group, just select the first item
 	if(selectedObject){
-		[popUp_targetGroup selectItemWithRepresentedObject:group];			
+		[popUp_targetGroup selectItemWithRepresentedObject:selectedObject];			
 	}else if([popUp_targetGroup numberOfItems] > 0){
 		[popUp_targetGroup selectItemAtIndex:0];
 	}
