@@ -9,11 +9,12 @@ Version 0.81
 - Improved the contextual menu choices in the Custom Status status message and autoresponse fields
 - Fixed a crash during OTR sessions (German)
 - Fixed a crash when changing Soundset or Events preferences on many localizations
-- Fixed a crash when configuring Sametime accounts in Mac OS X 10.2 Jaguar
 - Fixed issues with the Away and Idle dock icon overlays
 - Fixed issues with duplicate sounds playing for Message Received and Message Received (Initial) events
 - Fixed issues with autoresponse messages changing the sending font
 - Fixed issues with the Emoticons submenu not appearing in certain situations
+- (Sametime) Fixed a crash when configuring accounts in Mac OS X 10.2 Jaguar
+- (Sametime) Updated to meanwhile-0.4.1 and gaim-meanwhile-1.2.2, adding file transfer support
 - Updated Danish, Dutch, French, Italian, and Traditional Chinese translations
 
 Version 0.80 (5/2/2005)
