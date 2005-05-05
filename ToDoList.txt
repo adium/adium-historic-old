@@ -53,13 +53,4 @@ Defaults:
 1 - Improve profile display in the info window
 1 - Improve tab bar graphics
 1 - Improve the dock menu
-1 - Better handling when the other side disconnects an OTR session
-1 - OTR fingerprint management
-1 - Revisit gaim-vv
-1 - Save as support for exporting a log
-1 - Save as support for saving an individual conversation
-1 - Setup assistant and preference importer
-1 - Tab auto-completion of contact names in the message window
-1 - Tab bar needs a chevron when the tabs overflow the bar
-1 - Printing from the log viewer
 
