@@ -120,12 +120,16 @@
 
 /*!
  * @brief Invoked when content is sent, remember the text formatting used
+ *
+ * Don't update the formatting when we send an autoreply.
  */
 - (void)didSendContent:(NSNotification *)notification
 {
     AIContentObject	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 
-    if(content && [[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if(content &&
+	   [content isKindOfClass:[AIContentMessage class]] &&
+	   ![(AContentMessage *)content isAutoreply]){
 		NSAttributedString	*message = [content message];
 		
 		if([message length] > 0) {
