@@ -72,17 +72,6 @@
     return([self styleMask] == NSBorderlessWindowMask);
 }
 
-- (void)compatibleInvalidateShadow
-{
-    if ([NSApp isOnJaguarOrBetter])
-        [self invalidateShadow];
-    else {
-        BOOL hadShadow = [self hasShadow];
-        [self setHasShadow:!hadShadow];
-        [self setHasShadow:hadShadow];
-    }
-}
-
 //We must weak link these symbols.  Failure to will crash us on launch under 10.2
 //extern OSStatus CGSGetWindowTags(const CGSConnection cid, const CGSWindow wid, 
 //								 int *tags, int thirtyTwo) __attribute__((weak_import));

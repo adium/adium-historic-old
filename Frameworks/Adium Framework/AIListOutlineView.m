@@ -367,7 +367,7 @@
 	 *	time the window content is changed.  This is absolutely horrible for
 	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
 	 */
-	if(updateShadowsWhileDrawing) [[self window] compatibleInvalidateShadow];
+	if(updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
