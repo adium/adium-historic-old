@@ -47,10 +47,4 @@ Defaults:
 1 - Fix libgaim AIM file transfer code to handle firewalls/NAT
 1 - Group specific offline visibility toggles on the contact list
 1 - Improve address book support, syncing [notes syncing, two-way syncing for contact adding]
-1 - Improve behavior with showing empty groups, adding new groups
-1 - Improve blocking and privacy setting support
-1 - Improve list editing for errors, full lists, flickering when moving contacts
-1 - Improve profile display in the info window
-1 - Improve tab bar graphics
-1 - Improve the dock menu
 
