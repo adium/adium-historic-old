@@ -68,7 +68,8 @@
 - (NSDictionary *)availableMessageStyles
 {
 	if(!styleDictionary){
-		NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT withExtensions: @"AdiumMessageStyle"];
+		NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT 
+												   withExtensions:@"AdiumMessageStyle"];
 		NSEnumerator	*stylesEnumerator;
 		NSBundle		*style;
 		NSString		*resourcePath;
