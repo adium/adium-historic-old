@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AIContactListEditorPlugin.h"
 #import "AIMenuController.h"
@@ -47,7 +48,7 @@
 
 @interface AIContactListEditorPlugin (PRIVATE)
 - (void)deleteFromArray:(NSArray *)array;
-- (void)promptForNewContactOnWindow:(NSWindow *)inWindow strangerListContact:(AIListContact *)inListContact;
+- (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject;
 @end
 
 /*!
