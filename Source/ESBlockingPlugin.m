@@ -93,11 +93,22 @@
 				AIListContact *containedContact = nil;
 				
 				while(containedContact = [enumerator nextObject]){
-					[[containedContact account] addListObject:containedContact toPrivacyList:PRIVACY_DENY];
+					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
+					if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+						[acct addListObject:containedContact toPrivacyList:PRIVACY_DENY];
+					} else {
+						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
+					}
 				}
 			}else{
 				AIListContact *contact = (AIListContact *)object;
-				[[contact account] addListObject:contact toPrivacyList:PRIVACY_DENY];
+				AIAccount <AIAccount_Privacy> *acct = [contact account];
+				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+					[acct addListObject:contact toPrivacyList:PRIVACY_DENY];
+				} else {
+					NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, contact);
+				}
+				[acct addListObject:contact toPrivacyList:PRIVACY_DENY];
 			}
 		}
 	}
@@ -126,9 +137,11 @@
 			AIListContact *contact = nil;
 			
 			while(contact = [enumerator nextObject]){
-				if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
+				AIAccount <AIAccount_Privacy> *acct = [contact account];
+				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]){
 					anyAccount = YES;
-					if([[[contact account] listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					if([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+						//title: "Unblock"; enabled
 						if(!unblock){
 							[menuItem setTitle:UNBLOCK_CONTACT];
 						}
@@ -137,29 +150,35 @@
 				}
 			}
 			if(anyAccount){
+				//title: "Block"; enabled
 				if(unblock){
 					[menuItem setTitle:BLOCK_CONTACT];
 				}
 				return YES;
 			}else{
+				//title: "Block"; disabled
 				[menuItem setTitle:BLOCK_CONTACT];
 				return NO;
 			}
 		}else{
 			AIListContact *contact = (AIListContact *)object;
-			if([[contact account] conformsToProtocol:@protocol(AIAccount_Privacy)]){
-				if([[[contact account] listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+			AIAccount <AIAccount_Privacy> *acct = [contact account];
+			if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]){
+				if([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					//title: "Unblock"; enabled
 					if(!unblock){
 						[menuItem setTitle:UNBLOCK_CONTACT];
 					}
 					return YES;
 				}else{
+					//title: "Block"; enabled
 					if(unblock){
 						[menuItem setTitle:BLOCK_CONTACT];
 					}
 					return YES;
 				}
 			}else{
+				//title: "Block"; disabled
 				[menuItem setTitle:BLOCK_CONTACT];
 				return NO;
 			}
