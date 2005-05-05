@@ -34,7 +34,6 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject);
 static NSString *statusNameForChat(AIChat *inChat);
 
 static BOOL					statusIconsReady = NO;
-static BOOL					displayedInvalidStatusIconPackError = NO;
 
 + (void)initialize
 {
@@ -159,20 +158,19 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 					}
 					
 				}else{
-					//Only display the error once per session
-					if(!displayedInvalidStatusIconPackError){
-						NSString	*errorMessage;
-						
-						errorMessage = [NSString stringWithFormat:
-							AILocalizedString(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  Please remove the pack from this location and restart Adium; if you received this pack from adiumxtras.com, please contact its author.",nil),
-							[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
-							statusIconBasePath,
-							defaultStatusName];
-						
-						displayedInvalidStatusIconPackError = YES;
-
-						NSRunCriticalAlertPanel(AILocalizedString(@"Invalid status icon pack",nil),errorMessage,nil,nil,nil);
-					}
+					NSString	*errorMessage;
+					
+					errorMessage = [NSString stringWithFormat:
+						AILocalizedString(@"The active status icon pack \"%@\" installed at \"%@\" is invalid.  It is missing the required status icon \"%@\".  If you received this pack from adiumxtras.com, please contact its author. Your status icon setting will be restored to the default.",nil),
+						[[statusIconBasePath lastPathComponent] stringByDeletingPathExtension],
+						statusIconBasePath,
+						defaultStatusName];
+					
+					NSRunCriticalAlertPanel(AILocalizedString(@"Invalid status icon pack",nil),errorMessage,nil,nil,nil);
+					
+					//Post a notification so someone, somewhere can fix us :)
+					[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetInvalidSetNotification
+																					   object:nil];
 				}
 			}
 		}
@@ -205,7 +203,6 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			}
 			
 			statusIconsReady = YES;
-			displayedInvalidStatusIconPackError = NO;
 
 			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
 																			   object:nil];
