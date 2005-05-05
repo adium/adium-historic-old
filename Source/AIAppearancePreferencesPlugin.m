@@ -36,6 +36,11 @@
 
 	preferences = [[AIAppearancePreferences preferencePaneForPlugin:self] retain];	
 
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(invalidStatusSetActivated:)
+									   name:AIStatusIconSetInvalidSetNotification
+									 object:nil];
+	
 //	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:ICON_PACK_DEFAULT_PREFS
 //	                              forClass:[self class]] 
 //	                              forGroup:PREF_GROUP_INTERFACE];
@@ -93,6 +98,21 @@
 		
 		[AIServiceIcons setActiveServiceIconsFromPath:path];
 	}
+}
+
+/*
+ * @brief An invalid status set was activated
+ *
+ * Reset to the default by clearing our preference
+ */
+- (void)invalidStatusSetActivated:(NSNotification *)inNotification
+{
+	[[adium preferenceController] setPreference:nil
+										 forKey:KEY_STATUS_ICON_PACK
+										  group:PREF_GROUP_APPEARANCE];
+	
+	//Tell the preferences to update
+	[preferences xtrasChanged:nil];
 }
 
 @end
