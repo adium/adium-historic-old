@@ -313,7 +313,7 @@ static ESFileTransferPreferences *preferences;
 			}
 		}
 	}
-		NSLog(@"Path to archive: %@",pathToArchive);
+
 	return pathToArchive;
 }
 
@@ -332,13 +332,12 @@ static ESFileTransferPreferences *preferences;
 		fileTransfer = [self newFileTransferWithContact:listContact
 											 forAccount:account];
 		[fileTransfer setType:Outgoing_FileTransfer];
-		NSLog(@"looking at %@",inPath);
+
 		if([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]){
 			//If we get a directory, compress it first (this could be specified on a per-account basis later if we have services supporting folder transfer)
 			if(isDir){
 				inPath = [self pathToArchiveOfFolder:inPath];
 			}
-			NSLog(@"%i: %@",isDir,inPath);
 			
 			if(inPath){
 				[fileTransfer setLocalFilename:inPath];
@@ -486,7 +485,7 @@ static ESFileTransferPreferences *preferences;
 		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
-	NSLog(@"validating %@ gives %@",theItem,listContact);
+
     return(listContact != nil);
 }
 */
