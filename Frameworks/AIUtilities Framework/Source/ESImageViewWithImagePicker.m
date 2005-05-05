@@ -66,8 +66,7 @@
 	mouseDownPos = NSZeroPoint;
 	
 	useNSImagePickerController = YES;
-	imagePickerClassIsAvailable = ([NSApp isOnPantherOrBetter] &&
-								   (NSClassFromString(@"NSImagePickerController") != nil));
+	imagePickerClassIsAvailable = (NSClassFromString(@"NSImagePickerController") != nil);
 }
 
 - (void)dealloc
