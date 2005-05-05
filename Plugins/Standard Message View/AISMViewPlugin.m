@@ -28,8 +28,8 @@
 
 - (void)installPlugin
 {
-	//This plugin should ONLY be used in 10.2 or as a fallback if webkit isn't available for some reason.
-	if(![NSApp isOnPantherOrBetter] || ![NSApp isWebKitAvailable]){
+	//This plugin should ONLY be used as a fallback if webkit isn't available for some reason.
+	if(![NSApp isWebKitAvailable]){
 		//Register ourself as a message list view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
 		
