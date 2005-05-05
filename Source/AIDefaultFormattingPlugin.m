@@ -129,7 +129,7 @@
 
     if(content &&
 	   [content isKindOfClass:[AIContentMessage class]] &&
-	   ![(AContentMessage *)content isAutoreply]){
+	   ![(AIContentMessage *)content isAutoreply]){
 		NSAttributedString	*message = [content message];
 		
 		if([message length] > 0) {
