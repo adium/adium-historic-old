@@ -480,9 +480,9 @@
 }
 
 //
-- (int)customTabView:(AICustomTabsView *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
+- (int)customTabView:(AICustomTabsView.m *)tabView indexForInsertingTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return [[[adium interfaceController] openChats] count];
+	return [tabView numberOfTabViewItems];
 #warning the method called below was removed in [11724]. the above is tentative until we can be sure of a replacement. --boredzo
 //	return([[adium interfaceController] indexForInsertingChat:[(AIMessageTabViewItem *)tabViewItem chat] intoContainerWithID:containerID]);
 }
