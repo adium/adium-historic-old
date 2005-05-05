@@ -322,7 +322,8 @@
 	
 	//Yahoo doesn't have an explicit mobile state; instead the status message is automatically set to indicate mobility.
 	if(statusMessageString && ([statusMessageString isEqualToString:@"I'm on SMS"] ||
-							   [statusMessageString isEqualToString:@"I'm mobile"])){
+							   [statusMessageString isEqualToString:@"I'm mobile"] ||
+							   [statusMessageString isEqualToString:@"I'm mobile http://mobile.yahoo.com/messenger"])){
 		[theContact setIsMobile:YES notify:NotifyLater];
 
 	}else if([theContact isMobile]){
