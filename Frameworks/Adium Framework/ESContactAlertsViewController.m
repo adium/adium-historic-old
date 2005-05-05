@@ -393,7 +393,9 @@ int actionSort(id objectA, id objectB, void *context)
 		id item = [outlineView_summary itemAtRow:row];
 		
 		if([contactAlertsActions containsObjectIdenticalTo:item]){
-			if([outlineView_summary isItemExpanded:item]){
+			if([item count] == 0){
+				[self addAlert:nil];
+			}else if([outlineView_summary isItemExpanded:item]){
 				[outlineView_summary collapseItem:item];
 			}else{
 				[outlineView_summary expandItem:item];
