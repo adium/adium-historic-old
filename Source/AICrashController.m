@@ -66,7 +66,7 @@ static AICrashController *sharedCrashController = nil;
 //When a signal occurs, load the crash reporter and close this application
 void CrashHandler_Signal(int i)
 {
-	NSString	*bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
+	NSString	*bundlePath = [[NSBundle mainBundle] bundlePath];
 	NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
 
 	[[NSWorkspace sharedWorkspace] openFile:bundlePath withApplication:crashReporterPath];
