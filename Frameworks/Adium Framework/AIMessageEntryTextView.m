@@ -648,7 +648,14 @@ static NSColor	*cachedWhiteColor = nil;
 		int i = [(NSMenu *)contextualMenu numberOfItems];
 		enumerator = [itemsArray objectEnumerator];
 		while((menuItem = [enumerator nextObject])){
-//			[adiumMenu removeItem:menuItem];
+			//We're going to be copying; call menu needs update now since it won't be called later.
+			NSMenu	*submenu = [menuItem submenu];
+			if(submenu &&
+			   [submenu respondsToSelector:@selector(delegate)] &&
+			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]){
+				[[submenu delegate] menuNeedsUpdate:submenu];
+			}
+
 			[contextualMenu insertItem:[[menuItem copy] autorelease] atIndex:i++];
 		}
 	}
