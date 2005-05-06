@@ -50,8 +50,10 @@
 
 #define PREF_GROUP_CONTACT_STATUS_COLORING	@"Contact Status Coloring"
 
-#define SLIDE_ALLOWED_RECT_EDGE_MASK  (AIMinXEdgeMask | AIMaxXEdgeMask)
-
+#define SLIDE_ALLOWED_RECT_EDGE_MASK  		(AIMinXEdgeMask | AIMaxXEdgeMask)
+#define DOCK_HIDING_MOUSE_POLL_INTERVAL		0.1
+#define WINDOW_ALIGNMENT_TOLERANCE			2.0f
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE		1.1f
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
@@ -202,14 +204,14 @@
 		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
 		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
 		
-		// don't slide the window the first time this is called, because it will display the contact list
+		// don't slide the window the first time this is called, because the contact list will display
 		// before it is prepared.  This produces screen artifacts.
 		if (!firstTime)
 			[self slideWindowIfNeeded:nil];
 
 		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
 			if (slideWindowIfNeededTimer == nil) {
-				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
+				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
 																			target:self
 																		  selector:@selector(slideWindowIfNeeded:)
 																		  userInfo:nil
@@ -565,7 +567,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	for(screenEdge = 0; screenEdge < 4; screenEdge++) {
 		if(windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
 			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
-			if(mouseOutsideSlideBoundaryRectDistance < -1.1f) {
+			if(mouseOutsideSlideBoundaryRectDistance < MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 				shouldSlideOnScreen = NO;
 			}
 		}
@@ -588,7 +590,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRectEdge edge;
 	for(edge = 0; edge < 4; edge++) {
 		if(   (SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge))
-		   && (AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame, edge, screenSlideBoundaryRect, edge, 2.0f))) 
+		   && (AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame, edge, screenSlideBoundaryRect, edge, WINDOW_ALIGNMENT_TOLERANCE))) 
 		{
 			slidableEdges |= (1 << edge);
 		}
