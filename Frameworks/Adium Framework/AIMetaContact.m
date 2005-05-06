@@ -895,7 +895,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	AIListContact		*listContact;
 
 	enumerator = [[self listContacts] objectEnumerator];
-	while((!contactListStatusMessage && (listContact = [enumerator nextObject]))){
+	while(!contactListStatusMessage && (listContact = [enumerator nextObject])){
 		contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
 		if(!contactListStatusMessage){
 			contactListStatusMessage = [self statusMessage];

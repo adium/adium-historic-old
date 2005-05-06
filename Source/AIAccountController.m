@@ -491,7 +491,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		}
 	}
     
-    while((objectID && (account = [enumerator nextObject]))){
+    while(objectID && (account = [enumerator nextObject])){
         if([objectID isEqualToString:[account internalObjectID]]) break;
     }
     

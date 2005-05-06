@@ -1589,7 +1589,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 					AIStatus		*statusState;
 					BOOL			foundCorrectStatusState = NO;
 
-					while((!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject]))){
+					while(!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])){
 						//We found a custom match if our array of menu item states doesn't contain this state and
 						//its statusType matches the menuItem's tag.
 						foundCorrectStatusState = (![sortedFullStateArray containsObjectIdenticalTo:statusState] &&
