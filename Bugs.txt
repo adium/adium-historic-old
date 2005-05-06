@@ -1,13 +1,4 @@
-//------------------------------------------------------------------------------------
-- (AIM / Jabber) File transfers often fail to navigate firewalls and routers
-- (Yahoo) Files over 1 MB in size fail to send
-- (AIM) Contacts can get incorrectly tagged as being on an AOL Mobile Device
-- (ICQ) Broken ICQ clients send HTML. Should we try to correct for this?
-- (All) Gaim's proxy support is unreliable at best
 
-
-//------------------------------------------------------------------------------------
-// Bugs - Unconfirmed
 //------------------------------------------------------------------------------------
 - Messages with invalid looking HTML <tags> received via jabber (from ICQ user over
     transport), the invalid tags are being eaten? (Our HTML decoder isn't
