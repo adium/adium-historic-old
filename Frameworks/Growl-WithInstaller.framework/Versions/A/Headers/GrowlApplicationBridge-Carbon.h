@@ -579,7 +579,9 @@ Boolean LaunchGrowlIfInstalled(GrowlLaunchCallback callback, void *context);
  *	 currently installed, by searching for the Growl preference pane. Your
  *	 application probably does not need to use this macro itself.
  */
+#ifndef GROWL_PREFPANE_BUNDLE_IDENTIFIER
 #define GROWL_PREFPANE_BUNDLE_IDENTIFIER	CFSTR("com.growl.prefpanel")
+#endif
 
 __END_DECLS
 
