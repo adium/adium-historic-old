@@ -21,6 +21,7 @@
 
 	IBOutlet NSPanel		*bookmarksPanel;
 	IBOutlet NSPopUpButton	*popUpButton;
+	IBOutlet NSTabView		*tabView;
 	IBOutlet NSOutlineView	*outlineView;
 	IBOutlet NSButton		*insertButton;
 
@@ -41,6 +42,11 @@
 
 #pragma mark -
 
+//this method takes a bookmark dictionary, creates a link from it, and inserts it into the current text view (if any). no work is done if you pass nil or if there is no active text view.
+- (void)insertLink:(NSDictionary *)bookmark;
+
+#pragma mark -
+
 //returns YES if the bookmarks panel is on the screen; NO if it is not.
 - (BOOL)bookmarksPanelVisible;
 
@@ -51,5 +57,10 @@
 
 //this can be used on, say, a toolbar item.
 - (NSImage *)bookmarksImporterIcon;
+
+#pragma mark -
+
+//for bookmarks importers only (e.g. the Address Book importer's 'All' group).
+- (NSAttributedString *)attributedStringByItalicizingString:(NSString *)str;
 
 @end

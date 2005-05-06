@@ -54,6 +54,36 @@
 //072
 //073
 //074
+		073A5E26082BC33200723477 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = "NSImage+AIBookmarksImport.h";
+			path = "Source/NSImage+AIBookmarksImport.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		073A5E27082BC33200723477 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = "NSImage+AIBookmarksImport.m";
+			path = "Source/NSImage+AIBookmarksImport.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		073A5E28082BC33200723477 = {
+			fileRef = 073A5E26082BC33200723477;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		073A5E29082BC33200723477 = {
+			fileRef = 073A5E27082BC33200723477;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07A44FE3082752A700B76F11 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -417,14 +447,6 @@
 			settings = {
 			};
 		};
-		07F8AD4308265C32009CCBB5 = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.framework;
-			name = AIHyperlinks.framework;
-			path = "../AIHyperlinks Framework/build/AIHyperlinks.framework";
-			refType = 2;
-			sourceTree = SOURCE_ROOT;
-		};
 		07F8AD790826675E009CCBB5 = {
 			children = (
 				07F8AD7A0826675E009CCBB5,
@@ -532,6 +554,8 @@
 			children = (
 				07F8AF1108269256009CCBB5,
 				07F8AF1208269256009CCBB5,
+				073A5E26082BC33200723477,
+				073A5E27082BC33200723477,
 			);
 			isa = PBXGroup;
 			name = Additions;
@@ -689,7 +713,6 @@
 				1058C7B1FEA5585E11CA2CBB,
 				07F8AF0208269192009CCBB5,
 				07F8AEB008268FD1009CCBB5,
-				07F8AD4308265C32009CCBB5,
 			);
 			isa = PBXGroup;
 			name = "Linked Frameworks";
@@ -812,6 +835,7 @@
 				07F8AF1308269256009CCBB5,
 				07F8ACFF08265350009CCBB5,
 				07F8ACF208265350009CCBB5,
+				073A5E28082BC33200723477,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -848,6 +872,7 @@
 				07F8AD0208265350009CCBB5,
 				07F8AD0408265350009CCBB5,
 				07F8AD0608265350009CCBB5,
+				073A5E29082BC33200723477,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;

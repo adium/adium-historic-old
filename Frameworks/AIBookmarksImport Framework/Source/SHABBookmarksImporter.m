@@ -16,14 +16,21 @@
 
 #import "SHABBookmarksImporter.h"
 #import <AddressBook/AddressBook.h>
+#import <AddressBook/ABPeoplePickerView.h>
+#import "AIBookmarksImporterController.h"
 
 /*!
  * @class SHABBookmarksImporter
  * @brief Address Book bookmarks importer
- *
- * Currently disabled.
  */
 @implementation SHABBookmarksImporter
+
+- (void)dealloc {
+	[peoplePicker release];
+	[super dealloc];
+}
+
+#pragma mark -
 
 + (NSString *)browserName
 {
@@ -51,48 +58,61 @@
 	return YES;
 }
 
+- (NSView *)customView
+{
+	if(!peoplePicker) {
+		peoplePicker = [[ABPeoplePickerView alloc] initWithFrame:NSMakeRect(0.0, 0.0, 256.0, 256.0)];
+		[peoplePicker setAutosaveName:[[NSBundle bundleForClass:[self class]] bundleIdentifier]];
+		[peoplePicker setAllowsGroupSelection:YES];
+		[peoplePicker setAllowsMultipleSelection:NO];
+		[peoplePicker setValueSelectionBehavior:ABMultipleValueSelection];
+		[peoplePicker setNameDoubleAction:@selector(_insertBookmarkFromPeoplePickerViewSelection:)];
+		[peoplePicker setTarget:self];
+	}
+	return peoplePicker;
+}
+
 #pragma mark -
 
-- (NSArray *)availableBookmarks
+- (NSDictionary *)bookmarkForPerson:(ABPerson *)person
 {
-#warning XXX make this use groups --boredzo
-	NSString		*nameString, *urlString;
-	NSArray			*abPeople = [[ABAddressBook sharedAddressBook] people];
-	NSEnumerator	*enumerator = [abPeople objectEnumerator];
-	ABPerson		*person;
-	NSMutableArray	*hyperlinks = [NSMutableArray array];
+	NSDictionary *dict = nil;
 
-	while((person = [enumerator nextObject])){
-		urlString = [person valueForProperty:kABHomePageProperty];
-		if(urlString){
-			id firstName = [person valueForProperty:kABFirstNameProperty];
-			id  lastName = [person valueForProperty:kABLastNameProperty];
-			if(firstName && lastName) {
-				//we have both; join them with a space.
-				nameString = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
-			} else if(firstName || lastName) {
-				//we only have one.
-				nameString = [[(firstName ? firstName : lastName) retain] autorelease];
-			} else {
-				//we have neither; use the organisation name and hope it's a company's card.
-				nameString = [NSString stringWithString:[person valueForProperty:kABOrganizationProperty]];
-			}
-			NSImage *image = nil;
-			NSData *imageData = [person imageData];
-			if(imageData) {
-				image = [[[NSImage alloc] initWithData:imageData] autorelease];
-				[image setScalesWhenResized:YES];
-				[image setSize:NSMakeSize(16.0, 16.0)];
-			}
-
-			NSDictionary *dict = [[self class] dictionaryForBookmarksItemWithTitle:nameString
-																		   content:[NSURL URLWithString:urlString]
-																			 image:image];
-			if(dict) [hyperlinks addObject:dict];
+	NSString *urlString = [person valueForProperty:kABHomePageProperty];
+	if(urlString) {
+		id firstName = [person valueForProperty:kABFirstNameProperty];
+		id  lastName = [person valueForProperty:kABLastNameProperty];
+		NSString *nameString = nil;
+		if(firstName && lastName) {
+			//we have both; join them with a space.
+			nameString = [NSString stringWithFormat:@"%@ %@", firstName, lastName];
+		} else if(firstName || lastName) {
+			//we only have one.
+			nameString = [[(firstName ? firstName : lastName) retain] autorelease];
+		} else {
+			//we have neither; use the organisation name and hope it's a company's card.
+			nameString = [NSString stringWithString:[person valueForProperty:kABOrganizationProperty]];
 		}
+		NSImage *image = nil;
+		NSData *imageData = [person imageData];
+		if(imageData) {
+			image = [[[NSImage alloc] initWithData:imageData] autorelease];
+			[image setScalesWhenResized:YES];
+			[image setSize:NSMakeSize(16.0, 16.0)];
+		}
+
+		dict = [[self class] dictionaryForBookmarksItemWithTitle:nameString
+		                                                 content:[NSURL URLWithString:urlString]
+		                                                   image:image];
 	}
 
-	return hyperlinks;
+	return dict;
+}
+
+- (IBAction)_insertBookmarkFromPeoplePickerViewSelection:(id)sender
+{
+	if(!sender) sender = peoplePicker;
+	[[AIBookmarksImporterController sharedController] insertLink:[self bookmarkForPerson:[[sender selectedRecords] lastObject]]];
 }
 
 @end

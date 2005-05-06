@@ -14,13 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIBookmarksImporter.h"
+#import <Cocoa/Cocoa.h>
 
-@class ABPeoplePickerView;
+#define ADIUM_GENERIC_ICON_SCHEME @"x-aibookmarksimporter-genericscheme"
 
-@interface SHABBookmarksImporter: AIBookmarksImporter
-{
-	ABPeoplePickerView *peoplePicker;
-}
+@interface NSImage (AIBookmarksImport)
+
++ (NSImage *)folderIcon;
++ (NSImage *)iconForURLScheme:(NSString *)scheme;
 
 @end
