@@ -81,11 +81,11 @@
 	}
 	
 	//Configure the remaining controls
-	if(sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]]){
+	if((sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]])){
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
 	
-	if(messageText = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]]){
+	if((messageText = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]])){
 		[[textView_message textStorage] setAttributedString:messageText];
 	}else{
 		[textView_message setString:@""];

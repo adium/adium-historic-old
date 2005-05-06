@@ -345,7 +345,7 @@
 	AIListObject	*listObject;
 	AIChat			*chat = nil;
 		
-	if(internalObjectID = [clickContext objectForKey:@"internalObjectID"]){
+	if((internalObjectID = [clickContext objectForKey:@"internalObjectID"])){
 		
 		if ((listObject = [[adium contactController] existingListObjectWithUniqueID:internalObjectID]) &&
 			([listObject isKindOfClass:[AIListContact class]])){
@@ -356,7 +356,7 @@
 				chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
 			}
 		}
-	}else if(uniqueChatID = [clickContext objectForKey:@"uniqueChatID"]){
+	}else if((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])){
 		chat = [[adium contentController] existingChatWithUniqueChatID:uniqueChatID];
 		
 		//If we didn't find a chat, it may have closed since the notification was posted.

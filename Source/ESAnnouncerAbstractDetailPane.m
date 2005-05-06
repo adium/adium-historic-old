@@ -59,19 +59,19 @@
 	speakTime = [[inDetails objectForKey:KEY_ANNOUNCER_TIME] boolValue];
 	speakContactName = [[inDetails objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
 
-    if(voice = [inDetails objectForKey:KEY_VOICE_STRING]) {
+    if((voice = [inDetails objectForKey:KEY_VOICE_STRING])){
         [popUp_voices selectItemWithTitle:voice];
     } else {
         [popUp_voices selectItemAtIndex:0]; //"Default"
     }
 	
-    if(pitchNumber = [inDetails objectForKey:KEY_PITCH]) {
+    if((pitchNumber = [inDetails objectForKey:KEY_PITCH])){
 		[slider_pitch setFloatValue:[pitchNumber floatValue]];
     } else {
 		[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
 	
-    if(rateNumber = [inDetails objectForKey:KEY_RATE]) {
+    if((rateNumber = [inDetails objectForKey:KEY_RATE])){
 		[slider_rate setIntValue:[rateNumber intValue]];
     } else {
 		[slider_rate setIntValue:[[adium soundController] defaultRate]];

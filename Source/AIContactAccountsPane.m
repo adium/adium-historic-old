@@ -221,7 +221,7 @@
 		if(accountOnline){
 			AIListGroup	*group;
 			
-			if(group = [[adium contactController] remoteGroupForContact:exactContact]){
+			if((group = [[adium contactController] remoteGroupForContact:exactContact])){
 				[cell selectItemWithRepresentedObject:group];
 			}else{
 				[cell selectItemAtIndex:0];			

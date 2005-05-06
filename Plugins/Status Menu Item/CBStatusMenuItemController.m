@@ -69,7 +69,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 - (id)init
 {
-    if(self = [super init]){        
+    if((self = [super init])){
         //Create and set up the status item
         statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
         [statusItem setHighlightMode:YES];

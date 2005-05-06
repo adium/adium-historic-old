@@ -105,7 +105,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 			if (![logDict objectForKey:relativeLogPath]){
 				AIChatLog	*theLog;
 				
-				if (theLog = [self _logAtRelativeLogPath:relativeLogPath fileName:fileName]){
+				if((theLog = [self _logAtRelativeLogPath:relativeLogPath fileName:fileName])){
 					[logDict setObject:theLog
 								forKey:relativeLogPath];
 				}
@@ -154,7 +154,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 	
 	//Create & add the log
 
-	if(date = [fileAttributes fileModificationDate]){
+	if((date = [fileAttributes fileModificationDate])){
 		NSDate	*fileNameDate = [[self class] dateFromFileName:(fileName ? fileName : [relativeLogPath lastPathComponent])];
 		
 		NSTimeInterval dateTimeIntervalSinceFileNameDate = [date timeIntervalSinceDate:fileNameDate];

@@ -175,7 +175,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     //Grab the info from our buildnum script
     char *path, unixDate[256], num[256], whoami[256];
-    if(path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation])
+    if((path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation]))
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);

@@ -56,7 +56,7 @@
     if([inObject integerStatusObjectForKey:@"Online"]){
         NSDate	*signonDate;
 
-        if(signonDate = [inObject statusObjectForKey:@"Signon Date"]){
+        if((signonDate = [inObject statusObjectForKey:@"Signon Date"])){
             entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
 																								showingSeconds:NO 
 																								   abbreviated:NO]];

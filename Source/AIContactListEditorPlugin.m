@@ -257,7 +257,7 @@
 - (IBAction)deleteSelectionFromTab:(id)sender
 {
 	AIListObject   *currentContextMenuObject;
-	if(currentContextMenuObject = [[adium menuController] currentContextMenuObject]){
+	if((currentContextMenuObject = [[adium menuController] currentContextMenuObject])){
 		[self deleteFromArray:[NSArray arrayWithObject:currentContextMenuObject]];
 	}
 }

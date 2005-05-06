@@ -78,7 +78,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 {
 	AIListContact	*contact;
 	
-    if(contact = [self contactFromTextField]){
+    if((contact = [self contactFromTextField])){
         //Initiate the message
         [[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
 		

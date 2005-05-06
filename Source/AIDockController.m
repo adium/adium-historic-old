@@ -147,7 +147,7 @@
 						  resourceFolderName:FOLDER_DOCK_ICONS];
 
 		if(iconPath){
-			if(newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain]){
+			if((newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain])){
 				[availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
 			}
 		}
@@ -227,7 +227,7 @@
 		AIIconState		*iconState;
 		
 		stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
-		if(iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath]){
+		if((iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath])){
 			[iconStateDict setObject:iconState forKey:stateNameKey];
 		}
 	}

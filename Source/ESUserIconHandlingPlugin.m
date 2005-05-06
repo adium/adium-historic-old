@@ -278,7 +278,7 @@
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
 	BOOL		success;
 
-	if(success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath]){
+	if((success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath])){
 		[inObject setStatusObject:nil
 						   forKey:@"UserIconPath"
 						   notify:YES];

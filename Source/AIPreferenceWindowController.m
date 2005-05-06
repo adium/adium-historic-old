@@ -378,7 +378,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
 	if(tabView == tabView_category){
 		NSString	*identifier;
-		if(identifier = [tabViewItem identifier]){
+		if((identifier = [tabViewItem identifier])){
 			return [[self identifierToLabelDict] objectForKey:identifier];
 		}
 	}

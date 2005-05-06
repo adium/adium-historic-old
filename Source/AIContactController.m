@@ -551,7 +551,7 @@
 		[self _listChangedGroup:(AIListGroup *)containingObject object:listContact];
 	}
 
-	if(existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]]) {
+	if((existingObject = [localGroup objectWithService:[listContact service] UID:[listContact UID]])){
 		//If an object exists in this group with the same UID and serviceID, create a MetaContact
 		//for the two.
 		[self groupListContacts:[NSArray arrayWithObjects:listContact,existingObject,nil]];
@@ -563,7 +563,7 @@
 		//If no object exists in this group which matches, we should check if there is already
 		//a MetaContact holding a matching ListContact, since we should include this contact in it
 		//If we found a metaContact to which we should add, do it.
-		if (metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]]) {
+		if((metaContact = [contactToMetaContactLookupDict objectForKey:[listContact internalObjectID]])){
 			[self addListObject:listContact toMetaContact:metaContact];
 			performedGrouping = YES;
 		}
@@ -967,7 +967,7 @@
 	}
 
 	//AIMetaContact will handle reassigning the list object's grouping to being itself
-	if (success = [metaContact addObject:listObject]) {
+	if((success = [metaContact addObject:listObject])){
 		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
 
 		[self _listChangedGroup:metaContact object:listObject];
