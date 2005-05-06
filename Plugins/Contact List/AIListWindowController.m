@@ -60,6 +60,7 @@
 - (void)_configureToolbar;
 + (void)updateScreenSlideBoundaryRect:(id)sender;
 - (BOOL)shouldSlideWindowOffScreen_mousePositionStrategy;
+- (void)slideWindowIfNeeded:(id)sender;
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy;
 - (BOOL)shouldSlideWindowOnScreen_adiumActiveStrategy;
 - (BOOL)shouldSlideWindowOffScreen_adiumActiveStrategy;
@@ -200,22 +201,25 @@
 		[[self window] setHasShadow:[[prefDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 		windowShouldBeVisibleInBackground = ![[prefDict objectForKey:KEY_CL_HIDE] boolValue];
 		permitSlidingInForeground = [[prefDict objectForKey:KEY_CL_EDGE_SLIDE] boolValue];
+		
+		// don't slide the window the first time this is called, because it will display the contact list
+		// before it is prepared.  This produces screen artifacts.
+		if (!firstTime)
+			[self slideWindowIfNeeded:nil];
 
-		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground)
-		{
-			if (slideWindowIfNeededTimer == nil)
+		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
+			if (slideWindowIfNeededTimer == nil) {
 				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:0.1
 																			target:self
 																		  selector:@selector(slideWindowIfNeeded:)
 																		  userInfo:nil
-																		   repeats:YES];            
+																		   repeats:YES];            				
+			}
 		}
-		else
-		{
+		else {
             [slideWindowIfNeededTimer invalidate];
 			slideWindowIfNeededTimer = nil;
 		}
-
 
 		[contactListController setShowTooltips:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS] boolValue]];
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
@@ -510,8 +514,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if((!preventHiding) && (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible]))) {
-		shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+	if (!preventHiding) {
+		if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
+			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+		}
 	}
 	
 	return shouldSlide;
