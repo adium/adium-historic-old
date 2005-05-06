@@ -235,7 +235,7 @@
 		
         //Create the account and add it to our array
         if(service && accountUID && [accountUID length]){
-			if(newAccount = [self createAccountWithService:service UID:accountUID internalObjectID:internalObjectID]){
+			if((newAccount = [self createAccountWithService:service UID:accountUID internalObjectID:internalObjectID])){
                 [accountArray addObject:newAccount];
             }else{
 				[unloadableAccounts addObject:accountDict];
@@ -730,7 +730,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
         }
 		
 		//If inObject is an AIListContact return the account the object is on
-		if(account = [inContact account]){
+		if((account = [inContact account])){
 			if([account availableForSendingContentType:inType toContact:inContact]){
 				return(account);
 			}
@@ -746,7 +746,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		if (includeOffline){
 			//If inObject is an AIListContact return the account the object is on even if the account is offline
-			if(account = [inContact account]){
+			if((account = [inContact account])){
 				return(account);
 			}
 		}
@@ -1501,7 +1501,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				NSDictionary	*newRepresentedObject;
 				
 				//Set the represented object to indicate both the right status and the right account
-				if(status = [[menuItem representedObject] objectForKey:@"AIStatus"]){
+				if((status = [[menuItem representedObject] objectForKey:@"AIStatus"])){
 					newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
 						status, @"AIStatus",
 						account, @"AIAccount",
@@ -1548,7 +1548,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 				AIAccount	*account = [accountMenuItem representedObject];
 				NSMenu		*generatedAccountSubmenu;
 				
-				if(generatedAccountSubmenu = [temporaryMenuDict objectForKey:[account internalObjectID]]){
+				if((generatedAccountSubmenu = [temporaryMenuDict objectForKey:[account internalObjectID]])){
 					NSMenu		*accountSubmenu = [generatedAccountSubmenu copy];
 					
 					//Tell the status controller to update these items as necessary

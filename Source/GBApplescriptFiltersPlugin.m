@@ -159,7 +159,7 @@ static int numExecuted = 0;
 	// Load scripts
 	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
 	while((filePath = [enumerator nextObject])){
-		if(scriptBundle = [NSBundle bundleWithPath:filePath]){
+		if((scriptBundle = [NSBundle bundleWithPath:filePath])){
 			
 			NSString		*scriptsSetName;
 			NSEnumerator	*scriptEnumerator;
@@ -317,7 +317,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		NSString	*title;
 		NSMenuItem	*item;
 		
-		if (set = [appendDict objectForKey:@"Set"]){
+		if ((set = [appendDict objectForKey:@"Set"])){
 			indentationLevel = 1;
 			
 			if (![set isEqualToString:lastSet]){
@@ -443,7 +443,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
     NSMutableAttributedString   *filteredMessage = nil;
 	NSString					*stringMessage;
 
-	if (stringMessage = [inAttributedString string]){
+	if((stringMessage = [inAttributedString string])){
 		NSEnumerator				*enumerator;
 		NSMutableDictionary			*infoDict;
 		

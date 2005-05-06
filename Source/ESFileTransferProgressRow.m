@@ -279,7 +279,7 @@
 {
 	NSImage	*iconImage;
 
-	if(iconImage = [fileTransfer iconImage]){
+	if((iconImage = [fileTransfer iconImage])){
 		[view setIconImage:iconImage];		
 	}
 }

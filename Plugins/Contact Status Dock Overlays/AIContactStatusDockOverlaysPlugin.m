@@ -155,7 +155,7 @@
 		NSTimer	*removeTimer;
 		
 		//Clear any current timer for this object o ahve its overlay removed
-		if(removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"]) [removeTimer invalidate];
+		if((removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"])) [removeTimer invalidate];
 		
 		//Add a timer to remove this overlay
 		removeTimer = [NSTimer scheduledTimerWithTimeInterval:5

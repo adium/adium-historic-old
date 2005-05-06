@@ -342,8 +342,8 @@ static NSString                             *filterForContactName = nil;	//Conta
 
     //Sort by preference, defaulting to sorting by date
 	NSString	*selectedTableColumnPref;
-	if(selectedTableColumnPref = [[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_SELECTED_COLUMN
-																		  group:PREF_GROUP_LOGGING]){
+	if((selectedTableColumnPref = [[adium preferenceController] preferenceForKey:KEY_LOG_VIEWER_SELECTED_COLUMN
+																		   group:PREF_GROUP_LOGGING])){
 		selectedColumn = [[tableView_results tableColumnWithIdentifier:selectedTableColumnPref] retain];
 	}
 	if(!selectedColumn){
@@ -624,7 +624,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 	}
 
     //Append indexing progress
-    if(indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal]){
+    if((indexing = [plugin getIndexingProgress:&indexComplete outOf:&indexTotal])){
 		[progress appendString:[NSString stringWithFormat:AILocalizedString(@" - Indexing %i of %i",nil),indexComplete, indexTotal]];
     }
     
@@ -1404,7 +1404,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 												   );
 
 	//Process the results
-	if(resultCount = SKSearchResultsGetCount(searchResults)){
+	if((resultCount = SKSearchResultsGetCount(searchResults))){
 		SKDocumentRef   *outDocumentsArray = malloc(sizeof(SKDocumentRef) * LOG_RESULT_CLUMP_SIZE);
 		float		*outScoresArray = malloc(sizeof(float) * LOG_RESULT_CLUMP_SIZE);
 		NSRange		resultRange = NSMakeRange(0, resultCount);

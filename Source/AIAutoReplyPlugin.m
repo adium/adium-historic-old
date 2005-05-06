@@ -132,7 +132,7 @@
 	AIContentMessage	*responseContent;
 	NSAttributedString 	*autoReply;
 
-	if(autoReply = [[[chat account] statusState] autoReply]){
+	if((autoReply = [[[chat account] statusState] autoReply])){
 		responseContent = [AIContentMessage messageInChat:chat
 											   withSource:source
 											  destination:destination

@@ -120,7 +120,7 @@
 		
 		scheme = [url scheme];
 
-		if(service = [schemeToServiceDict objectForKey:scheme]){
+		if((service = [schemeToServiceDict objectForKey:scheme])){
 			if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				// aim://goim?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] stringByReplacingString:@"+" withString:@" "] compactedString];

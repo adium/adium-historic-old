@@ -876,7 +876,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		NSSet				*newKeys;
 		
 		observer = [observerValue nonretainedObjectValue];
-		if(newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent]){
+		if((newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent])){
 			if (!attrChange) attrChange = [NSMutableSet set];
 			[attrChange unionSet:newKeys];
 		}
@@ -1215,7 +1215,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
 		while((listContact = [enumerator nextObject])){
 			NSSet		*listContactChats;
-			if (listContactChats = [self allChatsWithContact:listContact]){
+			if((listContactChats = [self allChatsWithContact:listContact])){
 				[foundChats unionSet:listContactChats];
 			}
 		}

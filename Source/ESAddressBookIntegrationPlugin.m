@@ -472,7 +472,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		//No further need for the dictionary entries
 		[trackingDict removeObjectForKey:tagNumber];
 		
-		if(uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber]){
+		if((uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber])){
 			[trackingDictPersonToTagNumber removeObjectForKey:uniqueID];
 			[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
 		}
@@ -503,7 +503,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	
 	//Check if we already have a tag for the loading of another object with the same
 	//internalObjectID
-	if (tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId]){
+	if((tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId])){
 		id				previousValue;
 		NSMutableSet	*objectSet;
 		
@@ -644,7 +644,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
-        if (me = [sharedAddressBook me]) {
+        if((me = [sharedAddressBook me])){
 			
 			//Default buddy icon
 			if (includeIcon){

@@ -128,7 +128,7 @@
 		AIPlugin		*plugin = nil;
 
 		NS_DURING
-		if(pluginBundle = [NSBundle bundleWithPath:pluginPath]){						
+		if((pluginBundle = [NSBundle bundleWithPath:pluginPath])){
 			Class principalClass = [pluginBundle principalClass];
 			if(principalClass){
 				plugin = [[principalClass alloc] init];

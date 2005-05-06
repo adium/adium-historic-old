@@ -259,7 +259,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	ESFileTransfer	*fileTransfer;
 
-	if(fileTransfer = [notification object]){
+	if((fileTransfer = [notification object])){
 		[self addFileTransfer:fileTransfer];
 	}
 }
@@ -277,7 +277,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	ESFileTransferProgressRow	*row;
 
-	if(row = [self existingRowForFileTransfer:inFileTransfer]) [self _removeFileTransferRow:row];
+	if((row = [self existingRowForFileTransfer:inFileTransfer])) [self _removeFileTransferRow:row];
 }
 
 - (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer

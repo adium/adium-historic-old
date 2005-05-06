@@ -364,7 +364,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		NSSet	*statusDicts;
 
 		//Obtain the status dicts for this type and service code unique ID
-		if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:inServiceCodeUniqueID]){
+		if((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:inServiceCodeUniqueID])){
 			//And add them
 			[self _addMenuItemsForStatusOfType:type
 									withTarget:target
@@ -388,7 +388,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 				NSSet	*statusDicts;
 
 				//Obtain the status dicts for this type and service code unique ID
-				if(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID]){
+				if((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
 					//And add them
 					[self _addMenuItemsForStatusOfType:type
 											withTarget:target
@@ -1523,7 +1523,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 		//Search for the account or global status state as appropriate for this menu item.
 		//Also, determine if we are looking to select the Offline menu item
-		if(account = [dict objectForKey:@"AIAccount"]){
+		if((account = [dict objectForKey:@"AIAccount"])){
 			shouldSelectOffline = ![account online];
 		}else{
 			shouldSelectOffline = noAccountsAreOnline;

@@ -50,7 +50,7 @@
 
         NSDate	*signonDate;
 	
-        if(signonDate = [inObject statusObjectForKey:@"Signon Date"]){
+        if((signonDate = [inObject statusObjectForKey:@"Signon Date"])){
             NSString		*currentDay, *signonDay, *signonTime;
             NSDateFormatter	*dayFormatter, *timeFormatter;
             

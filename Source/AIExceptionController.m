@@ -178,7 +178,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			char	buffer[512];
 			size_t	length;
 
-			while(length = fread(buffer, 1, sizeof(buffer), file)) {
+			while((length = fread(buffer, 1, sizeof(buffer), file))){
 				[data appendBytes:buffer length:length];
 			}
 
