@@ -53,7 +53,7 @@
 #define SLIDE_ALLOWED_RECT_EDGE_MASK  		(AIMinXEdgeMask | AIMaxXEdgeMask)
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL		0.1
 #define WINDOW_ALIGNMENT_TOLERANCE			2.0f
-#define MOUSE_EDGE_SLIDE_ON_DISTANCE		-1.1f
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE		1.1f
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
@@ -567,7 +567,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	for(screenEdge = 0; screenEdge < 4; screenEdge++) {
 		if(windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
 			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
-			if(mouseOutsideSlideBoundaryRectDistance < MOUSE_EDGE_SLIDE_ON_DISTANCE) {
+			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 				shouldSlideOnScreen = NO;
 			}
 		}
