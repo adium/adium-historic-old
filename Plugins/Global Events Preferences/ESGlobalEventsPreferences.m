@@ -186,7 +186,7 @@
 	
 	//Built in event presets
 	enumerator = [[plugin builtInEventPresetsArray] objectEnumerator];
-	while(eventPreset = [enumerator nextObject]){
+	while((eventPreset = [enumerator nextObject])){
 		NSString		*name = [eventPreset objectForKey:@"Name"];
 		
 		//Add a menu item for the set
@@ -204,7 +204,7 @@
 		[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 		
 		enumerator = [storedEventPresetsArray objectEnumerator];
-		while(eventPreset = [enumerator nextObject]){
+		while((eventPreset = [enumerator nextObject])){
 			NSString		*name = [eventPreset objectForKey:@"Name"];
 			
 			//Add a menu item for the set

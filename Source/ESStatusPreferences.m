@@ -191,7 +191,7 @@
 		AIAccount		*account;
 		
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([account statusState] == originalState){
 				[account setStatusStateAndRemainOffline:newState];
 				

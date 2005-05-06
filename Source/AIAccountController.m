@@ -182,7 +182,7 @@
 	
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
-	while(accountDict = [enumerator nextObject]){
+	while((accountDict = [enumerator nextObject])){
 		NSString		*serviceID = [accountDict objectForKey:ACCOUNT_TYPE];
         AIAccount		*newAccount;
         AIService		*service;
@@ -256,7 +256,7 @@
 	
 	//Build a flattened array of the accounts
 	enumerator = [accountArray objectEnumerator];
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
 		
 		[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
@@ -323,14 +323,14 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		AIAccount		*account;
 
 		//Build an array of all currently used services
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if(includeCompatible){
 				NSEnumerator	*serviceEnumerator;
 				AIService		*accountService;
 				
 				//Add all services that are of the same class as the user's account (So, all compatible services)
 				serviceEnumerator = [[self servicesWithServiceClass:[[account service] serviceClass]] objectEnumerator];
-				while(accountService = [serviceEnumerator nextObject]){
+				while((accountService = [serviceEnumerator nextObject])){
 					//Prevent any service from going in twice
 					if(![serviceArray containsObject:accountService]){
 						[serviceArray addObject:accountService];
@@ -363,7 +363,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
 	AIService		*service;
 	
-	while(service = [enumerator nextObject]){
+	while((service = [enumerator nextObject])){
 		if([[service serviceID] isEqualToString:serviceID]) break;
 	}
 	
@@ -376,7 +376,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIService		*service;
 	NSMutableArray	*servicesArray = [NSMutableArray array];
 		
-	while(service = [enumerator nextObject]){
+	while((service = [enumerator nextObject])){
 		if([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
 	}
 	
@@ -491,7 +491,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		}
 	}
     
-    while(objectID && (account = [enumerator nextObject])){
+    while((objectID && (account = [enumerator nextObject]))){
         if([objectID isEqualToString:[account internalObjectID]]) break;
     }
     
@@ -527,7 +527,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     AIService		*aService;
 	
 	//Enumerate all available services
-	while(aService = [enumerator nextObject]){
+	while((aService = [enumerator nextObject])){
 		//Find matching serviceClasses
 		if([[aService serviceClass] isEqualToString:serviceClass]){
 			
@@ -569,7 +569,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [accountArray objectEnumerator];
 	AIAccount		*account;
 	
-    while(account = [enumerator nextObject]){	
+    while((account = [enumerator nextObject])){	
 		if([account online] && [[account service] canCreateGroupChats]) return(YES);
 	}
 	
@@ -581,7 +581,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [accountArray objectEnumerator];
 	AIAccount		*account;
 	
-    while(account = [enumerator nextObject]){	
+    while((account = [enumerator nextObject])){	
 		if([account contactListEditable]) return(YES);
 	}
 	
@@ -766,7 +766,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     if(inContact){
 		//First available account in our list of the correct service type
 		enumerator = [accountArray objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([inContact service] == [account service] &&
 			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
 				return(account);
@@ -775,7 +775,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		
 		//First available account in our list of a compatible service type
 		enumerator = [accountArray objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
 			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
 				return(account);
@@ -784,7 +784,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	}else{
 		//First available account in our list
 		enumerator = [accountArray objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
 				return(account);
 			}
@@ -810,7 +810,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSMenuItem		*menuItem;
 	
 	enumerator = [[self menuItemsForAccountsWithTarget:target includeOffline:includeOffline] objectEnumerator];
-	while(menuItem = [enumerator nextObject]){
+	while((menuItem = [enumerator nextObject])){
 		if (!groupChatCreator || [[[menuItem representedObject] service] canCreateGroupChats]){
 			[menu addItem:menuItem];
 		}
@@ -834,7 +834,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];
-    while(account = [enumerator nextObject]){
+    while((account = [enumerator nextObject])){
 		BOOL available = [[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		 toContact:nil 
 																		 onAccount:account];
@@ -897,7 +897,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[account formattedUID]
 																					 target:target
 																					 action:@selector(selectAccount:)
@@ -917,7 +917,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if((!inObject && !inPreferred) || 
 		   ([self _account:account canSendContentType:inType toListObject:inObject preferred:inPreferred includeOffline:includeOffline])){
 			
@@ -937,7 +937,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		AIListObject	*containedObject;
 		
 		//canSend is YES if any of the contained contacts of the meta contact return YES
-		while (containedObject = [enumerator nextObject]){
+		while ((containedObject = [enumerator nextObject])){
 			if ([self _account:account canSendContentType:inType toListObject:containedObject preferred:inPreferred includeOffline:includeOffline]){
 				
 				canSend = YES;
@@ -1173,7 +1173,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	
 	NSRunInformationalAlertPanel(@"Adium Version Upgrade", @"This version of Adium fixes a common crash related to secure storage of your instant messaging passwords.  When you press OK below, Adium will automatically update any stored passwords to the new, more stable system.\n\nThis process will only occur once and will take a moment; you may be prompted to allow access for one or more passwords.\n\nIf Adium crashes during this upgrade, simply relaunch Adium; the process will not occur again.",nil,nil,nil);
 
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		NSString	*passKey = [self _passKeyForAccount:account];
 		NSString	*accountName = [self _accountNameForAccount:account];
 		
@@ -1360,7 +1360,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 {
 	NSEnumerator			*enumerator = [accountMenuPluginsDict objectEnumerator];
 	id<AccountMenuPlugin>   accountMenuPlugin;
-	while (accountMenuPlugin = [enumerator nextObject]) {
+	while ((accountMenuPlugin = [enumerator nextObject])) {
 		[self _removeAccountMenuItemsForPlugin:accountMenuPlugin];
 		[self _addAccountMenuItemsForPlugin:accountMenuPlugin];
 	}
@@ -1394,7 +1394,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 		}
 		
 		enumerator = [accountMenuItemArraysDict keyEnumerator];
-		while(identifier = [enumerator nextObject]){
+		while((identifier = [enumerator nextObject])){
 			id<AccountMenuPlugin>	accountMenuPlugin;
 			NSMenuItem				*menuItem;
 
@@ -1452,7 +1452,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 		//Now add each item to the submenu
 		enumerator = [accountActionMenuItems objectEnumerator];
-		while(menuItem = [enumerator nextObject]){
+		while((menuItem = [enumerator nextObject])){
 			[actionsSubmenu addItem:menuItem];
 		}
 	}
@@ -1496,7 +1496,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			NSMenuItem		*accountMenuItem;
 			
 			//Enumerate all the menu items we were originally passed
-			while(menuItem = [menuItemEnumerator nextObject]){
+			while((menuItem = [menuItemEnumerator nextObject])){
 				AIStatus		*status;
 				NSDictionary	*newRepresentedObject;
 				
@@ -1532,7 +1532,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSNumber	*identifier;
 	
 	enumerator = [accountMenuItemArraysDict keyEnumerator];
-	while(identifier = [enumerator nextObject]){
+	while((identifier = [enumerator nextObject])){
 		id<AccountMenuPlugin> accountMenuPlugin = [accountMenuPluginsDict objectForKey:identifier];
 		
 		if([accountMenuPlugin showStatusSubmenu]){
@@ -1544,7 +1544,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			//Enumerate each menu item in this array (the array corresponds to one plugin's menu items; each menu item
 			//will be for a distinct AIAccount).
 			accountMenuItemEnumerator = [accountMenuItemArray objectEnumerator];
-			while(accountMenuItem = [accountMenuItemEnumerator nextObject]){
+			while((accountMenuItem = [accountMenuItemEnumerator nextObject])){
 				AIAccount	*account = [accountMenuItem representedObject];
 				NSMenu		*generatedAccountSubmenu;
 				
@@ -1582,7 +1582,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	NSEnumerator	*enumerator = [accountMenuItemArraysDict objectEnumerator];
 	NSArray			*ourMenuItemArray;
 	
-	while(ourMenuItemArray = [enumerator nextObject]){
+	while((ourMenuItemArray = [enumerator nextObject])){
 		[ourMenuItemArray makeObjectsPerformSelector:@selector(setSubmenu:)
 										  withObject:nil];
 	}

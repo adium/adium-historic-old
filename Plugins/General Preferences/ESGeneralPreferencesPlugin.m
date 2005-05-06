@@ -98,7 +98,7 @@
 	
 	//Set sending keys of all open views
 	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	while(entryView = [enumerator nextObject]){
+	while((entryView = [enumerator nextObject])){
 		[self _configureSendingKeysForObject:entryView];
 	}
 }

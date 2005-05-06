@@ -103,7 +103,7 @@
 	NSEnumerator	*enumerator = [keys objectEnumerator];
 	NSString		*className;
 
-	while (className = [enumerator nextObject]) {
+	while ((className = [enumerator nextObject])) {
 		AIPlugin	*plugin = [components objectForKey:className];
 #ifdef TRACK_COMPONENTS
 		NSLog(@"%@: removing component: %@", [self class], plugin);

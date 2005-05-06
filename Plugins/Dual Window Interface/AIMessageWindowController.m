@@ -463,7 +463,7 @@
 	//Update our contained chats array to mirror the order of the tabs
 	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
 	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
-	while(tabViewItem = [enumerator nextObject]){
+	while((tabViewItem = [enumerator nextObject])){
 		[containedChats addObject:[tabViewItem chat]];
 	}
 	

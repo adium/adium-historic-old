@@ -304,7 +304,7 @@
     [popUp_messageColoring removeAllItems];
     
 	//Add in the default styles
-	while( colorName = [enumerator nextObject] ) {
+	while(( colorName = [enumerator nextObject] )) {
 		[self _buildMessageColoringMenu_AddStyle:[messageStyles objectForKey:colorName] withTitle:colorName];
 	}
 	

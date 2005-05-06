@@ -76,7 +76,7 @@
 			entryString = [entry mutableString];
 			
 			enumerator = [listContacts objectEnumerator];
-			while(contact = [enumerator nextObject]){
+			while((contact = [enumerator nextObject])){
 				NSImage	*statusIcon, *serviceIcon;
 				
 				if (shouldAppendString){

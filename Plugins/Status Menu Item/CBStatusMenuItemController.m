@@ -331,7 +331,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		//Add the state menu items
         enumerator = [stateMenuItemsArray objectEnumerator];
         menuItem = nil;
-        while(menuItem = [enumerator nextObject]){
+        while((menuItem = [enumerator nextObject])){
             [menu addItem:menuItem];
 			
 			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
@@ -345,7 +345,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
-			while(menuItem = [enumerator nextObject]){
+			while((menuItem = [enumerator nextObject])){
 				NSMenu	*submenu;
 				
 				[menu addItem:menuItem];
@@ -359,7 +359,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 				if(submenu){
 					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
 					NSMenuItem		*submenuItem;
-					while(submenuItem = [submenuEnumerator nextObject]){
+					while((submenuItem = [submenuEnumerator nextObject])){
 						//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
 						if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
 							[[submenuItem target] validateMenuItem:submenuItem];
@@ -378,7 +378,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
             [menu addItem:[NSMenuItem separatorItem]];
 
             //Create and add the menu items
-            while(chat = [enumerator nextObject]){
+            while((chat = [enumerator nextObject])){
 				NSImage *image = nil;
 				
                 //Create a menu item from the chat

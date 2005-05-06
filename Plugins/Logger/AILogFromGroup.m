@@ -70,7 +70,7 @@
 		//
 		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
 		enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
-		while(folderName = [enumerator nextObject]){
+		while((folderName = [enumerator nextObject])){
 			AILogToGroup    *toGroup = nil;
 			
 			//#### Why does this alloc fail sometimes? ####

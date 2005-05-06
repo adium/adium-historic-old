@@ -79,7 +79,7 @@
 		
 		//Get all resource paths to search
 		stylesEnumerator = [stylesArray objectEnumerator];
-		while(resourcePath = [stylesEnumerator nextObject]) {
+		while((resourcePath = [stylesEnumerator nextObject])) {
 			if(style = [NSBundle bundleWithPath:resourcePath]){
 				NSString	*styleIdentifier = [style bundleIdentifier];
 				if(styleIdentifier && [styleIdentifier length]){

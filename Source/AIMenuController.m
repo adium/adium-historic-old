@@ -182,7 +182,7 @@
 		AIListContact	*aListContact;
 		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 
-		while(aListContact = [enumerator nextObject]) {
+		while((aListContact = [enumerator nextObject])) {
 			[self addMenuItemsForContact:aListContact
 								  toMenu:workingMenu
 						   separatorItem:&separatorItem];
@@ -213,7 +213,7 @@
 		}
 
 		enumerator = [itemArray objectEnumerator];
-		while(menuItem = [enumerator nextObject]) {
+		while((menuItem = [enumerator nextObject])) {
 			[workingMenu addItem:menuItem];
 		}
 	}

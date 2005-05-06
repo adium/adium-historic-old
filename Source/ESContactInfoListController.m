@@ -132,7 +132,7 @@
 				arrayOfDragItems = [NSMutableArray array];
 				
 				enumerator = [dragItemsUniqueIDs objectEnumerator];
-				while (uniqueID = [enumerator nextObject]){
+				while ((uniqueID = [enumerator nextObject])){
 					[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
 				}
 
@@ -182,7 +182,7 @@
 				arrayOfDragItems = [NSMutableArray array];
 				
 				enumerator = [dragItemsUniqueIDs objectEnumerator];
-				while (uniqueID = [enumerator nextObject]){
+				while ((uniqueID = [enumerator nextObject])){
 					[arrayOfDragItems addObject:[[adium contactController] existingListObjectWithUniqueID:uniqueID]];
 				}
 				
@@ -211,7 +211,7 @@
 			}
 			
 			enumerator = [dragItems objectEnumerator];
-			while (aDragItem = [enumerator nextObject]){
+			while ((aDragItem = [enumerator nextObject])){
 				if ([aDragItem isMemberOfClass:[AIListContact class]]){
 					//For listContacts, add all contacts with the same service and UID (on all accounts)
 					[realDragItems addObjectsFromArray:[[adium contactController] allContactsWithService:[aDragItem service] 

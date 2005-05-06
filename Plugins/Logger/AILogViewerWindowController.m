@@ -268,7 +268,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 
 			//Add the 'to' for each grouping on this account
 			toEnum = [[logFromGroup toGroupArray] objectEnumerator];
-			while(currentToGroup = [toEnum nextObject]){
+			while((currentToGroup = [toEnum nextObject])){
 				NSString	*currentTo = [currentToGroup to];
 				if(currentTo && ![currentTo isEqual:@".DS_Store"]){
 					[toSetForThisService addObject:currentTo];
@@ -284,7 +284,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 	
 	//Table access is easiest from an array; sort and add the just-created to groups to our table arrays
 	enumerator = [toDict keyEnumerator];
-	while (serviceClass = [enumerator nextObject]){
+	while ((serviceClass = [enumerator nextObject])){
 		NSSet		*toSetForThisService = [toDict objectForKey:serviceClass];
 		unsigned	i;
 		unsigned	count = [toSetForThisService count];
@@ -763,7 +763,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 						NSString	*searchWord;
 						
 						enumerator = [[activeSearchString componentsSeparatedByString:@" "] objectEnumerator];
-						while(searchWord = [enumerator nextObject]){
+						while((searchWord = [enumerator nextObject])){
 							NSRange     occurrence;
 							
 							logText = [self hilightOccurrencesOfString:searchWord inString:logText firstOccurrence:&occurrence];

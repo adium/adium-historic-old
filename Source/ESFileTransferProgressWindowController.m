@@ -187,7 +187,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//Create progress rows for all existing file transfers
 	shouldScrollToNewFileTransfer = NO;
 	enumerator = [[[adium fileTransferController] fileTransferArray] objectEnumerator];
-	while(fileTransfer = [enumerator nextObject]){
+	while((fileTransfer = [enumerator nextObject])){
 		[self addFileTransfer:fileTransfer];
 	}
 	
@@ -215,7 +215,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	BOOL						enableClear = NO;
 	
 	enumerator = [progressRows objectEnumerator];
-	while(row = [enumerator nextObject]){
+	while((row = [enumerator nextObject])){
 		if([[row fileTransfer] isStopped]){
 			enableClear = YES;
 			break;
@@ -286,7 +286,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	ESFileTransferProgressRow	*row;
 
 	enumerator = [progressRows objectEnumerator];
-	while(row = [enumerator nextObject]){
+	while((row = [enumerator nextObject])){
 		if([row fileTransfer] == inFileTransfer) break;
 	}
 
@@ -357,7 +357,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	unsigned					downloads = 0, uploads = 0;
 	
 	enumerator = [progressRows objectEnumerator];
-	while(aRow = [enumerator nextObject]){
+	while((aRow = [enumerator nextObject])){
 		FileTransferType type = [aRow type];
 		if(type == Incoming_FileTransfer){
 			downloads++;
@@ -400,7 +400,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	shouldScrollToNewFileTransfer = NO;
 	enumerator = [progressRows objectEnumerator];
-	while(row = [enumerator nextObject]){
+	while((row = [enumerator nextObject])){
 		if([[row fileTransfer] isStopped]) [self _removeFileTransferRow:row];
 	}	
 	shouldScrollToNewFileTransfer = YES;

@@ -172,7 +172,7 @@
 	
 	//Add contact to our accounts
 	enumerator = [accounts objectEnumerator];
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account contactListEditable] &&
 		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
 			AIListContact	*contact = [[adium contactController] contactWithService:service
@@ -289,7 +289,7 @@
 	NSEnumerator	*enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
 	AIAccount		*account;
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account contactListEditable]) return(YES);
 	}
 	
@@ -357,7 +357,7 @@
 	
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];
-	while(account = [enumerator nextObject]) {
+	while((account = [enumerator nextObject])) {
 		if(![account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT]){
 			[account setPreference:[NSNumber numberWithBool:YES]
 							forKey:KEY_ADD_CONTACT_TO 

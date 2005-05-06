@@ -182,7 +182,7 @@
 		sounds = [[adium soundController] soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 		
 		enumerator = [sounds keyEnumerator];
-		while(event = [enumerator nextObject]){
+		while((event = [enumerator nextObject])){
 			NSString	*eventID = [[adium contactAlertsController] eventIDForEnglishDisplayName:event];
 
 			soundName = [sounds objectForKey:event];

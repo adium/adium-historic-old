@@ -261,7 +261,7 @@
 	
     //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
     enumerator = [[[popUpButton menu] itemArray] objectEnumerator];
-    while(menuItem = [enumerator nextObject]){
+    while((menuItem = [enumerator nextObject])){
         if([menuItem representedObject] == object){
             [menuItem setState:NSOnState];
         }else{

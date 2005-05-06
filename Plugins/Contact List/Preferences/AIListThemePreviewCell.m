@@ -99,7 +99,7 @@
 	[[NSColor whiteColor] set];
 	[NSBezierPath fillRect:cellFrame];
 	
-	while(key = [enumerator nextObject]){
+	while((key = [enumerator nextObject])){
 		[[[themeDict objectForKey:key] representedColor] set];
 		[NSBezierPath fillRect:segmentRect];
 		segmentRect.origin.x += segmentRect.size.width;

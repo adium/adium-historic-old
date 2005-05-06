@@ -190,7 +190,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	//Apply its values
 	[[adiumInstance preferenceController] delayPreferenceChangedNotifications:YES];
 	enumerator = [setDictionary keyEnumerator];
-	while(key = [enumerator nextObject]){
+	while((key = [enumerator nextObject])){
 		[[adiumInstance preferenceController] setPreference:[setDictionary objectForKey:key]
 													 forKey:key
 													  group:preferenceGroup];
@@ -301,7 +301,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSMutableArray	*alreadyAddedArray = [NSMutableArray array];
 	NSString		*filePath;
 	
-    while(filePath = [enumerator nextObject]) {
+    while((filePath = [enumerator nextObject])) {
 		NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		
 		if(themeDict){

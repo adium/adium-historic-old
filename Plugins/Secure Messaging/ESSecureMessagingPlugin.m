@@ -191,7 +191,7 @@
 	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
 	NSToolbarItem	*item;
 	
-	while(item = [enumerator nextObject]){
+	while((item = [enumerator nextObject])){
 		if([[item itemIdentifier] isEqualToString:@"Encryption"]){
 			NSImage			*image;
 			

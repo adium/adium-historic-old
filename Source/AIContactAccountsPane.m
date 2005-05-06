@@ -120,7 +120,7 @@
 		
 		accounts = [[NSMutableArray alloc] init];
 		enumerator = [[(AIMetaContact *)listObject dictionaryOfServiceClassesAndListContacts] keyEnumerator];
-		while (serviceClass = [enumerator nextObject]){
+		while ((serviceClass = [enumerator nextObject])){
 			[(NSMutableArray *)accounts addObjectsFromArray:[[adium accountController] accountsWithServiceClass:serviceClass]];
 		}
 		

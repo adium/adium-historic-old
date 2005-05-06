@@ -72,14 +72,14 @@
 	NSString		*path;
 	
 	//Load any external plugins the user has installed
-	while(path = [enumerator nextObject]){
+	while((path = [enumerator nextObject])){
 		[self loadPluginAtPath:path confirmLoading:YES];
 	}
 	
 	NSString *internalPluginsPath = [[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:DIRECTORY_INTERNAL_PLUGINS] stringByExpandingTildeInPath];
 	//Load the plugins in our bundle
 	enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:internalPluginsPath] objectEnumerator];
-	while (path = [enumerator nextObject]) {
+	while ((path = [enumerator nextObject])) {
 		if([[path pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0)
 			[self loadPluginAtPath:[internalPluginsPath stringByAppendingPathComponent:path] confirmLoading:NO];
 	}

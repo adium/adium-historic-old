@@ -126,7 +126,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	[menu setAutoenablesItems:NO];
 	
 	enumerator = [[self arrayOfMenuItemsForEventsWithTarget:target forGlobalMenu:global] objectEnumerator];
-	while(item = [enumerator nextObject]){
+	while((item = [enumerator nextObject])){
 		[menu addItem:item];
 	}
 	
@@ -272,7 +272,7 @@ int eventIDSort(id objectA, id objectB, void *context){
 		enumerator = [alerts objectEnumerator];
 
 		//Process each alert (There may be more than one for an event)
-		while(alert = [enumerator nextObject]){
+		while((alert = [enumerator nextObject])){
 			NSString	*actionID;
 			id <AIActionHandler>	actionHandler;			
 			
@@ -467,7 +467,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[menuItemArray sortUsingFunction:actionMenuItemSort context:nil];
 	
 	enumerator = [menuItemArray objectEnumerator];
-	while(menuItem = [enumerator nextObject]){
+	while((menuItem = [enumerator nextObject])){
 		[menu addItem:menuItem];
 	}
 	
@@ -513,7 +513,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		
 		alertEnumerator = [[contactAlerts objectForKey:eventID] objectEnumerator];
 		
-		while(alert = [alertEnumerator nextObject]){
+		while((alert = [alertEnumerator nextObject])){
 			//If we don't have a specific actionID, or this one is right, add it
 			if(!actionID || [actionID isEqualToString:[alert objectForKey:KEY_ACTION_ID]]){
 				[alertArray addObject:alert];
@@ -527,12 +527,12 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 		
 		//Flatten the alert dict into an array
 		groupEnumerator = [contactAlerts keyEnumerator];
-		while(anEventID = [groupEnumerator nextObject]){
+		while((anEventID = [groupEnumerator nextObject])){
 			NSEnumerator	*alertEnumerator;
 			NSDictionary	*alert;
 			
 			alertEnumerator = [[contactAlerts objectForKey:anEventID] objectEnumerator];
-			while(alert = [alertEnumerator nextObject]){
+			while((alert = [alertEnumerator nextObject])){
 				//If we don't have a specific actionID, or this one is right, add it
 				if(!actionID || [actionID isEqualToString:[alert objectForKey:KEY_ACTION_ID]]){
 					[alertArray addObject:alert];
@@ -649,14 +649,14 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	//The contact alerts preference is a dictionary keyed by event.  Each event key yields an array of dictionaries;
 	//each of these dictionaries represents an alert.  We want to remove all dictionaries which represent alerts with
 	//the passed actionID
-	while (victimEventID = [enumerator nextObject]){
+	while ((victimEventID = [enumerator nextObject])){
 		NSMutableArray  *newEventArray = nil;
 	
 		eventArray = [contactAlerts objectForKey:victimEventID];
 
 		//Enumerate each alert for this event
 		alertArrayEnumerator = [eventArray objectEnumerator];
-		while (alertDict = [alertArrayEnumerator nextObject]){
+		while ((alertDict = [alertArrayEnumerator nextObject])){
 			
 			//We found an alertDict which needs to be removed
 			if ([[alertDict objectForKey:KEY_ACTION_ID] isEqualToString:actionID]){
@@ -699,7 +699,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 	
 	enumerator = [allGlobalAlerts objectEnumerator];
-	while(eventDict = [enumerator nextObject]){
+	while((eventDict = [enumerator nextObject])){
 		NSMutableArray		*eventArray;
 		NSString			*eventID = [eventDict objectForKey:KEY_EVENT_ID];
 
@@ -735,7 +735,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context){
 	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 	
 	//Add each alert to the target (addAlert:toListObject:setAsNewDefaults: will ensure identical alerts aren't added more than once)
-	while (alertDict  = [enumerator nextObject]){
+	while ((alertDict  = [enumerator nextObject])){
 		[self addAlert:alertDict toListObject:newObject setAsNewDefaults:NO];
 	}
 	

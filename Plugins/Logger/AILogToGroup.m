@@ -99,7 +99,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 		
 		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
 		enumerator = [[defaultManager directoryContentsAtPath:fullPath] objectEnumerator];
-		while(fileName = [enumerator nextObject]){
+		while((fileName = [enumerator nextObject])){
 			NSString		*relativeLogPath = [path stringByAppendingPathComponent:fileName];
 			
 			if (![logDict objectForKey:relativeLogPath]){

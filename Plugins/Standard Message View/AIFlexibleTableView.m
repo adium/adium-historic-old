@@ -216,7 +216,7 @@
             [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         }
         enumerator = [tableViewItemArray reverseObjectEnumerator];
-        while (menuItem = [enumerator nextObject]) {
+        while ((menuItem = [enumerator nextObject])) {
             [menu insertItem:menuItem atIndex:0];
         }
     }
@@ -531,7 +531,7 @@
     //removeObjectsFromArray is the intuitive choice, but our rows don't respond to hash and isEqual (nor do we want them to) so it isn't applicable
     if ([rowsToRemove count]) {
         rowEnumerator = [rowsToRemove objectEnumerator];
-        while (row = [rowEnumerator nextObject]){
+        while ((row = [rowEnumerator nextObject])){
             [rowArray removeObjectIdenticalTo:row];
         }
         
@@ -578,7 +578,7 @@
 
     //Remove any existing cursor rects
     enumerator = [cursorTrackingRowArray objectEnumerator];
-    while(row = [enumerator nextObject]){
+    while((row = [enumerator nextObject])){
         //Pass an empty visible rect to remove any cursor rects
         [row resetCursorRectsAtOffset:NSMakePoint(0,0) visibleRect:NSMakeRect(0,0,0,0) inView:self];
     }

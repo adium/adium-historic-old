@@ -165,7 +165,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
 	NSTabViewItem	*tabViewItem;
-	while(tabViewItem = [enumerator nextObject]){		
+	while((tabViewItem = [enumerator nextObject])){		
 		NSString	*label = nil;
 		int			identifier = [[tabViewItem identifier] intValue];
 
@@ -201,7 +201,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	
     //Close all open panes
     enumerator = [loadedPanes objectEnumerator];
-    while(pane = [enumerator nextObject]){
+    while((pane = [enumerator nextObject])){
         [pane closeView];
     }
     
@@ -267,7 +267,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     AIContactInfoPane	*pane;
     
     //Get the panes for this category
-    while(pane = [enumerator nextObject]){
+    while((pane = [enumerator nextObject])){
         if([pane contactInfoCategory] == inCategory){
             [paneArray addObject:pane];
 			[loadedPanes addObject:pane];
@@ -382,7 +382,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
 		AIContactInfoPane	*pane;
 		
-		while(pane = [enumerator nextObject]){
+		while((pane = [enumerator nextObject])){
 			[pane configureForListObject:displayedObject];
 		}
 	}
@@ -469,7 +469,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	AIMetaContact	*contactListRoot = (AIMetaContact *)[contactListController contactListRoot];
 	
 	enumerator = [[contactListView arrayOfSelectedItems] objectEnumerator];
-	while (aListObject = [enumerator nextObject]){
+	while ((aListObject = [enumerator nextObject])){
 		[[adium contactController] removeAllListObjectsMatching:aListObject
 												fromMetaContact:contactListRoot];
 	}

@@ -115,7 +115,7 @@
 		NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 		NSString		*path;
 		
-		while(path = [enumerator nextObject]){
+		while((path = [enumerator nextObject])){
 			AIIconState		*previewState = [[adium dockController] previewStateForIconPackAtPath:path];
 			[iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"Path", previewState, @"State", nil]];    
 		}
@@ -145,7 +145,7 @@
 //    [iconArray release]; iconArray = [[NSMutableArray alloc] init];
 //	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
 //	
-//    while(iconPath = [enumerator nextObject]){            
+//    while((iconPath = [enumerator nextObject])){            
 //        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
 //        
 //        //Find all the .AdiumIcon's
@@ -176,7 +176,7 @@
 	NSDictionary	*iconDict;
 	int				index = 0;
 	
-	while(iconDict = [enumerator nextObject]){
+	while((iconDict = [enumerator nextObject])){
 		NSString	*iconName = [[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension]		;
 		if([iconName isEqualToString:selectName]){
 			[imageGridView_icons selectIndex:index];

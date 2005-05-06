@@ -340,7 +340,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSMenuItem		*menuItem;
 	
 	enumerator = [availableStyles objectEnumerator];
-	while(style = [enumerator nextObject]){
+	while((style = [enumerator nextObject])){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
 																		 target:nil
 																		 action:nil
@@ -352,7 +352,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	[menuItemArray sortUsingFunction:menuTitleSort context:nil];
 	
 	enumerator = [menuItemArray objectEnumerator];
-	while(menuItem = [enumerator nextObject]){
+	while((menuItem = [enumerator nextObject])){
 		[menu addItem:menuItem];
 	}
 	
@@ -369,7 +369,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSString		*variant;
 	
 	//Add a menu item for each variant
-	while(variant = [enumerator nextObject]){
+	while((variant = [enumerator nextObject])){
 		[menu addItemWithTitle:variant
 						target:nil
 						action:nil
@@ -477,7 +477,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSDictionary		*participant;
 	AIService			*aimService = [[adium accountController] firstServiceWithServiceID:@"AIM"];
 	
-	while(participant = [enumerator nextObject]){
+	while((participant = [enumerator nextObject])){
 		NSString		*UID, *alias, *userIconName;
 		AIListObject	*listObject;
 		
@@ -543,7 +543,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSDictionary		*messageDict;
 	
 	enumerator = [chatArray objectEnumerator];
-	while(messageDict = [enumerator nextObject]){
+	while((messageDict = [enumerator nextObject])){
 		AIContentObject		*content = nil;
 		AIListObject		*source;
 		NSString			*from, *msgType;

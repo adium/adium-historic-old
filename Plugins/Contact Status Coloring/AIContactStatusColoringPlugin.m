@@ -352,7 +352,7 @@
 	NSMutableArray	*keysToRemove = nil;
 		
 	enumerator = [opacityUpdateDict objectEnumerator];
-	while(opacityDict = [enumerator nextObject]){
+	while((opacityDict = [enumerator nextObject])){
 		AIListContact	*listContact;
 		float			displayOpacity, initialDisplayOpacity, targetDisplayOpacity;
 		
@@ -389,7 +389,7 @@
 		NSString		*key;
 		
 		enumerator = [keysToRemove objectEnumerator];
-		while(key = [enumerator nextObject]){
+		while((key = [enumerator nextObject])){
 			[opacityUpdateDict removeObjectForKey:key];
 		}
 		
@@ -530,7 +530,7 @@
 			NSEnumerator	*enumerator = [[[flashingListObjectArray copy] autorelease] objectEnumerator];
 			AIListContact	*listContact;
 
-			while(listContact = [enumerator nextObject]){
+			while((listContact = [enumerator nextObject])){
 				[self removeFromFlashArray:listContact];
 			}
 			
