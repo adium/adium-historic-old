@@ -220,7 +220,7 @@
 	canIndent = [menuItem respondsToSelector:@selector(setIndentationLevel:)];
 	
 	enumerator = [inArray objectEnumerator];
-	while(name = [enumerator nextObject]){
+	while((name = [enumerator nextObject])){
 		menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		target:nil
 																		action:nil

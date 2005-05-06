@@ -299,7 +299,7 @@
         NSArray *contentRowArray = [[self _rowsForAddingContentObject:content] retain];
         NSEnumerator        *enumerator_two = [contentRowArray objectEnumerator];
 
-        while (row = [enumerator_two nextObject]) {
+        while ((row = [enumerator_two nextObject])) {
             [rowArray addObject:row];
         }
         
@@ -336,7 +336,7 @@
         NSEnumerator    *enumerator = [secondaryThreadContentThreadQueue objectEnumerator];
         AIContentObject *queuedContent;
         
-        while ( (queuedContent = [enumerator nextObject]) && !abandonRebuilding) {
+        while (( (queuedContent = [enumerator nextObject])) && !abandonRebuilding) {
             [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:queuedContent waitUntilDone:YES];
         }
     }
@@ -441,7 +441,7 @@
     NSEnumerator        *enumerator = [rowArray objectEnumerator];
     AIFlexibleTableRow  *row;
     
-    while (row = [enumerator nextObject]) {
+    while ((row = [enumerator nextObject])) {
         [messageView addRow:row];
     }
     
@@ -456,7 +456,7 @@
     NSEnumerator        *enumerator = [rowArray objectEnumerator];
     AIFlexibleTableRow  *row;
     
-    while (row = [enumerator nextObject]) {
+    while ((row = [enumerator nextObject])) {
         [messageView addRow:row];
     }
     
@@ -472,7 +472,7 @@
     NSEnumerator        *enumerator = [rowArray objectEnumerator];
     AIFlexibleTableRow  *row;
     
-    while (row = [enumerator nextObject]) {
+    while ((row = [enumerator nextObject])) {
         [row setOpacity:QUEUED_MESSAGE_OPACITY];
         [messageView addRow:row];
     }
@@ -519,12 +519,12 @@
         AIFlexibleTableFramedTextCell *cell;
         
         enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
-        while (cell = [enumerator nextObject]) {
+        while ((cell = [enumerator nextObject])) {
             [cell setDrawBottom:NO];
         }
 		
         enumerator = [[messageRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
-        while (cell = [enumerator nextObject]) {
+        while ((cell = [enumerator nextObject])) {
             [cell setDrawTop:NO];
         }
         
@@ -596,12 +596,12 @@
         AIFlexibleTableFramedTextCell *cell;
         
         enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
-        while (cell = [enumerator nextObject]) {
+        while ((cell = [enumerator nextObject])) {
             [cell setDrawBottom:NO];
         }
 		
         enumerator = [[messageRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
-        while (cell = [enumerator nextObject]) {
+        while ((cell = [enumerator nextObject])) {
             [cell setDrawTop:NO];
         }
         
@@ -639,7 +639,7 @@
     //Add a separator to our previous row if necessary
     AIFlexibleTableFramedTextCell *cell;
     NSEnumerator * enumerator = [[previousRow cellsWithClass:[AIFlexibleTableFramedTextCell class]] objectEnumerator];
-    while (cell = [enumerator nextObject]) {
+    while ((cell = [enumerator nextObject])) {
         [cell setDrawBottom:YES];
     }
     
@@ -779,7 +779,7 @@
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while (object = [enumerator nextObject]){
+	while ((object = [enumerator nextObject])){
 		//In the future, watch for changes
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:) 

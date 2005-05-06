@@ -252,7 +252,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [self selectCategoryWithIdentifier:@"advanced"];
 
 	//Search for the advanded pane
-	while(pane = [enumerator nextObject]){
+	while((pane = [enumerator nextObject])){
 		if([advancedPane caseInsensitiveCompare:[pane label]] == NSOrderedSame) break;
 	}
 
@@ -275,7 +275,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     AIPreferencePane	*pane;
     
     //Get the panes for this category
-    while(pane = [enumerator nextObject]){
+    while((pane = [enumerator nextObject])){
         if([pane category] == inCategory){
             [paneArray addObject:pane];
             [loadedPanes addObject:pane];
@@ -411,7 +411,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	
 	//Close open panes
 	enumerator = [loadedAdvancedPanes objectEnumerator];
-	while(pane = [enumerator nextObject]){
+	while((pane = [enumerator nextObject])){
 		[pane closeView];
 	}
 	[view_Advanced removeAllSubviews];

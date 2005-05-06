@@ -462,7 +462,7 @@ static NSArray *draggedTypes = nil;
 		//The first object in the chat's contentObjectArray is the most recent; we want to add chronologically, so reverse the array.
 		NSEnumerator	*enumerator = [[chat contentObjectArray] reverseObjectEnumerator];
 		AIContentObject	*object;
-		while(object = [enumerator nextObject]){
+		while((object = [enumerator nextObject])){
 			[contentQueue addObject:object];
 		}
 		
@@ -700,7 +700,7 @@ static NSArray *draggedTypes = nil;
 		//Have to copy and autorelease here since the itemArray will change as we go through the items
 		enumerator = [[[[originalMenu itemArray] copy] autorelease] objectEnumerator];
 		
-		while (menuItem = [enumerator nextObject]){
+		while ((menuItem = [enumerator nextObject])){
 			[menuItem retain];
 			[originalMenu removeItem:menuItem];
 			[webViewMenuItems addObject:menuItem];
@@ -768,7 +768,7 @@ static NSArray *draggedTypes = nil;
 		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSEnumerator	*enumerator = [files objectEnumerator];
 		NSString		*path;
-		while (path = [enumerator nextObject]){
+		while ((path = [enumerator nextObject])){
 			AIListObject *listObject = [chat listObject];
 			if(listObject){
 				[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
@@ -854,7 +854,7 @@ static NSArray *draggedTypes = nil;
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while (object = [enumerator nextObject]){
+	while ((object = [enumerator nextObject])){
 		//Update the mask for any user which just entered the chat
 		if (![objectsWithUserIconsArray containsObjectIdenticalTo:object]){
 			[self _updateUserIconForObject:object];
@@ -891,7 +891,7 @@ static NSArray *draggedTypes = nil;
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while (object = [enumerator nextObject]){
+	while ((object = [enumerator nextObject])){
 		//In the future, watch for changes
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:) 

@@ -172,14 +172,14 @@
 	currentThemeName = [[[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_CONTACT_LIST] retain];
 	
 	enumerator = [layoutArray objectEnumerator];
-	while(dict = [enumerator nextObject]){
+	while((dict = [enumerator nextObject])){
 		if([[dict objectForKey:@"name"] isEqualToString:currentLayoutName]){
 			[tableView_layout selectRow:[layoutArray indexOfObject:dict] byExtendingSelection:NO];
 		}
 	}
 	
 	enumerator = [themeArray objectEnumerator];
-	while(dict = [enumerator nextObject]){
+	while((dict = [enumerator nextObject])){
 		if([[dict objectForKey:@"name"] isEqualToString:currentThemeName]){
 			[tableView_theme selectRow:[themeArray indexOfObject:dict] byExtendingSelection:NO];
 		}

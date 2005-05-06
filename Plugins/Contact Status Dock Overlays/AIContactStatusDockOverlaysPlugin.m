@@ -248,7 +248,7 @@
 			AIListObject	*listObject;
 			BOOL			madeChanges = NO;
 			
-			while(listObject = [enumerator nextObject]){
+			while((listObject = [enumerator nextObject])){
 				if(([listObject respondsToSelector:@selector(account)]) &&
 				   ([(id)listObject account] == inObject) &&
 				   ([overlayObjectsArray containsObjectIdenticalTo:listObject])){

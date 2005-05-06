@@ -111,7 +111,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 	[menuItems addObject:menuItem];
 
 	enumerator = [roomListServersDict keyEnumerator];
-	while(prefix = [enumerator nextObject]){
+	while((prefix = [enumerator nextObject])){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[roomListServersDict objectForKey:prefix]
 																		 target:nil
 																		 action:nil
@@ -123,7 +123,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 	[menuItems sortUsingFunction:menuItemSort context:NULL];
 	
 	enumerator = [menuItems objectEnumerator];
-	while(menuItem = [enumerator nextObject]){
+	while((menuItem = [enumerator nextObject])){
 		[chatServerMenu addItem:menuItem];
 	}
 

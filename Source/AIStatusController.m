@@ -125,14 +125,14 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		NSString		*internalObjectID;
 
 		enumerator = [savedAccountsToConnect objectEnumerator];
-		while(internalObjectID = [enumerator nextObject]){
+		while((internalObjectID = [enumerator nextObject])){
 			AIAccount	*account = [[adium accountController] accountWithInternalObjectID:internalObjectID];
 			if(account) [accountsToConnect addObject:account];
 		}
 	}else{
 		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
 				[accountsToConnect addObject:account];
 			}
@@ -142,7 +142,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	//Put each account into the status it was in last time we quit.
 	BOOL		needToRebuildMenus = NO;
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
 														  group:GROUP_ACCOUNT_STATUS];
 		AIStatus	*lastStatus = nil;
@@ -200,7 +200,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	AIAccount		*account;
 
 	enumerator = [[[adium accountController] accountArray] objectEnumerator];
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		
 		//If this account is online, we'll want to save its internalObjectID.
 		if([account online]){
@@ -317,7 +317,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 
 		//Add the items for this type
 		enumerator = [menuItemArray objectEnumerator];
-		while(menuItem = [enumerator nextObject]){
+		while((menuItem = [enumerator nextObject])){
 			[menu addItem:menuItem];
 		}
 	}
@@ -380,7 +380,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 		//Insert a menu item for each available account
 		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
-		while(serviceCodeUniqueID = [enumerator nextObject]){
+		while((serviceCodeUniqueID = [enumerator nextObject])){
 			/* Obtain the status dicts for this type and service code unique ID if it is online or
 			 * if no accounts are online but an account of this service code is configured*/
 			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
@@ -424,7 +424,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSDictionary	*statusDict;
 
 	//Enumerate the status dicts
-	while(statusDict = [statusDictEnumerator nextObject]){
+	while((statusDict = [statusDictEnumerator nextObject])){
 		NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
 
 		/*
@@ -472,10 +472,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIStatusType	statusType = [statusState statusType];
 	NSEnumerator	*enumerator = [statusDictsByServiceCodeUniqueID[statusType] objectEnumerator];
 	NSSet			*set;
-	while(set = [enumerator nextObject]){
+	while((set = [enumerator nextObject])){
 		NSEnumerator	*statusDictsEnumerator = [set objectEnumerator];
 		NSDictionary	*statusDict;
-		while(statusDict = [statusDictsEnumerator nextObject]){
+		while((statusDict = [statusDictsEnumerator nextObject])){
 			if([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]){
 				return [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
 			}
@@ -603,7 +603,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[self setDelayStateMenuUpdates:YES];
 	
 	enumerator = [accountArray objectEnumerator];
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account online] ||
 		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
 		   (shouldConnectAllAccounts)){
@@ -619,7 +619,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	
 	//Any objects in the temporary state array which aren't the state we just set should now be removed.
 	enumerator = [[[temporaryStateArray copy] autorelease] objectEnumerator];
-	while(aStatusState = [enumerator nextObject]){
+	while((aStatusState = [enumerator nextObject])){
 		if(aStatusState != statusState){
 			[temporaryStateArray removeObject:aStatusState];
 			shouldRebuild = YES;
@@ -680,7 +680,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		builtInStateArray = [[NSMutableArray alloc] initWithCapacity:[savedBuiltInStateArray count]];
 
 		enumerator = [savedBuiltInStateArray objectEnumerator];
-		while(dict = [enumerator nextObject]){
+		while((dict = [enumerator nextObject])){
 			AIStatus	*status = [AIStatus statusWithDictionary:dict];
 			[builtInStateArray addObject:status];
 
@@ -844,7 +844,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		statusTypeCount[i] = 0;
 	}
 
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 			AIStatusType statusType = [[account statusState] statusType];
 
@@ -881,7 +881,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 		AIAccount			*account;
 
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
@@ -914,7 +914,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		*allOnlineAccountsAreUnvailable = YES;
 	}
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 			AIStatus	*statusState = [account statusState];
 			AIStatusType statusType = [statusState statusType];
@@ -990,7 +990,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	if(uniqueStatusID){
 		NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
 
-		while(statusState = [enumerator nextObject]){
+		while((statusState = [enumerator nextObject])){
 			if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
 				break;
 		}
@@ -1275,7 +1275,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
 	//are grouped together.
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while(statusState = [enumerator nextObject]){
+	while((statusState = [enumerator nextObject])){
 		AIStatusType thisStatusType = [statusState statusType];
 
 		//We treat Invisible statuses as being the same as Away for purposes of the menu
@@ -1376,7 +1376,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 	id <StateMenuPlugin>	stateMenuPlugin;
 
-	while(stateMenuPlugin = [enumerator nextObject]) {
+	while((stateMenuPlugin = [enumerator nextObject])) {
 		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
 		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
 	}
@@ -1400,7 +1400,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 		id <StateMenuPlugin>	stateMenuPlugin;
 
-		while(stateMenuPlugin = [enumerator nextObject]){
+		while((stateMenuPlugin = [enumerator nextObject])){
 			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
 		}
 		
@@ -1589,7 +1589,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 					AIStatus		*statusState;
 					BOOL			foundCorrectStatusState = NO;
 
-					while(!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])){
+					while((!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject]))){
 						//We found a custom match if our array of menu item states doesn't contain this state and
 						//its statusType matches the menuItem's tag.
 						foundCorrectStatusState = (![sortedFullStateArray containsObjectIdenticalTo:statusState] &&
@@ -1710,7 +1710,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		int				count = 0;
 		
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([account actualStatusState] == originalState){
 				if(++count > 1) break;
 			}
@@ -1833,7 +1833,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
 	//are grouped together.
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while(statusState = [enumerator nextObject]){
+	while((statusState = [enumerator nextObject])){
 		AIStatusType thisStatusType = [statusState statusType];
 
 		if(currentStatusType != thisStatusType){
@@ -1887,7 +1887,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		NSDictionary	*state;
 
 		//Update all the away messages to states.
-		while(state = [enumerator nextObject]){
+		while((state = [enumerator nextObject])){
 			if([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]){
 				AIStatus	*statusState;
 

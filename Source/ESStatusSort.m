@@ -139,7 +139,7 @@ static int  sizeOfSortOrder;
 	BOOL	groupIdleOrIdleTime = (groupIdle || sortIdleTime);
 
 	enumerator = [sortOrderArray objectEnumerator];
-	while (sortTypeNumber = [enumerator nextObject]){
+	while ((sortTypeNumber = [enumerator nextObject])){
 		switch ([sortTypeNumber intValue]){
 			case Available: 
 				/* Group available if:

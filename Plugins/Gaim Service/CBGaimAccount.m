@@ -511,7 +511,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
 
 		//Have the gaim thread perform the serverside actions
@@ -528,7 +528,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*object;
 	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		[gaimThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
@@ -549,7 +549,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Move the objects to it
 	enumerator = [objects objectEnumerator];
-	while(listObject = [enumerator nextObject]){
+	while((listObject = [enumerator nextObject])){
 		if([listObject isKindOfClass:[AIListGroup class]]){
 			//Since no protocol here supports nesting, a group move is really a re-name
 			
@@ -576,7 +576,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
-	while(contact = [enumerator nextObject]){
+	while((contact = [enumerator nextObject])){
 		//Evan: should we use groupName or newName here?
 		[contact setRemoteGroupName:newName];
 	}
@@ -1032,7 +1032,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
-	while(contactName = [enumerator nextObject]){
+	while((contactName = [enumerator nextObject])){
 		[self addUser:contactName toChat:chat];
 	}
 }
@@ -1054,7 +1054,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
-	while(contactName = [enumerator nextObject]){
+	while((contactName = [enumerator nextObject])){
 		[self removeUser:contactName fromChat:chat];
 	}
 }
@@ -1091,7 +1091,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator *enumerator = [listObjectArray objectEnumerator];
 	AIListObject *object = nil;
 	
-	while(object = [enumerator nextObject]){
+	while((object = [enumerator nextObject])){
 		[idArray addObject:[object UID]];
 	}
 	
@@ -2368,7 +2368,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			if([object isKindOfClass:[AIMetaContact class]]){
 				NSEnumerator	*enumerator = [[(AIMetaContact *)object containedObjects] objectEnumerator];
 				AIListContact	*containedListContact;
-				while(containedListContact = [enumerator nextObject]){
+				while((containedListContact = [enumerator nextObject])){
 					if([containedListContact account] == self){
 						[gaimThread setAlias:alias forUID:[containedListContact UID] onAccount:self];
 					}

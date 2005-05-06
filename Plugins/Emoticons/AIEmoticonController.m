@@ -193,12 +193,12 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
             //Check for the presence of all emoticons starting with this character
             emoticonEnumerator = [[emoticonIndex objectForKey:currentCharacterString] objectEnumerator];
-            while(emoticon = [emoticonEnumerator nextObject]){
+            while((emoticon = [emoticonEnumerator nextObject])){
                 NSEnumerator        *textEnumerator;
                 NSString            *text;
                 
                 textEnumerator = [[emoticon textEquivalents] objectEnumerator];
-                while(text = [textEnumerator nextObject]){
+                while((text = [textEnumerator nextObject])){
                     int     textLength = [text length];
 
                     if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
@@ -327,7 +327,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		
         //Grap the emoticons from each active pack
         enumerator = [[self activeEmoticonPacks] objectEnumerator];
-        while(emoticonPack = [enumerator nextObject]){
+        while((emoticonPack = [enumerator nextObject])){
             [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
         }
     }
@@ -402,7 +402,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
         //Use the names to build an array of the desired emoticon packs
         enumerator = [activePackNames objectEnumerator];
-        while(packName = [enumerator nextObject]){
+        while((packName = [enumerator nextObject])){
             AIEmoticonPack  *emoticonPack = [self emoticonPackWithName:packName];
             
             if(emoticonPack){
@@ -443,7 +443,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSMutableArray  *nameArray = [NSMutableArray array];
     
     enumerator = [[self activeEmoticonPacks] objectEnumerator];
-    while(pack = [enumerator nextObject]){
+    while((pack = [enumerator nextObject])){
         [nameArray addObject:[pack name]];
     }
     
@@ -465,7 +465,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		//Load emoticon packs
 		enumerator = [[adium allResourcesForName:EMOTICONS_PATH_NAME withExtensions:[NSArray arrayWithObjects:EMOTICON_PACK_PATH_EXTENSION,ADIUM_EMOTICON_SET_PATH_EXTENSION,PROTEUS_EMOTICON_SET_PATH_EXTENSION,nil]] objectEnumerator];
 		
-		while(path = [enumerator nextObject]) {
+		while((path = [enumerator nextObject])) {
 			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:path];
 			
 			if([[pack emoticons] count]) {
@@ -491,7 +491,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     AIEmoticonPack  *emoticonPack;
 	
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while(emoticonPack = [enumerator nextObject]){
+    while((emoticonPack = [enumerator nextObject])){
         if([[emoticonPack name] isEqualToString:inName]) return(emoticonPack);
     }
 	
@@ -517,14 +517,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     
     //Remove each pack
     enumerator = [inPacks objectEnumerator];
-    while(pack = [enumerator nextObject]){
+    while((pack = [enumerator nextObject])){
         if([_availableEmoticonPacks indexOfObject:pack] < index) index--;
         [_availableEmoticonPacks removeObject:pack];
     }
 	
     //Add back the packs in their new location
     enumerator = [inPacks objectEnumerator];
-    while(pack = [enumerator nextObject]){
+    while((pack = [enumerator nextObject])){
         [_availableEmoticonPacks insertObject:pack atIndex:index];
         index++;
     }
@@ -540,7 +540,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSMutableArray		*nameArray = [NSMutableArray array];
     
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while(pack = [enumerator nextObject]){
+    while((pack = [enumerator nextObject])){
         [nameArray addObject:[pack name]];
     }
     
@@ -617,13 +617,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     
     //Process all the text equivalents of each active emoticon
     emoticonEnumerator = [[self activeEmoticons] objectEnumerator];
-    while(emoticon = [emoticonEnumerator nextObject]){
+    while((emoticon = [emoticonEnumerator nextObject])){
         if([emoticon isEnabled]){
             NSEnumerator        *textEnumerator;
             NSString            *text;
 			
             textEnumerator = [[emoticon textEquivalents] objectEnumerator];
-            while(text = [textEnumerator nextObject]){
+            while((text = [textEnumerator nextObject])){
                 NSMutableArray  *subIndex;
                 unichar         firstCharacter;
                 NSString        *firstCharacterString;
@@ -688,7 +688,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while(pack = [enumerator nextObject]){
+    while((pack = [enumerator nextObject])){
         [pack flushEmoticonImageCache];
     }
 }

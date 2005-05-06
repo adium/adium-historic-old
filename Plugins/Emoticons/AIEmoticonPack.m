@@ -118,7 +118,7 @@
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self emoticons] objectEnumerator];
-    while(emoticon = [enumerator nextObject]){
+    while((emoticon = [enumerator nextObject])){
         [emoticon setEnabled:(![inArray containsObject:[emoticon name]])];
     }
 }
@@ -245,7 +245,7 @@
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
 	
-	while(fileName = [enumerator nextObject]){
+	while((fileName = [enumerator nextObject])){
 		id	dict = [emoticons objectForKey:fileName];
 		
 		if([dict isKindOfClass:[NSDictionary class]]){
@@ -263,7 +263,7 @@
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
 	
-	while(fileName = [enumerator nextObject]){
+	while((fileName = [enumerator nextObject])){
 		NSDictionary	*dict = [emoticons objectForKey:fileName];
 		
 		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
@@ -281,7 +281,7 @@
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self emoticons] objectEnumerator];
-    while(emoticon = [enumerator nextObject]){
+    while((emoticon = [enumerator nextObject])){
         [emoticon flushEmoticonImageCache];
     }
 }
@@ -367,7 +367,7 @@
     
     //Search for the file named Emoticon in our bundle (It can be in any image format)
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
-    while(fileName = [enumerator nextObject]){
+    while((fileName = [enumerator nextObject])){
 		if([fileName hasPrefix:@"Emoticon"]) return([inPath stringByAppendingPathComponent:fileName]);
     }
     

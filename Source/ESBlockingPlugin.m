@@ -92,7 +92,7 @@
 				NSEnumerator *enumerator = [[meta listContacts] objectEnumerator];
 				AIListContact *containedContact = nil;
 				
-				while(containedContact = [enumerator nextObject]){
+				while((containedContact = [enumerator nextObject])){
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
 					if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 						[acct addListObject:containedContact toPrivacyList:PRIVACY_DENY];
@@ -136,7 +136,7 @@
 			NSEnumerator *enumerator = [[meta listContacts] objectEnumerator];
 			AIListContact *contact = nil;
 			
-			while(contact = [enumerator nextObject]){
+			while((contact = [enumerator nextObject])){
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]){
 					anyAccount = YES;
@@ -196,7 +196,7 @@
 	NSEnumerator *enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
 	AIAccount *account = nil;
 
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
 			if(unblock){
@@ -219,7 +219,7 @@
 	
 	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
 			if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){

@@ -132,7 +132,7 @@ static NSMutableSet							*accountsToConnect = nil;
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 
-	while (account = [enumerator nextObject]){
+	while ((account = [enumerator nextObject])){
 		if ([account connectivityBasedOnNetworkReachability]){
 			[self handleConnectivityForAccount:account reachable:networkIsReachable];
 		}
@@ -270,7 +270,7 @@ static NSMutableSet							*accountsToConnect = nil;
 		NSEnumerator	*enumerator = [accountsToConnect objectEnumerator];
 		AIAccount		*account;
 		
-		while (account = [enumerator nextObject]){
+		while ((account = [enumerator nextObject])){
 			if (![account connectivityBasedOnNetworkReachability]){
 				[account setPreference:[NSNumber numberWithBool:YES] 
 								forKey:@"Online"
@@ -339,7 +339,7 @@ static NSMutableSet							*accountsToConnect = nil;
 	}
 	
 	//For each account, if the account uses custom reachability, add it
-	while (account = [enumerator nextObject]){
+	while ((account = [enumerator nextObject])){
 		const char *customServer = [account customServerToCheckForReachability];
 		if (customServer){
 			[self scheduleReachabilityCheckFor:customServer account:account];

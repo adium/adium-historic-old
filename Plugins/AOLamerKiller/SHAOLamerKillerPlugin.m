@@ -43,7 +43,7 @@
         NSString *killString;
         NSRange killRange;
 
-        while(killString = [enumerator nextObject]){
+        while((((killString = [enumerator nextObject])))){
             killRange = [[localString lowercaseString] rangeOfString:[killString lowercaseString]];
             if(NSNotFound != killRange.location){
                 killCount++;

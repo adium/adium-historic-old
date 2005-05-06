@@ -438,7 +438,7 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 		AIContentObject	*contentObject;
 		
 		enumerator = [thisContactQueue objectEnumerator];
-		while(contentObject = [enumerator nextObject]){
+		while((contentObject = [enumerator nextObject])){
 			[[adium contentController] sendContentObject:contentObject];
 		}
 		

@@ -126,7 +126,7 @@
 		cnt = 1;
 				
 		// Only save if we need to save more AND there is still unsaved content available
-		while( (cnt <= linesToDisplay) && (content = [enumerator nextObject]) ) {
+		while(( (cnt <= linesToDisplay) && (content = [enumerator nextObject])) ) {
 			
 			// Only record actual messages, no status
 			if( [content isKindOfClass:[AIContentMessage class]] || [content isKindOfClass:[AIContentContext class]]) {

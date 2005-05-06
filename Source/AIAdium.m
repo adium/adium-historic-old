@@ -606,7 +606,7 @@ static NSString	*prefsCategory;
 	searchPathEnumerator = [librarySearchPaths objectEnumerator];
 
 	//Copy each discovered path into the pathArray after adding our subfolder path
-	while(path = [searchPathEnumerator nextObject]){
+	while((path = [searchPathEnumerator nextObject])){
 		NSString	*fullPath;
 		
 		fullPath = [path stringByAppendingPathComponent:adiumFolderName];
@@ -648,14 +648,14 @@ static NSString	*prefsCategory;
 	// Get every path that can contain these resources
 	pathEnumerator = [[self resourcePathsForName:name] objectEnumerator];
 	
-	while (resourceDir = [pathEnumerator nextObject]) {
+	while ((resourceDir = [pathEnumerator nextObject])) {
 		resourceEnumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:resourceDir] objectEnumerator];
 		
-		while (resourcePath = [resourceEnumerator nextObject]) {
+		while ((resourcePath = [resourceEnumerator nextObject])) {
 			// Add each resource to the array
 			if (extensionsArray) {
 				extensionsEnumerator = [extensions objectEnumerator];
-				while (extension = [extensionsEnumerator nextObject]) {
+				while ((extension = [extensionsEnumerator nextObject])) {
 					if ([[resourcePath pathExtension] caseInsensitiveCompare:extension] == NSOrderedSame)
 						[resources addObject:[resourceDir stringByAppendingPathComponent:resourcePath]];
 				}
@@ -694,7 +694,7 @@ static NSString	*prefsCategory;
 			BOOL			isDir;
 
 			enumerator = [[defaultManager directoryContentsAtPath:generalAdiumCachesPath] objectEnumerator];
-			while(filename = [enumerator nextObject]){
+			while((filename = [enumerator nextObject])){
 				NSString	*fullPath = [generalAdiumCachesPath stringByAppendingPathComponent:filename];
 				
 				if(([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
@@ -718,7 +718,7 @@ static NSString	*prefsCategory;
     NSString		*resourcePath;
 
 	//Search all our resource paths for the requested pack
-    while(resourcePath = [enumerator nextObject]){
+    while((resourcePath = [enumerator nextObject])){
 		NSString *packPath = [resourcePath stringByAppendingPathComponent:packFileName];
 		if([fileManager fileExistsAtPath:packPath]) return([packPath stringByExpandingTildeInPath]);
 	}

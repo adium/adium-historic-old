@@ -253,7 +253,7 @@
 	NSMutableArray	*observerArray;
 	NSValue			*observerValue = [NSValue valueWithNonretainedObject:observer];
 
-	while(observerArray = [enumerator nextObject]){
+	while((observerArray = [enumerator nextObject])){
 #ifdef TRACK_PREFERENCE_OBSERVERS
 		NSLog(@"removing observer: %p", [observerValue nonretainedObjectValue]);
 #endif
@@ -286,7 +286,7 @@
 		NSEnumerator	*enumerator = [[observers objectForKey:group] objectEnumerator];
 		NSValue			*observerValue;
 
-		while(observerValue = [enumerator nextObject]){
+		while((observerValue = [enumerator nextObject])){
 			id observer = [observerValue nonretainedObjectValue];
 #ifdef TRACK_PREFERENCE_OBSERVERS
 			NSLog(@"informing observer %p", observer);
@@ -322,7 +322,7 @@
 		
 		[[adium contactController] delayListObjectNotifications];
 
-		while(group = [enumerator nextObject]){
+		while((group = [enumerator nextObject])){
 			[self informObserversOfChangedKey:nil inGroup:group object:nil];
 		}
 
@@ -531,12 +531,12 @@
 	
 	//They keys are preference groups, run through all of them
 	enumerator = [allDefaults keyEnumerator];
-	while(group = [enumerator nextObject]){
+	while((group = [enumerator nextObject])){
 		
 		//Get the dictionary of keys for each group, and reset them all
 		groupDefaults = [allDefaults objectForKey:group];
 		keyEnumerator = [groupDefaults keyEnumerator];
-		while(key = [keyEnumerator nextObject]){
+		while((key = [keyEnumerator nextObject])){
 			[[adium preferenceController] setPreference:[groupDefaults objectForKey:key]
 												 forKey:key
 												  group:group];

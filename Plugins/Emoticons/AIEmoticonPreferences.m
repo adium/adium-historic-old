@@ -145,7 +145,7 @@
 	
 	//First, remove any AIEmoticonPackPreviewView instances from the table
 	enumerator = [[[[table_emoticonPacks subviews] copy] autorelease] objectEnumerator];
-	while(view = [enumerator nextObject]){
+	while((view = [enumerator nextObject])){
 		if([view isKindOfClass:[AIEmoticonPackPreviewView class]]){
 			[view removeFromSuperviewWithoutNeedingDisplay];
 		}
@@ -156,7 +156,7 @@
 	emoticonPackPreviewControllers = [[NSMutableArray alloc] init];
 	
 	enumerator = [[[adium emoticonController] availableEmoticonPacks] objectEnumerator];
-	while(pack = [enumerator nextObject]){
+	while((pack = [enumerator nextObject])){
 		[emoticonPackPreviewControllers addObject:[AIEmoticonPackPreviewController previewControllerForPack:pack
 																								preferences:self]];
 	}
@@ -188,7 +188,7 @@
         int             totalHeight = 0;
         
         enumerator = [[selectedEmoticonPack emoticons] objectEnumerator];
-        while(emoticon = [enumerator nextObject]){
+        while((emoticon = [enumerator nextObject])){
             totalHeight += [[emoticon image] size].height;
         }
 
@@ -345,7 +345,7 @@
             
             //Move
             enumerator = [dragRows objectEnumerator];
-            while(dragRow = [enumerator nextObject]){
+            while((dragRow = [enumerator nextObject])){
                 [movedPacks addObject:[[emoticonPackPreviewControllers objectAtIndex:[dragRow intValue]] emoticonPack]];
             }
             [[adium emoticonController] moveEmoticonPacks:movedPacks toIndex:row];
@@ -355,7 +355,7 @@
             //Select the moved packs
             [tableView deselectAll:nil];
             enumerator = [emoticonPackPreviewControllers objectEnumerator];
-            while(previewController = [enumerator nextObject]){
+            while((previewController = [enumerator nextObject])){
 				//If the moved packs contains this preview controller's pack, select it, wherever it may be
 				AIEmoticonPack	*emoticonPack = [previewController emoticonPack];
 				if([movedPacks indexOfObjectIdenticalTo:emoticonPack] != NSNotFound){
@@ -414,7 +414,7 @@
         NSEnumerator *enumerator = [[table_emoticonPacks arrayOfSelectedItemsUsingSourceArray:emoticonPackPreviewControllers] objectEnumerator];
         
 		AIEmoticonPackPreviewController		*previewController;
-        while(previewController = [enumerator nextObject]) {
+        while((previewController = [enumerator nextObject])) {
 
             NSString *currentEPPath = [[previewController emoticonPack] path];
 

@@ -216,7 +216,7 @@
 			emoticonMenu = [[NSMenu alloc] initWithTitle:@""];
 			
 			[emoticonMenu setMenuChangedMessagesEnabled:NO];
-			while(pack = [packEnum nextObject]){
+			while((pack = [packEnum nextObject])){
 				packItem = [[NSMenuItem alloc] initWithTitle:[pack name] action:nil keyEquivalent:@""];
 				[packItem setSubmenu:[self flatEmoticonMenuForPack:pack]]; 
 				[emoticonMenu addItem:packItem];
@@ -249,7 +249,7 @@
 	[packMenu setMenuChangedMessagesEnabled:NO];
 	
     //loop through each emoticon and add a menu item for each
-    while(anEmoticon = [emoteEnum nextObject]){
+    while((anEmoticon = [emoteEnum nextObject])){
         if([anEmoticon isEnabled] == YES){
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
                                                              target:self
@@ -381,7 +381,7 @@
 		}
 		
 		enumerator = [toolbarItems objectEnumerator];
-		while(toolbarItem = [enumerator nextObject]){
+		while((toolbarItem = [enumerator nextObject])){
 			if([[toolbarItem view] menu] != inMenu){
 				//We can use the same menu for both
 				tempMenu = [theEmoticonMenu copy];
@@ -409,7 +409,7 @@
 		 */
 		[inMenu removeAllItems];
 		enumerator = [[[[theEmoticonMenu itemArray] copy] autorelease] objectEnumerator];
-		while (menuItem = [enumerator nextObject]){
+		while ((menuItem = [enumerator nextObject])){
 			[menuItem retain];
 			[theEmoticonMenu removeItem:menuItem];
 			[inMenu addItem:menuItem];

@@ -505,7 +505,7 @@
 	NSString		*path;
 	
 	//Build an array of all variant names
-	while(path = [enumerator nextObject]){
+	while((path = [enumerator nextObject])){
 		[availableVariants addObject:[[path lastPathComponent] stringByDeletingPathExtension]];
 	}
 

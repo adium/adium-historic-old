@@ -857,7 +857,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
-	while (chat = [enumerator nextObject]){
+	while ((chat = [enumerator nextObject])){
 		[self chatStatusChanged:chat modifiedStatusKeys:nil silent:NO];
 	}
 }
@@ -950,7 +950,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
-	while(chat = [enumerator nextObject]){
+	while((chat = [enumerator nextObject])){
 		//If a chat for this object already exists
 		if([[chat uniqueChatID] isEqualToString:[targetContact internalObjectID]]) {
 			if(!([chat listObject] == targetContact)){
@@ -1019,7 +1019,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	//Search for an existing chat
 	enumerator = [openChats objectEnumerator];
-	while(chat = [enumerator nextObject]){
+	while((chat = [enumerator nextObject])){
 		//If a chat for this object already exists
 		if([chat listObject] == targetContact) break;
 	}
@@ -1075,7 +1075,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	enumerator = [openChats objectEnumerator];
 
-	while(chat = [enumerator nextObject]){
+	while((chat = [enumerator nextObject])){
 		if(([chat account] == account) &&
 		   ([[chat name] isEqualToString:inName])){
 			break;
@@ -1092,7 +1092,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	enumerator = [openChats objectEnumerator];
 	
-	while(chat = [enumerator nextObject]){
+	while((chat = [enumerator nextObject])){
 		if([[chat uniqueChatID] isEqualToString:uniqueChatID]){
 			break;
 		}
@@ -1113,7 +1113,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	 */
 	NSEnumerator	*objectsBeingReceivedEnumerator = [objectsBeingReceived objectEnumerator];
 	AIContentObject	*contentObject;
-	while(contentObject = [objectsBeingReceivedEnumerator nextObject]){
+	while((contentObject = [objectsBeingReceivedEnumerator nextObject])){
 		if([contentObject chat] == inChat){
 			shouldRemove = NO;
 			break;
@@ -1213,7 +1213,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		foundChats = [NSMutableSet set];
 		
 		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
-		while(listContact = [enumerator nextObject]){
+		while((listContact = [enumerator nextObject])){
 			NSSet		*listContactChats;
 			if (listContactChats = [self allChatsWithContact:listContact]){
 				[foundChats unionSet:listContactChats];
@@ -1303,7 +1303,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([inObject service] == [account service]){
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;

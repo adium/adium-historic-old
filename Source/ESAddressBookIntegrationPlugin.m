@@ -444,7 +444,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 			//Apply the image to each listObject at the appropriate priority
 			enumerator = [(NSSet *)setOrObject objectEnumerator];
-			while(listObject = [enumerator nextObject]){
+			while((listObject = [enumerator nextObject])){
 				
 				/*
 				//These objects all have the same unique ID so will all also have the same meta contact; just check once
@@ -661,7 +661,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
 				
 				//Check for each service the address book supports
-				while(serviceID = [servicesEnumerator nextObject]){
+				while((serviceID = [servicesEnumerator nextObject])){
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
 					ABMultiValue	*names = [me valueForProperty:addressBookKey];
 					
@@ -671,13 +671,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 					NSEnumerator	*serviceEnumerator = [[[adium accountController] servicesWithServiceClass:serviceID] objectEnumerator];
 					AIService		*service;
-					while (service = [serviceEnumerator nextObject]){
+					while ((service = [serviceEnumerator nextObject])){
 						
 						NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:service] objectEnumerator];
 						AIAccount		*account;
 						
 						//Look at each account on this service, searching for one a matching UID
-						while (account = [accountsArray nextObject]){
+						while ((account = [accountsArray nextObject])){
 							//An ABPerson may have multiple names on a given service; iterate through them
 							NSString		*accountUID = [[account UID] compactedString];
 							int				nameCount = [names count];
@@ -734,7 +734,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	allServiceKeys = [serviceDict allKeys];
 	
 	peopleEnumerator = [[sharedAddressBook people] objectEnumerator];
-	while (person = [peopleEnumerator nextObject]){
+	while ((person = [peopleEnumerator nextObject])){
 		
 		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
 		NSString			*serviceID;
@@ -773,7 +773,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
 
 		//Now go through the instant messaging keys
-		while (serviceID = [servicesEnumerator nextObject]){
+		while ((serviceID = [servicesEnumerator nextObject])){
 			NSString				*addressBookKey;
 			ABMultiValue			*names;
 			int						nameCount;

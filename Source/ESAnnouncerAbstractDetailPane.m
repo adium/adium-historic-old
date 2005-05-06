@@ -183,7 +183,7 @@
 
 	voicesArray = [[[adium soundController] voices] sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 	enumerator = [voicesArray objectEnumerator];
-	while(voice = [enumerator nextObject]){
+	while((voice = [enumerator nextObject])){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:voice
 																					  target:nil
 																					  action:nil

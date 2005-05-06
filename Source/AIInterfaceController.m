@@ -241,7 +241,7 @@
 			
 			//If there was no unviewed content, ensure that atleast one of Adium's windows is unminimized
 			enumerator = [[NSApp windows] objectEnumerator];
-			while(window = [enumerator nextObject]){
+			while((window = [enumerator nextObject])){
 				//Check stylemask to rule out the system menu's window (Which reports itself as visible like a real window)
 				if(([window styleMask] & (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask))){
 					if(!targetWindow) targetWindow = window;
@@ -351,13 +351,13 @@
 	NSString		*containerID;
 	
 	//For all containers but the first, move the chats they contain to the first container
-	while(containerID = [containerEnumerator nextObject]){
+	while((containerID = [containerEnumerator nextObject])){
 		NSArray			*openChats = [[interfacePlugin openChatsInContainerWithID:containerID] copy];
 		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
 		AIChat			*chat;
 
 		//Move all the chats, providing a target index if chat sorting is enabled
-		while(chat = [chatEnumerator nextObject]){
+		while((chat = [chatEnumerator nextObject])){
 			[interfacePlugin moveChat:chat
 					toContainerWithID:firstContainerID
 								index:-1];
@@ -563,7 +563,7 @@
 	NSEnumerator	*containerEnumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
 	NSDictionary	*containerDict;
 	
-	while(containerDict = [containerEnumerator nextObject]){
+	while((containerDict = [containerEnumerator nextObject])){
 		NSString		*containerName = [containerDict objectForKey:@"Name"];
 		NSArray			*contentArray = [containerDict objectForKey:@"Content"];
 		NSEnumerator	*contentEnumerator = [contentArray objectEnumerator];
@@ -580,7 +580,7 @@
 		}
 		
 		//Add items for the chats it contains
-		while(chat = [contentEnumerator nextObject]){
+		while((chat = [contentEnumerator nextObject])){
 			NSString		*windowKeyString;
 			
 			//Prepare a key equivalent for the controller
@@ -938,7 +938,7 @@
     //Calculate the widest label while loading the arrays
     enumerator = [contactListTooltipEntryArray objectEnumerator];
     
-    while (tooltipEntry = [enumerator nextObject]){
+    while ((tooltipEntry = [enumerator nextObject])){
         
         entryString = [[tooltipEntry entryForObject:object] mutableCopy];
         if (entryString && [entryString length]) {
@@ -1017,7 +1017,7 @@
     //Calculate the widest label while loading the arrays
 	enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
 	
-	while (tooltipEntry = [enumerator nextObject]){
+	while ((tooltipEntry = [enumerator nextObject])){
 		
 		entryString = [[tooltipEntry entryForObject:object] mutableCopy];
 		if (entryString && [entryString length]) {

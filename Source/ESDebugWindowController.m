@@ -77,7 +77,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
 	//Load the logs which were added before the window was loaded
 	enumerator = [[[adium debugController] debugLogArray] objectEnumerator];
-	while(aDebugString = [enumerator nextObject]){
+	while((aDebugString = [enumerator nextObject])){
 		[mutableDebugString appendString:aDebugString];
 		if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
 			[mutableDebugString appendString:@"\n"];

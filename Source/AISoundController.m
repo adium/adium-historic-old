@@ -108,7 +108,7 @@
 	//Stop all sounds from playing
 	NSEnumerator		*enumerator = [soundCacheDict objectEnumerator];
 	QTSoundFilePlayer   *soundFilePlayer;
-	while (soundFilePlayer = [enumerator nextObject]){
+	while ((soundFilePlayer = [enumerator nextObject])){
 		[soundFilePlayer stop];
 	}
 }
@@ -152,7 +152,7 @@
 	BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
 	
 	enumerator = [soundCacheDict objectEnumerator];
-	while (soundFilePlayer = [enumerator nextObject]){
+	while ((soundFilePlayer = [enumerator nextObject])){
 		if (needToStopAndRelease){
 			[soundFilePlayer stop];
 		}else{
@@ -179,7 +179,7 @@
     NSFileManager *mgr           = [NSFileManager defaultManager];
     BOOL           isDir         = NO;
 
-    while(path = [folderEnum nextObject]) {
+    while((path = [folderEnum nextObject])) {
         path = [path stringByAppendingPathComponent:inName];
         if([mgr fileExistsAtPath:path isDirectory:&isDir]) {
             if(!isDir) {
@@ -319,7 +319,7 @@
     
     //Scan sounds
 	enumerator = [[adium resourcePathsForName:@"Sounds"] objectEnumerator];
-	while (path = [enumerator nextObject]){
+	while ((path = [enumerator nextObject])){
 		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
 	}
     
@@ -415,7 +415,7 @@
 			if(!sounds || !soundLocation) return;
 
 			enumerator = [sounds objectEnumerator];
-			while(soundName = [enumerator nextObject]){
+			while((soundName = [enumerator nextObject])){
 				[soundSetContents addObject:[soundLocation stringByAppendingPathComponent:soundName]];
 			}
 			

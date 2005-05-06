@@ -157,7 +157,7 @@
 			
 			onlineObjects = 0;
 			enumerator = [targetGroup objectEnumerator];
-			while(containedObject = [enumerator nextObject]){
+			while((containedObject = [enumerator nextObject])){
 				if([containedObject online]) onlineObjects++;
 			}
 		}

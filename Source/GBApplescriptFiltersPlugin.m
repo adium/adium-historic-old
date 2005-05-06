@@ -158,7 +158,7 @@ static int numExecuted = 0;
 	
 	// Load scripts
 	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
-	while(filePath = [enumerator nextObject]){
+	while((filePath = [enumerator nextObject])){
 		if(scriptBundle = [NSBundle bundleWithPath:filePath]){
 			
 			NSString		*scriptsSetName;
@@ -171,7 +171,7 @@ static int numExecuted = 0;
 			//Now enumerate each script the bundle claims as its own
 			scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
 			
-			while (scriptDict = [scriptEnumerator nextObject]){
+			while ((scriptDict = [scriptEnumerator nextObject])){
 				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
 				NSArray			*arguments;
 				NSURL			*scriptURL;
@@ -313,7 +313,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	int				indentationLevel;
 	
 	enumerator = [scripts objectEnumerator];
-	while(appendDict = [enumerator nextObject]){
+	while((appendDict = [enumerator nextObject])){
 		NSString	*title;
 		NSMenuItem	*item;
 		
@@ -385,7 +385,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			[(NSTextView *)responder insertText:@"{"];
 			
 			//Will that be a five minute argument or the full half hour?
-			while (anArgument = [argumentEnumerator nextObject]){
+			while ((anArgument = [argumentEnumerator nextObject])){
 				//Insert a comma after each argument past the first
 				if (insertedFirst){
 					[(NSTextView *)responder insertText:@","];					
@@ -449,7 +449,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		
 		//Replace all keywords
 		enumerator = [flatScriptArray objectEnumerator];
-		while(infoDict = [enumerator nextObject]){
+		while((infoDict = [enumerator nextObject])){
 			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
 

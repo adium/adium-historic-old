@@ -113,7 +113,7 @@
 	stateArrayCopy = [activeIconStateArray copy]; //Work with a copy, since this array will change as we remove states
 	enumerator = [stateArrayCopy objectEnumerator];
 	[enumerator nextObject]; //Skip the first icon
-	while(iconState = [enumerator nextObject]){
+	while((iconState = [enumerator nextObject])){
 		[self removeIconStateNamed:iconState];
 	}
 
@@ -380,7 +380,7 @@
     //Build an array of the valid active icon states
     availableIcons = [availableIconStateDict objectForKey:@"State"];
     enumerator = [activeIconStateArray objectEnumerator];
-    while(name = [enumerator nextObject]){
+    while((name = [enumerator nextObject])){
         if((state = [availableIcons objectForKey:name]) || (state = [availableDynamicIconStateDict objectForKey:name])){
             [iconStates addObject:state];
         }

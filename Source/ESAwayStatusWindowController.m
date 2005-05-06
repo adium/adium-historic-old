@@ -248,7 +248,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
 	AIAccount		*account;
 	
-	while(account = [enumerator nextObject]){
+	while((account = [enumerator nextObject])){
 		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 			AIStatus	*statusState = [account statusState];
 			if([statusState statusType] != AIAvailableStatusType){

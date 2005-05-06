@@ -163,7 +163,7 @@
 	NSEnumerator				*containerEnumerator = [containers objectEnumerator];
 	AIMessageWindowController	*container;
 	
-	while(container = [containerEnumerator nextObject]){
+	while((container = [containerEnumerator nextObject])){
 		[openContainersAndChats addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 			[container containerID], @"ID",
 			[container containedChats], @"Content",
@@ -187,7 +187,7 @@
 	NSEnumerator				*containerEnumerator = [containers objectEnumerator];
 	AIMessageWindowController	*container;
 	
-	while(container = [containerEnumerator nextObject]){
+	while((container = [containerEnumerator nextObject])){
 		[openContainersAndChats addObjectsFromArray:[container containedChats]];
 	}
 	
@@ -255,7 +255,7 @@
 
 	//Open any containers that should have opened while we were hidden
 	enumerator = [delayedContainerShowArray objectEnumerator];
-	while(container = [enumerator nextObject]) [container showWindowInFront:YES];
+	while((container = [enumerator nextObject])) [container showWindowInFront:YES];
 
 	[delayedContainerShowArray removeAllObjects];
 	applicationIsHidden = NO;

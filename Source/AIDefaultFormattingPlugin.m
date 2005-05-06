@@ -193,7 +193,7 @@
 	NSEnumerator	*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
 	NSText<AITextEntryView> *textEntryView;
 	
-	while(textEntryView = [enumerator nextObject]){
+	while((textEntryView = [enumerator nextObject])){
 		[self _resetFormattingInView:textEntryView];
 	}	
 }

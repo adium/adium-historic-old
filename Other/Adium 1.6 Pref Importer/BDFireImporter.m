@@ -57,7 +57,7 @@
     NSArray *fireKeyArray = [[[NSArray alloc] initWithArray:[fireMessageDict allKeys]] autorelease];
 	
     NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
-    while(fireMsgTitle = [fireEnumerator nextObject])
+    while((fireMsgTitle = [fireEnumerator nextObject]))
     {
         fireMessage = [fireMessageDict objectForKey:fireMsgTitle];
         
@@ -69,7 +69,7 @@
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
         messageAlreadyExists = NO;
         
-        while(AdiumMessage = [AdiumEnumerator nextObject])
+        while((AdiumMessage = [AdiumEnumerator nextObject]))
         {
             // If either the title or the content matches, we assume it's already been imported...
             AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];

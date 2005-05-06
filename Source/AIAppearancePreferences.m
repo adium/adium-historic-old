@@ -319,7 +319,7 @@ typedef enum {
 			
 			[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 
-			while(pack = [enumerator nextObject]){
+			while((pack = [enumerator nextObject])){
 				[[adium emoticonController] setEmoticonPack:pack enabled:NO];
 			}
 			
@@ -385,7 +385,7 @@ typedef enum {
 	[menu addItem:[NSMenuItem separatorItem]];
 	
 	//Emoticon Packs
-	while(pack = [enumerator nextObject]){
+	while((pack = [enumerator nextObject])){
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[pack name]
 																		 target:nil
 																		 action:nil
@@ -595,7 +595,7 @@ typedef enum {
 		enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
 	}
 	
-	while(presetDict = [enumerator nextObject]){
+	while((presetDict = [enumerator nextObject])){
 		if([newName isEqualToString:[presetDict objectForKey:@"name"]]) return(NO);
 	}
 	
@@ -667,7 +667,7 @@ typedef enum {
 		NSEnumerator	*enumerator = [newPresets objectEnumerator];
 		NSDictionary	*aPreset;
 		
-		while(aPreset = [enumerator nextObject]){
+		while((aPreset = [enumerator nextObject])){
 			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
 				*renamedPreset = aPreset;
 				break;
@@ -708,7 +708,7 @@ typedef enum {
 		NSEnumerator	*enumerator = [newPresets objectEnumerator];
 		NSDictionary	*aPreset;
 		
-		while(aPreset = [enumerator nextObject]){
+		while((aPreset = [enumerator nextObject])){
 			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
 				*duplicatePreset = aPreset;
 				break;
@@ -757,7 +757,7 @@ typedef enum {
 	NSString		*name;
 	
 	//Available Layouts
-	while(set = [enumerator nextObject]){
+	while((set = [enumerator nextObject])){
 		name = [set objectForKey:@"name"];
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		 target:nil
@@ -798,7 +798,7 @@ typedef enum {
 	NSString		*name;
 	
 	//Available themes
-	while(set = [enumerator nextObject]){
+	while((set = [enumerator nextObject])){
 		name = [set objectForKey:@"name"];
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		 target:nil
@@ -847,7 +847,7 @@ typedef enum {
 	NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 	NSString		*packPath;
 	
-	while(packPath = [enumerator nextObject]){
+	while((packPath = [enumerator nextObject])){
 		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 		AIIconState	*preview = [[adium dockController] previewStateForIconPackAtPath:packPath];
 		
@@ -894,7 +894,7 @@ typedef enum {
 	NSEnumerator	*enumerator = [packs objectEnumerator];
 	NSString		*packPath;
 
-	while(packPath = [enumerator nextObject]){
+	while((packPath = [enumerator nextObject])){
 		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																					  target:nil

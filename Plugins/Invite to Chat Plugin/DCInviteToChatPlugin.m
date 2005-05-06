@@ -122,7 +122,7 @@
 		[menu_chatMenu setMenuChangedMessagesEnabled:NO];
 
 		enumerator = [serviceDict keyEnumerator];
-		while(serviceClass = [enumerator nextObject]){
+		while((serviceClass = [enumerator nextObject])){
 			
 			//Each iteration, if we have more menu items now than before, add a separator item
 			currentNumberOfItems = [menu_chatMenu numberOfItems];

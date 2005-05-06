@@ -51,7 +51,7 @@ int main (int argc, const char * argv[]) {
 	NSEnumerator * e = [users objectEnumerator];
 	NSString * user;
 	
-	while(user = [e nextObject])
+	while((user = [e nextObject]))
 	{
 		if([user hasPrefix:@"."]) continue;
 		NSLog(@"Loading for user: %@",user);
@@ -69,7 +69,7 @@ void loadMetaContacts(NSString * userDir)
 	NSEnumerator * e = [metaContacts keyEnumerator];
 	NSString * contact;
 	
-	while(contact = [e nextObject])
+	while((contact = [e nextObject]))
 	{
 		if([[metaContacts objectForKey:contact] count] > 1)
 		{
@@ -105,7 +105,7 @@ void insertMetaContact(NSString * userDir, NSString * ID, NSArray * users)
 	if(!alias)
 	{
 		e = [users objectEnumerator];
-		while(contact = [e nextObject])
+		while((contact = [e nextObject]))
 		{
 			contact = 
 			   dictionaryForObject(userDir, [NSString stringWithFormat:@"%@.%@",
@@ -125,7 +125,7 @@ void insertMetaContact(NSString * userDir, NSString * ID, NSArray * users)
 	NSLog(@"Creating meta contact %@ with id %d", alias, metaID);
 	
 	e = [users objectEnumerator];
-	while(contact = [e nextObject])
+	while((contact = [e nextObject]))
 	{
 		NSString * service, * uid;
 		service = [contact objectForKey:KEY_SERVICE];

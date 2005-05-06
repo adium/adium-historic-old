@@ -312,7 +312,7 @@
 		int				online = 0;
 		
 		//Count online accounts
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			if([[account statusObjectForKey:@"Online"] boolValue]) online++;
 		}
 		

@@ -121,7 +121,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 		if(targetStatusState){
 			enumerator = [[[adium accountController] accountArray] objectEnumerator];
-			while(account = [enumerator nextObject]){
+			while((account = [enumerator nextObject])){
 				AIStatus	*currentStatusState = [account statusState];
 				if([currentStatusState statusType] == AIAvailableStatusType){
 					//Store the state the account is in at present
@@ -156,7 +156,7 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		AIAccount		*account;
 
 		enumerator = [[[adium accountController] accountArray] objectEnumerator];
-		while(account = [enumerator nextObject]){
+		while((account = [enumerator nextObject])){
 			AIStatus		*targetStatusState;
 			NSNumber		*accountHash = [NSNumber numberWithUnsignedInt:[account hash]];
 
