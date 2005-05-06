@@ -5,6 +5,7 @@
                 "_insertBookmarkFromOutlineViewSelection" = id; 
                 orderFrontBookmarksPanel = id; 
                 takeBrowserSelectionFrom = id; 
+                toggleBookmarksPanel = id; 
             }; 
             CLASS = AIBookmarksImporterController; 
             LANGUAGE = ObjC; 
@@ -13,6 +14,7 @@
                 insertButton = NSButton; 
                 outlineView = NSOutlineView; 
                 popUpButton = NSPopUpButton; 
+                tabView = NSTabView; 
             }; 
             SUPERCLASS = NSObject; 
         }, 

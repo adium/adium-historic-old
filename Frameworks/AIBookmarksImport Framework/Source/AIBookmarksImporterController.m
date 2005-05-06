@@ -17,6 +17,8 @@
 #import "AIBookmarksImporterController.h"
 #import "AIBookmarksImporter.h"
 
+#import "NSImage+AIBookmarksImport.h"
+
 #import <ApplicationServices/ApplicationServices.h>
 
 @interface AIBookmarksImporterController (PRIVATE)
@@ -70,16 +72,16 @@ static AIBookmarksImporterController *myself = nil;
 													 name:NSApplicationDidBecomeActiveNotification
 												   object:NSApp];
 
-		importers = [[self loadBuiltInImporters] retain];
-
-		//XXX - post a notification here calling for importers to register.
-
 		[[NSBundle bundleForClass:[AIBookmarksImporterController class]] loadNibFile:@"BookmarksPanel.nib" externalNameTable:nil withZone:[self zone]];
 
 		[outlineView setDoubleAction:@selector(_insertBookmarkFromOutlineViewSelection:)];
 		[outlineView setTarget:self];
 
 		[bookmarksPanel setBecomesKeyOnlyIfNeeded:YES];
+
+		importers = [[self loadBuiltInImporters] retain];
+
+		//XXX - post a notification here calling for importers to register.
 	}
 
 	return self;
@@ -135,7 +137,8 @@ static AIBookmarksImporterController *myself = nil;
 		NSComparisonResult comparison = [nameOfNewImporter caseInsensitiveCompare:[[importer class] browserName]];
 		if(comparison == NSOrderedSame) {
 			[importers replaceObjectAtIndex:i withObject:importerToAdd];
-			goto end;
+			[[popUpButton menu] removeItemAtIndex:i];
+			goto replaceNotInsertMenuItem;
 		} else if(comparison == NSOrderedAscending) {
 			//insert here
 			ranOut = NO;
@@ -148,17 +151,44 @@ static AIBookmarksImporterController *myself = nil;
 	}
 
 	[importers insertObject:importerToAdd atIndex:i];
+replaceNotInsertMenuItem:;
 	NSMenuItem *item = [self browserMenuItemWithName:nameOfNewImporter icon:[classOfNewImporter browserIcon]];
 	[[popUpButton menu] insertItem:item atIndex:i];
 
-end:
-	;
+	//if it has a custom view, insert it into the tab view.
+	NSView *customView = [importerToAdd customView];
+	if(customView) {
+		NSString *identifierToAdd = [importerToAdd importerIdentifier];
+		NSTabViewItem *tab = [[NSTabViewItem alloc] initWithIdentifier:identifierToAdd];
+
+		unsigned numTabs = [tabView numberOfTabViewItems];
+		unsigned destIndex = 1;
+		while(destIndex < numTabs) {
+			NSTabViewItem *thisTab = [tabView tabViewItemAtIndex:destIndex];
+			NSComparisonResult cmp = [[thisTab identifier] caseInsensitiveCompare:identifierToAdd];
+			if(cmp == NSOrderedDescending) {
+				break;
+			} else if(cmp == NSOrderedSame) {
+				//this tab's identifier is the same as another importer. replace the existing view with an older one.
+				[tab release];
+				tab = [thisTab retain];
+				goto replaceNotInsertTab;
+			}
+			++destIndex;
+		}
+
+		[tabView insertTabViewItem:tab atIndex:destIndex];
+	replaceNotInsertTab:
+		[tab setView:customView];
+		[tab release];
+	}
 }
 
 - (void)removeImporter:(AIBookmarksImporter *)importerToRemove
 {
 	BOOL needReload = NO;
 
+	//remove from the pop-up button.
 	NSString *browserNameToRemove = [[importerToRemove class] browserName];
 	int count = [popUpButton numberOfItems];
 	for(int i = 0; i < count; ++i) {
@@ -169,17 +199,33 @@ end:
 		}
 	}
 
+	//remove the tab view item for the importer.
+	int indexOfTabToRemove = [tabView indexOfTabViewItemWithIdentifier:[importerToRemove importerIdentifier]];
+	if(indexOfTabToRemove != NSNotFound) {
+		int indexOfSelectedTab = [tabView indexOfTabViewItem:[tabView selectedTabViewItem]];
+		int              delta = (indexOfTabToRemove < indexOfSelectedTab);
+
+		[tabView removeTabViewItem:[tabView tabViewItemAtIndex:indexOfTabToRemove]];
+		[tabView selectTabViewItemAtIndex:(indexOfSelectedTab - delta)];
+	}
+
 	/*we can't use removeObjectAtIndex: here because importers is a list of *all* registered importers, whereas
 	 *	the pop-up button contains only available importers (+browserIsAvailable = YES).
 	 */
 	[importers removeObjectIdenticalTo:importerToRemove];
 
+	//select the next item in the pop-up button.
 	if((int)selectedImporterIndex >= count) {
 		selectedImporterIndex -= ((selectedImporterIndex - count) + 1);
 	}
 	[popUpButton selectItemAtIndex:selectedImporterIndex];
 
-	if(needReload) [self loadBookmarks];
+	if(needReload
+	&& (((int)selectedImporterIndex) >= 0)
+	&& [[importers objectAtIndex:selectedImporterIndex] customView])
+	{
+		[self loadBookmarks];
+	}
 }
 
 #pragma mark -
@@ -270,6 +316,14 @@ end:
 
 	selectedImporterIndex = newIndex;
 	[popUpButton selectItemWithTag:selectedImporterIndex];
+
+	int tabIndex = NSNotFound;
+	if(((signed)selectedImporterIndex) != -1) {
+		tabIndex = [tabView indexOfTabViewItemWithIdentifier:[[importers objectAtIndex:selectedImporterIndex] importerIdentifier]];
+	}
+	if(tabIndex == NSNotFound) tabIndex = 0; //the ' Generic ' tab
+	[tabView selectTabViewItemAtIndex:tabIndex];
+
 	//update the enabled-state of the Insert button
 	[self outlineViewSelectionDidChange:nil];
 
@@ -296,66 +350,7 @@ end:
 
 - (IBAction)_insertBookmarkFromOutlineViewSelection:(id)sender
 {
-	NSDictionary *bookmark = [outlineView itemAtRow:[outlineView selectedRow]];
-	NSURL *URL = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
-
-	if(URL && [URL isKindOfClass:[NSURL class]]) {
-		NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		
-		//if the first responder is a text view...
-		if(responder && [responder isKindOfClass:[NSTextView class]]) {
-			NSTextView      *textView = (NSTextView *)responder;
-			NSTextStorage	*textStorage = [textView textStorage];
-			NSDictionary    *typingAttributes = [textView typingAttributes];
-			NSString		*URLString = [URL absoluteString];
-			unsigned		 linkStringLength, changeInLength;
-
-			NSString		*linkTitle = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
-			if(!linkTitle)   linkTitle = URLString;
-			NSRange			 linkRange = { 0, [linkTitle length] };
-
-			//new mutable string to build the link with
-			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:linkTitle
-			                                                                                  attributes:typingAttributes] autorelease];
-			[linkString addAttribute:NSLinkAttributeName value:URL range:linkRange];
-			
-			//Insert the link into the text view
-			NSRange selRange = [textView selectedRange];
-			[textStorage replaceCharactersInRange:selRange withAttributedString:linkString];
-			
-			//Determine the change in length
-			linkStringLength = [linkString length];
-			changeInLength = linkStringLength - selRange.length;
-			
-			//Special cases for insertion:
-			NSAttributedString  *space = [[[NSAttributedString alloc] initWithString:@" "
-																		  attributes:typingAttributes] autorelease];
-			NSString *str = [textView string];
-			
-			unsigned afterIndex = selRange.location + linkRange.length;
-			if(([str length] > afterIndex) && ([str characterAtIndex:afterIndex] != ' ')) {
-				/* If we insert a link, we're not at the end of the string, and the next char isn't a space,
-				 * insert a space.
-				 */
-				[textStorage insertAttributedString:space
-											atIndex:afterIndex];
-				changeInLength++;
-            }
-			if(selRange.location > 0 && [str characterAtIndex:(selRange.location - 1)] != ' ') {
-				/* If we insert a link, we're not at the start of the string, and the previous char isn't a space,
-				 * insert a space.
-				 */
-				[textStorage insertAttributedString:space
-											atIndex:selRange.location];
-				changeInLength++;
-            }
-			
-			//Notify that a change occurred since NSTextStorage won't do it for us
-			[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
-																object:textView
-															  userInfo:nil];
-		}
-	}
+	[self insertLink:[outlineView itemAtRow:[outlineView selectedRow]]];
 }
 
 #pragma mark -
@@ -394,12 +389,83 @@ end:
 												 keyEquivalent:@""];
 	[item setTarget:self];
 
-	icon = [icon copy];
+	if(icon) icon = [[icon copy] autorelease];
+	else     icon = [NSImage imageNamed:@"NSDefaultApplicationIcon"];
 	[icon setSize:NSMakeSize(16.0, 16.0)];
 	[item setImage:icon];
-	[icon release];
 
 	return [item autorelease];
+}
+
+- (NSAttributedString *)attributedStringByItalicizingString:(NSString *)str
+{
+	NSFont *font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
+	font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
+	NSDictionary *attrs = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
+	return [[[NSAttributedString alloc] initWithString:str attributes:attrs] autorelease];
+}
+
+- (void)insertLink:(NSDictionary *)bookmark
+{
+	NSURL *URL = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+
+	if(URL && [URL isKindOfClass:[NSURL class]]) {
+		NSResponder         *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
+
+		//if the first responder is a text view...
+		if(responder && [responder isKindOfClass:[NSTextView class]]) {
+			NSTextView      *textView = (NSTextView *)responder;
+			NSTextStorage	*textStorage = [textView textStorage];
+			NSDictionary    *typingAttributes = [textView typingAttributes];
+			NSString		*URLString = [URL absoluteString];
+			unsigned		 linkStringLength, changeInLength;
+
+			NSString		*linkTitle = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
+			if(!linkTitle)   linkTitle = URLString;
+			NSRange			 linkRange = { 0, [linkTitle length] };
+
+			//new mutable string to build the link with
+			NSMutableAttributedString	*linkString = [[[NSMutableAttributedString alloc] initWithString:linkTitle
+			                                                                                  attributes:typingAttributes] autorelease];
+			[linkString addAttribute:NSLinkAttributeName value:URL range:linkRange];
+
+			//Insert the link into the text view
+			NSRange selRange = [textView selectedRange];
+			[textStorage replaceCharactersInRange:selRange withAttributedString:linkString];
+
+			//Determine the change in length
+			linkStringLength = [linkString length];
+			changeInLength = linkStringLength - selRange.length;
+
+			//Special cases for insertion:
+			NSAttributedString  *space = [[[NSAttributedString alloc] initWithString:@" "
+																		  attributes:typingAttributes] autorelease];
+			NSString *str = [textView string];
+
+			unsigned afterIndex = selRange.location + linkRange.length;
+			if(([str length] > afterIndex) && ([str characterAtIndex:afterIndex] != ' ')) {
+				/* If we insert a link, we're not at the end of the string, and the next char isn't a space,
+				* insert a space.
+				*/
+				[textStorage insertAttributedString:space
+											atIndex:afterIndex];
+				changeInLength++;
+            }
+			if(selRange.location > 0 && [str characterAtIndex:(selRange.location - 1)] != ' ') {
+				/* If we insert a link, we're not at the start of the string, and the previous char isn't a space,
+				* insert a space.
+				*/
+				[textStorage insertAttributedString:space
+											atIndex:selRange.location];
+				changeInLength++;
+            }
+
+			//Notify that a change occurred since NSTextStorage won't do it for us
+			[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
+																object:textView
+															  userInfo:nil];
+		}
+	}
 }
 
 #pragma mark -
@@ -471,6 +537,17 @@ end:
 	NSString *identifier = [col identifier];
 	if([identifier isEqualToString:@"icon"]) {
 		result = [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON];
+		if(!result) {
+			NSURL *content = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+			if([content respondsToSelector:@selector(scheme)]) {
+				NSString *URLScheme = [content scheme];
+				result = [NSImage iconForURLScheme:URLScheme];
+			} else {
+				//probably a group
+				result = [NSImage folderIcon];
+			}
+			if(!result) result = [NSImage iconForURLScheme:ADIUM_GENERIC_ICON_SCHEME];
+		}
 	} else if([identifier isEqualToString:@"name"]) {
 		result = [item objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
 		if(!result) {

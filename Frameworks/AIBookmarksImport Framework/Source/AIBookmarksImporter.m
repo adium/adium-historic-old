@@ -60,22 +60,6 @@
 {
 	return nil;
 }
-- (NSMenu *)menuWithAvailableBookmarks
-{
-	NSEnumerator		*enumerator = [[self availableBookmarks] objectEnumerator];
-	id					object;
-
-	NSMenu *menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:[[self class] browserName]] autorelease];
-
-	while((object = [enumerator nextObject])){
-		if([[object objectForKey:ADIUM_BOOKMARK_DICT_CONTENT] isKindOfClass:[NSDictionary class]]) {
-			[self insertBookmarks:object intoMenu:menu];
-		} else {
-			[self insertMenuItemForBookmark:object intoMenu:menu];
-		}	
-	}
-	return menu;
-}
 - (BOOL)bookmarksHaveChanged
 {
 	NSString *bookmarksPath = [[self class] bookmarksPath];
@@ -158,6 +142,22 @@
 + (NSURL    *)browserURL
 {
 	return [NSURL fileURLWithPath:[self browserPath]];
+}
+
+//by default: bundle identifier, signature, name, filename (in that order of preference)
+- (NSString *)importerIdentifier
+{
+	NSString       *identifier =  [[self class] browserBundleIdentifier];
+	if(!identifier) identifier =  [[self class] browserSignature];
+	if(!identifier) identifier =  [[self class] browserName];
+	if(!identifier) identifier = [[[self class] browserPath] lastPathComponent];
+
+	return identifier;
+}
+
+- (NSView *)customView
+{
+	return nil;
 }
 
 #pragma mark Useful methods

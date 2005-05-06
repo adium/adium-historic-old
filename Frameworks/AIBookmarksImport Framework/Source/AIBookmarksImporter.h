@@ -59,13 +59,18 @@
 //+bookmarksPath should return a path to a file that exists (i.e. not a directory or a 404).
 + (NSString *)bookmarksPath;
 
-//inContent should be either an array of sub-items (for a group) or an URL.
-+ (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
+//by default: bundle identifier, signature, name, filename (in that order of preference)
+- (NSString *)importerIdentifier;
+
+- (NSView *)customView;
 
 #pragma mark -
 
+//inContent should be either an array of sub-items (for a group) or an URL.
++ (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
+
 - (NSArray *)availableBookmarks;
-- (NSMenu *)menuWithAvailableBookmarks;
+
 - (BOOL)bookmarksHaveChanged;
 
 #pragma mark -
