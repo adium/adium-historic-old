@@ -336,7 +336,7 @@
         NSEnumerator    *enumerator = [secondaryThreadContentThreadQueue objectEnumerator];
         AIContentObject *queuedContent;
         
-        while (( (queuedContent = [enumerator nextObject])) && !abandonRebuilding) {
+        while((queuedContent = [enumerator nextObject]) && !abandonRebuilding){
             [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:queuedContent waitUntilDone:YES];
         }
     }
