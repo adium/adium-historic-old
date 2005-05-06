@@ -18,6 +18,7 @@
 #import "AIBookmarksImporter.h"
 
 #import "NSImage+AIBookmarksImport.h"
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 
 #import <ApplicationServices/ApplicationServices.h>
 
@@ -315,7 +316,7 @@ replaceNotInsertMenuItem:;
 	}
 
 	selectedImporterIndex = newIndex;
-	[popUpButton selectItemWithTag:selectedImporterIndex];
+	[popUpButton compatibleSelectItemWithTag:selectedImporterIndex];
 
 	int tabIndex = NSNotFound;
 	if(((signed)selectedImporterIndex) != -1) {
