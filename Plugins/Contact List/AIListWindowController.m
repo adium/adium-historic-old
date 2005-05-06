@@ -53,7 +53,7 @@
 #define SLIDE_ALLOWED_RECT_EDGE_MASK  		(AIMinXEdgeMask | AIMaxXEdgeMask)
 #define DOCK_HIDING_MOUSE_POLL_INTERVAL		0.1
 #define WINDOW_ALIGNMENT_TOLERANCE			2.0f
-#define MOUSE_EDGE_SLIDE_ON_DISTANCE		1.1f
+#define MOUSE_EDGE_SLIDE_ON_DISTANCE		-1.1f
 
 @interface AIListWindowController (PRIVATE)
 - (void)windowDidLoad;
