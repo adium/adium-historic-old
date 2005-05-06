@@ -87,9 +87,10 @@
 	}
 }
 
-- (void)application:(NSApplication *)app openFile:(NSString *)path {
+- (BOOL)application:(NSApplication *)app openFile:(NSString *)path {
 	[adiumPath release];
 	adiumPath = [path retain];
+	return YES;
 }
 
 //Actively tries to kill Apple's "Report this crash" dialog
