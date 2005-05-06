@@ -422,7 +422,7 @@
                                              forKey:KEY_LIST_THEME_GROUP_SHADOW
                                               group:PREF_GROUP_LIST_THEME];
 		
-	}else if(sender = popUp_displayImageStyle){
+	}else if(sender == popUp_displayImageStyle){
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_THEME_BACKGROUND_IMAGE_STYLE
 											  group:PREF_GROUP_LIST_THEME];	
