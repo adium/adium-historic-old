@@ -29,6 +29,9 @@
  *you should also override:
  *	+browserSignature
  *	+browserBundleIdentifier
+ *you may also override:
+ *	-importerIdentifier
+ *	-customView
  *see below for further details.
  */
 
@@ -59,9 +62,12 @@
 //+bookmarksPath should return a path to a file that exists (i.e. not a directory or a 404).
 + (NSString *)bookmarksPath;
 
-//by default: bundle identifier, signature, name, filename (in that order of preference)
+//by default, this returns the first one found (non-nil) of: bundle identifier; signature; name; filename.
 - (NSString *)importerIdentifier;
 
+/*this view is used in place of the outline view in the Bookmarks panel.
+ *it's OK to return nil from this method, or to not implement it at all.
+ */
 - (NSView *)customView;
 
 #pragma mark -
@@ -69,6 +75,16 @@
 //inContent should be either an array of sub-items (for a group) or an URL.
 + (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
 
+/*return an array of bookmark dictionaries.
+ *
+ *a bookmark dictionary contains these keys:
+ *-	ADIUM_BOOKMARK_DICT_TITLE
+ *		an NSString or NSAttributedString which is the bookmark's title.
+ *- ADIUM_BOOKMARK_DICT_CONTENT
+ *		either an NSURL (for individual bookmarks), or an NSArray such as this method returns (for groups).
+ *- ADIUM_BOOKMARK_DICT_FAVICON (optional)
+ *		an NSImage.
+ */
 - (NSArray *)availableBookmarks;
 
 - (BOOL)bookmarksHaveChanged;
