@@ -56,7 +56,7 @@
 - (void)dealloc
 {
 #if LOG_TRACKING_INFO
-	NSLog(@"[%@] dealloc",self);
+	NSLog(@"[%@ dealloc]",self);
 #endif
 
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -96,7 +96,7 @@
 		tooltipTrackingTag = [view addTrackingRect:trackingRect owner:self userData:nil assumeInside:mouseInside];
 		
 #if LOG_TRACKING_INFO
-		NSLog(@"installCursorRect: [%@] addTrackingRect %@ on %@ : tag = %i",self,NSStringFromRect(trackingRect),view,tooltipTrackingTag);
+		NSLog(@"[%@ installCursorRect] addTrackingRect %@ on %@ in %@: tag = %i",self,NSStringFromRect(trackingRect),view,[view window],tooltipTrackingTag);
 #endif
 		//If the mouse is already inside, begin tracking the mouse immediately
 		if(mouseInside) [self _startTrackingMouse];
@@ -107,23 +107,27 @@
 - (void)removeCursorRect
 {
 #if LOG_TRACKING_INFO
-	NSLog(@"[%@] Remove rect %@ : tag = %i?",self,view,tooltipTrackingTag);
+	if(tooltipTrackingTag != -1){
+		NSLog(@"[%@ removeCursorRect] Remove rect from %@ in %@ : tag = %i",self,view,[view window],tooltipTrackingTag);
+	}else{
+		NSLog(@"[%@ removeCursorRect] No rect to remove",self);
+	}
 #endif
 
 	if(tooltipTrackingTag != -1){
 		[view removeTrackingRect:tooltipTrackingTag];
 		tooltipTrackingTag = -1;
-		[self _stopTrackingMouse];
-		
-#if LOG_TRACKING_INFO
-		NSLog(@"Removed %i.",tooltipTrackingTag);
-#endif
+		[self _stopTrackingMouse];		
 	}
 }
 
 //Reset cursor tracking
 - (void)resetCursorTracking
 {
+#if LOG_TRACKING_INFO
+	NSLog(@"[%@ resetCursorTracking]",self);
+#endif
+
 	[self removeCursorRect];
 	[self installCursorRect];
 }
@@ -138,7 +142,7 @@
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 #if LOG_TRACKING_INFO
-	NSLog(@"AISmoothTooltipTracker: *** Mouse entered");	
+	NSLog(@"+++ [%@: mouseEntered]", self);
 #endif
 	[self _startTrackingMouse];
 }
@@ -147,7 +151,7 @@
 - (void)mouseExited:(NSEvent *)theEvent
 {
 #if LOG_TRACKING_INFO
-	NSLog(@"AISmoothTooltipTracker: *** Mouse exited");
+	NSLog(@"--- [%@: mouseExited]", self);
 #endif
 	[self _stopTrackingMouse];
 }
@@ -203,7 +207,8 @@
 	NSWindow	*theWindow = [view window];
 	
 #if LOG_TRACKING_INFO
-	NSLog(@"AISmoothTooltipTracker: Visible: %i ; Point %@ in %@ = %i",[[view window] isVisible],
+	NSLog(@"%@: Visible: %i ; Point %@ in %@ = %i", self,
+		  [[view window] isVisible],
 /*		  NSStringFromPoint([[view superview] convertPoint:[[view window] convertScreenToBase:mouseLocation] fromView:[[view window] contentView]]),*/
 		  NSStringFromPoint([[view window] convertScreenToBase:mouseLocation]),
 /*		  NSStringFromRect([view frame]),*/
@@ -237,7 +242,7 @@
 		//This protects us in the cases where we do not receive a mouse exited message; we don't stop tracking
 		//because we could reenter the tracking area without receiving a mouseEntered: message.
 #if LOG_TRACKING_INFO
-		NSLog(@"Mouse moved out; hiding the tooltip.");
+		NSLog(@"%@: Mouse moved out; hiding the tooltip.", self);
 #endif
 		[self _hideTooltip];
 	}
