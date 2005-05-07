@@ -272,6 +272,9 @@ static NSString	*prefsCategory;
 	//Let the status controller we'll be closing so it can keep track of connected accounts for use with the global statuses
 	[statusController beginClosing];
 
+	//Let the content controller know we'll be closing so it can take action before chats are closed as a group
+	[contentController beginClosing];
+
 	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
 	[preferenceController beginClosing];
 

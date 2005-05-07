@@ -56,6 +56,16 @@
 
 @end
 
+/*
+ * @class AIContentController
+ * @brief Controller to manage incoming and outgoing content and chats.
+ *
+ * This controller handles default formatting and text entry filters, which can respond as text is entered in a message
+ * window.  It the center for content filtering, including registering/unregistering of content filters.
+ * It handles sending and receiving of content objects.  It manages chat observers, which are objects notified as
+ * status objects are set and removed on AIChat objects.  It manages chats themselves, tracking open ones, closing
+ * them when needed, etc.  Finally, it provides Events related to sending and receiving content, such as Message Received.
+ */
 @implementation AIContentController
 
 static NDRunLoopMessenger   *filterRunLoopMessenger = nil;
@@ -67,7 +77,9 @@ static ESExpandedRecursiveLock	*threadedFilterLock = nil;
 static NSAutoreleasePool *currentAutoreleasePool = nil;
 #define	AUTORELEASE_POOL_REFRESH	5.0
 
-//init
+/*
+ * @brief Initialize the controller
+ */
 - (void)initController
 {
     //Text entry filtering and tracking
@@ -93,13 +105,35 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 }
 
-//close
-- (void)closeController
+/*
+ * @brief Begin closing the controller
+ *
+ * Post Chat_WillClose for all chats which are still open before the controller closes
+ */
+- (void)beginClosing
 {
+	NSEnumerator	*enumerator = [openChats objectEnumerator];
+	AIChat			*chat;
 
+	//Every open chat is about to close.
+	while((chat = [enumerator nextObject])){
+		[[adium notificationCenter] postNotificationName:Chat_WillClose 
+												  object:chat
+												userInfo:nil];
+	}
 }
 
-//dealloc
+/*
+ * @brief Close the controller
+ */
+- (void)closeController
+{
+	
+}
+
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[emoticonPacks release]; emoticonPacks = nil;
@@ -124,6 +158,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	   defaultFormattingAttributes	= [inDict retain];
     }
 }
+/*
+ * @brief Default formatting attributes
+ *
+ * This dictionary of attributes will be used for new text entry views, messages, etc.
+ */
 - (NSDictionary *)defaultFormattingAttributes
 {
 	return defaultFormattingAttributes;
@@ -781,6 +820,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 	//We are no longer in the process of receiving this object
 	[objectsBeingReceived removeObject:inObject];
+	AILog(@"objectsBeingReceived: %@",([objectsBeingReceived count] ? objectsBeingReceived : @"(empty)"));
 }
 
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat
@@ -979,12 +1019,14 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		chat = [AIChat chatForAccount:account];
 		[chat addParticipatingListObject:targetContact];
 		[openChats addObject:chat];
-		
+		AILog(@"chatWithContact: Added <<%@>> [%@]",chat,openChats);
+
 		//Inform the account of its creation and post a notification if successful
 		if([[targetContact account] openChat:chat]){
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
 			[openChats removeObject:chat];
+			AILog(@"chatWithContact: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
 		}
 	}
@@ -1039,6 +1081,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		chat = [AIChat chatForAccount:account];
 		[chat setName:inName];
 		[openChats addObject:chat];
+		AILog(@"chatWithName:%@ onAccount:%@ added <<%@>> [%@]",inName,account,chat,openChats);
 		
 		if (chatCreationInfo) [chat setStatusObject:chatCreationInfo
 											 forKey:@"ChatCreationInfo"
@@ -1053,6 +1096,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
 		}else{
 			[openChats removeObject:chat];
+			AILog(@"chatWithName: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
 		}
 	}
@@ -1063,7 +1107,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	if(chat){		
 		[openChats addObject:chat];
-		
+		AILog(@"openChat: Added <<%@>> [%@]",chat,openChats);
 		[[adium interfaceController] openChat:chat]; 
 	}
 }
@@ -1135,6 +1179,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	//Remove the chat
 	if(shouldRemove){
 		[openChats removeObject:inChat];
+		AILog(@"closeChat: Removed <<%@>> [%@]",inChat, openChats);
 	}
 
 	return YES;
