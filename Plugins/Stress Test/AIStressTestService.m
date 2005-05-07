@@ -64,5 +64,7 @@
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceUnsupported);
 }
-
+- (BOOL)supportsProxySettings{
+	return(NO);
+}
 @end
