@@ -176,7 +176,8 @@
 	isSendingContent = YES;
 	
     //Notify our target
-    [target performSelector:selector];
+    [target performSelector:selector
+				 withObject:self];
 	
 	isSendingContent = NO;
 }

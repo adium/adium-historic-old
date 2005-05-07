@@ -71,7 +71,7 @@
 /*!
  * @brief Set the target and action to message when a send occurs
  *
- * When a send occurs, <b>inTarget</b> will be sent <b>inSelector</b>, which should take no arguments.
+ * When a send occurs, <b>inTarget</b> will be sent <b>inSelector</b>, which should take one argument which will be the sender.
  * @param inTarget The target
  * @param inSelector The selector to perform on <b>inTarget</b>
  */
