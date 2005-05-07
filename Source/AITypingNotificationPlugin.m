@@ -136,7 +136,7 @@
 		enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
 		
 		//Determine if this change indicated the user was typing or indicated the user had no longer entered text
-		if([[inTextEntryView attributedString] length] != 0){ //User is typing
+		if([[inTextEntryView textStorage] length] != 0){ //User is typing
 
 			currentTypingState = AITyping;
 
