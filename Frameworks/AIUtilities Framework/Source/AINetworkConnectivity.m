@@ -25,8 +25,6 @@
 #define	GENERIC_REACHABILITY_CHECK	"www.google.com"
 #define	AGGREGATE_INTERVAL			3.0
 
-#define	USE_10_3_METHODS_CHECK		(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_2)
-
 #define	CONNECTIVITY_DEBUG			FALSE
 
 @interface AINetworkConnectivity (PRIVATE)
@@ -52,34 +50,9 @@ static BOOL									networkIsReachable = NO;
 
 + (void)load
 {
-	if (USE_10_3_METHODS_CHECK){
-		//Schedule our generic reachability check which will be used for most accounts
-		//This is triggered as soon as it is added to the run loop, which means our networkIsReachable flag will be set.
-		[[AINetworkConnectivity class] scheduleReachabilityCheckFor:GENERIC_REACHABILITY_CHECK context:nil];
-
-	}else{
-		//10.2 method - the 10.3 method above is much more reliable.
-		SCDynamicStoreRef	storeRef = nil;
-		CFRunLoopSourceRef	sourceRef = nil;
-		OSStatus			status;
-		
-		//Create the CFRunLoopSourceRef we will want to add to our run loop to have
-		//localIPsChangedCallback() called when the IP list changes
-		status = CreateIPAddressListChangeCallbackSCF(localIPsChangedCallback, 
-													  nil,
-													  &storeRef,
-													  &sourceRef);
-		
-		//Add it to the run loop so we will receive the notifications
-		if((status == noErr) && sourceRef){
-			CFRunLoopAddSource(CFRunLoopGetCurrent(),
-							   sourceRef,
-							   kCFRunLoopDefaultMode);
-		}
-
-		//Determine our initial network reachability
-		networkIsReachable = checkGenericReachability();
-	}
+	//Schedule our generic reachability check which will be used for most accounts
+	//This is triggered as soon as it is added to the run loop, which means our networkIsReachable flag will be set.
+	[[AINetworkConnectivity class] scheduleReachabilityCheckFor:GENERIC_REACHABILITY_CHECK context:nil];
 }
 
 #pragma mark -
