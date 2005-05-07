@@ -300,14 +300,6 @@ static NSMutableSet							*accountsToConnect = nil;
 		//It is not certain what order the networkConnectivityDidChange and systemDidWake calls will be made.
 		//Ensure that we reconnect accounts as needed after adding them to the accountsToConnect array.
 		[self networkConnectivityChanged:nil];
-
-		/*
-		[NSTimer scheduledTimerWithTimeInterval:2.0
-										 target:[AINetworkConnectivity class]
-									   selector:@selector(refreshReachabilityAndNotify)
-									   userInfo:nil
-										repeats:NO];
-		 */
 	}
 }
 
