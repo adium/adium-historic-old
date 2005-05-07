@@ -10,9 +10,6 @@
  available interface goes up or down.  The notification has an NSNumber object of either YES or NO which reflects the
  new connectivity state.  
  
- + (void)refreshReachabilityAndNotify is offerred to immediately refresh reachability, although
- this should not generally be needed
- 
  + (BOOL)networkIsReachable always reflects the last network reachability state retrieved by AINetworkCnonnectivity.
  The notification should be relied upon whenever possible; this method exists primarily to assist in debugging.
  */
@@ -75,11 +72,6 @@ static BOOL									networkIsReachable = NO;
 + (BOOL)networkIsReachable
 {
 	return networkIsReachable;
-}
-
-+ (void)refreshReachabilityAndNotify
-{
-	[self handleConnectivityUsingCheckGenericReachability];
 }
 
 #pragma mark Aggregation and notification

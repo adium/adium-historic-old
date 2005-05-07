@@ -25,7 +25,5 @@
  */
 + (BOOL)networkIsReachable;
 
-+ (void)refreshReachabilityAndNotify;
-
 @end
 
