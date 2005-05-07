@@ -22,7 +22,8 @@
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AILocalizationTextField.h>
 
-#define PLAY_A_SOUND    			AILocalizedString(@"Play a sound",nil)
+#define PLAY_A_SOUND			AILocalizedString(@"Play a sound",nil)
+#define KEY_DEFAULT_SOUND_DICT	@"Default Sound Dict"
 
 @interface ESEventSoundAlertDetailPane (PRIVATE)
 - (NSMenu *)soundListMenu;
@@ -73,14 +74,20 @@
  */
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
+	NSString	*selectedSound;
+	int			soundIndex;
+	
+	if(!inDetails) inDetails = [[adium preferenceController] preferenceForKey:KEY_DEFAULT_SOUND_DICT
+																		group:PREF_GROUP_SOUNDS];
+
 	//If the user has a custom sound selected, we need to create an entry in the menu for it
-	NSString	*selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
+	selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
 	if([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == -1){
 		[self addSound:selectedSound toMenu:[popUp_actionDetails menu]];
 	}
 	
     //Set the menu to its previous setting if the stored event matches
-	int		soundIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_ALERT_SOUND_PATH]];
+	soundIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_ALERT_SOUND_PATH]];
 	if(soundIndex >= 0 && soundIndex < [popUp_actionDetails numberOfItems]){
 		[popUp_actionDetails selectItemAtIndex:soundIndex];        
 	}
@@ -91,13 +98,19 @@
  */
 - (NSDictionary *)actionDetails
 {
-	NSString	*soundPath = [[popUp_actionDetails selectedItem] representedObject];
+	NSString		*soundPath = [[popUp_actionDetails selectedItem] representedObject];
+	NSDictionary	*actionDetails = nil;
 
 	if(soundPath && [soundPath length]){
-		return([NSDictionary dictionaryWithObject:soundPath forKey:KEY_ALERT_SOUND_PATH]);
-	}else{
-		return(nil);
+		actionDetails = [NSDictionary dictionaryWithObject:soundPath forKey:KEY_ALERT_SOUND_PATH];
 	}
+
+	//Save the preferred settings for future use as defaults
+	[[adium preferenceController] setPreference:actionDetails
+										 forKey:KEY_DEFAULT_SOUND_DICT
+										  group:PREF_GROUP_SOUNDS];
+	
+	return actionDetails;
 }
 
 
