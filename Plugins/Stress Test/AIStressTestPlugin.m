@@ -23,9 +23,7 @@
 
 - (void)installPlugin
 {
-#ifdef DEVELOPMENT_BUILD
 	[[AIStressTestService alloc] init];
-#endif
 }
 
 

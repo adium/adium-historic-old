@@ -117,7 +117,7 @@
 				[contact setRemoteGroupName:[NSString stringWithFormat:@"Group %i", (int)(i/5.0)]];
             }
 			
-            [self echo:[NSString stringWithFormat:@"Created %i handles",count]];
+            [self echo:[NSString stringWithFormat:@"Created %i contacts",count]];
             
         }else if([type isEqualToString:@"online"]){
             NSMutableArray	*handleArray = [NSMutableArray array];
@@ -142,12 +142,14 @@
 				[NSTimer scheduledTimerWithTimeInterval:0.00001
 												 target:self
 											   selector:@selector(timer_online:)
-											   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"handles",
+											   userInfo:[NSDictionary dictionaryWithObjectsAndKeys:handleArray,@"contacts",
 												   [NSNumber numberWithBool:silent],@"silent",nil] 
 												repeats:YES];
 			}
-            [self echo:[NSString stringWithFormat:@"%i handles signing on %@",count,(silent?@"(Silently)":@"")]];
-			
+            [self echo:[NSString stringWithFormat:@"%i contacts signing on %@",count, (silent ?
+																					   @"(Silently)" :
+																					   @"")]];
+
         }else if([type isEqualToString:@"offline"]){
             int 	count = [[commands objectAtIndex:1] intValue];
             BOOL 	silent = NO;
@@ -171,37 +173,53 @@
 				
 				if (silent) [[adium contactController] endListObjectNotificationsDelay];
 			}
-            [self echo:[NSString stringWithFormat:@"%i handles signed off %@",count,(silent?@"(Silently)":@"")]];
+            [self echo:[NSString stringWithFormat:@"%i contacts signed off %@",count,(silent?@"(Silently)":@"")]];
 			
         }else if([type isEqualToString:@"msgin"]){
-            int 		count = [[commands objectAtIndex:1] intValue];
-			int 		spread = [[commands objectAtIndex:2] intValue];
-            NSString	*messageIn = [commands objectAtIndex:3];
+			int			count = [[commands objectAtIndex:1] intValue];
+			int			spread = [[commands objectAtIndex:2] intValue];
 			
-            [NSTimer scheduledTimerWithTimeInterval:0.00001
-											 target:self
-										   selector:@selector(timer_msgin:)
-										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
-											   [NSNumber numberWithInt:count],@"count",
-											   [NSNumber numberWithInt:spread],@"spread",
-											   messageIn,@"message",nil] 
-											repeats:YES];
+			//Get the full message, which comes after the first three command parts
+			int			messageIndex = ([(NSString *)[commands objectAtIndex:0] length] + 1 +
+										[(NSString *)[commands objectAtIndex:1] length] + 1 +
+										[(NSString *)[commands objectAtIndex:2] length] + 1);
 			
+            NSString	*messageIn = ((messageIndex < [message length]) ?
+									  [message substringFromIndex:messageIndex] :
+									  nil);
+			
+			if(messageIn){
+				[NSTimer scheduledTimerWithTimeInterval:0.00001
+												 target:self
+											   selector:@selector(timer_msgin:)
+											   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
+												   [NSNumber numberWithInt:count],@"count",
+												   [NSNumber numberWithInt:spread],@"spread",
+												   messageIn,@"message",nil] 
+												repeats:YES];
+			}
         }else if([type isEqualToString:@"msginout"]){
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
-            NSString	*messageOut = [commands objectAtIndex:3];
+			int			messageIndex = ([(NSString *)[commands objectAtIndex:0] length] + 1 +
+										[(NSString *)[commands objectAtIndex:1] length] + 1 +
+										[(NSString *)[commands objectAtIndex:2] length] + 1);
+            NSString	*messageOut = ((messageIndex < [message length]) ?
+									   [message substringFromIndex:messageIndex] : 
+									   nil);
 			
-            [NSTimer scheduledTimerWithTimeInterval:0.00001 
-											 target:self 
-										   selector:@selector(timer_msginout:)
-										   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
-											   [NSNumber numberWithInt:count],@"count",
-											   [NSNumber numberWithInt:spread],@"spread",
-											   messageOut,@"message",
-											   [NSNumber numberWithBool:NO],@"in",nil] 
-											repeats:YES];
-            
+			if(messageOut){
+				[NSTimer scheduledTimerWithTimeInterval:0.00001 
+												 target:self 
+											   selector:@selector(timer_msginout:)
+											   userInfo:[NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",
+												   [NSNumber numberWithInt:count],@"count",
+												   [NSNumber numberWithInt:spread],@"spread",
+												   messageOut,@"message",
+												   [NSNumber numberWithBool:NO],@"in",nil] 
+												repeats:YES];
+            }
+			
 		}else if ([type isEqualToString:@"groupchat"]) {
             int 		count = [[commands objectAtIndex:1] intValue];
 			NSString	*messageIn = [commands objectAtIndex:2];
@@ -228,7 +246,7 @@
 - (void)timer_online:(NSTimer *)inTimer
 {
     NSMutableDictionary	*userInfo = [inTimer userInfo];
-    NSMutableArray		*array = [userInfo objectForKey:@"handles"];
+    NSMutableArray		*array = [userInfo objectForKey:@"contacts"];
     AIListContact		*contact = [array lastObject];
 	BOOL				silent = [[userInfo objectForKey:@"silent"] boolValue];
 
