@@ -16,11 +16,9 @@
 
 #import "AIBookmarksImporter.h"
 
-@class ABPeoplePickerView;
-
 @interface SHABBookmarksImporter: AIBookmarksImporter
 {
-	ABPeoplePickerView *peoplePicker;
+	NSBundle *addressBookFrameworkBundle, *addressBookAppBundle;
 }
 
 @end
