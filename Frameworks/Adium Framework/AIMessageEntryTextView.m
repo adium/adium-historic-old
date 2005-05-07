@@ -256,13 +256,9 @@ static NSColor	*cachedWhiteColor = nil;
 
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
-//Return our current string
-- (NSAttributedString *)attributedString
-{
-    return([self textStorage]);
-}
-
-//Are we available for sending
+/*
+ * @brief Are we available for sending?
+ */
 - (BOOL)availableForSending
 {
 	return([self isSendingEnabled]);
@@ -786,7 +782,7 @@ static NSColor	*cachedWhiteColor = nil;
 - (void)changeDocumentBackgroundColor:(id)sender
 {
 	NSColor						*newColor = [sender color];
-	NSMutableAttributedString	*attrStorageString = [[[self attributedString] mutableCopy] autorelease];
+	NSMutableAttributedString	*attrStorageString = [[[self textStorage] mutableCopy] autorelease];
 	NSMutableDictionary			*textAttrDict;
 	
 	[self setBackgroundColor:newColor];
