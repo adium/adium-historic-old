@@ -164,10 +164,15 @@
 
 + (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage
 {
-	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:3];
+	return [self dictionaryForBookmarksItemWithTitle:inTitle content:inContent image:inImage appendURIToTitle:NO];
+}
++ (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage appendURIToTitle:(BOOL)appendURI
+{
+	NSMutableDictionary *dict = [NSMutableDictionary dictionaryWithCapacity:4];
 	if(inTitle)   [dict setObject:inTitle   forKey:ADIUM_BOOKMARK_DICT_TITLE];
 	if(inContent) [dict setObject:inContent forKey:ADIUM_BOOKMARK_DICT_CONTENT];
 	if(inImage)   [dict setObject:inImage   forKey:ADIUM_BOOKMARK_DICT_FAVICON];
+	[dict setObject:[NSNumber numberWithBool:appendURI] forKey:ADIUM_BOOKMARK_DICT_APPENDURI];
 	return dict;
 }
 

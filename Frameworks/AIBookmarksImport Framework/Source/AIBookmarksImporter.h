@@ -1,5 +1,5 @@
 /* 
-* Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -17,6 +17,7 @@
 #define ADIUM_BOOKMARK_DICT_TITLE      @"Title"
 #define ADIUM_BOOKMARK_DICT_CONTENT    @"Content"
 #define ADIUM_BOOKMARK_DICT_FAVICON    @"Favicon"
+#define ADIUM_BOOKMARK_DICT_APPENDURI  @"AppendURIToTitle"
 
 /*this is an abstract class.
  *
@@ -74,6 +75,7 @@
 
 //inContent should be either an array of sub-items (for a group) or an URL.
 + (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage;
++ (NSDictionary *)dictionaryForBookmarksItemWithTitle:(NSString *)inTitle content:(id)inContent image:(NSImage *)inImage appendURIToTitle:(BOOL)appendURI;
 
 /*return an array of bookmark dictionaries.
  *
@@ -84,6 +86,8 @@
  *		either an NSURL (for individual bookmarks), or an NSArray such as this method returns (for groups).
  *- ADIUM_BOOKMARK_DICT_FAVICON (optional)
  *		an NSImage.
+ *- ADIUM_BOOKMARK_DICT_APPENDURI (optional; default: NO)
+ *		an NSNumber containing a BOOL. when YES, the bookmark's title when inserted will be 'Title <URI>' rather than just the title.
  */
 - (NSArray *)availableBookmarks;
 
