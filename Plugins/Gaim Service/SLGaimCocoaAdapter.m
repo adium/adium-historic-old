@@ -874,7 +874,7 @@ NSMutableDictionary* get_chatDict(void)
 	GaimBuddy	*buddy;
 	
 	//Find the group (Create if necessary)
-	groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
 	if(!(group = gaim_find_group(groupUTF8String))){
 		group = gaim_group_new(groupUTF8String);
 		gaim_blist_add_group(group, NULL);
@@ -910,7 +910,7 @@ NSMutableDictionary* get_chatDict(void)
 		const char	*groupUTF8String;
 		GaimGroup	*group;
 
-		groupUTF8String = (groupName ? [groupName UTF8String] : "");
+		groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
 		if (group = gaim_find_group(groupUTF8String)){
 			/* Remove this contact from the server-side and gaim-side lists. 
 			 * Updating gaimside does not change the server.
@@ -942,7 +942,7 @@ NSMutableDictionary* get_chatDict(void)
 	account = accountLookupFromAdiumAccount(adiumAccount);
 
 	//Get the destination group (creating if necessary)
-	groupUTF8String = (groupName ? [groupName UTF8String] : "");
+	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
 	group = gaim_find_group(groupUTF8String);
 	if(!group){
 		/* If we can't find the group, something's gone wrong... we shouldn't be using a group we don't have.

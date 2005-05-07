@@ -119,12 +119,12 @@ static void adiumGaimCoreUiInit(void)
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
 
-	//Clear the local blist on first launch of .80... temporary code.
+	//Clear the local blist on first launch of .82... temporary code.
 	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.80:Cleared blist.xml on first run"];
+	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.82:Cleared blist.xml on first run"];
 	if(!clearedBlist || ![clearedBlist boolValue]){
 		[userDefaults setObject:[NSNumber numberWithBool:YES]
-						 forKey:@"Adium 0.80:Cleared blist.xml on first run"];
+						 forKey:@"Adium 0.82:Cleared blist.xml on first run"];
 
 		char *user_dir = gaim_user_dir();
 		[[NSFileManager defaultManager] trashFileAtPath:
