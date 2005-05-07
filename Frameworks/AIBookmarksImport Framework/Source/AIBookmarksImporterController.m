@@ -273,19 +273,17 @@ replaceNotInsertMenuItem:;
 - (void)loadBookmarks
 {
 	AIBookmarksImporter *importer = [importers objectAtIndex:selectedImporterIndex];
-	if([importer bookmarksHaveChanged]) {
-		NSArray *oldBookmarks = bookmarks;
-		NSArray *newBookmarks = [importer availableBookmarks];
+	NSArray *oldBookmarks = bookmarks;
+	NSArray *newBookmarks = [importer availableBookmarks];
 
-		BOOL lengthsDontMatch = ([oldBookmarks count] != [newBookmarks count]);
-		if(lengthsDontMatch || ![oldBookmarks isEqualToArray:newBookmarks]) {
-			[bookmarks release];
-			bookmarks = [newBookmarks retain];
+	BOOL lengthsDontMatch = ([oldBookmarks count] != [newBookmarks count]);
+	if(lengthsDontMatch || ![oldBookmarks isEqualToArray:newBookmarks]) {
+		[bookmarks release];
+		bookmarks = [newBookmarks retain];
 
-			int selection = lengthsDontMatch ? -1 : [outlineView selectedRow];
-			[outlineView reloadData];
-			[outlineView selectRow:selection byExtendingSelection:NO];
-		}
+		int selection = lengthsDontMatch ? -1 : [outlineView selectedRow];
+		[outlineView reloadData];
+		[outlineView selectRow:selection byExtendingSelection:NO];
 	}
 }
 
