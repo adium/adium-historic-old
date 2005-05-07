@@ -52,7 +52,6 @@
 - (NSView *)associatedView;
 
 //Adium Text Entry
-- (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setString:(NSString *)string;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
