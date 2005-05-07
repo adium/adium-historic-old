@@ -423,7 +423,14 @@ replaceNotInsertMenuItem:;
 			unsigned		 linkStringLength, changeInLength;
 
 			NSString		*linkTitle = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
-			if(!linkTitle)   linkTitle = URLString;
+			if(linkTitle) {
+				NSNumber *num = [bookmark objectForKey:ADIUM_BOOKMARK_DICT_APPENDURI];
+				if(num && [num boolValue]) {
+					linkTitle = [NSString stringWithFormat:@"%@ <%@>", linkTitle, URLString];
+				}
+			} else {
+				linkTitle = URLString;
+			}
 			NSRange			 linkRange = { 0, [linkTitle length] };
 
 			//new mutable string to build the link with
