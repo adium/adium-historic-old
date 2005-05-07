@@ -41,9 +41,10 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName messageViewController:(AIMessageViewController *)inMessageViewController
 {
-	[super initWithWindowNibName:windowNibName];
-	
-	messageViewController = [inMessageViewController retain];
+	if((self = [super initWithWindowNibName:windowNibName])){
+		messageViewController = [inMessageViewController retain];
+	}
+
 	return(self);
 }
 
@@ -62,10 +63,22 @@
 	[[self window] center];
 }
 
-//Called as the user list edit sheet closes, dismisses the sheet
+/*!
+ * @brief Called when the sheet ends
+ *
+ * As our sheet is closing, we auto-release this window controller instance.  This allows our controller to function
+ * independently without needing a separate object to retain and release it.
+ */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
     [sheet orderOut:nil];
+	
+	[self autorelease];
+}
+
+- (IBAction)closeWindow:(id)sender
+{
+	[super closeWindow:sender];
 }
 
 #pragma mark Actions
