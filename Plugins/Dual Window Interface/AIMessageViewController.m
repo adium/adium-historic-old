@@ -319,9 +319,10 @@
  */
 - (IBAction)sendMessage:(id)sender
 {
-    if([[textView_outgoing attributedString] length] != 0){ //If message length is 0, don't send
-        AIContentMessage			*message;
-		NSMutableAttributedString	*outgoingAttributedString = [[[textView_outgoing textStorage] copy] autorelease];
+	NSAttributedString	*attributedString = [textView_outgoing textStorage];
+	
+	//Only send if we have a non-zero-length string
+    if([attributedString length] != 0){ 
 		AIListObject				*listObject = [chat listObject];
 		
 		if(!sendMessagesToOfflineContact &&
@@ -334,20 +335,23 @@
 												forMessageViewController:self];
 			
 		}else{
-			AIAccount	*account = [chat account];
-			
+			AIContentMessage		*message;
+			NSAttributedString		*outgoingAttributedString;
+			AIAccount				*account = [chat account];
 			//Send the message
 			[[adium notificationCenter] postNotificationName:Interface_WillSendEnteredMessage
 													  object:chat
 													userInfo:nil];
 
+			outgoingAttributedString = [attributedString copy];
 			message = [AIContentMessage messageInChat:chat
 										   withSource:account
 										  destination:[chat listObject]
 												 date:nil //created for us by AIContentMessage
 											  message:outgoingAttributedString
 											autoreply:NO];
-			
+			[outgoingAttributedString release];
+
 			if([[adium contentController] sendContentObject:message]){
 				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage 
 														  object:chat
