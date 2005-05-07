@@ -178,6 +178,7 @@ typedef enum {
 
 //Private
 - (void)initController;
+- (void)beginClosing;
 - (void)closeController;
 
 @end
