@@ -535,29 +535,8 @@ replaceNotInsertMenuItem:;
 #pragma unused(outlineView)
 	id result = nil;
 
-	NSString *identifier = [col identifier];
-	if([identifier isEqualToString:@"icon"]) {
-		result = [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON];
-		if(!result) {
-			NSURL *content = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
-			if([content respondsToSelector:@selector(scheme)]) {
-				NSString *URLScheme = [content scheme];
-				result = [NSImage iconForURLScheme:URLScheme];
-			} else {
-				//probably a group
-				result = [NSImage folderIcon];
-			}
-			if(!result) result = [NSImage iconForURLScheme:ADIUM_GENERIC_ICON_SCHEME];
-		}
-	} else if([identifier isEqualToString:@"name"]) {
-		result = [item objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
-		if(!result) {
-			NSFont *font = [NSFont systemFontOfSize:[NSFont smallSystemFontSize]];
-			font = [[NSFontManager sharedFontManager] convertFont:font toHaveTrait:NSItalicFontMask];
-			NSDictionary *attrs = [NSDictionary dictionaryWithObject:font forKey:NSFontAttributeName];
-			result = [[[NSAttributedString alloc] initWithString:@"untitled" attributes:attrs] autorelease];
-		}
-	} else if([identifier isEqualToString:@"uri"]) {
+	//for supply of the icon/name column, see -outlineView:willDisplayCell:forTableColumn:item:.
+	if([[col identifier] isEqualToString:@"uri"]) {
 		NSURL *content = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
 		if([content respondsToSelector:@selector(absoluteString)]) {
 			result = [content absoluteString];
@@ -575,6 +554,35 @@ replaceNotInsertMenuItem:;
 
 #pragma mark -
 #pragma mark NSOutlineView delegate conformance
+
+- (void)outlineView:(NSOutlineView *)thisOutlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
+{
+	if([[tableColumn identifier] isEqualToString:@"name"]) {
+		NSMutableDictionary *dict = [[NSMutableDictionary alloc] initWithDictionary:item];
+
+		NSImage *image = [item objectForKey:ADIUM_BOOKMARK_DICT_FAVICON];
+		if(!image) {
+			NSURL *content = [item objectForKey:ADIUM_BOOKMARK_DICT_CONTENT];
+			if([content respondsToSelector:@selector(scheme)]) {
+				NSString *URLScheme = [content scheme];
+				image = [NSImage iconForURLScheme:URLScheme];
+			} else {
+				//probably a group
+				image = [NSImage folderIcon];
+			}
+			if(!image) image = [NSImage iconForURLScheme:ADIUM_GENERIC_ICON_SCHEME];
+			[dict setObject:image forKey:ADIUM_BOOKMARK_DICT_FAVICON];
+		}
+		[image setFlipped:YES];
+		[image setScalesWhenResized:YES];
+		float rowHeight = [thisOutlineView rowHeight];
+		[image setSize:NSMakeSize(rowHeight, rowHeight)];
+
+		[cell setObjectValue:dict];
+
+		[dict release];
+	}
+}
 
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {

@@ -84,6 +84,36 @@
 			settings = {
 			};
 		};
+		0786F725082CCB0900B8F447 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIBookmarkCell.h;
+			path = Source/AIBookmarkCell.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0786F726082CCB0900B8F447 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIBookmarkCell.m;
+			path = Source/AIBookmarkCell.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		0786F727082CCB0900B8F447 = {
+			fileRef = 0786F725082CCB0900B8F447;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		0786F728082CCB0900B8F447 = {
+			fileRef = 0786F726082CCB0900B8F447;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		07A44FE3082752A700B76F11 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -691,6 +721,8 @@
 				07F8ACEA08265350009CCBB5,
 				07F8ACEB08265350009CCBB5,
 				07F8AD0808265409009CCBB5,
+				0786F725082CCB0900B8F447,
+				0786F726082CCB0900B8F447,
 			);
 			isa = PBXGroup;
 			name = Classes;
@@ -836,6 +868,7 @@
 				07F8ACFF08265350009CCBB5,
 				07F8ACF208265350009CCBB5,
 				073A5E28082BC33200723477,
+				0786F727082CCB0900B8F447,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -873,6 +906,7 @@
 				07F8AD0408265350009CCBB5,
 				07F8AD0608265350009CCBB5,
 				073A5E29082BC33200723477,
+				0786F728082CCB0900B8F447,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
