@@ -212,7 +212,7 @@
     [inTextEntryView setTypingAttributes:attributes];
 
     //Apply the attributes to the existing content
-    contents = [[inTextEntryView attributedString] mutableCopy];
+    contents = [[inTextEntryView textStorage] mutableCopy];
     [contents setAttributes:attributes range:NSMakeRange(0,[contents length])];
     [inTextEntryView setAttributedString:contents];
 	[contents release];
