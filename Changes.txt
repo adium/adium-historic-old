@@ -1,6 +1,6 @@
 				Adium X Version History
 				-----------------------
-Version 0.81
+Version 0.81 (06 May 2005)
 - Added accounts back to the File menu, fixing the Actions submenus in the process
 - Added support for tooltips in the Status menu
 - Added support for automatic ZIP compression of folders and bundles when they are selected for file transfer
@@ -17,7 +17,7 @@ Version 0.81
 - (Sametime) Updated to meanwhile-0.4.1 and gaim-meanwhile-1.2.2, adding file transfer support
 - Updated Danish, Dutch, French, Italian, and Traditional Chinese translations
 
-Version 0.80 (5/2/2005)
+Version 0.80 (02 May 2005)
 
 - Complete Status system rewrite, with support for all status states on all protocols (including Available messages and Invisible status)
 - Improved the Events system, with new triggering events, new actions, and per-contact and per-group control over voice and pitch for speech
@@ -46,10 +46,10 @@ Protocol-specific changes:
 - Many, many other bug and leak fixes, performance enchancements, and improvements.
 	- For a full list of changes, see http://www.adiumx.com/Adium0.80-fullchanges.txt
 
-Version 0.77 (2/18/2005)
+Version 0.77 (18 February 2005)
 - Corrected security issue wherein keychain-stored passwords were leaked in memory after retrieval
-- Corrected a security issue which could have allowed another user with root access to your 
-	machine and specific knowledge of the Adium binary to extract instant 
+- Corrected a security issue which could have allowed another user with root access to your
+	machine and specific knowledge of the Adium binary to extract instant
 	messaging passwords while Adium was running
 - Improved support for decoding of HTML COLOR tags
 - Fixed a crash in the Log Viewer in certain situations
@@ -60,7 +60,7 @@ Version 0.77 (2/18/2005)
 - (AIM) Improved support for Japanese text in AIM group chats
 - Updated to libgaim 1.1.3, which corrects 2 security issues (see http://gaim.sf.net/security/)
 
-Version 0.76 (1/30/2005)
+Version 0.76 (30 January 2005)
 - Fixed a crash on load in OS X 10.2.0 through 10.2.6 without Safari
 - Fixed a crash on quit in OS X 10.2.x
 - Fixed a crash in the Emoticons preferences
@@ -68,21 +68,21 @@ Version 0.76 (1/30/2005)
 - Fixed a crash related to corrupt font files
 - Improved Novell GroupWise connection handling to handle invalid password and 'logged on from another workstation' errors
 
-Version 0.75.1 (1/24/2005)
+Version 0.75.1 (24 January 2005)
 - Fixed a crash when joining a group chat
 
 Version 0.75
 - Fixed a crash on launch
 - Fixed a longstanding crash when accessing stored passwords
 - Fixed a rare lockup condition when sending messages
-- Fixed issues with Adium when running on a system with a concurrent Gaim installation 
+- Fixed issues with Adium when running on a system with a concurrent Gaim installation
 - Fixed an issue with the fast user switching away message remaining after a relaunch
 - Fixed an issue with receiving messages containing certain characters followed by a semicolon
 - Fixed an issue with Command-I performing Show Contact's Info instead of Italics in message windows in certain situations
 - Improved connection speed, particularly on AIM accounts with long buddy lists
 - Updated to libgaim 1.1.2
 
-Version 0.74 (1/5/2005)
+Version 0.74 (05 January 2005)
 - Fixed issues causing newly added contacts to appear twice in certain situations
 - Fixed a rare crash when opening the Log Viewer
 - Fixed a rare issue causing blank or (null) contacts to appear
@@ -91,7 +91,7 @@ Version 0.74 (1/5/2005)
 - (Sametime) Fixed issues with preferences for contacts with '/' in their LDAP strings
 - Improved emoticon display in preferences and menus to sort emoticons alphabetically
 
-Version 0.73 (12/26/2004)
+Version 0.73 (26 December 2004)
 - Fixed issues with leading/trailing newlines for contact list Extended Status display
 - Fixed issues with applescript filters messaging applications which have been quit and relaunched
 - Fixed issues with custom dock icon selections not being reflected in the Finder and the Dock
@@ -111,10 +111,10 @@ Version 0.73 (12/26/2004)
 - Improved logging of autoresponses
 - Updated to libgaim 1.1.1
 
-Version 0.72 (11/16/2004)
+Version 0.72 (16 November 2004)
 - Fixed major stability issues involving Applescript filters
 - Fixed issues with erroneous autolinkification of text with multiple periods
-- Fixed issues with automatic away after idle 
+- Fixed issues with automatic away after idle
 - Fixed issues with manual ordering of contacts
 - Fixed a crash when deleting logs
 - Fixed a crash when selecting Undo in the Enter Away Message window
@@ -129,8 +129,8 @@ Version 0.72 (11/16/2004)
 - (MSN) Fixed a new sporadic crash
 - Updated to libgaim 1.0.3
 
-Version 0.71 (11/01/2004)
-- Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings 
+Version 0.71 (01 November 2004)
+- Fixed issues with "Systemwide HTTP/SOCKS4/SOCKS5" proxy settings
 - Fixed issues with automatic reconnection of accounts after sleeping
 - Fixed issues with tooltip display after opening a message window
 - Fixed issues with parsing of log dates in certain situations
@@ -145,12 +145,12 @@ Version 0.71 (11/01/2004)
 - Improved Log Viewer stability and responsiveness while indexing
 - Improved Rendezvous performance
 - Updated glib to avoid a potential buffer overflow
-- Updated to libgaim 1.0.2, which fixes 3 potential security problems (More information is available here: http://gaim.sf.net/security/)  
+- Updated to libgaim 1.0.2, which fixes 3 potential security problems (More information is available here: http://gaim.sf.net/security/)
 
-Version 0.70 (10/18/2004)
+Version 0.70 (18 October 2004)
 Services
-- Added Rendezvous support (iChat compatible) 
-- Added Zephyr support (on properly configured machines) 
+- Added Rendezvous support (iChat compatible)
+- Added Zephyr support (on properly configured machines)
 - (MSN) Display names are no longer truncated
 - (MSN) Added the option to treat display names as status
 - (MSN) Added support for conversation closed and timed-out messages
@@ -180,7 +180,7 @@ Messages and Chat
 - Improved behavior of typing notifications
 - Improved copy-to-clipboard behavior of the Minimal message style
 - Basic file transfer messasges (send, receive) now display in the message window
-- Updated built in MSN emoticon set to the correct key equivalents 
+- Updated built in MSN emoticon set to the correct key equivalents
 
 General Performance and Improvements
 - Contacts with unviewed content now display in the system menu
@@ -287,7 +287,7 @@ Other Fixes
 - Fixed several major memory leaks
 
 
-Version 0.63 (7/23/2004)
+Version 0.63 (23 July 2004)
 - Added support for the Sametime protocol
 - Adium will no longer unhide when new messages are received
 - New message windows now appear behind existing windows
@@ -336,7 +336,7 @@ Fixes:
 - Fixed several theme preference crashes
 
 
-Version 0.62 (7/06/2004)
+Version 0.62 (06 July 2004)
 - Added many additional options for custom status sorting
 - Added global events for file transfer (request, began, complete, canceled)
 - Added option for systemwide SOCKS4 support in the account preferences
@@ -372,7 +372,7 @@ Version 0.62 (7/06/2004)
 - Performance improvements
 
 
-Version 0.61 (6/25/2004)
+Version 0.61 (25 June 2004)
 - Added support for MSN Buddy Icons
 - Added support for Yahoo! Buddy Icons
 - Added support for editing an account's Buddy Icon (for AIM, MSN, and Yahoo!)
@@ -412,7 +412,7 @@ Version 0.61 (6/25/2004)
 - Launch time improvements
 
 
-Version 0.60 (6/16/2004)
+Version 0.60 (16 June 2004)
 - Added script for inserting an iTunes link for the playing song
 - Info window now shows to which accounts a contact has been added
 - Bookmark menu now only shows bookmarks for the default web browser
@@ -437,7 +437,7 @@ Version 0.60 (6/16/2004)
 - Several other crash fixes and improvements
 
 
-Version 0.59 (6/11/2004)
+Version 0.59 (11 June 2004)
 - Added support for changing user icons via the Get Info window
 - Added preferences for tab switching hotkeys
 - Restored Cmd-I shortcut for Get Info window
@@ -464,7 +464,7 @@ Version 0.59 (6/11/2004)
 - Many other small fixes and improvements
 
 
-Version 0.58 (6/04/2004)
+Version 0.58 (04 June 2004)
 - Added support for server-side AIM buddy comments
 - Added support for server-side AIM and Novell buddy aliases
 - Added automatic use of Safari, Internet Explorer, Mozilla, Camino, FireFox, and OmniWeb bookmarks
@@ -502,7 +502,7 @@ Version 0.58 (6/04/2004)
 - Many other small fixes and improvements
 
 
-Version 0.57 (5/21/2004)
+Version 0.57 (21 May 2004)
 - Added contact notes
 - Added delete contact contextual menu item
 - Added support for addBuddy links
@@ -544,7 +544,7 @@ Version 0.57 (5/21/2004)
 - Fixed several memory leaks
 
 
-Version 0.56 (5/14/2004)
+Version 0.56 (14 May 2004)
 - Added 'Insert Emoticon' to the Edit menu, contextual menus
 - Added support for viewing the correct status of yahoo contacts
 - Improved Event Notifications (Formerly Event Bezel), available globally or as a contact alert.
@@ -562,7 +562,7 @@ Version 0.56 (5/14/2004)
 - Fixed several memory leaks
 
 
-Version 0.55 (5/8/2004)
+Version 0.55 (08 May 2004)
 - Fixed a crash when connecting to a Yahoo account with privacy settings enabled
 - Fixed formatting when sending messages to oneself via MSN
 - Fixed a crash when editing links that are in the view at load time
@@ -575,7 +575,7 @@ Version 0.55 (5/8/2004)
 - Improved menu performance
 
 
-Version 0.54 (5/7/2004)
+Version 0.54 (07 May 2004)
 - Added support for displaying strikethrough, subscript, and superscript text
 - Added support for basic formatting in MSN messages
 - Added an option when sorting by status to sort within the status groups alphabetically by last name
@@ -584,7 +584,7 @@ Version 0.54 (5/7/2004)
 - Drastically reworked the web viewer for the SQL Logger.
 - Adding new message styles no longer requires restarting Adium
 - Fixed group dragging
-- Fixed the remaining problems with tooltips appearing unnecessarily 
+- Fixed the remaining problems with tooltips appearing unnecessarily
 - Fixed Webkit Message View for Japanese and Chinese users (the fix in 0.53 was incomplete)
 - Fixed Retro message style and added bubbleless variants, completing the classic Adium message view kit
 - Fixed issues related to custom links
@@ -601,7 +601,7 @@ Version 0.54 (5/7/2004)
 - Significant performance improvements, particularly during sign on
 
 
-Version 0.53 (4/30/2004)				
+Version 0.53 (30 April 2004)
 - Added Webkit Message View (6 distinct styles, or create your own!  Customizable fonts and backgrounds!) [10.3 only]
 - Added "Novell GroupWise" protocol support
 - Added "Yahoo! Japan" protocol support
@@ -643,15 +643,15 @@ Version 0.53 (4/30/2004)
 - Fixed an SQL Logger crash when opening the preferences
 - Fixed an SQL Logger issue with the same screenname on multiple services.
 - Fixed a bug with Japanese and Chinese text in the webkit message view
-- Scripts, themes, and sounds can be put in all three 
-	Library/Application Support folders 
+- Scripts, themes, and sounds can be put in all three
+	Library/Application Support folders
 	(Home/L/AS/Adium 2.0, /L/AS/Adium 2.0, and /Network/L/AS/Adium 2.0).
 - Scripts, themes, sounds in the Adium application bundle no longer override those in the Application Support folders
 - Performance and launch time improvements
 - Decreased binary size
 
 
-Version 0.52 (4/16/2004)
+Version 0.52 (16 April 2004)
 - Message windows now display a customizable number of lines from the previous conversation when opened
 - Added proxy connect options to Yahoo! accounts
 - Added proxy connect, host, port, connect via, resource, and encryption options to Jabber accounts
@@ -680,7 +680,7 @@ Version 0.52 (4/16/2004)
 - Cosmetic improvements to the account preferences
 
 
-Version 0.51 (4/08/2004)
+Version 0.51 (08 April 2004)
 - Adium now works in 10.2 (Fixed crash on launch in 10.2)
 - Fixed a crash when opening preference window
 - Fixed a crash in the theme preferences
@@ -690,5 +690,5 @@ Version 0.51 (4/08/2004)
 - Cleaned up the 'auto-away' preferences
 
 
-Version 0.50 (4/06/2004)
+Version 0.50 (06 April 2004)
 - Initial Release
