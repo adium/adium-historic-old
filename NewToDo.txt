@@ -1,9 +1,16 @@
 Adium interface and user experience improvements
 ------------------------------------------------
 
-Use an auto-extracting disk image- Nobody wants to read our readme or boring license- Users have trouble installing from the dmg window because (depending on their setup) it’s tricky to get the application folder open and ready for a drop since the window won’t spawn a new window when you click its icon.
+Use an auto-extracting disk image
+- Nobody wants to read our readme or boring license
+- Users have trouble installing from the dmg window because (depending on their setup) it’s tricky to get the application folder open and ready for a drop since the window won’t spawn a new window when you click its icon.
 
-Add a setup assistant- Throwing new users into our preferences is bad- We need a chance to explain to users that they need an account on a service in order to use that service, a setup assistant is the perfect place for this.- Giving novice users some basic options and doing a bit of self advertising (see iChat’s assistant) is also a good idea.
+
+Add a setup assistant
+- Throwing new users into our preferences is bad
+- We need a chance to explain to users that they need an account on a service in order to use that service, a setup assistant is the perfect place for this.
+- Giving novice users some basic options and doing a bit of self advertising (see iChat’s assistant) is also a good idea.
+
 
 Remove auto-connect
 - Auto-connect is clashing with out state memory system
@@ -12,8 +19,11 @@ Remove auto-connect
 
 <<under discussion>>
 
-Clarify the account checkboxes- It is not intuitive what they do.  If you think they are, then why do users always ask us what they’re for? Yeah, i think they are... but good point.
-Remove tab sorting
+Clarify the account checkboxes
+- It is not intuitive what they do.  If you think they are, then why do users always ask us what they’re for? Yeah, i think they are... but good point.
+
+
+Remove tab sorting
 - Nobody uses this, and it doesn't even work right
 
 Pluginize sound output device control.
@@ -29,7 +39,7 @@ Move message view custom background, font controls to a customize sheet
 Pluginize the floating away status window
 
 Pluginize the fast user switch state change preference
-    - Default to setting the user as generic away, not away with a message?  The message was the main problem for lots of users I think.  I think changing their status at all is a bit annoying..  I can see if somebody might want it though, but honestly I could care less and would rather stay as I left it.
+	- Default to setting the user as generic away, not away with a message?  The message was the main problem for lots of users I think.  I think changing their status at all is a bit annoying..  I can see if somebody might want it though, but honestly I could care less and would rather stay as I left it.
 It's a lot less annoying than changing to offline.  Agreed.
 
 
@@ -73,7 +83,7 @@ Improve emoticons customize
 
 Remove dock icons show all sheet
 - We do not need this clutter
-    [Evan: but it's so pretty!]
+	[Evan: but it's so pretty!]
 
 Add group specific view controls to the contact list
 
@@ -100,7 +110,7 @@ Better bookmarks importer
 	▾ Safari
 		Adium X			http://www.adiumx.com/
 		Adium CIA		http://cia.navi.cx/stats/project/adium
-    ▸ OmniWeb
+	▸ OmniWeb
 	▾ Camino
 		Growl			http://growl.info
 		Growl CIA		http://cia.navi.cx/stats/project/growl
