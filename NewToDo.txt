@@ -1,5 +1,5 @@
 Adium interface and user experience improvements
--------------------------------------------------
+------------------------------------------------
 
 Use an auto-extracting disk image
 - Nobody wants to read our readme or boring license
