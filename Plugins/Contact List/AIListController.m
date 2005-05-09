@@ -42,7 +42,6 @@ typedef enum {
 } DOCK_BOTTOM_TYPE;
 
 @interface AIListController (PRIVATE)
-- (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
 - (void)contactListChanged:(NSNotification *)notification;
 @end
 

@@ -43,4 +43,6 @@
 - (void)setAutoresizeVertically:(BOOL)flag;
 - (void)setForcedWindowWidth:(int)inWidth;
 
+- (NSRect)_desiredWindowFrameUsingDesiredWidth:(BOOL)useDesiredWidth desiredHeight:(BOOL)useDesiredHeight;
+
 @end
