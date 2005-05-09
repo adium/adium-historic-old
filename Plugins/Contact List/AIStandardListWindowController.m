@@ -176,6 +176,12 @@
 	[contactListController contactListDesiredSizeChanged];
 }
 
+- (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
+{
+	return [contactListController _desiredWindowFrameUsingDesiredWidth:YES
+														 desiredHeight:YES];
+}
+
 #pragma mark Dock-like hiding
 
 - (AIRectEdgeMask)slidableEdgesAdjacentToWindow
