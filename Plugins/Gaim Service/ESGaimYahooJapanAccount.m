@@ -18,13 +18,6 @@
 
 @implementation ESGaimYahooJapanAccount
 
-- (void)createNewGaimAccount
-{
-	[super createNewGaimAccount];
-
-	gaim_account_set_bool(account, "yahoojp", TRUE);
-}
-
 - (void)configureGaimAccount
 {
 	[super configureGaimAccount];
@@ -36,6 +29,8 @@
 	if (hostName && [hostName length]){
 		gaim_account_set_string(account, "serverjp", [hostName UTF8String]);
 	}
+
+	gaim_account_set_bool(account, "yahoojp", TRUE);
 }
 
 @end
