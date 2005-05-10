@@ -85,11 +85,11 @@
 		[window setTitle:AILocalizedString(@"Xtra Download",nil)];
 		[window makeKeyAndOrderFront:self];
 
-		urlToDownload = [[NSURL alloc] initWithScheme:@"http" host:[url host] path:[url path]];
-		dest = [NSTemporaryDirectory() stringByAppendingPathComponent:[[urlToDownload path] lastPathComponent]];
+		urlToDownload = [[NSURL alloc] initWithString:[NSString stringWithFormat:@"%@://%@/%@?%@", @"http", [url host], [url path], [url query]]];
+//		dest = [NSTemporaryDirectory() stringByAppendingPathComponent:[[urlToDownload path] lastPathComponent]];
 
 		download = [[NSURLDownload alloc] initWithRequest:[NSURLRequest requestWithURL:urlToDownload] delegate:self];
-		[download setDestination:dest allowOverwrite:YES];
+//		[download setDestination:dest allowOverwrite:YES];
 
 		[urlToDownload release];
 
@@ -108,6 +108,13 @@
 	downloadSize = [response expectedContentLength];
 	[progressBar setMaxValue:(long long)downloadSize];
 	[progressBar setDoubleValue:0.0];
+}
+
+- (void)download:(NSURLDownload *)connection decideDestinationWithSuggestedFilename:(NSString *)filename
+{
+	dest = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+	[download setDestination:dest allowOverwrite:YES];
+	NSLog(@"decided, based on suggested filename, on %@", dest);
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(unsigned)length
@@ -142,6 +149,8 @@
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
 
+	NSLog(@"finished download of %@", lastPathComponent);
+	
 	if([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]){
 		NSTask			*uncompress, *untar;
 
@@ -190,10 +199,12 @@
 
 		[unzip setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 
+		NSLog(@"going to unzip...");
 		[unzip launch];
 		[unzip waitUntilExit];
 		[unzip release];
-
+		NSLog(@"done unzipping...");
+		
 		//Now get the name of the unzipped file/directory, which will be output in a format like this:
 		/*
 		 Archive:  Get Info Window Layout.ListLayout.zip
@@ -213,13 +224,15 @@
 			nil]];
 		[unzip setStandardOutput:outputPipe];
 		
+		NSLog(@"going to determine filename...");
 		[unzip launch];
-		[unzip waitUntilExit];
-		[unzip release];
-
 		output = [outputPipe fileHandleForReading];
 		NSString	*outputString = [[[NSString alloc] initWithData:[output readDataToEndOfFile]
 														   encoding:NSASCIIStringEncoding] autorelease];
+		[unzip waitUntilExit];
+		[unzip release];
+		NSLog(@"done determining filename...");
+
 		NSString	*outputLine = [[outputString componentsSeparatedByString:@"\n"] objectAtIndex:3];
 
 		NSArray		*outputComponents = [outputLine componentsSeparatedByString:@" "];
