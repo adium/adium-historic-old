@@ -114,7 +114,6 @@
 {
 	dest = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
 	[download setDestination:dest allowOverwrite:YES];
-	NSLog(@"decided, based on suggested filename, on %@", dest);
 }
 
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(unsigned)length
@@ -149,8 +148,6 @@
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
 
-	NSLog(@"finished download of %@", lastPathComponent);
-	
 	if([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]){
 		NSTask			*uncompress, *untar;
 
@@ -199,11 +196,9 @@
 
 		[unzip setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 
-		NSLog(@"going to unzip...");
 		[unzip launch];
 		[unzip waitUntilExit];
 		[unzip release];
-		NSLog(@"done unzipping...");
 		
 		//Now get the name of the unzipped file/directory, which will be output in a format like this:
 		/*
@@ -224,14 +219,12 @@
 			nil]];
 		[unzip setStandardOutput:outputPipe];
 		
-		NSLog(@"going to determine filename...");
 		[unzip launch];
 		output = [outputPipe fileHandleForReading];
 		NSString	*outputString = [[[NSString alloc] initWithData:[output readDataToEndOfFile]
 														   encoding:NSASCIIStringEncoding] autorelease];
 		[unzip waitUntilExit];
 		[unzip release];
-		NSLog(@"done determining filename...");
 
 		NSString	*outputLine = [[outputString componentsSeparatedByString:@"\n"] objectAtIndex:3];
 
