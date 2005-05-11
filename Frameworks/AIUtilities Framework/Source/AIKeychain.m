@@ -64,7 +64,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],(void **)&passwordBytes,&passwordLength,NULL);
 	if(ret != noErr) {
 		//XXX localize me!
-		NSLog(@"could not get password from keychain for account %@ on service %@: GetPasswordKeychain returned %li", account, service, (long)err);
+		NSLog(@"could not get password from keychain for account %@ on service %@: GetPasswordKeychain returned %li", account, service, (long)ret);
 	} else {
 		NSData	*passwordData = [AIWiredData dataWithBytes:passwordBytes length:passwordLength];
 		passwordString = [[[AIWiredString alloc] initWithData:passwordData
@@ -109,7 +109,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 		success = (ret == noErr);
 		if(!success) {
 			//XXX localize me!
-			NSLog(@"could not add password in keychain for account %@ on service %@: SecKeychainAddInternetPassword returned %li", account, service, (long)err);
+			NSLog(@"could not add password in keychain for account %@ on service %@: SecKeychainAddInternetPassword returned %li", account, service, (long)ret);
 		}
 	}else if (ret == noErr){
 		//Item already present, so change it to the new password
@@ -121,7 +121,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 		success = (ret == noErr);
 		if(!success) {
 			//XXX localize me!
-			NSLog(@"could not change password in keychain for account %@ on service %@: SecKeychainItemModifyAttributesAndData returned %li", account, service, (long)err);
+			NSLog(@"could not change password in keychain for account %@ on service %@: SecKeychainItemModifyAttributesAndData returned %li", account, service, (long)ret);
 		}
 	}
 
