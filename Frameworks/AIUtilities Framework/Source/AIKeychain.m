@@ -71,6 +71,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 													 encoding:NSUTF8StringEncoding] autorelease];
 		if([passwordString length] == 0) passwordString = nil;
 	}
+
 	if(passwordBytes)
 		SecKeychainItemFreeContent(/*attrList*/ NULL, passwordBytes);
 
