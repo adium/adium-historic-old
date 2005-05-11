@@ -2,7 +2,7 @@
     IBClasses = (
         {CLASS = AIContactInfoPane; LANGUAGE = ObjC; SUPERCLASS = AIModularPane; }, 
         {
-            ACTIONS = {setAlias = id; setNotes = id; }; 
+            ACTIONS = {selectedEncryptionPreference = id; setAlias = id; setNotes = id; }; 
             CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
