@@ -43,16 +43,16 @@
 {
 	NSString	*connInfo;
 	id			tmp;
-	
+
     //Install some prefs.
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_SQL_LOGGING];
     advancedPreferences = [[JMSQLLoggerAdvancedPreferences preferencePane] retain];
-    
+
 	//Watch for pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SQL_LOGGING];
-	
+
 	if([username isEqualToString:@""] ) {
 		username = nil;
 	}
@@ -61,8 +61,8 @@
 		database = nil;
 	}
 
-	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'", 
-						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(), 
+	connInfo = [NSString stringWithFormat:@"host=\'%@\' port=\'%@\' user=\'%@\' password=\'%@\' dbname=\'%@\' sslmode=\'prefer\'",
+						(tmp = url) ? tmp: @"", (tmp = port) ? tmp: @"", (tmp = username) ? tmp: NSUserName(),
 				   (tmp = password) ? tmp: @"", (tmp = database) ? tmp: NSUserName()];
 
     conn = PQconnectdb([connInfo cString]);
@@ -75,6 +75,7 @@
 
 - (void)uninstallPlugin
 {
+        PQfinish(conn);
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
@@ -82,49 +83,45 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	bool			newLogValue;
-	
+
 	newLogValue = [[prefDict objectForKey:KEY_SQL_LOGGER_ENABLE] boolValue];
 	username = [prefDict objectForKey:KEY_SQL_USERNAME];
 	url = [prefDict objectForKey:KEY_SQL_URL];
 	port = [prefDict objectForKey:KEY_SQL_PORT];
 	database = [prefDict objectForKey:KEY_SQL_DATABASE];
 	password = [prefDict objectForKey:KEY_SQL_PASSWORD];
-	
+
 	if(newLogValue != observingContent){
 		observingContent = newLogValue;
-		
+
 		if(!observingContent){ //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
-			
+
 		}else{ //Start Logging
-			[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];		
+			[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
 		}
 	}
-}
-
-- (void)uninstallPlugin {
-    PQfinish(conn);
 }
 
 //Content was sent or recieved
 - (void)adiumSentOrReceivedContent:(NSNotification *)notification
 {
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
-    
+
     //Message Content
     if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
         AIChat		*chat = [notification object];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];
         AIAccount	*account = [chat account];
-        
+
         NSString	*srcDisplay = nil;
         NSString	*destDisplay = nil;
         NSString	*destUID = nil;
         NSString	*srcUID = nil;
         NSString	*destSrv = nil;
         NSString	*srcSrv = nil;
-        
+
         if ([[account UID] isEqual:[source UID]]) {
 #warning I think it would be better to use the destination of the message as a test here, but I am not sure.
             destUID  = [chat name];
@@ -155,7 +152,7 @@
             srcSrv = [[[chat account] service] serviceID];
             destSrv = srcSrv;
         }
-        
+
         if(account && source){
             //Log the message
             [self _addMessage:[[content message] attributedStringByConvertingAttachmentsToStrings]
@@ -181,33 +178,33 @@
 {
     NSString	*sqlStatement;
     NSMutableString 	*escapeHTMLMessage;
-    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO 
+    escapeHTMLMessage = [NSMutableString stringWithString:[AIHTMLDecoder encodeHTML:message headers:NO
 																		   fontTags:NO
-																 includingColorTags:NO  closeFontTags:NO 
-																		  styleTags:YES closeStyleTagsOnFontChange:NO 
+																 includingColorTags:NO  closeFontTags:NO
+																		  styleTags:YES closeStyleTagsOnFontChange:NO
 																	 encodeNonASCII:YES encodeSpaces:YES
 																		 imagesPath:nil
 																  attachmentsAsText:YES attachmentImagesOnlyForSending:NO
 																	 simpleTagsOnly:NO
 																	 bodyBackground:NO]];
-	
+
     char	escapeMessage[[escapeHTMLMessage length] * 2 + 1];
     char	escapeSender[[sourceName length] * 2 + 1];
     char	escapeRecip[[destName length] * 2 + 1];
     char	escapeSendDisplay[[sendDisp length] * 2 + 1];
     char	escapeRecDisplay[[destDisp length] * 2 + 1];
-    
+
     PGresult *res;
-        
+
     PQescapeString(escapeMessage, [escapeHTMLMessage UTF8String], [escapeHTMLMessage length]);
     PQescapeString(escapeSender, [sourceName UTF8String], [sourceName length]);
     PQescapeString(escapeRecip, [destName UTF8String], [destName length]);
     PQescapeString(escapeSendDisplay, [sendDisp UTF8String], [sendDisp length]);
     PQescapeString(escapeRecDisplay, [destDisp UTF8String], [destDisp length]);
-    
-    sqlStatement = [NSString stringWithFormat:@"insert into im.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')", 
+
+    sqlStatement = [NSString stringWithFormat:@"insert into im.message_v (sender_sn, recipient_sn, message, sender_service, recipient_service, sender_display, recipient_display) values (\'%s\',\'%s\',\'%s\', \'%@\', \'%@\', \'%s\', \'%s\')",
     escapeSender, escapeRecip, escapeMessage, s_service, r_service, escapeSendDisplay, escapeRecDisplay];
-    
+
     res = PQexec(conn, [sqlStatement UTF8String]);
     if (!res || PQresultStatus(res) != PGRES_COMMAND_OK) {
         NSLog(@"%s / %s\n%@", PQresStatus(PQresultStatus(res)), PQresultErrorMessage(res), sqlStatement);
@@ -215,14 +212,14 @@
         if (res) {
             PQclear(res);
         }
-        
+
         if (PQresultStatus(res) == PGRES_NONFATAL_ERROR) {
             //Disconnect and reconnect.
             PQfinish(conn);
             conn = PQconnectdb("");
             if (PQstatus(conn) == CONNECTION_BAD)
             {
-                [[adium interfaceController] handleErrorMessage:@"Database reconnect failed.." 
+                [[adium interfaceController] handleErrorMessage:@"Database reconnect failed.."
 												withDescription:@"Check your settings and try again."];
                 NSLog(@"%s", PQerrorMessage(conn));
             } else {
