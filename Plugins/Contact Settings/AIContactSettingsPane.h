@@ -23,7 +23,7 @@
 	IBOutlet	ESDelayedTextField		*textField_notes;
 	IBOutlet	NSPopUpButton			*popUp_encryption;
 
-	AIListObject		*listObject;
+	AIListObject						*listObject;
 }
 
 - (IBAction)setAlias:(id)sender;
