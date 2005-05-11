@@ -118,7 +118,6 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 													  [passwordData length],	// length of password
 													  [passwordData bytes]		// pointer to password data
 													  );
-		
 		success = (ret == noErr);
 		if(!success) {
 			//XXX localize me!
