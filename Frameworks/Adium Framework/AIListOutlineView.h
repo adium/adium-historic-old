@@ -44,12 +44,14 @@ typedef enum {
 	NSColor				*_rowColorWithOpacity;
 	
 	BOOL				ignoreMinimumWidth;
+	BOOL				desiredHeightPadding;
 }
 
 - (void)setDelegate:(id)delegate;
 - (int)desiredHeight;
 - (int)desiredWidth;
 - (void)setIgnoreMinimumWidth:(BOOL)inFlag;
+- (void)setDesiredHeightPadding:(int)inPadding;
 
 //Selection Hiding
 - (void)configureSelectionHidingForNewSuperview:(NSView *)newSuperview;

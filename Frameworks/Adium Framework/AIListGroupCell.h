@@ -23,6 +23,7 @@
 	NSColor		*backgroundColor;
 	NSColor		*gradientColor;
 	BOOL		drawsBackground;
+	BOOL		drawsGradientEdges;
 	
 	NSImage		*_gradient;
 	NSSize		_gradientSize;
@@ -33,10 +34,11 @@
 - (NSColor *)shadowColor;
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor;
 - (void)setDrawsBackground:(BOOL)inValue;
+- (void)setDrawsGradientEdges:(BOOL)inValue;
 - (NSImage *)cachedGradient:(NSSize)inSize;
 - (void)drawBackgroundGradientInRect:(NSRect)inRect;
 - (AIGradient *)backgroundGradient;
 - (void)flushGradientCache;
 - (NSColor *)flippyColor;
-
+	
 @end
