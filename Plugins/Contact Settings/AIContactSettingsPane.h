@@ -28,5 +28,6 @@
 
 - (IBAction)setAlias:(id)sender;
 - (IBAction)setNotes:(id)sender;
+- (IBAction)selectedEncryptionPreference:(id)sender;
 
 @end
