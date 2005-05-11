@@ -55,15 +55,17 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 	OSStatus			ret;
 	
 	//These will be filled in by GetPasswordKeychain
-	char				*passwordBytes = nil;
-	UInt32				passwordLength = nil;
+	char				*passwordBytes = NULL;
+	UInt32				passwordLength = 0;
 	
 	NSAssert((service && [service length] > 0),@"getPasswordFromKeychainForService: service wasn't acceptable!");
 	NSAssert((account && [account length] > 0),@"getPasswordFromKeychainForService: account wasn't acceptable!");
 	
 	ret = GetPasswordKeychain([service UTF8String],[account UTF8String],(void **)&passwordBytes,&passwordLength,NULL);
-	
-	if (ret == noErr){
+	if(ret != noErr) {
+		//XXX localize me!
+		NSLog(@"could not get password for account %@ on service %@: GetPasswordKeychain returned %li", account, service, (long)err);
+	} else {
 		NSData	*passwordData = [AIWiredData dataWithBytes:passwordBytes length:passwordLength];
 		passwordString = [[[AIWiredString alloc] initWithData:passwordData
 													 encoding:NSUTF8StringEncoding] autorelease];
