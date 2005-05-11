@@ -833,17 +833,6 @@
 }
 
 /*!
- * @brief Allow the system to sleep if it wants to
- *
- * Removes the hold on system sleep placed previously
- */
-- (void)allowSystemToSleep
-{
-    [[NSNotificationCenter defaultCenter] postNotificationName:AISystemContinueSleep_Notification
-														object:nil];	
-}
-
-/*!
  * @brief Remove the status objects from a listContact which we placed there
  *
  * Called for each contact to reduce our memory footprint after a contact signs off or an account disconnects.
@@ -914,13 +903,6 @@
 	
 	//Apply any changes
     [self notifyOfChangedStatusSilently:NO];
-
-	//Cancel our sleep hold timeout
-	[NSObject cancelPreviousPerformRequestsWithTarget:self
-											 selector:@selector(allowSystemToSleep)
-											   object:nil];
-	//And allow sleep
-	[self allowSystemToSleep];
 }
 
 /*!

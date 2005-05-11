@@ -19,7 +19,7 @@
 @protocol AIListObjectObserver;
 
 @interface ESAccountNetworkConnectivityPlugin : AIPlugin <AIListObjectObserver> {
-	
+	NSMutableSet			*accountsToConnect;
 }
 
 @end
