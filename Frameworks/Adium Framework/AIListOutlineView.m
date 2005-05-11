@@ -122,7 +122,7 @@
 // Returns our desired size
 - (int)desiredHeight
 {
-	int desiredHeight = [self totalHeight]+2;
+	int desiredHeight = [self totalHeight] + desiredHeightPadding;
 	return(desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT);
 }
 
@@ -150,6 +150,13 @@
 {
 	ignoreMinimumWidth = inFlag;
 }
+
+//Add padding to the desired height
+- (void)setDesiredHeightPadding:(int)inPadding
+{
+	desiredHeightPadding = inPadding;
+}
+
 
 //Background image ---------------------------------------------------------------
 //Draw our background image or color with transparency

@@ -284,6 +284,13 @@
 	theFont = [[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_FONT] representedFont];
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
+	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
+	if(windowStyle == WINDOW_STYLE_STANDARD){
+		[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
+	}else{
+		[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
+	}
+	
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED);
 	if(pillowsOrPillowsFittedWindowStyle){
@@ -301,10 +308,12 @@
 	//Mockie special cases.  For all other layouts we use fixed group spacing
 	if(windowStyle == WINDOW_STYLE_MOCKIE){
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-	}else{
-		//We want 2 pixels between each row.
+	}else if(windowStyle == WINDOW_STYLE_STANDARD){
+		//Force some spacing and draw a bordeer around our groups (This doesn't look good in borderless)
 		[groupCell setTopSpacing:1];
-		[groupCell setBottomSpacing:1];
+		[groupCell setLeftSpacing:1];
+		[groupCell setRightSpacing:1];
+		[groupCell setDrawsGradientEdges:YES];
 	}
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own

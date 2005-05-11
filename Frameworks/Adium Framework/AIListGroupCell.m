@@ -33,6 +33,7 @@
 	newCell->backgroundColor = [backgroundColor retain];
 	newCell->gradientColor = [gradientColor retain];
 	newCell->_gradient = [_gradient retain];
+	drawsGradientEdges = NO;
 	
 	return(newCell);
 }
@@ -98,6 +99,13 @@
 	//Reset gradient cache
 	[self flushGradientCache];
 }
+
+//
+- (void)setDrawsGradientEdges:(BOOL)inValue
+{
+	drawsGradientEdges = inValue;
+}
+
 
 
 //Sizing & Padding -----------------------------------------------------------------------------------------------------
@@ -253,6 +261,12 @@
 	}else{ //Seal the bottom
 		[backgroundColor set];
 		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y + inRect.size.height - 1, inRect.size.width, 1)];
+	}
+	
+	//Seal the edges
+	if(drawsGradientEdges){
+		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y, 1, inRect.size.height)];
+		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x+inRect.size.width-1, inRect.origin.y, 1, inRect.size.height)];
 	}
 }
 
