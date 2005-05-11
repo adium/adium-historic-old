@@ -25,11 +25,10 @@
 #import <IOKit/IOMessage.h>
 #import "AISleepNotification.h"
 
-
 void callback(void * x,io_service_t y,natural_t messageType,void * messageArgument);
 
 io_connect_t		root_port;
-int			holdSleep = 0;
+int					holdSleep = 0;
 long unsigned int	waitingSleepArgument;
 
 @implementation AISleepNotification

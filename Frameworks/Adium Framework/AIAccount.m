@@ -52,21 +52,10 @@
  * @brief Disconnect
  *
  * Disconnect the account, transitioning it into an offline state.
- *
- * System sleep is disallowed until we receive didDisconnect or a timeout occurs.
- * Subclasses should call [super disconnect] at the beginning of their implementation.  If disconnection is complete at
- * the end of the invocation, simply call [self didDisconnect] at the end. Otherwise, it should be called when the account
- * does complete disconnection.
  */
 - (void)disconnect
 {
-	//Hold sleep
-	[[NSNotificationCenter defaultCenter] postNotificationName:AISystemHoldSleep_Notification
-														object:nil];
-	//Allow sleep after a timeout
-	[self performSelector:@selector(allowSystemToSleep)
-			   withObject:nil
-			   afterDelay:10.0];
+
 }
 
 /*!
