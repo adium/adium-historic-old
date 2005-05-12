@@ -79,14 +79,14 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 - (void)raise
 {
 	if(!catchExceptions){
-		NSString	*theName = [self name];
+		NSString	*theName   = [self name];
 		NSString	*theReason = [self reason];
 
 		NSLog(@"Exception catching off: Did not catch %@ - %@",theName,theReason);
 		[super raise];
 	}else{
 		NSString	*theReason = [self reason];
-		NSString	*theName = [self name];
+		NSString	*theName   = [self name];
 		NSString	*backtrace = [self decodedExceptionStackTrace];
 
 		NSLog(@"Caught exception: %@ - %@",theName,theReason);
@@ -164,7 +164,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		NSString			*str;
 		
 		//We use two command line apps to decode our exception
-		str = [NSString stringWithFormat:@"\"%s\" -p %d %@ | tail -n +3 | head -n +%d | \"%s\" | cat -n",
+		str = [NSString stringWithFormat:@"%s -p %d %@ | tail -n +3 | head -n +%d | %s | cat -n",
 			[[[[NSBundle mainBundle] pathForResource:@"atos" ofType:nil] stringByEscapingForShell] fileSystemRepresentation], //atos arg 0
 			[[NSProcessInfo processInfo] processIdentifier], //atos arg 2 (argument to -p)
 			stackTrace, //atos arg 3..inf
@@ -175,12 +175,22 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		NSMutableData *data = [[NSMutableData alloc] init];
 
 		if(file) {
-			char	buffer[512];
-			size_t	length;
+			NSZone	*zone = [self zone];
 
-			while((length = fread(buffer, 1, sizeof(buffer), file))){
-				[data appendBytes:buffer length:length];
+			size_t	 bufferSize = getpagesize();
+			char	*buffer = NSZoneMalloc(zone, bufferSize);
+			if(!buffer) {
+				buffer = alloca(bufferSize = 512);
+				zone = NULL;
 			}
+
+			size_t	 amountRead;
+
+			while((amountRead = fread(buffer, sizeof(char), bufferSize, file))) {
+				[data appendBytes:buffer length:amountRead];
+			}
+
+			if(zone) NSZoneFree(zone, buffer);
 
 			pclose(file);
 		}
