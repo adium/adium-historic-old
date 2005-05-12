@@ -35,7 +35,8 @@
 //Configure the preference view
 - (void)viewDidLoad
 {
-	[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil withDefault:YES]];
+	[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self
+																		   withDefault:YES]];
 	[[popUp_encryption menu] setAutoenablesItems:NO];
 }
 
