@@ -4,21 +4,21 @@
  *
  * Written by Stephen Holt for Adium, released under the GPL
  *
- * Options used:	noyywrap            : act as if yywrap always returns 1
- *			8bit                : always force 8-bit chars.
- *			caseless            : case insensitive lexer
- *                      never-interactive   : prevents flex from including some calls to gettty() and such
- *                                          -- gives a slight performace gain.
- *			prefix=...          : replace YY_whatever with prefix - avoids symbol collisions
- *			debug               : turns on debugging output (string + accepting rule)
- *                                          -- only use while editing rules, and don't commit with this on
- *                                              (it generates a lot of unnecessary output and kills performace.)
+ *	Options used:	noyywrap            : act as if yywrap always returns 1
+ *					8bit                : always force 8-bit chars.
+ *					caseless            : case insensitive lexer
+ *					never-interactive   : prevents flex from including some calls to gettty() and such
+ *										  -- gives a slight performace gain.
+ *					prefix=...          : replace YY_whatever with prefix - avoids symbol collisions
+ *					debug               : turns on debugging output (string + accepting rule)
+ *										  -- only use while editing rules, and don't commit with this on
+ *										     (it generates a lot of unnecessary output and kills performace.)
  *
- * Variables used:      uint SHStringOffset : the position of the pointer, relative to the parent string
- *                                              incremented by yyleng at each yylex() call.
- *                      int SHValidShift    : Used only in CANONICAL start state
- *                                              ensures that yyleng reports whole length of the string,
- *                                              without a costly call to yymore().
+ *	Variables used:		uint SHStringOffset : the position of the pointer, relative to the parent string
+ *											  incremented by yyleng at each yylex() call.
+ *	               		 int SHValidShift	: Used only in CANONICAL start state
+ *											  ensures that yyleng reports whole length of the string,
+ *											  without a costly call to yymore().
  */
 #define YY_NO_UNPUT
 unsigned int SHStringOffset;
