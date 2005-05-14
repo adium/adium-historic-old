@@ -139,7 +139,7 @@
  */
 - (void)hostReachabilityChanged:(BOOL)networkIsReachable forHost:(NSString *)host
 {
-	NSLog(@"%@ is now reachable: %u", host, networkIsReachable);
+	NSLog(@"ESAccountNetworkConnectivityPlugin: %@ is now reachable: %u", host, networkIsReachable);
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 	
@@ -150,7 +150,7 @@
 			[accountsToNotConnect removeObject:account];
 		} else {
 			if([[account host] isEqualToString:host]) {
-				NSLog(@"found match in %@", account);
+				NSLog(@"ESAccountNetworkConnectivityPlugin: found match in %@", account);
 				[self handleConnectivityForAccount:account reachable:networkIsReachable];
 			}
 		}
