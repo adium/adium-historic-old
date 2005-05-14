@@ -3345,50 +3345,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		348E5E1706D2F447004C051C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.h;
-			name = AINetworkConnectivity.h;
-			path = Source/AINetworkConnectivity.h;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348E5E1806D2F447004C051C = {
-			fileEncoding = 4;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.c.objc;
-			name = AINetworkConnectivity.m;
-			path = Source/AINetworkConnectivity.m;
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		348E5E1906D2F447004C051C = {
-			fileRef = 348E5E1706D2F447004C051C;
-			isa = PBXBuildFile;
-			settings = {
-				ATTRIBUTES = (
-					Public,
-				);
-			};
-		};
-		348E5E1A06D2F447004C051C = {
-			fileRef = 348E5E1806D2F447004C051C;
-			isa = PBXBuildFile;
-			settings = {
-			};
-		};
-		348E5E1D06D2F457004C051C = {
-			children = (
-				348E5E1706D2F447004C051C,
-				348E5E1806D2F447004C051C,
-			);
-			isa = PBXGroup;
-			name = "Notification of network connectivity";
-			path = "";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		3498FEA707F489600004B79A = {
 			isa = PBXFileReference;
 			lastKnownFileType = text.plist.strings;
@@ -4633,7 +4589,6 @@
 				4BD1F2AB06D2683300B3975E,
 				4BD1EF7706D2636E00B3975E,
 				07C52D4007BD2F53006BE37C,
-				348E5E1D06D2F457004C051C,
 				4BD1EF7406D2636A00B3975E,
 				0750FF1A073A04E9000D8A1F,
 				4BD1F2B406D268C300B3975E,
@@ -5225,7 +5180,6 @@
 				4BD1F3D806D27F3100B3975E,
 				4BD1F5CF06D28D2100B3975E,
 				4BD1F5D106D28D2E00B3975E,
-				348E5E1906D2F447004C051C,
 				0750FF21073A051A000D8A1F,
 				0750FF2B073A055D000D8A1F,
 				0750FF3A073A0620000D8A1F,
@@ -5371,7 +5325,6 @@
 				4BD1F3D906D27F3100B3975E,
 				4BD1F5D006D28D2200B3975E,
 				4BD1F5D206D28D2E00B3975E,
-				348E5E1A06D2F447004C051C,
 				0750FF22073A051A000D8A1F,
 				0750FF2C073A055D000D8A1F,
 				0750FF3B073A0620000D8A1F,

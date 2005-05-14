@@ -51,7 +51,6 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMultiCellOutlineView.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/AINetworkConnectivity.h>
 #import <AIUtilities/AIOutlineView.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIPlasticButton.h>
