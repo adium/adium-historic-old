@@ -25,7 +25,6 @@
 #import "AIStatus.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/AISleepNotification.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 
@@ -501,7 +500,7 @@
 
 
 
-#pragma mark Passwowrds
+#pragma mark Passwords
 
 /*!
  * @brief Password entered callback
