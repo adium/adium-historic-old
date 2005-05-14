@@ -126,7 +126,8 @@ static void hostReachabilityChangedCallback(SCNetworkReachabilityRef target, SCN
 	BOOL reachable = ((flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired));
 	
 #if CONNECTIVITY_DEBUG
-	NSLog(@"*** networkReachabilityChangedCallback is: %i : %i %i %i %i %i %i %i = %i",flags,
+	NSLog(@"*** networkReachabilityChangedCallback gave us: 0x%x"@"\n\t"@"%i %i %i %i %i %i %i = %i",
+		  flags,
 		  flags & kSCNetworkFlagsTransientConnection,
 		  flags & kSCNetworkFlagsReachable,
 		  flags & kSCNetworkFlagsConnectionRequired,
