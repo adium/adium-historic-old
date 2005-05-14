@@ -20,10 +20,11 @@
 #import "ESVersionCheckerWindowController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AINetworkConnectivity.h>
+#import <AIUtilities/AIHostReachabilityMonitor.h>
 
 #define VERSION_CHECKER_TITLE		AILocalizedString(@"Check for Updates...",nil)
 #define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
+#define VERSION_PLIST_HOST			@"www.adiumx.com"
 #define VERSION_PLIST_KEY			@"adium-version"
 #define VERSION_BETA_PLIST_KEY		@"adium-beta-version"
 
@@ -69,20 +70,7 @@
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
 	
 	//Observe connectivity changes
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(networkConnectivityChanged:)
-												 name:AINetwork_ConnectivityChanged
-											   object:nil];
-	
-	//Check for an update now
-	[self automaticCheckForNewVersion:nil];
-	
-	//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
-	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
-											  target:self
-											selector:@selector(automaticCheckForNewVersion:)
-											userInfo:nil
-											 repeats:YES] retain];
+	[[AIHostReachabilityMonitor defaultMonitor] addObserver:self forHost:VERSION_PLIST_HOST];
 }
 
 /*!
@@ -92,8 +80,30 @@
 {
 	[timer invalidate];
 	[timer release]; timer = nil;
+
+	[[AIHostReachabilityMonitor defaultMonitor] removeObserver:self forHost:VERSION_PLIST_HOST];
 }
 
+//AIHostReachabilityObserver conformance -------------------------------------------------------------------------------------------------
+#pragma mark AIHostReachabilityObserver conformance
+
+- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host {
+	if(!timer) {
+		//Check for an update now
+		[self automaticCheckForNewVersion:nil];
+
+		//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
+		timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
+												  target:self
+												selector:@selector(automaticCheckForNewVersion:)
+												userInfo:nil
+												 repeats:YES] retain];
+	}
+}
+- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsNotReachable:(NSString *)host {
+	[timer invalidate];
+	[timer release]; timer = nil;
+}
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
@@ -105,42 +115,24 @@
  */
 - (void)manualCheckForNewVersion:(id)sender
 {
-	checkingManually = YES;
-	checkWhenConnectionBecomesAvailable = NO;
 	[self _requestVersionDict];
+	checkingManually = YES;
 }
 
 /*!
  * @brief Check for a new release of Adium (Silent on failure)
  *
  * Check for a new release of Adium without notifying the user on a false result.
- * Call this method when the user has not explicitely requested the version check.
+ * Call this method when the user has not explicitly requested the version check.
  */
 - (void)automaticCheckForNewVersion:(id)sender
 {
 	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																		 group:PREF_GROUP_UPDATING] boolValue];
 
-	if(BETA_RELEASE || updateAutomatically){
-		if([AINetworkConnectivity networkIsReachable]){
-			//If the network is available, check for updates now
-			checkingManually = NO;
-			checkWhenConnectionBecomesAvailable = NO;
-			[self _requestVersionDict];
-		}else{
-			//If the network is not available, check when it becomes available
-			checkWhenConnectionBecomesAvailable = YES;
-		}
-	}
-}
-
-/*!
- * @brief When a network connection becomes available, check for an update if we haven't already
- */
-- (void)networkConnectivityChanged:(NSNotification *)notification
-{
-	if(checkWhenConnectionBecomesAvailable && [[notification object] intValue]){
-		[self automaticCheckForNewVersion:nil];
+	if(BETA_RELEASE || updateAutomatically) {
+		[self _requestVersionDict];
+		checkingManually = NO;
 	}
 }
 
@@ -259,7 +251,10 @@ end:
  */
 - (void)_requestVersionDict
 {
-	[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
+	if(!checking) {
+		checking = YES;
+		[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
+	}
 }
 
 /*!
