@@ -366,13 +366,6 @@ static NSColor	*cachedWhiteColor = nil;
 	}
 }
 
-- (IBAction)performFindPanelAction:(id)sender
-{
-	NSView *searchView = [[[adium interfaceController] messageViewControllerForChat:chat] messageView];
-	if([searchView respondsToSelector:@selector(performFindPanelAction:)])
-		[searchView performFindPanelAction:sender];
-}
-
 //Contact menu ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact menu
 //Set and return the selected chat (to auto-configure the contact menu)
