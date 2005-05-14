@@ -16,10 +16,12 @@
 
 #import <Adium/AIPlugin.h>
 
-@protocol AIListObjectObserver;
+@protocol AIListObjectObserver, AIHostReachabilityObserver;
 
-@interface ESAccountNetworkConnectivityPlugin : AIPlugin <AIListObjectObserver> {
+@interface ESAccountNetworkConnectivityPlugin : AIPlugin <AIListObjectObserver, AIHostReachabilityObserver> {
+	NSMutableSet			*knownHosts;
 	NSMutableSet			*accountsToConnect;
+	NSMutableSet			*accountsToNotConnect;
 }
 
 @end
