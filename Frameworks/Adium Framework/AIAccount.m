@@ -18,7 +18,6 @@
 #import "AIAccount.h"
 #import "AIContactController.h"
 #import "AIListContact.h"
-#import <AIUtilities/AISleepNotification.h>
 
 /*!
  * @class AIAccount
@@ -35,7 +34,7 @@
  */
 - (void)initAccount
 {
-
+	
 }
 
 /*!
