@@ -20,11 +20,12 @@
 #define PREF_GROUP_UPDATING			@"Updating"
 #define KEY_CHECK_AUTOMATICALLY 	@"Check Automatically"
 
-@interface CPFVersionChecker : AIPlugin {
+@protocol AIHostReachabilityObserver;
+
+@interface CPFVersionChecker : AIPlugin <AIHostReachabilityObserver> {
     NSMenuItem 	*versionCheckerMenuItem;
 	NSTimer		*timer;
-	BOOL		checkingManually;
-	BOOL		checkWhenConnectionBecomesAvailable;
+	BOOL		checking, checkingManually;
 }
 
 - (void)manualCheckForNewVersion:(id)sender;
