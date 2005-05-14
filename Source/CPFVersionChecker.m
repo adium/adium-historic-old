@@ -88,9 +88,7 @@
 #pragma mark AIHostReachabilityObserver conformance
 
 - (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host {
-	NSLog(@"CPFVersionChecker: %@ is reachable", host);
 	if(!timer) {
-
 		//Check for an update now
 		[self automaticCheckForNewVersion:nil];
 
@@ -103,8 +101,6 @@
 	}
 }
 - (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsNotReachable:(NSString *)host {
-	NSLog(@"CPFVersionChecker: %@ is not reachable", host);
-
 	[timer invalidate];
 	[timer release]; timer = nil;
 }
