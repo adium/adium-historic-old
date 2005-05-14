@@ -95,6 +95,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 				[observers      removeObjectAtIndex:i];
 				[reachabilities removeObjectAtIndex:i];
 				removed = YES;
+				--numObservers;
 			}
 		}
 		i += !removed;
