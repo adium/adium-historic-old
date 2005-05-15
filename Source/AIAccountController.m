@@ -815,7 +815,9 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 			[menu addItem:menuItem];
 		}
 	}
-	
+
+	if(!target) [menu setAutoenablesItems:NO];
+
 	return([menu autorelease]);
 }
 
