@@ -39,6 +39,10 @@
 - (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
+#ifndef MAC_OS_X_VERSION_10_4
+#	define NSTableViewUniformColumnAutoresizingStyle 1
+#endif
+
 @implementation ESFileTransferProgressWindowController
 
 static ESFileTransferProgressWindowController *sharedTransferProgressInstance = nil;
