@@ -20,8 +20,6 @@
 #define KEY_ACTIVE_DOCK_ICON		@"Dock Icon"
 #define FOLDER_DOCK_ICONS			@"Dock Icons"
 
-@protocol AITextEntryView;
-
 @class AIIconState;
 
 typedef enum {
