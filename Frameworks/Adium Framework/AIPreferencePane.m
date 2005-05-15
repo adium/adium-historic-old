@@ -18,14 +18,6 @@
 
 #define PREFERENCE_VIEW_NIB		@"PreferenceView"	//Filename of the preference view nib
 
-@interface AIPreferencePane (PRIVATE)
-- (id)initInCategory:(PREFERENCE_CATEGORY)inCategory withDelegate:(id)inDelegate label:(NSString *)inLabel;
-- (NSString *)nibName;
-- (void)viewDidLoad;
-- (void)viewWillClose;
-- (void)configureControlDimming;
-@end
-
 @implementation AIPreferencePane
 
 //Return a new preference pane

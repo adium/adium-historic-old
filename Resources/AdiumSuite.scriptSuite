@@ -388,7 +388,7 @@
 					<key>Type</key>
 					<string>NSDate</string>
 				</dict>
-				<key>name</key>
+				<key>displayName</key>
 				<dict>
 					<key>AppleEventCode</key>
 					<string>AchN</string>
