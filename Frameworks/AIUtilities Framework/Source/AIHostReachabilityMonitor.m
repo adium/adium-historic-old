@@ -126,16 +126,14 @@ static void hostReachabilityChangedCallback(SCNetworkReachabilityRef target, SCN
 	BOOL reachable = ((flags & kSCNetworkFlagsReachable) && !(flags & kSCNetworkFlagsConnectionRequired));
 	
 #if CONNECTIVITY_DEBUG
-	NSLog(@"*** networkReachabilityChangedCallback gave us: 0x%x"@"\n\t"@"%i %i %i %i %i %i %i = %i",
-		  flags,
-		  flags & kSCNetworkFlagsTransientConnection,
-		  flags & kSCNetworkFlagsReachable,
-		  flags & kSCNetworkFlagsConnectionRequired,
-		  flags & kSCNetworkFlagsConnectionAutomatic,
-		  flags & kSCNetworkFlagsInterventionRequired,
-		  flags & kSCNetworkFlagsIsLocalAddress,
-		  flags & kSCNetworkFlagsIsDirect,
-		  reachable);
+	NSLog(@"*** hostReachabilityChangedCallback got flags: %c%c%c%c%c%c%c \n",  
+ 	      (flags & kSCNetworkFlagsTransientConnection)  ? 't' : '-',  
+ 	      (flags & kSCNetworkFlagsReachable)            ? 'r' : '-',  
+ 	      (flags & kSCNetworkFlagsConnectionRequired)   ? 'c' : '-',  
+ 	      (flags & kSCNetworkFlagsConnectionAutomatic)  ? 'C' : '-',  
+ 	      (flags & kSCNetworkFlagsInterventionRequired) ? 'i' : '-',  
+ 	      (flags & kSCNetworkFlagsIsLocalAddress)       ? 'l' : '-',  
+ 	      (flags & kSCNetworkFlagsIsDirect)             ? 'd' : '-');
 #endif
 
 	AIHostReachabilityMonitor *self = info;
