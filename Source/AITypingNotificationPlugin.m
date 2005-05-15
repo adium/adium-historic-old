@@ -24,7 +24,7 @@
 
 @interface AITypingNotificationPlugin (PRIVATE)
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat;
-- (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)_processTypingInView:(NSTextView<AITextEntryView> *)inTextEntryView;
 - (void)_addTypingTimerForChat:(AIChat *)chat;
 - (void)_resetTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat;
 - (void)_removeTypingTimer:(NSTimer *)enteredTextTimer forChat:(AIChat *)chat;
@@ -67,14 +67,14 @@
  *
  * Sent because we are a text entry view filter; ignored.
  */
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView {};
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView {};
 
 /*!
  * @brief Text entry view will close
  *
  * Be sure to clear the typing state of a chat when its text entry view closes
  */
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
 	
@@ -90,7 +90,7 @@
 /*!
  * @brief A string was added to a text entry view
  */
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     [self _processTypingInView:inTextEntryView];
 }
@@ -98,7 +98,7 @@
 /*!
  * @brief The contents of a text entry view changed
  */
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
 	if([inTextEntryView isSendingContent]){
 		[self _processTypingInView:inTextEntryView];
@@ -123,7 +123,7 @@
  *
  * When the user makes a change resulting in an empty text view, however, clear the typing state.
  */
-- (void)_processTypingInView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)_processTypingInView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     AIChat		*chat = [inTextEntryView chat];
 	

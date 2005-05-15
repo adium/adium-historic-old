@@ -29,11 +29,9 @@
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
 
-@protocol AITextEntryView;
-
 @interface AIDefaultFormattingPlugin (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
-- (void)_resetFormattingInView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)_resetFormattingInView:(NSTextView<AITextEntryView> *)inTextEntryView;
 @end
 
 @implementation AIDefaultFormattingPlugin
@@ -105,7 +103,7 @@
 /*!
  * @brief Invoked when a text entry view opens, set it to our default formatting
  */
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
 	[self _resetFormattingInView:inTextEntryView];
 }
@@ -113,7 +111,7 @@
 /*!
  * @brief Invoked when a text entry view closes
  */
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     //Ignored
 }
@@ -191,7 +189,7 @@
 	
 	//Update all open message windows to our default formatting
 	NSEnumerator	*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	NSText<AITextEntryView> *textEntryView;
+	NSTextView<AITextEntryView> *textEntryView;
 	
 	while((textEntryView = [enumerator nextObject])){
 		[self _resetFormattingInView:textEntryView];
@@ -201,7 +199,7 @@
 /*!
  * @brief Resets all the text in an entry view to the default values
  */
-- (void)_resetFormattingInView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)_resetFormattingInView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     NSMutableAttributedString	*contents;
     NSDictionary				*attributes;

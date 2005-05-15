@@ -195,7 +195,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //A string was added to a text entry view
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
     id				filter;
@@ -208,7 +208,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //A text entry view's content changed
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
     id				filter;
@@ -221,7 +221,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //A text entry view was opened
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
     id				filter;
@@ -241,7 +241,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 }
 
 //A text entry view was closed
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     NSEnumerator	*enumerator;
     id				filter;
@@ -820,7 +820,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 	//We are no longer in the process of receiving this object
 	[objectsBeingReceived removeObject:inObject];
-	AILog(@"objectsBeingReceived: %@",([objectsBeingReceived count] ? objectsBeingReceived : @"(empty)"));
+	AILog(@"objectsBeingReceived: %@",([objectsBeingReceived count] ? [objectsBeingReceived description] : @"(empty)"));
 }
 
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat

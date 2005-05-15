@@ -64,7 +64,7 @@
  *
  * Set the continuous spell checking setting as per our preference
  */
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     BOOL	spellEnabled = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_SPELL_CHECKING] boolValue];
 
@@ -77,7 +77,7 @@
  *
  * Save its continuous spell checking setting as our preference
  */
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     //Save spellcheck state
     if([inTextEntryView respondsToSelector:@selector(isContinuousSpellCheckingEnabled)]){
