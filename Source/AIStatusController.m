@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIAccount.h>
@@ -1625,19 +1626,32 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	AIStatus		*statusState = [dict objectForKey:@"AIStatus"];
 	AIAccount		*account = [dict objectForKey:@"AIAccount"];
 
-	if(account){
-		BOOL shouldRebuild;
-		
-		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
-		[account setStatusState:statusState];
+	/* Random undocumented feature of the moment... hold option and select a state to bring up the custom status window
+	 * for modifying and then setting it.
+	 */
+	if([NSEvent optionKey]){
+		[AIEditStateWindowController editCustomState:statusState
+											 forType:[statusState statusType]
+										  andAccount:account
+									  withSaveOption:YES
+											onWindow:nil
+									 notifyingTarget:self];
 
-		if(shouldRebuild){
-			//Rebuild our menus if there was a change
-			[self rebuildAllStateMenus];
-		}
-		
 	}else{
-		[self setActiveStatusState:statusState];
+		if(account){
+			BOOL shouldRebuild;
+			
+			shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
+			[account setStatusState:statusState];
+			
+			if(shouldRebuild){
+				//Rebuild our menus if there was a change
+				[self rebuildAllStateMenus];
+			}
+			
+		}else{
+			[self setActiveStatusState:statusState];
+		}
 	}
 }
 
