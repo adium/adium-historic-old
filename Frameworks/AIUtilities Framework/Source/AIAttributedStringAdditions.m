@@ -435,12 +435,15 @@
             [newAttributedString replaceCharactersInRange:searchRange 
 											   withString:replacementString];
 
+			/*The attributed string may have changed length; modify our 
+			 *	searchRange and cached length to reflect the string we just
+			 *	inserted.
+			 */
+			searchRange.length = [replacementString length];
+			length = [newAttributedString length];
+
 			//Now remove the URL
 			[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
-
-			/* The attributed string may have changed length; modify our searchRange to reflect the string 
-			 * we just inserted. */
-			searchRange.length = [replacementString length];
 		}
 		searchRange.location += searchRange.length;
 	}
