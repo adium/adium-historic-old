@@ -315,7 +315,6 @@
     NSImage				*image = (flash ? image1 : image2);
 	
     //Pre-calc some sizes
-#warning 1 - [[adium dockController] dockIconScale] is the wrong relationship?
     dockIconScale = 1- [[adium dockController] dockIconScale];
     iconHeight = (SMALLESTRADIUS + (RADIUSRANGE * dockIconScale));
 
