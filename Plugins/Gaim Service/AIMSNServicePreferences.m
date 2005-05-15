@@ -38,12 +38,6 @@
 {
 	return([AIServiceIcons serviceIconForServiceID:@"MSN" type:AIServiceIconLarge direction:AIIconNormal]);
 }
-//- (NSDictionary *)restorablePreferences
-//{
-//	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:STATUS_MENU_ITEM_DEFAULT_PREFS forClass:[self class]];
-//	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_STATUS_MENU_ITEM];
-//	return(defaultsDict);
-//}
 
 - (void)viewDidLoad
 {
