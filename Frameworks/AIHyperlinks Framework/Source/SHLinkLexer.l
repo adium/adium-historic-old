@@ -55,6 +55,7 @@ file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
 
 https?:\/\/		|
 ftp:\/\/		|
+feed:\/\/		|
 ssh:\/\/		|
 telnet:\/\/		|
 rts?p:\/\/		|
