@@ -15,6 +15,13 @@
 					<key>Name</key>
 					<string>service image</string>
 				</dict>
+				<key>statusState</key>
+				<dict>
+					<key>Description</key>
+					<string>The status of this account</string>
+					<key>Name</key>
+					<string>status state</string>
+				</dict>
 			</dict>
 			<key>Description</key>
 			<string>A messaging account. Accounts inherit all capabilities of list objects.</string>
@@ -48,7 +55,7 @@
 					<key>Name</key>
 					<string>contact</string>
 				</dict>
-				<key>name</key>
+				<key>displayName</key>
 				<dict>
 					<key>Description</key>
 					<string>The name of this chat (for a one-on-one chat, this is the same as the contact's display name.</string>
@@ -340,6 +347,95 @@
 			<string>list object</string>
 			<key>PluralName</key>
 			<string>list objects</string>
+		</dict>
+		<key>AIStatus</key>
+		<dict>
+			<key>Attributes</key>
+			<dict>
+				<key>icon</key>
+				<dict>
+					<key>Description</key>
+					<string>An icon which represents this status to the user.</string>
+					<key>Name</key>
+					<string>icon</string>
+				</dict>
+				<key>statusMessageString</key>
+				<dict>
+					<key>Description</key>
+					<string>This status's status message; when setting, HTML may optionally be passed.</string>
+					<key>Name</key>
+					<string>status message</string>
+				</dict>
+				<key>autoReplyString</key>
+				<dict>
+					<key>Description</key>
+					<string>This status's auto reply; when setting, HTML may be optionally passed.</string>
+					<key>Name</key>
+					<string>autoreply</string>
+				</dict>
+				<key>hasAutoReply</key>
+				<dict>
+					<key>Description</key>
+					<string>Does this status send an auto reply?</string>
+					<key>Name</key>
+					<string>has an auto reply</string>
+				</dict>
+				<key>autoReplyIsStatusMessage</key>
+				<dict>
+					<key>Description</key>
+					<string>Does this status treat its status message as an auto reply? If YES, the value of the autoreply attribute is ignored.</string>
+					<key>Name</key>
+					<string>autoreply</string>
+				</dict>				
+				<key>title</key>
+				<dict>
+					<key>Description</key>
+					<string>The title of this status. If not explicitly set, the title is automatically determined from the other attributes.</string>
+					<key>Name</key>
+					<string>title</string>
+				</dict>
+				<key>statusType</key>
+				<dict>
+					<key>Description</key>
+					<string>The general type of this status -- available, away, invisible, or offline.</string>
+					<key>Name</key>
+					<string>type</string>
+				</dict>
+				<key>statusName</key>
+				<dict>
+					<key>Description</key>
+					<string>A specific name for this status; this further refines what is specified by the type.  This will be used by protocols as appropriate. For example, for AIM, the status name is irrelevant; all away statuses are a simple Away, all available statuses are a simple Availalbe, and so on.  MSN, on the other hand, supports such specific status names as BRB and Lunch.  You can safely set any name for any protocol; it will be ignored if unsuported.  Available states: Generic Available, Free for Chat, Available for Friends Only.  Away states: Generic Away, Extended Away, Away for Friends Only, DND, Not Available, Occupied, BRB, Busy, Phone, Lunch, Not At Home, Not At Desk, Not In Office, Vacation, Stepped Out.  Invisible: Invisible.  Offline: Offline.</string>
+					<key>Name</key>
+					<string>status name</string>
+				</dict>
+				<key>shouldForceInitialIdleTime</key>
+				<dict>
+					<key>Description</key>
+					<string>Should this status force the user into an idle state regardless of computer activity?</string>
+					<key>Name</key>
+					<string>should force idle</string>
+				</dict>
+				<key>forcedInitialIdleTime</key>
+				<dict>
+					<key>Description</key>
+					<string>Amount of time (in seconds) to set the user as idle when entering this status. Only used if 'should force initial idle time' is YES.</string>
+					<key>Name</key>
+					<string>initial idle time</string>
+				</dict>
+				<key>uniqueStatusID</key>
+				<dict>
+					<key>Description</key>
+					<string>A unique ID for this status</string>
+					<key>Name</key>
+					<string>unique status ID</string>
+				</dict>
+			</dict>
+			<key>Description</key>
+			<string>A status and all associated attributes which can be set on or retrieved from one or more accounts.</string>
+			<key>Name</key>
+			<string>status state</string>
+			<key>PluralName</key>
+			<string>status states</string>
 		</dict>
 		<key>ESApplescriptabilityController</key>
 		<dict>

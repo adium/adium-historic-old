@@ -248,6 +248,8 @@
 			[scrollView_message setFrame:scrollFrame];
 		}
 
+		[scrollView_message setNeedsDisplay:YES];
+		
 		//Resize the window to fit the message
 		[window setFrame:frame display:YES animate:YES];
 	}
