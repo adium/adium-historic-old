@@ -80,7 +80,6 @@
 
 //Handles any attributed text entry
 @protocol AITextEntryView 
-- (NSAttributedString *)attributedString;
 - (void)setAttributedString:(NSAttributedString *)inAttributedString;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (BOOL)availableForSending;

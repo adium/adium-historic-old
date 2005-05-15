@@ -67,11 +67,11 @@ typedef enum {
 
 @interface NSObject (AITextEntryFilter)
 //required
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; 
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; 
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
 //optional
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //keypress
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //keypress
+- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
 @interface AIContentController : NSObject <AIEventHandler> {
@@ -136,10 +136,10 @@ typedef enum {
 - (void)registerTextEntryFilter:(id)inFilter;
 - (void)unregisterTextEntryFilter:(id)inFilter;
 - (NSArray *)openTextEntryViews;
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-- (void)contentsChangedInTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView;
+- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
+- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
 - (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
 - (NSDictionary *)defaultFormattingAttributes;
 
