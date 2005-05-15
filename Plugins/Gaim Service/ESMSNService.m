@@ -26,10 +26,8 @@
 //Service specific preferences
 - (id)init
 {
-	if((self = [super init]))
-	{
-			MSNServicePrefs = [[AIMSNServicePreferences preferencePane] retain];
-
+	if((self = [super init])){
+		MSNServicePrefs = [[AIMSNServicePreferences preferencePane] retain];
 	}
 
 	return self;
