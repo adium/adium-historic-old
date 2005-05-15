@@ -14,12 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "SLGaimCocoaAdapter.h"
+
+#import "AIAccountController.h"
 #import "AIInterfaceController.h"
 #import "AILoginController.h"
 #import "CBGaimAccount.h"
 #import "ESGaimAIMAccount.h"
 #import "CBGaimServicePlugin.h"
-#import "SLGaimCocoaAdapter.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimOTR.h"
 #import <AIUtilities/CBObjectAdditions.h>
@@ -232,14 +234,52 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 #pragma mark Lookup functions
 
+NSString* serviceClassForGaimProtocolID(const char *protocolID)
+{
+	NSString	*serviceClass = nil;
+	if(protocolID){
+		if(!strcmp(protocolID, "prpl-oscar"))
+			serviceClass = @"AIM-compatible";
+		else if(!strcmp(protocolID, "prpl-gg"))
+			serviceClass = @"Gadu-Gadu";
+		else if(!strcmp(protocolID, "prpl-jabber"))
+			serviceClass = @"Jabber";
+		else if(!strcmp(protocolID, "prpl-meanwhile"))
+			serviceClass = @"Sametime";
+		else if(!strcmp(protocolID, "prpl-msn"))
+			serviceClass = @"MSN";
+		else if(!strcmp(protocolID, "prpl-novell"))
+			serviceClass = @"GroupWise";
+		else if(!strcmp(protocolID, "prpl-yahoo"))
+			serviceClass = @"Yahoo!";
+		else if(!strcmp(protocolID, "prpl-zephyr"))
+			serviceClass = @"Zephyr";
+	}
+	
+	return serviceClass;
+}
+
 /*
  * Finds an instance of CBGaimAccount for a pointer to a GaimAccount struct.
  */
-
-CBGaimAccount *accountLookup(GaimAccount *acct)
+CBGaimAccount* accountLookup(GaimAccount *acct)
 {
 	CBGaimAccount *adiumGaimAccount = (acct ? (CBGaimAccount *)acct->ui_data : nil);
+	/* If the account doesn't have its ui_data associated yet (we haven't tried to connect) but we want this
+	 * lookup data, we have to do some manual parsing.  This is used for example from the OTR preferences.
+	 */
+	if(!adiumGaimAccount){
+		const char	*protocolID = acct->protocol_id;
+		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
 
+		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accountsWithServiceClass:serviceClass] objectEnumerator];
+		while(adiumGaimAccount = [enumerator nextObject]){
+			if(([[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) &&
+			   [adiumGaimAccount isKindOfClass:[CBGaimAccount class]]){
+				break;
+			}
+		}
+	}
     return adiumGaimAccount;
 }
 
