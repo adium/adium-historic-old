@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {
+            ACTIONS = {closeWindow = id; }; 
+            CLASS = AIWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = NSWindowController; 
+        }, 
+        {
+            ACTIONS = {forgetFingerprint = id; }; 
+            CLASS = ESGaimOTRFingerprintDetailsWindowController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "imageView_lock" = NSImageView; 
+                "imageView_service" = NSImageView; 
+                "textField_UID" = NSTextField; 
+                "textField_fingerprint" = NSTextField; 
+            }; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}

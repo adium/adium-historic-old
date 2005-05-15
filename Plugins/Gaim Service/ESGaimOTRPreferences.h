@@ -14,18 +14,23 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-#import "SLGaimCocoaAdapter.h"
+#import <Adium/AIPreferencePane.h>
 
-void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL accepted);
-void adium_gaim_otr_connect_conv(GaimConversation *conv);
-void adium_gaim_otr_disconnect_conv(GaimConversation *conv);
-void initGaimOTRSupprt(void);
-
-@class ESGaimOTRPreferences;
-
-@interface ESGaimOTRAdapter : AIObject {
-	ESGaimOTRPreferences	*OTRPrefs;
+@interface ESGaimOTRPreferences : AIPreferencePane {
+	IBOutlet	NSPopUpButton	*popUp_accounts;
+	IBOutlet	NSButton		*button_generate;
+	IBOutlet	NSTextField		*textField_privateKey;
+	
+	IBOutlet	NSTableView		*tableView_fingerprints;
+	IBOutlet	NSButton		*button_showFingerprint;
+	
+	BOOL						viewIsOpen;
+	
+	NSMutableArray				*fingerprintDictArray;
 }
+
+- (IBAction)generate:(id)sender;
+- (IBAction)showFingerprint:(id)sender;
+- (IBAction)selectAccount:(id)sender;
 
 @end

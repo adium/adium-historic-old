@@ -34,9 +34,15 @@
 /* Adium OTR headers */
 #import "ESGaimOTRUnknownFingerprintController.h"
 #import "ESGaimOTRPrivateKeyGenerationWindowController.h"
+#import "ESGaimOTRPreferences.h"
 
 static ESGaimOTRAdapter		*otrAdapter = nil;
 static NSMutableDictionary	*otrPolicyCache = nil;
+
+@interface ESGaimOTRAdapter (PRIVATE)
+- (void)prefsShouldUpdatePrivateKeyList;
+- (void)prefsShouldUpdateFingerprintsList;
+@end
 
 #pragma mark Adium convenience functions
 
@@ -356,81 +362,30 @@ OtrgDialogUiOps *otrg_adium_dialog_get_ui_ops(void)
 }
 
 #pragma mark UI (Preferences)
-/* Call this function when the DSA key is updated; it will redraw the
-* UI, if visible. */
+/*
+ * @brief Call this function when the DSA key is updated; it will redraw the UI, if visible.
+ *
+ * Note that OTR calls this the "fingerprint" in this context, but it is more properly called the private key list
+ */
 static void otrg_adium_ui_update_fingerprint(void)
 {
-
+	[otrAdapter prefsShouldUpdatePrivateKeyList];
 }
 
-/* Update the keylist, if it's visible */
+/*
+ * @brief Update the keylist, if it's visible
+ *
+ * Note that the 'keylist' is the list of fingerprints, which we call the fingerprints list for clarity.
+ */
 static void otrg_adium_ui_update_keylist(void)
 {
-#if 0
-    gchar *titles[4];
-    char hash[45];
-    ConnContext * context;
-    Fingerprint * fingerprint;
-    int selected_row = -1;
-	
-    gtkWidget *keylist = ui_layout.keylist;
-	
-    if (keylist == NULL)
-		return;
-
-    for (context = otrl_context_root; context != NULL;
-		 context = context->next) {
-		int i;
-		GaimPlugin *p;
-		char *proto_name;
-		fingerprint = context->fingerprint_root.next;
-		if (fingerprint == NULL) {
-			titles[0] = context->username;
-			titles[1] = (gchar *) otrl_context_statestr[context->state];
-			titles[2] = "No fingerprint";
-			p = gaim_find_prpl(context->protocol);
-			proto_name = (p && p->info->name) ? p->info->name : "Unknown";
-			titles[3] = g_strdup_printf("%s (%s)", context->accountname,
-										proto_name);
-			i = adium_clist_append(adium_CLIST(keylist), titles);
-			g_free(titles[3]);
-			adium_clist_set_row_data(adium_CLIST(keylist), i,
-								   &(context->fingerprint_root));
-			if (ui_layout.selected_fprint == &(context->fingerprint_root)) {
-				selected_row = i;
-			}
-		} else {
-			while(fingerprint) {
-				titles[0] = context->username;
-				if (context->state == CONN_CONNECTED &&
-					context->active_fingerprint != fingerprint) {
-					titles[1] = "Unused";
-				} else {
-					titles[1] =
-					(gchar *) otrl_context_statestr[context->state];
-				}
-				otrl_privkey_hash_to_human(hash, fingerprint->fingerprint);
-				titles[2] = hash;
-				p = gaim_find_prpl(context->protocol);
-				proto_name = (p && p->info->name) ? p->info->name : "Unknown";
-				titles[3] = g_strdup_printf("%s (%s)", context->accountname,
-											proto_name);
-				i = adium_clist_append(adium_CLIST(keylist), titles);
-				g_free(titles[3]);
-				adium_clist_set_row_data(adium_CLIST(keylist), i, fingerprint);
-				if (ui_layout.selected_fprint == fingerprint) {
-					selected_row = i;
-				}
-				fingerprint = fingerprint->next;
-			}
-		}
-    }
-#endif
+	[otrAdapter prefsShouldUpdateFingerprintsList];
 }
 
 static void otrg_adium_ui_config_buddy(GaimBuddy *buddy)
 {
-	/* This is for configuring the otr UI for a buddy.  We don't need it. */	
+	/* This is for displaying the buddy-specific OTR configuration.  We don't need it as the Adium Get Info window
+	 * handles the relevant preferences. */
 }
 
 static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *name)
@@ -490,7 +445,11 @@ void initGaimOTRSupprt(void)
 	//Init the plugin
 	gaim_init_otr_plugin();
 	
-	otrAdapter = [[ESGaimOTRAdapter alloc] init];
+	/* Create the OTR adapter on the main thread, since it registers as a preference observer and 
+	 * creates a preference pane, and the Adium core does not waste cycles thread safing these processes.
+	 */
+	otrAdapter = [[ESGaimOTRAdapter alloc] mainPerformSelector:@selector(init)
+												   returnValue:YES];
 
 	//Set the UI Ops
 	otrg_ui_set_ui_ops(otrg_adium_ui_get_ui_ops());
@@ -505,13 +464,18 @@ void initGaimOTRSupprt(void)
 	if(self = [super init]){
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:GROUP_ENCRYPTION];
+		
+		OTRPrefs = [[ESGaimOTRPreferences preferencePane] retain];
 	}
 
 	return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[OTRPrefs release];
+
 	[super dealloc];
 }
 
@@ -588,6 +552,30 @@ void initGaimOTRSupprt(void)
 	}
 	
 	return policyNumber;	
+}
+
+/*
+ * @brief The preferences should update the private key.
+ *
+ * OTR 
+ */
+- (void)prefsShouldUpdatePrivateKeyList
+{
+	AILog(@"Should update private key list");
+	[OTRPrefs performSelectorOnMainThread:@selector(updatePrivateKeyList)
+							   withObject:nil
+							waitUntilDone:NO];
+}
+
+/*
+ * @brief The preferences should update the key list.
+ */
+- (void)prefsShouldUpdateFingerprintsList
+{
+	AILog(@"Should update fingerprints list");
+	[OTRPrefs performSelectorOnMainThread:@selector(updateFingerprintsList)
+							   withObject:nil
+							waitUntilDone:NO];
 }
 
 @end
