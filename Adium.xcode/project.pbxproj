@@ -1713,7 +1713,6 @@
 			children = (
 				4B7F78C10597F5B700162728,
 				342113DD08261FC100A3B0FB,
-				346522D608371999009565FE,
 			);
 			isa = PBXVariantGroup;
 			name = MainMenu.nib;
@@ -5680,14 +5679,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 		};
-		346522D608371999009565FE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = cs;
-			path = "Adium Crash Reporter/cs.lproj/MainMenu.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
 		346522F8083719ED009565FE = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.nib;
@@ -5957,14 +5948,6 @@
 			lastKnownFileType = wrapper.nib;
 			name = Japanese;
 			path = "Frameworks/Adium Framework/Japanese.lproj/EditStateSheet.nib";
-			refType = 4;
-			sourceTree = "<group>";
-		};
-		3465233E08371A0C009565FE = {
-			isa = PBXFileReference;
-			lastKnownFileType = wrapper.nib;
-			name = Japanese;
-			path = Resources/Japanese.lproj/StatusPreferences.nib;
 			refType = 4;
 			sourceTree = "<group>";
 		};
@@ -6677,7 +6660,6 @@
 				346522A508371924009565FE,
 				346522C508371997009565FE,
 				346522FA083719EE009565FE,
-				3465233E08371A0C009565FE,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
