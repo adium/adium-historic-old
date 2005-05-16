@@ -89,6 +89,8 @@
 	/* Message cleanup */
 	/* actual message */
 	mutableString = [message mutableCopy];
+	[mutableString replaceOccurrencesOfString:@"<br>" withString:@"<br />"
+									  options:0 range:NSMakeRange(0, [mutableString length])];
 	[mutableString replaceOccurrencesOfString:@"&" withString:@"&amp;"
 									  options:0 range:NSMakeRange(0, [mutableString length])];
 	[mutableString replaceOccurrencesOfString:@"<" withString:@"&lt;"
@@ -130,6 +132,7 @@
     [textNode release];
     [bodyNode release];
     [messageNode release];
+       [messageExtraEscapedString release];
 }
 
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
