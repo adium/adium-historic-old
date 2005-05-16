@@ -59,7 +59,7 @@
 #define VIEW_CONTACTS_INFO				AILocalizedString(@"Get Info",nil)
 #define VIEW_CONTACTS_INFO_WITH_PROMPT	AILocalizedString(@"Get Info...",nil)
 #define GET_INFO_MASK					(NSCommandKeyMask | NSShiftKeyMask)
-#define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask)
+#define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask | NSControlKeyMask)
 
 #define	TITLE_SHOW_INFO					AILocalizedString(@"Show Info",nil)
 
@@ -1352,7 +1352,17 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	[[adium menuController] addContextualMenuItem:menuItem_getInfoContextualGroup
 									   toLocation:Context_Group_Manage];
 
-	//Install the alternate Get Info menu item which will let us mangle the shortcut as desired
+	//Install the standard Get Info menu item which will always be command-shift-I
+	menuItem_getInfo = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
+																			target:self
+																			action:@selector(showContactInfo:)
+																	 keyEquivalent:@"i"];
+	[menuItem_getInfo setKeyEquivalentModifierMask:GET_INFO_MASK];
+	[[adium menuController] addMenuItem:menuItem_getInfo toLocation:LOC_Contact_Info];
+
+	/* Install the alternate Get Info menu item which will be alternately command-I and command-shift-I, in the contact list
+	 * and in all other places, respectively.
+	 */
 	menuItem_getInfoAlternate = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:VIEW_CONTACTS_INFO
 																					 target:self
 																					 action:@selector(showContactInfo:)
@@ -1430,6 +1440,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     [menuItem_getInfoAlternate setKeyEquivalent:@"i"];
     [menuItem_getInfoAlternate setKeyEquivalentModifierMask:ALTERNATE_GET_INFO_MASK];
     [menuItem_getInfoAlternate setAlternate:YES];
+
     //Now give the italics its combination back
     [[adium menuController] restoreItalicsKeyEquivalent];
 }
