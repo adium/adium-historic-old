@@ -278,10 +278,10 @@
 	NSString	*defaultName;
 	NSString	*explanatoryText;
 	
-	defaultName = [NSString stringWithFormat:@"%@ (%@)",
+	defaultName = [NSString stringWithFormat:@"%@ %@",
 		[self _localizedTitle:[[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
 																	   group:PREF_GROUP_EVENT_PRESETS]],
-		AILocalizedString(@"Copy",nil)];
+		AILocalizedString(@"(Copy)","Copy, in parenthesis, as a noun indicating that the preceding item is a duplicate")];
 	explanatoryText = AILocalizedString(@"Enter a unique name for this new event set.",nil);
 
 	[ESPresetNameSheetController showPresetNameSheetWithDefaultName:defaultName
