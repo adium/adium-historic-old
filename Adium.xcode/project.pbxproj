@@ -297,6 +297,7 @@
 				zh_CN,
 				cs,
 				Norwegian,
+				is,
 			);
 			mainGroup = 29B97314FDCFA39411CA2CEA;
 			projectDirPath = "";
@@ -415,6 +416,7 @@
 				34652314083719EF009565FE,
 				3465235508371A40009565FE,
 				3465236708371A64009565FE,
+				34B272190839E8FB0092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -454,6 +456,7 @@
 				346522A208371923009565FE,
 				346522CC08371998009565FE,
 				346522FF083719EE009565FE,
+				34B271F50839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESFileTransferProgressView.nib;
@@ -494,6 +497,7 @@
 				3465228F08371921009565FE,
 				346522D008371998009565FE,
 				34652308083719EE009565FE,
+				34B272000839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ProxyPasswordPrompt.nib;
@@ -518,6 +522,7 @@
 				3465229B08371923009565FE,
 				346522C608371997009565FE,
 				34652311083719EF009565FE,
+				34B271F00839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = PasswordPrompt.nib;
@@ -580,6 +585,7 @@
 				34652319083719F0009565FE,
 				3465235208371A3F009565FE,
 				3465236808371A65009565FE,
+				34B272180839E8FB0092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -614,6 +620,7 @@
 				34652315083719EF009565FE,
 				3465235308371A3F009565FE,
 				3465236508371A64009565FE,
+				34B272160839E8FB0092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -648,6 +655,7 @@
 				34652318083719F0009565FE,
 				3465235408371A40009565FE,
 				3465236608371A64009565FE,
+				34B272170839E8FB0092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = Localizable.strings;
@@ -1327,6 +1335,7 @@
 				3465229808371922009565FE,
 				346522D108371998009565FE,
 				34652313083719EF009565FE,
+				34B271F60839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DualWindowMessageAdvanced.nib;
@@ -1747,6 +1756,7 @@
 				346522CD08371998009565FE,
 				34652310083719EF009565FE,
 				3465232C083719FF009565FE,
+				34B271EC0839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = EditStateSheet.nib;
@@ -2660,6 +2670,7 @@
 				3465229A08371923009565FE,
 				346522BE08371997009565FE,
 				34652302083719EE009565FE,
+				34B272060839E8E50092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = AccountProxy.nib;
@@ -2685,6 +2696,7 @@
 				346522A108371923009565FE,
 				346522D408371998009565FE,
 				34652306083719EE009565FE,
+				34B271FB0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimNovellAccountView.nib;
@@ -2709,6 +2721,7 @@
 				3465229508371922009565FE,
 				346522C308371997009565FE,
 				34652304083719EE009565FE,
+				34B271FE0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = AppearancePrefs.nib;
@@ -2734,6 +2747,7 @@
 				3465229208371922009565FE,
 				346522C008371997009565FE,
 				346522FB083719EE009565FE,
+				34B271EB0839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimGaduGaduAccountView.nib;
@@ -2759,6 +2773,7 @@
 				3465229708371922009565FE,
 				346522BD08371997009565FE,
 				3465230E083719EF009565FE,
+				34B271F10839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMSNAccountView.nib;
@@ -2784,6 +2799,7 @@
 				3465229008371921009565FE,
 				346522BF08371997009565FE,
 				3465230F083719EF009565FE,
+				34B272010839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimZephyrJoinChatView.nib;
@@ -2809,6 +2825,7 @@
 				346522A808371924009565FE,
 				346522D308371998009565FE,
 				346522FD083719EE009565FE,
+				34B271F80839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimOscarJoinChatView.nib;
@@ -2834,6 +2851,7 @@
 				3465229308371922009565FE,
 				346522D508371999009565FE,
 				346522FC083719EE009565FE,
+				34B272020839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimYahooJoinChatView.nib;
@@ -2859,6 +2877,7 @@
 				346522A008371923009565FE,
 				346522BC08371997009565FE,
 				3465230A083719EF009565FE,
+				34B271F70839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimZephyrAccountView.nib;
@@ -2884,6 +2903,7 @@
 				3465229608371922009565FE,
 				346522C708371998009565FE,
 				34652312083719EF009565FE,
+				34B272030839E8E50092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimMeanwhileJoinChatView.nib;
@@ -2908,6 +2928,7 @@
 				3465229E08371923009565FE,
 				346522CE08371998009565FE,
 				34652305083719EE009565FE,
+				34B271EE0839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = StatusSortConfiguration.nib;
@@ -2933,6 +2954,7 @@
 				346522A608371924009565FE,
 				346522C408371997009565FE,
 				3465230C083719EF009565FE,
+				34B271FC0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = DCGaimJabberJoinChatView.nib;
@@ -2958,6 +2980,7 @@
 				346522A908371924009565FE,
 				346522CF08371998009565FE,
 				34652303083719EE009565FE,
+				34B271FA0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimICQAccountView.nib;
@@ -2983,6 +3006,7 @@
 				3465228E08371921009565FE,
 				346522C908371998009565FE,
 				346522F8083719ED009565FE,
+				34B271F20839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimOscarAccountView.nib;
@@ -3008,6 +3032,7 @@
 				3465229F08371923009565FE,
 				346522C108371997009565FE,
 				3465230B083719EF009565FE,
+				34B271FF0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimMeanwhileAccountView.nib;
@@ -3033,6 +3058,7 @@
 				346522A708371924009565FE,
 				346522D208371998009565FE,
 				34652301083719EE009565FE,
+				34B272040839E8E50092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimYahooAccountView.nib;
@@ -3058,6 +3084,7 @@
 				3465229108371921009565FE,
 				346522BB08371997009565FE,
 				346522F9083719ED009565FE,
+				34B271F40839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ESGaimJabberAccountView.nib;
@@ -3090,6 +3117,7 @@
 				346522A408371924009565FE,
 				346522C208371997009565FE,
 				34652300083719EE009565FE,
+				34B271FD0839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ListThemeSheet.nib;
@@ -3122,6 +3150,7 @@
 				346522A308371923009565FE,
 				346522BA08371996009565FE,
 				34652309083719EF009565FE,
+				34B271ED0839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = ListLayoutSheet.nib;
@@ -3297,6 +3326,7 @@
 				3465229D08371923009565FE,
 				346522CA08371998009565FE,
 				346522FE083719EE009565FE,
+				34B271F90839E8E40092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = MessageContextDisplayPrefs.nib;
@@ -6678,6 +6708,7 @@
 				346522C508371997009565FE,
 				346522FA083719EE009565FE,
 				3465233E08371A0C009565FE,
+				34B271F30839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = StatusPreferences.nib;
@@ -7901,6 +7932,7 @@
 				3465229908371923009565FE,
 				346522C808371998009565FE,
 				3465230D083719EF009565FE,
+				34B272050839E8E50092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = WebKitPreferencesView.nib;
@@ -8969,6 +9001,7 @@
 				3465229408371922009565FE,
 				346522CB08371998009565FE,
 				34652307083719EE009565FE,
+				34B271EF0839E8E30092A5A0,
 			);
 			isa = PBXVariantGroup;
 			name = GeneralPreferences.nib;
@@ -9212,6 +9245,262 @@
 			isa = PBXBuildFile;
 			settings = {
 			};
+		};
+		34B271EB0839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimGaduGaduAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271EC0839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Frameworks/Adium Framework/is.lproj/EditStateSheet.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271ED0839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/ListLayoutSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271EE0839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/StatusSortConfiguration.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271EF0839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/GeneralPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F00839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/PasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F10839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimMSNAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F20839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimOscarAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F30839E8E30092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/StatusPreferences.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F40839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimJabberAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F50839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/ESFileTransferProgressView.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F60839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/DualWindowMessageAdvanced.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F70839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimZephyrAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F80839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/DCGaimOscarJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271F90839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/MessageContextDisplayPrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FA0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimICQAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FB0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimNovellAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FC0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/DCGaimJabberJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FD0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/ListThemeSheet.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FE0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/AppearancePrefs.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B271FF0839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimMeanwhileAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272000839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/ProxyPasswordPrompt.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272010839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/DCGaimZephyrJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272020839E8E40092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/DCGaimYahooJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272030839E8E50092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/DCGaimMeanwhileJoinChatView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272040839E8E50092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/ESGaimYahooAccountView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272050839E8E50092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = "Plugins/WebKit Message View/is.lproj/WebKitPreferencesView.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272060839E8E50092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = is;
+			path = Resources/is.lproj/AccountProxy.nib;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272160839E8FB0092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = is;
+			path = "Plugins/Gaim Service/is.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272170839E8FB0092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = is;
+			path = "Plugins/WebKit Message View/is.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272180839E8FB0092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = is;
+			path = Resources/is.lproj/Localizable.strings;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B272190839E8FB0092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = text.plist.strings;
+			name = is;
+			path = "Frameworks/Adium Framework/is.lproj/Localizable.strings";
+			refType = 4;
+			sourceTree = "<group>";
 		};
 		34B4B5A10708B049002C4C6D = {
 			fileEncoding = 4;
