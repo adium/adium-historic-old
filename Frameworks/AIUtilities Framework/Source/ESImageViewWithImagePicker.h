@@ -46,7 +46,6 @@
  */
 - (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker;
 
-
 /*!
  * imageForImageViewWithImagePicker:
  * @brief Requests the image to display in the Image Picker when it is displayed via user action
@@ -58,18 +57,6 @@
 - (NSImage *)imageForImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker;
 @end
 
-/*!
- * @class ESImageViewWithImagePicker
- * @brief Image view which displays and uses the Image Picker used by Apple Address Book and iChat when activated and also allows other image-setting behaviors.
- *
- * <p><tt>ESImageViewWithImagePicker</tt> is an  NSImageView subclass which supports:
- * - Address book-style image picker on double-click or enter, with delegate notification
- * - Copying, cutting, and pasting, with delegate notification
- * - Drag and drop into and out of the image well, with delegate notification
- * - Notifcation to the delegate of user's attempt to delete the image</p>
- * <p>It is therefore most useful with a delegate.  All delegate methods are optional; see the <tt>ESImageViewWithImagePickerDelegate</tt> protocol description.</p>
- * <p>Note: ESImageViewWithImagePicker requires Panther or better for the Address book-style image picker to work.</p>
- */
 @interface ESImageViewWithImagePicker : NSImageView {
 	NSImagePickerController *pickerController;
 	NSString				*title;
@@ -85,42 +72,10 @@
 	NSPoint					mouseDownPos;
 }
 
-/*!
- * @brief Set the delegate
- *
- * Set the delegate.  See <tt>ESImageViewWithImagePickerDelegate</tt> protocol discussion for details.
- * @param inDelegate The delegate, which may implement any of the methods described in <tt>ESImageViewWithImagePickerDelegate</tt>.
-*/ 
 - (void)setDelegate:(id)inDelegate;
-
-/*!
- * @brief Return the delegate
- *
- * Return the delegate.
- * @return The delegate
-*/ 
 - (id)delegate;
-
-/*!
- * @brief Set the title of the Image Picker
- *
- * Set the title of the Image Picker window which will be displayed if the user activates it (see class discussion).
- * @param inTitle An <tt>NSString</tt> of the title
-*/ 
 - (void)setTitle:(NSString *)inTitle;
-
-/*!
- * @brief Show the image picker window
- *
- * Displays the image picker window.  This is automatically invoked when the image view is double clicked
- */ 
 - (IBAction)showImagePicker:(id)sender;
-
-/*!
- * @brief Should the image view use the address book Image Picker?
- *
- * If NO, a standard Open panel is used instead.
- */
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController;
 
 @end

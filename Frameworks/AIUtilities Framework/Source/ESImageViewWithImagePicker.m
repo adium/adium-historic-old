@@ -8,21 +8,8 @@
 
 #import "ESImageViewWithImagePicker.h"
 #import "NSImagePicker.h"
-#import "CBApplicationAdditions.h"
 #import "ESImageAdditions.h"
 #import "AIStringUtilities.h"
-
-/*
- An NSImageView subclass which supports:
-	- Address book-style image picker on double-click or enter, with delegate notification
-		- Or, alternately, an Open Panel on double-click or enter, with delegate notification
-	- Copying and pasting, with delegate notification
-	- Drag and drop into and out of the image well, with delegate notification, 
-		with support for animated GIFs and transparency
- 	- Notifcation to the delegate of user's attempt to delete the image
-
- Note: ESImageViewWithImagePicker requires Panther or better for the Address book-style image picker to work.
- */
 
 #define DRAGGING_THRESHOLD 6.0*6.0
 
@@ -34,10 +21,29 @@
 - (void)delete;
 @end
 
+/*
+ * @class ESImageViewWithImagePicker
+ *
+ * @brief Image view which displays and uses the Image Picker used by Apple Address Book and iChat when activated and also allows other image-setting behaviors.
+ *
+ * The following is supported
+ *		- Address book-style image picker on double-click or enter, with delegate notification
+ *		- Or, alternately, an Open Panel on double-click or enter, with delegate notification
+ *		- Copying and pasting, with delegate notification
+ *		- Drag and drop into and out of the image well, with delegate notification, 
+ *			with support for animated GIFs and transparency
+ *		- Notifcation to the delegate of user's attempt to delete the image
+ *
+ * Note: ESImageViewWithImagePicker requires Panther or better for the Address Book-style
+ * image picker to work.
+ */
 @implementation ESImageViewWithImagePicker
 
 // Init ------------------------------------------------------------------------------------------
 #pragma mark Init
+/*
+ * @brief Initialize with coder
+ */
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     if((self = [super initWithCoder:aDecoder])) {
@@ -46,6 +52,9 @@
     return self;
 }
 
+/*
+ * @brief Initialize with frame
+ */
 - (id)initWithFrame:(NSRect)frameRect
 {
 	if((self = [super initWithFrame:frameRect])) {
@@ -54,6 +63,9 @@
 	return self;
 }
 
+/*
+ * @brief Private initialization method
+ */
 - (void)_initImageViewWithImagePicker
 {
 	pickerController = nil;
@@ -66,9 +78,16 @@
 	mouseDownPos = NSZeroPoint;
 	
 	useNSImagePickerController = YES;
+	
+	/* Determine if we can load the image picker controller class.  We might not be able to for a user with a corrupt AddressBook.framework,
+	 * for example... we certainly wouldn't be able to on version of Mac OS X before 10.3.0.
+	 */
 	imagePickerClassIsAvailable = (NSClassFromString(@"NSImagePickerController") != nil);
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	if (pickerController){
@@ -84,35 +103,71 @@
 
 // Getters and Setters ----------------------------------------------------------------
 #pragma mark Getters and Setters
+/*!
+ * @brief Set the delegate
+ *
+ * Set the delegate.  See <tt>ESImageViewWithImagePickerDelegate</tt> protocol discussion for details.
+ * @param inDelegate The delegate, which may implement any of the methods described in <tt>ESImageViewWithImagePickerDelegate</tt>.
+ */ 
 - (void)setDelegate:(id)inDelegate
 {
 	delegate = inDelegate;
 }
+
+/*!
+ * @brief Return the delegate
+ *
+ * @return The delegate
+ */ 
 - (id)delegate
 {
 	return delegate;
 }
 
+/*!
+ * @brief Set the image
+ *
+ * We may get here progrmatically, from a user drag-and-drop or paste, etc.
+ */
 - (void)setImage:(NSImage *)inImage
 {
 	[super setImage:inImage];
+	
+	//Inform the picker controller of a changed selection if it is open, for live updating
 	if (pickerController){
 		[pickerController selectionChanged];
 	}
 }
 
+/*!
+ * @brief Set the title of the Image Picker
+ *
+ * Set the title of the Image Picker window which will be displayed if the user activates it (see class discussion).
+ * @param inTitle An <tt>NSString</tt> of the title
+ */ 
 - (void)setTitle:(NSString *)inTitle
 {
-	[title release]; title = [inTitle retain];
-	if (pickerController){
-		[pickerController selectionChanged];
+	if(title != inTitle){
+		[title release]; title = [inTitle retain];
+		if (pickerController){
+			[pickerController selectionChanged];
+		}
 	}
 }
+
+/*
+ * @brief The title of the image picker
+ */
 - (NSString *)title
 {
 	return title;
 }
 
+/*!
+ * @brief Should the image view use the address book Image Picker?
+ *
+ * If NO, a standard Open panel is used instead.
+ */
 - (void)setUseNSImagePickerController:(BOOL)inUseNSImagePickerController
 {
 	useNSImagePickerController = inUseNSImagePickerController;
@@ -121,6 +176,11 @@
 // Monitoring user interaction --------------------------------------------------------
 #pragma mark Monitoring user interaction
 
+/*
+ * @brief Mouse down
+ *
+ * Intercept mouse down events so we can begin a drag out of the image view if appropriate
+ */
 - (void)mouseDown:(NSEvent *)theEvent
 {
 	NSEvent *nextEvent;
@@ -146,6 +206,11 @@
 	}
 }
 
+/*
+ * @brief Key down
+ *
+ * Intercept key down events to delete the image on delete/backspace or to show the image picker on enter/return
+ */
 - (void)keyDown:(NSEvent *)theEvent
 {
 	unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
@@ -159,6 +224,11 @@
 	}
 }
 
+/*
+ * @brief Mouse dragged
+ *
+ * Begin an image drag as appropriate
+ */
 - (void)mouseDragged:(NSEvent *)theEvent
 {
 	// Work out if the mouse has been dragged far enough - it stops accidental drags
@@ -198,13 +268,17 @@
 	[dragImage release];
 }
 
-//Declare what operations we can participate in as a drag and drop source
+/*
+ * @brief Declare what operations we can participate in as a drag and drop source
+ */
 - (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)flag
 {
 	return NSDragOperationCopy;
 }
 
-// Method called to support drag types we said we could offer
+/*
+ * @brief Method called to support drag types we said we could offer
+ */
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
     //sender has accepted the drag and now we need to send the data for the type we promised
@@ -219,9 +293,11 @@
     }
 }
 
+/*
+ * @brief Dragging entered
+ */
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	NSLog(@"draggingEntered: %@ : %@",[sender draggingSource],self);
 	if([sender draggingSource] == self){
 		return NSDragOperationNone;
 	}else{
@@ -229,9 +305,11 @@
 	}
 }
 
+/*
+ * @brief Dragging updated
+ */
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-		NSLog(@"draggingUpdated: %@ : %@",[sender draggingSource],self);
 	if([sender draggingSource] == self){
 		return NSDragOperationNone;
 	}else{
@@ -239,7 +317,14 @@
 	}
 }
 
-//A new image was dragged into our view, changing [self image] to match it (NSImageView handles that)
+/*
+ * @brief Conclude a drag operation
+ *
+ * A new image was dragged into our view.  -[super concludeDragOperation:] will change [self image] to match it.
+ * We then want to update our pickerController's selection if it is open.
+ * Also, if we're dropped a promised file, use its data directly as it may be better than what NSImageView's natural
+ * loading retrieves... this way we can get transparency or animation data, for example.
+ */
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
 	BOOL notified = NO;
@@ -282,6 +367,9 @@
 
 // Copy / Paste ----------------------------------------------------------------
 #pragma mark Copy / Paste
+/*
+ * @brief Copy
+ */
 - (void)copy:(id)sender
 {
 	NSImage *image = [self image];
@@ -291,6 +379,9 @@
 	}
 }
 
+/*
+ * @brief Paste
+ */
 - (void)paste:(id)sender
 {
 	NSPasteboard	*pb = [NSPasteboard generalPasteboard];
@@ -328,13 +419,20 @@
 	if(!success) NSBeep();
 }
 
-//Cut = copy + delete
+/*
+ * @brief Cut
+ *
+ * Cut = copy + delete
+ */
 - (void)cut:(id)sender
 {
 	[self copy:sender];
 	[self delete];
 }
 
+/*
+ * @brief Delete
+ */
 - (void)delete
 {
 	if (delegate && [delegate respondsToSelector:@selector(deleteInImageViewWithImagePicker:)]){
@@ -345,12 +443,17 @@
 
 // NSImagePicker Access and Delegate ----------------------------------------------------------------
 #pragma mark NSImagePicker Access and Delegate
-//Public method for showing the image picker
+/*!
+ * @brief Action to call -[self showPickerController]
+ */ 
 - (IBAction)showImagePicker:(id)sender
 {
 	[self showPickerController];
 }
 
+/*
+ * @brief Show the image picker controller
+ */
 - (void)showPickerController
 {
 	if (imagePickerClassIsAvailable && useNSImagePickerController){
@@ -358,7 +461,8 @@
 			Class	imagePickerClass;
 			NSPoint	pickerPoint;
 			
-			imagePickerClass = NSClassFromString(@"NSImagePickerController"); //10.2 doesn't have NSImagePickerController
+			//10.2 doesn't have NSImagePickerController, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+			imagePickerClass = NSClassFromString(@"NSImagePickerController");
 			pickerController = [[imagePickerClass sharedImagePickerControllerCreate:YES] retain];
 			[pickerController setDelegate:self];
 			
@@ -374,7 +478,6 @@
 
 	}else{
 		/* If we aren't using or can't use the image picker, use an open panel  */
-		
 		NSOpenPanel *openPanel;
 		
 		openPanel = [NSOpenPanel openPanel];
@@ -407,8 +510,13 @@
 	}
 }
 
-// This gets called when the user selects OK on a new image
-- (void)imagePicker: (id) sender selectedImage: (NSImage *) image
+/*
+ * @brief This gets called when the user selects OK on a new image
+ *
+ * @param sender The Image Picker
+ * @param image The image which was selected
+ */
+- (void)imagePicker:(id)sender selectedImage:(NSImage *)image
 {
 	//Update the NSImageView
 	[self setImage:image];
@@ -429,17 +537,21 @@
 		}
 		
 		//Add the image to the list of recent images
-		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture"); //10.2 doesn't have NSIPRecentPicture 
+		
+		//10.2 doesn't have NSIPRecentPicture, so find the class dynamically to avoid link errors if we want 10.2 compatibility
+		Class ipRecentPictureClass = NSClassFromString(@"NSIPRecentPicture");
 		id recentPicture = [[[ipRecentPictureClass alloc] initWithOriginalImage:image] autorelease];
 		[recentPicture setCurrent];
-		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures... but whatever, it works.
+		[ipRecentPictureClass _saveChanges]; //Saves to ~/Library/Images/iChat Recent Pictures
 
 		//Picker controller is closing
 		[pickerController release]; pickerController = nil;
 	}
 }
 
-// This is called if the user cancels an image selection
+/*
+ * @brief This is called if the user cancels an image selection
+ */
 - (void)imagePickerCanceled: (id) sender
 {
 	[[pickerController window] close];
@@ -448,9 +560,12 @@
 	[pickerController release]; pickerController = nil;
 }
 
-// This is called to provide an image when the delegate is first set and
-// following selectionChanged messages to the controller.
-// The junk on the end seems to be the selector name for the method itself
+/*
+ * @brief Provide the image to be shown in the image picker
+ *
+ * This is called to provide an image when the delegate is first set and following selectionChanged messages to the controller.
+ * The junk on the end seems to be the selector name for the method itself.
+ */
 - (NSImage *)displayImageInPicker: junk
 {
 	NSImage	*theImage = nil;
@@ -463,8 +578,11 @@
 	return (theImage ? theImage : [self image]);
 }
 
-// This is called to give a title for the picker. It is called as above.
-// Note that you must not return nil or the window gets upset
+/*
+ * @brief Provide the title for the picker
+ *
+ * Note that you must not return nil or the window gets upset
+ */
 - (NSString *)displayTitleInPicker: junk
 {
 	return (title ? title : AILocalizedString(@"Image Picker",nil));
@@ -473,8 +591,12 @@
 
 // Drawing ------------------------------------------------------------------------
 #pragma mark Drawing
-//Focus ring drawing code by Nicholas Riley, posted on cocoadev and available at:
-//http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+/*
+ * @brief Note when the focus ring needs to be displayed
+ *
+ * Focus ring drawing code by Nicholas Riley, posted unlicensed as public domain on cocoadev and available at:
+ * http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
+ */
 - (BOOL)needsDisplay
 {
 	NSResponder *resp = nil;
@@ -500,7 +622,9 @@
 	return(YES);
 }
 
-//Draw a focus ring around our view
+/*
+ * @brief Draw the focus ring around our view if necessary
+ */
 - (void)drawRect:(NSRect)rect
 {
 	[super drawRect:rect];
