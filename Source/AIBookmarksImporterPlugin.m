@@ -48,7 +48,7 @@
 	AIBookmarksImporterController *bookmarksImporterController = [AIBookmarksImporterController sharedController];
 
 	NSString *menuTitle = MENU_TITLE;
-	NSString *tooltip = AILocalizedString(@"Tooltip for show/hide bookmarks command", /*comment*/ nil);
+	NSString *tooltip = AILocalizedString(@"Toggle display of the Bookmarks panel", /*comment*/ nil);
 
 	//Main bookmark menu item
 	bookmarksMainMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:menuTitle
