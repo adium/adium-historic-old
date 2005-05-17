@@ -284,3 +284,8 @@
 }
 
 @end
+
+//XXX Remove after 0.90 is released -- 0.8x localization compatibility
+//AILocalizedString(@"Messages send on:",nil)
+//AILocalizedString(@"Send on Enter",nil)
+//AILocalizedString(@"Send on Return",nil)
