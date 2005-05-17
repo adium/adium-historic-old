@@ -435,3 +435,5 @@
 
 @end
 
+//XXX Remove after 0.90 is released -- 0.8x localization compatibility
+//AILocalizedString(@"Add to Accounts:",nil)
