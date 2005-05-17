@@ -25,11 +25,11 @@
 {
     IBOutlet    AIAlternatingRowTableView   *table_emoticonPacks;
     NSMutableArray							*emoticonPackPreviewControllers;
-	
+
 	IBOutlet    AIAlternatingRowTableView   *table_emoticons;
-    
     IBOutlet    NSTextField                 *textField_packTitle;
-        
+	IBOutlet	NSButton					*button_OK;
+		
     NSButtonCell                            *checkCell;
     AIEmoticonPack                          *selectedEmoticonPack;
 
