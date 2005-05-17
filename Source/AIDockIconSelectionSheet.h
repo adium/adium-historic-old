@@ -22,6 +22,8 @@
 	IBOutlet	AIImageGridView	*imageGridView_icons;
     NSMutableArray				*iconArray;
 
+	IBOutlet	NSButton		*button_OK;
+		
 	//Currently animated icon state and its index
     NSTimer						*animationTimer;
     AIIconState					*animatedIconState;

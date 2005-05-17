@@ -60,20 +60,7 @@
     [sheet orderOut:nil];
 }
 
-
-//Preference pane properties
-//- (PREFERENCE_CATEGORY)category{
-//    return(AIPref_Advanced);
-//}
-//- (NSString *)label{
-//    return(AILocalizedString(@"Dock Icon", nil));
-//}
-//- (NSString *)nibName{
-//    return(@"IconSelectionPrefs");
-//}
-
 //Setup our preference view
-//- (void)viewDidLoad
 - (void)windowDidLoad
 {
 	//Init
@@ -89,7 +76,9 @@
 									   name:Adium_Xtras_Changed
 									 object:nil];
 	[self xtrasChanged:nil];
-	
+
+	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
+
 	[super windowDidLoad];
 }
 
