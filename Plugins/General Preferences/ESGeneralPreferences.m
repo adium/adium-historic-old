@@ -261,25 +261,25 @@
 - (NSMenu *)sendKeysMenu
 {
 	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Enter","Enter key for sending messages"), [NSString stringWithUTF8String:"⌘←"], [NSString stringWithUTF8String:"⌘→"]]
+
+	[menu addItemWithTitle:AILocalizedString(@"Enter","Enter key for sending messages")
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AISendOnEnter];
-		
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Return","Return key for sending messages"), [NSString stringWithUTF8String:"⇧⌘←"], [NSString stringWithUTF8String:"⇧⌘→"]]
+
+	[menu addItemWithTitle:AILocalizedString(@"Return","Return key for sending messages")
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AISendOnReturn];
-	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Enter and Return","Enter and return key for sending messages"), [NSString stringWithUTF8String:"⌘["], [NSString stringWithUTF8String:"⌘]"]]
+
+	[menu addItemWithTitle:AILocalizedString(@"Enter and Return","Enter and return key for sending messages")
 					target:nil
 					action:nil
 			 keyEquivalent:@""
 					   tag:AISendOnBoth];
-	
+
 	return([menu autorelease]);		
 }
 
