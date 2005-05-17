@@ -78,13 +78,13 @@
 
 #pragma mark Sending keys
 //
-- (void)didOpenTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     [self _configureSendingKeysForObject:inTextEntryView]; //Configure the sending keys
 }
 
 //
-- (void)willCloseTextEntryView:(NSText<AITextEntryView> *)inTextEntryView
+- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     //Ignore
 }
