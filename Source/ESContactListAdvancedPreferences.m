@@ -74,12 +74,14 @@
 	[checkBox_showTooltipsInBackground setState:[[preferenceDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
 	[checkBox_windowHasShadow setState:[[preferenceDict objectForKey:KEY_CL_WINDOW_HAS_SHADOW] boolValue]];
 	
-	[checkBox_hide setLocalizedString:AILocalizedString(@"While Adium is in the background","Refers to a window hiding when Adium is not the foreground application")];
+#define WHILE_ADIUM_IS_IN_BACKGROUND	AILocalizedString(@"While Adium is in the background","Checkbox to indicate that something should occur while Adium is not the active application")
+	
+	[checkBox_hide setLocalizedString:WHILE_ADIUM_IS_IN_BACKGROUND];
 	[checkBox_edgeSlide setLocalizedString:AILocalizedString(@"Automatically on screen edges", "Refers to a window sliding off the edge of the screen like the Dock")];
 	[checkBox_flash setLocalizedString:AILocalizedString(@"Flash names with unviewed messages",nil)];
 	[checkBox_showTransitions setLocalizedString:AILocalizedString(@"Show transitions as contacts sign on and off","Transitions in this context means the names fading in as the contact signs on and out as the contact signs off")];
 	[checkBox_showTooltips setLocalizedString:AILocalizedString(@"Show contact information tooltips",nil)];
-	[checkBox_showTooltipsInBackground setLocalizedString:AILocalizedString(@"While Adium is in the background", "This is a secondary preference underneath 'Show contact information tooltips'")];
+	[checkBox_showTooltipsInBackground setLocalizedString:WHILE_ADIUM_IS_IN_BACKGROUND];
 	[checkBox_windowHasShadow setLocalizedString:AILocalizedString(@"Show window shadow",nil)];
 	[checkBox_windowHasShadow setToolTip:@"Stay close to the Vorlon."];
 
