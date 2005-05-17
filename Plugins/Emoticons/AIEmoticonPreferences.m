@@ -116,7 +116,9 @@
     
     //Configure the right pane to display the emoticons for the current selection
     [self _configureEmoticonListForSelection];
-	
+
+	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
+
 	//Redisplay the emoticons after an small delay so the sample emoticons line up properly
 	//since the desired width isn't known by AIEmoticonPackCell until once through the list of packs
 	[table_emoticonPacks performSelector:@selector(display) withObject:nil afterDelay:0.0001];

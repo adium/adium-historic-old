@@ -21,11 +21,23 @@
             CLASS = AIEmoticonPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_OK" = NSButton; 
                 "table_emoticonPacks" = AIAlternatingRowTableView; 
                 "table_emoticons" = AIAlternatingRowTableView; 
                 "textField_packTitle" = NSTextField; 
             }; 
             SUPERCLASS = AIWindowController; 
+        }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
         }, 
         {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
@@ -54,6 +66,7 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
