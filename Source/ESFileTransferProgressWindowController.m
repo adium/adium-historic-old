@@ -39,7 +39,7 @@
 - (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
 @end
 
-#ifndef MAC_OS_X_VERSION_10_4
+#if (!defined(MAC_OS_X_VERSION_10_4)) || (MAC_OS_X_VERSION_10_4 <= MAC_OS_X_VERSION_MAX_ALLOWED)
 #	define NSTableViewUniformColumnAutoresizingStyle 1
 #endif
 
