@@ -1355,7 +1355,6 @@
 				3419F3AB05314BE000C68BA3,
 				3419F3AC05314BE000C68BA3,
 				3419F3AE05314BE000C68BA3,
-				3419F3B005314BE000C68BA3,
 			);
 			buildRules = (
 			);
@@ -1436,13 +1435,6 @@
 				B73E464307DB5F9200D9129E,
 			);
 			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3419F3B005314BE000C68BA3 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		3419F6F505314E9C00C68BA3 = {
@@ -10152,7 +10144,6 @@
 				34BD9D24053146CC000AB133,
 				34BD9D42053146CC000AB133,
 				34BD9D57053146CC000AB133,
-				34BD9D5E053146CC000AB133,
 				34BD9D5F053146CC000AB133,
 				4BF2E91F067CB76300743318,
 				34BD9D6A053146CC000AB133,
@@ -11000,13 +10991,6 @@
 			settings = {
 			};
 		};
-		34BD9D5E053146CC000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		34BD9D5F053146CC000AB133 = {
 			buildActionMask = 12;
 			comments = Frameworks;
@@ -11050,7 +11034,6 @@
 				34BD9DC505314751000AB133,
 				34BD9DC805314751000AB133,
 				34BD9DDB05314751000AB133,
-				34BD9DDE05314751000AB133,
 			);
 			buildRules = (
 			);
@@ -11475,13 +11458,6 @@
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9DDE05314751000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		34BD9DE105314751000AB133 = {
 			explicitFileType = wrapper.framework;
 			includeInIndex = 0;
@@ -11496,7 +11472,6 @@
 				34BD9EE60531476D000AB133,
 				34BD9EE70531476D000AB133,
 				34BD9EEA0531476D000AB133,
-				34BD9EEE0531476D000AB133,
 			);
 			buildRules = (
 			);
@@ -11588,13 +11563,6 @@
 			isa = PBXFrameworksBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		34BD9EEE0531476D000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		34BD9EF10531476E000AB133 = {
 			explicitFileType = wrapper.cfbundle;
 			includeInIndex = 0;
@@ -11609,7 +11577,6 @@
 				34BD9F2F0531477E000AB133,
 				34BD9F310531477E000AB133,
 				34BD9F340531477E000AB133,
-				34BD9F360531477E000AB133,
 			);
 			buildRules = (
 			);
@@ -11709,13 +11676,6 @@
 				3448769806D1EF5900DA778C,
 			);
 			isa = PBXFrameworksBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		34BD9F360531477E000AB133 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		34BD9F390531477E000AB133 = {
@@ -24479,13 +24439,6 @@
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		B72537B9058C4577004BA969 = {
-			buildActionMask = 2147483647;
-			files = (
-			);
-			isa = PBXRezBuildPhase;
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		B72537BA058C4577004BA969 = {
 			buildActionMask = 2147483647;
 			files = (
@@ -24501,7 +24454,6 @@
 				B72537B6058C4577004BA969,
 				B72537B7058C4577004BA969,
 				B72537B8058C4577004BA969,
-				B72537B9058C4577004BA969,
 				B72537BA058C4577004BA969,
 			);
 			buildRules = (
