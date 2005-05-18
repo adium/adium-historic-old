@@ -134,8 +134,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     //
 	loadedPanes = [[NSMutableSet alloc] init];
 	
+	//Localization
 	[self localizeTabViewItemTitles];
-	
+	[button_removeContact setToolTip:AILocalizedString(@"Disassociate the selected contact from this meta contact. This does not remove the contact from your contact list.",nil)];
+	[button_removeContact setEnabled:NO];
+
     //Select the previously selected category
     selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
@@ -488,6 +491,15 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender
 {
 
+}
+
+- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject
+{
+	NSLog(@"Configuring for %@",listObject);
+	[self configureForListObject:listObject];
+	
+	//Only enable the remove contact button if a contact within the metacontact is selected
+	[button_removeContact setEnabled:(listObject && (listObject != [contactListController contactListRoot]))];
 }
 
 @end

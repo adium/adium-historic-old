@@ -54,4 +54,6 @@
 
 //Internal use
 - (float)drawerTrailingOffset;
+- (void)contactInfoListControllerSelectionDidChangeToListObject:(AIListObject *)listObject;
+
 @end

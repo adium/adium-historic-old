@@ -92,7 +92,8 @@
 {
 	if (!aNotification || [aNotification object] == contactListView){
 		int selectedRow = [contactListView selectedRow];
-		[(AIContactInfoWindowController *)delegate configureForListObject:((selectedRow != -1) ?
+
+		[delegate contactInfoListControllerSelectionDidChangeToListObject:((selectedRow != -1) ?
 																		   [contactListView itemAtRow:selectedRow] :
 																		   contactList)];
 	}
