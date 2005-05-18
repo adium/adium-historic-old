@@ -21,7 +21,6 @@
 
 #define PREF_GROUP_LOGGING              @"Logging"
 #define KEY_LOGGER_ENABLE               @"Enable Logging"
-#define	KEY_LOGGER_HTML                 @"Enable HTML Logging"
 
 @class AIAccount, AIChat, AILoggerPreferences, AILoggerAdvancedPreferences;
 
