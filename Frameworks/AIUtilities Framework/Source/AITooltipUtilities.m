@@ -33,6 +33,8 @@
 static	NSPanel                 *tooltipWindow = nil;
 static	NSTextView				*textView_tooltipTitle = nil;
 static	NSTextView				*textView_tooltipBody = nil;
+static  NSTextStorage   		*textStorage_tooltipTitle = nil;
+static  NSTextStorage   		*textStorage_tooltipBody = nil;
 static  NSImageView				*view_tooltipImage = nil;
 static  NSWindow				*onWindow = nil;
 static	NSAttributedString      *tooltipBody;
@@ -164,7 +166,6 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 //Create the tooltip
 + (void)_createTooltip
 {
-	NSTextStorage   *textStorage;
 	NSLayoutManager *layoutManager;
 	NSTextContainer *container;
 
@@ -186,10 +187,10 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
     if(!textView_tooltipTitle) {
 		//create and add the title text view
-		textStorage = [[NSTextStorage alloc] init];
+		textStorage_tooltipTitle = [[NSTextStorage alloc] init];
 
 		layoutManager = [[NSLayoutManager alloc] init];
-		[textStorage addLayoutManager:layoutManager];
+		[textStorage_tooltipTitle addLayoutManager:layoutManager];
 		[layoutManager release];
 
 		container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
@@ -206,10 +207,10 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
 	if(!textView_tooltipBody) {
 		//create and add the body text view
-		textStorage = [[NSTextStorage alloc] init];
+		textStorage_tooltipBody = [[NSTextStorage alloc] init];
 		
 		layoutManager = [[NSLayoutManager alloc] init];
-		[textStorage addLayoutManager:layoutManager];
+		[textStorage_tooltipBody addLayoutManager:layoutManager];
 		[layoutManager release];
 		
 		container = [[NSTextContainer alloc] initWithContainerSize:NSMakeSize(TOOLTIP_MAX_WIDTH,10000000.0)];
@@ -236,6 +237,8 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
     [tooltipWindow orderOut:nil];
     [textView_tooltipBody release];  textView_tooltipBody = nil;
     [textView_tooltipTitle release]; textView_tooltipTitle = nil;
+	[textStorage_tooltipBody release]; textStorage_tooltipBody = nil;
+	[textStorage_tooltipTitle release]; textStorage_tooltipTitle = nil;
     [view_tooltipImage release];     view_tooltipImage = nil;
     [tooltipWindow release];         tooltipWindow = nil;
     [tooltipBody release];           tooltipBody = nil;
