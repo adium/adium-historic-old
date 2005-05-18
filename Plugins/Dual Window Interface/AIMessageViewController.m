@@ -176,6 +176,9 @@
 	//Release view_contents, for which we are responsible because we loaded it via -[NSBundle loadNibNamed:owner]
 	[view_contents release];
 	
+	//Release the hidden user list view
+	[scrollView_userList release]; scrollView_userList = nil;
+	
     [super dealloc];
 }
 
