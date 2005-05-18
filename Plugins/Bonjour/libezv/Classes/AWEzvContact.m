@@ -81,6 +81,7 @@
     AWEzvXMLNode *messageNode, *bodyNode, *textNode, *htmlNode, *htmlBodyNode, *htmlMessageNode;
 	NSMutableString *mutableString;
 	NSString *messageExtraEscapedString;
+	NSString *htmlFiltered;
 
     if (_stream == nil) {
 	[self createConnection];
@@ -98,6 +99,12 @@
 	[mutableString replaceOccurrencesOfString:@">" withString:@"&gt;"
 									  options:0 range:NSMakeRange(0, [mutableString length])];
 	messageExtraEscapedString = [mutableString copy];
+	[mutableString release];
+	
+	mutableString = [html mutableCopy];
+	[mutableString replaceOccurrencesOfString:@"<br>" withString:@"<br />"
+									  options:0 range:NSMakeRange(0, [mutableString length])];
+	htmlFiltered = [mutableString copy];
 	[mutableString release];
 
     /* setup XML tree */
@@ -119,7 +126,7 @@
     [htmlBodyNode addAttribute:@"ichattextcolor" withValue:@"#000000"];
     [htmlNode addChild:htmlBodyNode];
     
-    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLRaw name:html];
+    htmlMessageNode = [[AWEzvXMLNode alloc] initWithType:AWEzvXMLRaw name:htmlFiltered];
     [htmlBodyNode addChild:htmlMessageNode];
     
     /* send the data */
@@ -132,7 +139,8 @@
     [textNode release];
     [bodyNode release];
     [messageNode release];
-       [messageExtraEscapedString release];
+	[messageExtraEscapedString release];
+	[htmlFiltered release];
 }
 
 - (void) sendTypingNotification:(AWEzvTyping)typingStatus {
