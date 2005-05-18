@@ -2271,7 +2271,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER -DDEBUG_BUILD -g3";
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				ZERO_LINK = NO;
@@ -6388,7 +6388,7 @@
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
-				OTHER_LDFLAGS = "-undefined suppress -flat_namespace";
+				OTHER_LDFLAGS = "-undefined dynamic_lookup";
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10164,7 +10164,6 @@
 				GCC_WARN_UNKNOWN_PRAGMAS = NO;
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
@@ -16689,7 +16688,6 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -17597,6 +17595,7 @@
 				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DDEBUG_BUILD -g3";
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				ZERO_LINK = YES;
@@ -17614,7 +17613,7 @@
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				ZERO_LINK = NO;
@@ -19290,12 +19289,11 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" \"Plugins/Gaim Service\" \"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" \"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\" \"Plugins/Gaim Service/Include/\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "";
 				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
@@ -19485,7 +19483,6 @@
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
-				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -24464,7 +24461,6 @@
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
-				OTHER_LDFLAGS = "-framework Carbon";
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
