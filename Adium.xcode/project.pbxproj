@@ -4106,7 +4106,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Plugins/Gaim Service/Libgaim.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Libgaim ]); then\n\tln -sf Versions/Current/Libgaim   Libgaim\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
+			shellScript = "## Fix Libgaim.framework symlinks\ncd \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Libgaim.framework\"\nln -sf ${FRAMEWORK_VERSION} Versions/Current\nln -sf Versions/Current/Headers Headers\nln -sf Versions/Current/Libgaim Libgaim\nln -sf Versions/Current/Resources Resources\n";
 		};
 		344EE9210574504B000F342B = {
 			children = (
@@ -19280,20 +19280,20 @@
 		};
 		4B7F278205440C0800CDFC90 = {
 			buildPhases = (
-				344ECA570620A04E007256C6,
 				4B7F277E05440C0800CDFC90,
 				4B7F277F05440C0800CDFC90,
+				4BDF2C97061E377E00EA75C5,
+				344ECA570620A04E007256C6,
 				4B7F278005440C0800CDFC90,
 				4B7F278105440C0800CDFC90,
-				4BDF2C97061E377E00EA75C5,
 			);
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Plugins/Gaim Service\" \"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\" \"Plugins/Gaim Service\" \"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
-				HEADER_SEARCH_PATHS = "\"Plugins/Gaim Service/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\" \"Plugins/Gaim Service/Include/\"";
+				HEADER_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers\" \"Plugins/Gaim Service/Include/glib\" \"Plugins/Gaim Service/Include/glib/glib\" \"Plugins/Gaim Service/Include/glib/gmodule\" \"Plugins/Gaim Service/Include/\"";
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_LDFLAGS = "";
