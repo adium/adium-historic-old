@@ -20,7 +20,7 @@
 #define	KEY_LOG_VIEWER_EMOTICONS			@"Log Viewer Emoticons"
 #define	KEY_LOG_VIEWER_DRAWER_STATE			@"Log Viewer Drawer State"
 #define	KEY_LOG_VIEWER_DRAWER_SIZE			@"Log Viewer Drawer Size"
-#define KEY_LOG_VIEWER_SELECTED_COLUMN		@"Log Viewer Selected Column Idenitifer"
+#define KEY_LOG_VIEWER_SELECTED_COLUMN		@"Log Viewer Selected Column Identifier"
 #define	LOG_VIEWER_DID_CREATE_LOG_ARRAYS	@"LogViewerDidCreateLogArrays"
 
 @class AIAlternatingRowOutlineView, AIListContact, AILoggerPlugin, AIChatLog;
