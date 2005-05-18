@@ -10139,12 +10139,12 @@
 		};
 		34BD9CD1053146CC000AB133 = {
 			buildPhases = (
-				34E9DCF2078FC79900662E8E,
 				34BD9D10053146CC000AB133,
 				34BD9D24053146CC000AB133,
+				34BD9D5F053146CC000AB133,
+				34E9DCF2078FC79900662E8E,
 				34BD9D42053146CC000AB133,
 				34BD9D57053146CC000AB133,
-				34BD9D5F053146CC000AB133,
 				4BF2E91F067CB76300743318,
 				34BD9D6A053146CC000AB133,
 				34677B3607CC3D6200F59F7B,
@@ -10154,7 +10154,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" Frameworks \"Frameworks/AIBookmarksImport Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -15377,7 +15377,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\ncd \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Growl-WithInstaller.framework\"\nln -sf ${FRAMEWORK_VERSION} Versions/Current\nln -sf Versions/Current/Headers Headers\nln -sf Versions/Current/Growl-WithInstaller Growl-WithInstaller\nln -sf Versions/Current/Resources Resources\n";
 		};
 		34EF54A407CE8EC300A685F1 = {
 			fileRef = 34D8344C07CBE6E2006466F2;
