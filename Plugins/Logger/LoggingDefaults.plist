@@ -4,8 +4,6 @@
 <dict>
 	<key>Enable Logging</key>
 	<true/>
-	<key>Enable HTML Logging</key>
-	<true/>
 	<key>Log Viewer Drawer Size</key>
 	<integer>200</integer>
 	<key>Log Viewer Drawer State</key>

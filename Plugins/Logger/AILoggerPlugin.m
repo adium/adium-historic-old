@@ -137,7 +137,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 {
 	BOOL            newLogValue;
 	
-	logHTML = /*[[prefDict objectForKey:KEY_LOGGER_HTML] boolValue]*/ YES;
+	logHTML = YES;
 
 	//Start/Stop logging
 	newLogValue = [[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue];
