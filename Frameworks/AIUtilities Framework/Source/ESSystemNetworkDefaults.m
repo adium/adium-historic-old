@@ -18,14 +18,14 @@
 	NSDictionary		*proxyDict = nil;
 
 	CFStringRef			enableKey;
-    int                 enable;
-    
+	int                 enable;
+
 	CFStringRef			portKey;
 	NSNumber			*portNum = nil;
 
 	CFStringRef			proxyKey;
 	NSString			*hostString;
-	
+
 	switch(proxyType){
 		case Proxy_HTTP: {
 			enableKey = kSCPropNetProxiesHTTPEnable;
@@ -69,26 +69,26 @@
 			break;
 		}
 	}
-	
-    if ((proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL))) {
-		
+
+	if ((proxyDict = (NSDictionary *)SCDynamicStoreCopyProxies(NULL))) {
+
 		//Enabled?
 		enable = [[proxyDict objectForKey:(NSString *)enableKey] intValue];
 		if (enable){
-			
+
 			//Host
 			hostString = [proxyDict objectForKey:(NSString *)proxyKey];
 			if (hostString){
-				
+
 				//Port
 				portNum = [proxyDict objectForKey:(NSString *)portKey];
 				if (portNum){
 					NSDictionary	*authDict;
-		
+
 					systemProxySettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 						hostString,@"Host",
 						portNum,@"Port",nil];
-		
+
 					//User name & password if applicable
 					authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
 					if(authDict){
@@ -102,13 +102,11 @@
 		}
 		// Could check and process kSCPropNetProxiesExceptionsList here, which returns: CFArray[CFString]
 	}
-    
-    //Clean up; proxyDict was created by a call with Copy in its name
-    if (proxyDict != NULL) {
-        [proxyDict release];
-    }
 
-    return(systemProxySettingsDictionary);
-}    
+	//Clean up; proxyDict was created by a call with Copy in its name
+	[proxyDict release];
+
+	return(systemProxySettingsDictionary);
+}
 
 @end
