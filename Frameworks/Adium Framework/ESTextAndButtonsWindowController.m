@@ -183,8 +183,8 @@
 	[super windowDidLoad];
 
 	//Hide the toolbar and zoom buttons
-	[[[self window] standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
-	[[[self window] standardWindowButton:NSWindowZoomButton] setFrame:NSMakeRect(0,0,0,0)];
+	[[window standardWindowButton:NSWindowToolbarButton] setFrame:NSMakeRect(0,0,0,0)];
+	[[window standardWindowButton:NSWindowZoomButton] setFrame:NSMakeRect(0,0,0,0)];
 	
 	//Title
 	if(title){
