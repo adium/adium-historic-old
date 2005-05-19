@@ -84,7 +84,7 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
-		AIDockController	*dockController = [adium dockController;
+		AIDockController	*dockController = [adium dockController];
 		BOOL				shouldUpdateStatus = NO;
 		
 		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){
