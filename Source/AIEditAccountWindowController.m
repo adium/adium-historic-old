@@ -33,7 +33,8 @@
 @interface AIEditAccountWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount notifyingTarget:(id)inTarget;
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount;
-- (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier;
+- (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
+	  availableHeight:(int)height;
 - (void)_configureResponderChain:(NSTimer *)inTimer;
 - (void)_removeCustomViewAndTabs;
 - (void)_localizeTabViewItemLabels;
@@ -106,11 +107,6 @@
 	[[self window] center];
 
 	//Account Overview
-	/*
-	[image_serviceIcon setImage:[AIServiceIcons serviceIconForService:[account service]
-																 type:AIServiceIconLarge
-															direction:AIIconNormal]];
-	 */
 	[textField_serviceName setStringValue:[[account service] longDescription]];
 	[textField_accountDescription setStringValue:[account UID]];
 	[checkBox_autoConnect setState:[[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]];
@@ -197,11 +193,9 @@
  */
 - (void)_addCustomViewAndTabsForAccount:(AIAccount *)inAccount
 {
-	NSRect	windowFrame;
-	int		heightChange = 0;
-	int		heightDifference;
-
-	windowFrame = [[self window] frame];
+	NSRect	windowFrame = [[self window] frame];
+	int		baseHeight = [view_accountSetup frame].size.height;
+	int		newHeight = baseHeight;
 
 	//Configure our account and proxy view controllers
 	accountViewController = [[[inAccount service] accountViewController] retain];
@@ -213,38 +207,39 @@
 	[accountProxyController configureForAccount:inAccount];
 
 	//Account setup view
-	heightDifference = [self _addCustomView:[accountViewController setupView]
-									 toView:view_accountSetup
-					  tabViewItemIdentifier:@"account"];
-	if(heightDifference > heightChange) heightChange = heightDifference;
-
+	newHeight = [self _addCustomView:[accountViewController setupView]
+						   toView:view_accountSetup
+			tabViewItemIdentifier:@"account"
+				  availableHeight:newHeight];
+	
 	//Account Profile View
-	heightDifference = [self _addCustomView:[accountViewController profileView]
-									 toView:view_accountProfile
-					  tabViewItemIdentifier:@"profile"];
-	if(heightDifference > heightChange) heightChange = heightDifference;
-
+	newHeight = [self _addCustomView:[accountViewController profileView]
+						   toView:view_accountProfile
+			tabViewItemIdentifier:@"profile"
+				  availableHeight:newHeight];
+	
 	//Account Options view
-	heightDifference = [self _addCustomView:[accountViewController optionsView]
-									 toView:view_accountOptions
-					  tabViewItemIdentifier:@"options"];
-	if(heightDifference > heightChange) heightChange = heightDifference;
-
+	newHeight = [self _addCustomView:[accountViewController optionsView]
+						   toView:view_accountOptions
+			tabViewItemIdentifier:@"options"
+				  availableHeight:newHeight];
+	
 	//Account Privacy view
-	heightDifference = [self _addCustomView:[accountViewController privacyView]
-									 toView:view_accountPrivacy
-					  tabViewItemIdentifier:@"privacy"];
-	if(heightDifference > heightChange) heightChange = heightDifference;
-
+	newHeight = [self _addCustomView:[accountViewController privacyView]
+						   toView:view_accountPrivacy
+			tabViewItemIdentifier:@"privacy"
+				  availableHeight:newHeight];
+	
 	//Add proxy view
-	heightDifference = [self _addCustomView:[accountProxyController view]
-									 toView:view_accountProxy
-					  tabViewItemIdentifier:@"proxy"];
-	if(heightDifference > heightChange) heightChange = heightDifference;
-
-	windowFrame.size.height += heightChange;
+	newHeight = [self _addCustomView:[accountProxyController view]
+						   toView:view_accountProxy
+			tabViewItemIdentifier:@"proxy"
+				  availableHeight:newHeight];
+	
+	//Resize our window as necessary to make room for the custom views
+	windowFrame.size.height += newHeight - [view_accountSetup frame].size.height;
 	[[self window] setFrame:windowFrame display:YES];
-
+	
 	//Responder chains are a pain in 10.3.  The tab view will set them up correctly when we switch tabs, but doesn't
 	//get a chance to setup the responder chain for our default tab.  A quick hack to get the tab view to set things
 	//up correctly is to switch tabs away and then back to our default.  This causes little harm, since our window
@@ -263,36 +258,29 @@
  * @param customView The view to add
  * @param setupView The view within our nib which will be filled by customView
  * @param identifier Identifier of the <tt>NSTabViewItem</tt> which will be removed from tabView_auxiliary if customView == nil
- * @result The positive height difference betwen customView and setupView, indicating how much taller the window needs to be to fit customView.
+ * @param requiredHeight The current required view height to display all our views
+ * @result The new required window height to display our existing views and the newly added view
  */
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
+	  availableHeight:(int)height
 {
-	NSSize	customViewFrameSize;
-	NSRect	ourViewFrame;
-	int		heightDifference;
-
 	if(customView){
-		customViewFrameSize = [customView frame].size;
-		ourViewFrame = [setupView frame];
-
-		heightDifference = (customViewFrameSize.height - ourViewFrame.size.height);
-		if(heightDifference > 0){
-			//Modify our frame to make room
-			ourViewFrame.size.height += heightDifference;
-			ourViewFrame.origin.y -= heightDifference;
-			[setupView setFrame:ourViewFrame];
+		//Adjust height as necessary if our view needs more room
+		if([customView frame].size.height > height){
+			height = [customView frame].size.height;
 		}
 
-		[customView setFrameSize:ourViewFrame.size];
+		//Align our view to the top and insert it into the window
+		[customView setFrameOrigin:NSMakePoint(0, [setupView frame].size.height - [customView frame].size.height)];
+		[customView setAutoresizingMask:NSViewMinYMargin];
 		[setupView addSubview:customView];
-	}else{
-		//If no options are available, remove the options tab
-		[tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemWithIdentifier:identifier]];
 
-		heightDifference = 0;
+	}else{
+		//If no view is available, remove the corresponding tab
+		[tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemWithIdentifier:identifier]];
 	}
 
-	return(heightDifference > 0 ? heightDifference : 0);
+	return(height);
 }
 
 /*!
@@ -317,7 +305,9 @@
 	[[tabView_auxiliary tabViewItemWithIdentifier:@"proxy"] setLabel:AILocalizedString(@"Proxy",nil)];
 }
 
+
 // ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+#pragma mark ESImageViewWithImagePicker Delegate
 - (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
 	[userIconData release];
