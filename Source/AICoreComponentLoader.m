@@ -18,23 +18,17 @@
  * @class AICoreComponentLoader
  * @brief Core - Component Loader
 
- * Loads integrated plugins.  All integrated plugins require a _loadComponentClass statement below and their class name
- * in the @class list.  In situations where the load order of plugins is important, please make note.
+ * Loads integrated plugins.  Component classes to load are determined by CoreComponents.plist
  */
 
 #import "AICoreComponentLoader.h"
 #import <Adium/AIPlugin.h>
 
-#define VERSION_KEY			@"Version"
-#define COMPONENTS_KEY		@"Components"
-
-#define COMPONENT_DISABLED	@"Disabled"
-#define COMPONENT_CLASS		@"Class"
-#define COMPONENT_HEADER	@"Header"
-#define COMPONENT_LOCATION	@"Location"
-
 @implementation AICoreComponentLoader
 
+/*!
+ * @brief Init
+ */
 - (id)init
 {
 	if((self = [super init])){
@@ -50,7 +44,6 @@
 - (void)dealloc
 {
 	[components release];
-
 	[super dealloc];
 }
 
@@ -61,30 +54,20 @@
  */
 - (void)initController
 {
-	NSString *propertyList = [[NSBundle mainBundle] pathForResource:@"CoreComponents" ofType:@"plist"];
-	NSDictionary *componentDict = [NSDictionary dictionaryWithContentsOfFile:propertyList];
-	NSArray *componentArray = [componentDict objectForKey:COMPONENTS_KEY];
+	//Fetch the list of components to load
+	NSString	*propertyList = [[NSBundle mainBundle] pathForResource:@"CoreComponents" ofType:@"plist"];
+	NSArray 	*componentArray = [NSArray arrayWithContentsOfFile:propertyList];
+	NSParameterAssert(componentArray != nil);
 
-	if(!componentArray){
-		return;
-	}
+	//Load each component
+	NSEnumerator *enumerator = [componentArray objectEnumerator];
+	NSString	 *className;
 
-	NSEnumerator *compEnumerator = [componentArray objectEnumerator];
-	NSDictionary *dict;
-
-	while((dict = [compEnumerator nextObject])){
-		if([[dict objectForKey:COMPONENT_DISABLED] boolValue]){
-			continue;
-		}
-
-		NSString *className = [dict objectForKey:COMPONENT_CLASS];
+	while((className = [enumerator nextObject])){
 		Class class;
 
 		if(className && (class = NSClassFromString(className))){
 			id object = [[class alloc] init];
-#ifdef TRACK_COMPONENTS
-			NSLog(@"%@: adding component: %@", [self class], object);
-#endif
 
 			NSAssert1(object, @"Failed to load %@", className);
 
@@ -95,25 +78,23 @@
 }
 
 /*!
- * @brief Give all components a chance to close
+ * @brief Close integreated components
  */
 - (void)closeController
 {
-	NSArray			*keys = [components allKeys];
-	NSEnumerator	*enumerator = [keys objectEnumerator];
-	NSString		*className;
+	NSEnumerator	*enumerator = [components objectEnumerator];
+	AIPlugin		*plugin;
 
-	while ((className = [enumerator nextObject])) {
-		AIPlugin	*plugin = [components objectForKey:className];
-#ifdef TRACK_COMPONENTS
-		NSLog(@"%@: removing component: %@", [self class], plugin);
-#endif
+	while((plugin = [enumerator nextObject])) {
 		[plugin uninstallPlugin];
 	}
 }
 
 #pragma mark -
 
+/*!
+ * @brief Retrieve a component plugin by its class name
+ */
 - (AIPlugin *)pluginWithClassName:(NSString *)className {
 	return [components objectForKey:className];
 }
