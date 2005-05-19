@@ -78,48 +78,46 @@
 /*!
  * @brief Update the dock icon state in response to an account changing status
  *
- * If one ore more accounts are online, set the Online icon state.  Similarly, handle the Connecting, Away, and Idle
+ * If one or more accounts are online, set the Online icon state.  Similarly, handle the Connecting, Away, and Idle
  * dock icon states.
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
-		BOOL	shouldUpdateStatus = NO;
+		AIDockController	*dockController = [adium dockController;
+		BOOL				shouldUpdateStatus = NO;
 		
 		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){
 			if([self _accountsWithBoolKey:@"Online"] > 0){
-				[[adium dockController] setIconStateNamed:@"Online"];
+				[dockController setIconStateNamed:@"Online"];
 			}else{
-				[[adium dockController] removeIconStateNamed:@"Online"];
+				[dockController removeIconStateNamed:@"Online"];
 			}
-			shouldUpdateStatus = YES;
-		}
-		if(inObject == nil || [inModifiedKeys containsObject:@"Connecting"]){
-			if([self _accountsWithBoolKey:@"Connecting"] > 0){
-				[[adium dockController] setIconStateNamed:@"Connecting"];
-			}else{
-				[[adium dockController] removeIconStateNamed:@"Connecting"];
-			}
-			shouldUpdateStatus = YES;
-		}
-		
-		if(inObject == nil || [inModifiedKeys containsObject:@"StatusState"]){
 			shouldUpdateStatus = YES;
 		}
 
+		if(inObject == nil || [inModifiedKeys containsObject:@"Connecting"]){
+			if([self _accountsWithBoolKey:@"Connecting"] > 0){
+				[dockController setIconStateNamed:@"Connecting"];
+			}else{
+				[dockController removeIconStateNamed:@"Connecting"];
+			}
+			shouldUpdateStatus = YES;
+		}
+		
 		if(inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]){
 			if([self _accountsWithKey:@"IdleSince"] > 0){
-				[[adium dockController] setIconStateNamed:@"Idle"];
+				[dockController setIconStateNamed:@"Idle"];
 			}else{
-				[[adium dockController] removeIconStateNamed:@"Idle"];
+				[dockController removeIconStateNamed:@"Idle"];
 			}	
 		}
 		
-		if(shouldUpdateStatus){
+		if(shouldUpdateStatus || [inModifiedKeys containsObject:@"StatusState"]){
 			if([[adium statusController] activeStatusType] == AIAwayStatusType){
-				[[adium dockController] setIconStateNamed:@"Away"];
+				[dockController setIconStateNamed:@"Away"];
 			}else{
-				[[adium dockController] removeIconStateNamed:@"Away"];
+				[dockController removeIconStateNamed:@"Away"];
 			}
 		}
 	}
@@ -164,5 +162,3 @@
 }
 
 @end
-
-
