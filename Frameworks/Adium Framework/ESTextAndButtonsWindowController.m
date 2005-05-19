@@ -194,7 +194,7 @@
 	}
 
 	//Message header
-	int		headerHeightChange, heightChange = 0;
+	float	headerHeightChange, heightChange = 0;
 	NSRect  frame = [window frame];
 	
 	[textView_messageHeader setVerticallyResizable:YES];
