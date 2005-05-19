@@ -45,6 +45,7 @@
 		[panel setHidesOnDeactivate:NO];
 		[panel setIgnoresMouseEvents:YES];
 		[panel setLevel:NSStatusWindowLevel];
+		[panel setHasShadow:YES];
 		[self _setWindowOpacity:WINDOW_FADE_MIN];
 
 		//Setup the static view
