@@ -69,7 +69,7 @@
 - (void)setImage:(NSImage *)inImage
 {
     NSRect frame = [panel frame];
-    frame.size = NSMakeSize([inImage size].width, [inImage size].height);
+    frame.size = [inImage size];
     [staticView setImage:inImage];
     [panel setFrame:frame display:YES animate:NO];
 }
