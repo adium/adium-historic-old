@@ -29,39 +29,39 @@
 	switch(proxyType){
 		case Proxy_HTTP: {
 			enableKey = kSCPropNetProxiesHTTPEnable;
-			portKey = kSCPropNetProxiesHTTPPort;
-			proxyKey = kSCPropNetProxiesHTTPProxy;
+			portKey   = kSCPropNetProxiesHTTPPort;
+			proxyKey  = kSCPropNetProxiesHTTPProxy;
 			break;
 		}
 		case Proxy_SOCKS4:
 		case Proxy_SOCKS5: {
 			enableKey = kSCPropNetProxiesSOCKSEnable;
-			portKey = kSCPropNetProxiesSOCKSPort;
-			proxyKey = kSCPropNetProxiesSOCKSProxy;
+			portKey   = kSCPropNetProxiesSOCKSPort;
+			proxyKey  = kSCPropNetProxiesSOCKSProxy;
 			break;
 		}
 		case Proxy_HTTPS: {
 			enableKey = kSCPropNetProxiesHTTPSEnable;
-			portKey = kSCPropNetProxiesHTTPSPort;
-			proxyKey = kSCPropNetProxiesHTTPSProxy;
+			portKey   = kSCPropNetProxiesHTTPSPort;
+			proxyKey  = kSCPropNetProxiesHTTPSProxy;
 			break;
 		}
 		case Proxy_FTP: {
 			enableKey = kSCPropNetProxiesFTPEnable;
-			portKey = kSCPropNetProxiesFTPPort;
-			proxyKey = kSCPropNetProxiesFTPProxy;
+			portKey   = kSCPropNetProxiesFTPPort;
+			proxyKey  = kSCPropNetProxiesFTPProxy;
 			break;
 		}
 		case Proxy_RTSP: {
 			enableKey = kSCPropNetProxiesRTSPEnable;
-			portKey = kSCPropNetProxiesRTSPPort;
-			proxyKey = kSCPropNetProxiesRTSPProxy;
+			portKey   = kSCPropNetProxiesRTSPPort;
+			proxyKey  = kSCPropNetProxiesRTSPProxy;
 			break;
 		}
 		case Proxy_Gopher: {
 			enableKey = kSCPropNetProxiesGopherEnable;
-			portKey = kSCPropNetProxiesGopherPort;
-			proxyKey = kSCPropNetProxiesGopherProxy;
+			portKey   = kSCPropNetProxiesGopherPort;
+			proxyKey  = kSCPropNetProxiesGopherProxy;
 			break;
 		}
 		default: {
