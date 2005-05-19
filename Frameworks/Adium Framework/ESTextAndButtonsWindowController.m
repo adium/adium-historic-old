@@ -281,7 +281,7 @@
 	}
 
     //Center the window (if we're not a sheet)
-    [[self window] center];
+    [window center];
 }
 
 - (IBAction)pressedButton:(id)sender
