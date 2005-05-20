@@ -46,6 +46,12 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
+            ACTIONS = {pasteAsRichText = id; scrollPageDown = id; scrollPageUp = id; }; 
+            CLASS = AIMessageEntryTextView; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AISendingTextView; 
+        }, 
+        {
             ACTIONS = {sendContent = id; }; 
             CLASS = AISendingTextView; 
             LANGUAGE = ObjC; 
