@@ -116,7 +116,7 @@
 	if(translation || addition || removal) {
 		NSEnumerator *keyEnum = [self keyEnumerator];
 		NSString *key;
-		NSString *selfCopy = [self copy];
+		NSDictionary *selfCopy = [self copy];
 
 		while((key = [keyEnum nextObject])) {
 			NSString *newKey = [translation objectForKey:key];
