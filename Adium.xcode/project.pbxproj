@@ -10382,6 +10382,7 @@
 				34B27295083ACA900092A5A0,
 				4BB9972A083D1A5F006ACD6F,
 				4BB9972C083D1A5F006ACD6F,
+				4BAF8D02083D9A3B0067CF6F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10868,6 +10869,7 @@
 				07FC987B0827D73F006C56D6,
 				4BB9972B083D1A5F006ACD6F,
 				4BB9972D083D1A5F006ACD6F,
+				4BAF8D03083D9A3B0067CF6F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11155,6 +11157,7 @@
 				34C1F5F807F88C9900DB6645,
 				34C1F5FA07F88C9900DB6645,
 				DA9CF85D080F97F8000C5249,
+				4BAF8CFE083D9A2A0067CF6F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11375,6 +11378,7 @@
 				34C1F5F707F88C9900DB6645,
 				34C1F5F907F88C9900DB6645,
 				DA9CF85C080F97F3000C5249,
+				4BAF8CFF083D9A2A0067CF6F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18366,6 +18370,8 @@
 				4BDD81E807A0B6D30057DB2C,
 				4BDD81E707A0B6D30057DB2C,
 				34943DEE07BAD918000F2A03,
+				4BAF8CFC083D9A2A0067CF6F,
+				4BAF8CFD083D9A2A0067CF6F,
 			);
 			isa = PBXGroup;
 			name = "Accounts & Services";
@@ -20659,6 +20665,66 @@
 			path = Resources/English.lproj/AppearancePrefs.nib;
 			refType = 4;
 			sourceTree = "<group>";
+		};
+		4BAF8CFC083D9A2A0067CF6F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIServiceMenu.h;
+			path = Source/AIServiceMenu.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAF8CFD083D9A2A0067CF6F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIServiceMenu.m;
+			path = Source/AIServiceMenu.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAF8CFE083D9A2A0067CF6F = {
+			fileRef = 4BAF8CFC083D9A2A0067CF6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAF8CFF083D9A2A0067CF6F = {
+			fileRef = 4BAF8CFD083D9A2A0067CF6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAF8D00083D9A3B0067CF6F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIServiceController.h;
+			path = Source/AIServiceController.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAF8D01083D9A3B0067CF6F = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIServiceController.m;
+			path = Source/AIServiceController.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BAF8D02083D9A3B0067CF6F = {
+			fileRef = 4BAF8D00083D9A3B0067CF6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BAF8D03083D9A3B0067CF6F = {
+			fileRef = 4BAF8D01083D9A3B0067CF6F;
+			isa = PBXBuildFile;
+			settings = {
+			};
 		};
 		4BAFD57706E0091100FF7FBC = {
 			fileEncoding = 30;
@@ -26116,6 +26182,8 @@
 			children = (
 				F57938EF033E745F01A8010A,
 				F57938AA033E737001A8010A,
+				4BAF8D00083D9A3B0067CF6F,
+				4BAF8D01083D9A3B0067CF6F,
 				6CF42677057763E100F27FAA,
 				6CF42678057763E200F27FAA,
 				F57938F6033E745F01A8010A,

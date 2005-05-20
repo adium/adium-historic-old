@@ -42,6 +42,7 @@
 #import "AIPreferencePane.h"
 #import "AIService.h"
 #import "AIServiceIcons.h"
+#import "AIServiceMenu.h"
 #import "AISortController.h"
 #import "AIStatus.h"
 #import "AIStatusIcons.h"

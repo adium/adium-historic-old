@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIServiceController.h"
 #import "AIChatLog.h"
 #import "AIContentController.h"
 #import "AILogFromGroup.h"
@@ -1522,7 +1523,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 			NSImage		*image;
 			
 			serviceClass = [theLog serviceClass];
-			image = [AIServiceIcons serviceIconForService:[[adium accountController] firstServiceWithServiceID:serviceClass]
+			image = [AIServiceIcons serviceIconForService:[[adium serviceController] firstServiceWithServiceID:serviceClass]
 													 type:AIServiceIconSmall
 												direction:AIIconNormal];
 			value = (image ? image : blankImage);

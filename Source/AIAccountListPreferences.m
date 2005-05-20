@@ -26,6 +26,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/AIServiceMenu.h>
 #import <Adium/AIStatusIcons.h>
 #import "KFTypeSelectTableView.h"
 
@@ -65,10 +66,10 @@
 	[self updateAccountOverview];
 	
 	//Build the 'add account' menu
-	NSMenu	*serviceMenu = [[adium accountController] menuOfServicesWithTarget:self 
-															activeServicesOnly:NO
-															   longDescription:YES
-																		format:AILocalizedString(@"%@",nil)];
+	NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
+												activeServicesOnly:NO
+												   longDescription:YES
+															format:AILocalizedString(@"%@",nil)];
 	[serviceMenu setAutoenablesItems:YES];
 	[button_newAccount setMenu:serviceMenu];
 

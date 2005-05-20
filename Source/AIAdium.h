@@ -23,10 +23,11 @@
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController;
+		AIEmoticonController, AIServiceController;
 
 @interface AIAdium : NSObject {
     IBOutlet	AIAccountController				*accountController;
+    IBOutlet	AIServiceController				*serviceController;
     IBOutlet	AIContactController				*contactController;
     IBOutlet	AIContentController				*contentController;
     IBOutlet	AIDockController				*dockController;
@@ -58,6 +59,7 @@
 
 + (NSString *)applicationSupportDirectory;
 - (AIAccountController *)accountController;
+- (AIServiceController *)serviceController;
 - (AIContactController *)contactController;
 - (AIContentController *)contentController;
 - (AIDockController *)dockController;

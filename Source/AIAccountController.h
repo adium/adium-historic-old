@@ -64,8 +64,6 @@ typedef enum
     IBOutlet	AIAdium		*adium;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
-    NSMutableDictionary		*availableServiceDict;		//Dictionary of available services
-	NSMutableDictionary		*availableServiceTypeDict;  //Dictionary of one of each available service types by serviceID
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
@@ -77,27 +75,13 @@ typedef enum
 	NSArray					*_cachedActiveServices;
 }
 
-//Services
-- (NSArray *)availableServices;
-- (AIService *)serviceWithUniqueID:(NSString *)identifier;
-- (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
-- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass;
-- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier;
-- (void)registerService:(AIService *)inService;
-- (NSMenu *)menuOfServicesWithTarget:(id)target 
-				  activeServicesOnly:(BOOL)activeServicesOnly
-					 longDescription:(BOOL)longDescription 
-							  format:(NSString *)format;
-
 //Accounts
 - (NSArray *)accountArray;
 - (void)saveAccounts;
-- (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible;
 - (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
 - (NSArray *)accountsWithService:(AIService *)service;
 - (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
 - (AIAccount *)firstAccountWithService:(AIService *)service;
-- (AIAccount *)defaultAccount;
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID;
 - (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
@@ -108,7 +92,6 @@ typedef enum
 - (BOOL)anOnlineAccountCanEditContacts;
 
 //Account Editing
-- (AIAccount *)newAccountAtIndex:(int)index;
 - (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service;
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
 - (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;

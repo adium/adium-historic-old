@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AICoreComponentLoader.h"
@@ -118,6 +119,9 @@ static NSString	*prefsCategory;
 }
 - (AIAccountController *)accountController{
     return(accountController);
+}
+- (AIServiceController *)serviceController{
+    return(serviceController);
 }
 - (AIContentController *)contentController{
     return(contentController);
@@ -231,6 +235,7 @@ static NSString	*prefsCategory;
 	[contactAlertsController initController];
 	[soundController initController];
 	[emoticonController initController];
+	[serviceController initController];
 	[accountController initController];
 	[contactController initController];
 	[contentController initController];
@@ -289,6 +294,7 @@ static NSString	*prefsCategory;
     [contentController closeController];
     [contactController closeController];
     [accountController closeController];
+	[serviceController closeController];
 	[emoticonController closeController];
     [soundController closeController];
     [menuController closeController];

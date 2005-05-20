@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -134,7 +135,7 @@
 				// aim://addbuddy?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:@" "] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
-															service:[[adium accountController] firstServiceWithServiceID:service]];
+															service:[[adium serviceController] firstServiceWithServiceID:service]];
 
 			}else if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
 				// ymsgr://sendim?tekjew
