@@ -116,11 +116,12 @@
 	if(translation || addition || removal) {
 		NSEnumerator *keyEnum = [self keyEnumerator];
 		NSString *key;
+		NSString *selfCopy = [self copy];
 
 		while((key = [keyEnum nextObject])) {
 			NSString *newKey = [translation objectForKey:key];
 			if(newKey) {
-				[self setObject:[self objectForKey:key] forKey:newKey];
+				[self setObject:[selfCopy objectForKey:key] forKey:newKey];
 			} else {
 				id newObj = [addition objectForKey:key];
 				if(newObj) {
@@ -130,6 +131,8 @@
 				}
 			}
 		}
+
+		[selfCopy release];		
 	}
 }
 
