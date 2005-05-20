@@ -22,7 +22,6 @@
             OUTLETS = {
                 accountController = AIAccountController; 
                 applescriptabilityController = ESApplescriptabilityController; 
-                bookmarksImporterController = AIBookmarksImporterController; 
                 componentLoader = AICoreComponentLoader; 
                 contactAlertsController = ESContactAlertsController; 
                 contactController = AIContactController; 
@@ -36,6 +35,7 @@
                 menuController = AIMenuController; 
                 pluginLoader = AICorePluginLoader; 
                 preferenceController = AIPreferenceController; 
+                serviceController = AIServiceController; 
                 soundController = AISoundController; 
                 statusController = AIStatusController; 
                 toolbarController = AIToolbarController; 
@@ -216,6 +216,12 @@
         {
             ACTIONS = {showPreferenceWindow = id; }; 
             CLASS = AIPreferenceController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {adium = AIAdium; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AIServiceController; 
             LANGUAGE = ObjC; 
             OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 

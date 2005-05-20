@@ -668,16 +668,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					if ([serviceID isEqualToString:@"AIM"] || [serviceID isEqualToString:@"ICQ"]){
 						serviceID = @"AIM-compatible";
 					}
-
-					NSEnumerator	*serviceEnumerator = [[[adium accountController] servicesWithServiceClass:serviceID] objectEnumerator];
-					AIService		*service;
-					while ((service = [serviceEnumerator nextObject])){
+					
+					NSEnumerator	*accountsArray = [[[adium accountController] accountArray] objectEnumerator];
+					AIAccount		*account;
+					
+					//Look at each account on this service, searching for one a matching UID
+					while ((account = [accountsArray nextObject])){
 						
-						NSEnumerator	*accountsArray = [[[adium accountController] accountsWithService:service] objectEnumerator];
-						AIAccount		*account;
-						
-						//Look at each account on this service, searching for one a matching UID
-						while ((account = [accountsArray nextObject])){
+						if([[[account service] serviceClass] isEqualToString:serviceID]){
 							//An ABPerson may have multiple names on a given service; iterate through them
 							NSString		*accountUID = [[account UID] compactedString];
 							int				nameCount = [names count];
@@ -691,8 +689,8 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									
 									if(myPhonetic){
 										[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
-																					  withOwner:self
-																				  priorityLevel:Low_Priority];										
+																					   withOwner:self
+																				   priorityLevel:Low_Priority];										
 									}									
 								}
 							}

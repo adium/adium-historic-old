@@ -17,6 +17,7 @@
 // $Id$
 
 #import "AIAccountController.h"
+#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AILoginController.h"
@@ -81,8 +82,6 @@
 //init
 - (void)initController
 {
-    availableServiceDict = [[NSMutableDictionary alloc] init];
-	availableServiceTypeDict = [[NSMutableDictionary alloc] init];
     accountArray = nil;
     lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
 	accountMenuItemArraysDict = [[NSMutableDictionary alloc] init];
@@ -155,7 +154,6 @@
 	//Cleanup
     [accountArray release];
 	[unloadableAccounts release];
-    [availableServiceDict release];
     [lastAccountIDToSendContent release];
 	[accountMenuItemArraysDict release];
 	[accountMenuPluginsDict release];
@@ -229,7 +227,7 @@
 		}
 		
 		//Fetch the account service, UID, and ID
-		service = [self serviceWithUniqueID:serviceID];
+		service = [[adium serviceController] serviceWithUniqueID:serviceID];
 		accountUID = [accountDict objectForKey:ACCOUNT_UID];
 		internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
 		
@@ -297,176 +295,6 @@
 }
 
 
-//Services -------------------------------------------------------------------------------------------------------
-#pragma mark Services
-//Sort an array of services alphabetically by their description
-int _alphabeticalServiceSort(id service1, id service2, void *context)
-{
-	return([(NSString *)[service1 longDescription] caseInsensitiveCompare:(NSString *)[service2 longDescription]]);
-}
-
-//Return the available services.  These are used for account creation.
-- (NSArray *)availableServices
-{
-	return([[availableServiceDict allValues] sortedArrayUsingFunction:_alphabeticalServiceSort context:nil]);
-}
-
-//Return the active services (services for which there is an account).  These are used for contact creation and determining if
-//the service of accounts and contacts should be presented to the user.
-//Simultaneously determine if any active service can 
-//If includeCompatible is YES, services not being used but in the same service class as one that is will be included
-- (NSArray *)activeServicesIncludingCompatibleServices:(BOOL)includeCompatible
-{
-	if(!_cachedActiveServices){
-		NSMutableArray	*serviceArray = [NSMutableArray array];
-		NSEnumerator	*enumerator = [accountArray objectEnumerator];
-		AIAccount		*account;
-
-		//Build an array of all currently used services
-		while((account = [enumerator nextObject])){
-			if(includeCompatible){
-				NSEnumerator	*serviceEnumerator;
-				AIService		*accountService;
-				
-				//Add all services that are of the same class as the user's account (So, all compatible services)
-				serviceEnumerator = [[self servicesWithServiceClass:[[account service] serviceClass]] objectEnumerator];
-				while((accountService = [serviceEnumerator nextObject])){
-					//Prevent any service from going in twice
-					if(![serviceArray containsObject:accountService]){
-						[serviceArray addObject:accountService];
-					}
-					
-				}
-			}else{
-				if(![serviceArray containsObject:[account service]]){
-					[serviceArray addObject:[account service]];
-				}
-			}
-		}
-		
-		//Sort
-		_cachedActiveServices = [[serviceArray sortedArrayUsingFunction:_alphabeticalServiceSort context:nil] retain];
-	}
-	
-	return(_cachedActiveServices);
-}
-
-//Returns the specified service controller
-- (AIService *)serviceWithUniqueID:(NSString *)identifier
-{
-    return([availableServiceDict objectForKey:identifier]);
-}
-
-//Return the first service with the specified serviceID
-- (AIService *)firstServiceWithServiceID:(NSString *)serviceID
-{
-	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
-	AIService		*service;
-	
-	while((service = [enumerator nextObject])){
-		if([[service serviceID] isEqualToString:serviceID]) break;
-	}
-	
-	return(service);
-}
-
-- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass
-{
-	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
-	AIService		*service;
-	NSMutableArray	*servicesArray = [NSMutableArray array];
-		
-	while((service = [enumerator nextObject])){
-		if([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
-	}
-	
-	return(servicesArray);
-}
-
-- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier
-{
-	AIService		*service = [self serviceWithUniqueID:identifier];
-    NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account;
-    
-    while((account = [enumerator nextObject])){
-		if(([account service] == service) &&
-		   [account online]) return YES;
-    }
-    
-    return(NO);
-}
-
-//Register service code
-- (void)registerService:(AIService *)inService
-{
-    [availableServiceDict setObject:inService forKey:[inService serviceCodeUniqueID]];
-	
-	[availableServiceTypeDict setObject:inService forKey:[inService serviceID]];
-}
-
-//Returns a menu of all services.
-//- Selector called on service selection is selectAccount:
-//- The menu item's represented objects are the service controllers they represent
-//- Format allows the description to be placed within a format string. If it is nil, the description alone will be used.
-- (NSMenu *)menuOfServicesWithTarget:(id)target activeServicesOnly:(BOOL)activeServicesOnly longDescription:(BOOL)longDescription format:(NSString *)format
-{
-	AIServiceImportance	importance;
-	unsigned			numberOfItems = 0;
-	NSArray				*serviceArray;
-	
-	//Prepare our menu
-	NSMenu *menu = [[NSMenu alloc] init];
-
-	serviceArray = (activeServicesOnly ? [self activeServicesIncludingCompatibleServices:YES] : [self availableServices]);
-	
-	//Divide our menu into sections.  This helps separate less important services from the others (sorry guys!)
-	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
-		NSEnumerator	*enumerator;
-		AIService		*service;
-		unsigned		currentNumberOfItems;
-		BOOL			addedDivider = NO;
-		
-		//Divider
-		currentNumberOfItems = [menu numberOfItems];
-		if (currentNumberOfItems > numberOfItems){
-			[menu addItem:[NSMenuItem separatorItem]];
-			numberOfItems = currentNumberOfItems + 1;
-			addedDivider = YES;
-		}
-
-		//Insert a menu item for each service of this importance
-		enumerator = [serviceArray objectEnumerator];
-		while((service = [enumerator nextObject])){
-			if([service serviceImportance] == importance){
-				NSString	*description = (longDescription ?
-											[service longDescription] :
-											[service shortDescription]);
-				
-				NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(format ? 
-																									 [NSString stringWithFormat:format,description] :
-																									 description)
-																							 target:target 
-																							 action:@selector(selectServiceType:) 
-																					  keyEquivalent:@""];
-				[menuItem setRepresentedObject:service];
-				[menuItem setImage:[AIServiceIcons serviceIconForService:service
-																	type:AIServiceIconSmall
-															   direction:AIIconNormal]];
-				[menu addItem:menuItem];
-				[menuItem release];
-			}
-		}
-		
-		//If we added a divider but didn't add any items, remove it
-		currentNumberOfItems = [menu numberOfItems];
-		if (addedDivider && (currentNumberOfItems <= numberOfItems) && (currentNumberOfItems > 0)){
-			[menu removeItemAtIndex:(currentNumberOfItems-1)];
-		}
-	}
-	
-	return([menu autorelease]);
-}	
 
 //Accounts -------------------------------------------------------------------------------------------------------
 #pragma mark Accounts
@@ -522,28 +350,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 - (NSArray *)accountsWithServiceClass:(NSString *)serviceClass
 {
-	NSMutableArray	*accountsArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
-    AIService		*aService;
+	NSMutableArray	*matchingAccounts = [NSMutableArray array];
+	NSEnumerator	*enumerator = [accountArray objectEnumerator];
+	AIAccount		*account;
 	
-	//Enumerate all available services
-	while((aService = [enumerator nextObject])){
-		//Find matching serviceClasses
-		if([[aService serviceClass] isEqualToString:serviceClass]){
-			
-			//Find matching accounts
-			NSEnumerator	*enumerator = [accountArray objectEnumerator];
-			AIAccount		*account;
-			
-			while((account = [enumerator nextObject])){
-				if ([account service] == aService){
-					[accountsArray addObject:account];
-				}
-			}
+	while((account = [enumerator nextObject])){
+		if([[[account service] serviceClass] isEqualToString:serviceClass]){
+			[matchingAccounts addObject:account];
 		}
 	}
 	
-	return(accountsArray);
+	return(matchingAccounts);
 }
 
 - (AIAccount *)firstAccountWithService:(AIService *)service
@@ -556,12 +373,6 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
     }
     
     return(account);
-}
-
-//Returns a new default account
-- (AIAccount *)defaultAccount
-{
-	return([self createAccountWithService:[self serviceWithUniqueID:@"libgaim-oscar-AIM"] UID:@"" internalObjectID:nil]);
 }
 
 - (BOOL)anOnlineAccountCanCreateGroupChats
@@ -591,35 +402,17 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 
 //Account Editing ------------------------------------------------------------------------------------------------------
 #pragma mark Account Editing
-//Create a new default account
-- (AIAccount *)newAccountAtIndex:(int)index
-{
-	if(index == -1) index = [accountArray count];
-	
-    NSParameterAssert(accountArray != nil);
-    NSParameterAssert(index >= 0 && index <= [accountArray count]);
-    
-    AIAccount	*newAccount = [self defaultAccount];
-    
-	[self insertAccount:newAccount atIndex:index save:YES];
-		
-    return(newAccount);
-}
-
 - (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service
 {
 	if(index == -1) index = [accountArray count];
 
     NSParameterAssert(accountArray != nil);
     NSParameterAssert(index >= 0 && index <= [accountArray count]);
-
+	NSParameterAssert(service != nil);
+	
 	AIAccount *newAccount;
 	
-	if(service){
 		newAccount = [self createAccountWithService:service	UID:@"" internalObjectID:nil];
-	}else{
-		newAccount = [self defaultAccount];
-	}
 	
 	[self insertAccount:newAccount atIndex:index save:YES];
 	
@@ -832,7 +625,7 @@ int _alphabeticalServiceSort(id service1, id service2, void *context)
 	AIAccount		*account;
 	
 	//We don't show service types unless the user is using multiple services
-	BOOL 	multipleServices = ([[self activeServicesIncludingCompatibleServices:NO] count] > 1);
+	BOOL 	multipleServices = ([[[adium serviceController] activeServices] count] > 1);
 	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];

@@ -25,6 +25,7 @@
 #import <Adium/AILocalizationTextField.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
+#import <Adium/AIServiceMenu.h>
 
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
 
@@ -206,10 +207,10 @@
 - (void)buildContactTypeMenu
 {
 	//Rebuild the menu
-	[popUp_contactType setMenu:[[adium accountController] menuOfServicesWithTarget:self 
-																activeServicesOnly:YES
-																   longDescription:NO
-																			format:nil]];
+	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self 
+													activeServicesOnly:YES
+													   longDescription:NO
+																format:nil]];
 	
 	//Ensure our selection is still valid
 	[self ensureValidContactTypeSelection];

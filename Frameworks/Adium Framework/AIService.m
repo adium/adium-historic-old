@@ -15,7 +15,7 @@
  */
 
 #import "AIAccount.h"
-#import "AIAccountController.h"
+#import "AIServiceController.h"
 #import "AIService.h"
 
 /*!
@@ -33,7 +33,7 @@
 {
 	if((self = [super init])){
 		//Register this service with Adium
-		[[adium accountController] registerService:self];
+		[[adium serviceController] registerService:self];
 		
 		[self registerStatuses];
 	}
@@ -382,6 +382,14 @@
 	free(dest);
 
 	return(filteredString);
+}
+
+/*!
+ * @brief Compare this service to another, ranking by long description
+ */
+- (NSComparisonResult)compareLongDescription:(AIService *)inService
+{
+	return([[self longDescription] compare:[inService longDescription]]);
 }
 
 @end
