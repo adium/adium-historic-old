@@ -20,6 +20,7 @@
 + (NSString *)stringWithContentsOfASCIIFile:(NSString *)path;
 
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
++ (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding;
 
 + (id)ellipsis;
 - (NSString *)stringByAppendingEllipsis;

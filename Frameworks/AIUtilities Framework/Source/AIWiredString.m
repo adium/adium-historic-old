@@ -51,16 +51,6 @@
 	return [[[self alloc] initWithCharacters:inChars length:inLength] autorelease];
 }
 
-+ (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding
-{
-	return [[[self alloc] initWithBytes:inBytes length:inLength encoding:inEncoding] autorelease];
-}
-
-+ (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)inEncoding
-{
-	return [[[self alloc] initWithData:data encoding:inEncoding] autorelease];
-}
-
 + (id)stringWithUTF8String:(const char *)utf8
 {
 	return [[[self alloc] initWithUTF8String:utf8] autorelease];

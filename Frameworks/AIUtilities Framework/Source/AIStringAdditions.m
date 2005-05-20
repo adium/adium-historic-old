@@ -62,6 +62,10 @@
 {
 	return [[[self alloc] initWithData:data encoding:encoding] autorelease];
 }
++ (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding
+{
+	return [[[self alloc] initWithBytes:inBytes length:inLength encoding:inEncoding] autorelease];
+}
 
 + (id)ellipsis
 {

@@ -27,6 +27,4 @@
 	size_t length;
 }
 
-+ (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding;
-
 @end
