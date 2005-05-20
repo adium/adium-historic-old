@@ -83,7 +83,7 @@
 	[button_removeLink setLocalizedString:AILocalizedString(@"Remove Link",nil)];	
 	[label_linkText setLocalizedString:AILocalizedString(@"Link Text:","Label for the text entry area for the name when creating a link")];
 	[label_URL setLocalizedString:AILocalizedString(@"URL",nil)];
-	
+
 	if(textView){
 		NSRange 	selectedRange = [textView selectedRange];
 		NSRange		rangeOfLinkAttribute;
@@ -146,6 +146,9 @@
 				[textView_URL setSelectedRange:NSMakeRange(0,[initialURL length])];
 				[initialURL release];
 			}
+		} else if([linkText length]) {
+			//focus the URL field so that the user can enter an URL right away.
+			[[self window] makeFirstResponder:textView_URL];
 		}
 
 		if(linkText && [linkText length]) {
