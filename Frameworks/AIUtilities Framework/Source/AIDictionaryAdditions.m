@@ -48,7 +48,7 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
     
     //open the dictionary
-    dictionary = [NSDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.plist",path,name]];
+    dictionary = [NSDictionary dictionaryWithContentsOfFile:[path stringByAppendingPathComponent:name]];
 
     //if the dictionary doesn't exist, create and return a new one
     if(dictionary == nil && create){
@@ -65,7 +65,26 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
-    return ([self writeToFile:[NSString stringWithFormat:@"%@/%@.plist",path,name] atomically:YES]);
+    return ([self writeToFile:[path stringByAppendingPathComponent:name] atomically:YES]);
+}
+
+- (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal
+{
+	NSDictionary *result;
+
+	//only do work if we have work to do.
+	if(translation || addition || removal) {
+		NSMutableDictionary *mutable = [self mutableCopy];
+
+		[mutable translate:translation add:addition remove:removal];
+
+		result = [[self class] dictionaryWithDictionary:mutable];
+		[mutable release];
+	} else {
+		result = [[self retain] autorelease];
+	}
+
+	return result;
 }
 
 @end
@@ -89,6 +108,29 @@
     }
 
     return(dictionary);
+}
+
+- (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal
+{
+	//only do work if we have work to do.
+	if(translation || addition || removal) {
+		NSEnumerator *keyEnum = [self keyEnumerator];
+		NSString *key;
+
+		while((key = [keyEnum nextObject])) {
+			NSString *newKey = [translation objectForKey:key];
+			if(newKey) {
+				[self setObject:[self objectForKey:key] forKey:newKey];
+			} else {
+				id newObj = [addition objectForKey:key];
+				if(newObj) {
+					[self setObject:newObj forKey:key];
+				} else if(removal && [removal containsObject:key]) {
+					[self removeObjectForKey:key];
+				}
+			}
+		}
+	}
 }
 
 @end

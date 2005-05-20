@@ -19,10 +19,14 @@
 + (NSDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
 - (BOOL)writeToPath:(NSString *)path withName:(NSString *)name;
 
+- (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal;
+
 @end
 
 @interface NSMutableDictionary (AIDictionaryAdditions)
 
 + (NSMutableDictionary *)dictionaryAtPath:(NSString *)path withName:(NSString *)name create:(BOOL)create;
+
+- (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal;
 
 @end
