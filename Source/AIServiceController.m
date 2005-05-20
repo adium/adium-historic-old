@@ -21,22 +21,26 @@
 
 @implementation AIServiceController
 
+/*!
+ * @brief Init
+ */
 - (void)initController {
 	services = [[NSMutableDictionary alloc] init];
 }
 
+/*!
+ * @brief Close
+ */
 - (void)closeController {
 	[services release]; services = nil;
 }
-
 
 /*!
  * @brief Register an AIService instance
  *
  * All services should be registered before they are used
  */
-- (void)registerService:(AIService *)inService
-{
+- (void)registerService:(AIService *)inService {
     [services setObject:inService forKey:[inService serviceCodeUniqueID]];
 }
 
@@ -56,7 +60,6 @@
  * @return NSArray of AIService instances
  */
 - (NSArray *)activeServices {
-
 	//Scan our user's accounts and build a list of service classes that they cover
 	NSMutableArray	*serviceClasses = [NSMutableArray array];
 	NSEnumerator	*accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
@@ -96,6 +99,8 @@
 
 
 
+
+
 /*!
  * Update this
  */ 
@@ -111,24 +116,6 @@
 	return(service);
 }
 
-/*!
- * Get rid of this
- */ 
-- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier
-{
-	AIService		*service = [self serviceWithUniqueID:identifier];
-    NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
-    AIAccount		*account;
-    
-    while((account = [enumerator nextObject])){
-		if(([account service] == service) &&
-		   [account online]) return YES;
-    }
-    
-    return(NO);
-}
-	
-
 //Return the first service with the specified serviceID
 
 //- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass
@@ -143,8 +130,5 @@
 //	
 //	return(servicesArray);
 //}
-
-
-
 
 @end
