@@ -19,6 +19,7 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <ExceptionHandling/NSExceptionHandler.h>
+#include <unistd.h>
 
 /*
  * @class AIExceptionController
