@@ -351,32 +351,27 @@
 
 		[item setEnabled:YES];
 
-		/* Add menu to toolbar item (for text mode)
-		 *
-		 * We depend on menuNeedsUpdate: for efficient safe updating, so only proceed if setDelegate is available.
-		 * This means that 10.2 will have this item greyed out in text-only mode. */
-		if([NSMenu instancesRespondToSelector:@selector(setDelegate:)]){
-			NSMenuItem	*menuFormRepresentation, *blankMenuItem;
-			NSMenu		*menu;
+		//Add menu to toolbar item (for text mode)
+		NSMenuItem	*menuFormRepresentation, *blankMenuItem;
+		NSMenu		*menu;
 
-			menuFormRepresentation = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
+		menuFormRepresentation = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] init] autorelease];
 
-			menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
-			[menu setDelegate:self];
-			[menu setAutoenablesItems:NO];
+		menu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+		[menu setDelegate:self];
+		[menu setAutoenablesItems:NO];
 
-			blankMenuItem = [[NSMenuItem alloc] initWithTitle:@""
-													   target:self
-													   action:@selector(dummyAction:)
-												keyEquivalent:@""];
-			[blankMenuItem setRepresentedObject:item];
-			[blankMenuItem setEnabled:YES];
-			[menu addItem:blankMenuItem];
+		blankMenuItem = [[NSMenuItem alloc] initWithTitle:@""
+												   target:self
+												   action:@selector(dummyAction:)
+											keyEquivalent:@""];
+		[blankMenuItem setRepresentedObject:item];
+		[blankMenuItem setEnabled:YES];
+		[menu addItem:blankMenuItem];
 
-			[menuFormRepresentation setSubmenu:menu];
-			[menuFormRepresentation setTitle:[item label]];
-			[item setMenuFormRepresentation:menuFormRepresentation];
-		}
+		[menuFormRepresentation setSubmenu:menu];
+		[menuFormRepresentation setTitle:[item label]];
+		[item setMenuFormRepresentation:menuFormRepresentation];
 
 		//If this is the first item added, start observing for chats becoming visible so we can update the icon
 		if([toolbarItems count] == 0){
