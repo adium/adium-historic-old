@@ -86,25 +86,29 @@
 					NSDictionary	*authDict;
 
 					systemProxySettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-						hostString,@"Host",
-						portNum,@"Port",nil];
+						hostString, @"Host",
+						portNum,    @"Port",
+						nil];
 
 					//User name & password if applicable
-					authDict = [AIKeychain getDictionaryFromKeychainForKey:hostString];
-					if(authDict){
-						[systemProxySettingsDictionary setObject:[authDict objectForKey:@"username"]
-														  forKey:@"Username"];
-						[systemProxySettingsDictionary setObject:[authDict objectForKey:@"password"]
-														  forKey:@"Password"];
+					NSError *error = nil;
+					authDict = [[AIKeychain defaultKeychain_error:&error] dictionaryFromKeychainForServer:hostString error:&error];
+					if(authDict) {
+						[systemProxySettingsDictionary addEntriesFromDictionary:authDict];
+					}
+					if(error) {
+						NSDictionary *userInfo = [error userInfo];
+						NSLog(@"could not get username and password for proxy: %@ returned %i (%@)", [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 					}
 				}
 			}
 		}
 		// Could check and process kSCPropNetProxiesExceptionsList here, which returns: CFArray[CFString]
+
+		//Clean up; proxyDict was created by a call with Copy in its name
+		[proxyDict release];
 	}
 
-	//Clean up; proxyDict was created by a call with Copy in its name
-	[proxyDict release];
 
 	return(systemProxySettingsDictionary);
 }
