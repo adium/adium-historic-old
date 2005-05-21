@@ -46,12 +46,12 @@
 //for -getSettings:, -setSettings:
 #define AIKEYCHAIN_ERROR_USERINFO_SETTINGSPOINTER @"PointerToSettingsStructure"
 //for -{add,find}{Internet,Generic}Password:...
-#define AIKEYCHAIN_ERROR_USERINFO_SERVICE  @"GenericPasswordService"
-#define AIKEYCHAIN_ERROR_USERINFO_SERVER   @"InternetPasswordServer"
-#define AIKEYCHAIN_ERROR_USERINFO_DOMAIN   @"InternetPasswordSecurityDomain"
-#define AIKEYCHAIN_ERROR_USERINFO_ACCOUNT  @"PasswordAccount"
-#define AIKEYCHAIN_ERROR_USERINFO_PROTOCOL @"PasswordProtocol"
-#define AIKEYCHAIN_ERROR_USERINFO_AUTHTYPE @"PasswordAuthenticationType"
+#define AIKEYCHAIN_ERROR_USERINFO_SERVICE            @"GenericPasswordService"
+#define AIKEYCHAIN_ERROR_USERINFO_SERVER             @"InternetPasswordServer"
+#define AIKEYCHAIN_ERROR_USERINFO_DOMAIN             @"InternetPasswordSecurityDomain"
+#define AIKEYCHAIN_ERROR_USERINFO_ACCOUNT            @"PasswordAccount"
+#define AIKEYCHAIN_ERROR_USERINFO_PROTOCOL           @"PasswordProtocol"
+#define AIKEYCHAIN_ERROR_USERINFO_AUTHENTICATIONTYPE @"PasswordAuthenticationType"
 
 /*!
  * @class AIKeychain
@@ -130,7 +130,18 @@
 
 #pragma mark -
 
-//keychain items returned by these methods must be released.
+/*working with keychain items
+ *
+ *like all AIKeychain methods, outError is optional (can be NULL).
+ *outKeychainItem is also optional. if it is non-NULL, you must release the
+ *	keychain item.
+ */
+
+//------------------------------------------------------------------------------
+/*add a password.
+ *
+ *if the password exists, the error object's code will be errSecDuplicateItem.
+ */
 
 //SecKeychainAddInternetPassword
 - (void)addInternetPassword:(NSString *)password
@@ -144,6 +155,20 @@
 			   keychainItem:(out SecKeychainItemRef *)outKeychainItem
 					  error:(out NSError **)outError;
 
+//convenience version: domain = path = nil; port = 0; authType = default; does not return keychain item
+- (void)addInternetPassword:(NSString *)password
+				  forServer:(NSString *)server
+					account:(NSString *)account
+				   protocol:(SecProtocolType)protocol
+					  error:(out NSError **)outError;
+
+//------------------------------------------------------------------------------
+/*search for a password.
+ *
+ *if the password does not exist, the error object's code will be
+ *	errSecItemNotFound.
+ */
+
 //SecKeychainFindInternetPassword
 - (NSString *)findInternetPasswordForServer:(NSString *)server
 							 securityDomain:(NSString *)domain //can pass nil
@@ -156,7 +181,62 @@
 									  error:(out NSError **)outError;
 
 //convenience version: domain = path = nil; port = 0; authType = default; does not return keychain item
-- (NSString *)internetPasswordForServer:(NSString *)server account:(NSString *)account protocol:(SecProtocolType)protocol error:(out NSError **)outError;
+- (NSString *)internetPasswordForServer:(NSString *)server
+								account:(NSString *)account
+							   protocol:(SecProtocolType)protocol
+								  error:(out NSError **)outError;
+
+//keys in this dictionary: @"Username" (account), @"Password".
+- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server error:(out NSError **)outError;
+
+//------------------------------------------------------------------------------
+/*set a password
+ *
+ *if you pass non-nil:
+ *	if the password exists:
+ *		it is changed.
+ *	if the password does not exist:
+ *		it is added.
+ *if you pass nil:
+ *	the password is removed.
+ */
+
+- (void)setInternetPassword:(NSString *)password
+				  forServer:(NSString *)server
+			 securityDomain:(NSString *)domain //can pass nil
+					account:(NSString *)account
+					   path:(NSString *)path
+					   port:(u_int16_t)port //can pass 0
+				   protocol:(SecProtocolType)protocol
+		 authenticationType:(SecAuthenticationType)authType
+			   keychainItem:(out SecKeychainItemRef *)outKeychainItem
+					  error:(out NSError **)outError;
+
+//convenience version: domain = path = nil; port = 0; authType = default; does not return keychain item
+- (void)setInternetPassword:(NSString *)password
+				  forServer:(NSString *)server
+					account:(NSString *)account
+				   protocol:(SecProtocolType)protocol
+					  error:(out NSError **)outError;
+
+//------------------------------------------------------------------------------
+//remove a password.
+
+- (void)deleteInternetPasswordForServer:(NSString *)server
+						 securityDomain:(NSString *)domain //can pass nil
+								account:(NSString *)account
+								   path:(NSString *)path
+								   port:(u_int16_t)port //can pass 0
+							   protocol:(SecProtocolType)protocol
+					 authenticationType:(SecAuthenticationType)authType
+						   keychainItem:(out SecKeychainItemRef *)outKeychainItem
+								  error:(out NSError **)outError;
+
+//convenience version: domain = path = nil; port = 0; authType = default; does not return keychain item
+- (void)deleteInternetPasswordForServer:(NSString *)server
+								account:(NSString *)account
+							   protocol:(SecProtocolType)protocol
+								  error:(out NSError **)outError;
 
 #pragma mark -
 
@@ -172,8 +252,6 @@
 									account:(NSString *)account
 							   keychainItem:(out SecKeychainItemRef *)outKeychainItem
 									  error:(out NSError **)outError;
-
-- (NSDictionary *)dictionaryFromKeychainForServer:(NSString *)server error:(out NSError **)outError;
 
 #pragma mark -
 
