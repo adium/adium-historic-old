@@ -692,7 +692,7 @@ static NSString	*prefsCategory;
 		NSString		*generalAdiumCachesPath;
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 
-		generalAdiumCachesPath = [[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Caches"] stringByAppendingPathComponent:@"Adium"] stringByExpandingTildeInPath];
+		generalAdiumCachesPath = [[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Caches"] stringByAppendingPathComponent:@"Adium"];
 		cachesPath = [[generalAdiumCachesPath stringByAppendingPathComponent:[[self loginController] currentUser]] retain];
 
 		//Ensure our cache path exists
