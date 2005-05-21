@@ -346,9 +346,11 @@
 	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 
 	//Only use the first line of a multi-line title
-	linebreakRange = [title rangeOfString:@"\n" options:NSLiteralSearch];
-	if(linebreakRange.location != NSNotFound){
-		title = [title substringToIndex:linebreakRange.location];
+	linebreakRange = [title lineRangeForRange:NSMakeRange(0, 0)];
+	//check to make sure that there actually is a linebreak to account for
+	//	by comparing the linebreak range against the whole string's range.
+	if ( !NSEqualRanges(linebreakRange, NSMakeRange(0, [title length])) ) {  
+		title = [title substringWithRange:linebreakRange];  
 	}
 	
 	return(title);
