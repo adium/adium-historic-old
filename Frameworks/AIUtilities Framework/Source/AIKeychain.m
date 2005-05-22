@@ -167,8 +167,8 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 
 + (AIKeychain *)defaultKeychain_error:(out NSError **)outError
 {
-	SecKeychainRef keychainRef;
-	OSStatus err = SecKeychainCopyDefault(&keychainRef);
+	SecKeychainRef aKeychainRef;
+	OSStatus err = SecKeychainCopyDefault(&aKeychainRef);
 	if(err != noErr) {
 		if(err != errSecNoDefaultKeychain) {
 			if(outError) {
@@ -186,9 +186,9 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		}
 		return nil;
 	} else {
-		if(keychainRef != [lastKnownDefaultKeychain keychainRef]) {
+		if(aKeychainRef != [lastKnownDefaultKeychain keychainRef]) {
 			[lastKnownDefaultKeychain release];
-			lastKnownDefaultKeychain = [[self alloc] initWithKeychainRef:keychainRef];
+			lastKnownDefaultKeychain = [[self alloc] initWithKeychainRef:aKeychainRef];
 		}
 		return [[lastKnownDefaultKeychain retain] autorelease];
 	}
