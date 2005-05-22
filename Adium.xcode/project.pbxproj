@@ -10385,6 +10385,7 @@
 				4BB9972A083D1A5F006ACD6F,
 				4BB9972C083D1A5F006ACD6F,
 				4B8741D30840D25700738987,
+				4B87424A0840E3D800738987,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10872,6 +10873,7 @@
 				4BB9972B083D1A5F006ACD6F,
 				4BB9972D083D1A5F006ACD6F,
 				4B8741D40840D25700738987,
+				4B87424B0840E3D800738987,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19659,6 +19661,8 @@
 			children = (
 				4B8741D10840D25600738987,
 				4B8741D20840D25600738987,
+				4B8742480840E3D800738987,
+				4B8742490840E3D800738987,
 			);
 			isa = PBXGroup;
 			name = Account;
@@ -19691,6 +19695,36 @@
 		};
 		4B8741D40840D25700738987 = {
 			fileRef = 4B8741D20840D25600738987;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8742480840E3D800738987 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AdiumPasswords.h;
+			path = Source/AdiumPasswords.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B8742490840E3D800738987 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AdiumPasswords.m;
+			path = Source/AdiumPasswords.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B87424A0840E3D800738987 = {
+			fileRef = 4B8742480840E3D800738987;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B87424B0840E3D800738987 = {
+			fileRef = 4B8742490840E3D800738987;
 			isa = PBXBuildFile;
 			settings = {
 			};
