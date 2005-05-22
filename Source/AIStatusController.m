@@ -377,7 +377,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	}else{
 		NSEnumerator	*enumerator;
 		NSString		*serviceCodeUniqueID;
-		BOOL			oneOrMoreConnectedAccounts = [[adium accountController] oneOrMoreConnectedAccounts];
+//		BOOL			oneOrMoreConnectedAccounts = [[adium accountController] oneOrMoreConnectedAccounts];
 
 		//Insert a menu item for each available account
 		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
