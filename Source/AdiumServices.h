@@ -14,16 +14,13 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 @class AIService;
 
-@interface AdiumServices : NSObject {
-    IBOutlet	AIAdium		*adium;	
-
+@interface AdiumServices : AIObject {
 	NSMutableDictionary		*services;
 }
-
-- (void)initController;
-- (void)closeController;
 
 - (void)registerService:(AIService *)inService;
 
@@ -31,6 +28,5 @@
 - (NSArray *)activeServices;
 - (AIService *)serviceWithUniqueID:(NSString *)uniqueID;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
-- (BOOL)serviceWithUniqueIDIsOnline:(NSString *)identifier;
 
 @end
