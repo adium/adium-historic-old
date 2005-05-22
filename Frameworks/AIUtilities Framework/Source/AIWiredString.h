@@ -21,10 +21,15 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface AIWiredString: NSString
+@class AIWiredData;
+
+@interface AIWiredString : NSString
 {
 	unichar *backing;
 	size_t length;
 }
+
+- (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)flag;
+- (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding;
 
 @end

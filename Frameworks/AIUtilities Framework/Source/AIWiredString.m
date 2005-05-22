@@ -262,7 +262,7 @@
 
 #pragma mark Getting other representations
 
-- (NSData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)allowLossyConversion nulTerminate:(BOOL)nulTerminate
+- (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)allowLossyConversion nulTerminate:(BOOL)nulTerminate
 {
 	if(inEncoding == NSUTF8StringEncoding) {
 		//for some reason, TEC can't convert to UTF-8, so we have to do that ourselves.
@@ -289,7 +289,7 @@
 	OSStatus err;
 	UnicodeToTextInfo converter = NULL; 
 
-	NSData *result = nil;
+	AIWiredData *result = nil;
 
 	err = CreateUnicodeToTextInfo(&mapping, &converter);
 	if(err != noErr) {
@@ -339,11 +339,11 @@
 
 	return result;
 }
-- (NSData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)flag
+- (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)flag
 {
 	return [self dataUsingEncoding:inEncoding allowLossyConversion:flag nulTerminate:NO];
 }
-- (NSData *)dataUsingEncoding:(NSStringEncoding)inEncoding
+- (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding
 {
 	return [self dataUsingEncoding:inEncoding allowLossyConversion:NO];
 }
