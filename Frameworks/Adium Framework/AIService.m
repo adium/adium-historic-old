@@ -15,7 +15,6 @@
  */
 
 #import "AIAccount.h"
-#import "AIServiceController.h"
 #import "AIService.h"
 
 /*!
@@ -33,7 +32,7 @@
 {
 	if((self = [super init])){
 		//Register this service with Adium
-		[[adium serviceController] registerService:self];
+		[[adium accountController] registerService:self];
 		
 		[self registerStatuses];
 	}

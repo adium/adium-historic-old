@@ -17,7 +17,6 @@
 // $Id$
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AILoginController.h"
@@ -41,6 +40,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
+#import "AdiumServices.h"
 
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
@@ -78,6 +78,33 @@
 @end
 
 @implementation AIAccountController
+
+- (void)awakeFromNib
+{
+	adiumServices = [[AdiumServices alloc] init];
+}
+
+//Adium Services
+- (void)registerService:(AIService *)inService{
+	[adiumServices registerService:inService];
+}
+- (NSArray *)services{
+	return [adiumServices services];
+}
+- (NSArray *)activeServices{
+	return [adiumServices activeServices];
+}
+- (AIService *)serviceWithUniqueID:(NSString *)uniqueID{
+	return [adiumServices serviceWithUniqueID:uniqueID];
+}
+- (AIService *)firstServiceWithServiceID:(NSString *)serviceID{
+	return [adiumServices firstServiceWithServiceID:serviceID];
+}
+				
+
+
+
+
 
 //init
 - (void)initController
@@ -227,7 +254,7 @@
 		}
 		
 		//Fetch the account service, UID, and ID
-		service = [[adium serviceController] serviceWithUniqueID:serviceID];
+		service = [[adium accountController] serviceWithUniqueID:serviceID];
 		accountUID = [accountDict objectForKey:ACCOUNT_UID];
 		internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
 		
@@ -625,7 +652,7 @@
 	AIAccount		*account;
 	
 	//We don't show service types unless the user is using multiple services
-	BOOL 	multipleServices = ([[[adium serviceController] activeServices] count] > 1);
+	BOOL 	multipleServices = ([[[adium accountController] activeServices] count] > 1);
 	
     //Insert a menu item for each available account
     enumerator = [accountArray objectEnumerator];

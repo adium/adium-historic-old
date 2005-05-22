@@ -15,7 +15,6 @@
  */
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIEditStateWindowController.h"
 #import "AIPreferenceController.h"
@@ -385,8 +384,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		while((serviceCodeUniqueID = [enumerator nextObject])){
 			/* Obtain the status dicts for this type and service code unique ID if it is online or
 			 * if no accounts are online but an account of this service code is configured*/
-//			if([[adium serviceController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
-//				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium serviceController] serviceWithUniqueID:serviceCodeUniqueID]])){
+//			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
+//				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])){
 				NSSet	*statusDicts;
 
 				//Obtain the status dicts for this type and service code unique ID

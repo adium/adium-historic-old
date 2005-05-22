@@ -50,9 +50,9 @@ typedef enum
 	Adium_Proxy_Default_SOCKS5
 } AdiumProxyType;
 
-@protocol AIListObjectObserver, AIServiceController, StateMenuPlugin;
+@protocol AIListObjectObserver, StateMenuPlugin;
 
-@class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact;
+@class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, AdiumServices;
 
 @protocol AccountMenuPlugin <NSObject>
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
@@ -73,7 +73,20 @@ typedef enum
 	NSMutableDictionary		*accountMenuItemArraysDict;
 	
 	NSArray					*_cachedActiveServices;
+
+	AdiumServices			*adiumServices;
 }
+
+//Services
+- (void)registerService:(AIService *)inService;
+- (NSArray *)services;
+- (NSArray *)activeServices;
+- (AIService *)serviceWithUniqueID:(NSString *)uniqueID;
+- (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
+
+					
+					
+					
 
 //Accounts
 - (NSArray *)accountArray;

@@ -6,7 +6,6 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import "AIServiceController.h"
 #import "AIServiceMenu.h"
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
@@ -28,7 +27,7 @@
 	//Prepare our menu
 	NSMenu *menu = [[NSMenu alloc] init];
 	
-	serviceArray = (activeServicesOnly ? [[[AIObject sharedAdiumInstance] serviceController] activeServices] : [[[AIObject sharedAdiumInstance] serviceController] services]);
+	serviceArray = (activeServicesOnly ? [[[AIObject sharedAdiumInstance] accountController] activeServices] : [[[AIObject sharedAdiumInstance] accountController] services]);
 	
 	//Divide our menu into sections.  This helps separate less important services from the others (sorry guys!)
 	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){

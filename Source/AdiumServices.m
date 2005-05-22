@@ -15,24 +15,29 @@
  */
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
+#import "AdiumServices.h"
 #import <Adium/AIService.h>
 #import <Adium/AIAccount.h>
 
-@implementation AIServiceController
+@implementation AdiumServices
 
 /*!
  * @brief Init
  */
-- (void)initController {
-	services = [[NSMutableDictionary alloc] init];
+- (id)init {
+	if((self = [super init])){
+		services = [[NSMutableDictionary alloc] init];
+	}
+	
+	return(self);
 }
 
 /*!
  * @brief Close
  */
-- (void)closeController {
+- (void)dealloc {
 	[services release]; services = nil;
+	[super dealloc];
 }
 
 /*!

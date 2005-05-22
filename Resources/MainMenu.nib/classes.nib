@@ -35,7 +35,6 @@
                 menuController = AIMenuController; 
                 pluginLoader = AICorePluginLoader; 
                 preferenceController = AIPreferenceController; 
-                serviceController = AIServiceController; 
                 soundController = AISoundController; 
                 statusController = AIStatusController; 
                 toolbarController = AIToolbarController; 
