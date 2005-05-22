@@ -16,7 +16,7 @@
 
 @class AIService;
 
-@interface AIServiceController : NSObject {
+@interface AdiumServices : NSObject {
     IBOutlet	AIAdium		*adium;	
 
 	NSMutableDictionary		*services;

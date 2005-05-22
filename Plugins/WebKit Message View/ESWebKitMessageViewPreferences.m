@@ -17,7 +17,6 @@
 #import "ESWebKitMessageViewPreferences.h"
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -476,7 +475,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSMutableDictionary	*listObjectDict = [NSMutableDictionary dictionary];
 	NSEnumerator		*enumerator = [participants objectEnumerator];
 	NSDictionary		*participant;
-	AIService			*aimService = [[adium serviceController] firstServiceWithServiceID:@"AIM"];
+	AIService			*aimService = [[adium accountController] firstServiceWithServiceID:@"AIM"];
 	
 	while((participant = [enumerator nextObject])){
 		NSString		*UID, *alias, *userIconName;

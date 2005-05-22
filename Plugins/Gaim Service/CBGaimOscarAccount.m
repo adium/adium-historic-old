@@ -15,7 +15,6 @@
  */
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIStatusController.h"
 #import "CBGaimOscarAccount.h"
@@ -82,7 +81,7 @@
 		contactServiceID = @"libgaim-oscar-AIM";
 	}
 
-	contactService = [[adium serviceController] serviceWithUniqueID:contactServiceID];
+	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
 
 	return(contactService);
 }

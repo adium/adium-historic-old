@@ -19,7 +19,6 @@
 //#define CONTACTS_INFO_WITH_PROMPT
 
 #import "AIAccountController.h"
-#import "AIServiceController.h"
 #import "AIContactController.h"
 #import "AIContactInfoWindowController.h"
 #import "AIInterfaceController.h"
@@ -1876,7 +1875,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-	return([self allContactsWithService:[[adium serviceController] firstServiceWithServiceID:inServiceID]
+	return([self allContactsWithService:[[adium accountController] firstServiceWithServiceID:inServiceID]
 									UID:inUID]);
 }
 
@@ -1987,7 +1986,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //XXX - This is ridiculous.
 - (AIListContact *)preferredContactWithUID:(NSString *)inUID andServiceID:(NSString *)inService forSendingContentType:(NSString *)inType
 {
-	AIService		*theService = [[adium serviceController] firstServiceWithServiceID:inService];
+	AIService		*theService = [[adium accountController] firstServiceWithServiceID:inService];
 	AIListContact	*tempListContact = [[AIListContact alloc] initWithUID:inUID
 																service:theService];
 	AIAccount		*account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
