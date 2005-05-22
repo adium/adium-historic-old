@@ -52,7 +52,8 @@ typedef enum
 
 @protocol AIListObjectObserver, StateMenuPlugin;
 
-@class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, AdiumServices;
+@class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
+		AdiumServices, AdiumPasswords;
 
 @protocol AccountMenuPlugin <NSObject>
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
@@ -75,6 +76,7 @@ typedef enum
 	NSArray					*_cachedActiveServices;
 
 	AdiumServices			*adiumServices;
+	AdiumPasswords			*adiumPasswords;
 }
 
 //Services
@@ -84,9 +86,18 @@ typedef enum
 - (AIService *)serviceWithUniqueID:(NSString *)uniqueID;
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID;
 
+//Passwords
+- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
+- (void)forgetPasswordForAccount:(AIAccount *)inAccount;
+- (NSString *)passwordForAccount:(AIAccount *)inAccount;
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
+- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+
 					
-					
-					
+			
+
 
 //Accounts
 - (NSArray *)accountArray;
@@ -128,16 +139,6 @@ typedef enum
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
-
-//Password Storage
-- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
-- (NSString *)passwordForAccount:(AIAccount *)inAccount;
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
-- (void)forgetPasswordForAccount:(AIAccount *)inAccount;
-
-- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
-- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
-- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
 //Private
 - (void)initController;

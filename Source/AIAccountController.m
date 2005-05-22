@@ -22,11 +22,7 @@
 #import "AILoginController.h"
 #import "AIPreferenceController.h"
 #import "AIStatusController.h"
-#import "ESAccountPasswordPromptController.h"
-#import "ESProxyPasswordPromptController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIKeychain.h>
-#import <AIUtilities/AIKeychainOld.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/CBObjectAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
@@ -41,6 +37,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 #import "AdiumServices.h"
+#import "AdiumPasswords.h"
 
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
@@ -82,9 +79,11 @@
 - (void)awakeFromNib
 {
 	adiumServices = [[AdiumServices alloc] init];
+	adiumPasswords = [[AdiumPasswords alloc] init];
 }
 
-//Adium Services
+//Services
+#pragma mark Services
 - (void)registerService:(AIService *)inService{
 	[adiumServices registerService:inService];
 }
@@ -100,6 +99,33 @@
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID{
 	return [adiumServices firstServiceWithServiceID:serviceID];
 }
+
+//Passwords
+#pragma mark Accounts
+- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount{
+	[adiumPasswords setPassword:inPassword forAccount:inAccount];
+}
+- (void)forgetPasswordForAccount:(AIAccount *)inAccount{
+	[adiumPasswords forgetPasswordForAccount:inAccount];
+}
+- (NSString *)passwordForAccount:(AIAccount *)inAccount{
+	return [adiumPasswords passwordForAccount:inAccount];
+}
+- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext{
+	[adiumPasswords passwordForAccount:inAccount notifyingTarget:inTarget selector:inSelector context:inContext];
+}
+- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName{
+	[adiumPasswords setPassword:inPassword forProxyServer:server userName:userName];
+}
+- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName{
+	return [adiumPasswords passwordForProxyServer:server userName:userName];
+}
+- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext{
+	[adiumPasswords passwordForProxyServer:server userName:userName notifyingTarget:inTarget selector:inSelector context:inContext];
+}
+
+
+
 				
 
 
@@ -876,201 +902,6 @@
 	return NO;	
 }
 
-//Password Storage -----------------------------------------------------------------------------------------------------
-#pragma mark Password Storage
-
-- (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]]);
-}
-- (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
-	if([[[adium loginController] userArray] count] > 1){
-		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]]);
-	}else{
-		return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
-	}
-}
-- (NSString *)_accountNameForProxyServer:(NSString *)proxyServer userName:(NSString *)userName{
-	return([NSString stringWithFormat:@"%@.%@",proxyServer,userName]);
-}
-- (NSString *)_passKeyForProxyServer:(NSString *)proxyServer{
-	if([[[adium loginController] userArray] count] > 1){
-		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer]);
-	}else{
-		return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
-	}
-}
-
-
-//Save an account password
-- (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount
-{
-	NSError *error = nil;
-	[[AIKeychain defaultKeychain_error:&error] setInternetPassword:inPassword
-														 forServer:[self _passKeyForAccount:inAccount]
-														   account:[self _accountNameForAccount:inAccount]
-														  protocol:FOUR_CHAR_CODE('AdIM')
-															 error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-}
-
-//Fetches a saved account password (returns nil if no password is saved)
-- (NSString *)passwordForAccount:(AIAccount *)inAccount
-{
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForAccount:inAccount]
-														account:[self _accountNameForAccount:inAccount]
-													   protocol:FOUR_CHAR_CODE('AdIM')
-														  error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-	return password;
-}
-
-//Fetches a saved account password (Prompts the user to enter if no password is saved)
-- (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
-{
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForAccount:inAccount]
-														account:[self _accountNameForAccount:inAccount]
-													   protocol:FOUR_CHAR_CODE('AdIM')
-														  error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-
-	if(password && [password length] != 0){
-		//Invoke the target right away
-		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
-	}else{
-		//Prompt the user for their password
-		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
-														notifyingTarget:inTarget
-															   selector:inSelector
-																context:inContext];
-	}
-}
-
-//Forget a saved password
-- (void)forgetPasswordForAccount:(AIAccount *)inAccount
-{
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	[keychain deleteInternetPasswordForServer:[self _passKeyForAccount:inAccount]
-									  account:[self _accountNameForAccount:inAccount]
-									 protocol:FOUR_CHAR_CODE('AdIM')
-										error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not delete password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-}
-
-- (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName
-{
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForProxyServer:server]
-														account:[self _accountNameForProxyServer:server 
-																						userName:userName]
-													   protocol:FOUR_CHAR_CODE('AdIM')
-														  error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
-			  [self _accountNameForProxyServer:server
-									  userName:userName],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
-			  [error code],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-	return password;
-}
-
-- (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
-{
-	NSError		*error    = nil;
-	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
-	NSString	*password = [keychain internetPasswordForServer:[self _passKeyForProxyServer:server]
-														account:[self _accountNameForProxyServer:server 
-																						userName:userName]
-													   protocol:FOUR_CHAR_CODE('AdIM')
-														  error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
-			  [self _accountNameForProxyServer:server
-									  userName:userName],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
-			  [error code],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-
-	if(password && [password length] != 0){
-		//Invoke the target right away
-		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];    
-	}else{
-		//Prompt the user for their password
-		[ESProxyPasswordPromptController showPasswordPromptForProxyServer:server
-																 userName:userName
-														  notifyingTarget:inTarget
-																 selector:inSelector
-																  context:inContext];
-	}
-}
-//Save a proxy server password
-- (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName
-{
-	NSError *error = nil;
-	[[AIKeychain defaultKeychain_error:&error] setInternetPassword:inPassword
-														 forServer:[self _passKeyForProxyServer:server]
-														   account:[self _accountNameForProxyServer:server 
-																						   userName:userName]
-														  protocol:FOUR_CHAR_CODE('AdIM')
-															 error:&error];
-	if(error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not %@ password for proxy server %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForProxyServer:server userName:userName], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-	}
-}
-
-- (void)_upgradePasswords
-{
-	AIAccount		*account;
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-
-	NSRunInformationalAlertPanel(@"Adium Version Upgrade", @"This version of Adium fixes a common crash related to secure storage of your instant messaging passwords.  When you press OK below, Adium will automatically update any stored passwords to the new, more stable system.\n\nThis process will only occur once and will take a moment; you may be prompted to allow access for one or more passwords.\n\nIf Adium crashes during this upgrade, simply relaunch Adium; the process will not occur again.",nil,nil,nil);
-
-	while((account = [enumerator nextObject])) {
-		NSString	*passKey = [self _passKeyForAccount:account];
-		NSString	*accountName = [self _accountNameForAccount:account];
-
-		//Get from old
-		NSString	*password = [AIKeychainOld getPasswordFromKeychainForService:passKey
-																		 account:accountName];
-
-		//Store in new
-		if(password) {
-			NSError *error = nil;
-			[[AIKeychain defaultKeychain_error:&error] addInternetPassword:password
-																 forServer:passKey
-																   account:accountName
-																  protocol:FOUR_CHAR_CODE('AdIM')
-																	 error:&error];
-			if(error) {
-				NSDictionary *userInfo = [error userInfo];
-				NSLog(@"could not upgrade password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:account], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
-			}
-		}
-	}
-}
 
 // Account Connection menus -----------------------------------------------
 #pragma mark Account Connection menus
