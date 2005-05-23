@@ -212,7 +212,7 @@
 }
 
 /*!
- * @brief Allowed characters for UIDs
+ * @brief Allowed characters for our account name
  *
  * Offers further distinction of allowed characters, for situations where certain characters are allowed
  * for our account name only, or characters which are allowed in user names are forbidden in our own account name.
@@ -225,7 +225,7 @@
 }
 
 /*!
- * @brief Allowed characters for our account name
+ * @brief Allowed characters for UIDs
  *
  * Offers further distinction of allowed characters, for situations where certain characters are allowed
  * for our account name only, or characters which are allowed in user names are forbidden in our own account name.
@@ -262,7 +262,7 @@
 }
 
 /*!
- * @brief Allowed UID length
+ * @brief Allowed account name length
  *
  * Offers further distinction of allowed name length, for situations where our account name has a different
  * length restriction than the names of our contacts.  If this distinction is not made, do not subclass these methods
@@ -275,7 +275,7 @@
 }
 
 /*!
- * @brief Allowed account name length
+ * @brief Allowed UID length
  *
  * Offers further distinction of allowed name length, for situations where our account name has a different
  * length restriction than the names of our contacts.  If this distinction is not made, do not subclass these methods
