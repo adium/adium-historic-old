@@ -17,6 +17,7 @@
 #import "adiumGaimRequest.h"
 #import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
+#import "ESGaimAuthorizationRequestWindowController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
@@ -90,23 +91,93 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString		*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
 	
-	if (primaryString && ([primaryString rangeOfString: @"wants to send you"].location != NSNotFound)){
+	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)){
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
 		gaim_xfer_choose_file((GaimXfer *)userData);
 		
-    }else{
+    }else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)){
+		NSString	*remoteName;
+		NSString	*accountName;
+		NSString	*reason = nil;
+		NSRange		wantsToAddRange, secondSearchRange;
+		unsigned	remoteNameStartingLocation, accountNameStartingLocation;
+		GCallback	authorizeCB, denyCB;
+    	
+		//Get the callback for Authorize, skipping over the title
+		va_arg(actions, char *);
+		authorizeCB = va_arg(actions, GCallback);
+
+		//Get the callback for Deny, skipping over the title
+		va_arg(actions, char *);
+		denyCB = va_arg(actions, GCallback);
+
+		/* "The user %s wants to as %s to" where the first is the remote contact and the second is the account name.
+		 * MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
+		 * OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
+		 *		The reason may be passed as "No reason given."
+		 */
+		wantsToAddRange = [primaryString rangeOfString:@" wants to add "];
+		remoteNameStartingLocation = [@"The user " length];
+		remoteName = [primaryString substringWithRange:NSMakeRange(remoteNameStartingLocation,
+																   (wantsToAddRange.location - remoteNameStartingLocation))];
+		
+		secondSearchRange = [primaryString rangeOfString:@"to his or her buddy list."];
+		if(secondSearchRange.location == NSNotFound){
+			secondSearchRange = [primaryString rangeOfString:@"to their buddy list for the following reason:\n"];
+			//The OSCAR version may have the alias in parenthesis after the ICQ number
+			if(secondSearchRange.location != NSNotFound){
+				NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
+				if(aliasBeginRange.location != NSNotFound){
+					remoteName = [remoteName substringToIndex:aliasBeginRange.location];
+				}
+			}
+		}
+
+		//Extract the account name
+		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
+		accountName = [primaryString substringWithRange:NSMakeRange(accountNameStartingLocation,
+																	secondSearchRange.location - accountNameStartingLocation + 1)];
+		
+		//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
+		if([accountName rangeOfString:@"@"].location != NSNotFound &&
+		   [accountName rangeOfString:@"/"].location != NSNotFound){
+			accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
+		}
+		
+		if((NSMaxRange(secondSearchRange) < [primaryString length]) &&
+		   [primaryString rangeOfString:@"No reason given."].location == NSNotFound){
+			reason = [primaryString substringFromIndex:NSMaxRange(secondSearchRange)];
+		}
+		
+		NSMutableDictionary	*infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
+			remoteName, @"Remote Name",
+			accountName, @"Account Name",
+			[NSValue valueWithPointer:authorizeCB],@"authorizeCB",
+			[NSValue valueWithPointer:denyCB],@"denyCB",
+			[NSValue valueWithPointer:userData],@"userData",
+			nil];
+
+		if(reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
+
+		[ESGaimAuthorizationRequestWindowController performSelectorOnMainThread:@selector(showAuthorizationRequestWithDict:)
+																	 withObject:infoDict
+																  waitUntilDone:YES];
+	}else{
 		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
 			(primary ? primary : ""),
 			((primary && secondary) ? "\n\n" : ""),
 			(secondary ? secondary : "")];
 		
-		NSMutableArray  *buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
-		GCallback 	    *callBacks = g_new0(GCallback, actionCount);
+		NSMutableArray	*buttonNamesArray = [NSMutableArray arrayWithCapacity:actionCount];
+		GCallback		*callBacks = g_new0(GCallback, actionCount);
     	
 		//Generate the actions names and callbacks into useable forms
 		for (i = 0; i < actionCount; i += 1) {
+			char *buttonName;
+			
 			//Get the name - XXX evands:need to localize!
-			[buttonNamesArray addObject:[NSString stringWithUTF8String:(va_arg(actions, char *))]];
+			buttonName = va_arg(actions, char *);
+			[buttonNamesArray addObject:[NSString stringWithUTF8String:buttonName]];
 			
 			//Get the callback for that name
 			callBacks[i] = va_arg(actions, GCallback);
@@ -132,6 +203,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 														withObject:infoDict
 													 waitUntilDone:YES];
 	}
+
     return(adium_gaim_get_handle());
 }
 
