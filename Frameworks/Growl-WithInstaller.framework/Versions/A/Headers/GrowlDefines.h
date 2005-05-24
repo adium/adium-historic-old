@@ -7,15 +7,17 @@
 
 #ifdef __OBJC__
 #define XSTR(x) (@x)
+#define STRING NSString *
 #else
 #define XSTR CFSTR
+#define STRING CFStringRef
 #endif
 
 /*!	@header GrowlDefines.h
  *	@abstract   Defines all the notification keys.
  *	@discussion Defines all the keys used for registration with Growl and for
  *	 Growl notifications.
- *	 
+ *
  *	 Most applications should use the functions or methods of Growl.framework
  *	 instead of posting notifications such as those described here.
  *	@updated 2004-01-25
@@ -24,8 +26,8 @@
 // UserInfo Keys for Registration
 #pragma mark UserInfo Keys for Registration
 
-/*!	@group Registration userInfo keys
- *	@abstract	Keys for the userInfo dictionary of a GROWL_APP_REGISTRATION distributed notification.
+/*!	@group Registration userInfo keys */
+/*	@abstract	Keys for the userInfo dictionary of a GROWL_APP_REGISTRATION distributed notification.
  *	@discussion The values of these keys describe the application and the
  *	 notifications it may post.
  *
@@ -72,18 +74,17 @@
  *	 notification names.
  */
 #define GROWL_NOTIFICATIONS_ALL			XSTR("AllNotifications")
-/*!	@defined GROWL_NOTIFICATIONS_USER_SET
- *	@abstract The array of notifications the user has turned on.
- *	@discussion This array contains the names of all the notifications the user
- *	 has enabled. Your application should not interact with this key.
+/*!	@defined	GROWL_TICKET_VERSION
+ *	@abstract	The version of your registration ticket.
+ *	@discussion	Include this key in a ticket plist file that you put in your
+ *	 application bundle for auto-discovery. The current ticket version is 1.
  */
-#define GROWL_NOTIFICATIONS_USER_SET	XSTR("AllowedUserNotifications")
-
+#define GROWL_TICKET_VERSION			XSTR("TicketVersion")
 // UserInfo Keys for Notifications
 #pragma mark UserInfo Keys for Notifications
 
-/*!	@group Notification userInfo keys
- *	@abstract	Keys for the userInfo dictionary of a GROWL_NOTIFICATION distributed notification.
+/*!	@group Notification userInfo keys */
+/*	@abstract	Keys for the userInfo dictionary of a GROWL_NOTIFICATION distributed notification.
  *	@discussion The values of these keys describe the content of a Growl
  *	 notification.
  *
@@ -155,15 +156,41 @@
  */
 #define GROWL_NOTIFICATION_CLICK_CONTEXT			XSTR("NotificationClickContext")
 
-//add documentation comments
-#define GROWL_NOTIFICATION_FORCE_APP_LINK	XSTR("NotificationForceAppLink")
-#define GROWL_NOTIFICATION_LINKS		XSTR("NotificationLinks")
+/*!	@defined GROWL_DISPLAY_PLUGIN
+ *	@discussion The name of a display plugin which should be used for this notification.
+ *    Optional. If this key is not set or the specified display plugin does not
+ *    exist, the display plugin stored in the application ticket is used. This key
+ *    allows applications to use different default display plugins for their
+ *    notifications. The user can still override those settings in the preference
+ *    pane.
+ */
+#define GROWL_DISPLAY_PLUGIN				XSTR("NotificationDisplayPlugin")
+
+/*!	@defined GROWL_NOTIFICATION_IDENTIFIER
+ *	@abstract An identifier for the notification for coalescing purposes.
+ *   Notifications with the same identifier fall into the same class; only
+ *   the last notification of a class is displayed on the screen. If a
+ *   notification of the same class is currently being displayed, it is
+ *   replaced by this notification.
+ *
+ *	 Optional. Not supported by all display plugins.
+ */
+#define GROWL_NOTIFICATION_IDENTIFIER	XSTR("GrowlNotificationIdentifier")
+
+/*!	@defined GROWL_APP_PID
+ *	@abstract The process identifier of the process which sends this
+ *   notification. If this field is set, the application will only receive
+ *   clicked and timed out notifications which originate from this process.
+ *
+ *	 Optional.
+ */
+#define GROWL_APP_PID					XSTR("ApplicationPID")
 
 // Notifications
 #pragma mark Notifications
 
-/*!	@group Notification names
- *	@abstract	Names of distributed notifications used by Growl.
+/*!	@group Notification names */
+/*	@abstract	Names of distributed notifications used by Growl.
  *	@discussion	These are notifications used by applications (directly or
  *	 indirectly) to interact with Growl, and by Growl for interaction between
  *	 its components.
@@ -224,10 +251,10 @@
  */
 #define GROWL_NOTIFICATION				XSTR("GrowlNotification")
 /*!	@defined GROWL_SHUTDOWN
- *	@abstract The distributed notification name that tells Growl to shutdown.
- *	@discussion The Growl preference pane posts this notification when the
- *	 "Stop Growl" button is clicked.
- */
+*	@abstract The distributed notification name that tells Growl to shutdown.
+*	@discussion The Growl preference pane posts this notification when the
+*	 "Stop Growl" button is clicked.
+*/
 #define GROWL_SHUTDOWN					XSTR("GrowlShutdown")
 /*!	@defined GROWL_PING
  *	@abstract A distributed notification to check whether Growl is running.
@@ -255,18 +282,18 @@
  *	 The GrowlApplicationBridge responds to this notification by calling a
  *	 callback in its delegate.
  */
-#define GROWL_NOTIFICATION_CLICKED             XSTR("GrowlClicked!")
+#define GROWL_NOTIFICATION_CLICKED		XSTR("GrowlClicked!")
+#define GROWL_NOTIFICATION_TIMED_OUT	XSTR("GrowlTimedOut!")
 
-/*!	@group Other symbols
- *	@abstract Symbols which don't fit into any of the other categories.
- */
+/*!	@group Other symbols */
+/* Symbols which don't fit into any of the other categories. */
 
 /*!	@defined GROWL_KEY_CLICKED_CONTEXT
  *	@abstract Used internally as the key for the clickedContext passed over DNC.
  *	@discussion This key is used in GROWL_NOTIFICATION_CLICKED, and contains the
  *	 click context that was supplied in the original notification.
  */
-#define GROWL_KEY_CLICKED_CONTEXT              XSTR("ClickedContext")
+#define GROWL_KEY_CLICKED_CONTEXT		XSTR("ClickedContext")
 /*!	@defined GROWL_REG_DICT_EXTENSION
  *	@abstract The filename extension for registration dictionaries.
  *	@discussion The GrowlApplicationBridge in Growl.framework registers with

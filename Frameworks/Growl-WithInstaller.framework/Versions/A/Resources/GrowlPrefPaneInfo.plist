@@ -17,11 +17,11 @@
 	<key>CFBundleSignature</key>
 	<string>GPAN</string>
 	<key>CFBundleVersion</key>
-	<string>0.6.2</string>
+	<string>0.7</string>
 	<key>NSMainNibFile</key>
 	<string>GrowlPref</string>
 	<key>NSPrefPaneIconFile</key>
-	<string>growl-claw128px.tiff</string>
+	<string>growl-claw32.tiff</string>
 	<key>NSPrefPaneIconLabel</key>
 	<string>Growl</string>
 	<key>NSPrincipalClass</key>
