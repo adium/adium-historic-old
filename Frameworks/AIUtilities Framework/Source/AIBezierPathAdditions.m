@@ -25,7 +25,7 @@
 
 + (NSBezierPath *)bezierPathRoundedRectOfSize:(NSSize)backgroundSize
 {
-	NSRect pathRect = { { 0, 0 }, backgroundSize };
+	NSRect pathRect = NSMakeRect(0, 0, backgroundSize.width, backgroundSize.height);
 
 	return [self bezierPathWithRoundedRect:pathRect];
 }
