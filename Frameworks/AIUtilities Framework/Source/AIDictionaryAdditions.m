@@ -48,7 +48,7 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
     
     //open the dictionary
-    dictionary = [NSDictionary dictionaryWithContentsOfFile:[path stringByAppendingPathComponent:name]];
+    dictionary = [NSDictionary dictionaryWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 
     //if the dictionary doesn't exist, create and return a new one
     if(dictionary == nil && create){
@@ -65,7 +65,7 @@
     NSParameterAssert(name != nil); NSParameterAssert([name length] != 0);
 
 	[[NSFileManager defaultManager] createDirectoriesForPath:path]; //make sure the path exists
-    return ([self writeToFile:[path stringByAppendingPathComponent:name] atomically:YES]);
+    return ([self writeToFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"] atomically:YES]);
 }
 
 - (NSDictionary *)dictionaryByTranslating:(NSDictionary *)translation adding:(NSDictionary *)addition removing:(NSSet *)removal
