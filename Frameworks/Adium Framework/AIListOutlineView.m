@@ -83,7 +83,6 @@
 	[self sizeLastColumnToFit];
 }
 
-
 //Selection Hiding -----------------------------------------------------------------------------------------------------
 //If our window isn't in the foreground, we're not displaying a selection.  So override this method to pass NO for
 //selected in that situation
