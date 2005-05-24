@@ -16,7 +16,6 @@
 
 #import "AIAccountController.h"
 #import "AIContactController.h"
-#import "AIContentController.h"
 #import "AIStatusController.h"
 #import "ESGaimMSNAccount.h"
 #import "Libgaim/state.h"
@@ -27,12 +26,10 @@
 #import <Adium/AIService.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
-#import <AIUtilities/AIStringAdditions.h>
 
 #define DEFAULT_MSN_PASSPORT_DOMAIN @"@hotmail.com"
 
 @interface ESGaimMSNAccount (PRIVATE)
-- (void)updateFriendlyNameToServerFriendlyName;
 -(void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
 @end
 
@@ -162,8 +159,6 @@
 - (oneway void)accountConnectionConnected
 {
 	[super accountConnectionConnected];
-	
-	[self updateFriendlyNameToServerFriendlyName];
 	[self updateStatusForKey:@"FullNameAttr"];
 }	
 
@@ -177,44 +172,6 @@
 		}
 	}else{
 		[super updateStatusForKey:key];
-	}
-}
-
-/*
- * @brief Update our friendly name to match the serer friendly name if appropriate
- *
- * Well behaved MSN clients respect the serverside display name so that an update on one client is reflected on another.
- * 
- * If our display name is static, we should update to the serverside one if they aren't the same.
- *
- * However, if our display name is dynamic, most likely we're looking at the filtered version of our dynamic
- * name, so we shouldn't update to the filtered one.
- */
-- (void)updateFriendlyNameToServerFriendlyName
-{
-	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
-	if(displayName &&
-	   strcmp(displayName, [[self UID] UTF8String]) &&
-	   strcmp(displayName, [[self formattedUID] UTF8String])){
-		/* There is a serverside display name, and it's not the same as our UID. */
-		NSAttributedString	*ourPreference = [self autoRefreshingOriginalAttributedStringForStatusKey:@"FullNameAttr"];
-
-		if(strcmp([[ourPreference string] UTF8String], displayName)){
-			/* The display name is different from our preference. Check if our preference is static. */
-			NSAttributedString	*filteredValue;
-			
-			filteredValue = [[adium contentController] filterAttributedString:ourPreference
-															  usingFilterType:AIFilterContent
-																	direction:AIFilterOutgoing
-																	  context:self];
-			
-			if([[filteredValue string] isEqualToString:[ourPreference string]]){
-				/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
-				[self setPreference:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:displayName]] autorelease]
-							 forKey:@"FullNameAttr"
-							  group:GROUP_ACCOUNT_STATUS];
-			}
-		}
 	}
 }
 
@@ -261,6 +218,7 @@
 	return displayConversationTimedOut;
 	 */
 }
+
 
 #pragma mark File transfer
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
@@ -465,21 +423,9 @@
 
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
-{	
+{
 	if(strcmp(label, "Set Friendly Name") == 0){
-		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
-
-	}else if(strcmp(label, "Set Home Phone Number") == 0){
-		return AILocalizedString(@"Set Home Phone Number",nil);
-		
-	}else if(strcmp(label, "Set Work Phone Number") == 0){
-		return AILocalizedString(@"Set Work Phone Number",nil);
-		
-	}else if(strcmp(label, "Set Mobile Phone Number") == 0){
-		return AILocalizedString(@"Set Mobile Phone Number",nil);
-		
-	}else if(strcmp(label, "Allow/Disallow Mobile Pages") == 0){
-		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
+		return(nil);
 	}
 
 	return([super titleForAccountActionMenuLabel:label]);
