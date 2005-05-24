@@ -9513,6 +9513,50 @@
 			settings = {
 			};
 		};
+		34B2740A083C0AB90092A5A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = ESGaimAuthorizationRequestWindowController.h;
+			path = "Plugins/Gaim Service/ESGaimAuthorizationRequestWindowController.h";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B2740B083C0AB90092A5A0 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = ESGaimAuthorizationRequestWindowController.m;
+			path = "Plugins/Gaim Service/ESGaimAuthorizationRequestWindowController.m";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B2740C083C0AB90092A5A0 = {
+			fileRef = 34B2740A083C0AB90092A5A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B2740D083C0AB90092A5A0 = {
+			fileRef = 34B2740B083C0AB90092A5A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		34B27415083C0B900092A5A0 = {
+			isa = PBXFileReference;
+			lastKnownFileType = wrapper.nib;
+			name = GaimAuthorizationRequestWindow.nib;
+			path = "Plugins/Gaim Service/GaimAuthorizationRequestWindow.nib";
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		34B27416083C0B900092A5A0 = {
+			fileRef = 34B27415083C0B900092A5A0;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
 		34B4B5A10708B049002C4C6D = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -10157,7 +10201,7 @@
 			buildRules = (
 			);
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" Frameworks \"Frameworks/AIBookmarksImport Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\" \"Frameworks/AIHyperlinks Framework/build\" \"Frameworks\" \"Frameworks/AIBookmarksImport Framework/build\"";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -12617,6 +12661,9 @@
 				34C9A6360822930D004F912C,
 				34C9A6370822930D004F912C,
 				34C9A64408229348004F912C,
+				34B2740A083C0AB90092A5A0,
+				34B2740B083C0AB90092A5A0,
+				34B27415083C0B900092A5A0,
 			);
 			isa = PBXGroup;
 			name = "Request UI";
@@ -15385,7 +15432,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "## Fix Growl-WithInstaller.framework symlinks\ncd \"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Growl-WithInstaller.framework\"\nln -sf ${FRAMEWORK_VERSION} Versions/Current\nln -sf Versions/Current/Headers Headers\nln -sf Versions/Current/Growl-WithInstaller Growl-WithInstaller\nln -sf Versions/Current/Resources Resources\n";
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
 		};
 		34EF54A407CE8EC300A685F1 = {
 			fileRef = 34D8344C07CBE6E2006466F2;
@@ -19142,6 +19189,7 @@
 				34C9A6380822930D004F912C,
 				3411E13A0832E3B9003C8270,
 				3411E2910832FC4A003C8270,
+				34B2740C083C0AB90092A5A0,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19189,6 +19237,7 @@
 				34C9A64508229348004F912C,
 				3411E2480832EB76003C8270,
 				3411E2980832FCA0003C8270,
+				34B27416083C0B900092A5A0,
 			);
 			isa = PBXResourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19271,6 +19320,7 @@
 				34C9A6390822930D004F912C,
 				3411E13B0832E3B9003C8270,
 				3411E2920832FC4A003C8270,
+				34B2740D083C0AB90092A5A0,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
