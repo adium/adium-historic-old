@@ -78,11 +78,6 @@
     }
 }
 
-- (void)setDataSource:(id)aSource
-{
-    [super setDataSource:aSource];
-}
-
 //Filter keydowns looking for the delete key (to delete the current selection)
 - (void)keyDown:(NSEvent *)theEvent
 {
