@@ -28,10 +28,6 @@
 	</dict>
 	<key>IBLastGroupID</key>
 	<string>4</string>
-	<key>IBOpenObjects</key>
-	<array>
-		<integer>9</integer>
-	</array>
 	<key>IBSystem Version</key>
 	<string>8B15</string>
 	<key>IBUserGuides</key>
@@ -41,7 +37,6 @@
 			<key>guideLocations</key>
 			<array>
 				<string>Vertical:381.000000</string>
-				<string>Vertical:53.000000</string>
 			</array>
 			<key>guidesLocked</key>
 			<false/>
