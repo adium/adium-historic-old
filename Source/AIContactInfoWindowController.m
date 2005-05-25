@@ -150,7 +150,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
     [self tabView:tabView_category willSelectTabViewItem:tabViewItem];
     [tabView_category selectTabViewItem:tabViewItem];    
 	
-	if ([imageView_userIcon respondsToSelector:@selector(setAnimates:)]) [imageView_userIcon setAnimates:YES];
+	[imageView_userIcon setAnimates:YES];
 		
 	//Monitor the selected contact
     [[adium notificationCenter] addObserver:self 
