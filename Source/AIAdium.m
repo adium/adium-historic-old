@@ -51,10 +51,9 @@
 #   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium 2.0"
 #endif
 
-#define ADIUM_FAQ_PAGE						AILocalizedString(@"http://faq.adiumx.com/","Adium FAQ page. Localize only if a translated version exists.")
+#define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localize only if a translated version exists.")
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
-#define ADIUM_BUG_PAGE						@"mailto:bugs@adiumx.com"
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
 //Portable Adium prefs key
@@ -318,10 +317,10 @@ static NSString	*prefsCategory;
 
 //Show our help
 - (IBAction)showHelp:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FAQ_PAGE]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
 }
 - (IBAction)reportABug:(id)sender{
-    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_BUG_PAGE]];
+    [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_TRAC_PAGE]];
 }
 - (IBAction)sendFeedback:(id)sender{
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FEEDBACK_PAGE]];
