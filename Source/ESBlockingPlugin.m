@@ -95,7 +95,7 @@
 				while((containedContact = [enumerator nextObject])){
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
 					if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-						[acct addListObject:containedContact toPrivacyList:PRIVACY_DENY];
+						[self _blockContact:contact unblock:unblock];
 					} else {
 						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
 					}
@@ -104,11 +104,10 @@
 				AIListContact *contact = (AIListContact *)object;
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
 				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
-					[acct addListObject:contact toPrivacyList:PRIVACY_DENY];
+					[self _blockContact:contact unblock:unblock];
 				} else {
 					NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, contact);
 				}
-				[acct addListObject:contact toPrivacyList:PRIVACY_DENY];
 			}
 		}
 	}
