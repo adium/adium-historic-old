@@ -59,31 +59,29 @@
 
 - (IBAction)blockContact:(id)sender
 {
-	AIListObject *object;
-	BOOL unblock;
+	AIListObject	*object;
 	
-	if(sender == blockContactMenuItem){
-		object = [[adium contactController] selectedListObject];
-	}else{
-		object = [[adium menuController] currentContextMenuObject];
-	}
+	object = ((sender == blockContactMenuItem) ?
+			  [[adium contactController] selectedListObject] :
+			  object = [[adium menuController] currentContextMenuObject]);
 	
-	unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
-
 	//Don't do groups
 	if([object isKindOfClass:[AIListContact class]]){
-		AIListContact *contact = (AIListContact *)object;
-		NSString *format = unblock 
-						 ? AILocalizedString(@"Are you sure you want to unblock %@?",nil)
-						 : AILocalizedString(@"Are you sure you want to block %@?",nil);
-						 
-		if(NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
-				   @"",
-				   AILocalizedString(@"OK",nil),
-				   AILocalizedString(@"Cancel",nil),
-				   nil) 
-				== NSAlertDefaultReturn){
+		AIListContact	*contact = (AIListContact *)object;
+		BOOL			unblock;
+		NSString		*format;
 		
+		unblock = [[sender title] isEqualToString:UNBLOCK_CONTACT];
+		format = (unblock ? 
+				  AILocalizedString(@"Are you sure you want to unblock %@?",nil) :
+				  AILocalizedString(@"Are you sure you want to block %@?",nil));
+
+		if(NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
+						   @"",
+						   AILocalizedString(@"OK", nil),
+						   AILocalizedString(@"Cancel", nil),
+						   nil) == NSAlertDefaultReturn){
+			
 			//Handle metas
 			if([object isKindOfClass:[AIMetaContact class]]){
 				AIMetaContact *meta = (AIMetaContact *)object;
