@@ -25,6 +25,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
+#import <Adium/AIAccountMenu.h>
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
@@ -35,7 +36,6 @@
 - (void)setIconState:(SMI_Icon_State)state;
 
 //AccountMenuPlugin
-- (NSString *)identifier;
 - (void)addAccountMenuItems:(NSArray *)menuItemArray;
 - (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 
@@ -135,8 +135,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 								         object:nil];
 		
         //Register ourself for the account menu items
-        [[adium accountController] registerAccountMenuPlugin:self];
         [[adium statusController] registerStateMenuPlugin:self];
+		
+		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:NO showTitleVerbs:NO] retain];
     }
     
     return self;
@@ -145,7 +146,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)dealloc
 {
     //Unregister ourself
-    [[adium accountController] unregisterAccountMenuPlugin:self];
     [[adium  statusController] unregisterStateMenuPlugin:self];
 	[[adium contentController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
@@ -155,7 +155,8 @@ static	NSImage						*adiumRedHighlightImage = nil;
     //[statusView release];
     [theMenu release];
     [unviewedObjectsArray release];
-        
+	[accountMenu release];
+	
     //To the superclass, Robin!
     [super dealloc];
 }
