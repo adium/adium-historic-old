@@ -51,11 +51,14 @@
 
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {	
-	NSRect  oldFrame, newFrame;
-	float   changeInTextHeight = 0;
+	NSRect		oldFrame, newFrame;
+	NSRect		windowFrame;
+	NSWindow	*window;
+	float		changeInTextHeight = 0;
 	
 	//Ensure the window is loaded
-	[self window];
+	window = [self window];
+	windowFrame = [window frame];
 
 	//If masked, replace our textField_input with a secure one
 	if([[infoDict objectForKey:@"Masked"] boolValue]){
@@ -116,23 +119,32 @@
 	
 	//Secondary text field
 	{
-		NSString *secondary = [infoDict objectForKey:@"Secondary Text"];
-		
-		oldFrame = [textField_secondary frame];
-		if ([secondary length]){
-			[textField_secondary setStringValue:secondary];
-			[textField_secondary sizeToFit];
-		}else{
-			[textField_secondary setStringValue:@""];
-			[textField_secondary setFrame:NSMakeRect(0,0,0,0)];
-			changeInTextHeight -= 8;
-		}
-		newFrame = [textField_secondary frame];
-		
-		changeInTextHeight += (newFrame.size.height - oldFrame.size.height);
+		NSString	*secondary = [infoDict objectForKey:@"Secondary Text"];
+		float		secondaryHeightChange;
 
-		newFrame.origin.y = oldFrame.origin.y - changeInTextHeight;
-		[textField_secondary setFrame:newFrame];
+		[textView_secondary setVerticallyResizable:YES];
+		[textView_secondary setHorizontallyResizable:NO];
+		[textView_secondary setDrawsBackground:NO];
+		[textView_secondary setTextContainerInset:NSZeroSize];
+		[scrollView_secondary setDrawsBackground:NO];
+		
+		[textView_secondary setString:(secondary ? secondary : @"")];
+		
+		//Resize the window frame to fit the error title
+		[textView_secondary sizeToFit];
+		secondaryHeightChange = [textView_secondary frame].size.height - [scrollView_secondary documentVisibleRect].size.height;
+		changeInTextHeight += secondaryHeightChange;
+
+//		changeInTextHeight += (newFrame.size.height - oldFrame.size.height);
+
+//		newFrame.origin.y = oldFrame.origin.y - changeInTextHeight;
+//		[textField_secondary setFrame:newFrame];
+		
+		windowFrame.size.height += changeInTextHeight;
+		windowFrame.origin.y -= changeInTextHeight;
+
+		//Resize the window to fit the message
+		[window setFrame:windowFrame display:YES animate:NO];
 	}
 	
 	//Default value

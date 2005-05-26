@@ -18,7 +18,10 @@
 
 @interface ESGaimRequestWindowController : AIWindowController {	
 	IBOutlet		NSTextField		*textField_primary;
-	IBOutlet		NSTextField		*textField_secondary;
+
+	IBOutlet		NSTextView		*textView_secondary;
+	IBOutlet		NSScrollView	*scrollView_secondary;
+
 	IBOutlet		NSTextField		*textField_input;
 	IBOutlet		NSButton		*button_okay;
 	IBOutlet		NSButton		*button_cancel;

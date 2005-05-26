@@ -24,9 +24,10 @@
             OUTLETS = {
                 "button_cancel" = NSButton; 
                 "button_okay" = NSButton; 
+                "scrollView_secondary" = NSScrollView; 
                 "textField_input" = NSTextField; 
                 "textField_primary" = NSTextField; 
-                "textField_secondary" = NSTextField; 
+                "textView_secondary" = NSTextView; 
             }; 
             SUPERCLASS = AIWindowController; 
         }, 
