@@ -20,6 +20,7 @@
 #import "AIMenuController.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <Adium/AIAccountMenu.h>
 
 @interface AIStateMenuPlugin (PRIVATE)
 - (void)updateKeyEquivalents;
@@ -52,6 +53,8 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:NO showTitleVerbs:NO] retain];
+
 	dockStatusMenuRoot = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Status",nil)
 																			  target:self
 																			  action:@selector(dummyAction:)
@@ -59,7 +62,7 @@
 	[[adium menuController] addMenuItem:dockStatusMenuRoot toLocation:LOC_Dock_Status];
 
 	[[adium statusController] registerStateMenuPlugin:self];
-	[[adium accountController] registerAccountMenuPlugin:self];
+
 
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(stateMenuSelectionsChanged:)
@@ -71,8 +74,9 @@
 - (void)uninstallPlugin
 {
 	[[adium statusController] unregisterStateMenuPlugin:self];
-	[[adium accountController] unregisterAccountMenuPlugin:self];
 	[[adium notificationCenter] removeObserver:self];
+	
+	[accountMenu release]; accountMenu = nil;
 }
 
 /*!

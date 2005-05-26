@@ -14,15 +14,39 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import <Adium/AIObject.h>
 
-@class AIAccountMenu;
+@protocol AIListObjectObserver;
 
-@interface AIAccountMenuAccessPlugin : AIPlugin {
-	AIAccountMenu	*accountMenu;
+@interface AIAccountMenu : AIObject <AIListObjectObserver, StateMenuPlugin> {
+	id				delegate;
+	BOOL			showAccountActions;
+	BOOL			showTitleVerbs;
+	
+	NSMutableArray	*menuItems;
 }
 
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
++ (id)accountMenuWithDelegate:(id)inDelegate
+		   showAccountActions:(BOOL)inShowAccountActions
+			   showTitleVerbs:(BOOL)inShowTitleVerbs;
+
+//Actions
+- (IBAction)toggleConnection:(id)sender;
+
+//Building
+- (void)rebuildAccountMenu;
+- (void)updateMenuItem:(NSMenuItem *)menuItem;
+- (NSImage *)imageForAccount:(AIAccount *)account;
+- (NSString *)titleForAccount:(AIAccount *)account;
+- (NSMenuItem *)menuItemForAccount:(AIAccount *)inAccount;
+
+//Account Actions
+- (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount;
 
 @end
+
+@interface NSObject (AIAccountMenuDelegate)
+- (void)addAccountMenuItems:(NSArray *)menuItemArray;
+- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
+@end
+

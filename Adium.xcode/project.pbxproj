@@ -11206,6 +11206,7 @@
 				34C1F5FA07F88C9900DB6645,
 				DA9CF85D080F97F8000C5249,
 				4BAF8CFE083D9A2A0067CF6F,
+				4B8743260841046600738987,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11427,6 +11428,7 @@
 				34C1F5F907F88C9900DB6645,
 				DA9CF85C080F97F3000C5249,
 				4BAF8CFF083D9A2A0067CF6F,
+				4B8743270841046600738987,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -18422,6 +18424,8 @@
 				34943DEE07BAD918000F2A03,
 				4BAF8CFC083D9A2A0067CF6F,
 				4BAF8CFD083D9A2A0067CF6F,
+				4B8743240841046600738987,
+				4B8743250841046600738987,
 			);
 			isa = PBXGroup;
 			name = "Accounts & Services";
@@ -19775,6 +19779,39 @@
 		};
 		4B87424B0840E3D800738987 = {
 			fileRef = 4B8742490840E3D800738987;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4B8743240841046600738987 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AIAccountMenu.h;
+			path = Source/AIAccountMenu.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B8743250841046600738987 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AIAccountMenu.m;
+			path = Source/AIAccountMenu.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4B8743260841046600738987 = {
+			fileRef = 4B8743240841046600738987;
+			isa = PBXBuildFile;
+			settings = {
+				ATTRIBUTES = (
+					Public,
+				);
+			};
+		};
+		4B8743270841046600738987 = {
+			fileRef = 4B8743250841046600738987;
 			isa = PBXBuildFile;
 			settings = {
 			};

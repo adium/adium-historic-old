@@ -16,10 +16,12 @@
 
 #import <Adium/AIPlugin.h>
 
-@protocol AccountMenuPlugin, StateMenuPlugin;
+@class AIAccountMenu;
+@protocol StateMenuPlugin;
 
-@interface AIStateMenuPlugin : AIPlugin <StateMenuPlugin, AccountMenuPlugin> {	
+@interface AIStateMenuPlugin : AIPlugin <StateMenuPlugin> {	
 	NSMenuItem		*dockStatusMenuRoot;
+	AIAccountMenu	*accountMenu;
 	
 	NSArray			*currentMenuItemArray;
 }

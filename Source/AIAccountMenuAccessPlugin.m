@@ -17,6 +17,7 @@
 #import "AIAccountController.h"
 #import "AIAccountMenuAccessPlugin.h"
 #import "AIMenuController.h"
+#import <Adium/AIAccountMenu.h>
 
 /*!
  * @class AIAccountMenuAccessPlugin
@@ -29,11 +30,15 @@
  */
 - (void)installPlugin
 {
-	//Wait for Adium to finish launching so status icons, etc. are ready and we aren't forced to immediately rebuild.
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(adiumFinishedLaunching:)
-									   name:Adium_CompletedApplicationLoad
-									 object:nil];
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:YES showTitleVerbs:YES] retain];
+}
+
+/*!
+ * @brief Uninstall Plugin
+ */
+- (void)uninstallPlugin
+{
+
 }
 
 /*!
@@ -41,17 +46,8 @@
  */
 - (void)dealloc
 {
-	[[adium notificationCenter] removeObserver:self];
-	
+	[accountMenu release];
 	[super dealloc];
-}
-
-/*!
- * @brief Adium finished launching
- */
-- (void)adiumFinishedLaunching:(NSNotification *)notification
-{
-	[[adium accountController] registerAccountMenuPlugin:self];
 }
 
 /*!
@@ -86,20 +82,6 @@
     while((menuItem = [enumerator nextObject])){    
         [[adium menuController] removeMenuItem:menuItem];
     }
-}
-
-/*!
- * @brief Uninstall Plugin
- */
-- (void)uninstallPlugin
-{
-    //Stop observing/receiving notifications
-	[[adium accountController] unregisterAccountMenuPlugin:self];
-}
-
-- (BOOL)showStatusSubmenu
-{
-	return NO;
 }
 
 @end

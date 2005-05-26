@@ -55,13 +55,7 @@ typedef enum
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
 		AdiumServices, AdiumPasswords;
 
-@protocol AccountMenuPlugin <NSObject>
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
-- (BOOL)showStatusSubmenu;
-@end
-
-@interface AIAccountController : NSObject<AIListObjectObserver, StateMenuPlugin>{
+@interface AIAccountController : NSObject {
     IBOutlet	AIAdium		*adium;	
 	
     NSMutableArray			*accountArray;				//Array of active accounts
@@ -70,11 +64,6 @@ typedef enum
 	
 	NSMutableArray			*unloadableAccounts;
 	
-	NSMutableDictionary		*accountMenuPluginsDict;
-	NSMutableDictionary		*accountMenuItemArraysDict;
-	
-	NSArray					*_cachedActiveServices;
-
 	AdiumServices			*adiumServices;
 	AdiumPasswords			*adiumPasswords;
 }
@@ -120,10 +109,6 @@ typedef enum
 - (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
 - (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
-
-//AccountMenuPlugin
-- (void)registerAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
-- (void)unregisterAccountMenuPlugin:(id<AccountMenuPlugin>)accountMenuPlugin;
 
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
