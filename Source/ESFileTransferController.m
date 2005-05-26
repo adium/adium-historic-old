@@ -286,11 +286,13 @@ static ESFileTransferPreferences *preferences;
 				destinationName = [NSString stringWithFormat:@"%@-%i",folderName,++uniqueNameCounter];
 			}
 
+			pathToArchive = [tmpDir stringByAppendingPathComponent:[destinationName stringByAppendingPathExtension:@"zip"]];
+
 			arguments = [NSArray arrayWithObjects:
 				@"-r", //we'll want to store recursively
 				@"-1", //use the fastest level of compression that isn't storage; the user can compress manually to do better
 				@"-q", //shhh!
-				[tmpDir stringByAppendingPathComponent:[destinationName stringByAppendingPathExtension:@"zip"]],   //output to our destination name
+				pathToArchive,   //output to our destination name
 				folderName, //store the folder
 				nil];
 			
@@ -308,9 +310,7 @@ static ESFileTransferPreferences *preferences;
 			NS_ENDHANDLER
 			[zipTask release];
 				
-			if(success){
-				pathToArchive = [tmpDir stringByAppendingPathComponent:destinationName];
-			}
+			if(!success) pathToArchive = nil;
 		}
 	}
 
