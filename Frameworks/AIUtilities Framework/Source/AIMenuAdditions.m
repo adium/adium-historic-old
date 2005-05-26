@@ -83,6 +83,17 @@
     return(self);
 }
 
+- (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
+{
+    if(!aString) aString = @"";
+    self = [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
+	
+    [self setTarget:target];
+    [self setRepresentedObject:object];
+	
+    return(self);
+}
+
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode keyMask:(unsigned int)keyMask
 {
     if (!aString) aString = @"";
