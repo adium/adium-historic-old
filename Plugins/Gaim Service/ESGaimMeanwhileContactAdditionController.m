@@ -157,6 +157,8 @@ struct resolved_id {
 											  withObject:[infoDict objectForKey:@"userData"]
 											  withObject:[infoDict objectForKey:@"fieldsValue"]];
 	}
+	
+	[self autorelease];
 }
 
 
