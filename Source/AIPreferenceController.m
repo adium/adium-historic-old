@@ -712,7 +712,7 @@
  *
  * @result A full path to the download location
  */
-- (NSString *) userPreferredDownloadFolder
+- (NSString *)userPreferredDownloadFolder
 {
 	NSString	*userPreferredDownloadFolder;
 	
