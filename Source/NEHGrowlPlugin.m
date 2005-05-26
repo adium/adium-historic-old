@@ -39,21 +39,21 @@
 #define GROWL_ALERT							AILocalizedString(@"Display a Growl notification",nil)
 #define GROWL_STICKY_ALERT					AILocalizedString(@"Display a sticky Growl notification",nil)
 
-#define GROWL_INSTALLATION_WINDOW_TITLE AILocalizedString(@"Growl Installation Recommended", "Growl installation window title")
-#define GROWL_UPDATE_WINDOW_TITLE AILocalizedString(@"Growl Update Available", "Growl update window title")
+#define GROWL_INSTALLATION_WINDOW_TITLE		AILocalizedString(@"Growl Installation Recommended", "Growl installation window title")
+#define GROWL_UPDATE_WINDOW_TITLE			AILocalizedString(@"Growl Update Available", "Growl update window title")
 
-#define GROWL_INSTALLATION_EXPLANATION AILocalizedString(@"Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.\n\nIt is strongly recommended that you allow Adium to automatically install Growl; no download is required.","Growl installation explanation")
-#define GROWL_UPDATE_EXPLANATION AILocalizedString(@"Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.\n\nThis release of Adium includes an updated version of Growl. It is strongly recommended that you allow Adium to automatically update Growl; no download is required.","Growl update explanation")
+#define GROWL_INSTALLATION_EXPLANATION		AILocalizedString(@"Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.\n\nIt is strongly recommended that you allow Adium to automatically install Growl; no download is required.","Growl installation explanation")
+#define GROWL_UPDATE_EXPLANATION			AILocalizedString(@"Adium uses the Growl notification system to provide a configurable interface to display status changes, incoming messages and more.\n\nThis release of Adium includes an updated version of Growl. It is strongly recommended that you allow Adium to automatically update Growl; no download is required.","Growl update explanation")
 
 #define GROWL_TEXT_SIZE 11
 
-#define GROWL_EVENT_ALERT_IDENTIFIER			@"Growl"
+#define GROWL_EVENT_ALERT_IDENTIFIER		@"Growl"
 
 @interface NEHGrowlPlugin (PRIVATE)
 - (NSDictionary *)growlRegistrationDict;
 - (NSAttributedString *)_growlInformationForUpdate:(BOOL)isUpdate;
 @end
-
+ 
 /*!
  * @class NEHGrowlPlugin
  * @brief Implements Growl functionality in Adium
