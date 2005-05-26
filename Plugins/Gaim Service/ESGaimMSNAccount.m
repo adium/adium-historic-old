@@ -194,14 +194,14 @@
 - (void)updateFriendlyNameToServerFriendlyName
 {
 	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
-	NSLog(@"%s",displayName);
+
 	if(displayName &&
 	   strcmp(displayName, [[self UID] UTF8String]) &&
 	   strcmp(displayName, [[self formattedUID] UTF8String])){
 		/* There is a serverside display name, and it's not the same as our UID. */
 		NSAttributedString	*ourPreference = [[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString];
 		const char			*ourPreferenceUTF8String = [[ourPreference string] UTF8String];
-		NSLog(@"Ours is %@ %s",ourPreference,ourPreferenceUTF8String);
+
 		if(!ourPreferenceUTF8String ||
 		   strcmp(ourPreferenceUTF8String, displayName)){
 			/* The display name is different from our preference. Check if our preference is static. */
@@ -214,14 +214,12 @@
 																		  context:self];
 			}
 			
-			NSLog(@"%@ == %@ ? %i",[filteredValue string],[ourPreference string],(!filteredValue || [[filteredValue string] isEqualToString:[ourPreference string]]));
 			if(!filteredValue ||
 			   [[filteredValue string] isEqualToString:[ourPreference string]]){
 				/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
 				NSAttributedString	*newPreference;
 				
 				newPreference = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:displayName]];
-				NSLog(@"set to %@!",newPreference);
 				[self setPreference:[newPreference dataRepresentation]
 							 forKey:@"FullNameAttr"
 							  group:GROUP_ACCOUNT_STATUS];
