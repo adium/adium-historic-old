@@ -63,7 +63,7 @@
 	
 	object = ((sender == blockContactMenuItem) ?
 			  [[adium contactController] selectedListObject] :
-			  object = [[adium menuController] currentContextMenuObject]);
+			  [[adium menuController] currentContextMenuObject]);
 	
 	//Don't do groups
 	if([object isKindOfClass:[AIListContact class]]){
