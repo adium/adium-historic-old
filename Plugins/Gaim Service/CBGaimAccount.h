@@ -129,6 +129,7 @@
 - (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
 - (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat;
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
@@ -165,5 +166,6 @@
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label;
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object;
+
 
 @end

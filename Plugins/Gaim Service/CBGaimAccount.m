@@ -1011,20 +1011,25 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 }
 
 #pragma mark GaimConversation User Lists
+- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat
+{
+	[chat addParticipatingListObject:listContact];
+	
+	GaimDebug(@"%@: addContact:%@ toChat:%@",self,listContact,chat);
+}
+
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
-	AIListContact *contact;
+	AIListContact *listContact;
 
 	if ((chat) &&
-		(contact = [self contactWithUID:contactName])){
+		(listContact = [self contactWithUID:contactName])){
 
 		if (!namesAreCaseSensitive){
-			[contact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
+			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 		}
 
-		[chat addParticipatingListObject:contact];
-
-		GaimDebug(@"added user %@ in chat %@",contactName,[chat name]);
+		[self addContact:listContact toChat:chat];
 	}
 }
 
@@ -1046,7 +1051,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[chat removeParticipatingListObject:contact];
 		
-		GaimDebug(@"removed user %@ in chat %@",contactName,[chat name]);
+		GaimDebug(@"%@ removeUser:%@ fromChat:%@",self,contact,chat);
 	}	
 }
 
