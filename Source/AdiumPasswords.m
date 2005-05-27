@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIAccountController.h"
 #import "AILoginController.h"
 #import "AdiumPasswords.h"
 #import "ESAccountPasswordPromptController.h"
@@ -33,6 +34,7 @@
 
 @implementation AdiumPasswords
 
+//Accounts -------------------------------------------------------------------------------------------------------------
 #pragma mark Accounts
 
 /*!
@@ -128,6 +130,7 @@
 	}
 }
 
+//Proxy Servers --------------------------------------------------------------------------------------------------------
 #pragma mark Proxy Servers
 
 /*!
@@ -223,6 +226,8 @@
 	}
 }
 
+
+//Password Keys --------------------------------------------------------------------------------------------------------
 #pragma mark Password Keys
 
 /*!
@@ -250,6 +255,50 @@
 		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer]);
 	}else{
 		return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
+	}
+}
+
+
+//Upgrade --------------------------------------------------------------------------------------------------------------
+#pragma mark Upgrade
+/*!
+ * @brief Upgraded password storage format (v0.70 -> v0.80) for ability with custom keychain software
+ */
+- (void)upgradePasswords
+{
+	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
+	NSNumber		*didPasswordUpgrade = [userDefaults objectForKey:@"Adium:Did Password Upgrade"];
+	
+	if(!didPasswordUpgrade || ![didPasswordUpgrade boolValue]){
+		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium:Did Password Upgrade"];
+		[userDefaults synchronize];
+		
+		AIAccount		*account;
+		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+		
+		NSRunInformationalAlertPanel(@"Adium Version Upgrade", @"This version of Adium fixes a common crash related to secure storage of your instant messaging passwords.  When you press OK below, Adium will automatically update any stored passwords to the new, more stable system.\n\nThis process will only occur once and will take a moment; you may be prompted to allow access for one or more passwords.\n\nIf Adium crashes during this upgrade, simply relaunch Adium; the process will not occur again.",nil,nil,nil);
+		
+		while((account = [enumerator nextObject])) {
+			NSString	*passKey = [self _passKeyForAccount:account];
+			NSString	*accountName = [self _accountNameForAccount:account];
+			
+			//Get from old
+			NSString	*password = [AIKeychainOld getPasswordFromKeychainForService:passKey account:accountName];
+			
+			//Store in new
+			if(password) {
+				NSError *error = nil;
+				[[AIKeychain defaultKeychain_error:&error] addInternetPassword:password
+																	 forServer:passKey
+																	   account:accountName
+																	  protocol:FOUR_CHAR_CODE('AdIM')
+																		 error:&error];
+				if(error){
+					NSDictionary *userInfo = [error userInfo];
+					NSLog(@"could not upgrade password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:account], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+				}
+			}
+		}
 	}
 }
 
