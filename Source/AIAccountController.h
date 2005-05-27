@@ -53,19 +53,18 @@ typedef enum
 @protocol AIListObjectObserver, StateMenuPlugin;
 
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
-		AdiumServices, AdiumPasswords;
+		AdiumServices, AdiumPasswords, AdiumAccounts;
 
 @interface AIAccountController : NSObject {
     IBOutlet	AIAdium		*adium;	
 	
-    NSMutableArray			*accountArray;				//Array of active accounts
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
     NSMutableDictionary		*accountStatusDict;			//Account status
 	
-	NSMutableArray			*unloadableAccounts;
 	
 	AdiumServices			*adiumServices;
 	AdiumPasswords			*adiumPasswords;
+	AdiumAccounts			*adiumAccounts;
 }
 
 //Services
@@ -84,31 +83,24 @@ typedef enum
 - (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
-					
-			
+//Accounts
+- (NSArray *)accounts;
+- (NSArray *)accountsCompatibleWithService:(AIService *)service;
+- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID;
+- (void)addAccount:(AIAccount *)inAccount;
+- (void)deleteAccount:(AIAccount *)inAccount;
+- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 
+
+
+	
 
 //Accounts
-- (NSArray *)accountArray;
-- (void)saveAccounts;
-- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
-- (NSArray *)accountsWithService:(AIService *)service;
-- (NSArray *)accountsWithServiceClass:(NSString *)serviceClass;
-- (AIAccount *)firstAccountWithService:(AIService *)service;
-- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID;
-- (NSArray *)accountsWithServiceClassOfService:(AIService *)service;
 - (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
 								   toListObject:(AIListObject *)inObject
 									 withTarget:(id)target
 								 includeOffline:(BOOL)includeOffline;
-- (BOOL)anOnlineAccountCanCreateGroupChats;
-- (BOOL)anOnlineAccountCanEditContacts;
-
-//Account Editing
-- (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service;
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave;
-- (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave;
-- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
@@ -124,6 +116,8 @@ typedef enum
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
+- (BOOL)anOnlineAccountCanCreateGroupChats;
+- (BOOL)anOnlineAccountCanEditContacts;
 
 //Private
 - (void)initController;

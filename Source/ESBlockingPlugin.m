@@ -190,7 +190,7 @@
 - (void)_blockContact:(AIListContact *)contact unblock:(BOOL)unblock
 {
 	//We want to block on all accounts with the same service class. If you want someone gone, you want 'em GONE.
-	NSEnumerator *enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
+	NSEnumerator *enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	AIAccount *account = nil;
 
 	while((account = [enumerator nextObject])){
@@ -214,7 +214,7 @@
 	AIAccount *account = nil;
 	NSEnumerator *enumerator;
 	
-	enumerator = [[[adium accountController] accountsWithServiceClassOfService:[contact service]] objectEnumerator];
+	enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	
 	while((account = [enumerator nextObject])){
 		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){

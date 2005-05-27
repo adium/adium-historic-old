@@ -669,7 +669,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 						serviceID = @"AIM-compatible";
 					}
 					
-					NSEnumerator	*accountsArray = [[[adium accountController] accountArray] objectEnumerator];
+					NSEnumerator	*accountsArray = [[[adium accountController] accounts] objectEnumerator];
 					AIAccount		*account;
 					
 					//Look at each account on this service, searching for one a matching UID

@@ -107,7 +107,7 @@
 		AIAccount		*account;
 		NSMutableSet	*requestedServices = [NSMutableSet set];
 		
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while(account = [enumerator nextObject]){
 			if([account online] &&
 			   [[[account UID] compactedString] isEqualToString:accountName] &&

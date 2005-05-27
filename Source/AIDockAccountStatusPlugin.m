@@ -133,7 +133,7 @@
  */
 - (BOOL)_accountsWithBoolKey:(NSString *)inKey
 {
-    NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
+    NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
     while((account = [enumerator nextObject])){
@@ -151,7 +151,7 @@
  */
 - (BOOL)_accountsWithKey:(NSString *)inKey
 {
-    NSEnumerator    *enumerator = [[[adium accountController] accountArray] objectEnumerator];
+    NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
     while((account = [enumerator nextObject])){

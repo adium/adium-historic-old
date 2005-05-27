@@ -19,6 +19,7 @@
 #import "AIContactController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
@@ -114,18 +115,19 @@
 	//Get the new accounts
 	[accounts release];
 	
-	if ([listObject isKindOfClass:[AIMetaContact class]]){
-		NSEnumerator	*enumerator;
-		NSString		*serviceClass;
+	if([listObject isKindOfClass:[AIMetaContact class]]){
+		NSEnumerator	*enumerator = [[(AIMetaContact *)listObject servicesOfContainedObjects] objectEnumerator];
+		AIService		*service;
 		
 		accounts = [[NSMutableArray alloc] init];
-		enumerator = [[(AIMetaContact *)listObject dictionaryOfServiceClassesAndListContacts] keyEnumerator];
-		while ((serviceClass = [enumerator nextObject])){
-			[(NSMutableArray *)accounts addObjectsFromArray:[[adium accountController] accountsWithServiceClass:serviceClass]];
+
+		while((service = [enumerator nextObject])){
+			[(NSMutableArray *)accounts addObjectsFromArrayIgnoringDuplicates:
+				[[adium accountController] accountsCompatibleWithService:service]];
 		}
 		
 	}else{
-		accounts = [[[adium accountController] accountsWithServiceClassOfService:[listObject service]] retain];
+		accounts = [[[adium accountController] accountsCompatibleWithService:[listObject service]] retain];
 	}
 	
 	//Refresh our table

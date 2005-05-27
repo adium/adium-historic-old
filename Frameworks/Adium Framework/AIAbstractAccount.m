@@ -193,7 +193,8 @@
 		UID = [newProposedUID retain];
 		
 		//Save our changed UID
-		[[adium accountController] saveAccounts];
+#warning XXX - This is making assumptions to the inner-workings of the account controller -ai
+		//[[adium accountController] saveAccounts];
 		
 		didChangeUID = YES;
 	}

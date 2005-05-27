@@ -287,7 +287,7 @@
  */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
-	NSEnumerator	*enumerator = [[[adium accountController] accountsWithServiceClassOfService:[menuItem representedObject]] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[menuItem representedObject]] objectEnumerator];
 	AIAccount		*account;
 	
 	while((account = [enumerator nextObject])){
@@ -354,7 +354,7 @@
 	AIAccount		*account;
 	
 	[accounts release];
-	accounts = [[[adium accountController] accountsWithServiceClassOfService:service] retain];
+	accounts = [[[adium accountController] accountsCompatibleWithService:service] retain];
 	
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];

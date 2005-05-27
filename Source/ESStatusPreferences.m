@@ -190,7 +190,7 @@
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([account statusState] == originalState){
 				[account setStatusStateAndRemainOffline:newState];

@@ -38,18 +38,12 @@
 #import <Adium/AIStatusIcons.h>
 #import "AdiumServices.h"
 #import "AdiumPasswords.h"
+#import "AdiumAccounts.h"
 
 //Paths and Filenames
 #define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 #define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
 
-//Preference keys
-#define TOP_ACCOUNT_ID					@"TopAccountID"   	//Highest account object ID
-#define ACCOUNT_LIST					@"Accounts"   		//Array of accounts
-#define ACCOUNT_TYPE					@"Type"				//Account type
-#define ACCOUNT_SERVICE					@"Service"			//Account service
-#define ACCOUNT_UID						@"UID"				//Account UID
-#define ACCOUNT_OBJECT_ID				@"ObjectID"   		//Account object ID
 
 //Other
 #define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
@@ -64,11 +58,72 @@
 
 @implementation AIAccountController
 
-- (void)awakeFromNib
+//init
+- (void)initController
 {
 	adiumServices = [[AdiumServices alloc] init];
 	adiumPasswords = [[AdiumPasswords alloc] init];
+	adiumAccounts = [[AdiumAccounts alloc] init];
+	
+
+	
+    lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
+	
+	//Default account preferences
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_ACCOUNTS];
+	
 }
+
+//Finish initialization once other controllers have set themselves up
+- (void)finishIniting
+{   
+	//Finish prepping the accounts
+	[adiumAccounts finishIniting];
+	
+	//Temporary upgrade code
+	[adiumPasswords upgradePasswords];
+
+
+	
+	
+	
+    //Observe content (for accountForSendingContentToContact)
+    [[adium notificationCenter] addObserver:self
+                                   selector:@selector(didSendContent:)
+                                       name:CONTENT_MESSAGE_SENT
+                                     object:nil];
+	
+}
+
+//close
+- (void)closeController
+{
+    //Disconnect all accounts
+    [self disconnectAllAccounts];
+    
+    //Remove observers (otherwise, every account added will be a duplicate next time around)
+    [[adium notificationCenter] removeObserver:self];
+}
+
+
+
+
+- (void)dealloc
+{
+	//Cleanup
+    [lastAccountIDToSendContent release];
+	
+	[super dealloc];
+}
+
+
+
+
+
+
+
+
 
 //Services
 #pragma mark Services
@@ -89,7 +144,7 @@
 }
 
 //Passwords
-#pragma mark Accounts
+#pragma mark Passwords
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount{
 	[adiumPasswords setPassword:inPassword forAccount:inAccount];
 }
@@ -112,395 +167,43 @@
 	[adiumPasswords passwordForProxyServer:server userName:userName notifyingTarget:inTarget selector:inSelector context:inContext];
 }
 
-
-
-				
-
-
-
-
-
-//init
-- (void)initController
-{
-    accountArray = nil;
-    lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
-	
-	//Default account preferences
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
-										  forGroup:PREF_GROUP_ACCOUNTS];
-}
-
-//Finish initialization once other controllers have set themselves up
-- (void)finishIniting
-{   
-    //Load the user accounts
-    [self loadAccounts];
-    
-    //Observe content (for accountForSendingContentToContact)
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(didSendContent:)
-                                       name:CONTENT_MESSAGE_SENT
-                                     object:nil];
-
-	/* Temporary upgrade code! */
-	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber	*didPasswordUpgrade = [userDefaults objectForKey:@"Adium:Did Password Upgrade"];
-	if(!didPasswordUpgrade || ![didPasswordUpgrade boolValue]){
-		[userDefaults setObject:[NSNumber numberWithBool:YES]
-						 forKey:@"Adium:Did Password Upgrade"];
-		[userDefaults synchronize];
-
-		if([accountArray count]){
-			[self _upgradePasswords];
-		}
-	}
-}
-
-//close
-- (void)closeController
-{
-    //Disconnect all accounts
-    [self disconnectAllAccounts];
-    
-    //Remove observers (otherwise, every account added will be a duplicate next time around)
-    [[adium notificationCenter] removeObserver:self];
-}
-
-- (void)dealloc
-{
-	//Cleanup
-    [accountArray release];
-	[unloadableAccounts release];
-    [lastAccountIDToSendContent release];
-	
-	[super dealloc];
-}
-
-//Account Storage ------------------------------------------------------------------------------------------------------
-#pragma mark Account Storage
-//Loads the saved accounts
-- (void)loadAccounts
-{
-    NSArray			*accountList;
-	NSEnumerator	*enumerator;
-	NSDictionary	*accountDict;
-
-	//Close down any existing accounts
-	[accountArray release]; accountArray = [[NSMutableArray alloc] init];
-	[unloadableAccounts release]; unloadableAccounts = [[NSMutableArray alloc] init];	
-	
-	accountList = [[adium preferenceController] preferenceForKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-	
-    //Create an instance of every saved account
-	enumerator = [accountList objectEnumerator];
-	while((accountDict = [enumerator nextObject])){
-		NSString		*serviceID = [accountDict objectForKey:ACCOUNT_TYPE];
-        AIAccount		*newAccount;
-        AIService		*service;
-		NSString		*accountUID;
-		NSString		*internalObjectID;
-		
-		//TEMPORARY UPGRADE CODE  0.63 -> 0.70 (Account format changed)
-		//####################################
-		if([serviceID isEqualToString:@"AIM-LIBGAIM"]){
-			NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
-			if(uid && [uid length]){
-				const char	firstCharacter = [uid characterAtIndex:0];
-				
-				if([uid hasSuffix:@"@mac.com"]){
-					serviceID = @"libgaim-oscar-Mac";
-				}else if(firstCharacter >= '0' && firstCharacter <= '9'){
-					serviceID = @"libgaim-oscar-ICQ";
-				}else{
-					serviceID = @"libgaim-oscar-AIM";
-				}
-			}
-		}else if([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]){
-			serviceID = @"libgaim-Gadu-Gadu";
-		}else if([serviceID isEqualToString:@"Jabber-LIBGAIM"]){
-			serviceID = @"libgaim-Jabber";
-		}else if([serviceID isEqualToString:@"MSN-LIBGAIM"]){
-			serviceID = @"libgaim-MSN";
-		}else if([serviceID isEqualToString:@"Napster-LIBGAIM"]){
-			serviceID = @"libgaim-Napster";
-		}else if([serviceID isEqualToString:@"Novell-LIBGAIM"]){
-			serviceID = @"libgaim-GroupWise";
-		}else if([serviceID isEqualToString:@"Sametime-LIBGAIM"]){
-			serviceID = @"libgaim-Sametime";
-		}else if([serviceID isEqualToString:@"Yahoo-LIBGAIM"]){
-			serviceID = @"libgaim-Yahoo!";
-		}else if([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]){
-			serviceID = @"libgaim-Yahoo!-Japan";
-		}
-		//####################################
-
-		//XXX: Temporary Rendezvous -> Bonjour code
-		if([serviceID isEqualToString:@"rvous-libezv"]){
-			serviceID = @"bonjour-libezv";
-		}
-		
-		//Fetch the account service, UID, and ID
-		service = [[adium accountController] serviceWithUniqueID:serviceID];
-		accountUID = [accountDict objectForKey:ACCOUNT_UID];
-		internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
-		
-        //Create the account and add it to our array
-        if(service && accountUID && [accountUID length]){
-			if((newAccount = [self createAccountWithService:service UID:accountUID internalObjectID:internalObjectID])){
-                [accountArray addObject:newAccount];
-            }else{
-				[unloadableAccounts addObject:accountDict];
-			}
-        }
-    }
-	
-	//Broadcast an account list changed notification
-    [[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
-}
-
-//Save the accounts
-- (void)saveAccounts
-{
-	NSMutableArray	*flatAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-	
-	//Build a flattened array of the accounts
-	enumerator = [accountArray objectEnumerator];
-	while((account = [enumerator nextObject])){
-		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
-		
-		[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID
-		[flatAccount setObject:[[account service] serviceID] forKey:ACCOUNT_SERVICE];	    	//Shared service ID
-		[flatAccount setObject:[account UID] forKey:ACCOUNT_UID];		    					//Account UID
-		[flatAccount setObject:[account internalObjectID] forKey:ACCOUNT_OBJECT_ID];  			//Account Object ID
-		
-		[flatAccounts addObject:flatAccount];
-	}
-	
-	//Add any unloadable accounts so they're not lost
-	[flatAccounts addObjectsFromArray:unloadableAccounts];
-	
-	//Save
-	[[adium preferenceController] setPreference:flatAccounts forKey:ACCOUNT_LIST group:PREF_GROUP_ACCOUNTS];
-	
-	//Broadcast an account list changed notification
-	[[adium notificationCenter] postNotificationName:Account_ListChanged object:nil userInfo:nil];
-}
-
-//Returns a new account of the specified type (Unique service plugin ID)
-- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID internalObjectID:(NSString *)internalObjectID
-{	
-	//Filter the UID
-	inUID = [service filterUID:inUID removeIgnoredCharacters:YES];
-	
-	//If no object ID is provided, use the next largest integer
-	if(!internalObjectID){
-		int	topAccountID = [[[adium preferenceController] preferenceForKey:TOP_ACCOUNT_ID group:PREF_GROUP_ACCOUNTS] intValue];
-		internalObjectID = [NSString stringWithFormat:@"%i",topAccountID];
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:topAccountID + 1]
-											 forKey:TOP_ACCOUNT_ID
-											  group:PREF_GROUP_ACCOUNTS];
-	}
-	
-	//Create the account
-	return([service accountWithUID:inUID internalObjectID:internalObjectID]);
-}
-
-
-
-//Accounts -------------------------------------------------------------------------------------------------------
+//Accounts
 #pragma mark Accounts
-//Returns all available accounts
-- (NSArray *)accountArray
-{
-    return(accountArray);
+- (NSArray *)accounts {
+	return [adiumAccounts accounts];
 }
-
-//Searches the account list for the specified account
-- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID
-{
-    NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account = nil;
-	
-	//XXX - Temporary Upgrade code for account internalObjectIDs stored as NSNumbers 0.7x -> 0.8 -ai
-	if(![objectID isKindOfClass:[NSString class]]){
-		if([objectID isKindOfClass:[NSNumber class]]){
-			objectID = [NSString stringWithFormat:@"%i",[(NSNumber *)objectID intValue]];
-		}else{
-			objectID = nil; //Unrecognizable, ignore
-		}
-	}
-    
-    while(objectID && (account = [enumerator nextObject])){
-        if([objectID isEqualToString:[account internalObjectID]]) break;
-    }
-    
-    return(account);
+- (NSArray *)accountsCompatibleWithService:(AIService *)service {
+	return [adiumAccounts accountsCompatibleWithService:service];
 }
-
-//Searches the account list for accounts with the specified service ID
-- (NSArray *)accountsWithService:(AIService *)service
-{
-	NSMutableArray	*array = [NSMutableArray array];
-    NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account;
-    
-    while((account = [enumerator nextObject])){
-		if([account service] == service) [array addObject:account];
-    }
-    
-    return(array);
+- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID {
+	return [adiumAccounts accountWithInternalObjectID:objectID];
 }
-
-//Searches the account list for accounts with the specified service's serviceClass
-//This could use other methods but that would require alloc'ing significantly more NSArrays, so we consolidate
-//for efficiency.
-- (NSArray *)accountsWithServiceClassOfService:(AIService *)service
-{
-	return([self accountsWithServiceClass:[service serviceClass]]);
+- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID {
+	return [adiumAccounts createAccountWithService:service UID:inUID];
 }
-
-- (NSArray *)accountsWithServiceClass:(NSString *)serviceClass
-{
-	NSMutableArray	*matchingAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	AIAccount		*account;
-	
-	while((account = [enumerator nextObject])){
-		if([[[account service] serviceClass] isEqualToString:serviceClass]){
-			[matchingAccounts addObject:account];
-		}
-	}
-	
-	return(matchingAccounts);
+- (void)addAccount:(AIAccount *)inAccount {
+	[adiumAccounts addAccount:inAccount];
 }
-
-- (AIAccount *)firstAccountWithService:(AIService *)service
-{
-    NSEnumerator	*enumerator = [accountArray objectEnumerator];
-    AIAccount		*account;
-    
-    while((account = [enumerator nextObject])){
-		if([account service] == service) break;
-    }
-    
-    return(account);
+- (void)deleteAccount:(AIAccount *)inAccount {
+	[adiumAccounts deleteAccount:inAccount];
 }
-
-- (BOOL)anOnlineAccountCanCreateGroupChats
-{
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	AIAccount		*account;
-	
-    while((account = [enumerator nextObject])){	
-		if([account online] && [[account service] canCreateGroupChats]) return(YES);
-	}
-	
-	return(NO);
-}
-
-- (BOOL)anOnlineAccountCanEditContacts
-{
-	NSEnumerator	*enumerator = [accountArray objectEnumerator];
-	AIAccount		*account;
-	
-    while((account = [enumerator nextObject])){	
-		if([account contactListEditable]) return(YES);
-	}
-	
-	return(NO);
+- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex {
+	return [adiumAccounts moveAccount:account toIndex:destIndex];
 }
 
 
-//Account Editing ------------------------------------------------------------------------------------------------------
-#pragma mark Account Editing
-- (AIAccount *)newAccountAtIndex:(int)index forService:(AIService *)service
-{
-	if(index == -1) index = [accountArray count];
 
-    NSParameterAssert(accountArray != nil);
-    NSParameterAssert(index >= 0 && index <= [accountArray count]);
-	NSParameterAssert(service != nil);
-	
-	AIAccount *newAccount;
-	
-		newAccount = [self createAccountWithService:service	UID:@"" internalObjectID:nil];
-	
-	[self insertAccount:newAccount atIndex:index save:YES];
-	
-    return(newAccount);
-}
 
-//Insert an account
-- (void)insertAccount:(AIAccount *)inAccount atIndex:(int)index save:(BOOL)shouldSave
-{    
-	if(index == -1) index = [accountArray count];
 
-    NSParameterAssert(inAccount != nil);
-    NSParameterAssert(accountArray != nil);
-    NSParameterAssert(index >= 0 && index <= [accountArray count]);
-    
-    //Insert the account
-	if ([accountArray count]){
-		[accountArray insertObject:inAccount atIndex:index];
-	}else{
-		[accountArray addObject:inAccount];
-	}
-	
-	if (shouldSave){
-		[self saveAccounts];
-	}
-}
 
-//Delete an account
-- (void)deleteAccount:(AIAccount *)inAccount save:(BOOL)shouldSave
-{
-    NSParameterAssert(inAccount != nil);
-    NSParameterAssert(accountArray != nil);
 
-	//Don't let the account dealloc until we have a chance to notify everyone that it's gone
-	[inAccount retain]; 
 
-	//Let the account take any action it wants before being deleted, such as disconnecting
-	[inAccount willBeDeleted];
-	
-	//Remove from our array
-	[accountArray removeObject:inAccount];
-	
-	//Clean up the keychain -- forget the stored password
-	[self forgetPasswordForAccount:inAccount];
-	
-	//Save if appropriate
-	if (shouldSave){
-		[self saveAccounts];
-	}
-	
-	//Cleanup
-	[inAccount release];
-}
 
-//Re-order an account on the list
-- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex
-{
-    int sourceIndex = [accountArray indexOfObject:account];
-    
-    //Remove the account
-    [account retain];
-    [accountArray removeObject:account];
-    
-    //Re-insert the account
-    if(destIndex > sourceIndex){
-        destIndex -= 1;
-    }
-    [accountArray insertObject:account atIndex:destIndex];
-    [account release];
-    
-    [self saveAccounts];
-    
-    return(destIndex);
-}
+
+
+
+
+
 
 
 //Preferred Source Accounts --------------------------------------------------------------------------------------------
@@ -563,7 +266,7 @@
 	
     if(inContact){
 		//First available account in our list of the correct service type
-		enumerator = [accountArray objectEnumerator];
+		enumerator = [[self accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([inContact service] == [account service] &&
 			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
@@ -572,7 +275,7 @@
 		}
 		
 		//First available account in our list of a compatible service type
-		enumerator = [accountArray objectEnumerator];
+		enumerator = [[self accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
 			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
@@ -581,7 +284,7 @@
 		}
 	}else{
 		//First available account in our list
-		enumerator = [accountArray objectEnumerator];
+		enumerator = [[self accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
 				return(account);
@@ -633,7 +336,7 @@
 	BOOL 	multipleServices = ([[[adium accountController] activeServices] count] > 1);
 	
     //Insert a menu item for each available account
-    enumerator = [accountArray objectEnumerator];
+    enumerator = [[self accounts] objectEnumerator];
     while((account = [enumerator nextObject])){
 		BOOL available = [[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		 toContact:nil 
@@ -714,7 +417,7 @@
 - (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline
 {
 	NSMutableArray	*sourceAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
 	while((account = [enumerator nextObject])){
@@ -801,7 +504,7 @@
     NSEnumerator		*enumerator;
     AIAccount			*account;
     
-    enumerator = [accountArray objectEnumerator];
+    enumerator = [[self accounts] objectEnumerator];
     while((account = [enumerator nextObject])){
         if([[account supportedPropertyKeys] containsObject:@"Online"]){
             [account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
@@ -815,7 +518,7 @@
     NSEnumerator		*enumerator;
     AIAccount			*account;
 
-    enumerator = [accountArray objectEnumerator];
+    enumerator = [[self accounts] objectEnumerator];
     while((account = [enumerator nextObject])){
         if([[account supportedPropertyKeys] containsObject:@"Online"] &&
 		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
@@ -824,12 +527,36 @@
     }
 }
 
+- (BOOL)anOnlineAccountCanCreateGroupChats
+{
+	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
+	AIAccount		*account;
+	
+    while((account = [enumerator nextObject])){	
+		if([account online] && [[account service] canCreateGroupChats]) return(YES);
+	}
+	
+	return(NO);
+}
+
+- (BOOL)anOnlineAccountCanEditContacts
+{
+	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
+	AIAccount		*account;
+	
+    while((account = [enumerator nextObject])){	
+		if([account contactListEditable]) return(YES);
+	}
+	
+	return(NO);
+}
+
 - (BOOL)oneOrMoreConnectedAccounts
 {
 	NSEnumerator		*enumerator;
     AIAccount			*account;
 
-    enumerator = [accountArray objectEnumerator];
+    enumerator = [[self accounts] objectEnumerator];
     while((account = [enumerator nextObject])){
         if([account online]){
 			return YES;
@@ -844,7 +571,7 @@
 	NSEnumerator		*enumerator;
     AIAccount			*account;
 	
-    enumerator = [accountArray objectEnumerator];
+    enumerator = [[self accounts] objectEnumerator];
     while((account = [enumerator nextObject])){
         if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
 			return YES;

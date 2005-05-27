@@ -245,7 +245,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 - (NSArray *)awayAccounts
 {	
 	NSMutableArray	*awayAccounts = [NSMutableArray array];	
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
 	while((account = [enumerator nextObject])){

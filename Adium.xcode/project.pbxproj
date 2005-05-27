@@ -10430,6 +10430,7 @@
 				4BB9972C083D1A5F006ACD6F,
 				4B8741D30840D25700738987,
 				4B87424A0840E3D800738987,
+				4BE40C200846544000F5790F,
 			);
 			isa = PBXHeadersBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -10918,6 +10919,7 @@
 				4BB9972D083D1A5F006ACD6F,
 				4B8741D40840D25700738987,
 				4B87424B0840E3D800738987,
+				4BE40C210846544000F5790F,
 			);
 			isa = PBXSourcesBuildPhase;
 			runOnlyForDeploymentPostprocessing = 0;
@@ -19713,10 +19715,12 @@
 		};
 		4B873F370840D1FB00738987 = {
 			children = (
-				4B8741D10840D25600738987,
-				4B8741D20840D25600738987,
+				4BE40C1E0846544000F5790F,
+				4BE40C1F0846544000F5790F,
 				4B8742480840E3D800738987,
 				4B8742490840E3D800738987,
+				4B8741D10840D25600738987,
+				4B8741D20840D25600738987,
 			);
 			isa = PBXGroup;
 			name = Account;
@@ -22421,6 +22425,36 @@
 		};
 		4BDF2CA5061E378400EA75C5 = {
 			fileRef = 4BDF2C91061E376C00EA75C5;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE40C1E0846544000F5790F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = AdiumAccounts.h;
+			path = Source/AdiumAccounts.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE40C1F0846544000F5790F = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.objc;
+			name = AdiumAccounts.m;
+			path = Source/AdiumAccounts.m;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		4BE40C200846544000F5790F = {
+			fileRef = 4BE40C1E0846544000F5790F;
+			isa = PBXBuildFile;
+			settings = {
+			};
+		};
+		4BE40C210846544000F5790F = {
+			fileRef = 4BE40C1F0846544000F5790F;
 			isa = PBXBuildFile;
 			settings = {
 			};

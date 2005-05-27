@@ -1616,7 +1616,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 
 	//Reset all accounts
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
 	while((listObject = [enumerator nextObject])) {
 		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
 		if(attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
@@ -1885,7 +1885,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	AIAccount		*account;
 	NSMutableArray  *returnContactArray = [NSMutableArray array];
 
-	enumerator = [[[adium accountController] accountsWithServiceClassOfService:service] objectEnumerator];
+	enumerator = [[[adium accountController] accountsCompatibleWithService:service] objectEnumerator];
 
 	while((account = [enumerator nextObject])) {
 		[returnContactArray addObject:[self contactWithService:service
@@ -2098,7 +2098,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[self removeListObjects:[(AIListGroup *)listObject containedObjects]];
 
 			//Delete the list off of all active accounts
-			enumerator = [[[adium accountController] accountArray] objectEnumerator];
+			enumerator = [[[adium accountController] accounts] objectEnumerator];
 			while ((account = [enumerator nextObject])) {
 				if ([account online]) {
 					[account deleteGroup:(AIListGroup *)listObject];
@@ -2228,7 +2228,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Rename a group
 - (void)_renameGroup:(AIListGroup *)listGroup to:(NSString *)newName
 {
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 
 	//Since Adium has no memory of what accounts a group is on, we have to send this message to all available accounts
