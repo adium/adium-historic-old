@@ -67,7 +67,7 @@
 - (NSArray *)activeServices {
 	//Scan our user's accounts and build a list of service classes that they cover
 	NSMutableArray	*serviceClasses = [NSMutableArray array];
-	NSEnumerator	*accountEnumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*accountEnumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
 	while((account = [accountEnumerator nextObject])){

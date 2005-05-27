@@ -1345,7 +1345,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 									   preferred:(BOOL)inPreferred
 {
 	NSMutableArray	*sourceAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
 	while((account = [enumerator nextObject])){

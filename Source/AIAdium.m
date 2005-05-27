@@ -256,7 +256,7 @@ static NSString	*prefsCategory;
 	[self openAppropriatePreferencesIfNeeded];
 
 	//If no accounts are setup, open the account prefs
-	if([[accountController accountArray] count] == 0){
+	if([[accountController accounts] count] == 0){
 		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
 	}
 

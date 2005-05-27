@@ -132,7 +132,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		}
 	}else{
 		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
 				[accountsToConnect addObject:account];
@@ -142,7 +142,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	
 	//Put each account into the status it was in last time we quit.
 	BOOL		needToRebuildMenus = NO;
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
 	while((account = [enumerator nextObject])){
 		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
 														  group:GROUP_ACCOUNT_STATUS];
@@ -200,7 +200,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 
-	enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
 	while((account = [enumerator nextObject])){
 		
 		//If this account is online, we'll want to save its internalObjectID.
@@ -557,7 +557,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	//Apply the state to our accounts and notify (delay to the next run loop to improve perceived speed)
 	[self performSelector:@selector(applyState:toAccounts:)
 			   withObject:statusState
-			   withObject:[[adium accountController] accountArray]
+			   withObject:[[adium accountController] accounts]
 			   afterDelay:0];
 }
 
@@ -795,7 +795,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 - (AIStatus *)activeStatusState
 {
 	if(!_activeStatusState){
-		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		NSCountedSet		*statusCounts = [NSCountedSet set];
 		AIAccount			*account;
 		AIStatus			*statusState;
@@ -834,7 +834,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 - (AIStatusType)activeStatusType
 {
-	NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount			*account;
 	int					statusTypeCount[STATUS_TYPES_COUNT];
 	AIStatusType		activeStatusType = AIOfflineStatusType;
@@ -879,7 +879,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 {
 	if(!_allActiveStatusStates){
 		_allActiveStatusStates = [[NSMutableSet alloc] init];
-		NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount			*account;
 
 		while((account = [enumerator nextObject])){
@@ -901,7 +901,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (NSSet *)activeUnavailableStatusesAndType:(AIStatusType *)activeUnvailableStatusType withName:(NSString **)activeUnvailableStatusName allOnlineAccountsAreUnvailable:(BOOL *)allOnlineAccountsAreUnvailable
 {
-	NSEnumerator		*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount			*account;
 	NSMutableSet		*activeUnvailableStatuses = [NSMutableSet set];
 	BOOL				foundStatusName = NO;
@@ -1723,7 +1723,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		AIAccount		*account;
 		int				count = 0;
 		
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			if([account actualStatusState] == originalState){
 				if(++count > 1) break;

@@ -260,7 +260,7 @@
 	menuItems = [[NSMutableArray alloc] init];
 	
     //Create a menuitem for each account
-	NSEnumerator	*enumerator = [[[adium accountController] accountArray] objectEnumerator];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount		*account;
 
     while((account = [enumerator nextObject])){

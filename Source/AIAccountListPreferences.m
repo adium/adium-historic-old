@@ -129,8 +129,7 @@
 - (IBAction)selectServiceType:(id)sender
 {
 	AIAccount	*account = [[adium accountController] createAccountWithService:[sender representedObject]
-																		   UID:@""
-															  internalObjectID:nil];
+																		   UID:@""];
 	
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[[self view] window]
@@ -155,11 +154,11 @@
  */
 - (void)editAccountSheetDidEndForAccount:(AIAccount *)inAccount withSuccess:(BOOL)successful
 {
-	BOOL existingAccount = ([[[adium accountController] accountArray] containsObject:inAccount]);
+	BOOL existingAccount = ([[[adium accountController] accounts] containsObject:inAccount]);
 	
 	if(!existingAccount && successful){
 		//New accounts need to be added to our account list once they're configured
-		[[adium accountController] insertAccount:inAccount atIndex:-1 save:YES];
+		[[adium accountController] addAccount:inAccount];
 
 		//Scroll the new account visible so that the user can see we added it
 		[tableView_accountList scrollRowToVisible:[accountArray indexOfObject:inAccount]];
@@ -213,7 +212,7 @@
     if(returnCode == NSAlertDefaultReturn){
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
-        [[adium accountController] deleteAccount:targetAccount save:YES];
+        [[adium accountController] deleteAccount:targetAccount];
 		
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
         if(index >= [accountArray count]){
@@ -281,7 +280,7 @@
 {
     //Update our list of accounts
     [accountArray release];
-	accountArray = [[[adium accountController] accountArray] retain];
+	accountArray = [[[adium accountController] accounts] retain];
 
 	//Refresh the account table
 	[tableView_accountList reloadData];
@@ -461,10 +460,7 @@
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
 	
     if([avaliableType isEqualToString:@"AIAccount"]){
-        int	newIndex;
-        
-        //Select the moved account
-        newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
+        int newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
         [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
 		
         return(YES);

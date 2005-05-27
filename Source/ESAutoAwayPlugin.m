@@ -96,7 +96,7 @@
 			targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:autoAwayID];
 			
 			if(targetStatusState){
-				enumerator = [[[adium accountController] accountArray] objectEnumerator];
+				enumerator = [[[adium accountController] accounts] objectEnumerator];
 				while((account = [enumerator nextObject])){
 					AIStatus	*currentStatusState = [account statusState];
 					if([currentStatusState statusType] == AIAvailableStatusType){
@@ -131,7 +131,7 @@
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		
-		enumerator = [[[adium accountController] accountArray] objectEnumerator];
+		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while((account = [enumerator nextObject])){
 			AIStatus		*targetStatusState;
 			NSNumber		*accountHash = [NSNumber numberWithUnsignedInt:[account hash]];

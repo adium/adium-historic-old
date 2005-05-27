@@ -43,7 +43,7 @@
 #pragma mark Convenience
 - (NSArray *)accounts
 {
-	return ([[adium accountController] accountArray]);
+	return ([[adium accountController] accounts]);
 }
 - (NSArray *)contacts
 {
