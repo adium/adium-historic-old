@@ -135,8 +135,6 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 
 		//Extract the account name
 		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
-		NSLog(@"got request: primary string @\"%@\"; range %@", primaryString, NSStringFromRange(NSMakeRange(accountNameStartingLocation,
-																	secondSearchRange.location - accountNameStartingLocation + 1)));
 		accountName = [primaryString substringWithRange:NSMakeRange(accountNameStartingLocation,
 																	secondSearchRange.location - accountNameStartingLocation + 1)];
 		
