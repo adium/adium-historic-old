@@ -417,6 +417,22 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	return contactsDict;
 }
 
+- (NSArray *)servicesOfContainedObjects
+{
+	NSMutableArray	*services = [[NSMutableArray alloc] init];
+	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
+	AIListObject	*listObject;
+	
+	while((listObject = [enumerator nextObject])){
+		if(![services containsObject:[listObject service]]) [services addObject:[listObject service]];
+	}
+	
+	return([services autorelease]);
+}
+
+
+
+
 - (unsigned)uniqueContainedObjectsCount
 {
 	return [[self listContacts] count];
