@@ -22,6 +22,8 @@
 #define DELAYED_UPDATE_INTERVAL			1.0
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
+#define AOL_MOBILE_DEVICE AILocalizedString(@"AOL Mobile Device", "Phrase to describe the client through which a contact is connected mobilely; cell phones, for example, may be AOL Mobile Devices.")
+
 @interface ESGaimAIMAccount (PRIVATE)
 - (NSString *)serversideCommentForContact:(AIListContact *)theContact;
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
@@ -616,21 +618,16 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 		NSString	*storedString = [theContact statusObjectForKey:@"Client"];
 		NSString	*client = nil;
 		BOOL		isMobile = NO;
-		
+
 		if(userinfo->present & AIM_USERINFO_PRESENT_FLAGS){
 			if(userinfo->capabilities & AIM_CAPS_HIPTOP){
 				client = AILocalizedString(@"AIM via Hiptop", "A 'Hiptop' is a mobile device; this phrase descibes a contact who is connected to AIM through a hiptop.");
 				isMobile = YES;
 				
 			}else if(userinfo->flags & AIM_FLAG_WIRELESS){
-				/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
-				 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
-				 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
-				 */
-				if(![[adium contentController] contactIsInGroupChat:theContact]){
-					client = AILocalizedString(@"AOL Mobile Device", "Phrase to describe the client through which a contact is connected mobilely; cell phones, for example, may be AOL Mobile Devices.");
-					isMobile = YES;
-				}
+				/* Incorrectly called just before a contact is added to a group chat */
+				client = AOL_MOBILE_DEVICE;
+				isMobile = YES;
 				
 			}else if(userinfo->flags & AIM_FLAG_ADMINISTRATOR){
 				client = AILocalizedString(@"AOL Administrator", nil);
@@ -766,4 +763,26 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 {
 	return(YES);
 }
+
+#pragma mark Group chat
+
+- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat
+{
+	/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
+	 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
+	 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
+	 */	
+	if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]){
+		[listContact setIsMobile:NO notify:NotifyLater];
+
+		[listContact setStatusObject:nil
+							  forKey:@"Client"
+							  notify:NotifyLater];
+
+		[listContact notifyOfChangedStatusSilently:NO];
+	}
+	
+	[super addContact:listContact toChat:chat];
+}
+
 @end
