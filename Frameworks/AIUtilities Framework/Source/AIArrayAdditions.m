@@ -36,6 +36,16 @@
 
 @implementation NSMutableArray (ESArrayAdditions)
 
+- (void)addObjectsFromArrayIgnoringDuplicates:(NSArray *)inArray
+{
+	NSEnumerator	*enumerator = [inArray objectEnumerator];
+	id				object;
+	
+	while((object = [enumerator nextObject])){
+		if(![self containsObject:object]) [self addObject:object];
+	}
+}
+
 - (void)moveObject:(id)object toIndex:(unsigned)newIndex
 {
 	unsigned	currentIndex = [self indexOfObject:object];
