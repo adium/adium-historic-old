@@ -111,7 +111,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		va_arg(actions, char *);
 		denyCB = va_arg(actions, GCallback);
 
-		/* "The user %s wants to as %s to" where the first is the remote contact and the second is the account name.
+		/* "The user %s wants to add %s to" where the first is the remote contact and the second is the account name.
 		 * MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
 		 * OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
 		 *		The reason may be passed as "No reason given."
@@ -121,7 +121,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		remoteName = [primaryString substringWithRange:NSMakeRange(remoteNameStartingLocation,
 																   (wantsToAddRange.location - remoteNameStartingLocation))];
 		
-		secondSearchRange = [primaryString rangeOfString:@"to his or her buddy list."];
+		secondSearchRange = [primaryString rangeOfString:@"to their buddy list."];
 		if(secondSearchRange.location == NSNotFound){
 			secondSearchRange = [primaryString rangeOfString:@"to their buddy list for the following reason:\n"];
 			//The OSCAR version may have the alias in parenthesis after the ICQ number
@@ -135,6 +135,8 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 
 		//Extract the account name
 		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
+		NSLog(@"got request: primary string @\"%@\"; range %@", primaryString, NSStringFromRange(NSMakeRange(accountNameStartingLocation,
+																	secondSearchRange.location - accountNameStartingLocation + 1)));
 		accountName = [primaryString substringWithRange:NSMakeRange(accountNameStartingLocation,
 																	secondSearchRange.location - accountNameStartingLocation + 1)];
 		
