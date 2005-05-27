@@ -92,6 +92,7 @@
 		view_accountSelection = nil;
 		userListController = nil;
 		sendMessagesToOfflineContact = NO;
+		retainingScrollViewUserList = NO;
 
 		//Load the view containing our controls
 		[NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
@@ -177,7 +178,9 @@
 	[view_contents release];
 	
 	//Release the hidden user list view
-	[scrollView_userList release]; scrollView_userList = nil;
+	if(retainingScrollViewUserList){
+		[scrollView_userList release];
+	}
 	
     [super dealloc];
 }
@@ -718,18 +721,25 @@
 	if(![self userListVisible]){
 		[splitView_messages addSubview:scrollView_userList];
 		[self _updateUserListViewWidth];
-		[scrollView_userList release]; scrollView_userList = nil;
+		
+		if(retainingScrollViewUserList){
+			[scrollView_userList release];
+			retainingScrollViewUserList = NO;
+		}
 	}
 }
 
 /*!
- * @brief Hide the user list
+ * @brief Hide the user list.
+ *
+ * We gain responsibility for releasing scrollView_userList after we hide it
  */
 - (void)_hideUserListView
 {
 	if([self userListVisible]){
 		[scrollView_userList retain];
 		[scrollView_userList removeFromSuperview];
+		retainingScrollViewUserList = YES;
 	}
 }
 
