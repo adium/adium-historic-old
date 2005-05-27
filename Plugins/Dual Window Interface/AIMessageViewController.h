@@ -33,6 +33,7 @@
 	
 	//User List
 	IBOutlet	AIAutoScrollView		*scrollView_userList;
+	BOOL								retainingScrollViewUserList;
     IBOutlet	AIListOutlineView		*userListView;
 	ESChatUserListController			*userListController;
 
