@@ -22,13 +22,18 @@
 
 }
 
+//Accounts
 - (void)setPassword:(NSString *)inPassword forAccount:(AIAccount *)inAccount;
 - (void)forgetPasswordForAccount:(AIAccount *)inAccount;
 - (NSString *)passwordForAccount:(AIAccount *)inAccount;
 - (void)passwordForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 
+//Proxy Servers
 - (void)setPassword:(NSString *)inPassword forProxyServer:(NSString *)server userName:(NSString *)userName;
 - (NSString *)passwordForProxyServer:(NSString *)server userName:(NSString *)userName;
 - (void)passwordForProxyServer:(NSString *)server userName:(NSString *)userName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
+
+//Upgrade
+- (void)upgradePasswords;
 
 @end
