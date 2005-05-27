@@ -287,7 +287,7 @@ static int nextChatNumber = 0;
 //If this chat only has one participating list object, it is returned.  Otherwise, nil is returned
 - (AIListContact *)listObject
 {
-    if([participatingListObjects count] == 1){
+    if(([participatingListObjects count] == 1) && ![chat name]){
         return([participatingListObjects objectAtIndex:0]);
     }else{
         return(nil);
