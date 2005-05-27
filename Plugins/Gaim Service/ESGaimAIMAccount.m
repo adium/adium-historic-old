@@ -37,6 +37,7 @@ static BOOL				createdEncoders = NO;
 static AIHTMLDecoder	*encoderCloseFontTagsAttachmentsAsText = nil;
 static AIHTMLDecoder	*encoderCloseFontTags = nil;
 static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
+static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Initialization and setup
 - (void)initAccount
@@ -85,6 +86,19 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 		[encoderAttachmentsAsText setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
 		[encoderAttachmentsAsText setOnlyUsesSimpleTags:NO];
 		[encoderAttachmentsAsText setAllowAIMsubprofileLinks:YES];
+		
+		encoderGroupChat = [[AIHTMLDecoder alloc] init];
+		[encoderGroupChat setIncludesHeaders:NO];
+		[encoderGroupChat setIncludesFontTags:YES];
+		[encoderGroupChat setClosesFontTags:NO];
+		[encoderGroupChat setIncludesStyleTags:YES];
+		[encoderGroupChat setIncludesColorTags:YES];
+		[encoderGroupChat setEncodesNonASCII:NO];
+		[encoderGroupChat setPreservesAllSpaces:NO];
+		[encoderGroupChat setUsesAttachmentTextEquivalents:YES];
+		[encoderGroupChat setOnlyConvertImageAttachmentsToIMGTagsWhenSendingAMessage:YES];
+		[encoderGroupChat setOnlyUsesSimpleTags:YES];
+		[encoderGroupChat setAllowAIMsubprofileLinks:YES];
 		
 		createdEncoders = YES;
 	}
@@ -147,20 +161,26 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 //AIM doesn't require we close our tags, so don't waste the characters
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	BOOL		nonHTMLUser = NO;
 	NSString	*returnString;
 	
 	//We don't want to send HTML to ICQ users, or mobile phone users
 	if(inListObject){
-		char	firstCharacter = [[inListObject UID] characterAtIndex:0];
+		BOOL		nonHTMLUser;
+		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
+
 	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
-	}
-	
-	if (nonHTMLUser){
-		returnString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+		
+		if (nonHTMLUser){
+			returnString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
+		}else{
+			returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
+																  imagesPath:nil];
+		}
+
 	}else{
-		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
-															  imagesPath:nil];
+		returnString = [encoderGroupChat encodeHTML:inAttributedString
+										 imagesPath:nil];
+		AILog(@"Encoded to %@ for no contact",returnString);
 	}
 	
 	return returnString;
@@ -234,8 +254,9 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 		}
 		
 	}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
-		return [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
-													  imagesPath:nil];
+		AILog(@"Encoding %@ for no contact",inAttributedString);
+		return [encoderGroupChat encodeHTML:inAttributedString
+								 imagesPath:nil];
 	}
 }
 
@@ -626,8 +647,10 @@ static AIHTMLDecoder	*encoderAttachmentsAsText = nil;
 				
 			}else if(userinfo->flags & AIM_FLAG_WIRELESS){
 				/* Incorrectly called just before a contact is added to a group chat */
-				client = AOL_MOBILE_DEVICE;
-				isMobile = YES;
+				if(![[adium contentController] contactIsInGroupChat:theContact]){
+					client = AOL_MOBILE_DEVICE;
+					isMobile = YES;
+				}
 				
 			}else if(userinfo->flags & AIM_FLAG_ADMINISTRATOR){
 				client = AILocalizedString(@"AOL Administrator", nil);
