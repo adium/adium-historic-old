@@ -26,6 +26,7 @@
 #import "adiumGaimOTR.h"
 #import <AIUtilities/CBObjectAdditions.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>
@@ -272,10 +273,11 @@ CBGaimAccount* accountLookup(GaimAccount *acct)
 		const char	*protocolID = acct->protocol_id;
 		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
 
-		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accountsWithServiceClass:serviceClass] objectEnumerator];
+		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
 		while(adiumGaimAccount = [enumerator nextObject]){
-			if(([[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) &&
-			   [adiumGaimAccount isKindOfClass:[CBGaimAccount class]]){
+			if([adiumGaimAccount isKindOfClass:[CBGaimAccount class]] &&
+			   [[[adiumGaimAccount service] serviceClass] isEqualToString:serviceClass] &&
+			   [[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame){
 				break;
 			}
 		}
