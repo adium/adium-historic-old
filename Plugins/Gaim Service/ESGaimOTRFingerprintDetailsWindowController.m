@@ -69,6 +69,8 @@
 	[imageView_lock setImage:[NSImage imageNamed:@"Lock_Locked State" forClass:[adium class]]];	
 	
 	[[self window] setTitle:AILocalizedString(@"OTR Fingerprint",nil)];
+	[button_OK setLocalizedString:AILocalizedString(@"OK",nil)];
+	[button_forgetFingerprint setLocalizedString:AILocalizedString(@"Forget Fingerprint","Button title to make Adium no longer know a user's encryption fingerprint")];
 	
 	[super windowDidLoad];
 }

@@ -15,6 +15,9 @@
 	IBOutlet	NSImageView	*imageView_service;
 	IBOutlet	NSImageView	*imageView_lock;
 	
+	IBOutlet	NSButton	*button_OK;
+	IBOutlet	NSButton	*button_forgetFingerprint;
+	
 	NSDictionary	*fingerprintDict;
 }
 
