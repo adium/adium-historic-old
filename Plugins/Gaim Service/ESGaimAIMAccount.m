@@ -178,8 +178,8 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		}
 
 	}else{
-		returnString = [encoderGroupChat encodeHTML:inAttributedString
-										 imagesPath:nil];
+		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
+															  imagesPath:nil];
 		AILog(@"Encoded to %@ for no contact",returnString);
 	}
 	
