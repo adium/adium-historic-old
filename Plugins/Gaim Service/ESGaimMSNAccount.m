@@ -33,7 +33,7 @@
 #define DEFAULT_MSN_PASSPORT_DOMAIN @"@hotmail.com"
 
 @interface ESGaimMSNAccount (PRIVATE)
-- (void)updateFriendlyNameToServerFriendlyName;
+- (void)updateFriendlyNameAfterConnect;
 -(void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
 @end
 
@@ -164,8 +164,7 @@
 {
 	[super accountConnectionConnected];
 	
-	[self updateFriendlyNameToServerFriendlyName];
-	[self updateStatusForKey:@"FullNameAttr"];
+	[self updateFriendlyNameAfterConnect];
 }	
 
 //Update our status
@@ -191,10 +190,11 @@
  * However, if our display name is dynamic, most likely we're looking at the filtered version of our dynamic
  * name, so we shouldn't update to the filtered one.
  */
-- (void)updateFriendlyNameToServerFriendlyName
+- (void)updateFriendlyNameAfterConnect
 {
 	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
-
+	BOOL		invokedFilter = NO;
+	
 	if(displayName &&
 	   strcmp(displayName, [[self UID] UTF8String]) &&
 	   strcmp(displayName, [[self formattedUID] UTF8String])){
@@ -205,28 +205,42 @@
 		if(!ourPreferenceUTF8String ||
 		   strcmp(ourPreferenceUTF8String, displayName)){
 			/* The display name is different from our preference. Check if our preference is static. */
-			NSAttributedString	*filteredValue = nil;
-			
-			if(ourPreference){
-				filteredValue = [[adium contentController] filterAttributedString:ourPreference
-																  usingFilterType:AIFilterContent
-																		direction:AIFilterOutgoing
-																		  context:self];
-			}
-			
-			if(!filteredValue ||
-			   [[filteredValue string] isEqualToString:[ourPreference string]]){
-				/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
-				NSAttributedString	*newPreference;
-				
-				newPreference = [[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:displayName]];
-				[self setPreference:[newPreference dataRepresentation]
-							 forKey:@"FullNameAttr"
-							  group:GROUP_ACCOUNT_STATUS];
-				[newPreference release];
-			}
+			[[adium contentController] filterAttributedString:ourPreference
+											  usingFilterType:AIFilterContent
+													direction:AIFilterOutgoing
+												filterContext:self
+											  notifyingTarget:self
+													 selector:@selector(gotFilteredFriendlyName:context:)
+													  context:[NSDictionary dictionaryWithObjectsAndKeys:
+														  ourPreference, @"ourPreference",
+														  [NSString stringWithUTF8String:displayName], @"displayName",
+														  nil]];
+			invokedFilter = YES;
 		}
 	}
+	
+	if(!invokedFilter){
+		[self gotFilteredFriendlyName:nil
+							  context:nil];
+	}
+}
+
+- (void)gotFilteredFriendlyName:(NSAttributedString *)filteredFriendlyName context:(NSDictionary *)infoDict
+{
+	if((!filteredFriendlyName && [infoDict objectForKey:@"displayName"]) ||
+	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"ourPreference"] string]])){
+		/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
+		NSAttributedString	*newPreference;
+		
+		newPreference = [[NSAttributedString alloc] initWithString:[infoDict objectForKey:@"displayName"]];
+
+		[self setPreference:[newPreference dataRepresentation]
+					 forKey:@"FullNameAttr"
+					  group:GROUP_ACCOUNT_STATUS];
+		[newPreference release];
+	}
+
+	[self updateStatusForKey:@"FullNameAttr"];
 }
 
 /*
