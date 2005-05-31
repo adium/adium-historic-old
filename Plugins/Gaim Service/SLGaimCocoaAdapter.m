@@ -269,7 +269,7 @@ CBGaimAccount* accountLookup(GaimAccount *acct)
 	/* If the account doesn't have its ui_data associated yet (we haven't tried to connect) but we want this
 	 * lookup data, we have to do some manual parsing.  This is used for example from the OTR preferences.
 	 */
-	if(!adiumGaimAccount){
+	if(!adiumGaimAccount && acct){
 		const char	*protocolID = acct->protocol_id;
 		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
 
