@@ -121,7 +121,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		remoteName = [primaryString substringWithRange:NSMakeRange(remoteNameStartingLocation,
 																   (wantsToAddRange.location - remoteNameStartingLocation))];
 		
-		secondSearchRange = [primaryString rangeOfString:@"to his or her buddy list."];
+		secondSearchRange = [primaryString rangeOfString:@"to their buddy list."];
 		if(secondSearchRange.location == NSNotFound){
 			secondSearchRange = [primaryString rangeOfString:@"to their buddy list for the following reason:\n"];
 			//The OSCAR version may have the alias in parenthesis after the ICQ number
