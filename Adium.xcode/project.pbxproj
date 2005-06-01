@@ -130,6 +130,23 @@
 			settings = {
 			};
 		};
+		07D43998084E5A4B00BFFF05 = {
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"Plugins/Gaim Service/Libgaim.framework",
+				"Plugins/Gaim Service/Libgaim.framework/Versions/A/libgaim",
+			);
+			isa = PBXShellScriptBuildPhase;
+			outputPaths = (
+				$BUILD_DIR/$WRAPPER_NAME/Contents/Frameworks/Libgaim.framework,
+				$BUILD_DIR/$WRAPPER_NAME/Contents/Frameworks/Libgaim.framework/Versions/A/libgaim,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch $SCRIPT_INPUT_FILE_0\n";
+		};
 		07FC98310827D33C006C56D6 = {
 			isa = PBXFileReference;
 			lastKnownFileType = wrapper.framework;
@@ -19346,6 +19363,7 @@
 			buildPhases = (
 				4B7F277E05440C0800CDFC90,
 				4B7F277F05440C0800CDFC90,
+				07D43998084E5A4B00BFFF05,
 				4BDF2C97061E377E00EA75C5,
 				344ECA570620A04E007256C6,
 				4B7F278005440C0800CDFC90,
