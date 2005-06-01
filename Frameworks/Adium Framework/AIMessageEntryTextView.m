@@ -302,7 +302,7 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	NSColor	*backgroundColor;
 	[super setTypingAttributes:attrs];
-	
+	NSLog(@"Set to %@",attrs);
 	//Correctly set our background color
 	if((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])){
 		[self setBackgroundColor:backgroundColor];
@@ -493,19 +493,29 @@ static NSColor	*cachedWhiteColor = nil;
 //Update history when content is sent
 - (IBAction)sendContent:(id)sender
 {
-	//Add to history
-    [historyArray insertObject:[[[self textStorage] copy] autorelease] atIndex:1];
-    if([historyArray count] > MAX_HISTORY){
-        [historyArray removeLastObject];
-    }
-    currentHistoryLocation = 0; //Move back to bottom of history
+	NSAttributedString	*textStorage = [self textStorage];
+	BOOL				shouldResetTypingAttributes = NO;
 	
+	if([textStorage length] > 0){
+		//Add to history if there is text being sent
+		[historyArray insertObject:[[textStorage copy] autorelease] atIndex:1];
+		if([historyArray count] > MAX_HISTORY){
+			[historyArray removeLastObject];
+		}
+		
+	}else{
+		[[adium notificationCenter] postNotificationName:@"Adium_RestoreDefaultFormatting"
+												  object:nil];
+	}
+
+	currentHistoryLocation = 0; //Move back to bottom of history
+
 	//Send the content
 	[super sendContent:sender];
 	
 	//Clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
 	[[self undoManager] removeAllActions];
-        
+
 	//Remove the link attribute (If present) so it doesn't bleed
 	if([[self typingAttributes] objectForKey:NSLinkAttributeName]){
 		NSMutableDictionary	*typingAttributes = [[[self typingAttributes] mutableCopy] autorelease];

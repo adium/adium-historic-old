@@ -61,6 +61,12 @@
 	                               selector:@selector(didSendContent:)
 	                                   name:CONTENT_MESSAGE_SENT
 	                                 object:nil];
+
+	//
+	[[adium notificationCenter] addObserver:self
+	                               selector:@selector(restoreDefaultFormat:)
+	                                   name:@"Adium_RestoreDefaultFormatting"
+	                                 object:nil];
 }
 
 /*!
