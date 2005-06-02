@@ -51,7 +51,7 @@
 
 #ifndef MAC_OS_X_10_4
 @interface NSWorkspace (NewTigerMethod)
-- (void)setIcon:(NSImage *)icon forFile:(NSString *)file options:(int)options;
+- (BOOL)setIcon:(NSImage *)image forFile:(NSString *)fullPath options:(unsigned)options;
 @end
 #endif
 
