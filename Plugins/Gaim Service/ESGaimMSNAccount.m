@@ -34,7 +34,8 @@
 
 @interface ESGaimMSNAccount (PRIVATE)
 - (void)updateFriendlyNameAfterConnect;
--(void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
+- (void)gotFilteredFriendlyName:(NSAttributedString *)filteredFriendlyName context:(NSDictionary *)infoDict;
+- (void)_setFriendlyNameTo:(NSAttributedString *)inAlias;
 @end
 
 @implementation ESGaimMSNAccount
