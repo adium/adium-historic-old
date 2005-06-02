@@ -49,10 +49,6 @@ typedef enum {
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 @end
 
-//Handles the display of a content type
-@protocol AIContentHandler 
-@end
-
 #define HIGHEST_FILTER_PRIORITY 0
 #define HIGH_FILTER_PRIORITY 0.25
 #define DEFAULT_FILTER_PRIORITY 0.5
