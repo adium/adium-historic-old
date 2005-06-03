@@ -16,6 +16,11 @@
 
 #import "AIObject.h"
 
+@protocol AIPlugin <NSObject>
+- (void)installPlugin;
+- (void)uninstallPlugin;
+@end
+
 @protocol AIPluginInfo
 - (NSString *)pluginAuthor;
 - (NSString *)pluginVersion;
@@ -23,11 +28,8 @@
 - (NSString *)pluginURL;
 @end
 
-@interface AIPlugin : AIObject {
+@interface AIPlugin : AIObject <AIPlugin> {
 
 }
-
-//PRIVATE
-- (void)uninstallPlugin;
 
 @end

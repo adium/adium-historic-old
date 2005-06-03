@@ -14,14 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
  
-@class AIPlugin;
-
-@protocol AIController;
+@protocol AIController, AIPlugin;
 
 @interface AICoreComponentLoader : NSObject <AIController> {
 	NSMutableDictionary	*components;
 }
 
-- (AIPlugin *)pluginWithClassName:(NSString *)className;
+- (id <AIPlugin>)pluginWithClassName:(NSString *)className;
 
 @end

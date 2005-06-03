@@ -16,34 +16,8 @@
 
 #import "AIPlugin.h"
 
-@interface AIPlugin (PRIVATE)
-- (void)installPlugin;
-@end
-
 @implementation AIPlugin
 
-//Init the plugin
-- (id)init
-{
-    if((self = [super init]))
-	{
-		//Install the plugin
-		[self installPlugin];
-	}
-
-    return self;
-}
-
-- (void)dealloc
-{
-    //Remove observers (general)
-    [[adium notificationCenter] removeObserver:self];
-    [[NSNotificationCenter defaultCenter] removeObserver:self];
-    
-    [super dealloc];
-}
-
-//Install the plugin
 - (void)installPlugin
 {
 }
