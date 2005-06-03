@@ -130,15 +130,13 @@ static	NSMutableDictionary	*controllerDict = nil;
 		originalStatusState = [inStatusState retain];
 	}
 	
-	if(!workingStatusState || ([workingStatusState statusType] != inStatusType)){
-		[workingStatusState release];
-		workingStatusState = (originalStatusState ? 
-							  [originalStatusState mutableCopy] :
-							  [[AIStatus statusOfType:inStatusType] retain]);
-		
-		//Clear the title if the save checkbox is showing so it will autoupdate.
-		if(showSaveCheckbox) [workingStatusState setTitle:nil];
-	}
+	[workingStatusState release];
+	workingStatusState = (originalStatusState ? 
+						  [originalStatusState mutableCopy] :
+						  [[AIStatus statusOfType:inStatusType] retain]);
+	
+	//Clear the title if the save checkbox is showing so it will autoupdate.
+	if(showSaveCheckbox) [workingStatusState setTitle:nil];
 }
 
 - (void)setAccount:(AIAccount *)inAccount
