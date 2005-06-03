@@ -96,7 +96,7 @@
 		case AIBraces:
 			leftKey = @"{";
 			rightKey = @"}";
-			beak;
+			break;
 	}
 
 	//Previous and nextMessage menuItems are in the same menu, so the setMenuChangedMessagesEnabled applies to both.
