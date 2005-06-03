@@ -494,7 +494,6 @@ static NSColor	*cachedWhiteColor = nil;
 - (IBAction)sendContent:(id)sender
 {
 	NSAttributedString	*textStorage = [self textStorage];
-	BOOL				shouldResetTypingAttributes = NO;
 	
 	if([textStorage length] > 0){
 		//Add to history if there is text being sent
