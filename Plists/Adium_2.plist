@@ -215,7 +215,7 @@
 			<key>CFBundleURLIconFile</key>
 			<string>generic</string>
 			<key>CFBundleURLName</key>
-			<string>aim url</string>
+			<string>AIM URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>aim</string>
@@ -225,7 +225,49 @@
 			<key>CFBundleURLIconFile</key>
 			<string>generic</string>
 			<key>CFBundleURLName</key>
-			<string>adiumxtra url</string>
+			<string>Yahoo! Messenger URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>ymsgr</string>
+				<string>yahoo</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>Jabber URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>xmpp</string>
+				<string>jabber</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>ICQ URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>icq</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>Microsoft Network URL</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>msn</string>
+			</array>
+		</dict>
+		<dict>
+			<key>CFBundleURLIconFile</key>
+			<string>generic</string>
+			<key>CFBundleURLName</key>
+			<string>Adium Xtra installation URL</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
 				<string>adiumxtra</string>

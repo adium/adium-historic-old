@@ -97,31 +97,47 @@
 	NSString *string = [[event descriptorAtIndex:1] stringValue];
 	NSURL *url = [NSURL URLWithString:string];
 
-	if(url){
-		NSString	*scheme;
+	if(url) {
+		NSString	*scheme, *newScheme;
 		NSString	*service;
-		
-		static NSDictionary	*schemeToServiceDict = nil;
-		if(!schemeToServiceDict){
-			schemeToServiceDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-				@"AIM", @"aim",
-				@"Yahoo!", @"ymsgr",
-				@"Yahoo!", @"yahoo",
-				@"Jabber", @"jabber",
-				@"ICQ", @"icq",
-				@"MSN", @"msn",
-				nil];
-		}
-		
-		if(![[url resourceSpecifier] hasPrefix:@"//"]){
+
+		//make sure we have the // in ://, as it simplifies later processing.
+		if(![[url resourceSpecifier] hasPrefix:@"//"]) {
 			string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
 			url = [NSURL URLWithString:string];
 		}
-		
+
 		scheme = [url scheme];
 
+		//map schemes to common aliases (like jabber: for xmpp:).
+		static NSDictionary *schemeMappingDict = nil;
+		if(!schemeMappingDict) {
+			schemeMappingDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+				@"ymsgr", @"yahoo",
+				@"xmpp", @"jabber",
+				nil];
+		}
+		newScheme = [schemeMappingDict objectForKey:scheme];
+		if(newScheme && ![newScheme isEqualToString:scheme]) {
+			scheme = newScheme;
+			string = [NSString stringWithFormat:@"%@:%@", scheme, [url resourceSpecifier]];
+			url = [NSURL URLWithString:string];
+		}
+
+		static NSDictionary	*schemeToServiceDict = nil;
+		if(!schemeToServiceDict) {
+			schemeToServiceDict = [[NSDictionary alloc] initWithObjectsAndKeys:
+				@"AIM",    @"aim",
+				@"Yahoo!", @"ymsgr",
+				@"Jabber", @"xmpp",
+				@"ICQ",    @"icq",
+				@"MSN",    @"msn",
+				nil];
+		}
+		
 		if((service = [schemeToServiceDict objectForKey:scheme])){
-			if([[url host] caseInsensitiveCompare:@"goim"] == NSOrderedSame){
+			NSString *host = [url host];
+			if([host caseInsensitiveCompare:@"goim"] == NSOrderedSame){
 				// aim://goim?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] stringByReplacingString:@"+" withString:@" "] compactedString];
 				if (name){
@@ -130,13 +146,13 @@
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
 				
-			}else if ([[url host] caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+			}else if ([host caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:@" "] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
 															service:[[adium accountController] firstServiceWithServiceID:service]];
 
-			}else if([[url host] caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
+			}else if([host caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
 				// ymsgr://sendim?tekjew
 				NSString *name = [[[url query] stringByDecodingURLEscapes] compactedString];
 				[self _openChatToContactWithName:name
@@ -160,6 +176,7 @@
 				NSString	*name;
 				if(user && [user length]){
 					// jabber://tekjew@jabber.org
+					// msn://jdoe@hotmail.com
 					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
 				}else{
 					// aim://tekjew
@@ -171,14 +188,6 @@
 									 withMessage:nil];
 			}
 			
-		}else if([scheme isEqualToString:@"xmpp"]){
-			// xmpp://tekjew@jabber.com
-			NSString *name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
-			
-			[self _openChatToContactWithName:[name compactedString]
-								   onService:@"Jabber"
-								 withMessage:nil];
-
 		}else if ([scheme isEqualToString:@"adiumxtra"]){
 			//Installs an adium extra
 			// adiumxtra://www.adiumxtras.com/path/to/xtra.zip
