@@ -252,6 +252,12 @@
 			 keyEquivalent:@""
 					   tag:AIBrackets];
 	
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for { and } keys"), [NSString stringWithUTF8String:"⌘{"], [NSString stringWithUTF8String:"⌘}"]]
+					target:nil
+					action:nil
+			 keyEquivalent:@""
+					   tag:AIBraces];
+	
 	return([menu autorelease]);		
 }
 
@@ -284,8 +290,3 @@
 }
 
 @end
-
-//XXX Remove after 0.90 is released -- 0.8x localization compatibility
-//AILocalizedString(@"Messages send on:",nil)
-//AILocalizedString(@"Send on Enter",nil)
-//AILocalizedString(@"Send on Return",nil)
