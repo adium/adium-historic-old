@@ -36,6 +36,14 @@
     userDirectory = nil;
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 // Close this controller
 - (void)closeController
 {

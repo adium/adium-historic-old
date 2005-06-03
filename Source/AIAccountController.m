@@ -96,6 +96,10 @@
 	
 }
 
+- (void)beginClosing
+{
+}
+
 //close
 - (void)closeController
 {

@@ -59,6 +59,14 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	actionHandlers = [[NSMutableDictionary alloc] init];
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
 	

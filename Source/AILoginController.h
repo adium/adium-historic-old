@@ -20,7 +20,9 @@
 
 @class AILoginWindowController;
 
-@interface AILoginController : NSObject{
+@protocol AIController;
+
+@interface AILoginController : NSObject <AIController> {
     IBOutlet	AIAdium			*adium;
     
     NSString					*currentUser;			//The current logged in username
@@ -35,8 +37,6 @@
 - (void)switchUsers;
 
 //Private
-- (void)initController;
-- (void)closeController;
 - (void)requestUserNotifyingTarget:(id)inTarget selector:(SEL)inSelector;
 - (NSArray *)userArray;
 - (void)deleteUser:(NSString *)inUserName;

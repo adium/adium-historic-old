@@ -14,13 +14,12 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@interface ESDebugController : NSObject {
+@protocol AIController;
+
+@interface ESDebugController : NSObject <AIController> {
 	IBOutlet	AIAdium		*adium;
 	NSMutableArray			*debugLogArray;
 }
-
-- (void)initController;
-- (void)closeController;
 
 #ifdef DEBUG_BUILD
 	+ (ESDebugController *)sharedDebugController;

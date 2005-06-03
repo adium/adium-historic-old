@@ -33,9 +33,9 @@ typedef enum {
     BOUNCE_DELAY60
 } DOCK_BEHAVIOR;
 
-@protocol AIFlashObserver;
+@protocol AIController, AIFlashObserver;
 
-@interface AIDockController: NSObject <AIFlashObserver> {
+@interface AIDockController: NSObject <AIController, AIFlashObserver> {
     IBOutlet	AIAdium 	*adium;
 	
     NSTimer 				*animationTimer;
@@ -68,9 +68,5 @@ typedef enum {
 //Bouncing & behavior
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior;
 - (NSString *)descriptionForBehavior:(DOCK_BEHAVIOR)behavior;
-
-//Private
-- (void)initController;
-- (void)closeController;
 
 @end

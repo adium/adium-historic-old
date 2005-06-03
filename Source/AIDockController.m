@@ -101,6 +101,14 @@
 	}
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];

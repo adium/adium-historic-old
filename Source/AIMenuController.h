@@ -18,6 +18,8 @@
 
 @class AIListObject;
 
+@protocol AIController;
+
 typedef enum {
     LOC_Adium_About = 0, LOC_Adium_Preferences,
     LOC_File_New, LOC_File_Close, LOC_File_Save, LOC_File_Additions,
@@ -37,7 +39,7 @@ typedef enum {
 	Context_TextView_Edit
 } CONTEXT_MENU_LOCATION;
 
-@interface AIMenuController : NSObject {
+@interface AIMenuController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;
 	
     IBOutlet	id		nilMenuItem;
@@ -172,10 +174,6 @@ typedef enum {
 //Control over the italics menu item
 - (void)removeItalicsKeyEquivalent;
 - (void)restoreItalicsKeyEquivalent;
-
-//Private
-- (void)initController;
-- (void)closeController;
 
 @end
 

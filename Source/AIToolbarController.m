@@ -28,6 +28,14 @@
 	toolbarItems = [[NSMutableDictionary alloc] init];
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
 	[toolbarItems release];

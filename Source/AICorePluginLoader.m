@@ -86,6 +86,14 @@
 	
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 //Give all external plugins a chance to close
 - (void)closeController
 {

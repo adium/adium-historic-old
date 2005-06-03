@@ -34,6 +34,14 @@
 
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 //close
 - (void)closeController
 {

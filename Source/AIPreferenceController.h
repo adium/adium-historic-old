@@ -37,7 +37,9 @@ typedef enum {
 
 @class AIPreferencePane, AIAdium, AIListObject;
 
-@interface AIPreferenceController : NSObject {
+@protocol AIController;
+
+@interface AIPreferenceController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;
 	NSString				*userDirectory;
 	
@@ -55,11 +57,6 @@ typedef enum {
     int						preferenceChangeDelays;			//Number of active delays (0 = not delayed)
     NSMutableSet			*delayedNotificationGroups;  	//Groups with delayed changes
 }
-
-- (void)initController;
-- (void)finishIniting;
-- (void)beginClosing;
-- (void)closeController;
 
 - (void)movePreferenceFolderFromAdium2ToAdium;
 

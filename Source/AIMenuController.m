@@ -57,6 +57,14 @@
 	[self localizeMenuTitles];
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 //Close
 - (void)closeController
 {

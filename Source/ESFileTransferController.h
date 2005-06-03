@@ -47,10 +47,10 @@ typedef enum {
 
 @class ESFileTransfer, AIListContact, AIAccount;
 
-@protocol AIEventHandler;
+@protocol AIController, AIEventHandler;
 
 //File transfers
-@interface ESFileTransferController : NSObject <AIEventHandler> {
+@interface ESFileTransferController : NSObject <AIController, AIEventHandler> {
 	IBOutlet	AIAdium		*adium;
 	
 	NSMenuItem				*menuItem_sendFile;
@@ -81,9 +81,5 @@ typedef enum {
 
 - (NSString *)stringForSize:(unsigned long long)inSize;
 - (NSString *)stringForSize:(unsigned long long)inSize of:(unsigned long long)totalSize ofString:(NSString *)totalSizeString;
-
-//Private
-- (void)initController;
-- (void)closeController;
 
 @end

@@ -173,6 +173,10 @@
 	[self sortContactList];
 }
 
+- (void)beginClosing
+{
+}
+
 //close
 - (void)closeController
 {

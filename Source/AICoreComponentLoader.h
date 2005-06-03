@@ -16,12 +16,11 @@
  
 @class AIPlugin;
 
-@interface AICoreComponentLoader : NSObject {
+@protocol AIController;
+
+@interface AICoreComponentLoader : NSObject <AIController> {
 	NSMutableDictionary	*components;
 }
-
-- (void)initController;
-- (void)closeController;
 
 - (AIPlugin *)pluginWithClassName:(NSString *)className;
 

@@ -16,6 +16,8 @@
 
 @class AIModularPane, AIListObject;
 
+@protocol AIController;
+
 /*!
  * @protocol AIEventHandler <NSObject>
  * @brief Protocol for a class which posts and supplies information about an Event
@@ -115,17 +117,13 @@ typedef enum {
 } AIEventHandlerGroupType;
 #define EVENT_HANDLER_GROUP_COUNT 5
 
-@interface ESContactAlertsController : NSObject {
+@interface ESContactAlertsController : NSObject <AIController> {
     IBOutlet	AIAdium			*adium;
 	
 	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
 	NSMutableDictionary			*actionHandlers;
 }
-
-//
-- (void)initController;
-- (void)closeController;
 
 //Events
 - (void)registerEventID:(NSString *)eventID withHandler:(id <AIEventHandler>)handler inGroup:(AIEventHandlerGroupType)inGroup globalOnly:(BOOL)global;

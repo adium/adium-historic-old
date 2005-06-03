@@ -77,6 +77,14 @@
 	}
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 /*!
  * @brief Close integreated components
  */
