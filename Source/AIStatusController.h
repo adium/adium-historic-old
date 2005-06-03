@@ -17,7 +17,7 @@
 #import "AIStatus.h"
 
 @class AIService;
-@protocol AIListObjectObserver;
+@protocol AIController, AIListObjectObserver;
 
 //Status State Notifications
 #define AIStatusStateArrayChangedNotification			@"AIStatusStateArrayChangedNotification"
@@ -101,7 +101,7 @@
 - (void)removeStateMenuItems:(NSArray *)menuItemArray;
 @end
 
-@interface AIStatusController : NSObject<AIListObjectObserver> {
+@interface AIStatusController : NSObject <AIController, AIListObjectObserver> {
     IBOutlet	AIAdium		*adium;
 
 	//Status states
@@ -131,11 +131,6 @@
 	
 	NSMutableSet			*stateMenuItemsNeedingUpdating;
 }
-
-- (void)initController;
-- (void)beginClosing;
-- (void)closeController;
-- (void)finishIniting;
 
 - (NSNumber *)nextUniqueStatusID;
 

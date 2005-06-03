@@ -30,12 +30,14 @@
 
 @class SUSpeaker;
 
+@protocol AIController;
+
 typedef enum{
 	SOUND_SYTEM_OUTPUT_DEVICE = 0,
 	SOUND_SYTEM_ALERT_DEVICE
 } SoundDeviceType;
 
-@interface AISoundController : NSObject {
+@interface AISoundController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;
 	
     NSMutableDictionary	*soundCacheDict;
@@ -78,10 +80,6 @@ typedef enum{
 
 - (int)defaultRate;
 - (int)defaultPitch;
-
-//Private
-- (void)initController;
-- (void)closeController;
 
 @end
 

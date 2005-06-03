@@ -175,6 +175,10 @@
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
 }
 
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
     [contactListPlugin closeContactList];

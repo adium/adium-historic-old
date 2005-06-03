@@ -25,6 +25,13 @@
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
 		AIEmoticonController;
 
+@protocol AIController
+- (void)initController;
+- (void)finishIniting;
+- (void)beginClosing;
+- (void)closeController;
+@end
+
 @interface AIAdium : NSObject {
     IBOutlet	AIAccountController				*accountController;
     IBOutlet	AIContactController				*contactController;

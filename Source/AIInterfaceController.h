@@ -44,6 +44,8 @@
 
 @class AIMenuController , AIChat, AIListObject;
 
+@protocol AIController;
+
 //Sends Interface_ViewDesiredSizeDidChange notifications
 @protocol AIAutoSizingView 
 - (NSSize)desiredSize;
@@ -121,7 +123,7 @@ typedef enum {
 	DCWebkitMessageView			//Preferred message view
 } DCMessageViewType;
 
-@interface AIInterfaceController : NSObject {
+@interface AIInterfaceController : NSObject <AIController> {
 	IBOutlet	AIMenuController	*menuController;
     IBOutlet	AIAdium			*adium;
 	
@@ -249,11 +251,6 @@ typedef enum {
 
 //Window levels menu
 - (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target;
-
-//Private
-- (void)initController;
-- (void)finishIniting;
-- (void)closeController;
 
 @end
 

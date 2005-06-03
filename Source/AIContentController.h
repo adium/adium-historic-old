@@ -22,7 +22,7 @@
 //Not displayed, but used for internal identification of the encryption menu
 #define ENCRYPTION_MENU_TITLE						@"Encryption Menu"
 
-@protocol AITextEntryView, AIEventHandler;
+@protocol AIController, AITextEntryView, AIEventHandler;
 
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
@@ -70,7 +70,7 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
-@interface AIContentController : NSObject <AIEventHandler> {
+@interface AIContentController : NSObject <AIController, AIEventHandler> {
     IBOutlet	AIAdium		*adium;
 	
     NSMutableArray			*textEntryFilterArray;
@@ -171,10 +171,5 @@ typedef enum {
 
 //Encryption
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
-
-//Private
-- (void)initController;
-- (void)beginClosing;
-- (void)closeController;
 
 @end

@@ -14,7 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@interface AIToolbarController : NSObject {
+@protocol AIController;
+
+@interface AIToolbarController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;
     NSMutableDictionary		*toolbarItems;
 }
@@ -22,9 +24,5 @@
 - (void)registerToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
 - (void)unregisterToolbarItem:(NSToolbarItem *)item forToolbarType:(NSString *)type;
 - (NSDictionary *)toolbarItemsForToolbarTypes:(NSArray *)types;
-
-//Private
-- (void)initController;
-- (void)closeController;
 
 @end

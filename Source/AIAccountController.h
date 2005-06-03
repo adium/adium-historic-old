@@ -50,12 +50,12 @@ typedef enum
 	Adium_Proxy_Default_SOCKS5
 } AdiumProxyType;
 
-@protocol AIListObjectObserver, StateMenuPlugin;
+@protocol AIController, AIListObjectObserver, StateMenuPlugin;
 
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
 		AdiumServices, AdiumPasswords, AdiumAccounts;
 
-@interface AIAccountController : NSObject {
+@interface AIAccountController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;	
 	
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
@@ -118,10 +118,5 @@ typedef enum
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
 - (BOOL)anOnlineAccountCanCreateGroupChats;
 - (BOOL)anOnlineAccountCanEditContacts;
-
-//Private
-- (void)initController;
-- (void)closeController;
-- (void)finishIniting;
 
 @end

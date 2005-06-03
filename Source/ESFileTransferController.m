@@ -110,6 +110,14 @@ static ESFileTransferPreferences *preferences;
 	[self configureFileTransferProgressWindow];
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
     [[adium preferenceController] unregisterPreferenceObserver:self];

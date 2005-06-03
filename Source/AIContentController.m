@@ -105,6 +105,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[[adium contactAlertsController] registerEventID:CONTENT_MESSAGE_RECEIVED_BACKGROUND withHandler:self inGroup:AIMessageEventHandlerGroup globalOnly:NO];
 }
 
+- (void)finishIniting
+{
+}
+
 /*
  * @brief Begin closing the controller
  *

@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@protocol AIListObjectObserver, AIContainingObject;
+@protocol AIController, AIListObjectObserver, AIContainingObject;
 
 @class AIAccount, AIListObject,  AIListContact, AIListGroup, AIMetaContact, AIMessageObject, AIService, AIContactInfoPane,
 	   AISortController;
@@ -71,7 +71,7 @@ typedef enum {
 @protocol ContactListOutlineView
 @end
 
-@interface AIContactController : NSObject {
+@interface AIContactController : NSObject <AIController> {
     IBOutlet	AIAdium		*adium;
 	
 	//Contacts and metaContacts
@@ -182,11 +182,6 @@ typedef enum {
 - (AIListObject *)selectedListObject;
 - (AIListObject *)selectedListObjectInContactList;
 - (NSArray *)arrayOfSelectedListObjectsInContactList;
-
-//Private
-- (void)initController;
-- (void)finishIniting;
-- (void)closeController;
 
 - (float)nextOrderIndex;
 

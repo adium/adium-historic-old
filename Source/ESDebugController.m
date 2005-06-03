@@ -51,6 +51,14 @@ static ESDebugController	*sharedDebugController = nil;
 	}
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 - (void)closeController
 {
 	//Save the open state of the debug window

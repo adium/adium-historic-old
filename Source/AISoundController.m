@@ -97,6 +97,14 @@
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
 }
 
+- (void)finishIniting
+{
+}
+
+- (void)beginClosing
+{
+}
+
 //close
 - (void)closeController
 {
