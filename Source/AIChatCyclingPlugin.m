@@ -89,11 +89,16 @@
 			rightKey = [NSString stringWithCharacters:&right length:1];
 			keyMask = (NSCommandKeyMask | NSShiftKeyMask);
 			break;
-		default://case AIBrackets:
+		case AIBrackets:
 			leftKey = @"[";
 			rightKey = @"]";
 			break;
+		case AIBraces:
+			leftKey = @"{";
+			rightKey = @"}";
+			beak;
 	}
+
 	//Previous and nextMessage menuItems are in the same menu, so the setMenuChangedMessagesEnabled applies to both.
 	[[previousChatMenuItem menu] setMenuChangedMessagesEnabled:NO];		
 	[previousChatMenuItem setKeyEquivalent:@""];
