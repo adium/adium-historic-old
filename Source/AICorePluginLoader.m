@@ -83,7 +83,6 @@
 		if([[path pathExtension] caseInsensitiveCompare:EXTENSION_ADIUM_PLUGIN] == 0)
 			[self loadPluginAtPath:[internalPluginsPath stringByAppendingPathComponent:path] confirmLoading:NO];
 	}
-	
 }
 
 - (void)finishIniting
@@ -98,10 +97,12 @@
 - (void)closeController
 {
     NSEnumerator	*enumerator = [pluginArray objectEnumerator];
-    AIPlugin		*plugin;
-	
+    id <AIPlugin>	plugin;
+
     while((plugin = [enumerator nextObject])){
-        [plugin uninstallPlugin];
+		[[adium notificationCenter] removeObserver:plugin];
+		[[NSNotificationCenter defaultCenter] removeObserver:plugin];
+		[plugin uninstallPlugin];
     }
 }
 
@@ -133,7 +134,7 @@
 	//Load the plugin
 	if(loadPlugin){
 		NSBundle		*pluginBundle;
-		AIPlugin		*plugin = nil;
+		id <AIPlugin>	plugin = nil;
 
 		NS_DURING
 		if((pluginBundle = [NSBundle bundleWithPath:pluginPath])){
@@ -145,6 +146,7 @@
 			}
 			
 			if(plugin){
+				[plugin installPlugin];
 				[pluginArray addObject:plugin];
 				[plugin release];
 			}else{

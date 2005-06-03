@@ -22,6 +22,7 @@
  */
 
 #import "AICoreComponentLoader.h"
+#import <Adium/AIObject.h>
 #import <Adium/AIPlugin.h>
 
 @implementation AICoreComponentLoader
@@ -67,9 +68,11 @@
 		Class class;
 
 		if(className && (class = NSClassFromString(className))){
-			id object = [[class alloc] init];
+			id <AIPlugin>	object = [[class alloc] init];
 
 			NSAssert1(object, @"Failed to load %@", className);
+
+			[object installPlugin];
 
 			[components setObject:object forKey:className];
 			[object release];
@@ -91,9 +94,11 @@
 - (void)closeController
 {
 	NSEnumerator	*enumerator = [components objectEnumerator];
-	AIPlugin		*plugin;
+	id <AIPlugin>	plugin;
 
 	while((plugin = [enumerator nextObject])) {
+		[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:plugin];
+		[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 		[plugin uninstallPlugin];
 	}
 }
@@ -103,7 +108,7 @@
 /*!
  * @brief Retrieve a component plugin by its class name
  */
-- (AIPlugin *)pluginWithClassName:(NSString *)className {
+- (id <AIPlugin>)pluginWithClassName:(NSString *)className {
 	return [components objectForKey:className];
 }
 
