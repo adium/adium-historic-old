@@ -34,7 +34,6 @@
 	
 	//Configure defaults as necessary
 	[newStatus setAutoReplyIsStatusMessage:YES];
-	[newStatus setHasAutoReply:YES];
 
 	return(newStatus);
 }
@@ -65,6 +64,10 @@
 	AIStatus	*status = [self status];
 	[status setStatusType:inStatusType];
 	[status setStatusName:[[[AIObject sharedAdiumInstance] statusController] defaultStatusNameForType:inStatusType]];
+	
+	if(inStatusType == AIAwayStatusType){
+		[status setHasAutoReply:YES];
+	}
 	
 	return(status);
 }
