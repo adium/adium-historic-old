@@ -226,7 +226,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 										 forKey:@"SavedAccountsToConnect"
 										  group:GROUP_ACCOUNT_STATUS];
 	
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 }
@@ -1085,7 +1085,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	//Clear the sorted menu items array since our state array changed.
 	[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 	[[adium notificationCenter] postNotificationName:AIStatusStateArrayChangedNotification object:nil];
@@ -1093,7 +1093,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 - (void)statusStateDidSetUniqueStatusID
 {
-	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:stateArray]
+	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
 }
