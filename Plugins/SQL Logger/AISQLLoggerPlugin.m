@@ -1,6 +1,6 @@
 /*-------------------------------------------------------------------------------------------------------*\
 | AISQLLoggerPlugin 1.0 for Adium                                                                         |
-| AILoggerPlugin: Copyright (C) 2002-2005 Jeffrey Melloy.                                                      |
+| AISQLLoggerPlugin: Copyright (C) 2002-2005 Jeffrey Melloy.                                              |
 | <jmelloy@visualdistortion.org> <http://www.visualdistortion.org/adium/>                                 |
 | Adium: Copyright (C) 2001-2005 Adam Iser. <adamiser@mac.com> <http://www.adiumx.com>                    |---\
 \---------------------------------------------------------------------------------------------------------/   |
@@ -109,7 +109,7 @@
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 
     //Message Content
-    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] && [content postProcessContent]){
         AIChat		*chat = [notification object];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];
