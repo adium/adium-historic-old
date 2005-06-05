@@ -116,7 +116,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 - (void)finishIniting
 {
 	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
-	 * status is selected with no accounts online. */
+	 * status is selected with no accounts online.
+	 */
 	NSArray	*savedAccountsToConnect = [[adium preferenceController] preferenceForKey:@"SavedAccountsToConnect"
 																			   group:GROUP_ACCOUNT_STATUS];
 	NSEnumerator	*enumerator;
@@ -213,7 +214,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		 * We use the statusObjectForKey:@"StatusState" accessor rather than [account statusState]
 		 * because we don't want anything besides the account's actual status state.  That is, we don't
 		 * want the default available state if the account doesn't have a state yet, and we want the
-		 * real last-state-which-was-set (not the offline one) if the account is offline. */
+		 * real last-state-which-was-set (not the offline one) if the account is offline.
+		 */
 		AIStatus	*currentStatus = [account statusObjectForKey:@"StatusState"];
 		[account setPreference:((currentStatus && (currentStatus != offlineStatusState)) ?
 								[NSKeyedArchiver archivedDataWithRootObject:currentStatus] :
@@ -383,7 +385,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
 		while((serviceCodeUniqueID = [enumerator nextObject])){
 			/* Obtain the status dicts for this type and service code unique ID if it is online or
-			 * if no accounts are online but an account of this service code is configured*/
+			 * if no accounts are online but an account of this service code is configured
+			 */
 //			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
 //				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])){
 				NSSet	*statusDicts;
@@ -609,11 +612,13 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
 		   (shouldConnectAllAccounts)){
 			/* If this account is online, or no accounts are online and this is an account to connect,
-			 * or we should be connecting all accounts, set the status completely. */
+			 * or we should be connecting all accounts, set the status completely.
+			 */
 			[account setStatusState:statusState];
 		}else{
-			//If this account should not have its state set now, perform internal bookkeeping so a future sign-on
-			//will be to the most appropriate state
+			/* If this account should not have its state set now, perform internal bookkeeping so a future sign-on
+			 * will be to the most appropriate state
+			 */
 			[account setStatusStateAndRemainOffline:statusState];
 		}
 	}
@@ -1323,7 +1328,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	if(currentStatusType != AIOfflineStatusType){
 		/* Add the last "Custom..." state optior for the last statusType we handled,
 		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
-		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness. */
+		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness.
+		 */
 		menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
 											  target:self
 											  action:@selector(selectCustomState:)
@@ -1489,7 +1495,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		* the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
 		* all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
 		* reconnecting, so we check to see if we are disconnecting via that menu item with the
-		* isProcessingGlobalChange BOOL. */
+		* isProcessingGlobalChange BOOL.
+		*/
 		if(!isProcessingGlobalChange){
 			if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
 				[accountsToConnect addObject:object];
@@ -1677,7 +1684,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	}
 
 	/* If we are going to a custom state of a different type, we don't want to prefill with baseStatusState as it stands.
-	 * Instead, we load the last used status of that type. */
+	 * Instead, we load the last used status of that type.
+	 */
 	if(([baseStatusState statusType] != statusType)){
 		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
@@ -1717,8 +1725,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	BOOL didRemove = NO;
 	
-	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account
-	* we should remove it */
+	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account, 
+	 * then we should remove it.
+	 */
 	if([temporaryStateArray containsObject:originalState]){
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
