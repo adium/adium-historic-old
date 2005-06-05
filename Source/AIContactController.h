@@ -103,8 +103,8 @@ typedef enum {
 	float					nextOrderIndex;
 
 	//Contact Info Menu Items
-	IBOutlet 	NSMenuItem  *menuItem_getInfo;
-	IBOutlet	NSMenuItem  *menuItem_getInfoAlternate;
+	NSMenuItem				*menuItem_getInfo;
+	NSMenuItem				*menuItem_getInfoAlternate;
 	NSMenuItem				*menuItem_getInfoContextualContact;
 	NSMenuItem				*menuItem_getInfoContextualGroup;	
 
