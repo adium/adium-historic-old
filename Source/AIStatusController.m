@@ -1547,9 +1547,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 				appropiateActiveStatusState = [account statusState];
 
 				/* Our "Custom..." menu choice has a nil represented object.  If the appropriate active search state is
-					* in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
-					* we have a custom state and will be searching for the custom item of the right type, switching all other
-					* menu items to NSOffState. */
+				 * in our array of states from which we made menu items, we'll be searching to match it.  If it isn't,
+				 * we have a custom state and will be searching for the custom item of the right type, switching all other
+				 * menu items to NSOffState.
+				 */
 				if([[self sortedFullStateArray] containsObjectIdenticalTo:appropiateActiveStatusState]){
 					//If the search state is in the array so is a saved state, search for the match
 					if(menuItemStatusState == appropiateActiveStatusState){
