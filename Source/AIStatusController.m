@@ -1123,8 +1123,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
     double idleTime = CGSSecondsSinceLastInputEvent(-1);
 
-	//On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
-	//Here we check for that value and correctly return a 0 idle time.
+	/* On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
+	 * Here we check for that value and correctly return a 0 idle time.
+	 */
 	if(idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai
 
     return(idleTime);
@@ -1148,8 +1149,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 	if(machineIsIdle){
 		if(currentIdle < lastSeenIdle){
-			//If the machine is less idle than the last time we recorded, it means that activity has occured and the
-			//user is no longer idle.
+			/* If the machine is less idle than the last time we recorded, it means that activity has occured and the
+			 * user is no longer idle.
+			 */
 			[self _setMachineIsIdle:NO];
 		}else{
 			//Periodically broadcast a 'MachineIdleUpdate' notification
@@ -1278,8 +1280,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	AIStatus		*statusState;
 	AIStatusType	currentStatusType = AIAvailableStatusType;
 
-	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
-	//are grouped together.
+	/* Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
+	 * are grouped together.
+	 */
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
 	while((statusState = [enumerator nextObject])){
 		AIStatusType thisStatusType = [statusState statusType];
@@ -1314,8 +1317,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 											  action:@selector(selectState:)
 									   keyEquivalent:@""];
 
-		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
-		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		/* NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
+		 * shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		 */
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
 		[menuItem setTag:currentStatusType];
 		[menuItem setToolTip:[statusState statusMessageString]];
@@ -1507,8 +1511,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 			}
 		}
 
-		//Clear these caches now. Observers which get called before we do when an account actually connects
-		//will want to get a fresh value.
+		/* Clear these caches now. Observers which get called before we do when an account actually connects
+		 * will want to get a fresh value.
+		 */
 		[self _resetActiveStatusState];
 	}
 }
@@ -1529,8 +1534,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		AIStatus		*menuItemStatusState;
 		BOOL			shouldSelectOffline;
 
-		//Search for the account or global status state as appropriate for this menu item.
-		//Also, determine if we are looking to select the Offline menu item
+		/* Search for the account or global status state as appropriate for this menu item.
+		 * Also, determine if we are looking to select the Offline menu item
+		 */
 		if((account = [dict objectForKey:@"AIAccount"])){
 			shouldSelectOffline = ![account online];
 		}else{
@@ -1599,8 +1605,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 					BOOL			foundCorrectStatusState = NO;
 
 					while(!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])){
-						//We found a custom match if our array of menu item states doesn't contain this state and
-						//its statusType matches the menuItem's tag.
+						/* We found a custom match if our array of menu item states doesn't contain this state and
+						 * its statusType matches the menuItem's tag.
+						 */
 						foundCorrectStatusState = (![sortedFullStateArray containsObjectIdenticalTo:statusState] &&
 												   ([menuItem tag] == [statusState statusType]));
 					}
@@ -1698,8 +1705,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		baseStatusState = [[lastStatusStateOfThisType retain] autorelease];
 	}
 
-	//don't use the current status state as a base.  Going from Away to Available, don't autofill the Available
-	//status message with the old away message.
+	/* Don't use the current status state as a base, and when going from Away to Available, don't autofill the Available
+	 * status message with the old away message.
+	 */
 	if([baseStatusState statusType] != statusType){
 		baseStatusState = nil;
 	}
@@ -1854,8 +1862,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[statusStatesMenu setMenuChangedMessagesEnabled:NO];
 	[statusStatesMenu setAutoenablesItems:NO];
 
-	//Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
-	//are grouped together.
+	/* Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
+	 * are grouped together.
+	 */
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
 	while((statusState = [enumerator nextObject])){
 		AIStatusType thisStatusType = [statusState statusType];
@@ -1871,12 +1880,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 											  action:nil
 									   keyEquivalent:@""];
 
-		//NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
-		//shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		/* NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
+		 * shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
+		 */
 		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setTag:[statusState statusType]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
-		[menuItem setTag:[statusState statusType]];
 		[statusStatesMenu addItem:menuItem];
 		[menuItem release];
 	}
