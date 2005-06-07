@@ -59,7 +59,7 @@
  * @param inDelegate The 
  * @result	An <tt>AISmoothTooltipTracker</tt> instance
  */ 
-+ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id<AISmoothTooltipTrackerDelegate>)inDelegate;
++ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate;
 
 /*!
  * @brief Set the delegate
