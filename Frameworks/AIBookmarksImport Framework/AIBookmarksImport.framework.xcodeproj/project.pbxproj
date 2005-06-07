@@ -427,7 +427,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "if [ -d \"../AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" ]; then\n\tditto \"../AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" \"${BUILT_PRODUCTS_DIR}/AIUtilities.framework\"\nfi\n";
+			shellScript = "if [ -d \"${SRCROOT}/../AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" ]; then\n\tln -fs \"${SRCROOT}/../AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" \"${BUILT_PRODUCTS_DIR}/AIUtilities.framework\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

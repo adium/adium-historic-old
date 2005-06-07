@@ -6,6 +6,33 @@
 	objectVersion = 42;
 	objects = {
 
+/* Begin PBXAggregateTarget section */
+		DACF3ED3085574D0006BFB18 /* External Frameworks */ = {
+			isa = PBXAggregateTarget;
+			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
+			buildPhases = (
+				DACF3ED2085574D0006BFB18 /* ShellScript */,
+			);
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+			);
+			name = "External Frameworks";
+			productName = "External Frameworks";
+		};
+/* End PBXAggregateTarget section */
+
 /* Begin PBXBuildFile section */
 		071C56330827933100399C0F /* Shared Dock Icon Images in Resources */ = {isa = PBXBuildFile; fileRef = 071C56310827933000399C0F /* Shared Dock Icon Images */; };
 		074DDB5D07CB413F0033AFF7 /* CBContactLastSeenPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 074DDB5C07CB413F0033AFF7 /* CBContactLastSeenPlugin.m */; };
@@ -1390,6 +1417,13 @@
 			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
 			remoteInfo = Bonjour;
 		};
+		DACF3EDC085574F1006BFB18 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
+			remoteInfo = "External Frameworks";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -1467,7 +1501,7 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
-		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AIBookmarksImport.framework; path = "Frameworks/AIBookmarksImport Framework/build/AIBookmarksImport.framework"; sourceTree = "<group>"; };
+		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AIBookmarksImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcode; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcode"; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Plugins/Emoticons/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Plugins/Emoticons/AIEmoticonController.m; sourceTree = "<group>"; };
@@ -1978,7 +2012,7 @@
 		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcode; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcode"; sourceTree = "<group>"; };
-		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AIHyperlinks.framework; path = "../Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AIHyperlinks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2314,7 +2348,7 @@
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
-		34D8379307CC3222006466F2 /* AIUtilities.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AIUtilities.framework; path = "../Frameworks/AIUtilities Framework/build/AIUtilities.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		34D8379307CC3222006466F2 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
 		34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Lock_Unlocked State.png"; path = "Plugins/Secure Messaging/Lock_Unlocked State.png"; sourceTree = "<group>"; };
@@ -6531,10 +6565,10 @@
 			buildPhases = (
 				34BD9D10053146CC000AB133 /* Headers */,
 				34BD9D24053146CC000AB133 /* Resources */,
-				34BD9D5F053146CC000AB133 /* CopyFiles */,
 				34E9DCF2078FC79900662E8E /* ShellScript */,
 				34BD9D42053146CC000AB133 /* Sources */,
 				34BD9D57053146CC000AB133 /* Frameworks */,
+				34BD9D5F053146CC000AB133 /* CopyFiles */,
 				4BF2E91F067CB76300743318 /* CopyFiles */,
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
 				34677B3607CC3D6200F59F7B /* CopyFiles */,
@@ -6568,6 +6602,7 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				DACF3EDD085574F1006BFB18 /* PBXTargetDependency */,
 				3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				07FC98360827D373006C56D6 /* PBXTargetDependency */,
@@ -6960,6 +6995,7 @@
 				346C9C4806004517000F5A8A /* Standard Message View */,
 				346C9C5306004525000F5A8A /* WebKit Message View */,
 				4947F5BC0655E85200B791E5 /* Bonjour */,
+				DACF3ED3085574D0006BFB18 /* External Frameworks */,
 			);
 		};
 /* End PBXProject section */
@@ -7387,7 +7423,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch $SCRIPT_INPUT_FILE_0\n";
+			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_INPUT_FILE_0}\"\n";
 		};
 		344ECA570620A04E007256C6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7413,7 +7449,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildnum=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > \"$SYMROOT/Adium.app/Contents/Resources/buildnum\"\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$SYMROOT/version.plist\"\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildnum=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/buildnum\"\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$BUILT_PRODUCTS_DIR/version.plist\"\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		34E9DCF2078FC79900662E8E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7439,7 +7475,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd \"$SYMROOT/Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\nln -fns \"../../../Frameworks\" \"Frameworks\"\n";
+			shellScript = "# Create symlink to the AIUtilities framework in the main Adium application\n#\ncd \"${BUILT_PRODUCTS_DIR}/Adium Crash Reporter.app/Contents/\"\nif [ -e Frameworks ] ; then\n    rm Frameworks\nfi\n\necho \"Symlinking AIUtilities framework...\"\nln -fns \"../../../Frameworks\" \"Frameworks\"\n";
 		};
 		6C15E63106DF3BB600E5A50E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7452,7 +7488,20 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "find \"$BUILD_ROOT/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\n";
+			shellScript = "find \"$BUILT_PRODUCTS_DIR/$WRAPPER_NAME\" '(' -name '.svn' -or -name '.DS_Store' -or -name '*.h' ')' -prune -exec rm -rf '{}' ';'\n";
+		};
+		DACF3ED2085574D0006BFB18 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if [ -d \"${SRCROOT}/Frameworks/AIBookmarksImport Framework/build/${CONFIGURATION}/AIBookmarksImport.framework\" ]; then\n\tln -fs \"${SRCROOT}/Frameworks/AIBookmarksImport Framework/build/${CONFIGURATION}/AIBookmarksImport.framework\" \"${BUILT_PRODUCTS_DIR}/AIBookmarksImport.framework\"\nfi\n\nif [ -d \"${SRCROOT}/Frameworks/AIHyperlinks Framework/build/${CONFIGURATION}/AIHyperlinks.framework\" ]; then\n\tln -fs \"${SRCROOT}/Frameworks/AIHyperlinks Framework/build/${CONFIGURATION}/AIHyperlinks.framework\" \"${BUILT_PRODUCTS_DIR}/AIHyperlinks.framework\"\nfi\n\nif [ -d \"${SRCROOT}/Frameworks/AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" ]; then\n\tln -fs \"${SRCROOT}/Frameworks/AIUtilities Framework/build/${CONFIGURATION}/AIUtilities.framework\" \"${BUILT_PRODUCTS_DIR}/AIUtilities.framework\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8017,6 +8066,11 @@
 			isa = PBXTargetDependency;
 			target = 4947F5BC0655E85200B791E5 /* Bonjour */;
 			targetProxy = DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */;
+		};
+		DACF3EDD085574F1006BFB18 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
+			targetProxy = DACF3EDC085574F1006BFB18 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -8659,6 +8713,78 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		DACF3EDF085574F6006BFB18 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		DACF3EE0085574F6006BFB18 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Deployment;
+		};
+		DACF3EE1085574F6006BFB18 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Deployment-Debug";
+		};
+		DACF3EE2085574F6006BFB18 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				OPTIMIZATION_CFLAGS = "-O0";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = "External Frameworks";
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
 		DADE8E00085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10013,6 +10139,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DACF3EDF085574F6006BFB18 /* Development */,
+				DACF3EE0085574F6006BFB18 /* Deployment */,
+				DACF3EE1085574F6006BFB18 /* Deployment-Debug */,
+				DACF3EE2085574F6006BFB18 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		DADE8DFF085507450062B664 /* Build configuration list for PBXNativeTarget "Adium.Framework" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
