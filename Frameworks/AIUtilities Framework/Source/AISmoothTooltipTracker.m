@@ -29,7 +29,7 @@
 
 @implementation AISmoothTooltipTracker
 
-+ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id)inDelegate
++ (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate
 {
 	return([[[self alloc] initForView:inView withDelegate:inDelegate] autorelease]);	
 }
@@ -69,7 +69,7 @@
 	[super dealloc];
 }
 
-- (void)setDelegate:(id)inDelegate
+- (void)setDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate
 {
 	if (delegate != inDelegate){
 		[self _stopTrackingMouse];
