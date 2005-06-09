@@ -206,8 +206,7 @@
 		[delegate setAccount:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					toContact:listObject]];
 	}
-	
-	
+
 	[self updateContactsMenu];
 	[self configureAccountsMenu];
 }
