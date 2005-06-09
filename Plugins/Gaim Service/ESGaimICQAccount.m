@@ -33,7 +33,7 @@
 	NSString	*encoding;
 
 	//Default encoding
-	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])){
+	if ((encoding = [self preferenceForKey:KEY_ICQ_ENCODING group:GROUP_ACCOUNT_STATUS])) {
 		gaim_account_set_string(account, "encoding", [encoding UTF8String]);
 	}
 }
@@ -66,30 +66,30 @@
 	statusMessage = [super statusMessageForGaimBuddy:b];
 
 	//If we don't get a status message from super, try to generate a generic one based on the state
-	if(!statusMessage || ![statusMessage length]){
+	if (!statusMessage || ![statusMessage length]) {
 					
 		/* ((b->uc & 0xffff0000) >> 16) is nicely undocumented magic from oscar.c.  It turns out that real
 		* men don't document their code. */
 		int			state = ((b->uc & 0xffff0000) >> 16);
 		NSString	*statusMessageString = nil;
 		
-		if (state & AIM_ICQ_STATE_CHAT){
+		if (state & AIM_ICQ_STATE_CHAT) {
 			statusMessageString = STATUS_DESCRIPTION_FREE_FOR_CHAT;
 			
-		}else if (state & AIM_ICQ_STATE_DND){
+		} else if (state & AIM_ICQ_STATE_DND) {
 			statusMessageString = STATUS_DESCRIPTION_DND;
 			
-		}else if (state & AIM_ICQ_STATE_OUT){
+		} else if (state & AIM_ICQ_STATE_OUT) {
 			statusMessageString = STATUS_DESCRIPTION_NOT_AVAILABLE;
 			
-		}else if (state & AIM_ICQ_STATE_BUSY){
+		} else if (state & AIM_ICQ_STATE_BUSY) {
 			statusMessageString = STATUS_DESCRIPTION_OCCUPIED;
 			
-		}else if (state & AIM_ICQ_STATE_INVISIBLE){
+		} else if (state & AIM_ICQ_STATE_INVISIBLE) {
 			statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
 		}
 		
-		if(statusMessageString){
+		if (statusMessageString) {
 			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 															 attributes:nil] autorelease];
 		}
@@ -106,19 +106,19 @@
 		* men don't document their code. */
 	int state = ((b->uc & 0xffff0000) >> 16);
 	
-	if (state & AIM_ICQ_STATE_CHAT){
+	if (state & AIM_ICQ_STATE_CHAT) {
 		statusName = STATUS_NAME_FREE_FOR_CHAT;
 		
-	}else if (state & AIM_ICQ_STATE_DND){
+	} else if (state & AIM_ICQ_STATE_DND) {
 		statusName = STATUS_NAME_DND;
 		
-	}else if (state & AIM_ICQ_STATE_OUT){
+	} else if (state & AIM_ICQ_STATE_OUT) {
 		statusName = STATUS_NAME_NOT_AVAILABLE;
 		
-	}else if (state & AIM_ICQ_STATE_BUSY){
+	} else if (state & AIM_ICQ_STATE_BUSY) {
 		statusName = STATUS_NAME_OCCUPIED;
 		
-	}else if (state & AIM_ICQ_STATE_INVISIBLE){
+	} else if (state & AIM_ICQ_STATE_INVISIBLE) {
 		statusName = STATUS_NAME_INVISIBLE;
 	}
 				
@@ -146,12 +146,12 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]){
+			if ([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) {
 				gaimStatusType = "Free For Chat";
-			}else{
+			} else {
 				/* ICQ uses "Online" rather than "Available" for the base available state.
 				 * For any available state we don't have a specific statusType for, use "Online"
 				 * rather than the "Available" CBGaimAccount will provide. */ 				
@@ -168,7 +168,7 @@
 		{
 			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
 
-			if(([statusName isEqualToString:STATUS_NAME_DND]) ||
+			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				gaimStatusType = "Do Not Disturb";
 			else if (([statusName isEqualToString:STATUS_NAME_NOT_AVAILABLE]) ||
@@ -191,10 +191,10 @@
 	}
 
 	//If we are setting one of our custom statuses, don't use a status message
-//	if(gaimStatusType != NULL) 	*statusMessage = nil;
+//	if (gaimStatusType != NULL) 	*statusMessage = nil;
 
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }
@@ -203,7 +203,7 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Re-request Authorization") == 0){
+	if (strcmp(label, "Re-request Authorization") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
 	}
 	

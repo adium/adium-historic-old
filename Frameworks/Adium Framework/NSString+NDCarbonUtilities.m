@@ -68,7 +68,7 @@
 
 	[self getFSRef:&theRef];
 
-	if( (FSResolveAliasFile( &theRef, YES, &theIsTargetFolder, &theWasAliased ) == noErr) )
+	if ( (FSResolveAliasFile( &theRef, YES, &theIsTargetFolder, &theWasAliased ) == noErr) )
 	{
 		theResolvedAlias = (theWasAliased) ? [NSString stringWithFSRef:&theRef] : self;
 	}
@@ -123,11 +123,11 @@
 	FSSpec			theFSSpec;
 	struct FInfo	theInfo;
 
-	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	if ( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
-		if( aFlags ) *aFlags = theInfo.fdFlags;
-		if( aType ) *aType = theInfo.fdType;
-		if( aCreator ) *aCreator = theInfo.fdCreator;
+		if ( aFlags ) *aFlags = theInfo.fdFlags;
+		if ( aType ) *aType = theInfo.fdType;
+		if ( aCreator ) *aCreator = theInfo.fdCreator;
 
 		return YES;
 	}
@@ -144,7 +144,7 @@
 	struct FInfo	theInfo;
 	NSPoint			thePoint = NSMakePoint( 0, 0 );
 
-	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	if ( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
 		thePoint = NSMakePoint(theInfo.fdLocation.h, theInfo.fdLocation.v );
 	}
@@ -161,7 +161,7 @@
 	FSSpec			theFSSpec;
 	struct FInfo	theInfo = { 0 };
 
-	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	if ( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
 		theInfo.fdFlags = (aFlags & aMask) | (theInfo.fdFlags & !aMask);
 		theInfo.fdType = aType;
@@ -182,7 +182,7 @@
 	FSSpec			theFSSpec;
 	struct FInfo	theInfo = { 0 };
 
-	if( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
+	if ( [self getFSSpec:&theFSSpec] && FSpGetFInfo( &theFSSpec, &theInfo) == noErr )
 	{
 		theInfo.fdLocation.h = aLocation.x;
 		theInfo.fdLocation.v = aLocation.y;

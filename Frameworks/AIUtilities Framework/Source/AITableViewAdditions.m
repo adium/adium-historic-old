@@ -25,8 +25,8 @@
     int			index = 0;
 
     enumerator = [[self tableColumns] objectEnumerator];
-    while((column = [enumerator nextObject])){
-        if(column == inColumn) return(index);
+    while ((column = [enumerator nextObject])) {
+        if (column == inColumn) return(index);
         index++;
     }
 
@@ -52,8 +52,8 @@
 	NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
 	[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 		
-	for(i = 0; i != bufSize; i++){
-		if((item = [sourceArray objectAtIndex:buf[i]])){
+	for (i = 0; i != bufSize; i++) {
+		if ((item = [sourceArray objectAtIndex:buf[i]])) {
 			[itemArray addObject:item];
 		}
 	}
@@ -70,8 +70,8 @@
     int			index = 0;
     
     enumerator = [[self tableColumns] objectEnumerator];
-    while((column = [enumerator nextObject])){
-        if([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return(index);
+    while ((column = [enumerator nextObject])) {
+        if ([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return(index);
         index++;
     }
 

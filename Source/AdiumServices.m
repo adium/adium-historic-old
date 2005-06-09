@@ -25,7 +25,7 @@
  * @brief Init
  */
 - (id)init {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		services = [[NSMutableDictionary alloc] init];
 	}
 	
@@ -70,10 +70,10 @@
 	NSEnumerator	*accountEnumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [accountEnumerator nextObject])){
+	while ((account = [accountEnumerator nextObject])) {
 		NSString	*serviceClass = [[account service] serviceClass];
 		
-		if(![serviceClasses containsObject:serviceClass]){
+		if (![serviceClasses containsObject:serviceClass]) {
 			[serviceClasses addObject:serviceClass];
 		}
 	}
@@ -83,8 +83,8 @@
 	NSEnumerator	*serviceEnumerator = [services objectEnumerator];
 	AIService		*service;
 
-	while((service = [serviceEnumerator nextObject])){
-		if([serviceClasses containsObject:[service serviceClass]]){
+	while ((service = [serviceEnumerator nextObject])) {
+		if ([serviceClasses containsObject:[service serviceClass]]) {
 			[activeServices addObject:service];
 		}
 	}
@@ -114,8 +114,8 @@
 	NSEnumerator	*enumerator = [services objectEnumerator];
 	AIService		*service;
 	
-	while((service = [enumerator nextObject])){
-		if([[service serviceID] isEqualToString:serviceID]) break;
+	while ((service = [enumerator nextObject])) {
+		if ([[service serviceID] isEqualToString:serviceID]) break;
 	}
 	
 	return(service);
@@ -129,8 +129,8 @@
 //	AIService		*service;
 //	NSMutableArray	*servicesArray = [NSMutableArray array];
 //	
-//	while((service = [enumerator nextObject])){
-//		if([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
+//	while ((service = [enumerator nextObject])) {
+//		if ([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
 //	}
 //	
 //	return(servicesArray);

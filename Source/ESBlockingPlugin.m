@@ -66,7 +66,7 @@
 			  [[adium menuController] currentContextMenuObject]);
 	
 	//Don't do groups
-	if([object isKindOfClass:[AIListContact class]]){
+	if ([object isKindOfClass:[AIListContact class]]) {
 		AIListContact	*contact = (AIListContact *)object;
 		BOOL			unblock;
 		NSString		*format;
@@ -76,32 +76,32 @@
 				  AILocalizedString(@"Are you sure you want to unblock %@?",nil) :
 				  AILocalizedString(@"Are you sure you want to block %@?",nil));
 
-		if(NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
+		if (NSRunAlertPanel([NSString stringWithFormat:format, [contact displayName]],
 						   @"",
 						   AILocalizedString(@"OK", nil),
 						   AILocalizedString(@"Cancel", nil),
-						   nil) == NSAlertDefaultReturn){
+						   nil) == NSAlertDefaultReturn) {
 			
 			//Handle metas
-			if([object isKindOfClass:[AIMetaContact class]]){
+			if ([object isKindOfClass:[AIMetaContact class]]) {
 				AIMetaContact *meta = (AIMetaContact *)object;
 									
 				//Enumerate over the various list contacts contained
 				NSEnumerator *enumerator = [[meta listContacts] objectEnumerator];
 				AIListContact *containedContact = nil;
 				
-				while((containedContact = [enumerator nextObject])){
+				while ((containedContact = [enumerator nextObject])) {
 					AIAccount <AIAccount_Privacy> *acct = [containedContact account];
-					if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+					if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 						[self _blockContact:contact unblock:unblock];
 					} else {
 						NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, containedContact);
 					}
 				}
-			}else{
+			} else {
 				AIListContact *contact = (AIListContact *)object;
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
-				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 					[self _blockContact:contact unblock:unblock];
 				} else {
 					NSLog(@"Account %@ does not support blocking (contact %@ not blocked on this account)", acct, contact);
@@ -117,64 +117,64 @@
 	BOOL unblock = [[menuItem title] isEqualToString:UNBLOCK_CONTACT];
 	BOOL anyAccount = NO;
 	
-	if(menuItem == blockContactMenuItem){
+	if (menuItem == blockContactMenuItem) {
 		object = [[adium contactController] selectedListObject];
-	}else{
+	} else {
 		object = [[adium menuController] currentContextMenuObject];
 	}
 	
 	//Don't do groups
-	if([object isKindOfClass:[AIListContact class]]){
+	if ([object isKindOfClass:[AIListContact class]]) {
 		//Handle metas
-		if([object isKindOfClass:[AIMetaContact class]]){
+		if ([object isKindOfClass:[AIMetaContact class]]) {
 			AIMetaContact *meta = (AIMetaContact *)object;
 								
 			//Enumerate over the various list contacts contained
 			NSEnumerator *enumerator = [[meta listContacts] objectEnumerator];
 			AIListContact *contact = nil;
 			
-			while((contact = [enumerator nextObject])){
+			while ((contact = [enumerator nextObject])) {
 				AIAccount <AIAccount_Privacy> *acct = [contact account];
-				if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]){
+				if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 					anyAccount = YES;
-					if([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+					if ([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
 						//title: "Unblock"; enabled
-						if(!unblock){
+						if (!unblock) {
 							[menuItem setTitle:UNBLOCK_CONTACT];
 						}
 						return YES;
 					}
 				}
 			}
-			if(anyAccount){
+			if (anyAccount) {
 				//title: "Block"; enabled
-				if(unblock){
+				if (unblock) {
 					[menuItem setTitle:BLOCK_CONTACT];
 				}
 				return YES;
-			}else{
+			} else {
 				//title: "Block"; disabled
 				[menuItem setTitle:BLOCK_CONTACT];
 				return NO;
 			}
-		}else{
+		} else {
 			AIListContact *contact = (AIListContact *)object;
 			AIAccount <AIAccount_Privacy> *acct = [contact account];
-			if([acct conformsToProtocol:@protocol(AIAccount_Privacy)]){
-				if([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+			if ([acct conformsToProtocol:@protocol(AIAccount_Privacy)]) {
+				if ([[acct listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
 					//title: "Unblock"; enabled
-					if(!unblock){
+					if (!unblock) {
 						[menuItem setTitle:UNBLOCK_CONTACT];
 					}
 					return YES;
-				}else{
+				} else {
 					//title: "Block"; enabled
-					if(unblock){
+					if (unblock) {
 						[menuItem setTitle:BLOCK_CONTACT];
 					}
 					return YES;
 				}
-			}else{
+			} else {
 				//title: "Block"; disabled
 				[menuItem setTitle:BLOCK_CONTACT];
 				return NO;
@@ -193,15 +193,15 @@
 	NSEnumerator *enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	AIAccount *account = nil;
 
-	while((account = [enumerator nextObject])){
-		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
+	while ((account = [enumerator nextObject])) {
+		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if(unblock){
-				if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+			if (unblock) {
+				if ([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
 					[privacyAccount removeListObject:contact fromPrivacyList:PRIVACY_DENY];
 				}
-			}else{
-				if(![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]){
+			} else {
+				if (![[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]]) {
 					[privacyAccount addListObject:contact toPrivacyList:PRIVACY_DENY];
 				}
 			}
@@ -216,10 +216,10 @@
 	
 	enumerator = [[[adium accountController] accountsCompatibleWithService:[contact service]] objectEnumerator];
 	
-	while((account = [enumerator nextObject])){
-		if([account conformsToProtocol:@protocol(AIAccount_Privacy)]){
+	while ((account = [enumerator nextObject])) {
+		if ([account conformsToProtocol:@protocol(AIAccount_Privacy)]) {
 			AIAccount <AIAccount_Privacy> *privacyAccount = (AIAccount <AIAccount_Privacy> *)account;
-			if([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult){
+			if ([[privacyAccount listObjectIDsOnPrivacyList:PRIVACY_DENY] containsObject:[contact UID]] == desiredResult) {
 				return YES;
 			}
 		}

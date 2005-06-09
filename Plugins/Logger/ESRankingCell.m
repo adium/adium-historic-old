@@ -29,7 +29,7 @@ static NSColor	*drawColor = nil;
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if(percentage != 0){
+	if (percentage != 0) {
 		//2 pixels left, 4 pixels right
 		cellFrame.size.width -= 6;
 		cellFrame.origin.x += 2;
@@ -41,7 +41,7 @@ static NSColor	*drawColor = nil;
 		//Draw in a horizontal area of cellFrame equal to (percentage) of it
 		cellFrame.size.width *= percentage;
 		
-		if(!drawColor) drawColor = [[[NSColor alternateSelectedControlColor] darkenAndAdjustSaturationBy:0.2] retain];
+		if (!drawColor) drawColor = [[[NSColor alternateSelectedControlColor] darkenAndAdjustSaturationBy:0.2] retain];
 
 		[drawColor set];
 		[[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:0] fill];

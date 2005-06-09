@@ -12,7 +12,7 @@
 //
 - (id)initWithFrame:(NSRect)frame
 {
-	if((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		//Default configure
 		bigImage    = nil;
 		toolbarItem = nil;
@@ -63,7 +63,7 @@
 	controlSize = inControlSize;
 
 	//Update our containing toolbar item's size so it will scale with us
-	switch(controlSize){
+	switch (controlSize) {
 		case NSRegularControlSize:
 			targetSize = NSMakeSize(32, 32);
 			break;
@@ -79,11 +79,11 @@
 	[toolbarItem setMaxSize:targetSize];
 
 	bigImageSize = [bigImage size];
-	if ((bigImageSize.width > targetSize.width) || (bigImageSize.height > targetSize.height)){
+	if ((bigImageSize.width > targetSize.width) || (bigImageSize.height > targetSize.height)) {
 		//If the image is bigger than our target, we should set a scaled image, not the bigImage itself
 		[super setImage:[bigImage imageByScalingToSize:targetSize]];
 		
-	}else{
+	} else {
 		[super setImage:bigImage];
 	}
 	
@@ -98,7 +98,7 @@
 //Big Image (This is the one that should be called to configure this button)
 - (void)setImage:(NSImage *)inImage
 {
-	if(bigImage != inImage){
+	if (bigImage != inImage) {
 	   [bigImage release];
 	   bigImage = [inImage retain];
     }
@@ -140,7 +140,7 @@
 	[super drawRect:rect];
 
 	//Draw the popup arrow
-	if(drawsArrow){
+	if (drawsArrow) {
 		[[[NSColor blackColor] colorWithAlphaComponent:0.75] set];
 		[[self popUpArrowPath] fill];
 	}
@@ -149,16 +149,16 @@
 //Path for the little popup arrow (Cached)
 - (NSBezierPath *)popUpArrowPath
 {
-	if(!arrowPath){
+	if (!arrowPath) {
 		NSRect	frame = [self frame];
 		
 		arrowPath = [[NSBezierPath bezierPath] retain];
 		
-		if(controlSize == NSRegularControlSize){
+		if (controlSize == NSRegularControlSize) {
 			[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-6, NSHeight(frame)-3)];
 			[arrowPath relativeLineToPoint:NSMakePoint( 6, 0)];
 			[arrowPath relativeLineToPoint:NSMakePoint(-3, 3)];
-		}else if(controlSize == NSSmallControlSize){
+		} else if (controlSize == NSSmallControlSize) {
 			[arrowPath moveToPoint:NSMakePoint(NSWidth(frame)-4, NSHeight(frame)-3)];
 			[arrowPath relativeLineToPoint:NSMakePoint( 4, 0)];
 			[arrowPath relativeLineToPoint:NSMakePoint(-2, 3)];
@@ -177,10 +177,10 @@
 {
 	NSMenu	*menu = [self menu];
 	
-	if(!menu){
+	if (!menu) {
 		[super mouseDown:theEvent];
-	}else{
-		if([self isEnabled]){
+	} else {
+		if ([self isEnabled]) {
 			[self highlight:YES];
 
 			NSPoint point = [self convertPoint:[self bounds].origin toView:nil];

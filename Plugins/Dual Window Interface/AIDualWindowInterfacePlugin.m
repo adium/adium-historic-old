@@ -87,7 +87,7 @@
 	AIMessageViewController 	*messageView = nil;
 	
 	//Create the messasge tab (if necessary)
-	if(!messageTab){
+	if (!messageTab) {
 		container = [self openContainerWithID:containerID name:containerID];
 		messageView = [AIMessageViewController messageViewControllerForChat:chat];
 
@@ -104,7 +104,7 @@
 	
 	//Open the container window.  We wait until after the chat has been added to the container
 	//before making it visible so window opening looks cleaner.
-	if(container && !applicationIsHidden && ![[container window] isVisible]){
+	if (container && !applicationIsHidden && ![[container window] isVisible]) {
 		[container showWindowInFront:!([[adium interfaceController] activeChat])];
 	}
 	
@@ -128,7 +128,7 @@
 - (void)setActiveChat:(AIChat *)inChat
 {
 	AIMessageTabViewItem *messageTab = [inChat statusObjectForKey:@"MessageTabViewItem"];
-	if(messageTab) [messageTab makeActive:nil];
+	if (messageTab) [messageTab makeActive:nil];
 }
 
 //Move a chat
@@ -137,14 +137,14 @@
 	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
 	AIMessageWindowController	*container = [containers objectForKey:containerID];
 
-	if([messageTab container] == container){
+	if ([messageTab container] == container) {
 		[container moveTabViewItem:messageTab toIndex:index];
-	}else{
+	} else {
 		[messageTab retain];
 		[[messageTab container] removeTabViewItem:messageTab silent:YES];
 
 		//Create the container if necessary
-		if(!container){
+		if (!container) {
 			container = [self openContainerWithID:containerID name:containerID];
 		}
 
@@ -163,7 +163,7 @@
 	NSEnumerator				*containerEnumerator = [containers objectEnumerator];
 	AIMessageWindowController	*container;
 	
-	while((container = [containerEnumerator nextObject])){
+	while ((container = [containerEnumerator nextObject])) {
 		[openContainersAndChats addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 			[container containerID], @"ID",
 			[container containedChats], @"Content",
@@ -187,7 +187,7 @@
 	NSEnumerator				*containerEnumerator = [containers objectEnumerator];
 	AIMessageWindowController	*container;
 	
-	while((container = [containerEnumerator nextObject])){
+	while ((container = [containerEnumerator nextObject])) {
 		[openContainersAndChats addObjectsFromArray:[container containedChats]];
 	}
 	
@@ -217,12 +217,12 @@
 - (id)openContainerWithID:(NSString *)containerID name:(NSString *)containerName
 {
 	AIMessageWindowController	*container = [containers objectForKey:containerID];
-	if(!container){
+	if (!container) {
 		container = [AIMessageWindowController messageWindowControllerForInterface:self withID:containerID name:containerName];
 		[containers setObject:container forKey:containerID];
 		
 		//If Adium is hidden, remember to open this container later
-		if(applicationIsHidden) [delayedContainerShowArray addObject:container];
+		if (applicationIsHidden) [delayedContainerShowArray addObject:container];
 	}
 	
 	return(container);
@@ -238,7 +238,7 @@
 - (void)containerDidClose:(AIMessageWindowController *)container
 {
 	NSString	*key = [[containers allKeysForObject:container] lastObject];
-	if(key) [containers removeObjectForKey:key];
+	if (key) [containers removeObjectForKey:key];
 }
 
 //Adium hid
@@ -255,7 +255,7 @@
 
 	//Open any containers that should have opened while we were hidden
 	enumerator = [delayedContainerShowArray objectEnumerator];
-	while((container = [enumerator nextObject])) [container showWindowInFront:YES];
+	while ((container = [enumerator nextObject])) [container showWindowInFront:YES];
 
 	[delayedContainerShowArray removeAllObjects];
 	applicationIsHidden = NO;
@@ -272,7 +272,7 @@
 {
 	AIMessageWindowController 	*oldMessageWindow = [tabViewItem container];
 	
-	if(oldMessageWindow != newMessageWindow){
+	if (oldMessageWindow != newMessageWindow) {
 		//Get the frame of the source window (We must do this before removing the tab, since removing a tab may
 		//destroy the source window)
 		NSRect  oldMessageWindowFrame = [[oldMessageWindow window] frame];
@@ -283,7 +283,7 @@
 		[oldMessageWindow removeTabViewItem:tabViewItem silent:YES];
 		
 		//Spawn a new window (if necessary)
-		if(!newMessageWindow){
+		if (!newMessageWindow) {
 			NSRect          newFrame;
 			
 			//Default to the width of the source container, and the drop point
@@ -296,7 +296,7 @@
 			newMessageWindow = [self openContainerWithID:[NSString stringWithFormat:@"%@:%i", ADIUM_UNIQUE_CONTAINER, uniqueContainerNumber++]
 													name:@"Messages"];
 			
-			if(newFrame.origin.x == -1 && newFrame.origin.y == -1){
+			if (newFrame.origin.x == -1 && newFrame.origin.y == -1) {
 				NSRect curFrame = [[newMessageWindow window] frame];
 				newFrame.origin = curFrame.origin;				
 			}

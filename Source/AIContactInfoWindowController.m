@@ -63,7 +63,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 + (id)showInfoWindowForListObject:(AIListObject *)listObject
 {
 	static BOOL didLoadPanes = NO;
-	if(!didLoadPanes){
+	if (!didLoadPanes) {
 		//Install our panes
 		[AIContactAccountsPane contactInfoPane];
 		[AIContactProfilePane contactInfoPane];
@@ -74,7 +74,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 
 	//Create the window
-	if(!sharedContactInfoInstance){
+	if (!sharedContactInfoInstance) {
 		sharedContactInfoInstance = [[self alloc] initWithWindowNibName:CONTACT_INFO_NIB];
 	}
 
@@ -83,7 +83,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Find the highest-up metaContact so our info is accurate
 
 	AIListObject	*containingObject;
-	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]){
+	while ([(containingObject = [listObject containingObject]) isKindOfClass:[AIMetaContact class]]) {
 		listObject = containingObject;
 	}
 
@@ -96,7 +96,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Close the info window
 + (void)closeInfoWindow
 {
-	if(sharedContactInfoInstance){
+	if (sharedContactInfoInstance) {
 		[sharedContactInfoInstance closeWindow:nil];
 	}
 }
@@ -142,7 +142,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Select the previously selected category
 	selectedTab = [[[adium preferenceController] preferenceForKey:KEY_INFO_SELECTED_CATEGORY
 															group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	if(selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
+	if (selectedTab < 0 || selectedTab >= [tabView_category numberOfTabViewItems]) selectedTab = 0;
 
 	tabViewItem = [tabView_category tabViewItemAtIndex:selectedTab];
 
@@ -168,11 +168,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 {
 	NSEnumerator	*enumerator = [[tabView_category tabViewItems] objectEnumerator];
 	NSTabViewItem	*tabViewItem;
-	while((tabViewItem = [enumerator nextObject])){
+	while ((tabViewItem = [enumerator nextObject])) {
 		NSString	*label = nil;
 		int			identifier = [[tabViewItem identifier] intValue];
 
-		switch(identifier){
+		switch (identifier) {
 			case AIInfo_Profile:
 				label = AILocalizedString(@"Info","short form of tab view item title for Contact Info window's first tab");
 				break;
@@ -204,7 +204,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 	//Close all open panes
 	enumerator = [loadedPanes objectEnumerator];
-	while((pane = [enumerator nextObject])){
+	while ((pane = [enumerator nextObject])) {
 		[pane closeView];
 	}
 
@@ -220,7 +220,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if (tabView == tabView_category){
+	if (tabView == tabView_category) {
 		return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
 	}
 
@@ -230,14 +230,14 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if (tabView == tabView_category){
+	if (tabView == tabView_category) {
 		int	identifier = [[tabViewItem identifier] intValue];
 
 		//Take focus away from any controls to ensure that they register changes and save
 		//	[[self window] makeFirstResponder:tabView_category];
 		[[self window] makeFirstResponder:nil];
 
-		switch(identifier){
+		switch (identifier) {
 			case AIInfo_Profile:
 				[view_Profile setPanes:[self _panesInCategory:AIInfo_Profile]];
 				break;
@@ -253,7 +253,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		}
 
 		//Update the selected toolbar item (10.3 or higher)
-		if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+		if ([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]) {
 			[[[self window] toolbar] setSelectedItemIdentifier:[tabViewItem identifier]];
 		}
 
@@ -270,8 +270,8 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	AIContactInfoPane	*pane;
 
 	//Get the panes for this category
-	while((pane = [enumerator nextObject])){
-		if([pane contactInfoCategory] == inCategory){
+	while ((pane = [enumerator nextObject])) {
+		if ([pane contactInfoCategory] == inCategory) {
 			[paneArray addObject:pane];
 			[loadedPanes addObject:pane];
 		}
@@ -287,13 +287,13 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (void)selectionChanged:(NSNotification *)notification
 {
 	AIListObject	*object = [[adium contactController] selectedListObject];
-	if(object) [self configureForListObject:[[adium contactController] selectedListObject]];
+	if (object) [self configureForListObject:[[adium contactController] selectedListObject]];
 }
 
 //Change the list object
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	if(inObject == nil || displayedObject != inObject){
+	if (inObject == nil || displayedObject != inObject) {
 		NSImage		*userIcon;
 		NSSize		userIconSize, imageView_userIconSize;
 		BOOL		useDisplayName = NO;
@@ -303,57 +303,57 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 		displayedObject = [inObject retain];
 
 		//Update our window title
-		if(inObject){
+		if (inObject) {
 			[[self window] setTitle:[NSString stringWithFormat:AILocalizedString(@"%@'s Info",nil),[inObject displayName]]];
-		}else{
+		} else {
 			[[self window] setTitle:AILocalizedString(@"Contact Info",nil)];
 		}
 
 		//Service
-		if([inObject isKindOfClass:[AIListContact class]]){
+		if ([inObject isKindOfClass:[AIListContact class]]) {
 			NSString	*displayServiceID;
-			if ([inObject isKindOfClass:[AIMetaContact class]]){
-				if ([[(AIMetaContact *)inObject listContacts] count] > 1){
+			if ([inObject isKindOfClass:[AIMetaContact class]]) {
+				if ([[(AIMetaContact *)inObject listContacts] count] > 1) {
 					displayServiceID = META_SERVICE_STRING;
 					useDisplayName = YES;
-				}else{
+				} else {
 					displayServiceID = [[[(AIMetaContact *)inObject preferredContact] service] shortDescription];
 				}
 
-			}else{
+			} else {
 				displayServiceID = [[inObject service] shortDescription];
 			}
 
 			[textField_service setStringValue:(displayServiceID ? displayServiceID : @"")];
 
-		}else if([inObject isKindOfClass:[AIListGroup class]]){
+		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
 			[textField_service setLocalizedString:AILocalizedString(@"Group",nil)];
-		}else{
+		} else {
 			[textField_service setStringValue:@""];
 		}
 
 		//Account name
-		if (inObject){
+		if (inObject) {
 			NSString	*formattedUID;
 
-			if (!useDisplayName && (formattedUID = [inObject formattedUID])){
+			if (!useDisplayName && (formattedUID = [inObject formattedUID])) {
 				[textField_accountName setStringValue:formattedUID];
-			}else{
+			} else {
 				NSString	*displayName;
 
-				if((displayName = [inObject displayName])){
+				if ((displayName = [inObject displayName])) {
 					[textField_accountName setStringValue:displayName];
-				}else{
+				} else {
 					[textField_accountName setStringValue:[inObject UID]];
 				}
 			}
 
-		}else{
+		} else {
 			[textField_accountName setStringValue:@""];
 		}
 
 		//User Icon
-		if(!(userIcon = [displayedObject userIcon])){
+		if (!(userIcon = [displayedObject userIcon])) {
 			userIcon = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}
 
@@ -381,11 +381,11 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //Configure our views
 - (void)configurePanes
 {
-	if(displayedObject){
+	if (displayedObject) {
 		NSEnumerator		*enumerator = [loadedPanes objectEnumerator];
 		AIContactInfoPane	*pane;
 
-		while((pane = [enumerator nextObject])){
+		while ((pane = [enumerator nextObject])) {
 			[pane configureForListObject:displayedObject];
 		}
 	}
@@ -395,21 +395,21 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 // ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
 - (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
-	if (displayedObject){
+	if (displayedObject) {
 		[displayedObject setUserIconData:imageData];
 	}
 }
 
 - (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
 {
-	if (displayedObject){
+	if (displayedObject) {
 		NSImage *userImage;
 
 		//Remove the preference
 		[displayedObject setUserIconData:nil];
 
 		//User Icon
-		if(!(userImage = [displayedObject userIcon])){
+		if (!(userImage = [displayedObject userIcon])) {
 			userImage = [NSImage imageNamed:@"DefaultIcon" forClass:[self class]];
 		}
 		[imageView_userIcon setImage:userImage];
@@ -441,20 +441,20 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	AIListObject	*listObject = [[adium contactController] parentContactForListObject:displayedObject];
 
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
-		([[(AIMetaContact *)listObject listContacts] count] > 1)){
+		([[(AIMetaContact *)listObject listContacts] count] > 1)) {
 		[contactListController setContactListRoot:listObject];
 		[drawer_metaContact open];
 
 		NSRect	outlineFrame = [contactListView frame];
 		int		totalHeight = [contactListView totalHeight];
 
-		if(outlineFrame.size.height != totalHeight){
+		if (outlineFrame.size.height != totalHeight) {
 			outlineFrame.size.height = totalHeight;
 			[contactListView setFrame:outlineFrame];
 			[contactListView setNeedsDisplay:YES];
 		}
 
-	}else{
+	} else {
 		[drawer_metaContact close];
 		[contactListController setContactListRoot:nil];
 	}
@@ -472,7 +472,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	AIMetaContact	*contactListRoot = (AIMetaContact *)[contactListController contactListRoot];
 
 	enumerator = [[contactListView arrayOfSelectedItems] objectEnumerator];
-	while ((aListObject = [enumerator nextObject])){
+	while ((aListObject = [enumerator nextObject])) {
 		[[adium contactController] removeAllListObjectsMatching:aListObject
 												fromMetaContact:contactListRoot];
 	}

@@ -72,7 +72,7 @@ struct message
 	NDRunLoopMessenger		* theCurentRunLoopMessenger;
 	
 	theCurentRunLoopMessenger = [self runLoopMessengerForThread:[NSThread currentThread]];
-	if( theCurentRunLoopMessenger == nil )
+	if ( theCurentRunLoopMessenger == nil )
 		theCurentRunLoopMessenger = [[NDRunLoopMessenger alloc] init];
 
 	return theCurentRunLoopMessenger;
@@ -83,7 +83,7 @@ struct message
   */
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		NSMutableDictionary		* theThreadDictionary;
 		id						theOneForThisThread;
@@ -92,7 +92,7 @@ struct message
 		messageRetry = DEFAULT_PORT_MESSAGE_RETRY;
 		
 		theThreadDictionary = [[NSThread currentThread] threadDictionary];
-		if((theOneForThisThread = [theThreadDictionary objectForKey:kThreadDictionaryKey]))
+		if ((theOneForThisThread = [theThreadDictionary objectForKey:kThreadDictionaryKey]))
 		{
 			[self release];
 			self = theOneForThisThread;
@@ -148,7 +148,7 @@ struct message
 {
 	NSThread		* thread = [notification object];
 
-	if( [[thread threadDictionary] objectForKey:kThreadDictionaryKey] == self )
+	if ( [[thread threadDictionary] objectForKey:kThreadDictionaryKey] == self )
 	{
 		[[thread threadDictionary] removeObjectForKey:kThreadDictionaryKey];
 		[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -162,7 +162,7 @@ struct message
   */
 - (void)portDidBecomeInvalid:(NSNotification *)notification
 {
-	if( [notification object] == port )
+	if ( [notification object] == port )
 	{
 		[[[NSThread currentThread] threadDictionary] removeObjectForKey:kThreadDictionaryKey];
 		[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -262,7 +262,7 @@ struct message
 	[theInvocation setTarget:aTarget];
 	[self messageInvocation: theInvocation withResult:aFlag];
 
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 
 	return theResult;
@@ -283,7 +283,7 @@ struct message
 	[theInvocation setArgument:&anObject atIndex:2];
 	[self messageInvocation: theInvocation withResult:aFlag];
 
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 
 	return theResult;
@@ -305,7 +305,7 @@ struct message
 	[theInvocation setArgument:&anotherObject atIndex:3];
 	[self messageInvocation:theInvocation withResult:aFlag];
 
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 	
 	return theResult;
@@ -328,7 +328,7 @@ struct message
 	[theInvocation setArgument:&aThirdObject atIndex:4];
 	[self messageInvocation:theInvocation withResult:aFlag];
 	
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 	
 	return theResult;
@@ -350,7 +350,7 @@ struct message
 	[theInvocation setArgument:&aFifthObject atIndex:6];
 	[self messageInvocation:theInvocation withResult:aFlag];
 	
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 	
 	return theResult;
@@ -371,7 +371,7 @@ struct message
 	[theInvocation setArgument:&aFourthObject atIndex:5];
 	[self messageInvocation:theInvocation withResult:aFlag];
 	
-	if( aFlag )
+	if ( aFlag )
 		[theInvocation getReturnValue:&theResult];
 	
 	return theResult;
@@ -425,7 +425,7 @@ struct message
 	theMessage->resultLock = aResultFlag ? [[NSConditionLock alloc] initWithCondition:NO] : nil;
 	[self sendData:theData];
 
-	if( aResultFlag )
+	if ( aResultFlag )
 	{
 		[theMessage->resultLock lockWhenCondition:YES];
 		[theMessage->resultLock unlock];
@@ -465,7 +465,7 @@ struct message
 	insideMessageInvocation = YES;
 	[theMessage->invocation invoke];
 	
-	if( theMessage->resultLock )
+	if ( theMessage->resultLock )
 	{
 		[theMessage->resultLock lock];
 		[theMessage->resultLock unlockWithCondition:YES];
@@ -491,30 +491,30 @@ struct message
 {
 	NSPortMessage		* thePortMessage;
 
-	if( port )
+	if ( port )
 	{
 		thePortMessage = [[NSPortMessage alloc] initWithSendPort:port receivePort:nil components:[NSArray arrayWithObject:aData]];
 		
 		//Ensure that messages are delivered in the order sent, so if we have queued messages, queue this new mesage, too
-		if (queuedPortMessageTimer){
-			if (!queuedPortMessageArray){
+		if (queuedPortMessageTimer) {
+			if (!queuedPortMessageArray) {
 				queuedPortMessageArray = [[NSMutableArray alloc] init];
 			}
 			
 			[queuedPortMessageArray addObject:thePortMessage];
-		}else{
+		} else {
 			NSDate	* sendBeforeDate = (messageRetryTimeout ? 
 										[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
 										[NSDate distantFuture]);
-			if( ![thePortMessage sendBeforeDate:sendBeforeDate] ){
+			if ( ![thePortMessage sendBeforeDate:sendBeforeDate] ) {
 				//If the message can't be sent before the timeout, add it to a queue array and ensure a timer is firing to send it later
-				if (!queuedPortMessageArray){
+				if (!queuedPortMessageArray) {
 					queuedPortMessageArray = [[NSMutableArray alloc] init];
 				}
 				
 				[queuedPortMessageArray addObject:thePortMessage];
 				
-				if (!queuedPortMessageTimer){
+				if (!queuedPortMessageTimer) {
 					queuedPortMessageTimer = [[NSTimer scheduledTimerWithTimeInterval:messageRetry
 																			   target:self 
 																			 selector:@selector(sendQueuedDataTimer:) 
@@ -536,17 +536,17 @@ struct message
 - (void)sendQueuedDataTimer:(NSTimer *)inTimer
 {
 	//If we are inside a message invocation, do nothing; we'll be given another shot when the timer fires again
-	if(!insideMessageInvocation){
-		if ([queuedPortMessageArray count]){
+	if (!insideMessageInvocation) {
+		if ([queuedPortMessageArray count]) {
 			NSPortMessage	* thePortMessage = [queuedPortMessageArray objectAtIndex:0];
 			NSDate			* sendBeforeDate = (messageRetryTimeout ? 
 												[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
 												[NSDate distantFuture]);
 
-			if( [thePortMessage sendBeforeDate:sendBeforeDate] ){
+			if ( [thePortMessage sendBeforeDate:sendBeforeDate] ) {
 				[queuedPortMessageArray removeObjectAtIndex:0];
 			}
-		}else{
+		} else {
 			[queuedPortMessageArray release]; queuedPortMessageArray = nil;
 			[queuedPortMessageTimer invalidate]; [queuedPortMessageTimer release]; queuedPortMessageTimer = nil;
 		}
@@ -566,7 +566,7 @@ struct message
   */
 - (id)_initWithTarget:(id)aTarget withOwner:(NDRunLoopMessenger *)anOwner withResult:(BOOL)aFlag
 {
-	if( aTarget && anOwner )
+	if ( aTarget && anOwner )
 	{
 		targetObject = [aTarget retain];
 		owner = [anOwner retain];

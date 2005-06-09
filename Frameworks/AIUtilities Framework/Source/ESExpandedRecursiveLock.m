@@ -13,7 +13,7 @@
 
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		locksByCurrentOwner = 0;
 	}
 	return(self);
@@ -34,7 +34,7 @@
 {
 	BOOL obtainedLock;
 	
-	if((obtainedLock = [super lockBeforeDate:limit])){
+	if ((obtainedLock = [super lockBeforeDate:limit])) {
 		locksByCurrentOwner++;
 	}
 	
@@ -45,7 +45,7 @@
 {
 	BOOL obtainedLock;
 	
-	if((obtainedLock = [super tryLock])){
+	if ((obtainedLock = [super tryLock])) {
 		locksByCurrentOwner++;
 	}
 	
@@ -68,7 +68,7 @@
 	int i;
 	int initialNumberOfLocksByCurrentOwner = locksByCurrentOwner;
 	
-	for (i = 0; i < initialNumberOfLocksByCurrentOwner; i++){
+	for (i = 0; i < initialNumberOfLocksByCurrentOwner; i++) {
 		[self unlock];
 	}
 }

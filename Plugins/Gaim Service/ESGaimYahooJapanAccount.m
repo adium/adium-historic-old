@@ -26,7 +26,7 @@
 	
 	//Host (server) - Yahoo! Japan uses a different server preference key than other accounts, so set that here
 	hostName = [self host];
-	if (hostName && [hostName length]){
+	if (hostName && [hostName length]) {
 		gaim_account_set_string(account, "serverjp", [hostName UTF8String]);
 	}
 

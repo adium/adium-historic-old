@@ -37,13 +37,13 @@
 //Init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		chat = nil;
 		delegate = nil;
 		
 		NSString	*nibName = [self nibName];
-		if(nibName)
+		if (nibName)
 		{
 			[NSBundle loadNibNamed:nibName owner:self];
 		}
@@ -84,10 +84,10 @@
 										 onAccount:inAccount
 								  chatCreationInfo:inInfo];
 	
-	if ([contactsToInvite count]){
+	if ([contactsToInvite count]) {
 		[chat setStatusObject:contactsToInvite forKey:@"ContactsToInvite" notify:NotifyNever];
 		
-		if ([invitationMessage length]){
+		if ([invitationMessage length]) {
 			[chat setStatusObject:invitationMessage forKey:@"InitialInivitationMessage" notify:NotifyNever];
 		}
 		
@@ -100,12 +100,12 @@
 {
 	NSArray *contacts = [chat statusObjectForKey:@"ContactsToInvite"];
 	
-	if(contacts && [contacts count]) {
+	if (contacts && [contacts count]) {
 		NSMutableDictionary	*inviteUsersDict;
 		NSString			*initialInvitationMessage = [chat statusObjectForKey:@"InitialInivitationMessage"];
 		
 		inviteUsersDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithInt:0],@"i",contacts,@"ContactsToInvite",nil];
-		if (initialInvitationMessage){
+		if (initialInvitationMessage) {
 			[inviteUsersDict setObject:initialInvitationMessage
 								forKey:@"InitialInivitationMessage"];
 		}
@@ -141,7 +141,7 @@
 	
 	i++;
 	[userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-	if(i >= count) {
+	if (i >= count) {
 		[inTimer invalidate];
 	}
 }
@@ -152,11 +152,11 @@
 	NSMutableArray	*contactsArray = nil;
 	NSArray			*contactNames;
 	
-	if ([namesSeparatedByCommas length]){
+	if ([namesSeparatedByCommas length]) {
 		
 		contactNames = [namesSeparatedByCommas componentsSeparatedByString:@","];
 		
-		if ([contactNames count]){
+		if ([contactNames count]) {
 			NSEnumerator	*enumerator;
 			NSString		*aContactName, *UID;
 			AIListContact	*listContact;
@@ -164,18 +164,18 @@
 			contactsArray = [NSMutableArray array];
 			
 			enumerator = [contactNames objectEnumerator];		
-			while ((aContactName = [enumerator nextObject])){
+			while ((aContactName = [enumerator nextObject])) {
 								
 				UID = [[inAccount service] filterUID:[self impliedCompletion:aContactName] removeIgnoredCharacters:YES];
 				
 				//If the service is not case sensitive, compact the string before proceeding so our UID will be correct
-				if (![[inAccount service] caseSensitive]){
+				if (![[inAccount service] caseSensitive]) {
 					UID = [UID compactedString];
 				}
 				
-				if((listContact = [[adium contactController] contactWithService:[inAccount service] 
+				if ((listContact = [[adium contactController] contactWithService:[inAccount service] 
 																	   account:inAccount 
-																		   UID:UID])){
+																		   UID:UID])) {
 					[contactsArray addObject:listContact];
 				}
 			}
@@ -193,16 +193,16 @@
 	AIListContact *listContact = nil;
 	AIListObject *listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueID];
 	
-	if( listObject ) {
-		if( [listObject isKindOfClass:[AIMetaContact class]] ) {
+	if ( listObject ) {
+		if ( [listObject isKindOfClass:[AIMetaContact class]] ) {
 			listContact = [(AIMetaContact *)listObject preferredContactWithService:service];
-		} else if( [listObject isKindOfClass:[AIListContact class]] ) {
-			if([[listObject service] isEqualTo:service]) {
+		} else if ( [listObject isKindOfClass:[AIListContact class]] ) {
+			if ([[listObject service] isEqualTo:service]) {
 				listContact = (AIListContact *)listObject;
 			}
 		}				
 		
-		if( listContact && [listContact online] ) {
+		if ( listContact && [listContact online] ) {
 			return listContact;
 		}
 	}
@@ -221,7 +221,7 @@
 	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]]) {
 		
 		// If so, get the ID's
-		if ([[pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]){
+		if ([[pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]) {
 			NSArray			*dragItemsUniqueIDs;
 			NSString		*uniqueID;
 			NSEnumerator	*enumerator;
@@ -229,12 +229,12 @@
 			dragItemsUniqueIDs = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
 			
 			enumerator = [dragItemsUniqueIDs objectEnumerator];
-			while ((uniqueID = [enumerator nextObject])){
+			while ((uniqueID = [enumerator nextObject])) {
 				
 				// Is there a contact with our service?
-				if( [self validContact:uniqueID withService:[account service]] ) {
+				if ( [self validContact:uniqueID withService:[account service]] ) {
 					
-					//if([[view window] firstResponder] != textField_inviteUsers)
+					//if ([[view window] firstResponder] != textField_inviteUsers)
 					//	[[view window] makeFirstResponder:textField_inviteUsers];
 					return NSDragOperationGeneric;
 				}
@@ -256,7 +256,7 @@
 	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]]) {
 		
 		// If so, get the unique ID's
-		if ([[pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]){
+		if ([[pboard availableTypeFromArray:[NSArray arrayWithObject:@"AIListObjectUniqueIDs"]] isEqualToString:@"AIListObjectUniqueIDs"]) {
 			NSArray			*dragItemsUniqueIDs;
 			NSString		*uniqueID;
 			AIListObject	*listObject;
@@ -266,16 +266,16 @@
 			dragItemsUniqueIDs = [pboard propertyListForType:@"AIListObjectUniqueIDs"];
 			
 			enumerator = [dragItemsUniqueIDs objectEnumerator];
-			while ((uniqueID = [enumerator nextObject])){
+			while ((uniqueID = [enumerator nextObject])) {
 				NSString *oldValue = [theField stringValue];
 				listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueID];
 				
 				// Get contacts with our service
 				// (May not be necessary, as we reject ungood contacts in the dragging entered phase)
-				if((listContact = [self validContact:uniqueID withService:[account service]])) {
+				if ((listContact = [self validContact:uniqueID withService:[account service]])) {
 					
 					// Add a comma for prettiness if need be
-					if( [oldValue length] && ![[oldValue substringFromIndex:([oldValue length]-1)] isEqualToString:@","] ) {
+					if ( [oldValue length] && ![[oldValue substringFromIndex:([oldValue length]-1)] isEqualToString:@","] ) {
 						oldValue = [oldValue stringByAppendingString:@", "];
 						[theField setStringValue:oldValue];
 					}

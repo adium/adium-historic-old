@@ -29,7 +29,7 @@
 - (void)installPlugin
 {
 	//This plugin should ONLY be used as a fallback if webkit isn't available for some reason.
-	if(![NSApp isWebKitAvailable]){
+	if (![NSApp isWebKitAvailable]) {
 		//Register ourself as a message list view plugin
 		[[adium interfaceController] registerMessageViewPlugin:self];
 		
@@ -39,7 +39,7 @@
 		
 		//Set up a time stamp format based on this user's locale
 		NSString    *format = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_STANDARD_MESSAGE_DISPLAY] objectForKey:KEY_SMV_TIME_STAMP_FORMAT];
-		if(!format || [format length] == 0){
+		if (!format || [format length] == 0) {
 			[[adium preferenceController] setPreference:[NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO]
 												 forKey:KEY_SMV_TIME_STAMP_FORMAT
 												  group:PREF_GROUP_STANDARD_MESSAGE_DISPLAY];

@@ -97,7 +97,7 @@
 	AIBookmarksImporterController *bookmarksImporterController = [AIBookmarksImporterController sharedController];
 
 	//Unregister the existing toolbar item first
-	if(toolbarItem) {
+	if (toolbarItem) {
 		[toolbarController unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 		[toolbarItem release]; toolbarItem = nil;
 	}

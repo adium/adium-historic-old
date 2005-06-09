@@ -42,7 +42,7 @@
 
 	//Invalidate any outstanding delayed status changes
 	enumerator = [delayedStatusTimers objectEnumerator];
-	while((timer = [enumerator nextObject])){
+	while ((timer = [enumerator nextObject])) {
 		[timer invalidate];
 	}
 	[delayedStatusTimers release]; delayedStatusTimers = nil;
@@ -60,21 +60,21 @@
 //Quickly set a status key for this object
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
-	if(key){
+	if (key) {
 		BOOL changedStatusDict = YES;
 		
-		if(value){
+		if (value) {
 			[statusDictionary setObject:value forKey:key];
-		}else{
+		} else {
 			//If we are already nil and being told to set nil, we don't need to do anything at all
-			if ([statusDictionary objectForKey:key]){
+			if ([statusDictionary objectForKey:key]) {
 				[statusDictionary removeObjectForKey:key];
-			}else{
+			} else {
 				changedStatusDict = NO;
 			}
 		}
 		
-		if (changedStatusDict){
+		if (changedStatusDict) {
 			[self object:self didSetStatusObject:value forKey:key notify:notify];
 		}
 	}
@@ -83,7 +83,7 @@
 //Perform a status change after a delay
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
-	if(!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
+	if (!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
 	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
 														  target:self
 														selector:@selector(_applyDelayedStatus:)
@@ -112,7 +112,7 @@
 	[self setStatusObject:object forKey:key notify:NotifyNow];
 	
 	[delayedStatusTimers removeObject:inTimer];
-	if([delayedStatusTimers count] == 0){
+	if ([delayedStatusTimers count] == 0) {
 		[delayedStatusTimers release]; delayedStatusTimers = nil;
 	}
 }
@@ -120,7 +120,7 @@
 //Nofity of any queued status changes
 - (void)notifyOfChangedStatusSilently:(BOOL)silent
 {
-    if(changedStatusKeys && [changedStatusKeys count]) {
+    if (changedStatusKeys && [changedStatusKeys count]) {
 		//Clear changedStatusKeys in case this status change invokes another, and we re-enter this code
 		NSSet	*keys = changedStatusKeys;
 		changedStatusKeys = nil;
@@ -207,8 +207,8 @@
 {
 	//If the status object changed for the same object receiving this method, notification is called for.
 	//Otherwise, it's just an informative message which shouldn't be triggering notification.
-	if (inObject == self){
-		switch (notify){
+	if (inObject == self) {
+		switch (notify) {
 			case NotifyNow: {
 				//Send out the notification now
 				[self didModifyStatusKeys:[NSSet setWithObject:key]
@@ -217,7 +217,7 @@
 			}
 			case NotifyLater: {
 				//Add this key to changedStatusKeys for later notification 
-				if(!changedStatusKeys) changedStatusKeys = [[NSMutableSet alloc] init];
+				if (!changedStatusKeys) changedStatusKeys = [[NSMutableSet alloc] init];
 				[changedStatusKeys addObject:key];
 				break;
 			}
@@ -236,7 +236,7 @@
 {
     AIMutableOwnerArray	*array = [displayDictionary objectForKey:inKey];
 	
-    if(!array){
+    if (!array) {
         array = [[AIMutableOwnerArray alloc] init];
 //		[array setDelegate:self];
         [displayDictionary setObject:array forKey:inKey];
@@ -252,9 +252,9 @@
 {
 	AIMutableOwnerArray	*array;
 	
-	if (create){
+	if (create) {
 		array = [self displayArrayForKey:inKey];
-	}else{
+	} else {
 		array = [displayDictionary objectForKey:inKey];
 	}
 	

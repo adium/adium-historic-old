@@ -36,7 +36,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		themeDict = nil;
 		colorKeyArray = [[NSArray arrayWithObjects:
@@ -80,7 +80,7 @@
 
 - (void)setThemeDict:(NSDictionary *)inDict
 {
-	if(inDict != themeDict){
+	if (inDict != themeDict) {
 		[themeDict release];
 		themeDict = [inDict retain];
 	}
@@ -99,7 +99,7 @@
 	[[NSColor whiteColor] set];
 	[NSBezierPath fillRect:cellFrame];
 	
-	while((key = [enumerator nextObject])){
+	while ((key = [enumerator nextObject])) {
 		[[[themeDict objectForKey:key] representedColor] set];
 		[NSBezierPath fillRect:segmentRect];
 		segmentRect.origin.x += segmentRect.size.width;

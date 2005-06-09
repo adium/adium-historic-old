@@ -102,7 +102,7 @@
 
 //Our containing window
 - (void)setContainer:(AIMessageWindowController *)inContainer{
-	if(inContainer != container){
+	if (inContainer != container) {
 		[container release];
 		container = [inContainer retain];
 	}
@@ -119,7 +119,7 @@
 {
     //Observe it's primary list object's status
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-	if([messageViewController listObject]){
+	if ([messageViewController listObject]) {
 		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
 										 object:[messageViewController listObject]];
@@ -133,7 +133,7 @@
     NSArray	*keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //If the display name changed, we resize the tabs
-    if(notification == nil || [keys containsObject:@"DisplayName"]){
+    if (notification == nil || [keys containsObject:@"DisplayName"]) {
 		[[[self tabView] delegate] resizeTabForTabViewItem:self];
 		
         //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
@@ -146,7 +146,7 @@
 	NSArray		*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
 	//Redraw if the icon has changed
-	if(keys == nil || [keys containsObject:@"Tab State Icon"]){
+	if (keys == nil || [keys containsObject:@"Tab State Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
 		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
 	}
@@ -158,17 +158,17 @@
     NSSet		*keys = [[notification userInfo] objectForKey:@"Keys"];
 
 	//Redraw if the icon has changed
-	if(keys == nil || [keys containsObject:@"Tab Status Icon"]){
+	if (keys == nil || [keys containsObject:@"Tab Status Icon"]) {
 		[[self container] updateIconForTabViewItem:self];
 		[[[self tabView] delegate] redisplayTabForTabViewItem:self];
 	}
 	
     //If the list object's display name changed, we resize the tabs
-    if(keys == nil || [keys containsObject:@"Display Name"]){
+    if (keys == nil || [keys containsObject:@"Display Name"]) {
 		[[[self tabView] delegate] resizeTabForTabViewItem:self];
     }
 	
-	if(keys == nil || [keys containsObject:KEY_USER_ICON]){
+	if (keys == nil || [keys containsObject:KEY_USER_ICON]) {
 		[self updateTabViewItemImage];
 	}
 }
@@ -179,7 +179,7 @@
 //
 //	NSImage *image = [self userIconImageOfSize:NSMakeSize(userIconSize, userIconSize)];
 //	
-//	if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+//	if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 //	
 //	
 //	
@@ -189,16 +189,16 @@
 //	
 //
 //	[tabViewItemImage release];
-//	if (listObject){
+//	if (listObject) {
 //		NSImage		*userIcon = [listObject userIcon];
-//		if (userIcon){
+//		if (userIcon) {
 //			tabViewItemImage = [[userIcon imageByScalingToSize:NSMakeSize(16,16)] retain];
-//		}else{
-//			if ([listObject isKindOfClass:[AIListContact class]]){
+//		} else {
+//			if ([listObject isKindOfClass:[AIListContact class]]) {
 //				tabViewItemImage = [[[[adium accountController] accountWithObjectID:[(AIListContact *)listObject accountID]] menuImage] retain];
 //			}
 //		}
-//	}else{
+//	} else {
 //		tabViewItemImage = [[[[messageViewController chat] account] menuImage] retain];
 //	}
 }
@@ -210,11 +210,11 @@
     NSTabView	*tabView = [self tabView];
     NSWindow	*window	= [tabView window];
 
-    if([tabView selectedTabViewItem] != self){
+    if ([tabView selectedTabViewItem] != self) {
         [tabView selectTabViewItem:self]; //Select our tab
     }
 
-    if(![window isKeyWindow]){
+    if (![window isKeyWindow]) {
         [window makeKeyAndOrderFront:nil]; //Bring our window to the front
     }
 }
@@ -247,9 +247,9 @@
 	NSImage *image = [self stateIcon];
 	
 	//Multi-user chats won't have status icons
-	if(!image && ![messageViewController userListVisible]) image = [self statusIcon];
+	if (!image && ![messageViewController userListVisible]) image = [self statusIcon];
 
-	if(!image) image = [AIStatusIcons statusIconForUnknownStatusWithIconType:AIStatusIconTab direction:AIIconNormal];
+	if (!image) image = [AIStatusIcons statusIconForUnknownStatusWithIconType:AIStatusIconTab direction:AIIconNormal];
 
 	return(image);
 }

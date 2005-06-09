@@ -150,13 +150,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//Just stop here if we don't have an address book dict to work with
-	if (!addressBookDict){
+	if (!addressBookDict) {
 		return nil;
 	}
 	
 	NSSet		*modifiedAttributes = nil;
 	
-    if(inModifiedKeys == nil){ //Only perform this when updating for all list objects
+    if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
         
         ABPerson *person = [self searchForObject:inObject];
 		
@@ -180,7 +180,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
 				
-				if(phoneticName){
+				if (phoneticName) {
 					phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"];
 
 					//Apply the values 
@@ -189,7 +189,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 						[phoneticNameArray setObject:phoneticName withOwner:self];
 						modifiedAttributes = [NSSet setWithObjects:@"Display Name", @"Phonetic Name", nil];
 					}
-				}else{
+				} else {
 					phoneticNameArray = [inObject displayArrayForKey:@"Phonetic Name"
 															  create:NO];
 					//Clear any stored value
@@ -199,14 +199,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					}					
 				}
 
-			}else{
+			} else {
 				AIMutableOwnerArray *displayNameArray, *phoneticNameArray;
 				
 				displayNameArray = [inObject displayArrayForKey:@"Display Name"
 														 create:NO];
 
 				//Clear any stored value
-				if ([displayNameArray objectWithOwner:self]){
+				if ([displayNameArray objectWithOwner:self]) {
 					[displayNameArray setObject:nil withOwner:self];
 					modifiedAttributes = [NSSet setWithObject:@"Display Name"];
 				}
@@ -222,7 +222,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			}
 
 			//If we changed anything, request an update of the alias / long display name
-			if (modifiedAttributes){
+			if (modifiedAttributes) {
 				[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 														  object:inObject
 														userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:silent]
@@ -233,14 +233,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
     } else if (automaticSync && [inModifiedKeys containsObject:KEY_USER_ICON]) {
         
 		//Only update when the serverside icon changes if there is no Adium preference overriding it
-		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]){
+		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]) {
 			//Find the person
 			ABPerson *person = [self searchForObject:inObject];
 			
-			if (person){
+			if (person) {
 				//Set the person's image to the inObject's serverside User Icon.
 				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
-				if(!userIconData){
+				if (!userIconData) {
 					userIconData = [[inObject statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
 				}
 				
@@ -273,24 +273,24 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
 		displayName = nickName;
 
-	}else if(!lastName || (displayFormat == First)){  
+	} else if (!lastName || (displayFormat == First)) {  
 		/* If no last name is available, use the first name */
 		displayName = firstName;
-		if(phonetic != NULL) *phonetic = phoneticFirstName;
+		if (phonetic != NULL) *phonetic = phoneticFirstName;
 
-	}else if(!firstName){
+	} else if (!firstName) {
 		/* If no first name is available, use the last name */
 		displayName = lastName;
-		if(phonetic != NULL) *phonetic = phoneticLastName;
+		if (phonetic != NULL) *phonetic = phoneticLastName;
 
 	} else {
 		BOOL havePhonetic = ((phonetic != NULL) && (phoneticFirstName || phoneticLastName));
 
 		/* Look to the preference setting */
-		switch(displayFormat){
+		switch (displayFormat) {
 			case FirstLast:
 				displayName = [NSString stringWithFormat:@"%@ %@",firstName,lastName];
-				if(havePhonetic){
+				if (havePhonetic) {
 					*phonetic = [NSString stringWithFormat:@"%@ %@",
 						(phoneticFirstName ? phoneticFirstName : firstName),
 						(phoneticLastName ? phoneticLastName : lastName)];
@@ -298,7 +298,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				break;
 			case LastFirst:
 				displayName = [NSString stringWithFormat:@"%@, %@",lastName,firstName]; 
-				if(havePhonetic){
+				if (havePhonetic) {
 					*phonetic = [NSString stringWithFormat:@"%@, %@",
 						(phoneticLastName ? phoneticLastName : lastName),
 						(phoneticFirstName ? phoneticFirstName : firstName)];
@@ -306,7 +306,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				break;
 			case LastFirstNoComma:
 				displayName = [NSString stringWithFormat:@"%@ %@",lastName,firstName]; 
-				if(havePhonetic){
+				if (havePhonetic) {
 					*phonetic = [NSString stringWithFormat:@"%@ %@",
 						(phoneticLastName ? phoneticLastName : lastName),
 						(phoneticFirstName ? phoneticFirstName : firstName)];
@@ -332,7 +332,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-    if([group isEqualToString:PREF_GROUP_ADDRESSBOOK]){
+    if ([group isEqualToString:PREF_GROUP_ADDRESSBOOK]) {
         NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
 		BOOL			oldCreateMetaContacts = createMetaContacts;
 		
@@ -346,7 +346,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
 		createMetaContacts = [[prefDict objectForKey:KEY_AB_CREATE_METACONTACTS] boolValue];
 		
-		if(firstTime){
+		if (firstTime) {
 			//Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 			[self rebuildAddressBookDict];
 			
@@ -356,11 +356,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			//Now update from our "me" card information
 		    [self updateSelfIncludingIcon:YES];	
 			
-		}else{
+		} else {
 			/* We have a notification (so this isn't the first time through): */
 
 			//If we weren't creating meta contacts before but we are now
-			if (!oldCreateMetaContacts && createMetaContacts){
+			if (!oldCreateMetaContacts && createMetaContacts) {
 				/*
 				 Build the address book dictionary, which will also trigger metacontact grouping as appropriate
 				 Delay to the next run loop to give better UI responsiveness
@@ -374,18 +374,18 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			[self updateAllContacts];
 		}
 
-    }else if(automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object){
+    } else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object) {
 		//Find the person
 		ABPerson *person = [self searchForObject:object];
 		
-		if(person){
+		if (person) {
 			//Set the person's image to the inObject's serverside User Icon.
 			NSData	*imageData = [object preferenceForKey:KEY_USER_ICON
 													group:PREF_GROUP_USERICONS
 									ignoreInheritedValues:YES];
 			
 			//If the pref is now nil, we should restore the address book back to the serverside icon if possible
-			if(!imageData){
+			if (!imageData) {
 				imageData = [[object statusObjectForKey:KEY_USER_ICON] TIFFRepresentation];
 			}
 			
@@ -404,13 +404,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)consumeImageData:(NSData *)inData forTag:(int)tag
 {
-	if (tag == meTag){
+	if (tag == meTag) {
 		[[adium preferenceController] setPreference:inData
 											 forKey:KEY_USER_ICON 
 											  group:GROUP_ACCOUNT_STATUS];
 		meTag = -1;
 		
-	}else if(useABImages){
+	} else if (useABImages) {
 		NSNumber		*tagNumber;
 		NSImage			*image;
 		AIListObject	*listObject;
@@ -426,7 +426,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		//Get the object from our tracking dictionary
 		setOrObject = [trackingDict objectForKey:tagNumber];
 		
-		if ([setOrObject isKindOfClass:[AIListObject class]]){
+		if ([setOrObject isKindOfClass:[AIListObject class]]) {
 			listObject = (AIListObject *)setOrObject;
 			
 			//Apply the image at the appropriate priority
@@ -438,19 +438,19 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			parentContact = [[adium contactController] parentContactForListObject:listObject];
 			 */
 			
-		}else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
+		} else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
 			NSEnumerator	*enumerator;
 //			BOOL			checkedForMetaContact = NO;
 
 			//Apply the image to each listObject at the appropriate priority
 			enumerator = [(NSSet *)setOrObject objectEnumerator];
-			while((listObject = [enumerator nextObject])){
+			while ((listObject = [enumerator nextObject])) {
 				
 				/*
 				//These objects all have the same unique ID so will all also have the same meta contact; just check once
-				if(!checkedForMetaContact){
+				if (!checkedForMetaContact) {
 					parentContact = [[adium contactController] parentContactForListObject:listObject];
-					if(parentContact == listObject) parentContact = nil;
+					if (parentContact == listObject) parentContact = nil;
 					checkedForMetaContact = YES;
 				}
 				*/
@@ -462,7 +462,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
 		
 		/*
-		if(parentContact){
+		if (parentContact) {
 			[parentContact setDisplayUserIcon:image
 									withOwner:self
 								priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];			
@@ -472,7 +472,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		//No further need for the dictionary entries
 		[trackingDict removeObjectForKey:tagNumber];
 		
-		if((uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber])){
+		if ((uniqueID = [trackingDictTagNumberToPerson objectForKey:tagNumber])) {
 			[trackingDictPersonToTagNumber removeObjectForKey:uniqueID];
 			[trackingDictTagNumberToPerson removeObjectForKey:tagNumber];
 		}
@@ -503,13 +503,13 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	
 	//Check if we already have a tag for the loading of another object with the same
 	//internalObjectID
-	if((tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId])){
+	if ((tagNumber = [trackingDictPersonToTagNumber objectForKey:uniqueId])) {
 		id				previousValue;
 		NSMutableSet	*objectSet;
 		
 		previousValue = [trackingDict objectForKey:tagNumber];
 		
-		if ([previousValue isKindOfClass:[AIListObject class]]){
+		if ([previousValue isKindOfClass:[AIListObject class]]) {
 			//If the old value is just a listObject, create an array with the old object
 			//and the new object
 			objectSet = [NSMutableSet setWithObjects:previousValue,inObject,nil];
@@ -517,12 +517,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			//Store the array in the tracking dict
 			[trackingDict setObject:objectSet forKey:tagNumber];
 			
-		}else /*if ([previousValue isKindOfClass:[NSMutableArray class]])*/{
+		} else /*if ([previousValue isKindOfClass:[NSMutableArray class]])*/{
 			//Add the new object to the previously-created array
 			[(NSMutableSet *)previousValue addObject:inObject];
 		}
 		
-	}else{
+	} else {
 		//Begin the image load
 		tag = [person beginLoadingImageDataForClient:self];
 		tagNumber = [NSNumber numberWithInt:tag];
@@ -546,28 +546,28 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
 	ABPerson		*person = nil;
-	if ([inObject isKindOfClass:[AIMetaContact class]]){
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
 		NSEnumerator	*enumerator;
 		AIListContact	*listContact;
 		
 		//Search for an ABPerson for each listContact within the metaContact; first one we find is
 		//the lucky winner.
 		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
-		while((listContact = [enumerator nextObject]) && (person == nil)){
+		while ((listContact = [enumerator nextObject]) && (person == nil)) {
 			person = [self searchForObject:listContact];
 		}
 
-	}else{
+	} else {
 		NSString		*UID = [inObject UID];
 		NSString		*serviceID = [[inObject service] serviceID];
 		
 		person = [self _searchForUID:UID serviceID:serviceID];
 
 		//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
-		if (!person){
-			if ([serviceID isEqualToString:@"AIM"]){
+		if (!person) {
+			if ([serviceID isEqualToString:@"AIM"]) {
 				person = [self _searchForUID:UID serviceID:@"ICQ"];
-			}else if ([serviceID isEqualToString:@"ICQ"]){
+			} else if ([serviceID isEqualToString:@"ICQ"]) {
 				person = [self _searchForUID:UID serviceID:@"AIM"];
 			}
 		}
@@ -589,15 +589,15 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	ABPerson		*person = nil;
 	NSDictionary	*dict;
 	
-	if ([serviceID isEqualToString:@"Mac"]){
+	if ([serviceID isEqualToString:@"Mac"]) {
 		dict = [addressBookDict objectForKey:@"AIM"];
-	}else{
+	} else {
 		dict = [addressBookDict objectForKey:serviceID];
 	} 
 	
-	if (dict){
+	if (dict) {
 		NSString *uniqueID = [dict objectForKey:[UID compactedString]];
-		if (uniqueID){
+		if (uniqueID) {
 			person = (ABPerson *)[sharedAddressBook recordForUniqueId:uniqueID];
 		}
 	}
@@ -644,16 +644,16 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NS_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
-        if((me = [sharedAddressBook me])){
+        if ((me = [sharedAddressBook me])) {
 			
 			//Default buddy icon
-			if (includeIcon){
+			if (includeIcon) {
 				//Begin the image load
 				meTag = [me beginLoadingImageDataForClient:self];
 			}
 			
 			//Set account display names
-			if (enableImport){
+			if (enableImport) {
 				NSEnumerator	*servicesEnumerator = [[serviceDict allKeys] objectEnumerator];
 				NSString		*serviceID;
 				NSString		*myDisplayName, *myPhonetic = nil;
@@ -661,11 +661,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
 				
 				//Check for each service the address book supports
-				while((serviceID = [servicesEnumerator nextObject])){
+				while ((serviceID = [servicesEnumerator nextObject])) {
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
 					ABMultiValue	*names = [me valueForProperty:addressBookKey];
 					
-					if ([serviceID isEqualToString:@"AIM"] || [serviceID isEqualToString:@"ICQ"]){
+					if ([serviceID isEqualToString:@"AIM"] || [serviceID isEqualToString:@"ICQ"]) {
 						serviceID = @"AIM-compatible";
 					}
 					
@@ -673,21 +673,21 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					AIAccount		*account;
 					
 					//Look at each account on this service, searching for one a matching UID
-					while ((account = [accountsArray nextObject])){
+					while ((account = [accountsArray nextObject])) {
 						
-						if([[[account service] serviceClass] isEqualToString:serviceID]){
+						if ([[[account service] serviceClass] isEqualToString:serviceID]) {
 							//An ABPerson may have multiple names on a given service; iterate through them
 							NSString		*accountUID = [[account UID] compactedString];
 							int				nameCount = [names count];
 							int				i;
 							
-							for (i=0 ; i<nameCount ; i++){
-								if ([accountUID isEqualToString:[[names valueAtIndex:i] compactedString]]){
+							for (i=0 ; i<nameCount ; i++) {
+								if ([accountUID isEqualToString:[[names valueAtIndex:i] compactedString]]) {
 									[[account displayArrayForKey:@"Display Name"] setObject:myDisplayName
 																				  withOwner:self
 																			  priorityLevel:Low_Priority];
 									
-									if(myPhonetic){
+									if (myPhonetic) {
 										[[account displayArrayForKey:@"Phonetic Name"] setObject:myPhonetic
 																					   withOwner:self
 																				   priorityLevel:Low_Priority];										
@@ -732,7 +732,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	allServiceKeys = [serviceDict allKeys];
 	
 	peopleEnumerator = [[sharedAddressBook people] objectEnumerator];
-	while ((person = [peopleEnumerator nextObject])){
+	while ((person = [peopleEnumerator nextObject])) {
 		
 		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
 		NSString			*serviceID;
@@ -749,14 +749,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			emails = [person valueForProperty:kABEmailProperty];
 			emailsCount = [emails count];
 			
-			for (i = 0; i < emailsCount ; i++){
+			for (i = 0; i < emailsCount ; i++) {
 				NSString	*email;
 				
 				email = [emails valueAtIndex:i];
-				if ([email hasSuffix:@"@mac.com"]){
+				if ([email hasSuffix:@"@mac.com"]) {
 					
 					//@mac.com UIDs go into the AIM dictionary
-					if (!(dict = [addressBookDict objectForKey:@"AIM"])){
+					if (!(dict = [addressBookDict objectForKey:@"AIM"])) {
 						dict = [[[NSMutableDictionary alloc] init] autorelease];
 						[addressBookDict setObject:dict forKey:@"AIM"];
 					}
@@ -771,7 +771,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
 
 		//Now go through the instant messaging keys
-		while ((serviceID = [servicesEnumerator nextObject])){
+		while ((serviceID = [servicesEnumerator nextObject])) {
 			NSString				*addressBookKey;
 			ABMultiValue			*names;
 			int						nameCount;
@@ -779,7 +779,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
 			
-			if (!(dict = [addressBookDict objectForKey:serviceID])){
+			if (!(dict = [addressBookDict objectForKey:serviceID])) {
 				dict = [[[NSMutableDictionary alloc] init] autorelease];
 				[addressBookDict setObject:dict forKey:serviceID];
 			}
@@ -790,23 +790,23 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			names = [person valueForProperty:addressBookKey];
 			nameCount = [names count];
 				
-			for (i = 0 ; i < nameCount ; i++){
+			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
-				if ([UID length]){
+				if ([UID length]) {
 					[dict setObject:[person uniqueId] forKey:UID];
 					
 					[UIDsArray addObject:UID];
 					
 					//If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
-					if (isOSCAR){
+					if (isOSCAR) {
 						const char	firstCharacter = [UID characterAtIndex:0];
 						
 						//Determine service based on UID
-						if([UID hasSuffix:@"@mac.com"]){
+						if ([UID hasSuffix:@"@mac.com"]) {
 							serviceID = @"Mac";
-						}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+						} else if (firstCharacter >= '0' && firstCharacter <= '9') {
 							serviceID = @"ICQ";
-						}else{
+						} else {
 							serviceID = @"AIM";
 						}
 					}
@@ -816,7 +816,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			}
 		}
 		
-		if (([UIDsArray count] > 1) && createMetaContacts){
+		if (([UIDsArray count] > 1) && createMetaContacts) {
 			/* Got a record with multiple names. Group the names together, adding them to the meta contact. */
 			[[adium contactController] groupUIDs:UIDsArray 
 									 forServices:servicesArray];

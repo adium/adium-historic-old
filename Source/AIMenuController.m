@@ -82,11 +82,11 @@
 	//Find the menu item (or the closest one above it)
 	destination = location;
 	menuItem = [locationArray objectAtIndex:destination];
-	while((menuItem == nilMenuItem) && (destination > 0)) {
+	while ((menuItem == nilMenuItem) && (destination > 0)) {
 		destination--;
 		menuItem = [locationArray objectAtIndex:destination];
 	}
-	if([menuItem isKindOfClass:[NSMenuItem class]]) {
+	if ([menuItem isKindOfClass:[NSMenuItem class]]) {
 		//If attached to a menu item, insert below that item
 		targetMenu = [menuItem menu];
 		targetIndex = [targetMenu indexOfItem:menuItem];
@@ -97,7 +97,7 @@
 	}
 
 	//Insert the new item and a divider (if necessary)
-	if(location != destination) {
+	if (location != destination) {
 		[targetMenu insertItem:[NSMenuItem separatorItem] atIndex:++targetIndex];
 	}
 	[targetMenu insertItem:newItem atIndex:targetIndex+1];
@@ -116,15 +116,15 @@
 	unsigned	loop, maxLoop;
 
 	//Fix the pointer if this is one
-	for(loop = 0, maxLoop = [locationArray count]; loop < maxLoop; loop++) {
+	for (loop = 0, maxLoop = [locationArray count]; loop < maxLoop; loop++) {
 		NSMenuItem	*menuItem = [locationArray objectAtIndex:loop];
 
 		//Move to the item above it, nil if a divider
-		if(menuItem == targetItem) {
-			if(targetIndex != 0) {
+		if (menuItem == targetItem) {
+			if (targetIndex != 0) {
 				NSMenuItem	*previousItem = [targetMenu itemAtIndex:(targetIndex - 1)];
 
-				if([previousItem isSeparatorItem]) {
+				if ([previousItem isSeparatorItem]) {
 					[locationArray replaceObjectAtIndex:loop withObject:nilMenuItem];
 				} else {
 					[locationArray replaceObjectAtIndex:loop withObject:previousItem];
@@ -140,8 +140,8 @@
 	[targetMenu removeItem:targetItem];
 
 	//Remove any double dividers (And dividers at the bottom)
-	for(loop = 0; loop < [targetMenu numberOfItems]; loop++) {
-		if(([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
+	for (loop = 0; loop < [targetMenu numberOfItems]; loop++) {
+		if (([[targetMenu itemAtIndex:loop] isSeparatorItem]) && 
 		   (loop == [targetMenu numberOfItems]-1 || [[targetMenu itemAtIndex:loop+1] isSeparatorItem])) {
 			[targetMenu removeItemAtIndex:loop];
 			loop--;//re-search the location
@@ -161,7 +161,7 @@
 	itemArray = [contextualMenuItemDict objectForKey:key];
 
 	//If one is not found, create it
-	if(!itemArray) {
+	if (!itemArray) {
 		itemArray = [[NSMutableArray alloc] init];
 		[contextualMenuItemDict setObject:itemArray forKey:key];
 	}
@@ -185,18 +185,18 @@
 
 	//Add any account-specific menu items
 	separatorItem = YES;
-	if([inObject isKindOfClass:[AIMetaContact class]]) {
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
 		NSEnumerator	*enumerator;
 		AIListContact	*aListContact;
 		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 
-		while((aListContact = [enumerator nextObject])) {
+		while ((aListContact = [enumerator nextObject])) {
 			[self addMenuItemsForContact:aListContact
 								  toMenu:workingMenu
 						   separatorItem:&separatorItem];
 		}
 
-	} else  if([inObject isKindOfClass:[AIListContact class]]) {
+	} else  if ([inObject isKindOfClass:[AIListContact class]]) {
 		[self addMenuItemsForContact:(AIListContact *)inObject
 							  toMenu:workingMenu
 					   separatorItem:&separatorItem];
@@ -211,17 +211,17 @@
 {
 	NSArray			*itemArray = [[inContact account] menuItemsForContact:inContact];
 
-	if(itemArray && [itemArray count]) {
+	if (itemArray && [itemArray count]) {
 		NSEnumerator	*enumerator;
 		NSMenuItem		*menuItem;
 
-		if(*separatorItem == YES) {
+		if (*separatorItem == YES) {
 			[workingMenu addItem:[NSMenuItem separatorItem]];
 			*separatorItem = NO;
 		}
 
 		enumerator = [itemArray objectEnumerator];
-		while((menuItem = [enumerator nextObject])) {
+		while ((menuItem = [enumerator nextObject])) {
 			[workingMenu addItem:menuItem];
 		}
 	}
@@ -248,19 +248,19 @@
 
 	//Process each specified location
 	enumerator = [inLocationArray objectEnumerator];
-	while((location = [enumerator nextObject])) {
+	while ((location = [enumerator nextObject])) {
 		NSArray			*menuItems = [contextualMenuItemDict objectForKey:location];
 		NSEnumerator	*itemEnumerator;
 
 		//Add a seperator
-		if(itemsAbove && [menuItems count]) {
+		if (itemsAbove && [menuItems count]) {
 			[inMenu addItem:[NSMenuItem separatorItem]];
 			itemsAbove = NO;
 		}
 
 		//Add each menu item in the location
 		itemEnumerator = [menuItems objectEnumerator];
-		while((menuItem = [itemEnumerator nextObject])) {
+		while ((menuItem = [itemEnumerator nextObject])) {
 			//Add the menu item
 			[inMenu addItem:menuItem];
 			itemsAbove = YES;

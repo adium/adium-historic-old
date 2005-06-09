@@ -44,23 +44,23 @@
 
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+    if ([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		
-        if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+        if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
             //If this is the first contact with unviewed content, animate the dock
-            if(!unviewedState){
+            if (!unviewedState) {
                 [[adium dockController] setIconStateNamed:@"Alert"];
                 unviewedState = YES;
             }
 
             [unviewedObjectsArray addObject:inChat];
 
-        }else{
-            if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+        } else {
+            if ([unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
                 [unviewedObjectsArray removeObject:inChat];
 
                 //If there are no more contacts with unviewed content, stop animating the dock
-                if([unviewedObjectsArray count] == 0 && unviewedState){
+                if ([unviewedObjectsArray count] == 0 && unviewedState) {
                     [[adium dockController] removeIconStateNamed:@"Alert"];
                     unviewedState = NO;
                 }
@@ -83,11 +83,11 @@
 {
 	AIChat	*inChat = [notification object];
 
-	if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+	if ([unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
 		[unviewedObjectsArray removeObject:inChat];
 		
 		//If there are no more contacts with unviewed content, stop animating the dock
-		if([unviewedObjectsArray count] == 0 && unviewedState){
+		if ([unviewedObjectsArray count] == 0 && unviewedState) {
 			[[adium dockController] removeIconStateNamed:@"Alert"];
 			unviewedState = NO;
 		}

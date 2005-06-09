@@ -23,7 +23,7 @@
 //failing that, they call Appearance Manager's SetThemeCursor function.
 + (void)setOpenGrabHandCursor
 {
-	if([self respondsToSelector:@selector(openHandCursor)])
+	if ([self respondsToSelector:@selector(openHandCursor)])
 		[[NSCursor openHandCursor] set];
 	else
 		SetThemeCursor(kThemeOpenHandCursor);
@@ -31,7 +31,7 @@
 
 + (void)setClosedGrabHandCursor
 {
-	if([self respondsToSelector:@selector(closedHandCursor)])
+	if ([self respondsToSelector:@selector(closedHandCursor)])
 		[[NSCursor closedHandCursor] set];
 	else
 		SetThemeCursor(kThemeClosedHandCursor);
@@ -39,7 +39,7 @@
 
 + (void)setHandPointCursor
 {
-	if([self respondsToSelector:@selector(pointingHandCursor)])
+	if ([self respondsToSelector:@selector(pointingHandCursor)])
 		[[NSCursor pointingHandCursor] set];
 	else
 		SetThemeCursor(kThemePointingHandCursor);

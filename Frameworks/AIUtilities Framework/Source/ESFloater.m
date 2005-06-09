@@ -30,7 +30,7 @@
 //
 - (id)initWithImage:(NSImage *)inImage styleMask:(unsigned int)styleMask
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		NSRect  frame;
 		windowIsVisible = NO;
 		visibilityTimer = nil;
@@ -100,21 +100,21 @@
 - (void)setMaxOpacity:(float)inMaxOpacity
 {
     maxOpacity = inMaxOpacity;
-    if(windowIsVisible) [self _setWindowOpacity:maxOpacity];
+    if (windowIsVisible) [self _setWindowOpacity:maxOpacity];
 }
 
 //Window Visibility --------------------------------------------------------------------------------------------------
 //Update the visibility of this window (Window is visible if there are any tabs present)
 - (void)setVisible:(BOOL)inVisible animate:(BOOL)animate
 {    
-    if(inVisible != windowIsVisible){
+    if (inVisible != windowIsVisible) {
         windowIsVisible = inVisible;
         
-        if(animate){
-            if(!visibilityTimer){
+        if (animate) {
+            if (!visibilityTimer) {
                 visibilityTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/WINDOW_FADE_FPS) target:self selector:@selector(_updateWindowVisiblityTimer:) userInfo:nil repeats:YES] retain];
             }
-        }else{
+        } else {
             [self _setWindowOpacity:(windowIsVisible ? maxOpacity : WINDOW_FADE_MIN)];
         }
     }
@@ -125,17 +125,17 @@
 {
     float   alphaValue = [panel alphaValue];
     
-    if(windowIsVisible){
+    if (windowIsVisible) {
         alphaValue += (maxOpacity - alphaValue) * ([NSEvent shiftKey] ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
-        if(alphaValue > maxOpacity - WINDOW_FADE_SNAP) alphaValue = maxOpacity;
-    }else{
+        if (alphaValue > maxOpacity - WINDOW_FADE_SNAP) alphaValue = maxOpacity;
+    } else {
         alphaValue -= (alphaValue - WINDOW_FADE_MIN) * ([NSEvent shiftKey] ? WINDOW_FADE_SLOW_STEP : WINDOW_FADE_STEP);
-        if(alphaValue < WINDOW_FADE_MIN + WINDOW_FADE_SNAP) alphaValue = WINDOW_FADE_MIN;
+        if (alphaValue < WINDOW_FADE_MIN + WINDOW_FADE_SNAP) alphaValue = WINDOW_FADE_MIN;
     }
     [self _setWindowOpacity:alphaValue];
     
     //
-    if(alphaValue == maxOpacity || alphaValue == WINDOW_FADE_MIN){
+    if (alphaValue == maxOpacity || alphaValue == WINDOW_FADE_MIN) {
         [visibilityTimer invalidate]; [visibilityTimer release]; visibilityTimer = nil;
     }
 }

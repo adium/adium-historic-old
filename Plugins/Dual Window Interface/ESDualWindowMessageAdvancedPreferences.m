@@ -64,36 +64,36 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == autohide_tabBar){
+    if (sender == autohide_tabBar) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:![sender state]]
 											 forKey:KEY_AUTOHIDE_TABBAR
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
-    }else if(sender == checkBox_allowInactiveClosing){
+    } else if (sender == checkBox_allowInactiveClosing) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_ENABLE_INACTIVE_TAB_CLOSE
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
-	}else if(sender == checkBox_hide){
+	} else if (sender == checkBox_hide) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_WINDOW_HIDE
 											  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
-	}else if(sender == checkBox_customNameFormatting){
+	} else if (sender == checkBox_customNameFormatting) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_WEBKIT_USE_NAME_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-	}else if(sender == popUp_nameFormat){
+	} else if (sender == popUp_nameFormat) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_NAME_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-	}else if(sender == popUp_minimumFontSize){
+	} else if (sender == popUp_minimumFontSize) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_WEBKIT_MIN_FONT_SIZE
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-	}else if(sender == popUp_timeStampFormat){
+	} else if (sender == popUp_timeStampFormat) {
 		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
 											 forKey:KEY_WEBKIT_TIME_STAMP_FORMAT
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
@@ -125,7 +125,7 @@
 	//Window position
 	[popUp_windowPosition setMenu:[[adium interfaceController] menuForWindowLevelsNotifyingTarget:self]];
 	menuIndex =  [popUp_windowPosition indexOfItemWithTag:[[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue]];
-	if(menuIndex >= 0 && menuIndex < [popUp_windowPosition numberOfItems]){
+	if (menuIndex >= 0 && menuIndex < [popUp_windowPosition numberOfItems]) {
 		[popUp_windowPosition selectItemAtIndex:menuIndex];
 	}
 	
@@ -172,9 +172,9 @@
 	
 	//Build the menu from the available formats
 	[self _addTimeStampChoice:noSecondsNoAMPM toMenu:menu];
-	if(!noAMPM) [self _addTimeStampChoice:noSecondsAMPM toMenu:menu];
+	if (!noAMPM) [self _addTimeStampChoice:noSecondsAMPM toMenu:menu];
 	[self _addTimeStampChoice:secondsNoAMPM toMenu:menu];
-	if(!noAMPM) [self _addTimeStampChoice:secondsAMPM toMenu:menu];
+	if (!noAMPM) [self _addTimeStampChoice:secondsAMPM toMenu:menu];
 	
 	return(menu);
 }
@@ -198,7 +198,7 @@
 	unsigned sizes[] = {1,2,3,4,5,6,7,8,9,10,11,12,13,14,18,20,22,24,36,48,64,72,96};
 	unsigned loopCounter;
 
-	for(loopCounter = 0; loopCounter < 23; loopCounter++){
+	for (loopCounter = 0; loopCounter < 23; loopCounter++) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[NSNumber numberWithInt:sizes[loopCounter]] stringValue]
 																		 target:nil
 																		 action:nil

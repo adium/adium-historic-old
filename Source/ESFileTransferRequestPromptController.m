@@ -44,7 +44,7 @@
 		  notifyingTarget:(id)inTarget
 				 selector:(SEL)inSelector
 {
-	if((self = [super init])){		
+	if ((self = [super init])) {		
 		fileTransfer = [inFileTransfer retain];
 		target       = [inTarget retain];
 		selector     =  inSelector;
@@ -56,12 +56,12 @@
 		//Display the name of the file, with the file's size if available
 		unsigned long long fileSize = [fileTransfer size];
 		
-		if(fileSize){
+		if (fileSize) {
 			NSString	*fileSizeString;
 			
 			fileSizeString = [[adium fileTransferController] stringForSize:fileSize];
 			filenameDisplay = [NSString stringWithFormat:@"%@ (%@)",remoteFilename,fileSizeString];
-		}else{
+		} else {
 			filenameDisplay = remoteFilename;
 		}
 		
@@ -94,14 +94,14 @@
 }
 
 /*!
-* @brief Window was closed, either by a button being clicked or the user closing it
+ * @brief Window was closed, either by a button being clicked or the user closing it
  */
 - (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	NSString	*localFilename = nil;
 	BOOL		finished = NO;
 
-	switch(returnCode){			
+	switch (returnCode) {			
 		case AITextAndButtonsDefaultReturn: /* Save */
 		{
 			localFilename = [[[adium preferenceController] userPreferredDownloadFolder] stringByAppendingPathComponent:[fileTransfer remoteFilename]];
@@ -109,7 +109,7 @@
 			/* If the file doesn't exist, we're done.  If it does, fall through to AITextAndButtonsOtherReturn
 			 * triggering a Save As... panel.
 			*/
-			if(![[NSFileManager defaultManager] fileExistsAtPath:localFilename]){
+			if (![[NSFileManager defaultManager] fileExistsAtPath:localFilename]) {
 				finished = YES;
 				break;
 			}
@@ -134,7 +134,7 @@
 		}
 	}
 
-	if(finished){
+	if (finished) {
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:localFilename];
@@ -154,7 +154,7 @@
 - (void)savePanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	//Only need to take action if the user pressed OK; if she pressed cancel, just return to our window.
-	if(returnCode == NSOKButton){
+	if (returnCode == NSOKButton) {
 		[target performSelector:selector
 					 withObject:fileTransfer
 					 withObject:[savePanel filename]];

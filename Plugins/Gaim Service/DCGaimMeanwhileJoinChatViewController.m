@@ -30,7 +30,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		[textField_inviteUsers setDragDelegate:self];
 		[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", nil]];
@@ -66,7 +66,7 @@
 	//Obtain room and exchange from the view
 	topic = [textField_topic stringValue];
 	
-	if (topic && [topic length]){
+	if (topic && [topic length]) {
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
 		chatCreationInfo = [NSDictionary dictionaryWithObject:topic
 													   forKey:@"chat.topic"];
@@ -76,7 +76,7 @@
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
 		   withInvitationMessage:nil];
-	}else{
+	} else {
 		NSLog(@"Error: No topic specified.");
 	}
 	
@@ -85,7 +85,7 @@
 //Entered text is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-	if([notification object] == textField_topic){
+	if ([notification object] == textField_topic) {
 		[self validateEnteredText];
 	}
 }
@@ -95,7 +95,7 @@
 	NSString	*topic = [textField_topic stringValue];
 	BOOL		enabled = (topic && [topic length]);
 	
-	if(delegate)
+	if (delegate)
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 
@@ -114,8 +114,8 @@
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		if([contact service] == [account service]){
+    while ((contact = [enumerator nextObject])) {
+		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
 			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];

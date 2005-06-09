@@ -35,7 +35,7 @@
 //Init
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		[[adium preferenceController] addPreferencePane:self];
 	}
 	return self;
@@ -53,7 +53,7 @@
 - (NSComparisonResult)caseInsensitiveCompare:(id)other
 {
 	NSString *nibName = [self nibName];
-	if([other isKindOfClass:[NSString class]]) {
+	if ([other isKindOfClass:[NSString class]]) {
 		return [nibName caseInsensitiveCompare:other];
 	} else {
 		return [nibName caseInsensitiveCompare:[other nibName]];

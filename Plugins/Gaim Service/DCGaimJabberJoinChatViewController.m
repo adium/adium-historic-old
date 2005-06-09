@@ -32,7 +32,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		[textField_inviteUsers setDragDelegate:self];
 		[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", nil]];
@@ -48,7 +48,7 @@
 	[delegate setJoinChatEnabled:NO];
 	[[view window] makeFirstResponder:textField_roomName];
 
-	if([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)])
+	if ([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)])
 		[[textField_server cell] setPlaceholderString:DEFAULT_CONFERENCE_SERVER];
 		
 	[textField_inviteUsers setMinStringLength:2];
@@ -66,13 +66,13 @@
 	NSString		*password = [textField_password stringValue];
 	NSDictionary	*chatCreationInfo;
 			
-	if( !handle || ![handle length] )
+	if ( !handle || ![handle length] )
 		handle = [inAccount UID];
 	
-	if( !password || ![password length] )
+	if ( !password || ![password length] )
 		password = @"temp";
 	
-	if( !server || ![server length] )
+	if ( !server || ![server length] )
 		server = DEFAULT_CONFERENCE_SERVER;
 			
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
@@ -103,7 +103,7 @@
 	//NSString *passwordLen = [textField_password stringValue];
 	BOOL enabled = NO;
 	
-	if( roomLen && [roomLen length] 
+	if ( roomLen && [roomLen length] 
 		//&& serverLen && [serverLen length]
 		//&& handleLen && [handleLen length]
 		//&& passwordLen && [passwordLen length]
@@ -111,7 +111,7 @@
 		enabled = YES;
 	}
 	
-	if( delegate )
+	if ( delegate )
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 
@@ -130,8 +130,8 @@
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		if([contact service] == [account service]){
+    while ((contact = [enumerator nextObject])) {
+		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
 			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];

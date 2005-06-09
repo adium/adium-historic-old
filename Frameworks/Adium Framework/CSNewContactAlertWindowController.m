@@ -57,13 +57,13 @@
 																		   configureForGlobal:inConfigureForGlobal
 																			   defaultEventID:inDefaultEventID];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[newAlertwindow window]
 		   modalForWindow:parentWindow
 			modalDelegate:newAlertwindow
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[newAlertwindow showWindow:nil];
 	}
 }
@@ -90,9 +90,9 @@
 	
 	//Create a mutable copy of the alert dictionary we're passed.  If we're passed nil, create the default alert.
 	alert = [inAlert mutableCopy];
-	if(!alert){	
+	if (!alert) {	
 		/*
-		if(!defaultEventID){
+		if (!defaultEventID) {
 			defaultEventID = [[adium contactAlertsController] defaultEventID];
 		}
 */
@@ -124,7 +124,7 @@
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-	if ([[self superclass] instancesRespondToSelector:@selector(windowDidLoad)]){
+	if ([[self superclass] instancesRespondToSelector:@selector(windowDidLoad)]) {
 		   [super windowDidLoad];
 	}
 
@@ -143,10 +143,10 @@
 	[label_Action setLocalizedString:AILocalizedString(@"Action:","Label for contact alert action (e.g. Send message, Play sound, etc.)")];	
 
 	//Remove the single-fire option for global
-	if(configureForGlobal){
-		if([checkbox_oneTime respondsToSelector:@selector(setHidden:)]){
+	if (configureForGlobal) {
+		if ([checkbox_oneTime respondsToSelector:@selector(setHidden:)]) {
 			[checkbox_oneTime setHidden:YES];
-		}else{
+		} else {
 			[checkbox_oneTime setFrame:NSZeroRect];
 		}
 	}
@@ -200,8 +200,8 @@
 	//Select the correct event
 	NSString	*eventID = [alert objectForKey:KEY_EVENT_ID];
 	enumerator = [[popUp_event itemArray] objectEnumerator];
-	while((menuItem = [enumerator nextObject])){
-		if([eventID isEqualToString:[menuItem representedObject]]){
+	while ((menuItem = [enumerator nextObject])) {
+		if ([eventID isEqualToString:[menuItem representedObject]]) {
 			[popUp_event selectItem:menuItem];
 			break;
 		}
@@ -210,15 +210,15 @@
 	//Select the correct action
 	NSString	*actionID = [alert objectForKey:KEY_ACTION_ID];
 	enumerator = [[popUp_action itemArray] objectEnumerator];
-	while((menuItem = [enumerator nextObject])){
-		if([actionID isEqualToString:[menuItem representedObject]]){
+	while ((menuItem = [enumerator nextObject])) {
+		if ([actionID isEqualToString:[menuItem representedObject]]) {
 			[popUp_action selectItem:menuItem];
 			break;
 		}
 	}
 	
 	//Setup our single-fire option
-	if(!configureForGlobal){
+	if (!configureForGlobal) {
 		[checkbox_oneTime setState:[[alert objectForKey:KEY_ONE_TIME_ALERT] intValue]];
 	}
 	
@@ -231,7 +231,7 @@
 {
 	//Save details
 	NSDictionary	*actionDetails = [detailsPane actionDetails];
-	if(actionDetails){
+	if (actionDetails) {
 		[alert setObject:actionDetails forKey:KEY_ACTION_DETAILS];
 	}
 
@@ -256,12 +256,12 @@
 	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];		
 
 	//Save changes and close down the old pane
-	if(detailsPane) [self saveDetailsPaneChanges];
+	if (detailsPane) [self saveDetailsPaneChanges];
 	[self cleanUpDetailsPane];
 	
 	//Get a new pane for the current action type, and configure it for our alert
 	detailsPane = [[actionHandler detailsPaneForActionID:actionID] retain];
-	if(detailsPane){
+	if (detailsPane) {
 		NSDictionary	*actionDetails = [alert objectForKey:KEY_ACTION_DETAILS];
 		
 		detailsView = [detailsPane view];
@@ -281,7 +281,7 @@
 					animate:[[self window] isVisible]];
 	
 	//Add the details view
-	if(detailsView) [view_auxiliary addSubview:detailsView];
+	if (detailsView) [view_auxiliary addSubview:detailsView];
 		
 	//Pull any default values the pane set in configureForActionDetails
 	[self saveDetailsPaneChanges];
@@ -294,7 +294,7 @@
 - (IBAction)selectEvent:(id)sender
 {
 	NSString	*eventID;
-	if((eventID = [sender representedObject])){
+	if ((eventID = [sender representedObject])) {
 		[alert setObject:eventID forKey:KEY_EVENT_ID];
 		
 		[detailsPane configureForEventID:eventID
@@ -307,11 +307,11 @@
 //User selected an action from the popup
 - (IBAction)selectAction:(id)sender
 {
-	if([sender representedObject]){
+	if ([sender representedObject]) {
 		NSString	*newAction = [sender representedObject];
 		NSString	*oldAction = [alert objectForKey:KEY_ACTION_ID];
 		
-		if(![newAction isEqualToString:oldAction]){
+		if (![newAction isEqualToString:oldAction]) {
 			[alert setObject:[sender representedObject] forKey:KEY_ACTION_ID];
 			
 			[self configureDetailsPane];
@@ -333,7 +333,7 @@
 																							 forListObject:listObject];
 	id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 
-	if(actionHandler && eventDescription){
+	if (actionHandler && eventDescription) {
 		[headerView setStringValue:eventDescription];
 		[headerView setImage:[actionHandler imageForActionID:actionID]];
 		[headerView setSubString:[actionHandler longDescriptionForActionID:actionID

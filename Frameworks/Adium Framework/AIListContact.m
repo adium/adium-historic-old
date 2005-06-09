@@ -68,7 +68,7 @@
 //UID, and account UID.  Adium will not allow multiple contacts with the same internalUniqueObjectID to be created.
 - (NSString *)internalUniqueObjectID
 {
-	if(!internalUniqueObjectID){
+	if (!internalUniqueObjectID) {
 		internalUniqueObjectID = [[AIListContact internalUniqueObjectIDForService:[self service]
 																		  account:[self account]
 																			  UID:[self UID]] retain];
@@ -88,7 +88,7 @@
 //Set the desired group for this contact.  Pass nil to indicate this object is no longer listed.
 - (void)setRemoteGroupName:(NSString *)inName
 {
-	if((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]){
+	if ((!remoteGroupName && inName) || ![inName isEqualToString:remoteGroupName]) {
 		//Autorelease so we don't have to worry about whether (remoteGroupName == inName) or not
 		[remoteGroupName autorelease];
 		remoteGroupName = [inName retain];
@@ -96,7 +96,7 @@
 		[[adium contactController] listObjectRemoteGroupingChanged:self];
 		
 		AIListObject	*myContainingObject = [self containingObject];
-		if([myContainingObject isKindOfClass:[AIMetaContact class]]){
+		if ([myContainingObject isKindOfClass:[AIMetaContact class]]) {
 			[(AIMetaContact *)myContainingObject remoteGroupingOfContainedObject:self changedTo:remoteGroupName];
 		}
 	}
@@ -152,20 +152,20 @@
 	AIListContact   *targetMessagingContact = nil;
 	AIListContact   *targetFileTransferContact = nil;
 
-	if (targetAccount){
+	if (targetAccount) {
 		targetMessagingContact = [[adium contactController] contactOnAccount:targetAccount
 															 fromListContact:self];
 		targetFileTransferContact = targetMessagingContact;
 	}
 	
 	//Send any message we were told to send
-	if (message && [message length]){
+	if (message && [message length]) {
 		AIChat			*chat;
 		BOOL			autoreply = [[evaluatedArguments objectForKey:@"autoreply"] boolValue];
 		
 		//Make sure we know where we are sending the message - if we don't have a target yet, find the best contact for
 		//sending CONTENT_MESSAGE_TYPE.
-		if (!targetMessagingContact){
+		if (!targetMessagingContact) {
 			//Get the target contact.  This could be the same contact, an identical contact on another account, 
 			//or a subcontact (if we're talking about a metaContact, for example)
 			targetMessagingContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
@@ -189,10 +189,10 @@
 	}
 	
 	//Send any file we were told to send
-	if (filePath && [filePath length]){
+	if (filePath && [filePath length]) {
 		//Make sure we know where we are sending the file - if we don't have a target yet, find the best contact for
 		//sending FILE_TRANSFER_TYPE.
-		if (!targetFileTransferContact){
+		if (!targetFileTransferContact) {
 			//Get the target contact.  This could be the same contact, an identical contact on another account, 
 			//or a subcontact (if we're talking about a metaContact, for example)
 			targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE

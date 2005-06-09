@@ -38,7 +38,7 @@
 
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		download = nil;
 		window = nil;
 	}
@@ -60,20 +60,20 @@
 
 - (void)sheetDidDismiss:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if(download) [download cancel];
+	if (download) [download cancel];
 
 	[self closeInstaller];
 }
 
 - (void)closeInstaller
 {
-	if(window) [window close];
+	if (window) [window close];
 	[self autorelease];	
 }
 
 - (void)installXtraAtURL:(NSURL *)url
 {
-	if([[url host] isEqualToString:@"www.adiumxtras.com"] || ALLOW_UNTRUSTED_XTRAS){
+	if ([[url host] isEqualToString:@"www.adiumxtras.com"] || ALLOW_UNTRUSTED_XTRAS) {
 		NSURL	*urlToDownload;
 
 		[NSBundle loadNibNamed:@"XtraProgressWindow" owner:self];
@@ -93,7 +93,7 @@
 
 		[urlToDownload release];
 
-	}else{
+	} else {
 		NSRunAlertPanel(AILocalizedString(@"Nontrusted Xtra", nil),
 						AILocalizedString(@"This Xtra is not hosted by adiumxtras.com. Automatic installation is not allowed.", nil),
 						AILocalizedString(@"Cancel", nil),
@@ -119,7 +119,7 @@
 - (void)download:(NSURLDownload *)download didReceiveDataOfLength:(unsigned)length
 {
 	amountDownloaded += (long long)length;
-	if(downloadSize != NSURLResponseUnknownLength){
+	if (downloadSize != NSURLResponseUnknownLength) {
 		[progressBar setDoubleValue:(double)amountDownloaded];
 		[percentText setStringValue:[NSString stringWithFormat:@"%f%",(double)((amountDownloaded / (double)downloadSize) * 100)]];
 	}
@@ -148,7 +148,7 @@
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
 
-	if([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]){
+	if ([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]) {
 		NSTask			*uncompress, *untar;
 
 		uncompress = [[NSTask alloc] init];
@@ -160,9 +160,9 @@
 		[uncompress waitUntilExit];
 		[uncompress release];
 		
-		if([pathExtension isEqualToString:@"tgz"]){
+		if ([pathExtension isEqualToString:@"tgz"]) {
 			dest = [[dest stringByDeletingPathExtension] stringByAppendingPathExtension:@"tar"];
-		}else{
+		} else {
 			//hasSuffix .tar.gz
 			dest = [dest substringToIndex:[dest length] - 3];//remove the .gz, leaving us with .tar
 		}
@@ -181,7 +181,7 @@
 		output = [outputPipe fileHandleForReading];
 		fileName = [[[[[NSString alloc] initWithData:[output readDataToEndOfFile]
 											encoding:NSASCIIStringEncoding] autorelease] componentsSeparatedByString:@"\n"] objectAtIndex:0];		
-	}else if([pathExtension isEqualToString:@"zip"]){
+	} else if ([pathExtension isEqualToString:@"zip"]) {
 		NSTask	*unzip;
 		
 		//First, perform the actual unzipping
@@ -234,11 +234,11 @@
 		unsigned	validComponentsFound = 0;
 		
 		//Loop past the length, date, and time components to get to the name, the 4th valid component
-		for(i = 0; i < count; i++){
-			if([(NSString *)[outputComponents objectAtIndex:i] length]){
+		for (i = 0; i < count; i++) {
+			if ([(NSString *)[outputComponents objectAtIndex:i] length]) {
 				validComponentsFound++;
 				
-				if(validComponentsFound == 4){
+				if (validComponentsFound == 4) {
 					break;
 				}
 			}
@@ -248,14 +248,14 @@
 		fileName = [[outputComponents subarrayWithRange:NSMakeRange(i, count-i)] componentsJoinedByString:@" "];
 	}
 	
-	if(fileName){
+	if (fileName) {
 		[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
 		
 		dest = [[dest stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
 		
 		//Open the file so Adium can install it and then delete it
 		[[NSWorkspace sharedWorkspace] openTempFile:dest];
-	}else{
+	} else {
 		NSLog(@"Installation Error: %@",dest);
 	}
 	

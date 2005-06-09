@@ -72,12 +72,12 @@ static	NSDictionary	*statusTypeDict = nil;
 	AIListContact	*contact = [notification object];
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
-	if([allChats count]){	
-		if([contact statusType] != AIAvailableStatusType){
+	if ([allChats count]) {	
+		if ([contact statusType] != AIAvailableStatusType) {
 			NSString		*statusMessage = [[contact statusMessage] string];
 			NSString		*statusType = [statusTypeDict objectForKey:CONTACT_STATUS_MESSAGE];
 			
-			if(statusMessage && [statusMessage length] != 0){
+			if (statusMessage && [statusMessage length] != 0) {
 				[self statusMessage:[NSString stringWithFormat:AILocalizedString(@"Away Message: %@",nil),statusMessage] 
 						 forContact:contact
 						   withType:statusType
@@ -98,7 +98,7 @@ static	NSDictionary	*statusTypeDict = nil;
 	AIListContact	*contact = [notification object];
 	
 	allChats = [[adium contentController] allChatsWithContact:contact];
-	if([allChats count]){
+	if ([allChats count]) {
 		NSString		*description, *phraseWithoutSubject;
 		NSString		*name = [notification name];
 		NSDictionary	*userInfo = [notification userInfo];
@@ -128,7 +128,7 @@ static	NSDictionary	*statusTypeDict = nil;
 {
 	NSDictionary	*userInfo = [notification userInfo];
 	
-	if(![[userInfo objectForKey:@"Already Posted StatusMessage"] boolValue]){
+	if (![[userInfo objectForKey:@"Already Posted StatusMessage"] boolValue]) {
 		[self contactStatusChanged:notification];
 	}
 }
@@ -147,7 +147,7 @@ static	NSDictionary	*statusTypeDict = nil;
 																			  attributes:[[adium contentController] defaultFormattingAttributes]] autorelease];
 
 	enumerator = [inChats objectEnumerator];
-	while((chat = [enumerator nextObject])){
+	while ((chat = [enumerator nextObject])) {
 		AIContentStatus	*content;
 		
 		//Create our content object
@@ -158,7 +158,7 @@ static	NSDictionary	*statusTypeDict = nil;
 										message:attributedMessage
 									   withType:type];
 		
-		if(statusPhrase){
+		if (statusPhrase) {
 			NSDictionary	*userInfo = [NSDictionary dictionaryWithObject:statusPhrase
 																	forKey:@"Status Phrase"];
 			[content setUserInfo:userInfo];

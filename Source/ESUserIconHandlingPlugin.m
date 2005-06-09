@@ -85,15 +85,15 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if(inModifiedKeys == nil){
+	if (inModifiedKeys == nil) {
 		//At object creation, load the user icon.
 
 		//Only load the cached image file if we do not load from a preference
-		if (![self cacheAndSetUserIconFromPreferenceForListObject:inObject]){
+		if (![self cacheAndSetUserIconFromPreferenceForListObject:inObject]) {
 			//Load the cached image file by reference into the display array;
 			//It will only be loaded into memory if needed
 			NSString			*cachedImagePath = [self _cachedImagePathForObject:inObject];
-			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]){
+			if ([[NSFileManager defaultManager] fileExistsAtPath:cachedImagePath]) {
 				NSImage				*cachedImage;
 
 				cachedImage = [[NSImage alloc] initByReferencingFile:cachedImagePath];
@@ -111,7 +111,7 @@
 				[cachedImage release];
 			}
 		}
-	}else if([inModifiedKeys containsObject:KEY_USER_ICON]){
+	} else if ([inModifiedKeys containsObject:KEY_USER_ICON]) {
 		//The status UserIcon object is set by account code; apply this to the display array and cache it if necesssary
 		NSImage				*userIcon;
 		NSImage				*statusUserIcon = [inObject statusObjectForKey:KEY_USER_ICON];
@@ -124,7 +124,7 @@
 		//If the new objectValue is what we just set, notify and cache
 		userIcon = [inObject displayUserIcon];
 
-		if (userIcon == statusUserIcon){
+		if (userIcon == statusUserIcon) {
 			//Cache using the raw data if possible, otherwise create a TIFF representation to cache
 			//Note: TIFF supports transparency but not animation
 			NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
@@ -148,22 +148,22 @@
 	AIListObject	*inObject = [notification object];
 	NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
-	if([keys containsObject:KEY_USER_ICON]){
+	if ([keys containsObject:KEY_USER_ICON]) {
 		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
 		NSImage *userIcon = [userIconDisplayArray objectValue];
 		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
 
 		//If the new user icon is not the same as the one we set in updateListObject:
 		//(either cached or not), update the cache
-		if (userIcon != ownedUserIcon){
+		if (userIcon != ownedUserIcon) {
 			AIChat	*chat;
 
 			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
 
 			//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
-			if(([toolbarItems count] > 0) &&
+			if (([toolbarItems count] > 0) &&
 			   [inObject isKindOfClass:[AIListContact class]] &&
-			   (chat = [[adium contentController] existingChatWithContact:(AIListContact *)inObject])){
+			   (chat = [[adium contentController] existingChatWithContact:(AIListContact *)inObject])) {
 				[self _updateToolbarIconOfChat:chat
 									  inWindow:[[adium interfaceController] windowForChat:chat]];
 			}
@@ -177,8 +177,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(object){
-		if(![self cacheAndSetUserIconFromPreferenceForListObject:object]){
+	if (object) {
+		if (![self cacheAndSetUserIconFromPreferenceForListObject:object]) {
 			[self destroyCacheForListObject:object];
 		}
 	}
@@ -200,7 +200,7 @@
 							  ignoreInheritedValues:YES];
 
 	//A preference is used at highest priority
-	if (imageData){
+	if (imageData) {
 		NSImage	*image;
 
 		image = [[NSImage alloc] initWithData:imageData];
@@ -210,9 +210,9 @@
 		[image release];
 
 		return YES;
-	}else{
+	} else {
 		//If we had a preference set before (that is, there's an object set at Highest_Priority), clear it
-		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority){
+		if ([[inObject displayArrayForKey:KEY_USER_ICON create:NO] priorityOfObjectWithOwner:self] == Highest_Priority) {
 
 			[inObject setDisplayUserIcon:nil
 							   withOwner:self
@@ -235,7 +235,7 @@
 										 length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
 	 success = ([imageData writeToFile:cachedImagePath
 							atomically:YES]);
-	 if (success){
+	 if (success) {
 		 [inObject setStatusObject:cachedImagePath
 							forKey:@"UserIconPath"
 							notify:YES];
@@ -260,7 +260,7 @@
 
 	success = ([inData writeToFile:cachedImagePath
 						atomically:YES]);
-	if (success){
+	if (success) {
 		[inObject setStatusObject:cachedImagePath
 						   forKey:@"UserIconPath"
 						   notify:YES];
@@ -278,7 +278,7 @@
 	NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
 	BOOL		success;
 
-	if((success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath])){
+	if ((success = [[NSFileManager defaultManager] trashFileAtPath:cachedImagePath])) {
 		[inObject setStatusObject:nil
 						   forKey:@"UserIconPath"
 						   notify:YES];
@@ -347,7 +347,7 @@
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 
-	if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+	if ([[item itemIdentifier] isEqualToString:@"UserIcon"]) {
 
 		[item setEnabled:YES];
 
@@ -374,7 +374,7 @@
 		[item setMenuFormRepresentation:menuFormRepresentation];
 
 		//If this is the first item added, start observing for chats becoming visible so we can update the icon
-		if([toolbarItems count] == 0){
+		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(chatDidBecomeVisible:)
 											   name:@"AIChatDidBecomeVisible"
@@ -395,10 +395,10 @@
 - (void)toolbarDidRemoveItem: (NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	if([toolbarItems containsObject:item]){
+	if ([toolbarItems containsObject:item]) {
 		[toolbarItems removeObject:item];
 
-		if([toolbarItems count] == 0){
+		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] removeObserver:self
 												  name:@"AIChatDidBecomeVisible"
 												object:nil];
@@ -431,19 +431,19 @@
 	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
 	NSToolbarItem	*item;
 
-	while((item = [enumerator nextObject])){
-		if([[item itemIdentifier] isEqualToString:@"UserIcon"]){
+	while ((item = [enumerator nextObject])) {
+		if ([[item itemIdentifier] isEqualToString:@"UserIcon"]) {
 			AIListContact	*listContact;
 			NSImage			*image;
 
-			if((listContact = [chat listObject]) && ![chat name]){
+			if ((listContact = [chat listObject]) && ![chat name]) {
 				image = [listContact userIcon];
 
 				//Use the serviceIcon if no image can be found
-				if(!image) image = [AIServiceIcons serviceIconForObject:listContact
+				if (!image) image = [AIServiceIcons serviceIconForObject:listContact
 																   type:AIServiceIconLarge
 															  direction:AIIconNormal];
-			}else{
+			} else {
 				//If we have no listObject or we have a name, we are a group chat and
 				//should use the account's service icon
 				image = [AIServiceIcons serviceIconForObject:[chat account]

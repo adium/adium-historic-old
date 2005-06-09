@@ -89,34 +89,34 @@
 	countAllObjects = [[prefDict objectForKey:KEY_COUNT_ALL_CONTACTS] boolValue];
 	countOnlineObjects = [[prefDict objectForKey:KEY_COUNT_ONLINE_CONTACTS] boolValue];
 	
-	if ((countAllObjects && !oldCountAllObjects) || (countOnlineObjects && !oldCountOnlineObjects)){
+	if ((countAllObjects && !oldCountAllObjects) || (countOnlineObjects && !oldCountOnlineObjects)) {
 		//One of the displays is on, but it was off before
 		
-		if (!oldCountAllObjects && !oldCountOnlineObjects){
+		if (!oldCountAllObjects && !oldCountOnlineObjects) {
 			//Install our observer if we are now counting contacts in some form but weren't before
 			//This will update all list objects.
 			[[adium contactController] registerListObjectObserver:self];				
-		}else{
+		} else {
 			//Refresh all
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 		
-	}else if ((!countAllObjects && oldCountAllObjects) || (!countOnlineObjects && oldCountOnlineObjects)){
+	} else if ((!countAllObjects && oldCountAllObjects) || (!countOnlineObjects && oldCountOnlineObjects)) {
 		//One of the displays is off, but it was on before
 		
 		//Refresh all
 		[[adium contactController] updateAllListObjectsForObserver:self];
 		
-		if (!countAllObjects && !countOnlineObjects){
+		if (!countAllObjects && !countOnlineObjects) {
 			//Remove our observer since we are now doing no counting
 			[[adium contactController] unregisterListObjectObserver:self];
 		}
 	}
 
-	if([menuItem_countAllObjects state] != countAllObjects) {
+	if ([menuItem_countAllObjects state] != countAllObjects) {
 		[menuItem_countAllObjects setState:countAllObjects];
 	}
-	if([menuItem_countOnlineObjects state] != countOnlineObjects) {
+	if ([menuItem_countOnlineObjects state] != countOnlineObjects) {
 		[menuItem_countOnlineObjects setState:countOnlineObjects];
 	}
 }
@@ -129,7 +129,7 @@
 	NSSet		*modifiedAttributes = nil;
 
 	//We never update for an AIAccount object
-	if([inObject isKindOfClass:[AIAccount class]]) return nil;
+	if ([inObject isKindOfClass:[AIAccount class]]) return nil;
 
 	/* We check against a nil inModifiedKeys so we can remove our Counting information from the display when the user
 	 * toggles it off.
@@ -137,10 +137,10 @@
 	 * We update for any group which isn't the root group when its contained objects count changes.
 	 * We update a contact's containing group when its online state changes.
 	 */	
-	if((inModifiedKeys == nil) ||
+	if ((inModifiedKeys == nil) ||
 	   ((countOnlineObjects || countAllObjects) &&
 		(([inObject isKindOfClass:[AIListGroup class]] && [inModifiedKeys containsObject:@"ObjectCount"] && ![[inObject UID] isEqualToString:ADIUM_ROOT_GROUP_NAME]) ||
-		 ([inObject isKindOfClass:[AIListContact class]] && [inModifiedKeys containsObject:@"Online"])))){
+		 ([inObject isKindOfClass:[AIListContact class]] && [inModifiedKeys containsObject:@"Online"])))) {
 		
 		//Obtain the group we want to work with -- for a contact, use its parent group.
 		AIListGroup		*targetGroup = ([inObject isKindOfClass:[AIListContact class]] ? 
@@ -151,41 +151,41 @@
 		int onlineObjects = 0, totalObjects = 0;
 
 		//Obtain a count of online objects in this group
-		if(countOnlineObjects){
+		if (countOnlineObjects) {
 			AIListObject	*containedObject;
 			NSEnumerator	*enumerator;
 			
 			onlineObjects = 0;
 			enumerator = [targetGroup objectEnumerator];
-			while((containedObject = [enumerator nextObject])){
-				if([containedObject online]) onlineObjects++;
+			while ((containedObject = [enumerator nextObject])) {
+				if ([containedObject online]) onlineObjects++;
 			}
 		}
 		
 		//Obtain a count of all objects in this group
-		if(countAllObjects){
+		if (countAllObjects) {
 			totalObjects = [[targetGroup statusObjectForKey:@"ObjectCount"] intValue];
 		}
 	
 		//Build a string to add to the right of the name which shows any information we just extracted
-		if (countOnlineObjects && countAllObjects){
+		if (countOnlineObjects && countAllObjects) {
 			countString = [NSString stringWithFormat:@" (%i/%i)", onlineObjects, totalObjects];
-		}else if(countAllObjects){
+		} else if (countAllObjects) {
 			countString = [NSString stringWithFormat:@" (%i)", totalObjects];
-		}else if(countOnlineObjects){
+		} else if (countOnlineObjects) {
 			countString = [NSString stringWithFormat:@" (%i)", onlineObjects];
 		}
 
-		if (countString){
+		if (countString) {
 			AIMutableOwnerArray *rightTextArray = [targetGroup displayArrayForKey:@"Right Text"];
 			
 			[rightTextArray setObject:countString withOwner:self priorityLevel:High_Priority];
 			modifiedAttributes = [NSSet setWithObject:@"Right Text"];
-		}else{
+		} else {
 			AIMutableOwnerArray *rightTextArray = [targetGroup displayArrayForKey:@"Right Text" create:NO];
 			
 			//If there is a right text object now but there shouldn't be anymore, remove it
-			if ([rightTextArray objectWithOwner:self]){
+			if ([rightTextArray objectWithOwner:self]) {
 				[rightTextArray setObject:nil withOwner:self priorityLevel:High_Priority];
 				modifiedAttributes = [NSSet setWithObject:@"Right Text"];
 			}
@@ -200,7 +200,7 @@
  */
 - (void)toggleMenuItem:(id)sender
 {
-    if(sender == menuItem_countOnlineObjects || sender == menuItem_countAllObjects) {
+    if (sender == menuItem_countOnlineObjects || sender == menuItem_countAllObjects) {
 		BOOL	newState = ![sender state];
 		
 		//Toggle and set, which will call back on preferencesChanged: above

@@ -37,16 +37,16 @@
 
 	itemsArray = [adiumMenu itemArray];
 	
-	if([itemsArray count] > 0) {
+	if ([itemsArray count] > 0) {
 		[contextualMenu addItem:[NSMenuItem separatorItem]];
 		int i = [(NSMenu *)contextualMenu numberOfItems];
 		enumerator = [itemsArray objectEnumerator];
-		while((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			//We're going to be copying; call menu needs update now since it won't be called later.
 			NSMenu	*submenu = [menuItem submenu];
-			if(submenu &&
+			if (submenu &&
 			   [submenu respondsToSelector:@selector(delegate)] &&
-			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]){
+			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]) {
 				[[submenu delegate] menuNeedsUpdate:submenu];
 			}
 			
@@ -59,10 +59,10 @@
 
 - (void)textDidChange:(NSNotification *)notification
 {
-    if(([self selectedRange].location == 0) && ([self selectedRange].length == 0)){ //remove attributes if we're changing text at (0,0)
+    if (([self selectedRange].location == 0) && ([self selectedRange].length == 0)) { //remove attributes if we're changing text at (0,0)
 		NSDictionary		*currentTextAttribs = [self typingAttributes];
 		
-        if([currentTextAttribs objectForKey:NSLinkAttributeName]){ // but only if we currently have a link there.
+        if ([currentTextAttribs objectForKey:NSLinkAttributeName]) { // but only if we currently have a link there.
 			NSMutableDictionary *textAttribs;
 			
 			textAttribs = [[self typingAttributes] mutableCopy];

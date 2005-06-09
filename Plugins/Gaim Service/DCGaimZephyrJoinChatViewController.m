@@ -31,7 +31,7 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if(delegate) {
+	if (delegate) {
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_class stringValue] length] > 0)];
 	}
 	
@@ -59,7 +59,7 @@
 	if (!instance || ![instance length]) instance = @"*";
 	if (!recipient || ![recipient length]) recipient = @"*";
 	
-	if (class && [class length]){
+	if (class && [class length]) {
 		NSString	*name;
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
 		chatCreationInfo = [NSMutableDictionary dictionaryWithObject:class
@@ -81,7 +81,7 @@
 //Entered text is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-	if([notification object] == textField_class){
+	if ([notification object] == textField_class) {
 		[self validateEnteredText];
 	}
 }
@@ -91,11 +91,11 @@
 	NSString *class = [textField_class stringValue];
 	BOOL enabled = NO;
 	
-	if(class && [class length]){
+	if (class && [class length]) {
 		enabled = YES;
 	}
 	
-	if(delegate)
+	if (delegate)
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 

@@ -49,7 +49,7 @@ static  float   distanceBetweenEmoticons = 0;
 	
 	[super drawRect:rect];
 	
-	if(NSIntersectsRect(rect,nameFrame)){
+	if (NSIntersectsRect(rect,nameFrame)) {
 		//Display the title, truncating as necessary
 		NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingTail];
@@ -62,26 +62,26 @@ static  float   distanceBetweenEmoticons = 0;
 							 SELECTED_TEXT_COLOR, NSForegroundColorAttributeName*/, nil]];
 	}
 
-	if(NSIntersectsRect(rect,cellFrame)){		
+	if (NSIntersectsRect(rect,cellFrame)) {		
 		NSEnumerator    *enumerator;
 		AIEmoticon      *emoticon;
 		float			x = 0;
 
 		//Display a few preview emoticons
 		enumerator = [[emoticonPack emoticons] objectEnumerator];
-		while((x < cellFrame.size.width) && (emoticon = [enumerator nextObject])){
+		while ((x < cellFrame.size.width) && (emoticon = [enumerator nextObject])) {
 			NSImage *image = [emoticon image];
 			NSSize  imageSize = [image size];
 			NSRect  destRect;
 			
 			//Scale the emoticon, preserving its proportions.
-			if(imageSize.width > EMOTICON_MAX_SIZE){
+			if (imageSize.width > EMOTICON_MAX_SIZE) {
 				destRect.size.width = EMOTICON_MAX_SIZE;
 				destRect.size.height = imageSize.height * (EMOTICON_MAX_SIZE / imageSize.width);
-			}else if(imageSize.height > EMOTICON_MAX_SIZE){
+			} else if (imageSize.height > EMOTICON_MAX_SIZE) {
 				destRect.size.width = imageSize.width * (EMOTICON_MAX_SIZE / imageSize.height);
 				destRect.size.height = EMOTICON_MAX_SIZE;
-			}else{
+			} else {
 				destRect.size.width = imageSize.width;
 				destRect.size.height = imageSize.height;            
 			}
@@ -91,7 +91,7 @@ static  float   distanceBetweenEmoticons = 0;
 			destRect.origin.y = cellFrame.origin.y + EMOTICON_BOTTOM_MARGIN;
 
 			//If there is enough room, draw the image
-			if((destRect.origin.x + destRect.size.width) < (cellFrame.origin.x + cellFrame.size.width)){
+			if ((destRect.origin.x + destRect.size.width) < (cellFrame.origin.x + cellFrame.size.width)) {
 				[image drawInRect:destRect
 						 fromRect:NSMakeRect(0, 0, imageSize.width, imageSize.height)
 						operation:NSCompositeSourceOver

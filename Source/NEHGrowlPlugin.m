@@ -154,9 +154,9 @@
  */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	if([[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]){
+	if ([[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]) {
 		return(GROWL_STICKY_ALERT);
-	}else{
+	} else {
 		return(GROWL_ALERT);
 	}
 }
@@ -183,7 +183,7 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	//XXX - bleh
-	if([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
+	if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
 		return;
 	
 	NSString			*title, *description;
@@ -193,20 +193,20 @@
 	BOOL				isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 
 	//For a message event, listObject should become whomever sent the message
-	if(isMessageEvent){
+	if (isMessageEvent) {
 		AIContentObject	*contentObject = [userInfo objectForKey:@"AIContentObject"];
 		AIListObject	*source = [contentObject source];
 		chat = [userInfo objectForKey:@"AIChat"];
 
-		if(source) listObject = source;
+		if (source) listObject = source;
 	}
 
-	if(listObject){
-		if([listObject isKindOfClass:[AIListContact class]]){
+	if (listObject) {
+		if ([listObject isKindOfClass:[AIListContact class]]) {
 			//Use the parent
 			listObject = [[adium contactController] parentContactForListObject:listObject];
 			title = [listObject longDisplayName];
-		}else{
+		} else {
 			title = [listObject displayName];
 		}
 		
@@ -218,21 +218,21 @@
 												   direction:AIIconNormal] TIFFRepresentation];
 		}
 		
-		if(chat){
+		if (chat) {
 			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
 				[chat uniqueChatID], @"uniqueChatID",
 				eventID, @"eventID",
 				nil];
 			
-		}else{
+		} else {
 			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
 				[listObject internalObjectID], @"internalObjectID",
 				eventID, @"eventID",
 				nil];
 		}
 
-	}else{
-		if(chat){
+	} else {
+		if (chat) {
 			title = [chat name];
 
 			clickContext = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -246,7 +246,7 @@
 														type:AIServiceIconLarge
 												   direction:AIIconNormal] TIFFRepresentation];
 			
-		}else{
+		} else {
 			title = @"Adium";
 		}
 	}
@@ -345,32 +345,32 @@
 	AIListObject	*listObject;
 	AIChat			*chat = nil;
 		
-	if((internalObjectID = [clickContext objectForKey:@"internalObjectID"])){
+	if ((internalObjectID = [clickContext objectForKey:@"internalObjectID"])) {
 		
 		if ((listObject = [[adium contactController] existingListObjectWithUniqueID:internalObjectID]) &&
-			([listObject isKindOfClass:[AIListContact class]])){
+			([listObject isKindOfClass:[AIListContact class]])) {
 			
 			//First look for an existing chat to avoid changing anything
-			if(!(chat = [[adium contentController] existingChatWithContact:(AIListContact *)listObject])){
+			if (!(chat = [[adium contentController] existingChatWithContact:(AIListContact *)listObject])) {
 				//If we don't find one, create one
 				chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
 			}
 		}
-	}else if((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])){
+	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
 		chat = [[adium contentController] existingChatWithUniqueChatID:uniqueChatID];
 		
 		//If we didn't find a chat, it may have closed since the notification was posted.
 		//If we have an appropriate existing list object, we can create a new chat.
 		if ((!chat) &&
 			(listObject = [[adium contactController] existingListObjectWithUniqueID:uniqueChatID]) &&
-			([listObject isKindOfClass:[AIListContact class]])){
+			([listObject isKindOfClass:[AIListContact class]])) {
 		
 			//If the uniqueChatID led us to an existing contact, create a chat with it
 			chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
 		}	
 	}
 
-	if(chat){
+	if (chat) {
 		//Make the chat active
 		[[adium interfaceController] setActiveChat:chat];
 		

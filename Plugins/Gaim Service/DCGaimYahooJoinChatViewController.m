@@ -30,7 +30,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		[textField_inviteUsers setDragDelegate:self];
 		[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", nil]];
@@ -75,7 +75,7 @@
 //Entered text is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-	if([notification object] == textField_roomName){
+	if ([notification object] == textField_roomName) {
 		[self validateEnteredText];
 	}
 }
@@ -85,11 +85,11 @@
 	NSString *roomName = [textField_roomName stringValue];
 	BOOL enabled = NO;
 	
-	if( roomName && [roomName length] ) {
+	if ( roomName && [roomName length] ) {
 		enabled = YES;
 	}
 	
-	if( delegate )
+	if ( delegate )
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 
@@ -108,8 +108,8 @@
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		if([contact service] == [account service]){
+    while ((contact = [enumerator nextObject])) {
+		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
 			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];

@@ -25,13 +25,13 @@
 {
     NSParameterAssert(sourcePath != nil && [sourcePath length] != 0);
 	
-	if([self fileExistsAtPath:sourcePath]){
+	if ([self fileExistsAtPath:sourcePath]) {
 		NSString	*destPath;
 
 		NSString	*fileName = [sourcePath lastPathComponent];
 		NSString	*sourceVolume = [sourcePath volumePath];
 
-		if([sourceVolume isEqualToString:@"/"]) {
+		if ([sourceVolume isEqualToString:@"/"]) {
 			//the file is on the startup disk.
 			//use the trash in home.
 			//example: /Users/boredzo/.Trash
@@ -46,12 +46,12 @@
 		destPath = [destPath stringByAppendingPathComponent:fileName];
 
 		//Move it to whichever Trash
-		if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]){
+		if (![[NSFileManager defaultManager] movePath:sourcePath toPath:destPath handler:nil]) {
 			//The move operation failed.  A folder with that name probably already exists in the trash.
 			//So let's try appending some random characters to the end of the file name.
 			NSString *destPathWithRandom = [destPath stringByAppendingString:[NSString randomStringOfLength:6]];
 			
-			if(![[NSFileManager defaultManager] movePath:sourcePath toPath:destPathWithRandom handler:nil]){
+			if (![[NSFileManager defaultManager] movePath:sourcePath toPath:destPathWithRandom handler:nil]) {
 				NSLog(@"Attempt to trash '%@' failed (full path: %@; full Trash path: %@).", fileName, sourcePath, destPath);
 				return NO;
 			}
@@ -74,13 +74,13 @@
 	dirPath = [dirPath stringByExpandingTildeInPath];
 	
 	enumerator = [[self directoryContentsAtPath:dirPath] objectEnumerator];
-	while((fileName = [enumerator nextObject])){
-		if([fileName hasPrefix:prefix]){
+	while ((fileName = [enumerator nextObject])) {
+		if ([fileName hasPrefix:prefix]) {
 			NSString	*path = [dirPath stringByAppendingPathComponent:fileName];
 			
-			if (moveToTrash){
+			if (moveToTrash) {
 				[self trashFileAtPath:path];
-			}else{
+			} else {
 				[self removeFileAtPath:path handler:nil];
 			}
 		}
@@ -96,17 +96,17 @@
     NSMutableArray	*neededFolders = [[NSMutableArray alloc] init];
     unsigned		count;
 	
-    while(![[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir){
+    while (![[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] || !isDir) {
         [neededFolders addObject:[fullPath lastPathComponent]];
         fullPath = [fullPath stringByDeletingLastPathComponent];
     }
 	
 	
 	count = [neededFolders count];
-	if(count){
+	if (count) {
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		short			folderIndex;
-		for(folderIndex = count-1; folderIndex >= 0; folderIndex--){
+		for (folderIndex = count-1; folderIndex >= 0; folderIndex--) {
 			fullPath = [fullPath stringByAppendingPathComponent:[neededFolders objectAtIndex:folderIndex]];
 			[defaultManager createDirectoryAtPath:fullPath attributes:nil];
 		}
@@ -123,7 +123,7 @@
 - (NSString *)pathIfExists:(NSString *)path
 {
 	BOOL exists = [self fileExistsAtPath:path];
-	if(!exists) path = nil;
+	if (!exists) path = nil;
 	return path;
 }
 
@@ -132,7 +132,7 @@
 {
 	BOOL  isDir = NO;
 	BOOL exists = ([self fileExistsAtPath:path isDirectory:&isDir] && isDir);
-	if(!exists) path = nil;
+	if (!exists) path = nil;
 	return path;
 }
 
@@ -141,7 +141,7 @@
 {
 	BOOL  isDir = NO;
 	BOOL exists = ([self fileExistsAtPath:path isDirectory:&isDir] && !isDir);
-	if(!exists) path = nil;
+	if (!exists) path = nil;
 	return path;
 }
 

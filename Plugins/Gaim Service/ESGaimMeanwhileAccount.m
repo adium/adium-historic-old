@@ -61,7 +61,7 @@
 	statusMessageText = (const char *)mwServiceAware_getText(pd->srvc_aware, &t);
 	statusMessageString = (statusMessageText ? [NSString stringWithUTF8String:statusMessageText] : nil);
 
-	if (statusMessageString && [statusMessageString length]){
+	if (statusMessageString && [statusMessageString length]) {
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
@@ -73,7 +73,7 @@
 {
 	BOOL shouldReconnect = YES;
 	
-	if (disconnectionError && *disconnectionError){
+	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect Username/Password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
 		}
@@ -104,10 +104,10 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE])
 				gaimStatusType = "Active";
 			break;
 		}
@@ -118,7 +118,7 @@
 
 			if ([statusName isEqualToString:STATUS_NAME_AWAY])
 				gaimStatusType = "Away";
-			else if(([statusName isEqualToString:STATUS_NAME_DND]) ||
+			else if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 					([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				gaimStatusType = "Do Not Disturb";
 			
@@ -129,7 +129,7 @@
 	/* XXX (?) Meanwhile supports status messages along with the status types, so let our message stay */
 	
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }
@@ -137,16 +137,16 @@
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if(strcmp(label, "Set Active Message...") == 0){
+	if (strcmp(label, "Set Active Message...") == 0) {
 		return(nil);
 
-	}else if(strcmp(label, "Set Status Messages...") == 0){
+	} else if (strcmp(label, "Set Status Messages...") == 0) {
 		return(nil);
 
-	}else if(strcmp(label, "Import Sametime List...") == 0){
+	} else if (strcmp(label, "Import Sametime List...") == 0) {
 		return(AILocalizedString(@"Import Sametime List...",nil));
 
-	}else if(strcmp(label, "Export Sametime List...") == 0){
+	} else if (strcmp(label, "Export Sametime List...") == 0) {
 		return(AILocalizedString(@"Export Sametime List...",nil));
 	}
 
@@ -161,7 +161,7 @@
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 		
 		return mwgaim_xfer_new(account->gc,destsn);

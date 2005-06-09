@@ -121,31 +121,31 @@ typedef enum {
 	NSString		*type = [[notification object] lowercaseString];
 	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_APPEARANCE];
 
-	if(!type || [type isEqualToString:@"adiumemoticonset"]){
+	if (!type || [type isEqualToString:@"adiumemoticonset"]) {
 		[self _rebuildEmoticonMenuAndSelectActivePack];
 	}
 	
-	if(!type || [type isEqualToString:@"adiumicon"]){
+	if (!type || [type isEqualToString:@"adiumicon"]) {
 		[popUp_dockIcon setMenu:[self _dockIconMenu]];
 		[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
 	}
 	
-	if(!type || [type isEqualToString:@"adiumserviceicons"]){
+	if (!type || [type isEqualToString:@"adiumserviceicons"]) {
 		[popUp_serviceIcons setMenu:[self _serviceIconsMenu]];
 		[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
 	}
 	
-	if(!type || [type isEqualToString:@"adiumstatusicons"]){
+	if (!type || [type isEqualToString:@"adiumstatusicons"]) {
 		[popUp_statusIcons setMenu:[self _statusIconsMenu]];
 		[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];		
 	}
 	
-	if(!type || [type isEqualToString:@"listtheme"]){
+	if (!type || [type isEqualToString:@"listtheme"]) {
 		[popUp_colorTheme setMenu:[self _colorThemeMenu]];
 		[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
 	}
 
-	if(!type || [type isEqualToString:@"listlayout"]){
+	if (!type || [type isEqualToString:@"listlayout"]) {
 		[popUp_listLayout setMenu:[self _listLayoutMenu]];
 		[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
 	}
@@ -160,32 +160,32 @@ typedef enum {
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Emoticons
-	if([group isEqualToString:PREF_GROUP_EMOTICONS]){
+	if ([group isEqualToString:PREF_GROUP_EMOTICONS]) {
 		[self _rebuildEmoticonMenuAndSelectActivePack];
 	}
 	
 	//Appearance
-	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		
 		//Horizontal resizing label
-		if(firstTime || 
+		if (firstTime || 
 		   [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE] ||
-		   [key isEqualToString:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE]){
+		   [key isEqualToString:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE]) {
 			
 			int windowMode = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 			BOOL horizontalAutosize = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 			
-			if(windowMode == WINDOW_STYLE_STANDARD){
+			if (windowMode == WINDOW_STYLE_STANDARD) {
 				//In standard mode, disable the horizontal autosizing slider if horiztonal autosizing is off
 				[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
 				[slider_horizontalWidth setEnabled:horizontalAutosize];
 				
-			}else{
+			} else {
 				//In all the borderless transparent modes, the horizontal autosizing slider becomes the
 				//horizontal sizing slider when autosizing is off
-				if(horizontalAutosize){
+				if (horizontalAutosize) {
 					[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Maximum width:",nil)];
-				}else{
+				} else {
 					[textField_horizontalWidthText setLocalizedString:AILocalizedString(@"Width:",nil)];			
 				}
 				[slider_horizontalWidth setEnabled:YES];
@@ -194,33 +194,33 @@ typedef enum {
 		}
 
 		//Selected menu items
-		if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
+		if (firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]) {
 			[popUp_statusIcons selectItemWithTitle:[prefDict objectForKey:KEY_STATUS_ICON_PACK]];
 			
 			//If the prefDict's item isn't present, we're using the default, so select that one
-			if(![popUp_serviceIcons selectedItem]){
+			if (![popUp_serviceIcons selectedItem]) {
 				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}			
 		}
-		if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
+		if (firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]) {
 			[popUp_serviceIcons selectItemWithTitle:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]];
 			
 			//If the prefDict's item isn't present, we're using the default, so select that one
-			if(![popUp_serviceIcons selectedItem]){
+			if (![popUp_serviceIcons selectedItem]) {
 				[popUp_serviceIcons selectItemWithTitle:[[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																										group:PREF_GROUP_APPEARANCE
 																									   object:nil]];
 			}
 		}		
-		if(firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
+		if (firstTime || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
 			[popUp_listLayout selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]];
 		}
-		if(firstTime || [key isEqualToString:KEY_LIST_THEME_NAME]){
+		if (firstTime || [key isEqualToString:KEY_LIST_THEME_NAME]) {
 			[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
 		}	
-		if(firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+		if (firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
 			[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
 		}		
 	}
@@ -237,11 +237,11 @@ typedef enum {
 	NSArray	*activeEmoticonPacks = [[adium emoticonController] activeEmoticonPacks];
 	int		numActivePacks = [activeEmoticonPacks count];
 	
-	if(numActivePacks == 0){
+	if (numActivePacks == 0) {
 		[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuNone];
-	}else if(numActivePacks > 1){
+	} else if (numActivePacks > 1) {
 		[popUp_emoticons compatibleSelectItemWithTag:AIEmoticonMenuMultiple];
-	}else{
+	} else {
 		[popUp_emoticons selectItemWithRepresentedObject:[activeEmoticonPacks objectAtIndex:0]];
 	}
 }
@@ -251,65 +251,65 @@ typedef enum {
  */
 - (IBAction)changePreference:(id)sender
 {
- 	if(sender == popUp_statusIcons){
+ 	if (sender == popUp_statusIcons) {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_STATUS_ICON_PACK
                                               group:PREF_GROUP_APPEARANCE];
 		
-	}else if(sender == popUp_serviceIcons){
+	} else if (sender == popUp_serviceIcons) {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_SERVICE_ICON_PACK
                                               group:PREF_GROUP_APPEARANCE];
 		
-	}else if(sender == popUp_dockIcon){
+	} else if (sender == popUp_dockIcon) {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_ACTIVE_DOCK_ICON
                                               group:PREF_GROUP_APPEARANCE];
 		
-	}else if(sender == popUp_listLayout){
+	} else if (sender == popUp_listLayout) {
         [[adium preferenceController] setPreference:[[sender selectedItem] title]
                                              forKey:KEY_LIST_LAYOUT_NAME
                                               group:PREF_GROUP_APPEARANCE];
 		
-	}else if(sender == popUp_colorTheme){
+	} else if (sender == popUp_colorTheme) {
 		[[adium preferenceController] setPreference:[[sender selectedItem] title]
 											 forKey:KEY_LIST_THEME_NAME
 											  group:PREF_GROUP_APPEARANCE];
 
-	}else if(sender == popUp_windowStyle){
+	} else if (sender == popUp_windowStyle) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[sender selectedItem] tag]]
 											 forKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 											  group:PREF_GROUP_APPEARANCE];
 		
-    }else if(sender == checkBox_verticalAutosizing){
+    } else if (sender == checkBox_verticalAutosizing) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
                                               group:PREF_GROUP_APPEARANCE];
 		
-    }else if(sender == checkBox_horizontalAutosizing){
+    } else if (sender == checkBox_horizontalAutosizing) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE
                                               group:PREF_GROUP_APPEARANCE];
 
-    }else if(sender == slider_windowOpacity){
+    } else if (sender == slider_windowOpacity) {
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:([sender floatValue] / 100.0)]
                                              forKey:KEY_LIST_LAYOUT_WINDOW_OPACITY
                                               group:PREF_GROUP_APPEARANCE];
 		[self _updateSliderValues];
 		
-	}else if(sender == slider_horizontalWidth){
+	} else if (sender == slider_horizontalWidth) {
 		int newValue = [sender intValue];
 		int oldValue = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
 																 group:PREF_GROUP_APPEARANCE] intValue];
-		if(newValue != oldValue){ 
+		if (newValue != oldValue) { 
 			[[adium preferenceController] setPreference:[NSNumber numberWithInt:newValue]
 												 forKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH
 												  group:PREF_GROUP_APPEARANCE];
 			[self _updateSliderValues];
 		}
 		
-	}else if(sender == popUp_emoticons){
-		if([sender tag] != AIEmoticonMenuMultiple){
+	} else if (sender == popUp_emoticons) {
+		if ([sender tag] != AIEmoticonMenuMultiple) {
 			//Disable all active emoticons
 			NSArray			*activePacks = [[[[adium emoticonController] activeEmoticonPacks] mutableCopy] autorelease];
 			NSEnumerator	*enumerator = [activePacks objectEnumerator];
@@ -319,12 +319,12 @@ typedef enum {
 			
 			[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 
-			while((pack = [enumerator nextObject])){
+			while ((pack = [enumerator nextObject])) {
 				[[adium emoticonController] setEmoticonPack:pack enabled:NO];
 			}
 			
 			//Enable the selected pack
-			if(selectedPack) [[adium emoticonController] setEmoticonPack:selectedPack enabled:YES];
+			if (selectedPack) [[adium emoticonController] setEmoticonPack:selectedPack enabled:YES];
 
 			[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 		}
@@ -371,7 +371,7 @@ typedef enum {
 	[menu addItem:menuItem];
 	
 	//Add the "Multiple packs selected" option
-	if([[[adium emoticonController] activeEmoticonPacks] count] > 1){
+	if ([[[adium emoticonController] activeEmoticonPacks] count] > 1) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Multiple Packs Selected",nil)
 																		 target:nil
 																		 action:nil
@@ -385,7 +385,7 @@ typedef enum {
 	[menu addItem:[NSMenuItem separatorItem]];
 	
 	//Emoticon Packs
-	while((pack = [enumerator nextObject])){
+	while ((pack = [enumerator nextObject])) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[pack name]
 																		 target:nil
 																		 action:nil
@@ -471,19 +471,19 @@ typedef enum {
  */
 - (void)listThemeEditorWillCloseWithChanges:(BOOL)saveChanges forThemeNamed:(NSString *)name
 {
-	if(saveChanges){
+	if (saveChanges) {
 		//Update the modified theme
-		if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
+		if ([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_THEME
 												withName:name
 											   extension:LIST_THEME_EXTENSION
-												inFolder:LIST_THEME_FOLDER]){
+												inFolder:LIST_THEME_FOLDER]) {
 		
 			[[adium preferenceController] setPreference:name
 												 forKey:KEY_LIST_THEME_NAME
 												  group:PREF_GROUP_APPEARANCE];
 		}
 		
-	}else{
+	} else {
 		//Revert back to selected theme
 		NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
 
@@ -540,19 +540,19 @@ typedef enum {
  */
 - (void)listLayoutEditorWillCloseWithChanges:(BOOL)saveChanges forLayoutNamed:(NSString *)name
 {
-	if(saveChanges){
+	if (saveChanges) {
 		//Update the modified layout
-		if([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
+		if ([AISCLViewPlugin createSetFromPreferenceGroup:PREF_GROUP_LIST_LAYOUT
 												withName:name
 											   extension:LIST_LAYOUT_EXTENSION
-												inFolder:LIST_LAYOUT_FOLDER]){
+												inFolder:LIST_LAYOUT_FOLDER]) {
 			
 			[[adium preferenceController] setPreference:name
 												 forKey:KEY_LIST_LAYOUT_NAME
 												  group:PREF_GROUP_APPEARANCE];
 		}
 		
-	}else{
+	} else {
 		//Revert back to selected layout
 		NSString *layout = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
 		
@@ -589,14 +589,14 @@ typedef enum {
 	NSDictionary	*presetDict;
 
 	//Scan the correct presets to ensure this name doesn't already exist
-	if([userInfo isEqualToString:@"theme"]){
+	if ([userInfo isEqualToString:@"theme"]) {
 		enumerator = [[AISCLViewPlugin availableThemeSets] objectEnumerator];
-	}else{
+	} else {
 		enumerator = [[AISCLViewPlugin availableLayoutSets] objectEnumerator];
 	}
 	
-	while((presetDict = [enumerator nextObject])){
-		if([newName isEqualToString:[presetDict objectForKey:@"name"]]) return(NO);
+	while ((presetDict = [enumerator nextObject])) {
+		if ([newName isEqualToString:[presetDict objectForKey:@"name"]]) return(NO);
 	}
 	
 	return(YES);
@@ -610,11 +610,11 @@ typedef enum {
 								newName:(NSString *)newName
 							   userInfo:(id)userInfo
 {
-	switch(returnCode){
+	switch (returnCode) {
 		case ESPresetNameSheetOkayReturn:
-			if([userInfo isEqualToString:@"theme"]){
+			if ([userInfo isEqualToString:@"theme"]) {
 				[self performSelector:@selector(_editListThemeWithName:) withObject:newName afterDelay:0.00001];
-			}else{
+			} else {
 				[self performSelector:@selector(_editListLayoutWithName:) withObject:newName afterDelay:0.00001];
 			}
 		break;
@@ -642,7 +642,7 @@ typedef enum {
 {
 	NSArray		*newPresets;
 
-	if(presets == _listLayouts){
+	if (presets == _listLayouts) {
 		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_LAYOUT_EXTENSION
 								  inFolder:LIST_LAYOUT_FOLDER
@@ -650,7 +650,7 @@ typedef enum {
 		_listLayouts = [AISCLViewPlugin availableLayoutSets];
 		newPresets = _listLayouts;
 		
-	}else if(presets == _listThemes){
+	} else if (presets == _listThemes) {
 		[AISCLViewPlugin renameSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_THEME_EXTENSION
 								  inFolder:LIST_THEME_FOLDER
@@ -658,17 +658,17 @@ typedef enum {
 		_listThemes = [AISCLViewPlugin availableThemeSets];
 		newPresets = _listThemes;
 
-	}else{
+	} else {
 		newPresets = nil;
 	}
 	
 	//Return the new duplicate by reference for the preset controller
-	if(renamedPreset){
+	if (renamedPreset) {
 		NSEnumerator	*enumerator = [newPresets objectEnumerator];
 		NSDictionary	*aPreset;
 		
-		while((aPreset = [enumerator nextObject])){
-			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
+		while ((aPreset = [enumerator nextObject])) {
+			if ([newName isEqualToString:[aPreset objectForKey:@"name"]]) {
 				*renamedPreset = aPreset;
 				break;
 			}
@@ -686,7 +686,7 @@ typedef enum {
 	NSString	*newName = [NSString stringWithFormat:@"%@ (%@)", [preset objectForKey:@"name"], AILocalizedString(@"Copy",nil)];
 	NSArray		*newPresets = nil;
 	
-	if(presets == _listLayouts){
+	if (presets == _listLayouts) {
 		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
 									extension:LIST_LAYOUT_EXTENSION
 									 inFolder:LIST_LAYOUT_FOLDER
@@ -694,7 +694,7 @@ typedef enum {
 		_listLayouts = [AISCLViewPlugin availableLayoutSets];
 		newPresets = _listLayouts;
 		
-	}else if(presets == _listThemes){
+	} else if (presets == _listThemes) {
 		[AISCLViewPlugin duplicateSetWithName:[preset objectForKey:@"name"]
 									extension:LIST_THEME_EXTENSION
 									 inFolder:LIST_THEME_FOLDER
@@ -704,12 +704,12 @@ typedef enum {
 	}
 
 	//Return the new duplicate by reference for the preset controller
-	if(duplicatePreset){
+	if (duplicatePreset) {
 		NSEnumerator	*enumerator = [newPresets objectEnumerator];
 		NSDictionary	*aPreset;
 		
-		while((aPreset = [enumerator nextObject])){
-			if([newName isEqualToString:[aPreset objectForKey:@"name"]]){
+		while ((aPreset = [enumerator nextObject])) {
+			if ([newName isEqualToString:[aPreset objectForKey:@"name"]]) {
 				*duplicatePreset = aPreset;
 				break;
 			}
@@ -724,7 +724,7 @@ typedef enum {
  */
 - (NSArray *)deletePreset:(NSDictionary *)preset inPresets:(NSArray *)presets
 {
-	if(presets == _listLayouts){
+	if (presets == _listLayouts) {
 		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_LAYOUT_EXTENSION
 								  inFolder:LIST_LAYOUT_FOLDER];		
@@ -732,7 +732,7 @@ typedef enum {
 		
 		return(_listLayouts);
 	
-	}else if(presets == _listThemes){
+	} else if (presets == _listThemes) {
 		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
 								 extension:LIST_THEME_EXTENSION
 								  inFolder:LIST_THEME_FOLDER];		
@@ -740,7 +740,7 @@ typedef enum {
 		
 		return(_listThemes);
 
-	}else{
+	} else {
 		return(nil);
 	}
 }
@@ -757,7 +757,7 @@ typedef enum {
 	NSString		*name;
 	
 	//Available Layouts
-	while((set = [enumerator nextObject])){
+	while ((set = [enumerator nextObject])) {
 		name = [set objectForKey:@"name"];
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		 target:nil
@@ -798,7 +798,7 @@ typedef enum {
 	NSString		*name;
 	
 	//Available themes
-	while((set = [enumerator nextObject])){
+	while ((set = [enumerator nextObject])) {
 		name = [set objectForKey:@"name"];
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																		 target:nil
@@ -847,7 +847,7 @@ typedef enum {
 	NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 	NSString		*packPath;
 	
-	while((packPath = [enumerator nextObject])){
+	while ((packPath = [enumerator nextObject])) {
 		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 		AIIconState	*preview = [[adium dockController] previewStateForIconPackAtPath:packPath];
 		
@@ -894,7 +894,7 @@ typedef enum {
 	NSEnumerator	*enumerator = [packs objectEnumerator];
 	NSString		*packPath;
 
-	while((packPath = [enumerator nextObject])){
+	while ((packPath = [enumerator nextObject])) {
 		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
 		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
 																					  target:nil

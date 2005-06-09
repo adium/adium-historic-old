@@ -20,11 +20,11 @@
     NSString		*obj = nil;
     NSEnumerator	*enumerator = [[[self query] componentsSeparatedByString:@"&"] objectEnumerator];
     
-    while((obj = [enumerator nextObject])){
+    while ((obj = [enumerator nextObject])) {
         NSArray *keyAndValue = [obj componentsSeparatedByString:@"="];
 
-        if(([keyAndValue count] >= 2) &&
-		   ([[keyAndValue objectAtIndex:0] isEqualToString:key])){
+        if (([keyAndValue count] >= 2) &&
+		   ([[keyAndValue objectAtIndex:0] isEqualToString:key])) {
 			return [keyAndValue objectAtIndex:1];
 		}
     }

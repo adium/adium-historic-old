@@ -30,7 +30,7 @@ int bringToFront(id itemA, id itemB, void *target);
     int		loop;
 
     subviews = [[self subviews] copy];
-    for(loop = 0;loop < [subviews count]; loop++){
+    for (loop = 0;loop < [subviews count]; loop++) {
         [[subviews objectAtIndex:loop] removeFromSuperview];
     }
     [subviews release];
@@ -43,11 +43,11 @@ int bringToFront(id itemA, id itemB, void *target);
 
 int bringToFront(id itemA, id itemB, void *target)
 {
-    if(itemA == target){
+    if (itemA == target) {
         return(NSOrderedDescending);
-    }else if(itemB == target){
+    } else if (itemB == target) {
         return(NSOrderedAscending);
-    }else{
+    } else {
         return(NSOrderedSame);
     }
 }

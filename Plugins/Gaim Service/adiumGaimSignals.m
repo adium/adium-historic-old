@@ -19,14 +19,14 @@
 
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
-	if (buddy){
+	if (buddy) {
 		SEL				updateSelector = nil;
 		id				data = nil;
 		BOOL			letAccountHandleUpdate = YES;
 		CBGaimAccount	*account = accountLookup(buddy->account);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
 
-		switch(event){
+		switch (event) {
 			case GAIM_BUDDY_SIGNON: {
 				updateSelector = @selector(updateSignon:withData:);
 				break;
@@ -37,7 +37,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 			case GAIM_BUDDY_SIGNON_TIME: {
 				updateSelector = @selector(updateSignonTime:withData:);
-				if (buddy->signon){
+				if (buddy->signon) {
 					data = [NSDate dateWithTimeIntervalSince1970:buddy->signon];
 				}
 				break;
@@ -67,20 +67,20 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 
 			case GAIM_BUDDY_IDLE:
 			case GAIM_BUDDY_IDLE_RETURN: {
-				if (buddy->idle != 0){
+				if (buddy->idle != 0) {
 					updateSelector = @selector(updateWentIdle:withData:);
 					
-					if (buddy->idle != -1){
+					if (buddy->idle != -1) {
 						data = [NSDate dateWithTimeIntervalSince1970:buddy->idle];
 					}
-				}else{
+				} else {
 					updateSelector = @selector(updateIdleReturn:withData:);	
 				}
 				break;
 			}
 			case GAIM_BUDDY_EVIL: {
 				updateSelector = @selector(updateEvil:withData:);
-				if (buddy->evil){
+				if (buddy->evil) {
 					data = [NSNumber numberWithInt:buddy->evil];
 				}
 				break;
@@ -89,13 +89,13 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				GaimBuddyIcon *buddyIcon = gaim_buddy_get_icon(buddy);
 				updateSelector = @selector(updateIcon:withData:);
 				
-				if (buddyIcon){
+				if (buddyIcon) {
 					const char  *iconData;
 					size_t		len;
 					
 					iconData = gaim_buddy_icon_get_data(buddyIcon, &len);
 					
-					if (iconData && len){
+					if (iconData && len) {
 						data = [NSData dataWithBytes:iconData
 											  length:len];
 					}
@@ -107,12 +107,12 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 			}
 		}
 		
-		if(letAccountHandleUpdate){
-			if (updateSelector){
+		if (letAccountHandleUpdate) {
+			if (updateSelector) {
 				[account mainPerformSelector:updateSelector
 								  withObject:theContact
 								  withObject:data];
-			}else{
+			} else {
 				[account mainPerformSelector:@selector(updateContact:forEvent:)
 								  withObject:theContact
 								  withObject:data];

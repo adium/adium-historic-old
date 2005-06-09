@@ -135,12 +135,12 @@
 {
 	BOOL isMessageEvent = [[adium contactAlertsController] isMessageEvent:eventID];
 	
-	if(isMessageEvent){
+	if (isMessageEvent) {
 		AIChat	*chat;
 
-		if((chat = [userInfo objectForKey:@"AIChat"]) &&
+		if ((chat = [userInfo objectForKey:@"AIChat"]) &&
 		   (chat != [[adium interfaceController] activeChat]) &&
-		   (![overlayObjectsArray containsObjectIdenticalTo:chat])){
+		   (![overlayObjectsArray containsObjectIdenticalTo:chat])) {
 			[overlayObjectsArray addObject:chat];
 			
 			//Wait until the next run loop so this event is done processing (and our unviewed content count is right)
@@ -151,11 +151,11 @@
 			/* The chat observer method is responsible for removing this overlay later */
 		}
 
-	}else if(listObject){
+	} else if (listObject) {
 		NSTimer	*removeTimer;
 		
 		//Clear any current timer for this object o ahve its overlay removed
-		if((removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"])) [removeTimer invalidate];
+		if ((removeTimer = [listObject statusObjectForKey:@"DockOverlayRemoveTimer"])) [removeTimer invalidate];
 		
 		//Add a timer to remove this overlay
 		removeTimer = [NSTimer scheduledTimerWithTimeInterval:5
@@ -167,7 +167,7 @@
 							 forKey:@"DockOverlayRemoveTimer"
 							 notify:NotifyNever];
 
-		if(![overlayObjectsArray containsObject:listObject]){
+		if (![overlayObjectsArray containsObject:listObject]) {
 			[overlayObjectsArray addObject:listObject];
 		}
 
@@ -240,24 +240,24 @@
 
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]]){
+	if ([inObject isKindOfClass:[AIAccount class]]) {
 		//When an account signs on or off, force an overlay update as it may have silently changed
 		//contacts' statuses
-		if([inModifiedKeys containsObject:@"Online"]){
+		if ([inModifiedKeys containsObject:@"Online"]) {
 			NSEnumerator	*enumerator = [[[overlayObjectsArray copy] autorelease] objectEnumerator];
 			AIListObject	*listObject;
 			BOOL			madeChanges = NO;
 			
-			while((listObject = [enumerator nextObject])){
-				if(([listObject respondsToSelector:@selector(account)]) &&
+			while ((listObject = [enumerator nextObject])) {
+				if (([listObject respondsToSelector:@selector(account)]) &&
 				   ([(id)listObject account] == inObject) &&
-				   ([overlayObjectsArray containsObjectIdenticalTo:listObject])){
+				   ([overlayObjectsArray containsObjectIdenticalTo:listObject])) {
 					[overlayObjectsArray removeObject:listObject];
 					madeChanges = YES;
 				}
 			}
 			
-			if(madeChanges) [self _setOverlay];
+			if (madeChanges) [self _setOverlay];
 		}
 	}
 	
@@ -269,10 +269,10 @@
  */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		
-		if(![inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
-			if([overlayObjectsArray containsObjectIdenticalTo:inChat]){
+		if (![inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+			if ([overlayObjectsArray containsObjectIdenticalTo:inChat]) {
 				[overlayObjectsArray removeObjectIdenticalTo:inChat];
 				[self _setOverlay];
 			}
@@ -286,13 +286,13 @@
 - (void)_setOverlay
 {
     //Remove & release the current overlay state
-    if(overlayState){
+    if (overlayState) {
         [[adium dockController] removeIconStateNamed:@"ContactStatusOverlay"];
         [overlayState release]; overlayState = nil;
     }
 
     //Create & set the new overlay state
-    if([overlayObjectsArray count] != 0){
+    if ([overlayObjectsArray count] != 0) {
         //Set the state
         overlayState = [[AIIconState alloc] initWithImages:[NSArray arrayWithObjects:[self overlayImageFlash:NO], [self overlayImageFlash:YES], nil]
 													 delay:0.5
@@ -332,7 +332,7 @@
 	
     //Draw overlays for each contact
     enumerator = [overlayObjectsArray reverseObjectEnumerator];
-    while((object = [enumerator nextObject]) && !(top < 0) && bottom < 128){
+    while ((object = [enumerator nextObject]) && !(top < 0) && bottom < 128) {
         float			left, right, arcRadius, stringInset;
         NSBezierPath	*path;
         NSColor			*backColor = nil, *textColor = nil, *borderColor = nil;
@@ -377,42 +377,42 @@
 		
 		/*
 		 //Get our colors
-		 if(!([contact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT] && flash)){
+		 if (!([contact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT] && flash)) {
 			 backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
 			 textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
 		 }
 		 */
 		
-        if([object integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){ //Unviewed
-			if(flash){
+        if ([object integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) { //Unviewed
+			if (flash) {
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];
-            }else{
+            } else {
                 backColor = backUnviewedContentColor;
                 textColor = unviewedContentColor;
             }
-        }else if([object integerStatusObjectForKey:@"Signed On"]){ //Signed on
+        } else if ([object integerStatusObjectForKey:@"Signed On"]) { //Signed on
             backColor = backSignedOnColor;
             textColor = signedOnColor;
 			
-        }else if([object integerStatusObjectForKey:@"Signed Off"]){ //Signed off
+        } else if ([object integerStatusObjectForKey:@"Signed Off"]) { //Signed off
             backColor = backSignedOffColor;
             textColor = signedOffColor;
 			
         }
 		
-		if(!backColor){
+		if (!backColor) {
 			backColor = [NSColor whiteColor];
 		}
-		if(!textColor){
+		if (!textColor) {
 			textColor = [NSColor blackColor];
 		}
 		
         //Lighten/Darken the back color slightly
-        if([backColor colorIsDark]){
+        if ([backColor colorIsDark]) {
             backColor = [backColor darkenBy:-0.15];
             borderColor = [backColor darkenBy:-0.3];
-        }else{
+        } else {
             backColor = [backColor darkenBy:0.15];
             borderColor = [backColor darkenBy:0.3];
         }

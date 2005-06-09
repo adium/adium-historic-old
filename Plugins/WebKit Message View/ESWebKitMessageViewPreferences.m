@@ -124,7 +124,7 @@
  */
 - (void)messageStyleXtrasDidChange
 {
-	if(viewIsOpen){
+	if (viewIsOpen) {
 		NSDictionary *prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
 		[popUp_styles setMenu:[self _stylesMenu]];
@@ -140,22 +140,22 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
+	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 		NSString	*style;
 		NSString	*variant;
 
 		//Ensure our style/variant menus are showing the correct selection
 		style = [prefDict objectForKey:KEY_WEBKIT_STYLE];
-		if(!style || ![popUp_styles selectItemWithRepresentedObject:style]){
+		if (!style || ![popUp_styles selectItemWithRepresentedObject:style]) {
 			style = WEBKIT_DEFAULT_STYLE;
 			[popUp_styles selectItemWithRepresentedObject:style];
 		}
 
 		variant = [prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:style]];
-		if(!variant) variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
+		if (!variant) variant = [AIWebkitMessageViewStyle defaultVariantForBundle:[plugin messageStyleBundleWithIdentifier:style]];
 		
 		//When the active style changes, rebuild our variant menu for the new style
-		if(!key || [key isEqualToString:KEY_WEBKIT_STYLE]){
+		if (!key || [key isEqualToString:KEY_WEBKIT_STYLE]) {
 			[popUp_variants setMenu:[self _variantsMenu]];
 		}
 		
@@ -169,9 +169,9 @@
 		//Style-specific background prefs
 		NSData	*backgroundImage = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"Background" forStyle:style]
 																		   group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
-		if(backgroundImage){
+		if (backgroundImage) {
 			[imageView_backgroundImage setImage:[[[NSImage alloc] initWithData:backgroundImage] autorelease]];
-		}else{
+		} else {
 			[imageView_backgroundImage setImage:nil];
 		}
 
@@ -204,47 +204,47 @@
 {
 	NSString	*style = [[popUp_styles selectedItem] representedObject];
 
-    if(sender == checkBox_showUserIcons){
+    if (sender == checkBox_showUserIcons) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_USER_ICONS
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-    }else if(sender == checkBox_showHeader){
+    } else if (sender == checkBox_showHeader) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_HEADER
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 
-    }else if(sender == checkBox_showMessageColors){
+    } else if (sender == checkBox_showMessageColors) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-    }else if(sender == checkBox_showMessageFonts){
+    } else if (sender == checkBox_showMessageFonts) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-    }else if(sender == checkBox_useCustomBackground){
+    } else if (sender == checkBox_useCustomBackground) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 
-	}else if(sender == colorWell_customBackgroundColor){
+	} else if (sender == colorWell_customBackgroundColor) {
 		[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
                                              forKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:style]
                                               group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-	}else if(sender == popUp_backgroundImageType){
+	} else if (sender == popUp_backgroundImageType) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
 											 forKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:style]
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
 
-	}else if(sender == popUp_styles){
+	} else if (sender == popUp_styles) {
 		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
 											 forKey:KEY_WEBKIT_STYLE
 											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
-	}else if(sender == popUp_variants){
+	} else if (sender == popUp_variants) {
 		NSString *activeStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
 																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
 		
@@ -340,7 +340,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSMenuItem		*menuItem;
 	
 	enumerator = [availableStyles objectEnumerator];
-	while((style = [enumerator nextObject])){
+	while ((style = [enumerator nextObject])) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[style name]
 																		 target:nil
 																		 action:nil
@@ -352,7 +352,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	[menuItemArray sortUsingFunction:menuTitleSort context:nil];
 	
 	enumerator = [menuItemArray objectEnumerator];
-	while((menuItem = [enumerator nextObject])){
+	while ((menuItem = [enumerator nextObject])) {
 		[menu addItem:menuItem];
 	}
 	
@@ -369,7 +369,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSString		*variant;
 	
 	//Add a menu item for each variant
-	while((variant = [enumerator nextObject])){
+	while ((variant = [enumerator nextObject])) {
 		[menu addItemWithTitle:variant
 						target:nil
 						action:nil
@@ -434,12 +434,12 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	[[view_previewLocation superview] replaceSubview:view_previewLocation with:preview];
 	
 	//Disable drag and drop onto the preview chat - Jeff doesn't need your porn :)
-	if([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]){
+	if ([preview respondsToSelector:@selector(setAllowsDragAndDrop:)]) {
 		[(ESWebView *)preview setAllowsDragAndDrop:NO];
 	}
 	
 	//Disable forwarding of events so the preferences responder chain works properly
-	if([preview respondsToSelector:@selector(setShouldForwardEvents:)]){
+	if ([preview respondsToSelector:@selector(setShouldForwardEvents:)]) {
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
 	}
 	
@@ -477,7 +477,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSDictionary		*participant;
 	AIService			*aimService = [[adium accountController] firstServiceWithServiceID:@"AIM"];
 	
-	while((participant = [enumerator nextObject])){
+	while ((participant = [enumerator nextObject])) {
 		NSString		*UID, *alias, *userIconName;
 		AIListObject	*listObject;
 		
@@ -486,14 +486,14 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		listObject = [[[AIListObject alloc] initWithUID:UID service:aimService] autorelease];
 		
 		//Display name
-		if(alias = [participant objectForKey:@"Display Name"]){
+		if (alias = [participant objectForKey:@"Display Name"]) {
 			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 													  object:listObject
 													userInfo:[NSDictionary dictionaryWithObject:alias forKey:@"Alias"]];
 		}
 		
 		//User icon
-		if(userIconName = [participant objectForKey:@"UserIcon Name"]){
+		if (userIconName = [participant objectForKey:@"UserIcon Name"]) {
 			[listObject setStatusObject:[previewPath stringByAppendingPathComponent:[participant objectForKey:@"UserIcon Name"]]
 								 forKey:@"UserIconPath"
 								 notify:YES];
@@ -513,21 +513,21 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSString			*dateOpened, *type, *name, *UID;
 	
 	//Date opened
-	if(dateOpened = [chatDict objectForKey:@"Date Opened"]){
+	if (dateOpened = [chatDict objectForKey:@"Date Opened"]) {
 		[inChat setDateOpened:[NSDate dateWithNaturalLanguageString:dateOpened]];
 	}
 	
 	//Source/Destination
 	type = [chatDict objectForKey:@"Type"];
-	if([type isEqualToString:@"IM"]){
-		if(UID = [chatDict objectForKey:@"Destination UID"]){
+	if ([type isEqualToString:@"IM"]) {
+		if (UID = [chatDict objectForKey:@"Destination UID"]) {
 			[inChat addParticipatingListObject:[participants objectForKey:UID]];
 		}
-		if(UID = [chatDict objectForKey:@"Source UID"]){
+		if (UID = [chatDict objectForKey:@"Source UID"]) {
 			[inChat setAccount:(AIAccount *)[participants objectForKey:UID]];
 		}
-	}else{
-		if(name = [chatDict objectForKey:@"Name"]) [inChat setName:name];
+	} else {
+		if (name = [chatDict objectForKey:@"Name"]) [inChat setName:name];
 	}
 	
 	//We don't want the interface controller to try to open this fake chat
@@ -543,7 +543,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSDictionary		*messageDict;
 	
 	enumerator = [chatArray objectEnumerator];
-	while((messageDict = [enumerator nextObject])){
+	while ((messageDict = [enumerator nextObject])) {
 		AIContentObject		*content = nil;
 		AIListObject		*source;
 		NSString			*from, *msgType;
@@ -554,7 +554,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 
 		source = (from ? [participants objectForKey:from] : nil);
 
-		if([msgType isEqualToString:CONTENT_MESSAGE_TYPE]){
+		if ([msgType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			//Create message content object
 			AIListObject		*dest;
 			NSString			*to;
@@ -577,7 +577,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 			//nor our destination are AIAccount objects.
 			[content _setIsOutgoing:outgoing];
 
-		}else if([msgType isEqualToString:CONTENT_STATUS_TYPE]){
+		} else if ([msgType isEqualToString:CONTENT_STATUS_TYPE]) {
 			//Create status content object
 			NSString			*statusMessageType;
 			
@@ -593,7 +593,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 										   withType:statusMessageType];
 		}
 
-		if(content){			
+		if (content) {			
 			[content setTrackContent:NO];
 			[content setPostProcessContent:NO];
 			[content setDisplayContentImmediately:NO];

@@ -94,7 +94,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 #pragma mark Configure
 //Gradient start color
 - (void)setFirstColor:(NSColor*)inColor{
-	if(color1 != inColor){
+	if (color1 != inColor) {
 		[color1 release];
 		color1 = [inColor retain];
 	}
@@ -106,7 +106,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 //Gradient end color
 - (void)setSecondColor:(NSColor*)inColor
 {
-	if(color2 != inColor){
+	if (color2 != inColor) {
 		[color2 release];
 		color2 = [inColor retain];
 	}
@@ -157,13 +157,13 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	TwoColors blendPoints;
 	NSColor *startColor = [color1 retain], *endColor = [color2 retain], *temp;
 
-	if(![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
+	if (![[startColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
 		temp = startColor;
 		startColor = [[startColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
 		[temp release];
 	}
 
-	if(![[endColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
+	if (![[endColor colorSpaceName] isEqualToString:NSDeviceRGBColorSpace]) {
 		temp = endColor;
 		endColor = [[endColor colorUsingColorSpaceName:NSDeviceRGBColorSpace] retain];
 		[temp release];
@@ -200,7 +200,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			//note that the comments in this section refer to the bounds of
 			//  the context, not the window. (e.g. 'top' means 'top of the
 			//  context', not 'top of the window'.)
-			if(direction == AIVertical) {
+			if (direction == AIVertical) {
 				//draw the gradient from the top middle to the bottom middle.
 				srcPt.x = dstPt.x = width / 2.0f;
 				srcPt.y = 0.0f;
@@ -230,7 +230,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 
 					//Drawing stuff
 					CGPathRef pathToAdd = CreateCGPathWithNSBezierPath(&transform, inPath); //thanks boredzo :)
-					if(pathToAdd != NULL) {
+					if (pathToAdd != NULL) {
 						CGContextAddPath(context, pathToAdd);
 						CGContextClip(context);
 
@@ -244,15 +244,15 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 								 fraction:1.0f];
 						
 						CGPathRelease(pathToAdd);
-					} /* if(pathToAdd != NULL) */
+					} /* if (pathToAdd != NULL) */
 					CGContextRelease(context);
-				} /* if(context) */
+				} /* if (context) */
 				CGShadingRelease(shading);
-			} /* if(shading) */
+			} /* if (shading) */
 			CGColorSpaceRelease(cspace);
-		} /* if(cspace) */
+		} /* if (cspace) */
 		CGFunctionRelease(function);
-	} /* if(function) */
+	} /* if (function) */
 }
 
 @end
@@ -316,17 +316,17 @@ int BlendColors(FloatRGB *result, FloatRGB *a, FloatRGB *b, float scale) {
 CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBezierPath *bezierPath) {
 	CGMutablePathRef cgpath = CGPathCreateMutable();
 
-	if(cgpath != NULL) {
+	if (cgpath != NULL) {
 		int numElements = [bezierPath elementCount];
 		int curElement;
 		NSBezierPathElement elementType;
 		NSPoint points[3];
 
-		for(curElement = 0; curElement < numElements; curElement++) {
+		for (curElement = 0; curElement < numElements; curElement++) {
 			//the points are copied into our points array. --boredzo
 			elementType = [bezierPath elementAtIndex:curElement associatedPoints:points];
 
-			switch(elementType) {
+			switch (elementType) {
 				case NSMoveToBezierPathElement:
 					CGPathMoveToPoint(cgpath, transform,
 						points[0].x, points[0].y);
@@ -351,9 +351,9 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 					 *  returns an invalid (error) value, we might want to
 					 *  report that to the user or something --boredzo
 					 */;
-			} //switch(elementType)
-		} //for(curElement = 0; curElement < numElements; curElement++)
-	} //if(cgpath != NULL)
+			} //switch (elementType)
+		} //for (curElement = 0; curElement < numElements; curElement++)
+	} //if (cgpath != NULL)
 
 	return cgpath;
 }

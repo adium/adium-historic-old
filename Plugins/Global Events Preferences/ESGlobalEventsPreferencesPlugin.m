@@ -88,7 +88,7 @@
 	builtInEventPresets = [[NSDictionary dictionaryNamed:@"BuiltInEventPresets" forClass:[self class]] retain];
 	storedEventPresets = [[[adium preferenceController] preferenceForKey:KEY_STORED_EVENT_PRESETS
 																   group:PREF_GROUP_EVENT_PRESETS] mutableCopy];
-	if(!storedEventPresets) storedEventPresets = [[NSMutableDictionary alloc] init];
+	if (!storedEventPresets) storedEventPresets = [[NSMutableDictionary alloc] init];
 
 	/* If there is no active event set, or the active event set is not present in our built in or stored event sets
 	 * then we are in one of two conditions: either this is a first-launch, or the user has deleted the event preferences.
@@ -96,8 +96,8 @@
 	 */
 	activeEventSet = [[adium preferenceController] preferenceForKey:KEY_ACTIVE_EVENT_SET
 															  group:PREF_GROUP_EVENT_PRESETS];
-	if(!activeEventSet || (![builtInEventPresets objectForKey:activeEventSet] &&
-						   ![storedEventPresets objectForKey:activeEventSet])){
+	if (!activeEventSet || (![builtInEventPresets objectForKey:activeEventSet] &&
+						   ![storedEventPresets objectForKey:activeEventSet])) {
 		[self setEventPreset:[builtInEventPresets objectForKey:@"Default Notifications"]];		
 	}
 
@@ -147,7 +147,7 @@
 	
 	//        
 	enumerator = [soundSetArray objectEnumerator];
-	while((eventDict = [enumerator nextObject])){
+	while ((eventDict = [enumerator nextObject])) {
 		
 		NSString		*eventID = [eventDict objectForKey:KEY_EVENT_SOUND_EVENT_ID];
 		NSString		*soundPath = [eventDict objectForKey:KEY_EVENT_SOUND_PATH];
@@ -172,7 +172,7 @@
 	NSMutableArray	*soundArray = nil;
 	NSString		*infoPlistPath = [inPath stringByAppendingPathComponent:@"Info.plist"];
 	
-	if([[NSFileManager defaultManager] fileExistsAtPath:infoPlistPath]){
+	if ([[NSFileManager defaultManager] fileExistsAtPath:infoPlistPath]) {
 		NSDictionary	*infoDict, *sounds;
 		NSEnumerator	*enumerator;
 		NSString		*event, *soundName, *soundLocation;
@@ -182,11 +182,11 @@
 		sounds = [[adium soundController] soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 		
 		enumerator = [sounds keyEnumerator];
-		while((event = [enumerator nextObject])){
+		while ((event = [enumerator nextObject])) {
 			NSString	*eventID = [[adium contactAlertsController] eventIDForEnglishDisplayName:event];
 
 			soundName = [sounds objectForKey:event];
-			if(eventID){
+			if (eventID) {
 				[soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					eventID, KEY_EVENT_SOUND_EVENT_ID,
 					[[soundLocation stringByAppendingPathComponent:soundName] stringByCollapsingBundlePath], KEY_EVENT_SOUND_PATH,
@@ -194,13 +194,13 @@
 			}
 		}
 		
-	}else{
+	} else {
 		//Open the soundset.rtf file
 		path = [NSString stringWithFormat:@"%@/%@.txt", inPath, [[inPath stringByDeletingPathExtension] lastPathComponent]];
 		
 		soundSet = [NSString stringWithContentsOfFile:path];
 		
-		if(soundSet && [soundSet length] != 0){
+		if (soundSet && [soundSet length] != 0) {
 			//Setup the scanner
 			scanner = [NSScanner scannerWithString:soundSet];
 			[scanner setCaseSensitive:NO];
@@ -217,7 +217,7 @@
 			//Scan the events
 			soundArray = [NSMutableArray array];
 			
-			while(![scanner isAtEnd]){
+			while (![scanner isAtEnd]) {
 				NSString	*event;
 				NSString	*soundPath;
 				
@@ -234,7 +234,7 @@
 				
 				//Locate the notification associated with the given display name
 				NSString	*eventID = [[adium contactAlertsController] eventIDForEnglishDisplayName:event];
-				if (eventID){
+				if (eventID) {
 					//Add this sound to our array
 					[soundArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 						eventID, KEY_EVENT_SOUND_EVENT_ID,
@@ -277,8 +277,8 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
     
     //Search for the desired set
     enumerator = [presetArray objectEnumerator];
-    while((set = [enumerator nextObject])){
-        if([presetName isEqualToString:[set objectForKey:@"Name"]]){
+    while ((set = [enumerator nextObject])) {
+        if ([presetName isEqualToString:[set objectForKey:@"Name"]]) {
             return([set objectForKey:@"Behavior"]);
         }
     }
@@ -296,7 +296,7 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 	
 	//
 	enumerator = [setArray objectEnumerator];
-	while((dictionary = [enumerator nextObject])){
+	while ((dictionary = [enumerator nextObject])) {
 		[[adium contactAlertsController] addGlobalAlert:[self performSelector:selector
 																   withObject:dictionary]];
 	}
@@ -309,7 +309,7 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 	/* For a built in set, we now should apply the sound set it specified. User-created sets already include the
 	 * soundset as individual events.
 	 */
-	if([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]){
+	if ([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]) {
 		[self applySoundSetWithPath:[eventPreset objectForKey:KEY_EVENT_SOUND_SET]];		
 	}
 	
@@ -344,21 +344,21 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 {
 	NSString	*name = [eventPreset objectForKey:KEY_EVENT_SET_NAME];
 	//Assign the next order index to this preset if it doesn't have one yet
-	if(![eventPreset objectForKey:KEY_ORDER_INDEX]){
+	if (![eventPreset objectForKey:KEY_ORDER_INDEX]) {
 		[eventPreset setObject:[NSNumber numberWithFloat:[self nextOrderIndex]]
 						forKey:KEY_ORDER_INDEX];
 	}
 
 	//If we don't have a name at this point, simply assign one
-	if(!name){
+	if (!name) {
 		name = NEW_PRESET_NAME;
 		
 		//Make sure we're not using a name which is already in use
-		if([storedEventPresets objectForKey:name]){
+		if ([storedEventPresets objectForKey:name]) {
 			unsigned i = 1;
 			name = [NEW_PRESET_NAME stringByAppendingFormat:@" (%i)",i];
 			
-			while([storedEventPresets objectForKey:name] != nil){
+			while ([storedEventPresets objectForKey:name] != nil) {
 				i++;
 				name = [NEW_PRESET_NAME stringByAppendingFormat:@" (%i)",i];
 			}
@@ -395,7 +395,7 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
  */
 - (void)applySoundSetWithPath:(NSString *)soundSetPath
 {
-	if(soundSetPath && [soundSetPath length]){ //Soundset
+	if (soundSetPath && [soundSetPath length]) { //Soundset
 		NSArray			*soundSetArray;
 		
 		soundSetArray = [self soundSetArrayAtPath:[soundSetPath stringByExpandingBundlePath]
@@ -420,11 +420,11 @@ int eventPresetsSort(id eventPresetA, id eventPresetB, void *context)
 	float orderIndexA = [[eventPresetA objectForKey:KEY_ORDER_INDEX] floatValue];
 	float orderIndexB = [[eventPresetB objectForKey:KEY_ORDER_INDEX] floatValue];
 	
-	if(orderIndexA > orderIndexB){
+	if (orderIndexA > orderIndexB) {
 		return(NSOrderedDescending);
-	}else if (orderIndexA < orderIndexB){
+	} else if (orderIndexA < orderIndexB) {
 		return(NSOrderedAscending);
-	}else{
+	} else {
 		return([[eventPresetA objectForKey:KEY_EVENT_SET_NAME] caseInsensitiveCompare:[eventPresetB objectForKey:KEY_EVENT_SET_NAME]]);
 	}
 }

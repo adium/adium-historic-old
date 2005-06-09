@@ -40,7 +40,7 @@ long unsigned int	waitingSleepArgument;
 
     //Observe system power events
     root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
-    if(root_port){
+    if (root_port) {
         CFRunLoopAddSource(CFRunLoopGetCurrent(),
                            IONotificationPortGetRunLoopSource(notify),
                            kCFRunLoopDefaultMode);
@@ -67,7 +67,7 @@ long unsigned int	waitingSleepArgument;
 {
     holdSleep--;
 
-    if(holdSleep == 0){
+    if (holdSleep == 0) {
         //Permit sleep now
         IOAllowPowerChange(root_port, (long)waitingSleepArgument);
     }
@@ -83,9 +83,9 @@ void callback(void * x, io_service_t y, natural_t messageType, void * messageArg
             [[NSNotificationCenter defaultCenter] postNotificationName:AISystemWillSleep_Notification object:nil];
 
             //If noone requested a delay, sleep now
-            if(holdSleep == 0){
+            if (holdSleep == 0) {
                 IOAllowPowerChange(root_port,(long)messageArgument);
-            }else{
+            } else {
                 waitingSleepArgument = (long unsigned int)messageArgument;
             }
                 

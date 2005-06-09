@@ -62,7 +62,7 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) {    
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Additions];
     }
 }
@@ -79,7 +79,7 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) {    
         [[adium menuController] removeMenuItem:menuItem];
     }
 }

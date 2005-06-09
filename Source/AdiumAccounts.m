@@ -42,7 +42,7 @@
  * @brief Init
  */
 - (id)init {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		accounts = [[NSMutableArray alloc] init];
 		unloadableAccounts = [[NSMutableArray alloc] init];	
 	}
@@ -96,8 +96,8 @@
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
-		if([[[account service] serviceClass] isEqualToString:[service serviceClass]]){
+	while ((account = [enumerator nextObject])) {
+		if ([[[account service] serviceClass] isEqualToString:[service serviceClass]]) {
 			[matchingAccounts addObject:account];
 		}
 	}
@@ -112,16 +112,16 @@
     AIAccount		*account = nil;
 	
 	//XXX - This upgrade should be occuring in the code that has stored these values, not here -ai
-	if(![objectID isKindOfClass:[NSString class]]){
-		if([objectID isKindOfClass:[NSNumber class]]){
+	if (![objectID isKindOfClass:[NSString class]]) {
+		if ([objectID isKindOfClass:[NSNumber class]]) {
 			objectID = [NSString stringWithFormat:@"%i",[(NSNumber *)objectID intValue]];
-		}else{
+		} else {
 			objectID = nil; //Unrecognizable, ignore
 		}
 	}
 	
-    while(objectID && (account = [enumerator nextObject])){
-        if([objectID isEqualToString:[account internalObjectID]]) break;
+    while (objectID && (account = [enumerator nextObject])) {
+        if ([objectID isEqualToString:[account internalObjectID]]) break;
     }
     
     return(account);
@@ -217,7 +217,7 @@
 
     //Create an instance of every saved account
 	enumerator = [accountList objectEnumerator];
-	while((accountDict = [enumerator nextObject])){
+	while ((accountDict = [enumerator nextObject])) {
 		NSString		*serviceID = [self _upgradeServiceID:[accountDict objectForKey:ACCOUNT_TYPE] forAccountDict:accountDict];
         AIAccount		*newAccount;
 
@@ -227,10 +227,10 @@
 		NSString	*internalObjectID = [accountDict objectForKey:ACCOUNT_OBJECT_ID];
 		
         //Create the account and add it to our array
-        if(service && accountUID && [accountUID length]){
-			if((newAccount = [service accountWithUID:accountUID internalObjectID:internalObjectID])){
+        if (service && accountUID && [accountUID length]) {
+			if ((newAccount = [service accountWithUID:accountUID internalObjectID:internalObjectID])) {
                 [accounts addObject:newAccount];
-            }else{
+            } else {
 				[unloadableAccounts addObject:accountDict];
 			}
         }
@@ -250,39 +250,39 @@
 - (NSString *)_upgradeServiceID:(NSString *)serviceID forAccountDict:(NSDictionary *)accountDict
 {
 	//Libgaim
-	if([serviceID isEqualToString:@"AIM-LIBGAIM"]){
+	if ([serviceID isEqualToString:@"AIM-LIBGAIM"]) {
 		NSString 	*uid = [accountDict objectForKey:ACCOUNT_UID];
-		if(uid && [uid length]){
+		if (uid && [uid length]) {
 			const char	firstCharacter = [uid characterAtIndex:0];
 			
-			if([uid hasSuffix:@"@mac.com"]){
+			if ([uid hasSuffix:@"@mac.com"]) {
 				serviceID = @"libgaim-oscar-Mac";
-			}else if(firstCharacter >= '0' && firstCharacter <= '9'){
+			} else if (firstCharacter >= '0' && firstCharacter <= '9') {
 				serviceID = @"libgaim-oscar-ICQ";
-			}else{
+			} else {
 				serviceID = @"libgaim-oscar-AIM";
 			}
 		}
-	}else if([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"GaduGadu-LIBGAIM"]) {
 		serviceID = @"libgaim-Gadu-Gadu";
-	}else if([serviceID isEqualToString:@"Jabber-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Jabber-LIBGAIM"]) {
 		serviceID = @"libgaim-Jabber";
-	}else if([serviceID isEqualToString:@"MSN-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"MSN-LIBGAIM"]) {
 		serviceID = @"libgaim-MSN";
-	}else if([serviceID isEqualToString:@"Napster-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Napster-LIBGAIM"]) {
 		serviceID = @"libgaim-Napster";
-	}else if([serviceID isEqualToString:@"Novell-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Novell-LIBGAIM"]) {
 		serviceID = @"libgaim-GroupWise";
-	}else if([serviceID isEqualToString:@"Sametime-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Sametime-LIBGAIM"]) {
 		serviceID = @"libgaim-Sametime";
-	}else if([serviceID isEqualToString:@"Yahoo-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Yahoo-LIBGAIM"]) {
 		serviceID = @"libgaim-Yahoo!";
-	}else if([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]){
+	} else if ([serviceID isEqualToString:@"Yahoo-Japan-LIBGAIM"]) {
 		serviceID = @"libgaim-Yahoo!-Japan";
 	}
 	
 	//Bonjour
-	if([serviceID isEqualToString:@"rvous-libezv"]){
+	if ([serviceID isEqualToString:@"rvous-libezv"]) {
 		serviceID = @"bonjour-libezv";
 	}
 	
@@ -300,7 +300,7 @@
 	
 	//Build a flattened array of the accounts
 	enumerator = [accounts objectEnumerator];
-	while((account = [enumerator nextObject])){
+	while ((account = [enumerator nextObject])) {
 		NSMutableDictionary		*flatAccount = [NSMutableDictionary dictionary];
 		
 		[flatAccount setObject:[[account service] serviceCodeUniqueID] forKey:ACCOUNT_TYPE]; 	//Unique plugin ID

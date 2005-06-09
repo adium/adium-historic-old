@@ -74,15 +74,15 @@
 
 - (id)init
 {
-	if((self = [self superInit])) {
+	if ((self = [self superInit])) {
 		backing = malloc(0);
-		if(!backing) {
+		if (!backing) {
 			NSLog(@"in -[AIWiredString init]: could not malloc %llu bytes", (unsigned long long)length);
 			[self release];
 			self = nil;
 		} else {
 			int retval = mlock(backing, length);
-			if(retval < 0) {
+			if (retval < 0) {
 				NSLog(@"in -[AIWiredString init]: mlock returned %i: %s", retval, strerror(errno));
 				[self release];
 				self = nil;
@@ -94,17 +94,17 @@
 
 - (id)initWithCharacters:(const unichar *)inChars length:(unsigned)inLength
 {
-	if(inLength) NSParameterAssert(inChars != NULL);
-	if((self = [self superInit])) {
+	if (inLength) NSParameterAssert(inChars != NULL);
+	if ((self = [self superInit])) {
 		length = inLength;
 		backing = malloc(sizeof(unichar) * length);
-		if(!backing) {
+		if (!backing) {
 			NSLog(@"in -[AIWiredString initWithCharacters:length:]: could not malloc %llu bytes", (unsigned long long)length);
 			[self release];
 			self = nil;
 		} else {
 			int retval = mlock(backing, length);
-			if(retval < 0) {
+			if (retval < 0) {
 				NSLog(@"in -[AIWiredString initWithCharacters:length:]: mlock returned %i: %s", retval, strerror(errno));
 				[self release];
 				self = nil;
@@ -116,8 +116,8 @@
 
 - (id)initWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding
 {
-	if(inLength) NSParameterAssert(inBytes != NULL);
-	if(inEncoding == NSUnicodeStringEncoding) {
+	if (inLength) NSParameterAssert(inBytes != NULL);
+	if (inEncoding == NSUnicodeStringEncoding) {
 		return [self initWithCharacters:inBytes length:(inLength / sizeof(unichar))];
 	}
 
@@ -132,7 +132,7 @@
 	TextToUnicodeInfo converter = NULL;
 	err = CreateTextToUnicodeInfoByEncoding(encoding, &converter);
 #endif
-	if(err != noErr) {
+	if (err != noErr) {
 		[self release];
 		self = nil;
 	} else {
@@ -142,7 +142,7 @@
 
 		do {
 			backing = AIReallocWired(backing, bufferSize += bufferSizeIncrement);
-			if(!backing) {
+			if (!backing) {
 				[self release];
 				self = nil;
 				break;
@@ -170,7 +170,7 @@
 										   backing);
 			ResetTextToUnicodeInfo(converter);
 #endif
-		} while(err == kTECOutputBufferFullStatus);
+		} while (err == kTECOutputBufferFullStatus);
 
 #ifdef USE_TECCONVERTER
 		TECDisposeConverter(converter);
@@ -198,18 +198,18 @@
 - (id)initWithString:(NSString *)other
 {
 	unsigned otherLength = [other length];
-	if(!otherLength) {
+	if (!otherLength) {
 		self = [self init];
-	} else if((self = [self superInit])) {
+	} else if ((self = [self superInit])) {
 		length = otherLength;
 		backing = malloc(length * sizeof(unichar));
-		if(!backing) {
+		if (!backing) {
 			NSLog(@"in -[AIWiredString initWithString:]: could not malloc %llu bytes", (unsigned long long)length);
 			[self release];
 			self = nil;
 		} else {
 			int retval = mlock(backing, length);
-			if(retval < 0) {
+			if (retval < 0) {
 				NSLog(@"in -[AIWiredString initWithString:]: mlock returned %i: %s", retval, strerror(errno));
 				[self release];
 				self = nil;
@@ -246,14 +246,14 @@
 - (void)getCharacters:(out unichar *)outBuf range:(NSRange)range
 {
 	NSParameterAssert(outBuf != NULL);
-	if(length) {
+	if (length) {
 		//neither of these assertions is valid for empty strings.
 		NSParameterAssert(range.location < length);
 		NSParameterAssert(((range.location + range.length) - 1) <= length);
 	
 		unsigned i = range.location;
 		unsigned j = 0, j_max = range.length;
-		while(j < j_max) {
+		while (j < j_max) {
 			outBuf[j] = backing[i];
 			++i; ++j;
 		}
@@ -264,13 +264,13 @@
 
 - (AIWiredData *)dataUsingEncoding:(NSStringEncoding)inEncoding allowLossyConversion:(BOOL)allowLossyConversion nulTerminate:(BOOL)nulTerminate
 {
-	if(inEncoding == NSUTF8StringEncoding) {
+	if (inEncoding == NSUTF8StringEncoding) {
 		//for some reason, TEC can't convert to UTF-8, so we have to do that ourselves.
 		nulTerminate = nulTerminate != NO; //this makes it either 1 or 0
 		UTF8Char *UTF8 = NULL;
 		size_t UTF8Length = 0;
 		size_t UTF8Size = [self makeUTF8:&UTF8 length:&UTF8Length extraBytes:nulTerminate forUTF16:backing length:length];
-		if(nulTerminate) UTF8[UTF8Length] = '\0';
+		if (nulTerminate) UTF8[UTF8Length] = '\0';
 		AIWiredData *data = [AIWiredData dataWithBytes:UTF8 length:(UTF8Length + nulTerminate)];
 		AIWipeMemory(UTF8, UTF8Size);
 		munlock(UTF8, UTF8Size);
@@ -284,7 +284,7 @@
 		.mappingVersion = kUnicodeUseLatestMapping,
 	};
 	OptionBits controlFlags = 0;
-	if(allowLossyConversion)
+	if (allowLossyConversion)
 		controlFlags |= (kUnicodeUseFallbacksMask | kUnicodeLooseMappingsMask);
 	OSStatus err;
 	UnicodeToTextInfo converter = NULL; 
@@ -292,7 +292,7 @@
 	AIWiredData *result = nil;
 
 	err = CreateUnicodeToTextInfo(&mapping, &converter);
-	if(err != noErr) {
+	if (err != noErr) {
 		NSLog(@"[AIWiredString dataUsingEncoding:\"%@\" allowLossyConversion:%u nulTerminate:%u] got error %li creating Unicode converter object to convert from encoding %08x to encoding %08x", [NSString localizedNameOfStringEncoding:inEncoding], allowLossyConversion, nulTerminate, (long)err, mapping.unicodeEncoding, mapping.otherEncoding);
 		return result;
 	}
@@ -304,7 +304,7 @@
 
 	do {
 		backing = AIReallocWired(outputBuffer, bufferSize += bufferSizeIncrement);
-		if(!outputBuffer) {
+		if (!outputBuffer) {
 			[self release];
 			self = nil;
 			break;
@@ -320,16 +320,16 @@
 								 /*iOutputBufLen*/ bufferSize,
 								 /*oInputRead*/ NULL, //number of bytes read from input by the converter
 								 &outputLength, &outputBuffer);
-		if(nulTerminate && (bufferSize == outputLength)) {
+		if (nulTerminate && (bufferSize == outputLength)) {
 			//do one more pass so we have room for the nul terminator
 			continue;
 		}
-	} while(err == kTECOutputBufferFullStatus);
+	} while (err == kTECOutputBufferFullStatus);
 
-	if(err != noErr) {
+	if (err != noErr) {
 		NSLog(@"[AIWiredString dataUsingEncoding:%@ allowLossyConversion:%u nulTerminate:%u] got error %li converting text from UTF-16", [NSString localizedNameOfStringEncoding:inEncoding], allowLossyConversion, nulTerminate, (long)err);
 	} else {
-		if(nulTerminate) outputBuffer[outputLength] = '\0';
+		if (nulTerminate) outputBuffer[outputLength] = '\0';
 		result = [AIWiredData dataWithBytes:outputBuffer length:outputLength];
 	}
 
@@ -391,8 +391,8 @@
 - (unsigned)hash {
 	//this is the CFString hash of Mac OS X 10.3.5.
 	register unsigned hash = length;
-	if(length < 16) {
-		for(unsigned i = 0; i < length; ++i) hash = hash * 257 + backing[i];
+	if (length < 16) {
+		for (unsigned i = 0; i < length; ++i) hash = hash * 257 + backing[i];
 	} else {
 		//this version is unrolled, so it should be faster.
 		//we want to hash the first 8 bytes, and the last 8 bytes, in ascending order of index.
@@ -434,7 +434,7 @@
 	UTF8Char *outBuf = NULL;
 	size_t outSize = 0;
 	unsigned long j = 0;
-	if(!inputLength) {
+	if (!inputLength) {
 		//for an empty input string, provide an empty (but valid) input buffer
 		outBuf = AIReallocWired(NULL, j = numExtraBytes);
 		bzero(outBuf, j);
@@ -445,26 +445,26 @@
 		UnicodeScalarValue scalar;
 		UTF16Char surrogateHigh = kUnicodeNotAChar;
 
-		for(i = 0; i < inputLength; ++i) {
+		for (i = 0; i < inputLength; ++i) {
 #define OUTPUT_BOUNDARY_GUARD \
-			if((!outSize) || (j >= (outSize - numExtraBytes))) { \
+			if ((!outSize) || (j >= (outSize - numExtraBytes))) { \
 				outBuf = AIReallocWired(outBuf, outSize += outSizeIncrement); \
-				if(!outBuf) break; \
+				if (!outBuf) break; \
 			}
 
 			OUTPUT_BOUNDARY_GUARD;
 
-			if(surrogateHigh != kUnicodeNotAChar) {
+			if (surrogateHigh != kUnicodeNotAChar) {
 				scalar = UCGetUnicodeScalarValueForSurrogatePair(surrogateHigh, input[i]);
 				surrogateHigh = kUnicodeNotAChar;
-			} else if(UCIsSurrogateHighCharacter(input[i])) {
+			} else if (UCIsSurrogateHighCharacter(input[i])) {
 				surrogateHigh = input[i];
 				continue;
 			} else {
 				scalar = input[i];
 			}
 
-			if(scalar < 0x80) {
+			if (scalar < 0x80) {
 				outBuf[j++] = scalar;
 			} else {
 				u_int8_t xxxxxx =  scalar        & 0x7f;
@@ -472,19 +472,19 @@
 				u_int8_t   zzzz = (scalar >> 12) & 0x0f;
 				u_int8_t  uuuuu = (scalar >> 16) & 0x1f;
 
-				if(uuuuu) {
+				if (uuuuu) {
 					outBuf[j++] = 0x240 | (uuuuu >> 2);
 					OUTPUT_BOUNDARY_GUARD;
 					outBuf[j++] =  0x80 | ((uuuuu  & 3) << 4) | zzzz;
 					OUTPUT_BOUNDARY_GUARD;
 					outBuf[j++] =  0x80 | yyyyyy;
 					OUTPUT_BOUNDARY_GUARD;
-				} else if(zzzz) {
+				} else if (zzzz) {
 					outBuf[j++] = 0xe0 | zzzz;
 					OUTPUT_BOUNDARY_GUARD;
 					outBuf[j++] = 0x80 | yyyyyy;
 					OUTPUT_BOUNDARY_GUARD;
-				} else if(yyyyyy) {
+				} else if (yyyyyy) {
 					outBuf[j++] = 0xc0 | yyyyyy;
 					OUTPUT_BOUNDARY_GUARD;
 				}
@@ -496,13 +496,13 @@
 		AISetRangeInMemory(outBuf, NSMakeRange(j, outSize - j), '\0');
 	}
 
-	if(output) *output = outBuf;
+	if (output) *output = outBuf;
 	else {
 		munlock(outBuf, outSize);
 		free(outBuf);
 	}
 
-	if(outputLength) *outputLength = j;
+	if (outputLength) *outputLength = j;
 
 	return outSize;
 }

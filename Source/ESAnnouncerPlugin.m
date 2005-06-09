@@ -64,9 +64,9 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
+	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		return(ANNOUNCER_ALERT_SHORT);
-	}else{ /*Speak Event*/
+	} else { /*Speak Event*/
 		return(ANNOUNCER_EVENT_ALERT_SHORT);
 	}
 }
@@ -77,15 +77,15 @@
  */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){		
+	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {		
 		NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 		
-		if(textToSpeak && [textToSpeak length]){
+		if (textToSpeak && [textToSpeak length]) {
 			return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
-		}else{
+		} else {
 			return(ANNOUNCER_ALERT_SHORT);
 		}
-	}else{ /*Speak Event*/
+	} else { /*Speak Event*/
 		return(ANNOUNCER_EVENT_ALERT_LONG);
 	}
 }
@@ -104,9 +104,9 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
+	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		return([ESAnnouncerSpeakTextAlertDetailPane actionDetailsPane]);
-	}else{ /*Speak Event*/
+	} else { /*Speak Event*/
 		return([ESAnnouncerSpeakEventAlertDetailPane actionDetailsPane]);
 	}
 }
@@ -132,7 +132,7 @@
 				  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
 				  nil);
 	
-	if([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]){
+	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
 		NSString	*userText = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 
 		/*
@@ -142,24 +142,24 @@ direction:(AIFilterDirection)direction
 context:(id)filterContext
 		*/	
 		
-		if(timeFormat){
+		if (timeFormat) {
 			NSString	*timeString;
 			
 			timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
 																								  timeZone:nil
 																									locale:nil]];
 			textToSpeak = (userText ? [timeString stringByAppendingString:userText] : textToSpeak);
-		}else{
+		} else {
 			textToSpeak = userText;
 		}
 
 		//Clear out the lastSenderString so the next speech event will get tagged with the sender's name
 		[lastSenderString release]; lastSenderString = nil;
 		
-	}else{ /*Speak Event*/	
+	} else { /*Speak Event*/	
 		
 		//Handle messages in a custom manner
-		if([[adium contactAlertsController] isMessageEvent:eventID]){
+		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
 			AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
 			NSString			*message = [[[content message] attributedStringByConvertingAttachmentsToStrings] string];
 			AIListObject		*source = [content source];
@@ -167,14 +167,14 @@ context:(id)filterContext
 			BOOL				newParagraph = NO;
 			NSMutableString		*theMessage = [NSMutableString string];
 			
-			if(speakSender && !isOutgoing) {
+			if (speakSender && !isOutgoing) {
 				NSString	*senderString;
 				
 				//Get the sender string
 				senderString = [source phoneticName];
 			
 				//Don't repeat the same sender string for messages twice in a row
-				if(!lastSenderString || ![senderString isEqualToString:lastSenderString]){
+				if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
 					NSMutableString		*senderStringToSpeak;
 					
 					//Track the sender string before modifications
@@ -196,13 +196,13 @@ context:(id)filterContext
 			}
 			
 			//Append the date if desired, after the sender name if that was added
-			if(timeFormat){
+			if (timeFormat) {
 				[theMessage appendFormat:@" %@...",[[content date] descriptionWithCalendarFormat:timeFormat
 																						timeZone:nil
 																						  locale:nil]];
 			}
 			
-			if(newParagraph) [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
+			if (newParagraph) [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
 
 			//Finally, append the actual message
 			[theMessage appendFormat:@" %@",message];
@@ -210,7 +210,7 @@ context:(id)filterContext
 			//theMessage is now the final string which will be passed to the speech engine
 			textToSpeak = theMessage;
 
-		}else{
+		} else {
 			//All non-message events use the normal naturalLanguageDescription methods, optionally prepending
 			//the time
 			NSString	*eventDescription;
@@ -220,14 +220,14 @@ context:(id)filterContext
 																							userInfo:userInfo
 																					  includeSubject:YES];
 			
-			if(timeFormat){
+			if (timeFormat) {
 				NSString	*timeString;
 				
 				timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
 																									  timeZone:nil
 																										locale:nil]];
 				textToSpeak = [timeString stringByAppendingString:eventDescription];
-			}else{
+			} else {
 				textToSpeak = eventDescription;
 			}
 			
@@ -237,7 +237,7 @@ context:(id)filterContext
 	}
 	
 	//Do the speech, with custom voice/pitch/rate as desired
-	if(textToSpeak){
+	if (textToSpeak) {
 		NSString	*voice = nil;
 		NSNumber	*pitchNumber = [details objectForKey:KEY_PITCH];
 		NSNumber	*floatNumber = [details objectForKey:KEY_RATE];

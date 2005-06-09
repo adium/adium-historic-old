@@ -71,7 +71,7 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Only change our preferences in response to global preference notifications; specific objects use this group as well.
-	if(object == nil){
+	if (object == nil) {
 		haveTalkedDays = [[prefDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue];
 		haveNotTalkedDays = [[prefDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue];
 		displayMode = [[prefDict objectForKey:KEY_DISPLAY_MODE] intValue];
@@ -84,7 +84,7 @@
 		
 		dimRecentContext = [[prefDict objectForKey:KEY_DIM_RECENT_CONTEXT] boolValue];
 		
-		if(shouldDisplay && linesToDisplay > 0 && !isObserving) {
+		if (shouldDisplay && linesToDisplay > 0 && !isObserving) {
 			//Observe new message windows only if we aren't already observing them
 			isObserving = YES;
 			[[adium notificationCenter] addObserver:self
@@ -92,7 +92,7 @@
 											   name:Chat_DidOpen 
 											 object:nil];
 			
-		}else if(isObserving && (!shouldDisplay || linesToDisplay <= 0)){
+		} else if (isObserving && (!shouldDisplay || linesToDisplay <= 0)) {
 			//Remove observer
 			isObserving = NO;
 			[[adium notificationCenter] removeObserver:self name:Chat_DidOpen object:nil];
@@ -115,7 +115,7 @@
 	chat = (AIChat *)[notification object];
 	
 	//Ensure we only save context for one-on-one chats; there must be a [chat listObject] and no name.
-	if(chat && [chat listObject] && ![chat name]) {		
+	if (chat && [chat listObject] && ![chat name]) {		
 		dict = [NSMutableDictionary dictionary];
 
 		enumerator = [[chat contentObjectArray] objectEnumerator];
@@ -126,10 +126,10 @@
 		cnt = 1;
 				
 		// Only save if we need to save more AND there is still unsaved content available
-		while((cnt <= linesToDisplay) && (content = [enumerator nextObject])){
+		while ((cnt <= linesToDisplay) && (content = [enumerator nextObject])) {
 			
 			// Only record actual messages, no status
-			if( [content isKindOfClass:[AIContentMessage class]] || [content isKindOfClass:[AIContentContext class]]) {
+			if ( [content isKindOfClass:[AIContentMessage class]] || [content isKindOfClass:[AIContentContext class]]) {
 				contentDict = [self savableContentObject:content];
 				[dict setObject:contentDict forKey:[[NSNumber numberWithInt:cnt] stringValue]];
 				cnt++;
@@ -138,12 +138,12 @@
 		}
 		
 		// If there's room left, append the old messages too
-		if( cnt <= linesToDisplay && previousDict ) {
+		if ( cnt <= linesToDisplay && previousDict ) {
 			
 			unsigned previousDictCount = [previousDict count];
 			prevcnt = 1;
 			
-			while( (cnt <= linesToDisplay+1) && (prevcnt <= previousDictCount) ) {
+			while ( (cnt <= linesToDisplay+1) && (prevcnt <= previousDictCount) ) {
 				[dict setObject:[previousDict objectForKey:[[NSNumber numberWithInt:prevcnt] stringValue]]
 						 forKey:[[NSNumber numberWithInt:cnt] stringValue]];
 				prevcnt++;
@@ -154,7 +154,7 @@
 	}
 	
 	// Did we find anything useful to save? If not, leave it untouched
-	if(dict && ([dict count] > 0)) {
+	if (dict && ([dict count] > 0)) {
 		[[chat listObject] setPreference:dict forKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	}
 	
@@ -178,10 +178,10 @@
 	accountNumber = [[chat account] internalObjectID];
 	
 	// Outgoing or incoming?
-	if ([content isOutgoing]){
+	if ([content isOutgoing]) {
 		[contentDict setObject:objectID forKey:@"To"];
 		[contentDict setObject:accountNumber forKey:@"From"];
-	}else{
+	} else {
 		[contentDict setObject:accountNumber forKey:@"To"];
 		[contentDict setObject:objectID forKey:@"From"];
 	}
@@ -213,43 +213,43 @@
 	NSDictionary	*chatDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
 	NSDictionary	*messageDict;
 	
-	if( chatDict && shouldDisplay && linesToDisplay > 0 ) {
+	if ( chatDict && shouldDisplay && linesToDisplay > 0 ) {
 		
 		//Check if the history fits the date restrictions
 		
 		NSCalendarDate *mostRecentMessage = [NSDate dateWithNaturalLanguageString:[[chatDict objectForKey:@"1"] objectForKey:@"Date"]];
 		
 		// find out how long it's been since the context was saved, if we care
-		if( !dimRecentContext ) {
+		if ( !dimRecentContext ) {
 			NSTimeInterval timeInterval = -[mostRecentMessage timeIntervalSinceNow];
 			isContext = !(timeInterval > -300 && timeInterval < 300);
 		}
 		
-		if( [self contextShouldBeDisplayed:mostRecentMessage] ) {
+		if ( [self contextShouldBeDisplayed:mostRecentMessage] ) {
 			
 			//Max number of lines to display
 			cnt = ([chatDict count] >= linesToDisplay ? linesToDisplay : [chatDict count]);
 			
 			//Add messages until: we add our max (linesToDisplay) OR we run out of saved messages
-			while( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
+			while ( (messageDict = [chatDict objectForKey:[[NSNumber numberWithInt:cnt] stringValue]]) && cnt > 0 ) {
 				
 				cnt--;
 				
 				type = [messageDict objectForKey:@"Type"];
 				
 				//Currently, we only add Message or Context content objects
-				if( [type isEqualToString:CONTENT_MESSAGE_TYPE] || [type isEqualToString:CONTENT_CONTEXT_TYPE] ) {
+				if ( [type isEqualToString:CONTENT_MESSAGE_TYPE] || [type isEqualToString:CONTENT_CONTEXT_TYPE] ) {
 					message = [NSAttributedString stringWithData:[messageDict objectForKey:@"Message"]];
 	
 					// The other person is always the one we're chatting with right now
-					if( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
+					if ( [[messageDict objectForKey:@"Outgoing"] boolValue] ) {
 						dest = [chat listObject];
 
 						id from = [messageDict objectForKey:@"From"];
-						if(![from isKindOfClass:[NSString class]]){
-							if([from respondsToSelector:@selector(stringValue)]){
+						if (![from isKindOfClass:[NSString class]]) {
+							if ([from respondsToSelector:@selector(stringValue)]) {
 								from = [from stringValue];
-							}else{
+							} else {
 								from = nil;
 							}
 						}
@@ -259,10 +259,10 @@
 						source = [chat listObject];
 						
 						id to = [messageDict objectForKey:@"To"];
-						if(![to isKindOfClass:[NSString class]]){
-							if([to respondsToSelector:@selector(stringValue)]){
+						if (![to isKindOfClass:[NSString class]]) {
+							if ([to respondsToSelector:@selector(stringValue)]) {
 								to = [to stringValue];
-							}else{
+							} else {
 								to = nil;
 							}
 						}
@@ -271,11 +271,11 @@
 					}
 
 					// Make the message response if all is well
-					if(message && source && dest) {
+					if (message && source && dest) {
 						
 						// Make the message appear as context if isContext is true or it was a context object
 						// last time or if we should always dim recent context. Make a regular message otherwise
-						if(isContext || [type isEqualToString:CONTENT_CONTEXT_TYPE] || dimRecentContext) {
+						if (isContext || [type isEqualToString:CONTENT_CONTEXT_TYPE] || dimRecentContext) {
 							responseContent = [AIContentContext messageInChat:chat
 																   withSource:source
 																  destination:dest
@@ -293,7 +293,7 @@
 							[responseContent setPostProcessContent:NO];
 						}
 						
-						if(responseContent){
+						if (responseContent) {
 							/* Don't display immediately, so the message view can aggregate multiple message history items.
 							 * As required, we post Content_ChatDidFinishAddingUntrackedContent when finished adding. */
 							[responseContent setDisplayContentImmediately:NO];
@@ -304,7 +304,7 @@
 						}
 					}
 				}
-			} /* end while() */
+			} /* end while () */
 
 		//We finished adding untracked content
 		[[adium notificationCenter] postNotificationName:Content_ChatDidFinishAddingUntrackedContent
@@ -320,18 +320,18 @@
 	int thresholdDays = 0;
 	int thresholdHours = 0;
 	
-	if( displayMode != MODE_ALWAYS ) {
+	if ( displayMode != MODE_ALWAYS ) {
 		
-		if( displayMode == MODE_HAVE_TALKED ) {
-			if( haveTalkedUnits == UNIT_DAYS )
+		if ( displayMode == MODE_HAVE_TALKED ) {
+			if ( haveTalkedUnits == UNIT_DAYS )
 				thresholdDays = haveTalkedDays;
-			else if( haveTalkedUnits == UNIT_HOURS )
+			else if ( haveTalkedUnits == UNIT_HOURS )
 				thresholdHours = haveTalkedDays;
 			
-		} else if( displayMode == MODE_HAVE_NOT_TALKED ) {
-			if( haveTalkedUnits == UNIT_DAYS )
+		} else if ( displayMode == MODE_HAVE_NOT_TALKED ) {
+			if ( haveTalkedUnits == UNIT_DAYS )
 				thresholdDays = haveNotTalkedDays;
-			else if( haveTalkedUnits == UNIT_HOURS )
+			else if ( haveTalkedUnits == UNIT_HOURS )
 				thresholdHours = haveNotTalkedDays;
 		}
 		
@@ -341,7 +341,7 @@
 
 		NSComparisonResult comparison = [newDate compare:[NSDate date]];
 		
-		if( ((displayMode == MODE_HAVE_TALKED) && (comparison == NSOrderedAscending)) ||
+		if ( ((displayMode == MODE_HAVE_TALKED) && (comparison == NSOrderedAscending)) ||
 			((displayMode == MODE_HAVE_NOT_TALKED) && (comparison == NSOrderedDescending)) ) {
 			dateIsGood = NO;
 		}

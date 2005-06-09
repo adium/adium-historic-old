@@ -60,9 +60,9 @@
 //into this view.
 - (void)keyDown:(NSEvent *)theEvent
 {
-	if(shouldForwardEvents){
+	if (shouldForwardEvents) {
 		[self forwardSelector:@selector(keyDown:) withObject:theEvent];
-	}else{
+	} else {
 		[super keyDown:theEvent];
 	}
 }
@@ -72,11 +72,11 @@
 	id	responder = [self nextResponder];
 	
 	//When walking the responder chain, we want to skip ScrollViews and ClipViews.
-	while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
+	while (responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])) {
 		responder = [responder nextResponder];
 	}
 	
-	if(responder){
+	if (responder) {
 		[[self window] makeFirstResponder:responder]; //Make it first responder
 		[responder tryToPerform:selector with:object]; //Pass it this key event
 	}
@@ -94,13 +94,13 @@
 {
 	NSDragOperation dragOperation;
 	
-	if(allowsDragAndDrop){
-		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingEntered:)]){
+	if (allowsDragAndDrop) {
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingEntered:)]) {
 			dragOperation = [draggingDelegate draggingEntered:sender];
-		}else{
+		} else {
 			dragOperation = [super draggingEntered:sender];
 		}
-	}else{
+	} else {
 		dragOperation = NSDragOperationNone;
 	}
 	
@@ -111,13 +111,13 @@
 {
 	NSDragOperation dragOperation;
 	
-	if(allowsDragAndDrop){
-		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingUpdated:)]){
+	if (allowsDragAndDrop) {
+		if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(draggingUpdated:)]) {
 			dragOperation = [draggingDelegate draggingUpdated:sender];
-		}else{
+		} else {
 			dragOperation = [super draggingUpdated:sender];
 		}
-	}else{
+	} else {
 		dragOperation = NSDragOperationNone;
 	}
 	
@@ -126,11 +126,11 @@
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate){
-		if([draggingDelegate respondsToSelector:@selector(draggingExited:)]){
+	if (draggingDelegate) {
+		if ([draggingDelegate respondsToSelector:@selector(draggingExited:)]) {
 			[draggingDelegate draggingExited:sender];
 		}
-	}else{
+	} else {
 		[super draggingExited:sender];
 	}
 }
@@ -143,27 +143,27 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]){
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(prepareForDragOperation:)]) {
 		return [draggingDelegate prepareForDragOperation:sender];
-	}else{
+	} else {
 		return [super prepareForDragOperation:sender];
 	}
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]){
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(performDragOperation:)]) {
 		return [draggingDelegate performDragOperation:sender];
-	}else{
+	} else {
 		return [super performDragOperation:sender];
 	}
 }
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(concludeDragOperation:)]){
+	if (draggingDelegate && [draggingDelegate respondsToSelector:@selector(concludeDragOperation:)]) {
 		[draggingDelegate performSelector:@selector(concludeDragOperation:) withObject:sender];
-	}else{
+	} else {
 		[super concludeDragOperation:sender];
 	}
 }

@@ -243,10 +243,10 @@ errorReturn:
 
 - (void)dealloc
 {
-	if (!deallocing){
+	if (!deallocing) {
 		deallocing = YES;
 		
-		if (![self stop]){
+		if (![self stop]) {
 #if DEBUG
 				NSLog(@"weren't able to stop, continuing with dealloc anyways");
 #endif
@@ -744,9 +744,9 @@ Boolean fillSoundConverterBuffer(SoundComponentDataPtr *data, void *refCon)
 
     // Note: This is what we call "sophisticated error handling".
 
-	if (useSystemAlertDevice){
+	if (useSystemAlertDevice) {
 		err = OpenSystemSoundAudioOutput(&outputAudioUnit);	
-	}else{
+	} else {
 		err = OpenDefaultAudioOutput(&outputAudioUnit);
 	}
 	

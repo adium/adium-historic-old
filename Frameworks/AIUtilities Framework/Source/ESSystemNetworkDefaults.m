@@ -26,7 +26,7 @@
 	CFStringRef			proxyKey;
 	NSString			*hostString;
 
-	switch(proxyType){
+	switch (proxyType) {
 		case Proxy_HTTP: {
 			enableKey = kSCPropNetProxiesHTTPEnable;
 			portKey   = kSCPropNetProxiesHTTPPort;
@@ -74,15 +74,15 @@
 
 		//Enabled?
 		enable = [[proxyDict objectForKey:(NSString *)enableKey] intValue];
-		if (enable){
+		if (enable) {
 
 			//Host
 			hostString = [proxyDict objectForKey:(NSString *)proxyKey];
-			if (hostString){
+			if (hostString) {
 
 				//Port
 				portNum = [proxyDict objectForKey:(NSString *)portKey];
-				if (portNum){
+				if (portNum) {
 					NSDictionary	*authDict;
 
 					systemProxySettingsDictionary = [NSMutableDictionary dictionaryWithObjectsAndKeys:
@@ -93,10 +93,10 @@
 					//User name & password if applicable
 					NSError *error = nil;
 					authDict = [[AIKeychain defaultKeychain_error:&error] dictionaryFromKeychainForServer:hostString error:&error];
-					if(authDict) {
+					if (authDict) {
 						[systemProxySettingsDictionary addEntriesFromDictionary:authDict];
 					}
-					if(error) {
+					if (error) {
 						NSDictionary *userInfo = [error userInfo];
 						NSLog(@"could not get username and password for proxy: %@ returned %i (%@)", [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 					}

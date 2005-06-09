@@ -66,9 +66,9 @@
 //Show or hide the contact list warning depending on the contact list mode currently selected
 - (void)_updateContactListWarning
 {
-	if([[popUp_contactList selectedItem] tag] == Meanwhile_CL_Load_And_Save){
+	if ([[popUp_contactList selectedItem] tag] == Meanwhile_CL_Load_And_Save) {
 		[textField_contactListWarning setStringValue:SAVE_WARNING];
-	}else{
+	} else {
 		[textField_contactListWarning setStringValue:@""];		
 	}
 }

@@ -51,7 +51,7 @@
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"AvailableMessage",
 			@"Invisible",
@@ -78,10 +78,10 @@
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError && *disconnectionError){
+	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
+		} else if ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
 	}
@@ -92,7 +92,7 @@
 #pragma mark Encoding
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {	
-	if (inListObject){
+	if (inListObject) {
 		return([AIHTMLDecoder encodeHTML:inAttributedString
 								 headers:NO
 								fontTags:YES
@@ -107,7 +107,7 @@
 		  attachmentImagesOnlyForSending:NO
 						  simpleTagsOnly:YES
 						  bodyBackground:NO]);
-	}else{
+	} else {
 		return [inAttributedString string];
 	}
 }
@@ -120,7 +120,7 @@
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 		
 		return yahoo_xfer_new(account->gc,destsn);
@@ -160,7 +160,7 @@
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 
-		switch(f->status){
+		switch (f->status) {
 			case YAHOO_STATUS_BRB:
 				statusName = STATUS_NAME_BRB;
 				break;
@@ -223,11 +223,11 @@
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 		
-		if(f->msg != NULL){
+		if (f->msg != NULL) {
 			statusMessageString = [NSString stringWithUTF8String:f->msg];
 			
-		}else if(f->status != YAHOO_STATUS_AVAILABLE){
-			switch(f->status){
+		} else if (f->status != YAHOO_STATUS_AVAILABLE) {
+			switch (f->status) {
 				case YAHOO_STATUS_BRB:
 					statusMessageString = STATUS_DESCRIPTION_BRB;
 					break;
@@ -271,7 +271,7 @@
 			}
 		}
 		
-		if(statusMessageString){
+		if (statusMessageString) {
 			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 															 attributes:nil] autorelease];
 		}
@@ -297,15 +297,15 @@
 		(od = account->gc->proto_data) &&
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 
-		if (f->status == YAHOO_STATUS_IDLE){
+		if (f->status == YAHOO_STATUS_IDLE) {
 #warning Idle time may not work.
 			//Now idle
 			int		idle = f->idle;
 			NSDate	*idleSince;
 			
-			if(idle != -1){
+			if (idle != -1) {
 				idleSince = [NSDate dateWithTimeIntervalSinceNow:-idle];
-			}else{
+			} else {
 				idleSince = [NSDate date];
 			}
 			
@@ -313,7 +313,7 @@
 								 forKey:@"IdleSince"
 								 notify:NotifyLater];
 			
-		}else if(f->status == YAHOO_STATUS_INVISIBLE){
+		} else if (f->status == YAHOO_STATUS_INVISIBLE) {
 			statusTypeNumber = [NSNumber numberWithInt:AIInvisibleStatusType]; /* Invisible has a special status type */
 		}
 	}
@@ -321,12 +321,12 @@
 	g_free(normalized);
 	
 	//Yahoo doesn't have an explicit mobile state; instead the status message is automatically set to indicate mobility.
-	if(statusMessageString && ([statusMessageString isEqualToString:@"I'm on SMS"] ||
+	if (statusMessageString && ([statusMessageString isEqualToString:@"I'm on SMS"] ||
 							   [statusMessageString isEqualToString:@"I'm mobile"] ||
-							   [statusMessageString isEqualToString:@"I'm mobile http://mobile.yahoo.com/messenger"])){
+							   [statusMessageString isEqualToString:@"I'm mobile http://mobile.yahoo.com/messenger"])) {
 		[theContact setIsMobile:YES notify:NotifyLater];
 
-	}else if([theContact isMobile]){
+	} else if ([theContact isMobile]) {
 		[theContact setIsMobile:NO notify:NotifyLater];		
 	}
 	
@@ -350,7 +350,7 @@
 		
 		AIStatusType	statusType = ((f->status != YAHOO_STATUS_AVAILABLE) ? AIAwayStatusType : AIAvailableStatusType);		
 		
-		if (f->status != YAHOO_STATUS_IDLE){
+		if (f->status != YAHOO_STATUS_IDLE) {
 			NSLog(@"%@ is %i",theContact,f->status);
 			[super updateIdleReturn:theContact withData:data];
 		}
@@ -379,7 +379,7 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
 			gaimStatusType = "Available";
@@ -429,10 +429,10 @@
 	}
 	
 	//If we are setting one of our custom statuses, clear a @"" statusMessage to nil
-	if((gaimStatusType != NULL) && ([*statusMessage length] == 0)) *statusMessage = nil;
+	if ((gaimStatusType != NULL) && ([*statusMessage length] == 0)) *statusMessage = nil;
 
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }
@@ -440,12 +440,12 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Add Buddy") == 0){
+	if (strcmp(label, "Add Buddy") == 0) {
 		//We handle Add Buddy ourselves
 		return(nil);
-	}else if(strcmp(label, "Join in Chat") == 0){
+	} else if (strcmp(label, "Join in Chat") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]]);
-	}else if(strcmp(label, "Initiate Conference") == 0){
+	} else if (strcmp(label, "Initiate Conference") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]]);
 	}
 

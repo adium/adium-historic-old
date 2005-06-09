@@ -53,7 +53,7 @@
 {
 	BOOL	fingerprintAccepted;
 
-	switch(returnCode){
+	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
 			fingerprintAccepted = YES;
 			break;

@@ -49,12 +49,12 @@
 {
 	NSString	*correctUID;
 	
-	if((proposedUID && ([proposedUID length] > 0)) && 
-	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)){
+	if ((proposedUID && ([proposedUID length] > 0)) && 
+	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)) {
 		
 		NSString	*host;
 		//Upgrade code: grab a previously specified Jabber host
-		if(host = [self preferenceForKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]){
+		if (host = [self preferenceForKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
 			//Determine our new, full UID
 			correctUID = [NSString stringWithFormat:@"%@@%@",proposedUID, host];
 
@@ -68,11 +68,11 @@
 											withObject:nil
 											afterDelay:0];
 			
-		}else{
+		} else {
 			//Append @jabber.org to a Jabber account with no server
 			correctUID = [NSString stringWithFormat:@"%@@jabber.org",proposedUID];			
 		}
-	}else{
+	} else {
 		correctUID = proposedUID;
 	}
 
@@ -92,7 +92,7 @@
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"AvailableMessage",
 			@"Invisible",
@@ -145,9 +145,9 @@
 
 	serverAppendedToUID = ([UID rangeOfString:@"@"].location != NSNotFound);
 
-	if (serverAppendedToUID){
+	if (serverAppendedToUID) {
 		userNameWithHost = UID;
-	}else{
+	} else {
 		userNameWithHost = [NSString stringWithFormat:@"%@@jabber.org",UID];
 	}
 
@@ -174,9 +174,9 @@
 - (NSString *)host
 {
 	int location = [UID rangeOfString:@"@"].location;
-	if((location != NSNotFound) && (location + 1 < [UID length])){
+	if ((location != NSNotFound) && (location + 1 < [UID length])) {
 		return [UID substringFromIndex:(location + 1)];
-	}else{
+	} else {
 		return DEFAULT_JABBER_HOST;
 	}
 }
@@ -216,9 +216,9 @@
 	NSString	*objectUID = [object UID];
 	NSString	*properUID;
 	
-	if ([objectUID rangeOfString:@"@"].location != NSNotFound){
+	if ([objectUID rangeOfString:@"@"].location != NSNotFound) {
 		properUID = objectUID;
-	}else{
+	} else {
 		properUID = [NSString stringWithFormat:@"%@@%@",objectUID,[self host]];
 	}
 	
@@ -263,12 +263,12 @@
 {
 	BOOL shouldReconnect = YES;
 	
-	if (disconnectionError && *disconnectionError){
+	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"401"].location != NSNotFound) {
 			shouldReconnect = NO;
 
 			/* Automatic registration attempt... Doesn't work for jabber.org at present... */
-			if([[self host] caseInsensitiveCompare:@"jabber.org"] != NSOrderedSame){
+			if ([[self host] caseInsensitiveCompare:@"jabber.org"] != NSOrderedSame) {
 				//Display no error message
 				[*disconnectionError release];
 				*disconnectionError = nil;
@@ -283,7 +283,7 @@
 																			 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
 																			 target:self
 																		   userInfo:nil];
-			}else{
+			} else {
 				//Display the Jabber.org error message
 				[*disconnectionError release];
 				*disconnectionError = AILocalizedString(@"Invalid Jabber ID or password.\n\nIf you do not have a jabber.org account under this name, you will need to register using another Jabber client such as iChat AV 3 (Mac OS X Tiger) or Psi (http://psi.affinix.com).\n\nAdium can not automatically register a new jabber.org account at this time (please see http://status.jabber.org/ for details).",nil);
@@ -293,9 +293,9 @@
 				[[adium accountController] forgetPasswordForAccount:self];
 			}
 			
-		}else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound){
+		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldReconnect = NO;
-		}else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound){
+		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
 			shouldReconnect = NO;			
 		}
 	}
@@ -305,7 +305,7 @@
 
 - (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
-	switch(returnCode){
+	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
 			[self performSelector:@selector(performRegisterWithPassword:)
 					   withObject:password
@@ -328,7 +328,7 @@
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 		
 		return jabber_outgoing_xfer_new(account->gc,destsn);
@@ -357,21 +357,21 @@
 {
 	NSAttributedString  *statusMessage = nil;
 
-	if (gaim_account_is_connected(account)){		
+	if (gaim_account_is_connected(account)) {		
 		char	*normalized = g_strdup(gaim_normalize(b->account, b->name));
 		JabberBuddy	*jb;
 		
-		if(jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE)){
+		if (jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE)) {
 			NSString	*statusMessageString = nil;
 			const char	*msg = jabber_buddy_get_status_msg(jb);
 			
-			if(msg){
+			if (msg) {
 				//Get the custom jabber status message if one is set
 				statusMessageString = [NSString stringWithUTF8String:msg];
 				
-			}else{
+			} else {
 				//If no custom status message, use the preset possibilities
-				switch(b->uc){
+				switch (b->uc) {
 					case JABBER_STATE_CHAT:
 						statusMessageString = STATUS_DESCRIPTION_FREE_FOR_CHAT;
 						break;
@@ -387,7 +387,7 @@
 				}
 			}
 			
-			if(statusMessageString && [statusMessageString length]){
+			if (statusMessageString && [statusMessageString length]) {
 				statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 																 attributes:nil] autorelease];
 			}
@@ -404,7 +404,7 @@
 	NSString		*statusName = nil;
 	
 	//If no custom status message, use the preset possibilities
-	switch(b->uc){
+	switch (b->uc) {
 		case JABBER_STATE_CHAT:
 			statusName = STATUS_NAME_FREE_FOR_CHAT;
 			break;						
@@ -423,13 +423,13 @@
 #pragma mark Menu items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Un-hide From") == 0){
+	if (strcmp(label, "Un-hide From") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Un-hide From %@",nil),[inContact formattedUID]]);
-	}if(strcmp(label, "Temporarily Hide From") == 0){
+	}if (strcmp(label, "Temporarily Hide From") == 0) {
 			return([NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]]);
-	}else if(strcmp(label, "Unsubscribe") == 0){
+	} else if (strcmp(label, "Unsubscribe") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Unsubscribe %@",nil),[inContact formattedUID]]);
-	}else if(strcmp(label, "(Re-)Request authorization") == 0){
+	} else if (strcmp(label, "(Re-)Request authorization") == 0) {
 		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
 	}
 	
@@ -441,7 +441,7 @@
 //Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
 - (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
-	if (chat){
+	if (chat) {
 		NSString	*chatNameWithServer = [chat name];
 		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
 
@@ -457,7 +457,7 @@
 
 - (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
-	if (chat){
+	if (chat) {
 		NSString	*chatNameWithServer = [chat name];
 		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
 		
@@ -492,10 +492,10 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if(([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
+			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_FREE_FOR_CHAT] == NSOrderedSame))
 				gaimStatusType = "Chatty";
 			break;
@@ -503,7 +503,7 @@
 			
 		case AIAwayStatusType:
 		{
-			if(([statusName isEqualToString:STATUS_NAME_DND]) ||
+			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
 				gaimStatusType = "Do Not Disturb";
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
@@ -521,7 +521,7 @@
 	/* Jabber supports status messages along with the status types, so let our message stay */
 	
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }

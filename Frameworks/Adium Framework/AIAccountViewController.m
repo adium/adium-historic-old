@@ -55,20 +55,20 @@
 	NSBundle		*ourBundle = [NSBundle bundleForClass:[AIAccountViewController class]];
 	NSDictionary	*nameTable = [NSDictionary dictionaryWithObject:self forKey:@"NSOwner"];
 	
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		account = nil;
 		
 		//Load custom views for our subclass (If our subclass specifies a nib name)
-		if([self nibName]){
+		if ([self nibName]) {
 			[NSBundle loadNibNamed:[self nibName] owner:self];
 		}
 		
 		//Load our default views if necessary
-		if(!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
-		if(!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
-		if(!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
-		if(!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
+		if (!view_setup) [ourBundle loadNibFile:@"AccountSetup" externalNameTable:nameTable withZone:nil];
+		if (!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
+		if (!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
+		if (!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
 	}
 
     return self;
@@ -95,7 +95,7 @@
  */
 - (void)awakeFromNib
 {
-	if(popUp_encryption){
+	if (popUp_encryption) {
 		[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:nil 
 																			   withDefault:NO]];
 		[[popUp_encryption menu] setAutoenablesItems:NO];
@@ -170,7 +170,7 @@
  */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if(account != inAccount){		
+	if (account != inAccount) {		
 		account = inAccount;
 		
 		//UID Label
@@ -204,9 +204,9 @@
 		
 		//Server Port
 		NSNumber	*port = [account preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS];
-		if(port){
+		if (port) {
 			[textField_connectPort setIntValue:[port intValue]];
-		}else{
+		} else {
 			[textField_connectPort setStringValue:@""];
 		}
 		
@@ -234,8 +234,8 @@
 {
 	//UID - account 
 	NSString	*newUID = [textField_accountUID stringValue];
-	if(![[account UID] isEqualToString:newUID] ||
-	   ![[account formattedUID] isEqualToString:newUID]){
+	if (![[account UID] isEqualToString:newUID] ||
+	   ![[account formattedUID] isEqualToString:newUID]) {
 		[account filterAndSetUID:newUID];
 	}
 
@@ -243,11 +243,11 @@
 	NSString		*password = [textField_password secureStringValue];
 	NSString		*oldPassword = [[adium accountController] passwordForAccount:account];
 	
-	if(password && [password length] != 0){
-		if (![password isEqualToString:oldPassword]){
+	if (password && [password length] != 0) {
+		if (![password isEqualToString:oldPassword]) {
 			[[adium accountController] setPassword:password forAccount:account];
 		}
-	}else if(oldPassword && [oldPassword length] != 0){
+	} else if (oldPassword && [oldPassword length] != 0) {
 		[[adium accountController] forgetPasswordForAccount:account];
 	}
 	

@@ -98,7 +98,7 @@
 		
 		//User icon masking
 		NSString *tmpName = [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_USER_ICON_MASK];
-		if(tmpName) userIconMask = [[NSImage alloc] initWithContentsOfFile:[stylePath stringByAppendingPathComponent:tmpName]];
+		if (tmpName) userIconMask = [[NSImage alloc] initWithContentsOfFile:[stylePath stringByAppendingPathComponent:tmpName]];
 	}
 
 	return self;
@@ -205,7 +205,7 @@
  */
 - (void)setDateFormat:(NSString *)format
 {
-	if(!format || [format length] == 0){
+	if (!format || [format length] == 0) {
 		format = [NSDateFormatter localizedDateFormatStringShowingSeconds:NO showingAMorPM:NO];
 	}
 	[timeStampFormatter release];
@@ -257,7 +257,7 @@
  */
 - (void)setCustomBackgroundPath:(NSString *)inPath
 {
-	if(customBackgroundPath != inPath){
+	if (customBackgroundPath != inPath) {
 		[customBackgroundPath release];
 		customBackgroundPath = [inPath retain];
 	}
@@ -276,7 +276,7 @@
  */
 - (void)setCustomBackgroundColor:(NSColor *)inColor
 {
-	if(customBackgroundColor != inColor){
+	if (customBackgroundColor != inColor) {
 		[customBackgroundColor release];
 		customBackgroundColor = [inColor retain];
 	}
@@ -312,13 +312,13 @@
 
 	//Old styles may be using an old custom 4 parameter baseHTML.  Styles version 3 and higher should
 	//be using the bundled (or a custom) 5 parameter baseHTML.
-	if(styleVersion < 3 && usingCustomBaseHTML){
+	if (styleVersion < 3 && usingCustomBaseHTML) {
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
 			[self pathForVariant:variant],												//Variant path
 			(showHeader ? headerHTML : @""),
 			footerHTML];
-	}else{
+	} else {
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
 			(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
@@ -340,21 +340,21 @@
 	NSString	*template;
 	
 	//Get the correct template for what we're inserting
-	if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
-		if([content isOutgoing]){
+	if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+		if ([content isOutgoing]) {
 			template = (contentIsSimilar ? nextContentOutHTML : contentOutHTML);
-		}else{
+		} else {
 			template = (contentIsSimilar ? nextContentInHTML : contentInHTML);
 		}
 	
-	}else if([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
-		if([content isOutgoing]){
+	} else if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) {
+		if ([content isOutgoing]) {
 			template = (contentIsSimilar ? nextContextOutHTML : contextOutHTML);
-		}else{
+		} else {
 			template = (contentIsSimilar ? nextContextInHTML : contextInHTML);
 		}
 
-	}else{
+	} else {
 		template = statusHTML;
 	
 	}
@@ -378,10 +378,10 @@
 	
 	//Starting with version 1, styles can choose to not include template.html.  If the template is not included 
 	//Adium's default will be used.  This is preferred since any future template updates will apply to the style
-	if((!baseHTML || [baseHTML length] == 0) && styleVersion >= 1){		
+	if ((!baseHTML || [baseHTML length] == 0) && styleVersion >= 1) {		
 		baseHTML = [NSString stringWithContentsOfASCIIFile:[[NSBundle bundleForClass:[self class]] pathForResource:@"Template" ofType:@"html"]];
 		usingCustomBaseHTML = NO;
-	}else{
+	} else {
 		usingCustomBaseHTML = YES;
 	}
 	[baseHTML retain];	
@@ -395,13 +395,13 @@
 	//Context (Fall back on content if not present)
 	contextInHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/Context.html"]] retain];
 	nextContextInHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Incoming/NextContext.html"]] retain];
-	if(!contextInHTML) contextInHTML = [contentInHTML retain];
-	if(!nextContextInHTML) nextContextInHTML = [nextContentInHTML retain];
+	if (!contextInHTML) contextInHTML = [contentInHTML retain];
+	if (!nextContextInHTML) nextContextInHTML = [nextContentInHTML retain];
 	
 	contextOutHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Outgoing/Context.html"]] retain];
 	nextContextOutHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Outgoing/NextContext.html"]] retain];
-	if(!contextOutHTML) contextOutHTML = [contentOutHTML retain];
-	if(!nextContextOutHTML) nextContextOutHTML = [nextContentOutHTML retain];
+	if (!contextOutHTML) contextOutHTML = [contentOutHTML retain];
+	if (!nextContextOutHTML) nextContextOutHTML = [nextContentOutHTML retain];
 	
 	//Status
 	statusHTML = [[NSString stringWithContentsOfFile:[stylePath stringByAppendingPathComponent:@"Status.html"]] retain];
@@ -419,23 +419,23 @@
 	NSString		*script;
 	
 	//If combining of consecutive messages has been disabled, we treat all content as non-similar
-	if(!combineConsecutive) contentIsSimilar = NO;
+	if (!combineConsecutive) contentIsSimilar = NO;
 	
 	//Fetch the correct template and substitute keywords for the passed content
 	newHTML = [[[self templateForContent:content similar:contentIsSimilar] mutableCopy] autorelease];
 	newHTML = [self fillKeywords:newHTML forContent:content];
 	
 	//BOM scripts vary by style version
-	if(styleVersion >= 3){
-		if(willAddMoreContentObjects){
+	if (styleVersion >= 3) {
+		if (willAddMoreContentObjects) {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_NO_SCROLL : APPEND_MESSAGE_NO_SCROLL);
-		}else{
+		} else {
 			script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 		}
-	}else if(styleVersion >= 1){
+	} else if (styleVersion >= 1) {
 		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE : APPEND_MESSAGE);
 		
-	}else{
+	} else {
 		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
 	}
 	
@@ -457,7 +457,7 @@
  */
 - (NSString *)scriptForScrollingAfterAddingMultipleContentObjects
 {
-	if(styleVersion >= 3){
+	if (styleVersion >= 3) {
 		return(@"alignChat(true);");
 	}
 
@@ -505,13 +505,13 @@
 	NSString		*path;
 	
 	//Build an array of all variant names
-	while((path = [enumerator nextObject])){
+	while ((path = [enumerator nextObject])) {
 		[availableVariants addObject:[[path lastPathComponent] stringByDeletingPathExtension]];
 	}
 
 	//Style versions before 3 stored the default variant in a separate location.  They also allowed for this
 	//varient name to not be specified, and would substitute a localized string in its place.
-	if(styleVersion < 3){
+	if (styleVersion < 3) {
 		[availableVariants addObject:[self noVariantName]];
 	}
 	
@@ -527,9 +527,9 @@
 - (NSString *)pathForVariant:(NSString *)variant
 {
 	//Styles before version 3 stored the default variant in main.css, and not in the variants folder.
-	if(styleVersion < 3 && [variant isEqualToString:[self noVariantName]]){
+	if (styleVersion < 3 && [variant isEqualToString:[self noVariantName]]) {
 		return(@"main.css");
-	}else{
+	} else {
 		return([NSString stringWithFormat:@"Variants/%@.css",variant]);
 	}
 }
@@ -579,32 +579,32 @@
 	NSRange			range;
 		
 	//date
-	if([content isKindOfClass:[AIContentMessage class]]){
+	if ([content isKindOfClass:[AIContentMessage class]]) {
 		date = [(AIContentMessage *)content date];
-	}else if([content isKindOfClass:[AIContentStatus class]]){
+	} else if ([content isKindOfClass:[AIContentStatus class]]) {
 		date = [(AIContentStatus *)content date];
 	}
 	
 	//Replacements applicable to any AIContentObject
-	//	if (date){
+	//	if (date) {
 	do{
 		range = [inString rangeOfString:@"%time%"];
-		if(range.location != NSNotFound){
-			if(date)
+		if (range.location != NSNotFound) {
+			if (date)
 				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
 			else
 				[inString deleteCharactersInRange:range];
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
 		range = [inString rangeOfString:@"%time{"];
-		if(range.location != NSNotFound) {
+		if (range.location != NSNotFound) {
 			NSRange endRange;
 			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-				if(date) {
+			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				if (date) {
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 					
 					NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
@@ -619,7 +619,7 @@
 				
 			}
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	//	}
 	
 	//message stuff
@@ -629,19 +629,19 @@
 		
 		do{
 			range = [inString rangeOfString:@"%userIconPath%"];
-			if(range.location != NSNotFound){
+			if (range.location != NSNotFound) {
 				NSString    *userIconPath;
 				NSString	*replacementString;
 				
 				userIconPath = [contentSource statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!userIconPath){
+				if (!userIconPath) {
 					userIconPath = [contentSource statusObjectForKey:@"UserIconPath"];
 				}
 					
-				if (showUserIcons && userIconPath){
+				if (showUserIcons && userIconPath) {
 					replacementString = [NSString stringWithFormat:@"file://%@", userIconPath];
 					
-				}else{
+				} else {
 					replacementString = ([content isOutgoing]
 										 ? @"Outgoing/buddy_icon.png" 
 										 : @"Incoming/buddy_icon.png");
@@ -649,28 +649,28 @@
 				
 				[inString replaceCharactersInRange:range withString:replacementString];
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
 		
 		do{
 			range = [inString rangeOfString:@"%senderScreenName%"];
-			if(range.location != NSNotFound){
+			if (range.location != NSNotFound) {
 				NSString *formattedUID = [contentSource formattedUID];
 				[inString replaceCharactersInRange:range 
 										withString:[(formattedUID ?
 													 formattedUID :
 													 [contentSource displayName]) stringByEscapingForHTML]];
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
         
 		do{
 			range = [inString rangeOfString:@"%sender%"];
-			if(range.location != NSNotFound){
+			if (range.location != NSNotFound) {
 				NSString		*senderDisplay = nil;
-				if (useCustomNameFormat){
+				if (useCustomNameFormat) {
 					NSString		*displayName = [contentSource displayName];
 					NSString		*formattedUID = [contentSource formattedUID];
 					
-					if (formattedUID && ![displayName isEqualToString:formattedUID]){
+					if (formattedUID && ![displayName isEqualToString:formattedUID]) {
 						switch (nameFormat) {
 							case Display_Name_Screen_Name: {
 								senderDisplay = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
@@ -686,39 +686,39 @@
 							}
 						}
 					}
-					if (!senderDisplay){
+					if (!senderDisplay) {
 						senderDisplay = displayName;
 					}
-				}else{
+				} else {
 					senderDisplay = [contentSource longDisplayName];
 				}
 				
-				if ([(AIContentMessage *)content isAutoreply]){
+				if ([(AIContentMessage *)content isAutoreply]) {
 					senderDisplay = [NSString stringWithFormat:@"%@ %@",senderDisplay,AILocalizedString(@"(Autoreply)","Short word inserted after the sender's name when displaying a message which was an autoresponse")];
 				}
 					
 				[inString replaceCharactersInRange:range withString:[senderDisplay stringByEscapingForHTML]];
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
         
 		do{
 			range = [inString rangeOfString:@"%service%"];
-			if(range.location != NSNotFound){
+			if (range.location != NSNotFound) {
 				[inString replaceCharactersInRange:range withString:[[contentSource service] shortDescription]];
 			}
-		} while(range.location != NSNotFound);	
+		} while (range.location != NSNotFound);	
 
 		//Blatantly stealing the date code for the background color script.
 		do{
 			range = [inString rangeOfString:@"%textbackgroundcolor{"];
-			if(range.location != NSNotFound) {
+			if (range.location != NSNotFound) {
 				NSRange endRange;
 				endRange = [inString rangeOfString:@"}%"];
-				if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+				if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 					NSString *transparency = [inString substringWithRange:NSMakeRange(NSMaxRange(range),
 																					  (endRange.location - NSMaxRange(range)))];
 					
-					if(allowTextBackgrounds && showIncomingColors){
+					if (allowTextBackgrounds && showIncomingColors) {
 						NSString *thisIsATemporaryString;
 						unsigned int rgb = 0, red, green, blue;
 						NSScanner *hexcode;
@@ -737,20 +737,20 @@
 															bodyBackground:YES];
 						hexcode = [NSScanner scannerWithString:thisIsATemporaryString];
 						[hexcode  scanHexInt:&rgb];
-						if(![thisIsATemporaryString length] && rgb == 0){
+						if (![thisIsATemporaryString length] && rgb == 0) {
 							[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
-						}else{
+						} else {
 							red = (rgb & 0xff0000) >> 16;
 							green = (rgb & 0x00ff00) >> 8;
 							blue = rgb & 0x0000ff;
 							[inString replaceCharactersInRange:NSUnionRange(range, endRange)
 													withString:[NSString stringWithFormat:@"rgba(%d, %d, %d, %@)", red, green, blue, transparency]];
 						}
-					}else{
+					} else {
 						[inString replaceCharactersInRange:NSUnionRange(range, endRange) withString:@""];
 					}
-				}else if(endRange.location == NSMaxRange(range)){
-					if(allowTextBackgrounds && showIncomingColors){
+				} else if (endRange.location == NSMaxRange(range)) {
+					if (allowTextBackgrounds && showIncomingColors) {
 						NSString *thisIsATemporaryString;
 						
 						thisIsATemporaryString = [AIHTMLDecoder encodeHTML:[content message] headers:NO 
@@ -768,17 +768,17 @@
 															bodyBackground:YES];
 						[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
 												withString:[NSString stringWithFormat:@"#%@", thisIsATemporaryString]];
-					}else{
+					} else {
 						[inString replaceCharactersInRange:NSUnionRange(range, endRange)
 												withString:@""];
 					}	
 				}
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
 		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range withString:[AIHTMLDecoder encodeHTML:[content message]
 																				  headers:NO 
 																				 fontTags:([content isOutgoing] ?
@@ -799,46 +799,46 @@
 																		   bodyBackground:NO]];
 		}
 		
-	}else if ([content isKindOfClass:[AIContentStatus class]]) {
+	} else if ([content isKindOfClass:[AIContentStatus class]]) {
 		NSString	*statusPhrase;
 		BOOL		replacedStatusPhrase = NO;
 		
 		do{
 			range = [inString rangeOfString:@"%status%"];
-			if(range.location != NSNotFound) {
+			if (range.location != NSNotFound) {
 				[inString replaceCharactersInRange:range
 										withString:[[(AIContentStatus *)content status] stringByEscapingForHTML]];
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
 		
 		do{
 			range = [inString rangeOfString:@"%statusSender%"];
-			if(range.location != NSNotFound) {
+			if (range.location != NSNotFound) {
 				[inString replaceCharactersInRange:range
 										withString:[[[(AIContentStatus *)content source] displayName] stringByEscapingForHTML]];
 			}
-		} while(range.location != NSNotFound);
+		} while (range.location != NSNotFound);
 
-		if(statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"]){
+		if (statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"]) {
 			do{
 				range = [inString rangeOfString:@"%statusPhrase%"];
-				if(range.location != NSNotFound) {
+				if (range.location != NSNotFound) {
 					[inString replaceCharactersInRange:range 
 											withString:[statusPhrase stringByEscapingForHTML]];
 					replacedStatusPhrase = YES;
 				}
-			} while(range.location != NSNotFound);
+			} while (range.location != NSNotFound);
 		}
 		
 		//Message (must do last)
 		range = [inString rangeOfString:@"%message%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			NSString	*messageString;
 
-			if(replacedStatusPhrase){
+			if (replacedStatusPhrase) {
 				//If the status phrase was used, clear the message tag
 				messageString = @"";
-			}else{
+			} else {
 				messageString = [AIHTMLDecoder encodeHTML:[content message]
 												  headers:NO 
 												 fontTags:NO
@@ -874,22 +874,22 @@
 	
 	do{
 		range = [inString rangeOfString:@"%chatName%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range
 									withString:[[chat displayName] stringByEscapingForHTML]];
 			
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	do{
 		range = [inString rangeOfString:@"%incomingIconPath%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			AIListContact	*listObject = [chat listObject];
 			NSString		*iconPath = nil;
 			
-			if (listObject){
+			if (listObject) {
 				iconPath = [listObject statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!iconPath){
+				if (!iconPath) {
 					iconPath = [listObject statusObjectForKey:@"UserIconPath"];
 				}
 			}
@@ -897,17 +897,17 @@
 			[inString replaceCharactersInRange:range
 									withString:(iconPath ? iconPath : @"incoming_icon.png")];
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	do{
 		range = [inString rangeOfString:@"%outgoingIconPath%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			AIListObject	*account = [chat account];
 			NSString		*iconPath = nil;
 			
-			if (account){
+			if (account) {
 				iconPath = [account statusObjectForKey:KEY_WEBKIT_USER_ICON];
-				if (!iconPath){
+				if (!iconPath) {
 					iconPath = [account statusObjectForKey:@"UserIconPath"];
 				}
 			}
@@ -915,22 +915,22 @@
 			[inString replaceCharactersInRange:range
 									withString:(iconPath ? iconPath : @"outgoing_icon.png")];
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	do{
 		range = [inString rangeOfString:@"%timeOpened%"];
-		if(range.location != NSNotFound){
+		if (range.location != NSNotFound) {
 			[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:[chat dateOpened]]];
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	//Replaces %time{x}% with a timestamp formatted like x (using NSDateFormatter)
 	do{
 		range = [inString rangeOfString:@"%timeOpened{"];
-		if(range.location != NSNotFound) {
+		if (range.location != NSNotFound) {
 			NSRange endRange;
 			endRange = [inString rangeOfString:@"}%"];
-			if(endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
+			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 				
 				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
 				NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
@@ -941,21 +941,21 @@
 				
 			}
 		}
-	} while(range.location != NSNotFound);
+	} while (range.location != NSNotFound);
 	
 	//Background
 	{
 		range = [inString rangeOfString:@"==bodyBackground=="];
 		
-		if(range.location != NSNotFound){ //a backgroundImage tag is not required
+		if (range.location != NSNotFound) { //a backgroundImage tag is not required
 			NSMutableString *bodyTag = nil;
 
-			if(allowsCustomBackground && (customBackgroundPath || customBackgroundColor)){				
+			if (allowsCustomBackground && (customBackgroundPath || customBackgroundColor)) {				
 				bodyTag = [[[NSMutableString alloc] init] autorelease];
 				
-				if(customBackgroundPath){
-					if([customBackgroundPath length]){
-						switch(customBackgroundType){
+				if (customBackgroundPath) {
+					if ([customBackgroundPath length]) {
+						switch (customBackgroundType) {
 							case BackgroundNormal:
 								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: no-repeat; background-attachment:fixed;", customBackgroundPath]];
 							break;
@@ -966,11 +966,11 @@
 								[bodyTag appendString:[NSString stringWithFormat:@"background-image: url('%@'); background-repeat: repeat;", customBackgroundPath]];
 							break;
 						}
-					}else{
+					} else {
 						[bodyTag appendString:@"background-image: none; "];
 					}
 				}
-				if(customBackgroundColor){
+				if (customBackgroundColor) {
 					[bodyTag appendString:[NSString stringWithFormat:@"background-color: #%@; ", [customBackgroundColor hexString]]];
 				}
  			}

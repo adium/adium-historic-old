@@ -39,13 +39,13 @@
 	
 	controller = [[self alloc] initWithWindowNibName:@"DockIconSelectionSheet"];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
 			modalDelegate:controller
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[controller showWindow:nil];
 		[[controller window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
@@ -96,7 +96,7 @@
 //When the xtras are changed, update our icons
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if(!notification || [[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0){
+	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumIcon"] == 0) {
 		[iconArray release];
 		iconArray = [[NSMutableArray alloc] init];
 		
@@ -104,7 +104,7 @@
 		NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 		NSString		*path;
 		
-		while((path = [enumerator nextObject])){
+		while ((path = [enumerator nextObject])) {
 			AIIconState		*previewState = [[adium dockController] previewStateForIconPackAtPath:path];
 			[iconArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:path, @"Path", previewState, @"State", nil]];    
 		}
@@ -134,12 +134,12 @@
 //    [iconArray release]; iconArray = [[NSMutableArray alloc] init];
 //	enumerator = [[adium resourcePathsForName:FOLDER_DOCK_ICONS] objectEnumerator];
 //	
-//    while((iconPath = [enumerator nextObject])){            
+//    while ((iconPath = [enumerator nextObject])) {            
 //        fileEnumerator = [[NSFileManager defaultManager] enumeratorAtPath:iconPath];
 //        
 //        //Find all the .AdiumIcon's
-//        while((filePath = [fileEnumerator nextObject])){
-//            if([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+//        while ((filePath = [fileEnumerator nextObject])) {
+//            if ([[filePath pathExtension] caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 //                NSString		*fullPath;
 //                AIIconState		*previewState;
 //                
@@ -165,9 +165,9 @@
 	NSDictionary	*iconDict;
 	int				index = 0;
 	
-	while((iconDict = [enumerator nextObject])){
+	while ((iconDict = [enumerator nextObject])) {
 		NSString	*iconName = [[[iconDict objectForKey:@"Path"] lastPathComponent] stringByDeletingPathExtension]		;
-		if([iconName isEqualToString:selectName]){
+		if ([iconName isEqualToString:selectName]) {
 			[imageGridView_icons selectIndex:index];
 			break; //we can exit early
 		}
@@ -186,7 +186,7 @@
 	[imageGridView_icons setNeedsDisplayOfImageAtIndex:index];
 	
 	//Stop the current animation
-    if(animationTimer){
+    if (animationTimer) {
         [animationTimer invalidate];
         [animationTimer release];
         animationTimer = nil;
@@ -195,7 +195,7 @@
 	animatedIndex = -1;
 
 	//Start the new animation
-	if(index != -1){
+	if (index != -1) {
 		NSString	*path = [[iconArray objectAtIndex:index] objectForKey:@"Path"];
 
 		animatedIconState = [[self animatedStateForDockIconAtPath:path] retain];
@@ -236,9 +236,9 @@
 
 - (NSImage *)imageGridView:(AIImageGridView *)imageGridView imageAtIndex:(int)index
 {
-	if(index == animatedIndex){
+	if (index == animatedIndex) {
 		return([animatedIconState image]);
-	}else{
+	} else {
 		return([[[iconArray objectAtIndex:index] objectForKey:@"State"] image]);
 	}
 }
@@ -266,7 +266,7 @@
 	NSString	*name = [[selectedIconPath lastPathComponent] stringByDeletingPathExtension];
 	
 	//We need atleast one icon installed, so prevent the user from deleting the default icon
-	if(![name isEqualToString:DEFAULT_DOCK_ICON_NAME]){
+	if (![name isEqualToString:DEFAULT_DOCK_ICON_NAME]) {
 		NSBeginAlertSheet(AILocalizedString(@"Delete Dock Icon",nil),
 						  AILocalizedString(@"Delete",nil),
 						  AILocalizedString(@"Cancel",nil),
@@ -281,7 +281,7 @@
 }
 - (void)trashConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(NSString *)selectedIconPath
 {
-    if(returnCode == NSOKButton){
+    if (returnCode == NSOKButton) {
 		int deletedIndex = [imageGridView_icons selectedIndex];
 		
 		//Deselect and stop animating

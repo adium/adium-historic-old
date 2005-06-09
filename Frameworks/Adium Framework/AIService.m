@@ -31,7 +31,7 @@
  */
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		//Register this service with Adium
 		[[adium accountController] registerService:self];
 		
@@ -370,10 +370,10 @@
 
 	//Filter the UID
 	unsigned	pos;
-	for(pos = 0; pos < workingStringLength; pos++){
+	for (pos = 0; pos < workingStringLength; pos++) {
 		unichar c = [workingString characterAtIndex:pos];
 		
-        if([allowedCharacters characterIsMember:c] && (!removeIgnored || ![ignoredCharacters characterIsMember:c])){
+        if ([allowedCharacters characterIsMember:c] && (!removeIgnored || ![ignoredCharacters characterIsMember:c])) {
             dest[destLength] = (removeIgnored ? c : [inUID characterAtIndex:pos]);
 			destLength++;
 		}

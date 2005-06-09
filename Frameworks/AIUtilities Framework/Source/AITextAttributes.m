@@ -45,7 +45,7 @@
 //init
 - (id)initWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
-	if((self = [self init])) {
+	if ((self = [self init])) {
 		dictionary = [[NSMutableDictionary alloc] init];
 
 		fontFamilyName = [inFamilyName retain];
@@ -58,12 +58,12 @@
 
 - (id)initWithDictionary:(NSDictionary *)inAttributes
 {
-	if((self = [self init])) {
+	if ((self = [self init])) {
 		dictionary = [inAttributes mutableCopy];
 
 		NSFont	*font = [dictionary objectForKey:NSFontAttributeName];
 
-		if(font) {
+		if (font) {
 			fontFamilyName = [[font familyName] retain];
 			fontTraitsMask = [[NSFontManager sharedFontManager] traitsOfFont:font];
 			fontSize = [font pointSize];
@@ -79,7 +79,7 @@
 
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		dictionary = nil;
 		fontFamilyName = nil;
 		fontTraitsMask = 0;
@@ -113,7 +113,7 @@
 //Set the font family (name)
 - (void)setFontFamily:(NSString *)inName
 {
-    if(fontFamilyName != inName){
+    if (fontFamilyName != inName) {
         [fontFamilyName release];
         fontFamilyName = [inName retain];
 
@@ -129,7 +129,7 @@
 //Set the font size
 - (void)setFontSize:(int)inSize
 {
-	if(fontSize != inSize){
+	if (fontSize != inSize) {
 		fontSize = inSize;
 		
 		[dictionary removeObjectForKey:NSFontAttributeName];
@@ -139,9 +139,9 @@
 //Set the text foreground color
 - (void)setTextColor:(NSColor *)inColor
 {
-	if(inColor){
+	if (inColor) {
 		[dictionary setObject:inColor forKey:NSForegroundColorAttributeName];
-	}else{
+	} else {
 		[dictionary removeObjectForKey:NSForegroundColorAttributeName];
 	}
 }
@@ -149,9 +149,9 @@
 //Sub-backround color (drawn just behind the text)
 - (void)setTextBackgroundColor:(NSColor *)inColor
 {
-	if(inColor){
+	if (inColor) {
 		[dictionary setObject:inColor forKey:NSBackgroundColorAttributeName];
-	}else{
+	} else {
 		[dictionary removeObjectForKey:NSBackgroundColorAttributeName];
 	}
 }
@@ -172,7 +172,7 @@
 //Disable a masked trait (bold, italic)
 - (void)disableTrait:(NSFontTraitMask)inTrait
 {
-    if(fontTraitsMask && inTrait){
+    if (fontTraitsMask && inTrait) {
         fontTraitsMask ^= inTrait;
     }
     
@@ -182,29 +182,29 @@
 //Enable/Disable underlining
 - (void)setUnderline:(BOOL)inUnderline
 {
-    if(inUnderline){
+    if (inUnderline) {
         [dictionary setObject:[NSNumber numberWithBool:inUnderline] forKey:NSUnderlineStyleAttributeName];
-    }else{
+    } else {
         [dictionary removeObjectForKey:NSUnderlineStyleAttributeName];
     }
 }
 
 // Enable or disable strikethrough
 - (void)setStrikethrough:(BOOL)inStrikethrough{
-	if(inStrikethrough){
+	if (inStrikethrough) {
 		[dictionary setObject:[NSNumber numberWithBool:inStrikethrough] forKey:NSStrikethroughStyleAttributeName];
-	}else{
+	} else {
 		[dictionary removeObjectForKey:NSStrikethroughStyleAttributeName];
 	}
 } 
 
 // Enable or disable subscript
 - (void)setSubscript:(BOOL)inSubscript{
-	if(inSubscript){
+	if (inSubscript) {
 		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / -2.0f)] forKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize - 2)];
 		
-	}else{
+	} else {
 		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize + 2)];
 	}
@@ -212,11 +212,11 @@
 
 // Enable or disable superscript
 - (void)setSuperscript:(BOOL)inSuperscript{
-	if(inSuperscript){
+	if (inSuperscript) {
 		[dictionary setObject:[NSNumber numberWithFloat:(fontSize / 2.0f)] forKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize - 2)];
 
-	}else{
+	} else {
 		[dictionary removeObjectForKey:NSBaselineOffsetAttributeName];
 		[self setFontSize:(fontSize + 2)];
 	}
@@ -224,18 +224,18 @@
 
 - (void)setLinkURL:(NSURL *)inURL
 {
-    if(inURL){
+    if (inURL) {
         [dictionary setObject:inURL forKey:NSLinkAttributeName];
-    }else{
+    } else {
         [dictionary removeObjectForKey:NSLinkAttributeName];
     }
 }
 
 - (void)setLanguageValue:(id)languageValue
 {
-	if(languageValue){
+	if (languageValue) {
 		[dictionary setObject:languageValue forKey:@"LanguageValue"];
-	}else{
+	} else {
 		[dictionary removeObjectForKey:@"LanguageValue"];		
 	}
 }
@@ -249,7 +249,7 @@
 - (NSDictionary *)dictionary
 {
 	//If the dictionary doesn't specify a font, it means our font has changed since the last call here. Update now.
-	if(![dictionary objectForKey:NSFontAttributeName]) [self updateFont];
+	if (![dictionary objectForKey:NSFontAttributeName]) [self updateFont];
 
     return(dictionary);
 }
@@ -269,10 +269,10 @@
     NSFont	*font = nil;
 
     //Ensure font size isn't 0
-    if(!fontSize) fontSize = 12;
+    if (!fontSize) fontSize = 12;
 
     //Create the font
-    if(fontFamilyName){
+    if (fontFamilyName) {
 		font = [[NSFontManager sharedFontManager] fontWithFamilyInsensitively:fontFamilyName 
 																	   traits:fontTraitsMask
 																	   weight:5
@@ -280,14 +280,14 @@
     }
     
     //If no name was specified or the font is not available, use the default font
-    if(!font){
+    if (!font) {
         font = [[NSFontManager sharedFontManager] fontWithFamily:FONT_DEFAULT_NAME
 														  traits:fontTraitsMask
 														  weight:5
 															size:fontSize];
     }
 
-    if(font){ //Just to be safe, incase the default font was unavailable for some reason
+    if (font) { //Just to be safe, incase the default font was unavailable for some reason
         [dictionary setObject:font forKey:NSFontAttributeName];
     }
 }

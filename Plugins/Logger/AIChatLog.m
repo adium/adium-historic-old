@@ -22,7 +22,7 @@
 
 - (id)initWithPath:(NSString *)inPath from:(NSString *)inFrom to:(NSString *)inTo serviceClass:(NSString *)inServiceClass date:(NSDate *)inDate
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		path = [inPath retain];
 		from = [inFrom retain];
@@ -80,12 +80,12 @@
 - (NSComparisonResult)compareTo:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [to caseInsensitiveCompare:[inLog to]];
-    if(result == NSOrderedSame){
+    if (result == NSOrderedSame) {
 		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 		
-		if (interval < 0){
+		if (interval < 0) {
 			result = NSOrderedAscending;
-		}else if (interval > 0){
+		} else if (interval > 0) {
 			result = NSOrderedDescending;
 		}
 	}
@@ -95,12 +95,12 @@
 - (NSComparisonResult)compareToReverse:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [[inLog to] caseInsensitiveCompare:to];
-    if(result == NSOrderedSame){
+    if (result == NSOrderedSame) {
 		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 		
-		if (interval < 0){
+		if (interval < 0) {
 			result = NSOrderedAscending;
-		}else if (interval > 0){
+		} else if (interval > 0) {
 			result = NSOrderedDescending;
 		}
 	}
@@ -111,12 +111,12 @@
 - (NSComparisonResult)compareFrom:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [from caseInsensitiveCompare:[inLog from]];
-    if(result == NSOrderedSame){
+    if (result == NSOrderedSame) {
 		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 		
-		if (interval < 0){
+		if (interval < 0) {
 			result = NSOrderedAscending;
-		}else if (interval > 0){
+		} else if (interval > 0) {
 			result = NSOrderedDescending;
 		}
 	} 
@@ -126,12 +126,12 @@
 - (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog
 {
     NSComparisonResult  result = [[inLog from] caseInsensitiveCompare:from];
-    if(result == NSOrderedSame){
+    if (result == NSOrderedSame) {
 		NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 		
-		if (interval < 0){
+		if (interval < 0) {
 			result = NSOrderedAscending;
-		}else if (interval > 0){
+		} else if (interval > 0) {
 			result = NSOrderedDescending;
 		}
 	}
@@ -145,11 +145,11 @@
 	NSComparisonResult  result;
 	NSTimeInterval		interval = [date timeIntervalSinceDate:[inLog date]];
 	
-	if (interval < 0){
+	if (interval < 0) {
 		result = NSOrderedAscending;
-	}else if (interval > 0){
+	} else if (interval > 0) {
 		result = NSOrderedDescending;
-	}else{
+	} else {
 		result = [to caseInsensitiveCompare:[inLog to]];
     }
 	
@@ -160,11 +160,11 @@
 	NSComparisonResult  result;
 	NSTimeInterval		interval = [[inLog date] timeIntervalSinceDate:date];
 	
-	if (interval < 0){
+	if (interval < 0) {
 		result = NSOrderedAscending;
-	}else if (interval > 0){
+	} else if (interval > 0) {
 		result = NSOrderedDescending;
-	}else{
+	} else {
 		result = [[inLog to] caseInsensitiveCompare:to];
     }
 	
@@ -176,11 +176,11 @@
 	NSComparisonResult  result;
 	float				otherRankingPercentage = [inLog rankingPercentage];
 	
-	if (rankingPercentage > otherRankingPercentage){
+	if (rankingPercentage > otherRankingPercentage) {
 		result = NSOrderedDescending;		
-	}else if (rankingPercentage < otherRankingPercentage){
+	} else if (rankingPercentage < otherRankingPercentage) {
 		result = NSOrderedAscending;	
-	}else{
+	} else {
 		result = [to caseInsensitiveCompare:[inLog to]];
     }
 	
@@ -191,11 +191,11 @@
 	NSComparisonResult  result;
 	float				otherRankingPercentage = [inLog rankingPercentage];
 	
-	if (rankingPercentage > otherRankingPercentage){
+	if (rankingPercentage > otherRankingPercentage) {
 		result = NSOrderedAscending;		
-	}else if (rankingPercentage < otherRankingPercentage){
+	} else if (rankingPercentage < otherRankingPercentage) {
 		result = NSOrderedDescending;				
-	}else{
+	} else {
 		result = [[inLog to] caseInsensitiveCompare:to];
     }
 	

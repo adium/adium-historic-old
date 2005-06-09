@@ -22,7 +22,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 
 + (void)initialize
 {
-	if(!singleton)
+	if (!singleton)
 		singleton = [[AIHostReachabilityMonitor alloc] init];
 }
 
@@ -36,7 +36,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		hostAndObserverListLock = [[NSLock alloc] init];
 
 		[hostAndObserverListLock lock];
@@ -82,15 +82,15 @@ static AIHostReachabilityMonitor *singleton = nil;
 - (void)removeObserver:(id <AIHostReachabilityObserver>)newObserver forHost:(NSString *)host
 {
 	//nil cannot observe, so it must not be in the list.
-	if(!newObserver) return;
+	if (!newObserver) return;
 
 	[hostAndObserverListLock lock];
 
 	unsigned numObservers = [observers count];
-	for(unsigned i = 0; i < numObservers; ) {
+	for (unsigned i = 0; i < numObservers; ) {
 		BOOL removed = NO;
-		if(newObserver == [observers objectAtIndex:i]) {
-			if((!host) || (host == [hosts objectAtIndex:i])) {
+		if (newObserver == [observers objectAtIndex:i]) {
+			if ((!host) || (host == [hosts objectAtIndex:i])) {
 				[hosts          removeObjectAtIndex:i];
 				[observers      removeObjectAtIndex:i];
 				[reachabilities removeObjectAtIndex:i];
@@ -115,7 +115,7 @@ static AIHostReachabilityMonitor *singleton = nil;
 	NSString *host = [hosts objectAtIndex:i];
 	id <AIHostReachabilityObserver> observer = [observers objectAtIndex:i];
 
-	if(isReachable) [observer hostReachabilityMonitor:self hostIsReachable:host];
+	if (isReachable) [observer hostReachabilityMonitor:self hostIsReachable:host];
 	else            [observer hostReachabilityMonitor:self hostIsNotReachable:host];
 
 	[hostAndObserverListLock unlock];

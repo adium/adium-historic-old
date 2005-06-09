@@ -27,7 +27,7 @@
 
 - (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		//Retain our information
 		contact = [inContact retain];
@@ -63,7 +63,7 @@
 
 - (void)setRemoteFilename:(NSString *)inRemoteFilename
 {
-    if (remoteFilename != inRemoteFilename){
+    if (remoteFilename != inRemoteFilename) {
         [remoteFilename release];
         remoteFilename = [inRemoteFilename retain];
     }
@@ -75,7 +75,7 @@
 
 - (void)setLocalFilename:(NSString *)inLocalFilename
 {
-    if (localFilename != inLocalFilename){
+    if (localFilename != inLocalFilename) {
         [localFilename release];
         localFilename = [inLocalFilename retain];
 	}
@@ -93,7 +93,7 @@
 	NSString	*displayFilename = [localFilename lastPathComponent];
 	
 	//If we don't have a local file name, try to use the remote file name.
-	if(!displayFilename) displayFilename = [remoteFilename lastPathComponent];
+	if (!displayFilename) displayFilename = [remoteFilename lastPathComponent];
 	
 	return displayFilename;
 }
@@ -124,7 +124,7 @@
 
 - (void)setStatus:(FileTransferStatus)inStatus
 {
-	if(status != inStatus){
+	if (status != inStatus) {
 		status = inStatus;
 		
 		[[adium fileTransferController] fileTransfer:self didSetStatus:status];
@@ -144,30 +144,30 @@
 	float oldPercentDone = percentDone;
 	int oldBytesSent = bytesSent;
 	
-    if (inPercent == -1){
-        if (inBytesSent != -1 && size != -1){
+    if (inPercent == -1) {
+        if (inBytesSent != -1 && size != -1) {
             percentDone = (inBytesSent / size);
 		}
-    }else{
+    } else {
         percentDone = inPercent;
     }
 	
-    if (inBytesSent == -1){
-        if (inPercent != -1 && size != -1){
+    if (inBytesSent == -1) {
+        if (inPercent != -1 && size != -1) {
             bytesSent = inPercent * size;
 		}
-    }else{
+    } else {
         bytesSent = inBytesSent;
 	}
 	
-	if ((percentDone != oldPercentDone) || (bytesSent != oldBytesSent)){
-		if (delegate){
+	if ((percentDone != oldPercentDone) || (bytesSent != oldBytesSent)) {
+		if (delegate) {
 			[delegate gotUpdateForFileTransfer:self];
 		}
 		
-		if (percentDone >= 1.0){
+		if (percentDone >= 1.0) {
 			[self setStatus:Complete_FileTransfer];
-		}else if ((percentDone != 0) && (status != In_Progress_FileTransfer)){
+		} else if ((percentDone != 0) && (status != In_Progress_FileTransfer)) {
 			[self setStatus:In_Progress_FileTransfer];
 		}
 	}
@@ -183,7 +183,7 @@
 
 - (void)setAccountData:(id)inAccountData
 {
-    if (accountData != inAccountData){
+    if (accountData != inAccountData) {
         [accountData release];
         accountData = [inAccountData retain];
     }
@@ -205,7 +205,7 @@
 - (AIListObject *)source
 {
 	AIListObject	*source;
-	switch(type){
+	switch (type) {
 		case Incoming_FileTransfer:
 			source = contact;
 			break;
@@ -222,7 +222,7 @@
 - (AIListObject *)destination
 {
 	AIListObject	*destination;
-	switch(type){
+	switch (type) {
 		case Incoming_FileTransfer:
 			destination = account;
 			break;
@@ -261,9 +261,9 @@
 	extension = [[self localFilename] pathExtension];
 	
 	//Fall back on the remote filename if necessary
-	if(!extension) extension = [[self remoteFilename] pathExtension]; 
+	if (!extension) extension = [[self remoteFilename] pathExtension]; 
 	
-	if(extension && [extension length]){
+	if (extension && [extension length]) {
 
 		//XXX - Test for file transfer type, overlay a light up arrow or down arrow?
 		iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:extension];

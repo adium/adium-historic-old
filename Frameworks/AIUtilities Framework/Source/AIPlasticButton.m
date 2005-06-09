@@ -44,7 +44,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		//Default title and image
 		[self setTitle:@""];
 		[self setImage:nil];
@@ -80,15 +80,15 @@
     NSImage	*middle;
     
     //Get the correct images
-    if(![[self cell] isHighlighted]){
-        if([[self keyEquivalent] isEqualToString:@"\r"]){
+    if (![[self cell] isHighlighted]) {
+        if ([[self keyEquivalent] isEqualToString:@"\r"]) {
             caps = plasticDefaultCaps;
             middle = plasticDefaultMiddle;
-        }else{
+        } else {
             caps = plasticCaps;
             middle = plasticMiddle;
         }
-    }else{
+    } else {
         caps = plasticPressedCaps;
         middle = plasticPressedMiddle;
     }
@@ -112,9 +112,9 @@
     sourceRect = NSMakeRect(0, 0, middleSize.width, middleSize.height);
     destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y/* + frame.size.height*/, sourceRect.size.width,  frame.size.height);
 	
-    while(destRect.origin.x < middleRight && (int)destRect.size.width > 0){
+    while (destRect.origin.x < middleRight && (int)destRect.size.width > 0) {
         //Crop
-        if((destRect.origin.x + destRect.size.width) > middleRight){
+        if ((destRect.origin.x + destRect.size.width) > middleRight) {
             sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRight;
         }
 		
@@ -134,14 +134,14 @@
 	
     //Draw Label
     NSString *title = [self title];
-    if(title) {
+    if (title) {
         NSColor		*color;
         NSDictionary 	*attributes;
         NSSize		size;
         NSPoint		centeredPoint;
 
         //Prep attributes
-        if([self isEnabled]) {
+        if ([self isEnabled]) {
             color = [NSColor blackColor];
         } else {
             color = [NSColor colorWithCalibratedWhite:0.0 alpha:0.5];
@@ -159,11 +159,11 @@
 
     //Draw image
     NSImage *image = [self image];
-    if(image) {
+    if (image) {
         NSSize	size = [image size];
         NSRect	centeredRect;
 
-		if([self menu]) frame.size.width -= PLASTIC_ARROW_PADDING;
+		if ([self menu]) frame.size.width -= PLASTIC_ARROW_PADDING;
 		
         centeredRect = NSMakeRect(frame.origin.x + (int)((frame.size.width - size.width) / 2.0) + IMAGE_OFFSET_X,
                                   frame.origin.y + (int)((frame.size.height - size.height) / 2.0) + IMAGE_OFFSET_Y,
@@ -178,7 +178,7 @@
     }
     
 	//Draw the arrow, if needed
-	if([self menu]){
+	if ([self menu]) {
 		[[[NSColor blackColor] colorWithAlphaComponent:0.70] set];
 		[[self popUpArrowPath] fill];
 	}
@@ -187,7 +187,7 @@
 //Path for the little popup arrow (Cached, dependent upon our current frame)
 - (NSBezierPath *)popUpArrowPath
 {
-	if(!arrowPath){
+	if (!arrowPath) {
 		NSRect frame = [self frame];
 		
 		arrowPath = [[NSBezierPath bezierPath] retain];
@@ -214,10 +214,10 @@
 //Custom mouse down tracking to display our menu and highlight
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if(![self menu]){
+	if (![self menu]) {
 		[super mouseDown:theEvent];
-	}else{
-		if([self isEnabled]){
+	} else {
+		if ([self isEnabled]) {
 			[self highlight:YES];
 			
 			NSPoint point = [self convertPoint:[self bounds].origin toView:nil];

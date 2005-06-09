@@ -28,7 +28,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initOutlineView];
 	}
 	return self;
@@ -36,7 +36,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initOutlineView];
 	}
 	return self;
@@ -50,9 +50,9 @@
 //Allow our delegate to specify context menus
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
-    if([[self delegate] respondsToSelector:@selector(outlineView:menuForEvent:)]){
+    if ([[self delegate] respondsToSelector:@selector(outlineView:menuForEvent:)]) {
         return([[self delegate] outlineView:self menuForEvent:theEvent]);
-    }else{
+    } else {
         return(nil);
     }
 }
@@ -60,54 +60,54 @@
 //Navigate outline view with the keyboard, send select actions to delegate
 - (void)keyDown:(NSEvent *)theEvent
 {
-	if(!([theEvent modifierFlags] & NSCommandKeyMask)){
+	if (!([theEvent modifierFlags] & NSCommandKeyMask)) {
 
 		NSString	*charString = [theEvent charactersIgnoringModifiers];
 		unichar		pressedChar = 0;
 	
 		//Get the pressed character
-		if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+		if ([charString length] == 1) pressedChar = [charString characterAtIndex:0];
 
-    	if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter){ //Delete
-			if([[self dataSource] respondsToSelector:@selector(outlineViewDeleteSelectedRows:)]){
+    	if (pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter) { //Delete
+			if ([[self dataSource] respondsToSelector:@selector(outlineViewDeleteSelectedRows:)]) {
 				[[self dataSource] outlineViewDeleteSelectedRows:self];
 			}
 
-		}else if(pressedChar == NSCarriageReturnCharacter || pressedChar == NSEnterCharacter){ //Enter or return
+		} else if (pressedChar == NSCarriageReturnCharacter || pressedChar == NSEnterCharacter) { //Enter or return
 			//doubleAction is NULL by default
 			SEL doubleActionSelector = [self doubleAction];
-			if (doubleActionSelector){
+			if (doubleActionSelector) {
 				[[self delegate] performSelector:doubleActionSelector withObject:self];
 			}
 
-        }else if(pressedChar == NSLeftArrowFunctionKey){ //left
+        } else if (pressedChar == NSLeftArrowFunctionKey) { //left
             id 	object = [self itemAtRow:[self selectedRow]];
-            if(object && [self isExpandable:object] && [self isItemExpanded:object]){
+            if (object && [self isExpandable:object] && [self isItemExpanded:object]) {
 				[self collapseItem:object];
             }
 
-        }else if(pressedChar == NSRightArrowFunctionKey){ //right
+        } else if (pressedChar == NSRightArrowFunctionKey) { //right
             id 	object = [self itemAtRow:[self selectedRow]];
-            if(object && [self isExpandable:object] && ![self isItemExpanded:object]){
+            if (object && [self isExpandable:object] && ![self isItemExpanded:object]) {
 				[self expandItem:object];
             }
 
-        }else if((pressedChar == '\031') && // backtab
-				 ([self respondsToSelector:@selector(findPrevious:)])){
+        } else if ((pressedChar == '\031') && // backtab
+				 ([self respondsToSelector:@selector(findPrevious:)])) {
 			/* KFTypeSelectTableView supports findPrevious; backtab is added to AIOutlineView as a find previous action
 			 * if KFTypeSelectTableView is being used via posing */
 			[self findPrevious:self];
 			
-		}else if((pressedChar == '\t') &&
-				 ([self respondsToSelector:@selector(findNext:)])){
+		} else if ((pressedChar == '\t') &&
+				 ([self respondsToSelector:@selector(findNext:)])) {
 			/* KFTypeSelectTableView supports findNext; tab is added to AIOutlineView as a find next action
 			* if KFTypeSelectTableView is being used via posing */
 			[self findNext:self];
 
-		}else{
+		} else {
 			[super keyDown:theEvent];
 		}
-	}else{
+	} else {
 		[super keyDown:theEvent];
 	}
 }
@@ -122,14 +122,14 @@
 {
 	[super expandItem:item expandChildren:expandChildren];
 
-	if(!ignoreExpandCollapse){
+	if (!ignoreExpandCollapse) {
 		//General expand notification
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidExpandItemNotification
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
 
 		//Inform our delegate directly
-		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+		if ([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]) {
 			[[self delegate] outlineView:self setExpandState:YES ofItem:item];
 		}
 	}
@@ -138,14 +138,14 @@
 {
 	[super collapseItem:item collapseChildren:collapseChildren];
 
-	if(!ignoreExpandCollapse){
+	if (!ignoreExpandCollapse) {
 		//General expand notification
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIOutlineViewUserDidCollapseItemNotification
 															object:self
 														  userInfo:[NSDictionary dictionaryWithObject:item forKey:@"Object"]];
 
 		//Inform our delegate directly
-		if([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]){
+		if ([[self delegate] respondsToSelector:@selector(outlineView:setExpandState:ofItem:)]) {
 			[[self delegate] outlineView:self setExpandState:NO ofItem:item];
 		}
 	}
@@ -163,30 +163,30 @@
 	of the last row is complete.  As an added benefit, we skip the delayed reloading if the outline view had been
 	reloaded since the edit, and the reload is no longer necessary.
 	*/
-    if([self numberOfRows] != 0 && ([self editedRow] == [self numberOfRows] - 1) && !needsReload){
+    if ([self numberOfRows] != 0 && ([self editedRow] == [self numberOfRows] - 1) && !needsReload) {
         needsReload = YES;
         [self performSelector:@selector(_reloadData) withObject:nil afterDelay:0.0001];
 
-    }else{
+    } else {
         needsReload = NO;
 		[super reloadData];
 
 		//After reloading data, we correctly expand/collapse all groups
-		if([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]){
+		if ([[self delegate] respondsToSelector:@selector(outlineView:expandStateOfItem:)]) {
 			id		delegate = [self delegate];
 			int 	numberOfRows = [delegate outlineView:self numberOfChildrenOfItem:nil];
 			int 	row;
 
 			//go through all items
-			for(row = 0; row < numberOfRows; row++){
+			for (row = 0; row < numberOfRows; row++) {
 				id item = [delegate outlineView:self child:row ofItem:nil];
 
 				//If the item is expandable, correctly expand/collapse it
-				if([delegate outlineView:self isItemExpandable:item]){
+				if ([delegate outlineView:self isItemExpandable:item]) {
 					ignoreExpandCollapse = YES;
-					if([delegate outlineView:self expandStateOfItem:item]){
+					if ([delegate outlineView:self expandStateOfItem:item]) {
 						[self expandItem:item];
-					}else{
+					} else {
 						[self collapseItem:item];
 					}
 					ignoreExpandCollapse = NO;
@@ -198,7 +198,7 @@
 
 //Here we skip the delayed reload if another reload has already occured before the delay could fire
 - (void)_reloadData{
-    if(needsReload) [self reloadData];
+    if (needsReload) [self reloadData];
 }
 
 //Preserve selection through a reload
@@ -218,7 +218,7 @@
 //Invoked in the dragging source as the drag ends
 - (void)draggedImage:(NSImage *)image endedAt:(NSPoint)screenPoint operation:(NSDragOperation)operation
 {	
-	if ([[self delegate] respondsToSelector:@selector(outlineView:draggedImage:endedAt:operation:)]){
+	if ([[self delegate] respondsToSelector:@selector(outlineView:draggedImage:endedAt:operation:)]) {
 		[[self delegate] outlineView:self draggedImage:image endedAt:screenPoint operation:operation];
 	}
 }

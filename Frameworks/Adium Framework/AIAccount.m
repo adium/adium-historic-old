@@ -179,7 +179,7 @@
 - (NSSet *)supportedPropertyKeys
 {
 	static	NSSet	*supportedPropertyKeys = nil;
-	if(!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSSet alloc] initWithObjects:
 			@"FormattedUID",
 			@"FullNameAttr",

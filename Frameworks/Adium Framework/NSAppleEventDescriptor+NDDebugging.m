@@ -24,7 +24,7 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 {
 	OSType		theType = [self descriptorType];
 	NSString		* theDescription = nil;
-	switch(theType)
+	switch (theType)
 	{
 		case typeBoolean:						//	1-byte Boolean value
 		case typeShortInteger:				//	16-bit integer
@@ -60,7 +60,7 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 			theNumOfItems = [self numberOfItems];
 			theString = [NSMutableString stringWithString:@"<typeAEList>( "];
 
-			for( theIndex = 1; theIndex < theNumOfItems; theIndex++)
+			for ( theIndex = 1; theIndex < theNumOfItems; theIndex++)
 			{
 				[theString appendFormat:@"%@, ", [self descriptorAtIndex:theIndex]];
 			}
@@ -74,7 +74,7 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 									theNumOfItems = [self numberOfItems];
 			NSMutableString	* theString = [NSMutableString stringWithString:@"<typeAERecord>{\n"];
 
-			for( theIndex = 1; theIndex <= theNumOfItems; theIndex++)
+			for ( theIndex = 1; theIndex <= theNumOfItems; theIndex++)
 			{
 				AEKeyword		theKeyWord = [self keywordForDescriptorAtIndex:theIndex];
 				[theString appendFormat:@"\t%@ = %@;\n", displayStringForAEKeyWord( theKeyWord ), [self descriptorForKeyword:theKeyWord]];
@@ -99,7 +99,7 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 			AEKeyword			theDescKeys[] = { keyAEDesiredClass, keyAEContainer, keyAEKeyForm, keyAEKeyData, 0 };
 			char					* theDescKeyStr[] = { "keyAEDesiredClass", "keyAEContainer", "keyAEKeyForm", "keyAEKeyData", NULL };
 			theString = [NSMutableString stringWithFormat:@"<cObjectSpecifier>\n{\n"];
-			for( theIndex = 0; theDescKeys[theIndex] != 0; theIndex++ )
+			for ( theIndex = 0; theDescKeys[theIndex] != 0; theIndex++ )
 			{
 				NSString		* theDescString = [[[self descriptorForKeyword:theDescKeys[theIndex]] description] stringByReplacingString:@"\n" withString:@"\n\t"];
 				[theString appendFormat:@"\t%s = %@;\n", theDescKeyStr[theIndex], theDescString];
@@ -116,15 +116,15 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 			AEKeyword			theAttKeys[] = { keyEventClassAttr, keyEventIDAttr, keyTransactionIDAttr, keyReturnIDAttr, keyAddressAttr, keyOptionalKeywordAttr, keyTimeoutAttr, keyInteractLevelAttr, keyEventSourceAttr, keyMissedKeywordAttr, keyOriginalAddressAttr, keyAcceptTimeoutAttr, 0 };
 			theString = [NSMutableString stringWithString:@"<typeAppleEvent>{\nattributes\n"];
 			
-			for( theIndex = 0; theAttKeys[theIndex] != 0; theIndex++ )
+			for ( theIndex = 0; theAttKeys[theIndex] != 0; theIndex++ )
 			{
 				NSAppleEventDescriptor		* theAtt = [self attributeDescriptorForKeyword:theAttKeys[theIndex]];
-				if( theAtt )
+				if ( theAtt )
 					[theString appendFormat:@"\t%@ = %@;\n", displayStringForAEKeyWord(theAttKeys[theIndex]), theAtt];
 			}
 
 			[theString appendString:@"\nparameters\n" ];
-			for( theIndex = 1; theIndex <= theNumberOfItems; theIndex++ )
+			for ( theIndex = 1; theIndex <= theNumberOfItems; theIndex++ )
 			{
 				AEKeyword		theKeyWord = [self keywordForDescriptorAtIndex:theIndex];
 				[theString appendFormat:@"\t%@ = %@;\n", displayStringForAEKeyWord( theKeyWord ), [self descriptorForKeyword:theKeyWord]];
@@ -142,7 +142,7 @@ NSString * displayStringForAEKeyWord( AEKeyword aType );
 
 NSString * displayStringForType( OSType aType )
 {
-	switch( aType )
+	switch ( aType )
 	{
 		STRINGFORFOURCHARCODE( typeBoolean );
 		STRINGFORFOURCHARCODE( typeShortInteger );
@@ -173,7 +173,7 @@ NSString * displayStringForType( OSType aType )
 
 NSString * displayStringForASKeyWord( AEKeyword aType )
 {
-	switch( aType )
+	switch ( aType )
 	{
 		STRINGFORFOURCHARCODE( keyASReturning );
 		STRINGFORFOURCHARCODE( keyASSubroutineName );
@@ -219,7 +219,7 @@ NSString * displayStringForASKeyWord( AEKeyword aType )
 
 NSString * displayStringForAEKeyWord( AEKeyword aType )
 {
-	switch( aType )
+	switch ( aType )
 	{
 		DUALSTRINGFORFOURCHARCODE( keyDirectObject, keyAEResult );
 		STRINGFORFOURCHARCODE( keyErrorNumber );

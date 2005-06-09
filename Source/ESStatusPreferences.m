@@ -162,7 +162,7 @@
 {
 	int		selectedIndex = [tableView_stateList selectedRow];
 	
-	if(selectedIndex >= 0 && selectedIndex < [stateArray count]){
+	if (selectedIndex >= 0 && selectedIndex < [stateArray count]) {
 		AIStatus	*statusState = [stateArray objectAtIndex:selectedIndex];
 		[AIEditStateWindowController editCustomState:statusState
 											 forType:[statusState statusType]
@@ -180,7 +180,7 @@
  */
 - (void)customStatusState:(AIStatus *)originalState changedTo:(AIStatus *)newState forAccount:(AIAccount *)account
 {
-	if(originalState){
+	if (originalState) {
 		/* As far the user was concerned, this was an edit.  The unique status ID should remain the same so that anything
 		 * depending upon this status will update to using it.  Furthermore, since this may be a copy of originalState
 		 * rather than the exact same object, we should update all accounts which are using this state to use the new copy
@@ -191,8 +191,8 @@
 		AIAccount		*account;
 		
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([account statusState] == originalState){
+		while ((account = [enumerator nextObject])) {
+			if ([account statusState] == originalState) {
 				[account setStatusStateAndRemainOffline:newState];
 				
 				[account notifyOfChangedStatusSilently:YES];
@@ -203,7 +203,7 @@
 
 		[originalState setUniqueStatusID:nil];
 
-	}else{
+	} else {
 		[[adium statusController] addStatusState:newState];
 	}
 }
@@ -217,7 +217,7 @@
 {
 	int		selectedIndex = [tableView_stateList selectedRow];
 	
-	if(selectedIndex >= 0 && selectedIndex < [stateArray count]){
+	if (selectedIndex >= 0 && selectedIndex < [stateArray count]) {
 		[[adium statusController] removeStatusState:[stateArray objectAtIndex:selectedIndex]];
 	}
 }
@@ -258,10 +258,10 @@
 	NSString 		*identifier = [tableColumn identifier];
 	AIStatus		*statusState = [stateArray objectAtIndex:row];
 	
-	if([identifier isEqualToString:@"icon"]){
+	if ([identifier isEqualToString:@"icon"]) {
 		return([statusState icon]);
 		
-	}else if([identifier isEqualToString:@"name"]){
+	} else if ([identifier isEqualToString:@"name"]) {
 		return([statusState title]); 
 		
 	}
@@ -303,9 +303,9 @@
  */
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
-    if(op == NSTableViewDropAbove && row != -1){
+    if (op == NSTableViewDropAbove && row != -1) {
         return(NSDragOperationPrivate);
-    }else{
+    } else {
         return(NSDragOperationNone);
     }
 }
@@ -317,7 +317,7 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATE_DRAG_TYPE]];
 	
-    if([avaliableType isEqualToString:STATE_DRAG_TYPE]){
+    if ([avaliableType isEqualToString:STATE_DRAG_TYPE]) {
         int	newIndex;
 		
         //Move the state and select it in the new location
@@ -325,7 +325,7 @@
         [tableView_stateList selectRow:newIndex byExtendingSelection:NO];
 		
         return(YES);
-    }else{
+    } else {
         return(NO);
     }
 }
@@ -391,7 +391,7 @@
 {
 	int			index = -1;
 
-	if(uniqueID){
+	if (uniqueID) {
 		NSArray		*itemArray;
 		int			targetUniqueStatusID;
 		unsigned	itemArrayCount, i;
@@ -400,12 +400,12 @@
 		
 		itemArray = [inPopUpButton itemArray];
 		itemArrayCount = [itemArray count];
-		for(i = 0; i < itemArrayCount; i++){
+		for (i = 0; i < itemArrayCount; i++) {
 			NSMenuItem	*menuItem = [itemArray objectAtIndex:i];
 			AIStatus	*statusState = [[menuItem representedObject] objectForKey:@"AIStatus"];
 			
 			//Found the right status by matching its status ID to our preferred one
-			if([statusState preexistingUniqueStatusID] == targetUniqueStatusID){
+			if ([statusState preexistingUniqueStatusID] == targetUniqueStatusID) {
 				index = i;
 				break;
 			}
@@ -441,37 +441,37 @@
  */
 - (void)changePreference:(id)sender
 {
-	if(sender == checkBox_idle){
+	if (sender == checkBox_idle) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_REPORT_IDLE
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
-	}else if(sender == checkBox_autoAway){
+	} else if (sender == checkBox_autoAway) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_AUTO_AWAY
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
-	}else if(sender == checkBox_showStatusWindow){
+	} else if (sender == checkBox_showStatusWindow) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_SHOW_STATUS_WINDOW
 											  group:PREF_GROUP_STATUS_PREFERENCES];		
 		
-	}else if(sender == checkBox_fastUserSwitching){
+	} else if (sender == checkBox_fastUserSwitching) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_STATUS_FUS
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		[self configureControlDimming];
 		
-	}else if(sender == popUp_autoAwayStatusState){
+	} else if (sender == popUp_autoAwayStatusState) {
 		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
 
 		[[adium preferenceController] setPreference:[statusState uniqueStatusID]
 											 forKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID
 											  group:PREF_GROUP_STATUS_PREFERENCES];
 		
-	}else if(sender == popUp_fastUserSwitchingStatusState){
+	} else if (sender == popUp_fastUserSwitchingStatusState) {
 		AIStatus	*statusState = [[[sender selectedItem] representedObject] objectForKey:@"AIStatus"];
 		
 		[[adium preferenceController] setPreference:[statusState uniqueStatusID]

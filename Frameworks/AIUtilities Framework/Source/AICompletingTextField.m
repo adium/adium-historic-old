@@ -33,7 +33,7 @@
 //Init the field
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _init];
 	}
 	return self;
@@ -41,7 +41,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _init];
 	}
 	return self;
@@ -89,14 +89,14 @@
 //Adds a string to the existing string list
 - (void)addCompletionString:(NSString *)string
 {
-    if(!stringSet) stringSet = [[NSMutableSet alloc] init];
+    if (!stringSet) stringSet = [[NSMutableSet alloc] init];
 
     [stringSet addObject:string];
 }
 
 - (void)addCompletionString:(NSString *)string withImpliedCompletion:(NSString *)impliedCompletion
 {
-	if (![string isEqualToString:impliedCompletion]){
+	if (![string isEqualToString:impliedCompletion]) {
 		if (!impliedCompletionDictionary) impliedCompletionDictionary = [[NSMutableDictionary alloc] init];
 		
 		[impliedCompletionDictionary setObject:impliedCompletion forKey:string];
@@ -118,17 +118,17 @@
 	userValueLength = [userValue length];
 	lastValueLength = userValueLength;
 	
-	if( completeAfterSeparator ) {
+	if ( completeAfterSeparator ) {
 		NSArray *tempArray = [userValue componentsSeparatedByString:@","];
 		lastValueLength = [[(NSString *)[tempArray objectAtIndex:([tempArray count]-1)] compactedString] length];
 		lastValue = [tempArray objectAtIndex:([tempArray count]-1)];
 	}
 	
 	//We only need to attempt an autocompletion if characters have been added - deleting shouldn't autocomplete
-    if(userValueLength > oldUserLength){
+    if (userValueLength > oldUserLength) {
         completionValue = [self completionForString:lastValue];
     
-        if(completionValue != nil && [completionValue length] > lastValueLength){
+        if (completionValue != nil && [completionValue length] > lastValueLength) {
             //Auto-complete the string - note that it retains the text that the user typed, and simply adds
             //the additional characters needed to match the completionValue
             [self setStringValue:[userValue stringByAppendingString:[completionValue substringFromIndex:lastValueLength]]];
@@ -157,11 +157,11 @@
     // If the field matches an entry in stringSet (except maybe case) replace it with the correct-case string
     userValue = [self stringValue];
     
-    if([userValue length] >= minLength){
+    if ([userValue length] >= minLength) {
         // Look for matching first matching string (except for case)
         enumerator = [stringSet objectEnumerator];
-        while((currentString = [enumerator nextObject])){
-            if([currentString compare:userValue options:NSCaseInsensitiveSearch] == 0){
+        while ((currentString = [enumerator nextObject])) {
+            if ([currentString compare:userValue options:NSCaseInsensitiveSearch] == 0) {
                 [self setStringValue:currentString];
                 break;
             }
@@ -181,7 +181,7 @@
     NSRange			range;
 
 	// Find only the last item in the list, if we are to autocomplete only after separators
-	if( completeAfterSeparator ) {
+	if ( completeAfterSeparator ) {
 		NSArray *tempArray = [inString componentsSeparatedByString:@","];
 		compString = [(NSString *)[tempArray objectAtIndex:([tempArray count]-1)] compactedString];
 	}
@@ -190,11 +190,11 @@
     length = [compString length];
     range = NSMakeRange(0, length);
 	
-    if(length >= minLength){
+    if (length >= minLength) {
         //Check each auto-complete string for a match
         enumerator = [stringSet objectEnumerator];
-        while((autoString = [enumerator nextObject])){
-            if(([autoString length] > length) && [autoString compare:compString options:NSCaseInsensitiveSearch range:range] == 0){
+        while ((autoString = [enumerator nextObject])) {
+            if (([autoString length] > length) && [autoString compare:compString options:NSCaseInsensitiveSearch range:range] == 0) {
 				return(autoString);
             }
         }
@@ -206,7 +206,7 @@
 //Return a string which may be the actual aString or may be some other string implied by it
 - (NSString *)impliedStringValueForString:(NSString *)aString
 {
-	if (aString){
+	if (aString) {
 		//Check if aString implies a different completion; ensure that this new completion is not itself
 		//a potential completion (if it is, we assume the user's manually entered stringValue to be the intended value)
 		NSString	*impliedCompletion = [impliedCompletionDictionary objectForKey:aString];
@@ -215,7 +215,7 @@
 		//If we got an implied completion, and using that implied completion wouldn't get us into a loop with other
 		//completions (leading to unpredicatable behavior as far as the user would be concerned), return the implied
 		//completion
-		if (impliedCompletion && (!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqualToString:impliedCompletion])){
+		if (impliedCompletion && (!impliedCompletionOfImpliedCompletion || [impliedCompletionOfImpliedCompletion isEqualToString:impliedCompletion])) {
 			aString = impliedCompletion;
 		}
 	}

@@ -74,7 +74,7 @@
 
 + (void)initialize
 {
-	if([self isEqual:[AIListWindowController class]]) {
+	if ([self isEqual:[AIListWindowController class]]) {
 		[[NSNotificationCenter defaultCenter] addObserver:self
 												 selector:@selector(updateScreenSlideBoundaryRect:) 
 													 name:NSApplicationDidChangeScreenParametersNotification 
@@ -189,11 +189,11 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-    if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
+    if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue];
 		int				level = NSNormalWindowLevel;
 		
-		switch(windowLevel){
+		switch (windowLevel) {
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
 			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
@@ -209,7 +209,7 @@
 		if (!firstTime)
 			[self slideWindowIfNeeded:nil];
 
-		if(!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
+		if (!windowShouldBeVisibleInBackground || permitSlidingInForeground) {
 			if (slideWindowIfNeededTimer == nil) {
 				slideWindowIfNeededTimer = [NSTimer scheduledTimerWithTimeInterval:DOCK_HIDING_MOUSE_POLL_INTERVAL
 																			target:self
@@ -227,8 +227,8 @@
 		[contactListController setShowTooltipsInBackground:[[prefDict objectForKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND] boolValue]];
     }
 
-    if([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]){
-		if([key isEqualToString:KEY_SCL_BORDERLESS]){
+    if ([group isEqualToString:PREF_GROUP_CONTACT_LIST_DISPLAY]) {
+		if ([key isEqualToString:KEY_SCL_BORDERLESS]) {
 			[self retain];
 			[[adium interfaceController] closeContactList:nil];
 			[[adium interfaceController] showContactList:nil];
@@ -237,22 +237,22 @@
 	}
 	
 	//Auto-Resizing
-	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		int				windowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 		BOOL			autoResizeVertically = [[prefDict objectForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE] boolValue];
 		BOOL			autoResizeHorizontally = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_AUTOSIZE] boolValue];
 		int				forcedWindowWidth, maxWindowWidth;
 		
-		if(autoResizeHorizontally){
+		if (autoResizeHorizontally) {
 			//If autosizing, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the maximum width; no forced width.
 			maxWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
 			forcedWindowWidth = -1;
-		}else{
-			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/){
+		} else {
+			if (windowStyle == WINDOW_STYLE_STANDARD/* || windowStyle == WINDOW_STYLE_BORDERLESS*/) {
 				//In the non-transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH has no meaning
 				maxWindowWidth = 10000;
 				forcedWindowWidth = -1;
-			}else{
+			} else {
 				//In the transparent non-autosizing modes, KEY_LIST_LAYOUT_HORIZONTAL_WIDTH determines the width of the window
 				forcedWindowWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_HORIZONTAL_WIDTH] intValue];
 				maxWindowWidth = forcedWindowWidth;
@@ -270,12 +270,12 @@
 		NSSize	thisMaximumSize = NSMakeSize(maxWindowWidth, 10000);
 		NSRect	currentFrame = [[self window] frame];
 		
-		if (forcedWindowWidth != -1){
+		if (forcedWindowWidth != -1) {
 			/*
 			 If we have a forced width but we are doing no autoresizing, set our frame now so we don't have t be doing checks every time
 			 contactListDesiredSizeChanged is called.
 			 */
-			if(!(autoResizeVertically || autoResizeHorizontally)){
+			if (!(autoResizeVertically || autoResizeHorizontally)) {
 				thisMinimumSize.width = forcedWindowWidth;
 				
 				[[self window] setFrame:NSMakeRect(currentFrame.origin.x,currentFrame.origin.y,forcedWindowWidth,currentFrame.size.height) 
@@ -285,13 +285,13 @@
 		}
 		
 		//If vertically resizing, make the minimum and maximum heights the current height
-		if (autoResizeVertically){
+		if (autoResizeVertically) {
 			thisMinimumSize.height = currentFrame.size.height;
 			thisMaximumSize.height = currentFrame.size.height;
 		}
 		
 		//If horizontally resizing, make the minimum and maximum widths the current width
-		if (autoResizeHorizontally){
+		if (autoResizeHorizontally) {
 			thisMinimumSize.width = currentFrame.size.width;
 			thisMaximumSize.width = currentFrame.size.width;			
 		}
@@ -307,7 +307,7 @@
 	}
 
 	//Window opacity
-	if([group isEqualToString:PREF_GROUP_APPEARANCE]){
+	if ([group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		float opacity = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_OPACITY] floatValue];		
 		[contactListController setBackgroundOpacity:opacity];
 	}
@@ -315,24 +315,24 @@
 	//Layout and Theme ------------
 	BOOL groupLayout = ([group isEqualToString:PREF_GROUP_LIST_LAYOUT]);
 	BOOL groupTheme = ([group isEqualToString:PREF_GROUP_LIST_THEME]);
-    if(groupLayout || (groupTheme && !firstTime)){ /* We don't want to execute this code twice when initializing */
+    if (groupLayout || (groupTheme && !firstTime)) { /* We don't want to execute this code twice when initializing */
         NSDictionary	*layoutDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_LAYOUT];
 		NSDictionary	*themeDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LIST_THEME];
 		
 		//Layout only
-		if(groupLayout){
+		if (groupLayout) {
 			int iconSize = [[layoutDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue];
 			[AIUserIcons setListUserIconSize:NSMakeSize(iconSize,iconSize)];
 		}
 			
 		//Theme only
-		if (groupTheme || firstTime){
+		if (groupTheme || firstTime) {
 			NSString		*imagePath = [themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_PATH];
 			
 			//Background Image
-			if(imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]){
+			if (imagePath && [imagePath length] && [[themeDict objectForKey:KEY_LIST_THEME_BACKGROUND_IMAGE_ENABLED] boolValue]) {
 				[contactListView setBackgroundImage:[[[NSImage alloc] initWithContentsOfFile:imagePath] autorelease]];
-			}else{
+			} else {
 				[contactListView setBackgroundImage:nil];
 			}
 		}
@@ -345,11 +345,11 @@
 //- (float)backgroundAlpha
 //{
 //#warning hmm, need?
-//	if([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
-//												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE){
+//	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
+//												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE) {
 //		return([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
 //														 group:PREF_GROUP_LIST_LAYOUT] floatValue]);
-//	}else{
+//	} else {
 //		return(0.0);
 //	}
 //}
@@ -357,15 +357,15 @@
 
 - (IBAction)performDefaultActionOnSelectedObject:(AIListObject *)selectedObject sender:(NSOutlineView *)sender
 {	
-    if([selectedObject isKindOfClass:[AIListGroup class]]){
+    if ([selectedObject isKindOfClass:[AIListGroup class]]) {
         //Expand or collapse the group
-        if([sender isItemExpanded:selectedObject]){
+        if ([sender isItemExpanded:selectedObject]) {
             [sender collapseItem:selectedObject];
-        }else{
+        } else {
             [sender expandItem:selectedObject];
         }
 		
-    }else if([selectedObject isKindOfClass:[AIListContact class]]){
+    } else if ([selectedObject isKindOfClass:[AIListContact class]]) {
 		//Hide any tooltip the contactListController is currently showing
 		[contactListController hideTooltip];
 
@@ -386,7 +386,7 @@
 	//crash if we are deallocated.  A dirty, but functional fix is to temporarily retain ourself here.
     [self retain];
 
-    if([self windowShouldClose:nil]){
+    if ([self windowShouldClose:nil]) {
         [[self window] close];
     }
 
@@ -408,9 +408,9 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	if(inFront){
+	if (inFront) {
 		[self showWindow:nil];
-	}else{
+	} else {
 		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
 }
@@ -443,12 +443,12 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	int numScreens = [screens count];
 	int i;
 	
-	if(numScreens > 0) {
+	if (numScreens > 0) {
 		// menubar screen is a special case - the menubar is not a part of the rect we're interested in
 		NSScreen *menubarScreen = [screens objectAtIndex:0];
 		screenSlideBoundaryRect = [menubarScreen frame];
 		screenSlideBoundaryRect.size.height = NSMaxY([menubarScreen visibleFrame]) - NSMinY([menubarScreen frame]);
-		for(i = 1; i < numScreens; i++) {
+		for (i = 1; i < numScreens; i++) {
 			screenSlideBoundaryRect = NSUnionRect(screenSlideBoundaryRect, [[screens objectAtIndex:i] frame]);
 		}		
 	}
@@ -472,16 +472,16 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldHideOnDeactivate = NO;
 		
-	if(!windowShouldBeVisibleInBackground) {
+	if (!windowShouldBeVisibleInBackground) {
 		shouldHideOnDeactivate = YES; // unless..
 		
 		// window is slid off the screen
-		if(windowSlidOffScreenEdgeMask != 0) {
+		if (windowSlidOffScreenEdgeMask != 0) {
 			shouldHideOnDeactivate = NO;
 		}
 		
 		// or window is in position to slide off of the screen
-		if([self slidableEdgesAdjacentToWindow] != 0) {
+		if ([self slidableEdgesAdjacentToWindow] != 0) {
 			shouldHideOnDeactivate = NO;
 		}
 	}
@@ -491,9 +491,9 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 
 - (void)slideWindowIfNeeded:(id)sender
 {
-	if([self shouldSlideWindowOnScreen])
+	if ([self shouldSlideWindowOnScreen])
 		[self slideWindowOnScreen];
-	else if([self shouldSlideWindowOffScreen])
+	else if ([self shouldSlideWindowOffScreen])
 		[self slideWindowOffScreenEdges:[self slidableEdgesAdjacentToWindow]];
 }
 
@@ -501,10 +501,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
+	if (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
 		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
 	}
-	else if(!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0))
+	else if (!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0))
 	{
 		shouldSlide = YES;
 	}
@@ -517,7 +517,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	BOOL shouldSlide = NO;
 	
 	if (!preventHiding) {
-		if(permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
+		if (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
 			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
 		}
 	}
@@ -537,10 +537,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	AIRectEdgeMask slidableEdgesAdjacentToWindow = [self slidableEdgesAdjacentToWindow];
 	NSRectEdge screenEdge;
-	for(screenEdge = 0; screenEdge < 4; screenEdge++) {		
-		if(slidableEdgesAdjacentToWindow & (1 << screenEdge)) {
+	for (screenEdge = 0; screenEdge < 4; screenEdge++) {		
+		if (slidableEdgesAdjacentToWindow & (1 << screenEdge)) {
 			float distanceMouseOutsideWindow = AISignedExteriorDistanceRect_edge_toPoint_(windowFrame, AIOppositeRectEdge_(screenEdge), mouseLocation);
-			if(distanceMouseOutsideWindow > 0)
+			if (distanceMouseOutsideWindow > 0)
 				shouldSlideOffScreen = YES;
 		}
 	}
@@ -548,7 +548,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	// don't allow the window to slide off if the user is dragging
 	// this method is hacky and does not completely work.  is there a way to detect if the mouse is down?
 	NSEventType currentEventType = [[NSApp currentEvent] type];
-	if(currentEventType == NSLeftMouseDragged || currentEventType == NSRightMouseDragged || currentEventType == NSOtherMouseDragged) {
+	if (currentEventType == NSLeftMouseDragged || currentEventType == NSRightMouseDragged || currentEventType == NSOtherMouseDragged) {
 		shouldSlideOffScreen = NO;
 	}	
 	
@@ -564,10 +564,10 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSPoint mouseLocation = [NSEvent mouseLocation];
 	
 	NSRectEdge screenEdge;
-	for(screenEdge = 0; screenEdge < 4; screenEdge++) {
-		if(windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
+	for (screenEdge = 0; screenEdge < 4; screenEdge++) {
+		if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
 			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
-			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
+			if (mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
 				shouldSlideOnScreen = NO;
 			}
 		}
@@ -588,8 +588,8 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect windowFrame = [window frame];
 	
 	NSRectEdge edge;
-	for(edge = 0; edge < 4; edge++) {
-		if(   (SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge))
+	for (edge = 0; edge < 4; edge++) {
+		if (   (SLIDE_ALLOWED_RECT_EDGE_MASK & (1 << edge))
 		   && (AIRectIsAligned_edge_toRect_edge_tolerance_(windowFrame, edge, screenSlideBoundaryRect, edge, WINDOW_ALIGNMENT_TOLERANCE))) 
 		{
 			slidableEdges |= (1 << edge);
@@ -605,11 +605,11 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	NSRect newWindowFrame = [window frame];
 	NSRectEdge edge;
 	
-	if(rectEdgeMask == 0)
+	if (rectEdgeMask == 0)
 		return;
 	
-	for(edge = 0; edge < 4; edge++) {
-		if(rectEdgeMask & (1 << edge)) {
+	for (edge = 0; edge < 4; edge++) {
+		if (rectEdgeMask & (1 << edge)) {
 			newWindowFrame = AIRectByAligningRect_edge_toRect_edge_(newWindowFrame, AIOppositeRectEdge_(edge), screenSlideBoundaryRect, edge);
 		}
 	}
@@ -631,7 +631,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
 	// necessarily on screen
-	if([window screen] == nil)
+	if ([window screen] == nil)
 	{
 		[window constrainFrameRect:newWindowFrame toScreen:[[NSScreen screens] objectAtIndex:0]];
 	}

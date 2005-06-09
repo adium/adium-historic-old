@@ -25,10 +25,10 @@
 //
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    if((self = [super initWithCoder:aDecoder])) {
+    if ((self = [super initWithCoder:aDecoder])) {
 		Class myClass = [self class];
 
-		if([[self cell] controlSize] != NSMiniControlSize){
+		if ([[self cell] controlSize] != NSMiniControlSize) {
 			//Preload normal-size images
 			popUpRolloverCaps   = [[NSImage imageNamed:@"PopUpRollover_Caps"   forClass:myClass] retain];
 			popUpRolloverMiddle = [[NSImage imageNamed:@"PopUpRollover_Middle" forClass:myClass] retain];
@@ -36,7 +36,7 @@
 			popUpPressedMiddle  = [[NSImage imageNamed:@"PopUpPressed_Middle"  forClass:myClass] retain];
 			popUpTriangle       = [[NSImage imageNamed:@"PopUpArrow"           forClass:myClass] retain];
 			popUpTriangleWhite  = [[NSImage imageNamed:@"PopUpArrowWhite"      forClass:myClass] retain];
-		}else{
+		} else {
 			//Preload small images
 			popUpRolloverCaps   = [[NSImage imageNamed:@"SmallPopUpRollover_Caps"   forClass:myClass] retain];
 			popUpRolloverMiddle = [[NSImage imageNamed:@"SmallPopUpRollover_Middle" forClass:myClass] retain];
@@ -73,20 +73,20 @@
 //Handle title setting on our own, since NSPopUpButton doesn't seem to do it reliably.
 - (void)setTitle:(NSString *)aString
 {
-    if(popUpTitle != aString){
+    if (popUpTitle != aString) {
         [popUpTitle release];
         popUpTitle = [aString retain];
 
-	if([[self window] isTextured]) [self sizeToFitBrushed];
+	if ([[self window] isTextured]) [self sizeToFitBrushed];
         [self setNeedsDisplay:YES];
     }
 }
 - (void)selectItem:(id <NSMenuItem>)item
 {
-    if(popUpTitle){
+    if (popUpTitle) {
         [popUpTitle release]; popUpTitle = nil;
     }
-    if([[self window] isTextured]) [self sizeToFitBrushed];
+    if ([[self window] isTextured]) [self sizeToFitBrushed];
     [super selectItem:item];
 }
 
@@ -94,12 +94,12 @@
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
     //If we're being removed from the window, we need to remove our tracking rects
-    if(newWindow == nil){
+    if (newWindow == nil) {
         [self stopTrackingCursor];
 	
-    }else{
+    } else {
 	//If we're being added to a brushed window, size ourself appropriately
-	if([newWindow isTextured]){
+	if ([newWindow isTextured]) {
 	    [self sizeToFitBrushed];
 	}
 	
@@ -117,9 +117,9 @@
     
     fontSize = [[self font] pointSize];
     font = ([[self window] isTextured] ? [NSFont boldSystemFontOfSize:fontSize] : [NSFont systemFontOfSize:fontSize]);
-    if(popUpTitle){
+    if (popUpTitle) {
 	title = popUpTitle;
-    }else{
+    } else {
 	title = [self titleOfSelectedItem];
     }
     
@@ -135,7 +135,7 @@
 //Custom drawing for brushed windows
 - (void)drawRect:(NSRect)rect
 {
-    if([[self window] isTextured]){
+    if ([[self window] isTextured]) {
 	NSDictionary	*textAttributes, *bezelAttributes;
 	NSColor		*textColor, *bezelColor;
 	NSString		*title;
@@ -154,17 +154,17 @@
 	
 	//Get the font and displayed string
 	font = [NSFont boldSystemFontOfSize:[[self font] pointSize]];
-	if(popUpTitle){
+	if (popUpTitle) {
 	    title = popUpTitle;
-	}else{
+	} else {
 	    title = [self titleOfSelectedItem];
 	}
 	
 	//Get the colors
-	if(mouseIn || highlighted){
+	if (mouseIn || highlighted) {
 	    textColor = [NSColor colorWithCalibratedWhite:1.0 alpha:1.0];
 	    bezelColor = [NSColor colorWithCalibratedWhite:0.0 alpha:0.4];
-	}else{
+	} else {
 	    textColor = [NSColor colorWithCalibratedWhite:0.16 alpha:1.0];
 	    bezelColor = [NSColor colorWithCalibratedWhite:1.0 alpha:0.4];
 	}
@@ -174,17 +174,17 @@
 	bezelAttributes = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, bezelColor, NSForegroundColorAttributeName, nil];
 	
 	//Get the correct triangle image
-	if(highlighted || mouseIn){
+	if (highlighted || mouseIn) {
 	    triangle = popUpTriangleWhite;
-	}else{
+	} else {
 	    triangle = popUpTriangle;
 	}
 	
 	//Get the correct background images
-	if(highlighted){
+	if (highlighted) {
 	    caps = popUpPressedCaps;
 	    middle = popUpPressedMiddle;
-	}else{
+	} else {
 	    caps = popUpRolloverCaps;
 	    middle = popUpRolloverMiddle;
 	}
@@ -201,7 +201,7 @@
 	frame.origin.y -= (frame.size.height - capHeight) / 2.0;
 
 	//Draw the backgound
-	if(mouseIn || highlighted){
+	if (mouseIn || highlighted) {
 	    //Draw the left cap
 	    [caps compositeToPoint:NSMakePoint(frame.origin.x, frame.origin.y + frame.size.height)
 		   fromRect:NSMakeRect(0, 0, capWidth, capHeight)
@@ -211,8 +211,8 @@
 	    sourceRect = NSMakeRect(0, 0, [middle size].width, [middle size].height);
 	    destRect = NSMakeRect(frame.origin.x + capWidth, frame.origin.y + frame.size.height, sourceRect.size.width, sourceRect.size.height);
 	    
-	    while(destRect.origin.x < contentRight && sourceRect.size.width != 0){
-		if((destRect.origin.x + destRect.size.width) > contentRight){ //Crop
+	    while (destRect.origin.x < contentRight && sourceRect.size.width != 0) {
+		if ((destRect.origin.x + destRect.size.width) > contentRight) { //Crop
 		    sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - contentRight;
 		}
 		
@@ -235,7 +235,7 @@
 	//Draw the triangle
 	[triangle compositeToPoint:NSMakePoint(frame.origin.x + capWidth + labelSize.width - LABEL_INSET_SMALL + TRIANGLE_PADDING_X, frame.origin.y + frame.size.height - TRIANGLE_OFFSET_Y) operation:NSCompositeSourceOver];
 
-    }else{
+    } else {
 	[super drawRect:rect];
     }
 }
@@ -243,7 +243,7 @@
 //Reset our cursor tracking (Only for the brushed variant)
 - (void)resetCursorRects
 {
-    if([[self window] isTextured]){
+    if ([[self window] isTextured]) {
 	[self stopTrackingCursor];
 	[self startTrackingCursor];
     }
@@ -252,7 +252,7 @@
 //Stop traking the cursor
 - (void)stopTrackingCursor
 {
-    if(trackingTag){
+    if (trackingTag) {
         [self removeTrackingRect:trackingTag];
         trackingTag = 0;
     }    
@@ -261,7 +261,7 @@
 //Start tracking the cursor
 - (void)startTrackingCursor
 {
-    if(trackingTag == 0){
+    if (trackingTag == 0) {
         NSRect 		trackRect;
         NSPoint		localPoint;
 
@@ -272,7 +272,7 @@
         mouseIn = NSPointInRect(localPoint, trackRect);
 
         //Track only if we're within a valid window
-        if([self window]){
+        if ([self window]) {
             trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseIn];
         }
     }
@@ -281,7 +281,7 @@
 //User is hovering our popup
 - (void)mouseEntered:(NSEvent *)theEvent
 {
-    if([self canDraw]){
+    if ([self canDraw]) {
         mouseIn = YES;
         [self setNeedsDisplay:YES];
     }
@@ -290,7 +290,7 @@
 //User has left our popup
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    if([self canDraw]){
+    if ([self canDraw]) {
         mouseIn = NO;
         [self setNeedsDisplay:YES];
     }

@@ -28,7 +28,7 @@
 //init
 - (id)initWithUID:(NSString *)inUID
 {
-    if((self = [super initWithUID:inUID service:nil])){
+    if ((self = [super initWithUID:inUID service:nil])) {
 		containedObjects = [[NSMutableArray alloc] init];
 		expanded = YES;
 
@@ -55,7 +55,7 @@
 //will have the same value here.
 - (NSString *)internalObjectID
 {
-	if(!internalObjectID){
+	if (!internalObjectID) {
 		internalObjectID = [[AIListObject internalObjectIDForServiceID:@"Group" UID:[self UID]] retain];
 	}
 	return(internalObjectID);
@@ -77,7 +77,7 @@
 //Set this group as visible if it contains anything visible
 - (void)_setVisibleCount:(int)newCount
 {
-	if(visibleCount != newCount){
+	if (visibleCount != newCount) {
 		visibleCount = newCount;
 		
 		//
@@ -145,7 +145,7 @@
 - (void)removeAllObjects
 {
 	//Remove all the objects
-	while([containedObjects count]){
+	while ([containedObjects count]) {
 		[self removeObject:[containedObjects objectAtIndex:0]];
 	}
 }
@@ -156,8 +156,8 @@
 	NSEnumerator	*enumerator = [containedObjects objectEnumerator];
 	AIListObject	*object;
 	
-	while((object = [enumerator nextObject])){
-		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
+	while ((object = [enumerator nextObject])) {
+		if ([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	
 	return(object);
@@ -169,9 +169,9 @@
 {
 	BOOL success = NO;
 	
-	if(![containedObjects containsObjectIdenticalTo:inObject]){
+	if (![containedObjects containsObjectIdenticalTo:inObject]) {
 		//Update our visible count
-		if([inObject visible]){
+		if ([inObject visible]) {
 			[self _setVisibleCount:visibleCount+1];
 		}
 		
@@ -182,7 +182,7 @@
 		//Sort this object on our own.  This always comes along with a content change, so calling contact controller's
 		//sort code would invoke an extra update that we don't need.  We can skip sorting if this object is not visible,
 		//since it will add to the bottom/non-visible section of our array.
-		if([inObject visible]){
+		if ([inObject visible]) {
 			[self sortListObject:inObject
 				  sortController:[[adium contactController] activeSortController]];
 		}
@@ -201,9 +201,9 @@
 //Remove an object from this group (PRIVATE: For contact controller only)
 - (void)removeObject:(AIListObject *)inObject
 {	
-	if([containedObjects containsObject:inObject]){
+	if ([containedObjects containsObject:inObject]) {
 		//Update our visible count
-		if([inObject visible]){
+		if ([inObject visible]) {
 			[self _setVisibleCount:visibleCount-1];
 		}
 		
@@ -236,13 +236,13 @@
 - (void)sortGroupAndSubGroups:(BOOL)subGroups sortController:(AISortController *)sortController
 {
     //Sort the groups within this group
-    if(subGroups){
+    if (subGroups) {
 		NSEnumerator		*enumerator;
 		AIListObject		*object;
 		
         enumerator = [containedObjects objectEnumerator];
-        while((object = [enumerator nextObject])){
-            if([object isMemberOfClass:[AIListGroup class]]){
+        while ((object = [enumerator nextObject])) {
+            if ([object isMemberOfClass:[AIListGroup class]]) {
                 [(AIListGroup *)object sortGroupAndSubGroups:YES
 											  sortController:sortController];
             }
@@ -250,10 +250,10 @@
     }
 	
     //Sort this group
-    if(sortController){
+    if (sortController) {
 		NSMutableArray	*sortedListObjects;
 		
-		if([containedObjects count] > 1){
+		if ([containedObjects count] > 1) {
 			sortedListObjects = [[sortController sortListObjects:containedObjects] mutableCopy];
 			[containedObjects release]; containedObjects = sortedListObjects;
 		}
@@ -277,9 +277,9 @@
 //Order index
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex
 {
-	if (inOrderIndex > largestOrder){
+	if (inOrderIndex > largestOrder) {
 		largestOrder = inOrderIndex;
-	}else if (inOrderIndex < smallestOrder){
+	} else if (inOrderIndex < smallestOrder) {
 		smallestOrder = inOrderIndex;
 	}
 }

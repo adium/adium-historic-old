@@ -82,23 +82,23 @@ typedef enum {
 
 - (IBAction)changePreference:(id)sender
 {
-	if( sender == checkBox_showContext ) {
+	if ( sender == checkBox_showContext ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_DISPLAY_CONTEXT
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		[self configureControlDimming];
 		
-	} else if( sender == checkBox_doNotDim ) {
+	} else if ( sender == checkBox_doNotDim ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:(![sender state])]
 											 forKey:KEY_DIM_RECENT_CONTEXT
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		
-	} else if( sender == textField_linesToDisplay ) {
+	} else if ( sender == textField_linesToDisplay ) {
 		
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_DISPLAY_LINES
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
-	} else if( sender == textField_haveTalkedDays ) {
+	} else if ( sender == textField_haveTalkedDays ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_HAVE_TALKED_DAYS
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
@@ -106,16 +106,16 @@ typedef enum {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender intValue]]
 											 forKey:KEY_HAVE_NOT_TALKED_DAYS
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
-	} else if( sender == matrix_radioButtons ) {
+	} else if ( sender == matrix_radioButtons ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender selectedRow]]
 											 forKey:KEY_DISPLAY_MODE
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		[self configureControlDimming];
-	} else if( sender == menu_haveTalkedUnits ) {
+	} else if ( sender == menu_haveTalkedUnits ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
 											 forKey:KEY_HAVE_TALKED_UNITS
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
-	} else if( sender == menu_haveNotTalkedUnits ) {
+	} else if ( sender == menu_haveNotTalkedUnits ) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[sender indexOfSelectedItem]]
 											 forKey:KEY_HAVE_NOT_TALKED_UNITS
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
@@ -143,8 +143,8 @@ typedef enum {
 	
 	[matrix_radioButtons setEnabled:contextEnabled];
 	
-	if( [checkBox_showContext state] ) {
-		switch( selectedRow ) {
+	if ( [checkBox_showContext state] ) {
+		switch ( selectedRow ) {
 			case AIMessageHistory_Always:
 				[textField_haveTalkedDays setEnabled:NO];
 				[stepper_haveTalkedDays setEnabled:NO];

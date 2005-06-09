@@ -61,7 +61,7 @@
 	windowFrame = [window frame];
 
 	//If masked, replace our textField_input with a secure one
-	if([[infoDict objectForKey:@"Masked"] boolValue]){
+	if ([[infoDict objectForKey:@"Masked"] boolValue]) {
 		NSRect				inputFrame = [textField_input frame];
 		NSSecureTextField	*secureTextField = [[[NSSecureTextField alloc] initWithFrame:inputFrame] autorelease];
 		
@@ -75,7 +75,7 @@
 	{
 		//Use the supplied OK text, then shift the button left so that the right side remains in the old location in the window
 		NSString *okText = [infoDict objectForKey:@"OK Text"];
-		if ([okText isEqualToString:@"OK"]){
+		if ([okText isEqualToString:@"OK"]) {
 			okText = AILocalizedString(@"OK",nil);
 		}
 		
@@ -101,10 +101,10 @@
 		
 		oldFrame = [textField_primary frame];
 		[textField_primary setStringValue:(primary ? primary : @"")];
-		if ([primary length]){
+		if ([primary length]) {
 			[textField_primary setStringValue:primary];
 			[textField_primary sizeToFit];
-		}else{
+		} else {
 			[textField_primary setStringValue:@""];
 			[textField_primary setFrame:NSMakeRect(0,0,0,0)];
 		}
@@ -156,7 +156,7 @@
 	
 	//Text input frame size
 	{
-		if (multiline){
+		if (multiline) {
 			newFrame = [textField_input frame];
 			newFrame.size.height = newFrame.size.height - changeInTextHeight;
 			
@@ -173,7 +173,7 @@
 
 - (IBAction)pressedButton:(id)sender
 {
-	if (sender == button_okay){
+	if (sender == button_okay) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
 											  withObject:okayCallbackValue
@@ -183,7 +183,7 @@
 		[cancelCallbackValue release]; cancelCallbackValue = nil;
 		[[self window] close];
 		
-	}else if (sender == button_cancel){
+	} else if (sender == button_cancel) {
 		[[self window] performClose:nil];
 	}
 }
@@ -193,7 +193,7 @@
 								   inputString:(NSString *)inString
 {
 	GaimRequestInputCb callBack = [inCallBackValue pointerValue];
-	if (callBack){
+	if (callBack) {
 		callBack([inUserDataValue pointerValue],[inString UTF8String]);
 	}	
 }
@@ -211,7 +211,7 @@
 {
 	[super windowWillClose:sender];
 	
-	if (cancelCallbackValue){
+	if (cancelCallbackValue) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)
 											  withObject:cancelCallbackValue

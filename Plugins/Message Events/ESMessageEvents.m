@@ -39,18 +39,18 @@
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_CHAT_TIMED_OUT] ||
 		[inModifiedKeys containsObject:KEY_CHAT_CLOSED_WINDOW] ||
-		[inModifiedKeys containsObject:KEY_CHAT_ERROR]){
+		[inModifiedKeys containsObject:KEY_CHAT_ERROR]) {
 
 		NSString		*message = nil;
 		NSString		*type = nil;
 		AIListContact	*listObject = [inChat listObject];
 		
-		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil){
+		if ([inChat statusObjectForKey:KEY_CHAT_ERROR] != nil) {
 		
 			AIChatErrorType errorType = [inChat integerStatusObjectForKey:KEY_CHAT_ERROR];
 			type = @"chat-error";
 
-			switch(errorType){
+			switch (errorType) {
 				case AIChatUnknownError:
 					message = [NSString stringWithFormat:AILocalizedString(@"Unknown conversation error.",nil)];
 					break;
@@ -108,15 +108,15 @@
 					break;
 			}
 			
-		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW] && listObject){
+		} else if ([inChat integerStatusObjectForKey:KEY_CHAT_CLOSED_WINDOW] && listObject) {
 			message = [NSString stringWithFormat:AILocalizedString(@"%@ closed the conversation window.",nil),[listObject displayName]];
 			type = @"closed";
-		}else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT] && listObject){
+		} else if ([inChat integerStatusObjectForKey:KEY_CHAT_TIMED_OUT] && listObject) {
 			message = [NSString stringWithFormat:AILocalizedString(@"The conversation with %@ timed out.",nil),[listObject displayName]];			
 			type = @"timed_out";
 		}
 		
-		if (message){
+		if (message) {
 			[[adium contentController] displayStatusMessage:message
 													 ofType:type
 													 inChat:inChat];

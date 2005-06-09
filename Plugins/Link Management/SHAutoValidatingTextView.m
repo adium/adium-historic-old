@@ -71,7 +71,7 @@
 //Catch the notification when the text in the view is edited
 - (void)textDidChange:(NSNotification *)notification
 {
-    if(continuousURLValidation) {//call the URL validatation if set
+    if (continuousURLValidation) {//call the URL validatation if set
         SHHyperlinkScanner  *laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
 		NSString			*linkURL = [self linkURL];
 
@@ -91,7 +91,7 @@
 {
 	NSString	*linkURL = [[self textStorage] string];
 
-	if([linkURL rangeOfString:@"%n"].location != NSNotFound){
+	if ([linkURL rangeOfString:@"%n"].location != NSNotFound) {
 		NSMutableString	*newLinkURL = [linkURL mutableCopy];
 		[newLinkURL replaceOccurrencesOfString:@"%n"
 									withString:@"%25n"
@@ -99,7 +99,7 @@
 										 range:NSMakeRange(0, [newLinkURL length])];
 		linkURL = newLinkURL;
 		
-	}else{
+	} else {
 		linkURL = [linkURL copy];
 	}
 	

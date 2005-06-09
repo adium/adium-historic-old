@@ -41,8 +41,8 @@
 	NSEnumerator	*enumerator = [inArray objectEnumerator];
 	id				object;
 	
-	while((object = [enumerator nextObject])){
-		if(![self containsObject:object]) [self addObject:object];
+	while ((object = [enumerator nextObject])) {
+		if (![self containsObject:object]) [self addObject:object];
 	}
 }
 
@@ -52,10 +52,10 @@
 	NSAssert3(currentIndex != NSNotFound, @"%@ %p does not contain object %p", NSStringFromClass([self class]), self, object);
 	
 	//if we're already there, do no work
-	if(currentIndex == newIndex) return;
+	if (currentIndex == newIndex) return;
 	
 	//Account for shifting
-	if(currentIndex <  newIndex) newIndex--;
+	if (currentIndex <  newIndex) newIndex--;
 	
 	//Move via a remove and add :(
 	[object retain];

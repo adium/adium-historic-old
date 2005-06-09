@@ -27,7 +27,7 @@
 	AIListGroupMockieCell *newCell = [super copyWithZone:zone];
 	
 	int i;
-	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+	for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 		newCell->_mockieGradient[i] = [_mockieGradient[i] retain];
 	}
 	
@@ -37,10 +37,10 @@
 //Init
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		int i;
-		for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+		for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 			_mockieGradient[i] = nil;
 		}
 	}
@@ -58,14 +58,14 @@
 //Draw a regular mockie background for our cell if gradient background drawing is disabled
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(drawsBackground){
+	if (drawsBackground) {
 		[super drawBackgroundWithFrame:rect];
-	}else{
-		if(![self cellIsSelected]){
+	} else {
+		if (![self cellIsSelected]) {
 			[[self backgroundColor] set];
-			if([controlView isItemExpanded:listObject]){
+			if ([controlView isItemExpanded:listObject]) {
 				[[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS] fill];
-			}else{
+			} else {
 				[[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS] fill];
 			}
 		}
@@ -75,11 +75,11 @@
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	if([self cellIsSelected]){
+	if ([self cellIsSelected]) {
 		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
-		if([controlView isItemExpanded:listObject]){
+		if ([controlView isItemExpanded:listObject]) {
 			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:cellFrame radius:MOCKIE_RADIUS]];
-		}else{
+		} else {
 			[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:MOCKIE_RADIUS]];
 		}
 	}
@@ -90,7 +90,7 @@
 {
 	AIGroupState state = ([controlView isItemExpanded:listObject] ? AIGroupExpanded : AIGroupCollapsed);
 
-	if(!_mockieGradient[state] || !NSEqualSizes(inSize,_mockieGradientSize[state])){
+	if (!_mockieGradient[state] || !NSEqualSizes(inSize,_mockieGradientSize[state])) {
 		[_mockieGradient[state] release];
 		_mockieGradient[state] = [[NSImage alloc] initWithSize:inSize];
 		_mockieGradientSize[state] = inSize;
@@ -107,7 +107,7 @@
 - (void)flushGradientCache
 {
 	int i;
-	for(i = 0; i < NUMBER_OF_GROUP_STATES; i++){
+	for (i = 0; i < NUMBER_OF_GROUP_STATES; i++) {
 		[_mockieGradient[i] release]; _mockieGradient[i] = nil;
 		_mockieGradientSize[i] = NSMakeSize(0,0);
 	}
@@ -117,9 +117,9 @@
 //upper corners so the group smoothly transitions to the contact below it.
 - (void)drawBackgroundGradientInRect:(NSRect)rect
 {
-	if([controlView isItemExpanded:listObject]){
+	if ([controlView isItemExpanded:listObject]) {
 		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedTopCorners:rect radius:MOCKIE_RADIUS]];
-	}else{
+	} else {
 		[[self backgroundGradient] drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:rect radius:MOCKIE_RADIUS]];
 	}
 }

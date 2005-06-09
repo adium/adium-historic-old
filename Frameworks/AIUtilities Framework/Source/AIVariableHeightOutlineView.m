@@ -29,7 +29,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initVariableHeightOutlineView];
 	}
 	return self;
@@ -37,7 +37,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initVariableHeightOutlineView];
 	}
 	return self;
@@ -72,25 +72,25 @@
 	id		item = [self itemAtRow:row];
 
 	//Expand/Collapse groups on mouse DOWN instead of mouse up (Makes it feel a ton faster)
-	if((item) &&
+	if ((item) &&
  	   ([self isExpandable:item]) &&
- 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)){
+ 	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.height)) {
 		//XXX - This is kind of a hack.  We need to check < WidthOfDisclosureTriangle, and are using the fact that
 		//      the disclosure width is about the same as the height of the row to fudge it. -ai
 
-		if([self isItemExpanded:item]){
+		if ([self isItemExpanded:item]) {
 			[self collapseItem:item];
-		}else{
+		} else {
 			[self expandItem:item];
 		}
-	}else{
+	} else {
 		[super mouseDown:theEvent];
 	}
 
-//	if((expandOnClick) &&
+//	if ((expandOnClick) &&
 //	   (item) &&
 //	   ([self isExpandable:item]) &&
-//	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)){
+//	   (viewPoint.x < [self frameOfCellAtColumn:0 row:row].size.width)) {
 //
 //		NSEvent *nextEvent;
 //		BOOL	itemIsExpanded;
@@ -106,20 +106,20 @@
 //		//Handle the original event
 //		[super mouseDown:theEvent];
 //
-//		if([nextEvent type] == NSLeftMouseUp){
+//		if ([nextEvent type] == NSLeftMouseUp) {
 //			//If they pressed and released, expand/collapse the item unless mouseDown: already did
 //			BOOL itemIsNowExpanded = [self isItemExpanded:item];
 //
-//			if(itemIsNowExpanded == itemIsExpanded){
-//				if(itemIsNowExpanded){
+//			if (itemIsNowExpanded == itemIsExpanded) {
+//				if (itemIsNowExpanded) {
 //					[self collapseItem:item];
-//				}else{
+//				} else {
 //					[self expandItem:item];
 //				}
 //			}
 //		}
 //
-//	}else{
+//	} else {
 //		[super mouseDown:theEvent];
 //	}
 }
@@ -148,11 +148,11 @@
 {
 	[self updateRowHeightCache];
 
-	if(point.y < 0 || point.y > totalHeight) return(-1);
+	if (point.y < 0 || point.y > totalHeight) return(-1);
 
 	//Find the top visible cell
 	int row = 0;
-	while(row < entriesInCache-1 && rowOriginCache[row+1] <= point.y) row++;
+	while (row < entriesInCache-1 && rowOriginCache[row+1] <= point.y) row++;
 	return(row);
 }
 
@@ -164,7 +164,7 @@
 	[self updateRowHeightCache];
 
 	//Find the top visible cell
-	while(row < entriesInCache-1 && rowOriginCache[row+1] <= rect.origin.y){
+	while (row < entriesInCache-1 && rowOriginCache[row+1] <= rect.origin.y) {
 		range.location++;
 		row++;
 	}
@@ -172,7 +172,7 @@
 	//Determine the number of additional visible cells
 	do{
 		range.length++;
-	}while(row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
+	}while (row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
 
 	return(range);
 }
@@ -216,11 +216,11 @@
 //Release existing
 - (void)resetRowHeightCache
 {
-	if(rowHeightCache){
+	if (rowHeightCache) {
 		free(rowHeightCache);
 		rowHeightCache = nil;
 	}
-	if(rowOriginCache){
+	if (rowOriginCache) {
 		free(rowOriginCache);
 		rowOriginCache = nil;
 	}
@@ -229,11 +229,11 @@
 
 - (void)updateRowHeightCache
 {
-	if(!rowHeightCache && !rowOriginCache){
+	if (!rowHeightCache && !rowOriginCache) {
 		int	numberOfRows = [self numberOfRows];
 
 		//Expand
-		while(numberOfRows > cacheSize){
+		while (numberOfRows > cacheSize) {
 			cacheSize *= 2;
 		}
 
@@ -247,7 +247,7 @@
 		int		i;
 		NSSize	intercellSpacing = [self intercellSpacing];
 
-		for(i = 0; i < entriesInCache; i++){
+		for (i = 0; i < entriesInCache; i++) {
 			int height = [self heightForRow:i];
 
 			rowHeightCache[i] = height;
@@ -273,13 +273,13 @@
 #pragma mark Drawing
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
+	if (row >= 0 && row < [self numberOfRows]) { //Somebody keeps calling this method with row = numberOfRows, which is wrong.
 
 		NSArray		*tableColumns = [self tableColumns];
 		id			item = [self itemAtRow:row];
 		unsigned	tableColumnIndex, count = [tableColumns count];
 
-		for(tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++){
+		for (tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++) {
 			NSTableColumn	*tableColumn;
 			NSRect			cellFrame;
 			id				cell;
@@ -307,9 +307,9 @@
 			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
 			 * we can cover the full width of the row in one stroke.
 			 */
-			if([self drawsAlternatingRows] &&
+			if ([self drawsAlternatingRows] &&
 			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
-			   (tableColumnIndex == 0)){
+			   (tableColumnIndex == 0)) {
 
 				[self _drawRowInRect:[self rectOfRow:row]
 							 colored:!(row % 2)
@@ -317,7 +317,7 @@
 			}
 
 			//Draw the cell
-			if(selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
+			if (selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
 			[cell drawWithFrame:cellFrame inView:self];
 		}
 	}
@@ -346,7 +346,7 @@
 	tableColumnsCount = [tableColumns count];
 
 	yOffset = 0;
-	for(i = 0; i < count; i++){
+	for (i = 0; i < count; i++) {
 		id		item;
 		row = buf[i];
 
@@ -354,7 +354,7 @@
 
 		//Draw each table column
 		unsigned tableColumnIndex;
-		for(tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++){
+		for (tableColumnIndex = 0 ; tableColumnIndex < tableColumnsCount ; tableColumnIndex++) {
 
 			NSTableColumn	*tableColumn = [tableColumns objectAtIndex:tableColumnIndex];
 			id		cell = [self cellForTableColumn:tableColumn item:item];
@@ -411,7 +411,7 @@
 	unsigned int	i, bufSize = [dragRows count];
 	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
 
-	for(i = 0; i < bufSize; i++){
+	for (i = 0; i < bufSize; i++) {
 		buf[i] = [[dragRows objectAtIndex:0] unsignedIntValue];
 	}
 
@@ -447,7 +447,7 @@
 
 - (void)highlightSelectionInClipRect:(NSRect)clipRect
 {
-	if(drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])){
+	if (drawsSelectedRowHighlight && (!drawHighlightOnlyWhenMain || [[self window] isMainWindow])) {
 		//Apple wants us to do some pretty crazy stuff for selections in 10.3
 		NSIndexSet *indices = [self selectedRowIndexes];
 		unsigned int bufSize = [indices count];
@@ -457,7 +457,7 @@
 		NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
 		[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 
-		for(i = 0; i < bufSize; i++) {
+		for (i = 0; i < bufSize; i++) {
 			[self _drawRowSelectionInRect:[self rectOfRow:buf[i]]];
 		}
 

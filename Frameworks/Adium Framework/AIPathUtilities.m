@@ -54,34 +54,34 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 	NSArray *internalRelativePath = nil;
 	NSArray *externalRelativePath = nil;
 
-	if(directory == AICachesDirectory){
+	if (directory == AICachesDirectory) {
 		directory = NSLibraryDirectory;
 		domainMask &= NSUserDomainMask; // Only search ~
 		externalRelativePath = [NSArray arrayWithObjects:CACHES_DIRECTORY, ADIUM_CACHES, nil];
-	}else if(directory == AIPluginsDirectory){
+	} else if (directory == AIPluginsDirectory) {
 		//Special case; PlugIns isn't inside Resources/
 		internalRelativePath = [NSArray arrayWithObjects:BUNDLE_CONTENTS, PLUGINS_DIRECTORY, nil];
 		adiumResourceName = PLUGINS_DIRECTORY;
-	}else if(directory == AIContactListDirectory){
+	} else if (directory == AIContactListDirectory) {
 		adiumResourceName = CONTACT_LIST_DIRECTORY;
-	}else if(directory == AIDockIconsDirectory){
+	} else if (directory == AIDockIconsDirectory) {
 		adiumResourceName = DOCK_ICONS_DIRECTORY;
-	}else if(directory == AIEmoticonsDirectory){
+	} else if (directory == AIEmoticonsDirectory) {
 		adiumResourceName = EMOTICONS_DIRECTORY;
-	}else if(directory == AIMessageStylesDirectory){
+	} else if (directory == AIMessageStylesDirectory) {
 		adiumResourceName = MESSAGE_STYLES_DIRECTORY;
-	}else if(directory == AIScriptsDirectory){
+	} else if (directory == AIScriptsDirectory) {
 		adiumResourceName = SCRIPTS_DIRECTORY;
-	}else if(directory == AIServiceIconsDirectory){
+	} else if (directory == AIServiceIconsDirectory) {
 		adiumResourceName = SERVICE_ICONS_DIRECTORY;
-	}else if(directory == AISoundsDirectory){
+	} else if (directory == AISoundsDirectory) {
 		adiumResourceName = SOUNDS_DIRECTORY;
-	}else if(directory == AIStatusIconsDirectory){
+	} else if (directory == AIStatusIconsDirectory) {
 		adiumResourceName = STATUS_ICONS_DIRECTORY;
 	}
 
-	if(adiumResourceName){
-		if(!internalRelativePath){
+	if (adiumResourceName) {
+		if (!internalRelativePath) {
 			internalRelativePath = [NSArray arrayWithObjects:BUNDLE_CONTENTS, BUNDLE_RESOURCES, adiumResourceName, nil];
 		}
 
@@ -93,7 +93,7 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 	}
 
 	// Internal directories.
-	if((domainMask & AIInternalDomainMask) && internalRelativePath){
+	if ((domainMask & AIInternalDomainMask) && internalRelativePath) {
 		NSString *bundlePath = [[NSBundle mainBundle] bundlePath];
 		NSString *fullAppendPath = [NSString pathWithComponents:internalRelativePath];
 
@@ -101,19 +101,19 @@ AISearchPathForDirectoriesInDomains(unsigned directory, unsigned domainMask, BOO
 	}
 
 	// Let NSSearchPathForDirectoriesInDomains do the rest of the work.
-	if(directory && domainMask){
+	if (directory && domainMask) {
 		NSArray *searchPaths = NSSearchPathForDirectoriesInDomains(directory, domainMask, expandTilde);
 
-		if(externalRelativePath){
+		if (externalRelativePath) {
 			NSString *pathToAppend = [NSString pathWithComponents:externalRelativePath];
 
 			NSEnumerator *paths = [searchPaths objectEnumerator];
 			NSString *path;
 
-			while((path = [paths nextObject])){
+			while ((path = [paths nextObject])) {
 				[dirs addObject:[path stringByAppendingPathComponent:pathToAppend]];
 			}
-		}else{
+		} else {
 			[dirs addObjectsFromArray:searchPaths];
 		}
 	}

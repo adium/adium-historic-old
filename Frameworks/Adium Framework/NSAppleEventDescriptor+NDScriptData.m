@@ -84,9 +84,9 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 
 	theTarget = [self attributeDescriptorForKeyword:keyAddressAttr];
 
-	if( theTarget )
+	if ( theTarget )
 	{
-		if( [theTarget descriptorType] != typeProcessSerialNumber )
+		if ( [theTarget descriptorType] != typeProcessSerialNumber )
 			theTarget = [theTarget coerceToDescriptorType:typeProcessSerialNumber];
 
 		[[theTarget data] getBytes:&theProcessSerialNumber length:sizeof(ProcessSerialNumber)];
@@ -104,9 +104,9 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 
 	theTarget = [self attributeDescriptorForKeyword:keyAddressAttr];
 
-	if( theTarget )
+	if ( theTarget )
 	{
-		if( [theTarget descriptorType] != typeApplSignature )
+		if ( [theTarget descriptorType] != typeApplSignature )
 			theTarget = [theTarget coerceToDescriptorType:typeApplSignature];
 
 		[[theTarget data] getBytes:&theCreator length:sizeof(OSType)];
@@ -134,11 +134,11 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 
 	theNumOfParam = [anArray count];
 
-	if( theNumOfParam > 0)
+	if ( theNumOfParam > 0)
 	{
 		theEventList = [self listDescriptor];
 	
-		for( theIndex = 0; theIndex < theNumOfParam; theIndex++ )
+		for ( theIndex = 0; theIndex < theNumOfParam; theIndex++ )
 		{
 			NSAppleEventDescriptor	* theAliasDesc;
 			theAliasDesc = [self aliasDescriptorWithFile:[anArray objectAtIndex:theIndex]];
@@ -179,7 +179,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	FSRef								theReference;
 	NSAppleEventDescriptor		* theAppleEventDescriptor = nil;
 
-	if( [aFile getFSRef:&theReference] == YES && FSNewAliasMinimal( &theReference, &theAliasHandle ) == noErr )
+	if ( [aFile getFSRef:&theReference] == YES && FSNewAliasMinimal( &theReference, &theAliasHandle ) == noErr )
 	{
 		HLock((Handle)theAliasHandle);
 		theAppleEventDescriptor = [self descriptorWithDescriptorType:typeAlias data:[NSData dataWithBytes:*theAliasHandle length:GetHandleSize((Handle) theAliasHandle)]];
@@ -295,9 +295,9 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 		{ NULL, 0, 0 }
 	};
 
-	for( theIndex = 0; theDescriptor == nil && theTypes[theIndex].objCType != NULL; theIndex++ )
+	for ( theIndex = 0; theDescriptor == nil && theTypes[theIndex].objCType != NULL; theIndex++ )
 	{
-		if( strcmp( theTypes[theIndex].objCType, theType ) == 0 )
+		if ( strcmp( theTypes[theIndex].objCType, theType ) == 0 )
 		{
 			char		* theBuffer[64];
 			[aNumber getValue:theBuffer];
@@ -313,32 +313,32 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	NSAppleEventDescriptor		* theDescriptor = nil;
 	const char						* theObjCType = [aValue objCType];
 
-	if( strcmp( theObjCType, @encode( FourCharCode ) ) == 0 )
+	if ( strcmp( theObjCType, @encode( FourCharCode ) ) == 0 )
 	{
 		theDescriptor = [NSAppleEventDescriptor descriptorWithTypeCode:[aValue fourCharCode]];
 	}
-	else if( strcmp( theObjCType, @encode( NSPoint ) ) )
+	else if ( strcmp( theObjCType, @encode( NSPoint ) ) )
 	{
 		NSPoint		thePoint = [aValue pointValue];
 		theDescriptor = [NSAppleEventDescriptor listDescriptorWithObjects:[NSNumber numberWithFloat:thePoint.x], [NSNumber numberWithFloat:thePoint.y], nil];
 	}
-	else if( strcmp( theObjCType, @encode( NSSize ) ) )
+	else if ( strcmp( theObjCType, @encode( NSSize ) ) )
 	{
 		NSSize		theSize = [aValue sizeValue];
 		theDescriptor = [NSAppleEventDescriptor listDescriptorWithObjects:[NSNumber numberWithFloat:theSize.width], [NSNumber numberWithFloat:theSize.height], nil];
 	}
-	else if( strcmp( theObjCType, @encode( NSRect ) ) )
+	else if ( strcmp( theObjCType, @encode( NSRect ) ) )
 	{
 		NSRect		theRect = [aValue rectValue];
 		theDescriptor = [NSAppleEventDescriptor listDescriptorWithObjects:[NSNumber numberWithFloat:theRect.origin.x], [NSNumber numberWithFloat:theRect.origin.y], [NSNumber numberWithFloat:theRect.size.width], [NSNumber numberWithFloat:theRect.size.height], nil];
 	}
-	else if( strcmp( theObjCType, @encode( NSRange ) ) )
+	else if ( strcmp( theObjCType, @encode( NSRange ) ) )
 	{
 		NSRange		theRange = [aValue rangeValue];
 		theDescriptor = [NSAppleEventDescriptor listDescriptorWithObjects:[NSNumber numberWithUnsignedInt:theRange.location], [NSNumber numberWithUnsignedInt:theRange.location + theRange.length], nil];
 	}
 #if 0
-	else if( strcmp( theObjCType, @encode( NSRange ) ) == 0 )
+	else if ( strcmp( theObjCType, @encode( NSRange ) ) == 0 )
 	{
 		AEDesc		theDesc,
 						theValues[2];
@@ -347,12 +347,12 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 		[aValue getValue:(void*)&theRange];
 		theRange.length += theRange.location;
 		
-		if( AECreateDesc( keyAERangeStart, (void*)&theRange.location, sizeof(unsigned int), &theValues[0] ) == noErr )
+		if ( AECreateDesc( keyAERangeStart, (void*)&theRange.location, sizeof(unsigned int), &theValues[0] ) == noErr )
 		{
-			if( AECreateDesc( keyAERangeStop, (void*)&theRange.length, sizeof(unsigned int), &theValues[1] ) == noErr )
+			if ( AECreateDesc( keyAERangeStop, (void*)&theRange.length, sizeof(unsigned int), &theValues[1] ) == noErr )
 			{
 				
-				if( AECreateDesc( typeRangeDescriptor, (void*)&theRange, sizeof(NSRange), &theDesc ) == noErr )
+				if ( AECreateDesc( typeRangeDescriptor, (void*)&theRange, sizeof(NSRange), &theDesc ) == noErr )
 				{
 					theDescriptor = [NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theDesc];
 				}
@@ -375,51 +375,51 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSAppleEventDescriptor		* theDescriptor = nil;
 
-	if( anObject == nil || [anObject isKindOfClass:[NSNull class]] )
+	if ( anObject == nil || [anObject isKindOfClass:[NSNull class]] )
 	{
 		theDescriptor = [NSAppleEventDescriptor nullDescriptor];
 	}
-	else if( [anObject isKindOfClass:[NSNumber class]] )
+	else if ( [anObject isKindOfClass:[NSNumber class]] )
 	{
 		theDescriptor = [self descriptorWithNumber:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSValue class]] )
+	else if ( [anObject isKindOfClass:[NSValue class]] )
 	{
 		theDescriptor = [self descriptorWithValue:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSString class]] )
+	else if ( [anObject isKindOfClass:[NSString class]] )
 	{
 		theDescriptor = [self descriptorWithString:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSData class]] )
+	else if ( [anObject isKindOfClass:[NSData class]] )
 	{
 		theDescriptor = [self descriptorWithData:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSArray class]] )
+	else if ( [anObject isKindOfClass:[NSArray class]] )
 	{
 		theDescriptor = [self descriptorWithArray:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSDictionary class]] )
+	else if ( [anObject isKindOfClass:[NSDictionary class]] )
 	{
 		theDescriptor = [self descriptorWithDictionary:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSURL class]] )
+	else if ( [anObject isKindOfClass:[NSURL class]] )
 	{
 		theDescriptor = [self aliasDescriptorWithURL:anObject];
 	}
-	else if( [anObject isKindOfClass:[NSAppleEventDescriptor class]] )
+	else if ( [anObject isKindOfClass:[NSAppleEventDescriptor class]] )
 	{
 		theDescriptor = anObject;
 	}
-	else if( [anObject isKindOfClass:[NSScriptObjectSpecifier class]] )
+	else if ( [anObject isKindOfClass:[NSScriptObjectSpecifier class]] )
 	{
 		theDescriptor = [self descriptorWithScriptObjectSpecifier:anObject];
 	}
-	else if( [anObject isKindOfClass:NSClassFromString(@"NDScriptData")] )
+	else if ( [anObject isKindOfClass:NSClassFromString(@"NDScriptData")] )
 	{
 		theDescriptor = [self performSelector:NSSelectorFromString(@"descriptorWithScriptData:") withObject:anObject];
 	}
-	else if( [anObject respondsToSelector:@selector(objectSpecifier)] )
+	else if ( [anObject respondsToSelector:@selector(objectSpecifier)] )
 	{
 		theDescriptor = [self descriptorWithScriptObjectSpecifier:[anObject objectSpecifier]];
 	}
@@ -449,11 +449,11 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 
 	theNumOfParam = [anArray count];
 
-	if( theNumOfParam > 0)
+	if ( theNumOfParam > 0)
 	{
 		theEventList = [self listDescriptor];
 
-		for( theIndex = 0; theIndex < theNumOfParam; theIndex++ )
+		for ( theIndex = 0; theIndex < theNumOfParam; theIndex++ )
 			[theEventList insertDescriptor:[self descriptorWithObject:[anArray objectAtIndex:theIndex]] atIndex:theIndex+1];
 	}
 
@@ -487,7 +487,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	unsigned int					theIndex;
 	NSAppleEventDescriptor		* theEventList = [self listDescriptor];
 
-	for( theIndex = 1; anObject != nil; anObject = va_arg( anArgList, id ) )
+	for ( theIndex = 1; anObject != nil; anObject = va_arg( anArgList, id ) )
 	{
 		[theEventList insertDescriptor:[self descriptorWithObject:anObject] atIndex:theIndex++];
 	}
@@ -501,10 +501,10 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 + (NSAppleEventDescriptor *)recordDescriptorWithObjects:(id *)anObjects keywords:(AEKeyword *)aKeywords count:(unsigned int)aCount
 {
 	NSAppleEventDescriptor	* theDescriptor = nil;
-	if( (theDescriptor = [self recordDescriptor]) != nil )
+	if ( (theDescriptor = [self recordDescriptor]) != nil )
 	{
 		unsigned int		theIndex;
-		for( theIndex = 0; theIndex < aCount; theIndex++ )
+		for ( theIndex = 0; theIndex < aCount; theIndex++ )
 		{
 			[theDescriptor setDescriptor:[NSAppleEventDescriptor descriptorWithObject:anObjects[theIndex]] forKeyword:aKeywords[theIndex]];
 		}
@@ -524,16 +524,16 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 										theUserRecordCount = 1,
 										theCount = [theKeyArray count];
 	Class								theValueClass = [NSValue class];
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 	{
 		id		theKey = [theKeyArray objectAtIndex:theIndex];
-		if( [theKey isKindOfClass:theValueClass] )
+		if ( [theKey isKindOfClass:theValueClass] )
 		{
 			[theRecordDescriptor setDescriptor:[NSAppleEventDescriptor descriptorWithObject:[aDictionary objectForKey:theKey]] forKeyword:[theKey fourCharCode]];
 		}
 		else		// non unsigned long keys need to be added with there value into an array with the key keyASUserRecordFields
 		{
-			if( theUserRecordDesc == nil )
+			if ( theUserRecordDesc == nil )
 			{
 				theUserRecordDesc = [self listDescriptor];
 			}
@@ -542,7 +542,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 		}
 	}
 	
-	if( theUserRecordDesc != nil )
+	if ( theUserRecordDesc != nil )
 		[theRecordDescriptor setDescriptor:theUserRecordDesc forKeyword:keyASUserRecordFields];
 	
 	return theRecordDescriptor;
@@ -555,11 +555,11 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSAppleEventDescriptor		* theDescriptor = nil;
 	AEDesc							theDesc = {0};
-	if( aeDescForObjectSpecifier( &theDesc, anObjectSpecifier ) )
+	if ( aeDescForObjectSpecifier( &theDesc, anObjectSpecifier ) )
 	{
 		theDescriptor = [NSAppleEventDescriptor descriptorWithAEDescNoCopy:&theDesc];
 		
-		if( theDescriptor == nil )
+		if ( theDescriptor == nil )
 			AEDisposeDesc( &theDesc );
 	}
 	return theDescriptor;
@@ -609,10 +609,10 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 + (NSAppleEventDescriptor *)userRecordDescriptorWithObjectAndKeys:(id)anObject arguments:(va_list)anArgList
 {
 	NSAppleEventDescriptor		* theUserRecord = [self listDescriptor];
-	if( theUserRecord )
+	if ( theUserRecord )
 	{
 		unsigned int		theIndex = 1;
-		for( ; anObject != nil; anObject = va_arg( anArgList, id ) )
+		for ( ; anObject != nil; anObject = va_arg( anArgList, id ) )
 		{
 			NSString		* theKey = va_arg( anArgList, id );
 			NSParameterAssert( theKey != nil );
@@ -630,10 +630,10 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 + (NSAppleEventDescriptor *)userRecordDescriptorWithObjects:(id *)anObject keys:(NSString **)aKeys count:(unsigned int)aCount
 {
 	NSAppleEventDescriptor		* theUserRecord = [self listDescriptor];
-	if( theUserRecord )
+	if ( theUserRecord )
 	{
 		unsigned int		theIndex;
-		for( theIndex = 0; theIndex < aCount; theIndex++ )
+		for ( theIndex = 0; theIndex < aCount; theIndex++ )
 		{
 			NSParameterAssert( aKeys[theIndex] != nil );
 			[theUserRecord insertDescriptor:[NSAppleEventDescriptor descriptorWithString:aKeys[theIndex]] atIndex:theIndex+1];
@@ -651,7 +651,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSAppleEventDescriptor	* theUserRecord = nil;
 
-	if( [aDictionary count] > 0 && (theUserRecord = [self listDescriptor]) != nil )
+	if ( [aDictionary count] > 0 && (theUserRecord = [self listDescriptor]) != nil )
 	{
 		NSEnumerator	* theEnumerator = [aDictionary keyEnumerator];
 		id					theKey;
@@ -680,9 +680,9 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	theNumOfItems = [self numberOfItems];
 	theArray = [NSMutableArray arrayWithCapacity:theNumOfItems];
 
-	for( theIndex = 1; theIndex <= theNumOfItems; theIndex++)
+	for ( theIndex = 1; theIndex <= theNumOfItems; theIndex++)
 	{
-		if( (theDescriptor = [self descriptorAtIndex:theIndex]) != nil )
+		if ( (theDescriptor = [self descriptorAtIndex:theIndex]) != nil )
 		{
 			[theArray addObject:[theDescriptor objectValue]];
 		}
@@ -701,12 +701,12 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	NSMutableDictionary		*theDictionary = [NSMutableDictionary dictionaryWithCapacity:theNumOfItems];
 
 	NSParameterAssert( sizeof( AEKeyword ) == sizeof( unsigned long ) );
-	for( theIndex = 1; theIndex <= theNumOfItems; theIndex++ )
+	for ( theIndex = 1; theIndex <= theNumOfItems; theIndex++ )
 	{
 		AEKeyword					theKeyword = [self keywordForDescriptorAtIndex:theIndex];
 		NSAppleEventDescriptor	* theDesc = [self descriptorForKeyword:theKeyword];
 		
-		if( theKeyword == keyASUserRecordFields )
+		if ( theKeyword == keyASUserRecordFields )
 		{
 			[theDictionary addEntriesFromDictionary:[theDesc dictionaryValueFromUserRecordDescriptor]];
 		}
@@ -727,12 +727,12 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 		? [NSMutableDictionary dictionaryWithCapacity:theNumOfItems/2]
 		: nil;
 	
-	for( theIndex = 1; theIndex+1 <= theNumOfItems; theIndex+=2)
+	for ( theIndex = 1; theIndex+1 <= theNumOfItems; theIndex+=2)
 	{
 		id		theKey = [[self descriptorAtIndex:theIndex] objectValue],
 		theValue = [self descriptorAtIndex:theIndex+1];
 		
-		if( [theKey isKindOfClass:[NSNumber class]] && [theKey unsignedLongValue] == keyASUserRecordFields )
+		if ( [theKey isKindOfClass:[NSNumber class]] && [theKey unsignedLongValue] == keyASUserRecordFields )
 		{
 			[theDictionary addEntriesFromDictionary:[theValue dictionaryValue]];
 		}
@@ -753,7 +753,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	id					theURL = nil;
 	OSAError			theError;
 
-	switch([self descriptorType])
+	switch ([self descriptorType])
 	{
 		case typeAlias:							//	alias record
 		{
@@ -767,7 +767,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 			HLock(theAliasHandle);
 			theError = AEGetDescData([self aeDesc], *theAliasHandle, theSize);
 			HUnlock(theAliasHandle);
-			if( theError == noErr  && FSResolveAlias( NULL, (AliasHandle)theAliasHandle, &theTarget, &theWasChanged ) == noErr )
+			if ( theError == noErr  && FSResolveAlias( NULL, (AliasHandle)theAliasHandle, &theTarget, &theWasChanged ) == noErr )
 			{
 				theURL = [NSURL URLWithFSRef:&theTarget];
 			}
@@ -789,7 +789,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (int)intValue
 {
 	int		theInt = 0;
-	if( AEGetDescData([self aeDesc], &theInt, sizeof(int)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theInt, sizeof(int)) != noErr )
 		NSLog(@"Failed to get int value from NSAppleEventDescriptor");
 	
 	return theInt;
@@ -801,7 +801,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (unsigned int)unsignedIntValue
 {
 	unsigned int		theUnsignedInt = 0;
-	if( AEGetDescData([self aeDesc], &theUnsignedInt, sizeof(unsigned int)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theUnsignedInt, sizeof(unsigned int)) != noErr )
 		NSLog(@"Failed to get unsigned int value from NSAppleEventDescriptor");
 
 	return theUnsignedInt;
@@ -813,7 +813,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (long)longValue
 {
 	long		theLong = 0;
-	if( AEGetDescData([self aeDesc], &theLong, sizeof(long)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theLong, sizeof(long)) != noErr )
 		NSLog(@"Failed to get long value from NSAppleEventDescriptor");
 	
 	return theLong;
@@ -825,7 +825,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (unsigned long)unsignedLongValue
 {
 	unsigned long		theUnsignedLong = 0;
-	if( AEGetDescData([self aeDesc], &theUnsignedLong, sizeof(unsigned long)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theUnsignedLong, sizeof(unsigned long)) != noErr )
 		NSLog(@"Failed to get unsigned long value from NSAppleEventDescriptor");
 	
 	return theUnsignedLong;
@@ -837,7 +837,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (FourCharCode)fourCharCodeValue
 {
 	FourCharCode		theResult = 0;
-	if( AEGetDescData([self aeDesc], &theResult, sizeof(FourCharCode)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theResult, sizeof(FourCharCode)) != noErr )
 		NSLog(@"Failed to get FourCharCode value from NSAppleEventDescriptor");
 	
 	return theResult;
@@ -849,7 +849,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (float)floatValue
 {
 	float		theFloat = 0.0;
-	if( AEGetDescData([self aeDesc], &theFloat, sizeof(float)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theFloat, sizeof(float)) != noErr )
 		NSLog(@"Failed to get float value from NSAppleEventDescriptor");
 	
 	return theFloat;
@@ -861,7 +861,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 - (double)doubleValue
 {
 	double		theDouble = 0.0;
-	if( AEGetDescData([self aeDesc], &theDouble, sizeof(double)) != noErr )
+	if ( AEGetDescData([self aeDesc], &theDouble, sizeof(double)) != noErr )
 		NSLog(@"Failed to get double value from NSAppleEventDescriptor");
 
 	return theDouble;
@@ -874,7 +874,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSValue		* theValue = nil;
 
-	switch([self descriptorType])
+	switch ([self descriptorType])
 	{
 		case typeBoolean:						//	Boolean value
 		case typeShortInteger:				//	16-bit integer
@@ -892,7 +892,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 			Size			theActualSize;
 			short int	theStart,
 							theEnd;
-			if( AEGetParamPtr([self aeDesc], keyOSASourceStart, typeShortInteger, &theTypeCode, (void*)&theStart, sizeof(short int), &theActualSize ) == noErr && AEGetParamPtr([self aeDesc], keyOSASourceEnd, typeShortInteger, &theTypeCode, (void*)&theEnd, sizeof(short int), &theActualSize ) == noErr )
+			if ( AEGetParamPtr([self aeDesc], keyOSASourceStart, typeShortInteger, &theTypeCode, (void*)&theStart, sizeof(short int), &theActualSize ) == noErr && AEGetParamPtr([self aeDesc], keyOSASourceEnd, typeShortInteger, &theTypeCode, (void*)&theEnd, sizeof(short int), &theActualSize ) == noErr )
 			{
 				theValue = [NSValue valueWithRange:NSMakeRange( theStart, theEnd - theStart )];
 			}
@@ -904,7 +904,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 			Size			theActualSize;
 			short int	theStart,
 							theEnd;
-			if( AEGetParamPtr ([self aeDesc], keyAERangeStart, typeShortInteger, &theTypeCode, (void*)&theStart, sizeof(short int), &theActualSize ) == noErr && AEGetParamPtr ([self aeDesc], keyAERangeStop, typeShortInteger, &theTypeCode, (void*)&theEnd, sizeof(short int), &theActualSize ) == noErr )
+			if ( AEGetParamPtr ([self aeDesc], keyAERangeStart, typeShortInteger, &theTypeCode, (void*)&theStart, sizeof(short int), &theActualSize ) == noErr && AEGetParamPtr ([self aeDesc], keyAERangeStop, typeShortInteger, &theTypeCode, (void*)&theEnd, sizeof(short int), &theActualSize ) == noErr )
 			{
 				theValue = [NSValue valueWithRange:NSMakeRange( theStart, theEnd - theStart )];
 			}
@@ -928,7 +928,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSNumber		* theNumber = nil;
 
-	switch([self descriptorType])
+	switch ([self descriptorType])
 	{
 		case typeBoolean:						//	Boolean value
 			theNumber = [NSNumber numberWithBool:[self booleanValue]];
@@ -940,7 +940,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 //		case typeInteger:							//	32-bit integer
 		{
 			int		theInteger;
-			if( AEGetDescData([self aeDesc], &theInteger, sizeof(int)) == noErr )
+			if ( AEGetDescData([self aeDesc], &theInteger, sizeof(int)) == noErr )
 				theNumber = [NSNumber numberWithInt: theInteger];
 			break;
 		}
@@ -994,7 +994,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	printf("descriptor type = %s\n", [NSFileTypeForHFSTypeCode(theDescType) lossyCString] );
 #endif
 	
-	switch(theDescType)
+	switch (theDescType)
 	{
 		case typeBoolean:						//	1-byte Boolean value
 		case typeShortInteger:				//	16-bit integer
@@ -1087,11 +1087,11 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 	NSAppleEventDescriptor	* theEvent = nil,
 									* theEventList = nil;
 
-	if( aTargetDescriptor != nil)
+	if ( aTargetDescriptor != nil)
 	{
 		theEventList = [NSAppleEventDescriptor aliasListDescriptorWithArray:anArray];
 
-		if( theEventList )
+		if ( theEventList )
 		{
 			theEvent = [self appleEventWithEventClass:kCoreEventClass eventID:kAEOpenDocuments targetDescriptor:aTargetDescriptor returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID];
 			[theEvent setParamDescriptor:theEventList forKeyword:keyDirectObject];
@@ -1167,7 +1167,7 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 - (id)initWithSubroutineName:(NSString *)aRoutineName argumentsListDescriptor:(NSAppleEventDescriptor *)aParam
 {
-	if( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASSubroutineEvent
+	if ( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASSubroutineEvent
 									 targetDescriptor:[NSAppleEventDescriptor currentProcessDescriptor] returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID]) != nil )
 	{
 		[self setParamDescriptor:[NSAppleEventDescriptor descriptorWithCString:[[aRoutineName lowercaseString] lossyCString]] forKeyword:keyASSubroutineName];
@@ -1182,19 +1182,19 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 - (id)initWithSubroutineName:(NSString *)aRoutineName labels:(AEKeyword*)aLabels arguments:(id *)anObjects count:(unsigned int)aCount
 {
-	if( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine
+	if ( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine
 														 targetDescriptor:[NSAppleEventDescriptor currentProcessDescriptor] returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID]) != nil )
 	{
 		unsigned int		theIndex;
 		[self setParamDescriptor:[NSAppleEventDescriptor descriptorWithCString:[[aRoutineName lowercaseString] lossyCString]] forKeyword:keyASSubroutineName];
-		for( theIndex = 0; theIndex < aCount; theIndex++ )
+		for ( theIndex = 0; theIndex < aCount; theIndex++ )
 		{
-			if( aLabels[theIndex] == keyASPrepositionGiven
+			if ( aLabels[theIndex] == keyASPrepositionGiven
 					&& [anObjects[theIndex] isKindOfClass:[NSDictionary class]] )
 			{
 				[self setParamDescriptor:[NSAppleEventDescriptor userRecordDescriptorWithDictionary:anObjects[theIndex]] forKeyword:keyASUserRecordFields];
 			}
-			else if( aLabels[theIndex] == keyASPrepositionGiven
+			else if ( aLabels[theIndex] == keyASPrepositionGiven
 					&& [anObjects[theIndex] isKindOfClass:[NSAppleEventDescriptor class]] )
 			{
 				[self setParamDescriptor:anObjects[theIndex] forKeyword:keyASUserRecordFields];
@@ -1214,12 +1214,12 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 - (id)initWithSubroutineName:(NSString *)aRoutineName labels:(AEKeyword*)aLabels argumentDescriptors:(NSAppleEventDescriptor **)aParam count:(unsigned int)aCount
 {
-	if( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine
+	if ( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine
 												  targetDescriptor:[NSAppleEventDescriptor currentProcessDescriptor] returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID]) != nil )
 	{
 		unsigned int		theIndex;
 		[self setParamDescriptor:[NSAppleEventDescriptor descriptorWithCString:[[aRoutineName lowercaseString] lossyCString]] forKeyword:keyASSubroutineName];
-		for( theIndex = 0; theIndex < aCount; theIndex++ )
+		for ( theIndex = 0; theIndex < aCount; theIndex++ )
 			[self setParamDescriptor:aParam[theIndex] forKeyword:aLabels[theIndex]];
 	}
 
@@ -1231,14 +1231,14 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
  */
 - (id)initWithSubroutineName:(NSString *)aRoutineName labelsAndArguments:(AEKeyword)aKeyWord arguments:(va_list)anArgList
 {
-	if( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine targetDescriptor:[NSAppleEventDescriptor currentProcessDescriptor] returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID]) != nil )
+	if ( (self = [self initWithEventClass:kASAppleScriptSuite eventID:kASPrepositionalSubroutine targetDescriptor:[NSAppleEventDescriptor currentProcessDescriptor] returnID:kAutoGenerateReturnID transactionID:kAnyTransactionID]) != nil )
 	{
 		[self setParamDescriptor:[NSAppleEventDescriptor descriptorWithCString:[[aRoutineName lowercaseString] lossyCString]] forKeyword:keyASSubroutineName];
-		for( ; aKeyWord != nil; aKeyWord = va_arg( anArgList, AEKeyword ) )
+		for ( ; aKeyWord != nil; aKeyWord = va_arg( anArgList, AEKeyword ) )
 		{
 			id		theObject = va_arg( anArgList, id );
 
-			if( aKeyWord == keyASPrepositionGiven )
+			if ( aKeyWord == keyASPrepositionGiven )
 			{
 				[self setParamDescriptor:[NSAppleEventDescriptor descriptorWithObject:[NSAppleEventDescriptor userRecordDescriptorWithObjectAndKeys:theObject arguments:anArgList]] forKeyword:keyASUserRecordFields];
 				break;				// all the arguments have been got
@@ -1269,27 +1269,27 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * aSpecifier )
 {
 	BOOL		theResult = NO;
-	if( aSpecifier )
+	if ( aSpecifier )
 	{
-		if( [aSpecifier isKindOfClass:[NSIndexSpecifier class]] )
+		if ( [aSpecifier isKindOfClass:[NSIndexSpecifier class]] )
 			theResult = aeDescForIndexSpecifier( aDesc, (NSIndexSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSMiddleSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSMiddleSpecifier class]] )
 			theResult = aeDescForMiddleSpecifier( aDesc, (NSMiddleSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSNameSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSNameSpecifier class]] )
 			theResult = aeDescForNameSpecifier( aDesc, (NSNameSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSPositionalSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSPositionalSpecifier class]] )
 			theResult = aeDescForPositionalSpecifier( aDesc, (NSPositionalSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSPropertySpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSPropertySpecifier class]] )
 			theResult = aeDescForPropertySpecifier( aDesc, (NSPropertySpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSRandomSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSRandomSpecifier class]] )
 			theResult = aeDescForRandomSpecifier( aDesc, (NSRandomSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSRangeSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSRangeSpecifier class]] )
 			theResult = aeDescForRangeSpecifier( aDesc, (NSRangeSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSRelativeSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSRelativeSpecifier class]] )
 			theResult = aeDescForRelativeSpecifier( aDesc, (NSRelativeSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSUniqueIDSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSUniqueIDSpecifier class]] )
 			theResult = aeDescForUniqueIDSpecifier( aDesc, (NSUniqueIDSpecifier*)aSpecifier );
-		else if( [aSpecifier isKindOfClass:[NSWhoseSpecifier class]] )
+		else if ( [aSpecifier isKindOfClass:[NSWhoseSpecifier class]] )
 			theResult = aeDescForWhoseSpecifier( aDesc, (NSWhoseSpecifier*)aSpecifier );
 		else 
 			NSLog(@"Script Object Specifier %@ of unhandled type %@", aSpecifier, [aSpecifier class]);
@@ -1313,10 +1313,10 @@ static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * 
 		NSCAssert( theContainerClassDesc != nil, @"Coercsion of NSScriptObjectSpecifiers to NSAppleEventDescriptor can only occur with NSScriptObjectSpecifiers that have there container class specifiers set.");
 		
 		/* nil container specifier means the container is the application and the container desc should be typeNull */
-		if( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
+		if ( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
 		{
 			long int		theIndex = [aSpecifier index]+1;
-			if( NDLogOSStatus( AECreateDesc( typeLongInteger, &theIndex, sizeof( theIndex ), &theKeyData ) ) )
+			if ( NDLogOSStatus( AECreateDesc( typeLongInteger, &theIndex, sizeof( theIndex ), &theKeyData ) ) )
 			{
 				DescType		theKeyDesc = [theContainerClassDesc appleEventCodeForKey:[aSpecifier key]];
 				theResult = NDLogOSStatus( CreateObjSpecifier( theKeyDesc, &theContainerDesc, formAbsolutePosition, &theKeyData, NO, aDesc) );
@@ -1345,13 +1345,13 @@ static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * 
 
 		NSCAssert( theContainerClassDesc != nil, @"Coercsion of NSScriptObjectSpecifiers to NSAppleEventDescriptor can only occur with NSScriptObjectSpecifiers that have there container class specifiers set.");
 
-		if( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
+		if ( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
 		{
 			NSString			* theName = [aSpecifier name];
 			unsigned int		theLength = [theName length];
 			unichar				* theCharacters = malloc( theLength * sizeof(unichar) );
 			[theName getCharacters:theCharacters];
-			if( NDLogOSStatus( AECreateDesc( typeUnicodeText, theCharacters, theLength, &theKeyData ) ) )
+			if ( NDLogOSStatus( AECreateDesc( typeUnicodeText, theCharacters, theLength, &theKeyData ) ) )
 			{
 				DescType		theKeyDesc = [theContainerClassDesc appleEventCodeForKey:[aSpecifier key]];
 				theResult = NDLogOSStatus( CreateObjSpecifier( theKeyDesc, &theContainerDesc, formName, &theKeyData, NO, aDesc) );
@@ -1381,10 +1381,10 @@ static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * 
 		NSCAssert( theContainerClassDesc != nil, @"Coercsion of NSScriptObjectSpecifiers to NSAppleEventDescriptor can only occur with NSScriptObjectSpecifiers that have there container class specifiers set.");
 		
 		/* nil container specifier means the container is the application and the container desc should be typeNull */
-		if( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
+		if ( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
 		{
 			DescType		theKeyDesc = [theContainerClassDesc appleEventCodeForKey:[aSpecifier key]];
-			if( NDLogOSStatus( AECreateDesc( typeType, &theKeyDesc, sizeof(theKeyDesc), &theKeyData ) ) )
+			if ( NDLogOSStatus( AECreateDesc( typeType, &theKeyDesc, sizeof(theKeyDesc), &theKeyData ) ) )
 			{
 				theResult = NDLogOSStatus( CreateObjSpecifier( formPropertyID, &theContainerDesc, formPropertyID, &theKeyData, NO, aDesc) );
 				AEDisposeDesc(&theKeyData);
@@ -1405,9 +1405,9 @@ static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * 
 		AEDesc		theStartDesc,
 						theEndDesc;
 		
-		if( aeDescForObjectSpecifier( &theStartDesc, [aSpecifier startSpecifier] ) )
+		if ( aeDescForObjectSpecifier( &theStartDesc, [aSpecifier startSpecifier] ) )
 		{
-			if( aeDescForObjectSpecifier( &theEndDesc, [aSpecifier endSpecifier] ) )
+			if ( aeDescForObjectSpecifier( &theEndDesc, [aSpecifier endSpecifier] ) )
 			{
 				theResult = NDLogOSStatus( CreateRangeDescriptor( &theStartDesc, &theEndDesc, NO, aDesc) );
 				AEDisposeDesc(&theEndDesc);
@@ -1438,24 +1438,24 @@ static BOOL aeDescForObjectSpecifier( AEDesc * aDesc, NSScriptObjectSpecifier * 
 			AEInitializeDesc(&theContainerDesc);	// need to initialize it to typeNull in case it is not set
 						
 			/* nil container specifier means the container is the application and the container desc should be typeNull */
-			if( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
+			if ( theContainerSpecifier == nil || NDLogFalse(aeDescForObjectSpecifier( &theContainerDesc, theContainerSpecifier  ) ) )
 			{
 				id		theIdentifier = [aSpecifier uniqueID];
-				if( [theIdentifier isKindOfClass:[NSString class]] )
+				if ( [theIdentifier isKindOfClass:[NSString class]] )
 				{
 					unsigned int		theLength = [(NSString*)theIdentifier length];
 					unichar				* theCharacters = malloc( theLength * sizeof(unichar) );
 					[theIdentifier getCharacters:theCharacters];
-					if( NDLogOSStatus( AECreateDesc( typeUnicodeText, theCharacters, theLength, &theKeyData ) ) )
+					if ( NDLogOSStatus( AECreateDesc( typeUnicodeText, theCharacters, theLength, &theKeyData ) ) )
 					{
 						theResult = NDLogOSStatus( CreateObjSpecifier( [[aSpecifier keyClassDescription] appleEventCode], &theContainerDesc, formAbsolutePosition, &theKeyData, NO, aDesc) );
 						AEDisposeDesc(&theKeyData);
 					}
 				}
-				else if( [theIdentifier isKindOfClass:[NSNumber class]] )
+				else if ( [theIdentifier isKindOfClass:[NSNumber class]] )
 				{
 					long int	theIndex = [(NSNumber*)theIdentifier unsignedIntValue];
-					if( NDLogOSStatus( AECreateDesc( typeLongInteger, &theIndex, sizeof( theIndex ), &theKeyData ) ) )
+					if ( NDLogOSStatus( AECreateDesc( typeLongInteger, &theIndex, sizeof( theIndex ), &theKeyData ) ) )
 					{
 						theResult = NDLogOSStatus( CreateObjSpecifier( [[aSpecifier keyClassDescription] appleEventCode], &theContainerDesc, formAbsolutePosition, &theKeyData, NO, aDesc) );
 						AEDisposeDesc(&theKeyData);
@@ -1485,11 +1485,11 @@ static NSScriptObjectSpecifier * objectSpecifierForAppleEventDescriptor( NSApple
 {
 	NSScriptObjectSpecifier		* theResultSpecifier = nil;
 	
-	if( aDescriptor )
+	if ( aDescriptor )
 	{
 		DescType							theFormType = [[aDescriptor descriptorForKeyword:keyAEKeyForm] fourCharCodeValue];
 		
-		switch( theFormType )
+		switch ( theFormType )
 		{
 			case formAbsolutePosition:
 				theResultSpecifier = objectSpecifierForAbsolutePositionAppleEventDescriptor( aDescriptor );

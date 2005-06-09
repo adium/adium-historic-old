@@ -37,13 +37,13 @@
 	
 	newGroupWindow = [[self alloc] initWithWindowNibName:ADD_GROUP_PROMPT_NIB];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[newGroupWindow window]
 		   modalForWindow:parentWindow
 			modalDelegate:newGroupWindow
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[newGroupWindow showWindow:nil];
 	}
 	

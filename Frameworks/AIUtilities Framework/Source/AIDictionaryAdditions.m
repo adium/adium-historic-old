@@ -51,7 +51,7 @@
     dictionary = [NSDictionary dictionaryWithContentsOfFile:[[path stringByAppendingPathComponent:name] stringByAppendingPathExtension:@"plist"]];
 
     //if the dictionary doesn't exist, create and return a new one
-    if(dictionary == nil && create){
+    if (dictionary == nil && create) {
         dictionary = [NSDictionary dictionary];
     }
 
@@ -73,7 +73,7 @@
 	NSDictionary *result;
 
 	//only do work if we have work to do.
-	if(translation || addition || removal) {
+	if (translation || addition || removal) {
 		NSMutableDictionary *mutable = [self mutableCopy];
 
 		[mutable translate:translation add:addition remove:removal];
@@ -103,7 +103,7 @@
     dictionary = [NSMutableDictionary dictionaryWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.plist",path,name]];
 
     //if the dictionary doesn't exist, create and return a new one
-    if(dictionary == nil && create){
+    if (dictionary == nil && create) {
         dictionary = [NSMutableDictionary dictionary];
     }
 
@@ -113,20 +113,20 @@
 - (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal
 {
 	//only do work if we have work to do.
-	if(translation || addition || removal) {
+	if (translation || addition || removal) {
 		NSEnumerator *keyEnum = [self keyEnumerator];
 		NSString *key;
 		NSDictionary *selfCopy = [self copy];
 
-		while((key = [keyEnum nextObject])) {
+		while ((key = [keyEnum nextObject])) {
 			NSString *newKey = [translation objectForKey:key];
-			if(newKey) {
+			if (newKey) {
 				[self setObject:[selfCopy objectForKey:key] forKey:newKey];
 			} else {
 				id newObj = [addition objectForKey:key];
-				if(newObj) {
+				if (newObj) {
 					[self setObject:newObj forKey:key];
-				} else if(removal && [removal containsObject:key]) {
+				} else if (removal && [removal containsObject:key]) {
 					[self removeObjectForKey:key];
 				}
 			}

@@ -15,7 +15,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initMultiCellOutlineView];
 	}
 	return self;
@@ -23,7 +23,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initMultiCellOutlineView];
 	}
 	return self;
@@ -47,7 +47,7 @@
 
 //Cell used for content rows
 - (void)setContentCell:(NSCell *)cell{
-	if(contentCell != cell){
+	if (contentCell != cell) {
 		[contentCell release];
 		contentCell = [cell retain];
 	}
@@ -61,7 +61,7 @@
 
 //Cell used for group rows
 - (void)setGroupCell:(NSCell *)cell{
-	if(groupCell != cell){
+	if (groupCell != cell) {
 		[groupCell release];
 		groupCell = [cell retain];
 	}

@@ -33,7 +33,7 @@
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict
 {
-    if(self = [super initWithWindowNibName:windowNibName]){
+    if (self = [super initWithWindowNibName:windowNibName]) {
 		infoDict = [inInfoDict retain];
 	}
 	
@@ -59,7 +59,7 @@
 						  callBackIndexNumber:(NSNumber *)inIndexNumber
 {	
 	GaimRequestActionCb callBack = [inCallBackValue pointerValue];
-	if (callBack){
+	if (callBack) {
 		callBack([inUserDataValue pointerValue], [inIndexNumber intValue]);
 	}
 }
@@ -70,14 +70,14 @@
 	
 	[textField_header setStringValue:AILocalizedString(@"Authorization Requested",nil)];
 	
-	if([infoDict objectForKey:@"Reason"]){
+	if ([infoDict objectForKey:@"Reason"]) {
 		message = [NSString stringWithFormat:
 			AILocalizedString(@"The contact %@ wants to add %@ to his or her contact list for the following reason:\n%@",nil),
 			[infoDict objectForKey:@"Remote Name"],
 			[infoDict objectForKey:@"Account Name"],
 			[infoDict objectForKey:@"Reason"]];
 
-	}else{
+	} else {
 		message = [NSString stringWithFormat:
 			AILocalizedString(@"The contact %@ wants to add %@ to his or her contact list.",nil),
 			[infoDict objectForKey:@"Remote Name"],
@@ -97,7 +97,7 @@
 										  withObject:[[[infoDict objectForKey:@"userData"] retain] autorelease]
 										  withObject:[NSNumber numberWithInt:0]];
 
-	if([checkBox_addToList state] == NSOnState){
+	if ([checkBox_addToList state] == NSOnState) {
 		/* Add the contact to all appropriate accounts. Gaim doesn't tell us which account this auth request was on,
 		 * and I'm not in a mood to fix Gaim silliness so we'll just hack around it for now, adding on all accounts which match
 		 * the passed account name. */
@@ -108,10 +108,10 @@
 		NSMutableSet	*requestedServices = [NSMutableSet set];
 		
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while(account = [enumerator nextObject]){
-			if([account online] &&
+		while (account = [enumerator nextObject]) {
+			if ([account online] &&
 			   [[[account UID] compactedString] isEqualToString:accountName] &&
-			   ![requestedServices containsObject:[account service]]){
+			   ![requestedServices containsObject:[account service]]) {
 				AIService	*service = [account service];
 				
 				[[adium contactController] requestAddContactWithUID:UID
@@ -131,7 +131,7 @@
 {
 	[super windowWillClose:sender];
 	
-	if (infoDict){
+	if (infoDict) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoAuthRequestCbValue:withUserDataValue:callBackIndexNumber:)
 											  withObject:[infoDict objectForKey:@"denyCB"]

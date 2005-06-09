@@ -130,32 +130,32 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
 	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
-	if([self online] || [self integerStatusObjectForKey:@"Connecting"]){
+	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]) {
 		//When a new contact is created, if we aren't already silent and delayed, set it  a second to cover our initial
 		//status updates
-		if(!silentAndDelayed){
+		if (!silentAndDelayed) {
 			[self silenceAllContactUpdatesForInterval:2.0];
 			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
 		}
 		
 		//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 		//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
-		if(![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]){
+		if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
 			[theContact setStatusObject:contactName
 								 forKey:@"FormattedUID"
 								 notify:NotifyLater];
 		}
 
-		if(groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]){
+		if (groupName && [groupName isEqualToString:@GAIM_ORPHANS_GROUP_NAME]) {
 			[theContact setRemoteGroupName:AILocalizedString(@"Orphans","Name for the orphans group")];
-		}else if(groupName && [groupName length] != 0){
+		} else if (groupName && [groupName length] != 0) {
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:groupName]];
-		}else{
+		} else {
 			[theContact setRemoteGroupName:[self _mapIncomingGroupName:nil]];
 		}
 		
 		[self gotGroupForContact:theContact];
-	}else{
+	} else {
 		GaimDebug(@"Got %@ for %@ while not online",groupName,theContact);
 	}
 }
@@ -166,10 +166,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	BOOL displayNameChanges = NO;
 
 	//Store this alias as the serverside display name so long as it isn't identical when unformatted to the UID
-	if(![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]){
+	if (![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
 
 		//This is the server display name.  Set it as such.
-		if(![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]){
+		if (![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]) {
 			//Set the server display name status object as the full display name
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"Server Display Name"
@@ -179,8 +179,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 		
 		//Use it either as the status message or the display name.
-		if ([self useDisplayNameAsStatusMessage]){
-			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:gaimAlias]){
+		if ([self useDisplayNameAsStatusMessage]) {
+			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:gaimAlias]) {
 				[theContact setStatusObject:[[[NSAttributedString alloc] initWithString:gaimAlias] autorelease]
 									 forKey:@"ContactListStatusMessage" 
 									 notify:NO];
@@ -188,25 +188,25 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				changes = YES;
 			}
 			
-		}else{
+		} else {
 			AIMutableOwnerArray	*displayNameArray = [theContact displayArrayForKey:@"Display Name"];
 			NSString			*oldDisplayName = [displayNameArray objectValue];
 			
 			//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
-			if(![[displayNameArray objectWithOwner:self] isEqualToString:gaimAlias]){
+			if (![[displayNameArray objectWithOwner:self] isEqualToString:gaimAlias]) {
 				[displayNameArray setObject:gaimAlias
 								  withOwner:self
 							  priorityLevel:Low_Priority];
 				
 				//If this causes the object value to change, we need to request a manual update of the display name
-				if(oldDisplayName != [displayNameArray objectValue]){
+				if (oldDisplayName != [displayNameArray objectValue]) {
 					displayNameChanges = YES;
 				}
 			}
 		}
 		
-	}else{
-		if(![gaimAlias isEqualToString:[theContact formattedUID]] && ![gaimAlias isEqualToString:[theContact UID]]){
+	} else {
+		if (![gaimAlias isEqualToString:[theContact formattedUID]] && ![gaimAlias isEqualToString:[theContact UID]]) {
 			[theContact setStatusObject:gaimAlias
 								 forKey:@"FormattedUID"
 								 notify:NO];
@@ -215,12 +215,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		}
 	}
 
-	if(changes){
+	if (changes) {
 		//Apply any changes
 		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 	}
 	
-	if (displayNameChanges){
+	if (displayNameChanges) {
 		//Notify of display name changes
 		[[adium contactController] listObjectAttributesChanged:theContact
 												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
@@ -249,10 +249,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
 	
-	if(!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)){
+	if (!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)) {
 		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 		
-		if(!silentAndDelayed){
+		if (!silentAndDelayed) {
 			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed On" notify:NO];
 			[theContact setStatusObject:nil forKey:@"Signed Off" notify:NO];
 			[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
@@ -267,8 +267,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
 	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
-	if(contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)){		
-		if(!silentAndDelayed){
+	if (contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)) {		
+		if (!silentAndDelayed) {
 			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed Off" notify:NO];
 			[theContact setStatusObject:nil forKey:@"Signed On" notify:NO];			
 			[theContact setStatusObject:nil forKey:@"Signed Off" afterDelay:15];
@@ -333,11 +333,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Idle time
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
-	if (idleSinceDate){
+	if (idleSinceDate) {
 		[theContact setStatusObject:idleSinceDate
 							 forKey:@"IdleSince"
 							 notify:NO];
-	}else{
+	} else {
 		//No idleSinceDate means we are Idle but don't know how long, so set to -1
 		[theContact setStatusObject:[NSNumber numberWithInt:-1]
 							 forKey:@"Idle"
@@ -378,7 +378,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	int evil = [evilNumber intValue];
 	NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning"];
 
-	if (evil > 0){
+	if (evil > 0) {
 		if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
 			[theContact setStatusObject:evilNumber
 								 forKey:@"Warning"
@@ -386,7 +386,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			//Apply any changes
 			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
-	}else{
+	} else {
 		if (currentWarningLevel) {
 			[theContact setStatusObject:nil
 								 forKey:@"Warning" 
@@ -401,7 +401,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Buddy Icon
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
-	if (userIconData){
+	if (userIconData) {
 		//Observers get a single shot at utilizing the user icon data in its raw form
 		[theContact setStatusObject:userIconData forKey:@"UserIconData" notify:NO];
 		
@@ -463,17 +463,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //outgoing before being used.
 - (NSString *)_mapIncomingGroupName:(NSString *)name
 {
-	if(!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)){
+	if (!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)) {
 		return(ADIUM_ROOT_GROUP_NAME);
-	}else{
+	} else {
 		return(name);
 	}
 }
 - (NSString *)_mapOutgoingGroupName:(NSString *)name
 {
-	if([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0){
+	if ([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0) {
 		return([self UID]);
-	}else{
+	} else {
 		return(name);
 	}
 }
@@ -483,7 +483,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {	
     //Request profile
 	AILog(@"%@: Update %@ : %i %i",self,inContact,[inContact online],[inContact isStranger]);
-//    if ([inContact online] || [inContact isStranger]){
+//    if ([inContact online] || [inContact isStranger]) {
 		[gaimThread getInfoFor:[inContact UID] onAccount:self];
 //    }
 }
@@ -511,7 +511,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator	*enumerator = [objects objectEnumerator];
 	AIListContact	*object;
 	
-	while((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		NSString	*groupName = [self _mapOutgoingGroupName:[object remoteGroupName]];
 
 		//Have the gaim thread perform the serverside actions
@@ -528,7 +528,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*object;
 	NSString		*groupName = [self _mapOutgoingGroupName:[inGroup UID]];
 	
-	while((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		[gaimThread addUID:[self _UIDForAddingObject:object] onAccount:self toGroup:groupName];
 		
 		//Add it to Adium's list
@@ -549,11 +549,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//Move the objects to it
 	enumerator = [objects objectEnumerator];
-	while((listObject = [enumerator nextObject])){
-		if([listObject isKindOfClass:[AIListGroup class]]){
+	while ((listObject = [enumerator nextObject])) {
+		if ([listObject isKindOfClass:[AIListGroup class]]) {
 			//Since no protocol here supports nesting, a group move is really a re-name
 			
-		}else{
+		} else {
 			//			NSString	*oldGroupName = [self _mapOutgoingGroupName:[listObject remoteGroupName]];
 			
 			//Tell the gaim thread to perform the serverside operation
@@ -576,7 +576,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator	*enumerator = [[[adium contactController] allContactsInGroup:inGroup subgroups:YES onAccount:self] objectEnumerator];
 	AIListContact	*contact;
 	
-	while((contact = [enumerator nextObject])){
+	while ((contact = [enumerator nextObject])) {
 		//Evan: should we use groupName or newName here?
 		[contact setRemoteGroupName:newName];
 	}
@@ -613,7 +613,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*listContact;
 	
 	//Obtain the contact's information if it's a stranger
-	if ((listContact = [chat listObject]) && ([listContact isStranger])){
+	if ((listContact = [chat listObject]) && ([listContact isStranger])) {
 		[self delayedUpdateContactStatus:listContact];
 	}
 #endif
@@ -691,21 +691,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	AIChatUpdateType	updateType = [type intValue];
 	NSString			*key = nil;
-	switch (updateType){
+	switch (updateType) {
 		case AIChatTimedOut:
-			if ([self displayConversationTimedOut]){
+			if ([self displayConversationTimedOut]) {
 				key = KEY_CHAT_TIMED_OUT;
 			}
 			break;
 			
 		case AIChatClosedWindow:
-			if ([self displayConversationClosed]){
+			if ([self displayConversationClosed]) {
 				key = KEY_CHAT_CLOSED_WINDOW;
 			}
 			break;
 	}
 	
-	if (key){
+	if (key) {
 		[chat setStatusObject:[NSNumber numberWithBool:YES] forKey:key notify:NotifyNow];
 		[chat setStatusObject:nil forKey:key notify:NotifyNever];
 		
@@ -734,7 +734,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
-    }else{
+    } else {
 		
 		//Clear the typing flag of the chat since a message was just received
 		[self setTypingFlagOfChat:chat to:nil];
@@ -756,30 +756,30 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	attributedMessage = [messageDict objectForKey:@"AttributedMessage"];
 	date = [messageDict objectForKey:@"Date"];
 	
-	if ((flags & GAIM_MESSAGE_SEND) != 0){
+	if ((flags & GAIM_MESSAGE_SEND) != 0) {
         //Gaim is telling us that our message was sent successfully.		
 
 		//We can now tell the other side that we're done typing
 		//[gaimThread sendTyping:AINotTyping inChat:chat];
 		
-	}else{
+	} else {
 		NSString			*source = [messageDict objectForKey:@"Source"];
 
 		//We display the message locally when it is sent.  If the protocol sends the message back to us, we should
 		//simply ignore it (MSN does this when a display name is set, for example).
-		if (![source isEqualToString:[self UID]]){
+		if (![source isEqualToString:[self UID]]) {
 			AIListContact	*listContact;
 			
 			//source may be (null) for system messages like topic changes
 			listContact = (source ? [self contactWithUID:source] : nil);
 
-			if(listContact){
+			if (listContact) {
 				[self _receivedMessage:attributedMessage
 								inChat:chat 
 					   fromListContact:listContact
 								 flags:flags
 								  date:date];
-			}else{
+			} else {
 				//If we didn't get a listContact, this is a gaim status message... display it as such.
 				[[adium contentController] displayStatusMessage:[attributedMessage string]
 														ofType:@"gaim"
@@ -811,7 +811,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     BOOL            sent = NO;
 	
 	if (gaim_account_is_connected(account)) {
-		if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+		if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 			AIContentMessage	*contentMessage = (AIContentMessage*)object;
 			AIChat				*chat = [contentMessage chat];
 			NSAttributedString  *message = [contentMessage message];
@@ -828,13 +828,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				NSRange		endlineRange;
 				NSRange		returnRange;
 				
-				while(((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
-					  ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound){
+				while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
+					  ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound) {
 					
 					//Use whichever endline character is found first
 					NSRange	operativeRange = ((endlineRange.location < returnRange.location) ? endlineRange : returnRange);
 					
-					if (operativeRange.location > 0){
+					if (operativeRange.location > 0) {
 						NSAttributedString  *thisPart;
 						NSString			*thisPartString;
 						
@@ -844,11 +844,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						encodedMessage = [self encodedAttributedString:thisPart
 														 forListObject:listObject
 														contentMessage:contentMessage];
-						if (encodedMessage){
+						if (encodedMessage) {
 							//Check for the AdiumFT tag indicating an embedded file transfer.
 							//Only deal with scanning deeper if it's found.
 							if ([encodedMessage rangeOfString:@"<AdiumFT "
-													  options:NSCaseInsensitiveSearch].location != NSNotFound){
+													  options:NSCaseInsensitiveSearch].location != NSNotFound) {
 								encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																		   toContact:listObject
 																	  contentMessage:contentMessage];
@@ -867,17 +867,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				
 			}
 			
-			if ([message length]){
+			if ([message length]) {
 				encodedMessage = [self encodedAttributedString:message
 												 forListObject:listObject
 												contentMessage:contentMessage];
-				if (encodedMessage){
+				if (encodedMessage) {
 					NSString	*messageString;
 					
 					//Check for the AdiumFT tag indicating an embedded file transfer.
 					//Only deal with scanning deeper if it's found.
 					if ([encodedMessage rangeOfString:@"<AdiumFT "
-											  options:NSCaseInsensitiveSearch].location != NSNotFound){
+											  options:NSCaseInsensitiveSearch].location != NSNotFound) {
 						encodedMessage = [self _handleFileSendsWithinMessage:encodedMessage
 																   toContact:listObject
 															  contentMessage:contentMessage];
@@ -892,7 +892,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 												withFlags:flags];
 				}
 			}
-		} else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]){
+		} else if ([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
 			AIContentTyping *contentTyping = (AIContentTyping*)object;
 			AIChat *chat = [contentTyping chat];
 			
@@ -911,18 +911,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
     BOOL	weAreOnline = [self online];
 	
-    if([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
-        if((weAreOnline && (inContact == nil || [inContact online])) ||
-		   ([self integerStatusObjectForKey:@"Connecting"])){ 
+    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
+        if ((weAreOnline && (inContact == nil || [inContact online])) ||
+		   ([self integerStatusObjectForKey:@"Connecting"])) { 
 			return(YES);
         }
-    }else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])){
-		if(weAreOnline){
-			if(inContact){
-				if([inContact online]){
+    } else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
+		if (weAreOnline) {
+			if (inContact) {
+				if ([inContact online]) {
 					return([self allowFileTransferWithListObject:inContact]);
 				}
-			}else{
+			} else {
 				return(YES);
 			}
        }	
@@ -938,7 +938,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (NSString *)_handleFileSendsWithinMessage:(NSString *)inString toContact:(AIListContact *)listContact contentMessage:(AIContentMessage *)contentMessage
 {
-	if (listContact){
+	if (listContact) {
 		NSScanner			*scanner;
 		NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
 		NSString			*chunkString;
@@ -955,21 +955,21 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		processedString = [[NSMutableString alloc] init];
 		
 		//Parse the HTML
-		while(![scanner isAtEnd]){
+		while (![scanner isAtEnd]) {
 			//Find an HTML IMG tag
-			if([scanner scanUpToString:@"<AdiumFT" intoString:&chunkString]){
+			if ([scanner scanUpToString:@"<AdiumFT" intoString:&chunkString]) {
 				[processedString appendString:chunkString];
 			}
 			
 			//Process the tag
-			if([scanner scanCharactersFromSet:tagCharStart intoString:nil]){ //If a tag wasn't found, we don't process.
+			if ([scanner scanCharactersFromSet:tagCharStart intoString:nil]) { //If a tag wasn't found, we don't process.
 																			 //            unsigned scanLocation = [scanner scanLocation]; //Remember our location (if this is an invalid tag we'll need to move back)
 				
 				//Get the tag itself
-				if([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]){
+				if ([scanner scanUpToCharactersFromSet:tagEnd intoString:&chunkString]) {
 					
-					if([chunkString caseInsensitiveCompare:@"AdiumFT"] == 0){
-						if([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]){
+					if ([chunkString caseInsensitiveCompare:@"AdiumFT"] == 0) {
+						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
 							
 							//Extract the file we wish to send
 							NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
@@ -980,7 +980,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						}
 					}
 					
-					if (![scanner isAtEnd]){
+					if (![scanner isAtEnd]) {
 						[scanner setScanLocation:[scanner scanLocation]+1];
 					}
 				}
@@ -994,7 +994,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		return ([self encodedAttributedString:[AIHTMLDecoder decodeHTML:processedString]
 								forListObject:listContact
 							   contentMessage:contentMessage]);
-	}else{
+	} else {
 		GaimDebug(@"Sending a file to a chat.  Are you insane?");
 		return (inString);
 	}
@@ -1003,7 +1003,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 // **XXX** Not used at present. Do we want to?
 - (BOOL)shouldSendAutoresponsesWhileAway
 {
-	if (account && account->gc){
+	if (account && account->gc) {
 		return (account->gc->flags & GAIM_CONNECTION_AUTO_RESP);
 	}
 	
@@ -1023,9 +1023,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact *listContact;
 
 	if ((chat) &&
-		(listContact = [self contactWithUID:contactName])){
+		(listContact = [self contactWithUID:contactName])) {
 
-		if (!namesAreCaseSensitive){
+		if (!namesAreCaseSensitive) {
 			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 		}
 
@@ -1037,7 +1037,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
-	while((contactName = [enumerator nextObject])){
+	while ((contactName = [enumerator nextObject])) {
 		[self addUser:contactName toChat:chat];
 	}
 }
@@ -1047,7 +1047,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIListContact	*contact;
 
 	if ((chat) && 
-		(contact = [self contactWithUID:contactName])){
+		(contact = [self contactWithUID:contactName])) {
 		
 		[chat removeParticipatingListObject:contact];
 		
@@ -1059,7 +1059,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
-	while((contactName = [enumerator nextObject])){
+	while ((contactName = [enumerator nextObject])) {
 		[self removeUser:contactName fromChat:chat];
 	}
 }
@@ -1096,7 +1096,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSEnumerator *enumerator = [listObjectArray objectEnumerator];
 	AIListObject *object = nil;
 	
-	while((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		[idArray addObject:[object UID]];
 	}
 	
@@ -1116,7 +1116,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
-	if ([sourceUID length]){
+	if ([sourceUID length]) {
 		//Get our contact
 		AIListContact   *contact = [self contactWithUID:sourceUID];
 		
@@ -1137,8 +1137,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID
 {
 	//Can't really trust sourceUID to not be @"" or something silly like that
-	if ([sourceUID length]){
-		if (!namesAreCaseSensitive){
+	if ([sourceUID length]) {
+		if (!namesAreCaseSensitive) {
 			sourceUID = [sourceUID compactedString];
 		}
 		
@@ -1147,7 +1147,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 																				 account:self
 																					 UID:sourceUID];
 		
-		if (contact){
+		if (contact) {
 			[(type == PRIVACY_PERMIT ? permittedContactsArray : deniedContactsArray) removeObject:contact];
 		}
 	}
@@ -1155,10 +1155,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)setPrivacyOptions:(PRIVACY_OPTION)option
 {
-	if(account){
+	if (account) {
 		GaimPrivacyType privacyType;
 
-		switch(option){
+		switch (option) {
 			case PRIVACY_ALLOW_ALL:
 			default:
 				privacyType = GAIM_PRIVACY_ALLOW_ALL;
@@ -1186,10 +1186,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	PRIVACY_OPTION privacyOption = -1;
 	
-	if(account){
+	if (account) {
 		GaimPrivacyType privacyType = account->perm_deny;
 		
-		switch(privacyType){
+		switch (privacyType) {
 			case GAIM_PRIVACY_ALLOW_ALL:
 			default:
 				privacyOption = PRIVACY_ALLOW_ALL;
@@ -1222,7 +1222,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	GaimXfer *xfer = [self newOutgoingXferForFileTransfer:fileTransfer];
 	
-	if (xfer){
+	if (xfer) {
 		//Associate the fileTransfer and the xfer with each other
 		[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
 		xfer->ui_data = [fileTransfer retain];
@@ -1422,13 +1422,13 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 	//Host (server)
 	hostName = [self host];
-	if (hostName && [hostName length]){
+	if (hostName && [hostName length]) {
 		gaim_account_set_string(account, "server", [hostName UTF8String]);
 	}
 	
 	//Port
 	portNumber = [self port];
-	if (portNumber){
+	if (portNumber) {
 		gaim_account_set_int(account, "port", portNumber);
 	}
 	
@@ -1472,35 +1472,35 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	proxyType = (proxyPref ? [proxyPref intValue] : Adium_Proxy_Default_SOCKS5);
 	
-	if(!proxyEnabled){
+	if (!proxyEnabled) {
 		//No proxy
 		gaim_proxy_info_set_type(proxy_info, GAIM_PROXY_NONE);
 		GaimDebug(@"Adium: Connect: %@ Connecting with no proxy.",[self UID]);
 		[invocation invoke];
 		
-	}else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
+	} else if ((proxyType == Adium_Proxy_Default_SOCKS5) || 
 			  (proxyType == Adium_Proxy_Default_HTTP) || 
 			  (proxyType == Adium_Proxy_Default_SOCKS4)) {
 		//Load and use systemwide proxy settings
 		NSDictionary *systemProxySettingsDictionary;
 		ProxyType adiumProxyType = Proxy_None;
 		
-		if (proxyType == Adium_Proxy_Default_SOCKS5){
+		if (proxyType == Adium_Proxy_Default_SOCKS5) {
 			gaimAccountProxyType = GAIM_PROXY_SOCKS5;
 			adiumProxyType = Proxy_SOCKS5;
 			
-		}else if (proxyType == Adium_Proxy_Default_HTTP){
+		} else if (proxyType == Adium_Proxy_Default_HTTP) {
 			gaimAccountProxyType = GAIM_PROXY_HTTP;
 			adiumProxyType = Proxy_HTTP;
 			
-		}else if (proxyType == Adium_Proxy_Default_SOCKS4){
+		} else if (proxyType == Adium_Proxy_Default_SOCKS4) {
 				gaimAccountProxyType = GAIM_PROXY_SOCKS4;
 				adiumProxyType = Proxy_SOCKS4;
 		}
 		
 		GaimDebug(@"Loading proxy dictionary.");
 		
-		if((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
+		if ((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
 
 			GaimDebug(@"Retrieved %@",systemProxySettingsDictionary);
 
@@ -1510,7 +1510,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			proxyUserName = [systemProxySettingsDictionary objectForKey:@"Username"];
 			proxyPassword = [systemProxySettingsDictionary objectForKey:@"Password"];
 			
-		}else{
+		} else {
 			//Using system wide defaults, and no proxy of the specified type is set in the system preferences
 			gaimAccountProxyType = GAIM_PROXY_NONE;
 		}
@@ -1520,9 +1520,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		gaim_proxy_info_set_host(proxy_info, (char *)[host UTF8String]);
 		gaim_proxy_info_set_port(proxy_info, port);
 		
-		if (proxyUserName && [proxyUserName length]){
+		if (proxyUserName && [proxyUserName length]) {
 			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
-			if (proxyPassword && [proxyPassword length]){
+			if (proxyPassword && [proxyPassword length]) {
 				gaim_proxy_info_set_password(proxy_info, (char *)[proxyPassword UTF8String]);
 			}
 		}
@@ -1531,11 +1531,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		[invocation invoke];
 
-	}else{
+	} else {
 		host = [self preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS];
 		port = [[self preferenceForKey:KEY_ACCOUNT_PROXY_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 		
-		switch (proxyType){
+		switch (proxyType) {
 			case Adium_Proxy_HTTP:
 				gaimAccountProxyType = GAIM_PROXY_HTTP;
 				break;
@@ -1556,7 +1556,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//If we need to authenticate, request the password and finish setting up the proxy in gotProxyServerPassword:context:
 		proxyUserName = [self preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS];
-		if (proxyUserName && [proxyUserName length]){
+		if (proxyUserName && [proxyUserName length]) {
 			gaim_proxy_info_set_username(proxy_info, (char *)[proxyUserName UTF8String]);
 			
 			[[adium accountController] passwordForProxyServer:host 
@@ -1564,7 +1564,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 											  notifyingTarget:self 
 													 selector:@selector(gotProxyServerPassword:context:)
 													  context:invocation];
-		}else{
+		} else {
 			
 			GaimDebug(@"Adium proxy settings: %i %s:%i",proxy_info->type,proxy_info->host,proxy_info->port);
 			[invocation invoke];
@@ -1577,14 +1577,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	GaimProxyInfo		*proxy_info = gaim_account_get_proxy_info(account);
 	
-	if (inPassword){
+	if (inPassword) {
 		gaim_proxy_info_set_password(proxy_info, (char *)[inPassword UTF8String]);
 		
 		GaimDebug(@"GotPassword: Proxy settings: %i %s:%i %s",proxy_info->type,proxy_info->host,proxy_info->port,proxy_info->username);
 
 		[invocation invoke];
 
-	}else{
+	} else {
 		gaim_proxy_info_set_username(proxy_info, NULL);
 		
 		//We are no longer connecting
@@ -1637,7 +1637,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 
 - (void)finishCreateNewGaimAccount
 {
-	if (!gaimThread){
+	if (!gaimThread) {
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];	
 	}	
 	
@@ -1651,7 +1651,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)disconnect
 {
-	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]){
+	if ([self online] || [self integerStatusObjectForKey:@"Connecting"]) {
 		//As per AIAccount's documentation, call super's implementation
 		[super disconnect];
 
@@ -1707,14 +1707,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	//If we were disconnected unexpectedly, attempt a reconnect. Give subclasses a chance to handle the disconnection error.
 	//connectionIsSuicidal == TRUE when Gaim thinks we shouldn't attempt a reconnect.
-	if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/){
+	if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]/* && lastDisconnectionError*/) {
 		if (reconnectAttemptsRemaining && 
 			[self shouldAttemptReconnectAfterDisconnectionError:&lastDisconnectionError] && !(connectionIsSuicidal)) {
 			
 			[self autoReconnectAfterDelay:AUTO_RECONNECT_DELAY];
 			reconnectAttemptsRemaining--;
-		}else{
-			if (lastDisconnectionError){
+		} else {
+			if (lastDisconnectionError) {
 				//Display then clear the last disconnection error
 				[self displayError:lastDisconnectionError];
 				[lastDisconnectionError release]; lastDisconnectionError = nil;
@@ -1744,7 +1744,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)performRegisterWithPassword:(NSString *)inPassword
 {
 	//Save the new password
-	if(password != inPassword){
+	if (password != inPassword) {
 		[password release]; password = [inPassword retain];
 	}
 	
@@ -1784,7 +1784,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"Offline",
@@ -1807,24 +1807,24 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	[super updateStatusForKey:key];
 	
     //Now look at keys which only make sense if we have an account
-	if(account){
+	if (account) {
 		GaimDebug(@"%@: Updating status for key: %@",self, key);
 
-		if([key isEqualToString:@"IdleSince"]){
+		if ([key isEqualToString:@"IdleSince"]) {
 			NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			[self setAccountIdleSinceTo:idleSince];
 							
-		}else if([key isEqualToString:@"TextProfile"]){
+		} else if ([key isEqualToString:@"TextProfile"]) {
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(setAccountProfileTo:)];
 			
-		}else if([key isEqualToString:KEY_USER_ICON]){
+		} else if ([key isEqualToString:KEY_USER_ICON]) {
 			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];			
 
 			[self setAccountUserImageData:data];
 
-		}else if([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]){
+		} else if ([key isEqualToString:KEY_ACCOUNT_CHECK_MAIL]) {
 			//Update the mail checking setting if the account is already made (if it isn't, we'll set it when it is made)
-			if(account){
+			if (account) {
 				[gaimThread setCheckMail:[self shouldCheckMail]
 							  forAccount:self];
 			}
@@ -1844,7 +1844,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
  */
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
-	if([self online]){
+	if ([self online]) {
 		char				*gaimStatusType;
 		NSString			*encodedStatusMessage;
 		
@@ -1884,7 +1884,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	
 	/* CBGaimAccount just handles available and away in the most simple way possible; 
 	 * we don't even care what the statusName is. */
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 			gaimStatusType = "Available";
 			break;
@@ -1892,7 +1892,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		case AIInvisibleStatusType: /* Invisible defaults to just being an away status */
 			gaimStatusType = GAIM_AWAY_CUSTOM;
 			//If we make it here, and we don't have a status message, generate one from the status controller's description.
-			if((*statusMessage == nil) || ([*statusMessage length] == 0)){
+			if ((*statusMessage == nil) || ([*statusMessage length] == 0)) {
 				*statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 			}
 			break;		
@@ -1942,11 +1942,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Set our profile immediately on the gaimThread
 - (void)setAccountProfileTo:(NSAttributedString *)profile
 {
-	if(!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]){
+	if (!profile || ![[profile string] isEqualToString:[[self statusObjectForKey:@"TextProfile"] string]]) {
 		NSString 	*profileHTML = nil;
 		
 		//Convert the profile to HTML, and pass it to libgaim
-		if(profile){
+		if (profile) {
 			profileHTML = [self encodedAttributedString:profile forListObject:nil];
 		}
 		
@@ -1974,11 +1974,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		
 		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
 		//image to one, and then pass libgaim the path.
-		if(image){
+		if (image) {
 			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
 			GaimDebug(@"Original image of size %f %f",[image size].width,[image size].height);
 			
-			if (prpl_info && (prpl_info->icon_spec.format)){
+			if (prpl_info && (prpl_info->icon_spec.format)) {
 				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
 				int						i;
 				
@@ -1998,14 +1998,14 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
-				if (prplScales && (!bigEnough || !smallEnough)){
+				if (prplScales && (!bigEnough || !smallEnough)) {
 					//Determine the scaled size
-					if(!smallEnough){
+					if (!smallEnough) {
 						//If it's too big, scale to the largest permissable size
 						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.max_width,
 																	   prpl_info->icon_spec.max_height)];
 						
-					}else /*if(!bigEnough)*/{
+					} else /*if (!bigEnough)*/{
 						//If it's not big enough, scale to the smallest permissable size
 						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.min_width,
 																	   prpl_info->icon_spec.min_height)];
@@ -2019,30 +2019,30 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				
 				//Look for gif first if the image is animated
 				NSImageRep	*imageRep = [image bestRepresentationForDevice:nil] ;
-				if([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
-				   [[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1){
+				if ([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
+				   [[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1) {
 					
 					for (i = 0; prpl_formats[i]; i++) {
-						if (strcmp(prpl_formats[i],"gif") == 0){
+						if (strcmp(prpl_formats[i],"gif") == 0) {
 							/* Try to use our original data.  If we had to scale, originalData will have been set
 							 * to nil and we'll continue below to convert the image. */
 							GaimDebug(@"l33t script kiddie animated GIF!!111");
 
 							buddyIconData = originalData;
-							if(buddyIconData)
+							if (buddyIconData)
 								break;
 						}
 					}
 				}
 				
-				if(!buddyIconData){
+				if (!buddyIconData) {
 					for (i = 0; prpl_formats[i]; i++) {
-						if (strcmp(prpl_formats[i],"png") == 0){
+						if (strcmp(prpl_formats[i],"png") == 0) {
 							buddyIconData = [image PNGRepresentation];
 							if (buddyIconData)
 								break;
 							
-						}else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)){
+						} else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
 							/* OS X 10.4's JPEG representation does much better than 10.3's.  Unfortunately, that also
 							 * means larger file sizes... which for our only JPEG-based protocol, AIM, means the buddy
 							 * icon doesn't get sent.  AIM max is 8 kilobytes; 10.4 produces 12 kb images.  0.90 is
@@ -2056,17 +2056,17 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 							if (buddyIconData)
 								break;
 							
-						}else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)){
+						} else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)) {
 							buddyIconData = [image TIFFRepresentation];
 							if (buddyIconData)
 								break;
 							
-						}else if (strcmp(prpl_formats[i],"gif") == 0){
+						} else if (strcmp(prpl_formats[i],"gif") == 0) {
 							buddyIconData = [image GIFRepresentation];
-							if(buddyIconData)
+							if (buddyIconData)
 								break;
 
-						}else if (strcmp(prpl_formats[i],"bmp") == 0){
+						} else if (strcmp(prpl_formats[i],"bmp") == 0) {
 							buddyIconData = [image BMPRepresentation];
 							if (buddyIconData)
 								break;
@@ -2075,10 +2075,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					}
 				}
 				
-				if([buddyIconData writeToFile:buddyIconFilename atomically:YES]){
+				if ([buddyIconData writeToFile:buddyIconFilename atomically:YES]) {
 					[gaimThread setBuddyIcon:buddyIconFilename onAccount:self];
 					
-				}else{
+				} else {
 					GaimDebug(@"Error writing file %@",buddyIconFilename);   
 				}
 				
@@ -2105,7 +2105,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
 {
 	NSMutableArray			*menuItemArray = nil;
-	if (account && gaim_account_is_connected(account)){
+	if (account && gaim_account_is_connected(account)) {
 		GaimPluginProtocolInfo	*prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(account->gc->prpl);
 		GList					*l, *ll;
 		
@@ -2114,18 +2114,18 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 		//Find the GaimBuddy
 		buddy = gaim_find_buddy(account, gaim_normalize(account, [[inContact UID] UTF8String]));
 		
-		if(prpl_info && prpl_info->blist_node_menu && buddy){
+		if (prpl_info && prpl_info->blist_node_menu && buddy) {
 			
 			//Add a NSMenuItem for each node action specified by the prpl
-			for(l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
+			for (l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
 				GaimBlistNodeAction *act = (GaimBlistNodeAction *) l->data;
 				NSDictionary		*dict;
 				NSMenuItem			*menuItem;
 				NSString			*title;
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
-				if(title = [self titleForContactMenuLabel:act->label
-											   forContact:inContact]){ 
+				if (title = [self titleForContactMenuLabel:act->label
+											   forContact:inContact]) { 
 					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																					 target:self
 																					 action:@selector(performContactMenuAction:)
@@ -2138,7 +2138,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
 						nil];
 					
-					if(!menuItemArray) menuItemArray = [NSMutableArray array];
+					if (!menuItemArray) menuItemArray = [NSMutableArray array];
 
 					[menuItem setRepresentedObject:dict];
 					[menuItemArray addObject:menuItem];
@@ -2176,10 +2176,10 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	NSMutableArray			*menuItemArray = nil;
 	
-	if (account && gaim_account_is_connected(account)){
+	if (account && gaim_account_is_connected(account)) {
 		GaimPlugin *plugin = account->gc->prpl;
 		
-		if(GAIM_PLUGIN_HAS_ACTIONS(plugin)){
+		if (GAIM_PLUGIN_HAS_ACTIONS(plugin)) {
 			GList	*l, *ll;
 			
 			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
@@ -2187,7 +2187,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			
 			for (l = ll = GAIM_PLUGIN_ACTIONS(plugin, account->gc); l; l = l->next) {
 				
-				if(l->data){
+				if (l->data) {
 					GaimPluginAction	*action;
 					NSDictionary		*dict;
 					NSMenuItem			*menuItem;
@@ -2198,7 +2198,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					action->context = account->gc;
 					
 					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
-					if(title = [self titleForAccountActionMenuLabel:action->label]){ 
+					if (title = [self titleForAccountActionMenuLabel:action->label]) { 
 						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
@@ -2211,16 +2211,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 						
 						[menuItem setRepresentedObject:dict];
 						
-						if(!menuItemArray) menuItemArray = [NSMutableArray array];
+						if (!menuItemArray) menuItemArray = [NSMutableArray array];
 						
 						[menuItemArray addObject:menuItem];
 						addedAnAction = YES;
-					}else{
+					} else {
 						g_free(action);
 					}
 					
-				}else{
-					if(addedAnAction){
+				} else {
+					if (addedAnAction) {
 						[menuItemArray addObject:[NSMenuItem separatorItem]];
 						addedAnAction = NO;
 					}
@@ -2245,7 +2245,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)){
+	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
 		/* XXX This depends upon an implementation of adiumGaimRequestFields in adiumGaimRequest.m.
 		* Enable once that is done. */
 		return(nil);
@@ -2285,11 +2285,11 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	NSDictionary	*defaults = [NSDictionary dictionaryNamed:[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]
 													 forClass:[self class]];
 	
-	if(defaults){
+	if (defaults) {
 		[[adium preferenceController] registerDefaults:defaults
 											  forGroup:GROUP_ACCOUNT_STATUS
 												object:self];
-	}else{
+	} else {
 		GaimDebug(@"Failed to load defaults for %@",[NSString stringWithFormat:@"GaimDefaults%@",[[self service] serviceID]]);
 	}
 	
@@ -2313,7 +2313,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (void)didChangeUID
 {
 	//Only need to take action if we have a created GaimAccount already
-	if(account != NULL){
+	if (account != NULL) {
 		//Remove our current account
 		[gaimThread removeAdiumAccount:self];
 		
@@ -2360,27 +2360,27 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 {
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 
-	if([group isEqualToString:PREF_GROUP_ALIASES]){
+	if ([group isEqualToString:PREF_GROUP_ALIASES]) {
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if ((account != nil) && 
 			([self shouldSetAliasesServerside]) &&
-			([key isEqualToString:@"Alias"])){
+			([key isEqualToString:@"Alias"])) {
 
 			NSString *alias = [object preferenceForKey:@"Alias"
 												 group:PREF_GROUP_ALIASES 
 								 ignoreInheritedValues:YES];
 
-			if([object isKindOfClass:[AIMetaContact class]]){
+			if ([object isKindOfClass:[AIMetaContact class]]) {
 				NSEnumerator	*enumerator = [[(AIMetaContact *)object containedObjects] objectEnumerator];
 				AIListContact	*containedListContact;
-				while((containedListContact = [enumerator nextObject])){
-					if([containedListContact account] == self){
+				while ((containedListContact = [enumerator nextObject])) {
+					if ([containedListContact account] == self) {
 						[gaimThread setAlias:alias forUID:[containedListContact UID] onAccount:self];
 					}
 				}
 				
-			}else if([object isKindOfClass:[AIListContact class]]){
-				if([(AIListContact *)object account] == self){
+			} else if ([object isKindOfClass:[AIListContact class]]) {
+				if ([(AIListContact *)object account] == self) {
 					[gaimThread setAlias:alias forUID:[object UID] onAccount:self];
 				}
 			}
@@ -2398,7 +2398,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
     AITypingState currentTypingState = [chat integerStatusObjectForKey:KEY_TYPING];
 	AITypingState newTypingState = [typingStateNumber intValue];
 
-    if(currentTypingState != newTypingState){
+    if (currentTypingState != newTypingState) {
 		[chat setStatusObject:(newTypingState ? typingStateNumber : nil)
 					   forKey:KEY_TYPING
 					   notify:NotifyNow];

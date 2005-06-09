@@ -68,26 +68,26 @@
 
 	//Attempt to find a saved destination object; if none is found, use the one we were passed
 	destUniqueID = [inDetails objectForKey:KEY_MESSAGE_SEND_TO];
-	if(destUniqueID) destObject = [[adium contactController] existingListObjectWithUniqueID:destUniqueID];
-	if(!destObject) destObject = inObject;
+	if (destUniqueID) destObject = [[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	if (!destObject) destObject = inObject;
 		
 	//Configure the destination menu
 	[popUp_messageTo setMenu:[[adium contactController] menuOfAllContactsInContainingObject:nil withTarget:self]];
 	
-	if (destObject && [destObject isKindOfClass:[AIListContact class]]){
+	if (destObject && [destObject isKindOfClass:[AIListContact class]]) {
 		[self setDestinationContact:(AIListContact *)destObject];
-	}else{
+	} else {
 		[self setDestinationContact:nil];
 	}
 	
 	//Configure the remaining controls
-	if((sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]])){
+	if ((sourceAccount = [[adium accountController] accountWithInternalObjectID:[inDetails objectForKey:KEY_MESSAGE_SEND_FROM]])) {
 		[popUp_messageFrom selectItemWithRepresentedObject:sourceAccount];
 	}
 	
-	if((messageText = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]])){
+	if ((messageText = [NSAttributedString stringWithData:[inDetails objectForKey:KEY_MESSAGE_SEND_MESSAGE]])) {
 		[[textView_message textStorage] setAttributedString:messageText];
-	}else{
+	} else {
 		[textView_message setString:@""];
 	}
 
@@ -111,7 +111,7 @@
 	AIListObject *listObject;
 
 	if ((listObject = [sender representedObject]) &&
-		[listObject isKindOfClass:[AIListContact class]]){
+		[listObject isKindOfClass:[AIListContact class]]) {
 		[self setDestinationContact:(AIListContact *)listObject];
 		
 		[self detailsForHeaderChanged];
@@ -121,7 +121,7 @@
 //Set our destination contact
 - (void)setDestinationContact:(AIListContact *)inContact
 {
-	if(inContact != toContact){
+	if (inContact != toContact) {
 		NSMenuItem	*firstMenuItem;
 		AIAccount	*preferredAccount;
 		
@@ -146,7 +146,7 @@
 		//Select preferred account
 		preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																							   toContact:toContact];
-		if(preferredAccount) [popUp_messageFrom selectItemWithRepresentedObject:preferredAccount];
+		if (preferredAccount) [popUp_messageFrom selectItemWithRepresentedObject:preferredAccount];
 
 	}
 }

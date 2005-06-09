@@ -155,13 +155,13 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(menuItem == menuItem_delete){
+	if (menuItem == menuItem_delete) {
 		return([[adium contactController] selectedListObjectInContactList] != nil);
 		
-	}else if(menuItem == menuItem_tabAddContact){
+	} else if (menuItem == menuItem_tabAddContact) {
 		return([[adium menuController] currentContextMenuObject] != nil);
 	
-	}else if(menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext){
+	} else if (menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext) {
 		return([[adium accountController] anOnlineAccountCanEditContacts]);
 		
 	}
@@ -204,7 +204,7 @@
 - (void)promptForNewContactOnWindow:(NSWindow *)inWindow selectedListObject:(AIListObject *)inListObject
 {
 	//We only autofill if the selected list object is a contact and a stranger
-	if(![inListObject isKindOfClass:[AIListContact class]] || ![(AIListContact *)inListObject isStranger]){
+	if (![inListObject isKindOfClass:[AIListContact class]] || ![(AIListContact *)inListObject isStranger]) {
 		inListObject = nil;
 	}
 	
@@ -222,7 +222,7 @@
 - (void)addContactRequest:(NSNotification *)notification
 {
 	NSDictionary *userInfo = [notification userInfo];
-	if (userInfo){
+	if (userInfo) {
 		[AINewContactWindowController promptForNewContactOnWindow:nil
 															 name:[userInfo objectForKey:@"UID"]
 														  service:[userInfo objectForKey:@"service"]];
@@ -257,7 +257,7 @@
 - (IBAction)deleteSelectionFromTab:(id)sender
 {
 	AIListObject   *currentContextMenuObject;
-	if((currentContextMenuObject = [[adium menuController] currentContextMenuObject])){
+	if ((currentContextMenuObject = [[adium menuController] currentContextMenuObject])) {
 		[self deleteFromArray:[NSArray arrayWithObject:currentContextMenuObject]];
 	}
 }
@@ -271,7 +271,7 @@
  */
 - (void)deleteFromArray:(NSArray *)array
 {
-	if(array){
+	if (array) {
 		int count = [array count];
 		
 		NSString	*name = ((count == 1) ?
@@ -288,7 +288,7 @@
 									 AILocalizedString(@"Cancel",nil),
 									 nil);
 
-		if(result == NSAlertDefaultReturn){
+		if (result == NSAlertDefaultReturn) {
 			[[adium contactController] removeListObjects:array];
 		}
 	}	

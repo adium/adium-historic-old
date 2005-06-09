@@ -48,7 +48,7 @@
 //init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		borderColor = nil;
 		bubbleColor = nil;
@@ -120,15 +120,15 @@
 //Set the frame, border, and divider colors
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor borderColor:(NSColor *)inBorderColor dividerColor:(NSColor *)inDividerColor
 {
-    if(borderColorOpaque != inBorderColor){
+    if (borderColorOpaque != inBorderColor) {
         [borderColorOpaque release];
         borderColorOpaque = [inBorderColor retain];
     }
-    if(bubbleColorOpaque != inBubbleColor){
+    if (bubbleColorOpaque != inBubbleColor) {
         [bubbleColorOpaque release];
         bubbleColorOpaque = [inBubbleColor retain];
     }
-    if(dividerColorOpaque != inDividerColor){
+    if (dividerColorOpaque != inDividerColor) {
         [dividerColorOpaque release];
         dividerColorOpaque = [inDividerColor retain];
     }
@@ -137,7 +137,7 @@
 
 - (void)setFrameBackgroundColor:(NSColor *)inBubbleColor
 {
-	if(bubbleColorOpaque != inBubbleColor){
+	if (bubbleColorOpaque != inBubbleColor) {
         [bubbleColorOpaque release];
         bubbleColorOpaque = [inBubbleColor retain];
 		
@@ -177,9 +177,9 @@
     inWidth -= (framePadLeft + framePadRight);
     int newHeight = [super sizeContentForWidth:inWidth] + (framePadTop + framePadBottom);
 
-    if(drawBottom) newHeight++; //Give ourselves another pixel for the bottom border
+    if (drawBottom) newHeight++; //Give ourselves another pixel for the bottom border
     
-    if(drawBottom && drawTop && newHeight < (FRAME_RADIUS * 2)){
+    if (drawBottom && drawTop && newHeight < (FRAME_RADIUS * 2)) {
         newHeight = (FRAME_RADIUS * 2);
     }
     
@@ -252,33 +252,33 @@
     [aliasShift translateXBy:ALIAS_SHIFT_X yBy:ALIAS_SHIFT_Y];
 
     //Draw the top (bubble separation) divider
-    if(drawTopDivider){
+    if (drawTopDivider) {
         [self _drawBubbleDividerInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, DIVIDER_FLAT_HEIGHT)];
         cellFrame.origin.y += DIVIDER_FLAT_HEIGHT;
         cellFrame.size.height -= DIVIDER_FLAT_HEIGHT;
     }
     
     //Draw the bubble top and bottom
-    if(drawSides){
-        if(drawTop){
+    if (drawSides) {
+        if (drawTop) {
             [self _drawBubbleTopInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, FRAME_RADIUS)];
             cellFrame.origin.y += FRAME_RADIUS;
             cellFrame.size.height -= FRAME_RADIUS;
         }
         
-        if(drawBottom){
+        if (drawBottom) {
             [self _drawBubbleBottomInRect:NSMakeRect(cellFrame.origin.x, (cellFrame.origin.y + cellFrame.size.height) - FRAME_RADIUS - 1, cellFrame.size.width, FRAME_RADIUS)];
             cellFrame.size.height -= FRAME_RADIUS;
         }
         
-    }else{
-        if(drawTop){
+    } else {
+        if (drawTop) {
             [self _drawFlatTopInRect:NSMakeRect(cellFrame.origin.x, cellFrame.origin.y, cellFrame.size.width, FRAME_FLAT_HEIGHT)];
             cellFrame.origin.y += FRAME_FLAT_HEIGHT;
             cellFrame.size.height -= FRAME_FLAT_HEIGHT;
         }
         
-        if(drawBottom){
+        if (drawBottom) {
             [self _drawFlatBottomInRect:NSMakeRect(cellFrame.origin.x, (cellFrame.origin.y + cellFrame.size.height) - FRAME_FLAT_HEIGHT, cellFrame.size.width, FRAME_FLAT_HEIGHT)];
             cellFrame.size.height -= FRAME_FLAT_HEIGHT;
         }
@@ -299,7 +299,7 @@
 //Draw the top bubble separation divider
 - (void)_drawBubbleDividerInRect:(NSRect)frame
 {
-    if(dividerColor){
+    if (dividerColor) {
         float dividerSpace = framePadLeft + 1;
         
         [dividerColor set];
@@ -312,7 +312,7 @@
         
     }
     
-    if(borderColor && drawSides){        
+    if (borderColor && drawSides) {        
         NSBezierPath        *path = [NSBezierPath bezierPath];
         NSAffineTransform	*aliasShift;
         
@@ -337,7 +337,7 @@
 //Draw the top border of a flat frame
 - (void)_drawFlatTopInRect:(NSRect)frame
 {
-    if(borderColor){
+    if (borderColor) {
         [borderColor set];
         [NSBezierPath fillRect:frame];
     }
@@ -346,7 +346,7 @@
 //Draw the bottom border of a flat frame
 - (void)_drawFlatBottomInRect:(NSRect)frame
 {
-    if(borderColor){
+    if (borderColor) {
         [borderColor set];
         [NSBezierPath fillRect:frame];
     }
@@ -381,7 +381,7 @@
     [bubbleColor set];
     [path fill];
     [path transformUsingAffineTransform:aliasShift];
-    if(borderColor){
+    if (borderColor) {
         [borderColor set];
         [path stroke];
     }
@@ -395,9 +395,9 @@
     [NSBezierPath fillRect:frame];
 
     //Draw the side borders along the middle
-    if(borderColor){
+    if (borderColor) {
         [borderColor set];
-        if(drawSides){
+        if (drawSides) {
             NSBezierPath        *path = [NSBezierPath bezierPath];
             NSAffineTransform	*aliasShift;
             
@@ -448,7 +448,7 @@
     [bubbleColor set];
     [path fill];
     [path transformUsingAffineTransform:aliasShift];
-    if(borderColor){
+    if (borderColor) {
         [borderColor set];
         [path stroke];
     }

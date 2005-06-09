@@ -67,16 +67,16 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]){
+	if ([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]) {
 		//If it hasn't been created yet, create it. Otherwise, tell it to show itself.
-		if(!itemController){
+		if (!itemController) {
 			itemController = [CBStatusMenuItemController statusMenuItemController];
-		}else{
+		} else {
 			[itemController showStatusItem];
 		}
-	}else{
+	} else {
 		//if it exists, tell it to hide itself
-		if(itemController){
+		if (itemController) {
 			[itemController hideStatusItem];
 		}
 	}

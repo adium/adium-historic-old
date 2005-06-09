@@ -127,7 +127,7 @@ static int  sizeOfSortOrder;
 	
 	unsigned int i;
 	
-	for (i = 0; i < MAX_SORT_ORDER_DIMENSION; i++){
+	for (i = 0; i < MAX_SORT_ORDER_DIMENSION; i++) {
 		sortOrder[i] = -1;
 	}
 	
@@ -139,8 +139,8 @@ static int  sizeOfSortOrder;
 	BOOL	groupIdleOrIdleTime = (groupIdle || sortIdleTime);
 
 	enumerator = [sortOrderArray objectEnumerator];
-	while ((sortTypeNumber = [enumerator nextObject])){
-		switch ([sortTypeNumber intValue]){
+	while ((sortTypeNumber = [enumerator nextObject])) {
+		switch ([sortTypeNumber intValue]) {
 			case Available: 
 				/* Group available if:
 					Group available,
@@ -167,7 +167,7 @@ static int  sizeOfSortOrder;
 			case Unavailable: 
 				//If one of groupAway or groupIdle is off, or we need a generic unavailable sort
 				if (groupUnavailable ||
-					((groupAvailable && (!groupAway || !groupIdleOrIdleTime)))){
+					((groupAvailable && (!groupAway || !groupIdleOrIdleTime)))) {
 					sortOrder[i++] = Unavailable;
 				}
 				break;
@@ -178,13 +178,13 @@ static int  sizeOfSortOrder;
 					We aren't grouping all the unavailable ones (this would imply grouping available)
 					We aren't grouping both the away and the idle ones (this would imply grouping available)
 				*/
-				if (!groupAvailable && !groupUnavailable && !(groupAway && (groupIdleOrIdleTime))){
+				if (!groupAvailable && !groupUnavailable && !(groupAway && (groupIdleOrIdleTime))) {
 					sortOrder[i++] = Online;
 				}
 				break;
 				
 			case Mobile:
-				if (groupAvailable && groupMobile){
+				if (groupAvailable && groupMobile) {
 					sortOrder[i++] = Mobile;
 				}
 				break;
@@ -280,7 +280,7 @@ static int  sizeOfSortOrder;
 {
 	NSArray	*sortOrderArray =  [[adium preferenceController] preferenceForKey:KEY_SORT_ORDER
 																		group:PREF_GROUP_CONTACT_SORTING];
-	if (sender == checkBox_groupAvailable){
+	if (sender == checkBox_groupAvailable) {
 		groupAvailable = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAvailable]
                                              forKey:KEY_GROUP_AVAILABLE
@@ -288,14 +288,14 @@ static int  sizeOfSortOrder;
 
 		[self configureControlDimming];
 		
-	}else if (sender == checkBox_groupMobileSeparately){
+	} else if (sender == checkBox_groupMobileSeparately) {
 		groupMobile = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupMobile]
                                              forKey:KEY_GROUP_MOBILE
                                               group:PREF_GROUP_CONTACT_SORTING];		
 		
 		//Ensure the mobile item is in our sort order array, as the old defaults didn't include it
-		if([sortOrderArray indexOfObject:[NSNumber numberWithInt:Mobile]] == NSNotFound){
+		if ([sortOrderArray indexOfObject:[NSNumber numberWithInt:Mobile]] == NSNotFound) {
 			NSMutableArray	*newSortOrderArray = [[sortOrderArray mutableCopy] autorelease];
 			[newSortOrderArray addObject:[NSNumber numberWithInt:Mobile]];
 			
@@ -306,29 +306,29 @@ static int  sizeOfSortOrder;
 			sortOrderArray = newSortOrderArray;
 		}
 		
-	}else if (sender == checkBox_groupAway){
+	} else if (sender == checkBox_groupAway) {
 		groupAway = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupAway]
                                              forKey:KEY_GROUP_AWAY
                                               group:PREF_GROUP_CONTACT_SORTING];		
-	}else if (sender == checkBox_groupIdle){
+	} else if (sender == checkBox_groupIdle) {
 		groupIdle = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupIdle]
                                              forKey:KEY_GROUP_IDLE
                                               group:PREF_GROUP_CONTACT_SORTING];
 		
-	}else if (sender == checkBox_groupIdleAndAway){
+	} else if (sender == checkBox_groupIdleAndAway) {
 		groupIdleAndAway = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:groupIdleAndAway]
                                              forKey:KEY_GROUP_IDLE_AND_AWAY
                                               group:PREF_GROUP_CONTACT_SORTING];
 		
-	}else if (sender == checkBox_sortIdleTime){
+	} else if (sender == checkBox_sortIdleTime) {
 		sortIdleTime = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortIdleTime]
                                              forKey:KEY_SORT_IDLE_TIME
                                               group:PREF_GROUP_CONTACT_SORTING];				
-	}else if(sender == matrix_resolution){
+	} else if (sender == matrix_resolution) {
 		id selectedCell = [sender selectedCell];
 		
 		resolveAlphabetically = (selectedCell == buttonCell_alphabetically);
@@ -338,7 +338,7 @@ static int  sizeOfSortOrder;
 		
 		[self configureControlDimming];
 		
-	}else if(sender == matrix_unavailableGrouping){
+	} else if (sender == matrix_unavailableGrouping) {
 		id selectedCell = [sender selectedCell];
 		
 		groupUnavailable = (selectedCell == buttonCell_allUnavailable);
@@ -348,7 +348,7 @@ static int  sizeOfSortOrder;
 		
 		[self configureControlDimming];
 		
-	}else if (sender == checkBox_alphabeticallyByLastName){
+	} else if (sender == checkBox_alphabeticallyByLastName) {
 		resolveAlphabeticallyByLastName = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:resolveAlphabeticallyByLastName]
                                              forKey:KEY_RESOLVE_BY_LAST_NAME
@@ -387,7 +387,7 @@ static int  sizeOfSortOrder;
  */
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-	switch (sortOrder[rowIndex]){
+	switch (sortOrder[rowIndex]) {
 		case Available:
 			return AVAILABLE;
 			break;
@@ -434,19 +434,19 @@ static int  sizeOfSortOrder;
 {
 	int equivalent = -1;
 
-	if ([string isEqualToString:AVAILABLE]){
+	if ([string isEqualToString:AVAILABLE]) {
 		equivalent = Available;
-	}else if ([string isEqualToString:AWAY]){
+	} else if ([string isEqualToString:AWAY]) {
 		equivalent = Away;
-	}else if ([string isEqualToString:IDLE]){
+	} else if ([string isEqualToString:IDLE]) {
 		equivalent = Idle;
-	}else if ([string isEqualToString:AWAY_AND_IDLE]){
+	} else if ([string isEqualToString:AWAY_AND_IDLE]) {
 		equivalent = Away_And_Idle;
-	}else if ([string isEqualToString:UNAVAILABLE] || ([string isEqualToString:OTHER_UNAVAILABLE])){
+	} else if ([string isEqualToString:UNAVAILABLE] || ([string isEqualToString:OTHER_UNAVAILABLE])) {
 		equivalent = Unavailable;
-	}else if ([string isEqualToString:ONLINE]){
+	} else if ([string isEqualToString:ONLINE]) {
 		equivalent = Online;
-	}else if([string isEqualToString:MOBILE]){
+	} else if ([string isEqualToString:MOBILE]) {
 		equivalent = Mobile;
 	}
 	
@@ -478,10 +478,10 @@ static int  sizeOfSortOrder;
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
 
-	if([avaliableType isEqualToString:STATUS_DRAG_TYPE]){
-        if(operation == NSTableViewDropAbove && row != -1){
+	if ([avaliableType isEqualToString:STATUS_DRAG_TYPE]) {
+        if (operation == NSTableViewDropAbove && row != -1) {
             return(NSDragOperationMove);
-        }else{
+        } else {
             return(NSDragOperationNone);
 		}
 	}
@@ -496,7 +496,7 @@ static int  sizeOfSortOrder;
 {
     NSString		*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:STATUS_DRAG_TYPE]];
 
-    if([availableType isEqualToString:STATUS_DRAG_TYPE]){
+    if ([availableType isEqualToString:STATUS_DRAG_TYPE]) {
 		NSString		*item = [[info draggingPasteboard] stringForType:STATUS_DRAG_TYPE];
 		
 		//Remember, sortOrderPref contains all possible sorting types, not just the ones presently visible in the table!
@@ -507,18 +507,18 @@ static int  sizeOfSortOrder;
 		//Remove it from our array
 		[sortOrderPref removeObject:sortNumber];
 		
-		if (row == [tableView numberOfRows]){
+		if (row == [tableView numberOfRows]) {
 			//Dropped at the bottom
 			[sortOrderPref addObject:sortNumber];
-		}else{
+		} else {
 			//Find the object which will end up just below it
 			int targetIndex = [sortOrderPref indexOfObject:[self numberForString:[self tableView:tableView
 																		 objectValueForTableColumn:nil
 																							   row:row]]];
-			if (targetIndex != NSNotFound){
+			if (targetIndex != NSNotFound) {
 				//Insert it there
 				[sortOrderPref insertObject:sortNumber atIndex:targetIndex];
-			}else{
+			} else {
 				//Dropped at the bottom
 				[sortOrderPref addObject:sortNumber];
 			}
@@ -552,30 +552,30 @@ static int  sizeOfSortOrder;
  */
 int statusSort(id objectA, id objectB, BOOL groups)
 {
-	if(groups){
+	if (groups) {
 		//Keep groups in manual order
-		if([objectA orderIndex] > [objectB orderIndex]){
+		if ([objectA orderIndex] > [objectB orderIndex]) {
 			return(NSOrderedDescending);
-		}else{
+		} else {
 			return(NSOrderedAscending);
 		}
 		
-	}else{
+	} else {
 		AIStatusSummary	statusSummaryA = [objectA statusSummary];
 		AIStatusSummary	statusSummaryB = [objectB statusSummary];
 		
 		//Always sort offline contacts to the bottom
 		BOOL onlineA = (statusSummaryA != AIOfflineStatus);
 		BOOL onlineB = (statusSummaryB != AIOfflineStatus);
-		if (!onlineB && onlineA){
+		if (!onlineB && onlineA) {
 			return NSOrderedAscending;
-		}else if (!onlineA && onlineB){
+		} else if (!onlineA && onlineB) {
 			return NSOrderedDescending;
 		}
 		
 		//We only need to start looking at status for sorting if both are online; 
 		//otherwise, skip to resolving alphabetically or manually
-		if (onlineA && onlineB){
+		if (onlineA && onlineB) {
 			unsigned int	i = 0;
 			BOOL			away[2];
 			BOOL			mobile[2];
@@ -595,21 +595,21 @@ int statusSort(id objectA, id objectB, BOOL groups)
 					   [objectB integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO] :
 					   0);
 			
-			if(groupMobile){
+			if (groupMobile) {
 				mobile[0] = [objectA isMobile];
 				mobile[1] = [objectB isMobile];
 			}
 
-			for (objectCounter = 0; objectCounter < 2; objectCounter++){
+			for (objectCounter = 0; objectCounter < 2; objectCounter++) {
 				sortIndex[objectCounter] = 999;
 
-				for (i = 0; i < sizeOfSortOrder ; i++){
+				for (i = 0; i < sizeOfSortOrder ; i++) {
 					//Reset the internal bookkeeping
 					onlyIfWeAintGotNothinBetter = NO;
 					definitelyFinishedIfSuccessful = NO;
 					
 					//Determine the state for the status this level of sorting cares about
-					switch (sortOrder[i]){
+					switch (sortOrder[i]) {
 						case Available:
 							status = (!away[objectCounter] && !idle[objectCounter]); // TRUE if A is available
 							break;
@@ -647,7 +647,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 
 					//If the object has the desired status and we want to use it, store the new index it should go to
 					if (status &&
-						(!onlyIfWeAintGotNothinBetter || (sortIndex[objectCounter] == 999))){
+						(!onlyIfWeAintGotNothinBetter || (sortIndex[objectCounter] == 999))) {
 						sortIndex[objectCounter] = i;
 						
 						//If definitelyFinishedIfSuccessful is YES, we're done sorting as soon as something fits
@@ -657,33 +657,33 @@ int statusSort(id objectA, id objectB, BOOL groups)
 				}
 			} //End for object loop
 			
-			if (sortIndex[0] > sortIndex[1]){
+			if (sortIndex[0] > sortIndex[1]) {
 				return NSOrderedDescending;
-			}else if (sortIndex[1] > sortIndex[0]){
+			} else if (sortIndex[1] > sortIndex[0]) {
 				return NSOrderedAscending;			
 			}
 			
 			//If one idle time is greater than the other and we want to sort on that basis, we have an ordering
-			if (sortIdleTime){
+			if (sortIdleTime) {
 				//Ordering is determined if either has a idle time and their idle times are not identical
-				if (((idle[0] != 0) || (idle[1] != 0)) && (idle[0] != idle[1])){
-					if(idle[0] > idle[1]){
+				if (((idle[0] != 0) || (idle[1] != 0)) && (idle[0] != idle[1])) {
+					if (idle[0] > idle[1]) {
 						return(NSOrderedDescending);
-					}else{
+					} else {
 						return(NSOrderedAscending);
 					}
 				}
 			}
 		}
 		
-		if (!resolveAlphabetically){
+		if (!resolveAlphabetically) {
 			//If we don't want to resolve alphabetically, we do want to resolve by manual ordering if possible
 			float orderIndexA = [objectA orderIndex];
 			float orderIndexB = [objectB orderIndex];
 			
-			if(orderIndexA > orderIndexB){
+			if (orderIndexA > orderIndexB) {
 				return(NSOrderedDescending);
-			}else if (orderIndexA < orderIndexB){
+			} else if (orderIndexA < orderIndexB) {
 				return(NSOrderedAscending);
 			}
 		}
@@ -692,7 +692,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
 		//Note that this sort should -never- return NSOrderedSame, so as a last resort we use the internalObjectID.
 		NSComparisonResult returnValue;
 		
-		if (resolveAlphabeticallyByLastName){
+		if (resolveAlphabeticallyByLastName) {
 			//Split the displayname into parts by spacing and use the last part, the "last name," for comparison
 			NSString	*space = @" ";
 			NSString	*displayNameA = [objectA displayName];
@@ -703,15 +703,15 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			returnValue = [[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]];
 			//If the last names are the same, compare the whole object, which will amount to sorting these objects
 			//by first name
-			if (returnValue == NSOrderedSame){
+			if (returnValue == NSOrderedSame) {
 				returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
-				if (returnValue == NSOrderedSame){
+				if (returnValue == NSOrderedSame) {
 					returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 				}
 			}
-		}else{
+		} else {
 			returnValue = [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
-			if (returnValue == NSOrderedSame){
+			if (returnValue == NSOrderedSame) {
 				returnValue = [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 			}
 		}

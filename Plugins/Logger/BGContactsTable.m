@@ -65,9 +65,9 @@
 //
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	if(showingContacts){
+	if (showingContacts) {
         return [[controller_LogViewer toArray] count];
-	}else{
+	} else {
         return [[controller_LogViewer fromArray] count];
 	}
 }
@@ -75,21 +75,21 @@
 //
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    if([[tableColumn identifier] isEqual:@"service"]){
+    if ([[tableColumn identifier] isEqual:@"service"]) {
 		NSArray	*serviceArray = (showingContacts ? [controller_LogViewer toServiceArray] : [controller_LogViewer fromServiceArray]);
 		NSImage	*image = [AIServiceIcons serviceIconForServiceID:[serviceArray objectAtIndex:row]
 															type:AIServiceIconSmall
 													   direction:AIIconNormal];
 		return(image ? image : blankImage);
 		
-    }else if([[tableColumn identifier] isEqual:@"name"]){
-		if(showingContacts){
+    } else if ([[tableColumn identifier] isEqual:@"name"]) {
+		if (showingContacts) {
 			return([self displayNameForContactAtToIndex:row]);
-		}else{
+		} else {
 			return([[controller_LogViewer fromArray] objectAtIndex:row]);
 		}
 		
-	}else{
+	} else {
 		return(@"");
 	}
 }
@@ -99,13 +99,13 @@
 {
 	int selectedRow = [table_filterList selectedRow];
 	
-	if(selectedRow >= 0 && selectedRow < [table_filterList numberOfRows]){
-		if(showingContacts){
+	if (selectedRow >= 0 && selectedRow < [table_filterList numberOfRows]) {
+		if (showingContacts) {
 			[controller_LogViewer filterForContactName:[[controller_LogViewer toArray] objectAtIndex:selectedRow]];
-		}else{
+		} else {
 			[controller_LogViewer filterForAccountName:[[controller_LogViewer fromArray] objectAtIndex:selectedRow]];
 		}
-	}else{
+	} else {
 		[controller_LogViewer filterForContactName:nil];
 		[controller_LogViewer filterForAccountName:nil];
 	}
@@ -113,9 +113,9 @@
 
 - (void)tableViewDeleteSelectedRows:(NSTableView *)tableView
 {
-    if(showingContacts){ // deleting a contact
+    if (showingContacts) { // deleting a contact
         [self moveContactToTrash];
-    }else{ // deleting an account
+    } else { // deleting an account
         [self moveAccountToTrash];
     }
 }
@@ -130,15 +130,15 @@
 
 - (void)trashContactConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if(returnCode == NSOKButton) {
+    if (returnCode == NSOKButton) {
         // loop through all accounts & find this contact, remove as needed
         // -> if you can think of a more efficient solution please do, this is all that came to mind
 		int dLoop;
 		int dLoopCount = [[controller_LogViewer fromArray] count];
-        for(dLoop = 0; dLoop < dLoopCount; dLoop++)
+        for (dLoop = 0; dLoop < dLoopCount; dLoop++)
         {
             NSString *deleteString = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@/%@/", [[controller_LogViewer fromServiceArray] objectAtIndex:dLoop], [[controller_LogViewer fromArray] objectAtIndex:dLoop], [[controller_LogViewer toArray] objectAtIndex:[table_filterList selectedRow]]]];
-            if([[NSFileManager defaultManager] fileExistsAtPath:deleteString])
+            if ([[NSFileManager defaultManager] fileExistsAtPath:deleteString])
             {
                 [[NSFileManager defaultManager] trashFileAtPath:deleteString];
             } 
@@ -159,7 +159,7 @@
 
 - (void)trashAccountConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-    if(returnCode == NSOKButton) {
+    if (returnCode == NSOKButton) {
         [[NSFileManager defaultManager] trashFileAtPath:[[AILoggerPlugin logBasePath] stringByAppendingPathComponent:[NSString stringWithFormat:@"%@.%@", [[controller_LogViewer fromServiceArray] objectAtIndex:[table_filterList selectedRow]], [[controller_LogViewer fromArray] objectAtIndex:[table_filterList selectedRow]]]]];
         [controller_LogViewer rebuildIndices];
         [table_filterList reloadData];
@@ -180,7 +180,7 @@
 
 - (NSString *)displayNameForContactAtToIndex:(unsigned)index
 {
-	if(!_displayNameArray){		
+	if (!_displayNameArray) {		
 		NSArray	*toServiceArray = [controller_LogViewer toServiceArray];
 		NSArray	*toArray = [controller_LogViewer toArray];
 		unsigned count = [toArray count];
@@ -188,16 +188,16 @@
 		
 		_displayNameArray = [[NSMutableArray alloc] init];
 		
-		for(i = 0; i < count; i++){
+		for (i = 0; i < count; i++) {
 			NSString *displayName;
 			NSString *toService = [toServiceArray objectAtIndex:i];
 			NSString *to = [toArray objectAtIndex:i];
 
 			displayName = [[[adium contactController] existingListObjectWithUniqueID:[NSString stringWithFormat:@"%@.%@",toService,to]] displayName];
 
-			if(displayName && ![displayName isEqualToString:to]){
+			if (displayName && ![displayName isEqualToString:to]) {
 				[_displayNameArray addObject:[NSString stringWithFormat:@"%@ (%@)", to, displayName]];
-			}else{
+			} else {
 	 			[_displayNameArray addObject:to];
 			}
 		}

@@ -121,15 +121,15 @@
 {
     NSSet		*modifiedAttributes = nil;
 
-	if([inObject isKindOfClass:[AIListContact class]]){
-		if(	inModifiedKeys == nil ||
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		if (	inModifiedKeys == nil ||
 			[inModifiedKeys containsObject:KEY_TYPING] ||
 			[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT] || 
 			[inModifiedKeys containsObject:@"StatusType"] ||
 			[inModifiedKeys containsObject:@"IsIdle"] ||
 			[inModifiedKeys containsObject:@"Online"] ||
 			[inModifiedKeys containsObject:@"Signed On"] || 
-			[inModifiedKeys containsObject:@"Signed Off"]){
+			[inModifiedKeys containsObject:@"Signed Off"]) {
 
 			//Update the contact's text color
 			[self _applyColorToContact:(AIListContact *)inObject];
@@ -137,13 +137,13 @@
 		}
 		
 		//Update our flash array
-		if((inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) && 
-		   flashUnviewedContentEnabled){
+		if ((inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) && 
+		   flashUnviewedContentEnabled) {
 			int unviewedContent = [inObject integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 			
-			if(unviewedContent && ![flashingListObjectArray containsObject:inObject]){ //Start flashing
+			if (unviewedContent && ![flashingListObjectArray containsObject:inObject]) { //Start flashing
 				[self addToFlashArray:inObject];
-			}else if(!unviewedContent && [flashingListObjectArray containsObject:inObject]){ //Stop flashing
+			} else if (!unviewedContent && [flashingListObjectArray containsObject:inObject]) { //Stop flashing
 				[self removeFromFlashArray:inObject];
 			}
 		}
@@ -165,11 +165,11 @@
     unviewedContent = [inContact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
 
     //Unviewed content
-    if(!color && (unviewedContentEnabled && unviewedContent)){
+    if (!color && (unviewedContentEnabled && unviewedContent)) {
 		/* Use the unviewed content settings if:
 		 *	- we aren't flashing or
 		 *  - every other flash. */
-        if(!flashUnviewedContentEnabled || ([[adium interfaceController] flashState] % 2)){
+        if (!flashUnviewedContentEnabled || ([[adium interfaceController] flashState] % 2)) {
             color = unviewedContentColor;
             invertedColor = unviewedContentInvertedColor;
             labelColor = unviewedContentLabelColor;
@@ -178,19 +178,19 @@
     }
 
     //Offline, Signed off, signed on, or typing
-    if(!color/* && (!unviewedContentEnabled || !unviewedContent)*/){
-		if(offlineEnabled && (![inContact online] &&
-							  ![inContact integerStatusObjectForKey:@"Signed Off"])){
+    if (!color/* && (!unviewedContentEnabled || !unviewedContent)*/) {
+		if (offlineEnabled && (![inContact online] &&
+							  ![inContact integerStatusObjectForKey:@"Signed Off"])) {
 			color = offlineColor;
 			invertedColor = offlineInvertedColor;
 			labelColor = offlineLabelColor;
-			if(offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
+			if (offlineImageFading) opacity = OFFLINE_IMAGE_OPACITY;
 			
-			if(transitionsEnabled){
+			if (transitionsEnabled) {
 				[self stopFadeOfContact:inContact];
 			}
 			
-		}else if(signedOffEnabled && ([inContact integerStatusObjectForKey:@"Signed Off"])){
+		} else if (signedOffEnabled && ([inContact integerStatusObjectForKey:@"Signed Off"])) {
 
 			//Set colors
             color = signedOffColor;
@@ -198,22 +198,22 @@
             labelColor = signedOffLabelColor;
 			isEvent = YES;
 
-			if(transitionsEnabled){
+			if (transitionsEnabled) {
 				[self fadeContact:inContact fromOpacity:1.0 toOpacity:0.8];
 			}
 			
-        }else if(signedOnEnabled && [inContact integerStatusObjectForKey:@"Signed On"]){
+        } else if (signedOnEnabled && [inContact integerStatusObjectForKey:@"Signed On"]) {
             
 			color = signedOnColor;
             invertedColor = signedOnInvertedColor;
             labelColor = signedOnLabelColor;
 			isEvent = YES;
 
-			if(transitionsEnabled){
+			if (transitionsEnabled) {
 				[self fadeContact:inContact fromOpacity:OFFLINE_IMAGE_OPACITY toOpacity:1.0];
 			}
 			
-        }else if(typingEnabled && ([inContact integerStatusObjectForKey:KEY_TYPING] == AITyping)){
+        } else if (typingEnabled && ([inContact integerStatusObjectForKey:KEY_TYPING] == AITyping)) {
             color = typingColor;
             invertedColor = typingInvertedColor;
             labelColor = typingLabelColor;
@@ -221,12 +221,12 @@
 			
 			[self stopFadeOfContact:inContact];
 			
-        }else{
+        } else {
 			[self stopFadeOfContact:inContact];	
 		}
     }
 
-    if(!color){
+    if (!color) {
 		AIStatusSummary statusSummary = [inContact statusSummary];
 
         //Prefetch these values, we need them multiple times below
@@ -234,15 +234,15 @@
         idle = [inContact integerStatusObjectForKey:@"Idle" fromAnyContainedObject:NO];
 
         //Idle And Away, Away, or Idle
-        if(awayAndIdleEnabled && (statusSummary == AIAwayAndIdleStatus)){
+        if (awayAndIdleEnabled && (statusSummary == AIAwayAndIdleStatus)) {
             color = awayAndIdleColor;
             invertedColor = awayAndIdleInvertedColor;
             labelColor = awayAndIdleLabelColor;
-        }else if(awayEnabled && ((statusSummary == AIAwayStatus) || (statusSummary == AIAwayAndIdleStatus))){
+        } else if (awayEnabled && ((statusSummary == AIAwayStatus) || (statusSummary == AIAwayAndIdleStatus))) {
             color = awayColor;
             invertedColor = awayInvertedColor;
             labelColor = awayLabelColor;
-        }else if(idleEnabled && ((statusSummary == AIIdleStatus) || (statusSummary == AIAwayAndIdleStatus))){
+        } else if (idleEnabled && ((statusSummary == AIIdleStatus) || (statusSummary == AIAwayAndIdleStatus))) {
             color = idleColor;
             invertedColor = idleInvertedColor;
             labelColor = idleLabelColor;
@@ -250,7 +250,7 @@
     }
 
     //Online
-    if(!color && onlineEnabled && [inContact online]){
+    if (!color && onlineEnabled && [inContact online]) {
         color = onlineColor;
         invertedColor = onlineInvertedColor;
         labelColor = onlineLabelColor;
@@ -271,7 +271,7 @@
     AIListContact	*object;
 
     enumerator = [flashingListObjectArray objectEnumerator];
-    while((object = [enumerator nextObject])){
+    while ((object = [enumerator nextObject])) {
         [self _applyColorToContact:object];
         
         //Force a redraw
@@ -287,7 +287,7 @@
 - (void)addToFlashArray:(AIListObject *)inObject
 {
     //Ensure that we're observing the flashing
-    if([flashingListObjectArray count] == 0){
+    if ([flashingListObjectArray count] == 0) {
         [[adium interfaceController] registerFlashObserver:self];
     }
 
@@ -305,14 +305,14 @@
     [flashingListObjectArray removeObject:inObject];
 
     //If we have no more flashing contacts, stop observing the flashes
-    if([flashingListObjectArray count] == 0){
+    if ([flashingListObjectArray count] == 0) {
         [[adium interfaceController] unregisterFlashObserver:self];
     }
 }
 
 - (void)fadeContact:(AIListContact *)listContact fromOpacity:(float)startValue toOpacity:(float)endValue
 {
-	if(![[listContact containingObject] isKindOfClass:[AIMetaContact class]]){
+	if (![[listContact containingObject] isKindOfClass:[AIMetaContact class]]) {
 		NSDictionary		*tempDisplayOpacityDict;
 		AIMutableOwnerArray	*tempDisplayOpacityArray;
 		NSNumber			*initialDisplayOpacity;
@@ -320,7 +320,7 @@
 		tempDisplayOpacityArray = [listContact displayArrayForKey:@"Temporary Display Opacity"];
 		
 		//We should start with the current value. If there isn't one, we start at startValue
-		if(!(initialDisplayOpacity= [tempDisplayOpacityArray objectValue])){
+		if (!(initialDisplayOpacity= [tempDisplayOpacityArray objectValue])) {
 			initialDisplayOpacity = [NSNumber numberWithFloat:startValue];
 			[tempDisplayOpacityArray setObject:initialDisplayOpacity withOwner:self];
 		}
@@ -334,7 +334,7 @@
 							  forKey:[listContact internalUniqueObjectID]];
 
 		
-		if(!opacityUpdateTimer){
+		if (!opacityUpdateTimer) {
 			opacityUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:OPACITY_REFRESH
 																   target:self
 																 selector:@selector(opacityRefresh:)
@@ -352,7 +352,7 @@
 	NSMutableArray	*keysToRemove = nil;
 		
 	enumerator = [opacityUpdateDict objectEnumerator];
-	while((opacityDict = [enumerator nextObject])){
+	while ((opacityDict = [enumerator nextObject])) {
 		AIListContact	*listContact;
 		float			displayOpacity, initialDisplayOpacity, targetDisplayOpacity;
 		
@@ -376,25 +376,25 @@
 		//If we are now above the target and the intitial was below, or we are below and the initial was above, stop the continual fading
 		//We don't want to remove the Temporary Display Opacity right now; we want to wait until stopFadeOfContact: is called when another status change occurs
 		if (((displayOpacity > targetDisplayOpacity) && (initialDisplayOpacity < targetDisplayOpacity)) ||
-			((displayOpacity < targetDisplayOpacity) && (initialDisplayOpacity > targetDisplayOpacity))){
+			((displayOpacity < targetDisplayOpacity) && (initialDisplayOpacity > targetDisplayOpacity))) {
 
 			//Track what keys we need to remove later. We can't remove them now since we are in the middle of an enumeration.
-			if(!keysToRemove) keysToRemove = [NSMutableArray array];
+			if (!keysToRemove) keysToRemove = [NSMutableArray array];
 			[keysToRemove addObject:[listContact internalUniqueObjectID]];
 		}
 	}
 
 	//Remove any keys which have been marked as needing it.
-	if(keysToRemove){
+	if (keysToRemove) {
 		NSString		*key;
 		
 		enumerator = [keysToRemove objectEnumerator];
-		while((key = [enumerator nextObject])){
+		while ((key = [enumerator nextObject])) {
 			[opacityUpdateDict removeObjectForKey:key];
 		}
 		
 		//If we have no contacts we are still tracking, stop the timer.
-		if(![opacityUpdateDict count]){
+		if (![opacityUpdateDict count]) {
 			[opacityUpdateTimer invalidate]; 
 			[opacityUpdateTimer release]; opacityUpdateTimer = nil;
 		}
@@ -410,14 +410,14 @@
 	[opacityUpdateDict removeObjectForKey:[listContact internalUniqueObjectID]];
 	
 	//Clear any temporary display opacity we have set
-	if((tempDisplayOpacityArray = [listContact displayArrayForKey:@"Temporary Display Opacity" create:NO]) &&
-	   (opacityNumber = [tempDisplayOpacityArray objectWithOwner:self])){
+	if ((tempDisplayOpacityArray = [listContact displayArrayForKey:@"Temporary Display Opacity" create:NO]) &&
+	   (opacityNumber = [tempDisplayOpacityArray objectWithOwner:self])) {
 		float		opacity = [opacityNumber floatValue];
 
 		[tempDisplayOpacityArray setObject:nil withOwner:self];
 
 		//Force a redraw if the opacity did not end at 1.0 (fully opaque)
-		if(opacity < 1.0){
+		if (opacity < 1.0) {
 			[[adium notificationCenter] postNotificationName:ListObject_AttributesChanged 
 													  object:listContact
 													userInfo:[NSDictionary dictionaryWithObject:[NSArray arrayWithObject:@"Temporary Display Opacity"] 
@@ -426,7 +426,7 @@
 	}
 
 	//If we have no contacts we are still tracking, stop the timer.
-	if(![opacityUpdateDict count]){
+	if (![opacityUpdateDict count]) {
 		[opacityUpdateTimer invalidate]; 
 		[opacityUpdateTimer release]; opacityUpdateTimer = nil;
 	}
@@ -436,7 +436,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_LIST_THEME]){
+	if ([group isEqualToString:PREF_GROUP_LIST_THEME]) {
 		//Release the old values..
 		[signedOffColor release];
 		[signedOnColor release];
@@ -515,29 +515,29 @@
 		offlineEnabled = [[prefDict objectForKey:KEY_OFFLINE_ENABLED] boolValue];
 		
 		//Update all objects
-		if(!firstTime){
+		if (!firstTime) {
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 
-	}else if([group isEqualToString:PREF_GROUP_CONTACT_LIST]){
+	} else if ([group isEqualToString:PREF_GROUP_CONTACT_LIST]) {
 		BOOL oldFlashUnviewedContentEnabled = flashUnviewedContentEnabled;
 		
 		transitionsEnabled = [[prefDict objectForKey:KEY_CL_SHOW_TRANSITIONS] boolValue];
 		flashUnviewedContentEnabled = [[prefDict objectForKey:KEY_CL_FLASH_UNVIEWED_CONTENT] boolValue];
 
-		if(oldFlashUnviewedContentEnabled && !flashUnviewedContentEnabled){
+		if (oldFlashUnviewedContentEnabled && !flashUnviewedContentEnabled) {
 			//Clear our flash array if we aren't flashing for unviewed content now but we were before
 			NSEnumerator	*enumerator = [[[flashingListObjectArray copy] autorelease] objectEnumerator];
 			AIListContact	*listContact;
 
-			while((listContact = [enumerator nextObject])){
+			while ((listContact = [enumerator nextObject])) {
 				[self removeFromFlashArray:listContact];
 			}
 			
 			//Make our colors end up right (if we were on an off-flash) by updating all list objects
 			[[adium contactController] updateAllListObjectsForObserver:self];
-		}else if (!oldFlashUnviewedContentEnabled && flashUnviewedContentEnabled){
-			if(!firstTime){
+		} else if (!oldFlashUnviewedContentEnabled && flashUnviewedContentEnabled) {
+			if (!firstTime) {
 				//Update all list objects so we start flashing
 				[[adium contactController] updateAllListObjectsForObserver:self];
 			}

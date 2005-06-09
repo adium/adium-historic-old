@@ -24,7 +24,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		color = nil;
 	}
 	return self;
@@ -44,7 +44,7 @@
 
 - (void)setColor:(NSColor *)inColor
 {
-    if(inColor != color){
+    if (inColor != color) {
         [color release];
         color = [inColor retain];
     }
@@ -57,7 +57,7 @@
     [NSBezierPath fillRect:rect];
 
     //Fill it with our color
-    if(!color){
+    if (!color) {
         color = [[NSColor whiteColor] retain];
     }
     [color set];

@@ -35,7 +35,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initAutoScrollView];
 	}
 	return self;
@@ -43,7 +43,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initAutoScrollView];
 	}
 	return self;
@@ -91,7 +91,7 @@
     //Observe the document view's frame changes
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
-    if(autoScrollToBottom){
+    if (autoScrollToBottom) {
         [[NSNotificationCenter defaultCenter] addObserver:self 
 												 selector:@selector(documentFrameDidChange:) 
 													 name:NSViewFrameDidChangeNotification
@@ -108,7 +108,7 @@
 {
     BOOL 	autoScroll = NO;
 
-    if(autoScrollToBottom){
+    if (autoScrollToBottom) {
         NSRect	documentVisibleRect = [self documentVisibleRect];
         NSRect	documentFrame = [[self documentView] frame];
 
@@ -120,7 +120,7 @@
     [super setFrame:frameRect];
 
     //Then auto-scroll
-    if(autoScroll) [self scrollToBottom];
+    if (autoScroll) [self scrollToBottom];
 }
 
 //When our document resizes
@@ -128,13 +128,13 @@
 {
 	//We guard against a recursive call to this method, which may occur if the user is resizing the view at the same time
 	//content is being modified
-    if(autoScrollToBottom && !inAutoScrollToBottom){
+    if (autoScrollToBottom && !inAutoScrollToBottom) {
         NSRect	documentVisibleRect =  [self documentVisibleRect];
         NSRect	   newDocumentFrame = [[self documentView] frame];
         
         //We autoscroll if the height of the document frame changed AND (Using the old frame to calculate) we're scrolled close to the bottom.
-        if((newDocumentFrame.size.height != oldDocumentFrame.size.height) && 
-		   ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > (oldDocumentFrame.size.height - AUTOSCROLL_CATCH_SIZE))){
+        if ((newDocumentFrame.size.height != oldDocumentFrame.size.height) && 
+		   ((documentVisibleRect.origin.y + documentVisibleRect.size.height) > (oldDocumentFrame.size.height - AUTOSCROLL_CATCH_SIZE))) {
 			inAutoScrollToBottom = YES;
             [self scrollToBottom];
 			inAutoScrollToBottom = NO;
@@ -151,7 +151,7 @@
     [super reflectScrolledClipView:cView];
 
     //Set our correct scrollbar visibility
-    if(autoHideScrollBar){
+    if (autoHideScrollBar) {
         [self setCorrectScrollbarVisibility];
     }
 }
@@ -175,7 +175,7 @@
 {
     autoHideScrollBar = inValue;
     
-    if(autoHideScrollBar) [self setCorrectScrollbarVisibility];
+    if (autoHideScrollBar) [self setCorrectScrollbarVisibility];
 }
 
 //Hides or shows the scrollbar as necessary
@@ -185,10 +185,10 @@
     float	  totalHeight = [[self documentView] frame].size.height;
 
     //Hide or show scrollbar
-    if(totalHeight > visibleHeight){
-        if(![self hasVerticalScroller]) [self setHasVerticalScroller:YES];
-    }else{
-        if( [self hasVerticalScroller]) [self setHasVerticalScroller:NO];
+    if (totalHeight > visibleHeight) {
+        if (![self hasVerticalScroller]) [self setHasVerticalScroller:YES];
+    } else {
+        if ( [self hasVerticalScroller]) [self setHasVerticalScroller:NO];
     }
 }
 
@@ -206,7 +206,7 @@
 	if ([charactersIgnoringModifiers length]) {
 		unichar inChar = [charactersIgnoringModifiers characterAtIndex:0];
 		
-		switch(inChar)
+		switch (inChar)
 		{
 			case NSUpArrowFunctionKey:
 			{
@@ -255,18 +255,18 @@
 				
 			default:
 			{
-				if (passKeysToDocumentView){
+				if (passKeysToDocumentView) {
 					[[self documentView] keyDown:theEvent];
-				}else{
+				} else {
 					[super keyDown:theEvent];
 				}
 				break;
 			}
 		}
-	}else{
-		if (passKeysToDocumentView){
+	} else {
+		if (passKeysToDocumentView) {
 			[[self documentView] keyDown:theEvent];
-		}else{
+		} else {
 			[super keyDown:theEvent];
 		}	
 	}
@@ -285,17 +285,17 @@
 //http://cocoa.mamasam.com/COCOADEV/2002/03/2/29535.php
 - (BOOL)needsDisplay
 {
-	if (alwaysDrawFocusRingIfFocused){
+	if (alwaysDrawFocusRingIfFocused) {
 		NSResponder *resp = nil;
 		NSWindow	*window = [self window];
 		
-		if([window isKeyWindow]){
+		if ([window isKeyWindow]) {
 			resp = [window firstResponder];
-			if(resp == lastResp){
+			if (resp == lastResp) {
 				return([super needsDisplay]);
 			}
 			
-		}else if(lastResp == nil){
+		} else if (lastResp == nil) {
 			return([super needsDisplay]);
 			
 		}
@@ -307,7 +307,7 @@
 		
 		[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
 		return(YES);
-	}else{
+	} else {
 		return([super needsDisplay]);
 	}
 }
@@ -317,7 +317,7 @@
 {
 	[super drawRect:rect];
 	
-	if(shouldDrawFocusRing){
+	if (shouldDrawFocusRing) {
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		NSRectFill(rect);
 	}

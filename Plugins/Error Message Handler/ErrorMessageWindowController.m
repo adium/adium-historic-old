@@ -37,7 +37,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 + (id)errorMessageWindowController
 {
-    if(!sharedErrorMessageInstance){
+    if (!sharedErrorMessageInstance) {
         sharedErrorMessageInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB];
     }
 
@@ -46,19 +46,19 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 + (void)closeSharedInstance
 {
-    if(sharedErrorMessageInstance){
+    if (sharedErrorMessageInstance) {
         [sharedErrorMessageInstance closeWindow:nil];
     }
 }
 
 - (void)displayError:(NSString *)inTitle withDescription:(NSString *)inDesc withTitle:(NSString *)inWindowTitle;
 {
-	if(inTitle && inDesc && inWindowTitle){
+	if (inTitle && inDesc && inWindowTitle) {
 		//force the window to load
 		[sharedErrorMessageInstance window];
 		
 		//add the error
-		if([errorTitleArray count] < MAX_ERRORS){ //Stop logging errors after too many
+		if ([errorTitleArray count] < MAX_ERRORS) { //Stop logging errors after too many
 			[errorTitleArray addObject:inTitle];
 			[errorDescArray addObject:inDesc];
 			[errorWindowTitleArray addObject:inWindowTitle];
@@ -70,10 +70,10 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 
 - (IBAction)okay:(id)sender
 {
-    if([errorTitleArray count] == 1){ //close the error dialog
+    if ([errorTitleArray count] == 1) { //close the error dialog
         [self closeWindow:nil];
 
-    }else{ //remove the first error and display the next one
+    } else { //remove the first error and display the next one
         [errorTitleArray removeObjectAtIndex:0];
         [errorDescArray removeObjectAtIndex:0];
         [errorWindowTitleArray removeObjectAtIndex:0];
@@ -97,7 +97,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     [super initWithWindowNibName:windowNibName];
 
 	/*
-	if(!boldErrorTitleAttributes){
+	if (!boldErrorTitleAttributes) {
 		boldErrorTitleAttributes = [[NSDictionary dictionaryWithObject:[[NSFontManager defaultManager] convertFont:[NSFont systemFontOfSize:0] 
 																									   toHaveTrait:NSBoldFontMask]
 																forKey:NSFontAttributeName] retain];
@@ -155,12 +155,12 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
 	[scrollView_errorInfo setFrame:infoFrame];
 
     //Display the current error count
-    if([errorTitleArray count] == 1){
+    if ([errorTitleArray count] == 1) {
         [tabView_multipleErrors selectTabViewItemAtIndex:0]; //hide the 'okay all' button and error count
         [[self window] setTitle:[errorWindowTitleArray objectAtIndex:0]];
         [button_okay setTitle:@"OK"];
 
-    }else{
+    } else {
         [tabView_multipleErrors selectTabViewItemAtIndex:1]; //show the 'okay all' button and error count
         [[self window] setTitle:[NSString stringWithFormat:@"%@ (x%i)",[errorWindowTitleArray objectAtIndex:0],[errorTitleArray count]]];
         [button_okay setTitle:@"Next"];

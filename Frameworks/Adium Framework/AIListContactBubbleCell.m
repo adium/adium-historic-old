@@ -30,7 +30,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		lastBackgroundBezierPath = nil;
 		outlineBubble = NO;
@@ -75,20 +75,20 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(![self cellIsSelected]){
+	if (![self cellIsSelected]) {
 		NSColor	*labelColor;
 		
 		//Label color.  If there is no label color we draw the background color (taking care of gridding if needed)
 		//We cannot use the regular table background drawing for bubble cells because of our rounded corners
 		labelColor = [self labelColor];
-		if(!labelColor) labelColor = [self backgroundColor];
+		if (!labelColor) labelColor = [self backgroundColor];
 		
 		//Draw our background with rounded corners, retaining the bezier path for use in drawUserIconInRect:position:
 		[lastBackgroundBezierPath release];
 		lastBackgroundBezierPath = [[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:rect]] retain];
 		
 		//Draw using a (slow) AIGradient if requested, otherwise just fill
-		if (drawWithGradient){
+		if (drawWithGradient) {
 			AIGradient	*gradient;
 			
 			gradient = [AIGradient gradientWithFirstColor:labelColor
@@ -96,13 +96,13 @@
 												direction:AIVertical];
 			[gradient drawInBezierPath:lastBackgroundBezierPath];
 			
-		}else{
+		} else {
 			[labelColor set];
 			[lastBackgroundBezierPath fill];
 		}
 		
 		//Draw an outline around the bubble in the textColor if requested
-		if(outlineBubble){
+		if (outlineBubble) {
 			[lastBackgroundBezierPath setLineWidth:outlineBubbleLineWidth];
 			[[self textColor] set];
 			[lastBackgroundBezierPath stroke];
@@ -113,7 +113,7 @@
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	if([self cellIsSelected]){
+	if ([self cellIsSelected]) {
 		AIGradient 	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 
 		[lastBackgroundBezierPath release];

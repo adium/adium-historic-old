@@ -41,7 +41,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName messageViewController:(AIMessageViewController *)inMessageViewController
 {
-	if((self = [super initWithWindowNibName:windowNibName])){
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		messageViewController = [inMessageViewController retain];
 	}
 

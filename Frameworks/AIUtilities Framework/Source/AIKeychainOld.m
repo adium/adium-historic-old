@@ -59,7 +59,7 @@ OSStatus GetPasswordKeychainOld(const char *service,const char *account,void *pa
 	
 	ret = GetPasswordKeychainOld([service UTF8String],[account UTF8String],&passwordData,&passwordLength,NULL);
 	
-    if (ret == noErr){
+    if (ret == noErr) {
         passwordString = [NSString stringWithCString:passwordData length:passwordLength];
 		
 		//Cleanup

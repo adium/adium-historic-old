@@ -70,11 +70,11 @@
 	[message appendAttributedString:[[[NSAttributedString alloc] initWithString:numberMessage
 																	 attributes:numberMessageAttributes] autorelease]];
 	
-	if (count == 1){
+	if (count == 1) {
 		BOOL	haveFroms = (froms != NULL);
 		BOOL	haveSubjects = (subjects != NULL);
 		
-		if (haveFroms || haveSubjects){
+		if (haveFroms || haveSubjects) {
 			NSFont			*fieldFont;
 			NSDictionary	*fieldAttributed, *infoAttributed;
 			
@@ -86,16 +86,16 @@
 			//Skip a line
 			[[message mutableString] appendString:@"\n\n"];
 			
-			if (haveFroms){
+			if (haveFroms) {
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"From: ",nil)
 																				 attributes:fieldAttributed] autorelease]];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*froms)]
 																				 attributes:infoAttributed] autorelease]];
 			}
-			if (haveFroms && haveSubjects){
+			if (haveFroms && haveSubjects) {
 				[[message mutableString] appendString:@"\n"];
 			}
-			if (haveSubjects){
+			if (haveSubjects) {
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:AILocalizedString(@"Subject: ",nil)
 																				 attributes:fieldAttributed] autorelease]];
 				[message appendAttributedString:[[[NSAttributedString alloc] initWithString:[NSString stringWithUTF8String:(*subjects)]
@@ -107,7 +107,7 @@
 	NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:title,@"Title",
 		message,@"Message",nil];
 	
-	if (urls != NULL){
+	if (urls != NULL) {
 		[infoDict setObject:[NSString stringWithUTF8String:urls[0]] forKey:@"URL"];
 	}
 	
@@ -155,9 +155,9 @@
  */
 + (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
-	switch(returnCode){
+	switch (returnCode) {
 		case AITextAndButtonsAlternateReturn:
-			if(userInfo) [self openURLString:userInfo];
+			if (userInfo) [self openURLString:userInfo];
 			break;
 
 		case AITextAndButtonsDefaultReturn:
@@ -179,7 +179,7 @@
  */ 
 + (void)openURLString:(NSString *)urlString
 {
-	if ([urlString rangeOfString:[NSString stringWithUTF8String:g_get_tmp_dir()]].location != NSNotFound){
+	if ([urlString rangeOfString:[NSString stringWithUTF8String:g_get_tmp_dir()]].location != NSNotFound) {
 		//Local HTML file
 		CFURLRef	appURL;
 		OSStatus	err;
@@ -198,7 +198,7 @@
 		//LSGetApplicationForURL() requires us to release the appURL when we are done with it
 		CFRelease(appURL);
 		
-	}else{
+	} else {
 		NSURL		*emailURL;
 		
 		//Web address

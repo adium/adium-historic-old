@@ -94,7 +94,7 @@
 	NSMenu			*dockStatusMenu = [[NSMenu alloc] init];
 
 	enumerator = [menuItemArray objectEnumerator];
-    while((menuItem = [enumerator nextObject])){
+    while ((menuItem = [enumerator nextObject])) {
 		NSMenuItem	*dockMenuItem;
 
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_State];
@@ -126,7 +126,7 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) {    
         [[adium menuController] removeMenuItem:menuItem];
     }
 	
@@ -152,13 +152,13 @@
 	AIStatus		*targetStatusState = nil;
 	BOOL			assignCmdOptionY;
 	
-	if(activeStatusType == AIAvailableStatusType){
+	if (activeStatusType == AIAvailableStatusType) {
 		//If currently available, set an equivalent for the base away
 		targetStatusType = AIAwayStatusType;
 		targetStatusState = nil;
 		assignCmdOptionY = NO;
 
-	}else{
+	} else {
 		//If away, invisible, or offline, set an equivalent for the available state
 		targetStatusType = AIAvailableStatusType;		
 		targetStatusState = [[adium statusController] defaultInitialStatusState];
@@ -166,20 +166,20 @@
 	}
 
 	enumerator = [currentMenuItemArray objectEnumerator];
-    while((menuItem = [enumerator nextObject])){
+    while ((menuItem = [enumerator nextObject])) {
 		AIStatus	*representedStatus = [[menuItem representedObject] objectForKey:@"AIStatus"];
 
 		int			tag = [menuItem tag];
-		if((tag == targetStatusType) && 
-		   (representedStatus == targetStatusState)){			
+		if ((tag == targetStatusType) && 
+		   (representedStatus == targetStatusState)) {			
 			[menuItem setKeyEquivalent:@"y"];
 			[menuItem setKeyEquivalentModifierMask:NSCommandKeyMask];
 
-		}else if(assignCmdOptionY && ((tag == AIAwayStatusType) && (representedStatus == nil))){
+		} else if (assignCmdOptionY && ((tag == AIAwayStatusType) && (representedStatus == nil))) {
 			[menuItem setKeyEquivalent:@"y"];
 			[menuItem setKeyEquivalentModifierMask:(NSCommandKeyMask | NSAlternateKeyMask)];
 			
-		}else{
+		} else {
 			[menuItem setKeyEquivalent:@""];
 			
 		}
@@ -208,7 +208,7 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) {    
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
     }
 }
@@ -225,7 +225,7 @@
 	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-    while((menuItem = [enumerator nextObject])){    
+    while ((menuItem = [enumerator nextObject])) {    
         [[adium menuController] removeMenuItem:menuItem];
     }
 }

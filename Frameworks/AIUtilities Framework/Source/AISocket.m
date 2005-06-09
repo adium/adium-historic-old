@@ -55,16 +55,16 @@
     BOOL success = NO;
 
     //If we are ready for sending, send out the buffer contents
-    if([self readyForSending]){
+    if ([self readyForSending]) {
         const char		*bytes = [inData bytes];
         int			length = [inData length];
         int			bytesLeft = length;
         int			bytesSent = 0;
 
         //send it
-        while(bytesLeft > 0){
+        while (bytesLeft > 0) {
             bytesSent = send(theSocket, bytes + (length - bytesLeft), bytesLeft, 0);
-            if(bytesSent <= 0){
+            if (bytesSent <= 0) {
                 isValid = NO;
                 break;
             }
@@ -91,26 +91,26 @@
     allDataAvailable = NO;
 
     //
-    if([readBuffer length] >= inLength){ // this data is fully in the buffer
+    if ([readBuffer length] >= inLength) { // this data is fully in the buffer
         //Return the correct bytes from the buffer
         *outData = [NSData dataWithBytes:[readBuffer bytes] length:inLength];// autorelease];
         allDataAvailable = YES;
         
 		//Remove the bytes from the read buffer (if desired)
-		if(allDataAvailable && shouldRemove){
+		if (allDataAvailable && shouldRemove) {
 			[self removeDataBytes:inLength];
 		}
 
-    }else{ // This data hasn't arrived yet (or has only partially arrived)
+    } else { // This data hasn't arrived yet (or has only partially arrived)
 
-        if([self readyForReceiving]){
+        if ([self readyForReceiving]) {
             //Read the bytes (or remaining bytes) from the net
             bytesRead = recv(theSocket, &tempBuffer, (inLength - [readBuffer length]), 0);
 
-            if(bytesRead == 0){ //Our socket is disconnected
+            if (bytesRead == 0) { //Our socket is disconnected
                 isValid = NO;
 
-            }else if(bytesRead > 0){
+            } else if (bytesRead > 0) {
                 //Append the bytes to the read buffer
                 [readBuffer appendBytes:tempBuffer length:bytesRead];
 
@@ -118,7 +118,7 @@
                 allDataAvailable = ([readBuffer length] == inLength); //YES if we have all the data
 
                 //Remove the bytes from the read buffer (if desired)
-                if(allDataAvailable && shouldRemove){
+                if (allDataAvailable && shouldRemove) {
                     [self removeDataBytes:inLength];
                 }
             }
@@ -138,14 +138,14 @@
     int 	c;
 
     //Read a chunk of data into the buffer
-    if([self readyForReceiving]){
+    if ([self readyForReceiving]) {
         int	bytesRead;
 
         bytesRead = recv(theSocket, &tempBuffer, sizeof(tempBuffer), 0);
 
-        if(bytesRead == 0){ //Our socket is disconnected
+        if (bytesRead == 0) { //Our socket is disconnected
             isValid = NO;
-        }else if(bytesRead > 0){ //Append the bytes to the read buffer
+        } else if (bytesRead > 0) { //Append the bytes to the read buffer
             [readBuffer appendBytes:tempBuffer length:bytesRead];
         }
     }
@@ -158,13 +158,13 @@
     length = [readBuffer length];
     bytes = [readBuffer bytes];
 
-    for(c = 0; c < length - 1; c++){
-        if(bytes[c] == '\r' && bytes[c+1] == '\n'){
+    for (c = 0; c < length - 1; c++) {
+        if (bytes[c] == '\r' && bytes[c+1] == '\n') {
             *outData = [NSData dataWithBytes:bytes length:(c + 2)];
             lineAvailable = YES;
             
             //Remove the bytes from the read buffer (if desired)
-            if(shouldRemove){
+            if (shouldRemove) {
                 [self removeDataBytes:(c + 2)];
             }
 
@@ -178,11 +178,11 @@
 //Remove data from the buffer
 - (void)removeDataBytes:(int)inLength
 {
-    if([readBuffer length] == inLength){
+    if ([readBuffer length] == inLength) {
         //Reset the data
         [readBuffer autorelease]; readBuffer = nil;
         readBuffer = [[NSMutableData alloc] init];
-    }else{
+    } else {
         const char *bytes = [readBuffer bytes];
 
         //subtract the bytes
@@ -217,7 +217,7 @@
 
     //resolve the host
     hostEnt = gethostbyname([host cString]);
-    if(!hostEnt){
+    if (!hostEnt) {
         NSLog(@"Error finding host");
         return(nil);
     }
@@ -227,7 +227,7 @@
     
     //Create the socket
     theSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if(theSocket < 0){
+    if (theSocket < 0) {
         NSLog(@"Error creating socket");
         return(nil);
     }
@@ -246,7 +246,7 @@
     
     //Connect
     isValid = YES;    
-    if(connect(theSocket, (struct sockaddr *)&socketAddress, sizeof(struct sockaddr)) != 0 && errno != EINPROGRESS){    
+    if (connect(theSocket, (struct sockaddr *)&socketAddress, sizeof(struct sockaddr)) != 0 && errno != EINPROGRESS) {    
         NSLog(@"Error initiating connecting");
         isValid = NO;
     }
@@ -276,7 +276,7 @@
         socklen_t	size = sizeof(error);
 
         getsockopt(theSocket, SOL_SOCKET, SO_ERROR, &error, &size);
-        if(error != 0){
+        if (error != 0) {
             NSLog(@"Socket(opt) error: %i",(int)error);
             isValid = NO;
             return(NO);
@@ -320,8 +320,8 @@
 /* Mini-Docs
 Non blocking reading
 
- if([socket readyForReceiving] && [socket getDataOfLength:HEADER_SIZE]){
-     if([socket getDataOfLength:CONTENT_SIZE]){
+ if ([socket readyForReceiving] && [socket getDataOfLength:HEADER_SIZE]) {
+     if ([socket getDataOfLength:CONTENT_SIZE]) {
          [socket removeDataBytes:HEADER_SIZE + CONTENT_SIZE];
 
          //Process the packet         

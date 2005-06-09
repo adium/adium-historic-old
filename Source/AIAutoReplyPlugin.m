@@ -82,8 +82,8 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]] &&
-	   [inModifiedKeys containsObject:@"StatusState"]){
+	if ([inObject isKindOfClass:[AIAccount class]] &&
+	   [inModifiedKeys containsObject:@"StatusState"]) {
 			
 		//Reset our list of contacts who have already received an auto-reply
 		[receivedAutoReply release];
@@ -107,10 +107,10 @@
 	//We will not respond to the received message if it is an auto-reply, over a chat where we have already responded,
 	//or over a chat with a name.
 	//XXX - Using the presence of a name on the chat to determine if it's multi-user or not is not clean -ai
-	if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
+	if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
 	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
-	   [chat name] == nil){
+	   [chat name] == nil) {
 		
 		[self sendAutoReplyFromAccount:[contentObject destination]
 							 toContact:[contentObject source]
@@ -132,7 +132,7 @@
 	AIContentMessage	*responseContent;
 	NSAttributedString 	*autoReply;
 
-	if((autoReply = [[[chat account] statusState] autoReply])){
+	if ((autoReply = [[[chat account] statusState] autoReply])) {
 		responseContent = [AIContentMessage messageInChat:chat
 											   withSource:source
 											  destination:destination
@@ -155,8 +155,8 @@
     AIContentObject	*contentObject = [[notification userInfo] objectForKey:@"AIContentObject"];
 	AIChat			*chat = [contentObject chat];
    
-    if([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]){
-        if(![receivedAutoReply containsObjectIdenticalTo:chat]){
+    if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
+        if (![receivedAutoReply containsObjectIdenticalTo:chat]) {
             [receivedAutoReply addObject:chat];
         }
     }

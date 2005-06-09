@@ -75,7 +75,7 @@ static NSArray *draggedTypes = nil;
 - (id)initForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
     //init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[self _initWebView];
 
@@ -192,7 +192,7 @@ static NSArray *draggedTypes = nil;
 	
     //Convert height to the scaled view 
 	float scale = [[[sharedPrintInfo dictionary] objectForKey:NSPrintScalingFactor] floatValue];
-	if(!scale) scale = 1.0;	
+	if (!scale) scale = 1.0;	
     pageWidth = pageWidth / scale;
 	
 	//Get the HTMLDocumentView which has all the content we want
@@ -284,24 +284,24 @@ static NSArray *draggedTypes = nil;
 {
 	NSString		*variantKey = [plugin styleSpecificKey:@"Variant" forStyle:activeStyle];
 	
-	if([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]){
+	if ([group isEqualToString:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY]) {
 		//Variant changes we can apply immediately.  All other changes require us to reload the view
-		if(!firstTime && [key isEqualToString:variantKey]){
+		if (!firstTime && [key isEqualToString:variantKey]) {
 			[activeVariant release]; activeVariant = [[prefDict objectForKey:variantKey] retain];
 			[self _updateVariantWithoutPrimingView];
 			
-		}else if(firstTime || shouldReflectPreferenceChanges){
+		} else if (firstTime || shouldReflectPreferenceChanges) {
 			//Ignore changes related to our background image cache.  These keys are used for storage only and aren't
 			//something we need to update in response to.  All other display changes we update our view for.
-			if(![key isEqualToString:@"BackgroundCacheUniqueID"] &&
-			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]){
+			if (![key isEqualToString:@"BackgroundCacheUniqueID"] &&
+			   ![key isEqualToString:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]]) {
 				[self _updateWebViewForCurrentPreferences];
 			}
 			
 		}
 	}
 	
-	if(([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] && shouldReflectPreferenceChanges)){
+	if (([group isEqualToString:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES] && shouldReflectPreferenceChanges)) {
 		//If the background image changes, wipe the cache and update for the new image
 		[[adium preferenceController] setPreference:nil
 											 forKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]
@@ -326,7 +326,7 @@ static NSArray *draggedTypes = nil;
 	[webView setDraggingDelegate:self];
 	[webView setMaintainsBackForwardList:NO];
 	
-	if(!draggedTypes){
+	if (!draggedTypes) {
 		draggedTypes = [[NSArray alloc] initWithObjects:
 			NSFilenamesPboardType,
 			NSTIFFPboardType,
@@ -362,7 +362,7 @@ static NSArray *draggedTypes = nil;
 
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
-	if(!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
+	if (!activeVariant) activeVariant = [[messageStyle defaultVariant] retain];
 	
 	//Update message style behavior
 	[messageStyle setShowUserIcons:[[prefDict objectForKey:KEY_WEBKIT_SHOW_USER_ICONS] boolValue]];
@@ -377,13 +377,13 @@ static NSArray *draggedTypes = nil;
 	//Webkit wants to load these from disk, but we have it stuffed in a plist.  So we'll write it out as an image
 	//into the cache and have webkit fetch from there.
 	NSString	*cachePath = nil;
-	if([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]){
+	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
 		cachePath = [prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]];
-		if(!cachePath || ![[NSFileManager defaultManager] fileExistsAtPath:cachePath]){
+		if (!cachePath || ![[NSFileManager defaultManager] fileExistsAtPath:cachePath]) {
 			NSData	*backgroundImage = [[adium preferenceController] preferenceForKey:[plugin styleSpecificKey:@"Background" forStyle:activeStyle]
 																				group:PREF_GROUP_WEBKIT_BACKGROUND_IMAGES];
 			
-			if(backgroundImage){
+			if (backgroundImage) {
 				//Generate a unique cache ID for this image
 				int	uniqueID = [[prefDict objectForKey:@"BackgroundCacheUniqueID"] intValue] + 1;
 				[[adium preferenceController] setPreference:[NSNumber numberWithInt:uniqueID]
@@ -399,7 +399,7 @@ static NSArray *draggedTypes = nil;
 				[[adium preferenceController] setPreference:cachePath
 													 forKey:[plugin styleSpecificKey:@"BackgroundCachePath" forStyle:activeStyle]
 													  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-			}else{
+			} else {
 				cachePath = @""; //No custom image found
 			}
 		}
@@ -408,9 +408,9 @@ static NSArray *draggedTypes = nil;
 	[messageStyle setCustomBackgroundType:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:activeStyle]] intValue]];
 
 	//Custom background color
-	if([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]){
+	if ([[prefDict objectForKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:activeStyle]] boolValue]) {
 		[messageStyle setCustomBackgroundColor:[[prefDict objectForKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:activeStyle]] representedColor]];
-	}else{
+	} else {
 		[messageStyle setCustomBackgroundColor:nil];
 	}
 	
@@ -434,9 +434,9 @@ static NSArray *draggedTypes = nil;
 - (void)_updateVariantWithoutPrimingView
 {
 	//We can only change the variant if the web view is ready.  If it's not ready we wait a bit and try again.
-	if(webViewIsReady){
+	if (webViewIsReady) {
 		[webView stringByEvaluatingJavaScriptFromString:[messageStyle scriptForChangingVariant:activeVariant]];			
-	}else{
+	} else {
 		[self performSelector:@selector(_updateVariantWithoutPrimingView) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
 	}
 }
@@ -453,7 +453,7 @@ static NSArray *draggedTypes = nil;
 	[webView setFrameLoadDelegate:self];
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
-	if(reprocessContent){
+	if (reprocessContent) {
 		/* Just in case we are in the middle of adding content, clean out the  newContent array.
 		 * The chat's contentObjectArray will have the new object; we won't lose anything.
 		 */
@@ -462,7 +462,7 @@ static NSArray *draggedTypes = nil;
 		//The first object in the chat's contentObjectArray is the most recent; we want to add chronologically, so reverse the array.
 		NSEnumerator	*enumerator = [[chat contentObjectArray] reverseObjectEnumerator];
 		AIContentObject	*object;
-		while((object = [enumerator nextObject])){
+		while ((object = [enumerator nextObject])) {
 			[contentQueue addObject:object];
 		}
 		
@@ -486,7 +486,7 @@ static NSArray *draggedTypes = nil;
 	 * This is NO, for example, when we receive an entire block of message history content so that we can avoid scrolling
 	 * after each one.
 	 */
-	if([contentObject displayContentImmediately]){
+	if ([contentObject displayContentImmediately]) {
 		[self processQueuedContent];
 	}
 }
@@ -507,10 +507,10 @@ static NSArray *draggedTypes = nil;
 	unsigned	contentQueueCount, objectsAdded = 0;
 	BOOL		willAddMoreContentObjects = NO;
 	
-	if(webViewIsReady){
+	if (webViewIsReady) {
 		contentQueueCount = [contentQueue count];
 
-		while(contentQueueCount > 0){
+		while (contentQueueCount > 0) {
 			AIContentObject *content;
 
 			willAddMoreContentObjects = (contentQueueCount > 1);
@@ -529,16 +529,16 @@ static NSArray *draggedTypes = nil;
 	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
 	 * was added.
 	 */
-	if(objectsAdded > 1){
+	if (objectsAdded > 1) {
 		NSString	*scrollToBottomScript;
 		
-		if(scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects]){
+		if (scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects]) {
 			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
 		}
 	}
 	
 	//If there is still content to process (the webview wasn't ready), we'll try again after a brief delay
-	if(contentQueueCount){
+	if (contentQueueCount) {
 		[self performSelector:@selector(processQueuedContent) withObject:nil afterDelay:NEW_CONTENT_RETRY_DELAY];
 	}
 }
@@ -555,8 +555,8 @@ static NSArray *draggedTypes = nil;
 	 If the day has changed since our last message (or if there was no previous message and 
 	 we are about to display context), insert a date line.
 	 */
-	if((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
-	   (![content isFromSameDayAsContent:previousContent])){
+	if ((!previousContent && [content isKindOfClass:[AIContentContext class]]) ||
+	   (![content isFromSameDayAsContent:previousContent])) {
 		dateMessage = [[content date] descriptionWithCalendarFormat:[[NSDateFormatter localizedDateFormatter] dateFormat]
 														   timeZone:nil
 															 locale:nil];
@@ -621,13 +621,13 @@ static NSArray *draggedTypes = nil;
     decisionListener:(id<WebPolicyDecisionListener>)listener
 {
     int actionKey = [[actionInformation objectForKey: WebActionNavigationTypeKey] intValue];
-    if (actionKey == WebNavigationTypeOther){
+    if (actionKey == WebNavigationTypeOther) {
 		[listener use];
     } else {
 		NSURL *url = [actionInformation objectForKey:WebActionOriginalURLKey];
 		
 		//Ignore file URLs, but open anything else
-		if(![url isFileURL]){
+		if (![url isFileURL]) {
 			[[NSWorkspace sharedWorkspace] openURL:url];
 		}
 		
@@ -643,10 +643,10 @@ static NSArray *draggedTypes = nil;
 	NSMutableArray *webViewMenuItems = [[defaultMenuItems mutableCopy] autorelease];
 	AIListContact	*chatListObject = [chat listObject];
 
-	if (webViewMenuItems){
+	if (webViewMenuItems) {
 		NSImage			*image;
 		
-		if((image = [element objectForKey:WebElementImageKey])){
+		if ((image = [element objectForKey:WebElementImageKey])) {
 			//Remove the first two items, which are "Open Image in New Window" and "Download Image"
 			[webViewMenuItems removeObjectAtIndex:0];
 			[webViewMenuItems removeObjectAtIndex:0];
@@ -654,30 +654,30 @@ static NSArray *draggedTypes = nil;
 			//XXX - Save Image As... item with the NSImage as representedObject
 		}
 
-		if([webViewMenuItems count] >= 1){
+		if ([webViewMenuItems count] >= 1) {
 			NSString	*nextMenuItemTitle = [[webViewMenuItems objectAtIndex:0] title];
-			if(nextMenuItemTitle &&
-			   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)){
+			if (nextMenuItemTitle &&
+			   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)) {
 				//Remove the next item, which is "Reload"
 				[webViewMenuItems removeObjectAtIndex:0];			
 			}
 		}
 	}
 	
-	if (chatListObject){
+	if (chatListObject) {
 		NSMenuItem		*menuItem;
 		NSEnumerator	*enumerator;
-		if (webViewMenuItems){
+		if (webViewMenuItems) {
 			//Add a separator item if items already exist in webViewMenuItems
-			if ([webViewMenuItems count]){
+			if ([webViewMenuItems count]) {
 				[webViewMenuItems addObject:[NSMenuItem separatorItem]];
 			}
-		}else{
+		} else {
 			webViewMenuItems = [NSMutableArray array];
 		}
 		
 		NSArray *locations;
-		if ([chatListObject isStranger]){
+		if ([chatListObject isStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -685,7 +685,7 @@ static NSArray *draggedTypes = nil;
 				[NSNumber numberWithInt:Context_Contact_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Stranger_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
-		}else{
+		} else {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -700,7 +700,7 @@ static NSArray *draggedTypes = nil;
 		//Have to copy and autorelease here since the itemArray will change as we go through the items
 		enumerator = [[[[originalMenu itemArray] copy] autorelease] objectEnumerator];
 		
-		while ((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			[menuItem retain];
 			[originalMenu removeItem:menuItem];
 			[webViewMenuItems addObject:menuItem];
@@ -724,8 +724,8 @@ static NSArray *draggedTypes = nil;
 	id	responder = [webView nextResponder];
 	
 	//Walkin the responder chain looking for an NSTextView
-	while(responder &&
-		  ![responder isKindOfClass:[NSTextView class]]){
+	while (responder &&
+		  ![responder isKindOfClass:[NSTextView class]]) {
 		responder = [responder nextResponder];
 	}
 	
@@ -762,23 +762,23 @@ static NSArray *draggedTypes = nil;
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	BOOL			success = NO;
 	
-	if ([self shouldHandleDragWithPasteboard:pasteboard]){
+	if ([self shouldHandleDragWithPasteboard:pasteboard]) {
 		
 		//Not an image but it is a file - send it immediately as a file transfer
 		NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSEnumerator	*enumerator = [files objectEnumerator];
 		NSString		*path;
-		while ((path = [enumerator nextObject])){
+		while ((path = [enumerator nextObject])) {
 			AIListObject *listObject = [chat listObject];
-			if(listObject){
+			if (listObject) {
 				[[adium fileTransferController] sendFile:path toListContact:(AIListContact *)listObject];
 			}
 		}
 		success = YES;
 		
-	}else{
+	} else {
 		NSTextView *textView = [self textView];
-		if(textView){
+		if (textView) {
 			[[webView window] makeFirstResponder:textView]; //Make it first responder
 			success = [textView performDragOperation:sender];
 		}
@@ -795,9 +795,9 @@ static NSArray *draggedTypes = nil;
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	BOOL	success = YES;
 	
-	if (![self shouldHandleDragWithPasteboard:pasteboard]){	
+	if (![self shouldHandleDragWithPasteboard:pasteboard]) {	
 		NSTextView *textView = [self textView];
-		if(textView){
+		if (textView) {
 			success = [textView prepareForDragOperation:sender];
 		}
 	}
@@ -812,9 +812,9 @@ static NSArray *draggedTypes = nil;
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	
-	if (![self shouldHandleDragWithPasteboard:pasteboard]){
+	if (![self shouldHandleDragWithPasteboard:pasteboard]) {
 		NSTextView *textView = [self textView];
-		if(textView){
+		if (textView) {
 			[textView concludeDragOperation:sender];
 		}
 	}
@@ -854,9 +854,9 @@ static NSArray *draggedTypes = nil;
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while ((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		//Update the mask for any user which just entered the chat
-		if (![objectsWithUserIconsArray containsObjectIdenticalTo:object]){
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:object]) {
 			[self _updateUserIconForObject:object];
 		}
 		
@@ -891,7 +891,7 @@ static NSArray *draggedTypes = nil;
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while ((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		//In the future, watch for changes
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:) 
@@ -916,10 +916,10 @@ static NSArray *draggedTypes = nil;
     AIListObject	*inObject = [notification object];
     NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
-	if(inObject &&
+	if (inObject &&
 	   ([keys containsObject:KEY_USER_ICON]) &&
 	   (([[chat participatingListObjects] indexOfObject:inObject] != NSNotFound) ||
-		([chat account] == inObject))){ /* The account is not on the participating list objects list */
+		([chat account] == inObject))) { /* The account is not on the participating list objects list */
 		
 		[self _updateUserIconForObject:inObject];
 	}
@@ -937,13 +937,13 @@ static NSArray *draggedTypes = nil;
 	NSImage				*webKitUserIcon;
 	
 	//If that's not the case, try using the UserIconPath
-	if (!userIcon){
+	if (!userIcon) {
 		userIcon = [[[NSImage alloc] initWithContentsOfFile:[inObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
 	
 	//Apply the mask
-	if(userIcon){
-		if([messageStyle userIconMask]){
+	if (userIcon) {
+		if ([messageStyle userIconMask]) {
 			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
 			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
@@ -951,19 +951,19 @@ static NSArray *draggedTypes = nil;
 					   operation:NSCompositeSourceIn
 						fraction:1.0];
 			[webKitUserIcon unlockFocus];
-		}else{
+		} else {
 			webKitUserIcon = userIcon;
 		}
 		
 		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
 		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
-												  atomically:YES]){
+												  atomically:YES]) {
 			[inObject setStatusObject:webKitUserIconPath
 							   forKey:KEY_WEBKIT_USER_ICON
 							   notify:NO];
 			
 			//Make sure it's known that this user has been handled (this will rarely be a problem, if ever)
-			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]){
+			if (![objectsWithUserIconsArray containsObjectIdenticalTo:inObject]) {
 				[objectsWithUserIconsArray addObject:inObject];
 			}
 		}

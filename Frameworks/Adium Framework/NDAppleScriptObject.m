@@ -70,7 +70,7 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 
 - (id)initWithString:(NSString *)aString modeFlags:(long)aModeFlags componentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if( (self = [self initWithComponentInstance:aComponentInstance]) != nil )
+	if ( (self = [self initWithComponentInstance:aComponentInstance]) != nil )
 	{
 		source = [aString retain];
 		[self compileWithModeFlags:aModeFlags];
@@ -89,7 +89,7 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 
 - (NSDictionary *)error
 {
-	if( error == nil )
+	if ( error == nil )
 		error = [[[self componentInstance] error] retain];
 
 	return error;
@@ -102,11 +102,11 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 
 - (void)setSource:(NSString *)aSource
 {
-	if( aSource != nil && source != aSource )
+	if ( aSource != nil && source != aSource )
 	{
 		[source release];
 		source = [aSource retain];
-		if( scriptID != kOSANullScript )
+		if ( scriptID != kOSANullScript )
 			NDLogOSStatus( OSADispose( [self instanceRecord], scriptID ));
 		scriptID = kOSANullScript;
 	}
@@ -114,11 +114,11 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 
 - (BOOL)compileWithModeFlags:(long)aModeFlags
 {
-	if( ![self isCompiled] && source != nil )
+	if ( ![self isCompiled] && source != nil )
 	{
 		scriptID = [NDAppleScriptObject compileString:source modeFlags:aModeFlags scriptID:kOSANullScript componentInstance:[self componentInstance]];
 
-		if( scriptID != kOSANullScript )
+		if ( scriptID != kOSANullScript )
 		{
 			[source release];		// don't need the source anymore
 			source = nil;
@@ -153,14 +153,14 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 	BOOL					theResult = NO,
 		theCanNotWriteTo = NO;
 
-	if( [self isCompiled] && (theData = [self data]) )
+	if ( [self isCompiled] && (theData = [self data]) )
 	{
-		if( ![[NSFileManager defaultManager] fileExistsAtPath:[aURL path] isDirectory:&theCanNotWriteTo] )
+		if ( ![[NSFileManager defaultManager] fileExistsAtPath:[aURL path] isDirectory:&theCanNotWriteTo] )
 		{
 			theCanNotWriteTo = ![[NSFileManager defaultManager] createFileAtPath:[aURL path] contents:nil attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:kScriptEditorCreatorCode], NSFileHFSCreatorCode, [NSNumber numberWithUnsignedLong:kCompiledAppleScriptTypeCode], NSFileHFSTypeCode, nil]];
 		}
 
-		if( !theCanNotWriteTo )
+		if ( !theCanNotWriteTo )
 			theResult = [theData writeToResourceForkURL:aURL type:kOSAScriptResourceType Id:anID name:kScriptResourceName];
 	}
 
@@ -174,14 +174,14 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
 	BOOL					theResult = NO,
 		theCanNotWriteTo = NO;
 
-	if( [self isCompiled] && (theData = [self data]) )
+	if ( [self isCompiled] && (theData = [self data]) )
 	{
-		if( ![[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&theCanNotWriteTo] )
+		if ( ![[NSFileManager defaultManager] fileExistsAtPath:aPath isDirectory:&theCanNotWriteTo] )
 		{
 			theCanNotWriteTo = ![[NSFileManager defaultManager] createFileAtPath:aPath contents:nil attributes:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithUnsignedLong:kScriptEditorCreatorCode], NSFileHFSCreatorCode, [NSNumber numberWithUnsignedLong:kCompiledAppleScriptTypeCode], NSFileHFSTypeCode, nil]];
 		}
 
-		if( !theCanNotWriteTo )
+		if ( !theCanNotWriteTo )
 			theResult = [theData writeToResourceForkFile:aPath type:kOSAScriptResourceType Id:anID name:kScriptResourceName];
 	}
 
@@ -198,7 +198,7 @@ static const OSType	kScriptEditorCreatorCode = 'ToyS',
  */
 - (id)initWithScriptID:(OSAID)aScriptID componentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if(NDLogFalse([[NDScriptData classForScriptID:aScriptID componentInstance:aComponentInstance] isSubclassOfClass:[NDScriptContext class]])
+	if (NDLogFalse([[NDScriptData classForScriptID:aScriptID componentInstance:aComponentInstance] isSubclassOfClass:[NDScriptContext class]])
 		&& NDLogFalse(self = [self initWithComponentInstance:aComponentInstance]))
 	{
 		scriptID = aScriptID;

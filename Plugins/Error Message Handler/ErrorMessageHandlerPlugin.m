@@ -89,9 +89,9 @@
 {
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
 	
-	if(alertText && [alertText length]){
+	if (alertText && [alertText length]) {
 		return([NSString stringWithFormat:ERROR_MESSAGE_ALERT_LONG, alertText]);
-	}else{
+	} else {
 		return(ERROR_MESSAGE_ALERT_SHORT);
 	}
 }
@@ -126,9 +126,9 @@
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+	if ([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]) {
 		description = AILocalizedString(@"Error occurs",nil);
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -141,9 +141,9 @@
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+	if ([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]) {
 		description = @"Error";
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -155,9 +155,9 @@
 {
 	NSString	*description;
 
-	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+	if ([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]) {
 		description = AILocalizedString(@"When an error occurs",nil);
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -176,20 +176,20 @@
 {
 	NSString	*description = nil;
 
-	if([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]){
+	if ([eventID isEqualToString:INTERFACE_ERROR_MESSAGE]) {
 		NSString	*errorTitle = [userInfo objectForKey:@"Title"];
 		NSString	*errorDescription = [userInfo objectForKey:@"Description"];
-		if(errorTitle && errorDescription){
+		if (errorTitle && errorDescription) {
 			description = [NSString stringWithFormat:@"%@\n%@",errorTitle,errorDescription];
 			
-		}else if(errorTitle || errorDescription){
+		} else if (errorTitle || errorDescription) {
 			description = (errorTitle ? errorTitle : errorDescription);
 			
-		}else{
+		} else {
 			description = AILocalizedString(@"An error occurred",nil);
 		}
 
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -199,7 +199,7 @@
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	static NSImage	*eventImage = nil;
-	if(!eventImage) eventImage = [[NSImage imageNamed:@"ErrorAlert" forClass:[self class]] retain];
+	if (!eventImage) eventImage = [[NSImage imageNamed:@"ErrorAlert" forClass:[self class]] retain];
 	return eventImage;
 }
 

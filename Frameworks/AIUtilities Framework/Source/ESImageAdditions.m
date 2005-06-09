@@ -62,13 +62,13 @@
 	
 	//Find an NSBitmapImageRep from the temporary image
 	enumerator = [[tempImage representations] objectEnumerator];
-	while((imageRep = [enumerator nextObject])){
-		if([imageRep isKindOfClass:[NSBitmapImageRep class]])
+	while ((imageRep = [enumerator nextObject])) {
+		if ([imageRep isKindOfClass:[NSBitmapImageRep class]])
 			break;
 	}
 	
 	//Make one if necessary
-	if(!imageRep){
+	if (!imageRep) {
 		imageRep = [NSBitmapImageRep imageRepWithData:[tempImage TIFFRepresentation]];
     }
 	
@@ -117,7 +117,7 @@
 	
 	NSBitmapImageRep *bm = [self bitmapRep]; 
 	
-	if(bm){
+	if (bm) {
 		NSDictionary *properties =  [NSDictionary dictionaryWithObjectsAndKeys:
 			[NSNumber numberWithBool:YES], NSImageDitherTransparency,
 			nil];
@@ -147,16 +147,16 @@
     double  right = rect.origin.x + rect.size.width;
     
     //Tile vertically
-    while(destRect.origin.y < top){
+    while (destRect.origin.y < top) {
 		//Tile horizontally
-		while(destRect.origin.x < right){
+		while (destRect.origin.x < right) {
 			NSRect  sourceRect = NSMakeRect(0, 0, size.width, size.height);
 			
 			//Crop as necessary
-			if((destRect.origin.x + destRect.size.width) > right){
+			if ((destRect.origin.x + destRect.size.width) > right) {
 				sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - right;
 			}
-			if((destRect.origin.y + destRect.size.height) > top){
+			if ((destRect.origin.y + destRect.size.height) > top) {
 				sourceRect.size.height -= (destRect.origin.y + destRect.size.height) - top;
 			}
 			
@@ -188,19 +188,19 @@
 	NSSize  originalSize = [self size];
 	
 	//Proceed only if size or delta are changing
-	if((NSEqualSizes(originalSize, size)) && (delta == 1.0) && !flipImage){
+	if ((NSEqualSizes(originalSize, size)) && (delta == 1.0) && !flipImage) {
 		return([[self copy] autorelease]);
 		
-	}else{
+	} else {
 		NSImage *newImage;
 		NSRect	newRect;
 		
 		//Scale proportionally (rather than stretching to fit) if requested and needed
-		if (proportionally && (originalSize.width != originalSize.height)){
-			if (originalSize.width > originalSize.height){
+		if (proportionally && (originalSize.width != originalSize.height)) {
+			if (originalSize.width > originalSize.height) {
 				//Give width priority: Make the height change by the same proportion as the width will change
 				size.height = originalSize.height * (size.width / originalSize.width);
-			}else{
+			} else {
 				//Give height priority: Make the width change by the same proportion as the height will change
 				size.width = originalSize.width * (size.height / originalSize.height);
 			}
@@ -209,7 +209,7 @@
 		newRect = NSMakeRect(0,0,size.width,size.height);
 		newImage = [[NSImage alloc] initWithSize:size];
 
-		if(flipImage) [newImage setFlipped:YES];		
+		if (flipImage) [newImage setFlipped:YES];		
 		
 		[newImage lockFocus];
 		//Highest quality interpolation
@@ -229,7 +229,7 @@
     NSParameterAssert(gworld != NULL);
 	
     PixMapHandle pixMapHandle = GetGWorldPixMap( gworld );
-    if(LockPixels(pixMapHandle)){
+    if (LockPixels(pixMapHandle)) {
         Rect 	portRect;
         
 		GetPortBounds( gworld, &portRect );
@@ -310,7 +310,7 @@
     FSRef       ref;
     NSImage     *closeImage = nil;
     
-    if(FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
+    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
 		HFSUniStr255    forkName;
 		SInt16			refNum;
 		Handle			resource;
@@ -318,9 +318,9 @@
 		GWorldPtr       gWorld;
 		int				resourceID;
 		
-		if(inTint == NSBlueControlTint){
+		if (inTint == NSBlueControlTint) {
 			resourceID = RESOURCE_ID_CLOSE_BUTTON_AQUA;
-		}else{ //inTint == NSGraphiteControlTint
+		} else { //inTint == NSGraphiteControlTint
 			resourceID = RESOURCE_ID_CLOSE_BUTTON_GRAPHITE;
 		}
 		
@@ -354,7 +354,7 @@
     FSRef       ref;
     NSImage     *closeImage = nil;
     
-    if(FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr){
+    if (FSPathMakeRef((unsigned char *)[theFilePath fileSystemRepresentation], &ref, NULL) == noErr) {
 		HFSUniStr255    forkName;
 		SInt16			refNum;
 		Handle			resource;
@@ -394,18 +394,18 @@
 
 	//If we're passed a 0,0 size, use the image's size for the area taken up by the image 
 	//(which may exceed the actual image dimensions)
-	if(size.width == 0 || size.height == 0) size = ownSize;
+	if (size.width == 0 || size.height == 0) size = ownSize;
 	
 	NSRect	drawRect = [self rectForDrawingInRect:rect atSize:size position:position];
 	
 	//If we are drawing in a rect wider than we are, center horizontally
-	if (drawRect.size.width > ownSize.width){
+	if (drawRect.size.width > ownSize.width) {
 		drawRect.origin.x += (drawRect.size.width - ownSize.width) / 2;
 		drawRect.size.width -= (drawRect.size.width - ownSize.width);
 	}
 
 	//If we are drawing in a rect higher than we are, center vertically
-	if (drawRect.size.height > ownSize.height){
+	if (drawRect.size.height > ownSize.height) {
 		drawRect.origin.y += (drawRect.size.height - ownSize.height) / 2;
 		drawRect.size.height -= (drawRect.size.height - ownSize.height);
 	}
@@ -418,7 +418,7 @@
 	
 	//Shift the origin if needed, and decrease the available destination rect width, by the passed size
 	//(which may exceed the actual image dimensions)
-	if(position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
+	if (position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
 	rect.size.width -= size.width;
 
 	return(rect);
@@ -429,10 +429,10 @@
 	NSRect	drawRect;
 	
 	//If we're passed a 0,0 size, use the image's size
-	if(size.width == 0 || size.height == 0) size = [self size];
+	if (size.width == 0 || size.height == 0) size = [self size];
 	
 	//Adjust
-	switch(position){
+	switch (position) {
 		case IMAGE_POSITION_LEFT:
 			drawRect = NSMakeRect(rect.origin.x,
 								  rect.origin.y + (int)((rect.size.height - size.height) / 2.0),

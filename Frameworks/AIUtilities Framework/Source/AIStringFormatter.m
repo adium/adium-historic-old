@@ -31,7 +31,7 @@
 
 - (id)initAllowingCharacters:(NSCharacterSet *)inCharacters length:(int)inLength caseSensitive:(BOOL)inCaseSensitive errorMessage:(NSString *)inErrorMessage
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		errorMessage = [inErrorMessage retain];
 		characters = [inCharacters retain];
 		length = inLength;
@@ -44,7 +44,7 @@
 
 - (NSString *)stringForObjectValue:(id)obj
 {
-    if(![obj isKindOfClass:[NSString class]]){
+    if (![obj isKindOfClass:[NSString class]]) {
         return(nil);
     }
 
@@ -63,42 +63,42 @@
 	BOOL	shouldIncreaseErrorCounter = NO;
 	
     //Check length
-    if(length > 0 && [*partialStringPtr length] > length){
+    if (length > 0 && [*partialStringPtr length] > length) {
         valid = NO;
 		shouldIncreaseErrorCounter = YES;
     }
 	
     //Check for invalid characters
-    if(characters != nil && [*partialStringPtr length] > 0){
+    if (characters != nil && [*partialStringPtr length] > 0) {
         NSScanner	*scanner = [NSScanner scannerWithString:(caseSensitive ? *partialStringPtr : [*partialStringPtr lowercaseString])];
         NSString	*validSegment;
 		
-        if(![scanner scanCharactersFromSet:characters intoString:&validSegment]){
+        if (![scanner scanCharactersFromSet:characters intoString:&validSegment]) {
             valid = NO;
 			shouldIncreaseErrorCounter = YES;
 			
-        }else{
+        } else {
 			unsigned validSegmentLength = [validSegment length];
 			unsigned partialStringPtrLength = [*partialStringPtr length];
 			
-			if (validSegmentLength != partialStringPtrLength){
+			if (validSegmentLength != partialStringPtrLength) {
 				valid = NO;
 				
 				//If the string is valid except for the last character, and the last character is a newline, strip the newline and allow the change
 				if ((validSegmentLength + 1 == partialStringPtrLength) &&
 					([*partialStringPtr characterAtIndex:validSegmentLength] == '\r' ||
-					 [*partialStringPtr characterAtIndex:validSegmentLength] == '\n')){
+					 [*partialStringPtr characterAtIndex:validSegmentLength] == '\n')) {
 					*partialStringPtr = [*partialStringPtr substringToIndex:validSegmentLength];
 					
-					if ((*proposedSelRangePtr).length == 0){
+					if ((*proposedSelRangePtr).length == 0) {
 						(*proposedSelRangePtr).location = (((*proposedSelRangePtr).location) - 1);
-					}else{
+					} else {
 						(*proposedSelRangePtr).length = (((*proposedSelRangePtr).length) - 1);	
 					}
 					
 					shouldIncreaseErrorCounter = NO;
 					
-				}else{
+				} else {
 					shouldIncreaseErrorCounter = YES;
 					
 				}
@@ -106,16 +106,16 @@
 		}
 	}
 	
-	if(shouldIncreaseErrorCounter){
+	if (shouldIncreaseErrorCounter) {
 		errorCount++;
 		
-		if(errorMessage != nil && errorCount > ERRORS_BEFORE_DIALOG){
+		if (errorMessage != nil && errorCount > ERRORS_BEFORE_DIALOG) {
 			NSRunAlertPanel(AILocalizedString(@"Invalid Input",nil), 
 							errorMessage, 
 							AILocalizedString(@"OK",nil), nil, nil);
 			errorCount = 0;
 			
-		}else{
+		} else {
 			NSBeep();
 		}
 	}

@@ -54,7 +54,7 @@
 - (void)removeAllItems
 {
 	int count = [self numberOfItems];
-	while(count--) {
+	while (count--) {
 		[self removeItemAtIndex:0];
 	}
 }
@@ -62,8 +62,8 @@
 - (void)removeAllItemsButFirst
 {
 	int count = [self numberOfItems];
-	if(count > 1) {
-		while(--count) {
+	if (count > 1) {
+		while (--count) {
 			[self removeItemAtIndex:1];
 		}
 	}
@@ -75,7 +75,7 @@
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode
 {
-    if(!aString) aString = @"";
+    if (!aString) aString = @"";
     self = [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
 
     [self setTarget:target];
@@ -85,7 +85,7 @@
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
 {
-    if(!aString) aString = @"";
+    if (!aString) aString = @"";
     self = [self initWithTitle:aString action:aSelector keyEquivalent:charCode];
 	
     [self setTarget:target];
@@ -167,9 +167,9 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
     itemIndex = [[self menu] indexOfItem:self] + 1;
 	
     //Set its attributes
-    if(enabled){
+    if (enabled) {
         ChangeMenuItemAttributes(carbonMenu, itemIndex, attributes, 0);
-    }else{
+    } else {
         ChangeMenuItemAttributes(carbonMenu, itemIndex, 0, attributes);
     }
 }
@@ -193,7 +193,7 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 {
 	NSEnumerator	*enumerator = [[self itemArray] objectEnumerator];
 	NSMenuItem		*menuItem;
-	while ((menuItem = [enumerator nextObject])){
+	while ((menuItem = [enumerator nextObject])) {
 		[menuItem setState:state];
 	}
 }
@@ -204,8 +204,8 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 	NSEnumerator	*enumerator = [[self itemArray] objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-	while((menuItem = [enumerator nextObject])){
-		if([menuItem isEnabled]) return(menuItem);
+	while ((menuItem = [enumerator nextObject])) {
+		if ([menuItem isEnabled]) return(menuItem);
 	}
 	
 	return(nil);
@@ -214,7 +214,7 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 //Swap two menu items
 + (void)swapMenuItem:(NSMenuItem *)itemA with:(NSMenuItem *)itemB
 {
-	if(itemA == itemB) return;
+	if (itemA == itemB) return;
 
 	NSMenu	*menuA  = [[itemA retain] menu];
 	int		 indexA = menuA ? [menuA indexOfItem:itemA] : -1;
@@ -222,21 +222,21 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 	NSMenu	*menuB  = [[itemB retain] menu];
 	int		 indexB = menuB ? [menuB indexOfItem:itemB] : -1;
 
-	if((menuA == menuB) && (indexA < indexB)) {
-		if(indexB > -1) {
+	if ((menuA == menuB) && (indexA < indexB)) {
+		if (indexB > -1) {
 			[menuB removeItemAtIndex:indexB];
 			[menuA insertItem:itemB atIndex:indexA++];
 		}
-		if(indexA > -1) {
+		if (indexA > -1) {
 			[menuA removeItemAtIndex:indexA];
 			[menuB insertItem:itemA atIndex:indexB];
 		}
 	} else {
-		if(indexA > -1) {
+		if (indexA > -1) {
 			[menuA removeItemAtIndex:indexA];
 			[menuB insertItem:itemA atIndex:indexB];
 		}
-		if(indexB > -1) {
+		if (indexB > -1) {
 			[menuB removeItemAtIndex:indexB];
 			[menuA insertItem:itemB atIndex:indexA];
 		}

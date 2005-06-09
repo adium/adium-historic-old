@@ -30,7 +30,7 @@
 //Init
 - (id)initForCell:(AIFlexibleTableCell *)inCell spannedIndex:(int)inIndex
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		masterCell = [inCell retain];
 		spannedIndex = inIndex;

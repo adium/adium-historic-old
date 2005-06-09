@@ -73,7 +73,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 {
 	NSString	*textString = [NSString stringWithUTF8String:text];
 	
-	if (GAIM_CONNECTION_IS_VALID(gc)){
+	if (GAIM_CONNECTION_IS_VALID(gc)) {
 		GaimAccount		*account = gc->account;
 		GaimBuddy		*buddy = gaim_find_buddy(account,who);
 		AIListContact   *theContact = contactLookupFromBuddy(buddy);
@@ -89,7 +89,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 
 static void *adiumGaimNotifyUri(const char *uri)
 {
-	if (uri){
+	if (uri) {
 		NSURL   *notifyURI = [NSURL URLWithString:[NSString stringWithUTF8String:uri]];
 		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 	}

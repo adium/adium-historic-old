@@ -64,9 +64,9 @@
 {
 	NSString	*fileName = [[[details objectForKey:KEY_ALERT_SOUND_PATH] lastPathComponent] stringByDeletingPathExtension];
 	
-	if(fileName && [fileName length]){
+	if (fileName && [fileName length]) {
 		return([NSString stringWithFormat:EVENT_SOUNDS_ALERT_LONG, fileName]);
-	}else{
+	} else {
 		return(EVENT_SOUNDS_ALERT_SHORT);
 	}
 }

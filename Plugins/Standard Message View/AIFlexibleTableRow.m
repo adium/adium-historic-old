@@ -39,7 +39,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell	*cell;
 
     //Init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		cellArray = [inCells retain];
 		representedObject = [inRepresentedObject retain];
@@ -50,7 +50,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 		
 		//Let all the cells know we are their row
 		enumerator = [cellArray objectEnumerator];
-		while((cell = [enumerator nextObject])){
+		while ((cell = [enumerator nextObject])) {
 			[cell setTableRow:self];
 		}
 		
@@ -104,8 +104,8 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell *cell;
     
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-        if([cell isKindOfClass:theClass]) return(cell);
+    while ((cell = [enumerator nextObject])) {
+        if ([cell isKindOfClass:theClass]) return(cell);
     }
     
     return(nil);
@@ -118,8 +118,8 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell *cell;
     
     enumerator = [cellArray reverseObjectEnumerator];
-    while((cell = [enumerator nextObject])){
-        if([cell isKindOfClass:theClass]) return(cell);
+    while ((cell = [enumerator nextObject])) {
+        if ([cell isKindOfClass:theClass]) return(cell);
     }
     
     return(nil);
@@ -133,8 +133,8 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell *cell;
     
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-        if([cell isKindOfClass:theClass]) [outArray addObject:cell];
+    while ((cell = [enumerator nextObject])) {
+        if ([cell isKindOfClass:theClass]) [outArray addObject:cell];
     }
     
     return([outArray autorelease]);
@@ -162,13 +162,13 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //Update our spansRow flag
     spansRows = NO;
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-        if([cell rowSpan] != 1) spansRows = YES;
-	if([cell isSpannedInto]) isSpannedInto = YES;
+    while ((cell = [enumerator nextObject])) {
+        if ([cell rowSpan] != 1) spansRows = YES;
+	if ([cell isSpannedInto]) isSpannedInto = YES;
     }
     
     //Recalculate height
-    if(resize) [tableView resizeRow:self];
+    if (resize) [tableView resizeRow:self];
 }
 
 
@@ -182,7 +182,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
     //Draw our cells
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
         NSSize	cellSize = [cell cellSize];
         
         [cell drawWithFrame:NSMakeRect(x, point.y, cellSize.width, (cellSize.height > height ? cellSize.height : height)) 
@@ -204,7 +204,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
     //Reset the cursor rects of our cells
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
         NSSize	cellSize = [cell cellSize];
 
         installedCursorRects += [cell resetCursorRectsAtOffset:NSMakePoint(x, offset.y)
@@ -227,9 +227,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     //Determine the clicked cell
     cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin];
-    if(cell){
+    if (cell) {
         return([cell handleMouseDownEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)]);
-    }else{
+    } else {
         return(NO);
     }
 }
@@ -242,9 +242,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     //Determine the clicked cell
     cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin];
-    if(cell){
+    if (cell) {
         return([cell menuItemsForEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)]);
-    }else{
+    } else {
         return(nil);
     }    
 }
@@ -260,10 +260,10 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     //Determine the clicked cell
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
         float	nextOriginX = (*outOrigin).x + [cell cellSize].width;
         
-        if(inPoint.x < nextOriginX) return(cell);
+        if (inPoint.x < nextOriginX) return(cell);
         (*outOrigin).x = nextOriginX;
     }
     
@@ -280,7 +280,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     NSPoint		cellPoint = NSMakePoint(0,0);
     
     //Flip, so we're working from left to right
-    if(endPoint.x < startPoint.x){
+    if (endPoint.x < startPoint.x) {
         NSPoint	temp = startPoint;
         startPoint = endPoint;
         endPoint = temp;
@@ -288,13 +288,13 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     //Select content in each cell
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
 	
-        if(cellPoint.x + [cell cellSize].width > startPoint.x && cellPoint.x < endPoint.x){
+        if (cellPoint.x + [cell cellSize].width > startPoint.x && cellPoint.x < endPoint.x) {
             BOOL end = NO, start = NO;
 	    
-            if(cellPoint.x < startPoint.x) start = YES; //selection starts in this cell
-            if(cellPoint.x + [cell cellSize].width > endPoint.x) end = YES; //ends in this row
+            if (cellPoint.x < startPoint.x) start = YES; //selection starts in this cell
+            if (cellPoint.x + [cell cellSize].width > endPoint.x) end = YES; //ends in this row
 	    
             [cell selectContentFrom:(start ? NSMakePoint(startPoint.x - cellPoint.x, startPoint.y - cellPoint.y) : NSMakePoint(-1,-1))
                                  to:(end ? NSMakePoint(endPoint.x - cellPoint.x, endPoint.y - cellPoint.y) : NSMakePoint(1e7,1e7))
@@ -313,7 +313,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell	*cell;
 
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
         [cell deselectContent];
     }
 }
@@ -328,9 +328,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
     //Enumerate through each cell
     rowEnumerator = [cellArray objectEnumerator];
-    while((cell = [rowEnumerator nextObject])){
-        if(segment = [cell selectedString]){
-            if(!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
+    while ((cell = [rowEnumerator nextObject])) {
+        if (segment = [cell selectedString]) {
+            if (!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
             [selectedString appendAttributedString:segment];
         }
     }
@@ -345,9 +345,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     NSPoint		cellOrigin;
     AIFlexibleTableCell	*cell;
     
-    if(cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin]){
+    if (cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin]) {
         return([cell pointIsSelected:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:cellOrigin]);
-    }else{
+    } else {
         return(NO);
     }
 }
@@ -367,37 +367,37 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 
     //Size all non-flexible cells
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
-	if(![cell variableWidth]){
+    while ((cell = [enumerator nextObject])) {
+	if (![cell variableWidth]) {
 	    //Keep track of the spanned cell if we find it
-	    if([cell isSpannedInto]){
+	    if ([cell isSpannedInto]) {
 		spanCell = (AIFlexibleTableSpanCell *)cell;
 	    }
 	    
 	    //Factor the height of regular, non-spanning cells into the height of this row
-	    if(![cell isSpannedInto] && [cell rowSpan] == 1){
+	    if (![cell isSpannedInto] && [cell rowSpan] == 1) {
 		height = _factorHeightOfCell(cell, height);
 	    }
 
 	    //Subtract the cell's width from our total
 	    inWidth -= [cell cellSize].width;
 	    
-	}else{
+	} else {
             flexCellCount++; //Keep track of the number of variable width cells
 	     
 	}
     }
 
     //Size all the flexible cells
-    if(flexCellCount){
+    if (flexCellCount) {
         BOOL	firstCell = YES;
         int	flexCellWidth = inWidth / flexCellCount; //Divide the remaining width among the flexible cells
         int	firstFlexCellWidth = (inWidth - (flexCellWidth * (flexCellCount - 1))); //We give any extra pixels to the first cell
         
         //Divide the available width among the flexible cells, and process their height.
         enumerator = [cellArray objectEnumerator];
-        while((cell = [enumerator nextObject])){
-            if([cell variableWidth]){
+        while ((cell = [enumerator nextObject])) {
+            if ([cell variableWidth]) {
                 [cell sizeCellForWidth:(firstCell ? firstFlexCellWidth : flexCellWidth)];
                 height = _factorHeightOfCell(cell, height);
             }
@@ -412,11 +412,11 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //In this case, the span cell will make the row tall enough for the master cell to fully display
     //This code assumes that only one span cell will exist per row
     //
-    if(spanCell){
+    if (spanCell) {
 	AIFlexibleTableCell  *masterCell = [spanCell masterCell];
 	
 	//Is this cell the last span cell?
-	if([spanCell spannedIndex] == [masterCell rowSpan] - 1){
+	if ([spanCell spannedIndex] == [masterCell rowSpan] - 1) {
 	    int masterCellHeight = [masterCell cellSize].height;
 	    int heightSoFar = 0;
 	    
@@ -424,7 +424,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 	    heightSoFar = [tableView heightOfSpanCellsAboveRow:self];
 	    
 	    //Adjust our height as necessary to make enough room for the master cell    
-	    if(masterCellHeight > heightSoFar){
+	    if (masterCellHeight > heightSoFar) {
 		height += (masterCellHeight - heightSoFar);
 	    }
 	}
@@ -465,7 +465,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight)
     
     //Set our cells' opacities
     enumerator = [cellArray objectEnumerator];
-    while((cell = [enumerator nextObject])){
+    while ((cell = [enumerator nextObject])) {
         [cell setOpacity:opacity];
     }
 }

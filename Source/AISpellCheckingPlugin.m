@@ -80,11 +80,11 @@
 - (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
     //Save spellcheck state
-    if([inTextEntryView respondsToSelector:@selector(isContinuousSpellCheckingEnabled)]){
+    if ([inTextEntryView respondsToSelector:@selector(isContinuousSpellCheckingEnabled)]) {
         BOOL	spellEnabled = [[[[adium preferenceController] preferencesForGroup:PREF_GROUP_SPELLING] objectForKey:KEY_SPELL_CHECKING] boolValue];
         BOOL	currentEnabled = [(NSTextView *)inTextEntryView isContinuousSpellCheckingEnabled];
 
-        if(currentEnabled != spellEnabled){
+        if (currentEnabled != spellEnabled) {
             [[adium preferenceController] setPreference:[NSNumber numberWithBool:currentEnabled]
 												 forKey:KEY_SPELL_CHECKING
 												  group:PREF_GROUP_SPELLING];
@@ -106,7 +106,7 @@
 	
 	//Set spellcheck state of all open views
 	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	while((entryView = [enumerator nextObject])){
+	while ((entryView = [enumerator nextObject])) {
 		[self _setSpellCheckingForObject:entryView enabled:spellEnabled];
 	}
 }
@@ -118,7 +118,7 @@
  */
 - (void)_setSpellCheckingForObject:(id)inObject enabled:(BOOL)enabled
 {
-    if([inObject respondsToSelector:@selector(setContinuousSpellCheckingEnabled:)]){
+    if ([inObject respondsToSelector:@selector(setContinuousSpellCheckingEnabled:)]) {
         [(NSTextView *)inObject setContinuousSpellCheckingEnabled:enabled];
     }
 }

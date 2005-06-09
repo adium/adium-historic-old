@@ -11,7 +11,7 @@
 
 - (id)initWithPath:(NSString *)path
 {
-	if((self = [super initWithPath:path])) {
+	if ((self = [super initWithPath:path])) {
 		originalPath = [path copy];
 	}
 	

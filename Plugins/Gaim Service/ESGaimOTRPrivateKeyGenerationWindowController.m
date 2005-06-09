@@ -31,13 +31,13 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 
 + (void)mainThreadStartedGeneratingForIdentifier:(NSString *)inIdentifier
 {
-	if(!keyGenerationControllerDict) keyGenerationControllerDict = [[NSMutableDictionary alloc] init];
+	if (!keyGenerationControllerDict) keyGenerationControllerDict = [[NSMutableDictionary alloc] init];
 	
-	if(![keyGenerationControllerDict objectForKey:inIdentifier]){
+	if (![keyGenerationControllerDict objectForKey:inIdentifier]) {
 		ESGaimOTRPrivateKeyGenerationWindowController	*controller;
 		
-		if(controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" 
-											  forIdentifier:inIdentifier]){
+		if (controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" 
+											  forIdentifier:inIdentifier]) {
 			[controller showWindow:nil];
 			[[controller window] makeKeyAndOrderFront:nil];
 			

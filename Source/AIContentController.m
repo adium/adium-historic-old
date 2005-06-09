@@ -120,7 +120,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	AIChat			*chat;
 
 	//Every open chat is about to close.
-	while((chat = [enumerator nextObject])){
+	while ((chat = [enumerator nextObject])) {
 		[[adium notificationCenter] postNotificationName:Chat_WillClose 
 												  object:chat
 												userInfo:nil];
@@ -157,7 +157,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 #pragma mark Default Formatting
 - (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
 {
-    if(defaultFormattingAttributes != inDict){
+    if (defaultFormattingAttributes != inDict) {
 	   [defaultFormattingAttributes release];
 	   defaultFormattingAttributes	= [inDict retain];
     }
@@ -184,10 +184,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 					  [inFilter respondsToSelector:@selector(willCloseTextEntryView:)]);
 	
 	//For performance reasons, we place filters that actually monitor content in a separate array
-	if([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
-	   [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]){
+	if ([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
+	   [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]) {
 		[textEntryContentFilterArray addObject:inFilter];
-	}else{
+	} else {
 		[textEntryFilterArray addObject:inFilter];
 	}
 }
@@ -206,7 +206,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
     //Notify all text entry filters (that are interested in filtering content)
     enumerator = [textEntryContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter stringAdded:inString toTextEntryView:inTextEntryView];
     }
 }
@@ -219,7 +219,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
     //Notify all text entry filters (that are interested in filtering content)
     enumerator = [textEntryContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter contentsChangedInTextEntryView:inTextEntryView];
     }
 }
@@ -235,11 +235,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
     
     //Notify all text entry filters
     enumerator = [textEntryContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter didOpenTextEntryView:inTextEntryView];
     }
     enumerator = [textEntryFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter didOpenTextEntryView:inTextEntryView];
     }
 }
@@ -255,11 +255,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
     //Notify all text entry filters
     enumerator = [textEntryContentFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter willCloseTextEntryView:inTextEntryView];
     }
     enumerator = [textEntryFilterArray objectEnumerator];
-    while((filter = [enumerator nextObject])){
+    while ((filter = [enumerator nextObject])) {
         [filter willCloseTextEntryView:inTextEntryView];
     }
 }
@@ -286,13 +286,13 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 					   threaded:NO];
 }
 
-int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context){
+int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context) {
 	float filterPriorityA = [filterA filterPriority];
 	float filterPriorityB = [filterB filterPriority];
 	
-	if(filterPriorityA < filterPriorityB)
+	if (filterPriorityA < filterPriorityB)
 		return NSOrderedAscending;
-	else if(filterPriorityA > filterPriorityB)
+	else if (filterPriorityA > filterPriorityB)
 		return NSOrderedDescending;
 	else
 		return NSOrderedSame;
@@ -307,7 +307,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 
-	if(!(threaded ? threadedContentFilter : contentFilter)[type][direction]){
+	if (!(threaded ? threadedContentFilter : contentFilter)[type][direction]) {
 		(threaded ? threadedContentFilter : contentFilter)[type][direction] = [[NSMutableArray alloc] init];
 	}
 	
@@ -322,8 +322,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSParameterAssert(inFilter != nil);
 
 	int i, j;
-	for(i = 0; i < FILTER_TYPE_COUNT; i++){
-		for(j = 0; j < FILTER_DIRECTION_COUNT; j++){
+	for (i = 0; i < FILTER_TYPE_COUNT; i++) {
+		for (j = 0; j < FILTER_DIRECTION_COUNT; j++) {
 			[contentFilter[i][j] removeObject:inFilter];
 			[threadedContentFilter[i][j] removeObject:inFilter];
 		}
@@ -360,7 +360,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	id<AIContentFilter>	filter;
 	
 	[inLock lock];
-	while((filter = [enumerator nextObject])){
+	while ((filter = [enumerator nextObject])) {
 		attributedString = [filter filterAttributedString:attributedString context:filterContext];
 	}
 	[inLock unlock];
@@ -411,7 +411,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 - (NDRunLoopMessenger *)filterRunLoopMessenger
 {
-	if (!filterRunLoopMessenger){
+	if (!filterRunLoopMessenger) {
 		if (!filterCreationLock) filterCreationLock = [[NSLock alloc] init];
 		[filterCreationLock lock];
 		
@@ -430,7 +430,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 										filterContext:(id)filterContext
 										   invocation:(NSInvocation *)invocation
 {
-	if(attributedString){
+	if (attributedString) {
 		//Perform the main filters
 		attributedString = [self _filterAttributedString:attributedString
 										   contentFilter:inContentFilterArray
@@ -452,7 +452,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 											   usingLock:threadedFilterLock];
 	}
 	
-	if (invocation){
+	if (invocation) {
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
 		[invocation setArgument:&attributedString atIndex:2];
 		[invocation retainArguments]; //redundant?
@@ -505,7 +505,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Release the current pool, then create a new one.
 - (void)refreshAutoreleasePool:(NSTimer *)inTimer
 {
-	if ([threadedFilterLock isUnlocked]){
+	if ([threadedFilterLock isUnlocked]) {
 		[currentAutoreleasePool release];
 		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	}
@@ -516,11 +516,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //Receiving step 1: Add an incoming content object - entry point
 - (void)receiveContentObject:(AIContentObject *)inObject
 {
-	if(inObject){
+	if (inObject) {
 		AIChat			*chat = [inObject chat];
 
         //Notify: Will Receive Content
-        if([inObject trackContent]){
+        if ([inObject trackContent]) {
             [[adium notificationCenter] postNotificationName:Content_WillReceiveContent
 													  object:chat
 													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
@@ -530,7 +530,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		[objectsBeingReceived addObject:inObject];
 
 		//Run the object through our incoming content filters
-        if([inObject filterContent]){
+        if ([inObject filterContent]) {
 			[self filterAttributedString:[inObject message]
 						 usingFilterType:AIFilterContent
 							   direction:AIFilterIncoming
@@ -539,7 +539,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 								selector:@selector(didFilterAttributedString:receivingContext:)
 								 context:inObject];
 			
-        }else{
+        } else {
 			[self finishReceiveContentObject:inObject];
 		}
     }
@@ -560,10 +560,10 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[self displayContentObject:inObject];
 	
 	//Update our most recent chat
-	if([inObject trackContent]){
+	if ([inObject trackContent]) {
 		AIChat	*chat = [inObject chat];
 		
-		if(chat != mostRecentChat){
+		if (chat != mostRecentChat) {
 			[mostRecentChat release];
 			mostRecentChat = [chat retain];
 		}
@@ -574,7 +574,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
     //Run the object through our outgoing content filters
-    if([inObject filterContent]){
+    if ([inObject filterContent]) {
 		[self filterAttributedString:[inObject message]
 					 usingFilterType:AIFilterContent
 						   direction:AIFilterOutgoing
@@ -583,7 +583,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 							selector:@selector(didFilterAttributedString:contentSendingContext:)
 							 context:inObject];
 		
-    }else{
+    } else {
 		[self finishSendContentObject:inObject];
 	}
 	
@@ -597,7 +597,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[inObject setMessage:filteredString];
 
 	//Special outgoing content filter for AIM away message bouncing.  Used to filter %n,%t,...
-	if([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]){
+	if ([inObject isKindOfClass:[AIContentMessage class]] && [(AIContentMessage *)inObject isAutoreply]) {
 		[self filterAttributedString:[inObject message]
 					 usingFilterType:AIFilterAutoReplyContent
 						   direction:AIFilterOutgoing
@@ -605,7 +605,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 					 notifyingTarget:self
 							selector:@selector(didFilterAttributedString:autoreplySendingContext:)
 							 context:inObject];
-	}else{		
+	} else {		
 		[self finishSendContentObject:inObject];
 	}
 }
@@ -625,21 +625,21 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     AIChat		*chat = [inObject chat];
 	
 	//Notify: Will Send Content
-    if([inObject trackContent]){
+    if ([inObject trackContent]) {
         [[adium notificationCenter] postNotificationName:Content_WillSendContent
 												  object:chat 
 												userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
     }
 	
     //Send the object
-	if ([inObject sendContent]){
-		if([(AIAccount *)[inObject source] sendContentObject:inObject]){
-			if([inObject displayContent]){
+	if ([inObject sendContent]) {
+		if ([(AIAccount *)[inObject source] sendContentObject:inObject]) {
+			if ([inObject displayContent]) {
 				//Add the object
 				[self displayContentObject:inObject];
 			}
 			
-			if([inObject trackContent]){
+			if ([inObject trackContent]) {
 				//Did send content
 				[[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_SENT
 												 forListObject:[chat listObject]
@@ -647,13 +647,13 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 								  previouslyPerformedActionIDs:nil];				
 			}
 			
-			if(mostRecentChat != chat){
+			if (mostRecentChat != chat) {
 				[mostRecentChat release];
 				mostRecentChat = [chat retain];
 			}
 //			sent = YES;
 		}
-	}else{
+	} else {
 		//We shouldn't send the content, so something was done with it.. clear the text entry view
 		//XXX - Nobody is observing this notification... -ai
 		[[adium notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
@@ -678,9 +678,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 //without this, the use of threaded filtering means that message history shows up after the first message.
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately
 {
-	if (useContentFilters){
+	if (useContentFilters) {
 		
-		if (immediately){
+		if (immediately) {
 			//Filter in the main thread, set the message, and continue
 			[inObject setMessage:[self filterAttributedString:[inObject message]
 											  usingFilterType:AIFilterContent
@@ -689,7 +689,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			[self displayContentObject:inObject immediately:YES];
 			
 			
-		}else{
+		} else {
 			//Filter in the filter thread
 			[self filterAttributedString:[inObject message]
 						 usingFilterType:AIFilterContent
@@ -699,7 +699,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 								selector:@selector(didFilterAttributedString:contentFilterDisplayContext:)
 								 context:inObject];
 		}
-	}else{
+	} else {
 		//Just continue
 		[self displayContentObject:inObject immediately:immediately];
 	}
@@ -723,12 +723,12 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately
 {
     //Filter the content object
-    if([inObject filterContent]){
+    if ([inObject filterContent]) {
 		BOOL				message = ([inObject isKindOfClass:[AIContentMessage class]] && ![(AIContentMessage *)inObject isAutoreply]);
 		AIFilterType		filterType = (message ? AIFilterMessageDisplay : AIFilterDisplay);
 		AIFilterDirection	direction = ([inObject isOutgoing] ? AIFilterOutgoing : AIFilterIncoming);
 		
-		if (immediately){
+		if (immediately) {
 			
 			//Set it after filtering in the main thread, then display it
 			[inObject setMessage:[self filterAttributedString:[inObject message]
@@ -737,7 +737,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 													  context:inObject]];
 			[self finishDisplayContentObject:inObject];		
 			
-		}else{
+		} else {
 			//Filter in the filtering thread
 			[self filterAttributedString:[inObject message]
 						 usingFilterType:filterType
@@ -748,7 +748,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 								 context:inObject];
 		}
 		
-    }else{
+    } else {
 		[self finishDisplayContentObject:inObject];
 	}
 
@@ -764,20 +764,20 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)finishDisplayContentObject:(AIContentObject *)inObject
 {
     //Check if the object should display
-    if([inObject displayContent] && ([[inObject message] length] > 0)){
+    if ([inObject displayContent] && ([[inObject message] length] > 0)) {
 		AIChat			*chat = [inObject chat];
 		NSDictionary	*userInfo;
 		BOOL			contentReceived, shouldPostContentReceivedEvents, chatIsOpen;
 
 		//If the chat of the content object has been cleared, we can't do anything with it, so simply return
-		if(!chat) return;
+		if (!chat) return;
 		
 		chatIsOpen = [chat isOpen];
 		contentReceived = (([inObject isMemberOfClass:[AIContentMessage class]]) &&
 						   (![inObject isOutgoing]));
 		shouldPostContentReceivedEvents = contentReceived && [inObject trackContent];
 		
-		if(!chatIsOpen){
+		if (!chatIsOpen) {
 			/*
 			 Tell the interface to open the chat
 			 For incoming messages, we don't open the chat until we're sure that new content is being received.
@@ -787,11 +787,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
-		if(shouldPostContentReceivedEvents){
+		if (shouldPostContentReceivedEvents) {
 			NSSet			*previouslyPerformedActionIDs = nil;
 			AIListObject	*listObject = [chat listObject];
 			
-			if(!chatIsOpen){
+			if (!chatIsOpen) {
 				//If the chat wasn't open before, generate CONTENT_MESSAGE_RECEIVED_FIRST
 				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_FIRST
 																				forListObject:listObject
@@ -799,7 +799,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 																 previouslyPerformedActionIDs:nil];	
 			}
 			
-			if(chat != [[adium interfaceController] activeChat]){
+			if (chat != [[adium interfaceController] activeChat]) {
 				//If the chat is not currently active, generate CONTENT_MESSAGE_RECEIVED_BACKGROUND
 				previouslyPerformedActionIDs = [[adium contactAlertsController] generateEvent:CONTENT_MESSAGE_RECEIVED_BACKGROUND
 																				forListObject:listObject
@@ -881,7 +881,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	modifiedAttributeKeys = [self _informObserversOfChatStatusChange:inChat withKeys:inModifiedKeys silent:silent];
 
     //Post an attributes changed message (if necessary)
-    if([modifiedAttributeKeys count]){
+    if ([modifiedAttributeKeys count]) {
 		[self chatAttributesChanged:inChat modifiedKeys:modifiedAttributeKeys];
     }	
 }
@@ -901,7 +901,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
 	
-	while ((chat = [enumerator nextObject])){
+	while ((chat = [enumerator nextObject])) {
 		[self chatStatusChanged:chat modifiedStatusKeys:nil silent:NO];
 	}
 }
@@ -915,12 +915,12 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 	//Let our observers know
 	enumerator = [chatObserverArray objectEnumerator];
-	while((observerValue = [enumerator nextObject])){
+	while ((observerValue = [enumerator nextObject])) {
 		id <AIChatObserver>	observer;
 		NSSet				*newKeys;
 		
 		observer = [observerValue nonretainedObjectValue];
-		if((newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent])){
+		if ((newKeys = [observer updateChat:inChat keys:modifiedKeys silent:silent])) {
 			if (!attrChange) attrChange = [NSMutableSet set];
 			[attrChange unionSet:newKeys];
 		}
@@ -957,7 +957,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	AIChat	*chat = [self chatWithContact:inContact];
 
-	if(chat) [[adium interfaceController] openChat:chat]; 
+	if (chat) [[adium interfaceController] openChat:chat]; 
 
 	return(chat);	
 }
@@ -975,7 +975,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
-	if ([inContact isKindOfClass:[AIMetaContact class]]){
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 																   forListContact:inContact];
 		
@@ -984,20 +984,20 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		 We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
 		 preferredContact from the metaContact.
 		 */
-		if (!targetContact){
+		if (!targetContact) {
 			targetContact = [(AIMetaContact *)inContact preferredContact];
 		}
 	}
 	
 	//If we can't get a contact, we're not going to be able to get a chat... return nil
-	if(!targetContact) return nil;
+	if (!targetContact) return nil;
 	
 	//Search for an existing chat we can switch instead of replacing
 	enumerator = [openChats objectEnumerator];
-	while((chat = [enumerator nextObject])){
+	while ((chat = [enumerator nextObject])) {
 		//If a chat for this object already exists
-		if([[chat uniqueChatID] isEqualToString:[targetContact internalObjectID]]) {
-			if(!([chat listObject] == targetContact)){
+		if ([[chat uniqueChatID] isEqualToString:[targetContact internalObjectID]]) {
+			if (!([chat listObject] == targetContact)) {
 				[self switchChat:chat toAccount:[targetContact account]];
 			}
 			
@@ -1005,8 +1005,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		}
 		
 		//If this object is within a meta contact, and a chat for an object in that meta contact already exists
-		if([[targetContact containingObject] isKindOfClass:[AIMetaContact class]] && 
-		   [[chat listObject] containingObject] == [targetContact containingObject]){
+		if ([[targetContact containingObject] isKindOfClass:[AIMetaContact class]] && 
+		   [[chat listObject] containingObject] == [targetContact containingObject]) {
 
 			//Switch the chat to be on this contact (and its account) now
 			[self switchChat:chat toListContact:targetContact usingContactAccount:YES];
@@ -1015,7 +1015,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		}
 	}
 
-	if(!chat){
+	if (!chat) {
 		AIAccount	*account;
 		account = [targetContact account];
 		
@@ -1026,9 +1026,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		AILog(@"chatWithContact: Added <<%@>> [%@]",chat,openChats);
 
 		//Inform the account of its creation and post a notification if successful
-		if([[targetContact account] openChat:chat]){
+		if ([[targetContact account] openChat:chat]) {
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-		}else{
+		} else {
 			[openChats removeObject:chat];
 			AILog(@"chatWithContact: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
@@ -1049,7 +1049,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
 	 being sent and more information - but we'll do it here as well just to be safe.
 	 */
-	if ([inContact isKindOfClass:[AIMetaContact class]]){
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];
 		
@@ -1058,16 +1058,16 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		 We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
 		 preferredContact from the metaContact.
 		 */
-		if (!targetContact){
+		if (!targetContact) {
 			targetContact = [(AIMetaContact *)inContact preferredContact];
 		}
 	}
 	
 	//Search for an existing chat
 	enumerator = [openChats objectEnumerator];
-	while((chat = [enumerator nextObject])){
+	while ((chat = [enumerator nextObject])) {
 		//If a chat for this object already exists
-		if([chat listObject] == targetContact) break;
+		if ([chat listObject] == targetContact) break;
 	}
 	
 	return(chat);
@@ -1080,7 +1080,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	//Search for an existing chat we can use instead of creating a new one
 	chat = [self existingChatWithName:inName onAccount:account];
 	
-	if(!chat){
+	if (!chat) {
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
 		[chat setName:inName];
@@ -1096,9 +1096,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 					   notify:NotifyNever];
 		
 		//Inform the account of its creation and post a notification if successful
-		if([account openChat:chat]){
+		if ([account openChat:chat]) {
 			[[adium notificationCenter] postNotificationName:Chat_Created object:chat userInfo:nil];
-		}else{
+		} else {
 			[openChats removeObject:chat];
 			AILog(@"chatWithName: Immediately removed <<%@>> [%@]",chat,openChats);
 			chat = nil;
@@ -1109,7 +1109,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 - (void)openChat:(AIChat *)chat
 {
-	if(chat){		
+	if (chat) {		
 		[openChats addObject:chat];
 		AILog(@"openChat: Added <<%@>> [%@]",chat,openChats);
 		[[adium interfaceController] openChat:chat]; 
@@ -1123,9 +1123,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	enumerator = [openChats objectEnumerator];
 
-	while((chat = [enumerator nextObject])){
-		if(([chat account] == account) &&
-		   ([[chat name] isEqualToString:inName])){
+	while ((chat = [enumerator nextObject])) {
+		if (([chat account] == account) &&
+		   ([[chat name] isEqualToString:inName])) {
 			break;
 		}
 	}	
@@ -1140,8 +1140,8 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	
 	enumerator = [openChats objectEnumerator];
 	
-	while((chat = [enumerator nextObject])){
-		if([[chat uniqueChatID] isEqualToString:uniqueChatID]){
+	while ((chat = [enumerator nextObject])) {
+		if ([[chat uniqueChatID] isEqualToString:uniqueChatID]) {
 			break;
 		}
 	}	
@@ -1161,14 +1161,14 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	 */
 	NSEnumerator	*objectsBeingReceivedEnumerator = [objectsBeingReceived objectEnumerator];
 	AIContentObject	*contentObject;
-	while((contentObject = [objectsBeingReceivedEnumerator nextObject])){
-		if([contentObject chat] == inChat){
+	while ((contentObject = [objectsBeingReceivedEnumerator nextObject])) {
+		if ([contentObject chat] == inChat) {
 			shouldRemove = NO;
 			break;
 		}
 	}
 
-	if(mostRecentChat == inChat){
+	if (mostRecentChat == inChat) {
 		[mostRecentChat release];
 		mostRecentChat = nil;
 	}
@@ -1181,7 +1181,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[inChat removeAllContent];
 
 	//Remove the chat
-	if(shouldRemove){
+	if (shouldRemove) {
 		[openChats removeObject:inChat];
 		AILog(@"closeChat: Removed <<%@>> [%@]",inChat, openChats);
 	}
@@ -1193,7 +1193,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount
 {
 	AIAccount	*oldAccount = [chat account];
-	if (newAccount != oldAccount){
+	if (newAccount != oldAccount) {
 		//Hang onto stuff until we're done
 		[chat retain];
 
@@ -1228,7 +1228,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	AIListContact	*newContact = [[adium contactController] contactWithService:[inContact service]
 																		account:newAccount
 																			UID:[inContact UID]];
-	if (newContact != [chat listObject]){
+	if (newContact != [chat listObject]) {
 		//Hang onto stuff until we're done
 		[chat retain];
 		
@@ -1253,7 +1253,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
     NSMutableSet	*foundChats = nil;
 	
 	//Scan the objects participating in each chat, looking for the requested object
-	if([inContact isKindOfClass:[AIMetaContact class]]){
+	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 
 		NSEnumerator	*enumerator;
 		AIListContact	*listContact;
@@ -1261,19 +1261,19 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		foundChats = [NSMutableSet set];
 		
 		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
-		while((listContact = [enumerator nextObject])){
+		while ((listContact = [enumerator nextObject])) {
 			NSSet		*listContactChats;
-			if((listContactChats = [self allChatsWithContact:listContact])){
+			if ((listContactChats = [self allChatsWithContact:listContact])) {
 				[foundChats unionSet:listContactChats];
 			}
 		}
 		
-	}else{
+	} else {
 		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
 		AIChat			*chat;
-		while((chat = [chatEnumerator nextObject])){
-			if(![chat name] &&
-				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]){
+		while ((chat = [chatEnumerator nextObject])) {
+			if (![chat name] &&
+				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]) {
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
 			}
@@ -1293,11 +1293,11 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	AIChat  *newActiveChat = nil;
 
-    if(mostRecentChat && [mostRecentChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+    if (mostRecentChat && [mostRecentChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
 		//First choice: switch to the chat which received chat most recently if it has unviewed content
 		newActiveChat = mostRecentChat;
 		
-	}else{
+	} else {
 		//Second choice: switch to the first chat we can find which has unviewed content
 		NSEnumerator	*enumerator = [openChats objectEnumerator];
 		AIChat			*chat;
@@ -1306,12 +1306,12 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		if (chat) newActiveChat = chat;
 	}
 
-	if (newActiveChat){
+	if (newActiveChat) {
 		//If either the first or second choice was made, set the new active chat and return YES
 		[[adium interfaceController] setActiveChat:newActiveChat];
 		return(YES);
 		
-    }else{
+    } else {
 		//Third choice: don't switch, returning NO
 		return(NO);
 	}
@@ -1328,9 +1328,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	AIChat			*chat;
 	BOOL			contactIsInGroupChat = NO;
 
-	while((chat = [chatEnumerator nextObject])){
-		if([chat name] &&
-		   [[chat participatingListObjects] containsObjectIdenticalTo:listContact]){
+	while ((chat = [chatEnumerator nextObject])) {
+		if ([chat name] &&
+		   [[chat participatingListObjects] containsObjectIdenticalTo:listContact]) {
 
 			contactIsInGroupChat = YES;
 			break;
@@ -1351,22 +1351,22 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
-		if([inObject service] == [account service]){
+	while ((account = [enumerator nextObject])) {
+		if ([inObject service] == [account service]) {
 			BOOL			knowsObject = NO;
 			BOOL			couldSendContent = NO;
 			AIListContact	*contactForAccount = [[adium contactController] existingContactWithService:[inObject service]
 																							   account:account
 																								   UID:[inObject UID]];
 			//Does the account know this object?
-			if(contactForAccount){
+			if (contactForAccount) {
 				knowsObject = [account availableForSendingContentType:inType toContact:contactForAccount];
 			}
 			
 			//Could the account send this
 			couldSendContent = [account availableForSendingContentType:inType toContact:nil];
 			
-			if((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)){
+			if ((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)) {
 				[sourceAccounts addObject:account];
 			}
 		}
@@ -1390,15 +1390,15 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+	if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 		description = AILocalizedString(@"Is sent a message",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]) {
 		description = AILocalizedString(@"Sends a message",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 		description = AILocalizedString(@"Sends an initial message",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = AILocalizedString(@"Sends a message in a background chat",nil);
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -1409,15 +1409,15 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSString	*description;
 
-	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+	if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 		description = AILocalizedString(@"Message sent",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]) {
 		description = AILocalizedString(@"Message received",nil);
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 		description = AILocalizedString(@"Message received (Initial)",nil);
-	}else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = AILocalizedString(@"Message received (Background chat)",nil);
-	}else{
+	} else {
 		description = @"";
 	}
 
@@ -1430,15 +1430,15 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+	if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 		description = @"Message Sent";
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]) {
 		description = @"Message Received";
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 		description = @"Message Received (New)";
-	}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+	} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 		description = @"Message Received (Background Chat)";
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -1449,23 +1449,23 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSString	*description = nil;
 	
-	if(listObject){
+	if (listObject) {
 		NSString	*name;
 		NSString	*format;
 
-		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+		if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 			format = AILocalizedString(@"When you send %@ a message",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]) {
 			format = AILocalizedString(@"When %@ sends a message to you",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 			format = AILocalizedString(@"When %@ sends an initial message to you",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			format = AILocalizedString(@"When %@ sends a message to you in a background chat",nil);			
-		}else{
+		} else {
 			format = nil;
 		}
 
-		if(format){
+		if (format) {
 			name = ([listObject isKindOfClass:[AIListGroup class]] ?
 					[NSString stringWithFormat:AILocalizedString(@"a member of %@",nil),[listObject displayName]] :
 					[listObject displayName]);
@@ -1473,14 +1473,14 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			description = [NSString stringWithFormat:format, name];
 		}
 		
-	}else{
-		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+	} else {
+		if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 			description = AILocalizedString(@"When you send a message",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED]) {
 			description = AILocalizedString(@"When you receive any message",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST]) {
 			description = AILocalizedString(@"When you receive an initial message",nil);
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			description = AILocalizedString(@"When you receive a message in a background chat",nil);			
 		}
 	}
@@ -1503,9 +1503,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	contentObject = [(NSDictionary *)userInfo objectForKey:@"AIContentObject"];
 	messageText = [[[contentObject message] attributedStringByConvertingAttachmentsToStrings] string];
 	
-	if(includeSubject){
+	if (includeSubject) {
 		
-		if([eventID isEqualToString:CONTENT_MESSAGE_SENT]){
+		if ([eventID isEqualToString:CONTENT_MESSAGE_SENT]) {
 			displayName = (listObject ? [listObject displayName] : [[contentObject chat] name]);
 
 			description = [NSString stringWithFormat:
@@ -1513,9 +1513,9 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 				messageText,
 				displayName];
 			
-		}else if([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
+		} else if ([eventID isEqualToString:CONTENT_MESSAGE_RECEIVED] ||
 				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_FIRST] ||
-				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]){
+				 [eventID isEqualToString:CONTENT_MESSAGE_RECEIVED_BACKGROUND]) {
 			displayName = (listObject ? [listObject displayName] : [[contentObject source] displayName]);
 
 			description = [NSString stringWithFormat:
@@ -1524,7 +1524,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 				messageText];
 		}	
 		
-	}else{
+	} else {
 		description = messageText;
 	}
 	
@@ -1577,7 +1577,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	[encryptionMenu addItem:menuItem];
 	[menuItem release];
 	
-	if(withDefault){
+	if (withDefault) {
 		[encryptionMenu addItem:[NSMenuItem separatorItem]];
 		
 		NSMenuItem *menuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"Default",nil)
@@ -1596,7 +1596,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	static NSImage	*eventImage = nil;
-	if(!eventImage) eventImage = [[NSImage imageNamed:@"message" forClass:[self class]] retain];
+	if (!eventImage) eventImage = [[NSImage imageNamed:@"message" forClass:[self class]] retain];
 	return eventImage;
 }
 

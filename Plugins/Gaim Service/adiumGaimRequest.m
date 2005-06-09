@@ -45,7 +45,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	NSMutableDictionary *infoDict;
 	
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
-	if([primaryString rangeOfString:@"Enter password for "].location != NSNotFound){
+	if ([primaryString rangeOfString:@"Enter password for "].location != NSNotFound) {
 		return;
 	}
 	
@@ -91,11 +91,11 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
     NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString		*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
 	
-	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)){
+	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
 		gaim_xfer_choose_file((GaimXfer *)userData);
 		
-    }else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)){
+    } else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)) {
 		NSString	*remoteName;
 		NSString	*accountName;
 		NSString	*reason = nil;
@@ -122,12 +122,12 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 																   (wantsToAddRange.location - remoteNameStartingLocation))];
 		
 		secondSearchRange = [primaryString rangeOfString:@"to his or her buddy list."];
-		if(secondSearchRange.location == NSNotFound){
+		if (secondSearchRange.location == NSNotFound) {
 			secondSearchRange = [primaryString rangeOfString:@"to their buddy list for the following reason:\n"];
 			//The OSCAR version may have the alias in parenthesis after the ICQ number
-			if(secondSearchRange.location != NSNotFound){
+			if (secondSearchRange.location != NSNotFound) {
 				NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
-				if(aliasBeginRange.location != NSNotFound){
+				if (aliasBeginRange.location != NSNotFound) {
 					remoteName = [remoteName substringToIndex:aliasBeginRange.location];
 				}
 			}
@@ -139,13 +139,13 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 																	secondSearchRange.location - accountNameStartingLocation + 1)];
 		
 		//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
-		if([accountName rangeOfString:@"@"].location != NSNotFound &&
-		   [accountName rangeOfString:@"/"].location != NSNotFound){
+		if ([accountName rangeOfString:@"@"].location != NSNotFound &&
+		   [accountName rangeOfString:@"/"].location != NSNotFound) {
 			accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
 		}
 		
-		if((NSMaxRange(secondSearchRange) < [primaryString length]) &&
-		   [primaryString rangeOfString:@"No reason given."].location == NSNotFound){
+		if ((NSMaxRange(secondSearchRange) < [primaryString length]) &&
+		   [primaryString rangeOfString:@"No reason given."].location == NSNotFound) {
 			reason = [primaryString substringFromIndex:NSMaxRange(secondSearchRange)];
 		}
 		
@@ -157,12 +157,12 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 			[NSValue valueWithPointer:userData],@"userData",
 			nil];
 
-		if(reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
+		if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
 
 		[ESGaimAuthorizationRequestWindowController performSelectorOnMainThread:@selector(showAuthorizationRequestWithDict:)
 																	 withObject:infoDict
 																  waitUntilDone:YES];
-	}else{
+	} else {
 		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
 			(primary ? primary : ""),
 			((primary && secondary) ? "\n\n" : ""),
@@ -184,7 +184,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		}
 		
 		//Make default_action the last one
-		if (default_action != -1 && (default_action < actionCount)){
+		if (default_action != -1 && (default_action < actionCount)) {
 			GCallback tempCallBack = callBacks[actionCount-1];
 			callBacks[actionCount-1] = callBacks[default_action];
 			callBacks[default_action] = tempCallBack;
@@ -234,7 +234,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {
-					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
+					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0) {
 						const char	*username;
 						NSString	*usernameString;
 						NSRange		serverAndResourceBeginningRange;
@@ -243,12 +243,12 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 						username = gaim_account_get_username(account);
 						usernameString = [NSString stringWithUTF8String:username];
 						serverAndResourceBeginningRange = [usernameString rangeOfString:@"@"];
-						if(serverAndResourceBeginningRange.location != NSNotFound){
+						if (serverAndResourceBeginningRange.location != NSNotFound) {
 							usernameString = [usernameString substringToIndex:serverAndResourceBeginningRange.location];
 						}
 						
 						gaim_request_field_string_set_value(field, [usernameString UTF8String]);
-					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
+					} else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0) {
 						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
 					}
 				}
@@ -257,8 +257,8 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		}
 		((GaimRequestFieldsCb)okCb)(userData, fields);
 		
-	}else if(titleString &&
-			 [titleString rangeOfString:@"select user to add"].location != NSNotFound){
+	} else if (titleString &&
+			 [titleString rangeOfString:@"select user to add"].location != NSNotFound) {
 		/* Meanwhile ambiguous ID... hack implementation until a full request fields UI exists */
 		GList					*gl, *fl, *field_list;
 		GaimRequestField		*field;
@@ -282,12 +282,12 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_LIST) {
-					if (strcasecmp("user", gaim_request_field_get_id(field)) == 0){
+					if (strcasecmp("user", gaim_request_field_get_id(field)) == 0) {
 						//Found the user field, which is a list of names and IDs
 						const GList *l;
 						
 						//Get all items
-						for (l = gaim_request_field_list_get_items(field); l != NULL; l = l->next){
+						for (l = gaim_request_field_list_get_items(field); l != NULL; l = l->next) {
 							const char			*name = (const char *)l->data;
 							struct resolved_id	*res = gaim_request_field_list_get_data(field, name);
 							[possibleUsers addObject:[NSValue valueWithPointer:res]];
@@ -326,7 +326,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 		[ESGaimMeanwhileContactAdditionController performSelectorOnMainThread:@selector(showContactAdditionListWithDict:)
 																   withObject:infoDict
 																waitUntilDone:YES];
-	}else{		
+	} else {		
 		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
 				   (primary ? primary : ""),
@@ -365,9 +365,9 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 				field = (GaimRequestField *)fl->data;
 				type = gaim_request_field_get_type(field);
 				if (type == GAIM_REQUEST_FIELD_STRING) {
-					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0){
+					if (strcasecmp("username", gaim_request_field_get_label(field)) == 0) {
 						gaim_request_field_string_set_value(field, gaim_account_get_username(account));
-					}else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0){
+					} else if (strcasecmp("password", gaim_request_field_get_label(field)) == 0) {
 						gaim_request_field_string_set_value(field, gaim_account_get_password(account));
 					}
 				}
@@ -384,15 +384,15 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
 {
 	NSString	*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
-	if(titleString &&
-	   ([titleString rangeOfString:@"Sametime"].location != NSNotFound)){
-		   if([titleString rangeOfString:@"Export"].location != NSNotFound){
+	if (titleString &&
+	   ([titleString rangeOfString:@"Sametime"].location != NSNotFound)) {
+		   if ([titleString rangeOfString:@"Export"].location != NSNotFound) {
 			   NSSavePanel *savePanel = [NSSavePanel savePanel];
 			   
-			   if([savePanel runModalForDirectory:nil file:nil] == NSOKButton){
+			   if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
 				   ((GaimRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
 			   }
-		   }else if([titleString rangeOfString:@"Import"].location != NSNotFound){
+		   } else if ([titleString rangeOfString:@"Import"].location != NSNotFound) {
 			   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 			   
 			   if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
@@ -400,7 +400,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 			   }
 		   }		   
 		   
-	   }else{
+	   } else {
 		   GaimXfer *xfer = (GaimXfer *)user_data;
 		   GaimXferType xferType = gaim_xfer_get_type(xfer);
 		   if (xfer) {
@@ -425,9 +425,9 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 														  withObject:fileTransfer];
 				   
 			   } else if (xferType == GAIM_XFER_SEND) {
-				   if (xfer->local_filename != NULL && xfer->filename != NULL){
+				   if (xfer->local_filename != NULL && xfer->filename != NULL) {
 					   gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
-				   }else{
+				   } else {
 					   gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
 					   [[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
 				   }

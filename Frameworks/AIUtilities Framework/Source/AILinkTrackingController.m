@@ -62,7 +62,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Reset the cursor tracking rects
     [self _endCursorTracking];
-    if(visibleRect.size.width && visibleRect.size.height){
+    if (visibleRect.size.width && visibleRect.size.height) {
         [self _beginCursorTrackingInRect:visibleRect withOffset:offset];
     }
 }
@@ -85,7 +85,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     location = [[theEvent window] convertBaseToScreen:location];
 
     //Ignore the mouse entry if our view is hidden, or our window is non-main
-    if([window isMainWindow] && [controlView canDraw]){
+    if ([window isMainWindow] && [controlView canDraw]) {
         [self _setMouseOverLink:link
                         atPoint:location];
     }
@@ -116,7 +116,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 	
-    if(charIndex >= 0 && charIndex < [textStorage length]){
+    if (charIndex >= 0 && charIndex < [textStorage length]) {
         NSString	*linkString;
         NSURL		*linkURL;
         NSRange		linkRange;
@@ -125,21 +125,21 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
 		
 		// The string might already have been filtered (i.e. in Context objects)
-		if( [linkString isKindOfClass:[NSURL class]] ) {
+		if ( [linkString isKindOfClass:[NSURL class]] ) {
 			linkString = [(NSURL *)linkString absoluteString];
 		}
 		
-		if(linkString != nil && [linkString length] != 0){
+		if (linkString != nil && [linkString length] != 0) {
 			//add http:// to the link string if a protocol wasn't specified
-			if(([linkString rangeOfString:@"://"].location == NSNotFound) &&
-			   ([linkString rangeOfString:@"mailto:"].location == NSNotFound)){
+			if (([linkString rangeOfString:@"://"].location == NSNotFound) &&
+			   ([linkString rangeOfString:@"mailto:"].location == NSNotFound)) {
 				linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
-			}else{
+			} else {
 				linkURL = [NSURL URLWithString:linkString];
 			}
 			
 			//bail if a link couldn't be made
-			if(linkURL){
+			if (linkURL) {
 				unsigned int	eventMask;
 				NSDate			*distantFuture;
 				unsigned		linkCount;
@@ -158,23 +158,23 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 				linkRects = _copyRectArray(linkRects, linkCount);
 				
 				//One last check to make sure we're really in the bounds of the link. Useful when the link runs up to the end of the document and a click in the blank area below still pases the style range test above.
-				if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+				if (_mouseInRects(mouseLoc, linkRects, linkCount, NO)) {
 					//Draw ourselves as clicked and kick off tracking
 					[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
 					[controlView setNeedsDisplay:YES];
 					
-					while(!done){
+					while (!done) {
 						//Get the next event and mouse location
 						theEvent = [NSApp nextEventMatchingMask:eventMask untilDate:distantFuture inMode:NSEventTrackingRunLoopMode dequeue:YES];
 						mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
 						mouseLoc.x -= offset.x;
 						mouseLoc.y -= offset.y;
 						
-						switch([theEvent type]){
+						switch ([theEvent type]) {
 							case NSRightMouseUp:		//Done Tracking Clickscr
 							case NSLeftMouseUp:
 								//If we were still inside the link, draw unclicked and open link
-								if(_mouseInRects(mouseLoc, linkRects, linkCount, NO)){
+								if (_mouseInRects(mouseLoc, linkRects, linkCount, NO)) {
 									[[NSWorkspace sharedWorkspace] openURL:linkURL];
 								}
 								[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
@@ -184,11 +184,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 							case NSLeftMouseDragged:	//Mouse Moved
 							case NSRightMouseDragged:
 								//Check if we crossed the link region edge
-								if(_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO){
+								if (_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == NO) {
 									[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor orangeColor] range:linkRange];
 									[controlView setNeedsDisplay:YES];
 									inRects = YES;
-								}else if(!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES){
+								} else if (!_mouseInRects(mouseLoc, linkRects, linkCount, NO) && inRects == YES) {
 									[textStorage addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:linkRange];
 									[controlView setNeedsDisplay:YES];
 									inRects = NO;
@@ -207,14 +207,14 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     }
 	
     //Free our copy of the link region
-    if(linkRects) free(linkRects);
+    if (linkRects) free(linkRects);
     return(success);
 }
 
 //Init
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		linkArray = nil;
 		mouseOverLink = NO;
 		hoveredLink = nil;
@@ -258,7 +258,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Process all links
     scanRange = NSMakeRange(visibleCharRange.location, 0);
-    while(NSMaxRange(scanRange) < NSMaxRange(visibleCharRange)){
+    while (NSMaxRange(scanRange) < NSMaxRange(visibleCharRange)) {
         NSString	*linkURL;
 
         //Get the link URL
@@ -268,11 +268,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 		
 		
 		// The string might already have been filtered (i.e. in Context objects)
-		if( [linkURL isKindOfClass:[NSURL class]] ) {
+		if ( [linkURL isKindOfClass:[NSURL class]] ) {
 			linkURL = [(NSURL *)linkURL absoluteString];
 		}
 		
-		if(linkURL){
+		if (linkURL) {
             NSRectArray linkRects;
             unsigned	index;
             unsigned	linkCount;
@@ -282,7 +282,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                                      withinSelectedCharacterRange:NSMakeRange(NSNotFound, 0)
                                                   inTextContainer:textContainer
                                                         rectCount:&linkCount];
-            for(index = 0; index < linkCount; index++){
+            for (index = 0; index < linkCount; index++) {
                 NSRect			linkRect;
                 NSRect			visibleLinkRect;
                 AIFlexibleLink		*link;
@@ -300,7 +300,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                 link = [[[AIFlexibleLink alloc] initWithTrackingRect:linkRect
 																 url:linkURL
 															   title:[[textStorage string] substringWithRange:scanRange]] autorelease];
-                if(!linkArray) linkArray = [[NSMutableArray alloc] init];
+                if (!linkArray) linkArray = [[NSMutableArray alloc] init];
                 [linkArray addObject:link];
 
 				
@@ -320,7 +320,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Remove all existing tracking rects
     enumerator = [linkArray objectEnumerator];
-    while((link = [enumerator nextObject])){
+    while ((link = [enumerator nextObject])) {
         [controlView removeTrackingRect:[link trackingTag]];
     }
 
@@ -331,16 +331,16 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Configure the mouse for being over a link or not
 - (void)_setMouseOverLink:(AIFlexibleLink *)inHoveredLink atPoint:(NSPoint)inPoint
 {
-    if(inHoveredLink != nil && mouseOverLink == NO){
+    if (inHoveredLink != nil && mouseOverLink == NO) {
         //Keep track of the hovered link/string
         mouseOverLink = YES;
 
         [NSCursor setHandPointCursor]; //Set link cursor
 
 		//If the link's title matches its URL, there is no need to show the tooltip.
-		if(showTooltip &&
+		if (showTooltip &&
 		   [[inHoveredLink title] caseInsensitiveCompare:[inHoveredLink url]] != NSOrderedSame &&
-		   [[@"http://" stringByAppendingString:[inHoveredLink title]] caseInsensitiveCompare:[inHoveredLink url]] != NSOrderedSame){
+		   [[@"http://" stringByAppendingString:[inHoveredLink title]] caseInsensitiveCompare:[inHoveredLink url]] != NSOrderedSame) {
 			
 			[hoveredLink release]; hoveredLink = [inHoveredLink retain];
 			[hoveredString release]; hoveredString = [[NSString stringWithFormat:@"%@", [hoveredLink url]] retain];
@@ -348,10 +348,10 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 			[AITooltipUtilities showTooltipWithString:hoveredString onWindow:nil atPoint:inPoint orientation:TooltipAbove]; //Show tooltip
 		}
 		
-	}else if(inHoveredLink == nil && mouseOverLink == YES){
+	} else if (inHoveredLink == nil && mouseOverLink == YES) {
         [[NSCursor arrowCursor] set]; //Restore the regular cursor
         
-        if(showTooltip){
+        if (showTooltip) {
             [AITooltipUtilities showTooltipWithString:nil onWindow:nil atPoint:NSMakePoint(0,0) orientation:TooltipAbove]; //Hide the tooltip
 			
             [hoveredLink release]; hoveredLink = nil;
@@ -368,8 +368,8 @@ BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL fl
 {
     int	index;
 
-    for(index = 0; index < arraySize; index++){
-        if(NSMouseInRect(aPoint, someRects[index], flipped)){
+    for (index = 0; index < arraySize; index++) {
+        if (NSMouseInRect(aPoint, someRects[index], flipped)) {
             return(YES);
         }
     }
@@ -404,7 +404,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
     glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
     charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 
-    if(charIndex >= 0 && charIndex < [textStorage length]){
+    if (charIndex >= 0 && charIndex < [textStorage length]) {
         NSString	*linkString;
         NSRange		linkRange;
     
@@ -412,15 +412,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
         linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
 
 		// The string might already have been filtered (i.e. in Context objects)
-		if( [linkString isKindOfClass:[NSURL class]] ) {
+		if ( [linkString isKindOfClass:[NSURL class]] ) {
 			linkString = [(NSURL *)linkString absoluteString];
 		}
 		
-		if(linkString != nil && [linkString length] != 0){
+		if (linkString != nil && [linkString length] != 0) {
             //add http:// to the link string if a protocol wasn't specified
-            if([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound){
+            if ([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound) {
                 linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
-            }else{
+            } else {
                 linkURL = [NSURL URLWithString:linkString];
             }
         }

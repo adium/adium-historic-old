@@ -40,7 +40,7 @@
 {
 	AIAccountPlusFieldPromptController *sharedInstance = [self sharedInstance];
 	
-    if(!sharedInstance){
+    if (!sharedInstance) {
         sharedInstance = [self createSharedInstance];
     }
 
@@ -51,7 +51,7 @@
 {
 	AIAccountPlusFieldPromptController *sharedInstance = [self sharedInstance];
 
-    if(sharedInstance){
+    if (sharedInstance) {
         [sharedInstance closeWindow:nil];
     }
 }
@@ -90,8 +90,8 @@
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		if([contact service] == [account service]){
+    while ((contact = [enumerator nextObject])) {
+		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
 			[textField_handle addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_handle addCompletionString:[contact displayName] withImpliedCompletion:UID];
@@ -131,7 +131,7 @@
 																						   toContact:nil];
 	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
 	
-    if(serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0){
+    if (serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0) {
 		//Select the account
 		[popUp_service selectItemAtIndex:serviceIndex];
 		

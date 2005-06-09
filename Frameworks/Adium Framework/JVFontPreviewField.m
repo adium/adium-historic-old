@@ -6,7 +6,7 @@
 
 - (id) initWithCoder:(NSCoder *) coder {
 	self = [super initWithCoder:coder];
-	if( [coder allowsKeyedCoding] ) {
+	if ( [coder allowsKeyedCoding] ) {
 		_showPointSize = [coder decodeBoolForKey:@"showPointSize"];
 		_showFontFace = [coder decodeBoolForKey:@"showFontFace"];
 		_actualFont = [[coder decodeObjectForKey:@"actualFont"] retain];
@@ -20,7 +20,7 @@
 
 - (void) encodeWithCoder:(NSCoder *) coder {
 	[super encodeWithCoder:coder];
-	if( [coder allowsKeyedCoding] ) {
+	if ( [coder allowsKeyedCoding] ) {
 		[coder encodeBool:_showPointSize forKey:@"showPointSize"];
 		[coder encodeBool:_showFontFace forKey:@"showFontFace"];
 		[coder encodeObject:_actualFont forKey:@"actualFont"];
@@ -40,14 +40,14 @@
 - (void) selectFont:(id) sender {
 	NSFont *font = [sender convertFont:[self font]];
 
-	if(!font) return;
+	if (!font) return;
 
-	if([[self delegate] respondsToSelector:@selector(fontPreviewField:shouldChangeToFont:)])
-		if(![[self delegate] fontPreviewField:self shouldChangeToFont:font]) return;
+	if ([[self delegate] respondsToSelector:@selector(fontPreviewField:shouldChangeToFont:)])
+		if (![[self delegate] fontPreviewField:self shouldChangeToFont:font]) return;
 
 	[self setFont:font];
 
-	if([[self delegate] respondsToSelector:@selector(fontPreviewField:didChangeToFont:)])
+	if ([[self delegate] respondsToSelector:@selector(fontPreviewField:didChangeToFont:)])
 		[[self delegate] fontPreviewField:self didChangeToFont:font];
 }
 
@@ -60,8 +60,8 @@
 - (unsigned int) validModesForFontPanel:(NSFontPanel *) fontPanel
 {
 	unsigned int ret = NSFontPanelStandardModesMask;
-	if(!_showPointSize) ret ^= NSFontPanelSizeModeMask;
-	if(!_showFontFace) ret ^= NSFontPanelFaceModeMask;
+	if (!_showPointSize) ret ^= NSFontPanelSizeModeMask;
+	if (!_showFontFace) ret ^= NSFontPanelFaceModeMask;
 	return ret;
 }
 
@@ -73,14 +73,14 @@
 
 - (void) updateDisplayedFont
 {
-	if(_actualFont){
+	if (_actualFont) {
 		NSMutableAttributedString *text = nil;
 
 		[super setFont:[[NSFontManager sharedFontManager] convertFont:_actualFont toSize:11.]];
 		
-		if(_showPointSize){
+		if (_showPointSize) {
 			text = [[[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@ %.0f", (_showFontFace ? [_actualFont displayName] : [_actualFont familyName]), [_actualFont pointSize]]] autorelease];
-		}else{
+		} else {
 			text = [[[NSMutableAttributedString alloc] initWithString:( _showFontFace ? [_actualFont displayName] : [_actualFont familyName] )] autorelease];
 		}
 		
@@ -106,7 +106,7 @@
 
 - (void) setFont:(NSFont *)font
 {
-	if(!font) return;
+	if (!font) return;
 	
 	[_actualFont autorelease];
 	_actualFont = [font retain];
@@ -136,13 +136,13 @@
 	NSResponder *resp = nil;
 	NSWindow	*window = [self window];
 	
-	if([window isKeyWindow]){
+	if ([window isKeyWindow]) {
 		resp = [window firstResponder];
-		if(resp == lastResp){
+		if (resp == lastResp) {
 			return([super needsDisplay]);
 		}
 		
-	}else if(lastResp == nil){
+	} else if (lastResp == nil) {
 		return([super needsDisplay]);
 		
 	}
@@ -161,7 +161,7 @@
 {
 	[super drawRect:rect];
 	
-	if(shouldDrawFocusRing){
+	if (shouldDrawFocusRing) {
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		NSRectFill(rect);
 	}

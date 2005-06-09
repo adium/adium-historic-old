@@ -91,7 +91,7 @@
 //will have the same value here.
 - (NSString *)internalObjectID
 {
-	if(!internalObjectID){
+	if (!internalObjectID) {
 		internalObjectID = [[AIListObject internalObjectIDForServiceID:[[self service] serviceID] UID:[self UID]] retain];
 	}
 	return(internalObjectID);
@@ -108,10 +108,10 @@
 //Toggle visibility of this object
 - (void)setVisible:(BOOL)inVisible
 {	
-	if(visible != inVisible){
+	if (visible != inVisible) {
 		visible = inVisible;
 
-		if([containingObject isKindOfClass:[AIListGroup class]]){
+		if ([containingObject isKindOfClass:[AIListGroup class]]) {
 			//Let our containing group know about the visibility change
 			[(AIListGroup *)containingObject visibilityOfContainedObject:self changedTo:inVisible];			
 		}
@@ -136,17 +136,17 @@
 //Set the local grouping for this object (PRIVATE: These are for AIListGroup ONLY)
 - (void)setContainingObject:(AIListObject <AIContainingObject> *)inGroup
 {
-    if (containingObject != inGroup){
+    if (containingObject != inGroup) {
 	   [containingObject release];
 	   containingObject = [inGroup retain];
 	}
 #if 0
 	BOOL hadContainingObject = (containingObject != nil);
 
-	if (!hadContainingObject){
+	if (!hadContainingObject) {
 		//When we get our first containing object, our ordering information is appropriate
 		[containingObject listObject:self didSetOrderIndex:orderIndex];
-	}else{
+	} else {
 		//Otherwise, clear it pending getting new ordering information, putting us the bottom of
 		//the containing object for now (but not saving that data)
 		orderIndex = ([containingObject largestOrder] + 1.0);
@@ -164,9 +164,9 @@
 - (AIListGroup *)parentGroup
 {
 	AIListObject	*parentGroup = [[[adium contactController] parentContactForListObject:self] containingObject];
-	if (parentGroup && [parentGroup isKindOfClass:[AIListGroup class]]){
+	if (parentGroup && [parentGroup isKindOfClass:[AIListGroup class]]) {
 		return((AIListGroup *)parentGroup);
-	}else{
+	} else {
 		return(nil);
 	}
 }
@@ -174,7 +174,7 @@
 //Returns our desired placement within a group
 - (float)orderIndex
 {
-	if(!orderIndex) [self determineOrderIndex];
+	if (!orderIndex) [self determineOrderIndex];
 	
 	return(orderIndex);
 }
@@ -185,19 +185,19 @@
 	NSNumber	*orderIndexNumber = [self preferenceForKey:KEY_ORDER_INDEX
 													 group:ObjectStatusCache 
 									 ignoreInheritedValues:YES];
-	if (orderIndexNumber){
+	if (orderIndexNumber) {
 		float storedOrderIndex;
 		
 		storedOrderIndex = [orderIndexNumber floatValue];
 		
 		//Evan: I don't know how we got up to infinity.. perhaps pref corruption in a previous version?
 		//In any case, check against it; if we stored it, reset to a reasonable number.
-		if(storedOrderIndex < INFINITY){
+		if (storedOrderIndex < INFINITY) {
 			orderIndex = storedOrderIndex;
-		}else{
+		} else {
 			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
 		}
-	}else{
+	} else {
 		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
 	}
 }
@@ -239,7 +239,7 @@
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {				
 	//Inform our containing group about the new status object value
-	if (containingObject){
+	if (containingObject) {
 		[containingObject object:self didSetStatusObject:value forKey:key notify:notify];
 	}
 	
@@ -252,7 +252,7 @@
 //A mutable owner array (one of our displayArrays) set an object
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
-	if (containingObject){
+	if (containingObject) {
 		[containingObject listObject:self mutableOwnerArray:inArray didSetObject:anObject withOwner:inOwner priorityLevel:priority];
 	}
 }
@@ -278,9 +278,9 @@
 }
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group ignoreInheritedValues:(BOOL)ignore
 {
-	if(ignore){
+	if (ignore) {
 		return([[adium preferenceController] preferenceForKey:key group:group objectIgnoringInheritance:self]);
-	}else{
+	} else {
 		return([[adium preferenceController] preferenceForKey:key group:group object:self]);
 	}
 }
@@ -357,7 +357,7 @@
 										 priorityLevel:inPriorityLevel];
 	
 	//If the displayUserIcon changed, flush our cache and send out a notification
-	if (oldImage != [self displayUserIcon]){
+	if (oldImage != [self displayUserIcon]) {
 		AIListObject	*myContainingObject = [self containingObject];
 		NSSet			*modifiedKeys = [NSSet setWithObject:KEY_USER_ICON];
 		
@@ -367,7 +367,7 @@
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:modifiedKeys];		
 		
-		if([myContainingObject isKindOfClass:[AIListContact class]]){
+		if ([myContainingObject isKindOfClass:[AIListContact class]]) {
 			[AIUserIcons flushCacheForContact:(AIListContact *)myContainingObject];
 
 			//Notify
@@ -413,9 +413,9 @@
 	
 	//Look for a parent contact and draw a display name from by default to provide a consistent naming
 	AIListObject	*parentObject = [[adium contactController] parentContactForListObject:self];
-	if (parentObject != self){
+	if (parentObject != self) {
 		outName = [parentObject displayName];
-	}else{
+	} else {
 		outName = [self ownDisplayName];
 	}
 
@@ -446,9 +446,9 @@
 
 	//Look for a parent contact and draw a display name from by default to provide a consistent naming
 	AIListObject	*parentObject = [[adium contactController] parentContactForListObject:self];
-	if (parentObject != self){
+	if (parentObject != self) {
 		outName = [parentObject phoneticName];
-	}else{
+	} else {
 		outName = [self ownPhoneticName];
 	}
 	
@@ -465,12 +465,12 @@
 //Apply an alias
 - (void)setDisplayName:(NSString *)alias
 {
-	if([alias length] == 0) alias = nil; 
+	if ([alias length] == 0) alias = nil; 
 	
 	NSString	*oldAlias = [self preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES];
 
 	if ((!alias && oldAlias) ||
-		(alias && !([alias isEqualToString:oldAlias]))){
+		(alias && !([alias isEqualToString:oldAlias]))) {
 		//Save the alias
 		[self setPreference:alias forKey:@"Alias" group:PREF_GROUP_ALIASES];
 
@@ -493,11 +493,11 @@
 }
 - (void)setNotes:(NSString *)notes
 {
-	if([notes length] == 0) notes = nil; 
+	if ([notes length] == 0) notes = nil; 
 
 	NSString	*oldNotes = [self preferenceForKey:@"Notes" group:PREF_GROUP_NOTES ignoreInheritedValues:YES];
 	if ((!notes && oldNotes) ||
-		(notes && (![notes isEqualToString:oldNotes]))){
+		(notes && (![notes isEqualToString:oldNotes]))) {
 		//Save the note
 		[self setPreference:notes forKey:@"Notes" group:PREF_GROUP_NOTES];
 	}
@@ -531,15 +531,15 @@
 	AIStatusType	currentStatusType = [self statusType];
 	NSString		*oldStatusName = [self statusName];
 	
-	if(currentStatusType != statusType){
+	if (currentStatusType != statusType) {
 		[self setStatusObject:[NSNumber numberWithInt:statusType] forKey:@"StatusType" notify:NotifyLater];
 	}
 	
-	if((!statusName && oldStatusName) || (statusName && ![statusName isEqualToString:oldStatusName])){
+	if ((!statusName && oldStatusName) || (statusName && ![statusName isEqualToString:oldStatusName])) {
 		[self setStatusObject:statusName forKey:@"StatusName" notify:NotifyLater];
 	}
 	
-	if(notify) [self notifyOfChangedStatusSilently:NO];
+	if (notify) [self notifyOfChangedStatusSilently:NO];
 }
 
 - (NSAttributedString *)statusMessage
@@ -566,8 +566,8 @@
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify
 {
-	if(!statusMessage ||
-	   ![[self statusObjectForKey:@"StatusMessage"] isEqualToAttributedString:statusMessage]){
+	if (!statusMessage ||
+	   ![[self statusObjectForKey:@"StatusMessage"] isEqualToAttributedString:statusMessage]) {
 		[self setStatusObject:statusMessage forKey:@"StatusMessage" notify:notify];
 	}
 }
@@ -580,7 +580,7 @@
 	[self setStatusMessage:nil
 					 notify:NotifyLater];
 
-	if(notify) [self notifyOfChangedStatusSilently:NO];
+	if (notify) [self notifyOfChangedStatusSilently:NO];
 }
 
 /*!
@@ -589,7 +589,7 @@
 - (NSAttributedString *)contactListStatusMessage
 {
 	NSAttributedString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
-	if(!contactListStatusMessage){
+	if (!contactListStatusMessage) {
 		contactListStatusMessage = [self statusMessage];
 	}
 	
@@ -603,29 +603,29 @@
 
 - (AIStatusSummary)statusSummary
 {
-	if ([self integerStatusObjectForKey:@"Online"]){
+	if ([self integerStatusObjectForKey:@"Online"]) {
 		AIStatusType	statusType = [self statusType];
 		
-		if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)){
-			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
+		if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)) {
+			if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]) {
 				return AIAwayAndIdleStatus;
-			}else{
+			} else {
 				return AIAwayStatus;
 			}
 			
-		}else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]){
+		} else if ([self integerStatusObjectForKey:@"IsIdle" fromAnyContainedObject:NO]) {
 			return AIIdleStatus;
 			
-		}else{
+		} else {
 			return AIAvailableStatus;
 			
 		}
-	}else{
+	} else {
 		//We don't know the status of an stranger who isn't showing up as online
-		if ([self isStranger]){
+		if ([self isStranger]) {
 			return AIUnknownStatus;
 			
-		}else{
+		} else {
 			return AIOfflineStatus;
 			
 		}

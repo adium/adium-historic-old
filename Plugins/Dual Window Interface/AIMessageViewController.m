@@ -85,7 +85,7 @@
  */
 - (id)initForChat:(AIChat *)inChat
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		//Init
 		chat = [inChat retain];
@@ -147,7 +147,7 @@
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
-    if(chat){
+    if (chat) {
         [[adium contentController] closeChat:chat];
 		
 		/* Ensure the chat knows it is closed.  I'm not sure how we can get here without the interface controller's
@@ -162,7 +162,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     //Account selection view
-    if(view_accountSelection){
+    if (view_accountSelection) {
 		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
         [view_accountSelection removeFromSuperview];
         [view_accountSelection release]; view_accountSelection = nil;
@@ -178,7 +178,7 @@
 	[view_contents release];
 	
 	//Release the hidden user list view
-	if(retainingScrollViewUserList){
+	if (retainingScrollViewUserList) {
 		[scrollView_userList release];
 	}
 	
@@ -222,7 +222,7 @@
  */
 - (void)setAccount:(AIAccount *)inAccount
 {
-	if(inAccount != [chat account]){
+	if (inAccount != [chat account]) {
 		[[adium contentController] switchChat:chat toAccount:inAccount];
 	}
 }
@@ -265,7 +265,7 @@
  */
 - (AIListObject *)preferredListObject
 {
-	if( [[splitView_messages subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)) {
+	if ( [[splitView_messages subviews] containsObject:scrollView_userList] && ([userListView selectedRow] != -1)) {
 		return [userListView itemAtRow:[userListView selectedRow]];
 	}
 	
@@ -282,7 +282,7 @@
 {
     NSArray	*modifiedKeys = [[notification userInfo] objectForKey:@"Keys"];
 	
-    if(notification == nil || [modifiedKeys containsObject:@"DisallowAccountSwitching"]){
+    if (notification == nil || [modifiedKeys containsObject:@"DisallowAccountSwitching"]) {
 		[self setAccountSelectionMenuVisibleIfNeeded:YES];
     }
 }
@@ -319,7 +319,7 @@
  */
 - (void)adiumPrint:(id)sender
 {
-	if([messageViewController respondsToSelector:@selector(adiumPrint:)]){
+	if ([messageViewController respondsToSelector:@selector(adiumPrint:)]) {
 		[messageViewController adiumPrint:sender];
 	}
 }
@@ -335,19 +335,19 @@
 	NSAttributedString	*attributedString = [textView_outgoing textStorage];
 	
 	//Only send if we have a non-zero-length string
-    if([attributedString length] != 0){ 
+    if ([attributedString length] != 0) { 
 		AIListObject				*listObject = [chat listObject];
 		
-		if(!sendMessagesToOfflineContact &&
+		if (!sendMessagesToOfflineContact &&
 		   ![chat name] &&
 		   ![listObject online] &&
-		   ![listObject isStranger]){
+		   ![listObject isStranger]) {
 			
 			//Contact is offline.  Ask how the user wants to handle the situation.
 			[CSMessageToOfflineContactWindowController showSheetInWindow:[view_contents window]
 												forMessageViewController:self];
 			
-		}else{
+		} else {
 			AIContentMessage		*message;
 			NSAttributedString		*outgoingAttributedString;
 			AIAccount				*account = [chat account];
@@ -365,7 +365,7 @@
 											autoreply:NO];
 			[outgoingAttributedString release];
 
-			if([[adium contentController] sendContentObject:message]){
+			if ([[adium contentController] sendContentObject:message]) {
 				[[adium notificationCenter] postNotificationName:Interface_DidSendEnteredMessage 
 														  object:chat
 														userInfo:nil];
@@ -396,7 +396,7 @@
 	//Put the alert on the metaContact containing this listObject if applicable
 	listObject = [[adium contactController] parentContactForListObject:[chat listObject]];
 	
-	if (listObject){
+	if (listObject) {
 		NSMutableDictionary *detailsDict, *alertDict;
 		
 		detailsDict = [NSMutableDictionary dictionary];
@@ -474,15 +474,15 @@
 - (void)setAccountSelectionMenuVisibleIfNeeded:(BOOL)makeVisible
 {
 	//If the account selection menu isn't allowed or isn't needed, we want to hide it
-	if([chat integerStatusObjectForKey:@"DisallowAccountSwitching"] ||
-	   ![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:[chat listObject]]){
+	if ([chat integerStatusObjectForKey:@"DisallowAccountSwitching"] ||
+	   ![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:[chat listObject]]) {
 		makeVisible = NO;
 	}
 	
 	//Hide or show the account selection view as requested
-	if(makeVisible){
+	if (makeVisible) {
 		[self _showAccountSelectionView];
-	}else{
+	} else {
 		[self _hideAccountSelectionView];
 	}
 }
@@ -492,7 +492,7 @@
  */
 - (void)_showAccountSelectionView
 {
-	if(!view_accountSelection){
+	if (!view_accountSelection) {
 		NSRect	contentFrame = [splitView_textEntryHorizontal frame];
 		int 	accountViewHeight;
 
@@ -523,7 +523,7 @@
  */
 - (void)_hideAccountSelectionView
 {
-	if(view_accountSelection){
+	if (view_accountSelection) {
 		int		height = [view_accountSelection frame].size.height;
 		NSRect	frame;
 
@@ -555,7 +555,7 @@
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
-    if([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]){
+    if ([textView_outgoing respondsToSelector:@selector(setUsesFindPanel:)]) {
 		[textView_outgoing setUsesFindPanel:YES];
     }
 	[textView_outgoing setClearOnEscape:YES];
@@ -563,7 +563,7 @@
 	//User's choice of mininum height for their text entry view
 	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
 															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
-	if(entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
+	if (entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
 
 	
 	//Associate the view with our message view so it knows which view to scroll in response to page up/down
@@ -643,7 +643,7 @@
 						  [splitView_textEntryHorizontal frame].size.height - height,
 						  tempFrame.size.width,
 						  height);
-	if(!NSEqualRects(tempFrame, newFrame)){
+	if (!NSEqualRects(tempFrame, newFrame)) {
 		[scrollView_outgoing setFrame:newFrame];
 		[scrollView_outgoing setNeedsDisplay:YES];
 		changed = YES;
@@ -655,13 +655,13 @@
 						  tempFrame.origin.y,
 						  tempFrame.size.width,
 						  [splitView_textEntryHorizontal frame].size.height - heightWithDivider);
-	if(!NSEqualRects(tempFrame, newFrame)){
+	if (!NSEqualRects(tempFrame, newFrame)) {
 		[splitView_messages setFrame:newFrame];
 		[splitView_messages setNeedsDisplay:YES];
 		changed = YES;
 	}
 
-	if(changed){		
+	if (changed) {		
 		//Redisplay the window on the next run loop
 		[[splitView_textEntryHorizontal window] performSelector:@selector(display)
 													 withObject:nil
@@ -687,8 +687,8 @@
 	height = [textView_outgoing desiredSize].height;
 	
 	//But we must never fall below the user's prefered mininum or above the allowed height
-	if(!ignoreUserMininum && height < entryMinHeight) height = entryMinHeight;
-	if(height > allowedHeight) height = allowedHeight;
+	if (!ignoreUserMininum && height < entryMinHeight) height = entryMinHeight;
+	if (height > allowedHeight) height = allowedHeight;
 	
 	return(height);
 }
@@ -701,9 +701,9 @@
  */
 - (void)setUserListVisible:(BOOL)inVisible
 {
-	if(inVisible){
+	if (inVisible) {
 		[self _showUserListView];
-	}else{
+	} else {
 		[self _hideUserListView];
 	}
 }
@@ -725,11 +725,11 @@
 	[self _configureUserList];
 
 	//Add the user list back to our window if it's missing
-	if(![self userListVisible]){
+	if (![self userListVisible]) {
 		[splitView_messages addSubview:scrollView_userList];
 		[self _updateUserListViewWidth];
 		
-		if(retainingScrollViewUserList){
+		if (retainingScrollViewUserList) {
 			[scrollView_userList release];
 			retainingScrollViewUserList = NO;
 		}
@@ -743,7 +743,7 @@
  */
 - (void)_hideUserListView
 {
-	if([self userListVisible]){
+	if ([self userListVisible]) {
 		[scrollView_userList retain];
 		[scrollView_userList removeFromSuperview];
 		retainingScrollViewUserList = YES;
@@ -758,7 +758,7 @@
  */
 - (void)_configureUserList
 {
-	if(!userListController){
+	if (!userListController) {
 		NSDictionary	*themeDict = [NSDictionary dictionaryNamed:USERLIST_THEME forClass:[self class]];
 		NSDictionary	*layoutDict = [NSDictionary dictionaryNamed:USERLIST_LAYOUT forClass:[self class]];
 		
@@ -773,7 +773,7 @@
 		//User's choice of mininum width for their user list view
 		userListMinWidth = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
 																	 group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
-		if(userListMinWidth < USER_LIST_MIN_WIDTH) userListMinWidth = USER_LIST_DEFAULT_WIDTH;
+		if (userListMinWidth < USER_LIST_MIN_WIDTH) userListMinWidth = USER_LIST_DEFAULT_WIDTH;
 		
 		
 	}
@@ -792,7 +792,7 @@
 							  [[chat participatingListObjects] count] > 1)];
 	
     //Update the user list
-    if([self userListVisible]){
+    if ([self userListVisible]) {
         [userListController reloadData];
     }
 }
@@ -805,7 +805,7 @@
  */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
-	if([notification object] == userListView){
+	if ([notification object] == userListView) {
 		int selectedIndex = [userListView selectedRow];
 		[chat setPreferredListObject:((selectedIndex != -1) ? 
 									  [[chat participatingListObjects] objectAtIndex:selectedIndex] :
@@ -869,8 +869,8 @@
 	int	width = USER_LIST_MIN_WIDTH;
 	
 	//We must never fall below the user's prefered mininum or above the allowed width
-	if(!ignoreUserMininum && width < userListMinWidth) width = userListMinWidth;
-	if(width > allowedWidth) width = allowedWidth;
+	if (!ignoreUserMininum && width < userListMinWidth) width = userListMinWidth;
+	if (width > allowedWidth) width = allowedWidth;
 
 	return(width);
 }
@@ -886,11 +886,11 @@
  */
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
-	if(sender == splitView_textEntryHorizontal){
+	if (sender == splitView_textEntryHorizontal) {
 		return([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
 											 [sender dividerThickness]));
 
-	}else /*if(sender == splitView_messages)*/ {
+	} else /*if (sender == splitView_messages)*/ {
 		return([sender frame].size.width - ([self _userListViewProperWidthIgnoringUserMininum:YES] +
 											[sender dividerThickness]));
 		
@@ -904,10 +904,10 @@
  */
 - (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
 {
-	if(sender == splitView_textEntryHorizontal){
+	if (sender == splitView_textEntryHorizontal) {
 		return((int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO));
 		
-	}else /*if(sender == splitView_messages)*/ {
+	} else /*if (sender == splitView_messages)*/ {
 		return((int)([sender frame].size.width * MESSAGE_VIEW_MIN_WIDTH_RATIO));
 		
 	}
@@ -920,10 +920,10 @@
  */
 - (float)splitView:(NSSplitView *)splitView constrainSplitPosition:(float)proposedPosition ofSubviewAt:(int)index
 {
-	if(splitView == splitView_textEntryHorizontal){
+	if (splitView == splitView_textEntryHorizontal) {
 		entryMinHeight = (int)([splitView frame].size.height - (proposedPosition + [splitView dividerThickness]));
 		
-	}else /*if(splitView == splitView_messages)*/ {
+	} else /*if (splitView == splitView_messages)*/ {
 		userListMinWidth = (int)([splitView frame].size.width - (proposedPosition + [splitView dividerThickness]));
 
 	}
@@ -936,10 +936,10 @@
  */
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
 {
-	if(sender == splitView_textEntryHorizontal){
+	if (sender == splitView_textEntryHorizontal) {
 		return(NO);
 		
-	}else /*if(sender == splitView_messages)*/ {
+	} else /*if (sender == splitView_messages)*/ {
 		return(subview == scrollView_userList);
 		
 	}
@@ -955,7 +955,7 @@
  */
 - (void)splitView:(NSSplitView *)sender resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	if([[sender subviews] count] == 2){
+	if ([[sender subviews] count] == 2) {
 		NSView	*view1 = [[sender subviews] objectAtIndex:0];
 		NSView	*view2 = [[sender subviews] objectAtIndex:1];
 		
@@ -965,7 +965,7 @@
 		int		dHeight = newSize.height - oldSize.height;
 
 		//Behavior varies depending on which split view is resizing
-		if(sender == splitView_textEntryHorizontal){
+		if (sender == splitView_textEntryHorizontal) {
 			//Adjust the height of both views
 			[self _updateTextEntryViewHeight];
 			
@@ -973,7 +973,7 @@
 			[view1 setFrameSize:NSMakeSize(newSize.width + dWidth, [view1 frame].size.height)];
 			[view2 setFrameSize:NSMakeSize(newSize.width + dWidth, [view2 frame].size.height)];
 			
-		}else /*if(sender == splitView_messages)*/{
+		} else /*if (sender == splitView_messages)*/{
 			//Adjust the width of both views
 			[self _updateUserListViewWidth];
 
@@ -982,7 +982,7 @@
 			[view2 setFrameSize:NSMakeSize([view2 frame].size.width, newSize.height + dHeight)];
 		}
 		
-	}else if([[sender subviews] count] == 1){
+	} else if ([[sender subviews] count] == 1) {
 		[[[sender subviews] objectAtIndex:0] setFrame:[sender frame]];
 		
 	}

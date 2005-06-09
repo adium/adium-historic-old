@@ -23,7 +23,7 @@ AILocalVideoWindowController	*sharedLocalVideoWindowInstance = nil;
 
 + (void)showLocalVideoWindow
 {
-	if(!sharedLocalVideoWindowInstance){
+	if (!sharedLocalVideoWindowInstance) {
 		sharedLocalVideoWindowInstance = [[self alloc] initWithWindowNibName:@"LocalVideoWindow"];
 		[sharedLocalVideoWindowInstance showWindow:nil];
 	}

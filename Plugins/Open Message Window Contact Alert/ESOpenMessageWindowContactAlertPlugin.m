@@ -57,7 +57,7 @@
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	if([listObject isKindOfClass:[AIListContact class]]){
+	if ([listObject isKindOfClass:[AIListContact class]]) {
 		AIChat	*chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
 		[[adium interfaceController] setActiveChat:chat];
 	}

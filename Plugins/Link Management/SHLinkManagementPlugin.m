@@ -70,17 +70,17 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-	if(responder && [responder isKindOfClass:[NSTextView class]]){
-		if([[menuItem title] isEqualToString:RM_LINK_TITLE]){
+	if (responder && [responder isKindOfClass:[NSTextView class]]) {
+		if ([[menuItem title] isEqualToString:RM_LINK_TITLE]) {
 			// only make remove link menu item active if slection is a link.
 			return [self textViewSelectionIsLink:(NSTextView *)responder];
-		}else{
+		} else {
 			//Update the menu item's title to reflect the current action
 			[menuItem setTitle:([self textViewSelectionIsLink:(NSTextView *)responder] ? EDIT_LINK_TITLE : ADD_LINK_TITLE)];
 			
 			return [(NSTextView *)responder isEditable];
 		}
-	}else{
+	} else {
 		return(NO); //Disable the menu item if a text field is not key
 	}
 	
@@ -92,9 +92,9 @@
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
     NSResponder *responder = [keyWindow firstResponder];
 	
-    if([responder isKindOfClass:[NSTextView class]] &&
+    if ([responder isKindOfClass:[NSTextView class]] &&
        ![[[(NSTextView *)responder window] title] isEqualToString:@"Link Editor"] &&
-       [(NSTextView *)responder isEditable]){
+       [(NSTextView *)responder isEditable]) {
 		[SHLinkEditorWindowController showLinkEditorForTextView:(NSTextView *)responder
 													   onWindow:keyWindow
 												  showFavorites:YES
@@ -109,11 +109,11 @@
     NSTextView  *textView = nil;
     id		 selectedLink = nil;
     
-    if([responder isKindOfClass:[NSTextView class]]){
+    if ([responder isKindOfClass:[NSTextView class]]) {
         textView = (NSTextView *)responder;
-        if([[textView textStorage] length] &&
+        if ([[textView textStorage] length] &&
 	   [textView selectedRange].location != NSNotFound &&
-	   [textView selectedRange].location != [[textView textStorage] length]){
+	   [textView selectedRange].location != [[textView textStorage] length]) {
 		NSRange selectionRange = [textView selectedRange];
 		selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
 												 atIndex:selectionRange.location
@@ -128,9 +128,9 @@
 {
 	id		selectedLink = nil;
 	
-	if([[textView textStorage] length] &&
+	if ([[textView textStorage] length] &&
 	   [textView selectedRange].location != NSNotFound &&
-	   [textView selectedRange].location != [[textView textStorage] length]){
+	   [textView selectedRange].location != [[textView textStorage] length]) {
 		NSRange selectionRange = [textView selectedRange];
 		selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
 												 atIndex:selectionRange.location
@@ -145,7 +145,7 @@
 - (void)registerToolbarItem
 {
     //Unregister the existing toolbar item first
-    if(toolbarItem){
+    if (toolbarItem) {
         [[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
         [toolbarItem release]; toolbarItem = nil;
     }

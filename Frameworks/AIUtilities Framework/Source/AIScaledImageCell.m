@@ -20,7 +20,7 @@
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
 	//Highlight
-	if([self isHighlighted]){
+	if ([self isHighlighted]) {
 		[[NSColor alternateSelectedControlColor] set];
 		[[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4] fill];
 	}
@@ -33,7 +33,7 @@
 {
 	NSImage	*img = [self image];
 
-	if(img){
+	if (img) {
 		//Handle flipped axis
 		[img setFlipped:![img isFlipped]];
 		
@@ -54,7 +54,7 @@
 				targetRect.size.height = roundf(imgSize.height / (imgSize.width  / cellFrame.size.width));
 			}
 			
-		}else{
+		} else {
 			targetRect.size.width = imgSize.width;
 			targetRect.size.height = imgSize.height;
 		}

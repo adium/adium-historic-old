@@ -26,7 +26,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    if((self = [super initWithWindowNibName:windowNibName])) {
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		target = [inTarget retain];
 		selector = inSelector;
 
@@ -70,7 +70,7 @@
 	BOOL	savePassword = [checkBox_savePassword state];
 
 	//save password?
-	if(savePassword && password && [password length]) {
+	if (savePassword && password && [password length]) {
 		[self savePassword:password];
 	}
 
@@ -81,7 +81,7 @@
 
 - (IBAction)togglePasswordSaved:(id)sender
 {
-    if([sender state] == NSOffState){
+    if ([sender state] == NSOffState) {
         //Forget any saved passwords
 		[self savePassword:nil];
     }

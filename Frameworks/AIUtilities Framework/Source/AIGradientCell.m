@@ -16,7 +16,7 @@
 
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		drawsGradient = NO;
 		ignoresFocus = NO;
 	}
@@ -53,7 +53,7 @@
 //Draw with the selected-control colours.
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if([self drawsGradientHighlight]){
+	if ([self drawsGradientHighlight]) {
 		//Draw the gradient
 		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		[gradient drawInRect:cellFrame];
@@ -63,12 +63,12 @@
 		[[NSColor alternateSelectedControlColor] set];
 		NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
 		
-	}else{
+	} else {
 		//Draw the regular selection, ignoring focus if desired
-		if(ignoresFocus){
+		if (ignoresFocus) {
 			[[NSColor alternateSelectedControlColor] set];
 			NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
-		}else{
+		} else {
 			[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
 		}
 	}

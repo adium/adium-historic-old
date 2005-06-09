@@ -14,7 +14,7 @@
 //
 - (id)initWithFrame:(NSRect)frame
 {
-	if((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		imageFloater = nil;
 	}
 
@@ -42,7 +42,7 @@
 //Custom mouse down tracking to display our image and highlight
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if([self isEnabled]){
+	if ([self isEnabled]) {
 		NSWindow	*window = [self window];
 		float		maxXOrigin;
 
@@ -56,7 +56,7 @@
 		//Move the display point down by the height of our image
 		point.y -= [bigImage size].height;
 
-		if(imageFloater){
+		if (imageFloater) {
 			[imageFloater close:nil];
 			[imageFloater release];
 		}
@@ -65,7 +65,7 @@
 		 * so it won't.
 		 */
 		maxXOrigin = NSMaxX([[window screen] frame]) - [bigImage size].width;
-		if(point.x  > maxXOrigin){
+		if (point.x  > maxXOrigin) {
 			point.x = maxXOrigin;
 		}
 
@@ -82,7 +82,7 @@
 {
 	[self highlight:NO];
 
-	if(imageFloater){
+	if (imageFloater) {
 		[imageFloater setVisible:NO animate:YES];
 		imageFloaterShouldBeOpen = FALSE;
 
@@ -97,7 +97,7 @@
 
 - (void)destroyImageFloater
 {
-	if(!imageFloaterShouldBeOpen){
+	if (!imageFloaterShouldBeOpen) {
 		[imageFloater close:nil];
 		[imageFloater release]; imageFloater = nil;
 	}

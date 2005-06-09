@@ -32,7 +32,7 @@
 {
 	static ESContactSortConfigurationWindowController   *sharedSortConfigInstance = nil;
 	
-    if(!sharedSortConfigInstance){
+    if (!sharedSortConfigInstance) {
         sharedSortConfigInstance = [[self alloc] initWithWindowNibName:@"SortConfiguration"];
 		
 		//Remove those buttons we don't want.  removeFromSuperview will confuse the window, so just make them invisible.

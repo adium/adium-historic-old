@@ -123,19 +123,19 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 
-	if(savedAccountsToConnect){
+	if (savedAccountsToConnect) {
 		NSString		*internalObjectID;
 
 		enumerator = [savedAccountsToConnect objectEnumerator];
-		while((internalObjectID = [enumerator nextObject])){
+		while ((internalObjectID = [enumerator nextObject])) {
 			AIAccount	*account = [[adium accountController] accountWithInternalObjectID:internalObjectID];
-			if(account) [accountsToConnect addObject:account];
+			if (account) [accountsToConnect addObject:account];
 		}
-	}else{
+	} else {
 		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]){
+		while ((account = [enumerator nextObject])) {
+			if ([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]) {
 				[accountsToConnect addObject:account];
 			}
 		}
@@ -144,15 +144,15 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	//Put each account into the status it was in last time we quit.
 	BOOL		needToRebuildMenus = NO;
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
-	while((account = [enumerator nextObject])){
+	while ((account = [enumerator nextObject])) {
 		NSData		*lastStatusData = [account preferenceForKey:@"LastStatus"
 														  group:GROUP_ACCOUNT_STATUS];
 		AIStatus	*lastStatus = nil;
-		if(lastStatusData){
+		if (lastStatusData) {
 			lastStatus = [NSKeyedUnarchiver unarchiveObjectWithData:lastStatusData];
 		}
 
-		if(lastStatus){
+		if (lastStatus) {
 			AIStatus	*existingStatus;
 			
 			/* We want to use a loaded status instance if one exists.  This will be the case if the account
@@ -161,9 +161,9 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 			 */
 			existingStatus = [self statusStateWithUniqueStatusID:[lastStatus uniqueStatusID]];
 			
-			if(existingStatus){
+			if (existingStatus) {
 				lastStatus = existingStatus;
-			}else{
+			} else {
 				//Add to our temporary status array
 				[temporaryStateArray addObject:lastStatus];
 				
@@ -176,7 +176,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 		}
 	}
 	
-	if(needToRebuildMenus){
+	if (needToRebuildMenus) {
 		//Clear the sorted menu items array since our state array changed.
 		[_sortedFullStateArray release]; _sortedFullStateArray = nil;
 		
@@ -202,10 +202,10 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	AIAccount		*account;
 
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
-	while((account = [enumerator nextObject])){
+	while ((account = [enumerator nextObject])) {
 		
 		//If this account is online, we'll want to save its internalObjectID.
-		if([account online]){
+		if ([account online]) {
 			[savedAccountsToConnect addObject:[account internalObjectID]];
 		}
 		
@@ -272,8 +272,8 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	NSString		*serviceCodeUniqueID = [service serviceCodeUniqueID];
 
 	//Create the set if necessary
-	if(!statusDictsByServiceCodeUniqueID[type]) statusDictsByServiceCodeUniqueID[type] = [[NSMutableDictionary alloc] init];
-	if(!(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
+	if (!statusDictsByServiceCodeUniqueID[type]) statusDictsByServiceCodeUniqueID[type] = [[NSMutableDictionary alloc] init];
+	if (!(statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])) {
 		statusDicts = [NSMutableSet set];
 		[statusDictsByServiceCodeUniqueID[type] setObject:statusDicts
 												   forKey:serviceCodeUniqueID];
@@ -306,7 +306,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	NSString		*serviceCodeUniqueID = [service serviceCodeUniqueID];
 	AIStatusType	type;
 
-	for(type = AIAvailableStatusType ; type < STATUS_TYPES_COUNT ; type++){
+	for (type = AIAvailableStatusType ; type < STATUS_TYPES_COUNT ; type++) {
 		NSArray		*menuItemArray;
 
 		menuItemArray = [self _menuItemsForStatusesOfType:type
@@ -314,13 +314,13 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 											   withTarget:target];
 
 		//Add a separator between each type after available
-		if ((type > AIAvailableStatusType) && [menuItemArray count]){
+		if ((type > AIAvailableStatusType) && [menuItemArray count]) {
 			[menu addItem:[NSMenuItem separatorItem]];
 		}
 
 		//Add the items for this type
 		enumerator = [menuItemArray objectEnumerator];
-		while((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			[menu addItem:menuItem];
 		}
 	}
@@ -350,7 +350,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (NSArray *)_menuItemsForStatusesOfType:(AIStatusType)type forServiceCodeUniqueID:(NSString *)inServiceCodeUniqueID withTarget:(id)target
 {
 	//Quick efficiency: If asked for the offline status type, just return nil as we have no offline statuses at present.
-	if(type == AIOfflineStatusType) return nil;
+	if (type == AIOfflineStatusType) return nil;
 
 	NSMutableArray  *menuItems = [[NSMutableArray alloc] init];
 	NSMutableSet	*alreadyAddedTitles = [NSMutableSet set];
@@ -363,11 +363,11 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 					alreadyAddedTitles:alreadyAddedTitles];
 
 	//Now, add items for this service, or from all available services, as appropriate
-	if(inServiceCodeUniqueID){
+	if (inServiceCodeUniqueID) {
 		NSSet	*statusDicts;
 
 		//Obtain the status dicts for this type and service code unique ID
-		if((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:inServiceCodeUniqueID])){
+		if ((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:inServiceCodeUniqueID])) {
 			//And add them
 			[self _addMenuItemsForStatusOfType:type
 									withTarget:target
@@ -376,23 +376,23 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 							alreadyAddedTitles:alreadyAddedTitles];
 		}
 
-	}else{
+	} else {
 		NSEnumerator	*enumerator;
 		NSString		*serviceCodeUniqueID;
 //		BOOL			oneOrMoreConnectedAccounts = [[adium accountController] oneOrMoreConnectedAccounts];
 
 		//Insert a menu item for each available account
 		enumerator = [statusDictsByServiceCodeUniqueID[type] keyEnumerator];
-		while((serviceCodeUniqueID = [enumerator nextObject])){
+		while ((serviceCodeUniqueID = [enumerator nextObject])) {
 			/* Obtain the status dicts for this type and service code unique ID if it is online or
 			 * if no accounts are online but an account of this service code is configured
 			 */
-//			if([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
-//				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])){
+//			if ([[adium accountController] serviceWithUniqueIDIsOnline:serviceCodeUniqueID] ||
+//				(!oneOrMoreConnectedAccounts && [[adium accountController] firstAccountWithService:[[adium accountController] serviceWithUniqueID:serviceCodeUniqueID]])) {
 				NSSet	*statusDicts;
 
 				//Obtain the status dicts for this type and service code unique ID
-				if((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])){
+				if ((statusDicts = [statusDictsByServiceCodeUniqueID[type] objectForKey:serviceCodeUniqueID])) {
 					//And add them
 					[self _addMenuItemsForStatusOfType:type
 											withTarget:target
@@ -428,7 +428,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	NSDictionary	*statusDict;
 
 	//Enumerate the status dicts
-	while((statusDict = [statusDictEnumerator nextObject])){
+	while ((statusDict = [statusDictEnumerator nextObject])) {
 		NSString	*title = [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
 
 		/*
@@ -436,7 +436,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		 * unique state names, but are welcome to share common name/description combinations, which is why the #defines
 		 * exist.
 		 */
-		if(![alreadyAddedTitles containsObject:title]){
+		if (![alreadyAddedTitles containsObject:title]) {
 			NSImage		*image;
 			NSMenuItem	*menuItem;
 
@@ -476,11 +476,11 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIStatusType	statusType = [statusState statusType];
 	NSEnumerator	*enumerator = [statusDictsByServiceCodeUniqueID[statusType] objectEnumerator];
 	NSSet			*set;
-	while((set = [enumerator nextObject])){
+	while ((set = [enumerator nextObject])) {
 		NSEnumerator	*statusDictsEnumerator = [set objectEnumerator];
 		NSDictionary	*statusDict;
-		while((statusDict = [statusDictsEnumerator nextObject])){
-			if([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]){
+		while ((statusDict = [statusDictsEnumerator nextObject])) {
+			if ([[statusDict objectForKey:KEY_STATUS_NAME] isEqualToString:statusName]) {
 				return [statusDict objectForKey:KEY_STATUS_DESCRIPTION];
 			}
 		}
@@ -492,7 +492,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (NSString *)localizedDescriptionForCoreStatusName:(NSString *)statusName
 {
 	static NSDictionary	*coreLocalizedStatusDescriptions = nil;
-	if(!coreLocalizedStatusDescriptions){
+	if (!coreLocalizedStatusDescriptions) {
 		coreLocalizedStatusDescriptions = [[NSDictionary dictionaryWithObjectsAndKeys:
 			STATUS_DESCRIPTION_AVAILABLE, STATUS_NAME_AVAILABLE,
 			STATUS_DESCRIPTION_FREE_FOR_CHAT, STATUS_NAME_FREE_FOR_CHAT,
@@ -530,7 +530,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 - (NSString *)defaultStatusNameForType:(AIStatusType)statusType
 {
 	//Set the default status name
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 			return STATUS_NAME_AVAILABLE;
 			break;
@@ -607,15 +607,15 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	[self setDelayStateMenuUpdates:YES];
 	
 	enumerator = [accountArray objectEnumerator];
-	while((account = [enumerator nextObject])){
-		if([account online] ||
+	while ((account = [enumerator nextObject])) {
+		if ([account online] ||
 		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
-		   (shouldConnectAllAccounts)){
+		   (shouldConnectAllAccounts)) {
 			/* If this account is online, or no accounts are online and this is an account to connect,
 			 * or we should be connecting all accounts, set the status completely.
 			 */
 			[account setStatusState:statusState];
-		}else{
+		} else {
 			/* If this account should not have its state set now, perform internal bookkeeping so a future sign-on
 			 * will be to the most appropriate state
 			 */
@@ -625,8 +625,8 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	
 	//Any objects in the temporary state array which aren't the state we just set should now be removed.
 	enumerator = [[[temporaryStateArray copy] autorelease] objectEnumerator];
-	while((aStatusState = [enumerator nextObject])){
-		if(aStatusState != statusState){
+	while ((aStatusState = [enumerator nextObject])) {
+		if (aStatusState != statusState) {
 			[temporaryStateArray removeObject:aStatusState];
 			shouldRebuild = YES;
 		}
@@ -634,11 +634,11 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 
 	isProcessingGlobalChange = NO;
 
-	if(shouldRebuild){
+	if (shouldRebuild) {
 		//Manually decrease the update delays counter as we don't want to call [self updateAllStateMenuSelections]
 		stateMenuUpdateDelays--;
 		[self rebuildAllStateMenus];
-	}else{
+	} else {
 		/* Allow setDelayStateMenuUpdates to decreate the counter and call
 		 * [self updateAllStateMenuSelections] as appropriate.
 		 */
@@ -654,14 +654,14 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (NSArray *)stateArray
 {
-	if(!stateArray){
+	if (!stateArray) {
 		NSData	*savedStateArrayData = [[adium preferenceController] preferenceForKey:KEY_SAVED_STATUS
 																				group:PREF_GROUP_SAVED_STATUS];
-		if(savedStateArrayData){
+		if (savedStateArrayData) {
 			stateArray = [[NSKeyedUnarchiver unarchiveObjectWithData:savedStateArrayData] mutableCopy];
 		}
 
-		if(!stateArray) stateArray = [[NSMutableArray alloc] init];
+		if (!stateArray) stateArray = [[NSMutableArray alloc] init];
 
 		//Upgrade Adium 0.7x away messages
 		[self _upgradeSavedAwaysToSavedStates];
@@ -678,7 +678,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
  */
 - (NSArray *)builtInStateArray
 {
-	if(!builtInStateArray){
+	if (!builtInStateArray) {
 		NSArray			*savedBuiltInStateArray = [NSArray arrayNamed:BUILT_IN_STATE_ARRAY forClass:[self class]];
 		NSEnumerator	*enumerator;
 		NSDictionary	*dict;
@@ -686,12 +686,12 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		builtInStateArray = [[NSMutableArray alloc] initWithCapacity:[savedBuiltInStateArray count]];
 
 		enumerator = [savedBuiltInStateArray objectEnumerator];
-		while((dict = [enumerator nextObject])){
+		while ((dict = [enumerator nextObject])) {
 			AIStatus	*status = [AIStatus statusWithDictionary:dict];
 			[builtInStateArray addObject:status];
 
 			//Store a reference to our offline state if we just loaded it
-			if([status statusType] == AIOfflineStatusType){
+			if ([status statusType] == AIOfflineStatusType) {
 				[offlineStatusState release];
 				offlineStatusState = [status retain];
 			}
@@ -717,47 +717,47 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	AIStatusType statusTypeB = [objectB statusType];
 
 	//We treat Invisible statuses as being the same as Away for purposes of the menu
-	if(statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
-	if(statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
+	if (statusTypeA == AIInvisibleStatusType) statusTypeA = AIAwayStatusType;
+	if (statusTypeB == AIInvisibleStatusType) statusTypeB = AIAwayStatusType;
 
-	if(statusTypeA > statusTypeB){
+	if (statusTypeA > statusTypeB) {
 		return NSOrderedDescending;
-	}else if(statusTypeB > statusTypeA){
+	} else if (statusTypeB > statusTypeA) {
 		return NSOrderedAscending;
-	}else{
+	} else {
 		BOOL isLockedMutabilityTypeA = ([objectA mutabilityType] == AILockedStatusState);
 		BOOL isLockedMutabilityTypeB = ([objectB mutabilityType] == AILockedStatusState);
 
 		//Put locked (built in) statuses at the top
-		if(isLockedMutabilityTypeA && !isLockedMutabilityTypeB){
+		if (isLockedMutabilityTypeA && !isLockedMutabilityTypeB) {
 			return NSOrderedAscending;
 			
-		}else if(!isLockedMutabilityTypeA && isLockedMutabilityTypeB){
+		} else if (!isLockedMutabilityTypeA && isLockedMutabilityTypeB) {
 			return NSOrderedDescending;
 
-		}else{
+		} else {
 			/* Check to see if either is temporary; temporary items go above saved ones and below
 			 * built-in ones.
 			 */
 			BOOL	isTemporaryA = [temporaryStateArray containsObject:objectA];
 			BOOL	isTemporaryB = [temporaryStateArray containsObject:objectB];
 
-			if(isTemporaryA && !isTemporaryB){
+			if (isTemporaryA && !isTemporaryB) {
 				return NSOrderedAscending;
 				
-			}else if(isTemporaryB && !isTemporaryA){
+			} else if (isTemporaryB && !isTemporaryA) {
 				return NSOrderedDescending;
 				
-			}else{
+			} else {
 				NSArray	*originalArray = (NSArray *)context;
 				
 				//Return them in the same relative order as the original array if they are of the same type
 				int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
 				int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
 				
-				if(indexA > indexB){
+				if (indexA > indexB) {
 					return NSOrderedDescending;
-				}else{
+				} else {
 					return NSOrderedAscending;
 				}
 			}
@@ -774,7 +774,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (NSArray *)sortedFullStateArray
 {
-	if(!_sortedFullStateArray){
+	if (!_sortedFullStateArray) {
 		NSArray			*originalStateArray = [self stateArray];
 		NSMutableArray	*tempArray = [originalStateArray mutableCopy];
 		[tempArray addObjectsFromArray:[self builtInStateArray]];
@@ -799,7 +799,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (AIStatus *)activeStatusState
 {
-	if(!_activeStatusState){
+	if (!_activeStatusState) {
 		NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		NSCountedSet		*statusCounts = [NSCountedSet set];
 		AIAccount			*account;
@@ -807,11 +807,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		unsigned			 highestCount = 0;
 		BOOL				 accountsAreOnline = [[adium accountController] oneOrMoreConnectedOrConnectingAccounts];
 
-		if(accountsAreOnline){
+		if (accountsAreOnline) {
 			AIStatus	*bestStatusState = nil;
 
-			while((account = [enumerator nextObject])) {
-				if([account online]){
+			while ((account = [enumerator nextObject])) {
+				if ([account online]) {
 					AIStatus *accountStatusState = [account statusState];
 					[statusCounts addObject:(accountStatusState ?
 											 accountStatusState :
@@ -820,9 +820,9 @@ int _statusArraySort(id objectA, id objectB, void *context)
 			}
 
 			enumerator = [statusCounts objectEnumerator];
-			while((statusState = [enumerator nextObject])) {
+			while ((statusState = [enumerator nextObject])) {
 				unsigned thisCount = [statusCounts countForObject:statusState];
-				if(thisCount > highestCount){
+				if (thisCount > highestCount) {
 					bestStatusState = statusState;
 					highestCount = thisCount;
 				}
@@ -846,23 +846,23 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	unsigned			highestCount = 0;
 
 	unsigned i;
-	for(i = 0 ; i < STATUS_TYPES_COUNT ; i++){
+	for (i = 0 ; i < STATUS_TYPES_COUNT ; i++) {
 		statusTypeCount[i] = 0;
 	}
 
-	while((account = [enumerator nextObject])){
-		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+	while ((account = [enumerator nextObject])) {
+		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 			AIStatusType statusType = [[account statusState] statusType];
 
 			//pretend that invisible is away for this purpose, as it's a type of unavailable state
-			if(statusType == AIInvisibleStatusType) statusType = AIAwayStatusType;
+			if (statusType == AIInvisibleStatusType) statusType = AIAwayStatusType;
 
 			statusTypeCount[statusType]++;
 		}
 	}
 
-	for(i = 0 ; i < STATUS_TYPES_COUNT ; i++){
-		if(statusTypeCount[i] > highestCount){
+	for (i = 0 ; i < STATUS_TYPES_COUNT ; i++) {
+		if (statusTypeCount[i] > highestCount) {
 			activeStatusType = i;
 			highestCount = statusTypeCount[i];
 		}
@@ -882,13 +882,13 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (NSSet *)allActiveStatusStates
 {
-	if(!_allActiveStatusStates){
+	if (!_allActiveStatusStates) {
 		_allActiveStatusStates = [[NSMutableSet alloc] init];
 		NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount			*account;
 
-		while((account = [enumerator nextObject])){
-			if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+		while ((account = [enumerator nextObject])) {
+			if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
 		}
@@ -916,49 +916,49 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	statusTypeCount[AIInvisibleStatusType] = 0;
 	
 	//Assume all accounts are unavailable until proven otherwise
-	if(allOnlineAccountsAreUnvailable != NULL){
+	if (allOnlineAccountsAreUnvailable != NULL) {
 		*allOnlineAccountsAreUnvailable = YES;
 	}
 	
-	while((account = [enumerator nextObject])){
-		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+	while ((account = [enumerator nextObject])) {
+		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 			AIStatus	*statusState = [account statusState];
 			AIStatusType statusType = [statusState statusType];
 			
-			if((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)){
+			if ((statusType == AIAwayStatusType) || (statusType == AIInvisibleStatusType)) {
 				NSString	*statusName = [statusState statusName];
 				
 				[activeUnvailableStatuses addObject:statusState];
 				
 				statusTypeCount[statusType]++;
 				
-				if(foundStatusName){
+				if (foundStatusName) {
 					//Once we find a status name, we only want to return it if all our status names are the same.
-					if((activeUnvailableStatusName != NULL) &&
+					if ((activeUnvailableStatusName != NULL) &&
 					   (*activeUnvailableStatusName != nil) && 
-					   ![*activeUnvailableStatusName isEqualToString:statusName]){
+					   ![*activeUnvailableStatusName isEqualToString:statusName]) {
 						*activeUnvailableStatusName = nil;
 					}
-				}else{
+				} else {
 					//We haven't found a status name yet, so store this one as the active status name
-					if(activeUnvailableStatusName != NULL){
+					if (activeUnvailableStatusName != NULL) {
 						*activeUnvailableStatusName = [statusState statusName];
 					}
 					foundStatusName = YES;
 				}
-			}else{
+			} else {
 				//An online account isn't unavailable
-				if(allOnlineAccountsAreUnvailable != NULL){
+				if (allOnlineAccountsAreUnvailable != NULL) {
 					*allOnlineAccountsAreUnvailable = NO;
 				}
 			}
 		}
 	}
 	
-	if(activeUnvailableStatusType != NULL){
-		if(statusTypeCount[AIAwayStatusType] > statusTypeCount[AIInvisibleStatusType]){
+	if (activeUnvailableStatusType != NULL) {
+		if (statusTypeCount[AIAwayStatusType] > statusTypeCount[AIInvisibleStatusType]) {
 			*activeUnvailableStatusType = AIAwayStatusType;
-		}else{
+		} else {
 			*activeUnvailableStatusType = AIInvisibleStatusType;		
 		}
 	}
@@ -977,7 +977,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	//Retain and autorelease since we'll be replacing this value (and therefore releasing it) via the preferenceController.
 	nextUniqueStatusID = [[[[adium preferenceController] preferenceForKey:TOP_STATUS_STATE_ID
 																  group:PREF_GROUP_SAVED_STATUS] retain] autorelease];
-	if(!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
+	if (!nextUniqueStatusID) nextUniqueStatusID = [NSNumber numberWithInt:1];
 
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:([nextUniqueStatusID intValue] + 1)]
 										 forKey:TOP_STATUS_STATE_ID
@@ -993,11 +993,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 {
 	AIStatus		*statusState = nil;
 
-	if(uniqueStatusID){
+	if (uniqueStatusID) {
 		NSEnumerator	*enumerator = [[self sortedFullStateArray] objectEnumerator];
 
-		while((statusState = [enumerator nextObject])){
-			if([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
+		while ((statusState = [enumerator nextObject])) {
+			if ([[statusState uniqueStatusID] compare:uniqueStatusID] == NSOrderedSame)
 				break;
 		}
 	}
@@ -1047,7 +1047,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
     [stateArray removeObject:statusState];
 
     //Re-insert the state
-    if(destIndex > sourceIndex) destIndex -= 1;
+    if (destIndex > sourceIndex) destIndex -= 1;
     [stateArray insertObject:statusState atIndex:destIndex];
     [statusState release];
 
@@ -1065,10 +1065,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)replaceExistingStatusState:(AIStatus *)oldStatusState withStatusState:(AIStatus *)newStatusState
 {
-	if(oldStatusState != newStatusState){
+	if (oldStatusState != newStatusState) {
 		int index = [stateArray indexOfObject:oldStatusState];
 
-		if(index >= 0 && index < [stateArray count]){
+		if (index >= 0 && index < [stateArray count]) {
 			[stateArray replaceObjectAtIndex:index withObject:newStatusState];
 		}
 	}
@@ -1126,7 +1126,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	/* On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
 	 * Here we check for that value and correctly return a 0 idle time.
 	 */
-	if(idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai
+	if (idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai
 
     return(idleTime);
 }
@@ -1147,13 +1147,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	double	currentIdle = [self currentMachineIdle];
 
-	if(machineIsIdle){
-		if(currentIdle < lastSeenIdle){
+	if (machineIsIdle) {
+		if (currentIdle < lastSeenIdle) {
 			/* If the machine is less idle than the last time we recorded, it means that activity has occured and the
 			 * user is no longer idle.
 			 */
 			[self _setMachineIsIdle:NO];
-		}else{
+		} else {
 			//Periodically broadcast a 'MachineIdleUpdate' notification
 			[[adium notificationCenter] postNotificationName:AIMachineIdleUpdateNotification
 													  object:nil
@@ -1162,9 +1162,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 														[NSDate dateWithTimeIntervalSinceNow:-currentIdle], @"IdleSince",
 														nil]];
 		}
-	}else{
+	} else {
 		//If machine inactivity is over the threshold, the user has gone idle.
-		if(currentIdle > MACHINE_IDLE_THRESHOLD) [self _setMachineIsIdle:YES];
+		if (currentIdle > MACHINE_IDLE_THRESHOLD) [self _setMachineIsIdle:YES];
 	}
 
 	lastSeenIdle = currentIdle;
@@ -1182,9 +1182,9 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	machineIsIdle = inIdle;
 
 	//Post the appropriate idle or active notification
-	if(machineIsIdle){
+	if (machineIsIdle) {
 		[[adium notificationCenter] postNotificationName:AIMachineIsIdleNotification object:nil];
-	}else{
+	} else {
 		[[adium notificationCenter] postNotificationName:AIMachineIsActiveNotification object:nil];
 	}
 
@@ -1284,15 +1284,15 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	 * are grouped together.
 	 */
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while((statusState = [enumerator nextObject])){
+	while ((statusState = [enumerator nextObject])) {
 		AIStatusType thisStatusType = [statusState statusType];
 
 		//We treat Invisible statuses as being the same as Away for purposes of the menu
-		if(thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
+		if (thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
 
 		//Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
-		if((currentStatusType != thisStatusType) &&
-		   (currentStatusType != AIOfflineStatusType)){
+		if ((currentStatusType != thisStatusType) &&
+		   (currentStatusType != AIOfflineStatusType)) {
 			menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
 												  target:self
 												  action:@selector(selectCustomState:)
@@ -1329,7 +1329,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		[menuItem release];
 	}
 
-	if(currentStatusType != AIOfflineStatusType){
+	if (currentStatusType != AIOfflineStatusType) {
 		/* Add the last "Custom..." state optior for the last statusType we handled,
 		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
 		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness.
@@ -1387,7 +1387,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 	id <StateMenuPlugin>	stateMenuPlugin;
 
-	while((stateMenuPlugin = [enumerator nextObject])) {
+	while ((stateMenuPlugin = [enumerator nextObject])) {
 		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
 		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
 	}
@@ -1407,11 +1407,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)updateAllStateMenuSelections
 {
-	if(stateMenuUpdateDelays == 0){
+	if (stateMenuUpdateDelays == 0) {
 		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
 		id <StateMenuPlugin>	stateMenuPlugin;
 
-		while((stateMenuPlugin = [enumerator nextObject])){
+		while ((stateMenuPlugin = [enumerator nextObject])) {
 			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
 		}
 		
@@ -1434,12 +1434,12 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)setDelayStateMenuUpdates:(BOOL)shouldDelay
 {
-	if(shouldDelay)
+	if (shouldDelay)
 		stateMenuUpdateDelays++;
 	else
 		stateMenuUpdateDelays--;
 
-	if(stateMenuUpdateDelays == 0){
+	if (stateMenuUpdateDelays == 0) {
 		[self updateAllStateMenuSelections];
 	}
 }
@@ -1465,17 +1465,17 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]]){
-		if([inModifiedKeys containsObject:@"Online"] ||
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		if ([inModifiedKeys containsObject:@"Online"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]){
+		   [inModifiedKeys containsObject:@"StatusState"]) {
 
 			//Don't update the state menus if we are currently delaying
-			if(stateMenuUpdateDelays == 0) [self updateAllStateMenuSelections];
+			if (stateMenuUpdateDelays == 0) [self updateAllStateMenuSelections];
 
 			//We can get here without the preferencesChanged: notification if the account is automatically connected.
-			if([inModifiedKeys containsObject:@"Online"]){
-				if([inObject online]) [accountsToConnect addObject:inObject];
+			if ([inModifiedKeys containsObject:@"Online"]) {
+				if ([inObject online]) [accountsToConnect addObject:inObject];
 			}
 		}
 	}
@@ -1494,18 +1494,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([key isEqualToString:@"Online"]){
+	if ([key isEqualToString:@"Online"]) {
 		/* Track the accounts we should connect when setting to an online state.  Our goal is to be able to reconnect
 		* the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
 		* all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
 		* reconnecting, so we check to see if we are disconnecting via that menu item with the
 		* isProcessingGlobalChange BOOL.
 		*/
-		if(!isProcessingGlobalChange){
-			if([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+		if (!isProcessingGlobalChange) {
+			if ([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
 				[accountsToConnect addObject:object];
-			}else{
-				if([accountsToConnect count] > 1){
+			} else {
+				if ([accountsToConnect count] > 1) {
 					[accountsToConnect removeObject:object];
 				}
 			}
@@ -1527,7 +1527,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if([stateMenuItemsNeedingUpdating containsObject:menuItem]){
+	if ([stateMenuItemsNeedingUpdating containsObject:menuItem]) {
 		BOOL			noAccountsAreOnline = ![[adium accountController] oneOrMoreConnectedAccounts];
 		NSDictionary	*dict = [menuItem representedObject];
 		AIAccount		*account;
@@ -1537,24 +1537,24 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 		/* Search for the account or global status state as appropriate for this menu item.
 		 * Also, determine if we are looking to select the Offline menu item
 		 */
-		if((account = [dict objectForKey:@"AIAccount"])){
+		if ((account = [dict objectForKey:@"AIAccount"])) {
 			shouldSelectOffline = ![account online];
-		}else{
+		} else {
 			shouldSelectOffline = noAccountsAreOnline;
 		}
 
 		menuItemStatusState = [dict objectForKey:@"AIStatus"];
 
-		if(shouldSelectOffline){
+		if (shouldSelectOffline) {
 			//If we should select offline, set all menu items which don't have the AIOfflineStatusType tag to be off.
-			if([menuItem tag] == AIOfflineStatusType){
-				if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-			}else{
-				if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+			if ([menuItem tag] == AIOfflineStatusType) {
+				if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+			} else {
+				if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 			}
 
-		}else{
-			if(account){
+		} else {
+			if (account) {
 				/* Account-specific menu items */
 				AIStatus		*appropiateActiveStatusState;
 				appropiateActiveStatusState = [account statusState];
@@ -1564,47 +1564,47 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 				 * we have a custom state and will be searching for the custom item of the right type, switching all other
 				 * menu items to NSOffState.
 				 */
-				if([[self sortedFullStateArray] containsObjectIdenticalTo:appropiateActiveStatusState]){
+				if ([[self sortedFullStateArray] containsObjectIdenticalTo:appropiateActiveStatusState]) {
 					//If the search state is in the array so is a saved state, search for the match
-					if(menuItemStatusState == appropiateActiveStatusState){
-						if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-					}else{
-						if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+					if (menuItemStatusState == appropiateActiveStatusState) {
+						if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+					} else {
+						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 					}
-				}else{
+				} else {
 					//If there is not a status state, we are in a Custom state. Search for the correct Custom item.
-					if(menuItemStatusState){
+					if (menuItemStatusState) {
 						//If the menu item has an associated state, it's always off.
-						if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
-					}else{
+						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+					} else {
 						//If it doesn't, check the tag to see if it should be on or off.
-						if([menuItem tag] == [appropiateActiveStatusState statusType]){
-							if([menuItem state] != NSOnState) [menuItem setState:NSOnState];
-						}else{
-							if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+						if ([menuItem tag] == [appropiateActiveStatusState statusType]) {
+							if ([menuItem state] != NSOnState) [menuItem setState:NSOnState];
+						} else {
+							if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 						}
 					}
 				}
-			}else{
+			} else {
 				/* General menu items */
 				NSSet	*allActiveStatusStates = [self allActiveStatusStates];
 				int		onState = (([allActiveStatusStates count] == 1) ? NSOnState : NSMixedState);
 
-				if(menuItemStatusState){
+				if (menuItemStatusState) {
 					//If this menu item has a status state, set it to the right on state if that state is active
-					if([allActiveStatusStates containsObject:menuItemStatusState]){
-						if([menuItem state] != onState) [menuItem setState:onState];
-					}else{
-						if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+					if ([allActiveStatusStates containsObject:menuItemStatusState]) {
+						if ([menuItem state] != onState) [menuItem setState:onState];
+					} else {
+						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 					}
-				}else{
+				} else {
 					//If it doesn't, check the tag to see if it should be on or off by looking for a matching custom state
 					NSEnumerator	*activeStatusStatesEnumerator = [allActiveStatusStates objectEnumerator];
 					NSArray			*sortedFullStateArray = [self sortedFullStateArray];
 					AIStatus		*statusState;
 					BOOL			foundCorrectStatusState = NO;
 
-					while(!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])){
+					while (!foundCorrectStatusState && (statusState = [activeStatusStatesEnumerator nextObject])) {
 						/* We found a custom match if our array of menu item states doesn't contain this state and
 						 * its statusType matches the menuItem's tag.
 						 */
@@ -1612,10 +1612,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 												   ([menuItem tag] == [statusState statusType]));
 					}
 
-					if(foundCorrectStatusState){
-						if([menuItem state] != NSOnState) [menuItem setState:onState];
-					}else{
-						if([menuItem state] != NSOffState) [menuItem setState:NSOffState];
+					if (foundCorrectStatusState) {
+						if ([menuItem state] != NSOnState) [menuItem setState:onState];
+					} else {
+						if ([menuItem state] != NSOffState) [menuItem setState:NSOffState];
 					}
 				}
 			}
@@ -1644,7 +1644,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	/* Random undocumented feature of the moment... hold option and select a state to bring up the custom status window
 	 * for modifying and then setting it.
 	 */
-	if([NSEvent optionKey]){
+	if ([NSEvent optionKey]) {
 		[AIEditStateWindowController editCustomState:statusState
 											 forType:[statusState statusType]
 										  andAccount:account
@@ -1652,19 +1652,19 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 											onWindow:nil
 									 notifyingTarget:self];
 
-	}else{
-		if(account){
+	} else {
+		if (account) {
 			BOOL shouldRebuild;
 			
 			shouldRebuild = [self removeIfNecessaryTemporaryStatusState:[account statusState]];
 			[account setStatusState:statusState];
 			
-			if(shouldRebuild){
+			if (shouldRebuild) {
 				//Rebuild our menus if there was a change
 				[self rebuildAllStateMenus];
 			}
 			
-		}else{
+		} else {
 			[self setActiveStatusState:statusState];
 		}
 	}
@@ -1684,16 +1684,16 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	AIStatusType	statusType = [sender tag];
 	AIStatus		*baseStatusState;
 
-	if(account){
+	if (account) {
 		baseStatusState = [account statusState];
-	}else{
+	} else {
 		baseStatusState = [self activeStatusState];
 	}
 
 	/* If we are going to a custom state of a different type, we don't want to prefill with baseStatusState as it stands.
 	 * Instead, we load the last used status of that type.
 	 */
-	if(([baseStatusState statusType] != statusType)){
+	if (([baseStatusState statusType] != statusType)) {
 		NSDictionary *lastStatusStates = [[adium preferenceController] preferenceForKey:@"LastStatusStates"
 																				  group:PREF_GROUP_STATUS_PREFERENCES];
 
@@ -1708,7 +1708,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	/* Don't use the current status state as a base, and when going from Away to Available, don't autofill the Available
 	 * status message with the old away message.
 	 */
-	if([baseStatusState statusType] != statusType){
+	if ([baseStatusState statusType] != statusType) {
 		baseStatusState = nil;
 	}
 
@@ -1736,19 +1736,19 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	/* If the original (old) status state is in our temporary array and is not being used in more than 1 account, 
 	 * then we should remove it.
 	 */
-	if([temporaryStateArray containsObject:originalState]){
+	if ([temporaryStateArray containsObject:originalState]) {
 		NSEnumerator	*enumerator;
 		AIAccount		*account;
 		int				count = 0;
 		
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([account actualStatusState] == originalState){
-				if(++count > 1) break;
+		while ((account = [enumerator nextObject])) {
+			if ([account actualStatusState] == originalState) {
+				if (++count > 1) break;
 			}
 		}
 
-		if(count <= 1){
+		if (count <= 1) {
 			[temporaryStateArray removeObject:originalState];
 			didRemove = YES;
 		}
@@ -1766,18 +1766,18 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	BOOL shouldRebuild = NO;
 	
-	if(account){
+	if (account) {
 		shouldRebuild = [self removeIfNecessaryTemporaryStatusState:originalState];
 
 		//Now set the newState for the account
 		[account setStatusState:newState];
 		
-	}else{
+	} else {
 		//Set the state for all accounts.  This will clear out the temporaryStatusArray as necessary.
 		[self setActiveStatusState:newState];
 	}
 
-	if([newState mutabilityType] != AITemporaryEditableStatusState){
+	if ([newState mutabilityType] != AITemporaryEditableStatusState) {
 		[[adium statusController] addStatusState:newState];
 	}
 
@@ -1785,7 +1785,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 	lastStatusStates = [[[adium preferenceController] preferenceForKey:@"LastStatusStates"
 																 group:PREF_GROUP_STATUS_PREFERENCES] mutableCopy];
-	if(!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
+	if (!lastStatusStates) lastStatusStates = [NSMutableDictionary dictionary];
 
 	[lastStatusStates setObject:[NSKeyedArchiver archivedDataWithRootObject:newState]
 						 forKey:[NSNumber numberWithInt:[newState statusType]]];
@@ -1795,7 +1795,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 										  group:PREF_GROUP_STATUS_PREFERENCES];
 
 	//Add to our temporary status array if it's not in our state array
-	if(shouldRebuild || (![[self stateArray] containsObjectIdenticalTo:newState])){
+	if (shouldRebuild || (![[self stateArray] containsObjectIdenticalTo:newState])) {
 		[temporaryStateArray addObject:newState];
 
 		//Now rebuild our menus to include this temporary item
@@ -1818,7 +1818,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	NSString	*title = [statusState title];
 
-	if([title length] > STATE_TITLE_MENU_LENGTH){
+	if ([title length] > STATE_TITLE_MENU_LENGTH) {
 		title = [title stringWithEllipsisByTruncatingToLength:STATE_TITLE_MENU_LENGTH];
 	}
 
@@ -1866,10 +1866,10 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	 * are grouped together.
 	 */
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
-	while((statusState = [enumerator nextObject])){
+	while ((statusState = [enumerator nextObject])) {
 		AIStatusType thisStatusType = [statusState statusType];
 
-		if(currentStatusType != thisStatusType){
+		if (currentStatusType != thisStatusType) {
 			//Add a divider between each type of status
 			[statusStatesMenu addItem:[NSMenuItem separatorItem]];
 			currentStatusType = thisStatusType;
@@ -1916,13 +1916,13 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	NSArray	*savedAways = [[adium preferenceController] preferenceForKey:OLD_KEY_SAVED_AWAYS
 																   group:OLD_GROUP_AWAY_MESSAGES];
 
-	if(savedAways){
+	if (savedAways) {
 		NSEnumerator	*enumerator = [savedAways objectEnumerator];
 		NSDictionary	*state;
 
 		//Update all the away messages to states.
-		while((state = [enumerator nextObject])){
-			if([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]){
+		while ((state = [enumerator nextObject])) {
+			if ([[state objectForKey:@"Type"] isEqualToString:OLD_STATE_SAVED_AWAY]) {
 				AIStatus	*statusState;
 
 				//Extract the away message information from this old record
@@ -1945,15 +1945,15 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 				//It has an auto reply.
 				[statusState setHasAutoReply:YES];
 
-				if(autoReplyMessageData){
+				if (autoReplyMessageData) {
 					//Use the custom auto reply if it was set.
 					[statusState setAutoReply:[NSAttributedString stringWithData:autoReplyMessageData]];
-				}else{
+				} else {
 					//If no autoReplyMesssage, use the status message.
 					[statusState setAutoReplyIsStatusMessage:YES];
 				}
 
-				if(title) [statusState setTitle:title];
+				if (title) [statusState setTitle:title];
 
 				//Add the updated state to our state array.
 				[stateArray addObject:statusState];

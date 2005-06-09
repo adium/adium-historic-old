@@ -67,14 +67,14 @@
 		ourMessage = [[inAttributedString mutableCopyWithZone:[inAttributedString zone]] autorelease];
 		str = [ourMessage mutableString];
 
-		if(includesDisplayName) {
+		if (includesDisplayName) {
 			startReplacement = [startReplacement stringByAppendingString:[[[[[adium interfaceController] activeChat] account] displayName] stringByAppendingString:@" "]];
 			endReplacement = @"";
 		}
 		replacementLength = [startReplacement length] + [endReplacement length];
 
 		extent = NSMakeRange(0, [str length]);
-		do { //while(extent.length)
+		do { //while (extent.length)
 			NSRange lineRange, searchRange, meRange;
 			signed shift = 0;
 			unsigned endInsertPoint;
@@ -90,7 +90,7 @@
 			searchRange = NSMakeRange(lineRange.location, endInsertPoint - lineRange.location);
 			meRange = [str rangeOfString:@"/me " options:NSLiteralSearch range:searchRange];
 			
-			if(meRange.location == lineRange.location && meRange.length == 4) {
+			if (meRange.location == lineRange.location && meRange.length == 4) {
 				NSAttributedString *endSplat = [[NSAttributedString alloc] initWithString:endReplacement 
 																			attributes:[ourMessage attributesAtIndex:endInsertPoint-1
 																									  effectiveRange:nil]];
@@ -103,10 +103,10 @@
 			}
 			
 			shift += lineRange.length;
-			if(shift > extent.length) shift = extent.length;
+			if (shift > extent.length) shift = extent.length;
 			extent.location += shift;
 			extent.length   -= shift;
-		} while(extent.length);
+		} while (extent.length);
 	}
 	
 	return (ourMessage ? ourMessage : inAttributedString);

@@ -112,13 +112,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	
 	//Enable/Disable logging
 	BOOL    emoticonsEnabled = ([[self activeEmoticons] count] != 0);
-	if(observingContent != emoticonsEnabled){
-		if(emoticonsEnabled){
+	if (observingContent != emoticonsEnabled) {
+		if (emoticonsEnabled) {
 			[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
 			[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterOutgoing];
 			[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
 			[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
-		}else{
+		} else {
 			[[adium contentController] unregisterContentFilter:self];
 		}
 		observingContent = emoticonsEnabled;
@@ -135,7 +135,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     if (inAttributedString) {
         //First, we do a quick scan of the message for any characters that might end up being emoticons
         //This avoids having to do the slower, more complicated scan for the majority of messages.
-        if([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound){
+        if ([[inAttributedString string] rangeOfCharacterFromSet:[self emoticonHintCharacterSet]].location != NSNotFound) {
             //If an emoticon character was found, we do a more thorough scan
             replacementMessage = [self _convertEmoticonsInMessage:inAttributedString context:context];
         }
@@ -160,13 +160,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     unsigned					currentLocation = 0, messageStringLength;
 	
 	//Determine our service class context
-	if([context isKindOfClass:[AIContentObject class]]){
+	if ([context isKindOfClass:[AIContentObject class]]) {
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
 		
-	}else if([context isKindOfClass:[AIListContact class]]){
+	} else if ([context isKindOfClass:[AIListContact class]]) {
 		serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					   toContact:(AIListContact *)context] service] serviceClass];
-	}else if([context isKindOfClass:[AIListObject class]] && [context respondsToSelector:@selector(service)]){
+	} else if ([context isKindOfClass:[AIListObject class]] && [context respondsToSelector:@selector(service)]) {
 		serviceClassContext = [[(AIListObject *)context service] serviceClass];
 	}
 	
@@ -174,7 +174,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	int                         replacementCount = 0; 
 
 	messageStringLength = [messageString length];
-    while(currentLocation != NSNotFound && currentLocation < messageStringLength){
+    while (currentLocation != NSNotFound && currentLocation < messageStringLength) {
         //Find the next occurence of a suspected emoticon
         currentLocation = [messageString rangeOfCharacterFromSet:emoticonStartCharacterSet
                                                          options:0 
@@ -185,7 +185,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         NSMutableArray  *candidateEmoticons = nil;
 		NSMutableArray  *candidateEmoticonTextEquivalents = nil;
 		
-        if(currentLocation != NSNotFound){
+        if (currentLocation != NSNotFound) {
             unichar         currentCharacter = [messageString characterAtIndex:currentLocation];
             NSString        *currentCharacterString = [NSString stringWithFormat:@"%C", currentCharacter];
             NSEnumerator    *emoticonEnumerator;
@@ -193,21 +193,21 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
             //Check for the presence of all emoticons starting with this character
             emoticonEnumerator = [[emoticonIndex objectForKey:currentCharacterString] objectEnumerator];
-            while((emoticon = [emoticonEnumerator nextObject])){
+            while ((emoticon = [emoticonEnumerator nextObject])) {
                 NSEnumerator        *textEnumerator;
                 NSString            *text;
                 
                 textEnumerator = [[emoticon textEquivalents] objectEnumerator];
-                while((text = [textEnumerator nextObject])){
+                while ((text = [textEnumerator nextObject])) {
                     int     textLength = [text length];
 
-                    if(textLength != 0){ //Invalid emoticon files may let empty text equivalents sneak in
+                    if (textLength != 0) { //Invalid emoticon files may let empty text equivalents sneak in
                         //If there is not enough room in the string for this text, we can skip it
-                        if(currentLocation + textLength <= messageStringLength){
-                            if([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == NSOrderedSame){
+                        if (currentLocation + textLength <= messageStringLength) {
+                            if ([messageString compare:text options:0 range:NSMakeRange(currentLocation, textLength)] == NSOrderedSame) {
                                 //Ignore emoticons within links
-                                if([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil){
-									if (!candidateEmoticons){
+                                if ([inMessage attribute:NSLinkAttributeName atIndex:currentLocation effectiveRange:nil] == nil) {
+									if (!candidateEmoticons) {
 										candidateEmoticons = [[NSMutableArray alloc] init];
 										candidateEmoticonTextEquivalents = [[NSMutableArray alloc] init];
 									}
@@ -221,7 +221,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                 }
             }
 			
-            if([candidateEmoticons count]){
+            if ([candidateEmoticons count]) {
                 NSString					*replacementString;
                 AIEmoticon					*emoticon;
                 NSMutableAttributedString   *replacement;
@@ -241,7 +241,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
                                                                   range:NSMakeRange(0,1)];
                                     
                 //insert the emoticon
-                if(!newMessage) newMessage = [inMessage mutableCopy];
+                if (!newMessage) newMessage = [inMessage mutableCopy];
 				[newMessage replaceCharactersInRange:NSMakeRange(currentLocation - replacementCount, textLength)
                                 withAttributedString:replacement];
                 //Update where we are in the original and replacement messages
@@ -276,19 +276,19 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	unsigned	count;
 	
 	count = [candidateEmoticonTextEquivalents count];
-	while(i < count){
+	while (i < count) {
 		NSString	*thisString = [candidateEmoticonTextEquivalents objectAtIndex:i];
 		unsigned thisLength = [thisString length];
-		if(thisLength > bestLength){
+		if (thisLength > bestLength) {
 			bestLength = thisLength;
 			bestIndex = i;
 			*replacementString = thisString;
 		}
 
 		//If we are using service appropriate emoticons, check if this is on the right service and, if so, compare.
-		if(thisLength > bestServiceAppropriateLength){
+		if (thisLength > bestServiceAppropriateLength) {
 			AIEmoticon	*thisEmoticon = [candidateEmoticons objectAtIndex:i];
-			if([thisEmoticon isAppropriateForServiceClass:serviceClassContext]){
+			if ([thisEmoticon isAppropriateForServiceClass:serviceClassContext]) {
 				bestServiceAppropriateLength = thisLength;
 				bestServiceAppropriateIndex = i;
 				serviceAppropriateReplacementString = thisString;
@@ -300,7 +300,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 	/* Did we get a service appropriate replacement? If so, use that rather than the current replacementString if it
 	 * differs. */
-	if(serviceAppropriateReplacementString && (serviceAppropriateReplacementString != *replacementString)){
+	if (serviceAppropriateReplacementString && (serviceAppropriateReplacementString != *replacementString)) {
 		bestLength = bestServiceAppropriateLength;
 		bestIndex = bestServiceAppropriateIndex;
 		*replacementString = serviceAppropriateReplacementString;
@@ -318,7 +318,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 //Returns an array of the currently active emoticons
 - (NSArray *)activeEmoticons
 {
-    if(!_activeEmoticons){
+    if (!_activeEmoticons) {
         NSEnumerator    *enumerator;
         AIEmoticonPack  *emoticonPack;
         
@@ -327,7 +327,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		
         //Grap the emoticons from each active pack
         enumerator = [[self activeEmoticonPacks] objectEnumerator];
-        while((emoticonPack = [enumerator nextObject])){
+        while ((emoticonPack = [enumerator nextObject])) {
             [_activeEmoticons addObjectsFromArray:[emoticonPack emoticons]];
         }
     }
@@ -339,7 +339,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 //Returns all active emoticons, categoriezed by starting character, using a dictionary, with each value containing an array of characters
 - (NSDictionary *)emoticonIndex
 {
-    if(!_emoticonIndexDict) [self _buildCharacterSetsAndIndexEmoticons];
+    if (!_emoticonIndexDict) [self _buildCharacterSetsAndIndexEmoticons];
     return(_emoticonIndexDict);
 }
 
@@ -354,13 +354,13 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 																				  group:PREF_GROUP_EMOTICONS] mutableCopy];
     NSMutableArray          *disabledArray = [[packDict objectForKey:KEY_EMOTICON_DISABLED] mutableCopy];
 	
-    if(!packDict) packDict = [[NSMutableDictionary alloc] init];
-    if(!disabledArray) disabledArray = [[NSMutableArray alloc] init];
+    if (!packDict) packDict = [[NSMutableDictionary alloc] init];
+    if (!disabledArray) disabledArray = [[NSMutableArray alloc] init];
     
     //Enable/Disable the emoticon
-    if(enabled){
+    if (enabled) {
         [disabledArray removeObject:[inEmoticon name]];
-    }else{
+    } else {
         [disabledArray addObject:[inEmoticon name]];
     }
     
@@ -390,7 +390,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 //Returns an array of the currently active emoticon packs
 - (NSArray *)activeEmoticonPacks
 {
-    if(!_activeEmoticonPacks){
+    if (!_activeEmoticonPacks) {
         NSArray         *activePackNames;
         NSEnumerator    *enumerator;
         NSString        *packName;
@@ -402,10 +402,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
         activePackNames = [[[adium preferenceController] preferencesForGroup:PREF_GROUP_EMOTICONS] objectForKey:KEY_EMOTICON_ACTIVE_PACKS];
         //Use the names to build an array of the desired emoticon packs
         enumerator = [activePackNames objectEnumerator];
-        while((packName = [enumerator nextObject])){
+        while ((packName = [enumerator nextObject])) {
             AIEmoticonPack  *emoticonPack = [self emoticonPackWithName:packName];
             
-            if(emoticonPack){
+            if (emoticonPack) {
                 [_activeEmoticonPacks addObject:emoticonPack];
 				[emoticonPack setIsEnabled:YES];
             }
@@ -443,7 +443,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSMutableArray  *nameArray = [NSMutableArray array];
     
     enumerator = [[self activeEmoticonPacks] objectEnumerator];
-    while((pack = [enumerator nextObject])){
+    while ((pack = [enumerator nextObject])) {
         [nameArray addObject:[pack name]];
     }
     
@@ -456,7 +456,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 //Returns an array of the available emoticon packs
 - (NSArray *)availableEmoticonPacks
 {
-    if(!_availableEmoticonPacks){
+    if (!_availableEmoticonPacks) {
 		NSEnumerator	*enumerator;
         NSString		*path;
 		
@@ -465,10 +465,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		//Load emoticon packs
 		enumerator = [[adium allResourcesForName:EMOTICONS_PATH_NAME withExtensions:[NSArray arrayWithObjects:EMOTICON_PACK_PATH_EXTENSION,ADIUM_EMOTICON_SET_PATH_EXTENSION,PROTEUS_EMOTICON_SET_PATH_EXTENSION,nil]] objectEnumerator];
 		
-		while((path = [enumerator nextObject])) {
+		while ((path = [enumerator nextObject])) {
 			AIEmoticonPack  *pack = [AIEmoticonPack emoticonPackFromPath:path];
 			
-			if([[pack emoticons] count]) {
+			if ([[pack emoticons] count]) {
 				[_availableEmoticonPacks addObject:pack];
 				[pack setDisabledEmoticons:[self disabledEmoticonsInPack:pack]];
 			}
@@ -491,8 +491,8 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     AIEmoticonPack  *emoticonPack;
 	
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while((emoticonPack = [enumerator nextObject])){
-        if([[emoticonPack name] isEqualToString:inName]) return(emoticonPack);
+    while ((emoticonPack = [enumerator nextObject])) {
+        if ([[emoticonPack name] isEqualToString:inName]) return(emoticonPack);
     }
 	
     return(nil);
@@ -500,7 +500,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumEmoticonset"] == 0){
+	if (notification == nil || [[notification object] caseInsensitiveCompare:@"AdiumEmoticonset"] == 0) {
 		[self resetAvailableEmoticons];
 		[prefs emoticonXtrasDidChange];
 	}
@@ -517,14 +517,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     
     //Remove each pack
     enumerator = [inPacks objectEnumerator];
-    while((pack = [enumerator nextObject])){
-        if([_availableEmoticonPacks indexOfObject:pack] < index) index--;
+    while ((pack = [enumerator nextObject])) {
+        if ([_availableEmoticonPacks indexOfObject:pack] < index) index--;
         [_availableEmoticonPacks removeObject:pack];
     }
 	
     //Add back the packs in their new location
     enumerator = [inPacks objectEnumerator];
-    while((pack = [enumerator nextObject])){
+    while ((pack = [enumerator nextObject])) {
         [_availableEmoticonPacks insertObject:pack atIndex:index];
         index++;
     }
@@ -540,7 +540,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSMutableArray		*nameArray = [NSMutableArray array];
     
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while((pack = [enumerator nextObject])){
+    while ((pack = [enumerator nextObject])) {
         [nameArray addObject:[pack name]];
     }
     
@@ -592,14 +592,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 //Returns a characterset containing characters that hint at the presence of an emoticon
 - (NSCharacterSet *)emoticonHintCharacterSet
 {
-    if(!_emoticonHintCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
+    if (!_emoticonHintCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
     return(_emoticonHintCharacterSet);
 }
 
 //Returns a characterset containing all the characters that may start an emoticon
 - (NSCharacterSet *)emoticonStartCharacterSet
 {
-    if(!_emoticonStartCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
+    if (!_emoticonStartCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
     return(_emoticonStartCharacterSet);
 }
 
@@ -617,50 +617,50 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     
     //Process all the text equivalents of each active emoticon
     emoticonEnumerator = [[self activeEmoticons] objectEnumerator];
-    while((emoticon = [emoticonEnumerator nextObject])){
-        if([emoticon isEnabled]){
+    while ((emoticon = [emoticonEnumerator nextObject])) {
+        if ([emoticon isEnabled]) {
             NSEnumerator        *textEnumerator;
             NSString            *text;
 			
             textEnumerator = [[emoticon textEquivalents] objectEnumerator];
-            while((text = [textEnumerator nextObject])){
+            while ((text = [textEnumerator nextObject])) {
                 NSMutableArray  *subIndex;
                 unichar         firstCharacter;
                 NSString        *firstCharacterString;
                 
-                if([text length] != 0){ //Invalid emoticon files may let empty text equivalents sneak in
+                if ([text length] != 0) { //Invalid emoticon files may let empty text equivalents sneak in
                     firstCharacter = [text characterAtIndex:0];
                     firstCharacterString = [NSString stringWithFormat:@"%C",firstCharacter];
                     
                     // -- Emoticon Hint Character Set --
                     //If any letter in this text equivalent already exists in the quick scan character set, we can skip it
-                    if([text rangeOfCharacterFromSet:_emoticonHintCharacterSet].location == NSNotFound){
+                    if ([text rangeOfCharacterFromSet:_emoticonHintCharacterSet].location == NSNotFound) {
                         //Potential for optimization!: Favor punctuation characters ( :();- ) over letters (especially vowels).                
                         [_emoticonHintCharacterSet addCharactersInString:firstCharacterString];
                     }
                     
                     // -- Emoticon Start Character Set --
                     //First letter of this emoticon goes in the start set
-                    if(![_emoticonStartCharacterSet characterIsMember:firstCharacter]){
+                    if (![_emoticonStartCharacterSet characterIsMember:firstCharacter]) {
                         [_emoticonStartCharacterSet addCharactersInString:firstCharacterString];
                     }
                     
                     // -- Index --
                     //Get the index according to this emoticon's first character
-                    if(!(subIndex = [_emoticonIndexDict objectForKey:firstCharacterString])){
+                    if (!(subIndex = [_emoticonIndexDict objectForKey:firstCharacterString])) {
                         subIndex = [[NSMutableArray alloc] init];
                         [_emoticonIndexDict setObject:subIndex forKey:firstCharacterString];
                         [subIndex release];
                     }
                     
                     //Place the emoticon into that index (If it isn't already in there)
-                    if(![subIndex containsObject:emoticon]){
+                    if (![subIndex containsObject:emoticon]) {
 						//Keep emoticons in order from largest to smallest.  This prevents icons that contain other
 						//icons from being masked by the smaller icons they contain.
 						//This cannot work unless the emoticon equivelents are broken down.
 						/*int i;
-						for(i = 0;i < [subIndex count]; i++){
-							if([subIndex objectAtIndex:i] equivelentLength] < ourLength]) break;
+						for (i = 0;i < [subIndex count]; i++) {
+							if ([subIndex objectAtIndex:i] equivelentLength] < ourLength]) break;
 						}*/
                         
 						//Instead of adding the emoticon, add all of its equivalents... ?
@@ -688,7 +688,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
-    while((pack = [enumerator nextObject])){
+    while ((pack = [enumerator nextObject])) {
         [pack flushEmoticonImageCache];
     }
 }

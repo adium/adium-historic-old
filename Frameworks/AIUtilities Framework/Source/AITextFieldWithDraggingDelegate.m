@@ -18,7 +18,7 @@
 //Init the field
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		self = [self _init];
 	}
 	return(self);
@@ -26,7 +26,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		self = [self _init];
 	}
 	return self;
@@ -46,67 +46,67 @@
 
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(prepareForDragOperation:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(prepareForDragOperation:)]) {
 		return [dragDelegate prepareForDragOperation:sender];
-	}else{
+	} else {
 		return [super prepareForDragOperation:sender];
 	}
 }
 
 - (BOOL)performDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(performDragOperation:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(performDragOperation:)]) {
 		return [dragDelegate performDragOperation:sender];
-	}else{
+	} else {
 		return [super performDragOperation:sender];
 	}
 }
 
 - (void)concludeDragOperation:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(concludeDragOperation:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(concludeDragOperation:)]) {
 		[dragDelegate concludeDragOperation:sender];
-	}else{
+	} else {
 		[super concludeDragOperation:sender];
 	}
 }
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEntered:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEntered:)]) {
 		lastEnteredOp = [dragDelegate draggingEntered:sender];
 		return lastEnteredOp;
-	}else{
+	} else {
 		return [super draggingEntered:sender];
 	}
 }
 
 - (void)draggingEnded:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEnded:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEnded:)]) {
 		[dragDelegate draggingEnded:sender];
-	}else{
+	} else {
 		[super draggingEnded:sender];
 	}
 }
 
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingExited:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingExited:)]) {
 		[dragDelegate draggingExited:sender];
-	}else{
+	} else {
 		[super draggingExited:sender];
 	}
 }
 
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingUpdated:)]){
+	if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingUpdated:)]) {
 		return [dragDelegate draggingUpdated:sender];
-	}else if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEntered:)]){
+	} else if (dragDelegate && [dragDelegate respondsToSelector:@selector(draggingEntered:)]) {
 		// If the delegate implements draggingEntered but not draggingUpdated, just return its last 'entered' operation
 		return lastEnteredOp;
-	}else{
+	} else {
 		return [super draggingUpdated:sender];
 	}
 }

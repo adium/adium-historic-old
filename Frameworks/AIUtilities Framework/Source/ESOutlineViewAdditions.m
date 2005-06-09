@@ -14,9 +14,9 @@
 {
     int selectedRow = [self selectedRow];
 	
-    if(selectedRow >= 0 && selectedRow < [self numberOfRows]){
+    if (selectedRow >= 0 && selectedRow < [self numberOfRows]) {
         return([self itemAtRow:selectedRow]);
-    }else{
+    } else {
         return(nil);
     }
 }
@@ -24,12 +24,12 @@
 //Redisplay an item (passing nil is the same as requesting a redisplay of the entire list)
 - (void)redisplayItem:(id)item
 {
-	if (item){
+	if (item) {
 		int row = [self rowForItem:item];
-		if(row >= 0 && row < [self numberOfRows]){
+		if (row >= 0 && row < [self numberOfRows]) {
 			[self setNeedsDisplayInRect:[self rectOfRow:row]];
 		}
-	}else{
+	} else {
 		[self setNeedsDisplay:YES];
 	}
 }
@@ -49,8 +49,8 @@
 	NSRange range = NSMakeRange([indices firstIndex], ([indices lastIndex]-[indices firstIndex]) + 1);
 	[indices getIndexes:buf maxCount:bufSize inIndexRange:&range];
 
-	for(i = 0; i != bufSize; i++){
-		if((item = [self itemAtRow:buf[i]])){
+	for (i = 0; i != bufSize; i++) {
+		if ((item = [self itemAtRow:buf[i]])) {
 			[itemArray addObject:item];
 		}
 	}
@@ -70,9 +70,9 @@
 	id  indexSet = [NSMutableIndexSet indexSet];
 
 	//Build an index set
-	while((selectedItem = [enumerator nextObject])){
+	while ((selectedItem = [enumerator nextObject])) {
 		selectedRow = [self rowForItem:selectedItem];
-		if(selectedRow != NSNotFound){
+		if (selectedRow != NSNotFound) {
 			[indexSet addIndex:selectedRow];
 		}
 	}

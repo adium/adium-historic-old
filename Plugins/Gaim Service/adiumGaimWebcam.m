@@ -62,7 +62,7 @@ static void adiumGaimWebcamUpdate(GaimWebcam *gwc,
 {
 	GaimDebug(@"adiumGaimWebcamUpdate (Frame %i , %i bytes)", id, size);
 	
-	if(!frameData){
+	if (!frameData) {
 		frameData = [[NSMutableData alloc] init];		
 	}
 	

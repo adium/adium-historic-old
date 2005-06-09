@@ -54,14 +54,14 @@
 
 - (id)init
 {
-	if((self = [self superInit])) {
+	if ((self = [self superInit])) {
 		backing = malloc(0);
-		if(!backing) {
+		if (!backing) {
 			[self release];
 			self = nil;
 		}
 		int mlock_retval = mlock(backing, length);
-		if(mlock < 0) {
+		if (mlock < 0) {
 			NSLog(@"in AIWiredData: mlock returned %i: %s", mlock_retval, strerror(errno));
 			[self release];
 			self = nil;
@@ -73,16 +73,16 @@
 - (id)initWithBytes:(const void *)inBytes length:(unsigned)inLength
 {
 	NSParameterAssert(inBytes != NULL);
-	if((self = [self superInit])) {
+	if ((self = [self superInit])) {
 		length = inLength;
 		backing = malloc(length);
-		if(!backing) {
+		if (!backing) {
 			NSLog(@"in AIWiredData: could not malloc %llu bytes", (unsigned long long)length);
 			[self release];
 			self = nil;
 		} else {
 			int mlock_retval = mlock(backing, length);
-			if(mlock < 0) {
+			if (mlock < 0) {
 				NSLog(@"in AIWiredData: mlock returned %i: %s", mlock_retval, strerror(errno));
 				[self release];
 				self = nil;
@@ -137,7 +137,7 @@
 
 	unsigned long i = range.location;
 	unsigned long j = 0, j_max =     range.length;
-	while(j < j_max) {
+	while (j < j_max) {
 		to[j] = from[i];
 		++i; ++j;
 	}
@@ -178,13 +178,13 @@
 		H  = (H <<  4) + B;    \
 		H ^= (H >> 24) & 0xF0;  \
 	}                            \
-	while(0)
+	while (0)
 - (unsigned)hash
 {
 	register unsigned int H = 0;
 	register unsigned rem = MIN(length, 16);
 	register const char *bytes = backing;
-	while(rem > 3) {
+	while (rem > 3) {
 		MULLE_ELF_STEP(bytes[length - rem]);
 		MULLE_ELF_STEP(bytes[length - rem + 1]);
 		MULLE_ELF_STEP(bytes[length - rem + 2]);
@@ -203,7 +203,7 @@
 
 - (BOOL)isEqualToData:(NSData *)other {
 	unsigned length_ = [self length];
-	if(length_ != [other length])
+	if (length_ != [other length])
 		return NO;
 	return (memcmp([self bytes], [other bytes], length_) != 0);
 }

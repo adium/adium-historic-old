@@ -67,7 +67,7 @@
 	showAccountActions:(BOOL)inShowAccountActions
 		showTitleVerbs:(BOOL)inShowTitleVerbs
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		delegate = inDelegate;
 		showAccountActions = inShowAccountActions;
 		showTitleVerbs = inShowTitleVerbs;
@@ -92,7 +92,7 @@
 
 		//Observe our accouts and prepare our state menus
 		[[adium contactController] registerListObjectObserver:self];
-		if(!inShowAccountActions) [[adium statusController] registerStateMenuPlugin:self];
+		if (!inShowAccountActions) [[adium statusController] registerStateMenuPlugin:self];
 	}
 	
 	return(self);
@@ -103,7 +103,7 @@
  */
 - (void)dealloc
 {
-	if(!showAccountActions) [[adium statusController] unregisterStateMenuPlugin:self];
+	if (!showAccountActions) [[adium statusController] unregisterStateMenuPlugin:self];
 	[self _destroyAccountMenuItems];
 	
 	[super dealloc];
@@ -114,22 +114,22 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]]){
+	if ([inObject isKindOfClass:[AIAccount class]]) {
 		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 
 		//Append the account actions menu for online accounts
-		if([inModifiedKeys containsObject:@"Online"]){
-			if(showAccountActions){
+		if ([inModifiedKeys containsObject:@"Online"]) {
+			if (showAccountActions) {
 				[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
 			}
 		}
 
 		//Update menu items to reflect status changes
-		if([inModifiedKeys containsObject:@"Online"] ||
+		if ([inModifiedKeys containsObject:@"Online"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]){
+		   [inModifiedKeys containsObject:@"StatusState"]) {
 	
 			[self updateMenuItem:menuItem];
 		}
@@ -176,8 +176,8 @@
 	NSEnumerator	*enumerator = [menuItems objectEnumerator];
 	NSMenuItem		*menuItem;
 	
-	while((menuItem = [enumerator nextObject])){    
-		if([menuItem representedObject] == account) return(menuItem);
+	while ((menuItem = [enumerator nextObject])) {    
+		if ([menuItem representedObject] == account) return(menuItem);
 	}
 
 	return(nil);
@@ -190,7 +190,7 @@
 {
 	AIAccount	*account = [menuItem representedObject];
 	
-	if(account){
+	if (account) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 		[menuItem setTitle:[self titleForAccount:account]];
 		[menuItem setImage:[self imageForAccount:account]];		
@@ -237,14 +237,14 @@
 	NSString	*titleFormat = nil;
 
 	//If the account doesn't have a name, give it a generic one
-	if(!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
+	if (!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
 
 	//Display connecting or disconnecting status in the title
-	if([[account statusObjectForKey:@"Connecting"] boolValue]){
+	if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
 		titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
-	}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+	} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
 		titleFormat = ACCOUNT_DISCONNECTING_MENU_TITLE;
-	}else if(showTitleVerbs){
+	} else if (showTitleVerbs) {
 		//Display 'connect' or 'disconnect' before the account name if title verbs are enabled
 		titleFormat = ([account online] ? ACCOUNT_DISCONNECT_MENU_TITLE : ACCOUNT_CONNECT_MENU_TITLE);
 	}
@@ -263,7 +263,7 @@
 	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount		*account;
 
-    while((account = [enumerator nextObject])){
+    while ((account = [enumerator nextObject])) {
 		NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																					target:self
 																					action:@selector(toggleConnection:)
@@ -284,7 +284,7 @@
  */
 - (void)_destroyAccountMenuItems
 {
-	if([menuItems count]){
+	if ([menuItems count]) {
 		[delegate removeAccountMenuItems:menuItems];
 		[menuItems release]; menuItems = nil;
 	}
@@ -302,13 +302,13 @@
 	NSMenu	*actionsSubmenu = nil;
 	
 	//Only build a menu if we have items
-	if(accountActionMenuItems && [accountActionMenuItems count]){
+	if (accountActionMenuItems && [accountActionMenuItems count]) {
 		actionsSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
 		
 		//Build a menu containing all the items
 		NSEnumerator	*enumerator = [accountActionMenuItems objectEnumerator];
 		NSMenuItem		*menuItem;
-		while((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			[actionsSubmenu addItem:[menuItem copy]];
 		}
 	}
@@ -327,10 +327,10 @@
 	NSEnumerator		*enumerator;
 	NSMenuItem			*accountMenuItem;
 
-	if([menuItems count] > 1){
+	if ([menuItems count] > 1) {
 		//We'll need to add these menu items items to each of our accounts
 		enumerator = [menuItems objectEnumerator];
-		while((accountMenuItem = [enumerator nextObject])){    		
+		while ((accountMenuItem = [enumerator nextObject])) {    		
 			AIAccount	*account = [accountMenuItem representedObject];
 			NSMenu		*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
 			
@@ -341,17 +341,17 @@
 			[accountSubmenu setMenuChangedMessagesEnabled:NO];
 			
 			//Enumerate all the menu items we were originally passed
-			while((statusMenuItem = [menuItemEnumerator nextObject])){
+			while ((statusMenuItem = [menuItemEnumerator nextObject])) {
 				AIStatus		*status;
 				NSDictionary	*newRepresentedObject;
 				
 				//Set the represented object to indicate both the right status and the right account
-				if((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])){
+				if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
 					newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
 						status, @"AIStatus",
 						account, @"AIAccount",
 						nil];
-				}else{
+				} else {
 					newRepresentedObject = [NSDictionary dictionaryWithObject:account
 																	   forKey:@"AIAccount"];
 				}
@@ -380,7 +380,7 @@
 	NSMenuItem		*menuItem;
 
 	//We'll need to add these menu items items to each of our accounts
-	while((menuItem = [enumerator nextObject])){    		
+	while ((menuItem = [enumerator nextObject])) {    		
 		[menuItem setSubmenu:nil];
 	}
 }

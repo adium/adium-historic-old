@@ -80,13 +80,13 @@
 {
     NSSet		*modifiedAttributes = nil;
 	
-	if(inModifiedKeys == nil ||
+	if (inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"StatusName"] ||
 	   [inModifiedKeys containsObject:@"StatusType"] ||
 	   [inModifiedKeys containsObject:@"IsIdle"] ||
 	   [inModifiedKeys containsObject:@"NotAStranger"] ||
-	   [inModifiedKeys containsObject:@"IsMobile"]){
+	   [inModifiedKeys containsObject:@"IsMobile"]) {
 		
 		//Tab
 		NSImage	*icon = [AIStatusIcons statusIconForListObject:inObject
@@ -115,7 +115,7 @@
 	
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_TYPING] ||
-		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		
 		//Apply the state icon to our chat
 		NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
@@ -125,7 +125,7 @@
 		modifiedAttributes = [NSSet setWithObject:@"Tab State Icon"];
 
 		//Also apply the state icon to our contact if this is a one-on-one chat
-		if([inChat listObject]){
+		if ([inChat listObject]) {
 			AIListObject *contact = [[adium contactController] parentContactForListObject:[inChat listObject]];
 			
 			NSImage	*icon = [AIStatusIcons statusIconForChat:inChat

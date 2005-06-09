@@ -73,7 +73,7 @@
 //Save changed preference
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == checkbox_enableSQLLogging) {
+    if (sender == checkbox_enableSQLLogging) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_SQL_LOGGER_ENABLE
                                               group:PREF_GROUP_SQL_LOGGING];

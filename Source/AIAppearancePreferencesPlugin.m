@@ -62,13 +62,13 @@
 					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	//Status icons
-	if(firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]){
+	if (firstTime || [key isEqualToString:KEY_STATUS_ICON_PACK]) {
 		NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_STATUS_ICON_PACK]
 										 extension:@"AdiumStatusIcons"
 								resourceFolderName:@"Status Icons"];
 		
 		//If the preferred pack isn't found (it was probably deleted while active), use the default one
-		if(!path){
+		if (!path) {
 			NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_STATUS_ICON_PACK
 																			 group:PREF_GROUP_APPEARANCE
 																			object:nil];
@@ -81,13 +81,13 @@
 	}
 	
 	//Service icons
-	if(firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]){
+	if (firstTime || [key isEqualToString:KEY_SERVICE_ICON_PACK]) {
 		NSString *path = [adium pathOfPackWithName:[prefDict objectForKey:KEY_SERVICE_ICON_PACK]
 										 extension:@"AdiumServiceIcons"
 								resourceFolderName:@"Service Icons"];
 		
 		//If the preferred pack isn't found (it was probably deleted while active), use the default one
-		if(!path){
+		if (!path) {
 			NSString *name = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
 																			 group:PREF_GROUP_APPEARANCE
 																			object:nil];

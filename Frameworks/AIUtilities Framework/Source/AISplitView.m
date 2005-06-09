@@ -25,7 +25,7 @@
 //Init
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if(([super initWithCoder:aDecoder])) {
+	if (([super initWithCoder:aDecoder])) {
 		[self _initSplitView];
 	}
 	return self;
@@ -33,7 +33,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initSplitView];
 	}
 	return self;
@@ -58,7 +58,7 @@
 	drawDivider = inDraw;
 }
 - (void)drawDividerInRect:(NSRect)aRect{
-	if(drawDivider){
+	if (drawDivider) {
 		[super drawDividerInRect:aRect];
 	}
 }

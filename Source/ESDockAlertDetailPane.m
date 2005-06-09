@@ -56,7 +56,7 @@
 - (void)configureForActionDetails:(NSDictionary *)inDetails listObject:(AIListObject *)inObject
 {
 	int behaviorIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_DOCK_BEHAVIOR_TYPE]];
-	if(behaviorIndex >= 0 && behaviorIndex < [popUp_actionDetails numberOfItems]){
+	if (behaviorIndex >= 0 && behaviorIndex < [popUp_actionDetails numberOfItems]) {
 		[popUp_actionDetails selectItemAtIndex:behaviorIndex];        
 	}
 }
@@ -68,9 +68,9 @@
 {
 	NSString	*behavior = [[popUp_actionDetails selectedItem] representedObject];
 	
-	if(behavior){
+	if (behavior) {
 		return([NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE]);
-	}else{
+	} else {
 		return(nil);
 	}	
 }
@@ -91,7 +91,7 @@
     NSMenu			*behaviorMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     DOCK_BEHAVIOR	behavior;
 
-	for(behavior = BOUNCE_ONCE; behavior < BOUNCE_DELAY60; behavior++){
+	for (behavior = BOUNCE_ONCE; behavior < BOUNCE_DELAY60; behavior++) {
 		NSString *name = [[adium dockController] descriptionForBehavior:behavior];
 		[behaviorMenu addItem:[self menuItemForBehavior:behavior withName:name]];
 	}

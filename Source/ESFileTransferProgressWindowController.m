@@ -52,7 +52,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 + (id)showFileTransferProgressWindow
 {
     //Create the window
-    if(!sharedTransferProgressInstance){
+    if (!sharedTransferProgressInstance) {
         sharedTransferProgressInstance = [[self alloc] initWithWindowNibName:FILE_TRANSFER_PROGRESS_NIB];
 	}
 
@@ -66,7 +66,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 + (id)showFileTransferProgressWindowIfNotOpen
 {
 	//Create the window and show it if it is not already open
-    if(!sharedTransferProgressInstance){
+    if (!sharedTransferProgressInstance) {
 		[self showFileTransferProgressWindow];
 	}
 	
@@ -76,14 +76,14 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //Close the info window
 + (void)closeTransferProgressWindow
 {
-    if(sharedTransferProgressInstance){
+    if (sharedTransferProgressInstance) {
         [sharedTransferProgressInstance closeWindow:nil];
     }
 }
 
 + (void)removeFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-    if(sharedTransferProgressInstance){
+    if (sharedTransferProgressInstance) {
         [sharedTransferProgressInstance _removeFileTransfer:inFileTransfer];
     }
 }
@@ -91,7 +91,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark Basic window controller functionality
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    if((self = [super initWithWindowNibName:windowNibName])) {
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		progressRows = [[NSMutableArray alloc] init];
 	}
 	return self;
@@ -128,7 +128,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	[scrollView setHasVerticalScroller:YES];
 	[scrollView setHasHorizontalScroller:NO];
 	[[scrollView contentView] setCopiesOnScroll:NO];
-	if([scrollView respondsToSelector:@selector(setAutohidesScrollers:)]){
+	if ([scrollView respondsToSelector:@selector(setAutohidesScrollers:)]) {
 		[scrollView setAutohidesScrollers:YES];
 	}
 
@@ -139,9 +139,9 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 	[outlineView sizeLastColumnToFit];
 	[outlineView setAutoresizesSubviews:YES];
-	if([outlineView respondsToSelector:@selector(setColumnAutoresizingStyle:)]){
+	if ([outlineView respondsToSelector:@selector(setColumnAutoresizingStyle:)]) {
 		[outlineView setColumnAutoresizingStyle:NSTableViewUniformColumnAutoresizingStyle];
-	}else{
+	} else {
 		[outlineView setAutoresizesAllColumnsToFit:YES];
 	}
 	[outlineView setDrawsAlternatingRows:YES];
@@ -162,7 +162,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		newFrame = [button_clear frame];
 		
 		//Don't let the button get smaller than it was initially
-		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
 		
 		//Keep the origin and height the same - we just want to size for width
 		newFrame.origin = oldFrame.origin;
@@ -172,7 +172,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 		//Resize the status bar text
 		int widthChange = oldFrame.size.width - newFrame.size.width;
-		if(widthChange){
+		if (widthChange) {
 			NSRect	statusFrame;
 			
 			statusFrame = [textField_statusBar frame];
@@ -195,7 +195,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//Create progress rows for all existing file transfers
 	shouldScrollToNewFileTransfer = NO;
 	enumerator = [[[adium fileTransferController] fileTransferArray] objectEnumerator];
-	while((fileTransfer = [enumerator nextObject])){
+	while ((fileTransfer = [enumerator nextObject])) {
 		[self addFileTransfer:fileTransfer];
 	}
 	
@@ -223,8 +223,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	BOOL						enableClear = NO;
 	
 	enumerator = [progressRows objectEnumerator];
-	while((row = [enumerator nextObject])){
-		if([[row fileTransfer] isStopped]){
+	while ((row = [enumerator nextObject])) {
+		if ([[row fileTransfer] isStopped]) {
 			enableClear = YES;
 			break;
 		}
@@ -237,11 +237,11 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark Progress row addition to the window
 - (void)progressRowDidAwakeFromNib:(ESFileTransferProgressRow *)progressRow
 {
-	if(![progressRows containsObjectIdenticalTo:progressRow]){
+	if (![progressRows containsObjectIdenticalTo:progressRow]) {
 		[progressRows addObject:progressRow];
 	}
 
-	if(shouldScrollToNewFileTransfer){
+	if (shouldScrollToNewFileTransfer) {
 		[self reloadAllData];
 		
 		[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
@@ -254,7 +254,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 			  heightChangedFrom:(float)oldHeight
 							 to:(float)newHeight
 {
-	if(shouldScrollToNewFileTransfer){
+	if (shouldScrollToNewFileTransfer) {
 		[self reloadAllData];
 		
 		[outlineView scrollRectToVisible:[outlineView rectOfRow:[progressRows indexOfObject:progressRow]]];
@@ -267,7 +267,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	ESFileTransfer	*fileTransfer;
 
-	if((fileTransfer = [notification object])){
+	if ((fileTransfer = [notification object])) {
 		[self addFileTransfer:fileTransfer];
 	}
 }
@@ -276,7 +276,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //This will call back on progressRowDidAwakeFromNib: if it adds a new row.
 - (void)addFileTransfer:(ESFileTransfer *)inFileTransfer
 {
-	if(![self existingRowForFileTransfer:inFileTransfer]){
+	if (![self existingRowForFileTransfer:inFileTransfer]) {
 		[ESFileTransferProgressRow rowForFileTransfer:inFileTransfer withOwner:self];
 	}
 }
@@ -285,7 +285,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	ESFileTransferProgressRow	*row;
 
-	if((row = [self existingRowForFileTransfer:inFileTransfer])) [self _removeFileTransferRow:row];
+	if ((row = [self existingRowForFileTransfer:inFileTransfer])) [self _removeFileTransferRow:row];
 }
 
 - (ESFileTransferProgressRow *)existingRowForFileTransfer:(ESFileTransfer *)inFileTransfer
@@ -294,8 +294,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	ESFileTransferProgressRow	*row;
 
 	enumerator = [progressRows objectEnumerator];
-	while((row = [enumerator nextObject])){
-		if([row fileTransfer] == inFileTransfer) break;
+	while ((row = [enumerator nextObject])) {
+		if ([row fileTransfer] == inFileTransfer) break;
 	}
 
 	return(row);
@@ -308,7 +308,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	ESFileTransfer	*fileTransfer = [progressRow fileTransfer];
 
-	if([fileTransfer isStopped]){
+	if ([fileTransfer isStopped]) {
 		NSClipView		*clipView = [scrollView contentView];
 		unsigned		row;
 
@@ -320,12 +320,12 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		[progressRows removeObject:progressRow];
 		[[adium fileTransferController] _removeFileTransfer:fileTransfer];
 		
-		if(shouldScrollToNewFileTransfer){
+		if (shouldScrollToNewFileTransfer) {
 			//Refresh the outline view
 			[self reloadAllData];
 			
 			//Determine the row to reselect.  If the current row is valid, keep it.  If it isn't, use the last row.
-			if(row >= [progressRows count]){
+			if (row >= [progressRows count]) {
 				row = [progressRows count] - 1;
 			}
 			[clipView scrollToPoint:[clipView constrainScrollPoint:([outlineView rectOfRow:row].origin)]];
@@ -344,7 +344,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	/* We get here as a progress row intializes itself, before it claims to be ready for display and therefore before
 	 * we have it in the progressRows array.  Add it now if necessary */
-	if(![progressRows containsObjectIdenticalTo:progressRow]){
+	if (![progressRows containsObjectIdenticalTo:progressRow]) {
 		[progressRows addObject:progressRow];
 	}
 	
@@ -365,36 +365,36 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	unsigned					downloads = 0, uploads = 0;
 	
 	enumerator = [progressRows objectEnumerator];
-	while((aRow = [enumerator nextObject])){
+	while ((aRow = [enumerator nextObject])) {
 		FileTransferType type = [aRow type];
-		if(type == Incoming_FileTransfer){
+		if (type == Incoming_FileTransfer) {
 			downloads++;
-		}else if(type == Outgoing_FileTransfer){
+		} else if (type == Outgoing_FileTransfer) {
 			uploads++;
 		}
 	}
 
-	if(downloads > 0){
-		if(downloads == 1)
+	if (downloads > 0) {
+		if (downloads == 1)
 			downloadsString = AILocalizedString(@"1 download",nil);
 		else
 			downloadsString = [NSString stringWithFormat:AILocalizedString(@"%i downloads","(number) downloads"), downloads];
 	}
 
-	if(uploads > 0){
-		if(uploads == 1)
+	if (uploads > 0) {
+		if (uploads == 1)
 			uploadsString = AILocalizedString(@"1 upload",nil);
 		else
 			uploadsString = [NSString stringWithFormat:AILocalizedString(@"%i uploads","(number) uploads"), uploads];
 	}
 
-	if(downloadsString && uploadsString){
+	if (downloadsString && uploadsString) {
 		statusBarString = [NSString stringWithFormat:@"%@; %@",downloadsString,uploadsString];
-	}else if(downloadsString){
+	} else if (downloadsString) {
 		statusBarString = downloadsString;
-	}else if(uploadsString){
+	} else if (uploadsString) {
 		statusBarString = uploadsString;
-	}else{
+	} else {
 		statusBarString = @"";
 	}
 
@@ -408,8 +408,8 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	
 	shouldScrollToNewFileTransfer = NO;
 	enumerator = [progressRows objectEnumerator];
-	while((row = [enumerator nextObject])){
-		if([[row fileTransfer] isStopped]) [self _removeFileTransferRow:row];
+	while ((row = [enumerator nextObject])) {
+		if ([[row fileTransfer] isStopped]) [self _removeFileTransferRow:row];
 	}	
 	shouldScrollToNewFileTransfer = YES;
 	
@@ -421,7 +421,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 #pragma mark OutlineView dataSource
 - (id)outlineView:(NSOutlineView *)inOutlineView child:(int)index ofItem:(id)item
 {
-	if(index < [progressRows count]) {
+	if (index < [progressRows count]) {
 		return([progressRows objectAtIndex:index]);
 	} else {
 		return nil;
@@ -462,16 +462,16 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 {
 	int		row = [inOutlineView selectedRow];
 	BOOL	didDelete = NO;
-	if(row != -1){
+	if (row != -1) {
 		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
-		if([[progressRow fileTransfer] isStopped]){
+		if ([[progressRow fileTransfer] isStopped]) {
 			[self _removeFileTransferRow:progressRow];
 			didDelete = YES;
 		}
 	}
 
 	//If they tried to delete a row that isn't finished, or we got here with no valid selection, sound the system beep
-	if(!didDelete)
+	if (!didDelete)
 		NSBeep();
 }
 
@@ -486,7 +486,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 								  fromView:[[inOutlineView window] contentView]];
     row = [inOutlineView rowAtPoint:location];
 
-	if(row != -1){
+	if (row != -1) {
 		ESFileTransferProgressRow	*progressRow = [inOutlineView itemAtRow:row];
 		menu = [progressRow menuForEvent:inEvent];
 	}
@@ -510,7 +510,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	NSRect	outlineFrame = [outlineView frame];
 	int		totalHeight = [outlineView totalHeight];
 
-	if(outlineFrame.size.height != totalHeight){
+	if (outlineFrame.size.height != totalHeight) {
 		outlineFrame.size.height = totalHeight;
 		[outlineView setFrame:outlineFrame];
 		[outlineView setNeedsDisplay:YES];
@@ -539,10 +539,10 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	windowFrame.size.width = 300;
 
 	//Respect the min and max sizes
-	if(windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
-	if(windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
-	if(windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
-	if(windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
+	if (windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
+	if (windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
+	if (windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
+	if (windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
 
 	//Keep the top-left corner the same
 	windowFrame.origin.y = oldWindowFrame.origin.y + oldWindowFrame.size.height - windowFrame.size.height;

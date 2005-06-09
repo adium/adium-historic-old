@@ -51,13 +51,13 @@ guint adium_source_remove(guint tag) {
 	[[sourceInfoDict objectForKey:[NSNumber numberWithUnsignedInt:tag]] pointerValue];
 	
 	//	GaimDebug (@"***SOURCE REMOVE : %i",tag);
-    if (sourceInfo){
+    if (sourceInfo) {
 		if (sourceInfo->timer != NULL) { 
 			//Got a timer; invalidate and release
 			CFRunLoopTimerInvalidate(sourceInfo->timer);
 			CFRelease(sourceInfo->timer);
 			
-		}else{
+		} else {
 			//Got a file handle; invalidate and release the source and the socket
 			CFRunLoopSourceInvalidate(sourceInfo->rls);
 			CFRelease(sourceInfo->rls);
@@ -119,7 +119,7 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 
 	NSNumber	*key = [NSNumber numberWithUnsignedInt:sourceId];
 	//Make sure we end up with a valid source id
-	while ([sourceInfoDict objectForKey:key]){
+	while ([sourceInfoDict objectForKey:key]) {
 		sourceId++;
 		key = [NSNumber numberWithUnsignedInt:sourceId];
 	}
@@ -203,7 +203,7 @@ static void socketCallback(CFSocketRef s,
 		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 		free(sourceInfo);
 		
-	}else{
+	} else {
 		//		GaimDebug (@"%x: Socket callback: %i",[NSRunLoop currentRunLoop],sourceInfo->tag);
 		sourceInfo->ioFunction(sourceInfo->user_data, sourceInfo->fd, c);
 	}	
@@ -219,7 +219,7 @@ static GaimEventLoopUiOps adiumEventLoopUiOps = {
 
 GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
 {
-	if(!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
+	if (!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
 
 	return &adiumEventLoopUiOps;
 }

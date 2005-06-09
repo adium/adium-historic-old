@@ -18,7 +18,7 @@
 //Init the field
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		self = [self _init];
 	}
 	return self;
@@ -26,7 +26,7 @@
 
 - (id)initWithFrame:(NSRect)frame
 {
-	if((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		[self _init];
 	}
 	return self;
@@ -51,8 +51,8 @@
 
 - (void)fireImmediately
 {
-    if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
+    if (delayedChangesTimer) {
+        if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
@@ -66,8 +66,8 @@
 {
 	[super textDidChange:notification];
 	
-    if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
+    if (delayedChangesTimer) {
+        if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
@@ -83,8 +83,8 @@
 - (void)textDidEndEditing:(NSNotification *)notification
 {
 	//Don't trigger our delayed changes timer after the field ends editing.
-	if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
+	if (delayedChangesTimer) {
+        if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;
@@ -97,8 +97,8 @@
 {
 	[[self target] performSelector:[self action] withObject:self];
 
-    if(delayedChangesTimer){
-        if([delayedChangesTimer isValid]){
+    if (delayedChangesTimer) {
+        if ([delayedChangesTimer isValid]) {
             [delayedChangesTimer invalidate]; 
         }
         [delayedChangesTimer release]; delayedChangesTimer = nil;

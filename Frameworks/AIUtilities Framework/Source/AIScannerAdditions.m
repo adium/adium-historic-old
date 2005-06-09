@@ -35,15 +35,15 @@
 
 	register unsigned i = 0;
 
-	if(length && (buf[i] == '+')) {
+	if (length && (buf[i] == '+')) {
 		++i;
 	}
-	if(i >= length) return NO;
-	if((buf[i] < '0') || (buf[i] > '9')) return NO;
+	if (i >= length) return NO;
+	if ((buf[i] < '0') || (buf[i] > '9')) return NO;
 
 	unsigned total = 0;
-	while(i < length) {
-		if((buf[i] >= '0') && (buf[i] <= '9')) {
+	while (i < length) {
+		if ((buf[i] >= '0') && (buf[i] <= '9')) {
 			total *= 10;
 			total += buf[i] - '0';
 			++i;

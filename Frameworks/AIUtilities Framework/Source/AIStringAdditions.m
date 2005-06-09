@@ -28,12 +28,12 @@
 {
 	srandom(TickCount());
 
-	if(!inLength) return [NSString string];
+	if (!inLength) return [NSString string];
 
 	NSString *string = nil;
 	char *buf = malloc(inLength);
 
-	if(buf) {
+	if (buf) {
 		static const char alphanumeric[] = {
 			'0', '1', '2', '3', '4', '5', '6', '7',
 			'8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
@@ -42,7 +42,7 @@
 			'W', 'X', 'Y', 'Z'
 		};
 		register unsigned remaining = inLength;
-		while(remaining--) {
+		while (remaining--) {
 			buf[remaining] = alphanumeric[random() % sizeof(alphanumeric)];
 		}
 		string = [[[NSString alloc] initWithBytes:buf length:inLength encoding:NSASCIIStringEncoding] autorelease];
@@ -82,7 +82,7 @@
 	NSMutableString	*newString = [NSMutableString string];
 	unsigned		i, length = [self length];
 
-	for(i = 0 ; i < length ; i++){
+	for (i = 0 ; i < length ; i++) {
 		/* Offset by the desired amount */
 		[newString appendFormat:@"%C",([self characterAtIndex:i] + offset)];
 	}
@@ -103,14 +103,14 @@
 	CFStringLowercase((CFMutableStringRef)outName, /*locale*/ NULL);
 	len = [outName length];
 	
-	while(pos < len) {
-		if([outName characterAtIndex:pos] == ' ') {
-			if(range.length++ == 0) {
+	while (pos < len) {
+		if ([outName characterAtIndex:pos] == ' ') {
+			if (range.length++ == 0) {
 				range.location = pos;
 			}
 			++pos;
 		} else {
-			if(range.length) {
+			if (range.length) {
 				[outName deleteCharactersInRange:range];
 				pos  = range.location;
 				len -= range.length;
@@ -138,9 +138,9 @@
 //
 - (NSString *)stringByExpandingBundlePath
 {
-    if([self hasPrefix:BUNDLE_STRING]){
+    if ([self hasPrefix:BUNDLE_STRING]) {
         return [[[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath] stringByAppendingString:[self substringFromIndex:[BUNDLE_STRING length]]];
-    }else{
+    } else {
         return [[self copy] autorelease];
     }
 }
@@ -150,9 +150,9 @@
 {
     NSString *bundlePath = [[[NSBundle mainBundle] bundlePath] stringByExpandingTildeInPath];
 
-    if([self hasPrefix:bundlePath]){
+    if ([self hasPrefix:bundlePath]) {
         return [BUNDLE_STRING stringByAppendingString:[self substringFromIndex:[bundlePath length]]];
-    }else{
+    } else {
         return [[self copy] autorelease];
     }
 }
@@ -189,8 +189,8 @@
 	static UniChar table[USHRT_MAX + 1];
 	static BOOL tableInitialized = NO;
 	NSString *result;
-	if(!tableInitialized) {
-		for(register unsigned i = 0; i <= USHRT_MAX; ++i) {
+	if (!tableInitialized) {
+		for (register unsigned i = 0; i <= USHRT_MAX; ++i) {
 			table[i] = i;
 		}
 		table['/'] = '-';
@@ -198,18 +198,18 @@
 	}
 
 	unsigned length = [self length];
-	if(length > NAME_MAX) {
+	if (length > NAME_MAX) {
 		NSLog(@"-safeFilenameString called on a string longer than %u characters (it will be truncated): @\"%@\"", NAME_MAX, self);
 		length = NAME_MAX;
 	}
-	if(!length) {
+	if (!length) {
 		//it will be an empty string anyway, so save the malloc and all the translation work.
 		result = [NSString string];
 	} else {
 		//there are characters here; translate them.
 		NSRange range = { 0, length };
 		UniChar *buf = malloc(length * sizeof(UniChar));
-		if(!buf) {
+		if (!buf) {
 			//can't malloc the memory - see if NSMutableString can do it
 			NSMutableString *string = [self mutableCopy];
 	
@@ -221,7 +221,7 @@
 	
 			register unsigned remaining = length;
 			register UniChar *ch = buf;
-			while(remaining--) {
+			while (remaining--) {
 				*ch = table[*ch];
 				++ch;
 			}
@@ -242,12 +242,12 @@
 //    NSMutableString *encodedString = [[NSMutableString alloc] initWithString:@""];
 //    NSString *read;
 //    
-//    while(![s isAtEnd])
+//    while (![s isAtEnd])
 //    {
 //        [s scanUpToCharactersFromSet:notUrlCode intoString:&read];
-//        if(read)
+//        if (read)
 //            [encodedString appendString:read];
-//        if(![s isAtEnd])
+//        if (![s isAtEnd])
 //        {
 //            [encodedString appendFormat:@"%%%x", [self characterAtIndex:[s scanLocation]]];
 //            [s setScanLocation:[s scanLocation]+1];
@@ -263,12 +263,12 @@
 //    NSMutableString *decodedString = [[NSMutableString alloc] initWithString:@""];
 //    NSString *read;
 //    
-//    while(![s isAtEnd])
+//    while (![s isAtEnd])
 //    {
 //        [s scanUpToString:@"%" intoString:&read];
-//        if(read)
+//        if (read)
 //            [decodedString appendString:read];
-//        if(![s isAtEnd])
+//        if (![s isAtEnd])
 //        {
 //            [decodedString appendString:[NSString stringWithFormat:@"%c", 
 //                [[NSString stringWithFormat:@"%li",
@@ -292,14 +292,14 @@
 //        invertedSet];
 //    NSScanner *s = [NSScanner scannerWithString:self]; 
 //    
-//    if([self rangeOfCharacterFromSet:notUrlCode].location != NSNotFound)
+//    if ([self rangeOfCharacterFromSet:notUrlCode].location != NSNotFound)
 //        return NO;
 //    
-//    while(![s isAtEnd])
+//    while (![s isAtEnd])
 //    {
 //        [s scanUpToString:@"%" intoString:nil];
 //        
-//        if([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] rangeOfCharacterFromSet:notHexSet].location != NSNotFound)
+//        if ([[self substringWithRange:NSMakeRange([s scanLocation]+1, 2)] rangeOfCharacterFromSet:notHexSet].location != NSNotFound)
 //            return NO;
 //    }
 //    
@@ -315,25 +315,25 @@
 
 //char intToHex(int digit)
 //{
-//    if(digit > 9){
+//    if (digit > 9) {
 //        return('a' + digit - 10);
-//    }else{
+//    } else {
 //        return('0' + digit);
 //    }
 //}
 //
 //int hexToInt(char hex)
 //{
-//    if(hex >= '0' && hex <= '9'){
+//    if (hex >= '0' && hex <= '9') {
 //        return(hex - '0');
 //		
-//    }else if(hex >= 'a' && hex <= 'f'){
+//    } else if (hex >= 'a' && hex <= 'f') {
 //        return(hex - 'a' + 10);
 //		
-//    }else if(hex >= 'A' && hex <= 'F'){
+//    } else if (hex >= 'A' && hex <= 'F') {
 //        return(hex - 'A' + 10);
 //		
-//    }else{
+//    } else {
 //        return(0);
 //		
 //    }
@@ -391,11 +391,11 @@
 	destData = [NSMutableData dataWithLength:(sourceLength * 3)];
 	destPtr  = [destData mutableBytes];
 
-	while(sourceIndex < sourceLength) {
+	while (sourceIndex < sourceLength) {
 		unsigned char	ch = UTF8[sourceIndex];
 		destPtr[destIndex++] = translationTable[ch];
 
-		if(!translationTable[ch]) {
+		if (!translationTable[ch]) {
 			//hex-encode.
 			destPtr[destIndex-1] = '%';
 			destPtr[destIndex++] = intToHex(ch / 0x10);
@@ -460,10 +460,10 @@
 	destData = [NSMutableData dataWithLength:sourceLength];
 	destPtr = [destData mutableBytes];
 	
-	while(sourceIndex < sourceLength){
+	while (sourceIndex < sourceLength) {
 		unsigned char	ch = UTF8[sourceIndex++];
 
-		if(ch == '%') {
+		if (ch == '%') {
 			destPtr[destIndex] = ( hexToInt(UTF8[sourceIndex]) * 0x10 ) + hexToInt(UTF8[sourceIndex+1]);
 			sourceIndex += 2;
 		} else {
@@ -493,16 +493,16 @@
 	
 	unsigned curLocation = 0, maxLocation = [self length];
 
-	while(1) {
-		if ([scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk]){
+	while (1) {
+		if ([scanner scanUpToCharactersFromSet:mustBeEscaped intoString:&lastChunk]) {
 			[result appendString:lastChunk];
 			curLocation = [scanner scanLocation];
 		}
-		if(curLocation >= maxLocation){
+		if (curLocation >= maxLocation) {
 			break;
 
-		}else{
-			switch([self characterAtIndex:curLocation]) {
+		} else {
+			switch ([self characterAtIndex:curLocation]) {
 				case '&':
 					[result appendString:@"&amp;"];
 					break;
@@ -530,7 +530,7 @@
 
 - (NSString *)stringByUnescapingFromHTML
 {
-	if([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
+	if ([self length] == 0) return [[self copy] autorelease]; //avoids various RangeExceptions.
 	
 	static NSString *ampersand = @"&", *semicolon = @";";
 	
@@ -541,18 +541,18 @@
 	NSMutableString *result = [NSMutableString string];
 	
 	do {
-		if([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
-			if(segment) {
+		if ([scanner scanUpToString:ampersand intoString:&segment] || [self characterAtIndex:[scanner scanLocation]] == '&') {
+			if (segment) {
 				[result appendString:segment];
 				segment = nil;
 			}
-			if(![scanner isAtEnd]) {
+			if (![scanner isAtEnd]) {
 				[scanner setScanLocation:[scanner scanLocation]+1];
 			}
 		}
-		if([scanner scanUpToString:semicolon intoString:&entity]) {
+		if ([scanner scanUpToString:semicolon intoString:&entity]) {
 			unsigned number;
-			if([entity characterAtIndex:0] == '#'){
+			if ([entity characterAtIndex:0] == '#') {
 				NSScanner	*numScanner;
 				unichar		secondCharacter;
 				BOOL		appendIt = NO;
@@ -561,21 +561,21 @@
 				[numScanner setCaseSensitive:YES];
 				secondCharacter = [entity characterAtIndex:1];
 				
-				if(secondCharacter == 'x' || secondCharacter == 'X'){
+				if (secondCharacter == 'x' || secondCharacter == 'X') {
 					//hexadecimal: "#x..." or "#X..."
 					[numScanner setScanLocation:2];
 					appendIt = [numScanner scanHexInt:&number];
 					
-				}else{
+				} else {
 					//decimal: "#..."
 					[numScanner setScanLocation:1];
 					appendIt = [numScanner scanUnsignedInt:&number];
 				}
 
-				if(appendIt){
+				if (appendIt) {
 					unichar chars[2] = { number, 0xffff };
 					CFIndex length = 1;
-					if(number > 0xffff) {
+					if (number > 0xffff) {
 						//split into surrogate pair
 						AIGetSurrogates(number, &chars[0], &chars[1]);
 						++length;
@@ -585,7 +585,7 @@
 			} else {
 				//named entity. for now, we only support the five essential ones.
 				static NSDictionary *entityNames = nil;
-				if(entityNames == nil) {
+				if (entityNames == nil) {
 					entityNames = [[NSDictionary alloc] initWithObjectsAndKeys:
 						[NSNumber numberWithUnsignedInt:'"'], @"quot",
 						[NSNumber numberWithUnsignedInt:'&'], @"amp",
@@ -595,15 +595,15 @@
 						nil];
 				}
 				number = [[entityNames objectForKey:[entity lowercaseString]] unsignedIntValue];
-				if(number){
+				if (number) {
 					[result appendFormat:@"%C", (unichar)number];
 				}
 			}
-			if(![scanner isAtEnd]) {
+			if (![scanner isAtEnd]) {
 				[scanner setScanLocation:[scanner scanLocation]+1];
 			}
-		} //if([scanner scanUpToString:semicolon intoString:&entity])
-	} while([scanner scanLocation] < myLength);
+		} //if ([scanner scanUpToString:semicolon intoString:&entity])
+	} while ([scanner scanLocation] < myLength);
 //	NSLog(@"unescaped %@\ninto %@", self, result);
 	return result;
 }
@@ -625,7 +625,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 
 - (NSString *)stringByEscapingForShell
 {
-	if(!(characterNature[' '] & whitespaceNature)) {
+	if (!(characterNature[' '] & whitespaceNature)) {
 		//if space doesn't have the whitespace nature, clearly we need to build the nature array.
 
 		//first, set all characters to zero.
@@ -652,7 +652,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 
 	unsigned myLength = [self length];
 	unichar *myBuf = malloc(sizeof(unichar) * myLength);
-	if(!myBuf) return nil;
+	if (!myBuf) return nil;
 	[self getCharacters:myBuf];
 	const unichar *myBufPtr = myBuf;
 
@@ -676,21 +676,21 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 	 */
 #define SBEFS_BOUNDARY_GUARD \
 	do { \
-		if(i == buflen) { \
+		if (i == buflen) { \
 			buf = realloc(buf, sizeof(unichar) * (buflen += buflenIncrement)); \
-			if(!buf) { \
+			if (!buf) { \
 				NSLog(@"in stringByEscapingForShell: could not allocate %lu bytes", (unsigned long)(sizeof(unichar) * buflen)); \
 				free(myBuf); \
 				return nil; \
 			} \
 		} \
-	} while(0)
+	} while (0)
 
 	unsigned i = 0;
-	for(; myLength--; ++i) {
+	for (; myLength--; ++i) {
 		SBEFS_BOUNDARY_GUARD;
 
-		if(characterNature[*myBufPtr] & whitespaceNature) {
+		if (characterNature[*myBufPtr] & whitespaceNature) {
 			//escape this character using a named escape
 			static unichar escapeNames[] = {
 				0, 0, 0, 0, 0, 0, 0,
@@ -710,7 +710,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 			SBEFS_BOUNDARY_GUARD;
 			buf[i] = escapeNames[*myBufPtr];
 		} else {
-			if(characterNature[*myBufPtr] & shellUnsafeNature) {
+			if (characterNature[*myBufPtr] & shellUnsafeNature) {
 				//escape this character
 				buf[i++] = '\\';
 				SBEFS_BOUNDARY_GUARD;
@@ -735,25 +735,25 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 {
 	NSEnumerator *pathEnum = [[[NSWorkspace sharedWorkspace] mountedLocalVolumePaths] objectEnumerator];
 	NSString *volumePath;
-	while((volumePath = [pathEnum nextObject])) {
-		if([self hasPrefix:[volumePath stringByAppendingString:@"/"]])
+	while ((volumePath = [pathEnum nextObject])) {
+		if ([self hasPrefix:[volumePath stringByAppendingString:@"/"]])
 			break;
 	}
-	if(!volumePath)
+	if (!volumePath)
 		volumePath = @"/";
 	return volumePath;
 }
 
 - (unichar)lastCharacter {
 	unsigned length = [self length];
-	if(length < 1)
+	if (length < 1)
 		return 0xffff;
 	else
 		return [self characterAtIndex:length - 1];
 }
 - (unichar)nextToLastCharacter {
 	unsigned length = [self length];
-	if(length < 2)
+	if (length < 2)
 		return 0xffff;
 	else
 		return [self characterAtIndex:length - 2];
@@ -761,7 +761,7 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 - (UTF32Char)lastLongCharacter {
 	unichar nextToLast = [self nextToLastCharacter];
 	unichar last       = [self lastCharacter];
-	if(UCIsSurrogateHighCharacter(nextToLast) && UCIsSurrogateLowCharacter(last)) {
+	if (UCIsSurrogateHighCharacter(nextToLast) && UCIsSurrogateLowCharacter(last)) {
 		return UCGetUnicodeScalarValueForSurrogatePair(nextToLast, last);
 	} else {
 		return last;

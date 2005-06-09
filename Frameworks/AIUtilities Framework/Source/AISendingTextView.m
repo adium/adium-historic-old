@@ -96,10 +96,10 @@
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
 	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
-    if([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r'){
-		if(sendingEnabled) [self sendContent:nil];
+    if ([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r') {
+		if (sendingEnabled) [self sendContent:nil];
 		return(YES);
-	}else{
+	} else {
 		return(NO);
 	}
 }
@@ -110,33 +110,33 @@
 	BOOL 		insertText = YES;
 	NSString	*theString = nil;
 	
-	if([aString isKindOfClass:[NSString class]]){
+	if ([aString isKindOfClass:[NSString class]]) {
         theString = aString;
-    }else if([aString isKindOfClass:[NSAttributedString class]]){
+    } else if ([aString isKindOfClass:[NSAttributedString class]]) {
         theString = [aString string];
     }
 	
-	if([theString hasSuffix:@"\n"] && !optionPressedWithNext){
+	if ([theString hasSuffix:@"\n"] && !optionPressedWithNext) {
 		if ((nextIsReturn && sendOnReturn) || (nextIsEnter && sendOnEnter)) {
 			
 			//Make sure we insert any applicable text first
 			if ([theString length] > 1) {
 				
 				NSRange range = NSMakeRange(0,[theString length]-1);
-				if([aString isKindOfClass:[NSString class]]){
+				if ([aString isKindOfClass:[NSString class]]) {
 					[super insertText:[aString substringWithRange:range]];
-				}else if([aString isKindOfClass:[NSAttributedString class]]){
+				} else if ([aString isKindOfClass:[NSAttributedString class]]) {
 					[super insertText:[aString attributedSubstringFromRange:range]];
 				}
 			}
 			
 			//Now send
-			if(sendingEnabled) [self sendContent:nil]; //Send the content
+			if (sendingEnabled) [self sendContent:nil]; //Send the content
 			insertText = NO;
 		}
 	}
 	
-	if(insertText) [super insertText:aString];
+	if (insertText) [super insertText:aString];
 }
 
 //
@@ -145,7 +145,7 @@
 	unsigned 	index = 0;
 	unsigned	numEvents = [eventArray count];
 
-    while(index < numEvents){
+    while (index < numEvents) {
 		NSEvent		*theEvent = [eventArray objectAtIndex:index];
 		
         if ([theEvent type] == NSKeyDown) {

@@ -58,7 +58,7 @@
 	
 	newContactWindow = [[self alloc] initWithWindowNibName:ADD_CONTACT_PROMPT_NIB contactName:inName service:inService];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[parentWindow makeKeyAndOrderFront:nil];
 		
 		[NSApp beginSheet:[newContactWindow window]
@@ -66,7 +66,7 @@
 			modalDelegate:newContactWindow
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[newContactWindow showWindow:nil];
 		[[newContactWindow window] makeKeyAndOrderFront:nil];
 	}
@@ -118,7 +118,7 @@
 	[self buildGroupMenu];
 	[self buildContactTypeMenu];
 	[self configureForCurrentServiceType];
-	if(contactName) [textField_contactName setStringValue:contactName];	
+	if (contactName) [textField_contactName setStringValue:contactName];	
 	
 	//Observe account list and status changes
 	[[adium notificationCenter] addObserver:self
@@ -173,15 +173,15 @@
 	
 	//Add contact to our accounts
 	enumerator = [accounts objectEnumerator];
-	while((account = [enumerator nextObject])){
-		if([account contactListEditable] &&
-		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]){
+	while ((account = [enumerator nextObject])) {
+		if ([account contactListEditable] &&
+		   [[account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] boolValue]) {
 			AIListContact	*contact = [[adium contactController] contactWithService:service
 																			 account:account
 																				 UID:UID];
 			
-			if(contact){
-				if(alias && [alias length]) [contact setDisplayName:alias];
+			if (contact) {
+				if (alias && [alias length]) [contact setDisplayName:alias];
 				[contactArray addObject:contact];
 
 				//Force this contact to show up on the user's list for a little bit, even if it is offline
@@ -227,15 +227,15 @@
 	[[popUp_contactType menu] update];
 
 	//Find the menu item for our current service
-	if(service) serviceIndex = [popUp_contactType indexOfItemWithRepresentedObject:service];		
+	if (service) serviceIndex = [popUp_contactType indexOfItemWithRepresentedObject:service];		
 
 	//If our service is not available we'll have to pick another one
-	if(service && (serviceIndex == -1 || ![[popUp_contactType itemAtIndex:serviceIndex] isEnabled])){
+	if (service && (serviceIndex == -1 || ![[popUp_contactType itemAtIndex:serviceIndex] isEnabled])) {
 		[self _setServiceType:nil];
 	}
 
 	//If we don't have a service, pick the first availbale one
-	if(!service){
+	if (!service) {
 		[self _setServiceType:[[[popUp_contactType menu] firstEnabledMenuItem] representedObject]];
 	}
 
@@ -276,7 +276,7 @@
  */
 - (void)_setServiceType:(AIService *)inService
 {
-	if(inService != service){
+	if (inService != service) {
 		[service release];
 		service = [inService retain];
 	}
@@ -290,8 +290,8 @@
 	NSEnumerator	*enumerator = [[[adium accountController] accountsCompatibleWithService:[menuItem representedObject]] objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
-		if([account contactListEditable]) return(YES);
+	while ((account = [enumerator nextObject])) {
+		if ([account contactListEditable]) return(YES);
 	}
 	
 	return(NO);
@@ -330,14 +330,14 @@
 
 	//Select the group of the currently selected object on the contact list
 	selectedObject = [[adium contactController] selectedListObject];
-	while(selectedObject && ![selectedObject isKindOfClass:[AIListGroup class]]){
+	while (selectedObject && ![selectedObject isKindOfClass:[AIListGroup class]]) {
 		selectedObject = [(AIListGroup *)selectedObject containingObject];
 	}
 
 	//If there was no selected group, just select the first item
-	if(selectedObject){
+	if (selectedObject) {
 		[popUp_targetGroup selectItemWithRepresentedObject:selectedObject];			
-	}else if([popUp_targetGroup numberOfItems] > 0){
+	} else if ([popUp_targetGroup numberOfItems] > 0) {
 		[popUp_targetGroup selectItemAtIndex:0];
 	}
 }
@@ -358,8 +358,8 @@
 	
 	//Select accounts by default
 	enumerator = [accounts objectEnumerator];
-	while((account = [enumerator nextObject])) {
-		if(![account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT]){
+	while ((account = [enumerator nextObject])) {
+		if (![account preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT]) {
 			[account setPreference:[NSNumber numberWithBool:YES]
 							forKey:KEY_ADD_CONTACT_TO 
 							 group:PREF_GROUP_ADD_CONTACT];			
@@ -384,15 +384,15 @@
 {
 	NSString	*identifier = [tableColumn identifier];
 	
-	if([identifier isEqualToString:@"check"]){
+	if ([identifier isEqualToString:@"check"]) {
 		return([[accounts objectAtIndex:row] contactListEditable] ?
 			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
 			   [NSNumber numberWithBool:NO]);
 	
-	}else if([identifier isEqualToString:@"account"]){
+	} else if ([identifier isEqualToString:@"account"]) {
 		return([[accounts objectAtIndex:row] formattedUID]);
 		
-	}else{
+	} else {
 		return(@"");
 
 	}
@@ -407,7 +407,7 @@
 {
 	NSString	*identifier = [tableColumn identifier];
 	
-	if([identifier isEqualToString:@"check"]){
+	if ([identifier isEqualToString:@"check"]) {
 		[cell setEnabled:[[accounts objectAtIndex:row] contactListEditable]];
 	}
 }
@@ -419,7 +419,7 @@
 {
 	NSString	*identifier = [tableColumn identifier];
 
-	if([identifier isEqualToString:@"check"]){
+	if ([identifier isEqualToString:@"check"]) {
 		[[accounts objectAtIndex:row] setPreference:[NSNumber numberWithBool:[object boolValue]] 
 											 forKey:KEY_ADD_CONTACT_TO 
 											  group:PREF_GROUP_ADD_CONTACT];

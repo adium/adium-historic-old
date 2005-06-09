@@ -101,12 +101,12 @@
 						theCount = [self length],
 						theFoundIndex = NSNotFound;
 
-	if( aRange.length + aRange.location > theCount )
+	if ( aRange.length + aRange.location > theCount )
 		[NSException raise:NSRangeException format:@"[%@ %@]: Range or index out of bounds", NSStringFromClass([self class]), NSStringFromSelector(_cmd)];
 
-	for( theIndex = aRange.location; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
+	for ( theIndex = aRange.location; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
 	{
-		if([self characterAtIndex:theIndex] == aCharacter)
+		if ([self characterAtIndex:theIndex] == aCharacter)
 			theFoundIndex = theIndex;
 	}
 
@@ -201,31 +201,31 @@
 
 	NSMutableString		* theComponet = [NSMutableString string];
 
-	while(  theTokenEnd < theLength )
+	while (  theTokenEnd < theLength )
 	{
-		if( aSingleQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aSingleQuote] )
+		if ( aSingleQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aSingleQuote] )
 		{
 			theTokenEnd += theSingleQuoteLen;
 
-			if( theTokenEnd < theLength )
+			if ( theTokenEnd < theLength )
 			{
 				[theComponet appendString:[self substringWithRange:NSMakeRange(theTokenEnd , 1)]];
 				theTokenEnd++;
 			}
 		}
-		else if( theInQuotes == NO && aOpeningQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aOpeningQuote] )
+		else if ( theInQuotes == NO && aOpeningQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aOpeningQuote] )
 		{
 			theTokenEnd += theOpeningQuoteLen;
 			theInQuotes = YES;
 		}
-		else if( theInQuotes == YES && aClosingQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aClosingQuote] )
+		else if ( theInQuotes == YES && aClosingQuote && [[self substringFromIndex:theTokenEnd] hasPrefix:aClosingQuote] )
 		{
 			theTokenEnd += theClosingQuoteLen;
 			theInQuotes = NO;
 		}
-		else if( theInQuotes == NO && [[self substringFromIndex:theTokenEnd] hasPrefix:aSeparator] )
+		else if ( theInQuotes == NO && [[self substringFromIndex:theTokenEnd] hasPrefix:aSeparator] )
 		{
-			if( aFlag || ![theComponet isEqualToString:@""] )
+			if ( aFlag || ![theComponet isEqualToString:@""] )
 			{
 				[theComponentArray addObject:theComponet];
 				theComponet = [NSMutableString string];
@@ -241,7 +241,7 @@
 		}
 	}
 	
-	if( ![theComponet isEqualToString:@""] )
+	if ( ![theComponet isEqualToString:@""] )
 	{
 		[theComponentArray addObject:theComponet];
 		theComponet = [NSMutableString string];

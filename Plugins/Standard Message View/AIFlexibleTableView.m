@@ -55,7 +55,7 @@
 
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[self _initFlexibleTableView];
 	}
@@ -140,7 +140,7 @@
 //Draw
 - (void)drawRect:(NSRect)rect
 {
-    if(!lockFocus){
+    if (!lockFocus) {
         NSEnumerator		*rowEnumerator;
         AIFlexibleTableRow	    *row;
         NSRect			documentVisibleRect;
@@ -153,16 +153,16 @@
         //Enumerate through each row
         //We draw from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
         rowEnumerator = [rowArray objectEnumerator];
-        while((row = [rowEnumerator nextObject])){
+        while ((row = [rowEnumerator nextObject])) {
             int	rowHeight = [row height];
             
             cellPoint.y -= rowHeight;
-            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || 
-			   (foundVisible && [row spansRows])){ //If visible
+            if (NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, rect.size.width, rowHeight), documentVisibleRect) || 
+			   (foundVisible && [row spansRows])) { //If visible
                 [row drawAtPoint:cellPoint visibleRect:documentVisibleRect inView:self];
-                if(!foundVisible) foundVisible = YES;
-            }else{
-                if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+                if (!foundVisible) foundVisible = YES;
+            } else {
+                if (foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
             }
         }
     }
@@ -187,14 +187,14 @@
     rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
     
     NSArray *rowContextArray = [clickedRow menuItemsForEvent:theEvent atPoint:rowClickLocation offset:rowOrigin];
-    if(rowContextArray && [rowContextArray count]){
+    if (rowContextArray && [rowContextArray count]) {
         [tableViewItemArray addObjectsFromArray:rowContextArray];
     }
     
     //[returnArray addObject:[NSMenuItem separatorItem]];
     
     //Copy
-    if([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
+    if ([clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
         [tableViewItemArray addObject:[[[NSMenuItem alloc] initWithTitle:COPY_MENU_ITEM
                                                                   target:self
                                                                   action:@selector(copy:)
@@ -202,7 +202,7 @@
     }
     
     //Pass this on to our delegate
-    if([delegate respondsToSelector:@selector(contextualMenuForFlexibleTableView:)]){
+    if ([delegate respondsToSelector:@selector(contextualMenuForFlexibleTableView:)]) {
         menu = ([(id<AIFlexibleTableViewDeleagte>)delegate contextualMenuForFlexibleTableView:self]);
     }
     
@@ -210,9 +210,9 @@
     if (tableViewItemArray && [tableViewItemArray count]) {
         //If the delegate didn't respond or responded nil, initialize a menu
         //Otherwise, prepend a separator
-        if(!menu){
+        if (!menu) {
             menu = [[[NSMenu alloc] init] autorelease];
-        }else{
+        } else {
             [menu insertItem:[NSMenuItem separatorItem] atIndex:0];
         }
         enumerator = [tableViewItemArray reverseObjectEnumerator];
@@ -240,30 +240,30 @@
     rowClickLocation = NSMakePoint(clickLocation.x - rowOrigin.x, clickLocation.y - rowOrigin.y); //Local to the row
 
     //Remember the number of clicks
-    if(![theEvent shiftKey]){
+    if (![theEvent shiftKey]) {
         clicks = [theEvent clickCount];
-        if(!(clicks % 3)){ //Triple click (Select line)
+        if (!(clicks % 3)) { //Triple click (Select line)
             selectClicks = 3;
-        }else if(!(clicks % 2)){ //Double Click (Select word)
+        } else if (!(clicks % 2)) { //Double Click (Select word)
             selectClicks = 2;
-        }else{
+        } else {
             selectClicks = 1;
         }
     }
 
     //Give the row a chance to handle the click
-    if(![clickedRow handleMouseDownEvent:theEvent atPoint:rowClickLocation offset:rowOrigin]){
+    if (![clickedRow handleMouseDownEvent:theEvent atPoint:rowClickLocation offset:rowOrigin]) {
         NSEvent	*newEvent = nil;
         BOOL	handled = NO;
 
         //Drag --------------------
-        if(selectClicks < 3 && [clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]){
+        if (selectClicks < 3 && [clickedRow pointIsSelected:rowClickLocation offset:rowOrigin]) {
             //Trigger a periodic event to start the drag after a short delay
             [NSEvent startPeriodicEventsAfterDelay:0.25 withPeriod:0];
 
             //Grab the next event
             newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask) untilDate:[NSDate distantFuture] inMode:NSEventTrackingRunLoopMode dequeue:NO];
-            switch([newEvent type]){
+            switch ([newEvent type]) {
                 case NSPeriodic: //If the user stays still, initiate the drag
                     [self _dragSelectedContentWithEvent:theEvent];
                     handled = YES;
@@ -276,7 +276,7 @@
         }
 
         //Select --------------------
-        if(!handled){
+        if (!handled) {
             //Update selected range
             [self _deselectAll];
             selection_startPoint = clickLocation;
@@ -287,7 +287,7 @@
             do{
                 newEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)];
     
-                switch([newEvent type]){
+                switch ([newEvent type]) {
                     case NSLeftMouseDraggedMask:
                     case NSPeriodic:
                         [self _dragMouseWithEvent:newEvent];
@@ -295,7 +295,7 @@
                     default: break;
                 }
                 
-            }while(newEvent == nil || [newEvent type] != NSLeftMouseUp);
+            }while (newEvent == nil || [newEvent type] != NSLeftMouseUp);
             [NSEvent stopPeriodicEvents];
         }
     }
@@ -309,7 +309,7 @@
 
     //Determine the clicked row
     rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
+    while ((row = [rowEnumerator nextObject])) {
         [row deselectContent];
     }    
 }
@@ -322,11 +322,11 @@
     NSPoint		location = [self convertPoint:[[self window] convertScreenToBase:[theEvent locationInWindow]] fromView:nil];
     NSRect		visibleRect = [scrollView documentVisibleRect];
 
-    if(!NSPointInRect(location, visibleRect)){
+    if (!NSPointInRect(location, visibleRect)) {
         NSPoint	scrollPoint = location;
 
         //down
-        if(scrollPoint.y >= visibleRect.origin.y + visibleRect.size.height){
+        if (scrollPoint.y >= visibleRect.origin.y + visibleRect.size.height) {
             scrollPoint.y -= visibleRect.size.height;
         }
 
@@ -390,7 +390,7 @@
     [self _deselectAll];
 
     //Flip, so we're working from top to bottom
-    if(endPoint.y < startPoint.y){
+    if (endPoint.y < startPoint.y) {
         NSPoint	temp = startPoint;
         startPoint = endPoint;
         endPoint = temp;
@@ -398,15 +398,15 @@
 
     //Determine the clicked row
     rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
+    while ((row = [rowEnumerator nextObject])) {
 
         rowPoint.y -= [row height];
 
-        if(rowPoint.y < endPoint.y && (rowPoint.y + [row height]) > startPoint.y){
+        if (rowPoint.y < endPoint.y && (rowPoint.y + [row height]) > startPoint.y) {
             BOOL end = NO, start = NO;
 
-            if(rowPoint.y + [row height] > endPoint.y) end = YES; //selection ends in this row
-            if(rowPoint.y  < startPoint.y) start = YES; //starts in this row
+            if (rowPoint.y + [row height] > endPoint.y) end = YES; //selection ends in this row
+            if (rowPoint.y  < startPoint.y) start = YES; //starts in this row
 
             [row selectContentFrom:(start ? NSMakePoint(startPoint.x - rowPoint.x, startPoint.y - rowPoint.y) : NSMakePoint(-1,-1))
                                 to:(end ? NSMakePoint(endPoint.x - rowPoint.x, endPoint.y - rowPoint.y) : NSMakePoint(1e7,1e7))
@@ -440,7 +440,7 @@
     //Remove existing observers
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSViewFrameDidChangeNotification object:nil];
 
-    if([self enclosingScrollView] != nil){
+    if ([self enclosingScrollView] != nil) {
         //Observe scroll view frame changes
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(scrollViewFrameChanged:) name:NSViewFrameDidChangeNotification object:[self enclosingScrollView]];
 
@@ -480,7 +480,7 @@
     [inRow setTableView:self];
     
     //Resize the row above (if necessary) to update any spanning
-    if([inRow isSpannedInto]){
+    if ([inRow isSpannedInto]) {
 		[self resizeRow:[rowArray objectAtIndex:(index+1)]];
     }
     
@@ -488,7 +488,7 @@
     [self resizeRow:inRow];
     if (!lockFocus) {  
         //Update our cursor tracking (We can skip this if our view is tall enough to scroll, since it will be called automatically then)
-        if([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height){
+        if ([self frame].size.height <= [[self enclosingScrollView] documentVisibleRect].size.height) {
             [self resetCursorRects];
         }
     }
@@ -519,11 +519,11 @@
     
     
     rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
+    while ((row = [rowEnumerator nextObject])) {
         if ([row tag] == tag) {
             [rowsToRemove addObject:row];
             foundTag = YES;
-        }else{
+        } else {
             if (foundTag) break; //Stop scanning once we hit a non-match (after having found an approriate row or rows)
         }
     }
@@ -531,7 +531,7 @@
     //removeObjectsFromArray is the intuitive choice, but our rows don't respond to hash and isEqual (nor do we want them to) so it isn't applicable
     if ([rowsToRemove count]) {
         rowEnumerator = [rowsToRemove objectEnumerator];
-        while ((row = [rowEnumerator nextObject])){
+        while ((row = [rowEnumerator nextObject])) {
             [rowArray removeObjectIdenticalTo:row];
         }
         
@@ -551,7 +551,7 @@
 //re-configure any cursor tracking rects they've set up.
 - (void)resetCursorRects
 {
-    if(!lockFocus){
+    if (!lockFocus) {
         //Reset cursor tracking for our visible rect
         [self _resetCursorRectsForVisibleRect:[[self enclosingScrollView] documentVisibleRect]];
     }
@@ -560,7 +560,7 @@
 //If we're being removed from the window, we need to remove our tracking rects
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-    if(newWindow == nil){
+    if (newWindow == nil) {
         //Remove cursor tracking (by passing an empty rect)
         [self _resetCursorRectsForVisibleRect:NSMakeRect(0,0,0,0)];
     }
@@ -578,34 +578,34 @@
 
     //Remove any existing cursor rects
     enumerator = [cursorTrackingRowArray objectEnumerator];
-    while((row = [enumerator nextObject])){
+    while ((row = [enumerator nextObject])) {
         //Pass an empty visible rect to remove any cursor rects
         [row resetCursorRectsAtOffset:NSMakePoint(0,0) visibleRect:NSMakeRect(0,0,0,0) inView:self];
     }
     [cursorTrackingRowArray release]; cursorTrackingRowArray = [[NSMutableArray alloc] init];
     
     //Install new cursor rects
-    if(visibleRect.size.width != 0 && visibleRect.size.height != 0){
+    if (visibleRect.size.width != 0 && visibleRect.size.height != 0) {
         //Get our visible rect (we don't want to process non-visible rows)
         documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
     
         //Enumerate through each row
         //We move from the bottom up, so we can avoid enumerating through rows that have scrolled out of view
         rowEnumerator = [rowArray objectEnumerator];
-        while((row = [rowEnumerator nextObject])){
+        while ((row = [rowEnumerator nextObject])) {
             int	rowHeight = [row height];
     
             cellPoint.y -= [row height];
     
-            if(NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, visibleRect.size.width, rowHeight), documentVisibleRect) || [row spansRows]){ //If visible
+            if (NSIntersectsRect(NSMakeRect(cellPoint.x, cellPoint.y, visibleRect.size.width, rowHeight), documentVisibleRect) || [row spansRows]) { //If visible
 
-                if([row resetCursorRectsAtOffset:cellPoint visibleRect:visibleRect inView:self]){
+                if ([row resetCursorRectsAtOffset:cellPoint visibleRect:visibleRect inView:self]) {
                     [cursorTrackingRowArray addObject:row];
                 }
 
-                if(!foundVisible && ![row spansRows]) foundVisible = YES;
-            }else{
-                if(foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
+                if (!foundVisible && ![row spansRows]) foundVisible = YES;
+            } else {
+                if (foundVisible) break; //Stop scanning once we hit a non-visible (after having drawn something)
             }
         }
     }
@@ -621,27 +621,27 @@
 {
 	id superview = [self superview];
 	
-	while (superview && !([superview isKindOfClass:[AIAutoScrollView class]])){
+	while (superview && !([superview isKindOfClass:[AIAutoScrollView class]])) {
 		superview = [superview superview];
 	}
 
-	if (superview){
+	if (superview) {
 		NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
 		
 		if ([charactersIgnoringModifiers length]) {
 			unichar inChar = [charactersIgnoringModifiers characterAtIndex:0];
 			
-			if(inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey ||
+			if (inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey ||
 			   inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey || 
-			   inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
+			   inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) {
 				[[self superview] keyDown:theEvent];
-			}else{
+			} else {
 				[self forwardSelector:@selector(keyDown:) withObject:theEvent];
 			}
-		}else{
+		} else {
 			[self forwardSelector:@selector(keyDown:) withObject:theEvent];	
 		}
-	}else{
+	} else {
 		[self forwardSelector:@selector(keyDown:) withObject:theEvent];
 	}
 }
@@ -658,20 +658,20 @@
 
 - (void)forwardSelector:(SEL)selector withObject:(id)object
 {
-    if(forwardsKeyEvents){
+    if (forwardsKeyEvents) {
         id	responder = [self nextResponder];
         
         //Make the next responder key (When walking the responder chain, we want to skip ScrollViews and ClipViews).
-        while(responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])){
+        while (responder && ([responder isKindOfClass:[NSClipView class]] || [responder isKindOfClass:[NSScrollView class]])) {
             responder = [responder nextResponder];
         }
         
-        if(responder){
+        if (responder) {
             [[self window] makeFirstResponder:responder]; //Make it first responder
             [responder tryToPerform:selector with:object]; //Pass it this key event
         }
         
-    }else{
+    } else {
         [super tryToPerform:selector with:object]; //Pass it this key event
     }
 }
@@ -688,9 +688,9 @@
 
     //Determine the clicked row
     rowEnumerator = [rowArray objectEnumerator];
-    while((row = [rowEnumerator nextObject])){
+    while ((row = [rowEnumerator nextObject])) {
         (*outOrigin).y -= [row height];
-        if(inPoint.y > (*outOrigin).y) return(row);
+        if (inPoint.y > (*outOrigin).y) return(row);
     }
 
     return(nil);
@@ -699,9 +699,9 @@
 //Returns a row by index
 - (AIFlexibleTableRow *)rowAtIndex:(int)index
 {
-    if(index >= 0 && index < [rowArray count]){
+    if (index >= 0 && index < [rowArray count]) {
         return([rowArray objectAtIndex:index]);
-    }else{
+    } else {
         return(nil);
     }
 }
@@ -712,7 +712,7 @@
 //If YES is passed, recalculates the size of all our rows as well.
 - (void)_resizeContents:(BOOL)resizeContents
 {
-    if(!lockFocus){
+    if (!lockFocus) {
         NSRect		    documentVisibleRect = [[self enclosingScrollView] documentVisibleRect];
         NSEnumerator	    *rowEnumerator;
         AIFlexibleTableRow  *row;
@@ -722,10 +722,10 @@
         size.width = documentVisibleRect.size.width;
         
         //Enumerate through each row, resizing it to the new width
-        if(resizeContents){
+        if (resizeContents) {
             contentsHeight = topPadding + bottomPadding;
             rowEnumerator = [rowArray objectEnumerator];
-            while((row = [rowEnumerator nextObject])){
+            while ((row = [rowEnumerator nextObject])) {
                 contentsHeight += [row sizeRowForWidth:size.width];
             }
         }
@@ -743,7 +743,7 @@
     contentsHeight += [inRow sizeRowForWidth:[self frame].size.width];
     
     //Resize our view
-    if(!lockFocus){        
+    if (!lockFocus) {        
         [self _resizeViewToWidth:[self frame].size.width height:contentsHeight];
     }
 }
@@ -757,19 +757,19 @@
     //Get our view's new dimensions
     size.width = width;
     size.height = height;
-    if(size.height < documentVisibleRect.size.height){
+    if (size.height < documentVisibleRect.size.height) {
         size.height = documentVisibleRect.size.height;
     }
 
     //Remember our content origin
-    if(contentBottomAligned && contentsHeight < documentVisibleRect.size.height){
+    if (contentBottomAligned && contentsHeight < documentVisibleRect.size.height) {
         contentOrigin = NSMakePoint(0, documentVisibleRect.size.height - bottomPadding);
-    }else{
+    } else {
         contentOrigin = NSMakePoint(0, contentsHeight - bottomPadding);
     }
 
     //Resize our view, and redisplay
-    if(!NSEqualSizes([self frame].size, size)){
+    if (!NSEqualSizes([self frame].size, size)) {
         [self setFrameSize:size];
     }
 
@@ -786,7 +786,7 @@
     do{
 	row = [rowArray objectAtIndex:rowIndex];
 	height += [row height];
-    }while(++rowIndex < [rowArray count] && ![row spansRows]);
+    }while (++rowIndex < [rowArray count] && ![row spansRows]);
     
     return(height);
 }
@@ -811,9 +811,9 @@
 
     //Enumerate through each row
     rowEnumerator = [rowArray reverseObjectEnumerator];
-    while((row = [rowEnumerator nextObject])){
-        if(segment = [row selectedString]){
-            if(!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
+    while ((row = [rowEnumerator nextObject])) {
+        if (segment = [row selectedString]) {
+            if (!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
             [selectedString appendAttributedString:segment];
         }
     }

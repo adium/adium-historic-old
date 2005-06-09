@@ -64,7 +64,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 		[button_edit setTitle:AILocalizedString(@"Edit",nil)];
 		[button_edit sizeToFit];
 		newFrame = [button_edit frame];
-		if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+		if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
 		newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 		[button_edit setFrame:newFrame];
 	}
@@ -138,7 +138,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(firstTime || (!object || object == listObject)){
+	if (firstTime || (!object || object == listObject)) {
 		//Update our list of alerts
 		[self reloadSummaryData];
 	}
@@ -152,10 +152,10 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	NSString	*defaultEventID;
 	id			item = [outlineView_summary itemAtRow:[outlineView_summary selectedRow]];
 
-	if([contactAlertsActions containsObjectIdenticalTo:item]){
+	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 		defaultEventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]];
 		
-	}else{
+	} else {
 		defaultEventID = [item objectForKey:KEY_EVENT_ID];
 	}
 	
@@ -173,7 +173,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (IBAction)editAlert:(id)sender
 {
 	int	selectedRow = [outlineView_summary selectedRow];
-	if(selectedRow >= 0 && selectedRow < [outlineView_summary numberOfRows]){
+	if (selectedRow >= 0 && selectedRow < [outlineView_summary numberOfRows]) {
 		NSDictionary	*alert = [outlineView_summary itemAtRow:selectedRow];
 		
 		[CSNewContactAlertWindowController editAlert:alert
@@ -191,16 +191,16 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 - (IBAction)deleteAlert:(id)sender
 {
 	unsigned int selectedRow = [outlineView_summary selectedRow];
-	if (selectedRow != -1){
+	if (selectedRow != -1) {
 		id	item = [outlineView_summary itemAtRow:selectedRow];
 		
-		if([contactAlertsActions containsObjectIdenticalTo:item]){
+		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 			/* Deleting an entire event */
 			
 			NSArray		*contactEvents = (NSArray *)item;
 			unsigned	contactEventsCount = [contactEvents count];
 			
-			if(contactEventsCount > 1){
+			if (contactEventsCount > 1) {
 				//Warn before deleting more than one event simultaneously
 				NSBeginAlertSheet(AILocalizedString(@"Delete Event?",nil),
 								  AILocalizedString(@"OK",nil),
@@ -212,18 +212,18 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 								  NULL, /* didDismissSelector */
 								  contactEvents,
 								  AILocalizedString(@"Remove the %i actions associated with this event?",nil), contactEventsCount);
-			}else{
+			} else {
 				//Delete a single event immediately
 				[self deleteContactActionsInArray:contactEvents];
 			}
 
-		}else{
+		} else {
 			/* Deleting a single action */
 			[item retain];
 			
 			[[adium contactAlertsController] removeAlert:item
 										  fromListObject:listObject];
-			if(delegate){
+			if (delegate) {
 				[delegate contactAlertsViewController:self
 										 deletedAlert:item];
 			}
@@ -233,7 +233,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 			//The deletion changed our selection
 			[self outlineViewSelectionDidChange:nil];
 		}
-	}else{
+	} else {
 		NSBeep();
 	}
 }
@@ -245,7 +245,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if(returnCode == NSAlertDefaultReturn){
+	if (returnCode == NSAlertDefaultReturn) {
 		[self deleteContactActionsInArray:(NSArray *)contextInfo];
 	}
 }
@@ -256,12 +256,12 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 	[oldAlert retain];
 	
 	//If this was an edit, remove the old alert first
-	if(oldAlert) [[adium contactAlertsController] removeAlert:oldAlert fromListObject:listObject];
+	if (oldAlert) [[adium contactAlertsController] removeAlert:oldAlert fromListObject:listObject];
 	
 	//Add the new alert
 	[[adium contactAlertsController] addAlert:newAlert toListObject:listObject setAsNewDefaults:YES];
 	
-	if(delegate){
+	if (delegate) {
 		[delegate contactAlertsViewController:self
 								 updatedAlert:newAlert
 									 oldAlert:oldAlert];
@@ -327,14 +327,14 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	int		row = [outlineView_summary selectedRow];
 	
-	if(row != -1){
+	if (row != -1) {
 		id item = [outlineView_summary itemAtRow:row];
 
-		if([contactAlertsActions containsObjectIdenticalTo:item]){
+		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 			selectedEventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]];
 			[[selectedEventID retain] autorelease];
 
-		}else{
+		} else {
 			selectedEventID = [[[item objectForKey:KEY_EVENT_ID] retain] autorelease];
 		}
 	}
@@ -348,7 +348,7 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[contactAlertsDict allKeys]] objectEnumerator];
 	
-	while((eventID = [enumerator nextObject])){
+	while ((eventID = [enumerator nextObject])) {
 		[contactAlertsEvents addObject:eventID];
 		[contactAlertsActions addObject:[[contactAlertsDict objectForKey:eventID] sortedArrayUsingFunction:actionSort
 																								   context:NULL]];
@@ -356,8 +356,8 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	//Now add events which have no actions at present
 	enumerator = [[[adium contactAlertsController] sortedArrayOfEventIDsFromArray:[[adium contactAlertsController] allEventIDs]] objectEnumerator];
-	while((eventID = [enumerator nextObject])){
-		if(![contactAlertsEvents containsObject:eventID]){
+	while ((eventID = [enumerator nextObject])) {
+		if (![contactAlertsEvents containsObject:eventID]) {
 			[contactAlertsEvents addObject:eventID];
 			
 			//XXX
@@ -367,9 +367,9 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	[outlineView_summary reloadData];
 	
-	if(selectedEventID){
+	if (selectedEventID) {
 		int actionsIndex = [contactAlertsEvents indexOfObject:selectedEventID];
-		if(actionsIndex != NSNotFound){
+		if (actionsIndex != NSNotFound) {
 			int rowToSelect;
 			
 			rowToSelect = [outlineView_summary rowForItem:[contactAlertsActions objectAtIndex:actionsIndex]];
@@ -389,18 +389,18 @@ int actionSort(id objectA, id objectB, void *context)
 {
 	int		row = [outlineView_summary selectedRow];
 	
-	if(row != -1){
+	if (row != -1) {
 		id item = [outlineView_summary itemAtRow:row];
 		
-		if([contactAlertsActions containsObjectIdenticalTo:item]){
-			if([item count] == 0){
+		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
+			if ([item count] == 0) {
 				[self addAlert:nil];
-			}else if([outlineView_summary isItemExpanded:item]){
+			} else if ([outlineView_summary isItemExpanded:item]) {
 				[outlineView_summary collapseItem:item];
-			}else{
+			} else {
 				[outlineView_summary expandItem:item];
 			}
-		}else{
+		} else {
 			[self editAlert:nil];
 		}
 	}
@@ -408,10 +408,10 @@ int actionSort(id objectA, id objectB, void *context)
 
 - (id)outlineView:(NSOutlineView *)inOutlineView child:(int)index ofItem:(id)item
 {
-	if(item == nil) item = contactAlertsActions;
+	if (item == nil) item = contactAlertsActions;
 	
 	//Return an event array from whithin contactAlertsActions
-	if(index < [item count]) {
+	if (index < [item count]) {
 		return([item objectAtIndex:index]);
 	} else {
 		return nil;
@@ -420,12 +420,12 @@ int actionSort(id objectA, id objectB, void *context)
 
 - (int)outlineView:(NSOutlineView *)inOutlineView numberOfChildrenOfItem:(id)item
 {
-	if(item == nil){
+	if (item == nil) {
 		return([contactAlertsActions count]);
-	}else{
-		if([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]){
+	} else {
+		if ([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]) {
 			return([item count]);
-		}else{
+		} else {
 			return(0);
 		}
 	}
@@ -438,9 +438,9 @@ int actionSort(id objectA, id objectB, void *context)
  */
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView isItemExpandable:(id)item
 {
-	if([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]){
+	if ([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]) {
 		return([item count] > 0);
-	}else{
+	} else {
 		return NO;
 	}
 }
@@ -481,25 +481,25 @@ int actionSort(id objectA, id objectB, void *context)
 {
 	NSString	*identifier = [tableColumn identifier];
 
-	if([contactAlertsActions containsObjectIdenticalTo:item]){
+	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 		/* item is an array of contact events */
 		NSArray	*contactEvents = (NSArray *)item;
 		
-		if([identifier isEqualToString:@"event"]){
+		if ([identifier isEqualToString:@"event"]) {
 			NSString	*eventID;
 			
 			eventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:contactEvents]];
 
 			return([[adium contactAlertsController] globalShortDescriptionForEventID:eventID]);
 			
-		}else if([identifier isEqualToString:@"action"]){
+		} else if ([identifier isEqualToString:@"action"]) {
 			NSMutableString	*actionDescription = [NSMutableString string];
 			NSDictionary	*eventDict;
 			BOOL			appended = NO;
 			unsigned		i, count;
 			
 			count = [contactEvents count];
-			for(i = 0; i < count; i++){
+			for (i = 0; i < count; i++) {
 				NSString				*actionID;
 				id <AIActionHandler>	actionHandler;
 				
@@ -507,28 +507,28 @@ int actionSort(id objectA, id objectB, void *context)
 				actionID = [eventDict objectForKey:KEY_ACTION_ID];
 				actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 				
-				if(actionHandler){
+				if (actionHandler) {
 					NSString	*thisDescription;
 					
 					thisDescription = [actionHandler longDescriptionForActionID:actionID
 																	withDetails:[eventDict objectForKey:KEY_ACTION_DETAILS]];
-					if(thisDescription && [thisDescription length]){
-						if(appended){
+					if (thisDescription && [thisDescription length]) {
+						if (appended) {
 							/* We are on the second or later action. */
 							NSString	*conjunctionIfNeeded;
 							NSString	*commaAndSpaceIfNeeded;
 							
 							//If we have more than 2 actions, we'll be combining them with commas
-							if(count > 2){
+							if (count > 2) {
 								commaAndSpaceIfNeeded = @",";
-							}else{
+							} else {
 								commaAndSpaceIfNeeded = @"";
 							}
 							
 							//If we are on the last action, we'll want to add a conjunction to finish the compound sentence
-							if(i == (count - 1)){
+							if (i == (count - 1)) {
 								conjunctionIfNeeded = AILocalizedString(@" and","conjunction to end a compound sentence");
-							}else{
+							} else {
 								conjunctionIfNeeded = @"";
 							}
 							
@@ -539,7 +539,7 @@ int actionSort(id objectA, id objectB, void *context)
 								[[thisDescription substringToIndex:1] lowercaseString],
 								[thisDescription substringFromIndex:1]]];
 							
-						}else{
+						} else {
 							/* We are on the first action.
 							*
 							* This is easy; just append the description.
@@ -553,26 +553,26 @@ int actionSort(id objectA, id objectB, void *context)
 			
 			return actionDescription;
 			
-		}else if ([identifier isEqualToString:@"image"]){
+		} else if ([identifier isEqualToString:@"image"]) {
 			NSString	*eventID;
 			
 			eventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:contactEvents]];
 			
 			return([[adium contactAlertsController] imageForEventID:eventID]);
 		}
-	}else{
+	} else {
 		/* item is an individual event */
-		if([identifier isEqualToString:@"event"]){
+		if ([identifier isEqualToString:@"event"]) {
 			NSDictionary			*alert = (NSDictionary *)item;
 			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
 			id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 
 			return([actionHandler longDescriptionForActionID:actionID
 												 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]);
-		}else if([identifier isEqualToString:@"action"]){
+		} else if ([identifier isEqualToString:@"action"]) {
 			return @"";
 			
-		}else if ([identifier isEqualToString:@"image"]){
+		} else if ([identifier isEqualToString:@"image"]) {
 			return nil;
 		}
 	}
@@ -586,7 +586,7 @@ int actionSort(id objectA, id objectB, void *context)
 	int		necessaryHeight = 0;
 	BOOL	enforceMinimumHeight;
 	
-	if([contactAlertsActions containsObjectIdenticalTo:item]){
+	if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 		/* Only need variable height for events, not for individual actions */
 		NSEnumerator	*enumerator;
 		NSTableColumn	*tableColumn;
@@ -597,10 +597,10 @@ int actionSort(id objectA, id objectB, void *context)
 		enforceMinimumHeight = ([(NSArray *)item count] > 0);
 
 		enumerator = [[inOutlineView tableColumns] objectEnumerator];
-		while((tableColumn = [enumerator nextObject])){
+		while ((tableColumn = [enumerator nextObject])) {
 			NSString	*identifier = [tableColumn identifier];
 			
-			if([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)){
+			if ([identifier isEqualToString:@"event"] || ([identifier isEqualToString:@"action"] && !eventIsExtended)) {
 				/* For the event column, and for the action column if appropriate, determine what height is needed */
 				NSString		*objectValue = [self outlineView:inOutlineView 
 									   objectValueForTableColumn:tableColumn
@@ -609,7 +609,7 @@ int actionSort(id objectA, id objectB, void *context)
 				NSFont			*font = [[tableColumn dataCell] font];
 				NSDictionary	*attributes = nil;
 				
-				if(font){
+				if (font) {
 					attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 						font, NSFontAttributeName, nil];
 				}
@@ -617,27 +617,27 @@ int actionSort(id objectA, id objectB, void *context)
 				NSAttributedString	*attributedTitle = [[NSAttributedString alloc] initWithString:objectValue
 																					   attributes:attributes];
 
-				if([identifier isEqualToString:@"event"] && eventIsExtended){
+				if ([identifier isEqualToString:@"event"] && eventIsExtended) {
 					/* If this is the event column and it is extended, the available width will be from its origin
 					 * to the right edge of the frame. */
 					NSRect	frame = [inOutlineView frame];
 					NSRect	columnRect = [inOutlineView rectOfColumn:EVENT_COLUMN_INDEX];
 					
 					tableColumnWidth = frame.size.width - columnRect.origin.x;
-				}else{
+				} else {
 					/* Otherwise, it's the width as normal. */
 					tableColumnWidth = [tableColumn width];
 				}
 
 				thisHeight = [attributedTitle heightWithWidth:tableColumnWidth];
-				if(thisHeight > necessaryHeight) necessaryHeight = thisHeight;
+				if (thisHeight > necessaryHeight) necessaryHeight = thisHeight;
 				[attributedTitle release];
 			}
 		}
 		
 		necessaryHeight += VERTICAL_ROW_PADDING;
 		
-	}else{
+	} else {
 		 enforceMinimumHeight = YES;
 	}
 
@@ -649,16 +649,16 @@ int actionSort(id objectA, id objectB, void *context)
 
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView extendToEdgeColumn:(int)column ofRow:(int)row
 {
-	if(column == 1){
-		if([outlineView_summary levelForRow:row] > 0){
+	if (column == 1) {
+		if ([outlineView_summary levelForRow:row] > 0) {
 			//This is an action underneath an event; extend the column
 			return YES;
-		}else{
+		} else {
 			id item = [outlineView_summary itemAtRow:row];
 			return (([item count] == 0) ||  //This is an event with no actions
 					([outlineView_summary isItemExpanded:item])); //Or it has actions and is expanded
 		}
-	}else{
+	} else {
 		return NO;
 	}
 }
@@ -666,21 +666,21 @@ int actionSort(id objectA, id objectB, void *context)
 - (void)outlineView:(NSOutlineView *)inOutlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	//Only needed for the single-action event column
-	if ([[tableColumn identifier] isEqualToString:@"event"]){
+	if ([[tableColumn identifier] isEqualToString:@"event"]) {
 		NSImage	*image = nil;
 		NSFont	*font;
 		
-		if([contactAlertsActions containsObjectIdenticalTo:item]){
+		if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 			/* item is an array of contact events */
 			NSArray	*contactEvents = (NSArray *)item;
 
-			if([contactEvents count]){
+			if ([contactEvents count]) {
 				font = [NSFont boldSystemFontOfSize:12];
-			}else{
+			} else {
 				font = [NSFont boldSystemFontOfSize:11];				
 			}
 			
-		}else{
+		} else {
 			NSDictionary			*alert = (NSDictionary *)item;
 			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
 			id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
@@ -703,19 +703,19 @@ int actionSort(id objectA, id objectB, void *context)
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {
 	NSOutlineView	*outlineView = [notification object];
-	if(!outlineView || (outlineView == outlineView_summary)){
+	if (!outlineView || (outlineView == outlineView_summary)) {
 		//Enable/disable our configure button
 		int row = [outlineView_summary selectedRow];
 		
-		if(row != -1){
+		if (row != -1) {
 			[button_add	setEnabled:YES];
 			
 			id item = [outlineView_summary itemAtRow:row];
-			if([contactAlertsActions containsObjectIdenticalTo:item]){
+			if ([contactAlertsActions containsObjectIdenticalTo:item]) {
 				[button_edit setEnabled:NO];
 				[button_delete setEnabled:([(NSArray *)item count] > 0)];
 				
-			}else{
+			} else {
 				[button_edit setEnabled:YES];
 				[button_delete setEnabled:YES];
 				
@@ -728,11 +728,11 @@ int actionSort(id objectA, id objectB, void *context)
 				
 				actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 				
-				if(actionHandler && [actionHandler respondsToSelector:@selector(performPreviewForAlert:)]){
+				if (actionHandler && [actionHandler respondsToSelector:@selector(performPreviewForAlert:)]) {
 					[(id)actionHandler performPreviewForAlert:eventDict];
 				}				
 			}
-		}else{
+		} else {
 			[button_add setEnabled:NO];
 			[button_delete setEnabled:NO];
 			[button_edit setEnabled:NO];
@@ -748,12 +748,12 @@ int actionSort(id objectA, id objectB, void *context)
 
 	[[adium preferenceController] delayPreferenceChangedNotifications:YES];
 	enumerator = [contactEventArray objectEnumerator];
-	while((eventDict = [enumerator nextObject])){
+	while ((eventDict = [enumerator nextObject])) {
 		[[adium contactAlertsController] removeAlert:eventDict fromListObject:listObject];
 	}
 	[[adium preferenceController] delayPreferenceChangedNotifications:NO];
 
-	if(delegate){
+	if (delegate) {
 		[delegate contactAlertsViewController:self
 								 deletedAlert:nil];
 	}

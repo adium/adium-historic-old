@@ -128,7 +128,7 @@ static int numExecuted = 0;
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == 0){
+	if ([[notification object] caseInsensitiveCompare:@"AdiumScripts"] == 0) {
 		[self buildScriptMenu];
 				
 		[self registerToolbarItem];
@@ -158,8 +158,8 @@ static int numExecuted = 0;
 	
 	// Load scripts
 	enumerator = [[adium allResourcesForName:@"Scripts" withExtensions:SCRIPT_BUNDLE_EXTENSION] objectEnumerator];
-	while((filePath = [enumerator nextObject])){
-		if((scriptBundle = [NSBundle bundleWithPath:filePath])){
+	while ((filePath = [enumerator nextObject])) {
+		if ((scriptBundle = [NSBundle bundleWithPath:filePath])) {
 			
 			NSString		*scriptsSetName;
 			NSEnumerator	*scriptEnumerator;
@@ -171,7 +171,7 @@ static int numExecuted = 0;
 			//Now enumerate each script the bundle claims as its own
 			scriptEnumerator = [[scriptBundle objectForInfoDictionaryKey:@"Scripts"] objectEnumerator];
 			
-			while ((scriptDict = [scriptEnumerator nextObject])){
+			while ((scriptDict = [scriptEnumerator nextObject])) {
 				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
 				NSArray			*arguments;
 				NSURL			*scriptURL;
@@ -180,13 +180,13 @@ static int numExecuted = 0;
 				
 				if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
 					(scriptFilePath = [scriptBundle pathForResource:scriptFileName
-															 ofType:SCRIPT_EXTENSION])){
+															 ofType:SCRIPT_EXTENSION])) {
 					
 					scriptURL = [NSURL fileURLWithPath:scriptFilePath];
 					keyword = [scriptDict objectForKey:@"Keyword"];
 					title = [scriptDict objectForKey:@"Title"];
 					
-					if(scriptURL && keyword && [keyword length] && title && [title length]){
+					if (scriptURL && keyword && [keyword length] && title && [title length]) {
 						NSMutableDictionary	*infoDict;
 						
 						arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
@@ -203,11 +203,11 @@ static int numExecuted = 0;
 							prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
 						
 						//The bundle may not be part of (or for defining) a set of scripts
-						if (scriptsSetName){
+						if (scriptsSetName) {
 							[infoDict setObject:scriptsSetName forKey:@"Set"];
 						}
 						//Arguments may be nil
-						if (arguments){
+						if (arguments) {
 							[infoDict setObject:arguments forKey:@"Arguments"];
 						}
 						
@@ -250,27 +250,27 @@ static int numExecuted = 0;
 /*!
  * @brief Sort first by set, then by title within sets
  */
-int _scriptTitleSort(id scriptA, id scriptB, void *context){
+int _scriptTitleSort(id scriptA, id scriptB, void *context) {
 	NSComparisonResult result;
 	
 	NSString	*setA = [scriptA objectForKey:@"Set"];
 	NSString	*setB = [scriptB objectForKey:@"Set"];
 	
-	if (setA && setB){
+	if (setA && setB) {
 		
 		//If both are within sets, sort by set; if they are within the same set, sort by title
-		if ((result = [setA caseInsensitiveCompare:setB]) == NSOrderedSame){
+		if ((result = [setA caseInsensitiveCompare:setB]) == NSOrderedSame) {
 			result = [(NSString *)[scriptA objectForKey:@"Title"] caseInsensitiveCompare:[scriptB objectForKey:@"Title"]];
 		}
-	}else{
+	} else {
 		//Sort by title if neither is in a set; otherwise sort the one in a set to the top
 		
-		if (!setA && !setB){
+		if (!setA && !setB) {
 			result = [(NSString *)[scriptA objectForKey:@"Title"] caseInsensitiveCompare:[scriptB objectForKey:@"Title"]];
 		
-		}else if (!setA){
+		} else if (!setA) {
 			result = NSOrderedDescending;
-		}else{
+		} else {
 			result = NSOrderedAscending;
 		}
 	}
@@ -287,11 +287,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	unsigned int lengthA = [(NSString *)[scriptA objectForKey:@"Keyword"] length];
 	unsigned int lengthB = [(NSString *)[scriptB objectForKey:@"Keyword"] length];
-	if (lengthA > lengthB){
+	if (lengthA > lengthB) {
 		result = NSOrderedAscending;
-	}else if (lengthA < lengthB){
+	} else if (lengthA < lengthB) {
 		result = NSOrderedDescending;
-	}else{
+	} else {
 		result = NSOrderedSame;
 	}
 	
@@ -313,33 +313,33 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	int				indentationLevel;
 	
 	enumerator = [scripts objectEnumerator];
-	while((appendDict = [enumerator nextObject])){
+	while ((appendDict = [enumerator nextObject])) {
 		NSString	*title;
 		NSMenuItem	*item;
 		
-		if ((set = [appendDict objectForKey:@"Set"])){
+		if ((set = [appendDict objectForKey:@"Set"])) {
 			indentationLevel = 1;
 			
-			if (![set isEqualToString:lastSet]){
+			if (![set isEqualToString:lastSet]) {
 				//We have a new set of scripts; create a section header for them
 				item = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:set
 																			 target:nil
 																			 action:nil
 																	  keyEquivalent:@""] autorelease];
-				if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:0];
+				if ([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:0];
 				[menu addItem:item];
 				
 				[lastSet release]; lastSet = [set retain];
 			}
-		}else{
+		} else {
 			//Scripts not in sets need not be indented
 			indentationLevel = 0;
 			[lastSet release]; lastSet = nil;
 		}
 	
-		if([appendDict objectForKey:@"Title"]){
+		if ([appendDict objectForKey:@"Title"]) {
 			title = [NSString stringWithFormat:@"%@ (%@)", [appendDict objectForKey:@"Title"], [appendDict objectForKey:@"Keyword"]];
-		}else{
+		} else {
 			title = [appendDict objectForKey:@"Keyword"];
 		}
 		
@@ -349,7 +349,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 															  keyEquivalent:@""] autorelease];
 		
 		[item setRepresentedObject:appendDict];
-		if([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:indentationLevel];
+		if ([item respondsToSelector:@selector(setIndentationLevel:)]) [item setIndentationLevel:indentationLevel];
 		[menu addItem:item];
 	}
 }
@@ -364,14 +364,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 	
 	//Append our string into the responder if possible
-	if(responder && [responder isKindOfClass:[NSTextView class]]){
+	if (responder && [responder isKindOfClass:[NSTextView class]]) {
 		NSArray		*arguments = [[sender representedObject] objectForKey:@"Arguments"];
 		NSString	*replacementText = [[sender representedObject] objectForKey:@"Keyword"];
 		
 		[(NSTextView *)responder insertText:replacementText];
 		
 		//Append arg list to replacement string, to show the user what they can pass
-		if(arguments){
+		if (arguments) {
 			NSEnumerator		*argumentEnumerator = [arguments objectEnumerator];
 			NSDictionary		*originalTypingAttributes = [(NSTextView *)responder typingAttributes];
 			NSMutableDictionary *italicizedTypingAttributes = [originalTypingAttributes mutableCopy];
@@ -385,11 +385,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			[(NSTextView *)responder insertText:@"{"];
 			
 			//Will that be a five minute argument or the full half hour?
-			while ((anArgument = [argumentEnumerator nextObject])){
+			while ((anArgument = [argumentEnumerator nextObject])) {
 				//Insert a comma after each argument past the first
-				if (insertedFirst){
+				if (insertedFirst) {
 					[(NSTextView *)responder insertText:@","];					
-				}else{
+				} else {
 					insertedFirst = YES;
 				}
 				
@@ -418,13 +418,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)){
+	if ((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)) {
 		return(YES); //Always keep the submenu enabled so users can see the available scripts
-	}else{
+	} else {
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		if(responder && [responder isKindOfClass:[NSText class]]){
+		if (responder && [responder isKindOfClass:[NSText class]]) {
 			return [(NSText *)responder isEditable];
-		}else{
+		} else {
 			return NO;
 		}
 	}
@@ -443,29 +443,29 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
     NSMutableAttributedString   *filteredMessage = nil;
 	NSString					*stringMessage;
 
-	if((stringMessage = [inAttributedString string])){
+	if ((stringMessage = [inAttributedString string])) {
 		NSEnumerator				*enumerator;
 		NSMutableDictionary			*infoDict;
 		
 		//Replace all keywords
 		enumerator = [flatScriptArray objectEnumerator];
-		while((infoDict = [enumerator nextObject])){
+		while ((infoDict = [enumerator nextObject])) {
 			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
 
-			if((prefixOnly && ([stringMessage rangeOfString:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)].location == 0)) ||
-			   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)){
+			if ((prefixOnly && ([stringMessage rangeOfString:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)].location == 0)) ||
+			   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)) {
 
 				NSNumber	*shouldSendNumber;
 				
-				if(!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
+				if (!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
 				[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
 				stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
 				
 				shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
 				if ((shouldSendNumber) &&
 					(![shouldSendNumber boolValue]) &&
-					([context isKindOfClass:[AIContentObject class]])){
+					([context isKindOfClass:[AIContentObject class]])) {
 					[(AIContentObject *)context setSendContent:NO];
 				}
 			}
@@ -497,13 +497,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	if (inString) {
 		scanner = [NSScanner scannerWithString:inString];
 		//Scan for the keyword
-		while(![scanner isAtEnd]){
+		while (![scanner isAtEnd]) {
 			[scanner scanUpToString:keyword intoString:nil];
 
-			if(([scanner scanString:keyword intoString:nil]) &&
+			if (([scanner scanString:keyword intoString:nil]) &&
 			   ([attributedString attribute:NSLinkAttributeName
 									atIndex:([scanner scanLocation]-1) /* The scanner ends up one past the keyword */
-							 effectiveRange:nil] == nil)){
+							 effectiveRange:nil] == nil)) {
 				//Scan the keyword and ensure it was not found within a link
 				int 		keywordStart, keywordEnd;
 				NSArray 	*argArray = nil;
@@ -511,33 +511,33 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 				
 				//Scan arguments
 				keywordStart = [scanner scanLocation] - [keyword length];
-				if([scanner scanString:@"{" intoString:nil]){
-					if([scanner scanUpToString:@"}" intoString:&argString]){
+				if ([scanner scanString:@"{" intoString:nil]) {
+					if ([scanner scanUpToString:@"}" intoString:&argString]) {
 						argArray = [self _argumentsFromString:argString forScript:infoDict];
 						[scanner scanString:@"}" intoString:nil];
 					}
 				}
 				keywordEnd = [scanner scanLocation];		
 
-				if(keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\'){
+				if (keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\') {
 					//Ignore the script (It was escaped) and delete the escape character
 					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
 					offset -= 1;
 					
-				}else{
+				} else {
 					//Run the script.  Cache the result to speed up multiple instances of a single keyword
 					NSString	*scriptResult = nil;
 					unsigned	scriptResultLength;
 
-					if([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
-					if(!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
-					if([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
+					if ([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
+					if (!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
+					if ([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
 					
 					//If the script fails, eat the keyword
-					if(!scriptResult) scriptResult = @"";
+					if (!scriptResult) scriptResult = @"";
 					
 					//Replace the substring with script result
-					if (([scriptResult hasPrefix:@"<HTML>"])){
+					if (([scriptResult hasPrefix:@"<HTML>"])) {
 						//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
 						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
 																		 withDefaultAttributes:[attributedString attributesAtIndex:(keywordStart + offset)
@@ -546,7 +546,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 														withAttributedString:attributedScriptResult];
 						scriptResultLength = [attributedScriptResult length];
 						
-					}else{
+					} else {
 						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
 														withString:scriptResult];
 						
@@ -581,21 +581,21 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	//Add each argument of inString to argArray so long as the number of arguments is less
 	//than the number of expected arguments for the script and the number of supplied arguments
-	while((i < count) && (i < inStringComponentsCount)){
+	while ((i < count) && (i < inStringComponentsCount)) {
 		[argArray addObject:[inStringComponents objectAtIndex:i]];
 		i++;
 	}
 	
 	//If more components were passed than were actually requested, the last argument gets the
 	//remainder
-	if (i < inStringComponentsCount){
+	if (i < inStringComponentsCount) {
 		NSRange	remainingRange;
 		
 		//i was incremented to end the while loop if i > 0, so subtract 1 to reexamine the last object
 		remainingRange.location = ((i > 0) ? i-1 : 0);
 		remainingRange.length = (inStringComponentsCount - remainingRange.location);
 
-		if (remainingRange.location >= 0){
+		if (remainingRange.location >= 0) {
 			NSString	*lastArgument;
 
 			//Remove that last, incomplete argument if it was added
@@ -624,10 +624,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	scriptContext = [infoDict objectForKey:@"NDScriptContext"];
 	
 	//If none is found, load and cache
-	if (!scriptContext){
+	if (!scriptContext) {
 		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe. Each script
 		//does not need one; we can reuse the same one for every script called from this thread.
-		if (!componentInstance){
+		if (!componentInstance) {
 			componentInstance = [[NDComponentInstance componentInstance] retain];
 
 			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
@@ -648,7 +648,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		scriptContext = [NDScriptContext scriptDataWithContentsOfURL:[infoDict objectForKey:@"Path"]
 												   componentInstance:componentInstance];
 
-		if(scriptContext){
+		if (scriptContext) {
 			[infoDict setObject:scriptContext
 						 forKey:@"NDScriptContext"];
 		}
@@ -665,7 +665,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	resultDescriptor = [scriptContext resultAppleEventDescriptor];
 	
-	if (resultDescriptor){
+	if (resultDescriptor) {
 		result = [resultDescriptor stringValue];
 	}
 
@@ -729,7 +729,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	MVMenuButton *button;
 	
 	//Unregister the existing toolbar item first
-	if(toolbarItem){
+	if (toolbarItem) {
 		[[adium toolbarController] unregisterToolbarItem:toolbarItem forToolbarType:@"TextEntry"];
 		[toolbarItem release]; toolbarItem = nil;
 	}
@@ -759,7 +759,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
-	if(!notification || ([[item itemIdentifier] isEqualToString:SCRIPT_IDENTIFIER])){
+	if (!notification || ([[item itemIdentifier] isEqualToString:SCRIPT_IDENTIFIER])) {
 		NSMenu		*menu = [[[scriptMenuItem submenu] copy] autorelease];
 		
 		//Add menu to view

@@ -33,7 +33,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initAlternatingRowTableView];
 	}
 	return self;
@@ -41,7 +41,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initAlternatingRowTableView];
 	}
 	return(self);
@@ -71,7 +71,7 @@
 
 - (void)setAlternatingRowColor:(NSColor *)color
 {
-    if(color != alternatingRowColor){
+    if (color != alternatingRowColor) {
         [alternatingRowColor release];
         alternatingRowColor = [color retain];
         [self setNeedsDisplay:YES];
@@ -85,14 +85,14 @@
     unichar		pressedChar = 0;
 
     //Get the pressed character
-    if([charString length] == 1) pressedChar = [charString characterAtIndex:0];
+    if ([charString length] == 1) pressedChar = [charString characterAtIndex:0];
 
     //Check if 'delete' was pressed
-    if(pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter){ //Delete
-        if([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]){
+    if (pressedChar == NSDeleteFunctionKey || pressedChar == NSBackspaceCharacter || pressedChar == NSDeleteCharacter) { //Delete
+        if ([[self dataSource] respondsToSelector:@selector(tableViewDeleteSelectedRows:)]) {
 			[[self dataSource] tableViewDeleteSelectedRows:self]; //Delete the selection
 		}
-    }else{
+    } else {
         [super keyDown:theEvent]; //Pass the key event on
     }
 }
@@ -134,17 +134,17 @@
     numberOfRows = [self numberOfRows];
     numberOfColumns = [self numberOfColumns];
     rowHeight = [self rowHeight] + [self intercellSpacing].height;
-    if(numberOfRows == 0){
+    if (numberOfRows == 0) {
         rowRect = NSMakeRect(0,0,rect.size.width,rowHeight);
         coloredRow = YES;        
-    }else{
+    } else {
         rowRect = [self rectOfRow:numberOfRows-1];
         rowRect.origin.y += rowHeight;
         coloredRow = !(numberOfRows % 2);        
     }
 
     //Draw the grid
-    while(rowRect.origin.y < rect.origin.y + rect.size.height){
+    while (rowRect.origin.y < rect.origin.y + rect.size.height) {
         [self _drawRowInRect:rowRect colored:coloredRow selected:NO];
 
         //Move to the next row
@@ -164,8 +164,8 @@
 //Draw a row
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
-    if(drawsAlternatingRows){ //Draw alternating rows in the outline view
-        if(colored && !selected){            
+    if (drawsAlternatingRows) { //Draw alternating rows in the outline view
+        if (colored && !selected) {            
 			[alternatingRowColor set];
             [NSBezierPath fillRect:rect/*segmentRect*/];
         }

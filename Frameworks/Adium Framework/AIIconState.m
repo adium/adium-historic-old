@@ -26,7 +26,7 @@
 - (id)initWithImages:(NSArray *)inImages delay:(float)inDelay looping:(BOOL)inLooping overlay:(BOOL)inOverlay
 {
     //init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[self _init];
 
@@ -45,7 +45,7 @@
 - (id)initWithImage:(NSImage *)inImage overlay:(BOOL)inOverlay
 {
     //init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[self _init];
 
@@ -68,33 +68,33 @@
 	AIIconState		*iconState;
 	
     //init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[self _init];
 		
 
 		enumerator = [inIconStates reverseObjectEnumerator];
-		while((iconState = [enumerator nextObject]) && !baseIconState && !animatingState){
+		while ((iconState = [enumerator nextObject]) && !baseIconState && !animatingState) {
 			//Find the base image (The image of the top-most non-overlay state)
 			if (!baseIconState && ![iconState overlay]) baseIconState = iconState;
 			
-			if (!animatingState && [iconState animated]){
-				if (![iconState overlay]){
+			if (!animatingState && [iconState animated]) {
+				if (![iconState overlay]) {
 					animatingState = iconState;
-				}else{
+				} else {
 					overlayAnimatingState = iconState;
 				}
 			}
 		}
 
 		//Abort if no base state image is found
-		if(!baseIconState) return(self);
+		if (!baseIconState) return(self);
 
 		//We prefer to have an animated state that isn't an overly, but if we didn't find one we'll take the overlay
 		//animating state if that was found
 		if (!animatingState) animatingState = overlayAnimatingState;
 		
-		if(!animatingState){ //Static icon
+		if (!animatingState) { //Static icon
 			//init
 			delay = 0;
 			animated = NO;
@@ -103,7 +103,7 @@
 							 animatingState:animatingState 
 								   forFrame:0] retain];
 
-		}else{ //Animating icon
+		} else { //Animating icon
 			//init
 			animated = YES;
 			delay = [animatingState animationDelay];
@@ -163,19 +163,19 @@
 
 - (void)nextFrame
 {
-    if(animated){
+    if (animated) {
 		unsigned imageArrayCount = [imageArray count];
 
         //Next frame
-        if(++currentFrame >= numberOfFrames){
+        if (++currentFrame >= numberOfFrames) {
             currentFrame = 0;
         }
 
         //Get the new image (compositing if necessary)
-        if((currentFrame >= imageArrayCount) &&
+        if ((currentFrame >= imageArrayCount) &&
 		   iconRendering_states &&
 		   iconRendering_baseState &&
-		   iconRendering_animationState){
+		   iconRendering_animationState) {
             [imageArray addObject:[self _compositeStates:iconRendering_states 
 										   withBaseState:iconRendering_baseState 
 										  animatingState:iconRendering_animationState
@@ -183,14 +183,14 @@
 			imageArrayCount++;
 
             //After rendering the last frame, we can release our icon rendering information (it's no longer needed)
-            if(currentFrame >= (numberOfFrames - 1)){
+            if (currentFrame >= (numberOfFrames - 1)) {
                 [iconRendering_states release]; iconRendering_states = nil;
                 [iconRendering_baseState release]; iconRendering_baseState = nil;
                 [iconRendering_animationState release]; iconRendering_animationState = nil;
             }
         }
 
-		if(currentFrame < imageArrayCount){
+		if (currentFrame < imageArrayCount) {
 			[image release];
 			image = [[imageArray objectAtIndex:currentFrame] retain];
 		}
@@ -233,30 +233,30 @@
 	int				animatingStateNumberOfFrames = [animatingState numberOfFrames];
 	
     //Use the base image as our starting point
-    if([baseState animated]){
-        if(baseState == animatingState){ //Only one state animates at a time
+    if ([baseState animated]) {
+        if (baseState == animatingState) { //Only one state animates at a time
             workingImage = [[[baseState imageArray] objectAtIndex:frame] copy];
-        }else{
+        } else {
             workingImage = [[[baseState imageArray] objectAtIndex:0] copy];
         }
-    }else{
+    } else {
         workingImage = [[baseState image] copy];
     }
 	
     //Draw on the images of all overlayed states
     enumerator = [iconStateArray objectEnumerator];
-    while((iconState = [enumerator nextObject])){
-        if([iconState overlay]){
+    while ((iconState = [enumerator nextObject])) {
+        if ([iconState overlay]) {
             NSImage	*overlayImage;
 			
             //Get the overlay image
-            if([iconState animated]){
-                if(iconState == animatingState){ //Only one state animates at a time
+            if ([iconState animated]) {
+                if (iconState == animatingState) { //Only one state animates at a time
                     overlayImage = [[iconState imageArray] objectAtIndex:frame];
-                }else{
+                } else {
                     overlayImage = [[iconState imageArray] objectAtIndex:( ((frame + 1) / animatingStateNumberOfFrames) * ([iconState numberOfFrames] - 1)) ];
 				}
-            }else{
+            } else {
                 overlayImage = [iconState image];
             }
 			

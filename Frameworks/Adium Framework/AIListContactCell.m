@@ -52,7 +52,7 @@
 //Init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		backgroundOpacity = 1.0;
 		statusFont = [[NSFont systemFontOfSize:12] retain];
@@ -86,22 +86,22 @@
 	int		largestElementHeight;
 		
 	//Display Name Height (And status text if below name)
-	if(extendedStatusVisible && extendedStatusIsBelowName){
+	if (extendedStatusVisible && extendedStatusIsBelowName) {
 		largestElementHeight = labelFontHeight + statusFontHeight;
-	}else{
+	} else {
 		largestElementHeight = labelFontHeight;
 	}
 	
 	//User Icon Height
-	if(userIconVisible){
-		if(userIconSize.height > largestElementHeight){
+	if (userIconVisible) {
+		if (userIconSize.height > largestElementHeight) {
 			largestElementHeight = userIconSize.height;
 		}
 	}
 	
 	//Status text height (If beside name)
-	if(extendedStatusVisible && !extendedStatusIsBelowName){
-		if(statusFontHeight > largestElementHeight){
+	if (extendedStatusVisible && !extendedStatusIsBelowName) {
+		if (statusFontHeight > largestElementHeight) {
 			largestElementHeight = statusFontHeight;
 		}
 	}
@@ -119,21 +119,21 @@
 	width += [displayName size].width;
 	
 	//User icon
-	if(userIconVisible){
+	if (userIconVisible) {
 		width += userIconSize.width;
 		width += USER_ICON_LEFT_PAD + USER_ICON_RIGHT_PAD;
 	}
 	
 	//Status icon
-	if(statusIconsVisible &&
-	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)){
+	if (statusIconsVisible &&
+	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)) {
 		width += [[self statusImage] size].width;
 		width += STATUS_ICON_LEFT_PAD + STATUS_ICON_RIGHT_PAD;
 	}
 
 	//Service icon
-	if(serviceIconsVisible &&
-	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)){
+	if (serviceIconsVisible &&
+	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)) {
 		width += [[self serviceImage] size].width;
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
@@ -163,7 +163,7 @@
 //Color of status text
 - (void)setStatusColor:(NSColor *)inColor
 {
-	if(statusColor != inColor){
+	if (statusColor != inColor) {
 		[statusColor release];
 		statusColor = [inColor retain];
 
@@ -180,7 +180,7 @@
 //Cache is flushed when alignment, color, or font is changed
 - (NSDictionary *)statusAttributes
 {
-	if(!_statusAttributes){
+	if (!_statusAttributes) {
 		NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				lineBreakMode:NSLineBreakByTruncatingTail];
 		[paragraphStyle setMaximumLineHeight:(float)labelFontHeight];
@@ -191,7 +191,7 @@
 			[self statusFont], NSFontAttributeName,nil] retain];
 	}
 	
-	if(backgroundColorIsEvents && [[listObject displayArrayObjectForKey:@"Is Event"] boolValue]){
+	if (backgroundColorIsEvents && [[listObject displayArrayObjectForKey:@"Is Event"] boolValue]) {
 		//If we are showing a temporary event with a custom background color, use the standard text color
 		//since it will be appropriate to the current background color.
 		NSMutableDictionary	*mutableStatusAttributes = [_statusAttributes mutableCopy];
@@ -200,14 +200,14 @@
 
 		return([mutableStatusAttributes autorelease]);
 
-	}else{
+	} else {
 		return(_statusAttributes);
 	}
 }
 
 - (NSDictionary *)statusAttributesInverted
 {
-	if(!_statusAttributesInverted){
+	if (!_statusAttributesInverted) {
 		_statusAttributesInverted = [[self statusAttributes] mutableCopy];
 		[_statusAttributesInverted setObject:CONTACT_INVERTED_STATUS_COLOR forKey:NSForegroundColorAttributeName];
 	}
@@ -318,31 +318,31 @@
 - (void)drawContentWithFrame:(NSRect)rect
 {
 	//Far Left
-	if(statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
-	if(serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if (statusIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if (serviceIconPosition == LIST_POSITION_FAR_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//User Icon [Left]
-	if(userIconPosition == LIST_POSITION_LEFT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if (userIconPosition == LIST_POSITION_LEFT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//Left
-	if(statusIconPosition == LIST_POSITION_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
-	if(serviceIconPosition == LIST_POSITION_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if (statusIconPosition == LIST_POSITION_LEFT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_LEFT];
+	if (serviceIconPosition == LIST_POSITION_LEFT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_LEFT];
 	
 	//Far Right
-	if(statusIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
-	if(serviceIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if (statusIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if (serviceIconPosition == LIST_POSITION_FAR_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//User Icon [Right]
-	if(userIconPosition == LIST_POSITION_RIGHT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if (userIconPosition == LIST_POSITION_RIGHT) rect = [self drawUserIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//Right
-	if(statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
-	if(serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if (statusIconPosition == LIST_POSITION_RIGHT) rect = [self drawStatusIconInRect:rect position:IMAGE_POSITION_RIGHT];
+	if (serviceIconPosition == LIST_POSITION_RIGHT) rect = [self drawServiceIconInRect:rect position:IMAGE_POSITION_RIGHT];
 	
 	//Extended Status
-	if(extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
+	if (extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:YES];
 	rect = [self drawDisplayNameWithFrame:rect];
-	if(!extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
+	if (!extendedStatusIsBelowName) rect = [self drawUserExtendedStatusInRect:rect drawUnder:NO];
 	
 }
 
@@ -350,7 +350,7 @@
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
 	NSColor	*labelColor = [self labelColor];
-	if(labelColor && ![self cellIsSelected]){
+	if (labelColor && ![self cellIsSelected]) {
 		[labelColor set];
 		[NSBezierPath fillRect:rect];
 	}
@@ -360,12 +360,12 @@
 - (NSRect)drawUserIconInRect:(NSRect)inRect position:(IMAGE_POSITION)position
 {
 	NSRect	rect = inRect;
-	if(userIconVisible){
+	if (userIconVisible) {
 		NSImage *image;
 		NSRect	drawRect;
 		
 		image = [self userIconImage];
-		if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
+		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconFlipped];
 		
 		rect = [image drawInRect:rect
 						  atSize:userIconSize
@@ -373,28 +373,28 @@
 						fraction:[self imageOpacityForDrawing]];
 		
 		//If we're using space on the left, shift the origin right
-		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
+		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_LEFT_PAD;
 		rect.size.width -= USER_ICON_LEFT_PAD;
 		
 		//Badges
 		drawRect = [image rectForDrawingInRect:inRect
 										atSize:userIconSize
 									  position:position];
-		if(statusIconPosition == LIST_POSITION_BADGE_LEFT){
+		if (statusIconPosition == LIST_POSITION_BADGE_LEFT) {
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		}else if(statusIconPosition == LIST_POSITION_BADGE_RIGHT){
+		} else if (statusIconPosition == LIST_POSITION_BADGE_RIGHT) {
 			[self drawStatusIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
 		}
 		
-		if(serviceIconPosition == LIST_POSITION_BADGE_LEFT){
+		if (serviceIconPosition == LIST_POSITION_BADGE_LEFT) {
 			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_LEFT];
-		}else if(serviceIconPosition == LIST_POSITION_BADGE_RIGHT){
+		} else if (serviceIconPosition == LIST_POSITION_BADGE_RIGHT) {
 			[self drawServiceIconInRect:drawRect position:IMAGE_POSITION_LOWER_RIGHT];
 		}
 		
 		//If we're using space on the right, shrink the width so we won't be overlapped
-//		if(position == IMAGE_POSITION_RIGHT) rect.size.width -= USER_ICON_RIGHT_PAD;
-		if(position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
+//		if (position == IMAGE_POSITION_RIGHT) rect.size.width -= USER_ICON_RIGHT_PAD;
+		if (position == IMAGE_POSITION_LEFT) rect.origin.x += USER_ICON_RIGHT_PAD;
 		rect.size.width -= USER_ICON_RIGHT_PAD;
 	}
 	
@@ -404,11 +404,11 @@
 //Status Icon
 - (NSRect)drawStatusIconInRect:(NSRect)rect position:(IMAGE_POSITION)position
 {
-	if(statusIconsVisible){
+	if (statusIconsVisible) {
 		BOOL	isBadge = (position == IMAGE_POSITION_LOWER_LEFT || position == IMAGE_POSITION_LOWER_RIGHT);
 		
-		if(!isBadge){
-			if(position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_LEFT_PAD;
+		if (!isBadge) {
+			if (position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_LEFT_PAD;
 			rect.size.width -= STATUS_ICON_LEFT_PAD;
 		}
 
@@ -420,8 +420,8 @@
 						fraction:1.0];
 		[image setFlipped:![image isFlipped]];
 		
-		if(!isBadge){
-			if(position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_RIGHT_PAD;
+		if (!isBadge) {
+			if (position == IMAGE_POSITION_LEFT) rect.origin.x += STATUS_ICON_RIGHT_PAD;
 			rect.size.width -= STATUS_ICON_RIGHT_PAD;
 		}
 	}
@@ -431,11 +431,11 @@
 //Service Icon
 - (NSRect)drawServiceIconInRect:(NSRect)rect position:(IMAGE_POSITION)position
 {
-	if(serviceIconsVisible){
+	if (serviceIconsVisible) {
 		BOOL	isBadge = (position == IMAGE_POSITION_LOWER_LEFT || position == IMAGE_POSITION_LOWER_RIGHT);
 
-		if(!isBadge){
-			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_LEFT_PAD;
+		if (!isBadge) {
+			if (position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_LEFT_PAD;
 			rect.size.width -= SERVICE_ICON_LEFT_PAD;
 		}
 		
@@ -443,7 +443,7 @@
 		 Draw the service icon if (it is not a badge), or if (it is a badge and there is a userIconImage)
 		 (We have already drawn the service icon if there is no userIconImage, in drawUserIconInRect:position:)
 		 */
-		if (!isBadge || ([self userIconImage] != nil)){
+		if (!isBadge || ([self userIconImage] != nil)) {
 			NSImage *image = [self serviceImage];
 			rect = [image drawInRect:rect
 							  atSize:NSMakeSize(0, 0)
@@ -451,8 +451,8 @@
 							fraction:[self imageOpacityForDrawing]];
 		}
 		
-		if(!isBadge){
-			if(position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_RIGHT_PAD;
+		if (!isBadge) {
+			if (position == IMAGE_POSITION_LEFT) rect.origin.x += SERVICE_ICON_RIGHT_PAD;
 			rect.size.width -= SERVICE_ICON_RIGHT_PAD;
 		}
 	}
@@ -462,18 +462,18 @@
 //User Extended Status
 - (NSRect)drawUserExtendedStatusInRect:(NSRect)rect drawUnder:(BOOL)drawUnder
 {
-	if(extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)){
+	if (extendedStatusVisible && (drawUnder || [self textAlignment] != NSCenterTextAlignment)) {
 		NSString 	*string = [listObject displayArrayObjectForKey:@"ExtendedStatus"];
 		
-		if(string){
+		if (string) {
 			int	halfHeight = rect.size.height / 2;
 
 			//Pad
-			if(drawUnder){
+			if (drawUnder) {
 				rect.origin.y += halfHeight;
 				rect.size.height -= halfHeight;
-			}else{
-				if([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
+			} else {
+				if ([self textAlignment] == NSLeftTextAlignment) rect.origin.x += NAME_STATUS_PAD;
 				rect.size.width -= NAME_STATUS_PAD;
 			}
 			
@@ -486,9 +486,9 @@
 			NSSize		nameSize = [extStatus size];
 			NSRect		drawRect = rect;
 			
-			if(nameSize.width > drawRect.size.width) nameSize = rect.size;
+			if (nameSize.width > drawRect.size.width) nameSize = rect.size;
 			
-			switch([self textAlignment]){
+			switch ([self textAlignment]) {
 				case NSCenterTextAlignment:
 					drawRect.origin.x += (drawRect.size.width - nameSize.width) / 2.0;
 				break;
@@ -501,10 +501,10 @@
 			
 			int half, offset;
 			
-			if(drawUnder){
+			if (drawUnder) {
 				half = ceil((drawRect.size.height - statusFontHeight) / 2.0);
 				offset = 0;
-			}else{
+			} else {
 				half = ceil((drawRect.size.height - labelFontHeight) / 2.0);
 				offset = (labelFontHeight - statusFontHeight) + ([[self font] descender] - [[self statusFont] descender]);
 			}
@@ -516,7 +516,7 @@
 
 			[extStatus release];
 			
-			if(drawUnder){
+			if (drawUnder) {
 				rect.origin.y -= halfHeight;
 			}
 		}
@@ -529,19 +529,19 @@
 {
 	BOOL	isEvent = [[listObject displayArrayObjectForKey:@"Is Event"] boolValue];
 	
-	if((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)){
+	if ((isEvent && backgroundColorIsEvents) || (!isEvent && backgroundColorIsStatus)) {
 		NSColor		*labelColor = [listObject displayArrayObjectForKey:@"Label Color"];	
 		NSNumber	*opacityNumber;
 		float		targetOpacity = backgroundOpacity;
 		
 		//The backgroundOpacity is our eventual target; Temporary Display Opacity will be a fraction from 0 to 1 which
 		//should be applied to that target
-		if((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])){
+		if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
 			targetOpacity *= [opacityNumber floatValue];
 		}
 		
 		return((targetOpacity != 1.0) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor);
-	}else{
+	} else {
 		return(nil);
 	}
 }
@@ -551,9 +551,9 @@
 {
 	NSColor	*theTextColor;
 	
-	if (shouldUseContactTextColors && (theTextColor = [listObject displayArrayObjectForKey:@"Text Color"])){
+	if (shouldUseContactTextColors && (theTextColor = [listObject displayArrayObjectForKey:@"Text Color"])) {
 		return(theTextColor);
-	}else{
+	} else {
 		return([super textColor]);
 	}
 }
@@ -572,7 +572,7 @@
 - (NSImage *)statusImage
 {
 	NSImage *stateIcon = [listObject displayArrayObjectForKey:@"List State Icon"];
-	if(!stateIcon) stateIcon = [listObject displayArrayObjectForKey:@"List Status Icon"];
+	if (!stateIcon) stateIcon = [listObject displayArrayObjectForKey:@"List Status Icon"];
 	return(stateIcon);
 }
 
@@ -591,13 +591,13 @@
 //
 - (float)imageOpacityForDrawing
 {
-	if([self cellIsSelected]){
+	if ([self cellIsSelected]) {
 		return(SELECTED_IMAGE_OPACITY);
-	}else{
+	} else {
 		NSNumber	*opacityNumber;
-		if((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])){
+		if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
 			return([opacityNumber floatValue]);
-		}else{
+		} else {
 			return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
 		}
 	}

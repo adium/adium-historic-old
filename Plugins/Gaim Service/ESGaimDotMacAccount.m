@@ -25,9 +25,9 @@
 	NSString	 *userNameWithMacDotCom = nil;
 
 	if (([UID rangeOfString:@"@mac.com"
-					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location != NSNotFound)){
+					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location != NSNotFound)) {
 		userNameWithMacDotCom = UID;
-	}else{
+	} else {
 		userNameWithMacDotCom = [UID stringByAppendingString:@"@mac.com"];
 	}
 

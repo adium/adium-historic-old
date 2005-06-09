@@ -68,7 +68,7 @@
 //Watch the window move.  If it gets near an edge, dock it to that edge
 - (void)windowDidMove:(NSNotification *)notification
 {
-	if(!alreadyMoving){  //Our setFrame call below will cause a re-entry into this function, we must guard against this
+	if (!alreadyMoving) {  //Our setFrame call below will cause a re-entry into this function, we must guard against this
 		alreadyMoving = YES;	
 		
 		//Attempt to dock this window the the visible frame first, and then to the screen frame
@@ -79,21 +79,21 @@
 		dockedWindowFrame = [self dockWindowFrame:dockedWindowFrame toScreenFrame:[[self screen] frame]];
 
 		//If the window wants to dock, animate it into place
-		if(!NSEqualRects(newWindowFrame, dockedWindowFrame)){
+		if (!NSEqualRects(newWindowFrame, dockedWindowFrame)) {
 			
-			if (!NSIsEmptyRect(oldWindowFrame)){
+			if (!NSIsEmptyRect(oldWindowFrame)) {
 				BOOL	user_XMovingLeft = ((oldWindowFrame.origin.x - newWindowFrame.origin.x) >= 0);
 				BOOL	docking_XMovingLeft = ((newWindowFrame.origin.x - dockedWindowFrame.origin.x) >= 0);
 				
 				//If the user is trying to move in the opposite X direction as the docking movement, use the user's movement
-				if ((user_XMovingLeft && !docking_XMovingLeft) || (!user_XMovingLeft && docking_XMovingLeft)){
-					if (resisted_XMotion <= IGNORED_X_RESISTS){
+				if ((user_XMovingLeft && !docking_XMovingLeft) || (!user_XMovingLeft && docking_XMovingLeft)) {
+					if (resisted_XMotion <= IGNORED_X_RESISTS) {
 						dockedWindowFrame.origin.x = newWindowFrame.origin.x;
 						resisted_XMotion = 0;
-					}else{
+					} else {
 						resisted_XMotion++;
 					}
-				}else{
+				} else {
 					//They went with the flow
 					resisted_XMotion = 0;
 				}
@@ -102,14 +102,14 @@
 				BOOL	docking_YMovingDown = ((newWindowFrame.origin.y - dockedWindowFrame.origin.y) >= 0);
 				
 				//If the user is trying to move in the opposite Y direction as the docking movement, use the user's movement
-				if ((user_YMovingDown && !docking_YMovingDown) || (!user_YMovingDown && docking_YMovingDown)){
-					if (resisted_YMotion <= IGNORED_Y_RESISTS){
+				if ((user_YMovingDown && !docking_YMovingDown) || (!user_YMovingDown && docking_YMovingDown)) {
+					if (resisted_YMotion <= IGNORED_Y_RESISTS) {
 						dockedWindowFrame.origin.y = newWindowFrame.origin.y;
 						resisted_YMotion = 0;
-					}else{
+					} else {
 						resisted_YMotion++;
 					}
-				}else{
+				} else {
 					resisted_YMotion = 0;
 				}
 			}
@@ -117,7 +117,7 @@
 			[self setFrame:dockedWindowFrame display:YES animate:YES];
 			oldWindowFrame = dockedWindowFrame;
 			
-		}else{
+		} else {
 			resisted_XMotion = 0;
 			resisted_YMotion = 0;	
 			oldWindowFrame = NSMakeRect(0,0,0,0);
@@ -131,22 +131,22 @@
 - (NSRect)dockWindowFrame:(NSRect)windowFrame toScreenFrame:(NSRect)screenFrame
 {
 	//Left
-	if(abs(NSMinX(windowFrame) - NSMinX(screenFrame)) < WINDOW_DOCKING_DISTANCE){
+	if (abs(NSMinX(windowFrame) - NSMinX(screenFrame)) < WINDOW_DOCKING_DISTANCE) {
 		windowFrame.origin.x = screenFrame.origin.x;
 	}
 	
 	//Bottom
-	if(abs(NSMinY(windowFrame) - NSMinY(screenFrame)) < WINDOW_DOCKING_DISTANCE){
+	if (abs(NSMinY(windowFrame) - NSMinY(screenFrame)) < WINDOW_DOCKING_DISTANCE) {
 		windowFrame.origin.y = screenFrame.origin.y;
 	}
 	
 	//Right
-	if(abs(NSMaxX(windowFrame) - NSMaxX(screenFrame)) < WINDOW_DOCKING_DISTANCE){
+	if (abs(NSMaxX(windowFrame) - NSMaxX(screenFrame)) < WINDOW_DOCKING_DISTANCE) {
 		windowFrame.origin.x -= NSMaxX(windowFrame) - NSMaxX(screenFrame);
 	}
 	
 	//Top
-	if(abs(NSMaxY(windowFrame) - NSMaxY(screenFrame)) < WINDOW_DOCKING_DISTANCE){
+	if (abs(NSMaxY(windowFrame) - NSMaxY(screenFrame)) < WINDOW_DOCKING_DISTANCE) {
 		windowFrame.origin.y -= NSMaxY(windowFrame) - NSMaxY(screenFrame);
 	}
 	
@@ -157,7 +157,7 @@
 {
 	[super toggleToolbarShown:sender];
 	
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]){
+	if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]) {
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}
@@ -167,7 +167,7 @@
 {
 	[super _toolbarPillButtonClicked:sender];
 	
-	if([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]){
+	if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowDidToggleToolbarShown:)]) {
 		[[self delegate] performSelector:@selector(windowDidToggleToolbarShown:)
 							  withObject:self];
 	}

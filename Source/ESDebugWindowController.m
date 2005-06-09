@@ -30,7 +30,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 + (id)showDebugWindow
 {
     //Create the window
-    if(!sharedDebugWindowInstance){
+    if (!sharedDebugWindowInstance) {
         sharedDebugWindowInstance = [[self alloc] initWithWindowNibName:DEBUG_WINDOW_NIB];
     }
 	
@@ -48,13 +48,13 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
 	[mutableDebugString appendString:aDebugString];
-	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
+	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
 		[mutableDebugString appendString:@"\n"];
 	}
 }
 + (void)addedDebugMessage:(NSString *)aDebugString
 {
-	if(sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:aDebugString];
+	if (sharedDebugWindowInstance) [sharedDebugWindowInstance addedDebugMessage:aDebugString];
 }
 
 - (NSString *)adiumFrameAutosaveName
@@ -77,9 +77,9 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
 	//Load the logs which were added before the window was loaded
 	enumerator = [[[adium debugController] debugLogArray] objectEnumerator];
-	while((aDebugString = [enumerator nextObject])){
+	while ((aDebugString = [enumerator nextObject])) {
 		[mutableDebugString appendString:aDebugString];
-		if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])){
+		if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
 			[mutableDebugString appendString:@"\n"];
 		}
 	}
@@ -95,7 +95,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 //Close the debug window
 + (void)closeDebugWindow
 {
-    if(sharedDebugWindowInstance){
+    if (sharedDebugWindowInstance) {
         [sharedDebugWindowInstance closeWindow:nil];
     }
 }

@@ -85,7 +85,7 @@
 										  forGroup:PREF_GROUP_SOUNDS];
     
     //Ensure the temporary mute is off
-	if([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+	if ([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
 	                                     group:PREF_GROUP_SOUNDS] boolValue])
 	{
 		[preferenceController setPreference:nil
@@ -116,7 +116,7 @@
 	//Stop all sounds from playing
 	NSEnumerator		*enumerator = [soundCacheDict objectEnumerator];
 	QTSoundFilePlayer   *soundFilePlayer;
-	while ((soundFilePlayer = [enumerator nextObject])){
+	while ((soundFilePlayer = [enumerator nextObject])) {
 		[soundFilePlayer stop];
 	}
 }
@@ -160,15 +160,15 @@
 	BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
 	
 	enumerator = [soundCacheDict objectEnumerator];
-	while ((soundFilePlayer = [enumerator nextObject])){
-		if (needToStopAndRelease){
+	while ((soundFilePlayer = [enumerator nextObject])) {
+		if (needToStopAndRelease) {
 			[soundFilePlayer stop];
-		}else{
+		} else {
 			[soundFilePlayer setVolume:customVolume];
 		}
 	}
 	
-	if (needToStopAndRelease){
+	if (needToStopAndRelease) {
 		[speechArray removeAllObjects];
 		[soundCacheDict removeAllObjects];
 		[soundCacheArray removeAllObjects];
@@ -187,18 +187,18 @@
     NSFileManager *mgr           = [NSFileManager defaultManager];
     BOOL           isDir         = NO;
 
-    while((path = [folderEnum nextObject])) {
+    while ((path = [folderEnum nextObject])) {
         path = [path stringByAppendingPathComponent:inName];
-        if([mgr fileExistsAtPath:path isDirectory:&isDir]) {
-            if(!isDir) {
+        if ([mgr fileExistsAtPath:path isDirectory:&isDir]) {
+            if (!isDir) {
                 break;
             }
         }
     }
 
-    if(path) {
+    if (path) {
         [self playSoundAtPath:path];
-    }else{
+    } else {
 		//They wanted a sound.  We can't find the one they wanted.  At least give 'em something.
 		NSBeep();
 	}
@@ -207,8 +207,8 @@
 //Play a sound by path
 - (void)playSoundAtPath:(NSString *)inPath
 {
-    if(!muteSounds){
-		if (inPath){
+    if (!muteSounds) {
+		if (inPath) {
 			[self _coreAudioPlaySound:inPath];
 		}
 	}
@@ -232,16 +232,16 @@
     justCrushAlot = [soundCacheDict objectForKey:inPath];
 	
     //If the sound is not cached, load it
-    if(!justCrushAlot){
+    if (!justCrushAlot) {
 		//If the cache is full, remove the least recently used cached sound
-		if([soundCacheDict count] >= MAX_CACHED_SOUNDS){
+		if ([soundCacheDict count] >= MAX_CACHED_SOUNDS) {
 			[self uncacheLastPlayer];
 		}
 		
 		//Load and cache the sound
 		justCrushAlot = [[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
 												   usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)];
-		if(justCrushAlot){
+		if (justCrushAlot) {
 			/*
 			 It's important that we are caching, not so much because of the overhead but because:
 				1) we don't want to leak QTSoundFilePlayer objects but
@@ -258,7 +258,7 @@
 			[soundCacheArray insertObject:inPath atIndex:0];
 		}
 		
-    }else{
+    } else {
 
 		//Move this sound to the front of the cache (This will naturally move lesser used sounds to the back for removal)
 		[soundCacheArray removeObject:inPath];
@@ -266,7 +266,7 @@
     }
 	
     //Set the volume and play sound
-    if(justCrushAlot){
+    if (justCrushAlot) {
 		//Reset the cached sound back to the beginning and set its volume; if it is currently playing,
 		//this will make it restart.
 		[justCrushAlot setVolume:customVolume];
@@ -277,13 +277,13 @@
 		[justCrushAlot play];
     }
 	
-	if (!soundCacheCleanupTimer){
+	if (!soundCacheCleanupTimer) {
 		soundCacheCleanupTimer = [[NSTimer scheduledTimerWithTimeInterval:SOUND_CACHE_CLEANUP_INTERVAL
 																   target:self
 																 selector:@selector(soundCacheCleanup:)
 																 userInfo:nil
 																  repeats:YES] retain];
-	}else{
+	} else {
 		[soundCacheCleanupTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:SOUND_CACHE_CLEANUP_INTERVAL]];
 	}
 }
@@ -292,9 +292,9 @@
 //If none are cached, stop the timer that got us here.
 - (void)soundCacheCleanup:(NSTimer *)inTimer
 {
-	if ([soundCacheArray count]){
+	if ([soundCacheArray count]) {
 		[self uncacheLastPlayer];
-	}else{
+	} else {
 		[soundCacheCleanupTimer invalidate]; [soundCacheCleanupTimer release]; soundCacheCleanupTimer = nil;
 	}
 }
@@ -304,7 +304,7 @@
 	NSString			*lastCachedPath = [soundCacheArray lastObject];
 	QTSoundFilePlayer   *gangstaPlaya = [soundCacheDict objectForKey:lastCachedPath];
 	
-	if (![gangstaPlaya isPlaying]){
+	if (![gangstaPlaya isPlaying]) {
 		[gangstaPlaya stop];
 		[soundCacheDict removeObjectForKey:lastCachedPath];
 		[soundCacheArray removeLastObject];	
@@ -327,7 +327,7 @@
     
     //Scan sounds
 	enumerator = [[adium resourcePathsForName:@"Sounds"] objectEnumerator];
-	while ((path = [enumerator nextObject])){
+	while ((path = [enumerator nextObject])) {
 		[self _scanSoundSetsFromPath:path intoArray:soundSetArray];
 	}
     
@@ -347,22 +347,22 @@
 
     //Scan the directory
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:soundFolderPath];
-    while((file = [enumerator nextObject])){
+    while ((file = [enumerator nextObject])) {
         BOOL			isDirectory;
         NSString		*fullPath;
 		NSString		*fileName = [file lastPathComponent];
 
 		//Skip .*, *.txt, and .svn
-        if([fileName characterAtIndex:0] != '.' &&
+        if ([fileName characterAtIndex:0] != '.' &&
            [[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] != NSOrderedSame &&
-           ![[file pathComponents] containsObject:@".svn"]){ //Ignore certain files
+           ![[file pathComponents] containsObject:@".svn"]) { //Ignore certain files
 
             //Determine if this is a file or a directory
             fullPath = [soundFolderPath stringByAppendingPathComponent:file];
             [[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDirectory];
-            if(isDirectory){
+            if (isDirectory) {
 				//Only add the soundset if it contains sounds
-                if([soundSetContents count] != 0){
+                if ([soundSetContents count] != 0) {
                     //Close the current soundset, adding it to our sound set array
                     [self _addSet:soundSetPath withSounds:soundSetContents toArray:soundSetArray];
                 }
@@ -373,14 +373,14 @@
 				[soundSetContents release];
                 soundSetContents = [[NSMutableArray alloc] init];
 
-            }else{
-				if([fileName isEqualToString:@"Info.plist"]){
+            } else {
+				if ([fileName isEqualToString:@"Info.plist"]) {
 					NSMutableDictionary *infoDict = [NSMutableDictionary dictionaryWithContentsOfFile:fullPath];
 					[infoDict setObject:soundSetPath forKey:SOUND_PACK_PATHNAME];
 					[self addSoundsIndicatedByDictionary:infoDict
 												 toArray:soundSetContents];
 					
-				}else{
+				} else {
 					//Add the sound
 					[soundSetContents addObject:fullPath];
 				}
@@ -395,7 +395,7 @@
 
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray
 {
-	if(inSet && inSounds && inArray){
+	if (inSet && inSounds && inArray) {
 		[inArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:inSet, KEY_SOUND_SET, inSounds, KEY_SOUND_SET_CONTENTS, nil]];
 	}
 }
@@ -410,7 +410,7 @@
 {
 	int version = [[infoDict objectForKey:SOUND_PACK_VERSION] intValue];
 
-	switch(version){
+	switch (version) {
 		case 1:
 		{
 			NSDictionary	*sounds;
@@ -420,10 +420,10 @@
 			sounds = [self soundsDictionaryFromDictionary:infoDict usingLocation:&soundLocation];
 			
 			//If we don't have a sound location, return
-			if(!sounds || !soundLocation) return;
+			if (!sounds || !soundLocation) return;
 
 			enumerator = [sounds objectEnumerator];
-			while((soundName = [enumerator nextObject])){
+			while ((soundName = [enumerator nextObject])) {
 				[soundSetContents addObject:[soundLocation stringByAppendingPathComponent:soundName]];
 			}
 			
@@ -446,15 +446,15 @@
 
 	id			possiblePaths = [infoDict objectForKey:SOUND_LOCATION];
 
-	if(possiblePaths){
-		if([possiblePaths isKindOfClass:[NSString class]]){
+	if (possiblePaths) {
+		if ([possiblePaths isKindOfClass:[NSString class]]) {
 			possiblePaths = [NSArray arrayWithObjects:possiblePaths, nil];
 		}
 		
 		NSEnumerator	*pathEnumerator = [possiblePaths objectEnumerator];
 		NSString		*aPath;
 		
-		while((aPath = [pathEnumerator nextObject])){
+		while ((aPath = [pathEnumerator nextObject])) {
 			NSString	*possiblePath;
 			NSArray		*splitPath = [aPath componentsSeparatedByString:SOUND_LOCATION_SEPARATOR];
 			
@@ -465,9 +465,9 @@
 				*
 				* The separator in the latter is ////, defined as SOUND_LOCATION_SEPARATOR.
 				*/
-			if([splitPath count] == 1){
+			if ([splitPath count] == 1) {
 				possiblePath = [splitPath objectAtIndex:0];
-			}else{
+			} else {
 				NSArray *components = [NSArray arrayWithObjects:
 					[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
 					[splitPath objectAtIndex:1],
@@ -480,7 +480,7 @@
 				* directory, then the standard location will be used.
 				*/
 			BOOL isDir;
-			if([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir){
+			if ([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir) {
 				soundLocation = possiblePath;
 				
 				/* Keep the 'full sound location', which is what was indicated in the dictionary, for generation of
@@ -493,9 +493,9 @@
 	}
 		
 	sounds = [infoDict objectForKey:[NSString stringWithFormat:@"%@:%@",SOUND_NAMES,fullSoundLocation]];
-	if(!sounds) sounds = [infoDict objectForKey:SOUND_NAMES];
+	if (!sounds) sounds = [infoDict objectForKey:SOUND_NAMES];
 	
-	if(outSoundLocation) *outSoundLocation = soundLocation;
+	if (outSoundLocation) *outSoundLocation = soundLocation;
 	
 	return sounds;
 }
@@ -557,19 +557,19 @@
 //pass rate as 0 to use default rate
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate
 {
-    if(text && [text length]){
-		if(!muteSounds){
+    if (text && [text length]) {
+		if (!muteSounds) {
 			NSMutableDictionary *dict;
 			
 			dict = [[NSMutableDictionary alloc] init];
 			
-			if(text){
+			if (text) {
 				[dict setObject:text forKey:TEXT_TO_SPEAK];
 			}
 			
-			if(voiceString) [dict setObject:voiceString forKey:VOICE];			
-			if(pitch > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
-			if(rate  > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:rate]  forKey:RATE];
+			if (voiceString) [dict setObject:voiceString forKey:VOICE];			
+			if (pitch > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
+			if (rate  > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:rate]  forKey:RATE];
 
 			[speechArray addObject:dict];
 			[dict release];
@@ -583,9 +583,9 @@
 - (void)speakNext
 {
     //we have items left to speak and aren't already speaking
-    if([speechArray count] && !speaking){
+    if ([speechArray count] && !speaking) {
 		//don't speak on top of other apps; instead, wait 1 second and try again
-		if(SpeechBusySystemWide() > 0){
+		if (SpeechBusySystemWide() > 0) {
 			[self performSelector:@selector(speakNext)
 					   withObject:nil
 					   afterDelay:1.0];
@@ -623,7 +623,7 @@
 //INitialize the default voice if it has not yet been done
 - (void)initDefaultVoiceIfNecessary
 {
-    if(!speaker_defaultVoice){
+    if (!speaker_defaultVoice) {
 		speaker_defaultVoice = [[SUSpeaker alloc] init];
 		[speaker_defaultVoice setDelegate:self];
 		defaultRate = [speaker_defaultVoice rate];
@@ -638,21 +638,21 @@
 	int theIndex = (voiceIndex ? *voiceIndex : 0);
 	SUSpeaker	*theSpeaker;
 
-	if(voiceString){
+	if (voiceString) {
 		theIndex = [voiceArray indexOfObject:voiceString];
-	}else{
+	} else {
 		theIndex = NSNotFound;
 	}
 
-	if(theIndex != NSNotFound){
-		if(!speaker_variableVoice){ //initVariableVoiceifNecessary
+	if (theIndex != NSNotFound) {
+		if (!speaker_variableVoice) { //initVariableVoiceifNecessary
 			speaker_variableVoice = [[SUSpeaker alloc] init];
 			[speaker_variableVoice setDelegate:self];
 		}
 		theSpeaker = speaker_variableVoice;
 		[theSpeaker setVoice:theIndex];
 
-	}else{
+	} else {
 		[self initDefaultVoiceIfNecessary];
 		theSpeaker = speaker_defaultVoice;
 	}
@@ -671,7 +671,7 @@
 	//Vicki, a new voice in 10.3, returns an invalid name to SUSpeaker, Vicki3Smallurrent. If we see that name,
 	//replace it with just Vicki.  If this gets fixed in a future release of OS X, this code will simply do nothing.
 	messedUpIndex = [ourVoiceArray indexOfObject:@"Vicki3Smallurrent"];
-	if(messedUpIndex != NSNotFound){
+	if (messedUpIndex != NSNotFound) {
 		[ourVoiceArray replaceObjectAtIndex:messedUpIndex
 								 withObject:@"Vicki"];
 	}

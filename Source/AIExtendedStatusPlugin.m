@@ -71,10 +71,10 @@
 	showStatus = ((statusStyle == STATUS_ONLY) || (statusStyle == IDLE_AND_STATUS));
 	showIdle = ((statusStyle == IDLE_ONLY) || (statusStyle == IDLE_AND_STATUS));
 	
-	if(firstTime){
+	if (firstTime) {
 		[[adium contactController] registerListObjectObserver:self];
-	}else{
-		if((oldShowStatus != showStatus) || (oldShowIdle != oldShowIdle)){
+	} else {
+		if ((oldShowStatus != showStatus) || (oldShowIdle != oldShowIdle)) {
 			[[adium contactController] updateAllListObjectsForObserver:self];
 		}
 	}
@@ -88,21 +88,21 @@
 	NSSet		*modifiedAttributes = nil;
 
 	//Idle time
-    if(inModifiedKeys == nil || 
+    if (inModifiedKeys == nil || 
 	   (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
-	   (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))){
+	   (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))) {
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
 		
-		if (showStatus){
+		if (showStatus) {
 			statusMessage = [[[[[[adium contentController] filterAttributedString:[inObject contactListStatusMessage]
 																  usingFilterType:AIFilterDisplay
 																		direction:AIFilterIncoming
 																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 			
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
-			if([statusMessage length] > STATUS_MAX_LENGTH){
+			if ([statusMessage length] > STATUS_MAX_LENGTH) {
 				[statusMessage deleteCharactersInRange:NSMakeRange(STATUS_MAX_LENGTH,
 																   [statusMessage length] - STATUS_MAX_LENGTH)];
 			}
@@ -111,15 +111,15 @@
 			 * We will replace line breaks with '/' as is done with multiple lines of a poem displayed on a single line.
 			 * 
 			 * First, we remove duplicate linebreaks. */
-			while([statusMessage replaceOccurrencesOfString:@"\r\r"
+			while ([statusMessage replaceOccurrencesOfString:@"\r\r"
 												 withString:@"\r"
 													options:NSLiteralSearch
 													  range:NSMakeRange(0,[statusMessage length])]);
-			while([statusMessage replaceOccurrencesOfString:@"\n\n"
+			while ([statusMessage replaceOccurrencesOfString:@"\n\n"
 												 withString:@"\n"
 													options:NSLiteralSearch
 													  range:NSMakeRange(0,[statusMessage length])]);
-			while([statusMessage replaceOccurrencesOfString:@"\r\n"
+			while ([statusMessage replaceOccurrencesOfString:@"\r\n"
 												 withString:@"\n"
 													options:NSLiteralSearch
 													  range:NSMakeRange(0,[statusMessage length])]);
@@ -137,11 +137,11 @@
 		idle = (showIdle ? [inObject integerStatusObjectForKey:@"Idle"] : 0);
 
 		//
-		if(idle > 0 && statusMessage){
+		if (idle > 0 && statusMessage) {
 			finalMessage = [NSString stringWithFormat:@"(%@) %@",[self idleStringForSeconds:idle], statusMessage];
-		}else if(idle > 0){
+		} else if (idle > 0) {
 			finalMessage = [NSString stringWithFormat:@"(%@)",[self idleStringForSeconds:idle]];
-		}else{
+		} else {
 			finalMessage = statusMessage;
 		}
 
@@ -164,13 +164,13 @@
 	NSString	*idleString;
 	
 	//Create the idle string
-	if(seconds > 599400){//Cap idle at 999 Hours (999*60*60 seconds)
+	if (seconds > 599400) {//Cap idle at 999 Hours (999*60*60 seconds)
 		idleString = AILocalizedString(@"Idle",nil);
-	}else if(seconds >= 600){
+	} else if (seconds >= 600) {
 		idleString = [NSString stringWithFormat:@"%ih",seconds / 60];
-	}else if(seconds >= 60){
+	} else if (seconds >= 60) {
 		idleString = [NSString stringWithFormat:@"%i:%02i",seconds / 60, seconds % 60];
-	}else{
+	} else {
 		idleString = [NSString stringWithFormat:@"%i",seconds];
 	}
 	

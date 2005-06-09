@@ -57,7 +57,7 @@
     client = [inObject statusObjectForKey:@"Client" fromAnyContainedObject:NO];
     
     //Return the correct string
-    if(client){
+    if (client) {
 		entry = [[NSAttributedString alloc] initWithString:client];
     }
 	

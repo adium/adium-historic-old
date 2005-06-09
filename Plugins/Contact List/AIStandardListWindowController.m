@@ -37,7 +37,7 @@
 //Init
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		toolbarItems = nil;
 	}
@@ -94,7 +94,7 @@
 	[menu addItem:[[[NSMenuItem alloc] init] autorelease]];
 	
 	//Add a menu item for each state
-	while((menuItem = [enumerator nextObject])){
+	while ((menuItem = [enumerator nextObject])) {
 		[menu addItem:menuItem];
 	}
 	

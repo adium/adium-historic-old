@@ -48,7 +48,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])){
+	if ((self = [super initWithFrame:frameRect])) {
 		adium = [AIObject sharedAdiumInstance];
 		associatedView = nil;
 		chat = nil;
@@ -63,22 +63,22 @@ static NSColor	*cachedWhiteColor = nil;
 		currentHistoryLocation = 0;
 		
 		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
-		if(!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
+		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
 		
 		[self setDrawsBackground:YES];
 		_desiredSizeCached = NSMakeSize(0,0);
 		
-		if([self respondsToSelector:@selector(setAllowsUndo:)]) {
+		if ([self respondsToSelector:@selector(setAllowsUndo:)]) {
 			[self setAllowsUndo:YES];
 		}
-		if([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
+		if ([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
 			[self setAllowsDocumentBackgroundColorChange:YES];
 		}
 		
 		[self setImportsGraphics:YES];
 		
 		//
-		if(!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
+		if (!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
 		
 		//
 		[[NSNotificationCenter defaultCenter] addObserver:self 
@@ -111,35 +111,35 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
 	
-	if([charactersIgnoringModifiers length]) {
+	if ([charactersIgnoringModifiers length]) {
 		unichar		 inChar = [charactersIgnoringModifiers characterAtIndex:0];
 		unsigned int flags = [inEvent modifierFlags];
 		
 		//We have to test ctrl before option, because otherwise we'd miss ctrl-option-* events
-		if((flags & NSControlKeyMask) && !(flags & NSShiftKeyMask)){
-			if(inChar == NSUpArrowFunctionKey){
+		if ((flags & NSControlKeyMask) && !(flags & NSShiftKeyMask)) {
+			if (inChar == NSUpArrowFunctionKey) {
 				[self popContent];
-			}else if(inChar == NSDownArrowFunctionKey){
+			} else if (inChar == NSDownArrowFunctionKey) {
 				[self pushContent];
-			}else if(inChar == 's'){
+			} else if (inChar == 's') {
 				[self swapContent];
-			}else{
+			} else {
 				[super keyDown:inEvent];
 			}
 			
-		}else if((flags & NSAlternateKeyMask) && !(flags & NSShiftKeyMask)){
-			if(inChar == NSUpArrowFunctionKey){
+		} else if ((flags & NSAlternateKeyMask) && !(flags & NSShiftKeyMask)) {
+			if (inChar == NSUpArrowFunctionKey) {
 				[self historyUp];
-			}else if(inChar == NSDownArrowFunctionKey){
+			} else if (inChar == NSDownArrowFunctionKey) {
 				[self historyDown];
-			}else{
+			} else {
 				[super keyDown:inEvent];
 			}
 			
-		}else if((flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)){
-			if((inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey) ||
+		} else if ((flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)) {
+			if ((inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey) ||
 			   (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) ||
-			   (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey)){
+			   (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey)) {
 				//Pass the associatedView a keyDown event equivalent equal to inEvent except without the modifier flags
 				[associatedView keyDown:[NSEvent keyEventWithType:[inEvent type]
 														 location:[inEvent locationInWindow]
@@ -151,43 +151,43 @@ static NSColor	*cachedWhiteColor = nil;
 									  charactersIgnoringModifiers:charactersIgnoringModifiers
 														isARepeat:[inEvent isARepeat]
 														  keyCode:[inEvent keyCode]]];
-			}else{
+			} else {
 				[super keyDown:inEvent];
 			}
 			
-		}else if(inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey){
+		} else if (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey) {
 			[associatedView keyDown:inEvent];
 			
-		}else if (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey){
-			if (homeToStartOfLine){
+		} else if (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) {
+			if (homeToStartOfLine) {
 				NSRange	newRange;
 				
-				if (flags & NSShiftKeyMask){
+				if (flags & NSShiftKeyMask) {
 					//With shift, select to the beginning/end of the line
 					NSRange	selectedRange = [self selectedRange];
 					if (inChar == NSHomeFunctionKey) {
 						//Home: from 0 to the current location
 						newRange.location = 0;
 						newRange.length = selectedRange.location;
-					}else{
+					} else {
 						//End: from current location to the end
 						newRange.location = selectedRange.location;
 						newRange.length = [[self string] length] - newRange.location;
 					}
 					
-				}else{
+				} else {
 					newRange.location = ((inChar == NSHomeFunctionKey) ? 0 : [[self string] length]);
 					newRange.length = 0;
 				}
 
 				[self setSelectedRange:newRange];
 
-			}else{
+			} else {
 				//If !homeToStartOfLine, pass the keypress to our associated view.
 				[associatedView keyDown:inEvent];
 			}
-		} else if([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter){
-			if(flags & NSShiftKeyMask){
+		} else if ([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter) {
+			if (flags & NSShiftKeyMask) {
 				[self insertText:@"\n"];
 			} else {
 				[super keyDown:inEvent];
@@ -195,7 +195,7 @@ static NSColor	*cachedWhiteColor = nil;
 		} else {
 			[super keyDown:inEvent];
 		}
-	}else{
+	} else {
 		[super keyDown:inEvent];
 	}
 }
@@ -204,7 +204,7 @@ static NSColor	*cachedWhiteColor = nil;
 - (void)textDidChange:(NSNotification *)notification
 {
     //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
-    if(!insertingText){ 
+    if (!insertingText) { 
         [[adium contentController] contentsChangedInTextEntryView:self];
     }
     
@@ -215,7 +215,7 @@ static NSColor	*cachedWhiteColor = nil;
 //10.3 only, called when the user presses escape - we'll clear our text view in response
 - (void)cancelOperation:(id)sender
 {
-	if(clearOnEscape){
+	if (clearOnEscape) {
 		NSUndoManager	*undoManager = [self undoManager];
 		[undoManager registerUndoWithTarget:self
 								   selector:@selector(setAttributedString:)
@@ -244,7 +244,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Associate a view with this text view for key forwarding
 - (void)setAssociatedView:(NSView *)inView
 {
-	if(inView != associatedView){
+	if (inView != associatedView) {
 		[associatedView release];
 		associatedView = [inView retain];
 	}
@@ -274,10 +274,10 @@ static NSColor	*cachedWhiteColor = nil;
     [[self textStorage] setAttributedString:inAttributedString];
 
     //Restore the old selected range
-    if(oldRange.location < length){
-        if(oldRange.location + oldRange.length <= length){
+    if (oldRange.location < length) {
+        if (oldRange.location + oldRange.length <= length) {
             [self setSelectedRange:oldRange];
-        }else{
+        } else {
             [self setSelectedRange:NSMakeRange(oldRange.location, length - oldRange.location)];       
         }
     }
@@ -304,9 +304,9 @@ static NSColor	*cachedWhiteColor = nil;
 	[super setTypingAttributes:attrs];
 	NSLog(@"Set to %@",attrs);
 	//Correctly set our background color
-	if((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])){
+	if ((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])) {
 		[self setBackgroundColor:backgroundColor];
-	}else{
+	} else {
 		[self setBackgroundColor:cachedWhiteColor];
 	}
 }
@@ -318,7 +318,7 @@ static NSColor	*cachedWhiteColor = nil;
 	
 	[super pasteAsRichText:sender];
 	
-	if(attributes){
+	if (attributes) {
 		[self setTypingAttributes:attributes];
 	}
 	
@@ -337,9 +337,9 @@ static NSColor	*cachedWhiteColor = nil;
 	insertingText = NO; 
 	
 	//Let Adium know we've adding content
-	if([aString isKindOfClass:[NSString class]]){
+	if ([aString isKindOfClass:[NSString class]]) {
 		theString = aString;
-	}else if([aString isKindOfClass:[NSAttributedString class]]){
+	} else if ([aString isKindOfClass:[NSAttributedString class]]) {
 		theString = [aString string];
 	}
 	
@@ -352,9 +352,9 @@ static NSColor	*cachedWhiteColor = nil;
 	[super deleteBackward:sender];
 	
 	//If we are now an empty string, and we still have a link active, clear the link
-	if ([[self textStorage] length] == 0){
+	if ([[self textStorage] length] == 0) {
 		NSDictionary *typingAttributes = [self typingAttributes];
-		if ([typingAttributes objectForKey:NSLinkAttributeName]){
+		if ([typingAttributes objectForKey:NSLinkAttributeName]) {
 			
 			NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
 			
@@ -371,7 +371,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Set and return the selected chat (to auto-configure the contact menu)
 - (void)setChat:(AIChat *)inChat
 {
-    if(chat != inChat){
+    if (chat != inChat) {
         [chat release];
         chat = [inChat retain];
     }
@@ -396,17 +396,17 @@ static NSColor	*cachedWhiteColor = nil;
 //Returns our desired size
 - (NSSize)desiredSize
 {
-    if(_desiredSizeCached.width == 0){
+    if (_desiredSizeCached.width == 0) {
         float 		textHeight;
 
-        if([[self textStorage] length] != 0){
+        if ([[self textStorage] length] != 0) {
             //If there is text in this view, let the container tell us its height
 			//Force glyph generation.  We must do this or usedRectForTextContainer might only return a rect for a
 			//portion of our text.
             [[self layoutManager] glyphRangeForTextContainer:[self textContainer]];
             textHeight = [[self layoutManager] usedRectForTextContainer:[self textContainer]].size.height;
 
-        }else{
+        } else {
             //Otherwise, we use the current typing attributes to guess what the height of a line should be
 			textHeight = [NSAttributedString stringHeightForAttributes:[self typingAttributes]];
         }
@@ -421,7 +421,7 @@ static NSColor	*cachedWhiteColor = nil;
 - (void)frameDidChange:(NSNotification *)notification
 {
 	//resetCacheAndPostSizeChanged can get us right back to here, resulting in an infinite loop if we're not careful
-	if (!resizing){
+	if (!resizing) {
 		resizing = YES;
 		[self _resetCacheAndPostSizeChanged];
 		resizing = NO;
@@ -435,7 +435,7 @@ static NSColor	*cachedWhiteColor = nil;
     _desiredSizeCached = NSMakeSize(0,0);
 
     //Post notification if size changed
-    if(!NSEqualSizes([self desiredSize], lastPostedSize)){
+    if (!NSEqualSizes([self desiredSize], lastPostedSize)) {
         [[NSNotificationCenter defaultCenter] postNotificationName:AIViewDesiredSizeDidChangeNotification object:self];
         lastPostedSize = [self desiredSize];
     }
@@ -447,13 +447,13 @@ static NSColor	*cachedWhiteColor = nil;
 //Page up or down in the message view
 - (void)scrollPageUp:(id)sender
 {
-    if([associatedView respondsToSelector:@selector(pageUp:)]){
+    if ([associatedView respondsToSelector:@selector(pageUp:)]) {
 		[associatedView pageUp:nil];
     }
 }
 - (void)scrollPageDown:(id)sender
 {
-    if([associatedView respondsToSelector:@selector(pageDown:)]){
+    if ([associatedView respondsToSelector:@selector(pageDown:)]) {
 		[associatedView pageDown:nil];
     }
 }
@@ -464,12 +464,12 @@ static NSColor	*cachedWhiteColor = nil;
 //Move up through the history
 - (void)historyUp
 {
-    if(currentHistoryLocation == 0){
+    if (currentHistoryLocation == 0) {
 		//Store current message
         [historyArray replaceObjectAtIndex:0 withObject:[[[self textStorage] copy] autorelease]];
     }
 	
-    if(currentHistoryLocation < [historyArray count]-1){
+    if (currentHistoryLocation < [historyArray count]-1) {
         //Move up
         currentHistoryLocation++;
 		
@@ -481,7 +481,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Move down through history
 - (void)historyDown
 {
-    if(currentHistoryLocation > 0){
+    if (currentHistoryLocation > 0) {
         //Move down
         currentHistoryLocation--;
 		
@@ -495,14 +495,14 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	NSAttributedString	*textStorage = [self textStorage];
 	
-	if([textStorage length] > 0){
+	if ([textStorage length] > 0) {
 		//Add to history if there is text being sent
 		[historyArray insertObject:[[textStorage copy] autorelease] atIndex:1];
-		if([historyArray count] > MAX_HISTORY){
+		if ([historyArray count] > MAX_HISTORY) {
 			[historyArray removeLastObject];
 		}
 		
-	}else{
+	} else {
 		[[adium notificationCenter] postNotificationName:@"Adium_RestoreDefaultFormatting"
 												  object:nil];
 	}
@@ -516,7 +516,7 @@ static NSColor	*cachedWhiteColor = nil;
 	[[self undoManager] removeAllActions];
 
 	//Remove the link attribute (If present) so it doesn't bleed
-	if([[self typingAttributes] objectForKey:NSLinkAttributeName]){
+	if ([[self typingAttributes] objectForKey:NSLinkAttributeName]) {
 		NSMutableDictionary	*typingAttributes = [[[self typingAttributes] mutableCopy] autorelease];
 		[typingAttributes removeObjectForKey:NSLinkAttributeName];
 		[self setTypingAttributes:typingAttributes];
@@ -535,7 +535,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Push out of the message entry field
 - (void)pushContent
 {
-	if([[self textStorage] length] != 0 && pushPopEnabled){
+	if ([[self textStorage] length] != 0 && pushPopEnabled) {
 		[pushArray addObject:[[[self textStorage] copy] autorelease]];
 		[self setString:@""];
 		[self _setPushIndicatorVisible:YES];
@@ -545,11 +545,11 @@ static NSColor	*cachedWhiteColor = nil;
 //Pop into the message entry field
 - (void)popContent
 {
-    if([pushArray count] && pushPopEnabled){
+    if ([pushArray count] && pushPopEnabled) {
         [self setAttributedString:[pushArray lastObject]];
         [self setSelectedRange:NSMakeRange([[self textStorage] length], 0)]; //selection to end
         [pushArray removeLastObject];
-        if([pushArray count] == 0){
+        if ([pushArray count] == 0) {
             [self _setPushIndicatorVisible:NO];
         }
     }
@@ -558,16 +558,16 @@ static NSColor	*cachedWhiteColor = nil;
 //Swap current content
 - (void)swapContent
 {
-	if(pushPopEnabled){
+	if (pushPopEnabled) {
 		NSAttributedString *tempMessage = [[[self textStorage] copy] autorelease];
 				
-		if([pushArray count]){
+		if ([pushArray count]) {
 			[self popContent];
-		}else{
+		} else {
 			[self setString:@""];
 		}
 		
-		if(tempMessage && [tempMessage length] != 0){
+		if (tempMessage && [tempMessage length] != 0) {
 			[pushArray addObject:tempMessage];
 			[self _setPushIndicatorVisible:YES];
 		}
@@ -577,7 +577,7 @@ static NSColor	*cachedWhiteColor = nil;
 //Push indicator
 - (void)_setPushIndicatorVisible:(BOOL)visible
 {
-    if(visible && !pushIndicatorVisible){
+    if (visible && !pushIndicatorVisible) {
         pushIndicatorVisible = visible;
 		
         //Push text over to make room for indicator
@@ -603,7 +603,7 @@ static NSColor	*cachedWhiteColor = nil;
 		
         [self _positionIndicator:nil]; //Set the indicators initial position
 		
-    }else if(!visible && pushIndicatorVisible){
+    } else if (!visible && pushIndicatorVisible) {
         pushIndicatorVisible = visible;
 		
         //Push text back
@@ -648,16 +648,16 @@ static NSColor	*cachedWhiteColor = nil;
 																						  forTextView:self];
 	itemsArray = [adiumMenu itemArray];
 	
-	if([itemsArray count] > 0) {
+	if ([itemsArray count] > 0) {
 		[contextualMenu addItem:[NSMenuItem separatorItem]];
 		int i = [(NSMenu *)contextualMenu numberOfItems];
 		enumerator = [itemsArray objectEnumerator];
-		while((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			//We're going to be copying; call menu needs update now since it won't be called later.
 			NSMenu	*submenu = [menuItem submenu];
-			if(submenu &&
+			if (submenu &&
 			   [submenu respondsToSelector:@selector(delegate)] &&
-			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]){
+			   [[submenu delegate] respondsToSelector:@selector(menuNeedsUpdate:)]) {
 				[[submenu delegate] menuNeedsUpdate:submenu];
 			}
 
@@ -701,11 +701,11 @@ static NSColor	*cachedWhiteColor = nil;
 	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
 	BOOL			allowDragOperation;
 	
-	if (type){
+	if (type) {
 		
 		// XXX - This shouldn't let you insert into a view for which the delegate says NO to some sort of check.
 		allowDragOperation = YES;
-	}else {
+	} else {
 		allowDragOperation = [super prepareForDragOperation:sender];
 	}
 	
@@ -718,7 +718,7 @@ static NSColor	*cachedWhiteColor = nil;
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
 	
-	if(!type){
+	if (!type) {
 		[super concludeDragOperation:sender];
 	}
 }
@@ -730,7 +730,7 @@ static NSColor	*cachedWhiteColor = nil;
 	NSString 		*type = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType,NSTIFFPboardType,NSPDFPboardType,NSPICTPboardType,nil]];
 	
 	BOOL	success = NO;
-	if(type){
+	if (type) {
 		NSAttributedString			*attachString;
 		NSImage						*img = [[[NSImage alloc] initWithPasteboard:pasteboard] autorelease];
 		
@@ -739,7 +739,7 @@ static NSColor	*cachedWhiteColor = nil;
 		//we can keep track of the paths of the files sent to us and insert their icons into the text view for later
 		//use.
 		
-		if (img && [chat canSendImages]){
+		if (img && [chat canSendImages]) {
 			AITextAttachmentExtension   *attachment = [[AITextAttachmentExtension alloc] init];
 			NSTextAttachmentCell		*cell = [[NSTextAttachmentCell alloc] initImageCell:img];
 			
@@ -754,11 +754,11 @@ static NSColor	*cachedWhiteColor = nil;
 			//Clean up
 			[cell release];
 			[attachment release];
-		}else{
+		} else {
 			NSArray			*files = [pasteboard propertyListForType:NSFilenamesPboardType];
 			NSEnumerator	*enumerator = [files objectEnumerator];
 			NSString		*path;
-			while ((path = [enumerator nextObject])){
+			while ((path = [enumerator nextObject])) {
 				ESFileWrapperExtension  *fileWrapper;
 				NSTextAttachment		*attachment;
 				
@@ -778,7 +778,7 @@ static NSColor	*cachedWhiteColor = nil;
 		}
 		
 		success = YES;
-	}else{
+	} else {
 		success = [super performDragOperation:sender];
 		
 	}
@@ -799,7 +799,7 @@ static NSColor	*cachedWhiteColor = nil;
 	textAttrDict = [[[self typingAttributes] mutableCopy] autorelease];
 	[textAttrDict setValue:newColor forKey:AIBodyColorAttributeName];
 	[self setTypingAttributes:textAttrDict];
-	if([[attrStorageString string] length] > 0)
+	if ([[attrStorageString string] length] > 0)
 	{
 		[attrStorageString setAttributes:textAttrDict range:NSMakeRange(0, [[attrStorageString string] length])];	
 	}

@@ -37,10 +37,10 @@ static BOOL					statusIconsReady = NO;
 
 + (void)initialize
 {
-	if(self == [AIStatusIcons class]){
+	if (self == [AIStatusIcons class]) {
 		//Allocate our status icon cache
-		for(unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
-			for(unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+		for (unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++) {
+			for (unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
 				statusIcons[i][j] = [[NSMutableDictionary alloc] init];
 			}
 		}
@@ -69,12 +69,12 @@ static BOOL					statusIconsReady = NO;
 {
 	NSString	*statusName = statusNameForChat(chat);
 	
-	if(statusName){
+	if (statusName) {
 		return [AIStatusIcons statusIconForStatusName:statusName
 										   statusType:AIAvailableStatusType
 											 iconType:iconType
 											direction:iconDirection];
-	}else{
+	} else {
 		return nil;
 	}
 }
@@ -82,7 +82,7 @@ static BOOL					statusIconsReady = NO;
 /* Copied from AIStatusController... this is called with a nil statusName frequently, so avoid making lots of extra method calls. */
 NSString *defaultNameForStatusType(AIStatusType statusType)
 {
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 			return STATUS_NAME_AVAILABLE;
 			break;
@@ -110,54 +110,54 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 	NSImage				*statusIcon = nil;
 
 	//If not passed a statusName, find a default
-	if(!statusName) statusName = defaultNameForStatusType(statusType);
+	if (!statusName) statusName = defaultNameForStatusType(statusType);
 	
 	//Retrieve the service icon from our cache
 	statusIcon = [statusIcons[iconType][iconDirection] objectForKey:statusName];
 
 	//Load the status icon if necessary
-	if(!statusIcon && statusIconsReady){
+	if (!statusIcon && statusIconsReady) {
 		NSString	*fileName;
 		
 		//Look for a file name with this status name in the active pack
 		fileName = [statusIconNames[iconType] objectForKey:statusName];
-		if(fileName){
+		if (fileName) {
 			NSString	*path = [statusIconBasePath stringByAppendingPathComponent:fileName];
 			
-			if(path){
+			if (path) {
 				statusIcon = [[NSImage alloc] initByReferencingFile:path];
 				
-				if(statusIcon){
-					if(iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
+				if (statusIcon) {
+					if (iconDirection == AIIconFlipped) [statusIcon setFlipped:YES];
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 					
 				}
 				
 				[statusIcon release];
 			}
-		}else{
+		} else {
 			NSString	*defaultStatusName = defaultNameForStatusType(statusType);
 
-			if(![defaultStatusName isEqualToString:statusName]){
+			if (![defaultStatusName isEqualToString:statusName]) {
 				/* If the pack doesn't provide an icon for this specific status name, fall back on and then cache the default. */
-				if((statusIcon = [self statusIconForStatusName:defaultStatusName
+				if ((statusIcon = [self statusIconForStatusName:defaultStatusName
 													statusType:statusType
 													  iconType:iconType
-													 direction:iconDirection])){
+													 direction:iconDirection])) {
 					[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 				}
 
-			}else{
-				if(statusType == AIInvisibleStatusType){
+			} else {
+				if (statusType == AIInvisibleStatusType) {
 					/* If we get here with an invisible status type, fall back on AIAwayStatusType */
-					if((statusIcon = [self statusIconForStatusName:nil
+					if ((statusIcon = [self statusIconForStatusName:nil
 														statusType:AIAwayStatusType
 														  iconType:iconType
-														 direction:iconDirection])){
+														 direction:iconDirection])) {
 						[statusIcons[iconType][iconDirection] setObject:statusIcon forKey:statusName];
 					}
 					
-				}else{
+				} else {
 					NSString	*errorMessage;
 					
 					errorMessage = [NSString stringWithFormat:
@@ -182,10 +182,10 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 //Set the active status icon pack
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath
 {
-	if(!statusIconBasePath || ![statusIconBasePath isEqualToString:inPath]){
+	if (!statusIconBasePath || ![statusIconBasePath isEqualToString:inPath]) {
 		NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 		
-		if(statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		if (statusIconDict && [[statusIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
 			[statusIconBasePath release];
 			statusIconBasePath = [inPath retain];
 			
@@ -196,8 +196,8 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			statusIconNames[AIStatusIconList] = [[statusIconDict objectForKey:@"List"] retain];
 
 			//Clear out the status icon cache
-			for(unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++){
-				for(unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+			for (unsigned i = 0; i < NUMBER_OF_STATUS_ICON_TYPES; i++) {
+				for (unsigned j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
 					[statusIcons[i][j] removeAllObjects];
 				}
 			}
@@ -208,7 +208,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 																			   object:nil];
 			
 			return(YES);
-		}else{
+		} else {
 			statusIconsReady = NO;
 
 			return(NO);
@@ -221,16 +221,16 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 //Returns the state icon for the passed chat (new content, typing, ...)
 static NSString *statusNameForChat(AIChat *inChat)
 {
-	if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+	if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
 		return(@"content");
 		
-	}else{
+	} else {
 		AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
 
-		if(typingState == AITyping){
+		if (typingState == AITyping) {
 			return(@"typing");
 			
-		}else if (typingState == AIEnteredText){
+		} else if (typingState == AIEnteredText) {
 			return(@"enteredtext");
 		}
 	}
@@ -255,21 +255,21 @@ static NSString *statusNameForListObject(AIListObject *listObject)
 {
 	NSString		*statusName = nil;
 
-	if([listObject isMobile]){
+	if ([listObject isMobile]) {
 		statusName = @"Mobile";
 	
-	}else{
+	} else {
 		AIStatusSummary	statusSummary = [listObject statusSummary];
 
-		if(statusSummary == AIOfflineStatus){
+		if (statusSummary == AIOfflineStatus) {
 			statusName = STATUS_NAME_OFFLINE;
-		}else if(statusSummary == AIIdleStatus){
+		} else if (statusSummary == AIIdleStatus) {
 			/* Note: AIIdleStatus, but not AIAwayAndIdleStatus, which implies an away state */
 			statusName = @"Idle";
-		}else{
+		} else {
 			statusName = [listObject statusName];
 			
-			if(!statusName && (statusSummary == AIUnknownStatus)){
+			if (!statusName && (statusSummary == AIUnknownStatus)) {
 				statusName = @"Unknown";
 			}
 		}
@@ -282,7 +282,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 {
 	AIStatusSummary	statusSummary = [listObject statusSummary];
 
-	if(statusSummary == AIOfflineStatus)
+	if (statusSummary == AIOfflineStatus)
 		return AIOfflineStatusType;
 	else
 		return [listObject statusType];
@@ -303,29 +303,29 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 
 	iconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 	
-	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+	if (iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
 		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
 		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:STATUS_NAME_AVAILABLE,STATUS_NAME_AWAY,@"Idle",@"Offline",nil] objectEnumerator];
 		NSString		*iconID;
 		int				xOrigin = 0;
 
 		[image lockFocus];
-		while((iconID = [enumerator nextObject])){
+		while ((iconID = [enumerator nextObject])) {
 			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
 			NSImage		*anIcon;
 			
-			if((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])){
+			if ((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])) {
 				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
 				
-				if(anIconSize.width < targetRect.size.width){
+				if (anIconSize.width < targetRect.size.width) {
 					float difference = (targetRect.size.width - anIconSize.width)/2;
 					
 					targetRect.size.width -= difference;
 					targetRect.origin.x += difference;
 				}
 				
-				if(anIconSize.height < targetRect.size.height){
+				if (anIconSize.height < targetRect.size.height) {
 					float difference = (targetRect.size.height - anIconSize.height)/2;
 					
 					targetRect.size.height -= difference;

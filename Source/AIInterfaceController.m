@@ -140,10 +140,10 @@
 	NSResponder	*responder = [keyWindow firstResponder];
 	
 	//First, walk down the responder chain looking for a responder which can handle the preferred selector
-	while(responder){
+	while (responder) {
 		[responderChain appendFormat:@"%@ (%i)",responder,[responder respondsToSelector:@selector(print:)]];
 		responder = [responder nextResponder];
-		if(responder) [responderChain appendString:@" -> "];
+		if (responder) [responderChain appendString:@" -> "];
 	}
 
 	NSLog(responderChain);
@@ -206,13 +206,13 @@
 //Registers code to handle the interface
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController
 {
-	if(!interfacePlugin) interfacePlugin = [inController retain];
+	if (!interfacePlugin) interfacePlugin = [inController retain];
 }
 
 //Register code to handle the contact list
 - (void)registerContactListController:(id <AIContactListController>)inController
 {
-	if(!contactListPlugin) contactListPlugin = [inController retain];
+	if (!contactListPlugin) contactListPlugin = [inController retain];
 }
 
 //Preferences changed
@@ -234,27 +234,27 @@
     //of the Adium system menu will cause it to always be YES.  We won't use it below.
 
 	//If no windows are visible, show the contact list
-	if(![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0){
+	if (![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
 		[self showContactList:nil];
-	}else{
+	} else {
 		//If windows are open, try switching to a chat with unviewed content
-		if(![[adium contentController] switchToMostRecentUnviewedContent]){
+		if (![[adium contentController] switchToMostRecentUnviewedContent]) {
 			NSEnumerator    *enumerator;
 			NSWindow	    *window, *targetWindow = nil;
 			BOOL	    	unMinimizedWindows = 0;
 			
 			//If there was no unviewed content, ensure that atleast one of Adium's windows is unminimized
 			enumerator = [[NSApp windows] objectEnumerator];
-			while((window = [enumerator nextObject])){
+			while ((window = [enumerator nextObject])) {
 				//Check stylemask to rule out the system menu's window (Which reports itself as visible like a real window)
-				if(([window styleMask] & (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask))){
-					if(!targetWindow) targetWindow = window;
-					if(![window isMiniaturized]) unMinimizedWindows++;
+				if (([window styleMask] & (NSTitledWindowMask | NSClosableWindowMask | NSMiniaturizableWindowMask))) {
+					if (!targetWindow) targetWindow = window;
+					if (![window isMiniaturized]) unMinimizedWindows++;
 				}
 			}
 			
 			//If there are no unminimized windows, unminimize the last one
-			if(unMinimizedWindows == 0 && targetWindow){
+			if (unMinimizedWindows == 0 && targetWindow) {
 				[targetWindow deminiaturize:nil];
 			}
 		}
@@ -269,9 +269,9 @@
 //Toggle the contact list
 - (IBAction)toggleContactList:(id)sender
 {
-    if([contactListPlugin contactListIsVisibleAndMain]){
+    if ([contactListPlugin contactListIsVisibleAndMain]) {
 		[self closeContactList:nil];
-    }else{
+    } else {
 		[self showContactList:nil];
     } 
 }
@@ -306,23 +306,23 @@
 	NSString	*containerID;
 	
 	//Determine the correct container for this chat
-	if(groupChatsByContactGroup){
+	if (groupChatsByContactGroup) {
 		AIListObject	*group = [[[adium contactController] parentContactForListObject:[inChat listObject]] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
-	}else{
+	} else {
 		//Open new chats into the first container (if not available, create a new one)
-		if([containers count] > 0){
+		if ([containers count] > 0) {
 			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
-		}else{
+		} else {
 			containerID = @"Messages";
 		}
 	}
 	
 	//XXX - Temporary setup for multiple windows
-	if(!tabbedChatting){
-		if([inChat listObject]){
+	if (!tabbedChatting) {
+		if ([inChat listObject]) {
 			containerID = [[inChat listObject] internalObjectID];
-		}else{
+		} else {
 			containerID = [inChat name];
 		}
 	}
@@ -330,7 +330,7 @@
 	
 	//Determine the correct placement for this chat within the container
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:-1];
-	if(![inChat isOpen]){
+	if (![inChat isOpen]) {
 		[inChat setIsOpen:YES];
 		
 		//Post the notification last, so observers receive a chat whose isOpen flag is yes.
@@ -355,13 +355,13 @@
 	NSString		*containerID;
 	
 	//For all containers but the first, move the chats they contain to the first container
-	while((containerID = [containerEnumerator nextObject])){
+	while ((containerID = [containerEnumerator nextObject])) {
 		NSArray			*openChats = [[interfacePlugin openChatsInContainerWithID:containerID] copy];
 		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
 		AIChat			*chat;
 
 		//Move all the chats, providing a target index if chat sorting is enabled
-		while((chat = [chatEnumerator nextObject])){
+		while ((chat = [chatEnumerator nextObject])) {
 			[interfacePlugin moveChat:chat
 					toContainerWithID:firstContainerID
 								index:-1];
@@ -399,7 +399,7 @@
 //Returns an array of open chats (cached, so call as frequently as desired)
 - (NSArray *)openChats
 {
-	if(!_cachedOpenChats){
+	if (!_cachedOpenChats) {
 		_cachedOpenChats = [[interfacePlugin openChats] retain];
 	}
 	
@@ -440,7 +440,7 @@
 	[self updateActiveWindowMenuItem];
 	
 	[mostRecentActiveChat release]; mostRecentActiveChat = nil;
-	if(inChat) mostRecentActiveChat = [inChat retain];	
+	if (inChat) mostRecentActiveChat = [inChat retain];	
 }
 
 //A chat has become visible: send out a notification for components and plugins to take action
@@ -464,11 +464,11 @@
 	[self clearUnviewedContentOfChat:inChat];
 	[self buildWindowMenu];
 	
-	if(inChat == activeChat){
+	if (inChat == activeChat) {
 		[activeChat release]; activeChat = nil;
 	}
 	
-	if(inChat == mostRecentActiveChat){
+	if (inChat == mostRecentActiveChat) {
 		[mostRecentActiveChat release]; mostRecentActiveChat = nil;
 	}
 }
@@ -491,7 +491,7 @@
 {
 	AIChat		*chat = [[notification userInfo] objectForKey:@"AIChat"];
 	
-	if(chat != activeChat){
+	if (chat != activeChat) {
 		[[adium contentController] increaseUnviewedContentOfChat:chat];
 	}
 }
@@ -508,17 +508,17 @@
 //Close the active chat
 - (IBAction)closeChatMenu:(id)sender
 {
-	if(activeChat) [self closeChat:activeChat];
+	if (activeChat) [self closeChat:activeChat];
 }
 
 //Updates the key equivalents on 'close' and 'close chat' (dynamically changed to make cmd-w less destructive)
 - (void)updateCloseMenuKeys
 {
-	if(activeChat && !closeMenuConfiguredForChat){
+	if (activeChat && !closeMenuConfiguredForChat) {
         [menuItem_close setKeyEquivalent:@"W"];
         [menuItem_closeChat setKeyEquivalent:@"w"];
 		closeMenuConfiguredForChat = YES;
-	}else if(!activeChat && closeMenuConfiguredForChat){
+	} else if (!activeChat && closeMenuConfiguredForChat) {
         [menuItem_close setKeyEquivalent:@"w"];
 		[menuItem_closeChat removeKeyEquivalent];		
 		closeMenuConfiguredForChat = NO;
@@ -541,8 +541,8 @@
     NSEnumerator	*enumerator = [windowMenuArray objectEnumerator];
     NSMenuItem		*item;
 
-    while((item = [enumerator nextObject])){
-		if([item representedObject]) [item setState:([item representedObject] == activeChat ? NSOnState : NSOffState)];
+    while ((item = [enumerator nextObject])) {
+		if ([item representedObject]) [item setState:([item representedObject] == activeChat ? NSOnState : NSOffState)];
     }
 }
 
@@ -558,7 +558,7 @@
 	
     //Remove any existing menus
     enumerator = [windowMenuArray objectEnumerator];
-    while((item = [enumerator nextObject])){
+    while ((item = [enumerator nextObject])) {
         [menuController removeMenuItem:item];
     }
     [windowMenuArray release]; windowMenuArray = [[NSMutableArray alloc] init];
@@ -567,14 +567,14 @@
 	NSEnumerator	*containerEnumerator = [[interfacePlugin openContainersAndChats] objectEnumerator];
 	NSDictionary	*containerDict;
 	
-	while((containerDict = [containerEnumerator nextObject])){
+	while ((containerDict = [containerEnumerator nextObject])) {
 		NSString		*containerName = [containerDict objectForKey:@"Name"];
 		NSArray			*contentArray = [containerDict objectForKey:@"Content"];
 		NSEnumerator	*contentEnumerator = [contentArray objectEnumerator];
 		AIChat			*chat;
 		
 		//Add a menu item for the container
-		if([contentArray count] > 1){
+		if ([contentArray count] > 1) {
 			item = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:containerName
 																		target:nil
 																		action:nil
@@ -584,15 +584,15 @@
 		}
 		
 		//Add items for the chats it contains
-		while((chat = [contentEnumerator nextObject])){
+		while ((chat = [contentEnumerator nextObject])) {
 			NSString		*windowKeyString;
 			
 			//Prepare a key equivalent for the controller
-			if(windowKey < 10){
+			if (windowKey < 10) {
 				windowKeyString = [NSString stringWithFormat:@"%i",(windowKey)];
-			}else if (windowKey == 10){
+			} else if (windowKey == 10) {
 				windowKeyString = [NSString stringWithString:@"0"];
-			}else{
+			} else {
 				windowKeyString = [NSString stringWithString:@""];
 			}
 			
@@ -600,7 +600,7 @@
 																		target:self
 																		action:@selector(showChatWindow:)
 																 keyEquivalent:windowKeyString];
-			if([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
+			if ([contentArray count] > 1 && respondsToSetIndentationLevel) [item setIndentationLevel:1];
 			[item setRepresentedObject:chat];
 			[item setImage:[chat chatMenuImage]];
 			[self _addItemToMainMenuAndDock:item];
@@ -636,11 +636,11 @@
 {
 	NSArray	*openChats = [self openChats];
 
-	if([openChats count]){
-		if(activeChat){
+	if ([openChats count]) {
+		if (activeChat) {
 			int chatIndex = [openChats indexOfObject:activeChat]+1;
 			[self setActiveChat:[openChats objectAtIndex:(chatIndex < [openChats count] ? chatIndex : 0)]];
-		}else{
+		} else {
 			[self setActiveChat:[openChats objectAtIndex:0]];
 		}
 	}
@@ -651,11 +651,11 @@
 {
 	NSArray	*openChats = [self openChats];
 	
-	if([openChats count]){
-		if(activeChat){
+	if ([openChats count]) {
+		if (activeChat) {
 			int chatIndex = [openChats indexOfObject:activeChat]-1;
 			[self setActiveChat:[openChats objectAtIndex:(chatIndex >= 0 ? chatIndex : [openChats count]-1)]];
-		}else{
+		} else {
 			[self setActiveChat:[openChats lastObject]];
 		}
 	}
@@ -675,7 +675,7 @@
 	//Sometimes our users find it amusing to disable plugins that are located within the Adium bundle.  This error
 	//trap prevents us from crashing if they happen to disable all the available message view plugins.
 	//PUT THAT PLUGIN BACK IT WAS IMPORTANT!
-	if([messageViewArray count] == 0){
+	if ([messageViewArray count] == 0) {
 		NSRunCriticalAlertPanel(@"No Message View Plugin Installed",
 								@"Adium cannot find its message view plugin, please re-install.  If you've manually disabled Adium's message view plugin, please re-enable it.",
 								@"Quit",
@@ -711,7 +711,7 @@
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
 {
     //Setup the timer if we don't have one yet
-    if(flashObserverArray == nil){
+    if (flashObserverArray == nil) {
         flashObserverArray = [[NSMutableArray alloc] init];
         flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) 
                                                        target:self 
@@ -731,7 +731,7 @@
     [flashObserverArray removeObject:inObserver];
     
     //Release the observer array and uninstall the timer
-    if([flashObserverArray count] == 0){
+    if ([flashObserverArray count] == 0) {
         [flashObserverArray release]; flashObserverArray = nil;
         [flashTimer invalidate];
         [flashTimer release]; flashTimer = nil;
@@ -747,7 +747,7 @@
     flashState++;
     
     enumerator = [flashObserverArray objectEnumerator];
-    while((observer = [enumerator nextObject])){
+    while ((observer = [enumerator nextObject])) {
         [observer flash:flashState];
     }
 }
@@ -773,8 +773,8 @@
 //list object tooltips
 - (void)showTooltipForListObject:(AIListObject *)object atScreenPoint:(NSPoint)point onWindow:(NSWindow *)inWindow 
 {
-    if(object){
-        if(object == tooltipListObject){ //If we already have this tooltip open
+    if (object) {
+        if (object == tooltipListObject) { //If we already have this tooltip open
                                          //Move the existing tooltip
             [AITooltipUtilities showTooltipWithTitle:tooltipTitle
 												body:tooltipBody
@@ -784,7 +784,7 @@
 											 atPoint:point 
 										 orientation:TooltipBelow];
             
-        }else{ //This is a new tooltip
+        } else { //This is a new tooltip
             NSArray                     *tabArray;
             NSMutableParagraphStyle     *paragraphStyleTitle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
             NSMutableParagraphStyle     *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -795,7 +795,7 @@
             //Buddy Icon
             [tooltipImage release];
 			tooltipImage = [[tooltipListObject userIcon] retain];
-			if(!tooltipImage) tooltipImage = [[AIServiceIcons serviceIconForObject:tooltipListObject
+			if (!tooltipImage) tooltipImage = [[AIServiceIcons serviceIconForObject:tooltipListObject
 																			 type:AIServiceIconLarge
 																		direction:AIIconNormal] retain];
             
@@ -860,9 +860,9 @@
 			[paragraphStyle release];
         }
         
-    }else{
+    } else {
         //Hide the existing tooltip
-        if(tooltipListObject){
+        if (tooltipListObject) {
             [AITooltipUtilities showTooltipWithTitle:nil 
                                                 body:nil
                                                image:nil 
@@ -906,23 +906,23 @@
         toolTipsFont, NSFontAttributeName, nil];
     
     //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if(!formattedUID || ([[displayName compactedString] isEqualToString:[formattedUID compactedString]])){
+    if (!formattedUID || ([[displayName compactedString] isEqualToString:[formattedUID compactedString]])) {
         [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
-    }else{
+    } else {
         [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
     }
     
-    if ([object isKindOfClass:[AIListContact class]]){
+    if ([object isKindOfClass:[AIListContact class]]) {
 		
 		//Add the serviceID, three spaces away
 		NSString	*displayServiceID;
-		if ([object isKindOfClass:[AIMetaContact class]]){
-			if ([(AIMetaContact *)object containsOnlyOneUniqueContact]){
+		if ([object isKindOfClass:[AIMetaContact class]]) {
+			if ([(AIMetaContact *)object containsOnlyOneUniqueContact]) {
 				displayServiceID = [[[(AIMetaContact *)object preferredContact] service] shortDescription];
-			}else{
+			} else {
 				displayServiceID = META_SERVICE_STRING;
 			}
-		}else{
+		} else {
 			displayServiceID = [[object service] shortDescription];
 		}
 		
@@ -932,7 +932,7 @@
                                     toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
     }
     
-    if ([object isKindOfClass:[AIListGroup class]]){
+    if ([object isKindOfClass:[AIListGroup class]]) {
         [titleString appendString:[NSString stringWithFormat:@" (%i/%i)",[(AIListGroup *)object visibleCount],[(AIListGroup *)object containedObjectsCount]] 
                    withAttributes:titleDict];
     }
@@ -942,7 +942,7 @@
     //Calculate the widest label while loading the arrays
     enumerator = [contactListTooltipEntryArray objectEnumerator];
     
-    while ((tooltipEntry = [enumerator nextObject])){
+    while ((tooltipEntry = [enumerator nextObject])) {
         
         entryString = [[tooltipEntry entryForObject:object] mutableCopy];
         if (entryString && [entryString length]) {
@@ -971,7 +971,7 @@
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
     
-    while((entryString = [enumerator nextObject])){        
+    while ((entryString = [enumerator nextObject])) {        
         NSAttributedString * labelAttribString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
 																				 attributes:labelDict];
         
@@ -1021,7 +1021,7 @@
     //Calculate the widest label while loading the arrays
 	enumerator = [contactListTooltipSecondaryEntryArray objectEnumerator];
 	
-	while ((tooltipEntry = [enumerator nextObject])){
+	while ((tooltipEntry = [enumerator nextObject])) {
 		
 		entryString = [[tooltipEntry entryForObject:object] mutableCopy];
 		if (entryString && [entryString length]) {
@@ -1049,7 +1049,7 @@
     //Add labels plus entires to the toolTip
     enumerator = [entryArray objectEnumerator];
     labelEnumerator = [labelArray objectEnumerator];
-    while((entryString = [enumerator nextObject])){
+    while ((entryString = [enumerator nextObject])) {
         NSMutableAttributedString *labelString = [[NSMutableAttributedString alloc] initWithString:[NSString stringWithFormat:@"\t%@:\t",[labelEnumerator nextObject]]
 																						attributes:labelDict];
         
@@ -1113,24 +1113,24 @@
 	SEL			pasteSelector = nil;
 	
 	//First, walk down the responder chain looking for a responder which can handle the preferred selector
-	while(responder && !([responder respondsToSelector:preferredSelector])){
+	while (responder && !([responder respondsToSelector:preferredSelector])) {
 		responder = [responder nextResponder];
 	}
 	
-	if (responder){
+	if (responder) {
 		pasteSelector = preferredSelector;
 		
-	}else{
+	} else {
 		//No responder found.  Try again, looking for one which will respond to paste:
 		responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		while(responder && !([responder respondsToSelector:@selector(paste:)])){
+		while (responder && !([responder respondsToSelector:@selector(paste:)])) {
 			responder = [responder nextResponder];
 		}
 		
 		if (responder) pasteSelector = @selector(paste:);
 	}
 	
-	if (pasteSelector){
+	if (pasteSelector) {
 		[keyWindow makeFirstResponder:responder];
 		[responder performSelector:pasteSelector
 						withObject:sender];
@@ -1144,7 +1144,7 @@
 	//Pass the print command to the window, which is responsible for routing it to the correct place or
 	//creating a view and printing.  Adium will not print from a window that does not respond to adiumPrint:
 	NSWindow	*keyWindowController = [[[NSApplication sharedApplication] keyWindow] windowController];
-	if([keyWindowController respondsToSelector:@selector(adiumPrint:)]){
+	if ([keyWindowController respondsToSelector:@selector(adiumPrint:)]) {
 		[keyWindowController performSelector:@selector(adiumPrint:)
 								  withObject:sender];
 	}
@@ -1157,9 +1157,9 @@
 {
     NSFontManager	*fontManager = [NSFontManager sharedFontManager];
     
-    if([fontManager traitsOfFont:[fontManager selectedFont]] & [sender tag]){
+    if ([fontManager traitsOfFont:[fontManager selectedFont]] & [sender tag]) {
         [fontManager removeFontTrait:sender];
-    }else{
+    } else {
         [fontManager addFontTrait:sender];
     }
 }
@@ -1182,34 +1182,34 @@
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder *responder = [keyWindow firstResponder]; 
 
-    if(menuItem == menuItem_bold || menuItem == menuItem_italic){
+    if (menuItem == menuItem_bold || menuItem == menuItem_italic) {
 		NSFont			*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
 		
 		//We must be in a text view, have text on the pasteboard, and have a font that supports bold or italic
-		if([responder isKindOfClass:[NSTextView class]]){
+		if ([responder isKindOfClass:[NSTextView class]]) {
 			return (menuItem == menuItem_bold ? [selectedFont supportsBold] : [selectedFont supportsItalics]);
 		}
 		return(NO);
 		
-	}else if(menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted){
+	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted) {
 		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil);
 	
-	}else if(menuItem == menuItem_showToolbar){
+	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
 										AILocalizedString(@"Hide Toolbar",nil) : 
 										AILocalizedString(@"Show Toolbar",nil))];
 		return([keyWindow toolbar] != nil);
 	
-	}else if(menuItem == menuItem_customizeToolbar){
+	} else if (menuItem == menuItem_customizeToolbar) {
 		return([keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible]);
 
-	}else if(menuItem == menuItem_closeChat){
+	} else if (menuItem == menuItem_closeChat) {
 		return(activeChat != nil);
 		
-	}else if(menuItem == menuItem_print){
+	} else if (menuItem == menuItem_print) {
 		return([[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)]);
 		
-	}else{
+	} else {
 		return(YES);
 	}
 }

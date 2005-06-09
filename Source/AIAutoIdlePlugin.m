@@ -96,10 +96,10 @@
  */
 - (void)machineIdleUpdate:(NSNotification *)notification
 {
-	if(!automaticIdleSet && reportIdleTime){
+	if (!automaticIdleSet && reportIdleTime) {
 		double	duration = [[[notification userInfo] objectForKey:@"Duration"] doubleValue];
 		
-		if(duration > idleTimeInterval){
+		if (duration > idleTimeInterval) {
 			//If we are over the idle threshold, set our accounts to idle
 			automaticIdleSet = YES;
 			automaticIdleDate = [[[notification userInfo] objectForKey:@"IdleSince"] retain];
@@ -119,9 +119,9 @@
  */
 - (void)machineIsActive:(NSNotification *)notification
 {
-	if(automaticIdleSet){
+	if (automaticIdleSet) {
 		//Only clear the idle status if it's the one we set, otherwise it's not ours to touch.
-		if([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] == automaticIdleDate){
+		if ([[adium preferenceController] preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] == automaticIdleDate) {
 			[[adium preferenceController] setPreference:nil
 												 forKey:@"IdleSince"
 												  group:GROUP_ACCOUNT_STATUS];

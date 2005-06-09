@@ -47,7 +47,7 @@
 //Init
 - (AIEmoticon *)initWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
-    if ((self = [super init])){
+    if ((self = [super init])) {
 		path = [inPath retain];
 		name = [inName retain];
 		textEquivalents = [inTextEquivalents retain];
@@ -151,7 +151,7 @@
     AITextAttachmentExtension   *attachment;
     
     //Cache this attachment for ourself
-    if(!_cachedAttributedString){
+    if (!_cachedAttributedString) {
         NSFileWrapper               *emoticonFileWrapper = [[[NSFileWrapper alloc] initWithPath:path] autorelease];
         AITextAttachmentExtension   *emoticonAttachment = [[[AITextAttachmentExtension alloc] init] autorelease];
         

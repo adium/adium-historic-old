@@ -26,7 +26,7 @@
 //init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		contentSize = NSMakeSize(0,0);
 		variableWidth = NO;
@@ -55,7 +55,7 @@
 //Set this cell's background color
 - (void)setBackgroundColor:(NSColor *)inColor
 {
-    if(backgroundColor != inColor){
+    if (backgroundColor != inColor) {
         [backgroundColor release]; backgroundColor = [inColor retain];
     }
 }

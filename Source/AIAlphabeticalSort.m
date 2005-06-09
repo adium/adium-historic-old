@@ -115,12 +115,12 @@ static  BOOL	sortByLastName;
  */
 - (IBAction)changePreference:(id)sender
 {
-	if (sender == checkBox_sortGroups){
+	if (sender == checkBox_sortGroups) {
 		sortGroups = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortGroups]
                                              forKey:KEY_SORT_GROUPS
                                               group:PREF_GROUP_CONTACT_SORTING];		
-	}else if (sender == checkBox_sortByLastName){
+	} else if (sender == checkBox_sortByLastName) {
 		sortByLastName = [sender state];
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:sortByLastName]
                                              forKey:KEY_SORT_BY_LAST_NAME
@@ -137,8 +137,8 @@ static  BOOL	sortByLastName;
 int alphabeticalSort(id objectA, id objectB, BOOL groups)
 {
 	//If we were not passed groups or if we should be sorting groups, sort alphabetically
-	if (!groups){
-		if (sortByLastName){
+	if (!groups) {
+		if (sortByLastName) {
 			NSString	*space = @" ";
 			NSString	*displayNameA = [objectA displayName];
 			NSString	*displayNameB = [objectB displayName];
@@ -147,21 +147,21 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups)
 			
 			NSComparisonResult returnValue = [[componentsA lastObject] caseInsensitiveCompare:[componentsB lastObject]];
 			//If the last names are the same, compare the whole object, which will amount to sorting these objects by first name
-			if (returnValue == NSOrderedSame){
+			if (returnValue == NSOrderedSame) {
 				returnValue = [displayNameA caseInsensitiveCompare:displayNameB];
 			}
 			
 			return (returnValue);
-		}else{
+		} else {
 			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 		}
-	}else{
+	} else {
 		//If sorting groups, do a caseInsesitiveCompare; otherwise, keep groups in manual order
-		if (sortGroups){
+		if (sortGroups) {
 			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
-		}else if([objectA orderIndex] > [objectB orderIndex]){
+		} else if ([objectA orderIndex] > [objectB orderIndex]) {
 			return(NSOrderedDescending);
-		}else{
+		} else {
 			return(NSOrderedAscending);
 		}
 	}

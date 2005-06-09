@@ -51,7 +51,7 @@
 	NSToolbar 	*toolbar = [self toolbar];
 	float 		toolbarHeight = 0.0;
 	
-	if(toolbar && [toolbar isVisible]){
+	if (toolbar && [toolbar isVisible]) {
 		NSRect 		windowFrame = [NSWindow contentRectForFrameRect:[self frame]
 														  styleMask:[self styleMask]];
 		toolbarHeight = NSHeight(windowFrame) - NSHeight([[self contentView] frame]);
@@ -84,29 +84,29 @@
 //	// ### This code correctly sets the expose flag, but doesn't remove it ###
 //	
 //	//Check for the presence of all three symbols.  If they do not exist, we simply return
-//	if(CGSGetWindowTags != NULL && CGSClearWindowTags != NULL && CGSSetWindowTags != NULL){
+//	if (CGSGetWindowTags != NULL && CGSClearWindowTags != NULL && CGSSetWindowTags != NULL) {
 //		CGSConnection cid;
 //		CGSWindow wid;
 //		SInt32 vers; 
 //		
 //		//As an extra layer of security, make sure we're in 10.3 or newer
 //		Gestalt(gestaltSystemVersion,&vers); 
-//		if(vers >= 0x1030){
+//		if (vers >= 0x1030) {
 //			wid = [self windowNumber];
 //			cid = _CGSDefaultConnection();
 //			int tags[2];
 //			tags[0] = tags[1] = 0;
 //			OSStatus retVal = CGSGetWindowTags(cid, wid, tags, 32);
-//			if(!retVal){
-//				if(flag){
+//			if (!retVal) {
+//				if (flag) {
 //					tags[0] = tags[0] | 0x00000800;
-//				}else{
+//				} else {
 //					tags[0] -= tags[0] & 0x00000800;
 //				}
 //				
 //				CGSSetWindowTags(cid, wid, tags, 32);
 //				
-//				if(flag){
+//				if (flag) {
 //					tags[0] = 0x02;
 //					tags[1] = 0;
 //					CGSClearWindowTags(cid, wid, tags, 32);

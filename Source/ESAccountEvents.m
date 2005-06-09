@@ -64,13 +64,13 @@
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+	if ([eventID isEqualToString:ACCOUNT_CONNECTED]) {
 		description = AILocalizedString(@"You connect",nil);
-	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+	} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 		description = AILocalizedString(@"You disconnect",nil);
-	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+	} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
 		description = AILocalizedString(@"New email notification",nil);
-	}else{
+	} else {
 		description = @"";	
 	}
 	
@@ -89,13 +89,13 @@
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+	if ([eventID isEqualToString:ACCOUNT_CONNECTED]) {
 		description = @"Connected";
-	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+	} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 		description = @"Disconnected";
-	}else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+	} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
 		description = @"New Mail Received";
-	}else{
+	} else {
 		description = @"";	
 	}
 	
@@ -109,13 +109,13 @@
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+	if ([eventID isEqualToString:ACCOUNT_CONNECTED]) {
 		description = AILocalizedString(@"When you connect",nil);
-	}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+	} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 		description = AILocalizedString(@"When you disconnect",nil);
-	}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+	} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
 		description = AILocalizedString(@"When you receive a new email notification",nil);
-	}else{
+	} else {
 		description = @"";
 	}
 	
@@ -138,25 +138,25 @@
 {
 	NSString	*description = nil;
 	
-	if(includeSubject){
+	if (includeSubject) {
 		NSString	*format = nil;
-		if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+		if ([eventID isEqualToString:ACCOUNT_CONNECTED]) {
 			format = AILocalizedString(@"%@ connected",nil);
-		}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+		} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 			format = AILocalizedString(@"%@ disconnected",nil);
-		}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+		} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
 			format = AILocalizedString(@"%@ received new email",nil);
 		}
 		
-		if(format){
+		if (format) {
 			description = [NSString stringWithFormat:format,[listObject formattedUID]];
 		}
-	}else{
-		if([eventID isEqualToString:ACCOUNT_CONNECTED]){
+	} else {
+		if ([eventID isEqualToString:ACCOUNT_CONNECTED]) {
 			description = AILocalizedString(@"connected",nil);
-		}else if([eventID isEqualToString:ACCOUNT_DISCONNECTED]){
+		} else if ([eventID isEqualToString:ACCOUNT_DISCONNECTED]) {
 			description = AILocalizedString(@"disconnected",nil);
-		}else if([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]){
+		} else if ([eventID isEqualToString:ACCOUNT_RECEIVED_EMAIL]) {
 			description = AILocalizedString(@"received new email",nil);
 		}
 	}
@@ -167,7 +167,7 @@
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	static NSImage	*eventImage = nil;
-	if(!eventImage) eventImage = [[NSImage imageNamed:@"pref-accounts" forClass:[self class]] retain];
+	if (!eventImage) eventImage = [[NSImage imageNamed:@"pref-accounts" forClass:[self class]] retain];
 	return eventImage;
 }
 
@@ -179,11 +179,11 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]]){ //We only care about accounts
-		if([inModifiedKeys containsObject:@"Online"]){
+	if ([inObject isKindOfClass:[AIAccount class]]) { //We only care about accounts
+		if ([inModifiedKeys containsObject:@"Online"]) {
 			
-			if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]){
-				if (accountConnectionStatusGroupingOnlineTimer){
+			if ([[inObject numberStatusObjectForKey:@"Online"] boolValue]) {
+				if (accountConnectionStatusGroupingOnlineTimer) {
 					[accountConnectionStatusGroupingOnlineTimer invalidate]; [accountConnectionStatusGroupingOnlineTimer release];
 				}
 				
@@ -192,8 +192,8 @@
 																							 selector:@selector(accountConnection:)
 																							 userInfo:inObject
 																							  repeats:NO] retain];
-			}else{
-				if (accountConnectionStatusGroupingOfflineTimer){
+			} else {
+				if (accountConnectionStatusGroupingOfflineTimer) {
 					[accountConnectionStatusGroupingOfflineTimer invalidate]; [accountConnectionStatusGroupingOfflineTimer release];
 				}
 				
