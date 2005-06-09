@@ -240,8 +240,15 @@
  */
 - (void)setListObject:(AIListContact *)listContact
 {
-	if(listContact != [chat listObject]){
-		[[adium contentController] switchChat:chat toListContact:listContact usingContactAccount:NO];
+	if (listContact != [chat listObject]) {
+		BOOL	shouldChangeAccount;
+
+		//If we changed services, set the account to this contact's account
+		shouldChangeAccount = ([listContact service] != [[chat listObject] service]);
+
+		[[adium contentController] switchChat:chat
+								toListContact:listContact
+						  usingContactAccount:shouldChangeAccount];
 	}
 }
 
