@@ -1238,8 +1238,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		//Set to the new listContact and account as needed
 		[chat setListObject:newContact];
 		if (useContactAccount) [chat setAccount:newAccount];
-		
-		
+
 		//Reopen the chat on the account
 		[[chat account] openChat:chat];
 		
