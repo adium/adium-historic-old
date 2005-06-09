@@ -11,14 +11,14 @@
 
 BOOL NDLogFalseBody( const BOOL aCond, const char * aTime, const char * aFileName, const char * aFuncName, const unsigned int aLine, const char * aCodeLine )
 {
-	if( aCond == NO )
+	if ( aCond == NO )
 		fprintf( stderr, "[%s] Condition false:\n\t%s\n\tfile: %s\n\tfunction: %s\n\tline: %u.\n", aTime, aFuncName, aCodeLine, aFileName, aLine );
 	return aCond;
 }
 
 BOOL NDLogOSStatusBody( const OSStatus anError, const char * aTime, const char * aFileName, const char * aFuncName, const unsigned int aLine, const char * aCodeLine )
 {
-	if( anError != noErr )
+	if ( anError != noErr )
 		fprintf( stderr, "Error result [%s] OSStatus %li:\n\t%s\n\tfile: %s\n\tfunction: %s\n\tline: %u.\n", aTime, anError, aCodeLine, aFileName, aFuncName, aLine );
 	return anError == noErr;
 }

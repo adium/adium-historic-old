@@ -96,18 +96,18 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]]){
-		if([inModifiedKeys containsObject:@"Online"] ||
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		if ([inModifiedKeys containsObject:@"Online"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
 		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]){
+		   [inModifiedKeys containsObject:@"StatusState"]) {
 
 			//Refresh this account in our list
 			int accountRow = [accountArray indexOfObject:inObject];
-			if(accountRow >= 0 && accountRow < [accountArray count]){
+			if (accountRow >= 0 && accountRow < [accountArray count]) {
 				[tableView_accountList setNeedsDisplayInRect:[tableView_accountList rectOfRow:accountRow]];
 			}
 			
@@ -142,7 +142,7 @@
 - (IBAction)editAccount:(id)sender
 {
     int	selectedRow = [tableView_accountList selectedRow];
-	if(selectedRow >= 0 && selectedRow < [accountArray count]){		
+	if (selectedRow >= 0 && selectedRow < [accountArray count]) {		
 		[AIEditAccountWindowController editAccount:[accountArray objectAtIndex:selectedRow] 
 										  onWindow:[[self view] window]
 								   notifyingTarget:self];
@@ -156,7 +156,7 @@
 {
 	BOOL existingAccount = ([[[adium accountController] accounts] containsObject:inAccount]);
 	
-	if(!existingAccount && successful){
+	if (!existingAccount && successful) {
 		//New accounts need to be added to our account list once they're configured
 		[[adium accountController] addAccount:inAccount];
 
@@ -177,7 +177,7 @@
 {
     int index = [tableView_accountList selectedRow];
 
-    if(index != -1){		
+    if (index != -1) {		
 		AIAccount	*targetAccount;
 		NSString    *accountFormattedUID;
 
@@ -209,13 +209,13 @@
     NSParameterAssert(targetAccount != nil);
 	NSParameterAssert([targetAccount isKindOfClass:[AIAccount class]]);
     
-    if(returnCode == NSAlertDefaultReturn){
+    if (returnCode == NSAlertDefaultReturn) {
         //Delete it
         index = [accountArray indexOfObject:targetAccount];
         [[adium accountController] deleteAccount:targetAccount];
 		
         //If it was the last row, select the new last row (by default the selection will jump to the top, which is bad)
-        if(index >= [accountArray count]){
+        if (index >= [accountArray count]) {
             index = [accountArray count]-1;
             [tableView_accountList selectRow:index byExtendingSelection:NO];
         }
@@ -238,7 +238,7 @@
 	[button_editAccount setTitle:AILocalizedString(@"Edit",nil)];
 	[button_editAccount sizeToFit];
 	newFrame = [button_editAccount frame];
-	if(newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
+	if (newFrame.size.width < oldFrame.size.width) newFrame.size.width = oldFrame.size.width;
 	newFrame.origin.x = oldFrame.origin.x + oldFrame.size.width - newFrame.size.width;
 	[button_editAccount setFrame:newFrame];
 
@@ -303,17 +303,17 @@
  */
 - (void)updateAccountOverview
 {
-	if([accountArray count] == 0){
+	if ([accountArray count] == 0) {
 		[textField_overview setStringValue:AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present")];
 
-	}else{
+	} else {
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		AIAccount		*account;
 		int				online = 0;
 		
 		//Count online accounts
-		while((account = [enumerator nextObject])){
-			if([[account statusObjectForKey:@"Online"] boolValue]) online++;
+		while ((account = [enumerator nextObject])) {
+			if ([[account statusObjectForKey:@"Online"] boolValue]) online++;
 		}
 		
 		[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online","Overview of total and online accounts"), [accountArray count], online]];
@@ -358,37 +358,37 @@
 	NSString 	*identifier = [tableColumn identifier];
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
-	if([identifier isEqualToString:@"icon"]){
+	if ([identifier isEqualToString:@"icon"]) {
 		return([[account userIcon] imageByScalingToSize:NSMakeSize(28,28)]);
 
-	}else if([identifier isEqualToString:@"service"]){
+	} else if ([identifier isEqualToString:@"service"]) {
 		return([[AIServiceIcons serviceIconForObject:account
 												type:AIServiceIconLarge
 										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)]);
 
-	}else if([identifier isEqualToString:@"name"]){
+	} else if ([identifier isEqualToString:@"name"]) {
 		return([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT);
 		
-	}else if([identifier isEqualToString:@"status"]){
+	} else if ([identifier isEqualToString:@"status"]) {
 		NSString	*title;
 		
-		if([[account statusObjectForKey:@"Connecting"] boolValue]){
+		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
 			title = AILocalizedString(@"Connecting",nil);
-		}else if([[account statusObjectForKey:@"Disconnecting"] boolValue]){
+		} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
 			title = AILocalizedString(@"Disconnecting",nil);
-		}else if([[account statusObjectForKey:@"Online"] boolValue]){
+		} else if ([[account statusObjectForKey:@"Online"] boolValue]) {
 			title = AILocalizedString(@"Online",nil);
-		}else{
+		} else {
 			title = STATUS_DESCRIPTION_OFFLINE;
 		}
 
 		return(title);
 		
-	}else if([identifier isEqualToString:@"statusicon"]){
+	} else if ([identifier isEqualToString:@"statusicon"]) {
 
 		return([AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal]);
 		
-	}else if([identifier isEqualToString:@"enabled"]){
+	} else if ([identifier isEqualToString:@"enabled"]) {
 		return(nil);
 	}
 	
@@ -403,11 +403,11 @@
 	NSString 	*identifier = [tableColumn identifier];
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
-	if([identifier isEqualToString:@"enabled"]){
+	if ([identifier isEqualToString:@"enabled"]) {
 		BOOL online = [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
 		[cell setState:(online ? NSOnState : NSOffState)];
 
-	}else if([identifier isEqualToString:@"status"]){
+	} else if ([identifier isEqualToString:@"status"]) {
 		[cell setEnabled:([[account statusObjectForKey:@"Connecting"] boolValue] ||
 						  [[account statusObjectForKey:@"Disconnecting"] boolValue] ||
 						  [[account statusObjectForKey:@"Online"] boolValue])];
@@ -422,7 +422,7 @@
  */
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	if([[tableColumn identifier] isEqualToString:@"enabled"]){
+	if ([[tableColumn identifier] isEqualToString:@"enabled"]) {
 		[[accountArray objectAtIndex:row] setPreference:object forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 	}
 }
@@ -445,9 +445,9 @@
  */
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
-    if(op == NSTableViewDropAbove && row != -1){
+    if (op == NSTableViewDropAbove && row != -1) {
         return(NSDragOperationPrivate);
-    }else{
+    } else {
         return(NSDragOperationNone);
     }
 }
@@ -459,12 +459,12 @@
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE]];
 	
-    if([avaliableType isEqualToString:@"AIAccount"]){
+    if ([avaliableType isEqualToString:@"AIAccount"]) {
         int newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
         [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
 		
         return(YES);
-    }else{
+    } else {
         return(NO);
     }
 }

@@ -62,13 +62,13 @@
 											 account:inAccount
 									 notifyingTarget:inTarget];
 
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
 			modalDelegate:controller
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[controller showWindow:nil];
 	}
 }
@@ -78,7 +78,7 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName account:(AIAccount *)inAccount notifyingTarget:(id)inTarget
 {
-	if((self = [super initWithWindowNibName:windowNibName])) {
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		account = [inAccount retain];
 		notifyTarget = inTarget;
 		userIconData = nil;
@@ -148,7 +148,7 @@
  */
 - (IBAction)cancel:(id)sender
 {
-	if(notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:NO];
+	if (notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:NO];
 	[self closeWindow:nil];
 }
 
@@ -163,7 +163,7 @@
 	[accountViewController saveConfiguration];
 	[accountProxyController saveConfiguration];
 
-	if(notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:YES];
+	if (notifyTarget) [notifyTarget editAccountSheetDidEndForAccount:account withSuccess:YES];
 	[self closeWindow:nil];
 }
 
@@ -176,7 +176,7 @@
 {
 	/* User icon - save if we have data or we deleted
 	 * (so if we don't have data that's the desired thing to set as the pref) */
-	if(userIconData || didDeleteUserIcon){
+	if (userIconData || didDeleteUserIcon) {
 		[account setPreference:userIconData
 						forKey:KEY_USER_ICON
 						 group:GROUP_ACCOUNT_STATUS];
@@ -264,9 +264,9 @@
 - (int)_addCustomView:(NSView *)customView toView:(NSView *)setupView tabViewItemIdentifier:(NSString *)identifier
 	  availableHeight:(int)height
 {
-	if(customView){
+	if (customView) {
 		//Adjust height as necessary if our view needs more room
-		if([customView frame].size.height > height){
+		if ([customView frame].size.height > height) {
 			height = [customView frame].size.height;
 		}
 
@@ -275,7 +275,7 @@
 		[customView setAutoresizingMask:NSViewMinYMargin];
 		[setupView addSubview:customView];
 
-	}else{
+	} else {
 		//If no view is available, remove the corresponding tab
 		[tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemWithIdentifier:identifier]];
 	}

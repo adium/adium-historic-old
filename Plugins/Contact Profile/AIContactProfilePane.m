@@ -67,7 +67,7 @@
 - (void)configureForListObject:(AIListObject *)inObject
 {
 	//New list object
-	if(inObject != listObject){
+	if (inObject != listObject) {
 		[listObject release];
 		listObject = [inObject retain];
 	}
@@ -76,7 +76,7 @@
 	[self updatePane];
 	
 	//Refresh the window's content (Contacts only)
-	if([listObject isKindOfClass:[AIListContact class]]){
+	if ([listObject isKindOfClass:[AIListContact class]]) {
 		[[adium contactController] updateListContactStatus:(AIListContact *)listObject];
 	}
 }
@@ -84,7 +84,7 @@
 //Refresh if changes are made to the object we're displaying
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if(inObject == listObject){
+    if (inObject == listObject) {
         [self updatePane];
     }
     return(nil);
@@ -113,13 +113,13 @@
 
 - (void)gotFilteredProfile:(NSAttributedString *)infoString context:(AIListObject *)object
 {
-	if(viewIsOpen)
+	if (viewIsOpen)
 		[self setAttributedString:infoString intoTextView:textView_profile];
 }
 
 - (void)gotFilteredStatus:(NSAttributedString *)infoString context:(AIListObject *)object
 {
-	if(viewIsOpen)
+	if (viewIsOpen)
 		[self setAttributedString:infoString intoTextView:textView_status];
 }
 
@@ -128,13 +128,13 @@
 {
 	NSColor		*backgroundColor = nil;
 
-	if(infoString && [infoString length]){
+	if (infoString && [infoString length]) {
 		[[textView textStorage] setAttributedString:infoString];	
 		backgroundColor = [infoString attribute:AIBodyColorAttributeName
 										atIndex:0 
 						  longestEffectiveRange:nil 
 										inRange:NSMakeRange(0,[infoString length])];
-	}else{
+	} else {
 		[[textView textStorage] setAttributedString:[NSAttributedString stringWithString:@""]];	
 	}
 	[textView setBackgroundColor:(backgroundColor ? backgroundColor : [NSColor whiteColor])];

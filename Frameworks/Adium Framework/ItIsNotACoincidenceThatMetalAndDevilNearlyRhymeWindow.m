@@ -32,7 +32,7 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag
 {
 	//Cancel out any attempt to create Windows Of Satan.
-	if (styleMask & NSTexturedBackgroundWindowMask){
+	if (styleMask & NSTexturedBackgroundWindowMask) {
 		styleMask &= ~NSTexturedBackgroundWindowMask;
 	}
 
@@ -45,7 +45,7 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)backingType defer:(BOOL)flag screen:(NSScreen *)aScreen
 {
 	//Fight the good fight.
-	if (styleMask & NSTexturedBackgroundWindowMask){
+	if (styleMask & NSTexturedBackgroundWindowMask) {
 		styleMask &= ~NSTexturedBackgroundWindowMask;
 	}
 

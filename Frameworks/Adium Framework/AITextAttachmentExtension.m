@@ -19,7 +19,7 @@
 
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		stringRepresentation = nil;
 		shouldSaveImageForLogging = NO;
@@ -41,7 +41,7 @@
     
 - (void)setString:(NSString *)inString
 {
-    if(stringRepresentation != inString){
+    if (stringRepresentation != inString) {
         [stringRepresentation release];
         stringRepresentation = [inString retain];
     }
@@ -52,7 +52,7 @@
  */
 - (NSString *)string
 {
-	if(stringRepresentation == nil){
+	if (stringRepresentation == nil) {
 		[self setString:[[NSProcessInfo processInfo] globallyUniqueString]];
     }
 	
@@ -61,7 +61,7 @@
 
 - (void)setImagePath:(NSString *)inPath
 {
-	if(imagePath != inPath){
+	if (imagePath != inPath) {
 		[imagePath release];
 		imagePath = [inPath retain];
 	}

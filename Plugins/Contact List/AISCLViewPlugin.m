@@ -79,10 +79,10 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Show contact list
 - (void)showContactListAndBringToFront:(BOOL)bringToFront
 {
-    if(!contactListWindowController){ //Load the window
-		if(windowStyle == WINDOW_STYLE_STANDARD){
+    if (!contactListWindowController) { //Load the window
+		if (windowStyle == WINDOW_STYLE_STANDARD) {
 			contactListWindowController = [[AIStandardListWindowController listWindowController] retain];
-		}else{
+		} else {
 			contactListWindowController = [[AIBorderlessListWindowController listWindowController] retain];
 		}
     }
@@ -99,7 +99,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Close contact list
 - (void)closeContactList
 {
-    if(contactListWindowController){
+    if (contactListWindowController) {
         [[contactListWindowController window] performClose:nil];
     }
 }
@@ -118,9 +118,9 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(firstTime || [group isEqualToString:PREF_GROUP_APPEARANCE]){
+	if (firstTime || [group isEqualToString:PREF_GROUP_APPEARANCE]) {
 		//Theme
-		if(firstTime || !key || [key isEqualToString:KEY_LIST_THEME_NAME]){
+		if (firstTime || !key || [key isEqualToString:KEY_LIST_THEME_NAME]) {
 			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_THEME_NAME]
 									extension:LIST_THEME_EXTENSION
 									 inFolder:LIST_THEME_FOLDER
@@ -128,21 +128,21 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 		}
 		
 		//Layout
-		if(firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]){
+		if (firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_NAME]) {
 			[AISCLViewPlugin applySetWithName:[prefDict objectForKey:KEY_LIST_LAYOUT_NAME]
 									extension:LIST_LAYOUT_EXTENSION
 									 inFolder:LIST_LAYOUT_FOLDER
 							toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 		}
 
-		if(firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]){
+		if (firstTime || !key || [key isEqualToString:KEY_LIST_LAYOUT_WINDOW_STYLE]) {
 			int	newWindowStyle = [[prefDict objectForKey:KEY_LIST_LAYOUT_WINDOW_STYLE] intValue];
 
-			if(newWindowStyle != windowStyle){
+			if (newWindowStyle != windowStyle) {
 				windowStyle = newWindowStyle;
 				
 				//If a contact list is visible and the window style has changed, update for the new window style
-				if(contactListWindowController){
+				if (contactListWindowController) {
 					//XXX - Evan: I really do not like this at all.  What to do?
 					//We can't close and reopen the contact list from within a preferencesChanged call, as the
 					//contact list itself is a preferences observer and will modify the array for its group as it
@@ -179,10 +179,10 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	fileName = [setName stringByAppendingPathExtension:extension];
 	
 	enumerator = [[adiumInstance resourcePathsForName:folder] objectEnumerator];
-	while((resourcePath = [enumerator nextObject]) && !setDictionary) {
+	while ((resourcePath = [enumerator nextObject]) && !setDictionary) {
 		NSString		*filePath = [resourcePath stringByAppendingPathComponent:fileName];
 		
-		if ([defaultManager fileExistsAtPath:filePath]){
+		if ([defaultManager fileExistsAtPath:filePath]) {
 			setDictionary = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		}
 	}
@@ -190,7 +190,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	//Apply its values
 	[[adiumInstance preferenceController] delayPreferenceChangedNotifications:YES];
 	enumerator = [setDictionary keyEnumerator];
-	while((key = [enumerator nextObject])){
+	while ((key = [enumerator nextObject])) {
 		[[adiumInstance preferenceController] setPreference:[setDictionary objectForKey:key]
 													 forKey:key
 													  group:preferenceGroup];
@@ -209,12 +209,12 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
 	path = [destFolder stringByAppendingPathComponent:fileName];
 	
-	if([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]){
+	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
 		
 		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 
 		return(YES);
-	}else{
+	} else {
 		NSRunAlertPanel(AILocalizedString(@"Error Saving Theme",nil),
 						AILocalizedString(@"Unable to write file %@ to %@",nil),
 						AILocalizedString(@"OK",nil),
@@ -301,15 +301,15 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSMutableArray	*alreadyAddedArray = [NSMutableArray array];
 	NSString		*filePath;
 	
-    while((filePath = [enumerator nextObject])) {
+    while ((filePath = [enumerator nextObject])) {
 		NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		
-		if(themeDict){
+		if (themeDict) {
 			NSString	*name = [[filePath lastPathComponent] stringByDeletingPathExtension];
 			
 			//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
 			//already added, we allow precedence to occur rather than conflict.
-			if ([alreadyAddedArray indexOfObject:name] == NSNotFound){
+			if ([alreadyAddedArray indexOfObject:name] == NSNotFound) {
 				[setArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
 					name, @"name",
 					filePath, @"path",
@@ -324,7 +324,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 }
 
 //Sort sets
-int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context){
+int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context) {
 	return([[objectA objectForKey:@"name"] caseInsensitiveCompare:[objectB objectForKey:@"name"]]);
 }
 

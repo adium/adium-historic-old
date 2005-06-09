@@ -50,7 +50,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
  */
 + (void)showUpToDateWindow
 {
-	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
+	if (sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
 	sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:VERSION_UPTODATE_NIB];
 	[sharedVersionCheckerInstance localizeUpToDateWindow];
 	[sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
@@ -65,7 +65,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
  */
 + (void)showUpdateWindowFromBuild:(NSDate *)currentBuildDate toBuild:(NSDate *)latestBuildDate
 {
-	if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
+	if (sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
 	sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:VERSION_AVAILABLE_NIB];
 	[sharedVersionCheckerInstance showWindowFromBuild:currentBuildDate toBuild:latestBuildDate];
 }
@@ -77,7 +77,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
  */
 + (void)showCannotConnectWindow
 {
-    if(sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
+    if (sharedVersionCheckerInstance) [sharedVersionCheckerInstance release];
     sharedVersionCheckerInstance = [[self alloc] initWithWindowNibName:CONNECT_ERROR_NIB];
     [sharedVersionCheckerInstance showWindowFromBuild:nil toBuild:nil];
 }
@@ -90,7 +90,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[super windowDidLoad];
 
 	//Disable the 'check automatically' button if we are in a beta build
-	if(BETA_RELEASE){
+	if (BETA_RELEASE) {
 		[checkBox_checkAutomatically setState:YES];
 		[checkBox_checkAutomatically setEnabled:NO];
 	}
@@ -129,7 +129,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
 	[checkBox_checkAutomatically setState:[[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																					group:PREF_GROUP_UPDATING] boolValue]];
 	//Set our panel to display the build date and age of the running copy
-	if(currentDate && newestDate){
+	if (currentDate && newestDate) {
 		NSDateFormatter *dateFormatter;
 		NSString   		*newestDateString;
 		NSString		*interval;
@@ -164,7 +164,7 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
  */
 - (IBAction)changePreference:(id)sender
 {
-	if(sender == checkBox_checkAutomatically){
+	if (sender == checkBox_checkAutomatically) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_CHECK_AUTOMATICALLY
 											  group:PREF_GROUP_UPDATING];

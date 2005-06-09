@@ -28,24 +28,24 @@
     NSMutableDictionary			*sizeDict = nil;
     NSFont						*font = nil;
 
-    if(!fontDict){
+    if (!fontDict) {
         fontDict = [[NSMutableDictionary alloc] init];
     }
 
-	if (fontName){
+	if (fontName) {
 		sizeDict = [fontDict objectForKey:fontName];
-		if(!sizeDict){
+		if (!sizeDict) {
 			sizeDict = [NSMutableDictionary dictionary];
 			[fontDict setObject:sizeDict forKey:fontName];
 		}
 
 		font = [sizeDict objectForKey:sizeString];
 
-		if(!font){
+		if (!font) {
 			font = [self fontWithName:fontName size:fontSize];
 
 			//If the font doesn't exist on the system, use the controlContentFont
-			if (!font){
+			if (!font) {
 				font = [self controlContentFontOfSize:fontSize];
 				NSAssert(font != nil, @"controlContentFont not found.");
 			}
@@ -54,13 +54,13 @@
 						 forKey:sizeString];
 			[fontDict setObject:sizeDict forKey:fontName];
 		}
-	}else{
+	} else {
 		//Use the control content font if we are passed a nil fontName
 		font = [self controlContentFontOfSize:fontSize];
 		fontName = [font fontName];
 
 		sizeDict = [fontDict objectForKey:fontName];
-		if(!sizeDict){
+		if (!sizeDict) {
 			sizeDict = [NSMutableDictionary dictionary];
 		}
 
@@ -82,8 +82,8 @@
 {
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 
-	if(self != [fontManager convertFont:self toHaveTrait:NSBoldFontMask] || 
-	   self != [fontManager convertFont:self toHaveTrait:NSUnboldFontMask]){
+	if (self != [fontManager convertFont:self toHaveTrait:NSBoldFontMask] || 
+	   self != [fontManager convertFont:self toHaveTrait:NSUnboldFontMask]) {
 		return YES;
 	}
 	
@@ -94,8 +94,8 @@
 {
 	NSFontManager	*fontManager = [NSFontManager sharedFontManager];
 	
-	if(self != [fontManager convertFont:self toHaveTrait:NSItalicFontMask] || 
-	   self != [fontManager convertFont:self toHaveTrait:NSUnitalicFontMask]){
+	if (self != [fontManager convertFont:self toHaveTrait:NSItalicFontMask] || 
+	   self != [fontManager convertFont:self toHaveTrait:NSUnitalicFontMask]) {
 		return YES;
 	}
 	

@@ -41,7 +41,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 //Create a new invite to chat window
 + (void)inviteToChatWindowForChat:(AIChat *)inChat contact:(AIListContact *)inContact
 {
-    if(!sharedInviteToChatInstance){
+    if (!sharedInviteToChatInstance) {
         sharedInviteToChatInstance = [[self alloc] initWithWindowNibName:INVITE_NIB_NAME];
     }
 
@@ -51,7 +51,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 + (void)closeSharedInstance
 {
-    if(sharedInviteToChatInstance){
+    if (sharedInviteToChatInstance) {
         [sharedInviteToChatInstance closeWindow:nil];
     }
 }
@@ -88,10 +88,10 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 - (IBAction)invite:(id)sender
 {	
 	// Sanity check: is there really a list object and a chat?
-	if( contact && [contact isKindOfClass:[AIListContact class]] && chat ) {
+	if ( contact && [contact isKindOfClass:[AIListContact class]] && chat ) {
 		
 		// Sanity check: is it a group chat?
-		if( [chat name]) {
+		if ( [chat name]) {
 			[chat inviteListContact:(AIListContact *)contact withMessage:[textField_message stringValue]];
 		} else {
 			//NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);
@@ -114,7 +114,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 																   withTarget:self
 															   includeOffline:![contact online]]];
 	
-	if( [contact isKindOfClass:[AIMetaContact class]] ) {
+	if ( [contact isKindOfClass:[AIMetaContact class]] ) {
 		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
 	} else {
 		[menu_contacts selectItemAtIndex:0];
@@ -138,7 +138,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 {
 	[self setContact:inContact];
 	
-	if (chat != inChat){
+	if (chat != inChat) {
 		[chat release]; chat = [inChat retain];
 		[service release]; service = [[[chat account] service] retain];
 	}
@@ -148,7 +148,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 - (void)setContact:(AIListContact *)inContact
 {	
-	if (contact != inContact){
+	if (contact != inContact) {
 		[contact release]; contact = [inContact retain];
 	}
 }

@@ -41,7 +41,7 @@
 //Init
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		shadowColor = nil;
 		backgroundColor = nil;
@@ -69,7 +69,7 @@
 //Color of our display name shadow
 - (void)setShadowColor:(NSColor *)inColor
 {
-	if(inColor != shadowColor){
+	if (inColor != shadowColor) {
 		[shadowColor release];
 		shadowColor = [inColor retain];
 	}
@@ -87,11 +87,11 @@
 //Set the background color and alternate/gradient background color of this group
 - (void)setBackgroundColor:(NSColor *)inBackgroundColor gradientColor:(NSColor *)inGradientColor
 {
-	if(inBackgroundColor != backgroundColor){
+	if (inBackgroundColor != backgroundColor) {
 		[backgroundColor release];
 		backgroundColor = [inBackgroundColor retain];
 	}
-	if(inGradientColor != gradientColor){
+	if (inGradientColor != gradientColor) {
 		[gradientColor release];
 		gradientColor = [inGradientColor retain];
 	}
@@ -147,10 +147,10 @@
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
 - (int)flippyIndent
 {
-//	if([self textAlignment] != NSCenterTextAlignment){
+//	if ([self textAlignment] != NSCenterTextAlignment) {
 		NSSize size = [self cellSize];
 		return(size.height*.4 + size.height*.2 + FLIPPY_TEXT_PADDING);
-/*	}else{
+/*	} else {
 		return(0);
 	}
 */
@@ -168,11 +168,11 @@
 	NSBezierPath	*arrowPath = [NSBezierPath bezierPath];
 	NSPoint			center = NSMakePoint(rect.origin.x + rect.size.height*.4, rect.origin.y + (rect.size.height/2.0));
 
-	if([controlView isItemExpanded:listObject]){
+	if ([controlView isItemExpanded:listObject]) {
 		[arrowPath moveToPoint:NSMakePoint(center.x - rect.size.height*.3, center.y - rect.size.height*.15)];
 		[arrowPath relativeLineToPoint:NSMakePoint( rect.size.height*.6, 0)];
 		[arrowPath relativeLineToPoint:NSMakePoint(-rect.size.height*.3, rect.size.height*.4)];		
-	}else{
+	} else {
 		[arrowPath moveToPoint:NSMakePoint(center.x - rect.size.height*.2, center.y - rect.size.height*.3)];
 		[arrowPath relativeLineToPoint:NSMakePoint( 0, rect.size.height*.6)];
 		[arrowPath relativeLineToPoint:NSMakePoint( rect.size.height*.4, -rect.size.height*.3)];		
@@ -181,7 +181,7 @@
 	[arrowPath closePath];
 	[arrowPath fill];
 
-//	if([self textAlignment] != NSCenterTextAlignment){
+//	if ([self textAlignment] != NSCenterTextAlignment) {
 		rect.origin.x += rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 		rect.size.width -= rect.size.height*.4 + rect.size.height*.2 + FLIPPY_TEXT_PADDING;
 //	}
@@ -192,7 +192,7 @@
 //Draw the background of our cell
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if(![self cellIsSelected] && drawsBackground){
+	if (![self cellIsSelected] && drawsBackground) {
 		[[self cachedGradient:rect.size] drawInRect:rect
 										   fromRect:NSMakeRect(0,0,rect.size.width,rect.size.height)
 										  operation:NSCompositeCopy
@@ -209,7 +209,7 @@
 //Add a simple shadow to our text attributes
 - (NSDictionary *)additionalLabelAttributes
 {
-	if(!shadowColor){
+	if (!shadowColor) {
 		return nil;
 	}
 
@@ -228,7 +228,7 @@
 //Generates and caches an NSImage containing the group background gradient
 - (NSImage *)cachedGradient:(NSSize)inSize
 {
-	if(!_gradient || !NSEqualSizes(inSize,_gradientSize)){
+	if (!_gradient || !NSEqualSizes(inSize,_gradientSize)) {
 		[_gradient release];
 		_gradient = [[NSImage alloc] initWithSize:inSize];
 		_gradientSize = inSize;
@@ -255,16 +255,16 @@
 	[backgroundColor getHue:nil luminance:&backgroundL saturation:nil];
 	[gradientColor getHue:nil luminance:&gradientL saturation:nil];
 	
-	if(gradientL < backgroundL){ //Seal the top
+	if (gradientL < backgroundL) { //Seal the top
 		[gradientColor set];
 		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y, inRect.size.width, 1)];
-	}else{ //Seal the bottom
+	} else { //Seal the bottom
 		[backgroundColor set];
 		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y + inRect.size.height - 1, inRect.size.width, 1)];
 	}
 	
 	//Seal the edges
-	if(drawsGradientEdges){
+	if (drawsGradientEdges) {
 		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x, inRect.origin.y, 1, inRect.size.height)];
 		[NSBezierPath fillRect:NSMakeRect(inRect.origin.x+inRect.size.width-1, inRect.origin.y, 1, inRect.size.height)];
 	}

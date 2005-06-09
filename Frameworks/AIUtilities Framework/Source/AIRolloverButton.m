@@ -12,7 +12,7 @@
 
 - (void)awakeFromNib
 {	
-	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]){
+	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]) {
         [super awakeFromNib];
 	}
 
@@ -28,7 +28,7 @@
 {
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
-	if(trackingTag != -1){
+	if (trackingTag != -1) {
 		[self removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
@@ -57,7 +57,7 @@
 {
 	[super viewWillMoveToSuperview:newSuperview];
 
-	if(trackingTag != -1){
+	if (trackingTag != -1) {
 		[[self superview] removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
@@ -74,7 +74,7 @@
 {
 	[super viewWillMoveToWindow:newWindow];
 
-	if(trackingTag != -1){
+	if (trackingTag != -1) {
 		[[self superview] removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
@@ -96,20 +96,20 @@
 - (void)resetCursorRects
 {
 	//Stop any existing tracking
-	if(trackingTag != -1){
+	if (trackingTag != -1) {
 		[[self superview] removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
 	
 	//Add a tracking rect if our superview and window are ready
-	if([self superview] && [self window]){
+	if ([self superview] && [self window]) {
 		NSRect	trackRect = /*NSMakeRect(0,0,frame.size.width, frame.size.height)*/ [self frame];
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
 									   fromView:[self superview]];
 		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 		
 		trackingTag = [[self superview] addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
-		if(mouseInside) [self mouseEntered:nil];
+		if (mouseInside) [self mouseEntered:nil];
 	}
 }
 

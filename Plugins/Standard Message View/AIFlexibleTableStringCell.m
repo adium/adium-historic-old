@@ -53,7 +53,7 @@
 //Init
 - (AIFlexibleTableStringCell *)initWithAttributedString:(NSAttributedString *)inString
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		string = [inString retain];
 		contentSize = [string size];

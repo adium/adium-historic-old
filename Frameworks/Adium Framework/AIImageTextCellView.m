@@ -25,7 +25,7 @@
 
 -(id)initWithFrame:(NSRect)inFrame
 {
-	if((self = [super initWithFrame:inFrame])){
+	if ((self = [super initWithFrame:inFrame])) {
 		[self _initImageTextView];
 	}
 	
@@ -34,7 +34,7 @@
 
 - (id)initWithCoder:(NSCoder *)encoder
 {
-	if((self = [super initWithCoder:encoder])){
+	if ((self = [super initWithCoder:encoder])) {
 		[self _initImageTextView];		
 	}
 	
@@ -65,13 +65,13 @@
 {
 	NSSize	cellSize = [cell cellSizeForBounds:inRect];
 	
-	if(cellSize.width < inRect.size.width){
+	if (cellSize.width < inRect.size.width) {
 		int difference = (inRect.size.width - cellSize.width)/2;
 		inRect.size.width -= difference;
 		inRect.origin.x += difference;
 	}
 	
-	if(cellSize.height < inRect.size.height){
+	if (cellSize.height < inRect.size.height) {
 		int difference = (inRect.size.height - cellSize.height)/2;
 		inRect.size.height -= difference;
 		inRect.origin.y += difference;		

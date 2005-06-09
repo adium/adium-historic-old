@@ -33,7 +33,7 @@
 	float				originalWidth = rect.size.width;
 	
 	//Alignment
-	switch([self textAlignment]){
+	switch ([self textAlignment]) {
 		case NSCenterTextAlignment:
 			rect.origin.x += ((rect.size.width - nameSize.width) / 2.0) - [self leftPadding];
 			break;
@@ -50,7 +50,7 @@
 	//Handle the icons (only works properly if they are on the same side as the text)
 	
 	//User icon
-	if(userIconVisible){
+	if (userIconVisible) {
 		float userIconChange;
 
 		userIconChange = userIconSize.width;
@@ -59,14 +59,14 @@
 		rect.size.width += userIconChange;
 		
 		//Shift left to accomodate an icon on the right
-		if (userIconPosition == LIST_POSITION_RIGHT){
+		if (userIconPosition == LIST_POSITION_RIGHT) {
 			rect.origin.x -= userIconChange;
 		}
 	}
 	
 	//Status icon
-	if(statusIconsVisible &&
-	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)){
+	if (statusIconsVisible &&
+	   (statusIconPosition != LIST_POSITION_BADGE_LEFT && statusIconPosition != LIST_POSITION_BADGE_RIGHT)) {
 		float	statusIconChange;
 
 		statusIconChange = [[self statusImage] size].width;
@@ -75,14 +75,14 @@
 		rect.size.width += statusIconChange;
 		
 		//Shift left to accomodate an icon on the right
-		if (statusIconPosition == LIST_POSITION_RIGHT || statusIconPosition == LIST_POSITION_FAR_RIGHT){
+		if (statusIconPosition == LIST_POSITION_RIGHT || statusIconPosition == LIST_POSITION_FAR_RIGHT) {
 			rect.origin.x -= statusIconChange;
 		}
 	}
 	
 	//Service icon
-	if(serviceIconsVisible &&
-	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)){
+	if (serviceIconsVisible &&
+	   (serviceIconPosition != LIST_POSITION_BADGE_LEFT && serviceIconPosition != LIST_POSITION_BADGE_RIGHT)) {
 		float serviceIconChange;
 		
 		serviceIconChange = [[self serviceImage] size].width;
@@ -91,7 +91,7 @@
 		rect.size.width += serviceIconChange;
 		
 		//Shift left to accomodate an icon on the right
-		if (serviceIconPosition == LIST_POSITION_RIGHT || serviceIconPosition == LIST_POSITION_FAR_RIGHT){
+		if (serviceIconPosition == LIST_POSITION_RIGHT || serviceIconPosition == LIST_POSITION_FAR_RIGHT) {
 			rect.origin.x -= serviceIconChange;
 		}
 	}

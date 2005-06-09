@@ -23,7 +23,7 @@
 
 - (void)setEmbeddedView:(NSView *)inView
 {
-	if(embeddedView != inView){
+	if (embeddedView != inView) {
 		[embeddedView release];
 		embeddedView = [inView retain];
 	}
@@ -40,11 +40,11 @@
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if([embeddedView respondsToSelector:@selector(setIsHighlighted:)]){
+	if ([embeddedView respondsToSelector:@selector(setIsHighlighted:)]) {
 		[embeddedView setIsHighlighted:[self isHighlighted]];
 	}
 
-	if([embeddedView superview] != controlView) {
+	if ([embeddedView superview] != controlView) {
 		[controlView addSubview:embeddedView];
 	}
 	
@@ -55,11 +55,11 @@
 {
 	NSImage	*image;
 
-	if([embeddedView respondsToSelector:@selector(setIsHighlighted:)]){
+	if ([embeddedView respondsToSelector:@selector(setIsHighlighted:)]) {
 		[embeddedView setIsHighlighted:[self isHighlighted]];
 	}
 
-	if([embeddedView superview] != controlView) {
+	if ([embeddedView superview] != controlView) {
 		[controlView addSubview:embeddedView];
 	}
 
@@ -75,7 +75,7 @@
 	NSEnumerator	*enumerator = [[embeddedView subviews] objectEnumerator];
 	NSView			*subView;
 
-	while((subView = [enumerator nextObject])){
+	while ((subView = [enumerator nextObject])) {
 		NSRect	subFrame = [subView frame];
 		NSRect	subUsableFrame = NSMakeRect(0, 0, subFrame.size.width, subFrame.size.height);
 

@@ -61,25 +61,25 @@
 	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
 
 	//Fill in the current alias
-	if((alias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES])){
+	if ((alias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES])) {
 		[textField_alias setStringValue:alias];
-	}else{
+	} else {
 		[textField_alias setStringValue:@""];
 	}
 	
 	//Current note
-    if((notes = [listObject notes])){
+    if ((notes = [listObject notes])) {
         [textField_notes setStringValue:notes];
-    }else{
+    } else {
         [textField_notes setStringValue:@""];
     }
 
 	//Encryption
 	encryption = [listObject preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 										group:GROUP_ENCRYPTION];
-	if(encryption){
+	if (encryption) {
 		[popUp_encryption compatibleSelectItemWithTag:[encryption intValue]];		
-	}else{
+	} else {
 		[popUp_encryption compatibleSelectItemWithTag:EncryptedChat_Default];		
 	}
 }
@@ -87,7 +87,7 @@
 //Apply an alias
 - (IBAction)setAlias:(id)sender
 {
-    if(listObject){
+    if (listObject) {
         NSString	*alias = [textField_alias stringValue];
 		[listObject setDisplayName:alias];
     }
@@ -96,7 +96,7 @@
 //Save contact notes
 - (IBAction)setNotes:(id)sender
 {
-    if(listObject){
+    if (listObject) {
         NSString 	*notes = [textField_notes stringValue];
 		[listObject setNotes:notes];
     }

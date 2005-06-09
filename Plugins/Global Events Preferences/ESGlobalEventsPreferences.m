@@ -127,8 +127,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if([group isEqualToString:PREF_GROUP_EVENT_PRESETS]){
-		if(!key || [key isEqualToString:@"Event Presets"]){
+	if ([group isEqualToString:PREF_GROUP_EVENT_PRESETS]) {
+		if (!key || [key isEqualToString:@"Event Presets"]) {
 			//Update when the available event presets change
 			[self setAndConfigureEventPresetsMenu];
 		}
@@ -143,7 +143,7 @@
 	NSMenuItem	*lastItem = [inPopUp lastItem];
 	BOOL		customIsShowing = (lastItem && (![lastItem representedObject] &&
 												[[lastItem title] isEqualToString:CUSTOM_TITLE]));
-	if(showCustom && !customIsShowing){
+	if (showCustom && !customIsShowing) {
 		//Add 'custom' then select it
 		[[inPopUp menu] addItem:[NSMenuItem separatorItem]];
 		[[inPopUp menu] addItemWithTitle:CUSTOM_TITLE
@@ -152,7 +152,7 @@
 						   keyEquivalent:@""];
 		[inPopUp selectItem:[inPopUp lastItem]];
 
-	}else if(!showCustom && customIsShowing){
+	} else if (!showCustom && customIsShowing) {
 		//If it currently has a 'custom' item listed, remove it and the separator above it
 		[inPopUp removeItemAtIndex:([inPopUp numberOfItems]-1)];
 		[inPopUp removeItemAtIndex:([inPopUp numberOfItems]-1)];
@@ -164,7 +164,7 @@
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){		
+	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {		
 		//Build the soundset menu
 		[popUp_soundSet setMenu:[self _soundSetMenu]];
 	}
@@ -186,7 +186,7 @@
 	
 	//Built in event presets
 	enumerator = [[plugin builtInEventPresetsArray] objectEnumerator];
-	while((eventPreset = [enumerator nextObject])){
+	while ((eventPreset = [enumerator nextObject])) {
 		NSString		*name = [eventPreset objectForKey:@"Name"];
 		
 		//Add a menu item for the set
@@ -200,11 +200,11 @@
 	
 	NSArray	*storedEventPresetsArray = [plugin storedEventPresetsArray];
 	
-	if([storedEventPresetsArray count]){
+	if ([storedEventPresetsArray count]) {
 		[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 		
 		enumerator = [storedEventPresetsArray objectEnumerator];
-		while((eventPreset = [enumerator nextObject])){
+		while ((eventPreset = [enumerator nextObject])) {
 			NSString		*name = [eventPreset objectForKey:@"Name"];
 			
 			//Add a menu item for the set
@@ -243,9 +243,9 @@
 	//First try to set the localized version
 	[popUp_eventPreset selectItemWithTitle:[self _localizedTitle:activeEventSetName]];
 	//If that fails, look for one exactly matching
-	if(![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemWithTitle:activeEventSetName];
+	if (![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemWithTitle:activeEventSetName];
 	//And if that fails, select the first item (something went wrong, we should at least have a selection)
-	if(![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemAtIndex:0];	
+	if (![popUp_eventPreset selectedItem]) [popUp_eventPreset selectItemAtIndex:0];	
 }
 
 - (void)setAndConfigureEventPresetsMenu
@@ -331,7 +331,7 @@
 				  forKey:@"Name"];
 
 	//Mark the newly created (but still functionally identical) event set as active if the old one was active
-	if([localizedCurrentName isEqualToString:oldPresetName]){
+	if ([localizedCurrentName isEqualToString:oldPresetName]) {
 		[[adium preferenceController] setPreference:newName
 											 forKey:KEY_ACTIVE_EVENT_SET
 											  group:PREF_GROUP_EVENT_PRESETS];
@@ -341,7 +341,7 @@
 	[plugin deleteEventPreset:preset];
 	[plugin saveEventPreset:newPreset];
 	
-	if(renamedPreset) *renamedPreset = newPreset;
+	if (renamedPreset) *renamedPreset = newPreset;
 
 	//Return an updated presets array
 	return [plugin storedEventPresetsArray];
@@ -361,7 +361,7 @@
 	[plugin saveEventPreset:newEventPreset];
 
 	//Return the created duplicate by reference
-	if(duplicatePreset != NULL) *duplicatePreset = [[newEventPreset retain] autorelease];
+	if (duplicatePreset != NULL) *duplicatePreset = [[newEventPreset retain] autorelease];
 	
 	//Cleanup
 	[newEventPreset release];
@@ -383,15 +383,15 @@
 {
 	NSMutableDictionary	*newEventPreset = [preset mutableCopy];
 	float newOrderIndex;
-	if(index == 0){		
+	if (index == 0) {		
 		newOrderIndex = [[[presets objectAtIndex:0] objectForKey:@"OrderIndex"] floatValue] / 2.0;
 
-	}else if(index < [presets count]){
+	} else if (index < [presets count]) {
 		float above = [[[presets objectAtIndex:index-1] objectForKey:@"OrderIndex"] floatValue];
 		float below = [[[presets objectAtIndex:index] objectForKey:@"OrderIndex"] floatValue];
 		newOrderIndex = ((above + below) / 2.0);
 
-	}else{
+	} else {
 		newOrderIndex = [plugin nextOrderIndex];
 	}
 	
@@ -400,7 +400,7 @@
 			 
 	//Now save the new preset
 	[plugin saveEventPreset:newEventPreset];
-	if(presetAfterMove != NULL) *presetAfterMove = [[newEventPreset retain] autorelease];
+	if (presetAfterMove != NULL) *presetAfterMove = [[newEventPreset retain] autorelease];
 	[newEventPreset release];
 
 	//Return an updated presets array
@@ -426,7 +426,7 @@
  */
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID
 {
-	if([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]){
+	if ([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]) {
 		
 		NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
 																				withEventID:nil
@@ -434,7 +434,7 @@
 		NSMenuItem		*soundMenuItem = nil;
 	
 		//We can select "None" if there are no sounds
-		if(![alertsArray count]){
+		if (![alertsArray count]) {
 			soundMenuItem = (NSMenuItem *)[popUp_soundSet itemWithTitle:@"None"];
 		}
 
@@ -447,7 +447,7 @@
 		 */
 		[self selectSoundSet:soundMenuItem];
 
-	}else{
+	} else {
 		[self saveCurrentEventPreset];
 	}
 }
@@ -534,13 +534,13 @@
 {
 	NSDictionary		*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
 
-	if([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]){
+	if ([eventPreset objectForKey:@"Built In"] && [[eventPreset objectForKey:@"Built In"] boolValue]) {
 		/* Perform after a delay so that if we got here as a result of a sheet-based add or edit of an event
 		 * the sheet will close before we try to open a new one. */
 		[self performSelector:@selector(showPresetCopySheet:)
 				   withObject:[self _localizedTitle:[eventPreset objectForKey:@"Name"]]
 				   afterDelay:0];
-	}else{	
+	} else {	
 		//Now save the current settings
 		[plugin saveEventPreset:[self currentEventSetForSaving]];
 	}		
@@ -579,7 +579,7 @@
 								newName:(NSString *)newName
 							   userInfo:(id)userInfo
 {
-	switch(returnCode){
+	switch (returnCode) {
 		case ESPresetNameSheetOkayReturn:
 		{
 			//XXX error if overwriting existing set?
@@ -622,11 +622,11 @@
 
 - (void)updateSoundSetSelectionForSoundSetPath:(NSString *)soundSetPath
 {
-	if(soundSetPath && [soundSetPath length] != 0){
+	if (soundSetPath && [soundSetPath length] != 0) {
 		[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
 		[self popUp:popUp_soundSet shouldShowCustom:NO];
 		
-	}else{
+	} else {
 		[self popUp:popUp_soundSet shouldShowCustom:YES];
 	}
 }
@@ -653,14 +653,14 @@
     NSMenu		*soundSetMenu = [[NSMenu alloc] init];
     
     enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
-    while((soundSetDict = [enumerator nextObject])){
+    while ((soundSetDict = [enumerator nextObject])) {
         NSString		*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
         NSFileManager	*defaultManager = [NSFileManager defaultManager];
         NSMenuItem		*menuItem;
 	
 		//Ensure this folder contains a soundset file (Otherwise, we ignore it)
-		if([defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]] ||
-		   [defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:@"Info.plist"]]){
+		if ([defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]] ||
+		   [defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:@"Info.plist"]]) {
 
             //Add a menu item for the set
             menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]]
@@ -685,11 +685,11 @@
 {
 	NSString	*localizedTitle = nil;
 	
-	if([englishTitle isEqualToString:@"None"])
+	if ([englishTitle isEqualToString:@"None"])
 		localizedTitle = AILocalizedString(@"None",nil);
-	else if([englishTitle isEqualToString:@"Default Notifications"])
+	else if ([englishTitle isEqualToString:@"Default Notifications"])
 		localizedTitle = AILocalizedString(@"Default Notifications",nil);
-	else if([englishTitle isEqualToString:@"Visual Notifications"])
+	else if ([englishTitle isEqualToString:@"Visual Notifications"])
 		localizedTitle = AILocalizedString(@"Visual Notifications",nil);
 
 	return (localizedTitle ? localizedTitle : englishTitle);

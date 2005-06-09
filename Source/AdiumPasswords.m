@@ -51,7 +51,7 @@
 														   account:[self _accountNameForAccount:inAccount]
 														  protocol:FOUR_CHAR_CODE('AdIM')
 															 error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
@@ -70,7 +70,7 @@
 									  account:[self _accountNameForAccount:inAccount]
 									 protocol:FOUR_CHAR_CODE('AdIM')
 										error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not delete password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
@@ -90,7 +90,7 @@
 														account:[self _accountNameForAccount:inAccount]
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
@@ -113,15 +113,15 @@
 														account:[self _accountNameForAccount:inAccount]
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
 	
-	if(password && [password length] != 0){
+	if (password && [password length] != 0) {
 		//Invoke the target right away
 		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];
-	}else{
+	} else {
 		//Prompt the user for their password
 		[ESAccountPasswordPromptController showPasswordPromptForAccount:inAccount
 														notifyingTarget:inTarget
@@ -151,7 +151,7 @@
 																						   userName:userName]
 														  protocol:FOUR_CHAR_CODE('AdIM')
 															 error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not %@ password for proxy server %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForProxyServer:server userName:userName], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
@@ -173,7 +173,7 @@
 																						userName:userName]
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
 			  [self _accountNameForProxyServer:server
@@ -203,7 +203,7 @@
 																						userName:userName]
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
-	if(error) {
+	if (error) {
 		NSDictionary *userInfo = [error userInfo];
 		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
 			  [self _accountNameForProxyServer:server
@@ -213,10 +213,10 @@
 			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 	}
 	
-	if(password && [password length] != 0){
+	if (password && [password length] != 0) {
 		//Invoke the target right away
 		[inTarget performSelector:inSelector withObject:password withObject:inContext afterDelay:0.0001];    
-	}else{
+	} else {
 		//Prompt the user for their password
 		[ESProxyPasswordPromptController showPasswordPromptForProxyServer:server
 																 userName:userName
@@ -237,9 +237,9 @@
 	return([NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]]);
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
-	if([[[adium loginController] userArray] count] > 1){
+	if ([[[adium loginController] userArray] count] > 1) {
 		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]]);
-	}else{
+	} else {
 		return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
 	}
 }
@@ -251,9 +251,9 @@
 	return([NSString stringWithFormat:@"%@.%@",proxyServer,userName]);
 }
 - (NSString *)_passKeyForProxyServer:(NSString *)proxyServer{
-	if([[[adium loginController] userArray] count] > 1){
+	if ([[[adium loginController] userArray] count] > 1) {
 		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer]);
-	}else{
+	} else {
 		return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
 	}
 }
@@ -269,7 +269,7 @@
 	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
 	NSNumber		*didPasswordUpgrade = [userDefaults objectForKey:@"Adium:Did Password Upgrade"];
 	
-	if(!didPasswordUpgrade || ![didPasswordUpgrade boolValue]){
+	if (!didPasswordUpgrade || ![didPasswordUpgrade boolValue]) {
 		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium:Did Password Upgrade"];
 		[userDefaults synchronize];
 		
@@ -278,7 +278,7 @@
 		
 		NSRunInformationalAlertPanel(@"Adium Version Upgrade", @"This version of Adium fixes a common crash related to secure storage of your instant messaging passwords.  When you press OK below, Adium will automatically update any stored passwords to the new, more stable system.\n\nThis process will only occur once and will take a moment; you may be prompted to allow access for one or more passwords.\n\nIf Adium crashes during this upgrade, simply relaunch Adium; the process will not occur again.",nil,nil,nil);
 		
-		while((account = [enumerator nextObject])) {
+		while ((account = [enumerator nextObject])) {
 			NSString	*passKey = [self _passKeyForAccount:account];
 			NSString	*accountName = [self _accountNameForAccount:account];
 			
@@ -286,14 +286,14 @@
 			NSString	*password = [AIKeychainOld getPasswordFromKeychainForService:passKey account:accountName];
 			
 			//Store in new
-			if(password) {
+			if (password) {
 				NSError *error = nil;
 				[[AIKeychain defaultKeychain_error:&error] addInternetPassword:password
 																	 forServer:passKey
 																	   account:accountName
 																	  protocol:FOUR_CHAR_CODE('AdIM')
 																		 error:&error];
-				if(error){
+				if (error) {
 					NSDictionary *userInfo = [error userInfo];
 					NSLog(@"could not upgrade password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:account], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 				}

@@ -37,7 +37,7 @@ struct resolved_id {
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict
 {
-    if(self = [super initWithWindowNibName:windowNibName]){
+    if (self = [super initWithWindowNibName:windowNibName]) {
 		infoDict = [inInfoDict retain];
 	}
 	
@@ -92,7 +92,7 @@ struct resolved_id {
 
 - (IBAction)pressedButton:(id)sender
 {
-	if (sender == button_OK){
+	if (sender == button_OK) {
 		struct resolved_id		*res;
 		int						selectedRow = [tableView_choices selectedRow];
 		GaimRequestField		*field = [[infoDict objectForKey:@"listFieldValue"] pointerValue];
@@ -114,7 +114,7 @@ struct resolved_id {
 		[infoDict release]; infoDict = nil;
 		[[self window] close];
 
-	}else if (sender == button_cancel){
+	} else if (sender == button_cancel) {
 		[[self window] performClose:nil];
 	}
 }
@@ -124,7 +124,7 @@ struct resolved_id {
  */
 - (void)doubleClickInTableView:(id)sender
 {
-	if([tableView_choices selectedRow] != -1){
+	if ([tableView_choices selectedRow] != -1) {
 		[self pressedButton:button_OK];
 	}
 }
@@ -141,7 +141,7 @@ struct resolved_id {
 								   fieldsValue:(NSValue *)inFieldsValue
 {	
 	GaimRequestFieldsCb callBack = [inCallBackValue pointerValue];
-	if (callBack){
+	if (callBack) {
 		callBack([inUserDataValue pointerValue], [inFieldsValue pointerValue]);
 	}	
 }
@@ -150,7 +150,7 @@ struct resolved_id {
 {
 	[super windowWillClose:sender];
 	
-	if (infoDict){
+	if (infoDict) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestFieldsCbValue:withUserDataValue:fieldsValue:)
 											  withObject:[infoDict objectForKey:@"Cancel Callback"]

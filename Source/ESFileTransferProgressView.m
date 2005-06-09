@@ -34,7 +34,7 @@
 
 - (void)awakeFromNib
 {
-	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]){
+	if ([[self superclass] instancesRespondToSelector:@selector(awakeFromNib)]) {
         [super awakeFromNib];
     }
 
@@ -100,19 +100,19 @@
 }
 - (void)setProgressAnimation:(BOOL)flag
 {
-	if(flag){
+	if (flag) {
 		[progressIndicator startAnimation:self];
-	}else{
+	} else {
 		[progressIndicator stopAnimation:self];	
 	}
 }
 - (void)setProgressVisible:(BOOL)flag
 {
-	if(flag != progressVisible){
+	if (flag != progressVisible) {
 		progressVisible = flag;
-		if(progressVisible){
+		if (progressVisible) {
 			//Redisplay the progress bar.  We never do this at present, so unimplemented for now.
-		}else{
+		} else {
 			NSRect	progressRect = [progressIndicator frame];
 			NSRect	frame;
 			float	distanceToMove = progressRect.size.height / 2;
@@ -163,15 +163,15 @@
 {
 	[transferStatus release];
 	
-	if(inTransferBytesStatus && inTransferRemainingStatus){
+	if (inTransferBytesStatus && inTransferRemainingStatus) {
 		transferStatus = [NSString stringWithFormat:@"%@ - %@",
 			inTransferBytesStatus,
 			inTransferRemainingStatus];
-	}else if(inTransferBytesStatus){
+	} else if (inTransferBytesStatus) {
 		transferStatus = inTransferBytesStatus;
-	}else if(inTransferRemainingStatus){
+	} else if (inTransferRemainingStatus) {
 		transferStatus = inTransferRemainingStatus;		
-	}else{
+	} else {
 		transferStatus = @"";
 	}
 	
@@ -193,7 +193,7 @@
 	
 	showingDetails = !showingDetails;
 
-	if(showingDetails){
+	if (showingDetails) {
 		//Increase our height to make space
 		newFrame.size.height += detailsFrame.size.height;
 		newFrame.origin.y -= detailsFrame.size.height;
@@ -214,7 +214,7 @@
 	
 		//Update the twiddle
 		[twiddle_details setState:NSOnState];
-	}else{
+	} else {
 		newFrame.size.height -= detailsFrame.size.height;
 		newFrame.origin.y += detailsFrame.size.height;
 
@@ -244,16 +244,16 @@
 #pragma mark Selection
 - (void)setIsHighlighted:(BOOL)flag
 {
-	if(isSelected != flag){
+	if (isSelected != flag) {
 		isSelected = flag;
 		
 		NSColor	*newColor;
 		NSColor	*transferStatusColor;
 		
-		if(isSelected){
+		if (isSelected) {
 			newColor = SELECTED_TEXT_COLOR;
 			transferStatusColor = newColor;
-		}else{
+		} else {
 			newColor = NORMAL_TEXT_COLOR;
 			transferStatusColor = TRANSFER_STATUS_COLOR;
 		}
@@ -270,13 +270,13 @@
 
 - (void)updateButtonStopResume
 {
-	if(isSelected){
+	if (isSelected) {
 		[button_stopResume setImage:[NSImage imageNamed:(buttonStopResumeIsHovered ? @"FTProgressStopRollover_Selected" : @"FTProgressStop_Selected")
 											   forClass:[self class]]];
 		
 		[button_stopResume setAlternateImage:[NSImage imageNamed:@"FTProgressStopPressed_Selected" forClass:[self class]]];
 		
-	}else{
+	} else {
 		[button_stopResume setImage:[NSImage imageNamed:(buttonStopResumeIsHovered ? @"FTProgressStopRollover" : @"FTProgressStop")
 											   forClass:[self class]]];
 		
@@ -286,13 +286,13 @@
 
 - (void)updateButtonReveal
 {
-	if(isSelected){
+	if (isSelected) {
 		[button_reveal setImage:[NSImage imageNamed:(buttonRevealIsHovered ? @"FTProgressRevealRollover_Selected" : @"FTProgressReveal_Selected")
 										   forClass:[self class]]];
 		
 		[button_reveal setAlternateImage:[NSImage imageNamed:@"FTProgressRevealPressed_Selected" forClass:[self class]]];
 
-	}else{
+	} else {
 		[button_reveal setImage:[NSImage imageNamed:(buttonRevealIsHovered ? @"FTProgressRevealRollover" : @"FTProgressReveal")
 										   forClass:[self class]]];
 
@@ -302,11 +302,11 @@
 }
 - (void)rolloverButton:(AIRolloverButton *)inButton mouseChangedToInsideButton:(BOOL)isInside
 {
-	if(inButton == button_stopResume){
+	if (inButton == button_stopResume) {
 		buttonStopResumeIsHovered = isInside;
 		[self updateButtonStopResume];
 		
-	}else if(inButton == button_reveal){
+	} else if (inButton == button_reveal) {
 		buttonRevealIsHovered = isInside;
 		[self updateButtonReveal];
 
@@ -331,8 +331,8 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 	targetRect.origin.x += primaryControlsRect.origin.x;
 	targetRect.origin.y += primaryControlsRect.origin.y;
 
-	if(isSelected){
-		if(!transferStatusSelectedAttributes){
+	if (isSelected) {
+		if (!transferStatusSelectedAttributes) {
 			NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																					lineBreakMode:NSLineBreakByTruncatingTail];
 			[paragraphStyle setMaximumLineHeight:[box_transferStatusFrame frame].size.height];
@@ -344,8 +344,8 @@ static NSDictionary	*transferStatusSelectedAttributes = nil;
 		}
 		
 		attributes = transferStatusSelectedAttributes;
-	}else{
-		if(!transferStatusAttributes){
+	} else {
+		if (!transferStatusAttributes) {
 			NSMutableParagraphStyle	*paragraphStyle = [NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																					lineBreakMode:NSLineBreakByTruncatingTail];
 			[paragraphStyle setMaximumLineHeight:[box_transferStatusFrame frame].size.height];

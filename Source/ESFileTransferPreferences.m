@@ -41,26 +41,26 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-	if(sender == checkBox_autoOpenFiles){
+	if (sender == checkBox_autoOpenFiles) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FT_AUTO_OPEN_SAFE
                                               group:PREF_GROUP_FILE_TRANSFER];
 
-	}else if(sender == checkBox_showProgress){
+	} else if (sender == checkBox_showProgress) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FT_SHOW_PROGRESS_WINDOW
                                               group:PREF_GROUP_FILE_TRANSFER];
 
-	}else if((sender == checkBox_autoAcceptFiles) ||
-			 (sender == checkBox_autoAcceptOnlyFromCLList)){
+	} else if ((sender == checkBox_autoAcceptFiles) ||
+			 (sender == checkBox_autoAcceptOnlyFromCLList)) {
 		FTAutoAcceptType autoAcceptType;
 		
-		if([checkBox_autoAcceptFiles state] == NSOffState){
+		if ([checkBox_autoAcceptFiles state] == NSOffState) {
 			autoAcceptType = AutoAccept_None;
-		}else{
-			if([checkBox_autoAcceptOnlyFromCLList state] == NSOnState){
+		} else {
+			if ([checkBox_autoAcceptOnlyFromCLList state] == NSOnState) {
 				autoAcceptType = AutoAccept_FromContactList;
-			}else{
+			} else {
 				autoAcceptType = AutoAccept_All;
 			}
 		}
@@ -70,7 +70,7 @@
                                               group:PREF_GROUP_FILE_TRANSFER];
 		[self configureControlDimming];
 		
-	}else if(sender == checkBox_autoClearCompleted){
+	} else if (sender == checkBox_autoClearCompleted) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_FT_AUTO_CLEAR_COMPLETED
                                               group:PREF_GROUP_FILE_TRANSFER];
@@ -91,7 +91,7 @@
 	
 	[self buildDownloadLocationMenu];
 	
-	switch(autoAcceptType){
+	switch (autoAcceptType) {
 		case AutoAccept_None:
 			[checkBox_autoAcceptFiles setState:NSOffState];
 			[checkBox_autoAcceptOnlyFromCLList setState:NSOffState];			
@@ -183,7 +183,7 @@
 
 - (void)openPanelDidEnd:(NSOpenPanel *)openPanel returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if(returnCode == NSOKButton){
+	if (returnCode == NSOKButton) {
 		[[adium preferenceController] setUserPreferredDownloadFolder:[openPanel filename]];
 	}
 

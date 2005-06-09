@@ -79,7 +79,7 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 			gaimStatusType = "Online";
 			break;
@@ -89,7 +89,7 @@
 	}
 
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }

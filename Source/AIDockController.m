@@ -95,7 +95,7 @@
 
 	//If Adium has been upgraded since the last time we ran, re-apply the user's custom icon
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_ICON_UPDATE_VERSION];
-	if(![[NSApp applicationVersion] isEqualToString:lastVersion]){
+	if (![[NSApp applicationVersion] isEqualToString:lastVersion]) {
 		[self updateAppBundleIcon];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:LAST_ICON_UPDATE_VERSION];
 	}
@@ -121,7 +121,7 @@
 	stateArrayCopy = [activeIconStateArray copy]; //Work with a copy, since this array will change as we remove states
 	enumerator = [stateArrayCopy objectEnumerator];
 	[enumerator nextObject]; //Skip the first icon
-	while((iconState = [enumerator nextObject])){
+	while ((iconState = [enumerator nextObject])) {
 		[self removeIconStateNamed:iconState];
 	}
 
@@ -145,7 +145,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+	if (!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
 		NSMutableDictionary	*newAvailableIconStateDict;
 		NSString			*iconPath;
 		
@@ -154,8 +154,8 @@
 								   extension:@"AdiumIcon"
 						  resourceFolderName:FOLDER_DOCK_ICONS];
 
-		if(iconPath){
-			if((newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain])){
+		if (iconPath) {
+			if ((newAvailableIconStateDict = [[self iconPackAtPath:iconPath] retain])) {
 				[availableIconStateDict release]; availableIconStateDict = newAvailableIconStateDict;
 			}
 		}
@@ -163,7 +163,7 @@
 		//Write the icon to the Adium application bundle so finder will see it
 		//On launch we only need to update the icon file if this is a new version of Adium.  When preferences
 		//change we always want to update it
-		if(!firstTime){
+		if (!firstTime) {
 			[self updateAppBundleIcon];
 		}
 
@@ -177,13 +177,13 @@
 	NSImage			*image;
 	
 	image = [[[availableIconStateDict objectForKey:@"State"] objectForKey:@"Base"] image];
-	if(image){
-		if([NSApp isOnTigerOrBetter]){
+	if (image) {
+		if ([NSApp isOnTigerOrBetter]) {
 			[[NSWorkspace sharedWorkspace] setIcon:image 
 										   forFile:[[NSBundle mainBundle] bundlePath]
 										   options:0];
 			
-		}else{
+		} else {
 			NSString		*icnsPath = [[NSBundle mainBundle] pathForResource:@"Adium" ofType:@"icns"];
 			IconFamily		*iconFamily;
 	
@@ -203,7 +203,7 @@
 //Icons ------------------------------------------------------------------------------------
 - (void)_setNeedsDisplay
 {
-    if(!needsDisplay){
+    if (!needsDisplay) {
         needsDisplay = YES;
 
         //Invoke a display after a short delay
@@ -230,12 +230,12 @@
 	iconStateDict = [NSMutableDictionary dictionary];
 	
     stateNameKeyEnumerator = [[[iconPackDict objectForKey:@"State"] allKeys] objectEnumerator];
-    while((stateNameKey = [stateNameKeyEnumerator nextObject])){
+    while ((stateNameKey = [stateNameKeyEnumerator nextObject])) {
 		NSDictionary	*stateDict;
 		AIIconState		*iconState;
 		
 		stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:stateNameKey];
-		if((iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath])){
+		if ((iconState = [self iconStateFromStateDict:stateDict folderPath:folderPath])) {
 			[iconStateDict setObject:iconState forKey:stateNameKey];
 		}
 	}
@@ -261,7 +261,7 @@
 {
 	AIIconState		*iconState = nil;
 	
-	if([[stateDict objectForKey:@"Animated"] intValue]){ //Animated State
+	if ([[stateDict objectForKey:@"Animated"] intValue]) { //Animated State
 		NSMutableDictionary	*tempIconCache = [NSMutableDictionary dictionary];
 		NSArray				*imageNameArray;
 		NSEnumerator		*imageNameEnumerator;
@@ -279,41 +279,41 @@
 
 		//Load the images
 		imageArray = [NSMutableArray arrayWithCapacity:[imageNameArray count]];
-		while((imageName = [imageNameEnumerator nextObject])){
+		while ((imageName = [imageNameEnumerator nextObject])) {
 			NSString	*imagePath;
 			NSImage		*image;
 			
 #define DOCK_ICON_INTERNAL_PATH @"../Shared Images/"
-			if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
+			if ([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]) {
 				//Special hack for all the incorrectly made icon packs we have floating around out there :P
 				imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
 				imagePath = [[NSBundle mainBundle] pathForResource:imageName
 				                                            ofType:@""
 				                                       inDirectory:@"Shared Dock Icon Images"];
-			}else{
+			} else {
 				imagePath = [folderPath stringByAppendingPathComponent:imageName];
 			}
 			
 			image = [tempIconCache objectForKey:imagePath]; //We re-use the same images for each state if possible to lower memory usage.
-			if(!image && imagePath){
+			if (!image && imagePath) {
 				image = [[[NSImage alloc] initByReferencingFile:imagePath] autorelease];
-				if(image) [tempIconCache setObject:image forKey:imagePath];
+				if (image) [tempIconCache setObject:image forKey:imagePath];
 			}
 			
-			if(image) [imageArray addObject:image];
+			if (image) [imageArray addObject:image];
 		}
 		
 		//Create the state
-		if(delay != 0 && [imageArray count] != 0){
+		if (delay != 0 && [imageArray count] != 0) {
 			iconState = [[AIIconState alloc] initWithImages:imageArray
 													  delay:delay
 													looping:looping
 													overlay:overlay];
-		}else{
+		} else {
 			NSLog(@"Invalid animated icon state (%@)",imageName);
 		}
 		
-	}else{ //Static State
+	} else { //Static State
 		NSString	*imageName;
 		NSString	*imagePath;
 		NSImage		*image;
@@ -321,13 +321,13 @@
 		
 		imageName = [stateDict objectForKey:@"Image"];
 		
-		if([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]){
+		if ([imageName hasPrefix:DOCK_ICON_INTERNAL_PATH]) {
 			//Special hack for all the incorrectly made icon packs we have floating around out there :P
 			imageName = [imageName substringFromIndex:[DOCK_ICON_INTERNAL_PATH length]];
 			imagePath = [[NSBundle mainBundle] pathForResource:imageName
 			                                            ofType:@""
 			                                       inDirectory:@"Shared Dock Icon Images"];
-		}else{
+		} else {
 			imagePath = [folderPath stringByAppendingPathComponent:imageName];
 		}
 
@@ -346,7 +346,7 @@
 //Set an icon state from our currently loaded icon pack
 - (void)setIconStateNamed:(NSString *)inName
 {
-    if(![activeIconStateArray containsObject:inName]){
+    if (![activeIconStateArray containsObject:inName]) {
         [activeIconStateArray addObject:inName]; 	//Add the name to our array
         [self _setNeedsDisplay];			//Redisplay our icon
     }
@@ -355,7 +355,7 @@
 //Remove an active icon state
 - (void)removeIconStateNamed:(NSString *)inName
 {
-    if([activeIconStateArray containsObject:inName]){
+    if ([activeIconStateArray containsObject:inName]) {
         [activeIconStateArray removeObject:inName]; 	//Remove the name from our array
         
         [self _setNeedsDisplay];			//Redisplay our icon
@@ -380,7 +380,7 @@
 
     //Stop any existing animation
     [animationTimer invalidate]; [animationTimer release]; animationTimer = nil;
-    if(observingFlash){
+    if (observingFlash) {
         [[adium interfaceController] unregisterFlashObserver:self];
         observingFlash = NO;
     }
@@ -388,8 +388,8 @@
     //Build an array of the valid active icon states
     availableIcons = [availableIconStateDict objectForKey:@"State"];
     enumerator = [activeIconStateArray objectEnumerator];
-    while((name = [enumerator nextObject])){
-        if((state = [availableIcons objectForKey:name]) || (state = [availableDynamicIconStateDict objectForKey:name])){
+    while ((name = [enumerator nextObject])) {
+        if ((state = [availableIcons objectForKey:name]) || (state = [availableDynamicIconStateDict objectForKey:name])) {
             [iconStates addObject:state];
         }
     }
@@ -399,13 +399,13 @@
     currentIconState = [[AIIconState alloc] initByCompositingStates:iconStates];
 
     //
-    if(![currentIconState animated]){ //Static icon
+    if (![currentIconState animated]) { //Static icon
 		NSImage *image = [currentIconState image];
-        if(image) {
+        if (image) {
 			 [[NSApplication sharedApplication] setApplicationIconImage:image];
 		}
 
-    }else{ //Animated icon
+    } else { //Animated icon
         //Our dock icon can run its animation at any speed, but we want to try and sync it with the global Adium flashing.  To do this, we delay starting our timer until the next flash occurs.
         [[adium interfaceController] registerFlashObserver:self];
         observingFlash = YES;
@@ -440,13 +440,13 @@
     NSImage	*image;
 
     //Move to the next image
-    if(timer){
+    if (timer) {
         [currentIconState nextFrame];
     }
 	
     //Set the image
     image = [currentIconState image];
-	if(image) {
+	if (image) {
 		[[NSApplication sharedApplication] setApplicationIconImage:image];
 	}
     
@@ -462,22 +462,22 @@
     int dWidth = availableSize.width - trueSize.width;
     float dockScale = 0;
 
-    if(dHeight != 22){ //dock is on the bottom
-        if(dHeight == 26){ //dock is hidden
-        }else{ //dock is not hidden
+    if (dHeight != 22) { //dock is on the bottom
+        if (dHeight == 26) { //dock is hidden
+        } else { //dock is not hidden
             dockScale = (dHeight-22)/128.0;
         }
-    }else if(dWidth != 0){ //dock is on the side
-        if(dWidth == 4){ //dock is hidden
-        }else{ //dock is not hidden
+    } else if (dWidth != 0) { //dock is on the side
+        if (dWidth == 4) { //dock is hidden
+        } else { //dock is not hidden
             dockScale = (dWidth)/128.0;
         }
-    }else{
+    } else {
         //multiple monitors?
         //Add support for multiple monitors
     }
 
-    if(dockScale <= 0 || dockScale > 1.0){
+    if (dockScale <= 0 || dockScale > 1.0) {
         dockScale = 0.3;
     }
 
@@ -492,13 +492,13 @@
 - (void)performBehavior:(DOCK_BEHAVIOR)behavior
 {
     //Start up the new behavior
-    switch(behavior){
+    switch (behavior) {
         case BOUNCE_NONE: {
 			[self _stopBouncing];
 			break;
 		}
         case BOUNCE_ONCE: {
-			if (currentBounceInterval >= SINGLE_BOUNCE_INTERVAL){
+			if (currentBounceInterval >= SINGLE_BOUNCE_INTERVAL) {
 				currentBounceInterval = SINGLE_BOUNCE_INTERVAL;
 				[self _singleBounce];
 			}
@@ -519,7 +519,7 @@
 {
 	NSString	*desc;
 	
-    switch(behavior){
+    switch (behavior) {
         case BOUNCE_NONE: desc = AILocalizedString(@"None",nil); break;
         case BOUNCE_ONCE: desc = AILocalizedString(@"Once",nil); break;
         case BOUNCE_REPEAT: desc = AILocalizedString(@"Repeatedly",nil); break;
@@ -538,7 +538,7 @@
 - (void)_bounceWithInterval:(NSTimeInterval)delay
 {
 	//Bounce only if the new delay is a faster bounce than the current one
-	if (delay < currentBounceInterval){
+	if (delay < currentBounceInterval) {
 		[self _singleBounce]; // do one right away
 		
 		currentBounceInterval = delay;
@@ -561,7 +561,7 @@
 //Bounce once via NSApp's NSInformationalRequest (also used by the timer to perform a single bounce)
 - (void)_singleBounce
 {
-    if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
+    if ([NSApp respondsToSelector:@selector(requestUserAttention:)]) {
         currentAttentionRequest = [NSApp requestUserAttention:NSInformationalRequest];
     }
 }
@@ -569,9 +569,9 @@
 //Bounce continuously via NSApp's NSCriticalRequest
 - (void)_continuousBounce
 {
-	if (CONTINUOUS_BOUNCE_INTERVAL < currentBounceInterval){
+	if (CONTINUOUS_BOUNCE_INTERVAL < currentBounceInterval) {
 		currentBounceInterval = CONTINUOUS_BOUNCE_INTERVAL;
-		if([NSApp respondsToSelector:@selector(requestUserAttention:)]){
+		if ([NSApp respondsToSelector:@selector(requestUserAttention:)]) {
 			currentAttentionRequest = [NSApp requestUserAttention:NSCriticalRequest];
 		}
 	}
@@ -581,13 +581,13 @@
 - (void)_stopBouncing
 {
     //Stop any timer
-    if(bounceTimer){
+    if (bounceTimer) {
         [bounceTimer invalidate]; [bounceTimer release]; bounceTimer = nil;
     }
 
     //Stop any continuous bouncing
-    if(currentAttentionRequest != -1){
-        if([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)]){
+    if (currentAttentionRequest != -1) {
+        if ([NSApp respondsToSelector:@selector(cancelUserAttentionRequest:)]) {
             [NSApp cancelUserAttentionRequest:currentAttentionRequest];
         }
         currentAttentionRequest = -1;

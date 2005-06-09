@@ -55,7 +55,7 @@
 // init the login controller
 - (id)initWithOwner:(id)inOwner windowNibName:(NSString *)windowNibName
 {
-	if((self = [super initWithWindowNibName:windowNibName])) {
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		//Retain our owner
 		owner = [inOwner retain];
 
@@ -77,11 +77,11 @@
 // TableView Delegate methods - Return the number of items in the table
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    if(tableView == tableView_userList){
+    if (tableView == tableView_userList) {
         return([userArray count]);
-    }else if(tableView == tableView_editableUserList){
+    } else if (tableView == tableView_editableUserList) {
         return([userArray count]);
-    }else{
+    } else {
         return(0);
     }
 }
@@ -89,11 +89,11 @@
 // TableView Delegate methods - Return the requested item in the table
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    if(tableView == tableView_userList){
+    if (tableView == tableView_userList) {
         return([userArray objectAtIndex:row]);
-    }else if(tableView == tableView_editableUserList){
+    } else if (tableView == tableView_editableUserList) {
         return([userArray objectAtIndex:row]);
-    }else{
+    } else {
         return(nil);
     }
 
@@ -152,7 +152,7 @@
     userArray = [[owner userArray] retain];
 
     //Refresh the tables (if the window is loaded)
-    if(tableView_userList != nil && tableView_editableUserList != nil){
+    if (tableView_userList != nil && tableView_editableUserList != nil) {
         [tableView_userList reloadData];
         [tableView_editableUserList reloadData];
     }
@@ -184,14 +184,14 @@
 // Rename a user
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-    if(tableView == tableView_editableUserList){
+    if (tableView == tableView_editableUserList) {
         //Rename the user
         [owner renameUser:[userArray objectAtIndex:row] to:object];
 
         //Refresh our user list
         [self updateUserList];
 
-		if(loginTimer){
+		if (loginTimer) {
 			[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
 		}
     }
@@ -236,9 +236,9 @@
 
     //Select the login they used last
     lastLogin = [loginDict objectForKey:LOGIN_LAST_USER];
-    if(lastLogin != nil && [lastLogin length] != 0 && [userArray indexOfObject:lastLogin] != NSNotFound){
+    if (lastLogin != nil && [lastLogin length] != 0 && [userArray indexOfObject:lastLogin] != NSNotFound) {
         [tableView_userList selectRow:[userArray indexOfObject:lastLogin] byExtendingSelection:NO];
-    }else{
+    } else {
         [tableView_userList selectRow:0 byExtendingSelection:NO];
     }
 
@@ -265,7 +265,7 @@
 
 - (void)disableLoginTimeout
 {
-	if(loginTimer){
+	if (loginTimer) {
 		[loginTimer invalidate]; [loginTimer release]; loginTimer = nil;
 	}
 }

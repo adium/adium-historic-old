@@ -151,7 +151,7 @@
     newExists = ([manager fileExistsAtPath:newPath isDirectory:&isDir] && isDir);
 	
 	//If we find an old preference folder (and no new one) migrate it to the new location
-    if(oldExists & !newExists){
+    if (oldExists & !newExists) {
         [manager movePath:oldPath toPath:newPath handler:nil];
     }
 }
@@ -224,7 +224,7 @@
 	NSParameterAssert([observer respondsToSelector:@selector(preferencesChangedForGroup:key:object:preferenceDict:firstTime:)]);
 	
 	//Fetch the observers for this group
-	if(!(groupObservers = [observers objectForKey:group])){
+	if (!(groupObservers = [observers objectForKey:group])) {
 		groupObservers = [[NSMutableArray alloc] init];
 		[observers setObject:groupObservers forKey:group];
 		[groupObservers release];
@@ -253,7 +253,7 @@
 	NSMutableArray	*observerArray;
 	NSValue			*observerValue = [NSValue valueWithNonretainedObject:observer];
 
-	while((observerArray = [enumerator nextObject])){
+	while ((observerArray = [enumerator nextObject])) {
 #ifdef TRACK_PREFERENCE_OBSERVERS
 		NSLog(@"removing observer: %p", [observerValue nonretainedObjectValue]);
 #endif
@@ -279,14 +279,14 @@
  */
 - (void)informObserversOfChangedKey:(NSString *)key inGroup:(NSString *)group object:(AIListObject *)object
 {
-	if(!object && preferenceChangeDelays > 0){
+	if (!object && preferenceChangeDelays > 0) {
         [delayedNotificationGroups addObject:group];
-    }else{
+    } else {
 		NSDictionary	*preferenceDict = [self cachedPreferencesWithDefaultsForGroup:group object:object];
 		NSEnumerator	*enumerator = [[observers objectForKey:group] objectEnumerator];
 		NSValue			*observerValue;
 
-		while((observerValue = [enumerator nextObject])){
+		while ((observerValue = [enumerator nextObject])) {
 			id observer = [observerValue nonretainedObjectValue];
 #ifdef TRACK_PREFERENCE_OBSERVERS
 			NSLog(@"informing observer %p", observer);
@@ -309,20 +309,20 @@
  */
 - (void)delayPreferenceChangedNotifications:(BOOL)inDelay
 {
-	if(inDelay){
+	if (inDelay) {
 		preferenceChangeDelays++;
-	}else{
+	} else {
 		preferenceChangeDelays--;
 	}
 	
 	//If changes are no longer delayed, save and notify of all preferences modified while delayed
-    if(!preferenceChangeDelays){
+    if (!preferenceChangeDelays) {
 		NSEnumerator    *enumerator = [delayedNotificationGroups objectEnumerator];
 		NSString        *group;
 		
 		[[adium contactController] delayListObjectNotifications];
 
-		while((group = [enumerator nextObject])){
+		while ((group = [enumerator nextObject])) {
 			[self informObserversOfChangedKey:nil inGroup:group object:nil];
 		}
 
@@ -363,18 +363,18 @@
 	BOOL				changed = YES;
 
     //Set the new value
-    if(value != nil){
+    if (value != nil) {
         [prefDict setObject:value forKey:key];
-    }else{
-		if([prefDict objectForKey:key]){
+    } else {
+		if ([prefDict objectForKey:key]) {
 			[prefDict removeObjectForKey:key];
-		}else{
+		} else {
 			changed = NO;
 		}
     }
 
 	//Update the preference cache with our changes
-	if(changed){
+	if (changed) {
 		[self updateCachedPreferences:prefDict forGroup:group object:object];
 		[self informObserversOfChangedKey:key inGroup:group object:object];
 	}
@@ -401,9 +401,9 @@
 	id	result = [[self cachedPreferencesForGroup:group object:object] objectForKey:key];
 	
 	//If there is no object specific preference, inherit the value from the object containing this one
-	if(!result && object){
+	if (!result && object) {
 		return([self _noDefaultsPreferenceForKey:key group:group object:[object containingObject]]);
-	}else{
+	} else {
 		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
 		return(result);
 	}
@@ -418,9 +418,9 @@
 	id	result = [[self cachedDefaultsForGroup:group object:object] objectForKey:key];
 	
 	//If there is no object specific preference, inherit the value from the object containing this one
-	if(!result && object){
+	if (!result && object) {
 		return([self defaultPreferenceForKey:key group:group object:[object containingObject]]);
-	}else{
+	} else {
 		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
 		return(result);
 	}	
@@ -438,7 +438,7 @@
 	id result = [self _noDefaultsPreferenceForKey:key group:group object:object];
 	
 	//If no result, try defaults
-	if(!result) result = [self defaultPreferenceForKey:key group:group object:object];
+	if (!result) result = [self defaultPreferenceForKey:key group:group object:object];
 	
 	return(result);
 }
@@ -488,14 +488,14 @@
 	NSString			*cacheKey;	
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
-	if(object){
+	if (object) {
 		NSString	*path = [object pathToPreferences];
 		NSString	*uniqueID = [object internalObjectID];
 		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
 		activeDefaultsCache = objectPrefWithDefaultsCache;
 		targetDefaultsDict = objectDefaults;
 		
-	}else{
+	} else {
 		cacheKey = group;
 		activeDefaultsCache = prefWithDefaultsCache;
 		targetDefaultsDict = defaults;
@@ -503,7 +503,7 @@
 	}
 	
 	actualDefaultsDict = [targetDefaultsDict objectForKey:cacheKey];
-	if(!actualDefaultsDict) actualDefaultsDict = [NSMutableDictionary dictionary];
+	if (!actualDefaultsDict) actualDefaultsDict = [NSMutableDictionary dictionary];
 	
 	[actualDefaultsDict addEntriesFromDictionary:defaultDict];
 	[targetDefaultsDict setObject:actualDefaultsDict
@@ -531,12 +531,12 @@
 	
 	//They keys are preference groups, run through all of them
 	enumerator = [allDefaults keyEnumerator];
-	while((group = [enumerator nextObject])){
+	while ((group = [enumerator nextObject])) {
 		
 		//Get the dictionary of keys for each group, and reset them all
 		groupDefaults = [allDefaults objectForKey:group];
 		keyEnumerator = [groupDefaults keyEnumerator];
-		while((key = [keyEnumerator nextObject])){
+		while ((key = [keyEnumerator nextObject])) {
 			[[adium preferenceController] setPreference:[groupDefaults objectForKey:key]
 												 forKey:key
 												  group:group];
@@ -561,20 +561,20 @@
 	NSMutableDictionary	*prefDict;
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
-	if(object){
+	if (object) {
 		NSString	*path = [object pathToPreferences];
 		NSString	*uniqueID = [object internalObjectID];
 		NSString	*cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
 		
-		if(!(prefDict = [objectPrefCache objectForKey:cacheKey])){
+		if (!(prefDict = [objectPrefCache objectForKey:cacheKey])) {
 			prefDict = [NSMutableDictionary dictionaryAtPath:[userDirectory stringByAppendingPathComponent:path]
 													withName:[uniqueID safeFilenameString]
 													  create:YES];
 			[objectPrefCache setObject:prefDict forKey:cacheKey];
 		}
 
-	}else{
-		if(!(prefDict = [prefCache objectForKey:group])){
+	} else {
+		if (!(prefDict = [prefCache objectForKey:group])) {
 			prefDict = [NSMutableDictionary dictionaryAtPath:userDirectory
 													withName:group
 													  create:YES];
@@ -597,13 +597,13 @@
 	NSString			*cacheKey;
 
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
-	if(object){
+	if (object) {
 		NSString	*path = [object pathToPreferences];
 		NSString	*uniqueID = [object internalObjectID];
 		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
 		sourceDefaultsDict = objectDefaults;
 		
-	}else{
+	} else {
 		cacheKey = group;
 		sourceDefaultsDict = defaults;
 	}
@@ -625,29 +625,29 @@
 	NSString			*cacheKey;
 	
 	//Object specific preferences are stored by path and objectID, while regular preferences are stored by group.
-	if(object){
+	if (object) {
 		NSString	*path = [object pathToPreferences];
 		NSString	*uniqueID = [object internalObjectID];
 		cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
 		activeDefaultsCache = objectPrefWithDefaultsCache;
 		sourceDefaultsDict = objectDefaults;
 
-	}else{
+	} else {
 		cacheKey = group;
 		activeDefaultsCache = prefWithDefaultsCache;
 		sourceDefaultsDict = defaults;
 
 	}
 	
-	if(!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])){		
+	if (!(prefWithDefaultsDict = [activeDefaultsCache objectForKey:cacheKey])) {		
 		NSDictionary	*userPrefs = [self cachedPreferencesForGroup:group object:object];
 		NSDictionary	*defaultPrefs = [sourceDefaultsDict objectForKey:cacheKey];
-		if(defaultPrefs){
+		if (defaultPrefs) {
 			//Add the object's own preferences to the defaults dictionary to get a dict with the object's keys
 			//overriding the default keys
 			prefWithDefaultsDict = [[defaultPrefs mutableCopy] autorelease];
 			[(NSMutableDictionary *)prefWithDefaultsDict addEntriesFromDictionary:userPrefs];
-		}else{
+		} else {
 			//With no defaults, just use the userPrefs
 			prefWithDefaultsDict = userPrefs;
 		}
@@ -668,7 +668,7 @@
  */
 - (void)updateCachedPreferences:(NSMutableDictionary *)prefDict forGroup:(NSString *)group object:(AIListObject *)object
 {
-	if(object){
+	if (object) {
 		NSString	*path = [object pathToPreferences];
 		NSString	*uniqueID = [object internalObjectID];
 		NSString	*cacheKey = [NSString stringWithFormat:@"%@:%@", path, uniqueID];
@@ -688,7 +688,7 @@
 		[prefDict writeToPath:[userDirectory stringByAppendingPathComponent:path]
 					 withName:[uniqueID safeFilenameString]];
 
-	}else{
+	} else {
 		/* Retain and autorelease the current prefDict so it remains viable for this run loop, since code should be
 		 * able to depend upon a retrieved prefDict remaining usable without bracketing a set of 
 		 * -[AIPreferenceController setPreference:forKey:group:] calls with retain/release. */
@@ -719,7 +719,7 @@
 	userPreferredDownloadFolder = [self preferenceForKey:@"UserPreferredDownloadFolder"
 												   group:PREF_GROUP_GENERAL];
 	
-	if(!userPreferredDownloadFolder){
+	if (!userPreferredDownloadFolder) {
 		OSStatus		err = noErr;
 		ICInstance		inst = NULL;
 		ICFileSpec		folder;
@@ -729,19 +729,19 @@
 		
 		memset( path, 0, 1024 ); //clear path's memory range
 		
-		if((err = ICStart(&inst, 'AdiM')) == noErr){
+		if ((err = ICStart(&inst, 'AdiM')) == noErr) {
 			ICGetPref( inst, kICDownloadFolder, NULL, &folder, &length );
 			ICStop( inst );
 			
-			if(((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
+			if (((err = FSpMakeFSRef(&folder.fss, &ref)) == noErr) &&
 			   ((err = FSRefMakePath(&ref, (unsigned char *)path, 1024)) == noErr) &&
-			   ((path != NULL) && (strlen(path) > 0))){
+			   ((path != NULL) && (strlen(path) > 0))) {
 				userPreferredDownloadFolder = [NSString stringWithUTF8String:path];
 			}
 		}
 	}
 	
-	if(!userPreferredDownloadFolder){
+	if (!userPreferredDownloadFolder) {
 		userPreferredDownloadFolder = @"~/Desktop";
 	}
 

@@ -51,18 +51,18 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
  */
 + (void)updateStatusWindowWithVisibility:(BOOL)shouldBeVisible
 {
-	if(shouldBeVisible){
-		if(sharedInstance){
+	if (shouldBeVisible) {
+		if (sharedInstance) {
 			//Update the window's configuration
 			[sharedInstance configureStatusWindow];
-		}else{
+		} else {
 			//Create a new shared instance, which will be configured automatically once the window loads
 			sharedInstance = [[self alloc] initWithWindowNibName:AWAY_STATUS_WINDOW_NIB];
 			[sharedInstance showWindow:nil];
 		}
 	
-	}else{
-		if(sharedInstance){
+	} else {
+		if (sharedInstance) {
 			//If the window is current visible, close it
 			[sharedInstance closeWindow:nil];
 		}
@@ -106,7 +106,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 - (void)windowWillClose:(id)sender
 {
 	//If we are muting while this window is open, remove the mute before closing
-	if([button_muteWhileAway state]){
+	if ([button_muteWhileAway state]) {
 		[[adium preferenceController] setPreference:nil
 											 forKey:KEY_SOUND_STATUS_MUTE
 											  group:PREF_GROUP_SOUNDS];
@@ -148,7 +148,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 																		 withName:&activeUnvailableStatusName
 												   allOnlineAccountsAreUnvailable:&allOnlineAccountsAreUnvailable];
 	
-	if(allOnlineAccountsAreUnvailable && ([relevantStatuses count] == 1)){
+	if (allOnlineAccountsAreUnvailable && ([relevantStatuses count] == 1)) {
 		//Show the single status tab if all online accounts are unavailable and they are all in the same status state
 		NSImage				*statusIcon;
 		NSAttributedString	*statusTitle;
@@ -169,7 +169,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 		//Select the right tab view item
 		[tabView_configuration selectTabViewItemWithIdentifier:@"singlestatus"];
 		
-	}else{
+	} else {
 		/* Show the multistatus tableview tab if accounts are in different states, which includes the case of only one
 		 * away state being in use but not all online accounts currently making use of it.
 		 */
@@ -206,14 +206,14 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSTextAttachmentCell		*cell;
 	NSAttributedString			*statusMessage;
 	
-	if((statusMessage = [statusState statusMessage]) &&
-	   ([statusMessage length])){
+	if ((statusMessage = [statusState statusMessage]) &&
+	   ([statusMessage length])) {
 		//Use the status message if it is set
 		statusTitle = [statusMessage mutableCopy];
 		[[statusTitle mutableString] insertString:@" "
 										  atIndex:0];
 
-	}else{
+	} else {
 		//If it isn't, use the title
 		NSDictionary				*attributesDict;
 
@@ -248,10 +248,10 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
-		if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+	while ((account = [enumerator nextObject])) {
+		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 			AIStatus	*statusState = [account statusState];
-			if([statusState statusType] != AIAvailableStatusType){
+			if ([statusState statusType] != AIAvailableStatusType) {
 				[awayAccounts addObject:account];
 			}
 		}
@@ -268,21 +268,21 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSTabViewItem	*selectedTabViewItem = [tabView_configuration selectedTabViewItem];
 	AIStatus		*availableStatusState = [[adium statusController] defaultInitialStatusState];
 	
-	if([[selectedTabViewItem identifier] isEqualToString:@"singlestatus"]){
+	if ([[selectedTabViewItem identifier] isEqualToString:@"singlestatus"]) {
 		//Put all accounts in the Available status state
 		[[adium statusController] setActiveStatusState:availableStatusState];
 
-	}else{
+	} else {
 		//Multistatus
 		NSArray	*selectedAccounts;
 		
 		selectedAccounts = [[tableView_multiStatus arrayOfSelectedItemsUsingSourceArray:_awayAccounts] copy];
 		
-		if([selectedAccounts count]){
+		if ([selectedAccounts count]) {
 			//Apply the available status state to only the selected accounts
 			[[adium statusController] applyState:availableStatusState
 									  toAccounts:selectedAccounts];
-		}else{
+		} else {
 			//No selection: Put all accounts in the Available status state
 			[[adium statusController] setActiveStatusState:availableStatusState];			
 		}

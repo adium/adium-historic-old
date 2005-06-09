@@ -46,7 +46,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[AIMetaContact class]]){
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
 		return(AILocalizedString(@"Contacts",nil));
 	}
 	
@@ -62,11 +62,11 @@
 {
     NSMutableAttributedString	*entry = nil;
 	
-	if([inObject isKindOfClass:[AIMetaContact class]]){
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {
 		NSArray				*listContacts = [(AIMetaContact *)inObject listContacts];
 		
 		//Only display the contents if it has more than one contact within it.
-		if ([listContacts count] > 1){
+		if ([listContacts count] > 1) {
 			NSMutableString	*entryString;
 			AIListContact	*contact;
 			NSEnumerator	*enumerator;
@@ -76,18 +76,18 @@
 			entryString = [entry mutableString];
 			
 			enumerator = [listContacts objectEnumerator];
-			while((contact = [enumerator nextObject])){
+			while ((contact = [enumerator nextObject])) {
 				NSImage	*statusIcon, *serviceIcon;
 				
-				if (shouldAppendString){
+				if (shouldAppendString) {
 					[entryString appendString:@"\r"];
-				}else{
+				} else {
 					shouldAppendString = YES;
 				}
 				
 				statusIcon = [[contact displayArrayObjectForKey:@"Tab Status Icon"] imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
 				
-				if(statusIcon){
+				if (statusIcon) {
 					NSTextAttachment		*attachment;
 					NSTextAttachmentCell	*cell;
 						
@@ -104,7 +104,7 @@
 				
 				serviceIcon = [[AIServiceIcons serviceIconForObject:contact type:AIServiceIconSmall direction:AIIconNormal]
 									imageByScalingToSize:META_TOOLTIP_ICON_SIZE];
-				if (serviceIcon){
+				if (serviceIcon) {
 					NSTextAttachment		*attachment;
 					NSTextAttachmentCell	*cell;
 					

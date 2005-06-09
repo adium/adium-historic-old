@@ -59,7 +59,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 + (id)treeWithCFTree:(CFTreeRef)CFTree createIfNecessary:(BOOL)flag {
 	AITree *tree = [knownTrees objectForKey:(id)CFTree];
-	if((!tree) && flag) {
+	if ((!tree) && flag) {
 		//no AITree exists for this CFTree yet - create one.
 		tree = [[[self alloc] initWithCFTree:CFTree] autorelease];
 	}
@@ -77,7 +77,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (id)initWithContextStructure:(CFTreeContext *)context {
 	NSParameterAssert(context != NULL);
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		contextStorage = *context;
 		backing = CFTreeCreate(kCFAllocatorDefault, &contextStorage);
 		childrenSet = [[NSMutableSet alloc] init];
@@ -86,7 +86,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (id)initWithCFTree:(CFTreeRef)cfTree {
 	NSParameterAssert(cfTree != NULL);
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		backing = (CFTreeRef)CFRetain(cfTree);
 		CFTreeGetContext(backing, &contextStorage);
 		[knownTrees setObject:self forKey:(id)backing];
@@ -140,7 +140,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (AITree *)rootCreatingAITreeIfNecessary:(BOOL)flag {
 	CFTreeRef rootCFTree = CFTreeFindRoot(backing);
-	if(!rootCFTree) return nil;
+	if (!rootCFTree) return nil;
 	else return [[self class] treeWithCFTree:rootCFTree createIfNecessary:flag];
 }
 - (AITree *)parent {
@@ -148,7 +148,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (AITree *)parentCreatingAITreeIfNecessary:(BOOL)flag {
 	CFTreeRef parentCFTree = CFTreeGetParent(backing);
-	if(!parentCFTree) return nil;
+	if (!parentCFTree) return nil;
 	else return [[self class] treeWithCFTree:parentCFTree createIfNecessary:flag];
 }
 
@@ -160,7 +160,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (AITree *)nextSiblingCreatingAITreeIfNecessary:(BOOL)flag {
 	CFTreeRef nextCFTree = CFTreeGetNextSibling(backing);
-	if(!nextCFTree) return nil;
+	if (!nextCFTree) return nil;
 	else return [[self class] treeWithCFTree:nextCFTree createIfNecessary:flag];
 }
 - (void)insertSibling:(AITree *)other {
@@ -170,7 +170,7 @@ static CFTreeContext treeContextForObjCObjects = {
 
 - (void)remove {
 	AITree *parent = [self parentCreatingAITreeIfNecessary:NO];
-	if(parent) [parent->childrenSet removeObject:self];
+	if (parent) [parent->childrenSet removeObject:self];
 	CFTreeRemove(backing);
 }
 
@@ -195,9 +195,9 @@ static CFTreeContext treeContextForObjCObjects = {
 	CFTreeGetChildren(backing, CFTrees);
 
 	Class myClass = [self class];
-	for(CFIndex i = 0; i < numChildren; ++i) {
+	for (CFIndex i = 0; i < numChildren; ++i) {
 		AITree *tree = [myClass treeWithCFTree:CFTrees[i] createIfNecessary:flag];
-		if(!tree) {
+		if (!tree) {
 			free(CFTrees);
 			return NO;
 		}
@@ -215,7 +215,7 @@ static CFTreeContext treeContextForObjCObjects = {
 }
 - (AITree *)firstChildCreatingAITreeIfNecessary:(BOOL)flag {
 	CFTreeRef parentCFTree = CFTreeGetParent(backing);
-	if(!parentCFTree) return nil;
+	if (!parentCFTree) return nil;
 	else return [[self class] treeWithCFTree:parentCFTree createIfNecessary:flag];
 }
 
@@ -226,7 +226,7 @@ static CFTreeContext treeContextForObjCObjects = {
 	AITree **trees = malloc(sizeof(AITree *) * numChildren);
 	[self getChildren:trees];
 
-	while(numChildren > 0) {
+	while (numChildren > 0) {
 		[*(trees++) performSelector:selector withObject:obj];
 	}
 }
@@ -238,7 +238,7 @@ static CFTreeContext treeContextForObjCObjects = {
 	[self getChildren:trees];
 	id *returnValues = malloc(sizeof(id) * numChildren);
 
-	for(CFIndex i = 0; i < numChildren; ++i) {
+	for (CFIndex i = 0; i < numChildren; ++i) {
 		returnValues[i] = [trees[i] performSelector:selector withObject:obj];
 	}
 

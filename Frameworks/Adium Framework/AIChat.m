@@ -48,7 +48,7 @@ static int nextChatNumber = 0;
 
 - (id)initForAccount:(AIAccount *)inAccount
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		name = nil;
 		account = [inAccount retain];
@@ -91,9 +91,9 @@ static int nextChatNumber = 0;
 	AIListObject 	*listObject = [self listObject];
 	NSImage			*image = nil;
 	
-	if(listObject){
+	if (listObject) {
 		image = [listObject userIcon];
-		if(!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
+		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
 	}
 
 	return(image);
@@ -105,7 +105,7 @@ static int nextChatNumber = 0;
 	AIListObject 	*listObject;
 	NSImage			*chatMenuImage = nil;
 	
-	if((listObject = [self listObject])){
+	if ((listObject = [self listObject])) {
 		chatMenuImage = [AIUserIcons menuUserIconForObject:listObject];
 	}
 
@@ -115,8 +115,8 @@ static int nextChatNumber = 0;
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if((!object || (object == account)) &&
-	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])){
+	if ((!object || (object == account)) &&
+	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])) {
 		enableTypingNotifications = ![[account preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
 														  group:GROUP_ACCOUNT_STATUS] boolValue];
 	}
@@ -131,7 +131,7 @@ static int nextChatNumber = 0;
 
 - (void)setAccount:(AIAccount *)inAccount
 {
-	if(inAccount != account){
+	if (inAccount != account) {
 		[account release];
 		account = [inAccount retain];
 		
@@ -154,7 +154,7 @@ static int nextChatNumber = 0;
 
 - (void)setDateOpened:(NSDate *)inDate
 {
-	if(dateOpened != inDate){
+	if (dateOpened != inDate) {
 	   [dateOpened release]; 
 	   dateOpened = [inDate retain];
     }
@@ -184,7 +184,7 @@ static int nextChatNumber = 0;
 	//If our unviewed content changes or typing status changes, and we have a single list object, 
 	//apply the change to that object as well so it can be cleanly reflected in the contact list.
 	if ([key isEqualToString:KEY_UNVIEWED_CONTENT] ||
-		[key isEqualToString:KEY_TYPING]){
+		[key isEqualToString:KEY_TYPING]) {
 		AIListObject	*listObject = [self listObject];
 		
 		if (listObject) [listObject setStatusObject:value forKey:key notify:notify];
@@ -197,7 +197,7 @@ static int nextChatNumber = 0;
 {
 	AIListObject	*listObject = [self listObject];
 	
-	if (listObject){
+	if (listObject) {
 		[listObject setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyLater];
 		[listObject setStatusObject:nil forKey:KEY_TYPING notify:NotifyLater];
 	
@@ -253,7 +253,7 @@ static int nextChatNumber = 0;
 
 - (void)addParticipatingListObject:(AIListContact *)inObject
 {
-	if (![participatingListObjects containsObjectIdenticalTo:inObject]){
+	if (![participatingListObjects containsObjectIdenticalTo:inObject]) {
 		[participatingListObjects addObject:inObject]; //Add
 		[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
 	}
@@ -287,22 +287,22 @@ static int nextChatNumber = 0;
 //If this chat only has one participating list object, it is returned.  Otherwise, nil is returned
 - (AIListContact *)listObject
 {
-    if(([participatingListObjects count] == 1) && ![self name]){
+    if (([participatingListObjects count] == 1) && ![self name]) {
         return([participatingListObjects objectAtIndex:0]);
-    }else{
+    } else {
         return(nil);
     }
 }
 - (void)setListObject:(AIListContact *)inListObject
 {
-	if(inListObject != [self listObject]){
+	if (inListObject != [self listObject]) {
 		[self clearListObjectStatuses];
 		[[adium notificationCenter] postNotificationName:Chat_DestinationChanged object:self]; //Notify
 
 		//The uniqueChatID may depend upon the listObject, so clear it
 		[self clearUniqueChatID];
 		
-		if ([participatingListObjects count]){
+		if ([participatingListObjects count]) {
 			[participatingListObjects removeObjectAtIndex:0];
 		}
 		
@@ -314,9 +314,9 @@ static int nextChatNumber = 0;
 {
 	if (!uniqueChatID) {
 		AIListObject	*listObject;
-		if ((listObject = [self listObject])){
+		if ((listObject = [self listObject])) {
 			uniqueChatID = [[listObject internalObjectID] retain];
-		}else if (name){
+		} else if (name) {
 			uniqueChatID = [[NSString alloc] initWithFormat:@"%@.%i",name,nextChatNumber++];
 		}
 	}
@@ -344,7 +344,7 @@ static int nextChatNumber = 0;
 
 - (void)setContentArray:(NSArray *)inContentArray
 {
-    if((NSArray *)contentObjectArray != inContentArray){
+    if ((NSArray *)contentObjectArray != inContentArray) {
         [contentObjectArray release];
         contentObjectArray = [inContentArray mutableCopy];
     }
@@ -382,7 +382,7 @@ static int nextChatNumber = 0;
 	NSString		*filePath = [evaluatedArguments objectForKey:@"filePath"];
 	
 	//Send any message we were told to send
-	if (message && [message length]){
+	if (message && [message length]) {
 		BOOL			autoreply = [[evaluatedArguments objectForKey:@"autoreply"] boolValue];
 
 		//Take the string and turn it into an attributed string (in case we were passed HTML)
@@ -399,20 +399,20 @@ static int nextChatNumber = 0;
 	}
 	
 	//Send any file we were told to send to every participating list object (anyone remember the AOL mass mailing zareW scene?)
-	if (filePath && [filePath length]){
+	if (filePath && [filePath length]) {
 		AIAccount		*sourceAccount = [evaluatedArguments objectForKey:@"account"];
 
 		NSEnumerator	*enumerator = [[self participatingListObjects] objectEnumerator];
 		AIListContact	*listContact;
 		
-		while ((listContact = [enumerator nextObject])){
+		while ((listContact = [enumerator nextObject])) {
 			AIListContact   *targetFileTransferContact;
 			
-			if (sourceAccount){
+			if (sourceAccount) {
 				//If we were told to use a specific account, insist upon using it no matter what account the chat is on
 				targetFileTransferContact = [[adium contactController] contactOnAccount:sourceAccount
 																		fromListContact:listContact];
-			}else{
+			} else {
 				//Make sure we know where we are sending the file by finding the best contact for
 				//sending FILE_TRANSFER_TYPE.
 				targetFileTransferContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
@@ -459,8 +459,8 @@ static int nextChatNumber = 0;
 	NSEnumerator	*enumerator = [[self containedObjects] objectEnumerator];
 	AIListObject	*object;
 	
-	while((object = [enumerator nextObject])){
-		if([inUID isEqualToString:[object UID]] && [object service] == inService) break;
+	while ((object = [enumerator nextObject])) {
+		if ([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	
 	return(object);
@@ -479,18 +479,18 @@ static int nextChatNumber = 0;
 
 - (BOOL)addObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[AIListContact class]]){
+	if ([inObject isKindOfClass:[AIListContact class]]) {
 		[self addParticipatingListObject:(AIListContact *)inObject];
 		
 		return YES;
-	}else{
+	} else {
 		return NO;
 	}
 }
 
 - (void)removeObject:(AIListObject *)inObject
 {
-	if ([inObject isKindOfClass:[AIListContact class]]){
+	if ([inObject isKindOfClass:[AIListContact class]]) {
 		[self removeParticipatingListObject:(AIListContact *)inObject];
 	}
 }

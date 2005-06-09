@@ -44,10 +44,10 @@
 
 	//The last object in the buttons array is the default; alternate is second to last; otherButton is last
 	defaultButton = [buttonNamesArray lastObject];
-	if(buttonNamesArrayCount > 1){
+	if (buttonNamesArrayCount > 1) {
 		alternateButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-2)];
 		
-		if(buttonNamesArrayCount > 2){
+		if (buttonNamesArrayCount > 2) {
 			otherButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-3)];			
 		}
 	}
@@ -79,7 +79,7 @@
 
 	callBackIndex = -1;
 		
-	switch(returnCode){
+	switch (returnCode) {
 		case AITextAndButtonsDefaultReturn:
 			callBackIndex = (actionCount - 1);
 			break;
@@ -96,13 +96,13 @@
 			break;
 	}
 
-	if ((callBackIndex != -1) && (theCallBacks[callBackIndex] != NULL)){
+	if ((callBackIndex != -1) && (theCallBacks[callBackIndex] != NULL)) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestActionCbValue:withUserDataValue:callBackIndex:)
 											  withObject:[NSValue valueWithPointer:theCallBacks[callBackIndex]]
 											  withObject:[userInfo objectForKey:@"userData"]
 											  withObject:[NSNumber numberWithInt:callBackIndex]];
-	}else{
+	} else {
 		NSLog(@"Failure.");
 	}
 	
@@ -114,7 +114,7 @@
 								  callBackIndex:(NSNumber *)callBackIndexNumber
 {
 	GaimRequestActionCb callBack = [callBackValue pointerValue];
-	if (callBack){
+	if (callBack) {
 		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
 	}
 }

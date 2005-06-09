@@ -62,7 +62,7 @@
 	
 	[popUp_windowPosition setMenu:[[adium interfaceController] menuForWindowLevelsNotifyingTarget:self]];
 	menuIndex =  [popUp_windowPosition indexOfItemWithTag:[[preferenceDict objectForKey:KEY_CL_WINDOW_LEVEL] intValue]];
-	if(menuIndex >= 0 && menuIndex < [popUp_windowPosition numberOfItems]){
+	if (menuIndex >= 0 && menuIndex < [popUp_windowPosition numberOfItems]) {
 		[popUp_windowPosition selectItemAtIndex:menuIndex];
 	}
     [checkBox_hide setState:[[preferenceDict objectForKey:KEY_CL_HIDE] boolValue]];
@@ -99,37 +99,37 @@
  */
 - (IBAction)changePreference:(id)sender
 {
-	if(sender == checkBox_hide){
+	if (sender == checkBox_hide) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_HIDE
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-    }else if(sender == checkBox_edgeSlide){
+    } else if (sender == checkBox_edgeSlide) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_EDGE_SLIDE
 											  group:PREF_GROUP_CONTACT_LIST];
-	}else if(sender == checkBox_flash){
+	} else if (sender == checkBox_flash) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_FLASH_UNVIEWED_CONTENT
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-    }else if(sender == checkBox_showTransitions){
+    } else if (sender == checkBox_showTransitions) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_SHOW_TRANSITIONS
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-    }else if(sender == checkBox_showTooltips){
+    } else if (sender == checkBox_showTooltips) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_SHOW_TOOLTIPS
 											  group:PREF_GROUP_CONTACT_LIST];
 		[self configureControlDimming];
 
-	}else if(sender == checkBox_showTooltipsInBackground){
+	} else if (sender == checkBox_showTooltipsInBackground) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
 											 forKey:KEY_CL_SHOW_TOOLTIPS_IN_BACKGROUND
 											  group:PREF_GROUP_CONTACT_LIST];
 		
-	}else if(sender == checkBox_windowHasShadow){
+	} else if (sender == checkBox_windowHasShadow) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_CL_WINDOW_HAS_SHADOW
 											  group:PREF_GROUP_CONTACT_LIST];

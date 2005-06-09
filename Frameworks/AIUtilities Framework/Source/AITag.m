@@ -47,7 +47,7 @@ NSString *AITag_ContentsKey = @"Contents";
    attributeValues:(NSArray *)newAttributeValues
           contents:(NSArray *)newContents
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		name = [newName copy];
 		attributeNames = [newAttributeNames mutableCopy];
 		attributeValues = [newAttributeValues mutableCopy];
@@ -73,9 +73,9 @@ NSString *AITag_ContentsKey = @"Contents";
 }
 //pass a dictionary or array.
 - (id)initWithPropertyList:(id)plist {
-	if([plist isKindOfClass:[NSArray class]]) {
+	if ([plist isKindOfClass:[NSArray class]]) {
 		return [self initWithArrayRepresentation:plist];
-	} else if([plist isKindOfClass:[NSDictionary class]]) {
+	} else if ([plist isKindOfClass:[NSDictionary class]]) {
 		return [self initWithDictionaryRepresentation:plist];
 	} else {
 		NSString *format = @"Attempt was made to initialize AITag %p with a property list that was neither an array nor a dictionary\n"
@@ -118,15 +118,15 @@ NSString *AITag_ContentsKey = @"Contents";
 	unsigned hash = [name hash];
 	NSEnumerator *objEnum = [attributeNames objectEnumerator];
 	id obj;
-	while((obj = [objEnum nextObject])) {
+	while ((obj = [objEnum nextObject])) {
 		hash ^= [obj hash];
 	}
 	objEnum = [attributeValues objectEnumerator];
-	while((obj = [objEnum nextObject])) {
+	while ((obj = [objEnum nextObject])) {
 		hash ^= [obj hash];
 	}
 	objEnum = [contents objectEnumerator];
-	while((obj = [objEnum nextObject])) {
+	while ((obj = [objEnum nextObject])) {
 		hash ^= [obj hash];
 	}
 	return hash;
@@ -140,7 +140,7 @@ NSString *AITag_ContentsKey = @"Contents";
 }
 - (BOOL)isEqual:(id)other
 {
-	if(![other isKindOfClass:[AITag class]]) {
+	if (![other isKindOfClass:[AITag class]]) {
 		//not an AITag? can't be equal.
 		return NO;
 	} else {
@@ -172,8 +172,8 @@ NSString *AITag_ContentsKey = @"Contents";
 }
 - (void)attributeAtIndex:(unsigned)index name:(out NSString **)outName value:(out NSString **)outValue
 {
-	if(outName)  *outName  =  [attributeNames objectAtIndex:index];
-	if(outValue) *outValue = [attributeValues objectAtIndex:index];
+	if (outName)  *outName  =  [attributeNames objectAtIndex:index];
+	if (outValue) *outValue = [attributeValues objectAtIndex:index];
 }
 - (void)replaceAttributeAtIndex:(unsigned)index name:(NSString *)newAttrName value:(NSString *)newAttrValue
 {
@@ -243,10 +243,10 @@ NSString *AITag_ContentsKey = @"Contents";
 	Class stringClass = [NSString class];
 	NSEnumerator *contentsEnumerator = [contents objectEnumerator];
 	id obj;
-	while((obj = [contentsEnumerator nextObject])) {
-		if([obj respondsToSelector:@selector(flattenedContents)]) {
+	while ((obj = [contentsEnumerator nextObject])) {
+		if ([obj respondsToSelector:@selector(flattenedContents)]) {
 			[string appendString:[obj flattenedContents]];
-		} else if([obj isKindOfClass:stringClass]) {
+		} else if ([obj isKindOfClass:stringClass]) {
 			[string appendString:obj];
 		} else {
 			[string appendString:[obj description]];

@@ -30,11 +30,11 @@
 	static BOOL _initialized = NO;
 	static BOOL _webkitAvailable = NO;
 
-	if(_initialized == NO){
+	if (_initialized == NO) {
 		NSString		*webkitPath = @"/System/Library/Frameworks/WebKit.framework";
 		BOOL			isDir;
 
-		if([[NSFileManager defaultManager] fileExistsAtPath:webkitPath isDirectory:&isDir] && isDir){
+		if ([[NSFileManager defaultManager] fileExistsAtPath:webkitPath isDirectory:&isDir] && isDir) {
 			_webkitAvailable = YES;
 		}
 

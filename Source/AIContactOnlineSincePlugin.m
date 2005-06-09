@@ -46,11 +46,11 @@
 - (NSAttributedString *)entryForObject:(AIListObject *)inObject
 {
     NSAttributedString * entry = nil;
-    if([inObject integerStatusObjectForKey:@"Online"]){
+    if ([inObject integerStatusObjectForKey:@"Online"]) {
 
         NSDate	*signonDate;
 	
-        if((signonDate = [inObject statusObjectForKey:@"Signon Date"])){
+        if ((signonDate = [inObject statusObjectForKey:@"Signon Date"])) {
             NSString		*currentDay, *signonDay, *signonTime;
             NSDateFormatter	*dayFormatter, *timeFormatter;
             
@@ -65,10 +65,10 @@
             signonDay = [dayFormatter stringForObjectValue:signonDate];
             signonTime = [timeFormatter stringForObjectValue:signonDate];
             
-            if([currentDay isEqualToString:signonDay]){ //Show time
+            if ([currentDay isEqualToString:signonDay]) { //Show time
                 entry = [[NSAttributedString alloc] initWithString:signonTime];
                 
-            }else{ //Show date and time
+            } else { //Show date and time
                 entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@, %@", signonDay, signonTime]];
 
             }

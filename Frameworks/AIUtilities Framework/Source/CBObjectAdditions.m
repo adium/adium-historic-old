@@ -42,7 +42,7 @@
 {
 	id returnValue;
 	
-	if (flag){
+	if (flag) {
 		NSInvocation *invocation;
 		
 		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -54,7 +54,7 @@
 		
 		[invocation getReturnValue:&returnValue];
 		
-	}else{
+	} else {
 		returnValue = nil;
 		[self performSelectorOnMainThread:aSelector 
 							   withObject:nil
@@ -81,7 +81,7 @@
 {
 	id returnValue;
 	
-	if (flag){
+	if (flag) {
 		NSInvocation *invocation;
 		
 		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -94,7 +94,7 @@
 
 		[invocation getReturnValue:&returnValue];
 		
-	}else{
+	} else {
 		returnValue = nil;
 		[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:NO];
 	}
@@ -112,7 +112,7 @@
 {
 	id returnValue;
 	
-	if (flag){
+	if (flag) {
 		NSInvocation *invocation;
 		
 		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -126,7 +126,7 @@
 		
 		[invocation getReturnValue:&returnValue];
 		
-	}else{
+	} else {
 		returnValue = nil;
 		[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
 	}
@@ -156,7 +156,7 @@
 {
 	id returnValue;
 	
-	if (flag){
+	if (flag) {
 		NSInvocation *invocation;
 		
 		invocation = [NSInvocation invocationWithMethodSignature:[self methodSignatureForSelector:aSelector]];
@@ -171,7 +171,7 @@
 		
 		[invocation getReturnValue:&returnValue];
 		
-	}else{
+	} else {
 		returnValue = nil;
 		[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
 	}

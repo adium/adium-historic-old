@@ -51,7 +51,7 @@
 	internalObjectID = [inInternalObjectID retain];
 	
 	accountModifiedUID = [self accountWillSetUID:UID];
-	if(accountModifiedUID != UID){
+	if (accountModifiedUID != UID) {
 		[UID release];
 		UID = [accountModifiedUID retain];
 	}
@@ -188,7 +188,7 @@
 	newProposedUID = [self accountWillSetUID:newProposedUID];
 
 	//Set our UID first (since [self formattedUID] uses the UID as necessary)
-	if(![newProposedUID isEqualToString:[self UID]]){
+	if (![newProposedUID isEqualToString:[self UID]]) {
 		[UID release];
 		UID = [newProposedUID retain];
 		
@@ -200,13 +200,13 @@
 	}
 
 	//Set our formatted UID if necessary
-	if(![newProposedFormattedUID isEqualToString:[self formattedUID]]){
+	if (![newProposedFormattedUID isEqualToString:[self formattedUID]]) {
 		[self setPreference:newProposedFormattedUID
 					 forKey:@"FormattedUID"
 					  group:GROUP_ACCOUNT_STATUS];
 	}
 	
-	if(didChangeUID){
+	if (didChangeUID) {
 		[self didChangeUID];
 	}
 }
@@ -221,8 +221,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!object || object == self){
-		if([[self supportedPropertyKeys] containsObject:key]){
+	if (!object || object == self) {
+		if ([[self supportedPropertyKeys] containsObject:key]) {
 			[self updateStatusForKey:key];
 		}
 	}
@@ -239,7 +239,7 @@
 {
     silentAndDelayed = YES;
 	
-	if(silenceAllContactUpdatesTimer){
+	if (silenceAllContactUpdatesTimer) {
 		[silenceAllContactUpdatesTimer invalidate];
 		[silenceAllContactUpdatesTimer release]; silenceAllContactUpdatesTimer = nil;
 	}
@@ -265,7 +265,7 @@
 - (void)updateContactStatus:(AIListContact *)inContact
 {
 	//If there is no outstanding delay
-	if(!delayedUpdateStatusTimer){
+	if (!delayedUpdateStatusTimer) {
 		//Update this contact's status immediately.
 		[self delayedUpdateContactStatus:inContact];
 		
@@ -276,14 +276,14 @@
 																   selector:@selector(_delayedUpdateStatusTimer:)
 																   userInfo:nil
 																	repeats:NO] retain];
-	}else{
+	} else {
 		//If there is an outstanding delay, set this contact as the target
 		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = [inContact retain];
 	}
 }
 - (void)_delayedUpdateStatusTimer:(NSTimer *)inTimer
 {
-	if(delayedUpdateStatusTarget){
+	if (delayedUpdateStatusTarget) {
 		[self delayedUpdateContactStatus:delayedUpdateStatusTarget];
 		[delayedUpdateStatusTarget release]; delayedUpdateStatusTarget = nil;
 	}
@@ -304,37 +304,37 @@
     
     //Online status changed
     //Call connect or disconnect as appropriate
-    if([key isEqualToString:@"Online"]){
-        if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
-            if(!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]){
-				if ([self requiresPassword]){
+    if ([key isEqualToString:@"Online"]) {
+        if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
+            if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
+				if ([self requiresPassword]) {
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
 												  notifyingTarget:self
 														 selector:@selector(passwordReturnedForConnect:context:)
 														  context:nil];
-				}else{
+				} else {
 					//Connect immediately without retrieving a password
 					[self connect];
 				}
 				
             }
-        }else{
-            if((areOnline || ([[self statusObjectForKey:@"Connecting"] boolValue])) && 
-			   (![[self statusObjectForKey:@"Disconnecting"] boolValue])){
+        } else {
+            if ((areOnline || ([[self statusObjectForKey:@"Connecting"] boolValue])) && 
+			   (![[self statusObjectForKey:@"Disconnecting"] boolValue])) {
                 //Disconnect
                 [self disconnect];
             }
         }
 		
-    }else if([key isEqualToString:@"StatusState"]){
+    } else if ([key isEqualToString:@"StatusState"]) {
 
-		if(areOnline){
+		if (areOnline) {
 			//Set the status state after filtering its statusMessage as appropriate
 			[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
 												   selector:@selector(gotFilteredStatusMessage:forStatusState:)
 													context:[self statusObjectForKey:@"StatusState"]];
-		}else{
+		} else {
 			//XXX behavior for setting a status when account is currently offline:
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
 			[self setPreference:[NSNumber numberWithBool:YES]
@@ -342,10 +342,10 @@
 						  group:GROUP_ACCOUNT_STATUS];
 		}
 		
-	}else if([key isEqualToString:@"FullNameAttr"]) {
+	} else if ([key isEqualToString:@"FullNameAttr"]) {
 		//Update the display name for this account
 		NSString	*displayName = [[[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString] string];
-		if([displayName length] == 0) displayName = nil;
+		if ([displayName length] == 0) displayName = nil;
 		
 		[[self displayArrayForKey:@"Display Name"] setObject:displayName
 												   withOwner:self];
@@ -353,7 +353,7 @@
 		[[adium contactController] listObjectAttributesChanged:self
 												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
 
-    }else if([key isEqualToString:@"FormattedUID"]){
+    } else if ([key isEqualToString:@"FormattedUID"]) {
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
 					   forKey:@"FormattedUID"
@@ -371,12 +371,12 @@
  */
 - (void)setStatusState:(AIStatus *)statusState
 {
-	if([statusState statusType] == AIOfflineStatusType){
+	if ([statusState statusType] == AIOfflineStatusType) {
 		[self setPreference:[NSNumber numberWithBool:NO] 
 					 forKey:@"Online"
 					  group:GROUP_ACCOUNT_STATUS];
 		
-	}else{
+	} else {
 		//Store the status state as a status object so it can be easily used elsewhere
 		[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyLater];
 		
@@ -387,14 +387,14 @@
 			* is thereafter responsible for updating any serverside settings as needed.  All of our current services will handle
 			* updating idle time as it changes automatically. This is a per-account preference setting; it will override
 			* any global idle setting for this account but won't change it. */	
-		if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
+		if ([[self supportedPropertyKeys] containsObject:@"IdleSince"]) {
 			NSDate	*idleSince;
 			
 			idleSince = ([statusState shouldForceInitialIdleTime] ?
 						 [NSDate dateWithTimeIntervalSinceNow:-([statusState forcedInitialIdleTime]+1)] :
 						 nil);
 
-			if([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince){
+			if ([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince) {
 				[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			}
 		}
@@ -415,14 +415,14 @@
 	//Store the status state as a status object so it can be easily used elsewhere
 	[self setStatusObject:statusState forKey:@"StatusState" notify:NotifyNever];
 
-	if([[self supportedPropertyKeys] containsObject:@"IdleSince"]){
+	if ([[self supportedPropertyKeys] containsObject:@"IdleSince"]) {
 		NSDate	*idleSince;
 		
 		idleSince = ([statusState shouldForceInitialIdleTime] ?
 					 [NSDate dateWithTimeIntervalSinceNow:-[statusState forcedInitialIdleTime]] :
 					 nil);
 		
-		if([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince){
+		if ([self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS] != idleSince) {
 			[self setPreference:idleSince forKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 		}		
 	}
@@ -441,20 +441,20 @@
 {
 	AIStatusType	statusType = [[self statusState] statusType];
 	
-	if(statusType == AIOfflineStatusType){
+	if (statusType == AIOfflineStatusType) {
 		return AIOfflineStatus;
-	}else{
-		if(statusType == AIAwayStatusType){
-			if ([self statusObjectForKey:@"IdleSince"]){
+	} else {
+		if (statusType == AIAwayStatusType) {
+			if ([self statusObjectForKey:@"IdleSince"]) {
 				return AIAwayAndIdleStatus;
-			}else{
+			} else {
 				return AIAwayStatus;
 			}
 
-		}else if([self statusObjectForKey:@"IdleSince"]){
+		} else if ([self statusObjectForKey:@"IdleSince"]) {
 			return AIIdleStatus;
 
-		}else{
+		} else {
 			return AIAvailableStatus;
 
 		}
@@ -463,15 +463,15 @@
 
 - (AIStatus *)statusState
 {
-	if ([self integerStatusObjectForKey:@"Online"]){
+	if ([self integerStatusObjectForKey:@"Online"]) {
 		AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
-		if(!statusState){
+		if (!statusState) {
 			statusState = [[adium statusController] defaultInitialStatusState];
 			[self setStatusStateAndRemainOffline:statusState];		
 		}
 		
 		return(statusState);
-	}else{
+	} else {
 		return([[adium statusController] offlineStatusState]);
 	}
 }
@@ -511,11 +511,11 @@
 - (void)passwordReturnedForConnect:(NSString *)inPassword context:(id)inContext
 {
     //If a password was returned, and we're still waiting to connect
-    if(inPassword && [inPassword length] != 0){
-		if(![[self statusObjectForKey:@"Online"] boolValue] &&
-		   ![[self statusObjectForKey:@"Connecting"] boolValue]){
+    if (inPassword && [inPassword length] != 0) {
+		if (![[self statusObjectForKey:@"Online"] boolValue] &&
+		   ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 			//Save the new password
-			if(password != inPassword){
+			if (password != inPassword) {
 				[password release]; password = [inPassword retain];
 			}
 			
@@ -523,7 +523,7 @@
 			[self connect];
 		}
 
-    }else{
+    } else {
 		[self setPreference:nil
 					 forKey:@"Online"
 					  group:GROUP_ACCOUNT_STATUS];
@@ -553,9 +553,9 @@
 															  context:self];
 	
 	//Refresh periodically if the filtered string is different from the original one
-	if(originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])){
+	if (originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])) {
 		[self startAutoRefreshingStatusKey:key];
-	}else{
+	} else {
 		[self stopAutoRefreshingStatusKey:key];
 	}
 
@@ -583,11 +583,11 @@
 	contextDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:NSStringFromSelector(selector), @"selectorString",
 		key, @"key", nil];
 	
-	if(originalValue){
+	if (originalValue) {
 		[contextDict setObject:originalValue forKey:@"originalValue"];
 	}
 	
-	if(originalContext){
+	if (originalContext) {
 		[contextDict setObject:originalContext forKey:@"originalContext"];
 	}
 	
@@ -611,10 +611,10 @@
 {
 	NSAttributedString	*originalValue;
 	
-	if([key isEqualToString:@"StatusState"]){
+	if ([key isEqualToString:@"StatusState"]) {
 		originalValue = [[self statusState] statusMessage];
 
-	}else{
+	} else {
 		originalValue = [[self preferenceForKey:key group:GROUP_ACCOUNT_STATUS] attributedString];		
 	}
 
@@ -637,18 +637,18 @@
 	id					originalContext = [contextDict objectForKey:@"originalContext"];
 	
 	//Refresh periodically if the filtered string is different from the original one
-	if(originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])){
+	if (originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])) {
 		[self startAutoRefreshingStatusKey:key];
-	}else{
+	} else {
 		[self stopAutoRefreshingStatusKey:key];
 	}
 	
 	//
-	if(originalContext){
+	if (originalContext) {
 		[self performSelector:selector
 				   withObject:filteredValue
 				   withObject:originalContext];
-	}else{
+	} else {
 		[self performSelector:selector
 				   withObject:filteredValue];
 	}
@@ -662,7 +662,7 @@
  */
 - (void)startAutoRefreshingStatusKey:(NSString *)key
 {
-	if(![autoRefreshingKeys containsObject:key]){
+	if (![autoRefreshingKeys containsObject:key]) {
 		[autoRefreshingKeys addObject:key];
 		[self _startAttributedRefreshTimer];
 	}
@@ -676,7 +676,7 @@
 - (void)stopAutoRefreshingStatusKey:(NSString *)key
 {
 	[autoRefreshingKeys removeObject:key];
-	if([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
+	if ([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
 }
 
 /*!
@@ -687,14 +687,14 @@
  */
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
-	if([key isEqualToString:@"Online"]){
-		if([value boolValue]){
-			if([autoRefreshingKeys count])	[self _startAttributedRefreshTimer];
-		}else{
+	if ([key isEqualToString:@"Online"]) {
+		if ([value boolValue]) {
+			if ([autoRefreshingKeys count])	[self _startAttributedRefreshTimer];
+		} else {
 			[self _stopAttributedRefreshTimer];
 		}
-	}else if ([key isEqualToString:@"Disconnecting"]){
-		if ([value boolValue]){
+	} else if ([key isEqualToString:@"Disconnecting"]) {
+		if ([value boolValue]) {
 			[self _stopAttributedRefreshTimer];	
 		}
 	}
@@ -707,7 +707,7 @@
  */
 - (void)_startAttributedRefreshTimer
 {
-	if(!attributedRefreshTimer){
+	if (!attributedRefreshTimer) {
 		attributedRefreshTimer = [[NSTimer scheduledTimerWithTimeInterval:FILTERED_STRING_REFRESH
 																   target:self
 																 selector:@selector(_refreshAttributedStrings:) 
@@ -721,7 +721,7 @@
  */
 - (void)_stopAttributedRefreshTimer
 {
-	if(attributedRefreshTimer){
+	if (attributedRefreshTimer) {
 		[attributedRefreshTimer invalidate];
 		[attributedRefreshTimer release];
 		attributedRefreshTimer = nil;
@@ -737,7 +737,7 @@
 {
     NSEnumerator    *keyEnumerator = [autoRefreshingKeys objectEnumerator];
     NSString        *key;
-    while((key = [keyEnumerator nextObject])){
+    while ((key = [keyEnumerator nextObject])) {
 		[self updateStatusForKey:key];
     }
 }
@@ -766,7 +766,7 @@
  */
 - (AIListContact *)contactWithUID:(NSString *)sourceUID
 {	
-	if (!namesAreCaseSensitive){
+	if (!namesAreCaseSensitive) {
 		sourceUID = [sourceUID compactedString];
 	}
 	
@@ -819,8 +819,8 @@
 - (void)_autoReconnectTimer:(NSTimer *)inTimer
 {
 	//If we still want to be online, and we're not yet online, continue with the reconnect
-    if([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
-	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]){
+    if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
+	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
 		[self setPreference:[NSNumber numberWithBool:YES] 
 					 forKey:@"Online" 
 					  group:GROUP_ACCOUNT_STATUS];
@@ -842,7 +842,7 @@
 	NSEnumerator	*enumerator = [[self contactStatusObjectKeys] objectEnumerator];
 	NSString		*key;
 	
-	while((key = [enumerator nextObject])){
+	while ((key = [enumerator nextObject])) {
 		[listContact setStatusObject:nil forKey:key notify:NotifyLater];
 	}
 	
@@ -864,7 +864,7 @@
 	enumerator = [[[adium contactController] allContactsInGroup:nil
 													  subgroups:YES 
 													  onAccount:self] objectEnumerator];
-	while((listContact = [enumerator nextObject])){
+	while ((listContact = [enumerator nextObject])) {
 		[listContact setRemoteGroupName:nil];
 		[self removeStatusObjectsFromContact:listContact silently:YES];
 	}
@@ -934,7 +934,7 @@
  */
 - (void)initFUSDisconnecting
 {
-	if([self disconnectOnFastUserSwitch]){
+	if ([self disconnectOnFastUserSwitch]) {
 		[[[NSWorkspace sharedWorkspace] notificationCenter] addObserver:self 
 															   selector:@selector(fastUserSwitchLeave:) 
 																   name:NSWorkspaceSessionDidResignActiveNotification
@@ -953,7 +953,7 @@
  */
 - (void)fastUserSwitchLeave:(NSNotification *)notification
 {
-	if([self online]){
+	if ([self online]) {
 		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		disconnectedByFastUserSwitch = YES;
 	}
@@ -966,7 +966,7 @@
  */
 - (void)fastUserSwitchReturn:(NSNotification *)notification
 {
-	if (disconnectedByFastUserSwitch){
+	if (disconnectedByFastUserSwitch) {
 		[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 		disconnectedByFastUserSwitch = NO;
 	}
@@ -979,7 +979,7 @@
  */
 - (void)setDisplayName:(NSString *)displayName
 {
-	if([displayName length] == 0) displayName = nil; 
+	if ([displayName length] == 0) displayName = nil; 
 	
 	[self setPreference:(displayName ?
 						 [[NSAttributedString stringWithString:displayName] dataRepresentation] :

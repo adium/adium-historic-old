@@ -79,7 +79,7 @@
     AIChat		*chat = [inTextEntryView chat];
 	
     //Send a 'not-typing' message to this chat
-    if([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping){
+    if ([chat integerStatusObjectForKey:WE_ARE_TYPING] != AINotTyping) {
         [self _sendTypingState:AINotTyping toChat:chat];
     }
 	
@@ -100,9 +100,9 @@
  */
 - (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
 {
-	if([inTextEntryView isSendingContent]){
+	if ([inTextEntryView isSendingContent]) {
 		[self _processTypingInView:inTextEntryView];
-	}else{
+	} else {
 		/* Delay one second before processing the large typing change, to prevent 'flickering' if the view is cleared
 		 * and then typing begins again. Cancel previous delayed changes before queuing this one. */
 		[NSObject cancelPreviousPerformRequestsWithTarget:self
@@ -127,7 +127,7 @@
 {
     AIChat		*chat = [inTextEntryView chat];
 	
-    if(chat){
+    if (chat) {
 		NSTimer			*enteredTextTimer;
 		NSNumber		*previousTypingNumber = [chat statusObjectForKey:WE_ARE_TYPING];
 		AITypingState   previousTypingState = (previousTypingNumber ? [previousTypingNumber intValue] : AINotTyping);
@@ -136,23 +136,23 @@
 		enteredTextTimer = [chat statusObjectForKey:ENTERED_TEXT_TIMER];
 		
 		//Determine if this change indicated the user was typing or indicated the user had no longer entered text
-		if([[inTextEntryView textStorage] length] != 0){ //User is typing
+		if ([[inTextEntryView textStorage] length] != 0) { //User is typing
 
 			currentTypingState = AITyping;
 
-			if(enteredTextTimer){
+			if (enteredTextTimer) {
 				[self _resetTypingTimer:enteredTextTimer forChat:chat];
-			}else{
+			} else {
 				[self _addTypingTimerForChat:chat];
 			}
 
-		}else{ //User is not typing
+		} else { //User is not typing
 			currentTypingState = AINotTyping;
 			[self _removeTypingTimer:enteredTextTimer forChat:chat];
 		}
 		
 		//We don't want to send the same typing value more than once
-        if(previousTypingState != currentTypingState){
+        if (previousTypingState != currentTypingState) {
 			[self _sendTypingState:currentTypingState toChat:chat];
 		}
     }    
@@ -171,7 +171,7 @@
 {
 	AIChat	*chat = [notification object];
 	
-	if([[chat account] suppressTypingNotificationChangesAfterSend]){
+	if ([[chat account] suppressTypingNotificationChangesAfterSend]) {
 		//Set the suppress typing flag for this chat
 		[chat setStatusObject:[NSNumber numberWithBool:YES]
 					   forKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS
@@ -201,7 +201,7 @@
  */
 - (void)_sendTypingState:(AITypingState)typingState toChat:(AIChat *)chat
 {
-	if([chat sendTypingNotificationsForNewTypingState:typingState]){
+	if ([chat sendTypingNotificationsForNewTypingState:typingState]) {
 		AIAccount		*account = [chat account];
 		AIContentTyping	*contentObject;
 

@@ -123,29 +123,29 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		AIAccount		*account;
 		AIStatus		*targetStatusState;
 
-		if(!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
+		if (!previousStatusStateDict) previousStatusStateDict = [[NSMutableDictionary alloc] init];
 
 		targetStatusState = [[adium statusController] statusStateWithUniqueStatusID:fastUserSwitchStatusID];
 
-		if(targetStatusState){
+		if (targetStatusState) {
 			enumerator = [[[adium accountController] accounts] objectEnumerator];
-			while((account = [enumerator nextObject])){
+			while ((account = [enumerator nextObject])) {
 				AIStatus	*currentStatusState = [account statusState];
-				if([currentStatusState statusType] == AIAvailableStatusType){
+				if ([currentStatusState statusType] == AIAvailableStatusType) {
 					//Store the state the account is in at present
 					[previousStatusStateDict setObject:currentStatusState
 												forKey:[NSNumber numberWithUnsignedInt:[account hash]]];
 
-					if([account online]){
+					if ([account online]) {
 						//If online, set the state
 						[account setStatusState:targetStatusState];
 						
 						//If we just brought the account offline, note that it will need to be reconnected later
-						if([targetStatusState statusType] == AIOfflineStatusType){
-							if(!accountsToReconnect) accountsToReconnect = [[NSMutableSet alloc] init];
+						if ([targetStatusState statusType] == AIOfflineStatusType) {
+							if (!accountsToReconnect) accountsToReconnect = [[NSMutableSet alloc] init];
 							[accountsToReconnect addObject:account];
 						}
-					}else{
+					} else {
 						//If offline, set the state without coming online
 						[account setStatusStateAndRemainOffline:targetStatusState];
 					}
@@ -170,16 +170,16 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 		AIAccount		*account;
 
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
+		while ((account = [enumerator nextObject])) {
 			AIStatus		*targetStatusState;
 			NSNumber		*accountHash = [NSNumber numberWithUnsignedInt:[account hash]];
 
 			targetStatusState = [previousStatusStateDict objectForKey:accountHash];
-			if(targetStatusState){
-				if([account online] || [accountsToReconnect containsObject:account]){
+			if (targetStatusState) {
+				if ([account online] || [accountsToReconnect containsObject:account]) {
 					//If online or needs to be reconnected, set the previous state, going online if necessary
 					[account setStatusState:targetStatusState];
-				}else{
+				} else {
 					//If offline, set the state without coming online
 					[account setStatusStateAndRemainOffline:targetStatusState];
 				}

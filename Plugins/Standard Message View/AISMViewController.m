@@ -94,7 +94,7 @@
 - (id)initForChat:(AIChat *)inChat
 {
     //init
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		rebuilding = NO;
 		lockContentThreadQueue = NO;
@@ -229,7 +229,7 @@
 	ignoreTextStyles = [[prefDict objectForKey:KEY_SMV_IGNORE_TEXT_STYLES] boolValue];
 	
 	//Force icons off for side prefixes
-	if([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
+	if ([prefixIncoming rangeOfString:@"%m"].location != NSNotFound) showUserIcons = NO;
 	
 	//Pad bottom of the message view depending on mode
 	[messageView setContentPaddingTop:0 bottom:(inlinePrefixes ? 3 : 0)];
@@ -238,7 +238,7 @@
 	headIndent = [[prefDict objectForKey:KEY_SMV_COMBINE_MESSAGES_INDENT] floatValue];
 	
 	//Reset all content objects if a preference actually changed
-	if(!firstTime) [self rebuildMessageViewForContent];
+	if (!firstTime) [self rebuildMessageViewForContent];
 }
 
 //Release any cached preference values
@@ -295,7 +295,7 @@
     
     //Re-add all content one row at a time (slooow)
     NSEnumerator        *enumerator_chat = [[chat contentObjectArray] reverseObjectEnumerator]; //(Content is stored in reverse order)
-    while((content = [enumerator_chat nextObject]) && !restartRebuilding && !abandonRebuilding){
+    while ((content = [enumerator_chat nextObject]) && !restartRebuilding && !abandonRebuilding) {
         NSArray *contentRowArray = [[self _rowsForAddingContentObject:content] retain];
         NSEnumerator        *enumerator_two = [contentRowArray objectEnumerator];
 
@@ -312,13 +312,13 @@
     }
     
     NSEnumerator *rowArray_enumerator = [rowArray objectEnumerator];
-    while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding && !abandonRebuilding){
+    while ((row = [rowArray_enumerator nextObject]) && !restartRebuilding && !abandonRebuilding) {
         [self performSelectorOnMainThread:@selector(addRowToMessageView:) withObject:row waitUntilDone:YES];
 
     }
 
     //restart the rebuilding process if necessary
-    if (restartRebuilding && !abandonRebuilding){
+    if (restartRebuilding && !abandonRebuilding) {
         restartRebuilding = NO;
         
         [self _rebuildMessageViewForContentThread];
@@ -336,7 +336,7 @@
         NSEnumerator    *enumerator = [secondaryThreadContentThreadQueue objectEnumerator];
         AIContentObject *queuedContent;
         
-        while((queuedContent = [enumerator nextObject]) && !abandonRebuilding){
+        while ((queuedContent = [enumerator nextObject]) && !abandonRebuilding) {
             [self performSelectorOnMainThread:@selector(_addContentObject:) withObject:queuedContent waitUntilDone:YES];
         }
     }
@@ -410,22 +410,22 @@
 //Add rows for a content object
 - (void)_addContentObject:(AIContentObject *)content
 {
-    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
         [self _addContentMessage:(AIContentMessage *)content];
-	}else if([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
+	} else if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) {
         [self _addContentContext:(AIContentContext *)content];
-    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
+    } else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
         [self _addContentStatus:(AIContentStatus *)content];
     }
 }
 
 - (NSArray *)_rowsForAddingContentObject:(AIContentObject *)content
 {
-    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
         return [self _rowsForAddingContentMessage:(AIContentMessage *)content];
-	} else if([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]){
+	} else if ([[content type] isEqualToString:CONTENT_CONTEXT_TYPE]) {
         return [self _rowsForAddingContentContext:(AIContentContext *)content];
-    }else if([[content type] isEqualToString:CONTENT_STATUS_TYPE]){
+    } else if ([[content type] isEqualToString:CONTENT_STATUS_TYPE]) {
         return [NSArray arrayWithObject:[self _rowForAddingContentStatus:(AIContentStatus *)content]];
     }
     
@@ -494,17 +494,17 @@
     BOOL                contentIsSimilar = NO;
     
     //We should merge if the previous content is a message and from the same source
-    if((!inlinePrefixes || combineMessages) &&
-       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])){
+    if ((!inlinePrefixes || combineMessages) &&
+       (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source])) {
         contentIsSimilar = YES;
     }
 	
 	//Always start a new bubble if enough time has elapsed since the last content
-	if(contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentMessage*)previousContent date]] >= NEW_BUBBLE_TIME)
+	if (contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentMessage*)previousContent date]] >= NEW_BUBBLE_TIME)
 		contentIsSimilar = NO;
     
     //If we are using inline prefixes, and this message is different from the previous one, insert a prefix row 
-    if(inlinePrefixes && !contentIsSimilar){
+    if (inlinePrefixes && !contentIsSimilar) {
         prefixRow = [self _prefixRowForContent:content];
     }
     
@@ -514,7 +514,7 @@
 									  header:(!inlinePrefixes && !contentIsSimilar)];
     
     //Merge our new message with the previous one
-    if(contentIsSimilar){  
+    if (contentIsSimilar) {  
         NSEnumerator        *enumerator;
         AIFlexibleTableFramedTextCell *cell;
         
@@ -531,7 +531,7 @@
         //draw the between-messages divider in the last framedTextCell in the row, which should be the message
         [[messageRow lastCellWithClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
         
-        if(!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
+        if (!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
     
     previousRow = messageRow;
@@ -554,14 +554,14 @@
     BOOL                contentIsSimilar = NO;
 
     //We should merge if the previous content is a message and from the same source AND same day
-    if((!inlinePrefixes || combineMessages) &&
+    if ((!inlinePrefixes || combineMessages) &&
        (previousContent && [[previousContent type] compare:[content type]] == 0 && [content source] == [previousContent source]) &&
-	   ([previousContent isFromSameDayAsContent:content])){
+	   ([previousContent isFromSameDayAsContent:content])) {
         contentIsSimilar = YES;
     }
 	
 	//Show a date header if the messages were on different dates
-	if( !contentIsSimilar && (![previousContent isFromSameDayAsContent:content])) {
+	if ( !contentIsSimilar && (![previousContent isFromSameDayAsContent:content])) {
 		
 		NSString *dateMessage = [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[content date]];
 		dateSeparator = [AIContentStatus statusInChat:[content chat]
@@ -577,11 +577,11 @@
 	}
 	
 	//Always start a new bubble if enough time has elapsed since the last content
-	if(contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentContext *)previousContent date]] >= NEW_BUBBLE_TIME)
+	if (contentIsSimilar && [[content date] timeIntervalSinceDate:[(AIContentContext *)previousContent date]] >= NEW_BUBBLE_TIME)
 		contentIsSimilar = NO;
     
     //If we are using inline prefixes, and this message is different from the previous one, insert a prefix row 
-    if(inlinePrefixes && !contentIsSimilar){
+    if (inlinePrefixes && !contentIsSimilar) {
         prefixRow = [self _prefixRowForContent:(AIContentMessage *)content];
     }
     
@@ -591,7 +591,7 @@
 									  header:(!inlinePrefixes && !contentIsSimilar)];
     
     //Merge our new message with the previous one
-    if(contentIsSimilar){  
+    if (contentIsSimilar) {  
         NSEnumerator        *enumerator;
         AIFlexibleTableFramedTextCell *cell;
         
@@ -608,7 +608,7 @@
         //draw the between-messages divider in the last framedTextCell in the row, which should be the message
         [[messageRow lastCellWithClass:[AIFlexibleTableFramedTextCell class]] setDrawTopDivider:YES];
         
-        if(!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
+        if (!inlinePrefixes) [[previousRow cellWithClass:[AIFlexibleTableImageCell class]] setRowSpan:2];
     }
     
     previousRow = messageRow;
@@ -664,9 +664,9 @@
     NSArray             *cellArray;
     AIFlexibleTableRow  *row;
     
-    if(showUserIcons){
+    if (showUserIcons) {
 		cellArray = [NSArray arrayWithObjects:[self _userIconCellForContent:content span:YES], [self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
-    }else{
+    } else {
 		cellArray = [NSArray arrayWithObjects:[self _prefixCellForContent:content], [self _timeStampCellForContent:content], nil];
     }
 	
@@ -684,10 +684,10 @@
 	BOOL					emptyHeadIndentCell;
 	
     //Empty icon span cell
-    if(showUserIcons){
-		if(isHeader){
+    if (showUserIcons) {
+		if (isHeader) {
 			leftmostCell = [self _userIconCellForContent:content span:NO];
-		}else if(thePreviousRow){
+		} else if (thePreviousRow) {
 			leftmostCell = [self _emptyImageSpanCellForPreviousRow:thePreviousRow];
 		}        
     }
@@ -699,14 +699,14 @@
     }
 	
     //
-    if(leftmostCell){
+    if (leftmostCell) {
 		messageCell = [self _messageCellForContent:content includingPrefixes:NO shouldPerformHeadIndent:NO];
 		
 		if (emptyHeadIndentCell) {
 			
 			//dchoby98 -- empty indent space
 			//NSColor *messageBackgroundColor = [messageCell contentBackgroundColor];
-			//if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
+			//if ( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 			//	messageBackgroundColor = [messageBackgroundColor darkenAndAdjustSaturationBy:-0.3];
 							
 			//if (messageBackgroundColor) {
@@ -718,7 +718,7 @@
 		}
 		
         cellArray = [NSArray arrayWithObjects:leftmostCell, messageCell, nil];
-    }else{
+    } else {
 		messageCell = [self _messageCellForContent:content includingPrefixes:!inlinePrefixes shouldPerformHeadIndent:(isHeader && !inlinePrefixes && combineMessages)];
         cellArray = [NSArray arrayWithObjects:messageCell, nil];
     }
@@ -742,7 +742,7 @@
     AIFlexibleTableCell	*statusCell;
 
 	// If no date specified, don't show one
-	if( [content date] != nil ) {
+	if ( [content date] != nil ) {
 		NSString *dateString = [timeStampFormatter stringForObjectValue:[content date]];
 		messageString = [NSString stringWithFormat:@"%@ (%@)", [[content message] string], dateString];
 	} else {
@@ -779,7 +779,7 @@
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while ((object = [enumerator nextObject])){
+	while ((object = [enumerator nextObject])) {
 		//In the future, watch for changes
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:) 
@@ -814,10 +814,10 @@
     AIListObject	*inObject = [notification object];
     NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
-	if(inObject &&
+	if (inObject &&
 	   ([keys containsObject:KEY_USER_ICON]) &&
 	   (([[chat participatingListObjects] indexOfObject:inObject] != NSNotFound) ||
-		([chat account] == inObject))){ /* The account is not on the participating list objects list */
+		([chat account] == inObject))) { /* The account is not on the participating list objects list */
 		
 		[userIconsDict removeObjectForKey:[inObject internalObjectID]];
 	}
@@ -837,14 +837,14 @@
 
 	userImage = [userIconsDict objectForKey:[listObject internalObjectID]];
 	
-	if(!userImage){
+	if (!userImage) {
 		NSImage	*original = [listObject userIcon];
 		
 		userImage = [original imageByScalingToSize:[original size]
 										  fraction:1.0
 										 flipImage:YES
 									proportionally:YES];
-		if(!userImage){
+		if (!userImage) {
 			userImage = ([content isOutgoing] ? iconOutgoing : iconIncoming);
 		}
 
@@ -867,16 +867,16 @@
     
     //Get the master cell
     masterCell = [thePreviousRow cellWithClass:[AIFlexibleTableImageCell class]];
-    if(!masterCell) masterCell = [[thePreviousRow cellWithClass:[AIFlexibleTableSpanCell class]] masterCell];
+    if (!masterCell) masterCell = [[thePreviousRow cellWithClass:[AIFlexibleTableSpanCell class]] masterCell];
     
-    if(masterCell){	
+    if (masterCell) {	
 		//Increase it's span height
 		[masterCell setRowSpan:[masterCell rowSpan] + 1];
 		
 		//Create our span cell as one of it's children
 		return([AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1]);
 		
-    }else{
+    } else {
 		return(nil);	
     }    
 }
@@ -889,7 +889,7 @@
 	NSColor *currentIncomingColor = colorIncoming;
 	NSColor *currentOutgoingColor = colorOutgoing;
 	
-	if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
+	if ( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
 		currentOutgoingDividerColor = [currentOutgoingDividerColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingDividerColor = [currentIncomingDividerColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingColor = [currentIncomingColor darkenAndAdjustSaturationBy:-0.3];
@@ -900,9 +900,9 @@
     //size the cell for the previousRow headIndent value
     [cell sizeCellForWidth:[thePreviousRow headIndent]];
 	
-    if([content isOutgoing]){
+    if ([content isOutgoing]) {
         [cell setFrameBackgroundColor:currentOutgoingColor borderColor:colorOutgoingBorder dividerColor:currentOutgoingDividerColor];
-    }else{
+    } else {
         [cell setFrameBackgroundColor:currentIncomingColor borderColor:colorIncomingBorder dividerColor:currentIncomingDividerColor];
     }
 	
@@ -950,18 +950,18 @@
 	NSColor							*backgroundColor;
 	
     //Get the message string
-    if(includePrefixes){
+    if (includePrefixes) {
 		messageString = [self _prefixStringForContent:content performHeadIndent:performHeadIndent];
-    }else{
+    } else {
 		messageString = [self _messageStringForContent:content];
     }
 	
     //Create the cell for this string
     messageCell = [AIFlexibleTableFramedTextCell cellWithAttributedString:messageString];
     [messageCell setPaddingLeft:0 top:0 right:(showUserIcons ? 4 : 0) bottom:0];
-    if(inlinePrefixes){
+    if (inlinePrefixes) {
         [messageCell setInternalPaddingLeft:(showUserIcons ? 7 : 10) top:2 right:5 bottom:2];
-    }else{
+    } else {
 		[messageCell setInternalPaddingLeft:4 top:2 right:4 bottom:2];
     }
     [messageCell setVariableWidth:YES];
@@ -970,35 +970,35 @@
     [messageCell setDrawSides:(showUserIcons && inlinePrefixes)];
     
     //Background coloring
-	if([[content message] length]){
+	if ([[content message] length]) {
 		bodyColor = [[content message] attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil];
 	}
-    if(![content isOutgoing]){
-		if(ignoreTextStyles || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+    if (![content isOutgoing]) {
+		if (ignoreTextStyles || !bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]) {
 	
 			//dchoby98
-			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
+			if ( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 				backgroundColor = [colorIncoming darkenAndAdjustSaturationBy:-0.3];
 			else
 				backgroundColor = colorIncoming;
 			
 			[messageCell setFrameBackgroundColor:backgroundColor borderColor:colorIncomingBorder dividerColor:colorIncomingDivider];
-		}else{
+		} else {
 			[messageCell setFrameBackgroundColor:bodyColor
 									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
 									dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
 		}
-    }else{
-		if(!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]){
+    } else {
+		if (!bodyColor || [bodyColor equalToRGBColor:[NSColor whiteColor]]) {
 			
 			//dchoby98
-			if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
+			if ( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 )
 				backgroundColor = [colorOutgoing darkenAndAdjustSaturationBy:-0.3];
 			else
 				backgroundColor = colorOutgoing;
 			
 			[messageCell setFrameBackgroundColor:backgroundColor borderColor:colorOutgoingBorder dividerColor:colorOutgoingDivider];
-		}else{
+		} else {
 			[messageCell setFrameBackgroundColor:bodyColor
 									 borderColor:[bodyColor darkenAndAdjustSaturationBy:0.3]
 									dividerColor:[bodyColor darkenAndAdjustSaturationBy:0.1]];
@@ -1016,11 +1016,11 @@
 {
 	NSAttributedString * messageString;
 	//Strip all coloring and formatting of received messages if desired
-	if([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
+	if ([[content type] compare:CONTENT_CONTEXT_TYPE] == 0) {
 		messageString = [self _stringWithContextStyle:[content message]];
-	}else if([content isOutgoing] || !ignoreTextStyles) {
+	} else if ([content isOutgoing] || !ignoreTextStyles) {
         messageString = [content message];
-    }else{
+    } else {
         messageString = [self _stringByRemovingAllStyles:[content message]];
     }    
 	return [messageString stringByAddingFormattingForLinks];
@@ -1034,7 +1034,7 @@
     
     //Does the prefix contain the message ?
     messageRange = [prefixFormat rangeOfString:@"%m"];
-    if(messageRange.location != NSNotFound){
+    if (messageRange.location != NSNotFound) {
         NSMutableAttributedString   *prefixString = [[[NSMutableAttributedString alloc] init] autorelease];
 		
         //If the prefix contains a message, we build it in pieces
@@ -1044,7 +1044,7 @@
 		
         [prefixString appendAttributedString:[self _prefixWithFormat:[prefixFormat substringFromIndex:messageRange.location] forContent:content]];
         
-        if(performHeadIndent) {
+        if (performHeadIndent) {
             NSMutableParagraphStyle     *paragraphStyle = [[[NSParagraphStyle defaultParagraphStyle] mutableCopy] autorelease];
             NSRange                     firstLineRange = [[prefixString string] lineRangeForRange:NSMakeRange(0,0)];
             
@@ -1060,7 +1060,7 @@
         
         return(prefixString);
         
-    }else{
+    } else {
         //Doesn't contain the message. There is no headIndent.
         headIndent = 0;
         return([self _prefixWithFormat:prefixFormat forContent:content]);
@@ -1076,7 +1076,7 @@
 	NSColor		*currentOutgoingSourceColor = outgoingSourceColor;
 	NSColor		*currentIncomingSourceColor = incomingSourceColor;
 	
-	if( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
+	if ( [[content type] compare:CONTENT_CONTEXT_TYPE] == 0 ) {
 		currentOutgoingSourceColor = [currentOutgoingSourceColor darkenAndAdjustSaturationBy:-0.3];
 		currentIncomingSourceColor = [currentIncomingSourceColor darkenAndAdjustSaturationBy:-0.3];
 	}
@@ -1098,45 +1098,45 @@
     int             scanLocation = 0;
     int             formatLength = [format length];
     
-    while(scanLocation != NSNotFound && scanLocation < formatLength){
+    while (scanLocation != NSNotFound && scanLocation < formatLength) {
 		int     flagLocation;
 		
 		//Find the next flag in our prefix
         flagLocation = [format rangeOfCharacterFromSet:flagSet options:0 range:NSMakeRange(scanLocation, formatLength - scanLocation)].location;
-		if(flagLocation == NSNotFound) flagLocation = formatLength;
+		if (flagLocation == NSNotFound) flagLocation = formatLength;
 		
 		//Add the string we scanned over
-		if(flagLocation - scanLocation){
+		if (flagLocation - scanLocation) {
 			[string appendString:[format substringWithRange:NSMakeRange(scanLocation, flagLocation - scanLocation)]];
 		}
 		
 		//Process the flag
 		scanLocation = flagLocation;
-		if(scanLocation < formatLength){
+		if (scanLocation < formatLength) {
 			unichar flagChar = [format characterAtIndex:scanLocation];
 			
-			if(flagChar == '%'){ //Expandable Keyword
+			if (flagChar == '%') { //Expandable Keyword
 				unichar nextChar = [format characterAtIndex:scanLocation + 1];
 				
 				//Expand the keyword
-				switch(nextChar){
+				switch (nextChar) {
 					case '%': [string appendString:@"%"]; break;
 					case 'a': [string appendString:[[content source] displayName]]; break;
 					case 'n': [string appendString:[[content source] formattedUID]]; break;
 					case 't': [string appendString:[timeStampFormatter stringForObjectValue:[content date]]]; break;
-					case 'r': if([content isAutoreply])[string appendString:@" (Autoreply)"]; break;
+					case 'r': if ([content isAutoreply])[string appendString:@" (Autoreply)"]; break;
 					default: break;
 				}
 				
 				scanLocation += 2; //Skip over the flag and value
 				
-			}else if(flagChar == '?'){ //Conditional text
+			} else if (flagChar == '?') { //Conditional text
 				unichar nextChar = [format characterAtIndex:scanLocation + 1];
 				
-				if(nextChar == '?'){
+				if (nextChar == '?') {
 					[string appendString:@"?"];
 					
-				}else{
+				} else {
 					int     endFlagLocation;
 					BOOL    present;
 					
@@ -1144,7 +1144,7 @@
 					endFlagLocation = [format rangeOfString:[NSString stringWithFormat:@"?%c",nextChar] options:0 range:NSMakeRange(scanLocation+2, formatLength - (scanLocation+2))].location;
 					
 					//Is this value present?
-					switch(nextChar){
+					switch (nextChar) {
 						case 'a': present = ([[[content source] displayName] compare:[[content source] formattedUID]] != 0); break;
 						case 'n': present = YES; break;
 						case 't': present = YES; break;
@@ -1153,7 +1153,7 @@
 					}
 					
 					//Scan and insert the conditional text
-					if(present){
+					if (present) {
 						[string appendString:[self _prefixStringByExpandingFormat:[format substringWithRange:NSMakeRange(scanLocation+2, endFlagLocation - (scanLocation + 2))] forContent:content]];
 					}
 					
@@ -1213,9 +1213,9 @@
 {
     AIListContact	*selectedObject = [chat listObject];
     
-    if(selectedObject){
+    if (selectedObject) {
 		NSArray *locations;
-		if ([selectedObject isStranger]){
+		if ([selectedObject isStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -1223,7 +1223,7 @@
 				[NSNumber numberWithInt:Context_Contact_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Stranger_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
-		}else{
+		} else {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -1234,7 +1234,7 @@
 		
 		return([[adium menuController] contextualMenuWithLocations:locations
 													 forListObject:selectedObject]);
-    }else{
+    } else {
 		return(nil);
 	}
 }

@@ -26,8 +26,8 @@
 	NSEnumerator *fontEnum = [fontList objectEnumerator];
 
 	NSString *thisName = [fontEnum nextObject];
-	while((thisName = [fontEnum nextObject])) {
-		if([thisName caseInsensitiveCompare:name] == NSOrderedSame) {
+	while ((thisName = [fontEnum nextObject])) {
+		if ([thisName caseInsensitiveCompare:name] == NSOrderedSame) {
 			theFont = [manager fontWithFamily:thisName traits:fontTraitMask weight:weight size:size];
 			break;
 		}

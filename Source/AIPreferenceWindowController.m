@@ -93,7 +93,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 + (void)closePreferenceWindow
 {
-	if(sharedPreferenceInstance) [sharedPreferenceInstance closeWindow:nil];
+	if (sharedPreferenceInstance) [sharedPreferenceInstance closeWindow:nil];
 }
 
 /*!
@@ -105,7 +105,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 + (AIPreferenceWindowController *)_preferenceWindowController
 {
-    if(!sharedPreferenceInstance){
+    if (!sharedPreferenceInstance) {
         sharedPreferenceInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
     }
     
@@ -117,7 +117,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-	if((self = [super initWithWindowNibName:windowNibName])) {
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		loadedPanes = [[NSMutableArray alloc] init];
 		loadedAdvancedPanes = nil;
 		_advancedCategoryArray = nil;
@@ -174,10 +174,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self window];
 	
 	//Make the previously selected category active if it is valid
-	if(shouldRestorePreviousSelectedPane){
+	if (shouldRestorePreviousSelectedPane) {
 		NSString *previouslySelectedCategory = [[adium preferenceController] preferenceForKey:KEY_PREFERENCE_SELECTED_CATEGORY
 																						group:PREF_GROUP_WINDOW_POSITIONS];
-		if(!previouslySelectedCategory || [previouslySelectedCategory isEqualToString:@"loading"])
+		if (!previouslySelectedCategory || [previouslySelectedCategory isEqualToString:@"loading"])
 			previouslySelectedCategory = @"accounts";
 		[self selectCategoryWithIdentifier:previouslySelectedCategory];
 	}
@@ -226,7 +226,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	[self window];
 	
 	index = [tabView_category indexOfTabViewItemWithIdentifier:identifier];
-	if(index != NSNotFound){
+	if (index != NSNotFound) {
 		tabViewItem = [tabView_category tabViewItemAtIndex:index];
 		[self tabView:tabView_category willSelectTabViewItem:tabViewItem];
 		[tabView_category selectTabViewItem:tabViewItem];    
@@ -252,14 +252,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     [self selectCategoryWithIdentifier:@"advanced"];
 
 	//Search for the advanded pane
-	while((pane = [enumerator nextObject])){
-		if([advancedPane caseInsensitiveCompare:[pane label]] == NSOrderedSame) break;
+	while ((pane = [enumerator nextObject])) {
+		if ([advancedPane caseInsensitiveCompare:[pane label]] == NSOrderedSame) break;
 	}
 
 	//If it exists, make it active
-	if(pane){
+	if (pane) {
 		int row = [[self advancedCategoryArray] indexOfObject:pane];
-		if([self tableView:tableView_advanced shouldSelectRow:row]){
+		if ([self tableView:tableView_advanced shouldSelectRow:row]) {
 			[tableView_advanced selectRow:row byExtendingSelection:NO];
 		}		
 	}
@@ -275,8 +275,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     AIPreferencePane	*pane;
     
     //Get the panes for this category
-    while((pane = [enumerator nextObject])){
-        if([pane category] == inCategory){
+    while ((pane = [enumerator nextObject])) {
+        if ([pane category] == inCategory) {
             [paneArray addObject:pane];
             [loadedPanes addObject:pane];
         }
@@ -303,7 +303,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (NSDictionary *)identifierToLabelDict
 {
 	static NSDictionary	*_identifierToLabelDict = nil;
-	if(!_identifierToLabelDict){
+	if (!_identifierToLabelDict) {
 		_identifierToLabelDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 			ACCOUNTS_TITLE,@"accounts",
 			AILocalizedString(@"General",nil),@"general",
@@ -327,8 +327,8 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (void)tabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    if(tabView == tabView_category && 
-	   ![[tabViewItem identifier] isEqualToString:@"loading"]){
+    if (tabView == tabView_category && 
+	   ![[tabViewItem identifier] isEqualToString:@"loading"]) {
 		
 		int selectedIndex = [tabView indexOfTabViewItem:tabViewItem];
 
@@ -336,9 +336,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		[self _saveControlChanges];
 		
 		//Load the pane if it isn't already loaded
-		if(![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]){
+		if (![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]) {
 			AIModularPaneCategoryView *view = [viewArray objectAtIndex:selectedIndex];
-			if([view isEmpty]) [view setPanes:[self _panesInCategory:selectedIndex]];
+			if ([view isEmpty]) [view setPanes:[self _panesInCategory:selectedIndex]];
 		}
 		
 		//Update the window title
@@ -355,9 +355,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (BOOL)immediatelyShowLoadingIndicatorForTabView:(NSTabView *)tabView willSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if(tabView == tabView_category){
+	if (tabView == tabView_category) {
 		AIModularPaneCategoryView *view = [viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]];
-		if([view isEmpty]) return YES;
+		if ([view isEmpty]) return YES;
 	}
 
 	return NO;
@@ -376,9 +376,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (NSString *)tabView:(NSTabView *)tabView labelForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if(tabView == tabView_category){
+	if (tabView == tabView_category) {
 		NSString	*identifier;
-		if((identifier = [tabViewItem identifier])){
+		if ((identifier = [tabViewItem identifier])) {
 			return [[self identifierToLabelDict] objectForKey:identifier];
 		}
 	}
@@ -391,9 +391,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	if(![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]){
+	if (![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]) {
 		return([[viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]] desiredHeight]);
-	}else{
+	} else {
 		return(ADVANCED_PANE_HEIGHT);
 	}
 }
@@ -411,14 +411,14 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	
 	//Close open panes
 	enumerator = [loadedAdvancedPanes objectEnumerator];
-	while((pane = [enumerator nextObject])){
+	while ((pane = [enumerator nextObject])) {
 		[pane closeView];
 	}
 	[view_Advanced removeAllSubviews];
 	[loadedAdvancedPanes release]; loadedAdvancedPanes = nil;
 	
 	//Load new panes
-	if(preferencePane){
+	if (preferencePane) {
 		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
 		[view_Advanced setPanes:loadedAdvancedPanes];
 	}
@@ -432,7 +432,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (NSArray *)advancedCategoryArray
 {
-    if(!_advancedCategoryArray){
+    if (!_advancedCategoryArray) {
         _advancedCategoryArray = [[self _panesInCategory:AIPref_Advanced] retain];
     }
     
@@ -470,9 +470,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 	//Select the previously selected row
 	int row = [[[adium preferenceController] preferenceForKey:KEY_ADVANCED_PREFERENCE_SELECTED_ROW
 														group:PREF_GROUP_WINDOW_POSITIONS] intValue];
-	if(row < 0 || row >= [tableView_advanced numberOfRows]) row = 1;
+	if (row < 0 || row >= [tableView_advanced numberOfRows]) row = 1;
 	
-	if([self tableView:tableView_advanced shouldSelectRow:row]){
+	if ([self tableView:tableView_advanced shouldSelectRow:row]) {
 		[tableView_advanced selectRow:row byExtendingSelection:NO];
 	}
 }
@@ -507,10 +507,10 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
-	if(row >= 0 && row < [[self advancedCategoryArray] count]){		
+	if (row >= 0 && row < [[self advancedCategoryArray] count]) {		
 		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
 		return(YES);
-    }else{
+    } else {
 		return(NO);
 	}
 }

@@ -36,7 +36,7 @@ static AIAdium *_sharedAdium = nil;
 //
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		NSParameterAssert(_sharedAdium != nil);
 		adium = _sharedAdium;

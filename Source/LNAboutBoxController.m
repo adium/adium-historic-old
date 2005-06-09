@@ -41,7 +41,7 @@
 LNAboutBoxController *sharedAboutBoxInstance = nil;
 + (LNAboutBoxController *)aboutBoxController
 {
-    if(!sharedAboutBoxInstance){
+    if (!sharedAboutBoxInstance) {
         sharedAboutBoxInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB];
     }
     return(sharedAboutBoxInstance);
@@ -50,7 +50,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    if((self = [super initWithWindowNibName:windowNibName])) {
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		numberOfDuckClicks = -1;
 	}
 
@@ -132,8 +132,8 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {    
 	scrollLocation += scrollRate;
 	
-	if(scrollLocation > maxScroll) scrollLocation = 0;    
-	if(scrollLocation < 0) scrollLocation = maxScroll;
+	if (scrollLocation > maxScroll) scrollLocation = 0;    
+	if (scrollLocation < 0) scrollLocation = maxScroll;
 	
 	[textView_credits scrollPoint:NSMakePoint(0, scrollLocation)];
 }
@@ -141,11 +141,11 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Receive the flags changed event for reversing the scroll direction via option
 - (void)flagsChanged:(NSEvent *)theEvent
 {
-    if([theEvent optionKey]) {
+    if ([theEvent optionKey]) {
         scrollRate = -ABOUT_SCROLL_RATE;
-    }else if([theEvent controlKey]){
+    } else if ([theEvent controlKey]) {
         scrollRate = 0;
-    }else{
+    } else {
         scrollRate = ABOUT_SCROLL_RATE;   
     }
 }
@@ -156,9 +156,9 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Toggle build date/number display
 - (IBAction)buildFieldClicked:(id)sender
 {
-    if((++numberOfBuildFieldClicks) % 2 == 0){
+    if ((++numberOfBuildFieldClicks) % 2 == 0) {
         [button_buildButton setTitle:buildDate];
-    }else{
+    } else {
 		[button_buildButton setTitle:buildNumber];
     }
 }
@@ -175,17 +175,17 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     //Grab the info from our buildnum script
     char *path, unixDate[256], num[256], whoami[256];
-    if((path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation]))
+    if ((path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation]))
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
 		
-        if(*num){
+        if (*num) {
             buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
 		}
 		
-		if(*unixDate){
+		if (*unixDate) {
 			NSDateFormatter *dateFormatter = [NSDateFormatter localizedDateFormatter];
 
 			NSDate	    *date;
@@ -196,8 +196,8 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     }
 	
     //Default to empty strings if something goes wrong
-    if(!buildDate) buildDate = [@"" retain];
-    if(!buildNumber) buildNumber = [@"" retain];
+    if (!buildDate) buildDate = [@"" retain];
+    if (!buildNumber) buildNumber = [@"" retain];
 }
 
 
@@ -231,10 +231,10 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     numberOfDuckClicks++;
 
-	if(numberOfDuckClicks == 10){
+	if (numberOfDuckClicks == 10) {
 		numberOfDuckClicks = -1;            
 		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Feather Ruffle.aif"];
-	}else{
+	} else {
 		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Quack.aif"];
 	}
 	

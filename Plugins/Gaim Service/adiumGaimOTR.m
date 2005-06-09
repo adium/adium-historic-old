@@ -93,9 +93,9 @@ static NSDictionary* details_for_context(ConnContext *context)
 
     /* Make a human-readable version of the sessionid (in two parts) */
     sessionid = context->sesskeys[1][0].sessionid;
-    for(i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
+    for (i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
     sess1[20] = '\0';
-    for(i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
+    for (i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
     sess2[20] = '\0';
 
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
@@ -121,7 +121,7 @@ static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type,
 	AILog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
 
 	//XXX todo: search on ops->notify in message.c in libotr and handle the error messages
-//	if (!(gaim_conv_present_error(username, account, msg))){
+//	if (!(gaim_conv_present_error(username, account, msg))) {
 		//Just pass it to gaim_notify_message()
 		gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);		
 //	}
@@ -143,8 +143,8 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	chat = existingChatLookupFromConv(conv);
 	message = [NSString stringWithUTF8String:msg];
 
-	if(localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
-																	  withUsername:username]){
+	if (localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
+																	  withUsername:username]) {
 		
 		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
 																	 withObject:localizedMessage
@@ -152,7 +152,7 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 																	 withObject:chat
 																  waitUntilDone:YES];
 		return 0; /* We handled it */
-	}else{
+	} else {
 		return 1; /* Display it as a normal message */
 	}
 }
@@ -270,11 +270,11 @@ static void otrg_adium_dialog_connected(ConnContext *context)
 	conv = gaim_find_conversation_with_account(context->username, account);
 	
 	//If there is no existing conversation, make one
-	if(!conv){
+	if (!conv) {
 		conv = gaim_conversation_new(GAIM_CONV_IM, account, context->username);	
 	}
 	
-	if(conv){
+	if (conv) {
 		securityDetailsDict = details_for_context(context);
 		
 		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
@@ -290,7 +290,7 @@ static void otrg_adium_dialog_disconnected(ConnContext *context)
 
 	conv = gaim_find_conversation_with_account(context->username,
 											   gaim_accounts_find(context->accountname, context->protocol));
-	if(conv){
+	if (conv) {
 		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
 										   setSecurityDetails:nil];
 	}
@@ -325,7 +325,7 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 	context = context_for_conv(conv);
     state = context ? context->state : CONN_UNCONNECTED;
 
-	if(state == CONN_CONNECTED){
+	if (state == CONN_CONNECTED) {
 		NSDictionary	*securityDetailsDict;
 
 		securityDetailsDict = details_for_context(context);
@@ -396,7 +396,7 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 
 	//First try to use our cache
 	policyNumber = [otrPolicyCache objectForKey:[contact internalObjectID]];
-	if(!policyNumber){
+	if (!policyNumber) {
 		//If a policy isn't cached, look it up
 		policyNumber = [otrAdapter mainPerformSelector:@selector(determinePolicyForContact:)
 											withObject:contact
@@ -423,7 +423,7 @@ OtrgUiUiOps *otrg_adium_ui_get_ui_ops(void)
 void adium_gaim_otr_connect_conv(GaimConversation *conv)
 {
 	/* Do nothing if this isn't an IM conversation */
-	if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){ 
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) { 
 		otrg_plugin_send_default_query_conv(conv);
 	}
 }
@@ -433,8 +433,8 @@ void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 	ConnContext	*context;
 
 	/* Do nothing if this isn't an IM conversation */
-	if((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
-	   (context = context_for_conv(conv))){
+	if ((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
+	   (context = context_for_conv(conv))) {
 		   otrg_ui_disconnect_connection(context);
 	}
 }
@@ -461,7 +461,7 @@ void initGaimOTRSupprt(void)
 
 - (id)init
 {
-	if(self = [super init]){
+	if (self = [super init]) {
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:GROUP_ENCRYPTION];
 		
@@ -487,7 +487,7 @@ void initGaimOTRSupprt(void)
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!key || [key isEqualToString:KEY_ENCRYPTED_CHAT_PREFERENCE]){
+	if (!key || [key isEqualToString:KEY_ENCRYPTED_CHAT_PREFERENCE]) {
 		[otrPolicyCache release]; otrPolicyCache = [[NSMutableDictionary alloc] init];
 	}
 }
@@ -505,26 +505,26 @@ void initGaimOTRSupprt(void)
 	NSString	*contactInternalObjectID;
 	
 	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
-	if([[contact UID] characterAtIndex:0] == '+'){
+	if ([[contact UID] characterAtIndex:0] == '+') {
 		policy = OTRL_POLICY_MANUAL;
 
-	}else{
+	} else {
 		NSNumber					*prefNumber;
 		AIEncryptedChatPreference	pref;
 
 		//Get the contact's preference (or its containing group, or so on)
 		prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 										 group:GROUP_ENCRYPTION];
-		if(!prefNumber || ([prefNumber intValue] == EncryptedChat_Default)){
+		if (!prefNumber || ([prefNumber intValue] == EncryptedChat_Default)) {
 			//If no contact preference or the contact is set to use the default, use the account preference
 			prefNumber = [[contact account] preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 													   group:GROUP_ENCRYPTION];		
 		}
 		
-		if(prefNumber){
+		if (prefNumber) {
 			pref = [prefNumber intValue];
 			
-			switch(pref){
+			switch (pref) {
 				case EncryptedChat_Never:
 					policy = OTRL_POLICY_NEVER;
 					break;
@@ -539,14 +539,14 @@ void initGaimOTRSupprt(void)
 					policy = OTRL_POLICY_ALWAYS;
 					break;
 			}
-		}else{
+		} else {
 			policy = OTRL_POLICY_MANUAL;
 		}
 	}
 
 	policyNumber = [NSNumber numberWithInt:policy];
 	
-	if(contactInternalObjectID = [contact internalObjectID]){
+	if (contactInternalObjectID = [contact internalObjectID]) {
 		[otrPolicyCache setObject:policyNumber
 						   forKey:contactInternalObjectID];
 	}

@@ -62,7 +62,7 @@
 	
 	textToSpeak  = [[[textView_textToSpeak string] copy] autorelease];
 	
-	if(textToSpeak){
+	if (textToSpeak) {
 		[actionDetails setObject:textToSpeak
 						  forKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 	}

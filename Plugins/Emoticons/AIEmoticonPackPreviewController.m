@@ -33,7 +33,7 @@
 
 - (id)initForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		emoticonPack = [inPack retain];
 		preferences = [inPreferences retain];
 

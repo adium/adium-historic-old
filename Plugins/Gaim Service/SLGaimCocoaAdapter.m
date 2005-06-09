@@ -171,7 +171,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
 	
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		accountDict = [[NSMutableDictionary alloc] init];
 		chatDict = [[NSMutableDictionary alloc] init];
@@ -227,7 +227,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
 	//Register ourself as libgaim's UI handler; this will call back on a function in which we finish configuring libgaim
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
-	if(!gaim_core_init("Adium")) {
+	if (!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
 	}
@@ -238,22 +238,22 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 NSString* serviceClassForGaimProtocolID(const char *protocolID)
 {
 	NSString	*serviceClass = nil;
-	if(protocolID){
-		if(!strcmp(protocolID, "prpl-oscar"))
+	if (protocolID) {
+		if (!strcmp(protocolID, "prpl-oscar"))
 			serviceClass = @"AIM-compatible";
-		else if(!strcmp(protocolID, "prpl-gg"))
+		else if (!strcmp(protocolID, "prpl-gg"))
 			serviceClass = @"Gadu-Gadu";
-		else if(!strcmp(protocolID, "prpl-jabber"))
+		else if (!strcmp(protocolID, "prpl-jabber"))
 			serviceClass = @"Jabber";
-		else if(!strcmp(protocolID, "prpl-meanwhile"))
+		else if (!strcmp(protocolID, "prpl-meanwhile"))
 			serviceClass = @"Sametime";
-		else if(!strcmp(protocolID, "prpl-msn"))
+		else if (!strcmp(protocolID, "prpl-msn"))
 			serviceClass = @"MSN";
-		else if(!strcmp(protocolID, "prpl-novell"))
+		else if (!strcmp(protocolID, "prpl-novell"))
 			serviceClass = @"GroupWise";
-		else if(!strcmp(protocolID, "prpl-yahoo"))
+		else if (!strcmp(protocolID, "prpl-yahoo"))
 			serviceClass = @"Yahoo!";
-		else if(!strcmp(protocolID, "prpl-zephyr"))
+		else if (!strcmp(protocolID, "prpl-zephyr"))
 			serviceClass = @"Zephyr";
 	}
 	
@@ -269,15 +269,15 @@ CBGaimAccount* accountLookup(GaimAccount *acct)
 	/* If the account doesn't have its ui_data associated yet (we haven't tried to connect) but we want this
 	 * lookup data, we have to do some manual parsing.  This is used for example from the OTR preferences.
 	 */
-	if(!adiumGaimAccount && acct){
+	if (!adiumGaimAccount && acct) {
 		const char	*protocolID = acct->protocol_id;
 		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
 
 		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
-		while(adiumGaimAccount = [enumerator nextObject]){
-			if([adiumGaimAccount isKindOfClass:[CBGaimAccount class]] &&
+		while (adiumGaimAccount = [enumerator nextObject]) {
+			if ([adiumGaimAccount isKindOfClass:[CBGaimAccount class]] &&
 			   [[[adiumGaimAccount service] serviceClass] isEqualToString:serviceClass] &&
-			   [[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame){
+			   [[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) {
 				break;
 			}
 		}
@@ -296,7 +296,7 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 	AIListContact *theContact = (buddy ? (AIListContact *)buddy->node.ui_data : nil);
 
 	//If the node does not have ui_data yet, we need to create a contact and associate it
-	if (!theContact && buddy){
+	if (!theContact && buddy) {
 		NSString	*UID;
 	
 		UID = [NSString stringWithUTF8String:gaim_normalize(buddy->account, buddy->name)];
@@ -320,7 +320,7 @@ AIChat* chatLookupFromConv(GaimConversation *conv)
 	AIChat *chat;
 	
 	chat = (AIChat *)conv->ui_data;
-	if (!chat){
+	if (!chat) {
 		NSString *name = [NSString stringWithUTF8String:conv->name];
 		
 		chat = [accountLookup(conv->account) mainThreadChatWithName:name];
@@ -343,7 +343,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 	
 	chat = (AIChat *)conv->ui_data;
 
-	if (!chat){
+	if (!chat) {
 		//No chat is associated with the IM conversation
 		AIListContact   *sourceContact;
 		GaimBuddy		*buddy;
@@ -387,11 +387,11 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 	GaimConversation	*conv = [[chatDict objectForKey:[chat uniqueChatID]] pointerValue];
 	GaimAccount			*account = accountLookupFromAdiumAccount(adiumAccount);
 	
-	if (!conv && adiumAccount){
+	if (!conv && adiumAccount) {
 		AIListObject *listObject = [chat listObject];
 		
 		//If we have a listObject, we are dealing with a one-on-one chat, so proceed accordingly
-		if (listObject){
+		if (listObject) {
 			char *destination;
 			
 			destination = g_strdup(gaim_normalize(account, [[listObject UID] UTF8String]));
@@ -399,16 +399,16 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
 			
 			//associate the AIChat with the gaim conv
-			if(conv) imChatLookupFromConv(conv);
+			if (conv) imChatLookupFromConv(conv);
 
 			g_free(destination);
 			
-		}else{
+		} else {
 			//Otherwise, we have a multiuser chat.
 			
 			//All multiuser chats should have a non-nil name.
 			NSString	*chatName = [chat name];
-			if (chatName){
+			if (chatName) {
 				const char *name = [chatName UTF8String];
 				
 				/*
@@ -424,7 +424,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 				 However, there's no reason not to check just in case.
 				 */
 				GaimChat *gaimChat = gaim_blist_find_chat (account, name);
-				if (!gaimChat){
+				if (!gaimChat) {
 					
 					/*
 					 If we don't have a GaimChat with this name on this account, we need to create one.
@@ -465,21 +465,21 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						char	*identifier = g_strdup(pce->identifier);
 						char	*valueUTF8String = nil;
 						
-						if (!(pce->is_int)){
+						if (!(pce->is_int)) {
 							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (value){
+							if (value) {
 								GaimDebug (@"$$$$ not int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup([value UTF8String]);
-							}else{
+							} else {
 								GaimDebug (@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}
-						}else{
+						} else {
 							NSNumber	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (value){
+							if (value) {
 								GaimDebug (@"$$$$  is int: added %s:%@ to chat info",identifier,value);
 								valueUTF8String = g_strdup_printf("%d",[value intValue]);
-							}else{
+							} else {
 								GaimDebug (@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
 								shouldTryToJoin = NO;
 							}							
@@ -508,7 +508,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					
 					//Associate our chat with the libgaim conversation
 					
-					if( shouldTryToJoin ) {
+					if ( shouldTryToJoin ) {
 					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
 						GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
@@ -550,61 +550,61 @@ NSMutableDictionary* get_chatDict(void)
 	NSString *secondaryString = secondary ? [NSString stringWithUTF8String:secondary] : nil;
 	
 	NSString *titleString;
-	if (title){
+	if (title) {
 		titleString = [NSString stringWithFormat:AILocalizedString(@"Adium Notice: %@",nil),[NSString stringWithUTF8String:title]];
-	}else{
+	} else {
 		titleString = AILocalizedString(@"Adium : Notice", nil);
 	}
 	
 	NSString *errorMessage = nil;
 	NSString *description = nil;
 	
-	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)){
+	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
 		return;
 	}
 	
 	//Suppress notification warnings we have no interest in seeing
-	if (secondaryString){
+	if (secondaryString) {
 		if (([secondaryString rangeOfString:@"Could not add the buddy 1 for an unknown reason"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Your screen name is currently formatted as follows"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Error reading from Switchboard server"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"0x001a: Unknown error"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
-			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)){
+			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)) {
 			return;
 		}
 	}
 	
-    if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound){
+    if ([primaryString rangeOfString: @"Yahoo! message did not get sent."].location != NSNotFound) {
 		//Yahoo send error
 		errorMessage = AILocalizedString(@"Your Yahoo! message did not get sent.", nil);
 		
-	}else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound){
+	} else if ([primaryString rangeOfString: @"did not get sent"].location != NSNotFound) {
 		//Oscar send error
 		NSString *targetUserName = [[[[primaryString componentsSeparatedByString:@" message to "] objectAtIndex:1] componentsSeparatedByString:@" did not get "] objectAtIndex:0];
 		
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"Your message to %@ did not get sent",nil),targetUserName];
 		
-		if ([secondaryString rangeOfString:@"Rate"].location != NSNotFound){
+		if ([secondaryString rangeOfString:@"Rate"].location != NSNotFound) {
 			description = AILocalizedString(@"You are sending messages too quickly; wait a moment and try again.",nil);
-		}else if ([secondaryString isEqualToString:@"Service unavailable"] || [secondaryString isEqualToString:@"Not logged in"]){
+		} else if ([secondaryString isEqualToString:@"Service unavailable"] || [secondaryString isEqualToString:@"Not logged in"]) {
 			description = AILocalizedString(@"Connection error.",nil);
-		}else if ([secondaryString isEqualToString:@"Refused by client"]){
+		} else if ([secondaryString isEqualToString:@"Refused by client"]) {
 			description = AILocalizedString(@"Your message was refused by the other user.",nil);
-		}else if ([secondaryString isEqualToString:@"Reply too big"]){
+		} else if ([secondaryString isEqualToString:@"Reply too big"]) {
 			description = AILocalizedString(@"Your message was too big.",nil);
-		}else if ([secondaryString isEqualToString:@"In local permit/deny"]){
+		} else if ([secondaryString isEqualToString:@"In local permit/deny"]) {
 			description = AILocalizedString(@"The other user is in your deny list.",nil);
-		}else if ([secondaryString rangeOfString:@"Too evil"].location != NSNotFound){
+		} else if ([secondaryString rangeOfString:@"Too evil"].location != NSNotFound) {
 			description = AILocalizedString(@"Warning level is too high.",nil);
-		}else if ([secondaryString isEqualToString:@"User temporarily unavailable"]){
+		} else if ([secondaryString isEqualToString:@"User temporarily unavailable"]) {
 			description = AILocalizedString(@"The other user is temporarily unavailable.",nil);
-		}else{
+		} else {
 			description = AILocalizedString(@"No reason was given.",nil);
 		}
 		
-    }else if ([primaryString rangeOfString: @"Authorization Denied"].location != NSNotFound){
+    } else if ([primaryString rangeOfString: @"Authorization Denied"].location != NSNotFound) {
 		//Authorization denied; grab the user name and reason
 		NSArray		*parts = [[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has denied your request to add them to your buddy list for the following reason:\n"];
 		NSString	*targetUserName =  [parts objectAtIndex:0];
@@ -613,7 +613,7 @@ NSMutableDictionary* get_chatDict(void)
 		errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ denied authorization:","User deined authorization; the next line has an explanation."),targetUserName];
 		description = reason;
 
-    }else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound){
+    } else if ([primaryString rangeOfString: @"Authorization Granted"].location != NSNotFound) {
 		//ICQ Authorization granted
 		NSString *targetUserName = [[[[secondaryString componentsSeparatedByString:@" user "] objectAtIndex:1] componentsSeparatedByString:@" has "] objectAtIndex:0];
 		
@@ -635,31 +635,31 @@ NSMutableDictionary* get_chatDict(void)
 	NSString *titleString = (title ? [NSString stringWithUTF8String:title] : nil);
 	NSString *primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
 	
-	if(!titleString){
+	if (!titleString) {
 		titleString = primaryString;
 		primaryString = nil;
 	}
 	
 	NSString *secondaryString = (secondary ? [NSString stringWithUTF8String:secondary] : nil);
-	if(!primaryString){
+	if (!primaryString) {
 		primaryString = secondaryString;
 		secondaryString = nil;
 	}
 	
 	static AIHTMLDecoder	*notifyFormattedHTMLDecoder = nil;
-	if(!notifyFormattedHTMLDecoder) notifyFormattedHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+	if (!notifyFormattedHTMLDecoder) notifyFormattedHTMLDecoder = [[AIHTMLDecoder decoder] retain];
 
 	NSString	*textString = (text ? [NSString stringWithUTF8String:text] : nil); 
-	if(textString) textString = [[notifyFormattedHTMLDecoder decodeHTML:textString] string];
+	if (textString) textString = [[notifyFormattedHTMLDecoder decodeHTML:textString] string];
 	
 	NSString	*description = nil;
-	if([textString length] && [secondaryString length]){
+	if ([textString length] && [secondaryString length]) {
 		description = [NSString stringWithFormat:@"%@\n\n%@",secondaryString,textString];
 		
-	}else if(textString){
+	} else if (textString) {
 		description = textString;
 		
-	}else if(secondaryString){
+	} else if (secondaryString) {
 		description = secondaryString;
 		
 	}
@@ -700,7 +700,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	
-	if(gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		gaim_account_disconnect(account);
 	}
 }
@@ -798,9 +798,9 @@ NSMutableDictionary* get_chatDict(void)
 		{
 			//XXX Do we want to error on this or pretend there was no command?
 			sendMessage = NO;
-			if(gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+			if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
 				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
-			}else{
+			} else {
 				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
 			}
 		}
@@ -824,7 +824,7 @@ NSMutableDictionary* get_chatDict(void)
 {	
 	const char *encodedMessageUTF8String;
 	
-	if(encodedMessage && (encodedMessageUTF8String = [encodedMessage UTF8String])){
+	if (encodedMessage && (encodedMessageUTF8String = [encodedMessage UTF8String])) {
 		GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
 
 		switch (gaim_conversation_get_type(conv)) {				
@@ -840,7 +840,7 @@ NSMutableDictionary* get_chatDict(void)
 				break;
 			}
 		}
-	}else{
+	} else {
 		GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
 	}
 }
@@ -854,7 +854,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	BOOL sendMessage = YES;
 	
-	if ([originalMessage hasPrefix:@"/"]){
+	if ([originalMessage hasPrefix:@"/"]) {
 		/* If a content object makes it this far and still has a "/", Adium hasn't treated it as a command or
 		substitution.  Send it to Gaim for it to try to handle it.
 		XXX - do we want to not-eat non-commands, checking to see if Gaim handled the command and, if not,
@@ -865,7 +865,7 @@ NSMutableDictionary* get_chatDict(void)
 												 inChat:chat];
 	}
 	
-	if(sendMessage){
+	if (sendMessage) {
 		AILog(@"Sending %@ from %@ to %@",encodedMessage,sourceAccount,chat);
 		[gaimThreadProxy gaimThreadSendEncodedMessage:encodedMessage
 									  originalMessage:originalMessage
@@ -880,12 +880,12 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
-	if (conv){
+	if (conv) {
 		//		BOOL isTyping = (([typingState intValue] == AINotTyping) ? FALSE : TRUE);
 
 		GaimTypingState gaimTypingState;
 		
-		switch (typingState){
+		switch (typingState) {
 			case AINotTyping:
 				gaimTypingState = GAIM_NOT_TYPING;
 				break;
@@ -917,7 +917,7 @@ NSMutableDictionary* get_chatDict(void)
 	
 	//Find the group (Create if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-	if(!(group = gaim_find_group(groupUTF8String))){
+	if (!(group = gaim_find_group(groupUTF8String))) {
 		group = gaim_group_new(groupUTF8String);
 		gaim_blist_add_group(group, NULL);
 	}
@@ -925,7 +925,7 @@ NSMutableDictionary* get_chatDict(void)
 	//Find the buddy (Create if necessary)
 	buddyUTF8String = [objectUID UTF8String];
 	buddy = gaim_find_buddy(account, buddyUTF8String);
-	if(!buddy) buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
+	if (!buddy) buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
 
 	GaimDebug (@"Adding buddy %s to group %s",buddy->name, group->name);
 
@@ -948,12 +948,12 @@ NSMutableDictionary* get_chatDict(void)
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GaimBuddy 	*buddy;
 	
-	if (buddy = gaim_find_buddy(account, [objectUID UTF8String])){
+	if (buddy = gaim_find_buddy(account, [objectUID UTF8String])) {
 		const char	*groupUTF8String;
 		GaimGroup	*group;
 
 		groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-		if (group = gaim_find_group(groupUTF8String)){
+		if (group = gaim_find_group(groupUTF8String)) {
 			/* Remove this contact from the server-side and gaim-side lists. 
 			 * Updating gaimside does not change the server.
 			 *
@@ -986,7 +986,7 @@ NSMutableDictionary* get_chatDict(void)
 	//Get the destination group (creating if necessary)
 	groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
 	group = gaim_find_group(groupUTF8String);
-	if(!group){
+	if (!group) {
 		/* If we can't find the group, something's gone wrong... we shouldn't be using a group we don't have.
 		 * We'll just silently turn this into an add operation. */
 		group = gaim_group_new(groupUTF8String);
@@ -995,7 +995,7 @@ NSMutableDictionary* get_chatDict(void)
 
 	buddyUTF8String = [objectUID UTF8String];
 	buddy = gaim_find_buddy(account, buddyUTF8String);
-	if(!buddy){
+	if (!buddy) {
 		/* If we can't find a buddy, something's gone wrong... we shouldn't be moving a buddy we don't have.
  		 * As with the group, we'll just silently turn this into an add operation. */
 		buddy = gaim_buddy_new(account, buddyUTF8String, NULL);
@@ -1006,7 +1006,7 @@ NSMutableDictionary* get_chatDict(void)
 	gaim_blist_add_buddy(buddy, NULL, group, NULL);
 
 	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
-	if(needToAddServerside) serv_add_buddy(gaim_account_get_connection(account), buddy);
+	if (needToAddServerside) serv_add_buddy(gaim_account_get_connection(account), buddy);
 }
 - (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
@@ -1020,7 +1020,7 @@ NSMutableDictionary* get_chatDict(void)
     GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
 	
 	//If we don't have a group with this name, just ignore the rename request
-    if(group){
+    if (group) {
 		//Rename gaimside, which will rename serverside as well
 		gaim_blist_rename_group(group, [newGroupName UTF8String]);
 	}
@@ -1036,7 +1036,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimGroup *group = gaim_find_group([groupName UTF8String]);
 	
-	if (group){
+	if (group) {
 		gaim_blist_remove_group(group);
 	}
 }
@@ -1050,7 +1050,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSetAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		const char  *uidUTF8String = [UID UTF8String];
 		GaimBuddy   *buddy = gaim_find_buddy(account, uidUTF8String);
 		const char  *aliasUTF8String = [alias UTF8String];
@@ -1058,14 +1058,14 @@ NSMutableDictionary* get_chatDict(void)
 	
 		if (buddy && ((aliasUTF8String && !oldAlias) ||
 					  (!aliasUTF8String && oldAlias) ||
-					  ((oldAlias && aliasUTF8String && (strcmp(oldAlias,aliasUTF8String) != 0))))){
+					  ((oldAlias && aliasUTF8String && (strcmp(oldAlias,aliasUTF8String) != 0))))) {
 
 			gaim_blist_alias_buddy(buddy,aliasUTF8String);
 			serv_alias_buddy(buddy);
 			
 			//If we had an alias before but no longer have, adiumGaimBlistUpdate() is not going to send the update
 			//(Because normally it's wasteful to send a nil alias to the account).  We need to manually invoke the update.
-			if (oldAlias && !alias){
+			if (oldAlias && !alias) {
 				AIListContact *theContact = contactLookupFromBuddy(buddy);
 				
 				[adiumAccount mainPerformSelector:@selector(updateContact:toAlias:)
@@ -1099,7 +1099,7 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimConversation *conv = [convValue pointerValue];
 
-	if(conv){
+	if (conv) {
 		//We use chatDict's objectfor the passed chatUniqueID because we can no longer trust any other
 		//values due to threading potentially letting them have changed on us.
 		[chatDict removeObjectForKey:chatUniqueID];
@@ -1130,10 +1130,10 @@ NSMutableDictionary* get_chatDict(void)
 	
 	GaimDebug (@"#### gaimThreadInviteContact:%@ toChat:%@",[listContact UID],[chat name]);
 	// dchoby98
-	if(([adiumAccount isKindOfClass:[CBGaimAccount class]]) &&
+	if (([adiumAccount isKindOfClass:[CBGaimAccount class]]) &&
 	   (conv = convLookupFromChat(chat, adiumAccount)) &&
 	   (account = accountLookupFromAdiumAccount((CBGaimAccount *)adiumAccount)) &&
-	   (gaimChat = gaim_conversation_get_chat_data(conv))){
+	   (gaimChat = gaim_conversation_get_chat_data(conv))) {
 
 		//GaimBuddy		*buddy = gaim_find_buddy(account, [[listObject UID] UTF8String]);
 		GaimDebug (@"#### gaimThreadAddChatUser chat: %@ (%@) buddy: %@",[chat name], chat,[listContact UID]);
@@ -1171,7 +1171,7 @@ NSMutableDictionary* get_chatDict(void)
 								 onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		
 		serv_set_away(account->gc, gaimStatusType, [message UTF8String]);
 	}
@@ -1189,7 +1189,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		serv_set_away(account->gc, (isInvisible ? "Invisible" : "Visible"), NULL);
 	}	
 }
@@ -1207,7 +1207,7 @@ NSMutableDictionary* get_chatDict(void)
 
 	gaim_account_set_user_info(account, profileHTMLUTF8);
 
-	if(account->gc != NULL && gaim_account_is_connected(account)) {
+	if (account->gc != NULL && gaim_account_is_connected(account)) {
 		serv_set_info(account->gc, profileHTMLUTF8);
 	}
 }
@@ -1220,7 +1220,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if(account){
+	if (account) {
 		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 	}
 }
@@ -1233,10 +1233,10 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadSetIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil);
 		
-		if(idle) {
+		if (idle) {
 			//Go to a 0 idle on the server first to ensure other clients see our change (to support arbitrary Set Custom Idle time changes)
 			serv_set_idle(account->gc, 0);
 			serv_set_idle(account->gc, idle);
@@ -1255,7 +1255,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadGetInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		
 		serv_get_info(account->gc, [inUID UTF8String]);
 	}
@@ -1326,7 +1326,7 @@ NSMutableDictionary* get_chatDict(void)
 - (oneway void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		GaimBuddy   *buddy;
 		GaimGroup   *g;
 		OscarData   *od;
@@ -1335,7 +1335,7 @@ NSMutableDictionary* get_chatDict(void)
 
 		if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 			(g = gaim_find_buddys_group(buddy)) && 
-			(od = account->gc->proto_data)){
+			(od = account->gc->proto_data)) {
 			aim_ssi_editcomment(od->sess, g->name, uidUTF8String, [comment UTF8String]);	
 		}
 	}
@@ -1352,9 +1352,9 @@ NSMutableDictionary* get_chatDict(void)
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
 	//Because we can get here from a delay, it's possible that we are now disconnected. Sanity checks are good.
-	if(account &&
+	if (account &&
 	   gaim_account_is_connected(account) &&
-	   [inFormattedUID length]){
+	   [inFormattedUID length]) {
 		
 		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
 	}
@@ -1376,9 +1376,9 @@ NSMutableDictionary* get_chatDict(void)
 	GaimConnection	*gc;
 	OscarData		*od;
 
-	if((account = accountLookupFromAdiumAccount(adiumAccount)) &&
+	if ((account = accountLookupFromAdiumAccount(adiumAccount)) &&
 	   (gc = gaim_account_get_connection(account)) &&
-	   (od = gc->proto_data)){
+	   (od = gc->proto_data)) {
 	 	aim_locate_setprofile(od->sess, NULL, NULL, 0, NULL, "", 0);
 		aim_srv_setavailmsg(od->sess, (char *)[availablePlaintext UTF8String]);
 	}
@@ -1399,7 +1399,7 @@ NSMutableDictionary* get_chatDict(void)
 	GaimBuddy			*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
 
 	//Perform act's callback with the desired buddy and data
-	if(act->callback)
+	if (act->callback)
 		act->callback((GaimBlistNode *)buddy, act->data);
 }
 - (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict 
@@ -1427,11 +1427,11 @@ NSMutableDictionary* get_chatDict(void)
 										 inChat:(AIChat *)inChat
 {
 	GaimConversation	*conv;
-	if(conv = convLookupFromChat(inChat, [inChat account])){
+	if (conv = convLookupFromChat(inChat, [inChat account])) {
 		
-		if(inSecureMessaging){
+		if (inSecureMessaging) {
 			adium_gaim_otr_connect_conv(conv);
-		}else{
+		} else {
 			adium_gaim_otr_disconnect_conv(conv);	
 		}
 	}
@@ -1448,10 +1448,10 @@ NSMutableDictionary* get_chatDict(void)
 {
 	AIChat	*chat = (conv ? imChatLookupFromConv(conv) : nil);
 
-	if(chat){
+	if (chat) {
 		NSMutableDictionary	*fullSecurityDetailsDict;
 		
-		if(securityDetailsDict){
+		if (securityDetailsDict) {
 			NSString				*format, *description;
 			fullSecurityDetailsDict = [[securityDetailsDict mutableCopy] autorelease];
 			
@@ -1480,7 +1480,7 @@ NSMutableDictionary* get_chatDict(void)
 			
 			[fullSecurityDetailsDict setObject:description
 										forKey:@"Description"];
-		}else{
+		} else {
 			fullSecurityDetailsDict = nil;	
 		}
 		
@@ -1498,12 +1498,12 @@ NSMutableDictionary* get_chatDict(void)
 {
 	NSString	*localizedOTRMessage = nil;
 
-	if(([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
-	   ([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)){
+	if (([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
+	   ([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)) {
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"You sent an unencrypted message, but %s was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
 			username];
-	}else if([message rangeOfString:@"has closed his private connection to you"].location != NSNotFound){
+	} else if ([message rangeOfString:@"has closed his private connection to you"].location != NSNotFound) {
 		localizedOTRMessage = [NSString stringWithFormat:
 			AILocalizedString(@"%s is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),
 			username];

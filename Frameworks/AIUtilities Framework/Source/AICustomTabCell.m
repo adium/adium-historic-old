@@ -62,9 +62,9 @@ static NSSize		rightCapSize;
 {
     static BOOL haveLoadedImages = NO;
     
-    if((self = [super init])) {
+    if ((self = [super init])) {
 		//Share these images between all AICustomTabCell instances
-		if(!haveLoadedImages){
+		if (!haveLoadedImages) {
 			Class myClass = [self class];
 
 			tabFrontLeft          = [[NSImage imageNamed:@"Aqua_Tab_Left"        forClass:myClass] retain];
@@ -119,13 +119,13 @@ static NSSize		rightCapSize;
     int	tabWidth = [tab size].width;
     int	ourWidth = [self size].width;
 	
-    if(tabWidth > ourWidth){
+    if (tabWidth > ourWidth) {
         return(NSOrderedAscending);
         
-    }else if(tabWidth < ourWidth){
+    } else if (tabWidth < ourWidth) {
         return(NSOrderedDescending);
         
-    }else{
+    } else {
         return(NSOrderedSame);
         
     }
@@ -186,7 +186,7 @@ static NSSize		rightCapSize;
 //When a tab is hovered it should be highlighted.  Highlighted tabs draw differently.
 - (void)setHighlighted:(BOOL)inHighlight
 {
-	if(highlighted != inHighlight){
+	if (highlighted != inHighlight) {
 		highlighted = inHighlight;
         [view setNeedsDisplayInRect:[self frame]];
 	}
@@ -198,7 +198,7 @@ static NSSize		rightCapSize;
 //Set whether the close button is currently hovered
 - (void)setHoveringClose:(BOOL)hovering
 {
-	if(hoveringClose != hovering){
+	if (hoveringClose != hovering) {
 		hoveringClose = hovering;
         [view setNeedsDisplayInRect:NSUnionRect([self _tabIconRect],[self _closeButtonRect])];
 	}
@@ -237,7 +237,7 @@ static NSSize		rightCapSize;
     middleLeftEdge = (rect.origin.x + leftCapSize.width);
 	
     //Background
-    if(selected && !ignoreSelection){
+    if (selected && !ignoreSelection) {
         //Draw the left cap
         [tabFrontLeft compositeToPoint:NSMakePoint(rect.origin.x, rect.origin.y) operation:NSCompositeSourceOver];
 		
@@ -245,8 +245,8 @@ static NSSize		rightCapSize;
         sourceRect = NSMakeRect(0, 0, [tabFrontMiddle size].width, [tabFrontMiddle size].height);
         destRect = NSMakeRect(middleLeftEdge, rect.origin.y, sourceRect.size.width, sourceRect.size.height);
 		
-        while(destRect.origin.x < middleRightEdge){
-            if((destRect.origin.x + destRect.size.width) > middleRightEdge){
+        while (destRect.origin.x < middleRightEdge) {
+            if ((destRect.origin.x + destRect.size.width) > middleRightEdge) {
                 sourceRect.size.width -= (destRect.origin.x + destRect.size.width) - middleRightEdge;
             }
             [tabFrontMiddle compositeToPoint:destRect.origin fromRect:sourceRect operation:NSCompositeSourceOver];
@@ -256,22 +256,22 @@ static NSSize		rightCapSize;
         //Draw the right cap
         [tabFrontRight compositeToPoint:NSMakePoint(middleRightEdge, rect.origin.y) operation:NSCompositeSourceOver];
 		
-    }else if(highlighted){
+    } else if (highlighted) {
         [[NSColor colorWithCalibratedWhite:0.0 alpha:0.1] set];
         [NSBezierPath fillRect:NSMakeRect(rect.origin.x, rect.origin.y, rect.size.width, rect.size.height)];
     }
 	
 	//We'll display our close icon if the user is hovering.  Otherwise, we display the tab specified icon
 	NSImage *leftIcon = [tabViewItem icon];
-	if((hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])) || !leftIcon){		
-		if(hoveringClose){
+	if ((hoveringClose && (selected || allowsInactiveTabClosing || [NSEvent cmdKey])) || !leftIcon) {		
+		if (hoveringClose) {
 			leftIcon = (trackingClose ? tabCloseFrontPressed : tabCloseFrontRollover);
-		}else{
+		} else {
 			leftIcon = ((selected && !ignoreSelection) ? tabCloseFront : tabCloseBack);
 		}
 		destPoint = [self _closeButtonRect].origin;
 
-	}else{
+	} else {
 		destPoint = [self _tabIconRect].origin;
 	}
 	[leftIcon compositeToPoint:destPoint operation:NSCompositeSourceOver];
@@ -287,7 +287,7 @@ static NSSize		rightCapSize;
 						  rect.origin.y + TAB_LABEL_Y_OFFSET,
 						  rect.size.width,
 						  rect.size.height - ((rect.size.height - labelSize.height) / 2.0));
-    if(TAB_SELECTED_HIGHER && !ignoreSelection && selected) destRect.origin.y += 1.0;
+    if (TAB_SELECTED_HIGHER && !ignoreSelection && selected) destRect.origin.y += 1.0;
 	[[self attributedLabel] drawInRect:destRect];	
 }
 
@@ -296,7 +296,7 @@ static NSSize		rightCapSize;
 {
 	NSString	*label = [tabViewItem label];
 	
-	if(![label isEqualToString:[attributedLabel string]]){
+	if (![label isEqualToString:[attributedLabel string]]) {
 		NSParagraphStyle	    *paragraphStyle;
 		
 		//Paragraph Style (Turn off clipping by word)
@@ -346,15 +346,15 @@ static NSSize		rightCapSize;
 - (void)mouseEntered:(NSEvent *)theEvent
 {
 	//Scrubs the tab if control is down.
-	if(([theEvent modifierFlags] & NSAlternateKeyMask) && !selected){
+	if (([theEvent modifierFlags] & NSAlternateKeyMask) && !selected) {
 		[[tabViewItem tabView] selectTabViewItem:tabViewItem];
 	}
 	
     //Set ourself (or our close button) as hovered
-    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&
-	   ([theEvent trackingNumber] == closeTrackingTag)){
+    if ((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&
+	   ([theEvent trackingNumber] == closeTrackingTag)) {
 		[self setHoveringClose:YES];
-    }else{
+    } else {
 		[self setHighlighted:YES];
     }
 }
@@ -362,9 +362,9 @@ static NSSize		rightCapSize;
 //Mouse left one of our tabs - Set ourself (or our close button) as not hovered
 - (void)mouseExited:(NSEvent *)theEvent
 {
-    if([theEvent trackingNumber] == closeTrackingTag){
+    if ([theEvent trackingNumber] == closeTrackingTag) {
 		[self setHoveringClose:NO];
-    }else{
+    } else {
 		[self setHighlighted:NO];
     }
 }
@@ -375,14 +375,14 @@ static NSSize		rightCapSize;
 //Track click and hold on the close button
 - (BOOL)willTrackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)controlView
 {
-    if((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&
+    if ((allowsInactiveTabClosing || selected || [NSEvent cmdKey]) &&
 	   (SHOW_CLOSE_BUTTON_FOR_SINGLE_TAB || [[tabViewItem tabView] numberOfTabViewItems] != 1) &&
-	   NSPointInRect([controlView convertPoint:[theEvent locationInWindow] fromView:nil], [self _closeButtonRect])){
+	   NSPointInRect([controlView convertPoint:[theEvent locationInWindow] fromView:nil], [self _closeButtonRect])) {
 		
         [self trackMouse:theEvent inRect:[self _closeButtonRect] ofView:controlView untilMouseUp:YES];
         return(YES);
 		
-    }else{
+    } else {
         return(NO);
 		
     }
@@ -403,7 +403,7 @@ static NSSize		rightCapSize;
 {
     BOOL	hovering = NSPointInRect(currentPoint, [self _closeButtonRect]);
 	
-    if(hoveringClose != hovering){
+    if (hoveringClose != hovering) {
         hoveringClose = hovering;
         [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
     }
@@ -417,9 +417,9 @@ static NSSize		rightCapSize;
     BOOL	hovering = NSPointInRect(stopPoint, [self _closeButtonRect]);
 	
 	//Closes all the other tabs in the current window if option is held down (And we have more than one tab)
-	if(hovering && ([[[controlView window] currentEvent] modifierFlags] & NSAlternateKeyMask) && [[tabViewItem tabView] numberOfTabViewItems] > 1){
+	if (hovering && ([[[controlView window] currentEvent] modifierFlags] & NSAlternateKeyMask) && [[tabViewItem tabView] numberOfTabViewItems] > 1) {
 		[(AICustomTabsView *)controlView closeAllTabsExceptFor:self];
-	}else if(hovering){ //If the mouse was released over the close button, close our tab
+	} else if (hovering) { //If the mouse was released over the close button, close our tab
         [(AICustomTabsView *)controlView closeTab:self];
     }
 	

@@ -75,7 +75,7 @@
 				containerID:(NSString *)inContainerID
 					   containerName:(NSString *)inName
 {
-	if((self = [super initWithWindowNibName:windowNibName])){
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		interface = [inInterface retain];
 		containerName = [inName retain];
 		containerID = [inContainerID retain];
@@ -163,7 +163,7 @@
 	[self _configureToolbar];
 
     //Remove any tabs from our tab view, it needs to start out empty
-    while([tabView_messages numberOfTabViewItems] > 0){
+    while ([tabView_messages numberOfTabViewItems] > 0) {
         [tabView_messages removeTabViewItem:[tabView_messages tabViewItemAtIndex:0]];
     }
 }
@@ -182,9 +182,9 @@
 //
 - (void)showWindowInFront:(BOOL)inFront
 {
-	if(inFront){
+	if (inFront) {
 		[self showWindow:nil];
-	}else{
+	} else {
 		[[self window] orderWindow:NSWindowBelow relativeTo:[[NSApp mainWindow] windowNumber]];
 	}
 }
@@ -219,13 +219,13 @@
 
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
 	enumerator = [[tabView_messages tabViewItems] reverseObjectEnumerator];
-    while((tabViewItem = [enumerator nextObject])){
+    while ((tabViewItem = [enumerator nextObject])) {
 		[[adium interfaceController] closeChat:[tabViewItem chat]];
     }
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
 	//window is no longer visible, since in that case another window will have already became active.
-	if([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
+	if ([[self window] isVisible]) [[adium interfaceController] chatDidBecomeActive:nil];
 	[interface containerDidClose:self];
 
     return;
@@ -235,7 +235,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-    if([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]){
+    if ([group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE]) {
 		NSWindow	*window = [self window];
 		
 		alwaysShowTabs = ![[prefDict objectForKey:KEY_AUTOHIDE_TABBAR] boolValue];
@@ -248,7 +248,7 @@
 		AIWindowLevel	windowLevel = [[prefDict objectForKey:KEY_WINDOW_LEVEL] intValue];
 		int				level = NSNormalWindowLevel;
 		
-		switch(windowLevel){
+		switch (windowLevel) {
 			case AINormalWindowLevel: level = NSNormalWindowLevel; break;
 			case AIFloatingWindowLevel: level = NSFloatingWindowLevel; break;
 			case AIDesktopWindowLevel: level = kCGDesktopWindowLevel; break;
@@ -261,7 +261,7 @@
 
 - (void)updateIconForTabViewItem:(AIMessageTabViewItem *)tabViewItem
 {
-	if(tabViewItem == [tabView_messages selectedTabViewItem]){
+	if (tabViewItem == [tabView_messages selectedTabViewItem]) {
 		[self _updateWindowTitleAndIcon];
 	}
 }
@@ -279,17 +279,17 @@
 //If silent is NO, the interface controller will be informed of the add
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem atIndex:(int)index silent:(BOOL)silent
 {
-	if(index == -1){
+	if (index == -1) {
 		[tabView_messages addTabViewItem:inTabViewItem];
 		[containedChats addObject:[inTabViewItem chat]];
-	}else{
+	} else {
 		[tabView_messages insertTabViewItem:inTabViewItem atIndex:index];
 		[containedChats insertObject:[inTabViewItem chat] atIndex:index];
 	}
 	
 	[inTabViewItem setContainer:self];
 
-	if(!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
+	if (!silent) [[adium interfaceController] chatDidOpen:[inTabViewItem chat]];
 }
 
 //Remove a tab view item container
@@ -301,13 +301,13 @@
 	[[inTabViewItem messageViewController] tabViewItemWillClose];
 	
     //If the tab is selected, select the next tab before closing it (To mirror the behavior of safari)
-    if(!windowIsClosing && inTabViewItem == [tabView_messages selectedTabViewItem]){
+    if (!windowIsClosing && inTabViewItem == [tabView_messages selectedTabViewItem]) {
 		[tabView_messages selectNextTabViewItem:nil];
     }
 	
     //Remove the tab and let the interface know a container closed
 	[containedChats removeObject:[inTabViewItem chat]];
-	if(!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
+	if (!silent) [[adium interfaceController] chatDidClose:[inTabViewItem chat]];
 	
 	[inTabViewItem retain];
     [tabView_messages removeTabViewItem:inTabViewItem];
@@ -315,7 +315,7 @@
 	[inTabViewItem release];
 
 	//close if we're empty
-	if(!windowIsClosing && [containedChats count] == 0){
+	if (!windowIsClosing && [containedChats count] == 0) {
 		[self closeWindow:nil];
 	}
 }
@@ -325,7 +325,7 @@
 {
 	AIChat	*chat = [inTabViewItem chat];
 
-	if([containedChats indexOfObject:chat] != index){
+	if ([containedChats indexOfObject:chat] != index) {
 		[tabView_customTabs moveTab:inTabViewItem toIndex:index];
 		[containedChats moveObject:chat toIndex:index];
 		
@@ -363,11 +363,11 @@
 //Our selected tab has changed, update the active chat
 - (void)customTabView:(AICustomTabsView *)tabView didSelectTabViewItem:(NSTabViewItem *)tabViewItem
 {
-    if(tabViewItem != nil){
+    if (tabViewItem != nil) {
 		AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
         [(AIMessageTabViewItem *)tabViewItem tabViewItemWasSelected]; //Let the tab know it was selected
 		
-        if([[self window] isMainWindow]){ //If our window is main, set the newly selected container as active
+        if ([[self window] isMainWindow]) { //If our window is main, set the newly selected container as active
 			[[adium interfaceController] chatDidBecomeActive:chat];
         }
 		
@@ -385,25 +385,25 @@
 	NSButton	*button;
 	
 	//Window Title
-    if([tabView_messages numberOfTabViewItems] == 1){
+    if ([tabView_messages numberOfTabViewItems] == 1) {
         title = [NSString stringWithFormat:@"%@", label];
-    }else{
+    } else {
 		title = [NSString stringWithFormat:@"%@ - %@", containerName, label];
     }
 	[[self window] setTitle:title];
 	
 	//Window Icon (We display state in the window title if tabs are not visible)
-	if(!hasShownDocumentButton){
-		if([[self window] respondsToSelector:@selector(addDocumentIconButton)]){
+	if (!hasShownDocumentButton) {
+		if ([[self window] respondsToSelector:@selector(addDocumentIconButton)]) {
 			[[self window] addDocumentIconButton];
 		}
 		hasShownDocumentButton = YES;
 	}
 	
 	button = [[self window] standardWindowButton:NSWindowDocumentIconButton];
-	if(!tabBarIsVisible){
+	if (!tabBarIsVisible) {
 		[button setImage:[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] stateIcon]];
-	}else{
+	} else {
 		[button setImage:nil];
 	}
 }
@@ -420,9 +420,9 @@
 {
     AIListContact	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
     
-    if(selectedObject){
+    if (selectedObject) {
 		NSArray *locations;
-		if ([selectedObject isStranger]){
+		if ([selectedObject isStranger]) {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -430,7 +430,7 @@
 				[NSNumber numberWithInt:Context_Contact_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Stranger_TabAction],
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
-		}else{
+		} else {
 			locations = [NSArray arrayWithObjects:
 				[NSNumber numberWithInt:Context_Contact_Manage],
 				[NSNumber numberWithInt:Context_Contact_Action],
@@ -463,7 +463,7 @@
 	//Update our contained chats array to mirror the order of the tabs
 	[containedChats release]; containedChats = [[NSMutableArray alloc] init];
 	enumerator = [[tabView_messages tabViewItems] objectEnumerator];
-	while((tabViewItem = [enumerator nextObject])){
+	while ((tabViewItem = [enumerator nextObject])) {
 		[containedChats addObject:[tabViewItem chat]];
 	}
 	
@@ -504,7 +504,7 @@
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
 {
     NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]];
-    if([type isEqualToString:NSRTFPboardType]){ //got RTF data
+    if ([type isEqualToString:NSRTFPboardType]) { //got RTF data
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
         return(YES);
     }
@@ -518,19 +518,19 @@
 //Update the visibility of our tab bar (Tab bar is visible if autohide is off, or if there are 2 or more tabs present)
 - (void)updateTabBarVisibilityAndAnimate:(BOOL)animate
 {
-    if(tabView_messages != nil){
+    if (tabView_messages != nil) {
         BOOL    shouldShowTabs = (supressHiding || alwaysShowTabs || ([tabView_messages numberOfTabViewItems] > 1));
 
-        if(shouldShowTabs != tabBarIsVisible){
+        if (shouldShowTabs != tabBarIsVisible) {
             tabBarIsVisible = shouldShowTabs;
             
 			//We invoke both of these on a delay to prevent a display issue when dragging completes and the tab bar
 			//is momentarily told to hide and then quickly to become visible again
-			if(animate){
+			if (animate) {
 				[self performSelector:@selector(_resizeTabBarAbsolute:)
 						   withObject:[NSNumber numberWithBool:YES]
 						   afterDelay:0.0001];
-			}else{
+			} else {
 				[self _resizeTabBarAbsolute:[NSNumber numberWithBool:YES]];
 			}
         }
@@ -541,7 +541,7 @@
 //- (void)_resizeTabBarTimer:(NSTimer *)inTimer
 //{
 //    //If the tab bar isn't at the right height, we set ourself to adjust it again
-//    if(![self _resizeTabBarAbsolute:[NSNumber numberWithBool:NO]]){ 
+//    if (![self _resizeTabBarAbsolute:[NSNumber numberWithBool:NO]]) { 
 //        [NSTimer scheduledTimerWithTimeInterval:(1.0/TAB_BAR_FPS)
 //										 target:self
 //									   selector:@selector(_resizeTabBarTimer:)
@@ -562,7 +562,7 @@
     
     //Move the tab view's height towards this desired height
     int distance = (destHeight - tabSize.height) * TAB_BAR_STEP;
-    if([absolute boolValue] || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
+    if ([absolute boolValue] || (distance > -1 && distance < 1)) distance = destHeight - tabSize.height;
 
     tabSize.height += distance;
     [tabView_customTabs setFrameSize:tabSize];
@@ -594,11 +594,11 @@
 {
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
-    if(sender == nil || type){
-        if(![[self window] isKeyWindow]) [[self window] makeKeyAndOrderFront:nil];
+    if (sender == nil || type) {
+        if (![[self window] isKeyWindow]) [[self window] makeKeyAndOrderFront:nil];
 		[self _suppressTabHiding:YES];
         return(NSDragOperationPrivate);
-    }else{
+    } else {
 		return(NSDragOperationNone);
 	}
 
@@ -607,7 +607,7 @@
 {
 	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 	
-    if(sender == nil || type) [self _suppressTabHiding:NO];
+    if (sender == nil || type) [self _suppressTabHiding:NO];
 }
 
 - (void)_suppressTabHiding:(BOOL)suppress
@@ -621,7 +621,7 @@
 {
 	id	controller = [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] messageViewController];
 	
-	if([controller respondsToSelector:@selector(adiumPrint:)]){
+	if ([controller respondsToSelector:@selector(adiumPrint:)]) {
 		[controller adiumPrint:sender];
 	}
 }

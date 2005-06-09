@@ -49,7 +49,7 @@
     NSMutableAttributedString       *newMessage = nil;
 
     if (inAttributedString && 
-		([[inAttributedString string] rangeOfString:@"$$" options:NSLiteralSearch].location != NSNotFound)){
+		([[inAttributedString string] rangeOfString:@"$$" options:NSLiteralSearch].location != NSNotFound)) {
 		NSScanner       *stringScanner;
 		NSArray         *returnTypes;
 		NSPasteboard    *pb;
@@ -62,17 +62,17 @@
 		
 		[stringScanner setCharactersToBeSkipped:[[[NSCharacterSet alloc] init] autorelease]];
 		
-		while([stringScanner isAtEnd] == NO){
+		while ([stringScanner isAtEnd] == NO) {
 			[stringScanner scanUpToString:@"$$" intoString:nil];
 			[stringScanner scanString:@"$$" intoString:nil];
 			
 			i = [stringScanner scanLocation];
-			if([stringScanner scanUpToString:@"$$" intoString:&innerLaTeX] && ![stringScanner isAtEnd]){
+			if ([stringScanner scanUpToString:@"$$" intoString:&innerLaTeX] && ![stringScanner isAtEnd]) {
 				[stringScanner setScanLocation:([stringScanner scanLocation]+2)];
 
 				[pb declareTypes:returnTypes owner:self];
 				[pb setString:innerLaTeX forType:NSStringPboardType];
-				if(NSPerformService(@"Equation Service/Typeset Equation", pb)){
+				if (NSPerformService(@"Equation Service/Typeset Equation", pb)) {
 					NSString                    *fullLaTeX;
 					NSMutableAttributedString   *replacement;
 					
@@ -85,7 +85,7 @@
 										 range:NSMakeRange(0,1)];
 					
 					// insert the image
-					if(!newMessage) // only create the copy if needed
+					if (!newMessage) // only create the copy if needed
 						newMessage = [[inAttributedString mutableCopy] autorelease];
 
 					[newMessage replaceCharactersInRange:NSMakeRange(i-2-removedChars, [fullLaTeX length]) 

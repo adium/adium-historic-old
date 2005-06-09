@@ -51,16 +51,16 @@
 	
 	yOffset = 0;
 	tableColumn = [[self tableColumns] objectAtIndex:0];
-	for(i = 0; i < count; i++){
+	for (i = 0; i < count; i++) {
 		
 		row = buf[i];
 		id		cell = [tableColumn dataCellForRow:row];
 		
 		//Render the cell
-		if([[self delegate] respondsToSelector:@selector(tableView:willDisplayCell:forTableColumn:row:)]){
+		if ([[self delegate] respondsToSelector:@selector(tableView:willDisplayCell:forTableColumn:row:)]) {
 			[[self delegate] tableView:self willDisplayCell:cell forTableColumn:nil row:row];
 		}
-		if([[self dataSource] respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)]){
+		if ([[self dataSource] respondsToSelector:@selector(tableView:objectValueForTableColumn:row:)]) {
 			[cell setObjectValue:[[self dataSource] tableView:self objectValueForTableColumn:nil row:row]];
 		}
 		
@@ -71,10 +71,10 @@
 		NSRect	targetFrame = NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height);
 		
 		//Cute little hack so we can do drag images when using BZGenericViewCell to put views into tables
-		if([cell isKindOfClass:[BZGenericViewCell class]]){
+		if ([cell isKindOfClass:[BZGenericViewCell class]]) {
 			[(BZGenericViewCell *)cell drawEmbeddedViewWithFrame:targetFrame
 														  inView:self];
-		}else{
+		} else {
 			[cell drawWithFrame:targetFrame
 						 inView:self];
 		}
@@ -115,7 +115,7 @@
 	unsigned int	i, bufSize = [dragRows count];
 	unsigned int	*buf = malloc(bufSize * sizeof(unsigned int));
 	
-	for(i = 0; i < bufSize; i++){
+	for (i = 0; i < bufSize; i++) {
 		buf[i] = [[dragRows objectAtIndex:0] unsignedIntValue];
 	}
 	

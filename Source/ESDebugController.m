@@ -46,7 +46,7 @@ static ESDebugController	*sharedDebugController = nil;
 	
 	//Restore the debug window if it was open when we quit last time
 	if ([[[adium preferenceController] preferenceForKey:KEY_DEBUG_WINDOW_OPEN
-												  group:GROUP_DEBUG] boolValue]){
+												  group:GROUP_DEBUG] boolValue]) {
 		[ESDebugWindowController showDebugWindow];
 	}
 }

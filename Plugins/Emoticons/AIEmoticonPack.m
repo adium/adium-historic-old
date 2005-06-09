@@ -57,7 +57,7 @@
 //Init
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		path = [inPath retain];
 		name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
@@ -106,7 +106,7 @@
 //Our emoticons
 - (NSArray *)emoticons
 {
-	if(!emoticonArray) [self loadEmoticons];
+	if (!emoticonArray) [self loadEmoticons];
 	return(emoticonArray);
 }
 
@@ -118,7 +118,7 @@
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self emoticons] objectEnumerator];
-    while((emoticon = [enumerator nextObject])){
+    while ((emoticon = [enumerator nextObject])) {
         [emoticon setEnabled:(![inArray containsObject:[emoticon name]])];
     }
 }
@@ -153,35 +153,39 @@
 //Returns the emoticons in this pack
 - (void)loadEmoticons
 {
+//	NSBundle	*emoticonPackBundle;
+	
 	[emoticonArray release]; emoticonArray = [[NSMutableArray alloc] init];
 	[serviceClass release]; serviceClass = nil;
 
+#warning Localization
+//	if (emoticonPackBundle = [NSBundle bundleWithPath:
 	//
 	NSString		*infoDictPath = [path stringByAppendingPathComponent:EMOTICON_PLIST_FILENAME];
 	NSDictionary	*infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
 	
 	//If no info dict was found, assume that this is an old emoticon pack and try to upgrade it
-	if(!infoDict){
+	if (!infoDict) {
 		[self _upgradeEmoticonPack:path];
 		infoDict = [NSDictionary dictionaryWithContentsOfFile:infoDictPath];
 	}
 	
 	//Load the emoticons
-	if(infoDict){
+	if (infoDict) {
 		/* Handle optional location key, which allows emoticons to be loaded
 		 * from arbitrary directories. This is only used by the iChat emoticon
 		 * pack.
 		 */
 		id possiblePaths = [infoDict objectForKey:EMOTICON_LOCATION];
-		if(possiblePaths){
-			if([possiblePaths isKindOfClass:[NSString class]]){
+		if (possiblePaths) {
+			if ([possiblePaths isKindOfClass:[NSString class]]) {
 				possiblePaths = [NSArray arrayWithObjects:possiblePaths, nil];
 			}
 
 			NSEnumerator *pathEnumerator = [possiblePaths objectEnumerator];
 			NSString *aPath;
 
-			while((aPath = [pathEnumerator nextObject])){
+			while ((aPath = [pathEnumerator nextObject])) {
 				NSString *possiblePath;
 				NSArray *splitPath = [aPath componentsSeparatedByString:EMOTICON_LOCATION_SEPARATOR];
 
@@ -192,9 +196,9 @@
 				 *
 				 * The separator in the latter is ////, defined as EMOTICON_LOCATION_SEPARATOR.
 				 */
-				if([splitPath count] == 1){
+				if ([splitPath count] == 1) {
 					possiblePath = [splitPath objectAtIndex:0];
-				}else{
+				} else {
 					NSArray *components = [NSArray arrayWithObjects:
 						[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
 						[splitPath objectAtIndex:1],
@@ -207,7 +211,7 @@
 				 * directory, then the standard location will be used.
 				 */
 				BOOL isDir;
-				if([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir){
+				if ([[NSFileManager defaultManager] fileExistsAtPath:possiblePath isDirectory:&isDir] && isDir) {
 					[emoticonLocation release];
 					emoticonLocation = [possiblePath retain];
 					break;
@@ -217,19 +221,19 @@
 
 		int version = [[infoDict objectForKey:EMOTICON_PACK_VERSION] intValue];
 		
-		switch(version){
+		switch (version) {
 			case 0: [self loadProteusEmoticons:infoDict]; break;
 			case 1: [self loadAdiumEmoticons:[infoDict objectForKey:EMOTICON_LIST]]; break;
 			default: break;
 		}
 		
 		serviceClass = [[infoDict objectForKey:EMOTICON_SERVICE_CLASS] retain];
-		if(!serviceClass){
-			if([name rangeOfString:@"AIM"].location != NSNotFound){
+		if (!serviceClass) {
+			if ([name rangeOfString:@"AIM"].location != NSNotFound) {
 				serviceClass = [@"AIM-compatible" retain];
-			}else if([name rangeOfString:@"MSN"].location != NSNotFound){
+			} else if ([name rangeOfString:@"MSN"].location != NSNotFound) {
 				serviceClass = [@"MSN" retain];
-			}else if([name rangeOfString:@"Yahoo"].location != NSNotFound){
+			} else if ([name rangeOfString:@"Yahoo"].location != NSNotFound) {
 				serviceClass = [@"Yahoo!" retain];
 			}
 		}
@@ -245,10 +249,10 @@
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
 	
-	while((fileName = [enumerator nextObject])){
+	while ((fileName = [enumerator nextObject])) {
 		id	dict = [emoticons objectForKey:fileName];
 		
-		if([dict isKindOfClass:[NSDictionary class]]){
+		if ([dict isKindOfClass:[NSDictionary class]]) {
 			[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[emoticonLocation stringByAppendingPathComponent:fileName]
 														  equivalents:[(NSDictionary *)dict objectForKey:EMOTICON_EQUIVALENTS]
 																 name:[(NSDictionary *)dict objectForKey:EMOTICON_NAME]
@@ -263,7 +267,7 @@
 	NSEnumerator	*enumerator = [emoticons keyEnumerator];
 	NSString		*fileName;
 	
-	while((fileName = [enumerator nextObject])){
+	while ((fileName = [enumerator nextObject])) {
 		NSDictionary	*dict = [emoticons objectForKey:fileName];
 		
 		[emoticonArray addObject:[AIEmoticon emoticonWithIconPath:[path stringByAppendingPathComponent:fileName]
@@ -281,7 +285,7 @@
     
     //Flag our emoticons as enabled/disabled
     enumerator = [[self emoticons] objectEnumerator];
-    while((emoticon = [enumerator nextObject])){
+    while ((emoticon = [enumerator nextObject])) {
         [emoticon flushEmoticonImageCache];
     }
 }
@@ -316,15 +320,15 @@
 	
 	//Process all .emoticons in the old pack
 	enumerator = [[NSFileManager defaultManager] enumeratorAtPath:tempPackPath];
-	while((fileName = [enumerator nextObject])){        
-		if([[fileName lastPathComponent] characterAtIndex:0] != '.' &&
-		   [[fileName pathExtension] caseInsensitiveCompare:EMOTICON_PATH_EXTENSION] == 0){
+	while ((fileName = [enumerator nextObject])) {        
+		if ([[fileName lastPathComponent] characterAtIndex:0] != '.' &&
+		   [[fileName pathExtension] caseInsensitiveCompare:EMOTICON_PATH_EXTENSION] == 0) {
 			NSString        *emoticonPath = [tempPackPath stringByAppendingPathComponent:fileName];
 			BOOL            isDirectory;
 			
 			//Ensure that this is a folder and that it is non-empty
 			[mgr fileExistsAtPath:emoticonPath isDirectory:&isDirectory];
-			if(isDirectory){
+			if (isDirectory) {
 				NSString	*emoticonName = [fileName stringByDeletingPathExtension];
 				
 				//Get the text equivalents out of this .emoticon
@@ -334,7 +338,7 @@
 				NSString 	*imagePath = [self _imagePathForEmoticonPath:emoticonPath];
 				NSString	*imageExtension = [imagePath pathExtension];
 				
-				if(emoticonStrings && imagePath){
+				if (emoticonStrings && imagePath) {
 					NSString	*newImageName = [emoticonName stringByAppendingPathExtension:imageExtension];
 					
 					//Move the image into our new pack (with a unique name)
@@ -367,8 +371,8 @@
     
     //Search for the file named Emoticon in our bundle (It can be in any image format)
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
-    while((fileName = [enumerator nextObject])){
-		if([fileName hasPrefix:@"Emoticon"]) return([inPath stringByAppendingPathComponent:fileName]);
+    while ((fileName = [enumerator nextObject])) {
+		if ([fileName hasPrefix:@"Emoticon"]) return([inPath stringByAppendingPathComponent:fileName]);
     }
     
     return(nil);
@@ -381,7 +385,7 @@
 	NSArray 	*textEquivalents = nil;
 	
 	//Fetch the text equivalents
-	if([[NSFileManager defaultManager] fileExistsAtPath:equivFilePath]){
+	if ([[NSFileManager defaultManager] fileExistsAtPath:equivFilePath]) {
 		NSString	*equivString;
 		
 		//Convert the text file into an array of strings
@@ -402,8 +406,8 @@
     
     //Step through all the invalid endlines
     charRange = [inString rangeOfCharacterFromSet:newlineSet];
-    while(charRange.length != 0){
-        if(!newString) newString = [[inString mutableCopy] autorelease];
+    while (charRange.length != 0) {
+        if (!newString) newString = [[inString mutableCopy] autorelease];
 		
         //Replace endline and continue
         [newString replaceCharactersInRange:charRange withString:@"\r"];

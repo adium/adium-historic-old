@@ -12,7 +12,7 @@
 
 - (void)drawRect:(NSRect)inRect
 {
-    if([[self window] isTextured]){
+    if ([[self window] isTextured]) {
 	NSFont			*font = [NSFont boldSystemFontOfSize:[[self font] pointSize]];
 	NSRect			bounds = [self bounds];
 	NSDictionary		*attributes;
@@ -36,7 +36,7 @@
 	    font, NSFontAttributeName, nil];
     
 	[[self stringValue] drawInRect:NSOffsetRect(bounds, +2, 0) withAttributes:attributes];
-    }else{
+    } else {
 	[super drawRect:inRect];
     }
 }

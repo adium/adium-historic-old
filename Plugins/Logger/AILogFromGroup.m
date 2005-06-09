@@ -23,7 +23,7 @@
 //A group of logs from one of our accounts
 - (AILogFromGroup *)initWithPath:(NSString *)inPath fromUID:(NSString *)inFromUID serviceClass:(NSString *)inServiceClass;
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		path = [inPath retain];
 		fromUID = [inFromUID retain];
@@ -59,7 +59,7 @@
 //Returns all of our 'to' groups, creating them if necessary
 - (NSArray *)toGroupArray
 {
-    if(!toGroupArray){
+    if (!toGroupArray) {
 		NSEnumerator    *enumerator;
 		NSString		*folderName;
 		NSString		*fullPath;
@@ -70,7 +70,7 @@
 		//
 		fullPath = [[AILoggerPlugin logBasePath] stringByAppendingPathComponent:path];
 		enumerator = [[[NSFileManager defaultManager] directoryContentsAtPath:fullPath] objectEnumerator];
-		while((folderName = [enumerator nextObject])){
+		while ((folderName = [enumerator nextObject])) {
 			AILogToGroup    *toGroup = nil;
 			
 			//#### Why does this alloc fail sometimes? ####
@@ -80,7 +80,7 @@
 											serviceClass:serviceClass];
 			
 			//Not sure why, but I've had that alloc fail on me before
-			if(toGroup != nil) [toGroupArray addObject:toGroup];
+			if (toGroup != nil) [toGroupArray addObject:toGroup];
 			
 			[toGroup release];
 		}

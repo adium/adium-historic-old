@@ -26,13 +26,13 @@
 	theCount = [self count];
 	theResultArray = [NSMutableArray arrayWithCapacity:theCount];
 
-	for( theIndex = 0; theIndex < theCount && theContinue == YES; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount && theContinue == YES; theIndex++ )
 	{
 		id		theResult;
 		
 		theResult = aFunc([self objectAtIndex:theIndex], &theContinue );
 
-		if( theResult ) [theResultArray addObject:theResult];
+		if ( theResult ) [theResultArray addObject:theResult];
 	}
 
 	return theResultArray;
@@ -50,13 +50,13 @@
 	theCount = [self count];
 	theResultArray = [NSMutableArray arrayWithCapacity:theCount];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 	{
 		id		theObject;
 
 		theObject = [self objectAtIndex:theIndex];
 
-		if( [theObject isKindOfClass:aClass] )
+		if ( [theObject isKindOfClass:aClass] )
 			[theResultArray addObject:theObject];
 	}
 
@@ -71,8 +71,8 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
-		if( !aFunc([self objectAtIndex:theIndex]) ) return NO;
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
+		if ( !aFunc([self objectAtIndex:theIndex]) ) return NO;
 
 	return YES;
 }
@@ -85,8 +85,8 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
-		if( !aFunc( [self objectAtIndex:theIndex], aContext ) ) return NO;
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
+		if ( !aFunc( [self objectAtIndex:theIndex], aContext ) ) return NO;
 
 	return YES;
 }
@@ -99,8 +99,8 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
-		if( !aFunc( [self objectAtIndex:theIndex], anObject ) ) return NO;
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
+		if ( !aFunc( [self objectAtIndex:theIndex], anObject ) ) return NO;
 
 	return YES;
 }
@@ -114,10 +114,10 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 
-	for( theIndex = 0; theIndex < theCount && theFoundObject == nil; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount && theFoundObject == nil; theIndex++ )
 	{
 		id		theObject = [self objectAtIndex:theIndex];
-		if( aFunc( theObject ) )
+		if ( aFunc( theObject ) )
 				theFoundObject = theObject;
 	}
 
@@ -133,10 +133,10 @@
 	unsigned int		theIndex,
 		theCount = [self count];
 
-	for( theIndex = 0; theIndex < theCount && theFoundObject == nil; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount && theFoundObject == nil; theIndex++ )
 	{
 		id		theObject = [self objectAtIndex:theIndex];
-		if( aFunc( theObject, aContext ) )
+		if ( aFunc( theObject, aContext ) )
 			theFoundObject = theObject;
 	}
 
@@ -149,10 +149,10 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 	{
 		id		theObject = [self objectAtIndex:theIndex];
-		if( aFunc( theObject ) )
+		if ( aFunc( theObject ) )
 			[theFoundObjectArray addObject:theObject];
 	}
 	
@@ -165,10 +165,10 @@
 	unsigned int		theIndex,
 		theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 	{
 		id		theObject = [self objectAtIndex:theIndex];
-		if( aFunc( theObject, aContext ) )
+		if ( aFunc( theObject, aContext ) )
 			[theFoundObjectArray addObject:theObject];
 	}
 	
@@ -184,9 +184,9 @@
 							theFoundIndex = NSNotFound,
 							theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
 	{
-		if( aFunc( [self objectAtIndex:theIndex] ) )
+		if ( aFunc( [self objectAtIndex:theIndex] ) )
 			theFoundIndex = theIndex;
 	}
 	
@@ -202,9 +202,9 @@
 	theFoundIndex = NSNotFound,
 							theCount = [self count];
 
-	for( theIndex = 0; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount && theFoundIndex == NSNotFound; theIndex++ )
 	{
-		if( aFunc( [self objectAtIndex:theIndex], aContext ) )
+		if ( aFunc( [self objectAtIndex:theIndex], aContext ) )
 			theFoundIndex = theIndex;
 	}
 
@@ -216,7 +216,7 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 		[aTarget performSelector:aSelector withObject:[self objectAtIndex:theIndex]];
 }
 
@@ -225,7 +225,7 @@
 	unsigned int		theIndex,
 							theCount = [self count];
 	
-	for( theIndex = 0; theIndex < theCount; theIndex++ )
+	for ( theIndex = 0; theIndex < theCount; theIndex++ )
 		[aTarget performSelector:aSelector withObject:[self objectAtIndex:theIndex] withObject:anObject];
 }
 

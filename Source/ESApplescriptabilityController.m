@@ -93,23 +93,23 @@
 
 - (AIStatusSummary)myStatus
 {
-	if ([[adium accountController] oneOrMoreConnectedAccounts]){
+	if ([[adium accountController] oneOrMoreConnectedAccounts]) {
 		AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
 		
-		if ([activeStatusState statusType] != AIAvailableStatus){
-			if ([self myIdleTime]){
+		if ([activeStatusState statusType] != AIAvailableStatus) {
+			if ([self myIdleTime]) {
 				return AIAwayAndIdleStatus;
-			}else{
+			} else {
 				return AIAwayStatus;
 			}
 			
-		}else if([self myIdleTime]){
+		} else if ([self myIdleTime]) {
 			return AIIdleStatus;
-		}else{
+		} else {
 			return AIAvailableStatus;
 		}
 		
-	}else{
+	} else {
 		return AIOfflineStatus;	
 	}
 }
@@ -119,7 +119,7 @@
 {
 	AIStatus	*activeStatusState = [[[adium statusController] activeStatusState] mutableCopy];
 	
-	switch(newStatus){
+	switch (newStatus) {
 		case AIAvailableStatus:
 			[activeStatusState setStatusType:AIAvailableStatusType];
 			break;
@@ -179,7 +179,7 @@
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
 
-	if(contact){
+	if (contact) {
 		//Open the chat and set it as active
 		chat = [[adium contentController] openChatWithContact:contact];
 		[[adium interfaceController] setActiveChat:chat];

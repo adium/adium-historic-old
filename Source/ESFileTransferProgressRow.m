@@ -43,7 +43,7 @@
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer withOwner:(id)inOwner
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		sizeString = nil;
 		forceUpdate = NO;
 
@@ -131,7 +131,7 @@
 	NSString	*filename = [inLocalFilename lastPathComponent];
 	
 	//If we don't have a local file name, try to use the remote file name.
-	if(!filename) filename = [[inFileTransfer remoteFilename] lastPathComponent];
+	if (!filename) filename = [[inFileTransfer remoteFilename] lastPathComponent];
 	
 	[view setFileName:filename];
 
@@ -157,7 +157,7 @@
 	FileTransferStatus	status = [inFileTransfer status];
 	
 	//Don't update continously; on a LAN transfer, for instance, we'll get almost constant updates
-	if(lastUpdateTick && (((updateTick - lastUpdateTick) / 60.0) < 0.2) && (status == In_Progress_FileTransfer) && !forceUpdate){
+	if (lastUpdateTick && (((updateTick - lastUpdateTick) / 60.0) < 0.2) && (status == In_Progress_FileTransfer) && !forceUpdate) {
 		return;
 	}
 
@@ -165,14 +165,14 @@
 	NSString			*transferBytesStatus = nil, *transferSpeedStatus = nil, *transferRemainingStatus = nil;
 	FileTransferType	type = [inFileTransfer type];
 	
-	if(!size){
+	if (!size) {
 		size = [inFileTransfer size];
 		
 		[sizeString release];
 		sizeString = [[[adium fileTransferController] stringForSize:size] retain];		
 	}
 
-	switch(status){
+	switch (status) {
 		case Unknown_Status_FileTransfer:
 		case Not_Started_FileTransfer:
 		case Accepted_FileTransfer:
@@ -196,10 +196,10 @@
 			break;
 	}
 
-	if(type == Unknown_FileTransfer || status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer){
+	if (type == Unknown_FileTransfer || status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer) {
 		transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Initiating file transfer...",nil)];		
-	}else{		
-		switch(status){
+	} else {		
+		switch (status) {
 			case Accepted_FileTransfer:
 				transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Accepted file transfer...",nil)];		
 			break;
@@ -209,7 +209,7 @@
 																							  of:size
 																						ofString:sizeString];
 
-				switch(type){
+				switch (type) {
 					case Incoming_FileTransfer:
 						transferBytesStatus = BYTES_RECEIVED;
 						break;
@@ -225,7 +225,7 @@
 			case Complete_FileTransfer:
 			{
 				NSString			*bytesString = [[adium fileTransferController] stringForSize:bytesSent];
-				switch(type){
+				switch (type) {
 					case Incoming_FileTransfer:
 						transferBytesStatus = BYTES_RECEIVED;
 						break;
@@ -249,18 +249,18 @@
 		}
 	}
 	
-	if((status == In_Progress_FileTransfer) && lastUpdateTick && lastBytesSent){
-		if(updateTick != lastUpdateTick){
+	if ((status == In_Progress_FileTransfer) && lastUpdateTick && lastBytesSent) {
+		if (updateTick != lastUpdateTick) {
 			unsigned long long	rate;
 			
 			rate = ((bytesSent - lastBytesSent) / ((updateTick - lastUpdateTick) / 60.0));
 			transferSpeedStatus = [NSString stringWithFormat:AILocalizedString(@"%@ per sec.",nil),[[adium fileTransferController] stringForSize:rate]];
 			
-			if(rate > 0){
+			if (rate > 0) {
 				unsigned long long secsRemaining = ((size - bytesSent) / rate);
 				transferRemainingStatus = [NSString stringWithFormat:AILocalizedString(@"%@ remaining.",nil),[self readableTimeForSecs:secsRemaining inLongFormat:YES]];
 				
-			}else{
+			} else {
 				transferRemainingStatus = AILocalizedString(@"Stalled","file transfer is stalled status message");
 			}
 		}
@@ -279,7 +279,7 @@
 {
 	NSImage	*iconImage;
 
-	if((iconImage = [fileTransfer iconImage])){
+	if ((iconImage = [fileTransfer iconImage])) {
 		[view setIconImage:iconImage];		
 	}
 }
@@ -308,13 +308,13 @@
 }
 - (IBAction)openFileAction:(id)sender
 {
-	if([fileTransfer status] == Complete_FileTransfer){
+	if ([fileTransfer status] == Complete_FileTransfer) {
 		[fileTransfer openFile];
 	}
 }
 - (void)removeRowAction:(id)sender
 {
-	if([fileTransfer isStopped]){
+	if ([fileTransfer isStopped]) {
 		[owner _removeFileTransferRow:self];
 	}
 }
@@ -326,8 +326,8 @@
 	NSMenuItem  *menuItem;
 	
 	//Allow open and show in finder on complete incoming transfers and all outgoing transfers
-	if(([fileTransfer status] == Complete_FileTransfer) ||
-	   ([fileTransfer type] == Outgoing_FileTransfer)){
+	if (([fileTransfer status] == Complete_FileTransfer) ||
+	   ([fileTransfer type] == Outgoing_FileTransfer)) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Open",nil)
 																		 target:self
 																		 action:@selector(openFileAction:)
@@ -342,13 +342,13 @@
 		
 	}	
 
-	if([fileTransfer isStopped]){
+	if ([fileTransfer isStopped]) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Remove from List",nil)
 																		 target:self
 																		 action:@selector(removeRowAction:)
 																  keyEquivalent:@""] autorelease];
 		[contextualMenu addItem:menuItem];	
-	}else{
+	} else {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Cancel",nil)
 																		 target:self
 																		 action:@selector(stopResumeAction:)
@@ -381,23 +381,23 @@
 	unsigned int val = 0.;
 	NSString *retval = nil;
 	
-	if( secs < 0 ) secs *= -1;
+	if ( secs < 0 ) secs *= -1;
 	
 	breaks = [[[desc allKeys] mutableCopy] autorelease];
 	[breaks sortUsingSelector:@selector( compare: )];
 	
-	while( i < [breaks count] && secs >= (NSTimeInterval) [[breaks objectAtIndex:i] unsignedIntValue] ) i++;
-	if( i > 0 ) i--;
+	while ( i < [breaks count] && secs >= (NSTimeInterval) [[breaks objectAtIndex:i] unsignedIntValue] ) i++;
+	if ( i > 0 ) i--;
 	stop = [[breaks objectAtIndex:i] unsignedIntValue];
 	
 	val = (unsigned int) ( secs / stop );
 	use = ( val > 1 ? plural : desc );
 	retval = [NSString stringWithFormat:@"%d %@", val, [use objectForKey:[NSNumber numberWithUnsignedInt:stop]]];
-	if( longFormat && i > 0 ) {
+	if ( longFormat && i > 0 ) {
 		unsigned int rest = (unsigned int) ( (unsigned int) secs % stop );
 		stop = [[breaks objectAtIndex:--i] unsignedIntValue];
 		rest = (unsigned int) ( rest / stop );
-		if( rest > 0 ) {
+		if ( rest > 0 ) {
 			use = ( rest > 1 ? plural : desc );
 			retval = [retval stringByAppendingFormat:@" %d %@", rest, [use objectForKey:[breaks objectAtIndex:i]]];
 		}

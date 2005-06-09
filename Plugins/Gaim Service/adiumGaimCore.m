@@ -39,7 +39,7 @@ static void adiumGaimDebugPrint(GaimDebugLevel level, const char *category, cons
 	
 	/*	AILog(@"%x: (Debug: %s) %s",[NSRunLoop currentRunLoop], category, arg_s); */
 	//Log error
-	if(!category) category = "general"; //Category can be nil
+	if (!category) category = "general"; //Category can be nil
 	
 	AILog(@"(Libgaim: %s) %s",category, arg_s);
 	
@@ -122,7 +122,7 @@ static void adiumGaimCoreUiInit(void)
 	//Clear the local blist on first launch of .82... temporary code.
 	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
 	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.82:Cleared blist.xml on first run"];
-	if(!clearedBlist || ![clearedBlist boolValue]){
+	if (!clearedBlist || ![clearedBlist boolValue]) {
 		[userDefaults setObject:[NSNumber numberWithBool:YES]
 						 forKey:@"Adium 0.82:Cleared blist.xml on first run"];
 

@@ -43,7 +43,7 @@
 	[super drawRect:rect];
 
 	if (([[self string] isEqualToString:@""]) && 
-		([[self window] firstResponder] != self)){
+		([[self window] firstResponder] != self)) {
 		NSSize	size = [self frame].size;
 		NSSize textContainerInset = [self textContainerInset];
 		

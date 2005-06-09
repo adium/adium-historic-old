@@ -46,40 +46,40 @@
 {
 	NSMutableAttributedString	*filteredMessage = nil;
 	
-	if(inAttributedString){
+	if (inAttributedString) {
 		//Filter keywords in the message
 		filteredMessage = [self replaceKeywordsInString:inAttributedString context:context];
 		
 		//Filter keywords in URLs (For AIM subprofile links, mostly)
 		int	length = [(filteredMessage ? filteredMessage : inAttributedString) length];
 		NSRange scanRange = NSMakeRange(0, 0);
-		while(NSMaxRange(scanRange) < length){
+		while (NSMaxRange(scanRange) < length) {
 			id linkURL = [(filteredMessage ? filteredMessage : inAttributedString) attribute:NSLinkAttributeName
 																					 atIndex:NSMaxRange(scanRange)
 																			  effectiveRange:&scanRange];
-			if(linkURL){
+			if (linkURL) {
 				NSString	*linkURLString;
 				
-				if([linkURL isKindOfClass:[NSURL class]]){
+				if ([linkURL isKindOfClass:[NSURL class]]) {
 					linkURLString = (NSString *)CFURLCreateStringByReplacingPercentEscapes(kCFAllocatorDefault,
 																						   (CFStringRef)[(NSURL *)linkURL absoluteString],
 																						   /* characters to leave escaped */ CFSTR(""));
 					[linkURLString autorelease];
 					
-				}else{
+				} else {
 					linkURLString = (NSString *)linkURL;
 				}
 				
-				if(linkURLString){
+				if (linkURLString) {
 					//If we found a URL, replace any keywords within it
 					NSString	*result = [[self replaceKeywordsInString:[NSAttributedString stringWithString:linkURLString]
 																 context:context] string];
 					
-					if(result){
+					if (result) {
 						NSURL		*newURL;
 						NSString	*escapedLinkURLString;
 						
-						if(!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
+						if (!filteredMessage) filteredMessage = [[inAttributedString mutableCopy] autorelease];
 						escapedLinkURLString = (NSString *)CFURLCreateStringByAddingPercentEscapes(/* allocator */ kCFAllocatorDefault,
 																								   (CFStringRef)result,
 																								   /* characters to leave unescaped */ NULL,
@@ -87,7 +87,7 @@
 																								   kCFStringEncodingUTF8);
 						newURL = [NSURL URLWithString:escapedLinkURLString];
 						
-						if(newURL){
+						if (newURL) {
 							[filteredMessage addAttribute:NSLinkAttributeName
 													value:newURL
 													range:scanRange];
@@ -117,18 +117,18 @@
 	//Our Name
 	//If we're passed content, our account will be the destination of that content
 	//If we're passed a list object, we can use the name of the preferred account for that object
-	if([str rangeOfString:@"%n"].location != NSNotFound){
+	if ([str rangeOfString:@"%n"].location != NSNotFound) {
 		NSString	*replacement = nil;
 
-		if([context isKindOfClass:[AIContentObject class]]){
+		if ([context isKindOfClass:[AIContentObject class]]) {
 			replacement = [[context destination] UID]; //This exists primarily for AIM compatibility; AIM uses the UID (no formatting).
-		}else if([context isKindOfClass:[AIListContact class]]){
+		} else if ([context isKindOfClass:[AIListContact class]]) {
 			replacement = [[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																				  toContact:context] formattedUID];
 		}
 
-		if(replacement){
-			if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+		if (replacement) {
+			if (!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
 			
 			[newAttributedString replaceOccurrencesOfString:@"%n"
 												 withString:replacement
@@ -138,11 +138,11 @@
 	}
 
 	//Current Date
-	if([str rangeOfString:@"%d"].location != NSNotFound){
+	if ([str rangeOfString:@"%d"].location != NSNotFound) {
 		NSCalendarDate	*currentDate = [NSCalendarDate calendarDate];
 		NSString		*calendarFormat = [[NSUserDefaults standardUserDefaults] objectForKey:NSShortDateFormatString];
 
-		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+		if (!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
 		
 		[newAttributedString replaceOccurrencesOfString:@"%d"
 											 withString:[currentDate descriptionWithCalendarFormat:calendarFormat]
@@ -151,12 +151,12 @@
 	}
 	
 	//Current Time
-	if([str rangeOfString:@"%t"].location != NSNotFound){
+	if ([str rangeOfString:@"%t"].location != NSNotFound) {
 		NSCalendarDate 	*currentDate = [NSCalendarDate calendarDate];
 		NSString		*localDateFormat = [NSDateFormatter localizedDateFormatStringShowingSeconds:YES
 																					  showingAMorPM:YES];
 		
-		if(!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
+		if (!newAttributedString) newAttributedString = [[attributedString mutableCopy] autorelease];
 
 		[newAttributedString replaceOccurrencesOfString:@"%t"
 											 withString:[currentDate descriptionWithCalendarFormat:localDateFormat]

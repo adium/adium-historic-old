@@ -44,7 +44,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName defaultName:(NSString *)inDefaultName explanatoryText:(NSString *)inExplanatoryText notifyingTarget:(id)inTarget userInfo:(id)inUserInfo
 {
-	if((self = [super initWithWindowNibName:windowNibName])){
+	if ((self = [super initWithWindowNibName:windowNibName])) {
 		defaultName = [inDefaultName retain];
 		explanatoryText = [inExplanatoryText retain];
 		target = [inTarget retain];
@@ -78,10 +78,10 @@
 {
 	NSString	*newName = [textField_name stringValue];
 	
-	if(![target respondsToSelector:@selector(presetNameSheetController:shouldAcceptNewName:userInfo:)] ||
+	if (![target respondsToSelector:@selector(presetNameSheetController:shouldAcceptNewName:userInfo:)] ||
 	   [target presetNameSheetController:self
 					 shouldAcceptNewName:newName
-								userInfo:userInfo]){
+								userInfo:userInfo]) {
 		
 		[target presetNameSheetControllerDidEnd:self 
 									 returnCode:ESPresetNameSheetOkayReturn 
@@ -90,7 +90,7 @@
 		
 		[self closeWindow:nil];
 
-	}else{
+	} else {
 		NSString	*nameInUseText;
 		
 		nameInUseText = [NSString stringWithFormat:AILocalizedString(@"\"%@\" is already in use.",nil), newName];

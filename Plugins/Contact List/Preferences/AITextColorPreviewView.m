@@ -51,17 +51,17 @@
 	NSShadow			*shadow = nil;
 
 	//Background
-	if(backgroundGradientColor){
+	if (backgroundGradientColor) {
 		[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
 							   secondColor:[backgroundColor color]
 								 direction:AIVertical] drawInRect:rect];
-	}else{
+	} else {
 		[(backColorOverride ? backColorOverride : [backgroundColor color]) set];
 		[NSBezierPath fillRect:rect];
 	}
 
 	//Shadow
-	if([textShadowColor color]){
+	if ([textShadowColor color]) {
 		shadow = [[[NSShadow alloc] init] autorelease];
 		[shadow setShadowOffset:NSMakeSize(0.0, -1.0)];
 		[shadow setShadowBlurRadius:2.0];
@@ -74,7 +74,7 @@
 		[NSParagraphStyle styleWithAlignment:NSCenterTextAlignment], NSParagraphStyleAttributeName,
 		[textColor color], NSForegroundColorAttributeName,
 		nil];
-	if(shadow) [attributes setObject:shadow forKey:NSShadowAttributeName];
+	if (shadow) [attributes setObject:shadow forKey:NSShadowAttributeName];
 	
 	sample = [[[NSAttributedString alloc] initWithString:AILocalizedString(@"Sample",nil)
 											  attributes:attributes] autorelease];
@@ -96,7 +96,7 @@
 //Overrides.  pass nil to disable
 - (void)setBackColorOverride:(NSColor *)inColor
 {
-	if(backColorOverride != inColor){
+	if (backColorOverride != inColor) {
 		[backColorOverride release];
 		backColorOverride = [inColor retain];
 	}

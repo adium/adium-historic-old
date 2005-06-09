@@ -34,7 +34,7 @@
 //Init
 - (id)initWithImage:(NSImage *)inImage
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		image = [inImage retain];
 		
@@ -65,7 +65,7 @@
 //Set the image frame color
 - (void)setFrameColor:(NSColor *)inBorderColor
 {
-    if(borderColor != inBorderColor){
+    if (borderColor != inBorderColor) {
         [borderColor release];
         borderColor = [inBorderColor retain];
     }
@@ -93,7 +93,7 @@
 			 fraction:opacity];
 	
     //
-    if(drawFrame){
+    if (drawFrame) {
         NSBezierPath * internalPath = [NSBezierPath bezierPathWithRoundedRect:cellFrame radius:4];
         
         [internalPath transformUsingAffineTransform:aliasShift];

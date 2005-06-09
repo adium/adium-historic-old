@@ -28,12 +28,12 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 + (void)initialize
 {
-	if(self == [AIServiceIcons class]){
+	if (self == [AIServiceIcons class]) {
 		int i, j;
 
 		//Allocate our service icon cache
-		for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
-			for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+		for (i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++) {
+			for (j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
 				serviceIcons[i][j] = [[NSMutableDictionary alloc] init];
 			}
 		}
@@ -63,14 +63,14 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 	serviceIcon = [serviceIcons[iconType][iconDirection] objectForKey:serviceID];
 
 	//Load the service icon if necessary
-	if(!serviceIcon){
+	if (!serviceIcon) {
 		NSString	*path = [serviceIconBasePath stringByAppendingPathComponent:[serviceIconNames[iconType] objectForKey:serviceID]];
 
-		if(path){
+		if (path) {
 			serviceIcon = [[NSImage alloc] initWithContentsOfFile:path];
 
-			if(serviceIcon){
-				if(iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
+			if (serviceIcon) {
+				if (iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
 				[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:serviceID];
 			}
 
@@ -84,10 +84,10 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 //Set the active service icon pack
 + (BOOL)setActiveServiceIconsFromPath:(NSString *)inPath
 {
-	if(!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]){
+	if (!serviceIconBasePath || ![serviceIconBasePath isEqualToString:inPath]) {
 		NSDictionary	*serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 
-		if(serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+		if (serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
 			[serviceIconBasePath release];
 			serviceIconBasePath = [inPath retain];
 
@@ -103,8 +103,8 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 			//Clear out the service icon cache
 			int i, j;
 
-			for(i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++){
-				for(j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++){
+			for (i = 0; i < NUMBER_OF_SERVICE_ICON_TYPES; i++) {
+				for (j = 0; j < NUMBER_OF_ICON_DIRECTIONS; j++) {
 					[serviceIcons[i][j] removeAllObjects];
 				}
 			}
@@ -132,29 +132,29 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
 	iconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 
-	if(iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1){
+	if (iconDict && [[iconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
 		NSDictionary	*previewIconNames = [iconDict objectForKey:@"List"];
 		NSEnumerator	*enumerator = [[NSArray arrayWithObjects:@"AIM",@"Jabber",@"MSN",@"Yahoo!",nil] objectEnumerator];
 		NSString		*iconID;
 		int				xOrigin = 0;
 
 		[image lockFocus];
-		while((iconID = [enumerator nextObject])){
+		while ((iconID = [enumerator nextObject])) {
 			NSString	*anIconPath = [inPath stringByAppendingPathComponent:[previewIconNames objectForKey:iconID]];
 			NSImage		*anIcon;
 
-			if((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])){
+			if ((anIcon = [[[NSImage alloc] initWithContentsOfFile:anIconPath] autorelease])) {
 				NSSize	anIconSize = [anIcon size];
 				NSRect	targetRect = NSMakeRect(xOrigin, 0, PREVIEW_MENU_IMAGE_SIZE, PREVIEW_MENU_IMAGE_SIZE);
 
-				if(anIconSize.width < targetRect.size.width){
+				if (anIconSize.width < targetRect.size.width) {
 					float difference = (targetRect.size.width - anIconSize.width)/2;
 
 					targetRect.size.width -= difference;
 					targetRect.origin.x += difference;
 				}
 
-				if(anIconSize.height < targetRect.size.height){
+				if (anIconSize.height < targetRect.size.height) {
 					float difference = (targetRect.size.height - anIconSize.height)/2;
 
 					targetRect.size.height -= difference;

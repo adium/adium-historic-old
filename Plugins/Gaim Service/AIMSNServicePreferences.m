@@ -57,17 +57,17 @@
 
 - (IBAction)changePreference:(id)sender
 {
-	if(sender == checkBox_treatDisplayNamesAsStatus){
+	if (sender == checkBox_treatDisplayNamesAsStatus) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] 
 											 forKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS
 											  group:PREF_GROUP_MSN_SERVICE];
 		
-	}else if(sender == checkBox_conversationClosed){
+	} else if (sender == checkBox_conversationClosed) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] 
 											 forKey:KEY_MSN_CONVERSATION_CLOSED
 											  group:PREF_GROUP_MSN_SERVICE];
 		
-	}else if(sender == checkBox_conversationTimedOut){
+	} else if (sender == checkBox_conversationTimedOut) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]] 
 											 forKey:KEY_MSN_CONVERSATION_TIMED_OUT
 											  group:PREF_GROUP_MSN_SERVICE];

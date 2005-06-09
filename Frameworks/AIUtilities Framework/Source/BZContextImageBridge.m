@@ -30,17 +30,17 @@ const BOOL defaultHasAlpha = YES;
 	//we use calloc because it fills the buffer with 0 - that includes the
 	//  alpha, so when calloc is done, the buffer is filled with transparent.
 	buffer = calloc(bytesPerRow * (unsigned)size.height, sizeof(unsigned char));
-	if(buffer == NULL) return nil;
+	if (buffer == NULL) return nil;
 
 	CGColorSpaceRef deviceRGB = CGColorSpaceCreateDeviceRGB();
-	if(deviceRGB == NULL) {
+	if (deviceRGB == NULL) {
 		free(buffer);
 		return nil;
 	}
 
 	context = CGBitmapContextCreate(buffer, size.width, size.height, bpc, bytesPerRow, deviceRGB, hasAlpha ? kCGImageAlphaPremultipliedLast : kCGImageAlphaNone);
 	CFRelease(deviceRGB);
-	if(context == NULL) {
+	if (context == NULL) {
 		free(buffer);
 		return nil;
 	}
@@ -70,8 +70,8 @@ const BOOL defaultHasAlpha = YES;
 
 - (void)dealloc
 {
-	if(buffer) free(buffer);
-	if(context) CGContextRelease(context);
+	if (buffer) free(buffer);
+	if (context) CGContextRelease(context);
 	[image release];
 
 	[super dealloc];
@@ -95,7 +95,7 @@ const BOOL defaultHasAlpha = YES;
 //if it has been created, we return that image.
 - (NSImage *)image;
 {
-	if(image == nil) image = [self refreshImage];
+	if (image == nil) image = [self refreshImage];
 	return image;
 }
 - (NSImage *)refreshImage;
@@ -163,7 +163,7 @@ const BOOL defaultHasAlpha = YES;
 {
 	RGBColor  rgb;
 	RGBColor *rgbptr;
-	if(color != nil) {
+	if (color != nil) {
 		float red, green, blue;
 		[color getRed:&red green:&green blue:&blue alpha:NULL];
 		rgb.red   = 65535 * red;
@@ -183,7 +183,7 @@ const BOOL defaultHasAlpha = YES;
 	OSStatus err;
 
 	err = GetLabel(label, &rgb, /*labelString*/ NULL);
-	if(err == noErr) {
+	if (err == noErr) {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:&rgb flags:flags];
 	}
 
@@ -192,7 +192,7 @@ const BOOL defaultHasAlpha = YES;
 
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
-	if(icon == NULL) return NO;
+	if (icon == NULL) return NO;
 
 	CGRect cgbounds = CGRectMake(bounds.origin.x, bounds.origin.y, bounds.size.width, bounds.size.height);
 
@@ -213,7 +213,7 @@ const BOOL defaultHasAlpha = YES;
 {
 	IconRef icon = [self getIconWithType:type];
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		return noSuchIconErr;
 	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds];
@@ -229,7 +229,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
@@ -246,7 +246,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
@@ -261,7 +261,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];
@@ -277,7 +277,7 @@ const BOOL defaultHasAlpha = YES;
 {
 	IconRef icon = [self getIconWithType:type creator:creator];
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		return noSuchIconErr;
 	} else {
 		OSStatus err = [self plotIcon:icon inRect:bounds];
@@ -293,7 +293,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelNSColor:color flags:flags];
@@ -310,7 +310,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelIndex:label flags:flags];
@@ -325,7 +325,7 @@ const BOOL defaultHasAlpha = YES;
 	IconRef icon = [self getIconWithType:type creator:creator];
 	OSStatus err;
 
-	if(icon == NULL) {
+	if (icon == NULL) {
 		err = noSuchIconErr;
 	} else {
 		err = [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:color flags:flags];

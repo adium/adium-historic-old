@@ -22,9 +22,9 @@
 
 BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 {
-	if(in < 0x10000) {
-		if(outHigh) *outHigh = 0;
-		if(outLow)  *outLow  = in;
+	if (in < 0x10000) {
+		if (outHigh) *outHigh = 0;
+		if (outLow)  *outLow  = in;
 		return NO;
 	} else {
 		enum {
@@ -37,14 +37,14 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 			UTF16LowAdditiveMask  = 56320, //0b1101 1100 0000 0000
 		};
 
-		if(outHigh) {
+		if (outHigh) {
 			*outHigh = \
 				  ((in >> UTF32HighShiftToUTF16High) & UTF16HighMask) \
 				| ((in >> UTF32LowShiftToUTF16High) & UTF16LowMask) \
 				| UTF16HighAdditiveMask;
 		}
 
-		if(outLow) {
+		if (outLow) {
 			*outLow = (in & UTF32LowMask) | UTF16LowAdditiveMask;
 		}
 
@@ -55,9 +55,9 @@ BOOL AIGetSurrogates(UTF32Char in, UTF16Char *outHigh, UTF16Char *outLow)
 //this uses the algorithm employed by Darwin 7.x's rm(1).
 void AIWipeMemory(void *buf, size_t len)
 {
-	if(buf) {
+	if (buf) {
 		char *buf_char = buf;
-		for(unsigned long i = 0; i < len; ++i) {
+		for (unsigned long i = 0; i < len; ++i) {
 			buf_char[i] = 0xff;
 			buf_char[i] = 0x00;
 			buf_char[i] = 0xff;
@@ -68,15 +68,15 @@ void AIWipeMemory(void *buf, size_t len)
 void *AIReallocWired(void *oldBuf, size_t newLen)
 {
 	void *newBuf = malloc(newLen);
-	if(!newBuf) {
+	if (!newBuf) {
 		NSLog(@"in AIReallocWired: could not allocate %lu bytes", (unsigned long)newLen);
 	} else {
 		int mlock_retval = mlock(newBuf, newLen);
-		if(mlock_retval < 0) {
+		if (mlock_retval < 0) {
 			NSLog(@"in AIReallocWired: could not wire %lu bytes", (unsigned long)newLen);
 			free(newBuf);
 			newBuf = NULL;
-		} else if(oldBuf) {
+		} else if (oldBuf) {
 			size_t  oldLen = malloc_size(oldBuf);
 			size_t copyLen = MIN(newLen, oldLen);
 
@@ -95,7 +95,7 @@ void AISetRangeInMemory(void *buf, NSRange range, int ch)
 	unsigned i     = range.location;
 	unsigned i_max = range.location + range.length;
 	char *buf_ch = buf;
-	while(i < i_max) {
+	while (i < i_max) {
 		buf_ch[i++] = ch;
 	}
 }

@@ -31,7 +31,7 @@
 	serviceArray = (activeServicesOnly ? [[[AIObject sharedAdiumInstance] accountController] activeServices] : [[[AIObject sharedAdiumInstance] accountController] services]);
 	
 	//Divide our menu into sections.  This helps separate less important services from the others (sorry guys!)
-	for(importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++){
+	for (importance = AIServicePrimary; importance <= AIServiceUnsupported; importance++) {
 		NSEnumerator	*enumerator;
 		AIService		*service;
 		unsigned		currentNumberOfItems;
@@ -39,7 +39,7 @@
 		
 		//Divider
 		currentNumberOfItems = [menu numberOfItems];
-		if (currentNumberOfItems > numberOfItems){
+		if (currentNumberOfItems > numberOfItems) {
 			[menu addItem:[NSMenuItem separatorItem]];
 			numberOfItems = currentNumberOfItems + 1;
 			addedDivider = YES;
@@ -47,8 +47,8 @@
 		
 		//Insert a menu item for each service of this importance
 		enumerator = [serviceArray objectEnumerator];
-		while((service = [enumerator nextObject])){
-			if([service serviceImportance] == importance){
+		while ((service = [enumerator nextObject])) {
+			if ([service serviceImportance] == importance) {
 				NSString	*description = (longDescription ?
 											[service longDescription] :
 											[service shortDescription]);
@@ -70,7 +70,7 @@
 		
 		//If we added a divider but didn't add any items, remove it
 		currentNumberOfItems = [menu numberOfItems];
-		if (addedDivider && (currentNumberOfItems <= numberOfItems) && (currentNumberOfItems > 0)){
+		if (addedDivider && (currentNumberOfItems <= numberOfItems) && (currentNumberOfItems > 0)) {
 			[menu removeItemAtIndex:(currentNumberOfItems-1)];
 		}
 	}

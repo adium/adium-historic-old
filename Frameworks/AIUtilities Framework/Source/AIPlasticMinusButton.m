@@ -12,7 +12,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self setImage:[NSImage imageNamed:@"minus" forClass:[self class]]];
 	}
 	return self;    

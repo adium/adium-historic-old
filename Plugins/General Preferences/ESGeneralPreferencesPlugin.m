@@ -98,7 +98,7 @@
 	
 	//Set sending keys of all open views
 	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	while((entryView = [enumerator nextObject])){
+	while ((entryView = [enumerator nextObject])) {
 		[self _configureSendingKeysForObject:entryView];
 	}
 }
@@ -106,7 +106,7 @@
 //Configure the message sending keys
 - (void)_configureSendingKeysForObject:(id)inObject
 {
-    if([inObject isKindOfClass:[AISendingTextView class]]){
+    if ([inObject isKindOfClass:[AISendingTextView class]]) {
 		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
 			
         [(AISendingTextView *)inObject setSendOnReturn:[[prefDict objectForKey:SEND_ON_RETURN] boolValue]];

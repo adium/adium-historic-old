@@ -32,7 +32,7 @@
 	//If the old frame is smaller than our original frame, treat the old frame as that original frame
 	//for resizing and positioning purposes
 	oldFrame  = [TARGET_CONTROL frame];
-	if(oldFrame.size.width < originalFrame.size.width){
+	if (oldFrame.size.width < originalFrame.size.width) {
 		oldFrame = originalFrame;
 	}
 	
@@ -49,7 +49,7 @@
 @implementation NSButtonCell (AILocalizationAssistance)
 - (void)setLocalizedString:(NSString *)inString
 {
-	if([self isKindOfClass:[AILocalizationButtonCell class]]){
+	if ([self isKindOfClass:[AILocalizationButtonCell class]]) {
 		[self setTitle:inString];
 	}
 }

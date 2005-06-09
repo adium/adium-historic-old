@@ -70,12 +70,12 @@
 	
 	showStatusWindow = [[prefDict objectForKey:KEY_STATUS_SHOW_STATUS_WINDOW] boolValue];
 	
-	if(showStatusWindow != oldShowStatusWindow){
-		if(showStatusWindow){
+	if (showStatusWindow != oldShowStatusWindow) {
+		if (showStatusWindow) {
 			/* Register as a list object observer, which will update all objects for us immediately leading to the proper
 			 * status window toggling. */
 			[[adium contactController] registerListObjectObserver:self];
-		}else{
+		} else {
 			//Hide the status window if it is currently visible
 			[ESAwayStatusWindowController updateStatusWindowWithVisibility:NO];
 			
@@ -95,11 +95,11 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIAccount class]] &&
-	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"] || [inModifiedKeys containsObject:@"Online"])){
-		if([inObject online] && ([inObject statusType] != AIAvailableStatusType)){
+	if ([inObject isKindOfClass:[AIAccount class]] &&
+	   (!inModifiedKeys || [inModifiedKeys containsObject:@"StatusState"] || [inModifiedKeys containsObject:@"Online"])) {
+		if ([inObject online] && ([inObject statusType] != AIAvailableStatusType)) {
 			[awayAccounts addObject:inObject];
-		}else{
+		} else {
 			[awayAccounts removeObject:inObject];
 		}
 

@@ -44,13 +44,13 @@
 																			forTextView:inTextView
 																		notifyingTarget:inTarget];
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[editorWindow window]
 		   modalForWindow:parentWindow
 			modalDelegate:editorWindow
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[editorWindow showWindow:nil];
 	}
 }
@@ -84,44 +84,44 @@
 	[label_linkText setLocalizedString:AILocalizedString(@"Link Text:","Label for the text entry area for the name when creating a link")];
 	[label_URL setLocalizedString:AILocalizedString(@"URL",nil)];
 
-	if(textView){
+	if (textView) {
 		NSRange 	selectedRange = [textView selectedRange];
 		NSRange		rangeOfLinkAttribute;
 		NSString    *linkText;
 		id   	 	linkURL = nil;
 		
 		//Get the selected link (We have to be careful when the selection is at the very end of our text view)
-		if(selectedRange.location >= 0 && NSMaxRange(selectedRange) < [[textView textStorage] length]) {
+		if (selectedRange.location >= 0 && NSMaxRange(selectedRange) < [[textView textStorage] length]) {
 			linkURL = [[textView textStorage] attribute:NSLinkAttributeName
 												atIndex:selectedRange.location
 										 effectiveRange:&rangeOfLinkAttribute];
 		}
 		
-		if(linkURL) {
+		if (linkURL) {
 			//If a link exists at our selection, expand the selection to encompass that entire link
 			[textView setSelectedRange:rangeOfLinkAttribute];
 			selectedRange = rangeOfLinkAttribute;
-		}else{
+		} else {
 			//Fill the URL field from the pasteboard if possible
 			NSPasteboard		*pboard = [NSPasteboard generalPasteboard];
 			NSString			*availableType = [pboard availableTypeFromArray:[NSArray arrayWithObjects:NSURLPboardType, NSStringPboardType, nil]];
 			
-			if(availableType){
-				if([availableType isEqualToString:NSURLPboardType]){
+			if (availableType) {
+				if ([availableType isEqualToString:NSURLPboardType]) {
 					linkURL = [[NSURL URLFromPasteboard:pboard] absoluteString];
 
-				}else{ /* NSStringPboardType */
+				} else { /* NSStringPboardType */
 					linkURL = [pboard stringForType:NSStringPboardType];
 				}
 			}
 
-			if(linkURL){
+			if (linkURL) {
 				//Only use the pasteboard if it contains a valid URL; otherwise it most likely is not intended for us.
 				SHHyperlinkScanner  *laxScanner;
 				
 				laxScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
 				
-				if(![laxScanner isStringValidURL:linkURL]){
+				if (![laxScanner isStringValidURL:linkURL]) {
 					linkURL = nil;
 				}
 				
@@ -133,12 +133,12 @@
 		linkText = [[textView attributedSubstringFromRange:selectedRange] string];
 		
 		//Place the link title and URL in our panel. Automatically select the URL.
-		if(linkURL) {
+		if (linkURL) {
 			NSString	*tmpString = ([linkURL isKindOfClass:[NSString class]] ? 
 									  (NSString *)linkURL : 
 									  [(NSURL *)linkURL absoluteString]);
 
-			if([tmpString length]){
+			if ([tmpString length]) {
 				NSAttributedString	*initialURL;
 				
 				initialURL = [[NSAttributedString alloc] initWithString:tmpString];
@@ -146,12 +146,12 @@
 				[textView_URL setSelectedRange:NSMakeRange(0,[initialURL length])];
 				[initialURL release];
 			}
-		} else if([linkText length]) {
+		} else if ([linkText length]) {
 			//focus the URL field so that the user can enter an URL right away.
 			[[self window] makeFirstResponder:textView_URL];
 		}
 
-		if(linkText && [linkText length]) {
+		if (linkText && [linkText length]) {
 			[textField_linkText setStringValue:linkText];
 		}
 	}
@@ -191,7 +191,7 @@
 	NSURL			*URL;
 	
 	//Pre-fix the url if necessary
-	switch([textView_URL validationStatus]){
+	switch ([textView_URL validationStatus]) {
 		case SH_URL_DEGENERATE:
 			[urlString insertString:@"http://" atIndex:0];
 			break;
@@ -205,7 +205,7 @@
 	//Insert it into the text view
 	URL = [NSURL URLWithString:urlString];
 
-	if(URL){
+	if (URL) {
 		[self insertLinkTo:URL
 				  withText:linkString
 					inView:textView];
@@ -213,7 +213,7 @@
 		[self informTargetOfLink];
 		[self closeWindow:nil];
 		
-	}else{
+	} else {
 		//If the URL is invalid enough that we can't create an NSURL, just beep
 		NSBeep();
 	}
@@ -224,9 +224,9 @@
 - (IBAction)removeURL:(id)sender
 {
     id  selectedLink;
-    if([[textView textStorage] length] &&
+    if ([[textView textStorage] length] &&
        [textView selectedRange].location != NSNotFound &&
-       [textView selectedRange].location != [[textView textStorage] length]){
+       [textView selectedRange].location != [[textView textStorage] length]) {
             NSRange selectionRange = [textView selectedRange];
             //get range
             selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
@@ -248,7 +248,7 @@
 		[textView_URL linkURL], KEY_LINK_URL,
 		nil];
 	
-	if([target respondsToSelector:@selector(linkEditorLinkDidChange:)]){
+	if ([target respondsToSelector:@selector(linkEditorLinkDidChange:)]) {
 		[target performSelector:@selector(linkEditorLinkDidChange:) withObject:linkDict];
 	}
 }
@@ -270,7 +270,7 @@
 		
 	//If this link was inserted at the end of our text view, add a space and set the formatting back to normal
 	//This prevents the link attribute from bleeding into newly entered text
-	if(NSMaxRange([inView selectedRange]) == [textStorage length]){
+	if (NSMaxRange([inView selectedRange]) == [textStorage length]) {
 		NSAttributedString	*tmpString = [[[NSAttributedString alloc] initWithString:@" "
 																		  attributes:typingAttributes] autorelease];
 		[textStorage appendAttributedString:tmpString];
@@ -289,13 +289,13 @@
     //validate our URL
     [textView_URL textDidChange:aNotification];
 	
-	if([imageView_invalidURLAlert respondsToSelector:@selector(setHidden:)]){
+	if ([imageView_invalidURLAlert respondsToSelector:@selector(setHidden:)]) {
         [imageView_invalidURLAlert setHidden:[textView_URL isURLValid]];
 
-    }else{ //for those stuck in jag, we can't use setHidden
-        if([textView_URL isURLValid]) {
+    } else { //for those stuck in jag, we can't use setHidden
+        if ([textView_URL isURLValid]) {
             [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"space" forClass:[self class]]];
-        }else{
+        } else {
             [imageView_invalidURLAlert setImage:[NSImage imageNamed:@"ErrorAlert" forClass:[self class]]];
         }
     }
@@ -303,15 +303,15 @@
 
 - (BOOL)textView:(NSTextView *)aTextView doCommandBySelector:(SEL)aSelector
 {
-    if(aSelector == @selector(insertNewline:)){
+    if (aSelector == @selector(insertNewline:)) {
             [self acceptURL:nil];
             return(YES);
 
-    }else if(aSelector == @selector(insertTab:)){
+    } else if (aSelector == @selector(insertTab:)) {
 		[[textView_URL window] selectNextKeyView:self];
 		return(YES);
 		
-	}else if(aSelector == @selector(insertBacktab:)){
+	} else if (aSelector == @selector(insertBacktab:)) {
 		[[textView_URL window] selectPreviousKeyView:self];
 		return(YES);
 	}

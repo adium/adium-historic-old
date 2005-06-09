@@ -113,11 +113,11 @@
 	theMenu = [[adium accountController] menuOfAccountsWithTarget:self
 												   includeOffline:YES];
 	enumerator = [[[[theMenu itemArray] copy] autorelease] objectEnumerator];
-	while(menuItem = [enumerator nextObject]){
+	while (menuItem = [enumerator nextObject]) {
 		//Only include the Gaim accounts, as any others don't support OTR
-		if([[menuItem representedObject] isKindOfClass:[CBGaimAccount class]]){
+		if ([[menuItem representedObject] isKindOfClass:[CBGaimAccount class]]) {
 			[menuItem setEnabled:YES];
-		}else{
+		} else {
 			[theMenu removeItem:menuItem];
 		}
 	}
@@ -138,7 +138,7 @@
 	[popUp_accounts selectItemWithRepresentedObject:selectedAccount];
 	
 	//If we can't, select the first item
-	if(![popUp_accounts selectedItem] && ([popUp_accounts numberOfItems] > 0)){
+	if (![popUp_accounts selectedItem] && ([popUp_accounts numberOfItems] > 0)) {
 		[popUp_accounts selectItemAtIndex:0];
 	}
 	
@@ -152,7 +152,7 @@
  */
 - (void)updateFingerprintsList
 {
-	if(viewIsOpen){
+	if (viewIsOpen) {
 		ConnContext		*context;
 		Fingerprint		*fingerprint;
 		OtrlUserState	otrg_plugin_userstate = otrg_get_userstate();
@@ -166,7 +166,7 @@
 			fingerprint = context->fingerprint_root.next;
 			/* If there's no fingerprint, don't add it to the known
 				* fingerprints list */
-			while(fingerprint) {
+			while (fingerprint) {
 				char			hash[45];
 				NSDictionary	*fingerprintDict;
 				NSString		*UID;
@@ -214,14 +214,14 @@
  */
 - (void)updatePrivateKeyList
 {
-	if(viewIsOpen){
+	if (viewIsOpen) {
 		NSString		*fingerprintString = nil;
 		CBGaimAccount	*adiumAccount = [[popUp_accounts selectedItem] representedObject];
 		GaimAccount		*gaimAccount;
 		
 		gaimAccount = accountLookupFromAdiumAccount(adiumAccount);
 
-		if(gaimAccount){
+		if (gaimAccount) {
 			const char *accountname;
 			const char *protocol;
 			char *fingerprint;
@@ -232,9 +232,9 @@
 			fingerprint = otrl_privkey_fingerprint(otrg_plugin_userstate,
 												   fingerprint_buf, accountname, protocol);
 
-			if(fingerprint){
+			if (fingerprint) {
 				fingerprintString = [NSString stringWithFormat:AILocalizedString(@"Fingerprint: %.80s",nil), fingerprint];
-			}else{
+			} else {
 				fingerprintString = AILocalizedString(@"No private key present", "Message to show in the Encryption OTR preferences when an account is selected which does not have a private key");
 			}
 		}
@@ -265,7 +265,7 @@
 - (IBAction)showFingerprint:(id)sender
 {
 	int selectedRow = [tableView_fingerprints selectedRow];
-	if(selectedRow != -1){
+	if (selectedRow != -1) {
 		NSDictionary	*fingerprintDict = [fingerprintDictArray objectAtIndex:selectedRow];
 		[ESGaimOTRFingerprintDetailsWindowController showDetailsForFingerprintDict:fingerprintDict];
 	}
@@ -289,14 +289,14 @@
 
 - (id)tableView:(NSTableView *)aTableView objectValueForTableColumn:(NSTableColumn *)aTableColumn row:(int)rowIndex
 {
-	if((rowIndex >= 0) && (rowIndex < [fingerprintDictArray count])){
+	if ((rowIndex >= 0) && (rowIndex < [fingerprintDictArray count])) {
 		NSString		*identifier = [aTableColumn identifier];
 		NSDictionary	*fingerprintDict = [fingerprintDictArray objectAtIndex:rowIndex];
 		
-		if([identifier isEqualToString:@"UID"]){
+		if ([identifier isEqualToString:@"UID"]) {
 			return [fingerprintDict objectForKey:@"UID"];
 			
-		}else if([identifier isEqualToString:@"Status"]){
+		} else if ([identifier isEqualToString:@"Status"]) {
 			return [fingerprintDict objectForKey:@"Status"];
 			
 		}

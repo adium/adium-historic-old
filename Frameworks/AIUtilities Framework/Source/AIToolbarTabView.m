@@ -63,23 +63,23 @@
 //Install a toolbar item for each tab view item we contain
 - (void)installToolbarItems
 {	
-	if([[self delegate] respondsToSelector:@selector(tabView:imageForTabViewItem:)]){
+	if ([[self delegate] respondsToSelector:@selector(tabView:imageForTabViewItem:)]) {
 		int	i;
 
-		for(i = 0; i < [self numberOfTabViewItems]; i++){
+		for (i = 0; i < [self numberOfTabViewItems]; i++) {
 			NSTabViewItem	*tabViewItem = [self tabViewItemAtIndex:i];
 			NSString 		*identifier = [NSString stringWithFormat:@"%i",i];
 			NSString		*label = nil;
 			
-			if([[self delegate] respondsToSelector:@selector(tabView:labelForTabViewItem:)]){
+			if ([[self delegate] respondsToSelector:@selector(tabView:labelForTabViewItem:)]) {
 				label = [[self delegate] tabView:self labelForTabViewItem:tabViewItem];
 			}
 			
-			if(!label) label = [tabViewItem label];
+			if (!label) label = [tabViewItem label];
 			
 			//We use the tab view item's index as identifier so we can easily sort our toolbar items into the same
 			//ordering as the tabs.
-			if(![toolbarItems objectForKey:identifier] && (tabViewItem != tabViewItem_loading)){
+			if (![toolbarItems objectForKey:identifier] && (tabViewItem != tabViewItem_loading)) {
 				[AIToolbarUtilities addToolbarItemToDictionary:toolbarItems
 												withIdentifier:identifier
 														 label:label
@@ -141,12 +141,12 @@
 - (void)selectTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	//Update the selected toolbar item (10.3 or higher)
-	if([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]){
+	if ([[[self window] toolbar] respondsToSelector:@selector(setSelectedItemIdentifier:)]) {
 		[[[self window] toolbar] setSelectedItemIdentifier:[NSString stringWithFormat:@"%i",[self indexOfTabViewItem:tabViewItem]]];
 	}
 
-	if(tabViewItem != [self selectedTabViewItem]){
-		if(tabViewItem_loading){
+	if (tabViewItem != [self selectedTabViewItem]) {
+		if (tabViewItem_loading) {
 			//Start the spinning progress indicator
 			[progressIndicator_loading setUsesThreadedAnimation:YES];
 			[progressIndicator_loading startAnimation:self];
@@ -154,30 +154,30 @@
 			//Select the loading tab view
 			[super selectTabViewItem:tabViewItem_loading];
 			
-			if(![[self delegate] respondsToSelector:@selector(immediatelyShowLoadingIndicatorForTabView:willSelectTabViewItem:)] ||
-			   [[self delegate] immediatelyShowLoadingIndicatorForTabView:self willSelectTabViewItem:tabViewItem]){
+			if (![[self delegate] respondsToSelector:@selector(immediatelyShowLoadingIndicatorForTabView:willSelectTabViewItem:)] ||
+			   [[self delegate] immediatelyShowLoadingIndicatorForTabView:self willSelectTabViewItem:tabViewItem]) {
 				[[self window] display];
 			}
 			
 			/* Now inform our delegate that we will be selecting the desired tab view 
 			 * since after [super selectTabViewItem:tabViewItem_loading]; it thinks we are selecting tabViewItem_loading */
-			if([[self delegate] respondsToSelector:@selector(tabView:willSelectTabViewItem:)]){
+			if ([[self delegate] respondsToSelector:@selector(tabView:willSelectTabViewItem:)]) {
 				[[self delegate] tabView:self willSelectTabViewItem:tabViewItem];
 			}
 			
-		}else if([self respondsToSelector:@selector(setHidden:)]){
+		} else if ([self respondsToSelector:@selector(setHidden:)]) {
 			//If not, just hide
 			[self setHidden:YES];
 		}
 	}
 	
-	if(!tabViewItem_loading){
+	if (!tabViewItem_loading) {
 		//Select before resizing if we don't have a tab to show while loading
 		[super selectTabViewItem:tabViewItem];
 	}
 	
 	//Resize the window
-	if([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]){
+	if ([[self delegate] respondsToSelector:@selector(tabView:heightForTabViewItem:)]) {
 		int		height = [[self delegate] tabView:self heightForTabViewItem:tabViewItem];
 		BOOL	isVisible = [[self window] isVisible];
 		NSRect 	frame = [[self window] frame];
@@ -190,7 +190,7 @@
 		[[self window] setFrame:frame display:isVisible animate:isVisible];		
 	}
 	
-	if(tabViewItem_loading){
+	if (tabViewItem_loading) {
 		//Select after resizing if we had a tab to show while loading
 		[super selectTabViewItem:tabViewItem];
 		
@@ -199,7 +199,7 @@
 										withObject:self
 										afterDelay:0];
 		
-	}else if ([self respondsToSelector:@selector(setHidden:)]){
+	} else if ([self respondsToSelector:@selector(setHidden:)]) {
 		//Otherwise, we simply hid before, so unhide now
 		[self setHidden:NO];
 	}

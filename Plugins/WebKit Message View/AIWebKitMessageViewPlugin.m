@@ -67,7 +67,7 @@
  */
 - (NSDictionary *)availableMessageStyles
 {
-	if(!styleDictionary){
+	if (!styleDictionary) {
 		NSArray			*stylesArray = [adium allResourcesForName:MESSAGE_STYLES_SUBFOLDER_OF_APP_SUPPORT 
 												   withExtensions:@"AdiumMessageStyle"];
 		NSEnumerator	*stylesEnumerator;
@@ -79,10 +79,10 @@
 		
 		//Get all resource paths to search
 		stylesEnumerator = [stylesArray objectEnumerator];
-		while((resourcePath = [stylesEnumerator nextObject])) {
-			if(style = [NSBundle bundleWithPath:resourcePath]){
+		while ((resourcePath = [stylesEnumerator nextObject])) {
+			if (style = [NSBundle bundleWithPath:resourcePath]) {
 				NSString	*styleIdentifier = [style bundleIdentifier];
-				if(styleIdentifier && [styleIdentifier length]){
+				if (styleIdentifier && [styleIdentifier length]) {
 					[styleDictionary setObject:style forKey:styleIdentifier];
 				}
 			}
@@ -104,8 +104,8 @@
 	NSBundle		*bundle = [styles objectForKey:identifier];
 	
 	//If the style isn't available, use our default.  Or, failing that, any available style
-	if(!bundle) bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
-	if(!bundle){
+	if (!bundle) bundle = [styles objectForKey:WEBKIT_DEFAULT_STYLE];
+	if (!bundle) {
 		bundle = [[styles allValues] lastObject];
 	}
 
@@ -117,7 +117,7 @@
  */
 - (void)xtrasChanged:(NSNotification *)notification
 {
-	if([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0){		
+	if ([[notification object] caseInsensitiveCompare:@"AdiumMessageStyle"] == 0) {		
 		[styleDictionary release]; styleDictionary = nil;
 		[preferences messageStyleXtrasDidChange];
 	}

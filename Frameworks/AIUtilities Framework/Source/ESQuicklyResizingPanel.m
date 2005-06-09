@@ -15,19 +15,19 @@
 //Override all three panel initialization methods to set the default resizeInterval at init
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 		resizeInterval = DEFAULT_RESIZE_INTERVAL;
 	return self;
 }
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag screen:(NSScreen *)aScreen
 {
-	if((self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:flag screen:aScreen]))
+	if ((self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:flag screen:aScreen]))
 		resizeInterval = DEFAULT_RESIZE_INTERVAL;
 	return self;
 }
 - (id)initWithContentRect:(NSRect)contentRect styleMask:(unsigned int)styleMask backing:(NSBackingStoreType)bufferingType defer:(BOOL)flag
 {
-	if((self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:flag]))
+	if ((self = [super initWithContentRect:contentRect styleMask:styleMask backing:bufferingType defer:flag]))
 		resizeInterval = DEFAULT_RESIZE_INTERVAL;
 	return self;
 }

@@ -55,11 +55,11 @@ int manualSort(id objectA, id objectB, BOOL groups)
 	float orderIndexA = [objectA orderIndex];
 	float orderIndexB = [objectB orderIndex];
 	
-	if(orderIndexA > orderIndexB){
+	if (orderIndexA > orderIndexB) {
 		return(NSOrderedDescending);
-	}else if (orderIndexA < orderIndexB){
+	} else if (orderIndexA < orderIndexB) {
 		return(NSOrderedAscending);
-	}else{
+	} else {
 		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
 	}
 	

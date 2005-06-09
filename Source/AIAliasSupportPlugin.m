@@ -120,7 +120,7 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])){
+    if ((inModifiedKeys == nil) || ([inModifiedKeys containsObject:@"FormattedUID"])) {
 		return([self _applyAlias:[inObject preferenceForKey:@"Alias"
 													  group:PREF_GROUP_ALIASES 
 									  ignoreInheritedValues:YES]
@@ -149,10 +149,10 @@
 	//Set new checkmark
 	[[menu_contactSubmenu itemWithTag:displayFormat] setState:NSOnState];
 	
-	if(firstTime){
+	if (firstTime) {
 		//Register ourself as a handle observer
 		[[adium contactController] registerListObjectObserver:self];
-	}else{
+	} else {
 		//Update all existing contacts
 		[[adium contactController] updateAllListObjectsForObserver:self];
 
@@ -177,7 +177,7 @@
 	NSNumber		*shouldNotifyNumber = [userInfo objectForKey:@"Notify"];
 	
 	NSString		*alias = [userInfo objectForKey:@"Alias"];
-	if (!alias){
+	if (!alias) {
 		alias = [object preferenceForKey:@"Alias"
 								   group:PREF_GROUP_ALIASES 
 				   ignoreInheritedValues:YES];
@@ -215,8 +215,8 @@
 	displayName = [displayNameArray objectValue];
 	
     //Build and set the Long Display Name
-	if ([inObject isKindOfClass:[AIListContact class]]){
-		switch(displayFormat)
+	if ([inObject isKindOfClass:[AIListContact class]]) {
+		switch (displayFormat)
 		{
 			case AINameFormat_DisplayName:
 				longDisplayName = displayName;
@@ -225,18 +225,18 @@
 			case AINameFormat_DisplayName_ScreenName:
 				formattedUID = [inObject formattedUID];
 				
-				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
+				if (!displayName || !formattedUID || [displayName isEqualToString:formattedUID]) {
 					longDisplayName = displayName;
-				}else{
+				} else {
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",displayName,formattedUID];
 				}
 					break;
 				
 			case AINameFormat_ScreenName_DisplayName:
 				formattedUID = [inObject formattedUID];
-				if(!displayName || !formattedUID || [displayName isEqualToString:formattedUID]){
+				if (!displayName || !formattedUID || [displayName isEqualToString:formattedUID]) {
 					longDisplayName = displayName;
-				}else{
+				} else {
 					longDisplayName = [NSString stringWithFormat:@"%@ (%@)",formattedUID,displayName];
 				}
 					break;
@@ -260,7 +260,7 @@
 	
 	//If notify is YES, send out a manual listObjectAttributesChanged notice; 
 	//if NO, the observer methods will be handling it
-	if(notify){
+	if (notify) {
 		[[adium contactController] listObjectAttributesChanged:inObject
 												  modifiedKeys:modifiedAttributes];
 	}

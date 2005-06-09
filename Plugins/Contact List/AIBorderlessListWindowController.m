@@ -25,7 +25,7 @@
 //Init
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		//Unlike a normal window, the system doesn't assist us in keeping the borderless contact list on a visible screen
 		//So we'll observe screen changes and ensure that the contact list stays on a valid screen
@@ -60,7 +60,7 @@
 //If our window is no longer on a screen, move it to the main screen and center
 - (void)centerWindowOnMainScreenIfNeeded:(NSNotification *)notification
 {
-	if(![[self window] screen]){
+	if (![[self window] screen]) {
 		[[self window] setFrameOrigin:[[NSScreen mainScreen] frame].origin];
 		[[self window] center];
 	}

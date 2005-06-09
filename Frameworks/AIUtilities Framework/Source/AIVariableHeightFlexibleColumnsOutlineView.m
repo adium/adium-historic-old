@@ -24,8 +24,8 @@
 
 - (NSRect)frameOfCellAtColumn:(int)column row:(int)row
 {
-	if([[self delegate] respondsToSelector:@selector(outlineView:extendToEdgeColumn:ofRow:)] &&
-	   [[self delegate] outlineView:self extendToEdgeColumn:column ofRow:row]){
+	if ([[self delegate] respondsToSelector:@selector(outlineView:extendToEdgeColumn:ofRow:)] &&
+	   [[self delegate] outlineView:self extendToEdgeColumn:column ofRow:row]) {
 		
 		NSRect	frame = [self frame];
 		NSRect	columnRect = [self rectOfColumn:column];
@@ -37,7 +37,7 @@
 						  rowOriginCache[row],
 						  frame.size.width - columnOriginX - floor((intercellSpacing.width)/2),
 						  rowHeightCache[row]));
-	}else{
+	} else {
 		return([super frameOfCellAtColumn:column row:row]);
 	}
 }
@@ -45,7 +45,7 @@
 #pragma mark Drawing
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-	if(row >= 0 && row < [self numberOfRows]){ //Somebody keeps calling this method with row = numberOfRows, which is wrong.
+	if (row >= 0 && row < [self numberOfRows]) { //Somebody keeps calling this method with row = numberOfRows, which is wrong.
 		
 		NSArray		*tableColumns = [self tableColumns];
 		id			item = [self itemAtRow:row];
@@ -53,7 +53,7 @@
 		
 		BOOL		delegateRespondsToExtendToEdgeColumn = [[self delegate] respondsToSelector:@selector(outlineView:extendToEdgeColumn:ofRow:)];
 
-		for(tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++){
+		for (tableColumnIndex = 0 ; tableColumnIndex < count ; tableColumnIndex++) {
 			NSTableColumn	*tableColumn;
 			NSRect			cellFrame;
 			id				cell;
@@ -81,9 +81,9 @@
 			 * can optionally suppress drawing. We only do this before drawing the first column; that way,
 			 * we can cover the full width of the row in one stroke.
 			 */
-			if([self drawsAlternatingRows] && 
+			if ([self drawsAlternatingRows] && 
 			   (![cell respondsToSelector:@selector(drawGridBehindCell)] || [cell drawGridBehindCell]) &&
-			   (tableColumnIndex == 0)){
+			   (tableColumnIndex == 0)) {
 				
 				[self _drawRowInRect:[self rectOfRow:row]
 							 colored:!(row % 2)
@@ -91,9 +91,9 @@
 			}
 			
 			
-			if(tableColumnIndex == 0){
+			if (tableColumnIndex == 0) {
 				//Draw flippy triangle
-				if([self isExpandable:item]){
+				if ([self isExpandable:item]) {
 					
 					cellFrame.origin.x += FLIPPY_TEXT_PADDING/2;
 					cellFrame.size.width -= FLIPPY_TEXT_PADDING/2;
@@ -103,7 +103,7 @@
 					NSPoint			center = NSMakePoint(cellFrame.origin.x + FLIPPY_WIDTH/2,
 														 cellFrame.origin.y + (cellFrame.size.height/2.0));
 					/* Remember: The view is flipped */
-					if([self isItemExpanded:item]){
+					if ([self isItemExpanded:item]) {
 						//Bottom point
 						[arrowPath moveToPoint:NSMakePoint(center.x, 
 														   center.y + FLIPPY_HEIGHT/2)];
@@ -112,7 +112,7 @@
 						
 						//Move to top right
 						[arrowPath relativeLineToPoint:NSMakePoint(FLIPPY_WIDTH, 0)];
-					}else{
+					} else {
 						//Bottom left
 						[arrowPath moveToPoint:NSMakePoint(center.x - (FLIPPY_WIDTH/2), 
 														   center.y + (FLIPPY_HEIGHT/2))];
@@ -125,9 +125,9 @@
 					
 					[arrowPath closePath];
 					
-					if(selected){
+					if (selected) {
 						[[NSColor whiteColor] set];
-					}else{
+					} else {
 						[[NSColor darkGrayColor] set];
 					}
 					[arrowPath fill];
@@ -138,12 +138,12 @@
 			}
 			
 			//Draw the cell
-			if(selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
+			if (selected) [cell _drawHighlightWithFrame:cellFrame inView:self];
 			[cell drawWithFrame:cellFrame inView:self];
 	
 			//Stop drawing if this column extends to the edge
-			if(delegateRespondsToExtendToEdgeColumn &&
-			   [[self delegate] outlineView:self extendToEdgeColumn:tableColumnIndex ofRow:row]){
+			if (delegateRespondsToExtendToEdgeColumn &&
+			   [[self delegate] outlineView:self extendToEdgeColumn:tableColumnIndex ofRow:row]) {
 				break;
 			}
 		}

@@ -79,7 +79,7 @@
 	NSString		*leftKey, *rightKey;
 	unsigned int	keyMask = NSCommandKeyMask;
 	
-	switch([[prefDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]){
+	switch ([[prefDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]) {
 		case AISwitchArrows:
 			leftKey = [NSString stringWithCharacters:&left length:1];
 			rightKey = [NSString stringWithCharacters:&right length:1];

@@ -30,7 +30,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //Init
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initImageGridView];
 	}
 	return self;
@@ -38,7 +38,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initImageGridView];
 	}
 	return self;
@@ -79,7 +79,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	_respondsToImageHovered = [delegate respondsToSelector:@selector(imageGridView:cursorIsHoveringImageAtIndex:)];
 	
 	//If the delegate wants mouse moved messages, enable them
-	if(_respondsToImageHovered) [[self window] setAcceptsMouseMovedEvents:YES];
+	if (_respondsToImageHovered) [[self window] setAcceptsMouseMovedEvents:YES];
 	[self reloadData];
 }
 - (id)delegate{
@@ -114,7 +114,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //Redisplay an image in the grid
 - (void)setNeedsDisplayOfImageAtIndex:(int)index
 {
-	if(index >= 0){
+	if (index >= 0) {
 		[self setNeedsDisplayInRect:[self rectForImageAtIndex:index]];
 	}
 }
@@ -138,8 +138,8 @@ Adium, Copyright 2001-2005, Adam Iser
 	int 	i;
 	
 	//Determine which image was clicked
-	for(i = 0; i < numberOfImages; i++){
-		if(NSPointInRect(point, [self rectForImageAtIndex:i])){
+	for (i = 0; i < numberOfImages; i++) {
+		if (NSPointInRect(point, [self rectForImageAtIndex:i])) {
 			return(i);
 		}
 	}
@@ -157,10 +157,10 @@ Adium, Copyright 2001-2005, Adam Iser
 	[NSBezierPath fillRect:drawRect];
 	
 	//Draw all images that lie in the dirty rect
-	for(i = 0; i < numberOfImages; i++){
+	for (i = 0; i < numberOfImages; i++) {
 		NSRect	imageRect = [self rectForImageAtIndex:i];
 
-		if(NSIntersectsRect(drawRect, imageRect)){
+		if (NSIntersectsRect(drawRect, imageRect)) {
 			[cell setImage:[delegate imageGridView:self imageAtIndex:i]];
 			[cell setHighlighted:(selectedIndex == i)];
 			[cell drawWithFrame:imageRect inView:self];
@@ -195,7 +195,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	//covers the entire visible area in our scroll view.
 	rows = ceil((double)numberOfImages / (double)columns);
 	newFrame.size.height = rows * (imageSize.height + padding.height) + padding.height;
-	if(scrollView && [scrollView contentSize].height > newFrame.size.height){
+	if (scrollView && [scrollView contentSize].height > newFrame.size.height) {
 		newFrame.size.height = [scrollView contentSize].height;
 	}
 	[super setFrame:newFrame];
@@ -214,19 +214,19 @@ Adium, Copyright 2001-2005, Adam Iser
 	BOOL	shouldSelect = YES;
 	
 	//Restrict the index to our bounds
-	while(index < 0) index += numberOfImages;
-	while(index > numberOfImages-1) index -= numberOfImages;
+	while (index < 0) index += numberOfImages;
+	while (index > numberOfImages-1) index -= numberOfImages;
 	
 	//If the delegate supports it, confirm that this selection should be allowed
-	if(_respondsToShouldSelect){
+	if (_respondsToShouldSelect) {
 		shouldSelect = [delegate imageGridView:self shouldSelectIndex:index];
 	}
 	
 	//Make the selection change, update our view and notify
-	if(shouldSelect && index != selectedIndex){
+	if (shouldSelect && index != selectedIndex) {
 		//Notification: Selection is changing 
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIImageGridViewSelectionIsChangingNotification object:self];
-		if(_respondsToSelectionIsChanging){
+		if (_respondsToSelectionIsChanging) {
 			[delegate imageGridViewSelectionIsChanging:[NSNotification notificationWithName:AIImageGridViewSelectionIsChangingNotification object:self]];
 		}
 		
@@ -239,7 +239,7 @@ Adium, Copyright 2001-2005, Adam Iser
 		
 		//Notification: Selection did change 
 		[[NSNotificationCenter defaultCenter] postNotificationName:AIImageGridViewSelectionDidChangeNotification object:self];
-		if(_respondsToSelectionDidChange){
+		if (_respondsToSelectionDidChange) {
 			[delegate imageGridViewSelectionDidChange:[NSNotification notificationWithName:AIImageGridViewSelectionDidChangeNotification object:self]];
 		}
 	}
@@ -276,9 +276,9 @@ Adium, Copyright 2001-2005, Adam Iser
 //Delete selection
 - (void)keyDown:(NSEvent *)theEvent
 {
-    if(_respondsToDeleteSelection && [[theEvent charactersIgnoringModifiers] length]){
+    if (_respondsToDeleteSelection && [[theEvent charactersIgnoringModifiers] length]) {
 		unichar	pressedKey = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
-		if(pressedKey == NSDeleteFunctionKey || pressedKey == NSBackspaceCharacter || pressedKey == NSDeleteCharacter){ //Delete
+		if (pressedKey == NSDeleteFunctionKey || pressedKey == NSBackspaceCharacter || pressedKey == NSDeleteCharacter) { //Delete
 			[delegate imageGridViewDeleteSelectedImage:self];
 			return;
         }
@@ -295,25 +295,25 @@ Adium, Copyright 2001-2005, Adam Iser
 //Reset our cursor tracking
 - (void)resetCursorRects
 {
-	if(_respondsToImageHovered){
+	if (_respondsToImageHovered) {
 		NSView	*scrollView = [self enclosingScrollView];
 		NSRect	scrollFrame = [scrollView frame];
 		
 		//Stop any existing tracking
-		if(trackingTag != -1){
+		if (trackingTag != -1) {
 			[scrollView removeTrackingRect:trackingTag];
 			trackingTag = -1;
 		}
 		
 		//Add a tracking rect if our scrollview and window are ready
-		if(scrollView && [scrollView window]){
+		if (scrollView && [scrollView window]) {
 			NSRect	trackRect = NSMakeRect(0,0,scrollFrame.size.width, scrollFrame.size.height);
 			NSPoint	localPoint = [scrollView convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
 												 fromView:nil];
 			BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
 
 			trackingTag = [scrollView addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
-			if(mouseInside) [self mouseEntered:nil];
+			if (mouseInside) [self mouseEntered:nil];
 		}
 	}
 }
@@ -343,14 +343,14 @@ Adium, Copyright 2001-2005, Adam Iser
 //Set the hovered image index
 - (void)_setHoveredIndex:(int)index
 {
-	if(index != hoveredIndex){
+	if (index != hoveredIndex) {
 		//Mark the old and new hovered image for redraw
 		[self setNeedsDisplayOfImageAtIndex:hoveredIndex];
 		[self setNeedsDisplayOfImageAtIndex:index];
 		
 		//Make the change and notify our delegate
 		hoveredIndex = index;
-		if(_respondsToImageHovered) [delegate imageGridView:self cursorIsHoveringImageAtIndex:hoveredIndex];
+		if (_respondsToImageHovered) [delegate imageGridView:self cursorIsHoveringImageAtIndex:hoveredIndex];
 	}
 }
 

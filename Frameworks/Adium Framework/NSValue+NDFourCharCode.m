@@ -77,13 +77,13 @@
 {
 	FourCharCode		theValue = 0;
 	const char			* theObjCType = [self objCType];
-	if( sizeof(FourCharCode) <= sizeof(unsigned long) && strcmp(theObjCType, @encode(unsigned long)) == 0 )
+	if ( sizeof(FourCharCode) <= sizeof(unsigned long) && strcmp(theObjCType, @encode(unsigned long)) == 0 )
 		theValue = [(id)self unsignedLongValue];
-	else if( sizeof(FourCharCode) <= sizeof(long) && strcmp(theObjCType, @encode(long)) == 0 )
+	else if ( sizeof(FourCharCode) <= sizeof(long) && strcmp(theObjCType, @encode(long)) == 0 )
 		theValue = [(id)self longValue];
-	else if( sizeof(FourCharCode) <= sizeof(unsigned int) && strcmp(theObjCType, @encode(unsigned int)) == 0 )
+	else if ( sizeof(FourCharCode) <= sizeof(unsigned int) && strcmp(theObjCType, @encode(unsigned int)) == 0 )
 		theValue = [(id)self unsignedIntValue];
-	else if( sizeof(FourCharCode) <= sizeof(unsigned int) && strcmp(theObjCType, @encode(int)) == 0 )
+	else if ( sizeof(FourCharCode) <= sizeof(unsigned int) && strcmp(theObjCType, @encode(int)) == 0 )
 		theValue = [(id)self intValue];
 	
 	return theValue;
@@ -118,7 +118,7 @@
  */
 - (id)initWithBytes:(const void *)aValue objCType:(const char *)aType
 {
-	if( strcmp( aType, @encode(FourCharCode)) == 0 )
+	if ( strcmp( aType, @encode(FourCharCode)) == 0 )
 	{
 		self = [self initWithFourCharCode:*(FourCharCode*)aValue];
 	}
@@ -135,7 +135,7 @@
  */
 - (id)initWithFourCharCode:(FourCharCode)aFourCharCode
 {
-	if( (self = [self init]) != nil )
+	if ( (self = [self init]) != nil )
 	{
 		fourCharCode = aFourCharCode;
 	}
@@ -156,7 +156,7 @@
 - (void)getValue:(void *)aBuffer
 {
 	aBuffer = malloc(sizeof(FourCharCode));
-	if( aBuffer )
+	if ( aBuffer )
 		memcpy(aBuffer, (const void *)&fourCharCode, sizeof(fourCharCode));
 }
 

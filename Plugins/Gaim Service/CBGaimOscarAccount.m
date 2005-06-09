@@ -33,7 +33,7 @@
 - (const char*)protocolPlugin
 {
 	static BOOL didInitOscar = NO;
-	if (!didInitOscar){
+	if (!didInitOscar) {
 		didInitOscar = gaim_init_oscar_plugin();
 		if (!didInitOscar) NSLog(@"CBGaimOscarAccount: Oscar plugin failed to load.");
 	}
@@ -47,14 +47,14 @@
 {
 	AIListContact	*contact;
 	
-	if (!namesAreCaseSensitive){
+	if (!namesAreCaseSensitive) {
 		sourceUID = [sourceUID compactedString];
 	}
 	
 	contact = [[adium contactController] existingContactWithService:service
 															account:self
 																UID:sourceUID];
-	if(!contact){		
+	if (!contact) {		
 		contact = [[adium contactController] contactWithService:[self _serviceForUID:sourceUID]
 														account:self
 															UID:sourceUID];
@@ -71,13 +71,13 @@
 	const char	firstCharacter = ([contactUID length] ? [contactUID characterAtIndex:0] : '\0');
 
 	//Determine service based on UID
-	if([contactUID hasSuffix:@"@mac.com"]){
+	if ([contactUID hasSuffix:@"@mac.com"]) {
 		contactServiceID = @"libgaim-oscar-Mac";
-	}else if(firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')){
+	} else if (firstCharacter && (firstCharacter >= '0' && firstCharacter <= '9')) {
 		contactServiceID = @"libgaim-oscar-ICQ";
-	//		}else if(isMobile = (firstCharacter == '+')){
+	//		} else if (isMobile = (firstCharacter == '+')) {
 	//			contactServiceID = @"libgaim-oscar-AIM";
-	}else{
+	} else {
 		contactServiceID = @"libgaim-oscar-AIM";
 	}
 
@@ -95,9 +95,9 @@
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
+		} else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
-		}else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
+		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;	
 		}
 	}
@@ -140,14 +140,14 @@
 	//For ICQ contacts, however, we want to pass this data on as the profile
 	const char	firstCharacter = [[theContact UID] characterAtIndex:0];
 	
-	if((firstCharacter >= '0' && firstCharacter <= '9') || [theContact isStranger]){
+	if ((firstCharacter >= '0' && firstCharacter <= '9') || [theContact isStranger]) {
 		[super updateUserInfo:theContact withData:userInfoString];
 	}
 }
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 
 		return oscar_xfer_new(account->gc,destsn);
@@ -169,7 +169,7 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Edit Buddy Comment") == 0){
+	if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return(nil);
 	}
 
@@ -179,11 +179,11 @@
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
-	if(strcmp(label, "Set User Info...") == 0){
+	if (strcmp(label, "Set User Info...") == 0) {
 		return(nil);
-	}else if(strcmp(label, "Edit Buddy Comment") == 0){
+	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
 		return(nil);
-	}else if(strcmp(label, "Show Buddies Awaiting Authorization") == 0){
+	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
 		/* XXX Depends on adiumGaimRequestFields() */
 		return(nil);
 	}
@@ -197,18 +197,18 @@
 	NSStringEncoding	desiredEncoding = NSUTF8StringEncoding;
 	
 	//Only attempt to check encoding if we were passed one
-	if (encoding && (encoding[0] != '\0')){
+	if (encoding && (encoding[0] != '\0')) {
 		NSString	*encodingString = [NSString stringWithUTF8String:encoding];
 		NSRange		encodingRange;
 		
 		encodingRange = (encodingString ? [encodingString rangeOfString:@"charset=\""] : NSMakeRange(NSNotFound, 0));
-		if(encodingRange.location != NSNotFound){
+		if (encodingRange.location != NSNotFound) {
 			encodingString = [encodingString substringWithRange:NSMakeRange(NSMaxRange(encodingRange),
 																			[encodingString length] - NSMaxRange(encodingRange) - 1)];
-			if(encodingString && [encodingString length]){
+			if (encodingString && [encodingString length]) {
 				desiredEncoding = CFStringConvertEncodingToNSStringEncoding(CFStringConvertIANACharSetNameToEncoding((CFStringRef)encodingString));
 				
-				if(desiredEncoding == kCFStringEncodingInvalidId) {
+				if (desiredEncoding == kCFStringEncodingInvalidId) {
 					desiredEncoding = NSUTF8StringEncoding;
 				}
 			}
@@ -228,7 +228,7 @@
 	
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, normalized))){
+		(userinfo = aim_locate_finduserinfo(od->sess, normalized))) {
 		
 		bi = (od->buddyinfo ? g_hash_table_lookup(od->buddyinfo, normalized) : NULL);
 		
@@ -237,7 +237,7 @@
 			//Available status message - bi->availmsg has already been converted to UTF8 if needed for us.
 			statusMessage = [NSString stringWithUTF8String:(bi->availmsg)];
 			
-		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)){
+		} else if ((userinfo->flags & AIM_FLAG_AWAY) && (userinfo->away != NULL)) {
 			if ((userinfo->away_len > 0) && 
 				(userinfo->away_encoding != NULL)) {
 				
@@ -245,7 +245,7 @@
 				statusMessage = [self stringWithBytes:userinfo->away
 											   length:userinfo->away_len
 											 encoding:userinfo->away_encoding];
-			}else{
+			} else {
 				//Away message, no encoding provided, assume UTF8
 				statusMessage = [NSString stringWithUTF8String:userinfo->away];
 			}
@@ -254,13 +254,13 @@
 	
 	g_free(normalized);
 	
-	if(statusMessage){
+	if (statusMessage) {
 		// We use our own HTML decoder to avoid conflicting with the shared one, since we are running in a thread
 		static AIHTMLDecoder	*statusMessageHTMLDecoder = nil;
-		if(!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
+		if (!statusMessageHTMLDecoder) statusMessageHTMLDecoder = [[AIHTMLDecoder decoder] retain];
 		
 		return [statusMessageHTMLDecoder decodeHTML:statusMessage];
-	}else{
+	} else {
 		return nil;
 	}
 }

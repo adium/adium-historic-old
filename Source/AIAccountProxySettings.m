@@ -38,7 +38,7 @@
  */
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		//Load our view
 		[NSBundle loadNibNamed:@"AccountProxy" owner:self];
 
@@ -95,7 +95,7 @@
  */
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if(account != inAccount){
+	if (account != inAccount) {
 		[account release];
 		account = [inAccount retain];
 
@@ -130,8 +130,8 @@
 	NSString	*proxyUserName = [textField_proxyUserName stringValue];
 
 	//Password
-	if(![proxyUserName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS]] ||
-	   ![proxyHostName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS]]){
+	if (![proxyUserName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME group:GROUP_ACCOUNT_STATUS]] ||
+	   ![proxyHostName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_HOST group:GROUP_ACCOUNT_STATUS]]) {
 		
 		[[adium accountController] setPassword:[textField_proxyPassword secureStringValue]
 								forProxyServer:proxyHostName
@@ -163,7 +163,7 @@
 	NSString	*proxyHostName = [textField_proxyHostName stringValue];
 	NSString	*proxyUserName = [textField_proxyUserName stringValue];
 	
-	if(proxyHostName && proxyUserName){
+	if (proxyHostName && proxyUserName) {
 		NSString *proxyPassword = [[adium accountController] passwordForProxyServer:proxyHostName
 																		   userName:proxyUserName];
 		[textField_proxyPassword setStringValue:(proxyPassword ? proxyPassword : @"")];
@@ -180,19 +180,19 @@
 {
 	NSTextField *sender = [aNotification object];
 	
-	if(sender == textField_proxyHostName){
+	if (sender == textField_proxyHostName) {
 		
-	}else if(sender == textField_proxyPortNumber){
+	} else if (sender == textField_proxyPortNumber) {
 		[account setPreference:[NSNumber numberWithInt:[textField_proxyPortNumber intValue]]
 						forKey:KEY_ACCOUNT_PROXY_PORT
 						 group:GROUP_ACCOUNT_STATUS];
 		
-	}else if(sender == textField_proxyUserName){
+	} else if (sender == textField_proxyUserName) {
 		NSString	*userName = [textField_proxyUserName stringValue];
 		
 		//If the username changed, save the new username and clear the password field
-		if(![userName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME 
-														  group:GROUP_ACCOUNT_STATUS]]){
+		if (![userName isEqualToString:[account preferenceForKey:KEY_ACCOUNT_PROXY_USERNAME 
+														  group:GROUP_ACCOUNT_STATUS]]) {
 			[account setPreference:userName
 							forKey:KEY_ACCOUNT_PROXY_USERNAME
 							 group:GROUP_ACCOUNT_STATUS];

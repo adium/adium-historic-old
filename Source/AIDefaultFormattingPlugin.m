@@ -97,10 +97,10 @@
 	
 	//Apply the new preferences as Adium's default formatting attributes
 	attributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, nil];
-	if(textColor && ![textColor equalToRGBColor:[NSColor textColor]]){
+	if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]) {
 		[attributes setObject:textColor forKey:NSForegroundColorAttributeName];	
 	}	
-	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]){
+	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
 		[attributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
 	}
 	[[adium contentController] setDefaultFormattingAttributes:attributes];
@@ -131,42 +131,42 @@
 {
     AIContentObject	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 
-    if(content &&
+    if (content &&
 	   [content isKindOfClass:[AIContentMessage class]] &&
-	   ![(AIContentMessage *)content isAutoreply]){
+	   ![(AIContentMessage *)content isAutoreply]) {
 		NSAttributedString	*message = [content message];
 		
-		if([message length] > 0) {
+		if ([message length] > 0) {
 			NSDictionary	*attributes = [message attributesAtIndex:[message length]-1 effectiveRange:nil];
 			NSString		*newFont = [(NSFont *)[attributes objectForKey:NSFontAttributeName] stringRepresentation];
 			NSString		*newTextColor = [(NSColor *)[attributes objectForKey:NSForegroundColorAttributeName] stringRepresentation];
 			NSString		*newBodyColor = [(NSColor *)[attributes objectForKey:AIBodyColorAttributeName] stringRepresentation];
 			
 			//If the attribute is nil for these values, substitute our defaults
-			if(!newFont) newFont = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_FONT
+			if (!newFont) newFont = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_FONT
 																				   group:PREF_GROUP_FORMATTING
 																				  object:nil];
-			if(!newTextColor) newTextColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_TEXT_COLOR 
+			if (!newTextColor) newTextColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_TEXT_COLOR 
 																							 group:PREF_GROUP_FORMATTING
 																							object:nil];
-			if(!newBodyColor) newBodyColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_BACKGROUND_COLOR 
+			if (!newBodyColor) newBodyColor = [[adium preferenceController] defaultPreferenceForKey:KEY_FORMATTING_BACKGROUND_COLOR 
 																							 group:PREF_GROUP_FORMATTING
 																							object:nil];
 			
 			//Save the new formatting (if it's changed)
-			if(![[font stringRepresentation] isEqualToString:newFont]){
+			if (![[font stringRepresentation] isEqualToString:newFont]) {
 				AILog(@"newfont:%@  (was %@)",newFont,[font stringRepresentation]);
 				[[adium preferenceController] setPreference:newFont
 													 forKey:KEY_FORMATTING_FONT
 													  group:PREF_GROUP_FORMATTING];
 			}
-			if(![[textColor stringRepresentation] isEqualToString:newTextColor]){
+			if (![[textColor stringRepresentation] isEqualToString:newTextColor]) {
 				AILog(@"newcolor:%@ (was %@)",newTextColor,[textColor stringRepresentation]);
 				[[adium preferenceController] setPreference:newTextColor
 													 forKey:KEY_FORMATTING_TEXT_COLOR
 													  group:PREF_GROUP_FORMATTING];
 			}
-			if(![[backgroundColor stringRepresentation] isEqualToString:newBodyColor]){
+			if (![[backgroundColor stringRepresentation] isEqualToString:newBodyColor]) {
 				AILog(@"newbackgroundcolor:%@ (was %@)",newBodyColor,[backgroundColor stringRepresentation]);
 				[[adium preferenceController] setPreference:newBodyColor
 													 forKey:KEY_FORMATTING_TEXT_COLOR
@@ -197,7 +197,7 @@
 	NSEnumerator	*enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
 	NSTextView<AITextEntryView> *textEntryView;
 	
-	while((textEntryView = [enumerator nextObject])){
+	while ((textEntryView = [enumerator nextObject])) {
 		[self _resetFormattingInView:textEntryView];
 	}	
 }

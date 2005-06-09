@@ -88,7 +88,7 @@
 #pragma mark AIHostReachabilityObserver conformance
 
 - (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host {
-	if(!timer) {
+	if (!timer) {
 		//Check for an update now
 		[self automaticCheckForNewVersion:nil];
 
@@ -130,7 +130,7 @@
 	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
 																		 group:PREF_GROUP_UPDATING] boolValue];
 
-	if(BETA_RELEASE || updateAutomatically) {
+	if (BETA_RELEASE || updateAutomatically) {
 		[self _requestVersionDict];
 		checkingManually = NO;
 	}
@@ -149,7 +149,7 @@
 	NSDate		*newestDate = nil;
 
 	//Get the newest version date from the passed version dict
-	if(versionDict && number){
+	if (versionDict && number) {
 		newestDate = [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
 	}
 		
@@ -159,14 +159,14 @@
 																				group:PREF_GROUP_UPDATING];
 	
 	//If the user has already been informed of this update previously, don't bother them
-	if(checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])){
-		if(!newestDate){
+	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
+		if (!newestDate) {
 			//Display connection error message
-			if(checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
-		}else if([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]){
+			if (checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
+		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
 			//Display the 'up to date' message if the user checked for updates manually
-			if(checkingManually) [ESVersionCheckerWindowController showUpToDateWindow];
-		}else{
+			if (checkingManually) [ESVersionCheckerWindowController showUpToDateWindow];
+		} else {
 			//Display 'update' message always
 			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:newestDate];
 			
@@ -178,14 +178,14 @@
 	
 	//Beta Expiration (Designed to be annoying)
 	//Beta expiration checking is performed in addition to regular version checking
-	if(BETA_RELEASE){
+	if (BETA_RELEASE) {
 		NSString	*betaNumber = [versionDict objectForKey:VERSION_BETA_PLIST_KEY];
 		NSDate		*betaDate = nil;
 		
-		if(versionDict && number) betaDate = [NSDate dateWithTimeIntervalSince1970:[betaNumber doubleValue]];
-		if(!betaDate){
+		if (versionDict && number) betaDate = [NSDate dateWithTimeIntervalSince1970:[betaNumber doubleValue]];
+		if (!betaDate) {
 			[ESVersionCheckerWindowController showCannotConnectWindow];
-		}else if(![thisDate isEqualToDate:betaDate] && ![thisDate isEqualToDate:[thisDate laterDate:betaDate]]){
+		} else if (![thisDate isEqualToDate:betaDate] && ![thisDate isEqualToDate:[thisDate laterDate:betaDate]]) {
 			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:betaDate];
 		}
 	}
@@ -205,7 +205,7 @@
 
 	NSString *path = [[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil];
 	NSMutableData *data = [NSMutableData dataWithContentsOfFile:path];
-	if(data) {
+	if (data) {
 		[data increaseLengthBy:1]; //nul-terminates.
 
 		const char *ptr = [data bytes];
@@ -215,7 +215,7 @@
 
 		//first character: 'r'. skip it.
 		++i;
-		if(i >= len) goto end;
+		if (i >= len) goto end;
 
 		//grab the build number.
 		unsigned long buildnum = strtoul(ptr+i, &nextptr, 10);
@@ -224,7 +224,7 @@
 
 		//skip the '|' (with a space on each side of it).
 		i += 3;
-		if(i >= len) goto end;
+		if (i >= len) goto end;
 
 		//grab the date number. this is a UNIX date (seconds since 1970-1-1).
 		NSTimeInterval unixDate = strtod(ptr+i, &nextptr);
@@ -235,7 +235,7 @@
 
 		//skip the '|'.
 		i += 3;
-		if(i >= len) goto end;
+		if (i >= len) goto end;
 
 		//grab the author.
 		NSRange range = { i, len - i };
@@ -253,7 +253,7 @@ end:
  */
 - (void)_requestVersionDict
 {
-	if(!checking) {
+	if (!checking) {
 		checking = YES;
 		[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
 	}
@@ -268,7 +268,7 @@ end:
 {
 	NSData			*data = [sender resourceDataUsingCache:YES];
 	
-	if(data){
+	if (data) {
 		NSDictionary	*versionDict;
 
 		versionDict = [NSPropertyListSerialization propertyListFromData:data

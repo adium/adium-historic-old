@@ -37,7 +37,7 @@
 			  date:(NSDate*)inDate
 		   message:(NSAttributedString *)inMessage
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		//Default Behavior
 		filterContent = YES;
@@ -86,7 +86,7 @@
 
 - (void)setUserInfo:(id)inUserInfo
 {
-	if(userInfo != inUserInfo){
+	if (userInfo != inUserInfo) {
 		[userInfo release];
 		userInfo = [inUserInfo retain];
 	}
@@ -97,7 +97,7 @@
 //Content is similar if it's from the same source, of the same time, and sent within 5 minutes.
 - (BOOL)isSimilarToContent:(AIContentObject *)inContent
 {
-	if(source == [inContent source] && [[self type] compare:[inContent type]] == 0){
+	if (source == [inContent source] && [[self type] compare:[inContent type]] == 0) {
 		NSTimeInterval	timeInterval = [date timeIntervalSinceDate:[inContent date]];
 		
 		return(timeInterval > -300 && timeInterval < 300);
@@ -156,7 +156,7 @@
 //Attributed Message
 - (void)setMessage:(NSAttributedString *)inMessage
 {
-	if(message != inMessage){
+	if (message != inMessage) {
 		[message release];
 		message = [inMessage retain];
 	}

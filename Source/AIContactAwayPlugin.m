@@ -57,23 +57,23 @@
     statusMessage = [inObject statusMessage];
     
     //Return the correct string
-    if(statusMessage != nil && [statusMessage length] != 0){
-		if (away){
+    if (statusMessage != nil && [statusMessage length] != 0) {
+		if (away) {
 			
 			//Check to make sure we're not duplicating server display name information
 			NSString	*serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
 			
 			//Return the correct string
-			if ([serverDisplayName isEqualToString:[statusMessage string]]){
+			if ([serverDisplayName isEqualToString:[statusMessage string]]) {
 				label = AWAY_LABEL;
-			}else{
+			} else {
 				label = AWAY_MESSAGE_LABEL;
 			}
 			
-		}else{
+		} else {
 			label = STATUS_LABEL;
 		}
-    }else if(away){
+    } else if (away) {
 		label = AWAY_LABEL;
     }
     
@@ -101,18 +101,18 @@
 	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
 
     //Return the correct string
-	if ([serverDisplayName isEqualToString:[statusMessage string]]){
+	if ([serverDisplayName isEqualToString:[statusMessage string]]) {
 		//If the status and server display name are the same, just display YES for away since we'll display the
 		//server display name itself in the proper place.
-		if(away){
+		if (away) {
 			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
 		}
-	}else{
-		if(statusMessage != nil && [statusMessage length] != 0){
-			if([[statusMessage string] rangeOfString:@"\t" options:NSLiteralSearch].location == NSNotFound){
+	} else {
+		if (statusMessage != nil && [statusMessage length] != 0) {
+			if ([[statusMessage string] rangeOfString:@"\t" options:NSLiteralSearch].location == NSNotFound) {
 				entry = statusMessage;
 				
-			}else{
+			} else {
 				/* We don't display tabs well in the tooltips because we use them for alignment, so
 				 * turn them into 4 spaces. */
 				NSMutableAttributedString	*mutableStatusMessage = [[statusMessage mutableCopy] autorelease];
@@ -125,7 +125,7 @@
 			
 			
 			
-		}else if(away){
+		} else if (away) {
 			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
 		}
 	}

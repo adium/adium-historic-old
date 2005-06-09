@@ -71,11 +71,11 @@
 	sendOnReturn = [[prefDict objectForKey:SEND_ON_RETURN] boolValue];
 	[popUp_sendKeys setMenu:[self sendKeysMenu]];
 	
-	if(sendOnEnter && sendOnReturn){
+	if (sendOnEnter && sendOnReturn) {
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnBoth];
-	}else if(sendOnEnter){
+	} else if (sendOnEnter) {
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnEnter];			
-	}else if(sendOnReturn){
+	} else if (sendOnReturn) {
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
 	}
 
@@ -84,9 +84,9 @@
 	[popUp_outputDevice setMenu:[self outputDeviceMenu]];
 	[popUp_outputDevice compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue]];
 	
-    if([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] == YES){
+    if ([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] == YES) {
         [slider_volume setFloatValue:0.0];
-    }else{
+    } else {
         [slider_volume setFloatValue:[[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
     }
 	
@@ -115,30 +115,30 @@
 //Called in response to all preference controls, applies new settings
 - (IBAction)changePreference:(id)sender
 {
-    if(sender == checkBox_messagesInTabs){
+    if (sender == checkBox_messagesInTabs) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_TABBED_CHATTING
                                               group:PREF_GROUP_INTERFACE];
 		[self configureControlDimming];
 		
-	}else if(sender == checkBox_arrangeByGroup){
+	} else if (sender == checkBox_arrangeByGroup) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
 											 forKey:KEY_GROUP_CHATS_BY_GROUP
 											  group:PREF_GROUP_INTERFACE];
 		
-	}else if(sender == checkBox_enableLogging){
+	} else if (sender == checkBox_enableLogging) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
                                              forKey:KEY_LOGGER_ENABLE
                                               group:PREF_GROUP_LOGGING];
 		
-    }else if(sender == popUp_tabKeys){
+    } else if (sender == popUp_tabKeys) {
 		AITabKeys keySelection = [[sender selectedItem] tag];
 
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:keySelection]
 											 forKey:KEY_TAB_SWITCH_KEYS
 											  group:PREF_GROUP_CHAT_CYCLING];
 		
-	}else if(sender == popUp_sendKeys){
+	} else if (sender == popUp_sendKeys) {
 		AISendKeys 	keySelection = [[sender selectedItem] tag];
 		BOOL		sendOnEnter = (keySelection == AISendOnEnter || keySelection == AISendOnBoth);
 		BOOL		sendOnReturn = (keySelection == AISendOnReturn || keySelection == AISendOnBoth);
@@ -150,13 +150,13 @@
 											 forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
 		
-    }else if(sender == popUp_outputDevice){
+    } else if (sender == popUp_outputDevice) {
 		SoundDeviceType soundType = [[popUp_outputDevice selectedItem] tag];
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
 											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
 											  group:PREF_GROUP_SOUNDS];
 
-	}else if(sender == checkBox_enableMenuItem){
+	} else if (sender == checkBox_enableMenuItem) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
 											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
 											  group:PREF_GROUP_STATUS_MENU_ITEM];
@@ -184,7 +184,7 @@
 	oldMute = [[prefDict objectForKey:KEY_SOUND_MUTE] intValue];
 
     //Volume
-    if(volume != oldVolume){
+    if (volume != oldVolume) {
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:volume]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_SOUNDS];
@@ -192,7 +192,7 @@
     }
 
     //Muted
-    if(mute != oldMute){
+    if (mute != oldMute) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:mute]
                                              forKey:KEY_SOUND_MUTE
                                               group:PREF_GROUP_SOUNDS];
@@ -200,7 +200,7 @@
     }
 	
     //Play a sample sound
-    if(playSample){
+    if (playSample) {
         [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
     }
 }

@@ -115,18 +115,18 @@
 	//Get the new accounts
 	[accounts release];
 	
-	if([listObject isKindOfClass:[AIMetaContact class]]){
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		NSEnumerator	*enumerator = [[(AIMetaContact *)listObject servicesOfContainedObjects] objectEnumerator];
 		AIService		*service;
 		
 		accounts = [[NSMutableArray alloc] init];
 
-		while((service = [enumerator nextObject])){
+		while ((service = [enumerator nextObject])) {
 			[(NSMutableArray *)accounts addObjectsFromArrayIgnoringDuplicates:
 				[[adium accountController] accountsCompatibleWithService:service]];
 		}
 		
-	}else{
+	} else {
 		accounts = [[[adium accountController] accountsCompatibleWithService:[listObject service]] retain];
 	}
 	
@@ -173,13 +173,13 @@
 	NSString		*identifier = [tableColumn identifier];
 	AIAccount		*account = [accounts objectAtIndex:row];
 
-	if([identifier isEqualToString:@"account"]){
+	if ([identifier isEqualToString:@"account"]) {
 		NSString	*accountFormattedUID = [account formattedUID];
 		
-		if([account integerStatusObjectForKey:@"Online"]){
+		if ([account integerStatusObjectForKey:@"Online"]) {
 			return(accountFormattedUID);
 			
-		}else{
+		} else {
 			//Gray the names of offline accounts
 			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:accountFormattedUID attributes:attributes];
@@ -202,11 +202,11 @@
 	BOOL			accountOnline;
 		
 	account =  [accounts objectAtIndex:row];
-	if ([listObject isKindOfClass:[AIMetaContact class]]){
+	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		//If we're dealing with a metaContact, make sure it's the topmost one
 		exactContact = (AIListContact *)[[adium contactController] parentContactForListObject:listObject];
 
-	}else{
+	} else {
 		//Retrieve an AIListContact on this account
 		exactContact = [[adium contactController] existingContactWithService:[listObject service]
 																	 account:account
@@ -219,16 +219,16 @@
 	[cell setEnabled:accountOnline];
 	
 	//Select active group
-	if([identifier isEqualToString:@"group"]){
-		if(accountOnline){
+	if ([identifier isEqualToString:@"group"]) {
+		if (accountOnline) {
 			AIListGroup	*group;
 			
-			if((group = [[adium contactController] remoteGroupForContact:exactContact])){
+			if ((group = [[adium contactController] remoteGroupForContact:exactContact])) {
 				[cell selectItemWithRepresentedObject:group];
-			}else{
+			} else {
 				[cell selectItemAtIndex:0];			
 			}
-		}else{
+		} else {
 			[cell setTitle:AILocalizedString(@"(Unavailable)",nil)];
 		}
 	}
@@ -249,35 +249,35 @@
 	AIAccount		*account = [accounts objectAtIndex:row];
 	AIListContact	*exactContact;
 	
-	if([identifier isEqualToString:@"group"]){
+	if ([identifier isEqualToString:@"group"]) {
 		NSMenu		*menu = [[tableColumn dataCell] menu];
 		int			menuIndex = [object intValue];
 		
-		if(menuIndex >= 0 && menuIndex < [menu numberOfItems]){
+		if (menuIndex >= 0 && menuIndex < [menu numberOfItems]) {
 			AIListGroup	*group = [[menu itemAtIndex:menuIndex] representedObject];
 			
-			if ([listObject isKindOfClass:[AIMetaContact class]]){
+			if ([listObject isKindOfClass:[AIMetaContact class]]) {
 				//If we're dealing with a metaContact, make sure it's the topmost one
 				exactContact = (AIListContact *)[[adium contactController] parentContactForListObject:listObject];
 				
-			}else{
+			} else {
 				//Retrieve an AIListContact on this account
 				exactContact = [[adium contactController] existingContactWithService:[listObject service]
 																			 account:account
 																				 UID:[listObject UID]];
 			}
 			
-			if (group){
-				if (group != [exactContact containingObject]){
+			if (group) {
+				if (group != [exactContact containingObject]) {
 					
 					if (exactContact && ([exactContact containingObject] ||
-										 [exactContact isKindOfClass:[AIMetaContact class]])){
+										 [exactContact isKindOfClass:[AIMetaContact class]])) {
 						//Move contact
 						[[adium contactController] moveContact:exactContact toGroup:group];
 						
-					}else{
+					} else {
 						//Add contact
-						if (!exactContact){
+						if (!exactContact) {
 							exactContact = [[adium contactController] contactWithService:[listObject service]
 																				 account:account
 																					 UID:[listObject UID]];
@@ -287,8 +287,8 @@
 													   toGroup:group];
 					}
 				}
-			}else{
-				if(exactContact){
+			} else {
+				if (exactContact) {
 					//User selected not listed, so we'll remove that contact
 					[[adium contactController] removeListObjects:[NSArray arrayWithObject:exactContact]];
 				}

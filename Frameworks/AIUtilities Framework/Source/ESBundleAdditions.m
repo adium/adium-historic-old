@@ -14,11 +14,11 @@
 	NSDictionary	*info = [self localizedInfoDictionary];
 	NSString		*label = [info objectForKey:@"CFBundleName"];
 	
-	if (!label){
+	if (!label) {
 		label = [self objectForInfoDictionaryKey:@"CFBundleName"];
 	}
 	
-	if (!label){
+	if (!label) {
 		label = [self bundleIdentifier];
 	}
 	

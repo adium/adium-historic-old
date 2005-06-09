@@ -27,7 +27,7 @@
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initColorSelectionPopUpButton];
 	}
 	return self;
@@ -35,7 +35,7 @@
 
 - (id)initWithFrame:(NSRect)buttonFrame pullsDown:(BOOL)flag
 {
-	if((self = [super initWithFrame:buttonFrame pullsDown:flag])) {
+	if ((self = [super initWithFrame:buttonFrame pullsDown:flag])) {
 		[self _initColorSelectionPopUpButton];
 	}
 	return self;
@@ -75,14 +75,14 @@
 
     //search for a preset
     enumerator = [availableColors objectEnumerator];
-    while((label = [enumerator nextObject])){
-        if([[enumerator nextObject] equalToRGBColor:inColor]) break;
+    while ((label = [enumerator nextObject])) {
+        if ([[enumerator nextObject] equalToRGBColor:inColor]) break;
     }
 
     //Select
-    if(label){
+    if (label) {
         [self selectItemWithTitle:label];
-    }else{
+    } else {
         [self _setCustomColor:inColor];
         [self selectItem:customMenuItem];
     }
@@ -95,7 +95,7 @@
 //Set the available pre-set color choices.  Array should be alternating labels and colors (NSString, NSColor, NSString, NSColor, NSString, ...)
 - (void)setAvailableColors:(NSArray *)inColors
 {
-    if(inColors != availableColors){
+    if (inColors != availableColors) {
         [availableColors release];
         availableColors = [inColors retain];
 
@@ -115,7 +115,7 @@
 //Color panel color was changed
 - (void)customColorChanged:(id)sender
 {
-    if([self selectedItem] == customMenuItem){
+    if ([self selectedItem] == customMenuItem) {
         [self _setCustomColor:[[[[NSColorPanel sharedColorPanel] color] copy] autorelease]];
         [[self target] performSelector:[self action] withObject:self];
     }
@@ -124,7 +124,7 @@
 //Set the current custom color
 - (void)_setCustomColor:(NSColor *)inColor
 {
-    if(customColor != inColor){
+    if (customColor != inColor) {
         [customColor release]; customColor = [inColor retain];
         [customMenuItem setRepresentedObject:customColor];
         [customMenuItem setImage:[self _sampleImageForColor:customColor]];
@@ -140,14 +140,14 @@
     NSString		*label;
 
     //Empty our menu
-    if(![self menu]){
+    if (![self menu]) {
         [self setMenu:[[[NSMenu alloc] init] autorelease]]; //Make sure we have a menu
     }
     [self removeAllItems];
     
     //Colors
     enumerator = [availableColors objectEnumerator];
-    while((label = [enumerator nextObject])){
+    while ((label = [enumerator nextObject])) {
         color = [enumerator nextObject];
 
         //Create the menu item

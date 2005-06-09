@@ -65,7 +65,7 @@
 	[status setStatusType:inStatusType];
 	[status setStatusName:[[[AIObject sharedAdiumInstance] statusController] defaultStatusNameForType:inStatusType]];
 	
-	if(inStatusType == AIAwayStatusType){
+	if (inStatusType == AIAwayStatusType) {
 		[status setHasAutoReply:YES];
 	}
 	
@@ -77,7 +77,7 @@
  */
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		statusDict = [[NSMutableDictionary alloc] init];
 	}
 	
@@ -113,10 +113,10 @@
 	//Ensure we have a unique status ID before encoding
 	[self uniqueStatusID];
 	
-	if([encoder allowsKeyedCoding]){
+	if ([encoder allowsKeyedCoding]) {
         [encoder encodeObject:statusDict forKey:@"AIStatusDict"];
 
-    }else{
+    } else {
         [encoder encodeObject:statusDict];
     }
 }
@@ -126,13 +126,13 @@
  */
 - (id)initWithCoder:(NSCoder *)decoder
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
-		if ([decoder allowsKeyedCoding]){
+		if ([decoder allowsKeyedCoding]) {
 			// Can decode keys in any order		
 			statusDict = [[decoder decodeObjectForKey:@"AIStatusDict"] mutableCopy];
 			
-		}else{
+		} else {
 			// Must decode keys in same order as encodeWithCoder:		
 			statusDict = [[decoder decodeObject] mutableCopy];
 		}
@@ -163,10 +163,10 @@
 	NSString		*statusName;
 	AIStatusType	statusType;
 	
-	if([self shouldForceInitialIdleTime]){
+	if ([self shouldForceInitialIdleTime]) {
 		statusName = @"Idle";
 		statusType = AIAwayStatusType;
-	}else{
+	} else {
 		statusName = [self statusName];
 		statusType = [self statusType];
 	}
@@ -188,7 +188,7 @@
 	
 	statusMessage = [statusDict objectForKey:STATUS_STATUS_MESSAGE];
 
-	if(![statusMessage length]) statusMessage = nil;
+	if (![statusMessage length]) statusMessage = nil;
 
 	return statusMessage;
 }
@@ -206,10 +206,10 @@
  */
 - (void)setStatusMessage:(NSAttributedString *)statusMessage
 {
-	if(statusMessage){
+	if (statusMessage) {
 		[statusDict setObject:statusMessage
 					   forKey:STATUS_STATUS_MESSAGE];
-	}else{
+	} else {
 		[statusDict removeObjectForKey:STATUS_STATUS_MESSAGE];
 	}
 }
@@ -233,13 +233,13 @@
 {
 	NSAttributedString	*autoReply = nil;
 
-	if([self hasAutoReply]){
+	if ([self hasAutoReply]) {
 		autoReply = ([self autoReplyIsStatusMessage] ?
 					 [self statusMessage] :
 					 [statusDict objectForKey:STATUS_AUTO_REPLY_MESSAGE]);
 	}
 
-	if(![autoReply length]) autoReply = nil;
+	if (![autoReply length]) autoReply = nil;
 	
 	return autoReply;
 }
@@ -249,10 +249,10 @@
  */
 - (void)setAutoReply:(NSAttributedString *)autoReply
 {
-	if(autoReply){
+	if (autoReply) {
 		[statusDict setObject:autoReply
 					   forKey:STATUS_AUTO_REPLY_MESSAGE];
-	}else{
+	} else {
 		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
 	}
 }
@@ -305,45 +305,45 @@
 	NSRange				linebreakRange;
 	
 	//If the state has a title, we simply use it
-	if(!title){
+	if (!title) {
 		NSString *string = [statusDict objectForKey:STATUS_TITLE];
-		if(string && [string length]) title = string;
+		if (string && [string length]) title = string;
 	}
 
 	//If the state has a status message, use it.
-	if(!title && 
+	if (!title && 
 	   (statusMessage = [self statusMessage]) &&
-	   ([statusMessage length])){
+	   ([statusMessage length])) {
 		title = [statusMessage string];
 	}
 
 	//If the state has an autoreply (but no status message), use it.
-	if(!title &&
+	if (!title &&
 	   (autoReply = [self autoReply]) &&
-	   ([autoReply length])){
+	   ([autoReply length])) {
 		title = [autoReply string];
 	}
 	
 	/* If the state is not an available state, or it's an available state with a non-default statusName,
  	 * use the description of the state itself. */
 	statusType = [self statusType];
-	if(!title &&
+	if (!title &&
 	   (([self statusType] != AIAvailableStatusType) || (([self statusName] != nil) &&
-														 ![[self statusName] isEqualToString:STATUS_NAME_AVAILABLE]))){
+														 ![[self statusName] isEqualToString:STATUS_NAME_AVAILABLE]))) {
 		title = [[adium statusController] descriptionForStateOfStatus:self];
 	}
 
 	//If the state is simply idle, use the string "Idle"
-	if(!title && [self shouldForceInitialIdleTime]){
+	if (!title && [self shouldForceInitialIdleTime]) {
 		title = AILocalizedString(@"Idle",nil);
 	}
 
-	if(!title && (statusType == AIOfflineStatusType)){
+	if (!title && (statusType == AIOfflineStatusType)) {
 		title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_OFFLINE];
 	}
 
 	//If the state is none of the above, use the string "Available"
-	if(!title) title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE];
+	if (!title) title = [[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE];
 	
 	//Strip newlines and whitespace from the beginning and the end
 	title = [title stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
@@ -364,10 +364,10 @@
  */
 - (void)setTitle:(NSString *)inTitle
 {
-	if(inTitle){
+	if (inTitle) {
 		[statusDict setObject:inTitle
 					   forKey:STATUS_TITLE];
-	}else{
+	} else {
 		[statusDict removeObjectForKey:STATUS_TITLE];
 	}
 }
@@ -413,10 +413,10 @@
  */
 - (void)setStatusName:(NSString *)statusName
 {
-	if(statusName){
+	if (statusName) {
 		[statusDict setObject:statusName
 					   forKey:STATUS_STATUS_NAME];
-	}else{
+	} else {
 		[statusDict removeObjectForKey:statusName];
 	}
 }
@@ -492,7 +492,7 @@
 - (NSNumber *)uniqueStatusID
 {
 	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
-	if(!uniqueStatusID){
+	if (!uniqueStatusID) {
 		uniqueStatusID = [[adium statusController] nextUniqueStatusID];
 		[self setUniqueStatusID:uniqueStatusID];
 	}
@@ -514,10 +514,10 @@
 
 - (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID
 {
-	if(inUniqueStatusID){
+	if (inUniqueStatusID) {
 		[statusDict setObject:inUniqueStatusID
 					   forKey:STATUS_UNIQUE_ID];		
-	}else{
+	} else {
 		[statusDict removeObjectForKey:STATUS_UNIQUE_ID];
 	}
 	

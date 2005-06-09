@@ -32,12 +32,12 @@
 - (id)initForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		floaterTabImage = [[self dragTabImageForTabCell:inTabCell inCustomTabsView:inTabView] retain];
 		floaterWindowImage = [[self dragWindowImageForWindow:[inTabView window] customTabsView:inTabView tabCell:inTabCell] retain];
 		useFancyAnimations = (floaterWindowImage != nil);
 
-		if(useFancyAnimations){
+		if (useFancyAnimations) {
 			//Create a floating window for our tab
 			dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
 			[dragTabFloater setMaxOpacity:1.0];
@@ -71,7 +71,7 @@
 //Toggle display of the full drag window
 - (void)setDisplayingFullWindow:(BOOL)inFullWindow animate:(BOOL)animate
 {
-	if(useFancyAnimations){
+	if (useFancyAnimations) {
 		fullWindow = inFullWindow;
 		[dragWindowFloater setVisible:fullWindow animate:animate];
 		[dragTabFloater setVisible:!fullWindow animate:animate];
@@ -82,9 +82,9 @@
 //If the drag window is fading out, we don't move it.  Things look cleaner this way.
 - (void)moveToPoint:(NSPoint)inPoint
 {
-	if(useFancyAnimations){
+	if (useFancyAnimations) {
 		[dragTabFloater moveFloaterToPoint:inPoint];
-		if(fullWindow) [dragWindowFloater moveFloaterToPoint:NSMakePoint(inPoint.x - CUSTOM_TABS_INDENT, inPoint.y)];
+		if (fullWindow) [dragWindowFloater moveFloaterToPoint:NSMakePoint(inPoint.x - CUSTOM_TABS_INDENT, inPoint.y)];
 	}
 }
 	
@@ -96,7 +96,7 @@
 {
     NSImage     *dragTabImage = nil;
     
-    if([customTabsView canDraw]){
+    if ([customTabsView canDraw]) {
         dragTabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
         [dragTabImage addRepresentation:[[[NSBitmapImageRep alloc] initWithFocusedViewRect:[tabCell frame]] autorelease]];
@@ -114,7 +114,7 @@
     NSImage     *contentImage, *tabImage;    
     NSPoint     insertPoint;
 	
-    if([customTabsView canDraw] && [contentView canDraw]){
+    if ([customTabsView canDraw] && [contentView canDraw]) {
         //Get an image of the tab
         tabImage = [[[NSImage alloc] init] autorelease];
         [customTabsView lockFocus];
@@ -153,9 +153,9 @@
 //On earlier systems we fall back to using the stock dragging code
 - (NSImage *)dragImage
 {
-	if(useFancyAnimations){
+	if (useFancyAnimations) {
 		return([[[NSImage alloc] initWithSize:[floaterTabImage size]] autorelease]);
-	}else{
+	} else {
 		return(floaterTabImage);
 	}
 }

@@ -70,7 +70,7 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if(!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]){
+	if (!key || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
 		[self updateListObject:nil keys:nil silent:NO];
 	}
 }
@@ -83,40 +83,40 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if(inObject == nil || [inObject isKindOfClass:[AIAccount class]]){
+	if (inObject == nil || [inObject isKindOfClass:[AIAccount class]]) {
 		AIDockController	*dockController = [adium dockController];
 		BOOL				shouldUpdateStatus = NO;
 		
-		if(inObject == nil || [inModifiedKeys containsObject:@"Online"]){
-			if([self _accountsWithBoolKey:@"Online"] > 0){
+		if (inObject == nil || [inModifiedKeys containsObject:@"Online"]) {
+			if ([self _accountsWithBoolKey:@"Online"] > 0) {
 				[dockController setIconStateNamed:@"Online"];
-			}else{
+			} else {
 				[dockController removeIconStateNamed:@"Online"];
 			}
 			shouldUpdateStatus = YES;
 		}
 
-		if(inObject == nil || [inModifiedKeys containsObject:@"Connecting"]){
-			if([self _accountsWithBoolKey:@"Connecting"] > 0){
+		if (inObject == nil || [inModifiedKeys containsObject:@"Connecting"]) {
+			if ([self _accountsWithBoolKey:@"Connecting"] > 0) {
 				[dockController setIconStateNamed:@"Connecting"];
-			}else{
+			} else {
 				[dockController removeIconStateNamed:@"Connecting"];
 			}
 			shouldUpdateStatus = YES;
 		}
 		
-		if(inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]){
-			if([self _accountsWithKey:@"IdleSince"] > 0){
+		if (inObject == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
+			if ([self _accountsWithKey:@"IdleSince"] > 0) {
 				[dockController setIconStateNamed:@"Idle"];
-			}else{
+			} else {
 				[dockController removeIconStateNamed:@"Idle"];
 			}	
 		}
 		
-		if(shouldUpdateStatus || [inModifiedKeys containsObject:@"StatusState"]){
-			if([[adium statusController] activeStatusType] == AIAwayStatusType){
+		if (shouldUpdateStatus || [inModifiedKeys containsObject:@"StatusState"]) {
+			if ([[adium statusController] activeStatusType] == AIAwayStatusType) {
 				[dockController setIconStateNamed:@"Away"];
-			}else{
+			} else {
 				[dockController removeIconStateNamed:@"Away"];
 			}
 		}
@@ -136,8 +136,8 @@
     NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
-    while((account = [enumerator nextObject])){
-		if([account integerStatusObjectForKey:inKey]) return(YES);
+    while ((account = [enumerator nextObject])) {
+		if ([account integerStatusObjectForKey:inKey]) return(YES);
     }
 
     return(NO);
@@ -154,8 +154,8 @@
     NSEnumerator    *enumerator = [[[adium accountController] accounts] objectEnumerator];
     AIAccount       *account;
 
-    while((account = [enumerator nextObject])){
-		if([account statusObjectForKey:inKey]) return(YES);
+    while ((account = [enumerator nextObject])) {
+		if ([account statusObjectForKey:inKey]) return(YES);
     }
 
     return(NO);

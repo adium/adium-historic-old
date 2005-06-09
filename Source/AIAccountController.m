@@ -224,34 +224,34 @@
 	AIAccount		*account;
 	
 	//If passed a contact, we have a few better ways to determine the account than just using the first
-    if(inContact){
+    if (inContact) {
 		//If we've messaged this object previously, and the account we used to message it is online, return that account
         NSString *accountID = [inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
 													group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        if(accountID && (account = [self accountWithInternalObjectID:accountID])){
-            if([account availableForSendingContentType:inType toContact:inContact]){
+        if (accountID && (account = [self accountWithInternalObjectID:accountID])) {
+            if ([account availableForSendingContentType:inType toContact:inContact]) {
                 return(account);
             }
         }
 		
 		//If inObject is an AIListContact return the account the object is on
-		if((account = [inContact account])){
-			if([account availableForSendingContentType:inType toContact:inContact]){
+		if ((account = [inContact account])) {
+			if ([account availableForSendingContentType:inType toContact:inContact]) {
 				return(account);
 			}
 		}
 		
 		//Return the last account used to message someone on this service
 		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
-		if(lastAccountID && (account = [self accountWithInternalObjectID:lastAccountID])){
-			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
+		if (lastAccountID && (account = [self accountWithInternalObjectID:lastAccountID])) {
+			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
 				return(account);
 			}
 		}
 		
-		if (includeOffline){
+		if (includeOffline) {
 			//If inObject is an AIListContact return the account the object is on even if the account is offline
-			if((account = [inContact account])){
+			if ((account = [inContact account])) {
 				return(account);
 			}
 		}
@@ -268,29 +268,29 @@
 	AIAccount		*account;
 	NSEnumerator	*enumerator;
 	
-    if(inContact){
+    if (inContact) {
 		//First available account in our list of the correct service type
 		enumerator = [[self accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([inContact service] == [account service] &&
-			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
+		while ((account = [enumerator nextObject])) {
+			if ([inContact service] == [account service] &&
+			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
 				return(account);
 			}
 		}
 		
 		//First available account in our list of a compatible service type
 		enumerator = [[self accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
-			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)){
+		while ((account = [enumerator nextObject])) {
+			if ([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
+			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
 				return(account);
 			}
 		}
-	}else{
+	} else {
 		//First available account in our list
 		enumerator = [[self accounts] objectEnumerator];
-		while((account = [enumerator nextObject])){
-			if([account availableForSendingContentType:inType toContact:nil] || includeOffline){
+		while ((account = [enumerator nextObject])) {
+			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
 				return(account);
 			}
 		}
@@ -315,13 +315,13 @@
 	NSMenuItem		*menuItem;
 	
 	enumerator = [[self menuItemsForAccountsWithTarget:target includeOffline:includeOffline] objectEnumerator];
-	while((menuItem = [enumerator nextObject])){
-		if (!groupChatCreator || [[[menuItem representedObject] service] canCreateGroupChats]){
+	while ((menuItem = [enumerator nextObject])) {
+		if (!groupChatCreator || [[[menuItem representedObject] service] canCreateGroupChats]) {
 			[menu addItem:menuItem];
 		}
 	}
 
-	if(!target) [menu setAutoenablesItems:NO];
+	if (!target) [menu setAutoenablesItems:NO];
 
 	return([menu autorelease]);
 }
@@ -341,12 +341,12 @@
 	
     //Insert a menu item for each available account
     enumerator = [[self accounts] objectEnumerator];
-    while((account = [enumerator nextObject])){
+    while ((account = [enumerator nextObject])) {
 		BOOL available = [[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
 																		 toContact:nil 
 																		 onAccount:account];
 		
-		if(available || includeOffline){
+		if (available || includeOffline) {
 			NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:(multipleServices ?
 																								  [NSString stringWithFormat:@"%@ (%@)", [account formattedUID], [[account service] shortDescription]] :
 																								  [account formattedUID])
@@ -392,9 +392,9 @@
 	//Build the menu
 	menu = [[NSMenu alloc] init];
 	[menu setAutoenablesItems:NO];
-	if([topAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:topAccounts];
-	if([topAccounts count] &&  [bottomAccounts count]) [menu addItem:[NSMenuItem separatorItem]];
-	if([bottomAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:bottomAccounts];
+	if ([topAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:topAccounts];
+	if ([topAccounts count] &&  [bottomAccounts count]) [menu addItem:[NSMenuItem separatorItem]];
+	if ([bottomAccounts count]) [self _addMenuItemsToMenu:menu withTarget:target forAccounts:bottomAccounts];
 	
 	return([menu autorelease]);
 }
@@ -404,7 +404,7 @@
 	NSEnumerator	*enumerator = [accounts objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
+	while ((account = [enumerator nextObject])) {
 		NSMenuItem	*menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[account formattedUID]
 																					 target:target
 																					 action:@selector(selectAccount:)
@@ -424,9 +424,9 @@
 	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount		*account;
 	
-	while((account = [enumerator nextObject])){
-		if((!inObject && !inPreferred) || 
-		   ([self _account:account canSendContentType:inType toListObject:inObject preferred:inPreferred includeOffline:includeOffline])){
+	while ((account = [enumerator nextObject])) {
+		if ((!inObject && !inPreferred) || 
+		   ([self _account:account canSendContentType:inType toListObject:inObject preferred:inPreferred includeOffline:includeOffline])) {
 			
 			[sourceAccounts addObject:account];
 		}
@@ -439,21 +439,21 @@
 {
 	BOOL			canSend = NO;
 	
-	if ([inObject isKindOfClass:[AIMetaContact class]]){		
+	if ([inObject isKindOfClass:[AIMetaContact class]]) {		
 		NSEnumerator	*enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 		AIListObject	*containedObject;
 		
 		//canSend is YES if any of the contained contacts of the meta contact return YES
-		while ((containedObject = [enumerator nextObject])){
-			if ([self _account:account canSendContentType:inType toListObject:containedObject preferred:inPreferred includeOffline:includeOffline]){
+		while ((containedObject = [enumerator nextObject])) {
+			if ([self _account:account canSendContentType:inType toListObject:containedObject preferred:inPreferred includeOffline:includeOffline]) {
 				
 				canSend = YES;
 				break;
 			}
 		}
 
-	}else{
-		if ([[inObject serviceClass] isEqualToString:[account serviceClass]]){
+	} else {
+		if ([[inObject serviceClass] isEqualToString:[account serviceClass]]) {
 			BOOL			knowsObject = NO;
 			BOOL			canFindObject = NO;
 			AIListContact	*contactForAccount = [[adium contactController] existingContactWithService:[inObject service]
@@ -461,7 +461,7 @@
 																								   UID:[inObject UID]];
 			
 			//Does the account know this object?
-			if(contactForAccount){
+			if (contactForAccount) {
 				knowsObject = [account availableForSendingContentType:CONTENT_MESSAGE_TYPE
 															toContact:contactForAccount];
 			}
@@ -469,9 +469,9 @@
 			//Could the account find this object?
 			canFindObject = [account availableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:nil];
 			
-			if((inPreferred && knowsObject) ||						//Online and can see the object
+			if ((inPreferred && knowsObject) ||						//Online and can see the object
 			   (!inPreferred && !knowsObject && canFindObject) ||	//Online and may be able to see the object
-			   (!inPreferred && !knowsObject && includeOffline)){	//Offline, but may be able to see the object if online
+			   (!inPreferred && !knowsObject && includeOffline)) {	//Offline, but may be able to see the object if online
 				canSend = YES;
 			}
 		}
@@ -487,7 +487,7 @@
     AIChat			*chat = [userInfo objectForKey:@"AIChat"];
     AIListObject	*destObject = [chat listObject];
     
-    if(chat && destObject){
+    if (chat && destObject) {
         AIContentObject *contentObject = [userInfo objectForKey:@"AIContentObject"];
         AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
         
@@ -509,8 +509,8 @@
     AIAccount			*account;
     
     enumerator = [[self accounts] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:@"Online"]){
+    while ((account = [enumerator nextObject])) {
+        if ([[account supportedPropertyKeys] containsObject:@"Online"]) {
             [account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
@@ -523,9 +523,9 @@
     AIAccount			*account;
 
     enumerator = [[self accounts] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([[account supportedPropertyKeys] containsObject:@"Online"] &&
-		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]){
+    while ((account = [enumerator nextObject])) {
+        if ([[account supportedPropertyKeys] containsObject:@"Online"] &&
+		   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
             [account setPreference:nil forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
@@ -536,8 +536,8 @@
 	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
 	AIAccount		*account;
 	
-    while((account = [enumerator nextObject])){	
-		if([account online] && [[account service] canCreateGroupChats]) return(YES);
+    while ((account = [enumerator nextObject])) {	
+		if ([account online] && [[account service] canCreateGroupChats]) return(YES);
 	}
 	
 	return(NO);
@@ -548,8 +548,8 @@
 	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
 	AIAccount		*account;
 	
-    while((account = [enumerator nextObject])){	
-		if([account contactListEditable]) return(YES);
+    while ((account = [enumerator nextObject])) {	
+		if ([account contactListEditable]) return(YES);
 	}
 	
 	return(NO);
@@ -561,8 +561,8 @@
     AIAccount			*account;
 
     enumerator = [[self accounts] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([account online]){
+    while ((account = [enumerator nextObject])) {
+        if ([account online]) {
 			return YES;
         }
     }	
@@ -576,8 +576,8 @@
     AIAccount			*account;
 	
     enumerator = [[self accounts] objectEnumerator];
-    while((account = [enumerator nextObject])){
-        if([account online] || [account integerStatusObjectForKey:@"Connecting"]){
+    while ((account = [enumerator nextObject])) {
+        if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 			return YES;
         }
     }	

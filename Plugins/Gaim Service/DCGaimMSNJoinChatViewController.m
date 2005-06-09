@@ -24,7 +24,7 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
 	[super configureForAccount:inAccount];
-	if( delegate )
+	if ( delegate )
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:NO];
 }
 

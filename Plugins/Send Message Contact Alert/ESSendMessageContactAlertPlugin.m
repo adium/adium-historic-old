@@ -63,13 +63,13 @@
 	NSString		*destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
 	AIListContact	*contact = nil;
 
-	if(destUniqueID){
+	if (destUniqueID) {
 		contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 	}
 	
-	if(contact && messageText){
+	if (contact && messageText) {
 		return([NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText]);
-	}else{
+	} else {
 		return(SEND_MESSAGE_ALERT_SHORT);		
 	}
 }
@@ -95,7 +95,7 @@
 	//Intended source and dest
 	account = [[adium accountController] accountWithInternalObjectID:[details objectForKey:KEY_MESSAGE_SEND_FROM]];
 	destUniqueID = [details objectForKey:KEY_MESSAGE_SEND_TO];
-	if(destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
+	if (destUniqueID) contact = (AIListContact *)[[adium contactController] existingListObjectWithUniqueID:destUniqueID];
 
 	//Message to send and other options
 	useAnotherAccount = [[details objectForKey:KEY_MESSAGE_OTHER_ACCOUNT] boolValue];
@@ -103,37 +103,37 @@
 	//If we have a contact (and not a meta contact), we need to make sure it's the contact for account, or 
 	//availableForSendingContentType: will return NO incorrectly.
 	//######### The core should really handle this for us. #########
-	if([contact isKindOfClass:[AIMetaContact class]]){
+	if ([contact isKindOfClass:[AIMetaContact class]]) {
 		contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
 		
-	}else if([contact isKindOfClass:[AIListContact class]]){
+	} else if ([contact isKindOfClass:[AIListContact class]]) {
 		contact = [[adium contactController] contactWithService:[contact service]
 														account:account 
 															UID:[contact UID]];
 	}
 	
 	//If the desired account is not available for sending, ask Adium for the best available account
-	if(![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
+	if (![[adium contentController] availableForSendingContentType:CONTENT_MESSAGE_TYPE
 														toContact:contact
-														onAccount:account]){
-		if(useAnotherAccount){
+														onAccount:account]) {
+		if (useAnotherAccount) {
 			account = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																			 toContact:contact];
 			//Repeat the refinement process using the newly retrieved account
-			if([contact isKindOfClass:[AIMetaContact class]]){
+			if ([contact isKindOfClass:[AIMetaContact class]]) {
 				contact = [(AIMetaContact *)contact preferredContactWithService:[account service]];
 				
-			}else if([contact isKindOfClass:[AIListContact class]]){
+			} else if ([contact isKindOfClass:[AIListContact class]]) {
 				contact = [[adium contactController] contactWithService:[contact service]
 																account:account 
 																	UID:[contact UID]];
 			}
-		}else{
+		} else {
 			account = nil;
 		}
 	}
 	
-	if(account && contact){
+	if (account && contact) {
 		//Create and open a chat with this contact
 		AIChat					*chat;
 		NSAttributedString 		*message;
@@ -156,7 +156,7 @@
 	}
 	
 	//Display an error message if the message was not delivered
-	if(!success && contact){
+	if (!success && contact) {
         [[adium interfaceController] handleMessage:AILocalizedString(@"Contact Alert Error",nil)
 								   withDescription:[NSString stringWithFormat:AILocalizedString(@"Unable to send message to %@.",nil), [contact displayName]]
 								   withWindowTitle:@""];

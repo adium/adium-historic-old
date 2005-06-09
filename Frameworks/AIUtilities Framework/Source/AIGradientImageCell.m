@@ -12,7 +12,7 @@
 @implementation AIGradientImageCell
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		drawsGradient = NO;
 		ignoresFocus = NO;
 		maxSize = NSZeroSize;
@@ -59,7 +59,7 @@
 //Draw with the selected-control colours.
 - (void)_drawHighlightWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-	if([self drawsGradientHighlight]){
+	if ([self drawsGradientHighlight]) {
 		//Draw the gradient
 		AIGradient *gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		[gradient drawInRect:cellFrame];
@@ -69,12 +69,12 @@
 		[[NSColor alternateSelectedControlColor] set];
 		NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
 		
-	}else{
+	} else {
 		//Draw the regular selection, ignoring focus if desired
-		if(ignoresFocus){
+		if (ignoresFocus) {
 			[[NSColor alternateSelectedControlColor] set];
 			NSRectFillUsingOperation(cellFrame,NSCompositeSourceOver);
-		}else{
+		} else {
 			[(id)super _drawHighlightWithFrame:cellFrame inView:controlView]; 
 		}
 	}
@@ -85,7 +85,7 @@
 {
 	NSImage	*img = [self image];
 	
-	if(img){
+	if (img) {
 		//Handle flipped axis
 		[img setFlipped:![img isFlipped]];
 		
@@ -99,26 +99,26 @@
 		
 		//Determine the correct maximum size, taking into account maxSize and our cellFrame.
 		NSSize	ourMaxSize = cellFrame.size;
-		if((maxSize.width != 0) && (ourMaxSize.width > maxSize.width)){
+		if ((maxSize.width != 0) && (ourMaxSize.width > maxSize.width)) {
 			ourMaxSize.width = maxSize.width;
 		}
-		if((maxSize.height != 0) && (ourMaxSize.height > maxSize.height)){
+		if ((maxSize.height != 0) && (ourMaxSize.height > maxSize.height)) {
 			ourMaxSize.height = maxSize.height;
 		}
 
 		if ((imgSize.height > ourMaxSize.height) ||
 			(imgSize.width  >  ourMaxSize.width)) {
 			
-			if (imgSize.width > imgSize.height){
+			if (imgSize.width > imgSize.height) {
 				//Give width priority: Make the height change by the same proportion as the width will change
 				targetRect.size.width = ourMaxSize.width;
 				targetRect.size.height = imgSize.height * (targetRect.size.width / imgSize.width);
-			}else{
+			} else {
 				//Give height priority: Make the width change by the same proportion as the height will change
 				targetRect.size.height = ourMaxSize.height;
 				targetRect.size.width = imgSize.width * (targetRect.size.height / imgSize.height);
 			}
-		}else{
+		} else {
 			targetRect.size.width = imgSize.width;
 			targetRect.size.height = imgSize.height;
 		}

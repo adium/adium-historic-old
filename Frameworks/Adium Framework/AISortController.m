@@ -26,7 +26,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		statusKeysRequiringResort = [[self statusKeysRequiringResort] retain];
 		attributeKeysRequiringResort = [[self attributeKeysRequiringResort] retain];
 		sortFunction = [self sortFunction];
@@ -63,18 +63,18 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 #pragma mark Sort Logic
 - (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
-	if(statusKeysRequiringResort){
+	if (statusKeysRequiringResort) {
 		return([statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
-	}else{
+	} else {
 		return(NO);
 	}
 }
 
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
-	if(attributeKeysRequiringResort){
+	if (attributeKeysRequiringResort) {
 		return([attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
-	}else{
+	} else {
 		return(NO);
 	}
 }
@@ -86,9 +86,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 - (void)forceIgnoringOfGroups:(BOOL)shouldForce
 {
-	if(shouldForce){
+	if (shouldForce) {
 		alwaysSortGroupsToTop = NO;
-	}else{
+	} else {
 		alwaysSortGroupsToTop = [self alwaysSortGroupsToTopByDefault];
 	}
 }
@@ -101,11 +101,11 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	AIListObject	*object;
 	int				index = 0;
 
-	if(alwaysSortGroupsToTop){
-		while((object = [enumerator nextObject]) && ((object == inObject) || 
+	if (alwaysSortGroupsToTop) {
+		while ((object = [enumerator nextObject]) && ((object == inObject) || 
 			  basicGroupVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending)) index++;
-	}else{
-		while((object = [enumerator nextObject]) && ((object == inObject) ||
+	} else {
+		while ((object = [enumerator nextObject]) && ((object == inObject) ||
 			  basicVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending)) index++;
 	}
 	
@@ -136,11 +136,11 @@ int basicVisibilitySort(id objectA, id objectB, void *context)
     BOOL	visibleA = [objectA visible];
     BOOL	visibleB = [objectB visible];
 	
-    if(!visibleA && visibleB){
+    if (!visibleA && visibleB) {
         return(NSOrderedDescending);
-    }else if(visibleA && !visibleB){
+    } else if (visibleA && !visibleB) {
         return(NSOrderedAscending);
-    }else{
+    } else {
 		sortfunc	function = context;
 
 		return((function)(objectA, objectB, NO));
@@ -153,19 +153,19 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
     BOOL	visibleA = [objectA visible];
     BOOL	visibleB = [objectB visible];
 	
-    if(!visibleA && visibleB){
+    if (!visibleA && visibleB) {
         return(NSOrderedDescending);
-    }else if(visibleA && !visibleB){
+    } else if (visibleA && !visibleB) {
         return(NSOrderedAscending);
-    }else{
+    } else {
         BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
         BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 		
-        if(groupA && !groupB){
+        if (groupA && !groupB) {
             return(NSOrderedAscending);
-        }else if(!groupA && groupB){
+        } else if (!groupA && groupB) {
             return(NSOrderedDescending);
-        }else{
+        } else {
 			sortfunc	function = context;
 			
 			return((function)(objectA, objectB, groupA));
@@ -180,7 +180,7 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
  */
 - (void)didBecomeActive 
 {
-	if (!becameActiveFirstTime){
+	if (!becameActiveFirstTime) {
 		[self didBecomeActiveFirstTime];
 		becameActiveFirstTime = YES;
 	}
@@ -194,9 +194,9 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
  */
 - (NSString *)configureSortMenuItemTitle{ 
 	NSString *configureSortWindowTitle = [self configureSortWindowTitle];
-	if(configureSortWindowTitle){
+	if (configureSortWindowTitle) {
 		return([[self configureSortWindowTitle] stringByAppendingEllipsis]);
-	}else{
+	} else {
 		return(nil);
 	}
 }

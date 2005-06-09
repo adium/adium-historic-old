@@ -46,7 +46,7 @@
  */
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-    if((self = [super initWithCoder:aDecoder])) {
+    if ((self = [super initWithCoder:aDecoder])) {
 		[self _initImageViewWithImagePicker];
 	}
     return self;
@@ -57,7 +57,7 @@
  */
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		[self _initImageViewWithImagePicker];
 	}
 	return self;
@@ -90,7 +90,7 @@
  */
 - (void)dealloc
 {
-	if (pickerController){
+	if (pickerController) {
 		[[pickerController window] close];
 		[pickerController release]; pickerController = nil;
 	}
@@ -134,7 +134,7 @@
 	[super setImage:inImage];
 	
 	//Inform the picker controller of a changed selection if it is open, for live updating
-	if (pickerController){
+	if (pickerController) {
 		[pickerController selectionChanged];
 	}
 }
@@ -147,9 +147,9 @@
  */ 
 - (void)setTitle:(NSString *)inTitle
 {
-	if(title != inTitle){
+	if (title != inTitle) {
 		[title release]; title = [inTitle retain];
-		if (pickerController){
+		if (pickerController) {
 			[pickerController selectionChanged];
 		}
 	}
@@ -197,11 +197,11 @@
 	 * NSImageView does some sort of event loop modification in response to a click. We didn't dequeue the event, so
 	 * we don't have to handle it ourselves -- instead, the event loop will handle it after this invocation is complete. 
 	 */
-	if([nextEvent type] != NSLeftMouseDragged){
+	if ([nextEvent type] != NSLeftMouseDragged) {
 		[super mouseDown:theEvent];   
 	}
 
-	if ([theEvent clickCount] == 2){
+	if ([theEvent clickCount] == 2) {
 		[self showPickerController];
 	}
 }
@@ -215,11 +215,11 @@
 {
 	unichar key = [[theEvent charactersIgnoringModifiers] characterAtIndex:0];
 	
-	if (key == NSDeleteCharacter || key == NSBackspaceCharacter){
+	if (key == NSDeleteCharacter || key == NSBackspaceCharacter) {
 		[self delete];
-	}else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter){
+	} else if (key == NSEnterCharacter || key == NSCarriageReturnCharacter) {
 		[self showPickerController];
-	}else{
+	} else {
 		[super keyDown:theEvent];
 	}
 }
@@ -235,7 +235,7 @@
 	NSPoint mousePos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	float dx = mousePos.x-mouseDownPos.x;
 	float dy = mousePos.y-mouseDownPos.y;	
-	if ((dx*dx) * (dy*dy) < DRAGGING_THRESHOLD){
+	if ((dx*dx) * (dy*dy) < DRAGGING_THRESHOLD) {
 		return;
 	}
 	
@@ -282,12 +282,12 @@
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
     //sender has accepted the drag and now we need to send the data for the type we promised
-    if([type isEqualToString:NSTIFFPboardType]){
+    if ([type isEqualToString:NSTIFFPboardType]) {
 		//set data for TIFF type on the pasteboard as requested
 		[sender setData:[[self image] TIFFRepresentation] 
 				forType:NSTIFFPboardType];
 		
-    }else if([type isEqualToString:NSPDFPboardType]){
+    } else if ([type isEqualToString:NSPDFPboardType]) {
 		[sender setData:[self dataWithPDFInsideRect:[self bounds]] 
 				forType:NSPDFPboardType];
     }
@@ -298,9 +298,9 @@
  */
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
-	if([sender draggingSource] == self){
+	if ([sender draggingSource] == self) {
 		return NSDragOperationNone;
-	}else{
+	} else {
 		return [super draggingEntered:sender];
 	}
 }
@@ -310,9 +310,9 @@
  */
 - (NSDragOperation)draggingUpdated:(id <NSDraggingInfo>)sender
 {
-	if([sender draggingSource] == self){
+	if ([sender draggingSource] == self) {
 		return NSDragOperationNone;
-	}else{
+	} else {
 		return [super draggingUpdated:sender];
 	}
 }
@@ -331,22 +331,22 @@
 	
 	[super concludeDragOperation:sender];
 	
-	if (pickerController){
+	if (pickerController) {
 		[pickerController selectionChanged];
 	}
 	
 	//Use the file's data if possible
-	if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+	if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 		NSPasteboard	*pboard = [sender draggingPasteboard];
 
-		if([[pboard types] containsObject:NSFilenamesPboardType]){
+		if ([[pboard types] containsObject:NSFilenamesPboardType]) {
 			NSArray *files = [pboard propertyListForType:NSFilenamesPboardType];
 		
-			if([files count]){
+			if ([files count]) {
 				NSString	*imageFile = [files objectAtIndex:0];
 				NSData		*imageData = [NSData dataWithContentsOfFile:imageFile];
 
-				if(imageData){
+				if (imageData) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:[NSData dataWithContentsOfFile:imageFile]];
@@ -358,7 +358,7 @@
 	}
 
 	//Inform the delegate if we haven't informed it yet
-	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+	if (!notified && [delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
 		[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 					   withObject:self
 					   withObject:[self image]];
@@ -373,7 +373,7 @@
 - (void)copy:(id)sender
 {
 	NSImage *image = [self image];
-	if (image){
+	if (image) {
 		[[NSPasteboard generalPasteboard] declareTypes:[NSArray arrayWithObject:NSTIFFPboardType] owner:nil];
 		[[NSPasteboard generalPasteboard] setData:[image TIFFRepresentation] forType:NSTIFFPboardType];
 	}
@@ -390,22 +390,22 @@
 	BOOL			success = NO;
 
     NSData			*imageData = (type ? [pb dataForType:type] : nil);
-	if (imageData){
+	if (imageData) {
 		NSImage *image = [[[NSImage alloc] initWithData:imageData] autorelease];
-		if (image){
+		if (image) {
 			[self setImage:image];
 			
-			if (pickerController){
+			if (pickerController) {
 				[pickerController selectionChanged];
 			}
 			
 			//Inform the delegate
-			if(delegate){
-				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+			if (delegate) {
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
-				}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+				} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 								   withObject:self
 								   withObject:image];
@@ -416,7 +416,7 @@
 		}
 	}
 	
-	if(!success) NSBeep();
+	if (!success) NSBeep();
 }
 
 /*
@@ -435,7 +435,7 @@
  */
 - (void)delete
 {
-	if (delegate && [delegate respondsToSelector:@selector(deleteInImageViewWithImagePicker:)]){
+	if (delegate && [delegate respondsToSelector:@selector(deleteInImageViewWithImagePicker:)]) {
 		[delegate performSelector:@selector(deleteInImageViewWithImagePicker:)
 					   withObject:self];
 	}	
@@ -456,8 +456,8 @@
  */
 - (void)showPickerController
 {
-	if (imagePickerClassIsAvailable && useNSImagePickerController){
-		if (!pickerController){
+	if (imagePickerClassIsAvailable && useNSImagePickerController) {
+		if (!pickerController) {
 			Class	imagePickerClass;
 			NSPoint	pickerPoint;
 			
@@ -476,7 +476,7 @@
 		[pickerController selectionChanged];
 		[[pickerController window] makeKeyAndOrderFront: nil];
 
-	}else{
+	} else {
 		/* If we aren't using or can't use the image picker, use an open panel  */
 		NSOpenPanel *openPanel;
 		
@@ -494,13 +494,13 @@
 			[self setImage:image];
 			
 			//Inform the delegate
-			if(delegate){
-				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+			if (delegate) {
+				if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 								   withObject:self
 								   withObject:imageData];
 					
-				}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+				} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
 					[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 								   withObject:self
 								   withObject:image];
@@ -521,15 +521,15 @@
 	//Update the NSImageView
 	[self setImage:image];
 	
-	if (imagePickerClassIsAvailable){
+	if (imagePickerClassIsAvailable) {
 		//Inform the delegate
-		if(delegate){
-			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]){
+		if (delegate) {
+			if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)]) {
 				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImageData:)
 							   withObject:self
 							   withObject:[image PNGRepresentation]];
 				
-			}else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]){
+			} else if ([delegate respondsToSelector:@selector(imageViewWithImagePicker:didChangeToImage:)]) {
 				[delegate performSelector:@selector(imageViewWithImagePicker:didChangeToImage:)
 							   withObject:self
 							   withObject:image];
@@ -571,7 +571,7 @@
 	NSImage	*theImage = nil;
 	
 	//Give the delegate an opportunity to supply an image which differs from the NSImageView's image
-	if (delegate && [delegate respondsToSelector:@selector(imageForImageViewWithImagePicker:)]){
+	if (delegate && [delegate respondsToSelector:@selector(imageForImageViewWithImagePicker:)]) {
 		theImage = [delegate imageForImageViewWithImagePicker:self];
 	}
 	
@@ -602,13 +602,13 @@
 	NSResponder *resp = nil;
 	NSWindow	*window = [self window];
 	
-	if([window isKeyWindow]){
+	if ([window isKeyWindow]) {
 		resp = [window firstResponder];
-		if(resp == lastResp){
+		if (resp == lastResp) {
 			return([super needsDisplay]);
 		}
 		
-	}else if(lastResp == nil){
+	} else if (lastResp == nil) {
 		return([super needsDisplay]);
 		
 	}
@@ -629,7 +629,7 @@
 {
 	[super drawRect:rect];
 	
-	if(shouldDrawFocusRing){
+	if (shouldDrawFocusRing) {
 		NSSetFocusRingStyle(NSFocusRingOnly);
 		NSRectFill(rect);
 	}

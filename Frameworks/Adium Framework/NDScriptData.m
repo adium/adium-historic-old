@@ -75,10 +75,10 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	OSAID		theScriptID = kOSANullScript;
 	id			theInstance = nil;
 	
-	if(aComponentInstance == nil)
+	if (aComponentInstance == nil)
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
 	
-	if( NDLogOSStatus( OSACoerceFromDesc( [aComponentInstance instanceRecord], [aDescriptor aeDesc], kOSAModeNull, &theScriptID )) )
+	if ( NDLogOSStatus( OSACoerceFromDesc( [aComponentInstance instanceRecord], [aDescriptor aeDesc], kOSAModeNull, &theScriptID )) )
 	{
 		theInstance = [self newWithScriptID:theScriptID componentInstance:aComponentInstance];
 	}
@@ -91,7 +91,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)init
 {
-	if( NDLogFalse( self = [self initWithComponentInstance:[NDComponentInstance sharedComponentInstance]] ) )
+	if ( NDLogFalse( self = [self initWithComponentInstance:[NDComponentInstance sharedComponentInstance]] ) )
 	{
 		scriptID = kOSANullScript;
 	}
@@ -105,10 +105,10 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (id)initWithAppleEventDescriptor:(NSAppleEventDescriptor *)aDescriptor componentInstance:(NDComponentInstance *)aComponentInstance
 {
 	OSAID		theScriptID = kOSANullScript;
-	if(aComponentInstance == nil)
+	if (aComponentInstance == nil)
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
 
-	if( NDLogOSStatus( OSACoerceFromDesc( [aComponentInstance instanceRecord], [aDescriptor aeDesc], kOSAModeNull, &theScriptID )) )
+	if ( NDLogOSStatus( OSACoerceFromDesc( [aComponentInstance instanceRecord], [aDescriptor aeDesc], kOSAModeNull, &theScriptID )) )
 	{
 		self = [self initWithScriptID:theScriptID componentInstance:aComponentInstance];
 	}
@@ -126,7 +126,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithData:(NSData *)aData componentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if(aComponentInstance == nil)
+	if (aComponentInstance == nil)
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
 	return [self initWithScriptID:loadScriptData( aData, kOSAModeNull, kOSANullScript, aComponentInstance ) componentInstance:aComponentInstance];
 }
@@ -146,9 +146,9 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (id)initWithContentsOfFile:(NSString *)aPath componentInstance:(NDComponentInstance *)aComponentInstance
 {
 	OSAID		theScriptID = kOSANullScript;
-	if( aComponentInstance == nil )
+	if ( aComponentInstance == nil )
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
-	if( (theScriptID = loadScriptData( [NSData dataWithContentsOfFile:aPath], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
+	if ( (theScriptID = loadScriptData( [NSData dataWithContentsOfFile:aPath], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
 		|| (theScriptID = loadScriptData( [NSData dataWithResourceForkContentsOfFile:aPath type:kOSAScriptResourceType Id:kScriptResourceID], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
 		|| (theScriptID = [[self class] compileString:[NSString stringWithContentsOfFile:aPath] scriptID:kOSANullScript componentInstance:aComponentInstance]) != kOSANullScript )
 	{
@@ -169,9 +169,9 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (id)initWithContentsOfURL:(NSURL *)anURL componentInstance:(NDComponentInstance *)aComponentInstance
 {
 	OSAID		theScriptID = kOSANullScript;
-	if( aComponentInstance == nil )
+	if ( aComponentInstance == nil )
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
-	if( (theScriptID = loadScriptData( [NSData dataWithContentsOfURL:anURL], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
+	if ( (theScriptID = loadScriptData( [NSData dataWithContentsOfURL:anURL], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
 	  || (theScriptID = loadScriptData( [NSData dataWithResourceForkContentsOfURL:anURL type:kOSAScriptResourceType Id:kScriptResourceID], kOSAModeNull, kOSANullScript, aComponentInstance )) != kOSANullScript
 	  || (theScriptID = [[self class] compileString:[NSString stringWithContentsOfURL:anURL] scriptID:kOSANullScript componentInstance:aComponentInstance]) != kOSANullScript )
 	{
@@ -190,7 +190,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithComponentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if( NDLogFalse( self = [super init]) )
+	if ( NDLogFalse( self = [super init]) )
 	{
 		scriptID = kOSANullScript;
 		componentInstance = aComponentInstance ? aComponentInstance : [NDComponentInstance sharedComponentInstance];
@@ -204,7 +204,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (void)dealloc
 {
-	if( scriptID != kOSANullScript )
+	if ( scriptID != kOSANullScript )
 	{
 		NDLogOSStatus( OSADispose( [self instanceRecord], scriptID ));
 	}
@@ -259,7 +259,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	DescType		theBestType = bestType( [self scriptID], [self instanceRecord] );
 	BOOL			theSuccess = NO;
 	
-	if( theBestType == kTXNUnicodeTextData || theBestType == kTXNTextData || theBestType == kTXNRichTextFormatData )
+	if ( theBestType == kTXNUnicodeTextData || theBestType == kTXNTextData || theBestType == kTXNRichTextFormatData )
 	{
 		theSuccess = NDLogOSStatus( OSACoerceToDesc( [self instanceRecord], [self scriptID], theBestType, kOSAModeNull, &theDesc) );
 	}
@@ -393,7 +393,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)init
 {
-	if( (self = [super init]) != nil )
+	if ( (self = [super init]) != nil )
 	{
 		resultScriptData = nil;
 		resultScriptID = kOSANullScript;
@@ -407,7 +407,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithSource:(NSString *)aSource modeFlags:(long)aModeFlags componentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if(aComponentInstance == nil)
+	if (aComponentInstance == nil)
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
 	return [self initWithScriptID:[[self class] compileString:aSource scriptID:kOSANullScript componentInstance:aComponentInstance] componentInstance:aComponentInstance];
 }
@@ -428,7 +428,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (NDScriptData *)resultScriptData
 {
-	if( resultScriptData == nil && resultScriptID != kOSANullScript )
+	if ( resultScriptData == nil && resultScriptID != kOSANullScript )
 		resultScriptData = [NDScriptData newWithScriptID:resultScriptID componentInstance:[self componentInstance]];
 		
 	return resultScriptData;
@@ -466,7 +466,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 {
 	id				theInstance = nil;
 	OSAID			theScriptID = kOSANullScript;
-	if( NDLogOSStatus( OSACopyID( [self instanceRecord], [self scriptID], &theScriptID ) ) )
+	if ( NDLogOSStatus( OSACopyID( [self instanceRecord], [self scriptID], &theScriptID ) ) )
 	{
 		theInstance = [NDScriptData newWithScriptID:theScriptID componentInstance:[self componentInstance]];
 	}
@@ -490,12 +490,12 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 				theResultScriptID = kOSANullScript;
 	BOOL		theResult = NO;
 
-	if( aComponentInstance == nil )
+	if ( aComponentInstance == nil )
 		aComponentInstance = [NDComponentInstance sharedComponentInstance];
 
 	theScriptID = [self compileString:aSource modeFlags:kOSAModeCanInteract|kOSAModeAugmentContext|kOSAModeCompileIntoContext scriptID:kOSANullScript componentInstance:aComponentInstance];
 	
-	if( theScriptID != kOSANullScript )
+	if ( theScriptID != kOSANullScript )
 	{
 		theResult = NDLogOSStatus( OSAExecute( [aComponentInstance instanceRecord], theScriptID, kOSANullScript, kOSAModeNull, &theResultScriptID ));
 		OSADispose( [aComponentInstance instanceRecord], theScriptID );
@@ -511,7 +511,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)init
 {
-	if( (self = [super init]) != nil )
+	if ( (self = [super init]) != nil )
 	{
 		parentScriptData = nil;
 		executionModeFlags = kOSAModeNull;
@@ -524,7 +524,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithData:(NSData *)aData parentScriptData:(NDScriptData *)aParentData
 {
-	if( (self = [self initWithData:aData componentInstance:[aParentData componentInstance]]) != nil )
+	if ( (self = [self initWithData:aData componentInstance:[aParentData componentInstance]]) != nil )
 	{
 		[self setParentScriptData:aParentData];
 	}
@@ -536,10 +536,10 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithParentScriptData:(NDScriptData *)aParentScriptData name:(NSString *)aName
 {
-	if( (self = [self initWithComponentInstance:[aParentScriptData componentInstance]]) != nil )
+	if ( (self = [self initWithComponentInstance:[aParentScriptData componentInstance]]) != nil )
 	{
 		parentScriptData = [aParentScriptData retain];
-		if( !NDLogOSStatus( OSAMakeContext( [self instanceRecord], aName ? [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc] : NULL, parentScriptData ? [parentScriptData scriptID] : kOSANullScript, &scriptID )))
+		if ( !NDLogOSStatus( OSAMakeContext( [self instanceRecord], aName ? [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc] : NULL, parentScriptData ? [parentScriptData scriptID] : kOSANullScript, &scriptID )))
 		{
 			[self release];
 			self = nil;
@@ -554,7 +554,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithContentsOfFile:(NSString *)aPath parentScriptData:(NDScriptData *)aParentData
 {
-	if( (self = [self initWithContentsOfFile:aPath componentInstance:[aParentData componentInstance]]) != nil )
+	if ( (self = [self initWithContentsOfFile:aPath componentInstance:[aParentData componentInstance]]) != nil )
 	{
 		[self setParentScriptData:aParentData];
 	}
@@ -566,7 +566,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithContentsOfURL:(NSURL *)aURL parentScriptData:(NDScriptData *)aParentData
 {
-	if( (self = [self initWithContentsOfURL:aURL componentInstance:[aParentData componentInstance]]) != nil )
+	if ( (self = [self initWithContentsOfURL:aURL componentInstance:[aParentData componentInstance]]) != nil )
 	{
 		[self setParentScriptData:aParentData];
 	}
@@ -595,7 +595,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (NDScriptData *)parentScriptData
 {
-	if( parentScriptData == nil )
+	if ( parentScriptData == nil )
 	{
 		parentScriptData = [[self scriptDataForPropertyOfType:pASParent] retain];
 	}
@@ -608,7 +608,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (BOOL)setParentScriptData:(NDScriptData *)aParentData
 {
 	BOOL		theResult = YES;
-	if( aParentData != parentScriptData )
+	if ( aParentData != parentScriptData )
 	{
 		theResult = [self setPropertyOfType:pASParent toScriptData:aParentData];
 		[parentScriptData release];
@@ -650,18 +650,18 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	OSAID		theResultScriptID = kOSANullScript;
 	BOOL		theResult = NO;
 	
-	if( aScriptHandler )
+	if ( aScriptHandler )
 	{
 		BOOL		theNeedToRelease = NO;
 		
 		// if has a different component instance then we need to make a copy with selfs component instance.
-		if( [aScriptHandler instanceRecord] != [self instanceRecord] )
+		if ( [aScriptHandler instanceRecord] != [self instanceRecord] )
 		{
 			aScriptHandler = [aScriptHandler copyWithComponentInstance:[self componentInstance]];
 			theNeedToRelease = YES;
 		}
 		theResult = NDLogOSStatus( OSAExecute( [self instanceRecord], [aScriptHandler scriptID], [self scriptID], [self executionModeFlags], &theResultScriptID ));
-		if( theNeedToRelease ) [aScriptHandler release];
+		if ( theNeedToRelease ) [aScriptHandler release];
 	}
 	else
 		theResult = NDLogOSStatus( OSAExecute( [self instanceRecord], [self scriptID], kOSANullScript, [self executionModeFlags], &theResultScriptID ));
@@ -728,7 +728,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	AEDescList		theEventIdentifierList;
 	NSArray			* theArray = nil;
 
-	if( OSAGetHandlerNames ( [self instanceRecord], kOSAModeNull, [self scriptID], &theEventIdentifierList ) == noErr )
+	if ( OSAGetHandlerNames ( [self instanceRecord], kOSAModeNull, [self scriptID], &theEventIdentifierList ) == noErr )
 	{
 		theArray = [[[[NSAppleEventDescriptor  alloc] initWithAEDescNoCopy:&theEventIdentifierList] autorelease] arrayValue];
 	}
@@ -751,7 +751,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	OSAID		theResultScriptID = kOSANullScript;
 	BOOL		theRespondsToSubroutine = NO;
 	
-	if( NDLogOSStatus(OSAGetHandler( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithEventClass:anEventClass eventID:anEventID] aeDesc], &theResultScriptID ))
+	if ( NDLogOSStatus(OSAGetHandler( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithEventClass:anEventClass eventID:anEventID] aeDesc], &theResultScriptID ))
 		 && theResultScriptID != kOSANullScript )
 	{
 		theRespondsToSubroutine = YES;
@@ -768,7 +768,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	OSAID		theResultScriptID = kOSANullScript;
 	BOOL		theRespondsToSubroutine = NO;
 
-	if( NDLogOSStatus(OSAGetHandler( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], &theResultScriptID ))
+	if ( NDLogOSStatus(OSAGetHandler( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], &theResultScriptID ))
 		 && theResultScriptID != kOSANullScript )
 	{
 		theRespondsToSubroutine = YES;
@@ -805,19 +805,19 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (BOOL)setSubroutineNamed:(NSString *)aName toScriptHandler:(NDScriptHandler *)aScriptHandler
 {
 	BOOL			theResult = NO;
-	if( aScriptHandler )
+	if ( aScriptHandler )
 	{
 		BOOL			theNeedToRelease = NO;
 		
 		// if has a different component instance then we need to make a copy with selfs component instance.
-		if( [aScriptHandler instanceRecord] != [self instanceRecord] )
+		if ( [aScriptHandler instanceRecord] != [self instanceRecord] )
 		{
 			aScriptHandler = [aScriptHandler copyWithComponentInstance:[self componentInstance]];
 			theNeedToRelease = YES;
 		}
 			
 		theResult = NDLogOSStatus( OSASetHandler( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], [aScriptHandler scriptID] ));
-		if( theNeedToRelease ) [aScriptHandler release];
+		if ( theNeedToRelease ) [aScriptHandler release];
 	}
 	
 	return theResult;
@@ -838,19 +838,19 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 - (BOOL)addSubroutineNamed:(NSString *)aName withScriptHandler:(NDScriptHandler *)aScriptHandler
 {
 	BOOL			theResult = NO;
-	if( aScriptHandler )
+	if ( aScriptHandler )
 	{
 		BOOL			theNeedToRelease = NO;
 		
 		// if has a different component instance then we need to make a copy with selfs component instance.
-		if( [aScriptHandler instanceRecord] != [self instanceRecord] )
+		if ( [aScriptHandler instanceRecord] != [self instanceRecord] )
 		{
 			aScriptHandler = [aScriptHandler copyWithComponentInstance:[self componentInstance]];
 			theNeedToRelease = YES;
 		}
 		
 		theResult = NDLogOSStatus( OSASetHandler( [self instanceRecord], kOSAModeDontDefine, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], [aScriptHandler scriptID] ));
-		if( theNeedToRelease ) [aScriptHandler release];
+		if ( theNeedToRelease ) [aScriptHandler release];
 	}
 	return theResult;
 }
@@ -872,7 +872,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	AEDescList		thePropertyNamesList;
 	NSArray			* theArray = nil;
 
-	if( NDLogOSStatus( OSAGetPropertyNames ( [self instanceRecord], kOSAModeNull, [self scriptID], &thePropertyNamesList ) ) )
+	if ( NDLogOSStatus( OSAGetPropertyNames ( [self instanceRecord], kOSAModeNull, [self scriptID], &thePropertyNamesList ) ) )
 	{
 		theArray = [[[[NSAppleEventDescriptor  alloc] initWithAEDescNoCopy:&thePropertyNamesList] autorelease] arrayValue];
 	}
@@ -886,7 +886,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 {
 	BOOL					theHasPropertyName = NO;
 	OSAID					theResultID = kOSANullScript;
-	if( OSAGetProperty( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], &theResultID )
+	if ( OSAGetProperty( [self instanceRecord], kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aName] aeDesc], &theResultID )
 		 && theResultID != kOSANullScript )
 	{
 		theHasPropertyName = YES;
@@ -902,10 +902,10 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 {
 	AEDesc		thePropDesc;
 	NDScriptData	* theScriptData = nil;
-	if( NDLogOSStatus( AECreateDesc( typeProperty, (void*)&aPropCode, sizeof(aPropCode), &thePropDesc) ) )
+	if ( NDLogOSStatus( AECreateDesc( typeProperty, (void*)&aPropCode, sizeof(aPropCode), &thePropDesc) ) )
 	{
 		OSAID				theScriptID = kOSANullScript;
-		if( NDLogOSStatus( OSAGetProperty([self instanceRecord], kOSAModeNull, [self scriptID], &thePropDesc, &theScriptID ) ) && theScriptID != kOSANullScript )
+		if ( NDLogOSStatus( OSAGetProperty([self instanceRecord], kOSAModeNull, [self scriptID], &thePropDesc, &theScriptID ) ) && theScriptID != kOSANullScript )
 		{
 			theScriptData = [NDScriptData scriptDataWithScriptID:theScriptID componentInstance:[self componentInstance]];
 		}
@@ -935,19 +935,19 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	BOOL			theNeedToRelease = NO;
 	
 	// if has a different component instance then we need to make a copy with selfs component instance.
-	if( [aScriptData instanceRecord] != [self instanceRecord] )
+	if ( [aScriptData instanceRecord] != [self instanceRecord] )
 	{
 		aScriptData = [aScriptData copyWithComponentInstance:[self componentInstance]];
 		theNeedToRelease = YES;
 	}
 
-	if( NDLogOSStatus( AECreateDesc( typeProperty, (void*)&aPropCode, sizeof(aPropCode), &thePropDesc) ) )
+	if ( NDLogOSStatus( AECreateDesc( typeProperty, (void*)&aPropCode, sizeof(aPropCode), &thePropDesc) ) )
 	{
 		theResult = NDLogOSStatus( OSASetProperty([self instanceRecord], kOSAModeNull, [self scriptID], &thePropDesc, [aScriptData scriptID]) );
 		AEDisposeDesc( &thePropDesc );
 	}
 	
-	if( theNeedToRelease ) [aScriptData release];
+	if ( theNeedToRelease ) [aScriptData release];
 	
 	return theResult;
 }
@@ -961,7 +961,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	BOOL			theNeedToRelease = NO;
 	
 	// if has a different component instance then we need to make a copy with selfs component instance.
-	if( [aScriptData instanceRecord] != [self instanceRecord] )
+	if ( [aScriptData instanceRecord] != [self instanceRecord] )
 	{
 		aScriptData = [aScriptData copyWithComponentInstance:[self componentInstance]];
 		theNeedToRelease = YES;
@@ -969,7 +969,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	
 	theResult = NDLogOSStatus( OSASetProperty ( [self instanceRecord],  kOSAModeNull, [self scriptID], [[NSAppleEventDescriptor descriptorWithString:aVariableName] aeDesc], [aScriptData scriptID] ) );
 
-	if( theNeedToRelease ) [aScriptData release];
+	if ( theNeedToRelease ) [aScriptData release];
 	
 	return theResult;
 }
@@ -1064,9 +1064,9 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 + (id)scriptDataWithContentsOfFile:(NSString *)aPath componentInstance:(NDComponentInstance *)aComponentInstance
 {
 	id		theInstance = nil;
-	if( (theInstance = [self scriptDataWithData:[NSData dataWithContentsOfFile:aPath] componentInstance:aComponentInstance] ) == nil)
+	if ( (theInstance = [self scriptDataWithData:[NSData dataWithContentsOfFile:aPath] componentInstance:aComponentInstance] ) == nil)
 	{
-		if( (theInstance = [NSData dataWithResourceForkContentsOfFile:aPath type:kOSAScriptResourceType Id:kScriptResourceID]) == nil )
+		if ( (theInstance = [NSData dataWithResourceForkContentsOfFile:aPath type:kOSAScriptResourceType Id:kScriptResourceID]) == nil )
 			theInstance = [NSString stringWithContentsOfFile:aPath];
 	}
 	
@@ -1087,9 +1087,9 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 + (id)scriptDataWithContentsOfURL:(NSURL *)anURL componentInstance:(NDComponentInstance *)aComponentInstance
 {
 	id		theInstance = nil;
-	if( (theInstance = [self scriptDataWithData:[NSData dataWithContentsOfURL:anURL] componentInstance:aComponentInstance] ) == nil)
+	if ( (theInstance = [self scriptDataWithData:[NSData dataWithContentsOfURL:anURL] componentInstance:aComponentInstance] ) == nil)
 	{
-		if( (theInstance = [NSData dataWithResourceForkContentsOfURL:anURL type:kOSAScriptResourceType Id:kScriptResourceID]) == nil )
+		if ( (theInstance = [NSData dataWithResourceForkContentsOfURL:anURL type:kOSAScriptResourceType Id:kScriptResourceID]) == nil )
 			theInstance = [NSString stringWithContentsOfURL:anURL];
 	}
 
@@ -1616,7 +1616,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithScriptID:(OSAID)aScriptID componentInstance:(NDComponentInstance *)aComponentInstance
 {
-	if(NDLogFalse([[NDScriptData classForScriptID:aScriptID componentInstance:aComponentInstance] isSubclassOfClass:[self class]])
+	if (NDLogFalse([[NDScriptData classForScriptID:aScriptID componentInstance:aComponentInstance] isSubclassOfClass:[self class]])
 		 && NDLogFalse(self = [self initWithComponentInstance:aComponentInstance]))
 	{
 		scriptID = aScriptID;
@@ -1668,12 +1668,12 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 	 * if resultScriptID is wrapped in a NDScriptData then we need to release the object and it will dispose of the resultScriptID,
 	 * otherwise we have to dispose of the resultScriptID ourselves
 	 */
-	if( resultScriptData != nil )
+	if ( resultScriptData != nil )
 	{
 		[resultScriptData release];
 		resultScriptData = nil;
 	}
-	else if( resultScriptID != kOSANullScript )
+	else if ( resultScriptID != kOSANullScript )
 	{
 		NDLogOSStatus( OSADispose( [self instanceRecord], resultScriptID ));
 	}
@@ -1709,9 +1709,9 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
  */
 - (id)initWithScriptID:(OSAID)aScriptDataID parentScriptData:(NDScriptData *)aParentScriptData
 {
-	if( (self = [self initWithScriptID:aScriptDataID componentInstance:[aParentScriptData componentInstance]]) != nil )
+	if ( (self = [self initWithScriptID:aScriptDataID componentInstance:[aParentScriptData componentInstance]]) != nil )
 	{
-		if( aParentScriptData )
+		if ( aParentScriptData )
 			[self setParentScriptData:aParentScriptData];
 	}
 	return self;
@@ -1806,7 +1806,7 @@ static OSAID compileString(NSString * aString, long int aModeFlags, OSAID aScrip
 {
 	NSAppleEventDescriptor		* theStringDesc;
 
-	if( (theStringDesc = [NSAppleEventDescriptor descriptorWithString:aString]) != nil )
+	if ( (theStringDesc = [NSAppleEventDescriptor descriptorWithString:aString]) != nil )
 	{
 		NDLogOSStatus( OSACompile([aComp instanceRecord], [theStringDesc aeDesc], aModeFlags, &aScriptID) );
 	}
@@ -1821,7 +1821,7 @@ static OSAID loadScriptData( NSData * aData, long int aModeFlags, OSAID aScriptI
 {
 	NSAppleEventDescriptor		* theDataDesc;
 
-	if( (theDataDesc = [NSAppleEventDescriptor descriptorWithDescriptorType:typeOSAGenericStorage data:aData]) != nil )
+	if ( (theDataDesc = [NSAppleEventDescriptor descriptorWithDescriptorType:typeOSAGenericStorage data:aData]) != nil )
 	{
 		NDLogOSStatus( OSALoad([aComp instanceRecord], [theDataDesc aeDesc], kOSAModeCompileIntoContext, &aScriptID) );
 	}

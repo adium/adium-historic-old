@@ -29,7 +29,7 @@
 //Init
 - (id)initWithFrame:(NSRect)frame
 {
-	if((self = [super initWithFrame:frame])) {
+	if ((self = [super initWithFrame:frame])) {
 		[self _initLinkTextView];
 	}
 
@@ -39,7 +39,7 @@
 //Init from nib
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
-	if((self = [super initWithCoder:aDecoder])) {
+	if ((self = [super initWithCoder:aDecoder])) {
 		[self _initLinkTextView];
 	}
 
@@ -69,7 +69,7 @@
 //Pass clicks to the link tracking controller
 - (void)mouseDown:(NSEvent*)theEvent
 {
-    if(![linkTrackingController handleMouseDown:theEvent withOffset:NSMakePoint(0,0)]){
+    if (![linkTrackingController handleMouseDown:theEvent withOffset:NSMakePoint(0,0)]) {
         [super mouseDown:theEvent];
     }    
 }
@@ -95,7 +95,7 @@
 //If we're being removed from the window, we need to remove our tracking rects
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-    if(newWindow == nil){ //pass an empty visible rect to end any tracking
+    if (newWindow == nil) { //pass an empty visible rect to end any tracking
         [linkTrackingController trackLinksInRect:NSMakeRect(0,0,0,0) withOffset:NSMakePoint(0,0)];
     }
 }
@@ -115,14 +115,14 @@
 	
 	linkMenuItems = [linkTrackingController menuItemsForEvent:theEvent withOffset:NSMakePoint(0,0)];
 	
-	if([linkMenuItems count]){
+	if ([linkMenuItems count]) {
 		NSMenuItem		*menuItem;
 		NSEnumerator	*enumerator;
 
-		if(!menu) menu = [[[NSMenu alloc] init] autorelease];
+		if (!menu) menu = [[[NSMenu alloc] init] autorelease];
 		
 		enumerator = [linkMenuItems reverseObjectEnumerator];
-		while((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			[menu insertItem:menuItem atIndex:0];
 		}
 	}

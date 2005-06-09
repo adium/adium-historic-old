@@ -52,10 +52,10 @@
 {
 	NSString	*correctUID;
 	
-	if(([proposedUID length] > 0) && 
-	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)){
+	if (([proposedUID length] > 0) && 
+	   ([proposedUID rangeOfString:@"@"].location == NSNotFound)) {
 		correctUID = [proposedUID stringByAppendingString:DEFAULT_MSN_PASSPORT_DOMAIN];
-	}else{
+	} else {
 		correctUID = proposedUID;
 	}
 	
@@ -130,10 +130,10 @@
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError && *disconnectionError){
+	if (disconnectionError && *disconnectionError) {
 		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
+		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
 			shouldAttemptReconnect = NO;
 		}
 	}
@@ -172,11 +172,11 @@
 - (void)updateStatusForKey:(NSString *)key
 {    
 	//We'll handle FullNameAttr, the rest we let AIAccount handle for us
-	if([key isEqualToString:@"FullNameAttr"]){
-		if([[self statusObjectForKey:@"Online"] boolValue]){
+	if ([key isEqualToString:@"FullNameAttr"]) {
+		if ([[self statusObjectForKey:@"Online"] boolValue]) {
 			[self autoRefreshingOutgoingContentForStatusKey:key selector:@selector(_setFriendlyNameTo:)];
 		}
-	}else{
+	} else {
 		[super updateStatusForKey:key];
 	}
 }
@@ -196,15 +196,15 @@
 	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
 	BOOL		invokedFilter = NO;
 	
-	if(displayName &&
+	if (displayName &&
 	   strcmp(displayName, [[self UID] UTF8String]) &&
-	   strcmp(displayName, [[self formattedUID] UTF8String])){
+	   strcmp(displayName, [[self formattedUID] UTF8String])) {
 		/* There is a serverside display name, and it's not the same as our UID. */
 		NSAttributedString	*ourPreference = [[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString];
 		const char			*ourPreferenceUTF8String = [[ourPreference string] UTF8String];
 
-		if(!ourPreferenceUTF8String ||
-		   strcmp(ourPreferenceUTF8String, displayName)){
+		if (!ourPreferenceUTF8String ||
+		   strcmp(ourPreferenceUTF8String, displayName)) {
 			/* The display name is different from our preference. Check if our preference is static. */
 			[[adium contentController] filterAttributedString:ourPreference
 											  usingFilterType:AIFilterContent
@@ -220,7 +220,7 @@
 		}
 	}
 	
-	if(!invokedFilter){
+	if (!invokedFilter) {
 		[self gotFilteredFriendlyName:nil
 							  context:nil];
 	}
@@ -228,8 +228,8 @@
 
 - (void)gotFilteredFriendlyName:(NSAttributedString *)filteredFriendlyName context:(NSDictionary *)infoDict
 {
-	if((!filteredFriendlyName && [infoDict objectForKey:@"displayName"]) ||
-	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"ourPreference"] string]])){
+	if ((!filteredFriendlyName && [infoDict objectForKey:@"displayName"]) ||
+	   ([[filteredFriendlyName string] isEqualToString:[[infoDict objectForKey:@"ourPreference"] string]])) {
 		/* Filtering made no changes to the string, so we're static. If we make it here, update to match the server. */
 		NSAttributedString	*newPreference;
 		
@@ -252,14 +252,14 @@
 {
 	NSString	*friendlyName = [attributedFriendlyName string];
 	
-	if (!friendlyName || ![friendlyName isEqualToString:[self statusObjectForKey:@"AccountServerDisplayName"]]){
+	if (!friendlyName || ![friendlyName isEqualToString:[self statusObjectForKey:@"AccountServerDisplayName"]]) {
 		
-		if (gaim_account_is_connected(account)){
+		if (gaim_account_is_connected(account)) {
 			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
 			
 			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
 
-			if([friendlyName length] == 0) friendlyName = nil;
+			if ([friendlyName length] == 0) friendlyName = nil;
 			
 			[[self displayArrayForKey:@"Display Name"] setObject:friendlyName
 													   withOwner:self];
@@ -296,7 +296,7 @@
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 		
 		return msn_xfer_new(account->gc,destsn);
@@ -325,7 +325,7 @@
 {
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
-	if([group isEqualToString:PREF_GROUP_MSN_SERVICE]){
+	if ([group isEqualToString:PREF_GROUP_MSN_SERVICE]) {
 		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
 		displayConversationClosed = [[prefDict objectForKey:KEY_MSN_CONVERSATION_CLOSED] boolValue];
 		displayConversationTimedOut = [[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue];
@@ -340,7 +340,7 @@
 	
 	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
 	
-	switch(gaimMsnAwayType){
+	switch (gaimMsnAwayType) {
 		case MSN_BRB:
 			statusMessageString = STATUS_DESCRIPTION_BRB;
 			break;
@@ -357,7 +357,7 @@
 			break;
 	}
 	
-	if (statusMessageString && [statusMessageString length]){
+	if (statusMessageString && [statusMessageString length]) {
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
@@ -371,7 +371,7 @@
 	
 	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
 	
-	switch(gaimMsnAwayType){
+	switch (gaimMsnAwayType) {
 		case MSN_BRB:
 			statusName = STATUS_NAME_BRB;
 			break;
@@ -401,11 +401,11 @@
 	BOOL		shouldUpdateAway = YES;
 	
 	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
-		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)){
+		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)) {
 		shouldUpdateAway = NO;
 	}
 	
-	if(shouldUpdateAway){
+	if (shouldUpdateAway) {
 		[super updateStatusForContact:theContact
 						 toStatusType:statusTypeNumber
 						   statusName:statusName
@@ -435,10 +435,10 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE])
 				gaimStatusType = "Available";
 			break;
 		}
@@ -459,7 +459,7 @@
 			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
 				gaimStatusType = "Out To Lunch";
-			else if([statusName isEqualToString:STATUS_NAME_AWAY]) /* Check last so statusMessageString has been properly checked. */
+			else if ([statusName isEqualToString:STATUS_NAME_AWAY]) /* Check last so statusMessageString has been properly checked. */
 				gaimStatusType = "Away From Computer";
 
 			break;
@@ -471,10 +471,10 @@
 	}
 	
 	//If we are setting one of our custom statuses, don't use a status message
-	if(gaimStatusType != NULL) 	*statusMessage = nil;
+	if (gaimStatusType != NULL) 	*statusMessage = nil;
 
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 
 	return gaimStatusType;
 }
@@ -482,7 +482,7 @@
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)){
+	if ((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)) {
 		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
 	}
 	
@@ -492,19 +492,19 @@
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {	
-	if(strcmp(label, "Set Friendly Name") == 0){
+	if (strcmp(label, "Set Friendly Name") == 0) {
 		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
 
-	}else if(strcmp(label, "Set Home Phone Number") == 0){
+	} else if (strcmp(label, "Set Home Phone Number") == 0) {
 		return AILocalizedString(@"Set Home Phone Number",nil);
 		
-	}else if(strcmp(label, "Set Work Phone Number") == 0){
+	} else if (strcmp(label, "Set Work Phone Number") == 0) {
 		return AILocalizedString(@"Set Work Phone Number",nil);
 		
-	}else if(strcmp(label, "Set Mobile Phone Number") == 0){
+	} else if (strcmp(label, "Set Mobile Phone Number") == 0) {
 		return AILocalizedString(@"Set Mobile Phone Number",nil);
 		
-	}else if(strcmp(label, "Allow/Disallow Mobile Pages") == 0){
+	} else if (strcmp(label, "Allow/Disallow Mobile Pages") == 0) {
 		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
 	}
 

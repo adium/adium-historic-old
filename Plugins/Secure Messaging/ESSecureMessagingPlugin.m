@@ -110,11 +110,11 @@
 - (void)toolbarWillAddItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	if([[item itemIdentifier] isEqualToString:@"Encryption"]){
+	if ([[item itemIdentifier] isEqualToString:@"Encryption"]) {
 		[item setEnabled:YES];
 		
 		//If this is the first item added, start observing for chats becoming visible so we can update the icon
-		if([toolbarItems count] == 0){
+		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] addObserver:self
 										   selector:@selector(chatDidBecomeVisible:)
 											   name:@"AIChatDidBecomeVisible"
@@ -139,10 +139,10 @@
 - (void)toolbarDidRemoveItem: (NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	if([toolbarItems containsObject:item]){
+	if ([toolbarItems containsObject:item]) {
 		[toolbarItems removeObject:item];
 		
-		if([toolbarItems count] == 0){
+		if ([toolbarItems count] == 0) {
 			[[adium notificationCenter] removeObserver:self
 												  name:@"AIChatDidBecomeVisible"
 												object:nil];
@@ -160,14 +160,14 @@
 //When the IsSecure key of a chat changes, update the @"Encryption" item immediately
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if([inModifiedKeys containsObject:@"SecurityDetails"]){
+    if ([inModifiedKeys containsObject:@"SecurityDetails"]) {
 		[self _updateToolbarIconOfChat:inChat
 							  inWindow:[[adium interfaceController] windowForChat:inChat]];
 		
 		/* Add a status message to the chat */
 		NSNumber	*lastEncryptedNumber = [inChat statusObjectForKey:@"secureMessagingLastEncryptedState"];
 		BOOL		chatIsSecure = [inChat isSecure];
-		if(!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])){
+		if (!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])) {
 			NSString	*message;
 			
 			[inChat setStatusObject:[NSNumber numberWithBool:chatIsSecure]
@@ -191,13 +191,13 @@
 	NSEnumerator	*enumerator = [[toolbar items] objectEnumerator];
 	NSToolbarItem	*item;
 	
-	while((item = [enumerator nextObject])){
-		if([[item itemIdentifier] isEqualToString:@"Encryption"]){
+	while ((item = [enumerator nextObject])) {
+		if ([[item itemIdentifier] isEqualToString:@"Encryption"]) {
 			NSImage			*image;
 			
-			if([chat isSecure]){
+			if ([chat isSecure]) {
 				image = lockImage_Locked;
-			}else{
+			} else {
 				image = lockImage_Unlocked;				
 			}
 
@@ -231,7 +231,7 @@
 	
 	aboutEncryption = [[[[adium interfaceController] activeChat] account] aboutEncryption];
 	
-	if(aboutEncryption){
+	if (aboutEncryption) {
 		NSRunInformationalAlertPanel(AILocalizedString(@"About Encryption",nil),
 									 aboutEncryption,
 									 AILocalizedString(@"OK",nil),
@@ -254,14 +254,14 @@
 {
 	AIChat					*chat = [[adium interfaceController] activeChat];
 
-	if([[[menuItem menu] title] isEqualToString:ENCRYPTION_MENU_TITLE]){
+	if ([[[menuItem menu] title] isEqualToString:ENCRYPTION_MENU_TITLE]) {
 		/* Options submenu */
 		AIEncryptedChatPreference tag = [menuItem tag];
-		switch(tag){
+		switch (tag) {
 			case EncryptedChat_Default:
 			{
 				AIListContact	*listContact = [chat listObject];
-				if(listContact){
+				if (listContact) {
 					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																group:GROUP_ENCRYPTION];
 					//Set the state (checked or unchecked) as appropriate. Default = no pref or the actual 'default' value.
@@ -276,7 +276,7 @@
 			case EncryptedChat_RejectUnencryptedMessages:
 			{
 				AIListContact	*listContact = [chat listObject];
-				if(listContact){
+				if (listContact) {
 					NSNumber	*pref = [listContact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 																group:GROUP_ENCRYPTION];
 					
@@ -287,11 +287,11 @@
 				break;
 			}
 		}
-	}else{
+	} else {
 		/* Items on the main menu */
 		AISecureMessagingMenuTag tag = [menuItem tag];
 		
-		switch(tag){
+		switch (tag) {
 			case AISecureMessagingMenu_Toggle:
 				//The menu item should indicate what will happen if it is selected.. the opposite of our secure state
 				[menuItem setTitle:([chat isSecure] ? TITLE_MAKE_INSECURE : TITLE_MAKE_SECURE)];
@@ -320,7 +320,7 @@
 
 - (NSMenu *)_secureMessagingMenu
 {
-	if(!_secureMessagingMenu){
+	if (!_secureMessagingMenu) {
 		NSMenuItem	*item;
 
 		_secureMessagingMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];

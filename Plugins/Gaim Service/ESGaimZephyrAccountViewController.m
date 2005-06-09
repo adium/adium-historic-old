@@ -38,16 +38,16 @@
 
 - (IBAction)changedPreference:(id)sender
 {	
-	if (sender == checkBox_exportAnyone){
+	if (sender == checkBox_exportAnyone) {
 		[account setPreference:[NSNumber numberWithBool:[sender state]]
 						forKey:KEY_ZEPHYR_EXPORT_ANYONE
 						 group:GROUP_ACCOUNT_STATUS];
 		
-	}else if (sender == checkBox_exportSubs){
+	} else if (sender == checkBox_exportSubs) {
 		[account setPreference:[NSNumber numberWithBool:[sender state]]
 						forKey:KEY_ZEPHYR_EXPORT_SUBS
 						 group:GROUP_ACCOUNT_STATUS];
-	}else{
+	} else {
 		[super changedPreference:sender];
 	}
 }
@@ -55,19 +55,19 @@
 - (void)controlTextDidChange:(NSNotification *)notification
 {
 	NSTextField *sender = [notification object];
-	if (sender == textField_exposure){
+	if (sender == textField_exposure) {
 		NSString *exposure = [sender stringValue];
 		[account setPreference:([exposure length] ? exposure : nil)
 						forKey:KEY_ZEPHYR_EXPOSURE
 						 group:GROUP_ACCOUNT_STATUS];
 		
-	}else if (sender == textField_encoding){
+	} else if (sender == textField_encoding) {
 		NSString *encoding = [sender stringValue];
 
 		[account setPreference:([encoding length] ? encoding : nil)
 						forKey:KEY_ZEPHYR_ENCODING
 						 group:GROUP_ACCOUNT_STATUS];
-	}else{
+	} else {
 		[super controlTextDidChange:notification];
 	}		
 }

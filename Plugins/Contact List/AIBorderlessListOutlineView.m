@@ -22,7 +22,7 @@
 //Forward mouse down events to our containing window (when command is pressed) to allow dragging
 - (void)mouseDown:(NSEvent *)theEvent
 {
-	if(![theEvent cmdKey]){
+	if (![theEvent cmdKey]) {
 		//Wait for the next event
 		NSEvent *nextEvent = [[self window] nextEventMatchingMask:(NSLeftMouseUpMask | NSLeftMouseDraggedMask | NSPeriodicMask)
 														untilDate:[NSDate distantFuture]
@@ -30,7 +30,7 @@
 														  dequeue:NO];
 		
 		//Pass along the event (either to ourself or our window, depending on what it is)
-		switch([nextEvent type]){
+		switch ([nextEvent type]) {
 			case NSLeftMouseUp:
 				[super mouseDown:theEvent];   
 				[super mouseUp:nextEvent];   
@@ -43,15 +43,15 @@
 				[[self window] mouseDown:theEvent];
 				break;
 		}
-	}else{
+	} else {
         [super mouseDown:theEvent];   
 	}
 }
 - (void)mouseDragged:(NSEvent *)theEvent
 {
-    if(![theEvent cmdKey]){
+    if (![theEvent cmdKey]) {
         [[self window] mouseDragged:theEvent];   
-	}else{
+	} else {
 		[super mouseDragged:theEvent];
 	}
 }

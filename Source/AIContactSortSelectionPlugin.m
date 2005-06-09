@@ -103,15 +103,15 @@
 	
 	//
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
-	while((controller = [enumerator nextObject])){
-		if([identifier compare:[controller identifier]] == NSOrderedSame){
+	while ((controller = [enumerator nextObject])) {
+		if ([identifier compare:[controller identifier]] == NSOrderedSame) {
 			[[adium contactController] setActiveSortController:controller];
 			break;
 		}
 	}
 	
 	//Temporary failsafe for old preferences
-	if (!controller){
+	if (!controller) {
 		[[adium contactController] setActiveSortController:[[[adium contactController] sortControllerArray] objectAtIndex:0]];
 	}
 }
@@ -131,7 +131,7 @@
 	
 	//Add each sort controller
 	enumerator = [[[adium contactController] sortControllerArray] objectEnumerator];
-	while((controller = [enumerator nextObject])){
+	while ((controller = [enumerator nextObject])) {
 		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[controller displayName]
 																		 target:self
 																		 action:@selector(changedSortSelection:)
@@ -156,7 +156,7 @@
 	activeSortController = [[adium contactController] activeSortController];
 	
 	index = [[menuItem_configureSort menu] indexOfItemWithRepresentedObject:activeSortController];
-	if (index != NSNotFound){
+	if (index != NSNotFound) {
 		[[[menuItem_configureSort menu] itemAtIndex:index] setState:NSOnState];
 	}
 	
@@ -175,7 +175,7 @@
 	
 	//Uncheck the old active sort controller
 	int index = [[menuItem_configureSort menu] indexOfItemWithRepresentedObject:[[adium contactController] activeSortController]];
-	if (index != NSNotFound){
+	if (index != NSNotFound) {
 		[[[menuItem_configureSort menu] itemAtIndex:index] setState:NSOffState];
 	}
 	

@@ -24,7 +24,7 @@ static BOOL getDataFunction( Handle aResHandle, ResType aType, NSString * aName,
 
 static BOOL removeResourceFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
 {
-	if( aResHandle )
+	if ( aResHandle )
 		RemoveResource( aResHandle );		// Disposed of in current resource file
 	return !aResHandle || noErr == ResError( );
 }
@@ -34,10 +34,10 @@ static BOOL getNameFunction( Handle aResHandle, ResType aType, NSString * aName,
 	Str255		thePName;
 	NSString		** theString = (NSString **)aContext;
 	
-	if( aResHandle )
+	if ( aResHandle )
 	{
 		GetResInfo( aResHandle, &anId, &aType, thePName );
-		if( noErr ==  ResError( ) )
+		if ( noErr ==  ResError( ) )
 			*theString = [NSString stringWithPascalString:thePName];
 	}
 	
@@ -48,7 +48,7 @@ static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, s
 {
 	Str255		thePName;
 	
-	if( aResHandle && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
+	if ( aResHandle && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
 	{
 		GetResInfo( aResHandle, &anId, &aType, thePName );
 		return noErr ==  ResError( );
@@ -60,7 +60,7 @@ static BOOL getIdFunction( Handle aResHandle, ResType aType, NSString * aName, s
 static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext )
 {
 	short int		* theAttributes = (short int*)aContext;
-	if( aResHandle )
+	if ( aResHandle )
 	{
 		*theAttributes = GetResAttrs( aResHandle );
 		return noErr ==  ResError( );
@@ -72,11 +72,11 @@ static BOOL getAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * aName, short int anId, void * aContext  )
 {
 	short int		theAttributes = *(short int*)aContext;
-	if( aResHandle )
+	if ( aResHandle )
 	{
 		theAttributes &= ~(resPurgeable|resChanged); // these attributes should not be changed
 		SetResAttrs( aResHandle, theAttributes);
-		if( noErr ==  ResError( ) )
+		if ( noErr ==  ResError( ) )
 		{
 			ChangedResource(aResHandle);
 			return noErr ==  ResError( );
@@ -187,12 +187,12 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 	FSRef			theFsRef,
 					theParentFsRef;
 
-	if( (self = [self init]) != nil )
+	if ( (self = [self init]) != nil )
 	{
 		/*
 		 * if write permission then create resource fork
 		 */
-		if( (aPermission & 0x06) != 0 )		// if write permission
+		if ( (aPermission & 0x06) != 0 )		// if write permission
 		{
 			if ( [[aPath stringByDeletingLastPathComponent] getFSRef:&theParentFsRef] )
 			{
@@ -203,7 +203,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 				theName = [aPath lastPathComponent];
 				theNameLength = [theName length];
 
-				if( theNameLength <= PATH_MAX )
+				if ( theNameLength <= PATH_MAX )
 				{
 					[theName getCharacters:theUnicodeName range:NSMakeRange(0,theNameLength)];
 
@@ -211,7 +211,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 
 					theError =  ResError( );
 
-					if( theError == noErr || theError == dupFNErr )
+					if ( theError == noErr || theError == dupFNErr )
 					{
 						[aPath getFSRef:&theFsRef];
 						fileReference = FSOpenResFile ( &theFsRef, aPermission );
@@ -231,7 +231,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 
 	}
 
-	if( noErr != theError && theError != dupFNErr )
+	if ( noErr != theError && theError != dupFNErr )
 	{
 		[self release];
 		self = nil;
@@ -245,7 +245,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
  */
 - (id)initForReadingAtPath:(NSString *)aPath
 {
-	if( [[NSFileManager defaultManager] fileExistsAtPath:aPath] )
+	if ( [[NSFileManager defaultManager] fileExistsAtPath:aPath] )
 		return [self initForPermission:fsRdPerm AtURL:[NSURL fileURLWithPath:aPath]];
 	else
 	{
@@ -267,7 +267,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
  */
 - (void)dealloc
 {
-	if( fileReference > 0 )
+	if ( fileReference > 0 )
 		CloseResFile( fileReference );
 
 	[super dealloc];
@@ -280,7 +280,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 {
 	Handle		theResHandle;
 	
-	if( [self removeType:aType Id:anId] )
+	if ( [self removeType:aType Id:anId] )
 	{
 		short int	thePreviousRefNum;
 
@@ -298,7 +298,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 			AddResource( theResHandle, aType, anId, thePName );
 			HUnlock( theResHandle );
 
-/*			if( noErr == ResError() )
+/*			if ( noErr == ResError() )
 				ChangedResource( theResHandle );
 */			
 			UseResFile( thePreviousRefNum );     		// reset back to resource previously set
@@ -315,7 +315,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
  */
 - (BOOL)addData:(NSData *)aData type:(ResType)aType name:(NSString *)aName
 {
-	if( aName == nil ) NSLog(@"Adding a resource without specifying the name of id.");
+	if ( aName == nil ) NSLog(@"Adding a resource without specifying the name of id.");
 	return [self addData:aData type:aType Id:Unique1ID(aType) name:aName];
 }
 
@@ -336,7 +336,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 {
 	NSData	* theData = nil;
 
-	if( operateOnResourceUsingFunction( fileReference, aType, aName, 0, getDataFunction, (void*)&theData )  )
+	if ( operateOnResourceUsingFunction( fileReference, aType, aName, 0, getDataFunction, (void*)&theData )  )
 		return theData;
 	else
 		return nil;
@@ -356,15 +356,15 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 
 	theNumOfTypes = Count1Types ();
 
-	if( noErr ==  ResError( ) )
+	if ( noErr ==  ResError( ) )
 	{
 		theTypesArray = [NSMutableArray arrayWithCapacity:theNumOfTypes];
 
-		for( theIndex = 1; theIndex <= theNumOfTypes; theIndex++ )
+		for ( theIndex = 1; theIndex <= theNumOfTypes; theIndex++ )
 		{
 			ResType		theResType;
 			Get1IndType ( &theResType, theIndex );
-			if( noErr ==  ResError( ) )
+			if ( noErr ==  ResError( ) )
 				[theTypesArray addObject:[NSNumber numberWithUnsignedLong:theResType]];
 			else
 				NSLog( @"Could not get type for resource %i", theIndex);
@@ -393,7 +393,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 {
 	NSString		* theString = nil;
 
-	if( operateOnResourceUsingFunction( fileReference, aType, nil, anId, getNameFunction, (void*)&theString ) )
+	if ( operateOnResourceUsingFunction( fileReference, aType, nil, anId, getNameFunction, (void*)&theString ) )
 		return theString;
 	else
 		return nil;
@@ -437,10 +437,10 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 	ByteCount			theByteCount;
 	signed long long	theForkSize;
 	
-	if( FSGetForkSize( fileReference, &theForkSize ) == noErr && theForkSize <= UINT_MAX )
+	if ( FSGetForkSize( fileReference, &theForkSize ) == noErr && theForkSize <= UINT_MAX )
 	{
 		theData = [NSMutableData dataWithLength:theForkSize];
-		if( FSReadFork( fileReference, fsFromStart, 0, theForkSize, [theData mutableBytes], &theByteCount ) != noErr || theByteCount != theForkSize )
+		if ( FSReadFork( fileReference, fsFromStart, 0, theForkSize, [theData mutableBytes], &theByteCount ) != noErr || theByteCount != theForkSize )
 			theData = nil;
 	}
 
@@ -467,7 +467,7 @@ static BOOL setAttributesFunction( Handle aResHandle, ResType aType, NSString * 
 NSData * dataFromResourceHandle( Handle aResourceHandle )
 {
 	NSData		* theData = nil;
-	if( aResourceHandle )
+	if ( aResourceHandle )
 	{
 		HLock(aResourceHandle);
 		theData = [NSData dataWithBytes:*aResourceHandle length:GetHandleSize( aResourceHandle )];
@@ -488,14 +488,14 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 
 	UseResFile( afileRef );    		// set this resource to be current
 
-	if( noErr ==  ResError( ) && ((aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)]) || !aName ))
+	if ( noErr ==  ResError( ) && ((aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)]) || !aName ))
 	{
-		if( aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
+		if ( aName && [aName getPascalString:(StringPtr)thePName length:sizeof(thePName)] )
 			theResHandle = Get1NamedResource( aType, thePName );
-		else if( !aName )
+		else if ( !aName )
 			theResHandle = Get1Resource( aType, anId );			
 				
-		if( noErr == ResError() )
+		if ( noErr == ResError() )
 				theResult = aFunction( theResHandle, aType, aName, anId, aContext  );
 
 		if ( theResHandle )
@@ -565,7 +565,7 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 {
 	BOOL					theResult = NO;
 	NDResourceFork		* theResourceFork = [[NDResourceFork alloc] initForWritingAtURL:aURL];
-	if( theResourceFork )
+	if ( theResourceFork )
 	{
 		theResult = [theResourceFork addData:self type:aType Id:anId name:aName];
 		[theResourceFork release];
@@ -580,7 +580,7 @@ BOOL operateOnResourceUsingFunction( short int afileRef, ResType aType, NSString
 {
 	BOOL					theResult = NO;
 	NDResourceFork		* theResourceFork = [[NDResourceFork alloc] initForWritingAtPath:aPath];
-	if( theResourceFork )
+	if ( theResourceFork )
 	{
 		theResult = [theResourceFork addData:self type:aType Id:anId name:aName];
 		[theResourceFork release];

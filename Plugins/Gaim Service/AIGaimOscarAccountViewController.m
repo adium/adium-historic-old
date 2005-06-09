@@ -38,13 +38,13 @@
     //Profile
     NSData				*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
 	NSAttributedString	*profile = nil;
-    if(profileData){
+    if (profileData) {
         profile = [NSAttributedString stringWithData:profileData];
 	}
 	
-	if(profile && [profile length]){
+	if (profile && [profile length]) {
 		[[textView_textProfile textStorage] setAttributedString:profile];
-	}else{
+	} else {
 		[textView_textProfile setString:@""];
 	}
 }

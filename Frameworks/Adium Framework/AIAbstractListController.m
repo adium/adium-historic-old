@@ -50,7 +50,7 @@
 
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		contactListView = [inContactListView retain];
 		scrollView_contactList = [inScrollView_contactList retain];
@@ -88,7 +88,7 @@
 	[contactListView release]; contactListView = nil;
 	[scrollView_contactList release]; scrollView_contactList = nil;
 	
-	if (tooltipTracker){
+	if (tooltipTracker) {
 		[tooltipTracker setDelegate:nil];
 		[tooltipTracker release]; tooltipTracker = nil;
 	}
@@ -112,7 +112,7 @@
  */
 - (void)contactListWillBeRemoved
 {
-	if (tooltipTracker){
+	if (tooltipTracker) {
 		[tooltipTracker setDelegate:nil];
 		[tooltipTracker release]; tooltipTracker = nil;
 	}	
@@ -146,7 +146,7 @@
 
 - (void)setContactListRoot:(ESObjectWithStatus <AIContainingObject> *)newContactListRoot
 {
-	if(contactList != newContactListRoot){
+	if (contactList != newContactListRoot) {
 		[contactList release]; contactList = [newContactListRoot retain];
 	}
 
@@ -194,7 +194,7 @@
 	[groupCell release];
 	[contentCell release];
 
-	switch(windowStyle){
+	switch (windowStyle) {
 		case WINDOW_STYLE_STANDARD:
 		case WINDOW_STYLE_BORDERLESS:
 			groupCell = [[AIListGroupCell alloc] init];
@@ -229,7 +229,7 @@
 	[groupCell setTextAlignment:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_ALIGNMENT] intValue]];
 	[contentCell setUserIconSize:[[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_SIZE] intValue]];
 
-	if(windowStyle != WINDOW_STYLE_PILLOWS_FITTED){
+	if (windowStyle != WINDOW_STYLE_PILLOWS_FITTED) {
 		[contentCell setUserIconVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_ICON] boolValue]];
 		[contentCell setExtendedStatusVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue]];
 		[contentCell setStatusIconsVisible:[[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_STATUS_ICONS] boolValue]];
@@ -239,7 +239,7 @@
 		[contentCell setStatusIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_STATUS_ICON_POSITION] intValue]];
 		[contentCell setServiceIconPosition:[[prefDict objectForKey:KEY_LIST_LAYOUT_SERVICE_ICON_POSITION] intValue]];
 		[contentCell setExtendedStatusIsBelowName:[[prefDict objectForKey:KEY_LIST_LAYOUT_EXTENDED_STATUS_POSITION] boolValue]];		
-	}else{
+	} else {
 		//Fitted pillows + centered text = no icons
 		BOOL allowIcons = (contentCellAlignment != NSCenterTextAlignment);
 		
@@ -249,7 +249,7 @@
 
 		[contentCell setExtendedStatusVisible:NO /*(allowIcons ? [[prefDict objectForKey:KEY_LIST_LAYOUT_SHOW_EXT_STATUS] boolValue] : NO)*/];
 
-		if (allowIcons){
+		if (allowIcons) {
 			LIST_POSITION iconPosition;
 			
 			iconPosition = [[prefDict objectForKey:KEY_LIST_LAYOUT_USER_ICON_POSITION] intValue];
@@ -285,30 +285,30 @@
 	[groupCell setFont:(theFont ? theFont : GROUP_FONT_IF_FONT_NOT_FOUND)];
 
 	//Standard special cases.  Add an extra line of padding to the bottom of the standard window.
-	if(windowStyle == WINDOW_STYLE_STANDARD){
+	if (windowStyle == WINDOW_STYLE_STANDARD) {
 		[contactListView setDesiredHeightPadding:3];   //1 pixel border at the top and bottom + extra line at bottom
-	}else{
+	} else {
 		[contactListView setDesiredHeightPadding:2];   //Accounts for the 1 pixel border at the top and bottom
 	}
 	
 	//Bubbles special cases
 	pillowsOrPillowsFittedWindowStyle = (windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED);
-	if(pillowsOrPillowsFittedWindowStyle){
+	if (pillowsOrPillowsFittedWindowStyle) {
 		//Treat the padding as spacing
 		[contentCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 		[groupCell setSplitVerticalSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
-	}else{
+	} else {
 		[contentCell setSplitVerticalPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_SPACING] intValue]];
 		[contentCell setLeftPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_LEFT_INDENT] intValue]];
 		[contentCell setRightPadding:[[prefDict objectForKey:KEY_LIST_LAYOUT_CONTACT_RIGHT_INDENT] intValue]];
 	}
 	
 	//Mockie special cases.  For all other layouts we use fixed group spacing
-	if(windowStyle == WINDOW_STYLE_MOCKIE){
+	if (windowStyle == WINDOW_STYLE_MOCKIE) {
 		[groupCell setTopSpacing:[[prefDict objectForKey:KEY_LIST_LAYOUT_GROUP_TOP_SPACING] intValue]];
-	}else if(windowStyle == WINDOW_STYLE_STANDARD){
+	} else if (windowStyle == WINDOW_STYLE_STANDARD) {
 		//Force some spacing and draw a bordeer around our groups (This doesn't look good in borderless)
 		[groupCell setTopSpacing:1];
 		[groupCell setLeftSpacing:1];
@@ -317,13 +317,13 @@
 	}
 	
 	//Disable square row highlighting for bubble lists - the bubble cells handle this on their own
-	if(windowStyle == WINDOW_STYLE_MOCKIE ||
-	   pillowsOrPillowsFittedWindowStyle){
+	if (windowStyle == WINDOW_STYLE_MOCKIE ||
+	   pillowsOrPillowsFittedWindowStyle) {
 		[contactListView setDrawsSelectedRowHighlight:NO];
 	}
 	
 	//Pillows special cases
-	if (pillowsOrPillowsFittedWindowStyle){
+	if (pillowsOrPillowsFittedWindowStyle) {
 		BOOL	outlineBubble = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE] boolValue];
 		int		outlineBubbleLineWidth = [[prefDict objectForKey:KEY_LIST_LAYOUT_OUTLINE_BUBBLE_WIDTH] intValue];
 
@@ -377,11 +377,11 @@
 - (LIST_POSITION)pillowsFittedIconPositionForIconPosition:(LIST_POSITION)iconPosition contentCellAlignment:(NSTextAlignment)contentCellAlignment
 {
 	if ((contentCellAlignment == NSLeftTextAlignment) && ((iconPosition == LIST_POSITION_RIGHT) ||
-														  (iconPosition == LIST_POSITION_FAR_RIGHT))){
+														  (iconPosition == LIST_POSITION_FAR_RIGHT))) {
 		iconPosition = LIST_POSITION_LEFT;
 		
-	}else if ((contentCellAlignment == NSRightTextAlignment) && ((iconPosition == LIST_POSITION_LEFT) ||
-																 (iconPosition == LIST_POSITION_FAR_LEFT))){
+	} else if ((contentCellAlignment == NSRightTextAlignment) && ((iconPosition == LIST_POSITION_LEFT) ||
+																 (iconPosition == LIST_POSITION_FAR_LEFT))) {
 		iconPosition = LIST_POSITION_RIGHT;
 	}
 	
@@ -393,7 +393,7 @@
 	[groupCell setBackgroundColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND] representedColor]
 					gradientColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_BACKGROUND_GRADIENT] representedColor]];
 
-	if([[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]){
+	if ([[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW] boolValue]) {
 		[groupCell setShadowColor:[[prefDict objectForKey:KEY_LIST_THEME_GROUP_SHADOW_COLOR] representedColor]];
 	}
 	
@@ -410,13 +410,13 @@
 //
 - (id)outlineView:(NSOutlineView *)outlineView child:(int)index ofItem:(id)item
 {
-    if(item == nil){
-		if (hideRoot){
+    if (item == nil) {
+		if (hideRoot) {
 			return((index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
-		}else{
+		} else {
 			return contactList;
 		}
-    }else{
+    } else {
         return((index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
     }
 }
@@ -424,13 +424,13 @@
 //
 - (int)outlineView:(NSOutlineView *)outlineView numberOfChildrenOfItem:(id)item
 {
-    if(item == nil){
-		if (hideRoot){
+    if (item == nil) {
+		if (hideRoot) {
 			return([contactList visibleCount]);
-		}else{
+		} else {
 			return(1);
 		}
-    }else{
+    } else {
         return([item visibleCount]);
     }
 }
@@ -438,7 +438,7 @@
 //Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	if ([outlineView isKindOfClass:[AIListOutlineView class]]){
+	if ([outlineView isKindOfClass:[AIListOutlineView class]]) {
 		[(AIListCell *)cell setListObject:item];
 		[(AIListCell *)cell setControlView:(AIListOutlineView *)outlineView];
 		
@@ -451,9 +451,9 @@
 		//	
 		//	
 		//	
-		//    if(index >= 0 && index < icons && (index == selectedIconIndex)){
+		//    if (index >= 0 && index < icons && (index == selectedIconIndex)) {
 		//        [cell setHighlighted:YES];
-		//    }else{
+		//    } else {
 		//        [cell setHighlighted:NO];
 		//    }
 		
@@ -569,7 +569,7 @@
 	[outlineView deselectAll:nil];
 	
 	//Begin the drag
-	if(dragItems) [dragItems release];
+	if (dragItems) [dragItems release];
 	dragItems = [items retain];
 	
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
@@ -580,7 +580,7 @@
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
 {
-	if(dragItems){
+	if (dragItems) {
 		[dragItems release]; dragItems = nil;
 	}
 
@@ -596,7 +596,7 @@
 
 - (void)listControllerDragEnded:(NSNotification *)notification
 {
-	if(dragItems){
+	if (dragItems) {
 		[dragItems release]; dragItems = nil;
 	}	
 }
@@ -604,14 +604,14 @@
 - (void)pasteboard:(NSPasteboard *)sender provideDataForType:(NSString *)type
 {
 	//Provide an array of internalObjectIDs which can be used to reference all the dragged contacts
-	if ([type isEqualToString:@"AIListObjectUniqueIDs"]){
+	if ([type isEqualToString:@"AIListObjectUniqueIDs"]) {
 		
-		if (dragItems){
+		if (dragItems) {
 			NSMutableArray	*dragItemsArray = [NSMutableArray array];
 			NSEnumerator	*enumerator = [dragItems objectEnumerator];
 			AIListObject	*listObject;
 			
-			while ((listObject = [enumerator nextObject])){
+			while ((listObject = [enumerator nextObject])) {
 				[dragItemsArray addObject:[listObject internalObjectID]];
 			}
 			
@@ -627,11 +627,11 @@
 {
 	AIListObject	*hoveredObject = [self contactListItemAtScreenPoint:screenPoint];
 	
-	if([hoveredObject isKindOfClass:[AIListContact class]]){
+	if ([hoveredObject isKindOfClass:[AIListContact class]]) {
 		[[adium interfaceController] showTooltipForListObject:hoveredObject
 												atScreenPoint:screenPoint
 													 onWindow:[contactListView window]];
-	}else{
+	} else {
 		[self hideTooltip];
 	}
 }
@@ -640,13 +640,13 @@
 {
 	AIListObject	*listObject = nil;
 
-	if(showTooltips && (showTooltipsInBackground || [NSApp isActive])){
+	if (showTooltips && (showTooltipsInBackground || [NSApp isActive])) {
 		NSRect		contactListFrame = [contactListView frame];
 		NSPoint		viewPoint = [contactListView convertPoint:[[contactListView window] convertScreenToBase:screenPoint]
 													 fromView:nil];
 		
 		//Be sure that screen points outside our view return nil, since no contact is being hovered.
-		if(viewPoint.x > NSMinX(contactListFrame) && viewPoint.x < NSMaxX(contactListFrame)){
+		if (viewPoint.x > NSMinX(contactListFrame) && viewPoint.x < NSMaxX(contactListFrame)) {
 			listObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
 		}
 	}

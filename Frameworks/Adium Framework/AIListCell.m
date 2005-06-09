@@ -31,7 +31,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		topSpacing = 0;
 		bottomSpacing = 0;
@@ -48,7 +48,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 		
 		useAliasesAsRequested = YES;
 
-		if(!leftParagraphStyleWithTruncatingTail){
+		if (!leftParagraphStyleWithTruncatingTail) {
 			leftParagraphStyleWithTruncatingTail = [[NSMutableParagraphStyle styleWithAlignment:NSLeftTextAlignment
 																				  lineBreakMode:NSLineBreakByTruncatingTail] retain];
 		}
@@ -83,7 +83,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Set the list object being drawn
 - (void)setListObject:(AIListObject *)inObject
 {
-	if(inObject != listObject){
+	if (inObject != listObject) {
 		[listObject release];
 		listObject = [inObject retain];
 
@@ -106,7 +106,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Font used to display label
 - (void)setFont:(NSFont *)inFont
 {
-	if(inFont != font){
+	if (inFont != font) {
 		[font release];
 		font = [inFont retain];
 	}
@@ -130,7 +130,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Text color
 - (void)setTextColor:(NSColor *)inColor
 {
-	if(inColor != textColor){
+	if (inColor != textColor) {
 		[textColor release];
 		textColor = [inColor retain];
 	}
@@ -141,7 +141,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 - (void)setInvertedTextColor:(NSColor *)inColor
 {
-	if(inColor != invertedTextColor){
+	if (inColor != invertedTextColor) {
 		[invertedTextColor release];
 		invertedTextColor = [inColor retain];
 	}
@@ -235,7 +235,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 }
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)inControlView
 {	
-	if(listObject){
+	if (listObject) {
 		//Cell spacing
 		cellFrame.origin.y += [self topSpacing];
 		cellFrame.size.height -= [self bottomSpacing] + [self topSpacing];
@@ -292,10 +292,10 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	NSSize				nameSize = [displayName size];
 	NSRect				rect = inRect;
 	
-	if(nameSize.width > rect.size.width) nameSize.width = rect.size.width;
+	if (nameSize.width > rect.size.width) nameSize.width = rect.size.width;
 
 	//Alignment
-	switch([self textAlignment]){
+	switch ([self textAlignment]) {
 		case NSCenterTextAlignment:
 			rect.origin.x += (rect.size.width - nameSize.width) / 2.0;
 		break;
@@ -315,7 +315,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	[displayName release];
 
 	//Adjust the drawing rect
-	switch([self textAlignment]){
+	switch ([self textAlignment]) {
 		case NSRightTextAlignment:
 			inRect.size.width -= nameSize.width;
 		break;
@@ -344,11 +344,11 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 				 [NSString stringWithFormat:@" %f",[listObject orderIndex]]); 
 #endif
 
-	if(!leftText && !rightText){
+	if (!leftText && !rightText) {
 		return((useAliasesAsRequested ? 
 				[listObject longDisplayName] :
 				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName])));
-	}else{
+	} else {
 		//Combine left text, the object name, and right text
 		return([NSString stringWithFormat:@"%@%@%@",
 			(leftText ? leftText : @""),
@@ -373,7 +373,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 	[leftParagraphStyleWithTruncatingTail setMaximumLineHeight:(float)labelFontHeight];
 
-	if (additionalAttributes){
+	if (additionalAttributes) {
 		labelAttributes = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 			currentTextColor, NSForegroundColorAttributeName,
 			leftParagraphStyleWithTruncatingTail, NSParagraphStyleAttributeName,
@@ -381,7 +381,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 			nil];
 		[labelAttributes addEntriesFromDictionary:additionalAttributes];
 
-	}else{
+	} else {
 		labelAttributes = (NSMutableDictionary *)[NSDictionary dictionaryWithObjectsAndKeys:
 			currentTextColor, NSForegroundColorAttributeName,
 			leftParagraphStyleWithTruncatingTail, NSParagraphStyleAttributeName,
@@ -416,9 +416,9 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 - (NSColor *)backgroundColor
 {
 	//We could just call backgroundColorForRow: but it's best to avoid doing a rowForItem lookup if there is no grid
-	if([controlView drawsAlternatingRows]){
+	if ([controlView drawsAlternatingRows]) {
 		return([controlView backgroundColorForRow:[controlView rowForItem:listObject]]);
-	}else{
+	} else {
 		return([controlView backgroundColor]);
 	}
 }

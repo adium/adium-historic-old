@@ -70,29 +70,29 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	NSNumber	*targetHash = [NSNumber numberWithUnsignedInt:[inTarget hash]];
 		
-	if((controller = [controllerDict objectForKey:targetHash])){
+	if ((controller = [controllerDict objectForKey:targetHash])) {
 		[controller setOriginalStatusState:inStatusState forType:inStatusType];
 		[controller setAccount:inAccount];
 		[controller configureForAccountAndWorkingStatusState];
 
-	}else{
+	} else {
 		controller = [[self alloc] initWithWindowNibName:@"EditStateSheet" 
 												 forType:inStatusType 
 											  andAccount:inAccount
 											 customState:inStatusState 
 										 notifyingTarget:inTarget
 										showSaveCheckbox:inShowSaveCheckbox];
-		if(!controllerDict) controllerDict = [[NSMutableDictionary alloc] init];
+		if (!controllerDict) controllerDict = [[NSMutableDictionary alloc] init];
 		[controllerDict setObject:controller forKey:targetHash];
 	}
 	
-	if(parentWindow){
+	if (parentWindow) {
 		[NSApp beginSheet:[controller window]
 		   modalForWindow:parentWindow
 			modalDelegate:controller
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
-	}else{
+	} else {
 		[controller showWindow:nil];
 		[[controller window] makeKeyAndOrderFront:nil];
 		[NSApp activateIgnoringOtherApps:YES];
@@ -106,7 +106,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forType:(AIStatusType)inStatusType andAccount:(AIAccount *)inAccount customState:(AIStatus *)inStatusState notifyingTarget:(id)inTarget showSaveCheckbox:(BOOL)inShowSaveCheckbox
 {
-    if((self = [super initWithWindowNibName:windowNibName])){
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		target = inTarget;
 		showSaveCheckbox = inShowSaveCheckbox;
 
@@ -125,7 +125,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (void)setOriginalStatusState:(AIStatus *)inStatusState forType:(AIStatusType)inStatusType
 {
-	if(originalStatusState != inStatusState){
+	if (originalStatusState != inStatusState) {
 		[originalStatusState release];
 		originalStatusState = [inStatusState retain];
 	}
@@ -136,12 +136,12 @@ static	NSMutableDictionary	*controllerDict = nil;
 						  [[AIStatus statusOfType:inStatusType] retain]);
 	
 	//Clear the title if the save checkbox is showing so it will autoupdate.
-	if(showSaveCheckbox) [workingStatusState setTitle:nil];
+	if (showSaveCheckbox) [workingStatusState setTitle:nil];
 }
 
 - (void)setAccount:(AIAccount *)inAccount
 {
-	if(inAccount != account){
+	if (inAccount != account) {
 		[account release];
 		account = [inAccount retain];
 	}
@@ -177,7 +177,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[textView_statusMessage setSendOnReturn:NO];
 	[textView_statusMessage setSendOnEnter:sendOnEnter];
 	
-	if([textView_statusMessage isKindOfClass:[AIMessageEntryTextView class]]){
+	if ([textView_statusMessage isKindOfClass:[AIMessageEntryTextView class]]) {
 		[(AIMessageEntryTextView *)textView_statusMessage setClearOnEscape:NO];
 		[(AIMessageEntryTextView *)textView_statusMessage setPushPopEnabled:NO];
 	}
@@ -193,7 +193,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	 * If the user expects enter to insert a newline in a message, however, it will do that here, too. */
 	[textView_autoReply setSendOnEnter:sendOnEnter];
 
-	if([textView_autoReply isKindOfClass:[AIMessageEntryTextView class]]){
+	if ([textView_autoReply isKindOfClass:[AIMessageEntryTextView class]]) {
 		[(AIMessageEntryTextView *)textView_autoReply setClearOnEscape:NO];
 		[(AIMessageEntryTextView *)textView_autoReply setPushPopEnabled:NO];
 	}
@@ -209,7 +209,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[intFormatter release];
 	*/
 
-	if(!showSaveCheckbox){
+	if (!showSaveCheckbox) {
 		[checkBox_save setHidden:YES];
 	}
 	
@@ -279,7 +279,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (IBAction)okay:(id)sender
 {
-	if(target && [target respondsToSelector:@selector(customStatusState:changedTo:forAccount:)]){
+	if (target && [target respondsToSelector:@selector(customStatusState:changedTo:forAccount:)]) {
 		//Perform on a delay so the sheet can beging closing immediately.
 		[self performSelector:@selector(notifyOfStateChange)
 				   withObject:nil
@@ -325,12 +325,12 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (IBAction)statusControlChanged:(id)sender
 {
-	if(sender == checkbox_autoReply){
+	if (sender == checkbox_autoReply) {
 		[workingStatusState setHasAutoReply:[checkbox_autoReply state]];
 		
-	}else if(sender == checkbox_customAutoReply){
+	} else if (sender == checkbox_customAutoReply) {
 		[workingStatusState setAutoReplyIsStatusMessage:![checkbox_customAutoReply state]];	
-	}else if(sender == checkbox_idle){
+	} else if (sender == checkbox_idle) {
 		[workingStatusState setShouldForceInitialIdleTime:[checkbox_idle state]];
 	}
 	
@@ -345,10 +345,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	id sender = [notification object];
 
-	if(sender == textField_title){
+	if (sender == textField_title) {
 		NSString	*newTitle = [textField_title stringValue];
 		
-		if([newTitle length]) [workingStatusState setTitle:newTitle];
+		if ([newTitle length]) [workingStatusState setTitle:newTitle];
 	}
 }
 
@@ -359,10 +359,10 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	id sender = [notification object];
 
-	if(sender == textView_statusMessage){
+	if (sender == textView_statusMessage) {
 		[workingStatusState setStatusMessage:[[[textView_statusMessage textStorage] copy] autorelease]];
 		
-	}else if(sender == textView_autoReply){
+	} else if (sender == textView_autoReply) {
 		[workingStatusState setAutoReply:[[[textView_autoReply textStorage] copy] autorelease]];
 		
 	}
@@ -379,11 +379,11 @@ static	NSMutableDictionary	*controllerDict = nil;
 {
 	id sender = [notification object];
 
-	if(sender == textField_title){
+	if (sender == textField_title) {
 		NSString	*newTitle = [textField_title stringValue];
 		
 		//Set to nil if the field is cleared to get back to the automatically generated value
-		if(![newTitle length]){
+		if (![newTitle length]) {
 			[workingStatusState setTitle:nil];
 			
 			[self updateTitleDisplay];
@@ -397,7 +397,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 - (IBAction)selectStatus:(id)sender
 {
 	NSDictionary	*stateDict = [[popUp_state selectedItem] representedObject];
-	if(stateDict){
+	if (stateDict) {
 		[workingStatusState setStatusType:[[stateDict objectForKey:KEY_STATUS_TYPE] intValue]];
 		[workingStatusState setStatusName:[stateDict objectForKey:KEY_STATUS_NAME]];
 	}
@@ -451,7 +451,7 @@ static	NSMutableDictionary	*controllerDict = nil;
  */
 - (id)_positionControl:(id)control relativeTo:(id)guide height:(int *)height
 {
-	if(![control isHidden]){
+	if (![control isHidden]) {
 		NSRect	frame = [control frame];
 		
 		//Position this control relative to the one above it
@@ -461,7 +461,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		(*height) += frame.size.height + CONTROL_SPACING;
 		
 		return(control);
-	}else{
+	} else {
 		return(guide);
 	}
 }
@@ -481,22 +481,22 @@ static	NSMutableDictionary	*controllerDict = nil;
 	NSString	*description;
 	int			index;
 
-	if(needToRebuildPopUpState){
+	if (needToRebuildPopUpState) {
 		[self configureStateMenu];
 	}
 
 	description = [[adium statusController] descriptionForStateOfStatus:statusState];
 	index = (description ? [popUp_state indexOfItemWithTitle:description] : -1);
-	if(index != -1){
+	if (index != -1) {
 		[popUp_state selectItemAtIndex:index];
 
-	}else{
-		if(description){
+	} else {
+		if (description) {
 			[popUp_state setTitle:[NSString stringWithFormat:@"%@ (%@)",
 				description,
 				AILocalizedString(@"No compatible accounts connected",nil)]];
 
-		}else{
+		} else {
 			[popUp_state setTitle:AILocalizedString(@"Unknown",nil)];			
 		}
 
@@ -514,11 +514,11 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	NSAttributedString	*blankString = [NSAttributedString stringWithString:@""];
 	
-	if(!statusMessage) statusMessage = blankString;
+	if (!statusMessage) statusMessage = blankString;
 	[[textView_statusMessage textStorage] setAttributedString:statusMessage];
 	[textView_statusMessage setSelectedRange:NSMakeRange(0, [statusMessage length])];
 
-	if(!autoReply) autoReply = blankString;
+	if (!autoReply) autoReply = blankString;
 	[[textView_autoReply textStorage] setAttributedString:autoReply];
 
 	//Idle start
@@ -551,7 +551,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[workingStatusState setForcedInitialIdleTime:idleStart];
 
 	//Set the title if necessary
-	if(![[workingStatusState title] isEqualToString:[textField_title stringValue]]){
+	if (![[workingStatusState title] isEqualToString:[textField_title stringValue]]) {
 		[workingStatusState setTitle:[textField_title stringValue]];
 	}
 

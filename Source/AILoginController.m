@@ -75,7 +75,7 @@
     loginDict = [NSMutableDictionary dictionaryAtPath:[AIAdium applicationSupportDirectory] withName:LOGIN_PREFERENCES_FILE_NAME create:YES];
 
     //Make sure that atleast 1 login name is available.  If not, create the name 'default'
-    if([[self userArray] count] == 0){
+    if ([[self userArray] count] == 0) {
         //Create a 'default' user
         [self addUser:DEFAULT_USER_NAME];
 
@@ -86,10 +86,10 @@
 	
 	//Retrieve the desired user from the command line if possible
 	arguments = [[NSProcessInfo processInfo] arguments];
-	if(arguments && ([arguments count] > 1)){
+	if (arguments && ([arguments count] > 1)) {
 		
 		argumentIndex = [arguments indexOfObject:@"--user"];
-		if((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)){
+		if ((argumentIndex != NSNotFound) && ([arguments count] > argumentIndex + 1)) {
 			userName = [[[arguments objectAtIndex:argumentIndex+1] copy] autorelease];
 		}
 	}
@@ -101,24 +101,24 @@
 			or
 		- LOGIN_LAST_USER does not indicate a valid user
 	 */
-	if(!userName){
+	if (!userName) {
 		BOOL userRequestedShowWindow = NO;
 		
-		if(([NSEvent optionKey]) ||
+		if (([NSEvent optionKey]) ||
 		   (userRequestedShowWindow = [[loginDict objectForKey:LOGIN_SHOW_WINDOW] boolValue]) || 
-		   (!(userName = [loginDict objectForKey:LOGIN_LAST_USER]))){
+		   (!(userName = [loginDict objectForKey:LOGIN_LAST_USER]))) {
 
 			//Prompt for the user
 			loginWindowController = [[AILoginWindowController loginWindowControllerWithOwner:self] retain];
 			[loginWindowController showWindow:nil];
 			
 			//If the user always wants to see the window, disable the login timeout
-			if(userRequestedShowWindow) [loginWindowController disableLoginTimeout];
+			if (userRequestedShowWindow) [loginWindowController disableLoginTimeout];
 		}
     }
 
 	
-	if(userName){
+	if (userName) {
 		[self loginAsUser:userName];
 	}
 }
@@ -141,7 +141,7 @@
     NSParameterAssert(userName != nil);
     
     //Close the login panel
-    if(loginWindowController){
+    if (loginWindowController) {
         [loginWindowController closeWindow:nil];
         [loginWindowController release]; loginWindowController = nil;
     }
@@ -183,12 +183,12 @@
 
     directoryContents = [[NSFileManager defaultManager] directoryContentsAtPath:userPath];
 	count = [directoryContents count];
-    for(loop = 0;loop < count;loop++){
+    for (loop = 0;loop < count;loop++) {
         NSString	*path = [directoryContents objectAtIndex:loop];
 
         //Fetch the names of all directories
-        if([[NSFileManager defaultManager] fileExistsAtPath:[userPath stringByAppendingPathComponent:path] isDirectory:&isDirectory]){
-            if(isDirectory){
+        if ([[NSFileManager defaultManager] fileExistsAtPath:[userPath stringByAppendingPathComponent:path] isDirectory:&isDirectory]) {
+            if (isDirectory) {
                 [userArray addObject:[path lastPathComponent]];
             }
         }

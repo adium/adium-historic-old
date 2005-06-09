@@ -88,7 +88,7 @@
 //selected in that situation
 - (void)_drawRowInRect:(NSRect)rect colored:(BOOL)colored selected:(BOOL)selected
 {
-	if(![[self window] isKeyWindow]) selected = NO;
+	if (![[self window] isKeyWindow]) selected = NO;
 	[super _drawRowInRect:rect colored:colored selected:selected];
 }
 	
@@ -97,7 +97,7 @@
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidBecomeMainNotification object:[self window]];
     [[NSNotificationCenter defaultCenter] removeObserver:self name:NSWindowDidResignMainNotification object:[self window]];
-    if([newSuperview window]){
+    if ([newSuperview window]) {
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowBecameMain:) name:NSWindowDidBecomeMainNotification object:[newSuperview window]];
         [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(windowResignedMain:) name:NSWindowDidResignMainNotification object:[newSuperview window]];
     }
@@ -133,13 +133,13 @@
 	id			theDelegate = [self delegate];
 	
 	//Enumerate all rows, find the widest one
-	for(row = 0; row < numberOfRows; row++){
+	for (row = 0; row < numberOfRows; row++) {
 		id			item = [self itemAtRow:row];
 		NSCell		*cell = ([self isExpandable:item] ? groupCell : contentCell);
 	
 		[theDelegate outlineView:self willDisplayCell:cell forTableColumn:nil item:item];
 		int	width = [(AIListCell *)cell cellWidth];
-		if(width > widestCell) widestCell = width;
+		if (width > widestCell) widestCell = width;
 	}
 	
 	return(((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH);
@@ -161,19 +161,19 @@
 //Draw our background image or color with transparency
 - (void)drawBackgroundInClipRect:(NSRect)clipRect
 {
-	if([self drawsBackground]){
+	if ([self drawsBackground]) {
 		//BG Color
 		[[self backgroundColor] set];
 		NSRectFill(clipRect);
 		
 		//Image
 		NSScrollView	*enclosingScrollView = [self enclosingScrollView];
-		if(backgroundImage && enclosingScrollView){
+		if (backgroundImage && enclosingScrollView) {
 			NSRect	visRect = [enclosingScrollView documentVisibleRect];
 			NSSize	imageSize = [backgroundImage size];
 			NSRect	imageRect = { NSZeroPoint, imageSize };
 
-			switch(backgroundStyle){
+			switch (backgroundStyle) {
 				
 				case AINormalBackground:{
 					//Background image normal
@@ -213,12 +213,12 @@
 					currentOrigin = visRect.origin;
 					
 					//We'll repeat this vertical process as long as necessary
-					while (currentOrigin.y < visRect.size.height){				
+					while (currentOrigin.y < visRect.size.height) {				
 						//Reset the x axis to draw a series of images horizontally at this height
 						currentOrigin.x = visRect.origin.x;
 						
 						//Draw as long as our origin is within the visible rect
-						while(currentOrigin.x < visRect.size.width){
+						while (currentOrigin.x < visRect.size.width) {
 							//Draw at the current x and y at least once with the original size
 							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
 											   fromRect:imageRect
@@ -237,7 +237,7 @@
 			}
 		}
 		
-	}else{
+	} else {
 		//If we aren't drawing a background, fill the rect with clearColor
 		[[NSColor clearColor] set];
 		NSRectFill(clipRect);
@@ -248,7 +248,7 @@
 //
 - (void)setBackgroundImage:(NSImage *)inImage
 {
-	if(backgroundImage != inImage){
+	if (backgroundImage != inImage) {
 		[backgroundImage release];
 		backgroundImage = [inImage retain];		
 		[backgroundImage setFlipped:YES];
@@ -280,9 +280,9 @@
 
 	//Mockie and pillow lists always require a non-opaque window, other lists only require a non-opaque window when
 	//the user has requested transparency.
-	if(windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED){
+	if (windowStyle == WINDOW_STYLE_MOCKIE || windowStyle == WINDOW_STYLE_PILLOWS || windowStyle == WINDOW_STYLE_PILLOWS_FITTED) {
 		[[self window] setOpaque:NO];
-	}else{
+	} else {
 		[[self window] setOpaque:(backgroundOpacity == 1.0)];
 	}
 
@@ -303,7 +303,7 @@
 //Background color (Opacity is added into the return automatically)
 - (void)setBackgroundColor:(NSColor *)inColor
 {
-	if(backgroundColor != inColor){
+	if (backgroundColor != inColor) {
 		[backgroundColor release];
 		backgroundColor = [inColor retain];
 		[_backgroundColorWithOpacity release];
@@ -314,7 +314,7 @@
 - (NSColor *)backgroundColor
 {
 	//Factor in opacity
-	if(!_backgroundColorWithOpacity){ 
+	if (!_backgroundColorWithOpacity) { 
 		_backgroundColorWithOpacity = [[backgroundColor colorWithAlphaComponent:backgroundOpacity] retain];
 	}
 	
@@ -324,7 +324,7 @@
 //Alternating row color (Opacity is added into the return automatically)
 - (void)setAlternatingRowColor:(NSColor *)color
 {
-	if(rowColor != color){
+	if (rowColor != color) {
 		[rowColor release];
 		rowColor = [color retain];
 		[_rowColorWithOpacity release];
@@ -336,7 +336,7 @@
 
 - (NSColor *)alternatingRowColor
 {
-	if(!_rowColorWithOpacity){
+	if (!_rowColorWithOpacity) {
 		_rowColorWithOpacity = [[rowColor colorWithAlphaComponent:backgroundOpacity] retain];
 	}
 	
@@ -364,7 +364,7 @@
  */
 - (void)drawRect:(NSRect)rect
 {	
-	//if(![NSApp isOnPantherOrBetter]) _drawBackground = YES;
+	//if (![NSApp isOnPantherOrBetter]) _drawBackground = YES;
 	[super drawRect:rect];
 
 	/*	#################### More Crappy Code ###################
@@ -373,11 +373,11 @@
 	 *	time the window content is changed.  This is absolutely horrible for
 	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
 	 */
-	if(updateShadowsWhileDrawing) [[self window] invalidateShadow];
+	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
 - (void)drawRow:(int)row clipRect:(NSRect)rect
 {
-	if(_drawBackground){
+	if (_drawBackground) {
 		_drawBackground = NO;
 		[self drawBackgroundInClipRect:[self frame]];
 	}
@@ -396,9 +396,9 @@
 {
     int selectedRow = [self selectedRow];
 
-    if(selectedRow >= 0 && selectedRow < [self numberOfRows]){
+    if (selectedRow >= 0 && selectedRow < [self numberOfRows]) {
         return([self itemAtRow:selectedRow]);
-    }else{
+    } else {
         return(nil);
     }
 }

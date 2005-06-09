@@ -74,7 +74,7 @@
 	GaimAccount		*gaimAccount = [self gaimAccount];
 	GaimConnection  *gc;
 	
-	if(gc = gaim_account_get_connection(gaimAccount)){
+	if (gc = gaim_account_get_connection(gaimAccount)) {
 		gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
 	}
 }
@@ -85,9 +85,9 @@
 {
 	NSAttributedString  *statusMessage = nil;
 	
-	if(b && b->proto_data){
+	if (b && b->proto_data) {
 		NSString	*statusMessageString = [NSString stringWithUTF8String:b->proto_data];
-		if (statusMessageString && [statusMessageString length]){
+		if (statusMessageString && [statusMessageString length]) {
 			statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 															 attributes:nil] autorelease];
 		}
@@ -117,19 +117,19 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AVAILABLE])
+			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE])
 				gaimStatusType = AGG_STATUS_AVAIL;
-			else if([statusName isEqualToString:STATUS_NAME_AVAILABLE_FRIENDS_ONLY])
+			else if ([statusName isEqualToString:STATUS_NAME_AVAILABLE_FRIENDS_ONLY])
 				gaimStatusType = AGG_STATUS_AVAIL_FRIENDS;
 			break;
 		}
 			
 		case AIAwayStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AWAY])
+			if ([statusName isEqualToString:STATUS_NAME_AWAY])
 				gaimStatusType = AGG_STATUS_BUSY;
 			else if ([statusName isEqualToString:STATUS_NAME_AWAY_FRIENDS_ONLY])
 				gaimStatusType = AGG_STATUS_BUSY_FRIENDS;
@@ -147,7 +147,7 @@
 	/* Gadu-Gadu supports status messages along with the status types, so let our message stay */
 	
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }

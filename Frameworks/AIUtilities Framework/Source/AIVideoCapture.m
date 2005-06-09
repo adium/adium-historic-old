@@ -37,7 +37,7 @@ static long instanceCounter = 0L;
 //Init
 - (id)initWithSize:(NSSize)inSize captureInterval:(NSTimeInterval)inInterval delegate:(id)inDelegate
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		delegate = inDelegate;
 		uniqueID = 0;
 		gWorld = NULL;
@@ -46,7 +46,7 @@ static long instanceCounter = 0L;
 		captureInterval = inInterval;
 	
 		//Delegate must implement frameReady
-		if(delegate){
+		if (delegate) {
 			NSParameterAssert([delegate respondsToSelector:@selector(videoCapture:frameReady:)]);
 		}
 	
@@ -122,15 +122,15 @@ static long instanceCounter = 0L;
 //Being capturing frames
 - (void)beginCapturingVideo
 {
-	if(!captureTimer){
+	if (!captureTimer) {
 		//Unique ID for this object
 		//Since our callback is C code, we'll need a way to find our AIVideoCapture instance from within the callback.
 		//We achieve this by keeping track of all the open AIVideoCapture instances, where each instance has a unique
 		//identifier.  The callback can lookup the instance it wants by this unique ID.
-		if(!videoCaptureInstances) videoCaptureInstances = [[NSMutableDictionary alloc] init];
-		if(!uniqueID) {
+		if (!videoCaptureInstances) videoCaptureInstances = [[NSMutableDictionary alloc] init];
+		if (!uniqueID) {
 			uniqueID = ++instanceCounter;
-			if(uniqueID <= 0) {
+			if (uniqueID <= 0) {
 				//we overflowed the long
 				uniqueID = instanceCounter = 1;
 			}
@@ -166,7 +166,7 @@ static long instanceCounter = 0L;
 //Begin capturing a frame of video, delegate is notified when capture if complete
 - (void)captureFrame:(NSTimer *)timer
 {
-	if(decodeSeq == 0) [self _primeDecompression];
+	if (decodeSeq == 0) [self _primeDecompression];
 	SGIdle(seqGrab);
 }
 

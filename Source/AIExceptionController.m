@@ -48,7 +48,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 
 	//Set up exceptions to except
 	//More of these (matched by substring) can be found in -raise
-	if(!safeExceptionReasons) {
+	if (!safeExceptionReasons) {
 		safeExceptionReasons = [[NSSet alloc] initWithObjects:
 			@"_sharedInstance is invalid.", //Address book framework is weird sometimes
 			@"No text was found", //ICeCoffEE is an APE haxie which would crash us whenever a user pasted, or something like that
@@ -61,7 +61,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			@"Invalid parameter not satisfying: aString != nil", //The Find command can throw this, as can other AppKit methods
 			nil];
 	}
-	if(!safeExceptionNames) {
+	if (!safeExceptionNames) {
 		safeExceptionNames = [[NSSet alloc] initWithObjects:
 			@"GIFReadingException", //GIF reader sucks
 			@"NSPortTimeoutException", //Harmless - it timed out for a reason
@@ -79,13 +79,13 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 //its addition to write the exception log, load the crash reporter, and exit.
 - (void)raise
 {
-	if(!catchExceptions){
+	if (!catchExceptions) {
 		NSString	*theName   = [self name];
 		NSString	*theReason = [self reason];
 
 		NSLog(@"Exception catching off: Did not catch %@ - %@",theName,theReason);
 		[super raise];
-	}else{
+	} else {
 		NSString	*theReason = [self reason];
 		NSString	*theName   = [self name];
 		NSString	*backtrace = [self decodedExceptionStackTrace];
@@ -95,7 +95,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		BOOL		shouldLaunchCrashReporter = YES;
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
-		if((!theReason) || //Harmless
+		if ((!theReason) || //Harmless
 		   [safeExceptionReasons containsObject:theReason] || 
 		   [theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
 		   [theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
@@ -114,7 +114,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		}
 		
 		//Check the stack trace for a third set of known offenders
-		if(!backtrace ||
+		if (!backtrace ||
 		   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
 		   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
 		   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
@@ -123,7 +123,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			   shouldLaunchCrashReporter = NO;
 		}
 			   
-		if(shouldLaunchCrashReporter){
+		if (shouldLaunchCrashReporter) {
 			NSString	*bundlePath = [[NSBundle mainBundle] bundlePath];
 			NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
 			NSString	*versionString = [[NSProcessInfo processInfo] operatingSystemVersionString];
@@ -138,7 +138,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 			[[NSWorkspace sharedWorkspace] openFile:bundlePath withApplication:crashReporterPath];
 
 			exit(-1);
-		}else{
+		} else {
 			NSLog(@"The following unhandled exception was ignored: %@ (%@)\nStack trace:\n%@",
 				  theName,
 				  theReason,
@@ -160,7 +160,7 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	NSString        *stackTrace = nil;
 
 	//Turn the nonsense of memory addresses into a human-readable backtrace complete with line numbers
-	if(dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) {
+	if (dict && (stackTrace = [dict objectForKey:NSStackTraceKey])) {
 		NSMutableString		*processedStackTrace;
 		NSString			*str;
 		
@@ -175,23 +175,23 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		FILE *file = popen( [str UTF8String], "r" );
 		NSMutableData *data = [[NSMutableData alloc] init];
 
-		if(file) {
+		if (file) {
 			NSZone	*zone = [self zone];
 
 			size_t	 bufferSize = getpagesize();
 			char	*buffer = NSZoneMalloc(zone, bufferSize);
-			if(!buffer) {
+			if (!buffer) {
 				buffer = alloca(bufferSize = 512);
 				zone = NULL;
 			}
 
 			size_t	 amountRead;
 
-			while((amountRead = fread(buffer, sizeof(char), bufferSize, file))) {
+			while ((amountRead = fread(buffer, sizeof(char), bufferSize, file))) {
 				[data appendBytes:buffer length:amountRead];
 			}
 
-			if(zone) NSZoneFree(zone, buffer);
+			if (zone) NSZoneFree(zone, buffer);
 
 			pclose(file);
 		}

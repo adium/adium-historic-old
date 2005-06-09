@@ -33,7 +33,7 @@
 //Init
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		font = nil;
 		subString = nil;
 		maxImageWidth = DEFAULT_MAX_IMAGE_WIDTH;
@@ -84,7 +84,7 @@
 //Font used to display our text
 - (void)setFont:(NSFont *)inFont
 {
-    if(font != inFont){
+    if (font != inFont) {
         [font release];
         font = [inFont retain];
     }
@@ -98,7 +98,7 @@
 //Substring (Displayed in gray below our main string)
 - (void)setSubString:(NSString *)inSubString
 {
-	if(subString != inSubString){
+	if (subString != inSubString) {
 		[subString release];
 		subString = [inSubString retain];
 	}
@@ -125,17 +125,17 @@
 	NSImage		*image = [self image];
 	NSSize		cellSize = NSZeroSize;
 	
-	if(image){
+	if (image) {
 		NSSize	destSize = [image size];
 
 		//Center image vertically, or scale as needed
-		if (destSize.height > cellFrame.size.height){
+		if (destSize.height > cellFrame.size.height) {
 			float proportionChange = cellFrame.size.height / destSize.height;
 			destSize.height = cellFrame.size.height;
 			destSize.width = destSize.width * proportionChange;
 		}
 		
-		if (destSize.width > maxImageWidth){
+		if (destSize.width > maxImageWidth) {
 			float proportionChange = maxImageWidth / destSize.width;
 			destSize.width = maxImageWidth;
 			destSize.height = destSize.height * proportionChange;
@@ -145,7 +145,7 @@
 		cellSize.height = destSize.height;
 	}
 	
-	if(title != nil){
+	if (title != nil) {
 		NSDictionary	*attributes;
 		NSSize			titleSize;
 
@@ -156,12 +156,12 @@
 																	 lineBreakMode:lineBreakMode];
 		
 		//
-		if([self font]){
+		if ([self font]) {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				[self font], NSFontAttributeName,
 				nil];
-		}else{
+		} else {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				nil];
@@ -169,7 +169,7 @@
 		
 		titleSize = [title sizeWithAttributes:attributes];
 		
-		if(subString){
+		if (subString) {
 			NSSize			subStringSize;
 
 			attributes = [NSDictionary dictionaryWithObject:[NSFont systemFontOfSize:10]
@@ -177,19 +177,19 @@
 			subStringSize = [subString sizeWithAttributes:attributes];
 			
 			//Use the wider of the two strings as the required width
-			if(subStringSize.width > titleSize.width){
+			if (subStringSize.width > titleSize.width) {
 				cellSize.width += subStringSize.width;
-			}else{
+			} else {
 				cellSize.width += titleSize.width;
 			}
 			
-			if(cellSize.height < (subStringSize.height + titleSize.height)){
+			if (cellSize.height < (subStringSize.height + titleSize.height)) {
 				cellSize.height = (subStringSize.height + titleSize.height);
 			}
-		}else{
+		} else {
 			//No substring
 			cellSize.width += titleSize.width;
-			if(cellSize.height < titleSize.height){
+			if (cellSize.height < titleSize.height) {
 				cellSize.height = titleSize.height;
 			}
 		}
@@ -208,12 +208,12 @@
 //	[super drawInteriorWithFrame:cellFrame inView:controlView];
 	
 	highlighted = [self isHighlighted];
-	if(highlighted){
+	if (highlighted) {
 		[self _drawHighlightWithFrame:cellFrame inView:controlView];
 	}
 
 	//Draw the cell's image
-	if(image != nil){
+	if (image != nil) {
 		NSSize	size = [image size];
 		NSSize  destSize = size;
 		NSPoint	destPoint = cellFrame.origin;
@@ -223,19 +223,19 @@
 		destPoint.x += imageTextPadding;
 		
 		//Center image vertically, or scale as needed
-		if (destSize.height > cellFrame.size.height){
+		if (destSize.height > cellFrame.size.height) {
 			 float proportionChange = cellFrame.size.height / size.height;
 			 destSize.height = cellFrame.size.height;
 			 destSize.width = size.width * proportionChange;
 		 }
 		 
-		 if (destSize.width > maxImageWidth){
+		 if (destSize.width > maxImageWidth) {
 			 float proportionChange = maxImageWidth / destSize.width;
 			 destSize.width = maxImageWidth;
 			 destSize.height = destSize.height * proportionChange;
 		 }
 		 
-		if(destSize.height < cellFrame.size.height){
+		if (destSize.height < cellFrame.size.height) {
 			destPoint.y += (cellFrame.size.height - destSize.height) / 2.0;
 		} 
 
@@ -246,7 +246,7 @@
 		cellFrame.origin.x += imageTextPadding + destSize.width;
 		
 		BOOL flippedIt = NO;
-		if (![image isFlipped]){
+		if (![image isFlipped]) {
 			[image setFlipped:YES];
 			flippedIt = YES;
 		}
@@ -255,31 +255,31 @@
 				 fromRect:NSMakeRect(0,0,size.width,size.height)
 				operation:NSCompositeSourceOver
 				 fraction:1.0];
-		if (flippedIt){
+		if (flippedIt) {
 			[image setFlipped:NO];
 		}
 	}
 	
 	//Draw the cell's text
-	if(title != nil){
+	if (title != nil) {
 		NSAttributedString	*attributedString;
 		NSColor				*textColor;
 		NSDictionary		*attributes;
 		float				stringHeight = 0.0;
 
 		//Determine the correct text color
-		if(highlighted){
+		if (highlighted) {
 			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-		}else{
-			if([self isEnabled]){
+		} else {
+			if ([self isEnabled]) {
 				textColor = [NSColor controlTextColor]; //Draw the text regular
-			}else{
+			} else {
 				textColor = [NSColor grayColor]; //Draw the text disabled
 			}
 		}
 
 		//Adjust if a substring is present
-		if(subString) cellFrame.size.height /= 2;
+		if (subString) cellFrame.size.height /= 2;
 
 		/* Padding: Origin goes right by our padding amount, and the width decreases by twice it
 		 * (for left and right padding).
@@ -291,13 +291,13 @@
 		NSParagraphStyle	*paragraphStyle = [NSParagraphStyle styleWithAlignment:[self alignment]
 																	 lineBreakMode:lineBreakMode];		
 		//
-		if([self font]){
+		if ([self font]) {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				[self font], NSFontAttributeName,
 				textColor, NSForegroundColorAttributeName,
 				nil];
-		}else{
+		} else {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				paragraphStyle, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,
@@ -306,7 +306,7 @@
 		
 		attributedString = [[NSAttributedString alloc] initWithString:title
 														   attributes:attributes];
-		switch(lineBreakMode){
+		switch (lineBreakMode) {
 			case NSLineBreakByWordWrapping:
 			case NSLineBreakByCharWrapping:
 				stringHeight = [attributedString heightWithWidth:cellFrame.size.width];
@@ -320,7 +320,7 @@
 		}
 
 		//Calculate the centered rect
-		if(stringHeight < cellFrame.size.height){
+		if (stringHeight < cellFrame.size.height) {
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
 		}
 
@@ -329,14 +329,14 @@
 		[attributedString release];
 		
 		//Draw the substring
-		if(subString){
+		if (subString) {
 			//Determine the correct text color
-			if(highlighted){
+			if (highlighted) {
 				textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-			}else{
-				if([self isEnabled]){
+			} else {
+				if ([self isEnabled]) {
 					textColor = [NSColor colorWithCalibratedWhite:0.4 alpha:1.0]; //Draw the text regular
-				}else{
+				} else {
 					textColor = [NSColor colorWithCalibratedWhite:0.8 alpha:1.0]; //Draw the text disabled
 				}
 			}

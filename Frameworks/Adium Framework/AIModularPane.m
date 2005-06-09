@@ -40,7 +40,7 @@
 //Init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		view = nil;
 	}
@@ -57,11 +57,11 @@
 //Returns our view
 - (NSView *)view
 {
-    if(!view){
+    if (!view) {
         //Load and configure our view
         [NSBundle loadNibNamed:[self nibName] owner:self];
         [self viewDidLoad];
-		if(![self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
+		if (![self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
     }
     
     return(view);
@@ -70,7 +70,7 @@
 //Close our view
 - (void)closeView
 {
-	if(view){
+	if (view) {
 		[self viewWillClose];
 		[view release]; view = nil;
 	}

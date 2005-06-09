@@ -24,7 +24,7 @@
 
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		lineBreakMode = /*NSLineBreakByTruncatingTail*/ NSLineBreakByWordWrapping;
 	}
 
@@ -38,17 +38,17 @@
 	BOOL		highlighted = [self isHighlighted];
 	
 	//Draw the cell's text
-	if(title != nil){
+	if (title != nil) {
 		NSDictionary	*attributes;
 		float			 stringHeight;
 		NSColor			*textColor;
 
-		if(highlighted){
+		if (highlighted) {
 			textColor = [NSColor alternateSelectedControlTextColor]; //Draw the text inverted
-		}else{
-			if([self isEnabled]){
+		} else {
+			if ([self isEnabled]) {
 				textColor = [NSColor controlTextColor]; //Draw the text regular
-			}else{
+			} else {
 				textColor = [NSColor grayColor]; //Draw the text disabled
 			}
 		}
@@ -59,12 +59,12 @@
 		[style setLineBreakMode:lineBreakMode];
 
 		//
-		if(font){
+		if (font) {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				font, NSFontAttributeName,
 				style, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,nil];
-		}else{
+		} else {
 			attributes = [NSDictionary dictionaryWithObjectsAndKeys:
 				style, NSParagraphStyleAttributeName,
 				textColor, NSForegroundColorAttributeName,nil];
@@ -74,7 +74,7 @@
 																			   attributes:attributes];
 		//Calculate the centered rect
 		stringHeight = [attributedTitle heightWithWidth:cellFrame.size.width];
-		if(stringHeight < cellFrame.size.height){
+		if (stringHeight < cellFrame.size.height) {
 			cellFrame.origin.y += (cellFrame.size.height - stringHeight) / 2.0;
 		}
 

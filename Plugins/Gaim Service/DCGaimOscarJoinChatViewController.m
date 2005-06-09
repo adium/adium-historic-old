@@ -37,7 +37,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		[textField_inviteUsers setDragDelegate:self];
 		[textField_inviteUsers registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs", nil]];
@@ -80,7 +80,7 @@
 	//Obtain room and exchange from the view
 	room = [textField_roomName stringValue];
 
-	if (room && [room length]){
+	if (room && [room length]) {
 		exchange = 4;
 				
 		//The chatCreationInfo has keys corresponding to the GHashTable keys and values to match them.
@@ -91,7 +91,7 @@
 				chatCreationInfo:chatCreationInfo
 				invitingContacts:[self contactsFromNamesSeparatedByCommas:[textField_inviteUsers stringValue] onAccount:inAccount]
 		  withInvitationMessage:[textField_inviteMessage stringValue]];
-	}else{
+	} else {
 		NSLog(@"Error: No room specified.");
 	}
 
@@ -100,7 +100,7 @@
 //Entered text is changing
 - (void)controlTextDidChange:(NSNotification *)notification
 {
-	if([notification object] == textField_roomName){
+	if ([notification object] == textField_roomName) {
 		[self validateEnteredText];
 	}
 }
@@ -110,7 +110,7 @@
 	NSString	*roomName = [textField_roomName stringValue];
 	BOOL		enabled = (roomName && [roomName length]);
 
-	if(delegate)
+	if (delegate)
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
 }
 
@@ -129,8 +129,8 @@
 	
 	//Configure the auto-complete view to autocomplete for contacts matching the selected account's service
     enumerator = [[[adium contactController] allContactsInGroup:nil subgroups:YES onAccount:nil] objectEnumerator];
-    while((contact = [enumerator nextObject])){
-		if([contact service] == [account service]){
+    while ((contact = [enumerator nextObject])) {
+		if ([contact service] == [account service]) {
 			NSString *UID = [contact UID];
 			[textField_inviteUsers addCompletionString:[contact formattedUID] withImpliedCompletion:UID];
 			[textField_inviteUsers addCompletionString:[contact displayName] withImpliedCompletion:UID];

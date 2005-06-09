@@ -83,7 +83,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSRange	scanRange;
     
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		textStorage = nil;
 		textContainer = nil;
@@ -102,8 +102,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
 		//Check if our string contains any links
 		scanRange = NSMakeRange(0, 0);
-		while(NSMaxRange(scanRange) < [textStorage length]){
-			if([textStorage attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]){
+		while (NSMaxRange(scanRange) < [textStorage length]) {
+			if ([textStorage attribute:NSLinkAttributeName atIndex:NSMaxRange(scanRange) effectiveRange:&scanRange]) {
 				containsLinks = YES;
 			}
 		}
@@ -132,8 +132,8 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 	[aLayoutManager release];
 
     //Return
-    if(outContainer) *outContainer = aContainer;
-    if(outLayoutManager) *outLayoutManager = aLayoutManager;
+    if (outContainer) *outContainer = aContainer;
+    if (outLayoutManager) *outLayoutManager = aLayoutManager;
     return([aTextStorage autorelease]);
 }
 
@@ -150,7 +150,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Resize the content of this cell to the desired width, returns new height
 - (int)sizeContentForWidth:(float)inWidth
 {
-    if(!USE_OPTIMIZED_LIVE_RESIZE || ![[tableRow tableView] inLiveResize]){        
+    if (!USE_OPTIMIZED_LIVE_RESIZE || ![[tableRow tableView] inLiveResize]) {        
         //Reformat the text
         [textContainer setContainerSize:NSMakeSize(inWidth, 1e7)];
         glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
@@ -165,7 +165,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Draw our custom content
 - (void)drawContentsWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
 {
-    if(glyphRange.length != 0){
+    if (glyphRange.length != 0) {
         if (isOpaque) {
 			//drawBackgroundForGlyphRange:atPoint: doesn't actually invalidate the glyphs properly, so call glyphRangeForTextContainer: first
 			[layoutManager glyphRangeForTextContainer:textContainer];
@@ -216,7 +216,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     glyphIndex = [layoutManager glyphIndexForPoint:point 
 								   inTextContainer:textContainer 
 					fractionOfDistanceThroughGlyph:&fractionOfDistanceThroughGlyph];
-    if(fractionOfDistanceThroughGlyph >= offset){
+    if (fractionOfDistanceThroughGlyph >= offset) {
         glyphIndex += 1;
     }
 
@@ -229,9 +229,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Returns YES if cursor rects were modified
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
-    if(containsLinks){
+    if (containsLinks) {
         //Setup our link tracking
-        if(!linkTrackingController){
+        if (!linkTrackingController) {
             linkTrackingController = [[AILinkTrackingController linkTrackingControllerForView:controlView 
 																			  withTextStorage:textStorage 
 																				layoutManager:layoutManager
@@ -252,12 +252,12 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     BOOL	handled = NO;
 
     //Check for a link click
-    if(!handled && containsLinks){
+    if (!handled && containsLinks) {
         handled = ([linkTrackingController handleMouseDown:theEvent withOffset:inOffset]);
     }
 
     //Check for an attachment click
-    if(!handled){
+    if (!handled) {
         handled = [self _handleAttachmentClicks:theEvent atPoint:inPoint offset:inOffset];
     }
 
@@ -272,15 +272,15 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 
     //Find clicked char index
     charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
-    if(charIndex >= 0 && charIndex < [textStorage length]){
-       if([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter){ //Check for emoticons to turn into text
+    if (charIndex >= 0 && charIndex < [textStorage length]) {
+       if ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter) { //Check for emoticons to turn into text
 		   AITextAttachmentExtension	*attachment = [textStorage attribute:NSAttachmentAttributeName
 																	 atIndex:charIndex
 															  effectiveRange:nil];
            NSString						*repStr = [attachment string];
 
 		   //Check if the string exists and wants its alternate text to be used
-           if(repStr != nil && [attachment hasAlternate]) {
+           if (repStr != nil && [attachment hasAlternate]) {
                NSMutableAttributedString	*repAttStr = [[NSMutableAttributedString alloc] initWithString:repStr];
 
                NSMutableDictionary			*attributes = [[textStorage attributesAtIndex:charIndex 
@@ -288,16 +288,16 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                unsigned int					tempIndex = charIndex;
                NSColor						*tempColor = nil;
 
-               if(tempIndex > 0){
-                   while(((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
+               if (tempIndex > 0) {
+                   while (((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
 													 atIndex: --tempIndex effectiveRange:nil]) == nil) && (tempIndex != 0));
-               }else if([textStorage length] > 1){
-                   while(((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
+               } else if ([textStorage length] > 1) {
+                   while (((tempColor = [textStorage attribute:NSForegroundColorAttributeName 
 													 atIndex: ++tempIndex effectiveRange:nil]) == nil) &&
 						 (tempIndex != ([textStorage length] - 1)));
                }
 
-               if(tempColor) [attributes setObject:tempColor forKey:NSForegroundColorAttributeName];
+               if (tempColor) [attributes setObject:tempColor forKey:NSForegroundColorAttributeName];
                
 			   [attributes setObject:attachment
 							  forKey:@"IKHiddenAttachment"];
@@ -314,7 +314,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
                handled = YES;
            }
 
-       }else if([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]){ //Check for text to turn back into emoticons
+       } else if ([textStorage attribute:@"IKHiddenAttachment" atIndex:charIndex effectiveRange:nil]) { //Check for text to turn back into emoticons
            NSRange			replaceRange;
            NSMutableAttributedString	*repAttStr;
            AITextAttachmentExtension	*repAtt = [textStorage attribute:@"IKHiddenAttachment" 
@@ -332,7 +332,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
        }
    }
 
-   if(handled){
+   if (handled) {
        glyphRange = [layoutManager glyphRangeForTextContainer:textContainer];
        [[tableRow tableView] resizeRow:tableRow];
    }
@@ -348,11 +348,11 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     int		startIndex = (above ? 0 : [self _characterIndexAtPoint:source fractionOffset:0.5]);
     int		stopIndex = (below ? 1e7 : [self _characterIndexAtPoint:dest fractionOffset:0.5]);
 	
-    if(selectMode == 2){ //Extend to words
+    if (selectMode == 2) { //Extend to words
         startIndex = [textStorage doubleClickAtIndex:startIndex].location;
         stopIndex = (below ? 1e7 : NSMaxRange([textStorage doubleClickAtIndex:stopIndex]));
 
-    }else if(selectMode == 3){ //Extend to cells
+    } else if (selectMode == 3) { //Extend to cells
         startIndex = 0;
         stopIndex = 1e7;
         
@@ -394,7 +394,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 {
     NSMutableAttributedString *selectedString = nil;
     
-    if(selectionRange.length && ((selectionRange.location + selectionRange.length) <= [string length])){
+    if (selectionRange.length && ((selectionRange.location + selectionRange.length) <= [string length])) {
         //Get the selected text (attributedStringByConvertingAttachmentsToStrings converts any attachments to text)
         selectedString = [[[[string attributedSubstringFromRange:selectionRange] attributedStringByConvertingAttachmentsToStrings] mutableCopy] autorelease];
 
@@ -418,17 +418,17 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     NSRange	range;
 
     //The range must go from left to right
-    if(sourceIndex < destIndex){
+    if (sourceIndex < destIndex) {
         range = NSMakeRange(sourceIndex, destIndex - sourceIndex);
-    }else{
+    } else {
         range = NSMakeRange(destIndex, sourceIndex - destIndex);
     }
 
     //The range cannot start before our string
-    if(range.location < 0) range.location = 0;
+    if (range.location < 0) range.location = 0;
 
     //The range cannot end beyond the end of our string
-    if(range.location + range.length > [textStorage length]){
+    if (range.location + range.length > [textStorage length]) {
         range.length = [textStorage length] - range.location;
     }
 
@@ -447,7 +447,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     menuItemArray = [self _attachmentMenuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
     
     //Add link menu items
-    if (containsLinks){
+    if (containsLinks) {
         NSArray *linkMenuItems = ([linkTrackingController menuItemsForEvent:theEvent withOffset:inOffset]);
         if (menuItemArray)
             menuItemArray = [menuItemArray arrayByAddingObjectsFromArray:linkMenuItems];
@@ -467,9 +467,9 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     
     //Find clicked char index
     charIndex = [self _characterIndexAtPoint:inPoint fractionOffset:1.0];
-    if(charIndex >= 0 && charIndex < [textStorage length]){
+    if (charIndex >= 0 && charIndex < [textStorage length]) {
         //Check for emoticons in image form
-        if( ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter) ) {
+        if ( ([[textStorage string] characterAtIndex:charIndex] == NSAttachmentCharacter) ) {
 			AITextAttachmentExtension	*attachment;
 			NSImage						*image;
 			NSString					*repStr;
@@ -493,7 +493,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 			repStr = [attachment string];
 			
 			//Check if the string exists and wants its alternate text to be used
-			if(repStr != nil && [attachment hasAlternate]) {
+			if (repStr != nil && [attachment hasAlternate]) {
 				
 				NSAttributedString *formattedText = [[NSAttributedString alloc] initWithString:repStr
 																					attributes:[textStorage attributesAtIndex:charIndex

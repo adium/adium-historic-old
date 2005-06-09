@@ -47,7 +47,7 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
 	//A gaim image tag takes the form <IMG ID="12"></IMG> where 12 is the reference for use in GaimStoredImage* gaim_imgstore_get(int)
 
 	//Parse the incoming HTML
-    while(![scanner isAtEnd]){
+    while (![scanner isAtEnd]) {
 
 		//Find the beginning of a gaim IMG ID tag
 		if ([scanner scanUpToString:targetString intoString:&chunkString]) {
@@ -64,7 +64,7 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
 
 			//Get the image, then write it out as a png
 			GaimStoredImage		*gaimImage = gaim_imgstore_get(imageID);
-			if (gaimImage){
+			if (gaimImage) {
 				NSString			*imagePath = _messageImageCachePath(imageID, adiumAccount);
 
 				//First make an NSImage, then request a TIFFRepresentation to avoid an obscure bug in the PNG writing routines
@@ -75,12 +75,12 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
 				NSBitmapImageRep	*bitmapRep = [NSBitmapImageRep imageRepWithData:imageTIFFData];
 
 				//If writing the PNG file is successful, write an <IMG SRC="filepath"> tag to our string
-				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]){
+				if ([[bitmapRep representationUsingType:NSPNGFileType properties:nil] writeToFile:imagePath atomically:YES]) {
 					[newString appendString:[NSString stringWithFormat:@"<IMG SRC=\"%@\">",imagePath]];
 				}
 
 				[image release];
-			}else{
+			} else {
 				//If we didn't get a gaimImage, just leave the tag for now.. maybe it was important?
 				[newString appendString:chunkString];
 			}
@@ -100,11 +100,11 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 	chat = (AIChat *)conv->ui_data;
 
 	//Chat will be nil if we've already cleaned up, at which point no further action is needed.
-	if (chat){
+	if (chat) {
 		//The chat's uniqueChatID may have changed before we got here.  Make sure we are talking about the proper conv
 		//before removing its NSValue from the chatDict
 		NSMutableDictionary	*chatDict = get_chatDict();
-		if (conv == [[chatDict objectForKey:[chat uniqueChatID]] pointerValue]){
+		if (conv == [[chatDict objectForKey:[chat uniqueChatID]] pointerValue]) {
 			[chatDict removeObjectForKey:[chat uniqueChatID]];
 		}
 
@@ -116,7 +116,7 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
-	if((flags & GAIM_MESSAGE_SEND) == 0){
+	if ((flags & GAIM_MESSAGE_SEND) == 0) {
 		NSDictionary	*messageDict;
 		NSString		*messageString;
 
@@ -140,7 +140,7 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
-	if((flags & GAIM_MESSAGE_SEND) == 0){
+	if ((flags & GAIM_MESSAGE_SEND) == 0) {
 		NSDictionary		*messageDict;
 		CBGaimAccount		*adiumAccount = accountLookup(conv->account);
 		NSString			*messageString;
@@ -169,104 +169,104 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
 {
 	AIChat	*chat = nil;
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		chat = existingChatLookupFromConv(conv);
-	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
 		chat = imChatLookupFromConv(conv);
 	}
 
-	if (chat){
-		if (flags & GAIM_MESSAGE_SYSTEM){
+	if (chat) {
+		if (flags & GAIM_MESSAGE_SYSTEM) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
-			if (messageString){
+			if (messageString) {
 				AIChatUpdateType	updateType = -1;
 
-				if([messageString rangeOfString:@"timed out"].location != NSNotFound){
+				if ([messageString rangeOfString:@"timed out"].location != NSNotFound) {
 					updateType = AIChatTimedOut;
-				}else if([messageString rangeOfString:@"closed the conversation"].location != NSNotFound){
+				} else if ([messageString rangeOfString:@"closed the conversation"].location != NSNotFound) {
 					updateType = AIChatClosedWindow;
 				}
 
-				if (updateType != -1){
+				if (updateType != -1) {
 					[accountLookup(conv->account) mainPerformSelector:@selector(updateForChat:type:)
 														   withObject:chat
 														   withObject:[NSNumber numberWithInt:updateType]];
 				}
 			}
-		}else if (flags & GAIM_MESSAGE_ERROR){
+		} else if (flags & GAIM_MESSAGE_ERROR) {
 			NSString			*messageString = [NSString stringWithUTF8String:message];
-			if (messageString){
+			if (messageString) {
 				AIChatErrorType	errorType = -1;
 
-				if([messageString rangeOfString:@"Unable to send message"].location != NSNotFound){
+				if ([messageString rangeOfString:@"Unable to send message"].location != NSNotFound) {
 					/* Unable to send message = generic and AIM errors */
-					if(([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
-					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)){
+					if (([messageString rangeOfString:@"Not logged in"].location != NSNotFound) ||
+					   ([messageString rangeOfString:@"is not online"].location != NSNotFound)) {
 						errorType = AIChatMessageSendingUserNotAvailable;
 
-					}else if([messageString rangeOfString:@"In local permit/deny"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"In local permit/deny"].location != NSNotFound) {
 						errorType = AIChatMessageSendingUserIsBlocked;
 
-					}else if(([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)){
+					} else if (([messageString rangeOfString:@"Refused by client"].location != NSNotFound) ||
+							 ([messageString rangeOfString:@"message is too large"].location != NSNotFound)) {
 						//XXX - there may be other conditions, but this seems the most common so that's how we'll classify it
 						errorType = AIChatMessageSendingTooLarge;
 					}
 
-				}else if(([messageString rangeOfString:@"Message could not be sent"].location != NSNotFound) ||
-						 ([messageString rangeOfString:@"Message may have not been sent"].location != NSNotFound)){
+				} else if (([messageString rangeOfString:@"Message could not be sent"].location != NSNotFound) ||
+						 ([messageString rangeOfString:@"Message may have not been sent"].location != NSNotFound)) {
 					/* Message could not be sent = MSN errors */
-					if([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound){
+					if ([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound) {
 						errorType = AIChatMessageSendingTimeOutOccurred;
 
-					}else if([messageString rangeOfString:@"because the user is offline"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"because the user is offline"].location != NSNotFound) {
 						errorType = AIChatMessageSendingUserNotAvailable;
 						
-					}else if([messageString rangeOfString:@"not allowed while invisible"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"not allowed while invisible"].location != NSNotFound) {
 						errorType = AIChatMessageSendingNotAllowedWhileInvisible;
 						
-					}else if(([messageString rangeOfString:@"because a connection error occurred"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"because an error with the switchboard"].location != NSNotFound)){
+					} else if (([messageString rangeOfString:@"because a connection error occurred"].location != NSNotFound) ||
+							 ([messageString rangeOfString:@"because an error with the switchboard"].location != NSNotFound)) {
 						errorType = AIChatMessageSendingConnectionError;
 					}
 
-				}else if([messageString rangeOfString:@"You missed"].location != NSNotFound){
+				} else if ([messageString rangeOfString:@"You missed"].location != NSNotFound) {
 					if (([messageString rangeOfString:@"because they were too large"].location != NSNotFound) ||
-						([messageString rangeOfString:@"because it was too large"].location != NSNotFound)){
+						([messageString rangeOfString:@"because it was too large"].location != NSNotFound)) {
 						//The actual message when on AIM via libgaim is "You missed 2 messages" but this is a lie.
 						errorType = AIChatMessageReceivingMissedTooLarge;
 
-					}else if(([messageString rangeOfString:@"because it was invalid"].location != NSNotFound) ||
-							 ([messageString rangeOfString:@"because they were invalid"].location != NSNotFound)){
+					} else if (([messageString rangeOfString:@"because it was invalid"].location != NSNotFound) ||
+							 ([messageString rangeOfString:@"because they were invalid"].location != NSNotFound)) {
 						errorType = AIChatMessageReceivingMissedInvalid;
 
-					}else if([messageString rangeOfString:@"because the rate limit has been exceeded"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"because the rate limit has been exceeded"].location != NSNotFound) {
 						errorType = AIChatMessageReceivingMissedRateLimitExceeded;
 
-					}else if([messageString rangeOfString:@"because he/she was too evil"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"because he/she was too evil"].location != NSNotFound) {
 						errorType = AIChatMessageReceivingMissedRemoteIsTooEvil;
 
-					}else if([messageString rangeOfString:@"because you are too evil"].location != NSNotFound){
+					} else if ([messageString rangeOfString:@"because you are too evil"].location != NSNotFound) {
 						errorType = AIChatMessageReceivingMissedLocalIsTooEvil;
 
 					}
 
-				}else if([messageString isEqualToString:@"Command failed"]){
+				} else if ([messageString isEqualToString:@"Command failed"]) {
 					errorType = AIChatCommandFailed;
 
-				}else if([messageString isEqualToString:@"Wrong number of arguments"]){
+				} else if ([messageString isEqualToString:@"Wrong number of arguments"]) {
 					errorType = AIChatInvalidNumberOfArguments;
 
-				}else if([messageString rangeOfString:@"transfer"].location != NSNotFound){
+				} else if ([messageString rangeOfString:@"transfer"].location != NSNotFound) {
 					//Ignore the transfer errors; we will handle them locally
 					errorType = -2;
 
-				}else if ([messageString rangeOfString:@"User information not available"].location != NSNotFound){
+				} else if ([messageString rangeOfString:@"User information not available"].location != NSNotFound) {
 					//Ignore user information errors; they are irrelevent
 					errorType = -2;
 				}
 
-				if (errorType == -1){
+				if (errorType == -1) {
 					errorType = AIChatUnknownError;
 				}
 
@@ -286,14 +286,14 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, gboolean new_arrival)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
 		//We pass the name as given, not normalized, so we can use its formatting as a formattedUID.
 		//The account is responsible for normalization if needed.
 		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
 											   withObject:[NSString stringWithUTF8String:user]
 											   withObject:existingChatLookupFromConv(conv)];
-	}else{
+	} else {
 		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
 
@@ -301,7 +301,7 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 
 static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
 
 		GList *l;
@@ -313,7 +313,7 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 											   withObject:usersArray
 											   withObject:existingChatLookupFromConv(conv)];
 
-	}else{
+	} else {
 		GaimDebug (@"adiumGaimConvChatAddUsers: IM");
 	}
 }
@@ -325,11 +325,11 @@ static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldN
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
- 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+ 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, user)]
 											   withObject:existingChatLookupFromConv(conv)];
-	}else{
+	} else {
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM: remove %s",user);
 	}
 
@@ -337,7 +337,7 @@ static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
 
 		GList *l;
@@ -349,7 +349,7 @@ static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 											   withObject:usersArray
 											   withObject:existingChatLookupFromConv(conv)];
 
-	}else{
+	} else {
 		GaimDebug (@"adiumGaimConvChatRemoveUser: IM");
 	}
 }
@@ -377,19 +377,19 @@ static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
 											   withObject:existingChatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
 
-	}else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM){
+	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
 			case GAIM_CONV_UPDATE_TYPING: {
 
 				AITypingState typingState;
 
-				switch (gaim_conv_im_get_typing_state(im)){
+				switch (gaim_conv_im_get_typing_state(im)) {
 					case GAIM_TYPING:
 						typingState = AITyping;
 						break;
@@ -488,7 +488,7 @@ static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *co
 	GaimDebug (@"adiumGaimConvWindowAddConv");
 
 	//Pass chats along to the account
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT){
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
 
 		AIChat *chat = chatLookupFromConv(conv);
 

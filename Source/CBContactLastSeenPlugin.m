@@ -72,7 +72,7 @@
 	AIListObject	*inObject = [notification object];
 	
 	//Either they are online, or we've come online. Either way, update both their status and the time
-	if([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_YES]){
+	if ([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_YES]) {
 	
 		[[adium preferenceController] setPreference:AILocalizedString(@"Online",nil)
 											 forKey:KEY_LAST_SEEN_STATUS
@@ -85,7 +85,7 @@
 											 object:inObject];
 											 
 	//They've signed off, update their status and the time		
-	}else if([[notification name] isEqualToString:CONTACT_STATUS_ONLINE_NO]){
+	} else if ([[notification name] isEqualToString:CONTACT_STATUS_ONLINE_NO]) {
 
 		[[adium preferenceController] setPreference:AILocalizedString(@"Signing off",nil)
 											 forKey:KEY_LAST_SEEN_STATUS
@@ -99,7 +99,7 @@
 											 object:inObject];
 	
 	//Don't update the status, just the date
-	}else if([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_NO]){
+	} else if ([[notification name] isEqualToString:CONTACT_SEEN_ONLINE_NO]) {
 	
 		[[adium preferenceController] setPreference:[NSDate date]
 											 forKey:KEY_LAST_SEEN_DATE
@@ -134,7 +134,7 @@
 	NSAttributedString	*entry = nil;
 	
 	//Only display for offline contacts
-	if(![inObject online]){
+	if (![inObject online]) {
 	
 		lastSeenStatus = [[adium preferenceController] preferenceForKey:KEY_LAST_SEEN_STATUS 
 																  group:PREF_GROUP_LAST_SEEN
@@ -143,7 +143,7 @@
 		lastSeenDate = [[adium preferenceController] preferenceForKey:KEY_LAST_SEEN_DATE 
 																group:PREF_GROUP_LAST_SEEN
 															   object:inObject];
-		if(lastSeenStatus && lastSeenDate){
+		if (lastSeenStatus && lastSeenDate) {
 			NSString	*timeElapsed;
 			NSString	*timeElapsedWithDesignation;
 			
@@ -154,11 +154,11 @@
 			
 			//stringForTimeIntervalSinceDate may return @"" if it's too short of an interval.
 			timeElapsed = [NSDateFormatter stringForTimeIntervalSinceDate:lastSeenDate showingSeconds:NO abbreviated:NO];
-			if(timeElapsed && [timeElapsed length]){
+			if (timeElapsed && [timeElapsed length]) {
 				timeElapsedWithDesignation = [NSString stringWithFormat:@"%@ %@\n",
 					timeElapsed,
 					[[[NSUserDefaults standardUserDefaults] objectForKey:NSEarlierTimeDesignations] lastObject]];
-			}else{
+			} else {
 				timeElapsedWithDesignation = @"";
 			}
 			

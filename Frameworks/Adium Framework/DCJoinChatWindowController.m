@@ -37,7 +37,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 //Create a new join chat window
 + (void)joinChatWindow
 {
-    if(!sharedJoinChatInstance){
+    if (!sharedJoinChatInstance) {
         sharedJoinChatInstance = [[self alloc] initWithWindowNibName:JOIN_CHAT_NIB];
     }
 
@@ -46,7 +46,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 
 + (void)closeSharedInstance
 {
-    if(sharedJoinChatInstance){
+    if (sharedJoinChatInstance) {
         [sharedJoinChatInstance closeWindow:nil];
     }
 }
@@ -54,7 +54,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 - (IBAction)joinChat:(id)sender
 {
 	// If there is a controller, it handles all of the join-chat work
-	if( controller ) {
+	if ( controller ) {
 		[controller joinChatWithAccount:[[popUp_service selectedItem] representedObject]];
 	}
 	
@@ -81,7 +81,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	windowFrame.origin.y += diff;
 	[[self window] setFrame:windowFrame display:YES animate:YES];
 
-	if(controller && currentView){
+	if (controller && currentView) {
 		[view_customView addSubview:currentView];
 		[controller configureForAccount:inAccount];
 	}
@@ -92,7 +92,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 {	
     [super initWithWindowNibName:windowNibName];    
 	    		
-	if( controller )
+	if ( controller )
 		[controller release];
 	
 	controller = nil;
@@ -109,13 +109,13 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
     [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self
 																includeOffline:NO 
 											onlyIfCreatingGroupChatIsSupported:YES]];
-	if (numberOfServiceMenuItems > 0){
+	if (numberOfServiceMenuItems > 0) {
 		//Select the last used account / Available online account
 		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																							   toContact:nil];
 		int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
 		
-		if(serviceIndex < numberOfServiceMenuItems && serviceIndex >= 0){
+		if (serviceIndex < numberOfServiceMenuItems && serviceIndex >= 0) {
 			[popUp_service selectItemAtIndex:serviceIndex];
 		}
 		

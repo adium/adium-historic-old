@@ -51,15 +51,15 @@ pxmCreate( void* data, UInt32 inSize )
 {
 	pxmRef	newPxmRef;
 	
-	if( data == NULL || inSize == 0 )
+	if ( data == NULL || inSize == 0 )
 		return NULL;
 	
 	newPxmRef = (pxmRef)NewPtr(inSize);
-	if( newPxmRef == NULL )
+	if ( newPxmRef == NULL )
 		return NULL;
 	BlockMoveData( data, newPxmRef, inSize );
 	
-	if( newPxmRef->pixelType == pxmTypeIndexed || ( newPxmRef->pixelType == pxmTypeDefault && newPxmRef->pixelSize == 8 ) )
+	if ( newPxmRef->pixelType == pxmTypeIndexed || ( newPxmRef->pixelType == pxmTypeDefault && newPxmRef->pixelSize == 8 ) )
 		newPxmRef->clutAddr = _DefaultCLUT();
 	
 	return newPxmRef;
@@ -68,10 +68,10 @@ pxmCreate( void* data, UInt32 inSize )
 pxmErr
 pxmDispose( pxmRef inRef )
 {
-	if( inRef == NULL )
+	if ( inRef == NULL )
 		return pxmErrBadParams;
 	
-	if( inRef->clutAddr != _DefaultCLUT() )
+	if ( inRef->clutAddr != _DefaultCLUT() )
 		DisposePtr( (Ptr)inRef->clutAddr );
 	
 	DisposePtr( (Ptr)inRef );
@@ -89,7 +89,7 @@ pxmSize( pxmRef inRef )
 pxmErr
 pxmBounds( pxmRef inRef, Rect* outRect )
 {
-	if( inRef == NULL || outRect == NULL )
+	if ( inRef == NULL || outRect == NULL )
 		return pxmErrBadParams;
 	
 	*outRect = inRef->bounds;
@@ -99,7 +99,7 @@ pxmBounds( pxmRef inRef, Rect* outRect )
 bool
 pxmHasAlpha( pxmRef inRef )
 {
-	if( inRef )
+	if ( inRef )
 		return inRef->hasAlpha;
 	return NULL;
 }
@@ -107,7 +107,7 @@ pxmHasAlpha( pxmRef inRef )
 UInt16
 pxmPixelSize( pxmRef inRef )
 {
-	if( inRef )
+	if ( inRef )
 		return inRef->pixelSize;
 	return 0;
 }
@@ -115,7 +115,7 @@ pxmPixelSize( pxmRef inRef )
 UInt16
 pxmPixelType( pxmRef inRef )
 {
-	if( inRef )
+	if ( inRef )
 		return inRef->pixelType;
 	return 0;
 }
@@ -123,7 +123,7 @@ pxmPixelType( pxmRef inRef )
 UInt16
 pxmImageCount( pxmRef inRef )
 {
-	if( inRef )
+	if ( inRef )
 		return inRef->imageCount;
 	return 0;
 }
@@ -131,7 +131,7 @@ pxmImageCount( pxmRef inRef )
 bool
 pxmIsMultiMask( pxmRef inRef )
 {
-	if( inRef )
+	if ( inRef )
 		return inRef->maskCount == pxmMultiMask;
 	return false;
 }
@@ -143,11 +143,11 @@ pxmMakeGWorld( pxmRef inRef, GWorldPtr* outGWorld )
 {
 	OSStatus	status;
 	
-	if( inRef == NULL )
+	if ( inRef == NULL )
 		return pxmErrBadParams;
 	
 	status = NewGWorld( outGWorld, 32, &inRef->bounds, NULL, NULL, 0 );
-	if( status ){ *outGWorld = NULL; return pxmErrMemFull; }
+	if ( status ) { *outGWorld = NULL; return pxmErrMemFull; }
 	
 	return pxmErrNone;
 }
@@ -157,19 +157,19 @@ pxmMakeGWorld( pxmRef inRef, GWorldPtr* outGWorld )
 pxmErr
 pxmRenderImage( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOS )
 {
-	if( inRef == NULL  || inOS == NULL )
+	if ( inRef == NULL  || inOS == NULL )
 		return pxmErrBadParams;
 	
-	if( imageIndex >= inRef->imageCount )
+	if ( imageIndex >= inRef->imageCount )
 		return pxmErrBadIndex;
 	
-	if( inRef->pixelType == pxmTypeDirect32 )
+	if ( inRef->pixelType == pxmTypeDirect32 )
 		return _Render32( inRef, imageIndex, inOS );
 	
-	if( inRef->pixelType == pxmTypeDirect16 )
+	if ( inRef->pixelType == pxmTypeDirect16 )
 		return _Render32( inRef, imageIndex, inOS );
 	
-	if( inRef->pixelType == pxmTypeIndexed || ( inRef->pixelType == pxmTypeDefault && inRef->pixelSize == 8 ) )
+	if ( inRef->pixelType == pxmTypeIndexed || ( inRef->pixelType == pxmTypeDefault && inRef->pixelSize == 8 ) )
 		return _Render32( inRef, imageIndex, inOS );
 	
 	return pxmErrBadDepth;
@@ -233,9 +233,9 @@ _Render32( pxmRef inRef, UInt16 imageIndex, GWorldPtr inOS )
 	srcBA = (UInt32*)_GetPixelDataLoc( inRef, imageIndex );
 	srcRL = inRef->bounds.right;
 	
-	for( i = 0; i < inRef->bounds.bottom; i++ )
+	for ( i = 0; i < inRef->bounds.bottom; i++ )
 	{
-		for( j = 0; j < inRef->bounds.right; j++ )
+		for ( j = 0; j < inRef->bounds.right; j++ )
 		    dstBA[j] = srcBA[j];
 		
 		srcBA += srcRL;

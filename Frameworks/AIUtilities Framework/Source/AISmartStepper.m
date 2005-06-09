@@ -20,7 +20,7 @@
     [super mouseDown:theEvent];
 
     //Give focus to our field
-    if([[self window] firstResponder] != textField){
+    if ([[self window] firstResponder] != textField) {
         [[self window] makeFirstResponder:textField];
     }
 }

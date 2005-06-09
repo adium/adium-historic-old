@@ -24,7 +24,7 @@
 
 - (id)init
 {
-	if((self = [super init]))
+	if ((self = [super init]))
 	{
 		outlineBubble = NO;
 		outlineBubbleLineWidth = 1.0;
@@ -51,11 +51,11 @@
 //Draw a regular bubble background for our cell if gradient background drawing is disabled
 - (void)drawBackgroundWithFrame:(NSRect)rect
 {
-	if (drawBubble){
-		if(drawsBackground){
+	if (drawBubble) {
+		if (drawsBackground) {
 			[super drawBackgroundWithFrame:[self bubbleRectForFrame:rect]];
-		}else{
-			if(![self cellIsSelected]){
+		} else {
+			if (![self cellIsSelected]) {
 				NSBezierPath	*bezierPath;
 				
 				[[self backgroundColor] set];
@@ -63,7 +63,7 @@
 				
 				[bezierPath fill];
 				
-				if(outlineBubble){
+				if (outlineBubble) {
 					[bezierPath setLineWidth:outlineBubbleLineWidth];
 					[[self textColor] set];
 					[bezierPath stroke];
@@ -76,7 +76,7 @@
 //Draw a custom selection
 - (void)drawSelectionWithFrame:(NSRect)cellFrame
 {
-	if([self cellIsSelected]){
+	if ([self cellIsSelected]) {
 		AIGradient	*gradient = [AIGradient selectedControlGradientWithDirection:AIVertical];
 		[gradient drawInBezierPath:[NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:cellFrame]]];
 	}
@@ -85,13 +85,13 @@
 //Draw our background gradient bubble
 - (void)drawBackgroundGradientInRect:(NSRect)inRect
 {
-	if (drawBubble){
+	if (drawBubble) {
 		NSBezierPath	*bezierPath;
 		
 		bezierPath = [NSBezierPath bezierPathWithRoundedRect:[self bubbleRectForFrame:inRect]];
 		[[self backgroundGradient] drawInBezierPath:bezierPath];
 		
-		if(outlineBubble){
+		if (outlineBubble) {
 			[bezierPath setLineWidth:outlineBubbleLineWidth];
 			[[self textColor] set];
 			[bezierPath stroke];

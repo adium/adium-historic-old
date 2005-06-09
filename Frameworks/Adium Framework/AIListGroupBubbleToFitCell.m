@@ -32,7 +32,7 @@
 	float				originalWidth = rect.size.width;
 
 	//Alignment
-	switch([self textAlignment]){
+	switch ([self textAlignment]) {
 		case NSCenterTextAlignment:
 			rect.origin.x += ((rect.size.width - nameSize.width) / 2.0) - [self leftPadding];
 		break;
@@ -47,7 +47,7 @@
 	rect.size.width = nameSize.width + [self leftPadding] + [self rightPadding];
 	
 	//Until we get right aligned/centered flippies, this will do
-	if([self textAlignment] == NSLeftTextAlignment){
+	if ([self textAlignment] == NSLeftTextAlignment) {
 		rect.size.width += [self flippyIndent];
 	}
 	

@@ -177,8 +177,8 @@ static ESFileTransferPreferences *preferences;
 										  userInfo:fileTransfer
 					  previouslyPerformedActionIDs:nil];
 
-	if((autoAcceptType == AutoAccept_All) ||
-	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))){
+	if ((autoAcceptType == AutoAccept_All) ||
+	   ((autoAcceptType == AutoAccept_FromContactList) && (![listContact isStranger]))) {
 		NSString	*preferredDownloadFolder = [[adium preferenceController] userPreferredDownloadFolder];
 		NSString	*remoteFilename = [fileTransfer remoteFilename];
 		
@@ -188,10 +188,10 @@ static ESFileTransferPreferences *preferences;
 		/* If the file does not exist, immediately accept the receive request.
 		 * If it does, display a Save As dialog.
 		 */
-		if(![[NSFileManager defaultManager] fileExistsAtPath:localFilename]){
+		if (![[NSFileManager defaultManager] fileExistsAtPath:localFilename]) {
 			[self _finishReceiveRequestForFileTransfer:fileTransfer localFilename:localFilename];
 			
-		}else{
+		} else {
 			//Prompt for a location to save; savePanelDidEnd::: will release the retained fileTransfer and the savePanel
 			[[[NSSavePanel savePanel] retain] beginSheetForDirectory:preferredDownloadFolder
 			                                                    file:remoteFilename
@@ -200,7 +200,7 @@ static ESFileTransferPreferences *preferences;
 			                                          didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
 			                                             contextInfo:[fileTransfer retain]];
 		}
-	}else{
+	} else {
 		//Prompt to accept/deny
 		[ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
 															notifyingTarget:self
@@ -213,7 +213,7 @@ static ESFileTransferPreferences *preferences;
 {
 	NSString	*localFilename = nil;
 	
-	if(returnCode == NSOKButton){
+	if (returnCode == NSOKButton) {
 		localFilename = [savePanel filename];
 	}
 
@@ -239,17 +239,17 @@ static ESFileTransferPreferences *preferences;
  */
 - (void)_finishReceiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer localFilename:(NSString *)localFilename
 {	
-	if(localFilename){
+	if (localFilename) {
 		[fileTransfer setLocalFilename:localFilename];
 		[fileTransfer setStatus:Accepted_FileTransfer];
 
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] acceptFileTransferRequest:fileTransfer];
 		
-		if(showProgressWindow){
+		if (showProgressWindow) {
 			[self showProgressWindowIfNotOpen:nil];
 		}
 		
-	}else{
+	} else {
 		[(AIAccount<AIAccount_Files> *)[fileTransfer account] rejectFileReceiveRequest:fileTransfer];
 		[fileTransfer setStatus:Canceled_Local_FileTransfer];
 	}	
@@ -261,7 +261,7 @@ static ESFileTransferPreferences *preferences;
 	NSOpenPanel *openPanel = [NSOpenPanel openPanel];
 	[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Send File to %@",nil),[listContact displayName]]];
 	
-	if([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton){
+	if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
 		[self sendFile:[openPanel filename] toListContact:listContact];
 	}
 }
@@ -290,7 +290,7 @@ static ESFileTransferPreferences *preferences;
 			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
 
 			//Get a unique name if necessary. This could happen if we are sending this folder multiple times.
-			while([defaultManager fileExistsAtPath:[tmpDir stringByAppendingPathComponent:destinationName]]){
+			while ([defaultManager fileExistsAtPath:[tmpDir stringByAppendingPathComponent:destinationName]]) {
 				destinationName = [NSString stringWithFormat:@"%@-%i",folderName,++uniqueNameCounter];
 			}
 
@@ -318,7 +318,7 @@ static ESFileTransferPreferences *preferences;
 			NS_ENDHANDLER
 			[zipTask release];
 				
-			if(!success) pathToArchive = nil;
+			if (!success) pathToArchive = nil;
 		}
 	}
 
@@ -332,7 +332,7 @@ static ESFileTransferPreferences *preferences;
 	ESFileTransfer	*fileTransfer;
 	
 	if ((account = [[adium accountController] preferredAccountForSendingContentType:FILE_TRANSFER_TYPE
-																		  toContact:listContact])){
+																		  toContact:listContact])) {
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 		BOOL			isDir;
 		
@@ -341,13 +341,13 @@ static ESFileTransferPreferences *preferences;
 											 forAccount:account];
 		[fileTransfer setType:Outgoing_FileTransfer];
 
-		if([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]){
+		if ([defaultManager fileExistsAtPath:inPath isDirectory:&isDir]) {
 			//If we get a directory, compress it first (this could be specified on a per-account basis later if we have services supporting folder transfer)
-			if(isDir){
+			if (isDir) {
 				inPath = [self pathToArchiveOfFolder:inPath];
 			}
 			
-			if(inPath){
+			if (inPath) {
 				[fileTransfer setLocalFilename:inPath];
 				[fileTransfer setSize:[[[defaultManager fileAttributesAtPath:inPath
 																traverseLink:YES] objectForKey:NSFileSize] longValue]];
@@ -355,7 +355,7 @@ static ESFileTransferPreferences *preferences;
 				//The fileTransfer object should now have everything the account needs to begin transferring
 				[(AIAccount<AIAccount_Files> *)account beginSendOfFileTransfer:fileTransfer];
 				
-				if(showProgressWindow){
+				if (showProgressWindow) {
 					[self showProgressWindowIfNotOpen:nil];
 				}
 			}
@@ -371,12 +371,12 @@ static ESFileTransferPreferences *preferences;
 	AIListContact   *listContact = nil;
 	
 	selectedObject = [[adium contactController] selectedListObject];
-	if ([selectedObject isKindOfClass:[AIListContact class]]){
+	if ([selectedObject isKindOfClass:[AIListContact class]]) {
 		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
 	
-	if(listContact){
+	if (listContact) {
 		[self requestForSendingFileToListContact:listContact];
 	}
 }
@@ -394,7 +394,7 @@ static ESFileTransferPreferences *preferences;
 #pragma mark Status updates
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status
 {
-	switch(status){
+	switch (status) {
 		case Accepted_FileTransfer:
 		{
 			[[adium contactAlertsController] generateEvent:FILE_TRANSFER_BEGAN
@@ -402,7 +402,7 @@ static ESFileTransferPreferences *preferences;
 												  userInfo:fileTransfer
 							  previouslyPerformedActionIDs:nil];
 
-			if(showProgressWindow){
+			if (showProgressWindow) {
 				[self showProgressWindowIfNotOpen:nil];
 			}
 			
@@ -416,11 +416,11 @@ static ESFileTransferPreferences *preferences;
 							  previouslyPerformedActionIDs:nil];
 			
 			//The file is complete; if we are supposed to automatically open safe files and this is one, open it
-			if([self shouldOpenCompleteFileTransfer:fileTransfer]){ 
+			if ([self shouldOpenCompleteFileTransfer:fileTransfer]) { 
 				[fileTransfer openFile];
 			}
 			
-			if(autoClearCompletedTransfers){
+			if (autoClearCompletedTransfers) {
 				[ESFileTransferProgressWindowController removeFileTransfer:fileTransfer];
 				[self _removeFileTransfer:fileTransfer];
 			}
@@ -443,10 +443,10 @@ static ESFileTransferPreferences *preferences;
 {
 	BOOL	shouldOpen = NO;
 	
-	if(autoOpenSafe &&
-	   ([fileTransfer type] == Incoming_FileTransfer)){
+	if (autoOpenSafe &&
+	   ([fileTransfer type] == Incoming_FileTransfer)) {
 		
-		if(!safeFileExtensions) safeFileExtensions = [SAFE_FILE_EXTENSIONS_SET retain];		
+		if (!safeFileExtensions) safeFileExtensions = [SAFE_FILE_EXTENSIONS_SET retain];		
 
 		shouldOpen = [safeFileExtensions containsObject:[[[fileTransfer localFilename] pathExtension] lowercaseString]];
 	}
@@ -458,25 +458,25 @@ static ESFileTransferPreferences *preferences;
 {
 	AIListContact   *listContact = nil;
 	
-    if(menuItem == menuItem_sendFile){
+    if (menuItem == menuItem_sendFile) {
         AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
 			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
 		return(listContact != nil);
 		
-	}else if(menuItem == menuItem_sendFileContext){
+	} else if (menuItem == menuItem_sendFileContext) {
 		AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
-		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+		if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
 			listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
 		return(listContact != nil);
 		
-    }else if(menuItem == menuItem_showFileTransferProgress){
+    } else if (menuItem == menuItem_showFileTransferProgress) {
 		return(YES);
 	}
 
@@ -489,7 +489,7 @@ static ESFileTransferPreferences *preferences;
 	AIListContact   *listContact = nil;
 	
 	AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]){
+	if (selectedObject && [selectedObject isKindOfClass:[AIListContact class]]) {
 		listContact = [[adium contactController] preferredContactForContentType:FILE_TRANSFER_TYPE
 																 forListContact:(AIListContact *)selectedObject];
 	}
@@ -529,7 +529,7 @@ static ESFileTransferPreferences *preferences;
 	autoClearCompletedTransfers = [[prefDict objectForKey:KEY_FT_AUTO_CLEAR_COMPLETED] boolValue];
 	
 	//If we created a safe file extensions set and no longer need it, desroy it
-	if(!autoOpenSafe && safeFileExtensions){
+	if (!autoOpenSafe && safeFileExtensions) {
 		[safeFileExtensions release]; safeFileExtensions = nil;
 	}
 	
@@ -544,15 +544,15 @@ static ESFileTransferPreferences *preferences;
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = AILocalizedString(@"File transfer requested",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"File transfer begins",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 		description = AILocalizedString(@"File transfer canceled by the other side",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = AILocalizedString(@"File transfer completed successfully",nil);
-	}else{		
+	} else {		
 		description = @"";	
 	}
 	
@@ -565,15 +565,15 @@ static ESFileTransferPreferences *preferences;
 {
 	NSString	*description;
 	
-	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = @"File Transfer Request";
-	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = @"File Transfer Began";
-	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 		description = @"File Transfer Canceled Remotely";
-	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = @"File Transfer Complete";
-	}else{		
+	} else {		
 		description = @"";	
 	}
 	
@@ -584,15 +584,15 @@ static ESFileTransferPreferences *preferences;
 {	
 	NSString	*description;
 	
-	if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+	if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 		description = AILocalizedString(@"When a file transfer is requested",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
 		description = AILocalizedString(@"When a file transfer begins",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 		description = AILocalizedString(@"When a file transfer is canceled remotely",nil);
-	}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
+	} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
 		description = AILocalizedString(@"When a file transfer is completed successfully",nil);
-	}else{		
+	} else {		
 		description = @"";	
 	}
 
@@ -614,56 +614,56 @@ static ESFileTransferPreferences *preferences;
 	displayName = [listObject displayName];
 	displayFilename = [fileTransfer displayFilename];
 	
-	if(includeSubject){
+	if (includeSubject) {
 		NSString	*format = nil;
 		
-		if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
 			format = AILocalizedString(@"%@ requests to send you %@",nil);
 			
-		}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
-			if([fileTransfer type] == Incoming_FileTransfer){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
+			if ([fileTransfer type] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ began sending you %@",nil);
-			}else{
+			} else {
 				format = AILocalizedString(@"%@ began receiving %@",nil);	
 			}
-		}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 			format = AILocalizedString(@"%@ canceled the transfer of %@",nil);
-		}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
-			if([fileTransfer type] == Incoming_FileTransfer){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
+			if ([fileTransfer type] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"%@ sent you %@",nil);
-			}else{
+			} else {
 				format = AILocalizedString(@"%@ received %@",nil);	
 			}
 		}
 		
-		if(format){
+		if (format) {
 			description = [NSString stringWithFormat:format,displayName,displayFilename];
 		}
-	}else{
+	} else {
 		NSString	*format = nil;
 		
-		if([eventID isEqualToString:FILE_TRANSFER_REQUEST]){
+		if ([eventID isEqualToString:FILE_TRANSFER_REQUEST]) {
 			//Should only happen for an incoming transfer
 			format = AILocalizedString(@"requests to send you %@",nil);
 			
-		}else if([eventID isEqualToString:FILE_TRANSFER_BEGAN]){
-			if([fileTransfer type] == Incoming_FileTransfer){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_BEGAN]) {
+			if ([fileTransfer type] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"began sending you %@",nil);
-			}else{
+			} else {
 				format = AILocalizedString(@"began receiving %@",nil);	
 			}
-		}else if([eventID isEqualToString:FILE_TRANSFER_CANCELED]){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_CANCELED]) {
 			format = AILocalizedString(@"canceled the transfer of %@",nil);
-		}else if([eventID isEqualToString:FILE_TRANSFER_COMPLETE]){
-			if([fileTransfer type] == Incoming_FileTransfer){
+		} else if ([eventID isEqualToString:FILE_TRANSFER_COMPLETE]) {
+			if ([fileTransfer type] == Incoming_FileTransfer) {
 				format = AILocalizedString(@"sent you %@",nil);
-			}else{
+			} else {
 				format = AILocalizedString(@"received %@",nil);	
 			}
 		}
 		
-		if(format){
+		if (format) {
 			description = [NSString stringWithFormat:format,displayFilename];
 		}		
 	}
@@ -674,7 +674,7 @@ static ESFileTransferPreferences *preferences;
 - (NSImage *)imageForEventID:(NSString *)eventID
 {
 	static NSImage	*eventImage = nil;
-	if(!eventImage) eventImage = [[NSImage imageNamed:@"pref-ft" forClass:[self class]] retain];
+	if (!eventImage) eventImage = [[NSImage imageNamed:@"pref-ft" forClass:[self class]] retain];
 	return eventImage;
 }
 
@@ -686,14 +686,14 @@ static ESFileTransferPreferences *preferences;
 {
 	NSString *ret = nil;
 	
-	if( inSize == 0. ) ret = ZERO_BYTES;
-	else if( inSize > 0. && inSize < 1024. ) ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes", "file size measured in bytes" ), inSize];
-	else if( inSize >= 1024. && inSize < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( inSize / 1024. )];
-	else if( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( inSize / pow( 1024., 2. ) )];
-	else if( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( inSize / pow( 1024., 3. ) )];
-	else if( inSize >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( inSize / pow( 1024., 4. ) )];
+	if ( inSize == 0. ) ret = ZERO_BYTES;
+	else if ( inSize > 0. && inSize < 1024. ) ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes", "file size measured in bytes" ), inSize];
+	else if ( inSize >= 1024. && inSize < pow( 1024., 2. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB", "file size measured in kilobytes" ), ( inSize / 1024. )];
+	else if ( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB", "file size measured in megabytes" ), ( inSize / pow( 1024., 2. ) )];
+	else if ( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB", "file size measured in gigabytes" ), ( inSize / pow( 1024., 3. ) )];
+	else if ( inSize >= pow( 1024., 4. ) ) ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB", "file size measured in terabytes" ), ( inSize / pow( 1024., 4. ) )];
 	
-	if(!ret) ret = ZERO_BYTES;
+	if (!ret) ret = ZERO_BYTES;
 	
 	return(ret);
 }
@@ -702,48 +702,48 @@ static ESFileTransferPreferences *preferences;
 {
 	NSString *ret = nil;
 	
-	if( inSize == 0. ){
+	if ( inSize == 0. ) {
 		ret = ZERO_BYTES;
-	}else if( inSize > 0. && inSize < 1024. ){
-		if( totalSize > 0. && totalSize < 1024. ){
+	} else if ( inSize > 0. && inSize < 1024. ) {
+		if ( totalSize > 0. && totalSize < 1024. ) {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%lu of %lu bytes", "file sizes both measured in bytes" ), inSize, totalSize];
 			
-		}else{
+		} else {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%lu bytes of %@", "file size measured in bytes out of some other measurement" ), inSize, totalSizeString];
 			
 		}
-	}else if( inSize >= 1024. && inSize < pow( 1024., 2. ) ){
-		if( totalSize >= 1024. && totalSize < pow( 1024., 2. ) ){
+	} else if ( inSize >= 1024. && inSize < pow( 1024., 2. ) ) {
+		if ( totalSize >= 1024. && totalSize < pow( 1024., 2. ) ) {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.1f of %.1f KB", "file sizes both measured in kilobytes" ), ( inSize / 1024. ), ( totalSize / 1024. )];
 			
-		}else{
+		} else {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.1f KB of %@", "file size measured in kilobytes out of some other measurement" ), ( inSize / 1024. ), totalSizeString];
 		}
 	}
-	else if( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ){
-		if( totalSize >= pow( 1024., 2. ) && totalSize < pow( 1024., 3. ) ){
+	else if ( inSize >= pow( 1024., 2. ) && inSize < pow( 1024., 3. ) ) {
+		if ( totalSize >= pow( 1024., 2. ) && totalSize < pow( 1024., 3. ) ) {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.2f of %.2f MB", "file sizes both measured in megabytes" ), ( inSize / pow( 1024., 2. ) ), ( totalSize / pow( 1024., 2. ) )];
-		}else{
+		} else {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.2f MB of %@", "file size measured in megabytes out of some other measurement" ), ( inSize / pow( 1024., 2. ) ), totalSizeString];	
 		}
 	}
-	else if( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ){
-		if( totalSize >= pow( 1024., 3. ) && totalSize < pow( 1024., 4. ) ){
+	else if ( inSize >= pow( 1024., 3. ) && inSize < pow( 1024., 4. ) ) {
+		if ( totalSize >= pow( 1024., 3. ) && totalSize < pow( 1024., 4. ) ) {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.3f of %.3f GB", "file sizes both measured in gigabytes" ), ( inSize / pow( 1024., 3. ) ), ( totalSize / pow( 1024., 3. ) )];
-		}else{
+		} else {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.3f GB of %@", "file size measured in gigabytes out of some other measurement" ), ( inSize / pow( 1024., 3. ) ), totalSizeString];
 			
 		}
 	}
-	else if( inSize >= pow( 1024., 4. ) ){
-		if( totalSize >= pow( 1024., 4. ) ){
+	else if ( inSize >= pow( 1024., 4. ) ) {
+		if ( totalSize >= pow( 1024., 4. ) ) {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.4f of %.4f TB", "file sizes both measured in terabytes" ), ( inSize / pow( 1024., 4. ) ),  ( totalSize / pow( 1024., 4. ) )];
-		}else{
+		} else {
 			ret = [NSString stringWithFormat:AILocalizedString( @"%.4f TB of %@", "file size measured in terabytes out of some other measurement" ), ( inSize / pow( 1024., 4. ) ), totalSizeString];			
 		}
 	}
 	
-	if(!ret) ret = ZERO_BYTES;
+	if (!ret) ret = ZERO_BYTES;
 	
 	return(ret);
 }

@@ -46,7 +46,7 @@
 {
 	NSString	*key = [self adiumFrameAutosaveName];
 
-	if(key){
+	if (key) {
 		NSString	*frameString;
 		int			numberOfScreens;
 
@@ -58,27 +58,27 @@
 																	  [NSString stringWithFormat:@"%@-%i",key,numberOfScreens])
 															   group:PREF_GROUP_WINDOW_POSITIONS];
 
-		if(!frameString && (numberOfScreens > 1)){
+		if (!frameString && (numberOfScreens > 1)) {
 			//Fall back on the single screen preference if necessary (this is effectively a preference upgrade).
 			frameString = [[adium preferenceController] preferenceForKey:key
 																   group:PREF_GROUP_WINDOW_POSITIONS];
 		}
 
-		if(frameString){
+		if (frameString) {
 			NSRect		windowFrame = NSRectFromString(frameString);
 			NSSize		minSize = [[self window] minSize];
 			NSSize		maxSize = [[self window] maxSize];
 			
 			//Respect the min and max sizes
-			if(windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
-			if(windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
-			if(windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
-			if(windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
+			if (windowFrame.size.width < minSize.width) windowFrame.size.width = minSize.width;
+			if (windowFrame.size.height < minSize.height) windowFrame.size.height = minSize.height;
+			if (windowFrame.size.width > maxSize.width) windowFrame.size.width = maxSize.width;
+			if (windowFrame.size.height > maxSize.height) windowFrame.size.height = maxSize.height;
 
 			//Don't allow the window to shrink smaller than its toolbar
 			NSRect 		contentFrame = [NSWindow contentRectForFrameRect:windowFrame
 															   styleMask:[[self window] styleMask]];
-			if(contentFrame.size.height < [[self window] toolbarHeight]){
+			if (contentFrame.size.height < [[self window] toolbarHeight]) {
 				windowFrame.size.height += [[self window] toolbarHeight] - contentFrame.size.height;
 			}
 
@@ -93,10 +93,10 @@
  */
 - (IBAction)closeWindow:(id)sender
 {
-    if([self windowShouldClose:nil]){
-		if([[self window] isSheet]){
+    if ([self windowShouldClose:nil]) {
+		if ([[self window] isSheet]) {
 			[NSApp endSheet:[self window]];
-		}else{
+		} else {
 			[[self window] close];
 		}
 	}
@@ -123,7 +123,7 @@
 {
 	NSString	*key = [self adiumFrameAutosaveName];
 
- 	if(key){
+ 	if (key) {
 		//Unique key for each number of screens
 		int	numberOfScreens = [[NSScreen screens] count];
 

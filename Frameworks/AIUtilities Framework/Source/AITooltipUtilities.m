@@ -49,7 +49,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 
 + (void)initialize
 {
-	if (!titleAndBodyMarginLineColor){
+	if (!titleAndBodyMarginLineColor) {
 		titleAndBodyMarginLineColor = [[[NSColor grayColor] colorWithAlphaComponent:.7] retain];
 	}
 }
@@ -93,7 +93,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 					 atPoint:(NSPoint)inPoint
 				 orientation:(AITooltipOrientation)inOrientation
 {    
-   if((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage){ //If passed something to display
+   if ((inTitle && [inTitle length]) || (inBody && [inBody length]) || inImage) { //If passed something to display
        BOOL		newLocation = (!NSEqualPoints(inPoint,tooltipPoint) || (tooltipOrientation != inOrientation));
 
 	   //Update point and orientation
@@ -101,11 +101,11 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
         tooltipOrientation = inOrientation;
         onWindow = inWindow;
 
-        if((!tooltipTitle && !tooltipBody && !tooltipImage)){
+        if ((!tooltipTitle && !tooltipBody && !tooltipImage)) {
             [self _createTooltip]; //make the window
         }
 
-        if(!(inBody == tooltipBody)   ||
+        if (!(inBody == tooltipBody)   ||
 		   !(inTitle == tooltipTitle) || 
 		   !(inImage == tooltipImage)) { //we don't exist or something changed
 
@@ -131,32 +131,32 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 			imageOnRight = inImageOnRight;
 			[view_tooltipImage setImage:tooltipImage];
 
-			if(tooltipImage){
+			if (tooltipImage) {
 				imageSize = [tooltipImage size];
 				
 				//Constrain our image proportionally
-				if(imageSize.height > MAX_IMAGE_DIMENSION){
+				if (imageSize.height > MAX_IMAGE_DIMENSION) {
 					imageSize.width = round(imageSize.width * (MAX_IMAGE_DIMENSION / imageSize.height));
 					imageSize.height = MAX_IMAGE_DIMENSION;
 				}
 				
-				if (imageSize.width > MAX_IMAGE_DIMENSION){
+				if (imageSize.width > MAX_IMAGE_DIMENSION) {
 					imageSize.height = round(imageSize.height * (MAX_IMAGE_DIMENSION / imageSize.width));
 					imageSize.width = MAX_IMAGE_DIMENSION;
 				}
 				
-			}else{
+			} else {
 				imageSize = NSZeroSize;	
 			}
 
             [self _sizeTooltip];
 				
-        }else if(newLocation){ //Everything is the same but the location is different
+        } else if (newLocation) { //Everything is the same but the location is different
                 [tooltipWindow setFrameOrigin:[self _tooltipFrameOriginForSize:[[tooltipWindow contentView] frame].size]];
         }
 
-    }else{ //If passed a nil string, hide any existing tooltip
-        if(tooltipBody){
+    } else { //If passed a nil string, hide any existing tooltip
+        if (tooltipBody) {
             [self _closeTooltip];
         }
 
@@ -169,7 +169,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 	NSLayoutManager *layoutManager;
 	NSTextContainer *container;
 
-	if(!tooltipWindow) {
+	if (!tooltipWindow) {
 		//Create the window
 		tooltipWindow = [[NSPanel alloc] initWithContentRect:NSZeroRect 
 												   styleMask:NSBorderlessWindowMask
@@ -185,7 +185,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[tooltipWindow setLevel:NSStatusWindowLevel];
 	}
 
-    if(!textView_tooltipTitle) {
+    if (!textView_tooltipTitle) {
 		//create and add the title text view
 		textStorage_tooltipTitle = [[NSTextStorage alloc] init];
 
@@ -205,7 +205,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[[tooltipWindow contentView] addSubview:textView_tooltipTitle];
 	}
 
-	if(!textView_tooltipBody) {
+	if (!textView_tooltipBody) {
 		//create and add the body text view
 		textStorage_tooltipBody = [[NSTextStorage alloc] init];
 		
@@ -226,7 +226,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 		[[tooltipWindow contentView] addSubview:textView_tooltipBody];
 	}
 
-    if(!view_tooltipImage) {
+    if (!view_tooltipImage) {
 		view_tooltipImage = [[NSImageView alloc] initWithFrame:NSZeroRect];
 		[[tooltipWindow contentView] addSubview:view_tooltipImage];
 	}
@@ -301,7 +301,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
 			tooltipTitleRect.origin.y = (windowHeight - (imageSize.height)/2 - tooltipTitleRect.size.height/2);
         }
 
-        if(imageOnRight) {
+        if (imageOnRight) {
             //Recenter the title to be between the left of the window and the left of the image
 			tooltipTitleRect.origin.x = TOOLTIP_INSET;
 
@@ -343,7 +343,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
     }
     
     //Ensure the tip is visible
-    if(![tooltipWindow isVisible]){
+    if (![tooltipWindow isVisible]) {
         [tooltipWindow makeKeyAndOrderFront:nil];
     }
 }
@@ -360,32 +360,32 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
     NSPoint      tooltipOrigin;
     
     //Adjust the tooltip so it fits completely on the screen
-    if(tooltipOrientation == TooltipAbove){
-        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)){
+    if (tooltipOrientation == TooltipAbove) {
+        if (tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)) {
            tooltipOrigin.x = tooltipPoint.x - 2 - tooltipSize.width;
-        }else{
+        } else {
           tooltipOrigin.x = tooltipPoint.x;
         }
 
-        if(tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipSize.height)){
+        if (tooltipPoint.y > (screenRect.origin.y + screenRect.size.height - tooltipSize.height)) {
             tooltipOrigin.y = screenRect.origin.y + screenRect.size.height - tooltipSize.height;
-        }else{
+        } else {
             tooltipOrigin.y = tooltipPoint.y + 2;
         }
         
         if (tooltipOrigin.y < 0)
             tooltipOrigin.y = 0;
         
-    }else{
-        if(tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)){
+    } else {
+        if (tooltipPoint.x > (screenRect.origin.x + screenRect.size.width - tooltipSize.width)) {
             tooltipOrigin.x = tooltipPoint.x - 2 - tooltipSize.width;
-        }else{
+        } else {
             tooltipOrigin.x = tooltipPoint.x + 10;
         }
 
-        if(tooltipPoint.y < (screenRect.origin.y + tooltipSize.height)){
+        if (tooltipPoint.y < (screenRect.origin.y + tooltipSize.height)) {
             tooltipOrigin.y = tooltipPoint.y + 2;
-        }else{
+        } else {
             tooltipOrigin.y = tooltipPoint.y - 2 - tooltipSize.height;
         }
         

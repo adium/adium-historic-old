@@ -53,7 +53,7 @@
 	//Watch for pref changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SQL_LOGGING];
 
-	if([username isEqualToString:@""] ) {
+	if ([username isEqualToString:@""] ) {
 		username = nil;
 	}
 
@@ -91,13 +91,13 @@
 	database = [prefDict objectForKey:KEY_SQL_DATABASE];
 	password = [prefDict objectForKey:KEY_SQL_PASSWORD];
 
-	if(newLogValue != observingContent){
+	if (newLogValue != observingContent) {
 		observingContent = newLogValue;
 
-		if(!observingContent){ //Stop Logging
+		if (!observingContent) { //Stop Logging
 			[[adium notificationCenter] removeObserver:self name:Content_ContentObjectAdded object:nil];
 
-		}else{ //Start Logging
+		} else { //Start Logging
 			[[adium notificationCenter] addObserver:self selector:@selector(adiumSentOrReceivedContent:) name:Content_ContentObjectAdded object:nil];
 		}
 	}
@@ -109,7 +109,7 @@
     AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
 
     //Message Content
-    if([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] && [content postProcessContent]){
+    if ([[content type] isEqualToString:CONTENT_MESSAGE_TYPE] && [content postProcessContent]) {
         AIChat		*chat = [notification object];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];
@@ -125,7 +125,7 @@
         if ([[account UID] isEqual:[source UID]]) {
 #warning I think it would be better to use the destination of the message as a test here, but I am not sure.
             destUID  = [chat name];
-            if(!destUID) {
+            if (!destUID) {
                 destUID = [[chat listObject] UID];
                 destDisplay = [[chat listObject] displayName];
             }
@@ -138,7 +138,7 @@
             srcSrv = [[source service] serviceID];
         } else {
             destUID = [chat name];
-            if(!destUID) {
+            if (!destUID) {
                 srcDisplay = [[chat listObject] displayName];
                 srcUID = [[chat listObject] UID];
                 destUID = [destination UID];
@@ -153,7 +153,7 @@
             destSrv = srcSrv;
         }
 
-        if(account && source){
+        if (account && source) {
             //Log the message
             [self _addMessage:[[content message] attributedStringByConvertingAttachmentsToStrings]
                          dest:destUID
@@ -227,7 +227,7 @@
             }
         }
     }
-    if(res) {
+    if (res) {
         PQclear(res);
     }
 }

@@ -76,11 +76,11 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-    if(	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]){
+    if (	inModifiedKeys == nil || [inModifiedKeys containsObject:@"IdleSince"]) {
 
-        if([inObject statusObjectForKey:@"IdleSince"] != nil){
+        if ([inObject statusObjectForKey:@"IdleSince"] != nil) {
             //Track the handle
-            if(!idleObjectArray){
+            if (!idleObjectArray) {
                 idleObjectArray = [[NSMutableArray alloc] init];
                 idleObjectTimer = [[NSTimer scheduledTimerWithTimeInterval:IDLE_UPDATE_INTERVAL
 																	target:self 
@@ -93,11 +93,11 @@
 			//Set the correct idle value
 			[self setIdleForObject:inObject silent:silent];
 
-        }else{
-			if ([idleObjectArray containsObjectIdenticalTo:inObject]){
+        } else {
+			if ([idleObjectArray containsObjectIdenticalTo:inObject]) {
 				//Stop tracking the handle
 				[idleObjectArray removeObject:inObject];
-				if([idleObjectArray count] == 0){
+				if ([idleObjectArray count] == 0) {
 					[idleObjectTimer invalidate]; [idleObjectTimer release]; idleObjectTimer = nil;
 					[idleObjectArray release]; idleObjectArray = nil;
 				}
@@ -126,7 +126,7 @@
 
 	//Update everyone's idle time
     enumerator = [idleObjectArray objectEnumerator];
-    while((object = [enumerator nextObject])){
+    while ((object = [enumerator nextObject])) {
         [self setIdleForObject:object silent:YES];
     }
 	
@@ -141,11 +141,11 @@
 	NSDate		*idleSince = [inObject statusObjectForKey:@"IdleSince"];
 	NSNumber	*idleNumber = nil;
 	
-	if(idleSince){ //Set the handle's 'idle' value
+	if (idleSince) { //Set the handle's 'idle' value
 		int	idle = -[idleSince timeIntervalSinceNow] / 60.0;
 		
 		/* They are idle; a non-zero idle time is needed.  We'll treat them as generically idle until this updates */
-		if (idle == 0){
+		if (idle == 0) {
 			idle = -1;
 		}
 
@@ -173,9 +173,9 @@
 	int 		idle = [inObject integerStatusObjectForKey:@"Idle"];
 	NSString	*entry = nil;
 
-	if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
+	if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = AILocalizedString(@"Idle",nil);
-	}else if(idle != 0){
+	} else if (idle != 0) {
 		entry = AILocalizedString(@"Idle Time",nil);
 	}
 
@@ -192,10 +192,10 @@
     int 				idle = [inObject integerStatusObjectForKey:@"Idle"];
     NSAttributedString	*entry = nil;
 	
-    if((idle > 599400) || (idle == -1)){ //Cap idle at 999 Hours (999*60*60 seconds)
+    if ((idle > 599400) || (idle == -1)) { //Cap idle at 999 Hours (999*60*60 seconds)
 		entry = [[NSAttributedString alloc] initWithString:AILocalizedString(@"Yes",nil)];
 		
-    }else if(idle != 0){
+    } else if (idle != 0) {
 		int	hours = (int)(idle / 60);
 		int	minutes = (int)((int)idle % 60);
 		
@@ -204,7 +204,7 @@
 		minutesString = ((minutes == 1) ? 
 						 AILocalizedString(@"1 minute",nil) :
 						 [NSString stringWithFormat:AILocalizedString(@"%i minutes",nil),minutes]);
-		if(hours){
+		if (hours) {
 			hoursString = ((hours == 1) ? 
 						   AILocalizedString(@"1 hour",nil) :
 						   [NSString stringWithFormat:AILocalizedString(@"%i hours",nil),hours]);

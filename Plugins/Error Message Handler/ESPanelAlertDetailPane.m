@@ -38,9 +38,9 @@
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
-	if([view_alertText string]){
+	if ([view_alertText string]) {
 		return([NSDictionary dictionaryWithObject:[view_alertText string] forKey:KEY_ALERT_TEXT]);
-	}else{
+	} else {
 		return(nil);
 	}
 }

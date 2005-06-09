@@ -92,7 +92,7 @@
 // Send a content object
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE] && ![(AIContentMessage *)object isAutoreply]){
+    if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE] && ![(AIContentMessage *)object isAutoreply]) {
         NSString	*message;
         NSArray		*commands;
         NSString	*type = 
@@ -103,11 +103,11 @@
 		commands = [message componentsSeparatedByString:@" "];
 		type = (([commands count]) ? [commands objectAtIndex:0] : nil);
 		
-        if([type isEqualToString:@"create"]){
+        if ([type isEqualToString:@"create"]) {
             int count = [[commands objectAtIndex:1] intValue];
             int i;
             
-            for(i=0;i < count;i++){
+            for (i=0;i < count;i++) {
                 NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 				AIListContact	*contact;
 				
@@ -119,15 +119,15 @@
 			
             [self echo:[NSString stringWithFormat:@"Created %i contacts",count]];
             
-        }else if([type isEqualToString:@"online"]){
+        } else if ([type isEqualToString:@"online"]) {
             NSMutableArray	*handleArray = [NSMutableArray array];
             int 		count = [[commands objectAtIndex:1] intValue];
 			BOOL 		silent = NO;
 			int 		i;
 			
-			if([commands count] > 2) silent = ([[commands objectAtIndex:2] isEqualToString:@"silent"]);
-			if(count){				
-				for(i=0;i < count;i++){
+			if ([commands count] > 2) silent = ([[commands objectAtIndex:2] isEqualToString:@"silent"]);
+			if (count) {				
+				for (i=0;i < count;i++) {
 					AIListContact	*contact;
 					NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i];
 					
@@ -150,7 +150,7 @@
 																					   @"(Silently)" :
 																					   @"")]];
 
-        }else if([type isEqualToString:@"offline"]){
+        } else if ([type isEqualToString:@"offline"]) {
             int 	count = [[commands objectAtIndex:1] intValue];
             BOOL 	silent = NO;
 			BOOL	shouldNotify = !silent;
@@ -158,11 +158,11 @@
 			
 			NSString	*ONLINE = @"Online";
 			
-            if([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
-			if(count){
+            if ([commands count] > 2) silent = ([(NSString *)@"silent" compare:[commands objectAtIndex:2]] == 0);
+			if (count) {
 				if (silent) [[adium contactController] delayListObjectNotifications];
 				
-				for(i=0;i < count;i++){
+				for (i=0;i < count;i++) {
 					AIListContact	*contact;
 					
 					contact = [[adium contactController] existingContactWithService:service
@@ -175,7 +175,7 @@
 			}
             [self echo:[NSString stringWithFormat:@"%i contacts signed off %@",count,(silent?@"(Silently)":@"")]];
 			
-        }else if([type isEqualToString:@"msgin"]){
+        } else if ([type isEqualToString:@"msgin"]) {
 			int			count = [[commands objectAtIndex:1] intValue];
 			int			spread = [[commands objectAtIndex:2] intValue];
 			
@@ -188,7 +188,7 @@
 									  [message substringFromIndex:messageIndex] :
 									  nil);
 			
-			if(messageIn){
+			if (messageIn) {
 				[NSTimer scheduledTimerWithTimeInterval:0.00001
 												 target:self
 											   selector:@selector(timer_msgin:)
@@ -198,7 +198,7 @@
 												   messageIn,@"message",nil] 
 												repeats:YES];
 			}
-        }else if([type isEqualToString:@"msginout"]){
+        } else if ([type isEqualToString:@"msginout"]) {
             int 		count = [[commands objectAtIndex:1] intValue];
             int 		spread = [[commands objectAtIndex:2] intValue];
 			int			messageIndex = ([(NSString *)[commands objectAtIndex:0] length] + 1 +
@@ -208,7 +208,7 @@
 									   [message substringFromIndex:messageIndex] : 
 									   nil);
 			
-			if(messageOut){
+			if (messageOut) {
 				[NSTimer scheduledTimerWithTimeInterval:0.00001 
 												 target:self 
 											   selector:@selector(timer_msginout:)
@@ -220,7 +220,7 @@
 												repeats:YES];
             }
 			
-		}else if ([type isEqualToString:@"groupchat"]) {
+		} else if ([type isEqualToString:@"groupchat"]) {
             int 		count = [[commands objectAtIndex:1] intValue];
 			NSString	*messageIn = [commands objectAtIndex:2];
 			
@@ -232,10 +232,10 @@
 											   messageIn,@"message",nil] 
 											repeats:YES];	
 			
-        }else if ([type isEqualToString:@"crash"]){
+        } else if ([type isEqualToString:@"crash"]) {
             NSMutableArray *help = [[NSMutableArray alloc] init];
             [help addObject:nil]; 
-        }else if ([object destination] == commandContact){
+        } else if ([object destination] == commandContact) {
             [self echo:[NSString stringWithFormat:@"Unknown command %@",type]];
         }
     }
@@ -256,7 +256,7 @@
 	[contact notifyOfChangedStatusSilently:silent];
 
     [array removeLastObject];
-    if([array count] == 0){
+    if ([array count] == 0) {
 		if (silent) [[adium contactController] endListObjectNotificationsDelay];
 
 		[inTimer invalidate];
@@ -274,9 +274,9 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 	
-    if((contact = [[adium contactController] contactWithService:service
+    if ((contact = [[adium contactController] contactWithService:service
 														account:self
-															UID:buddyUID])){
+															UID:buddyUID])) {
         AIContentMessage *messageObject;
         messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
 											 withSource:contact
@@ -291,7 +291,7 @@
 	
     i++;
     [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-    if(i == count) [inTimer invalidate];
+    if (i == count) [inTimer invalidate];
 }
 
 
@@ -307,11 +307,11 @@
     AIListContact	*contact;
     NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",i%spread];
 	
-    if((contact = [[adium contactController] contactWithService:service
+    if ((contact = [[adium contactController] contactWithService:service
 														account:self
-															UID:buddyUID])){
+															UID:buddyUID])) {
         AIContentMessage *messageObject;
-        if(msgIn){
+        if (msgIn) {
             messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
                                                  withSource:self
                                                 destination:contact
@@ -320,7 +320,7 @@
 																							 attributes:[[adium contentController] defaultFormattingAttributes]] autorelease]
                                                   autoreply:YES];
             [[adium contentController] sendContentObject:messageObject];
-        }else{
+        } else {
             messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
                                                  withSource:contact
                                                 destination:self
@@ -336,7 +336,7 @@
 	
     i++;
     [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-    if(i == count) [inTimer invalidate];
+    if (i == count) [inTimer invalidate];
 }
 
 - (void)timer_groupchat:(NSTimer *)inTimer
@@ -350,8 +350,8 @@
 	AIContentMessage *messageObject;
 	
 	//Ensure our contacts and group are created when we get to the first contact
-	if( i == 0 ) {
-		for(j = 0; j < count; j++) {
+	if ( i == 0 ) {
+		for (j = 0; j < count; j++) {
 			NSString		*buddyUID = [NSString stringWithFormat:@"Buddy%i",j];
 			[listObjectArray addObject:[[adium contactController] contactWithService:service
 																			 account:self
@@ -377,7 +377,7 @@
 	//Increment our object counter, invalidating this timer if we're done sending messages
 	i++;
     [userInfo setObject:[NSNumber numberWithInt:i] forKey:@"i"];
-    if(i == count) [inTimer invalidate];
+    if (i == count) [inTimer invalidate];
 }
 
 
@@ -385,9 +385,9 @@
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]){
+	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
 		return(YES);
-	}else{
+	} else {
 		return(NO);
 	}
 }
@@ -396,7 +396,7 @@
 - (BOOL)openChat:(AIChat *)chat
 {
 	AIListObject	*listObject = [chat listObject];
-	if (listObject && (listObject == commandContact)){
+	if (listObject && (listObject == commandContact)) {
 		//
 		[self echo:@"Stress Test\r-------------\rYou must create contacts before using any other commands\rUsage:\rcreate <count>\ronline <count> |silent|\roffline <count> |silent|\rmsgin <count> <spread> <message>\rmsginout <count> <spread> <message>\rgroupchat <count> <message>\rcrash"];
 	}

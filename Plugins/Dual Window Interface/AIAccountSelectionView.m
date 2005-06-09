@@ -60,7 +60,7 @@
 
 - (void)setDelegate:(id)inDelegate
 {
-	if(inDelegate){
+	if (inDelegate) {
 		NSParameterAssert([inDelegate respondsToSelector:@selector(setAccount:)]);
 		NSParameterAssert([inDelegate respondsToSelector:@selector(setListObject:)]);
 		NSParameterAssert([inDelegate respondsToSelector:@selector(account)]);
@@ -100,7 +100,7 @@
     //Transfer the contents to our view
     viewArray = [[[view_contents subviews] copy] autorelease];
     enumerator = [viewArray objectEnumerator];
-    while((view = [enumerator nextObject])){
+    while ((view = [enumerator nextObject])) {
         [view retain];
         [view removeFromSuperview];
         [self addSubview:view];
@@ -145,7 +145,7 @@
 //Configures the account menu to show all online accounts
 - (void)configureAccountsMenu
 {
-    if(delegate){
+    if (delegate) {
 		AIListObject	*listObject = [delegate listObject];
 		
 		//
@@ -172,7 +172,7 @@
 #pragma mark Contacts
 - (void)configureContactsMenu
 {
-	if(delegate){
+	if (delegate) {
 		AIListObject	*listObject = [delegate listObject];
 
 		//Find the parent meta contact if possible
@@ -202,7 +202,7 @@
 	[delegate setListObject:listObject];
 	
 	//If we changed services, set the account
-	if(oldService != [listObject service]){
+	if (oldService != [listObject service]) {
 		[delegate setAccount:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					toContact:listObject]];
 	}
@@ -215,7 +215,7 @@
 //An account's status changed
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 {
-    if([inObject isKindOfClass:[AIAccount class]]){
+    if ([inObject isKindOfClass:[AIAccount class]]) {
 		[self configureContactsMenu];
     }
     
@@ -254,16 +254,16 @@
 	
     //Select the correct item
 	int index = [popUpButton indexOfItemWithRepresentedObject:object];
-    if(index < [popUpButton numberOfItems] && index >= 0){
+    if (index < [popUpButton numberOfItems] && index >= 0) {
 		[popUpButton selectItemAtIndex:index];
 	}
 	
     //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
     enumerator = [[[popUpButton menu] itemArray] objectEnumerator];
-    while((menuItem = [enumerator nextObject])){
-        if([menuItem representedObject] == object){
+    while ((menuItem = [enumerator nextObject])) {
+        if ([menuItem representedObject] == object) {
             [menuItem setState:NSOnState];
-        }else{
+        } else {
             [menuItem setState:NSOffState];
         }
     }

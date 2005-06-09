@@ -34,10 +34,10 @@
 {
 	BOOL shouldAttemptReconnect = YES;
 	
-	if (disconnectionError && *disconnectionError){
+	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
 			[[adium accountController] forgetPasswordForAccount:self];
-		}else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
+		} else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
 	}
@@ -67,10 +67,10 @@
 	AIStatusType	statusType = [statusState statusType];
 	char			*gaimStatusType = NULL;
 	
-	switch(statusType){
+	switch (statusType) {
 		case AIAvailableStatusType:
 		{
-			if([statusName isEqualToString:STATUS_NAME_AVAILABLE]){
+			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
 				gaimStatusType = "Available";
 
 				//Don't use a status message for an available state, as Novell would go Away
@@ -85,12 +85,12 @@
 
 			if ([statusName isEqualToString:STATUS_NAME_AWAY])
 				gaimStatusType = "Away";
-			else if([statusName isEqualToString:STATUS_NAME_BUSY])
+			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
 				gaimStatusType = "Busy";
 			
 			//With a status message of "Busy" we should ensure we actually go to the Busy state, not the generic away
 			//with a message of Busy.
-			if([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame){
+			if ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame) {
 				gaimStatusType = "Busy";
 				*statusMessage = nil;
 			}
@@ -106,7 +106,7 @@
 	 * Note that "Busy" will actually become a generic away if we have a message, but that's probably desired. */
 
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }

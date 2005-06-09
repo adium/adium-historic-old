@@ -45,7 +45,7 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 + (id)dictionaryWithContentsOfRGBTxtFile:(NSString *)path
 {
 	NSMutableData *data = [NSMutableData dataWithContentsOfFile:path];
-	if(!data) return nil;
+	if (!data) return nil;
 	
 	char *ch = [data mutableBytes]; //we use mutable bytes because we want to tokenise the string by replacing separators with '\0'.
 	unsigned length = [data length];
@@ -71,12 +71,12 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 	
 	NSMutableDictionary *mutableDict = [NSMutableDictionary dictionary];
 	
-	for(unsigned i = 0; i < length; ++i) {
-		if(state.inComment) {
-			if(ch[i] == '\n') state.inComment = NO;
-		} else if(ch[i] == '\n') {
-			if(state.prevChar != '\n') { //ignore blank lines
-				if(	! ((state.redStart   != NULL)
+	for (unsigned i = 0; i < length; ++i) {
+		if (state.inComment) {
+			if (ch[i] == '\n') state.inComment = NO;
+		} else if (ch[i] == '\n') {
+			if (state.prevChar != '\n') { //ignore blank lines
+				if (	! ((state.redStart   != NULL)
 					   && (state.greenStart != NULL)
 					   && (state.blueStart  != NULL)
 					   && (state.nameStart  != NULL)))
@@ -100,34 +100,34 @@ static NSString *defaultRGBTxtLocation2 = @"etc/rgb.txt";
 														   alpha:1.0];
 				[mutableDict setObject:color forKey:name];
 				NSString *lowercaseName = [name lowercaseString];
-				if(![mutableDict objectForKey:lowercaseName]) {
+				if (![mutableDict objectForKey:lowercaseName]) {
 					//only add the lowercase version if it isn't already defined
 					[mutableDict setObject:color forKey:lowercaseName];
 				}
 
 				state.redStart = state.greenStart = state.blueStart = state.nameStart = 
 				state.redEnd   = state.greenEnd   = state.blueEnd   = NULL;
-			} //if(prevChar != '\n')
-		} else if((ch[i] != ' ') && (ch[i] != '\t')) {
-			if(state.prevChar == '\n' && ch[i] == '#') {
+			} //if (prevChar != '\n')
+		} else if ((ch[i] != ' ') && (ch[i] != '\t')) {
+			if (state.prevChar == '\n' && ch[i] == '#') {
 				state.inComment = YES;
 			} else {
-				if(!state.redStart) {
+				if (!state.redStart) {
 					state.redStart = &ch[i];
 					state.red = (float)(strtod(state.redStart, (char **)&state.redEnd) / 255.0);
-				} else if((!state.greenStart) && state.redEnd && (&ch[i] >= state.redEnd)) {
+				} else if ((!state.greenStart) && state.redEnd && (&ch[i] >= state.redEnd)) {
 					state.greenStart = &ch[i];
 					state.green = (float)(strtod(state.greenStart, (char **)&state.greenEnd) / 255.0);
-				} else if((!state.blueStart) && state.greenEnd && (&ch[i] >= state.greenEnd)) {
+				} else if ((!state.blueStart) && state.greenEnd && (&ch[i] >= state.greenEnd)) {
 					state.blueStart = &ch[i];
 					state.blue = (float)(strtod(state.blueStart, (char **)&state.blueEnd) / 255.0);
-				} else if((!state.nameStart) && state.blueEnd && (&ch[i] >= state.blueEnd)) {
+				} else if ((!state.nameStart) && state.blueEnd && (&ch[i] >= state.blueEnd)) {
 					state.nameStart  = &ch[i];
 				}
 			}
 		}
 		state.prevChar = ch[i];
-	} //for(unsigned i = 0; i < length; ++i)
+	} //for (unsigned i = 0; i < length; ++i)
 	
 	//why not use -copy? because this is subclass-friendly.
 	//you can call this method on NSMutableDictionary and get a mutable dictionary back.
@@ -156,7 +156,7 @@ end:
 	g = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	++selfUTF8;
 	b = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
-	if(*selfUTF8 == ',') {
+	if (*selfUTF8 == ',') {
 		++selfUTF8;
 		a = strtoul(selfUTF8, (char **)&selfUTF8, /*base*/ 10);
 	}
@@ -190,14 +190,14 @@ end:
 //Returns the current system control tint, supporting 10.2
 + (NSControlTint)currentControlTintSupportingJag
 {
-    if([self respondsToSelector:@selector(currentControlTint)]){
+    if ([self respondsToSelector:@selector(currentControlTint)]) {
 		return [self currentControlTint];
-    }else{
+    } else {
 		NSNumber	*tintNum = [[NSUserDefaults standardUserDefaults] objectForKey:@"AppleAquaColorVariant"];
 	
-		if(!tintNum || [tintNum intValue] == 1){
+		if (!tintNum || [tintNum intValue] == 1) {
 			return NSBlueControlTint;
-		}else{
+		} else {
 			return NSGraphiteControlTint;
 		}
     }
@@ -205,19 +205,19 @@ end:
 
 + (NSDictionary *)colorNamesDictionary
 {
-	if(!RGBColorValues) {
+	if (!RGBColorValues) {
 		NSFileManager *mgr = [NSFileManager defaultManager];
 
 		NSEnumerator *middlePathEnum = [[mgr directoryContentsAtPath:defaultRGBTxtLocation1] objectEnumerator];
 		NSString *middlePath;
-		while((!RGBColorValues) && (middlePath = [middlePathEnum nextObject])) {
+		while ((!RGBColorValues) && (middlePath = [middlePathEnum nextObject])) {
 			NSString *path = [defaultRGBTxtLocation1 stringByAppendingPathComponent:[middlePath stringByAppendingPathComponent:defaultRGBTxtLocation2]];
 			RGBColorValues = [[NSDictionary dictionaryWithContentsOfRGBTxtFile:path] retain];
-			if(RGBColorValues) {
+			if (RGBColorValues) {
 				NSLog(@"Got colour values from %@", path);
 			}
 		}
-		if(!RGBColorValues) {
+		if (!RGBColorValues) {
 			RGBColorValues = [[NSDictionary alloc] initWithObjectsAndKeys:
 				[NSColor colorWithHTMLString:@"#000"],    @"black",
 				[NSColor colorWithHTMLString:@"#c0c0c0"], @"silver",
@@ -281,7 +281,7 @@ end:
 }
 
 //Linearly adjust a color
-#define cap(x) { if(x < 0){x = 0;}else if(x > 1){x = 1;} }
+#define cap(x) { if (x < 0) {x = 0;} else if (x > 1) {x = 1;} }
 - (NSColor *)adjustHue:(float)dHue saturation:(float)dSat brightness:(float)dBrit
 {
     float hue, sat, brit, alpha;
@@ -330,37 +330,37 @@ end:
     //Calculate the luminance
 	float lum = (minValue + maxValue) / 2.0f;
 
-	if(luminance) *luminance = lum;
+	if (luminance) *luminance = lum;
 
     //Special case for grays (They'll make us divide by zero below)
-    if(minValue == maxValue)
+    if (minValue == maxValue)
 	{
-		if(hue)
+		if (hue)
 			*hue = 0.0f;
-		if(saturation)
+		if (saturation)
 			*saturation = 0.0f;
         return;
     }
 
     //Calculate Saturation
-	if(saturation)
+	if (saturation)
 	{
-		if(lum < 0.5f)
+		if (lum < 0.5f)
 			*saturation = (maxValue - minValue) / (maxValue + minValue);
 		else
 			*saturation = (maxValue - minValue) / (2.0 - maxValue - minValue);
 	}
 
-	if(hue)
+	if (hue)
 	{
 		//Calculate hue
 		r = (maxValue - r) / (maxValue - minValue);
 		g = (maxValue - g) / (maxValue - minValue);
 		b = (maxValue - b) / (maxValue - minValue);
 
-		if(r == maxValue)
+		if (r == maxValue)
 			*hue = b - g;
-		else if(g == maxValue)
+		else if (g == maxValue)
 			*hue = 2.0f + r - b;
 		else
 			*hue = 4.0f + g - r;
@@ -368,8 +368,8 @@ end:
 		*hue = (*hue / 6.0f);// % 1.0f;
 
 		//hue = hue % 1.0f
-		while(*hue < 0.0f) *hue += 1.0f;
-		while(*hue > 1.0f) *hue -= 1.0f;
+		while (*hue < 0.0f) *hue += 1.0f;
+		while (*hue > 1.0f) *hue -= 1.0f;
 	}
 }
 
@@ -379,14 +379,14 @@ end:
     float m1, m2;
 
     //Special case for grays
-    if(saturation == 0){
+    if (saturation == 0) {
         r = luminance;
         g = luminance;
         b = luminance;
         
-    }else{
+    } else {
         //Generate some magic numbers
-        if(luminance <= 0.5) m2 = luminance * (1.0 + saturation);
+        if (luminance <= 0.5) m2 = luminance * (1.0 + saturation);
         else m2 = luminance + saturation - (luminance * saturation);
         m1 = 2.0 * luminance - m2;
 
@@ -400,15 +400,15 @@ end:
 }
 
 //??
-float _v(float m1, float m2, float hue){
+float _v(float m1, float m2, float hue) {
 
     //hue = hue % 1.0
-    while(hue < 0.0) hue += 1.0;
-    while(hue > 1.0) hue -= 1.0;
+    while (hue < 0.0) hue += 1.0;
+    while (hue > 1.0) hue -= 1.0;
     
     if     (hue < ONE_SIXTH) return( m1 + (m2 - m1) *              hue  * 6.0);
-    else if(hue < 0.5)       return( m2 );
-    else if(hue < TWO_THIRD) return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
+    else if (hue < 0.5)       return( m2 );
+    else if (hue < TWO_THIRD) return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
     else                     return( m1 );
 }
 
@@ -457,17 +457,17 @@ float _v(float m1, float m2, float hue){
 }
 + (id)colorWithHTMLString:(NSString *)str defaultColor:(NSColor *)defaultColor
 {
-	if(!str) return nil;
+	if (!str) return nil;
 
 	unsigned strLength = [str length];
 
 	NSString *colorValue = str;
-	if((!strLength) || ([str characterAtIndex:0] != '#')) {
+	if ((!strLength) || ([str characterAtIndex:0] != '#')) {
 		//look it up; it's a colour name
 		NSDictionary *colorValues = [self colorNamesDictionary];
 		colorValue = [colorValues objectForKey:str];
-		if(!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
-		if(!colorValue) {
+		if (!colorValue) colorValue = [colorValues objectForKey:[str lowercaseString]];
+		if (!colorValue) {
 			NSLog(@"+[NSColor(AIColorAdditions) colorWithHTMLString:] called with unrecognised color name (str is %@); returning %@", str, defaultColor);
 			return defaultColor;
 		}
@@ -490,9 +490,9 @@ float _v(float m1, float m2, float hue){
 	float	alpha = 1.0;
 
 	//skip # if present.
-	if(*hexString == '#') ++hexString;
+	if (*hexString == '#') ++hexString;
 
-	if(hexStringLength < 3) {
+	if (hexStringLength < 3) {
 		NSLog(@"+[%@ colorWithHTMLString:] called with a string that cannot possibly be a hexadecimal color specification (e.g. #ff0000, #00b, #cc08) (string: %@ input: %@); returning %@", NSStringFromClass(self), colorValue, str, defaultColor);
 		return defaultColor;
 	}
@@ -508,22 +508,22 @@ float _v(float m1, float m2, float hue){
 	//	c = x / 0xf
 
 	red   = hexToInt(*(hexString++));
-	if(isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	if (isLong) red    = (red   * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else       red   /= 15.0;
 
 	green = hexToInt(*(hexString++));
-	if(isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	if (isLong) green  = (green * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else       green /= 15.0;
 
 	blue  = hexToInt(*(hexString++));
-	if(isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
+	if (isLong) blue   = (blue  * 16.0 + hexToInt(*(hexString++))) / 255.0;
 	else       blue  /= 15.0;
 
-	if(*hexString) {
+	if (*hexString) {
 		//we still have one more component to go: this is alpha.
 		//without this component, alpha defaults to 1.0 (see initialiser above).
 		alpha = hexToInt(*(hexString++));
-		if(isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
+		if (isLong) alpha = (alpha * 16.0 + hexToInt(*(hexString++))) / 255.0;
 		else alpha /= 15.0;
 	}
 
@@ -533,29 +533,29 @@ float _v(float m1, float m2, float hue){
 @end
 
 //Returns the min of 3 values
-static float min(float a, float b, float c){
-    if(a < b && a < c) return(a);
-    if(b < a && b < c) return(b);
+static float min(float a, float b, float c) {
+    if (a < b && a < c) return(a);
+    if (b < a && b < c) return(b);
     return(c);
 }
 
 //Returns the max of 3 values
-static float max(float a, float b, float c){
-    if(a > b && a > c) return(a);
-    if(b > a && b > c) return(b);
+static float max(float a, float b, float c) {
+    if (a > b && a > c) return(a);
+    if (b > a && b > c) return(b);
     return(c);
 }
 
 //Convert hex to an int
 int hexToInt(char hex)
 {
-    if(hex >= '0' && hex <= '9'){
+    if (hex >= '0' && hex <= '9') {
         return(hex - '0');
-    }else if(hex >= 'a' && hex <= 'f'){
+    } else if (hex >= 'a' && hex <= 'f') {
         return(hex - 'a' + 10);
-    }else if(hex >= 'A' && hex <= 'F'){
+    } else if (hex >= 'A' && hex <= 'F') {
         return(hex - 'A' + 10);
-    }else{
+    } else {
         return(0);
     }
 }
@@ -563,9 +563,9 @@ int hexToInt(char hex)
 //Convert int to a hex
 char intToHex(int digit)
 {
-    if(digit > 9){
+    if (digit > 9) {
         return('a' + digit - 10);
-    }else{
+    } else {
         return('0' + digit);
     }
 }

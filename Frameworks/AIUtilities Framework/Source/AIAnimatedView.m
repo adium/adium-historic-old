@@ -27,7 +27,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect image:(NSImage *)inImage frames:(int)inFrames delay:(float)inDelay target:(id)inTarget action:(SEL)inAction
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		image = [inImage retain];
 		frames = inFrames;
 		delay = inDelay;
@@ -40,7 +40,7 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-	if((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect])) {
 		image = nil;
 		frames = 1;
 		delay = 0;
@@ -61,7 +61,7 @@
 
 - (void)setImage:(NSImage *)inImage
 {
-    if(inImage != image){
+    if (inImage != image) {
         [image release];
         image = [inImage retain];
     }
@@ -69,7 +69,7 @@
 
 - (void)setTarget:(id)inTarget
 {
-    if(target != inTarget){
+    if (target != inTarget) {
         [target release];
         target = [inTarget retain];
     }
@@ -125,11 +125,11 @@
 {
     //Move to the next frame
     currentFrame--;
-    if(currentFrame <= 0){
+    if (currentFrame <= 0) {
         [timer invalidate];
 
         //Notify our target that the animation is complete (after a delay for the final image)
-        if(target && action){
+        if (target && action) {
             [target performSelector:action withObject:nil afterDelay:delay];
         }
     }

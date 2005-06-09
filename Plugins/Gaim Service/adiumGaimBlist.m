@@ -42,7 +42,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		GaimBuddy *buddy = (GaimBuddy*)node;
 
 		//Take no action if the relevant account isn't online.
-		if(!buddy->account || !gaim_account_is_connected(buddy->account))
+		if (!buddy->account || !gaim_account_is_connected(buddy->account))
 			return;
 		   
 		AIListContact	*theContact = contactLookupFromBuddy(buddy);
@@ -54,21 +54,21 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 
 		//Group changes, including the initial notification of the group
 		//We also use this opportunity to check the contact's name against its formattedUID
-		if(!groupDict) groupDict = [[NSMutableDictionary alloc] init];
+		if (!groupDict) groupDict = [[NSMutableDictionary alloc] init];
 
 		/* If there is no old group name, or there is and there is no current group name, or the two don't match,
 		 * update our group information. */
-		if(!(oldGroupName = [groupDict objectForKey:buddyValue]) ||
+		if (!(oldGroupName = [groupDict objectForKey:buddyValue]) ||
 		   !(groupName) ||
-		   !([oldGroupName isEqualToString:groupName])){
+		   !([oldGroupName isEqualToString:groupName])) {
 
 			NSString	*contactName;
 			contactName = [NSString stringWithUTF8String:buddy->name];
 
 			//Store the new string in our aliasDict
-			if(groupName){
+			if (groupName) {
 				[groupDict setObject:groupName forKey:buddyValue];
-			}else{
+			} else {
 				[groupDict removeObjectForKey:buddyValue];
 			}
 
@@ -84,20 +84,20 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		 * aliasDict NSMutableDictionary to track what alias was last used for each buddy.  The first invocation,
 		 * and subsequent invocations for the same alias, are passed back to the main thread for processing. */
 		const char	*alias = gaim_buddy_get_alias(buddy);
-		if (alias){
+		if (alias) {
 			NSString	*aliasString = [NSString stringWithUTF8String:alias];
 			NSString	*oldAliasString;
 			
-			if(!aliasDict) aliasDict = [[NSMutableDictionary alloc] init];
+			if (!aliasDict) aliasDict = [[NSMutableDictionary alloc] init];
 
-			if(![aliasString isEqualToString:[theContact UID]] &&
+			if (![aliasString isEqualToString:[theContact UID]] &&
 			   (!(oldAliasString = [aliasDict objectForKey:buddyValue]) ||
-			   (![oldAliasString isEqualToString:aliasString]))){
+			   (![oldAliasString isEqualToString:aliasString]))) {
 
 				//Store the new string in our aliasDict
-				if(aliasString){
+				if (aliasString) {
 					[aliasDict setObject:aliasString forKey:buddyValue];
-				}else{
+				} else {
 					[aliasDict removeObjectForKey:buddyValue];
 				}
 				

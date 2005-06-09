@@ -108,10 +108,10 @@
 	showOfflineContacts = [[prefDict objectForKey:KEY_SHOW_OFFLINE_CONTACTS] boolValue];
 	useContactListGroups = ![[prefDict objectForKey:KEY_HIDE_CONTACT_LIST_GROUPS] boolValue];
 
-	if(firstTime){
+	if (firstTime) {
 		//Observe contact and preference changes
 		[[adium contactController] registerListObjectObserver:self];
-	}else{
+	} else {
 		//Refresh visibility of all contacts
 		[[adium contactController] updateAllListObjectsForObserver:self];
 		
@@ -151,7 +151,7 @@
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
-	if([[item itemIdentifier] isEqualToString:OFFLINE_CONTACTS_IDENTIFER]){
+	if ([[item itemIdentifier] isEqualToString:OFFLINE_CONTACTS_IDENTIFER]) {
 		[item setImage:[NSImage imageNamed:(showOfflineContacts ?
 											@"offlinecontacts_transparent" :
 											@"offlinecontacts")
@@ -164,28 +164,28 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {    
-    if(inModifiedKeys == nil ||
+    if (inModifiedKeys == nil ||
 	   [inModifiedKeys containsObject:@"Online"] ||
 	   [inModifiedKeys containsObject:@"Signed Off"] ||
 	   [inModifiedKeys containsObject:@"New Object"] ||
-	   [inModifiedKeys containsObject:@"VisibleObjectCount"]){
+	   [inModifiedKeys containsObject:@"VisibleObjectCount"]) {
 
-		if([inObject isKindOfClass:[AIListContact class]]){
+		if ([inObject isKindOfClass:[AIListContact class]]) {
 			BOOL	online = [inObject online];
 			BOOL	justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
 			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
 
-			if([inObject isKindOfClass:[AIMetaContact class]]){
+			if ([inObject isKindOfClass:[AIMetaContact class]]) {
 				[inObject setVisible:((online) || 
 									  (justSignedOff) || 
 									  (newObject) ||
 									  (showOfflineContacts && ([(AIMetaContact *)inObject visibleCount] > 0)))];
 				
-			}else{
+			} else {
 				[inObject setVisible:(showOfflineContacts || online || justSignedOff || newObject)];
 			}
 
-		}else if([inObject isKindOfClass:[AIListGroup class]]){
+		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
 			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
 
 			[inObject setVisible:((useContactListGroups) &&

@@ -47,7 +47,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	arrayOfContactsForDelayedUpdates = nil;
 	delayedSignonUpdateTimer = nil;
 	
-	if(!createdEncoders){
+	if (!createdEncoders) {
 		encoderCloseFontTagsAttachmentsAsText = [[AIHTMLDecoder alloc] init];
 		[encoderCloseFontTagsAttachmentsAsText setIncludesHeaders:YES];
 		[encoderCloseFontTagsAttachmentsAsText setIncludesFontTags:YES];
@@ -145,7 +145,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	//Set our capitilization properly if necessary
 	formattedUID = [self formattedUID];
 	
-	if (![[formattedUID lowercaseString] isEqualToString:formattedUID]){
+	if (![[formattedUID lowercaseString] isEqualToString:formattedUID]) {
 		
 		//Remove trailing and leading whitespace
 		formattedUID = [formattedUID stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceCharacterSet]];
@@ -164,20 +164,20 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	NSString	*returnString;
 	
 	//We don't want to send HTML to ICQ users, or mobile phone users
-	if(inListObject){
+	if (inListObject) {
 		BOOL		nonHTMLUser;
 		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
 
 	    nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 		
-		if (nonHTMLUser){
+		if (nonHTMLUser) {
 			returnString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
-		}else{
+		} else {
 			returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
 																  imagesPath:nil];
 		}
 
-	}else{
+	} else {
 		returnString = [encoderCloseFontTagsAttachmentsAsText encodeHTML:inAttributedString
 															  imagesPath:nil];
 		AILog(@"Encoded to %@ for no contact",returnString);
@@ -190,24 +190,24 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 						forListObject:(AIListObject *)inListObject
 					   contentMessage:(AIContentMessage *)contentMessage
 {		
-	if(inListObject){
+	if (inListObject) {
 		BOOL		nonHTMLUser = NO;
 		char		firstCharacter = [[inListObject UID] characterAtIndex:0];
 		nonHTMLUser = ((firstCharacter >= '0' && firstCharacter <= '9') || firstCharacter == '+');
 		
-		if (nonHTMLUser){
+		if (nonHTMLUser) {
 			//We don't want to send HTML to ICQ users, or mobile phone users
 			return ([[inAttributedString attributedStringByConvertingLinksToStrings] string]);
 			
-		}else{
-			if (GAIM_DEBUG){
+		} else {
+			if (GAIM_DEBUG) {
 				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
 				NSString	*returnString;
 				
 				returnString = [encoderCloseFontTags encodeHTML:inAttributedString
 													 imagesPath:@"/tmp"];
 				
-				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound){
+				if ([returnString rangeOfString:@"<IMG " options:NSCaseInsensitiveSearch].location != NSNotFound) {
 					//There's an image... we need to see about a Direct Connect, aborting the send attempt if none is established 
 					//and sending after it is if one is established
 
@@ -217,19 +217,19 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 					
 					dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
 					
-					if (dim && (dim->connected)){
+					if (dim && (dim->connected)) {
 						//We have a connected dim already; process the string and keep the modified copy
 						returnString = [self stringByProcessingImgTagsForDirectIM:returnString];
 						
-					}else{
+					} else {
 						//Either no dim, or the dim we have is no longer conected (oscar_direct_im_initiate_immediately will reconnect it)
 						oscar_direct_im_initiate_immediately(account->gc, who);
 						
 						//Add this content message to the sending queue for this contact to be sent once a connection is established
-						if(!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
+						if (!directIMQueue) directIMQueue = [[NSMutableDictionary alloc] init];
 						
 						NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[inListObject internalObjectID]];
-						if(!thisContactQueue){
+						if (!thisContactQueue) {
 							thisContactQueue = [NSMutableArray array];
 							
 							[directIMQueue setObject:thisContactQueue
@@ -253,7 +253,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			}
 		}
 		
-	}else{ //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
+	} else { //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
 		AILog(@"Encoding %@ for no contact",inAttributedString);
 		return [encoderGroupChat encodeHTML:inAttributedString
 								 imagesPath:nil];
@@ -267,12 +267,12 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  */
 - (BOOL)canSendImagesForChat:(AIChat *)inChat
 {
-	if(inChat && [inChat listObject]){
+	if (inChat && [inChat listObject]) {
 		//Check for a oscar_direct_im (dim) currently open
 		struct oscar_direct_im  *dim;
 		const char				*who = [[[inChat listObject] UID] UTF8String];
 
-		if(account && account->gc && who){
+		if (account && account->gc && who) {
 			dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
 			
 			if (dim) {
@@ -288,11 +288,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 - (void)gotGroupForContact:(AIListContact *)theContact
 {
-	if(theContact){
+	if (theContact) {
 		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray array] retain];
 		[arrayOfContactsForDelayedUpdates addObject:theContact];
 		
-		if (!delayedSignonUpdateTimer){
+		if (!delayedSignonUpdateTimer) {
 			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
 																		 target:self
 																	   selector:@selector(_performDelayedUpdates:) 
@@ -304,7 +304,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 - (void)_performDelayedUpdates:(NSTimer *)timer
 {
-	if ([arrayOfContactsForDelayedUpdates count]){
+	if ([arrayOfContactsForDelayedUpdates count]) {
 		AIListContact *theContact = [arrayOfContactsForDelayedUpdates objectAtIndex:0];
 		
 		[theContact setStatusObject:[self serversideCommentForContact:theContact]
@@ -313,7 +313,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		
 		[arrayOfContactsForDelayedUpdates removeObjectAtIndex:0];
 		
-	}else{
+	} else {
 		[arrayOfContactsForDelayedUpdates release]; arrayOfContactsForDelayedUpdates = nil;
 		[delayedSignonUpdateTimer invalidate]; [delayedSignonUpdateTimer release]; delayedSignonUpdateTimer = nil;
 	}
@@ -324,18 +324,18 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {	
 	NSString *serversideComment = nil;
 	
-	if (gaim_account_is_connected(account)){
+	if (gaim_account_is_connected(account)) {
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
 		GaimBuddy   *buddy;
 		
-		if (buddy = gaim_find_buddy(account, uidUTF8String)){
+		if (buddy = gaim_find_buddy(account, uidUTF8String)) {
 			GaimGroup   *g;
 			char		*comment;
 			OscarData   *od;
 			
 			if ((g = gaim_find_buddys_group(buddy)) &&
 				(od = account->gc->proto_data) &&
-				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))){
+				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))) {
 				gchar		*comment_utf8;
 				
 				comment_utf8 = gaim_utf8_try_convert(comment);
@@ -355,13 +355,13 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
 	
-	if([group isEqualToString:PREF_GROUP_NOTES]){
+	if ([group isEqualToString:PREF_GROUP_NOTES]) {
 		//If the notification object is a listContact belonging to this account, update the serverside information
 		if (account &&
 			[object isKindOfClass:[AIListContact class]] && 
-			[(AIListContact *)object account] == self){
+			[(AIListContact *)object account] == self) {
 			
-			if ([key isEqualToString:@"Notes"]){
+			if ([key isEqualToString:@"Notes"]) {
 				NSString  *comment = [object preferenceForKey:@"Notes" 
 														group:PREF_GROUP_NOTES
 										ignoreInheritedValues:YES];
@@ -386,7 +386,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))){
+		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))) {
 		
 		return (userinfo->capabilities & AIM_CAPS_SENDFILE);
 	}
@@ -417,11 +417,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	if(strcmp(label, "Direct IM") == 0){
+	if (strcmp(label, "Direct IM") == 0) {
 		//XXX
-		if (/*GAIM_DEBUG && */![[[inContact service] serviceID] isEqualToString:@"ICQ"]){
+		if (/*GAIM_DEBUG && */![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
 			return([NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]]);
-		}else{
+		} else {
 			return(nil);
 		}
 	}
@@ -434,11 +434,11 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	/* Remove various actions which are either duplicates of superior Adium actions (*grin*)
 	 * or are just silly ("Confirm Account" for example). */
-	if(strcmp(label, "Set Available Message...") == 0){
+	if (strcmp(label, "Set Available Message...") == 0) {
 		return(nil);
-	}else if(strcmp(label, "Format Screen Name...") == 0){
+	} else if (strcmp(label, "Format Screen Name...") == 0) {
 		return(nil);
-	}else if(strcmp(label, "Confirm Account") == 0){
+	} else if (strcmp(label, "Confirm Account") == 0) {
 		return(nil);
 	}
 
@@ -456,18 +456,18 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 											 inChat:[[adium contentController] chatWithContact:theContact]];
 	//Send any pending directIM messages for this contact
 	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
-	if(thisContactQueue){
+	if (thisContactQueue) {
 		NSEnumerator	*enumerator;
 		AIContentObject	*contentObject;
 		
 		enumerator = [thisContactQueue objectEnumerator];
-		while((contentObject = [enumerator nextObject])){
+		while ((contentObject = [enumerator nextObject])) {
 			[[adium contentController] sendContentObject:contentObject];
 		}
 		
 		[directIMQueue removeObjectForKey:[theContact internalObjectID]];
 		
-		if(![directIMQueue count]){
+		if (![directIMQueue count]) {
 			[directIMQueue release]; directIMQueue = nil;
 		}
 	}
@@ -487,7 +487,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	NSScanner			*scanner;
 	//    NSCharacterSet		*tagCharStart, *tagEnd, *absoluteTagEnd;
 	static NSCharacterSet *elementEndCharacters = nil;
-	if(!elementEndCharacters)
+	if (!elementEndCharacters)
 		elementEndCharacters = [[NSCharacterSet characterSetWithCharactersInString:@" >"] retain];
 	static NSString		*tagStart = @"<", *tagEnd = @">";
 	NSString			*chunkString;
@@ -504,19 +504,19 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	processedString = [[NSMutableString alloc] init];
 	
     //Parse the HTML
-    while(![scanner isAtEnd]){
+    while (![scanner isAtEnd]) {
         //Find an HTML IMG tag
-        if([scanner scanUpToString:@"<img" intoString:&chunkString]){
+        if ([scanner scanUpToString:@"<img" intoString:&chunkString]) {
 			//Append the text leading up the the IMG tag; a directIM may have image tags inline with message text
             [processedString appendString:chunkString];
         }
 		
         //Process the tag
-        if([scanner scanString:tagStart intoString:nil]){ //If a tag wasn't found, we don't process.
+        if ([scanner scanString:tagStart intoString:nil]) { //If a tag wasn't found, we don't process.
 														  //Get the tag itself
-			if([scanner scanUpToCharactersFromSet:elementEndCharacters intoString:&chunkString]){
-				if([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame){
-					if([scanner scanUpToString:tagEnd intoString:&chunkString]){
+			if ([scanner scanUpToCharactersFromSet:elementEndCharacters intoString:&chunkString]) {
+				if ([chunkString caseInsensitiveCompare:@"IMG"] == NSOrderedSame) {
+					if ([scanner scanUpToString:tagEnd intoString:&chunkString]) {
 						
 						//Load the src image
 						NSDictionary	*imgArguments = [AIHTMLDecoder parseArguments:chunkString];
@@ -533,7 +533,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 					}
 				}
 				
-				if (![scanner isAtEnd]){
+				if (![scanner isAtEnd]) {
 					[scanner setScanLocation:[scanner scanLocation]+1];
 				}
 			}
@@ -548,7 +548,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	SEL updateSelector = nil;
 	
-	switch([event intValue]){
+	switch ([event intValue]) {
 		case GAIM_BUDDY_INFO_UPDATED: {
 			updateSelector = @selector(updateInfo:);
 			break;
@@ -567,7 +567,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		}
 	}
 	
-	if (updateSelector){
+	if (updateSelector) {
 		[self performSelector:updateSelector
 				   withObject:theContact];
 	}
@@ -582,7 +582,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	
 	if (gaim_account_is_connected(account) &&
 		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))){
+		(userinfo = aim_locate_finduserinfo(od->sess, [[theContact UID] UTF8String]))) {
 		
 		//Update the profile if necessary - length must be greater than one since we get "" with info_len 1
 		//when attempting to retrieve the profile of an AOL member (which can't be done via AIM).
@@ -601,7 +601,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 					//Due to OSCAR being silly, we can get a single control character as profileString.
 					//This passes the [profileString length] check above, but we don't want to store it as our profile.
 					NSAttributedString	*attributedProfile = [AIHTMLDecoder decodeHTML:profileString];
-					if([attributedProfile length]){
+					if ([attributedProfile length]) {
 						[theContact setStatusObject:attributedProfile
 											 forKey:@"TextProfile" 
 											 notify:NO];
@@ -633,48 +633,48 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	if ((gaim_account_is_connected(account)) &&
 		(od = account->gc->proto_data) && 
 		(theContactUID = [theContact UID]) && 
-		(userinfo = aim_locate_finduserinfo(od->sess, [theContactUID UTF8String]))){
+		(userinfo = aim_locate_finduserinfo(od->sess, [theContactUID UTF8String]))) {
 
 		//Client
 		NSString	*storedString = [theContact statusObjectForKey:@"Client"];
 		NSString	*client = nil;
 		BOOL		isMobile = NO;
 
-		if(userinfo->present & AIM_USERINFO_PRESENT_FLAGS){
-			if(userinfo->capabilities & AIM_CAPS_HIPTOP){
+		if (userinfo->present & AIM_USERINFO_PRESENT_FLAGS) {
+			if (userinfo->capabilities & AIM_CAPS_HIPTOP) {
 				client = AILocalizedString(@"AIM via Hiptop", "A 'Hiptop' is a mobile device; this phrase descibes a contact who is connected to AIM through a hiptop.");
 				isMobile = YES;
 				
-			}else if(userinfo->flags & AIM_FLAG_WIRELESS){
+			} else if (userinfo->flags & AIM_FLAG_WIRELESS) {
 				/* Incorrectly called just before a contact is added to a group chat */
-				if(![[adium contentController] contactIsInGroupChat:theContact]){
+				if (![[adium contentController] contactIsInGroupChat:theContact]) {
 					client = AOL_MOBILE_DEVICE;
 					isMobile = YES;
 				}
 				
-			}else if(userinfo->flags & AIM_FLAG_ADMINISTRATOR){
+			} else if (userinfo->flags & AIM_FLAG_ADMINISTRATOR) {
 				client = AILocalizedString(@"AOL Administrator", nil);
 				
-			}else if (userinfo->flags & AIM_FLAG_AOL){
+			} else if (userinfo->flags & AIM_FLAG_AOL) {
 				client = AILocalizedString(@"America Online", nil);
-			}/* else if((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)){
+			}/* else if ((userinfo->flags & AIM_FLAG_FREE) || (userinfo->flags & AIM_FLAG_UNCONFIRMED)) {
 							client = @"AOL Instant Messenger";
 			}*/
 		}
 
 		[theContact setIsMobile:isMobile notify:NotifyLater];
 
-		if(client){
+		if (client) {
 			//Set the client if necessary
-			if (storedString == nil || ![client isEqualToString:storedString]){
+			if (storedString == nil || ![client isEqualToString:storedString]) {
 				[theContact setStatusObject:client forKey:@"Client" notify:NotifyLater];
 						
 				//Apply any changes
 				[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 			}
-		}else{
+		} else {
 			//Clear the client value if one was present before
-			if(storedString){
+			if (storedString) {
 				[theContact setStatusObject:nil forKey:@"Client" notify:NotifyLater];
 						
 				//Apply any changes
@@ -700,7 +700,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
 
-	if(gaimStatusType && !strcmp(gaimStatusType, "Available")){
+	if (gaimStatusType && !strcmp(gaimStatusType, "Available")) {
 		/*
 		 * As of gaim 1.x, setting/changing an available message in OSCAR requires a special, additional call */
 		
@@ -730,14 +730,14 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	char			*gaimStatusType = NULL;
 	
 	//Only special case we need is for invisibility.
-	if(statusType == AIInvisibleStatusType)
+	if (statusType == AIInvisibleStatusType)
 		gaimStatusType = "Invisible";
 	
 	//If we are setting one of our custom statuses, don't use a status message
-	if(gaimStatusType != NULL) 	*statusMessage = nil;
+	if (gaimStatusType != NULL) 	*statusMessage = nil;
 	
 	//If we didn't get a gaim status type, request one from super
-	if(gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
 	
 	return gaimStatusType;
 }
@@ -749,10 +749,10 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
 {
-	if(!strcmp(gaimStatusType, "Available")){
+	if (!strcmp(gaimStatusType, "Available")) {
 		NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 		return([messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
-	}else{
+	} else {
 		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
 	}
 }
@@ -762,7 +762,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"AvailableMessage",
 			@"Invisible",
@@ -795,7 +795,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
 	 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
 	 */	
-	if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]){
+	if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]) {
 		[listContact setIsMobile:NO notify:NotifyLater];
 
 		[listContact setStatusObject:nil

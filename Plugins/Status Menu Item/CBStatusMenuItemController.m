@@ -61,7 +61,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 + (CBStatusMenuItemController *)statusMenuItemController
 {
     //Standard singelton stuff.
-    if (!sharedStatusMenuInstance){
+    if (!sharedStatusMenuInstance) {
 		sharedStatusMenuInstance = [[self alloc] init];
     }
     return (sharedStatusMenuInstance);
@@ -69,28 +69,28 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 - (id)init
 {
-    if((self = [super init])){
+    if ((self = [super init])) {
         //Create and set up the status item
         statusItem = [[[NSStatusBar systemStatusBar] statusItemWithLength:NSSquareStatusItemLength] retain];
         [statusItem setHighlightMode:YES];
 		
 		//Initialize our cached images
-		if(!adiumOfflineImage){
+		if (!adiumOfflineImage) {
 			adiumOfflineImage = [[NSImage imageNamed:@"adiumOffline.png" forClass:[self class]] retain];
 		}
-		if(!adiumOfflineHighlightImage){
+		if (!adiumOfflineHighlightImage) {
 			adiumOfflineHighlightImage = [[NSImage imageNamed:@"adiumOfflineHighlight.png" forClass:[self class]] retain];
 		}
-		if(!adiumImage){
+		if (!adiumImage) {
 			adiumImage = [[NSImage imageNamed:@"adium.png" forClass:[self class]] retain];
 		}
-		if(!adiumHighlightImage){
+		if (!adiumHighlightImage) {
 			adiumHighlightImage = [[NSImage imageNamed:@"adiumHighlight.png" forClass:[self class]] retain];
 		}
-		if(!adiumRedImage){
+		if (!adiumRedImage) {
 			adiumRedImage = [[NSImage imageNamed:@"adiumRed.png" forClass:[self class]] retain];
 		}
-		if(!adiumRedHighlightImage){
+		if (!adiumRedHighlightImage) {
 			adiumRedHighlightImage = [[NSImage imageNamed:@"adiumRedHighlight.png" forClass:[self class]] retain];
 		}
 			
@@ -167,17 +167,17 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)setIconState:(SMI_Icon_State)state
 {
 	//If we're not already in that state
-	if(state != iconState){
+	if (state != iconState) {
 		//Set our state to the new one
 		iconState = state;
 		//And set the appropriate icon
-		if(iconState == OFFLINE){
+		if (iconState == OFFLINE) {
 			[statusItem setImage:adiumOfflineImage];
 			[statusItem setAlternateImage:adiumOfflineHighlightImage];
-		}else if(iconState == ONLINE){
+		} else if (iconState == ONLINE) {
 			[statusItem setImage:adiumImage];
 			[statusItem setAlternateImage:adiumHighlightImage];
-		}else{
+		} else {
 			[statusItem setImage:adiumRedImage];
 			[statusItem setAlternateImage:adiumRedHighlightImage];
 		}
@@ -266,7 +266,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	[unviewedObjectsArray removeObjectIdenticalTo:chat];
 	
 	int index = [theMenu indexOfItemWithRepresentedObject:chat];
-	if(index != -1){
+	if (index != -1) {
 		[theMenu removeItemAtIndex:index];
 	}
 }
@@ -274,31 +274,31 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	//If the contact's unviewed content state has changed
-    if(inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]){
+    if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
         //If there is new unviewed content
-        if([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]){
+        if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
             //If we're not already watching it
-            if(![unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+            if (![unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
                 //Add it, we're watching it now
                 [unviewedObjectsArray addObject:inChat];
                 //We need to update our menu
                 needsUpdate = YES;
                 //If this is the first contact with unviewed content, set our icon to unviewed content
-                if(iconState != UNVIEWED){
+                if (iconState != UNVIEWED) {
                     //Set our state
 					[self setIconState:UNVIEWED];
                 }
             }
         //If they've viewed the content
-        }else{
+        } else {
             //If we're tracking this object
-            if([unviewedObjectsArray containsObjectIdenticalTo:inChat]){
+            if ([unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
                 //Remove it, it's not unviewed anymore
                 [unviewedObjectsArray removeObjectIdenticalTo:inChat];
                 //We need to update our menu
                 needsUpdate = YES;
                 //If there are no more contacts with unviewed content, set our icon to normal
-                if([unviewedObjectsArray count] == 0 && iconState == UNVIEWED){
+                if ([unviewedObjectsArray count] == 0 && iconState == UNVIEWED) {
                     //Set our state
 					[self setIconState:ONLINE];
 				}
@@ -307,7 +307,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
     }
 	
 	//If they're typing, we also need to update.
-	if([inModifiedKeys containsObject:KEY_TYPING]){
+	if ([inModifiedKeys containsObject:KEY_TYPING]) {
 		needsUpdate = YES;
 	}
 	
@@ -321,7 +321,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)menuNeedsUpdate:(NSMenu *)menu
 {
     //If something has changed
-    if(needsUpdate){
+    if (needsUpdate) {
         NSEnumerator    *enumerator;
         NSMenuItem      *menuItem;
         AIChat          *chat;
@@ -332,37 +332,37 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		//Add the state menu items
         enumerator = [stateMenuItemsArray objectEnumerator];
         menuItem = nil;
-        while((menuItem = [enumerator nextObject])){
+        while ((menuItem = [enumerator nextObject])) {
             [menu addItem:menuItem];
 			
 			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-			if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 				[[menuItem target] validateMenuItem:menuItem];
 			}
         }
 
-		if([accountMenuItemsArray count] > 0){
+		if ([accountMenuItemsArray count] > 0) {
 			[menu addItem:[NSMenuItem separatorItem]];
 			
 			//Add the account menu items
 			enumerator = [accountMenuItemsArray objectEnumerator];
-			while((menuItem = [enumerator nextObject])){
+			while ((menuItem = [enumerator nextObject])) {
 				NSMenu	*submenu;
 				
 				[menu addItem:menuItem];
 				
 				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-				if([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+				if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 					[[menuItem target] validateMenuItem:menuItem];
 				}
 				
 				submenu = [menuItem submenu];
-				if(submenu){
+				if (submenu) {
 					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
 					NSMenuItem		*submenuItem;
-					while((submenuItem = [submenuEnumerator nextObject])){
+					while ((submenuItem = [submenuEnumerator nextObject])) {
 						//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
-						if([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]){
+						if ([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 							[[submenuItem target] validateMenuItem:submenuItem];
 						}
 					}
@@ -371,7 +371,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
         }
 		
 		//If there exist any open chats, add them
-        if([openChatsArray count] > 0){
+        if ([openChatsArray count] > 0) {
 			enumerator = [openChatsArray objectEnumerator];
 			chat = nil;
 
@@ -379,7 +379,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
             [menu addItem:[NSMenuItem separatorItem]];
 
             //Create and add the menu items
-            while((chat = [enumerator nextObject])){
+            while ((chat = [enumerator nextObject])) {
 				NSImage *image = nil;
 				
                 //Create a menu item from the chat
@@ -391,7 +391,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
                 [menuItem setRepresentedObject:chat];
 				
                 //If there is a chat status image, use that
-				if(!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])){
+				if (!(image = [AIStatusIcons statusIconForChat:chat type:AIStatusIconTab direction:AIIconNormal])) {
 					//Otherwise use the contact's status image
 					image = [AIStatusIcons statusIconForListObject:[chat listObject] 
 														type:AIStatusIconTab
@@ -422,7 +422,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)switchToChat:(id)sender
 {
     //If we're not the active app, activate 
-    if(![NSApp isActive]){
+    if (![NSApp isActive]) {
         [self activateAdium:nil];
     }
     

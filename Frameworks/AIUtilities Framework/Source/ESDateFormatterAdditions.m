@@ -67,20 +67,20 @@ typedef enum {
     StringType		type;
     
     //Determine the type of string requested
-    if(!seconds && !showAmPm) type = NONE;
-    else if(seconds && !showAmPm) type = SECONDS;
-    else if(!seconds & showAmPm) type = AMPM;
+    if (!seconds && !showAmPm) type = NONE;
+    else if (seconds && !showAmPm) type = SECONDS;
+    else if (!seconds & showAmPm) type = AMPM;
     else type = BOTH;
 
     //Check the cache for this string, return if found
-    if(cache[type]){
+    if (cache[type]) {
         return(cache[type]);
     }
 
     //use system-wide defaults for date format
     NSMutableString *localizedDateFormatString = [currentTimeFormatString mutableCopy];
 
-    if(!showAmPm){ 
+    if (!showAmPm) { 
         //potentially could use stringForKey:NSAMPMDesignation as space isn't always the separator between time and %p
         [localizedDateFormatString replaceOccurrencesOfString:@" %p" 
                                                 withString:@"" 
@@ -88,7 +88,7 @@ typedef enum {
                                                 range:NSMakeRange(0,[localizedDateFormatString length])];
     }
 
-    if(!seconds){
+    if (!seconds) {
         int secondSeparatorIndex = [localizedDateFormatString rangeOfString:@"%S" options:NSBackwardsSearch].location;
         
         if ( (secondSeparatorIndex != NSNotFound) && (secondSeparatorIndex > 0) ) {
@@ -123,57 +123,57 @@ typedef enum {
     seconds -= days * 86400;
 	
 	//Hours
-    if(seconds){
+    if (seconds) {
         hours = (int)(seconds / 3600);
         seconds -= hours * 3600;
     }
 	
 	//Minutes
-    if(seconds){
+    if (seconds) {
         minutes = (int)(seconds / 60);
         seconds -= minutes * 60;
     }
 		
-    if(abbreviate){
-        if(days)
+    if (abbreviate) {
+        if (days)
             [theString appendString:[NSString stringWithFormat:@"%id ",days]];
-        if(hours)
+        if (hours)
             [theString appendString:[NSString stringWithFormat:@"%ih ",hours]];
-        if(minutes)
+        if (minutes)
             [theString appendString:[NSString stringWithFormat:@"%im ",minutes]];
-        if(showSeconds && seconds)
+        if (showSeconds && seconds)
             [theString appendString:[NSString stringWithFormat:@"%%lfs ",seconds]];
         
         //Return the string without the final space
-        if ([theString length] > 1){
+        if ([theString length] > 1) {
             [theString deleteCharactersInRange:NSMakeRange(([theString length]-1), 1)];
 		}
 
-    }else{
-        if (days >= 1){
-			if(days == 1){
+    } else {
+        if (days >= 1) {
+			if (days == 1) {
 				[theString appendString:ONE_DAY];
-			}else{
+			} else {
 				[theString appendString:[NSString stringWithFormat:MULTIPLE_DAYS, days]];
 			}
 			
 			[theString appendString:@", "];
 		}
 
-		if (hours >= 1){
-			if(hours == 1){
+		if (hours >= 1) {
+			if (hours == 1) {
 				[theString appendString:ONE_HOUR];
-			}else{
+			} else {
 				[theString appendString:[NSString stringWithFormat:MULTIPLE_HOURS, hours]];
 			}
 			
 			[theString appendString:@", "];
 		}
 
-		if (minutes >= 1){
-			if(minutes == 1){
+		if (minutes >= 1) {
+			if (minutes == 1) {
 				[theString appendString:ONE_MINUTE];
-			}else{
+			} else {
 				[theString appendString:[NSString stringWithFormat:MULTIPLE_MINUTES, minutes]];
 			}
 			
@@ -181,10 +181,10 @@ typedef enum {
 		}
 
 		//Don't show seconds if we showed days; that's just ridiculous.
-		if(showSeconds && (seconds >= 1) && (days == 0)){
-			if(seconds == 1){
+		if (showSeconds && (seconds >= 1) && (days == 0)) {
+			if (seconds == 1) {
 				[theString appendString:ONE_SECOND];
-			}else{
+			} else {
 				[theString appendString:[NSString stringWithFormat:MULTIPLE_SECONDS, seconds]];
 			}
 
@@ -192,7 +192,7 @@ typedef enum {
 		}
 
         //Return the string without the final comma and space
-        if ([theString length] > 2){
+        if ([theString length] > 2) {
             [theString deleteCharactersInRange:NSMakeRange(([theString length]-2), 2)];
 		}
     }
@@ -213,52 +213,52 @@ typedef enum {
 	seconds -= (weeks * 86400 * 7);
 
 	//Days
-	if(seconds){
+	if (seconds) {
 		days = (int)(seconds / 86400);
 		seconds -= days * 86400;
 	}
 	
 	//Hours
-    if(seconds){
+    if (seconds) {
         hours = (int)(seconds / 3600);
         seconds -= hours * 3600;
     }
 	
 	//Minutes
-    if(seconds){
+    if (seconds) {
         minutes = (int)(seconds / 60);
         seconds -= minutes * 60;
     }
 
-	if(weeks >= 1){
-		if(weeks == 1){
+	if (weeks >= 1) {
+		if (weeks == 1) {
 			timeString = ONE_WEEK;
-		}else{
+		} else {
 			timeString = [NSString stringWithFormat:MULTIPLE_WEEKS, weeks];
 		}
 	}
 	
-	if(!timeString && (days >= 1)){
-		if(days == 1){
+	if (!timeString && (days >= 1)) {
+		if (days == 1) {
 			timeString = ONE_DAY;
-		}else{
+		} else {
 			timeString = [NSString stringWithFormat:MULTIPLE_DAYS, days];
 		}
 	}
 	
-	if(!timeString && (hours >= 1)){
-		if(hours == 1){
+	if (!timeString && (hours >= 1)) {
+		if (hours == 1) {
 			timeString = ONE_HOUR;
-		}else{
+		} else {
 			timeString = [NSString stringWithFormat:MULTIPLE_HOURS, hours];
 		}
 	}
 
 	//If we get here, display either 1 minute or some number of minutes (approximate, we don't want to go into seconds)
-	if(!timeString){
-		if(minutes > 1){
+	if (!timeString) {
+		if (minutes > 1) {
 			timeString = [NSString stringWithFormat:MULTIPLE_MINUTES, minutes];
-		}else{
+		} else {
 			timeString = ONE_MINUTE;
 		}
 	}

@@ -21,7 +21,7 @@
 - (BOOL)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
-	if ((index != -1) && ([self numberOfItems] > 0)){
+	if ((index != -1) && ([self numberOfItems] > 0)) {
 		[self selectItemAtIndex:index];
 		return YES;
 	}
@@ -31,7 +31,7 @@
 - (BOOL)compatibleSelectItemWithTag:(int)tag
 {
     int	index = [self indexOfItemWithTag:tag];
-	if ((index != -1) && ([self numberOfItems] > 0)){
+	if ((index != -1) && ([self numberOfItems] > 0)) {
 		[self selectItemAtIndex:index];
 		return YES;
 	}
@@ -57,7 +57,7 @@
 - (BOOL)selectItemWithRepresentedObject:(id)object
 {
     int	index = [self indexOfItemWithRepresentedObject:object];
-	if(index != NSNotFound){
+	if (index != NSNotFound) {
 		[self selectItemAtIndex:index];
 		return YES;
 	}

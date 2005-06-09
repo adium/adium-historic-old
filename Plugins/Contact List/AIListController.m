@@ -128,14 +128,14 @@ typedef enum {
 //Dynamically resize the contact list
 - (void)contactListDesiredSizeChanged
 {
-    if(autoResizeVertically || autoResizeHorizontally){
+    if (autoResizeVertically || autoResizeHorizontally) {
 		NSWindow	*theWindow = [contactListView window];
 		
 		NSRect  currentFrame = [theWindow frame];
         NSRect	desiredFrame = [self _desiredWindowFrameUsingDesiredWidth:(autoResizeHorizontally || (forcedWindowWidth != -1))
 															desiredHeight:autoResizeVertically];
 
-		if(!NSEqualRects(currentFrame, desiredFrame)){
+		if (!NSEqualRects(currentFrame, desiredFrame)) {
 			//We must set the min/max first, otherwise our setFrame will be restricted by them and not produce the
 			//expected results
 			[theWindow setMinSize:NSMakeSize((autoResizeHorizontally ? desiredFrame.size.width : minWindowSize.width),
@@ -165,15 +165,15 @@ typedef enum {
 	NSRect		visibleBoundingFrame = [theWindowScreen visibleFrame];
 	
 	//First, see if they are now within EDGE_CATCH_Y of the total boundingFrame
-	if((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
-	   (windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y)){
+	if ((windowFrame.origin.y < boundingFrame.origin.y + EDGE_CATCH_Y) &&
+	   (windowFrame.origin.y + windowFrame.size.height < boundingFrame.origin.y + boundingFrame.size.height - EDGE_CATCH_Y)) {
 		dockToBottomOfScreen = AIDockToBottom_TotalFrame;
-	}else{
+	} else {
 		//Then, check for the (possibly smaller) visibleBoundingFrame
-		if((windowFrame.origin.y < visibleBoundingFrame.origin.y + EDGE_CATCH_Y) &&
-		   (windowFrame.origin.y + windowFrame.size.height < visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y)){
+		if ((windowFrame.origin.y < visibleBoundingFrame.origin.y + EDGE_CATCH_Y) &&
+		   (windowFrame.origin.y + windowFrame.size.height < visibleBoundingFrame.origin.y + visibleBoundingFrame.size.height - EDGE_CATCH_Y)) {
 			dockToBottomOfScreen = AIDockToBottom_VisibleFrame;
-		}else{
+		} else {
 			dockToBottomOfScreen = AIDockToBottom_No;
 		}
 	}
@@ -204,11 +204,11 @@ typedef enum {
 	toolbarHeight = [theWindow toolbarHeight];
 	
 	//Width
-	if(useDesiredWidth){
-		if(forcedWindowWidth != -1){
+	if (useDesiredWidth) {
+		if (forcedWindowWidth != -1) {
 			//If auto-sizing is disabled, use the specified width
 			newWindowFrame.size.width = forcedWindowWidth;
-		}else{
+		} else {
 			//Subtract the current size of the view from our frame
 			newWindowFrame.size.width -= viewFrame.size.width;
 			
@@ -216,18 +216,18 @@ typedef enum {
 			newWindowFrame.size.width += [contactListView desiredWidth];
 
 			//Don't get bigger than our maxWindowWidth
-			if(newWindowFrame.size.width > maxWindowWidth){
+			if (newWindowFrame.size.width > maxWindowWidth) {
 				newWindowFrame.size.width = maxWindowWidth;
-			}else if(newWindowFrame.size.width < 0){
+			} else if (newWindowFrame.size.width < 0) {
 				newWindowFrame.size.width = 0;	
 			}
 
 			//Anchor to the appropriate screen edge
 			anchorToRightEdge = (    (currentScreen != nil) 
                                   && (windowFrame.origin.x + windowFrame.size.width) + EDGE_CATCH_X > (visibleScreenFrame.origin.x + visibleScreenFrame.size.width));
-			if(anchorToRightEdge){
+			if (anchorToRightEdge) {
 				newWindowFrame.origin.x = (windowFrame.origin.x + windowFrame.size.width) - newWindowFrame.size.width;
-			}else{
+			} else {
 				newWindowFrame.origin.x = windowFrame.origin.x;
 
 			}
@@ -253,8 +253,8 @@ typedef enum {
         BOOL windowOnEdge = ((newWindowFrame.origin.x < screenFrame.origin.x + EDGE_CATCH_X) ||
                              ((newWindowFrame.origin.x + newWindowFrame.size.width) > (screenFrame.origin.x + screenFrame.size.width - EDGE_CATCH_X)));
 
-        if((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
-           (dockToBottomOfScreen == AIDockToBottom_TotalFrame)){
+        if ((windowOnEdge && (dockToBottomOfScreen != AIDockToBottom_VisibleFrame)) ||
+           (dockToBottomOfScreen == AIDockToBottom_TotalFrame)) {
             NSArray *screens;
             
             boundingFrame = screenFrame;
@@ -262,17 +262,17 @@ typedef enum {
             //We still cannot violate the menuBar, so account for it here if we are on the menuBar screen.
             if ((screens = [NSScreen screens]) &&
                 ([screens count]) &&
-                (currentScreen == [screens objectAtIndex:0])){
+                (currentScreen == [screens objectAtIndex:0])) {
                 boundingFrame.size.height -= MENU_BAR_HEIGHT;
             }
             
-        }else{
+        } else {
             boundingFrame = visibleScreenFrame;
         }
     }
 
 	//Height
-	if(useDesiredHeight){
+	if (useDesiredHeight) {
 		//Subtract the current size of the view from our frame
 		newWindowFrame.size.height -= viewFrame.size.height;
 		
@@ -280,59 +280,59 @@ typedef enum {
 		newWindowFrame.size.height += desiredHeight;
 		
 		//Vertical positioning and size if we are placed on a screen
-		if(newWindowFrame.size.height >= boundingFrame.size.height){
+		if (newWindowFrame.size.height >= boundingFrame.size.height) {
 			//If the window is bigger than the screen, keep it on the screen
 			newWindowFrame.size.height = boundingFrame.size.height;
 			newWindowFrame.origin.y = boundingFrame.origin.y;
-		}else{
+		} else {
 			//A Non-full height window is anchrored to the appropriate screen edge
-			if(dockToBottomOfScreen == AIDockToBottom_No){
+			if (dockToBottomOfScreen == AIDockToBottom_No) {
 				//If the user did not dock to the bottom in any way last, the origin should move up
 				newWindowFrame.origin.y = (windowFrame.origin.y + windowFrame.size.height) - newWindowFrame.size.height;
-			}else{
+			} else {
 				//If the user did dock (either to the full screen or the visible screen), the origin should remain in place.
 				newWindowFrame.origin.y = windowFrame.origin.y;				
 			}
 		}
 		
 		//We must never request a height of 0 or OS X will completely move us off the screen
-		if(newWindowFrame.size.height == 0) newWindowFrame.size.height = 1;
+		if (newWindowFrame.size.height == 0) newWindowFrame.size.height = 1;
 		
 		//If we have a toolbar showing and the new window frame would put us into the dock, OS X will change the rect
 		//automatically after we call setFrame:.  However, if it would put us off the screen, OS X allows this. Checking
 		//our size against the size of the screen lets us correct for this problem.
-		if((newWindowFrame.size.height + toolbarHeight) > (screenFrame.size.height)){
+		if ((newWindowFrame.size.height + toolbarHeight) > (screenFrame.size.height)) {
 			newWindowFrame.size.height -= toolbarHeight;
 		}
 		
 		//Keep the window from hanging off any Y screen edge (This is optional and could be removed if this annoys people)
-		if(NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
-		if(NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);		
+		if (NSMaxY(newWindowFrame) > NSMaxY(boundingFrame)) newWindowFrame.origin.y = NSMaxY(boundingFrame) - newWindowFrame.size.height;
+		if (NSMinY(newWindowFrame) < NSMinY(boundingFrame)) newWindowFrame.origin.y = NSMinY(boundingFrame);		
 	}
 
-	if(useDesiredWidth){
+	if (useDesiredWidth) {
 		//We only want to account for the scrollbar if we are dynamically sizing (i.e. autoResizeHorizontally is YES).
 		//useDesiredWidth could be YES because of a forcedWidth; we shouldn't change based on the scrollbar in that case.
-		if(autoResizeHorizontally){
+		if (autoResizeHorizontally) {
 			//If the desired height plus any toolbar height exceeds the height we determined, we will be showing a scroller; 
 			//expand horizontally to take that into account.  The magic number 2 fixes this method for use with our borderless
 			//windows... I'm not sure why it's needed, but it doesn't hurt anything.
-			if(desiredHeight + toolbarHeight > newWindowFrame.size.height + 2){
+			if (desiredHeight + toolbarHeight > newWindowFrame.size.height + 2) {
 				float scrollerWidth = [NSScroller scrollerWidthForControlSize:[[scrollView_contactList verticalScroller] controlSize]];
 				newWindowFrame.size.width += scrollerWidth;
 				
-				if(anchorToRightEdge){
+				if (anchorToRightEdge) {
 					newWindowFrame.origin.x -= scrollerWidth;
 				}
 			}
 		}
 		
 		//We must never request a width of 0 or OS X will completely move us off the screen
-		if(newWindowFrame.size.width == 0) newWindowFrame.size.width = 1;
+		if (newWindowFrame.size.width == 0) newWindowFrame.size.width = 1;
 
 		//Keep the window from hanging off any X screen edge (This is optional and could be removed if this annoys people)
-		if(NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
-		if(NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
+		if (NSMaxX(newWindowFrame) > NSMaxX(boundingFrame)) newWindowFrame.origin.x = NSMaxX(boundingFrame) - newWindowFrame.size.width;
+		if (NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
 
 	return(newWindowFrame);
@@ -362,16 +362,16 @@ typedef enum {
 	id		object = [notification object];
 
 	//Redisplay and resize
-	if(!object || object == contactList){
+	if (!object || object == contactList) {
 		[self setContactListRoot:[[adium contactController] contactList]];
-	}else{
+	} else {
 		NSDictionary	*userInfo = [notification userInfo];
 		AIListGroup		*containingGroup = [userInfo objectForKey:@"ContainingGroup"];
 
-		if(!containingGroup || containingGroup == contactList){
+		if (!containingGroup || containingGroup == contactList) {
 			//Reload the whole tree if the containing group is our root
 			[contactListView reloadData];
-		}else{
+		} else {
 			//We need to reload the contaning group since this notification is posted when adding and removing objects.
 			//Reloading the actual object that changed will produce no results since it may not be on the list.
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
@@ -384,7 +384,7 @@ typedef enum {
 //Update auto-resizing when object visibility changes
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inModifiedKeys containsObject:@"VisibleObjectCount"]){
+	if ([inModifiedKeys containsObject:@"VisibleObjectCount"]) {
 		//If the visible count changes, we'll need to resize our list - but we wait until the group is resorted
 		//to actually perform the resizing.  This prevents the scrollbar from flickering up and some issues with
 		//us resizing before the outlineview is aware that the view has grown taller/shorter.
@@ -401,14 +401,14 @@ typedef enum {
 
 	//The notification passes the contact whose order changed.  This means that we must reload the group containing
 	//that contact in order to correctly update the list.
-	if(!object || (object == contactList)){ //Treat a nil object as equivalent to the contact list
+	if (!object || (object == contactList)) { //Treat a nil object as equivalent to the contact list
 		[contactListView reloadData];
-	}else{
+	} else {
 		[contactListView reloadItem:object reloadChildren:YES];
 	}
 
 	//If we need a resize we can do that now that the outline view has been reloaded
-	if(needsAutoResize){
+	if (needsAutoResize) {
 		[self contactListDesiredSizeChanged];
 		needsAutoResize = NO;
 	}
@@ -424,8 +424,8 @@ typedef enum {
 	[contactListView redisplayItem:object];
 
     //Resize the contact list horizontally
-    if(autoResizeHorizontally){
-		if(([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"])){
+    if (autoResizeHorizontally) {
+		if (([keys containsObject:@"Display Name"] || [keys containsObject:@"Long Display Name"])) {
 			[self contactListDesiredSizeChanged];
 		}
     }
@@ -450,28 +450,28 @@ typedef enum {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
 	//No dropping into contacts
-    if([avaliableType isEqualToString:@"AIListObject"]){
+    if ([avaliableType isEqualToString:@"AIListObject"]) {
 		id	primaryDragItem = [dragItems objectAtIndex:0];
 		
-		if([primaryDragItem isKindOfClass:[AIListGroup class]]){
+		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
 			//Disallow dragging groups into or onto other objects
-			if(item != nil){
-				if([item isKindOfClass:[AIListGroup class]]){
+			if (item != nil) {
+				if ([item isKindOfClass:[AIListGroup class]]) {
 					[outlineView setDropItem:nil dropChildIndex:[[item containingObject] indexOfObject:item]];
-				}else{
+				} else {
 					[outlineView setDropItem:nil dropChildIndex:[[[item containingObject] containingObject] indexOfObject:[item containingObject]]];
 				}
 			}
 			
-		}else{
+		} else {
 			//Disallow dragging contacts onto anything besides a group
-			if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
+			if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
 				[outlineView setDropItem:item dropChildIndex:NSOutlineViewDropOnItemIndex];
 			}
 			
 		}
 		
-		if(index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]){
+		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
 			return(NSDragOperationCopy);
 		}
 	}
@@ -484,21 +484,21 @@ typedef enum {
 {
     NSString	*availableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
 	
-    if([availableType isEqualToString:@"AIListObject"]){
+    if ([availableType isEqualToString:@"AIListObject"]) {
 		//The tree root is not associated with our root contact list group, so we need to make that association here
-		if(item == nil) item = contactList;
+		if (item == nil) item = contactList;
 		
 		//Move the list object to its new location
-		if([item isKindOfClass:[AIListGroup class]]){
+		if ([item isKindOfClass:[AIListGroup class]]) {
 			[[adium contactController] moveListObjects:dragItems toGroup:item index:index];
 			
-		}else if ([item isKindOfClass:[AIListContact class]]){
+		} else if ([item isKindOfClass:[AIListContact class]]) {
 			NSString	*promptTitle;
 			
 			//Appropriate prompt
-			if([dragItems count] == 1){
+			if ([dragItems count] == 1) {
 				promptTitle = [NSString stringWithFormat:@"Combine %@ and %@?", [[dragItems objectAtIndex:0] displayName], [item displayName]];
-			}else{
+			} else {
 				promptTitle = [NSString stringWithFormat:@"Combine these contacts with %@?",[item displayName]];
 			}
 		
@@ -528,7 +528,7 @@ typedef enum {
 {
 	NSDictionary	*context = (NSDictionary *)contextInfo;
 
-	if(returnCode == 1){
+	if (returnCode == 1) {
 		AIListObject	*item = [context objectForKey:@"item"];
 		NSArray			*draggedItems = [context objectForKey:@"dragitems"];
 		AIMetaContact	*metaContact;

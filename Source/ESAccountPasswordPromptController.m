@@ -43,7 +43,7 @@
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-    if((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
+    if ((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
 		account = [inAccount retain];
 		[self retain];
 	}
@@ -81,9 +81,9 @@
 //Save a password; pass nil to forget the password
 - (void)savePassword:(NSString *)password
 {
-	if (password){
+	if (password) {
 		[[adium accountController] setPassword:password forAccount:account];	
-	}else{
+	} else {
 		[[adium accountController] forgetPasswordForAccount:account];	
 	}
 }

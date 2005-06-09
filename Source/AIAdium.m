@@ -78,7 +78,7 @@ static NSString	*prefsCategory;
 //Init
 - (id)init
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		[AIObject _setSharedAdiumInstance:self];
 	}
 
@@ -97,7 +97,7 @@ static NSString	*prefsCategory;
 	static NSString *_preferencesFolderPath = nil;
 
     //Determine the preferences path if neccessary
-	if(!_preferencesFolderPath){
+	if (!_preferencesFolderPath) {
 		_preferencesFolderPath = [[[[[NSBundle mainBundle] infoDictionary] objectForKey:PORTABLE_ADIUM_KEY] stringByExpandingTildeInPath] retain];
 		if (!_preferencesFolderPath)
 			_preferencesFolderPath = [[ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByExpandingTildeInPath] retain];
@@ -171,7 +171,7 @@ static NSString	*prefsCategory;
 //Return the shared Adium notification center
 - (NSNotificationCenter *)notificationCenter
 {
-    if(notificationCenter == nil){
+    if (notificationCenter == nil) {
         notificationCenter = [[NSNotificationCenter alloc] init];
     }
             
@@ -256,7 +256,7 @@ static NSString	*prefsCategory;
 	[self openAppropriatePreferencesIfNeeded];
 
 	//If no accounts are setup, open the account prefs
-	if([[accountController accounts] count] == 0){
+	if ([[accountController accounts] count] == 0) {
 		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
 	}
 
@@ -362,25 +362,25 @@ static NSString	*prefsCategory;
     [advancedPrefsName release]; advancedPrefsName = nil;
 	
     //Specify a file extension and a human-readable description of what the files of this type do
-    if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame){
+    if ([extension caseInsensitiveCompare:@"AdiumPlugin"] == NSOrderedSame) {
         destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Plugins"];
         //Plugins haven't been loaded yet if the application isn't done loading, so only request a restart if it has finished loading already 
         requiresRestart = completedApplicationLoad;
         fileDescription = AILocalizedString(@"Adium plugin",nil);
 
-    } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame){
+    } else if ([extension caseInsensitiveCompare:@"AdiumIcon"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Dock Icons"];
         fileDescription = AILocalizedString(@"dock icon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 
-	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Sounds"];
 		fileDescription = AILocalizedString(@"sound set",nil);
 		prefsButton = AILocalizedString(@"Open Event Prefs",nil);
 		prefsCategory = @"events";
 
-	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"AdiumEmoticonset"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Emoticons"];
 		fileDescription = AILocalizedString(@"emoticon set",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
@@ -390,44 +390,44 @@ static NSString	*prefsCategory;
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Scripts"];
 		fileDescription = AILocalizedString(@"AppleScript set",nil);
 		
-	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"AdiumMessageStyle"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Message Styles"];
 		fileDescription = AILocalizedString(@"message style",nil);
 		prefsButton = AILocalizedString(@"Open Message Prefs",nil);
 		prefsCategory = @"messages";
-	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"ListLayout"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list layout",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
-	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"ListTheme"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Contact List"];
 		fileDescription = AILocalizedString(@"contact list theme",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
-	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"AdiumServiceIcons"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Service Icons"];
 		fileDescription = AILocalizedString(@"service icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 		
-	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame){
+	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
 		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
 		fileDescription = AILocalizedString(@"status icons",nil);
 		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
 		prefsCategory = @"appearance";
 	}
 
-    if (destination){
+    if (destination) {
         NSString    *destinationFilePath = [destination stringByAppendingPathComponent:[filename lastPathComponent]];
         
         NSString	*alertTitle = nil;
         NSString	*alertMsg = nil;
 		NSString	*format;
 		
-		if([filename isEqualToString:destinationFilePath]) {
+		if ([filename isEqualToString:destinationFilePath]) {
 			// Don't copy the file if it's already in the right place!!
 			alertTitle= AILocalizedString(@"Installation Successful","Title of installation successful window");
 			
@@ -448,7 +448,7 @@ static NSString	*prefsCategory;
 			//Perform the copy and display an alert informing the user of its success or failure
 			if ([[NSFileManager defaultManager] copyPath:filename 
 												  toPath:destinationFilePath 
-												 handler:nil]){
+												 handler:nil]) {
 				
 				alertTitle = AILocalizedString(@"Installation Successful","Title of installation successful window");
 				alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@ was successful.",
@@ -456,12 +456,12 @@ static NSString	*prefsCategory;
 					fileDescription,
 					[[filename lastPathComponent] stringByDeletingPathExtension]];
 				
-				if (requiresRestart){
+				if (requiresRestart) {
 					alertMsg = [alertMsg stringByAppendingString:AILocalizedString(@" Please restart Adium.",nil)];
 				}
 				
 				success = YES;
-			}else{
+			} else {
 				alertTitle = AILocalizedString(@"Installation Failed","Title of installation failed window");
 				alertMsg = [NSString stringWithFormat:AILocalizedString(@"Installation of the %@ %@ was unsuccessful.",
 																		"Installation failed sentence, like 'Installation of the message style Fiat was unsuccessful.'."),
@@ -476,20 +476,20 @@ static NSString	*prefsCategory;
         buttonPressed = NSRunInformationalAlertPanel(alertTitle,alertMsg,nil,prefsButton,nil);
 		
 		// User clicked the "open prefs" button
-		if(buttonPressed == NSAlertAlternateReturn){
+		if (buttonPressed == NSAlertAlternateReturn) {
 			//If we're done loading the app, open the prefs now; if not, it'll be done once the load is finished
 			//so the controllers and plugins have had a chance to initialize
-			if(completedApplicationLoad) {
+			if (completedApplicationLoad) {
 				[self openAppropriatePreferencesIfNeeded];
 			}
-		}else{
+		} else {
 			//If the user didn't press the "open prefs" button, clear the pref opening information
 			[prefsCategory release]; prefsCategory = nil;
 			[advancedPrefsName release]; advancedPrefsName = nil;
 		}
 		
-    }else{
-		if (!errorMessage){
+    } else {
+		if (!errorMessage) {
 			errorMessage = AILocalizedString(@"An error occurred while installing the X(tra).",nil);
 		}
 		
@@ -513,10 +513,10 @@ static NSString	*prefsCategory;
 
 - (void)openAppropriatePreferencesIfNeeded
 {
-	if (prefsCategory){
-		if([prefsCategory isEqualToString:@"advanced"]){
+	if (prefsCategory) {
+		if ([prefsCategory isEqualToString:@"advanced"]) {
 			[preferenceController openPreferencesToAdvancedPane:advancedPrefsName];
-		}else{
+		} else {
 			[preferenceController openPreferencesToCategoryWithIdentifier:prefsCategory];
 		}
 		
@@ -545,8 +545,8 @@ static NSString	*prefsCategory;
 	 If the targetPath doesn't exist, create it, as this method was called to ensure that it exists
 	 for creating files in the user domain.
 	 */
-    if([existingResourcePaths indexOfObject:targetPath] == NSNotFound) {
-        if(![defaultManager createDirectoryAtPath:targetPath attributes:nil]) {
+    if ([existingResourcePaths indexOfObject:targetPath] == NSNotFound) {
+        if (![defaultManager createDirectoryAtPath:targetPath attributes:nil]) {
 			BOOL error;
 			
 			//If the directory could not be created, there may be a file in the way. Death to file.
@@ -554,7 +554,7 @@ static NSString	*prefsCategory;
 
 			if (!error) error = ![defaultManager createDirectoryAtPath:targetPath attributes:nil];
 
-			if (error){
+			if (error) {
 				targetPath = nil;
 				
 				int result;
@@ -563,7 +563,7 @@ static NSString	*prefsCategory;
 												 AILocalizedString(@"OK",nil), 
 												 AILocalizedString(@"Launch Disk Utility",nil), 
 												 nil);
-				if (result == NSAlertAlternateReturn){
+				if (result == NSAlertAlternateReturn) {
 					[[NSWorkspace sharedWorkspace] launchApplication:@"Disk Utility"];
 				}
 			}
@@ -608,22 +608,22 @@ static NSString	*prefsCategory;
 	searchPathEnumerator = [librarySearchPaths objectEnumerator];
 
 	//Copy each discovered path into the pathArray after adding our subfolder path
-	while((path = [searchPathEnumerator nextObject])){
+	while ((path = [searchPathEnumerator nextObject])) {
 		NSString	*fullPath;
 		
 		fullPath = [path stringByAppendingPathComponent:adiumFolderName];
-		if(([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
-		   (isDir)){
+		if (([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
+		   (isDir)) {
 			
 			[pathArray addObject:fullPath];
 		}
 	}
 	
 	//Add the path to the resource in Adium's bundle
-	if(name){
+	if (name) {
 		path = [[[[NSBundle mainBundle] resourcePath] stringByAppendingPathComponent:name] stringByExpandingTildeInPath];
-		if(([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
-		   (isDir)){
+		if (([defaultManager fileExistsAtPath:path isDirectory:&isDir]) &&
+		   (isDir)) {
 			[pathArray addObject:path];
 		}
 	}
@@ -681,7 +681,7 @@ static NSString	*prefsCategory;
 {
 	static NSString *cachesPath = nil;
 
-	if(!cachesPath){
+	if (!cachesPath) {
 		NSString		*generalAdiumCachesPath;
 		NSFileManager	*defaultManager = [NSFileManager defaultManager];
 
@@ -689,18 +689,18 @@ static NSString	*prefsCategory;
 		cachesPath = [[generalAdiumCachesPath stringByAppendingPathComponent:[[self loginController] currentUser]] retain];
 
 		//Ensure our cache path exists
-		if([defaultManager createDirectoriesForPath:cachesPath]){
+		if ([defaultManager createDirectoriesForPath:cachesPath]) {
 			//If we have to make directories, try to move old cache files into the new directory
 			NSEnumerator	*enumerator;
 			NSString		*filename;
 			BOOL			isDir;
 
 			enumerator = [[defaultManager directoryContentsAtPath:generalAdiumCachesPath] objectEnumerator];
-			while((filename = [enumerator nextObject])){
+			while ((filename = [enumerator nextObject])) {
 				NSString	*fullPath = [generalAdiumCachesPath stringByAppendingPathComponent:filename];
 				
-				if(([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
-				   (!isDir)){
+				if (([defaultManager fileExistsAtPath:fullPath isDirectory:&isDir]) &&
+				   (!isDir)) {
 					[defaultManager movePath:fullPath
 									  toPath:[cachesPath stringByAppendingPathComponent:filename]
 									 handler:nil];
@@ -720,9 +720,9 @@ static NSString	*prefsCategory;
     NSString		*resourcePath;
 
 	//Search all our resource paths for the requested pack
-    while((resourcePath = [enumerator nextObject])){
+    while ((resourcePath = [enumerator nextObject])) {
 		NSString *packPath = [resourcePath stringByAppendingPathComponent:packFileName];
-		if([fileManager fileExistsAtPath:packPath]) return([packPath stringByExpandingTildeInPath]);
+		if ([fileManager fileExistsAtPath:packPath]) return([packPath stringByExpandingTildeInPath]);
 	}
 
     return(nil);	
@@ -748,12 +748,12 @@ static NSString	*prefsCategory;
 	spaces1 = [@"" stringByPaddingToLength:(length / 2)
 								withString:@" "
 						   startingAtIndex:0];	
-	if (length % 2 == 0){
+	if (length % 2 == 0) {
 		//An even length is one space too much
 		spaces2 = [@"" stringByPaddingToLength:(length / 2) - 1
 									withString:@" "
 							   startingAtIndex:0];			
-	}else{
+	} else {
 		//An odd length is okay
 		spaces2 = spaces1;
 	}
@@ -773,23 +773,23 @@ static NSString	*prefsCategory;
 	
 	lastLaunchedVersion = [lastLaunchedVersionString floatValue];	
 
-	if (!lastLaunchedVersion || !currentVersion || currentVersion > lastLaunchedVersion){
+	if (!lastLaunchedVersion || !currentVersion || currentVersion > lastLaunchedVersion) {
 		
-		if (lastLaunchedVersion){
+		if (lastLaunchedVersion) {
 			
 			NSNumber		*lastLaunchedVersionNumber = [NSNumber numberWithFloat:lastLaunchedVersion];
 			
 			versionUpgradeDict = [NSDictionary dictionaryWithObjectsAndKeys:lastLaunchedVersionNumber, @"lastLaunchedVersion",
 				currentVersionNumber,@"currentVersion",
 				nil];
-		}else{
+		} else {
 			versionUpgradeDict = [NSDictionary dictionaryWithObject:currentVersionNumber
 															 forKey:@"currentVersion"];			
 		}
 	}
 	
 	//Remember that we have now run in this version.
-	if(versionUpgradeDict){
+	if (versionUpgradeDict) {
 		[[self preferenceController] setPreference:currentVersionString
 											forKey:KEY_LAST_VERSION_LAUNCHED
 											 group:PREF_GROUP_GENERAL];
@@ -802,21 +802,21 @@ static NSString	*prefsCategory;
 {
 	NSString	*returnString = nil;
 	
-	if ([inString isEqualToString:@"0.7b1"]){
+	if ([inString isEqualToString:@"0.7b1"]) {
 		returnString = @"0.68";
-	}else if ([inString isEqualToString:@"0.7b2"]){
+	} else if ([inString isEqualToString:@"0.7b2"]) {
 		returnString = @"0.681";
-	}else if ([inString isEqualToString:@"0.7b3"]){
+	} else if ([inString isEqualToString:@"0.7b3"]) {
 		returnString = @"0.682";
-	}else if ([inString isEqualToString:@"0.7b4"]){
+	} else if ([inString isEqualToString:@"0.7b4"]) {
 		returnString = @"0.683";
-	}else if ([inString isEqualToString:@"0.7b5"]){
+	} else if ([inString isEqualToString:@"0.7b5"]) {
 		returnString = @"0.684";
-	}else if ([inString isEqualToString:@"0.7b6"]){
+	} else if ([inString isEqualToString:@"0.7b6"]) {
 		returnString = @"0.685";
-	}else if ([inString isEqualToString:@"0.7b7"]){
+	} else if ([inString isEqualToString:@"0.7b7"]) {
 		returnString = @"0.686";
-	}else if ([inString isEqualToString:@"0.7b8"]){
+	} else if ([inString isEqualToString:@"0.7b8"]) {
 		returnString = @"0.687";
 	}
 	
@@ -827,8 +827,8 @@ static NSString	*prefsCategory;
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
 	BOOL handleKey = NO;
 	
-	if([key isEqualToString:@"applescriptabilityController"] || 
-	   [key isEqualToString:@"interfaceController"] ){
+	if ([key isEqualToString:@"applescriptabilityController"] || 
+	   [key isEqualToString:@"interfaceController"] ) {
 		handleKey = YES;
 		
 	}

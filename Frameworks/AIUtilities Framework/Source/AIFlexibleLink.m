@@ -20,7 +20,7 @@
 
 - (id)initWithTrackingRect:(NSRect)inTrackingRect url:(NSString *)inURL title:(NSString *)inTitle
 {
-	if((self = [super init])) {
+	if ((self = [super init])) {
 		trackingRect = inTrackingRect;
 		url = [inURL retain];
 		title = [inTitle retain];

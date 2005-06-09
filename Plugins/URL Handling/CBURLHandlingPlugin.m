@@ -83,7 +83,7 @@
 	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
 
 	//Set the name and creator codes
-	if (Spec.fCreator != 'AdIM'){
+	if (Spec.fCreator != 'AdIM') {
 		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
 		Spec.fCreator = 'AdIM';
 
@@ -97,12 +97,12 @@
 	NSString *string = [[event descriptorAtIndex:1] stringValue];
 	NSURL *url = [NSURL URLWithString:string];
 
-	if(url) {
+	if (url) {
 		NSString	*scheme, *newScheme;
 		NSString	*service;
 
 		//make sure we have the // in ://, as it simplifies later processing.
-		if(![[url resourceSpecifier] hasPrefix:@"//"]) {
+		if (![[url resourceSpecifier] hasPrefix:@"//"]) {
 			string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
 			url = [NSURL URLWithString:string];
 		}
@@ -111,21 +111,21 @@
 
 		//map schemes to common aliases (like jabber: for xmpp:).
 		static NSDictionary *schemeMappingDict = nil;
-		if(!schemeMappingDict) {
+		if (!schemeMappingDict) {
 			schemeMappingDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 				@"ymsgr", @"yahoo",
 				@"xmpp", @"jabber",
 				nil];
 		}
 		newScheme = [schemeMappingDict objectForKey:scheme];
-		if(newScheme && ![newScheme isEqualToString:scheme]) {
+		if (newScheme && ![newScheme isEqualToString:scheme]) {
 			scheme = newScheme;
 			string = [NSString stringWithFormat:@"%@:%@", scheme, [url resourceSpecifier]];
 			url = [NSURL URLWithString:string];
 		}
 
 		static NSDictionary	*schemeToServiceDict = nil;
-		if(!schemeToServiceDict) {
+		if (!schemeToServiceDict) {
 			schemeToServiceDict = [[NSDictionary alloc] initWithObjectsAndKeys:
 				@"AIM",    @"aim",
 				@"Yahoo!", @"ymsgr",
@@ -135,50 +135,50 @@
 				nil];
 		}
 		
-		if((service = [schemeToServiceDict objectForKey:scheme])){
+		if ((service = [schemeToServiceDict objectForKey:scheme])) {
 			NSString *host = [url host];
-			if([host caseInsensitiveCompare:@"goim"] == NSOrderedSame){
+			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
 				// aim://goim?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] stringByReplacingString:@"+" withString:@" "] compactedString];
-				if (name){
+				if (name) {
 					[self _openChatToContactWithName:name
 										   onService:service 
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
 				
-			}else if ([host caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
+			} else if ([host caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
 				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:@" "] stringByDecodingURLEscapes] compactedString];				
 				[[adium contactController] requestAddContactWithUID:name
 															service:[[adium accountController] firstServiceWithServiceID:service]];
 
-			}else if([host caseInsensitiveCompare:@"sendim"] == NSOrderedSame){
+			} else if ([host caseInsensitiveCompare:@"sendim"] == NSOrderedSame) {
 				// ymsgr://sendim?tekjew
 				NSString *name = [[[url query] stringByDecodingURLEscapes] compactedString];
 				[self _openChatToContactWithName:name
 									   onService:service
 									 withMessage:nil];
 				
-			}else if([url queryArgumentForKey:@"openChatToScreenName"]){
+			} else if ([url queryArgumentForKey:@"openChatToScreenName"]) {
 				// aim://openChatToScreenname?tekjew  [?]
 				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByReplacingString:@"+" withString:@" "] compactedString];
 				
-				if (name){
+				if (name) {
 					[self _openChatToContactWithName:name
 										   onService:service
 										 withMessage:nil];
 				}
-			}else{
+			} else {
 				//Default to opening the host as a name.
 
 				NSString	*user = [url user];
 				NSString	*host = [url host];
 				NSString	*name;
-				if(user && [user length]){
+				if (user && [user length]) {
 					// jabber://tekjew@jabber.org
 					// msn://jdoe@hotmail.com
 					name = [NSString stringWithFormat:@"%@@%@",[url user],[url host]];
-				}else{
+				} else {
 					// aim://tekjew
 					name = host;
 				}
@@ -188,7 +188,7 @@
 									 withMessage:nil];
 			}
 			
-		}else if ([scheme isEqualToString:@"adiumxtra"]){
+		} else if ([scheme isEqualToString:@"adiumxtra"]) {
 			//Installs an adium extra
 			// adiumxtra://www.adiumxtras.com/path/to/xtra.zip
 
@@ -204,13 +204,13 @@
 	contact = [[adium contactController] preferredContactWithUID:UID
 													andServiceID:serviceID 
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
-	if(contact){
+	if (contact) {
 		//Open the chat and set it as active
 		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
 		
 		//Insert the message text as if the user had typed it after opening the chat
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		if(message && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+		if (message && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]) {
 			[responder insertText:message];
 		}
 	}

@@ -27,7 +27,7 @@
 //Init
 - (id)init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
 		[[adium contactController] addContactInfoPane:self];
 	}

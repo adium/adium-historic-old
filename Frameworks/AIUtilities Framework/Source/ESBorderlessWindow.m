@@ -46,13 +46,13 @@ static	NSRect	windowFrame;
 { 
     BOOL shouldClose = YES;
     
-	if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowShouldClose:)]){
+	if ([self delegate] && [[self delegate] respondsToSelector:@selector(windowShouldClose:)]) {
         shouldClose = [(id)[self delegate] windowShouldClose:nil];
-    } else if ([self respondsToSelector:@selector(windowShouldClose:)]){ 
+    } else if ([self respondsToSelector:@selector(windowShouldClose:)]) { 
         shouldClose = [(id)self windowShouldClose:nil];
 	}
 	
-    if (shouldClose){
+    if (shouldClose) {
         [self close];
 	}
 }
@@ -76,7 +76,7 @@ static	NSRect	windowFrame;
 		NSRect  screenFrame = [currentScreen visibleFrame];
 		if (currentScreen == [[NSScreen screens] objectAtIndex:0]) {
 
-			if((newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ){
+			if ((newOrigin.y+windowFrame.size.height) > (screenFrame.origin.y+screenFrame.size.height) ) {
 				
 				newOrigin.y = screenFrame.origin.y + (screenFrame.size.height-windowFrame.size.height);
 			}
@@ -91,7 +91,7 @@ static	NSRect	windowFrame;
 		newWindowFrame.origin = newOrigin;
 
 		//If the user is not pressing shift, attempt to dock this window the the visible frame first, and then to the screen frame
-		if (![theEvent shiftKey]){
+		if (![theEvent shiftKey]) {
 			[self dockWindowFrame:&newWindowFrame toScreenFrame:[currentScreen visibleFrame]];
 			[self dockWindowFrame:&newWindowFrame toScreenFrame:[currentScreen frame]];
 		}
@@ -125,25 +125,25 @@ static	NSRect	windowFrame;
 	BOOL	changed = NO;
 	
 	//Left
-	if((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+	if ((abs(NSMinX((*windowFrame)) - NSMinX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
 		(*windowFrame).origin.x = screenFrame.origin.x;
 		changed = YES;
 	}
 	
 	//Bottom
-	if((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+	if ((abs(NSMinY(*windowFrame) - NSMinY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
 		(*windowFrame).origin.y = screenFrame.origin.y;
 		changed = YES;
 	}
 	
 	//Right
-	if((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+	if ((abs(NSMaxX(*windowFrame) - NSMaxX(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
 		(*windowFrame).origin.x -= NSMaxX(*windowFrame) - NSMaxX(screenFrame);
 		changed = YES;
 	}
 	
 	//Top
-	if((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)){
+	if ((abs(NSMaxY(*windowFrame) - NSMaxY(screenFrame)) < BORDERLESS_WINDOW_DOCKING_DISTANCE)) {
 		(*windowFrame).origin.y -= NSMaxY(*windowFrame) - NSMaxY(screenFrame);
 		changed = YES;
 	}

@@ -32,7 +32,7 @@
  */
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		components = [[NSMutableDictionary alloc] init];
 	}
 
@@ -64,10 +64,10 @@
 	NSEnumerator *enumerator = [componentArray objectEnumerator];
 	NSString	 *className;
 
-	while((className = [enumerator nextObject])){
+	while ((className = [enumerator nextObject])) {
 		Class class;
 
-		if(className && (class = NSClassFromString(className))){
+		if (className && (class = NSClassFromString(className))) {
 			id <AIPlugin>	object = [[class alloc] init];
 
 			NSAssert1(object, @"Failed to load %@", className);
@@ -96,7 +96,7 @@
 	NSEnumerator	*enumerator = [components objectEnumerator];
 	id <AIPlugin>	plugin;
 
-	while((plugin = [enumerator nextObject])) {
+	while ((plugin = [enumerator nextObject])) {
 		[[[AIObject sharedAdiumInstance] notificationCenter] removeObserver:plugin];
 		[[NSNotificationCenter defaultCenter] removeObserver:plugin];
 		[plugin uninstallPlugin];

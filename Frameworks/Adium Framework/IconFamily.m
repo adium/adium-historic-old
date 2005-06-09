@@ -77,7 +77,7 @@
 // The proper way to do this is to simply allocate a zero-sized handle (not to be confused with an empty handle) and assign it to hIconFamily.  This technique works on Mac OS X 10.2 as well as on 10.0.x and 10.1.x.  Our previous technique of allocating an IconFamily struct with a resourceSize of 0 no longer works as of Mac OS X 10.2.
 - init
 {
-    if((self = [super init]))
+    if ((self = [super init]))
 	{
         hIconFamily = (IconFamilyHandle) NewHandle( 0 );
         if (hIconFamily == NULL) {
@@ -144,7 +144,7 @@
             hIconFamily = NULL;
         }
 
-        if( ![path getFSSpec:&fileSpec createFileIfNecessary:NO] )
+        if ( ![path getFSSpec:&fileSpec createFileIfNecessary:NO] )
         {
             [self autorelease];
             return nil;
@@ -572,7 +572,7 @@
     // Remove the file's existing kCustomIconResource of type kIconFamilyType
     // (if any).
     hExistingCustomIcon = GetResource( kIconFamilyType, kCustomIconResource );
-    if( hExistingCustomIcon )
+    if ( hExistingCustomIcon )
         RemoveResource( hExistingCustomIcon );
     
     // Now add our icon family as the file's new custom icon.
@@ -583,7 +583,7 @@
         return NO;
     }
     
-    if( compat )
+    if ( compat )
     {
         [self addResourceType:kLarge8BitData asResID:kCustomIconResource];
         [self addResourceType:kLarge1BitMask asResID:kCustomIconResource];
@@ -649,7 +649,7 @@
     // Remove the file's existing kCustomIconResource of type kIconFamilyType
     // (if any).
     hExistingCustomIcon = GetResource( kIconFamilyType, kCustomIconResource );
-    if( hExistingCustomIcon )
+    if ( hExistingCustomIcon )
         RemoveResource( hExistingCustomIcon );
 
     // Close the file's resource fork, flushing the resource map out to disk.
@@ -701,22 +701,22 @@
 
     exists = [fm fileExistsAtPath:path isDirectory:&isDir];
 
-    if( !isDir || !exists )
+    if ( !isDir || !exists )
         return NO;
 
-    if( [fm fileExistsAtPath:iconrPath] )
+    if ( [fm fileExistsAtPath:iconrPath] )
     {
-        if( ![fm removeFileAtPath:iconrPath handler:nil] )
+        if ( ![fm removeFileAtPath:iconrPath handler:nil] )
             return NO;
     }
 
     if (![iconrPath getFSSpec:&targetFileFSSpec createFileIfNecessary:YES])
         return NO;
 
-    if( ![path getFSSpec:&targetFolderFSSpec createFileIfNecessary:YES] )
+    if ( ![path getFSSpec:&targetFolderFSSpec createFileIfNecessary:YES] )
         return NO;
 
-    if( ![path getFSRef:&targetFolderFSRef createFileIfNecessary:NO] )
+    if ( ![path getFSRef:&targetFolderFSRef createFileIfNecessary:NO] )
         return NO;
 
     // Make sure the file has a resource fork that we can open.  (Although
@@ -746,7 +746,7 @@
     // Remove the file's existing kCustomIconResource of type kIconFamilyType
     // (if any).
     hExistingCustomIcon = GetResource( kIconFamilyType, kCustomIconResource );
-    if( hExistingCustomIcon )
+    if ( hExistingCustomIcon )
         RemoveResource( hExistingCustomIcon );
 
     // Now add our icon family as the file's new custom icon.
@@ -758,7 +758,7 @@
         return NO;
     }
 
-    if( compat )
+    if ( compat )
     {
         [self addResourceType:kLarge8BitData asResID:kCustomIconResource];
         [self addResourceType:kLarge1BitMask asResID:kCustomIconResource];
@@ -785,7 +785,7 @@
     result = FSGetCatalogInfo( &targetFolderFSRef,
                                kFSCatInfoFinderInfo,
                                &catInfo, nil, nil, nil);
-    if( result != noErr )
+    if ( result != noErr )
         return NO;
 
     ((DInfo*)catInfo.finderInfo)->frFlags = ( ((DInfo*)catInfo.finderInfo)->frFlags | kHasCustomIcon ) & ~kHasBeenInited;
@@ -793,7 +793,7 @@
     FSSetCatalogInfo( &targetFolderFSRef,
                       kFSCatInfoFinderInfo,
                       &catInfo);
-    if( result != noErr )
+    if ( result != noErr )
         return NO;
 
     // Notify the system that the target directory has changed, to give Finder the chance to find out about its new custom icon.
@@ -883,7 +883,7 @@
 
 #if 1   // This is the way that works.  It gives the newImage an NSCachedImageRep.
 	
-	if(iconWidth != 0){
+	if (iconWidth != 0) {
 		// Create a new image the size of the icon, and clear it to transparent.
 		newImage = [[NSImage alloc] initWithSize:NSMakeSize(iconWidth,iconWidth)];
 		[newImage lockFocus];
@@ -1337,7 +1337,7 @@
 
     err = GetIconFamilyData( hIconFamily, type, hIconRes );
 
-    if( !GetHandleSize(hIconRes) || err != noErr )
+    if ( !GetHandleSize(hIconRes) || err != noErr )
         return NO;
 
     AddResource( hIconRes, type, resID, "\p" );
@@ -1367,9 +1367,9 @@
 
     GetScrapFlavorInfoList(scrap, &numInfos, scrapInfos);
 
-    for( i=0; i<numInfos; i++ )
+    for ( i=0; i<numInfos; i++ )
     {
-        if( scrapInfos[i].flavorType == 'icns' )
+        if ( scrapInfos[i].flavorType == 'icns' )
             canInit = YES;
     }
 
@@ -1389,7 +1389,7 @@
     Size amountMem = 0;
     ScrapRef scrap;
 
-    if((self = [super init]))
+    if ((self = [super init]))
     {
         GetCurrentScrap(&scrap);
 

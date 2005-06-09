@@ -31,7 +31,7 @@ static AICrashController *sharedCrashController = nil;
 
 + (void)enableCrashCatching
 {
-	if(!sharedCrashController){
+	if (!sharedCrashController) {
 		sharedCrashController = [[AICrashController alloc] init];
 	}
 }
@@ -39,7 +39,7 @@ static AICrashController *sharedCrashController = nil;
 //Init
 - (id)init
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		//Remove any existing crash logs
 		[[NSFileManager defaultManager] trashFileAtPath:CRASHES_PATH];
 

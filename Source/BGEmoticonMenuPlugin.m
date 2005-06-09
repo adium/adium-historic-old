@@ -121,7 +121,7 @@
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
 	
-	if([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]){
+	if ([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]) {
 		NSMenu		*theEmoticonMenu = [self emoticonMenu];
 
 		//Add menu to view
@@ -143,7 +143,7 @@
 - (void)toolbarDidRemoveItem:(NSNotification *)notification
 {
 	NSToolbarItem	*item = [[notification userInfo] objectForKey:@"item"];
-	if([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]){
+	if ([[item itemIdentifier] isEqualToString:TOOLBAR_EMOTICON_IDENTIFIER]) {
 		[toolbarItems removeObject:item];
 	}
 }
@@ -201,14 +201,14 @@
 {
 	NSMenu	*emoticonMenuCopy;
 	
-	if(!emoticonMenu){
+	if (!emoticonMenu) {
 		NSArray		*emoticonPacks = [[adium emoticonController] activeEmoticonPacks];
 
-		if([emoticonPacks count] == 1){
+		if ([emoticonPacks count] == 1) {
 			//If there is only 1 emoticon pack loaded, do not create submenus
 			emoticonMenu = [[self flatEmoticonMenuForPack:[emoticonPacks objectAtIndex:0]] retain];
 
-		}else{
+		} else {
 			NSEnumerator	*packEnum = [emoticonPacks objectEnumerator];
 			AIEmoticonPack  *pack;
 			NSMenuItem 		*packItem;
@@ -216,7 +216,7 @@
 			emoticonMenu = [[NSMenu alloc] initWithTitle:@""];
 			
 			[emoticonMenu setMenuChangedMessagesEnabled:NO];
-			while((pack = [packEnum nextObject])){
+			while ((pack = [packEnum nextObject])) {
 				packItem = [[NSMenuItem alloc] initWithTitle:[pack name] action:nil keyEquivalent:@""];
 				[packItem setSubmenu:[self flatEmoticonMenuForPack:pack]]; 
 				[emoticonMenu addItem:packItem];
@@ -228,7 +228,7 @@
 	
 	//Always return a copy so we can freely modify the menu's item array without messing up our cached copy
 	emoticonMenuCopy = [emoticonMenu copy];
-	if([emoticonMenuCopy respondsToSelector:@selector(setDelegate:)]){
+	if ([emoticonMenuCopy respondsToSelector:@selector(setDelegate:)]) {
 		[emoticonMenuCopy setDelegate:self];
 	}
 	
@@ -249,8 +249,8 @@
 	[packMenu setMenuChangedMessagesEnabled:NO];
 	
     //loop through each emoticon and add a menu item for each
-    while((anEmoticon = [emoteEnum nextObject])){
-        if([anEmoticon isEnabled] == YES){
+    while ((anEmoticon = [emoteEnum nextObject])) {
+        if ([anEmoticon isEnabled] == YES) {
             NSMenuItem *newItem = [[NSMenuItem alloc] initWithTitle:[anEmoticon name]
                                                              target:self
                                                              action:@selector(insertEmoticon:)
@@ -282,13 +282,13 @@
  */
 - (void)insertEmoticon:(id)sender
 {
-	if([sender isKindOfClass:[NSMenuItem class]]){
+	if ([sender isKindOfClass:[NSMenuItem class]]) {
 		NSString *emoString = [[[sender representedObject] textEquivalents] objectAtIndex:0];
 		
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		if(emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]){
+		if (emoString && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]) {
 			NSRange tmpRange = [(NSTextView *)responder selectedRange];
-			if(0 != tmpRange.length){
+			if (0 != tmpRange.length) {
 				[(NSTextView *)responder setSelectedRange:NSMakeRange((tmpRange.location + tmpRange.length),0)];
 			}
 			[responder insertText:emoString];
@@ -311,18 +311,18 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if(menuItem == quickMenuItem || menuItem == quickContextualMenuItem){
+	if (menuItem == quickMenuItem || menuItem == quickContextualMenuItem) {
 		BOOL	haveEmoticons = ([[[adium emoticonController] activeEmoticonPacks] count] != 0);
 
 		//Disable the main emoticon menu items if no emoticons are available
 		return(haveEmoticons);
 		
-	}else{
+	} else {
 		//Disable the emoticon menu items if we're not in a text field
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		if(responder && [responder isKindOfClass:[NSText class]]){
+		if (responder && [responder isKindOfClass:[NSText class]]) {
 			return([(NSText *)responder isEditable]);
-		}else{
+		} else {
 			return(NO);
 		}
 		
@@ -349,7 +349,7 @@
 - (void)menuNeedsUpdate:(NSMenu *)inMenu
 {	
 	//Build the emoticon menus if necessary
-	if(needToRebuildMenus){
+	if (needToRebuildMenus) {
 		NSMenu			*theEmoticonMenu, *tempMenu;
 		NSMenuItem		*menuItem;
 		NSEnumerator	*enumerator;
@@ -362,31 +362,31 @@
 		 * submenu isn't the one for which we are currently updating. One of them WILL be identical to inMenu, as
 		 * that's why we got here (the delegate call) in the first place.  For that one, we'll remove inMenu's items
 		 * and then add the items from emoticonMenu. */
-		if([quickMenuItem submenu] != inMenu){
+		if ([quickMenuItem submenu] != inMenu) {
 			tempMenu = [theEmoticonMenu copy];
 			[quickMenuItem setSubmenu:tempMenu];
-			if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+			if ([tempMenu respondsToSelector:@selector(setDelegate:)]) {
 				[tempMenu setDelegate:self];
 			}
 			[tempMenu release];
 		}
 		
-		if([quickContextualMenuItem submenu] != inMenu){
+		if ([quickContextualMenuItem submenu] != inMenu) {
 			tempMenu = [theEmoticonMenu copy];
 			[quickContextualMenuItem setSubmenu:tempMenu];
-			if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+			if ([tempMenu respondsToSelector:@selector(setDelegate:)]) {
 				[tempMenu setDelegate:self];
 			}
 			[tempMenu release];
 		}
 		
 		enumerator = [toolbarItems objectEnumerator];
-		while((toolbarItem = [enumerator nextObject])){
-			if([[toolbarItem view] menu] != inMenu){
+		while ((toolbarItem = [enumerator nextObject])) {
+			if ([[toolbarItem view] menu] != inMenu) {
 				//We can use the same menu for both
 				tempMenu = [theEmoticonMenu copy];
 
-				if([tempMenu respondsToSelector:@selector(setDelegate:)]){
+				if ([tempMenu respondsToSelector:@selector(setDelegate:)]) {
 					[tempMenu setDelegate:self];
 				}
 				
@@ -409,7 +409,7 @@
 		 */
 		[inMenu removeAllItems];
 		enumerator = [[[[theEmoticonMenu itemArray] copy] autorelease] objectEnumerator];
-		while ((menuItem = [enumerator nextObject])){
+		while ((menuItem = [enumerator nextObject])) {
 			[menuItem retain];
 			[theEmoticonMenu removeItem:menuItem];
 			[inMenu addItem:menuItem];

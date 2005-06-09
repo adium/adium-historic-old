@@ -40,7 +40,7 @@ static void adiumGaimUpdateProgress(GaimXfer *xfer, double percent)
 {	
 	ESFileTransfer *fileTransfer = (ESFileTransfer *)xfer->ui_data;
 	
-	if (fileTransfer){
+	if (fileTransfer) {
 		[accountLookup(xfer->account) mainPerformSelector:@selector(updateProgressForFileTransfer:percent:bytesSent:)
 											   withObject:fileTransfer
 											   withObject:[NSNumber numberWithFloat:percent]
