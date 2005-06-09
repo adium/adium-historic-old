@@ -96,6 +96,14 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }
 
+- (void)dealloc
+{
+	[previousStatusStateDict release];
+	[accountsToReconnect release];
+	
+	[super dealloc];
+}
+
 /*!
  * @brief Handle a fast user switch event
  *
@@ -131,6 +139,12 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 					if([account online]){
 						//If online, set the state
 						[account setStatusState:targetStatusState];
+						
+						//If we just brought the account offline, note that it will need to be reconnected later
+						if([targetStatusState statusType] == AIOfflineStatusType){
+							if(!accountsToReconnect) accountsToReconnect = [[NSMutableSet alloc] init];
+							[accountsToReconnect addObject:account];
+						}
 					}else{
 						//If offline, set the state without coming online
 						[account setStatusStateAndRemainOffline:targetStatusState];
@@ -162,15 +176,13 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 
 			targetStatusState = [previousStatusStateDict objectForKey:accountHash];
 			if(targetStatusState){
-				if([account online]){
-					//If online, set the state
+				if([account online] || [accountsToReconnect containsObject:account]){
+					//If online or needs to be reconnected, set the previous state, going online if necessary
 					[account setStatusState:targetStatusState];
 				}else{
 					//If offline, set the state without coming online
 					[account setStatusStateAndRemainOffline:targetStatusState];
 				}
-
-				[previousStatusStateDict removeObjectForKey:accountHash];
 			}
 		}
 
@@ -180,6 +192,9 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 												 forKey:KEY_SOUND_TEMPORARY_MUTE
 												  group:PREF_GROUP_SOUNDS];
 		}
+		
+		[previousStatusStateDict release]; previousStatusStateDict = nil;
+		[accountsToReconnect release]; accountsToReconnect = nil;
 	}
 }
 
