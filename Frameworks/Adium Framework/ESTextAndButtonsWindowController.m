@@ -198,6 +198,7 @@
 	NSRect  frame = [window frame];
 	
 	[textView_messageHeader setVerticallyResizable:YES];
+	[textView_messageHeader setHorizontallyResizable:NO];
 	[textView_messageHeader setDrawsBackground:NO];
 	[scrollView_messageHeader setDrawsBackground:NO];
 	
@@ -214,6 +215,7 @@
 	//Set the message, then change the window size accordingly
 	{
 		[textView_message setVerticallyResizable:YES];
+		[textView_message setHorizontallyResizable:NO];
 		[textView_message setDrawsBackground:NO];
 		[scrollView_message setDrawsBackground:NO];
 		
