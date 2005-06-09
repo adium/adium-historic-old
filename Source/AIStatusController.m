@@ -1106,7 +1106,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 //Machine Activity -----------------------------------------------------------------------------------------------------
 #pragma mark Machine Activity
 #define MACHINE_IDLE_THRESHOLD			30 	//30 seconds of inactivity is considered idle
-#define MACHINE_ACTIVE_POLL_INTERVAL	30	//Poll every 60 seconds when the user is active
+#define MACHINE_ACTIVE_POLL_INTERVAL	30	//Poll every 30 seconds when the user is active
 #define MACHINE_IDLE_POLL_INTERVAL		1	//Poll every second when the user is idle
 
 //Private idle function
