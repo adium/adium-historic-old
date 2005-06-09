@@ -11,6 +11,7 @@
 @interface ESAutoAwayPlugin : AIPlugin {
 	BOOL				automaticAwaySet;
 	NSMutableDictionary	*previousStatusStateDict;
+	NSMutableSet		*accountsToReconnect;
 	
 	BOOL		autoAway;
 	NSNumber	*autoAwayID;

@@ -52,6 +52,8 @@
 - (void)dealloc
 {
 	[previousStatusStateDict release];
+	[accountsToReconnect release];
+	[autoAwayID release];
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[super dealloc];
@@ -65,7 +67,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	autoAwayID = [prefDict objectForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID];
+	[autoAwayID release];
+	autoAwayID = [[prefDict objectForKey:KEY_STATUS_ATUO_AWAY_STATUS_STATE_ID] retain];
 
 	autoAway = (autoAwayID ? 
 				[[prefDict objectForKey:KEY_STATUS_AUTO_AWAY] boolValue] :
@@ -107,6 +110,13 @@
 						if([account online]){
 							//If online, set the state
 							[account setStatusState:targetStatusState];
+							
+							//If we just brought the account offline, note that it will need to be reconnected later
+							if([targetStatusState statusType] == AIOfflineStatusType){
+								if(!accountsToReconnect) accountsToReconnect = [[NSMutableSet alloc] init];
+								[accountsToReconnect addObject:account];
+							}
+							
 						}else{
 							//If offline, set the state without coming online
 							[account setStatusStateAndRemainOffline:targetStatusState];
@@ -138,18 +148,19 @@
 			
 			targetStatusState = [previousStatusStateDict objectForKey:accountHash];
 			if(targetStatusState){
-				if([account online]){
-					//If online, set the state
+				if([account online] || [accountsToReconnect containsObject:account]){
+					//If online or needs to be reconnected, set the previous state, going online if necessary
 					[account setStatusState:targetStatusState];
 				}else{
 					//If offline, set the state without coming online
 					[account setStatusStateAndRemainOffline:targetStatusState];
 				}
-				
-				[previousStatusStateDict removeObjectForKey:accountHash];
 			}
 		}
 
+		[previousStatusStateDict release]; previousStatusStateDict = nil;
+		[accountsToReconnect release]; accountsToReconnect = nil;
+		
 		automaticAwaySet = NO;
 	}
 }

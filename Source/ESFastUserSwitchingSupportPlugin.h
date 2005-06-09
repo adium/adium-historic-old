@@ -24,6 +24,7 @@
 	NSNumber	*fastUserSwitchStatusID;
 	
 	NSMutableDictionary	*previousStatusStateDict;
+	NSMutableSet		*accountsToReconnect;
 }
 
 @end
