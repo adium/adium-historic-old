@@ -470,6 +470,12 @@
 		3498FEAF07F489770004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = Resources/French.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEB007F4897A0004B79A /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3498FEB107F4897D0004B79A /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = Resources/Japanese.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A3D085A09EA00864531 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = Resources/Catalan.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A3F085A09F500864531 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = Resources/Swedish.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A41085A0A1500864531 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_CN; path = Resources/zh_CN.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A43085A0A1A00864531 /* cs */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = cs; path = Resources/cs.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A45085A0A1D00864531 /* is */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = is; path = Resources/is.lproj/Localizable.strings; sourceTree = "<group>"; };
+		34B82A47085A0A2700864531 /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Norwegian; path = Resources/Norwegian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		34BFE58007E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIVariableHeightFlexibleColumnsOutlineView.h; path = Source/AIVariableHeightFlexibleColumnsOutlineView.h; sourceTree = "<group>"; };
 		34BFE58107E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIVariableHeightFlexibleColumnsOutlineView.m; path = Source/AIVariableHeightFlexibleColumnsOutlineView.m; sourceTree = "<group>"; };
 		34C2A4540821797100F3363F /* Danish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Danish; path = Resources/Danish.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1562,6 +1568,12 @@
 				"Traditional Chinese",
 				zh_TW,
 				Danish,
+				Catalan,
+				Swedish,
+				zh_CN,
+				cs,
+				is,
+				Norwegian,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1733,6 +1745,12 @@
 				3498FEB107F4897D0004B79A /* Japanese */,
 				345F5CF4081AFD51001F733C /* zh_TW */,
 				34C2A4540821797100F3363F /* Danish */,
+				34B82A3D085A09EA00864531 /* Catalan */,
+				34B82A3F085A09F500864531 /* Swedish */,
+				34B82A41085A0A1500864531 /* zh_CN */,
+				34B82A43085A0A1A00864531 /* cs */,
+				34B82A45085A0A1D00864531 /* is */,
+				34B82A47085A0A2700864531 /* Norwegian */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
