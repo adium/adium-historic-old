@@ -1277,6 +1277,34 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
 		};
+		342CDFD408590F8E00005C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		342CDFDA08590FAB00005C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		342CDFDE08590FBA00005C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		342CDFE608590FD900005C63 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
 		34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1416,13 +1444,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 4947F5BC0655E85200B791E5;
 			remoteInfo = Bonjour;
-		};
-		DACF3EDC085574F1006BFB18 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
-			remoteInfo = "External Frameworks";
 		};
 /* End PBXContainerItemProxy section */
 
@@ -6602,7 +6623,7 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
-				DACF3EDD085574F1006BFB18 /* PBXTargetDependency */,
+				342CDFD508590F8E00005C63 /* PBXTargetDependency */,
 				3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				07FC98360827D373006C56D6 /* PBXTargetDependency */,
@@ -6652,6 +6673,7 @@
 				);
 			};
 			dependencies = (
+				342CDFDF08590FBA00005C63 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -6783,6 +6805,7 @@
 			};
 			dependencies = (
 				6C3E0152054445C000A4AE2E /* PBXTargetDependency */,
+				342CDFE708590FD900005C63 /* PBXTargetDependency */,
 			);
 			name = Gaim;
 			productName = Gaim;
@@ -6838,6 +6861,7 @@
 				WARNING_CFLAGS = "-Wall";
 			};
 			dependencies = (
+				342CDFDB08590FAB00005C63 /* PBXTargetDependency */,
 			);
 			name = "Adium Crash Reporter";
 			productName = "Adium Crash Reporter";
@@ -7992,6 +8016,26 @@
 			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcode)";
 			targetProxy = 07FC98350827D373006C56D6 /* PBXContainerItemProxy */;
 		};
+		342CDFD508590F8E00005C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 342CDFD408590F8E00005C63 /* PBXContainerItemProxy */;
+		};
+		342CDFDB08590FAB00005C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 342CDFDA08590FAB00005C63 /* PBXContainerItemProxy */;
+		};
+		342CDFDF08590FBA00005C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 342CDFDE08590FBA00005C63 /* PBXContainerItemProxy */;
+		};
+		342CDFE708590FD900005C63 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 342CDFE608590FD900005C63 /* PBXContainerItemProxy */;
+		};
 		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B72537BB058C4577004BA969 /* Latex Plugin */;
@@ -8066,11 +8110,6 @@
 			isa = PBXTargetDependency;
 			target = 4947F5BC0655E85200B791E5 /* Bonjour */;
 			targetProxy = DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */;
-		};
-		DACF3EDD085574F1006BFB18 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
-			targetProxy = DACF3EDC085574F1006BFB18 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -8792,7 +8831,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -8839,7 +8878,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -8876,7 +8915,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -8914,7 +8953,7 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -8939,7 +8978,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -8974,7 +9013,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -8999,7 +9038,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9025,11 +9064,12 @@
 		DADE8E08085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
+				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9042,7 +9082,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
+					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9087,7 +9127,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
+					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9122,7 +9162,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
+					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9158,7 +9198,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build",
+					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -9182,7 +9222,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9217,7 +9257,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9242,7 +9282,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9268,7 +9308,7 @@
 		DADE8E12085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
@@ -9284,7 +9324,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9322,7 +9362,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9350,7 +9390,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9379,7 +9419,7 @@
 		DADE8E17085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
@@ -9397,7 +9437,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9431,7 +9471,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9455,7 +9495,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9480,7 +9520,7 @@
 		DADE8E1C085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
@@ -9494,7 +9534,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9530,7 +9570,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9556,7 +9596,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9583,7 +9623,7 @@
 		DADE8E21085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
+				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
@@ -9600,10 +9640,10 @@
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Frameworks/AIUtilities Framework/build",
-					"Frameworks/AIHyperlinks Framework/build",
-					Frameworks,
-					"Frameworks/AIBookmarksImport Framework/build",
+					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9646,10 +9686,10 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Frameworks/AIUtilities Framework/build",
-					"Frameworks/AIHyperlinks Framework/build",
-					Frameworks,
-					"Frameworks/AIBookmarksImport Framework/build",
+					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9683,10 +9723,10 @@
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
-					"Frameworks/AIUtilities Framework/build",
-					"Frameworks/AIHyperlinks Framework/build",
-					Frameworks,
-					"Frameworks/AIBookmarksImport Framework/build",
+					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9721,10 +9761,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					"Frameworks/AIUtilities Framework/build",
-					"Frameworks/AIHyperlinks Framework/build",
-					Frameworks,
-					"Frameworks/AIBookmarksImport Framework/build",
+					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
+					"$(SRCROOT)/Frameworks",
+					"$(SRCROOT/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
 				);
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
@@ -10115,6 +10155,7 @@
 		DADE8E3B085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ZERO_LINK = YES;
 			};
 			name = Development;
 		};
