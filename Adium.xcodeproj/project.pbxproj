@@ -1274,34 +1274,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
 		};
-		342CDFD408590F8E00005C63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
-		342CDFDA08590FAB00005C63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
-		342CDFDE08590FBA00005C63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
-		342CDFE608590FD900005C63 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
 		34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -6682,7 +6654,6 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
-				342CDFD508590F8E00005C63 /* PBXTargetDependency */,
 				3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				07FC98360827D373006C56D6 /* PBXTargetDependency */,
@@ -6732,7 +6703,6 @@
 				);
 			};
 			dependencies = (
-				342CDFDF08590FBA00005C63 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -6864,7 +6834,6 @@
 			};
 			dependencies = (
 				6C3E0152054445C000A4AE2E /* PBXTargetDependency */,
-				342CDFE708590FD900005C63 /* PBXTargetDependency */,
 			);
 			name = Gaim;
 			productName = Gaim;
@@ -6920,7 +6889,6 @@
 				WARNING_CFLAGS = "-Wall";
 			};
 			dependencies = (
-				342CDFDB08590FAB00005C63 /* PBXTargetDependency */,
 			);
 			name = "Adium Crash Reporter";
 			productName = "Adium Crash Reporter";
@@ -7521,7 +7489,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\necho $PBXCP\n\n#Copy AIUtilities.framework\n$PBXCP \"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIBookmarksImport.framework\n$PBXCP \"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\" \"$FRAMEWORKS_DIR\"\n";
+			shellScript = "#!/bin/sh\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIBookmarksImport.framework\n$PBXCP \"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\" \"$FRAMEWORKS_DIR\"\n";
 		};
 		344ECA570620A04E007256C6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8089,26 +8057,6 @@
 			isa = PBXTargetDependency;
 			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcode)";
 			targetProxy = 07FC98350827D373006C56D6 /* PBXContainerItemProxy */;
-		};
-		342CDFD508590F8E00005C63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 342CDFD408590F8E00005C63 /* PBXContainerItemProxy */;
-		};
-		342CDFDB08590FAB00005C63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 342CDFDA08590FAB00005C63 /* PBXContainerItemProxy */;
-		};
-		342CDFDF08590FBA00005C63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 342CDFDE08590FBA00005C63 /* PBXContainerItemProxy */;
-		};
-		342CDFE708590FD900005C63 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 342CDFE608590FD900005C63 /* PBXContainerItemProxy */;
 		};
 		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
