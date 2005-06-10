@@ -51,8 +51,6 @@ typedef enum{
 	
     int					activeSoundThreads;
     BOOL				soundThreadActive;
-	
-    NSLock				*soundLock;
     
     NSMutableDictionary	*systemSoundIDDict;
 	
