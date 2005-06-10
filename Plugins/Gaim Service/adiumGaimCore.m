@@ -92,21 +92,14 @@ static void adiumGaimCoreDebugInit(void)
 /* The core is ready... finish configuring libgaim and its plugins */
 static void adiumGaimCoreUiInit(void)
 {
+	//Initialize the core UI ops
 	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
     gaim_blist_set_ui_ops(adium_gaim_blist_get_ui_ops());
     gaim_connections_set_ui_ops(adium_gaim_connection_get_ui_ops());
     gaim_conversations_set_win_ui_ops(adium_gaim_conversation_get_win_ui_ops());
-    gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
-    gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
-    gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
-    gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());
-	gaim_roomlist_set_ui_ops (adium_gaim_roomlist_get_ui_ops());	
-#if	ENABLE_WEBCAM
-	initGaimWebcamSupport();
-#endif
-	
+    gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
 	initGaimOTRSupprt();
-	
+
 	/* Why use Gaim's accounts and blist list when we have the information locally?
 		*		- Faster account connection: Gaim doesn't have to recreate the local list
 		*		- Privacy/blocking support depends on the accounts and blist files existing
@@ -137,6 +130,16 @@ static void adiumGaimCoreUiInit(void)
 	
 	//Configure signals for receiving gaim events
 	configureAdiumGaimSignals();
+	
+	//Configure the GUI-related UI ops last
+	gaim_roomlist_set_ui_ops (adium_gaim_roomlist_get_ui_ops());
+    gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
+    gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
+	gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
+
+#if	ENABLE_WEBCAM
+	initGaimWebcamSupport();
+#endif
 }
 
 static void adiumGaimCoreQuit(void)
