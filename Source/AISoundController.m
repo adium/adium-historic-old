@@ -63,42 +63,44 @@
 
 @implementation AISoundController
 
-- (void)initController
+- (id)init
 {
-    soundCacheDict = [[NSMutableDictionary alloc] init];
-    soundCacheArray = [[NSMutableArray alloc] init];
-	soundCacheCleanupTimer = nil;
-
-    speechArray = [[NSMutableArray alloc] init];
-    resetNextTime = NO;
-    speaking = NO;
-
-	[self loadVoiceArray];
-
-    //Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
-    [[AIObject sharedAdiumInstance] createResourcePathForName:PATH_SOUNDS];
-    
-    AIPreferenceController *preferenceController = [adium preferenceController];
-
-    //Register our default preferences
-    [preferenceController registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
-										  forGroup:PREF_GROUP_SOUNDS];
-    
-    //Ensure the temporary mute is off
-	if ([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
-	                                     group:PREF_GROUP_SOUNDS] boolValue])
-	{
-		[preferenceController setPreference:nil
-		                             forKey:KEY_SOUND_TEMPORARY_MUTE
-		                              group:PREF_GROUP_SOUNDS];
+	if ((self = [super init])) {
+		soundCacheDict = [[NSMutableDictionary alloc] init];
+		soundCacheArray = [[NSMutableArray alloc] init];
+		soundCacheCleanupTimer = nil;
+		
+		speechArray = [[NSMutableArray alloc] init];
+		resetNextTime = NO;
+		speaking = NO;		
 	}
-
-    //observe pref changes
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];
+	
+	return self;
 }
 
 - (void)finishIniting
 {
+	AIPreferenceController *preferenceController = [adium preferenceController];
+
+	[self loadVoiceArray];
+	
+	//Create a custom sounds directory ~/Library/Application Support/Adium 2.0/Sounds
+	[adium createResourcePathForName:PATH_SOUNDS];
+	
+	//Register our default preferences
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
+								  forGroup:PREF_GROUP_SOUNDS];
+	
+	//Ensure the temporary mute is off
+	if ([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+										  group:PREF_GROUP_SOUNDS] boolValue]) {
+		[preferenceController setPreference:nil
+									 forKey:KEY_SOUND_TEMPORARY_MUTE
+									  group:PREF_GROUP_SOUNDS];
+	}
+	
+	//observe pref changes
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];	
 }
 
 - (void)beginClosing

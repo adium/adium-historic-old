@@ -31,9 +31,13 @@
 @implementation AILoginController
 
 // Init this controller
-- (void)initController
+- (id)init
 {
-    userDirectory = nil;
+	if ((self = [super init])) { 
+		userDirectory = nil;
+	}
+	
+	return self;
 }
 
 - (void)finishIniting

@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 #define Dock_IconWillChange			@"Dock_IconWillChange"
 #define Dock_IconDidChange			@"Dock_IconDidChange"
 
@@ -35,9 +37,7 @@ typedef enum {
 
 @protocol AIController, AIFlashObserver;
 
-@interface AIDockController: NSObject <AIController, AIFlashObserver> {
-    IBOutlet	AIAdium 	*adium;
-	
+@interface AIDockController: AIObject <AIController, AIFlashObserver> {
     NSTimer 				*animationTimer;
     NSTimer					*bounceTimer;
     

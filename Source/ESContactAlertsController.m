@@ -52,11 +52,15 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 }
 
 //init and close
-- (void)initController
+- (id)init
 {
-	globalOnlyEventHandlers = [[NSMutableDictionary alloc] init];
-	eventHandlers = [[NSMutableDictionary alloc] init];
-	actionHandlers = [[NSMutableDictionary alloc] init];
+	if ((self = [super init])) {
+		globalOnlyEventHandlers = [[NSMutableDictionary alloc] init];
+		eventHandlers = [[NSMutableDictionary alloc] init];
+		actionHandlers = [[NSMutableDictionary alloc] init];
+	}
+	
+	return self;
 }
 
 - (void)finishIniting

@@ -15,7 +15,7 @@
  */
 
 #import "AINewMessagePromptController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIInterfaceController.h"
 
 #define NEW_MESSAGE_PROMPT_NIB	@"NewMessagePrompt"
@@ -80,7 +80,7 @@ static AINewMessagePromptController *sharedNewMessageInstance = nil;
 	
     if ((contact = [self contactFromTextField])) {
         //Initiate the message
-        [[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
+        [[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:contact]];
 		
 		//Close the prompt
         [[self class] closeSharedInstance];

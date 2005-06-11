@@ -72,40 +72,26 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 /*!
  * Init the status controller
  */
-- (void)initController
+- (id)init
 {
-	stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
-	stateMenuPluginsArray = [[NSMutableArray alloc] init];
-	stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
-	stateMenuUpdateDelays = 0;
-	_sortedFullStateArray = nil;
-	_activeStatusState = nil;
-	_allActiveStatusStates = nil;
-	temporaryStateArray = [[NSMutableSet alloc] init];
+	if ((self = [super init])) {
+		stateMenuItemArraysDict = [[NSMutableDictionary alloc] init];
+		stateMenuPluginsArray = [[NSMutableArray alloc] init];
+		stateMenuItemsNeedingUpdating = [[NSMutableSet alloc] init];
+		stateMenuUpdateDelays = 0;
+		_sortedFullStateArray = nil;
+		_activeStatusState = nil;
+		_allActiveStatusStates = nil;
+		temporaryStateArray = [[NSMutableSet alloc] init];
+		
+		accountsToConnect = [[NSMutableSet alloc] init];
+		isProcessingGlobalChange = NO;
+		
+		//Init
+		[self _setMachineIsIdle:NO];
+	}
 	
-	accountsToConnect = [[NSMutableSet alloc] init];
-	isProcessingGlobalChange = NO;
-
-	//Init
-	[self _setMachineIsIdle:NO];
-
-	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
-
-	//Update our state menus when the state array or status icon set changes
-	[adiumNotificationCenter addObserver:self
-								   selector:@selector(rebuildAllStateMenus)
-									   name:AIStatusStateArrayChangedNotification
-									 object:nil];
-	[adiumNotificationCenter addObserver:self
-								selector:@selector(rebuildAllStateMenus)
-									name:AIStatusIconSetDidChangeNotification
-								  object:nil];
-	[[adium contactController] registerListObjectObserver:self];
-
-	//Watch account status preference changes for our accountsToConnect set
- 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
-
-	[self buildBuiltInStatusTypes];
+	return self;
 }
 
 /*!
@@ -115,6 +101,24 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)finishIniting
 {
+	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
+	
+	//Update our state menus when the state array or status icon set changes
+	[adiumNotificationCenter addObserver:self
+								selector:@selector(rebuildAllStateMenus)
+									name:AIStatusStateArrayChangedNotification
+								  object:nil];
+	[adiumNotificationCenter addObserver:self
+								selector:@selector(rebuildAllStateMenus)
+									name:AIStatusIconSetDidChangeNotification
+								  object:nil];
+	[[adium contactController] registerListObjectObserver:self];
+	
+	//Watch account status preference changes for our accountsToConnect set
+ 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+	
+	[self buildBuiltInStatusTypes];
+
 	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
 	 * status is selected with no accounts online.
 	 */

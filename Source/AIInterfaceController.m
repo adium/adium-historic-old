@@ -17,6 +17,7 @@
 // $Id$
 
 #import "AIContactController.h"
+#import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
@@ -93,38 +94,35 @@
  */
 @implementation AIInterfaceController
 
-/*!
- * @brief Initialize the controller
- */
-- (void)initController
+- (id)init
 {
-	/* Use KFTypeSelectTableView as our NSTableView base class to allow type-select searching of all
-	 * table and outline views throughout Adium.
-	 */
-	[[KFTypeSelectTableView class] poseAsClass:[NSTableView class]];
+	if ((self = [super init])) {
+		/* Use KFTypeSelectTableView as our NSTableView base class to allow type-select searching of all
+		* table and outline views throughout Adium.
+		*/
+		[[KFTypeSelectTableView class] poseAsClass:[NSTableView class]];
+		
+		contactListViewArray = [[NSMutableArray alloc] init];
+		messageViewArray = [[NSMutableArray alloc] init];
+		contactListTooltipEntryArray = [[NSMutableArray alloc] init];
+		contactListTooltipSecondaryEntryArray = [[NSMutableArray alloc] init];
+		closeMenuConfiguredForChat = NO;
+		_cachedOpenChats = nil;
+		mostRecentActiveChat = nil;
+		activeChat = nil;
+		
+		tooltipListObject = nil;
+		tooltipTitle = nil;
+		tooltipBody = nil;
+		tooltipImage = nil;
+		flashObserverArray = nil;
+		flashTimer = nil;
+		flashState = 0;
+		
+		windowMenuArray = nil;
+	}
 	
-    contactListViewArray = [[NSMutableArray alloc] init];
-    messageViewArray = [[NSMutableArray alloc] init];
-    contactListTooltipEntryArray = [[NSMutableArray alloc] init];
-    contactListTooltipSecondaryEntryArray = [[NSMutableArray alloc] init];
-	closeMenuConfiguredForChat = NO;
-	_cachedOpenChats = nil;
-	mostRecentActiveChat = nil;
-	activeChat = nil;
-	
-    tooltipListObject = nil;
-    tooltipTitle = nil;
-    tooltipBody = nil;
-    tooltipImage = nil;
-    flashObserverArray = nil;
-    flashTimer = nil;
-    flashState = 0;
-	
-	windowMenuArray = nil;
-	
-    //Observe content so we can open chats as necessary
-    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:CONTENT_MESSAGE_RECEIVED object:nil];	
+	return self;
 }
 
 #if 0
@@ -173,6 +171,10 @@
 
 	//Observe preference changes
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_INTERFACE];
+
+    //Observe content so we can open chats as necessary
+    [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
+									   name:CONTENT_MESSAGE_RECEIVED object:nil];	
 }
 
 - (void)beginClosing
@@ -237,8 +239,13 @@
 	if (![contactListPlugin contactListIsVisibleAndMain] && [[interfacePlugin openContainers] count] == 0) {
 		[self showContactList:nil];
 	} else {
+		AIChat	*mostRecentUnviewedChat;
+
 		//If windows are open, try switching to a chat with unviewed content
-		if (![[adium contentController] switchToMostRecentUnviewedContent]) {
+		if ((mostRecentUnviewedChat = [[adium chatController] mostRecentUnviewedChat])) {
+			[self setActiveChat:mostRecentUnviewedChat];
+
+		} else {
 			NSEnumerator    *enumerator;
 			NSWindow	    *window, *targetWindow = nil;
 			BOOL	    	unMinimizedWindows = 0;
@@ -279,6 +286,7 @@
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
+	NSLog(@"showContactList: %@",contactListPlugin);
 	[contactListPlugin showContactListAndBringToFront:YES];
 }
 
@@ -483,7 +491,7 @@
 //Clear the unviewed content count of the chat.  This is done when chats are made active or closed.
 - (void)clearUnviewedContentOfChat:(AIChat *)inChat
 {
-	[[adium contentController] clearUnviewedContentOfChat:inChat];
+	[[adium chatController] clearUnviewedContentOfChat:inChat];
 }
 
 //Content was received, increase the unviewed content count of the chat (if it's not currently active)
@@ -492,7 +500,7 @@
 	AIChat		*chat = [[notification userInfo] objectForKey:@"AIChat"];
 	
 	if (chat != activeChat) {
-		[[adium contentController] increaseUnviewedContentOfChat:chat];
+		[[adium chatController] increaseUnviewedContentOfChat:chat];
 	}
 }
 
@@ -1150,6 +1158,12 @@
 	}
 }
 
+#pragma mark Preferences Display
+- (IBAction)showPreferenceWindow:(id)sender
+{
+	[[adium preferenceController] showPreferenceWindow:sender];
+}
+
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
 #pragma mark Custom Dimming menu items
 //The standard ones do not dim correctly when unavailable
@@ -1253,5 +1267,3 @@
 }
 
 @end
-
-

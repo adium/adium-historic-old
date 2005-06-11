@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -27,12 +28,6 @@
 #import <Adium/AIHTMLDecoder.h>
 
 @implementation ESApplescriptabilityController
-
-//init
-- (void)initController
-{
-
-}
 
 - (void)finishIniting
 {
@@ -61,7 +56,7 @@
 }
 - (NSArray *)chats
 {
-	return ([[[adium contentController] openChats] allObjects]);
+	return ([[[adium chatController] openChats] allObjects]);
 }
 
 #pragma mark Attributes
@@ -181,7 +176,7 @@
 
 	if (contact) {
 		//Open the chat and set it as active
-		chat = [[adium contentController] openChatWithContact:contact];
+		chat = [[adium chatController] openChatWithContact:contact];
 		[[adium interfaceController] setActiveChat:chat];
 	}
 	

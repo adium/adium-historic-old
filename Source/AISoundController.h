@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 //Sound Controller
 #define	KEY_SOUND_SET						@"Set"
 #define	KEY_SOUND_SET_CONTENTS				@"Sounds"
@@ -37,9 +39,7 @@ typedef enum{
 	SOUND_SYTEM_ALERT_DEVICE
 } SoundDeviceType;
 
-@interface AISoundController : NSObject <AIController> {
-    IBOutlet	AIAdium		*adium;
-	
+@interface AISoundController : AIObject <AIController> {
     NSMutableDictionary	*soundCacheDict;
     NSMutableArray		*soundCacheArray;
 	NSTimer				*soundCacheCleanupTimer;

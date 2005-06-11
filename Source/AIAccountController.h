@@ -14,11 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * $Revision: 1.32 $
- * $Date$
- * $Author$
- **/
+#import <Adium/AIObject.h>
 
 #define Account_ListChanged 					@"Account_ListChanged"
 #define Adium_RequestSetManualIdleTime			@"Adium_RequestSetManualIdleTime"
@@ -55,9 +51,7 @@ typedef enum
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
 		AdiumServices, AdiumPasswords, AdiumAccounts;
 
-@interface AIAccountController : NSObject <AIController> {
-    IBOutlet	AIAdium		*adium;	
-	
+@interface AIAccountController : AIObject <AIController> {
     NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
     NSMutableDictionary		*accountStatusDict;			//Account status
 	

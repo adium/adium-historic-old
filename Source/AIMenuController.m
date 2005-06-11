@@ -32,8 +32,21 @@
 
 @implementation AIMenuController
 
-//Init
-- (void)initController
+- (id)init
+{
+	if ((self = [super init])) {
+		//Set up our contextual menu stuff
+		contextualMenu = [[NSMenu alloc] init];
+		contextualMenuItemDict = [[NSMutableDictionary alloc] init];
+		currentContextMenuObject = nil;
+		textViewContextualMenu = [[NSMenu alloc] init];
+		contextualMenu_TextView = nil;
+	}
+	
+	return self;
+}
+
+- (void)awakeFromNib
 {
 	//Build the array of menu locations
 	locationArray = [[NSMutableArray alloc] initWithObjects:menu_Adium_About, menu_Adium_Preferences,
@@ -46,19 +59,11 @@
 		menu_Window_Top, menu_Window_Commands, menu_Window_Auxiliary, menu_Window_Fixed,
 		menu_Help_Local, menu_Help_Web, menu_Help_Additions,
 		menu_Dock_Status, nil];
-
-	//Set up our contextual menu stuff
-	contextualMenu = [[NSMenu alloc] init];
-	contextualMenuItemDict = [[NSMutableDictionary alloc] init];
-	currentContextMenuObject = nil;
-	textViewContextualMenu = [[NSMenu alloc] init];
-	contextualMenu_TextView = nil;
-
-	[self localizeMenuTitles];
 }
 
 - (void)finishIniting
-{
+{	
+	[self localizeMenuTitles];	
 }
 
 - (void)beginClosing

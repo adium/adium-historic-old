@@ -14,7 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@protocol AIController, AIListObjectObserver, AIContainingObject;
+#import <Adium/AIObject.h>
+#import <Adium/AIListObject.h>
+
+@protocol AIController, AIListObjectObserver/*, AIContainingObject*/;
 
 @class AIAccount, AIListObject,  AIListContact, AIListGroup, AIMetaContact, AIMessageObject, AIService, AIContactInfoPane,
 	   AISortController;
@@ -71,9 +74,7 @@ typedef enum {
 @protocol ContactListOutlineView
 @end
 
-@interface AIContactController : NSObject <AIController> {
-    IBOutlet	AIAdium		*adium;
-	
+@interface AIContactController : AIObject <AIController> {
 	//Contacts and metaContacts
 	NSMutableDictionary		*contactDict;
 	NSMutableDictionary		*metaContactDict;

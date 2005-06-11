@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 #define LOGIN_PREFERENCES_FILE_NAME @"Login Preferences"	//Login preferences file name
 #define LOGIN_SHOW_WINDOW 			@"Show Login Window"	//Should hide the login window 
 #define LOGIN_LAST_USER				@"Last Login Name"		//Last logged in user
@@ -22,9 +24,7 @@
 
 @protocol AIController;
 
-@interface AILoginController : NSObject <AIController> {
-    IBOutlet	AIAdium			*adium;
-    
+@interface AILoginController : AIObject <AIController> {
     NSString					*currentUser;			//The current logged in username
     NSString					*userDirectory;			//The current user's Adium home directory
     AILoginWindowController		*loginWindowController;	//The login select window

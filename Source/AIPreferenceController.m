@@ -49,32 +49,26 @@
 /*!
  * @brief Initialize
  */
-- (void)initController
+- (id)init
 {
-    //
-    paneArray = [[NSMutableArray alloc] init];
-
-    defaults = [[NSMutableDictionary alloc] init];
-	prefCache = [[NSMutableDictionary alloc] init];
-    prefWithDefaultsCache = [[NSMutableDictionary alloc] init];
-
-	objectDefaults = [[NSMutableDictionary alloc] init];
-	objectPrefCache = [[NSMutableDictionary alloc] init];
-	objectPrefWithDefaultsCache = [[NSMutableDictionary alloc] init];
-
-	observers = [[NSMutableDictionary alloc] init];
-    delayedNotificationGroups = [[NSMutableSet alloc] init];
-    preferenceChangeDelays = 0;
-
-	//
-	userDirectory = [[[adium loginController] userDirectory] retain];
+	if ((self = [super init])) {
+		//
+		paneArray = [[NSMutableArray alloc] init];
+		
+		defaults = [[NSMutableDictionary alloc] init];
+		prefCache = [[NSMutableDictionary alloc] init];
+		prefWithDefaultsCache = [[NSMutableDictionary alloc] init];
+		
+		objectDefaults = [[NSMutableDictionary alloc] init];
+		objectPrefCache = [[NSMutableDictionary alloc] init];
+		objectPrefWithDefaultsCache = [[NSMutableDictionary alloc] init];
+		
+		observers = [[NSMutableDictionary alloc] init];
+		delayedNotificationGroups = [[NSMutableSet alloc] init];
+		preferenceChangeDelays = 0;
+	}
 	
-    //Create the 'ByObject' and 'Accounts' object specific preference directory
-	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
-	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
-	
-	//Register our default preferences
-    [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+	return self;
 }
 
 /*!
@@ -85,6 +79,16 @@
  */
 - (void)finishIniting
 {
+	//
+	userDirectory = [[[adium loginController] userDirectory] retain];
+	
+    //Create the 'ByObject' and 'Accounts' object specific preference directory
+	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:OBJECT_PREFS_PATH]];
+	[[NSFileManager defaultManager] createDirectoriesForPath:[userDirectory stringByAppendingPathComponent:ACCOUNT_PREFS_PATH]];
+	
+	//Register our default preferences
+    [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
+	
     NSToolbarItem	*toolbarItem;
 
     //Show preference window toolabr item

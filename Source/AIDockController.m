@@ -58,24 +58,30 @@
 @implementation AIDockController
  
 //init and close
-- (void)initController
+- (id)init
 {
-    //init
-    activeIconStateArray = [[NSMutableArray alloc] initWithObjects:@"Base",nil];
-    availableDynamicIconStateDict = [[NSMutableDictionary alloc] init];
-    currentIconState = nil;
-    currentAttentionRequest = -1;
-	currentBounceInterval = NO_BOUNCE_INTERVAL;
-    animationTimer = nil;
-    bounceTimer = nil;
-    needsDisplay = NO;
+	if ((self = [super init])) {
+		activeIconStateArray = [[NSMutableArray alloc] initWithObjects:@"Base",nil];
+		availableDynamicIconStateDict = [[NSMutableDictionary alloc] init];
+		currentIconState = nil;
+		currentAttentionRequest = -1;
+		currentBounceInterval = NO_BOUNCE_INTERVAL;
+		animationTimer = nil;
+		bounceTimer = nil;
+		needsDisplay = NO;
+	}
+	
+	return self;
+}
 
+- (void)finishIniting
+{
 	AIPreferenceController *preferenceController = [adium preferenceController];
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
-
+	
     //Register our default preferences
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:DOCK_DEFAULT_PREFS
-	                              forClass:[self class]] 
+																forClass:[self class]] 
 	                              forGroup:PREF_GROUP_APPEARANCE];
     
     //Observe pref changes
@@ -86,23 +92,19 @@
 	                       selector:@selector(appWillChangeActive:) 
 	                           name:NSApplicationWillBecomeActiveNotification 
 	                         object:nil];
-
+	
     //We also stop bouncing when Adium is no longer active
     [notificationCenter addObserver:self
 	                       selector:@selector(appWillChangeActive:) 
 	                           name:NSApplicationWillResignActiveNotification 
 	                         object:nil];
-
+	
 	//If Adium has been upgraded since the last time we ran, re-apply the user's custom icon
 	NSString	*lastVersion = [[NSUserDefaults standardUserDefaults] objectForKey:LAST_ICON_UPDATE_VERSION];
 	if (![[NSApp applicationVersion] isEqualToString:lastVersion]) {
 		[self updateAppBundleIcon];
 		[[NSUserDefaults standardUserDefaults] setObject:[NSApp applicationVersion] forKey:LAST_ICON_UPDATE_VERSION];
 	}
-}
-
-- (void)finishIniting
-{
 }
 
 - (void)beginClosing
