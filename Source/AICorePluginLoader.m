@@ -38,6 +38,7 @@
 #define CONFIRMED_PLUGINS_VERSION		@"Confirmed Plugin Version"
 
 @interface AICorePluginLoader (PRIVATE)
+- (void)loadPlugins;
 - (void)loadPluginAtPath:(NSString *)pluginName confirmLoading:(BOOL)confirmLoading;
 - (BOOL)confirmPluginAtPath:(NSString *)pluginPath;
 - (void)disablePlugin:(NSString *)pluginPath;
@@ -49,13 +50,15 @@
 {
 	if ((self = [super init])) {
 		pluginArray = [[NSMutableArray alloc] init];
+		
+		[self loadPlugins];
 	}
 
 	return self;
 }
 
 //init
-- (void)initController
+- (void)loadPlugins
 {
 	//Init
 	[adium createResourcePathForName:EXTERNAL_PLUGIN_FOLDER];

@@ -25,6 +25,10 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIPlugin.h>
 
+@interface AICoreComponentLoader (PRIVATE)
+- (void)loadComponents;
+@end
+
 @implementation AICoreComponentLoader
 
 /*!
@@ -34,6 +38,8 @@
 {
 	if ((self = [super init])) {
 		components = [[NSMutableDictionary alloc] init];
+		
+		[self loadComponents];
 	}
 
 	return self;
@@ -53,7 +59,7 @@
 /*!
  * @brief Load integrated components
  */
-- (void)initController
+- (void)loadComponents
 {
 	//Fetch the list of components to load
 	NSString	*propertyList = [[NSBundle mainBundle] pathForResource:@"CoreComponents" ofType:@"plist"];
