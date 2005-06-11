@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIInterfaceController.h"
 #import "ESContactAlertsController.h"
 #import "ESOpenMessageWindowContactAlertPlugin.h"
@@ -58,7 +58,7 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	if ([listObject isKindOfClass:[AIListContact class]]) {
-		AIChat	*chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
+		AIChat	*chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
 		[[adium interfaceController] setActiveChat:chat];
 	}
 }

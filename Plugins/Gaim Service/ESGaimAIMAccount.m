@@ -7,6 +7,7 @@
 //
 
 #import "ESGaimAIMAccount.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIPreferenceController.h"
@@ -453,7 +454,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM connected","Direct IM is an AIM-specific phrase for transferring images in the message window")
 											 ofType:@"directIM"
-											 inChat:[[adium contentController] chatWithContact:theContact]];
+											 inChat:[[adium chatController] chatWithContact:theContact]];
 	//Send any pending directIM messages for this contact
 	NSMutableArray	*thisContactQueue = [directIMQueue objectForKey:[theContact internalObjectID]];
 	if (thisContactQueue) {
@@ -479,7 +480,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 	[[adium contentController] displayStatusMessage:AILocalizedString(@"Direct IM disconnected","Direct IM is an AIM-specific phrase for transferring images in the message window")
 											 ofType:@"directIM"
-											 inChat:[[adium contentController] chatWithContact:theContact]];	
+											 inChat:[[adium chatController] chatWithContact:theContact]];	
 }
 
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString
@@ -647,7 +648,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 				
 			} else if (userinfo->flags & AIM_FLAG_WIRELESS) {
 				/* Incorrectly called just before a contact is added to a group chat */
-				if (![[adium contentController] contactIsInGroupChat:theContact]) {
+				if (![[adium chatController] contactIsInGroupChat:theContact]) {
 					client = AOL_MOBILE_DEVICE;
 					isMobile = YES;
 				}

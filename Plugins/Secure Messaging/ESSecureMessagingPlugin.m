@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIToolbarController.h"
@@ -59,12 +60,12 @@
 	
 	[self registerToolbarItem];
 	
-	[[adium contentController] registerChatObserver:self];
+	[[adium chatController] registerChatObserver:self];
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterChatObserver:self];
+	[[adium chatController] unregisterChatObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 }
 

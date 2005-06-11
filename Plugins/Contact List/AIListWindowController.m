@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIInterfaceController.h"
 #import "AIListLayoutWindowController.h"
 #import "AIListOutlineView.h"
@@ -370,7 +370,7 @@
 		[contactListController hideTooltip];
 
 		//Open a new message with the contact
-		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:(AIListContact *)selectedObject]];
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:(AIListContact *)selectedObject]];
 		
     }
 }
