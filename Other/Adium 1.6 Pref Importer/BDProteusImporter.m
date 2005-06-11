@@ -28,9 +28,9 @@
 - (NSString *)proteusVersion
 {
 	NSFileManager *fm = [NSFileManager defaultManager];
-	if ([fm fileExistsAtPath:PROTEUS4_STATUS_DATA]){
+	if ([fm fileExistsAtPath:PROTEUS4_STATUS_DATA]) {
 		return @"4";
-	}else if ([fm fileExistsAtPath:PROTEUS3_STATUS_DATA]){
+	} else if ([fm fileExistsAtPath:PROTEUS3_STATUS_DATA]) {
 		return @"3";
 	} else {
 		return @"";
