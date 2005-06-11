@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChatController.h"
 #import "AIContactController.h"
-#import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AIStandardToolbarItemsPlugin.h"
 #import "AIToolbarController.h"
@@ -61,7 +61,7 @@
     AIListObject	*object = [[adium contactController] selectedListObject];
 
     if ([object isKindOfClass:[AIListContact class]]) {
-		AIChat  *chat = [[adium contentController] openChatWithContact:(AIListContact *)object];
+		AIChat  *chat = [[adium chatController] openChatWithContact:(AIListContact *)object];
         [[adium interfaceController] setActiveChat:chat];
     }
 	

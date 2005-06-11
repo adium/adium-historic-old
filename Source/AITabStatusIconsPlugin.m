@@ -16,7 +16,7 @@
 
 #import "AITabStatusIconsPlugin.h"
 #import "AIContactController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>
@@ -46,7 +46,7 @@
 	[[adium contactController] registerListObjectObserver:self];
 	
 	//Observe chat changes
-	[[adium contentController] registerChatObserver:self];
+	[[adium chatController] registerChatObserver:self];
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(statusIconSetDidChange:)
@@ -60,7 +60,7 @@
 - (void)uninstallPlugin
 {
 	[[adium contactController] unregisterListObjectObserver:self];
-	[[adium contentController] unregisterChatObserver:self];
+	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 }
 
@@ -70,7 +70,7 @@
 - (void)statusIconSetDidChange:(NSNotification *)aNotification
 {
 	[[adium contactController] updateAllListObjectsForObserver:self];
-	[[adium contentController] updateAllChatsForObserver:self];
+	[[adium chatController] updateAllChatsForObserver:self];
 }
 
 /*!

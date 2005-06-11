@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -163,7 +164,7 @@
 			//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
 			if (([toolbarItems count] > 0) &&
 			   [inObject isKindOfClass:[AIListContact class]] &&
-			   (chat = [[adium contentController] existingChatWithContact:(AIListContact *)inObject])) {
+			   (chat = [[adium chatController] existingChatWithContact:(AIListContact *)inObject])) {
 				[self _updateToolbarIconOfChat:chat
 									  inWindow:[[adium interfaceController] windowForChat:chat]];
 			}

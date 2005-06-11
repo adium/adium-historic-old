@@ -15,6 +15,7 @@
  */
 
 #import "AIStatusChangedMessagesPlugin.h"
+#import "AIChatController.h"
 #import "AIContentController.h"
 #import "ESContactAlertsController.h"
 #import <Adium/AIListContact.h>
@@ -71,7 +72,7 @@ static	NSDictionary	*statusTypeDict = nil;
 	NSSet			*allChats;
 	AIListContact	*contact = [notification object];
 	
-	allChats = [[adium contentController] allChatsWithContact:contact];
+	allChats = [[adium chatController] allChatsWithContact:contact];
 	if ([allChats count]) {	
 		if ([contact statusType] != AIAvailableStatusType) {
 			NSString		*statusMessage = [[contact statusMessage] string];
@@ -97,7 +98,7 @@ static	NSDictionary	*statusTypeDict = nil;
 	NSSet			*allChats;
 	AIListContact	*contact = [notification object];
 	
-	allChats = [[adium contentController] allChatsWithContact:contact];
+	allChats = [[adium chatController] allChatsWithContact:contact];
 	if ([allChats count]) {
 		NSString		*description, *phraseWithoutSubject;
 		NSString		*name = [notification name];
