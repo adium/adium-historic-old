@@ -15,7 +15,6 @@
  */
 
 #import "SHSafariBookmarksImporter.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define SAFARI_BOOKMARKS_PATH	@"~/Library/Safari/Bookmarks.plist"
 #define SAFARI_HISTORY_PATH		@"~/Library/Safari/History.plist"
@@ -36,7 +35,13 @@
 
 + (NSString *)bookmarksPath
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:[SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+	NSString	*bookmarksPath = [SAFARI_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) bookmarksPath = nil;
+	
+	return bookmarksPath;
 }
 
 + (NSString *)browserName

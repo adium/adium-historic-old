@@ -68,13 +68,6 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		DA8A824208554F1E00F24BB3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = DA8A823808554F1000F24BB3 /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -355,7 +348,6 @@
 				WRAPPER_EXTENSION = framework;
 			};
 			dependencies = (
-				DA8A824308554F1E00F24BB3 /* PBXTargetDependency */,
 			);
 			name = AIBookmarksImport;
 			productInstallPath = "$(HOME)/Library/Frameworks";
@@ -455,14 +447,6 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
-/* Begin PBXTargetDependency section */
-		DA8A824308554F1E00F24BB3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = DA8A824208554F1E00F24BB3 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
-
 /* Begin PBXVariantGroup section */
 		07F8AD790826675E009CCBB5 /* BookmarksPanel.nib */ = {
 			isa = PBXVariantGroup;
@@ -497,7 +481,6 @@
 				COPY_PHASE_STRIP = NO;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -541,7 +524,6 @@
 				COPY_PHASE_STRIP = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -583,7 +565,6 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = c99;
 				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
@@ -621,21 +602,18 @@
 		DA8A80B208554A6C00F24BB3 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 			};
 			name = Development;
 		};
 		DA8A80B308554A6C00F24BB3 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 			};
 			name = Deployment;
 		};
 		DA8A80B408554A6C00F24BB3 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/../AIUtilities Framework/build/$(CONFIGURATION)\"";
 			};
 			name = Default;
 		};

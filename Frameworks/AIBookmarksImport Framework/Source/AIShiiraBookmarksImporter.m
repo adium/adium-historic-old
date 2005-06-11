@@ -15,7 +15,6 @@
  */
 
 #import "AIShiiraBookmarksImporter.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define SHIIRA_BOOKMARKS_PATH	@"~/Library/Shiira/Bookmarks.plist"
 #define SHIIRA_HISTORY_PATH		@"~/Library/Shiira/History.plist"
@@ -27,7 +26,13 @@
 
 + (NSString *)bookmarksPath
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:[SHIIRA_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+	NSString	*bookmarksPath = [SHIIRA_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+
+	if (!exists) bookmarksPath = nil;
+
+	return bookmarksPath;
 }
 
 + (NSString *)browserName

@@ -15,7 +15,6 @@
  */
 
 #import "SHCaminoBookmarksImporter.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define CAMINO_BOOKMARKS_PATH   @"~/Library/Application Support/Camino/bookmarks.plist"
 #define CAMINO_DICT_CHILD_KEY   @"Children"
@@ -31,7 +30,13 @@
 
 + (NSString *)bookmarksPath
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:[CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+	NSString	*bookmarksPath = [CAMINO_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) bookmarksPath = nil;
+	
+	return bookmarksPath;
 }
 
 + (NSString *)browserName

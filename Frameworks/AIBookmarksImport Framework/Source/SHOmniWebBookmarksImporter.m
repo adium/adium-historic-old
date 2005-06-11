@@ -16,7 +16,6 @@
 
 #import "SHOmniWebBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define OW45_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb/Bookmarks.html"
 #define OW5_BOOKMARKS_PATH		@"~/Library/Application Support/OmniWeb 5/Favorites.html"
@@ -63,12 +62,26 @@
 
 + (NSString *)bookmarksPathForOmniWeb5
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:[OW5_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+	NSString	*bookmarksPath = [OW5_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) bookmarksPath = nil;
+	
+	return bookmarksPath;
 }
+
 + (NSString *)bookmarksPathForOmniWeb4Point5
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:[OW45_BOOKMARKS_PATH stringByExpandingTildeInPath]];
+	NSString	*bookmarksPath = [OW45_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) bookmarksPath = nil;
+	
+	return bookmarksPath;
 }
+
 + (NSString *)bookmarksPath
 {
 	NSString *path = [self bookmarksPathForOmniWeb5];

@@ -16,7 +16,6 @@
 
 #import "SHMozillaBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define MOZILLA_BOOKMARKS_PATH  @"~/Library/Mozilla/Profiles/default"
 #define MOZILLA_BOOKMARKS_FILE_NAME @"bookmarks.html"
@@ -33,14 +32,19 @@
 	NSEnumerator *enumerator = [[mgr directoryContentsAtPath:defaultProfileDir] objectEnumerator];
 	NSString    *directory;
 
-	while((directory = [enumerator nextObject])){
+	while ((directory = [enumerator nextObject])) {
 		NSRange found = [directory rangeOfString:@".slt"];
-		if(found.location != NSNotFound) {
-			NSString *path = [[defaultProfileDir stringByAppendingPathComponent:directory] stringByAppendingPathComponent:MOZILLA_BOOKMARKS_FILE_NAME];
-			path = [mgr pathIfNotDirectory:path];
-			if(path) break;
+		if (found.location != NSNotFound) {
+			NSString	*path = [[defaultProfileDir stringByAppendingPathComponent:directory] stringByAppendingPathComponent:MOZILLA_BOOKMARKS_FILE_NAME];
+			BOOL		isDir =	NO;
+			BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir] && !isDir);
+				
+			if (!exists) path = nil;
+
+			if (path) break;
 		}
 	}
+	
 	return path;
 }
 
