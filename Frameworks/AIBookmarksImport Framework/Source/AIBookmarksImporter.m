@@ -16,7 +16,6 @@
 
 #import "AIBookmarksImporter.h"
 #import "AIBookmarksImporterController.h"
-#import <AIUtilities/AIMenuAdditions.h>
 
 @interface AIBookmarksImporter (PRIVATE)
 
@@ -219,11 +218,17 @@
 {
 	NSString	*title = [object objectForKey:ADIUM_BOOKMARK_DICT_TITLE];
 	if(title && [title length]){
-		[inMenu addItemWithTitle:title
-						  target:[AIBookmarksImporterController sharedController]
-						  action:@selector(injectBookmarkFrom:)
-				   keyEquivalent:@""
-			   representedObject:object];
+		NSMenuItem	*theMenuItem;
+		
+		theMenuItem = [[NSMenuItem alloc] initWithTitle:title
+												 action:@selector(injectBookmarkFrom:)
+										  keyEquivalent:@""];
+		[theMenuItem setTarget:[AIBookmarksImporterController sharedController]];
+		[theMenuItem setRepresentedObject:object];
+		
+		[inMenu addItem:theMenuItem];
+
+		[theMenuItem release];
 	}
 }
 

@@ -16,7 +16,6 @@
 
 #import "SHFireFoxBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define FIREFOX_8_OR_LESS_BOOKMARKS_PATH  @"~/Library/Phoenix/Profiles/default"
 #define FIREFOX_9_BOOKMARKS_PATH @"~/Library/Application Support/Firefox/Profiles"
@@ -44,10 +43,19 @@
 
 + (NSString *)bookmarksPath
 {
-	NSFileManager *mgr = [NSFileManager defaultManager];
-	NSString *path = [mgr pathIfNotDirectory:[self fox9BookmarksPath]];
-	if(!path) path = [mgr pathIfNotDirectory:[self fox8OrLessBookmarksPath]];
-	return path;
+	NSString	*bookmarksPath = [self fox9BookmarksPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) {
+		bookmarksPath = [self fox8OrLessBookmarksPath];
+	
+		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+		
+		if (!exists) bookmarksPath = nil;
+	}
+	
+	return bookmarksPath;
 }
 
 #pragma mark -

@@ -16,7 +16,6 @@
 
 #import "SHMSIEBookmarksImporter.h"
 #import "SHMozillaCommonParser.h"
-#import <AIUtilities/AIFileManagerAdditions.h>
 
 #define MSIE_BOOKMARKS_PATH  @"~/Library/Preferences/Explorer/Favorites.html"
 
@@ -26,7 +25,13 @@
 
 + (NSString *)bookmarksPath
 {
-	return [[NSFileManager defaultManager] pathIfNotDirectory:MSIE_BOOKMARKS_PATH];
+	NSString	*bookmarksPath = [MSIE_BOOKMARKS_PATH stringByExpandingTildeInPath];
+	BOOL		isDir =	NO;
+	BOOL		exists = ([[NSFileManager defaultManager] fileExistsAtPath:bookmarksPath isDirectory:&isDir] && !isDir);
+	
+	if (!exists) bookmarksPath = nil;
+	
+	return bookmarksPath;
 }
 
 + (NSString *)browserName
