@@ -27,9 +27,9 @@
 				);
 			};
 			dependencies = (
-				34B9E669085B7C96006216DF /* PBXTargetDependency */,
-				34B9E66B085B7C99006216DF /* PBXTargetDependency */,
-				34B9E66D085B7C9B006216DF /* PBXTargetDependency */,
+				34B9E7B3085B8A6B006216DF /* PBXTargetDependency */,
+				34B9E7B5085B8A6B006216DF /* PBXTargetDependency */,
+				34B9E7B7085B8A6B006216DF /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -1275,13 +1275,6 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXContainerItemProxy section */
-		07FC98350827D373006C56D6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIBookmarksImport;
-		};
 		34677B3E07CC3E8400F59F7B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1317,40 +1310,33 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
-		3496A8EE07CE6CD40055BBAB /* PBXContainerItemProxy */ = {
+		34B9E664085B7C74006216DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = DACF3ED3085574D0006BFB18;
+			remoteInfo = "External Frameworks";
+		};
+		34B9E7B2085B8A6B006216DF /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
+			remoteInfo = AIUtilities;
+		};
+		34B9E7B4085B8A6B006216DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
-		34B9E664085B7C74006216DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = DACF3ED3085574D0006BFB18 /* External Frameworks */;
-			remoteInfo = "External Frameworks";
-		};
-		34B9E668085B7C96006216DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
-		34B9E66A085B7C99006216DF /* PBXContainerItemProxy */ = {
+		34B9E7B6085B8A6B006216DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
-		};
-		34B9E66C085B7C9B006216DF /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
-			remoteInfo = AIHyperlinks.framework;
 		};
 		34BD98D10531467B000AB133 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1442,13 +1428,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
-		};
-		DA0E6462085A78D500A00B72 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
 		};
 		DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -6713,9 +6692,7 @@
 			};
 			dependencies = (
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
-				3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
-				07FC98360827D373006C56D6 /* PBXTargetDependency */,
 				4B215DB0059896B000305B3C /* PBXTargetDependency */,
 				4B7845EC059B50820048A8BA /* PBXTargetDependency */,
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
@@ -6762,7 +6739,6 @@
 				);
 			};
 			dependencies = (
-				DA0E6463085A78D500A00B72 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -8101,11 +8077,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		07FC98360827D373006C56D6 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcodeproj)";
-			targetProxy = 07FC98350827D373006C56D6 /* PBXContainerItemProxy */;
-		};
 		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B72537BB058C4577004BA969 /* Latex Plugin */;
@@ -8126,30 +8097,25 @@
 			target = 346C9C5306004525000F5A8A /* WebKit Message View */;
 			targetProxy = 346C9D45060046AB000F5A8A /* PBXContainerItemProxy */;
 		};
-		3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = "AIHyperlinks.framework (from AIHyperlinks.framework.xcodeproj)";
-			targetProxy = 3496A8EE07CE6CD40055BBAB /* PBXContainerItemProxy */;
-		};
 		34B9E665085B7C74006216DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
 			targetProxy = 34B9E664085B7C74006216DF /* PBXContainerItemProxy */;
 		};
-		34B9E669085B7C96006216DF /* PBXTargetDependency */ = {
+		34B9E7B3085B8A6B006216DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AIUtilities;
-			targetProxy = 34B9E668085B7C96006216DF /* PBXContainerItemProxy */;
+			targetProxy = 34B9E7B2085B8A6B006216DF /* PBXContainerItemProxy */;
 		};
-		34B9E66B085B7C99006216DF /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIBookmarksImport;
-			targetProxy = 34B9E66A085B7C99006216DF /* PBXContainerItemProxy */;
-		};
-		34B9E66D085B7C9B006216DF /* PBXTargetDependency */ = {
+		34B9E7B5085B8A6B006216DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = AIHyperlinks.framework;
-			targetProxy = 34B9E66C085B7C9B006216DF /* PBXContainerItemProxy */;
+			targetProxy = 34B9E7B4085B8A6B006216DF /* PBXContainerItemProxy */;
+		};
+		34B9E7B7085B8A6B006216DF /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIBookmarksImport;
+			targetProxy = 34B9E7B6085B8A6B006216DF /* PBXContainerItemProxy */;
 		};
 		34BD9CD2053146CC000AB133 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8195,11 +8161,6 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = B7F09288058C3F16000F9CBE /* PBXContainerItemProxy */;
-		};
-		DA0E6463085A78D500A00B72 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = DA0E6462085A78D500A00B72 /* PBXContainerItemProxy */;
 		};
 		DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
