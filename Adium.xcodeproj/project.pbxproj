@@ -1269,7 +1269,7 @@
 /* Begin PBXContainerItemProxy section */
 		07FC98350827D373006C56D6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
@@ -1304,14 +1304,14 @@
 		};
 		3496A8ED07CE6CCB0055BBAB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
 		3496A8EE07CE6CD40055BBAB /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
@@ -1332,14 +1332,14 @@
 		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
 		34FD94910828255100040AC6 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
@@ -1406,6 +1406,13 @@
 			proxyType = 1;
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
+		};
+		DA0E6462085A78D500A00B72 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
 		};
 		DA70F2B1080CAE8200C72D8B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1489,7 +1496,7 @@
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
 		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIBookmarksImport.framework; path = "Frameworks/AIBookmarksImport Framework/build/AIBookmarksImport.framework"; sourceTree = "<group>"; };
-		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcode; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcode"; sourceTree = "<group>"; };
+		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcodeproj; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcodeproj"; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Plugins/Emoticons/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Plugins/Emoticons/AIEmoticonController.m; sourceTree = "<group>"; };
 		3402D38307CB04DB0044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Frameworks/Adium Framework/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1746,7 +1753,7 @@
 		344458EE070B5BEF00D8E932 /* ESDebugWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESDebugWindowController.m; path = Source/ESDebugWindowController.m; sourceTree = "<group>"; };
 		3448054E07AC5151006A7F7B /* ESDebugAILog.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDebugAILog.m; path = "Frameworks/Adium Framework/ESDebugAILog.m"; sourceTree = "<group>"; };
 		3448054F07AC5151006A7F7B /* ESDebugAILog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDebugAILog.h; path = "Frameworks/Adium Framework/ESDebugAILog.h"; sourceTree = "<group>"; };
-		3448717006D1E57700DA778C /* AIUtilities.framework.xcode */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = AIUtilities.framework.xcode; path = "Frameworks/AIUtilities Framework/AIUtilities.framework.xcode"; sourceTree = "<group>"; };
+		3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = AIUtilities.framework.xcodeproj; path = "Frameworks/AIUtilities Framework/AIUtilities.framework.xcodeproj"; sourceTree = "<group>"; };
 		3448758D06D1EBDF00DA778C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		344AB2C30579136900384CEE /* ESOpenMessageWindowContactAlertPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESOpenMessageWindowContactAlertPlugin.h; path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.h"; sourceTree = "<group>"; };
 		344AB2C40579136900384CEE /* ESOpenMessageWindowContactAlertPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESOpenMessageWindowContactAlertPlugin.m; path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.m"; sourceTree = "<group>"; };
@@ -2062,7 +2069,7 @@
 		34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountPrivacy.nib; path = "Frameworks/Adium Framework/AccountPrivacy.nib"; sourceTree = "<group>"; };
 		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcode; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcode"; sourceTree = "<group>"; };
+		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcodeproj; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcodeproj"; sourceTree = "<group>"; };
 		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIHyperlinks.framework; path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -4561,9 +4568,9 @@
 			isa = PBXGroup;
 			children = (
 				34D8342B07CBE6A4006466F2 /* External Sources */,
-				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */,
-				3448717006D1E57700DA778C /* AIUtilities.framework.xcode */,
-				07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */,
+				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
+				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
+				07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -6703,6 +6710,7 @@
 				);
 			};
 			dependencies = (
+				DA0E6463085A78D500A00B72 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -7025,15 +7033,15 @@
 				},
 				{
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
-					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcode */;
+					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
 				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
-					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcode */;
+					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 				},
 				{
 					ProductGroup = 07FC98340827D355006C56D6 /* Products */;
-					ProjectRef = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcode */;
+					ProjectRef = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
 				},
 			);
 			targets = (
@@ -8055,7 +8063,7 @@
 /* Begin PBXTargetDependency section */
 		07FC98360827D373006C56D6 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcode)";
+			name = "AIBookmarksImport (from AIBookmarksImport.framework.xcodeproj)";
 			targetProxy = 07FC98350827D373006C56D6 /* PBXContainerItemProxy */;
 		};
 		34677B3F07CC3E8400F59F7B /* PBXTargetDependency */ = {
@@ -8080,7 +8088,7 @@
 		};
 		3496A8EF07CE6CD40055BBAB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			name = "AIHyperlinks.framework (from AIHyperlinks.framework.xcode)";
+			name = "AIHyperlinks.framework (from AIHyperlinks.framework.xcodeproj)";
 			targetProxy = 3496A8EE07CE6CD40055BBAB /* PBXContainerItemProxy */;
 		};
 		34BD9CD2053146CC000AB133 /* PBXTargetDependency */ = {
@@ -8127,6 +8135,11 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = B7F09288058C3F16000F9CBE /* PBXContainerItemProxy */;
+		};
+		DA0E6463085A78D500A00B72 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = DA0E6462085A78D500A00B72 /* PBXContainerItemProxy */;
 		};
 		DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
