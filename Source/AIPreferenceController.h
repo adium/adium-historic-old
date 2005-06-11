@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 //Preference groups
 #define PREF_GROUP_GENERAL              @"General"
 #define PREF_GROUP_ACCOUNTS             @"Accounts"
@@ -39,8 +41,7 @@ typedef enum {
 
 @protocol AIController;
 
-@interface AIPreferenceController : NSObject <AIController> {
-    IBOutlet	AIAdium		*adium;
+@interface AIPreferenceController : AIObject <AIController> {
 	NSString				*userDirectory;
 	
     NSMutableArray			*paneArray;						//Loaded preference panes

@@ -59,41 +59,37 @@
 @implementation AIAccountController
 
 //init
-- (void)initController
+- (id)init
 {
-	adiumServices = [[AdiumServices alloc] init];
-	adiumPasswords = [[AdiumPasswords alloc] init];
-	adiumAccounts = [[AdiumAccounts alloc] init];
+	if ((self = [super init])) {
+		adiumServices = [[AdiumServices alloc] init];
+		adiumPasswords = [[AdiumPasswords alloc] init];
+		adiumAccounts = [[AdiumAccounts alloc] init];
+		
+		lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];		
+	}
 	
-
-	
-    lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];
-	
-	//Default account preferences
-	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
-										  forGroup:PREF_GROUP_ACCOUNTS];
-	
+	return self;
 }
 
 //Finish initialization once other controllers have set themselves up
 - (void)finishIniting
 {   
+	//Default account preferences
+	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
+										  forGroup:PREF_GROUP_ACCOUNTS];
+	
 	//Finish prepping the accounts
 	[adiumAccounts finishIniting];
 	
 	//Temporary upgrade code
 	[adiumPasswords upgradePasswords];
 
-
-	
-	
-	
     //Observe content (for accountForSendingContentToContact)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:CONTENT_MESSAGE_SENT
-                                     object:nil];
-	
+                                     object:nil];	
 }
 
 - (void)beginClosing

@@ -126,49 +126,54 @@
 @implementation AIContactController
 
 //init
-- (void)initController
+- (id)init
 {
-	//Default account preferences
+	if ((self = [super init])) {
+		//
+		nextOrderIndex = 1;
+		contactObserverArray = [[NSMutableArray alloc] init];
+		sortControllerArray = [[NSMutableArray alloc] init];
+		activeSortController = nil;
+		delayedStatusChanges = 0;
+		delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
+		delayedAttributeChanges = 0;
+		delayedModifiedAttributeKeys = [[NSMutableSet alloc] init];
+		delayedContactChanges = 0;
+		delayedUpdateRequests = 0;
+		updatesAreDelayed = NO;
+		
+		//
+		contactDict = [[NSMutableDictionary alloc] init];
+		groupDict = [[NSMutableDictionary alloc] init];
+		metaContactDict = [[NSMutableDictionary alloc] init];
+		contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
+	}
+	
+	return self;
+}
+
+//finish initing
+- (void)finishIniting
+{	
+	//Default contact preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_CONTACT_LIST];
-    //
-	nextOrderIndex = 1;
-    contactObserverArray = [[NSMutableArray alloc] init];
-    sortControllerArray = [[NSMutableArray alloc] init];
-    activeSortController = nil;
-    delayedStatusChanges = 0;
-	delayedModifiedStatusKeys = [[NSMutableSet alloc] init];
-	delayedAttributeChanges = 0;
-	delayedModifiedAttributeKeys = [[NSMutableSet alloc] init];
-    delayedContactChanges = 0;
-	delayedUpdateRequests = 0;
-	updatesAreDelayed = NO;
-
-	//
-	contactDict = [[NSMutableDictionary alloc] init];
-	groupDict = [[NSMutableDictionary alloc] init];
-	metaContactDict = [[NSMutableDictionary alloc] init];
-	contactToMetaContactLookupDict = [[NSMutableDictionary alloc] init];
-
+	
 	contactList = [[AIListGroup alloc] initWithUID:ADIUM_ROOT_GROUP_NAME];
-
+	
 	//Get Info window and menu items
 	[self prepareContactInfo];
-
+	
 	//Show Groups menu item
 	[self prepareShowHideGroups];
-
+	
 	//Observe content (for preferredContactForContentType:forListContact:)
     [[adium notificationCenter] addObserver:self
                                    selector:@selector(didSendContent:)
                                        name:CONTENT_MESSAGE_SENT
                                      object:nil];
-}
 
-//finish initing
-- (void)finishIniting
-{
 	[self loadContactList];
 	[self sortContactList];
 }

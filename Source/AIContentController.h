@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 #define Content_ContentObjectAdded					@"Content_ContentObjectAdded"
 #define Content_ChatDidFinishAddingUntrackedContent	@"Content_ChatDidFinishAddingUntrackedContent"
 #define Content_WillSendContent						@"Content_WillSendContent"
@@ -24,6 +26,7 @@
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
+@class AdiumMessageEvents;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
@@ -43,11 +46,6 @@ typedef enum {
 	AIFilterOutgoing		// Content we are sending
 } AIFilterDirection;
 #define FILTER_DIRECTION_COUNT 2
-
-//Observer which receives notifications of changes in chat status
-@protocol AIChatObserver
-- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
-@end
 
 #define HIGHEST_FILTER_PRIORITY 0
 #define HIGH_FILTER_PRIORITY 0.25
@@ -70,52 +68,22 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
 @end
 
-@interface AIContentController : NSObject <AIController, AIEventHandler> {
-    IBOutlet	AIAdium		*adium;
-	
+@interface AIContentController : AIObject <AIController> {
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
     NSMutableArray			*textEntryViews;
 	NSDictionary			*defaultFormattingAttributes;
 	
-    NSMutableSet			*openChats;
 	NSMutableSet			*objectsBeingReceived;
-	NSMutableArray			*chatObserverArray;
 
-    AIChat					*mostRecentChat;
-    
     NSArray					*emoticonsArray;
     NSArray					*emoticonPacks;
 	
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
+	
+	AdiumMessageEvents		*messageEvents;
 }
-
-//Chats
-- (NSSet *)allChatsWithContact:(AIListContact *)inContact;
-- (AIChat *)openChatWithContact:(AIListContact *)inContact;
-- (AIChat *)chatWithContact:(AIListContact *)inContact;
-- (AIChat *)existingChatWithContact:(AIListContact *)inContact;
-- (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID;
-- (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
-- (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
-- (void)openChat:(AIChat *)chat;
-- (BOOL)closeChat:(AIChat *)inChat;
-- (NSSet *)openChats;
-- (BOOL)switchToMostRecentUnviewedContent;
-- (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
-- (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount;
-- (BOOL)contactIsInGroupChat:(AIListContact *)listContact;
-
-//Status
-- (void)registerChatObserver:(id <AIChatObserver>)inObserver;
-- (void)unregisterChatObserver:(id <AIChatObserver>)inObserver;
-- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
-- (void)updateAllChatsForObserver:(id <AIChatObserver>)observer;
-
-//Unviewed Content Status
-- (void)increaseUnviewedContentOfChat:(AIChat *)inChat;
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
@@ -171,5 +139,7 @@ typedef enum {
 
 //Encryption
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault;
+
+- (BOOL)chatIsReceivingContent:(AIChat *)chat;
 
 @end

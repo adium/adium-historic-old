@@ -252,6 +252,8 @@ typedef enum {
 //Window levels menu
 - (NSMenu *)menuForWindowLevelsNotifyingTarget:(id)target;
 
+- (IBAction)showPreferenceWindow:(id)sender;
+
 @end
 
 //Custom printing informal protocol

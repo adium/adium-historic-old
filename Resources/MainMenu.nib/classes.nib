@@ -1,12 +1,6 @@
 {
     IBClasses = (
         {
-            CLASS = AIAccountController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
             ACTIONS = {
                 confirmQuit = id; 
                 launchJeeves = id; 
@@ -20,61 +14,9 @@
             CLASS = AIAdium; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                accountController = AIAccountController; 
-                applescriptabilityController = ESApplescriptabilityController; 
-                componentLoader = AICoreComponentLoader; 
-                contactAlertsController = ESContactAlertsController; 
-                contactController = AIContactController; 
-                contentController = AIContentController; 
-                debugController = ESDebugController; 
-                dockController = AIDockController; 
-                emoticonController = AIEmoticonController; 
-                fileTransferController = ESFileTransferController; 
                 interfaceController = AIInterfaceController; 
-                loginController = AILoginController; 
                 menuController = AIMenuController; 
-                pluginLoader = AICorePluginLoader; 
-                preferenceController = AIPreferenceController; 
-                soundController = AISoundController; 
-                statusController = AIStatusController; 
-                toolbarController = AIToolbarController; 
             }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {showContactInfo = id; }; 
-            CLASS = AIContactController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {
-                adium = AIAdium; 
-                "menuItem_getInfo" = NSMenuItem; 
-                "menuItem_getInfoAlternate" = NSMenuItem; 
-            }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIContentController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {CLASS = AICoreComponentLoader; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {
-            CLASS = AICorePluginLoader; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIDockController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIEmoticonController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -91,6 +33,7 @@
                 showChatWindow = id; 
                 showContactList = id; 
                 showContactListAndBringToFront = id; 
+                showPreferenceWindow = id; 
                 toggleContactList = id; 
                 toggleFontTrait = id; 
                 toggleToolbarShown = id; 
@@ -112,12 +55,6 @@
                 "menuItem_print" = NSMenuItem; 
                 "menuItem_showToolbar" = NSMenuItem; 
             }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AILoginController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; target = id; }; 
             SUPERCLASS = NSObject; 
         }, 
         {
@@ -210,61 +147,6 @@
                 "menu_Window_Top" = id; 
                 nilMenuItem = id; 
             }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            ACTIONS = {showPreferenceWindow = id; }; 
-            CLASS = AIPreferenceController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIServiceController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AISoundController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIStatusController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = AIToolbarController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = ESApplescriptabilityController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = ESContactAlertsController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = ESDebugController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
-            SUPERCLASS = NSObject; 
-        }, 
-        {
-            CLASS = ESFileTransferController; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {adium = AIAdium; }; 
             SUPERCLASS = NSObject; 
         }, 
         {

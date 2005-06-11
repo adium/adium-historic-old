@@ -23,9 +23,13 @@
 
 @implementation AIToolbarController
 
-- (void)initController
+- (id)init
 {
-	toolbarItems = [[NSMutableDictionary alloc] init];
+	if ((self = [super init])) {
+		toolbarItems = [[NSMutableDictionary alloc] init];
+	}
+	
+	return self;
 }
 
 - (void)finishIniting

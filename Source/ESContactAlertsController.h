@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import <Adium/AIObject.h>
+
 @class AIModularPane, AIListObject;
 
 @protocol AIController;
@@ -117,9 +119,7 @@ typedef enum {
 } AIEventHandlerGroupType;
 #define EVENT_HANDLER_GROUP_COUNT 5
 
-@interface ESContactAlertsController : NSObject <AIController> {
-    IBOutlet	AIAdium			*adium;
-	
+@interface ESContactAlertsController : AIObject <AIController> {
 	NSMutableDictionary			*globalOnlyEventHandlers;
 	NSMutableDictionary			*eventHandlers;
 	NSMutableDictionary			*actionHandlers;

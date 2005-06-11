@@ -57,25 +57,32 @@ static ESFileTransferPreferences *preferences;
 
 @implementation ESFileTransferController
 
-//init and close
-- (void)initController
+//init
+- (id)init
 {
-	fileTransferArray = [[NSMutableArray alloc] init];
-	safeFileExtensions = nil;
+	if ((self = [super init])) {
+		fileTransferArray = [[NSMutableArray alloc] init];
+		safeFileExtensions = nil;
+	}
+	
+	return self;
+}
 
+- (void)finishIniting
+{
     //Add our get info contextual menu item
     menuItem_sendFileContext = [[NSMenuItem alloc] initWithTitle:SEND_FILE
-														 target:self action:@selector(contextualMenuSendFile:)
-												  keyEquivalent:@""];
+														  target:self action:@selector(contextualMenuSendFile:)
+												   keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_sendFileContext toLocation:Context_Contact_Action];
-
+	
 	//Register the events we generate
 	ESContactAlertsController *contactAlertsController = [adium contactAlertsController];
 	[contactAlertsController registerEventID:FILE_TRANSFER_REQUEST withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_BEGAN withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_CANCELED withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	[contactAlertsController registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
-
+	
     //Install the Send File menu item
 	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:SEND_FILE
 												   target:self action:@selector(sendFileToSelectedContact:)
@@ -95,23 +102,19 @@ static ESFileTransferPreferences *preferences;
 														 action:@selector(sendFileToSelectedContact:)
 														   menu:nil];
     [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"ListObject"];
-
+	
 	AIPreferenceController *preferenceController = [adium preferenceController];
     //Register our default preferences
     [preferenceController registerDefaults:[NSDictionary dictionaryNamed:FILE_TRANSFER_DEFAULT_PREFS
-																		forClass:[self class]] 
-										  forGroup:PREF_GROUP_FILE_TRANSFER];
+																forClass:[self class]] 
+								  forGroup:PREF_GROUP_FILE_TRANSFER];
     
     //Observe pref changes
 	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_FILE_TRANSFER];
 	preferences = [[ESFileTransferPreferences preferencePane] retain];
-
+	
 	//Set up the file transfer progress window
 	[self configureFileTransferProgressWindow];
-}
-
-- (void)finishIniting
-{
 }
 
 - (void)beginClosing

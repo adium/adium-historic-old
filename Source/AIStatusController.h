@@ -14,7 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIStatus.h"
+#import <Adium/AIObject.h>
+#import <Adium/AIStatus.h>
 
 @class AIService;
 @protocol AIController, AIListObjectObserver;
@@ -101,9 +102,7 @@
 - (void)removeStateMenuItems:(NSArray *)menuItemArray;
 @end
 
-@interface AIStatusController : NSObject <AIController, AIListObjectObserver> {
-    IBOutlet	AIAdium		*adium;
-
+@interface AIStatusController : AIObject <AIController, AIListObjectObserver> {
 	//Status states
 	NSMutableArray			*stateArray;
 	NSMutableArray			*builtInStateArray;
