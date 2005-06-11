@@ -36,7 +36,7 @@
 //
 - (id)init
 {
-    if((self = [super init])) {
+    if ((self = [super init])) {
 		slayerScript = [[NSAppleScript alloc] initWithSource:@"tell application \"UserNotificationCenter\" to quit"];
 	}
 
@@ -64,9 +64,9 @@
     [scrollView_details setAlwaysDrawFocusRingIfFocused:YES];
 	
     //Search for an exception log
-    if([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]){
+    if ([[NSFileManager defaultManager] fileExistsAtPath:EXCEPTIONS_PATH]) {
         [self reportCrashForLogAtPath:EXCEPTIONS_PATH];
-    }else{  
+    } else {  
         //Kill the apple crash reporter
 		[NSTimer scheduledTimerWithTimeInterval:CRASH_REPORT_SLAY_INTERVAL
 										 target:self
@@ -82,7 +82,7 @@
                                         repeats:YES];
     }
 	
-	if([progress_sending respondsToSelector:@selector(setHidden:)]){
+	if ([progress_sending respondsToSelector:@selector(setHidden:)]) {
 		[progress_sending setHidden:YES];
 	}
 }
@@ -99,7 +99,7 @@
 	static int 		countdown = CRASH_REPORT_SLAY_ATTEMPTS;
 	
 	//Kill the notification app if it's open
-	if(countdown-- == 0 || ![[slayerScript executeAndReturnError:nil] booleanValue]){
+	if (countdown-- == 0 || ![[slayerScript executeAndReturnError:nil] booleanValue]) {
 		[inTimer invalidate];
 	}
 }
@@ -111,7 +111,7 @@
 	static int 		countdown = CRASH_LOG_WAIT_ATTEMPTS;
 	
 	//Kill the notification app if it's open
-	if(countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]){
+	if (countdown-- == 0 || [self reportCrashForLogAtPath:CRASHES_PATH]) {
 		[inTimer invalidate];
 	}
 }
@@ -122,25 +122,25 @@
     NSString	*emailAddress, *aimAccount;
     NSRange		binaryRange;
     
-	if([[NSFileManager defaultManager] fileExistsAtPath:inPath]){
+	if ([[NSFileManager defaultManager] fileExistsAtPath:inPath]) {
 		NSString	*newLog = [NSString stringWithContentsOfFile:inPath];
-		if(newLog && [newLog length]){
+		if (newLog && [newLog length]) {
 			//Hang onto and delete the log
 			crashLog = [newLog retain];
 			[[NSFileManager defaultManager] trashFileAtPath:inPath];
 			
 			//Strip off PPC thread state and binary descriptions.. we don't need to send all that
 			binaryRange = [crashLog rangeOfString:@"PPC Thread State:"];
-			if(binaryRange.location != NSNotFound){
+			if (binaryRange.location != NSNotFound) {
 				NSString	*shortLog = [crashLog substringToIndex:binaryRange.location];
 				[crashLog release]; crashLog = [shortLog retain];
 			}
 			
 			//Restore the user's email address and account if they've entered it previously
-			if((emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS])){
+			if ((emailAddress = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_EMAIL_ADDRESS])) {
 				[textField_emailAddress setStringValue:emailAddress];
 			}
-			if((aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT])){
+			if ((aimAccount = [[NSUserDefaults standardUserDefaults] objectForKey:KEY_CRASH_AIM_ACCOUNT])) {
 				[textField_accountIM setStringValue:aimAccount];
 			}
 			
@@ -190,16 +190,16 @@
 //User wants to send the report
 - (IBAction)send:(id)sender
 {
-	if([[textField_emailAddress stringValue] isEqualToString:@""] &&
-	   [[textField_accountIM stringValue] isEqualToString:@""]){
+	if ([[textField_emailAddress stringValue] isEqualToString:@""] &&
+	   [[textField_accountIM stringValue] isEqualToString:@""]) {
 		NSBeginCriticalAlertSheet(AILocalizedString(@"Contact Information Required",nil),
 								  @"OK", nil, nil, window_MainWindow, nil, nil, nil, NULL,
 								  AILocalizedString(@"Please provide either your email address or AIM name in case we need to contact you for additional information (or to suggest a solution).",nil));
-	}else{
+	} else {
 		NSString	*shortDescription = [textField_description stringValue];
 
 		//Truncate description field to 300 characters
-		if([shortDescription length] > 300){
+		if ([shortDescription length] > 300) {
 		    shortDescription = [shortDescription substringToIndex:300];
 		}
 
@@ -220,7 +220,7 @@
 		[self sendReport:crashReport];
 
 		//Relaunch Adium
-		if(adiumPath) {
+		if (adiumPath) {
 			[[NSWorkspace sharedWorkspace] openFile:adiumPath];
 		} else {
 			[[NSWorkspace sharedWorkspace] launchApplication:@"Adium"];
@@ -240,8 +240,8 @@
     
     //Compact the fields of the report into a long URL string
     enumerator = [[crashReport allKeys] objectEnumerator];
-    while((key = [enumerator nextObject])){
-        if([reportString length] != 0) [reportString appendString:@"&"];
+    while ((key = [enumerator nextObject])) {
+        if ([reportString length] != 0) [reportString appendString:@"&"];
         [reportString appendFormat:@"%@=%@", key, [[crashReport objectForKey:key] stringByEncodingURLEscapes]];
     }
 
@@ -251,12 +251,12 @@
 	//Dipslay immediately since we need it for this run loop.
 	[[button_close superview] display];
 	
-	if([progress_sending respondsToSelector:@selector(setHidden:)]){
+	if ([progress_sending respondsToSelector:@selector(setHidden:)]) {
 		[progress_sending setHidden:NO];
 	}
 	
     //
-    while(!data || [data length] == 0){
+    while (!data || [data length] == 0) {
         NSError 			*error;
         NSURLResponse 		*reply;
         NSMutableURLRequest *request;
@@ -280,12 +280,12 @@
         [progress_sending stopAnimation:nil];
         
         //Alert on failure, and offer the option to quit or retry
-        if(!data || [data length] == 0){
-            if(NSRunAlertPanel(@"Unable to send crash report",
+        if (!data || [data length] == 0) {
+            if (NSRunAlertPanel(@"Unable to send crash report",
                                [error localizedDescription],
                                @"Try Again", 
                                @"Quit",
-                               nil) == NSAlertAlternateReturn){
+                               nil) == NSAlertAlternateReturn) {
                 break;
             }
         }
@@ -315,17 +315,17 @@
 {
     //Grab the info from our buildnum script
     char *path, unixDate[256], num[256],whoami[256];
-    if((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]))
+    if ((path = (char *)[[[[NSBundle mainBundle] resourcePath] stringByAppendingString:@"/../../../buildnum"] fileSystemRepresentation]))
     {
         FILE *f = fopen(path, "r");
         fscanf(f, "%s | %s | %s", num, unixDate, whoami);
         fclose(f);
 		
-        if(*num){
+        if (*num) {
             buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
 		}
 		
-		if(*unixDate){
+		if (*unixDate) {
 			NSDateFormatter *dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:@"%m-%d" 
 																	 allowNaturalLanguage:NO] autorelease];
             NSDate	    *date;
@@ -334,11 +334,11 @@
             buildDate = [[dateFormatter stringForObjectValue:date] retain];
 		}
 		
-		if (*whoami){
+		if (*whoami) {
 			buildUser = [[NSString stringWithFormat:@"%s", whoami] retain];
 			if ([buildUser isEqualToString:@"adamiser"] || 
 				[buildUser isEqualToString:@"evands"] || 
-				[buildUser isEqualToString:@"jmelloy"]){
+				[buildUser isEqualToString:@"jmelloy"]) {
 				buildUser = nil;
 			}
 			
@@ -346,8 +346,8 @@
     }
     
     //Default to empty strings if something goes wrong
-    if(!buildDate) buildDate = [@"" retain];
-    if(!buildNumber) buildNumber = [@"" retain];
+    if (!buildDate) buildDate = [@"" retain];
+    if (!buildNumber) buildNumber = [@"" retain];
 }
 
 @end

@@ -52,18 +52,14 @@
 	
 	[popUpButton_Clients setAction:@selector(changeClientSelection:)];
 	[popUpButton_Clients setAutoenablesItems:NO];
-        
-	
-	
-	
+
     NSString				*file;
     NSString				*dirPath = [@"~/Library/Application Support/Adium/Users" stringByExpandingTildeInPath];
     NSDirectoryEnumerator *enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
 	
-    while((file = [enumer nextObject]))
-	{
+    while ((file = [enumer nextObject])) {
 		[enumer skipDescendents];
-		if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
+		if ([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
 			[popUpButton_account addItemWithTitle:file];
 	}
 	
@@ -71,13 +67,10 @@
     enumer = [[NSFileManager defaultManager] enumeratorAtPath:dirPath];
 	[popUpButton_user removeAllItems];
 	
-    while((file = [enumer nextObject]))
-	{
+    while ((file = [enumer nextObject])) {
 		[enumer skipDescendents];
-		if([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"])
-		{
-			if (![file isEqualToString:@".DS_Store"])
-			{ 
+		if ([[[enumer fileAttributes] objectForKey:@"NSFileType"] isEqual:@"NSFileTypeDirectory"]) {
+			if (![file isEqualToString:@".DS_Store"]) { 
 				[popUpButton_user addItemWithTitle:file];
 			}
 		}
@@ -86,7 +79,7 @@
     [window_main makeKeyAndOrderFront:nil];
 	
 	//No Adium 1.x prefs
-	if([popUpButton_account numberOfItems] == 0){
+	if ([popUpButton_account numberOfItems] == 0) {
 		[popUpButton_account setEnabled:NO];
 		[button_Adium_Logs setEnabled:NO];
 		[button_Adium_Aliases setEnabled:NO];
@@ -99,13 +92,13 @@
 	
 	
 	//No Adium 2.0 prefs
-	if([popUpButton_user numberOfItems] == 0){
+	if ([popUpButton_user numberOfItems] == 0) {
 		NSBeginAlertSheet(@"Run Adium 2 first", @"Quit", nil, nil, window_main, NSApp, @selector(terminate:), nil, nil, @"You must run Adium 2 before any settings can be imported");
 	}
 	
 	 
 	//Multiple Adium 2.0 users
-	//if([popUpButton_user numberOfItems] > 1)
+	//if ([popUpButton_user numberOfItems] > 1)
 //	{
 //		[NSApp beginSheet:theSheet
 //		   modalForWindow:window_main
@@ -133,9 +126,9 @@
 		icon = [iconDict objectForKey:[item title]];
 		[icon setSize:NSMakeSize(16,16)];
 		[item setImage:icon];
-	if([manager fileExistsAtPath:settingsPath]){
+	if ([manager fileExistsAtPath:settingsPath]) {
 		[item setEnabled:YES];
-	}else{
+	} else {
 		[item setEnabled:NO];
 	}
 
@@ -147,9 +140,9 @@
 		icon = [iconDict objectForKey:[item title]];
 		[icon setSize:NSMakeSize(16,16)];
 		[item setImage:icon];
-		if([manager fileExistsAtPath:settingsPath]){
+		if ([manager fileExistsAtPath:settingsPath]) {
 			[item setEnabled:YES];
-		}else{
+		} else {
 			[item setEnabled:NO];
 		}
 	
@@ -158,17 +151,17 @@
 	settingsPath = [@"~/Library/Application Support/Fire/" stringByExpandingTildeInPath];
 		[popUpButton_Clients addItemWithTitle:@"Fire"];
 		item = (NSMenuItem *)[popUpButton_Clients lastItem];
-		if ([[NSFileManager defaultManager] fileExistsAtPath:path]){
+		if ([[NSFileManager defaultManager] fileExistsAtPath:path]) {
 			icon = [iconDict objectForKey:[item title]];
-		}else{
+		} else {
 			icon = [NSImage imageNamed:@"ErrorAlert"];
 		}
 		[icon setSize:NSMakeSize(16,16)];
 		
 		[item setImage:icon];
-		if([manager fileExistsAtPath:settingsPath]){
+		if ([manager fileExistsAtPath:settingsPath]) {
 			[item setEnabled:YES];
-		}else{
+		} else {
 			[item setEnabled:NO];
 		}
 
@@ -189,17 +182,17 @@
     NSMutableArray	*mutableArray = [NSMutableArray array];
     
     enumerator = [array objectEnumerator];
-    while((dict = [enumerator nextObject])){
+    while ((dict = [enumerator nextObject])) {
         NSString	*type = [dict objectForKey:@"Type"];
         
-        if([type isEqualToString:@"Group"]){
+        if ([type isEqualToString:@"Group"]) {
             [mutableArray addObject:[NSMutableDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _loadAwaysFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
             
-        }else if([type isEqualToString:@"Away"]){
+        } else if ([type isEqualToString:@"Away"]) {
             NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
             NSString                *title = [dict objectForKey:@"Title"];
             NSData                  *autoresponse = [dict objectForKey:@"Autoresponse"];
@@ -207,11 +200,11 @@
             [newDict setObject:@"Away" forKey:@"Type"];
             [newDict setObject:[NSAttributedString stringWithData:[dict objectForKey:@"Message"]] forKey:@"Message"];
             
-            if(title && [title length]){
+            if (title && [title length]) {
                 [newDict setObject:title forKey:@"Title"];
             }
             
-            if(autoresponse){
+            if (autoresponse) {
                 [newDict setObject:[NSAttributedString stringWithData:autoresponse] forKey:@"Autoresponse"];
             }
             
@@ -229,17 +222,17 @@
     NSMutableArray	*saveArray = [NSMutableArray array];
     
     enumerator = [array objectEnumerator];
-    while((dict = [enumerator nextObject])){
+    while ((dict = [enumerator nextObject])) {
         NSString	*type = [dict objectForKey:@"Type"];
         
-        if([type isEqualToString:@"Group"]){
+        if ([type isEqualToString:@"Group"]) {
             [saveArray addObject:[NSDictionary dictionaryWithObjectsAndKeys:
                 @"Group", @"Type",
                 [self _saveArrayFromArray:[dict objectForKey:@"Contents"]], @"Contents",
                 [dict objectForKey:@"Name"], @"Name",
                 nil]];
             
-        }else if([type isEqualToString:@"Away"]){
+        } else if ([type isEqualToString:@"Away"]) {
             NSMutableDictionary     *newDict = [NSMutableDictionary dictionary];
             NSString                *title = [dict objectForKey:@"Title"];
             NSData                  *autoresponse = [[dict objectForKey:@"Autoresponse"] dataRepresentation];
@@ -247,11 +240,11 @@
             [newDict setObject:@"Away" forKey:@"Type"];
             [newDict setObject:[[dict objectForKey:@"Message"] dataRepresentation] forKey:@"Message"];
             
-            if(title && [title length]){
+            if (title && [title length]) {
                 [newDict setObject:title forKey:@"Title"];
             }
             
-            if(autoresponse){
+            if (autoresponse) {
                 [newDict setObject:autoresponse forKey:@"Autoresponse"];
             }
             
@@ -269,9 +262,9 @@
 	NSDictionary*appDict;
 	
 	enumerator = [apps objectEnumerator];
-	while((appDict = [enumerator nextObject])){
-		if([[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Adium"].location != NSNotFound &&
-		   [[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Importer"].location == NSNotFound){
+	while ((appDict = [enumerator nextObject])) {
+		if ([[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Adium"].location != NSNotFound &&
+		   [[appDict objectForKey:@"NSApplicationName"] rangeOfString:@"Importer"].location == NSNotFound) {
 			//Alert
 			NSBeginAlertSheet(@"Adium is running", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Please close all copies of Adium before importing.");
 			
@@ -303,7 +296,7 @@
 //
 - (IBAction)importLogs:(id)sender
 {
-	if([self ensureAdiumIsClosed]){
+	if ([self ensureAdiumIsClosed]) {
 		
 		NSString		*importingFromAccount = [popUpButton_account titleOfSelectedItem];
 		NSString		*importingForAccount = [popUpButton_user titleOfSelectedItem];
@@ -328,7 +321,7 @@
 		//For every contact they messaged
 		oldLogFolder = [[oldUserFolder stringByAppendingPathComponent:importingFromAccount] stringByAppendingPathComponent:@"Logs"];
 		logEnumerator = [[defaultFileManager directoryContentsAtPath:oldLogFolder] objectEnumerator];
-		while((subFolder = [logEnumerator nextObject])){
+		while ((subFolder = [logEnumerator nextObject])) {
 			NSString		*subFolderPath;
 			NSEnumerator	*fileEnumerator;
 			NSString		*fileName;
@@ -336,7 +329,7 @@
 			//For every log file they have
 			subFolderPath = [oldLogFolder stringByAppendingPathComponent:subFolder];
 			fileEnumerator = [[defaultFileManager directoryContentsAtPath:subFolderPath] objectEnumerator];
-			while((fileName = [fileEnumerator nextObject])){
+			while ((fileName = [fileEnumerator nextObject])) {
 				NSString	*newPath = [NSString stringWithFormat:@"%@/AIM.%@/%@", newLogFolder, importingFromAccount, subFolder];
 				
 				//Update status
@@ -364,7 +357,7 @@
 	NSString *importingFromAccount = [popUpButton_account titleOfSelectedItem];
 	NSString *importingForAccount = [popUpButton_user titleOfSelectedItem];
 	
-	if([self ensureAdiumIsClosed]){
+	if ([self ensureAdiumIsClosed]) {
 		//
 		[progressIndicator setIndeterminate:YES];
 		[progressIndicator startAnimation:nil];
@@ -394,20 +387,20 @@
 			}
 		}
 		
-		if (listAccount && buddyList){
+		if (listAccount && buddyList) {
 			//Scan through all the buddies and groups
 			int				numGroups = [[buddyList objectForKey:@"numGroups"] intValue];
 			int				i,j;
 			NSFileManager   *defaultFileManager = [NSFileManager defaultManager];
 			
-			for(i = 0; i < numGroups; i++){
+			for (i = 0; i < numGroups; i++) {
 				NSDictionary *group = [buddyList objectForKey:[NSString stringWithFormat:@"group %d", i]];
 				int numContacts = [[group objectForKey:@"numberOfBuddies"] intValue];
 				
-				for(j = 0; j < numContacts; j++){
+				for (j = 0; j < numContacts; j++) {
 					
 					NSString	*alias = [group objectForKey:[NSString stringWithFormat:@"alias %d", j]];
-					if(alias && ![alias isEqualToString:@""]){
+					if (alias && ![alias isEqualToString:@""]) {
 						NSString			*screenname;
 						NSString			*prefPath;
 						NSMutableDictionary *prefDict;
@@ -423,7 +416,7 @@
 						//Open the 2.0 object specific preference file for this contact
 						prefPath = [[NSString stringWithFormat:@"~/Library/Application Support/Adium 2.0/Users/%@/ByObject/AIM.%@.plist", importingForAccount, screenname] stringByExpandingTildeInPath];
 						prefDict = [NSMutableDictionary dictionaryWithContentsOfFile:prefPath];
-						if(!prefDict) prefDict = [NSMutableDictionary dictionary];
+						if (!prefDict) prefDict = [NSMutableDictionary dictionary];
 						
 						//Add the alias key to it
 						[prefDict setObject:alias forKey:@"Alias"];
@@ -446,19 +439,19 @@
 
 /*- (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)code contextInfo:(void *)info
 {
-	if(code)
+	if (code)
 	{
 		[progressIndicator setIndeterminate:YES];
 		[progressIndicator startAnimation:self];
 		[button_import setEnabled:NO];
 		[popUpButton_account setEnabled:NO];
 		
-		if([checkBox_contacts state] == NSOnState
+		if ([checkBox_contacts state] == NSOnState
 		   && [popUpButton_account selectedItem])
 		{
 			[self importContacts];
 		}
-		if([checkBox_aliases state] == NSOnState
+		if ([checkBox_aliases state] == NSOnState
 		   && [popUpButton_account selectedItem])
 		{
 			[self importAliases];
@@ -487,17 +480,17 @@
 
 - (IBAction)importAwayMessages:(id)sender
 {
-    if([self ensureAdiumIsClosed]){
+    if ([self ensureAdiumIsClosed]) {
         NSString *whichClient;
         whichClient = [popUpButton_Clients titleOfSelectedItem];
     
-        if(whichClient == @"iChat"){
+        if (whichClient == @"iChat") {
             [self importiChatAways];
         }
-        else if(whichClient == @"Proteus"){
+        else if (whichClient == @"Proteus") {
             [self importProteusAways];
         }
-        else if(whichClient == @"Fire"){
+        else if (whichClient == @"Fire") {
             [self importFireAways];
         }
     }
@@ -536,7 +529,7 @@
     NSString *AdiumMsgTitle, *AdiumMsgContent;
     BOOL messageAlreadyExists;
         
-    while((iChatMsgContent = [iChatEnumerator nextObject]))
+    while ((iChatMsgContent = [iChatEnumerator nextObject]))
         {
             
             // Create a title for the message by truncating it
@@ -546,7 +539,7 @@
             AdiumEnumerator = [AdiumMessageArray objectEnumerator];
             messageAlreadyExists = NO;
             
-            while((AdiumMessage = [AdiumEnumerator nextObject]))
+            while ((AdiumMessage = [AdiumEnumerator nextObject]))
             {
                 AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
                 AdiumMsgContent = [AdiumMessage objectForKey:@"Message"];
@@ -579,7 +572,7 @@
     [spinner_importProgress stopAnimation:nil];
     [spinner_importProgress setHidden:YES];
         
-    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
+    if ([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
         NSBeginAlertSheet(@"iChat messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your iChat away messages have been imported and are now available in Adium.");
     }
@@ -604,7 +597,7 @@
     
     //Create an array of Proteus Away Messages
     manager  = [[NSFileManager alloc] init];
-    if([manager fileExistsAtPath:PROTEUS_3_STATUS])
+    if ([manager fileExistsAtPath:PROTEUS_3_STATUS])
         proteusPath = PROTEUS_3_STATUS;
     else
         proteusPath = PROTEUS_4_STATUS;
@@ -638,7 +631,7 @@
     //Get us an array of all the keys in the dictionary
         
     NSEnumerator *proteusEnumerator = [proteusMessageArray objectEnumerator];
-    while((proteusMessage = [proteusEnumerator nextObject]))
+    while ((proteusMessage = [proteusEnumerator nextObject]))
     {
         
         proteusMsgTitle = [proteusMessage objectForKey:@"Name"];
@@ -647,14 +640,14 @@
         NSLog(proteusMsgContent);
         
         //If we want to import ALL of the messages and not just ones for the away status...
-        if([button_importAllProteusAways state] == NSOnState){
+        if ([button_importAllProteusAways state] == NSOnState) {
         
             
         // Loop through each Adium away message and compare it to the current proteus message
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
         messageAlreadyExists = NO;
         
-        while((AdiumMessage = [AdiumEnumerator nextObject]))
+        while ((AdiumMessage = [AdiumEnumerator nextObject]))
         {
             // If either the title or the content matches, we assume it's already been imported...
             AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
@@ -690,7 +683,7 @@
     [spinner_importProgress stopAnimation:nil];
     [spinner_importProgress setHidden:YES];
     
-    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
+    if ([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
         NSBeginAlertSheet(@"Proteus messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Proteus away messages have been imported and are now available in Adium.");
     }
@@ -741,7 +734,7 @@
     NSArray *fireKeyArray = [[[NSArray alloc] initWithArray:[fireMessageDict allKeys]] autorelease];
               
     NSEnumerator *fireEnumerator = [fireKeyArray objectEnumerator];
-    while((fireMsgTitle = [fireEnumerator nextObject]))
+    while ((fireMsgTitle = [fireEnumerator nextObject]))
     {
         fireMessage = [fireMessageDict objectForKey:fireMsgTitle];
         
@@ -753,7 +746,7 @@
         AdiumEnumerator = [AdiumMessageArray objectEnumerator];
         messageAlreadyExists = NO;
         
-        while((AdiumMessage = [AdiumEnumerator nextObject]))
+        while ((AdiumMessage = [AdiumEnumerator nextObject]))
         {
             // If either the title or the content matches, we assume it's already been imported...
             AdiumMsgTitle = [AdiumMessage objectForKey:@"Title"];
@@ -789,7 +782,7 @@
     [spinner_importProgress stopAnimation:nil];
     [spinner_importProgress setHidden:YES];
     
-    if([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
+    if ([finalDict writeToFile:[awayMessagePath stringByExpandingTildeInPath] atomically:YES])
     {
         NSBeginAlertSheet(@"Fire messages imported successfully.", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Your Fire away messages have been imported and are now available in Adium.");
     }
