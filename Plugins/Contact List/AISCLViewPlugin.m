@@ -43,7 +43,6 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	[adium createResourcePathForName:LIST_THEME_FOLDER];
 
     //Install our preference views
-//    preferences = [[AICLPreferences preferencePane] retain];
 	advancedPreferences = [[ESContactListAdvancedPreferences preferencePane] retain];
 	   
 	//Observe list closing

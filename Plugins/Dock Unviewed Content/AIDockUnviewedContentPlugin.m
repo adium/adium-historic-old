@@ -14,9 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIDockUnviewedContentPlugin.h"
+#import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIDockController.h"
-#import "AIDockUnviewedContentPlugin.h"
 #import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIChat.h>
 
@@ -29,7 +30,7 @@
     unviewedState = NO;
 
     //Register as a chat observer (So we can catch the unviewed content status flag)
-    [[adium contentController] registerChatObserver:self];
+    [[adium chatController] registerChatObserver:self];
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatWillClose:)
@@ -38,7 +39,7 @@
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterChatObserver:self];
+	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 }
 

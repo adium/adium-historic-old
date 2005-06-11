@@ -14,8 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContactController.h"
 #import "AIContactStatusDockOverlaysPlugin.h"
+#import "AIChatController.h"
+#import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIDockController.h"
 #import "AIInterfaceController.h"
@@ -60,7 +61,7 @@
     [[adium contactController] registerListObjectObserver:self];
 	
 	//Register as a chat observer (for unviewed content)
-	[[adium contentController] registerChatObserver:self];
+	[[adium chatController] registerChatObserver:self];
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(chatClosed:)
@@ -81,7 +82,7 @@
 - (void)uninstallPlugin
 {
 	[[adium contactController] unregisterListObjectObserver:self];
-	[[adium contentController] unregisterChatObserver:self];
+	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 }

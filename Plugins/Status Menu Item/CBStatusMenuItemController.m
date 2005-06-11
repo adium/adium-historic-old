@@ -15,7 +15,7 @@
  */
 
 #import "AIAccountController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIInterfaceController.h"
 #import "AIStatusController.h"
 #import "CBStatusMenuItemController.h"
@@ -122,7 +122,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 										 object:nil];
 		
         //Register as a chat observer (So we can catch the unviewed content status flag)
-        [[adium contentController] registerChatObserver:self];
+        [[adium chatController] registerChatObserver:self];
 				
 		//Register to recieve connect/disconnect notifications
 		[[adium notificationCenter] addObserver:self

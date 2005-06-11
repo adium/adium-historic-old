@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -602,7 +603,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 - (oneway void)addChat:(AIChat *)chat
 {
 	//Open the chat
-	[[adium contentController] openChat:chat];
+	[[adium chatController] openChat:chat];
 }
 
 //Open a chat for Adium
@@ -643,12 +644,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	AIChat *chat;
 
 	//First, make sure the chat is created
-	[[adium contentController] mainPerformSelector:@selector(chatWithContact:)
-										withObject:contact
-									 waitUntilDone:YES];
+	[[adium chatController] mainPerformSelector:@selector(chatWithContact:)
+									 withObject:contact
+								  waitUntilDone:YES];
 
 	//Now return the existing chat
-	chat = [[adium contentController] existingChatWithContact:contact];
+	chat = [[adium chatController] existingChatWithContact:contact];
 
 	return chat;
 }
@@ -669,7 +670,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 									 waitUntilDone:YES];
 	
 	//Now return the existing chat
-	chat = [[adium contentController] existingChatWithName:name onAccount:self];
+	chat = [[adium chatController] existingChatWithName:name onAccount:self];
 	
 	return chat;
 }

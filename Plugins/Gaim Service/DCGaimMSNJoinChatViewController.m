@@ -14,8 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "AIContentController.h"
 #import "DCGaimMSNJoinChatViewController.h"
+#import "AIChatController.h"
 #import "DCJoinChatWindowController.h"
 #import <Adium/AIAccount.h>
 
@@ -37,9 +37,9 @@
 	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",nil];
 
-	[[adium contentController] chatWithName:room
-								  onAccount:inAccount
-						   chatCreationInfo:chatCreationInfo];
+	[[adium chatController] chatWithName:room
+							   onAccount:inAccount
+						chatCreationInfo:chatCreationInfo];
 }
 
 - (NSString *)nibName

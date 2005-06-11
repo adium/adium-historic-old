@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountSelectionView.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContactInfoWindowController.h"
 #import "AIContentController.h"
@@ -148,7 +149,7 @@
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
     if (chat) {
-        [[adium contentController] closeChat:chat];
+        [[adium chatController] closeChat:chat];
 		
 		/* Ensure the chat knows it is closed.  I'm not sure how we can get here without the interface controller's
 		 * closeChat: being called first, but it's possible.  This may indicate a subtle, deeper bug elsewhere. */
@@ -223,7 +224,7 @@
 - (void)setAccount:(AIAccount *)inAccount
 {
 	if (inAccount != [chat account]) {
-		[[adium contentController] switchChat:chat toAccount:inAccount];
+		[[adium chatController] switchChat:chat toAccount:inAccount];
 	}
 }
 
@@ -246,9 +247,9 @@
 		//If we changed services, set the account to this contact's account
 		shouldChangeAccount = ([listContact service] != [[chat listObject] service]);
 
-		[[adium contentController] switchChat:chat
-								toListContact:listContact
-						  usingContactAccount:shouldChangeAccount];
+		[[adium chatController] switchChat:chat
+							 toListContact:listContact
+					   usingContactAccount:shouldChangeAccount];
 	}
 }
 

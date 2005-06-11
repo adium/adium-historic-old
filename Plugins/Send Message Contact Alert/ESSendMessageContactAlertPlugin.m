@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -138,7 +139,7 @@
 		AIChat					*chat;
 		NSAttributedString 		*message;
 		
-		chat = [[adium contentController] openChatWithContact:contact];
+		chat = [[adium chatController] openChatWithContact:contact];
 		[[adium interfaceController] setActiveChat:chat];
 		
 		message = [NSAttributedString stringWithData:[details objectForKey:KEY_MESSAGE_SEND_MESSAGE]];

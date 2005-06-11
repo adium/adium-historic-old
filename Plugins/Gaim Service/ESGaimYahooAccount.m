@@ -298,7 +298,6 @@
 		(f = g_hash_table_lookup(od->friends, normalized))) {
 
 		if (f->status == YAHOO_STATUS_IDLE) {
-#warning Idle time may not work.
 			//Now idle
 			int		idle = f->idle;
 			NSDate	*idleSince;

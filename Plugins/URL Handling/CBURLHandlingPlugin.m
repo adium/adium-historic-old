@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -206,7 +207,7 @@
 										   forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact) {
 		//Open the chat and set it as active
-		[[adium interfaceController] setActiveChat:[[adium contentController] openChatWithContact:contact]];
+		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:contact]];
 		
 		//Insert the message text as if the user had typed it after opening the chat
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
