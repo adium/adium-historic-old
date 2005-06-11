@@ -412,6 +412,10 @@
 		34B70344076EDB370016E8BA /* CSNewContactAlertWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B7033F076EDB370016E8BA /* CSNewContactAlertWindowController.m */; };
 		34B70345076EDB370016E8BA /* CSNewContactAlertWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B70340076EDB370016E8BA /* CSNewContactAlertWindowController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34B70346076EDB370016E8BA /* NewAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B70341076EDB370016E8BA /* NewAlert.nib */; };
+		34B82C81085A85D800864531 /* AIChatController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B82C7F085A85D800864531 /* AIChatController.h */; };
+		34B82C82085A85D800864531 /* AIChatController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C80085A85D800864531 /* AIChatController.m */; };
+		34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B82C89085A87B000864531 /* AdiumMessageEvents.h */; };
+		34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B82C8A085A87B000864531 /* AdiumMessageEvents.m */; };
 		34B9194C062DEC29004F1223 /* AIGaimOscarAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */; };
 		34B9194D062DEC29004F1223 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
 		34B919CB062DEF15004F1223 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
@@ -700,8 +704,6 @@
 		34E2A2F507B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A2EF07B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m */; };
 		34E2A3E807B08CCB006735BC /* AIAliasSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A3E507B08CC9006735BC /* AIAliasSupportPlugin.m */; };
 		34E2A3E907B08CCB006735BC /* AIAliasSupportPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A3E607B08CC9006735BC /* AIAliasSupportPlugin.h */; };
-		34E38240068F7F2300303451 /* ESMessageEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3823E068F7F2300303451 /* ESMessageEvents.h */; };
-		34E38241068F7F2300303451 /* ESMessageEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3823F068F7F2300303451 /* ESMessageEvents.m */; };
 		34E3C8890638D40500AA3EF7 /* ESYahooJapanService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */; };
 		34E3C88A0638D40500AA3EF7 /* ESYahooJapanService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */; };
 		34E3C8A70638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */; };
@@ -2190,6 +2192,10 @@
 		34B7033F076EDB370016E8BA /* CSNewContactAlertWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CSNewContactAlertWindowController.m; path = "Frameworks/Adium Framework/CSNewContactAlertWindowController.m"; sourceTree = "<group>"; };
 		34B70340076EDB370016E8BA /* CSNewContactAlertWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CSNewContactAlertWindowController.h; path = "Frameworks/Adium Framework/CSNewContactAlertWindowController.h"; sourceTree = "<group>"; };
 		34B70341076EDB370016E8BA /* NewAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlert.nib; path = "Frameworks/Adium Framework/NewAlert.nib"; sourceTree = "<group>"; };
+		34B82C7F085A85D800864531 /* AIChatController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIChatController.h; path = Source/AIChatController.h; sourceTree = "<group>"; };
+		34B82C80085A85D800864531 /* AIChatController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIChatController.m; path = Source/AIChatController.m; sourceTree = "<group>"; };
+		34B82C89085A87B000864531 /* AdiumMessageEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumMessageEvents.h; path = Source/AdiumMessageEvents.h; sourceTree = "<group>"; };
+		34B82C8A085A87B000864531 /* AdiumMessageEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumMessageEvents.m; path = Source/AdiumMessageEvents.m; sourceTree = "<group>"; };
 		34B9194A062DEC29004F1223 /* AIGaimOscarAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimOscarAccountViewController.m; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.m"; sourceTree = "<group>"; };
 		34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimOscarAccountViewController.h; path = "Plugins/Gaim Service/AIGaimOscarAccountViewController.h"; sourceTree = "<group>"; };
 		34B9197F062DEC99004F1223 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
@@ -2440,8 +2446,6 @@
 		34E2A2EF07B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESAddressBookIntegrationAdvancedPreferences.m; path = Source/ESAddressBookIntegrationAdvancedPreferences.m; sourceTree = "<group>"; };
 		34E2A3E507B08CC9006735BC /* AIAliasSupportPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAliasSupportPlugin.m; path = Source/AIAliasSupportPlugin.m; sourceTree = "<group>"; };
 		34E2A3E607B08CC9006735BC /* AIAliasSupportPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAliasSupportPlugin.h; path = Source/AIAliasSupportPlugin.h; sourceTree = "<group>"; };
-		34E3823E068F7F2300303451 /* ESMessageEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESMessageEvents.h; path = "Plugins/Message Events/ESMessageEvents.h"; sourceTree = "<group>"; };
-		34E3823F068F7F2300303451 /* ESMessageEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESMessageEvents.m; path = "Plugins/Message Events/ESMessageEvents.m"; sourceTree = "<group>"; };
 		34E3C8870638D40500AA3EF7 /* ESYahooJapanService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESYahooJapanService.h; path = "Plugins/Gaim Service/ESYahooJapanService.h"; sourceTree = "<group>"; };
 		34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESYahooJapanService.m; path = "Plugins/Gaim Service/ESYahooJapanService.m"; sourceTree = "<group>"; };
 		34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimYahooJapanAccount.h; path = "Plugins/Gaim Service/ESGaimYahooJapanAccount.h"; sourceTree = "<group>"; };
@@ -3682,6 +3686,7 @@
 		347E778507CA825F00350507 /* Messaging */ = {
 			isa = PBXGroup;
 			children = (
+				34B82C7C085A6A3F00864531 /* New Group */,
 				4BF4813B049A802E00A8010A /* Auto Linking */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
@@ -3893,6 +3898,22 @@
 				4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */,
 			);
 			name = "Contact Alerts";
+			sourceTree = "<group>";
+		};
+		34B82C7C085A6A3F00864531 /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = "New Group";
+			sourceTree = "<group>";
+		};
+		34B82C85085A874C00864531 /* Events */ = {
+			isa = PBXGroup;
+			children = (
+				34B82C89085A87B000864531 /* AdiumMessageEvents.h */,
+				34B82C8A085A87B000864531 /* AdiumMessageEvents.m */,
+			);
+			name = Events;
 			sourceTree = "<group>";
 		};
 		34BFD7ED07E6A1FB00AD984D /* Preset Manager */ = {
@@ -4175,15 +4196,6 @@
 				34086A1005E5E17B00ABB759 /* User Icon Handling */,
 			);
 			name = Contacts;
-			sourceTree = "<group>";
-		};
-		34E38235068F7F0300303451 /* Message Events */ = {
-			isa = PBXGroup;
-			children = (
-				34E3823E068F7F2300303451 /* ESMessageEvents.h */,
-				34E3823F068F7F2300303451 /* ESMessageEvents.m */,
-			);
-			name = "Message Events";
 			sourceTree = "<group>";
 		};
 		34E385FF068FAA5100303451 /* Account Events */ = {
@@ -4557,7 +4569,6 @@
 				7E824CCD06387FAF00813072 /* Link Management */,
 				9C8C7FA303CBA17B00267226 /* Logger */,
 				F1D0C631051AC2380000000E /* Message Alias Support */,
-				34E38235068F7F0300303451 /* Message Events */,
 				6E5A43DC0611604B0078C342 /* Message History */,
 				34DFF46607A5EAC800B92233 /* Secure Messaging */,
 			);
@@ -4862,6 +4873,8 @@
 			children = (
 				F57938EF033E745F01A8010A /* AIAccountController.h */,
 				F57938AA033E737001A8010A /* AIAccountController.m */,
+				34B82C7F085A85D800864531 /* AIChatController.h */,
+				34B82C80085A85D800864531 /* AIChatController.m */,
 			);
 			name = "Public Interface";
 			sourceTree = "<group>";
@@ -4994,6 +5007,7 @@
 		4BC291F9083D9EDC0075F57D /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				34B82C85085A874C00864531 /* Events */,
 				4B873F370840D1FB00738987 /* Account */,
 			);
 			name = Core;
@@ -6059,7 +6073,6 @@
 				4B909C8B064D75400074C9A8 /* BGEmoticonMenuPlugin.h in Headers */,
 				4BBF41E30661194A001D31E1 /* AIContactProfilePane.h in Headers */,
 				4B2DC06D066F705800AD5AAD /* AIContactSettingsPane.h in Headers */,
-				34E38240068F7F2300303451 /* ESMessageEvents.h in Headers */,
 				9E20910C06A601A500E33E27 /* CBStatusMenuItemController.h in Headers */,
 				9E20910F06A601B100E33E27 /* CBStatusMenuItemPlugin.h in Headers */,
 				344C0D5106B6D63800DA7200 /* ESApplescriptabilityController.h in Headers */,
@@ -6189,6 +6202,8 @@
 				4B8741D30840D25700738987 /* AdiumServices.h in Headers */,
 				4B87424A0840E3D800738987 /* AdiumPasswords.h in Headers */,
 				4BE40C200846544000F5790F /* AdiumAccounts.h in Headers */,
+				34B82C81085A85D800864531 /* AIChatController.h in Headers */,
+				34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7680,7 +7695,6 @@
 				4B909C8A064D75400074C9A8 /* BGEmoticonMenuPlugin.m in Sources */,
 				4BBF41E40661194A001D31E1 /* AIContactProfilePane.m in Sources */,
 				4B2DC06E066F705800AD5AAD /* AIContactSettingsPane.m in Sources */,
-				34E38241068F7F2300303451 /* ESMessageEvents.m in Sources */,
 				9E20910E06A601AF00E33E27 /* CBStatusMenuItemController.m in Sources */,
 				9E20911006A601B200E33E27 /* CBStatusMenuItemPlugin.m in Sources */,
 				344C0D5006B6D63800DA7200 /* ESApplescriptabilityController.m in Sources */,
@@ -7809,6 +7823,8 @@
 				4B8741D40840D25700738987 /* AdiumServices.m in Sources */,
 				4B87424B0840E3D800738987 /* AdiumPasswords.m in Sources */,
 				4BE40C210846544000F5790F /* AdiumAccounts.m in Sources */,
+				34B82C82085A85D800864531 /* AIChatController.m in Sources */,
+				34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
