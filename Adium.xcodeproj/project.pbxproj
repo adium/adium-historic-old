@@ -11,6 +11,7 @@
 			isa = PBXAggregateTarget;
 			buildConfigurationList = DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */;
 			buildPhases = (
+				34CF9EEF085B98D400D87E37 /* ShellScript */,
 				DACF3ED2085574D0006BFB18 /* ShellScript */,
 			);
 			buildSettings = {
@@ -423,9 +424,6 @@
 		34B9194D062DEC29004F1223 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
 		34B919CB062DEF15004F1223 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
 		34B919CC062DEF15004F1223 /* CBOscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B919CA062DEF15004F1223 /* CBOscarService.m */; };
-		34B9E6FA085B7DAE006216DF /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D8379307CC3222006466F2 /* AIUtilities.framework */; };
-		34B9E6FB085B7DAE006216DF /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
-		34B9E6FC085B7DAE006216DF /* AIBookmarksImport.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */; };
 		34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */; };
 		34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */; };
 		34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */; };
@@ -587,6 +585,8 @@
 		34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */; };
 		34CEBE6206F117DF00A89DDE /* ESContactInfoListController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */; };
 		34CEBE6306F117DF00A89DDE /* ESContactInfoListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */; };
+		34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */; };
+		34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */; };
 		34D1897F076114C00075A380 /* AILocalizationButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D1897D076114C00075A380 /* AILocalizationButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D18980076114C00075A380 /* AILocalizationButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D1897E076114C00075A380 /* AILocalizationButton.m */; };
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -1352,6 +1352,13 @@
 			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
 			remoteInfo = Adium.Framework;
 		};
+		34CF9F04085B994800D87E37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
@@ -1456,9 +1463,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				34B9E6FA085B7DAE006216DF /* AIUtilities.framework in CopyFiles */,
-				34B9E6FB085B7DAE006216DF /* AIHyperlinks.framework in CopyFiles */,
-				34B9E6FC085B7DAE006216DF /* AIBookmarksImport.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
@@ -1513,7 +1517,7 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
-		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIBookmarksImport.framework; path = build/Development/AIBookmarksImport.framework; sourceTree = "<group>"; };
+		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIBookmarksImport.framework; path = ../../adium/build/Development/AIBookmarksImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcodeproj; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcodeproj"; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Plugins/Emoticons/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Plugins/Emoticons/AIEmoticonController.m; sourceTree = "<group>"; };
@@ -2343,6 +2347,8 @@
 		34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimMeanwhileContactAdditionWindow.nib; path = "Plugins/Gaim Service/GaimMeanwhileContactAdditionWindow.nib"; sourceTree = "<group>"; };
 		34CEBE6006F117DF00A89DDE /* ESContactInfoListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESContactInfoListController.h; path = Source/ESContactInfoListController.h; sourceTree = "<group>"; };
 		34CEBE6106F117DF00A89DDE /* ESContactInfoListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESContactInfoListController.m; path = Source/ESContactInfoListController.m; sourceTree = "<group>"; };
+		34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESiTunesPlugin.h; path = Source/ESiTunesPlugin.h; sourceTree = "<group>"; };
+		34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESiTunesPlugin.m; path = Source/ESiTunesPlugin.m; sourceTree = "<group>"; };
 		34D188DB0760F0F50075A380 /* AILocalizationControl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationControl.m; path = "Frameworks/Adium Framework/AILocalizationControl.m"; sourceTree = "<group>"; };
 		34D1897D076114C00075A380 /* AILocalizationButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButton.h; path = "Frameworks/Adium Framework/AILocalizationButton.h"; sourceTree = "<group>"; };
 		34D1897E076114C00075A380 /* AILocalizationButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButton.m; path = "Frameworks/Adium Framework/AILocalizationButton.m"; sourceTree = "<group>"; };
@@ -3702,7 +3708,7 @@
 		347E778507CA825F00350507 /* Messaging */ = {
 			isa = PBXGroup;
 			children = (
-				34B82C7C085A6A3F00864531 /* New Group */,
+				34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */,
 				4BF4813B049A802E00A8010A /* Auto Linking */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
@@ -3916,13 +3922,6 @@
 			name = "Contact Alerts";
 			sourceTree = "<group>";
 		};
-		34B82C7C085A6A3F00864531 /* New Group */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = "New Group";
-			sourceTree = "<group>";
-		};
 		34B82C85085A874C00864531 /* Events */ = {
 			isa = PBXGroup;
 			children = (
@@ -4062,6 +4061,15 @@
 				6E6EA018066F9C2600FA0D91 /* MessageStyles.plist */,
 			);
 			name = Preferences;
+			sourceTree = "<group>";
+		};
+		34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */ = {
+			isa = PBXGroup;
+			children = (
+				34CF9DF2085B8B7900D87E37 /* ESiTunesPlugin.h */,
+				34CF9DF3085B8B7900D87E37 /* ESiTunesPlugin.m */,
+			);
+			name = "iTunes Now Playing";
 			sourceTree = "<group>";
 		};
 		34D18983076114D20075A380 /* Localization Assistance */ = {
@@ -6220,6 +6228,7 @@
 				4BE40C200846544000F5790F /* AdiumAccounts.h in Headers */,
 				34B82C81085A85D800864531 /* AIChatController.h in Headers */,
 				34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */,
+				34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6657,6 +6666,7 @@
 				34E9DCF2078FC79900662E8E /* ShellScript */,
 				34BD9D42053146CC000AB133 /* Sources */,
 				34BD9D57053146CC000AB133 /* Frameworks */,
+				34CF9F57085BA90200D87E37 /* ShellScript */,
 				34BD9D5F053146CC000AB133 /* CopyFiles */,
 				4BF2E91F067CB76300743318 /* CopyFiles */,
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
@@ -6739,6 +6749,7 @@
 				);
 			};
 			dependencies = (
+				34CF9F05085B994800D87E37 /* PBXTargetDependency */,
 			);
 			name = Adium.Framework;
 			productInstallPath = "@executable_path/../Frameworks";
@@ -7540,6 +7551,32 @@
 			shellPath = /bin/sh;
 			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildnum=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\nme=`whoami`\necho $buildnum \"|\" $builddate \"|\" $me > \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Resources/buildnum\"\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$BUILT_PRODUCTS_DIR/version.plist\"\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
+		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "## Fix Growl-WithInstaller.framework symlinks\n\n#Versions\ncd \"$SRCROOT/Frameworks/Growl-WithInstaller.framework\"\n\ncd Versions\nif ( ! [ -e Current ]); then\n\tln -sf $FRAMEWORK_VERSION Current\nfi\ncd \"$OLDPWD\"\n\n#Root\nif ( ! [ -e Headers ]); then\n\tln -sf Versions/Current/Headers   Headers\nfi\n\n\nif ( ! [ -e Growl-WithInstaller ]); then\n\tln -sf Versions/Current/Growl-WithInstaller   Growl-WithInstaller\nfi\n\nif ( ! [ -e Resources ]); then\n\tln -sf Versions/Current/Resources Resources\nfi\n";
+		};
+		34CF9F57085BA90200D87E37 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIBookmarksImport.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\" \"$FRAMEWORKS_DIR\"\n";
+		};
 		34E9DCF2078FC79900662E8E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -7590,7 +7627,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\nfi\n\nAIBOOKMARKSIMPORT_FRAMEWORK=\"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\"\nif ( [ -d \"$AIBOOKMARKSIMPORT_FRAMEWORK\" ] ;) then\n\tln -fs \"$AIBOOKMARKSIMPORT_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\"\nfi\n";
+			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\nfi\n\nAIBOOKMARKSIMPORT_FRAMEWORK=\"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\"\nif ( [ -d \"$AIBOOKMARKSIMPORT_FRAMEWORK\" ] ;) then\n\tln -fs \"$AIBOOKMARKSIMPORT_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\"\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -7825,6 +7862,7 @@
 				4BE40C210846544000F5790F /* AdiumAccounts.m in Sources */,
 				34B82C82085A85D800864531 /* AIChatController.m in Sources */,
 				34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */,
+				34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8126,6 +8164,11 @@
 			isa = PBXTargetDependency;
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 34BD98D10531467B000AB133 /* PBXContainerItemProxy */;
+		};
+		34CF9F05085B994800D87E37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 34CF9F04085B994800D87E37 /* PBXContainerItemProxy */;
 		};
 		4947F5BD0655E85200B791E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8951,7 +8994,6 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -8979,7 +9021,6 @@
 					"-seg1addr",
 					0x10000000,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -8998,7 +9039,6 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -9016,7 +9056,6 @@
 					"-seg1addr",
 					0x10000000,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -9035,7 +9074,6 @@
 				DEBUGGING_SYMBOLS = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DEBUGGING_SYMBOLS = full;
@@ -9057,7 +9095,6 @@
 					"-seg1addr",
 					0x10000000,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SKIP_INSTALL = YES;
 				WARNING_CFLAGS = (
@@ -9073,7 +9110,6 @@
 			buildSettings = {
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				FRAMEWORK_VERSION = A;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -9098,7 +9134,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9120,7 +9155,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
@@ -9133,7 +9167,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9145,7 +9178,6 @@
 				INSTALL_PATH = "$(USER_APPS_DIR)";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
@@ -9158,7 +9190,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9174,7 +9205,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
@@ -9184,12 +9214,10 @@
 		DADE8E08085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = NO;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = "Plists/Adium Crash Reporter-Info.plist";
 				INSTALL_PATH = "$(USER_APPS_DIR)";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Adium Crash Reporter";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -9202,7 +9230,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9232,7 +9260,6 @@
 					"-g3",
 				);
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
@@ -9247,7 +9274,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9267,7 +9294,6 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9282,7 +9308,7 @@
 				DEBUGGING_SYMBOLS = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -9306,7 +9332,6 @@
 					"-g3",
 				);
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9318,7 +9343,7 @@
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
 					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
-					"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
+					"$(BUILT_PRODUCTS_DIR)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
@@ -9331,7 +9356,6 @@
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Gaim;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9342,7 +9366,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9364,7 +9387,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
@@ -9377,7 +9399,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9389,7 +9410,6 @@
 				INFOPLIST_FILE = Plists/Bonjour.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9402,7 +9422,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9418,7 +9437,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9428,12 +9446,10 @@
 		DADE8E12085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_PREPROCESSOR_DEFINITIONS = HAVE_EXPAT_CONFIG_H;
 				INFOPLIST_FILE = Plists/Bonjour.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Bonjour;
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -9444,7 +9460,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9469,7 +9484,6 @@
 					"-undefined",
 					dynamic_lookup,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
@@ -9482,7 +9496,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9497,7 +9510,6 @@
 					"-undefined",
 					dynamic_lookup,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9510,7 +9522,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9529,7 +9540,6 @@
 					"-undefined",
 					dynamic_lookup,
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "WebKit Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9539,7 +9549,6 @@
 		DADE8E17085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/WebKit_Message_View.plist;
@@ -9557,7 +9566,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9578,7 +9586,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Standard Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
@@ -9591,7 +9598,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9602,7 +9608,6 @@
 				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Standard Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9615,7 +9620,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9630,7 +9634,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Standard Message View";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -9640,7 +9643,6 @@
 		DADE8E1C085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
@@ -9654,7 +9656,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9676,7 +9677,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -9690,7 +9690,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9702,7 +9701,6 @@
 				INSTALL_PATH = "$(USER_LIBRARY_DIR)/Bundles";
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -9716,7 +9714,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9732,7 +9729,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Latex Plugin";
 				WARNING_CFLAGS = "-Wall";
 				WRAPPER_EXTENSION = AdiumPlugin;
@@ -9743,7 +9739,6 @@
 		DADE8E21085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)\"";
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
 				INFOPLIST_FILE = "Plists/Latex Plugin.plist";
@@ -9759,12 +9754,7 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -9791,10 +9781,8 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -9805,12 +9793,7 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9828,10 +9811,8 @@
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
 			name = Deployment;
@@ -9842,12 +9823,7 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -9869,10 +9845,8 @@
 				);
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = NO;
 			};
 			name = "Deployment-Debug";
@@ -9880,12 +9854,7 @@
 		DADE8E26085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SRCROOT)/Frameworks/AIUtilities Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks/AIHyperlinks Framework/build/$(CONFIGURATION)",
-					"$(SRCROOT)/Frameworks",
-					"$(SRCROOT)/Frameworks/AIBookmarksImport Framework/build/$(CONFIGURATION)",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -9897,10 +9866,8 @@
 				INSTALL_PATH = /;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
-				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
 			name = Default;
@@ -10012,7 +9979,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -10048,7 +10014,6 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "SQL Logger";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost";
@@ -10063,7 +10028,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -10089,7 +10053,6 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "SQL Logger";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost";
@@ -10104,7 +10067,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -10134,7 +10096,6 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "SQL Logger";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost";
@@ -10146,7 +10107,6 @@
 		DADE8E30085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				GCC_WARN_FOUR_CHARACTER_CONSTANTS = NO;
@@ -10166,7 +10126,6 @@
 					"-lcrypto",
 				);
 				OTHER_REZFLAGS = "";
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "SQL Logger";
 				SECTORDER_FLAGS = "";
 				WARNING_CFLAGS = "-Wmost";
@@ -10179,7 +10138,6 @@
 			buildSettings = {
 				COPY_PHASE_STRIP = NO;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
@@ -10200,7 +10158,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = YES;
@@ -10213,7 +10170,6 @@
 				COPY_PHASE_STRIP = YES;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -10224,7 +10180,6 @@
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -10237,7 +10192,6 @@
 				COPY_PHASE_STRIP = NO;
 				DEAD_CODE_STRIPPING = YES;
 				DEBUGGING_SYMBOLS = YES;
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_DEBUGGING_SYMBOLS = full;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = NO;
@@ -10252,7 +10206,6 @@
 					"-DDEBUG_BUILD",
 					"-g3",
 				);
-				PRECOMP_DESTINATION_DIR = $SYMROOT/PrecompiledHeaders;
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 				ZERO_LINK = NO;
@@ -10262,11 +10215,9 @@
 		DADE8E35085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				INFOPLIST_FILE = Plists/Stress_Test.plist;
-				PRECOMP_DESTINATION_DIR = "$(BUILD_DIR)/PrefixHeaders";
 				PRODUCT_NAME = "Stress Test";
 				WRAPPER_EXTENSION = AdiumPlugin;
 			};
@@ -10275,6 +10226,9 @@
 		DADE8E3B085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
 			};
 			name = Development;
@@ -10282,18 +10236,27 @@
 		DADE8E3C085507450062B664 /* Deployment */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Deployment;
 		};
 		DADE8E3D085507450062B664 /* Deployment-Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = "Deployment-Debug";
 		};
 		DADE8E3E085507450062B664 /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
+				WARNING_CFLAGS = "-Wall";
 			};
 			name = Default;
 		};
