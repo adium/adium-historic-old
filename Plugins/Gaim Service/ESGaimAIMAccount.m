@@ -329,7 +329,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		const char  *uidUTF8String = [[theContact UID] UTF8String];
 		GaimBuddy   *buddy;
 		
-		if (buddy = gaim_find_buddy(account, uidUTF8String)) {
+		if ((buddy = gaim_find_buddy(account, uidUTF8String))) {
 			GaimGroup   *g;
 			char		*comment;
 			OscarData   *od;

@@ -36,8 +36,8 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 	if (![keyGenerationControllerDict objectForKey:inIdentifier]) {
 		ESGaimOTRPrivateKeyGenerationWindowController	*controller;
 		
-		if (controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" 
-											  forIdentifier:inIdentifier]) {
+		if ((controller = [[self alloc] initWithWindowNibName:@"GaimOTRPrivateKeyGenerationWindow" 
+												forIdentifier:inIdentifier])) {
 			[controller showWindow:nil];
 			[[controller window] makeKeyAndOrderFront:nil];
 			

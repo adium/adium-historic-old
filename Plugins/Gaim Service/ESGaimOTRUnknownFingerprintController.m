@@ -17,6 +17,7 @@
 #import "ESGaimOTRUnknownFingerprintController.h"
 #import "ESTextAndButtonsWindowController.h"
 #import "SLGaimCocoaAdapter.h"
+#import "adiumGaimOTR.h"
 #import <Adium/NDRunLoopMessenger.h>
 
 @implementation ESGaimOTRUnknownFingerprintController
@@ -53,17 +54,7 @@
 {
 	BOOL	fingerprintAccepted;
 
-	switch (returnCode) {
-		case AITextAndButtonsDefaultReturn:
-			fingerprintAccepted = YES;
-			break;
-
-		case AITextAndButtonsAlternateReturn:
-		case AITextAndButtonsOtherReturn:
-		case AITextAndButtonsClosedWithoutResponse:
-			fingerprintAccepted = NO;
-			break;
-	}	
+	fingerprintAccepted = ((returnCode == AITextAndButtonsDefaultReturn) ? YES : NO);
 	
 	//Use the gaim thread to perform the response
 	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self

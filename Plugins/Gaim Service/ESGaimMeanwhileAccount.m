@@ -30,9 +30,10 @@
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
+gboolean gaim_init_meanwhile_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitMeanwhile = NO;
+	static gboolean didInitMeanwhile = NO;
 	
 	[self initSSL];
 	if (!didInitMeanwhile) didInitMeanwhile = gaim_init_meanwhile_plugin(); 

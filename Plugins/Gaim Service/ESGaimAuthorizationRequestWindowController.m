@@ -33,7 +33,7 @@
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict
 {
-    if (self = [super initWithWindowNibName:windowNibName]) {
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		infoDict = [inInfoDict retain];
 	}
 	
@@ -108,7 +108,7 @@
 		NSMutableSet	*requestedServices = [NSMutableSet set];
 		
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while (account = [enumerator nextObject]) {
+		while ((account = [enumerator nextObject])) {
 			if ([account online] &&
 			   [[[account UID] compactedString] isEqualToString:accountName] &&
 			   ![requestedServices containsObject:[account service]]) {

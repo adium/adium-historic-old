@@ -37,7 +37,7 @@ struct resolved_id {
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict
 {
-    if (self = [super initWithWindowNibName:windowNibName]) {
+    if ((self = [super initWithWindowNibName:windowNibName])) {
 		infoDict = [inInfoDict retain];
 	}
 	

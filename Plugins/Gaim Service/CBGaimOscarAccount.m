@@ -30,6 +30,7 @@
 
 @implementation CBGaimOscarAccount
 
+gboolean gaim_init_oscar_plugin(void);
 - (const char*)protocolPlugin
 {
 	static BOOL didInitOscar = NO;

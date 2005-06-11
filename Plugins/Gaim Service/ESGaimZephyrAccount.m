@@ -19,9 +19,10 @@
 
 @implementation ESGaimZephyrAccount
 
+gboolean gaim_init_zephyr_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitZephyr = NO;
+	static gboolean didInitZephyr = NO;
 
 	if (!didInitZephyr) didInitZephyr = gaim_init_zephyr_plugin();
     return "prpl-zephyr";

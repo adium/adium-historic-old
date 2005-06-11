@@ -274,7 +274,7 @@ CBGaimAccount* accountLookup(GaimAccount *acct)
 		NSString	*serviceClass = serviceClassForGaimProtocolID(protocolID);
 
 		NSEnumerator	*enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
-		while (adiumGaimAccount = [enumerator nextObject]) {
+		while ((adiumGaimAccount = [enumerator nextObject])) {
 			if ([adiumGaimAccount isKindOfClass:[CBGaimAccount class]] &&
 			   [[[adiumGaimAccount service] serviceClass] isEqualToString:serviceClass] &&
 			   [[adiumGaimAccount UID] caseInsensitiveCompare:[NSString stringWithUTF8String:acct->username]] == NSOrderedSame) {
@@ -312,7 +312,7 @@ AIListContact* contactLookupFromBuddy(GaimBuddy *buddy)
 
 AIListContact* contactLookupFromIMConv(GaimConversation *conv)
 {
-	
+	return nil;
 }
 
 AIChat* chatLookupFromConv(GaimConversation *conv)
@@ -560,7 +560,7 @@ NSMutableDictionary* get_chatDict(void)
 	NSString *description = nil;
 	
 	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
-		return;
+		return(adium_gaim_get_handle());
 	}
 	
 	//Suppress notification warnings we have no interest in seeing
@@ -572,7 +572,7 @@ NSMutableDictionary* get_chatDict(void)
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)) {
-			return;
+			return(adium_gaim_get_handle());
 		}
 	}
 	
@@ -1277,6 +1277,7 @@ NSMutableDictionary* get_chatDict(void)
 	[gaimThreadProxy gaimThreadXferRequest:[NSValue valueWithPointer:xfer]];
 }
 
+gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 - (oneway void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];

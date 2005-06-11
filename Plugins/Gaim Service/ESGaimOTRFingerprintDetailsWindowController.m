@@ -33,8 +33,8 @@
 {
 	ESGaimOTRFingerprintDetailsWindowController	*controller;
 	
-	if (controller = [[self alloc] initWithWindowNibName:@"GaimOTRFingerprintDetailsWindow" 
-									 forFingerprintDict:inFingerprintDict]) {
+	if ((controller = [[self alloc] initWithWindowNibName:@"GaimOTRFingerprintDetailsWindow" 
+									   forFingerprintDict:inFingerprintDict])) {
 		[controller showWindow:nil];
 		[[controller window] makeKeyAndOrderFront:nil];
 	}

@@ -34,6 +34,7 @@
 
 @implementation ESGaimGaduGaduAccount
 
+gboolean gaim_init_gg_plugin(void);
 - (const char*)protocolPlugin
 {
 	static BOOL didInitGG = NO;
@@ -74,7 +75,7 @@
 	GaimAccount		*gaimAccount = [self gaimAccount];
 	GaimConnection  *gc;
 	
-	if (gc = gaim_account_get_connection(gaimAccount)) {
+	if ((gc = gaim_account_get_connection(gaimAccount))) {
 		gg_userlist_request(((struct agg_data *)gc->proto_data)->sess, GG_USERLIST_GET, NULL);
 	}
 }

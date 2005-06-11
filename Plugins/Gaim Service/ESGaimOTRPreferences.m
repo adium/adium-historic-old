@@ -113,7 +113,7 @@
 	theMenu = [[adium accountController] menuOfAccountsWithTarget:self
 												   includeOffline:YES];
 	enumerator = [[[[theMenu itemArray] copy] autorelease] objectEnumerator];
-	while (menuItem = [enumerator nextObject]) {
+	while ((menuItem = [enumerator nextObject])) {
 		//Only include the Gaim accounts, as any others don't support OTR
 		if ([[menuItem representedObject] isKindOfClass:[CBGaimAccount class]]) {
 			[menuItem setEnabled:YES];

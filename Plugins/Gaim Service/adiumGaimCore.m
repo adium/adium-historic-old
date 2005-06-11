@@ -27,6 +27,7 @@
 #import "adiumGaimRoomlist.h"
 #import "adiumGaimSignals.h"
 #import "adiumGaimWebcam.h"
+#import "adiumGaimOTR.h"
 
 #import <AIUtilities/AIFileManagerAdditions.h>
 
