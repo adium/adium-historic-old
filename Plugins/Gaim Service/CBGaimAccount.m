@@ -110,6 +110,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 	return gaimThread;
 }
 
+gboolean gaim_init_ssl_openssl_plugin(void);
 - (void)initSSL
 {
 	if (!didInitSSL) {
@@ -828,9 +829,12 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 			if (account->gc->flags & GAIM_CONNECTION_NO_NEWLINES) {
 				NSRange		endlineRange;
 				NSRange		returnRange;
+
+				endlineRange = [[message string] rangeOfString:@"\n"];
+				returnRange = [[message string] rangeOfString:@"\r"];
 				
-				while (((endlineRange = [[message string] rangeOfString:@"\n"]).location) != NSNotFound ||
-					  ((returnRange = [[message string] rangeOfString:@"\r"]).location) != NSNotFound) {
+				while (endlineRange.location != NSNotFound ||
+					   returnRange.location != NSNotFound) {
 					
 					//Use whichever endline character is found first
 					NSRange	operativeRange = ((endlineRange.location < returnRange.location) ? endlineRange : returnRange);
@@ -861,6 +865,9 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 													inChat:chat
 												 withFlags:flags];
 						}
+						
+						endlineRange = [[message string] rangeOfString:@"\n"];
+						returnRange = [[message string] rangeOfString:@"\r"];
 					}
 					
 					message = [message attributedSubstringFromRange:NSMakeRange(operativeRange.location+operativeRange.length,[[message string] length]-operativeRange.location)];
@@ -2125,8 +2132,8 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 				NSString			*title;
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
-				if (title = [self titleForContactMenuLabel:act->label
-											   forContact:inContact]) { 
+				if ((title = [self titleForContactMenuLabel:act->label
+												 forContact:inContact])) { 
 					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																					 target:self
 																					 action:@selector(performContactMenuAction:)
@@ -2199,7 +2206,7 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 					action->context = account->gc;
 					
 					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
-					if (title = [self titleForAccountActionMenuLabel:action->label]) { 
+					if ((title = [self titleForAccountActionMenuLabel:action->label])) { 
 						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)

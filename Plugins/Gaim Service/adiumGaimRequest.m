@@ -46,7 +46,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
 	if ([primaryString rangeOfString:@"Enter password for "].location != NSNotFound) {
-		return;
+		return adium_gaim_get_handle();
 	}
 	
 	infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",

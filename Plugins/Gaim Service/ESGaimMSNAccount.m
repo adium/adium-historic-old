@@ -75,6 +75,7 @@
 	[super dealloc];
 }
 
+gboolean gaim_init_msn_plugin(void);
 - (const char*)protocolPlugin
 {
 	static BOOL didInitMSN = NO;
@@ -513,7 +514,7 @@
 
 /*
  //Added to msn.c
-//**ADIUM
+// **ADIUM
 void msn_set_friendly_name(GaimConnection *gc, const char *entry)
 {
 	msn_act_id(gc, entry);

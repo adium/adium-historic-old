@@ -21,9 +21,10 @@
 
 @implementation ESGaimNovellAccount
 
+gboolean gaim_init_novell_plugin(void);
 - (const char*)protocolPlugin
 {
-	static BOOL didInitNovell = NO;
+	static gboolean didInitNovell = NO;
 
 	[self initSSL];
 	if (!didInitNovell) didInitNovell = gaim_init_novell_plugin();

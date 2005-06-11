@@ -54,7 +54,7 @@
 		
 		NSString	*host;
 		//Upgrade code: grab a previously specified Jabber host
-		if (host = [self preferenceForKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES]) {
+		if ((host = [self preferenceForKey:@"Jabber:Host" group:GROUP_ACCOUNT_STATUS ignoreInheritedValues:YES])) {
 			//Determine our new, full UID
 			correctUID = [NSString stringWithFormat:@"%@@%@",proposedUID, host];
 
@@ -79,6 +79,7 @@
 	return correctUID;
 }
 
+gboolean gaim_init_jabber_plugin(void);
 - (const char*)protocolPlugin
 {
 	[self initSSL];
@@ -361,7 +362,7 @@
 		char	*normalized = g_strdup(gaim_normalize(b->account, b->name));
 		JabberBuddy	*jb;
 		
-		if (jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE)) {
+		if ((jb = jabber_buddy_find(account->gc->proto_data, normalized, FALSE))) {
 			NSString	*statusMessageString = nil;
 			const char	*msg = jabber_buddy_get_status_msg(jb);
 			

@@ -143,8 +143,8 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	chat = existingChatLookupFromConv(conv);
 	message = [NSString stringWithUTF8String:msg];
 
-	if (localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
-																	  withUsername:username]) {
+	if ((localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
+																		withUsername:username])) {
 		
 		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
 																	 withObject:localizedMessage
@@ -440,6 +440,7 @@ void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 }
 
 #pragma mark Initial setup
+gboolean gaim_init_otr_plugin(void);
 void initGaimOTRSupprt(void)
 {
 	//Init the plugin
@@ -461,7 +462,7 @@ void initGaimOTRSupprt(void)
 
 - (id)init
 {
-	if (self = [super init]) {
+	if ((self = [super init])) {
 		[[adium preferenceController] registerPreferenceObserver:self
 														forGroup:GROUP_ENCRYPTION];
 		
@@ -500,7 +501,7 @@ void initGaimOTRSupprt(void)
  */
 - (NSNumber *)determinePolicyForContact:(AIListContact *)contact
 {
-	OtrlPolicy	policy;
+	OtrlPolicy	policy = OTRL_POLICY_MANUAL;
 	NSNumber	*policyNumber;
 	NSString	*contactInternalObjectID;
 	
@@ -546,7 +547,7 @@ void initGaimOTRSupprt(void)
 
 	policyNumber = [NSNumber numberWithInt:policy];
 	
-	if (contactInternalObjectID = [contact internalObjectID]) {
+	if ((contactInternalObjectID = [contact internalObjectID])) {
 		[otrPolicyCache setObject:policyNumber
 						   forKey:contactInternalObjectID];
 	}

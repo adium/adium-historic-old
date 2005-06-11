@@ -29,6 +29,7 @@
 
 @implementation ESGaimYahooAccount
 
+gboolean gaim_init_yahoo_plugin(void);
 - (const char*)protocolPlugin
 {
 	static BOOL	didInitYahoo = NO;

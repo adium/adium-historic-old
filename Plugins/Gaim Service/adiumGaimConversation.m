@@ -354,11 +354,6 @@ static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 	}
 }
 
-static void adiumGaimConvSetTitle(GaimConversation *conv, const char *title)
-{
-    GaimDebug (@"adiumGaimConvSetTitle");
-}
-
 static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
 {
 	GaimDebug (@"adiumGaimConvUpdateUser: %s",user);
@@ -393,11 +388,12 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 					case GAIM_TYPING:
 						typingState = AITyping;
 						break;
-					case GAIM_NOT_TYPING:
-						typingState = AINotTyping;
-						break;
 					case GAIM_TYPED:
 						typingState = AIEnteredText;
+						break;
+					case GAIM_NOT_TYPING:
+					default:
+						typingState = AINotTyping;
 						break;
 				}
 
