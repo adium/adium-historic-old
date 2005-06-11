@@ -15,6 +15,7 @@
  */
 
 #import "AIAccountController.h"
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AICoreComponentLoader.h"
@@ -118,6 +119,9 @@ static NSString	*prefsCategory;
 - (AIAccountController *)accountController{
     return(accountController);
 }
+- (AIChatController *)chatController{
+	return(chatController);
+}
 - (AIContentController *)contentController{
     return(contentController);
 }
@@ -207,7 +211,7 @@ static NSString	*prefsCategory;
 - (void)applicationDidFinishLaunching:(NSNotification *)notification
 {
 	//Begin loading and initing the components
-    [loginController initController];
+	loginController = [[AILoginController alloc] init];
     
     //Begin Login
     [loginController requestUserNotifyingTarget:self selector:@selector(completeLogin)];
@@ -222,35 +226,51 @@ static NSString	*prefsCategory;
 //Called by the login controller when a user has been selected, continue logging in
 - (void)completeLogin
 {
-	//Init the controllers.
-	[preferenceController initController]; //should init first to allow other controllers access to their prefs
-	[toolbarController initController];
-	[menuController initController];
-	[debugController initController]; //should init after the menuController to add its menu item if needed
-	[contactAlertsController initController];
-	[soundController initController];
-	[emoticonController initController];
-	[accountController initController];
-	[contactController initController];
-	[contentController initController];
-	[interfaceController initController];
-	[dockController initController];
-	[fileTransferController initController];
-	[applescriptabilityController initController];
-	[statusController initController];
+	/* Init the controllers.
+	 * Menu and interface controllers are created by MainMenu.nib when it loads.
+	 */
+	preferenceController = [[AIPreferenceController alloc] init];
+	toolbarController = [[AIToolbarController alloc] init];
+	debugController = [[ESDebugController alloc] init];
+	contactAlertsController = [[ESContactAlertsController alloc] init];
+	soundController = [[AISoundController alloc] init];
+	emoticonController = [[AIEmoticonController alloc] init];
+	accountController = [[AIAccountController alloc] init];
+	contactController = [[AIContactController alloc] init];
+	chatController = [[AIChatController alloc] init];
+	contentController = [[AIContentController alloc] init];
+	dockController = [[AIDockController alloc] init];
+	fileTransferController = [[ESFileTransferController alloc] init];
+	applescriptabilityController = [[ESApplescriptabilityController alloc] init];
+	statusController = [[AIStatusController alloc] init];
+
+	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
+	[preferenceController finishIniting];
 
 	//should always init last.  Plugins rely on everything else.
-	[componentLoader initController];
-	[pluginLoader initController];
-
+	componentLoader = [[AICoreComponentLoader alloc] init];
+	pluginLoader = [[AICorePluginLoader alloc] init];
+	
 	/* Account controller should finish initing before the contact controller
-	 * so accounts and services are available for contact creation.
+	 * so accounts and services are available for contact creation.  Contact controller should finish initing
+	 * before the interface controller so the contact list is available when the contact list window is automatically
+	 * opened.
 	 */
-	[preferenceController finishIniting];
+	[menuController finishIniting];	//Loaded by nib
 	[accountController finishIniting];
 	[contactController finishIniting];
+	[interfaceController finishIniting];	//Loaded by nib
+	[toolbarController finishIniting];
+	[debugController finishIniting];
+	[contactAlertsController finishIniting];
+	[soundController finishIniting];
+	[emoticonController finishIniting];
+	[chatController finishIniting];
+	[contentController finishIniting];
+	[dockController finishIniting];
+	[fileTransferController finishIniting];
+	[applescriptabilityController finishIniting];
 	[statusController finishIniting];
-	[interfaceController finishIniting];
 
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
@@ -271,8 +291,8 @@ static NSString	*prefsCategory;
 	//Let the status controller we'll be closing so it can keep track of connected accounts for use with the global statuses
 	[statusController beginClosing];
 
-	//Let the content controller know we'll be closing so it can take action before chats are closed as a group
-	[contentController beginClosing];
+	//Let the chat controller know we'll be closing so it can take action before chats are closed as a group
+	[chatController beginClosing];
 
 	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
 	[preferenceController beginClosing];
@@ -727,101 +747,6 @@ static NSString	*prefsCategory;
 
     return(nil);	
 }
-
-//If this is the first time running a version, post Adium_versionUpgraded with information about the old and new versions.
-/*- (NSDictionary *)versionUpgradeDict
-{
-	NSString	*currentVersionString, *lastLaunchedVersionString;
-	float	    currentVersion, lastLaunchedVersion;
-	NSNumber	*currentVersionNumber;
-	NSDictionary	*versionUpgradeDict = nil;
-	
-	currentVersionString = [[[NSBundle mainBundle] infoDictionary] objectForKey:kCFBundleVersionKey];
-	lastLaunchedVersionString = [[self preferenceController] preferenceForKey:KEY_LAST_VERSION_LAUNCHED
-																		group:PREF_GROUP_GENERAL];	
-	// ##### BETA ONLY
-#if BETA_RELEASE
-	//Friendly reminder that we are running with the beta flag on
-	NSString	*spaces1, *spaces2;
-	unsigned	length = [currentVersionString length];
-	
-	spaces1 = [@"" stringByPaddingToLength:(length / 2)
-								withString:@" "
-						   startingAtIndex:0];	
-	if (length % 2 == 0) {
-		//An even length is one space too much
-		spaces2 = [@"" stringByPaddingToLength:(length / 2) - 1
-									withString:@" "
-							   startingAtIndex:0];			
-	} else {
-		//An odd length is okay
-		spaces2 = spaces1;
-	}
-	
-	NSLog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces1,spaces2);
-	NSLog(@"#### Loading Adium X BETA Release v%@ ####",currentVersionString);
-
-	AILog(@"####     %@THIS IS A BETA RELEASE!%@     ####",spaces1,spaces2);
-	AILog(@"#### Loading Adium X BETA Release v%@ ####",currentVersionString);
-
-	currentVersionString = [self processBetaVersionString:currentVersionString];
-	lastLaunchedVersionString = [self processBetaVersionString:lastLaunchedVersionString];
-#endif	
-	
-	currentVersion = [currentVersionString floatValue];
-	currentVersionNumber = [NSNumber numberWithFloat:currentVersion];
-	
-	lastLaunchedVersion = [lastLaunchedVersionString floatValue];	
-
-	if (!lastLaunchedVersion || !currentVersion || currentVersion > lastLaunchedVersion) {
-		
-		if (lastLaunchedVersion) {
-			
-			NSNumber		*lastLaunchedVersionNumber = [NSNumber numberWithFloat:lastLaunchedVersion];
-			
-			versionUpgradeDict = [NSDictionary dictionaryWithObjectsAndKeys:lastLaunchedVersionNumber, @"lastLaunchedVersion",
-				currentVersionNumber,@"currentVersion",
-				nil];
-		} else {
-			versionUpgradeDict = [NSDictionary dictionaryWithObject:currentVersionNumber
-															 forKey:@"currentVersion"];			
-		}
-	}
-	
-	//Remember that we have now run in this version.
-	if (versionUpgradeDict) {
-		[[self preferenceController] setPreference:currentVersionString
-											forKey:KEY_LAST_VERSION_LAUNCHED
-											 group:PREF_GROUP_GENERAL];
-	 }
-	
-	return(versionUpgradeDict);
-}
-
-- (NSString *)processBetaVersionString:(NSString *)inString
-{
-	NSString	*returnString = nil;
-	
-	if ([inString isEqualToString:@"0.7b1"]) {
-		returnString = @"0.68";
-	} else if ([inString isEqualToString:@"0.7b2"]) {
-		returnString = @"0.681";
-	} else if ([inString isEqualToString:@"0.7b3"]) {
-		returnString = @"0.682";
-	} else if ([inString isEqualToString:@"0.7b4"]) {
-		returnString = @"0.683";
-	} else if ([inString isEqualToString:@"0.7b5"]) {
-		returnString = @"0.684";
-	} else if ([inString isEqualToString:@"0.7b6"]) {
-		returnString = @"0.685";
-	} else if ([inString isEqualToString:@"0.7b7"]) {
-		returnString = @"0.686";
-	} else if ([inString isEqualToString:@"0.7b8"]) {
-		returnString = @"0.687";
-	}
-	
-	return(returnString ? returnString : inString);
-}*/
 
 #pragma mark Scripting
 - (BOOL)application:(NSApplication *)sender delegateHandlesKey:(NSString *)key {
