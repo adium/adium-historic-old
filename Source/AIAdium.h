@@ -23,35 +23,36 @@
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
 		AIPreferenceViewController, AISoundController, AIDockController, ESFileTransferController, 
 		ESContactAlertsController, ESApplescriptabilityController, AIStatusController, ESDebugController,
-		AIEmoticonController;
+		AIEmoticonController, AIChatController;
 
 @protocol AIController
-- (void)initController;
 - (void)finishIniting;
 - (void)beginClosing;
 - (void)closeController;
 @end
 
 @interface AIAdium : NSObject {
-    IBOutlet	AIAccountController				*accountController;
-    IBOutlet	AIContactController				*contactController;
-    IBOutlet	AIContentController				*contentController;
-    IBOutlet	AIDockController				*dockController;
-    IBOutlet	AIEmoticonController			*emoticonController;
-    IBOutlet	AIInterfaceController			*interfaceController;
-    IBOutlet	AILoginController				*loginController;
     IBOutlet	AIMenuController				*menuController;
-    IBOutlet	AIPreferenceController			*preferenceController;
-    IBOutlet	AISoundController				*soundController;
-    IBOutlet	AIStatusController				*statusController;
-    IBOutlet	AIToolbarController				*toolbarController;
-    IBOutlet	ESApplescriptabilityController	*applescriptabilityController;
-    IBOutlet	ESDebugController				*debugController;
-    IBOutlet    ESContactAlertsController		*contactAlertsController;
-    IBOutlet    ESFileTransferController		*fileTransferController;
+    IBOutlet	AIInterfaceController			*interfaceController;
 
-	IBOutlet	AICoreComponentLoader			*componentLoader;
-	IBOutlet	AICorePluginLoader				*pluginLoader;
+	AIAccountController				*accountController;
+	AIChatController				*chatController;
+	AIContactController				*contactController;
+	AIContentController				*contentController;
+	AIDockController				*dockController;
+	AIEmoticonController			*emoticonController;
+	AILoginController				*loginController;
+	AIPreferenceController			*preferenceController;
+	AISoundController				*soundController;
+	AIStatusController				*statusController;
+	AIToolbarController				*toolbarController;
+	ESApplescriptabilityController	*applescriptabilityController;
+	ESDebugController				*debugController;
+	ESContactAlertsController		*contactAlertsController;
+	ESFileTransferController		*fileTransferController;
+
+	AICoreComponentLoader			*componentLoader;
+	AICorePluginLoader				*pluginLoader;
     
     NSNotificationCenter						*notificationCenter;
     NSMutableDictionary							*eventNotifications;
@@ -65,6 +66,7 @@
 
 + (NSString *)applicationSupportDirectory;
 - (AIAccountController *)accountController;
+- (AIChatController *)chatController;
 - (AIContactController *)contactController;
 - (AIContentController *)contentController;
 - (AIDockController *)dockController;
