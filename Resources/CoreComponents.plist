@@ -61,7 +61,6 @@
 	<string>ESContactServersideDisplayName</string>
 	<string>ESFastUserSwitchingSupportPlugin</string>
 	<string>ESFileTransferMessagesPlugin</string>
-	<string>ESMessageEvents</string>
 	<string>ESMetaContactContentsPlugin</string>
 	<string>ESOpenMessageWindowContactAlertPlugin</string>
 	<string>ESSafariLinkToolbarItemPlugin</string>
