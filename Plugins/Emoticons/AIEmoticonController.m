@@ -68,25 +68,31 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 
 #define EMOTICONS_THEMABLE_PREFS      @"Emoticon Themable Prefs"
 
-- (void)initController
+//init
+- (id)init
 {
-    //Init    
-    observingContent = NO;
-    _availableEmoticonPacks = nil;
-    _activeEmoticonPacks = nil;
-    _activeEmoticons = nil;
-    _emoticonHintCharacterSet = nil;
-    _emoticonStartCharacterSet = nil;
-    _emoticonIndexDict = nil;
+	if ((self = [super init])) {
+		observingContent = NO;
+		_availableEmoticonPacks = nil;
+		_activeEmoticonPacks = nil;
+		_activeEmoticons = nil;
+		_emoticonHintCharacterSet = nil;
+		_emoticonStartCharacterSet = nil;
+		_emoticonIndexDict = nil;
+	}
+	
+	return self;
+}
 
+- (void)finishIniting
+{
     //Create the custom emoticons directory
-    [[AIObject sharedAdiumInstance] createResourcePathForName:EMOTICONS_PATH_NAME];
+    [adium createResourcePathForName:EMOTICONS_PATH_NAME];
     
     //Setup Preferences
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:@"EmoticonDefaults" 
 																		forClass:[self class]]
 										  forGroup:PREF_GROUP_EMOTICONS];
-    //prefs = [[AIEmoticonPreferences preferencePaneForPlugin:self] retain];
     
 	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EMOTICONS];
 	
@@ -95,6 +101,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 								   selector:@selector(xtrasChanged:)
 									   name:Adium_Xtras_Changed
 									 object:nil];
+}
+
+- (void)beginClosing
+{
 }
 
 - (void)closeController

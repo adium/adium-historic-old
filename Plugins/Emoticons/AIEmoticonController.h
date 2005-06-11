@@ -14,7 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import <Adium/AIObject.h>
 
 #define PREF_GROUP_EMOTICONS				@"Emoticons"
 #define KEY_EMOTICON_ACTIVE_PACKS			@"Active Emoticon Packs"
@@ -25,9 +25,7 @@
 @protocol AIContentFilter;
 @class AIEmoticonPreferences, AIEmoticonPack, AIEmoticon;
 
-@interface AIEmoticonController : NSObject <AIContentFilter> {
-    IBOutlet	AIAdium		*adium;	
-
+@interface AIEmoticonController : AIObject <AIController, AIContentFilter> {
     AIEmoticonPreferences		*prefs;
     BOOL                        observingContent;
 
@@ -41,8 +39,6 @@
 	BOOL						serviceAppropriateEmoticons;
 }
 
-- (void)initController;
-- (void)closeController;
 - (NSArray *)availableEmoticonPacks;
 - (AIEmoticonPack *)emoticonPackWithName:(NSString *)inName;
 - (NSArray *)activeEmoticons;
