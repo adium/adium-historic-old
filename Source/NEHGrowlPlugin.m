@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
@@ -351,13 +352,13 @@
 			([listObject isKindOfClass:[AIListContact class]])) {
 			
 			//First look for an existing chat to avoid changing anything
-			if (!(chat = [[adium contentController] existingChatWithContact:(AIListContact *)listObject])) {
+			if (!(chat = [[adium chatController] existingChatWithContact:(AIListContact *)listObject])) {
 				//If we don't find one, create one
-				chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
+				chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
 			}
 		}
 	} else if ((uniqueChatID = [clickContext objectForKey:@"uniqueChatID"])) {
-		chat = [[adium contentController] existingChatWithUniqueChatID:uniqueChatID];
+		chat = [[adium chatController] existingChatWithUniqueChatID:uniqueChatID];
 		
 		//If we didn't find a chat, it may have closed since the notification was posted.
 		//If we have an appropriate existing list object, we can create a new chat.
@@ -366,7 +367,7 @@
 			([listObject isKindOfClass:[AIListContact class]])) {
 		
 			//If the uniqueChatID led us to an existing contact, create a chat with it
-			chat = [[adium contentController] openChatWithContact:(AIListContact *)listObject];
+			chat = [[adium chatController] openChatWithContact:(AIListContact *)listObject];
 		}	
 	}
 
