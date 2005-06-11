@@ -17,7 +17,7 @@
 #import "AIAccount.h"
 #import "AIChat.h"
 #import "AIContactController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIService.h"
 #import "DCJoinChatViewController.h"
 #import <AIUtilities/AIStringAdditions.h>
@@ -80,9 +80,9 @@
 	 withInvitationMessage:(NSString *)invitationMessage
 {
 	AILog(@"Creating chatWithName:%@ onAccount:%@ chatCreationInfo:%@",inName,inAccount,inInfo);
-	chat = [[adium contentController] chatWithName:inName
-										 onAccount:inAccount
-								  chatCreationInfo:inInfo];
+	chat = [[adium chatController] chatWithName:inName
+									  onAccount:inAccount
+							   chatCreationInfo:inInfo];
 	
 	if ([contactsToInvite count]) {
 		[chat setStatusObject:contactsToInvite forKey:@"ContactsToInvite" notify:NotifyNever];

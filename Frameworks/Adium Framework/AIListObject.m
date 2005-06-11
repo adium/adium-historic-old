@@ -14,10 +14,10 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIListObject.h"
 #import "AIContactController.h"
 #import "AIListContact.h"
 #import "AIListGroup.h"
-#import "AIListObject.h"
 #import "AIPreferenceController.h"
 #import "AIService.h"
 #import "AIUserIcons.h"
@@ -156,7 +156,7 @@
 #else
 	//Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
 	//disconnect/reconnect cycle?
-	[containingObject listObject:self didSetOrderIndex:orderIndex];
+	[(AIListObject<AIContainingObject> *)containingObject listObject:self didSetOrderIndex:orderIndex];
 #endif
 }
 
