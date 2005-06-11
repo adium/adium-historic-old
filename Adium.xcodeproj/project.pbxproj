@@ -423,6 +423,9 @@
 		34B9194D062DEC29004F1223 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
 		34B919CB062DEF15004F1223 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
 		34B919CC062DEF15004F1223 /* CBOscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B919CA062DEF15004F1223 /* CBOscarService.m */; };
+		34B9E6FA085B7DAE006216DF /* AIUtilities.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34D8379307CC3222006466F2 /* AIUtilities.framework */; };
+		34B9E6FB085B7DAE006216DF /* AIHyperlinks.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
+		34B9E6FC085B7DAE006216DF /* AIBookmarksImport.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */; };
 		34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */; };
 		34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */; };
 		34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */; };
@@ -1474,6 +1477,9 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				34B9E6FA085B7DAE006216DF /* AIUtilities.framework in CopyFiles */,
+				34B9E6FB085B7DAE006216DF /* AIHyperlinks.framework in CopyFiles */,
+				34B9E6FC085B7DAE006216DF /* AIBookmarksImport.framework in CopyFiles */,
 				3419FE230531586A00C68BA3 /* Adium.framework in CopyFiles */,
 				9E12765407D38B5000AA91C5 /* Growl-WithInstaller.framework in CopyFiles */,
 			);
@@ -6672,7 +6678,6 @@
 				34E9DCF2078FC79900662E8E /* ShellScript */,
 				34BD9D42053146CC000AB133 /* Sources */,
 				34BD9D57053146CC000AB133 /* Frameworks */,
-				342CE077085939A000005C63 /* ShellScript */,
 				34BD9D5F053146CC000AB133 /* CopyFiles */,
 				4BF2E91F067CB76300743318 /* CopyFiles */,
 				34BD9D6A053146CC000AB133 /* CopyFiles */,
@@ -7532,19 +7537,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "#!/bin/zsh\n\n#we use Xcode's dependency-resolution to determine when this script should be run.\ntouch \"${SCRIPT_INPUT_FILE_0}\"\n";
-		};
-		342CE077085939A000005C63 /* ShellScript */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIBookmarksImport.framework\n$PBXCP \"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\" \"$FRAMEWORKS_DIR\"\n";
 		};
 		344ECA570620A04E007256C6 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
