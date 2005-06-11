@@ -16,7 +16,7 @@
 
 #import "AIAccount.h"
 #import "AIContactController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIContentMessage.h"
 #import "AIListContact.h"
 #import "AIMetaContact.h"
@@ -173,7 +173,7 @@
 			targetAccount = [targetMessagingContact account];	
 		}
 		
-		chat = [[adium contentController] openChatWithContact:targetMessagingContact];
+		chat = [[adium chatController] openChatWithContact:targetMessagingContact];
 		
 		//Take the string and turn it into an attributed string (in case we were passed HTML)
 		NSAttributedString  *attributedMessage = [AIHTMLDecoder decodeHTML:message];

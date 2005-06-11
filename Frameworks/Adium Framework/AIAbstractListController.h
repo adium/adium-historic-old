@@ -15,10 +15,10 @@
  */
 
 #import "AIWindowController.h"
+#import <Adium/AIListObject.h>
 #import <AIUtilities/AISmoothTooltipTracker.h>
 
 @class AIAutoScrollView, AIListOutlineView, AIListContactCell, AIListGroupCell, ESObjectWithStatus, AIListObject, AIChat;
-@protocol AIContainingObject;
 
 #define LIST_LAYOUT_FOLDER						@"Contact List"
 #define LIST_LAYOUT_EXTENSION					@"ListLayout"

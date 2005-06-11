@@ -24,7 +24,7 @@
 #import "AIUserIcons.h"
 
 #import "AIContactController.h"
-#import "AIContentController.h"
+#import "AIChatController.h"
 #import "AIPreferenceController.h"
 
 #import <AIUtilities/AIArrayAdditions.h>
@@ -174,9 +174,9 @@ static int nextChatNumber = 0;
 //Status
 - (void)didModifyStatusKeys:(NSSet *)keys silent:(BOOL)silent
 {
-	[[adium contentController] chatStatusChanged:self
-							  modifiedStatusKeys:keys
-										  silent:silent];	
+	[[adium chatController] chatStatusChanged:self
+						   modifiedStatusKeys:keys
+									   silent:silent];	
 }
 
 - (void)object:(id)inObject didSetStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify

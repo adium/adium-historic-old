@@ -144,7 +144,7 @@
 	[contactListView registerForDraggedTypes:[NSArray arrayWithObjects:@"AIListObject", @"AIListObjectUniqueIDs",nil]];
 }
 
-- (void)setContactListRoot:(ESObjectWithStatus <AIContainingObject> *)newContactListRoot
+- (void)setContactListRoot:(ESObjectWithStatus<AIContainingObject> *)newContactListRoot
 {
 	if (contactList != newContactListRoot) {
 		[contactList release]; contactList = [newContactListRoot retain];
