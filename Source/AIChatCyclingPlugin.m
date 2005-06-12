@@ -81,6 +81,7 @@
 	
 	switch ([[prefDict objectForKey:KEY_TAB_SWITCH_KEYS] intValue]) {
 		case AISwitchArrows:
+		default:
 			leftKey = [NSString stringWithCharacters:&left length:1];
 			rightKey = [NSString stringWithCharacters:&right length:1];
 			break;
