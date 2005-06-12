@@ -83,6 +83,8 @@ typedef enum {
 	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
 	AdiumMessageEvents		*messageEvents;
+	
+	NSMutableSet			*stringsRequiringPolling;
 }
 
 //Sending / Receiving content
@@ -116,6 +118,9 @@ typedef enum {
 					direction:(AIFilterDirection)direction
 					 threaded:(BOOL)threaded;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
+- (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
+- (BOOL)shouldPollToUpdateString:(NSString *)inString;
+
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction

@@ -94,7 +94,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		emoticonsArray = nil;
 		
 		objectsBeingReceived = [[NSMutableSet alloc] init];
-		
+		stringsRequiringPolling = [[NSMutableSet alloc] init];
+	
 		//Emoticons array
 		emoticonsArray = nil;
 	}
@@ -316,6 +317,30 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 			[threadedContentFilter[i][j] removeObject:inFilter];
 		}
 	}
+}
+
+//Register a string which, if present when filtering for a potentiall autorefreshing string, requires polling to be updated
+- (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString
+{
+	[stringsRequiringPolling addObject:inPollString];
+}
+
+//Is polling required to update the passed string?
+- (BOOL)shouldPollToUpdateString:(NSString *)inString
+{
+	NSEnumerator	*enumerator;
+	NSString		*stringRequiringPolling;
+	BOOL			shouldPoll = NO;
+	
+	enumerator = [stringsRequiringPolling objectEnumerator];
+	while ((stringRequiringPolling = [enumerator nextObject])) {
+		if ([inString rangeOfString:stringRequiringPolling].location != NSNotFound) {
+			shouldPoll = YES;
+			break;
+		}
+	}
+	
+	return shouldPoll;
 }
 
 #define THREADED_FILTERING TRUE
