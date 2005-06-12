@@ -44,6 +44,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AISortController.h>
 #import <Adium/AIUserIcons.h>
+#import <Adium/AIServiceIcons.h>
 
 #ifdef CONTACTS_INFO_WITH_PROMPT
 #import "ESShowContactInfoPromptController.h"
@@ -1208,93 +1209,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	return [[objectA displayName] caseInsensitiveCompare:[objectB displayName]];
 }
 
-//Return a menu of contacts which are within inContact on a given service. Pass nil for service to retrive all contacts.
-//The menuItems have a target of target and a selector of @selector(selectContainedContact:).
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline
-{
-	NSMenu		*contactMenu = [[NSMenu alloc] initWithTitle:@""];
-	NSArray		*contactArray;
-
-	if ([inContact isKindOfClass:[AIMetaContact class]]) {
-		if (service) {
-			NSDictionary	*dict;
-
-			dict = [(AIMetaContact *)inContact dictionaryOfServiceClassesAndListContacts];
-			contactArray = [dict objectForKey:[service serviceClass]];
-		} else {
-			//If service is nil, get ALL contained contacts
-			contactArray = [(AIMetaContact *)inContact listContacts];
-		}
-	} else {
-		contactArray = [NSArray arrayWithObject:inContact];
-	}
-
-	//Sort the array by display name
-	contactArray = [contactArray sortedArrayUsingFunction:contactDisplayNameSort context:nil];
-
-	[self _addMenuItemsFromArray:contactArray
-						  toMenu:contactMenu
-						  target:target
-				  offlineContacts:NO];
-
-	if (includeOffline) {
-		//Separate the online from the offline
-		if ([contactMenu numberOfItems] > 0) {
-			[contactMenu addItem:[NSMenuItem separatorItem]];
-		}
-
-		[self _addMenuItemsFromArray:contactArray
-							  toMenu:contactMenu
-							  target:target
-					 offlineContacts:YES];
-	}
-
-	return [contactMenu autorelease];
-}
-
-//Add the contacts from contactArray to the specified menu.  If offlineContacts is NO, only add online ones.
-//If offlineContacts is YES, only add offline ones.
-- (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts
-{
-	NSEnumerator	*enumerator;
-	AIListContact	*contact;
-
-	enumerator = [contactArray objectEnumerator];
-
-	while ((contact = [enumerator nextObject])) {
-		BOOL contactIsOnline = [contact online];
-
-		//If the contact is online and we aren't doing only offline contacts, add it.
-		//If the contact is offline, and we are doing only offline contacts, add it if any account is available for sending to it.
-		if ((contactIsOnline && !offlineContacts) ||
-			(!contactIsOnline &&
-			 offlineContacts &&
-			 ([[adium accountController] firstAccountAvailableForSendingContentType:CONTENT_MESSAGE_TYPE
-																		  toContact:contact
-																	 includeOffline:NO] != nil))) {
-			NSImage			*menuServiceImage;
-			NSMenuItem		*menuItem;
-
-			menuServiceImage = [AIUserIcons menuUserIconForObject:contact];
-
-			menuItem = [[NSMenuItem alloc] initWithTitle:[contact formattedUID]
-												  target:target
-												  action:@selector(selectContainedContact:)
-										   keyEquivalent:@""];
-			[menuItem setRepresentedObject:contact];
-			[menuItem setImage:menuServiceImage];
-			[contactMenu addItem:menuItem];
-
-			[menuItem release];
-		}
-	}
-}
-
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target
-{
-	return( [self menuOfContainedContacts:inContact forService:nil withTarget:target includeOffline:YES] );
-}
-
 //Return either the highest metaContact containing this list object, or the list object itself.  Appropriate for when
 //preferences should be read from/to the most generalized contact possible.
 - (AIListObject *)parentContactForListObject:(AIListObject *)listObject
@@ -1834,7 +1748,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
 																	   account:inAccount
 																		   UID:inUID];
-
+		NSLog(@"%@",key);
 		contact = [contactDict objectForKey:key];
 		if (!contact) {
 			//Create
