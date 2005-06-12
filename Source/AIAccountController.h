@@ -90,22 +90,13 @@ typedef enum
 
 	
 
-//Accounts
-- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType
-								   toListObject:(AIListObject *)inObject
-									 withTarget:(id)target
-								 includeOffline:(BOOL)includeOffline;
-
 //Preferred Source Accounts 
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline;
 - (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline;
-- (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline;
-- (NSMenu *)menuOfAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline onlyIfCreatingGroupChatIsSupported:(BOOL)groupChatCreator;
-- (NSArray *)menuItemsForAccountsWithTarget:(id)target includeOffline:(BOOL)includeOffline;
-- (NSMenu *)menuOfAccountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject withTarget:(id)target includeOffline:(BOOL)includeOffline;
 
 //Connection convenience methods
+- (void)toggleConnectionOfAccount:(AIAccount *)account;
 - (void)connectAllAccounts;
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
