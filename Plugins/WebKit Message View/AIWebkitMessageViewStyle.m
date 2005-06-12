@@ -684,6 +684,9 @@
 								senderDisplay = formattedUID;
 								break;	
 							}
+							case Display_Name: {
+								senderDisplay = displayName;
+							}
 						}
 					}
 					if (!senderDisplay) {
@@ -819,7 +822,7 @@
 			}
 		} while (range.location != NSNotFound);
 
-		if (statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"]) {
+		if ((statusPhrase = [[content userInfo] objectForKey:@"Status Phrase"])) {
 			do{
 				range = [inString rangeOfString:@"%statusPhrase%"];
 				if (range.location != NSNotFound) {
