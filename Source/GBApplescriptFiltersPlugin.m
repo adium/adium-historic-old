@@ -214,6 +214,9 @@ static int numExecuted = 0;
 						//Place the entry in our script arrays
 						[scriptArray addObject:infoDict];
 						[flatScriptArray addObject:infoDict];
+						
+						//Scripts must always be updated via polling
+						[[adium contentController] registerFilterStringWhichRequiresPolling:keyword];
 					}
 				}
 			}
