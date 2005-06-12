@@ -16,7 +16,7 @@
 
 #import "AIWindowController.h"
 
-@class AIListContact, AICompletingTextField;
+@class AIListContact, AICompletingTextField, AIAccountMenu;
 
 @interface AIAccountPlusFieldPromptController : AIWindowController {
     IBOutlet	AICompletingTextField	*textField_handle;
@@ -24,6 +24,8 @@
 	
 	IBOutlet	NSButton				*button_okay;
 	IBOutlet	NSButton				*button_cancel;
+	
+	AIAccountMenu 						*accountMenu;
 }
 
 + (void)showPrompt;
