@@ -14,40 +14,27 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@class AIAccount, AIListObject, AIListContact;
-@protocol AIListObjectObserver;
+@class AIChat, AIAccountMenu, AIContactMenu;
 
-@interface AIAccountSelectionView : NSView <AIListObjectObserver> {
-    AIAdium						*adium;
-	
-    IBOutlet	NSView			*view_contents;
+#define AIViewFrameDidChangeNotification	@"AIViewFrameDidChangeNotification"
 
-	IBOutlet	NSBox			*box_accounts;
-	IBOutlet	NSPopUpButton   *popUp_accounts;
+@interface AIAccountSelectionView : NSView {
+	NSPopUpButton		*popUp_accounts;
+	NSTextField			*label_accounts;
+	NSView				*box_accounts;
+
+	NSPopUpButton   	*popUp_contacts;
+	NSTextField			*label_contacts;
+	NSView				*box_contacts;
 	
-	IBOutlet	NSBox			*box_contacts;
-	IBOutlet	NSPopUpButton   *popUp_contacts;
-	
-    id				delegate;
+	AIAccountMenu		*accountMenu;	
+	AIContactMenu		*contactMenu;	
+    AIAdium				*adium;
+	AIChat				*chat;
 }
 
-+ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
-+ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject;
-+ (BOOL)multipleContactsForContact:(AIListContact *)inContact;
+- (id)initWithCoder:(NSCoder *)aDecoder;
+- (id)initWithFrame:(NSRect)frameRect;
+- (void)setChat:(AIChat *)inChat;
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id)inDelegate;
-- (void)setDelegate:(id)inDelegate;
-- (id)delegate;
-- (void)configureView;
-- (void)updateMenu;
-- (void)accountListChanged:(NSNotification *)notification;
-- (IBAction)selectAccount:(id)sender;
-
-@end
-
-@interface NSObject (AIAccountSelectionViewDelegate)
-- (void)setAccount:(AIAccount *)inAccount;
-- (void)setListObject:(AIListContact *)listObject;
-- (AIAccount *)account;
-- (AIListContact *)listObject;
 @end

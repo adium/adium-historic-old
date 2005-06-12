@@ -54,10 +54,10 @@
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat;
 - (void)tabViewItemWillClose;
 - (AIChat *)chat;
-- (void)setAccount:(AIAccount *)inAccount;
-- (AIAccount *)account;
-- (void)setListObject:(AIListContact *)listContact;
-- (AIListContact *)listObject;
+//- (void)setAccount:(AIAccount *)inAccount;
+//- (AIAccount *)account;
+//- (void)setListObject:(AIListContact *)listContact;
+//- (AIListContact *)listObject;
 - (AIListObject *)preferredListObject;
 
 //Message Display

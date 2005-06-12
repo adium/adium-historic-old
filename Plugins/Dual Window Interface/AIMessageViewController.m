@@ -59,8 +59,8 @@
 - (void)chatStatusChanged:(NSNotification *)notification;
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification;
 - (void)_configureMessageDisplay;
-- (void)_showAccountSelectionView;
-- (void)_hideAccountSelectionView;
+- (void)_createAccountSelectionView;
+- (void)_destroyAccountSelectionView;
 - (void)_configureTextEntryView;
 - (void)_updateTextEntryViewHeight;
 - (int)_textEntryViewProperHeightIgnoringUserMininum:(BOOL)ignoreUserMininum;
@@ -94,10 +94,10 @@
 		userListController = nil;
 		sendMessagesToOfflineContact = NO;
 		retainingScrollViewUserList = NO;
-
+		
 		//Load the view containing our controls
 		[NSBundle loadNibNamed:MESSAGE_VIEW_NIB owner:self];
-			
+		
 		//Register for the various notification we need
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(sendMessage:) 
@@ -123,7 +123,11 @@
 									   selector:@selector(redisplaySourceAndDestinationSelector:) 
 										   name:Chat_DestinationChanged
 										 object:chat];
-		
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(accountSelectionViewFrameDidChange:)
+													 name:AIViewFrameDidChangeNotification
+												   object:view_accountSelection];
+
 		//
 		[splitView_textEntryHorizontal setDividerThickness:6]; //Default is 9
 		[splitView_textEntryHorizontal setDrawsDivider:NO];
@@ -131,6 +135,7 @@
 		//Configure our views
 		[self _configureMessageDisplay];
 		[self _configureTextEntryView];
+		[self setAccountSelectionMenuVisibleIfNeeded:NO];
 		
 		//Update chat status and participating list objects to configure the user list if necessary
 		[self chatStatusChanged:nil];
@@ -163,11 +168,7 @@
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 	
     //Account selection view
-    if (view_accountSelection) {
-		[view_accountSelection setDelegate:nil]; //Make sure it doesn't try and talk to us after we're gone
-        [view_accountSelection removeFromSuperview];
-        [view_accountSelection release]; view_accountSelection = nil;
-    }
+	[self _destroyAccountSelectionView];
 	
 	//This is the controller for the actual view (not self, despite the naming oddness)
     [messageViewController release];
@@ -219,38 +220,11 @@
 }
 
 /*!
- * @brief Set the source account associated with this chat
- */
-- (void)setAccount:(AIAccount *)inAccount
-{
-	if (inAccount != [chat account]) {
-		[[adium chatController] switchChat:chat toAccount:inAccount];
-	}
-}
-
-/*!
  * @brief Retrieve the source account associated with this chat
  */
 - (AIAccount *)account
 {
     return([chat account]);
-}
-
-/*!
- * @brief Set the destination list object associated with this chat
- */
-- (void)setListObject:(AIListContact *)listContact
-{
-	if (listContact != [chat listObject]) {
-		BOOL	shouldChangeAccount;
-
-		//If we changed services, set the account to this contact's account
-		shouldChangeAccount = ([listContact service] != [[chat listObject] service]);
-
-		[[adium chatController] switchChat:chat
-							 toListContact:listContact
-					   usingContactAccount:shouldChangeAccount];
-	}
 }
 
 /*!
@@ -459,6 +433,14 @@
 //Account Selection ----------------------------------------------------------------------------------------------------
 #pragma mark Account Selection
 /*!
+ * @brief
+ */
+- (void)accountSelectionViewFrameDidChange:(NSNotification *)notification
+{
+	[self _updateAccountSelectionViewHeight];
+}
+
+/*!
  * @brief Redisplay the source/destination account selector
  */
 - (void)redisplaySourceAndDestinationSelector:(NSNotification *)notification
@@ -474,46 +456,34 @@
  */
 - (void)setAccountSelectionMenuVisibleIfNeeded:(BOOL)makeVisible
 {
-	//If the account selection menu isn't allowed or isn't needed, we want to hide it
-	if ([chat integerStatusObjectForKey:@"DisallowAccountSwitching"] ||
-	   ![AIAccountSelectionView optionsAvailableForSendingContentType:CONTENT_MESSAGE_TYPE toContact:[chat listObject]]) {
-		makeVisible = NO;
-	}
-	
 	//Hide or show the account selection view as requested
 	if (makeVisible) {
-		[self _showAccountSelectionView];
+		[self _createAccountSelectionView];
 	} else {
-		[self _hideAccountSelectionView];
+		[self _destroyAccountSelectionView];
 	}
 }
 
 /*!
  * @brief Show the account selection view
  */
-- (void)_showAccountSelectionView
+- (void)_createAccountSelectionView
 {
 	if (!view_accountSelection) {
 		NSRect	contentFrame = [splitView_textEntryHorizontal frame];
 		int 	accountViewHeight;
 
-		//Create the account selection view and insert it into our window (Initial frame is arbitrary)
-		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:NSZeroRect delegate:self];
+		//Create the account selection view and insert it into our window
+		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:contentFrame];
 
-		//Insert the account selection view at the top of our view
-		accountViewHeight = [view_accountSelection frame].size.height;
-		[view_contents addSubview:view_accountSelection];
-		[view_accountSelection setFrame:NSMakeRect(contentFrame.origin.x,
-												   contentFrame.origin.y + contentFrame.size.height - accountViewHeight,
-												   [view_contents frame].size.width,
-												   accountViewHeight)];
-
-		//Move the rest of the window down to make room
-		[splitView_textEntryHorizontal setFrame:NSMakeRect(contentFrame.origin.x,
-														   contentFrame.origin.y,
-														   contentFrame.size.width,
-														   contentFrame.size.height - [view_accountSelection frame].size.height)];
+		[view_accountSelection setAutoresizingMask:(NSViewWidthSizable | NSViewMinYMargin)];
 		
+		//Insert the account selection view at the top of our view
+		[view_contents addSubview:view_accountSelection];
+		[view_accountSelection setChat:chat];
+
+		[self _updateAccountSelectionViewHeight];
+			
 		//Redisplay everything
 		[view_contents setNeedsDisplay:YES];
 	}
@@ -522,28 +492,32 @@
 /*!
  * @brief Hide the account selection view
  */
-- (void)_hideAccountSelectionView
+- (void)_destroyAccountSelectionView
 {
 	if (view_accountSelection) {
-		int		height = [view_accountSelection frame].size.height;
-		NSRect	frame;
-
 		//Remove the account selection view from our window, clean it up
-		[view_accountSelection setDelegate:nil];
 		[view_accountSelection removeFromSuperview];
 		[view_accountSelection release]; view_accountSelection = nil;
 		
-		//Move the rest of the window up to fill the empty space
-		frame = [splitView_textEntryHorizontal frame];
-		[splitView_textEntryHorizontal setFrame:NSMakeRect(frame.origin.x,
-														   frame.origin.y,
-														   frame.size.width,
-														   frame.size.height + height)];
-		
 		//Redisplay everything
-		[view_contents setNeedsDisplay:YES];
+		//[view_contents setNeedsDisplay:YES];
+		[self _updateAccountSelectionViewHeight];
 	}
 }
+
+/*!
+ * @brief 
+ */
+- (void)_updateAccountSelectionViewHeight
+{NSLog(@"_updateAccountSelectionViewHeight");
+	int		contentsHeight = [view_contents frame].size.height;
+	int 	accountSelectionHeight = [view_accountSelection frame].size.height;
+	
+	[view_accountSelection setFrameOrigin:NSMakePoint([view_accountSelection frame].origin.x, 
+													  contentsHeight - accountSelectionHeight)];
+	[splitView_textEntryHorizontal setFrameSize:NSMakeSize([splitView_textEntryHorizontal frame].size.width,
+														   contentsHeight - accountSelectionHeight)];
+}	
 
 
 //Text Entry -----------------------------------------------------------------------------------------------------------
