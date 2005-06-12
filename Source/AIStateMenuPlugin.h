@@ -24,6 +24,7 @@
 	AIAccountMenu	*accountMenu;
 	
 	NSArray			*currentMenuItemArray;
+	NSArray			*installedMenuItems;
 }
 
 @end
