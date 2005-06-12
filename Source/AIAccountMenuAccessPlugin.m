@@ -30,7 +30,7 @@
  */
 - (void)installPlugin
 {
-	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:YES showTitleVerbs:YES] retain];
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountOptionsSubmenu showTitleVerbs:YES] retain];
 }
 
 /*!
@@ -38,16 +38,7 @@
  */
 - (void)uninstallPlugin
 {
-
-}
-
-/*!
- * @brief Deallocate
- */
-- (void)dealloc
-{
 	[accountMenu release];
-	[super dealloc];
 }
 
 /*!
@@ -57,31 +48,29 @@
  *
  * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
  */
-- (void)addAccountMenuItems:(NSArray *)menuItemArray
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
 {
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
+
+	//Remove any existing menu items
+	enumerator = [installedMenuItems objectEnumerator];
+    while((menuItem = [enumerator nextObject])){    
+		[[adium menuController] removeMenuItem:menuItem];
+    }
 	
-    while ((menuItem = [enumerator nextObject])) {    
+	//Add the new menu items
+	enumerator = [menuItems objectEnumerator];
+    while ((menuItem = [enumerator nextObject])) {
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_File_Additions];
     }
+	
+	//Remember the installed items so we can remove them later
+	[installedMenuItems release]; 
+	installedMenuItems = [menuItems retain];
 }
-
-/*!
- * @brief Remove account menu items from our location
- *
- * Implemented as required by the AccountMenuPlugin protocol.
- *
- * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
- */
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray
-{
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
-	NSMenuItem		*menuItem;
-
-    while ((menuItem = [enumerator nextObject])) {    
-        [[adium menuController] removeMenuItem:menuItem];
-    }
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[[adium accountController] toggleConnectionOfAccount:inAccount];
 }
 
 @end
