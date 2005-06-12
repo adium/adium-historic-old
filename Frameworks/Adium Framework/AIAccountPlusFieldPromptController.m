@@ -22,6 +22,7 @@
 #import "AIListContact.h"
 #import "AIService.h"
 #import <AIUtilities/AICompletingTextField.h>
+#import <Adium/AIAccountMenu.h>
 
 @interface AIAccountPlusFieldPromptController (PRIVATE)
 - (void)_configureTextFieldForAccount:(AIAccount *)account;
@@ -74,12 +75,6 @@
 	return(contact);
 }
 
-- (IBAction)selectAccount:(id)sender
-{
-	AIAccount			*selectedAccount = [sender representedObject];
-	[self _configureTextFieldForAccount:selectedAccount];
-}
-
 - (void)_configureTextFieldForAccount:(AIAccount *)account
 {
 	NSEnumerator		*enumerator;
@@ -119,34 +114,54 @@
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
+	//Controls
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
-	
 	[textField_handle setMinStringLength:2];
 	
-    //Configure the handle type menu
-    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self includeOffline:NO]];
-	
-    //Select the last used account / Available online account
-	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																						   toContact:nil];
-	int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
-	
-    if (serviceIndex < [popUp_service numberOfItems] && serviceIndex >= 0) {
-		//Select the account
-		[popUp_service selectItemAtIndex:serviceIndex];
-		
-		//Configure the autocompleting field
-		[self _configureTextFieldForAccount:preferredAccount];
-	}
+	//Account menu
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountNoSubmenu
+										   showTitleVerbs:NO] retain];
 
     //Center the window
     [[self window] center];
 }
 
+//
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
+	
+	[accountMenu release];
+	
 	[[self class] destroySharedInstance];
 }
 
+
+//Account menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Account menu
+//Account menu delegate
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[popUp_service setMenu:[inAccountMenu menu]];	
+}	
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[self _configureTextFieldForAccount:inAccount];
+}
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
+	return([inAccount online]);
+}
+
+//Select the last used account / Available online account
+- (void)_selectLastUsedAccountInAccountMenu:(AIAccountMenu *)inAccountMenu
+{
+	AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																						   toContact:nil];
+	NSMenuItem	*menuItem = [inAccountMenu menuItemForAccount:preferredAccount];
+	
+	if (menuItem) {
+		[popUp_service selectItem:menuItem];
+		[self _configureTextFieldForAccount:preferredAccount];
+	}
+}	
+	
 @end
