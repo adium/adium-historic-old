@@ -18,254 +18,397 @@
 #import "AIAccountSelectionView.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
+#import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIContactMenu.h>
+#import <Adium/AIChat.h>
 
-#define ACCOUNT_SELECTION_NIB		@"AccountSelectionView"
+#define ACCOUNT_SELECTION_NIB	@"AccountSelectionView"
+
+#define BOX_RECT	NSMakeRect(0, 0, 300, 28)
+#define LABEL_RECT	NSMakeRect(17, 7, 56, 17)
+#define POPUP_RECT	NSMakeRect(75, 1, 212, 26)
 
 @interface AIAccountSelectionView (PRIVATE)
-- (void)configureContactsMenu;
-- (void)configureAccountsMenu;
-
-- (void)updateAccountsMenu;
-- (void)updateContactsMenu;
-- (void)updatePopUp:(NSPopUpButton *)popUpButton toObject:(id)object;
+- (id)_init;
+- (void)chatMetaContactChanged;
+- (void)chatDestinationChanged:(NSNotification *)notification;
+- (void)chatSourceChanged:(NSNotification *)notification;
+- (AIMetaContact *)_chatMetaContact;
+- (BOOL)_accountIsAvailable:(AIAccount *)inAccount;
+- (void)_createAccountMenu;
+- (void)_createContactMenu;
+- (void)_destroyAccountMenu;
+- (void)_destroyContactMenu;
+- (BOOL)choicesAvailableForAccount;
+- (BOOL)choicesAvailableForContact;
+- (NSTextField *)_textFieldLabelWithValue:(NSString *)inValue frame:(NSRect)inFrame;
+- (NSPopUpButton *)_popUpButtonWithFrame:(NSRect)inFrame;
+- (NSView *)_boxWithFrame:(NSRect)inFrame;
+- (void)_repositionMenusAndResize;
 @end
 
 @implementation AIAccountSelectionView
 
-- (id)initWithFrame:(NSRect)frameRect delegate:(id)inDelegate
+/*!
+ * @brief InitWithCoder
+ */
+- (id)initWithCoder:(NSCoder *)aDecoder
 {
-    [super initWithFrame:frameRect];
-
-    delegate = inDelegate;
-    adium = [AIObject sharedAdiumInstance];
-
-    [self configureView];
-	[self configureContactsMenu];
-    [self configureAccountsMenu];
-	
-    //register for notifications
-    [[adium notificationCenter] addObserver:self
-				   selector:@selector(accountListChanged:)
-				       name:Account_ListChanged
-				     object:nil];
-    [[adium contactController] registerListObjectObserver:self];
-
-    return(self);
-}
-
-- (void)setDelegate:(id)inDelegate
-{
-	if (inDelegate) {
-		NSParameterAssert([inDelegate respondsToSelector:@selector(setAccount:)]);
-		NSParameterAssert([inDelegate respondsToSelector:@selector(setListObject:)]);
-		NSParameterAssert([inDelegate respondsToSelector:@selector(account)]);
-		NSParameterAssert([inDelegate respondsToSelector:@selector(listObject)]);
+	if((self = [super initWithCoder:aDecoder])) {
+		[self _init];
 	}
-	
-    delegate = inDelegate;
-}
-- (id)delegate
-{
-    return delegate;
+	return self;
 }
 
+/*!
+ * @brief InitWithFrame
+ */
+- (id)initWithFrame:(NSRect)frameRect
+{
+	if((self = [super initWithFrame:frameRect])) {
+		[self _init];
+	}
+	return self;
+}
+
+/*!
+ * @brief Common init
+ */
+- (id)_init
+{
+	adium = [AIObject sharedAdiumInstance];
+
+	return self;
+}
+
+/*!
+ * @brief Dealloc
+ */
 - (void)dealloc
 {
-    delegate = nil;
-    [[adium contactController] unregisterListObjectObserver:self];
-    [[adium notificationCenter] removeObserver:self];
-		
+	[self setChat:nil];
+
     [super dealloc];
 }
 
-//Load and configure our contents
-- (void)configureView
+/*!
+ * @brief Set the chat associated with this selection view
+ *
+ * @param chat AIChat instance this view representents
+ */
+- (void)setChat:(AIChat *)inChat
 {
-    NSEnumerator	*enumerator;
-    NSView		*view;
-    NSArray		*viewArray;
+	if(chat != inChat){
+		if(chat){
+			//Stop observing the existing chat
+			[[adium notificationCenter] removeObserver:self name:Chat_SourceChanged object:chat];
+			[[adium notificationCenter] removeObserver:self name:Chat_DestinationChanged object:chat];
 
-    //Load our contents
-    [NSBundle loadNibNamed:ACCOUNT_SELECTION_NIB owner:self];
+			//Remove our menus
+			[self _destroyAccountMenu];
+			[self _destroyContactMenu];
+			
+			//Release it
+			[chat release]; chat = nil;
+		}
 
-    //Set our height and resizing correctly (width is flexible)
-    [self setFrameSize:NSMakeSize([self frame].size.width, [view_contents frame].size.height)];
-	[self setAutoresizingMask:[view_contents autoresizingMask]];
-	
-    //Transfer the contents to our view
-    viewArray = [[[view_contents subviews] copy] autorelease];
-    enumerator = [viewArray objectEnumerator];
-    while ((view = [enumerator nextObject])) {
-        [view retain];
-        [view removeFromSuperview];
-        [self addSubview:view];
-
-        [view resizeWithOldSuperviewSize:[view_contents frame].size];
-        [view release];
-    }
-	
-	//Release the view_contents, which we own via -[NSBundle loadNibNamed:withOwner:]
-    [view_contents release];
+		if(inChat){
+			//Retain the new chat
+			chat = [inChat retain];
+			
+			//Observe changes to this chat's source and destination
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatSourceChanged:)
+											   name:Chat_SourceChanged
+											 object:chat];
+			[[adium notificationCenter] addObserver:self
+										   selector:@selector(chatDestinationChanged:)
+											   name:Chat_DestinationChanged
+											 object:chat];
+			
+			//Update source and destination menus
+			[self chatMetaContactChanged];
+		}			
+	}
 }
 
-+ (BOOL)optionsAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject
+/*!
+ * @brief Update our menus when the meta contact or the meta contact's content changes
+ */
+- (void)chatMetaContactChanged
 {
-	return([self multipleContactsForContact:inObject] ||
-		   [self multipleAccountsForSendingContentType:inType toContact:inObject]);
+	//Rebuild 'To' contact menu
+	if([self choicesAvailableForContact]){
+		[self _createContactMenu];
+	}else{
+		[self _destroyContactMenu];
+	}
+
+	//Update our 'From' account menu
+	[self chatDestinationChanged:nil];
 }
 
-+ (BOOL)multipleAccountsForSendingContentType:(NSString *)inType toContact:(AIListContact *)inObject
+/*!
+ * @brief Update our menus when the destination contact changes
+ */
+- (void)chatDestinationChanged:(NSNotification *)notification
 {
-	return(([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
-																				toListObject:inObject
-																				   preferred:YES] count] > 1)
-	||
-	([[[[AIObject sharedAdiumInstance] contentController] sourceAccountsForSendingContentType:inType
-																				toListObject:inObject
-																				   preferred:NO] count]> 1));
-}
-
-+ (BOOL)multipleContactsForContact:(AIListContact *)inObject
-{
-	AIListObject *listObject;
+	//Update selection in contact menu
+	[popUp_contacts selectItemWithRepresentedObject:[chat listObject]];
 	
-	//Find the parent meta contact if possible
-	listObject = [[[AIObject sharedAdiumInstance] contactController] parentContactForListObject:inObject];
+	//Rebuild 'From' account menu
+	if([self choicesAvailableForAccount]){
+		[self _createAccountMenu];
+		[popUp_accounts selectItemWithRepresentedObject:[chat listObject]];
+	}else{
+		[self _destroyAccountMenu];
+	}
 	
-	return (([listObject isKindOfClass:[AIMetaContact class]]) &&
-			([[(AIMetaContact *)listObject listContacts] count] > 1));
+	//Reposition our menus and resize as necessary
+	[self _repositionMenusAndResize];
+	
+	//Update selection in account menu
+	[self chatSourceChanged:nil];
 }
 
-#pragma mark Acccounts
-//Configures the account menu to show all online accounts
-- (void)configureAccountsMenu
+/*!
+ * @brief Update our menus when the source account changes
+ */
+- (void)chatSourceChanged:(NSNotification *)notification
 {
-    if (delegate) {
-		AIListObject	*listObject = [delegate listObject];
+	//Update selection in account menu
+	[popUp_accounts selectItemWithRepresentedObject:[chat account]];
+}
+
+/*!
+ * @brief Reposition our menus and resize the account selection view as necessary
+ *
+ * Invoke this method after the visibility of either menu has changed.
+ */
+- (void)_repositionMenusAndResize
+{
+	int		newHeight = 0;
+	NSRect	oldFrame = [self frame];
+	
+	//Account menu is always at the bottom
+	if(box_accounts){
+		[box_accounts setFrameOrigin:NSMakePoint(0, 0)];
+		newHeight += [box_accounts frame].size.height;
+	}
+
+	//Contact menu is at the bottom, unless the account menu is present in which case it moves up
+	if(box_contacts){
+		[box_contacts setFrameOrigin:NSMakePoint(0, (box_accounts ? [box_accounts frame].size.height : 0))];
+		newHeight += [box_contacts frame].size.height;
+	}
+
+	//Resize our view to fit whichever menus are visible
+	[self setFrameSize:NSMakeSize([self frame].size.width, newHeight)];
+	[[self superview] setNeedsDisplayInRect:NSUnionRect(oldFrame,[self frame])];
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIViewFrameDidChangeNotification object:self];
+}
+
+
+//Account Menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Account Menu
+/*
+ * @brief Returns YES if a choice of source account is available
+ */
+- (BOOL)choicesAvailableForAccount
+{
+	NSEnumerator 	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+	AIAccount		*account;
+	int				choices = 0;
+
+	while ((account = [enumerator nextObject])) {
+		if ([self _accountIsAvailable:account]) {
+			if (++choices > 1) return(YES);
+		}
+	}
+	
+	return(NO);
+}
+
+/*
+ * @brief Account Menu Delegate
+ */
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[popUp_accounts setMenu:[inAccountMenu menu]];
+}
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[[adium contentController] switchChat:chat toAccount:inAccount];
+}
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
+	return([self _accountIsAvailable:inAccount]);
+}
+
+/*
+ * @brief Check if an account is available for sending content
+ *
+ * An account is considered available if it's of the right service class and is currently online.
+ * @param inAccount AIAccount instance to check
+ * @return YES if the account is available
+ */
+- (BOOL)_accountIsAvailable:(AIAccount *)inAccount
+{
+	return([[[[chat listObject] service] serviceClass] isEqualToString:[[inAccount service] serviceClass]] &&
+		   [inAccount integerStatusObjectForKey:@"Online"]);
+}
+
+/*
+ * @brief Create the account menu and add it to our view
+ */
+- (void)_createAccountMenu
+{
+	if (!popUp_accounts) {
+		//Since the account box is only a few controls, we build it by hand rather than loading it from a nib
+		box_accounts = [[self _boxWithFrame:BOX_RECT] retain];
+
+		popUp_accounts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
+		[box_accounts addSubview:popUp_accounts];
 		
-		//
-		[popUp_accounts setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																				  toListObject:listObject
-																					withTarget:self
-																				includeOffline:NO]];
-		//
-		[[popUp_accounts menu] setAutoenablesItems:NO];
+		label_accounts = [[self _textFieldLabelWithValue:@"From:" frame:LABEL_RECT] retain];
+		[box_accounts addSubview:label_accounts];
 		
-		//Select our current account
-		[self updateAccountsMenu];
+		//Resize the contact box to fit our view and insert it
+		[box_accounts setFrameSize:NSMakeSize([self frame].size.width, BOX_RECT.size.height)];
+		[self addSubview:box_accounts];
+		
+		//Configure the contact menu
+		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountNoSubmenu showTitleVerbs:NO] retain];
+	}
+}
+
+/*
+ * @brief Destroy the account menu, removing it from our view
+ */
+- (void)_destroyAccountMenu
+{
+	if (popUp_accounts) {
+		[box_accounts removeFromSuperview];
+		[label_accounts release]; label_accounts = nil;
+		[popUp_accounts release]; popUp_accounts = nil;
+		[box_accounts release]; box_accounts = nil;
+		[accountMenu release]; accountMenu = nil;
 	}
 }
 
 
-//User selected a new account from the account menu
-- (IBAction)selectAccount:(id)sender
-{
-	//This will end up triggering a call to updateMenu
-    [delegate setAccount:[sender representedObject]];
+//Contact Menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Contact Menu
+/*
+ * @brief Returns YES if a choice of destination contact is available
+ */
+- (BOOL)choicesAvailableForContact{
+	return([[[self _chatMetaContact] listContacts] count] > 1);
 }
 
-#pragma mark Contacts
-- (void)configureContactsMenu
-{
-	if (delegate) {
-		AIListObject	*listObject = [delegate listObject];
+/*
+ * @brief Contact menu delegate
+ */
+- (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[popUp_contacts setMenu:[inContactMenu menu]];
+}
+- (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact {
+	[[adium contentController] switchChat:chat toListContact:inContact usingContactAccount:NO];
+}
 
-		//Find the parent meta contact if possible
-		listObject = [[[AIObject sharedAdiumInstance] contactController] parentContactForListObject:listObject];
-	
-		//We include offline since some protocols include 'inivisibility' 
-		//which may make a contact appear offline but not be.
-		[popUp_contacts setMenu:[[adium contactController] menuOfContainedContacts:listObject
-																		forService:nil
-																		withTarget:self
-																	includeOffline:YES/*![listObject online]*/]];
-		//
-		[[popUp_contacts menu] setAutoenablesItems:NO];
+/*
+ * @brief Create the contact menu and add it to our view
+ */
+- (void)_createContactMenu
+{
+	if (!popUp_contacts) {
+		//Since the contact box is only a few controls, we build it by hand rather than loading it from a nib
+		box_contacts = [[self _boxWithFrame:BOX_RECT] retain];
+
+		popUp_contacts = [[self _popUpButtonWithFrame:POPUP_RECT] retain];
+		[box_contacts addSubview:popUp_contacts];
 		
-		
-		[self updateContactsMenu];
+		label_contacts = [[self _textFieldLabelWithValue:@"To:" frame:LABEL_RECT] retain];
+		[box_contacts addSubview:label_contacts];
+
+		//Resize the contact box to fit our view and insert it
+		[box_contacts setFrameSize:NSMakeSize([self frame].size.width, BOX_RECT.size.height)];
+		[self addSubview:box_contacts];
+
+		//Configure the contact menu
+		contactMenu = [[AIContactMenu contactMenuWithDelegate:self forContactsInObject:[self _chatMetaContact]] retain];
 	}
-	
-	[self configureAccountsMenu];
 }
 
-- (void)selectContainedContact:(id)sender
+/*
+ * @brief Destroy the contact menu, remove it from our view
+ */
+- (void)_destroyContactMenu
 {
-	AIListContact	*listObject = [sender representedObject];
-	AIService		*oldService = [[delegate listObject] service];
-	
-	[delegate setListObject:listObject];
-	
-	//If we changed services, set the account
-	if (oldService != [listObject service]) {
-		[delegate setAccount:[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																					toContact:listObject]];
+	if(popUp_contacts){
+		[box_contacts removeFromSuperview];
+		[label_contacts release]; label_contacts = nil;
+		[box_contacts release]; box_contacts = nil;
+		[popUp_contacts release]; popUp_contacts = nil;
+		[contactMenu release]; contactMenu = nil;
 	}
-
-	[self updateContactsMenu];
-	[self configureAccountsMenu];
 }
 
-#pragma mark Notifications
-//An account's status changed
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
+
+//Misc -----------------------------------------------------------------------------------------------------------------
+#pragma mark Misc
+/*!
+ * @brief Returns the meta contact containing our current destination contact (If one exists)
+ */
+- (AIMetaContact *)_chatMetaContact
 {
-    if ([inObject isKindOfClass:[AIAccount class]]) {
-		[self configureContactsMenu];
-    }
-    
-    return(nil);
+	id 	containingObject = [[chat listObject] containingObject];
+	return([containingObject isKindOfClass:[AIMetaContact class]] ? containingObject : nil);
 }
 
-//The account list/status changed
-- (void)accountListChanged:(NSNotification *)notification
+/*!
+ * @brief
+ */
+- (NSTextField *)_textFieldLabelWithValue:(NSString *)inValue frame:(NSRect)inFrame
 {
-	[self configureContactsMenu];
+	NSTextField *label = [[NSTextField alloc] initWithFrame:inFrame];
+
+	[label setStringValue:inValue];
+	[label setEditable:NO];
+	[label setSelectable:NO];
+	[label setBordered:NO];
+	[label setDrawsBackground:NO];
+	[label setFont:[NSFont systemFontOfSize:[NSFont systemFontSize]]];
+	[label setAlignment:NSRightTextAlignment];
+
+	return [label autorelease];
 }
 
-#pragma mark Menu Updating
-- (void)updateMenu
+/*!
+ * @brief
+ */
+- (NSPopUpButton *)_popUpButtonWithFrame:(NSRect)inFrame
 {
-	[self updateAccountsMenu];
-	[self updateContactsMenu];
-}
+	NSPopUpButton *popUp = [[NSPopUpButton alloc] initWithFrame:inFrame];
 
-- (void)updateAccountsMenu
-{
-    [self updatePopUp:popUp_accounts 
-			 toObject:[delegate account]];
-}
-
-- (void)updateContactsMenu
-{
-    [self updatePopUp:popUp_contacts
-			 toObject:[delegate listObject]];
-}
-
-- (void)updatePopUp:(NSPopUpButton *)popUpButton toObject:(id)object
-{
-	NSEnumerator	*enumerator;
-    NSMenuItem		*menuItem;
+	[popUp setAutoresizingMask:(NSViewWidthSizable)];
 	
-    //Select the correct item
-	int index = [popUpButton indexOfItemWithRepresentedObject:object];
-    if (index < [popUpButton numberOfItems] && index >= 0) {
-		[popUpButton selectItemAtIndex:index];
-	}
-	
-    //Update the 'Checked' menu item (NSPopUpButton doesn't like to do this automatically for us)
-    enumerator = [[[popUpButton menu] itemArray] objectEnumerator];
-    while ((menuItem = [enumerator nextObject])) {
-        if ([menuItem representedObject] == object) {
-            [menuItem setState:NSOnState];
-        } else {
-            [menuItem setState:NSOffState];
-        }
-    }
+	return [popUp autorelease];
 }
+
+/*!
+ * @brief
+ */
+- (NSView *)_boxWithFrame:(NSRect)inFrame
+{
+	NSView	*box = [[NSView alloc] initWithFrame:inFrame];
+
+	[box setAutoresizingMask:(NSViewWidthSizable)];
+	
+	return [box autorelease];
+}
+
 @end
