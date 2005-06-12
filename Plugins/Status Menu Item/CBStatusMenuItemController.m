@@ -35,10 +35,6 @@
 //Icon State
 - (void)setIconState:(SMI_Icon_State)state;
 
-//AccountMenuPlugin
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
-
 //Chat Observer
 - (void)chatOpened:(NSNotification *)notification;
 - (void)chatClosed:(NSNotification *)notification;
@@ -134,10 +130,11 @@ static	NSImage						*adiumRedHighlightImage = nil;
 										   name:ACCOUNT_DISCONNECTED
 								         object:nil];
 		
-        //Register ourself for the account menu items
+        //Register ourself for the status menu items
         [[adium statusController] registerStateMenuPlugin:self];
 		
-		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:NO showTitleVerbs:NO] retain];
+		//Account menu
+		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
     }
     
     return self;
@@ -184,24 +181,17 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	}
 }
 
-//AccountMenuPlugin --------------------------------------------------------
-#pragma mark AccountMenuPlugin
-- (void)addAccountMenuItems:(NSArray *)menuItemArray
-{
-    //Stick 'em in!
-    [accountMenuItemsArray addObjectsFromArray:menuItemArray];
+//Account Menu --------------------------------------------------------
+#pragma mark Account Menu
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[accountMenuItemsArray release];
+	accountMenuItemsArray = [menuItems retain];
     
     //We need to update next time we're clicked
     needsUpdate = YES;
 }
-
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray
-{
-    //Pull 'em out!
-    [accountMenuItemsArray removeObjectsInArray:menuItemArray];
-    
-    //We need to update next time we're clicked
-    needsUpdate = YES;
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[[adium accountController] toggleConnectionOfAccount:inAccount];
 }
 
 
