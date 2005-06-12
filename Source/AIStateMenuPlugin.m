@@ -53,7 +53,7 @@
 
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
-	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self showAccountActions:NO showTitleVerbs:NO] retain];
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
 
 	dockStatusMenuRoot = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Status",nil)
 																			  target:self
@@ -203,35 +203,29 @@
  *
  * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be added to the menu
  */
-- (void)addAccountMenuItems:(NSArray *)menuItemArray
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
 {
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
+	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	
+	//Remove any existing menu items
+	enumerator = [installedMenuItems objectEnumerator];
+    while ((menuItem = [enumerator nextObject])) {    
+		[[adium menuController] removeMenuItem:menuItem];
+    }
+	
+	//Add the new menu items
+	enumerator = [menuItems objectEnumerator];
     while ((menuItem = [enumerator nextObject])) {    
 		[[adium menuController] addMenuItem:menuItem toLocation:LOC_Status_Accounts];
     }
-}
-
-/*!
-* @brief Remove account menu items from our location
- *
- * Implemented as required by the AccountMenuPlugin protocol.
- *
- * @param menuItemArray An <tt>NSArray</tt> of <tt>NSMenuItem</tt> objects to be removed from the menu
- */
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray
-{
-	NSEnumerator	*enumerator = [menuItemArray objectEnumerator];
-	NSMenuItem		*menuItem;
 	
-    while ((menuItem = [enumerator nextObject])) {    
-        [[adium menuController] removeMenuItem:menuItem];
-    }
+	//Remember the installed items so we can remove them later
+	[installedMenuItems release]; 
+	installedMenuItems = [menuItems retain];
+}
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[[adium accountController] toggleConnectionOfAccount:inAccount];
 }
 
-- (BOOL)showStatusSubmenu
-{
-	return YES;
-}
 @end
