@@ -874,39 +874,6 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 
 //Content Source & Destination -----------------------------------------------------------------------------------------
 #pragma mark Content Source & Destination
-//Returns the available account for sending content to a specified contact
-- (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
-									toListObject:(AIListObject *)inObject
-									   preferred:(BOOL)inPreferred
-{
-	NSMutableArray	*sourceAccounts = [NSMutableArray array];
-	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
-	AIAccount		*account;
-	
-	while ((account = [enumerator nextObject])) {
-		if ([inObject service] == [account service]) {
-			BOOL			knowsObject = NO;
-			BOOL			couldSendContent = NO;
-			AIListContact	*contactForAccount = [[adium contactController] existingContactWithService:[inObject service]
-																							   account:account
-																								   UID:[inObject UID]];
-			//Does the account know this object?
-			if (contactForAccount) {
-				knowsObject = [account availableForSendingContentType:inType toContact:contactForAccount];
-			}
-			
-			//Could the account send this
-			couldSendContent = [account availableForSendingContentType:inType toContact:nil];
-			
-			if ((inPreferred && knowsObject) || (!inPreferred && !knowsObject && couldSendContent)) {
-				[sourceAccounts addObject:account];
-			}
-		}
-	}
-	
-	return(sourceAccounts);
-}
-
 //Returns the available contacts for receiving content to a specific contact
 - (NSArray *)destinationObjectsForContentType:(NSString *)inType
 								 toListObject:(AIListObject *)inObject
