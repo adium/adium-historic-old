@@ -1,6 +1,19 @@
 {
     IBClasses = (
         {
+            CLASS = AIAccountSelectionView; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "box_accounts" = NSBox; 
+                "box_contacts" = NSBox; 
+                delegate = id; 
+                "popUp_accounts" = NSPopUpButton; 
+                "popUp_contacts" = NSPopUpButton; 
+                "view_contents" = NSView; 
+            }; 
+            SUPERCLASS = NSView; 
+        }, 
+        {
             CLASS = AIAlternatingRowOutlineView; 
             LANGUAGE = ObjC; 
             OUTLETS = {lastSelectedRowIndexes = id; }; 
@@ -21,22 +34,24 @@
             SUPERCLASS = AISendingTextView; 
         }, 
         {
-            ACTIONS = {inviteUser = id; sendMessage = id; sendMessageLater = id; }; 
+            ACTIONS = {
+                adiumPrint = id; 
+                didSendMessage = id; 
+                sendMessage = id; 
+                sendMessageLater = id; 
+            }; 
             CLASS = AIMessageViewController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_inviteUser" = NSButton; 
-                "button_send" = AIPlasticButton; 
                 "customView_messages" = NSView; 
-                delegate = id; 
-                "scrollView_messages" = NSView; 
+                "scrollView_messages" = NSScrollView; 
                 "scrollView_outgoing" = NSScrollView; 
                 "scrollView_userList" = AIAutoScrollView; 
-                "splitView_messages" = NSSplitView; 
-                "splitView_textEntryHorizontal" = NSSplitView; 
+                "splitView_messages" = AISplitView; 
+                "splitView_textEntryHorizontal" = AISplitView; 
                 "textView_outgoing" = AIMessageEntryTextView; 
-                "toolbar_bottom" = AIMiniToolbar; 
                 userListView = AIListOutlineView; 
+                "view_accountSelection" = AIAccountSelectionView; 
                 "view_contents" = NSView; 
             }; 
             SUPERCLASS = AIObject; 
@@ -75,7 +90,8 @@
             SUPERCLASS = NSTextView; 
         }, 
         {CLASS = AISplitView; LANGUAGE = ObjC; SUPERCLASS = NSSplitView; }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
 }
