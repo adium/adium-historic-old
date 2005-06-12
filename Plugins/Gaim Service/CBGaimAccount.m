@@ -921,7 +921,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	
     if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
         if ((weAreOnline && (inContact == nil || [inContact online])) ||
-		   ([self integerStatusObjectForKey:@"Connecting"])) { 
+			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
 			return(YES);
         }
     } else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
