@@ -22,12 +22,14 @@
 #import "AIService.h"
 #import "DCJoinChatViewController.h"
 #import "DCJoinChatWindowController.h"
+#import <Adium/AIAccountMenu.h>
 
 #define JOIN_CHAT_NIB		@"JoinChatWindow"
 
 @interface DCJoinChatWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (void)windowDidLoad;
+- (void)_selectPreferredAccountInAccountMenu:(AIAccountMenu *)inAccountMenu;
 @end
 
 @implementation DCJoinChatWindowController
@@ -103,55 +105,36 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 //Setup the window before it is displayed
 - (void)windowDidLoad
 {
-	unsigned numberOfServiceMenuItems = [popUp_service numberOfItems];
-	
-    //Configure the handle type menu
-    [popUp_service setMenu:[[adium accountController] menuOfAccountsWithTarget:self
-																includeOffline:NO 
-											onlyIfCreatingGroupChatIsSupported:YES]];
-	if (numberOfServiceMenuItems > 0) {
-		//Select the last used account / Available online account
-		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
-																							   toContact:nil];
-		int			serviceIndex = [popUp_service indexOfItemWithRepresentedObject:preferredAccount];
-		
-		if (serviceIndex < numberOfServiceMenuItems && serviceIndex >= 0) {
-			[popUp_service selectItemAtIndex:serviceIndex];
-		}
-		
-		AIAccount *account = [[popUp_service selectedItem] representedObject];
-		[self configureForAccount:account];
-	}
-
+	//Localized strings
 	[[self window] setTitle:AILocalizedString(@"Join Chat",nil)];
 	[label_account setLocalizedString:AILocalizedString(@"Account:",nil)];
 
 	[button_joinChat setLocalizedString:AILocalizedString(@"Join",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
+	//Account menu
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountNoSubmenu
+										   showTitleVerbs:NO] retain];
+	
+
     //Center the window
     [[self window] center];
-	
 	[super windowDidLoad];
-}
-
-- (IBAction)selectAccount:(id)sender
-{
-	AIAccount			*selectedAccount = [sender representedObject];
-	[self configureForAccount:selectedAccount];
 }
 
 - (void)windowWillClose:(id)sender
 {
 	[super windowWillClose:sender];
 	sharedJoinChatInstance = nil;
+	[accountMenu release]; accountMenu = nil;
     [self autorelease]; //Close the shared instance
 }
 
 //Dealloc
 - (void)dealloc
 {    
-     [super dealloc];
+	[super dealloc];
 }
 
 #pragma mark DCJoinChatViewController delegate
@@ -176,6 +159,36 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 														UID:UID];
 	
 	return(contact);
+}
+
+
+//Account Menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Account Menu
+//Account menu delegate
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[popUp_service setMenu:[inAccountMenu menu]];
+	[self _selectPreferredAccountInAccountMenu:inAccountMenu];
+}	
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[self configureForAccount:inAccount];
+}
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
+	return([inAccount online] && [[inAccount service] canCreateGroupChats]);
+}
+
+//Select the last used account / Available online account
+- (void)_selectPreferredAccountInAccountMenu:(AIAccountMenu *)inAccountMenu
+{
+	if ([popUp_service numberOfItems]) {
+		AIAccount   *preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
+																							   toContact:nil];
+		NSMenuItem	*menuItem = [inAccountMenu menuItemForAccount:preferredAccount];
+		
+		if (menuItem) {
+			[popUp_service selectItem:menuItem];
+			[self configureForAccount:preferredAccount];
+		}
+	}
 }
 
 @end
