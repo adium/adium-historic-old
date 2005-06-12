@@ -42,7 +42,7 @@
 - (void)autoRefreshingOutgoingContentForStatusKey:(NSString *)key selector:(SEL)selector context:(id)originalContext;
 - (NSAttributedString *)autoRefreshingOriginalAttributedStringForStatusKey:(NSString *)key;
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
-- (void)startAutoRefreshingStatusKey:(NSString *)key;
+- (void)startAutoRefreshingStatusKey:(NSString *)key forOriginalValueString:(NSString *)originalValueString;
 - (void)stopAutoRefreshingStatusKey:(NSString *)key;
 - (void)_startAttributedRefreshTimer;
 - (void)_stopAttributedRefreshTimer;
