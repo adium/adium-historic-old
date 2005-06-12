@@ -296,17 +296,17 @@ static int nextChatNumber = 0;
 - (void)setListObject:(AIListContact *)inListObject
 {
 	if (inListObject != [self listObject]) {
-		[self clearListObjectStatuses];
-		[[adium notificationCenter] postNotificationName:Chat_DestinationChanged object:self]; //Notify
-
-		//The uniqueChatID may depend upon the listObject, so clear it
-		[self clearUniqueChatID];
-		
 		if ([participatingListObjects count]) {
 			[participatingListObjects removeObjectAtIndex:0];
 		}
-		
 		[self addParticipatingListObject:inListObject];
+
+		//Clear any local caches relying on the list object
+		[self clearListObjectStatuses];
+		[self clearUniqueChatID];
+
+		//Notify once the destination has been changed
+		[[adium notificationCenter] postNotificationName:Chat_DestinationChanged object:self];
 	}
 }
 
@@ -471,6 +471,11 @@ static int nextChatNumber = 0;
 	return([[self containedObjects] objectEnumerator]);
 }
 
+- (NSArray *)listContacts
+{
+	return([self containedObjects]);
+}
+
 //Should list each list contact only once (for chats, this is the same as the objectEnumerator)
 - (NSEnumerator *)listContactsEnumerator
 {
@@ -533,7 +538,7 @@ static int nextChatNumber = 0;
 }
 
 #pragma mark Comparison
-- (BOOL)isEqual:(AIChat *)inChat
+- (BOOL)isEqual:(id)inChat
 {
 	return (inChat == self);
 }
