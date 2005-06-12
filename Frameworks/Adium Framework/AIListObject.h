@@ -30,7 +30,7 @@ typedef enum {
 	AIUnknownStatus = 'unkN'
 } AIStatusSummary;
 
-@protocol AIContainingObject
+@protocol AIContainingObject <NSObject>
 - (NSArray *)containedObjects;
 - (unsigned)containedObjectsCount;
 - (BOOL)containsObject:(AIListObject *)inObject;
@@ -43,6 +43,7 @@ typedef enum {
 - (NSEnumerator *)objectEnumerator;
 
 //Should list each list contact only once (for groups, this is the same as the objectEnumerator)
+- (NSArray *)listContacts;
 - (NSEnumerator *)listContactsEnumerator;
 
 - (BOOL)addObject:(AIListObject *)inObject;
