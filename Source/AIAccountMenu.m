@@ -19,11 +19,7 @@
 #import "AIContactController.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
-#import <Adium/AIListObject.h>
-#import <Adium/AIServiceIcons.h>
-#import <Adium/AIStatusIcons.h>
 
 //Menu titles
 #define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect: %@","Connect account prefix")
@@ -34,10 +30,13 @@
 
 @interface AIAccountMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate
-	showAccountActions:(BOOL)inShowAccountActions
+		   submenuType:(AIAccountSubmenuType)inSubmenuType
 		showTitleVerbs:(BOOL)inShowTitleVerbs;
-- (void)_createAccountMenuItems;
-- (void)_destroyAccountMenuItems;
+- (void)_updateMenuItem:(NSMenuItem *)menuItem;
+- (NSString *)_titleForAccount:(AIAccount *)account;
+- (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount;
+- (void)addStateMenuItems:(NSArray *)menuItemArray;
+- (void)removeStateMenuItems:(NSArray *)ignoredMenuItemArray;
 @end
 
 @implementation AIAccountMenu
@@ -49,11 +48,11 @@
  * @param inShowTitleVerbs YES to show verbs in the menu titles
  */
 + (id)accountMenuWithDelegate:(id)inDelegate
-		   showAccountActions:(BOOL)inShowAccountActions
+				  submenuType:(AIAccountSubmenuType)inSubmenuType
 			   showTitleVerbs:(BOOL)inShowTitleVerbs
 {
 	return([[[self alloc] initWithDelegate:inDelegate
-						showAccountActions:inShowAccountActions
+							   submenuType:inSubmenuType
 							showTitleVerbs:inShowTitleVerbs] autorelease]);
 }
 
@@ -64,35 +63,27 @@
  * @param inShowTitleVerbs YES to show verbs in the menu titles
  */
 - (id)initWithDelegate:(id)inDelegate
-	showAccountActions:(BOOL)inShowAccountActions
+		   submenuType:(AIAccountSubmenuType)inSubmenuType
 		showTitleVerbs:(BOOL)inShowTitleVerbs
 {
 	if ((self = [super init])) {
-		delegate = inDelegate;
-		showAccountActions = inShowAccountActions;
+		submenuType = inSubmenuType;
 		showTitleVerbs = inShowTitleVerbs;
-		
-		[self rebuildAccountMenu];
+
+		[self setDelegate:inDelegate];
 		
 		//Rebuild our account menu when accounts or icon sets change
 		[[adium notificationCenter] addObserver:self
-									   selector:@selector(rebuildAccountMenu)
+									   selector:@selector(rebuildMenu)
 										   name:Account_ListChanged
-										 object:nil];
-		
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(rebuildAccountMenu)
-										   name:AIStatusIconSetDidChangeNotification
-										 object:nil];
-
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(rebuildAccountMenu)
-										   name:AIServiceIconSetDidChangeNotification
 										 object:nil];
 
 		//Observe our accouts and prepare our state menus
 		[[adium contactController] registerListObjectObserver:self];
-		if (!inShowAccountActions) [[adium statusController] registerStateMenuPlugin:self];
+		if (submenuType == AIAccountStatusSubmenu) [[adium statusController] registerStateMenuPlugin:self];
+
+		//Rebuild our menu now
+		[self rebuildMenu];
 	}
 	
 	return(self);
@@ -103,142 +94,126 @@
  */
 - (void)dealloc
 {
-	if (!showAccountActions) [[adium statusController] unregisterStateMenuPlugin:self];
-	[self _destroyAccountMenuItems];
-	
+	if (submenuType == AIAccountStatusSubmenu) [[adium statusController] unregisterStateMenuPlugin:self];
+	[[adium contactController] unregisterListObjectObserver:self];
+
+	delegate = nil;
+
 	[super dealloc];
 }
 
 /*!
- * @brief Update menu when an account's status changes
- */
-- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
-{
-	if ([inObject isKindOfClass:[AIAccount class]]) {
-		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
-
-		//Append the account actions menu for online accounts
-		if ([inModifiedKeys containsObject:@"Online"]) {
-			if (showAccountActions) {
-				[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
-			}
-		}
-
-		//Update menu items to reflect status changes
-		if ([inModifiedKeys containsObject:@"Online"] ||
-		   [inModifiedKeys containsObject:@"Connecting"] ||
-		   [inModifiedKeys containsObject:@"Disconnecting"] ||
-		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]) {
-	
-			[self updateMenuItem:menuItem];
-		}
-	}
-	
-    return(nil);
-}
-
-
-//Actions --------------------------------------------------------------------------------------------------------------
-#pragma mark Actions
-/*!
- * @brief Toggle an account's status
- */
-- (IBAction)toggleConnection:(id)sender
-{
-    AIAccount   *account = [sender representedObject];
-    BOOL    	online = [[account statusObjectForKey:@"Online"] boolValue];
-	BOOL		connecting = [[account statusObjectForKey:@"Connecting"] boolValue];
-	
-	//If online or connecting set the account offline, otherwise set it to online
-	[account setPreference:[NSNumber numberWithBool:!(online || connecting)] 
-					forKey:@"Online"
-					 group:GROUP_ACCOUNT_STATUS];
-}
-
-
-//Building -------------------------------------------------------------------------------------------------------------
-#pragma mark Building
-/*!
- * @brief Completely rebuild the menu
- */
-- (void)rebuildAccountMenu
-{
-	[self _destroyAccountMenuItems];
-	[self _createAccountMenuItems];
-}
-
-/*!
- * @brief Find an existing menu item for an account
+ * @brief Returns the existing menu item for a specific account
+ *
+ * @param account AIAccount whose menu item to return
+ * @return NSMenuItem instance for the account
  */
 - (NSMenuItem *)menuItemForAccount:(AIAccount *)account
 {
-	NSEnumerator	*enumerator = [menuItems objectEnumerator];
-	NSMenuItem		*menuItem;
-	
-	while ((menuItem = [enumerator nextObject])) {    
-		if ([menuItem representedObject] == account) return(menuItem);
-	}
+	return [self menuItemWithRepresentedObject:account];
+}
 
-	return(nil);
+
+//Delegate -------------------------------------------------------------------------------------------------------------
+#pragma mark Delegate
+/*!
+ * @brief Set our account menu delegate
+ */
+- (void)setDelegate:(id)inDelegate
+{
+	delegate = inDelegate;
+	
+	//Ensure the the delegate implements all required selectors and remember which optional selectors it supports.
+	NSParameterAssert([delegate respondsToSelector:@selector(accountMenu:didRebuildMenuItems:)]);
+	delegateRespondsToDidSelectAccount = [delegate respondsToSelector:@selector(accountMenu:didSelectAccount:)];
+	delegateRespondsToShouldIncludeAccount = [delegate respondsToSelector:@selector(accountMenu:shouldIncludeAccount:)];	
+}
+- (id)delegate
+{
+	return delegate;
 }
 
 /*!
- * @brief Update a menu item to reflect its account's current status
+ * @brief Inform our delegate when the menu is rebuilt
  */
-- (void)updateMenuItem:(NSMenuItem *)menuItem
+- (void)rebuildMenu
+{
+	[super rebuildMenu];
+	[delegate accountMenu:self didRebuildMenuItems:[self menuItems]];
+}	
+
+/*
+ * @brief Inform our delegate of menu selections
+ */
+- (void)selectAccountMenuItem:(NSMenuItem *)menuItem
+{
+	if(delegateRespondsToDidSelectAccount){
+		[delegate accountMenu:self didSelectAccount:[menuItem representedObject]];
+	}
+}
+
+
+//Account Menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Account Menu
+/*!
+ * @brief Build our account menu items
+ */
+- (NSArray *)buildMenuItems
+{
+	NSMutableArray	*menuItemArray = [NSMutableArray array];
+	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+	AIAccount		*account;
+	
+	//Add a menuitem for each account the delegate allows (or all accounts if it doesn't specify)
+	while ((account = [enumerator nextObject])) {
+		if (!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account]) {
+			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																						target:self
+																						action:@selector(selectAccountMenuItem:)
+																				 keyEquivalent:@""
+																			 representedObject:account];
+			[self _updateMenuItem:menuItem];
+			[menuItemArray addObject:menuItem];
+			[menuItem release];
+		}
+	}
+	
+	//Update our status submenus once this method exists
+	if (submenuType == AIAccountStatusSubmenu) {
+		[[adium statusController] performSelector:@selector(rebuildAllStateMenusForPlugin:)
+									   withObject:self
+									   afterDelay:0.0001];
+	}
+	
+	return(menuItemArray);
+}
+
+/*!
+* @brief Update a menu item to reflect its account's current status
+ */
+- (void)_updateMenuItem:(NSMenuItem *)menuItem
 {
 	AIAccount	*account = [menuItem representedObject];
 	
 	if (account) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
-		[menuItem setTitle:[self titleForAccount:account]];
-		[menuItem setImage:[self imageForAccount:account]];		
+		[menuItem setTitle:[self _titleForAccount:account]];
+		[menuItem setImage:[self imageForListObject:account]];		
 		[[menuItem menu] setMenuChangedMessagesEnabled:YES];
 	}
 }
 
 /*!
- * @brief Returns a menu image for the account
+* @brief Returns the menu title for an account
  */
-- (NSImage *)imageForAccount:(AIAccount *)account
-{
-	NSImage	*statusIcon, *serviceIcon;
-	NSSize	statusSize, serviceSize, compositeSize;
-	NSRect	compositeRect;
-	
-	//Get the service and status icons
-	statusIcon = [AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal];
-	statusSize = [statusIcon size];
-	serviceIcon = [AIServiceIcons serviceIconForObject:account type:AIServiceIconSmall direction:AIIconNormal];	
-	serviceSize = [serviceIcon size];
-	
-	//Composite them side by side (since we're only allowed one image in a menu and we want to see both)
-	compositeSize = NSMakeSize(statusSize.width + serviceSize.width + 1,
-							   statusSize.height > serviceSize.height ? statusSize.height : serviceSize.height);
-	compositeRect = NSMakeRect(0, 0, compositeSize.width, compositeSize.height);
-	
-	//Render the image
-	NSImage	*composite = [[NSImage alloc] initWithSize:compositeSize];
-	[composite lockFocus];
-	[statusIcon drawInRect:compositeRect atSize:[statusIcon size] position:IMAGE_POSITION_LEFT fraction:1.0];
-	[serviceIcon drawInRect:compositeRect atSize:[serviceIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
-	[composite unlockFocus];
-	
-	return([composite autorelease]);
-}
-
-/*!
- * @brief Returns the menu title for an account
- */
-- (NSString *)titleForAccount:(AIAccount *)account
+- (NSString *)_titleForAccount:(AIAccount *)account
 {
 	NSString	*accountTitle = [account formattedUID];
 	NSString	*titleFormat = nil;
-
+	
 	//If the account doesn't have a name, give it a generic one
 	if (!accountTitle || ![accountTitle length]) accountTitle = NEW_ACCOUNT_DISPLAY_TEXT;
-
+	
 	//Display connecting or disconnecting status in the title
 	if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
 		titleFormat = ACCOUNT_CONNECTING_MENU_TITLE;
@@ -253,46 +228,43 @@
 }
 
 /*!
- * @brief Create the account menu items
+ * @brief Update menu when an account's status changes
  */
-- (void)_createAccountMenuItems
+- (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	menuItems = [[NSMutableArray alloc] init];
-	
-    //Create a menuitem for each account
-	NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
-    AIAccount		*account;
-
-    while ((account = [enumerator nextObject])) {
-		NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
-																					target:self
-																					action:@selector(toggleConnection:)
-																			 keyEquivalent:@""
-																		 representedObject:account];
-		[menuItems addObject:menuItem];
-		[menuItem release];
+	if ([inObject isKindOfClass:[AIAccount class]]) {
+		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 		
-		[self updateMenuItem:menuItem];
-    }
-	
-	//Inform our delgate of the new items
-	[delegate addAccountMenuItems:menuItems];
-}
-
-/*!
- * @brief Destroy the account menu items
- */
-- (void)_destroyAccountMenuItems
-{
-	if ([menuItems count]) {
-		[delegate removeAccountMenuItems:menuItems];
-		[menuItems release]; menuItems = nil;
+		//Append the account actions menu for online accounts
+		if(menuItem && submenuType == AIAccountOptionsSubmenu){
+			if([inModifiedKeys containsObject:@"Online"]){
+				[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
+			}
+		}
+		
+		//Update menu items to reflect status changes
+		if([inModifiedKeys containsObject:@"Online"] ||
+		   [inModifiedKeys containsObject:@"Connecting"] ||
+		   [inModifiedKeys containsObject:@"Disconnecting"] ||
+		   [inModifiedKeys containsObject:@"IdleSince"] ||
+		   [inModifiedKeys containsObject:@"StatusState"]){
+			
+			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
+			if(delegateRespondsToShouldIncludeAccount &&
+			   ([delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject] != (menuItem == nil))){
+				[self rebuildMenu];
+			}else{
+				[self _updateMenuItem:menuItem];
+			}
+		}
 	}
+	
+    return(nil);
 }
 
 
-//Account Actions ------------------------------------------------------------------------------------------------------
-#pragma mark Account Actions
+//Account Action Submenu -----------------------------------------------------------------------------------------------
+#pragma mark Account Action Submenu
 /*!
  * @brief Returns an action menu for the passed account
  */
@@ -317,8 +289,8 @@
 }	
 
 
-//Account Status -------------------------------------------------------------------------------------------------------
-#pragma mark Account Status
+//Account Status Submenu -----------------------------------------------------------------------------------------------
+#pragma mark Account Status Submenu
 /*!
  * @brief Add the passed state menu items to each of our account menu items
  */
@@ -327,47 +299,45 @@
 	NSEnumerator		*enumerator;
 	NSMenuItem			*accountMenuItem;
 
-	if ([menuItems count] > 1) {
-		//We'll need to add these menu items items to each of our accounts
-		enumerator = [menuItems objectEnumerator];
-		while ((accountMenuItem = [enumerator nextObject])) {    		
-			AIAccount	*account = [accountMenuItem representedObject];
-			NSMenu		*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+	//We'll need to add these menu items items to each of our accounts
+	enumerator = [[self menuItems] objectEnumerator];
+	while ((accountMenuItem = [enumerator nextObject])) {    		
+		AIAccount	*account = [accountMenuItem representedObject];
+		NSMenu		*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		
+		//Add status items if we have more than one account
+		NSEnumerator	*menuItemEnumerator = [menuItemArray objectEnumerator];
+		NSMenuItem		*statusMenuItem;
+		
+		[accountSubmenu setMenuChangedMessagesEnabled:NO];
+		
+		//Enumerate all the menu items we were originally passed
+		while ((statusMenuItem = [menuItemEnumerator nextObject])) {
+			AIStatus		*status;
+			NSDictionary	*newRepresentedObject;
 			
-			//Add status items if we have more than one account
-			NSEnumerator	*menuItemEnumerator = [menuItemArray objectEnumerator];
-			NSMenuItem		*statusMenuItem;
-			
-			[accountSubmenu setMenuChangedMessagesEnabled:NO];
-			
-			//Enumerate all the menu items we were originally passed
-			while ((statusMenuItem = [menuItemEnumerator nextObject])) {
-				AIStatus		*status;
-				NSDictionary	*newRepresentedObject;
-				
-				//Set the represented object to indicate both the right status and the right account
-				if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
-					newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
-						status, @"AIStatus",
-						account, @"AIAccount",
-						nil];
-				} else {
-					newRepresentedObject = [NSDictionary dictionaryWithObject:account
-																	   forKey:@"AIAccount"];
-				}
-				
-				//Create a copy of the item for this account and add it to our status menu
-				NSMenuItem *newItem = [statusMenuItem copy];
-				[newItem setRepresentedObject:newRepresentedObject];
-				[accountSubmenu addItem:newItem];
-				[newItem release];
+			//Set the represented object to indicate both the right status and the right account
+			if ((status = [[statusMenuItem representedObject] objectForKey:@"AIStatus"])) {
+				newRepresentedObject = [NSDictionary dictionaryWithObjectsAndKeys:
+					status, @"AIStatus",
+					account, @"AIAccount",
+					nil];
+			} else {
+				newRepresentedObject = [NSDictionary dictionaryWithObject:account
+																   forKey:@"AIAccount"];
 			}
 			
-			[accountSubmenu setMenuChangedMessagesEnabled:YES];
-			
-			//Add the status menu to our account menu item
-			[accountMenuItem setSubmenu:accountSubmenu];		
+			//Create a copy of the item for this account and add it to our status menu
+			NSMenuItem *newItem = [statusMenuItem copy];
+			[newItem setRepresentedObject:newRepresentedObject];
+			[accountSubmenu addItem:newItem];
+			[newItem release];
 		}
+		
+		[accountSubmenu setMenuChangedMessagesEnabled:YES];
+		
+		//Add the status menu to our account menu item
+		[accountMenuItem setSubmenu:accountSubmenu];		
 	}
 }
 
@@ -376,7 +346,7 @@
  */
 - (void)removeStateMenuItems:(NSArray *)ignoredMenuItemArray
 {
-	NSEnumerator	*enumerator = [menuItems objectEnumerator];
+	NSEnumerator	*enumerator = [[self menuItems] objectEnumerator];
 	NSMenuItem		*menuItem;
 
 	//We'll need to add these menu items items to each of our accounts
