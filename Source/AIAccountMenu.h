@@ -14,39 +14,38 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
+#import <Adium/AIAbstractListObjectMenu.h>
 
 @protocol AIListObjectObserver;
 
-@interface AIAccountMenu : AIObject <AIListObjectObserver, StateMenuPlugin> {
+typedef enum {
+	AIAccountNoSubmenu = 0,
+	AIAccountStatusSubmenu,
+	AIAccountOptionsSubmenu
+} AIAccountSubmenuType;
+
+@interface AIAccountMenu : AIAbstractListObjectMenu <AIListObjectObserver, StateMenuPlugin> {
 	id				delegate;
-	BOOL			showAccountActions;
+	BOOL			delegateRespondsToDidSelectAccount;
+	BOOL			delegateRespondsToShouldIncludeAccount;	
+
+	BOOL			submenuType;
 	BOOL			showTitleVerbs;
-	
-	NSMutableArray	*menuItems;
 }
 
 + (id)accountMenuWithDelegate:(id)inDelegate
-		   showAccountActions:(BOOL)inShowAccountActions
+				  submenuType:(AIAccountSubmenuType)inSubmenuType
 			   showTitleVerbs:(BOOL)inShowTitleVerbs;
 
-//Actions
-- (IBAction)toggleConnection:(id)sender;
+- (void)setDelegate:(id)inDelegate;
+- (id)delegate;
 
-//Building
-- (void)rebuildAccountMenu;
-- (void)updateMenuItem:(NSMenuItem *)menuItem;
-- (NSImage *)imageForAccount:(AIAccount *)account;
-- (NSString *)titleForAccount:(AIAccount *)account;
-- (NSMenuItem *)menuItemForAccount:(AIAccount *)inAccount;
-
-//Account Actions
-- (NSMenu *)actionsMenuForAccount:(AIAccount *)inAccount;
+- (NSMenuItem *)menuItemForAccount:(AIAccount *)account;
 
 @end
 
 @interface NSObject (AIAccountMenuDelegate)
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems;
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount; 	//Optional
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount; //Optional
 @end
-
