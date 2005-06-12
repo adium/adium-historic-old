@@ -812,7 +812,7 @@
     //Enumerate through each row
     rowEnumerator = [rowArray reverseObjectEnumerator];
     while ((row = [rowEnumerator nextObject])) {
-        if (segment = [row selectedString]) {
+        if ((segment = [row selectedString])) {
             if (!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
             [selectedString appendAttributedString:segment];
         }
