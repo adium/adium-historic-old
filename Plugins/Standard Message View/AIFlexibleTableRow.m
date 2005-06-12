@@ -329,7 +329,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //Enumerate through each cell
     rowEnumerator = [cellArray objectEnumerator];
     while ((cell = [rowEnumerator nextObject])) {
-        if (segment = [cell selectedString]) {
+        if ((segment = [cell selectedString])) {
             if (!selectedString) selectedString = [[[NSMutableAttributedString alloc] init] autorelease];
             [selectedString appendAttributedString:segment];
         }
@@ -345,7 +345,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     NSPoint		cellOrigin;
     AIFlexibleTableCell	*cell;
     
-    if (cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin]) {
+    if ((cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin])) {
         return([cell pointIsSelected:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:cellOrigin]);
     } else {
         return(NO);
