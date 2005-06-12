@@ -224,7 +224,7 @@ if [ "$changelog" == "yes" ] ; then
 fi
 
 # build Adium - OPTIMIZATION_CFLAGS is in the env
-xcodebuild -project Adium.xcode -target Adium -buildstyle Deployment
+xcodebuild -project Adium.xcodeproj -target Adium -configuration Deployment
 
 # Check for build output dir
 if !([ -e $build_output_dir ]); then
