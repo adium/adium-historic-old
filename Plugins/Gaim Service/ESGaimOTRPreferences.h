@@ -16,6 +16,8 @@
 
 #import <Adium/AIPreferencePane.h>
 
+@class AIAccountMenu;
+
 @interface ESGaimOTRPreferences : AIPreferencePane {
 	IBOutlet	NSPopUpButton	*popUp_accounts;
 	IBOutlet	NSButton		*button_generate;
@@ -27,10 +29,10 @@
 	BOOL						viewIsOpen;
 	
 	NSMutableArray				*fingerprintDictArray;
+	AIAccountMenu 				*accountMenu;
 }
 
 - (IBAction)generate:(id)sender;
 - (IBAction)showFingerprint:(id)sender;
-- (IBAction)selectAccount:(id)sender;
 
 @end
