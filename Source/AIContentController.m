@@ -51,6 +51,11 @@
 - (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext invocation:(NSInvocation *)invocation;
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext usingLock:(NSRecursiveLock *)inLock;
 
+- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString 
+										contentFilter:(NSArray *)inContentFilterArray
+								threadedContentFilter:(NSArray *)inThreadedContentFilterArray
+										filterContext:(id)filterContext
+										   invocation:(NSInvocation *)invocation;
 @end
 
 /*
