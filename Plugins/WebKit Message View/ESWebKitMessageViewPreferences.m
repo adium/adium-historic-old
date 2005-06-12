@@ -486,14 +486,14 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		listObject = [[[AIListObject alloc] initWithUID:UID service:aimService] autorelease];
 		
 		//Display name
-		if (alias = [participant objectForKey:@"Display Name"]) {
+		if ((alias = [participant objectForKey:@"Display Name"])) {
 			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
 													  object:listObject
 													userInfo:[NSDictionary dictionaryWithObject:alias forKey:@"Alias"]];
 		}
 		
 		//User icon
-		if (userIconName = [participant objectForKey:@"UserIcon Name"]) {
+		if ((userIconName = [participant objectForKey:@"UserIcon Name"])) {
 			[listObject setStatusObject:[previewPath stringByAppendingPathComponent:[participant objectForKey:@"UserIcon Name"]]
 								 forKey:@"UserIconPath"
 								 notify:YES];
@@ -513,21 +513,23 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	NSString			*dateOpened, *type, *name, *UID;
 	
 	//Date opened
-	if (dateOpened = [chatDict objectForKey:@"Date Opened"]) {
+	if ((dateOpened = [chatDict objectForKey:@"Date Opened"])) {
 		[inChat setDateOpened:[NSDate dateWithNaturalLanguageString:dateOpened]];
 	}
 	
 	//Source/Destination
 	type = [chatDict objectForKey:@"Type"];
 	if ([type isEqualToString:@"IM"]) {
-		if (UID = [chatDict objectForKey:@"Destination UID"]) {
+		if ((UID = [chatDict objectForKey:@"Destination UID"])) {
 			[inChat addParticipatingListObject:[participants objectForKey:UID]];
 		}
-		if (UID = [chatDict objectForKey:@"Source UID"]) {
+		if ((UID = [chatDict objectForKey:@"Source UID"])) {
 			[inChat setAccount:(AIAccount *)[participants objectForKey:UID]];
 		}
 	} else {
-		if (name = [chatDict objectForKey:@"Name"]) [inChat setName:name];
+		if ((name = [chatDict objectForKey:@"Name"])) {
+			[inChat setName:name];
+		}
 	}
 	
 	//We don't want the interface controller to try to open this fake chat

@@ -500,7 +500,7 @@ static NSArray *draggedTypes = nil;
 }
 
 /*!
- * @brief Append new content to our processing queuProcess any content in the queuee
+ * @brief Append new content to our processing queueProcess any content in the queuee
  */
 - (void)processQueuedContent
 {
@@ -524,6 +524,9 @@ static NSArray *draggedTypes = nil;
 			objectsAdded++;
 			contentQueueCount--;
 		}
+	} else {
+		/* If the webview isn't ready, assume we have at least one piece of content left to display */
+		contentQueueCount = 1;
 	}
 	
 	/* If we added multiple objects, we may want to scroll to the bottom now, having not done it as each object
@@ -532,7 +535,7 @@ static NSArray *draggedTypes = nil;
 	if (objectsAdded > 1) {
 		NSString	*scrollToBottomScript;
 		
-		if (scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects]) {
+		if ((scrollToBottomScript = [messageStyle scriptForScrollingAfterAddingMultipleContentObjects])) {
 			[webView stringByEvaluatingJavaScriptFromString:scrollToBottomScript];
 		}
 	}
