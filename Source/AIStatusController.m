@@ -1218,7 +1218,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 	//Track this plugin
 	[stateMenuItemArraysDict setObject:[NSMutableArray array] forKey:identifier];
-	[stateMenuPluginsArray addObject:stateMenuPlugin];
+	[stateMenuPluginsArray addObject:[NSValue valueWithNonretainedObject:stateMenuPlugin]];
 
 	//Start it out with a fresh set of menu items
 	[self _addStateMenuItemsForPlugin:stateMenuPlugin];
@@ -1239,7 +1239,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 	//Stop tracking the plugin
 	[stateMenuItemArraysDict removeObjectForKey:identifier];
-	[stateMenuPluginsArray removeObjectIdenticalTo:stateMenuPlugin];
+	[stateMenuPluginsArray removeObject:[NSValue valueWithNonretainedObject:stateMenuPlugin]];
 }
 
 /*!
