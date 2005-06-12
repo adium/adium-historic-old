@@ -78,5 +78,6 @@
 	<string>ESAutoAwayPlugin</string>
 	<string>ESAwayStatusWindowPlugin</string>
 	<string>SMContactListShowBehaviorPlugin</string>
+	<string>ESiTunesPlugin</string>
 </array>
 </plist>
