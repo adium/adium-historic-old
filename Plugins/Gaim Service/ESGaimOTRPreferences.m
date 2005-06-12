@@ -18,6 +18,7 @@
 #import "AIAccountController.h"
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <Adium/AIAccountMenu.h>
 #import "SLGaimCocoaAdapter.h"
 
 /* libotr headers */
@@ -65,13 +66,18 @@
 {
 	viewIsOpen = YES;
 
+	//Account Menu
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+											  submenuType:AIAccountNoSubmenu
+										   showTitleVerbs:NO] retain];
+	
+	//Fingerprints
 	[tableView_fingerprints setDelegate:self];
 	[tableView_fingerprints setDataSource:self];
 	[tableView_fingerprints setTarget:self];
 	[tableView_fingerprints setDoubleAction:@selector(showFingerprint:)];
 	[self updateFingerprintsList];
 	
-	[self configureAccountsMenu];	
 	[self updatePrivateKeyList];
 	
 	[self tableViewSelectionDidChange:nil];
@@ -87,6 +93,7 @@
 {
 	viewIsOpen = NO;
 	[fingerprintDictArray release]; fingerprintDictArray = nil;
+	[accountMenu release]; accountMenu = nil;
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:Account_ListChanged
@@ -102,47 +109,6 @@
 	[[adium notificationCenter] removeObserver:self];
 
 	[super dealloc];
-}
-
-- (void)configureAccountsMenu
-{
-	NSMenu			*theMenu;
-	NSEnumerator	*enumerator;
-	NSMenuItem		*menuItem;
-
-	theMenu = [[adium accountController] menuOfAccountsWithTarget:self
-												   includeOffline:YES];
-	enumerator = [[[[theMenu itemArray] copy] autorelease] objectEnumerator];
-	while ((menuItem = [enumerator nextObject])) {
-		//Only include the Gaim accounts, as any others don't support OTR
-		if ([[menuItem representedObject] isKindOfClass:[CBGaimAccount class]]) {
-			[menuItem setEnabled:YES];
-		} else {
-			[theMenu removeItem:menuItem];
-		}
-	}
-
-	[popUp_accounts setMenu:theMenu];
-}
-
-- (void)accountListChanged:(NSNotification *)notification
-{
-	AIAccount	*selectedAccount = [[popUp_accounts selectedItem] representedObject];
-	
-	[selectedAccount retain];
-	
-	//Rebuild the menu
-	[self configureAccountsMenu];
-	
-	//Attempt to select the account which was previously selected
-	[popUp_accounts selectItemWithRepresentedObject:selectedAccount];
-	
-	//If we can't, select the first item
-	if (![popUp_accounts selectedItem] && ([popUp_accounts numberOfItems] > 0)) {
-		[popUp_accounts selectItemAtIndex:0];
-	}
-	
-	[selectedAccount release];
 }
 
 /*
@@ -271,16 +237,7 @@
 	}
 }
 
-/*
- * @brief A different account was selected in the accounts NSPopUpButton menu
- *
- * Update the display of its private key
- */
-- (IBAction)selectAccount:(id)sender
-{
-	[self updatePrivateKeyList];
-}
-
+//Fingerprint tableview ------------------------------------------------------------------------------------------------
 #pragma mark Fingerprint tableview
 - (int)numberOfRowsInTableView:(NSTableView *)aTableView
 {
@@ -314,6 +271,22 @@
 {
 	int selectedRow = [tableView_fingerprints selectedRow];
 	[button_showFingerprint setEnabled:(selectedRow != -1)];
+}
+
+
+//Account menu ---------------------------------------------------------------------------------------------------------
+#pragma mark Account menu
+/*
+ * @brief Account menu delegate
+ */ 
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[popUp_accounts setMenu:[inAccountMenu menu]];
+}
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
+	[self updatePrivateKeyList];
+}
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
+	return([inAccount isKindOfClass:[CBGaimAccount class]]);
 }
 
 @end
