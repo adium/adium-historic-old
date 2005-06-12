@@ -626,7 +626,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	
 	newWindowFrame = AIRectByMovingRect_intoRect_(newWindowFrame, screenSlideBoundaryRect);
 	
-	[window orderFront:nil];
+	[window makeKeyAndOrderFront:nil];
 	[window setFrame:newWindowFrame display:NO animate:YES];
 	
 	// be lenient; the window is now within the screenSlideBoundaryRect, but it isn't
