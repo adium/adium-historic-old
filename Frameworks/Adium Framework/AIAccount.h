@@ -27,6 +27,8 @@
 
 #define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
 
+#define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
+
 typedef enum {
     STATUS_NA = -1,
     STATUS_OFFLINE,
@@ -100,7 +102,8 @@ typedef enum {
 	
 	//Attributed string refreshing
     NSTimer                     *attributedRefreshTimer;
-    NSMutableArray				*autoRefreshingKeys;
+    NSMutableSet				*autoRefreshingKeys;
+	NSMutableSet				*dynamicKeys;
 	
 	//Contact update guarding
 	NSTimer						*delayedUpdateStatusTimer;

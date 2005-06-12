@@ -44,40 +44,46 @@
  */
 - (id)initWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID service:(AIService *)inService
 {
-	NSString	*accountModifiedUID;
-	
-    self = [super initWithUID:inUID service:inService];
+    if ((self = [super initWithUID:inUID service:inService])) {
+		NSString	*accountModifiedUID;
 
-	internalObjectID = [inInternalObjectID retain];
+		internalObjectID = [inInternalObjectID retain];
+		
+		accountModifiedUID = [self accountWillSetUID:UID];
+		if (accountModifiedUID != UID) {
+			[UID release];
+			UID = [accountModifiedUID retain];
+		}
+		
+		namesAreCaseSensitive = [[self service] caseSensitive];
+		
+		//Handle the preference changed monitoring (for account status) for our subclass
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
+		
+		//Clear the online state.  'Auto-Connect' values are used, not the previous online state.
+		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		[self updateStatusForKey:@"FullNameAttr"];
+		[self updateStatusForKey:@"FormattedUID"];
+		
+		autoRefreshingKeys = [[NSMutableSet alloc] init];
+		dynamicKeys = [[NSMutableSet alloc] init];
+		attributedRefreshTimer = nil;
+		reconnectTimer = nil;
+		delayedUpdateStatusTimer = nil;
+		delayedUpdateStatusTarget = nil;
+		silenceAllContactUpdatesTimer = nil;
+		disconnectedByFastUserSwitch = NO;
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(requestImmediateDynamicContentUpdate:)
+										   name:Adium_RequestImmediateDynamicContentUpdate
+										 object:nil];
+		
+		//Init the account
+		[self initFUSDisconnecting];
+		[self initAccount];
+    }
 	
-	accountModifiedUID = [self accountWillSetUID:UID];
-	if (accountModifiedUID != UID) {
-		[UID release];
-		UID = [accountModifiedUID retain];
-	}
-	
-	namesAreCaseSensitive = [[self service] caseSensitive];
-	
-    //Handle the preference changed monitoring (for account status) for our subclass
- 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
-   	
-    //Clear the online state.  'Auto-Connect' values are used, not the previous online state.
-    [self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
-    [self updateStatusForKey:@"FullNameAttr"];
-    [self updateStatusForKey:@"FormattedUID"];
-	
-    autoRefreshingKeys = [[NSMutableArray alloc] init];
-    attributedRefreshTimer = nil;
-	reconnectTimer = nil;
-	delayedUpdateStatusTimer = nil;
-	delayedUpdateStatusTarget = nil;
-	silenceAllContactUpdatesTimer = nil;
-	disconnectedByFastUserSwitch = NO;
-	
-    //Init the account
-	[self initFUSDisconnecting];
-    [self initAccount];
-    
     return(self);
 }
 
@@ -536,16 +542,20 @@
 /*!
  * @brief Schedule/Unschedule a status string for auto-refreshing if it contains dynamic content
  *
- * Tests an attributed status string.  If the string contains dynamic content it will be scheduled for automatic
- * refreshing and periodically updated.  If the string does not contain dynamic content any existing scheduling for
- * it will be removed.  Call this method when the value of an attributed status that supports automatic refreshing
- * is changed by the user.  This method returns the current value of the auto-refreshing string for you to use.
+ * Tests an attributed status string.  If the string contains dynamic content, the key is noted.  If it also requires
+ * periodic polling to refresh its value, it will be scheduled for automatic refreshing and periodically updated.
+ *
+ * If the string does not contain dynamic content any existing scheduling for it will be removed.  Call this method when the
+ * value of an attributed status that supports automatic refreshing is changed by the user.
+ *
  * @param key Status key to check for auto-refreshing content
+ * @result The current value of the auto-refreshing string for you to use.
  */
 - (NSAttributedString *)autoRefreshingOutgoingContentForStatusKey:(NSString *)key
 {
 	NSAttributedString	*originalValue = [self autoRefreshingOriginalAttributedStringForStatusKey:key];
 	NSAttributedString  *filteredValue;
+	NSString			*originalValueString = [originalValue string];
 	
 	filteredValue = [[adium contentController] filterAttributedString:originalValue
 													  usingFilterType:AIFilterContent
@@ -553,8 +563,8 @@
 															  context:self];
 	
 	//Refresh periodically if the filtered string is different from the original one
-	if (originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])) {
-		[self startAutoRefreshingStatusKey:key];
+	if (originalValue && (![originalValueString isEqualToString:[filteredValue string]])) {
+		[self startAutoRefreshingStatusKey:key forOriginalValueString:originalValueString];
 	} else {
 		[self stopAutoRefreshingStatusKey:key];
 	}
@@ -636,9 +646,11 @@
 	SEL					selector = NSSelectorFromString([contextDict objectForKey:@"selectorString"]);
 	id					originalContext = [contextDict objectForKey:@"originalContext"];
 	
+	NSString			*originalValueString = [originalValue string];
+	
 	//Refresh periodically if the filtered string is different from the original one
-	if (originalValue && (![[originalValue string] isEqualToString:[filteredValue string]])) {
-		[self startAutoRefreshingStatusKey:key];
+	if (originalValue && (![originalValueString isEqualToString:[filteredValue string]])) {
+		[self startAutoRefreshingStatusKey:key forOriginalValueString:originalValueString];
 	} else {
 		[self stopAutoRefreshingStatusKey:key];
 	}
@@ -657,12 +669,14 @@
 /*!
  * @brief Start auto-refreshing a status key
  *
- * Starts auto-refreshing one of our account status attributed strings.  The string will be automatically reprocessed
- * and updated when any dynamic content it contains changes.
+ * If polling is necessary, add the key to autoRefreshingKeys and start our timer.  Whether polling is needed or not,
+ * note that the key is dynamic.
  */
-- (void)startAutoRefreshingStatusKey:(NSString *)key
+- (void)startAutoRefreshingStatusKey:(NSString *)key forOriginalValueString:(NSString *)originalValueString
 {
-	if (![autoRefreshingKeys containsObject:key]) {
+	[dynamicKeys addObject:key];
+
+	if ([[adium contentController] shouldPollToUpdateString:originalValueString]) {
 		[autoRefreshingKeys addObject:key];
 		[self _startAttributedRefreshTimer];
 	}
@@ -675,7 +689,9 @@
  */
 - (void)stopAutoRefreshingStatusKey:(NSString *)key
 {
+	[dynamicKeys removeObject:key];
 	[autoRefreshingKeys removeObject:key];
+
 	if ([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
 }
 
@@ -740,6 +756,25 @@
     while ((key = [keyEnumerator nextObject])) {
 		[self updateStatusForKey:key];
     }
+}
+
+//We were informed that some of our dynamic content may have just changed; update it
+- (void)requestImmediateDynamicContentUpdate:(NSNotification *)notification
+{
+	if ([dynamicKeys count]) {
+		NSEnumerator    *enumerator;
+		NSString        *key;
+		
+		enumerator = [dynamicKeys objectEnumerator];
+		while ((key = [enumerator nextObject])) {
+			[self updateStatusForKey:key];
+		}
+		
+		//Move the next fire date forward since we just updated them all
+		if (attributedRefreshTimer) {
+			[attributedRefreshTimer setFireDate:[NSDate dateWithTimeIntervalSinceNow:FILTERED_STRING_REFRESH]];
+		}
+	}
 }
 
 
