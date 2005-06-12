@@ -670,6 +670,8 @@ NSMutableDictionary* get_chatDict(void)
 										  withObject:(message ? message : @"")
 										  withObject:(description ? description : @"")
 										  withObject:(titleString ? titleString : @"")];
+
+	return(adium_gaim_get_handle());
 }
 
 
@@ -839,6 +841,10 @@ NSMutableDictionary* get_chatDict(void)
 				gaim_conv_chat_send(gaimChat, encodedMessageUTF8String);
 				break;
 			}
+			
+			case GAIM_CONV_MISC:
+			case GAIM_CONV_UNKNOWN:
+				break;
 		}
 	} else {
 		GaimDebug (@"*** Error encoding %@ to UTF8",encodedMessage);
@@ -887,6 +893,7 @@ NSMutableDictionary* get_chatDict(void)
 		
 		switch (typingState) {
 			case AINotTyping:
+			default:
 				gaimTypingState = GAIM_NOT_TYPING;
 				break;
 			case AITyping:
@@ -948,12 +955,12 @@ NSMutableDictionary* get_chatDict(void)
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GaimBuddy 	*buddy;
 	
-	if (buddy = gaim_find_buddy(account, [objectUID UTF8String])) {
+	if ((buddy = gaim_find_buddy(account, [objectUID UTF8String]))) {
 		const char	*groupUTF8String;
 		GaimGroup	*group;
 
 		groupUTF8String = (groupName ? [groupName UTF8String] : "Buddies");
-		if (group = gaim_find_group(groupUTF8String)) {
+		if ((group = gaim_find_group(groupUTF8String))) {
 			/* Remove this contact from the server-side and gaim-side lists. 
 			 * Updating gaimside does not change the server.
 			 *
@@ -1428,7 +1435,7 @@ gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 										 inChat:(AIChat *)inChat
 {
 	GaimConversation	*conv;
-	if (conv = convLookupFromChat(inChat, [inChat account])) {
+	if ((conv = convLookupFromChat(inChat, [inChat account]))) {
 		
 		if (inSecureMessaging) {
 			adium_gaim_otr_connect_conv(conv);

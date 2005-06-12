@@ -356,6 +356,16 @@ gboolean gaim_init_msn_plugin(void);
 		case MSN_LUNCH:
 			statusMessageString = STATUS_DESCRIPTION_LUNCH;
 			break;
+		
+		case MSN_HIDDEN:
+			statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
+			break;
+		
+		case MSN_IDLE:
+		case MSN_AWAY:
+		case MSN_ONLINE:
+		case MSN_OFFLINE:
+			break;
 	}
 	
 	if (statusMessageString && [statusMessageString length]) {
@@ -386,6 +396,16 @@ gboolean gaim_init_msn_plugin(void);
 			
 		case MSN_LUNCH:
 			statusName = STATUS_NAME_LUNCH;
+			break;
+			
+		case MSN_HIDDEN:
+			statusName = STATUS_NAME_INVISIBLE;
+			break;
+			
+		case MSN_IDLE:
+		case MSN_AWAY:
+		case MSN_ONLINE:
+		case MSN_OFFLINE:
 			break;
 	}
 	
@@ -468,6 +488,9 @@ gboolean gaim_init_msn_plugin(void);
 			
 		case AIInvisibleStatusType:
 			gaimStatusType = "Hidden";
+			break;
+		
+		case AIOfflineStatusType:
 			break;
 	}
 	

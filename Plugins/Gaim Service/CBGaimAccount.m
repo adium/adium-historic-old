@@ -1903,7 +1903,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			if ((*statusMessage == nil) || ([*statusMessage length] == 0)) {
 				*statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 			}
-			break;		
+			break;
+		case AIOfflineStatusType:
+			break;
 	}
 	
 	return gaimStatusType;

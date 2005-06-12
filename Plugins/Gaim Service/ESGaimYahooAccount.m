@@ -201,6 +201,14 @@ gboolean gaim_init_yahoo_plugin(void);
 			case YAHOO_STATUS_INVISIBLE:
 				statusName = STATUS_NAME_INVISIBLE;
 				break;
+			
+			case YAHOO_STATUS_AVAILABLE:
+			case YAHOO_STATUS_WEBLOGIN:
+			case YAHOO_STATUS_CUSTOM:
+			case YAHOO_STATUS_IDLE:
+			case YAHOO_STATUS_OFFLINE:
+			case YAHOO_STATUS_TYPING:
+				break;
 		}
 	}
 	
@@ -268,6 +276,14 @@ gboolean gaim_init_yahoo_plugin(void);
 				case YAHOO_STATUS_INVISIBLE:
 					statusMessageString = STATUS_DESCRIPTION_INVISIBLE;
 					//				statusType = AIInvisibleStatusType; /* Invisible has a special status type */
+					break;
+					
+				case YAHOO_STATUS_AVAILABLE:
+				case YAHOO_STATUS_WEBLOGIN:
+				case YAHOO_STATUS_CUSTOM:
+				case YAHOO_STATUS_IDLE:
+				case YAHOO_STATUS_OFFLINE:
+				case YAHOO_STATUS_TYPING:
 					break;
 			}
 		}
@@ -383,8 +399,9 @@ gboolean gaim_init_yahoo_plugin(void);
 		case AIAvailableStatusType:
 		{
 			gaimStatusType = "Available";
+			break;
 		}
-			
+
 		case AIAwayStatusType:
 		{
 			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
@@ -426,6 +443,9 @@ gboolean gaim_init_yahoo_plugin(void);
 			
 			break;
 		}
+		
+		case AIOfflineStatusType:
+			break;
 	}
 	
 	//If we are setting one of our custom statuses, clear a @"" statusMessage to nil

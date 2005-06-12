@@ -188,6 +188,9 @@
 			*statusMessage = nil;
 
 			break;
+		
+		case AIOfflineStatusType:
+			break;
 	}
 
 	//If we are setting one of our custom statuses, don't use a status message
