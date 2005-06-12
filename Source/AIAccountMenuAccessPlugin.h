@@ -20,9 +20,7 @@
 
 @interface AIAccountMenuAccessPlugin : AIPlugin {
 	AIAccountMenu	*accountMenu;
+	NSMutableArray	*installedMenuItems;
 }
-
-- (void)addAccountMenuItems:(NSArray *)menuItemArray;
-- (void)removeAccountMenuItems:(NSArray *)menuItemArray;
 
 @end
