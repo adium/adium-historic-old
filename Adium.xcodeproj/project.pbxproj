@@ -1359,6 +1359,27 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
 			remoteInfo = AIUtilities;
 		};
+		34CFA095085C36AE00D87E37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		34CFA097085C36B500D87E37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		34CFA099085C36BB00D87E37 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteInfo = AIBookmarksImport;
+		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
@@ -6701,6 +6722,9 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				34CFA096085C36AE00D87E37 /* PBXTargetDependency */,
+				34CFA098085C36B500D87E37 /* PBXTargetDependency */,
+				34CFA09A085C36BB00D87E37 /* PBXTargetDependency */,
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				4B215DB0059896B000305B3C /* PBXTargetDependency */,
@@ -7627,7 +7651,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\nfi\n\nAIBOOKMARKSIMPORT_FRAMEWORK=\"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\"\nif ( [ -d \"$AIBOOKMARKSIMPORT_FRAMEWORK\" ] ;) then\n\tln -fs \"$AIBOOKMARKSIMPORT_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\"\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\nfi\n";
+			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\nfi\n\nAIBOOKMARKSIMPORT_FRAMEWORK=\"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\"\nif ( [ -d \"$AIBOOKMARKSIMPORT_FRAMEWORK\" ] ;) then\n\tln -fs \"$AIBOOKMARKSIMPORT_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\"\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8169,6 +8193,21 @@
 			isa = PBXTargetDependency;
 			name = AIUtilities;
 			targetProxy = 34CF9F04085B994800D87E37 /* PBXContainerItemProxy */;
+		};
+		34CFA096085C36AE00D87E37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 34CFA095085C36AE00D87E37 /* PBXContainerItemProxy */;
+		};
+		34CFA098085C36B500D87E37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIHyperlinks.framework;
+			targetProxy = 34CFA097085C36B500D87E37 /* PBXContainerItemProxy */;
+		};
+		34CFA09A085C36BB00D87E37 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIBookmarksImport;
+			targetProxy = 34CFA099085C36BB00D87E37 /* PBXContainerItemProxy */;
 		};
 		4947F5BD0655E85200B791E5 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
