@@ -30,29 +30,32 @@
 
 static ESDebugController	*sharedDebugController = nil;
 
-- (void)initController
+- (id)init
 {
-	sharedDebugController = self;
+	if ((self = [super init])) {
+		sharedDebugController = self;
+
+		debugLogArray = [[NSMutableArray alloc] init];
+	}
 	
+	return self;
+}
+
+- (void)finishIniting
+{
 	//Contact list menu tem
-    NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
+	NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
 																				target:self
 																				action:@selector(showDebugWindow:)
 																		 keyEquivalent:@""];
 	[[adium menuController] addMenuItem:menuItem toLocation:LOC_Adium_About];
 	[menuItem release];
 
-	debugLogArray = [[NSMutableArray alloc] init];
-	
 	//Restore the debug window if it was open when we quit last time
 	if ([[[adium preferenceController] preferenceForKey:KEY_DEBUG_WINDOW_OPEN
 												  group:GROUP_DEBUG] boolValue]) {
 		[ESDebugWindowController showDebugWindow];
 	}
-}
-
-- (void)finishIniting
-{
 }
 
 - (void)beginClosing
@@ -104,7 +107,7 @@ static ESDebugController	*sharedDebugController = nil;
 }
 
 #else
-	- (void)initController {};
+	- (void)finishIniting {};
 	- (void)closeController {};
 #endif /* DEBUG_BUILD */
 

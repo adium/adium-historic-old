@@ -231,7 +231,13 @@ static NSString	*prefsCategory;
 	 */
 	preferenceController = [[AIPreferenceController alloc] init];
 	toolbarController = [[AIToolbarController alloc] init];
+
+#ifdef DEBUG_BUILD
 	debugController = [[ESDebugController alloc] init];
+#else
+	debugController = nil;
+#endif
+
 	contactAlertsController = [[ESContactAlertsController alloc] init];
 	soundController = [[AISoundController alloc] init];
 	emoticonController = [[AIEmoticonController alloc] init];
@@ -246,6 +252,7 @@ static NSString	*prefsCategory;
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
 	[preferenceController finishIniting];
+	[debugController finishIniting];
 
 	//should always init last.  Plugins rely on everything else.
 	componentLoader = [[AICoreComponentLoader alloc] init];
