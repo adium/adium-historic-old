@@ -136,6 +136,11 @@
     return([containedObjects objectEnumerator]);
 }
 
+- (NSArray *)listContacts
+{
+	return(containedObjects);
+}
+
 - (NSEnumerator *)listContactsEnumerator
 {
 	return([self objectEnumerator]);
