@@ -101,6 +101,9 @@ gboolean gaim_init_novell_plugin(void);
 			
 		case AIInvisibleStatusType:
 			gaimStatusType = "Appear Offline";
+		
+		case AIOfflineStatusType:
+			break;
 	}
 	
 	/* XXX Novell supports status messages along with Away and Busy, so let our message stay 

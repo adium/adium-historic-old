@@ -87,6 +87,9 @@ gboolean gaim_init_zephyr_plugin(void);
 		case AIInvisibleStatusType:
 			gaimStatusType = "Hidden";
 			break;
+		case AIAwayStatusType:
+		case AIOfflineStatusType:
+			break;
 	}
 
 	//If we didn't get a gaim status type, request one from super

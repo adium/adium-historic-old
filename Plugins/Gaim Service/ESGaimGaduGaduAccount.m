@@ -143,6 +143,9 @@ gboolean gaim_init_gg_plugin(void);
 		case AIInvisibleStatusType:
 			gaimStatusType = AGG_STATUS_INVISIBLE;
 			break;
+		
+		case AIOfflineStatusType:
+			break;
 	}
 
 	/* Gadu-Gadu supports status messages along with the status types, so let our message stay */

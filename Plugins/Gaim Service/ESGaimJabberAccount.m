@@ -517,6 +517,9 @@ gboolean gaim_init_jabber_plugin(void);
 		case AIInvisibleStatusType:
 			gaimStatusType = "Invisible";
 			break;
+			
+		case AIOfflineStatusType:
+			break;
 	}
 	
 	/* Jabber supports status messages along with the status types, so let our message stay */

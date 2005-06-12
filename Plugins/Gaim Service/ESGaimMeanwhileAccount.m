@@ -112,7 +112,7 @@ gboolean gaim_init_meanwhile_plugin(void);
 				gaimStatusType = "Active";
 			break;
 		}
-			
+
 		case AIAwayStatusType:
 		{
 			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
@@ -125,6 +125,10 @@ gboolean gaim_init_meanwhile_plugin(void);
 			
 			break;
 		}
+		
+		case AIInvisibleStatusType:
+		case AIOfflineStatusType:
+			break;
 	}
 	
 	/* XXX (?) Meanwhile supports status messages along with the status types, so let our message stay */
