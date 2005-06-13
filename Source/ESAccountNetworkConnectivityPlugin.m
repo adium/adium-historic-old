@@ -312,7 +312,7 @@
 	//Immediately re-connect accounts which are ignoring the server reachability
 	enumerator = [[[adium accountController] accounts] objectEnumerator];	
 	while ((account = [enumerator nextObject])) {
-		if ([account connectivityBasedOnNetworkReachability] && [accountsToConnect containsObject:account]) {
+		if (![account connectivityBasedOnNetworkReachability] && [accountsToConnect containsObject:account]) {
 			[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 			[accountsToConnect removeObject:account];
 		}
