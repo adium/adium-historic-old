@@ -302,7 +302,7 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	NSColor	*backgroundColor;
 	[super setTypingAttributes:attrs];
-	NSLog(@"Set to %@",attrs);
+
 	//Correctly set our background color
 	if ((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])) {
 		[self setBackgroundColor:backgroundColor];
