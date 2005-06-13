@@ -37,7 +37,8 @@
     
 	NSString                                *crashLog;		//Current crash log
     
-	NSString                                *buildNumber, *buildDate, *buildUser;
+	NSDate									*buildDate;
+	NSString                                *buildNumber, *buildUser;
 	NSAppleScript                           *slayerScript;
 
     NSString                                *adiumPath;
