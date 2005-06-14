@@ -135,30 +135,6 @@
     [super dealloc];
 }
 
-/*!
- * @brief Adium 2 to Adium X preference migration
- *
- * This code will move the preferences from "../Adium 2.0" to "../Adium X", if we ever want to do that.
- * Not currently used.
- */
-- (void)movePreferenceFolderFromAdium2ToAdium
-{
-    NSFileManager *manager = [NSFileManager defaultManager];
-	NSString      *appSupport = [[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"];
-    NSString *oldPath, *newPath;
-    BOOL 	 isDir, oldExists, newExists;
-	
-	//Check for a preference folder in the old and new locations
-	oldPath = [appSupport stringByAppendingPathComponent:@"Adium 2.0"];
-    newPath = [appSupport stringByAppendingPathComponent:@"Adium X"];
-    oldExists = ([manager fileExistsAtPath:oldPath isDirectory:&isDir] && isDir);
-    newExists = ([manager fileExistsAtPath:newPath isDirectory:&isDir] && isDir);
-	
-	//If we find an old preference folder (and no new one) migrate it to the new location
-    if (oldExists & !newExists) {
-        [manager movePath:oldPath toPath:newPath handler:nil];
-    }
-}
 
 
 //Preference Window ----------------------------------------------------------------------------------------------------
