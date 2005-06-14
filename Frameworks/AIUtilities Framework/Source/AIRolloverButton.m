@@ -55,12 +55,12 @@
 //Remove old tracking rects when we change superviews
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
 {
-	[super viewWillMoveToSuperview:newSuperview];
-
 	if (trackingTag != -1) {
-		[[self superview] removeTrackingRect:trackingTag];
+		[self removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
+
+	[super viewWillMoveToSuperview:newSuperview];
 }
 
 - (void)viewDidMoveToSuperview
@@ -72,12 +72,12 @@
 
 - (void)viewWillMoveToWindow:(NSWindow *)newWindow
 {
-	[super viewWillMoveToWindow:newWindow];
-
 	if (trackingTag != -1) {
-		[[self superview] removeTrackingRect:trackingTag];
+		[self removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
+	
+	[super viewWillMoveToWindow:newWindow];
 }
 
 - (void)viewDidMoveToWindow
@@ -97,18 +97,19 @@
 {
 	//Stop any existing tracking
 	if (trackingTag != -1) {
-		[[self superview] removeTrackingRect:trackingTag];
+		[self removeTrackingRect:trackingTag];
 		trackingTag = -1;
 	}
 	
 	//Add a tracking rect if our superview and window are ready
 	if ([self superview] && [self window]) {
-		NSRect	trackRect = /*NSMakeRect(0,0,frame.size.width, frame.size.height)*/ [self frame];
+		NSRect	myFrame = [self frame];
+		NSRect	trackRect = NSMakeRect(0, 0, myFrame.size.width, myFrame.size.height);
 		NSPoint	localPoint = [self convertPoint:[[self window] convertScreenToBase:[NSEvent mouseLocation]]
 									   fromView:[self superview]];
-		BOOL	mouseInside = NSPointInRect(localPoint, trackRect);
+		BOOL	mouseInside = NSPointInRect(localPoint, myFrame);
 		
-		trackingTag = [[self superview] addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
+		trackingTag = [self addTrackingRect:trackRect owner:self userData:nil assumeInside:mouseInside];
 		if (mouseInside) [self mouseEntered:nil];
 	}
 }
