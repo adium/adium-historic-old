@@ -73,7 +73,7 @@
 	
 	NSEnumerator	*enumerator = [[adium allResourcesForName:EXTERNAL_PLUGIN_FOLDER withExtensions:EXTENSION_ADIUM_PLUGIN] objectEnumerator];
 	NSString		*path;
-	
+
 	//Load any external plugins the user has installed
 	while ((path = [enumerator nextObject])) {
 		[self loadPluginAtPath:path confirmLoading:YES];
