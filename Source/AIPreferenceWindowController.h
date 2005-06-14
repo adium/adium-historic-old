@@ -34,7 +34,6 @@
 	IBOutlet	AIAutoScrollView			*scrollView_advanced;
 
     IBOutlet	AIModularPaneCategoryView   *view_Advanced;
-	IBOutlet	NSButton					*button_restoreDefaults;
     
 	NSArray				    *viewArray;
     NSMutableArray		    *loadedPanes;
@@ -56,6 +55,5 @@
 //Advanced Preferences
 - (void)configureAdvancedPreferencesForPane:(AIPreferencePane *)preferencePane;
 - (NSArray *)advancedCategoryArray;
-- (IBAction)restoreDefaults:(id)sender;
 
 @end

@@ -4900,6 +4900,8 @@
 				F57938AA033E737001A8010A /* AIAccountController.m */,
 				34B82C7F085A85D800864531 /* AIChatController.h */,
 				34B82C80085A85D800864531 /* AIChatController.m */,
+				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
+				F57938AF033E737001A8010A /* AIPreferenceController.m */,
 			);
 			name = "Public Interface";
 			sourceTree = "<group>";
@@ -5940,8 +5942,6 @@
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F570A5B503704C6101A8010A /* AIMenuController.h */,
 				F570A5B603704C6101A8010A /* AIMenuController.m */,
-				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
-				F57938AF033E737001A8010A /* AIPreferenceController.m */,
 				F57938F9033E745F01A8010A /* AISoundController.h */,
 				F57938B0033E737001A8010A /* AISoundController.m */,
 				4B292D3007A9C8E100C5F882 /* AIStatusController.h */,

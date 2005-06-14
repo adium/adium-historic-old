@@ -36,13 +36,6 @@
     return(@"SQL_Logger_Prefs");
 }
 
-- (NSDictionary *)restorablePreferences
-{
-	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SQL_LOGGING_DEFAULT_PREFS forClass:[self class]];
-	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_SQL_LOGGING];
-	return(defaultsDict);
-}
-
 //Configure the preference view
 - (void)viewDidLoad
 {
