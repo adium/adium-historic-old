@@ -94,7 +94,5 @@ typedef enum
 - (void)disconnectAllAccounts;
 - (BOOL)oneOrMoreConnectedAccounts;
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts;
-- (BOOL)anOnlineAccountCanCreateGroupChats;
-- (BOOL)anOnlineAccountCanEditContacts;
 
 @end
