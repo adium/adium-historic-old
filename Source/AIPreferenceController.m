@@ -211,9 +211,6 @@
 	}
 
 	//Add our new observer
-#ifdef TRACK_PREFERENCE_OBSERVERS
-	NSLog(@"adding observer: %@", observer);
-#endif
 	[groupObservers addObject:[NSValue valueWithNonretainedObject:observer]];
 	
 	//Blanket change notification for initialization
@@ -234,13 +231,7 @@
 	NSValue			*observerValue = [NSValue valueWithNonretainedObject:observer];
 
 	while ((observerArray = [enumerator nextObject])) {
-#ifdef TRACK_PREFERENCE_OBSERVERS
-		NSLog(@"removing observer: %p", [observerValue nonretainedObjectValue]);
-#endif
 		[observerArray removeObject:observerValue];
-#ifdef TRACK_PREFERENCE_OBSERVERS
-		NSLog(@"...removed");
-#endif
 	}
 }
 
@@ -268,9 +259,6 @@
 
 		while ((observerValue = [enumerator nextObject])) {
 			id observer = [observerValue nonretainedObjectValue];
-#ifdef TRACK_PREFERENCE_OBSERVERS
-			NSLog(@"informing observer %p", observer);
-#endif
 
 			[observer preferencesChangedForGroup:group
 											 key:key
@@ -650,6 +638,7 @@
 	}
 }
 
+
 //Default download locaiton --------------------------------------------------------------------------------------------
 #pragma mark Default download location
 /*!
@@ -706,7 +695,6 @@
 				 forKey:@"UserPreferredDownloadFolder"
 				  group:PREF_GROUP_GENERAL];
 }
-
 
 @end
 
