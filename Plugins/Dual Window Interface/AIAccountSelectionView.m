@@ -18,6 +18,7 @@
 #import "AIAccountSelectionView.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
+#import "AIChatController.h"
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
@@ -242,7 +243,7 @@
 	[popUp_accounts setMenu:[inAccountMenu menu]];
 }
 - (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
-	[[adium contentController] switchChat:chat toAccount:inAccount];
+	[[adium chatController] switchChat:chat toAccount:inAccount];
 }
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
 	return([self _accountIsAvailable:inAccount]);
@@ -316,7 +317,7 @@
 	[popUp_contacts setMenu:[inContactMenu menu]];
 }
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact {
-	[[adium contentController] switchChat:chat toListContact:inContact usingContactAccount:NO];
+	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:NO];
 }
 
 /*
