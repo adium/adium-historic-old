@@ -28,6 +28,9 @@
 				);
 			};
 			dependencies = (
+				4BE3AA81085F3A71005919E7 /* PBXTargetDependency */,
+				4BE3AA83085F3A71005919E7 /* PBXTargetDependency */,
+				4BE3AA85085F3A71005919E7 /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -1064,6 +1067,8 @@
 		4BDD822207A0BAE00057DB2C /* GaimDefaultsAntepo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD822107A0BAE00057DB2C /* GaimDefaultsAntepo.plist */; };
 		4BDF2C92061E376C00EA75C5 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		4BDF2CA5061E378400EA75C5 /* Libgaim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
+		4BE3AD1E085F3EDD005919E7 /* AdiumPreferredAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */; };
+		4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */; };
 		4BE40C200846544000F5790F /* AdiumAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE40C1E0846544000F5790F /* AdiumAccounts.h */; };
 		4BE40C210846544000F5790F /* AdiumAccounts.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE40C1F0846544000F5790F /* AdiumAccounts.m */; };
 		4BE6175507AC67EE0049C87D /* AIAutoIdlePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE6174B07AC67ED0049C87D /* AIAutoIdlePlugin.h */; };
@@ -1387,6 +1392,27 @@
 			proxyType = 1;
 			remoteGlobalIDString = 346C9C4806004517000F5A8A;
 			remoteInfo = "Standard Message View";
+		};
+		4BE3AA80085F3A71005919E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		4BE3AA82085F3A71005919E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		4BE3AA84085F3A71005919E7 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteInfo = AIBookmarksImport;
 		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2817,6 +2843,8 @@
 		4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSetup.nib; path = "Frameworks/Adium Framework/AccountSetup.nib"; sourceTree = "<group>"; };
 		4BDD822107A0BAE00057DB2C /* GaimDefaultsAntepo.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsAntepo.plist; path = "Plugins/Gaim Service/GaimDefaultsAntepo.plist"; sourceTree = "<group>"; };
 		4BDF2C91061E376C00EA75C5 /* Libgaim.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Libgaim.framework; path = "Plugins/Gaim Service/Libgaim.framework"; sourceTree = "<group>"; };
+		4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPreferredAccounts.h; path = Source/AdiumPreferredAccounts.h; sourceTree = "<group>"; };
+		4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPreferredAccounts.m; path = Source/AdiumPreferredAccounts.m; sourceTree = "<group>"; };
 		4BE40C1E0846544000F5790F /* AdiumAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumAccounts.h; path = Source/AdiumAccounts.h; sourceTree = "<group>"; };
 		4BE40C1F0846544000F5790F /* AdiumAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumAccounts.m; path = Source/AdiumAccounts.m; sourceTree = "<group>"; };
 		4BE6174B07AC67ED0049C87D /* AIAutoIdlePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAutoIdlePlugin.h; path = Source/AIAutoIdlePlugin.h; sourceTree = SOURCE_ROOT; };
@@ -4883,6 +4911,8 @@
 				4BE40C1F0846544000F5790F /* AdiumAccounts.m */,
 				4B8742480840E3D800738987 /* AdiumPasswords.h */,
 				4B8742490840E3D800738987 /* AdiumPasswords.m */,
+				4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */,
+				4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */,
 				4B8741D10840D25600738987 /* AdiumServices.h */,
 				4B8741D20840D25600738987 /* AdiumServices.m */,
 			);
@@ -5004,8 +5034,8 @@
 		4BC291F9083D9EDC0075F57D /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				34B82C85085A874C00864531 /* Events */,
 				4B873F370840D1FB00738987 /* Account */,
+				34B82C85085A874C00864531 /* Events */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -6210,6 +6240,7 @@
 				34B82C81085A85D800864531 /* AIChatController.h in Headers */,
 				34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */,
 				34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */,
+				4BE3AD1E085F3EDD005919E7 /* AdiumPreferredAccounts.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7845,6 +7876,7 @@
 				34B82C82085A85D800864531 /* AIChatController.m in Sources */,
 				34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */,
 				34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */,
+				4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8153,6 +8185,21 @@
 			isa = PBXTargetDependency;
 			target = 346C9C4806004517000F5A8A /* Standard Message View */;
 			targetProxy = 4B90B54D064220B400D23731 /* PBXContainerItemProxy */;
+		};
+		4BE3AA81085F3A71005919E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 4BE3AA80085F3A71005919E7 /* PBXContainerItemProxy */;
+		};
+		4BE3AA83085F3A71005919E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIHyperlinks.framework;
+			targetProxy = 4BE3AA82085F3A71005919E7 /* PBXContainerItemProxy */;
+		};
+		4BE3AA85085F3A71005919E7 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIBookmarksImport;
+			targetProxy = 4BE3AA84085F3A71005919E7 /* PBXContainerItemProxy */;
 		};
 		6C3E0152054445C000A4AE2E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;

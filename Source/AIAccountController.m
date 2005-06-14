@@ -40,21 +40,7 @@
 #import "AdiumPasswords.h"
 #import "AdiumAccounts.h"
 
-//Paths and Filenames
-#define PREF_GROUP_PREFERRED_ACCOUNTS   @"Preferred Accounts"
 #define ACCOUNT_DEFAULT_PREFS			@"AccountPrefs"
-
-
-//Other
-#define KEY_PREFERRED_SOURCE_ACCOUNT	@"Preferred Account"
-
-@interface AIAccountController (PRIVATE)
-- (void)loadAccounts;
-- (NSArray *)_accountsForSendingContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
-- (BOOL)_account:(AIAccount *)account canSendContentType:(NSString *)inType toListObject:(AIListObject *)inObject preferred:(BOOL)inPreferred includeOffline:(BOOL)includeOffline;
-- (void)_upgradePasswords;
-- (void)_addMenuItemsToMenu:(NSMenu *)menu withTarget:(id)target forAccounts:(NSArray *)accounts;
-@end
 
 @implementation AIAccountController
 
@@ -65,8 +51,7 @@
 		adiumServices = [[AdiumServices alloc] init];
 		adiumPasswords = [[AdiumPasswords alloc] init];
 		adiumAccounts = [[AdiumAccounts alloc] init];
-		
-		lastAccountIDToSendContent = [[NSMutableDictionary alloc] init];		
+		adiumPreferredAccounts = [[AdiumPreferredAccounts alloc] init];
 	}
 	
 	return self;
@@ -84,16 +69,11 @@
 	
 	//Temporary upgrade code
 	[adiumPasswords upgradePasswords];
-
-    //Observe content (for accountForSendingContentToContact)
-    [[adium notificationCenter] addObserver:self
-                                   selector:@selector(didSendContent:)
-                                       name:CONTENT_MESSAGE_SENT
-                                     object:nil];	
 }
 
 - (void)beginClosing
 {
+	
 }
 
 //close
@@ -101,28 +81,12 @@
 {
     //Disconnect all accounts
     [self disconnectAllAccounts];
-    
-    //Remove observers (otherwise, every account added will be a duplicate next time around)
-    [[adium notificationCenter] removeObserver:self];
 }
-
-
-
 
 - (void)dealloc
-{
-	//Cleanup
-    [lastAccountIDToSendContent release];
-	
+{	
 	[super dealloc];
 }
-
-
-
-
-
-
-
 
 
 //Services
@@ -191,130 +155,24 @@
 	return [adiumAccounts moveAccount:account toIndex:destIndex];
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Preferred Source Accounts --------------------------------------------------------------------------------------------
-#pragma mark Preferred Source Accounts
-//Returns the preferred choice for sending content to the passed list object
-//When presenting the user with a list of accounts, this should be the one selected by default
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact 
-{
-	return ([self preferredAccountForSendingContentType:inType toContact:inContact includeOffline:NO]);
+//Preferred Accounts
+#pragma mark Preferred Accounts
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact {
+	return [adiumPreferredAccounts preferredAccountForSendingContentType:inType toContact:inContact];
+}
+- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline {
+	return [adiumPreferredAccounts preferredAccountForSendingContentType:inType toContact:inContact includeOffline:includeOffline];
+}
+- (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline {
+	return [adiumPreferredAccounts firstAccountAvailableForSendingContentType:inType toContact:inContact includeOffline:includeOffline];
 }
 
-- (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
-{
-	AIAccount		*account;
-	
-	//If passed a contact, we have a few better ways to determine the account than just using the first
-    if (inContact) {
-		//If we've messaged this object previously, and the account we used to message it is online, return that account
-        NSString *accountID = [inContact preferenceForKey:KEY_PREFERRED_SOURCE_ACCOUNT
-													group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        if (accountID && (account = [self accountWithInternalObjectID:accountID])) {
-            if ([account availableForSendingContentType:inType toContact:inContact]) {
-                return(account);
-            }
-        }
-		
-		//If inObject is an AIListContact return the account the object is on
-		if ((account = [inContact account])) {
-			if ([account availableForSendingContentType:inType toContact:inContact]) {
-				return(account);
-			}
-		}
-		
-		//Return the last account used to message someone on this service
-		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
-		if (lastAccountID && (account = [self accountWithInternalObjectID:lastAccountID])) {
-			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
-				return(account);
-			}
-		}
-		
-		if (includeOffline) {
-			//If inObject is an AIListContact return the account the object is on even if the account is offline
-			if ((account = [inContact account])) {
-				return(account);
-			}
-		}
-	}
-	
-	//If the previous attempts failed, or we weren't passed a contact, use the first appropraite account
-	return([self firstAccountAvailableForSendingContentType:inType
-												  toContact:inContact
-											 includeOffline:includeOffline]);
-}
 
-- (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline
-{
-	AIAccount		*account;
-	NSEnumerator	*enumerator;
-	
-    if (inContact) {
-		//First available account in our list of the correct service type
-		enumerator = [[self accounts] objectEnumerator];
-		while ((account = [enumerator nextObject])) {
-			if ([inContact service] == [account service] &&
-			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
-				return(account);
-			}
-		}
-		
-		//First available account in our list of a compatible service type
-		enumerator = [[self accounts] objectEnumerator];
-		while ((account = [enumerator nextObject])) {
-			if ([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
-			   ([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
-				return(account);
-			}
-		}
-	} else {
-		//First available account in our list
-		enumerator = [[self accounts] objectEnumerator];
-		while ((account = [enumerator nextObject])) {
-			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
-				return(account);
-			}
-		}
-	}
-	
-	
-	//Can't find anything
-	return(nil);
-}
 
-//Watch outgoing content, remembering the user's choice of source account
-- (void)didSendContent:(NSNotification *)notification
-{
-	NSDictionary	*userInfo = [notification userInfo];
-    AIChat			*chat = [userInfo objectForKey:@"AIChat"];
-    AIListObject	*destObject = [chat listObject];
-    
-    if (chat && destObject) {
-        AIContentObject *contentObject = [userInfo objectForKey:@"AIContentObject"];
-        AIAccount		*sourceAccount = (AIAccount *)[contentObject source];
-        
-        [destObject setPreference:[sourceAccount internalObjectID]
-                           forKey:KEY_PREFERRED_SOURCE_ACCOUNT
-                            group:PREF_GROUP_PREFERRED_ACCOUNTS];
-        
-        [lastAccountIDToSendContent setObject:[sourceAccount internalObjectID] forKey:[[destObject service] serviceID]];
-    }
-}
+
+
+
+
 
 
 //Connection convenience methods ---------------------------------------------------------------------------------------

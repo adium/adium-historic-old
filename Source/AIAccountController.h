@@ -49,16 +49,13 @@ typedef enum
 @protocol AIController, AIListObjectObserver, StateMenuPlugin;
 
 @class AIAdium, AIAccount, AIListObject, AIAccountViewController, AIService, AIListContact, 
-		AdiumServices, AdiumPasswords, AdiumAccounts;
+		AdiumServices, AdiumPasswords, AdiumAccounts, AdiumPreferredAccounts;
 
 @interface AIAccountController : AIObject <AIController> {
-    NSMutableDictionary		*lastAccountIDToSendContent;//Last account to send content
-    NSMutableDictionary		*accountStatusDict;			//Account status
-	
-	
 	AdiumServices			*adiumServices;
 	AdiumPasswords			*adiumPasswords;
 	AdiumAccounts			*adiumAccounts;
+	AdiumPreferredAccounts	*adiumPreferredAccounts;
 }
 
 //Services
@@ -86,11 +83,7 @@ typedef enum
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
 
-
-
-	
-
-//Preferred Source Accounts 
+//Preferred Accounts
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline;
 - (AIAccount *)firstAccountAvailableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact includeOffline:(BOOL)includeOffline;
