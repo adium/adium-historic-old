@@ -719,7 +719,7 @@
 - (void)registerFlashObserver:(id <AIFlashObserver>)inObserver
 {
     //Setup the timer if we don't have one yet
-    if (flashObserverArray == nil) {
+    if (!flashObserverArray) {
         flashObserverArray = [[NSMutableArray alloc] init];
         flashTimer = [[NSTimer scheduledTimerWithTimeInterval:(1.0/2.0) 
                                                        target:self 
