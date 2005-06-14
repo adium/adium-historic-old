@@ -27,13 +27,14 @@
 #define	STORE_URL_TRIGGER	AILocalizedString(@"%_iTMS","Trigger for an iTunes Music Store link to the currently playing iTunes song")
 #define MUSIC_TRIGGER		AILocalizedString(@"/music","Command which triggers *is listening to %_track by %_artist*")
 
+/*!
+ * @class ESiTunesPlugin
+ * @brief Fiiltering component to provide triggers which are replaced by information from the current iTunes track
+ */
 @implementation ESiTunesPlugin
 
-static	NSDictionary	*substitutionDict = nil;
-static	NSDictionary	*phraseSubstitutionDict = nil;
-
 /*!
-* @brief Install
+ * @brief Install
  */
 - (void)installPlugin
 {
@@ -93,6 +94,9 @@ static	NSDictionary	*phraseSubstitutionDict = nil;
 	}
 }
 
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	
@@ -101,7 +105,7 @@ static	NSDictionary	*phraseSubstitutionDict = nil;
 /*!
 * @brief Filter messages for keywords to replace
  *
- * Replace any script keywords with the result of running the script (with arguments as appropriate)
+ * Replace any iTunes triggers with the appropriate information
  */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
 {
@@ -172,7 +176,7 @@ static	NSDictionary	*phraseSubstitutionDict = nil;
 }
 
 /*!
-* @brief Filter priority
+ * @brief Filter priority
  *
  * Filter earlier than the default
  */
@@ -181,6 +185,11 @@ static	NSDictionary	*phraseSubstitutionDict = nil;
 	return HIGH_FILTER_PRIORITY;
 }
 
+/*!
+ * @brief The iTunes song changed
+ *
+ * Cache the information, and then requst an immediate update to dynamic content
+ */
 - (void)iTunesUpdate:(NSNotification *)aNotification
 {
 	NSDictionary	*newInfo = [aNotification userInfo];
