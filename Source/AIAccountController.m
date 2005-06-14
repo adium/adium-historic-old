@@ -174,9 +174,7 @@
 
 
 
-
-//Connection convenience methods ---------------------------------------------------------------------------------------
-#pragma mark Connection Convenience Methods
+//XXX - This will be removed when accounts switch to an Enabled / Disabled system
 - (void)toggleConnectionOfAccount:(AIAccount *)account
 {
     BOOL    online = [[account statusObjectForKey:@"Online"] boolValue];
@@ -188,7 +186,7 @@
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
-//Connects all the accounts
+//XXX - This will be removed when accounts switch to an Enabled / Disabled system
 - (void)connectAllAccounts
 {
     NSEnumerator		*enumerator;
@@ -202,7 +200,7 @@
     }
 }
 
-//Disconnects all the accounts
+//XXX - This will be removed when accounts switch to an Enabled / Disabled system
 - (void)disconnectAllAccounts
 {
     NSEnumerator		*enumerator;
@@ -217,18 +215,7 @@
     }
 }
 
-- (BOOL)anOnlineAccountCanCreateGroupChats
-{
-	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
-	AIAccount		*account;
-	
-    while ((account = [enumerator nextObject])) {	
-		if ([account online] && [[account service] canCreateGroupChats]) return(YES);
-	}
-	
-	return(NO);
-}
-
+//XXX - Re-evaluate this method and its presence in the core
 - (BOOL)anOnlineAccountCanEditContacts
 {
 	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
@@ -241,6 +228,7 @@
 	return(NO);
 }
 
+//XXX - Re-evaluate this method and its presence in the core
 - (BOOL)oneOrMoreConnectedAccounts
 {
 	NSEnumerator		*enumerator;
@@ -256,6 +244,7 @@
 	return NO;
 }
 
+//XXX - Re-evaluate this method and its presence in the core
 - (BOOL)oneOrMoreConnectedOrConnectingAccounts
 {
 	NSEnumerator		*enumerator;

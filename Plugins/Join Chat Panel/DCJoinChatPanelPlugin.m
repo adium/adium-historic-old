@@ -66,7 +66,14 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if (menuItem == joinChatMenuItem) {
-		return([[adium accountController] anOnlineAccountCanCreateGroupChats]);
+		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+		AIAccount		*account;
+		
+		while ((account = [enumerator nextObject])) {	
+			if ([account online] && [[account service] canCreateGroupChats]) return(YES);
+		}
+		
+		return(NO);
 	}
 	
 	return(YES);
