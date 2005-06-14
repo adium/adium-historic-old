@@ -663,13 +663,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	 First, make sure the chat is created - we will get here from a call in which Gaim has already
 	 created the GaimConversation, so there's no need for a chatCreationInfo dictionary.
 	 */
-	
-	[[adium contentController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
+	[[adium chatController] mainPerformSelector:@selector(chatWithName:onAccount:chatCreationInfo:)
 										withObject:name
 										withObject:self
 										withObject:nil
 									 waitUntilDone:YES];
-	
+
 	//Now return the existing chat
 	chat = [[adium chatController] existingChatWithName:name onAccount:self];
 	

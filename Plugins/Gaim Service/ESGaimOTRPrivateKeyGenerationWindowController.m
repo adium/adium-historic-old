@@ -52,9 +52,10 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName forIdentifier:(NSString *)inIdentifier
 {
-	self = [super initWithWindowNibName:windowNibName];
-	identifier = [inIdentifier retain];
-	
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		identifier = [inIdentifier retain];
+	}
+
 	return self;
 }
 
