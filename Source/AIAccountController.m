@@ -172,8 +172,6 @@
 
 
 
-
-
 //XXX - This will be removed when accounts switch to an Enabled / Disabled system
 - (void)toggleConnectionOfAccount:(AIAccount *)account
 {
@@ -213,19 +211,6 @@
             [account setPreference:nil forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
         }
     }
-}
-
-//XXX - Re-evaluate this method and its presence in the core
-- (BOOL)anOnlineAccountCanEditContacts
-{
-	NSEnumerator	*enumerator = [[self accounts] objectEnumerator];
-	AIAccount		*account;
-	
-    while ((account = [enumerator nextObject])) {	
-		if ([account contactListEditable]) return(YES);
-	}
-	
-	return(NO);
 }
 
 //XXX - Re-evaluate this method and its presence in the core

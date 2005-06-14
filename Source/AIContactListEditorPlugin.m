@@ -162,8 +162,14 @@
 		return([[adium menuController] currentContextMenuObject] != nil);
 	
 	} else if (menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext) {
-		return([[adium accountController] anOnlineAccountCanEditContacts]);
+		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
+		AIAccount		*account;
 		
+		while ((account = [enumerator nextObject])) {	
+			if ([account contactListEditable]) return(YES);
+		}
+		
+		return(NO);
 	}
 	
 	return(YES);
