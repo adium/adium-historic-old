@@ -517,39 +517,6 @@
 	[activeDefaultsCache removeObjectForKey:cacheKey];
 }
 
-/*!
- * @brief Reset an advanced preference pane to default values
- *
- * This only works for preference panes, and only panes in the advanced preferences have a reset defaults button.
- */
-- (void)resetPreferencesInPane:(AIPreferencePane *)preferencePane
-{
-	NSDictionary	*allDefaults, *groupDefaults;
-	NSEnumerator	*enumerator, *keyEnumerator;
-	NSString		*group, *key;
-	
-	[self delayPreferenceChangedNotifications:YES];
-	
-	//Get the restorable prefs dictionary of the pref pane
-	allDefaults = [preferencePane restorablePreferences];
-	
-	//They keys are preference groups, run through all of them
-	enumerator = [allDefaults keyEnumerator];
-	while ((group = [enumerator nextObject])) {
-		
-		//Get the dictionary of keys for each group, and reset them all
-		groupDefaults = [allDefaults objectForKey:group];
-		keyEnumerator = [groupDefaults keyEnumerator];
-		while ((key = [keyEnumerator nextObject])) {
-			[[adium preferenceController] setPreference:[groupDefaults objectForKey:key]
-												 forKey:key
-												  group:group];
-		}
-	}
-	
-	[self delayPreferenceChangedNotifications:NO];
-}
-
 
 //Preference Cache -----------------------------------------------------------------------------------------------------
 //We cache the preferences locally to avoid loading them each time we need a value

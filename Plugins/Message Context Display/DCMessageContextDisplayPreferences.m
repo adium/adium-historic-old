@@ -49,13 +49,6 @@ typedef enum {
 	return([NSImage imageNamed:@"pref-messagehistory" forClass:[self class]]);
 }
 
-- (NSDictionary *)restorablePreferences
-{
-	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:CONTEXT_DISPLAY_DEFAULTS forClass:[self class]];
-	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CONTEXT_DISPLAY];	
-	return(defaultsDict);
-}
-
 
 //Configure the preference view
 - (void)viewDidLoad

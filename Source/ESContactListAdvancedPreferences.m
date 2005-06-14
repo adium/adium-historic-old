@@ -148,17 +148,6 @@
 }
 
 /*!
- * @brief Restorable preferences
- * @result An NSDictionary of preferences to set when Restore Defaults is clicked
- */
-- (NSDictionary *)restorablePreferences
-{
-	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:CONTACT_LIST_DEFAULTS forClass:[self class]];
-	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_CONTACT_LIST];	
-	return defaultsDict;
-}
-
-/*!
  * @brief Configure control dimming
  */
 - (void)configureControlDimming

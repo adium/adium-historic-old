@@ -67,12 +67,6 @@
 	return(AIPref_Advanced);
 }
 
-//Return an array of dictionaries, each dictionary of the form (key, default, group)
-- (NSDictionary *)restorablePreferences
-{
-	return(nil);
-}
-
 //Return an image for these preferences (advanced only)
 - (NSImage *)image
 {

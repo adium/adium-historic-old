@@ -422,9 +422,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 		loadedAdvancedPanes = [[NSArray arrayWithObject:preferencePane] retain];
 		[view_Advanced setPanes:loadedAdvancedPanes];
 	}
-
-	//Disable the "Restore Defaults" button if there's nothing to restore
-	[button_restoreDefaults setEnabled:([preferencePane restorablePreferences] != nil)];
 }
 
 /*!
@@ -437,15 +434,6 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     }
     
     return(_advancedCategoryArray);
-}
-
-/*!
- * @brief Restores all preferences on the currently active advanced pane to their defaults
- */
-- (IBAction)restoreDefaults:(id)sender
-{
-	int	selectedRow = [tableView_advanced selectedRow];
-	[[adium preferenceController] resetPreferencesInPane:[[self advancedCategoryArray] objectAtIndex:selectedRow]];
 }
 
 
