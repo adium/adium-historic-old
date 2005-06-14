@@ -88,21 +88,6 @@
 	
 	//Register our default preferences
     [self registerDefaults:[NSDictionary dictionaryNamed:PREFS_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_GENERAL];
-	
-    NSToolbarItem	*toolbarItem;
-
-    //Show preference window toolabr item
-    toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"ShowPreferences"
-														  label:AILocalizedString(@"Preferences",nil)
-												   paletteLabel:TITLE_OPEN_PREFERENCES
-														toolTip:TITLE_OPEN_PREFERENCES
-														 target:self
-												settingSelector:@selector(setImage:)
-													itemContent:[NSImage imageNamed:@"pref-general"
-																		   forClass:[self class]]
-														 action:@selector(showPreferenceWindow:)
-														   menu:nil];
-    [[adium toolbarController] registerToolbarItem:toolbarItem forToolbarType:@"General"];
 }
 
 /*!
