@@ -24,7 +24,8 @@
 /*!
  * @brief Init
  */
-- (id)init {
+- (id)init
+{
 	if ((self = [super init])) {
 		services = [[NSMutableDictionary alloc] init];
 	}
@@ -35,7 +36,8 @@
 /*!
  * @brief Close
  */
-- (void)dealloc {
+- (void)dealloc
+{
 	[services release]; services = nil;
 	[super dealloc];
 }
@@ -45,7 +47,8 @@
  *
  * All services should be registered before they are used
  */
-- (void)registerService:(AIService *)inService {
+- (void)registerService:(AIService *)inService
+{
     [services setObject:inService forKey:[inService serviceCodeUniqueID]];
 }
 
@@ -54,7 +57,8 @@
  *
  * @return NSArray of AIService instances
  */
-- (NSArray *)services {
+- (NSArray *)services
+{
 	return([[services allValues] sortedArrayUsingSelector:@selector(compareLongDescription:)]);
 }
 
@@ -64,7 +68,8 @@
  * Active services are those for which the user has an account (or compatible account)
  * @return NSArray of AIService instances
  */
-- (NSArray *)activeServices {
+- (NSArray *)activeServices
+{
 	//Scan our user's accounts and build a list of service classes that they cover
 	NSMutableArray	*serviceClasses = [NSMutableArray array];
 	NSEnumerator	*accountEnumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -98,17 +103,13 @@
  * @param uniqueID The serviceCodeUniqueID of the desired service
  * @return AIService if found, nil if not found
  */
-- (AIService *)serviceWithUniqueID:(NSString *)uniqueID {
+- (AIService *)serviceWithUniqueID:(NSString *)uniqueID
+{
     return([services objectForKey:uniqueID]);
 }
 
 
-
-
-
-/*!
- * Update this
- */ 
+//XXX - Re-evaluate this method and its presence in the core
 - (AIService *)firstServiceWithServiceID:(NSString *)serviceID
 {
 	NSEnumerator	*enumerator = [services objectEnumerator];
@@ -120,20 +121,5 @@
 	
 	return(service);
 }
-
-//Return the first service with the specified serviceID
-
-//- (NSArray *)servicesWithServiceClass:(NSString *)serviceClass
-//{
-//	NSEnumerator	*enumerator = [availableServiceDict objectEnumerator];
-//	AIService		*service;
-//	NSMutableArray	*servicesArray = [NSMutableArray array];
-//	
-//	while ((service = [enumerator nextObject])) {
-//		if ([[service serviceClass] isEqualToString:serviceClass]) [servicesArray addObject:service];
-//	}
-//	
-//	return(servicesArray);
-//}
 
 @end
