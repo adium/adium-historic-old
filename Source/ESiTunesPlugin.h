@@ -10,6 +10,9 @@
 
 @interface ESiTunesPlugin : AIPlugin <AIContentFilter> {
 	NSDictionary	*iTunesCurrentInfo;
+	
+	NSDictionary	*substitutionDict;
+	NSDictionary	*phraseSubstitutionDict;
 }
 
 @end
