@@ -14,17 +14,6 @@
  \------------------------------------------------------------------------------------------------------ */
 
 /*
-    An array that keeps track of who owns each of its objects.
-    
-    Every object in the array has an associated owner.  The best use for this class is when multiple pieces of code
- 	may be trying to control the same thing.  For instance, if there are several events that can cause something to
- 	change colors, by using an owner-array it is possible to prevent conflicts and determine an average color based
- 	on all the values.  It's also easy for a specific owner to remove the value they contributed, or replace it with
- 	another.
- 
-	Floating point priority levels can be used to dictate the ordering of objects in the array.  Lower numbers have
- 	higher priority.
- 
 	Delegate method:
 		- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 */
@@ -39,6 +28,21 @@
 - (void)mutableOwnerArray:(AIMutableOwnerArray *)mutableOwnerArray didSetObject:(id)anObject withOwner:(id)inOwner;
 @end
 
+/*!
+ * @class AIMutableOwnerArray
+ * @brief An container object that keeps track of who owns each of its objects.
+ *
+ * Every object in the <tt>AIMutableOwnerArray</tt> has an associated owner.  The best use for this class is when 
+ * multiple pieces of code may be trying to control the same thing.  For instance, if there are several events that can
+ * cause something to change colors, by using an owner-array it is possible to prevent conflicts and determine an
+ * average color based on all the values.  It's also easy for a specific owner to remove the value they contributed,
+ * or replace it with another.
+ *
+ * An owner can only own one object in a given <tt>AIMutableOwnerArray</tt>.
+ *
+ * Floating point priority levels can be used to dictate the ordering of objects in the array.
+ * Lower numbers have higher priority.
+ */
 @implementation AIMutableOwnerArray
 
 //Init
@@ -84,13 +88,30 @@
 
 //Value Storage --------------------------------------------------------------------------------------------------------
 #pragma mark Value Storage
-//Adds an object with a specified owner at medium priority (Pass nil to remove the object)
+/*!
+ * @brief Store an object with an owner at default (medium) priority
+ *
+ * Calls <tt>setObject:withOwner:priorityLevel:</tt> with a priorityLevel of Medium_Priority.
+ * Pass nil to remove the object
+ */
 - (void)setObject:(id)anObject withOwner:(id)inOwner
 {
 	[self setObject:anObject withOwner:inOwner priorityLevel:Medium_Priority];
 }
 
-//Adds an object with a specified owner (Pass nil to remove the object)
+/*!
+ * @brief Store an object with an owner and a priority
+ *
+ *	<p>Stores an object in the array with a specified owner at a given priority</p>
+ *	@param anObject An object to store
+ *	@param inOwner The owner of the object
+ *  @param priority <p>priority is a float from 0.0 to 1.0, with 0.0 the highest-priority (earliest in the array). Possible preset values are:<br>
+ *			- Highest_Priority<br>
+ *			- High_Priority<br>
+ *			- Medium_Priority<br>
+ *			- Low_Priority<br>
+ *			- Lowest_Priority<br>
+ */
 - (void)setObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority
 {
     int	ownerIndex;
@@ -129,13 +150,22 @@
 
 //Value Retrieval ------------------------------------------------------------------------------------------------------
 #pragma mark Value Retrieval
-//Returns the object with the highest priority
+/*!
+ * @brief Highest priority object
+ *
+ * @result The object with the highest priority, performing no other comparison
+ */
 - (id)objectValue
 {
     return((ownerArray && [ownerArray count]) ? [self _objectWithHighestPriority] : nil);
 }
 
-//Returns the greatest number value
+/*!
+ * @brief Greatest NSNumber value
+ *
+ * Assumes the <tt>AIMutableOwnerArray</tt> contains NSNumber instances
+ * @result Returns the greatest (highest value) contained <tt>NSNumber</tt> value.
+ */
 - (NSNumber *)numberValue
 {
 	int count;
@@ -168,7 +198,12 @@
 	return 0;
 }
 
-//Returns the greatest int value
+/*!
+ * @brief Greatest integer value
+ *
+ * Assuming the <tt>AIMutableOwnerArray</tt> contains <tt>NSNumber</tt> instances, returns the intValue of the greatest (highest-valued) one.
+ * @return  Returns the greatest contained integer value.
+ */
 - (int)intValue
 {
 	int count;
@@ -201,7 +236,12 @@
 	return 0;
 }
 
-//Returns the greatest double value
+/*!
+ * @brief Greatest double value
+ *
+ * Assuming the <tt>AIMutableOwnerArray</tt> contains <tt>NSNumber</tt> instances, returns the doubleValue of the greatest (highest-valued) one.
+ * @return  Returns the greatest contained double value.
+ */
 - (double)doubleValue
 {
 	int count;
@@ -236,7 +276,12 @@
 	return 0;
 }
 
-//Returns the earliest date
+/*!
+ * @brief Earliest date
+ *
+ * Assuming the <tt>AIMutableOwnerArray</tt> contains <tt>NSDate</tt> instances, returns the earliest one.
+ * @return  Returns the earliest contained date.
+ */
 - (NSDate *)date
 {
 	int count;
@@ -269,7 +314,13 @@
 	return nil;
 }
 
-//Return the object with highest priority in our arrays
+/*!
+ * @brief Retrieve object by owner
+ *
+ * Retrieve the object within the <tt>AIMutableOwnerArray</tt> owned by the specified owner.
+ * @param inOwner An owner
+ * @return  Returns the object owned by <i>inOwner</i>.
+ */
 - (id)_objectWithHighestPriority
 {
 	//If we have more than one object and the object we want is not already in the front of our arrays, 
@@ -309,6 +360,7 @@
 	valueIsSortedToFront = YES;
 }
 
+
 //Returns an object with the specified owner
 - (id)objectWithOwner:(id)inOwner
 {
@@ -320,6 +372,13 @@
     return(nil);
 }
 
+/*! 
+ * @brief Retrieve priority by owner
+ *
+ * Retrieve the priority of the object within the <tt>AIMutableOwnerArray</tt> owned by the specified owner.
+ * @param inOwner An owner
+ * @return  Returns the priority of the object owned by <i>inOwner</i>, or 0 if no object is owned by the owner.
+ */
 - (float)priorityOfObjectWithOwner:(id)inOwner
 {
 	if (ownerArray && priorityArray) {
@@ -329,7 +388,13 @@
 	return 0.0;
 }
 
-//Returns the owner of the specified object
+/*!
+ * @brief Retrieve owner by object
+ *
+ * Retrieve the owner within the <tt>AIMutableOwnerArray</tt> which owns the specified object.  If multiple owners own a single object, returns the one with the highest priority.
+ * @param anObject An object
+ * @return  Returns the owner which owns <i>anObject</i>.
+ */
 - (id)ownerWithObject:(id)inObject
 {
     if (ownerArray && contentArray) {
@@ -340,6 +405,13 @@
     return(nil);
 }
 
+/*! 
+ * @brief Retrieve priority by object
+ *
+ * Retrieve the priority of an object within the <tt>AIMutableOwnerArray</tt>.
+ * @param inObject An object
+ * @return Returns the priority of the object, or 0 if the object is not in the array.
+ */
 - (float)priorityOfObject:(id)inObject
 {
 	if (contentArray && priorityArray) {
@@ -349,19 +421,34 @@
 	return 0.0;
 }
 
-//Return a value enumerator
+/*!
+ * @brief Retrive enumerator for objects
+ * 
+ * Retrieve an <tt>NSEnumerator</tt> for all objects in the <tt>AIMutableOwnerArray</tt>. Order is not guaranteed.
+ * @return  Returns <tt>NSEnumerator</tt> for all objects.
+ */
 - (NSEnumerator *)objectEnumerator
 {
 	return([contentArray objectEnumerator]);
 }
 
-//Return all values
+/*!
+ * @brief Retrieve array of values
+ * 
+ * Retrieve an <tt>NSArray</tt> for all objects in the <tt>AIMutableOwnerArray</tt>. Order is not guaranteed.
+ * @return  Returns <tt>NSArray</tt> for all objects.
+ */
 - (NSArray *)allValues
 {
 	return(contentArray);
 }
 
-//Return the number of objects
+/*!
+ * @brief Retrieve number of objects
+ * 
+ * Retrieve the number of objects in the <tt>AIMutableOwnerArray</tt>.
+ * @return  Returns an unsigned of the number of objects.
+ */
 - (unsigned)count
 {
     return([contentArray count]);
@@ -389,10 +476,25 @@
 
 //Delegation -----------------------------------------------------------------------------------------
 #pragma mark Delegation
+/*!
+ * @brief Set the delegate
+ * 
+ * The delegate may implement:<br>
+ * <tt>- (void)mutableOwnerArray:(AIMutableOwnerArray *)inArray didSetObject:(id)anObject withOwner:(id)inOwner priorityLevel:(float)priority</tt><br>
+ * to be notified with the AIMutableOwnerArray is modified.
+ * @param inDelegate The delegate
+ */
 - (void)setDelegate:(id)inDelegate
 {
 	delegate = inDelegate;
 }
+
+/*!
+ * @brief Retrieve the delegate.
+ *
+ * Retrieve the delegate.
+ * @return Returns the delegate.
+ */
 - (id)delegate
 {
 	return(delegate);
