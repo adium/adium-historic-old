@@ -34,7 +34,7 @@
 
 	//Remove any mute-while-stauts-window-is-open mute from the sound controller's preferences
 	[[adium preferenceController] setPreference:nil
-										 forKey:KEY_SOUND_STATUS_MUTE
+										 forKey:KEY_SOUND_MUTE
 										  group:PREF_GROUP_SOUNDS];
 	
 	//Observe preference changes for updating if we should show the status window

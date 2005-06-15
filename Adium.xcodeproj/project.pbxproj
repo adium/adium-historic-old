@@ -4515,6 +4515,7 @@
 				4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */,
 				4B14CF28085FBC5900C88949 /* AdiumSpeech.h */,
 				4B14CF29085FBC5900C88949 /* AdiumSpeech.m */,
+				34D8326407CBD598006466F2 /* SoundPrefs.plist */,
 			);
 			name = Sound;
 			sourceTree = "<group>";
@@ -5981,7 +5982,6 @@
 				345F58F208199727001F733C /* togglegroups.png */,
 				34D8326107CBD598006466F2 /* AccountPrefs.plist */,
 				34D8326207CBD598006466F2 /* DockPrefs.plist */,
-				34D8326407CBD598006466F2 /* SoundPrefs.plist */,
 				34D8326607CBD598006466F2 /* ContactPrefs.plist */,
 				34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */,
 				34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */,
