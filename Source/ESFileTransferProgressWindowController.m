@@ -503,8 +503,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
  */
 - (void)reloadAllData
 {
-	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperviewWithoutNeedingDisplay)];
-
+	[[[[outlineView subviews] copy] autorelease] makeObjectsPerformSelector:@selector(removeFromSuperview)];
 	[outlineView reloadData];
 
 	NSRect	outlineFrame = [outlineView frame];
