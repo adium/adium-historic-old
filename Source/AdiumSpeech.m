@@ -15,6 +15,12 @@
  */
 
 #import "AdiumSpeech.h"
+#import <Adium/SUSpeaker.h>
+
+#define TEXT_TO_SPEAK				@"Text"
+#define VOICE						@"Voice"
+#define PITCH						@"Pitch"
+#define RATE						@"Rate"
 
 @implementation AdiumSpeech
 

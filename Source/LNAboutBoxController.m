@@ -237,7 +237,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 		numberOfDuckClicks = -1;            
 		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Feather Ruffle.aif"]];
 	} else {
-		[[adium soundController] playSoundNamed:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Quack.aif"]];
+		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Quack.aif"]];
 	}
 	
 }

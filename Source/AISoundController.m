@@ -20,29 +20,18 @@
 #import "AISoundController.h"
 #import <Adium/AIObject.h>
 #import <Adium/AIAccount.h>
-#import <Adium/SUSpeaker.h>
-#import <Adium/QTSoundFilePlayer.h>
 #import <AIUtilities/CBApplicationAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
 #include <float.h>
 
-#define	PATH_SOUNDS					@"/Sounds"
+#import "AdiumSound.h"
+#import "AdiumSpeech.h"
+#import "AdiumSoundSets.h"
+
 #define PATH_INTERNAL_SOUNDS		@"/Contents/Resources/Sounds/"
-#define SOUND_SET_PATH_EXTENSION	@"txt"
-#define SOUND_DEFAULT_PREFS			@"SoundPrefs"
-#define MAX_CACHED_SOUNDS			4					//Max cached sounds
-
-#define TEXT_TO_SPEAK				@"Text"
-#define VOICE						@"Voice"
-#define PITCH						@"Pitch"
-#define RATE						@"Rate"
 
 
-#define SOUND_LOCATION					@"Location"
-#define SOUND_LOCATION_SEPARATOR		@"////"
-#define	SOUND_PACK_PATHNAME				@"AdiumSetPathname_Private"
-#define	SOUND_PACK_VERSION				@"AdiumSetVersion"
-#define SOUND_NAMES						@"Sounds"
+
 
 @interface AISoundController (PRIVATE)
 - (void)_removeSystemAlertIDs;
@@ -135,6 +124,38 @@
 //}
 
 
+//Sound
+- (void)playSoundAtPath:(NSString *)inPath{
+	[adiumSound playSoundAtPath:inPath];
+}
+
+//Speech
+- (NSArray *)voices{
+	return [adiumSpeech voices];
+}
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate{
+	[adiumSpeech speakDemoTextForVoice:voiceString withPitch:pitch andRate:rate];
+}
+- (int)defaultRate{
+	return [adiumSpeech defaultRate];
+}
+- (int)defaultPitch{
+	return [adiumSpeech defaultPitch];
+}
+- (void)speakText:(NSString *)text{
+	[adiumSpeech speakText:text];
+}
+- (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate{
+	[adiumSpeech speakText:text withVoice:voiceString pitch:pitch rate:rate];
+}
+
+//Soundsets
+- (NSArray *)soundSetArray{
+	return [adiumSoundSets soundSetArray];
+}
+- (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation{
+	return [adiumSoundSets soundsDictionaryFromDictionary:infoDict usingLocation:outSoundLocation];
+}
 
 
 @end

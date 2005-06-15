@@ -16,21 +16,22 @@
 
 #import <Adium/AIObject.h>
 
+#define PREF_GROUP_SOUNDS					@"Sounds"
+
 //Sound Controller
 #define	KEY_SOUND_SET						@"Set"
 #define	KEY_SOUND_SET_CONTENTS				@"Sounds"
 #define KEY_SOUND_MUTE						@"Mute Sounds"
-#define KEY_SOUND_TEMPORARY_MUTE			@"Mute Sounds Temporarily"
 #define	KEY_SOUND_STATUS_MUTE				@"Mute Sounds based on Status"
 #define KEY_SOUND_USE_CUSTOM_VOLUME			@"Use Custom Volume"
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"
 #define KEY_USE_SYSTEM_SOUND_OUTPUT			@"Use System Sound Output"
 #define KEY_SOUND_SOUND_DEVICE_TYPE			@"Sound Device Type"
+#define KEY_SOUND_TEMPORARY_MUTE			@"Mute Sounds Temporarily"
 
-#define PREF_GROUP_SOUNDS					@"Sounds"
 #define KEY_EVENT_MUTE_WHILE_AWAY			@"Mute While Away"
 
-@class SUSpeaker;
+@class SUSpeaker, AdiumSound, AdiumSpeech, AdiumSoundSets;
 
 @protocol AIController;
 
@@ -39,30 +40,36 @@ typedef enum{
 	SOUND_SYTEM_ALERT_DEVICE
 } SoundDeviceType;
 
-@interface AISoundController : AIObject <AIController> {
-    NSMutableDictionary	*soundCacheDict;
-    NSMutableArray		*soundCacheArray;
-	NSTimer				*soundCacheCleanupTimer;
-    BOOL				useCustomVolume;
-    BOOL				muteSounds;
-	BOOL				muteWhileAway;
-	SoundDeviceType		soundDeviceType;
-    float				customVolume;
-	
-    int					activeSoundThreads;
-    BOOL				soundThreadActive;
-    
-    NSMutableDictionary	*systemSoundIDDict;
-	
-    NSMutableArray 		*speechArray;
-    NSArray				*voiceArray;
-    BOOL				resetNextTime;
-    BOOL				speaking;
-    int                 defaultRate;
-    int                 defaultPitch;
 
-    SUSpeaker			*speaker_variableVoice;
-    SUSpeaker			*speaker_defaultVoice;    
+@interface AISoundController : AIObject <AIController> {
+	
+	AdiumSound			*adiumSound;
+	AdiumSpeech 		*adiumSpeech;
+	AdiumSoundSets 		*adiumSoundSets;
+	
+//    NSMutableDictionary	*soundCacheDict;
+//    NSMutableArray		*soundCacheArray;
+//	NSTimer				*soundCacheCleanupTimer;
+//    BOOL				useCustomVolume;
+//    BOOL				muteSounds;
+//	BOOL				muteWhileAway;
+//	SoundDeviceType		soundDeviceType;
+//    float				customVolume;
+//	
+//    int					activeSoundThreads;
+//    BOOL				soundThreadActive;
+//    
+//    NSMutableDictionary	*systemSoundIDDict;
+//	
+//    NSMutableArray 		*speechArray;
+//    NSArray				*voiceArray;
+//    BOOL				resetNextTime;
+//    BOOL				speaking;
+//    int                 defaultRate;
+//    int                 defaultPitch;
+//
+//    SUSpeaker			*speaker_variableVoice;
+//    SUSpeaker			*speaker_defaultVoice;    
 }
 
 //Sound

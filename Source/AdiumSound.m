@@ -14,11 +14,20 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AISoundController.h"
+#import "AIPreferenceController.h"
 #import "AdiumSound.h"
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <Adium/QTSoundFilePlayer.h>
+
+#define SOUND_DEFAULT_PREFS				@"SoundPrefs"
+#define MAX_CACHED_SOUNDS			4					//Max cached sounds
 
 #define	SOUND_CACHE_CLEANUP_INTERVAL	60.0		//One minute
 
 @interface AdiumSound (PRIVATE)
+- (void)_coreAudioPlaySound:(NSString *)inPath;
+- (void)_uncacheLastPlayer;
 
 @end
 
@@ -33,23 +42,6 @@
 		soundCacheDict = [[NSMutableDictionary alloc] init];
 		soundCacheArray = [[NSMutableArray alloc] init];
 		soundCacheCleanupTimer = nil;
-
-		AIPreferenceController *preferenceController = [adium preferenceController];
-		
-		//Register our default preferences
-		[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
-									  forGroup:PREF_GROUP_SOUNDS];
-		
-		//Ensure the temporary mute is off
-		if ([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
-											  group:PREF_GROUP_SOUNDS] boolValue]) {
-			[preferenceController setPreference:nil
-										 forKey:KEY_SOUND_TEMPORARY_MUTE
-										  group:PREF_GROUP_SOUNDS];
-		}
-		
-		//observe pref changes
-		[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];	
 	}
 	
 	return(self);
@@ -68,7 +60,7 @@
 	}
 
 	//Cleanup
-	[preferenceController unregisterPreferenceObserver:self];	
+	[[adium preferenceController] unregisterPreferenceObserver:self];	
 
 	[soundCacheDict release]; soundCacheDict = nil;
 	[soundCacheArray release]; soundCacheArray = nil;
@@ -76,6 +68,78 @@
 	
 	[super dealloc];
 }
+
+/*!
+ * @brief Finish Initing
+ *
+ * Requires:
+ * 1) Preference controller is ready
+ */
+- (void)controllerDidLoad
+{
+	AIPreferenceController *preferenceController = [adium preferenceController];
+	
+	//Register our default preferences
+	[preferenceController registerDefaults:[NSDictionary dictionaryNamed:SOUND_DEFAULT_PREFS forClass:[self class]]
+								  forGroup:PREF_GROUP_SOUNDS];
+	
+	//Ensure the temporary mute is off
+	if ([[preferenceController preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
+										  group:PREF_GROUP_SOUNDS] boolValue]) {
+		[preferenceController setPreference:nil
+									 forKey:KEY_SOUND_TEMPORARY_MUTE
+									  group:PREF_GROUP_SOUNDS];
+	}
+	
+	//observe pref changes
+	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];	
+}
+	
+	
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	NSEnumerator		*enumerator;
+	QTSoundFilePlayer   *soundFilePlayer;
+	SoundDeviceType		oldSoundDeviceType;
+	
+//	useCustomVolume = YES;
+	customVolume = ([[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]);
+				
+	muteSounds = ([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] ||
+				  [[prefDict objectForKey:KEY_SOUND_TEMPORARY_MUTE] intValue] ||
+				  [[prefDict objectForKey:KEY_SOUND_STATUS_MUTE] intValue]);
+	
+	oldSoundDeviceType = soundDeviceType;
+	soundDeviceType = [[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
+	
+	
+	//Clear out our cached sounds and our speech aray if either
+	// -We're probably not going to be using them for a while
+	// -We've changed output device types so will want to recreate our sound output objects
+	//
+	//If neither of these things happened, we need to update our currently playing songs
+	//to the new volume setting.
+	
+	BOOL needToStopAndRelease = (muteSounds || (soundDeviceType != oldSoundDeviceType));
+	
+	enumerator = [soundCacheDict objectEnumerator];
+	while ((soundFilePlayer = [enumerator nextObject])) {
+		if (needToStopAndRelease) {
+			[soundFilePlayer stop];
+		} else {
+			[soundFilePlayer setVolume:customVolume];
+		}
+	}
+	
+	if (needToStopAndRelease) {
+		[soundCacheDict removeAllObjects];
+		[soundCacheArray removeAllObjects];
+	}
+}
+	
+
 
 /*!
  * @brief Play a sound
@@ -102,7 +166,7 @@
     if (!existingPlayer) {
 		//If the cache is full, remove the least recently used cached sound
 		if ([soundCacheDict count] >= MAX_CACHED_SOUNDS) {
-			[self uncacheLastPlayer];
+			[self _uncacheLastPlayer];
 		}
 		
 		//Load and cache the sound
@@ -160,7 +224,7 @@
 - (void)soundCacheCleanup:(NSTimer *)inTimer
 {
 	if ([soundCacheArray count]) {
-		[self uncacheLastPlayer];
+		[self _uncacheLastPlayer];
 	} else {
 		[soundCacheCleanupTimer invalidate]; [soundCacheCleanupTimer release]; soundCacheCleanupTimer = nil;
 	}
@@ -169,7 +233,7 @@
 /*!
  *
  */
-- (void)uncacheLastPlayer
+- (void)_uncacheLastPlayer
 {
 	NSString			*lastCachedPath = [soundCacheArray lastObject];
 	QTSoundFilePlayer   *existingPlayer = [soundCacheDict objectForKey:lastCachedPath];
