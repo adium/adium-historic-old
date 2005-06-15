@@ -148,7 +148,7 @@
 }
 #endif
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
     //Load the interface
     [interfacePlugin openInterface];
@@ -177,11 +177,7 @@
 									   name:CONTENT_MESSAGE_RECEIVED object:nil];	
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
     [contactListPlugin closeContactList];
     [interfacePlugin closeInterface];

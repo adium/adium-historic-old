@@ -86,18 +86,14 @@
 	}
 }
 
-- (void)finishIniting
-{
-}
-
-- (void)beginClosing
+- (void)controllerDidLoad
 {
 }
 
 /*!
  * @brief Close integreated components
  */
-- (void)closeController
+- (void)controllerWillClose
 {
 	NSEnumerator	*enumerator = [components objectEnumerator];
 	id <AIPlugin>	plugin;
