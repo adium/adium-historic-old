@@ -77,7 +77,7 @@
  * Sets up the toolbar items.
  * We can't do these in initing, since the toolbar controller hasn't loaded yet at that point.
  */
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	//
 	userDirectory = [[[adium loginController] userDirectory] retain];
@@ -91,19 +91,9 @@
 }
 
 /*!
- * @brief Begin closing
- * 
- * We must close the preference window before plugins and the other controllers are unloaded.
- */
-- (void)beginClosing
-{
-    [AIPreferenceWindowController closePreferenceWindow];
-}
-
-/*!
  * @brief Close
  */
-- (void)closeController
+- (void)controllerWillClose
 {
     //Preferences are (always) saved as they're modified, so there's no need to save them here.
 } 
@@ -130,6 +120,11 @@
 - (IBAction)showPreferenceWindow:(id)sender
 {
 	[AIPreferenceWindowController openPreferenceWindow];
+}
+
+- (IBAction)closePreferenceWindow:(id)sender
+{
+	[AIPreferenceWindowController closePreferenceWindow];
 }
 
 /*!

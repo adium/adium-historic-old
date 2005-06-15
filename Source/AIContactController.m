@@ -154,7 +154,7 @@
 }
 
 //finish initing
-- (void)finishIniting
+- (void)controllerDidLoad
 {	
 	//Default contact preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:CONTACT_DEFAULT_PREFS
@@ -179,12 +179,8 @@
 	[self sortContactList];
 }
 
-- (void)beginClosing
-{
-}
-
 //close
-- (void)closeController
+- (void)controllerWillClose
 {
 	[self saveContactList];
 }
@@ -1084,7 +1080,7 @@
  * a UID and a service, respectively, which together define a contact which should be included in the grouping.
  *
  * Assumption: This is only called after the contact list is finished loading, which occurs via
- * -(void)finishIniting above.
+ * -(void)controllerDidLoad above.
  *
  * @param UIDsArray NSArray of UIDs
  * @param servicesArray NSArray of serviceIDs corresponding to entries in UIDsArray

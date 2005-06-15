@@ -41,7 +41,7 @@ static ESDebugController	*sharedDebugController = nil;
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	//Contact list menu tem
 	NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Debug Window",nil)
@@ -58,11 +58,7 @@ static ESDebugController	*sharedDebugController = nil;
 	}
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
 	//Save the open state of the debug window
 	[[adium preferenceController] setPreference:([ESDebugWindowController debugWindowIsOpen] ?
@@ -107,8 +103,8 @@ static ESDebugController	*sharedDebugController = nil;
 }
 
 #else
-	- (void)finishIniting {};
-	- (void)closeController {};
+	- (void)controllerDidLoad {};
+	- (void)controllerWillClose {};
 #endif /* DEBUG_BUILD */
 
 @end
