@@ -84,7 +84,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
     //Create the custom emoticons directory
     [adium createResourcePathForName:EMOTICONS_PATH_NAME];
@@ -103,11 +103,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 									 object:nil];
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
 //	[[adium contentController] unregisterOutgoingContentFilter:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
