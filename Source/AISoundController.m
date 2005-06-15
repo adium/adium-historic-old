@@ -55,10 +55,10 @@
 - (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate{
 	[adiumSpeech speakDemoTextForVoice:voiceString withPitch:pitch andRate:rate];
 }
-- (int)defaultRate{
+- (float)defaultRate{
 	return [adiumSpeech defaultRate];
 }
-- (int)defaultPitch{
+- (float)defaultPitch{
 	return [adiumSpeech defaultPitch];
 }
 - (void)speakText:(NSString *)text{
