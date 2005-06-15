@@ -46,8 +46,8 @@ typedef enum{
 //Speech
 - (NSArray *)voices;
 - (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
-- (int)defaultRate;
-- (int)defaultPitch;
+- (float)defaultRate;
+- (float)defaultPitch;
 - (void)speakText:(NSString *)text;
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
 
