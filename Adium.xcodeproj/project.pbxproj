@@ -5063,8 +5063,8 @@
 		4BC291F9083D9EDC0075F57D /* Core */ = {
 			isa = PBXGroup;
 			children = (
-				4B14CF1E085FBC4400C88949 /* Sound */,
 				4B873F370840D1FB00738987 /* Account */,
+				4B14CF1E085FBC4400C88949 /* Sound */,
 				34B82C85085A874C00864531 /* Events */,
 			);
 			name = Core;

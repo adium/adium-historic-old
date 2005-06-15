@@ -15,6 +15,23 @@
  */
 
 #import "AdiumSoundSets.h"
+#import "AISoundController.h"
+
+#define	PATH_SOUNDS						@"/Sounds"
+
+#define SOUND_LOCATION					@"Location"
+#define SOUND_LOCATION_SEPARATOR		@"////"
+#define	SOUND_PACK_PATHNAME				@"AdiumSetPathname_Private"
+#define	SOUND_PACK_VERSION				@"AdiumSetVersion"
+#define SOUND_NAMES						@"Sounds"
+#define SOUND_SET_PATH_EXTENSION		@"txt"
+
+@interface AdiumSoundSets (PRIVATE)
+- (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
+- (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
+- (void)addSoundsIndicatedByDictionary:(NSDictionary *)infoDict toArray:(NSMutableArray *)soundSetContents;
+
+@end
 
 @implementation AdiumSoundSets
 

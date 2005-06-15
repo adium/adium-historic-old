@@ -17,7 +17,30 @@
 #import <Adium/AIObject.h>
 
 @interface AdiumSound : AIObject {
-
+    NSMutableDictionary	*soundCacheDict;
+    NSMutableArray		*soundCacheArray;
+	NSTimer				*soundCacheCleanupTimer;
+	//    BOOL				useCustomVolume;
+    BOOL				muteSounds;
+	//	BOOL				muteWhileAway;
+	SoundDeviceType		soundDeviceType;
+    float				customVolume;
+	//	
+	//    int					activeSoundThreads;
+	//    BOOL				soundThreadActive;
+	//    
+	//    NSMutableDictionary	*systemSoundIDDict;
+	//	
+	//    NSMutableArray 		*speechArray;
+	//    NSArray				*voiceArray;
+	//    BOOL				resetNextTime;
+	//    BOOL				speaking;
+	//    int                 defaultRate;
+	//    int                 defaultPitch;
+	//
+	//    SUSpeaker			*speaker_variableVoice;
+	//    SUSpeaker			*speaker_defaultVoice;    
+	
 }
 
 - (void)controllerDidLoad;
