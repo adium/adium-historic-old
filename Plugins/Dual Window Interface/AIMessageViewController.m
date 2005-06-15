@@ -69,6 +69,7 @@
 - (void)_configureUserList;
 - (void)_updateUserListViewWidth;
 - (int)_userListViewProperWidthIgnoringUserMininum:(BOOL)ignoreUserMininum;
+- (void)_updateAccountSelectionViewHeight;
 @end
 
 @implementation AIMessageViewController
@@ -471,7 +472,6 @@
 {
 	if (!view_accountSelection) {
 		NSRect	contentFrame = [splitView_textEntryHorizontal frame];
-		int 	accountViewHeight;
 
 		//Create the account selection view and insert it into our window
 		view_accountSelection = [[AIAccountSelectionView alloc] initWithFrame:contentFrame];
@@ -509,7 +509,8 @@
  * @brief 
  */
 - (void)_updateAccountSelectionViewHeight
-{NSLog(@"_updateAccountSelectionViewHeight");
+{
+	NSLog(@"_updateAccountSelectionViewHeight");
 	int		contentsHeight = [view_contents frame].size.height;
 	int 	accountSelectionHeight = [view_accountSelection frame].size.height;
 	
