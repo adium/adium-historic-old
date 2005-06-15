@@ -251,33 +251,29 @@ static NSString	*prefsCategory;
 	statusController = [[AIStatusController alloc] init];
 
 	//Finish setting up the preference controller before the components and plugins load so they can read prefs 
-	[preferenceController finishIniting];
-	[debugController finishIniting];
+	[preferenceController controllerDidLoad];
+	[debugController controllerDidLoad];
 
-	//should always init last.  Plugins rely on everything else.
+	//Plugins and components should always init last, since they rely on everything else.
 	componentLoader = [[AICoreComponentLoader alloc] init];
 	pluginLoader = [[AICorePluginLoader alloc] init];
 	
-	/* Account controller should finish initing before the contact controller
-	 * so accounts and services are available for contact creation.  Contact controller should finish initing
-	 * before the interface controller so the contact list is available when the contact list window is automatically
-	 * opened.
-	 */
-	[menuController finishIniting];	//Loaded by nib
-	[accountController finishIniting];
-	[contactController finishIniting];
-	[interfaceController finishIniting];	//Loaded by nib
-	[toolbarController finishIniting];
-	[debugController finishIniting];
-	[contactAlertsController finishIniting];
-	[soundController finishIniting];
-	[emoticonController finishIniting];
-	[chatController finishIniting];
-	[contentController finishIniting];
-	[dockController finishIniting];
-	[fileTransferController finishIniting];
-	[applescriptabilityController finishIniting];
-	[statusController finishIniting];
+	//Finish initing
+	[menuController controllerDidLoad];			//Loaded by nib
+	[accountController controllerDidLoad];		//** Before contactController so accounts and services are available for contact creation
+	[contactController controllerDidLoad];		//** Before interfaceController so the contact list is available to the interface
+	[interfaceController controllerDidLoad];	//Loaded by nib
+	[toolbarController controllerDidLoad];
+	[debugController controllerDidLoad];
+	[contactAlertsController controllerDidLoad];
+	[soundController controllerDidLoad];
+	[emoticonController controllerDidLoad];
+	[chatController controllerDidLoad];
+	[contentController controllerDidLoad];
+	[dockController controllerDidLoad];
+	[fileTransferController controllerDidLoad];
+	[applescriptabilityController controllerDidLoad];
+	[statusController controllerDidLoad];
 
 	//Open the preferences if we were unable to because application:openFile: was called before we got here
 	[self openAppropriatePreferencesIfNeeded];
@@ -295,33 +291,28 @@ static NSString	*prefsCategory;
 //Give all the controllers a chance to close down
 - (void)applicationWillTerminate:(NSNotification *)notification
 {
-	//Let the status controller we'll be closing so it can keep track of connected accounts for use with the global statuses
-	[statusController beginClosing];
-
-	//Let the chat controller know we'll be closing so it can take action before chats are closed as a group
-	[chatController beginClosing];
-
-	//Preference controller needs to close the prefs window before the plugins that control it are unloaded
-	[preferenceController beginClosing];
+	//Close the preference window before we shut down the plugins that compose it
+	[preferenceController closePreferenceWindow:nil];
 
     //Close the controllers in reverse order
-    [pluginLoader closeController]; //should always unload first.  Plugins rely on all the controllers.
-	[componentLoader closeController];
-    [contactAlertsController closeController];
-    [fileTransferController closeController];
-	[statusController closeController];
-    [dockController closeController];
-    [interfaceController closeController];
-    [contentController closeController];
-    [contactController closeController];
-    [accountController closeController];
-	[emoticonController closeController];
-    [soundController closeController];
-    [menuController closeController];
-    [applescriptabilityController closeController];
-	[debugController closeController];
-	[toolbarController closeController];
-    [preferenceController closeController];
+	[pluginLoader controllerWillClose]; 				//** First because plugins rely on all the controllers
+	[componentLoader controllerWillClose];				//** First because components rely on all the controllers
+	[statusController controllerWillClose];				//** Before accountController so account states are saved before being set to offline
+    [chatController controllerWillClose];				//** Before interfaceController so chats can be correctly closed
+	[contactAlertsController controllerWillClose];
+    [fileTransferController controllerWillClose];
+    [dockController controllerWillClose];
+    [interfaceController controllerWillClose];
+    [contentController controllerWillClose];
+    [contactController controllerWillClose];
+    [accountController controllerWillClose];
+	[emoticonController controllerWillClose];
+    [soundController controllerWillClose];
+    [menuController controllerWillClose];
+    [applescriptabilityController controllerWillClose];
+	[debugController controllerWillClose];
+	[toolbarController controllerWillClose];
+    [preferenceController controllerWillClose];			//** Last since other controllers may want to write preferences as they close
 	
 	[self deleteTemporaryFiles];
 }
