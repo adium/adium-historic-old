@@ -50,7 +50,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 - (void)installPlugin
 {
 	setAwayThroughFastUserSwitch = NO;
-	setMuteThroughFastUserSwitch = NO;
 	monitoringFastUserSwitch = NO;
 
 	NSNotificationCenter *workspaceCenter = [[NSWorkspace sharedWorkspace] notificationCenter];
@@ -153,15 +152,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 			}
 		}
 
-		//Set a temporary mute if none already exists
-		NSNumber *oldTempMute = [[adium preferenceController] preferenceForKey:KEY_SOUND_TEMPORARY_MUTE
-																		 group:PREF_GROUP_SOUNDS];
-		if (!oldTempMute || ![oldTempMute boolValue]) {
-			[[adium preferenceController] setPreference:[NSNumber numberWithBool:YES]
-												 forKey:KEY_SOUND_TEMPORARY_MUTE
-												  group:PREF_GROUP_SOUNDS];
-			setMuteThroughFastUserSwitch = YES;
-		}
 	} else {
 		//Activation - return from away
 
@@ -186,13 +176,6 @@ extern NSString *NSWorkspaceSessionDidResignActiveNotification __attribute__((we
 			}
 		}
 
-		//Clear the temporary mute if necessary
-		if (setMuteThroughFastUserSwitch) {
-			[[adium preferenceController] setPreference:nil
-												 forKey:KEY_SOUND_TEMPORARY_MUTE
-												  group:PREF_GROUP_SOUNDS];
-		}
-		
 		[previousStatusStateDict release]; previousStatusStateDict = nil;
 		[accountsToReconnect release]; accountsToReconnect = nil;
 	}

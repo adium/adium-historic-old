@@ -83,12 +83,7 @@
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
 	[popUp_outputDevice setMenu:[self outputDeviceMenu]];
 	[popUp_outputDevice compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue]];
-	
-    if ([[prefDict objectForKey:KEY_SOUND_MUTE] intValue] == YES) {
-        [slider_volume setFloatValue:0.0];
-    } else {
-        [slider_volume setFloatValue:[[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
-    }
+	[slider_volume setFloatValue:[[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
 	
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
@@ -174,33 +169,17 @@
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     float			volume, oldVolume;
-    BOOL			mute, oldMute;
-    BOOL			playSample = NO;
 
 	volume = [slider_volume floatValue];
 	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
-
-	mute = (volume == 0.0);
-	oldMute = [[prefDict objectForKey:KEY_SOUND_MUTE] intValue];
 
     //Volume
     if (volume != oldVolume) {
         [[adium preferenceController] setPreference:[NSNumber numberWithFloat:volume]
                                              forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
                                               group:PREF_GROUP_SOUNDS];
-        playSample = YES;
-    }
 
-    //Muted
-    if (mute != oldMute) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:mute]
-                                             forKey:KEY_SOUND_MUTE
-                                              group:PREF_GROUP_SOUNDS];
-        playSample = NO;
-    }
-	
-    //Play a sample sound
-    if (playSample) {
+		//Play a sample sound
         [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
     }
 }

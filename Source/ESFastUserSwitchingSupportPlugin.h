@@ -18,7 +18,6 @@
 
 @interface ESFastUserSwitchingSupportPlugin : AIPlugin {
     BOOL setAwayThroughFastUserSwitch;
-    BOOL setMuteThroughFastUserSwitch;
 	
 	BOOL		monitoringFastUserSwitch;
 	NSNumber	*fastUserSwitchStatusID;

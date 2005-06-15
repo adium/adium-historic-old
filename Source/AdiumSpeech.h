@@ -19,38 +19,24 @@
 @class SUSpeaker;
 
 @interface AdiumSpeech : AIObject {
-	//    NSMutableDictionary	*soundCacheDict;
-	//    NSMutableArray		*soundCacheArray;
-	//	NSTimer				*soundCacheCleanupTimer;
-	//    BOOL				useCustomVolume;
-    BOOL				muteSounds;
-	//	BOOL				muteWhileAway;
-	//	SoundDeviceType		soundDeviceType;
-	//    float				customVolume;
-	//	
-	//    int					activeSoundThreads;
-	//    BOOL				soundThreadActive;
-	//    
-	//    NSMutableDictionary	*systemSoundIDDict;
-	//	
     NSMutableArray 		*speechArray;
-    NSArray				*voiceArray;
-    BOOL				resetNextTime;
-    BOOL				speaking;
-    int                 defaultRate;
-    int                 defaultPitch;
-	//
-    SUSpeaker			*speaker_variableVoice;
-    SUSpeaker			*speaker_defaultVoice;   
+    NSMutableArray		*voiceArray;
 
+    SUSpeaker			*_variableVoice;
+    SUSpeaker			*_defaultVoice;
+	float				_defaultRate;
+	float				_defaultPitch;
 	
+	BOOL				workspaceSessionIsActive;
+	BOOL				speaking;
 }
 
-- (NSArray *)voices;
-- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
-- (int)defaultRate;
-- (int)defaultPitch;
 - (void)speakText:(NSString *)text;
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
+
+- (NSArray *)voices;
+- (float)defaultRate;
+- (float)defaultPitch;
 
 @end

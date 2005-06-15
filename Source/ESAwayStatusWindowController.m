@@ -108,7 +108,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	//If we are muting while this window is open, remove the mute before closing
 	if ([button_muteWhileAway state]) {
 		[[adium preferenceController] setPreference:nil
-											 forKey:KEY_SOUND_STATUS_MUTE
+											 forKey:KEY_SOUND_MUTE
 											  group:PREF_GROUP_SOUNDS];
 	}
 
@@ -345,8 +345,9 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	NSNumber	*shouldMuteWhileWindowIsOpen = [[adium preferenceController] preferenceForKey:@"Mute While Away Status Window is Open"
 																					group:PREF_GROUP_STATUS_PREFERENCES];
 	//Apply the mute to the sound controller by setting a preference for it
+	//XXX - This is BROKEN.  The "muting" should occur at the event level, NOT in the sound controller as it was before. -ai
 	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
-										 forKey:KEY_SOUND_STATUS_MUTE
+										 forKey:KEY_SOUND_MUTE
 										  group:PREF_GROUP_SOUNDS];
 	[button_muteWhileAway setState:([shouldMuteWhileWindowIsOpen boolValue] ? NSOnState : NSOffState)];
 }
@@ -364,7 +365,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 										  group:PREF_GROUP_STATUS_PREFERENCES];
 	//And apply the mute to the sound controller by setting a preference for it
 	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
-										 forKey:KEY_SOUND_STATUS_MUTE
+										 forKey:KEY_SOUND_MUTE
 										  group:PREF_GROUP_SOUNDS];	
 }
 
