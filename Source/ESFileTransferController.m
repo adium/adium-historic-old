@@ -68,7 +68,7 @@ static ESFileTransferPreferences *preferences;
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
     //Add our get info contextual menu item
     menuItem_sendFileContext = [[NSMenuItem alloc] initWithTitle:SEND_FILE
@@ -117,11 +117,7 @@ static ESFileTransferPreferences *preferences;
 	[self configureFileTransferProgressWindow];
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
     [[adium preferenceController] unregisterPreferenceObserver:self];
 }
