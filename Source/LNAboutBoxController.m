@@ -26,6 +26,8 @@
 #define ABOUT_BOX_NIB					@"AboutBox"
 #define	ADIUM_SITE_LINK					AILocalizedString(@"http://www.adiumx.com/","Adium homepage. Only localize if a translated version of the page exists.")
 
+#define PATH_TO_SOUNDS					[[[[NSBundle mainBundle] bundlePath] stringByAppendingPathComponent:@"/Contents/Resources/Adium.AdiumSoundset"] stringByExpandingTildeInPath]
+
 #define ABOUT_SCROLL_FPS				30.0
 #define ABOUT_SCROLL_RATE				1.0
 
@@ -230,15 +232,14 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 - (IBAction)adiumDuckClicked:(id)sender
 {
     numberOfDuckClicks++;
-
+	
 	if (numberOfDuckClicks == 10) {
 		numberOfDuckClicks = -1;            
-		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Feather Ruffle.aif"];
+		[[adium soundController] playSoundAtPath:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Feather Ruffle.aif"]];
 	} else {
-		[[adium soundController] playSoundNamed:@"/Adium.AdiumSoundset/Quack.aif"];
+		[[adium soundController] playSoundNamed:[PATH_TO_SOUNDS stringByAppendingPathComponent:@"/Adium.AdiumSoundset/Quack.aif"]];
 	}
 	
 }
-
 
 @end

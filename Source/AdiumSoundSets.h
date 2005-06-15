@@ -16,24 +16,11 @@
 
 #import <Adium/AIObject.h>
 
-@class AIService, AIAccount;
+@interface AdiumSoundSets : AIObject {
 
-@interface AdiumAccounts : AIObject {
-    NSMutableArray			*accounts;
-	NSMutableArray			*unloadableAccounts;
 }
 
-- (void)controllerDidLoad;
-
-//Accounts
-- (NSArray *)accounts;
-- (NSArray *)accountsCompatibleWithService:(AIService *)service;
-- (AIAccount *)accountWithInternalObjectID:(NSString *)objectID;
-
-//Editing
-- (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID;
-- (void)addAccount:(AIAccount *)inAccount;
-- (void)deleteAccount:(AIAccount *)inAccount;
-- (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+- (NSArray *)soundSetArray;
+- (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation;
 
 @end
