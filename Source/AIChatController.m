@@ -39,7 +39,7 @@
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {	
 	//Observe content so we can update the most recent chat
     [[adium notificationCenter] addObserver:self 
@@ -53,7 +53,7 @@
 									 object:nil];		
 }
 
-- (void)beginClosing
+- (void)controllerWillClose
 {
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
 	AIChat			*chat;
@@ -64,10 +64,6 @@
 												  object:chat
 												userInfo:nil];
 	}
-}
-
-- (void)closeController
-{
 }
 
 - (void)dealloc

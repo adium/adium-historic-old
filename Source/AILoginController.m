@@ -40,16 +40,12 @@
 	return self;
 }
 
-- (void)finishIniting
-{
-}
-
-- (void)beginClosing
+- (void)controllerDidLoad
 {
 }
 
 // Close this controller
-- (void)closeController
+- (void)controllerWillClose
 {
 
 }

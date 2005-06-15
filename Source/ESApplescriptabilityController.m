@@ -29,16 +29,12 @@
 
 @implementation ESApplescriptabilityController
 
-- (void)finishIniting
-{
-}
-
-- (void)beginClosing
+- (void)controllerDidLoad
 {
 }
 
 //close
-- (void)closeController
+- (void)controllerWillClose
 {
 	
 }

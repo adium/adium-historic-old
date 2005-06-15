@@ -58,26 +58,21 @@
 }
 
 //Finish initialization once other controllers have set themselves up
-- (void)finishIniting
+- (void)controllerDidLoad
 {   
 	//Default account preferences
 	[[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:ACCOUNT_DEFAULT_PREFS forClass:[self class]]
 										  forGroup:PREF_GROUP_ACCOUNTS];
 	
 	//Finish prepping the accounts
-	[adiumAccounts finishIniting];
+	[adiumAccounts controllerDidLoad];
 	
 	//Temporary upgrade code
 	[adiumPasswords upgradePasswords];
 }
 
-- (void)beginClosing
-{
-	
-}
-
 //close
-- (void)closeController
+- (void)controllerWillClose
 {
     //Disconnect all accounts
     [self disconnectAllAccounts];

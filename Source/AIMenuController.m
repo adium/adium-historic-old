@@ -61,17 +61,13 @@
 		menu_Dock_Status, nil];
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {	
 	[self localizeMenuTitles];	
 }
 
-- (void)beginClosing
-{
-}
-
 //Close
-- (void)closeController
+- (void)controllerWillClose
 {
 	//There's no need to remove the menu items, the system will take them out for us.
 }

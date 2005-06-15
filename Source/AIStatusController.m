@@ -99,7 +99,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  *
  * Set our initial status state, and restore our array of accounts to connect when a global state is selected.
  */
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
 	
@@ -199,7 +199,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  * Note: accountsToConnect is not the same as online accounts. It may, for example, have a single entry which is
  * the last account to have been connected (if no accounts are currently online).
  */
-- (void)beginClosing
+- (void)controllerWillClose
 {
 	NSMutableArray	*savedAccountsToConnect = [NSMutableArray array];
 	NSEnumerator	*enumerator;
@@ -235,13 +235,7 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
 										 forKey:KEY_SAVED_STATUS
 										  group:PREF_GROUP_SAVED_STATUS];
-}
 
-/*!
- * @brief Close the status controller
- */
-- (void)closeController
-{
 	[[adium notificationCenter] removeObserver:self];
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[[adium contactController] unregisterListObjectObserver:self];
