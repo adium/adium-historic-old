@@ -1383,9 +1383,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 	[self _resetActiveStatusState];
 
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-	id <StateMenuPlugin>	stateMenuPlugin;
+	NSValue					*stateMenuPluginContainer;
 
-	while ((stateMenuPlugin = [enumerator nextObject])) {
+	while ((stateMenuPluginContainer = [enumerator nextObject])) {
+		id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginContainer nonretainedObjectValue];
+
 		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
 		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
 	}
