@@ -15,6 +15,7 @@
  */
 
 #import "ESChatUserListController.h"
+#import "AIMenuController.h"
 
 @implementation ESChatUserListController
 
@@ -29,4 +30,21 @@
 	return(NO);
 }
 
+/*
+ * @brief Return the contextual menu for a passed list object
+ */
+- (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
+{
+	NSArray			*locationsArray = [NSArray arrayWithObjects:
+		[NSNumber numberWithInt:Context_Contact_ChatAction],		
+		[NSNumber numberWithInt:Context_Contact_Manage],
+		[NSNumber numberWithInt:Context_Contact_Action],
+		[NSNumber numberWithInt:Context_Contact_ListAction],
+		[NSNumber numberWithInt:Context_Contact_NegativeAction],
+		[NSNumber numberWithInt:Context_Contact_Additions], nil];
+	
+    return([[adium menuController] contextualMenuWithLocations:locationsArray
+												 forListObject:listObject
+														inChat:[(id)[self delegate] chat]]);
+}
 @end

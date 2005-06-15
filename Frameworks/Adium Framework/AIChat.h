@@ -89,6 +89,8 @@ typedef enum {
 	NSString			*name;
 	NSString			*uniqueChatID;
 	
+	NSMutableSet		*ignoredListContacts;
+	
 	BOOL				expanded;			//Exanded/Collapsed state of this object
 	
 	BOOL				enableTypingNotifications;
@@ -137,5 +139,8 @@ typedef enum {
 - (BOOL)supportsSecureMessagingToggling;
 
 - (BOOL)canSendImages;
+
+- (BOOL)isListContactIgnored:(AIListContact *)inContact;
+- (void)setListContact:(AIListContact *)inContact isIgnored:(BOOL)isIgnored;
 
 @end

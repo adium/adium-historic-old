@@ -523,28 +523,31 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	if (inObject) {
 		AIChat			*chat = [inObject chat];
 
-        //Notify: Will Receive Content
-        if ([inObject trackContent]) {
-            [[adium notificationCenter] postNotificationName:Content_WillReceiveContent
-													  object:chat
-													userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
-        }
-		
-		//Track that we are in the process of receiving this object
-		[objectsBeingReceived addObject:inObject];
-
-		//Run the object through our incoming content filters
-        if ([inObject filterContent]) {
-			[self filterAttributedString:[inObject message]
-						 usingFilterType:AIFilterContent
-							   direction:AIFilterIncoming
-						   filterContext:inObject
-						 notifyingTarget:self
-								selector:@selector(didFilterAttributedString:receivingContext:)
-								 context:inObject];
+		//Only proceed if the contact is not ignored
+		if (![chat isListContactIgnored:[inObject source]]) {
+			//Notify: Will Receive Content
+			if ([inObject trackContent]) {
+				[[adium notificationCenter] postNotificationName:Content_WillReceiveContent
+														  object:chat
+														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:inObject,@"Object",nil]];
+			}
 			
-        } else {
-			[self finishReceiveContentObject:inObject];
+			//Track that we are in the process of receiving this object
+			[objectsBeingReceived addObject:inObject];
+			
+			//Run the object through our incoming content filters
+			if ([inObject filterContent]) {
+				[self filterAttributedString:[inObject message]
+							 usingFilterType:AIFilterContent
+								   direction:AIFilterIncoming
+							   filterContext:inObject
+							 notifyingTarget:self
+									selector:@selector(didFilterAttributedString:receivingContext:)
+									 context:inObject];
+				
+			} else {
+				[self finishReceiveContentObject:inObject];
+			}
 		}
     }
 }

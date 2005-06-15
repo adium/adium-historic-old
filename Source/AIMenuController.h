@@ -16,7 +16,7 @@
 
 #define Menu_didChange  @"Menu_didChange"
 
-@class AIListObject;
+@class AIListObject, AIChat;
 
 @protocol AIController;
 
@@ -35,7 +35,8 @@ typedef enum {
 
 typedef enum {
     Context_Group_Manage,Context_Contact_Manage, Context_Contact_Action, Context_Contact_NegativeAction,
-    Context_Contact_Additions, Context_Contact_TabAction, Context_Contact_Stranger_TabAction, Context_Contact_ListAction, 
+    Context_Contact_Additions, Context_Contact_TabAction, Context_Contact_Stranger_TabAction, Context_Contact_ListAction,
+	Context_Contact_ChatAction,
 	Context_TextView_Edit
 } CONTEXT_MENU_LOCATION;
 
@@ -149,7 +150,8 @@ typedef enum {
     NSMenu                              *contextualMenu;
     NSMutableDictionary					*contextualMenuItemDict;
     AIListObject						*currentContextMenuObject;
-    
+    AIChat								*currentContextMenuChat;
+	
     //disabled until post .53
     NSMenu                              *textViewContextualMenu;
     NSTextView                          *contextualMenu_TextView;
@@ -166,7 +168,9 @@ typedef enum {
 //Contextual menu items
 - (void)addContextualMenuItem:(NSMenuItem *)newItem toLocation:(CONTEXT_MENU_LOCATION)location;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject;
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject inChat:(AIChat *)inChat;
 - (AIListObject *)currentContextMenuObject;
+- (AIChat *)currentContextMenuChat;
 
 - (NSTextView *)contextualMenuTextView;
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forTextView:(NSTextView *)inObject;

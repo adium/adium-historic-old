@@ -206,6 +206,14 @@
 	return(workingMenu);
 }
 
+- (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject inChat:(AIChat *)inChat
+{
+	[currentContextMenuChat release];
+	currentContextMenuChat = [inChat retain];
+	
+	return [self contextualMenuWithLocations:inLocationArray forListObject:inObject];
+}
+
 //Add menuItems for a passed contact to a specified menu.  *seperatorItem can be YES to indicate that a 
 //separator item should be inserted before the menu items if desired. It will then be set to NO.
 - (void)addMenuItemsForContact:(AIListContact *)inContact toMenu:(NSMenu *)workingMenu separatorItem:(BOOL *)separatorItem
@@ -274,6 +282,11 @@
 - (AIListObject *)currentContextMenuObject
 {
 	return(currentContextMenuObject);
+}
+
+- (AIChat *)currentContextMenuChat
+{
+	return(currentContextMenuChat);
 }
 
 - (NSTextView *)contextualMenuTextView
