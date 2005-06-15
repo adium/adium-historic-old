@@ -20,6 +20,8 @@
 	NSMutableArray			*chatObserverArray;
 	
     AIChat					*mostRecentChat;	
+	
+	NSMenuItem				*menuItem_ignore;
 }
 
 //Chats
