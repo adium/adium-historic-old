@@ -831,6 +831,12 @@
 		4B08399C07D235190034A001 /* DockIconSelectionSheet.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B08399B07D235190034A001 /* DockIconSelectionSheet.nib */; };
 		4B09D5C205D5265800BC00F0 /* AIMetaContact.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B09D5C005D5265800BC00F0 /* AIMetaContact.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B09D5C305D5265800BC00F0 /* AIMetaContact.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B09D5C105D5265800BC00F0 /* AIMetaContact.m */; };
+		4B14CF2A085FBC5900C88949 /* AdiumSound.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B14CF24085FBC5800C88949 /* AdiumSound.h */; };
+		4B14CF2B085FBC5900C88949 /* AdiumSound.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF25085FBC5800C88949 /* AdiumSound.m */; };
+		4B14CF2C085FBC5900C88949 /* AdiumSoundSets.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B14CF26085FBC5800C88949 /* AdiumSoundSets.h */; };
+		4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */; };
+		4B14CF2E085FBC5900C88949 /* AdiumSpeech.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B14CF28085FBC5900C88949 /* AdiumSpeech.h */; };
+		4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B14CF29085FBC5900C88949 /* AdiumSpeech.m */; };
 		4B191D8A0611C10800E8A4E7 /* License.txt in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D880611C10800E8A4E7 /* License.txt */; };
 		4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 4B191D890611C10800E8A4E7 /* ReadMe.rtf */; };
 		4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B215DBD0598A71400305B3C /* crashDuck.icns */; };
@@ -1397,21 +1403,21 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
 		4BE3AA82085F3A71005919E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
 		4BE3AA84085F3A71005919E7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
 			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
 		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
@@ -2623,6 +2629,12 @@
 		4B09D5C105D5265800BC00F0 /* AIMetaContact.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMetaContact.m; path = "Frameworks/Adium Framework/AIMetaContact.m"; sourceTree = "<group>"; };
 		4B13322B0459BAB800A8010A /* AIDockUnviewedContentPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDockUnviewedContentPlugin.h; path = "Plugins/Dock Unviewed Content/AIDockUnviewedContentPlugin.h"; sourceTree = "<group>"; };
 		4B13322C0459BAB800A8010A /* AIDockUnviewedContentPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDockUnviewedContentPlugin.m; path = "Plugins/Dock Unviewed Content/AIDockUnviewedContentPlugin.m"; sourceTree = "<group>"; };
+		4B14CF24085FBC5800C88949 /* AdiumSound.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSound.h; path = Source/AdiumSound.h; sourceTree = "<group>"; };
+		4B14CF25085FBC5800C88949 /* AdiumSound.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSound.m; path = Source/AdiumSound.m; sourceTree = "<group>"; };
+		4B14CF26085FBC5800C88949 /* AdiumSoundSets.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSoundSets.h; path = Source/AdiumSoundSets.h; sourceTree = "<group>"; };
+		4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSoundSets.m; path = Source/AdiumSoundSets.m; sourceTree = "<group>"; };
+		4B14CF28085FBC5900C88949 /* AdiumSpeech.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumSpeech.h; path = Source/AdiumSpeech.h; sourceTree = "<group>"; };
+		4B14CF29085FBC5900C88949 /* AdiumSpeech.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumSpeech.m; path = Source/AdiumSpeech.m; sourceTree = "<group>"; };
 		4B18A52B0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContactStatusDockOverlaysPlugin.h; path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.h"; sourceTree = "<group>"; };
 		4B18A52C0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContactStatusDockOverlaysPlugin.m; path = "Plugins/Contact Status Dock Overlays/AIContactStatusDockOverlaysPlugin.m"; sourceTree = "<group>"; };
 		4B191D880611C10800E8A4E7 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
@@ -4494,6 +4506,19 @@
 			name = "Dock Account Status";
 			sourceTree = "<group>";
 		};
+		4B14CF1E085FBC4400C88949 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				4B14CF24085FBC5800C88949 /* AdiumSound.h */,
+				4B14CF25085FBC5800C88949 /* AdiumSound.m */,
+				4B14CF26085FBC5800C88949 /* AdiumSoundSets.h */,
+				4B14CF27085FBC5900C88949 /* AdiumSoundSets.m */,
+				4B14CF28085FBC5900C88949 /* AdiumSpeech.h */,
+				4B14CF29085FBC5900C88949 /* AdiumSpeech.m */,
+			);
+			name = Sound;
+			sourceTree = "<group>";
+		};
 		4B18A51F0459F89300A8010A /* Contact and Chat Dock Overlays */ = {
 			isa = PBXGroup;
 			children = (
@@ -4902,6 +4927,8 @@
 				34B82C80085A85D800864531 /* AIChatController.m */,
 				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
 				F57938AF033E737001A8010A /* AIPreferenceController.m */,
+				F57938F9033E745F01A8010A /* AISoundController.h */,
+				F57938B0033E737001A8010A /* AISoundController.m */,
 			);
 			name = "Public Interface";
 			sourceTree = "<group>";
@@ -5036,6 +5063,7 @@
 		4BC291F9083D9EDC0075F57D /* Core */ = {
 			isa = PBXGroup;
 			children = (
+				4B14CF1E085FBC4400C88949 /* Sound */,
 				4B873F370840D1FB00738987 /* Account */,
 				34B82C85085A874C00864531 /* Events */,
 			);
@@ -5942,8 +5970,6 @@
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F570A5B503704C6101A8010A /* AIMenuController.h */,
 				F570A5B603704C6101A8010A /* AIMenuController.m */,
-				F57938F9033E745F01A8010A /* AISoundController.h */,
-				F57938B0033E737001A8010A /* AISoundController.m */,
 				4B292D3007A9C8E100C5F882 /* AIStatusController.h */,
 				4B292D3107A9C8E100C5F882 /* AIStatusController.m */,
 				F570A60703704E9701A8010A /* AIToolbarController.h */,
@@ -6241,6 +6267,9 @@
 				34B82C8B085A87B000864531 /* AdiumMessageEvents.h in Headers */,
 				34CF9DF4085B8B7900D87E37 /* ESiTunesPlugin.h in Headers */,
 				4BE3AD1E085F3EDD005919E7 /* AdiumPreferredAccounts.h in Headers */,
+				4B14CF2A085FBC5900C88949 /* AdiumSound.h in Headers */,
+				4B14CF2C085FBC5900C88949 /* AdiumSoundSets.h in Headers */,
+				4B14CF2E085FBC5900C88949 /* AdiumSpeech.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7877,6 +7906,9 @@
 				34B82C8C085A87B000864531 /* AdiumMessageEvents.m in Sources */,
 				34CF9DF5085B8B7900D87E37 /* ESiTunesPlugin.m in Sources */,
 				4BE3AD1F085F3EDD005919E7 /* AdiumPreferredAccounts.m in Sources */,
+				4B14CF2B085FBC5900C88949 /* AdiumSound.m in Sources */,
+				4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */,
+				4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

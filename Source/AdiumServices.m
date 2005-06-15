@@ -34,7 +34,7 @@
 }
 
 /*!
- * @brief Close
+ * @brief Dealloc
  */
 - (void)dealloc
 {

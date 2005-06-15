@@ -51,7 +51,7 @@
 }
 
 /*!
- * @brief Close
+ * @brief Dealloc
  */
 - (void)dealloc {
     [accounts release];
@@ -66,7 +66,7 @@
  * Requires:
  * 1) All services have registered
  */
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	[self _loadAccounts];
 }
