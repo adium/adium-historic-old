@@ -16,13 +16,65 @@ enum {
 };
 const BOOL defaultHasAlpha = YES;
 
+/*!
+ * @class BZContextImageBridge
+ * @brief Used to translate between Quartz and NSImage.
+ *
+ * Quick-start for <tt>BZContextImageBridge</tt>:
+ * 
+ * 1. Create a bridge.
+ * 	BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:NSMakeSize(42.0f, 10.0f)];
+ * 
+ * 2. Obtain the context. The context is retained for you (see below).
+ * 	CGContextRef context = [bridge context];
+ * 
+ * 3. Draw into the context. (note: it is a bitmap context, so you cannot use PDF functions on it.)
+ * 
+ * 4. Call image. If you call image more than once, the image will not be re-created (although, since the image uses the same backing store as the context, this should not be a problem).
+ * 	NSImage *image = [bridge image];
+ * 
+ * You can obtain greater control over the bridge by initing it using initWithSize:bitsPerComponent:componentsPerPixel:hasAlpha:.
+ * 
+ * If you use bridgeWithSize:, the bridge is autoreleased.
+ * 
+ * The <tt>Icon Services</tt> interfaces gives you a nice Cocoa interface for drawing icons in the context.
+ * They come in full and abstracted flavours.
+ * 
+ * Summary of Icon Services methods (without types):
+ * - wrapping GetIconRef:
+ *   getIconWithType:
+ *   getIconWithType:creator:
+ * - wrapping other GetIconRef functions:
+ *   [future expansion]
+ * - wrapping PlotIconRefInContext:
+ *   plotIcon:inRect:
+ *   plotIcon:inRect:alignment:transform:labelNSColor:flags:
+ *   plotIcon:inRect:alignment:transform:labelIndex:flags:
+ *   plotIcon:inRect:alignment:transform:labelRGBColor:flags:
+ * 
+ * For more information, read the Icon Services documentation. They all return the status code returned from the Carbon calls on which these methods are based.<br>
+ */
 @implementation BZContextImageBridge
 
+/*!
+ * @brief Init a <tt>BZContextImageBridge</tt> with higher granularity of control
+ * 
+ * The initialized bridge will use 32-bit RGBA.
+ */
 - (id)initWithSize:(NSSize)size
 {
 	return [self initWithSize:size bitsPerComponent:defaultBitsPerComponent componentsPerPixel:defaultComponentsPerPixel hasAlpha:defaultHasAlpha];
 }
 
+/*!
+ * @brief Init a <tt>BZContextImageBridge</tt> with finer granularity of control
+ * 
+ *	If hasAlpha is true, one of the components counted is an alpha component. For example:<br>
+ * 			hasAlpha	componentsPerPixel	result<br>
+ * 			YES			4U					RGBA<br>
+ * 			NO			3U					RGB<br>
+ * @return  An initialised <tt>BZContextImageBridge</tt> object
+ */
 - (id)initWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
 	unsigned bytesPerRow = (sizeof(unsigned char) * ((bpc / 8) * cpp)) * (unsigned)size.width;
@@ -54,12 +106,17 @@ const BOOL defaultHasAlpha = YES;
 	return self;
 }
 
-//convenience.
+/*!
+ * @brief Create an autoreleased <tt>BZContextImageBridge</tt>
+ */
 + (id)bridgeWithSize:(NSSize)size
 {
 	return [[[self alloc] initWithSize:size] autorelease];
 }
 
+/*!
+ * @brief Create an autoreleased <tt>BZContextImageBridge</tt> with finer granularity of control
+ */
 + (id)bridgeWithSize:(NSSize)size bitsPerComponent:(unsigned)bpc componentsPerPixel:(unsigned)cpp hasAlpha:(BOOL)hasAlpha
 {
 	return [[[self alloc] initWithSize:size
@@ -79,25 +136,43 @@ const BOOL defaultHasAlpha = YES;
 
 #pragma mark Accessors
 
-//read-only accessors.
+/*!
+ * @brief Access the raw bytes that back the image</tt>
+ */
 - (unsigned char *)buffer;
 {
 	return buffer;
 }
 
+/*!
+ * @brief Access the Quartz context for the image
+ *
+ * This method retains the context on the behalf of the caller. It is the caller's responsibility to release it.
+ */
 - (CGContextRef)context;
 {
 	CGContextRetain(context);
 	return context;
 }
 
-//if the image hasn't been created yet, we call refreshImage to create it.
-//if it has been created, we return that image.
+/*!
+ * @brief Obtain an <tt>NSImage</tt>
+ *
+ * The image may be cached. If you have made changes to the context, call <tt>-refreshImage</tt> instead.
+ * If the image hasn't been created yet, we call refreshImage to create it.
+ * If it has been created, we return that image.
+ */
 - (NSImage *)image;
 {
 	if (image == nil) image = [self refreshImage];
 	return image;
 }
+
+/*!
+ * @brief Obtain a guaranteed-current <tt>NSImage</tt>
+ *
+ * The image is (re)generated whenever this method is called. For this reason, you may wish to use <tt>-image</tt> instead if performance is an issue.
+ */
 - (NSImage *)refreshImage;
 {
 	unsigned bitsPerPixel = mybitsPerComponent  * mycomponentsPerPixel;
@@ -118,16 +193,29 @@ const BOOL defaultHasAlpha = YES;
 	return image;
 }
 
+/*!
+ * @brief Access the number of bits per component in the image
+ *
+ * For example, a 32-bit RGBA image has 8 bits per component.
+ */
 - (unsigned)bitsPerComponent
 {
 	return mybitsPerComponent;
 }
 
+/*!
+ * @brief Access the number of components per pixel in the image
+ *
+ * This includes the alpha component, if any. For example, a 32-bit RGBA image has 4 components per pixel.
+ */
 - (unsigned)componentsPerPixel
 {
 	return mycomponentsPerPixel;
 }
 
+/*!
+ * @brief Access the pixel dimensions of the image
+ */
 - (NSSize)size
 {
 	return mysize;
@@ -138,11 +226,25 @@ const BOOL defaultHasAlpha = YES;
 //gives you a nice Cocoa interface for drawing icons in the context.
 //comes in full and abstracted flavours.
 
+/*!
+ * @brief Obtain a Carbon IconRef for an HFS file type
+ *
+ * This is the same as calling <code>getIconWithType:type creator:kSystemIconsCreator</code>.
+ *
+ * The caller is responsible for releasing the IconRef.
+ */
 - (IconRef)getIconWithType:(OSType)type
 {
 	return [self getIconWithType:type creator:0];
 }
 
+/*!
+ * @brief Obtain a Carbon IconRef for an HFS file type and creator code
+ *
+ * For example, <code>getIconWithType:'AAPL' creator:'hook'</code> returns the icon for iTunes.
+ *
+ * The caller is responsible for releasing the IconRef.
+ */
 - (IconRef)getIconWithType:(OSType)type creator:(OSType)creator
 {
 	IconRef icon;
@@ -152,6 +254,11 @@ const BOOL defaultHasAlpha = YES;
 	return (err == noErr) ? icon : NULL;
 }
 
+/*!
+ * @brief Plot a Carbon icon into the image
+ *
+ * Calls through to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code> with NULL as the colour.
+ */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds
 {
 	OSStatus err = [self plotIcon:icon inRect:bounds alignment:kAlignNone transform:kTransformNone labelRGBColor:NULL flags:kPlotIconRefNormalFlags];
@@ -159,6 +266,13 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot a Carbon icon into the image with finer granularity of control
+ *
+ * The NSColor must be in an RGB colour space.
+ *
+ * Calls through to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelNSColor:(NSColor *)color flags:(PlotIconRefFlags)flags
 {
 	RGBColor  rgb;
@@ -177,6 +291,13 @@ const BOOL defaultHasAlpha = YES;
 	return [self plotIcon:icon inRect:bounds alignment:align transform:transform labelRGBColor:rgbptr flags:flags];
 }
 
+/*!
+ * @brief Plot a Carbon icon into the image with finer granularity of control
+ *
+ * The label index is one you would pass to Icon Services' GetLabel function (i.e. an integer from 1 to 7).
+ *
+ * Calls through to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelIndex:(SInt16)label flags:(PlotIconRefFlags)flags
 {
 	RGBColor rgb;
@@ -190,6 +311,14 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot a Carbon icon into the image with finer granularity of control
+ *
+ * @param align An alignment type from Icon Services. See <tt>HIServices/Icons.h></tt>.
+ * @param transform A transform type from Icon Services. See <tt>HIServices/Icons.h></tt>.
+ * @param color A pointer to a Carbon RGBColor structure. RGBColors have three unsigned 16-bit components (no alpha), which range from 0 to 65535.
+ * @param flags Plot flags from Icon Services. See <tt>HIServices/Icons.h></tt>. Usually you will pass kPlotIconRefNormalFlags here.
+ */
 - (OSStatus)plotIcon:(IconRef)icon inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
 	if (icon == NULL) return NO;
@@ -209,6 +338,12 @@ const BOOL defaultHasAlpha = YES;
 
 #pragma mark ...without creator
 
+/*!
+ * @brief Plot an icon into the image
+ *
+ * Looks up the icon with <code>-getIconWithType:</code>, then passes that to
+ * <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code> with NULL as the colour.
+ */
 - (OSStatus)plotIconWithType:(OSType)type inRect:(NSRect)bounds
 {
 	IconRef icon = [self getIconWithType:type];
@@ -222,6 +357,14 @@ const BOOL defaultHasAlpha = YES;
 	}
 }
 
+/*!
+* @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:</code>, then passes that 
+ * to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ *
+ * The NSColor must be in an RGB colour space.
+ */
 - (OSStatus)plotIconWithType:(OSType)type inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelNSColor:(NSColor *)color flags:(PlotIconRefFlags)flags
 {
 	[color retain];
@@ -241,6 +384,13 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:</code>, then passes that to <code>-plotIcon:inRect:alignment:transform:labelIndex:flags:</code>.
+ *
+ * The label index is one you would pass to Icon Services' GetLabel function (i.e. an integer from 1 to 7).
+ */
 - (OSStatus)plotIconWithType:(OSType)type inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelIndex:(SInt16)label flags:(PlotIconRefFlags)flags
 {
 	IconRef icon = [self getIconWithType:type];
@@ -256,6 +406,11 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:</code>, then passes that to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ */
 - (OSStatus)plotIconWithType:(OSType)type inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
 	IconRef icon = [self getIconWithType:type];
@@ -273,6 +428,11 @@ const BOOL defaultHasAlpha = YES;
 
 #pragma mark ...with creator
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:creator:</code>, then passes that to <code>-plotIcon:inRect:</code>.
+ */
 - (OSStatus)plotIconWithType:(OSType)type creator:(OSType)creator inRect:(NSRect)bounds
 {
 	IconRef icon = [self getIconWithType:type creator:creator];
@@ -286,6 +446,13 @@ const BOOL defaultHasAlpha = YES;
 	}
 }
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:creator:</code>, then passes that to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ *
+ * The NSColor must be in an RGB colour space.
+ */
 - (OSStatus)plotIconWithType:(OSType)type creator:(OSType)creator inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelNSColor:(NSColor *)color flags:(PlotIconRefFlags)flags
 {
 	[color retain];
@@ -305,6 +472,13 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:creator:</code>, then passes that to <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ *
+ * The label index is one you would pass to Icon Services' GetLabel function (i.e. an integer from 1 to 7).
+ */
 - (OSStatus)plotIconWithType:(OSType)type creator:(OSType)creator inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelIndex:(SInt16)label flags:(PlotIconRefFlags)flags
 {
 	IconRef icon = [self getIconWithType:type creator:creator];
@@ -320,6 +494,12 @@ const BOOL defaultHasAlpha = YES;
 	return err;
 }
 
+/*!
+ * @brief Plot an icon into the image with finer granularity of control
+ *
+ * Looks up the icon with <code>-getIconWithType:creator:</code>, then passes that to
+ * <code>-plotIcon:inRect:alignment:transform:labelRGBColor:flags:</code>.
+ */
 - (OSStatus)plotIconWithType:(OSType)type creator:(OSType)creator inRect:(NSRect)bounds alignment:(IconAlignmentType)align transform:(IconTransformType)transform labelRGBColor:(const RGBColor *)color flags:(PlotIconRefFlags)flags
 {
 	IconRef icon = [self getIconWithType:type creator:creator];
