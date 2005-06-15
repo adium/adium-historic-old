@@ -484,6 +484,23 @@
     return([item isExpanded]);
 }
 
+/*
+ * @brief Return the contextual menu for a passed list object
+ */
+- (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
+{
+	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
+	NSArray			*locationsArray = [NSArray arrayWithObjects:
+		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
+		[NSNumber numberWithInt:Context_Contact_Action],
+		[NSNumber numberWithInt:Context_Contact_ListAction],
+		[NSNumber numberWithInt:Context_Contact_NegativeAction],
+		[NSNumber numberWithInt:Context_Contact_Additions], nil];
+
+    return([[adium menuController] contextualMenuWithLocations:locationsArray
+												 forListObject:listObject]);
+}
+
 //
 - (NSMenu *)outlineView:(NSOutlineView *)outlineView menuForEvent:(NSEvent *)theEvent
 {
@@ -505,16 +522,8 @@
 	
     //Return the context menu
 	AIListObject	*listObject = (AIListObject *)[outlineView firstSelectedItem];
-	BOOL			isGroup = [listObject isKindOfClass:[AIListGroup class]];
-	NSArray			*locationsArray = [NSArray arrayWithObjects:
-		[NSNumber numberWithInt:(isGroup ? Context_Group_Manage : Context_Contact_Manage)],
-		[NSNumber numberWithInt:Context_Contact_Action],
-		[NSNumber numberWithInt:Context_Contact_ListAction],
-		[NSNumber numberWithInt:Context_Contact_NegativeAction],
-		[NSNumber numberWithInt:Context_Contact_Additions], nil];
-	
-    return([[adium menuController] contextualMenuWithLocations:locationsArray
-												 forListObject:listObject]);
+
+	return [self contextualMenuForListObject:listObject];
 }
 
 #pragma mark Finder-style searching
