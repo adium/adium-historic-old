@@ -20,10 +20,9 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
-#import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
-#import <Adium/AIService.h>
+#import <Adium/AIContactMenu.h>
 
 #define INVITE_NIB_NAME		@"InviteToChatWindow"
 
@@ -59,11 +58,11 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {	
-    self = [super initWithWindowNibName:windowNibName];    
-	
-	contact = nil;
-	service = nil;
-	chat = nil;
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		contact = nil;
+		service = nil;
+		chat = nil;
+	}
 	
     return(self);
 }
@@ -109,11 +108,8 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		
 	//Configure the contact menu (primarily for handling metacontacts)
 	//If the contact is not online, we should include offline so it will be shown; if it is, we don't need 'em
-    [menu_contacts setMenu:[[adium contactController] menuOfContainedContacts:contact
-																   forService:service
-																   withTarget:self
-															   includeOffline:![contact online]]];
-	
+    [menu_contacts setMenu:[AIContactMenu contactMenuWithDelegate:self forContactsInObject:contact]];
+
 	if ( [contact isKindOfClass:[AIMetaContact class]] ) {
 		[menu_contacts selectItemWithRepresentedObject:[(AIMetaContact *)contact preferredContactWithService:service]];
 	} else {
@@ -129,11 +125,6 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 
 //Setting methods
 #pragma mark Setting methods
-- (IBAction)selectContainedContact:(id)sender
-{
-	[self setContact:[[menu_contacts selectedItem] representedObject]];
-}
-
 - (void)setChat:(AIChat *)inChat contact:(AIListContact *)inContact
 {
 	[self setContact:inContact];
@@ -169,4 +160,19 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	[self closeWindow:nil];
 }
 
+/*
+ * @brief Contact menu delegate
+ */
+- (void)contactMenu:(AIContactMenu *)inContactMenu didRebuildMenuItems:(NSArray *)menuItems {
+	[menu_contacts setMenu:[inContactMenu menu]];
+}
+
+- (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact {
+	[self setContact:inContact];
+}
+
+- (BOOL)contactMenu:(AIContactMenu *)inContactMenu shouldIncludeContact:(AIListContact *)inContact {
+	return ([[inContact serviceClass] isEqualToString:[service serviceClass]] &&
+			(![contact online] || [inContact online]));
+}
 @end
