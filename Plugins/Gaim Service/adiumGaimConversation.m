@@ -127,19 +127,21 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 			  gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)),
 			  messageString);
 		if (!who || strcmp(who,gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)))) {
-			NSString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
-			NSNumber	*gaimMessageFlags = [NSNumber numberWithInt:flags];
-			NSDate		*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+			NSAttributedString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
+			NSNumber			*gaimMessageFlags = [NSNumber numberWithInt:flags];
+			NSDate				*date = [NSDate dateWithTimeIntervalSince1970:mtime];
 			
 			if (who && strlen(who)) {
 				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+					[NSString stringWithUTF8String:who], @"Source",
+					gaimMessageFlags, @"GaimMessageFlags",
 					[NSString stringWithUTF8String:who], @"Source",
 					[NSNumber numberWithInt:flags], @"GaimMessageFlags",
 					date, @"Date",nil];
 				
 			} else {
 				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
-					[NSNumber numberWithInt:flags], @"GaimMessageFlags",
+					gaimMessageFlags, @"GaimMessageFlags",
 					date, @"Date",nil];
 			}
 			
