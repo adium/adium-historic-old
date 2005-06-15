@@ -134,11 +134,6 @@ typedef enum {
 //preferences should be read from/to the most generalized contact possible.
 - (AIListObject *)parentContactForListObject:(AIListObject *)listObject;
 
-
-
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact forService:(AIService *)service withTarget:(id)target includeOffline:(BOOL)includeOffline;
-- (NSMenu *)menuOfContainedContacts:(AIListObject *)inContact withTarget:(id)target;
-
 //Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
