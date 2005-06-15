@@ -121,19 +121,32 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 		NSString		*messageString;
 
 		messageString = [NSString stringWithUTF8String:message];
-		AILog(@"Source: %s \t Name: %s \t Nick: %s : Message %@", 
+		AILog(@"Source: %s \t Name: %s \t MyNick: %s : Message %@", 
 			  who,
 			  gaim_conversation_get_name(conv),
 			  gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)),
 			  messageString);
-		messageDict = [NSDictionary dictionaryWithObjectsAndKeys:[AIHTMLDecoder decodeHTML:messageString],@"AttributedMessage",
-			[NSString stringWithUTF8String:who],@"Source",
-			[NSNumber numberWithInt:flags],@"GaimMessageFlags",
-			[NSDate dateWithTimeIntervalSince1970:mtime],@"Date",nil];
-
-		[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
-											   withObject:messageDict
-											   withObject:chatLookupFromConv(conv)];
+		if (!who || strcmp(who,gaim_conv_chat_get_nick(GAIM_CONV_CHAT(conv)))) {
+			NSString	*attributedMessage = [AIHTMLDecoder decodeHTML:messageString];
+			NSNumber	*gaimMessageFlags = [NSNumber numberWithInt:flags];
+			NSDate		*date = [NSDate dateWithTimeIntervalSince1970:mtime];
+			
+			if (who && strlen(who)) {
+				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+					[NSString stringWithUTF8String:who, @"Source",
+					[NSNumber numberWithInt:flags], @"GaimMessageFlags",
+					date, @"Date",nil];
+				
+			} else {
+				messageDict = [NSDictionary dictionaryWithObjectsAndKeys:attributedMessage, @"AttributedMessage",
+					[NSNumber numberWithInt:flags], @"GaimMessageFlags",
+					date, @"Date",nil];
+			}
+			
+			[accountLookup(conv->account) mainPerformSelector:@selector(receivedMultiChatMessage:inChat:)
+												   withObject:messageDict
+												   withObject:chatLookupFromConv(conv)];
+		}
 	}
 }
 
@@ -373,6 +386,33 @@ static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+		GaimConvChat  *chat = gaim_conversation_get_chat_data(conv);
+		
+		switch(type) {
+			case GAIM_CONV_UPDATE_TOPIC:
+				[accountLookup(conv->account) mainPerformSelector:@selector(updateTopic:forChat:)
+													   withObject:(gaim_conv_chat_get_topic(chat) ?
+																   [NSString stringWithUTF8String:gaim_conv_chat_get_topic(chat)] :
+																   nil)
+													   withObject:existingChatLookupFromConv(conv)];
+				break;
+			case GAIM_CONV_UPDATE_TITLE:
+				[accountLookup(conv->account) mainPerformSelector:@selector(updateTitle:forChat:)
+													   withObject:(gaim_conversation_get_title(conv) ?
+																   [NSString stringWithUTF8String:gaim_conversation_get_title(conv)] :
+																   nil)
+													   withObject:existingChatLookupFromConv(conv)];
+				
+				GaimDebug (@"Update to title: %s",gaim_conversation_get_title(conv));
+				break;
+			case GAIM_CONV_UPDATE_CHATLEFT:
+				GaimDebug (@"Chat left! %s",gaim_conversation_get_name(conv));
+				break;
+				
+			default:
+				break;
+		}
+		
 		[accountLookup(conv->account) mainPerformSelector:@selector(convUpdateForChat:type:)
 											   withObject:existingChatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
