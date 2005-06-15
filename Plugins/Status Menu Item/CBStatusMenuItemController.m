@@ -143,17 +143,17 @@ static	NSImage						*adiumRedHighlightImage = nil;
 - (void)dealloc
 {
     //Unregister ourself
-    [[adium  statusController] unregisterStateMenuPlugin:self];
-	[[adium contentController] unregisterChatObserver:self];
+    [[adium statusController] unregisterStateMenuPlugin:self];
+	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
-		
+
     //Release our objects
     [statusItem release];
     //[statusView release];
     [theMenu release];
     [unviewedObjectsArray release];
 	[accountMenu release];
-	
+
     //To the superclass, Robin!
     [super dealloc];
 }
