@@ -34,10 +34,11 @@ static io_connect_t			root_port;
 static int					holdSleep = 0;
 static long unsigned int	waitingSleepArgument;
 
-+ (void)load
++ (void)initialize
 {
     IONotificationPortRef	notify;
     io_object_t				anIterator;
+	NSNotificationCenter	*defaultCenter = [NSNotificationCenter defaultCenter];
 
     //Observe system power events
     root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
@@ -48,15 +49,15 @@ static long unsigned int	waitingSleepArgument;
     }
 
     //Observe Hold/continue sleep notification
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-											 selector:@selector(holdSleep:) 
-												 name:AISystemHoldSleep_Notification
-											   object:nil];
-	
-    [[NSNotificationCenter defaultCenter] addObserver:self 
-											 selector:@selector(continueSleep:)
-												 name:AISystemContinueSleep_Notification
-											   object:nil];
+    [defaultCenter addObserver:self 
+					  selector:@selector(holdSleep:) 
+						  name:AISystemHoldSleep_Notification
+						object:nil];
+
+    [defaultCenter addObserver:self 
+					  selector:@selector(continueSleep:)
+						  name:AISystemContinueSleep_Notification
+						object:nil];
 }
 
 //
