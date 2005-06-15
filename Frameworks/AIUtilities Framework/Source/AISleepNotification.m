@@ -5,19 +5,6 @@
 //  Created by Adam Iser on Sun Jun 29 2003.
 //
 
-/*
- AISleepNotification posts two notifications, 
-	AISystemWillSleep_Notification and AISystemDidWake_Notification.
- Registering for these allow a program to take action before the computer sleeps and after the computer
- wakes from sleep.
- 
- AISleepNotification also observes two notifications, 
-	AISystemHoldSleep_Notification and AISystemContinueSleep_Notification.
- Through the use of these, a program
- can preemptively delay sleeping which may occur during, for example, the execution of a lengthy block of
- code which shouldn't be inerrupted and then remove the delay when execution of the code is complete.
- */
-
 #import <mach/mach_port.h>
 #import <mach/mach_interface.h>
 #import <mach/mach_init.h>
@@ -27,16 +14,30 @@
 
 void callback(void * x,io_service_t y,natural_t messageType,void * messageArgument);
 
-io_connect_t		root_port;
-int					holdSleep = 0;
-long unsigned int	waitingSleepArgument;
-
+/*!
+ * @class AISleepNotification
+ * @brief Class to notify when the system goes to sleep and wakes from sleep and optionally place a hold on the sleep process.
+ *
+ * AISleepNotification posts (on the default NSNotificationCenter) <tt>AISystemWillSleep_Notification</tt> when the system is about to go to sleep,
+ * and posts <tt>AISystemDidWake_Notification</tt> when it wakes from sleep.
+ *
+ * Classes may request that the sleep process be postponed by posting <tt>AISystemHoldSleep_Notification</tt>.
+ * This is most useful in response to the <tt>AISystemWillSleep_Notification</tt> notification.
+ * When sleep should be allowed to continue, <tt>AISystemContinueSleep_Notification</tt> should be posted.
+ * At that time, if no other holders are pending, the system will go to sleep.
+ * Through the use of these, a program can preemptively delay sleeping which may occur during, for example, the execution of a lengthy block of
+ * code which shouldn't be interrupted, and then remove the delay when execution of the code is complete.
+ */
 @implementation AISleepNotification
+
+static io_connect_t			root_port;
+static int					holdSleep = 0;
+static long unsigned int	waitingSleepArgument;
 
 + (void)load
 {
     IONotificationPortRef	notify;
-    io_object_t 		anIterator;
+    io_object_t				anIterator;
 
     //Observe system power events
     root_port = IORegisterForSystemPower(0, &notify, callback, &anIterator);
@@ -75,7 +76,7 @@ long unsigned int	waitingSleepArgument;
 
 
 //
-void callback(void * x, io_service_t y, natural_t messageType, void * messageArgument)
+void callback(void * x, io_service_t y, natural_t messageType, void *messageArgument)
 {
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
