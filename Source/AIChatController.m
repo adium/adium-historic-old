@@ -9,12 +9,14 @@
 #import "AIContentController.h"
 #import "AIContactController.h"
 #import "AIInterfaceController.h"
+#import "AIMenuController.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIMetaContact.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
 
 @interface AIChatController (PRIVATE)
 - (NSSet *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent;
@@ -50,7 +52,13 @@
 	[[adium notificationCenter] addObserver:self 
 								   selector:@selector(didExchangeContent:) 
 									   name:CONTENT_MESSAGE_SENT
-									 object:nil];		
+									 object:nil];
+	
+	menuItem_ignore = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
+																		   target:self
+																		   action:@selector(toggleIgnoreOfContact:)
+																	keyEquivalent:@""];
+	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_ChatAction];
 }
 
 - (void)controllerWillClose
@@ -557,7 +565,38 @@
 			[mostRecentChat release];
 			mostRecentChat = [chat retain];
 		}
-	}	
+	}
+}
+
+#pragma mark Ignore
+- (void)toggleIgnoreOfContact:(id)sender
+{
+	AIListObject	*listObject = [[adium menuController] currentContextMenuObject];
+	AIChat			*chat = [[adium menuController] currentContextMenuChat];
+	
+	if ([listObject isKindOfClass:[AIListContact class]]) {
+		BOOL			isIgnored = [chat isListContactIgnored:(AIListContact *)listObject];
+		[chat setListContact:(AIListContact *)listObject isIgnored:!isIgnored];
+	}
+}
+
+- (BOOL)validateMenuItem:(NSMenuItem *)menuItem
+{
+	if (menuItem == menuItem_ignore) {
+		AIListObject	*listObject = [[adium menuController] currentContextMenuObject];
+		AIChat			*chat = [[adium menuController] currentContextMenuChat];
+		
+		if ([listObject isKindOfClass:[AIListContact class]]) {
+			if ([chat isListContactIgnored:(AIListContact *)listObject]) {
+				[menuItem setTitle:AILocalizedString(@"Un-ignore","Un-ignore means begin receiving messages from this contact again in a chat")];
+				
+			} else {
+				[menuItem setTitle:AILocalizedString(@"Ignore","Ignore means no longer receive messages from this contact in a chat")];
+			}
+		}
+	}
+	
+	return YES;
 }
 
 @end
