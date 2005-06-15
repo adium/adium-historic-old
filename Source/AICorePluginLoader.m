@@ -88,16 +88,12 @@
 	}
 }
 
-- (void)finishIniting
-{
-}
-
-- (void)beginClosing
+- (void)controllerDidLoad
 {
 }
 
 //Give all external plugins a chance to close
-- (void)closeController
+- (void)controllerWillClose
 {
     NSEnumerator	*enumerator = [pluginArray objectEnumerator];
     id <AIPlugin>	plugin;

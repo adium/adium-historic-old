@@ -32,15 +32,11 @@
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
 	[toolbarItems release];
 }

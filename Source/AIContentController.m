@@ -103,25 +103,16 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	//Message events
 	messageEvents = [[AdiumMessageEvents alloc] init];
 }
 
 /*
- * @brief Begin closing the controller
- *
- * Post Chat_WillClose for all chats which are still open before the controller closes
- */
-- (void)beginClosing
-{
-}
-
-/*
  * @brief Close the controller
  */
-- (void)closeController
+- (void)controllerWillClose
 {
 	
 }

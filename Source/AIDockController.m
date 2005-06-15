@@ -74,7 +74,7 @@
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 	AIPreferenceController *preferenceController = [adium preferenceController];
 	NSNotificationCenter *notificationCenter = [NSNotificationCenter defaultCenter];
@@ -107,11 +107,7 @@
 	}
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 

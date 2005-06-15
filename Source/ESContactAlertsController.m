@@ -63,15 +63,11 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	return self;
 }
 
-- (void)finishIniting
+- (void)controllerDidLoad
 {
 }
 
-- (void)beginClosing
-{
-}
-
-- (void)closeController
+- (void)controllerWillClose
 {
 	
 }
