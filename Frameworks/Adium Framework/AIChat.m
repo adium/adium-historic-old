@@ -56,6 +56,7 @@ static int nextChatNumber = 0;
 		participatingListObjects = [[NSMutableArray alloc] init];
 		dateOpened = [[NSDate date] retain];
 		uniqueChatID = nil;
+		ignoredListContacts = nil;
 		isOpen = NO;
 		expanded = YES;
 
@@ -79,7 +80,8 @@ static int nextChatNumber = 0;
 	[account release];
 	[contentObjectArray release];
 	[participatingListObjects release];
-	[dateOpened release]; 
+	[dateOpened release];
+	[ignoredListContacts release];
 	[uniqueChatID release]; uniqueChatID = nil;
 
 	[super dealloc];
@@ -535,6 +537,32 @@ static int nextChatNumber = 0;
 	BOOL suppressTypingNotifications = [self integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS];
 	
 	return(!suppressTypingNotifications && (enableTypingNotifications || (newTypingState == AINotTyping)));
+}
+
+#pragma mark Ignore list (group chat)
+/*!
+ * @brief Set the ignored state of a contact
+ *
+ * @param inContact The contact whose state is to be changed
+ * @param isIgnored YES to ignore the contact; NO to not ignore the contact
+ */
+- (void)setListContact:(AIListContact *)inContact isIgnored:(BOOL)isIgnored
+{
+	//Create ignoredListContacts if needed
+	if (isIgnored && !ignoredListContacts) {
+		ignoredListContacts = [[NSMutableSet alloc] init];	
+	}
+
+	if (isIgnored) {
+		[ignoredListContacts addObject:inContact];
+	} else {
+		[ignoredListContacts removeObject:inContact];		
+	}	
+}
+
+- (BOOL)isListContactIgnored:(AIListContact *)inContact
+{
+	return [ignoredListContacts containsObject:inContact];
 }
 
 #pragma mark Comparison
