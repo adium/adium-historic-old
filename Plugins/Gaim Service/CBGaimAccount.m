@@ -685,7 +685,16 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Multiuser chat update
 - (oneway void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type
 {
+
+}
+- (oneway void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat
+{
 	
+}
+- (oneway void)updateTitle:(NSString *)inTitle forChat:(AIChat *)chat
+{
+	[[chat displayArrayForKey:@"Display Name"] setObject:inTitle
+											   withOwner:self];
 }
 
 - (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type
@@ -2262,6 +2271,44 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 	return([NSString stringWithUTF8String:label]);
 }
+
+
+/* Chat specific menu item code from gtkgaim */
+#if 0
+if (gaim_conv_chat_is_user_ignored(GAIM_CONV_CHAT(conv), who))
+button = gaim_new_item_from_stock(menu, _("Un-Ignore"), GAIM_STOCK_IGNORE,
+								  G_CALLBACK(ignore_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+else
+button = gaim_new_item_from_stock(menu, _("Ignore"), GAIM_STOCK_IGNORE,
+								  G_CALLBACK(ignore_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+g_object_set_data_full(G_OBJECT(button), "user_data", g_strdup(who), g_free);
+
+if (gc && (prpl_info->get_info || prpl_info->get_cb_info)) {
+	button = gaim_new_item_from_stock(menu, _("Info"), GAIM_STOCK_INFO,
+									  G_CALLBACK(menu_chat_info_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+	g_object_set_data_full(G_OBJECT(button), "user_data", g_strdup(who), g_free);
+}
+
+if (gc && prpl_info->get_cb_away) {
+	button = gaim_new_item_from_stock(menu, _("Get Away Message"), GAIM_STOCK_AWAY,
+									  G_CALLBACK(menu_chat_get_away_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+	g_object_set_data_full(G_OBJECT(button), "user_data", g_strdup(who), g_free);
+}
+
+/* XXX: jabber can only add buddies from here in certain circumstances */
+/* Added by Jonas <jonas@birme.se> */
+if (gc) {
+	if (gaim_find_buddy(gc->account, who))
+		button = gaim_new_item_from_stock(menu, _("Remove"), GTK_STOCK_REMOVE,
+										  G_CALLBACK(menu_chat_add_remove_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+	else
+		button = gaim_new_item_from_stock(menu, _("Add"), GTK_STOCK_ADD,
+										  G_CALLBACK(menu_chat_add_remove_cb), GAIM_GTK_CONVERSATION(conv), 0, 0, NULL);
+	g_object_set_data_full(G_OBJECT(button), "user_data", g_strdup(who), g_free);
+}
+/* End Jonas */
+#endif
+
 
 /* Secure messaging */
 #pragma mark Secure Messaging

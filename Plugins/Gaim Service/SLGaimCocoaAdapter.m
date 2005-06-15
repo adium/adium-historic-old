@@ -442,55 +442,59 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 					GaimConnection			*gc = gaim_account_get_connection(account);
 					GList					*list, *tmp;
 					struct proto_chat_entry *pce;
+					NSString				*identifier;
+					NSEnumerator			*enumerator;
 					
-					//Create a hash table	
+					//Create a hash table
+					//The hash table should contain char* objects created via a g_strdup method
 					components = g_hash_table_new_full(g_str_hash, g_str_equal,
 													   g_free, g_free);
 					
-					/*
-					 Get the chat_info for our desired account.  This will be a GList of proto_chat_entry
-					 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
-					 and a maximum integer value.
-					 */
-					list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
-					
-					// DEBUG: If this is false, we don't even try to join.
-					BOOL shouldTryToJoin = YES;
-					
-					//Look at each proto_chat_entry in the list and put it in the hash table
-					//The hash table should contain char* objects created via a g_strdup method
-					for (tmp = list; tmp; tmp = tmp->next)
-					{
-						pce = tmp->data;
-						char	*identifier = g_strdup(pce->identifier);
-						char	*valueUTF8String = nil;
+					enumerator = [chatCreationInfo keyEnumerator];
+					while ((identifier = [enumerator nextObject])) {
+						id		value = [chatCreationInfo objectForKey:identifier];
+						char	*valueUTF8String = NULL;
 						
-						if (!(pce->is_int)) {
-							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (value) {
-								GaimDebug (@"$$$$ not int: added %s:%@ to chat info",identifier,value);
-								valueUTF8String = g_strdup([value UTF8String]);
-							} else {
-								GaimDebug (@"String: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
-								shouldTryToJoin = NO;
-							}
+						if ([value isKindOfClass:[NSNumber class]]) {
+							valueUTF8String = g_strdup_printf("%d",[value intValue]);
+
+						} else if ([value isKindOfClass:[NSString class]]) {
+							valueUTF8String = g_strdup([value UTF8String]);
+
 						} else {
-							NSNumber	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
-							if (value) {
-								GaimDebug (@"$$$$  is int: added %s:%@ to chat info",identifier,value);
-								valueUTF8String = g_strdup_printf("%d",[value intValue]);
-							} else {
-								GaimDebug (@"Int: Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
-								shouldTryToJoin = NO;
-							}							
+							GaimDebug (@"Invalid value %@ for identifier %@",value,identifier);
 						}
 						
 						//Store our chatCreationInfo-supplied value in the compnents hash table
-						g_hash_table_replace(components,
-											 identifier,
-											 valueUTF8String);
+						if (valueUTF8String) {
+							g_hash_table_replace(components,
+												 g_strdup([identifier UTF8String]),
+												 valueUTF8String);
+						}
 					}
-					
+
+					//In debug mode, verify we didn't miss any required values
+					if (GAIM_DEBUG) {
+						/*
+						 Get the chat_info for our desired account.  This will be a GList of proto_chat_entry
+						 objects, each of which has a label and identifier.  Each may also have is_int, with a minimum
+						 and a maximum integer value.
+						 */
+						list = (GAIM_PLUGIN_PROTOCOL_INFO(gc->prpl))->chat_info(gc);
+
+						//Look at each proto_chat_entry in the list to verify we have it in chatCreationInfo
+						for (tmp = list; tmp; tmp = tmp->next)
+						{
+							pce = tmp->data;
+							char	*identifier = g_strdup(pce->identifier);
+							
+							NSString	*value = [chatCreationInfo objectForKey:[NSString stringWithUTF8String:identifier]];
+							if (!value) {
+								GaimDebug (@"Danger, Will Robinson! %s is in the proto_info but can't be found in %@",identifier,chatCreationInfo);
+							}
+						}
+					}
+
 					/*
 					 //Add the GaimChat to our local buddy list?
 					gaimChat = gaim_chat_new(account,
@@ -505,17 +509,11 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 						gaim_blist_add_chat(gaimChat, group, NULL);
 					}
 					*/
-					
-					//Associate our chat with the libgaim conversation
-					
-					if ( shouldTryToJoin ) {
+
 					//Join the chat serverside - the GHsahTable components, couple with the originating GaimConnect,
 					//now contains all the information the prpl will need to process our request.
-						GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
-						serv_join_chat(gc, components);
-					} else {
-						//NSLog(@"#### Bailing out of group chat");
-					}
+					GaimDebug (@"In the event of an emergency, your GHashTable may be used as a flotation device...");
+					serv_join_chat(gc, components);
 				}
 			}
 		}
