@@ -26,9 +26,8 @@
 		AIEmoticonController, AIChatController;
 
 @protocol AIController
-- (void)finishIniting;
-- (void)beginClosing;
-- (void)closeController;
+- (void)controllerDidLoad;
+- (void)controllerWillClose;
 @end
 
 @interface AIAdium : NSObject {
