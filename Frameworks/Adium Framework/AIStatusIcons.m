@@ -221,18 +221,17 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 //Returns the state icon for the passed chat (new content, typing, ...)
 static NSString *statusNameForChat(AIChat *inChat)
 {
-	if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+	AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
+
+	if (typingState == AITyping) {
+		return(@"typing");
+
+	} else if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
 		return(@"content");
 		
-	} else {
-		AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
-
-		if (typingState == AITyping) {
-			return(@"typing");
-			
-		} else if (typingState == AIEnteredText) {
-			return(@"enteredtext");
-		}
+	} else if (typingState == AIEnteredText) {
+		return(@"enteredtext");
+		
 	}
 	
 	return(nil);
