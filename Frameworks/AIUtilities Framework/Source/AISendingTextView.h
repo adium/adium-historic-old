@@ -21,7 +21,6 @@
     id				target;
     SEL				selector;
     BOOL			sendingEnabled;
-	BOOL			isSendingContent;
 
     BOOL			sendOnEnter;
     BOOL			sendOnReturn;
@@ -46,11 +45,6 @@
  * Returns whether sending keys will trigger the send action to be sent to the target
  */
 - (BOOL)isSendingEnabled;
-
-/*!
- * @brief Is the text view in the middle of sending content?
- */
-- (BOOL)isSendingContent;
 
 /*!
  * @brief Set if Return triggers a send

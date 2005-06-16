@@ -173,17 +173,7 @@
 //'Send' our content
 - (IBAction)sendContent:(id)sender
 {
-	isSendingContent = YES;
-	
-    //Notify our target
-    [target performSelector:selector
-				 withObject:self];
-	
-	isSendingContent = NO;
+    [target performSelector:selector withObject:self];
 }
 
-- (BOOL)isSendingContent
-{
-	return isSendingContent;
-}
 @end
