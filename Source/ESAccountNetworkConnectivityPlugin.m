@@ -102,7 +102,8 @@
 		//start off forbidding all accounts from auto-connecting.
 		accountsToConnect    = [[NSMutableSet alloc] initWithArray:accounts];
 		accountsToNotConnect = [accountsToConnect mutableCopy];
-
+		knownHosts			 = [[NSMutableSet alloc] init];
+			
 		//add ourselves to the default host-reachability monitor as an observer for each account's host.
 		//at the same time, weed accounts that are to be auto-connected out of the accountsToNotConnect set.
 		NSEnumerator *accountsEnum = [accounts objectEnumerator];
@@ -183,7 +184,6 @@
 			if (![account integerStatusObjectForKey:@"Online"] &&
 			   ![account integerStatusObjectForKey:@"Connecting"] &&
 			   ![[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-
 				[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
 				[accountsToConnect removeObject:account];
 			}
@@ -194,7 +194,6 @@
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
 			![account integerStatusObjectForKey:@"Disconnecting"] &&
 			[[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-
 			[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 			[accountsToConnect addObject:account];
 		}
@@ -249,7 +248,6 @@
 		while ((account = [enumerator nextObject])) {
 			if ([[account supportedPropertyKeys] containsObject:@"Online"] &&
 			   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-
 				//Disconnect the account and add it to our list to reconnect
 				[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
 				[accountsToConnect addObject:account];
