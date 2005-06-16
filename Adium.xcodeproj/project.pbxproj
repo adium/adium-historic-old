@@ -1059,7 +1059,7 @@
 		4BD6753E06001E140049CAF7 /* AIAccountSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B25494703F6A32700A8010A /* AIAccountSelectionView.m */; };
 		4BD6753F06001E150049CAF7 /* AccountSelectionView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */; };
 		4BD6755006001E1D0049CAF7 /* ESDualWindowMessageAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */; };
-		4BD6755406001E1E0049CAF7 /* DualWindowMessageDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D43504051ADC10003B2F21 /* DualWindowMessageDefaults.plist */; };
+		4BD6755406001E1E0049CAF7 /* DualWindowDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */; };
 		4BD6756B06001E320049CAF7 /* EventSoundDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */; };
 		4BD6758106001E430049CAF7 /* ErrorMessageHandlerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 40AC0EEB03B5BF1000A80202 /* ErrorMessageHandlerPlugin.h */; };
 		4BD6758206001E430049CAF7 /* ErrorMessageHandlerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC0EEC03B5BF1000A80202 /* ErrorMessageHandlerPlugin.m */; };
@@ -2362,7 +2362,7 @@
 		34D189B1076131850075A380 /* AILocalizationAssistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationAssistance.h; path = "Frameworks/Adium Framework/AILocalizationAssistance.h"; sourceTree = "<group>"; };
 		34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferPreferences.h; path = Source/ESFileTransferPreferences.h; sourceTree = "<group>"; };
 		34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferPreferences.m; path = Source/ESFileTransferPreferences.m; sourceTree = "<group>"; };
-		34D43504051ADC10003B2F21 /* DualWindowMessageDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = DualWindowMessageDefaults.plist; path = "Plugins/Dual Window Interface/DualWindowMessageDefaults.plist"; sourceTree = "<group>"; };
+		34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DualWindowDefaults.plist; path = "Plugins/Dual Window Interface/DualWindowDefaults.plist"; sourceTree = "<group>"; };
 		34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover.tif; path = Resources/FTProgressRevealRollover.tif; sourceTree = "<group>"; };
 		34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover_Selected.tif; path = Resources/FTProgressRevealRollover_Selected.tif; sourceTree = "<group>"; };
 		34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressStopRollover_Selected.tif; path = Resources/FTProgressStopRollover_Selected.tif; sourceTree = "<group>"; };
@@ -3945,13 +3945,13 @@
 			name = "Contact Alerts";
 			sourceTree = "<group>";
 		};
-		34B82C85085A874C00864531 /* Events */ = {
+		34B82C85085A874C00864531 /* Events (Who owns this?) */ = {
 			isa = PBXGroup;
 			children = (
 				34B82C89085A87B000864531 /* AdiumMessageEvents.h */,
 				34B82C8A085A87B000864531 /* AdiumMessageEvents.m */,
 			);
-			name = Events;
+			name = "Events (Who owns this?)";
 			sourceTree = "<group>";
 		};
 		34BFD7ED07E6A1FB00AD984D /* Preset Manager */ = {
@@ -4930,10 +4930,8 @@
 			children = (
 				F57938EF033E745F01A8010A /* AIAccountController.h */,
 				F57938AA033E737001A8010A /* AIAccountController.m */,
-				34B82C7F085A85D800864531 /* AIChatController.h */,
-				34B82C80085A85D800864531 /* AIChatController.m */,
-				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
-				F57938AF033E737001A8010A /* AIPreferenceController.m */,
+				F55B415C03AB8B5601A8010A /* AIContentController.h */,
+				F55B415D03AB8B5601A8010A /* AIContentController.m */,
 				F57938F9033E745F01A8010A /* AISoundController.h */,
 				F57938B0033E737001A8010A /* AISoundController.m */,
 			);
@@ -4983,7 +4981,6 @@
 				4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */,
 				4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */,
 				34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */,
-				34D43504051ADC10003B2F21 /* DualWindowMessageDefaults.plist */,
 			);
 			name = Preferences;
 			sourceTree = "<group>";
@@ -5071,8 +5068,9 @@
 			isa = PBXGroup;
 			children = (
 				4B873F370840D1FB00738987 /* Account */,
+				4BC4439A08612BD800B10F28 /* Content */,
 				4B14CF1E085FBC4400C88949 /* Sound */,
-				34B82C85085A874C00864531 /* Events */,
+				34B82C85085A874C00864531 /* Events (Who owns this?) */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -5122,6 +5120,13 @@
 				4BE6174C07AC67ED0049C87D /* AIAutoIdlePlugin.m */,
 			);
 			name = "Auto-Idle";
+			sourceTree = "<group>";
+		};
+		4BC4439A08612BD800B10F28 /* Content */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Content;
 			sourceTree = "<group>";
 		};
 		4BC5A5C90764F70E0080ECF7 /* Video Chat Interface */ = {
@@ -5861,6 +5866,7 @@
 				F549EF1C036B1A0A01A8010A /* Messages */,
 				4BA12FFC04C0A12900A8010A /* Preferences */,
 				4BCFEC5803F5718700A8010A /* Other */,
+				34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */,
 			);
 			name = "Message Windows";
 			sourceTree = "<group>";
@@ -5960,12 +5966,14 @@
 		F5BF8A6002C7D2F401A8010A /* Core Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				34B82C7F085A85D800864531 /* AIChatController.h */,
+				34B82C80085A85D800864531 /* AIChatController.m */,
+				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
+				F57938AF033E737001A8010A /* AIPreferenceController.m */,
 				6CF42677057763E100F27FAA /* ESContactAlertsController.h */,
 				6CF42678057763E200F27FAA /* ESContactAlertsController.m */,
 				F57938F6033E745F01A8010A /* AIContactController.h */,
 				F57938AB033E737001A8010A /* AIContactController.m */,
-				F55B415C03AB8B5601A8010A /* AIContentController.h */,
-				F55B415D03AB8B5601A8010A /* AIContentController.m */,
 				9E95316703C8E0BE00415B22 /* AIDockController.h */,
 				9E95316903C8E0C700415B22 /* AIDockController.m */,
 				11C157D804A88E04008E0C76 /* AIEmoticonController.h */,
@@ -7331,7 +7339,7 @@
 				4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */,
 				4BD6745506001D4E0049CAF7 /* DockBehaviorDefaults.plist in Resources */,
 				4BD6747606001D840049CAF7 /* LoggingDefaults.plist in Resources */,
-				4BD6755406001E1E0049CAF7 /* DualWindowMessageDefaults.plist in Resources */,
+				4BD6755406001E1E0049CAF7 /* DualWindowDefaults.plist in Resources */,
 				4BD6756B06001E320049CAF7 /* EventSoundDefaults.plist in Resources */,
 				4B191D8A0611C10800E8A4E7 /* License.txt in Resources */,
 				4B191D8B0611C10800E8A4E7 /* ReadMe.rtf in Resources */,
