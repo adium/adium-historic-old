@@ -1021,9 +1021,6 @@
 		4BD6742E06001D1D0049CAF7 /* AIEmoticonPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = F5F0FE9D04B12CAC01A80106 /* AIEmoticonPreferences.m */; };
 		4BD6742F06001D1D0049CAF7 /* EmoticonPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = F5F0FEA004B1336C01A80106 /* EmoticonPrefs.nib */; };
 		4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = F5F0FEA204B133AB01A80106 /* EmoticonDefaults.plist */; };
-		4BD6743206001D1F0049CAF7 /* AISpellCheckingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC8AFE204FD3C5600A8010A /* AISpellCheckingPlugin.h */; };
-		4BD6743306001D200049CAF7 /* AISpellCheckingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC8AFE304FD3C5600A8010A /* AISpellCheckingPlugin.m */; };
-		4BD6743606001D210049CAF7 /* SpellingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BC8AFEC04FD413900A8010A /* SpellingDefaults.plist */; };
 		4BD6744406001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B18A52B0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.h */; };
 		4BD6744506001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B18A52C0459F8F200A8010A /* AIContactStatusDockOverlaysPlugin.m */; };
 		4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BB826B504C8876C00A8010A /* DockOverlayDefaults.plist */; };
@@ -2820,9 +2817,6 @@
 		4BC5A5D80764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIVideoChatInterfacePlugin.h; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.h"; sourceTree = "<group>"; };
 		4BC5A5D90764F75B0080ECF7 /* AIVideoChatInterfacePlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIVideoChatInterfacePlugin.m; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.m"; sourceTree = "<group>"; };
 		4BC5A5DA0764F75B0080ECF7 /* LocalVideoWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = LocalVideoWindow.nib; path = "Plugins/Video Chat Interface/LocalVideoWindow.nib"; sourceTree = "<group>"; };
-		4BC8AFE204FD3C5600A8010A /* AISpellCheckingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISpellCheckingPlugin.h; path = Source/AISpellCheckingPlugin.h; sourceTree = "<group>"; };
-		4BC8AFE304FD3C5600A8010A /* AISpellCheckingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISpellCheckingPlugin.m; path = Source/AISpellCheckingPlugin.m; sourceTree = "<group>"; };
-		4BC8AFEC04FD413900A8010A /* SpellingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = SpellingDefaults.plist; path = Resources/SpellingDefaults.plist; sourceTree = "<group>"; };
 		4BCAB5EF07B59967006641B9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		4BCAB5F007B59967006641B9 /* EditAccountSheet.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EditAccountSheet.nib; path = Resources/EditAccountSheet.nib; sourceTree = "<group>"; };
 		4BCAC4CE07B59AFE006641B9 /* AddressBookPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AddressBookPrefs.nib; path = Resources/AddressBookPrefs.nib; sourceTree = "<group>"; };
@@ -3737,7 +3731,6 @@
 				9E4CF9D104AA69B000415B22 /* Action Support */,
 				4B6D0E43047D490700A8010A /* Default Formatting */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
-				4BC8AFD604FD3C1000A8010A /* Spell Checking */,
 				4B0473B7043E43F200A8010A /* Status Changed Messages */,
 				4B5B15220493BF9A00A8010A /* Typing Notification */,
 			);
@@ -5141,16 +5134,6 @@
 			name = "Video Chat Interface";
 			sourceTree = "<group>";
 		};
-		4BC8AFD604FD3C1000A8010A /* Spell Checking */ = {
-			isa = PBXGroup;
-			children = (
-				4BC8AFE204FD3C5600A8010A /* AISpellCheckingPlugin.h */,
-				4BC8AFE304FD3C5600A8010A /* AISpellCheckingPlugin.m */,
-				4BC8AFEC04FD413900A8010A /* SpellingDefaults.plist */,
-			);
-			name = "Spell Checking";
-			sourceTree = "<group>";
-		};
 		4BCAC53407B59F9C006641B9 /* Other */ = {
 			isa = PBXGroup;
 			children = (
@@ -6118,7 +6101,6 @@
 				4BD6742706001D1A0049CAF7 /* AIEmoticonPack.h in Headers */,
 				4BD6742B06001D1B0049CAF7 /* AIEmoticonController.h in Headers */,
 				4BD6742D06001D1C0049CAF7 /* AIEmoticonPreferences.h in Headers */,
-				4BD6743206001D1F0049CAF7 /* AISpellCheckingPlugin.h in Headers */,
 				4BD6744406001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.h in Headers */,
 				4BD6745706001D5E0049CAF7 /* AIDockUnviewedContentPlugin.h in Headers */,
 				4BD6745D06001D730049CAF7 /* ESOpenMessageWindowContactAlertPlugin.h in Headers */,
@@ -7335,7 +7317,6 @@
 				34536751059BA8EE00A83D9E /* atos in Resources */,
 				34F2BD25059CF8070005B238 /* c++filt in Resources */,
 				4BD6743106001D1E0049CAF7 /* EmoticonDefaults.plist in Resources */,
-				4BD6743606001D210049CAF7 /* SpellingDefaults.plist in Resources */,
 				4BD6744906001D460049CAF7 /* DockOverlayDefaults.plist in Resources */,
 				4BD6745506001D4E0049CAF7 /* DockBehaviorDefaults.plist in Resources */,
 				4BD6747606001D840049CAF7 /* LoggingDefaults.plist in Resources */,
@@ -7758,7 +7739,6 @@
 				4BD6742806001D1A0049CAF7 /* AIEmoticonPack.m in Sources */,
 				4BD6742C06001D1C0049CAF7 /* AIEmoticonController.m in Sources */,
 				4BD6742E06001D1D0049CAF7 /* AIEmoticonPreferences.m in Sources */,
-				4BD6743306001D200049CAF7 /* AISpellCheckingPlugin.m in Sources */,
 				4BD6744506001D430049CAF7 /* AIContactStatusDockOverlaysPlugin.m in Sources */,
 				4BD6745806001D5E0049CAF7 /* AIDockUnviewedContentPlugin.m in Sources */,
 				4BD6745E06001D740049CAF7 /* ESOpenMessageWindowContactAlertPlugin.m in Sources */,

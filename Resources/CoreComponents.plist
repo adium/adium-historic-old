@@ -33,7 +33,6 @@
 	<string>AINewMessagePanelPlugin</string>
 	<string>AIOfflineContactHidingPlugin</string>
 	<string>AISCLViewPlugin</string>
-	<string>AISpellCheckingPlugin</string>
 	<string>AIStandardToolbarItemsPlugin</string>
 	<string>AIStateMenuPlugin</string>
 	<string>AIStatusChangedMessagesPlugin</string>
