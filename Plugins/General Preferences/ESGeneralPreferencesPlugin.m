@@ -63,58 +63,11 @@
 	//Install our preference view
 	preferences = [[ESGeneralPreferences preferencePaneForPlugin:self] retain];	
 
-	//Register as a text entry filter for sending key setting purposes
-	[[adium contentController] registerTextEntryFilter:self];
-
-	//Observe preference changes for updating sending key settings
-	[preferenceController registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];	
 }
 
 - (void)uninstallPlugin
 {
-	[[adium contentController] unregisterTextEntryFilter:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];	
+
 }
-
-#pragma mark Sending keys
-//
-- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    [self _configureSendingKeysForObject:inTextEntryView]; //Configure the sending keys
-}
-
-//
-- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    //Ignore
-}
-
-//Update all views in response to a preference change
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	NSEnumerator	*enumerator;
-	id				entryView;
-	
-	//Set sending keys of all open views
-	enumerator = [[[adium contentController] openTextEntryViews] objectEnumerator];
-	while ((entryView = [enumerator nextObject])) {
-		[self _configureSendingKeysForObject:entryView];
-	}
-}
-
-//Configure the message sending keys
-- (void)_configureSendingKeysForObject:(id)inObject
-{
-    if ([inObject isKindOfClass:[AISendingTextView class]]) {
-		NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_GENERAL];
-			
-        [(AISendingTextView *)inObject setSendOnReturn:[[prefDict objectForKey:SEND_ON_RETURN] boolValue]];
-		[(AISendingTextView *)inObject setSendOnEnter:[[prefDict objectForKey:SEND_ON_ENTER] boolValue]];
-    }
-}
-
-#pragma mark Service and status icons
-
 
 @end
