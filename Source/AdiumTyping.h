@@ -14,10 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIPlugin.h>
+#import <Adium/AIObject.h>
 
-@interface AITypingNotificationPlugin : AIPlugin {
+@class AIChat;
+
+@interface AdiumTyping : AIObject {
 
 }
+
+- (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText;
 
 @end

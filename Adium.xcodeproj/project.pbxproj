@@ -540,8 +540,6 @@
 		34C14CD307A8B1AB003CC138 /* AIEmoticonPackPreviewView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C14CD107A8B1AB003CC138 /* AIEmoticonPackPreviewView.m */; };
 		34C14D5107A8BA00003CC138 /* EmoticonPackPreview.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34C14D5007A8BA00003CC138 /* EmoticonPackPreview.nib */; };
 		34C18B0D06CAC95400FF5FF9 /* SystemConfiguration.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34E839050583207E00F2AADB /* SystemConfiguration.framework */; };
-		34C1F21407F7A63500DB6645 /* AITypingNotificationPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C1F21207F7A63500DB6645 /* AITypingNotificationPlugin.m */; };
-		34C1F21507F7A63500DB6645 /* AITypingNotificationPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C1F21307F7A63500DB6645 /* AITypingNotificationPlugin.h */; };
 		34C1F4FD07F8148300DB6645 /* NSAppleEventDescriptor+NDDebugging.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C1F4F107F8148200DB6645 /* NSAppleEventDescriptor+NDDebugging.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34C1F4FE07F8148300DB6645 /* NSValue+NDFourCharCode.h in Headers */ = {isa = PBXBuildFile; fileRef = 34C1F4F207F8148200DB6645 /* NSValue+NDFourCharCode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34C1F4FF07F8148300DB6645 /* NDScriptData.m in Sources */ = {isa = PBXBuildFile; fileRef = 34C1F4F307F8148200DB6645 /* NDScriptData.m */; };
@@ -1064,6 +1062,8 @@
 		4BD6758406001E440049CAF7 /* ErrorMessageWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 40AC0F1003B5C29E00A80202 /* ErrorMessageWindowController.m */; };
 		4BD6758506001E450049CAF7 /* ErrorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 40AC0F1303B5C34800A80202 /* ErrorWindow.nib */; };
 		4BD6758806001E460049CAF7 /* AlertMessageContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3439FD8C05794B4500B2E449 /* AlertMessageContactAlert.nib */; };
+		4BDAB9930861C662009FB73B /* AdiumTyping.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDAB9910861C661009FB73B /* AdiumTyping.h */; };
+		4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDAB9920861C661009FB73B /* AdiumTyping.m */; };
 		4BDAF69807A1561000276D68 /* AIAccountProxySettings.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BDAF69507A1560F00276D68 /* AIAccountProxySettings.h */; };
 		4BDAF69907A1561000276D68 /* AIAccountProxySettings.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BDAF69607A1561000276D68 /* AIAccountProxySettings.m */; };
 		4BDD81EA07A0B6D30057DB2C /* AccountOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E707A0B6D30057DB2C /* AccountOptions.nib */; };
@@ -2281,8 +2281,6 @@
 		34C14CD007A8B1AB003CC138 /* AIEmoticonPackPreviewView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIEmoticonPackPreviewView.h; path = Plugins/Emoticons/AIEmoticonPackPreviewView.h; sourceTree = "<group>"; };
 		34C14CD107A8B1AB003CC138 /* AIEmoticonPackPreviewView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPackPreviewView.m; path = Plugins/Emoticons/AIEmoticonPackPreviewView.m; sourceTree = "<group>"; };
 		34C14D5007A8BA00003CC138 /* EmoticonPackPreview.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EmoticonPackPreview.nib; path = Plugins/Emoticons/EmoticonPackPreview.nib; sourceTree = "<group>"; };
-		34C1F21207F7A63500DB6645 /* AITypingNotificationPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITypingNotificationPlugin.m; path = Source/AITypingNotificationPlugin.m; sourceTree = "<group>"; };
-		34C1F21307F7A63500DB6645 /* AITypingNotificationPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITypingNotificationPlugin.h; path = Source/AITypingNotificationPlugin.h; sourceTree = "<group>"; };
 		34C1F4F107F8148200DB6645 /* NSAppleEventDescriptor+NDDebugging.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSAppleEventDescriptor+NDDebugging.h"; path = "Frameworks/Adium Framework/NSAppleEventDescriptor+NDDebugging.h"; sourceTree = "<group>"; };
 		34C1F4F207F8148200DB6645 /* NSValue+NDFourCharCode.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = "NSValue+NDFourCharCode.h"; path = "Frameworks/Adium Framework/NSValue+NDFourCharCode.h"; sourceTree = "<group>"; };
 		34C1F4F307F8148200DB6645 /* NDScriptData.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = NDScriptData.m; path = "Frameworks/Adium Framework/NDScriptData.m"; sourceTree = "<group>"; };
@@ -2844,6 +2842,8 @@
 		4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIWebkitMessageViewStyle.m; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.m"; sourceTree = "<group>"; };
 		4BD68227045B010D00A8010A /* AILogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogViewerWindowController.h; path = Plugins/Logger/AILogViewerWindowController.h; sourceTree = "<group>"; };
 		4BD68228045B010D00A8010A /* AILogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILogViewerWindowController.m; path = Plugins/Logger/AILogViewerWindowController.m; sourceTree = "<group>"; };
+		4BDAB9910861C661009FB73B /* AdiumTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumTyping.h; path = Source/AdiumTyping.h; sourceTree = "<group>"; };
+		4BDAB9920861C661009FB73B /* AdiumTyping.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumTyping.m; path = Source/AdiumTyping.m; sourceTree = "<group>"; };
 		4BDAF69507A1560F00276D68 /* AIAccountProxySettings.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountProxySettings.h; path = Source/AIAccountProxySettings.h; sourceTree = "<group>"; };
 		4BDAF69607A1561000276D68 /* AIAccountProxySettings.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountProxySettings.m; path = Source/AIAccountProxySettings.m; sourceTree = "<group>"; };
 		4BDC17720493C90E00A8010A /* AIContentTyping.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentTyping.h; path = "Frameworks/Adium Framework/AIContentTyping.h"; sourceTree = "<group>"; };
@@ -3732,7 +3732,6 @@
 				4B6D0E43047D490700A8010A /* Default Formatting */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
 				4B0473B7043E43F200A8010A /* Status Changed Messages */,
-				4B5B15220493BF9A00A8010A /* Typing Notification */,
 			);
 			name = Messaging;
 			sourceTree = "<group>";
@@ -4807,15 +4806,6 @@
 			name = "State & Status";
 			sourceTree = "<group>";
 		};
-		4B5B15220493BF9A00A8010A /* Typing Notification */ = {
-			isa = PBXGroup;
-			children = (
-				34C1F21307F7A63500DB6645 /* AITypingNotificationPlugin.h */,
-				34C1F21207F7A63500DB6645 /* AITypingNotificationPlugin.m */,
-			);
-			name = "Typing Notification";
-			sourceTree = "<group>";
-		};
 		4B60991906A447D400EC8D78 /* New Message Panel */ = {
 			isa = PBXGroup;
 			children = (
@@ -5118,6 +5108,8 @@
 		4BC4439A08612BD800B10F28 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				4BDAB9910861C661009FB73B /* AdiumTyping.h */,
+				4BDAB9920861C661009FB73B /* AdiumTyping.m */,
 			);
 			name = Content;
 			sourceTree = "<group>";
@@ -6246,7 +6238,6 @@
 				34BFE25107E8E5F200AD984D /* AIAutoLinkingPlugin.h in Headers */,
 				34BFE25D07E8E69300AD984D /* AIContactAccountsPane.h in Headers */,
 				34BFE2D707E8E74400AD984D /* AIChatConsolidationPlugin.h in Headers */,
-				34C1F21507F7A63500DB6645 /* AITypingNotificationPlugin.h in Headers */,
 				343EC6AA0809DEC800E27095 /* ESContactAlertsPane.h in Headers */,
 				347C6942080C8F2B00E69674 /* ESAwayStatusWindowPlugin.h in Headers */,
 				347C6948080C8F3B00E69674 /* ESAwayStatusWindowController.h in Headers */,
@@ -6266,6 +6257,7 @@
 				4B14CF2A085FBC5900C88949 /* AdiumSound.h in Headers */,
 				4B14CF2C085FBC5900C88949 /* AdiumSoundSets.h in Headers */,
 				4B14CF2E085FBC5900C88949 /* AdiumSpeech.h in Headers */,
+				4BDAB9930861C662009FB73B /* AdiumTyping.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7885,7 +7877,6 @@
 				34BFE25007E8E5F200AD984D /* AIAutoLinkingPlugin.m in Sources */,
 				34BFE25C07E8E69300AD984D /* AIContactAccountsPane.m in Sources */,
 				34BFE2D807E8E74400AD984D /* AIChatConsolidationPlugin.m in Sources */,
-				34C1F21407F7A63500DB6645 /* AITypingNotificationPlugin.m in Sources */,
 				343EC6A90809DEC800E27095 /* ESContactAlertsPane.m in Sources */,
 				347C6943080C8F2B00E69674 /* ESAwayStatusWindowPlugin.m in Sources */,
 				347C6949080C8F3B00E69674 /* ESAwayStatusWindowController.m in Sources */,
@@ -7904,6 +7895,7 @@
 				4B14CF2B085FBC5900C88949 /* AdiumSound.m in Sources */,
 				4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */,
 				4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */,
+				4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
