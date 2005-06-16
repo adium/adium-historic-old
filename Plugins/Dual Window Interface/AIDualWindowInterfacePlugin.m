@@ -44,7 +44,7 @@
 	//Preferences
 	//XXX - move to separate plugin
     [[adium preferenceController] registerDefaults:[NSDictionary dictionaryNamed:DUAL_INTERFACE_DEFAULT_PREFS forClass:[self class]] 
-										  forGroup:PREF_GROUP_INTERFACE];
+										  forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 
 	preferenceMessageAdvController = [[ESDualWindowMessageAdvancedPreferences preferencePane] retain];
 
