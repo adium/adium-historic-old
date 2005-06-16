@@ -12,7 +12,7 @@
 #import <IOKit/IOMessage.h>
 #import "AISleepNotification.h"
 
-void callback(void * x,io_service_t y,natural_t messageType,void * messageArgument);
+void callback(void *refcon, io_service_t y, natural_t messageType, void *messageArgument);
 
 /*!
  * @class AISleepNotification
@@ -34,6 +34,22 @@ static io_connect_t			root_port;
 static int					holdSleep = 0;
 static long unsigned int	waitingSleepArgument;
 
+/*!
+ * @brief Load, called when the framework is loaded
+ *
+ * We should not depend upon any other classes being ready when load is called.  However, we can depend on our own
+ * class being ready... so we reference to force initialize being called on our superclass as well as ourself.
+ */
++ (void)load
+{
+	[self class];
+}
+
+/*!
+ * @brief Initialize sleep notifications
+ *
+ * Observe system power events (sleep / wake from sleep) and begin observing for hold and continue notifications.
+ */
 + (void)initialize
 {
     IONotificationPortRef	notify;
@@ -46,7 +62,9 @@ static long unsigned int	waitingSleepArgument;
         CFRunLoopAddSource(CFRunLoopGetCurrent(),
                            IONotificationPortGetRunLoopSource(notify),
                            kCFRunLoopDefaultMode);
-    }
+    } else {
+		NSLog(@"AISleepNotification: Could not retrieve root_port from IORegisterForSystemPower(). Sleep notification disabled.");
+	}
 
     //Observe Hold/continue sleep notification
     [defaultCenter addObserver:self 
@@ -60,11 +78,21 @@ static long unsigned int	waitingSleepArgument;
 						object:nil];
 }
 
-//
+/*
+ * @brief Hold sleep notification
+ *
+ * This must be balanced by the AISystemContinueSleep_Notification notification
+ */
 + (void)holdSleep:(NSNotification *)notification
 {
     holdSleep++;
 }
+
+/*
+ * @brief Continue sleep notification
+ *
+ * If this balances the last AISystemHoldSleep_Notification notification, we will sleep immediately.
+ */
 + (void)continueSleep:(NSNotification *)notification
 {
     holdSleep--;
@@ -75,9 +103,15 @@ static long unsigned int	waitingSleepArgument;
     }
 }
 
-
-//
-void callback(void * x, io_service_t y, natural_t messageType, void *messageArgument)
+/*
+ * @brief Callback for sleep power events
+ *
+ * @param refcon The refcon passed when the notification was installed.
+ * @param service The IOService whose state has changed. We only handle one IOService.
+ * @param messageType A messageType enum, defined by IOKit/IOMessage.h.
+ * @param messageArgument An argument for the message which we store for use when sleeping later.
+ */
+void callback(void *refcon, io_service_t service, natural_t messageType, void *messageArgument)
 {
     switch ( messageType ) {
         case kIOMessageSystemWillSleep:
@@ -86,7 +120,7 @@ void callback(void * x, io_service_t y, natural_t messageType, void *messageArgu
 
             //If noone requested a delay, sleep now
             if (holdSleep == 0) {
-                IOAllowPowerChange(root_port,(long)messageArgument);
+                IOAllowPowerChange(root_port, (long)messageArgument);
             } else {
                 waitingSleepArgument = (long unsigned int)messageArgument;
             }
@@ -94,7 +128,7 @@ void callback(void * x, io_service_t y, natural_t messageType, void *messageArgu
         break;
             
         case kIOMessageCanSystemSleep:
-            IOAllowPowerChange(root_port,(long)messageArgument);
+            IOAllowPowerChange(root_port, (long)messageArgument);
         break;
             
         case kIOMessageSystemHasPoweredOn:
