@@ -24,7 +24,6 @@
 #define	PREF_GROUP_DUAL_WINDOW_INTERFACE	@"Dual Window Interface"
 
 #define DUAL_INTERFACE_DEFAULT_PREFS		@"DualWindowDefaults"
-#define DUAL_INTERFACE_WINDOW_DEFAULT_PREFS	@"DualWindowMessageDefaults"
 
 #define KEY_ALWAYS_CREATE_NEW_WINDOWS 		@"Always Create New Windows"
 //#define KEY_USE_LAST_WINDOW					@"Use Last Window"
