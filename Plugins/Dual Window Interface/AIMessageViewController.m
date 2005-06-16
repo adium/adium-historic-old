@@ -27,6 +27,7 @@
 #import "AIPreferenceController.h"
 #import "CSMessageToOfflineContactWindowController.h"
 #import "ESContactAlertsController.h"
+#import "ESGeneralPreferencesPlugin.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
@@ -142,6 +143,9 @@
 		//Update chat status and participating list objects to configure the user list if necessary
 		[self chatStatusChanged:nil];
 		[self chatParticipatingListObjectsChanged:nil];
+		
+		//Observe general preferences for sending keys
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_GENERAL];
 	}
 
     return self;
@@ -152,6 +156,8 @@
  */
 - (void)dealloc
 {   
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     //Close the message entry text view
     [[adium contentController] willCloseTextEntryView:textView_outgoing];
 
@@ -165,6 +171,7 @@
 		[chat release]; chat = nil;
     }
 	
+
     //remove observers
     [[adium notificationCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] removeObserver:self];
@@ -537,6 +544,16 @@
 {
 	BOOL	spellCheckingEnabled = [[notification object] isContinuousSpellCheckingEnabled];
 	[textView_outgoing setContinuousSpellCheckingEnabled:spellCheckingEnabled];
+}
+
+/*!
+ * @brief Preferences changed, update sending keys
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	[textView_outgoing setSendOnReturn:[[prefDict objectForKey:SEND_ON_RETURN] boolValue]];
+	[textView_outgoing setSendOnEnter:[[prefDict objectForKey:SEND_ON_ENTER] boolValue]];
 }
 
 /*!
