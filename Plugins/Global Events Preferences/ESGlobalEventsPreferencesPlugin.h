@@ -35,7 +35,7 @@
 #define PREF_GROUP_EVENT_PRESETS			@"Event Presets"
 #define KEY_ACTIVE_EVENT_SET				@"Active Event Set"
 
-@class ESGlobalEventsPreferences;
+@class ESGlobalEventsPreferences, AISoundSet;
 
 @interface ESGlobalEventsPreferencesPlugin : AIPlugin {
 	ESGlobalEventsPreferences	*preferences;
@@ -57,7 +57,7 @@
 - (NSDictionary *)storedEventPresets;
 - (NSArray *)storedEventPresetsArray;
 
-- (void)applySoundSetWithPath:(NSString *)soundSetPath;
+- (void)applySoundSet:(AISoundSet *)soundSet;
 
 - (float)nextOrderIndex;
 

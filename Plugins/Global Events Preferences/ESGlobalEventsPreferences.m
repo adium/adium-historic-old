@@ -21,6 +21,7 @@
 #import "ESGlobalEventsPreferencesPlugin.h"
 #import <Adium/ESPresetManagementController.h>
 #import <Adium/ESPresetNameSheetController.h>
+#import <Adium/AISoundSet.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
@@ -54,7 +55,7 @@
 
 - (void)setAndConfigureEventPresetsMenu;
 - (void)updateSoundSetSelection;
-- (void)updateSoundSetSelectionForSoundSetPath:(NSString *)soundSetPath;
+- (void)updateSoundSetSelectionForSoundSet:(AISoundSet *)soundSet;
 @end
 
 @implementation ESGlobalEventsPreferences
@@ -460,17 +461,13 @@
  */
 - (IBAction)selectSoundSet:(id)sender
 {
-	NSString			*soundSetPath = ([sender representedObject] ?
-										 [[sender representedObject] stringByCollapsingBundlePath] :
-										 @"");
-	
 	//Apply the sound set so its events are in the current alerts.
-	[plugin applySoundSetWithPath:soundSetPath];
+	[plugin applySoundSet:[sender representedObject]];
 
 	/* Update the selection, which will select Custom as appropriate.  This must be done before saving the event
 	 * preset so the menu is on the correct sound set to save.
 	 */
-	[self updateSoundSetSelectionForSoundSetPath:soundSetPath];
+	[self updateSoundSetSelectionForSoundSet:[sender representedObject]];
 
 	/* Save the preset which is now updated to have the appropriate sounds; 
 	 * in saving, the name of the soundset, or @"", will also be saved.
@@ -503,11 +500,7 @@
 	NSMutableDictionary	*currentEventSetForSaving = [[eventPreset mutableCopy] autorelease];
 	
 	//Set the sound set, which is just stored here for ease of preference pane display
-	NSString	*soundSet = [[popUp_soundSet selectedItem] representedObject];
-	
-	[currentEventSetForSaving setObject:(soundSet ?
-										 [soundSet stringByCollapsingBundlePath] :
-										 @"")
+	[currentEventSetForSaving setObject:[[[popUp_soundSet selectedItem] representedObject] name]
 								 forKey:KEY_EVENT_SOUND_SET];
 	
 	//Get and store the alerts array
@@ -620,10 +613,10 @@
 	
 }
 
-- (void)updateSoundSetSelectionForSoundSetPath:(NSString *)soundSetPath
+- (void)updateSoundSetSelectionForSoundSet:(AISoundSet *)soundSet
 {
-	if (soundSetPath && [soundSetPath length] != 0) {
-		[popUp_soundSet selectItemWithRepresentedObject:[soundSetPath stringByExpandingBundlePath]];
+	if (soundSet) {
+		[popUp_soundSet selectItemWithRepresentedObject:soundSet];
 		[self popUp:popUp_soundSet shouldShowCustom:NO];
 		
 	} else {
@@ -633,12 +626,7 @@
 
 - (void)updateSoundSetSelection
 {
-	NSDictionary	*eventPreset = [[popUp_eventPreset selectedItem] representedObject];
-	
-	//Update the soundset popUp
-	NSString		*soundSetPath = [eventPreset objectForKey:KEY_EVENT_SOUND_SET];
-	
-	[self updateSoundSetSelectionForSoundSetPath:soundSetPath];
+	[self updateSoundSetSelectionForSoundSet:[[popUp_eventPreset selectedItem] representedObject]];
 }
 
 /*!
@@ -648,31 +636,19 @@
  */
 - (NSMenu *)_soundSetMenu
 {
-    NSEnumerator	*enumerator;
-    NSDictionary	*soundSetDict;
-    NSMenu		*soundSetMenu = [[NSMenu alloc] init];
+    NSMenu			*soundSetMenu = [[NSMenu alloc] init];
+    NSEnumerator	*enumerator = [[[adium soundController] soundSets] objectEnumerator];
+    AISoundSet		*soundSet;
     
-    enumerator = [[[adium soundController] soundSetArray] objectEnumerator];
-    while ((soundSetDict = [enumerator nextObject])) {
-        NSString		*setPath = [soundSetDict objectForKey:KEY_SOUND_SET];
-        NSFileManager	*defaultManager = [NSFileManager defaultManager];
-        NSMenuItem		*menuItem;
-	
-		//Ensure this folder contains a soundset file (Otherwise, we ignore it)
-		if ([defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:[[[setPath stringByDeletingPathExtension] lastPathComponent] stringByAppendingPathExtension:@"txt"]]] ||
-		   [defaultManager fileExistsAtPath:[setPath stringByAppendingPathComponent:@"Info.plist"]]) {
-
-            //Add a menu item for the set
-            menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[self _localizedTitle:[[setPath stringByDeletingPathExtension] lastPathComponent]]
-																			 target:self
-																			 action:@selector(selectSoundSet:)
-																	  keyEquivalent:@""] autorelease];
-            [menuItem setRepresentedObject:setPath];
-            [soundSetMenu addItem:menuItem];
-        }
+    while ((soundSet = [enumerator nextObject])) {
+		[soundSetMenu addItemWithTitle:[self _localizedTitle:[soundSet name]]
+								target:self
+								action:@selector(selectSoundSet:)
+						 keyEquivalent:@""
+					 representedObject:soundSet];
     }
 
-    return(soundSetMenu);
+    return([soundSetMenu autorelease]);
 }
 
 #pragma mark Common menu methods
