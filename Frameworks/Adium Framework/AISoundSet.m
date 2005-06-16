@@ -1,0 +1,277 @@
+/* 
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * with this source distribution.
+ * 
+ * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
+ * General Public License as published by the Free Software Foundation; either version 2 of the License,
+ * or (at your option) any later version.
+ * 
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even
+ * the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General
+ * Public License for more details.
+ * 
+ * You should have received a copy of the GNU General Public License along with this program; if not,
+ * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+#import "AISoundSet.h"
+#import <AIUtilities/AIFileManagerAdditions.h>
+
+#define SOUNDSET_TEMP_EXTENSION		@"AdiumSoundSetOld"
+#define SOUNDSET_PLIST_FILENAME		@"Sounds.plist"
+
+#define SOUNDSET_VERSION			@"AdiumSetVersion"
+#define SOUNDSET_INFO				@"Info"
+#define SOUNDSET_SOUNDS				@"Sounds"
+#define SOUNDSET_SOUND_LOCATIONS	@"Location"
+
+#define SOUND_LOCATION_SEPARATOR	@"////"
+
+@interface AISoundSet (PRIVATE)
+- (id)initWithContentsOfFile:(NSString *)inPath;
+- (void)_loadSoundSetFromPath:(NSString *)inPath;
+- (NSString *)_fullPathForSoundAtLocalPath:(NSString *)localPath searchLocations:(NSArray *)locations;
+- (void)_upgradeTextBasedSoundSet:(NSString *)inPath;
+@end
+
+@implementation AISoundSet
+
+/*!
+ * @brief Create a new soundset object from the specified path
+ */
++ (id)soundSetWithContentsOfFile:(NSString *)inPath
+{
+	return([[[self alloc] initWithContentsOfFile:inPath] autorelease]);
+}
+
+/*!
+ * @brief Init
+ *
+ * @param inPath NSString path to the .AdiumSoundSet file
+ */
+- (id)initWithContentsOfFile:(NSString *)inPath
+{
+	if ((self = [super init])) {
+		[self _loadSoundSetFromPath:inPath];
+	}
+	
+	return self;
+}
+
+/*!
+ * @brief Dealloc
+ */
+- (void)dealloc
+{
+	[name release]; name = nil;
+	[info release]; info = nil;
+	[sounds release]; sounds = nil;
+	
+	[super dealloc];
+}
+
+/*!
+ * @brief Returns the name of this soundSet
+ */
+- (NSString *)name
+{
+	return name;
+}
+
+/*!
+ * @brief Returns the info for this soundSet
+ *
+ * @return NSString containing information about the soundset and its creator in no particular format.
+ */
+- (NSString *)info
+{
+	return info;
+}
+
+/*!
+ * @brief Returns a dictionary of sounds
+ *
+ * @return NSDictionary with sound identifiers as keys and full paths as objects
+ */
+- (NSDictionary *)sounds
+{
+	return sounds;
+}
+
+/*!
+ * @brief Initialize this object from a soundset at the given path
+ *
+ * @param inPath NSString path to the .AdiumSoundSet file
+ */
+- (void)_loadSoundSetFromPath:(NSString *)inPath
+{
+	//If we don't have a Sound.plist, assume this is an old format soundset and attempt to upgrade it
+	NSString *soundPlistPath = [inPath stringByAppendingPathComponent:SOUNDSET_PLIST_FILENAME];
+	if (![[NSFileManager defaultManager] fileExistsAtPath:soundPlistPath]) {
+		[self _upgradeTextBasedSoundSet:inPath];
+	}
+	
+	//Load the sound set
+	NSDictionary 	*soundSet = [NSDictionary dictionaryWithContentsOfFile:soundPlistPath];	
+	int				version = [[soundSet objectForKey:SOUNDSET_VERSION] intValue];
+
+	if(version == 1){
+		NSEnumerator	*enumerator;
+		NSString		*key;
+		NSArray			*locations;
+		NSDictionary	*localSounds;
+		
+		//Retrieve the set name and information
+		name = [[inPath lastPathComponent] stringByDeletingPathExtension];
+		info = [soundSet objectForKey:SOUNDSET_INFO];
+		
+		//Search locations.  If none are provided, search within the soundset folder.
+		locations = [soundSet objectForKey:SOUNDSET_SOUND_LOCATIONS];
+		if(!locations) locations = [NSArray arrayWithObject:inPath];
+		
+		//Retrieve the sound keys and paths, converting local paths to full paths
+		localSounds = [soundSet objectForKey:SOUNDSET_SOUNDS];
+		sounds = [[NSMutableDictionary alloc] init];
+
+		enumerator = [localSounds keyEnumerator];
+		while((key = [enumerator nextObject])){
+			[sounds setObject:[self _fullPathForSoundAtLocalPath:[localSounds objectForKey:key]
+												 searchLocations:locations]
+					   forKey:key];
+		}
+		
+	}else{
+		NSRunAlertPanel(AILocalizedString(@"Cannot open sound set", nil),
+						AILocalizedString(@"The sound set %@ is version %i, and this version of Adium does not know how to handle that; perhaps try a later version of Adium.", nil),
+						/*defaultButton*/ nil, /*alternateButton*/ nil, /*otherButton*/ nil,
+						[soundPlistPath lastPathComponent], version);
+	}
+	
+}
+
+/*!
+ * @brief Converts a local sound path into a full path, searching multiple locations.
+ *
+ * This method takes a local path and an array of locations.  If one location is passed it will simply return a full
+ * path by combining the local path and location.  If multiple locations are passed it will search them for the
+ * existance of the sound file specified by local path and return the full path that actually contains the sound file.
+ * 
+ * Locations may be in one of two possible formats:
+ * 	<string>/absolute/path/to/directory</string>
+ * 	<string>CFBundleIdentifier////relative/path/from/bundle/to/directory</string>
+ *
+ * The latter allows a soundSet to search within the bundle of an application for sounds.
+ *
+ * @param localPath NSString local path to the sound file
+ * @param locations NSArray of NSString paths to search for the sound file's local path
+ * @return NSString full path to the sound file
+ */
+- (NSString *)_fullPathForSoundAtLocalPath:(NSString *)localPath searchLocations:(NSArray *)locations
+{
+	//If we've been passed more than one location, scan all of them for the sound file
+	if([locations count] > 1){
+		NSEnumerator	*enumerator = [locations objectEnumerator];
+		NSString		*location;
+		
+		while((location = [enumerator nextObject])){
+			NSArray		*splitPath = [location componentsSeparatedByString:SOUND_LOCATION_SEPARATOR];
+			NSString	*fullPath;
+			BOOL 		isDir;
+
+			//Resolve bundle relative paths
+			if ([splitPath count] == 2) {
+				location = [NSString pathWithComponents:[NSArray arrayWithObjects:
+					[[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:[splitPath objectAtIndex:0]],
+					[splitPath objectAtIndex:1],
+					nil]];
+			}
+			
+			//If we found the sound file, return its path
+			fullPath = [location stringByAppendingPathComponent:localPath];
+			if ([[NSFileManager defaultManager] fileExistsAtPath:fullPath isDirectory:&isDir] && !isDir) {
+				return fullPath;
+			}
+		}
+	}
+
+	//Otherwise (or, if we cannot find our sound file), return a path in the first location
+	return [[locations lastObject] stringByAppendingPathComponent:localPath];
+}
+
+/*!
+ * @brief Upgrade a sound pack from the old format (controlled by a .txt file) to the new .plist based format
+ *
+ * The soundSet is upgraded in place, so this should only need to be called once per soundSet.
+ * @param inPath NSString path to the .AdiumSoundSet file
+ */
+- (void)_upgradeTextBasedSoundSet:(NSString *)setPath
+{
+    NSCharacterSet		*newlineSet = [NSCharacterSet characterSetWithCharactersInString:@"\n"];
+    NSCharacterSet		*whitespaceSet = [NSCharacterSet whitespaceCharacterSet];
+	NSFileManager		*mgr = [NSFileManager defaultManager];
+	NSMutableDictionary	*newSounds = [NSMutableDictionary dictionary];
+	NSString			*setName, *workingDirectory, *tempSetName, *tempSetPath;
+	NSString			*oldSetString, *oldSetInfo;
+
+	//
+	setName = [[setPath lastPathComponent] stringByDeletingPathExtension];
+	workingDirectory = [setPath stringByDeletingLastPathComponent];
+
+	NSLog(@"Upgrading sound set %@.",setName);
+
+	//Rename the existing set to .AdiumSoundSetOld
+	tempSetName = [setName stringByAppendingPathExtension:SOUNDSET_TEMP_EXTENSION];
+	tempSetPath = [workingDirectory stringByAppendingPathComponent:tempSetName];
+	[mgr movePath:setPath toPath:tempSetPath handler:nil];
+	
+	//Create a folder for the new soundset
+	[mgr createDirectoryAtPath:setPath attributes:nil];
+
+	//Extract the set's contents
+	oldSetString = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", tempSetPath, setName]];
+	if (oldSetString && [oldSetString length] != 0) {
+		NSScanner	*scanner;
+		
+		//Setup the scanner
+		scanner = [NSScanner scannerWithString:oldSetString];
+		[scanner setCaseSensitive:NO];
+		[scanner setCharactersToBeSkipped:whitespaceSet];
+
+		//Scan the description
+		[scanner scanUpToString:@"\nSoundset:\n" intoString:&oldSetInfo];
+		[scanner scanString:@"\nSoundset:\n" intoString:nil];
+		
+		//Scan the events
+		while (![scanner isAtEnd]) {
+			NSString	*event;
+			NSString	*path;
+			
+			//Get the event and file name
+			[scanner scanUpToString:@"\"" intoString:nil];
+			[scanner scanString:@"\"" intoString:nil];
+			[scanner scanUpToString:@"\"" intoString:&event];
+			[scanner scanString:@"\"" intoString:nil];
+			[scanner scanUpToCharactersFromSet:newlineSet intoString:&path];
+			[scanner scanCharactersFromSet:newlineSet intoString:nil];
+			
+			//Move the sound into our new pack
+			[mgr copyPath:[tempSetPath stringByAppendingPathComponent:path]
+				   toPath:[setPath stringByAppendingPathComponent:[path lastPathComponent]]
+				  handler:nil];
+			[newSounds setObject:[path lastPathComponent] forKey:event];
+		}
+	}
+	
+	//Generate and save a Sounds.plist for the updated set
+	NSDictionary	*infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSNumber numberWithInt:1], SOUNDSET_VERSION,
+		oldSetInfo, SOUNDSET_INFO,
+		newSounds, SOUNDSET_SOUNDS,
+		nil];
+	[infoDict writeToFile:[setPath stringByAppendingPathComponent:SOUNDSET_PLIST_FILENAME] atomically:NO];
+	
+	//Trash the old soundset
+	[mgr trashFileAtPath:tempSetPath];
+}
+
+@end
