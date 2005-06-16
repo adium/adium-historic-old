@@ -61,9 +61,6 @@ static int nextChatNumber = 0;
 		expanded = YES;
 
 		AILog(@"[AIChat: %x initForAccount]",self);
-
-		//Observe preferences changes for typing enable/disable
-		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
 	}
 
     return self;
@@ -76,7 +73,6 @@ static int nextChatNumber = 0;
 {
 	AILog(@"[%@ dealloc]",self);
 
-	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[account release];
 	[contentObjectArray release];
 	[participatingListObjects release];
@@ -114,15 +110,6 @@ static int nextChatNumber = 0;
 	return(chatMenuImage);
 }
 
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	if ((!object || (object == account)) &&
-	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])) {
-		enableTypingNotifications = ![[account preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
-														  group:GROUP_ACCOUNT_STATUS] boolValue];
-	}
-}
 
 //Associated Account ---------------------------------------------------------------------------------------------------
 #pragma mark Associated Account
@@ -140,10 +127,6 @@ static int nextChatNumber = 0;
 		//The uniqueChatID may depend upon the account, so clear it
 		[self clearUniqueChatID];
 		[[adium notificationCenter] postNotificationName:Chat_SourceChanged object:self]; //Notify
-		
-		//Update our typing notifications pref immediately
-		enableTypingNotifications = ![[account preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
-														  group:GROUP_ACCOUNT_STATUS] boolValue];
 	}
 }
 
@@ -523,21 +506,6 @@ static int nextChatNumber = 0;
 - (float)largestOrder { return(1E10); }
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
-#pragma mark Typing notifications
-/*!
- * @brief Send typing notifications given the new typing state?
- *
- * We never send typing notifications if we are currently suppressing them.
- * If we are not suppressing them, any new typing state should be sent if typing notifications are enabled; only a not-typing
- * state should be sent if typing notifications are not enabled, as this may be necessary to clear a state we set while
- * they were enabled.
- */
-- (BOOL)sendTypingNotificationsForNewTypingState:(AITypingState)newTypingState
-{
-	BOOL suppressTypingNotifications = [self integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS];
-	
-	return(!suppressTypingNotifications && (enableTypingNotifications || (newTypingState == AINotTyping)));
-}
 
 #pragma mark Ignore list (group chat)
 /*!

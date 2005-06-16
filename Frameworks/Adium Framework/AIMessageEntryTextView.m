@@ -203,6 +203,9 @@ static NSColor	*cachedWhiteColor = nil;
 //Text changed
 - (void)textDidChange:(NSNotification *)notification
 {
+	//Update typing status
+	[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
+	
     //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
     if (!insertingText) { 
         [[adium contentController] contentsChangedInTextEntryView:self];
@@ -812,12 +815,6 @@ static NSColor	*cachedWhiteColor = nil;
 }
 
 //Apple's dumb. I'm using the setTextAttributes: to save the font color until Tiger gets a larger adoption base. See there.
-
-//Silence the compiler warnings
-- (BOOL)isSendingContent
-{
-	return [super isSendingContent];
-}
 
 
 #pragma mark Spell Checking

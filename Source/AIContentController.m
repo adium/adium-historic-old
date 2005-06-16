@@ -38,6 +38,7 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/NDRunLoopMessenger.h>
+#import "AdiumTyping.h"
 
 @interface AIContentController (PRIVATE)
 
@@ -85,6 +86,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (id)init
 {
 	if ((self = [super init])) {
+		adiumTyping = [[AdiumTyping alloc] init];
+		
+		
 		//Text entry filtering and tracking
 		textEntryFilterArray = [[NSMutableArray alloc] init];
 		textEntryContentFilterArray = [[NSMutableArray alloc] init];
@@ -114,6 +118,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
  */
 - (void)controllerWillClose
 {
+	[adiumTyping release];
 	
 }
 
@@ -122,6 +127,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
  */
 - (void)dealloc
 {
+	
 	[emoticonPacks release]; emoticonPacks = nil;
 	[emoticonsArray release]; emoticonsArray = nil;
     [textEntryFilterArray release];
@@ -131,6 +137,19 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
     [super dealloc];
 }
+
+
+
+
+#pragma mark Typing
+- (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText {
+	[adiumTyping userIsTypingContentForChat:chat hasEnteredText:hasEnteredText];
+}
+
+
+
+
+
 
 
 //Default Formatting -------------------------------------------------------------------------------------------------

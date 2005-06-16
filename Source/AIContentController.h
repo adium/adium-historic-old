@@ -26,7 +26,7 @@
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
-@class AdiumMessageEvents;
+@class AdiumMessageEvents, AdiumTyping;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
@@ -69,6 +69,8 @@ typedef enum {
 @end
 
 @interface AIContentController : AIObject <AIController> {
+	AdiumTyping				*adiumTyping;
+	
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
     NSMutableArray			*textEntryViews;
@@ -86,6 +88,9 @@ typedef enum {
 	
 	NSMutableSet			*stringsRequiringPolling;
 }
+
+//Typing
+- (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
