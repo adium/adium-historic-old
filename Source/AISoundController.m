@@ -69,11 +69,8 @@
 }
 
 //Soundsets
-- (NSArray *)soundSetArray{
-	return [adiumSoundSets soundSetArray];
-}
-- (NSDictionary *)soundsDictionaryFromDictionary:(NSDictionary *)infoDict usingLocation:(NSString **)outSoundLocation{
-	return [adiumSoundSets soundsDictionaryFromDictionary:infoDict usingLocation:outSoundLocation];
+- (NSArray *)soundSets{
+	return [adiumSoundSets soundSets];
 }
 
 @end

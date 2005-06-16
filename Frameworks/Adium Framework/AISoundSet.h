@@ -14,12 +14,15 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIObject.h>
-
-@interface AdiumSoundSets : AIObject {
-
+@interface AISoundSet : NSObject {
+	NSString			*name;
+	NSString			*info;
+	NSMutableDictionary	*sounds;
 }
 
-- (NSArray *)soundSets;
++ (id)soundSetWithContentsOfFile:(NSString *)inPath;
+- (NSString *)name;
+- (NSString *)info;
+- (NSDictionary *)sounds;
 
 @end

@@ -1001,6 +1001,8 @@
 		4BCAC71707B5A50F006641B9 /* VersionCannotConnect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71107B5A50F006641B9 /* VersionCannotConnect.nib */; };
 		4BCAC71807B5A50F006641B9 /* VersionChecker Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */; };
 		4BCAC71907B5A50F006641B9 /* VersionUpToDate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71307B5A50F006641B9 /* VersionUpToDate.nib */; };
+		4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD548AE086086B5008DF3CB /* AISoundSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD548AF086086B5008DF3CB /* AISoundSet.m */; };
 		4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */; };
 		4BD62D8107CE8F240099EBA2 /* AIWebkitMessageViewStyle.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */; };
 		4BD6737306001BF00049CAF7 /* AIAccountListPreferencesPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F55B413B03AB895501A8010A /* AIAccountListPreferencesPlugin.h */; };
@@ -2842,6 +2844,8 @@
 		4BCDEB4103D4DC9700A8010A /* AISMViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISMViewController.m; path = "Plugins/Standard Message View/AISMViewController.m"; sourceTree = "<group>"; };
 		4BCDEB4203D4DC9700A8010A /* AISMViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISMViewController.h; path = "Plugins/Standard Message View/AISMViewController.h"; sourceTree = "<group>"; };
 		4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSelectionView.nib; path = "Plugins/Dual Window Interface/AccountSelectionView.nib"; sourceTree = "<group>"; };
+		4BD548AE086086B5008DF3CB /* AISoundSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISoundSet.h; path = "Frameworks/Adium Framework/AISoundSet.h"; sourceTree = "<group>"; };
+		4BD548AF086086B5008DF3CB /* AISoundSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISoundSet.m; path = "Frameworks/Adium Framework/AISoundSet.m"; sourceTree = "<group>"; };
 		4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIWebkitMessageViewStyle.h; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.h"; sourceTree = "<group>"; };
 		4BD62D7F07CE8F240099EBA2 /* AIWebkitMessageViewStyle.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIWebkitMessageViewStyle.m; path = "Plugins/WebKit Message View/AIWebkitMessageViewStyle.m"; sourceTree = "<group>"; };
 		4BD68227045B010D00A8010A /* AILogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILogViewerWindowController.h; path = Plugins/Logger/AILogViewerWindowController.h; sourceTree = "<group>"; };
@@ -3594,6 +3598,8 @@
 				34503C7E058F96C400FB7AD1 /* AIEmoticon.m */,
 				3448054F07AC5151006A7F7B /* ESDebugAILog.h */,
 				3448054E07AC5151006A7F7B /* ESDebugAILog.m */,
+				4BD548AE086086B5008DF3CB /* AISoundSet.h */,
+				4BD548AF086086B5008DF3CB /* AISoundSet.m */,
 			);
 			name = Other;
 			sourceTree = "<group>";
@@ -6371,6 +6377,7 @@
 				4B8743260841046600738987 /* AIAccountMenu.h in Headers */,
 				4B22E160085CAE2F001864DE /* AIAbstractListObjectMenu.h in Headers */,
 				4B22E162085CAE2F001864DE /* AIContactMenu.h in Headers */,
+				4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8005,6 +8012,7 @@
 				4B8743270841046600738987 /* AIAccountMenu.m in Sources */,
 				4B22E161085CAE2F001864DE /* AIAbstractListObjectMenu.m in Sources */,
 				4B22E163085CAE2F001864DE /* AIContactMenu.m in Sources */,
+				4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
