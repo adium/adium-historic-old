@@ -122,8 +122,8 @@
 		NSDictionary	*localSounds;
 		
 		//Retrieve the set name and information
-		name = [[inPath lastPathComponent] stringByDeletingPathExtension];
-		info = [soundSet objectForKey:SOUNDSET_INFO];
+		name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
+		info = [[soundSet objectForKey:SOUNDSET_INFO] retain];
 		
 		//Search locations.  If none are provided, search within the soundset folder.
 		locations = [soundSet objectForKey:SOUNDSET_SOUND_LOCATIONS];
