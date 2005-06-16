@@ -23,7 +23,6 @@
 
 #define OUR_TYPING_STATE						@"OurTypingState"
 #define ENTERED_TEXT_TIMER						@"EnteredTextTimer"
-#define KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS	@"SuppressTypingNotificationChanges"
 
 #define DELAY_BEFORE_PAUSING_TYPING		3.0		//Wait for 3 seconds of inactivity before pausing typing
 #define DELAY_BEFORE_CLEARING_TYPING	2.0		//Wait 2 seconds before clearing the typing flag
@@ -139,8 +138,7 @@
  */
 - (void)setTypingState:(AITypingState)typingState ofChat:(AIChat *)chat
 {
-	if ([chat integerStatusObjectForKey:OUR_TYPING_STATE] != typingState &&
-		![chat integerStatusObjectForKey:KEY_TEMP_SUPPRESS_TYPING_NOTIFICATIONS]) {
+	if ([chat integerStatusObjectForKey:OUR_TYPING_STATE] != typingState) {
 		AIContentTyping	*contentObject;
 
 		//Send typing content object (It will go directly to the account since typing content isn't tracked or filtered)
