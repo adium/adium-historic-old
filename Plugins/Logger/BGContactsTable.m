@@ -122,10 +122,16 @@
 
 -(void)moveContactToTrash
 {
-    NSString	*name = [[[[controller_LogViewer toArray] objectAtIndex:[table_filterList selectedRow]] copy] autorelease];
-    NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
-                      @selector(trashContactConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-                      @"Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.",name,name);
+	int row = [table_filterList selectedRow];
+	
+	if (row != -1) {
+		NSString	*name = [[[[controller_LogViewer toArray] objectAtIndex:row] copy] autorelease];
+		NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+						  @selector(trashContactConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+						  @"Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.",name,name);
+	} else {
+		NSBeep();
+	}
 }
 
 - (void)trashContactConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -151,10 +157,16 @@
 
 -(void)moveAccountToTrash
 {
-    NSString	*name = [[[[controller_LogViewer fromArray] objectAtIndex:[table_filterList selectedRow]] copy] autorelease];
-    NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
-                      @selector(trashAccountConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-                      @"Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.", name);
+	int row = [table_filterList selectedRow];
+
+	if (row != -1) {
+		NSString	*name = [[[[controller_LogViewer fromArray] objectAtIndex:row] copy] autorelease];
+		NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+						  @selector(trashAccountConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
+						  @"Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.", name);
+	} else {
+		NSBeep();
+	}
 }
 
 - (void)trashAccountConfirmSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
