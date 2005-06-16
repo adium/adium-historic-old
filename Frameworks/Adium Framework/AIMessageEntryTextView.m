@@ -819,4 +819,13 @@ static NSColor	*cachedWhiteColor = nil;
 	return [super isSendingContent];
 }
 
+
+#pragma mark Spell Checking
+//Post a notification when spell checking is toggled
+- (void)toggleContinuousSpellChecking:(id)sender
+{
+	[super toggleContinuousSpellChecking:sender];
+	[[NSNotificationCenter defaultCenter] postNotificationName:AIContinuousSpellCheckingWasToggledNotification object:self];
+}
+
 @end
