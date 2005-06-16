@@ -16,6 +16,8 @@
 
 #import <AIUtilities/AISendingTextView.h>
 
+#define	AIContinuousSpellCheckingWasToggledNotification	@"AIContinuousSpellCheckingWasToggledNotification"
+
 @class AIListContact, AIAdium, AIAccount, AIChat;
 @protocol AITextEntryView;
 

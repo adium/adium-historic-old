@@ -52,6 +52,7 @@
 #define	USERLIST_LAYOUT						@"UserList Layout"		//File name of the user list layout
 #define	KEY_ENTRY_TEXTVIEW_MIN_HEIGHT		@"Minimum Text Height"	//Preference key for text entry height
 #define	KEY_ENTRY_USER_LIST_MIN_WIDTH		@"UserList Width"		//Preference key for user list width
+#define KEY_SPELL_CHECKING					@"Spell Checking Enabled"
 
 
 @interface AIMessageViewController (PRIVATE)
@@ -206,6 +207,12 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:userListMinWidth]
 										 forKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
+										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+
+	//Remember continuous spell checking
+	BOOL	spellCheckingEnabled = [textView_outgoing isContinuousSpellCheckingEnabled];
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:spellCheckingEnabled]
+										 forKey:KEY_SPELL_CHECKING
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	
 #warning Wrong as per the third XXX above, but a crash fix for now.
@@ -524,10 +531,21 @@
 //Text Entry -----------------------------------------------------------------------------------------------------------
 #pragma mark Text Entry
 /*!
+ * @brief Spell checking was toggled in one of our message windows, update this one to match
+ */
+- (void)continuousSpellCheckingWasToggled:(NSNotification *)notification
+{
+	BOOL	spellCheckingEnabled = [[notification object] isContinuousSpellCheckingEnabled];
+	[textView_outgoing setContinuousSpellCheckingEnabled:spellCheckingEnabled];
+}
+
+/*!
  * @brief Configure the text entry view
  */
 - (void)_configureTextEntryView
 {	
+	NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE] ;
+	
 	//Configure the text entry view
     [textView_outgoing setTarget:self action:@selector(sendMessage:)];
     [textView_outgoing setTextContainerInset:NSMakeSize(0,2)];
@@ -537,8 +555,7 @@
 	[textView_outgoing setClearOnEscape:YES];
 	
 	//User's choice of mininum height for their text entry view
-	entryMinHeight = [[[adium preferenceController] preferenceForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT
-															   group:PREF_GROUP_DUAL_WINDOW_INTERFACE] intValue];
+	entryMinHeight = [[prefDict objectForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT] intValue];
 	if (entryMinHeight < ENTRY_TEXTVIEW_MIN_HEIGHT) entryMinHeight = ENTRY_TEXTVIEW_MIN_HEIGHT;
 
 	
@@ -551,11 +568,19 @@
 	[textView_outgoing setChat:chat];
 	[[adium contentController] didOpenTextEntryView:textView_outgoing];
 
+	//Configure spell checking
+	[textView_outgoing setContinuousSpellCheckingEnabled:[[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
+	
     //Observe text entry view size changes so we can dynamically resize as the user enters text
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(outgoingTextViewDesiredSizeDidChange:)
 												 name:AIViewDesiredSizeDidChangeNotification 
 											   object:textView_outgoing];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(continuousSpellCheckingWasToggled:)
+												 name:AIContinuousSpellCheckingWasToggledNotification
+											   object:nil];
+	
 }
 
 /*!

@@ -6,5 +6,7 @@
 	<false/>
 	<key>Enable Inactive Tab Close</key>
 	<false/>
+	<key>Spell Checking Enabled</key>
+	<true/>
 </dict>
 </plist>
