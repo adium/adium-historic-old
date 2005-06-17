@@ -1,9 +1,0 @@
-ESFileTransferProgressView.nib
-PasswordPrompt.nib
-ProxyPasswordPrompt.nib
-MessageContextDisplayPrefs.nib (probably)
-
----untouched, will be changing---
-ContactSettingsPane
-DefaultFormatting
-TextForcingPrefs
