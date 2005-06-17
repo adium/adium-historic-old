@@ -6,17 +6,16 @@
 //  Copyright (c) 2003-2005 The Adium Team. All rights reserved.
 //
 
+#import "AIObjectSelectionPopUpButton.h"
+
 /*!
  * @class AIColorSelectionPopUpButton
- * @brief Button for selecting colors
+ * @brief PopUpButton for selecting colors
  *
- * Button which draws as a rectangle, with an inset of a selected color, and which displays the standard color picker when clicked, updating its color as colors are changed in the color picker.
+ * AIColorSelectionPopUpButton is an NSPopUpButton that displays preset color choices
  */
-@interface AIColorSelectionPopUpButton : NSPopUpButton {
-    NSArray	*availableColors;
-    NSColor	*customColor;
+@interface AIColorSelectionPopUpButton : AIObjectSelectionPopUpButton {
 
-    NSMenuItem	*customMenuItem;
 }
 
 /*!

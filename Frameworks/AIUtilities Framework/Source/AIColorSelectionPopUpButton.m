@@ -14,157 +14,94 @@
 #define COLOR_SAMPLE_WIDTH		24
 #define COLOR_SAMPLE_HEIGHT		12
 #define SAMPLE_FRAME_DARKEN		0.3
-#define COLOR_CUSTOM_TITLE		AILocalizedString(@"Custom...", nil)
 
 @interface AIColorSelectionPopUpButton (PRIVATE)
 - (void)_initColorSelectionPopUpButton;
 - (void)_buildColorMenu;
-- (NSImage *)_sampleImageForColor:(NSColor *)inColor;
 - (void)_setCustomColor:(NSColor *)inColor;
+- (NSImage *)_sampleImageForColor:(NSColor *)inColor;
 @end
 
+/*!
+ * @class AIColorSelectionPopUpButton
+ *
+ * AIColorSelectionPopUpButton is an NSPopUpButton that displays preset color choices.
+ */
 @implementation AIColorSelectionPopUpButton
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+/*!
+ * @brief Shared init code
+ */
+- (void)_initObjectSelectionPopUpButton
 {
-	if ((self = [super initWithCoder:aDecoder])) {
-		[self _initColorSelectionPopUpButton];
-	}
-	return self;
-}
-
-- (id)initWithFrame:(NSRect)buttonFrame pullsDown:(BOOL)flag
-{
-	if ((self = [super initWithFrame:buttonFrame pullsDown:flag])) {
-		[self _initColorSelectionPopUpButton];
-	}
-	return self;
-}
-
-- (void)_initColorSelectionPopUpButton
-{
-    //
-    availableColors = nil;
-    customColor = nil;
-    
-    //Create the custom menu item
-    customMenuItem = [[NSMenuItem alloc] initWithTitle:COLOR_CUSTOM_TITLE
-												target:self
-												action:@selector(openColorPanel:) 
-										 keyEquivalent:@""];
+	[super _initObjectSelectionPopUpButton];
 
     //Setup our default colors
-    customColor = [[NSColor blackColor] retain];
+    [self setCustomValue:[NSColor blackColor]];
     [self setAvailableColors:[NSArray arrayWithObjects:@"Black",[NSColor blackColor],@"White",[NSColor whiteColor],@"Red", [NSColor redColor], @"Blue", [NSColor blueColor], @"Green", [NSColor greenColor], @"Yellow", [NSColor yellowColor], nil]];
 }
 
-- (void)dealloc
-{
-    [availableColors release]; availableColors = nil;
-    [customColor release]; customColor = nil;
-    [customMenuItem release]; customMenuItem = nil;
-    
-    [super dealloc];
-}
-
-//The currently selected color
+/*!
+ * @brief Set the currently displayed color
+ * 
+ * If a preset exists for the color, it will be selected.  Otherwise, the custom option will be changed to this color
+ * and selected
+ * @param inColor NSColor to make active
+ */
 - (void)setColor:(NSColor *)inColor
 {
-    NSEnumerator	*enumerator;
-    NSString		*label;
-
-    //search for a preset
-    enumerator = [availableColors objectEnumerator];
-    while ((label = [enumerator nextObject])) {
-        if ([[enumerator nextObject] equalToRGBColor:inColor]) break;
-    }
-
-    //Select
-    if (label) {
-        [self selectItemWithTitle:label];
-    } else {
-        [self _setCustomColor:inColor];
-        [self selectItem:customMenuItem];
-    }
+	[self setObjectValue:inColor];
 }
+
+/*!
+ * @brief Returns the currently displayed color
+ */
 - (NSColor *)color
 {
-    return([[self selectedItem] representedObject]);
+    return([self objectValue]);
 }
 
-//Set the available pre-set color choices.  Array should be alternating labels and colors (NSString, NSColor, NSString, NSColor, NSString, ...)
+/*!
+ * @brief Set the pre-set color choices
+ *
+ * @param inColor NSArray or color presets as alternating NSString label, NSColor color pairs
+ */
 - (void)setAvailableColors:(NSArray *)inColors
 {
-    if (inColors != availableColors) {
-        [availableColors release];
-        availableColors = [inColors retain];
-
-        [self _buildColorMenu];
-    }
+	[self setPresetValues:inColors];
 }
 
-//Opens the color panel
-- (void)openColorPanel:(id)sender
+/*!
+ * @brief Invoked when the custom menu item is selected
+ */
+- (void)selectCustomValue:(id)sender
 {
     [[NSColorPanel sharedColorPanel] setTarget:self];
     [[NSColorPanel sharedColorPanel] setAction:@selector(customColorChanged:)];
-    [[NSColorPanel sharedColorPanel] setColor:customColor];
+    [[NSColorPanel sharedColorPanel] setColor:[self customValue]];
     [[NSColorPanel sharedColorPanel] makeKeyAndOrderFront:nil];
 }
 
-//Color panel color was changed
+/*!
+ * @brief Invoked when a new custom color is picked
+ */
 - (void)customColorChanged:(id)sender
 {
-    if ([self selectedItem] == customMenuItem) {
-        [self _setCustomColor:[[[[NSColorPanel sharedColorPanel] color] copy] autorelease]];
-        [[self target] performSelector:[self action] withObject:self];
-    }
+	[self setCustomValue:[[[[NSColorPanel sharedColorPanel] color] copy] autorelease]];
 }
 
-//Set the current custom color
-- (void)_setCustomColor:(NSColor *)inColor
+/*!
+ * @brief Compare two values
+ */
+- (BOOL)value:(id)valueA isEqualTo:(id)valueB
 {
-    if (customColor != inColor) {
-        [customColor release]; customColor = [inColor retain];
-        [customMenuItem setRepresentedObject:customColor];
-        [customMenuItem setImage:[self _sampleImageForColor:customColor]];
-    }
+	return([valueA equalToRGBColor:valueB]);
 }
 
-//Build a menu of colors
-- (void)_buildColorMenu
-{
-    NSMenuItem		*menuItem;
-    NSEnumerator	*enumerator;
-    NSColor		*color;
-    NSString		*label;
-
-    //Empty our menu
-    if (![self menu]) {
-        [self setMenu:[[[NSMenu alloc] init] autorelease]]; //Make sure we have a menu
-    }
-    [self removeAllItems];
-    
-    //Colors
-    enumerator = [availableColors objectEnumerator];
-    while ((label = [enumerator nextObject])) {
-        color = [enumerator nextObject];
-
-        //Create the menu item
-        menuItem = [[[NSMenuItem alloc] initWithTitle:label target:nil action:nil keyEquivalent:@""] autorelease];
-        [menuItem setRepresentedObject:color];
-        [menuItem setImage:[self _sampleImageForColor:color]];
-        [[self menu] addItem:menuItem];
-    }
-
-    //Custom
-    [[self menu] addItem:[NSMenuItem separatorItem]];
-    [[self menu] addItem:customMenuItem];
-    [customMenuItem setImage:[self _sampleImageForColor:customColor]];
-}
-
-//Returns a sample square image for the color
-- (NSImage *)_sampleImageForColor:(NSColor *)inColor
+/*!
+ * @brief Updates a menu image for the value
+ */
+- (void)updateMenuItem:(NSMenuItem *)menuItem forValue:(id)inValue
 {
     NSImage	*image;
     NSRect	imageRect;
@@ -172,19 +109,16 @@
     //Create the sample image
     imageRect = NSMakeRect(0, 0, COLOR_SAMPLE_WIDTH, COLOR_SAMPLE_HEIGHT);
     image = [[[NSImage alloc] initWithSize:imageRect.size] autorelease];
-
+	
     [image lockFocus];
-    [inColor set];
+    [inValue set];
     [NSBezierPath fillRect:imageRect];
-    [[inColor darkenBy:SAMPLE_FRAME_DARKEN] set];
+    [[inValue darkenBy:SAMPLE_FRAME_DARKEN] set];
     [NSBezierPath strokeRect:imageRect];
     [image unlockFocus];
-
-    return(image);
+	
+	[menuItem setImage:image];
 }
 
 @end
-
-
-
 

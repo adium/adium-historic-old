@@ -237,6 +237,10 @@
 		4B84A63407B70A5000C2941D /* AISplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B84A63207B70A5000C2941D /* AISplitView.m */; };
 		4BC5A5C30764F6ED0080ECF7 /* AIVideoCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC5A5C10764F6ED0080ECF7 /* AIVideoCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC5A5C40764F6ED0080ECF7 /* AIVideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5C20764F6ED0080ECF7 /* AIVideoCapture.m */; };
+		4BC869D70863170200B2C430 /* AIFontSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869D50863170200B2C430 /* AIFontSelectionPopUpButton.h */; };
+		4BC869D80863170200B2C430 /* AIFontSelectionPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC869D60863170200B2C430 /* AIFontSelectionPopUpButton.m */; };
+		4BC869FC08631A6300B2C430 /* AIObjectSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869FA08631A6300B2C430 /* AIObjectSelectionPopUpButton.h */; };
+		4BC869FD08631A6300B2C430 /* AIObjectSelectionPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC869FB08631A6300B2C430 /* AIObjectSelectionPopUpButton.m */; };
 		4BD1F3D806D27F3100B3975E /* AIScaledImageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F3D906D27F3100B3975E /* AIScaledImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */; };
 		4BD1F5CF06D28D2100B3975E /* AISocket.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486BAE06D1DF0300DA778C /* AISocket.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -527,6 +531,10 @@
 		4B84A63207B70A5000C2941D /* AISplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISplitView.m; path = Source/AISplitView.m; sourceTree = "<group>"; };
 		4BC5A5C10764F6ED0080ECF7 /* AIVideoCapture.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIVideoCapture.h; path = Source/AIVideoCapture.h; sourceTree = "<group>"; };
 		4BC5A5C20764F6ED0080ECF7 /* AIVideoCapture.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIVideoCapture.m; path = Source/AIVideoCapture.m; sourceTree = "<group>"; };
+		4BC869D50863170200B2C430 /* AIFontSelectionPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIFontSelectionPopUpButton.h; path = Source/AIFontSelectionPopUpButton.h; sourceTree = "<group>"; };
+		4BC869D60863170200B2C430 /* AIFontSelectionPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFontSelectionPopUpButton.m; path = Source/AIFontSelectionPopUpButton.m; sourceTree = "<group>"; };
+		4BC869FA08631A6300B2C430 /* AIObjectSelectionPopUpButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIObjectSelectionPopUpButton.h; path = Source/AIObjectSelectionPopUpButton.h; sourceTree = "<group>"; };
+		4BC869FB08631A6300B2C430 /* AIObjectSelectionPopUpButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIObjectSelectionPopUpButton.m; path = Source/AIObjectSelectionPopUpButton.m; sourceTree = "<group>"; };
 		4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScaledImageCell.h; path = Source/AIScaledImageCell.h; sourceTree = "<group>"; };
 		4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScaledImageCell.m; path = Source/AIScaledImageCell.m; sourceTree = "<group>"; };
 		4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Background.png; path = Resources/Aqua_Tab_Background.png; sourceTree = "<group>"; };
@@ -956,13 +964,17 @@
 			name = "\"Plastic\" aqua buttons";
 			sourceTree = "<group>";
 		};
-		4BD1EF3306D2631E00B3975E /* Color selection menu */ = {
+		4BD1EF3306D2631E00B3975E /* Color & font selection menu */ = {
 			isa = PBXGroup;
 			children = (
+				4BC869FA08631A6300B2C430 /* AIObjectSelectionPopUpButton.h */,
+				4BC869FB08631A6300B2C430 /* AIObjectSelectionPopUpButton.m */,
 				34486B4E06D1DF0300DA778C /* AIColorSelectionPopUpButton.h */,
 				34486B4F06D1DF0300DA778C /* AIColorSelectionPopUpButton.m */,
+				4BC869D50863170200B2C430 /* AIFontSelectionPopUpButton.h */,
+				4BC869D60863170200B2C430 /* AIFontSelectionPopUpButton.m */,
 			);
-			name = "Color selection menu";
+			name = "Color & font selection menu";
 			sourceTree = "<group>";
 		};
 		4BD1EF3606D2632300B3975E /* Resizing preference window */ = {
@@ -1037,7 +1049,7 @@
 				34D1838D075FC20E0075A380 /* Button with rollover delegate action */,
 				4BD1EF7A06D2637800B3975E /* Button with a popup menu for toolbar items */,
 				0750FF2F073A0562000D8A1F /* Toolbar item whose validation delegate can be changed */,
-				4BD1EF3306D2631E00B3975E /* Color selection menu */,
+				4BD1EF3306D2631E00B3975E /* Color & font selection menu */,
 				4BD1F5A706D28BE600B3975E /* Colored box view */,
 				4BD1F2D806D2699D00B3975E /* Delayed action textField */,
 				4BD1EED206D25EC900B3975E /* Dynamic, draggable tabs */,
@@ -1492,6 +1504,8 @@
 				34D835D007CBED06006466F2 /* pxmLib.h in Headers */,
 				3459C58F07E291EC005F284E /* AIGradientImageCell.h in Headers */,
 				34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */,
+				4BC869D70863170200B2C430 /* AIFontSelectionPopUpButton.h in Headers */,
+				4BC869FC08631A6300B2C430 /* AIObjectSelectionPopUpButton.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1728,6 +1742,8 @@
 				34D835CF07CBED06006466F2 /* pxmLib.m in Sources */,
 				3459C58E07E291EC005F284E /* AIGradientImageCell.m in Sources */,
 				34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */,
+				4BC869D80863170200B2C430 /* AIFontSelectionPopUpButton.m in Sources */,
+				4BC869FD08631A6300B2C430 /* AIObjectSelectionPopUpButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
