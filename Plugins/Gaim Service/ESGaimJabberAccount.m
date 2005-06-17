@@ -268,32 +268,22 @@ gboolean gaim_init_jabber_plugin(void);
 		if ([*disconnectionError rangeOfString:@"401"].location != NSNotFound) {
 			shouldReconnect = NO;
 
-			/* Automatic registration attempt... Doesn't work for jabber.org at present... */
-			if ([[self host] caseInsensitiveCompare:@"jabber.org"] != NSOrderedSame) {
-				//Display no error message
-				[*disconnectionError release];
-				*disconnectionError = nil;
+			/* Automatic registration attempt */
+			//Display no error message
+			[*disconnectionError release];
+			*disconnectionError = nil;
 
-				[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
-																	  defaultButton:AILocalizedString(@"Register",nil)
-																	alternateButton:AILocalizedString(@"Cancel",nil)
-																		otherButton:nil
-																		   onWindow:nil
-																  withMessageHeader:nil
-																		 andMessage:[NSAttributedString stringWithString:
-																			 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
-																			 target:self
-																		   userInfo:nil];
-			} else {
-				//Display the Jabber.org error message
-				[*disconnectionError release];
-				*disconnectionError = AILocalizedString(@"Invalid Jabber ID or password.\n\nIf you do not have a jabber.org account under this name, you will need to register using another Jabber client such as iChat AV 3 (Mac OS X Tiger) or Psi (http://psi.affinix.com).\n\nAdium can not automatically register a new jabber.org account at this time (please see http://status.jabber.org/ for details).",nil);
-				[*disconnectionError retain];
+			[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"Invalid Jabber ID or Password",nil)
+																  defaultButton:AILocalizedString(@"Register",nil)
+																alternateButton:AILocalizedString(@"Cancel",nil)
+																	otherButton:nil
+																	   onWindow:nil
+															  withMessageHeader:nil
+																	 andMessage:[NSAttributedString stringWithString:
+																		 AILocalizedString(@"Jabber was unable to connect due to an invalid Jabber ID or password.  This may be because you do not yet have an account on this Jabber server.  Would you like to register now?",nil)]
+																		 target:self
+																	   userInfo:nil];
 
-				//Forget the password
-				[[adium accountController] forgetPasswordForAccount:self];
-			}
-			
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldReconnect = NO;
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
