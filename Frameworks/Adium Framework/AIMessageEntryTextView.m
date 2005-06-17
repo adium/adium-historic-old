@@ -22,9 +22,10 @@
 #import "ESFileWrapperExtension.h"
 #import "AITextAttachmentExtension.h"
 
+#import "AIDefaultFormattingPlugin.h"
+
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-#import "AIDefaultFormattingPlugin.h"
 
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
@@ -498,16 +499,10 @@ static NSColor	*cachedWhiteColor = nil;
 {
 	NSAttributedString	*textStorage = [self textStorage];
 	
-	if ([textStorage length] > 0) {
-		//Add to history if there is text being sent
-		[historyArray insertObject:[[textStorage copy] autorelease] atIndex:1];
-		if ([historyArray count] > MAX_HISTORY) {
-			[historyArray removeLastObject];
-		}
-		
-	} else {
-		[[adium notificationCenter] postNotificationName:@"Adium_RestoreDefaultFormatting"
-												  object:nil];
+	//Add to history if there is text being sent
+	[historyArray insertObject:[[textStorage copy] autorelease] atIndex:1];
+	if ([historyArray count] > MAX_HISTORY) {
+		[historyArray removeLastObject];
 	}
 
 	currentHistoryLocation = 0; //Move back to bottom of history
@@ -517,13 +512,6 @@ static NSColor	*cachedWhiteColor = nil;
 	
 	//Clear the undo/redo stack as it makes no sense to carry between sends (the history is for that)
 	[[self undoManager] removeAllActions];
-
-	//Remove the link attribute (If present) so it doesn't bleed
-	if ([[self typingAttributes] objectForKey:NSLinkAttributeName]) {
-		NSMutableDictionary	*typingAttributes = [[[self typingAttributes] mutableCopy] autorelease];
-		[typingAttributes removeObjectForKey:NSLinkAttributeName];
-		[self setTypingAttributes:typingAttributes];
-	}
 }
 
 
