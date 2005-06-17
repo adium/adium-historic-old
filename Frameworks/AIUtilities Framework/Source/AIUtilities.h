@@ -40,6 +40,7 @@
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIFontSelectionPopUpButton.h>
 #import <AIUtilities/AIGradient.h>
 #import <AIUtilities/AIGradientCell.h>
 #import <AIUtilities/AIHostReachabilityMonitor.h>
