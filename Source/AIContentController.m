@@ -24,6 +24,7 @@
 //XXX - why are we importing specific headers here, rather than just importing the umbrella headers? --boredzo
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
@@ -39,6 +40,8 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import "AdiumTyping.h"
+
+#define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
 
 @interface AIContentController (PRIVATE)
 
@@ -102,6 +105,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
 		//Emoticons array
 		emoticonsArray = nil;
+		
+		AIPreferenceController *preferenceController = [adium preferenceController];
+		[preferenceController registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];		
 	}
 	
 	return self;
@@ -111,6 +117,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	//Message events
 	messageEvents = [[AdiumMessageEvents alloc] init];
+
+	//Formatting prefs
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
 }
 
 /*
@@ -154,13 +163,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 //Default Formatting -------------------------------------------------------------------------------------------------
 #pragma mark Default Formatting
-- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict
-{
-    if (defaultFormattingAttributes != inDict) {
-	   [defaultFormattingAttributes release];
-	   defaultFormattingAttributes	= [inDict retain];
-    }
-}
+//XXX - This is really UI, but it can live here for now
 /*
  * @brief Default formatting attributes
  *
@@ -169,6 +172,24 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (NSDictionary *)defaultFormattingAttributes
 {
 	return defaultFormattingAttributes;
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
+					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	NSFont	*font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
+	NSColor	*textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
+	NSColor	*backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
+	
+	//Build formatting dict
+	[defaultFormattingAttributes release];
+	defaultFormattingAttributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:font, NSFontAttributeName, nil];
+	if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]) {
+		[defaultFormattingAttributes setObject:textColor forKey:NSForegroundColorAttributeName];	
+	}	
+	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
+		[defaultFormattingAttributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
+	}
 }
 
 

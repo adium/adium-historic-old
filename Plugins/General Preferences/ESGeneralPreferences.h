@@ -16,6 +16,8 @@
 
 #import <Adium/AIPreferencePane.h>
 
+@class AIColorSelectionPopUpButton, AIFontSelectionPopUpButton;
+
 @interface ESGeneralPreferences : AIPreferencePane {
     IBOutlet	NSButton		*checkBox_messagesInTabs;
     IBOutlet	NSButton		*checkBox_arrangeByGroup;
@@ -36,6 +38,10 @@
 	IBOutlet	NSTextField		*label_menuItem;
 	IBOutlet	NSTextField		*label_switchTabsWith;
 	IBOutlet	NSTextField		*label_sound;
+	
+	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_text;
+	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_background;
+	IBOutlet	AIFontSelectionPopUpButton		*fontPopUp_text;
 }
 
 - (IBAction)selectVolume:(id)sender;

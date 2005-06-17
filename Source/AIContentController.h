@@ -21,6 +21,14 @@
 #define Content_WillSendContent						@"Content_WillSendContent"
 #define Content_WillReceiveContent					@"Content_WillReceiveContent"
 
+//XXX - This is really UI, but it can live here for now
+#define PREF_GROUP_FORMATTING				@"Formatting"
+#define KEY_FORMATTING_FONT					@"Default Font"
+#define KEY_FORMATTING_TEXT_COLOR			@"Default Text Color"
+#define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
+
+
+
 //Not displayed, but used for internal identification of the encryption menu
 #define ENCRYPTION_MENU_TITLE						@"Encryption Menu"
 
@@ -74,7 +82,7 @@ typedef enum {
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
     NSMutableArray			*textEntryViews;
-	NSDictionary			*defaultFormattingAttributes;
+//	NSDictionary			*defaultFormattingAttributes;
 	
 	NSMutableSet			*objectsBeingReceived;
 
@@ -87,10 +95,18 @@ typedef enum {
 	AdiumMessageEvents		*messageEvents;
 	
 	NSMutableSet			*stringsRequiringPolling;
+	
+	NSMutableDictionary	*defaultFormattingAttributes;
+
 }
 
 //Typing
 - (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText;
+
+
+//- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
+- (NSDictionary *)defaultFormattingAttributes;
+
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
@@ -111,8 +127,6 @@ typedef enum {
 - (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
 - (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
 - (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
-- (NSDictionary *)defaultFormattingAttributes;
 
 //Filtering content
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter

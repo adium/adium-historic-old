@@ -397,8 +397,6 @@
 		34A6FB2607D6F97B00972830 /* EventSoundContactAlert.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2507D6F97B00972830 /* EventSoundContactAlert.nib */; };
 		34A6FB2D07D6F98600972830 /* SoundAlert.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2B07D6F98600972830 /* SoundAlert.png */; };
 		34A6FB2E07D6F98600972830 /* SoundFileIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB2C07D6F98600972830 /* SoundFileIcon.png */; };
-		34A6FB7707D6FDBA00972830 /* AIDefaultFormattingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FB7507D6FDB900972830 /* AIDefaultFormattingPlugin.m */; };
-		34A6FB7807D6FDBA00972830 /* AIDefaultFormattingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A6FB7607D6FDB900972830 /* AIDefaultFormattingPlugin.h */; };
 		34A6FB8107D6FDCC00972830 /* FormattingDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */; };
 		34A6FEBB07D7E2E400972830 /* KFTypeSelectTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34A6FEBC07D7E2E500972830 /* KFTypeSelectTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */; };
@@ -2165,8 +2163,6 @@
 		34A6FB2507D6F97B00972830 /* EventSoundContactAlert.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = EventSoundContactAlert.nib; path = Resources/EventSoundContactAlert.nib; sourceTree = "<group>"; };
 		34A6FB2B07D6F98600972830 /* SoundAlert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SoundAlert.png; path = Resources/SoundAlert.png; sourceTree = "<group>"; };
 		34A6FB2C07D6F98600972830 /* SoundFileIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SoundFileIcon.png; path = Resources/SoundFileIcon.png; sourceTree = "<group>"; };
-		34A6FB7507D6FDB900972830 /* AIDefaultFormattingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIDefaultFormattingPlugin.m; path = Source/AIDefaultFormattingPlugin.m; sourceTree = "<group>"; };
-		34A6FB7607D6FDB900972830 /* AIDefaultFormattingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIDefaultFormattingPlugin.h; path = Source/AIDefaultFormattingPlugin.h; sourceTree = "<group>"; };
 		34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = FormattingDefaults.plist; path = Resources/FormattingDefaults.plist; sourceTree = "<group>"; };
 		34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = KFTypeSelectTableView.m; path = "Frameworks/Adium Framework/KFTypeSelectTableView.m"; sourceTree = "<group>"; };
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
@@ -3729,7 +3725,6 @@
 				4BF4813B049A802E00A8010A /* Auto Linking */,
 				34F8A7FA05A8927F00577775 /* Applescript Filters */,
 				9E4CF9D104AA69B000415B22 /* Action Support */,
-				4B6D0E43047D490700A8010A /* Default Formatting */,
 				34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */,
 				4B0473B7043E43F200A8010A /* Status Changed Messages */,
 			);
@@ -4818,16 +4813,6 @@
 			name = "New Message Panel";
 			sourceTree = "<group>";
 		};
-		4B6D0E43047D490700A8010A /* Default Formatting */ = {
-			isa = PBXGroup;
-			children = (
-				34A6FB7607D6FDB900972830 /* AIDefaultFormattingPlugin.h */,
-				34A6FB7507D6FDB900972830 /* AIDefaultFormattingPlugin.m */,
-				34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */,
-			);
-			name = "Default Formatting";
-			sourceTree = "<group>";
-		};
 		4B737B4B065D4FDC0062AB94 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
@@ -4915,6 +4900,7 @@
 				F57938AA033E737001A8010A /* AIAccountController.m */,
 				F55B415C03AB8B5601A8010A /* AIContentController.h */,
 				F55B415D03AB8B5601A8010A /* AIContentController.m */,
+				34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */,
 				F57938F9033E745F01A8010A /* AISoundController.h */,
 				F57938B0033E737001A8010A /* AISoundController.m */,
 			);
@@ -6231,7 +6217,6 @@
 				9E125C6507D3571400AA91C5 /* ESBlockingPlugin.h in Headers */,
 				34A6FAD807D6F3A700972830 /* ESEventSoundAlertDetailPane.h in Headers */,
 				34A6FADA07D6F3AA00972830 /* AIEventSoundsPlugin.h in Headers */,
-				34A6FB7807D6FDBA00972830 /* AIDefaultFormattingPlugin.h in Headers */,
 				344093AA07D9161B00321BB3 /* ESAutoAwayPlugin.h in Headers */,
 				34BFD80107E6A51D00AD984D /* GBApplescriptFiltersPlugin.h in Headers */,
 				34BFE20307E8E11500AD984D /* AIChatCyclingPlugin.h in Headers */,
@@ -7870,7 +7855,6 @@
 				4B4B60B507D39910004C5D11 /* AIContentController.m in Sources */,
 				34A6FAD907D6F3AA00972830 /* AIEventSoundsPlugin.m in Sources */,
 				34A6FADB07D6F3AA00972830 /* ESEventSoundAlertDetailPane.m in Sources */,
-				34A6FB7707D6FDBA00972830 /* AIDefaultFormattingPlugin.m in Sources */,
 				344093AB07D9161B00321BB3 /* ESAutoAwayPlugin.m in Sources */,
 				34BFD80007E6A51D00AD984D /* GBApplescriptFiltersPlugin.m in Sources */,
 				34BFE20207E8E11500AD984D /* AIChatCyclingPlugin.m in Sources */,

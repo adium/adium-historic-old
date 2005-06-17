@@ -570,6 +570,7 @@
 		[textView_outgoing setUsesFindPanel:YES];
     }
 	[textView_outgoing setClearOnEscape:YES];
+	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	
 	//User's choice of mininum height for their text entry view
 	entryMinHeight = [[prefDict objectForKey:KEY_ENTRY_TEXTVIEW_MIN_HEIGHT] intValue];
@@ -614,6 +615,7 @@
 - (void)clearTextEntryView
 {
 	[textView_outgoing setString:@""];
+	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
 	
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:textView_outgoing];
