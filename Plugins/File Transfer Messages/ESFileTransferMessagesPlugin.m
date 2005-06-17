@@ -26,8 +26,15 @@
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type;
 @end
 
+/*!
+ * @class ESFileTransferMessagesPlugin
+ * @brief Component which handles sending file transfer status messages
+ */
 @implementation ESFileTransferMessagesPlugin
 
+/*!
+ * @brief Install
+ */
 - (void)installPlugin
 {
 	//Install our observers
@@ -47,11 +54,17 @@
 									 object:nil];
 }
 
+/*!
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[[adium notificationCenter] removeObserver:self];
 }
 
+/*!
+ * @brief A file transfer event occurred
+ */
 - (void)handleFleTransferEvent:(NSNotification *)notification
 {
 	ESFileTransfer	*fileTransfer = (ESFileTransfer *)[notification userInfo];
@@ -85,7 +98,9 @@
 	[self statusMessage:message forContact:listContact withType:type];
 }
 
-//Post a status message on all active chats for this object
+/*!
+ * @brief Post a status message on all active chats for this object
+ */
 - (void)statusMessage:(NSString *)message forContact:(AIListContact *)contact withType:(NSString *)type
 {
     NSEnumerator		*enumerator;
