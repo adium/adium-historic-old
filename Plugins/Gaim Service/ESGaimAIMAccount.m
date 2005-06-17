@@ -290,7 +290,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 - (void)gotGroupForContact:(AIListContact *)theContact
 {
 	if (theContact) {
-		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray array] retain];
+		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray alloc] init];
 		[arrayOfContactsForDelayedUpdates addObject:theContact];
 		
 		if (!delayedSignonUpdateTimer) {
