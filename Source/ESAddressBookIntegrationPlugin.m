@@ -111,6 +111,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[sharedAddressBook release]; sharedAddressBook = nil;
 
 	[[adium preferenceController] unregisterPreferenceObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 
 	[super dealloc];
 }
