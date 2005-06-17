@@ -96,6 +96,7 @@
 {
 	if (submenuType == AIAccountStatusSubmenu) [[adium statusController] unregisterStateMenuPlugin:self];
 	[[adium contactController] unregisterListObjectObserver:self];
+	[[adium notificationCenter] removeObserver:self];
 
 	delegate = nil;
 
