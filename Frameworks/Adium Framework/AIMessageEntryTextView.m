@@ -55,7 +55,6 @@ static NSColor	*cachedWhiteColor = nil;
 		pushPopEnabled = YES;
 		clearOnEscape = NO;
 		homeToStartOfLine = YES;
-		insertingText = NO;
 		resizing = NO;
 		historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
 		pushArray = [[NSMutableArray alloc] init];
@@ -206,9 +205,7 @@ static NSColor	*cachedWhiteColor = nil;
 	[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
 	
     //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
-    if (!insertingText) { 
-        [[adium contentController] contentsChangedInTextEntryView:self];
-    }
+	[[adium contentController] contentsChangedInTextEntryView:self];
     
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
@@ -325,27 +322,6 @@ static NSColor	*cachedWhiteColor = nil;
 	}
 	
 	[attributes release];
-}
-
-//Let adium know as text is inserted
-- (void)insertText:(id)aString
-{
-    NSString 	*theString = nil;
-
-	//We set the insertingText flag to YES to prevent our 'textDidChange' method from notifying Adium
-	//about this change, since we will notify Adium in a more efficient way from this method.
-	insertingText = YES;
-	[super insertText:aString];
-	insertingText = NO; 
-	
-	//Let Adium know we've adding content
-	if ([aString isKindOfClass:[NSString class]]) {
-		theString = aString;
-	} else if ([aString isKindOfClass:[NSAttributedString class]]) {
-		theString = [aString string];
-	}
-	
-	[[adium contentController] stringAdded:theString toTextEntryView:self];
 }
 
 - (void)deleteBackward:(id)sender
