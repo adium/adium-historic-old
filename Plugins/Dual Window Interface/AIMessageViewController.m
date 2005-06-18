@@ -158,9 +158,6 @@
 {   
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
-    //Close the message entry text view
-    [[adium contentController] willCloseTextEntryView:textView_outgoing];
-
     if (chat) {
         [[adium chatController] closeChat:chat];
 		
