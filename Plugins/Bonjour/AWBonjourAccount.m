@@ -198,7 +198,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 			}
 	}
 	
-	if (idleSinceDate = [contact idleSinceDate]){
+	if ((idleSinceDate = [contact idleSinceDate])){
 		//Only set the new date object if the time interval has changed
 		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0){
 			[listContact setStatusObject:idleSinceDate forKey:@"IdleSince" notify:NO];
@@ -209,7 +209,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		[listContact setStatusObject:nil forKey:@"IsIdle" notify:NO];
 	}
 	
-    if (statusMessage = [contact statusMessage]){
+    if ((statusMessage = [contact statusMessage])){
 		NSString	*oldStatusMessage = [listContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"];
 		
 		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]){
@@ -468,6 +468,8 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 			case AIAwayStatusType:
 			case AIInvisibleStatusType:
 				[self setAccountAwayTo:statusMessage];
+				break;
+			default:
 				break;
 		}
 	}
