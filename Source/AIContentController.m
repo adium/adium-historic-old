@@ -93,17 +93,9 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		adiumTyping = [[AdiumTyping alloc] init];
 		adiumFormatting = [[AdiumFormatting alloc] init];
 		
-		
-		//Text entry filtering and tracking
-		emoticonPacks = nil;
-		emoticonsArray = nil;
-		
 		objectsBeingReceived = [[NSMutableSet alloc] init];
 		stringsRequiringPolling = [[NSMutableSet alloc] init];
 	
-		//Emoticons array
-		emoticonsArray = nil;
-		
 	}
 	
 	return self;
@@ -132,9 +124,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
  */
 - (void)dealloc
 {
-	
-	[emoticonPacks release]; emoticonPacks = nil;
-	[emoticonsArray release]; emoticonsArray = nil;
 	[objectsBeingReceived release];
 
     [super dealloc];

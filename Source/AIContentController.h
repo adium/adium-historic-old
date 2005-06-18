@@ -71,9 +71,6 @@ typedef enum {
 		
 	NSMutableSet			*objectsBeingReceived;
 
-    NSArray					*emoticonsArray;
-    NSArray					*emoticonPacks;
-	
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
