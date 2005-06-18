@@ -44,8 +44,6 @@
 #import <Adium/AIMetaContact.h>
 #import <Adium/NDRunLoopMessenger.h>
 
-#define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
-
 @interface AIContentController (PRIVATE)
 
 - (void)finishReceiveContentObject:(AIContentObject *)inObject;
@@ -93,13 +91,13 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	if ((self = [super init])) {
 		adiumTyping = [[AdiumTyping alloc] init];
+		adiumFormatting = [[AdiumFormatting alloc] init];
 		
 		
 		//Text entry filtering and tracking
 		textEntryFilterArray = [[NSMutableArray alloc] init];
 		textEntryContentFilterArray = [[NSMutableArray alloc] init];
 		textEntryViews = [[NSMutableArray alloc] init];
-		defaultFormattingAttributes = nil;
 		emoticonPacks = nil;
 		emoticonsArray = nil;
 		
@@ -109,8 +107,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		//Emoticons array
 		emoticonsArray = nil;
 		
-		AIPreferenceController *preferenceController = [adium preferenceController];
-		[preferenceController registerDefaults:[NSDictionary dictionaryNamed:DEFAULT_FORMATTING_DEFAULT_PREFS forClass:[self class]] forGroup:PREF_GROUP_FORMATTING];		
 	}
 	
 	return self;
@@ -121,8 +117,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	//Message events
 	messageEvents = [[AdiumMessageEvents alloc] init];
 
-	//Formatting prefs
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_FORMATTING];
+	[adiumFormatting controllerDidLoad];
 }
 
 /*
@@ -131,6 +126,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 - (void)controllerWillClose
 {
 	[adiumTyping release];
+	[adiumFormatting release];
 	
 }
 
@@ -158,42 +154,16 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	[adiumTyping userIsTypingContentForChat:chat hasEnteredText:hasEnteredText];
 }
 
-
-
-
-
-
-
-//Default Formatting -------------------------------------------------------------------------------------------------
-#pragma mark Default Formatting
-//XXX - This is really UI, but it can live here for now
-/*
- * @brief Default formatting attributes
- *
- * This dictionary of attributes will be used for new text entry views, messages, etc.
- */
-- (NSDictionary *)defaultFormattingAttributes
-{
-	return defaultFormattingAttributes;
+#pragma mark Formatting
+- (NSDictionary *)defaultFormattingAttributes {
+	return [adiumFormatting defaultFormattingAttributes];
 }
 
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
-					preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	NSFont	*font = [[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont];
-	NSColor	*textColor = [[prefDict objectForKey:KEY_FORMATTING_TEXT_COLOR] representedColor];
-	NSColor	*backgroundColor = [[prefDict objectForKey:KEY_FORMATTING_BACKGROUND_COLOR] representedColor];
-	
-	//Build formatting dict
-	[defaultFormattingAttributes release];
-	defaultFormattingAttributes = [[NSMutableDictionary alloc] initWithObjectsAndKeys:font, NSFontAttributeName, nil];
-	if (textColor && ![textColor equalToRGBColor:[NSColor textColor]]) {
-		[defaultFormattingAttributes setObject:textColor forKey:NSForegroundColorAttributeName];	
-	}	
-	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
-		[defaultFormattingAttributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
-	}
-}
+
+
+
+
+
 
 
 //Content Filtering ----------------------------------------------------------------------------------------------------

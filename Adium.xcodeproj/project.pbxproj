@@ -975,6 +975,8 @@
 		4BBF41E40661194A001D31E1 /* AIContactProfilePane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF41DE0661194A001D31E1 /* AIContactProfilePane.m */; };
 		4BBF41E70661194A001D31E1 /* ContactProfilePane.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BBF41E10661194A001D31E1 /* ContactProfilePane.nib */; };
 		4BBF41F506611A23001D31E1 /* AIContactInfoPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BBF41EE066119A8001D31E1 /* AIContactInfoPane.m */; };
+		4BC540B808648322003CD69E /* AdiumFormatting.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC540B608648321003CD69E /* AdiumFormatting.h */; };
+		4BC540B908648322003CD69E /* AdiumFormatting.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC540B708648322003CD69E /* AdiumFormatting.m */; };
 		4BC5A5DB0764F75B0080ECF7 /* AILocalVideoWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC5A5D60764F75B0080ECF7 /* AILocalVideoWindowController.h */; };
 		4BC5A5DC0764F75B0080ECF7 /* AILocalVideoWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5D70764F75B0080ECF7 /* AILocalVideoWindowController.m */; };
 		4BC5A5DD0764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC5A5D80764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h */; };
@@ -2806,6 +2808,8 @@
 		4BC15BEA0524CE5E00A8010A /* AIStressTestAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStressTestAccount.m; path = "Plugins/Stress Test/AIStressTestAccount.m"; sourceTree = "<group>"; };
 		4BC15BEB0524CE5E00A8010A /* AIStressTestPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStressTestPlugin.h; path = "Plugins/Stress Test/AIStressTestPlugin.h"; sourceTree = "<group>"; };
 		4BC15BEC0524CE5E00A8010A /* AIStressTestPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStressTestPlugin.m; path = "Plugins/Stress Test/AIStressTestPlugin.m"; sourceTree = "<group>"; };
+		4BC540B608648321003CD69E /* AdiumFormatting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumFormatting.h; path = Source/AdiumFormatting.h; sourceTree = "<group>"; };
+		4BC540B708648322003CD69E /* AdiumFormatting.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumFormatting.m; path = Source/AdiumFormatting.m; sourceTree = "<group>"; };
 		4BC5A5D60764F75B0080ECF7 /* AILocalVideoWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILocalVideoWindowController.h; path = "Plugins/Video Chat Interface/AILocalVideoWindowController.h"; sourceTree = "<group>"; };
 		4BC5A5D70764F75B0080ECF7 /* AILocalVideoWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILocalVideoWindowController.m; path = "Plugins/Video Chat Interface/AILocalVideoWindowController.m"; sourceTree = "<group>"; };
 		4BC5A5D80764F75B0080ECF7 /* AIVideoChatInterfacePlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIVideoChatInterfacePlugin.h; path = "Plugins/Video Chat Interface/AIVideoChatInterfacePlugin.h"; sourceTree = "<group>"; };
@@ -4900,7 +4904,6 @@
 				F57938AA033E737001A8010A /* AIAccountController.m */,
 				F55B415C03AB8B5601A8010A /* AIContentController.h */,
 				F55B415D03AB8B5601A8010A /* AIContentController.m */,
-				34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */,
 				F57938F9033E745F01A8010A /* AISoundController.h */,
 				F57938B0033E737001A8010A /* AISoundController.m */,
 			);
@@ -5094,6 +5097,9 @@
 		4BC4439A08612BD800B10F28 /* Content */ = {
 			isa = PBXGroup;
 			children = (
+				4BC540B608648321003CD69E /* AdiumFormatting.h */,
+				4BC540B708648322003CD69E /* AdiumFormatting.m */,
+				34A6FB8007D6FDCC00972830 /* FormattingDefaults.plist */,
 				4BDAB9910861C661009FB73B /* AdiumTyping.h */,
 				4BDAB9920861C661009FB73B /* AdiumTyping.m */,
 			);
@@ -6243,6 +6249,7 @@
 				4B14CF2C085FBC5900C88949 /* AdiumSoundSets.h in Headers */,
 				4B14CF2E085FBC5900C88949 /* AdiumSpeech.h in Headers */,
 				4BDAB9930861C662009FB73B /* AdiumTyping.h in Headers */,
+				4BC540B808648322003CD69E /* AdiumFormatting.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7880,6 +7887,7 @@
 				4B14CF2D085FBC5900C88949 /* AdiumSoundSets.m in Sources */,
 				4B14CF2F085FBC5900C88949 /* AdiumSpeech.m in Sources */,
 				4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */,
+				4BC540B908648322003CD69E /* AdiumFormatting.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -58,7 +58,6 @@
 - (void)setString:(NSString *)string;
 - (void)setTypingAttributes:(NSDictionary *)attrs;
 - (void)pasteAsRichText:(id)sender;
-- (void)insertText:(id)aString;
 - (NSSize)desiredSize;
 
 //Context
