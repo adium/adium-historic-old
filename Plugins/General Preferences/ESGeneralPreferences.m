@@ -14,13 +14,16 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIContentController.h"
 #import "AIInterfaceController.h"
 #import "AISoundController.h"
-#import "AIContentController.h"
 #import "ESGeneralPreferences.h"
 #import "ESGeneralPreferencesPlugin.h"
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIFontSelectionPopUpButton.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
