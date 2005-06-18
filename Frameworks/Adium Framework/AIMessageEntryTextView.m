@@ -22,8 +22,6 @@
 #import "ESFileWrapperExtension.h"
 #import "AITextAttachmentExtension.h"
 
-#import "AIDefaultFormattingPlugin.h"
-
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
 
