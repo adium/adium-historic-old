@@ -18,16 +18,20 @@
 
 #import "AIAccountController.h"
 #import "AIContactController.h"
-#import "ESContactAlertsController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-//XXX - why are we importing specific headers here, rather than just importing the umbrella headers? --boredzo
-#import <AIUtilities/AIAttributedStringAdditions.h>
+#import "AIPreferenceController.h"
+#import "AdiumTyping.h"
+#import "ESContactAlertsController.h"
 #import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/AITextAttributes.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
+#import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -39,7 +43,6 @@
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/NDRunLoopMessenger.h>
-#import "AdiumTyping.h"
 
 #define DEFAULT_FORMATTING_DEFAULT_PREFS	@"FormattingDefaults"
 
@@ -190,104 +193,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	if (backgroundColor && ![backgroundColor equalToRGBColor:[NSColor textBackgroundColor]]) {
 		[defaultFormattingAttributes setObject:backgroundColor forKey:AIBodyColorAttributeName];	
 	}
-}
-
-
-//Text Entry Filtering -------------------------------------------------------------------------------------------------
-#pragma mark Text Entry Filtering
-
-//Text entry filters process content as it is entered by the user.
-
-- (void)registerTextEntryFilter:(id)inFilter
-{
-	NSParameterAssert([inFilter respondsToSelector:@selector(didOpenTextEntryView:)] &&
-					  [inFilter respondsToSelector:@selector(willCloseTextEntryView:)]);
-	
-	//For performance reasons, we place filters that actually monitor content in a separate array
-	if ([inFilter respondsToSelector:@selector(stringAdded:toTextEntryView:)] &&
-	   [inFilter respondsToSelector:@selector(contentsChangedInTextEntryView:)]) {
-		[textEntryContentFilterArray addObject:inFilter];
-	} else {
-		[textEntryFilterArray addObject:inFilter];
-	}
-}
-
-- (void)unregisterTextEntryFilter:(id)inFilter
-{
-	[textEntryContentFilterArray removeObject:inFilter];
-	[textEntryFilterArray removeObject:inFilter];
-}
-
-//A string was added to a text entry view
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    NSEnumerator	*enumerator;
-    id				filter;
-	
-    //Notify all text entry filters (that are interested in filtering content)
-    enumerator = [textEntryContentFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter stringAdded:inString toTextEntryView:inTextEntryView];
-    }
-}
-
-//A text entry view's content changed
-- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    NSEnumerator	*enumerator;
-    id				filter;
-	
-    //Notify all text entry filters (that are interested in filtering content)
-    enumerator = [textEntryContentFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter contentsChangedInTextEntryView:inTextEntryView];
-    }
-}
-
-//A text entry view was opened
-- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    NSEnumerator	*enumerator;
-    id				filter;
-	
-    //Track the view
-    [textEntryViews addObject:inTextEntryView];
-    
-    //Notify all text entry filters
-    enumerator = [textEntryContentFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter didOpenTextEntryView:inTextEntryView];
-    }
-    enumerator = [textEntryFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter didOpenTextEntryView:inTextEntryView];
-    }
-}
-
-//A text entry view was closed
-- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView
-{
-    NSEnumerator	*enumerator;
-    id				filter;
-	
-    //Stop tracking the view
-    [textEntryViews removeObject:inTextEntryView];
-	
-    //Notify all text entry filters
-    enumerator = [textEntryContentFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter willCloseTextEntryView:inTextEntryView];
-    }
-    enumerator = [textEntryFilterArray objectEnumerator];
-    while ((filter = [enumerator nextObject])) {
-        [filter willCloseTextEntryView:inTextEntryView];
-    }
-}
-
-//Returns all currently open text entry views
-- (NSArray *)openTextEntryViews
-{
-    return(textEntryViews);
 }
 
 
