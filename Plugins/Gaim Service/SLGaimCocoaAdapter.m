@@ -1282,7 +1282,8 @@ NSMutableDictionary* get_chatDict(void)
 	[gaimThreadProxy gaimThreadXferRequest:[NSValue valueWithPointer:xfer]];
 }
 
-gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
+//this is in Libgaim.framework, though it isn't in the headers.
+void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 - (oneway void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
