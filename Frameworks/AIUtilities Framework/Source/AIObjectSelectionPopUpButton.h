@@ -25,6 +25,6 @@
 //For subclasses
 - (void)_initObjectSelectionPopUpButton;
 - (BOOL)value:(id)valueA isEqualTo:(id)valueB;
-- (NSImage *)menuImageForValue:(id)inValue;
+- (void)updateMenuItem:(NSMenuItem *)menuItem forValue:(id)inValue;
 
 @end
