@@ -27,14 +27,12 @@
 #define KEY_FORMATTING_TEXT_COLOR			@"Default Text Color"
 #define KEY_FORMATTING_BACKGROUND_COLOR		@"Default Background Color"
 
-
-
 //Not displayed, but used for internal identification of the encryption menu
 #define ENCRYPTION_MENU_TITLE						@"Encryption Menu"
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
-@class AdiumMessageEvents, AdiumTyping;
+@class AdiumMessageEvents, AdiumTyping, AdiumFormatting;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
@@ -69,6 +67,7 @@ typedef enum {
 
 @interface AIContentController : AIObject <AIController> {
 	AdiumTyping				*adiumTyping;
+	AdiumFormatting			*adiumFormatting;
 	
     NSMutableArray			*textEntryFilterArray;
     NSMutableArray			*textEntryContentFilterArray;
