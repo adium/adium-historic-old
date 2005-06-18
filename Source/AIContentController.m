@@ -95,9 +95,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 		
 		
 		//Text entry filtering and tracking
-		textEntryFilterArray = [[NSMutableArray alloc] init];
-		textEntryContentFilterArray = [[NSMutableArray alloc] init];
-		textEntryViews = [[NSMutableArray alloc] init];
 		emoticonPacks = nil;
 		emoticonsArray = nil;
 		
@@ -138,9 +135,6 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 	
 	[emoticonPacks release]; emoticonPacks = nil;
 	[emoticonsArray release]; emoticonsArray = nil;
-    [textEntryFilterArray release];
-    [textEntryContentFilterArray release];
-    [textEntryViews release];
 	[objectsBeingReceived release];
 
     [super dealloc];

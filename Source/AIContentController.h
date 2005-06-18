@@ -68,12 +68,7 @@ typedef enum {
 @interface AIContentController : AIObject <AIController> {
 	AdiumTyping				*adiumTyping;
 	AdiumFormatting			*adiumFormatting;
-	
-    NSMutableArray			*textEntryFilterArray;
-    NSMutableArray			*textEntryContentFilterArray;
-    NSMutableArray			*textEntryViews;
-//	NSDictionary			*defaultFormattingAttributes;
-	
+		
 	NSMutableSet			*objectsBeingReceived;
 
     NSArray					*emoticonsArray;
