@@ -204,9 +204,6 @@ static NSColor	*cachedWhiteColor = nil;
 	//Update typing status
 	[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
 	
-    //Let observers know our text changed (unless it was changed by text insertion, which they'll already have known about)
-	[[adium contentController] contentsChangedInTextEntryView:self];
-    
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
 }
@@ -283,7 +280,6 @@ static NSColor	*cachedWhiteColor = nil;
 
     //Notify everyone that our text changed
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-    [[adium contentController] contentsChangedInTextEntryView:self];
 }
 
 //Set our string (plain text)
@@ -293,7 +289,6 @@ static NSColor	*cachedWhiteColor = nil;
 
     //Notify everyone that our text changed
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
-    [[adium contentController] contentsChangedInTextEntryView:self];
 }
 
 //Set our typing format
