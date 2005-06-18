@@ -584,7 +584,6 @@
 	//Associate the text entry view with our chat and inform Adium that it exists.
 	//This is necessary for text entry filters to work correctly.
 	[textView_outgoing setChat:chat];
-	[[adium contentController] didOpenTextEntryView:textView_outgoing];
 
 	//Configure spell checking
 	[textView_outgoing setContinuousSpellCheckingEnabled:[[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
