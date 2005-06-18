@@ -237,9 +237,9 @@
 		4B84A63407B70A5000C2941D /* AISplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B84A63207B70A5000C2941D /* AISplitView.m */; };
 		4BC5A5C30764F6ED0080ECF7 /* AIVideoCapture.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC5A5C10764F6ED0080ECF7 /* AIVideoCapture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC5A5C40764F6ED0080ECF7 /* AIVideoCapture.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC5A5C20764F6ED0080ECF7 /* AIVideoCapture.m */; };
-		4BC869D70863170200B2C430 /* AIFontSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869D50863170200B2C430 /* AIFontSelectionPopUpButton.h */; };
+		4BC869D70863170200B2C430 /* AIFontSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869D50863170200B2C430 /* AIFontSelectionPopUpButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC869D80863170200B2C430 /* AIFontSelectionPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC869D60863170200B2C430 /* AIFontSelectionPopUpButton.m */; };
-		4BC869FC08631A6300B2C430 /* AIObjectSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869FA08631A6300B2C430 /* AIObjectSelectionPopUpButton.h */; };
+		4BC869FC08631A6300B2C430 /* AIObjectSelectionPopUpButton.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BC869FA08631A6300B2C430 /* AIObjectSelectionPopUpButton.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BC869FD08631A6300B2C430 /* AIObjectSelectionPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BC869FB08631A6300B2C430 /* AIObjectSelectionPopUpButton.m */; };
 		4BD1F3D806D27F3100B3975E /* AIScaledImageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F3D906D27F3100B3975E /* AIScaledImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */; };
