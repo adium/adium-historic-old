@@ -119,15 +119,6 @@ typedef enum {
 - (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
 - (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 
-//Filtering / Tracking text entry
-- (void)registerTextEntryFilter:(id)inFilter;
-- (void)unregisterTextEntryFilter:(id)inFilter;
-- (NSArray *)openTextEntryViews;
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-
 //Filtering content
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
