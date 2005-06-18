@@ -67,15 +67,6 @@ typedef enum {
 - (float)filterPriority;
 @end
 
-@interface NSObject (AITextEntryFilter)
-//required
-- (void)didOpenTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; 
-- (void)willCloseTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView;
-//optional
-- (void)stringAdded:(NSString *)inString toTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //keypress
-- (void)contentsChangedInTextEntryView:(NSTextView<AITextEntryView> *)inTextEntryView; //delete,copy,paste,etc
-@end
-
 @interface AIContentController : AIObject <AIController> {
 	AdiumTyping				*adiumTyping;
 	
