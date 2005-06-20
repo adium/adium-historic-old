@@ -123,7 +123,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	}
 }
 
-//Register a string which, if present when filtering for a potentiall autorefreshing string, requires polling to be updated
+//Register a string which, if present when filtering for a potentially autorefreshing string, requires polling to be updated
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString
 {
 	[stringsRequiringPolling addObject:inPollString];
