@@ -15,6 +15,7 @@
  */
 
 #import "AdiumContentFiltering.h"
+#import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/ESExpandedRecursiveLock.h>
 
 static NDRunLoopMessenger   	*filterRunLoopMessenger = nil;
