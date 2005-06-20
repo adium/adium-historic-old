@@ -542,11 +542,9 @@ static int nextChatNumber = 0;
 #pragma mark Debugging
 - (NSString *)description
 {
-	NSString	*myUniqueChatID = [self uniqueChatID];
-	
 	return([NSString stringWithFormat:@"%@:%@",
 		[super description],
-		(myUniqueChatID ? myUniqueChatID : @"<new>")]);
+		(uniqueChatID ? uniqueChatID : @"<new>")]);
 }
 
 @end
