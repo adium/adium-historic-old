@@ -32,7 +32,7 @@
 
 @protocol AIController, AITextEntryView, AIEventHandler;
 
-@class AdiumMessageEvents, AdiumTyping, AdiumFormatting;
+@class AdiumMessageEvents, AdiumTyping, AdiumFormatting, AdiumContentFiltering;
 @class AIAccount, AIChat, AIListContact, AIListObject, AIContentObject, NDRunLoopMessenger;
 
 typedef enum {
@@ -68,40 +68,20 @@ typedef enum {
 @interface AIContentController : AIObject <AIController> {
 	AdiumTyping				*adiumTyping;
 	AdiumFormatting			*adiumFormatting;
-		
+	AdiumContentFiltering	*adiumContentFiltering;
+	AdiumMessageEvents		*adiumMessageEvents;
+	
+	NSMutableDictionary		*defaultFormattingAttributes;
 	NSMutableSet			*objectsBeingReceived;
-
-	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
-	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
-	
-	AdiumMessageEvents		*messageEvents;
-	
-	NSMutableSet			*stringsRequiringPolling;
-	
-	NSMutableDictionary	*defaultFormattingAttributes;
-
 }
 
 //Typing
 - (void)userIsTypingContentForChat:(AIChat *)chat hasEnteredText:(BOOL)hasEnteredText;
 
-
-//- (void)setDefaultFormattingAttributes:(NSDictionary *)inDict;
+//Formatting
 - (NSDictionary *)defaultFormattingAttributes;
 
-
-//Sending / Receiving content
-- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
-- (void)receiveContentObject:(AIContentObject *)inObject;
-- (BOOL)sendContentObject:(AIContentObject *)inObject;
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
-- (void)displayContentObject:(AIContentObject *)inObject;
-- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
-- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
-- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
-- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
-
-//Filtering content
+//Content Filtering
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction;
@@ -125,6 +105,21 @@ typedef enum {
 					  selector:(SEL)selector
 					   context:(id)context;
 - (NDRunLoopMessenger *)filterRunLoopMessenger;
+
+
+
+
+
+//Sending / Receiving content
+- (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
+- (void)receiveContentObject:(AIContentObject *)inObject;
+- (BOOL)sendContentObject:(AIContentObject *)inObject;
+- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
+- (void)displayContentObject:(AIContentObject *)inObject;
+- (void)displayContentObject:(AIContentObject *)inObject immediately:(BOOL)immediately;
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters;
+- (void)displayContentObject:(AIContentObject *)inObject usingContentFilters:(BOOL)useContentFilters immediately:(BOOL)immediately;
+- (void)displayStatusMessage:(NSString *)message ofType:(NSString *)type inChat:(AIChat *)inChat;
 
 //Content Source & Destination
 - (NSArray *)sourceAccountsForSendingContentType:(NSString *)inType
