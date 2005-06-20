@@ -136,7 +136,7 @@ typedef enum {
 
 - (BOOL)canSendImages;
 
-- (BOOL)isListContactIgnored:(AIListContact *)inContact;
+- (BOOL)isListContactIgnored:(AIListObject *)inContact;
 - (void)setListContact:(AIListContact *)inContact isIgnored:(BOOL)isIgnored;
 
 @end

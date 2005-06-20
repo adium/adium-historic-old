@@ -528,7 +528,7 @@ static int nextChatNumber = 0;
 	}	
 }
 
-- (BOOL)isListContactIgnored:(AIListContact *)inContact
+- (BOOL)isListContactIgnored:(AIListObject *)inContact
 {
 	return [ignoredListContacts containsObject:inContact];
 }
