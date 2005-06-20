@@ -25,6 +25,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 
