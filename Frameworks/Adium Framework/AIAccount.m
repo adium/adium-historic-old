@@ -371,7 +371,7 @@
  */
 - (BOOL)contactListEditable
 {
-	return(NO); //XXX - This method isn't even called for contact list editing.  We should either call it or remove it -ai
+	return(NO);
 }
 
 /*!
