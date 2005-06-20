@@ -529,17 +529,6 @@
 	return([inAccount availableForSendingContentType:inType toContact:inContact]);
 }
 
-//Content Source & Destination -----------------------------------------------------------------------------------------
-#pragma mark Content Source & Destination
-//Returns the available contacts for receiving content to a specific contact
-- (NSArray *)destinationObjectsForContentType:(NSString *)inType
-								 toListObject:(AIListObject *)inObject
-									preferred:(BOOL)inPreferred
-{
-	//meta contact special case here, return any contacts in the user defined meta contact
-	return([NSArray arrayWithObject:inObject]);
-}
-
 /*! 
 * @brief Generate a menu of encryption preference choices
 */
