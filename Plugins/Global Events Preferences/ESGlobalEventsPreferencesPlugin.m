@@ -231,7 +231,6 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
 		[self applySoundSet:(soundSet ? [AISoundSet soundSetWithContentsOfFile:[soundSet stringByExpandingBundlePath]] : nil)];
 	}
 
-	NSLog(@"Preset name is %@",[eventPreset objectForKey:KEY_EVENT_SET_NAME]);
 	//Set the name of the now-active event set, which includes sounds and all other events
 	[[adium preferenceController] setPreference:[eventPreset objectForKey:KEY_EVENT_SET_NAME]
 										 forKey:KEY_ACTIVE_EVENT_SET
