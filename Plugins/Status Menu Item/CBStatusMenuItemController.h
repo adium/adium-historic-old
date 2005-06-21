@@ -27,18 +27,18 @@ typedef enum {
 
 @interface CBStatusMenuItemController : AIObject <StateMenuPlugin, AIChatObserver>
 {
-    NSStatusItem            *statusItem;
-    NSMenu                  *theMenu;
-	AIAccountMenu			*accountMenu;
-    
-    NSMutableArray          *accountMenuItemsArray;
-    NSMutableArray          *stateMenuItemsArray;
-    NSMutableArray          *unviewedObjectsArray;
-	NSMutableArray			*openChatsArray;
-    
-    BOOL                    needsUpdate;
-	
-	SMI_Icon_State			iconState;
+	NSStatusItem            *statusItem;
+	NSMenu                  *theMenu;
+	AIAccountMenu           *accountMenu;
+
+	NSMutableArray          *accountMenuItemsArray;
+	NSMutableArray          *stateMenuItemsArray;
+	NSMutableArray          *unviewedObjectsArray;
+	NSMutableArray          *openChatsArray;
+
+	SMI_Icon_State          iconState;
+
+	BOOL                    needsUpdate;
 }
 
 + (CBStatusMenuItemController *)statusMenuItemController;
