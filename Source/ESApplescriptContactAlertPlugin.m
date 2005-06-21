@@ -88,14 +88,20 @@
 {
 	NSString		*path = [details objectForKey:KEY_APPLESCRIPT_TO_RUN];
 	if (path) {		
-		NSURL 			*scriptURL;
-		NSAppleScript   *script;
-
-		scriptURL = [NSURL fileURLWithPath:path];
-		script = [[NSAppleScript alloc] initWithContentsOfURL:scriptURL error:nil];
+		NSString		*applescriptRunnerPath;
 		
-		[script executeAndReturnError:nil];
-		[script release];
+		//Find the path to the ApplescriptRunner application
+		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
+																ofType:nil
+														   inDirectory:nil];
+		//Set up our task
+		scriptTask = [[[NSTask alloc] init] autorelease];
+		[scriptTask setLaunchPath:applescriptRunnerPath];
+		[scriptTask setArguments:[NSArray arrayWithObject:path]];
+		[scriptTask setStandardOutput:standardOuptut];
+		
+		//Launch; no need to wait for it to finish
+		[scriptTask launch];
 	}
 }
 
