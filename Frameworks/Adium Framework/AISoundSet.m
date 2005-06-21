@@ -52,6 +52,7 @@
 - (id)initWithContentsOfFile:(NSString *)inPath
 {
 	if ((self = [super init])) {
+		sourcePath = [inPath retain];
 		[self _loadSoundSetFromPath:inPath];
 	}
 	
@@ -66,7 +67,8 @@
 	[name release]; name = nil;
 	[info release]; info = nil;
 	[sounds release]; sounds = nil;
-	
+	[sourcePath release]; sourcePath = nil;
+
 	[super dealloc];
 }
 
@@ -96,6 +98,16 @@
 - (NSDictionary *)sounds
 {
 	return sounds;
+}
+
+/*!
+ * @brief Path to the soundset
+ *
+ * @resturn NSString with the path to the sound set; may need to be expanded with stringByExpandingBundleIdentifier
+ */
+- (NSString *)sourcePath
+{
+	return sourcePath;
 }
 
 /*!
@@ -211,13 +223,11 @@
 	NSFileManager		*mgr = [NSFileManager defaultManager];
 	NSMutableDictionary	*newSounds = [NSMutableDictionary dictionary];
 	NSString			*setName, *workingDirectory, *tempSetName, *tempSetPath;
-	NSString			*oldSetString, *oldSetInfo;
+	NSString			*oldSetString, *oldSetInfo = nil;
 
 	//
 	setName = [[setPath lastPathComponent] stringByDeletingPathExtension];
 	workingDirectory = [setPath stringByDeletingLastPathComponent];
-
-	NSLog(@"Upgrading sound set %@.",setName);
 
 	//Rename the existing set to .AdiumSoundSetOld
 	tempSetName = [setName stringByAppendingPathExtension:SOUNDSET_TEMP_EXTENSION];
@@ -272,6 +282,25 @@
 	
 	//Trash the old soundset
 	[mgr trashFileAtPath:tempSetPath];
+}
+
+#pragma mark Equality
+
+/*
+ * @brief Two sound sets are considered equal if they are pointing to the same .AdiumSoundset bundle
+ */
+- (BOOL)isEqual:(id)otherObject
+{
+	return ([otherObject isKindOfClass:[self class]] &&
+			[[(AISoundSet *)otherObject sourcePath] isEqualToString:sourcePath]);
+}
+
+/*
+ * @brief Because we defined equality based on our sourcePath, the sourcePath's hash is an easy hash for us to use
+ */
+- (unsigned)hash
+{
+	return [sourcePath hash];
 }
 
 @end

@@ -18,6 +18,8 @@
 	NSString			*name;
 	NSString			*info;
 	NSMutableDictionary	*sounds;
+	
+	NSString			*sourcePath;
 }
 
 + (id)soundSetWithContentsOfFile:(NSString *)inPath;
