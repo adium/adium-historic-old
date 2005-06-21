@@ -71,9 +71,10 @@ int main (int argc, const char *argv[])
 			//Pass arguments - arguments is expecting an NSArray with only NSString objects
 			if ([scriptArgumentArray count]) {
 				NSAppleEventDescriptor  *arguments = [[NSAppleEventDescriptor alloc] initListDescriptor];
-				NSEnumerator			*enumerator = [scriptArgumentArray objectEnumerator];
+				NSEnumerator			*enumerator;
 				NSString				*object;
 
+				enumerator = [scriptArgumentArray objectEnumerator];
 				while ((object = [enumerator nextObject])) {
 					[arguments insertDescriptor:[NSAppleEventDescriptor descriptorWithString:object]
 										atIndex:([arguments numberOfItems] + 1)]; //This +1 seems wrong... but it's not
