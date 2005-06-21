@@ -81,9 +81,9 @@
 		NSString		*scriptResult;
 
 		//Find the path to the ApplescriptRunner application
-		applescriptRunnerPath = [[[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
-																 ofType:nil
-															inDirectory:nil] retain];
+		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
+																ofType:nil
+														   inDirectory:nil];
 		//Set up our task
 		scriptTask = [[NSTask alloc] init];
 		[scriptTask setLaunchPath:applescriptRunnerPath];
