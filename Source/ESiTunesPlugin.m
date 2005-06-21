@@ -43,8 +43,7 @@
 		//Perform substitutions on outgoing content
 		[[adium contentController] registerContentFilter:self 
 												  ofType:AIFilterContent
-											   direction:AIFilterOutgoing
-												threaded:NO];
+											   direction:AIFilterOutgoing];
 
 		[[NSDistributedNotificationCenter defaultCenter] addObserver:self
 															selector:@selector(iTunesUpdate:)
