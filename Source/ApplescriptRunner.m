@@ -22,7 +22,7 @@ int main (int argc, const char * argv[]) {
 	NSAppleScript			*appleScript;
 	NSAppleEventDescriptor	*thisApplication;
 	NSAppleEventDescriptor	*containerEvent;
-	NSString				*resultString;
+	NSString				*resultString = nil;
 	NSString				*functionName = nil;
 	NSURL					*pathURL;
 	unsigned				processArgumentsCount = [processArguments count];
