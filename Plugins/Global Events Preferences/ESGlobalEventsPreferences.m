@@ -167,7 +167,7 @@
 {
 	if (!notification || [[notification object] caseInsensitiveCompare:@"AdiumSoundset"] == NSOrderedSame) {		
 		//Build the soundset menu
-		[popUp_soundSet setMenu:[self _soundSetMenu]];
+		[popUp_soundSet setMenu:[self _soundSetMenu]];		
 	}
 }
 
@@ -617,6 +617,7 @@
 {
 	if (soundSet) {
 		[popUp_soundSet selectItemWithRepresentedObject:soundSet];
+		
 		[self popUp:popUp_soundSet shouldShowCustom:NO];
 		
 	} else {
@@ -626,7 +627,18 @@
 
 - (void)updateSoundSetSelection
 {
-	[self updateSoundSetSelectionForSoundSet:[[popUp_eventPreset selectedItem] representedObject]];
+	NSEnumerator	*enumerator = [[[adium soundController] soundSets] objectEnumerator];
+    AISoundSet		*soundSet;
+	NSString		*name;
+
+	name = [[[popUp_eventPreset selectedItem] representedObject] objectForKey:KEY_EVENT_SOUND_SET];
+	name = [[name lastPathComponent] stringByDeletingPathExtension];
+
+    while ((soundSet = [enumerator nextObject])) {
+		if ([[soundSet name] isEqualToString:name]) break;
+	}
+
+	[self updateSoundSetSelectionForSoundSet:soundSet];
 }
 
 /*!
