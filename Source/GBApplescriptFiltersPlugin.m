@@ -437,7 +437,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 }
 
-
 //Message Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Message Filtering
 /*!
@@ -554,7 +553,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 }
 
-
 /*!
  * @brief Execute the script as a separate task
  *
@@ -611,6 +609,11 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[scriptTask launch];
 }
 
+/*
+ * @brief A script finished executing
+ *
+ * @param aNotification The notification, whose object is the NSTask which terminated
+ */
 - (void)scriptDidFinish:(NSNotification *)aNotification
 {
 	NSTask						*scriptTask = [aNotification object];
