@@ -266,6 +266,8 @@
 //Rebuild our view for any existing content
 - (void)rebuildMessageViewForContent
 {
+	//As of Adium 0.9x, chats no longer retain all their content objects, so rebuilding in this way is not supported.
+	/*
     if (rebuilding) {
         restartRebuilding = YES;
     } else {
@@ -276,8 +278,11 @@
         rebuilding = YES;
         [NSThread detachNewThreadSelector:@selector(_rebuildMessageViewForContentThread) toTarget:self withObject:nil];
     }
+	 */
 }
 
+/* No longer used. See comment in -[AISMViewController rebuildMessageViewForContent] */
+#if 0
 -(void)_rebuildMessageViewForContentThread
 {
     AIContentObject    *content;
@@ -348,6 +353,7 @@
     [rowArray release];
     [pool release];
 }
+#endif //0
 
 - (void)unlockMessageView
 {
