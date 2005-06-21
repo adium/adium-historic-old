@@ -344,6 +344,10 @@
 		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
 		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
 		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
+		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
+		349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
+		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
+		349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */ = {isa = PBXBuildFile; fileRef = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */; };
 		349C6E4907C96D45005EB896 /* CBContactCountingDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C6E4607C96D44005EB896 /* CBContactCountingDisplayPlugin.m */; };
 		349C6E4A07C96D45005EB896 /* CBContactCountingDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 349C6E4707C96D45005EB896 /* CBContactCountingDisplayPlugin.h */; };
 		349C6E8D07C972B2005EB896 /* AIExtendedStatusPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 349C6E8B07C972B2005EB896 /* AIExtendedStatusPlugin.h */; };
@@ -1323,6 +1327,34 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
 		};
+		349C31620867D199000BF883 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */;
+			remoteInfo = AdiumApplescriptRunner;
+		};
+		349C31640867D1A0000BF883 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		349C31660867D1A0000BF883 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		349C31680867D1A0000BF883 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteInfo = AIBookmarksImport;
+		};
 		34B9E664085B7C74006216DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -2108,6 +2140,9 @@
 		3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestWindowController.m"; sourceTree = "<group>"; };
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
+		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
+		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
+		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		349C6E4607C96D44005EB896 /* CBContactCountingDisplayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBContactCountingDisplayPlugin.m; path = Source/CBContactCountingDisplayPlugin.m; sourceTree = "<group>"; };
 		349C6E4707C96D45005EB896 /* CBContactCountingDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBContactCountingDisplayPlugin.h; path = Source/CBContactCountingDisplayPlugin.h; sourceTree = "<group>"; };
 		349C6E8B07C972B2005EB896 /* AIExtendedStatusPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIExtendedStatusPlugin.h; path = Source/AIExtendedStatusPlugin.h; sourceTree = "<group>"; };
@@ -3123,6 +3158,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		349C2EF80867AC97000BF883 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */,
+				349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34BD9D57053146CC000AB133 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -3258,6 +3302,7 @@
 				3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */,
 				4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */,
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
+				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -3285,6 +3330,7 @@
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
 				F50A325A03B5798301A8010A /* Resources */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
+				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				4B3717000510D19400A8010A /* (Old Code, Disabled, etc) */,
 				29B97323FDCFA39411CA2CEA /* Linked Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
@@ -3304,6 +3350,7 @@
 				34D836FF07CBF979006466F2 /* AudioUnit.framework */,
 				F531836F019E40BB01A80165 /* Carbon.framework */,
 				3448758D06D1EBDF00DA778C /* Cocoa.framework */,
+				349C2FEF0867AD65000BF883 /* Foundation.framework */,
 				34B588A0058D833A00E7EF0D /* ExceptionHandling.framework */,
 				34D836F307CBF960006466F2 /* QuickTime.framework */,
 				34E839050583207E00F2AADB /* SystemConfiguration.framework */,
@@ -3827,6 +3874,14 @@
 				3496A8EA07CE6CA30055BBAB /* AIHyperlinks.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		349C2F310867ACF7000BF883 /* ApplescriptRunner */ = {
+			isa = PBXGroup;
+			children = (
+				349C2F460867AD16000BF883 /* ApplescriptRunner.m */,
+			);
+			name = ApplescriptRunner;
 			sourceTree = "<group>";
 		};
 		349C6E8207C9728B005EB896 /* Contact List */ = {
@@ -6680,6 +6735,46 @@
 ";
 			productType = "com.apple.product-type.bundle";
 		};
+		349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 349C2F220867ACA9000BF883 /* Build configuration list for PBXNativeTarget "AdiumApplescriptRunner" */;
+			buildPhases = (
+				349C2EF70867AC97000BF883 /* Sources */,
+				349C2EF80867AC97000BF883 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = ApplescriptRunner;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			dependencies = (
+			);
+			name = AdiumApplescriptRunner;
+			productName = ApplescriptRunner;
+			productReference = 349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */;
+			productType = "com.apple.product-type.tool";
+		};
 		34BD9CD1053146CC000AB133 /* Adium */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E22085507450062B664 /* Build configuration list for PBXNativeTarget "Adium" */;
@@ -6724,6 +6819,9 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
+				349C31650867D1A0000BF883 /* PBXTargetDependency */,
+				349C31670867D1A0000BF883 /* PBXTargetDependency */,
+				349C31690867D1A0000BF883 /* PBXTargetDependency */,
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				4B215DB0059896B000305B3C /* PBXTargetDependency */,
@@ -6732,6 +6830,7 @@
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
 				4B90B54E064220B400D23731 /* PBXTargetDependency */,
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
+				349C31630867D199000BF883 /* PBXTargetDependency */,
 			);
 			name = Adium;
 			productInstallPath = /;
@@ -7118,6 +7217,7 @@
 				346C9C5306004525000F5A8A /* WebKit Message View */,
 				4947F5BC0655E85200B791E5 /* Bonjour */,
 				DACF3ED3085574D0006BFB18 /* External Frameworks */,
+				349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */,
 			);
 		};
 /* End PBXProject section */
@@ -7208,6 +7308,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				349C30790867ADA3000BF883 /* AdiumApplescriptRunner in Resources */,
 				DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */,
 				349C7C7A07C9AE1B005EB896 /* ContactListAdvancedPrefs.nib in Resources */,
 				34E0EA0807CC53ED00A82198 /* NewMessagePrompt.nib in Resources */,
@@ -7693,6 +7794,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		349C2EF70867AC97000BF883 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		34BD9D42053146CC000AB133 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8162,6 +8271,26 @@
 			isa = PBXTargetDependency;
 			target = 346C9C5306004525000F5A8A /* WebKit Message View */;
 			targetProxy = 346C9D45060046AB000F5A8A /* PBXContainerItemProxy */;
+		};
+		349C31630867D199000BF883 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */;
+			targetProxy = 349C31620867D199000BF883 /* PBXContainerItemProxy */;
+		};
+		349C31650867D1A0000BF883 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 349C31640867D1A0000BF883 /* PBXContainerItemProxy */;
+		};
+		349C31670867D1A0000BF883 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIHyperlinks.framework;
+			targetProxy = 349C31660867D1A0000BF883 /* PBXContainerItemProxy */;
+		};
+		349C31690867D1A0000BF883 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIBookmarksImport;
+			targetProxy = 349C31680867D1A0000BF883 /* PBXContainerItemProxy */;
 		};
 		34B9E665085B7C74006216DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8938,6 +9067,124 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		349C2F230867ACA9000BF883 /* Development */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumApplescriptRunner;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Development;
+		};
+		349C2F240867ACA9000BF883 /* Deployment */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumApplescriptRunner;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Deployment;
+		};
+		349C2F250867ACA9000BF883 /* Deployment-Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumApplescriptRunner;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = "Deployment-Debug";
+		};
+		349C2F260867ACA9000BF883 /* Default */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
+				GCC_MODEL_TUNING = G5;
+				GCC_PRECOMPILE_PREFIX_HEADER = NO;
+				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
+				INSTALL_PATH = /usr/local/bin;
+				MACOSX_DEPLOYMENT_TARGET = 10.2;
+				OPTIMIZATION_CFLAGS = "";
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = (
+					"-framework",
+					Foundation,
+					"-framework",
+					AppKit,
+				);
+				OTHER_REZFLAGS = "";
+				PREBINDING = NO;
+				PRODUCT_NAME = AdiumApplescriptRunner;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = (
+					"-Wmost",
+					"-Wno-four-char-constants",
+					"-Wno-unknown-pragmas",
+				);
+			};
+			name = Default;
+		};
 		DACF3EDF085574F6006BFB18 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10287,6 +10534,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		349C2F220867ACA9000BF883 /* Build configuration list for PBXNativeTarget "AdiumApplescriptRunner" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				349C2F230867ACA9000BF883 /* Development */,
+				349C2F240867ACA9000BF883 /* Deployment */,
+				349C2F250867ACA9000BF883 /* Deployment-Debug */,
+				349C2F260867ACA9000BF883 /* Default */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
