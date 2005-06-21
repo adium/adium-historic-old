@@ -16,22 +16,21 @@
 
 #import <Adium/AIPlugin.h>
 
-@class NDComponentInstance;
-@protocol AIContentFilter, NDScriptDataSendEvent, NDScriptDataActive;
+@protocol AIDelayedContentFilter;
 
-@interface GBApplescriptFiltersPlugin : AIPlugin <AIContentFilter, NDScriptDataSendEvent, NDScriptDataActive> {    
+@interface GBApplescriptFiltersPlugin : AIPlugin <AIDelayedContentFilter> {
 	NSMenuItem				*scriptMenuItem;			//Script menu parent
 	NSMenuItem				*contextualScriptMenuItem;	//Script menu parent
-	NSMenu 					*scriptMenu;			//Submenu of scripts
+	NSMenu 					*scriptMenu;				//Submenu of scripts
 
-	NSMutableArray			*flatScriptArray;		//Flat array of scripts
-	NSMutableArray			*scriptArray;			//Ordered array for script menu
+	NSMutableArray			*flatScriptArray;			//Flat array of scripts
+	NSMutableArray			*scriptArray;				//Ordered array for script menu
 	
 	BOOL					buildingScriptMenu;
 	
 	NSToolbarItem			*toolbarItem;
 	
-	NDComponentInstance		*componentInstance;
+	NSMutableDictionary		*scriptTaskInfoDicts;
 }
 
 @end

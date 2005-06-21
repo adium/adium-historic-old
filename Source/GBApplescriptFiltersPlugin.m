@@ -34,25 +34,33 @@
 #define SCRIPT_EXTENSION		@"scpt"
 #define	SCRIPT_IDENTIFIER		@"InsertScript"
 
-//#define APPLESCRIPT_FILTER_DEBUG
+#define SCRIPT_TIMEOUT			30
 
 @interface GBApplescriptFiltersPlugin (PRIVATE)
+
+- (void)_replaceKeyword:(NSString *)keyword
+			 withScript:(NSMutableDictionary *)infoDict
+			   inString:(NSString *)inString
+	 inAttributedString:(NSMutableAttributedString *)attributedString
+			   uniqueID:(unsigned long long)uniqueID;
+
+- (void)_executeScript:(NSMutableDictionary *)infoDict 
+		 withArguments:(NSArray *)arguments
+		 forAttributedString:(NSMutableAttributedString *)attributedString
+		  keywordRange:(NSRange)keywordRange
+			  uniqueID:(unsigned long long)uniqueID;
+
+- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSMutableDictionary *)scriptDict;
+
+- (void)buildScriptMenu;
 - (void)_appendScripts:(NSArray *)scripts toMenu:(NSMenu *)menu;
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
-- (id)_filterString:(NSString *)inString originalObject:(id)originalObject;
-- (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments;
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)toObject;
-- (NSArray *)_argumentsFromString:(NSString *)inString forScript:(NSMutableDictionary *)scriptDict;
-- (void)buildScriptMenu;
+
 - (void)registerToolbarItem;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
 int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
-
-#ifdef APPLESCRIPT_FILTER_DEBUG
-static int numExecuted = 0;
-#endif
 
 /*!
  * @class GBApplescriptFiltersPlugin
@@ -71,7 +79,6 @@ static int numExecuted = 0;
 	//We have an array of scripts for building the menu, and a dictionary of scripts used for the actual substition
 	scriptArray = nil;
 	flatScriptArray = nil;
-	componentInstance = nil;
 	
 	//Prepare our script menu item (which will have the Scripts menu as its submenu)
 	scriptMenuItem = [[NSMenuItem alloc] initWithTitle:TITLE_INSERT_SCRIPT 
@@ -79,11 +86,10 @@ static int numExecuted = 0;
 												action:@selector(dummyTarget:)
 										 keyEquivalent:@""];
 
-	//Perform substitutions on outgoing content in a thread
-	[[adium contentController] registerContentFilter:self 
-											  ofType:AIFilterContent
-										   direction:AIFilterOutgoing
-											threaded:YES];
+	//Perform substitutions on outgoing content; we may be slow, so register as a delayed content filter
+	[[adium contentController] registerDelayedContentFilter:self 
+													 ofType:AIFilterContent
+												  direction:AIFilterOutgoing];
 	
 	//Observe for installation of new scripts
 	[[adium notificationCenter] addObserver:self
@@ -174,7 +180,6 @@ static int numExecuted = 0;
 			while ((scriptDict = [scriptEnumerator nextObject])) {
 				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
 				NSArray			*arguments;
-				NSURL			*scriptURL;
 				NSNumber		*prefixOnlyNumber;
 				NSNumber		*requiresUserInteractionNumber;
 				
@@ -182,11 +187,10 @@ static int numExecuted = 0;
 					(scriptFilePath = [scriptBundle pathForResource:scriptFileName
 															 ofType:SCRIPT_EXTENSION])) {
 					
-					scriptURL = [NSURL fileURLWithPath:scriptFilePath];
 					keyword = [scriptDict objectForKey:@"Keyword"];
 					title = [scriptDict objectForKey:@"Title"];
 					
-					if (scriptURL && keyword && [keyword length] && title && [title length]) {
+					if (keyword && [keyword length] && title && [title length]) {
 						NSMutableDictionary	*infoDict;
 						
 						arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
@@ -199,7 +203,7 @@ static int numExecuted = 0;
 						if (!requiresUserInteractionNumber) requiresUserInteractionNumber = [NSNumber numberWithBool:NO];
 						
 						infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
-							scriptURL, @"Path", keyword, @"Keyword", title, @"Title", 
+							scriptFilePath, @"Path", keyword, @"Keyword", title, @"Title", 
 							prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
 						
 						//The bundle may not be part of (or for defining) a set of scripts
@@ -437,14 +441,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 //Message Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Message Filtering
 /*!
- * @brief Filter messages for keywords to replace
+ * @brief Delayed filter messages for keywords to replace
  *
- * Replace any script keywords with the result of running the script (with arguments as appropriate)
+ * Will eventually replace any script keywords with the result of running the script (with arguments as appropriate).
+ * @result YES if we began a delayed filtration; NO if we did not
  */
-- (NSAttributedString *)filterAttributedString:(NSAttributedString *)inAttributedString context:(id)context
+- (BOOL)delayedFilterAttributedString:(NSAttributedString *)inAttributedString context:(id)context uniqueID:(unsigned long long)uniqueID
 {
-    NSMutableAttributedString   *filteredMessage = nil;
-	NSString					*stringMessage;
+	BOOL		beganProcessing = NO; 
+	NSString	*stringMessage;
 
 	if ((stringMessage = [inAttributedString string])) {
 		NSEnumerator				*enumerator;
@@ -452,30 +457,33 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		
 		//Replace all keywords
 		enumerator = [flatScriptArray objectEnumerator];
-		while ((infoDict = [enumerator nextObject])) {
+		while ((infoDict = [enumerator nextObject]) && !beganProcessing) {
 			NSString	*keyword = [infoDict objectForKey:@"Keyword"];
 			BOOL		prefixOnly = [[infoDict objectForKey:@"PrefixOnly"] boolValue];
 
 			if ((prefixOnly && ([stringMessage rangeOfString:keyword options:(NSCaseInsensitiveSearch | NSAnchoredSearch)].location == 0)) ||
 			   (!prefixOnly && [stringMessage rangeOfString:keyword options:NSCaseInsensitiveSearch].location != NSNotFound)) {
-
 				NSNumber	*shouldSendNumber;
-				
-				if (!filteredMessage) filteredMessage = [inAttributedString mutableCopy];
-				[self _replaceKeyword:keyword withScript:infoDict inString:stringMessage inAttributedString:filteredMessage];
-				stringMessage = [filteredMessage string]; //Update our plain text string, since it most likely changed
-				
+
+				[self _replaceKeyword:keyword
+						   withScript:infoDict
+							 inString:stringMessage
+				   inAttributedString:[[inAttributedString mutableCopy] autorelease]
+							 uniqueID:uniqueID];
+
 				shouldSendNumber = [infoDict objectForKey:@"ShouldSend"];
 				if ((shouldSendNumber) &&
 					(![shouldSendNumber boolValue]) &&
 					([context isKindOfClass:[AIContentObject class]])) {
 					[(AIContentObject *)context setSendContent:NO];
 				}
+				
+				beganProcessing = YES;
 			}
 		}
 	}
 	
-    return(filteredMessage ? [filteredMessage autorelease] : inAttributedString);
+    return beganProcessing;
 }
 
 /*!
@@ -491,77 +499,173 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 /*!
  * @brief Perform a thorough variable replacing scan
  */
-- (void)_replaceKeyword:(NSString *)keyword withScript:(NSMutableDictionary *)infoDict inString:(NSString *)inString inAttributedString:(NSMutableAttributedString *)attributedString
+- (void)_replaceKeyword:(NSString *)keyword
+			 withScript:(NSMutableDictionary *)infoDict
+			   inString:(NSString *)inString
+	 inAttributedString:(NSMutableAttributedString *)attributedString
+			   uniqueID:(unsigned long long)uniqueID
 {
 	NSScanner	*scanner;
-	NSString	*arglessScriptResult = nil;
-	int			offset = 0;
-	
-	if (inString) {
-		scanner = [NSScanner scannerWithString:inString];
-		//Scan for the keyword
-		while (![scanner isAtEnd]) {
-			[scanner scanUpToString:keyword intoString:nil];
+	BOOL		foundKeyword = NO;
+	BOOL		beganExecutingScript = NO;
 
-			if (([scanner scanString:keyword intoString:nil]) &&
-			   ([attributedString attribute:NSLinkAttributeName
-									atIndex:([scanner scanLocation]-1) /* The scanner ends up one past the keyword */
-							 effectiveRange:nil] == nil)) {
-				//Scan the keyword and ensure it was not found within a link
-				int 		keywordStart, keywordEnd;
-				NSArray 	*argArray = nil;
-				NSString	*argString;
+	//Scan for the keyword
+	scanner = [NSScanner scannerWithString:inString];
+	while (![scanner isAtEnd] && !foundKeyword) {
+		[scanner scanUpToString:keyword intoString:nil];
+		
+		if (([scanner scanString:keyword intoString:nil]) &&
+			([attributedString attribute:NSLinkAttributeName
+								 atIndex:([scanner scanLocation]-1) /* The scanner ends up one past the keyword */
+						  effectiveRange:nil] == nil)) {
+			//Scan the keyword and ensure it was not found within a link
+			int 		keywordStart, keywordEnd;
+			NSArray 	*argArray = nil;
+			NSString	*argString;
+			
+			//Scan arguments
+			keywordStart = [scanner scanLocation] - [keyword length];
+			if ([scanner scanString:@"{" intoString:nil]) {
+				if ([scanner scanUpToString:@"}" intoString:&argString]) {
+					argArray = [self _argumentsFromString:argString forScript:infoDict];
+					[scanner scanString:@"}" intoString:nil];
+				}
+			}
+			keywordEnd = [scanner scanLocation];		
+			
+			if (keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\') {
+				//Ignore the script (It was escaped) and delete the escape character
+				[attributedString replaceCharactersInRange:NSMakeRange(keywordStart - 1, 1) withString:@""];
+				foundKeyword = YES;
+
+			} else {
+				//Run the script.
+				NSRange	keywordRange = NSMakeRange(keywordStart, keywordEnd - keywordStart);
 				
-				//Scan arguments
-				keywordStart = [scanner scanLocation] - [keyword length];
-				if ([scanner scanString:@"{" intoString:nil]) {
-					if ([scanner scanUpToString:@"}" intoString:&argString]) {
-						argArray = [self _argumentsFromString:argString forScript:infoDict];
-						[scanner scanString:@"}" intoString:nil];
-					}
-				}
-				keywordEnd = [scanner scanLocation];		
+				[self _executeScript:infoDict 
+					   withArguments:argArray
+				 forAttributedString:attributedString
+						keywordRange:keywordRange
+							uniqueID:uniqueID];
 
-				if (keywordStart != 0 && [inString characterAtIndex:keywordStart - 1] == '\\') {
-					//Ignore the script (It was escaped) and delete the escape character
-					[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset - 1, 1) withString:@""];
-					offset -= 1;
-					
-				} else {
-					//Run the script.  Cache the result to speed up multiple instances of a single keyword
-					NSString	*scriptResult = nil;
-					unsigned	scriptResultLength;
-
-					if ([argArray count] == 0 && arglessScriptResult) scriptResult = arglessScriptResult;
-					if (!scriptResult) scriptResult = [self _executeScript:infoDict withArguments:argArray];
-					if ([argArray count] == 0 && !arglessScriptResult) arglessScriptResult = scriptResult;
-					
-					//If the script fails, eat the keyword
-					if (!scriptResult) scriptResult = @"";
-					
-					//Replace the substring with script result
-					if (([scriptResult hasPrefix:@"<HTML>"])) {
-						//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
-						NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
-																		 withDefaultAttributes:[attributedString attributesAtIndex:(keywordStart + offset)
-																													effectiveRange:nil]];
-						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-														withAttributedString:attributedScriptResult];
-						scriptResultLength = [attributedScriptResult length];
-						
-					} else {
-						[attributedString replaceCharactersInRange:NSMakeRange(keywordStart + offset, keywordEnd - keywordStart)
-														withString:scriptResult];
-						
-						scriptResultLength = [scriptResult length];
-					}
-					
-					//Adjust for replaced text
-					offset += scriptResultLength - (keywordEnd - keywordStart);
-				}
+				beganExecutingScript = YES;
 			}
 		}
 	}
+}
+
+
+/*!
+ * @brief Execute the script as a separate task
+ *
+ * When the task is complete, we will be notified, at which point we perform the replacement for the script result
+ * and pass the modified attributed string back to the content controller for use.
+ */
+- (void)_executeScript:(NSMutableDictionary *)infoDict 
+			   withArguments:(NSArray *)arguments
+		 forAttributedString:(NSMutableAttributedString *)attributedString
+				keywordRange:(NSRange)keywordRange
+					uniqueID:(unsigned long long)uniqueID
+{
+	NSTask			*scriptTask;
+	NSMutableArray	*applescriptRunnerArguments = [NSMutableArray arrayWithObject:[infoDict objectForKey:@"Path"]];
+	NSTimer			*scriptTimeoutTimer;
+	
+	static NSString	*applescriptRunnerPath = nil;
+	if (!applescriptRunnerPath) {
+		//Find and cache the path to the ApplescriptRunner application
+		applescriptRunnerPath = [[[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
+																 ofType:nil
+															inDirectory:nil] retain];
+	}
+
+	//We run the substitute function
+	[applescriptRunnerArguments addObject:@"substitute"];
+
+	if (arguments && [arguments count]) {
+		[applescriptRunnerArguments addObjectsFromArray:arguments];
+	}
+
+	scriptTask = [[NSTask alloc] init];
+	[scriptTask setLaunchPath:applescriptRunnerPath];
+	[scriptTask setArguments:applescriptRunnerArguments];
+	[scriptTask setStandardOutput:[NSPipe pipe]];
+	[scriptTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
+		attributedString, @"Mutable Attributed String",
+		NSStringFromRange(keywordRange), @"Range",
+		[NSNumber numberWithUnsignedLongLong:uniqueID], @"uniqueID",
+		scriptTimeoutTimer, @"Script Timeout Timer",
+		nil]];
+
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(scriptDidFinish:)
+												 name:NSTaskDidTerminateNotification
+											   object:scriptTask];
+
+	scriptTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:SCRIPT_TIMEOUT
+														  target:self
+														selector:@selector(scriptTimeout:)
+														userInfo:scriptTask
+														 repeats:NO];
+
+	[scriptTask launch];
+}
+
+- (void)scriptDidFinish:(NSNotification *)aNotification
+{
+	NSTask						*scriptTask = [aNotification object];
+	NSDictionary				*environment = [scriptTask environment];
+	NSPipe						*standardOuptut = [scriptTask standardOutput];
+	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
+	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
+	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
+	NSTimer						*scriptTimeoutTimer = [environment objectForKey:@"Script Timeout Timer"];
+	NSFileHandle				*output;
+	NSString					*scriptResult;
+
+	output = [standardOuptut fileHandleForReading];
+	scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
+										 encoding:NSUTF8StringEncoding];
+
+	//If the script fails, eat the keyword
+	if (!scriptResult) scriptResult = [@"" retain];
+	
+	//Replace the substring with script result
+	if (([scriptResult hasPrefix:@"<HTML>"])) {
+		//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
+		NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
+														 withDefaultAttributes:[attributedString attributesAtIndex:keywordRange.location
+																									effectiveRange:nil]];
+		[attributedString replaceCharactersInRange:keywordRange
+							  withAttributedString:attributedScriptResult];
+
+	} else {
+		[attributedString replaceCharactersInRange:keywordRange
+										withString:scriptResult];
+	}
+
+	//Invalidate the timeout timer
+	[scriptTimeoutTimer invalidate];
+
+	//Cleanup
+	[scriptResult release];
+	[scriptTask release];
+	
+	//Inform the content controller that we're done
+	[[adium contentController] delayedFilterDidFinish:attributedString uniqueID:[uniqueID unsignedLongLongValue]];
+}
+
+/*
+ * @brief Script execution timed out after SCRIPT_TIMEOUT
+ *
+ * @param inTimer A timer whose userInfo is the NSTask which has timed out
+ */
+- (void)scriptTimeout:(NSTimer *)inTimer
+{
+	NSTask	*scriptTask = [inTimer userInfo];
+
+	//This will trigger NSTaskDidTerminateNotification for the NSTask, triggering -[self scriptDidFinish:] above
+	[scriptTask terminate];
 }
 
 /*!
@@ -612,115 +716,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 	
 	return(argArray);
-}
-
-/*!
- * @brief Execute the script, returning its output
- */
-- (NSString *)_executeScript:(NSMutableDictionary *)infoDict withArguments:(NSArray *)arguments
-{
-	NDScriptContext			*scriptContext;
-	NSAppleEventDescriptor	*resultDescriptor;
-	NSString				*result = nil;
-
-	//Attempt to use a cached script
-	scriptContext = [infoDict objectForKey:@"NDScriptContext"];
-	
-	//If none is found, load and cache
-	if (!scriptContext) {
-		//We run from a thread, so we need a unique componentInstance, as the shared one is NOT threadsafe. Each script
-		//does not need one; we can reuse the same one for every script called from this thread.
-		if (!componentInstance) {
-			componentInstance = [[NDComponentInstance componentInstance] retain];
-
-			//We want to receive the sendAppleEvent calls below for scripts running with our componentInstance
-			[componentInstance setAppleEventSendTarget:self currentProcessOnly:YES];
-
-			/*
-			 We don't want any funny business happening while the applescript runs; if we don't set an activeTarget,
-			 the thread will appear open and invocations will come out of order.  If we wanted to disregard ordering,
-			 we'd get a huge perceived performance boost when running lengthy applescripts by removing this... but
-			 message order definitely does matter, so we must wait until Message 1 is done and displayed before doing
-			 Message 2.
-			 */
-			[componentInstance setActiveTarget:self];
-		}
-
-
-		//Load the script
-		scriptContext = [NDScriptContext scriptDataWithContentsOfURL:[infoDict objectForKey:@"Path"]
-												   componentInstance:componentInstance];
-
-		if (scriptContext) {
-			[infoDict setObject:scriptContext
-						 forKey:@"NDScriptContext"];
-		}
-	}
-
-#ifdef APPLESCRIPT_FILTER_DEBUG
-	numExecuted++;
-	NSLog(@"%i: Executing %@",numExecuted,[infoDict objectForKey:@"Title"]);
-	[scriptContext executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-	NSLog(@"%i: Finished.",numExecuted);
-#else
-	[scriptContext executeSubroutineNamed:@"substitute" argumentsArray:arguments];
-#endif
-	
-	resultDescriptor = [scriptContext resultAppleEventDescriptor];
-	
-	if (resultDescriptor) {
-		result = [resultDescriptor stringValue];
-	}
-
-	return(result);
-}
-
-/*!
- * @brief Receive apple events while running an applescript
- */
-- (NSAppleEventDescriptor *)sendAppleEvent:(NSAppleEventDescriptor *)appleEventDescriptor 
-								  sendMode:(AESendMode)sendMode 
-							  sendPriority:(AESendPriority)sendPriority
-							timeOutInTicks:(long)timeOutInTicks
-								  idleProc:(AEIdleUPP)idleProc
-								filterProc:(AEFilterUPP)filterProc
-{
-	NSAppleEventDescriptor	*eventDescriptor;
-
-#ifdef APPLESCRIPT_FILTER_DEBUG
-	NSLog(@"%i (mainthread %i): appleEvent: %@",numExecuted,handleOnMainThread,appleEventDescriptor);
-#endif
-
-	NSInvocation			*invocation;
-	SEL						selector;
-	
-	selector = @selector(sendAppleEvent:sendMode:sendPriority:timeOutInTicks:idleProc:filterProc:);
-	
-	invocation = [NSInvocation invocationWithMethodSignature:[componentInstance methodSignatureForSelector:selector]];
-	[invocation setSelector:selector];
-	[invocation setTarget:componentInstance];
-	
-	[invocation setArgument:&appleEventDescriptor atIndex:2];
-	[invocation setArgument:&sendMode atIndex:3];
-	[invocation setArgument:&sendPriority atIndex:4];
-	[invocation setArgument:&timeOutInTicks atIndex:5];
-	[invocation setArgument:&idleProc atIndex:6];
-	[invocation setArgument:&filterProc atIndex:7];
-	
-	[invocation performSelectorOnMainThread:@selector(invoke)
-								 withObject:nil
-							  waitUntilDone:YES];
-	[invocation getReturnValue:&eventDescriptor];
-
-	return(eventDescriptor);
-}
-
-- (BOOL)appleScriptActive
-{
-#ifdef APPLESCRIPT_FILTER_DEBUG
-	NSLog(@"%i: Active.",numExecuted);
-#endif
-	return(YES);
 }
 
 #pragma mark Toolbar item
