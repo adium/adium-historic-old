@@ -117,7 +117,7 @@
 //
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
 {
-    //Observe it's primary list object's status
+    //Observe its primary list object's status
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
 	if ([messageViewController listObject]) {
 		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
