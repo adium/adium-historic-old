@@ -24,7 +24,6 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/ESURLAdditions.h>
 #import <Adium/AIContentMessage.h>
-#import <Adium/NSString+NDUtilities.h>
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
@@ -140,29 +139,36 @@
 			NSString *host = [url host];
 			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
 				// aim://goim?screenname=tekjew
-				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] stringByReplacingString:@"+" withString:@" "] compactedString];
+				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
+
 				if (name) {
 					[self _openChatToContactWithName:name
 										   onService:service 
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
-				
+
 			} else if ([host caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
-				NSString *name = [[[[url queryArgumentForKey:@"screenname"] stringByReplacingString:@"+" withString:@" "] stringByDecodingURLEscapes] compactedString];				
-				[[adium contactController] requestAddContactWithUID:name
-															service:[[adium accountController] firstServiceWithServiceID:service]];
+				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
+
+				if (name) {
+					[[adium contactController] requestAddContactWithUID:name
+																service:[[adium accountController] firstServiceWithServiceID:service]];
+				}
 
 			} else if ([host caseInsensitiveCompare:@"sendim"] == NSOrderedSame) {
 				// ymsgr://sendim?tekjew
 				NSString *name = [[[url query] stringByDecodingURLEscapes] compactedString];
-				[self _openChatToContactWithName:name
-									   onService:service
-									 withMessage:nil];
+				
+				if (name) {
+					[self _openChatToContactWithName:name
+										   onService:service
+										 withMessage:nil];
+				}
 				
 			} else if ([url queryArgumentForKey:@"openChatToScreenName"]) {
 				// aim://openChatToScreenname?tekjew  [?]
-				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByReplacingString:@"+" withString:@" "] compactedString];
+				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByDecodingURLEscapes] compactedString];
 				
 				if (name) {
 					[self _openChatToContactWithName:name
