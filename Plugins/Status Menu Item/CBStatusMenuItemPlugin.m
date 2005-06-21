@@ -68,17 +68,16 @@
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
 	if ([[prefDict objectForKey:KEY_STATUS_MENU_ITEM_ENABLED] boolValue]) {
-		//If it hasn't been created yet, create it. Otherwise, tell it to show itself.
+		//If it hasn't been created yet, create it. It will be created visible.
+		//Otherwise, tell it to show itself.
 		if (!itemController) {
 			itemController = [CBStatusMenuItemController statusMenuItemController];
 		} else {
 			[itemController showStatusItem];
 		}
 	} else {
-		//if it exists, tell it to hide itself
-		if (itemController) {
-			[itemController hideStatusItem];
-		}
+		//if it exists, tell it to hide itself.
+		[itemController hideStatusItem];
 	}
 }
 
