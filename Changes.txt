@@ -1,21 +1,29 @@
 				Adium X Version History
 				-----------------------
-Version 0.82
+Version 0.82 (6/17/2005)
  * Added OTR Encryption advanced preferences pane for fingerprint management [#5]
+ * Added Ignore / Un-ignore support for all group chats
  * Added support for spaces and the plus character in Yahoo! names
  * Added support for modifying a saved status before setting it by holding Option when selecting a status
  * Added support for adding contacts to your list when they request authorization [#2]
  * Added support for the MSN display name updating to match the last used name when you change it in another client and then sign on with Adium [#196]
+ * Added support for pressing enter/return to send a 'blank' IM to reset to the default typing attributes ‡ la old iChat
+ * Autoreply is now enabled by default new away messages but disabled for available and invisible messages
+ * Made the message window and standard contact list unified
+ * Improved retrieval of AIM buddy icons
  * Improved the Play Sound action in the Events preferences [#29]
+ * Improved updating of chat names
  * Improved Aqua service icons, including a new Gadu-Gadu service icon
- * Fixed issues causing Adium to prevent system sleep in certain situations
+ * Re-enabled jabber.org automatic registration
+ * Fixed a crash in the File Transfer Progress Window after removing a file transfer
+ * Fixed issues causing Adium to prevent system sleep in certain situations [#106]
  * Fixed issues with network connectivity detection
  * Fixed issues with unblocking contacts who have been blocked [#197]
  * Fixed issues with white lines at the top and bottom of borderless windows
  * Fixed display of Meanwhile available and away messages [#105]
  * Fixed encoding issues when using Yahoo! Japan
  * Fixed chats remaining in the Window menu after viewing the Send Later sheet
- * Fixed saving of in-window message history for chats open when quitting Adium
+ * Fixed saving of in-window message history for chats open when quitting Adium [#71]
  * Fixed a crash caused by certain invalid HTML links
  * Fixed zooming the standard contact list window [#81]
  * Fixed setting the per-user encryption setting via the Get Info window [#44]
@@ -24,13 +32,27 @@ Version 0.82
  * Fixed issues with sending line breaks over Bonjour [#48]
  * Fixed issues with automatic compression of bundles/folders for file transfer
  * Fixed issues with the Find Buddy by Email window [#279]
- * Fixed the %_uptime script with less than one day of uptime [#165]
  * Fixed contacts in AIM group chats being incorrectly marked as mobile [#54]
+ * Fixed issues with sending links in AIM group chats [#229]
+ * Fixed the %_uptime script with less than one day of uptime [#165]
+ * Fixed a crash when closing group chats [#314]
+ * Fixed issues with scripts used in MSN display names being overwritten after reconnecting [#326]
+ * Fixed issues with the Custom Status window reconfiguring for a new status of the same type
+ * Fixed issues with URL handling
+ * Fixed a leak when switching between To: contacts on differing services within a metaContact
+ * Fixed responder chain in the New Message prompt [#260]
+ * Fixed setting the Offline status state for Auto Away and Fast User Switching
+ * Fixed issues with inviting Yahoo contacts to chats while joining them via File->Join Group Chat
+ * Fixed a crash when deleting logs in the Log Viewer
+ * Fixed "Radioactive Adiumy" and crushed all PNG files to save space [#69]
+ * Fixed a rare hang at launch
+ * Corrected a situation in which it would be possible for Adium to delete saved status states accidentally
  * Fixed several memory leaks
- * Added Czech, Icelandic, Norwegian, and Simplified Chinese translations
+ * Disabled Crash Reporter for out of date versions of Adium [#65]
+ * Added Catalan, Czech, Icelandic, Norwegian, Simplified Chinese, and Swedish translations
  * Updated all other translations
- * Updated to Growl 0.70
- * Updated to libgaim 1.3.0
+ * Updated to Growl 0.7
+ * Updated to libgaim 1.3.1
 
 Version 0.81 (06 May 2005)
  * Added accounts back to the File menu, fixing the Actions submenus in the process
