@@ -1,4 +1,0 @@
-#import "NDScriptData_Protocols.h"
-
-#define NDAppleScriptObjectSendEvent	NDScriptDataObjectSendEvent
-#define NDAppleScriptObjectActive		NDScriptDataObjectActive
