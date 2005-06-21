@@ -80,8 +80,9 @@ typedef enum {
     AIAccount			*account;
 	NSDate				*dateOpened;
 	BOOL				isOpen;
-	
-    NSMutableArray		*contentObjectArray;
+
+	NSMutableArray		*pendingOutgoingContentObjects;
+
     NSMutableArray		*participatingListObjects;
 	AIListContact		*preferredListObject;
 	NSString			*name;
@@ -114,11 +115,8 @@ typedef enum {
 - (void)setPreferredListObject:(AIListContact *)inObject;
 - (BOOL)inviteListContact:(AIListContact *)inObject withMessage:(NSString *)inviteMessage;
 
-- (NSArray *)contentObjectArray;
-- (BOOL)hasContent;
-- (void)setContentArray:(NSArray *)inContentArray;
-- (void)addContentObject:(AIContentObject *)inObject;
-- (void)appendContentArray:(NSArray *)inContentArray;
+- (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject;
+- (void)finishedSendingContentObject:(AIContentObject *)inObject;
 - (void)removeAllContent;
 
 - (NSString *)name;

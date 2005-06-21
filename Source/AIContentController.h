@@ -65,6 +65,12 @@ typedef enum {
 - (float)filterPriority;
 @end
 
+//Delayed content filters return YES if they begin a delayed filter, NO if they don't.
+@protocol AIDelayedContentFilter
+- (BOOL)delayedFilterAttributedString:(NSAttributedString *)inAttributedString context:(id)context uniqueID:(unsigned long long)uniqueID;
+- (float)filterPriority;
+@end
+
 @interface AIContentController : AIObject <AIController> {
 	AdiumTyping				*adiumTyping;
 	AdiumFormatting			*adiumFormatting;
@@ -85,10 +91,9 @@ typedef enum {
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction;
-- (void)registerContentFilter:(id <AIContentFilter>)inFilter
-					   ofType:(AIFilterType)type
-					direction:(AIFilterDirection)direction
-					 threaded:(BOOL)threaded;
+- (void)registerDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter
+							  ofType:(AIFilterType)type
+						   direction:(AIFilterDirection)direction;;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
 - (BOOL)shouldPollToUpdateString:(NSString *)inString;
@@ -104,11 +109,7 @@ typedef enum {
 			   notifyingTarget:(id)target
 					  selector:(SEL)selector
 					   context:(id)context;
-- (NDRunLoopMessenger *)filterRunLoopMessenger;
-
-
-
-
+- (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID;
 
 //Sending / Receiving content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount;
