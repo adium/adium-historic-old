@@ -74,14 +74,33 @@
 	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 
 	if (responder && [responder isKindOfClass:[NSTextView class]]) {
-		//Run the script in our filter thread to avoid threading conflicts, waiting for a result and then returning it
-		NSString	*scriptResult = [[[adium contentController] filterRunLoopMessenger] target:self
-																			   performSelector:@selector(_executeSafariLinkScript)
-																					withResult:YES];
+		NSTask			*scriptTask;
+		NSMutableArray	*applescriptRunnerArguments = [NSArray arrayWithObjects:SAFARI_LINK_SCRIPT_PATH, @"substitute", nil];
+		NSString		*applescriptRunnerPath;
+		NSPipe			*standardOuptut = [NSPipe pipe];
+		NSString		*scriptResult;
+
+		//Find the path to the ApplescriptRunner application
+		applescriptRunnerPath = [[[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
+																 ofType:nil
+															inDirectory:nil] retain];
+		//Set up our task
+		scriptTask = [[NSTask alloc] init];
+		[scriptTask setLaunchPath:applescriptRunnerPath];
+		[scriptTask setArguments:applescriptRunnerArguments];
+		[scriptTask setStandardOutput:standardOuptut];
+
+		//Launch, then block until it's finished
+		[scriptTask launch];
+		[scriptTask waitUntilExit];
+
+		//Retrieve the HTML returned by the script via standardOutput
+		scriptResult = [[NSString alloc] initWithData:[[standardOuptut fileHandleForReading] readDataToEndOfFile]
+											 encoding:NSUTF8StringEncoding];
 
 		//If the script returns nil or fails, do nothing
 		if (scriptResult && [scriptResult length]) {
-			//Insert the script result - it should have returned HTML, so process it first
+			//Insert the script result - it should have returned an HTML link, so process it first
 			NSAttributedString	*attributedScriptResult;
 			NSDictionary		*attributes;
 
@@ -92,21 +111,10 @@
 			if (attributes) [(NSTextView *)responder setTypingAttributes:attributes];
 			[attributes release];
 		}
-	}
-}
 
-/*!
- * @brief Execute the script our Safari applescript
- * @result NSString containing an HTML link to the active Safari web page
- */
-- (NSString *)_executeSafariLinkScript
-{
-	//Create the NSAppleScript object if necessary
-	if (!safariLinkScript) {
-		safariLinkScript = [[NSAppleScript alloc] initWithContentsOfURL:[NSURL fileURLWithPath:SAFARI_LINK_SCRIPT_PATH] error:nil];
+		[scriptResult release];
+		[scriptTask release];
 	}
-
-	return [[safariLinkScript executeFunction:@"substitute" withArguments:nil error:nil] stringValue];
 }
 
 @end
