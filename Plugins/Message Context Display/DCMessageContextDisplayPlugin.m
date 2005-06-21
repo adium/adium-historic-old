@@ -118,7 +118,9 @@
 	if (chat && [chat listObject] && ![chat name]) {		
 		dict = [NSMutableDictionary dictionary];
 
-		enumerator = [[chat contentObjectArray] objectEnumerator];
+#warning Message history is now broken. We should be reading from the new log files, not doing independent storage.
+//		enumerator = [[chat contentObjectArray] objectEnumerator];
+		enumerator = nil;
 		
 		//Is there already stored context for this person?
 		previousDict = [[chat listObject] preferenceForKey:KEY_MESSAGE_CONTEXT group:PREF_GROUP_CONTEXT_DISPLAY];
