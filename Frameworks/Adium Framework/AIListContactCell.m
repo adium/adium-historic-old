@@ -26,13 +26,9 @@
 
 #define HULK_CRUSH_FACTOR 1
 
-
 //Selections
 #define CONTACT_INVERTED_TEXT_COLOR		[NSColor whiteColor]
 #define CONTACT_INVERTED_STATUS_COLOR	[NSColor whiteColor]
-#define SELECTED_IMAGE_OPACITY			0.8
-#define FULL_IMAGE_OPACITY				1.0
-
 
 @implementation AIListContactCell
 
@@ -591,15 +587,11 @@
 //
 - (float)imageOpacityForDrawing
 {
-	if ([self cellIsSelected]) {
-		return(SELECTED_IMAGE_OPACITY);
+	NSNumber	*opacityNumber;
+	if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
+		return([opacityNumber floatValue]);
 	} else {
-		NSNumber	*opacityNumber;
-		if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-			return([opacityNumber floatValue]);
-		} else {
-			return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
-		}
+		return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
 	}
 }
 
