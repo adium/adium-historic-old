@@ -29,6 +29,7 @@
 	//Content processing
 	AIContentObject				*previousContent;
 	NSMutableArray				*contentQueue;
+	NSMutableArray				*storedContentObjects;
 	BOOL						webViewIsReady;
 	
 	//Style & Variant

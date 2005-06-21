@@ -422,6 +422,9 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
 																		  withPlugin:plugin] retain];
 	
+	//Enable live refreshing of our preview
+	[previewController setShouldReflectPreferenceChanges:YES];
+
 	//Add fake users and content to our chat
 	previewFilePath = [[NSBundle bundleForClass:[self class]] pathForResource:WEBKIT_PREVIEW_CONVERSATION_FILE ofType:@"plist"];
 	previewDict = [[[NSDictionary alloc] initWithContentsOfFile:previewFilePath] autorelease];
@@ -441,10 +444,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	//Disable forwarding of events so the preferences responder chain works properly
 	if ([preview respondsToSelector:@selector(setShouldForwardEvents:)]) {
 		[(ESWebView *)preview setShouldForwardEvents:NO];		
-	}
-	
-	//Enable live refreshing of our preview
-	[previewController setShouldReflectPreferenceChanges:YES];
+	}	
 }
 
 /*!
