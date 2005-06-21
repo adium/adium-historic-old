@@ -582,6 +582,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 
 	scriptTask = [[NSTask alloc] init];
+	
+	scriptTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:SCRIPT_TIMEOUT
+														  target:self
+														selector:@selector(scriptTimeout:)
+														userInfo:scriptTask
+														 repeats:NO];
+	
 	[scriptTask setLaunchPath:applescriptRunnerPath];
 	[scriptTask setArguments:applescriptRunnerArguments];
 	[scriptTask setStandardOutput:[NSPipe pipe]];
@@ -596,12 +603,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 											 selector:@selector(scriptDidFinish:)
 												 name:NSTaskDidTerminateNotification
 											   object:scriptTask];
-
-	scriptTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:SCRIPT_TIMEOUT
-														  target:self
-														selector:@selector(scriptTimeout:)
-														userInfo:scriptTask
-														 repeats:NO];
 
 	[scriptTask launch];
 }
