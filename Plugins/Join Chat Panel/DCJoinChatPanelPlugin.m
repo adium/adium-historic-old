@@ -18,6 +18,8 @@
 #import "AIMenuController.h"
 #import "DCJoinChatPanelPlugin.h"
 #import "DCJoinChatWindowController.h"
+#import <Adium/AIAccount.h>
+#import <Adium/AIService.h>
 #import <AIUtilities/AIMenuAdditions.h>
 
 #define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Group Chat...",nil)
@@ -68,7 +70,7 @@
 	if (menuItem == joinChatMenuItem) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount		*account;
-		
+
 		while ((account = [enumerator nextObject])) {	
 			if ([account online] && [[account service] canCreateGroupChats]) return(YES);
 		}
