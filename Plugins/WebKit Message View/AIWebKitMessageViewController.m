@@ -83,6 +83,7 @@ static NSArray *draggedTypes = nil;
 		plugin = [inPlugin retain];
 		contentQueue = [[NSMutableArray alloc] init];
 		shouldReflectPreferenceChanges = NO;
+		storedContentObjects = nil;
 
 		//Observe preference changes.
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
@@ -149,6 +150,7 @@ static NSArray *draggedTypes = nil;
 	
 	//Cleanup content processing
 	[contentQueue release]; contentQueue = nil;
+	[storedContentObjects release]; storedContentObjects = nil;
 	[previousContent release]; previousContent = nil;
 
 	//Release the chat
@@ -165,6 +167,15 @@ static NSArray *draggedTypes = nil;
 - (void)setShouldReflectPreferenceChanges:(BOOL)inValue
 {
 	shouldReflectPreferenceChanges = inValue;
+
+	//We'll want to start storing content objects if we're needing to reflect preference changes
+	if (shouldReflectPreferenceChanges) {
+		if (!storedContentObjects) {
+			storedContentObjects = [[NSMutableArray alloc] init];
+		}
+	} else {
+		[storedContentObjects release]; storedContentObjects = nil;
+	}
 }
 
 /*!
@@ -454,18 +465,26 @@ static NSArray *draggedTypes = nil;
 	[[webView mainFrame] loadHTMLString:[messageStyle baseTemplateWithVariant:activeVariant chat:chat] baseURL:nil];
 
 	if (reprocessContent) {
-		/* Just in case we are in the middle of adding content, clean out the  newContent array.
-		 * The chat's contentObjectArray will have the new object; we won't lose anything.
-		 */
+		NSArray	*currentContentQueue;
+		
+		//Keep the array of objects waiting to be added, if necessary, to append them after our currently displayed ones
+		currentContentQueue = ([contentQueue count] ?
+							   [contentQueue copy] :
+							   nil);
+
+		//Start from an empty content queue
 		[contentQueue removeAllObjects];
-		
-		//The first object in the chat's contentObjectArray is the most recent; we want to add chronologically, so reverse the array.
-		NSEnumerator	*enumerator = [[chat contentObjectArray] reverseObjectEnumerator];
-		AIContentObject	*object;
-		while ((object = [enumerator nextObject])) {
-			[contentQueue addObject:object];
+
+		//Add our stored content objects to the content queue
+		[contentQueue addObjectsFromArray:storedContentObjects];
+		[storedContentObjects removeAllObjects];
+
+		//Add the old content queue back in if necessary
+		if (currentContentQueue) {
+			[contentQueue addObjectsFromArray:currentContentQueue];
+			[currentContentQueue release];
 		}
-		
+
 		//We're still holding onto the previousContent from before, which is no longer accurate. Release it.
 		[previousContent release]; previousContent = nil;
 	}
@@ -518,7 +537,12 @@ static NSArray *draggedTypes = nil;
 			//Display the content
 			content = [contentQueue objectAtIndex:0];
 			[self _processContentObject:content willAddMoreContentObjects:willAddMoreContentObjects];
-			
+
+			//If we are going to reflect preference changes, store this content object
+			if (shouldReflectPreferenceChanges) {
+				[storedContentObjects addObject:content];
+			}
+
 			//Remove the content we just displayed from the queue
 			[contentQueue removeObjectAtIndex:0];
 			objectsAdded++;
