@@ -15,30 +15,17 @@
  */
 
 #import "AdiumContentFiltering.h"
-#import <Adium/NDRunLoopMessenger.h>
-#import <AIUtilities/ESExpandedRecursiveLock.h>
-
-static NDRunLoopMessenger   	*filterRunLoopMessenger = nil;
-static NSLock					*filterCreationLock = nil;
-static NSRecursiveLock			*mainFilterLock = nil;
-static ESExpandedRecursiveLock	*threadedFilterLock = nil;
-
-//The autorelease pool presently in use; it will be periodically released and recreated
-static NSAutoreleasePool *currentAutoreleasePool = nil;
-#define	AUTORELEASE_POOL_REFRESH	5.0
 
 @interface AdiumContentFiltering (PRIVATE)
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject usingFilterArray:(NSArray *)inArray;
-- (NSString *)_filterString:(NSString *)inString forContentObject:(AIContentObject *)inObject listObjectContext:(AIListObject *)inListObject/* usingFilterArray:(NSArray *)inArray*/;
-- (void)_filterContentObject:(AIContentObject *)inObject usingFilterArray:(NSArray *)inArray;
-- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext invocation:(NSInvocation *)invocation;
-- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString contentFilter:(NSArray *)inContentFilterArray filterContext:(id)filterContext usingLock:(NSRecursiveLock *)inLock;
+- (void)_registerContentFilter:(id)inFilter
+				   filterArray:(NSMutableArray *)inFilterArray;
 
-- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString 
-										contentFilter:(NSArray *)inContentFilterArray
-								threadedContentFilter:(NSArray *)inThreadedContentFilterArray
-										filterContext:(id)filterContext
-										   invocation:(NSInvocation *)invocation;
+- (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
+								  contentFilter:(NSArray *)inContentFilterArray
+								  filterContext:(id)filterContext;
+
+int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context);
+
 @end
 
 @implementation AdiumContentFiltering
@@ -50,6 +37,7 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {
 	if((self = [super init])){
 		stringsRequiringPolling = [[NSMutableSet alloc] init];
+		delayedFilteringDict = [[NSMutableDictionary alloc] init];
 	}
 	
 	return(self);
@@ -66,50 +54,67 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 
 //Content Filtering ----------------------------------------------------------------------------------------------------
 #pragma mark Content Filtering
-//Register a content filter.  If the particular filter wants to apply to multiple types or directions, it should
-//register multiple times.  Be careful that incoming content is always contained (aka: Don't feed incoming content
-//to a shell script or something silly like that).
+/*
+ * @brief Register a content filter.
+ *
+ * If the particular filter wants to apply to multiple types or directions, it should register multiple times.
+ */
 - (void)registerContentFilter:(id<AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction
 {
-	[self registerContentFilter:inFilter
-						 ofType:type
-					  direction:direction
-					   threaded:NO];
-}
-
-int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context) {
-	float filterPriorityA = [filterA filterPriority];
-	float filterPriorityB = [filterB filterPriority];
-	
-	if (filterPriorityA < filterPriorityB)
-		return NSOrderedAscending;
-	else if (filterPriorityA > filterPriorityB)
-		return NSOrderedDescending;
-	else
-		return NSOrderedSame;
-}
-
-- (void)registerContentFilter:(id<AIContentFilter>)inFilter
-					   ofType:(AIFilterType)type
-					direction:(AIFilterDirection)direction
-					 threaded:(BOOL)threaded
-{
-	NSParameterAssert(inFilter != nil);
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
 
-	if (!(threaded ? threadedContentFilter : contentFilter)[type][direction]) {
-		(threaded ? threadedContentFilter : contentFilter)[type][direction] = [[NSMutableArray alloc] init];
+	if (!contentFilter[type][direction]) {
+		contentFilter[type][direction] = [[NSMutableArray alloc] init];
 	}
 	
-	NSMutableArray	*currentContentFilter = (threaded ? threadedContentFilter : contentFilter)[type][direction];
-	[currentContentFilter addObject:inFilter];
-	[currentContentFilter sortUsingFunction:filterSort context:nil];
+	[self _registerContentFilter:inFilter
+					 filterArray:contentFilter[type][direction]];
 }
 
-//Unregister all instances of filter.
+/*
+ * @brief Register a delayed content filter
+ *
+ * Delayed content filters return YES or NO from their filter method; YES means they began a filtering process.
+ * When finished, the filter is responsible for notifying this class that the attributed string is ready.
+ * A unique ID will be passed to identify each string.
+ */
+- (void)registerDelayedContentFilter:(id<AIDelayedContentFilter>)inFilter
+							  ofType:(AIFilterType)type
+						   direction:(AIFilterDirection)direction
+{
+	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
+	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
+
+	if (!delayedContentFilter[type][direction]) {
+		delayedContentFilter[type][direction] = [[NSMutableArray alloc] init];
+	}
+	
+	[self _registerContentFilter:inFilter
+					 filterArray:delayedContentFilter[type][direction]];
+}
+
+/*
+ * @brief Add a content filter to the specified array
+ *
+ * Adds, then sorts by priority
+ */
+- (void)_registerContentFilter:(id)inFilter
+				   filterArray:(NSMutableArray *)inFilterArray
+{
+	NSParameterAssert(inFilter != nil);
+	
+	[inFilterArray addObject:inFilter];
+	[inFilterArray sortUsingFunction:filterSort context:nil];	
+}
+
+/*
+ * @brief Unregister a filter.
+ *
+ * Looks in both contentFilter and delayedContentFilter, for all types and directions
+ */
 - (void)unregisterContentFilter:(id<AIContentFilter>)inFilter
 {
 	NSParameterAssert(inFilter != nil);
@@ -118,18 +123,22 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	for (i = 0; i < FILTER_TYPE_COUNT; i++) {
 		for (j = 0; j < FILTER_DIRECTION_COUNT; j++) {
 			[contentFilter[i][j] removeObject:inFilter];
-			[threadedContentFilter[i][j] removeObject:inFilter];
+			[delayedContentFilter[i][j] removeObject:inFilter];
 		}
 	}
 }
 
-//Register a string which, if present when filtering for a potentially autorefreshing string, requires polling to be updated
+/*
+ * @brief Register a string to be filtered which requires polling to be updated
+ */
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString
 {
 	[stringsRequiringPolling addObject:inPollString];
 }
 
-//Is polling required to update the passed string?
+/*
+ * @brief Is polling required to update the passed string?
+ */
 - (BOOL)shouldPollToUpdateString:(NSString *)inString
 {
 	NSEnumerator	*enumerator;
@@ -147,47 +156,91 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 	return shouldPoll;
 }
 
-#define THREADED_FILTERING TRUE
-
-//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
-//This only performs main thread filters.
+/*
+ * @brief Filter an attributed string immediately
+ *
+ * This does not perform delayed filters.
+ *
+ * @param attributedString NSAttributedString to filter
+ * @param type Type of the filter
+ * @param direction Direction of the filter
+ * @param filterContext A object, such as an AIListContact or an AIAccount, used as context by filters
+ * @result The filtered attributed string, which may be the same as attributedString
+ */
 - (NSAttributedString *)filterAttributedString:(NSAttributedString *)attributedString
 							   usingFilterType:(AIFilterType)type
 									 direction:(AIFilterDirection)direction
 									   context:(id)filterContext
 {
-	//Perform the filter (in the main thread)
 	attributedString = [self _filterAttributedString:attributedString
 									   contentFilter:contentFilter[type][direction]
-									   filterContext:filterContext
-										   usingLock:mainFilterLock];
+									   filterContext:filterContext];
 	
-	return (attributedString);
+	return attributedString;
 }
 
 
-//Perform the filtering of an attributedString on the specified content filter. Pass filterContext while filtering.
-//Either thread may use this function, but no two threads should be using filters from the same content array at once.
+/*
+ * @brief Perform the filtering of an attributedString on the specified content filter.
+ *
+ * @param attributedString NSAttributedString to filter
+ * @param inContentFilterArray Array of filters to use
+ * @param filtercontext Passed to each filter as context.
+ * @result The filtered NSAttributedString, which may be the same as attributedString
+ */
 - (NSAttributedString *)_filterAttributedString:(NSAttributedString *)attributedString
 								  contentFilter:(NSArray *)inContentFilterArray
 								  filterContext:(id)filterContext
-									  usingLock:(NSRecursiveLock *)inLock
 {
 	NSEnumerator		*enumerator = [inContentFilterArray objectEnumerator];
 	id<AIContentFilter>	filter;
 	
-	[inLock lock];
 	while ((filter = [enumerator nextObject])) {
 		attributedString = [filter filterAttributedString:attributedString context:filterContext];
 	}
-	[inLock unlock];
 	
-	return(attributedString);
+	return attributedString;
 }
 
-//Filters an attributed string.  If the string is associated with a contact or list object, pass that object as context.
-//Selector should take two arguments.  The first will be the filtered attributedString; the second is the passed context.
-//Filtration occurs in a background thread, sequentially, and will notify target at selector when complete.
+/*
+ * @brief Begin delayed filtering of an attributedString
+ *
+ * @result YES if any delayed filtering began; NO if it did not
+ */
+- (BOOL)_delayedFilterAttributedString:(NSAttributedString *)attributedString
+						 contentFilter:(NSArray *)inContentFilterArray
+						 filterContext:(id)filterContext
+				 uniqueDelayedFilterID:(unsigned long long)uniqueID
+{
+	NSEnumerator				*enumerator = [inContentFilterArray objectEnumerator];
+	id<AIDelayedContentFilter>	filter;
+	BOOL						beganDelayedFiltering = NO;
+	
+	//Break as soon as we begin delayed filtering; we'll be back through here when that filtering is done
+	while ((filter = [enumerator nextObject]) && !beganDelayedFiltering) {
+		beganDelayedFiltering = [filter delayedFilterAttributedString:attributedString 
+															  context:filterContext
+															 uniqueID:uniqueID];
+	}
+	
+	return beganDelayedFiltering;	
+}
+
+/*
+ * @brief Filter an attributed string, notifying a target when complete
+ *
+ * This performs delayed filters, which means there may be a non-blocking delay before the filtered attributed string
+ * is returned.
+ *
+ * @param attributedString NSAttributedString to filter
+ * @param type Type of the filter
+ * @param direction Direction of the filter
+ * @param filterContext A object, such as an AIListContact or an AIAccount, used as context by filters
+ * @param target Target to notify when filtering is complete
+ * @param selector Selector to call on target.  It should take 2 arguments; the first will be the filtered attributedString; the second is the passed context.
+ * @param context Context passed back to target via selector when filtering is complete
+ * @result The filtered attributed string, which may be the same as attributedString
+ */
 - (void)filterAttributedString:(NSAttributedString *)attributedString
 			   usingFilterType:(AIFilterType)type
 					 direction:(AIFilterDirection)direction
@@ -198,134 +251,108 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 {
 	NSParameterAssert(type >= 0 && type < FILTER_TYPE_COUNT);
 	NSParameterAssert(direction >= 0 && direction < FILTER_DIRECTION_COUNT);
+
+	BOOL				shouldDelay = NO;
+	NSInvocation		*invocation;
 	
-	NSInvocation *invocation;
+	//Set up the invocation
 	invocation = [NSInvocation invocationWithMethodSignature:[target methodSignatureForSelector:selector]];
-	
 	[invocation setSelector:selector];
 	[invocation setTarget:target];
 	[invocation setArgument:&context atIndex:3]; //context, the second argument after the two hidden arguments of every NSInvocation
-	[invocation retainArguments];
 
-#if THREADED_FILTERING
-	//Now request the asynchronous filtering
-	[[self filterRunLoopMessenger] target:self 
-						  performSelector:@selector(thread_filterAttributedString:contentFilter:threadedContentFilter:filterContext:invocation:) 
-							   withObject:attributedString
-							   withObject:contentFilter[type][direction]
-							   withObject:threadedContentFilter[type][direction]
-							   withObject:filterContext
-							   withObject:invocation];
-#else
-	//Synchronous filtering
-	[self thread_filterAttributedString:attributedString
-						  contentFilter:contentFilter[type][direction]
-				  threadedContentFilter:threadedContentFilter[type][direction]
-						  filterContext:filterContext
-							 invocation:invocation];
-#endif
-}
-
-- (NDRunLoopMessenger *)filterRunLoopMessenger
-{
-	if (!filterRunLoopMessenger) {
-		if (!filterCreationLock) filterCreationLock = [[NSLock alloc] init];
-		[filterCreationLock lock];
-		
-		[NSThread detachNewThreadSelector:@selector(thread_createFilterRunLoopMessenger) toTarget:self withObject:nil];
-		
-		[filterCreationLock lockBeforeDate:[NSDate distantFuture]];
-		[filterCreationLock release]; filterCreationLock = nil;
-	}
-	
-	return (filterRunLoopMessenger);
-}
-
-- (NSAttributedString *)thread_filterAttributedString:(NSAttributedString *)attributedString 
-										contentFilter:(NSArray *)inContentFilterArray
-										threadedContentFilter:(NSArray *)inThreadedContentFilterArray
-										filterContext:(id)filterContext
-										   invocation:(NSInvocation *)invocation
-{
 	if (attributedString) {
+		static unsigned long long	uniqueDelayedFilterID = 0;
+		
 		//Perform the main filters
 		attributedString = [self _filterAttributedString:attributedString
-										   contentFilter:inContentFilterArray
-										   filterContext:filterContext
-											   usingLock:mainFilterLock];
-		
-		/*
-		 Now perform the threaded-only filters.
-		 
-		 The threadedFilterLock also serves as a way to know if a filtering operation is currently in progress.
-		 Running a filter may take multiple run loops (e.g. applescript execution).
-		 It is not acceptable for our autorelease pool to be released between these loops
-		 as we have autoreleased objects upon which we are depending; we can check against the lock
-		 using isUnlocked (non-blocking) to know if it is safe.
-		 */
-		attributedString = [self _filterAttributedString:attributedString
-										   contentFilter:inThreadedContentFilterArray
-										   filterContext:filterContext
-											   usingLock:threadedFilterLock];
+										   contentFilter:contentFilter[type][direction]
+										   filterContext:filterContext];
+
+		//Now perform the delayed filters
+		shouldDelay = [self _delayedFilterAttributedString:attributedString
+											 contentFilter:delayedContentFilter[type][direction]
+											 filterContext:filterContext
+									 uniqueDelayedFilterID:uniqueDelayedFilterID];
+
+		//If we should delay (a delayed filter is doing its thing), store what we need to finish later
+		if (shouldDelay) {
+			//NSInvocation does not retain its arguments by default; if we're caching the invocation, we must tell it to.
+			[invocation retainArguments];
+
+			//Track this so we can invoke with the filtered product later
+			[delayedFilteringDict setObject:[NSDictionary dictionaryWithObjectsAndKeys:
+				invocation, @"Invocation",
+				delayedContentFilter[type][direction], @"Delayed Content Filter",
+				filterContext, @"Filter Context", nil]
+									 forKey:[NSNumber numberWithUnsignedLongLong:uniqueDelayedFilterID]];
+		}
+
+		//Increment our delayed filter ID
+		uniqueDelayedFilterID++;
 	}
 	
-	if (invocation) {
+	//If we didn't delay, invoke immediately
+	if (!shouldDelay) {
 		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
 		[invocation setArgument:&attributedString atIndex:2];
-		[invocation retainArguments]; //redundant?
 		
-		//Send the filtered attributedString back via invocation, on the main thread
-		[invocation performSelectorOnMainThread:@selector(invoke) withObject:nil waitUntilDone:NO];
+		//Send the filtered attributedString back via the invocation
+		[invocation invoke];
 	}
-	
-	return(attributedString);
 }
 
-//Only called once, the first time a threaded filtering is requested
-- (void)thread_createFilterRunLoopMessenger
+/*
+ * @brief A delayed filter finished filtering
+ *
+ * After this filter finishes, run it through the delayed filter system again
+ * to hit the next delayed string, if necessary.
+ *
+ * If no more delayed filtering is needed, look up the invocation and pass the
+ * now-finished string to the appropriate target.
+ */
+- (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID
 {
-	NSTimer				*autoreleaseTimer;
+	NSNumber		*uniqueIDNumber;
+	NSDictionary	*infoDict;
+	BOOL			shouldDelay;
 	
-	//Create an initial autorelease pool
-	currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
+	uniqueIDNumber = [NSNumber numberWithUnsignedLongLong:uniqueID];
+	infoDict = [delayedFilteringDict objectForKey:uniqueIDNumber];
 	
-	//We will want to periodically release and recreate the autorelease pool to avoid collecting memory usage
-	autoreleaseTimer = [[NSTimer scheduledTimerWithTimeInterval:AUTORELEASE_POOL_REFRESH
-														target:self
-													  selector:@selector(refreshAutoreleasePool:)
-													  userInfo:nil
-													   repeats:YES] retain];
+	//Run through the delayed filters again, since a delayed filter would stop after the first hit
+	shouldDelay = [self _delayedFilterAttributedString:attributedString
+										 contentFilter:[infoDict objectForKey:@"Delayed Content Filter"]
+										 filterContext:[infoDict objectForKey:@"Filter Context"]
+								 uniqueDelayedFilterID:uniqueID];
 	
-	//Initialize the lock used to coordinate threading the main vs. the filter thread
-	threadedFilterLock = [[ESExpandedRecursiveLock alloc] init];
-	mainFilterLock = [[NSRecursiveLock alloc] init];
-	
-	//Create and configure our messenger to the filter thread (in which we are at present)
-	filterRunLoopMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
-	[filterRunLoopMessenger setMessageRetryTimeout:3.0];
+	//If we no longer need to delay, set up the invocation and invoke it
+	if (!shouldDelay) {
+		NSInvocation	*invocation = [infoDict objectForKey:@"Invocation"];
 
-	//The run loop messenger has now been created
-	[filterCreationLock unlock];
+		//Put that attributed string into the invocation as the first argument after the two hidden arguments of every NSInvocation
+		[invocation setArgument:&attributedString atIndex:2];
 
-	//CFRunLoop() will not exit until Adium does
-	CFRunLoopRun();
+		//Send the filtered attributedString back via the invocation
+		[invocation invoke];
 
-	[autoreleaseTimer invalidate]; [autoreleaseTimer release];
-	[filterRunLoopMessenger release]; filterRunLoopMessenger = nil;
-	[threadedFilterLock release]; threadedFilterLock = nil;
-	[mainFilterLock release]; mainFilterLock = nil;
-	[currentAutoreleasePool release];
+		//No further need for the infoDict from delayedFilteringDict
+		[delayedFilteringDict removeObjectForKey:uniqueIDNumber];
+	}
 }
 
-//Our autoreleased objects will only be released when the outermost autorelease pool is released.
-//This is handled automatically in the main thread, but we need to do it manually here.
-//Release the current pool, then create a new one.
-- (void)refreshAutoreleasePool:(NSTimer *)inTimer
+#pragma mark Filter priority sort
+int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *context)
 {
-	if ([threadedFilterLock isUnlocked]) {
-		[currentAutoreleasePool release];
-		currentAutoreleasePool = [[NSAutoreleasePool alloc] init];
-	}
+	float filterPriorityA = [filterA filterPriority];
+	float filterPriorityB = [filterB filterPriority];
+	
+	if (filterPriorityA < filterPriorityB)
+		return NSOrderedAscending;
+	else if (filterPriorityA > filterPriorityB)
+		return NSOrderedDescending;
+	else
+		return NSOrderedSame;
 }
 
 @end

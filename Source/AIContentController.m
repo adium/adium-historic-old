@@ -124,11 +124,10 @@
 					direction:(AIFilterDirection)direction {
 	[adiumContentFiltering registerContentFilter:inFilter ofType:type direction:direction];
 }
-- (void)registerContentFilter:(id <AIContentFilter>)inFilter
-					   ofType:(AIFilterType)type
-					direction:(AIFilterDirection)direction
-					 threaded:(BOOL)threaded {
-	[adiumContentFiltering registerContentFilter:inFilter ofType:type direction:direction threaded:threaded];
+- (void)registerDelayedContentFilter:(id <AIDelayedContentFilter>)inFilter
+							  ofType:(AIFilterType)type
+						   direction:(AIFilterDirection)direction {
+	[adiumContentFiltering registerDelayedContentFilter:inFilter ofType:type direction:direction];
 }
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter {
 	[adiumContentFiltering unregisterContentFilter:inFilter];
@@ -163,20 +162,11 @@
 										 selector:selector
 										  context:context];
 }
-- (NDRunLoopMessenger *)filterRunLoopMessenger {
-	return [adiumContentFiltering filterRunLoopMessenger];
+- (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID
+{
+	[adiumContentFiltering delayedFilterDidFinish:attributedString
+										 uniqueID:uniqueID];
 }
-
-
-
-
-
-
-
-
-
-
-
 
 //Messaging ------------------------------------------------------------------------------------------------------------
 #pragma mark Messaging
@@ -231,22 +221,34 @@
 }
 
 //Sending step 1: Entry point for any method in Adium which sends content
+/*
+ * @brief Send a content object
+ *
+ * Sending step 1: Public method to send a content object.
+ *
+ * This method checks to be sure that messages are sent by accounts in the order they are sent by the user;
+ * this can only be problematic when a delayedFilter is involved, leading to the user sending more messages before
+ * the first finished sending.
+ */
 - (BOOL)sendContentObject:(AIContentObject *)inObject
 {
-    //Run the object through our outgoing content filters
-    if ([inObject filterContent]) {
-		[self filterAttributedString:[inObject message]
-					 usingFilterType:AIFilterContent
-						   direction:AIFilterOutgoing
-					   filterContext:inObject
-					 notifyingTarget:self
-							selector:@selector(didFilterAttributedString:contentSendingContext:)
-							 context:inObject];
-		
-    } else {
-		[self finishSendContentObject:inObject];
+	//Only proceed if the chat allows it; if it doesn't, it will handle calling this method again when it is ready
+	if ([[inObject chat] willBeginSendingContentObject:inObject]) {
+		//Run the object through our outgoing content filters
+		if ([inObject filterContent]) {
+			[self filterAttributedString:[inObject message]
+						 usingFilterType:AIFilterContent
+							   direction:AIFilterOutgoing
+						   filterContext:inObject
+						 notifyingTarget:self
+								selector:@selector(didFilterAttributedString:contentSendingContext:)
+								 context:inObject];
+			
+		} else {
+			[self finishSendContentObject:inObject];
+		}
 	}
-	
+
 	// XXX
 	return YES;
 }
@@ -305,16 +307,12 @@
 													  userInfo:[NSDictionary dictionaryWithObjectsAndKeys:chat,@"AIChat",inObject,@"AIContentObject",nil]
 								  previouslyPerformedActionIDs:nil];				
 			}
-
 			//			sent = YES;
 		}
-	} else {
-		//We shouldn't send the content, so something was done with it.. clear the text entry view
-		//XXX - Nobody is observing this notification... -ai
-		[[adium notificationCenter] postNotificationName:Interface_ShouldClearTextEntryView
-												  object:chat 
-												userInfo:nil];
 	}
+	
+	//Let the chat know we finished sending
+	[chat finishedSendingContentObject:inObject];
 	
 //    return(sent);
 }
@@ -468,9 +466,6 @@
 							  previouslyPerformedActionIDs:previouslyPerformedActionIDs];
 		}
 		
-		//Add this content to the chat
-		[chat addContentObject:inObject];
-
 		//Notify: Content Object Added
 		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
 												  object:chat
@@ -530,8 +525,8 @@
 }
 
 /*! 
-* @brief Generate a menu of encryption preference choices
-*/
+ * @brief Generate a menu of encryption preference choices
+ */
 - (NSMenu *)encryptionMenuNotifyingTarget:(id)target withDefault:(BOOL)withDefault
 {
 	NSMenu		*encryptionMenu = [[NSMenu allocWithZone:[NSMenu zone]] init];

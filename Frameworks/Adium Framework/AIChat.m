@@ -52,7 +52,6 @@ static int nextChatNumber = 0;
 	{
 		name = nil;
 		account = [inAccount retain];
-		contentObjectArray = [[NSMutableArray alloc] init];
 		participatingListObjects = [[NSMutableArray alloc] init];
 		dateOpened = [[NSDate date] retain];
 		uniqueChatID = nil;
@@ -60,6 +59,8 @@ static int nextChatNumber = 0;
 		isOpen = NO;
 		expanded = YES;
 
+		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
+		
 		AILog(@"[AIChat: %x initForAccount]",self);
 	}
 
@@ -74,12 +75,12 @@ static int nextChatNumber = 0;
 	AILog(@"[%@ dealloc]",self);
 
 	[account release];
-	[contentObjectArray release];
 	[participatingListObjects release];
 	[dateOpened release];
 	[ignoredListContacts release];
+	[pendingOutgoingContentObjects release];
 	[uniqueChatID release]; uniqueChatID = nil;
-
+	
 	[super dealloc];
 }
 
@@ -316,42 +317,52 @@ static int nextChatNumber = 0;
 
 //Content --------------------------------------------------------------------------------------------------------------
 #pragma mark Content
-//Return our array of content objects
-- (NSArray *)contentObjectArray
+
+/*
+ * @brief Informs the chat that the core and the account are ready to begin filtering and sending a content object
+ *
+ * If there is only one object in pendingOutgoingContentObjects after adding inObject, we should send immedaitely.
+ * However, if other objects are in it, we should wait for them to be removed, as they are chronologically first.
+ * If we are asked if we should begin sending the earliest object in pendingOutgoingContentObjects, the answer is YES.
+ *
+ * @param inObject The object being sent
+ * @result YES if the object should be sent immediately; NO if another object is in process so we should wait
+ */
+- (BOOL)willBeginSendingContentObject:(AIContentObject *)inObject
 {
-    return(contentObjectArray);
+	int	currentIndex = [pendingOutgoingContentObjects indexOfObjectIdenticalTo:inObject];
+
+	//Don't add the object twice when we are called from -[AIChat finishedSendingContentObject]
+	if (currentIndex == NSNotFound) {
+		[pendingOutgoingContentObjects addObject:inObject];
+	}
+
+	return (([pendingOutgoingContentObjects count] == 1) ||
+			(currentIndex == 0));
 }
 
-- (BOOL)hasContent
+/*
+ * @brief Informs the chat that an outgoing content object was sent and dispalyed.
+ *
+ * It is no longer pending, so we remove it from that array.
+ * If there are more pending objects, trigger sending the next.
+ *
+ * @param inObject The object with which we are finished
+ */
+- (void)finishedSendingContentObject:(AIContentObject *)inObject
 {
-    return ([contentObjectArray count] != 0);
+	[pendingOutgoingContentObjects removeObjectIdenticalTo:inObject];
+	
+	if ([pendingOutgoingContentObjects count]) {
+		[[adium contentController] sendContentObject:[pendingOutgoingContentObjects objectAtIndex:0]];
+	}
 }
 
-- (void)setContentArray:(NSArray *)inContentArray
-{
-    if ((NSArray *)contentObjectArray != inContentArray) {
-        [contentObjectArray release];
-        contentObjectArray = [inContentArray mutableCopy];
-    }
-}
-
-//Add a message object to this handle
-- (void)addContentObject:(AIContentObject *)inObject
-{
-    //Add the object
-    [contentObjectArray insertObject:inObject atIndex:0];
-}
-
-//
-- (void)appendContentArray:(NSArray *)inContentArray
-{
-    [contentObjectArray addObjectsFromArray:inContentArray];
-}
 
 //
 - (void)removeAllContent
 {
-    [contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
+    //[contentObjectArray release]; contentObjectArray = [[NSMutableArray alloc] init];
 }
 
 - (BOOL)canSendImages
@@ -361,6 +372,9 @@ static int nextChatNumber = 0;
 
 //Applescript ----------------------------------------------------------------------------------------------------------
 #pragma mark Applescript
+/*
+ * @brief Applescript command to send a message in this chat
+ */
 - (id)sendScriptCommand:(NSScriptCommand *)command {
 	NSDictionary	*evaluatedArguments = [command evaluatedArguments];
 	NSString		*message = [evaluatedArguments objectForKey:@"message"];
@@ -528,6 +542,12 @@ static int nextChatNumber = 0;
 	}	
 }
 
+/*
+ * @brief Is the passed object ignored?
+ *
+ * @param inContact The contact to check
+ * @result YES if the contact is ignored; NO if it is not
+ */
 - (BOOL)isListContactIgnored:(AIListObject *)inContact
 {
 	return [ignoredListContacts containsObject:inContact];

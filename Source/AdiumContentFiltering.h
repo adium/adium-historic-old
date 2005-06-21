@@ -19,18 +19,19 @@
 
 @interface AdiumContentFiltering : AIObject {
 	NSMutableArray			*contentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
-	NSMutableArray			*threadedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
+	NSMutableArray			*delayedContentFilter[FILTER_TYPE_COUNT][FILTER_DIRECTION_COUNT];
 	
 	NSMutableSet			*stringsRequiringPolling;
+	
+	NSMutableDictionary		*delayedFilteringDict;
 }
 
 - (void)registerContentFilter:(id <AIContentFilter>)inFilter
 					   ofType:(AIFilterType)type
 					direction:(AIFilterDirection)direction;
-- (void)registerContentFilter:(id <AIContentFilter>)inFilter
-					   ofType:(AIFilterType)type
-					direction:(AIFilterDirection)direction
-					 threaded:(BOOL)threaded;
+- (void)registerDelayedContentFilter:(id<AIDelayedContentFilter>)inFilter
+							  ofType:(AIFilterType)type
+						   direction:(AIFilterDirection)direction;
 - (void)unregisterContentFilter:(id <AIContentFilter>)inFilter;
 - (void)registerFilterStringWhichRequiresPolling:(NSString *)inPollString;
 - (BOOL)shouldPollToUpdateString:(NSString *)inString;
@@ -46,6 +47,7 @@
 			   notifyingTarget:(id)target
 					  selector:(SEL)selector
 					   context:(id)context;
-- (NDRunLoopMessenger *)filterRunLoopMessenger;
+
+- (void)delayedFilterDidFinish:(NSAttributedString *)attributedString uniqueID:(unsigned long long)uniqueID;
 
 @end
