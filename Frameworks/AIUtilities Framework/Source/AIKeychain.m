@@ -588,6 +588,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 	NSData *domainData  = [domain  dataUsingEncoding:NSUTF8StringEncoding];
 	NSData *accountData = [account dataUsingEncoding:NSUTF8StringEncoding];
 	NSData *pathData    = [path    dataUsingEncoding:NSUTF8StringEncoding];
+	AIWiredString *passwordString = nil;
 
 	OSStatus err = SecKeychainFindInternetPassword(keychainRef,
 												   [serverData length],  [serverData bytes],
@@ -625,7 +626,9 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		*outError = error;
 	}
 
-	return [AIWiredString stringWithBytes:passwordData length:passwordLength encoding:NSUTF8StringEncoding];
+	passwordString = [AIWiredString stringWithBytes:passwordData length:passwordLength encoding:NSUTF8StringEncoding];
+	SecKeychainItemFreeContent(NULL, passwordData);
+	return passwordString;
 }
 
 - (NSString *)internetPasswordForServer:(NSString *)server account:(NSString *)account protocol:(SecProtocolType)protocol error:(out NSError **)outError
@@ -939,6 +942,7 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 
 	NSData *serviceData = [service dataUsingEncoding:NSUTF8StringEncoding];
 	NSData *accountData = [account dataUsingEncoding:NSUTF8StringEncoding];
+	AIWiredString *passwordString = nil;
 
 	OSStatus err = SecKeychainFindGenericPassword(keychainRef,
 												  [serviceData length],  [serviceData bytes],
@@ -962,7 +966,9 @@ static AIKeychain *lastKnownDefaultKeychain = nil;
 		*outError = error;
 	}
 
-	return [AIWiredString stringWithBytes:passwordData length:passwordLength encoding:NSUTF8StringEncoding];
+	passwordString = [AIWiredString stringWithBytes:passwordData length:passwordLength encoding:NSUTF8StringEncoding];
+	SecKeychainItemFreeContent(NULL, passwordData);
+	return passwordString;	
 }
 
 
