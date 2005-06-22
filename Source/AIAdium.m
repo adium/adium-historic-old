@@ -433,9 +433,14 @@ static NSString	*prefsCategory;
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
 		NSString	*packName = [[filename lastPathComponent] stringByDeletingPathExtension];
-		NSString	*defaultPackName = [[adium preferenceController] defaultPreferenceForKey:@"Status Icon Pack"
-																					   group:@"Appearance"
-																					  object:nil];
+/*
+ //Can't do this because the preferenceController isn't ready yet
+ NSString	*defaultPackName = [[self preferenceController] defaultPreferenceForKey:@"Status Icon Pack"
+																			  group:@"Appearance"
+																			 object:nil];
+*/
+		NSString	*defaultPackName = @"Gems";
+
 		if (![packName isEqualToString:defaultPackName]) {
 			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
 			fileDescription = AILocalizedString(@"status icons",nil);
