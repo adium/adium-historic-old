@@ -28,9 +28,9 @@
 				);
 			};
 			dependencies = (
-				4BE3AA81085F3A71005919E7 /* PBXTargetDependency */,
-				4BE3AA83085F3A71005919E7 /* PBXTargetDependency */,
-				4BE3AA85085F3A71005919E7 /* PBXTargetDependency */,
+				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
+				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
+				4B8E0BDC086A16D4009A7A4D /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -1304,29 +1304,8 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */;
+			remoteGlobalIDString = 349C2EF90867AC97000BF883;
 			remoteInfo = AdiumApplescriptRunner;
-		};
-		349C31640867D1A0000BF883 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
-			remoteInfo = AIUtilities;
-		};
-		349C31660867D1A0000BF883 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
-			remoteInfo = AIHyperlinks.framework;
-		};
-		349C31680867D1A0000BF883 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
-			remoteInfo = AIBookmarksImport;
 		};
 		34B9E664085B7C74006216DF /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1398,33 +1377,33 @@
 			remoteGlobalIDString = 4B7F278205440C0800CDFC90;
 			remoteInfo = Gaim;
 		};
+		4B8E0BD7086A16D4009A7A4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIUtilities */;
+			remoteInfo = AIUtilities;
+		};
+		4B8E0BD9086A16D4009A7A4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIHyperlinks.framework */;
+			remoteInfo = AIHyperlinks.framework;
+		};
+		4B8E0BDB086A16D4009A7A4D /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 8DC2EF4F0486A6940098B216 /* AIBookmarksImport */;
+			remoteInfo = AIBookmarksImport;
+		};
 		4B90B54D064220B400D23731 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 346C9C4806004517000F5A8A;
 			remoteInfo = "Standard Message View";
-		};
-		4BE3AA80085F3A71005919E7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIUtilities;
-		};
-		4BE3AA82085F3A71005919E7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIHyperlinks.framework;
-		};
-		4BE3AA84085F3A71005919E7 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIBookmarksImport;
 		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -6715,9 +6694,6 @@
 				ZERO_LINK = YES;
 			};
 			dependencies = (
-				349C31650867D1A0000BF883 /* PBXTargetDependency */,
-				349C31670867D1A0000BF883 /* PBXTargetDependency */,
-				349C31690867D1A0000BF883 /* PBXTargetDependency */,
 				34B9E665085B7C74006216DF /* PBXTargetDependency */,
 				34BD9CD2053146CC000AB133 /* PBXTargetDependency */,
 				4B215DB0059896B000305B3C /* PBXTargetDependency */,
@@ -8161,21 +8137,6 @@
 			target = 349C2EF90867AC97000BF883 /* AdiumApplescriptRunner */;
 			targetProxy = 349C31620867D199000BF883 /* PBXContainerItemProxy */;
 		};
-		349C31650867D1A0000BF883 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 349C31640867D1A0000BF883 /* PBXContainerItemProxy */;
-		};
-		349C31670867D1A0000BF883 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIHyperlinks.framework;
-			targetProxy = 349C31660867D1A0000BF883 /* PBXContainerItemProxy */;
-		};
-		349C31690867D1A0000BF883 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIBookmarksImport;
-			targetProxy = 349C31680867D1A0000BF883 /* PBXContainerItemProxy */;
-		};
 		34B9E665085B7C74006216DF /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = DACF3ED3085574D0006BFB18 /* External Frameworks */;
@@ -8206,25 +8167,25 @@
 			target = 4B7F278205440C0800CDFC90 /* Gaim */;
 			targetProxy = 4B7845EB059B50820048A8BA /* PBXContainerItemProxy */;
 		};
+		4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIUtilities;
+			targetProxy = 4B8E0BD7086A16D4009A7A4D /* PBXContainerItemProxy */;
+		};
+		4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIHyperlinks.framework;
+			targetProxy = 4B8E0BD9086A16D4009A7A4D /* PBXContainerItemProxy */;
+		};
+		4B8E0BDC086A16D4009A7A4D /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = AIBookmarksImport;
+			targetProxy = 4B8E0BDB086A16D4009A7A4D /* PBXContainerItemProxy */;
+		};
 		4B90B54E064220B400D23731 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 346C9C4806004517000F5A8A /* Standard Message View */;
 			targetProxy = 4B90B54D064220B400D23731 /* PBXContainerItemProxy */;
-		};
-		4BE3AA81085F3A71005919E7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIUtilities;
-			targetProxy = 4BE3AA80085F3A71005919E7 /* PBXContainerItemProxy */;
-		};
-		4BE3AA83085F3A71005919E7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIHyperlinks.framework;
-			targetProxy = 4BE3AA82085F3A71005919E7 /* PBXContainerItemProxy */;
-		};
-		4BE3AA85085F3A71005919E7 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIBookmarksImport;
-			targetProxy = 4BE3AA84085F3A71005919E7 /* PBXContainerItemProxy */;
 		};
 		6C3E0152054445C000A4AE2E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -8959,7 +8920,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -8986,7 +8947,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -9013,7 +8974,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -9041,7 +9002,7 @@
 				GCC_PREFIX_HEADER = "$(SYSTEM_LIBRARY_DIR)/Frameworks/AppKit.framework/Headers/AppKit.h";
 				INSTALL_PATH = /usr/local/bin;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
-				OPTIMIZATION_CFLAGS = "";
+				OPTIMIZATION_CFLAGS = "-O0";
 				OTHER_CFLAGS = "";
 				OTHER_LDFLAGS = (
 					"-framework",

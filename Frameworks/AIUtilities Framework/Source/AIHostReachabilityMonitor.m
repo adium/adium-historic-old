@@ -7,6 +7,9 @@
 
 #import "AIHostReachabilityMonitor.h"
 #import <SystemConfiguration/SystemConfiguration.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <netinet/in.h>
 
 static AIHostReachabilityMonitor *singleton = nil;
 
@@ -150,9 +153,28 @@ static void hostReachabilityChangedCallback(SCNetworkReachabilityRef target, SCN
 		.release         = CFRelease,
 		.copyDescription = CFCopyDescription,
 	};
+	struct hostent 		*remoteHost;
+	struct sockaddr_in	localAddr, remoteAddr;
 	
-	reachabilityRef = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault,
-														  [nodename UTF8String]);
+	//Resolve the remote host domain name to an IP
+	if (!(remoteHost = gethostbyname([nodename UTF8String]))) {
+		return nil;
+	}
+
+	//Create a reachability reference pair with localhost and the remote host
+	bzero(&localAddr, sizeof(localAddr));
+	localAddr.sin_len = sizeof(localAddr);
+	localAddr.sin_family = AF_INET;
+	inet_aton("127.0.0.1", &localAddr.sin_addr);
+	
+	bzero(&remoteAddr, sizeof(remoteAddr));
+	remoteAddr.sin_len = sizeof(remoteAddr);
+	remoteAddr.sin_family = AF_INET;
+	memcpy(&remoteAddr.sin_addr.s_addr, &remoteHost->h_addr_list[0][0], 4);
+
+	reachabilityRef = SCNetworkReachabilityCreateWithAddressPair(NULL, 
+																 (struct sockaddr *)&localAddr, 
+																 (struct sockaddr *)&remoteAddr);
 	
 	//Add it to the run loop so we will receive the notifications
 	SCNetworkReachabilityScheduleWithRunLoop(reachabilityRef,
