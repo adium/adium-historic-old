@@ -432,10 +432,19 @@ static NSString	*prefsCategory;
 		prefsCategory = @"appearance";
 		
 	} else if ([extension caseInsensitiveCompare:@"AdiumStatusIcons"] == NSOrderedSame) {
-		destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
-		fileDescription = AILocalizedString(@"status icons",nil);
-		prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
-		prefsCategory = @"appearance";
+		NSString	*packName = [[filename lastPathComponent] stringByDeletingPathExtension];
+		NSString	*defaultPackName = [[adium preferenceController] defaultPreferenceForKey:@"Status Icon Pack"
+																					   group:@"Appearance"
+																					  object:nil];
+		if (![packName isEqualToString:defaultPackName]) {
+			destination = [ADIUM_APPLICATION_SUPPORT_DIRECTORY stringByAppendingPathComponent:@"Status Icons"];
+			fileDescription = AILocalizedString(@"status icons",nil);
+			prefsButton = AILocalizedString(@"Open Appearance Prefs",nil);
+			prefsCategory = @"appearance";
+		} else {
+			errorMessage = [NSString stringWithFormat:AILocalizedString(@"%@ is the name of the default status icon pack; this pack therefore can not be installed.",nil),
+				packName];
+		}
 	}
 
     if (destination) {
