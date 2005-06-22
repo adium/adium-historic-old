@@ -1744,7 +1744,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		NSString		*key = [AIListContact internalUniqueObjectIDForService:inService
 																	   account:inAccount
 																		   UID:inUID];
-		NSLog(@"%@",key);
+
 		contact = [contactDict objectForKey:key];
 		if (!contact) {
 			//Create
