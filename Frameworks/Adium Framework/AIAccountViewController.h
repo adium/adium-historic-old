@@ -58,4 +58,6 @@
 - (NSString *)nibName;
 - (void)saveConfiguration;
 
+- (NSString *)UIDPlaceholder;
+
 @end

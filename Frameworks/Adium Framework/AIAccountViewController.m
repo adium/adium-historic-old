@@ -185,6 +185,7 @@
 														  length:[[account service] allowedLengthForAccountName]
 												   caseSensitive:[[account service] caseSensitive]
 													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+		[[textField_accountUID cell] setPlaceholderString:[self UIDPlaceholder]];
 
 		//Can't change the UID while the account is online
 		//XXX update this if the account connectivity changes -eds
@@ -292,6 +293,16 @@
 - (IBAction)changedPreference:(id)sender
 {
 	//Empty
+}
+
+#pragma mark Attributes
+
+/*!
+ * @brief Placeholder string for the UID field
+ */
+- (NSString *)UIDPlaceholder
+{
+	return @"";
 }
 
 @end
