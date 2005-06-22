@@ -80,13 +80,7 @@
 	
 	[self updatePrivateKeyList];
 	
-	[self tableViewSelectionDidChange:nil];
-	
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(accountListChanged:)
-									   name:Account_ListChanged
-									 object:nil];
-		
+	[self tableViewSelectionDidChange:nil];		
 }
 
 - (void)viewWillClose
