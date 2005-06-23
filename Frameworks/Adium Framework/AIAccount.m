@@ -44,7 +44,8 @@
  */
 - (void)connect
 {
-	
+	//We are connecting
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
 }
 
 /*!
@@ -54,7 +55,10 @@
  */
 - (void)disconnect
 {
+	[self setStatusObject:nil forKey:@"Connecting" notify:NotifyLater];
+	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyLater];
 
+	[self notifyOfChangedStatusSilently:NO];
 }
 
 /*!

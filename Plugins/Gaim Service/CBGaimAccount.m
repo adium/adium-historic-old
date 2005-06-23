@@ -1376,14 +1376,13 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Connect this account (Our password should be in the instance variable 'password' all ready for us)
 - (void)connect
 {
+	[super connect];
+	
 	if (!account) {
 		//create a gaim account if one does not already exist
 		[self createNewGaimAccount];
 		GaimDebug(@"created GaimAccount 0x%x with UID %@, protocolPlugin %s", account, [self UID], [self protocolPlugin]);
 	}
-	
-	//We are connecting
-	[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Connecting" notify:NotifyNow];
 	
 	//Make sure our settings are correct
 	[self configureGaimAccountNotifyingTarget:self selector:@selector(continueConnectWithConfiguredGaimAccount)];
@@ -1671,8 +1670,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		//As per AIAccount's documentation, call super's implementation
 		[super disconnect];
 
-		[self setStatusObject:nil forKey:@"Connecting" notify:NO];
-		[self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
 		[[adium contactController] delayListObjectNotificationsUntilInactivity];
 
 		//Tell libgaim to disconnect
@@ -1710,14 +1707,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 {
 	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
 
-    //We are now offline
-	[self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
-	[self setStatusObject:nil forKey:@"Connecting" notify:NO];
-	[self setStatusObject:nil forKey:@"Online" notify:NO];
-	
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
-	
+
 	//Apply any changes
 	[self notifyOfChangedStatusSilently:NO];
 	
