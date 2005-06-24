@@ -40,8 +40,6 @@
 - (void)chatClosed:(NSNotification *)notification;
 @end
 
-@implementation CBStatusMenuItemController
-
 static	CBStatusMenuItemController	*sharedStatusMenuInstance = nil;
 
 static	NSImage						*adiumOfflineImage = nil;
@@ -52,6 +50,8 @@ static	NSImage						*adiumHighlightImage = nil;
 
 static	NSImage						*adiumRedImage = nil;
 static	NSImage						*adiumRedHighlightImage = nil;
+
+@implementation CBStatusMenuItemController
 
 //Returns the shared instance, possibly initializing and creating a new one.
 + (CBStatusMenuItemController *)statusMenuItemController
@@ -149,7 +149,9 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	[[adium notificationCenter] removeObserver:self];
 
 	//Release our objects
-	[statusItem release];
+	[[statusItem statusBar] removeStatusItem:statusItem];
+#warning cant release this because it causes a crash on quit. rdar://4160625 and #743. --boredzo
+//	[statusItem release];
 	[theMenu release];
 	[unviewedObjectsArray release];
 	[accountMenu release];
