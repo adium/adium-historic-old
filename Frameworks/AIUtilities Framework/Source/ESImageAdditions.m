@@ -134,7 +134,7 @@
 			NS_ENDHANDLER
 		}
 	}
-	
+
 	return GIFRepresentation;
 }
 	
