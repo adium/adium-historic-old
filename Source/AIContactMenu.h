@@ -8,18 +8,17 @@
 
 #import <Adium/AIAbstractListObjectMenu.h>
 
-@class AIAccount, AIListContact;
-@protocol AIContainingObject;
+@class AIAccount, AIListContact, AIListObject;
 
 @interface AIContactMenu : AIAbstractListObjectMenu <AIListObjectObserver> {
-	id <AIContainingObject>	containingObject;
+	AIListObject			*containingObject;
 	
 	id						delegate;
 	BOOL					delegateRespondsToDidSelectContact;
 	BOOL					delegateRespondsToShouldIncludeContact;	
 }
 
-+ (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(id <AIContainingObject>)inContainingObject;
++ (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
 
 - (void)setDelegate:(id)inDelegate;
 - (id)delegate;
