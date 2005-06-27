@@ -59,15 +59,12 @@
 
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
-- (void)_resortChat:(AIChat *)chat;
-- (void)_resortAllChats;
-- (NSArray *)_listObjectsForChatsInContainerWithID:(NSString *)containerID;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
 - (NSAttributedString *)_tooltipTitleForObject:(AIListObject *)object;
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
-- (void)preferencesChanged:(NSNotification *)notification;
-- (void)contactOrderChanged:(NSNotification *)notification;
+
+- (AIChat *)mostRecentActiveChat;
 @end
 
 /*!
@@ -239,7 +236,10 @@
 
 		//If windows are open, try switching to a chat with unviewed content
 		if ((mostRecentUnviewedChat = [[adium chatController] mostRecentUnviewedChat])) {
-			[self setActiveChat:mostRecentUnviewedChat];
+			//If the most recently active chat has unviewed content, don't switch away from it
+			if (![[self mostRecentActiveChat] integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+				[self setActiveChat:mostRecentUnviewedChat];
+			}
 
 		} else {
 			NSEnumerator    *enumerator;
@@ -263,7 +263,8 @@
 		}
 	}
 	
-    return(NO); //we handled the reopen, return NO so NSApp does nothing.
+	//We handled the reopen; return NO so NSApp does nothing.
+    return NO; 
 }
 		
 
@@ -282,7 +283,6 @@
 //Show the contact list window
 - (IBAction)showContactList:(id)sender
 {
-	NSLog(@"showContactList: %@",contactListPlugin);
 	[contactListPlugin showContactListAndBringToFront:YES];
 }
 
@@ -439,12 +439,21 @@
 - (void)chatDidBecomeActive:(AIChat *)inChat
 {
 	[activeChat release]; activeChat = [inChat retain];
-	[self clearUnviewedContentOfChat:inChat];
 	[self updateCloseMenuKeys];
 	[self updateActiveWindowMenuItem];
 	
 	[mostRecentActiveChat release]; mostRecentActiveChat = nil;
-	if (inChat) mostRecentActiveChat = [inChat retain];	
+	if (inChat) {
+		mostRecentActiveChat = [inChat retain];
+
+		/* Clear the unviewed content on the next event loop so other methods have a chance to react to the chat becoming
+		* active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
+		* had unviewed content.
+		*/
+		[self performSelector:@selector(clearUnviewedContentOfChat:)
+				   withObject:inChat
+				   afterDelay:0];
+	}		
 }
 
 //A chat has become visible: send out a notification for components and plugins to take action
