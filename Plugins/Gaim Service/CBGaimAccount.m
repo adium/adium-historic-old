@@ -2036,7 +2036,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 						}
 					}
 					
-					if (!buddyIconDaata) {
+					if (!buddyIconData) {
 						for (i = 0; prpl_formats[i]; i++) {
 							if (strcmp(prpl_formats[i],"png") == 0) {
 								buddyIconData = [image PNGRepresentation];
