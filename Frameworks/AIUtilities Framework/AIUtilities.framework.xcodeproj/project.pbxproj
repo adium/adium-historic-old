@@ -19,6 +19,8 @@
 		076CAD6F0785B64000250504 /* AIFunctions.h in Headers */ = {isa = PBXBuildFile; fileRef = 076CAD6E0785B64000250504 /* AIFunctions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078DF8B007C2948200831ABF /* AIWiredData.h in Headers */ = {isa = PBXBuildFile; fileRef = 078DF8AE07C2948200831ABF /* AIWiredData.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		0795642107C3553A00F9A88F /* AIWiredString.h in Headers */ = {isa = PBXBuildFile; fileRef = 0795641F07C3553A00F9A88F /* AIWiredString.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0798BF75086E9F6600CA8E17 /* AIDataAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 0798BF73086E9F6600CA8E17 /* AIDataAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		0798BF76086E9F6600CA8E17 /* AIDataAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 0798BF74086E9F6600CA8E17 /* AIDataAdditions.m */; };
 		079C113B0782FB500048E350 /* AIScannerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 079C11390782FB500048E350 /* AIScannerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		079C113C0782FB500048E350 /* AIScannerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 079C113A0782FB500048E350 /* AIScannerAdditions.m */; };
 		07B7AF9F0797A952003B71E1 /* AITree.h in Headers */ = {isa = PBXBuildFile; fileRef = 07B7AF9D0797A952003B71E1 /* AITree.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -293,6 +295,8 @@
 		078DF8AF07C2948200831ABF /* AIWiredData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWiredData.m; path = Source/AIWiredData.m; sourceTree = "<group>"; };
 		0795641F07C3553A00F9A88F /* AIWiredString.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIWiredString.h; path = Source/AIWiredString.h; sourceTree = "<group>"; };
 		0795642007C3553A00F9A88F /* AIWiredString.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIWiredString.m; path = Source/AIWiredString.m; sourceTree = "<group>"; };
+		0798BF73086E9F6600CA8E17 /* AIDataAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIDataAdditions.h; path = Source/AIDataAdditions.h; sourceTree = "<group>"; };
+		0798BF74086E9F6600CA8E17 /* AIDataAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIDataAdditions.m; path = Source/AIDataAdditions.m; sourceTree = "<group>"; };
 		079C11390782FB500048E350 /* AIScannerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScannerAdditions.h; path = Source/AIScannerAdditions.h; sourceTree = "<group>"; };
 		079C113A0782FB500048E350 /* AIScannerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScannerAdditions.m; path = Source/AIScannerAdditions.m; sourceTree = "<group>"; };
 		07B7AF9D0797A952003B71E1 /* AITree.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITree.h; path = Source/AITree.h; sourceTree = "<group>"; };
@@ -846,6 +850,8 @@
 				34486B4B06D1DF0300DA778C /* AIColorAdditions.m */,
 				34486B5206D1DF0300DA778C /* AICursorAdditions.h */,
 				34486B5306D1DF0300DA778C /* AICursorAdditions.m */,
+				0798BF73086E9F6600CA8E17 /* AIDataAdditions.h */,
+				0798BF74086E9F6600CA8E17 /* AIDataAdditions.m */,
 				34486B5C06D1DF0300DA778C /* AIDictionaryAdditions.h */,
 				34486B5D06D1DF0300DA778C /* AIDictionaryAdditions.m */,
 				34486B6006D1DF0300DA778C /* AIEventAdditions.h */,
@@ -1506,6 +1512,7 @@
 				34BFE58207E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.h in Headers */,
 				4BC869D70863170200B2C430 /* AIFontSelectionPopUpButton.h in Headers */,
 				4BC869FC08631A6300B2C430 /* AIObjectSelectionPopUpButton.h in Headers */,
+				0798BF75086E9F6600CA8E17 /* AIDataAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1744,6 +1751,7 @@
 				34BFE58307E9180500AD984D /* AIVariableHeightFlexibleColumnsOutlineView.m in Sources */,
 				4BC869D80863170200B2C430 /* AIFontSelectionPopUpButton.m in Sources */,
 				4BC869FD08631A6300B2C430 /* AIObjectSelectionPopUpButton.m in Sources */,
+				0798BF76086E9F6600CA8E17 /* AIDataAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
