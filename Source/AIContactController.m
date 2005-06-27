@@ -109,8 +109,8 @@
 
 //MetaContacts
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID;
-- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences;
-- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences;
+- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact;
+- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray;
 - (void)addListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (BOOL)_performAddListObject:(AIListObject *)listObject toMetaContact:(AIMetaContact *)metaContact;
 - (void)removeListObject:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
@@ -118,8 +118,6 @@
 - (void)_saveMetaContacts:(NSDictionary *)allMetaContactsDict;
 - (void)breakdownAndRemoveMetaContact:(AIMetaContact *)metaContact;
 - (void)_storeListObject:(AIListObject *)listObject inMetaContact:(AIMetaContact *)metaContact;
-
-- (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID;
 
 - (void)_addMenuItemsFromArray:(NSArray *)contactArray toMenu:(NSMenu *)contactMenu target:(id)target offlineContacts:(BOOL)offlineContacts;
 @end
@@ -736,7 +734,11 @@
 
 #pragma mark Meta Contacts
 //Meta Contacts --------------------------------------------------------------------------------------------------------
-//Returns a metaContact with the specified object ID.  Pass nil to create a new, unique metaContact
+/*
+ * @brief Create or load a metaContact
+ *
+ * @param inObjectID The objectID of an existing but unloaded metaContact, or nil to create and save a new metaContact
+ */
 - (AIMetaContact *)metaContactWithObjectID:(NSNumber *)inObjectID
 {
 	NSString		*metaContactDictKey;
@@ -771,10 +773,13 @@
 		//Add it to our more general contactDict, as well
 		[contactDict setObject:metaContact forKey:[metaContact internalUniqueObjectID]];
 
+		/* We restore contacts (actually, internalIDs for contacts, to be added as necessary later) if the metaContact
+		 * existed before this call to metaContactWithObjectID:
+		 */
 		if (shouldRestoreContacts) {
-			if (![self _restoreContactsToMetaContact:metaContact updatingPreferences:NO]) {
+			if (![self _restoreContactsToMetaContact:metaContact]) {
 
-				//If restoring the metacontact did not actually add any contacts, delete it as it is invalid
+				//If restoring the metacontact did not actually add any contacts, delete it since it is invalid
 				[self breakdownAndRemoveMetaContact:metaContact];
 				metaContact = nil;
 			}
@@ -791,7 +796,12 @@
 	return (metaContact);
 }
 
-- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact updatingPreferences:(BOOL)updatePreferences
+/*
+ * @brief Associate the appropriate internal IDs for contained contacts with a metaContact
+ *
+ * @result YES if one or more contacts was associated with the metaContact; NO if none were.
+ */
+- (BOOL)_restoreContactsToMetaContact:(AIMetaContact *)metaContact
 {
 	NSDictionary	*allMetaContactsDict = [[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
 																					group:PREF_GROUP_CONTACT_LIST];
@@ -799,13 +809,8 @@
 	BOOL			restoredContacts;
 
 	if ([containedContactsArray count]) {
-		[metaContact setDelayContainedObjectSorting:YES];
-
 		[self _restoreContactsToMetaContact:metaContact
-								   fromContainedContactsArray:containedContactsArray
-										  updatingPreferences:updatePreferences];
-
-		[metaContact setDelayContainedObjectSorting:NO];
+				 fromContainedContactsArray:containedContactsArray];
 
 		restoredContacts = YES;
 
@@ -816,56 +821,36 @@
 	return restoredContacts;
 }
 
-- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray updatingPreferences:(BOOL)updatePreferences
+/*
+ * @brief Associate the internal IDs for an array of contacts with a specific metaContact
+ *
+ * This does not actually place any AIListContacts within the metaContact.  Instead, it updates the contactToMetaContactLookupDict
+ * dictionary to have metaContact associated with the list contacts specified by containedContactsArray. This
+ * allows us to add them lazily to the metaContact (in contactWithService:account:UID:) as necessary.
+ *
+ * @param metaContact The metaContact to which contact referneces are added
+ * @param containedContactsArray An array of NSDictionary objects, each of which has SERVICE_ID_KEY and UID_KEY which together specify an internalObjectID of an AIListContact
+ */
+- (void)_restoreContactsToMetaContact:(AIMetaContact *)metaContact fromContainedContactsArray:(NSArray *)containedContactsArray
 {
 	NSEnumerator		*enumerator = [containedContactsArray objectEnumerator];
-	NSMutableDictionary	*allMetaContactsDict = nil;
-	NSDictionary		*containedContact;
-	BOOL				shouldSaveMetaContacts = NO;
+	NSDictionary		*containedContactDict;
 
-	while ((containedContact = [enumerator nextObject])) {
-		if ([[containedContact objectForKey:KEY_IS_METACONTACT] boolValue]) {
-			/* As of Adium 0.80, these keys should never be created as we no longer create metaContacts within metaContacts.
-			   This check exists to import old preferences. */
-			NSArray			*newContainedContactsArray;
-			NSString		*objectID;
-
-			if (!allMetaContactsDict) {
-				allMetaContactsDict = [[[adium preferenceController] preferenceForKey:KEY_METACONTACT_OWNERSHIP
-																				group:PREF_GROUP_CONTACT_LIST] mutableCopy];
-			}
-
-			//Retrieve the containedContactsArray for the metaContact with the specified objectID
-			objectID = [containedContact objectForKey:KEY_OBJECTID];
-			newContainedContactsArray = [allMetaContactsDict objectForKey:objectID];
-
-			//Recursively call ourself, saving the preferences, to make this merge unnecessary next time
-			[self _restoreContactsToMetaContact:metaContact
-					 fromContainedContactsArray:newContainedContactsArray
-							updatingPreferences:YES];
-
-			//We should never need this metaContact again.
-			[allMetaContactsDict removeObjectForKey:objectID];
-
-			shouldSaveMetaContacts = YES;
-
-	 	} else {
-
-			//Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
-			//As listObjects are loaded/created/requested which match this internalObjectID, they will be inserted into the metaContact.
+	while ((containedContactDict = [enumerator nextObject])) {
+		/* Before Adium 0.80, metaContacts could be created within metaContacts. Simply ignore any attempt to restore
+		* such irroneous data, which will have a YES boolValue for KEY_IS_METACONTACT. */
+		if (![[containedContactDict objectForKey:KEY_IS_METACONTACT] boolValue]) {
+			/* Assign this metaContact to the appropriate internalObjectID for containedContact's represented listObject.
+			 *
+			 * As listObjects are loaded/created/requested which match this internalObjectID, 
+			 * they will be inserted into the metaContact.
+			 */
+			NSString	*internalObjectID = [AIListObject internalObjectIDForServiceID:[containedContactDict objectForKey:SERVICE_ID_KEY]
+																				   UID:[containedContactDict objectForKey:UID_KEY]];
 			[contactToMetaContactLookupDict setObject:metaContact
-											   forKey:[AIListObject internalObjectIDForServiceID:[containedContact objectForKey:SERVICE_ID_KEY]
-																							 UID:[containedContact objectForKey:UID_KEY]]];
+											   forKey:internalObjectID];
 		}
 	}
-
-	if (shouldSaveMetaContacts) {
-		AILog(@"MetaContacts: Should save for %@",containedContactsArray);
-		[self _saveMetaContacts:allMetaContactsDict];
-	}
-	
-	//Clean up
-	[allMetaContactsDict release];
 }
 
 
@@ -945,7 +930,6 @@
 		[allMetaContactsDict setObject:containedContactsArray forKey:metaContactInternalObjectID];
 
 		//Save
-		AILog(@"MetaContacts: _storeListObject saving: %@",listObject);
 		[self _saveMetaContacts:allMetaContactsDict];
 
 		[[adium contactAlertsController] mergeAndMoveContactAlertsFromListObject:listObject
@@ -977,7 +961,6 @@
 		[contactToMetaContactLookupDict setObject:metaContact forKey:[listObject internalObjectID]];
 
 		[self _listChangedGroup:metaContact object:listObject];
-
 		//If the metaContact isn't in a group yet, use the group of the object we just added
 		if ((![metaContact containingObject]) && localGroup) {
 			//Add the new meta contact to our list
@@ -993,9 +976,9 @@
 {
 	NSEnumerator	*enumerator;
 	AIListObject	*theObject;
-
+	
 	enumerator = [[self allContactsWithService:[listObject service]
-										  UID:[listObject UID]] objectEnumerator];
+										   UID:[listObject UID]] objectEnumerator];
 
 	//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
 	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
@@ -1087,19 +1070,52 @@
  */
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray
 {
-	NSMutableArray  *contactsToGroupArray = [NSMutableArray array];
-
+	NSMutableSet	*internalObjectIDs = [[NSMutableSet alloc] init];
+	AIMetaContact	*metaContact = nil;
+	NSEnumerator	*enumerator;
+	NSString		*internalObjectID;
 	int				count = [UIDsArray count];
 	int				i;
-
+				
 	//Build an array of all contacts matching this description (multiple accounts on the same service listing
 	//the same UID mean that we can have multiple AIListContact objects with a UID/service combination)
 	for (i = 0; i < count; i++) {
-		[contactsToGroupArray addObjectsFromArray:[self allContactsWithServiceID:[servicesArray objectAtIndex:i]
-																			 UID:[UIDsArray objectAtIndex:i]]];
+		NSString	*serviceID = [servicesArray objectAtIndex:i];
+		NSString	*UID = [UIDsArray objectAtIndex:i];
+		
+		internalObjectID = [AIListObject internalObjectIDForServiceID:serviceID
+																  UID:UID];
+		if(!metaContact) {
+			metaContact = [contactToMetaContactLookupDict objectForKey:internalObjectID];
+		}
+		
+		[internalObjectIDs addObject:internalObjectID];
+	}
+	
+	//Create a new metaContact is we didn't find one.
+	if (!metaContact) {
+		metaContact = [self metaContactWithObjectID:nil];
+	}
+	
+	enumerator = [internalObjectIDs objectEnumerator];
+	while ((internalObjectID = [enumerator nextObject])) {
+		AIListObject	*existingObject;
+		if ((existingObject = [self existingListObjectWithUniqueID:internalObjectID])) {
+			/* If there is currently an object (or multiple objects) matching this internalObjectID
+			 * we should add immediately.
+			 */
+			[self addListObject:existingObject
+				  toMetaContact:metaContact];	
+		} else {
+			/* If no objects matching this internalObjectID exist, we can simply add to the 
+			 * contactToMetaContactLookupDict for use if such an object is created later.
+			 */
+			[contactToMetaContactLookupDict setObject:metaContact
+											   forKey:internalObjectID];			
+		}
 	}
 
-	return([self groupListContacts:contactsToGroupArray]);
+	return(metaContact);
 }
 
 /* @brief Group an NSArray of AIListContacts, returning the meta contact into which they are added.
@@ -1123,7 +1139,7 @@
 		}
 	}
 
-	//Create a new MetaContact is we didn't find one.
+	//Create a new metaContact is we didn't find one.
 	if (!metaContact) {
 		metaContact = [self metaContactWithObjectID:nil];
 	}
@@ -1750,10 +1766,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			//Create
 			contact = [[AIListContact alloc] initWithUID:inUID account:inAccount service:inService];
 
-			//Make sure this contact's order index isn't bigger than our current nextOrderIndex we'll vend to new contacts
-			float orderIndex = [contact orderIndex];
-			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
-
 			//Do the update thing
 			[self _updateAllAttributesOfObject:contact];
 
@@ -1790,12 +1802,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	} else {
 		return(nil);
 	}
-}
-
-- (NSArray *)allContactsWithServiceID:(NSString *)inServiceID UID:(NSString *)inUID
-{
-	return([self allContactsWithService:[[adium accountController] firstServiceWithServiceID:inServiceID]
-									UID:inUID]);
 }
 
 - (NSArray *)allContactsWithService:(AIService *)service UID:(NSString *)inUID
@@ -1957,12 +1963,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			group = [[AIListGroup alloc] initWithUID:groupUID];
 			//[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
 
-			//Place new groups at the bottom of our list (by giving them the largest ordering index)
-//			largestOrder += 1.0;
-//			[group setOrderIndex:largestOrder];
-			float orderIndex = [group orderIndex];
-			if (orderIndex > nextOrderIndex) nextOrderIndex = orderIndex + 1;
-
 			//add
 			[self _updateAllAttributesOfObject:group];
 			[groupDict setObject:group forKey:groupUID];
@@ -2102,25 +2102,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		if ([group isKindOfClass:[AIListGroup class]]) {
 			if ([listContact isKindOfClass:[AIMetaContact class]]) {
 				//This is a meta contact, move the objects within it.  listContacts will give us a flat array of AIListContacts.
-
-				/*
-				NSEnumerator	*metaEnumerator;
-				AIListContact	*aContainedContact;
-
-				metaEnumerator = [[(AIMetaContact *)listContact listContacts] objectEnumerator];
-				while ((aContainedContact = [metaEnumerator nextObject])) {
-					NSEnumerator	*allContactsEnumerator;
-					AIListContact	*specificContact;
-
-					//Leave no contact behind.
-					allContactsEnumerator = [[self allContactsWithService:[aContainedContact service]
-																	  UID:[aContainedContact UID]] objectEnumerator];
-					while ((specificContact = [allContactsEnumerator nextObject])) {
-						[self _moveObjectServerside:specificContact toGroup:(AIListGroup *)group];
-					}
-				}
-				*/
-
 				[self _moveContactLocally:listContact toGroup:(AIListGroup *)group];
 
 			} else if ([listContact isKindOfClass:[AIListContact class]]) {
