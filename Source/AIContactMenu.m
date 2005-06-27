@@ -13,7 +13,7 @@
 #import <Adium/AIListGroup.h>
 
 @interface AIContactMenu (PRIVATE)
-- (id)initWithDelegate:(id)inDelegate forContactsInObject:(id <AIContainingObject>)inContainingObject;
+- (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject;
 - (void)_updateMenuItem:(NSMenuItem *)menuItem;
 @end
 
@@ -24,7 +24,7 @@
  * @param inDelegate Delegate in charge of adding menu items
  * @param inContainingObject Containing contact whose contents will be displayed in the menu
  */
-+ (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(id <AIContainingObject>)inContainingObject
++ (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
 	return([[[self alloc] initWithDelegate:inDelegate forContactsInObject:inContainingObject] autorelease]);
 }
@@ -34,7 +34,7 @@
  * @param inDelegate Delegate in charge of adding menu items
  * @param inContainingObject Containing contact whose contents will be displayed in the menu
  */
-- (id)initWithDelegate:(id)inDelegate forContactsInObject:(id <AIContainingObject>)inContainingObject
+- (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
 	if((self = [super init])){
 		[self setDelegate:inDelegate];
@@ -120,7 +120,9 @@
 - (NSArray *)buildMenuItems
 {
 	NSMutableArray	*menuItemArray = [NSMutableArray array];
-	NSEnumerator	*enumerator = [containingObject listContactsEnumerator];
+	NSEnumerator	*enumerator = ([containingObject conformsToProtocol:@protocol(AIContainingObject)] ?
+								   [(AIListObject<AIContainingObject> *)containingObject listContactsEnumerator] :
+								   [[NSArray arrayWithObject:containingObject] objectEnumerator]);
 	AIListObject	*listObject;
 	
 	while ((listObject = [enumerator nextObject])) {
