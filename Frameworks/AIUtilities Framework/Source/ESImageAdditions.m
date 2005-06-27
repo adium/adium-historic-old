@@ -132,9 +132,9 @@
 			NS_HANDLER
 				GIFRepresentation = nil;	// must have failed
 			NS_ENDHANDLER
-		}		
+		}
 	}
-
+	
 	return GIFRepresentation;
 }
 	
@@ -211,15 +211,27 @@
 
 		if (flipImage) [newImage setFlipped:YES];		
 		
-		[newImage lockFocus];
 		//Highest quality interpolation
 		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-		[self drawInRect:newRect
-				fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
-			   operation:NSCompositeCopy
-				fraction:delta];
-		[newImage unlockFocus];
 		
+		NSImageRep	*bestRep = [self bestRepresentationForDevice:nil];
+		if ([bestRep isKindOfClass:[NSBitmapImageRep class]] && 
+			(delta == 1.0) &&
+			([[(NSBitmapImageRep *)bestRep valueForProperty:NSImageFrameCount] intValue] > 1) ) {
+			//We've got an animating file, and the current alpha is fine.  Just copy the representation.
+			[newImage addRepresentation:[[bestRep copy] autorelease]];
+			
+		} else {
+			[newImage lockFocus];
+			
+			[self drawInRect:newRect
+					fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
+				   operation:NSCompositeCopy
+					fraction:delta];
+			
+			[newImage unlockFocus];
+		}
+
 		return([newImage autorelease]);	
 	}
 }
