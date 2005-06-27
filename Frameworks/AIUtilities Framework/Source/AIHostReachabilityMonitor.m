@@ -369,7 +369,7 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 #endif
 }
 
-#pragmamark -
+#pragma mark -
 #pragma mark Unconfigured hosts
 /*
  * @brief Add an unconfigured host and observer to unconfiguredHostsAndObservers
