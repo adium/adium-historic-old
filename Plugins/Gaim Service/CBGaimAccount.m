@@ -2035,45 +2035,47 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 							}
 						}
 					}
-
-					for (i = 0; prpl_formats[i]; i++) {
-						if (strcmp(prpl_formats[i],"png") == 0) {
-							buddyIconData = [image PNGRepresentation];
-							if (buddyIconData)
-								break;
-							
-						} else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
-							/* OS X 10.4's JPEG representation does much better than 10.3's.  Unfortunately, that also
-							 * means larger file sizes... which for our only JPEG-based protocol, AIM, means the buddy
-							 * icon doesn't get sent.  AIM max is 8 kilobytes; 10.4 produces 12 kb images.  0.90 is
-							 * large indistinguishable from 1.0 anyways.
-							 */
-							float compressionFactor = ([NSApp isOnTigerOrBetter] ?
-													   0.9 :
-													   1.0);
-
-							buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
-							if (buddyIconData)
-								break;
-							
-						} else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)) {
-							buddyIconData = [image TIFFRepresentation];
-							if (buddyIconData)
-								break;
-							
-						} else if (strcmp(prpl_formats[i],"gif") == 0) {
-							buddyIconData = [image GIFRepresentation];
-							if (buddyIconData)
-								break;
-
-						} else if (strcmp(prpl_formats[i],"bmp") == 0) {
-							buddyIconData = [image BMPRepresentation];
-							if (buddyIconData)
-								break;
-							
-						}						
+					
+					if (!buddyIconDaata) {
+						for (i = 0; prpl_formats[i]; i++) {
+							if (strcmp(prpl_formats[i],"png") == 0) {
+								buddyIconData = [image PNGRepresentation];
+								if (buddyIconData)
+									break;
+								
+							} else if ((strcmp(prpl_formats[i],"jpeg") == 0) || (strcmp(prpl_formats[i],"jpg") == 0)) {
+								/* OS X 10.4's JPEG representation does much better than 10.3's.  Unfortunately, that also
+								* means larger file sizes... which for our only JPEG-based protocol, AIM, means the buddy
+								* icon doesn't get sent.  AIM max is 8 kilobytes; 10.4 produces 12 kb images.  0.90 is
+								* large indistinguishable from 1.0 anyways.
+								*/
+								float compressionFactor = ([NSApp isOnTigerOrBetter] ?
+														   0.9 :
+														   1.0);
+								
+								buddyIconData = [image JPEGRepresentationWithCompressionFactor:compressionFactor];
+								if (buddyIconData)
+									break;
+								
+							} else if ((strcmp(prpl_formats[i],"tiff") == 0) || (strcmp(prpl_formats[i],"tif") == 0)) {
+								buddyIconData = [image TIFFRepresentation];
+								if (buddyIconData)
+									break;
+								
+							} else if (strcmp(prpl_formats[i],"gif") == 0) {
+								buddyIconData = [image GIFRepresentation];
+								if (buddyIconData)
+									break;
+								
+							} else if (strcmp(prpl_formats[i],"bmp") == 0) {
+								buddyIconData = [image BMPRepresentation];
+								if (buddyIconData)
+									break;
+								
+							}						
+						}
 					}
-
+					
 					//Cleanup
 					g_strfreev(prpl_formats);
 				}
