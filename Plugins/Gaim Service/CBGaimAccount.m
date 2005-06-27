@@ -1989,63 +1989,53 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			GaimDebug(@"Original image of size %f %f",[image size].width,[image size].height);
 			
 			if (prpl_info && (prpl_info->icon_spec.format)) {
-				char					**prpl_formats =  g_strsplit (prpl_info->icon_spec.format,",",0);
-				int						i;
+				NSString	*buddyIconFilename = [self _userIconCachePath];
+				NSData		*buddyIconData = nil;
+				NSSize		imageSize = [image size];
+				BOOL		smallEnough, prplScales;
+				unsigned	i;
 				
-				NSString				*buddyIconFilename = [self _userIconCachePath];
-				NSData					*buddyIconData = nil;
-				NSSize					imageSize = [image size];
-				BOOL					bigEnough, smallEnough, prplScales;
-				
-				/*  We need to scale it down if:
-				 *    1) The prpl needs to scale before it sends (?) AND
-				 *    2) The image is larger than the maximum size allowed by the protocol
+				/* We need to scale it down if:
+				 *	1) The prpl needs to scale before it sends to the server or other buddies AND
+				 *	2) The image is larger than the maximum size allowed by the protocol
+				 * We ignore the minimum required size, as scaling up just leads to pixellated images.
 				 */
-				bigEnough = (prpl_info->icon_spec.min_width <= imageSize.width &&
-							 prpl_info->icon_spec.min_height <= imageSize.height);
 				smallEnough =  (prpl_info->icon_spec.max_width >= imageSize.width &&
 								prpl_info->icon_spec.max_height >= imageSize.height);
 					
 				prplScales = (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_SEND) || (prpl_info->icon_spec.scale_rules & GAIM_ICON_SCALE_DISPLAY);
 
-				if (prplScales && (!bigEnough || !smallEnough)) {
-					//Determine the scaled size
-					if (!smallEnough) {
-						//If it's too big, scale to the largest permissable size
-						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.max_width,
-																	   prpl_info->icon_spec.max_height)];
-						
-					} else /*if (!bigEnough)*/{
-						//If it's not big enough, scale to the smallest permissable size
-						image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.min_width,
-																	   prpl_info->icon_spec.min_height)];
-					}
+				if (prplScales &&  !smallEnough) {
+					//Determine the scaled size.  If it's too big, scale to the largest permissable size
+					image = [image imageByScalingToSize:NSMakeSize(prpl_info->icon_spec.max_width,
+																   prpl_info->icon_spec.max_height)];
 
 					/* Our original data is no longer valid, since we had to scale to a different size */
 					originalData = nil;
 					GaimDebug(@"Scaled image to size %@",NSStringFromSize([image size]));
 				}
 
-				
-				//Look for gif first if the image is animated
-				NSImageRep	*imageRep = [image bestRepresentationForDevice:nil] ;
-				if ([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
-				   [[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1) {
-					
-					for (i = 0; prpl_formats[i]; i++) {
-						if (strcmp(prpl_formats[i],"gif") == 0) {
-							/* Try to use our original data.  If we had to scale, originalData will have been set
-							 * to nil and we'll continue below to convert the image. */
-							GaimDebug(@"l33t script kiddie animated GIF!!111");
+				if (!buddyIconData) {
+					char		**prpl_formats =  g_strsplit(prpl_info->icon_spec.format,",",0);
 
-							buddyIconData = originalData;
-							if (buddyIconData)
-								break;
+					//Look for gif first if the image is animated
+					NSImageRep	*imageRep = [image bestRepresentationForDevice:nil] ;
+					if ([imageRep isKindOfClass:[NSBitmapImageRep class]] &&
+						[[(NSBitmapImageRep *)imageRep valueForProperty:NSImageFrameCount] intValue] > 1) {
+						
+						for (i = 0; prpl_formats[i]; i++) {
+							if (strcmp(prpl_formats[i],"gif") == 0) {
+								/* Try to use our original data.  If we had to scale, originalData will have been set
+								* to nil and we'll continue below to convert the image. */
+								GaimDebug(@"l33t script kiddie animated GIF!!111");
+								
+								buddyIconData = originalData;
+								if (buddyIconData)
+									break;
+							}
 						}
 					}
-				}
-				
-				if (!buddyIconData) {
+
 					for (i = 0; prpl_formats[i]; i++) {
 						if (strcmp(prpl_formats[i],"png") == 0) {
 							buddyIconData = [image PNGRepresentation];
@@ -2083,6 +2073,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 							
 						}						
 					}
+
+					//Cleanup
+					g_strfreev(prpl_formats);
 				}
 				
 				if ([buddyIconData writeToFile:buddyIconFilename atomically:YES]) {
@@ -2091,9 +2084,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 				} else {
 					GaimDebug(@"Error writing file %@",buddyIconFilename);   
 				}
-				
-				//Cleanup
-				g_strfreev(prpl_formats);
 			}
 		}
 	}
