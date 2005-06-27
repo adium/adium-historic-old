@@ -18,10 +18,13 @@
 
 @interface AIHostReachabilityMonitor: NSObject
 {
-	NSMutableArray *hosts;
-	NSMutableArray *observers;
-	NSMutableArray *reachabilities;
-	NSLock *hostAndObserverListLock;
+	NSMutableArray	*hosts;
+	NSMutableArray	*observers;
+	NSMutableArray	*reachabilities;
+	
+	NSMutableSet	*unconfiguredHostsAndObservers;
+	
+	NSLock			*hostAndObserverListLock;
 }
 
 /*!
