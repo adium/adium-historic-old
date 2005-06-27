@@ -79,8 +79,11 @@
 		
 		while((file = [fileEnumerator nextObject])){
 			if([[file pathExtension] caseInsensitiveCompare:SOUND_SET_PATH_EXTENSION] == NSOrderedSame){
-				NSString *fullPath = [path stringByAppendingPathComponent:file];
-				[soundSets addObject:[AISoundSet soundSetWithContentsOfFile:fullPath]];
+				NSString	*fullPath = [path stringByAppendingPathComponent:file];
+				AISoundSet	*soundSet = [AISoundSet soundSetWithContentsOfFile:fullPath];
+				if (soundSet) {
+					[soundSets addObject:soundSet];
+				}
 			}
 		}
 	}
