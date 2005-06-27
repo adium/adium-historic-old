@@ -11,7 +11,7 @@
 #include <netdb.h>
 #include <netinet/in.h>
 
-#define CONNECTIVITY_DEBUG TRUE
+#define CONNECTIVITY_DEBUG FALSE
 
 static AIHostReachabilityMonitor *singleton = nil;
 
