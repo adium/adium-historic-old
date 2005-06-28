@@ -186,6 +186,8 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 												   object:nil];
 		
 		gaimThreadMessenger = [[NDRunLoopMessenger runLoopMessengerForCurrentRunLoop] retain];
+		[gaimThreadMessenger setMessageRetryTimeout:0.1];
+		[gaimThreadMessenger setMessageRetry:0.1];
 		gaimThreadProxy = [[gaimThreadMessenger target:self] retain];
 		
 		//Use a time to periodically release our autorelease pool so we don't continually grow in memory usage
