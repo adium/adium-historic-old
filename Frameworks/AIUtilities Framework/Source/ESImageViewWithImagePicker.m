@@ -11,7 +11,7 @@
 #import "ESImageAdditions.h"
 #import "AIStringUtilities.h"
 
-#define DRAGGING_THRESHOLD 6.0*6.0
+#define DRAGGING_THRESHOLD 16.0
 
 @interface ESImageViewWithImagePicker (PRIVATE)
 - (void)_initImageViewWithImagePicker;
@@ -235,7 +235,7 @@
 	NSPoint mousePos = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 	float dx = mousePos.x-mouseDownPos.x;
 	float dy = mousePos.y-mouseDownPos.y;	
-	if ((dx*dx) * (dy*dy) < DRAGGING_THRESHOLD) {
+	if ((dx*dx) + (dy*dy) < DRAGGING_THRESHOLD) {
 		return;
 	}
 	
