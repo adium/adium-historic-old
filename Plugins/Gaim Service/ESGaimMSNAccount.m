@@ -458,11 +458,8 @@ gboolean gaim_init_msn_plugin(void);
 	
 	switch (statusType) {
 		case AIAvailableStatusType:
-		{
-			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE])
-				gaimStatusType = "Available";
+			gaimStatusType = "Available";
 			break;
-		}
 
 		case AIAwayStatusType:
 		{
