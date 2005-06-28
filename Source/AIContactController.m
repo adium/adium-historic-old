@@ -129,7 +129,6 @@
 {
 	if ((self = [super init])) {
 		//
-		nextOrderIndex = 1;
 		contactObserverArray = [[NSMutableArray alloc] init];
 		sortControllerArray = [[NSMutableArray alloc] init];
 		activeSortController = nil;
@@ -2164,11 +2163,6 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		//
 		[listObject setOrderIndex:((nextHighest + nextLowest) / 2.0)];
 	}
-}
-
-- (float)nextOrderIndex
-{
-	return nextOrderIndex++;
 }
 
 @end
