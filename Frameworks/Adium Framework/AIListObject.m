@@ -194,11 +194,11 @@
 		//In any case, check against it; if we stored it, reset to a reasonable number.
 		if (storedOrderIndex < INFINITY) {
 			orderIndex = storedOrderIndex;
-		} else {
-			[self setOrderIndex:[[adium contactController] nextOrderIndex]];
 		}
-	} else {
-		[self setOrderIndex:[[adium contactController] nextOrderIndex]];
+	}
+
+	if (!orderIndex) {
+		[self setOrderIndex:([[self containingObject] largestOrder] + 1)];
 	}
 }
 
