@@ -17,7 +17,7 @@
 
 + (NSString *)randomStringOfLength:(unsigned int)inLength;
 
-+ (NSString *)stringWithContentsOfASCIIFile:(NSString *)path;
++ (NSString *)stringWithContentsOfUTF8File:(NSString *)path;
 
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding;
 + (id)stringWithBytes:(const void *)inBytes length:(unsigned)inLength encoding:(NSStringEncoding)inEncoding;

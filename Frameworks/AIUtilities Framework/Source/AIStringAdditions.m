@@ -18,6 +18,8 @@
 #import "AIColorAdditions.h"
 #import "AIScannerAdditions.h"
 #import "AIFunctions.h"
+#import "CBApplicationAdditions.h"
+
 #include <unistd.h>
 #include <limits.h>
 
@@ -52,10 +54,17 @@
 	return string;
 }
 
-+ (NSString *)stringWithContentsOfASCIIFile:(NSString *)path
++ (NSString *)stringWithContentsOfUTF8File:(NSString *)path
 {
-	return ([[[NSString alloc] initWithData:[NSData dataWithContentsOfFile:path]
-								   encoding:NSASCIIStringEncoding] autorelease]);
+	if ([NSApp isOnTigerOrBetter]) {
+		return ([NSString stringWithContentsOfFile:path
+										  encoding:NSUTF8StringEncoding 
+											 error:NULL]);
+
+	} else {
+		return ([[[NSString alloc] initWithData:[NSData dataWithContentsOfFile:path]
+									   encoding:NSUTF8StringEncoding] autorelease]);
+	}
 }
 
 + (id)stringWithData:(NSData *)data encoding:(NSStringEncoding)encoding
