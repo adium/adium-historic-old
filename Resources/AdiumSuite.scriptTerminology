@@ -461,7 +461,7 @@
 		<key>Disconnect</key>
 		<dict>
 			<key>Description</key>
-			<string>Disconnect an account, or all accounts if no account is specified.</string>
+			<string>Disconnect an account (specify 'every account' to disconnect all accounts).</string>
 			<key>Name</key>
 			<string>disconnect</string>
 			<key>UnnamedArgument</key>
