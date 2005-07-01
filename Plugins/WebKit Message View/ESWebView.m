@@ -67,6 +67,19 @@
 	}
 }
 
+- (void)paste:(id)sender
+{
+	[self forwardSelector:@selector(paste:) withObject:sender];
+}
+- (void)pasteAsPlainText:(id)sender
+{
+	[self forwardSelector:@selector(pasteAsPlainText:) withObject:sender];
+}
+- (void)pasteAsRichText:(id)sender
+{
+	[self forwardSelector:@selector(pasteAsRichText:) withObject:sender];
+}
+
 - (void)forwardSelector:(SEL)selector withObject:(id)object
 {
 	id	responder = [self nextResponder];
