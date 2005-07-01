@@ -164,75 +164,22 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 - (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
-	BOOL changes = NO;
-	BOOL displayNameChanges = NO;
-
-	//Store this alias as the serverside display name so long as it isn't identical when unformatted to the UID
 	if (![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
+		//Store this alias as the serverside display name so long as it isn't identical when unformatted to the UID
+		[theContact setServersideAlias:gaimAlias
+					   asStatusMessage:[self useDisplayNameAsStatusMessage]
+							  silently:silentAndDelayed];
 
-		//This is the server display name.  Set it as such.
-		if (![gaimAlias isEqualToString:[theContact statusObjectForKey:@"Server Display Name"]]) {
-			//Set the server display name status object as the full display name
-			[theContact setStatusObject:gaimAlias
-								 forKey:@"Server Display Name"
-								 notify:NO];
-			
-			changes = YES;
-		}
-		
-		//Use it either as the status message or the display name.
-		if ([self useDisplayNameAsStatusMessage]) {
-			if (![[theContact stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:gaimAlias]) {
-				[theContact setStatusObject:[[[NSAttributedString alloc] initWithString:gaimAlias] autorelease]
-									 forKey:@"ContactListStatusMessage" 
-									 notify:NO];
-				
-				changes = YES;
-			}
-			
-		} else {
-			AIMutableOwnerArray	*displayNameArray = [theContact displayArrayForKey:@"Display Name"];
-			NSString			*oldDisplayName = [displayNameArray objectValue];
-			
-			//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
-			if (![[displayNameArray objectWithOwner:self] isEqualToString:gaimAlias]) {
-				[displayNameArray setObject:gaimAlias
-								  withOwner:self
-							  priorityLevel:Low_Priority];
-				
-				//If this causes the object value to change, we need to request a manual update of the display name
-				if (oldDisplayName != [displayNameArray objectValue]) {
-					displayNameChanges = YES;
-				}
-			}
-		}
-		
-	} else {
-		if (![gaimAlias isEqualToString:[theContact formattedUID]] && ![gaimAlias isEqualToString:[theContact UID]]) {
-			[theContact setStatusObject:gaimAlias
-								 forKey:@"FormattedUID"
-								 notify:NO];
+	} else {				
+		//If it's the same characters as the UID, apply it as a formatted UID
+		if (![gaimAlias isEqualToString:[theContact formattedUID]] && 
+			![gaimAlias isEqualToString:[theContact UID]]) {
+			[theContact setFormattedUID:gaimAlias
+								 notify:NotifyLater];
 
-			changes = YES;
+			//Apply any changes
+			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 		}
-	}
-
-	if (changes) {
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
-	
-	if (displayNameChanges) {
-		//Notify of display name changes
-		[[adium contactController] listObjectAttributesChanged:theContact
-												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
-		
-//XXX - There must be a cleaner way to do this alias stuff!  This works for now
-		//Request an alias change
-		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-												  object:theContact
-												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
-																					 forKey:@"Notify"]];
 	}
 }
 
@@ -249,50 +196,31 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Signed online
 - (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data
 {
-	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
-	
-	if (!contactOnlineStatus || ([contactOnlineStatus boolValue] != YES)) {
-		[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
-		
-		if (!silentAndDelayed) {
-			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed On" notify:NO];
-			[theContact setStatusObject:nil forKey:@"Signed Off" notify:NO];
-			[theContact setStatusObject:nil forKey:@"Signed On" afterDelay:15];
-		}
+	[theContact setOnline:YES
+				   notify:NotifyLater
+				 silently:silentAndDelayed];
 
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 //Signed offline
 - (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
-	NSNumber *contactOnlineStatus = [theContact statusObjectForKey:@"Online"];
-	if (contactOnlineStatus && ([contactOnlineStatus boolValue] != NO)) {		
-		if (!silentAndDelayed) {
-			[theContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Signed Off" notify:NO];
-			[theContact setStatusObject:nil forKey:@"Signed On" notify:NO];			
-			[theContact setStatusObject:nil forKey:@"Signed Off" afterDelay:15];
-		}
-
-		//Will also apply any changes applied above, so no need to call notifyOfChangedStatusSilently 
-		[self removeStatusObjectsFromContact:theContact silently:silentAndDelayed];
-	}
+	[theContact setOnline:NO
+				   notify:NotifyLater
+				 silently:silentAndDelayed];
+	
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 //Signon Time
 - (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
 {	
-	if (signonDate) {
-		//Set the signon time
-		[theContact setStatusObject:signonDate
-							 forKey:@"Signon Date"
-							 notify:NO];
-		
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-	}
+	[theContact setSignonDate:signonDate
+					   notify:NotifyLater];
+	
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 /*!
@@ -335,40 +263,17 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Idle time
 - (void)updateWentIdle:(AIListContact *)theContact withData:(NSDate *)idleSinceDate
 {
-	if (idleSinceDate) {
-		[theContact setStatusObject:idleSinceDate
-							 forKey:@"IdleSince"
-							 notify:NO];
-	} else {
-		//No idleSinceDate means we are Idle but don't know how long, so set to -1
-		[theContact setStatusObject:[NSNumber numberWithInt:-1]
-							 forKey:@"Idle"
-							 notify:NO];
-	}
+	[theContact setIdle:YES sinceDate:idleSinceDate notify:NotifyLater];
 
-	//@"Idle", for a contact with an IdleSince date, will be changing every minute.  @"IsIdle" provides observers a way
-	//to perform an action when the contact becomes/comes back from idle, regardless of whether an IdleSince is available,
-	//without having to do that action every minute for other contacts.
-	[theContact setStatusObject:[NSNumber numberWithBool:YES]
-						 forKey:@"IsIdle"
-						 notify:NO];
-	
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 - (void)updateIdleReturn:(AIListContact *)theContact withData:(void *)data
 {
-	[theContact setStatusObject:nil
-						 forKey:@"IdleSince"
-						 notify:NO];
-	[theContact setStatusObject:nil
-						 forKey:@"Idle"
-						 notify:NO];
-	
-	[theContact setStatusObject:nil
-						 forKey:@"IsIdle"
-						 notify:NO];
-	
+	[theContact setIdle:NO
+			  sinceDate:nil
+				 notify:NotifyLater];
+
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
@@ -376,68 +281,27 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Evil level (warning level)
 - (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber
 {
-	//Set the warning level or clear it if it's now 0.
-	int evil = [evilNumber intValue];
-	NSNumber *currentWarningLevel = [theContact statusObjectForKey:@"Warning"];
+	[theContact setWarningLevel:[evilNumber intValue]
+						 notify:NotifyLater];
 
-	if (evil > 0) {
-		if (!currentWarningLevel || ([currentWarningLevel intValue] != evil)) {
-			[theContact setStatusObject:evilNumber
-								 forKey:@"Warning"
-								 notify:NO];
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-		}
-	} else {
-		if (currentWarningLevel) {
-			[theContact setStatusObject:nil
-								 forKey:@"Warning" 
-								 notify:NO];
-			//Apply any changes
-			[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-
-		}
-	}
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }   
 
 //Buddy Icon
 - (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
-	if (userIconData) {
-		//Observers get a single shot at utilizing the user icon data in its raw form
-		[theContact setStatusObject:userIconData forKey:@"UserIconData" notify:NO];
-		
-		//Set the User Icon as an NSImage
-		NSImage *userIcon = [[NSImage alloc] initWithData:userIconData];
-		[theContact setStatusObject:userIcon forKey:KEY_USER_ICON notify:NO];
-		[userIcon release];
-		
-		//Apply any changes
-		[theContact notifyOfChangedStatusSilently:silentAndDelayed];
-		
-		//Clear the UserIconData
-		[theContact setStatusObject:nil forKey:@"UserIconData" notify:NO];
-	}
+	[theContact setServersideIconData:userIconData
+							   notify:NotifyLater];
+
+	//Apply any changes
+	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
 - (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
 {
-	NSString *oldUserInfoString = [theContact statusObjectForKey:@"TextProfileString"];
-	
-	if (userInfoString && [userInfoString length]) {
-		if (![userInfoString isEqualToString:oldUserInfoString]) {
-			
-			[theContact setStatusObject:userInfoString
-								 forKey:@"TextProfileString" 
-								 notify:NO];
-			[theContact setStatusObject:[AIHTMLDecoder decodeHTML:userInfoString]
-								 forKey:@"TextProfile" 
-								 notify:NO];
-		}
-	} else if (oldUserInfoString) {
-		[theContact setStatusObject:nil forKey:@"TextProfileString" notify:NO];
-		[theContact setStatusObject:nil forKey:@"TextProfile" notify:NO];	
-	}	
+	[theContact setProfile:[AIHTMLDecoder decodeHTML:userInfoString]
+					notify:NotifyLater];
 	
 	//Apply any changes
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
@@ -482,7 +346,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 //Update the status of a contact (Request their profile)
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
-{	
+{
     //Request profile
 	AILog(@"%@: Update %@ : %i %i",self,inContact,[inContact online],[inContact isStranger]);
 //    if ([inContact online] || [inContact isStranger]) {
