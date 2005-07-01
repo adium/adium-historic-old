@@ -18,7 +18,9 @@
 
 @implementation NSWindow (AIWindowAdditions)
 
-//Set content size with animation
+/*
+ * @brief Set content size with animation
+ */
 - (void)setContentSize:(NSSize)aSize display:(BOOL)displayFlag animate:(BOOL)animateFlag
 {
 	NSRect	frame = [self frame];
@@ -32,7 +34,9 @@
 }
 
 
-//The method 'center' puts the window really close to the top of the screen.  This method puts it not so close.
+/*
+ * @brief The method 'center' puts the window really close to the top of the screen.  This method puts it not so close.
+ */
 - (void)betterCenter
 {
 	NSRect	frame = [self frame];
@@ -45,7 +49,11 @@
 		   display:NO];
 }
 
-//Toolbar height
+/*
+ * @brief Height of the toolbar
+ *
+ * @result The height of the toolbar, or 0 if no toolbar exists or is visible
+ */
 - (float)toolbarHeight
 {
 	NSToolbar 	*toolbar = [self toolbar];
@@ -60,16 +68,58 @@
 	return(toolbarHeight);
 }
 
-
-//Is this window textured/brushed metal?
+/*
+ * @brief Is this window textured/brushed metal?
+ */
 - (BOOL)isTextured
 {
     return(([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
 }
 
+/*
+ * @brief Is this window borderless?
+ */
 - (BOOL)isBorderless
 {
     return([self styleMask] == NSBorderlessWindowMask);
+}
+
+/*
+ * @brief Find the earliest responder which responds to a selector
+ *
+ * @param selector The target selector
+ * @param classToAvoid If non-NULL, a Class which, even if it resopnds to selector, should be ignored
+ * @param The NSResponder earliest in the responder chain which matches the passed values, or nil if no such responder exists
+ */
+- (NSResponder *)earliestResponderWhichRespondsToSelector:(SEL)selector andIsNotOfClass:(Class)classToAvoid
+{
+	NSResponder	*responder = [self firstResponder];
+
+	//First, walk down the responder chain looking for a responder which can handle the preferred selector
+	while (responder && (![responder respondsToSelector:selector] ||
+						 ((classToAvoid && [responder isKindOfClass:classToAvoid])))) {
+		responder = [responder nextResponder];
+	}
+	
+	return responder;
+}
+
+/*
+ * @brief Find the earliest responder of a specified class
+ *
+ * @param targetClass The target class
+ * @result The NSResponder earliest in the responder chain which is of class targetClass, or nil if no such responder exists
+ */
+- (NSResponder *)earliestResponderOfClass:(Class)targetClass
+{
+	NSResponder	*responder = [self firstResponder];
+
+	//First, walk down the responder chain looking for a responder which can handle the preferred selector
+	while (responder && ![responder isKindOfClass:targetClass]) {
+		responder = [responder nextResponder];
+	}
+
+	return responder;	
 }
 
 //We must weak link these symbols.  Failure to will crash us on launch under 10.2
