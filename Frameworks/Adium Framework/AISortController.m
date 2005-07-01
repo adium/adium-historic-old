@@ -24,6 +24,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 @implementation AISortController
 
+/*
+ * @brief Initialize
+ */
 - (id)init
 {
 	if ((self = [super init])) {
@@ -39,6 +42,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	return(self);
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[statusKeysRequiringResort release];
@@ -49,6 +55,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	[super dealloc];
 }
 
+/*
+ * @brief Configure our customization view
+ */
 - (NSView *)configureView
 {
 	if (!configureView)
@@ -61,6 +70,12 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sort Logic -------------------------------------------------------------------------------------------------------
 #pragma mark Sort Logic
+/*
+ * @brief Should we resort for a set of changed status keys?
+ *
+ * @param inModifiedKeys NSSet of NSString keys to test
+ * @result YES if we need to resort
+ */
 - (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
 	if (statusKeysRequiringResort) {
@@ -70,6 +85,12 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	}
 }
 
+/*
+ * @brief Should we resort for a set of changed attribute keys?
+ *
+ * @param inModifiedKeys NSSet of NSString keys to test
+ * @result YES if we need to resort
+ */
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
 	if (attributeKeysRequiringResort) {
@@ -79,11 +100,22 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 	}
 }
 
+/*
+ * @brief Always sort groups to the top by default?
+ *
+ * By default, manual sort ignores groups and sorts them alongside all other objects
+ * while alphabetical and status sort them to the top of any given array.
+ */
 - (BOOL)alwaysSortGroupsToTopByDefault
 {
 	return(YES);
 }
 
+/*
+ * @brief Force ignoring of groups?
+ *
+ * @param shouldForce If YES, groups are ignored. If NO, default behavior for this sort is used.
+ */
 - (void)forceIgnoringOfGroups:(BOOL)shouldForce
 {
 	if (shouldForce) {
@@ -95,6 +127,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 
 //Sorting -------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
+/*
+ * @brief Index for inserting an object into an array
+ *
+ * @param inObject The AIListObject to be inserted object
+ * @param inObjects An NSArray of AIListObject objects
+ * @result The index for insertion
+ */
 - (int)indexForInserting:(AIListObject *)inObject intoObjects:(NSArray *)inObjects
 {
 	NSEnumerator 	*enumerator = [inObjects objectEnumerator];
@@ -130,53 +169,71 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 										  hint:[inObjects sortedArrayHint]];
 }
 
-//Sort
+/*
+ * @brief Primary sort when groups are sorted alongside contacts (alwaysSortGroupsToTop == FALSE)
+ *
+ * Visible contacts go above invisible ones.  For contacts which are both visible, use the sort function.
+ */
 int basicVisibilitySort(id objectA, id objectB, void *context)
 {
     BOOL	visibleA = [objectA visible];
     BOOL	visibleB = [objectB visible];
 	
-    if (!visibleA && visibleB) {
-        return(NSOrderedDescending);
-    } else if (visibleA && !visibleB) {
-        return(NSOrderedAscending);
-    } else {
-		sortfunc	function = context;
+	if (visibleA || visibleB) {
+		if (!visibleA && visibleB) {
+			return(NSOrderedDescending);
+		} else if (visibleA && !visibleB) {
+			return(NSOrderedAscending);
+		} else {
+			sortfunc	function = context;
+			
+			return((function)(objectA, objectB, NO));
+		}
 
-		return((function)(objectA, objectB, NO));
-    }
+	} else {
+		//We don't care about the relative ordering of two invisible contacts
+		return NSOrderedSame;
+	}
 }
 
-//Sort, groups always at the top
+/*
+ * @brief Primary sort when groups are always sorted to the top
+ *
+ * Visible contacts go above invisible ones.  For contacts which are both visible, use the sort function.
+ */
 int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 {
     BOOL	visibleA = [objectA visible];
     BOOL	visibleB = [objectB visible];
 	
-    if (!visibleA && visibleB) {
-        return(NSOrderedDescending);
-    } else if (visibleA && !visibleB) {
-        return(NSOrderedAscending);
-    } else {
-        BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
-        BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
-		
-        if (groupA && !groupB) {
-            return(NSOrderedAscending);
-        } else if (!groupA && groupB) {
-            return(NSOrderedDescending);
-        } else {
-			sortfunc	function = context;
+	if (visibleA || visibleB) {
+		if (!visibleA && visibleB) {
+			return(NSOrderedDescending);
+		} else if (visibleA && !visibleB) {
+			return(NSOrderedAscending);
+		} else {
+			BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
+			BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 			
-			return((function)(objectA, objectB, groupA));
-        }
-    }
+			if (groupA && !groupB) {
+				return(NSOrderedAscending);
+			} else if (!groupA && groupB) {
+				return(NSOrderedDescending);
+			} else {
+				sortfunc	function = context;
+				
+				return((function)(objectA, objectB, groupA));
+			}
+		}
+
+	} else {
+		//We don't care about the relative ordering of two invisible contacts
+		return NSOrderedSame;
+	}
 }
 
 /*!
- * @brief Did become active
- *
- * Called when the controller becomes active
+ * @brief The controller became active (in use by Adium)
  */
 - (void)didBecomeActive 
 {
