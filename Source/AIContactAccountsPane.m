@@ -204,7 +204,7 @@
 	account =  [accounts objectAtIndex:row];
 	if ([listObject isKindOfClass:[AIMetaContact class]]) {
 		//If we're dealing with a metaContact, make sure it's the topmost one
-		exactContact = (AIListContact *)[[adium contactController] parentContactForListObject:listObject];
+		exactContact = [(AIMetaContact *)listObject parentContact];
 
 	} else {
 		//Retrieve an AIListContact on this account
@@ -258,7 +258,7 @@
 			
 			if ([listObject isKindOfClass:[AIMetaContact class]]) {
 				//If we're dealing with a metaContact, make sure it's the topmost one
-				exactContact = (AIListContact *)[[adium contactController] parentContactForListObject:listObject];
+				exactContact = [(AIMetaContact *)listObject parentContact];
 				
 			} else {
 				//Retrieve an AIListContact on this account

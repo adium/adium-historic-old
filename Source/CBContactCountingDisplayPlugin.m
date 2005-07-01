@@ -144,7 +144,7 @@
 		
 		//Obtain the group we want to work with -- for a contact, use its parent group.
 		AIListGroup		*targetGroup = ([inObject isKindOfClass:[AIListContact class]] ? 
-										[inObject parentGroup] :
+										[(AIListContact *)inObject parentGroup] :
 										inObject);
 
 		NSString		*countString = nil;

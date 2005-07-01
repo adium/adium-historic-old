@@ -438,7 +438,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (void)configureDrawer
 {
-	AIListObject	*listObject = [[adium contactController] parentContactForListObject:displayedObject];
+	AIListObject	*listObject = ([displayedObject isKindOfClass:[AIListContact class]] ?
+								   [(AIListContact *)displayedObject parentContact] :
+								   displayedObject);
 
 	if ([listObject isKindOfClass:[AIMetaContact class]] &&
 		([[(AIMetaContact *)listObject listContacts] count] > 1)) {

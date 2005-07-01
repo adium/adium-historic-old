@@ -116,23 +116,26 @@
 	if (inModifiedKeys == nil ||
 		[inModifiedKeys containsObject:KEY_TYPING] ||
 		[inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
+		AIListContact	*listContact;
+		NSImage			*tabStateIcon;
 		
 		//Apply the state icon to our chat
-		NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
-														type:AIStatusIconTab
-												   direction:AIIconNormal];
-		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:icon withOwner:self];
+		tabStateIcon = [AIStatusIcons statusIconForChat:inChat
+												   type:AIStatusIconTab
+											  direction:AIIconNormal];
+		[[inChat displayArrayForKey:@"Tab State Icon"] setObject:tabStateIcon withOwner:self];
 		modifiedAttributes = [NSSet setWithObject:@"Tab State Icon"];
 
 		//Also apply the state icon to our contact if this is a one-on-one chat
-		if ([inChat listObject]) {
-			AIListObject *contact = [[adium contactController] parentContactForListObject:[inChat listObject]];
+#warning Verify that parentContact is proper here
+		if ((listContact = [[inChat listObject] parentContact])) {
+			NSImage	*listStateIcon;
 			
-			NSImage	*icon = [AIStatusIcons statusIconForChat:inChat
+			listStateIcon = [AIStatusIcons statusIconForChat:inChat
 														type:AIStatusIconList
 												   direction:AIIconNormal];
-			[[contact displayArrayForKey:@"List State Icon"] setObject:icon withOwner:self];
-			[[adium contactController] listObjectAttributesChanged:contact
+			[[listContact displayArrayForKey:@"List State Icon"] setObject:listStateIcon withOwner:self];
+			[[adium contactController] listObjectAttributesChanged:listContact
 													  modifiedKeys:[NSSet setWithObject:@"List State Icon"]];
 		}		
 	}

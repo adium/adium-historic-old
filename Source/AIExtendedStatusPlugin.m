@@ -88,15 +88,16 @@
 	NSSet		*modifiedAttributes = nil;
 
 	//Idle time
-    if (inModifiedKeys == nil || 
-	   (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
-	   (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))) {
+    if ((inModifiedKeys == nil || 
+		 (showIdle && [inModifiedKeys containsObject:@"Idle"]) ||
+		 (showStatus && ([inModifiedKeys containsObject:@"StatusMessage"] || [inModifiedKeys containsObject:@"ContactListStatusMessage"]))) &&
+		[inObject isKindOfClass:[AIListContact class]]){
 		NSMutableString	*statusMessage = nil;
 		NSString		*finalMessage = nil;
 		int				idle;
 		
 		if (showStatus) {
-			statusMessage = [[[[[[adium contentController] filterAttributedString:[inObject contactListStatusMessage]
+			statusMessage = [[[[[[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
 																  usingFilterType:AIFilterDisplay
 																		direction:AIFilterIncoming
 																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
