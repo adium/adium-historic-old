@@ -42,6 +42,8 @@
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
 - (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
 - (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;
+- (NSDate *)signonDate;
+
 - (void)setIdle:(BOOL)isIdle sinceDate:(NSDate *)idleSinceDate notify:(NotifyTiming)notify;
 - (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify;
 
