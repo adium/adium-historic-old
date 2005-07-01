@@ -49,7 +49,8 @@
 	NSMutableDictionary	*attributes;
 	NSAttributedString	*sample;
 	NSShadow			*shadow = nil;
-
+	NSSize				sampleSize;
+	
 	//Background
 	if (backgroundGradientColor) {
 		[[AIGradient gradientWithFirstColor:[backgroundGradientColor color]
@@ -78,13 +79,12 @@
 	
 	sample = [[[NSAttributedString alloc] initWithString:AILocalizedString(@"Sample",nil)
 											  attributes:attributes] autorelease];
-	int	sampleHeight = [sample size].height;
-	
-#warning todo: center the string in the rect
-	[sample drawInRect:NSMakeRect(rect.origin.x,
-								  rect.origin.y + (rect.size.height - sampleHeight) / 2.0,
-								  rect.size.width,
-								  sampleHeight)];
+	sampleSize = [sample size];
+
+	[sample drawInRect:NSIntegralRect(NSMakeRect(rect.origin.x + ((rect.size.width - sampleSize.width) / 2.0),
+												 rect.origin.y + ((rect.size.height - sampleSize.height) / 2.0),
+												 sampleSize.width,
+												 sampleSize.height))];
 }
 
 - (void)dealloc
