@@ -194,6 +194,7 @@ typedef enum {
 - (void)updateLayoutFromPrefDict:(NSDictionary *)prefDict andThemeFromPrefDict:(NSDictionary *)themeDict;
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict;
 
+- (void)listObjectAttributesChanged:(NSNotification *)notification;
 - (void)contactListDesiredSizeChanged;
 - (void)updateTransparency;
 - (BOOL)useAliasesInContactListAsRequested;
