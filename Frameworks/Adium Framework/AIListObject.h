@@ -88,12 +88,10 @@ typedef enum {
 //Grouping
 - (AIListObject <AIContainingObject> *)containingObject;
 - (float)orderIndex;
-- (AIListGroup *)parentGroup;
 
 //Display
-- (NSString *)ownDisplayName;
-- (NSString *)ownPhoneticName;
 - (NSString *)formattedUID;
+- (void)setFormattedUID:(NSString *)inFormattedUID notify:(NotifyTiming)notify;
 - (NSString *)longDisplayName;
 
 //Prefs
@@ -116,7 +114,6 @@ typedef enum {
 - (void)setStatusWithName:(NSString *)statusName statusType:(AIStatusType)statusType notify:(NotifyTiming)notify;
 - (NSAttributedString *)statusMessage;
 - (void)setStatusMessage:(NSAttributedString *)statusMessage notify:(NotifyTiming)notify;
-- (NSAttributedString *)contactListStatusMessage;
 - (void)setBaseAvailableStatusAndNotify:(NotifyTiming)notify;
 - (AIStatusSummary)statusSummary;
 
