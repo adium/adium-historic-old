@@ -15,6 +15,7 @@
  */
 
 #import "AIAbstractListController.h"
+#import "AIContactController.h"
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
 #import "AIListCell.h"
@@ -47,7 +48,11 @@
 @end
 
 @implementation AIAbstractListController
-
+/*
+ * @brief Initialize
+ *
+ * Designated initializer for AIAbstractListController
+ */
 - (id)initWithContactListView:(AIListOutlineView *)inContactListView inScrollView:(AIAutoScrollView *)inScrollView_contactList delegate:(id<AIListControllerDelegate>)inDelegate
 {
 	if ((self = [super init]))
@@ -69,17 +74,27 @@
 									   selector:@selector(listControllerDragEnded:)
 										   name:@"AIListControllerDragEnded"
 										 object:nil];
+		
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:)
+										   name:ListObject_AttributesChanged
+										 object:nil];
 	}
 
 	return(self);
 }
 
+/*
+ * @brief Delegate
+ */
 - (id)delegate
 {
 	return(delegate);
 }
 
-//Dealloc
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[contactList release];
@@ -405,6 +420,21 @@
 	[contentCell setStatusColor:[[prefDict objectForKey:KEY_LIST_THEME_CONTACT_STATUS_COLOR] representedColor]];
 }
 
+#pragma mark Updating the display
+/*!
+ * @brief List object attributes changed
+ *
+ * Redisplay the object in question
+ */
+- (void)listObjectAttributesChanged:(NSNotification *)notification
+{
+    AIListObject	*object = [notification object];
+	
+	//Redraw the modified object (or the whole list, if object is nil)
+	[contactListView redisplayItem:object];	
+}
+
+
 //Outline View data source ---------------------------------------------------------------------------------------------
 #pragma mark Outline View data source
 //
@@ -435,28 +465,19 @@
     }
 }
 
-//Before one of our cells gets told to draw, we need to make sure it knows what contact it's drawing for.
+/*!
+ * @brief Configure the cell for the proper listObject before drawing
+ *
+ * @param outlineView The AIListOutlineView which is drawing
+ * @param cell An AIListCell within the AIListOutlineView
+ * @param tableColumn (Ignored)
+ * @param item The AIListObject which well be drawn by the cell
+ */
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
 	if ([outlineView isKindOfClass:[AIListOutlineView class]]) {
 		[(AIListCell *)cell setListObject:item];
 		[(AIListCell *)cell setControlView:(AIListOutlineView *)outlineView];
-		
-		//	
-		//	int	icons = [iconArray count];
-		//    int	columns = [tableView numberOfColumns];
-		//    int index;
-		//	
-		//    index = (row * columns) + [tableView indexOfTableColumn:tableColumn];
-		//	
-		//	
-		//	
-		//    if (index >= 0 && index < icons && (index == selectedIconIndex)) {
-		//        [cell setHighlighted:YES];
-		//    } else {
-		//        [cell setHighlighted:NO];
-		//    }
-		
 	}
 }
 
@@ -484,7 +505,7 @@
     return([item isExpanded]);
 }
 
-/*
+/*!
  * @brief Return the contextual menu for a passed list object
  */
 - (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
