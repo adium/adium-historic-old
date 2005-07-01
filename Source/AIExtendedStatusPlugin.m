@@ -21,6 +21,7 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 #define STATUS_MAX_LENGTH	100
 
