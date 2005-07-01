@@ -94,7 +94,9 @@
 - (void)updatePane
 {	
 	//Text Profile
-	[[adium contentController] filterAttributedString:[listObject statusObjectForKey:@"TextProfile"]
+	[[adium contentController] filterAttributedString:([listObject isKindOfClass:[AIListContact class]] ?
+													   [(AIListContact *)listObject profile] :
+													   nil)
 									  usingFilterType:AIFilterDisplay
 											direction:AIFilterIncoming
 										filterContext:listObject
