@@ -15,8 +15,6 @@
  */
 
 #import "AIObject.h"
-#import "AIListContact.h"
-#import "AIMetaContact.h"
 
 @class AIChat, AIAccount, AIMetaContact, AIListContact, AIService;
 

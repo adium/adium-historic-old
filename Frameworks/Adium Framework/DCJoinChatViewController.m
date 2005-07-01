@@ -19,6 +19,8 @@
 #import "AIContactController.h"
 #import "AIChatController.h"
 #import "AIService.h"
+#import "AIListContact.h"
+#import "AIMetaContact.h"
 #import "DCJoinChatViewController.h"
 #import <AIUtilities/AIStringAdditions.h>
 
