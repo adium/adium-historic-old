@@ -20,6 +20,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
 #import <AIUtilities/AIAppleScriptAdditions.h>
+#import <AIUtilities/AIWindowAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
 
@@ -71,9 +72,10 @@
  */
 - (IBAction)insertSafariLink:(id)sender
 {
-	NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-
-	if (responder && [responder isKindOfClass:[NSTextView class]]) {
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
+	
+	if (earliestTextView) {
 		NSTask			*scriptTask;
 		NSMutableArray	*applescriptRunnerArguments = [NSArray arrayWithObjects:SAFARI_LINK_SCRIPT_PATH, @"substitute", nil];
 		NSString		*applescriptRunnerPath;
@@ -106,9 +108,9 @@
 
 			attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
 
-			attributes = [[(NSTextView *)responder typingAttributes] copy];
-			[(NSTextView *)responder insertText:attributedScriptResult];
-			if (attributes) [(NSTextView *)responder setTypingAttributes:attributes];
+			attributes = [[earliestTextView typingAttributes] copy];
+			[earliestTextView insertText:attributedScriptResult];
+			if (attributes) [earliestTextView setTypingAttributes:attributes];
 			[attributes release];
 		}
 

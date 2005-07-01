@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIWindowAdditions.h>
 
 #define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
 #define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
@@ -90,12 +91,11 @@
 - (IBAction)editFormattedLink:(id)sender
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
-    NSResponder *responder = [keyWindow firstResponder];
-	
-    if ([responder isKindOfClass:[NSTextView class]] &&
-       ![[[(NSTextView *)responder window] title] isEqualToString:@"Link Editor"] &&
-       [(NSTextView *)responder isEditable]) {
-		[SHLinkEditorWindowController showLinkEditorForTextView:(NSTextView *)responder
+	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
+
+    if (earliestTextView &&
+		![[keyWindow windowController] isKindOfClass:[SHLinkEditorWindowController class]]) {
+		[SHLinkEditorWindowController showLinkEditorForTextView:earliestTextView
 													   onWindow:keyWindow
 												  showFavorites:YES
 												notifyingTarget:nil];
@@ -104,23 +104,23 @@
 
 - (IBAction)removeFormattedLink:(id)sender
 {
-    NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
-    NSResponder *responder = [keyWindow firstResponder];
-    NSTextView  *textView = nil;
-    id		 selectedLink = nil;
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
     
-    if ([responder isKindOfClass:[NSTextView class]]) {
-        textView = (NSTextView *)responder;
-        if ([[textView textStorage] length] &&
-	   [textView selectedRange].location != NSNotFound &&
-	   [textView selectedRange].location != [[textView textStorage] length]) {
-		NSRange selectionRange = [textView selectedRange];
-		selectedLink = [[textView textStorage] attribute:NSLinkAttributeName
-												 atIndex:selectionRange.location
-										  effectiveRange:&selectionRange];
-            [[textView textStorage] removeAttribute:NSLinkAttributeName range:selectionRange];
-        }
-    }
+	if (earliestTextView) {
+		NSRange	selectedRange = [earliestTextView selectedRange];
+		id		selectedLink = nil;
+		
+		if ([[earliestTextView textStorage] length] &&
+			selectedRange.location != NSNotFound &&
+			selectedRange.location != [[earliestTextView textStorage] length]) {
+			
+			selectedLink = [[earliestTextView textStorage] attribute:NSLinkAttributeName
+															 atIndex:selectedRange.location
+													  effectiveRange:&selectedRange];
+			[[earliestTextView textStorage] removeAttribute:NSLinkAttributeName range:selectedRange];			
+		}
+	}	
 }
 
 //Returns YES if a link is under the selection of the passed text view

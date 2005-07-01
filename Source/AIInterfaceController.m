@@ -28,6 +28,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITooltipUtilities.h>
+#import <AIUtilities/AIWindowAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -37,6 +38,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AISortController.h>
 #import <Adium/KFTypeSelectTableView.h>
+
 
 #define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
@@ -1119,33 +1121,33 @@
 	[self _pasteWithPreferredSelector:@selector(pasteAsRichText:) sender:sender];
 }
 
-- (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender
+/*
+ * @brief Send a paste message, using preferredSelector if possible and paste: if not
+ *
+ * Walks the responder chain looking for a responder which can handle preferredSelector, skipping instances of
+ * WebHTMLView.  These are skipped because we can control what paste does to WebView (by using a custom subclass) but
+ * have no control over what the WebHTMLView would do.
+ *
+ * If no responder is found, repeats the process looking for the simpler paste: selector.
+ */
+- (void)_pasteWithPreferredSelector:(SEL)selector sender:(id)sender
 {
 	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
 	NSResponder	*responder = [keyWindow firstResponder];
-	SEL			pasteSelector = nil;
 	
-	//First, walk down the responder chain looking for a responder which can handle the preferred selector
-	while (responder && !([responder respondsToSelector:preferredSelector])) {
-		responder = [responder nextResponder];
-	}
-	
-	if (responder) {
-		pasteSelector = preferredSelector;
-		
-	} else {
+	//First, look for a responder which can handle the preferred selector
+	if (!(responder = [keyWindow earliestResponderWhichRespondsToSelector:selector
+														  andIsNotOfClass:NSClassFromString(@"WebHTMLView")])) {		
 		//No responder found.  Try again, looking for one which will respond to paste:
-		responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
-		while (responder && !([responder respondsToSelector:@selector(paste:)])) {
-			responder = [responder nextResponder];
-		}
+		selector = @selector(paste:);
 		
-		if (responder) pasteSelector = @selector(paste:);
+		responder = [keyWindow earliestResponderWhichRespondsToSelector:selector
+														andIsNotOfClass:NSClassFromString(@"WebHTMLView")];
 	}
-	
-	if (pasteSelector) {
+
+	if (selector) {
 		[keyWindow makeFirstResponder:responder];
-		[responder performSelector:pasteSelector
+		[responder performSelector:selector
 						withObject:sender];
 	}
 }
