@@ -479,8 +479,8 @@
 //Redetermine the local grouping of a contact in response to server grouping information or an external change
 - (void)listObjectRemoteGroupingChanged:(AIListContact *)inContact
 {
-	NSString			*remoteGroupName = [inContact remoteGroupName];
-	AIListObject		*containingObject;
+	AIListObject<AIContainingObject>	*containingObject;
+	NSString							*remoteGroupName = [inContact remoteGroupName];
 
 	[inContact retain];
 
@@ -488,14 +488,11 @@
 
 	if ([containingObject isKindOfClass:[AIMetaContact class]]) {
 
-		//Make sure we traverse metaContacts as close to the root as possible; an automatic metaContact may be within
-		//a manually created one, for example, in the most common situation.
-		containingObject = [self parentContactForListObject:containingObject];
-
-		//If the object's 'group' is a metaContact, and that metaContact isn't in our list yet
-		//use the object's own remote grouping (or the contactList root) as our grouping.
+		/* If inContact's containingObject is a metaContact, and that metaContact has no containingObject,
+		 * use inContact's remote grouping as the metaContact's grouping.
+		 */
 		if (![containingObject containingObject] && [remoteGroupName length]) {
-
+#warning meta contacts created while hiding groups will disappear
 			//If no similar objects exist, we add this contact directly to the list
 			AIListGroup *targetGroup;
 
@@ -590,7 +587,7 @@
 
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
 		//For a metaContact, the closest we have to a remote group is the group it is within locally
-		group = [inContact parentGroup];
+		group = [(AIMetaContact *)inContact parentGroup];
 
 	} else {
 		NSString	*remoteGroup = [inContact remoteGroupName];
@@ -1922,22 +1919,29 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 
 
-//Watch outgoing content, remembering the user's choice of destination contact for contacts within metaContacts
+/*
+ * @brief Watch outgoing content, remembering the user's choice of destination contact for contacts within metaContacts
+ *
+ * If the destination contact's parent contact differs from the destination contact itself, the chat is with a metaContact.
+ * If that metaContact's preferred destination for messaging isn't the same as the contact which was just messaged,
+ * update the preference so that a new chat with this metaContact would default to the proper contact.
+ */
 - (void)didSendContent:(NSNotification *)notification
 {
     AIChat			*chat = [[notification userInfo] objectForKey:@"AIChat"];
     AIListContact	*destContact = [chat listObject];
-    AIListObject	*metaContact;
+    AIListContact	*metaContact;
 
-	//Note: parentContactForListObject returns the passed contact if it is not in a metaContact;
-	//this is a quick and easy check.
-    if ((chat) &&
-	   (destContact) &&
-	   ((metaContact = [self parentContactForListObject:destContact]) != destContact)) {
+    if (((metaContact = [destContact parentContact]) != destContact)) {
+		NSString	*destinationInternalObjectID = [destContact internalObjectID];
+		NSString	*currentPreferredDestination = [metaContact preferenceForKey:KEY_PREFERRED_DESTINATION_CONTACT
+																		   group:OBJECT_STATUS_CACHE];
 
-		[metaContact setPreference:[destContact internalObjectID]
-							forKey:KEY_PREFERRED_DESTINATION_CONTACT
-							 group:OBJECT_STATUS_CACHE];
+		if (![destinationInternalObjectID isEqualToString:currentPreferredDestination]) {
+			[metaContact setPreference:destinationInternalObjectID
+								forKey:KEY_PREFERRED_DESTINATION_CONTACT
+								 group:OBJECT_STATUS_CACHE];
+		}
     }
 }
 

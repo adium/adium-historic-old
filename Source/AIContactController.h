@@ -130,9 +130,6 @@ typedef enum {
 - (void)removeAllListObjectsMatching:(AIListObject *)listObject fromMetaContact:(AIMetaContact *)metaContact;
 - (AIListGroup *)remoteGroupForContact:(AIListContact *)inContact;
 - (void)clearAllMetaContactData;
-	//Return either the highest metaContact containing this list object, or the list object itself.  Appropriate for when
-//preferences should be read from/to the most generalized contact possible.
-- (AIListObject *)parentContactForListObject:(AIListObject *)listObject;
 
 //Contact status & Attributes
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
