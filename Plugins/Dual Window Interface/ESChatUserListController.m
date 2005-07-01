@@ -16,6 +16,7 @@
 
 #import "ESChatUserListController.h"
 #import "AIMenuController.h"
+#import "AIMessageTabViewItem.h"
 
 @implementation ESChatUserListController
 
@@ -32,6 +33,8 @@
 
 /*
  * @brief Return the contextual menu for a passed list object
+ *
+ * Assumption: Our delegate is an AIMessageTabViewItem (which responds to chat)
  */
 - (NSMenu *)contextualMenuForListObject:(AIListObject *)listObject
 {
@@ -45,6 +48,6 @@
 	
     return([[adium menuController] contextualMenuWithLocations:locationsArray
 												 forListObject:listObject
-														inChat:[(id)[self delegate] chat]]);
+														inChat:[[self delegate] chat]]);
 }
 @end

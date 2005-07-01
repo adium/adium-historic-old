@@ -378,18 +378,18 @@
 //XXX - Offline messaging code SHOULD NOT BE IN HERE! -ai
 - (IBAction)sendMessageLater:(id)sender
 {
-	AIListObject		*listObject;
+	AIListContact	*listContact;
 	
-	//Put the alert on the metaContact containing this listObject if applicable
-	listObject = [[adium contactController] parentContactForListObject:[chat listObject]];
-	
-	if (listObject) {
+	//Put the alert on the metaContact containing this listContact if applicable
+	listContact = [[chat listObject] parentContact];
+
+	if (listContact) {
 		NSMutableDictionary *detailsDict, *alertDict;
 		
 		detailsDict = [NSMutableDictionary dictionary];
 		[detailsDict setObject:[[chat account] internalObjectID] forKey:@"Account ID"];
 		[detailsDict setObject:[NSNumber numberWithBool:YES] forKey:@"Allow Other"];
-		[detailsDict setObject:[listObject internalObjectID] forKey:@"Destination ID"];
+		[detailsDict setObject:[listContact internalObjectID] forKey:@"Destination ID"];
 
 		alertDict = [NSMutableDictionary dictionary];
 		[alertDict setObject:detailsDict forKey:@"ActionDetails"];
@@ -397,12 +397,12 @@
 		[alertDict setObject:@"SendMessage" forKey:@"ActionID"];
 		[alertDict setObject:[NSNumber numberWithBool:YES] forKey:@"OneTime"]; 
 		
-		[alertDict setObject:listObject forKey:@"TEMP-ListObject"];
+		[alertDict setObject:listContact forKey:@"TEMP-ListContact"];
 		
 		[[adium contentController] filterAttributedString:[[[textView_outgoing textStorage] copy] autorelease]
 										  usingFilterType:AIFilterContent
 												direction:AIFilterOutgoing
-											filterContext:listObject
+											filterContext:listContact
 										  notifyingTarget:self
 												 selector:@selector(gotFilteredMessageToSendLater:receivingContext:)
 												  context:alertDict];
@@ -418,18 +418,18 @@
 - (void)gotFilteredMessageToSendLater:(NSAttributedString *)filteredMessage receivingContext:(NSMutableDictionary *)alertDict
 {
 	NSMutableDictionary	*detailsDict;
-	AIListObject		*listObject;
+	AIListContact		*listContact;
 	
 	detailsDict = [alertDict objectForKey:@"ActionDetails"];
 	[detailsDict setObject:[filteredMessage dataRepresentation] forKey:@"Message"];
 
-	listObject = [[alertDict objectForKey:@"TEMP-ListObject"] retain];
-	[alertDict removeObjectForKey:@"TEMP-ListObject"];
+	listContact = [[alertDict objectForKey:@"TEMP-ListContact"] retain];
+	[alertDict removeObjectForKey:@"TEMP-ListContact"];
 	
 	[[adium contactAlertsController] addAlert:alertDict 
-								 toListObject:listObject
+								 toListObject:listContact
 							 setAsNewDefaults:NO];
-	[listObject release];
+	[listContact release];
 }
 
 /*!
