@@ -20,6 +20,9 @@
 - (BOOL)isBorderless;
 - (void)betterCenter;
 - (float)toolbarHeight;
+
+- (NSResponder *)earliestResponderWhichRespondsToSelector:(SEL)selector andIsNotOfClass:(Class)classToAvoid;
+- (NSResponder *)earliestResponderOfClass:(Class)targetClass;
 @end
 
 // The following code is Copyright (C) 2003, 2004 Richard J Wareham <richwareham@users.sourceforge.net>,
