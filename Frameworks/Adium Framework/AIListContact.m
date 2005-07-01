@@ -24,6 +24,8 @@
 #import "ESFileTransfer.h"
 #import "AIHTMLDecoder.h"
 
+#import <AIUtilities/AIMutableOwnerArray.h>
+
 @implementation AIListContact
 
 //Init with an account
@@ -115,7 +117,297 @@
 	[[adium contactController] listObjectRemoteGroupingChanged:self];
 }
 
-//A listContact is a stranger if it has a nil remoteGroupName
+#pragma mark Names
+/*!
+ * @brief Display name
+ *
+ * Display name, drawing first from any externally-provided display name, then falling back to 
+ * the formatted UID.
+ *
+ * A listContact attempts to have the same displayName as its containing contact (potentially its metaContact).
+ * If it is not in a metaContact, its display name is returned by [super displayName]
+ */
+- (NSString *)displayName
+{
+	AIListContact	*parentContact = [self parentContact];
+    NSString		*displayName;
+
+	displayName = ((parentContact == self) ?
+				   [super displayName] :
+				   [parentContact displayName]);
+
+	//If a display name was found, return it; otherwise, return the formattedUID
+    return(displayName ? displayName : [self formattedUID]);
+}
+
+/*!
+ * @brief Own display name
+ *
+ * Returns the display name without trying to account for a metaContact. Exists for use by AIMetaContact to avoid
+ * infinite recursion by its displayName calling our displayName calling its displayName and so on.
+ */
+- (NSString *)ownDisplayName
+{
+	return [super displayName];
+}
+
+- (void)setServersideAlias:(NSString *)alias 
+		   asStatusMessage:(BOOL)useAsStatusMessage
+				  silently:(BOOL)silent
+{
+	BOOL changes = NO;
+	BOOL displayNameChanges = NO;
+	
+	//This is the server display name.  Set it as such.
+	if (![alias isEqualToString:[self statusObjectForKey:@"Server Display Name"]]) {
+		//Set the server display name status object as the full display name
+		[self setStatusObject:alias
+					   forKey:@"Server Display Name"
+					   notify:NotifyLater];
+		
+		changes = YES;
+	}
+	
+	//Use it either as the status message or the display name.
+	if (useAsStatusMessage) {
+		if (![[self stringFromAttributedStringStatusObjectForKey:@"ContactListStatusMessage"] isEqualToString:alias]) {
+			[self setStatusObject:[[[NSAttributedString alloc] initWithString:alias] autorelease]
+						   forKey:@"ContactListStatusMessage" 
+						   notify:NotifyLater];
+			
+			changes = YES;
+		}
+		
+	} else {
+		AIMutableOwnerArray	*displayNameArray = [self displayArrayForKey:@"Display Name"];
+		NSString			*oldDisplayName = [displayNameArray objectValue];
+		
+		//If the mutableOwnerArray's current value isn't identical to this alias, we should set it
+		if (![[displayNameArray objectWithOwner:[self account]] isEqualToString:alias]) {
+			[displayNameArray setObject:alias
+							  withOwner:[self account]
+						  priorityLevel:Low_Priority];
+			
+			//If this causes the object value to change, we need to request a manual update of the display name
+			if (oldDisplayName != [displayNameArray objectValue]) {
+				displayNameChanges = YES;
+			}
+		}
+	}
+	
+	if (changes) {
+		//Apply any changes
+		[self notifyOfChangedStatusSilently:silent];
+	}
+	
+	if (displayNameChanges) {
+		//Notify of display name changes
+		[[adium contactController] listObjectAttributesChanged:self
+												  modifiedKeys:[NSSet setWithObject:@"Display Name"]];
+		
+		//XXX - There must be a cleaner way to do this alias stuff!  This works for now
+		//Request an alias change
+		[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
+												  object:self
+												userInfo:[NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES]
+																					 forKey:@"Notify"]];
+	}
+}
+
+/*!
+ * @brief The way this object's name should be spoken
+ *
+ * If not found, the display name is returned.
+ */
+- (NSString *)phoneticName
+{
+	AIListContact	*parentContact = [self parentContact];
+	NSString		*phoneticName;
+
+	phoneticName = ((parentContact == self) ?
+				   [super phoneticName] :
+				   [parentContact phoneticName]);
+	
+	//If a display name was found, return it; otherwise, return the formattedUID
+    return(phoneticName ? phoneticName : [self displayName]);
+}
+
+/*!
+ * @brief Own phonetic name
+ *
+ * Returns the phonetic name without trying to account for a metaContact. Exists for use by AIMetaContact to avoid
+ * infinite recursion by its phoneticName calling our phoneticName calling its phoneticName and so on.
+ */
+- (NSString *)ownPhoneticName
+{
+	return [super phoneticName];
+}
+
+#pragma mark Status objects
+
+/*!
+ * @brief Set online
+ */
+- (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent
+{
+	if (online != [self online]) {
+		[self setStatusObject:(online ? [NSNumber numberWithBool:YES] : nil)
+					   forKey:@"Online"
+					   notify:notify];
+		
+		if (!silent) {
+			[self setStatusObject:[NSNumber numberWithBool:YES] 
+						   forKey:(online ? @"Signed On" : @"Signed Off")
+						   notify:notify];
+			[self setStatusObject:nil 
+						   forKey:(online ? @"Signed Off" : @"Signed On")
+						   notify:notify];
+			[self setStatusObject:nil
+						   forKey:(online ? @"Signed On" : @"Signed Off")
+					   afterDelay:15];
+		}
+		
+		if (online) {
+			if (notify == NotifyNow) {
+				[self notifyOfChangedStatusSilently:silent];
+			}
+			
+		} else {
+			//Will always notify
+			[[self account] removeStatusObjectsFromContact:self
+												  silently:silent];	
+		}
+	}
+}
+
+/*!
+ * @brief Set the sign on date
+ */
+- (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify
+{
+	[self setStatusObject:signonDate
+				   forKey:@"Signon Date"
+				   notify:notify];
+}
+/*!
+ * @brief Date this contact signed on, if available
+ */
+- (NSDate *)signonDate
+{
+	return [self statusObjectForKey:@"Signon Date"];
+}
+
+/*!
+ * @brief Set the idle state
+ *
+ * @param isIdle YES if the contact is idle
+ * @param idleSinceDate The date this contact went idle. Only relevant if isIdle is YES
+ * @param noitfy The NotifyTiming
+ */
+- (void)setIdle:(BOOL)isIdle sinceDate:(NSDate *)idleSinceDate notify:(NotifyTiming)notify
+{
+	if (isIdle) {
+		if (idleSinceDate) {
+			[self setStatusObject:idleSinceDate
+						   forKey:@"IdleSince"
+						   notify:NotifyLater];
+		} else {
+			//No idleSinceDate means we are Idle but don't know how long, so set to -1
+			[self setStatusObject:[NSNumber numberWithInt:-1]
+						   forKey:@"Idle"
+						   notify:NotifyLater];
+		}
+	} else {
+		[self setStatusObject:nil
+					   forKey:@"IdleSince"
+					   notify:NotifyLater];
+		[self setStatusObject:nil
+					   forKey:@"Idle"
+					   notify:NotifyLater];
+	}
+	
+	/* @"Idle", for a contact with an IdleSince date, will be changing every minute.  @"IsIdle" provides observers a way
+	* to perform an action when the contact becomes/comes back from idle, regardless of whether an IdleSince is available,
+	* without having to do that action every minute for other contacts.
+	*/
+	[self setStatusObject:(isIdle ? [NSNumber numberWithBool:YES] : nil)
+				   forKey:@"IsIdle"
+				   notify:NotifyLater];
+	
+	//Apply any changes
+	if (notify == NotifyNow) {
+		[self notifyOfChangedStatusSilently:NO];
+	}
+}
+
+- (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify
+{
+	//Observers get a single shot at utilizing the user icon data in its raw form
+	[self setStatusObject:iconData forKey:@"UserIconData" notify:NotifyLater];
+	
+	//Set the User Icon as an NSImage
+	NSImage *userIcon = [[NSImage alloc] initWithData:iconData];
+	[self setStatusObject:userIcon forKey:KEY_USER_ICON notify:NotifyLater];
+	[userIcon release];
+	
+	//Clear the UserIconData after it has been used
+	[self setStatusObject:nil
+				   forKey:@"UserIconData"
+			   afterDelay:1];
+	
+	//Apply any changes
+	if (notify == NotifyNow) {
+		[self notifyOfChangedStatusSilently:NO];
+	}	
+}
+
+/*!
+ * @brief Set the warning level
+ *
+ * @param warningLevel The warning level, an integer between 0 and 100
+ */
+- (void)setWarningLevel:(int)warningLevel notify:(NotifyTiming)notify
+{
+	if (warningLevel != [self warningLevel]) {
+		[self setStatusObject:[NSNumber numberWithInt:warningLevel]
+					   forKey:@"Warning"
+					   notify:notify];
+	}
+}
+
+/*
+ * @brief Warning level
+ *
+ * @result The warning level, an integer between 0 and 100
+ */
+- (int)warningLevel
+{
+	return [self integerStatusObjectForKey:@"Warning"];
+}
+
+/*
+ * @brief Set the profile
+ */
+- (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify
+{
+	[self setStatusObject:profile
+				   forKey:@"TextProfile" 
+				   notify:notify];
+}
+
+/*
+ * @brief Profile
+ */
+- (NSAttributedString *)profile
+{
+	return [self statusObjectForKey:@"TextProfile"];
+}
+
+/*!
+ * @brief Is this contact a stranger?
+ * 
+ * A listContact is a stranger if it has a nil remoteGroupName
+ */
 - (BOOL)isStranger
 {
 	return(![self integerStatusObjectForKey:@"NotAStranger"]);
@@ -139,6 +431,57 @@
 				   notify:notify];
 }
 
+#pragma mark Status
+
+/*!
+ * @brief Determine the status message to be displayed in the contact list
+ */
+- (NSAttributedString *)contactListStatusMessage
+{
+	NSAttributedString	*contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
+	if (!contactListStatusMessage) {
+		contactListStatusMessage = [self statusMessage];
+	}
+	
+	return contactListStatusMessage;
+}
+
+#pragma mark Parents
+/*
+ * @brief This object's parent AIListGroup
+ *
+ * @result An AIListGroup which contains this object or the object containing this object, or nil if it is not in an AIListGroup.
+ */
+- (AIListGroup *)parentGroup
+{
+	AIListObject<AIContainingObject>	*parentGroup = [[self parentContact] containingObject];
+
+	if (parentGroup && [parentGroup isKindOfClass:[AIListGroup class]]) {
+		return((AIListGroup *)parentGroup);
+	} else {
+		return(nil);
+	}
+}
+
+/*
+ * @brief This object's parent AIListContact
+ *
+ * The parent AIListContact is the appropriate place to apply preferences specific to this contact so that such
+ * preferences are also applied to other AIListContacts in the same meta contact, if necessary.
+ *
+ * @result Either this contact, if it is not in a metaContact, or the AIMetaContact which contains it.
+ */
+ - (AIListContact *)parentContact
+ {
+	AIListContact	*parentContact = self;
+
+	if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
+		parentContact = (AIMetaContact *)containingObject;		
+	}
+
+	return(parentContact);
+ }
+ 
 
 //AppleScript ----------------------------------------------------------------------------------------------------------
 #pragma mark AppleScript
