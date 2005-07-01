@@ -132,7 +132,8 @@ gboolean gaim_init_msn_plugin(void);
 	BOOL shouldAttemptReconnect = YES;
 	
 	if (disconnectionError && *disconnectionError) {
-		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound)) {
+		if (([*disconnectionError rangeOfString:@"Type your e-mail address and password correctly"].location != NSNotFound) ||
+			([*disconnectionError rangeOfString:@"Unable to authenticate"].location != NSNotFound)) {
 			[[adium accountController] forgetPasswordForAccount:self];
 		} else if (([*disconnectionError rangeOfString:@"You have signed on from another location"].location != NSNotFound)) {
 			shouldAttemptReconnect = NO;
