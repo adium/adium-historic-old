@@ -50,7 +50,8 @@
 
         NSDate	*signonDate;
 	
-        if ((signonDate = [inObject signonDate])) {
+        if ([inObject isKindOfClass:[AIListContact class]] &&
+			(signonDate = [(AIListContact *)inObject signonDate])) {
             NSString		*currentDay, *signonDay, *signonTime;
             NSDateFormatter	*dayFormatter, *timeFormatter;
             

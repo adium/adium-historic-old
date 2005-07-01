@@ -56,7 +56,8 @@
     if ([inObject online]) {
         NSDate	*signonDate;
 
-        if ((signonDate = [inObject signonDate])) {
+        if ([inObject isKindOfClass:[AIListContact class]] &&
+			(signonDate = [(AIListContact *)inObject signonDate])) {
             entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
 																								showingSeconds:NO 
 																								   abbreviated:NO]];
