@@ -17,36 +17,38 @@
 #import "ESObjectWithStatus.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
 
-//ESObjectWithStatus is an abstract superclass for use by any subclass which needs a system of status objects
+#define KEY_KEY		@"Key"
+#define KEY_VALUE	@"Value"
 
-#define Key		@"Key"
-#define Value	@"Value"
-
+/*!
+ * @class ESObjectWithStatus
+ * @brief Abstract superclass for objects with a system of status objects and display arrays
+ *
+ * Status objects are an abstracted NSMutableDictionary implementation with notification of changed
+ * keys and optional delayed, grouped notification.
+ *
+ * Display arrays utilize AIMutableOwnerArray.  See its documentation in AIUtilities.framework.
+ */
 @implementation ESObjectWithStatus
 
+/*
+ * @brief Initialize
+ */
 - (id)init
 {
 	if ((self = [super init])) {
 		statusDictionary = [[NSMutableDictionary alloc] init];
 		displayDictionary = [[NSMutableDictionary alloc] init];
-		delayedStatusTimers = nil;
 	}
 
 	return self;
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
-	NSEnumerator	*enumerator;
-	NSTimer			*timer;
-
-	//Invalidate any outstanding delayed status changes
-	enumerator = [delayedStatusTimers objectEnumerator];
-	while ((timer = [enumerator nextObject])) {
-		[timer invalidate];
-	}
-	[delayedStatusTimers release]; delayedStatusTimers = nil;
-
 	[statusDictionary release]; statusDictionary = nil;
 	[changedStatusKeys release]; changedStatusKeys = nil;
 	[displayDictionary release]; displayDictionary = nil;
@@ -57,8 +59,14 @@
 //Setting status objects -----------------------------------------------------------------------------------------------
 #pragma mark Setting Status
 
-//Quickly set a status key for this object
-- (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
+/*
+ * @brief Set a status object
+ *
+ * @param value The value
+ * @param key The NSString key for the value
+ * @param notify The notification timing. One of NotifyNow, NotifyLater, or NotifyNever.
+ */
+ - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify
 {
 	if (key) {
 		BOOL changedStatusDict = YES;
@@ -80,44 +88,41 @@
 	}
 }
 
-//Perform a status change after a delay
+/*
+ * @brief Set a status object after a delay
+ *
+ * @param value The value
+ * @param key The NSString key for the value
+ * @param delay The delay until the change is made
+ */
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay
 {
-	if (!delayedStatusTimers) delayedStatusTimers = [[NSMutableArray alloc] init];
-	NSTimer		*timer = [NSTimer scheduledTimerWithTimeInterval:delay
-														  target:self
-														selector:@selector(_applyDelayedStatus:)
-														userInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-															key, Key,
-															value, Value,
-															nil]
-														 repeats:NO];
-	[delayedStatusTimers addObject:timer];
+	[self performSelector:@selector(_applyDelayedStatus:)
+			   withObject:[NSDictionary dictionaryWithObjectsAndKeys:
+				   key, KEY_KEY,
+				   value, KEY_VALUE,
+				   nil]
+			   afterDelay:delay];
 }
 
-//Perform a delayed status change using a dictionary with Value, Key, and Delay keys
-- (void)delayedStatusChange:(NSDictionary *)statusChangeDict
+/*
+ * @brief Perform a delayed status object change
+ *
+ * Called as a result of -[ESObjectWithStatus setStatusObject:forKey:afterDelay:]
+ */
+- (void)_applyDelayedStatus:(NSDictionary *)infoDict
 {
-	[self setStatusObject:[statusChangeDict objectForKey:Value] 
-				   forKey:[statusChangeDict objectForKey:Key]
-			   afterDelay:[[statusChangeDict objectForKey:@"Delay"] intValue]];
-}
-
-- (void)_applyDelayedStatus:(NSTimer *)inTimer
-{
-	NSDictionary	*infoDict = [inTimer userInfo];
-	id				object = [infoDict objectForKey:Value];
-	NSString		*key = [infoDict objectForKey:Key];
+	id				object = [infoDict objectForKey:KEY_VALUE];
+	NSString		*key = [infoDict objectForKey:KEY_KEY];
 	
 	[self setStatusObject:object forKey:key notify:NotifyNow];
-	
-	[delayedStatusTimers removeObject:inTimer];
-	if ([delayedStatusTimers count] == 0) {
-		[delayedStatusTimers release]; delayedStatusTimers = nil;
-	}
 }
 
-//Nofity of any queued status changes
+/*
+ * @brief Notify of any status object changes made with a NotifyTiming of NotifyLater
+ *
+ * @param silent YES if the notification should be marked as silent
+ */
 - (void)notifyOfChangedStatusSilently:(BOOL)silent
 {
     if (changedStatusKeys && [changedStatusKeys count]) {
@@ -135,32 +140,69 @@
 
 //Getting status objects ----------------------------------------------------------------------------------------------
 #pragma mark Getting Status
-//Quickly retrieve a status key enumerator for this object
+/*
+ * @brief Status key enumeartor
+ *
+ * @result NSEnumerator of all status keys
+ */
 - (NSEnumerator	*)statusKeyEnumerator
 {
 	return([statusDictionary keyEnumerator]);
 }
+
+/*
+ * @brief Status object for key
+ */
 - (id)statusObjectForKey:(NSString *)key
 {
     return([statusDictionary objectForKey:key]);
 }
+
+/*
+ * @brief Integer status object for key
+ *
+ * @result int value for key, or 0 if no object is set for key
+ */
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	NSNumber *number = [statusDictionary objectForKey:key];
     return(number ? [number intValue] : 0);
 }
+
+/*
+ * @brief Earliest date status object for key
+ *
+ * @result The earliest NSDate associated with this key. There can only be one NSDate for the base class, so it returns this one.
+ */
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
-	return([statusDictionary objectForKey:key]);
+	id obj = [statusDictionary objectForKey:key];
+	return ((obj && [obj isKindOfClass:[NSDate class]]) ? obj : nil);
 }
+
+/*
+ * @brief Number status object for key
+ *
+ * @result The NSNumber for this key, or nil if no such key is set or the value is not an NSNumber
+ */
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key
 {
 	id obj = [statusDictionary objectForKey:key];
 	return ((obj && [obj isKindOfClass:[NSNumber class]]) ? obj : nil);
 }
+
+/*
+ * @brief String from a key which stores an attributed string
+ *
+ * @result The NSString contents of an NSAttributedString for this key
+ */
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
-	return([[statusDictionary objectForKey:key] string]);
+	id obj = [statusDictionary objectForKey:key];
+
+	return ((obj && [obj isKindOfClass:[NSAttributedString class]]) ?
+			[(NSAttributedString *)obj string] :
+			nil);
 }
 
 //---- fromAnyContainedObject status object behavior ----
