@@ -16,7 +16,7 @@
 
 #import "AIListObject.h"
 
-@class AIAccount, AIContentObject;
+@class AIAccount, AIContentObject, AIListContact, AIListGroup;
 
 @interface AIListContact : AIListObject {
 	AIAccount		*account;
@@ -33,6 +33,28 @@
 + (NSString *)internalUniqueObjectIDForService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
 - (void)restoreGrouping;
 
+- (AIListGroup *)parentGroup;
+- (AIListContact *)parentContact;
+
+- (NSString *)ownDisplayName;
+- (NSString *)ownPhoneticName;
+
 - (void)setIsMobile:(BOOL)isMobile notify:(NotifyTiming)notify;
+- (void)setOnline:(BOOL)online notify:(NotifyTiming)notify silently:(BOOL)silent;
+- (void)setSignonDate:(NSDate *)signonDate notify:(NotifyTiming)notify;
+- (void)setIdle:(BOOL)isIdle sinceDate:(NSDate *)idleSinceDate notify:(NotifyTiming)notify;
+- (void)setServersideIconData:(NSData *)iconData notify:(NotifyTiming)notify;
+
+- (void)setWarningLevel:(int)warningLevel notify:(NotifyTiming)notify;
+- (int)warningLevel;
+
+- (void)setProfile:(NSAttributedString *)profile notify:(NotifyTiming)notify;
+- (NSAttributedString *)profile;
+
+- (void)setServersideAlias:(NSString *)alias 
+		   asStatusMessage:(BOOL)useAsStatusMessage
+				  silently:(BOOL)silent;
+
+- (NSAttributedString *)contactListStatusMessage;
 
 @end
