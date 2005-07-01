@@ -27,7 +27,6 @@ typedef enum {
 @interface ESObjectWithStatus : AIObject {
     NSMutableDictionary		*statusDictionary;
     NSMutableSet			*changedStatusKeys;		//Status keys that have changed since the last notification
-	NSMutableArray			*delayedStatusTimers;
 	
 	NSMutableDictionary		*displayDictionary;		//A dictionary of values affecting this object's display
 }
@@ -35,7 +34,6 @@ typedef enum {
 //Setting status objects
 - (void)setStatusObject:(id)value forKey:(NSString *)key notify:(NotifyTiming)notify;
 - (void)setStatusObject:(id)value forKey:(NSString *)key afterDelay:(NSTimeInterval)delay;
-- (void)delayedStatusChange:(NSDictionary *)statusChangeDict;
 - (void)notifyOfChangedStatusSilently:(BOOL)silent;
 
 //Getting status objects
