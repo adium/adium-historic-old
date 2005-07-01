@@ -25,6 +25,7 @@
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
+#import <AIUtilities/CBObjectAdditions.h>
 
 #define EDGE_CATCH_X				40
 #define EDGE_CATCH_Y				40
@@ -64,9 +65,6 @@ typedef enum {
 									 object:nil];
     [[adium notificationCenter] addObserver:self selector:@selector(contactOrderChanged:)
 									   name:Contact_OrderChanged 
-									 object:nil];
-    [[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:) 
-									   name:ListObject_AttributesChanged
 									 object:nil];
 
 	//Observe group expansion for resizing
@@ -356,7 +354,12 @@ typedef enum {
 
 //Content Updating -----------------------------------------------------------------------------------------------------
 #pragma mark Content Updating
-//Reload the contact list
+/*
+ * @brief The entire contact list, or an entire group, changed
+ *
+ * This indicates that an entire gorup changed -- the contact list is just a giant group, so that includes hte entire
+ * contact list changing.  Reload the appropriate object.
+ */
 - (void)contactListChanged:(NSNotification *)notification
 {
 	id		object = [notification object];
@@ -372,8 +375,9 @@ typedef enum {
 			//Reload the whole tree if the containing group is our root
 			[contactListView reloadData];
 		} else {
-			//We need to reload the contaning group since this notification is posted when adding and removing objects.
-			//Reloading the actual object that changed will produce no results since it may not be on the list.
+			/* We need to reload the contaning group since this notification is posted when adding and removing objects.
+			 * Reloading the actual object that changed will produce no results since it may not be on the list.
+			 */
 			[contactListView reloadItem:containingGroup reloadChildren:YES];
 		}
 	}
@@ -381,27 +385,36 @@ typedef enum {
 	[self contactListDesiredSizeChanged];
 }
 
-//Update auto-resizing when object visibility changes
+/*
+ * @brief Update auto-resizing when object visibility changes
+ */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inModifiedKeys containsObject:@"VisibleObjectCount"]) {
-		//If the visible count changes, we'll need to resize our list - but we wait until the group is resorted
-		//to actually perform the resizing.  This prevents the scrollbar from flickering up and some issues with
-		//us resizing before the outlineview is aware that the view has grown taller/shorter.
+		/* If the visible count changes, we'll need to resize our list - but we wait until the group is 
+		 * re-sorted, trigerring contactOrderChanged: below, to actually perform the resizing.  This prevents 
+		 * the scrollbar from flickering up and some issues with us resizing before the outlineview is aware that
+		 * the view has grown taller/shorter.
+		 */
 		needsAutoResize = YES;
 	}
 
+	//Modify no keys
 	return(nil);
 }
 
-//Update the contact list (if updates aren't delayed)
+/*
+ * @brief Order of contacts changed
+ *
+ * The notification's object is the contact whose order changed.  
+ * We must reload the group containing that contact in order to correctly update the list.
+ */
 - (void)contactOrderChanged:(NSNotification *)notification
 {
 	id		object = [[notification object] containingObject];
 
-	//The notification passes the contact whose order changed.  This means that we must reload the group containing
-	//that contact in order to correctly update the list.
-	if (!object || (object == contactList)) { //Treat a nil object as equivalent to the contact list
+	//Treat a nil object as equivalent to the whole contact list
+	if (!object || (object == contactList)) {
 		[contactListView reloadData];
 	} else {
 		[contactListView reloadItem:object reloadChildren:YES];
@@ -414,14 +427,18 @@ typedef enum {
 	}
 }
 
-//Redisplay the modified object (Attribute change)
+/*
+ * @brief List object attributes changed
+ *
+ * Resize horizontally if desired and the display name changed
+ */
 - (void)listObjectAttributesChanged:(NSNotification *)notification
 {
-    AIListObject	*object = [notification object];
-    NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
-
-	//Redraw the modified object (or the whole list, if object is nil)
-	[contactListView redisplayItem:object];
+	NSSet	*keys;
+	
+	[super listObjectAttributesChanged:notification];
+	
+    keys = [[notification userInfo] objectForKey:@"Keys"];
 
     //Resize the contact list horizontally
     if (autoResizeHorizontally) {
@@ -431,17 +448,20 @@ typedef enum {
     }
 }
 
-//
+/*
+ * @brief The outline view selection changed
+ *
+ * On the next run loop, post Interface_ContactSelectionChanged.  Why wait for the next run loop?
+ * If we post this notification immediately, our outline view may not yet be key, and the contact controller
+ * will return nil for 'selectedListObject'.  If we wait, the outline view will be definitely be set as key, and
+ * everything will work as expected.
+ */
 - (void)outlineViewSelectionDidChange:(NSNotification *)notification
 {    
-    //Post a 'contact list selection changed' notification on the interface center
-	//If we post this notification immediately, our outline view may not yet be key, and contact controller
-	//will return nil for 'selectedListObject'.  If we wait until we're back in the main run loop, the
-	//outline view will be set as key for certain, and everything will work as expected.
-	[self performSelector:@selector(_delayedNotify) withObject:nil afterDelay:0.0001];
-}
-- (void)_delayedNotify{
-	[[adium notificationCenter] postNotificationName:Interface_ContactSelectionChanged object:nil];
+	[[adium notificationCenter] performSelector:@selector(postNotificationName:object:)
+									 withObject:Interface_ContactSelectionChanged
+									 withObject:nil
+									 afterDelay:0];
 }
 
 //
@@ -497,9 +517,9 @@ typedef enum {
 			
 			//Appropriate prompt
 			if ([dragItems count] == 1) {
-				promptTitle = [NSString stringWithFormat:@"Combine %@ and %@?", [[dragItems objectAtIndex:0] displayName], [item displayName]];
+				promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine %@ and %@?","Title of the prompt when combining two contacts. Each %@ will be filled with a contact name."), [[dragItems objectAtIndex:0] displayName], [item displayName]];
 			} else {
-				promptTitle = [NSString stringWithFormat:@"Combine these contacts with %@?",[item displayName]];
+				promptTitle = [NSString stringWithFormat:AILocalizedString(@"Combine these contacts with %@?","Title of the prompt when combining two or more contacts with another.  %@ will be filled with a contact name."),[item displayName]];
 			}
 		
 			//Metacontact creation, prompt the user
@@ -508,15 +528,15 @@ typedef enum {
 				dragItems, @"dragitems", nil];
 			
 			NSBeginInformationalAlertSheet(promptTitle,
-										   @"Combine",
-										   @"Cancel",
+										   AILocalizedString(@"Combine","Button title for accepting the action of combining multiple contacts into a metacontact"),
+										   AILocalizedString(@"Cancel",nil),
 										   nil,
 										   nil,
 										   self,
 										   @selector(mergeContactSheetDidEnd:returnCode:contextInfo:),
 										   nil,
 										   [context retain], //we're responsible for retaining the content object
-										   @"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\r\rYou may un-combine these contacts by getting info on them.");
+										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\r\rYou may un-combine these contacts by getting info on them.","Explanation of metacontact creation"));
 		}
 	}
 	
