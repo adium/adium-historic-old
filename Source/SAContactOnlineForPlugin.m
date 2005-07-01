@@ -53,10 +53,10 @@
 {
     NSAttributedString	*entry = nil;
 	
-    if ([inObject integerStatusObjectForKey:@"Online"]) {
+    if ([inObject online]) {
         NSDate	*signonDate;
 
-        if ((signonDate = [inObject statusObjectForKey:@"Signon Date"])) {
+        if ((signonDate = [inObject signonDate])) {
             entry = [[NSAttributedString alloc] initWithString:[NSDateFormatter stringForTimeIntervalSinceDate:signonDate 
 																								showingSeconds:NO 
 																								   abbreviated:NO]];

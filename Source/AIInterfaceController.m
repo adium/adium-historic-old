@@ -311,7 +311,7 @@
 	
 	//Determine the correct container for this chat
 	if (groupChatsByContactGroup) {
-		AIListObject	*group = [[[adium contactController] parentContactForListObject:[inChat listObject]] containingObject];
+		AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
 		containerID = (group ? [group displayName] : @"Chat"); 
 	} else {
 		//Open new chats into the first container (if not available, create a new one)

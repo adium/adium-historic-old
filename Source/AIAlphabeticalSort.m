@@ -155,6 +155,7 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups)
 		} else {
 			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
 		}
+
 	} else {
 		//If sorting groups, do a caseInsesitiveCompare; otherwise, keep groups in manual order
 		if (sortGroups) {

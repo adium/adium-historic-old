@@ -436,7 +436,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 							 priorityLevel:(preferAddressBookImages ? High_Priority : Low_Priority)];
 
 			/*
-			parentContact = [[adium contactController] parentContactForListObject:listObject];
+			parentContact = [listObject parentContact];
 			 */
 			
 		} else /*if ([setOrObject isKindOfClass:[NSSet class]])*/{
@@ -450,7 +450,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				/*
 				//These objects all have the same unique ID so will all also have the same meta contact; just check once
 				if (!checkedForMetaContact) {
-					parentContact = [[adium contactController] parentContactForListObject:listObject];
+					parentContact = [listObject parentContact];
 					if (parentContact == listObject) parentContact = nil;
 					checkedForMetaContact = YES;
 				}
