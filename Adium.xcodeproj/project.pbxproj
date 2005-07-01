@@ -5878,8 +5878,6 @@
 			children = (
 				34B82C7F085A85D800864531 /* AIChatController.h */,
 				34B82C80085A85D800864531 /* AIChatController.m */,
-				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
-				F57938AF033E737001A8010A /* AIPreferenceController.m */,
 				6CF42677057763E100F27FAA /* ESContactAlertsController.h */,
 				6CF42678057763E200F27FAA /* ESContactAlertsController.m */,
 				F57938F6033E745F01A8010A /* AIContactController.h */,
@@ -5895,6 +5893,8 @@
 				F57938AD033E737001A8010A /* AILoginController.m */,
 				F570A5B503704C6101A8010A /* AIMenuController.h */,
 				F570A5B603704C6101A8010A /* AIMenuController.m */,
+				F57938ED033E745F01A8010A /* AIPreferenceController.h */,
+				F57938AF033E737001A8010A /* AIPreferenceController.m */,
 				4B292D3007A9C8E100C5F882 /* AIStatusController.h */,
 				4B292D3107A9C8E100C5F882 /* AIStatusController.m */,
 				F570A60703704E9701A8010A /* AIToolbarController.h */,
