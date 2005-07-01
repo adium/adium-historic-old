@@ -16,6 +16,7 @@
 
 #import "AIContactController.h"
 #import "AIListObject.h"
+#import "AIListContact.h"
 #import "AIPreferenceController.h"
 #import "CSNewContactAlertWindowController.h"
 #import "ESContactAlertsController.h"
@@ -125,8 +126,11 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 {
 	//Configure for the list object, using the highest-up metacontact if necessary
 	[listObject release];
-	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
-	
+	listObject = ([inObject isKindOfClass:[AIListContact class]] ?
+				  [(AIListContact *)inObject parentContact] :
+				  inObject);
+	[listObject retain];
+
 	[targetEventID release];
 	targetEventID = [inTargetEventID retain];
 	
