@@ -18,6 +18,7 @@
 #import "SAContactOnlineForPlugin.h"
 #import <AIUtilities/ESDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
 
 /*!
  * @class SAContactOnlineForPlugin
