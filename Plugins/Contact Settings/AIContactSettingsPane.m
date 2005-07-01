@@ -58,7 +58,9 @@
 	
 	//Hold onto the object, using the highest-up metacontact if necessary
 	[listObject release];
-	listObject = [[[adium contactController] parentContactForListObject:inObject] retain];
+	listObject = ([inObject isKindOfClass:[AIListContact class]] ?
+				  [(AIListContact *)inObject parentContact] :
+				  inObject);
 
 	//Fill in the current alias
 	if ((alias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES])) {
