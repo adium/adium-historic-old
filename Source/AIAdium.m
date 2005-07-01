@@ -264,7 +264,6 @@ static NSString	*prefsCategory;
 	[contactController controllerDidLoad];		//** Before interfaceController so the contact list is available to the interface
 	[interfaceController controllerDidLoad];	//Loaded by nib
 	[toolbarController controllerDidLoad];
-	[debugController controllerDidLoad];
 	[contactAlertsController controllerDidLoad];
 	[soundController controllerDidLoad];
 	[emoticonController controllerDidLoad];
