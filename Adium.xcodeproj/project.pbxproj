@@ -9292,8 +9292,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
@@ -9306,11 +9306,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = NO;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
 					"Plugins/Gaim Service/Include/glib",
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
@@ -9328,19 +9328,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
 					"Plugins/Gaim Service/Include/glib",
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
@@ -9355,19 +9355,19 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
 					"Plugins/Gaim Service/Include/glib",
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
@@ -9386,17 +9386,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH,
 					"$(BUILT_PRODUCTS_DIR)",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = Adium.pch;
 				HEADER_SEARCH_PATHS = (
-					$TARGET_BUILD_DIR/$FRAMEWORKS_FOLDER_PATH/Libgaim.framework/Headers,
 					"Plugins/Gaim Service/Include/glib",
 					"Plugins/Gaim Service/Include/glib/glib",
 					"Plugins/Gaim Service/Include/glib/gmodule",
 					"Plugins/Gaim Service/Include/",
+					"$(TARGET_BUILD_DIR)/$(FRAMEWORKS_FOLDER_PATH)/Libgaim.framework/Headers",
 				);
 				INFOPLIST_FILE = Plists/Gaim_Service.plist;
 				OTHER_LDFLAGS = "";
