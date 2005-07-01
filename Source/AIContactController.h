@@ -101,7 +101,6 @@ typedef enum {
 	//Sorting
     NSMutableArray			*sortControllerArray;
     AISortController	 	*activeSortController;
-	float					nextOrderIndex;
 
 	//Contact Info Menu Items
 	NSMenuItem				*menuItem_getInfo;
@@ -175,7 +174,5 @@ typedef enum {
 - (AIListObject *)selectedListObject;
 - (AIListObject *)selectedListObjectInContactList;
 - (NSArray *)arrayOfSelectedListObjectsInContactList;
-
-- (float)nextOrderIndex;
 
 @end
