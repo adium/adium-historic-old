@@ -33,7 +33,7 @@
 {
     [super initWithCoder:aDecoder];
     [self _initListOutlineView];
-    return(self);
+    return self;
 }
 
 - (id)initWithFrame:(NSRect)frame
@@ -41,7 +41,7 @@
 	[super initWithFrame:frame];
 	[self _initListOutlineView];
 	
-	return(self);
+	return self;
 }
 
 - (void)_initListOutlineView
@@ -67,7 +67,7 @@
 //Prevent the display of a focus ring around the contact list in 10.3 and greater
 - (NSFocusRingType)focusRingType
 {
-    return(NSFocusRingTypeNone);
+    return NSFocusRingTypeNone;
 }
 
 //When our delegate is set, ask it for our data cells
@@ -122,7 +122,7 @@
 - (int)desiredHeight
 {
 	int desiredHeight = [self totalHeight] + desiredHeightPadding;
-	return(desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT);
+	return desiredHeight > MINIMUM_HEIGHT ? desiredHeight : MINIMUM_HEIGHT;
 }
 
 - (int)desiredWidth
@@ -142,7 +142,7 @@
 		if (width > widestCell) widestCell = width;
 	}
 	
-	return(((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH);
+	return ((widestCell > MINIMUM_WIDTH) || ignoreMinimumWidth) ? widestCell : MINIMUM_WIDTH;
 }
 
 - (void)setIgnoreMinimumWidth:(BOOL)inFlag
@@ -297,7 +297,7 @@
 - (float)backgroundFade
 {
 	//Factor in opacity
-	return(backgroundFade * backgroundOpacity);
+	return backgroundFade * backgroundOpacity;
 }
 
 //Background color (Opacity is added into the return automatically)
@@ -318,7 +318,7 @@
 		_backgroundColorWithOpacity = [[backgroundColor colorWithAlphaComponent:backgroundOpacity] retain];
 	}
 	
-	return(_backgroundColorWithOpacity);
+	return _backgroundColorWithOpacity;
 }
 
 //Alternating row color (Opacity is added into the return automatically)
@@ -340,7 +340,7 @@
 		_rowColorWithOpacity = [[rowColor colorWithAlphaComponent:backgroundOpacity] retain];
 	}
 	
-	return(_rowColorWithOpacity);
+	return _rowColorWithOpacity;
 }
 
 - (void)viewWillMoveToSuperview:(NSView *)newSuperview
@@ -376,15 +376,15 @@
     int selectedRow = [self selectedRow];
 
     if (selectedRow >= 0 && selectedRow < [self numberOfRows]) {
-        return([self itemAtRow:selectedRow]);
+        return [self itemAtRow:selectedRow];
     } else {
-        return(nil);
+        return nil;
     }
 }
 
 - (NSArray *)arrayOfListObjects
 {
-	return([self arrayOfSelectedItems]);
+	return [self arrayOfSelectedItems];
 }
 
 @end
