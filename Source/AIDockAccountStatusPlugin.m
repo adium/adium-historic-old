@@ -114,10 +114,17 @@
 		}
 		
 		if (shouldUpdateStatus || [inModifiedKeys containsObject:@"StatusState"]) {
-			if ([[adium statusController] activeStatusType] == AIAwayStatusType) {
+			AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
+			if (activeStatusType == AIAwayStatusType) {
 				[dockController setIconStateNamed:@"Away"];
 			} else {
 				[dockController removeIconStateNamed:@"Away"];
+			}
+
+			if (activeStatusType == AIInvisibleStatusType) {
+				[dockController setIconStateNamed:@"Invisible"];
+			} else {
+				[dockController removeIconStateNamed:@"Invisible"];
 			}
 		}
 	}
