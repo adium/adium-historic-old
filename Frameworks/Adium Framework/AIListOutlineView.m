@@ -360,9 +360,9 @@
 	 *	time the window content is changed.  This is absolutely horrible for
 	 *	performance, but the only way to avoid shadow ghosting in 10.3 :(
 	 *
-	 *  Not a problem as of 10.4.1. --boredzo
+	 *  XXX - ToDo: Check if this is still a problem in 10.4
 	 */
-	if (updateShadowsWhileDrawing && ![NSApp isOnTigerOrBetter]) [[self window] invalidateShadow];
+	if (updateShadowsWhileDrawing) [[self window] invalidateShadow];
 }
 
 - (void)setUpdateShadowsWhileDrawing:(BOOL)update{
