@@ -34,7 +34,9 @@
 
 @implementation AIStandardListWindowController
 
-//Init
+/*
+ * @brief Initialize
+ */
 - (id)init
 {
 	if ((self = [super init]))
@@ -45,19 +47,28 @@
 	return self;
 }
 
+/*
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
+	[[adium notificationCenter] removeObserver:self];
 	[toolbarItems release];
 	
 	[super dealloc];
 }
 
-//Borderless nib
+/*
+ * @brief Nib name
+ */
 - (NSString *)nibName
 {
     return(@"ContactListWindow");    
 }
 
+/*
+ * @brief Window loaded
+ */
 - (void)windowDidLoad
 {
 	[super windowDidLoad];
