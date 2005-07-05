@@ -501,7 +501,7 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	BOOL shouldSlide = NO;
 	
-	if (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
+	if ((permitSlidingInForeground && ![NSApp isHidden]) || (![NSApp isActive] && !windowShouldBeVisibleInBackground)) {
 		shouldSlide = [self shouldSlideWindowOnScreen_mousePositionStrategy];
 	}
 	else if (!permitSlidingInForeground && [NSApp isActive] && (windowSlidOffScreenEdgeMask != 0))
