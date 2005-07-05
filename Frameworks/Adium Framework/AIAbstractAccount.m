@@ -197,11 +197,10 @@
 	if (![newProposedUID isEqualToString:[self UID]]) {
 		[UID release];
 		UID = [newProposedUID retain];
-		
-		//Save our changed UID
-#warning XXX - This is making assumptions to the inner-workings of the account controller -ai
-		//[[adium accountController] saveAccounts];
-		
+
+		//Inform the account controller of the changed UID
+		[[adium accountController] accountDidChangeUID:self];
+
 		didChangeUID = YES;
 	}
 

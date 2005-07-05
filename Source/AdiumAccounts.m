@@ -186,6 +186,16 @@
 }
 
 /*
+ * @brief An account's UID changed
+ *
+ * Save our account array, which stores the account's UID permanently
+ */
+- (void)accountDidChangeUID:(AIAccount *)account
+{
+	[self _saveAccounts];
+}
+
+/*
  * @brief Generate a unique account InternalObjectID
  *
  * @return NSString unique InternalObjectID
