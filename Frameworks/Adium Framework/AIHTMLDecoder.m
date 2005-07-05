@@ -1276,7 +1276,7 @@ static AIHTMLDecoder *classMethodInstance = nil;
 + (AIHTMLDecoder *)classMethodInstance
 {
 	if (classMethodInstance == nil)
-		classMethodInstance = [self new];
+		classMethodInstance = [[self alloc] init];
 	return classMethodInstance;
 }
 
