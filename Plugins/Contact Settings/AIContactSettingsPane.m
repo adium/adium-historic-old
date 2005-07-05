@@ -61,6 +61,7 @@
 	listObject = ([inObject isKindOfClass:[AIListContact class]] ?
 				  [(AIListContact *)inObject parentContact] :
 				  inObject);
+	[listObject retain];
 
 	//Fill in the current alias
 	if ((alias = [listObject preferenceForKey:@"Alias" group:PREF_GROUP_ALIASES ignoreInheritedValues:YES])) {
