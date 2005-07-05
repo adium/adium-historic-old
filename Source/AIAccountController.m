@@ -149,6 +149,9 @@
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex {
 	return [adiumAccounts moveAccount:account toIndex:destIndex];
 }
+- (void)accountDidChangeUID:(AIAccount *)inAccount {
+	[adiumAccounts accountDidChangeUID:inAccount];
+}
 
 //Preferred Accounts
 #pragma mark Preferred Accounts

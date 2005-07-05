@@ -82,6 +82,7 @@ typedef enum
 - (void)addAccount:(AIAccount *)inAccount;
 - (void)deleteAccount:(AIAccount *)inAccount;
 - (int)moveAccount:(AIAccount *)account toIndex:(int)destIndex;
+- (void)accountDidChangeUID:(AIAccount *)inAccount;
 
 //Preferred Accounts
 - (AIAccount *)preferredAccountForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact;
