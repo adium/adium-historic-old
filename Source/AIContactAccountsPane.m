@@ -99,12 +99,14 @@
  */
 - (void)configureForListObject:(AIListObject *)inObject
 {
-	//New list object
-	[listObject release];
-	listObject = [inObject retain];
-
-	//Rebuild our account list
-	[self updateAccountList];
+	if (listObject != inObject) {
+		//New list object
+		[listObject release];
+		listObject = [inObject retain];
+		
+		//Rebuild our account list
+		[self updateAccountList];
+	}
 }
 
 /*!
