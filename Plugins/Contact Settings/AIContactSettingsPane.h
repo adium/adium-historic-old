@@ -19,8 +19,13 @@
 @class ESDelayedTextField;
 
 @interface AIContactSettingsPane : AIContactInfoPane {
+	IBOutlet	NSTextField				*label_alias;
 	IBOutlet	ESDelayedTextField		*textField_alias;
+	
+	IBOutlet	NSTextField				*label_notes;
 	IBOutlet	ESDelayedTextField		*textField_notes;
+	
+	IBOutlet	NSTextField				*label_encryption;
 	IBOutlet	NSPopUpButton			*popUp_encryption;
 
 	AIListObject						*listObject;

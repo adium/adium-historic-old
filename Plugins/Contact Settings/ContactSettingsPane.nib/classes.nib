@@ -6,6 +6,9 @@
             CLASS = AIContactSettingsPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "label_alias" = NSTextField; 
+                "label_encryption" = NSTextField; 
+                "label_notes" = NSTextField; 
                 "popUp_encryption" = NSPopUpButton; 
                 "textField_alias" = ESDelayedTextField; 
                 "textField_notes" = ESDelayedTextField; 

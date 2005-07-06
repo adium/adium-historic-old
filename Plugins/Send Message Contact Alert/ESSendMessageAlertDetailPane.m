@@ -138,6 +138,7 @@
 		[popUp_messageTo selectItemAtIndex:0];
 		
 		//Update 'from' menu
+#warning Broken
 		[popUp_messageFrom setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
 																					 toListObject:toContact
 																					   withTarget:self

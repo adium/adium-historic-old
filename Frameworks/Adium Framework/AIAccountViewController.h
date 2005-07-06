@@ -34,13 +34,17 @@
 	//Custom account view nibs are encouraged to connect to these outlets.
 	IBOutlet	NSTextField		*textField_accountUIDLabel;		//Label on UID field
 	IBOutlet	NSTextField		*textField_accountUID;			//UID field
+	IBOutlet	NSTextField		*label_password;				//Label on the password field
 	IBOutlet	NSTextField		*textField_password;			//Password field
 	IBOutlet	NSTextField		*textField_connectHost;			//Connect host
 	IBOutlet	NSTextField		*textField_connectPort;			//Connect port
 	IBOutlet	NSTextField		*textField_alias;				//User alias (or display name)
 	IBOutlet	NSButton		*checkBox_checkMail;			//Check for new mail
 	
+	IBOutlet	NSTextField		*label_typing;					//Label for the typing rpeference
 	IBOutlet	NSButton		*checkBox_sendTyping;			//Send the user's typing state
+	
+	IBOutlet	NSTextField		*label_encryption;				//Label for the encryption preference
 	IBOutlet	NSPopUpButton	*popUp_encryption;				//Encryption preference
 	
 	//Instance variables

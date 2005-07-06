@@ -38,7 +38,9 @@
 @implementation BGEmoticonMenuPlugin
 
 #define PREF_GROUP_EMOTICONS			@"Emoticons"
+
 #define	TITLE_INSERT_EMOTICON			AILocalizedString(@"Insert Emoticon",nil)
+#define	TOOLTIP_INSERT_EMOTICON			AILocalizedString(@"Insert an emoticon into the text",nil)
 #define	TITLE_EMOTICON					AILocalizedString(@"Emoticon",nil)
 
 #define	TOOLBAR_EMOTICON_IDENTIFIER		@"InsertEmoticon"
@@ -175,7 +177,7 @@
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_EMOTICON_IDENTIFIER
 														   label:TITLE_EMOTICON
 													paletteLabel:TITLE_INSERT_EMOTICON
-														 toolTip:TITLE_INSERT_EMOTICON
+														 toolTip:TOOLTIP_INSERT_EMOTICON
 														  target:self
 												 settingSelector:@selector(setView:)
 													 itemContent:button
