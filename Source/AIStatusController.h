@@ -162,9 +162,6 @@
 - (int)moveStatusState:(AIStatus *)state toIndex:(int)destIndex;
 - (void)statusStateDidSetUniqueStatusID;
 
-//Machine Idle
-- (double)currentMachineIdle;
-
 //State menu support
 - (void)registerStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
 - (void)unregisterStateMenuPlugin:(id <StateMenuPlugin>)stateMenuPlugin;
