@@ -36,7 +36,7 @@
     if ((self = [super initWithWindowNibName:windowNibName])) {
 		infoDict = [inInfoDict retain];
 		NSWindow *window = [self window];
-		if(![window setFrameUsingName:[window frameAutosaveName]])
+		if(![window setFrameUsingName:[self windowFrameAutosaveName]])
 			[window center];
 	}
 	
