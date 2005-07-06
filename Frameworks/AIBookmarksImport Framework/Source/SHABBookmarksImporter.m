@@ -81,7 +81,6 @@
 
 - (NSImage *)personIcon
 {
-#warning XXX check for Panther compatibility --boredzo
 	NSImage   *image = [self imageFromAddressBook:@"vCard.icns"]; //prefer IconFamily to TIFF
 	if(!image) image = [self imageFromAddressBook:@"vCard"];
 	if(!image) image = [self imageFromAddressBook:@"SingleCard"]; //this one comes from the framework
@@ -89,7 +88,6 @@
 }
 - (NSImage *)groupIcon
 {
-#warning XXX check for Panther compatibility --boredzo
 	return [self imageFromAddressBook:@"MultipleCards32"];
 }
 
