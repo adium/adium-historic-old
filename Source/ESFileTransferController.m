@@ -53,6 +53,8 @@ static ESFileTransferPreferences *preferences;
 
 - (BOOL)shouldOpenCompleteFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)_removeFileTransfer:(ESFileTransfer *)fileTransfer;
+
+- (NSString *)uniquePathForPath:(NSString *)inPath;
 @end
 
 @implementation ESFileTransferController
@@ -184,47 +186,15 @@ static ESFileTransferPreferences *preferences;
 		//If we should autoaccept, determine the local filename  and proceed to accept the request
 		localFilename = [preferredDownloadFolder stringByAppendingPathComponent:remoteFilename];
 		
-		/* If the file does not exist, immediately accept the receive request.
-		 * If it does, display a Save As dialog.
-		 */
-		if (![[NSFileManager defaultManager] fileExistsAtPath:localFilename]) {
-			[self _finishReceiveRequestForFileTransfer:fileTransfer localFilename:localFilename];
+		[self _finishReceiveRequestForFileTransfer:fileTransfer
+									 localFilename:[self uniquePathForPath:localFilename]];
 			
-		} else {
-			//Prompt for a location to save; savePanelDidEnd::: will release the retained fileTransfer and the savePanel
-			[[[NSSavePanel savePanel] retain] beginSheetForDirectory:preferredDownloadFolder
-			                                                    file:remoteFilename
-			                                          modalForWindow:nil
-			                                           modalDelegate:self
-			                                          didEndSelector:@selector(savePanelDidEnd:returnCode:contextInfo:)
-			                                             contextInfo:[fileTransfer retain]];
-		}
 	} else {
 		//Prompt to accept/deny
 		[ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
 															notifyingTarget:self
 																   selector:@selector(_finishReceiveRequestForFileTransfer:localFilename:)];
 	}
-}
-
-
-- (void)savePanelDidEnd:(NSSavePanel *)savePanel returnCode:(int)returnCode contextInfo:(ESFileTransfer *)fileTransfer
-{
-	NSString	*localFilename = nil;
-	
-	if (returnCode == NSOKButton) {
-		localFilename = [savePanel filename];
-	}
-
-	//Pass nil to cancel, if the user didn't press OK
-	[self  _finishReceiveRequestForFileTransfer:fileTransfer
-								  localFilename:localFilename];
-	
-	//Match the retain made when invoking the save panel above
-	[fileTransfer release];
-
-	//release the save panel too
-	[savePanel release];	
 }
 
 /*!
@@ -279,19 +249,16 @@ static ESFileTransferPreferences *preferences;
 		//Proceed only if /usr/bin/zip exists
 		if ([defaultManager fileExistsAtPath:launchPath]) {
 			NSString	*folderName = [inPath lastPathComponent];
-			NSString	*destinationName = folderName;
+			NSString	*destinationName;
 			NSArray		*arguments;
 			NSTask		*zipTask;
-			int			uniqueNameCounter = 0;
+			
 			BOOL		success = NO;
 
 			//Ensure our temporary directory exists [it never will the first time this method is called]
 			[defaultManager createDirectoryAtPath:tmpDir attributes:nil];
 
-			//Get a unique name if necessary. This could happen if we are sending this folder multiple times.
-			while ([defaultManager fileExistsAtPath:[tmpDir stringByAppendingPathComponent:destinationName]]) {
-				destinationName = [NSString stringWithFormat:@"%@-%i",folderName,++uniqueNameCounter];
-			}
+			destinationName = [self uniquePathForPath:[tmpDir stringByAppendingPathComponent:folderName]];
 
 			pathToArchive = [tmpDir stringByAppendingPathComponent:[destinationName stringByAppendingPathExtension:@"zip"]];
 
@@ -675,6 +642,59 @@ static ESFileTransferPreferences *preferences;
 	static NSImage	*eventImage = nil;
 	if (!eventImage) eventImage = [[NSImage imageNamed:@"pref-ft" forClass:[self class]] retain];
 	return eventImage;
+}
+
+#pragma mark Unique naming
+/*!
+ * @brief Generate a unique path given a path
+ *
+ * If nothing exists at the path, the path is returned.
+ * If a file or folder with the passed name already exists, a hyphen and a number is added, the number being the 
+ * smallest necessary for it to be unique.
+ *
+ * For example, if ~/Desktop/pr0n.jpg already exists, ~/Desktop/pr0n-1.jpg will be returned, if that file does not
+ * exist.  If ~/Desktop/pr0n-1.jpg exists, ~/Desktop/pr0n-2.jpg will be returned, and so on.
+ *
+ * @result The full unique path
+ */
+- (NSString *)uniquePathForPath:(NSString *)inPath
+{
+	NSFileManager	*defaultManager = [NSFileManager defaultManager];
+	NSString		*uniquePath = inPath;
+	NSString		*basePath = nil, *fileName = nil, *extension = nil;
+	BOOL			generatedParts = NO;
+	unsigned		uniqueNameCounter = 0;
+	
+	fileName = [fileName stringByDeletingPathExtension];
+
+	//Get a unique name if necessary. This could happen if we are sending this folder multiple times.
+	while ([defaultManager fileExistsAtPath:uniquePath]) {
+		NSString	*uniqueFilename;
+		
+		if (!generatedParts) {
+			basePath = [inPath stringByDeletingLastPathComponent];
+			fileName = [[inPath lastPathComponent] stringByDeletingPathExtension];
+			extension = [inPath pathExtension];
+
+			//If there is no extension, -[NSString pathExtension] returns @""
+			if (![extension length]) extension = nil;
+
+			generatedParts = YES;
+		}
+		
+		//Get a unique file name
+		uniqueFilename = [NSString stringWithFormat:@"%@-%i",fileName,++uniqueNameCounter];
+		
+		//Put it at the proper path
+		uniquePath = [basePath stringByAppendingPathComponent:uniqueFilename];
+		
+		//Append the extension if there is one
+		if (extension) {
+			uniquePath = [uniquePath stringByAppendingPathExtension:extension];
+		}
+	}
+	
+	return uniquePath;
 }
 
 #pragma mark Strings for sizes
