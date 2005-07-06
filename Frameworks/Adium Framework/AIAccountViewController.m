@@ -316,10 +316,10 @@
 #pragma mark Localization
 - (void)localizeStrings
 {
-	[textField_passwordLabel setLocalizedString:AILocalizedString(@"Password:","Label for the password field in the account preferences")];
-	[textField_typingLabel setLocalizedString:AILocalizedString(@"Typing:","Label beside the 'let others know when you are typing' checkbox in the account preferences")];
+	[label_password setLocalizedString:AILocalizedString(@"Password:","Label for the password field in the account preferences")];
+	[label_typing setLocalizedString:AILocalizedString(@"Typing:","Label beside the 'let others know when you are typing' checkbox in the account preferences")];
 	[checkBox_sendTyping setLocalizedString:AILocalizedString(@"Let others know when you are typing","Text of the typing preference checkbox in the account preferneces")];
-	[popUp_encryptionLabel setLocalizedString:AILocalizedString(@"Encryption:","Label besides the encryption preference menu")];
+	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:","Label besides the encryption preference menu")];
 }
 
 @end
