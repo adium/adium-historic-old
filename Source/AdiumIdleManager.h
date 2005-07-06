@@ -9,7 +9,7 @@
 
 @interface AdiumIdleManager : AIObject {
 	BOOL					machineIsIdle;
-	double					lastSeenIdle;
+	CFTimeInterval			lastSeenIdle;
 	NSTimer					*idleTimer;	
 }
 

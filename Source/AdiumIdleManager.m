@@ -7,13 +7,14 @@
 
 #import "AdiumIdleManager.h"
 #import "AIStatusController.h"
+#import <AIUtilities/CBApplicationAdditions.h>
 
 #define MACHINE_IDLE_THRESHOLD			30 	//30 seconds of inactivity is considered idle
 #define MACHINE_ACTIVE_POLL_INTERVAL	30	//Poll every 30 seconds when the user is active
 #define MACHINE_IDLE_POLL_INTERVAL		1	//Poll every second when the user is idle
 
 //Private idle function
-extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
+extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AdiumIdleManager (PRIVATE)
 - (void)_setMachineIsIdle:(BOOL)inIdle;
@@ -26,9 +27,11 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  * Posts AIMachineIsIdleNotification to adium's notification center when the machine becomes idle.
  * Posts AIMachineIsActiveNotification when the machine is no longer idle
  * Posts AIMachineIdleUpdateNotification periodically while idle with an NSDictionary userInfo
- *		containing an NSNumber double value @"Duration" and an NSDate @"IdleSince".
+ *		containing an NSNumber double value @"Duration" (a CFTimeInterval) and an NSDate @"IdleSince".
  */
 @implementation AdiumIdleManager
+
+static BOOL isOnTigerOrBetter = NO;
 
 /*!
  * @brief Initialize
@@ -36,6 +39,8 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
 - (id)init
 {
 	if ((self = [super init])) {
+		isOnTigerOrBetter = [NSApp isOnTigerOrBetter];
+
 		[self _setMachineIsIdle:NO];
 	}
 	
@@ -49,14 +54,24 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  * events from the user (such as mouse movement or keyboard input).  In addition to this method, the status controller
  * sends out notifications when the machine becomes idle, stays idle, and returns to an active state.
  */
-- (double)currentMachineIdle
+- (CFTimeInterval)currentMachineIdle
 {
-    double idleTime = CGSSecondsSinceLastInputEvent(-1);
-	
-	/* On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
-	* Here we check for that value and correctly return a 0 idle time.
-	*/
-	if (idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai
+	CFTimeInterval idleTime;
+
+	if (isOnTigerOrBetter) {
+		//CGEventSourceSecondsSinceLastEventType() added in 10.4
+		idleTime = CGEventSourceSecondsSinceLastEventType(kCGEventSourceStateCombinedSessionState,
+														  kCGAnyInputEventType);
+		
+	} else {
+		//CGSSecondsSinceLastInputEvent is a private function available in 10.2 and later
+		idleTime = CGSSecondsSinceLastInputEvent(-1);
+		
+		/* On MDD Powermacs, the above function will return a large value when the machine is active (perhaps a -1?).
+		* Here we check for that value and correctly return a 0 idle time.
+		*/
+		if (idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai		
+	}
 	
     return(idleTime);
 }
@@ -75,7 +90,7 @@ extern double CGSSecondsSinceLastInputEvent(unsigned long evType);
  */
 - (void)_idleCheckTimer:(NSTimer *)inTimer
 {
-	double	currentIdle = [self currentMachineIdle];
+	CFTimeInterval	currentIdle = [self currentMachineIdle];
 	
 	if (machineIsIdle) {
 		if (currentIdle < lastSeenIdle) {
