@@ -29,6 +29,10 @@
 
 #define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
+@interface AIAccountViewController (PRIVATE)
+- (void)localizeStrings;
+@end
+
 /*!
  * @class AIAccountViewController
  * @brief Base account view controller
@@ -69,6 +73,8 @@
 		if (!view_profile) [ourBundle loadNibFile:@"AccountProfile" externalNameTable:nameTable withZone:nil];
 		if (!view_options) [ourBundle loadNibFile:@"AccountOptions" externalNameTable:nameTable withZone:nil];
 		if (!view_privacy) [ourBundle loadNibFile:@"AccountPrivacy" externalNameTable:nameTable withZone:nil];
+		
+		[self localizeStrings];
 	}
 
     return self;
@@ -175,7 +181,9 @@
 		
 		//UID Label
 		NSString 	*userNameLabel = [[account service] userNameLabel];
-		[textField_accountUIDLabel setStringValue:[(userNameLabel ? userNameLabel : @"User Name") stringByAppendingString:@":"]];
+		[textField_accountUIDLabel setStringValue:[(userNameLabel ?
+													userNameLabel :
+													AILocalizedString(@"User Name", nil)) stringByAppendingString:@":"]];
 		
 		//UID
 		NSString	*formattedUID = [account formattedUID];
@@ -303,6 +311,15 @@
 - (NSString *)UIDPlaceholder
 {
 	return @"";
+}
+
+#pragma mark Localization
+- (void)localizeStrings
+{
+	[textField_passwordLabel setLocalizedString:AILocalizedString(@"Password:","Label for the password field in the account preferences")];
+	[textField_typingLabel setLocalizedString:AILocalizedString(@"Typing:","Label beside the 'let others know when you are typing' checkbox in the account preferences")];
+	[checkBox_sendTyping setLocalizedString:AILocalizedString(@"Let others know when you are typing","Text of the typing preference checkbox in the account preferneces")];
+	[popUp_encryptionLabel setLocalizedString:AILocalizedString(@"Encryption:","Label besides the encryption preference menu")];
 }
 
 @end

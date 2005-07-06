@@ -21,6 +21,11 @@
 #import <AIUtilities/ESDelayedTextField.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIListContact.h>
+
+@interface AIContactSettingsPane (PRIVATE)
+- (void)localizeTitles;
+@end
 
 @implementation AIContactSettingsPane
 
@@ -38,6 +43,8 @@
 	[popUp_encryption setMenu:[[adium contentController] encryptionMenuNotifyingTarget:self
 																		   withDefault:YES]];
 	[[popUp_encryption menu] setAutoenablesItems:NO];
+
+	[self localizeTitles];
 }
 
 //Preference view is closing
@@ -110,6 +117,13 @@
 	[listObject setPreference:[NSNumber numberWithInt:[sender tag]]
 					   forKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 						group:GROUP_ENCRYPTION];
+}
+
+- (void)localizeTitles
+{
+	[label_alias setLocalizedString:AILocalizedString(@"Alias:","Label beside the field for a contact's alias in the settings tab of the Get Infow indow")];
+	[label_notes setLocalizedString:AILocalizedString(@"Notes:","Label beside the field for contact notes in the Settings tab of the Get Info window")];
+	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:","Label besides the field for contact encryption settings")];
 }
 
 @end
