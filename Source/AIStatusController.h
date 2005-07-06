@@ -17,7 +17,7 @@
 #import <Adium/AIObject.h>
 #import <Adium/AIStatus.h>
 
-@class AIService;
+@class AIService, AdiumIdleManager;
 @protocol AIController, AIListObjectObserver;
 
 //Status State Notifications
@@ -117,11 +117,6 @@
 	NSMutableSet			*accountsToConnect;
 	BOOL					isProcessingGlobalChange;
 
-	//Machine idle tracking
-	BOOL					machineIsIdle;
-	double					lastSeenIdle;
-	NSTimer					*idleTimer;
-
 	//State menu support
 	NSMutableArray			*stateMenuPluginsArray;
 	NSMutableDictionary		*stateMenuItemArraysDict;
@@ -129,6 +124,8 @@
 	NSArray					*_sortedFullStateArray;
 	
 	NSMutableSet			*stateMenuItemsNeedingUpdating;
+	
+	AdiumIdleManager		*idleManager;
 }
 
 - (NSNumber *)nextUniqueStatusID;
