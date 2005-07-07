@@ -122,6 +122,8 @@
 	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
 											  submenuType:AIAccountNoSubmenu
 										   showTitleVerbs:NO] retain];
+	
+	[self _configureTextFieldForAccount:[[popUp_service selectedItem] representedObject]];
 
     //Center the window
     [[self window] center];
