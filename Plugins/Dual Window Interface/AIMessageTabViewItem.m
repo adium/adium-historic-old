@@ -43,7 +43,7 @@
 //
 + (AIMessageTabViewItem *)messageTabWithView:(AIMessageViewController *)inMessageView
 {
-    return([[[self alloc] initWithMessageView:inMessageView] autorelease]);
+    return [[[self alloc] initWithMessageView:inMessageView] autorelease];
 }
 
 //init
@@ -72,7 +72,7 @@
     //Set our contents
     [self setView:[messageViewController view]];
 	
-    return(self);
+    return self;
 }
 
 //
@@ -91,13 +91,13 @@
 //Access to our message view controller
 - (AIMessageViewController *)messageViewController
 {
-    return(messageViewController);
+    return messageViewController;
 }
 
 //Our chat
 - (AIChat *)chat
 {
-	return([messageViewController chat]);
+	return [messageViewController chat];
 }
 
 //Our containing window
@@ -108,7 +108,7 @@
 	}
 }
 - (AIMessageWindowController *)container{
-	return(container);
+	return container;
 }
 
 
@@ -251,19 +251,19 @@
 
 	if (!image) image = [AIStatusIcons statusIconForUnknownStatusWithIconType:AIStatusIconTab direction:AIIconNormal];
 
-	return(image);
+	return image;
 }
 
 //Status icon is the status of this contact (away, idle, online, stranger)
 - (NSImage *)statusIcon
 {
-	return([[[messageViewController chat] listObject] displayArrayObjectForKey:@"Tab Status Icon"]);
+	return [[[messageViewController chat] listObject] displayArrayObjectForKey:@"Tab Status Icon"];
 }
 
 //State icon is the state of the contact (Typing, unviewed content)
 - (NSImage *)stateIcon
 {
-	return([[messageViewController chat] displayArrayObjectForKey:@"Tab State Icon"]);
+	return [[messageViewController chat] displayArrayObjectForKey:@"Tab State Icon"];
 }
 
 - (NSImage *)image
