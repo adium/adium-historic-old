@@ -14,6 +14,13 @@
 #import "AIContactController.h"
 #import <AIUtilities/AICompletingTextField.h>
 
+#define BLOCK_EDITOR_TITLE AILocalizedString(@"Block List","Block List Editor window title")
+#define BLOCK_DONE	AILocalizedString(@"Done","Done button for block list editor")
+#define BLOCK_BLOCK	AILocalizedString(@"Add","Add button for block list editor")
+#define BLOCK_CANCEL	AILocalizedString(@"Cancel","Cancel button for block list editor")
+#define BLOCK_ACCOUNT AILocalizedString(@"Account:",nil)
+#define BLOCK_BUDDY AILocalizedString(@"Buddy:",nil)
+
 @implementation RAFBlockEditorWindowController
 
 static RAFBlockEditorWindowController *sharedInstance = nil;
@@ -29,6 +36,12 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 
 - (void)windowDidLoad
 {
+	[[self window] setTitle:BLOCK_EDITOR_TITLE];
+	[doneButton setTitle:BLOCK_DONE];
+	[cancelButton setTitle:BLOCK_CANCEL];
+	[blockButton setTitle:BLOCK_BLOCK];
+	[accountText setStringValue:BLOCK_ACCOUNT];
+	[buddyText setStringValue:BLOCK_BUDDY];
 	[self willChangeValueForKey:@"listContents"];
 	listContents = [[NSMutableArray alloc] init];
 	NSMenu *tmpMenu = [[NSMenu alloc] init];

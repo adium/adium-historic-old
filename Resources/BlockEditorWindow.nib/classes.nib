@@ -33,8 +33,11 @@
             CLASS = RAFBlockEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountText = NSTextField; 
                 accounts = NSPopUpButton; 
                 blockButton = NSButton; 
+                buddyText = NSTextField; 
+                cancelButton = NSButton; 
                 doneButton = NSButton; 
                 field = AICompletingTextField; 
                 sheet = NSWindow; 
