@@ -75,6 +75,7 @@
 	<string>ESStatusPreferencesPlugin</string>
 	<string>ESAutoAwayPlugin</string>
 	<string>ESAwayStatusWindowPlugin</string>
+	<string>RAFBlockEditorPlugin</string>
 	<string>SMContactListShowBehaviorPlugin</string>
 	<string>ESiTunesPlugin</string>
 </array>

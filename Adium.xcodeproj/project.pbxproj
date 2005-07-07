@@ -48,6 +48,13 @@
 		07FC98320827D33C006C56D6 /* AIBookmarksImport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */; };
 		07FC987B0827D73F006C56D6 /* AIBookmarksImporterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 348EF1B4080B2F3D0015E0FC /* AIBookmarksImporterPlugin.m */; };
 		07FC987C0827D747006C56D6 /* AIBookmarksImporterPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 348EF1B3080B2F3D0015E0FC /* AIBookmarksImporterPlugin.h */; };
+		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
+		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
+		110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */; };
+		110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */; };
+		110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 110763F908676D04005987A5 /* BlockEditorWindow.nib */; };
+		11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */ = {isa = PBXBuildFile; fileRef = 11B648DD087C62C5008F528B /* RAFDragArrayController.h */; };
+		11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */ = {isa = PBXBuildFile; fileRef = 11B648DE087C62C5008F528B /* RAFDragArrayController.m */; };
 		3402D38B07CB04FC0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402D38A07CB04FC0044F818 /* Localizable.strings */; };
 		3402D5A5080DBC91004E50B4 /* SortConfiguration.nib in Resources */ = {isa = PBXBuildFile; fileRef = 347E791D07CAA52300350507 /* SortConfiguration.nib */; };
 		3402E01B07CB0CED0044F818 /* ESFileTransferProgressView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3402E01A07CB0CEC0044F818 /* ESFileTransferProgressView.nib */; };
@@ -1511,6 +1518,13 @@
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
 		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIBookmarksImport.framework; path = ../../adium/build/Development/AIBookmarksImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcodeproj; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcodeproj"; sourceTree = "<group>"; };
+		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
+		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
+		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
+		110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorWindowController.m; path = Source/RAFBlockEditorWindowController.m; sourceTree = "<group>"; };
+		110763F908676D04005987A5 /* BlockEditorWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = BlockEditorWindow.nib; path = Resources/BlockEditorWindow.nib; sourceTree = "<group>"; };
+		11B648DD087C62C5008F528B /* RAFDragArrayController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFDragArrayController.h; path = Source/RAFDragArrayController.h; sourceTree = "<group>"; };
+		11B648DE087C62C5008F528B /* RAFDragArrayController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFDragArrayController.m; path = Source/RAFDragArrayController.m; sourceTree = "<group>"; };
 		11C157D804A88E04008E0C76 /* AIEmoticonController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEmoticonController.h; path = Source/AIEmoticonController.h; sourceTree = "<group>"; };
 		11C157D904A88E04008E0C76 /* AIEmoticonController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonController.m; path = Source/AIEmoticonController.m; sourceTree = "<group>"; };
 		3402D38307CB04DB0044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Frameworks/Adium Framework/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2086,7 +2100,7 @@
 		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIHyperlinks.framework.xcodeproj; path = "Frameworks/AIHyperlinks Framework/AIHyperlinks.framework.xcodeproj"; sourceTree = "<group>"; };
-		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AIHyperlinks.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIHyperlinks.framework; path = "Frameworks/AIHyperlinks Framework/build/AIHyperlinks.framework"; sourceTree = "<group>"; };
 		3498FE9107F488EF0004B79A /* Italian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9707F488FD0004B79A /* Dutch */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Dutch; path = "Plugins/Gaim Service/Dutch.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9807F489020004B79A /* French */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = French; path = "Plugins/Gaim Service/French.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2400,7 +2414,7 @@
 		34D836F307CBF960006466F2 /* QuickTime.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickTime.framework; path = /System/Library/Frameworks/QuickTime.framework; sourceTree = "<absolute>"; };
 		34D836FF07CBF979006466F2 /* AudioUnit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioUnit.framework; path = /System/Library/Frameworks/AudioUnit.framework; sourceTree = "<absolute>"; };
 		34D8370007CBF97A006466F2 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = /System/Library/Frameworks/AudioToolbox.framework; sourceTree = "<absolute>"; };
-		34D8379307CC3222006466F2 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		34D8379307CC3222006466F2 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIUtilities.framework; path = "Frameworks/AIUtilities Framework/build/AIUtilities.framework"; sourceTree = "<group>"; };
 		34DFF46007A5EABF00B92233 /* ESSecureMessagingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESSecureMessagingPlugin.h; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.h"; sourceTree = "<group>"; };
 		34DFF46107A5EABF00B92233 /* ESSecureMessagingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESSecureMessagingPlugin.m; path = "Plugins/Secure Messaging/ESSecureMessagingPlugin.m"; sourceTree = "<group>"; };
 		34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "Lock_Unlocked State.png"; path = "Plugins/Secure Messaging/Lock_Unlocked State.png"; sourceTree = "<group>"; };
@@ -4011,8 +4025,15 @@
 		34C2D31006334A460018E5D2 /* Blocking */ = {
 			isa = PBXGroup;
 			children = (
+				110763F908676D04005987A5 /* BlockEditorWindow.nib */,
+				110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */,
+				110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */,
+				110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */,
+				110763F408676CC9005987A5 /* RAFBlockEditorWindowController.m */,
 				9E125C6307D3571400AA91C5 /* ESBlockingPlugin.h */,
 				9E125C6407D3571400AA91C5 /* ESBlockingPlugin.m */,
+				11B648DD087C62C5008F528B /* RAFDragArrayController.h */,
+				11B648DE087C62C5008F528B /* RAFDragArrayController.m */,
 			);
 			name = Blocking;
 			sourceTree = "<group>";
@@ -6209,6 +6230,9 @@
 				4BC540B808648322003CD69E /* AdiumFormatting.h in Headers */,
 				4BC5419008649CC6003CD69E /* AdiumContentFiltering.h in Headers */,
 				346CFDC6087B7836009711C8 /* AdiumIdleManager.h in Headers */,
+				110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */,
+				110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */,
+				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7389,6 +7413,7 @@
 				4B8C3CE90825F60B004B9F45 /* AccountListPreferences.nib in Resources */,
 				071C56330827933100399C0F /* Shared Dock Icon Images in Resources */,
 				4BB9972F083D1A74006ACD6F /* ContactListShowBehavior.nib in Resources */,
+				110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7884,7 +7909,10 @@
 				4BDAB9940861C662009FB73B /* AdiumTyping.m in Sources */,
 				4BC540B908648322003CD69E /* AdiumFormatting.m in Sources */,
 				4BC5419108649CC6003CD69E /* AdiumContentFiltering.m in Sources */,
+				110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */,
+				110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */,
 				346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */,
+				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
