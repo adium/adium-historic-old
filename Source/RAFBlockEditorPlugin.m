@@ -11,7 +11,7 @@
 #import "AIAccount.h"
 #import "AIAccountController.h"
 
-#define BLOCK_EDITOR @"Block List Editor..."
+#define BLOCK_EDITOR AILocalizedString(@"Block List Editor...","Block List Editor menu item")
 
 @implementation RAFBlockEditorPlugin
 

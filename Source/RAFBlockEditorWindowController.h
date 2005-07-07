@@ -19,6 +19,9 @@
 	IBOutlet NSPopUpButton		*accounts;
 	IBOutlet AICompletingTextField		*field;
 	IBOutlet NSButton			*blockButton;
+	IBOutlet NSButton			*cancelButton;
+	IBOutlet NSTextField		*accountText;
+	IBOutlet NSTextField		*buddyText;
 	
 	NSMutableArray				*listContents;
 }
