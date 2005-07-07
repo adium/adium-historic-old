@@ -20,6 +20,8 @@
 #define BLOCK_CANCEL	AILocalizedString(@"Cancel","Cancel button for block list editor")
 #define BLOCK_ACCOUNT AILocalizedString(@"Account:",nil)
 #define BLOCK_BUDDY AILocalizedString(@"Buddy:",nil)
+#define BLOCK_BUDDY_COL AILocalizedString(@"Contact","Title of column containing user IDs of blocked contacts")
+#define BLOCK_ACCOUNT_COL AILocalizedString(@"Account","Title of column containing blocking accounts")
 
 @implementation RAFBlockEditorWindowController
 
@@ -42,6 +44,8 @@ static RAFBlockEditorWindowController *sharedInstance = nil;
 	[blockButton setTitle:BLOCK_BLOCK];
 	[accountText setStringValue:BLOCK_ACCOUNT];
 	[buddyText setStringValue:BLOCK_BUDDY];
+	[[buddyCol headerCell] setTitle:BLOCK_BUDDY_COL];
+	[[accountCol headerCell] setTitle:BLOCK_ACCOUNT_COL];
 	[self willChangeValueForKey:@"listContents"];
 	listContents = [[NSMutableArray alloc] init];
 	NSMenu *tmpMenu = [[NSMenu alloc] init];

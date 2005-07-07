@@ -22,6 +22,8 @@
 	IBOutlet NSButton			*cancelButton;
 	IBOutlet NSTextField		*accountText;
 	IBOutlet NSTextField		*buddyText;
+	IBOutlet NSTableColumn		*buddyCol;
+	IBOutlet NSTableColumn		*accountCol;
 	
 	NSMutableArray				*listContents;
 }
