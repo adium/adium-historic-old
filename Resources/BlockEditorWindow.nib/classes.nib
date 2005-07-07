@@ -33,9 +33,11 @@
             CLASS = RAFBlockEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                accountCol = NSTableColumn; 
                 accountText = NSTextField; 
                 accounts = NSPopUpButton; 
                 blockButton = NSButton; 
+                buddyCol = NSTableColumn; 
                 buddyText = NSTextField; 
                 cancelButton = NSButton; 
                 doneButton = NSButton; 
