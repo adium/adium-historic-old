@@ -72,13 +72,13 @@
 		AIAccount		*account;
 
 		while ((account = [enumerator nextObject])) {	
-			if ([account online] && [[account service] canCreateGroupChats]) return(YES);
+			if ([account online] && [[account service] canCreateGroupChats]) return YES;
 		}
 		
-		return(NO);
+		return NO;
 	}
 	
-	return(YES);
+	return YES;
 }
 
 @end
