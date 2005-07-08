@@ -19,7 +19,7 @@
 #import "AIPreferenceController.h"
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 /* libotr headers */
 #import <libotr/proto.h>

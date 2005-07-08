@@ -24,7 +24,7 @@
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimOTR.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIChat.h>

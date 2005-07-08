@@ -28,10 +28,10 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/CBObjectAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESSystemNetworkDefaults.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AISystemNetworkDefaults.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -464,11 +464,23 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Chats ------------------------------------------------------------
 #pragma mark Chats
 
-//Add a new chat - this will ultimately call -(BOOL)openChat:(AIChat *)chat below.
+/*
+ * @brief Called by Gaim code when a chat should be opened by the interface
+ *
+ * If the user sent an initial message, this will be triggered and have no effect.
+ *
+ * If a remote user sent an initial message, however, a chat will be created without being opened.  This call is our
+ * cue to actually open chat.
+ *
+ * Another situation in which this is relevant is when we request joining a group chat; the chat should only be actually
+ * opened once the server notifies us that we are in the room.
+ *
+ * This will ultimately call -[CBGaimAccount openChat:] below if the chat was not previously open.
+ */
 - (oneway void)addChat:(AIChat *)chat
 {
 	//Open the chat
-	[[adium chatController] openChat:chat];
+	[[adium interfaceController] openChat:chat]; 
 }
 
 //Open a chat for Adium
@@ -1379,7 +1391,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		
 		GaimDebug(@"Loading proxy dictionary.");
 		
-		if ((systemProxySettingsDictionary = [ESSystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
+		if ((systemProxySettingsDictionary = [AISystemNetworkDefaults systemProxySettingsDictionaryForType:adiumProxyType])) {
 
 			GaimDebug(@"Retrieved %@",systemProxySettingsDictionary);
 

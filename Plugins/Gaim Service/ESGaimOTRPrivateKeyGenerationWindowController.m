@@ -7,6 +7,7 @@
 //
 
 #import "ESGaimOTRPrivateKeyGenerationWindowController.h"
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface ESGaimOTRPrivateKeyGenerationWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forIdentifier:(NSString *)inIdentifier;
@@ -68,7 +69,7 @@ static NSMutableDictionary	*keyGenerationControllerDict = nil;
 {
 	[super windowDidLoad];
 
-	[[self window] setTitle:AILocalizedString(@"Please wait...",nil)];
+	[[self window] setTitle:[AILocalizedString(@"Please wait",nil) stringByAppendingEllipsis]];
 	[[self window] center];
 
 	[progressIndicator startAnimation:nil];

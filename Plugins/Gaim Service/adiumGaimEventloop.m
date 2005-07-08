@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimEventloop.h"
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;

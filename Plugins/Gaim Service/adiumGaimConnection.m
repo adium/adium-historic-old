@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimConnection.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 static void adiumGaimConnConnectProgress(GaimConnection *gc, const char *text, size_t step, size_t step_count)
 {

@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimConversation.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentTyping.h>
 #import <Adium/AIHTMLDecoder.h>

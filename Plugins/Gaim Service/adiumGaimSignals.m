@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimSignals.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 {
