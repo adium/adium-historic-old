@@ -67,6 +67,8 @@
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
 		34048AC70617CB4C004D0B7E /* SLGaimCocoaAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */; };
 		34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
+		34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */; };
+		34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
@@ -1538,6 +1540,8 @@
 		3402E06C07CB0F9D0044F818 /* English */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist.strings; name = English; path = "Plugins/WebKit Message View/English.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = SLGaimCocoaAdapter.h; path = "Plugins/Gaim Service/SLGaimCocoaAdapter.h"; sourceTree = "<group>"; };
 		34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = SLGaimCocoaAdapter.m; path = "Plugins/Gaim Service/SLGaimCocoaAdapter.m"; sourceTree = "<group>"; };
+		34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESImageViewWithImagePicker.h; path = "Frameworks/Adium Framework/ESImageViewWithImagePicker.h"; sourceTree = "<group>"; };
+		34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESImageViewWithImagePicker.m; path = "Frameworks/Adium Framework/ESImageViewWithImagePicker.m"; sourceTree = "<group>"; };
 		3408254D075B078B00703011 /* Dock Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Dock Icons"; path = "Resources/Dock Icons"; sourceTree = "<group>"; };
 		3408268E075B5CB900703011 /* Awake.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Awake.png; path = "Resources/Dock Icons/Adiumy Green.AdiumIcon/Awake.png"; sourceTree = "<group>"; };
 		3408268F075B5CB900703011 /* Flap.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Flap.png; path = "Resources/Dock Icons/Adiumy Green.AdiumIcon/Flap.png"; sourceTree = "<group>"; };
@@ -3253,7 +3257,7 @@
 		29B97314FDCFA39411CA2CEA /* CocAIMe2 */ = {
 			isa = PBXGroup;
 			children = (
-				34B27293083ACA900092A5A0 /* DeadStrings.h */,
+				34057EF3087E024400664D64 /* Keeping 0.8x and 0.90 translation in sync */,
 				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
 				4B191D8E0611C11400E8A4E7 /* ToDoList.txt */,
 				3474DFFC08254F3500BF30F0 /* Copyright.txt */,
@@ -3300,6 +3304,16 @@
 				9C103FAE057127A500F3C158 /* WebKit.framework */,
 			);
 			name = "Linked Frameworks";
+			sourceTree = "<group>";
+		};
+		34057EF3087E024400664D64 /* Keeping 0.8x and 0.90 translation in sync */ = {
+			isa = PBXGroup;
+			children = (
+				34B27293083ACA900092A5A0 /* DeadStrings.h */,
+				34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */,
+				34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */,
+			);
+			name = "Keeping 0.8x and 0.90 translation in sync";
 			sourceTree = "<group>";
 		};
 		34086A1005E5E17B00ABB759 /* User Icon Handling */ = {
@@ -4876,6 +4890,8 @@
 			children = (
 				F57938EF033E745F01A8010A /* AIAccountController.h */,
 				F57938AA033E737001A8010A /* AIAccountController.m */,
+				34B82C7F085A85D800864531 /* AIChatController.h */,
+				34B82C80085A85D800864531 /* AIChatController.m */,
 				F55B415C03AB8B5601A8010A /* AIContentController.h */,
 				F55B415D03AB8B5601A8010A /* AIContentController.m */,
 				F57938F9033E745F01A8010A /* AISoundController.h */,
@@ -5911,8 +5927,6 @@
 		F5BF8A6002C7D2F401A8010A /* Core Controllers */ = {
 			isa = PBXGroup;
 			children = (
-				34B82C7F085A85D800864531 /* AIChatController.h */,
-				34B82C80085A85D800864531 /* AIChatController.m */,
 				6CF42677057763E100F27FAA /* ESContactAlertsController.h */,
 				6CF42678057763E200F27FAA /* ESContactAlertsController.m */,
 				F57938F6033E745F01A8010A /* AIContactController.h */,
@@ -6320,6 +6334,7 @@
 				4B22E160085CAE2F001864DE /* AIAbstractListObjectMenu.h in Headers */,
 				4B22E162085CAE2F001864DE /* AIContactMenu.h in Headers */,
 				4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */,
+				34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7998,6 +8013,7 @@
 				4B22E161085CAE2F001864DE /* AIAbstractListObjectMenu.m in Sources */,
 				4B22E163085CAE2F001864DE /* AIContactMenu.m in Sources */,
 				4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */,
+				34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
