@@ -31,8 +31,8 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>

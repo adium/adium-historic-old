@@ -22,7 +22,7 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>

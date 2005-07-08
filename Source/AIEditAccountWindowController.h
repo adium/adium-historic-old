@@ -16,14 +16,14 @@
 
 #import <Adium/AIWindowController.h>
 
-@class AIAccountProxySettings, AIAccountViewController, ESImageViewWithImagePicker;
+@class AIAccountProxySettings, AIAccountViewController, AIImageViewWithImagePicker;
 
 @interface AIEditAccountWindowController : AIWindowController {
 	//Account preferences
 	IBOutlet	NSButton					*button_chooseIcon;
 	IBOutlet	NSTextField					*textField_accountDescription;
 	IBOutlet	NSTextField					*textField_serviceName;
-	IBOutlet	ESImageViewWithImagePicker  *imageView_userIcon;
+	IBOutlet	AIImageViewWithImagePicker  *imageView_userIcon;
     IBOutlet	NSTabView					*tabView_auxiliary;
 	IBOutlet	NSButton					*checkBox_autoConnect;
 	IBOutlet	NSButton					*button_cancel;

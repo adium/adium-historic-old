@@ -19,7 +19,7 @@
 #import "ESContactAlertsController.h"
 #import "ESEventSoundAlertDetailPane.h"
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define EVENT_SOUNDS_ALERT_SHORT	AILocalizedString(@"Play a sound",nil)
 #define EVENT_SOUNDS_ALERT_LONG		AILocalizedString(@"Play the sound \"%@\"",nil)

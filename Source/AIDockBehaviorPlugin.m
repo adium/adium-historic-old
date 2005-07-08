@@ -18,7 +18,7 @@
 #import "AIDockController.h"
 #import "ESContactAlertsController.h"
 #import "ESDockAlertDetailPane.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define DOCK_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Bounce the dock icon",nil)
 #define DOCK_BEHAVIOR_ALERT_LONG	AILocalizedString(@"Bounce the dock icon %@",nil)

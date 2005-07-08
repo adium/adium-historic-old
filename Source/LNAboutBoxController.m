@@ -20,8 +20,8 @@
 #import "LNAboutBoxController.h"
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 
 #define ABOUT_BOX_NIB					@"AboutBox"
 #define	ADIUM_SITE_LINK					AILocalizedString(@"http://www.adiumx.com/","Adium homepage. Only localize if a translated version of the page exists.")

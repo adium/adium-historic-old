@@ -7,7 +7,7 @@
 //
 
 #import "AIAbstractListObjectMenu.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>

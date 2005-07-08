@@ -20,7 +20,7 @@
 #import "ESEventSoundAlertDetailPane.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AILocalizationTextField.h>
 
 #define PLAY_A_SOUND			AILocalizedString(@"Play a sound",nil)

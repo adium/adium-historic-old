@@ -26,7 +26,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIEventAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <Adium/AIStatusIcons.h>

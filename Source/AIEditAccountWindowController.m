@@ -22,8 +22,8 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
 #import <AIUtilities/AIViewAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageViewWithImagePicker.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIAccountViewController.h>
 #import <Adium/AIService.h>
@@ -306,15 +306,15 @@
 }
 
 
-// ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
-#pragma mark ESImageViewWithImagePicker Delegate
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+// AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+#pragma mark AIImageViewWithImagePicker Delegate
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
 	[userIconData release];
 	userIconData = [imageData retain];
 }
 
-- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
 {
 	[userIconData release]; userIconData = nil;
 	didDeleteUserIcon = YES;

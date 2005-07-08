@@ -17,7 +17,7 @@
 #import "AIPreferenceController.h"
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 
 @interface ESContactAlertsController (PRIVATE)

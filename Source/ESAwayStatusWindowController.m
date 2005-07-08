@@ -19,7 +19,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AITableViewAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 
 #define AWAY_STATUS_WINDOW_NIB					@"AwayStatusWindow"

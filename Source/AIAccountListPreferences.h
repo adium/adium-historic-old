@@ -16,7 +16,7 @@
 
 #import <Adium/AIPreferencePane.h>
 
-@class AIAccountController, AIAccount, AIAutoScrollView, ESImageViewWithImagePicker;
+@class AIAccountController, AIAccount, AIAutoScrollView, AIImageViewWithImagePicker;
 @protocol AIListObjectObserver;
 
 @interface AIAccountListPreferences : AIPreferencePane <AIListObjectObserver> {
