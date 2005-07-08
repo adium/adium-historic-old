@@ -12,6 +12,7 @@
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #define	STATUS_DEFAULT_PREFS @"StatusDefaults"
 
@@ -34,7 +35,7 @@
     preferences = [[ESStatusPreferences preferencePaneForPlugin:self] retain];	
 	
 	//Add our menu item
-	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Status Menu...",nil)
+	menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Edit Status Menu",nil) stringByAppendingEllipsis]
 																	target:self
 																	action:@selector(showStatusPreferences:)
 															 keyEquivalent:@""];

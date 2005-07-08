@@ -319,7 +319,7 @@
 	//Adium menu
 	[menuItem_aboutAdium setTitle:AILocalizedString(@"About Adium",nil)];
 	[menuItem_adiumXtras setTitle:AILocalizedString(@"Adium Xtras",nil)];
-	[menuItem_preferences setTitle:AILocalizedString(@"Preferences...",nil)];
+	[menuItem_preferences setTitle:[AILocalizedString(@"Preferences",nil) stringByAppendingEllipsis]];
 	[menuItem_hideAdium setTitle:AILocalizedString(@"Hide Adium",nil)];
 	[menuItem_hideOthers setTitle:AILocalizedString(@"Hide Others",nil)];
 	[menuItem_showAll setTitle:AILocalizedString(@"Show All",nil)];
@@ -328,9 +328,9 @@
 	//File menu
 	[menuItem_close setTitle:AILocalizedString(@"Close",nil)];
 	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat",nil)];
-	[menuItem_saveAs setTitle:AILocalizedString(@"Save As...",nil)];
-	[menuItem_pageSetup setTitle:AILocalizedString(@"Page Setup...",nil)];
-	[menuItem_print setTitle:AILocalizedString(@"Print...",nil)];
+	[menuItem_saveAs setTitle:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]];
+	[menuItem_pageSetup setTitle:[AILocalizedString(@"Page Setup",nil) stringByAppendingEllipsis]];
+	[menuItem_print setTitle:[AILocalizedString(@"Print",nil) stringByAppendingEllipsis]];
 
 	//Edit menu
 	[menuItem_cut setTitle:AILocalizedString(@"Cut",nil)];
@@ -339,7 +339,7 @@
 	[menuItem_pasteFormatted setTitle:AILocalizedString(@"Paste Formatted",nil)];
 	[menuItem_clear setTitle:AILocalizedString(@"Clear",nil)];
 	[menuItem_selectAll setTitle:AILocalizedString(@"Select All",nil)];
-	
+
 #define TITLE_FIND AILocalizedString(@"Find",nil)
 	[menuItem_find setTitle:TITLE_FIND];
 	[menuItem_findCommand setTitle:[TITLE_FIND stringByAppendingEllipsis]];
@@ -347,7 +347,7 @@
 	[menuItem_findPrevious setTitle:AILocalizedString(@"Find Previous",nil)];
 	[menuItem_findUseSelectionForFind setTitle:AILocalizedString(@"Use Selection for Find",nil)];
 	[menuItem_findJumpToSelection setTitle:AILocalizedString(@"Jump to Selection",nil)];
-	
+
 #define TITLE_SPELLING AILocalizedString(@"Spelling",nil)
 	[menuItem_spelling setTitle:TITLE_SPELLING];
 	[menuItem_spellingCommand setTitle:[TITLE_SPELLING stringByAppendingEllipsis]];
@@ -359,7 +359,7 @@
 	[menuItem_stopSpeaking setTitle:AILocalizedString(@"Stop Speaking",nil)];
 	
 	//View menu
-	[menuItem_customizeToolbar setTitle:AILocalizedString(@"Customize Toolbar...",nil)];
+	[menuItem_customizeToolbar setTitle:[AILocalizedString(@"Customize Toolbar",nil) stringByAppendingEllipsis]];
 
 	//Format menu
 	[menuItem_bold setTitle:AILocalizedString(@"Bold",nil)];

@@ -17,10 +17,11 @@
 #import "ESFileTransferProgressRow.h"
 #import "ESFileTransferProgressView.h"
 #import "ESFileTransferProgressWindowController.h"
-#import <AIUtilities/AIMenuAdditions.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIUserIcons.h>
 #import <Adium/ESFileTransfer.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #define	BYTES_RECEIVED		[NSString stringWithFormat:AILocalizedString(@"%@ received","(a bytes string) received"),bytesString]
 #define	BYTES_SENT			[NSString stringWithFormat:AILocalizedString(@"%@ sent","(a bytes string) sent"),bytesString]
@@ -197,11 +198,11 @@
 	}
 
 	if (type == Unknown_FileTransfer || status == Unknown_Status_FileTransfer || status == Not_Started_FileTransfer) {
-		transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Initiating file transfer...",nil)];		
+		transferBytesStatus = [AILocalizedString(@"Initiating file transfer",nil) stringByAppendingEllipsis];
 	} else {		
 		switch (status) {
 			case Accepted_FileTransfer:
-				transferBytesStatus = [NSString stringWithFormat:AILocalizedString(@"Accepted file transfer...",nil)];		
+				transferBytesStatus = [AILocalizedString(@"Accepted file transfer",nil) stringByAppendingEllipsis];
 			break;
 			case In_Progress_FileTransfer:
 			{

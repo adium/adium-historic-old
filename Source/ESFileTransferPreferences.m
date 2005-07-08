@@ -18,8 +18,9 @@
 #import "ESFileTransferController.h"
 #import <Adium/AILocalizationButton.h>
 #import <Adium/AILocalizationTextField.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface ESFileTransferPreferences (PRIVATE)
 - (NSMenu *)downloadLocationMenu;
@@ -154,7 +155,7 @@
 	[menu addItem:[NSMenuItem separatorItem]];
 	
 	//Create the menu item for changing the current download folder
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Other...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Other",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(selectOtherDownloadFolder:)
 															  keyEquivalent:@""] autorelease];

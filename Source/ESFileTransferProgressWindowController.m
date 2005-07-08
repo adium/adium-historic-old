@@ -20,7 +20,7 @@
 #import <Adium/ESFileTransfer.h>
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/BZGenericViewCell.h>
+#import <AIUtilities/AIGenericViewCell.h>
 
 #define FILE_TRANSFER_PROGRESS_NIB			@"FileTransferProgressWindow"
 #define KEY_TRANSFER_PROGRESS_WINDOW_FRAME	@"Transfer Progress Window Frame"
@@ -133,7 +133,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	}
 
 	//Configure the outline view
-	BZGenericViewCell	*cell = [[[BZGenericViewCell alloc] init] autorelease];
+	AIGenericViewCell	*cell = [[[AIGenericViewCell alloc] init] autorelease];
 	[cell setDrawsGradientHighlight:YES];
 	[[[outlineView tableColumns] objectAtIndex:0] setDataCell:cell];
 

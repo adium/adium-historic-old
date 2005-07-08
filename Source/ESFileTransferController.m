@@ -25,15 +25,16 @@
 #import "ESFileTransferRequestPromptController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/CBObjectAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/ESFileTransfer.h>
 
-#define SEND_FILE					AILocalizedString(@"Send File...",nil)
+#define SEND_FILE					[AILocalizedString(@"Send File",nil) stringByAppendingEllipsis]
 #define CONTACT						AILocalizedString(@"Contact",nil)
 
 #define	SEND_FILE_IDENTIFIER		@"SendFile"

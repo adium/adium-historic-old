@@ -18,7 +18,8 @@
 #import "ESFileTransferProgressView.h"
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIRolloverButton.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 #define	NORMAL_TEXT_COLOR		[NSColor controlTextColor]
 #define	SELECTED_TEXT_COLOR		[NSColor whiteColor]
@@ -82,7 +83,7 @@
 {
 	[textField_fileName setStringValue:(inFileName ? 
 									   inFileName : 
-									   AILocalizedString(@"Initializing transfer...",nil))];
+									   [AILocalizedString(@"Initializing transfer",nil) stringByAppendingEllipsis])];
 }
 - (void)setIconImage:(NSImage *)inIconImage
 {

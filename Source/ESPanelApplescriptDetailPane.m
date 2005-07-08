@@ -18,6 +18,7 @@
 #import "ESApplescriptContactAlertPlugin.h"
 #import <Adium/AILocalizationTextField.h>
 #import <Adium/AILocalizationButton.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface ESPanelApplescriptDetailPane (PRIVATE)
 - (void)setScriptPath:(NSString *)inPath;
@@ -46,7 +47,7 @@
 	scriptPath = nil;
 	
 	[label_applescript setLocalizedString:AILocalizedString(@"Applescript:",nil)];
-	[button_browse setLocalizedString:AILocalizedString(@"Browse...",nil)];
+	[button_browse setLocalizedString:[AILocalizedString(@"Browse",nil) stringByAppendingEllipsis]];
 }
 
 /*!

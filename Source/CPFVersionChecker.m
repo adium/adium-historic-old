@@ -21,8 +21,9 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIHostReachabilityMonitor.h>
+#import <AIUtilities/AIStringAdditions.h>
 
-#define VERSION_CHECKER_TITLE		AILocalizedString(@"Check for Updates...",nil)
+#define VERSION_CHECKER_TITLE		[AILocalizedString(@"Check for Updates",nil) stringByAppendingEllipsis]
 #define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
 #define VERSION_PLIST_HOST			@"www.adiumx.com"
 #define VERSION_PLIST_KEY			@"adium-version"
