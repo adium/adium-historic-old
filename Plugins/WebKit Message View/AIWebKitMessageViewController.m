@@ -670,24 +670,23 @@ static NSArray *draggedTypes = nil;
 	NSMutableArray *webViewMenuItems = [[defaultMenuItems mutableCopy] autorelease];
 	AIListContact	*chatListObject = [chat listObject];
 
+	//Remove default items we don't want
 	if (webViewMenuItems) {
-		NSImage			*image;
+		NSEnumerator	*enumerator;
+		NSMenuItem		*menuItem;
 		
-		if ((image = [element objectForKey:WebElementImageKey])) {
-			//Remove the first two items, which are "Open Image in New Window" and "Download Image"
-			[webViewMenuItems removeObjectAtIndex:0];
-			[webViewMenuItems removeObjectAtIndex:0];
-			
-			//XXX - Save Image As... item with the NSImage as representedObject
-		}
+		enumerator = [defaultMenuItems objectEnumerator];
+		while ((menuItem = [enumerator nextObject])) {
+			NSString	*menuItemTitle = [menuItem title];
 
-		if ([webViewMenuItems count] >= 1) {
-			NSString	*nextMenuItemTitle = [[webViewMenuItems objectAtIndex:0] title];
-			if (nextMenuItemTitle &&
-			   ([nextMenuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame)) {
-				//Remove the next item, which is "Reload"
-				[webViewMenuItems removeObjectAtIndex:0];			
-			}
+			if (menuItemTitle &&
+				(([menuItemTitle localizedCaseInsensitiveCompare:@"Open Image in New Window"] == NSOrderedSame) ||
+				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Image"] == NSOrderedSame) ||
+				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Reload"] == NSOrderedSame) ||
+				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Open Link in New Window"] == NSOrderedSame) ||
+				 ([menuItemTitle localizedCaseInsensitiveCompare:@"Download Linked File"] == NSOrderedSame))) {
+				[webViewMenuItems removeObjectIdenticalTo:menuItem];
+			}			
 		}
 	}
 	
