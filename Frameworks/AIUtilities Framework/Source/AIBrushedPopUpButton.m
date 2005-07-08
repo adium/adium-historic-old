@@ -7,7 +7,7 @@
 //
 
 #import "AIBrushedPopUpButton.h"
-#import "ESImageAdditions.h"
+#import "AIImageAdditions.h"
 #import "AIWindowAdditions.h"
 
 #define TRIANGLE_PADDING_X 	2

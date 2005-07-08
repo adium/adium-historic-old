@@ -6,13 +6,13 @@
 //  Copyright (c) 2004-2005 The Adium Team. All rights reserved.
 //
 
-@class ESFloater, AICustomTabsView, AICustomTabCell;
+@class AIFloater, AICustomTabsView, AICustomTabCell;
 
 @interface AICustomTabDragWindow : NSObject {
 	NSImage				*floaterTabImage;
 	NSImage				*floaterWindowImage;
-	ESFloater			*dragTabFloater;
-	ESFloater			*dragWindowFloater;
+	AIFloater			*dragTabFloater;
+	AIFloater			*dragWindowFloater;
 	BOOL				fullWindow;
 	
 	BOOL				useFancyAnimations;

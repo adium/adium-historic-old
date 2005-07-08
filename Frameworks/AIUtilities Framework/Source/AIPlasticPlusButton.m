@@ -6,7 +6,7 @@
 //
 
 #import "AIPlasticPlusButton.h"
-#import "ESImageAdditions.h"
+#import "AIImageAdditions.h"
 
 @implementation AIPlasticPlusButton
 

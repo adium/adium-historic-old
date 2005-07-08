@@ -20,7 +20,7 @@
 #import "AICustomTabDragging.h"
 #import "AIArrayAdditions.h"
 #import "AIWindowAdditions.h"
-#import "ESImageAdditions.h"
+#import "AIImageAdditions.h"
 
 #define TAB_DRAG_DISTANCE 		3					//Distance required before a drag kicks in
 #define CUSTOM_TABS_FPS			30.0				//Animation speed
