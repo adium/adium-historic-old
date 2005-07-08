@@ -36,6 +36,7 @@
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSSet *)openChats;
 - (AIChat *)mostRecentUnviewedChat;
+- (int) unviewedContentCount;
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount;
 - (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount;
 - (BOOL)contactIsInGroupChat:(AIListContact *)listContact;

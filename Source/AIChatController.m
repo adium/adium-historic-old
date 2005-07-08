@@ -611,6 +611,23 @@
 }
 
 /*!
+ * @brief Gets the total number of unviewed messages
+ * 
+ * @result The number of unviewed messages
+ */
+- (int) unviewedContentCount
+{
+	int count = 0;
+	NSEnumerator * enu = [[[adium chatController] openChats] objectEnumerator];
+	AIChat * chat;
+	while(chat = [enu nextObject])
+	{
+		count += [chat unviewedContentCount];
+	}
+	return count;
+}
+
+/*!
  * @brief Is the passed contact in a group chat?
  *
  * @result YES if the contact is in an open group chat; NO if not.
