@@ -18,6 +18,7 @@
 #import "AINewMessagePanelPlugin.h"
 #import "AINewMessagePromptController.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 /*!
  * @class AINewMessagePanelPlugin
@@ -30,7 +31,7 @@
  */
 - (void)installPlugin
 {
-	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:AILocalizedString(@"New Chat...",nil)
+	newMessageMenuItem = [[NSMenuItem alloc] initWithTitle:[AILocalizedString(@"New Chat",nil) stringByAppendingEllipsis]
 													target:self 
 													action:@selector(newMessage:)
 											 keyEquivalent:@"n"];

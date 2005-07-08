@@ -17,11 +17,12 @@
 #import "AIPreferenceController.h"
 #import "ESFileTransferController.h"
 #import "ESFileTransferRequestPromptController.h"
-#import <AIUtilities/CBApplicationAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/ESFileTransfer.h>
 #import <Adium/ESTextAndButtonsWindowController.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @interface ESFileTransferRequestPromptController (PRIVATE)
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
@@ -73,7 +74,7 @@
 		windowController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:AILocalizedString(@"File Transfer Request",nil)
 																				 defaultButton:AILocalizedString(@"Save",nil)
 																			   alternateButton:AILocalizedString(@"Cancel",nil)
-																				   otherButton:AILocalizedString(@"Save As...",nil)
+																				   otherButton:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]
 																					  onWindow:nil
 																			 withMessageHeader:nil
 																					andMessage:message

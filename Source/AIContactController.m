@@ -32,8 +32,8 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -58,7 +58,7 @@
 #define	OBJECT_STATUS_CACHE				@"Object Status Cache"
 
 #define VIEW_CONTACTS_INFO				AILocalizedString(@"Get Info",nil)
-#define VIEW_CONTACTS_INFO_WITH_PROMPT	AILocalizedString(@"Get Info...",nil)
+#define VIEW_CONTACTS_INFO_WITH_PROMPT	[VIEW_CONTACTS_INFO stringByAppendingEllipsis]
 #define GET_INFO_MASK					(NSCommandKeyMask | NSShiftKeyMask)
 #define ALTERNATE_GET_INFO_MASK			(NSCommandKeyMask | NSShiftKeyMask | NSControlKeyMask)
 
