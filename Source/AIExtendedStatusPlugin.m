@@ -19,6 +19,7 @@
 #import "AIExtendedStatusPlugin.h"
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIMutableOwnerArray.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
@@ -98,10 +99,14 @@
 		int				idle;
 		
 		if (showStatus) {
-			statusMessage = [[[[[[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
-																  usingFilterType:AIFilterDisplay
-																		direction:AIFilterIncoming
-																		  context:inObject] string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
+			NSAttributedString	*attributedStatusMessage = [[adium contentController] filterAttributedString:[(AIListContact *)inObject contactListStatusMessage]
+																							 usingFilterType:AIFilterDisplay
+																								   direction:AIFilterIncoming
+																									 context:inObject];
+			//Convert attachments to strings so emoticons become their text equivalents, etc.
+			attributedStatusMessage = [attributedStatusMessage attributedStringByConvertingAttachmentsToStrings];
+			
+			statusMessage = [[[[attributedStatusMessage string] stringByTrimmingCharactersInSet:whitespaceAndNewlineCharacterSet] mutableCopy] autorelease];
 			
 			//Incredibly long status messages are slow to size, so we crop them to a reasonable length
 			if ([statusMessage length] > STATUS_MAX_LENGTH) {
