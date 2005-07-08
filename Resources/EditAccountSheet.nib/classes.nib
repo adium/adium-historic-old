@@ -47,6 +47,13 @@
             SUPERCLASS = AIWindowController; 
         }, 
         {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
             CLASS = AILocalizationButton; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -61,13 +68,6 @@
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
-        }, 
-        {
-            ACTIONS = {showImagePicker = id; }; 
-            CLASS = ESImageViewWithImagePicker; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {delegate = id; }; 
-            SUPERCLASS = NSImageView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
