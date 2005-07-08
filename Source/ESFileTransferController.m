@@ -34,7 +34,8 @@
 #import <Adium/AIListObject.h>
 #import <Adium/ESFileTransfer.h>
 
-#define SEND_FILE					[AILocalizedString(@"Send File",nil) stringByAppendingEllipsis]
+#define SEND_FILE					AILocalizedString(@"Send File",nil)
+#define SEND_FILE_WITH_ELLIPSIS		[SEND_FILE stringByAppendingEllipsis]
 #define CONTACT						AILocalizedString(@"Contact",nil)
 
 #define	SEND_FILE_IDENTIFIER		@"SendFile"
@@ -74,7 +75,7 @@ static ESFileTransferPreferences *preferences;
 - (void)controllerDidLoad
 {
     //Add our get info contextual menu item
-    menuItem_sendFileContext = [[NSMenuItem alloc] initWithTitle:SEND_FILE
+    menuItem_sendFileContext = [[NSMenuItem alloc] initWithTitle:SEND_FILE_WITH_ELLIPSIS
 														  target:self action:@selector(contextualMenuSendFile:)
 												   keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_sendFileContext toLocation:Context_Contact_Action];
@@ -87,7 +88,7 @@ static ESFileTransferPreferences *preferences;
 	[contactAlertsController registerEventID:FILE_TRANSFER_COMPLETE withHandler:self inGroup:AIFileTransferEventHandlerGroup globalOnly:YES];
 	
     //Install the Send File menu item
-	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:SEND_FILE
+	menuItem_sendFile = [[NSMenuItem alloc] initWithTitle:SEND_FILE_WITH_ELLIPSIS
 												   target:self action:@selector(sendFileToSelectedContact:)
 											keyEquivalent:@"F"];
 	[menuItem_sendFile setKeyEquivalentModifierMask:(NSCommandKeyMask | NSShiftKeyMask)];
@@ -96,8 +97,8 @@ static ESFileTransferPreferences *preferences;
 	//Add our "Send File" toolbar item
 	NSToolbarItem	*toolbarItem;
     toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SEND_FILE_IDENTIFIER
-														  label:AILocalizedString(@"Send File",nil)
-												   paletteLabel:AILocalizedString(@"Send File",nil)
+														  label:SEND_FILE
+												   paletteLabel:SEND_FILE
 														toolTip:AILocalizedString(@"Send a file",nil)
 														 target:self
 												settingSelector:@selector(setImage:)
