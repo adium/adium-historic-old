@@ -15,10 +15,10 @@
  */
 
 #import "AICrashReporter.h"
-#import <AIUtilities/ESTextViewWithPlaceholder.h>
+#import <AIUtilities/AITextViewWithPlaceholder.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 
 #define CRASH_REPORT_URL				@"http://www.visualdistortion.org/crash/post.jsp"
