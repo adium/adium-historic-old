@@ -63,7 +63,7 @@
  */
 - (NSString *)nibName
 {
-    return(@"ContactListWindow");    
+    return @"ContactListWindow";
 }
 
 /*
@@ -164,22 +164,22 @@
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+    return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"OfflineContacts", NSToolbarSeparatorItemIdentifier,
-		@"ShowInfo", @"NewMessage", NSToolbarFlexibleSpaceItemIdentifier, @"AddContact", nil]);
+    return[NSArray arrayWithObjects:@"OfflineContacts", NSToolbarSeparatorItemIdentifier,
+		@"ShowInfo", @"NewMessage", NSToolbarFlexibleSpaceItemIdentifier, @"AddContact", nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+    return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
-			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+			NSToolbarCustomizeToolbarItemIdentifier, nil]];
 }
 
 - (void)windowDidToggleToolbarShown:(NSWindow *)sender

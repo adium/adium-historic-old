@@ -24,7 +24,7 @@
 //Options view
 - (NSView *)optionsView
 {
-    return(nil);
+    return nil;
 }
 
 @end

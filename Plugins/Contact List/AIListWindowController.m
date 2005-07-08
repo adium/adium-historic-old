@@ -88,7 +88,7 @@
 //Return a new contact list window controller
 + (AIListWindowController *)listWindowController
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 //Init
@@ -96,7 +96,7 @@
 {	
     [super initWithWindowNibName:[self nibName]];
 	preventHiding = NO;
-    return(self);
+    return self;
 }
 
 - (void)dealloc
@@ -109,13 +109,13 @@
 //Our window nib name
 - (NSString *)nibName
 {
-    return(@"");    
+    return @"";
 }
 
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_DUAL_CONTACT_LIST_WINDOW_FRAME);
+	return KEY_DUAL_CONTACT_LIST_WINDOW_FRAME;
 }
 
 //Setup the window after it has loaded

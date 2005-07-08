@@ -14,20 +14,20 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_Messages);
+    return AIPref_Advanced_Messages;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Messages","Message Display Options advanced preferences label"));
+    return AILocalizedString(@"Messages","Message Display Options advanced preferences label");
 }
 - (NSString *)nibName{
-    return(@"WebKitAdvancedPreferencesView");
+    return @"WebKitAdvancedPreferencesView";
 }
 
 - (NSDictionary *)restorablePreferences
 {
 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:WEBKIT_DEFAULT_PREFS forClass:[self class]];
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultPrefs forKey:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-	return(defaultsDict);
+	return defaultsDict;
 }
 
 //Configure the preference view

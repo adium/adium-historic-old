@@ -66,13 +66,13 @@
  * @brief Preference pane properties
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages);
+    return AIPref_Messages;
 }
 - (NSString *)label{
-    return(@"A");
+    return @"A";
 }
 - (NSString *)nibName{
-    return(@"WebKitPreferencesView");
+    return @"WebKitPreferencesView";
 }
 
 /*!
@@ -324,7 +324,7 @@
 
 int menuTitleSort(id objectA, id objectB, void *context)
 {
-	return([[objectA title] caseInsensitiveCompare:[objectB title]]);
+	return [[objectA title] caseInsensitiveCompare:[objectB title]];
 }
 \
 /*!
@@ -356,7 +356,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		[menu addItem:menuItem];
 	}
 	
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 /*! 
@@ -377,7 +377,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 			 representedObject:variant];
 	}
 
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 /*!
@@ -391,7 +391,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	[self _addBackgroundImageTypeChoice:BackgroundCenter toMenu:menu withTitle:AILocalizedString(@"Centered",nil)];
 	[self _addBackgroundImageTypeChoice:BackgroundTile toMenu:menu withTitle:AILocalizedString(@"Tiled",nil)];
 		
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 - (void)_addBackgroundImageTypeChoice:(int)tag toMenu:(NSMenu *)menu withTitle:(NSString *)title
 {
@@ -502,7 +502,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 		[listObjectDict setObject:listObject forKey:UID];
 	}
 	
-	return(listObjectDict);
+	return listObjectDict;
 }
 
 /*!

@@ -92,7 +92,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Returns YES if the contact list is visible and in front
 - (BOOL)contactListIsVisibleAndMain
 {
-	return(contactListWindowController && [[contactListWindowController window] isMainWindow]);
+	return (contactListWindowController && [[contactListWindowController window] isMainWindow]);
 }
 
 //Close contact list
@@ -212,7 +212,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 		
 		[[sharedAdiumInstance notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 
-		return(YES);
+		return YES;
 	} else {
 		NSRunAlertPanel(AILocalizedString(@"Error Saving Theme",nil),
 						AILocalizedString(@"Unable to write file %@ to %@",nil),
@@ -221,7 +221,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 						nil,
 						fileName,
 						path);
-		return(NO);
+		return NO;
 	}
 }
 
@@ -238,7 +238,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
 	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 	
-	return(success);
+	return success;
 }
 
 //
@@ -258,7 +258,7 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
 	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 	
-	return(success);
+	return success;
 }
 
 //
@@ -279,17 +279,17 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	//The availability of an xtras just changed, since we deleted it... post a notification so we can update
 	[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:Adium_Xtras_Changed object:extension];
 
-	return(success);
+	return success;
 }
 
 + (NSArray *)availableLayoutSets
 {
-	return([AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
-											fromFolder:LIST_LAYOUT_FOLDER]);
+	return [AISCLViewPlugin availableSetsWithExtension:LIST_LAYOUT_EXTENSION 
+											fromFolder:LIST_LAYOUT_FOLDER];
 }
 + (NSArray *)availableThemeSets
 {
-	return([AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER]);
+	return [AISCLViewPlugin availableSetsWithExtension:LIST_THEME_EXTENSION fromFolder:LIST_THEME_FOLDER];
 }
 
 //
@@ -319,12 +319,12 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 		}
 	}
 	
-	return([setArray sortedArrayUsingFunction:availableSetSort context:nil]);
+	return [setArray sortedArrayUsingFunction:availableSetSort context:nil];
 }
 
 //Sort sets
 int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context) {
-	return([[objectA objectForKey:@"name"] caseInsensitiveCompare:[objectB objectForKey:@"name"]]);
+	return [[objectA objectForKey:@"name"] caseInsensitiveCompare:[objectB objectForKey:@"name"]];
 }
 
 @end

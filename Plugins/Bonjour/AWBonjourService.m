@@ -16,50 +16,50 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([AWBonjourAccount class]);
+	return [AWBonjourAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESBonjourAccountViewController accountViewController]);
+    return [ESBonjourAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCJoinChatViewController joinChatView]);
+	return [DCJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"bonjour-libezv");
+	return @"bonjour-libezv";
 }
 - (NSString *)serviceID{
-	return(@"Bonjour");
+	return @"Bonjour";
 }
 - (NSString *)serviceClass{
-	return(@"Bonjour");
+	return @"Bonjour";
 }
 - (NSString *)shortDescription{
-	return(@"Bonjour");
+	return @"Bonjour";
 }
 - (NSString *)longDescription{
-	return(@"Bonjour");
+	return @"Bonjour";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([[NSCharacterSet illegalCharacterSet] invertedSet]);
+	return [[NSCharacterSet illegalCharacterSet] invertedSet];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(999);
+	return 999;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 - (BOOL)supportsProxySettings{
-	return(NO);
+	return NO;
 }
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE
