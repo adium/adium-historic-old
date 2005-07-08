@@ -24,7 +24,7 @@
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIImageTextCell.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIVariableHeightFlexibleColumnsOutlineView.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIGradientImageCell.h>

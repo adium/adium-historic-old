@@ -35,8 +35,8 @@
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESOutlineViewAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/KFTypeSelectTableView.h>
 
 #define CONTENT_FONT_IF_FONT_NOT_FOUND	[NSFont systemFontOfSize:10]

@@ -17,7 +17,7 @@
 #import "AIAbstractListController.h"
 #import "AIListCell.h"
 #import "AIListLayoutWindowController.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 //User Icon
 #define USER_ICON_LEFT_PAD			2

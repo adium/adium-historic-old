@@ -17,8 +17,8 @@
 #import "AIListCell.h"
 #import "AIListOutlineView.h"
 #import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESOutlineViewAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 
 #define MINIMUM_HEIGHT				48
 #define MINIMUM_WIDTH				140

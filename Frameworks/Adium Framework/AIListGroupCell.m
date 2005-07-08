@@ -18,7 +18,7 @@
 #import "AIListOutlineView.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIGradient.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 #define FLIPPY_TEXT_PADDING		4
 
