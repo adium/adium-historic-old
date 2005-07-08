@@ -23,9 +23,16 @@
 - (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSSet *)inModifiedKeys;
 @end
 
+/*!
+ * @class AIChatController
+ * @brief Core controller for chats
+ *
+ * This is the only class which should vend AIChat objects (via openChat... or chatWith:...).
+ * AIChat objects should never be created directly.
+ */
 @implementation AIChatController
 
-/*
+/*!
  * @brief Initialize the controller
  */
 - (id)init
@@ -41,6 +48,10 @@
 	return self;
 }
 
+
+/*!
+ * @brief Controller loaded
+ */
 - (void)controllerDidLoad
 {	
 	//Observe content so we can update the most recent chat
@@ -54,6 +65,7 @@
 									   name:CONTENT_MESSAGE_SENT
 									 object:nil];
 	
+	//Ignore menu item for contacts in group chats
 	menuItem_ignore = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																		   target:self
 																		   action:@selector(toggleIgnoreOfContact:)
@@ -61,6 +73,12 @@
 	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_ChatAction];
 }
 
+
+/*!
+ * @brief Controller will close
+ *
+ * Post the Chat_WillClose for each open chat so any closing behavior can be performed
+ */
 - (void)controllerWillClose
 {
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
@@ -74,6 +92,9 @@
 	}
 }
 
+/*!
+ * @brief Deallocate
+ */
 - (void)dealloc
 {
 	[openChats release];
@@ -82,7 +103,13 @@
 	[super dealloc];
 }
 	
-//Registers code to observe handle status changes
+/*!
+ * @brief Register a chat observer
+ *
+ * Chat observers are notified when status objects are changed on chats
+ *
+ * @param inObserver An observer, which must conform to AIChatObserver
+ */
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver
 {
 	//Add the observer
@@ -92,11 +119,19 @@
 	[self updateAllChatsForObserver:inObserver];
 }
 
+/*!
+ * @brief Unregister a chat observer
+ */
 - (void)unregisterChatObserver:(id <AIChatObserver>)inObserver
 {
     [chatObserverArray removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
+/*!
+ * @brief Chat status changed
+ *
+ * Called by AIChat after it changes one or more status keys.
+ */
 - (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	NSSet			*modifiedAttributeKeys;
@@ -110,6 +145,11 @@
     }	
 }
 
+/*!
+ * @brief Chat attributes changed
+ *
+ * Called by -[AIChatController chatStatusChanged:modifiedStatusKeys:silent:] if any observers changed attributes
+ */
 - (void)chatAttributesChanged:(AIChat *)inChat modifiedKeys:(NSSet *)inModifiedKeys
 {
 	//Post an attributes changed message
@@ -119,7 +159,11 @@
 																								   forKey:@"Keys"] : nil)];
 }
 
-//Send a chatStatusChanged message for each open chat with a nil modifiedStatusKeys array
+/*!
+ * @brief Send each chat in turn to an observer with a nil modifiedStatusKeys argument
+ *
+ * This lets an observer use its normal update mechanism to update every chat in some manner
+ */
 - (void)updateAllChatsForObserver:(id <AIChatObserver>)observer
 {
 	NSEnumerator	*enumerator = [openChats objectEnumerator];
@@ -130,7 +174,9 @@
 	}
 }
 
-//Notify observers of a status change.  Returns the modified attribute keys
+/*!
+ * @brief Notify observers of a status change.  Returns the modified attribute keys
+ */
 - (NSSet *)_informObserversOfChatStatusChange:(AIChat *)inChat withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
 {
 	NSMutableSet	*attrChange = nil;
@@ -159,24 +205,13 @@
 	return(attrChange);
 }
 
-//Increase unviewed content
-- (void)increaseUnviewedContentOfChat:(AIChat *)inChat
-{
-	int currentUnviewed = [inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
-	[inChat setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)]
-					 forKey:KEY_UNVIEWED_CONTENT
-					 notify:YES];
-}
-
-//Clear unviewed content
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat
-{
-	[inChat setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:YES];
-}
-
 //Chats -------------------------------------------------------------------------------------------------
 #pragma mark Chats
-//Opens a chat for communication with the contact, creating if necessary.  The new chat will be made active.
+/*!
+ * @brief Opens a chat for communication with the contact, creating if necessary.
+ *
+ * The interface controller will then be asked to make the new chat active.
+ */
 - (AIChat *)openChatWithContact:(AIListContact *)inContact
 {
 	AIChat	*chat = [self chatWithContact:inContact];
@@ -186,8 +221,14 @@
 	return(chat);	
 }
 
-//Creates a chat for communication with the contact, but does not make the chat active (Doesn't open a chat window)
-//If a chat already exists it will be returned
+/*!
+ * @brief Creates a chat for communication with the contact, but does not make the chat active
+ *
+ * No window or tab is opened for the chat.
+ * If a chat with this contact already exists, it is returned.
+ * If a chat with a contact within the same metaContact at this contact exists, it is switched to this contact
+ * and then returned.
+ */
 - (AIChat *)chatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
@@ -262,6 +303,11 @@
 	return(chat);
 }
 
+/*!
+ * @brief Return a pre-existing chat with a contact.
+ *
+ * @result The chat, or nil if no chat with the contact exists
+ */
 - (AIChat *)existingChatWithContact:(AIListContact *)inContact
 {
 	NSEnumerator	*enumerator;
@@ -277,10 +323,9 @@
 		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
 															   forListContact:inContact];
 		
-		/*
-		 If we have no accounts online, preferredContactForContentType:forListContact will return nil.
-		 We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
-		 preferredContact from the metaContact.
+		/* If we have no accounts online, preferredContactForContentType:forListContact will return nil.
+		 * We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
+		 * preferredContact from the metaContact.
 		 */
 		if (!targetContact) {
 			targetContact = [(AIMetaContact *)inContact preferredContact];
@@ -297,6 +342,13 @@
 	return(chat);
 }
 
+/*!
+ * @brief Open a group chat
+ *
+ * @param inName The name of the chat; in general, the chat room name
+ * @param account The account on which to create the group chat
+ * @param chatCreationInfo A dictionary of information which may be used by the account when joining the chat serverside
+ */
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo
 {
 	AIChat			*chat = nil;
@@ -331,15 +383,11 @@
 	return(chat);
 }
 
-- (void)openChat:(AIChat *)chat
-{
-	if (chat) {		
-		[openChats addObject:chat];
-		AILog(@"openChat: Added <<%@>> [%@]",chat,openChats);
-		[[adium interfaceController] openChat:chat]; 
-	}
-}
-
+/*!
+ * @brief Find an existing group chat
+ *
+ * @result The group AIChat, or nil if no such chat exists
+ */
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account
 {
 	NSEnumerator	*enumerator;
@@ -357,6 +405,11 @@
 	return chat;
 }
 
+/*!
+ * @brief Find an existing chat by unique chat ID
+ *
+ * @result The AIChat, or nil if no such chat exists
+ */
 - (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID
 {
 	NSEnumerator	*enumerator;
@@ -373,7 +426,11 @@
 	return chat;
 }
 
-//Close a chat
+/*!
+ * @brief Close a chat
+ *
+ * @result YES the chat was removed succesfully; NO if it was not
+ */
 - (BOOL)closeChat:(AIChat *)inChat
 {	
 	BOOL	shouldRemove;
@@ -402,11 +459,18 @@
 		[openChats removeObject:inChat];
 		AILog(@"closeChat: Removed <<%@>> [%@]",inChat, openChats);
 	}
+	
+	[inChat setIsOpen:NO];
 
-	return YES;
+	return shouldRemove;
 }
 
-//Switch a chat from one account to another, updating the target list contact to be an 'identical' one on the target account.
+/*!
+ * @brief Switch a chat from one account to another
+ *
+ * The target list contact for the chat is changed to be an 'identical' one on the target account; that is, a contact
+ * with the same UID but an account and service appropriate for newAccount.
+ */
 - (void)switchChat:(AIChat *)chat toAccount:(AIAccount *)newAccount
 {
 	AIAccount	*oldAccount = [chat account];
@@ -420,14 +484,14 @@
 		//Set the account and the listObject
 		{
 			[chat setAccount:newAccount];
-			
+
 			//We want to keep the same destination for the chat but switch it to a listContact on the desired account.
-			AIListContact	*newContact = [[adium contactController] contactWithService:[[chat listObject] service]
-																				account:[chat account]
+			AIListContact	*newContact = [[adium contactController] contactWithService:[newAccount service]
+																				account:newAccount
 																					UID:[[chat listObject] UID]];
 			[chat setListObject:newContact];
 		}
-		
+
 		//Open the chat on account B
 		[newAccount openChat:chat];
 		
@@ -436,13 +500,19 @@
 	}
 }
 
-//Switch the list contact of the account; this does not change the source account - use switchChat:toAccount: for that.
+/*!
+ * @brief Switch the list contact of a chat
+ *
+ * @param chat The chat
+ * @param inContact The contact with which the chat will now take place
+ * @param useContactAccount If YES, the chat is also set to [inContact account] as its account. If NO, the account and service of chat are unchanged.
+ */
 - (void)switchChat:(AIChat *)chat toListContact:(AIListContact *)inContact usingContactAccount:(BOOL)useContactAccount
 {
 	AIAccount		*newAccount = (useContactAccount ? [inContact account] : [chat account]);
-	
+
 	//Switch the inContact over to a contact on the new account so we send messages to the right place.
-	AIListContact	*newContact = [[adium contactController] contactWithService:[inContact service]
+	AIListContact	*newContact = [[adium contactController] contactWithService:[newAccount service]
 																		account:newAccount
 																			UID:[inContact UID]];
 	if (newContact != [chat listObject]) {
@@ -464,24 +534,29 @@
 	}
 }
 
-//Returns all chats with the object
+/*!
+ * @brief Find all chats with a contact
+ *
+ * @param inContact The contact. If inContact is an AIMetaContact, all chats with all contacts within the metaContact will be returned.
+ * @result An NSSet with all chats with the contact.  In general, will contain 0 or 1 AIChat objects, though it may contain more.
+ */
 - (NSSet *)allChatsWithContact:(AIListContact *)inContact
 {
     NSMutableSet	*foundChats = nil;
 	
 	//Scan the objects participating in each chat, looking for the requested object
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
+		if ([openChats count]) {
+			NSEnumerator	*enumerator;
+			AIListContact	*listContact;
 
-		NSEnumerator	*enumerator;
-		AIListContact	*listContact;
-
-		foundChats = [NSMutableSet set];
-		
-		enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
-		while ((listContact = [enumerator nextObject])) {
-			NSSet		*listContactChats;
-			if ((listContactChats = [self allChatsWithContact:listContact])) {
-				[foundChats unionSet:listContactChats];
+			enumerator = [[(AIMetaContact *)inContact listContacts] objectEnumerator];
+			while ((listContact = [enumerator nextObject])) {
+				NSSet		*listContactChats;
+				if ((listContactChats = [self allChatsWithContact:listContact])) {
+					if (!foundChats) foundChats = [NSMutableSet set];
+					[foundChats unionSet:listContactChats];
+				}
 			}
 		}
 		
@@ -500,16 +575,26 @@
     return(foundChats);
 }
 
+/*!
+ * @brief All open chats
+ *
+ * Open chats from the chatController may include chats which are not currently displayed by the interface.
+ */
 - (NSSet *)openChats
 {
     return openChats;
 }
 
+/*!
+ * @brief Find the chat which most recently received content which has not yet been seen
+ *
+ * @result An AIChat with unviewed content, or nil if no chats current have unviewed content
+ */
 - (AIChat *)mostRecentUnviewedChat
 {
 	AIChat  *mostRecentUnviewedChat = nil;
 	
-	if (mostRecentChat && [mostRecentChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+	if (mostRecentChat && [mostRecentChat unviewedContentCount]) {
 		//First choice: switch to the chat which received chat most recently if it has unviewed content
 		mostRecentUnviewedChat = mostRecentChat;
 		
@@ -517,7 +602,7 @@
 		//Second choice: switch to the first chat we can find which has unviewed content
 		NSEnumerator	*enumerator = [openChats objectEnumerator];
 		AIChat			*chat;
-		while ((chat = [enumerator nextObject]) && ![chat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]);
+		while ((chat = [enumerator nextObject]) && ![chat unviewedContentCount]);
 		
 		if (chat) mostRecentUnviewedChat = chat;
 	}
@@ -526,7 +611,7 @@
 }
 
 /*!
-* @brief Is the passed contact in a group chat?
+ * @brief Is the passed contact in a group chat?
  *
  * @result YES if the contact is in an open group chat; NO if not.
  */
@@ -548,7 +633,7 @@
 	return contactIsInGroupChat;
 }
 
-/*
+/*!
  * @brief Called when content is sent or received
  *
  * Update the most recent chat
@@ -569,6 +654,11 @@
 }
 
 #pragma mark Ignore
+/*!
+ * @brief Toggle ignoring of a contact
+ *
+ * Must be called from the contextual menu for the contact within a chat
+ */
 - (void)toggleIgnoreOfContact:(id)sender
 {
 	AIListObject	*listObject = [[adium menuController] currentContextMenuObject];
@@ -580,6 +670,11 @@
 	}
 }
 
+/*!
+ * @brief Menu item validation
+ *
+ * When asked to validate our ignore menu item, set its title to ignore/un-ignore as appropriate for the contact
+ */
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem
 {
 	if (menuItem == menuItem_ignore) {

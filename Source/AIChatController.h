@@ -33,7 +33,6 @@
 - (AIChat *)existingChatWithUniqueChatID:(NSString *)uniqueChatID;
 - (AIChat *)chatWithName:(NSString *)inName onAccount:(AIAccount *)account chatCreationInfo:(NSDictionary *)chatCreationInfo;
 - (AIChat *)existingChatWithName:(NSString *)inName onAccount:(AIAccount *)account;
-- (void)openChat:(AIChat *)chat;
 - (BOOL)closeChat:(AIChat *)inChat;
 - (NSSet *)openChats;
 - (AIChat *)mostRecentUnviewedChat;
@@ -44,12 +43,10 @@
 //Status
 - (void)registerChatObserver:(id <AIChatObserver>)inObserver;
 - (void)unregisterChatObserver:(id <AIChatObserver>)inObserver;
-- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
 - (void)updateAllChatsForObserver:(id <AIChatObserver>)observer;
-
-//Unviewed Content Status
-- (void)increaseUnviewedContentOfChat:(AIChat *)inChat;
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
 
 @end
 
+@interface AIChatController (AIChatMethods)
+- (void)chatStatusChanged:(AIChat *)inChat modifiedStatusKeys:(NSSet *)inModifiedKeys silent:(BOOL)silent;
+@end
