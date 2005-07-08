@@ -63,10 +63,10 @@
 															withID:(NSString *)inContainerID
 															  name:(NSString *)inName
 {
-    return([[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB
+    return [[[self alloc] initWithWindowNibName:MESSAGE_WINDOW_NIB
 									  interface:inInterface
 									containerID:inContainerID
-										   containerName:inName] autorelease]);
+										   containerName:inName] autorelease];
 }
 
 //init
@@ -100,7 +100,7 @@
 		[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 	}
 
-    return(self);
+    return self;
 }
 
 //dealloc
@@ -131,19 +131,19 @@
 //Human readable container name
 - (NSString *)name
 {
-	return(containerName);
+	return containerName;
 }
 
 //Internal container ID
 - (NSString *)containerID
 {
-	return(containerID);
+	return containerID;
 }
 
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return([self _frameSaveKey]);
+	return [self _frameSaveKey];
 }
 
 //Setup our window before it is displayed
@@ -171,12 +171,12 @@
 //Frames
 - (NSString *)_frameSaveKey
 {
-	return([NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID]);
+	return [NSString stringWithFormat:@"%@ %@",KEY_MESSAGE_WINDOW_POSITION, containerID];
 }
 - (BOOL)shouldCascadeWindows
 {
 	//Cascade if we have no frame
-	return([[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS] == nil);
+	return ([[adium preferenceController] preferenceForKey:[self _frameSaveKey] group:PREF_GROUP_WINDOW_POSITIONS] == nil);
 }
 
 //
@@ -336,13 +336,13 @@
 //Returns YES if we are empty (currently contain no chats)
 - (BOOL)containerIsEmpty
 {
-	return([containedChats count] == 0);
+	return ([containedChats count] == 0);
 }
 
 //Returns an array of the chats we contain
 - (NSArray *)containedChats
 {
-    return(containedChats);
+    return containedChats;
 }
 
 
@@ -410,7 +410,7 @@
 
 - (AIChat *)activeChat
 {
-	return([(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat]);
+	return [(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat];
 }
 
 //Custom Tabs Delegate -------------------------------------------------------------------------------------------------
@@ -419,7 +419,8 @@
 - (NSMenu *)customTabView:(AICustomTabsView *)tabView menuForTabViewItem:(NSTabViewItem *)tabViewItem
 {
     AIListContact	*selectedObject = [[(AIMessageTabViewItem *)tabViewItem chat] listObject];
-    
+    NSMenu *tmp=nil;
+	
     if (selectedObject) {
 		NSArray *locations;
 		if ([selectedObject isStranger]) {
@@ -439,12 +440,12 @@
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
-		return([[adium menuController] contextualMenuWithLocations:locations
-													 forListObject:selectedObject]);
+		tmp = [[adium menuController] contextualMenuWithLocations:locations
+													 forListObject:selectedObject];
         
     }
 	
-	return(nil);
+	return tmp;
 }
 
 //Tab count changed
@@ -498,18 +499,19 @@
 //Allow dragging of text
 - (NSArray *)customTabViewAcceptableDragTypes:(AICustomTabsView *)tabView
 {
-    return([NSArray arrayWithObject:NSRTFPboardType]);
+    return [NSArray arrayWithObject:NSRTFPboardType];
 }
 
 //Accept dragged text
 - (BOOL)customTabView:(AICustomTabsView *)tabView didAcceptDragPasteboard:(NSPasteboard *)pasteboard onTabViewItem:(NSTabViewItem *)tabViewItem
 {
     NSString    *type = [pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSRTFPboardType]];
+	BOOL tmp = NO;
     if ([type isEqualToString:NSRTFPboardType]) { //got RTF data
         [[(AIMessageTabViewItem *)tabViewItem messageViewController] addToTextEntryView:[NSAttributedString stringWithData:[pasteboard dataForType:NSRTFPboardType]]];
-        return(YES);
+        tmp = YES;
     }
-    return(NO);
+    return tmp;
 }
 
 
@@ -579,7 +581,7 @@
 	//[[self window] displayIfNeeded];
 	
     //Return YES when the desired height is reached
-    return(tabSize.height == destHeight);
+    return (tabSize.height == destHeight);
 }
 
 
@@ -593,17 +595,17 @@
 //Bring our window to the front
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)sender
 {
+	NSDragOperation tmp = NSDragOperationNone;
     NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 
     if (sender == nil || type) {
         if (![[self window] isKeyWindow]) [[self window] makeKeyAndOrderFront:nil];
 		[self _suppressTabHiding:YES];
-        return(NSDragOperationPrivate);
-    } else {
-		return(NSDragOperationNone);
-	}
-
+        tmp = NSDragOperationPrivate;
+    }
+	return tmp;
 }
+
 - (void)draggingExited:(id <NSDraggingInfo>)sender
 {
 	NSString 		*type = [[sender draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
@@ -650,26 +652,26 @@
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-	return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+	return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"UserIcon",@"Encryption",  NSToolbarSeparatorItemIdentifier, 
+    return [NSArray arrayWithObjects:@"UserIcon",@"Encryption",  NSToolbarSeparatorItemIdentifier, 
 		@"InsertEmoticon", @"LinkEditor", @"SafariLink", NSToolbarShowColorsItemIdentifier,
 		NSToolbarShowFontsItemIdentifier, NSToolbarFlexibleSpaceItemIdentifier, @"SendFile",
-		@"ShowInfo", @"LogViewer", nil]);
+		@"ShowInfo", @"LogViewer", nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+    return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
 			NSToolbarShowColorsItemIdentifier,
 			NSToolbarShowFontsItemIdentifier,
-			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+			NSToolbarCustomizeToolbarItemIdentifier, nil]];
 }
 
 @end
