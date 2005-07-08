@@ -370,6 +370,24 @@ static int nextChatNumber = 0;
 	return([[self account] canSendImagesForChat:self]);
 }
 
+- (int)unviewedContentCount
+{
+	return [self integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+}
+
+- (void)incrementUnviewedContentCount
+{
+	int currentUnviewed = [self integerStatusObjectForKey:KEY_UNVIEWED_CONTENT];
+	[self setStatusObject:[NSNumber numberWithInt:(currentUnviewed+1)]
+					 forKey:KEY_UNVIEWED_CONTENT
+					 notify:NotifyNow];
+}
+
+- (void)clearUnviewedContentCount
+{
+	[self setStatusObject:nil forKey:KEY_UNVIEWED_CONTENT notify:NotifyNow];
+}
+
 //Applescript ----------------------------------------------------------------------------------------------------------
 #pragma mark Applescript
 /*
