@@ -69,6 +69,7 @@
 		34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
 		34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */; };
 		34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */; };
+		34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34057FAC087EEBE500664D64 /* OTRPrefs.nib */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
 		34082690075B5CB900703011 /* Awake.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268E075B5CB900703011 /* Awake.png */; };
 		34082691075B5CB900703011 /* Flap.png in Resources */ = {isa = PBXBuildFile; fileRef = 3408268F075B5CB900703011 /* Flap.png */; };
@@ -102,7 +103,6 @@
 		34111A6006BE1B370005AF5C /* ESObjectWithStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */; };
 		3411E13A0832E3B9003C8270 /* ESGaimOTRPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */; };
 		3411E13B0832E3B9003C8270 /* ESGaimOTRPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */; };
-		3411E2480832EB76003C8270 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3411E2470832EB75003C8270 /* OTRPrefs.nib */; };
 		3411E2910832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */; };
 		3411E2920832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */; };
 		3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */ = {isa = PBXBuildFile; fileRef = 3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */; };
@@ -1574,7 +1574,7 @@
 		34111A5E06BE1B370005AF5C /* ESObjectWithStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESObjectWithStatus.m; path = "Frameworks/Adium Framework/ESObjectWithStatus.m"; sourceTree = "<group>"; };
 		3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRPreferences.h; path = "Plugins/Gaim Service/ESGaimOTRPreferences.h"; sourceTree = "<group>"; };
 		3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRPreferences.m; path = "Plugins/Gaim Service/ESGaimOTRPreferences.m"; sourceTree = "<group>"; };
-		3411E2470832EB75003C8270 /* OTRPrefs.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = OTRPrefs.nib; path = "Plugins/Gaim Service/OTRPrefs.nib"; sourceTree = "<group>"; };
+		3411E2470832EB75003C8270 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimOTRFingerprintDetailsWindowController.h; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.h"; sourceTree = "<group>"; };
 		3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimOTRFingerprintDetailsWindowController.m; path = "Plugins/Gaim Service/ESGaimOTRFingerprintDetailsWindowController.m"; sourceTree = "<group>"; };
 		3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = GaimOTRFingerprintDetailsWindow.nib; path = "Plugins/Gaim Service/GaimOTRFingerprintDetailsWindow.nib"; sourceTree = "<group>"; };
@@ -3441,7 +3441,7 @@
 				34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */,
 				3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */,
 				3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */,
-				3411E2470832EB75003C8270 /* OTRPrefs.nib */,
+				34057FAC087EEBE500664D64 /* OTRPrefs.nib */,
 				3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */,
 				3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */,
 				3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */,
@@ -7530,7 +7530,7 @@
 				3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */,
 				3440931E07D914F500321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib in Resources */,
 				34C9A64508229348004F912C /* GaimMeanwhileContactAdditionWindow.nib in Resources */,
-				3411E2480832EB76003C8270 /* OTRPrefs.nib in Resources */,
+				34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */,
 				3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */,
 				34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */,
 			);
@@ -8422,6 +8422,14 @@
 				342CE16F085A08C700005C63 /* Catalan */,
 			);
 			name = Localizable.strings;
+			sourceTree = "<group>";
+		};
+		34057FAC087EEBE500664D64 /* OTRPrefs.nib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3411E2470832EB75003C8270 /* English */,
+			);
+			name = OTRPrefs.nib;
 			sourceTree = "<group>";
 		};
 		34167FEC081D706200E35678 /* DualWindowMessageAdvanced.nib */ = {
