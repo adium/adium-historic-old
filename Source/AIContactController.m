@@ -226,7 +226,7 @@
 	[[NSFileManager defaultManager] removeFilesInDirectory:path
 												withPrefix:@"MetaContact"
 											 movingToTrash:NO];
-	[[NSFileManager defaultManager] removeFilesInDirectory:@"~/Library/Caches/Adium"
+	[[NSFileManager defaultManager] removeFilesInDirectory:[adium cachesPath]
 												withPrefix:@"MetaContact"
 											 movingToTrash:NO];
 
