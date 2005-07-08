@@ -17,7 +17,7 @@
 #import "AIWebkitMessageViewStyle.h"
 #import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>

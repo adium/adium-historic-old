@@ -15,7 +15,7 @@
  */
 
 #import "ErrorMessageWindowController.h"
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 #define MAX_ERRORS			80				//The max # of errors to display
 #define	ERROR_WINDOW_NIB	@"ErrorWindow"	//Filename of the error window nib

@@ -16,14 +16,14 @@
 
 #import <Adium/AIContactInfoPane.h>
 
-@class ESDelayedTextField;
+@class AIDelayedTextField;
 
 @interface AIContactSettingsPane : AIContactInfoPane {
 	IBOutlet	NSTextField				*label_alias;
-	IBOutlet	ESDelayedTextField		*textField_alias;
+	IBOutlet	AIDelayedTextField		*textField_alias;
 	
 	IBOutlet	NSTextField				*label_notes;
-	IBOutlet	ESDelayedTextField		*textField_notes;
+	IBOutlet	AIDelayedTextField		*textField_notes;
 	
 	IBOutlet	NSTextField				*label_encryption;
 	IBOutlet	NSPopUpButton			*popUp_encryption;

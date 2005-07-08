@@ -11,6 +11,7 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = AIListWindowController; 
         }, 
+        {CLASS = AIBorderlessWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {
             CLASS = AIListOutlineView; 
             LANGUAGE = ObjC; 
@@ -38,7 +39,6 @@
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
         }, 
-        {CLASS = ESBorderlessWindow; LANGUAGE = ObjC; SUPERCLASS = NSWindow; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

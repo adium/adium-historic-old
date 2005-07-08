@@ -21,8 +21,9 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
-#define JOIN_CHAT_MENU_ITEM		AILocalizedString(@"Join Group Chat...",nil)
+#define JOIN_CHAT_MENU_ITEM		[AILocalizedString(@"Join Group Chat",nil) stringByAppendingEllipsis]
 
 /*!
  * @class DCJoinChatPanelPlugin

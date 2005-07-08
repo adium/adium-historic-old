@@ -28,8 +28,8 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIScrollViewAdditions.h>
 #import <AIUtilities/AITextAttributes.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentContext.h>

@@ -17,14 +17,15 @@
 #import "AISMPreferences.h"
 #import "AISMViewPlugin.h"
 #import <Adium/JVFontPreviewField.h>
-#import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIFontAdditions.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
-#define CUSTOM_MESSAGE_STYLE_STRING AILocalizedString(@"Custom...","Title of the Custom Message Style popup menu item")
+#define CUSTOM_MESSAGE_STYLE_STRING [AILocalizedString(@"Custom","Title of the Custom Message Style popup menu item") stringByAppendingEllipsis]
 
 @interface AISMPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

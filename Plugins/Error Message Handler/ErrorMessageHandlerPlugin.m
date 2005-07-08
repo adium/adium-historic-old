@@ -19,8 +19,8 @@
 #import "ESPanelAlertDetailPane.h"
 #import "ErrorMessageHandlerPlugin.h"
 #import "ErrorMessageWindowController.h"
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 
 #define ERROR_MESSAGE_ALERT_SHORT	AILocalizedString(@"Display an alert",nil)

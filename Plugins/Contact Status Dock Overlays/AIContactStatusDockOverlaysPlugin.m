@@ -26,7 +26,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIParagraphStyleAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAbstractListController.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
@@ -272,7 +272,7 @@
 {
 	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		
-		if (![inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+		if (![inChat unviewedContentCount]) {
 			if ([overlayObjectsArray containsObjectIdenticalTo:inChat]) {
 				[overlayObjectsArray removeObjectIdenticalTo:inChat];
 				[self _setOverlay];
@@ -378,13 +378,13 @@
 		
 		/*
 		 //Get our colors
-		 if (!([contact integerStatusObjectForKey:KEY_UNVIEWED_CONTENT] && flash)) {
+		 if (!([contact unviewedContentCount] && flash)) {
 			 backColor = [[contact displayArrayForKey:@"Label Color"] averageColor];
 			 textColor = [[contact displayArrayForKey:@"Text Color"] averageColor];
 		 }
 		 */
 		
-        if ([object integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) { //Unviewed
+        if ([object statusObjectForKey:KEY_UNVIEWED_CONTENT]) { //Unviewed
 			if (flash) {
                 backColor = [NSColor whiteColor];
                 textColor = [NSColor blackColor];

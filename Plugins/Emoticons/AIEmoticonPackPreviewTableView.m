@@ -15,8 +15,8 @@
  */
 
 #import "AIEmoticonPackPreviewTableView.h"
-#import <AIUtilities/BZGenericViewCell.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIGenericViewCell.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define	DRAG_IMAGE_FRACTION	0.75
 
@@ -24,7 +24,7 @@
  * @class AIEmoticonPackPreviewTableView
  * @brief Table view subclass for the emoticon pack preview
  *
- * This AIAlternatingRowTableView subclass draws images for BZGenericViewCell-using columns.  It only draws the image
+ * This AIAlternatingRowTableView subclass draws images for AIGenericViewCell-using columns.  It only draws the image
  * for the first column so is not suitable for general use.
  */
 @implementation AIEmoticonPackPreviewTableView
@@ -70,9 +70,9 @@
 		NSRect	cellFrame = [self frameOfCellAtColumn:0 row:row];
 		NSRect	targetFrame = NSMakeRect(cellFrame.origin.x - rowRect.origin.x,yOffset,cellFrame.size.width,cellFrame.size.height);
 		
-		//Cute little hack so we can do drag images when using BZGenericViewCell to put views into tables
-		if ([cell isKindOfClass:[BZGenericViewCell class]]) {
-			[(BZGenericViewCell *)cell drawEmbeddedViewWithFrame:targetFrame
+		//Cute little hack so we can do drag images when using AIGenericViewCell to put views into tables
+		if ([cell isKindOfClass:[AIGenericViewCell class]]) {
+			[(AIGenericViewCell *)cell drawEmbeddedViewWithFrame:targetFrame
 														  inView:self];
 		} else {
 			[cell drawWithFrame:targetFrame

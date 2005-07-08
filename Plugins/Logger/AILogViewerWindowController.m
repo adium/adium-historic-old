@@ -29,8 +29,8 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
@@ -599,7 +599,9 @@ static NSString                             *filterForContactName = nil;	//Conta
 													  AILocalizedString(@"Found %i matches",nil) :
 													  AILocalizedString(@"Found 1 match",nil)),count];
     } else if (searching) {
-		progress = [NSMutableString stringWithString:AILocalizedString(@"Opening logs...",nil)];
+		progress = [AILocalizedString(@"Opening logs",nil) mutableCopy];
+		[progress appendString:[NSString ellipsis]];
+
     } else {
 		unsigned count = [selectedLogArray count];
 		progress = [NSMutableString stringWithFormat:((count != 1) ?

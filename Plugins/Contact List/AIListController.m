@@ -20,12 +20,12 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIAutoScrollView.h>
 #import <AIUtilities/AIWindowAdditions.h>
-#import <AIUtilities/ESOutlineViewAdditions.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 #define EDGE_CATCH_X				40
 #define EDGE_CATCH_Y				40

@@ -21,18 +21,19 @@
 #import "ESSecureMessagingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 
 #define	TITLE_MAKE_SECURE		AILocalizedString(@"Initiate Encrypted OTR Chat",nil)
 #define	TITLE_MAKE_INSECURE		AILocalizedString(@"Cancel Encrypted Chat",nil)
-#define TITLE_SHOW_DETAILS		AILocalizedString(@"Show Details...",nil)
+#define TITLE_SHOW_DETAILS		[AILocalizedString(@"Show Details",nil) stringByAppendingEllipsis]
 #define	TITLE_ENCRYPTION_OPTIONS AILocalizedString(@"Encryption Settings",nil)
-#define TITLE_ABOUT_ENCRYPTION	AILocalizedString(@"About Encryption...",nil)
+#define TITLE_ABOUT_ENCRYPTION	[AILocalizedString(@"About Encryption",nil) stringByAppendingEllipsis]
 
 #define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
 

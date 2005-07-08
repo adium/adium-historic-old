@@ -25,7 +25,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIVariableHeightOutlineView.h>
 #import <AIUtilities/AIVerticallyCenteredTextCell.h>
 #import <AIUtilities/AIGradientImageCell.h>
@@ -221,13 +221,13 @@
 	//Edit Presets
 	[eventPresetsMenu addItem:[NSMenuItem separatorItem]];
 
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Preset...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Add New Preset",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(addNewPreset:)
 															  keyEquivalent:@""] autorelease];
 	[eventPresetsMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Presets...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Edit Presets",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(editPresets:)
 															  keyEquivalent:@""] autorelease];

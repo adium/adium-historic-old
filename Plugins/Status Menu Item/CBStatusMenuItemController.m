@@ -21,7 +21,7 @@
 #import "CBStatusMenuItemController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIArrayAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
@@ -268,7 +268,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	//If the contact's unviewed content state has changed
 	if (inModifiedKeys == nil || [inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		//If there is new unviewed content
-		if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+		if ([inChat unviewedContentCount]) {
 			//If we're not already watching it
 			if (![unviewedObjectsArray containsObjectIdenticalTo:inChat]) {
 				//Add it, we're watching it now

@@ -18,7 +18,7 @@
 #import "AIContentController.h"
 #import "AIAccountController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIContentObject.h>

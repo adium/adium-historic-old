@@ -28,10 +28,10 @@
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/ESBundleAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageViewWithImagePicker.h>
+#import <AIUtilities/AIBundleAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentMessage.h>
@@ -293,7 +293,7 @@
 /*!
  * @brief Save changes to the background image
  */
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)picker didChangeToImage:(NSImage *)image
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)picker didChangeToImage:(NSImage *)image
 {
 	[self _setBackgroundImage:image];
 }
@@ -301,7 +301,7 @@
 /*!
  * @brief Remove the background image
  */
-- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker
+- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
 {
 	[self _setBackgroundImage:nil];
 }
