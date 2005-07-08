@@ -91,10 +91,10 @@
 - (void)openInterface;
 - (void)closeInterface;
 - (id)openChat:(AIChat *)chat inContainerWithID:(NSString *)containerName atIndex:(int)index;
-- (void)closeChat:(AIChat *)chat;
 - (AIChat *)activeChat;
 - (void)setActiveChat:(AIChat *)inChat;
 - (void)moveChat:(AIChat *)chat toContainerWithID:(NSString *)containerID index:(int)index;
+- (void)closeChat:(AIChat *)chat;
 - (NSArray *)openContainersAndChats;
 - (NSArray *)openContainers;
 - (NSArray *)openChats;
@@ -200,7 +200,6 @@ typedef enum {
 - (void)chatDidBecomeVisible:(AIChat *)inChat inWindow:(NSWindow *)inWindow;
 - (void)chatDidClose:(AIChat *)inChat;
 - (void)chatOrderDidChange;
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat;
 - (NSWindow *)windowForChat:(AIChat *)inChat;
 
 //Chat close menus
