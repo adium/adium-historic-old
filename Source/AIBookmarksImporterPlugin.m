@@ -23,7 +23,8 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 
-#define MENU_TITLE					AILocalizedString(@"Show/Hide Bookmarks", nil)
+#define SHOW_HIDE_BOOKMARKS			AILocalizedString(@"Show/Hide Bookmarks", nil)
+#define BOOKMARKS_TOOLTIP			AILocalizedString(@"Toggle display of your browser's bookmarks for insertion into text",nil)
 
 #define TOOLBAR_ITEM_IDENTIFIER		@"InsertBookmarks"
 
@@ -47,23 +48,20 @@
 	AIMenuController *menuController = [adium menuController];
 	AIBookmarksImporterController *bookmarksImporterController = [AIBookmarksImporterController sharedController];
 
-	NSString *menuTitle = MENU_TITLE;
-	NSString *tooltip = AILocalizedString(@"Toggle display of the Bookmarks panel", /*comment*/ nil);
-
 	//Main bookmark menu item
-	bookmarksMainMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:menuTitle
+	bookmarksMainMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_HIDE_BOOKMARKS
 																				  target:bookmarksImporterController
 																				  action:@selector(toggleBookmarksPanel:)
 																		   keyEquivalent:@""] autorelease];
-	[bookmarksMainMenuItem setToolTip:tooltip];
+	[bookmarksMainMenuItem setToolTip:BOOKMARKS_TOOLTIP];
 	[menuController addMenuItem:bookmarksMainMenuItem toLocation:LOC_Edit_Additions];
 
 	//Contextual bookmark menu item
-	bookmarksContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:menuTitle
+	bookmarksContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_HIDE_BOOKMARKS
 																						target:bookmarksImporterController
 																						action:@selector(toggleBookmarksPanel:)
 																				 keyEquivalent:@""] autorelease];
-	[bookmarksContextualMenuItem setToolTip:tooltip];
+	[bookmarksContextualMenuItem setToolTip:BOOKMARKS_TOOLTIP];
 	[menuController addContextualMenuItem:bookmarksContextualMenuItem toLocation:Context_TextView_Edit];
 
 	[self registerToolbarItem];
@@ -105,8 +103,8 @@
 	//Register our toolbar item
 	toolbarItem = [[AIToolbarUtilities toolbarItemWithIdentifier:TOOLBAR_ITEM_IDENTIFIER
 														   label:AILocalizedString(@"Bookmarks",nil)
-													paletteLabel:AILocalizedString(@"Show/Hide Bookmarks",nil)
-														 toolTip:AILocalizedString(@"Tooltip for show/hide bookmarks command",nil)
+													paletteLabel:SHOW_HIDE_BOOKMARKS
+														 toolTip:BOOKMARKS_TOOLTIP
 														  target:bookmarksImporterController
 												 settingSelector:@selector(setView:)
 													 itemContent:nil
