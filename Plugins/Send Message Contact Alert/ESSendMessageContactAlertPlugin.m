@@ -23,7 +23,7 @@
 #import "ESSendMessageAlertDetailPane.h"
 #import "ESSendMessageContactAlertPlugin.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListContact.h>

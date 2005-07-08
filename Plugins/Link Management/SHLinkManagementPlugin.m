@@ -20,12 +20,13 @@
 #import "SHLinkEditorWindowController.h"
 #import "SHLinkManagementPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
 
-#define ADD_LINK_TITLE			AILocalizedString(@"Add Link...",nil)
-#define EDIT_LINK_TITLE			AILocalizedString(@"Edit Link...",nil)
+#define ADD_LINK_TITLE			[AILocalizedString(@"Add Link",nil) stringByAppendingEllipsis]
+#define EDIT_LINK_TITLE			[AILocalizedString(@"Edit Link",nil) stringByAppendingEllipsis]
 #define RM_LINK_TITLE           AILocalizedString(@"Remove Link",nil)
 
 @interface SHLinkManagementPlugin (PRIVATE)

@@ -22,8 +22,8 @@
 #import "AIEmoticonController.h"
 #import <AIUtilities/AIAlternatingRowTableView.h>
 #import <AIUtilities/AITableViewAdditions.h>
-#import <AIUtilities/BZGenericViewCell.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIGenericViewCell.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListObject.h>
 #import "AIPreferenceController.h"
 
@@ -87,7 +87,7 @@
     [table_emoticonPacks registerForDraggedTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE]];
 	
 	//Configure the outline view
-	BZGenericViewCell	*cell = [[[BZGenericViewCell alloc] init] autorelease];
+	AIGenericViewCell	*cell = [[[AIGenericViewCell alloc] init] autorelease];
 	[cell setDrawsGradientHighlight:YES];
 	[[table_emoticonPacks tableColumnWithIdentifier:@"Emoticons"] setDataCell:cell];
 	[table_emoticonPacks selectRow:0 byExtendingSelection:NO];

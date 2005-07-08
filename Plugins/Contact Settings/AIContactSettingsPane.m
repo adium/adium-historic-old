@@ -18,7 +18,7 @@
 #import "AIContentController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import <AIUtilities/ESDelayedTextField.h>
+#import <AIUtilities/AIDelayedTextField.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>

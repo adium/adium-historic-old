@@ -15,7 +15,7 @@
  */
 
 #import "XtrasInstaller.h"
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 //Should only be YES for testing
 #define	ALLOW_UNTRUSTED_XTRAS	NO

@@ -18,7 +18,7 @@
 #import "DCMessageContextDisplayPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #warning crosslink
 #import "AIPreferenceWindowController.h"

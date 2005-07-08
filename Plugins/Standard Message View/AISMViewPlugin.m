@@ -19,8 +19,8 @@
 #import "AISMPreferences.h"
 #import "AIInterfaceController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 
 @implementation AISMViewPlugin
 

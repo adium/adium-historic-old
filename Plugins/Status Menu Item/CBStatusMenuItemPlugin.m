@@ -17,7 +17,7 @@
 #import "AIPreferenceController.h"
 #import "CBStatusMenuItemPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 @interface CBStatusMenuItemPlugin(PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;

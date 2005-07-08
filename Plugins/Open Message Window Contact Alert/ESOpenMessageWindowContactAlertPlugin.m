@@ -18,7 +18,7 @@
 #import "AIInterfaceController.h"
 #import "ESContactAlertsController.h"
 #import "ESOpenMessageWindowContactAlertPlugin.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 

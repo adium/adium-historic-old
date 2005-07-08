@@ -15,6 +15,7 @@
             }; 
             SUPERCLASS = AIContactInfoPane; 
         }, 
+        {CLASS = AIDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {
             CLASS = AILocalizationTextField; 
             LANGUAGE = ObjC; 
@@ -34,7 +35,6 @@
             SUPERCLASS = AIObject; 
         }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = ESDelayedTextField; LANGUAGE = ObjC; SUPERCLASS = NSTextField; }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

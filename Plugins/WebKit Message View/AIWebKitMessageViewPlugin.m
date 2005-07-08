@@ -20,8 +20,8 @@
 #import "AIWebKitMessageViewPlugin.h"
 #import "ESWebKitMessageViewPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESBundleAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIBundleAdditions.h>
 
 @interface AIWebKitMessageViewPlugin (PRIVATE)
 - (void)_scanAvailableWebkitStyles;

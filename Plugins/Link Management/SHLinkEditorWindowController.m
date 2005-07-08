@@ -17,14 +17,13 @@
 #import "SHLinkEditorWindowController.h"
 #import "SHAutoValidatingTextView.h"
 #import <AIHyperlinks/SHLinkLexer.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 
 #define LINK_EDITOR_NIB_NAME        @"LinkEditor"
 #define FAVS_EDITOR_NIB_NAME        @"FavsEditor"
-#define CHOOSE_URL                  AILocalizedString(@"Select...",nil)
 
 @interface SHLinkEditorWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forTextView:(NSTextView *)inTextView notifyingTarget:(id)inTarget;

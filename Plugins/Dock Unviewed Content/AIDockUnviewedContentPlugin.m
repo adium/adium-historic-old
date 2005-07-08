@@ -47,7 +47,7 @@
 {
     if ([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
 		
-        if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+        if ([inChat unviewedContentCount]) {
             //If this is the first contact with unviewed content, animate the dock
             if (!unviewedState) {
                 [[adium dockController] setIconStateNamed:@"Alert"];

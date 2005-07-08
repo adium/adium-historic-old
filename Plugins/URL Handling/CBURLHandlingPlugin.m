@@ -22,7 +22,7 @@
 #import "CBURLHandlingPlugin.h"
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/ESURLAdditions.h>
+#import <AIUtilities/AIURLAdditions.h>
 #import <Adium/AIContentMessage.h>
 
 @interface CBURLHandlingPlugin(PRIVATE)
