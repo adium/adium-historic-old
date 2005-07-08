@@ -22,8 +22,8 @@
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIListObject.h>
 

@@ -25,8 +25,8 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageButton.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageButton.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
@@ -305,7 +305,7 @@
  */
 - (void)registerToolbarItem
 {
-	ESImageButton	*button;
+	AIImageButton	*button;
 	NSToolbarItem	*toolbarItem;
 
 	toolbarItems = [[NSMutableSet alloc] init];
@@ -320,7 +320,7 @@
 												 name:NSToolbarDidRemoveItemNotification
 											   object:nil];
 
-	button = [[ESImageButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
+	button = [[AIImageButton alloc] initWithFrame:NSMakeRect(0,0,32,32)];
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:@"UserIcon"
 														  label:AILocalizedString(@"Icon",nil)
 												   paletteLabel:AILocalizedString(@"Contact Icon",nil)
@@ -452,7 +452,7 @@
 												   direction:AIIconNormal];
 			}
 
-			[(ESImageButton *)[item view] setImage:image];
+			[(AIImageButton *)[item view] setImage:image];
 			break;
 		}
 	}
@@ -476,7 +476,7 @@
 	NSMenuItem		*menuItem = [menu itemAtIndex:1];
 	NSToolbarItem	*toolbarItem = [menuItem representedObject];
 
-	[menuItem setImage:[[[(ESImageButton *)[toolbarItem view] image] copy] autorelease]];
+	[menuItem setImage:[[[(AIImageButton *)[toolbarItem view] image] copy] autorelease]];
 }
 
 - (BOOL)validateMenuItem:(NSMenuItem *)menuItem

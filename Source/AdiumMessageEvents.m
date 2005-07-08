@@ -21,7 +21,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 @implementation AdiumMessageEvents
 

@@ -27,9 +27,9 @@
 #import "ESContactAlertsController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AITabViewAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
-#import <AIUtilities/ESImageViewWithImagePicker.h>
-#import <AIUtilities/ESOutlineViewAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
+#import <AIUtilities/AIOutlineViewAdditions.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListOutlineView.h>
@@ -391,16 +391,16 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	}
 }
 
-#pragma mark ESImageViewWithImagePicker Delegate
-// ESImageViewWithImagePicker Delegate ---------------------------------------------------------------------
-- (void)imageViewWithImagePicker:(ESImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+#pragma mark AIImageViewWithImagePicker Delegate
+// AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
 	if (displayedObject) {
 		[displayedObject setUserIconData:imageData];
 	}
 }
 
-- (void)deleteInImageViewWithImagePicker:(ESImageViewWithImagePicker *)sender
+- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
 {
 	if (displayedObject) {
 		NSImage *userImage;
@@ -418,9 +418,9 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 /*
  If the userIcon was bigger than our image view's frame, it will have been clipped before being passed
- to the ESImageViewWithImagePicker.  This delegate method lets us pass the original, unmodified userIcon.
+ to the AIImageViewWithImagePicker.  This delegate method lets us pass the original, unmodified userIcon.
  */
-- (NSImage *)imageForImageViewWithImagePicker:(ESImageViewWithImagePicker *)picker
+- (NSImage *)imageForImageViewWithImagePicker:(AIImageViewWithImagePicker *)picker
 {
 	return ([displayedObject userIcon]);
 }

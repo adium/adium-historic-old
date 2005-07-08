@@ -11,7 +11,7 @@
 #import "AIInterfaceController.h"
 #import "AIPreferenceWindowController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 @interface ESContactListAdvancedPreferences (PRIVATE)
 - (NSMenu *)windowPositionMenu;

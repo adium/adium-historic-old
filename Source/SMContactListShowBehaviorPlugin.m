@@ -20,7 +20,7 @@
 #import "AICoreComponentLoader.h"
 #import "AISCLViewPlugin.h"
 #import "AIListWindowController.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #define SHOW_CONTACT_LIST_BEHAVIOR_ALERT_SHORT	AILocalizedString(@"Show the contact list window",nil)
 #define SHOW_CONTACT_LIST_BEHAVIOR_ALERT_LONG	AILocalizedString(@"Show the contact list window for %.1f seconds",nil)

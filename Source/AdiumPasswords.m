@@ -21,7 +21,7 @@
 #import "ESProxyPasswordPromptController.h"
 #import <AIUtilities/AIKeychain.h>
 #import <AIUtilities/AIKeychainOld.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
 

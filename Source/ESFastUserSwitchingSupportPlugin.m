@@ -21,7 +21,7 @@
 #import "AIStatusController.h"
 #import "ESFastUserSwitchingSupportPlugin.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIAccount.h>
 
 #define FAST_USER_SWITCH_AWAY_STRING AILocalizedString(@"I have switched logged in users. Someone else may be using the computer.","Fast user switching away message")

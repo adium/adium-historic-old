@@ -21,7 +21,7 @@
 #import "AIToolbarController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListGroup.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>

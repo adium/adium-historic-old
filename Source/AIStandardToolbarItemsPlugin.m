@@ -20,7 +20,7 @@
 #import "AIStandardToolbarItemsPlugin.h"
 #import "AIToolbarController.h"
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 

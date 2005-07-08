@@ -17,7 +17,7 @@
 #import "AIInterfaceController.h"
 #import "AIPreferenceController.h"
 #import "CBContactLastSeenPlugin.h"
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
 
 #define PREF_GROUP_LAST_SEEN	@"Last Seen"

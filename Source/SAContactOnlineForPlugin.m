@@ -16,7 +16,7 @@
 
 #import "AIInterfaceController.h"
 #import "SAContactOnlineForPlugin.h"
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIListContact.h>
 

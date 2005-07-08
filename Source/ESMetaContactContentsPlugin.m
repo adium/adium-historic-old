@@ -16,7 +16,7 @@
 
 #import "AIInterfaceController.h"
 #import "ESMetaContactContentsPlugin.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>

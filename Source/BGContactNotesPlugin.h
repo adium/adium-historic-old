@@ -20,7 +20,7 @@
 
 @interface BGContactNotesPlugin : AIPlugin </*AIListObjectObserver, */AIContactListTooltipEntry> {
 //    IBOutlet    NSView                  *view_contactNotesInfoView;
-//    IBOutlet	ESDelayedTextField		*textField_notes;
+//    IBOutlet	AIDelayedTextField		*textField_notes;
 //
 //    AIPreferenceViewController			*contactView;
 //    AIListObject                        *activeListObject;

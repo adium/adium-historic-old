@@ -19,7 +19,7 @@
 #import "ESAddressBookIntegrationPlugin.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AILocalizationTextField.h>
 
 #define ADDRESS_BOOK_FIRST_LAST_OPTION			AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg")

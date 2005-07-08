@@ -37,7 +37,7 @@
 #import "ESFileTransferController.h"
 #import "LNAboutBoxController.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
-#import <AIUtilities/CBApplicationAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
 
 //#define NEW_APPLICATION_SUPPORT_DIRECTORY
 

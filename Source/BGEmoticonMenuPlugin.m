@@ -21,8 +21,8 @@
 #import "BGEmoticonMenuPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 #import <Adium/AIEmoticon.h>
 

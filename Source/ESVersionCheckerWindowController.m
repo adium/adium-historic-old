@@ -17,7 +17,7 @@
 #import "AIPreferenceController.h"
 #import "CPFVersionChecker.h"
 #import "ESVersionCheckerWindowController.h"
-#import <AIUtilities/ESDateFormatterAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
 
 #define ADIUM_UPDATE_URL			@"http://download.adiumx.com/"
 #define ADIUM_UPDATE_BETA_URL		@"http://beta.adiumx.com/"

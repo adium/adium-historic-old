@@ -20,7 +20,7 @@
 #import "GBApplescriptFiltersPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>

@@ -23,8 +23,8 @@
 #import "ESContactAlertsController.h"
 #import "NEHGrowlPlugin.h"
 #import "CBGrowlAlertDetailPane.h"
-#import <AIUtilities/CBApplicationAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>

@@ -16,13 +16,13 @@
  
 #import <Adium/AIWindowController.h>
 
-@class ESContactInfoListController, AIModularPaneCategoryView, ESImageViewWithImagePicker, AIAutoScrollView,
+@class ESContactInfoListController, AIModularPaneCategoryView, AIImageViewWithImagePicker, AIAutoScrollView,
 	   AIListOutlineView;
 @protocol AIListControllerDelegate;
 
 @interface AIContactInfoWindowController : AIWindowController <AIListControllerDelegate> {	
 	IBOutlet		NSTabView						*tabView_category;
-	IBOutlet		ESImageViewWithImagePicker		*imageView_userIcon;
+	IBOutlet		AIImageViewWithImagePicker		*imageView_userIcon;
 	IBOutlet		NSTextField						*textField_accountName;
 	IBOutlet		NSTextField						*textField_service;
 	
