@@ -540,7 +540,10 @@ specified by Unix98. */
 
 /* Define to 1 if your processor stores words with the most significant byte
    first (like Motorola and SPARC, unlike Intel and VAX). */
-#define WORDS_BIGENDIAN 1
+//XXX
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_3
+	#define WORDS_BIGENDIAN 1
+#endif
 
 /* Define to 1 if the X Window System is missing or not being used. */
 #define X_DISPLAY_MISSING 1
@@ -561,9 +564,7 @@ specified by Unix98. */
 /* #undef size_t */
 
 /* socklen_t size */
-#ifndef socklen_t
-#define socklen_t int
-#endif
+//#define socklen_t int
 
 /* For glib */
 #define	SIZEOF_CHAR	1
