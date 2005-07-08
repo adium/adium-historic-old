@@ -106,6 +106,10 @@ typedef enum {
 - (BOOL)isOpen;
 - (void)setIsOpen:(BOOL)flag;
 
+- (int)unviewedContentCount;
+- (void)incrementUnviewedContentCount;
+- (void)clearUnviewedContentCount;
+
 - (NSArray *)participatingListObjects;
 - (void)addParticipatingListObject:(AIListContact *)inObject;
 - (void)removeParticipatingListObject:(AIListContact *)inObject;
