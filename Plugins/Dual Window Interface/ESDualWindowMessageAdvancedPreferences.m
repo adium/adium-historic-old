@@ -19,8 +19,8 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESDateFormatterAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIDateFormatterAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 #warning crosslink
 #import "AIInterfaceController.h"

@@ -220,8 +220,8 @@
     //Close all our tabs (The array will change as we remove tabs, so we must work with a copy)
 	enumerator = [[tabView_messages tabViewItems] reverseObjectEnumerator];
     while ((tabViewItem = [enumerator nextObject])) {
-		[[adium interfaceController] closeChat:[tabViewItem chat]];
-    }
+		[interface closeChat:[tabViewItem chat]];
+	}
 
 	//Chats have all closed, set active to nil, let the interface know we closed.  We should skip this step if our
 	//window is no longer visible, since in that case another window will have already became active.
@@ -490,8 +490,9 @@
 //Close a message tab
 - (void)customTabView:(AICustomTabsView *)tabView closeTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	
-    [[adium interfaceController] closeChat:[(AIMessageTabViewItem *)tabViewItem chat]];
+	AIChat	*chat = [(AIMessageTabViewItem *)tabViewItem chat];
+
+	[interface closeChat:chat];
 }
 
 //Allow dragging of text

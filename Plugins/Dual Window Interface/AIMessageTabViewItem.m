@@ -114,15 +114,22 @@
 
 
 //Message View Delegate ----------------------------------------------------------------------
-//
+/*
+ * @brief The list objects participating in our chat changed
+ */
 - (void)chatParticipatingListObjectsChanged:(NSNotification *)notification
 {
-    //Observe its primary list object's status
+	AIListObject	*listObject;
+
+	//Remove the old observer
     [[adium notificationCenter] removeObserver:self name:ListObject_AttributesChanged object:nil];
-	if ([messageViewController listObject]) {
-		[[adium notificationCenter] addObserver:self selector:@selector(listObjectAttributesChanged:)
+
+	//If there is a single list object for this chat, observe its attribute changes
+	if ((listObject = [messageViewController listObject])) {
+		[[adium notificationCenter] addObserver:self
+									   selector:@selector(listObjectAttributesChanged:)
 										   name:ListObject_AttributesChanged
-										 object:[messageViewController listObject]];
+										 object:listObject];
 		
 	}
 }
@@ -134,10 +141,16 @@
 
     //If the display name changed, we resize the tabs
     if (notification == nil || [keys containsObject:@"DisplayName"]) {
-		[[[self tabView] delegate] resizeTabForTabViewItem:self];
+		id delegate = [[self tabView] delegate];
+		[delegate resizeTabForTabViewItem:self];
 		
-        //This should really be looked at and possibly a better method found.  This works and causes an automatic update to each open tab.  But it feels like a hack.  There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  I guess that's what this causes to happen, but the indirectness bugs me. - obviously not the best solution, but good enough for now.
-        [[[self tabView] delegate] tabViewDidChangeNumberOfTabViewItems:[self tabView]];
+        /* This should really be looked at and possibly a better method found.
+		 * This works and causes an automatic update to each open tab.  But it feels like a hack.
+		 * There is probably a more elegant method.  Something like [[[self tabView] delegate] redraw];  
+		 * I guess that's what this causes to happen, but the indirectness bugs me. It's obviously not the best solution,
+		 * but good enough for now.
+		 */
+        [delegate tabViewDidChangeNumberOfTabViewItems:[self tabView]];
     }
 }
 

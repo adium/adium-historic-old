@@ -19,6 +19,7 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
+#import "AIChatController.h"
 #import "ESDualWindowMessageAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <Adium/AIChat.h>
@@ -111,17 +112,25 @@
 	return(messageTab);
 }
 
-//Close a chat window
+/*
+ * @brief Close a chat
+ *
+ * First, tell the chatController to close the chat. If it returns YES, remove our interface to the chat.
+ * Take no action if it returns NO; this indicates that the chat shouldn't close, probably because it's about
+ * to receive another message.
+ */
 - (void)closeChat:(AIChat *)chat
 {
-	AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
-	AIMessageWindowController	*container = [messageTab container];
-	
-	//Close the chat
-	[container removeTabViewItem:messageTab silent:NO];
-	[chat setStatusObject:nil
-				   forKey:@"MessageTabViewItem"
-				   notify:NotifyNever];
+	if ([[adium chatController] closeChat:chat]) {
+		AIMessageTabViewItem		*messageTab = [chat statusObjectForKey:@"MessageTabViewItem"];
+		AIMessageWindowController	*container = [messageTab container];
+		
+		//Close the chat
+		[container removeTabViewItem:messageTab silent:NO];
+		[chat setStatusObject:nil
+					   forKey:@"MessageTabViewItem"
+					   notify:NotifyNever];
+	}
 }
 
 //Make a chat active

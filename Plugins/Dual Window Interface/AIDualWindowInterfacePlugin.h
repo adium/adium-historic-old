@@ -17,7 +17,7 @@
 #import <Adium/AIPlugin.h>
 
 @class AIContactListWindowController, AIDualWindowPreferences, AIMessageTabViewItem,
-	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences;
+	AIMessageWindowController, ESDualWindowMessageAdvancedPreferences, AIChat;
 
 @protocol AIInterfaceController;
 
