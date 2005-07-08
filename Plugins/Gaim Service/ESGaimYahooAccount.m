@@ -41,8 +41,8 @@ gboolean gaim_init_yahoo_plugin(void);
 {
 	[super configureGaimAccount];
 
-	gaim_account_set_string(account, "room_list", [[self preferenceForKey:KEY_YAHOO_ROOM_LIST_SERVER
-																   group:GROUP_ACCOUNT_STATUS] UTF8String]);
+	gaim_account_set_string(account, "room_list_locale", [[self preferenceForKey:KEY_YAHOO_ROOM_LIST_LOCALE
+																		   group:GROUP_ACCOUNT_STATUS] UTF8String]);
 
 	//Make sure we're not turning japanese oh no not turning japanese I really think so
 	gaim_account_set_bool(account, "yahoojp", FALSE);
