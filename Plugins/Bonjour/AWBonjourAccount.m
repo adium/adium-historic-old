@@ -23,6 +23,7 @@
  */
 
 #import "AIContactController.h"
+#import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIStatusController.h"
 #import "AWEzv.h"
@@ -38,7 +39,7 @@
 #import <Adium/AIStatus.h>
 #import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 static	NSLock				*threadPreparednessLock = nil;
 static	AWEzv				*_libezvThreadProxy = nil;
@@ -85,7 +86,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (AWEzv *)libezvThreadProxy
 {
-	if(!_libezvThreadProxy){
+	if (!_libezvThreadProxy) {
 		//Obtain the lock
 		threadPreparednessLock = [[NSLock alloc] init];
 		[threadPreparednessLock lock];
@@ -175,32 +176,32 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 														account:self
 															UID:[self UIDForContact:contact]];  
 	
-	if (![listContact remoteGroupName]){
+	if (![listContact remoteGroupName]) {
 		[listContact setRemoteGroupName:@"Bonjour"];
 	}
 	
 	//We only get state change updates on Online contacts
-	if (![listContact online]){
+	if (![listContact online]) {
 		[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Online" notify:NO];
 	}
 	
 	switch ([contact status]) {
 		case AWEzvAway:
-			if (![listContact integerStatusObjectForKey:@"Away"]){
+			if (![listContact integerStatusObjectForKey:@"Away"]) {
 				[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Away" notify:NO];
 			}
 			break;
 		case AWEzvOnline:
 		case AWEzvIdle:
 		default:
-			if ([listContact integerStatusObjectForKey:@"Away"]){
+			if ([listContact integerStatusObjectForKey:@"Away"]) {
 				[listContact setStatusObject:nil forKey:@"Away" notify:NO];
 			}
 	}
 	
-	if ((idleSinceDate = [contact idleSinceDate])){
+	if ((idleSinceDate = [contact idleSinceDate])) {
 		//Only set the new date object if the time interval has changed
-		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0){
+		if ([[listContact statusObjectForKey:@"IdleSince"] timeIntervalSinceDate:idleSinceDate] != 0) {
 			[listContact setStatusObject:idleSinceDate forKey:@"IdleSince" notify:NO];
 			[listContact setStatusObject:[NSNumber numberWithBool:YES] forKey:@"IsIdle" notify:NO];
 		}
@@ -209,10 +210,10 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 		[listContact setStatusObject:nil forKey:@"IsIdle" notify:NO];
 	}
 	
-    if ((statusMessage = [contact statusMessage])){
+    if ((statusMessage = [contact statusMessage])) {
 		NSString	*oldStatusMessage = [listContact stringFromAttributedStringStatusObjectForKey:@"StatusMessage"];
 		
-		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]){
+		if (!oldStatusMessage || ![oldStatusMessage isEqualToString:statusMessage]) {
 			[listContact setStatusObject:[[[NSAttributedString alloc] initWithString:statusMessage] autorelease]
 								  forKey:@"StatusMessage"
 								  notify:NO];
@@ -222,13 +223,13 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	}
 	
 	contactImage = [contact contactImage];
-	if(contactImage != [listContact userIcon]){
+	if (contactImage != [listContact userIcon]) {
 		[listContact setStatusObject:contactImage forKey:KEY_USER_ICON notify:NO];
 	}
 	
     //Use the contact alias as the serverside display name
 	contactName = [contact name];
-	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]){
+	if (![[listContact statusObjectForKey:@"Server Display Name"] isEqualToString:contactName]) {
 		//This is the server display name.  Set it as such.
 		[listContact setStatusObject:contactName
 							  forKey:@"Server Display Name"
@@ -296,7 +297,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
 																	UID:inUID];
-	chat = [[adium contentController] chatWithContact:listContact];
+	chat = [[adium chatController] chatWithContact:listContact];
 	
     msgObj = [AIContentMessage messageInChat:chat
 								  withSource:listContact
@@ -329,7 +330,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     listContact = [[adium contactController] existingContactWithService:service
 																account:self
 																	UID:inUID];
-	chat = [[adium contentController] existingChatWithContact:listContact];
+	chat = [[adium chatController] existingChatWithContact:listContact];
 	
     [chat setStatusObject:typingNumber
 				   forKey:KEY_TYPING
@@ -368,7 +369,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
     BOOL sent = NO;
-    if([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]){
+    if ([[object type] isEqualToString:CONTENT_MESSAGE_TYPE]) {
 		NSAttributedString  *attributedMessage = [(AIContentMessage *)object message];
 		NSString			*message = [attributedMessage string];
 		NSString			*htmlMessage = [AIHTMLDecoder encodeHTML:attributedMessage
@@ -396,7 +397,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 		sent = YES;
 
-    } else if([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
+    } else if ([[object type] isEqualToString:CONTENT_TYPING_TYPE]) {
 		AIContentTyping *contentTyping = (AIContentTyping*)object;
 		AIChat			*chat = [contentTyping chat];
 		AIListObject    *listObject = [chat listObject];
@@ -413,7 +414,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-    if([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]){
+    if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]) {
 		return(YES);
     }
     
@@ -441,15 +442,15 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
     BOOL    areOnline = [[self statusObjectForKey:@"Online"] boolValue];
     
     //Now look at keys which only make sense while online
-    if(areOnline){
-        if([key isEqualToString:@"IdleSince"]){
+    if (areOnline) {
+        if ([key isEqualToString:@"IdleSince"]) {
             NSDate	*idleSince = [self preferenceForKey:@"IdleSince" group:GROUP_ACCOUNT_STATUS];
 			
 			[[self libezvThreadProxy] setStatus:AWEzvIdle
 									withMessage:[[self statusMessage] string]];
             [self setAccountIdleTo:idleSince];
 			
-        }else if([key isEqualToString:KEY_USER_ICON]){
+        }else if ([key isEqualToString:KEY_USER_ICON]) {
 			NSData  *data = [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];
 
 			[self setAccountUserImage:(data ? [[[NSImage alloc] initWithData:data] autorelease] : nil)];
@@ -459,9 +460,9 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
-	if([self online]){
+	if ([self online]) {
 		AIStatusType	statusType = [statusState statusType];
-		switch(statusType){
+		switch(statusType) {
 			case AIAvailableStatusType:
 				[self setAccountAwayTo:nil];
 				break;
@@ -485,7 +486,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (void)setAccountAwayTo:(NSAttributedString *)awayMessage
 {
-	if(!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]){
+	if (!awayMessage || ![[awayMessage string] isEqualToString:[[self statusObjectForKey:@"StatusMessage"] string]]) {
 		if (awayMessage != nil)
 		    [[self libezvThreadProxy] setStatus:AWEzvAway withMessage:[awayMessage string]];
 		else
@@ -515,7 +516,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 {
 	static NSMutableSet *supportedPropertyKeys = nil;
 	
-	if (!supportedPropertyKeys){
+	if (!supportedPropertyKeys) {
 		supportedPropertyKeys = [[NSMutableSet alloc] initWithObjects:
 			@"Online",
 			@"Offline",
