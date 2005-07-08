@@ -25,12 +25,10 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
-#import <Adium/AIAccountMenu.h>
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
 - (void)menuNeedsUpdate:(NSMenu *)menu;
-- (void)accountStateChanged:(NSNotification *)notification;
 
 //Icon State
 - (void)setIconState:(SMI_Icon_State)state;
@@ -101,7 +99,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		[theMenu setDelegate:self];
 
 		//Setup for open chats and unviewed content catching
-		accountMenuItemsArray = [[NSMutableArray alloc] init];
 		stateMenuItemsArray = [[NSMutableArray alloc] init];
 		unviewedObjectsArray = [[NSMutableArray alloc] init];
 		openChatsArray = [[NSMutableArray alloc] init];
@@ -133,9 +130,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 		//Register ourself for the status menu items
 		[[adium statusController] registerStateMenuPlugin:self];
-
-		//Account menu
-		accountMenu = [[AIAccountMenu accountMenuWithDelegate:self submenuType:AIAccountStatusSubmenu showTitleVerbs:NO] retain];
 	}
 
 	return self;
@@ -154,7 +148,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 //	[statusItem release];
 	[theMenu release];
 	[unviewedObjectsArray release];
-	[accountMenu release];
 
 	//To the superclass, Robin!
 	[super dealloc];
@@ -182,20 +175,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		}
 	}
 }
-
-//Account Menu --------------------------------------------------------
-#pragma mark Account Menu
-- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems {
-	[accountMenuItemsArray release];
-	accountMenuItemsArray = [menuItems retain];
-
-	//We need to update next time we're clicked
-	needsUpdate = YES;
-}
-- (void)accountMenu:(AIAccountMenu *)inAccountMenu didSelectAccount:(AIAccount *)inAccount {
-	[[adium accountController] toggleConnectionOfAccount:inAccount];
-}
-
 
 //StateMenuPlugin --------------------------------------------------------
 #pragma mark StateMenuPlugin
@@ -330,35 +309,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 			//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
 			if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
 				[[menuItem target] validateMenuItem:menuItem];
-			}
-		}
-
-		if ([accountMenuItemsArray count] > 0) {
-			[menu addItem:[NSMenuItem separatorItem]];
-
-			//Add the account menu items
-			enumerator = [accountMenuItemsArray objectEnumerator];
-			while ((menuItem = [enumerator nextObject])) {
-				NSMenu	*submenu;
-
-				[menu addItem:menuItem];
-
-				//Validate the menu items as they are added since they weren't previously validated when the menu was clicked
-				if ([[menuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-					[[menuItem target] validateMenuItem:menuItem];
-				}
-
-				submenu = [menuItem submenu];
-				if (submenu) {
-					NSEnumerator	*submenuEnumerator = [[submenu itemArray] objectEnumerator];
-					NSMenuItem		*submenuItem;
-					while ((submenuItem = [submenuEnumerator nextObject])) {
-						//Validate the submenu items as they are added since they weren't previously validated when the menu was clicked
-						if ([[submenuItem target] respondsToSelector:@selector(validateMenuItem:)]) {
-							[[submenuItem target] validateMenuItem:submenuItem];
-						}
-					}
-				}
 			}
 		}
 
