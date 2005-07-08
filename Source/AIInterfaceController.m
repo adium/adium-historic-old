@@ -239,7 +239,7 @@
 		//If windows are open, try switching to a chat with unviewed content
 		if ((mostRecentUnviewedChat = [[adium chatController] mostRecentUnviewedChat])) {
 			//If the most recently active chat has unviewed content, don't switch away from it
-			if (![[self mostRecentActiveChat] integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+			if (![[self mostRecentActiveChat] unviewedContentCount]) {
 				[self setActiveChat:mostRecentUnviewedChat];
 			}
 
@@ -344,10 +344,13 @@
 	}
 }
 
-//Close the window for a chat
+/*
+ * @brief Close the interface for a chat
+ *
+ * Tell the interface plugin to close the chat.
+ */
 - (void)closeChat:(AIChat *)inChat
 {
-	[inChat setIsOpen:NO];
     [interfacePlugin closeChat:inChat];
 }
 
@@ -452,8 +455,8 @@
 		* active. Specifically, this lets the handleReopenWithVisibleWindows: method have a chance to know that this chat
 		* had unviewed content.
 		*/
-		[self performSelector:@selector(clearUnviewedContentOfChat:)
-				   withObject:inChat
+		[inChat performSelector:@selector(clearUnviewedContentCount)
+					 withObject:nil
 				   afterDelay:0];
 	}		
 }
@@ -476,7 +479,7 @@
 - (void)chatDidClose:(AIChat *)inChat
 {
 	[self _resetOpenChatsCache];
-	[self clearUnviewedContentOfChat:inChat];
+	[inChat clearUnviewedContentCount];
 	[self buildWindowMenu];
 	
 	if (inChat == activeChat) {
@@ -495,11 +498,7 @@
 	[self buildWindowMenu];
 }
 
-//Clear the unviewed content count of the chat.  This is done when chats are made active or closed.
-- (void)clearUnviewedContentOfChat:(AIChat *)inChat
-{
-	[[adium chatController] clearUnviewedContentOfChat:inChat];
-}
+#pragma mark Unviewed content
 
 //Content was received, increase the unviewed content count of the chat (if it's not currently active)
 - (void)didReceiveContent:(NSNotification *)notification
@@ -507,7 +506,7 @@
 	AIChat		*chat = [[notification userInfo] objectForKey:@"AIChat"];
 	
 	if (chat != activeChat) {
-		[[adium chatController] increaseUnviewedContentOfChat:chat];
+		[chat incrementUnviewedContentCount];
 	}
 }
 
