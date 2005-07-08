@@ -158,16 +158,7 @@
 {   
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 
-    if (chat) {
-        [[adium chatController] closeChat:chat];
-		
-		/* Ensure the chat knows it is closed.  I'm not sure how we can get here without the interface controller's
-		 * closeChat: being called first, but it's possible.  This may indicate a subtle, deeper bug elsewhere. */
-		[chat setIsOpen:NO];
-
-		[chat release]; chat = nil;
-    }
-	
+	[chat release]; chat = nil;
 
     //remove observers
     [[adium notificationCenter] removeObserver:self];
