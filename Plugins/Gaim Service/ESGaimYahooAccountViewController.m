@@ -49,7 +49,7 @@
 {
 	[super configureForAccount:inAccount];
 
-	[popUp_chatServer selectItemWithRepresentedObject:[inAccount preferenceForKey:KEY_YAHOO_ROOM_LIST_SERVER
+	[popUp_chatServer selectItemWithRepresentedObject:[inAccount preferenceForKey:KEY_YAHOO_ROOM_LIST_LOCALE
 																			group:GROUP_ACCOUNT_STATUS]];
 }
 
@@ -61,7 +61,7 @@
     [super saveConfiguration];
 	
 	[account setPreference:[[popUp_chatServer selectedItem] representedObject]
-					forKey:KEY_YAHOO_ROOM_LIST_SERVER
+					forKey:KEY_YAHOO_ROOM_LIST_LOCALE
 					 group:GROUP_ACCOUNT_STATUS];
 }
 
@@ -87,7 +87,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 		@"Canada", @"ca",
 		@"Central African Republic", @"cf",
 		@"China", @"cn",
-		@"Germany", @"de",
+/*		@"Germany", @"de",*/
 		@"Denmark", @"dk",
 		@"Spain", @"es",
 		@"France", @"fr",
@@ -107,7 +107,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 																	 target:nil
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
-	[menuItem setRepresentedObject:@"http://insider.msg.yahoo.com/ycontent"];
+	[menuItem setRepresentedObject:@"us"];
 	[menuItems addObject:menuItem];
 
 	enumerator = [roomListServersDict keyEnumerator];
@@ -116,7 +116,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 																		 target:nil
 																		 action:nil
 																  keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:[NSString stringWithFormat:@"http://%@.insider.msg.yahoo.com/ycontent",prefix]];
+		[menuItem setRepresentedObject:prefix];
 		[menuItems addObject:menuItem];		
 	}
 
