@@ -17,7 +17,7 @@
 #import "AIWindowController.h"
 #import "AIStatus.h"
 
-@class AIAccount, ESTextViewWithPlaceholder, AIService, AIAutoScrollView, AISendingTextView;
+@class AIAccount, AITextViewWithPlaceholder, AIService, AIAutoScrollView, AISendingTextView;
 
 @interface AIEditStateWindowController : AIWindowController {
 	IBOutlet	NSBox				*box_title;
