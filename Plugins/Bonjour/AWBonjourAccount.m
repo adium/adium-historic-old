@@ -75,13 +75,13 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 
 - (BOOL)disconnectOnFastUserSwitch
 {
-	return(YES);
+	return YES;
 }
 
 //No need for a password for Bonjour accounts
 - (BOOL)requiresPassword
 {
-	return(NO);
+	return NO;
 }
 
 - (AWEzv *)libezvThreadProxy
@@ -414,23 +414,24 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 //Return YES if we're available for sending the specified content.  If inListObject is NO, we can return YES if we will 'most likely' be able to send the content.
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
+	BOOL retVal = NO;
     if ([inType isEqualToString:CONTENT_MESSAGE_TYPE] && [self online]) {
-		return(YES);
+		retVal = YES;
     }
     
-    return NO;
+    return retVal;
 }
 
 //Initiate a new chat
 - (BOOL)openChat:(AIChat *)chat
 {
-    return(YES);
+    return YES;
 }
 
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)inChat
 {
-    return(YES);
+    return YES;
 }
 
 #pragma mark Account Status
@@ -540,7 +541,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	NSString	*userName = [contact name];
 	return([NSString stringWithFormat:@"%@ [%@]",name,[ substringFromIndex:[name length]]]);
 	 */
-	return([contact uniqueID]);
+	return [contact uniqueID];
 }
 
 #pragma mark Bonjour Thread

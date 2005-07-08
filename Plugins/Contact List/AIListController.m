@@ -86,7 +86,7 @@ typedef enum {
 
 	[self contactListChanged:nil];
 
-	return(self);
+	return self;
 }
 
 //Setup the window after it has loaded
@@ -149,7 +149,7 @@ typedef enum {
 //Size for window zoom
 - (NSRect)windowWillUseStandardFrame:(NSWindow *)sender defaultFrame:(NSRect)defaultFrame
 {
-    return([self _desiredWindowFrameUsingDesiredWidth:YES desiredHeight:YES]);
+    return [self _desiredWindowFrameUsingDesiredWidth:YES desiredHeight:YES];
 }
 
 //Window moved, remember which side the user has docked it to
@@ -333,7 +333,7 @@ typedef enum {
 		if (NSMinX(newWindowFrame) < NSMinX(boundingFrame)) newWindowFrame.origin.x = NSMinX(boundingFrame);
 	}
 
-	return(newWindowFrame);
+	return newWindowFrame;
 }
 
 - (void)setMinWindowSize:(NSSize)inSize {
@@ -400,7 +400,7 @@ typedef enum {
 	}
 
 	//Modify no keys
-	return(nil);
+	return nil;
 }
 
 /*
@@ -468,6 +468,7 @@ typedef enum {
 - (NSDragOperation)outlineView:(NSOutlineView*)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
 {
     NSString	*avaliableType = [[info draggingPasteboard] availableTypeFromArray:[NSArray arrayWithObject:@"AIListObject"]];
+	NSDragOperation retVal = NSDragOperationPrivate;
 	
 	//No dropping into contacts
     if ([avaliableType isEqualToString:@"AIListObject"]) {
@@ -492,11 +493,11 @@ typedef enum {
 		}
 		
 		if (index == NSOutlineViewDropOnItemIndex && ![item isKindOfClass:[AIListGroup class]]) {
-			return(NSDragOperationCopy);
+			retVal = NSDragOperationCopy;
 		}
 	}
 	
-	return(NSDragOperationPrivate);
+	return NSDragOperationPrivate;
 }
 
 //
@@ -542,7 +543,7 @@ typedef enum {
 	
 	[super outlineView:outlineView acceptDrop:info item:item childIndex:index];
 	
-    return(YES);
+    return YES;
 }
 - (void)mergeContactSheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
