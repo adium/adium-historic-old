@@ -122,13 +122,6 @@
 	if (confirmLoading) {
 		loadPlugin = [self confirmPluginAtPath:pluginPath];
 	}
-
-	//Special case for webkit.  Trying to load the webkit plugin on a 10.2 system will get us into trouble
-	//with linking (because webkit may not be present).  This special case code recognizes the webkit plugin
-	//and skips it if webkit is not available.
-	if ([[pluginPath lastPathComponent] isEqualToString:WEBKIT_PLUGIN] && ![NSApp isWebKitAvailable]) {
-		loadPlugin = NO;
-	}
 		
 	//Load the plugin
 	if (loadPlugin) {
