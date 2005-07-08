@@ -72,7 +72,6 @@
 		34486C6106D1DF0400DA778C /* AIEventAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B6106D1DF0300DA778C /* AIEventAdditions.m */; };
 		34486C6206D1DF0400DA778C /* AIFileManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B6206D1DF0300DA778C /* AIFileManagerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C6306D1DF0400DA778C /* AIFileManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B6306D1DF0300DA778C /* AIFileManagerAdditions.m */; };
-		34486C7606D1DF0400DA778C /* AIFontAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7606D1DF0300DA778C /* AIFontAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C7806D1DF0400DA778C /* AIGradient.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7806D1DF0300DA778C /* AIGradient.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C7906D1DF0400DA778C /* AIGradient.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B7906D1DF0300DA778C /* AIGradient.m */; };
 		34486C7A06D1DF0400DA778C /* AIGradientCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B7A06D1DF0300DA778C /* AIGradientCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -304,6 +303,7 @@
 		34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleToolbarItem.m; path = Source/AIFlexibleToolbarItem.m; sourceTree = "<group>"; };
 		34057F25087E032400664D64 /* AIFontManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFontManagerAdditions.m; path = Source/AIFontManagerAdditions.m; sourceTree = "<group>"; };
 		34057F26087E032400664D64 /* AIFontManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFontManagerAdditions.h; path = Source/AIFontManagerAdditions.h; sourceTree = "<group>"; };
+		340580C3087EEFB900664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/Localizable.strings; sourceTree = "<group>"; };
 		3433564B0793699400C84B15 /* AIKeychainOld.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIKeychainOld.m; path = Source/AIKeychainOld.m; sourceTree = "<group>"; };
 		3433564C0793699400C84B15 /* AIKeychainOld.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIKeychainOld.h; path = Source/AIKeychainOld.h; sourceTree = "<group>"; };
 		34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAlternatingRowOutlineView.h; path = Source/AIAlternatingRowOutlineView.h; sourceTree = "<group>"; };
@@ -350,7 +350,6 @@
 		34486B6106D1DF0300DA778C /* AIEventAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEventAdditions.m; path = Source/AIEventAdditions.m; sourceTree = "<group>"; };
 		34486B6206D1DF0300DA778C /* AIFileManagerAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFileManagerAdditions.h; path = Source/AIFileManagerAdditions.h; sourceTree = "<group>"; };
 		34486B6306D1DF0300DA778C /* AIFileManagerAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFileManagerAdditions.m; path = Source/AIFileManagerAdditions.m; sourceTree = "<group>"; };
-		34486B7606D1DF0300DA778C /* AIFontAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFontAdditions.h; path = Source/AIFontAdditions.h; sourceTree = "<group>"; };
 		34486B7806D1DF0300DA778C /* AIGradient.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradient.h; path = Source/AIGradient.h; sourceTree = "<group>"; };
 		34486B7906D1DF0300DA778C /* AIGradient.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGradient.m; path = Source/AIGradient.m; sourceTree = "<group>"; };
 		34486B7A06D1DF0300DA778C /* AIGradientCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGradientCell.h; path = Source/AIGradientCell.h; sourceTree = "<group>"; };
@@ -1419,7 +1418,6 @@
 				34486C5E06D1DF0400DA778C /* AIDockingWindow.h in Headers */,
 				34486C6006D1DF0400DA778C /* AIEventAdditions.h in Headers */,
 				34486C6206D1DF0400DA778C /* AIFileManagerAdditions.h in Headers */,
-				34486C7606D1DF0400DA778C /* AIFontAdditions.h in Headers */,
 				34486C7806D1DF0400DA778C /* AIGradient.h in Headers */,
 				34486C7A06D1DF0400DA778C /* AIGradientCell.h in Headers */,
 				34486C7E06D1DF0400DA778C /* AIImageTextCell.h in Headers */,
@@ -1585,6 +1583,7 @@
 				cs,
 				is,
 				Norwegian,
+				Russian,
 			);
 			mainGroup = 0867D691FE84028FC02AAC07 /* AIUtilities.framework */;
 			productRefGroup = 034768DFFF38A50411DB9C8B /* Products */;
@@ -1764,6 +1763,7 @@
 				34B82A43085A0A1A00864531 /* cs */,
 				34B82A45085A0A1D00864531 /* is */,
 				34B82A47085A0A2700864531 /* Norwegian */,
+				340580C3087EEFB900664D64 /* Russian */,
 			);
 			name = Localizable.strings;
 			sourceTree = "<group>";
