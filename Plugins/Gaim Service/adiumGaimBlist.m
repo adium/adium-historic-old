@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimBlist.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIListContact.h>
 
 static NSMutableDictionary	*groupDict = nil;

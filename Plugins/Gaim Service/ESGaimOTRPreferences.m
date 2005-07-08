@@ -16,7 +16,7 @@
 
 #import "ESGaimOTRPreferences.h"
 #import "AIAccountController.h"
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccountMenu.h>
 #import "SLGaimCocoaAdapter.h"

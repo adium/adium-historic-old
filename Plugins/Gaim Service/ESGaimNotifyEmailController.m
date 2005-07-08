@@ -19,7 +19,7 @@
 #import "GaimCommon.h"
 #import "ESTextAndButtonsWindowController.h"
 #import "ESContactAlertsController.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 @interface ESGaimNotifyEmailController (PRIVATE)
 + (void)openURLString:(NSString *)urlString;

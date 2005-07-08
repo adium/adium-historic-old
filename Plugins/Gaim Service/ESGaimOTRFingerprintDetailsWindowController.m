@@ -11,7 +11,7 @@
 #import <Adium/AIAccount.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/NDRunLoopMessenger.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 
 /* libotr headers */
 #import <libotr/proto.h>

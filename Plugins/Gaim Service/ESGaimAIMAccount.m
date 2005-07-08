@@ -18,7 +18,7 @@
 #import <Adium/AIService.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 #define DELAYED_UPDATE_INTERVAL			1.0
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58

@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimFt.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 static void adiumGaimNewXfer(GaimXfer *xfer)
 {

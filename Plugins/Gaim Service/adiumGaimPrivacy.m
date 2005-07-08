@@ -15,7 +15,7 @@
  */
 
 #import "adiumGaimPrivacy.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 
 static void adiumGaimPermitAdded(GaimAccount *account, const char *name)
 {

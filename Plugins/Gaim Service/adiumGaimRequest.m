@@ -19,7 +19,7 @@
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimAuthorizationRequestWindowController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
-#import <AIUtilities/CBObjectAdditions.h>
+#import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 
 //Jabber registration
