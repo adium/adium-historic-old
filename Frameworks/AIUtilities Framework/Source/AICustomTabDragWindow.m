@@ -7,8 +7,8 @@
 //
 
 #import "AICustomTabDragWindow.h"
-#import "ESFloater.h"
-#import "CBApplicationAdditions.h"
+#import "AIFloater.h"
+#import "AIApplicationAdditions.h"
 #import "AICustomTabsView.h"
 #import "AICustomTabCell.h"
 
@@ -39,11 +39,11 @@
 
 		if (useFancyAnimations) {
 			//Create a floating window for our tab
-			dragTabFloater = [ESFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
+			dragTabFloater = [AIFloater floaterWithImage:floaterTabImage styleMask:NSBorderlessWindowMask];
 			[dragTabFloater setMaxOpacity:1.0];
 
 			//Create a floating window for the stand-alone window our tab would produce
-			dragWindowFloater = [ESFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
+			dragWindowFloater = [AIFloater floaterWithImage:floaterWindowImage styleMask:NSTitledWindowMask];
 			[dragWindowFloater setMaxOpacity:(transparent ? 0.75 : 1.00)];
 		}
 	}

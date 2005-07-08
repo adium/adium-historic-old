@@ -18,7 +18,7 @@
 #import "AIColorAdditions.h"
 #import "AIScannerAdditions.h"
 #import "AIFunctions.h"
-#import "CBApplicationAdditions.h"
+#import "AIApplicationAdditions.h"
 
 #include <unistd.h>
 #include <limits.h>

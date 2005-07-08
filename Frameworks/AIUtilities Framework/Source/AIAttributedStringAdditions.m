@@ -20,7 +20,7 @@
 #import "AIAttributedStringAdditions.h"
 #import "AIColorAdditions.h"
 #import "AITextAttributes.h"
-#import "CBApplicationAdditions.h"
+#import "AIApplicationAdditions.h"
 
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 

@@ -16,7 +16,7 @@
 #import "AICustomTabCell.h"
 #import "AICustomTabsView.h"
 #import "AICursorAdditions.h"
-#import "ESImageAdditions.h"
+#import "AIImageAdditions.h"
 #import "AIEventAdditions.h"
 #import "AIParagraphStyleAdditions.h"
 

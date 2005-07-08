@@ -294,7 +294,7 @@
 /*!
  * @brief Retrieve a keychain dictionary for a given key
  *
- * Retrieve a keychain dictionary for a given key.  See <tt>ESSystemNetworkDefaults</tt> for an example useage.
+ * Retrieve a keychain dictionary for a given key.  See <tt>AISystemNetworkDefaults</tt> for an example useage.
  * @param key The key by which to retrieve the dictionary
  * @return An <tt>NSDictionary</tt> of the values from the keychain.
  */

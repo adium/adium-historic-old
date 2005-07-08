@@ -18,7 +18,7 @@
  */
 
 #import "AIGradient.h"
-#import "BZContextImageBridge.h"
+#import "AIContextImageBridge.h"
 #import "AIColorAdditions.h"
 
 @interface AIGradient (PRIVATE)
@@ -222,7 +222,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 			);
 
 			if (shading != NULL) {
-				BZContextImageBridge *bridge = [BZContextImageBridge bridgeWithSize:inRect.size];
+				AIContextImageBridge *bridge = [AIContextImageBridge bridgeWithSize:inRect.size];
 				CGContextRef context = [bridge context];
 
 				if (context != NULL) {
