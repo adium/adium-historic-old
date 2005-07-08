@@ -43,6 +43,13 @@
             SUPERCLASS = AIWindowController; 
         }, 
         {
+            ACTIONS = {showImagePicker = id; }; 
+            CLASS = AIImageViewWithImagePicker; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {delegate = id; }; 
+            SUPERCLASS = NSImageView; 
+        }, 
+        {
             CLASS = AIListOutlineView; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIMultiCellOutlineView; 
@@ -74,12 +81,6 @@
             CLASS = AIWindowController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = NSWindowController; 
-        }, 
-        {
-            CLASS = ESImageViewWithImagePicker; 
-            LANGUAGE = ObjC; 
-            OUTLETS = {delegate = id; }; 
-            SUPERCLASS = NSImageView; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }, 
