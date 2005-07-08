@@ -93,7 +93,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(DOCK_OVERLAY_ALERT_SHORT);
+	return DOCK_OVERLAY_ALERT_SHORT;
 }
 
 /*!
@@ -102,7 +102,7 @@
  */
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(DOCK_OVERLAY_ALERT_LONG);
+	return DOCK_OVERLAY_ALERT_LONG;
 }
 
 /*!
@@ -111,7 +111,7 @@
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
 	//XXX
-	return([NSImage imageNamed:@"DockAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"DockAlert" forClass:[self class]];
 }
 
 /*!
@@ -212,7 +212,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -262,7 +262,7 @@
 		}
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -438,7 +438,7 @@
 	
     [image unlockFocus];
     
-    return(image);
+    return image;
 }
 
 @end
