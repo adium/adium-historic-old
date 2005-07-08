@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AIChatController.h"
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIStressTestAccount.h"
@@ -278,7 +279,7 @@
 														account:self
 															UID:buddyUID])) {
         AIContentMessage *messageObject;
-        messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
+        messageObject = [AIContentMessage messageInChat:[[adium chatController] chatWithContact:contact]
 											 withSource:contact
                                             destination:self
 												   date:nil
@@ -312,7 +313,7 @@
 															UID:buddyUID])) {
         AIContentMessage *messageObject;
         if (msgIn) {
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
+            messageObject = [AIContentMessage messageInChat:[[adium chatController] chatWithContact:contact]
                                                  withSource:self
                                                 destination:contact
                                                        date:nil
@@ -321,7 +322,7 @@
                                                   autoreply:YES];
             [[adium contentController] sendContentObject:messageObject];
         } else {
-            messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:contact]
+            messageObject = [AIContentMessage messageInChat:[[adium chatController] chatWithContact:contact]
                                                  withSource:contact
                                                 destination:self
                                                        date:nil
@@ -358,9 +359,9 @@
 																				 UID:buddyUID]];
 		}
 		
-		groupChat = [[[adium contentController] chatWithName:[NSString stringWithFormat:@"%@'s Chat",[[listObjectArray objectAtIndex:0] displayName]]
-												  onAccount:self
-											chatCreationInfo:nil] retain];
+		groupChat = [[[adium chatController] chatWithName:[NSString stringWithFormat:@"%@'s Chat",[[listObjectArray objectAtIndex:0] displayName]]
+												onAccount:self
+										 chatCreationInfo:nil] retain];
 		
 	}
 	
@@ -422,7 +423,7 @@
 - (void)_echo:(NSString *)string
 {
     AIContentMessage *messageObject;
-    messageObject = [AIContentMessage messageInChat:[[adium contentController] chatWithContact:commandContact]
+    messageObject = [AIContentMessage messageInChat:[[adium chatController] chatWithContact:commandContact]
                                          withSource:commandContact
                                         destination:self
                                                date:nil
