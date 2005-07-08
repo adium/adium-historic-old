@@ -266,7 +266,7 @@
 			 keyEquivalent:@""
 					   tag:AIBrackets];
 	
-	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Brackets (%@ and %@)","Word for { and } keys"), [NSString stringWithUTF8String:"⌘{"], [NSString stringWithUTF8String:"⌘}"]]
+	[menu addItemWithTitle:[NSString stringWithFormat:AILocalizedString(@"Curly braces (%@ and %@)","Word for { and } keys"), [NSString stringWithUTF8String:"⌘{"], [NSString stringWithUTF8String:"⌘}"]]
 					target:nil
 					action:nil
 			 keyEquivalent:@""
