@@ -23,8 +23,9 @@
 #import "AIListLayoutWindowController.h"
 #import "AIListThemeWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import <AIUtilities/ESImageAdditions.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIEmoticonController.h>
 #import <Adium/AIIconState.h>
 #import <Adium/AIServiceIcons.h>
@@ -771,13 +772,13 @@ typedef enum {
 	[menu addItem:[NSMenuItem separatorItem]];
 
 	//Preset management	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Layout...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Add New Layout",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(createListLayout:)
 															  keyEquivalent:@""] autorelease];
 	[menu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Layouts...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Edit Layouts",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(manageListLayouts:)
 															  keyEquivalent:@""] autorelease];
@@ -812,13 +813,13 @@ typedef enum {
 	[menu addItem:[NSMenuItem separatorItem]];
 	
 	//Preset management	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Add New Theme...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Add New Theme",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(createListTheme:)
 															  keyEquivalent:@""] autorelease];
 	[menu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Edit Themes...",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[AILocalizedString(@"Edit Themes",nil) stringByAppendingEllipsis]
 																	 target:self
 																	 action:@selector(manageListThemes:)
 															  keyEquivalent:@""] autorelease];
