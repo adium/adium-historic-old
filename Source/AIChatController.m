@@ -618,7 +618,7 @@
 - (int) unviewedContentCount
 {
 	int count = 0;
-	NSEnumerator * enu = [[[adium chatController] openChats] objectEnumerator];
+	NSEnumerator * enu = [[self openChats] objectEnumerator];
 	AIChat * chat;
 	while(chat = [enu nextObject])
 	{
