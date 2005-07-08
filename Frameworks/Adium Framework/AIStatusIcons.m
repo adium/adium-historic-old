@@ -226,7 +226,7 @@ static NSString *statusNameForChat(AIChat *inChat)
 	if (typingState == AITyping) {
 		return(@"typing");
 
-	} else if ([inChat integerStatusObjectForKey:KEY_UNVIEWED_CONTENT]) {
+	} else if ([inChat unviewedContentCount]) {
 		return(@"content");
 		
 	} else if (typingState == AIEnteredText) {
