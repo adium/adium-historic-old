@@ -138,25 +138,37 @@
 	return status;
 }
 
-//Progress update
-- (void)setPercentDone:(float)inPercent bytesSent:(int)inBytesSent
+/*
+ * @brief Report a progress update on the file transfer
+ *
+ * @param inPercent The percentage complete.  If 0, inBytesSent will be used to calculate the percent complete if possible.
+ * @param inBytesSent The number of bytes sent. If 0, inPercent will be used to calculate bytes sent if possible.
+ */
+- (void)setPercentDone:(float)inPercent bytesSent:(unsigned long long)inBytesSent
 {
 	float oldPercentDone = percentDone;
-	int oldBytesSent = bytesSent;
-	
-    if (inPercent == -1) {
-        if (inBytesSent != -1 && size != -1) {
-            percentDone = (inBytesSent / size);
+	unsigned long long oldBytesSent = bytesSent;
+
+    if (inPercent == 0) {		
+        if (inBytesSent != 0 && size != 0) {
+            percentDone = ((float)inBytesSent / (float)size);
+		} else {
+			percentDone = inPercent;
 		}
+
     } else {
         percentDone = inPercent;
     }
-	
-    if (inBytesSent == -1) {
-        if (inPercent != -1 && size != -1) {
+
+    if (inBytesSent == 0) {
+        if (inPercent != 0 && size != 0) {
             bytesSent = inPercent * size;
+		} else {
+			bytesSent = inBytesSent;			
 		}
+
     } else {
+
         bytesSent = inBytesSent;
 	}
 	
