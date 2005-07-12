@@ -317,14 +317,14 @@
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
 			[self pathForVariant:variant],												//Variant path
 			(showHeader ? headerHTML : @""),
-			footerHTML];
+			(footerHTML ? footerHTML : @"")];
 	} else {
 		templateHTML = [NSMutableString stringWithFormat:baseHTML,						//Template
 			[[NSURL fileURLWithPath:stylePath] absoluteString],							//Base path
 			(styleVersion < 3 ? @"" : @"@import url( \"main.css\" );"),					//Import main.css by default (For version 3 and newer styles)
 			[self pathForVariant:variant],												//Variant path
 			(showHeader ? headerHTML : @""),
-			footerHTML];
+			(footerHTML ? footerHTML : @"")];
 	}
 
 	return([self fillKeywordsForBaseTemplate:templateHTML chat:chat]);
