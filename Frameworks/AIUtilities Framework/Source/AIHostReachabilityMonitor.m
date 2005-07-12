@@ -6,6 +6,7 @@
 //
 
 #import "AIHostReachabilityMonitor.h"
+#import "AISleepNotification.h"
 #import <SystemConfiguration/SystemConfiguration.h>
 #include <arpa/inet.h>
 #include <netdb.h>
@@ -64,6 +65,12 @@ static AIHostReachabilityMonitor *singleton = nil;
 		ipChangesRunLoopSourceRef = nil;
 
 		[hostAndObserverListLock unlock];
+		
+		//Monitor system sleep so we can accurately report connectivity changes when the system wakes
+		[[NSNotificationCenter defaultCenter] addObserver:self
+												 selector:@selector(systemDidWake:)
+													 name:AISystemDidWake_Notification
+												   object:nil];
 	}
 	return self;
 }
@@ -82,6 +89,8 @@ static AIHostReachabilityMonitor *singleton = nil;
 	[hostAndObserverListLock unlock];
 
 	[hostAndObserverListLock release];
+
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 
 	[super dealloc];
 }
@@ -124,8 +133,11 @@ static AIHostReachabilityMonitor *singleton = nil;
 			if ((!host) || (host == [hosts objectAtIndex:i])) {
 				[hosts          removeObjectAtIndex:i];
 				[observers      removeObjectAtIndex:i];
+				SCNetworkReachabilityScheduleWithRunLoop((SCNetworkReachabilityRef)[reachabilities objectAtIndex:i],
+														 CFRunLoopGetCurrent(),
+														 kCFRunLoopDefaultMode);
 				[reachabilities removeObjectAtIndex:i];
-				
+
 				[self removeUnconfiguredHost:host
 									observer:newObserver];
 				
@@ -241,12 +253,12 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 			SCNetworkReachabilityScheduleWithRunLoop(reachabilityRef,
 													 CFRunLoopGetCurrent(),
 													 kCFRunLoopDefaultMode);
-						
+			
 			//Note that we succesfully configured for reachability notifications
 			[self gotReachabilityRef:(SCNetworkReachabilityRef)[(NSObject *)reachabilityRef autorelease]
 							 forHost:host
 							observer:observer];
-			
+
 			/* Perform an immediate reachability check, since we've just scheduled checks for future changes
 			 * and won't be notified immediately.  We update the hostContext to include our reachabilityRef before
 			 * scheduling the info resolution (it's still in our run loop from when we requested the IP address).
@@ -499,6 +511,46 @@ static OSStatus CreateIPAddressListChangeCallbackSCF(SCDynamicStoreCallBack call
 							  kCFRunLoopDefaultMode);
 		CFRelease(ipChangesRunLoopSourceRef);
 		ipChangesRunLoopSourceRef = nil;
+	}
+}
+
+#pragma mark -
+#pragma mark Sleep and Wake
+
+/*!
+ * @brief System is waking from sleep
+ *
+ * When the system wakes, manually reconfigure reachability checking as not all network configurations will report a change.
+ */
+- (void)systemDidWake:(NSNotification *)notification
+{
+	[hostAndObserverListLock lock];
+
+	NSArray	*oldHosts = [hosts copy];
+	NSArray	*oldObservers = [observers copy];
+	
+	NSEnumerator				*enumerator;
+	SCNetworkReachabilityRef	reachabilityRef;
+	enumerator = [reachabilities objectEnumerator];
+	while ((reachabilityRef = (SCNetworkReachabilityRef)[enumerator nextObject])) {
+		SCNetworkReachabilityUnscheduleFromRunLoop(reachabilityRef,
+												   CFRunLoopGetCurrent(),
+												   kCFRunLoopDefaultMode);
+	}
+	
+	[hosts removeAllObjects];
+	[observers removeAllObjects];
+	[reachabilities removeAllObjects];
+	
+	[hostAndObserverListLock unlock];
+
+	unsigned numObservers = [oldObservers count];
+	for (unsigned i = 0; i < numObservers; i++) {
+		NSString						*host = [oldHosts objectAtIndex:i];
+		id<AIHostReachabilityObserver>	observer = [oldObservers objectAtIndex:i];
+
+		[self addObserver:observer
+				  forHost:host];
 	}
 }
 
