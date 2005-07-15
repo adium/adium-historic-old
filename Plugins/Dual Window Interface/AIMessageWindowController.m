@@ -76,6 +76,8 @@
 					   containerName:(NSString *)inName
 {
 	if ((self = [super initWithWindowNibName:windowNibName])) {
+		NSWindow	*myWindow;
+	
 		interface = [inInterface retain];
 		containerName = [inName retain];
 		containerID = [inContainerID retain];
@@ -83,7 +85,7 @@
 		hasShownDocumentButton = NO;
 		
 		//Load our window
-		[self window];
+		myWindow = [self window];
 		
 		//Tab hiding suppression (used to force tab bars visible when a drag is occuring)
 		tabBarIsVisible = YES;
@@ -93,11 +95,15 @@
 													 name:AICustomTabDragDidComplete
 												   object:nil];
 		
+		[[NSNotificationCenter defaultCenter] addObserver:self 
+												 selector:@selector(windowWillMiniaturize:)
+													 name:NSWindowWillMiniaturizeNotification
+												   object:myWindow];
 		//Prefs
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 		
 		//Register as a tab drag observer so we know when tabs are dragged over our window and can show our tab bar
-		[[self window] registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
+		[myWindow registerForDraggedTypes:[NSArray arrayWithObjects:TAB_CELL_IDENTIFIER,nil]];
 	}
 
     return self;
@@ -106,6 +112,7 @@
 //dealloc
 - (void)dealloc
 {
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 
 	/* Ensure our window is quite clear we have no desire to ever hear from it again.  sendEvent: with a flags changed
@@ -672,6 +679,12 @@
 			NSToolbarShowColorsItemIdentifier,
 			NSToolbarShowFontsItemIdentifier,
 			NSToolbarCustomizeToolbarItemIdentifier, nil]];
+}
+
+#pragma mark Miniaturization
+- (void)windowWillMiniaturize:(NSNotification *)notification
+{
+	[[self window] setMiniwindowImage:[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] chatImage]];
 }
 
 @end
