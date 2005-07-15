@@ -68,14 +68,16 @@
 		NSDictionary	*conditionalArtistTrackDict;
 		
 		slashMusicDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			AILocalizedString(@"*is listening to %_track by %_artist*","Phrase sent in response to /music.  %_track and %_artist MUST match their localized forms for this to work properly."),
+			[NSString stringWithFormat:AILocalizedString(@"*is listening to %@ by %@*","Phrase sent in response to /music.  The first %@ is the track; the second %@ is the artist."),
+				TRACK_TRIGGER, ARTIST_TRIGGER],
 			KEY_PLAYING,
 			AILocalizedString(@"*is listening to nothing*","Phrase sent in response to /music when nothing is playing."),
 			KEY_STOPPED,
 			nil];
 		
 		conditionalArtistTrackDict = [[NSDictionary alloc] initWithObjectsAndKeys:
-			AILocalizedString(@"%_track - %_artist","Phrase for the Current iTunes Track status. %_track and %_artist MUST match their localized forms for this to work properly."),
+			[NSString stringWithFormat:@"%@ - %@",
+				TRACK_TRIGGER, ARTIST_TRIGGER],
 			KEY_PLAYING,
 			@"",
 			KEY_STOPPED,
