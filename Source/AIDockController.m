@@ -490,6 +490,18 @@
     return(dockScale);
 }
 
+/*
+ * @brief Return the dock icon image without any auxiliary states
+ */
+- (NSImage *)baseApplicationIconImage
+{
+	NSDictionary	*availableIcons = [availableIconStateDict objectForKey:@"State"];
+	AIIconState		*iconState;
+	
+	iconState = [[[AIIconState alloc] initByCompositingStates:[NSArray arrayWithObject:[availableIcons objectForKey:@"Base"]]] autorelease];
+	
+	return [iconState image];
+}
 
 //Bouncing -------------------------------------------------------------------------------------------------------------
 #pragma mark Bouncing
