@@ -52,6 +52,8 @@ typedef enum {
     NSMutableDictionary *trackingDict;
 	NSMutableDictionary *trackingDictPersonToTagNumber;
 	NSMutableDictionary *trackingDictTagNumberToPerson;
+	
+	NSMenuItem			*contextualMenuItem;
 
     int                 meTag;
     

@@ -17,15 +17,18 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "ESAddressBookIntegrationPlugin.h"
+#import "AIMenuController.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/OWAddressBookAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
 
 #define IMAGE_LOOKUP_INTERVAL   0.01
+#define CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
@@ -36,6 +39,9 @@
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
+- (void)showInAddressBook;
+- (void)addToAddressBookDict:(NSArray *)people;
+- (void)removeFromAddressBookDict:(NSArray *)UIDs;
 @end
 
 /*!
@@ -81,6 +87,16 @@ static	ABAddressBook	*sharedAddressBook = nil;
 								kABMSNInstantProperty,@"MSN",
 								kABYahooInstantProperty,@"Yahoo!",
 								kABICQInstantProperty,@"ICQ",nil] retain];
+	
+	//Shared Address Book
+	[sharedAddressBook release]; sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
+	
+	//Create our contextual menu and install it
+	contextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTEXTUAL_AB_MENU_TITLE
+																			   action:@selector(showInAddressBook)
+																		keyEquivalent:@""] autorelease];
+	[contextualMenuItem setTarget:self];
+	[[adium menuController] addContextualMenuItem:contextualMenuItem toLocation:Context_Contact_Action];
 	
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
@@ -250,7 +266,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
     }
     
-    return(modifiedAttributes);
+    return modifiedAttributes;
 }
 
 /*!
@@ -610,11 +626,56 @@ static	ABAddressBook	*sharedAddressBook = nil;
 /*!
  * @brief Address book changed externally
  *
- * As a result we rebuld the address book dictionary cache and update all contacts based on it
+ * As a result we add/remove people to/from our address book dictionary cache and update all contacts based on it
  */
 - (void)addressBookChanged:(NSNotification *)notification
 {
-	[self rebuildAddressBookDict];
+	id addedPeopleUIDs = nil;
+	id modifiedPeopleUIDs = nil;
+	id deletedPeopleUIDs = nil;
+	
+	//Delay listObjectNotifications to speed up metaContact creation
+	[[adium contactController] delayListObjectNotifications];
+	
+	//In case of a single person, these are NSStrings, and in case of more then one, they are
+	//Arrays containing NSStrings.
+	addedPeopleUIDs = [[notification userInfo] objectForKey:kABInsertedRecords];
+	modifiedPeopleUIDs = [[notification userInfo] objectForKey:kABUpdatedRecords];
+	deletedPeopleUIDs = [[notification userInfo] objectForKey:kABDeletedRecords];
+	
+	if (addedPeopleUIDs) {
+		if ([addedPeopleUIDs isKindOfClass:[NSArray class]])
+			//We are dealing with multiple records
+			[self addToAddressBookDict:[sharedAddressBook peopleFromUniqueIDs:addedPeopleUIDs]];
+		else
+			//We have only one record
+			[self addToAddressBookDict:[NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:addedPeopleUIDs]]];
+	}
+	
+	if (modifiedPeopleUIDs) {
+		if ([modifiedPeopleUIDs isKindOfClass:[NSArray class]]) {
+			//We are dealing with multiple records
+			[self removeFromAddressBookDict:modifiedPeopleUIDs];
+			[self addToAddressBookDict:[sharedAddressBook peopleFromUniqueIDs:modifiedPeopleUIDs]];
+		} else {
+			//We have only one record
+			[self removeFromAddressBookDict:[NSArray arrayWithObject:modifiedPeopleUIDs]];
+			[self addToAddressBookDict:[NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:modifiedPeopleUIDs]]];
+		}
+	}
+	
+	if (deletedPeopleUIDs) {
+		if ([deletedPeopleUIDs isKindOfClass:[NSArray class]])
+			//We are dealing with multiple records
+			[self removeFromAddressBookDict:deletedPeopleUIDs];
+		else
+			//We have only one record
+			[self removeFromAddressBookDict:[NSArray arrayWithObject:deletedPeopleUIDs]];
+	}
+	
+	//Stop delaying list object notifications since we are done
+	[[adium contactController] endListObjectNotificationsDelay];
+	
     [self updateAllContacts];
 }
 
@@ -708,6 +769,22 @@ static	ABAddressBook	*sharedAddressBook = nil;
 #pragma mark Address book caching
 /*!
  * @brief rebuild our address book lookup dictionary
+ */
+- (void)rebuildAddressBookDict
+{
+	//Delay listObjectNotifications to speed up metaContact creation
+	[[adium contactController] delayListObjectNotifications];
+	
+	[addressBookDict release]; addressBookDict = [[NSMutableDictionary alloc] init];
+	
+	[self addToAddressBookDict:[sharedAddressBook people]];
+
+	//Stop delaying list object notifications since we are done
+	[[adium contactController] endListObjectNotificationsDelay];
+}
+
+/*!
+ * @brief add people to our address book lookup dictionary
  *
  * Rather than continually searching the address book, a lookup dictionary addressBookDict provides an quick and easy
  * way to look up a unique record ID for an ABPerson based on the service and UID of a contact. addressBookDict contains
@@ -718,21 +795,15 @@ static	ABAddressBook	*sharedAddressBook = nil;
  * In the process of building we look for cards which have multiple screen names listed and, if desired, automatically
  * create metaContacts baesd on this information.
  */
-- (void)rebuildAddressBookDict
+- (void)addToAddressBookDict:(NSArray *)people
 {
 	NSEnumerator		*peopleEnumerator;
 	NSArray				*allServiceKeys;
 	ABPerson			*person;
-
-	//Delay listObjectNotifications to speed up metaContact creation
-	[[adium contactController] delayListObjectNotifications];
-
-	[sharedAddressBook release]; sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
-	[addressBookDict release]; addressBookDict = [[NSMutableDictionary alloc] init];
 	
 	allServiceKeys = [serviceDict allKeys];
 	
-	peopleEnumerator = [[sharedAddressBook people] objectEnumerator];
+	peopleEnumerator = [people objectEnumerator];
 	while ((person = [peopleEnumerator nextObject])) {
 		
 		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
@@ -770,7 +841,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				}
 			}
 		}
-
+		
 		//Now go through the instant messaging keys
 		while ((serviceID = [servicesEnumerator nextObject])) {
 			NSString				*addressBookKey;
@@ -790,7 +861,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			//An ABPerson may have multiple names; iterate through them
 			names = [person valueForProperty:addressBookKey];
 			nameCount = [names count];
-				
+			
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
 				if ([UID length]) {
@@ -823,9 +894,63 @@ static	ABAddressBook	*sharedAddressBook = nil;
 									 forServices:servicesArray];
 		}
 	}
+}
 
-	//Stop delaying list object notifications since we are done
-	[[adium contactController] endListObjectNotificationsDelay];
+/*!
+ * @brief remove people from our address book lookup dictionary
+ */
+- (void)removeFromAddressBookDict:(NSArray *)UIDs
+{
+	NSEnumerator		*UIDsEnumerator;
+	NSArray				*allServiceKeys;
+	NSString			*UID;
+	
+	allServiceKeys = [serviceDict allKeys];
+	
+	UIDsEnumerator = [UIDs objectEnumerator];
+	while ((UID = [UIDsEnumerator nextObject])) {
+		
+		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
+		NSString			*serviceID;
+		NSMutableDictionary	*dict;
+		
+		//The same person may have multiple services; iterate through them and remove each one.
+		while ((serviceID = [servicesEnumerator nextObject])) {
+			NSEnumerator *keysEnumerator;
+			NSString *key;
+			
+			dict = [addressBookDict objectForKey:serviceID];
+			
+			keysEnumerator = [[dict allKeysForObject:UID] objectEnumerator];
+			
+			//The same person may have multiple accounts from the same service; we should remove them all.
+			while ((key = [keysEnumerator nextObject])) {
+				[dict removeObjectForKey:key];
+			}
+		}
+	}	
+}
+
+#pragma mark AB contextual menu
+/*!
+ * @brief Validate menu item
+ */
+- (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
+{
+	if ([self searchForObject:[[adium menuController] currentContextMenuObject]])
+		return YES;
+	else
+		return NO;
+}
+
+/*!
+ * @brief Shows the selected contact in Address Book
+ */
+- (void)showInAddressBook
+{
+	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
+	NSString *url = [NSString stringWithFormat:@"addressbook://%@", [selectedPerson uniqueId]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }
 
 @end
