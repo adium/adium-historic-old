@@ -145,7 +145,7 @@
 - (void)applyState:(AIStatus *)statusState toAccounts:(NSArray *)accountArray;
 - (AIStatus *)activeStatusState;
 - (NSSet *)allActiveStatusStates;
-- (AIStatusType)activeStatusType;
+- (AIStatusType)activeStatusTypeTreatingInvisibleAsAway:(BOOL)invisibleIsAway;
 - (NSSet *)activeUnavailableStatusesAndType:(AIStatusType *)activeUnvailableStatusType 
 								   withName:(NSString **)activeUnvailableStatusName
 			 allOnlineAccountsAreUnvailable:(BOOL *)allOnlineAccountsAreUnvailable;

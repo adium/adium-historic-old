@@ -360,6 +360,14 @@
     }
 }
 
+/*
+ * @brief Does the current icon know how to display a given state?
+ */
+- (BOOL)currentIconSupportsIconStateNamed:(NSString *)inName
+{
+	return ([[availableIconStateDict objectForKey:@"State"] objectForKey:inName] != nil);
+}
+
 //Set a custom icon state
 - (void)setIconState:(AIIconState *)iconState named:(NSString *)inName
 {

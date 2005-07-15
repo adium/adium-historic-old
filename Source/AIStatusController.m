@@ -835,7 +835,16 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	return _activeStatusState;
 }
 
-- (AIStatusType)activeStatusType
+/*
+ * @brief Find the 'active' AIStatusType
+ *
+ * The active type is the one used by the largest number of accounts.  In case of a tie, the order of the AIStatusType
+ * enum is respected
+ *
+ * @param invisibleIsAway If YES, AIInvisibleStatusType is trated as AIAwayStatusType
+ * @result The active AIStatusType for online accounts, or AIOfflineStatusType if all accounts are  offline
+ */
+- (AIStatusType)activeStatusTypeTreatingInvisibleAsAway:(BOOL)invisibleIsAway
 {
 	NSEnumerator		*enumerator = [[[adium accountController] accounts] objectEnumerator];
 	AIAccount			*account;
@@ -852,8 +861,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
 			AIStatusType statusType = [[account statusState] statusType];
 
-			//pretend that invisible is away for this purpose, as it's a type of unavailable state
-			if (statusType == AIInvisibleStatusType) statusType = AIAwayStatusType;
+			//If invisibleIsAway, pretend that invisible is away
+			if (invisibleIsAway && (statusType == AIInvisibleStatusType)) statusType = AIAwayStatusType;
 
 			statusTypeCount[statusType]++;
 		}
