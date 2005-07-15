@@ -86,7 +86,7 @@
  */
 - (NSString *)UID
 {
-    return(UID);
+    return UID;
 }
 
 /*
@@ -94,7 +94,7 @@
  */
 - (AIService *)service
 {
-	return(service);
+	return service;
 }
 
 /*
@@ -104,7 +104,7 @@
  */
 - (NSString *)serviceID
 {
-	return([service serviceID]);
+	return [service serviceID];
 }
 
 /*
@@ -116,7 +116,7 @@
  */
 - (NSString *)serviceClass
 {
-	return([service serviceClass]);
+	return [service serviceClass];
 }
 
 /*
@@ -131,7 +131,7 @@
 	if (!internalObjectID) {
 		internalObjectID = [[AIListObject internalObjectIDForServiceID:[[self service] serviceID] UID:[self UID]] retain];
 	}
-	return(internalObjectID);
+	return internalObjectID;
 }
 
 /*
@@ -141,7 +141,7 @@
  */
 + (NSString *)internalObjectIDForServiceID:(NSString *)inServiceID UID:(NSString *)inUID
 {
-	return([NSString stringWithFormat:@"%@.%@",inServiceID, inUID]);
+	return [NSString stringWithFormat:@"%@.%@",inServiceID, inUID];
 }
 
 
@@ -172,7 +172,7 @@
  */
 - (BOOL)visible
 {
-	return(visible);
+	return visible;
 }
 
 
@@ -183,7 +183,7 @@
  */
 - (AIListObject <AIContainingObject> *)containingObject
 {
-    return(containingObject);
+    return containingObject;
 }
 
 /*
@@ -222,7 +222,7 @@
 {
 	if (!orderIndex) [self determineOrderIndex];
 	
-	return(orderIndex);
+	return orderIndex;
 }
 
 - (void)determineOrderIndex
@@ -326,21 +326,21 @@
 //Retrieve a preference value
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group
 {
-	return([[adium preferenceController] preferenceForKey:key group:group object:self]);
+	return [[adium preferenceController] preferenceForKey:key group:group object:self];
 }
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group ignoreInheritedValues:(BOOL)ignore
 {
 	if (ignore) {
-		return([[adium preferenceController] preferenceForKey:key group:group objectIgnoringInheritance:self]);
+		return [[adium preferenceController] preferenceForKey:key group:group objectIgnoringInheritance:self];
 	} else {
-		return([[adium preferenceController] preferenceForKey:key group:group object:self]);
+		return [[adium preferenceController] preferenceForKey:key group:group object:self];
 	}
 }
 
 //Path for storing our reference file
 - (NSString *)pathToPreferences
 {
-    return(OBJECT_PREFS_PATH);
+    return OBJECT_PREFS_PATH;
 }
 
 //Display Name  -------------------------------------------------------------------------------------
@@ -366,7 +366,7 @@
 - (NSString *)formattedUID
 {
 	NSString  *outName = [self statusObjectForKey:FormattedUID];
-    return(outName ? outName : UID);	
+    return outName ? outName : UID;	
 }
 
 /*
@@ -379,7 +379,7 @@
 {
     NSString	*outName = [[self displayArrayForKey:LongDisplayName create:NO] objectValue];
 	
-    return(outName ? outName : [self displayName]);
+    return outName ? outName : [self displayName];
 }
 
 /*!
@@ -391,7 +391,7 @@
 - (NSString *)displayName
 {
     NSString	*displayName = [[self displayArrayForKey:DisplayName create:NO] objectValue];
-    return(displayName ? displayName : [self formattedUID]);
+    return displayName ? displayName : [self formattedUID];
 }
 
 /*!
@@ -402,7 +402,7 @@
 - (NSString *)phoneticName
 {
 	NSString	*phoneticName = [[self displayArrayForKey:@"Phonetic Name" create:NO] objectValue];
-    return(phoneticName ? phoneticName : [self displayName]);
+    return phoneticName ? phoneticName : [self displayName];
 }
 
 //Apply an alias
@@ -428,11 +428,11 @@
 #pragma mark Key-Value Pairing
 - (NSImage *)userIcon
 {
-	return([self displayUserIcon]);
+	return [self displayUserIcon];
 }
 - (NSImage *)displayUserIcon
 {
-	return([[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue]);	
+	return [[self displayArrayForKey:KEY_USER_ICON create:NO] objectValue];	
 }
 
 - (void)setDisplayUserIcon:(NSImage *)inImage
@@ -639,7 +639,7 @@
 #pragma mark Debugging
 - (NSString *)description
 {
-	return([NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]]);
+	return [NSString stringWithFormat:@"%@:%@",[super description],[self internalObjectID]];
 }
 
 @end
