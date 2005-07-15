@@ -61,7 +61,7 @@
 	return(40);
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return(YES);
 }
 - (AIServiceImportance)serviceImportance{
 	return(AIServiceSecondary);
