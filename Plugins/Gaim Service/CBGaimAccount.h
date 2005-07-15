@@ -97,51 +97,51 @@
 - (SLGaimCocoaAdapter *)gaimThread;
 
 #pragma mark Gaim callback handling methods
-- (oneway void)accountConnectionConnected;
-- (oneway void)accountConnectionReportDisconnect:(NSString *)text;
-- (oneway void)accountConnectionNotice:(NSString *)text;
-- (oneway void)accountConnectionDisconnected;
-- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
+- (void)accountConnectionConnected;
+- (void)accountConnectionReportDisconnect:(NSString *)text;
+- (void)accountConnectionNotice:(NSString *)text;
+- (void)accountConnectionDisconnected;
+- (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent;
 
-- (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
-- (oneway void)updateContact:(AIListContact *)theContact
+- (void)newContact:(AIListContact *)theContact withName:(NSString *)inName;
+- (void)updateContact:(AIListContact *)theContact
 				 toGroupName:(NSString *)groupName
 				 contactName:(NSString *)contactName;
-- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
-- (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
-- (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data;
-- (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
-- (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
+- (void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias;
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event;
+- (void)updateSignon:(AIListContact *)theContact withData:(void *)data;
+- (void)updateSignoff:(AIListContact *)theContact withData:(void *)data;
+- (void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate;
 - (void)updateStatusForContact:(AIListContact *)theContact
 				  toStatusType:(NSNumber *)statusTypeNumber
 					statusName:(NSString *)statusName 
 				 statusMessage:(NSAttributedString *)statusMessage;
 - (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b;
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b;
-- (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
-- (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
+- (void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber;
+- (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData;
+- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString;
 
-- (oneway void)removeContact:(AIListContact *)theContact;
+- (void)removeContact:(AIListContact *)theContact;
 
-- (oneway void)addChat:(AIChat *)chat;
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
-- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
-- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
-- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (void)addChat:(AIChat *)chat;
+- (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typing;
+- (void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
+- (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
+- (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat;
-- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
-- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
+- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
+- (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
-- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
-- (oneway void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
+- (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
+- (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-- (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
-- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
+- (void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
 									 percent:(NSNumber *)percent
 								   bytesSent:(NSNumber *)bytesSent;
-- (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
-- (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
+- (void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer;
+- (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer;
 - (ESFileTransfer *)newFileTransferObjectWith:(NSString *)destinationUID
 										 size:(unsigned long long)inSize
 							   remoteFilename:(NSString *)remoteFilename;
@@ -151,7 +151,7 @@
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;
 - (AIChat *)mainThreadChatWithName:(NSString *)name;
-- (oneway void)requestAddContactWithUID:(NSString *)contactUID;
+- (void)requestAddContactWithUID:(NSString *)contactUID;
 
 - (void)gotGroupForContact:(AIListContact *)contact;
 
