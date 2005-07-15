@@ -25,6 +25,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AICustomTabDragging.h>
 #import <AIUtilities/AICustomTabsView.h>
+#import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIArrayAdditions.h>
 #import <AIUtilities/AIWindowAdditions.h>
@@ -682,9 +683,72 @@
 }
 
 #pragma mark Miniaturization
+/*
+ * @brief Our window is about to minimize
+ *
+ * Set our miniwindow image, which will display in the dock, appropriately.
+ */
 - (void)windowWillMiniaturize:(NSNotification *)notification
 {
-	[[self window] setMiniwindowImage:[[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] chatImage]];
+	NSImage *miniwindowImage;
+	NSImage	*chatImage = [[(AIMessageTabViewItem *)[tabView_messages selectedTabViewItem] chat] chatImage];
+	NSImage	*appImage = [[adium dockController] baseApplicationIconImage];
+	NSSize	chatImageSize = [chatImage size];
+	NSSize	appImageSize = [appImage size];
+	NSSize	newChatImageSize;
+	NSSize	badgeSize;
+	
+	miniwindowImage = [[NSImage alloc] initWithSize:NSMakeSize(128,128)];
+	
+	//Determine the properly scaled chat image size
+	newChatImageSize = NSMakeSize(96,96);
+	if (chatImageSize.width != chatImageSize.height) {
+		if (chatImageSize.width > chatImageSize.height) {
+			//Give width priority: Make the height change by the same proportion as the width will change
+			newChatImageSize.height = chatImageSize.height * (newChatImageSize.width / chatImageSize.width);
+		} else {
+			//Give height priority: Make the width change by the same proportion as the height will change
+			newChatImageSize.width = chatImageSize.width * (newChatImageSize.height / chatImageSize.height);
+		}		
+	}
+	
+	//OS X 10.4 always returns a square application icon of 128x128, but better safe than sorry
+	badgeSize = NSMakeSize(48, 48);
+	if (appImageSize.width != appImageSize.height) {
+		if (appImageSize.width > appImageSize.height) {
+			//Give width priority: Make the height change by the same proportion as the width will change
+			badgeSize.height = appImageSize.height * (badgeSize.width / appImageSize.width);
+		} else {
+			//Give height priority: Make the width change by the same proportion as the height will change
+			badgeSize.width = appImageSize.width * (badgeSize.height / appImageSize.height);
+		}		
+	}
+	
+	[miniwindowImage lockFocus];
+	{
+		//Draw the chat image with space around it (the dock will do ugly scaling if we don't make a transparent border)
+		[chatImage drawInRect:NSMakeRect((128 - newChatImageSize.width)/2, (128 - newChatImageSize.height)/2,
+										 newChatImageSize.width, newChatImageSize.height)
+					 fromRect:NSMakeRect(0, 0, chatImageSize.width, chatImageSize.height)
+					operation:NSCompositeSourceOver
+					 fraction:1.0];
+		
+		//Draw the Adium icon as a badge in the bottom right
+		[appImage drawInRect:NSMakeRect(128 - badgeSize.width,
+										0,
+										badgeSize.width,
+										badgeSize.height)
+					fromRect:NSMakeRect(0, 0, appImageSize.width, appImageSize.height)
+				   operation:NSCompositeSourceOver
+					fraction:1.0];
+	}
+	[miniwindowImage unlockFocus];
+	
+	//Set the image
+	[[self window] setMiniwindowImage:miniwindowImage];
+	
+	//Cleanup
+	[miniwindowImage release];
 }
 
 @end
