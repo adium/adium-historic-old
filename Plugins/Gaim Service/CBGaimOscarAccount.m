@@ -157,16 +157,6 @@ gboolean gaim_init_oscar_plugin(void);
 	return nil;
 }
 
-#pragma mark Privacy
-- (BOOL)addListObject:(AIListObject *)inObject toPrivacyList:(PRIVACY_TYPE)type
-{
-    return [super addListObject:inObject toPrivacyList:type];
-}
-- (BOOL)removeListObject:(AIListObject *)inObject fromPrivacyList:(PRIVACY_TYPE)type
-{
-    return [super removeListObject:inObject fromPrivacyList:type]; 
-}
-
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
