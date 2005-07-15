@@ -147,7 +147,7 @@
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 
-	AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
+	AIStatusType	activeStatusType = [[adium statusController] activeStatusTypeTreatingInvisibleAsAway:YES];
 	AIStatusType	targetStatusType = AIAvailableStatusType;
 	AIStatus		*targetStatusState = nil;
 	BOOL			assignCmdOptionY;
