@@ -282,5 +282,7 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>AppleDockIconEnabled</key>
+	<string>YES</string>
 </dict>
 </plist>
