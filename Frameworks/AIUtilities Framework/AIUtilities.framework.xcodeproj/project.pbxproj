@@ -251,6 +251,9 @@
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
+		EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */; };
+		EEB11DD50887E67300D0C340 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB11DD40887E67200D0C340 /* AddressBook.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -542,6 +545,9 @@
 		6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextFieldWithDraggingDelegate.h; path = Source/AITextFieldWithDraggingDelegate.h; sourceTree = "<group>"; };
 		6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextFieldWithDraggingDelegate.m; path = Source/AITextFieldWithDraggingDelegate.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWAddressBookAdditions.h; path = Source/OWAddressBookAdditions.h; sourceTree = "<group>"; };
+		EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWAddressBookAdditions.m; path = Source/OWAddressBookAdditions.m; sourceTree = "<group>"; };
+		EEB11DD40887E67200D0C340 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -557,6 +563,7 @@
 				344870ED06D1E3DF00DA778C /* AudioUnit.framework in Frameworks */,
 				344870EE06D1E3DF00DA778C /* AudioToolbox.framework in Frameworks */,
 				3448711606D1E40000DA778C /* QuickTime.framework in Frameworks */,
+				EEB11DD50887E67300D0C340 /* AddressBook.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -696,6 +703,7 @@
 		1058C7B0FEA5585E11CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				EEB11DD40887E67200D0C340 /* AddressBook.framework */,
 				3448711506D1E40000DA778C /* QuickTime.framework */,
 				344870EB06D1E3DF00DA778C /* AudioUnit.framework */,
 				344870EC06D1E3DF00DA778C /* AudioToolbox.framework */,
@@ -899,6 +907,8 @@
 				34486BCF06D1DF0400DA778C /* AIWindowAdditions.m */,
 				34FFB271087DF0F70000A517 /* AIFontAdditions.m */,
 				34FFB272087DF0F70000A517 /* AIFontAdditions.h */,
+				EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */,
+				EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -1501,6 +1511,7 @@
 				34FFB29C087DF1300000A517 /* AIObjectAdditions.h in Headers */,
 				34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */,
 				34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */,
+				EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1740,6 +1751,7 @@
 				34FFB2A0087DF1300000A517 /* AIURLAdditions.m in Sources */,
 				34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */,
 				34057F27087E032400664D64 /* AIFontManagerAdditions.m in Sources */,
+				EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
