@@ -114,7 +114,9 @@
 		}
 		
 		if (shouldUpdateStatus || [inModifiedKeys containsObject:@"StatusState"]) {
-			AIStatusType	activeStatusType = [[adium statusController] activeStatusType];
+			BOOL			iconSupportsInvisible = [[adium dockController] currentIconSupportsIconStateNamed:@"Invisible"];
+			AIStatusType	activeStatusType = [[adium statusController] activeStatusTypeTreatingInvisibleAsAway:!iconSupportsInvisible];
+
 			if (activeStatusType == AIAwayStatusType) {
 				[dockController setIconStateNamed:@"Away"];
 			} else {

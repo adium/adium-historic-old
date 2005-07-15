@@ -62,6 +62,7 @@ typedef enum {
 
 //Special access to icon pack loading
 - (NSArray *)availableDockIconPacks;
+- (BOOL)currentIconSupportsIconStateNamed:(NSString *)inName;;
 - (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
 - (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath;
 
