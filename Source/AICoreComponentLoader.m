@@ -17,7 +17,7 @@
 /*!
  * @class AICoreComponentLoader
  * @brief Core - Component Loader
-
+ *
  * Loads integrated plugins.  Component classes to load are determined by CoreComponents.plist
  */
 
