@@ -96,15 +96,21 @@ struct resolved_id {
 		struct resolved_id		*res;
 		int						selectedRow = [tableView_choices selectedRow];
 		GaimRequestField		*field = [[infoDict objectForKey:@"listFieldValue"] pointerValue];
-
+		char					*label;
+		
 		res = (struct resolved_id *)([[[infoDict objectForKey:@"Possible Users"] objectAtIndex:selectedRow] pointerValue]);
-
+		
 		//Clear the selection
 		gaim_request_field_list_clear_selected(field);
 		
-		//Now set the selection
-		gaim_request_field_list_add_selected(field, res->name);
-		
+		/* Now set the selection
+			*
+			* label format is from multi_resolved_query() in mwgaim.c
+			*/
+		label = g_strdup_printf("%s (%s)", res->name, res->id);
+		gaim_request_field_list_add_selected(field, label);
+		g_free(label);
+
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestFieldsCbValue:withUserDataValue:fieldsValue:)
 											  withObject:[infoDict objectForKey:@"OK Callback"]
