@@ -195,7 +195,7 @@
 	[contentDict setObject:[[(AIContentMessage *)content date] description] forKey:@"Date"];
 	[contentDict setObject:[[[(AIContentMessage *)content message] attributedStringByConvertingAttachmentsToStrings] dataRepresentation] forKey:@"Message"];
 
-	return(contentDict);
+	return contentDict;
 }
 
 
@@ -349,6 +349,6 @@
 		}
 	}
 	
-	return( dateIsGood );
+	return  dateIsGood ;
 }
 @end

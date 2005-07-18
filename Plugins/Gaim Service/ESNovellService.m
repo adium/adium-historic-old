@@ -24,47 +24,47 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimNovellAccount class]);
+	return [ESGaimNovellAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimNovellAccountViewController accountViewController]);
+    return [ESGaimNovellAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimNovellJoinChatViewController joinChatView]);
+	return [DCGaimNovellJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-GroupWise");
+	return @"libgaim-GroupWise";
 }
 - (NSString *)serviceID{
-	return(@"GroupWise");
+	return @"GroupWise";
 }
 - (NSString *)serviceClass{
-	return(@"GroupWise");
+	return @"GroupWise";
 }
 - (NSString *)shortDescription{
-	return(@"GroupWise");
+	return @"GroupWise";
 }
 - (NSString *)longDescription{
-	return(@"Novell GroupWise");
+	return @"Novell GroupWise";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@-._ "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@-._ "];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(40);
+	return 40;
 }
 - (BOOL)caseSensitive{
-	return(YES);
+	return YES;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 
 - (void)registerStatuses{

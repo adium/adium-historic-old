@@ -70,7 +70,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 													withObject:infoDict
 												 waitUntilDone:YES];
 	
-    return(adium_gaim_get_handle());
+    return adium_gaim_get_handle();
 }
 
 static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
@@ -80,7 +80,7 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
 
-    return(adium_gaim_get_handle());
+    return adium_gaim_get_handle();
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
@@ -204,7 +204,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 													 waitUntilDone:YES];
 	}
 
-    return(adium_gaim_get_handle());
+    return adium_gaim_get_handle();
 }
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
@@ -378,7 +378,7 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 //		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
     
-	return(adium_gaim_get_handle());
+	return adium_gaim_get_handle();
 }
 
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
@@ -435,7 +435,7 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 		   }
 	   }
 	   
-	return(adium_gaim_get_handle());
+	return adium_gaim_get_handle();
 }
 
 static void adiumGaimRequestClose(GaimRequestType type,void *uiHandle)

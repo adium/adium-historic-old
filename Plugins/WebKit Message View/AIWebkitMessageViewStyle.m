@@ -57,7 +57,7 @@
  */
 + (id)messageViewStyleFromBundle:(NSBundle *)inBundle
 {
-	return([[[self alloc] initWithBundle:inBundle] autorelease]);
+	return [[[self alloc] initWithBundle:inBundle] autorelease];
 }
 
 /*!
@@ -143,7 +143,7 @@
  */
 - (BOOL)isLegacy
 {
-	return(styleVersion < LEGACY_VERSION_THRESHOLD);
+	return styleVersion < LEGACY_VERSION_THRESHOLD;
 }
 
 
@@ -154,7 +154,7 @@
  */
 - (BOOL)allowsCustomBackground
 {
-	return(allowsCustomBackground);
+	return allowsCustomBackground;
 }
 
 /*!
@@ -162,7 +162,7 @@
  */
 - (BOOL)allowsUserIcons
 {
-	return(allowsUserIcons);
+	return allowsUserIcons;
 }
 
 /*!
@@ -170,7 +170,7 @@
  */
 - (NSString *)defaultFontFamily
 {
-	return([styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY]);
+	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_FAMILY];
 }
 
 /*!
@@ -178,7 +178,7 @@
  */
 - (NSNumber *)defaultFontSize
 {
-	return([styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE]);
+	return [styleBundle objectForInfoDictionaryKey:KEY_WEBKIT_DEFAULT_FONT_SIZE];
 }
 
 /*!
@@ -186,7 +186,7 @@
  */
 - (BOOL)hasHeader
 {
-	return(headerHTML && [headerHTML length]);
+	return headerHTML && [headerHTML length];
 }
 
 /*!
@@ -194,7 +194,7 @@
  */
 - (NSImage *)userIconMask
 {
-	return(userIconMask);
+	return userIconMask;
 }
 
 
@@ -327,7 +327,7 @@
 			(footerHTML ? footerHTML : @"")];
 	}
 
-	return([self fillKeywordsForBaseTemplate:templateHTML chat:chat]);
+	return [self fillKeywordsForBaseTemplate:templateHTML chat:chat];
 }
 
 /*!
@@ -359,7 +359,7 @@
 	
 	}
 	
-	return(template);
+	return template;
 }
 
 /*!
@@ -438,7 +438,7 @@
 		script = (contentIsSimilar ? APPEND_NEXT_MESSAGE_WITH_SCROLL : APPEND_MESSAGE_WITH_SCROLL);
 	}
 	
-	return([NSString stringWithFormat:script, [self _escapeStringForPassingToScript:newHTML]]); 
+	return [NSString stringWithFormat:script, [self _escapeStringForPassingToScript:newHTML]]; 
 }
 
 /*!
@@ -446,7 +446,7 @@
  */
 - (NSString *)scriptForChangingVariant:(NSString *)variant
 {
-	return([NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]]);
+	return [NSString stringWithFormat:@"setStylesheet(\"mainStyle\",\"%@\");",[self pathForVariant:variant]];
 }
 
 /*!
@@ -457,7 +457,7 @@
 - (NSString *)scriptForScrollingAfterAddingMultipleContentObjects
 {
 	if (styleVersion >= 3) {
-		return(@"alignChat(true);");
+		return @"alignChat(true);";
 	}
 
 	return nil;
@@ -488,7 +488,7 @@
 	enum { lengthOfBRString = 6 };
 	range.length += delta * lengthOfBRString;
 
-	return(inString);
+	return inString;
 }
 
 
@@ -517,7 +517,7 @@
 	//Alphabetize the variants
 	[availableVariants sortUsingSelector:@selector(compare:)];
 	
-	return(availableVariants);
+	return availableVariants;
 }
 
 /*!
@@ -527,9 +527,9 @@
 {
 	//Styles before version 3 stored the default variant in main.css, and not in the variants folder.
 	if (styleVersion < 3 && [variant isEqualToString:[self noVariantName]]) {
-		return(@"main.css");
+		return @"main.css";
 	} else {
-		return([NSString stringWithFormat:@"Variants/%@.css",variant]);
+		return [NSString stringWithFormat:@"Variants/%@.css",variant];
 	}
 }
 
@@ -539,13 +539,13 @@
 - (NSString *)noVariantName
 {
 	NSString	*noVariantName = [styleBundle objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
-	return(noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item"));
+	return noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item");
 }
 
 + (NSString *)noVariantNameForBundle:(NSBundle *)inBundle
 {
 	NSString	*noVariantName = [inBundle objectForInfoDictionaryKey:@"DisplayNameForNoVariant"];
-	return(noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item"));	
+	return noVariantName ? noVariantName : AILocalizedString(@"Normal","Normal style variant menu item");	
 }
 
 /*!
@@ -553,7 +553,7 @@
  */
 - (NSString *)defaultVariant
 {
-	return(styleVersion < 3 ? [self noVariantName] : [styleBundle objectForInfoDictionaryKey:@"DefaultVariant"]);
+	return styleVersion < 3 ? [self noVariantName] : [styleBundle objectForInfoDictionaryKey:@"DefaultVariant"];
 }
 
 + (NSString *)defaultVariantForBundle:(NSBundle *)inBundle
@@ -861,7 +861,7 @@
 		}
 	}
 
-	return(inString);
+	return inString;
 }
 
 /*!
@@ -982,7 +982,7 @@
  		}
  	}
 
-	return(inString);
+	return inString;
 }
 
 @end

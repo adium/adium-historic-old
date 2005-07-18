@@ -234,13 +234,13 @@
  * @brief Keychain identifier for an account
  */
 - (NSString *)_accountNameForAccount:(AIAccount *)inAccount{
-	return([NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]]);
+	return [NSString stringWithFormat:@"%@.%@",[[inAccount service] serviceID],[inAccount internalObjectID]];
 }
 - (NSString *)_passKeyForAccount:(AIAccount *)inAccount{
 	if ([[[adium loginController] userArray] count] > 1) {
-		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]]);
+		return [NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],[self _accountNameForAccount:inAccount]];
 	} else {
-		return([NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]]);
+		return [NSString stringWithFormat:@"Adium.%@",[self _accountNameForAccount:inAccount]];
 	}
 }
 
@@ -248,13 +248,13 @@
  * @brief Keychain identifier for a proxy server
  */
 - (NSString *)_accountNameForProxyServer:(NSString *)proxyServer userName:(NSString *)userName{
-	return([NSString stringWithFormat:@"%@.%@",proxyServer,userName]);
+	return [NSString stringWithFormat:@"%@.%@",proxyServer,userName];
 }
 - (NSString *)_passKeyForProxyServer:(NSString *)proxyServer{
 	if ([[[adium loginController] userArray] count] > 1) {
-		return([NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer]);
+		return [NSString stringWithFormat:@"Adium.%@.%@",[[adium loginController] currentUser],proxyServer];
 	} else {
-		return([NSString stringWithFormat:@"Adium.%@",proxyServer]);	
+		return [NSString stringWithFormat:@"Adium.%@",proxyServer];	
 	}
 }
 

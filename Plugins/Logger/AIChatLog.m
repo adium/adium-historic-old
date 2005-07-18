@@ -47,23 +47,23 @@
 }
 
 - (NSString *)path{
-    return(path);
+    return path;
 }
 - (NSString *)from{
-    return(from);
+    return from;
 }
 - (NSString *)to{
-    return(to);
+    return to;
 }
 - (NSString *)serviceClass{
-	return(serviceClass);
+	return serviceClass;
 }
 - (NSDate *)date{
-    return(date);
+    return date;
 }
 
 - (float)rankingPercentage{
-	return(rankingPercentage);
+	return rankingPercentage;
 }
 - (void)setRankingPercentage:(float)inRankingPercentage{
 	rankingPercentage = inRankingPercentage;
@@ -71,7 +71,7 @@
 
 - (BOOL)isFromSameDayAsDate:(NSCalendarDate *)inDate
 {
-	return([[date dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra]);
+	return [[date dateWithCalendarFormat:nil timeZone:nil] dayOfCommonEra] == [inDate dayOfCommonEra];
 }
 
 #pragma mark Sort Selectors
@@ -90,7 +90,7 @@
 		}
 	}
 	
-    return(result);
+    return result;
 }
 - (NSComparisonResult)compareToReverse:(AIChatLog *)inLog
 {
@@ -105,7 +105,7 @@
 		}
 	}
 	
-    return(result);
+    return result;
 }
 //Sort by From, then Date
 - (NSComparisonResult)compareFrom:(AIChatLog *)inLog
@@ -121,7 +121,7 @@
 		}
 	} 
 	
-    return(result);
+    return result;
 }
 - (NSComparisonResult)compareFromReverse:(AIChatLog *)inLog
 {
@@ -136,7 +136,7 @@
 		}
 	}
     
-    return(result);
+    return result;
 }
 
 //Sort by Date, then To
@@ -153,7 +153,7 @@
 		result = [to caseInsensitiveCompare:[inLog to]];
     }
 	
-    return(result);
+    return result;
 }
 - (NSComparisonResult)compareDateReverse:(AIChatLog *)inLog
 {
@@ -168,7 +168,7 @@
 		result = [[inLog to] caseInsensitiveCompare:to];
     }
 	
-    return(result);
+    return result;
 }
 
 -(NSComparisonResult)compareRank:(AIChatLog *)inLog
@@ -184,7 +184,7 @@
 		result = [to caseInsensitiveCompare:[inLog to]];
     }
 	
-	return(result);
+	return result;
 }
 -(NSComparisonResult)compareRankReverse:(AIChatLog *)inLog
 {
@@ -199,7 +199,7 @@
 		result = [[inLog to] caseInsensitiveCompare:to];
     }
 	
-	return(result);
+	return result;
 }
 
 @end

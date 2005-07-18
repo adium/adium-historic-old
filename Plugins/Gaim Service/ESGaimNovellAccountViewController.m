@@ -19,13 +19,13 @@
 @implementation ESGaimNovellAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimNovellAccountView");
+    return @"ESGaimNovellAccountView";
 }
 
 //Return nil to hide the options tab, we don't need it
 - (NSView *)optionsView
 {
-    return(nil);
+    return nil;
 }
 
 @end

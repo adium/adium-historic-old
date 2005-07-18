@@ -55,7 +55,7 @@
 #pragma mark Send Message Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(SEND_MESSAGE_ALERT_SHORT);
+	return SEND_MESSAGE_ALERT_SHORT;
 }
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
@@ -69,20 +69,20 @@
 	}
 	
 	if (contact && messageText) {
-		return([NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText]);
+		return [NSString stringWithFormat:SEND_MESSAGE_ALERT_LONG, [contact displayName], messageText];
 	} else {
-		return(SEND_MESSAGE_ALERT_SHORT);		
+		return SEND_MESSAGE_ALERT_SHORT;		
 	}
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"MessageAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"MessageAlert" forClass:[self class]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESSendMessageAlertDetailPane actionDetailsPane]);
+	return [ESSendMessageAlertDetailPane actionDetailsPane];
 }
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
@@ -166,7 +166,7 @@
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(YES);
+	return YES;
 }
 
 @end

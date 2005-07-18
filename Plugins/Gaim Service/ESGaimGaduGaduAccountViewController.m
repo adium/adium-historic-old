@@ -20,11 +20,11 @@
 @implementation ESGaimGaduGaduAccountViewController
 
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"GG Number",nil));
+    return AILocalizedString(@"GG Number",nil);
 }
 
 - (NSString *)nibName{
-    return(@"ESGaimGaduGaduAccountView");
+    return @"ESGaimGaduGaduAccountView";
 }
 
 @end

@@ -176,7 +176,7 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 		}
 	}
 	
-	return(statusIcon);
+	return statusIcon;
 }
 
 //Set the active status icon pack
@@ -207,11 +207,11 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 			[[[AIObject sharedAdiumInstance] notificationCenter] postNotificationName:AIStatusIconSetDidChangeNotification
 																			   object:nil];
 			
-			return(YES);
+			return YES;
 		} else {
 			statusIconsReady = NO;
 
-			return(NO);
+			return NO;
 		}
 	}
 
@@ -224,17 +224,17 @@ static NSString *statusNameForChat(AIChat *inChat)
 	AITypingState typingState = [inChat integerStatusObjectForKey:KEY_TYPING];
 
 	if (typingState == AITyping) {
-		return(@"typing");
+		return @"typing";
 
 	} else if ([inChat unviewedContentCount]) {
-		return(@"content");
+		return @"content";
 		
 	} else if (typingState == AIEnteredText) {
-		return(@"enteredtext");
+		return @"enteredtext";
 		
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -343,7 +343,7 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 		[image unlockFocus];
 	}		
 
-	return([image autorelease]);
+	return [image autorelease];
 }
 
 @end

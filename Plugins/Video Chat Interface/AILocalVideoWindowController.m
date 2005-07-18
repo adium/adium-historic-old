@@ -40,7 +40,7 @@ AILocalVideoWindowController	*sharedLocalVideoWindowInstance = nil;
 											 delegate:self];
 	[localVideo beginCapturingVideo];
 	
-	return(self);
+	return self;
 }
 
 //

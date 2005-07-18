@@ -22,49 +22,49 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([AIStressTestAccount class]);
+	return [AIStressTestAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return(nil);
+    return nil;
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCStressTestJoinChatViewController joinChatView]);
+	return [DCStressTestJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"Stress-Test");
+	return @"Stress-Test";
 }
 - (NSString *)serviceID{
-	return(@"Stress Test");
+	return @"Stress Test";
 }
 - (NSString *)serviceClass{
-	return(@"Stress Test");
+	return @"Stress Test";
 }
 - (NSString *)shortDescription{
-	return(@"Stress Test");
+	return @"Stress Test";
 }
 - (NSString *)longDescription{
-	return(@"Stress Test (Das ist verboten)");
+	return @"Stress Test (Das ist verboten)";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789@."];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(20);
+	return 20;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceUnsupported);
+	return AIServiceUnsupported;
 }
 - (BOOL)supportsProxySettings{
-	return(NO);
+	return NO;
 }
 @end

@@ -35,50 +35,50 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimMSNAccount class]);
+	return [ESGaimMSNAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimMSNAccountViewController accountViewController]);
+    return [ESGaimMSNAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimMSNJoinChatViewController joinChatView]);
+	return [DCGaimMSNJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-MSN");
+	return @"libgaim-MSN";
 }
 - (NSString *)serviceID{
-	return(@"MSN");
+	return @"MSN";
 }
 - (NSString *)serviceClass{
-	return(@"MSN");
+	return @"MSN";
 }
 - (NSString *)shortDescription{
-	return(@"MSN");
+	return @"MSN";
 }
 - (NSString *)longDescription{
-	return(@"MSN Messenger");
+	return @"MSN Messenger";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._-"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(113);
+	return 113;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServicePrimary);
+	return AIServicePrimary;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"MSN Passport",""));    //Sign-in name
+    return AILocalizedString(@"MSN Passport","");    //Sign-in name
 }
 
 - (void)registerStatuses{

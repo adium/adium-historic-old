@@ -330,17 +330,17 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (NSString *)_mapIncomingGroupName:(NSString *)name
 {
 	if (!name || ([[name compactedString] caseInsensitiveCompare:[self UID]] == 0)) {
-		return(ADIUM_ROOT_GROUP_NAME);
+		return ADIUM_ROOT_GROUP_NAME;
 	} else {
-		return(name);
+		return name;
 	}
 }
 - (NSString *)_mapOutgoingGroupName:(NSString *)name
 {
 	if ([[name compactedString] caseInsensitiveCompare:ADIUM_ROOT_GROUP_NAME] == 0) {
-		return([self UID]);
+		return [self UID];
 	} else {
-		return(name);
+		return name;
 	}
 }
 
@@ -362,7 +362,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 - (AIService *)_serviceForUID:(NSString *)contactUID
 {
-	return([self service]);
+	return [self service];
 }
 
 - (void)gotGroupForContact:(AIListContact *)listContact {};
@@ -404,7 +404,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object
 {
-	return([object UID]);
+	return [object UID];
 }
 
 - (void)moveListObjects:(NSArray *)objects toGroup:(AIListGroup *)group
@@ -458,7 +458,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 // Return YES if the contact list is editable
 - (BOOL)contactListEditable
 {
-    return([[self statusObjectForKey:@"Online"] boolValue]);
+    return [[self statusObjectForKey:@"Online"] boolValue];
 }
 
 //Chats ------------------------------------------------------------
@@ -502,7 +502,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[gaimThread openChat:chat onAccount:self];
 	
 	//Created the chat successfully
-	return(YES);
+	return YES;
 }
 
 - (BOOL)closeChat:(AIChat*)chat
@@ -794,7 +794,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		}
 	}
 	
-    return(sent);
+    return sent;
 }
 
 //Return YES if we're available for sending the specified content or will be soon (are currently connecting).
@@ -806,21 +806,21 @@ gboolean gaim_init_ssl_openssl_plugin(void);
     if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
         if ((weAreOnline && (inContact == nil || [inContact online])) ||
 			([self integerStatusObjectForKey:@"Connecting"])) {  //XXX - Why do we lie if we're connecting? -ai
-			return(YES);
+			return YES;
         }
     } else if (([inType isEqualToString:FILE_TRANSFER_TYPE]) && ([self conformsToProtocol:@protocol(AIAccount_Files)])) {
 		if (weAreOnline) {
 			if (inContact) {
 				if ([inContact online]) {
-					return([self allowFileTransferWithListObject:inContact]);
+					return [self allowFileTransferWithListObject:inContact];
 				}
 			} else {
-				return(YES);
+				return YES;
 			}
        }	
 	}
 	
-    return(NO);
+    return NO;
 }
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
@@ -1101,7 +1101,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		}
 	}
 
-	return(privacyOption);
+	return privacyOption;
 }
 
 /*****************************************************/
@@ -1151,11 +1151,11 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 										 size:(unsigned long long)inSize
 							   remoteFilename:(NSString *)remoteFilename
 {
-	return([self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
+	return [self mainPerformSelector:@selector(_mainThreadNewFileTransferObjectWith:size:remoteFilename:)
 						  withObject:destinationUID
 						  withObject:[NSNumber numberWithUnsignedLongLong:inSize]
 						  withObject:remoteFilename
-						 returnValue:YES]);
+						 returnValue:YES];
 }
 - (ESFileTransfer *)_mainThreadNewFileTransferObjectWith:(NSString *)destinationUID
 													size:(NSNumber *)inSize
@@ -1169,7 +1169,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[fileTransfer setSize:[inSize unsignedLongLongValue]];
 	[fileTransfer setRemoteFilename:remoteFilename];
 
-    return(fileTransfer);
+    return fileTransfer;
 }
 
 //Update an ESFileTransfer object progress
@@ -2026,7 +2026,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		}
 	}
 	
-	return(menuItemArray);
+	return menuItemArray;
 }
 
 //Action of a dynamically-generated contact menu item
@@ -2040,7 +2040,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //Subclasses may override to provide a localized label and/or prevent a specified label from being shown
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
-	return([NSString stringWithUTF8String:label]);
+	return [NSString stringWithUTF8String:label];
 }
 
 /*!
@@ -2126,10 +2126,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	if ((strcmp(label, "Change Password...") == 0) || (strcmp(label, "Change Password") == 0)) {
 		/* XXX This depends upon an implementation of adiumGaimRequestFields in adiumGaimRequest.m.
 		* Enable once that is done. */
-		return(nil);
+		return nil;
 	}
 
-	return([NSString stringWithUTF8String:label]);
+	return [NSString stringWithUTF8String:label];
 }
 
 /* Secure messaging */
@@ -2144,7 +2144,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
 {
 	//Allow secure messaging via OTR for one-on-one chats
-	return([inChat name] == nil);
+	return [inChat name] == nil;
 }
 
 - (NSString *)aboutEncryption
@@ -2216,7 +2216,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
     return (@"Unknown");
 }
 
-- (NSDictionary *)defaultProperties { return([NSDictionary dictionary]); }
+- (NSDictionary *)defaultProperties { return [NSDictionary dictionary]; }
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
@@ -2292,7 +2292,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (NSString *)_userIconCachePath
 {    
     NSString    *userIconCacheFilename = [NSString stringWithFormat:@"TEMP-UserIcon_%@_%@", [self internalObjectID], [NSString randomStringOfLength:4]];
-    return([[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename]);
+    return [[adium cachesPath] stringByAppendingPathComponent:userIconCacheFilename];
 }
 
 - (AIListContact *)contactWithUID:(NSString *)inUID
@@ -2308,32 +2308,32 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 							 withObject:inUID
 							returnValue:YES];
 
-	return(contact);
+	return contact;
 }
 
 - (NSNumber *)shouldCheckMail
 {
-	return([self preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS]);
+	return [self preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS];
 }
 
 - (BOOL)displayConversationClosed
 {
-	return(NO);
+	return NO;
 }
 
 - (BOOL)displayConversationTimedOut
 {
-	return(NO);
+	return NO;
 }
 
 - (BOOL)shouldSetAliasesServerside
 {
-	return(NO);
+	return NO;
 }
 
 - (NSString *)internalObjectID
 {
-	return([super internalObjectID]);
+	return [super internalObjectID];
 }
 
 @end

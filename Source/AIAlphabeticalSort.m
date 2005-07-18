@@ -55,28 +55,28 @@ static  BOOL	sortByLastName;
  * @brief Non-localized identifier
  */
 - (NSString *)identifier{
-    return(@"Alphabetical");
+    return @"Alphabetical";
 }
 
 /*!
  * @brief Localized display name
  */
 - (NSString *)displayName{
-    return(AILocalizedString(@"Sort Contacts Alphabetically",nil));
+    return AILocalizedString(@"Sort Contacts Alphabetically",nil);
 }
 
 /*!
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return(nil);
+	return nil;
 }
 
 /*!
  * @brief Attribute keys which, when changed, should trigger a resort
  */
 - (NSSet *)attributeKeysRequiringResort{
-	return([NSSet setWithObject:@"Display Name"]);
+	return [NSSet setWithObject:@"Display Name"];
 }
 
 #pragma mark Configuration
@@ -87,7 +87,7 @@ static  BOOL	sortByLastName;
  * @result Localized title. If nil, the menu item will be disabled.
  */
 - (NSString *)configureSortWindowTitle{
-	return(AILocalizedString(@"Configure Alphabetical Sort",nil));	
+	return AILocalizedString(@"Configure Alphabetical Sort",nil);	
 }
 
 /*!
@@ -153,17 +153,17 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups)
 			
 			return (returnValue);
 		} else {
-			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			return [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
 		}
 
 	} else {
 		//If sorting groups, do a caseInsesitiveCompare; otherwise, keep groups in manual order
 		if (sortGroups) {
-			return([[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]]);
+			return [[objectA longDisplayName] caseInsensitiveCompare:[objectB longDisplayName]];
 		} else if ([objectA orderIndex] > [objectB orderIndex]) {
-			return(NSOrderedDescending);
+			return NSOrderedDescending;
 		} else {
-			return(NSOrderedAscending);
+			return NSOrderedAscending;
 		}
 	}
 }
@@ -172,7 +172,7 @@ int alphabeticalSort(id objectA, id objectB, BOOL groups)
  * @brief Sort function
  */
 - (sortfunc)sortFunction{
-	return(&alphabeticalSort);
+	return &alphabeticalSort;
 }
 
 @end

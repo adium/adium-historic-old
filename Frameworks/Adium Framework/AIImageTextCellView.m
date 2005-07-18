@@ -29,7 +29,7 @@
 		[self _initImageTextView];
 	}
 	
-	return(self);
+	return self;
 }
 
 - (id)initWithCoder:(NSCoder *)encoder
@@ -38,7 +38,7 @@
 		[self _initImageTextView];		
 	}
 	
-	return(self);
+	return self;
 }
 
 - (void)_initImageTextView
@@ -57,7 +57,7 @@
 //NSCell expects to draw into a flipped view
 - (BOOL)isFlipped
 {
-	return(YES);
+	return YES;
 }
 
 //Drawing

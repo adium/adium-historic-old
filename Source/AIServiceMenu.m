@@ -75,7 +75,7 @@
 		}
 	}
 	
-	return([menu autorelease]);
+	return [menu autorelease];
 }	
 
 

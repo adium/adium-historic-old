@@ -20,7 +20,7 @@
 @implementation ESGaimJabberAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimJabberAccountView");
+    return @"ESGaimJabberAccountView";
 }
 
 //Configure our controls

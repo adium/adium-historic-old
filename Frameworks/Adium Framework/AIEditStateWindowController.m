@@ -114,7 +114,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[self setAccount:inAccount];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -460,9 +460,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[control setFrame:frame];
 		(*height) += frame.size.height + CONTROL_SPACING;
 		
-		return(control);
+		return control;
 	} else {
-		return(guide);
+		return guide;
 	}
 }
 
@@ -555,7 +555,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 		[workingStatusState setTitle:[textField_title stringValue]];
 	}
 
-	return(workingStatusState);
+	return workingStatusState;
 }
 
 @end

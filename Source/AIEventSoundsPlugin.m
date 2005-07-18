@@ -53,7 +53,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(EVENT_SOUNDS_ALERT_SHORT);
+	return EVENT_SOUNDS_ALERT_SHORT;
 }
 
 /*!
@@ -65,9 +65,9 @@
 	NSString	*fileName = [[[details objectForKey:KEY_ALERT_SOUND_PATH] lastPathComponent] stringByDeletingPathExtension];
 	
 	if (fileName && [fileName length]) {
-		return([NSString stringWithFormat:EVENT_SOUNDS_ALERT_LONG, fileName]);
+		return [NSString stringWithFormat:EVENT_SOUNDS_ALERT_LONG, fileName];
 	} else {
-		return(EVENT_SOUNDS_ALERT_SHORT);
+		return EVENT_SOUNDS_ALERT_SHORT;
 	}
 }
 
@@ -76,7 +76,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"SoundAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"SoundAlert" forClass:[self class]];
 }
 
 /*!
@@ -85,7 +85,7 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESEventSoundAlertDetailPane actionDetailsPane]);
+	return [ESEventSoundAlertDetailPane actionDetailsPane];
 }
 
 /*!
@@ -115,7 +115,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 /*!

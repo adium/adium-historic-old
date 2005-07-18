@@ -111,7 +111,7 @@
 										 forKey:[self defaultDetailsKey]
 										  group:PREF_GROUP_ANNOUNCER];
 
-	return(actionDetails);
+	return actionDetails;
 }
 
 /*!
@@ -192,7 +192,7 @@
 		[voicesMenu addItem:menuItem];
 	}
 	
-	return(voicesMenu);
+	return voicesMenu;
 }
 
 /*!

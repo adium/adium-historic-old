@@ -47,7 +47,7 @@
 	AIListContactBubbleCell *newCell = [super copyWithZone:zone];
 	newCell->lastBackgroundBezierPath = [lastBackgroundBezierPath retain];
 	
-	return(newCell);
+	return newCell;
 }
 
 - (void)dealloc
@@ -59,17 +59,17 @@
 
 //Give ourselves extra padding to compensate for the rounded bubble
 - (int)leftPadding{
-	return([super leftPadding] + EDGE_INDENT);
+	return [super leftPadding] + EDGE_INDENT;
 }
 - (int)rightPadding{
-	return([super rightPadding] + EDGE_INDENT);
+	return [super rightPadding] + EDGE_INDENT;
 }
 
 - (int)cellWidth
 {
 	int		width = [super cellWidth];
 
-	return(width + EDGE_INDENT);
+	return width + EDGE_INDENT;
 }
 
 //Draw the background of our cell
@@ -137,21 +137,21 @@
 
 	[NSGraphicsContext restoreGraphicsState];
 	
-	return(returnRect);
+	return returnRect;
 }
 
 //Pass drawing rects through this method before drawing a bubble.  This allows us to make adjustments to bubble
 //positioning and size.
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
-	return(rect);
+	return rect;
 }
 
 //Because of the rounded corners, we cannot rely on the outline view to draw our grid.  Return NO here to let
 //the outline view know we'll be drawing the grid ourself
 - (BOOL)drawGridBehindCell
 {
-	return(NO);
+	return NO;
 }
 
 - (void)setOutlineBubble:(BOOL)flag

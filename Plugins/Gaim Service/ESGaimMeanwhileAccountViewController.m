@@ -32,7 +32,7 @@
 #ifndef MEANWHILE_NOT_AVAILABLE
 
 - (NSString *)nibName{
-    return(@"ESGaimMeanwhileAccountView");
+    return @"ESGaimMeanwhileAccountView";
 }
 
 //Configure our controls

@@ -21,7 +21,7 @@
 //Return a new contact info pane
 + (AIContactInfoPane *)contactInfoPane
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 //Init
@@ -38,7 +38,7 @@
 //Resizable
 - (BOOL)resizable
 {
-	return(YES);
+	return YES;
 }
 
 - (CONTACT_INFO_CATEGORY)contactInfoCategory

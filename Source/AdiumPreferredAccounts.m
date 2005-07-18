@@ -42,7 +42,7 @@
 										 object:nil];		
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -77,14 +77,14 @@
 													group:PREF_GROUP_PREFERRED_ACCOUNTS];
         if (accountID && (account = [[adium accountController] accountWithInternalObjectID:accountID])) {
             if ([account availableForSendingContentType:inType toContact:inContact]) {
-                return(account);
+                return account;
             }
         }
 		
 		//If inObject is an AIListContact return the account the object is on
 		if ((account = [inContact account])) {
 			if ([account availableForSendingContentType:inType toContact:inContact]) {
-				return(account);
+				return account;
 			}
 		}
 		
@@ -92,14 +92,14 @@
 		NSString	*lastAccountID = [lastAccountIDToSendContent objectForKey:[[inContact service] serviceID]];
 		if (lastAccountID && (account = [[adium accountController] accountWithInternalObjectID:lastAccountID])) {
 			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
-				return(account);
+				return account;
 			}
 		}
 		
 		if (includeOffline) {
 			//If inObject is an AIListContact return the account the object is on even if the account is offline
 			if ((account = [inContact account])) {
-				return(account);
+				return account;
 			}
 		}
 	}
@@ -123,7 +123,7 @@
 		while ((account = [enumerator nextObject])) {
 			if ([inContact service] == [account service] &&
 				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
-				return(account);
+				return account;
 			}
 		}
 		
@@ -132,7 +132,7 @@
 		while ((account = [enumerator nextObject])) {
 			if ([[inContact serviceClass] isEqualToString:[account serviceClass]] &&
 				([account availableForSendingContentType:inType toContact:nil] || includeOffline)) {
-				return(account);
+				return account;
 			}
 		}
 	} else {
@@ -140,14 +140,14 @@
 		enumerator = [[[adium accountController] accounts] objectEnumerator];
 		while ((account = [enumerator nextObject])) {
 			if ([account availableForSendingContentType:inType toContact:nil] || includeOffline) {
-				return(account);
+				return account;
 			}
 		}
 	}
 	
 	
 	//Can't find anything
-	return(nil);
+	return nil;
 }
 
 //XXX - Must we monitor content to determine this?

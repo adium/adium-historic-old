@@ -82,7 +82,7 @@
 #pragma mark Display Dialog Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(ERROR_MESSAGE_ALERT_SHORT);
+	return ERROR_MESSAGE_ALERT_SHORT;
 }
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
@@ -90,20 +90,20 @@
 	NSString	*alertText = [[details objectForKey:KEY_ALERT_TEXT] lastPathComponent];
 	
 	if (alertText && [alertText length]) {
-		return([NSString stringWithFormat:ERROR_MESSAGE_ALERT_LONG, alertText]);
+		return [NSString stringWithFormat:ERROR_MESSAGE_ALERT_LONG, alertText];
 	} else {
-		return(ERROR_MESSAGE_ALERT_SHORT);
+		return ERROR_MESSAGE_ALERT_SHORT;
 	}
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"ErrorAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"ErrorAlert" forClass:[self class]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESPanelAlertDetailPane actionDetailsPane]);
+	return [ESPanelAlertDetailPane actionDetailsPane];
 }
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
@@ -132,7 +132,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 //Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
@@ -147,7 +147,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 
@@ -161,12 +161,12 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(YES);
+	return YES;
 }
 
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
@@ -193,7 +193,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID

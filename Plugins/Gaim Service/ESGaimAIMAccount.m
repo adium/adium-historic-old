@@ -121,7 +121,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  */
 - (BOOL)shouldSetAliasesServerside
 {
-	return(YES);
+	return YES;
 }
 
 #pragma mark Connectivity
@@ -348,7 +348,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		}
 	}
 	
-	return(serversideComment);
+	return serversideComment;
 }
 
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
@@ -421,13 +421,13 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	if (strcmp(label, "Direct IM") == 0) {
 		//XXX
 		if (/*GAIM_DEBUG && */![[[inContact service] serviceID] isEqualToString:@"ICQ"]) {
-			return([NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]]);
+			return [NSString stringWithFormat:AILocalizedString(@"Initiate Direct IM with %@",nil),[inContact formattedUID]];
 		} else {
-			return(nil);
+			return nil;
 		}
 	}
 
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 #pragma mark Account Action Menu Items
@@ -436,14 +436,14 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	/* Remove various actions which are either duplicates of superior Adium actions (*grin*)
 	 * or are just silly ("Confirm Account" for example). */
 	if (strcmp(label, "Set Available Message...") == 0) {
-		return(nil);
+		return nil;
 	} else if (strcmp(label, "Format Screen Name...") == 0) {
-		return(nil);
+		return nil;
 	} else if (strcmp(label, "Confirm Account") == 0) {
-		return(nil);
+		return nil;
 	}
 
-	return([super titleForAccountActionMenuLabel:label]);
+	return [super titleForAccountActionMenuLabel:label];
 }
 
 #pragma mark DirectIM (IM Image)
@@ -752,9 +752,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 {
 	if (!strcmp(gaimStatusType, "Available")) {
 		NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
-		return([messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH]);
+		return [messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
 	} else {
-		return([super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType]);
+		return [super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType];
 	}
 }
 
@@ -785,7 +785,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  */
 - (BOOL)suppressTypingNotificationChangesAfterSend
 {
-	return(YES);
+	return YES;
 }
 
 #pragma mark Group chat

@@ -291,10 +291,10 @@
 	AIAccount		*account;
 	
 	while ((account = [enumerator nextObject])) {
-		if ([account contactListEditable]) return(YES);
+		if ([account contactListEditable]) return YES;
 	}
 	
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -312,7 +312,7 @@
 {
 	[self ensureValidContactTypeSelection];
 	
-	return(nil);
+	return nil;
 }
 
 
@@ -374,7 +374,7 @@
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([accounts count]);
+	return [accounts count];
 }
 
 /*!
@@ -390,10 +390,10 @@
 			   [NSNumber numberWithBool:NO]);
 	
 	} else if ([identifier isEqualToString:@"account"]) {
-		return([[accounts objectAtIndex:row] formattedUID]);
+		return [[accounts objectAtIndex:row] formattedUID];
 		
 	} else {
-		return(@"");
+		return @"";
 
 	}
 }

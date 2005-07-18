@@ -28,28 +28,28 @@
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 
 /*!
  * @brief Label
  */
 - (NSString *)label{
-    return(CONTACT_LIST_TITLE);
+    return CONTACT_LIST_TITLE;
 }
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ContactListAdvancedPrefs");
+    return @"ContactListAdvancedPrefs";
 }
 
 /*!
  * @brief Image
  */
 - (NSImage *)image{
-	return([NSImage imageNamed:@"pref-contactList" forClass:[AIPreferenceWindowController class]]);
+	return [NSImage imageNamed:@"pref-contactList" forClass:[AIPreferenceWindowController class]];
 }
 
 /*!

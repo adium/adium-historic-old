@@ -137,7 +137,7 @@
 {
 	AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
 	
-	return([[activeStatusState statusMessage] string]);
+	return [[activeStatusState statusMessage] string];
 }
 
 - (void)setMyStatusMessage:(NSString *)statusMessage
@@ -154,7 +154,7 @@
 
 #pragma mark Controller convenience
 - (AIInterfaceController *)interfaceController{
-    return([adium interfaceController]);
+    return [adium interfaceController];
 }
 
 

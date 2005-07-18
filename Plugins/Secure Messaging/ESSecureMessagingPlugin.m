@@ -361,7 +361,7 @@
 		[_secureMessagingMenu addItem:item];
 	}
 	
-	return([[_secureMessagingMenu copy] autorelease]);
+	return [[_secureMessagingMenu copy] autorelease];
 }
 
 @end

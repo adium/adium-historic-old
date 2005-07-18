@@ -48,7 +48,7 @@
  */
 + (id)accountViewController
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 /*!
@@ -119,7 +119,7 @@
  */
 - (NSView *)setupView
 {
-    return(view_setup);
+    return view_setup;
 }
 
 /*!
@@ -130,7 +130,7 @@
  */
 - (NSView *)profileView
 {
-    return(view_profile);
+    return view_profile;
 }
 
 /*!
@@ -141,7 +141,7 @@
  */
 - (NSView *)optionsView
 {
-    return(view_options);
+    return view_options;
 }
 
 /*!
@@ -152,7 +152,7 @@
  */
 - (NSView *)privacyView
 {
-	return(view_privacy);
+	return view_privacy;
 }
  
 /*!
@@ -163,7 +163,7 @@
  */
 - (NSString *)nibName
 {
-    return(@"");    
+    return @"";    
 }
 
 

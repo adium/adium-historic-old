@@ -59,7 +59,7 @@
  */
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self]);
+    return [AIWebKitMessageViewController messageViewControllerForChat:inChat withPlugin:self];
 }
 
 /*!
@@ -91,7 +91,7 @@
 		NSAssert([styleDictionary count] > 0, @"No message styles available"); //Abort if we have no message styles
 	}
 	
-	return(styleDictionary);
+	return styleDictionary;
 }
 
 /*!
@@ -109,7 +109,7 @@
 		bundle = [[styles allValues] lastObject];
 	}
 
-	return(bundle);
+	return bundle;
 }
 
 /*!
@@ -130,7 +130,7 @@
  */
 - (NSString *)styleSpecificKey:(NSString *)key forStyle:(NSString *)style
 {
-	return([NSString stringWithFormat:@"%@:%@", style, key]);
+	return [NSString stringWithFormat:@"%@:%@", style, key];
 }
 
 @end

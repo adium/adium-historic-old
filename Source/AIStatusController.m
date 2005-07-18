@@ -515,7 +515,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 			nil] retain];
 	}
 
-	return([coreLocalizedStatusDescriptions objectForKey:statusName]);
+	return [coreLocalizedStatusDescriptions objectForKey:statusName];
 }
 
 
@@ -665,7 +665,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		[self _upgradeSavedAwaysToSavedStates];
 	}
 
-	return(stateArray);
+	return stateArray;
 }
 
 /*!
@@ -696,7 +696,7 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 		}
 	}
 
-	return(builtInStateArray);
+	return builtInStateArray;
 }
 
 - (AIStatus *)offlineStatusState
@@ -1060,7 +1060,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	[self _saveStateArrayAndNotifyOfChanges];
 
-	return(destIndex);
+	return destIndex;
 }
 
 /*!
@@ -1393,7 +1393,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		}
 	}
 
-    return(nil);
+    return nil;
 }
 
 /*!
@@ -1537,7 +1537,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		[stateMenuItemsNeedingUpdating removeObject:menuItem];
 	}
 
-	return(YES);
+	return YES;
 }
 
 /*!
@@ -1735,7 +1735,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		title = [title stringWithEllipsisByTruncatingToLength:STATE_TITLE_MENU_LENGTH];
 	}
 
-	return(title);
+	return title;
 }
 
 /*!

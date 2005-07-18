@@ -24,53 +24,53 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimZephyrAccount class]);
+	return [ESGaimZephyrAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimZephyrAccountViewController accountViewController]);
+    return [ESGaimZephyrAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimZephyrJoinChatViewController joinChatView]);
+	return [DCGaimZephyrJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-zephyr");
+	return @"libgaim-zephyr";
 }
 - (NSString *)serviceID{
-	return(@"Zephyr");
+	return @"Zephyr";
 }
 - (NSString *)serviceClass{
-	return(@"Zephyr");
+	return @"Zephyr";
 }
 - (NSString *)shortDescription{
-	return(@"Zephyr");
+	return @"Zephyr";
 }
 - (NSString *)longDescription{
-	return(@"Zephyr");
+	return @"Zephyr";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789._@-"];
 }
 - (NSCharacterSet *)allowedCharactersForUIDs{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._@-"]);	
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._@-"];	
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(255);
+	return 255;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceUnsupported);
+	return AIServiceUnsupported;
 }
 - (BOOL)canCreateGroupChats{
-	return(YES);
+	return YES;
 }
 
 - (void)registerStatuses{

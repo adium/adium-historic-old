@@ -37,16 +37,16 @@ typedef enum {
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Message History",nil));
+    return AILocalizedString(@"Message History",nil);
 }
 - (NSString *)nibName{
-    return(@"MessageContextDisplayPrefs");
+    return @"MessageContextDisplayPrefs";
 }
 - (NSImage *)image{
-	return([NSImage imageNamed:@"pref-messagehistory" forClass:[self class]]);
+	return [NSImage imageNamed:@"pref-messagehistory" forClass:[self class]];
 }
 
 

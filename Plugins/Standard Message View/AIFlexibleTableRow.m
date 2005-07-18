@@ -29,7 +29,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 //Create a new row
 + (id)rowWithCells:(NSArray *)inCells representedObject:(id)inRepresentedObject
 {
-    return([[[self alloc] initWithCells:inCells representedObject:inRepresentedObject] autorelease]);
+    return [[[self alloc] initWithCells:inCells representedObject:inRepresentedObject] autorelease];
 }
 
 //Create a new row
@@ -75,13 +75,13 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     tableView = inView;
 }
 - (AIFlexibleTableView *)tableView{
-    return(tableView);
+    return tableView;
 }
 
 //Our represented object
 - (id)representedObject
 {
-    return(representedObject);
+    return representedObject;
 }
 
 //set the amount that rows which follow this one should indent
@@ -105,10 +105,10 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     enumerator = [cellArray objectEnumerator];
     while ((cell = [enumerator nextObject])) {
-        if ([cell isKindOfClass:theClass]) return(cell);
+        if ([cell isKindOfClass:theClass]) return cell;
     }
     
-    return(nil);
+    return nil;
 }
 
 //Finds the last cell in this row with the specified class
@@ -119,10 +119,10 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     
     enumerator = [cellArray reverseObjectEnumerator];
     while ((cell = [enumerator nextObject])) {
-        if ([cell isKindOfClass:theClass]) return(cell);
+        if ([cell isKindOfClass:theClass]) return cell;
     }
     
-    return(nil);
+    return nil;
 }
 
 //Finds all cells in this row with the specified class
@@ -137,7 +137,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
         if ([cell isKindOfClass:theClass]) [outArray addObject:cell];
     }
     
-    return([outArray autorelease]);
+    return [outArray autorelease];
 }
 
 
@@ -145,12 +145,12 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
 //Returns YES if this row spans into another row's cells
 - (BOOL)spansRows
 {
-    return(spansRows);
+    return spansRows;
 }
 
 //Returns YES if another row spans into this row's cells
 - (BOOL)isSpannedInto{
-    return(isSpannedInto);
+    return isSpannedInto;
 }
 
 //Update spanning
@@ -214,7 +214,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
         x += cellSize.width;
     }
 
-    return(installedCursorRects != 0);
+    return installedCursorRects != 0;
 }
 
 
@@ -228,9 +228,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //Determine the clicked cell
     cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin];
     if (cell) {
-        return([cell handleMouseDownEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)]);
+        return [cell handleMouseDownEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)];
     } else {
-        return(NO);
+        return NO;
     }
 }
 
@@ -243,9 +243,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     //Determine the clicked cell
     cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin];
     if (cell) {
-        return([cell menuItemsForEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)]);
+        return [cell menuItemsForEvent:theEvent atPoint:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:NSMakePoint(inOffset.x + cellOrigin.x, inOffset.y + cellOrigin.y)];
     } else {
-        return(nil);
+        return nil;
     }    
 }
 
@@ -263,11 +263,11 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     while ((cell = [enumerator nextObject])) {
         float	nextOriginX = (*outOrigin).x + [cell cellSize].width;
         
-        if (inPoint.x < nextOriginX) return(cell);
+        if (inPoint.x < nextOriginX) return cell;
         (*outOrigin).x = nextOriginX;
     }
     
-    return(nil);
+    return nil;
 }
 
 
@@ -336,7 +336,7 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 
     //
-    return(selectedString);
+    return selectedString;
 }    
 
 //Tests if a point is within selected content
@@ -346,9 +346,9 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     AIFlexibleTableCell	*cell;
     
     if ((cell = [self _cellAtPoint:inPoint cellOrigin:&cellOrigin])) {
-        return([cell pointIsSelected:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:cellOrigin]);
+        return [cell pointIsSelected:NSMakePoint(inPoint.x - cellOrigin.x, inPoint.y - cellOrigin.y) offset:cellOrigin];
     } else {
-        return(NO);
+        return NO;
     }
 }
 
@@ -431,20 +431,20 @@ int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight);
     }
 
     //Return our required height
-    return(height);
+    return height;
 }
 
 //Returns the height of this row
 - (int)height
 {
-    return(height);
+    return height;
 }
 
 //Factors height of the passed cell into the height of our row
 int _factorHeightOfCell(AIFlexibleTableCell *cell, int currentHeight)
 {
     int	cellHeight = [cell cellSize].height;
-    return((cellHeight > currentHeight) ? cellHeight : currentHeight );
+    return (cellHeight > currentHeight) ? cellHeight : currentHeight ;
 }
 
 //Tags

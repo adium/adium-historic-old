@@ -20,12 +20,12 @@
 
 - (id)initWithFrame:(NSRect)frameRect
 {
-    return([super initWithFrame:frameRect]);
+    return [super initWithFrame:frameRect];
 }
 
 - (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer
 {
-    return([super initWithFrame:frameRect textContainer:aTextContainer]);
+    return [super initWithFrame:frameRect textContainer:aTextContainer];
 }
 
 - (void)dealloc
@@ -50,7 +50,7 @@
 
 - (BOOL)isContinuousURLValidationEnabled
 {
-    return(continuousURLValidation);
+    return continuousURLValidation;
 }
 
 
@@ -58,11 +58,11 @@
 #pragma mark Get URL Verification Status
 - (BOOL)isURLValid
 {
-    return(URLIsValid);
+    return URLIsValid;
 }
 - (URI_VERIFICATION_STATUS)validationStatus
 {
-    return(validStatus);
+    return validStatus;
 }
 
 
@@ -103,7 +103,7 @@
 		linkURL = [linkURL copy];
 	}
 	
-	return([linkURL autorelease]);
+	return [linkURL autorelease];
 }
 
 @end

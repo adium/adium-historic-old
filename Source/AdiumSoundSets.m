@@ -50,7 +50,7 @@
 		[adium createResourcePathForName:SOUNDSET_RESOURCE_PATH];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!

@@ -45,7 +45,7 @@
 		messageViewController = [inMessageViewController retain];
 	}
 
-	return(self);
+	return self;
 }
 
 - (void)dealloc

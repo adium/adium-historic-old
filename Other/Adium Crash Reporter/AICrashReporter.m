@@ -165,11 +165,11 @@
 			//Open our window
 			[window_MainWindow makeKeyAndOrderFront:nil];
 			
-			return(YES);
+			return YES;
 		}
 	}
 	
-	return(NO);
+	return NO;
 }
 
 #pragma mark Privacy Details

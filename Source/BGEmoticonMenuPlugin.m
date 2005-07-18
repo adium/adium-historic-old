@@ -269,7 +269,7 @@
     
     [packMenu setMenuChangedMessagesEnabled:YES];
 	
-    return([packMenu autorelease]);
+    return [packMenu autorelease];
 }
 
 
@@ -317,15 +317,15 @@
 		BOOL	haveEmoticons = ([[[adium emoticonController] activeEmoticonPacks] count] != 0);
 
 		//Disable the main emoticon menu items if no emoticons are available
-		return(haveEmoticons);
+		return haveEmoticons;
 		
 	} else {
 		//Disable the emoticon menu items if we're not in a text field
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		if (responder && [responder isKindOfClass:[NSText class]]) {
-			return([(NSText *)responder isEditable]);
+			return [(NSText *)responder isEditable];
 		} else {
-			return(NO);
+			return NO;
 		}
 		
 	}

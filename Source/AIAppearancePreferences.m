@@ -62,13 +62,13 @@ typedef enum {
  * @brief Preference pane properties
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Appearance);
+    return AIPref_Appearance;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Appearance","Appearance preferences label"));
+    return AILocalizedString(@"Appearance","Appearance preferences label");
 }
 - (NSString *)nibName{
-    return(@"AppearancePrefs");
+    return @"AppearancePrefs";
 }
 
 /*!
@@ -397,7 +397,7 @@ typedef enum {
 	}
 	
 	
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 
@@ -427,7 +427,7 @@ typedef enum {
 						withTag:WINDOW_STYLE_PILLOWS_FITTED
 						 toMenu:menu];
 
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 - (void)_addWindowStyleOption:(NSString *)option withTag:(int)tag toMenu:(NSMenu *)menu{
     NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:option
@@ -597,10 +597,10 @@ typedef enum {
 	}
 	
 	while ((presetDict = [enumerator nextObject])) {
-		if ([newName isEqualToString:[presetDict objectForKey:@"name"]]) return(NO);
+		if ([newName isEqualToString:[presetDict objectForKey:@"name"]]) return NO;
 	}
 	
-	return(YES);
+	return YES;
 }
 
 /*!
@@ -731,7 +731,7 @@ typedef enum {
 								  inFolder:LIST_LAYOUT_FOLDER];		
 		_listLayouts = [AISCLViewPlugin availableLayoutSets];
 		
-		return(_listLayouts);
+		return _listLayouts;
 	
 	} else if (presets == _listThemes) {
 		[AISCLViewPlugin deleteSetWithName:[preset objectForKey:@"name"]
@@ -739,10 +739,10 @@ typedef enum {
 								  inFolder:LIST_THEME_FOLDER];		
 		_listThemes = [AISCLViewPlugin availableThemeSets];
 		
-		return(_listThemes);
+		return _listThemes;
 
 	} else {
-		return(nil);
+		return nil;
 	}
 }
 
@@ -784,7 +784,7 @@ typedef enum {
 															  keyEquivalent:@""] autorelease];
 	[menu addItem:menuItem];
 	
-	return(menu);	
+	return menu;	
 }
 
 /*!
@@ -825,7 +825,7 @@ typedef enum {
 															  keyEquivalent:@""] autorelease];
 	[menu addItem:menuItem];
 	
-	return(menu);	
+	return menu;	
 }
 
 
@@ -861,7 +861,7 @@ typedef enum {
 		[menu addItem:menuItem];
 	}
 	
-	return(menu);	
+	return menu;	
 }
 
 
@@ -872,7 +872,7 @@ typedef enum {
  */
 - (NSMenu *)_statusIconsMenu
 {
-	return([self _iconPackMenuForPacks:[adium allResourcesForName:@"Status Icons" withExtensions:@"AdiumStatusIcons"] class:[AIStatusIcons class]]);
+	return [self _iconPackMenuForPacks:[adium allResourcesForName:@"Status Icons" withExtensions:@"AdiumStatusIcons"] class:[AIStatusIcons class]];
 }
 
 /*!
@@ -880,7 +880,7 @@ typedef enum {
  */
 - (NSMenu *)_serviceIconsMenu
 {
-	return([self _iconPackMenuForPacks:[adium allResourcesForName:@"Service Icons" withExtensions:@"AdiumServiceIcons"] class:[AIServiceIcons class]]);
+	return [self _iconPackMenuForPacks:[adium allResourcesForName:@"Service Icons" withExtensions:@"AdiumServiceIcons"] class:[AIServiceIcons class]];
 }
 
 /*!
@@ -906,7 +906,7 @@ typedef enum {
 		[serviceIconsMenu addItem:menuItem];
 	}
 	
-	return(serviceIconsMenu);	
+	return serviceIconsMenu;	
 }
 
 @end

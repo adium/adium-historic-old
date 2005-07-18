@@ -41,13 +41,13 @@
     cell = [AIFlexibleTableStringCell cellWithAttributedString:attributedString];
     [cell setType:NSTextCellType];
 
-    return(cell);
+    return cell;
 }
 
 //Create a new cell from an attributed string
 + (AIFlexibleTableStringCell *)cellWithAttributedString:(NSAttributedString *)inString
 {
-    return([[[self alloc] initWithAttributedString:inString] autorelease]);
+    return [[[self alloc] initWithAttributedString:inString] autorelease];
 }
 
 //Init

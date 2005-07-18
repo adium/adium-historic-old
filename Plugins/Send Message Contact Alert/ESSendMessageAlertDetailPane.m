@@ -34,10 +34,10 @@
 
 //Pane Details
 - (NSString *)label{
-	return(@"");
+	return @"";
 }
 - (NSString *)nibName{
-    return(@"SendMessageContactAlert");    
+    return @"SendMessageContactAlert";    
 }
 
 //Configure the detail view

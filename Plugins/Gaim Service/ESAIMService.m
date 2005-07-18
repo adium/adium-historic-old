@@ -21,35 +21,35 @@
 
 //Service Description
 - (Class)accountClass{
-	return([ESGaimAIMAccount class]);
+	return [ESGaimAIMAccount class];
 }
 
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-oscar-AIM");
+	return @"libgaim-oscar-AIM";
 }
 - (NSString *)serviceID{
-	return(@"AIM");
+	return @"AIM";
 }
 - (NSString *)shortDescription{
-	return(@"AIM");
+	return @"AIM";
 }
 - (NSString *)longDescription{
-	return(@"AOL Instant Messenger");
+	return @"AOL Instant Messenger";
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServicePrimary);
+	return AIServicePrimary;
 }
 - (BOOL)canCreateGroupChats{
-	return(YES);
+	return YES;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"Screen Name",nil)); //ScreenName
+    return AILocalizedString(@"Screen Name",nil); //ScreenName
 }
 
 @end

@@ -48,12 +48,12 @@
 //
 - (NSString *)fromUID
 {
-    return(fromUID);
+    return fromUID;
 }
 
 - (NSString *)serviceClass
 {
-	return(serviceClass);
+	return serviceClass;
 }
 
 //Returns all of our 'to' groups, creating them if necessary
@@ -86,7 +86,7 @@
 		}
     }
     
-    return(toGroupArray);
+    return toGroupArray;
 }
 
 @end

@@ -24,47 +24,47 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimGaduGaduAccount class]);
+	return [ESGaimGaduGaduAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimGaduGaduAccountViewController accountViewController]);
+    return [ESGaimGaduGaduAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimGaduGaduJoinChatViewController joinChatView]);
+	return [DCGaimGaduGaduJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Gadu-Gadu");
+	return @"libgaim-Gadu-Gadu";
 }
 - (NSString *)serviceID{
-	return(@"Gadu-Gadu");
+	return @"Gadu-Gadu";
 }
 - (NSString *)serviceClass{
-	return(@"Gadu-Gadu");
+	return @"Gadu-Gadu";
 }
 - (NSString *)shortDescription{
-	return(@"Gadu-Gadu");
+	return @"Gadu-Gadu";
 }
 - (NSString *)longDescription{
-	return(@"Gadu-Gadu");
+	return @"Gadu-Gadu";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._ "];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(24);
+	return 24;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 
 - (void)registerStatuses{

@@ -81,7 +81,7 @@
  */
 + (AIMessageViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[[self alloc] initForChat:inChat] autorelease]);
+    return [[[self alloc] initForChat:inChat] autorelease];
 }
 
 /*!
@@ -219,7 +219,7 @@
  */
 - (AIChat *)chat
 {
-    return(chat);
+    return chat;
 }
 
 /*!
@@ -227,7 +227,7 @@
  */
 - (AIAccount *)account
 {
-    return([chat account]);
+    return [chat account];
 }
 
 /*!
@@ -235,7 +235,7 @@
  */
 - (AIListContact *)listObject
 {
-    return([chat listObject]);
+    return [chat listObject];
 }
 
 /*!
@@ -289,7 +289,7 @@
  */
 - (NSView *)view
 {
-    return(view_contents);
+    return view_contents;
 }
 
 /*!
@@ -697,7 +697,7 @@
 	if (!ignoreUserMininum && height < entryMinHeight) height = entryMinHeight;
 	if (height > allowedHeight) height = allowedHeight;
 	
-	return(height);
+	return height;
 }
 
 
@@ -720,7 +720,7 @@
  */
 - (BOOL)userListVisible
 {
-	return([[splitView_messages subviews] containsObject:scrollView_userList]);
+	return [[splitView_messages subviews] containsObject:scrollView_userList];
 }
 
 /*!
@@ -879,7 +879,7 @@
 	if (!ignoreUserMininum && width < userListMinWidth) width = userListMinWidth;
 	if (width > allowedWidth) width = allowedWidth;
 
-	return(width);
+	return width;
 }
 
 
@@ -912,10 +912,10 @@
 - (float)splitView:(NSSplitView *)sender constrainMinCoordinate:(float)proposedMin ofSubviewAt:(int)offset
 {
 	if (sender == splitView_textEntryHorizontal) {
-		return((int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO));
+		return (int)([sender frame].size.height * MESSAGE_VIEW_MIN_HEIGHT_RATIO);
 		
 	} else /*if (sender == splitView_messages)*/ {
-		return((int)([sender frame].size.width * MESSAGE_VIEW_MIN_WIDTH_RATIO));
+		return (int)([sender frame].size.width * MESSAGE_VIEW_MIN_WIDTH_RATIO);
 		
 	}
 }
@@ -935,7 +935,7 @@
 
 	}
 	
-	return(proposedPosition);
+	return proposedPosition;
 }
 
 /* 
@@ -944,10 +944,10 @@
 - (BOOL)splitView:(NSSplitView *)sender canCollapseSubview:(NSView *)subview
 {
 	if (sender == splitView_textEntryHorizontal) {
-		return(NO);
+		return NO;
 		
 	} else /*if (sender == splitView_messages)*/ {
-		return(subview == scrollView_userList);
+		return subview == scrollView_userList;
 		
 	}
 }

@@ -28,7 +28,7 @@
 
 + (id)previewControllerForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences
 {
-	return([[[self alloc] initForPack:inPack preferences:inPreferences] autorelease]);
+	return [[[self alloc] initForPack:inPack preferences:inPreferences] autorelease];
 }
 
 - (id)initForPack:(AIEmoticonPack *)inPack preferences:(AIEmoticonPreferences *)inPreferences
@@ -69,7 +69,7 @@
 
 - (NSView *)view
 {
-	return(previewView);
+	return previewView;
 }
 
 - (AIEmoticonPack *)emoticonPack

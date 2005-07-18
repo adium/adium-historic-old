@@ -111,55 +111,55 @@ static NSString	*prefsCategory;
 //Core Controllers -----------------------------------------------------------------------------------------------------
 #pragma mark Core Controllers
 - (AILoginController *)loginController{
-    return(loginController);
+    return loginController;
 }
 - (AIMenuController *)menuController{
-    return(menuController);
+    return menuController;
 }
 - (AIAccountController *)accountController{
-    return(accountController);
+    return accountController;
 }
 - (AIChatController *)chatController{
-	return(chatController);
+	return chatController;
 }
 - (AIContentController *)contentController{
-    return(contentController);
+    return contentController;
 }
 - (AIContactController *)contactController{
-    return(contactController);
+    return contactController;
 }
 - (AIEmoticonController *)emoticonController{
-    return(emoticonController);
+    return emoticonController;
 }
 - (AISoundController *)soundController{
-    return(soundController);
+    return soundController;
 }
 - (AIInterfaceController *)interfaceController{
-    return(interfaceController);
+    return interfaceController;
 }
 - (AIPreferenceController *)preferenceController{
-    return(preferenceController);
+    return preferenceController;
 }
 - (AIToolbarController *)toolbarController{
-    return(toolbarController);
+    return toolbarController;
 }
 - (AIDockController *)dockController{
-    return(dockController);
+    return dockController;
 }
 - (ESFileTransferController *)fileTransferController{
-    return(fileTransferController);    
+    return fileTransferController;    
 }
 - (ESContactAlertsController *)contactAlertsController{
-    return(contactAlertsController);
+    return contactAlertsController;
 }
 - (ESApplescriptabilityController *)applescriptabilityController{
-	return(applescriptabilityController);
+	return applescriptabilityController;
 }
 - (ESDebugController *)debugController{
-	return(debugController);
+	return debugController;
 }
 - (AIStatusController *)statusController{
-    return(statusController);
+    return statusController;
 }
 
 //Loaders --------------------------------------------------------------------------------------------------------
@@ -179,7 +179,7 @@ static NSString	*prefsCategory;
         notificationCenter = [[NSNotificationCenter alloc] init];
     }
             
-    return(notificationCenter);
+    return notificationCenter;
 }
 
 
@@ -220,7 +220,7 @@ static NSString	*prefsCategory;
 //Forward a re-open message to the interface controller
 - (BOOL)applicationShouldHandleReopen:(NSApplication *)sender hasVisibleWindows:(BOOL)flag
 {
-    return([interfaceController handleReopenWithVisibleWindows:flag]);
+    return [interfaceController handleReopenWithVisibleWindows:flag];
 }
 
 //Called by the login controller when a user has been selected, continue logging in
@@ -539,7 +539,7 @@ static NSString	*prefsCategory;
 	success = [self application:theApplication openFile:filename];
 	[[NSFileManager defaultManager] removeFileAtPath:filename handler:nil];
 	
-	return(success);
+	return success;
 }
 
 - (void)openAppropriatePreferencesIfNeeded
@@ -659,7 +659,7 @@ static NSString	*prefsCategory;
 		}
 	}
     
-	return(pathArray);
+	return pathArray;
 }
 
 
@@ -753,10 +753,10 @@ static NSString	*prefsCategory;
 	//Search all our resource paths for the requested pack
     while ((resourcePath = [enumerator nextObject])) {
 		NSString *packPath = [resourcePath stringByAppendingPathComponent:packFileName];
-		if ([fileManager fileExistsAtPath:packPath]) return([packPath stringByExpandingTildeInPath]);
+		if ([fileManager fileExistsAtPath:packPath]) return [packPath stringByExpandingTildeInPath];
 	}
 
-    return(nil);	
+    return nil;	
 }
 
 #pragma mark Scripting

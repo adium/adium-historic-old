@@ -88,7 +88,7 @@
  */
 - (NSString *)adiumFrameAutosaveName
 {
-	return(@"OTR Fingerprint Details Window");
+	return @"OTR Fingerprint Details Window";
 }
 
 - (void)gaimThreadForgetFingerprint:(NSValue *)fingerprintValue

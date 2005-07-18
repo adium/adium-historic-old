@@ -505,10 +505,10 @@ gboolean gaim_init_msn_plugin(void);
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if ((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)) {
-		return([NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]];
 	}
 	
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 #pragma mark Account Action Menu Items
@@ -530,7 +530,7 @@ gboolean gaim_init_msn_plugin(void);
 		return AILocalizedString(@"Allow/Disallow Mobile Pages","Action menu item for MSN accounts to toggle whether Mobile pages [forwarding messages to a mobile device] are enabled");
 	}
 
-	return([super titleForAccountActionMenuLabel:label]);
+	return [super titleForAccountActionMenuLabel:label];
 }
 
 /*

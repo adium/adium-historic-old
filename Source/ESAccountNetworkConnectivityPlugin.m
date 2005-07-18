@@ -278,7 +278,7 @@
 		}
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -292,11 +292,11 @@
 	while ((account = [enumerator nextObject])) {
 		if ([[account statusObjectForKey:@"Online"] boolValue] ||
 		   [[account statusObjectForKey:@"Disconnecting"] boolValue]) {
-			return(YES);
+			return YES;
 		}
 	}
 	
-	return(NO);
+	return NO;
 }
 
 /*!

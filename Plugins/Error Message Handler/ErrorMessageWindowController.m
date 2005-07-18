@@ -41,7 +41,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
         sharedErrorMessageInstance = [[self alloc] initWithWindowNibName:ERROR_WINDOW_NIB];
     }
 
-    return(sharedErrorMessageInstance);
+    return sharedErrorMessageInstance;
 }
 
 + (void)closeSharedInstance
@@ -108,7 +108,7 @@ static ErrorMessageWindowController *sharedErrorMessageInstance = nil;
     errorDescArray =  [[NSMutableArray alloc] init];
     errorWindowTitleArray = [[NSMutableArray alloc] init];
 
-    return(self);
+    return self;
 }
 
 - (void)dealloc

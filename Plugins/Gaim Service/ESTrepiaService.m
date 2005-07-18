@@ -23,47 +23,47 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimTrepiaAccount class]);
+	return [ESGaimTrepiaAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimTrepiaAccountViewController accountViewController]);
+    return [ESGaimTrepiaAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimTrepiaJoinChatViewController joinChatView]);
+	return [DCGaimTrepiaJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Trepia");
+	return @"libgaim-Trepia";
 }
 - (NSString *)serviceID{
-	return(@"Trepia");
+	return @"Trepia";
 }
 - (NSString *)serviceClass{
-	return(@"Trepia");
+	return @"Trepia";
 }
 - (NSString *)shortDescription{
-	return(@"Trepia");
+	return @"Trepia";
 }
 - (NSString *)longDescription{
-	return(@"Trepia");
+	return @"Trepia";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(24);
+	return 24;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 
 @end

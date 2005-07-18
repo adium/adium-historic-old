@@ -24,19 +24,19 @@
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category
 {
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 - (NSString *)label
 {
-    return(AILocalizedString(@"MSN",nil));
+    return AILocalizedString(@"MSN",nil);
 }
 - (NSString *)nibName
 {
-    return(@"MSNServicePrefs");
+    return @"MSNServicePrefs";
 }
 - (NSImage *)image
 {
-	return([AIServiceIcons serviceIconForServiceID:@"MSN" type:AIServiceIconLarge direction:AIIconNormal]);
+	return [AIServiceIcons serviceIconForServiceID:@"MSN" type:AIServiceIconLarge direction:AIIconNormal];
 }
 
 - (void)viewDidLoad

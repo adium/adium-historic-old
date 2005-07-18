@@ -51,7 +51,7 @@
 //Create a new emoticon pack
 + (id)emoticonPackFromPath:(NSString *)inPath
 {
-    return([[[self alloc] initFromPath:inPath] autorelease]);
+    return [[[self alloc] initFromPath:inPath] autorelease];
 }
 
 //Init
@@ -84,13 +84,13 @@
 //Our name
 - (NSString *)name
 {
-    return(name);
+    return name;
 }
 
 //Our path
 - (NSString *)path
 {
-    return(path);
+    return path;
 }
 
 /*!
@@ -100,14 +100,14 @@
  */
 - (NSString *)serviceClass
 {
-	return(serviceClass);
+	return serviceClass;
 }
 
 //Our emoticons
 - (NSArray *)emoticons
 {
 	if (!emoticonArray) [self loadEmoticons];
-	return(emoticonArray);
+	return emoticonArray;
 }
 
 //Set the emoticons that are disabled in this pack
@@ -145,7 +145,7 @@
 	newPack->name = [name retain];
 	newPack->emoticonLocation = [emoticonLocation retain];
 
-    return(newPack);
+    return newPack;
 }
 
 //Loading Emoticons ----------------------------------------------------------------------------------------------------
@@ -372,10 +372,10 @@
     //Search for the file named Emoticon in our bundle (It can be in any image format)
     enumerator = [[NSFileManager defaultManager] enumeratorAtPath:inPath];
     while ((fileName = [enumerator nextObject])) {
-		if ([fileName hasPrefix:@"Emoticon"]) return([inPath stringByAppendingPathComponent:fileName]);
+		if ([fileName hasPrefix:@"Emoticon"]) return [inPath stringByAppendingPathComponent:fileName];
     }
     
-    return(nil);
+    return nil;
 }
 
 //Text equivalents from a pack
@@ -394,7 +394,7 @@
 		textEquivalents = [[equivString componentsSeparatedByString:@"\r"] retain];
 	}
 	
-	return(textEquivalents);
+	return textEquivalents;
 }
 
 //Convert any unix/windows line endings to mac line endings
@@ -414,7 +414,7 @@
         charRange = [newString rangeOfCharacterFromSet:newlineSet];
     }
     
-    return(newString ? newString : inString);
+    return newString ? newString : inString;
 }
 
 - (NSString *)description

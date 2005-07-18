@@ -103,7 +103,7 @@
 		modifiedAttributes = [NSSet setWithObjects:@"Tab Status Icon", @"List Status Icon", nil];
 	}
 	
-	return(modifiedAttributes);
+	return modifiedAttributes;
 }
 
 /*!
@@ -140,7 +140,7 @@
 		}		
 	}
 	
-	return(modifiedAttributes);
+	return modifiedAttributes;
 }
 
 @end

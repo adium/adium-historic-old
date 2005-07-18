@@ -29,42 +29,42 @@
 
 //Account Creation
 - (AIAccountViewController *)accountViewController{
-    return([AIGaimOscarAccountViewController accountViewController]);
+    return [AIGaimOscarAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimOscarJoinChatViewController joinChatView]);
+	return [DCGaimOscarJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceClass{
-	return(@"AIM-compatible");
+	return @"AIM-compatible";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "];
 }
 - (NSCharacterSet *)allowedCharactersForUIDs{
-	return([NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "]);	
+	return [NSCharacterSet characterSetWithCharactersInString:@"+abcdefghijklmnopqrstuvwxyz0123456789@._- "];	
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceUnsupported);
+	return AIServiceUnsupported;
 }
 
 #pragma mark Must be subclassed
 - (NSString *)serviceCodeUniqueID{
-	return(@""); /* Subclasses should return a value starting with libgaim-oscar */
+	return @""; /* Subclasses should return a value starting with libgaim-oscar */
 }
 - (NSString *)shortDescription{
-	return(@"");
+	return @"";
 }
 - (NSString *)longDescription{
-	return(@"");
+	return @"";
 }
 - (NSString *)serviceID{
-	return(@"");
+	return @"";
 }
 
 #pragma mark Statuses

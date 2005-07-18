@@ -38,7 +38,7 @@
 	AIListContactMockieCell *newCell = [super copyWithZone:zone];
 	newCell->lastBackgroundBezierPath = [lastBackgroundBezierPath retain];
 	
-	return(newCell);
+	return newCell;
 }
 
 - (void)dealloc
@@ -135,7 +135,7 @@
 //the outline view know we'll be drawing the grid ourself
 - (BOOL)drawGridBehindCell
 {
-	return(NO);
+	return NO;
 }
 
 //User Icon, clipping to the last bezier path (which should have been part of this same drawing operation) if applicable
@@ -156,7 +156,7 @@
 		returnRect = [super drawUserIconInRect:inRect position:position];
 	}
 	
-	return(returnRect);
+	return returnRect;
 }
 
 @end

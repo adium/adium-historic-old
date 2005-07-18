@@ -128,7 +128,7 @@
 						  notify:NO]);
     }
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -265,7 +265,7 @@
 												  modifiedKeys:modifiedAttributes];
 	}
 	
-	return(modifiedAttributes);
+	return modifiedAttributes;
 }
 
 /*!

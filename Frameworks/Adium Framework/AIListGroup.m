@@ -40,7 +40,7 @@
 		visible = NO;
     }
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc
@@ -58,7 +58,7 @@
 	if (!internalObjectID) {
 		internalObjectID = [[AIListObject internalObjectIDForServiceID:@"Group" UID:[self UID]] retain];
 	}
-	return(internalObjectID);
+	return internalObjectID;
 }
 
 
@@ -71,7 +71,7 @@
 //Returns the number of visible objects in this group
 - (unsigned)visibleCount
 {
-    return(visibleCount);
+    return visibleCount;
 }
 
 //Set this group as visible if it contains anything visible
@@ -103,47 +103,47 @@
 //Return our contained objects
 - (NSArray *)containedObjects
 {
-	return(containedObjects);
+	return containedObjects;
 }
 
 //Number of containd objects
 - (unsigned)containedObjectsCount
 {
-    return([containedObjects count]);
+    return [containedObjects count];
 }
 
 //Test for the presence of an object in our group
 - (BOOL)containsObject:(AIListObject *)inObject
 {
-	return([containedObjects containsObject:inObject]);
+	return [containedObjects containsObject:inObject];
 }
 
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {
-    return([containedObjects objectAtIndex:index]);
+    return [containedObjects objectAtIndex:index];
 }
 
 //Retrieve the index of an object
 - (int)indexOfObject:(AIListObject *)inObject
 {
-    return([containedObjects indexOfObject:inObject]);
+    return [containedObjects indexOfObject:inObject];
 }
 
 //Return an enumerator of our content
 - (NSEnumerator *)objectEnumerator
 {
-    return([containedObjects objectEnumerator]);
+    return [containedObjects objectEnumerator];
 }
 
 - (NSArray *)listContacts
 {
-	return(containedObjects);
+	return containedObjects;
 }
 
 - (NSEnumerator *)listContactsEnumerator
 {
-	return([self objectEnumerator]);
+	return [self objectEnumerator];
 }
 
 //Remove all the objects from this group (PRIVATE: For contact controller only)
@@ -165,7 +165,7 @@
 		if ([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	
-	return(object);
+	return object;
 }
 
 //Add an object to this group (PRIVATE: For contact controller only)
@@ -276,7 +276,7 @@
 //Returns the current expanded/collapsed state of this group
 - (BOOL)isExpanded
 {
-    return(expanded);
+    return expanded;
 }
 
 //Order index

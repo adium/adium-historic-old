@@ -109,7 +109,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         sharedPreferenceInstance = [[self alloc] initWithWindowNibName:PREFERENCE_WINDOW_NIB];
     }
     
-    return(sharedPreferenceInstance);
+    return sharedPreferenceInstance;
 }
 
 /*!
@@ -285,7 +285,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
     //Alphabetize them
     [paneArray sortUsingSelector:@selector(caseInsensitiveCompare:)];
     
-    return(paneArray);
+    return paneArray;
 }
 
 /*!
@@ -368,7 +368,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
-	return([NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]] forClass:[self class]]);
+	return [NSImage imageNamed:[NSString stringWithFormat:PREFERENCE_ICON_FORMAT, [tabViewItem identifier]] forClass:[self class]];
 }
 
 /*!
@@ -392,9 +392,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 - (int)tabView:(NSTabView *)tabView heightForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if (![[tabViewItem identifier] isEqualToString:ADVANCED_PANE_IDENTIFIER]) {
-		return([[viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]] desiredHeight]);
+		return [[viewArray objectAtIndex:[tabView indexOfTabViewItem:tabViewItem]] desiredHeight];
 	} else {
-		return(ADVANCED_PANE_HEIGHT);
+		return ADVANCED_PANE_HEIGHT;
 	}
 }
 
@@ -433,7 +433,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
         _advancedCategoryArray = [[self _panesInCategory:AIPref_Advanced] retain];
     }
     
-    return(_advancedCategoryArray);
+    return _advancedCategoryArray;
 }
 
 
@@ -470,7 +470,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([[self advancedCategoryArray] count]);
+	return [[self advancedCategoryArray] count];
 }
 
 /*!
@@ -478,7 +478,7 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
  */
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	return([[[self advancedCategoryArray] objectAtIndex:row] label]);
+	return [[[self advancedCategoryArray] objectAtIndex:row] label];
 }
 
 /*!
@@ -497,9 +497,9 @@ static AIPreferenceWindowController *sharedPreferenceInstance = nil;
 {
 	if (row >= 0 && row < [[self advancedCategoryArray] count]) {		
 		[self configureAdvancedPreferencesForPane:[[self advancedCategoryArray] objectAtIndex:row]];
-		return(YES);
+		return YES;
     } else {
-		return(NO);
+		return NO;
 	}
 }
 

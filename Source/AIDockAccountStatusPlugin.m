@@ -131,7 +131,7 @@
 		}
 	}
 
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -146,10 +146,10 @@
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account integerStatusObjectForKey:inKey]) return(YES);
+		if ([account integerStatusObjectForKey:inKey]) return YES;
     }
 
-    return(NO);
+    return NO;
 }
 
 /*!
@@ -164,10 +164,10 @@
     AIAccount       *account;
 
     while ((account = [enumerator nextObject])) {
-		if ([account statusObjectForKey:inKey]) return(YES);
+		if ([account statusObjectForKey:inKey]) return YES;
     }
 
-    return(NO);
+    return NO;
 }
 
 @end

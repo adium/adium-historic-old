@@ -44,13 +44,13 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_General);
+    return AIPref_General;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"General","General preferences label"));
+    return AILocalizedString(@"General","General preferences label");
 }
 - (NSString *)nibName{
-    return(@"GeneralPreferences");
+    return @"GeneralPreferences";
 }
 
 //Configure the preference view
@@ -238,7 +238,7 @@
 			 keyEquivalent:@""
 					   tag:SOUND_SYTEM_ALERT_DEVICE];
 
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 /*!
@@ -272,7 +272,7 @@
 			 keyEquivalent:@""
 					   tag:AIBraces];
 	
-	return([menu autorelease]);		
+	return [menu autorelease];		
 }
 
 /*!
@@ -300,7 +300,7 @@
 			 keyEquivalent:@""
 					   tag:AISendOnBoth];
 
-	return([menu autorelease]);		
+	return [menu autorelease];		
 }
 
 @end

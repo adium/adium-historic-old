@@ -24,15 +24,15 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimYahooAccount class]);
+	return [ESGaimYahooAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimYahooAccountViewController accountViewController]);
+    return [ESGaimYahooAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimYahooJoinChatViewController joinChatView]);
+	return [DCGaimYahooJoinChatViewController joinChatView];
 }
 
 - (BOOL)canCreateGroupChats{
@@ -41,34 +41,34 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Yahoo!");
+	return @"libgaim-Yahoo!";
 }
 - (NSString *)serviceID{
-	return(@"Yahoo!");
+	return @"Yahoo!";
 }
 - (NSString *)serviceClass{
-	return(@"Yahoo!");
+	return @"Yahoo!";
 }
 - (NSString *)shortDescription{
-	return(@"Yahoo!");
+	return @"Yahoo!";
 }
 - (NSString *)longDescription{
-	return(@"Yahoo! Messenger");
+	return @"Yahoo! Messenger";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_@.- +"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_@.- +"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServicePrimary);
+	return AIServicePrimary;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"Yahoo! ID",nil));    //Yahoo! ID
+    return AILocalizedString(@"Yahoo! ID",nil);    //Yahoo! ID
 }
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE

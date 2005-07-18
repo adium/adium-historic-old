@@ -46,7 +46,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     if (!sharedAboutBoxInstance) {
         sharedAboutBoxInstance = [[self alloc] initWithWindowNibName:ABOUT_BOX_NIB];
     }
-    return(sharedAboutBoxInstance);
+    return sharedAboutBoxInstance;
 }
 
 //Init
@@ -169,7 +169,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 - (NSString *)_applicationVersion
 {
     NSString	*version = [NSApp applicationVersion];
-    return([NSString stringWithFormat:@"Adium X %@",(version ? version : @"")]);
+    return [NSString stringWithFormat:@"Adium X %@",(version ? version : @"")];
 }
 
 //Load the current build date and our cryptic, non-sequential build number ;)

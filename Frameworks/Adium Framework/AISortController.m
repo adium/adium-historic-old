@@ -39,7 +39,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 		becameActiveFirstTime = NO;
 	}
 	
-	return(self);
+	return self;
 }
 
 /*
@@ -79,9 +79,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedStatusKeys:(NSSet *)inModifiedKeys
 {
 	if (statusKeysRequiringResort) {
-		return([statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
+		return [statusKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 
@@ -94,9 +94,9 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 - (BOOL)shouldSortForModifiedAttributeKeys:(NSSet *)inModifiedKeys
 {
 	if (attributeKeysRequiringResort) {
-		return([attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil);
+		return [attributeKeysRequiringResort intersectsSet:inModifiedKeys] != nil;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 
@@ -108,7 +108,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
  */
 - (BOOL)alwaysSortGroupsToTopByDefault
 {
-	return(YES);
+	return YES;
 }
 
 /*
@@ -148,7 +148,7 @@ int basicVisibilitySort(id objectA, id objectB, void *context);
 			  basicVisibilitySort(inObject, object, sortFunction) == NSOrderedDescending)) index++;
 	}
 	
-	return(index);
+	return index;
 }
 
 /*!
@@ -181,13 +181,13 @@ int basicVisibilitySort(id objectA, id objectB, void *context)
 	
 	if (visibleA || visibleB) {
 		if (!visibleA && visibleB) {
-			return(NSOrderedDescending);
+			return NSOrderedDescending;
 		} else if (visibleA && !visibleB) {
-			return(NSOrderedAscending);
+			return NSOrderedAscending;
 		} else {
 			sortfunc	function = context;
 			
-			return((function)(objectA, objectB, NO));
+			return (function)(objectA, objectB, NO);
 		}
 
 	} else {
@@ -208,21 +208,21 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 	
 	if (visibleA || visibleB) {
 		if (!visibleA && visibleB) {
-			return(NSOrderedDescending);
+			return NSOrderedDescending;
 		} else if (visibleA && !visibleB) {
-			return(NSOrderedAscending);
+			return NSOrderedAscending;
 		} else {
 			BOOL	groupA = [objectA isKindOfClass:[AIListGroup class]];
 			BOOL	groupB = [objectB isKindOfClass:[AIListGroup class]];
 			
 			if (groupA && !groupB) {
-				return(NSOrderedAscending);
+				return NSOrderedAscending;
 			} else if (!groupA && groupB) {
-				return(NSOrderedDescending);
+				return NSOrderedDescending;
 			} else {
 				sortfunc	function = context;
 				
-				return((function)(objectA, objectB, groupA));
+				return (function)(objectA, objectB, groupA);
 			}
 		}
 
@@ -252,9 +252,9 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 - (NSString *)configureSortMenuItemTitle{ 
 	NSString *configureSortWindowTitle = [self configureSortWindowTitle];
 	if (configureSortWindowTitle) {
-		return([[self configureSortWindowTitle] stringByAppendingEllipsis]);
+		return [[self configureSortWindowTitle] stringByAppendingEllipsis];
 	} else {
-		return(nil);
+		return nil;
 	}
 }
 
@@ -264,27 +264,27 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
 /*!
  * @brief Non-localized identifier
  */
-- (NSString *)identifier{ return(nil); };
+- (NSString *)identifier{ return nil; };
 
 /*!
  * @brief Localized display name
  */
-- (NSString *)displayName{ return(nil); };
+- (NSString *)displayName{ return nil; };
 
 /*!
  * @brief Status keys which, when changed, should trigger a resort
  */
-- (NSSet *)statusKeysRequiringResort{ return(nil); };
+- (NSSet *)statusKeysRequiringResort{ return nil; };
 
 /*!
  * @brief Attribute keys which, when changed, should trigger a resort
  */
-- (NSSet *)attributeKeysRequiringResort{ return(nil); };
+- (NSSet *)attributeKeysRequiringResort{ return nil; };
 
 /*!
  * @brief Sort function
  */
-- (int (*)(id, id, BOOL))sortFunction{ return(NULL); };
+- (int (*)(id, id, BOOL))sortFunction{ return NULL; };
 
 /*!
  * @brief Did become active first time
@@ -299,12 +299,12 @@ int basicGroupVisibilitySort(id objectA, id objectB, void *context)
  * Subclasses should provide a title for configuring the sort only if configuration is possible.
  * @result Localized title. If nil, the menu item will be disabled.
  */
-- (NSString *)configureSortWindowTitle{ return(nil); };
+- (NSString *)configureSortWindowTitle{ return nil; };
 
 /*!
  * @brief Nib name for configuration
  */
-- (NSString *)configureNibName{ return(nil); };
+- (NSString *)configureNibName{ return nil; };
 
 /*!
  * @brief View did load

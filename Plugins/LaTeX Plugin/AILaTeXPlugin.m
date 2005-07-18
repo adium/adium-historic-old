@@ -126,7 +126,7 @@
     [cell release];
     [attachment release];
 
-    return(attachString);
+    return attachString;
 }
 
 @end

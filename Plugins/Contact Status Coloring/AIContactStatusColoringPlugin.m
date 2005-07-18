@@ -149,7 +149,7 @@
 		}
 	}
 
-    return(modifiedAttributes);
+    return modifiedAttributes;
 }
 
 //Applies the correct color to the passed object

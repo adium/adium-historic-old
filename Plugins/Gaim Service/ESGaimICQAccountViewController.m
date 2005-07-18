@@ -27,7 +27,7 @@
 @implementation ESGaimICQAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimICQAccountView");
+    return @"ESGaimICQAccountView";
 }
 
 //
@@ -200,7 +200,7 @@
 		UTF-8 
 	 */
 	
-	return([menu autorelease]);
+	return [menu autorelease];
 }
 
 - (void)addEncodingItemsWithNames:(NSArray *)inArray withTitle:(NSString *)inTitle toMenu:(NSMenu *)menu

@@ -191,7 +191,7 @@
 		}
 	}
 	
-	return(loadPlugin);
+	return loadPlugin;
 }
 
 //Move a plugin to the disabled plugins folder

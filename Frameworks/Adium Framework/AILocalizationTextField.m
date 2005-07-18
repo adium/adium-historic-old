@@ -45,7 +45,7 @@
 
 - (NSControl *)viewForSizing
 {
-	return((NSTextField *)super);
+	return (NSTextField *)super;
 }
 
 #include "AILocalizationControl.m"

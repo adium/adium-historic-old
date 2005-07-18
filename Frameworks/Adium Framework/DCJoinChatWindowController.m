@@ -99,7 +99,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	
 	controller = nil;
 
-    return(self);
+    return self;
 }
 
 //Setup the window before it is displayed
@@ -158,7 +158,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 													account:account 
 														UID:UID];
 	
-	return(contact);
+	return contact;
 }
 
 
@@ -173,7 +173,7 @@ static DCJoinChatWindowController *sharedJoinChatInstance = nil;
 	[self configureForAccount:inAccount];
 }
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
-	return([inAccount online] && [[inAccount service] canCreateGroupChats]);
+	return [inAccount online] && [[inAccount service] canCreateGroupChats];
 }
 
 //Select the last used account / Available online account

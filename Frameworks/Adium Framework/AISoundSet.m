@@ -41,7 +41,7 @@
  */
 + (id)soundSetWithContentsOfFile:(NSString *)inPath
 {
-	return([[[self alloc] initWithContentsOfFile:inPath] autorelease]);
+	return [[[self alloc] initWithContentsOfFile:inPath] autorelease];
 }
 
 /*!

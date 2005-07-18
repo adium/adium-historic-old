@@ -387,7 +387,7 @@
 //Active chat
 - (AIChat *)activeChat
 {
-	return(activeChat);
+	return activeChat;
 }
 //Set the active chat window
 - (void)setActiveChat:(AIChat *)inChat
@@ -397,7 +397,7 @@
 //Last chat to be active (should only be nil if no chats are open)
 - (AIChat *)mostRecentActiveChat
 {
-	return(mostRecentActiveChat);
+	return mostRecentActiveChat;
 }
 //Solely for key-value pairing purposes
 - (void)setMostRecentActiveChat:(AIChat *)inChat
@@ -412,13 +412,13 @@
 		_cachedOpenChats = [[interfacePlugin openChats] retain];
 	}
 	
-	return(_cachedOpenChats);
+	return _cachedOpenChats;
 }
 
 //
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID
 {
-	return([interfacePlugin openChatsInContainerWithID:containerID]);
+	return [interfacePlugin openChatsInContainerWithID:containerID];
 }
 
 //Resets the cache of open chats
@@ -698,7 +698,7 @@
 		[NSApp terminate:nil];
 	}
 	
-	return([[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat]);
+	return [[messageViewArray objectAtIndex:0] messageViewControllerForChat:inChat];
 }
 
 
@@ -769,7 +769,7 @@
 //Current state of flashing.  This is an integer the increases by 1 with every flash.  Mod to whatever range is desired
 - (int)flashState
 {
-    return(flashState);
+    return flashState;
 }
 
 
@@ -1209,28 +1209,28 @@
 		if ([responder isKindOfClass:[NSTextView class]]) {
 			return (menuItem == menuItem_bold ? [selectedFont supportsBold] : [selectedFont supportsItalics]);
 		}
-		return(NO);
+		return NO;
 		
 	} else if (menuItem == menuItem_paste || menuItem == menuItem_pasteFormatted) {
-		return([[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil);
+		return [[NSPasteboard generalPasteboard] availableTypeFromArray:[NSArray arrayWithObjects:NSStringPboardType, NSRTFPboardType, NSTIFFPboardType, NSPICTPboardType, NSPDFPboardType, nil]] != nil;
 	
 	} else if (menuItem == menuItem_showToolbar) {
 		[menuItem_showToolbar setTitle:([[keyWindow toolbar] isVisible] ? 
 										AILocalizedString(@"Hide Toolbar",nil) : 
 										AILocalizedString(@"Show Toolbar",nil))];
-		return([keyWindow toolbar] != nil);
+		return [keyWindow toolbar] != nil;
 	
 	} else if (menuItem == menuItem_customizeToolbar) {
-		return([keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible]);
+		return [keyWindow toolbar] != nil && [[keyWindow toolbar] isVisible];
 
 	} else if (menuItem == menuItem_closeChat) {
-		return(activeChat != nil);
+		return activeChat != nil;
 		
 	} else if (menuItem == menuItem_print) {
-		return([[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)]);
+		return [[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)];
 		
 	} else {
-		return(YES);
+		return YES;
 	}
 }
 

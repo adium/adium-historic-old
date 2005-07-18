@@ -31,7 +31,7 @@
 	
 	newCell->colorKeyArray = [colorKeyArray retain];
 	
-	return(newCell);
+	return newCell;
 }
 
 - (id)init

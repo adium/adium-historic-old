@@ -26,7 +26,7 @@
  */
 + (id)contactMenuWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
-	return([[[self alloc] initWithDelegate:inDelegate forContactsInObject:inContainingObject] autorelease]);
+	return [[[self alloc] initWithDelegate:inDelegate forContactsInObject:inContainingObject] autorelease];
 }
 
 /*!
@@ -45,7 +45,7 @@
 		[self rebuildMenu];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -69,7 +69,7 @@
  */
 - (NSMenuItem *)menuItemForContact:(AIListContact *)contact
 {
-	return([self menuItemWithRepresentedObject:contact]);
+	return [self menuItemWithRepresentedObject:contact];
 }
 
 
@@ -140,7 +140,7 @@
 		}
 	}
 	
-	return(menuItemArray);
+	return menuItemArray;
 }
 
 /*!
@@ -183,7 +183,7 @@
 		}
 	}
 	
-    return(nil);
+    return nil;
 }
 
 @end

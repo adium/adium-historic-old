@@ -50,7 +50,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(DOCK_BEHAVIOR_ALERT_SHORT);
+	return DOCK_BEHAVIOR_ALERT_SHORT;
 }
 
 /*!
@@ -60,7 +60,7 @@
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	int behavior = [[details objectForKey:KEY_DOCK_BEHAVIOR_TYPE] intValue];
-	return([NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]]);
+	return [NSString stringWithFormat:DOCK_BEHAVIOR_ALERT_LONG, [[[adium dockController] descriptionForBehavior:behavior] lowercaseString]];
 }
 
 /*!
@@ -68,7 +68,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"DockAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"DockAlert" forClass:[self class]];
 }
 
 /*!
@@ -77,7 +77,7 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESDockAlertDetailPane actionDetailsPane]);
+	return [ESDockAlertDetailPane actionDetailsPane];
 }
 
 /*!
@@ -107,7 +107,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 @end

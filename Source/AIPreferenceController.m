@@ -163,7 +163,7 @@
  */
 - (NSArray *)paneArray
 {
-    return(paneArray);
+    return paneArray;
 }
 
 
@@ -336,7 +336,7 @@
  */
 - (id)preferenceForKey:(NSString *)key group:(NSString *)group
 {
-	return([self preferenceForKey:key group:group objectIgnoringInheritance:nil]);
+	return [self preferenceForKey:key group:group objectIgnoringInheritance:nil];
 }
 
 /*!
@@ -350,10 +350,10 @@
 	
 	//If there is no object specific preference, inherit the value from the object containing this one
 	if (!result && object) {
-		return([self _noDefaultsPreferenceForKey:key group:group object:[object containingObject]]);
+		return [self _noDefaultsPreferenceForKey:key group:group object:[object containingObject]];
 	} else {
 		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
-		return(result);
+		return result;
 	}
 }
 
@@ -367,10 +367,10 @@
 	
 	//If there is no object specific preference, inherit the value from the object containing this one
 	if (!result && object) {
-		return([self defaultPreferenceForKey:key group:group object:[object containingObject]]);
+		return [self defaultPreferenceForKey:key group:group object:[object containingObject]];
 	} else {
 		//If we have no object (either were passed no object initially or got here recursively) use defaults if necessary
-		return(result);
+		return result;
 	}	
 }
 
@@ -388,7 +388,7 @@
 	//If no result, try defaults
 	if (!result) result = [self defaultPreferenceForKey:key group:group object:object];
 	
-	return(result);
+	return result;
 }
 
 /*!
@@ -402,7 +402,7 @@
 	//We are ignoring inheritance, so we can ignore inherited defaults, too, and use the cachedPreferencesWithDefaultsForGroup:object: dict
 	id result = [[self cachedPreferencesWithDefaultsForGroup:group object:object] objectForKey:key];
 	
-	return(result);
+	return result;
 }
 
 /*!
@@ -413,7 +413,7 @@
 - (NSDictionary *)preferencesForGroup:(NSString *)group
 {
 	
-    return([self cachedPreferencesWithDefaultsForGroup:group object:nil]);
+    return [self cachedPreferencesWithDefaultsForGroup:group object:nil];
 }
 
 //Defaults -------------------------------------------------------------------------------------------------------------
@@ -497,7 +497,7 @@
 		}
 	}
 	
-	return(prefDict);
+	return prefDict;
 }
 
 /*!
@@ -523,7 +523,7 @@
 		sourceDefaultsDict = defaults;
 	}
 	
-	return([sourceDefaultsDict objectForKey:cacheKey]);
+	return [sourceDefaultsDict objectForKey:cacheKey];
 }
 
 /*!
@@ -571,7 +571,7 @@
 		[activeDefaultsCache setObject:prefWithDefaultsDict forKey:cacheKey];
 	}
 
-	return(prefWithDefaultsDict);
+	return prefWithDefaultsDict;
 }
 
 /*!

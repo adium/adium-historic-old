@@ -27,14 +27,14 @@
  * @brief Non-localized identifier
  */
 - (NSString *)identifier{
-    return(@"ManualSort");
+    return @"ManualSort";
 }
 
 /*!
  * @brief Localized display name
  */
 - (NSString *)displayName{
-    return(AILocalizedString(@"Sort Contacts Manually",nil));
+    return AILocalizedString(@"Sort Contacts Manually",nil);
 }
 
 /*!
@@ -43,7 +43,7 @@
  * For manual sorting, groups get sorted like any other object
  */
 - (BOOL)alwaysSortGroupsToTopByDefault{
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -56,11 +56,11 @@ int manualSort(id objectA, id objectB, BOOL groups)
 	float orderIndexB = [objectB orderIndex];
 	
 	if (orderIndexA > orderIndexB) {
-		return(NSOrderedDescending);
+		return NSOrderedDescending;
 	} else if (orderIndexA < orderIndexB) {
-		return(NSOrderedAscending);
+		return NSOrderedAscending;
 	} else {
-		return([[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]]);
+		return [[objectA internalObjectID] caseInsensitiveCompare:[objectB internalObjectID]];
 	}
 	
 }
@@ -69,7 +69,7 @@ int manualSort(id objectA, id objectB, BOOL groups)
  * @brief Sort function
  */
 - (sortfunc)sortFunction{
-	return(&manualSort);
+	return &manualSort;
 }
 
 @end

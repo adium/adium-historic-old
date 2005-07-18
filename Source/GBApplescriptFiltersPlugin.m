@@ -279,7 +279,7 @@ int _scriptTitleSort(id scriptA, id scriptB, void *context) {
 		}
 	}
 	
-	return(result);
+	return result;
 }
 
 /*!
@@ -423,7 +423,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if ((menuItem == scriptMenuItem) || (menuItem == contextualScriptMenuItem)) {
-		return(YES); //Always keep the submenu enabled so users can see the available scripts
+		return YES; //Always keep the submenu enabled so users can see the available scripts
 	} else {
 		NSResponder	*responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
 		if (responder && [responder isKindOfClass:[NSText class]]) {
@@ -716,7 +716,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 		}
 	}
 	
-	return(argArray);
+	return argArray;
 }
 
 #pragma mark Toolbar item

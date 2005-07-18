@@ -70,13 +70,13 @@
 
 //Preference pane properties
 //- (PREFERENCE_CATEGORY)category{
-//    return(AIPref_Advanced);
+//    return AIPref_Advanced;
 //}
 //- (NSString *)label{
-//    return(AILocalizedString(@"Emoticons","Emoticons/Smilies"));
+//    return AILocalizedString(@"Emoticons","Emoticons/Smilies");
 //}
 //- (NSString *)nibName{
-//    return(@"EmoticonPrefs");
+//    return @"EmoticonPrefs";
 //}
 
 //Configure the preference view
@@ -233,7 +233,7 @@
 		       forKey:NSParagraphStyleAttributeName];
     }
 
-    return([[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease]);
+    return [[[NSAttributedString alloc] initWithString:inString attributes:attributes] autorelease];
 }
 
 #pragma mark Table view data source
@@ -241,9 +241,9 @@
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     if (tableView == table_emoticonPacks) {
-        return([emoticonPackPreviewControllers count]);
+        return [emoticonPackPreviewControllers count];
     } else {
-        return([[selectedEmoticonPack emoticons] count]);
+        return [[selectedEmoticonPack emoticons] count];
     }
 }
 
@@ -259,32 +259,32 @@
 {
     if (tableView == table_emoticonPacks) {
 		
-		return(@"");
+		return @"";
 			
     } else {
 		NSString    *identifier = [tableColumn identifier];
         AIEmoticon  *emoticon = [[selectedEmoticonPack emoticons] objectAtIndex:row];
         
         if ([identifier isEqualToString:@"Enabled"]) {
-            return([NSNumber numberWithBool:[emoticon isEnabled]]);
+            return [NSNumber numberWithBool:[emoticon isEnabled]];
             
         } else if ([identifier isEqualToString:@"Image"]) {
-            return([emoticon image]);
+            return [emoticon image];
             
         } else if ([identifier isEqualToString:@"Name"]) {
             if ([selectedEmoticonPack isEnabled] && [emoticon isEnabled]) {
-				return([emoticon name]);
+				return [emoticon name];
             } else {
-				return([self _dimString:[emoticon name] center:NO]);
+				return [self _dimString:[emoticon name] center:NO];
 			}
             
         } else {// if ([identifier compare:@"String"] == 0) {
 			NSArray *textEquivalents = [emoticon textEquivalents];
 			if ([textEquivalents count]) {
 				if ([selectedEmoticonPack isEnabled] && [emoticon isEnabled]) {
-					return([textEquivalents objectAtIndex:0]);
+					return [textEquivalents objectAtIndex:0];
 				} else {
-					return([self _dimString:[textEquivalents objectAtIndex:0] center:YES]);
+					return [self _dimString:[textEquivalents objectAtIndex:0] center:YES];
 				}
 			} else {
 				return @"";
@@ -314,9 +314,9 @@
         [pboard declareTypes:[NSArray arrayWithObject:EMOTICON_PACK_DRAG_TYPE] owner:self];
         [pboard setString:@"dragPack" forType:EMOTICON_PACK_DRAG_TYPE];
         
-        return(YES);
+        return YES;
     } else {
-        return(NO);
+        return NO;
     }
 }
 
@@ -324,12 +324,12 @@
 {
     if (tableView == table_emoticonPacks) {
         if (op == NSTableViewDropAbove && row != -1) {
-            return(NSDragOperationMove);
+            return NSDragOperationMove;
         } else {
-            return(NSDragOperationNone);
+            return NSDragOperationNone;
         }
     } else {
-        return(NSDragOperationNone);
+        return NSDragOperationNone;
     }
 }
 
@@ -365,12 +365,12 @@
 				}
             }
             
-            return(YES);
+            return YES;
         } else {
-            return(NO);
+            return NO;
         }
     } else {
-        return(NO);
+        return NO;
     }
 }
 

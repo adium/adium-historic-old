@@ -68,7 +68,7 @@
 }
 - (NSString *)imagePath
 {
-	return(imagePath);
+	return imagePath;
 }
 
 - (void)setImageSize:(NSSize)inSize
@@ -77,7 +77,7 @@
 }
 - (NSSize)imageSize
 {
-	return(imageSize);
+	return imageSize;
 }
 
 - (BOOL)shouldSaveImageForLogging

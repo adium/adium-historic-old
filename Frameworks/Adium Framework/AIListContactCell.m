@@ -42,7 +42,7 @@
 	newCell->_statusAttributes = [_statusAttributes retain];
 	newCell->_statusAttributesInverted = [_statusAttributesInverted retain];
 
-	return(newCell);
+	return newCell;
 }
 
 //Init
@@ -102,7 +102,7 @@
 		}
 	}
 	
-	return(NSMakeSize(0, [super cellSize].height + largestElementHeight));
+	return NSMakeSize(0, [super cellSize].height + largestElementHeight);
 }
 
 - (int)cellWidth
@@ -134,7 +134,7 @@
 		width += SERVICE_ICON_LEFT_PAD + SERVICE_ICON_RIGHT_PAD;
 	}
 	
-	return(width + 1);
+	return width + 1;
 }
 
 
@@ -153,7 +153,7 @@
 	[_statusAttributes release]; _statusAttributes = nil;
 }
 - (NSFont *)statusFont{
-	return(statusFont);
+	return statusFont;
 }
 
 //Color of status text
@@ -169,7 +169,7 @@
 }
 - (NSColor *)statusColor
 {
-	return(statusColor);
+	return statusColor;
 }
 
 //Attributes for displaying the status string (Cached)
@@ -194,10 +194,10 @@
 		[mutableStatusAttributes setObject:[self textColor]
 									forKey:NSForegroundColorAttributeName];
 
-		return([mutableStatusAttributes autorelease]);
+		return [mutableStatusAttributes autorelease];
 
 	} else {
-		return(_statusAttributes);
+		return _statusAttributes;
 	}
 }
 
@@ -208,7 +208,7 @@
 		[_statusAttributesInverted setObject:CONTACT_INVERTED_STATUS_COLOR forKey:NSForegroundColorAttributeName];
 	}
 	
-	return(_statusAttributesInverted);
+	return _statusAttributesInverted;
 }
 
 //Flush status attributes when alignment is changed
@@ -227,7 +227,7 @@
 	userIconVisible = inShowIcon;
 }
 - (BOOL)userIconVisible{
-	return(userIconVisible);
+	return userIconVisible;
 }
 
 //User Icon Size
@@ -236,7 +236,7 @@
 	userIconSize = NSMakeSize(inSize, inSize);
 }
 - (int)userIconSize{
-	return(userIconSize.height);
+	return userIconSize.height;
 }
 
 //Extended Status Visibility
@@ -245,7 +245,7 @@
 	extendedStatusVisible = inShowStatus;
 }
 - (BOOL)extendedStatusVisible{
-	return(extendedStatusVisible);
+	return extendedStatusVisible;
 }
 
 //Status Icon Visibility
@@ -254,7 +254,7 @@
 	statusIconsVisible = inShowStatus;
 }
 - (BOOL)statusIconsVisible{
-	return(statusIconsVisible);
+	return statusIconsVisible;
 }
 
 //Service Icon Visibility
@@ -263,7 +263,7 @@
 	serviceIconsVisible = inShowService;
 }
 - (BOOL)serviceIconsVisible{
-	return(serviceIconsVisible);
+	return serviceIconsVisible;
 }
 
 //Element Positioning
@@ -286,7 +286,7 @@
 	backgroundOpacity = inOpacity;
 }
 - (float)backgroundOpacity{
-	return(backgroundOpacity);
+	return backgroundOpacity;
 }
 
 //
@@ -394,7 +394,7 @@
 		rect.size.width -= USER_ICON_RIGHT_PAD;
 	}
 	
-	return(rect);
+	return rect;
 }
 
 //Status Icon
@@ -421,7 +421,7 @@
 			rect.size.width -= STATUS_ICON_RIGHT_PAD;
 		}
 	}
-	return(rect);
+	return rect;
 }
 
 //Service Icon
@@ -452,7 +452,7 @@
 			rect.size.width -= SERVICE_ICON_RIGHT_PAD;
 		}
 	}
-	return(rect);
+	return rect;
 }
 
 //User Extended Status
@@ -517,7 +517,7 @@
 			}
 		}
 	}
-	return(rect);
+	return rect;
 }
 
 //Contact label color
@@ -536,9 +536,9 @@
 			targetOpacity *= [opacityNumber floatValue];
 		}
 		
-		return((targetOpacity != 1.0) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor);
+		return (targetOpacity != 1.0) ? [labelColor colorWithAlphaComponent:targetOpacity] : labelColor;
 	} else {
-		return(nil);
+		return nil;
 	}
 }
 
@@ -548,20 +548,20 @@
 	NSColor	*theTextColor;
 	
 	if (shouldUseContactTextColors && (theTextColor = [listObject displayArrayObjectForKey:@"Text Color"])) {
-		return(theTextColor);
+		return theTextColor;
 	} else {
-		return([super textColor]);
+		return [super textColor];
 	}
 }
 - (NSColor *)invertedTextColor
 {
-	return(CONTACT_INVERTED_TEXT_COLOR/*[[self textColor] colorWithInvertedLuminance]*/);
+	return CONTACT_INVERTED_TEXT_COLOR/*[[self textColor] colorWithInvertedLuminance]*/;
 }
 
 //Contact user image - AIUserIcons should already have been informed of our desired size by setUserIconSize: above.
 - (NSImage *)userIconImage
 {
-	return([AIUserIcons listUserIconForContact:(AIListContact *)listObject size:userIconSize]);
+	return [AIUserIcons listUserIconForContact:(AIListContact *)listObject size:userIconSize];
 }
 
 //Contact state or status image
@@ -569,19 +569,19 @@
 {
 	NSImage *stateIcon = [listObject displayArrayObjectForKey:@"List State Icon"];
 	if (!stateIcon) stateIcon = [listObject displayArrayObjectForKey:@"List Status Icon"];
-	return(stateIcon);
+	return stateIcon;
 }
 
 //Contact service image
 - (NSImage *)serviceImage
 {
-	return([AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped]);
+	return [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconList direction:AIIconFlipped];
 }
 
 //No need to the grid if we have a status color to draw
 - (BOOL)drawGridBehindCell
 {
-	return([self labelColor] == nil);
+	return [self labelColor] == nil;
 }
 
 //
@@ -589,9 +589,9 @@
 {
 	NSNumber	*opacityNumber;
 	if ((opacityNumber = [listObject displayArrayObjectForKey:@"Temporary Display Opacity"])) {
-		return([opacityNumber floatValue]);
+		return [opacityNumber floatValue];
 	} else {
-		return([[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue]);
+		return [[listObject displayArrayObjectForKey:@"Image Opacity"] floatValue];
 	}
 }
 

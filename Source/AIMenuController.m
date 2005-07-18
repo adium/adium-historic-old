@@ -203,7 +203,7 @@
 					   separatorItem:&separatorItem];
 	}
 
-	return(workingMenu);
+	return workingMenu;
 }
 
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray forListObject:(AIListObject *)inObject inChat:(AIChat *)inChat
@@ -242,7 +242,7 @@
 	[contextualMenu_TextView release];
 	contextualMenu_TextView = [inTextView retain];
 
-	return([self contextualMenuWithLocations:inLocationArray usingMenu:textViewContextualMenu]);
+	return [self contextualMenuWithLocations:inLocationArray usingMenu:textViewContextualMenu];
 }
 
 - (NSMenu *)contextualMenuWithLocations:(NSArray *)inLocationArray usingMenu:(NSMenu *)inMenu
@@ -276,22 +276,22 @@
 		}
 	}
 
-	return(inMenu);
+	return inMenu;
 }
 
 - (AIListObject *)currentContextMenuObject
 {
-	return(currentContextMenuObject);
+	return currentContextMenuObject;
 }
 
 - (AIChat *)currentContextMenuChat
 {
-	return(currentContextMenuChat);
+	return currentContextMenuChat;
 }
 
 - (NSTextView *)contextualMenuTextView
 {
-	return(contextualMenu_TextView);
+	return contextualMenu_TextView;
 }
 
 - (void)removeItalicsKeyEquivalent

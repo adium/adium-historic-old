@@ -105,7 +105,7 @@
 									   name:CONTACT_ALERTS_DETAILS_FOR_HEADER_CHANGED
 									 object:nil];
 
-	return(self);
+	return self;
 }
 
 //Dealloc

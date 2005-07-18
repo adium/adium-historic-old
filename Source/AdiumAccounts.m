@@ -47,7 +47,7 @@
 		unloadableAccounts = [[NSMutableArray alloc] init];	
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -81,7 +81,7 @@
  */
 - (NSArray *)accounts
 {
-    return(accounts);
+    return accounts;
 }
 
 /*
@@ -102,7 +102,7 @@
 		}
 	}
 	
-	return(matchingAccounts);	
+	return matchingAccounts;	
 }
 
 //XXX - Change this.  Everyone should be finding accounts by UID and service, not internalObjectID!
@@ -124,7 +124,7 @@
         if ([objectID isEqualToString:[account internalObjectID]]) break;
     }
     
-    return(account);
+    return account;
 }
 
 
@@ -140,7 +140,7 @@
  */
 - (AIAccount *)createAccountWithService:(AIService *)service UID:(NSString *)inUID
 {	
-	return([service accountWithUID:inUID internalObjectID:[self _generateUniqueInternalObjectID]]);
+	return [service accountWithUID:inUID internalObjectID:[self _generateUniqueInternalObjectID]];
 }
 
 /*
@@ -182,7 +182,7 @@
 {
     [accounts moveObject:account toIndex:destIndex];
     [self _saveAccounts];
-	return([accounts indexOfObject:account]);
+	return [accounts indexOfObject:account];
 }
 
 /*
@@ -210,7 +210,7 @@
 										 forKey:TOP_ACCOUNT_ID
 										  group:PREF_GROUP_ACCOUNTS];
 
-	return(internalObjectID);
+	return internalObjectID;
 }
 
 
@@ -296,7 +296,7 @@
 		serviceID = @"bonjour-libezv";
 	}
 	
-	return(serviceID);
+	return serviceID;
 }
 
 /*

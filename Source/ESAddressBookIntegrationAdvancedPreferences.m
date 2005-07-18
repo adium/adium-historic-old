@@ -43,19 +43,19 @@
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 /*!
  * @brief Label
  */
 - (NSString *)label{
-    return(AILocalizedString(@"Address Book",nil));
+    return AILocalizedString(@"Address Book",nil);
 }
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"AddressBookPrefs");
+    return @"AddressBookPrefs";
 }
 /*!
  * @brief Image for advanced preferences

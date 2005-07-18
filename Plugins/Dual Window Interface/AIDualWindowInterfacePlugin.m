@@ -109,7 +109,7 @@
 		[container showWindowInFront:!([[adium interfaceController] activeChat])];
 	}
 	
-	return(messageTab);
+	return messageTab;
 }
 
 /*
@@ -180,13 +180,13 @@
 			nil]];
 	}
 	
-	return(openContainersAndChats);
+	return openContainersAndChats;
 }
 
 //Returns an array of open container IDs
 - (NSArray *)openContainers
 {
-	return([containers allKeys]);
+	return [containers allKeys];
 }
 
 //Returns an array of open chats
@@ -200,24 +200,24 @@
 		[openContainersAndChats addObjectsFromArray:[container containedChats]];
 	}
 	
-	return(openContainersAndChats);
+	return openContainersAndChats;
 }
 
 //Returns the ID of the container containing the chat
 - (NSString *)containerIDForChat:(AIChat *)chat
 {
-	return([[[chat statusObjectForKey:@"MessageTabViewItem"] container] containerID]);
+	return [[[chat statusObjectForKey:@"MessageTabViewItem"] container] containerID];
 }
 
 //Returns an array of all the chats in a container
 - (NSArray *)openChatsInContainerWithID:(NSString *)containerID
 {
-	return([[containers objectForKey:containerID] containedChats]);
+	return [[containers objectForKey:containerID] containedChats];
 }
 
 - (NSWindow *)windowForChat:(AIChat *)chat
 {
-	return([[[chat statusObjectForKey:@"MessageTabViewItem"] container] window]);
+	return [[[chat statusObjectForKey:@"MessageTabViewItem"] container] window];
 }
 
 //Containers -----------------------------------------------------------------------------------------------------------
@@ -234,7 +234,7 @@
 		if (applicationIsHidden) [delayedContainerShowArray addObject:container];
 	}
 	
-	return(container);
+	return container;
 }
 
 //Close a continer

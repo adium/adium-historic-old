@@ -27,7 +27,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"AnnouncerSpeakEventContactAlert");    
+    return @"AnnouncerSpeakEventContactAlert";    
 }
 
 /*!

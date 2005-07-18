@@ -211,7 +211,7 @@
             [mutableArray addObject:newDict];
         }
     }
-    return(mutableArray);
+    return mutableArray;
 }
 
 //Recursively build a savable away message array (replacing NSAttributedString with NSData)
@@ -252,7 +252,7 @@
         }
     }
     
-    return(saveArray);
+    return saveArray;
 }
 //
 - (BOOL)ensureAdiumIsClosed
@@ -269,11 +269,11 @@
 			NSBeginAlertSheet(@"Adium is running", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"Please close all copies of Adium before importing.");
 			
 			//Return NO
-			return(NO);
+			return NO;
 		}
 	}
 	
-	return(YES);
+	return YES;
 }
 
 //
@@ -806,7 +806,7 @@
 
 - (AIContentController *)contentController
 {
-    return(contentController);
+    return contentController;
 }
 
 - (void)applicationDidFinishLaunching: (NSNotification *)aNotification

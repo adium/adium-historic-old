@@ -202,28 +202,28 @@ static int  sizeOfSortOrder;
  * @brief Non-localized identifier
  */
 - (NSString *)identifier{
-    return(@"by Status");
+    return @"by Status";
 }
 
 /*!
  * @brief Localized display name
  */
 - (NSString *)displayName{
-    return(AILocalizedString(@"Sort Contacts by Status",nil));
+    return AILocalizedString(@"Sort Contacts by Status",nil);
 }
 
 /*!
  * @brief Status keys which, when changed, should trigger a resort
  */
 - (NSSet *)statusKeysRequiringResort{
-	return([NSSet setWithObjects:@"Online",@"Idle",@"StatusType",@"IsMobile",nil]);
+	return [NSSet setWithObjects:@"Online",@"Idle",@"StatusType",@"IsMobile",nil];
 }
 
 /*!
  * @brief Attribute keys which, when changed, should trigger a resort
  */
 - (NSSet *)attributeKeysRequiringResort{
-	return([NSSet setWithObject:@"Display Name"]);
+	return [NSSet setWithObject:@"Display Name"];
 }
 
 //Configuration
@@ -235,7 +235,7 @@ static int  sizeOfSortOrder;
  * @result Localized title. If nil, the menu item will be disabled.
  */
 - (NSString *)configureSortWindowTitle{
-	return(AILocalizedString(@"Configure Status Sort",nil));	
+	return AILocalizedString(@"Configure Status Sort",nil);	
 }
 
 /*!
@@ -468,7 +468,7 @@ static int  sizeOfSortOrder;
     //put it on the pasteboard
     [pboard setString:dragItem forType:STATUS_DRAG_TYPE];
 	
-    return(YES);
+    return YES;
 }
 
 /*!
@@ -480,13 +480,13 @@ static int  sizeOfSortOrder;
 
 	if ([avaliableType isEqualToString:STATUS_DRAG_TYPE]) {
         if (operation == NSTableViewDropAbove && row != -1) {
-            return(NSDragOperationMove);
+            return NSDragOperationMove;
         } else {
-            return(NSDragOperationNone);
+            return NSDragOperationNone;
 		}
 	}
 	
-    return(NSDragOperationNone);
+    return NSDragOperationNone;
 }
 
 /*!
@@ -539,7 +539,7 @@ static int  sizeOfSortOrder;
 	}
 	
    	
-    return(YES);
+    return YES;
 }
 
 
@@ -555,9 +555,9 @@ int statusSort(id objectA, id objectB, BOOL groups)
 	if (groups) {
 		//Keep groups in manual order
 		if ([objectA orderIndex] > [objectB orderIndex]) {
-			return(NSOrderedDescending);
+			return NSOrderedDescending;
 		} else {
-			return(NSOrderedAscending);
+			return NSOrderedAscending;
 		}
 		
 	} else {
@@ -668,9 +668,9 @@ int statusSort(id objectA, id objectB, BOOL groups)
 				//Ordering is determined if either has a idle time and their idle times are not identical
 				if (((idle[0] != 0) || (idle[1] != 0)) && (idle[0] != idle[1])) {
 					if (idle[0] > idle[1]) {
-						return(NSOrderedDescending);
+						return NSOrderedDescending;
 					} else {
-						return(NSOrderedAscending);
+						return NSOrderedAscending;
 					}
 				}
 			}
@@ -682,9 +682,9 @@ int statusSort(id objectA, id objectB, BOOL groups)
 			float orderIndexB = [objectB orderIndex];
 			
 			if (orderIndexA > orderIndexB) {
-				return(NSOrderedDescending);
+				return NSOrderedDescending;
 			} else if (orderIndexA < orderIndexB) {
-				return(NSOrderedAscending);
+				return NSOrderedAscending;
 			}
 		}
 		
@@ -724,7 +724,7 @@ int statusSort(id objectA, id objectB, BOOL groups)
  * @brief Sort function
  */
 - (sortfunc)sortFunction{
-	return(&statusSort);
+	return &statusSort;
 }
 
 @end

@@ -21,7 +21,7 @@
 	[super initWithCoder:inCoder];
 	[self _initLocalizationControl];
 	
-	return(self);
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)inFrame
@@ -31,7 +31,7 @@
 	originalFrame = inFrame;
 	[self _initLocalizationControl];
 	
-	return(self);
+	return self;
 }
 
 - (void)awakeFromNib

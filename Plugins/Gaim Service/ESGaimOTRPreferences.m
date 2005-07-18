@@ -47,19 +47,19 @@
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category
 {
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 - (NSString *)label
 {
-    return(AILocalizedString(@"Encryption",nil));
+    return AILocalizedString(@"Encryption",nil);
 }
 - (NSString *)nibName
 {
-    return(@"OTRPrefs");
+    return @"OTRPrefs";
 }
 - (NSImage *)image
 {
-	return([NSImage imageNamed:@"Lock_Locked State" forClass:[adium class]]);
+	return [NSImage imageNamed:@"Lock_Locked State" forClass:[adium class]];
 }
 
 - (void)viewDidLoad
@@ -280,7 +280,7 @@
 	[self updatePrivateKeyList];
 }
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
-	return([inAccount isKindOfClass:[CBGaimAccount class]]);
+	return [inAccount isKindOfClass:[CBGaimAccount class]];
 }
 
 @end

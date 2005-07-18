@@ -21,7 +21,7 @@
 @implementation ESGaimZephyrAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimZephyrAccountView");
+    return @"ESGaimZephyrAccountView";
 }
 
 //Configure our controls

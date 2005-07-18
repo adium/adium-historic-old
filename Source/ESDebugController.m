@@ -99,7 +99,7 @@ static ESDebugController	*sharedDebugController = nil;
 
 - (NSArray *)debugLogArray
 {
-	return(debugLogArray);
+	return debugLogArray;
 }
 
 #else

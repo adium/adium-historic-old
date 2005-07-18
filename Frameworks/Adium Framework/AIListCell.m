@@ -64,7 +64,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 
 	newCell->listObject = nil;
 	[newCell setListObject:listObject];
-	return(newCell);
+	return newCell;
 }
 
 //Dealloc
@@ -91,7 +91,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 - (BOOL)isGroup{
-	return(isGroup);
+	return isGroup;
 }
 
 //Set our control view (Better than passing this around like crazy)
@@ -115,7 +115,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	labelFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self font] forKey:NSFontAttributeName]]; 
 }
 - (NSFont *)font{
-	return(font);
+	return font;
 }
 
 //Alignment of label text
@@ -124,7 +124,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	textAlignment = inAlignment;
 }
 - (NSTextAlignment)textAlignment{
-	return(textAlignment);
+	return textAlignment;
 }
 
 //Text color
@@ -136,7 +136,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 - (NSColor *)textColor{
-	return(textColor);
+	return textColor;
 }
 
 - (void)setInvertedTextColor:(NSColor *)inColor
@@ -147,7 +147,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 }
 - (NSColor *)invertedTextColor{
-	return(invertedTextColor);
+	return invertedTextColor;
 }
 
 
@@ -156,12 +156,12 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //Default cell size just contains our padding and spacing
 - (NSSize)cellSize
 {
-	return(NSMakeSize(0, [self topSpacing] + [self topPadding] + [self bottomPadding] + [self bottomSpacing]));
+	return NSMakeSize(0, [self topSpacing] + [self topPadding] + [self bottomPadding] + [self bottomSpacing]);
 }
 
 - (int)cellWidth
 {
-	return([self leftSpacing] + [self leftPadding] + [self rightPadding] + [self rightSpacing]);
+	return [self leftSpacing] + [self leftPadding] + [self rightPadding] + [self rightSpacing];
 }
 
 //User-defined spacing offsets.  A cell may adjust these values to to obtain a more desirable default. 
@@ -174,25 +174,25 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	topSpacing = inSpacing;
 }
 - (int)topSpacing{
-	return(topSpacing);
+	return topSpacing;
 }
 - (void)setBottomSpacing:(int)inSpacing{
 	bottomSpacing = inSpacing;
 }
 - (int)bottomSpacing{
-	return(bottomSpacing);
+	return bottomSpacing;
 }
 - (void)setLeftSpacing:(int)inSpacing{
 	leftSpacing = inSpacing;
 }
 - (int)leftSpacing{
-	return(leftSpacing);
+	return leftSpacing;
 }
 - (void)setRightSpacing:(int)inSpacing{
 	rightSpacing = inSpacing;
 }
 - (int)rightSpacing{
-	return(rightSpacing);
+	return rightSpacing;
 }
 
 //User-defined padding offsets.  A cell may adjust these values to to obtain a more desirable default.
@@ -208,22 +208,22 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	bottomPadding = inPadding;
 }
 - (int)topPadding{
-	return(topPadding);
+	return topPadding;
 }
 - (int)bottomPadding{
-	return(bottomPadding);
+	return bottomPadding;
 }
 - (void)setLeftPadding:(int)inPadding{
 	leftPadding = inPadding;
 }
 - (int)leftPadding{
-	return(leftPadding);
+	return leftPadding;
 }
 - (void)setRightPadding:(int)inPadding{
 	rightPadding = inPadding;
 }
 - (int)rightPadding{
-	return(rightPadding);
+	return rightPadding;
 }
 
 
@@ -328,7 +328,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 	}
 	
 	
-	return(inRect);
+	return inRect;
 }
 
 //Display string for our list object
@@ -389,13 +389,13 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 			nil];
 	}
 	
-	return(labelAttributes);
+	return labelAttributes;
 }
 
 //Additional attributes to apply to our label string (For Sub-Classes)
 - (NSDictionary *)additionalLabelAttributes
 {
-	return(nil);
+	return nil;
 }
 
 //YES if our cell is currently selected
@@ -409,7 +409,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //YES if a grid would be visible behind this cell (needs to be drawn)
 - (BOOL)drawGridBehindCell
 {
-	return(YES);
+	return YES;
 }
 
 //The background color for this cell.  This will either be [controlView backgroundColor] or [controlView alternatingGridColor]
@@ -417,9 +417,9 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 {
 	//We could just call backgroundColorForRow: but it's best to avoid doing a rowForItem lookup if there is no grid
 	if ([controlView drawsAlternatingRows]) {
-		return([controlView backgroundColorForRow:[controlView rowForItem:listObject]]);
+		return [controlView backgroundColorForRow:[controlView rowForItem:listObject]];
 	} else {
-		return([controlView backgroundColor]);
+		return [controlView backgroundColor];
 	}
 }
 

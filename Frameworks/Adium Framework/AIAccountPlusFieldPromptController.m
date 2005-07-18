@@ -72,7 +72,7 @@
 													account:account 
 														UID:UID];
 	
-	return(contact);
+	return contact;
 }
 
 - (void)_configureTextFieldForAccount:(AIAccount *)account
@@ -103,7 +103,7 @@
     //init
     [super initWithWindowNibName:windowNibName];    
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc
@@ -150,7 +150,7 @@
 	[self _configureTextFieldForAccount:inAccount];
 }
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
-	return([inAccount online]);
+	return [inAccount online];
 }
 
 //Select the last used account / Available online account

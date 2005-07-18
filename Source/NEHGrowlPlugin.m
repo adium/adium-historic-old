@@ -145,7 +145,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(GROWL_ALERT);
+	return GROWL_ALERT;
 }
 
 /*!
@@ -156,9 +156,9 @@
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	if ([[details objectForKey:KEY_GROWL_ALERT_STICKY] boolValue]) {
-		return(GROWL_STICKY_ALERT);
+		return GROWL_STICKY_ALERT;
 	} else {
-		return(GROWL_ALERT);
+		return GROWL_ALERT;
 	}
 }
 
@@ -167,7 +167,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"GrowlAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"GrowlAlert" forClass:[self class]];
 }
 
 /*!
@@ -279,7 +279,7 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-    return([CBGrowlAlertDetailPane actionDetailsPane]);
+    return [CBGrowlAlertDetailPane actionDetailsPane];
 }
 
 /*!
@@ -289,7 +289,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 #pragma mark Growl
@@ -299,7 +299,7 @@
  */
 - (NSString *)applicationNameForGrowl
 {
-	return(@"Adium");
+	return @"Adium";
 }
 
 /*!
@@ -317,7 +317,7 @@
 		allNotes, GROWL_NOTIFICATIONS_DEFAULT,
 		nil];
 
-	return(growlReg);
+	return growlReg;
 }
 
 /*!
@@ -385,7 +385,7 @@
  */
 - (NSString *)growlInstallationWindowTitle
 {
-	return(GROWL_INSTALLATION_WINDOW_TITLE);	
+	return GROWL_INSTALLATION_WINDOW_TITLE;	
 }
 
 /*!
@@ -393,7 +393,7 @@
  */
 - (NSString *)growlUpdateWindowTitle
 {
-	return(GROWL_UPDATE_WINDOW_TITLE);
+	return GROWL_UPDATE_WINDOW_TITLE;
 }
 
 /*!
@@ -403,7 +403,7 @@
  */
 - (NSAttributedString *)growlInstallationInformation
 {
-	return([self _growlInformationForUpdate:NO]);
+	return [self _growlInformationForUpdate:NO];
 }
 
 /*!
@@ -413,7 +413,7 @@
  */
 - (NSAttributedString *)growlUpdateInformation
 {
-	return([self _growlInformationForUpdate:YES]);
+	return [self _growlInformationForUpdate:YES];
 }
 
 /*!
@@ -446,7 +446,7 @@
 	
 	[growlInfo appendAttributedString:defaultExplanation];
 	
-	return(growlInfo);
+	return growlInfo;
 }
 
 @end

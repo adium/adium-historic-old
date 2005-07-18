@@ -208,11 +208,11 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 												options:NSLiteralSearch
 												  range:NSMakeRange(0, [processedStackTrace length])];
 		
-		return(processedStackTrace);
+		return processedStackTrace;
 	}
 	
 	//If we are unable to decode the stack trace, return the best we have
-	return(stackTrace);
+	return stackTrace;
 }
 
 @end

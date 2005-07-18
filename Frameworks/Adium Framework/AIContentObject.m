@@ -29,7 +29,7 @@
 	   destination:(AIListObject *)inDest
 			  date:(NSDate*)inDate
 {
-	return([self initWithChat:inChat source:inSource destination:inDest date:inDate message:nil]);
+	return [self initWithChat:inChat source:inSource destination:inDest date:inDate message:nil];
 }
 - (id)initWithChat:(AIChat *)inChat
 			source:(AIListObject *)inSource
@@ -76,7 +76,7 @@
 //Content Identifier
 - (NSString *)type
 {
-    return(@"");
+    return @"";
 }
 
 - (id)userInfo
@@ -100,10 +100,10 @@
 	if (source == [inContent source] && [[self type] compare:[inContent type]] == 0) {
 		NSTimeInterval	timeInterval = [date timeIntervalSinceDate:[inContent date]];
 		
-		return(timeInterval > -300 && timeInterval < 300);
+		return timeInterval > -300 && timeInterval < 300;
 	}
 	
-	return(NO);
+	return NO;
 }
 
 //Content is from the same day. If passed nil, content is from the current day.
@@ -112,7 +112,7 @@
 	NSCalendarDate *ourDate = [[self date] dateWithCalendarFormat:nil timeZone:nil];
 	NSCalendarDate *inDate = [(inContent ? [inContent date] : [NSDate date]) dateWithCalendarFormat:nil timeZone:nil];
 	
-	return([ourDate dayOfCommonEra] == [inDate dayOfCommonEra]);
+	return [ourDate dayOfCommonEra] == [inDate dayOfCommonEra];
 }
 
 //Content --------------------------------------------------------------------------------------------------------------
@@ -120,23 +120,23 @@
 //Message Source and destination
 - (AIListObject *)source
 {
-    return(source);
+    return source;
 }
 - (AIListObject *)destination
 {
-    return(destination);
+    return destination;
 }
 
 //Date and time of this message
 - (NSDate *)date
 {
-    return(date);
+    return date;
 }
 
 //Is this content incoming or outgoing?
 - (BOOL)isOutgoing
 {
-    return(outgoing);
+    return outgoing;
 }
 - (void)_setIsOutgoing:(BOOL)inOutgoing
 { //Hack for message view preferences
@@ -150,7 +150,7 @@
 }
 - (AIChat *)chat
 {
-    return(chat);
+    return chat;
 }
 
 //Attributed Message
@@ -163,7 +163,7 @@
 }
 - (NSAttributedString *)message
 {
-	return(message);
+	return message;
 }
 
 //HTML string message

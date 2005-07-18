@@ -229,11 +229,11 @@
 
 	while ((account = [enumerator nextObject])) {
 		if ([self _accountIsAvailable:account]) {
-			if (++choices > 1) return(YES);
+			if (++choices > 1) return YES;
 		}
 	}
 	
-	return(NO);
+	return NO;
 }
 
 /*
@@ -246,7 +246,7 @@
 	[[adium chatController] switchChat:chat toAccount:inAccount];
 }
 - (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount {
-	return([self _accountIsAvailable:inAccount]);
+	return [self _accountIsAvailable:inAccount];
 }
 
 /*
@@ -307,7 +307,7 @@
  * @brief Returns YES if a choice of destination contact is available
  */
 - (BOOL)choicesAvailableForContact{
-	return([[[self _chatMetaContact] listContacts] count] > 1);
+	return [[[self _chatMetaContact] listContacts] count] > 1;
 }
 
 /*
@@ -367,7 +367,7 @@
 - (AIMetaContact *)_chatMetaContact
 {
 	id 	containingObject = [[chat listObject] containingObject];
-	return([containingObject isKindOfClass:[AIMetaContact class]] ? containingObject : nil);
+	return [containingObject isKindOfClass:[AIMetaContact class]] ? containingObject : nil;
 }
 
 /*!

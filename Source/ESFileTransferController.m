@@ -152,12 +152,12 @@ static ESFileTransferPreferences *preferences;
 									 withObject:fileTransfer
 									 afterDelay:0.0001];
 
-	return(fileTransfer);
+	return fileTransfer;
 }
 
 - (NSArray *)fileTransferArray
 {
-	return(fileTransferArray);
+	return fileTransferArray;
 }
 
 //Remove a file transfer from our array.
@@ -419,7 +419,7 @@ static ESFileTransferPreferences *preferences;
 		shouldOpen = [safeFileExtensions containsObject:[[[fileTransfer localFilename] pathExtension] lowercaseString]];
 	}
 
-	return(shouldOpen);
+	return shouldOpen;
 }
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
@@ -433,7 +433,7 @@ static ESFileTransferPreferences *preferences;
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
-		return(listContact != nil);
+		return listContact != nil;
 		
 	} else if (menuItem == menuItem_sendFileContext) {
 		AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];
@@ -442,13 +442,13 @@ static ESFileTransferPreferences *preferences;
 																	 forListContact:(AIListContact *)selectedObject];
 		}
 		
-		return(listContact != nil);
+		return listContact != nil;
 		
     } else if (menuItem == menuItem_showFileTransferProgress) {
-		return(YES);
+		return YES;
 	}
 
-    return(YES);
+    return YES;
 }
 
 /*
@@ -462,7 +462,7 @@ static ESFileTransferPreferences *preferences;
 																 forListContact:(AIListContact *)selectedObject];
 	}
 
-    return(listContact != nil);
+    return listContact != nil;
 }
 */
 #pragma mark File transfer progress window
@@ -524,7 +524,7 @@ static ESFileTransferPreferences *preferences;
 		description = @"";	
 	}
 	
-	return(description);
+	return description;
 }
 
 //Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
@@ -545,7 +545,7 @@ static ESFileTransferPreferences *preferences;
 		description = @"";	
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
@@ -564,7 +564,7 @@ static ESFileTransferPreferences *preferences;
 		description = @"";	
 	}
 
-	return(description);
+	return description;
 }
 
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
@@ -636,7 +636,7 @@ static ESFileTransferPreferences *preferences;
 		}		
 	}
 
-	return(description);
+	return description;
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID
@@ -716,7 +716,7 @@ static ESFileTransferPreferences *preferences;
 	
 	if (!ret) ret = ZERO_BYTES;
 	
-	return(ret);
+	return ret;
 }
 
 - (NSString *)stringForSize:(unsigned long long)inSize of:(unsigned long long)totalSize ofString:(NSString *)totalSizeString
@@ -766,7 +766,7 @@ static ESFileTransferPreferences *preferences;
 	
 	if (!ret) ret = ZERO_BYTES;
 	
-	return(ret);
+	return ret;
 }
 
 @end

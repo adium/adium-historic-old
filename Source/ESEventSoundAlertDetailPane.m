@@ -41,7 +41,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"EventSoundContactAlert");    
+    return @"EventSoundContactAlert";    
 }
 
 /*!
@@ -164,7 +164,7 @@
 	[soundMenu addItem:menuItem];
 	[soundMenu setAutoenablesItems:NO];
 	
-    return([soundMenu autorelease]);
+    return [soundMenu autorelease];
 }
 
 /*!

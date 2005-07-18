@@ -23,7 +23,7 @@
 - (id)copyWithZone:(NSZone *)zone
 {
 	id newCell = [super copyWithZone:zone];
-	return(newCell);
+	return newCell;
 }
 
 //Adjust the bubble rect to tightly fit our label string
@@ -99,7 +99,7 @@
 	//Don't let the bubble try to draw larger than the width we were passed, which was the full width possible
 	if (rect.size.width > originalWidth) rect.size.width = originalWidth;
 	
-	return(rect);
+	return rect;
 }
 
 @end

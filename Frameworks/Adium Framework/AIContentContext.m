@@ -27,7 +27,7 @@
 //Content Identifier
 - (NSString *)type
 {
-    return(CONTENT_CONTEXT_TYPE);
+    return CONTENT_CONTEXT_TYPE;
 }
 
 @end

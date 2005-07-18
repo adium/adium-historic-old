@@ -62,7 +62,7 @@
 		[listLayoutWindow showWindow:nil];
 	}
 	
-	return(listLayoutWindow);
+	return listLayoutWindow;
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget
@@ -74,7 +74,7 @@
 	target = inTarget;
 	layoutName = [inName retain];
 	
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -318,7 +318,7 @@
 
 - (BOOL)fontPreviewField:(JVFontPreviewField *)field shouldChangeToFont:(NSFont *)font
 {
-	return(YES);
+	return YES;
 }
 
 - (void)fontPreviewField:(JVFontPreviewField *)field didChangeToFont:(NSFont *)font
@@ -544,7 +544,7 @@
 		i++;
 	}
 	
-	return(alignmentMenu);
+	return alignmentMenu;
 	
 }
 
@@ -584,7 +584,7 @@
 		i++;
 	}
 	
-	return(positionMenu);
+	return positionMenu;
 }
 
 - (NSMenu *)extendedStatusPositionMenu
@@ -606,7 +606,7 @@
 	[menuItem setTag:EXTENDED_STATUS_POSITION_BESIDE_NAME];
 	[extendedStatusPositionMenu addItem:menuItem];
 	
-	return(extendedStatusPositionMenu);
+	return extendedStatusPositionMenu;
 }
 
 - (NSMenu *)extendedStatusStyleMenu
@@ -635,7 +635,7 @@
 	[menuItem setTag:IDLE_AND_STATUS];
 	[extendedStatusStyleMenu addItem:menuItem];
 	
-	return(extendedStatusStyleMenu);
+	return extendedStatusStyleMenu;
 }
 
 

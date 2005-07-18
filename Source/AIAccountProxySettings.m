@@ -54,7 +54,7 @@
  */
 - (NSView *)view
 {
-	return(view_accountProxy);
+	return view_accountProxy;
 }
 
 /*!
@@ -259,7 +259,7 @@
 															 keyEquivalent:@""];
     [menuItem setTag:tag];
 	
-	return([menuItem autorelease]);
+	return [menuItem autorelease];
 }
 
 @end

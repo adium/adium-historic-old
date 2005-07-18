@@ -25,7 +25,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ESGaimOscarAccountView");
+    return @"ESGaimOscarAccountView";
 }
 
 /*!

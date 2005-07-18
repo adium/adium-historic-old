@@ -40,7 +40,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(APPLESCRIPT_ALERT_SHORT);
+	return APPLESCRIPT_ALERT_SHORT;
 }
 
 /*!
@@ -52,9 +52,9 @@
 	NSString	*scriptName = [[[details objectForKey:KEY_APPLESCRIPT_TO_RUN] lastPathComponent] stringByDeletingPathExtension];
 	
 	if (scriptName && [scriptName length]) {
-		return([NSString stringWithFormat:APPLESCRIPT_ALERT_LONG, scriptName]);
+		return [NSString stringWithFormat:APPLESCRIPT_ALERT_LONG, scriptName];
 	} else {
-		return(APPLESCRIPT_ALERT_SHORT);
+		return APPLESCRIPT_ALERT_SHORT;
 	}
 }
 
@@ -63,7 +63,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"ApplescriptAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"ApplescriptAlert" forClass:[self class]];
 }
 
 /*!
@@ -72,7 +72,7 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([ESPanelApplescriptDetailPane actionDetailsPane]);
+	return [ESPanelApplescriptDetailPane actionDetailsPane];
 }
 
 /*!
@@ -115,7 +115,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(YES);
+	return YES;
 }
 
 @end

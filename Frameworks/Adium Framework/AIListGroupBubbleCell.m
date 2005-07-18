@@ -37,15 +37,15 @@
 - (id)copyWithZone:(NSZone *)zone
 {
 	id newCell = [super copyWithZone:zone];
-	return(newCell);
+	return newCell;
 }
 
 //Give ourselves extra padding to compensate for the rounded bubble
 - (int)leftPadding{
-	return([super leftPadding] + EDGE_INDENT);
+	return [super leftPadding] + EDGE_INDENT;
 }
 - (int)rightPadding{
-	return([super rightPadding] + EDGE_INDENT);
+	return [super rightPadding] + EDGE_INDENT;
 }
 
 //Draw a regular bubble background for our cell if gradient background drawing is disabled
@@ -104,14 +104,14 @@
 //positioning and size.
 - (NSRect)bubbleRectForFrame:(NSRect)rect
 {
-	return(rect);
+	return rect;
 }
 
 //Because of the rounded corners, we cannot rely on the outline view to draw our grid.  Return NO here to let
 //the outline view know we'll be drawing the grid ourself
 - (BOOL)drawGridBehindCell
 {
-	return(NO);
+	return NO;
 }
 
 - (void)setOutlineBubble:(BOOL)flag

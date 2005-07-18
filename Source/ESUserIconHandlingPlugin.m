@@ -136,7 +136,7 @@
 		}
 	}
 
-	return(nil);
+	return nil;
 }
 
 /*!

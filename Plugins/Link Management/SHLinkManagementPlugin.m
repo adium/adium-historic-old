@@ -83,7 +83,7 @@
 			return [(NSTextView *)responder isEditable];
 		}
 	} else {
-		return(NO); //Disable the menu item if a text field is not key
+		return NO; //Disable the menu item if a text field is not key
 	}
 	
 }
@@ -138,7 +138,7 @@
 										  effectiveRange:&selectionRange];
 	}
 	
-	return(selectedLink != nil);
+	return selectedLink != nil;
 }
 
 #pragma mark Toolbar Item stuff

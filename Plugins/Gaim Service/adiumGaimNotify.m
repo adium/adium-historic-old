@@ -84,7 +84,7 @@ static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const 
 										 withObject:textString];
 	}
 	
-    return(adium_gaim_get_handle());
+    return adium_gaim_get_handle();
 }
 
 static void *adiumGaimNotifyUri(const char *uri)
@@ -94,7 +94,7 @@ static void *adiumGaimNotifyUri(const char *uri)
 		[[NSWorkspace sharedWorkspace] openURL:notifyURI];
 	}
 	
-	return(adium_gaim_get_handle());
+	return adium_gaim_get_handle();
 }
 
 static void adiumGaimNotifyClose(GaimNotifyType type,void *uiHandle)

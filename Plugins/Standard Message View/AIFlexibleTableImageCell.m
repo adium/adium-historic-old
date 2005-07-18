@@ -28,7 +28,7 @@
 //Create a new image cell
 + (AIFlexibleTableImageCell *)cellWithImage:(NSImage *)inImage
 {
-    return([[[self alloc] initWithImage:inImage] autorelease]);
+    return [[[self alloc] initWithImage:inImage] autorelease];
 }
 
 //Init

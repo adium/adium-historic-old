@@ -41,7 +41,7 @@
  */
 + (id)emoticonWithIconPath:(NSString *)inPath equivalents:(NSArray *)inTextEquivalents name:(NSString *)inName pack:(AIEmoticonPack *)inPack
 {
-    return([[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName pack:inPack] autorelease]);
+    return [[[self alloc] initWithIconPath:inPath equivalents:inTextEquivalents name:inName pack:inPack] autorelease];
 }
 
 //Init
@@ -55,7 +55,7 @@
 		_cachedAttributedString = nil;
     }
 
-    return(self);
+    return self;
 }
 
 //Dealloc
@@ -78,7 +78,7 @@
  */
 - (NSArray *)textEquivalents
 {
-    return(textEquivalents);
+    return textEquivalents;
 }
 
 /*!
@@ -122,7 +122,7 @@
  * @result The enabled state
  */
 - (BOOL)isEnabled{
-    return(enabled);
+    return enabled;
 }
 
 /*!
@@ -132,7 +132,7 @@
  */
 - (NSImage *)image
 {
-    return([[[NSImage alloc] initWithContentsOfFile:path] autorelease]);
+    return [[[NSImage alloc] initWithContentsOfFile:path] autorelease];
 }
 
 /*!
@@ -171,7 +171,7 @@
     attachment = [attributedString attribute:NSAttachmentAttributeName atIndex:0 effectiveRange:nil];
     [attachment setString:textEquivalent];
     
-    return([attributedString autorelease]);
+    return [attributedString autorelease];
 }
 
 
@@ -183,7 +183,7 @@
 - (BOOL)isAppropriateForServiceClass:(NSString *)inServiceClass
 {
 	NSString	*ourServiceClass = [pack serviceClass];
-	return(!ourServiceClass || [ourServiceClass isEqualToString:inServiceClass]);
+	return !ourServiceClass || [ourServiceClass isEqualToString:inServiceClass];
 }
 
 /*!
@@ -191,7 +191,7 @@
  */
 - (NSString *)description
 {
-    return([NSString stringWithFormat:@"%@<%x> (Equivalents: %@) [in %@]",name,self,[self textEquivalents],pack]);
+    return [NSString stringWithFormat:@"%@<%x> (Equivalents: %@) [in %@]",name,self,[self textEquivalents],pack];
 }
 
 /*!
@@ -201,7 +201,7 @@
  */
 - (NSComparisonResult)compare:(AIEmoticon *)otherEmoticon
 {
-	return([name caseInsensitiveCompare:[otherEmoticon name]]);
+	return [name caseInsensitiveCompare:[otherEmoticon name]];
 }
 
 @end

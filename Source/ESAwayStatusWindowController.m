@@ -74,7 +74,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
  */
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_AWAY_STATUS_WINDOW_FRAME);
+	return KEY_AWAY_STATUS_WINDOW_FRAME;
 }
 
 /*!
@@ -310,7 +310,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([_awayAccounts count]);
+	return [_awayAccounts count];
 }
 
 /*!
@@ -322,7 +322,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 {
 	AIAccount	*account = [_awayAccounts objectAtIndex:row];
 
-	return([account formattedUID]);
+	return [account formattedUID];
 }
 
 /*!

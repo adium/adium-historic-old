@@ -24,7 +24,7 @@
 */
 + (AIActionDetailsPane *)actionDetailsPane
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 /*!
@@ -33,7 +33,7 @@
  */
 + (AIActionDetailsPane *)actionDetailsPaneForPlugin:(id)inPlugin
 {
-    return([[[self alloc] initForPlugin:inPlugin] autorelease]);
+    return [[[self alloc] initForPlugin:inPlugin] autorelease];
 }
 
 /*!
@@ -84,7 +84,7 @@
  */
 - (NSDictionary *)actionDetails
 {
-	return(nil);
+	return nil;
 }
 
 @end

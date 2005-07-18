@@ -126,13 +126,13 @@
 // Returns the current user's Adium home directory
 - (NSString *)userDirectory
 {
-    return(userDirectory);
+    return userDirectory;
 }
 
 //
 - (NSString *)currentUser
 {
-    return(currentUser);
+    return currentUser;
 }
 
 // Sets the correct user directory and sends out a login message
@@ -194,7 +194,7 @@
         }
     }
 
-    return([userArray autorelease]);
+    return [userArray autorelease];
 }
 
 // Delete a user

@@ -539,7 +539,7 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	NSString	*uniqueID = [contact uniqueID];
 	NSArray		*components = [uniqueID componentsSeparatedByString:@"@"];
 	NSString	*userName = [contact name];
-	return([NSString stringWithFormat:@"%@ [%@]",name,[ substringFromIndex:[name length]]]);
+	return [NSString stringWithFormat:@"%@ [%@]",name,[ substringFromIndex:[name length]]];
 	 */
 	return [contact uniqueID];
 }

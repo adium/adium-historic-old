@@ -23,13 +23,13 @@
 //Return a new preference pane
 + (AIPreferencePane *)preferencePane
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 //Return a new preference pane, passing plugin
 + (AIPreferencePane *)preferencePaneForPlugin:(id)inPlugin
 {
-    return([[[self alloc] initForPlugin:inPlugin] autorelease]);
+    return [[[self alloc] initForPlugin:inPlugin] autorelease];
 }
 
 //Init
@@ -64,13 +64,13 @@
 //Preference category
 - (PREFERENCE_CATEGORY)category
 {
-	return(AIPref_Advanced);
+	return AIPref_Advanced;
 }
 
 //Return an image for these preferences (advanced only)
 - (NSImage *)image
 {
-	return(nil);
+	return nil;
 }
 
 @end

@@ -69,7 +69,7 @@
         }
     }
 
-    return(nil);
+    return nil;
 }
 
 /*!
