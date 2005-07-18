@@ -750,7 +750,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
 {
-	if (!strcmp(gaimStatusType, "Available")) {
+	if (gaimStatusType && !strcmp(gaimStatusType, "Available")) {
 		NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 		return [messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
 	} else {
