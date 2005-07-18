@@ -100,6 +100,7 @@
                 "menuItem_saveAs" = NSMenuItem; 
                 "menuItem_selectAll" = NSMenuItem; 
                 "menuItem_sendFeedback" = NSMenuItem; 
+                "menuItem_services" = NSMenuItem; 
                 "menuItem_showAll" = NSMenuItem; 
                 "menuItem_showColors" = NSMenuItem; 
                 "menuItem_showFonts" = NSMenuItem; 
