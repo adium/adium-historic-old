@@ -208,7 +208,6 @@
 		3448761406D1EC0C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448761606D1EC3000DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448761D06D1ED8E00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
-		3448761F06D1ED9E00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448762106D1EDB300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763B06D1EF0500DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448763D06D1EF3C00DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
@@ -252,20 +251,8 @@
 		346BA3440774C2D200628F06 /* ESGlobalEventsPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 346BA3420774C2D200628F06 /* ESGlobalEventsPreferences.h */; };
 		346BA3450774C2D200628F06 /* ESGlobalEventsPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 346BA3430774C2D200628F06 /* ESGlobalEventsPreferences.m */; };
 		346BA3640774C35500628F06 /* GlobalEventsPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 346BA3630774C35400628F06 /* GlobalEventsPreferences.nib */; };
-		346C9C6906004536000F5A8A /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		346C9C700600453C000F5A8A /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		346C9C7C06004560000F5A8A /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9C103FAE057127A500F3C158 /* WebKit.framework */; };
-		346C9CC706004608000F5A8A /* AISMPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE9200A03DED0E500A8010A /* AISMPreferences.h */; };
-		346C9CC806004609000F5A8A /* AISMPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BE9200B03DED0E500A8010A /* AISMPreferences.m */; };
-		346C9CCA06004609000F5A8A /* AISMPrefView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9200E03DED34C00A8010A /* AISMPrefView.nib */; };
-		346C9CCC0600460A000F5A8A /* AISMViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BCDEB4203D4DC9700A8010A /* AISMViewController.h */; };
-		346C9CCF0600460B000F5A8A /* AISMViewPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = F5793995033E75B001A8010A /* AISMViewPlugin.h */; };
-		346C9CD30600460D000F5A8A /* AISMViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCDEB4103D4DC9700A8010A /* AISMViewController.m */; };
-		346C9CD50600460E000F5A8A /* AISMViewPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = F5793996033E75B001A8010A /* AISMViewPlugin.m */; };
-		346C9CDB0600460F000F5A8A /* blue.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BA3DADA0520CD4000A8010A /* blue.png */; };
-		346C9CE106004611000F5A8A /* green.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BA3DADB0520CD4000A8010A /* green.png */; };
-		346C9CE706004613000F5A8A /* PrefixColors.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B5AAA1F03E02EB900A8010A /* PrefixColors.plist */; };
-		346C9CEB06004614000F5A8A /* SMVDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BE9201003DEE2FE00A8010A /* SMVDefaults.plist */; };
 		346C9D010600463D000F5A8A /* AIWebKitMessageViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B539C5105EFD6FA00E5921A /* AIWebKitMessageViewController.h */; };
 		346C9D020600463D000F5A8A /* AIWebKitMessageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B539C5205EFD6FB00E5921A /* AIWebKitMessageViewController.m */; };
 		346C9D040600463E000F5A8A /* AIWebKitMessageViewPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B539C4B05EFD6CD00E5921A /* AIWebKitMessageViewPlugin.h */; };
@@ -656,7 +643,6 @@
 		34D8370107CBF97A006466F2 /* AudioUnit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D836FF07CBF979006466F2 /* AudioUnit.framework */; };
 		34D8370207CBF97A006466F2 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D8370007CBF97A006466F2 /* AudioToolbox.framework */; };
 		34D8374E07CC2F2E006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
-		34D8375307CC2F9E006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8375407CC2FA3006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34D8378307CC31B9006466F2 /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		34DFF53907A62EB200B92233 /* Lock_Unlocked State.png in Resources */ = {isa = PBXBuildFile; fileRef = 34DFF52607A62EB000B92233 /* Lock_Unlocked State.png */; };
@@ -725,22 +711,6 @@
 		34F2E81B07C2CD6C007EAAAB /* AITextAttachmentExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */; };
 		34F2E83A07C2CDBE007EAAAB /* ESFileWrapperExtension.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */; };
 		34F2E83B07C2CDBE007EAAAB /* ESFileWrapperExtension.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		34F2E8E307C2D0C4007EAAAB /* AIFlexibleTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8D307C2D0C3007EAAAB /* AIFlexibleTableView.m */; };
-		34F2E8E407C2D0C4007EAAAB /* AIFlexibleTableView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8D407C2D0C3007EAAAB /* AIFlexibleTableView.h */; };
-		34F2E8E507C2D0C4007EAAAB /* AIFlexibleTableTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8D507C2D0C3007EAAAB /* AIFlexibleTableTextCell.m */; };
-		34F2E8E607C2D0C4007EAAAB /* AIFlexibleTableTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8D607C2D0C3007EAAAB /* AIFlexibleTableTextCell.h */; };
-		34F2E8E707C2D0C4007EAAAB /* AIFlexibleTableStringCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8D707C2D0C3007EAAAB /* AIFlexibleTableStringCell.m */; };
-		34F2E8E807C2D0C4007EAAAB /* AIFlexibleTableStringCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8D807C2D0C3007EAAAB /* AIFlexibleTableStringCell.h */; };
-		34F2E8E907C2D0C4007EAAAB /* AIFlexibleTableSpanCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8D907C2D0C3007EAAAB /* AIFlexibleTableSpanCell.m */; };
-		34F2E8EA07C2D0C4007EAAAB /* AIFlexibleTableSpanCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8DA07C2D0C3007EAAAB /* AIFlexibleTableSpanCell.h */; };
-		34F2E8EB07C2D0C4007EAAAB /* AIFlexibleTableRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8DB07C2D0C3007EAAAB /* AIFlexibleTableRow.m */; };
-		34F2E8EC07C2D0C4007EAAAB /* AIFlexibleTableRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8DC07C2D0C3007EAAAB /* AIFlexibleTableRow.h */; };
-		34F2E8ED07C2D0C4007EAAAB /* AIFlexibleTableImageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8DD07C2D0C4007EAAAB /* AIFlexibleTableImageCell.m */; };
-		34F2E8EE07C2D0C4007EAAAB /* AIFlexibleTableImageCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8DE07C2D0C4007EAAAB /* AIFlexibleTableImageCell.h */; };
-		34F2E8EF07C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8DF07C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.m */; };
-		34F2E8F007C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8E007C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.h */; };
-		34F2E8F107C2D0C4007EAAAB /* AIFlexibleTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E8E107C2D0C4007EAAAB /* AIFlexibleTableCell.m */; };
-		34F2E8F207C2D0C4007EAAAB /* AIFlexibleTableCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E8E207C2D0C4007EAAAB /* AIFlexibleTableCell.h */; };
 		34F4675E080F46AC007800AB /* ESBonjourAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */; };
 		34F4675F080F46AC007800AB /* ESBonjourAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */; };
 		34F46760080F46AC007800AB /* AWBonjourPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F46757080F46AB007800AB /* AWBonjourPlugin.m */; };
@@ -885,7 +855,6 @@
 		4B8C3CE90825F60B004B9F45 /* AccountListPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */; };
 		4B909C8A064D75400074C9A8 /* BGEmoticonMenuPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = C4243C930638E4EA007AD2D9 /* BGEmoticonMenuPlugin.m */; };
 		4B909C8B064D75400074C9A8 /* BGEmoticonMenuPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = C4243C920638E4EA007AD2D9 /* BGEmoticonMenuPlugin.h */; };
-		4B90B54C064220AB00D23731 /* Standard Message View.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */; };
 		4B93589006DBC71B007977AA /* AIUserIcons.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B93588A06DBC71B007977AA /* AIUserIcons.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B93589106DBC71B007977AA /* AIStatusIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93588B06DBC71B007977AA /* AIStatusIcons.m */; };
 		4B93589206DBC71B007977AA /* AIServiceIcons.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B93588C06DBC71B007977AA /* AIServiceIcons.m */; };
@@ -1112,7 +1081,6 @@
 		6E4D963206B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4D962F06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m */; };
 		6E5A43DF061160C60078C342 /* DCMessageContextDisplayPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */; };
 		6E5A43E0061160C60078C342 /* DCMessageContextDisplayPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */; };
-		6E6EA019066F9C2600FA0D91 /* MessageStyles.plist in Resources */ = {isa = PBXBuildFile; fileRef = 6E6EA018066F9C2600FA0D91 /* MessageStyles.plist */; };
 		6E7C19BC0623BF80008A1C99 /* DCMessageContextDisplayPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */; };
 		6E7C19BD0623BF80008A1C99 /* DCMessageContextDisplayPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */; };
 		6EA3688506B73E7D009CA81A /* DCGaimNovellJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */; };
@@ -1290,13 +1258,6 @@
 			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
-		346C9CBC060045E9000F5A8A /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133;
-			remoteInfo = Adium.Framework;
-		};
 		346C9D45060046AB000F5A8A /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1409,13 +1370,6 @@
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIBookmarksImport;
 		};
-		4B90B54D064220B400D23731 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 346C9C4806004517000F5A8A;
-			remoteInfo = "Standard Message View";
-		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
@@ -1478,7 +1432,6 @@
 				348EF1F6080B31280015E0FC /* Latex Plugin.AdiumPlugin in CopyFiles */,
 				4B7F27C705440DE900CDFC90 /* Gaim.AdiumPlugin in CopyFiles */,
 				344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */,
-				4B90B54C064220AB00D23731 /* Standard Message View.AdiumPlugin in CopyFiles */,
 				340B9BD4069C735900FE1E57 /* WebKit Message View.AdiumPlugin in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2143,7 +2096,6 @@
 		3498FE9907F4890A0004B79A /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Japanese; path = "Plugins/Gaim Service/Japanese.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3498FE9A07F489100004B79A /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = "Plugins/Gaim Service/German.lproj/Localizable.strings"; sourceTree = "<group>"; };
 		3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WebKit Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Standard Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestWindowController.m"; sourceTree = "<group>"; };
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -2516,22 +2468,6 @@
 		34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentExtension.m; path = "Frameworks/Adium Framework/AITextAttachmentExtension.m"; sourceTree = "<group>"; };
 		34F2E83807C2CDBD007EAAAB /* ESFileWrapperExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileWrapperExtension.m; path = "Frameworks/Adium Framework/ESFileWrapperExtension.m"; sourceTree = "<group>"; };
 		34F2E83907C2CDBD007EAAAB /* ESFileWrapperExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileWrapperExtension.h; path = "Frameworks/Adium Framework/ESFileWrapperExtension.h"; sourceTree = "<group>"; };
-		34F2E8D307C2D0C3007EAAAB /* AIFlexibleTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableView.m; path = "Plugins/Standard Message View/AIFlexibleTableView.m"; sourceTree = "<group>"; };
-		34F2E8D407C2D0C3007EAAAB /* AIFlexibleTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableView.h; path = "Plugins/Standard Message View/AIFlexibleTableView.h"; sourceTree = "<group>"; };
-		34F2E8D507C2D0C3007EAAAB /* AIFlexibleTableTextCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableTextCell.m; path = "Plugins/Standard Message View/AIFlexibleTableTextCell.m"; sourceTree = "<group>"; };
-		34F2E8D607C2D0C3007EAAAB /* AIFlexibleTableTextCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableTextCell.h; path = "Plugins/Standard Message View/AIFlexibleTableTextCell.h"; sourceTree = "<group>"; };
-		34F2E8D707C2D0C3007EAAAB /* AIFlexibleTableStringCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableStringCell.m; path = "Plugins/Standard Message View/AIFlexibleTableStringCell.m"; sourceTree = "<group>"; };
-		34F2E8D807C2D0C3007EAAAB /* AIFlexibleTableStringCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableStringCell.h; path = "Plugins/Standard Message View/AIFlexibleTableStringCell.h"; sourceTree = "<group>"; };
-		34F2E8D907C2D0C3007EAAAB /* AIFlexibleTableSpanCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableSpanCell.m; path = "Plugins/Standard Message View/AIFlexibleTableSpanCell.m"; sourceTree = "<group>"; };
-		34F2E8DA07C2D0C3007EAAAB /* AIFlexibleTableSpanCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableSpanCell.h; path = "Plugins/Standard Message View/AIFlexibleTableSpanCell.h"; sourceTree = "<group>"; };
-		34F2E8DB07C2D0C3007EAAAB /* AIFlexibleTableRow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableRow.m; path = "Plugins/Standard Message View/AIFlexibleTableRow.m"; sourceTree = "<group>"; };
-		34F2E8DC07C2D0C3007EAAAB /* AIFlexibleTableRow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableRow.h; path = "Plugins/Standard Message View/AIFlexibleTableRow.h"; sourceTree = "<group>"; };
-		34F2E8DD07C2D0C4007EAAAB /* AIFlexibleTableImageCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableImageCell.m; path = "Plugins/Standard Message View/AIFlexibleTableImageCell.m"; sourceTree = "<group>"; };
-		34F2E8DE07C2D0C4007EAAAB /* AIFlexibleTableImageCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableImageCell.h; path = "Plugins/Standard Message View/AIFlexibleTableImageCell.h"; sourceTree = "<group>"; };
-		34F2E8DF07C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableFramedTextCell.m; path = "Plugins/Standard Message View/AIFlexibleTableFramedTextCell.m"; sourceTree = "<group>"; };
-		34F2E8E007C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableFramedTextCell.h; path = "Plugins/Standard Message View/AIFlexibleTableFramedTextCell.h"; sourceTree = "<group>"; };
-		34F2E8E107C2D0C4007EAAAB /* AIFlexibleTableCell.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIFlexibleTableCell.m; path = "Plugins/Standard Message View/AIFlexibleTableCell.m"; sourceTree = "<group>"; };
-		34F2E8E207C2D0C4007EAAAB /* AIFlexibleTableCell.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIFlexibleTableCell.h; path = "Plugins/Standard Message View/AIFlexibleTableCell.h"; sourceTree = "<group>"; };
 		34F46755080F46AB007800AB /* ESBonjourAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = ESBonjourAccountViewController.m; sourceTree = "<group>"; };
 		34F46756080F46AB007800AB /* ESBonjourAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = ESBonjourAccountViewController.h; sourceTree = "<group>"; };
 		34F46757080F46AB007800AB /* AWBonjourPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AWBonjourPlugin.m; sourceTree = "<group>"; };
@@ -2693,7 +2629,6 @@
 		4B588C9807AC23A9001832A9 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Frameworks/Adium Framework/English.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		4B588C9B07AC23B2001832A9 /* AIEditStateWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditStateWindowController.h; path = "Frameworks/Adium Framework/AIEditStateWindowController.h"; sourceTree = "<group>"; };
 		4B588C9C07AC23B2001832A9 /* AIEditStateWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditStateWindowController.m; path = "Frameworks/Adium Framework/AIEditStateWindowController.m"; sourceTree = "<group>"; };
-		4B5AAA1F03E02EB900A8010A /* PrefixColors.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = PrefixColors.plist; path = "Plugins/Standard Message View/PrefixColors.plist"; sourceTree = "<group>"; };
 		4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = DockBehaviorDefaults.plist; path = "Plugins/Global Events Preferences/DockBehaviorDefaults.plist"; sourceTree = "<group>"; };
 		4B7635A507A0581D0021CCD7 /* GaimDefaultsAIM.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsAIM.plist; path = "Plugins/Gaim Service/GaimDefaultsAIM.plist"; sourceTree = "<group>"; };
 		4B7644DC07A05E7E0021CCD7 /* GaimDefaultsICQ.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsICQ.plist; path = "Plugins/Gaim Service/GaimDefaultsICQ.plist"; sourceTree = "<group>"; };
@@ -2743,8 +2678,6 @@
 		4B970BF80535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDualWindowMessageAdvancedPreferences.h; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.h"; sourceTree = "<group>"; };
 		4B970BF90535B864002F28F9 /* ESDualWindowMessageAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESDualWindowMessageAdvancedPreferences.m; path = "Plugins/Dual Window Interface/ESDualWindowMessageAdvancedPreferences.m"; sourceTree = "<group>"; };
 		4B97DB6606AC123A0003EE49 /* linkToolbar.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = linkToolbar.png; sourceTree = "<group>"; };
-		4BA3DADA0520CD4000A8010A /* blue.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = blue.png; path = "Plugins/Standard Message View/blue.png"; sourceTree = "<group>"; };
-		4BA3DADB0520CD4000A8010A /* green.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = green.png; path = "Plugins/Standard Message View/green.png"; sourceTree = "<group>"; };
 		4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = EventSoundDefaults.plist; path = "Plugins/Global Events Preferences/EventSoundDefaults.plist"; sourceTree = "<group>"; };
 		4BA62D7F06C51256001D6B3C /* Status Icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Status Icons"; path = "Resources/Status Icons"; sourceTree = "<group>"; };
 		4BAA1B350632ED8B00D8B92C /* AIActionDetailsPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIActionDetailsPane.h; path = "Frameworks/Adium Framework/AIActionDetailsPane.h"; sourceTree = "<group>"; };
@@ -2851,8 +2784,6 @@
 		4BCAC71107B5A50F006641B9 /* VersionCannotConnect.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = VersionCannotConnect.nib; path = Resources/VersionCannotConnect.nib; sourceTree = "<group>"; };
 		4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "VersionChecker Defaults.plist"; path = "Resources/VersionChecker Defaults.plist"; sourceTree = "<group>"; };
 		4BCAC71307B5A50F006641B9 /* VersionUpToDate.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = VersionUpToDate.nib; path = Resources/VersionUpToDate.nib; sourceTree = "<group>"; };
-		4BCDEB4103D4DC9700A8010A /* AISMViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISMViewController.m; path = "Plugins/Standard Message View/AISMViewController.m"; sourceTree = "<group>"; };
-		4BCDEB4203D4DC9700A8010A /* AISMViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISMViewController.h; path = "Plugins/Standard Message View/AISMViewController.h"; sourceTree = "<group>"; };
 		4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSelectionView.nib; path = "Plugins/Dual Window Interface/AccountSelectionView.nib"; sourceTree = "<group>"; };
 		4BD548AE086086B5008DF3CB /* AISoundSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISoundSet.h; path = "Frameworks/Adium Framework/AISoundSet.h"; sourceTree = "<group>"; };
 		4BD548AF086086B5008DF3CB /* AISoundSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISoundSet.m; path = "Frameworks/Adium Framework/AISoundSet.m"; sourceTree = "<group>"; };
@@ -2883,10 +2814,6 @@
 		4BE6175407AC67EE0049C87D /* AIStateMenuPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStateMenuPlugin.m; path = Source/AIStateMenuPlugin.m; sourceTree = SOURCE_ROOT; };
 		4BE8AF6D0796EC1200B6E49B /* AIAbstractAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractAccount.h; path = "Frameworks/Adium Framework/AIAbstractAccount.h"; sourceTree = "<group>"; };
 		4BE8AF6E0796EC1200B6E49B /* AIAbstractAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractAccount.m; path = "Frameworks/Adium Framework/AIAbstractAccount.m"; sourceTree = "<group>"; };
-		4BE9200A03DED0E500A8010A /* AISMPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISMPreferences.h; path = "Plugins/Standard Message View/AISMPreferences.h"; sourceTree = "<group>"; };
-		4BE9200B03DED0E500A8010A /* AISMPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISMPreferences.m; path = "Plugins/Standard Message View/AISMPreferences.m"; sourceTree = "<group>"; };
-		4BE9200E03DED34C00A8010A /* AISMPrefView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AISMPrefView.nib; path = "Plugins/Standard Message View/AISMPrefView.nib"; sourceTree = "<group>"; };
-		4BE9201003DEE2FE00A8010A /* SMVDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = SMVDefaults.plist; path = "Plugins/Standard Message View/SMVDefaults.plist"; sourceTree = "<group>"; };
 		4BE9FFE7055981AB00359B15 /* Adium.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Adium.pch; sourceTree = SOURCE_ROOT; };
 		4BF2E194067CAE9200743318 /* Emoticons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Emoticons; path = Resources/Emoticons; sourceTree = "<group>"; };
 		4BF2E6B3067CB70E00743318 /* Message Styles */ = {isa = PBXFileReference; lastKnownFileType = folder; name = "Message Styles"; path = "Resources/Message Styles"; sourceTree = "<group>"; };
@@ -2938,7 +2865,6 @@
 		6E4D962F06B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimMSNJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimMSNJoinChatViewController.m"; sourceTree = "<group>"; };
 		6E5A43DD061160C50078C342 /* DCMessageContextDisplayPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPlugin.h; path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.h"; sourceTree = "<group>"; };
 		6E5A43DE061160C50078C342 /* DCMessageContextDisplayPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPlugin.m; path = "Plugins/Message Context Display/DCMessageContextDisplayPlugin.m"; sourceTree = "<group>"; };
-		6E6EA018066F9C2600FA0D91 /* MessageStyles.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = MessageStyles.plist; path = "Plugins/Standard Message View/MessageStyles.plist"; sourceTree = "<group>"; };
 		6E7C19B90623BF7F008A1C99 /* DCMessageContextDisplayPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCMessageContextDisplayPreferences.h; path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.h"; sourceTree = "<group>"; };
 		6E7C19BA0623BF7F008A1C99 /* DCMessageContextDisplayPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCMessageContextDisplayPreferences.m; path = "Plugins/Message Context Display/DCMessageContextDisplayPreferences.m"; sourceTree = "<group>"; };
 		6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimNovellJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimNovellJoinChatView.nib"; sourceTree = "<group>"; };
@@ -3092,8 +3018,6 @@
 		F5793984033E756E01A8010A /* MessageView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessageView.nib; path = "Plugins/Dual Window Interface/MessageView.nib"; sourceTree = "<group>"; };
 		F579398F033E759C01A8010A /* AIOfflineContactHidingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIOfflineContactHidingPlugin.h; path = Source/AIOfflineContactHidingPlugin.h; sourceTree = "<group>"; };
 		F5793990033E759C01A8010A /* AIOfflineContactHidingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIOfflineContactHidingPlugin.m; path = Source/AIOfflineContactHidingPlugin.m; sourceTree = "<group>"; };
-		F5793995033E75B001A8010A /* AISMViewPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AISMViewPlugin.h; path = "Plugins/Standard Message View/AISMViewPlugin.h"; sourceTree = "<group>"; };
-		F5793996033E75B001A8010A /* AISMViewPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AISMViewPlugin.m; path = "Plugins/Standard Message View/AISMViewPlugin.m"; sourceTree = "<group>"; };
 		F5819CE9032124CE01A8010A /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		F59DB3D6033EA9CD01A8010A /* AIAdium.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAdium.h; path = Source/AIAdium.h; sourceTree = "<group>"; };
 		F59DB3D7033EA9CD01A8010A /* AIAdium.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAdium.m; path = Source/AIAdium.m; sourceTree = "<group>"; };
@@ -3113,16 +3037,6 @@
 				3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */,
 				3419F75C05314FED00C68BA3 /* Adium.framework in Frameworks */,
 				B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		346C9C4706004517000F5A8A /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				34D8375307CC2F9E006466F2 /* AIUtilities.framework in Frameworks */,
-				3448761F06D1ED9E00DA778C /* Cocoa.framework in Frameworks */,
-				346C9C6906004536000F5A8A /* Adium.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3278,7 +3192,6 @@
 				346C9DA406004754000F5A8A /* Standard Message View.AdiumPlugin */,
 				6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */,
 				3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */,
-				3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */,
 				4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */,
 				349ECD2007C1BE2A0014623E /* Latex Plugin.AdiumPlugin */,
 				349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */,
@@ -3686,7 +3599,6 @@
 		346C9BCD060044F3000F5A8A /* Message Views */ = {
 			isa = PBXGroup;
 			children = (
-				F59F9A7F032BE67901A8010A /* Standard Message View */,
 				9CBADC5005712615005187DA /* WebKit Message View */,
 			);
 			name = "Message Views";
@@ -4119,19 +4031,6 @@
 			name = "General Preferences";
 			sourceTree = "<group>";
 		};
-		34CDB7AE0571D67800D50469 /* Preferences */ = {
-			isa = PBXGroup;
-			children = (
-				4BE9200A03DED0E500A8010A /* AISMPreferences.h */,
-				4BE9200B03DED0E500A8010A /* AISMPreferences.m */,
-				4BE9200E03DED34C00A8010A /* AISMPrefView.nib */,
-				4BE9201003DEE2FE00A8010A /* SMVDefaults.plist */,
-				4B5AAA1F03E02EB900A8010A /* PrefixColors.plist */,
-				6E6EA018066F9C2600FA0D91 /* MessageStyles.plist */,
-			);
-			name = Preferences;
-			sourceTree = "<group>";
-		};
 		34CF9DEF085B8B3D00D87E37 /* iTunes Now Playing */ = {
 			isa = PBXGroup;
 			children = (
@@ -4289,29 +4188,6 @@
 				34536750059BA8ED00A83D9E /* atos */,
 			);
 			name = "UNIX tools";
-			sourceTree = "<group>";
-		};
-		34F2E8C907C2D08F007EAAAB /* Flexible Table View */ = {
-			isa = PBXGroup;
-			children = (
-				34F2E8E207C2D0C4007EAAAB /* AIFlexibleTableCell.h */,
-				34F2E8E107C2D0C4007EAAAB /* AIFlexibleTableCell.m */,
-				34F2E8E007C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.h */,
-				34F2E8DF07C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.m */,
-				34F2E8DE07C2D0C4007EAAAB /* AIFlexibleTableImageCell.h */,
-				34F2E8DD07C2D0C4007EAAAB /* AIFlexibleTableImageCell.m */,
-				34F2E8DC07C2D0C3007EAAAB /* AIFlexibleTableRow.h */,
-				34F2E8DB07C2D0C3007EAAAB /* AIFlexibleTableRow.m */,
-				34F2E8DA07C2D0C3007EAAAB /* AIFlexibleTableSpanCell.h */,
-				34F2E8D907C2D0C3007EAAAB /* AIFlexibleTableSpanCell.m */,
-				34F2E8D807C2D0C3007EAAAB /* AIFlexibleTableStringCell.h */,
-				34F2E8D707C2D0C3007EAAAB /* AIFlexibleTableStringCell.m */,
-				34F2E8D607C2D0C3007EAAAB /* AIFlexibleTableTextCell.h */,
-				34F2E8D507C2D0C3007EAAAB /* AIFlexibleTableTextCell.m */,
-				34F2E8D407C2D0C3007EAAAB /* AIFlexibleTableView.h */,
-				34F2E8D307C2D0C3007EAAAB /* AIFlexibleTableView.m */,
-			);
-			name = "Flexible Table View";
 			sourceTree = "<group>";
 		};
 		34F52BD506E2B22800887BE2 /* ICQ */ = {
@@ -5864,21 +5740,6 @@
 			name = "Message Windows";
 			sourceTree = "<group>";
 		};
-		F59F9A7F032BE67901A8010A /* Standard Message View */ = {
-			isa = PBXGroup;
-			children = (
-				34F2E8C907C2D08F007EAAAB /* Flexible Table View */,
-				F5793995033E75B001A8010A /* AISMViewPlugin.h */,
-				F5793996033E75B001A8010A /* AISMViewPlugin.m */,
-				4BCDEB4203D4DC9700A8010A /* AISMViewController.h */,
-				4BCDEB4103D4DC9700A8010A /* AISMViewController.m */,
-				4BA3DADA0520CD4000A8010A /* blue.png */,
-				4BA3DADB0520CD4000A8010A /* green.png */,
-				34CDB7AE0571D67800D50469 /* Preferences */,
-			);
-			name = "Standard Message View";
-			sourceTree = "<group>";
-		};
 		F5A3C2DD039A516E01A8010A /* Password Prompt */ = {
 			isa = PBXGroup;
 			children = (
@@ -6045,24 +5906,6 @@
 			files = (
 				3419F3A805314BE000C68BA3 /* AISQLLoggerPlugin.h in Headers */,
 				3439FDA905794D0F00B2E449 /* JMSQLLoggerAdvancedPreferences.h in Headers */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		346C9C4406004517000F5A8A /* Headers */ = {
-			isa = PBXHeadersBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				346C9CC706004608000F5A8A /* AISMPreferences.h in Headers */,
-				346C9CCC0600460A000F5A8A /* AISMViewController.h in Headers */,
-				346C9CCF0600460B000F5A8A /* AISMViewPlugin.h in Headers */,
-				34F2E8E407C2D0C4007EAAAB /* AIFlexibleTableView.h in Headers */,
-				34F2E8E607C2D0C4007EAAAB /* AIFlexibleTableTextCell.h in Headers */,
-				34F2E8E807C2D0C4007EAAAB /* AIFlexibleTableStringCell.h in Headers */,
-				34F2E8EA07C2D0C4007EAAAB /* AIFlexibleTableSpanCell.h in Headers */,
-				34F2E8EC07C2D0C4007EAAAB /* AIFlexibleTableRow.h in Headers */,
-				34F2E8EE07C2D0C4007EAAAB /* AIFlexibleTableImageCell.h in Headers */,
-				34F2E8F007C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.h in Headers */,
-				34F2E8F207C2D0C4007EAAAB /* AIFlexibleTableCell.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6584,60 +6427,6 @@
 			productReference = 6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */;
 			productType = "com.apple.product-type.bundle";
 		};
-		346C9C4806004517000F5A8A /* Standard Message View */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = DADE8E18085507450062B664 /* Build configuration list for PBXNativeTarget "Standard Message View" */;
-			buildPhases = (
-				346C9C4406004517000F5A8A /* Headers */,
-				346C9C4506004517000F5A8A /* Resources */,
-				346C9C4606004517000F5A8A /* Sources */,
-				346C9C4706004517000F5A8A /* Frameworks */,
-			);
-			buildRules = (
-			);
-			buildSettings = {
-				FRAMEWORK_SEARCH_PATHS = "\"Frameworks/AIUtilities Framework/build\"";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
-				PRODUCT_NAME = "Standard Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			dependencies = (
-				346C9CBD060045E9000F5A8A /* PBXTargetDependency */,
-			);
-			name = "Standard Message View";
-			productName = "Standard Message View";
-			productReference = 3499F45106309AC80035B468 /* Standard Message View.AdiumPlugin */;
-			productSettingsXML = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
-<!DOCTYPE plist PUBLIC \"-//Apple Computer//DTD PLIST 1.0//EN\" \"http://www.apple.com/DTDs/PropertyList-1.0.dtd\">
-<plist version=\"1.0\">
-<dict>
-	<key>CFBundleDevelopmentRegion</key>
-	<string>English</string>
-	<key>CFBundleExecutable</key>
-	<string>Standard Message View</string>
-	<key>CFBundleGetInfoString</key>
-	<string></string>
-	<key>CFBundleIconFile</key>
-	<string></string>
-	<key>CFBundleIdentifier</key>
-	<string>com.MySoftwareCompany.Standard_Message_View</string>
-	<key>CFBundleInfoDictionaryVersion</key>
-	<string>6.0</string>
-	<key>CFBundlePackageType</key>
-	<string>APPL</string>
-	<key>CFBundleShortVersionString</key>
-	<string></string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
-	<key>CFBundleVersion</key>
-	<string>1.0.0d1</string>
-</dict>
-</plist>
-";
-			productType = "com.apple.product-type.bundle";
-		};
 		346C9C5306004525000F5A8A /* WebKit Message View */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = DADE8E13085507450062B664 /* Build configuration list for PBXNativeTarget "WebKit Message View" */;
@@ -6786,7 +6575,6 @@
 				4B7845EC059B50820048A8BA /* PBXTargetDependency */,
 				DA70F2B2080CAE8200C72D8B /* PBXTargetDependency */,
 				346C9D46060046AB000F5A8A /* PBXTargetDependency */,
-				4B90B54E064220B400D23731 /* PBXTargetDependency */,
 				34677B3F07CC3E8400F59F7B /* PBXTargetDependency */,
 				349C31630867D199000BF883 /* PBXTargetDependency */,
 			);
@@ -7172,7 +6960,6 @@
 				B72537BB058C4577004BA969 /* Latex Plugin */,
 				3419F3A605314BE000C68BA3 /* SQL Logger */,
 				34BD9EE00531476D000AB133 /* Stress Test */,
-				346C9C4806004517000F5A8A /* Standard Message View */,
 				346C9C5306004525000F5A8A /* WebKit Message View */,
 				4947F5BC0655E85200B791E5 /* Bonjour */,
 				DACF3ED3085574D0006BFB18 /* External Frameworks */,
@@ -7233,19 +7020,6 @@
 			files = (
 				341591E405463DA800291275 /* SQL_Logger_Prefs.nib in Resources */,
 				B7FD6C170596550F000C4D9D /* SQLLogging.plist in Resources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		346C9C4506004517000F5A8A /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				346C9CCA06004609000F5A8A /* AISMPrefView.nib in Resources */,
-				346C9CDB0600460F000F5A8A /* blue.png in Resources */,
-				346C9CE106004611000F5A8A /* green.png in Resources */,
-				346C9CE706004613000F5A8A /* PrefixColors.plist in Resources */,
-				346C9CEB06004614000F5A8A /* SMVDefaults.plist in Resources */,
-				6E6EA019066F9C2600FA0D91 /* MessageStyles.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7723,24 +7497,6 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		346C9C4606004517000F5A8A /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-				346C9CC806004609000F5A8A /* AISMPreferences.m in Sources */,
-				346C9CD30600460D000F5A8A /* AISMViewController.m in Sources */,
-				346C9CD50600460E000F5A8A /* AISMViewPlugin.m in Sources */,
-				34F2E8E307C2D0C4007EAAAB /* AIFlexibleTableView.m in Sources */,
-				34F2E8E507C2D0C4007EAAAB /* AIFlexibleTableTextCell.m in Sources */,
-				34F2E8E707C2D0C4007EAAAB /* AIFlexibleTableStringCell.m in Sources */,
-				34F2E8E907C2D0C4007EAAAB /* AIFlexibleTableSpanCell.m in Sources */,
-				34F2E8EB07C2D0C4007EAAAB /* AIFlexibleTableRow.m in Sources */,
-				34F2E8ED07C2D0C4007EAAAB /* AIFlexibleTableImageCell.m in Sources */,
-				34F2E8EF07C2D0C4007EAAAB /* AIFlexibleTableFramedTextCell.m in Sources */,
-				34F2E8F107C2D0C4007EAAAB /* AIFlexibleTableCell.m in Sources */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		346C9C5106004525000F5A8A /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -8215,11 +7971,6 @@
 			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			targetProxy = 346C9C9A06004585000F5A8A /* PBXContainerItemProxy */;
 		};
-		346C9CBD060045E9000F5A8A /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 34BD9DAF05314751000AB133 /* Adium.Framework */;
-			targetProxy = 346C9CBC060045E9000F5A8A /* PBXContainerItemProxy */;
-		};
 		346C9D46060046AB000F5A8A /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 346C9C5306004525000F5A8A /* WebKit Message View */;
@@ -8274,11 +8025,6 @@
 			isa = PBXTargetDependency;
 			name = AIBookmarksImport;
 			targetProxy = 4B8E0BDB086A16D4009A7A4D /* PBXContainerItemProxy */;
-		};
-		4B90B54E064220B400D23731 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 346C9C4806004517000F5A8A /* Standard Message View */;
-			targetProxy = 4B90B54D064220B400D23731 /* PBXContainerItemProxy */;
 		};
 		6C3E0152054445C000A4AE2E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
@@ -9697,75 +9443,6 @@
 			};
 			name = Default;
 		};
-		DADE8E19085507450062B664 /* Development */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				GCC_WARN_MISSING_PARENTHESES = NO;
-				GCC_WARN_SHADOW = NO;
-				GCC_WARN_SIGN_COMPARE = NO;
-				GCC_WARN_TYPECHECK_CALLS_TO_PRINTF = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = NO;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				PRODUCT_NAME = "Standard Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Development;
-		};
-		DADE8E1A085507450062B664 /* Deployment */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = "-DCRASH_REPORTER";
-				PRODUCT_NAME = "Standard Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Deployment;
-		};
-		DADE8E1B085507450062B664 /* Deployment-Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_ENABLE_OBJC_EXCEPTIONS = NO;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
-				MACOSX_DEPLOYMENT_TARGET = 10.3;
-				OTHER_CFLAGS = (
-					"-DCRASH_REPORTER",
-					"-DDEBUG_BUILD",
-					"-g3",
-				);
-				PRODUCT_NAME = "Standard Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = "Deployment-Debug";
-		};
-		DADE8E1C085507450062B664 /* Default */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = Adium.pch;
-				INFOPLIST_FILE = Plists/Standard_Message_View.plist;
-				PRODUCT_NAME = "Standard Message View";
-				WRAPPER_EXTENSION = AdiumPlugin;
-			};
-			name = Default;
-		};
 		DADE8E1E085507450062B664 /* Development */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -10335,17 +10012,6 @@
 				DADE8E15085507450062B664 /* Deployment */,
 				DADE8E16085507450062B664 /* Deployment-Debug */,
 				DADE8E17085507450062B664 /* Default */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Default;
-		};
-		DADE8E18085507450062B664 /* Build configuration list for PBXNativeTarget "Standard Message View" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				DADE8E19085507450062B664 /* Development */,
-				DADE8E1A085507450062B664 /* Deployment */,
-				DADE8E1B085507450062B664 /* Deployment-Debug */,
-				DADE8E1C085507450062B664 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Default;
