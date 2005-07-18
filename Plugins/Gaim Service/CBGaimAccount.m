@@ -2002,7 +2002,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 				NSString			*title;
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
-				if ((title = [self titleForContactMenuLabel:act->label
+				if (act &&
+					(title = [self titleForContactMenuLabel:act->label
 												 forContact:inContact])) { 
 					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																					 target:self
@@ -2076,7 +2077,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 					action->context = account->gc;
 					
 					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
-					if ((title = [self titleForAccountActionMenuLabel:action->label])) { 
+					if (action &&
+						(title = [self titleForAccountActionMenuLabel:action->label])) { 
 						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
