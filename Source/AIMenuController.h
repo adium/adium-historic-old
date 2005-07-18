@@ -91,6 +91,7 @@ typedef enum {
 	IBOutlet	NSMenuItem	*menuItem_aboutAdium;
 	IBOutlet	NSMenuItem	*menuItem_adiumXtras;
 	IBOutlet	NSMenuItem	*menuItem_preferences;
+	IBOutlet	NSMenuItem	*menuItem_services;
 	IBOutlet	NSMenuItem	*menuItem_hideAdium;
 	IBOutlet	NSMenuItem	*menuItem_hideOthers;
 	IBOutlet	NSMenuItem	*menuItem_showAll;
