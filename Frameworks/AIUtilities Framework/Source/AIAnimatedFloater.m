@@ -28,7 +28,7 @@
 
 + (id)animatedFloaterWithImage:(NSImage *)inImage size:(NSSize)inSize frames:(int)inFrames delay:(float)inDelay at:(NSPoint)inPoint
 {
-    return([[self alloc] initWithImage:inImage size:(NSSize)inSize frames:inFrames delay:inDelay at:inPoint]);
+    return [[self alloc] initWithImage:inImage size:(NSSize)inSize frames:inFrames delay:inDelay at:inPoint];
 }
 
 - (id)initWithImage:(NSImage *)inImage size:(NSSize)inSize frames:(int)inFrames delay:(float)inDelay at:(NSPoint)inPoint
@@ -59,7 +59,7 @@
     [panel setFrameOrigin:inPoint];
     [animatedView startAnimation:nil];
 
-    return(self);
+    return self;
 }
 
 - (void)dealloc

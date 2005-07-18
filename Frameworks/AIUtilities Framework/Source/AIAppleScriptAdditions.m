@@ -14,7 +14,7 @@
 //Execute an applescript function
 - (NSAppleEventDescriptor *)executeFunction:(NSString *)functionName error:(NSDictionary **)errorInfo
 {
-	return([self executeFunction:functionName withArguments:nil error:errorInfo]);
+	return [self executeFunction:functionName withArguments:nil error:errorInfo];
 }
 
 - (NSAppleEventDescriptor *)executeFunction:(NSString *)functionName withArguments:(NSArray *)argumentArray error:(NSDictionary **)errorInfo
@@ -54,7 +54,7 @@
 	}
 	
 	//Execute the event
-	return([self executeAppleEvent:containerEvent error:nil]);
+	return [self executeAppleEvent:containerEvent error:nil];
 }
 
 @end

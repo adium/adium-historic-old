@@ -44,7 +44,7 @@
 	if ((self = [super initWithFrame:frameRect])) {
 		[self _initAlternatingRowTableView];
 	}
-	return(self);
+	return self;
 }
 
 - (void)_initAlternatingRowTableView
@@ -105,7 +105,7 @@
 }
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-	return(acceptFirstMouse);
+	return acceptFirstMouse;
 }
 
 

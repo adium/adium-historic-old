@@ -605,11 +605,11 @@
 	if ([window isKeyWindow]) {
 		resp = [window firstResponder];
 		if (resp == lastResp) {
-			return([super needsDisplay]);
+			return [super needsDisplay];
 		}
 		
 	} else if (lastResp == nil) {
-		return([super needsDisplay]);
+		return [super needsDisplay];
 		
 	}
 	
@@ -619,7 +619,7 @@
 	lastResp = resp;
 	
 	[self setKeyboardFocusRingNeedsDisplayInRect:[self bounds]];
-	return(YES);
+	return YES;
 }
 
 /*

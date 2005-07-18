@@ -130,7 +130,7 @@
 		}
 	}
 	
-	return([outName autorelease]);
+	return [outName autorelease];
 }
 
 - (int)intValueFromHex
@@ -140,7 +140,7 @@
 
     [scanner scanHexInt:&value];
 
-    return(value);
+    return value;
 }
 
 #define BUNDLE_STRING	@"$$BundlePath$$"
@@ -174,7 +174,7 @@
     //Use carbon to truncate the string (this only works when drawing in the system font!)
     TruncateThemeText((CFMutableStringRef)string, kThemeSmallSystemFont, kThemeStateActive, inWidth, truncEnd, NULL);
     
-    return([string autorelease]);
+    return [string autorelease];
 }
 
 - (NSString *)stringWithEllipsisByTruncatingToLength:(unsigned int)length
@@ -263,7 +263,7 @@
 //        }
 //    }
 //    
-//    return([encodedString autorelease]);
+//    return [encodedString autorelease];
 //}
 //
 //- (NSString *)stringByDecodingURLEscapes
@@ -289,7 +289,7 @@
 //
 //        }
 //    }
-//    return([decodedString autorelease]);
+//    return [decodedString autorelease];
 //
 //}
 //
@@ -325,25 +325,25 @@
 //char intToHex(int digit)
 //{
 //    if (digit > 9) {
-//        return('a' + digit - 10);
+//        return ('a' + digit - 10);
 //    } else {
-//        return('0' + digit);
+//        return ('0' + digit);
 //    }
 //}
 //
 //int hexToInt(char hex)
 //{
 //    if (hex >= '0' && hex <= '9') {
-//        return(hex - '0');
+//        return (hex - '0');
 //		
 //    } else if (hex >= 'a' && hex <= 'f') {
-//        return(hex - 'a' + 10);
+//        return (hex - 'a' + 10);
 //		
 //    } else if (hex >= 'A' && hex <= 'F') {
-//        return(hex - 'A' + 10);
+//        return (hex - 'A' + 10);
 //		
 //    } else {
-//        return(0);
+//        return 0;
 //		
 //    }
 //}

@@ -65,7 +65,7 @@
 		toolbarHeight = NSHeight(windowFrame) - NSHeight([[self contentView] frame]);
 	}
 	
-	return(toolbarHeight);
+	return toolbarHeight;
 }
 
 /*
@@ -73,7 +73,7 @@
  */
 - (BOOL)isTextured
 {
-    return(([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
+    return (([self styleMask] & NSTexturedBackgroundWindowMask) != 0);
 }
 
 /*
@@ -81,7 +81,7 @@
  */
 - (BOOL)isBorderless
 {
-    return([self styleMask] == NSBorderlessWindowMask);
+    return ([self styleMask] == NSBorderlessWindowMask);
 }
 
 /*

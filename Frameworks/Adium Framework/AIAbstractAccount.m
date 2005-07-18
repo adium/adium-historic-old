@@ -568,7 +568,7 @@
 		[self stopAutoRefreshingStatusKey:key];
 	}
 
-	return (filteredValue);
+	return filteredValue;
 }
 
 /*!
@@ -786,9 +786,9 @@
  */
 - (NSArray *)contacts
 {
-	return ([[adium contactController] allContactsInGroup:nil
+	return [[adium contactController] allContactsInGroup:nil
 												subgroups:YES
-												onAccount:self]);
+												onAccount:self];
 }
 
 /*!
@@ -804,9 +804,9 @@
 		sourceUID = [sourceUID compactedString];
 	}
 	
-	return([[adium contactController] contactWithService:service
+	return [[adium contactController] contactWithService:service
 												 account:self
-													 UID:sourceUID]);
+													 UID:sourceUID];
 }
 
 

@@ -41,12 +41,12 @@
 //-----------------------
 + (AISocket *)socketWithHost:(NSString *)host port:(int)port
 {
-    return([[[self alloc] initWithHost:host port:port] autorelease]);
+    return [[[self alloc] initWithHost:host port:port] autorelease];
 }
 
 - (BOOL)isValid
 {
-    return(isValid);
+    return isValid;
 }
 
 //Send data
@@ -75,7 +75,7 @@
         success = YES;
     }
 
-    return(success);
+    return success;
 }
 
 
@@ -126,7 +126,7 @@
         }
     }
 
-    return(allDataAvailable);
+    return allDataAvailable;
 }
 
 - (BOOL)getDataToNewline:(NSData **)outData remove:(BOOL)shouldRemove
@@ -172,7 +172,7 @@
         }
     }
 
-    return(lineAvailable);
+    return lineAvailable;
 }
 
 //Remove data from the buffer
@@ -193,12 +193,12 @@
 
 - (NSString *)hostIP
 {
-    return(hostIP);
+    return hostIP;
 }
 
 - (int)hostPort
 {
-    return(hostPort);
+    return hostPort;
 }
 
 
@@ -219,7 +219,7 @@
     hostEnt = gethostbyname([host cString]);
     if (!hostEnt) {
         NSLog(@"Error finding host");
-        return(nil);
+        return nil;
     }
     address = inet_ntoa(*((struct in_addr *)hostEnt->h_addr));
     hostIP = [[NSString alloc] initWithCString:address]; //Remember our host IP
@@ -229,7 +229,7 @@
     theSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (theSocket < 0) {
         NSLog(@"Error creating socket");
-        return(nil);
+        return nil;
     }
 
     //Make it non-blocking
@@ -251,7 +251,7 @@
         isValid = NO;
     }
 
-    return(self);
+    return self;
 }
 
 //Returns YES if the connection is ready for sending
@@ -279,11 +279,11 @@
         if (error != 0) {
             NSLog(@"Socket(opt) error: %i",(int)error);
             isValid = NO;
-            return(NO);
+            return NO;
         }
     }
 
-    return(result != 0);
+    return (result != 0);
 }
 
 //Returns YES if the connection is ready for receiving
@@ -303,7 +303,7 @@
 
     result = select(theSocket + 1, &receivefds, NULL, NULL, &timeOut);
 
-    return(result != 0);
+    return (result != 0);
 }
 
 - (void)dealloc

@@ -94,7 +94,7 @@
 	NSTimeInterval secondsToShow = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
 	AISCLViewPlugin *contactListViewPlugin = (AISCLViewPlugin *)[[adium componentLoader] pluginWithClassName:@"AISCLViewPlugin"];
 	AIListWindowController *windowController = [contactListViewPlugin contactListWindowController];
-	
+	NSLog(@"Hit performActionID:forListObject:withDetails:triggeringEventID::");
 	[windowController setPreventHiding:YES];
 	
 	if ([windowController windowShouldHideOnDeactivate]) {

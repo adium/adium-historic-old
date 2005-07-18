@@ -288,12 +288,12 @@
 {
 	NSAttributedString	*string = [[[NSAttributedString alloc] initWithString:FONT_HEIGHT_STRING
 																   attributes:attributes] autorelease];
-	return([string heightWithWidth:1e7]);
+	return [string heightWithWidth:1e7];
 }
 
 + (NSAttributedString *)stringWithString:(NSString *)inString
 {
-	return([[[NSAttributedString alloc] initWithString:inString] autorelease]);
+	return [[[NSAttributedString alloc] initWithString:inString] autorelease];
 }
 
 - (float)heightWithWidth:(float)width
@@ -322,12 +322,12 @@
 	[textContainer release];
 	[layoutManager release];
 	
-    return(height);
+    return height;
 }
 
 - (NSData *)dataRepresentation
 {
-	return([NSArchiver archivedDataWithRootObject:self]);
+	return [NSArchiver archivedDataWithRootObject:self];
 }
 
 + (NSAttributedString *)stringWithData:(NSData *)inData
@@ -356,7 +356,7 @@
 		[unarchiver release];
 	}
 	
-	return(returnValue);
+	return returnValue;
 }
 
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings
@@ -464,7 +464,7 @@
 
 - (NSAttributedString *)attributedString
 {
-	return([NSAttributedString stringWithData:self]);
+	return [NSAttributedString stringWithData:self];
 }
 
 @end

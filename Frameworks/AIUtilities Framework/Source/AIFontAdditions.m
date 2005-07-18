@@ -69,13 +69,13 @@
         [fontDict setObject:sizeDict forKey:fontName];
 	}
 
-    return(font);
+    return font;
 }
 
 //Returns an attributed string containing this font.  Useful for saving & restoring fonts to preferences/plists
 - (NSString *)stringRepresentation
 {
-    return([NSString stringWithFormat:@"%@,%i",[self fontName],(int)[self pointSize]]);
+    return [NSString stringWithFormat:@"%@,%i",[self fontName],(int)[self pointSize]];
 }
 
 - (BOOL)supportsBold
@@ -116,7 +116,7 @@
     fontName = [self substringToIndex:divider];
     fontSize = [[self substringFromIndex:divider+1] intValue];
 
-    return([NSFont cachedFontWithName:fontName size:fontSize]);
+    return [NSFont cachedFontWithName:fontName size:fontSize];
 }
 
 @end

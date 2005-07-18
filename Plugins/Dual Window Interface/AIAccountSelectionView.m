@@ -258,7 +258,7 @@
  */
 - (BOOL)_accountIsAvailable:(AIAccount *)inAccount
 {
-	return([[[[chat listObject] service] serviceClass] isEqualToString:[[inAccount service] serviceClass]] &&
+	return ([[[[chat listObject] service] serviceClass] isEqualToString:[[inAccount service] serviceClass]] &&
 		   [inAccount integerStatusObjectForKey:@"Online"]);
 }
 

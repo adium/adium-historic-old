@@ -56,7 +56,7 @@
 	[self resetRowHeightCache];
 }
 - (NSCell *)contentCell{
-	return(contentCell);
+	return contentCell;
 }
 
 //Cell used for group rows
@@ -69,17 +69,17 @@
 	[self resetRowHeightCache];
 }
 - (NSCell *)groupCell{
-	return(groupCell);
+	return groupCell;
 }
 
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-	return([self isExpandable:item] ? groupCell : contentCell);
+	return ([self isExpandable:item] ? groupCell : contentCell);
 }
 
 - (int)heightForRow:(int)row
 {
-	return([self isExpandable:[self itemAtRow:row]] ? groupRowHeight : contentRowHeight);
+	return ([self isExpandable:[self itemAtRow:row]] ? groupRowHeight : contentRowHeight);
 }
 
 @end

@@ -362,9 +362,9 @@
 		return [[account userIcon] imageByScalingToSize:NSMakeSize(28,28)];
 
 	} else if ([identifier isEqualToString:@"service"]) {
-		return([[AIServiceIcons serviceIconForObject:account
+		return [[AIServiceIcons serviceIconForObject:account
 												type:AIServiceIconLarge
-										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)]);
+										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)];
 
 	} else if ([identifier isEqualToString:@"name"]) {
 		return [[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT;

@@ -21,7 +21,7 @@
 	if ((self = [super initWithCoder:aDecoder])) {
 		self = [self _init];
 	}
-	return(self);
+	return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
@@ -36,7 +36,7 @@
 {
 	dragDelegate = nil;
 	lastEnteredOp = NSDragOperationNone;
-    return(self);
+    return self;
 }
 
 - (void)setDragDelegate:(id)drag

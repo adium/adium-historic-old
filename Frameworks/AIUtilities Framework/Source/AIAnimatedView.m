@@ -48,7 +48,7 @@
 		action = nil;
 	}
 
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -82,7 +82,7 @@
 
 - (BOOL)isOpaque
 {
-    return(NO);
+    return NO;
 }
 
 - (void)setDelay:(float)inDelay

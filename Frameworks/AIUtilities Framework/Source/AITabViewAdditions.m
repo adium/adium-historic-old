@@ -27,7 +27,7 @@
 
 - (int)indexOfSelectedTabViewItem
 {
-	return([self indexOfTabViewItem:[self selectedTabViewItem]]);
+	return [self indexOfTabViewItem:[self selectedTabViewItem]];
 }
 
 

@@ -46,7 +46,7 @@
 	NSParameterAssert([delegate respondsToSelector:@selector(rolloverButton:mouseChangedToInsideButton:)]);
 }
 - (NSObject<AIRolloverButtonDelegate> *)delegate{
-    return(delegate);
+    return delegate;
 }
 
 //Cursor Tracking  -----------------------------------------------------------------------------------------------------

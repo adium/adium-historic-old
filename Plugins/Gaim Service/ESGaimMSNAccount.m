@@ -145,7 +145,7 @@ gboolean gaim_init_msn_plugin(void);
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	return([AIHTMLDecoder encodeHTML:inAttributedString
+	return [AIHTMLDecoder encodeHTML:inAttributedString
 							 headers:NO
 							fontTags:YES
 				  includingColorTags:YES
@@ -158,7 +158,7 @@ gboolean gaim_init_msn_plugin(void);
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:NO
 					  simpleTagsOnly:YES
-					  bodyBackground:NO]);
+					  bodyBackground:NO];
 }
 
 #pragma mark Status

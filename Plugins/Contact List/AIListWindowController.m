@@ -347,8 +347,8 @@
 //#warning hmm, need?
 //	if ([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_STYLE
 //												 group:PREF_GROUP_LIST_LAYOUT] intValue] != WINDOW_STYLE_MOCKIE) {
-//		return([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
-//														 group:PREF_GROUP_LIST_LAYOUT] floatValue]);
+//		return [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
+//														 group:PREF_GROUP_LIST_LAYOUT] floatValue];
 //	} else {
 //		return 0.0;
 //	}

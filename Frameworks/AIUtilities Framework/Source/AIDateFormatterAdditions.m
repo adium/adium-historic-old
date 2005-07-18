@@ -31,20 +31,20 @@ typedef enum {
 
 + (NSDateFormatter *)localizedDateFormatter
 {
-	return([[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
-								   allowNaturalLanguage:NO] autorelease]);
+	return [[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSDateFormatString] 
+								   allowNaturalLanguage:NO] autorelease];
 }
 + (NSDateFormatter *)localizedShortDateFormatter
 {
-	return([[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
-								   allowNaturalLanguage:NO] autorelease]);
+	return [[[NSDateFormatter alloc] initWithDateFormat:[[NSUserDefaults standardUserDefaults] stringForKey:NSShortDateFormatString] 
+								   allowNaturalLanguage:NO] autorelease];
 }
 
 + (NSDateFormatter *)localizedDateFormaterShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
 {
     NSString	*format = [self localizedDateFormatStringShowingSeconds:seconds showingAMorPM:showAmPm];
 	
-	return([[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease]);	
+	return [[[NSDateFormatter alloc] initWithDateFormat:format allowNaturalLanguage:NO] autorelease];
 }
 
 + (NSString *)localizedDateFormatStringShowingSeconds:(BOOL)seconds showingAMorPM:(BOOL)showAmPm
@@ -74,7 +74,7 @@ typedef enum {
 
     //Check the cache for this string, return if found
     if (cache[type]) {
-        return(cache[type]);
+        return cache[type];
     }
 
     //use system-wide defaults for date format
@@ -103,7 +103,7 @@ typedef enum {
     //Cache the result
     cache[type] = [localizedDateFormatString retain];
 
-    return([localizedDateFormatString autorelease]);
+    return [localizedDateFormatString autorelease];
 }
 
 + (NSString *)stringForTimeIntervalSinceDate:(NSDate *)inDate
@@ -263,7 +263,7 @@ typedef enum {
 		}
 	}
 
-	return(timeString ? timeString : @"");
+	return (timeString ? timeString : @"");
 }
 
 

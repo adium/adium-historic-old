@@ -31,7 +31,7 @@
 		allowsDuplicatesInToolbar = NO;
 		flexibleWidth = NO;
 	}
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -72,12 +72,12 @@
     
     [newItem configureForObjects:[self configurationObjects]];
 
-    return(newItem);
+    return newItem;
 }
 
 //Toolbar item identifier
 - (NSString *)identifier{
-    return(identifier);
+    return identifier;
 }
 
 //Palette Label, displayed by the item on the customization palette
@@ -88,7 +88,7 @@
     }
 }
 - (NSString *)paletteLabel{
-    return(paletteLabel);
+    return paletteLabel;
 }
 
 
@@ -104,7 +104,7 @@
     }
 }
 - (NSString *)toolTip{
-    return(toolTip);
+    return toolTip;
 }
 
 
@@ -116,7 +116,7 @@
     }
 }
 - (id)target{
-    return(target);
+    return target;
 }
 
 - (void)setAction:(SEL)inAction
@@ -124,7 +124,7 @@
     action = inAction;
 }
 - (SEL)action{
-    return(action);
+    return action;
 }
 
 
@@ -136,7 +136,7 @@
     }
 }
 - (BOOL)isEnabled{
-    return(enabled);
+    return enabled;
 }
 
 
@@ -152,7 +152,7 @@
     }
 }
 - (NSImage *)image{
-    return(image);
+    return image;
 }
 
 
@@ -161,7 +161,7 @@
     allowsDuplicatesInToolbar = inValue;
 }
 - (BOOL)allowsDuplicatesInToolbar{
-    return(allowsDuplicatesInToolbar);
+    return allowsDuplicatesInToolbar;
 }
 
 
@@ -179,7 +179,7 @@
         [(AIMiniToolbarButton *)view setEnabled:enabled];
     }
 
-    return(view);
+    return view;
 }
 
 
@@ -193,7 +193,7 @@
     }
 }
 - (NSObject<AIMiniToolbarItemDelegate> *)delegate{
-    return(delegate);
+    return delegate;
 }
 
 
@@ -206,13 +206,13 @@
 
     //Inform our delegate so it can configure this item
     if(delegate){
-        return([delegate configureToolbarItem:self forObjects:inObjects]);
+        return [delegate configureToolbarItem:self forObjects:inObjects];
     }else{
-        return(YES);
+        return YES;
     }
 }
 - (NSDictionary *)configurationObjects{
-    return(objects);
+    return objects;
 }
 
 
@@ -221,7 +221,7 @@
     flexibleWidth = inflexibleWidth;
 }
 - (BOOL)flexibleWidth{
-    return(flexibleWidth);
+    return flexibleWidth;
 }
 
 

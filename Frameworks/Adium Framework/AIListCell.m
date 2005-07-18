@@ -345,17 +345,17 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 #endif
 
 	if (!leftText && !rightText) {
-		return((useAliasesAsRequested ? 
+		return (useAliasesAsRequested ? 
 				[listObject longDisplayName] :
-				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName])));
+				([listObject formattedUID] ? [listObject formattedUID] : [listObject longDisplayName]));
 	} else {
 		//Combine left text, the object name, and right text
-		return([NSString stringWithFormat:@"%@%@%@",
+		return [NSString stringWithFormat:@"%@%@%@",
 			(leftText ? leftText : @""),
 			(useAliasesAsRequested ? [listObject longDisplayName] : ([listObject formattedUID] ?
 																	 [listObject formattedUID] :
 																	 [listObject longDisplayName])),
-			(rightText ? rightText : @"")]);
+			(rightText ? rightText : @"")];
 	}
 }
 
@@ -401,7 +401,7 @@ static NSMutableParagraphStyle	*leftParagraphStyleWithTruncatingTail = nil;
 //YES if our cell is currently selected
 - (BOOL)cellIsSelected
 {
-	return([self isHighlighted] &&
+	return ([self isHighlighted] &&
 		   [[controlView window] isKeyWindow] &&
 		   [[controlView window] firstResponder] == controlView);
 }

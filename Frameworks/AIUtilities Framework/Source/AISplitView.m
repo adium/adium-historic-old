@@ -50,7 +50,7 @@
 	dividerThickness = inThickness;
 }
 - (float)dividerThickness{
-	return(dividerThickness);
+	return dividerThickness;
 }
 
 //Divider drawing

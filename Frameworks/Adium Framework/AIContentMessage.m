@@ -37,12 +37,12 @@
 			message:(NSAttributedString *)inMessage
 		  autoreply:(BOOL)inAutoReply
 {
-    return([[[self alloc] initWithChat:inChat
+    return [[[self alloc] initWithChat:inChat
 								source:inSource
 						   destination:inDest
 								  date:inDate
 							   message:inMessage
-							 autoreply:inAutoReply] autorelease]);
+							 autoreply:inAutoReply] autorelease];
 }
 
 //Content Identifier

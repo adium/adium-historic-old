@@ -28,7 +28,7 @@
 	[newCell setDrawsGradientHighlight:drawsGradient];
 	[newCell setIgnoresFocus:ignoresFocus];
 	
-	return(newCell);
+	return newCell;
 }
 
 //Draw Gradient
@@ -38,7 +38,7 @@
 }
 - (BOOL)drawsGradientHighlight
 {
-	return(drawsGradient);
+	return drawsGradient;
 }
 
 //Ignore focus (Draw as active regardless of focus)
@@ -48,7 +48,7 @@
 }
 - (BOOL)ignoresFocus
 {
-	return(ignoresFocus);
+	return ignoresFocus;
 }
 
 - (void)setMaxSize:(NSSize)inMaxSize

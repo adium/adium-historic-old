@@ -36,23 +36,23 @@ static void *adiumGaimNotifyMessage(GaimNotifyMsgType type, const char *title, c
 static void *adiumGaimNotifyEmails(size_t count, gboolean detailed, const char **subjects, const char **froms, const char **tos, const char **urls, GCallback cb,void *userData)
 {
     //Values passed can be null
-    return([ESGaimNotifyEmailController handleNotifyEmails:count 
+    return [ESGaimNotifyEmailController handleNotifyEmails:count 
 												  detailed:detailed
 												  subjects:subjects
 													 froms:froms
 													   tos:tos
-													  urls:urls]);
+													  urls:urls];
 }
 
 static void *adiumGaimNotifyEmail(const char *subject, const char *from, const char *to, const char *url, GCallback cb,void *userData)
 {
-	return(adiumGaimNotifyEmails(1,
+	return adiumGaimNotifyEmails(1,
 								 TRUE,
 								 (subject ? &subject : NULL),
 								 (from ? &from : NULL),
 								 (to ? &to : NULL),
 								 (url ? &url : NULL),
-								 cb, userData));
+								 cb, userData);
 }
 
 static void *adiumGaimNotifyFormatted(const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)

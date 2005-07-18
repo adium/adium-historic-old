@@ -36,7 +36,7 @@
     dictPath = [ownerBundle pathForResource:name ofType:@"plist"];    
     dict = [NSDictionary dictionaryWithContentsOfFile:dictPath];
 
-    return(dict);
+    return dict;
 }
 
 // returns the dictionary from the specified path
@@ -55,7 +55,7 @@
         dictionary = [NSDictionary dictionary];
     }
 
-    return(dictionary);
+    return dictionary;
 }
 
 // saves this dictionary to the specified path
@@ -107,7 +107,7 @@
         dictionary = [NSMutableDictionary dictionary];
     }
 
-    return(dictionary);
+    return dictionary;
 }
 
 - (void)translate:(NSDictionary *)translation add:(NSDictionary *)addition remove:(NSSet *)removal

@@ -132,28 +132,28 @@
 	NSSize	intercellSpacing = [self intercellSpacing];
 
 	[self updateRowHeightCache];
-	return(NSMakeRect(columnRect.origin.x + round((intercellSpacing.width)/2),
+	return NSMakeRect(columnRect.origin.x + round((intercellSpacing.width)/2),
 					  rowOriginCache[row],
 					  columnRect.size.width - floor((intercellSpacing.width)/2),
-					  rowHeightCache[row]));
+					  rowHeightCache[row]);
 }
 
 - (NSRect)rectOfRow:(int)row
 {
 	[self updateRowHeightCache];
-	return(NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]));
+	return NSMakeRect(0, rowOriginCache[row], [self frame].size.width, rowHeightCache[row]);
 }
 
 - (int)rowAtPoint:(NSPoint)point
 {
 	[self updateRowHeightCache];
 
-	if (point.y < 0 || point.y > totalHeight) return(-1);
+	if (point.y < 0 || point.y > totalHeight) return -1;
 
 	//Find the top visible cell
 	int row = 0;
 	while (row < entriesInCache-1 && rowOriginCache[row+1] <= point.y) row++;
-	return(row);
+	return row;
 }
 
 - (NSRange)rowsInRect:(NSRect)rect
@@ -174,7 +174,7 @@
 		range.length++;
 	}while (row < entriesInCache && rowOriginCache[row++] <= rect.origin.y + rect.size.height);
 
-	return(range);
+	return range;
 }
 
 
@@ -262,12 +262,12 @@
 
 - (id)cellForTableColumn:(NSTableColumn *)tableColumn item:(id)item
 {
-    return([tableColumn dataCell]);
+    return [tableColumn dataCell];
 }
 
 - (int)heightForRow:(int)row
 {
-	return([[self dataSource] outlineView:self heightForItem:[self itemAtRow:row] atRow:row]);
+	return [[self dataSource] outlineView:self heightForItem:[self itemAtRow:row] atRow:row];
 }
 
 #pragma mark Drawing
@@ -384,7 +384,7 @@
 	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
 
 
-	return([image imageByFadingToFraction:DRAG_IMAGE_FRACTION]);
+	return [image imageByFadingToFraction:DRAG_IMAGE_FRACTION];
 
 }
 
@@ -401,7 +401,7 @@
 
 	free(buf);
 
-	return(image);
+	return image;
 }
 
 //Our default drag image will be cropped incorrectly, so we need a custom one here
@@ -419,14 +419,14 @@
 
 	free(buf);
 
-	return(image);
+	return image;
 }
 
 
 - (int)totalHeight
 {
 	[self updateRowHeightCache];
-	return(totalHeight);
+	return totalHeight;
 }
 
 

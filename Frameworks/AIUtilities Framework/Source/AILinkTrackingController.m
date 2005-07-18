@@ -45,13 +45,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //Create a link tracking controller for any view
 + (id)linkTrackingControllerForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer
 {
-    return([[[self alloc] initForView:inControlView withTextStorage:inTextStorage layoutManager:inLayoutManager textContainer:inTextContainer] autorelease]);
+    return [[[self alloc] initForView:inControlView withTextStorage:inTextStorage layoutManager:inLayoutManager textContainer:inTextContainer] autorelease];
 }
 
 //Create a tracking controller for a text view
 + (id)linkTrackingControllerForTextView:(NSTextView *)inTextView
 {
-    return([[[self alloc] initForView:inTextView withTextStorage:[inTextView textStorage] layoutManager:[inTextView layoutManager] textContainer:[inTextView textContainer]] autorelease]);
+    return [[[self alloc] initForView:inTextView withTextStorage:[inTextView textStorage] layoutManager:[inTextView layoutManager] textContainer:[inTextView textContainer]] autorelease];
 }
 
 //Track links in the passed rect.  Returns YES if links exist within our text.  Pass a 0 width/height visible rect to stop any link tracking.
@@ -208,7 +208,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 	
     //Free our copy of the link region
     if (linkRects) free(linkRects);
-    return(success);
+    return success;
 }
 
 //Init
@@ -370,11 +370,11 @@ BOOL _mouseInRects(NSPoint aPoint, NSRectArray someRects, int arraySize, BOOL fl
 
     for (index = 0; index < arraySize; index++) {
         if (NSMouseInRect(aPoint, someRects[index], flipped)) {
-            return(YES);
+            return YES;
         }
     }
 
-    return(NO);
+    return NO;
 }
 
 //Copy rects

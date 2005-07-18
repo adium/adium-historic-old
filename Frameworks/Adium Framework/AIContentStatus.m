@@ -36,12 +36,12 @@
 		   message:(NSAttributedString *)inMessage
 		  withType:(NSString *)inStatus
 {
-    return([[[self alloc] initWithChat:inChat
+    return [[[self alloc] initWithChat:inChat
 								source:inSource
 						   destination:inDest
 								  date:inDate
 							   message:inMessage
-							  withType:inStatus] autorelease]);
+							  withType:inStatus] autorelease];
 }
 
 //init

@@ -95,7 +95,7 @@
         [item setMenuFormRepresentation:mItem];
     }
     
-    return(item);
+    return item;
 }
 
 /*!

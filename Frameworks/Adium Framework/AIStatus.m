@@ -171,10 +171,10 @@
 		statusType = [self statusType];
 	}
 
-	return([AIStatusIcons statusIconForStatusName:statusName
+	return [AIStatusIcons statusIconForStatusName:statusName
 									   statusType:statusType
 										 iconType:AIStatusIconList
-										direction:AIIconNormal]);
+										direction:AIIconNormal];
 }
 
 /*!
@@ -526,10 +526,10 @@
 
 - (NSString *)description
 {
-	return([NSString stringWithFormat:@"<%@: %x [%@]>",
+	return [NSString stringWithFormat:@"<%@: %x [%@]>",
 		NSStringFromClass([self class]),
 		self,
-		[[self title] stringWithEllipsisByTruncatingToLength:20]]);
+		[[self title] stringWithEllipsisByTruncatingToLength:20]];
 }
 
 @end

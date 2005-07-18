@@ -20,7 +20,7 @@
 
 //Nib to load
 - (NSString *)nibName{
-    return(@"GaimOscarAIMAccountView");    
+    return @"GaimOscarAIMAccountView";
 }
 
 //Configure our controls

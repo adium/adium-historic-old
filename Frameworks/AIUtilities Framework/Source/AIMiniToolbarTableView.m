@@ -38,7 +38,7 @@
 //Allow dragging from the table view while the window is in the background
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-    return(YES);
+    return YES;
 }
 
 @end

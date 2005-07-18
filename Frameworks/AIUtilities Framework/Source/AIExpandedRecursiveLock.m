@@ -16,7 +16,7 @@
 	if ((self = [super init])) {
 		locksByCurrentOwner = 0;
 	}
-	return(self);
+	return self;
 }
 - (void)lock
 {
@@ -38,7 +38,7 @@
 		locksByCurrentOwner++;
 	}
 	
-	return(obtainedLock);
+	return obtainedLock;
 }
 
 - (BOOL)tryLock
@@ -49,7 +49,7 @@
 		locksByCurrentOwner++;
 	}
 	
-	return(obtainedLock);	
+	return obtainedLock;
 }
 
 /*
@@ -59,7 +59,7 @@
   */
 - (BOOL)isUnlocked
 {
-	return(locksByCurrentOwner == 0);
+	return (locksByCurrentOwner == 0);
 }
 
 //Relinquish all locks by the present owner

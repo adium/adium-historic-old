@@ -108,30 +108,30 @@
 //Enable all categories
 - (BOOL)validateToolbarItem:(NSToolbarItem *)theItem
 {
-    return(YES);
+    return YES;
 }
 
 //Access to our toolbar items
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier
  willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+    return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
 }
 
 //Default set (All items, sorted by name)
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([[toolbarItems allKeys] sortedArrayUsingSelector:@selector(compare:)]);
+    return [[toolbarItems allKeys] sortedArrayUsingSelector:@selector(compare:)];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([self toolbarDefaultItemIdentifiers:toolbar]);
+    return [self toolbarDefaultItemIdentifiers:toolbar];
 }
 
 - (NSArray *)toolbarSelectableItemIdentifiers:(NSToolbar *)toolbar
 {
-    return([self toolbarDefaultItemIdentifiers:toolbar]);
+    return [self toolbarDefaultItemIdentifiers:toolbar];
 }
 
 

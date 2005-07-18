@@ -558,9 +558,9 @@
 
 + (NSString *)defaultVariantForBundle:(NSBundle *)inBundle
 {
-	return([[inBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue] < 3 ? 
+	return [[inBundle objectForInfoDictionaryKey:KEY_WEBKIT_VERSION] intValue] < 3 ? 
 		   [self noVariantNameForBundle:inBundle] : 
-		   [inBundle objectForInfoDictionaryKey:@"DefaultVariant"]);	
+		   [inBundle objectForInfoDictionaryKey:@"DefaultVariant"];
 }
 
 //Keyword Replacement --------------------------------------------------------------------------------------------------

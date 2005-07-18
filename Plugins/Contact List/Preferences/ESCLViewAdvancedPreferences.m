@@ -14,13 +14,13 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_ContactList);
+    return AIPref_Advanced_ContactList;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Display Preferences",nil));
+    return AILocalizedString(@"Display Preferences",nil);
 }
 - (NSString *)nibName{
-    return(@"CLViewAdvancedPrefs");
+    return @"CLViewAdvancedPrefs";
 }
 
 - (NSDictionary *)restorablePreferences
@@ -38,7 +38,7 @@
 		nil];
 								
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	return(defaultsDict);
+	return defaultsDict;
 }
 
 //Called in response to all preference controls, applies new settings

@@ -77,9 +77,9 @@ static NSSize				menuIconCacheSize;
 									   forKey:[inObject internalObjectID]];
 	}
 
-	return(userIcon ?
-		   userIcon :
-		   [AIServiceIcons serviceIconForObject:inObject
+	return (userIcon ?
+		   	userIcon :
+			[AIServiceIcons serviceIconForObject:inObject
 										   type:AIServiceIconSmall
 									  direction:AIIconNormal]);
 }

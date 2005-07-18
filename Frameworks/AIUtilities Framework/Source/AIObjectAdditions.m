@@ -19,7 +19,7 @@
 - (unsigned int) hash
 {
 	enum { numBitsPerUnsignedInt = sizeof(unsigned int) * 8 };
-	return( ((unsigned int) self >> 4) | (unsigned int) self << (numBitsPerUnsignedInt - 4));
+	return (((unsigned int) self >> 4) | (unsigned int) self << (numBitsPerUnsignedInt - 4));
 }
 
 @end
@@ -61,7 +61,7 @@
 							waitUntilDone:NO];
 	}
 
-	return(returnValue);
+	return returnValue;
 }
 
 //Included to allow uniform coding
@@ -99,7 +99,7 @@
 		[self performSelectorOnMainThread:aSelector withObject:argument1 waitUntilDone:NO];
 	}
 	
-	return(returnValue);
+	return returnValue;
 }
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2
@@ -131,7 +131,7 @@
 		[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 waitUntilDone:NO];
 	}
 	
-	return(returnValue);
+	return returnValue;
 }
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 waitUntilDone:(BOOL)flag
@@ -176,7 +176,7 @@
 		[self mainPerformSelector:aSelector withObject:argument1 withObject:argument2 withObject:argument3 waitUntilDone:NO];
 	}
 	
-	return(returnValue);
+	return returnValue;
 }
 
 - (void)mainPerformSelector:(SEL)aSelector withObject:(id)argument1 withObject:(id)argument2 withObject:(id)argument3 waitUntilDone:(BOOL)flag

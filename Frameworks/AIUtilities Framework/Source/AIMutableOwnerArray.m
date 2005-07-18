@@ -82,7 +82,7 @@
 	}
 	[desc appendString:@">"];
 	
-	return([desc autorelease]);
+	return [desc autorelease];
 }
 
 
@@ -157,7 +157,7 @@
  */
 - (id)objectValue
 {
-    return((ownerArray && [ownerArray count]) ? [self _objectWithHighestPriority] : nil);
+    return ((ownerArray && [ownerArray count]) ? [self _objectWithHighestPriority] : nil);
 }
 
 /*!
@@ -190,9 +190,9 @@
 			//Move the object to the front, so we don't have to find it next time
 			[self _moveObjectToFront:indexOfMax];
 			
-			return(currentMax);
+			return currentMax;
 		} else {
-			return([contentArray objectAtIndex:0]);
+			return [contentArray objectAtIndex:0];
 		}
 	}
 	return 0;
@@ -228,9 +228,9 @@
 			//Move the object to the front, so we don't have to find it next time
 			[self _moveObjectToFront:indexOfMax];
 			
-			return(currentMax);
+			return currentMax;
 		} else {
-			return([[contentArray objectAtIndex:0] intValue]);
+			return [[contentArray objectAtIndex:0] intValue];
 		}
 	}
 	return 0;
@@ -267,9 +267,9 @@
 			//Move the object to the front, so we don't have to find it next time
 			[self _moveObjectToFront:indexOfMax];
 			
-			return(currentMax);
+			return currentMax;
 		} else {
-			return([[contentArray objectAtIndex:0] doubleValue]);
+			return [[contentArray objectAtIndex:0] doubleValue];
 		}
 	}
 	
@@ -306,9 +306,9 @@
 			//Move the object to the front, so we don't have to find it next time
 			[self _moveObjectToFront:indexOfMax];
 			
-			return(currentMax);
+			return currentMax;
 		} else {
-			return([contentArray objectAtIndex:0]);
+			return [contentArray objectAtIndex:0];
 		}
 	}
 	return nil;
@@ -346,7 +346,7 @@
 		[self _moveObjectToFront:indexOfMax];
 	}
 
-	return([contentArray objectAtIndex:0]); 
+	return [contentArray objectAtIndex:0]; 
 }
 
 //Move an object to the front of our arrays
@@ -366,10 +366,10 @@
 {
     if (ownerArray && contentArray) {
         int	index = [ownerArray indexOfObject:inOwner];
-        if (index != NSNotFound) return([contentArray objectAtIndex:index]);
+        if (index != NSNotFound) return [contentArray objectAtIndex:index];
     }
     
-    return(nil);
+    return nil;
 }
 
 /*! 
@@ -383,7 +383,7 @@
 {
 	if (ownerArray && priorityArray) {
         int	index = [ownerArray indexOfObject:inOwner];
-		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
+		if (index != NSNotFound) return [[priorityArray objectAtIndex:index] floatValue];
 	}
 	return 0.0;
 }
@@ -399,10 +399,10 @@
 {
     if (ownerArray && contentArray) {
         int	index = [contentArray indexOfObject:inObject];
-        if (index != NSNotFound) return([ownerArray objectAtIndex:index]);
+        if (index != NSNotFound) return [ownerArray objectAtIndex:index];
     }
     
-    return(nil);
+    return nil;
 }
 
 /*! 
@@ -416,7 +416,7 @@
 {
 	if (contentArray && priorityArray) {
         int	index = [contentArray indexOfObject:inObject];
-		if (index != NSNotFound) return([[priorityArray objectAtIndex:index] floatValue]);
+		if (index != NSNotFound) return [[priorityArray objectAtIndex:index] floatValue];
 	}
 	return 0.0;
 }
@@ -429,7 +429,7 @@
  */
 - (NSEnumerator *)objectEnumerator
 {
-	return([contentArray objectEnumerator]);
+	return [contentArray objectEnumerator];
 }
 
 /*!
@@ -440,7 +440,7 @@
  */
 - (NSArray *)allValues
 {
-	return(contentArray);
+	return contentArray;
 }
 
 /*!
@@ -451,7 +451,7 @@
  */
 - (unsigned)count
 {
-    return([contentArray count]);
+    return [contentArray count];
 }
 
 //Array creation / Destruction -----------------------------------------------------------------------------------------
@@ -497,6 +497,6 @@
  */
 - (id)delegate
 {
-	return(delegate);
+	return delegate;
 }
 @end

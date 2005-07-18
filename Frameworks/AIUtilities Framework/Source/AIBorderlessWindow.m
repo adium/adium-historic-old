@@ -148,7 +148,7 @@ static	NSRect	windowFrame;
 		changed = YES;
 	}
 	
-	return(changed);
+	return changed;
 }
 
 

@@ -53,7 +53,7 @@ static long instanceCounter = 0L;
 		//Init our video capture (Reserve the device and prepare for capture)
 		[self _initVideoCapture];
 	}
-	return(self);
+	return self;
 }
 
 //Dealloc
@@ -178,7 +178,7 @@ static long instanceCounter = 0L;
 
 //Accessor for our sequence ID so we can use it in the non-instanced callback function
 - (ImageSequence)_decodeSeq{
-	return(decodeSeq);
+	return decodeSeq;
 }
 
 @end
@@ -196,6 +196,6 @@ pascal OSErr videoCaptureDataCallback(SGChannel c, Ptr p, long len, long *offset
 	//Request another frame
 	DecompressSequenceFrameS([videoCapture _decodeSeq], p, len, 0, &ignore, NULL);
 
-	return(noErr);
+	return noErr;
 }
 

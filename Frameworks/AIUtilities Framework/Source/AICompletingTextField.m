@@ -195,12 +195,12 @@
         enumerator = [stringSet objectEnumerator];
         while ((autoString = [enumerator nextObject])) {
             if (([autoString length] > length) && [autoString compare:compString options:NSCaseInsensitiveSearch range:range] == 0) {
-				return(autoString);
+				return autoString;
             }
         }
     }
 	
-    return(nil);
+    return nil;
 }
 
 //Return a string which may be the actual aString or may be some other string implied by it

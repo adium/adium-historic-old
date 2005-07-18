@@ -114,7 +114,7 @@
 	
     [neededFolders release];
 	
-	return(count > 0);
+	return (count > 0);
 }
 
 #pragma mark -
