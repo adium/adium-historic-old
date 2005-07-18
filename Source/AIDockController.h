@@ -65,6 +65,7 @@ typedef enum {
 - (NSArray *)availableDockIconPacks;
 - (BOOL)currentIconSupportsIconStateNamed:(NSString *)inName;;
 - (NSMutableDictionary *)iconPackAtPath:(NSString *)folderPath;
+- (void)getName:(NSString **)outName previewState:(AIIconState **)outIconState forIconPackAtPath:(NSString *)folderPath;
 - (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath;
 
 //Bouncing & behavior
