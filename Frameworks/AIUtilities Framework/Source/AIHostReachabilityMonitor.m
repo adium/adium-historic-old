@@ -224,8 +224,9 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 				.release         = CFRelease,
 				.copyDescription = CFCopyDescription,
 			};
-			struct sockaddr_in	localAddr;
-			struct sockaddr		*remoteAddr;
+			SCNetworkConnectionFlags				flags;
+			struct sockaddr_in						localAddr;
+			struct sockaddr							*remoteAddr;
 			
 			/* Create a reachability reference pair with localhost and the remote host */
 			
@@ -259,28 +260,40 @@ static void hostResolvedCallback(CFHostRef theHost, CFHostInfoType typeInfo,  co
 							 forHost:host
 							observer:observer];
 
-			/* Perform an immediate reachability check, since we've just scheduled checks for future changes
-			 * and won't be notified immediately.  We update the hostContext to include our reachabilityRef before
-			 * scheduling the info resolution (it's still in our run loop from when we requested the IP address).
-			 */
-			CFHostClientContext	hostContext = {
-				.version		 = 0,
-				.info			 = [NSDictionary dictionaryWithObjectsAndKeys:
-									self, @"self",
-									host, @"host",
-									observer, @"observer",
-									reachabilityRef, @"reachabilityRef",
-									nil],
-				.retain			 = CFRetain,
-				.release		 = CFRelease,
-				.copyDescription = CFCopyDescription,
-			};
-			CFHostSetClient(theHost,
-							hostResolvedCallback,
-							&hostContext);
-			CFHostStartInfoResolution(theHost,
-									  kCFHostReachability,
-									  NULL);
+			if (SCNetworkReachabilityGetFlags(reachabilityRef, &flags)) {
+				//We already have valid flags for the reachabilityRef
+#if CONNECTIVITY_DEBUG
+				NSLog(@"Immediate reachability info for %@", reachabilityRef);
+#endif=
+				hostReachabilityChangedCallback(reachabilityRef,
+												flags,
+												self);
+
+			} else {
+				/* Perform an immediate reachability check, since we've just scheduled checks for future changes
+				* and won't be notified immediately.  We update the hostContext to include our reachabilityRef before
+				* scheduling the info resolution (it's still in our run loop from when we requested the IP address).
+				*/
+				CFHostClientContext	hostContext = {
+					.version		 = 0,
+					.info			 = [NSDictionary dictionaryWithObjectsAndKeys:
+						self, @"self",
+						host, @"host",
+						observer, @"observer",
+						reachabilityRef, @"reachabilityRef",
+						nil],
+					.retain			 = CFRetain,
+					.release		 = CFRelease,
+					.copyDescription = CFCopyDescription,
+				};
+				CFHostSetClient(theHost,
+								hostResolvedCallback,
+								&hostContext);
+				CFHostStartInfoResolution(theHost,
+										  kCFHostReachability,
+										  NULL);
+			}
+
 		} else {
 			/* We were not able to resolve the host name to an IP address.  This is most likely because we have no
 			* Internet connection or because the user is attempting to connect to MSN.
