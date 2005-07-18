@@ -210,10 +210,7 @@
 		newImage = [[NSImage alloc] initWithSize:size];
 
 		if (flipImage) [newImage setFlipped:YES];		
-		
-		//Highest quality interpolation
-		[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
-		
+
 		NSImageRep	*bestRep = [self bestRepresentationForDevice:nil];
 		if ([bestRep isKindOfClass:[NSBitmapImageRep class]] && 
 			(delta == 1.0) &&
@@ -223,7 +220,8 @@
 			
 		} else {
 			[newImage lockFocus];
-			
+			//Highest quality interpolation
+			[[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
 			[self drawInRect:newRect
 					fromRect:NSMakeRect(0,0,originalSize.width,originalSize.height)
 				   operation:NSCompositeCopy
