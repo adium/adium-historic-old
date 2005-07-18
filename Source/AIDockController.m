@@ -241,7 +241,14 @@
 	return [NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil];
 }
 
-- (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath
+/*
+ * @brief Get the name and preview steate for a dock icon pack
+ *
+ * @param outName Reference to an NSString, or NULL if this information is not needed
+ * @param outIconState Reference to an AIIconState, or NULL if this information is not needed
+ * @param folderPath The path to the dock icon pack
+ */
+- (void)getName:(NSString **)outName previewState:(AIIconState **)outIconState forIconPackAtPath:(NSString *)folderPath
 {
 	NSDictionary	*iconPackDict;
 	NSDictionary	*stateDict;
@@ -252,7 +259,17 @@
 	//Load the preview state
 	stateDict = [[iconPackDict objectForKey:@"State"] objectForKey:@"Preview"];
 	
-	return ([self iconStateFromStateDict:stateDict folderPath:folderPath]);
+	if (outIconState) *outIconState = [self iconStateFromStateDict:stateDict folderPath:folderPath];
+	if (outName) *outName = [[iconPackDict objectForKey:@"Description"] objectForKey:@"Title"];
+}
+
+- (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath
+{
+	AIIconState	*previewState = nil;
+	
+	[self getName:NULL previewState:&previewState forIconPackAtPath:folderPath];
+	
+	return previewState;
 }
 
 - (AIIconState *)iconStateFromStateDict:(NSDictionary *)stateDict folderPath:(NSString *)folderPath

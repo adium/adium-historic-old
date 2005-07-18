@@ -128,7 +128,7 @@ typedef enum {
 	
 	if (!type || [type isEqualToString:@"adiumicon"]) {
 		[popUp_dockIcon setMenu:[self _dockIconMenu]];
-		[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+		[popUp_dockIcon selectItemWithRepresentedObject:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
 	}
 	
 	if (!type || [type isEqualToString:@"adiumserviceicons"]) {
@@ -222,7 +222,7 @@ typedef enum {
 			[popUp_colorTheme selectItemWithRepresentedObject:[prefDict objectForKey:KEY_LIST_THEME_NAME]];	
 		}	
 		if (firstTime || [key isEqualToString:KEY_ACTIVE_DOCK_ICON]) {
-			[popUp_dockIcon selectItemWithTitle:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
+			[popUp_dockIcon selectItemWithRepresentedObject:[prefDict objectForKey:KEY_ACTIVE_DOCK_ICON]];
 		}		
 	}
 }
@@ -263,7 +263,7 @@ typedef enum {
                                               group:PREF_GROUP_APPEARANCE];
 		
 	} else if (sender == popUp_dockIcon) {
-        [[adium preferenceController] setPreference:[[sender selectedItem] title]
+        [[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
                                              forKey:KEY_ACTIVE_DOCK_ICON
                                               group:PREF_GROUP_APPEARANCE];
 		
@@ -839,28 +839,52 @@ typedef enum {
 	[AIDockIconSelectionSheet showDockIconSelectorOnWindow:[[self view] window]];
 }
 
+int _dockMenuItemSort(id objectA, id objectB, void *context)
+{
+	return ([[(NSMenuItem *)objectA title] caseInsensitiveCompare:[(NSMenuItem *)objectB title]]);
+}
+
 /*!
  * @brief Returns a menu of dock icon packs
  */
 - (NSMenu *)_dockIconMenu
 {
-	NSMenu			*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	NSEnumerator	*enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
-	NSString		*packPath;
-	
+	NSMutableArray		*menuItemArray = [NSMutableArray array];
+	NSMenu				*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+	NSEnumerator		*enumerator;
+	NSString			*packPath;
+	NSMenuItem			*menuItem;
+
+	enumerator = [[[adium dockController] availableDockIconPacks] objectEnumerator];
 	while ((packPath = [enumerator nextObject])) {
-		NSString	*name = [[packPath lastPathComponent] stringByDeletingPathExtension];
-		AIIconState	*preview = [[adium dockController] previewStateForIconPackAtPath:packPath];
+		NSString	*name = nil;
+		NSString	*packName = [[packPath lastPathComponent] stringByDeletingPathExtension];
+		AIIconState	*preview = nil;
 		
-		NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
-																					  target:nil
-																					  action:nil
-																			   keyEquivalent:@""] autorelease];
-		[menuItem setRepresentedObject:name];
-		[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18,18)]];
+		[[adium dockController] getName:&name
+						   previewState:&preview
+					  forIconPackAtPath:packPath];
+
+		if (!name) {
+			name = packName;
+		}
+		
+		menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:name
+																		 target:nil
+																		 action:nil
+																  keyEquivalent:@""] autorelease];
+		[menuItem setRepresentedObject:packName];
+		[menuItem setImage:[[preview image] imageByScalingToSize:NSMakeSize(18, 18)]];
+		[menuItemArray addObject:menuItem];
+	}
+
+	[menuItemArray sortUsingFunction:_dockMenuItemSort context:NULL];
+
+	enumerator = [menuItemArray objectEnumerator];
+	while ((menuItem = [enumerator nextObject])) {
 		[menu addItem:menuItem];
 	}
-	
+
 	return menu;	
 }
 
