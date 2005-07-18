@@ -113,7 +113,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 
 - (id)delegate
 {
-	return(delegate);
+	return delegate;
 }
 
 //Configure the pane for a list object
@@ -315,7 +315,7 @@ int globalAlertAlphabeticalSort(id objectA, id objectB, void *context);
 //A sort which groups actions together.
 int actionSort(id objectA, id objectB, void *context)
 {
-	return([(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]]);
+	return [(NSString *)[objectA objectForKey:KEY_ACTION_ID] compare:(NSString *)[objectB objectForKey:KEY_ACTION_ID]];
 }
 
 /*!
@@ -416,7 +416,7 @@ int actionSort(id objectA, id objectB, void *context)
 	
 	//Return an event array from whithin contactAlertsActions
 	if (index < [item count]) {
-		return([item objectAtIndex:index]);
+		return [item objectAtIndex:index];
 	} else {
 		return nil;
 	}
@@ -425,12 +425,12 @@ int actionSort(id objectA, id objectB, void *context)
 - (int)outlineView:(NSOutlineView *)inOutlineView numberOfChildrenOfItem:(id)item
 {
 	if (item == nil) {
-		return([contactAlertsActions count]);
+		return [contactAlertsActions count];
 	} else {
 		if ([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]) {
-			return([item count]);
+			return [item count];
 		} else {
-			return(0);
+			return 0;
 		}
 	}
 }
@@ -443,7 +443,7 @@ int actionSort(id objectA, id objectB, void *context)
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView isItemExpandable:(id)item
 {
 	if ([item isKindOfClass:[NSArray class]] && [contactAlertsActions containsObjectIdenticalTo:item]) {
-		return([item count] > 0);
+		return [item count] > 0;
 	} else {
 		return NO;
 	}
@@ -478,7 +478,7 @@ int actionSort(id objectA, id objectB, void *context)
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView expandStateOfItem:(id)item
 {
 	NSNumber	*expandState = [expandStateDict objectForKey:[contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:item]]];
-	return(expandState ? [expandState boolValue] : NO);
+	return expandState ? [expandState boolValue] : NO;
 }
 
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
@@ -494,7 +494,7 @@ int actionSort(id objectA, id objectB, void *context)
 			
 			eventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:contactEvents]];
 
-			return([[adium contactAlertsController] globalShortDescriptionForEventID:eventID]);
+			return [[adium contactAlertsController] globalShortDescriptionForEventID:eventID];
 			
 		} else if ([identifier isEqualToString:@"action"]) {
 			NSMutableString	*actionDescription = [NSMutableString string];
@@ -562,7 +562,7 @@ int actionSort(id objectA, id objectB, void *context)
 			
 			eventID = [contactAlertsEvents objectAtIndex:[contactAlertsActions indexOfObjectIdenticalTo:contactEvents]];
 			
-			return([[adium contactAlertsController] imageForEventID:eventID]);
+			return [[adium contactAlertsController] imageForEventID:eventID];
 		}
 	} else {
 		/* item is an individual event */
@@ -581,7 +581,7 @@ int actionSort(id objectA, id objectB, void *context)
 		}
 	}
 
-	return(@"");
+	return @"";
 }
 
 //Each row should be tall enough to fit its event and action descriptions as necessary

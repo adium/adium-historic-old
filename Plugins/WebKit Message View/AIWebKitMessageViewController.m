@@ -66,7 +66,7 @@ static NSArray *draggedTypes = nil;
  */
 + (AIWebKitMessageViewController *)messageViewControllerForChat:(AIChat *)inChat withPlugin:(AIWebKitMessageViewPlugin *)inPlugin
 {
-    return([[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease]);
+    return [[[self alloc] initForChat:inChat withPlugin:inPlugin] autorelease];
 }
 
 /*!
@@ -268,7 +268,7 @@ static NSArray *draggedTypes = nil;
  */
 - (NSView *)messageView
 {
-	return(webView);
+	return webView;
 }
 
 /*!
@@ -276,7 +276,7 @@ static NSArray *draggedTypes = nil;
  */
 - (NSView *)messageScrollView
 {
-	return([[webView mainFrame] frameView]);
+	return [[webView mainFrame] frameView];
 }
 
 /*!
@@ -284,7 +284,7 @@ static NSArray *draggedTypes = nil;
  */
 - (AIWebkitMessageViewStyle *)messageStyle
 {
-	return(messageStyle);
+	return messageStyle;
 }
 
 /*!
@@ -765,7 +765,7 @@ static NSArray *draggedTypes = nil;
 {
 	NSPasteboard	*pasteboard = [sender draggingPasteboard];
 
-	return(([pasteboard availableTypeFromArray:draggedTypes]) ?
+	return ([pasteboard availableTypeFromArray:draggedTypes] ?
 		   NSDragOperationCopy :
 		   NSDragOperationNone);
 }
@@ -1002,7 +1002,7 @@ static NSArray *draggedTypes = nil;
 - (NSString *)_webKitUserIconPathForObject:(AIListObject *)inObject
 {
 	NSString	*filename = [NSString stringWithFormat:@"TEMP-%@%@.tiff",[inObject internalObjectID],[NSString randomStringOfLength:5]];
-	return([[adium cachesPath] stringByAppendingPathComponent:filename]);
+	return [[adium cachesPath] stringByAppendingPathComponent:filename];
 }
 
 @end

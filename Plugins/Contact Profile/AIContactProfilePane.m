@@ -35,13 +35,13 @@
  * @brief Category
  */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
-    return(AIInfo_Profile);
+    return AIInfo_Profile;
 }
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ContactProfilePane");
+    return @"ContactProfilePane";
 }
 
 //Configure the preference view
@@ -87,7 +87,7 @@
     if (inObject == listObject) {
         [self updatePane];
     }
-    return(nil);
+    return nil;
 }
 
 //Update our pane to reflect our contact

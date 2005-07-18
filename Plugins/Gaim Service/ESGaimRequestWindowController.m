@@ -46,7 +46,7 @@
     self = [super initWithWindowNibName:windowNibName];
 	[self showWindowWithDict:infoDict multiline:multiline];
 	
-    return(self);
+    return self;
 }
 
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline

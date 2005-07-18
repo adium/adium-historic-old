@@ -71,7 +71,7 @@
 }
 - (AIFlexibleTableRow *)tableRow
 {
-    return(tableRow);
+    return tableRow;
 }
 
 - (void)setOpacity:(float)inOpacity
@@ -91,7 +91,7 @@
     bottomPadding = inBottom;
 }
 - (NSSize)paddingInset{
-    return(NSMakeSize(leftPadding, topPadding));
+    return NSMakeSize(leftPadding, topPadding);
 }
 
 
@@ -103,13 +103,13 @@
     [tableRow updateSpanningAndResizeRow:YES];
 }
 - (int)rowSpan{
-    return(rowSpan);
+    return rowSpan;
 }
 
 //YES if this cell is spanned into
 - (BOOL)isSpannedInto
 {
-    return(NO);
+    return NO;
 }
 
 
@@ -117,13 +117,13 @@
 //Reset our cursor rects (returns YES if cursor rects were modified)
 - (BOOL)resetCursorRectsAtOffset:(NSPoint)offset visibleRect:(NSRect)visibleRect inView:(NSView *)controlView
 {
-    return(NO);
+    return NO;
 }
 
 //Handle a mouse down
 - (BOOL)handleMouseDownEvent:(NSEvent *)theEvent atPoint:(NSPoint)inPoint offset:(NSPoint)inOffset
 {    
-    return(NO);
+    return NO;
 }
 
 //
@@ -141,7 +141,7 @@
 //
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    return(NO);
+    return NO;
 }
 
 //
@@ -153,7 +153,7 @@
 //
 - (NSAttributedString *)selectedString
 {
-    return(nil);
+    return nil;
 }
 
 
@@ -163,13 +163,13 @@
 {
     NSSize	size = [self contentSize];
 
-    return(NSMakeSize(leftPadding + size.width + rightPadding, topPadding + size.height + bottomPadding));
+    return NSMakeSize(leftPadding + size.width + rightPadding, topPadding + size.height + bottomPadding);
 }
 
 //The size of our content
 - (NSSize)contentSize
 {
-    return(contentSize);
+    return contentSize;
 }
 
 //Set to YES if the width of this cell is variable
@@ -178,7 +178,7 @@
     variableWidth = inVariableWidth;
 }
 - (BOOL)variableWidth{
-    return(variableWidth);
+    return variableWidth;
 }
 
 //Resize this cell to the desired width
@@ -191,7 +191,7 @@
 //Resize the content of this cell to the desired width, returns new height
 - (int)sizeContentForWidth:(float)inWidth
 {
-    return(contentSize.height);
+    return contentSize.height;
 }
 
 

@@ -231,15 +231,15 @@
 #pragma mark ImageGridView Delegate
 - (int)numberOfImagesInImageGridView:(AIImageGridView *)imageGridView
 {
-	return([iconArray count]);
+	return [iconArray count];
 }
 
 - (NSImage *)imageGridView:(AIImageGridView *)imageGridView imageAtIndex:(int)index
 {
 	if (index == animatedIndex) {
-		return([animatedIconState image]);
+		return [animatedIconState image];
 	} else {
-		return([[[iconArray objectAtIndex:index] objectForKey:@"State"] image]);
+		return [[[iconArray objectAtIndex:index] objectForKey:@"State"] image];
 	}
 }
 

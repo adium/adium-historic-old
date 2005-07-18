@@ -34,7 +34,7 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
     adium = [AIObject sharedAdiumInstance];
-    return([super initWithWindowNibName:windowNibName]);
+    return [super initWithWindowNibName:windowNibName];
 }
 
 /*!
@@ -110,7 +110,7 @@
  */
 - (BOOL)windowShouldClose:(id)sender
 {
-	return(YES);
+	return YES;
 }
 
 /*!
@@ -141,7 +141,7 @@
  */
 - (BOOL)shouldCascadeWindows
 {
-    return(NO);
+    return NO;
 }
 
 /*!
@@ -151,7 +151,7 @@
  */
 - (NSString *)adiumFrameAutosaveName
 {
-	return(nil);
+	return nil;
 }
 	
 @end

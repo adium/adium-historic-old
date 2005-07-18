@@ -51,7 +51,7 @@
 		[listThemeWindow showWindow:nil];
 	}
 	
-	return(listThemeWindow);
+	return listThemeWindow;
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName name:(NSString *)inName notifyingTarget:(id)inTarget
@@ -63,7 +63,7 @@
 	target = inTarget;
 	themeName = [inName retain];
 	
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -550,7 +550,7 @@
 	[menuItem setTag:AIFillStretchBackground];
 	[displayImageStyleMenu addItem:menuItem];
 	
-	return(displayImageStyleMenu);
+	return displayImageStyleMenu;
 }
 
 @end

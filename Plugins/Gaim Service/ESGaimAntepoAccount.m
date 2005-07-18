@@ -43,7 +43,7 @@
  */
 - (NSString *)host
 {
-	return([self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS]);
+	return [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
 }
 
 @end

@@ -50,7 +50,7 @@
 //Return a message view controller
 - (id <AIMessageViewController>)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([AISMViewController messageViewControllerForChat:inChat]);
+    return [AISMViewController messageViewControllerForChat:inChat];
 }
 
 @end

@@ -120,7 +120,7 @@
  */
 - (BOOL)requiresPassword
 {
-	return(YES);
+	return YES;
 }
 
 /*!
@@ -131,7 +131,7 @@
  */
 - (BOOL)shouldSendAutoresponsesWhileAway
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -142,7 +142,7 @@
  */
 - (BOOL)disconnectOnFastUserSwitch
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -166,7 +166,7 @@
  */
 - (BOOL)suppressTypingNotificationChangesAfterSend
 {
-	return(NO);
+	return NO;
 }
 
 
@@ -194,7 +194,7 @@
 			nil];
 	}
 
-	return(supportedPropertyKeys);
+	return supportedPropertyKeys;
 }
 
 /*!
@@ -206,7 +206,7 @@
  */
 - (id)statusForKey:(NSString *)key
 {
-	return([self preferenceForKey:key group:GROUP_ACCOUNT_STATUS]);
+	return [self preferenceForKey:key group:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -244,7 +244,7 @@
  */
 - (float)delayedUpdateStatusInterval
 {
-	return(3.0);
+	return 3.0;
 }
 
 /*!
@@ -274,7 +274,7 @@
  */
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -288,7 +288,7 @@
  */
 - (BOOL)openChat:(AIChat *)chat
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -302,7 +302,7 @@
  */
 - (BOOL)closeChat:(AIChat *)chat
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -345,7 +345,7 @@
  */
 - (BOOL)sendContentObject:(AIContentObject *)object
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -360,7 +360,7 @@
  */
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-    return([inAttributedString string]);
+    return [inAttributedString string];
 }
 
 
@@ -375,7 +375,7 @@
  */
 - (BOOL)contactListEditable
 {
-	return(NO);
+	return NO;
 }
 
 /*!
@@ -447,7 +447,7 @@
  */
 - (NSArray *)menuItemsForContact:(AIListContact *)inContact
 {
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -459,7 +459,7 @@
  */
 - (NSArray *)accountActionMenuItems
 {
-	return(nil);
+	return nil;
 }
 
 #pragma mark Secure messsaging
@@ -517,7 +517,7 @@
 - (NSImage *)userIcon
 {
 	NSData	*iconData = [self userIconData];
-	return(iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil);
+	return iconData ? [[[NSImage alloc] initWithData:iconData] autorelease] : nil;
 }
 
 

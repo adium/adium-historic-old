@@ -42,7 +42,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Display Name",nil));
+    return AILocalizedString(@"Display Name",nil);
 }
 
 /*!
@@ -63,7 +63,7 @@
 		entry = [[NSAttributedString alloc] initWithString:serverDisplayName];
     }
 	
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 @end

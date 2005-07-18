@@ -86,7 +86,7 @@
 		[self rebuildMenu];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -186,7 +186,7 @@
 									   afterDelay:0.0001];
 	}
 	
-	return(menuItemArray);
+	return menuItemArray;
 }
 
 /*!
@@ -225,7 +225,7 @@
 		titleFormat = ([account online] ? ACCOUNT_DISCONNECT_MENU_TITLE : ACCOUNT_CONNECT_MENU_TITLE);
 	}
 	
-	return(titleFormat ? [NSString stringWithFormat:titleFormat, accountTitle] : accountTitle);
+	return titleFormat ? [NSString stringWithFormat:titleFormat, accountTitle] : accountTitle;
 }
 
 /*!
@@ -260,7 +260,7 @@
 		}
 	}
 	
-    return(nil);
+    return nil;
 }
 
 

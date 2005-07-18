@@ -280,7 +280,7 @@
 		[tabView_auxiliary removeTabViewItem:[tabView_auxiliary tabViewItemWithIdentifier:identifier]];
 	}
 
-	return(height);
+	return height;
 }
 
 /*!

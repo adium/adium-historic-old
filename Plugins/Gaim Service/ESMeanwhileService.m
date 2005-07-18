@@ -24,32 +24,32 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimMeanwhileAccount class]);
+	return [ESGaimMeanwhileAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimMeanwhileAccountViewController accountViewController]);
+    return [ESGaimMeanwhileAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimMeanwhileJoinChatViewController joinChatView]);
+	return [DCGaimMeanwhileJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Sametime");
+	return @"libgaim-Sametime";
 }
 - (NSString *)serviceID{
-	return(@"Sametime");
+	return @"Sametime";
 }
 - (NSString *)serviceClass{
-	return(@"Sametime");
+	return @"Sametime";
 }
 - (NSString *)shortDescription{
-	return(@"Sametime");
+	return @"Sametime";
 }
 - (NSString *)longDescription{
-	return(@"Lotus Sametime");
+	return @"Lotus Sametime";
 }
 - (NSCharacterSet *)allowedCharacters{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
@@ -57,22 +57,22 @@
 	[allowedCharacters formUnionWithCharacterSet:[NSCharacterSet symbolCharacterSet]];
 	[allowedCharacters addCharactersInString:@" "];
 
-	return([allowedCharacters autorelease]);
+	return [allowedCharacters autorelease];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(1000);
+	return 1000;
 }
 - (BOOL)caseSensitive{
-	return(YES);
+	return YES;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 - (BOOL)canCreateGroupChats{
-	return(YES);
+	return YES;
 }
 - (void)registerStatuses{
 	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE

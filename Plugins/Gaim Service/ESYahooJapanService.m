@@ -23,47 +23,47 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimYahooJapanAccount class]);
+	return [ESGaimYahooJapanAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimYahooAccountViewController accountViewController]);
+    return [ESGaimYahooAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimYahooJoinChatViewController joinChatView]);
+	return [DCGaimYahooJoinChatViewController joinChatView];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Yahoo!-Japan");
+	return @"libgaim-Yahoo!-Japan";
 }
 - (NSString *)serviceID{
-	return(@"Yahoo! Japan");
+	return @"Yahoo! Japan";
 }
 - (NSString *)serviceClass{
-	return(@"Yahoo! Japan");
+	return @"Yahoo! Japan";
 }
 - (NSString *)shortDescription{
-	return(@"Yahoo! Japan");
+	return @"Yahoo! Japan";
 }
 - (NSString *)longDescription{
-	return(@"Yahoo! Japan");
+	return @"Yahoo! Japan";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_@.-"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"abcdefghijklmnopqrstuvwxyz0123456789_@.-"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(24);
+	return 24;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 
 @end

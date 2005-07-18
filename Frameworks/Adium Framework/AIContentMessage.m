@@ -48,7 +48,7 @@
 //Content Identifier
 - (NSString *)type
 {
-    return(CONTENT_MESSAGE_TYPE);
+    return CONTENT_MESSAGE_TYPE;
 }
 
 //Init
@@ -63,7 +63,7 @@
     	
     isAutoreply = inAutoReply;
 	
-    return(self);
+    return self;
 }
 
 //This message was automatically generated
@@ -71,7 +71,7 @@
 	isAutoreply = inAutoreply;
 }
 - (BOOL)isAutoreply{
-    return(isAutoreply);
+    return isAutoreply;
 }
 
 @end

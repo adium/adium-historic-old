@@ -109,7 +109,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_TRANSFER_PROGRESS_WINDOW_FRAME);
+	return KEY_TRANSFER_PROGRESS_WINDOW_FRAME;
 }
 
 //Setup the window before it is displayed
@@ -298,7 +298,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		if ([row fileTransfer] == inFileTransfer) break;
 	}
 
-	return(row);
+	return row;
 }
 
 //Remove a file transfer row from the window. This is coupled to the file transfer controller; care must be taken
@@ -422,7 +422,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 - (id)outlineView:(NSOutlineView *)inOutlineView child:(int)index ofItem:(id)item
 {
 	if (index < [progressRows count]) {
-		return([progressRows objectAtIndex:index]);
+		return [progressRows objectAtIndex:index];
 	} else {
 		return nil;
 	}
@@ -430,25 +430,25 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 
 - (int)outlineView:(NSOutlineView *)inOutlineView numberOfChildrenOfItem:(id)item
 {
-	return([progressRows count]);
+	return [progressRows count];
 }
 
 //No items are expandable for the outline view
 - (BOOL)outlineView:(NSOutlineView *)inOutlineView isItemExpandable:(id)item
 {
-	return(NO);
+	return NO;
 }
 
 //We don't use object values
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-	return(@"");
+	return @"";
 }
 
 //Each row should be the height of its item's view
 - (int)outlineView:(NSOutlineView *)inOutlineView heightForItem:(id)item atRow:(int)row
 {
-	return([[(ESFileTransferProgressRow *)item view] frame].size.height);
+	return [[(ESFileTransferProgressRow *)item view] frame].size.height;
 }
 
 //Before a cell is display, set its embedded view
@@ -491,7 +491,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 		menu = [progressRow menuForEvent:inEvent];
 	}
 
-	return(menu);
+	return menu;
 }
 
 /*!
@@ -546,7 +546,7 @@ static ESFileTransferProgressWindowController *sharedTransferProgressInstance = 
 	//Keep the top-left corner the same
 	windowFrame.origin.y = oldWindowFrame.origin.y + oldWindowFrame.size.height - windowFrame.size.height;
 
-    return(windowFrame);
+    return windowFrame;
 }
 
 @end

@@ -999,7 +999,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}
 	}
 	
-	return([attrString autorelease]);
+	return [attrString autorelease];
 }
 
 #pragma mark Tag-parsing
@@ -1369,19 +1369,19 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 int HTMLEquivalentForFontSize(int fontSize)
 {
 	if (fontSize <= 9) {
-		return(1);
+		return 1;
 	} else if (fontSize <= 10) {
-		return(2);
+		return 2;
 	} else if (fontSize <= 12) {
-		return(3);
+		return 3;
 	} else if (fontSize <= 14) {
-		return(4);
+		return 4;
 	} else if (fontSize <= 18) {
-		return(5);
+		return 5;
 	} else if (fontSize <= 24) {
-		return(6);
+		return 6;
 	} else {
-		return(7);
+		return 7;
 	}
 }
 

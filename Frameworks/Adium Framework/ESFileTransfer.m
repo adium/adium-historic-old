@@ -22,7 +22,7 @@
 //Init
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initWithContact:inContact forAccount:inAccount] autorelease]);    
+    return [[[self alloc] initWithContact:inContact forAccount:inAccount] autorelease];    
 }
 
 - (id)initWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
@@ -229,7 +229,7 @@
 			break;
 	}
 	
-	return(source);
+	return source;
 }
 - (AIListObject *)destination
 {
@@ -246,7 +246,7 @@
 			break;
 	}
 	
-	return(destination);	
+	return destination;	
 }
 
 - (void)cancel
@@ -281,12 +281,12 @@
 		iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
 	}
 
-	return(iconImage);
+	return iconImage;
 }	
 
 - (BOOL)isStopped
 {
-	return((status == Complete_FileTransfer) ||
+	return (status == Complete_FileTransfer ||
 		   (status == Canceled_Local_FileTransfer) ||
 		   (status == Canceled_Remote_FileTransfer));
 }

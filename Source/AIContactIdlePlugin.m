@@ -108,7 +108,7 @@
         }
     }
 
-    return(nil);
+    return nil;
 }
         
 /*!
@@ -179,7 +179,7 @@
 		entry = AILocalizedString(@"Idle Time",nil);
 	}
 
-	return(entry);
+	return entry;
 }
 
 /*!
@@ -216,7 +216,7 @@
 			 minutesString)];
     }
 	
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 @end

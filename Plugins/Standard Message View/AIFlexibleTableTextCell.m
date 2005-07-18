@@ -69,13 +69,13 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     cell = [AIFlexibleTableTextCell cellWithAttributedString:attributedString];
     [cell setType:NSTextCellType];
     
-    return(cell);
+    return cell;
 }
 
 //Create a new cell from an attributed string
 + (AIFlexibleTableTextCell *)cellWithAttributedString:(NSAttributedString *)inString
 {
-    return([[[self alloc] initWithAttributedString:inString] autorelease]);
+    return [[[self alloc] initWithAttributedString:inString] autorelease];
 }
 
 //
@@ -134,7 +134,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
     //Return
     if (outContainer) *outContainer = aContainer;
     if (outLayoutManager) *outLayoutManager = aLayoutManager;
-    return([aTextStorage autorelease]);
+    return [aTextStorage autorelease];
 }
 
 //
@@ -159,7 +159,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         contentHeight = [layoutManager usedRectForTextContainer:textContainer].size.height;
     }
 
-    return(contentHeight);
+    return contentHeight;
 }
 
 //Draw our custom content
@@ -220,7 +220,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         glyphIndex += 1;
     }
 
-    return([layoutManager characterIndexForGlyphAtIndex:glyphIndex]);
+    return [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 }
 
 
@@ -242,7 +242,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         [linkTrackingController trackLinksInRect:visibleRect withOffset:offset];
     }
 
-    return(containsLinks);
+    return containsLinks;
 }
 
 #pragma mark Mouse down events
@@ -261,7 +261,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         handled = [self _handleAttachmentClicks:theEvent atPoint:inPoint offset:inOffset];
     }
 
-    return(handled);
+    return handled;
 }
 
 //Handle attachment click toggling
@@ -337,7 +337,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
        [[tableRow tableView] resizeRow:tableRow];
    }
 
-   return(NO);	//Returning TRUE gets in the way of selections, making copying difficult
+   return NO;	//Returning TRUE gets in the way of selections, making copying difficult
 }
 
 //Change this cell's selection
@@ -386,7 +386,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 //
 - (BOOL)pointIsSelected:(NSPoint)inPoint offset:(NSPoint)inOffset
 {
-    return(NSLocationInRange([self _characterIndexAtPoint:inPoint fractionOffset:0.5], selectionRange));
+    return NSLocationInRange([self _characterIndexAtPoint:inPoint fractionOffset:0.5], selectionRange);
 }
 
 //
@@ -409,7 +409,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
 																			 effectiveRange:nil]];
     }
     
-    return(selectedString);
+    return selectedString;
 }
 
 //Converts the specified source/dest index to a valid NSRange
@@ -432,7 +432,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
         range.length = [textStorage length] - range.location;
     }
 
-    return(range);
+    return range;
 }
 
 //****Contextual menu items
@@ -455,7 +455,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize);
             menuItemArray = linkMenuItems;
     }
     
-    return(menuItemArray);
+    return menuItemArray;
 }
 
 //Return the menu items for an attachment

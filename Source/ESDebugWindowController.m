@@ -37,12 +37,12 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	//Configure and show window
 	[sharedDebugWindowInstance showWindow:nil];
 	
-	return(sharedDebugWindowInstance);
+	return sharedDebugWindowInstance;
 }
 
 + (BOOL)debugWindowIsOpen
 {
-	return(sharedDebugWindowInstance != nil);
+	return sharedDebugWindowInstance != nil;
 }
 
 - (void)addedDebugMessage:(NSString *)aDebugString
@@ -59,7 +59,7 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_DEBUG_WINDOW_FRAME);
+	return KEY_DEBUG_WINDOW_FRAME;
 }
 
 //Setup the window before it is displayed

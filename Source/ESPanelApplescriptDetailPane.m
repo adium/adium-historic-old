@@ -34,7 +34,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ApplescriptContactAlert");    
+    return @"ApplescriptContactAlert";    
 }
 
 /*!

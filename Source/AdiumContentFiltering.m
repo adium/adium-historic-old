@@ -40,7 +40,7 @@ int filterSort(id<AIContentFilter> filterA, id<AIContentFilter> filterB, void *c
 		delayedFilteringDict = [[NSMutableDictionary alloc] init];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!

@@ -89,7 +89,7 @@
 	NSPoint clickLocation = [self convertPoint:[dragEvent locationInWindow] fromView:nil];
 	dragImageOffset->x = (rowRect.size.width / 2.0) - clickLocation.x;
 	
-	return([image imageByFadingToFraction:DRAG_IMAGE_FRACTION]);
+	return [image imageByFadingToFraction:DRAG_IMAGE_FRACTION];
 }
 
 - (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent*)dragEvent offset:(NSPointPointer)dragImageOffset
@@ -105,7 +105,7 @@
 	
 	free(buf);
 	
-	return(image);
+	return image;
 }
 
 //Our default drag image will be cropped incorrectly, so we need a custom one here
@@ -123,7 +123,7 @@
 	
 	free(buf);
 	
-	return(image);
+	return image;
 }
 
 @end

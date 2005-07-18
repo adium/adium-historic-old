@@ -27,13 +27,13 @@
  * @brief Category
  */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
-    return(AIInfo_Alerts);
+    return AIInfo_Alerts;
 }
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ContactAlerts");
+    return @"ContactAlerts";
 }
 
 /*!

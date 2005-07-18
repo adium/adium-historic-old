@@ -90,7 +90,7 @@
 		receivedAutoReply = [[NSMutableArray alloc] init];		
 	}
     
-    return(nil);
+    return nil;
 }
 
 /*!

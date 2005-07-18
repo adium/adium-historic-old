@@ -89,7 +89,7 @@ static NSColor	*cachedWhiteColor = nil;
 												   object:self];
 	}
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc
@@ -246,7 +246,7 @@ static NSColor	*cachedWhiteColor = nil;
 	}
 }
 - (NSView *)associatedView{
-	return(associatedView);
+	return associatedView;
 }
 
 
@@ -257,7 +257,7 @@ static NSColor	*cachedWhiteColor = nil;
  */
 - (BOOL)availableForSending
 {
-	return([self isSendingEnabled]);
+	return [self isSendingEnabled];
 }
 
 //Set our string, preserving the selected range
@@ -350,18 +350,18 @@ static NSColor	*cachedWhiteColor = nil;
     }
 }
 - (AIChat *)chat{
-    return(chat);
+    return chat;
 }
 
 //Return the selected list object (to auto-configure the contact menu)
 - (AIListContact *)listObject
 {
-	return([chat listObject]);
+	return [chat listObject];
 }
 
 - (AIListContact *)preferredListObject
 {
-	return([chat preferredListObject]);
+	return [chat preferredListObject];
 }
 
 //Auto Sizing ----------------------------------------------------------------------------------------------------------
@@ -387,7 +387,7 @@ static NSColor	*cachedWhiteColor = nil;
         _desiredSizeCached = NSMakeSize([self frame].size.width, textHeight + ENTRY_TEXTVIEW_PADDING);
     }
 
-    return(_desiredSizeCached);
+    return _desiredSizeCached;
 }
 
 //Reset the desired size cache when our frame changes

@@ -41,7 +41,7 @@ struct resolved_id {
 		infoDict = [inInfoDict retain];
 	}
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc

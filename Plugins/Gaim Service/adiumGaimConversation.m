@@ -27,7 +27,7 @@
 static NSString* _messageImageCachePath(int imageID, CBGaimAccount* adiumAccount)
 {
     NSString    *messageImageCacheFilename = [NSString stringWithFormat:MESSAGE_IMAGE_CACHE_NAME, [adiumAccount internalObjectID], imageID];
-    return([[[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"]);
+    return [[[[AIObject sharedAdiumInstance] cachesPath] stringByAppendingPathComponent:messageImageCacheFilename] stringByAppendingPathExtension:@"png"];
 }
 
 static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAccount)
@@ -484,7 +484,7 @@ GaimConversationUiOps *adium_gaim_conversation_get_ui_ops(void)
 // Conversation Window ---------------------------------------------------------------------------------------------
 static GaimConversationUiOps *adiumGaimConvWindowGetConvUiOps()
 {
-    return(adium_gaim_conversation_get_ui_ops());
+    return adium_gaim_conversation_get_ui_ops();
 }
 
 static void adiumGaimConvWindowNew(GaimConvWindow *win)
@@ -547,7 +547,7 @@ static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *c
 
 static int adiumGaimConvWindowGetActiveIndex(const GaimConvWindow *win)
 {
-    return(0);
+    return 0;
 }
 
 static GaimConvWindowUiOps adiumGaimWindowOps = {

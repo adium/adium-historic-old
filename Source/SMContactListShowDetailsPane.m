@@ -24,7 +24,7 @@
  */
 - (NSString *)label
 { 
-	return(@"");
+	return @"";
 }
 
 /*!
@@ -32,7 +32,7 @@
  */
 - (NSString *)nibName
 {
-	return(@"ContactListShowBehavior");
+	return @"ContactListShowBehavior";
 }
 
 /*!
@@ -48,7 +48,7 @@
  */
 - (NSDictionary *)actionDetails
 {
-	return([NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:[slider_secondsToShow doubleValue]] forKey:KEY_SECONDS_TO_SHOW_LIST]);
+	return [NSDictionary dictionaryWithObject:[NSNumber numberWithDouble:[slider_secondsToShow doubleValue]] forKey:KEY_SECONDS_TO_SHOW_LIST];
 }
 
 /*!

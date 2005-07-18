@@ -23,43 +23,43 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimICQAccount class]);
+	return [ESGaimICQAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimICQAccountViewController accountViewController]);
+    return [ESGaimICQAccountViewController accountViewController];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-oscar-ICQ");
+	return @"libgaim-oscar-ICQ";
 }
 - (NSString *)serviceID{
-	return(@"ICQ");
+	return @"ICQ";
 }
 - (NSString *)shortDescription{
-	return(@"ICQ");
+	return @"ICQ";
 }
 - (NSString *)longDescription{
-	return(@"ICQ");
+	return @"ICQ";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@"0123456789"]);
+	return [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(16);
+	return 16;
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"ICQ Number",nil));    //ICQ#
+    return AILocalizedString(@"ICQ Number",nil);    //ICQ#
 }
 
 - (void)registerStatuses{

@@ -61,7 +61,7 @@ gboolean gaim_init_oscar_plugin(void);
 															UID:sourceUID];
 	}
 	
-	return(contact);
+	return contact;
 }
 
 - (AIService *)_serviceForUID:(NSString *)contactUID
@@ -84,7 +84,7 @@ gboolean gaim_init_oscar_plugin(void);
 
 	contactService = [[adium accountController] serviceWithUniqueID:contactServiceID];
 
-	return(contactService);
+	return contactService;
 }
 	
 #pragma mark Account Connection
@@ -161,25 +161,25 @@ gboolean gaim_init_oscar_plugin(void);
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if (strcmp(label, "Edit Buddy Comment") == 0) {
-		return(nil);
+		return nil;
 	}
 
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 #pragma mark Account Action Menu Items
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	if (strcmp(label, "Set User Info...") == 0) {
-		return(nil);
+		return nil;
 	} else if (strcmp(label, "Edit Buddy Comment") == 0) {
-		return(nil);
+		return nil;
 	} else if (strcmp(label, "Show Buddies Awaiting Authorization") == 0) {
 		/* XXX Depends on adiumGaimRequestFields() */
-		return(nil);
+		return nil;
 	}
 
-	return([super titleForAccountActionMenuLabel:label]);
+	return [super titleForAccountActionMenuLabel:label];
 }
 
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding

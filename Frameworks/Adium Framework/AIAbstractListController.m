@@ -81,7 +81,7 @@
 										 object:nil];
 	}
 
-	return(self);
+	return self;
 }
 
 /*
@@ -89,7 +89,7 @@
  */
 - (id)delegate
 {
-	return(delegate);
+	return delegate;
 }
 
 /*
@@ -400,7 +400,7 @@
 		iconPosition = LIST_POSITION_RIGHT;
 	}
 	
-	return(iconPosition);
+	return iconPosition;
 }
 
 - (void)updateCellRelatedThemePreferencesFromDict:(NSDictionary *)prefDict
@@ -442,12 +442,12 @@
 {
     if (item == nil) {
 		if (hideRoot) {
-			return((index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
+			return (index >= 0 && index < [contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil;
 		} else {
 			return contactList;
 		}
     } else {
-        return((index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
+        return (index >= 0 && index < [item containedObjectsCount]) ? [item objectAtIndex:index] : nil;
     }
 }
 
@@ -456,12 +456,12 @@
 {
     if (item == nil) {
 		if (hideRoot) {
-			return([contactList visibleCount]);
+			return [contactList visibleCount];
 		} else {
-			return(1);
+			return 1;
 		}
     } else {
-        return([item visibleCount]);
+        return [item visibleCount];
     }
 }
 
@@ -484,7 +484,7 @@
 //
 - (id)outlineView:(NSOutlineView *)outlineView objectValueForTableColumn:(NSTableColumn *)tableColumn byItem:(id)item
 {
-    return(@"");
+    return @"";
 }
 
 //
@@ -502,7 +502,7 @@
 //
 - (BOOL)outlineView:(NSOutlineView *)outlineView expandStateOfItem:(id)item
 {
-    return([item isExpanded]);
+    return [item isExpanded];
 }
 
 /*!
@@ -605,7 +605,7 @@
 	[pboard declareTypes:[NSArray arrayWithObjects:@"AIListObject",@"AIListObjectUniqueIDs",nil] owner:self];
 	[pboard setString:@"Private" forType:@"AIListObject"];
 	
-	return(YES);
+	return YES;
 }
 
 - (BOOL)outlineView:(NSOutlineView *)outlineView acceptDrop:(id <NSDraggingInfo>)info item:(id)item childIndex:(int)index
@@ -681,7 +681,7 @@
 		}
 	}
 	
-	return(listObject);
+	return listObject;
 }
 
 //Hide tooltip

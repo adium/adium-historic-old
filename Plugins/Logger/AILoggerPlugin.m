@@ -160,7 +160,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Logging Paths --------------------------------------------------------------------------------------------------------
 + (NSString *)logBasePath
 {
-	return(logBasePath);
+	return logBasePath;
 }
 
 //Returns the RELATIVE path to the folder where the log should be written
@@ -175,13 +175,13 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"html");
 	
-	return([NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension]);
+	return [NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension];
 }
 
 //Takes the RELATIVE path to a log, and returns a FULL path
 + (NSString *)fullPathOfLogAtRelativePath:(NSString *)relativePath
 {
-	return([[self logBasePath] stringByAppendingPathComponent:relativePath]);
+	return [[self logBasePath] stringByAppendingPathComponent:relativePath];
 }
 
 
@@ -214,15 +214,15 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 {
     if (menuItem == viewContactLogsMenuItem) {
         AIListObject	*selectedObject = [[adium contactController] selectedListObject];
-		return(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]);
+		return selectedObject && [selectedObject isKindOfClass:[AIListContact class]];
 
     } else if (menuItem == viewContactLogsContextMenuItem) {
         AIListObject	*selectedObject = [[adium menuController] currentContextMenuObject];		
-		return(selectedObject && [selectedObject isKindOfClass:[AIListContact class]]);
+		return selectedObject && [selectedObject isKindOfClass:[AIListContact class]];
 		
     }
 	
-    return(YES);
+    return YES;
 }
 
 /*!
@@ -341,7 +341,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		}
 	}
 
-	return(logString);
+	return logString;
 }
 
 //Generate a plain-text string representing a status message
@@ -362,7 +362,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 		}
 	}
 
-	return(logString);
+	return logString;
 }
 
 //Write a plain-text string to the correct log file.  Returns a RELATIVE path to the log.
@@ -401,7 +401,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 	}
 
 	//Return a RELATIVE path to the log
-    return([relativePath stringByAppendingPathComponent:fileName]);
+    return [relativePath stringByAppendingPathComponent:fileName];
 }
 
 //Display a warning to the user that logging failed, and disable logging to prevent additional warnings
@@ -470,9 +470,9 @@ this problem is along the lines of:
 		[logAccessLock lock];
 		SKIndexFlush(index_Content); //Flush the index before returning to ensure everything is up to date
 		[logAccessLock unlock];
-		return(index_Content);
+		return index_Content;
     } else {
-		return(nil);
+		return nil;
     }
 }
 
@@ -507,9 +507,9 @@ this problem is along the lines of:
     if (logIndexingEnabled) {
 		*complete = logsIndexed;
 		*total = logsToIndex;
-		return(logsToIndex != 0);
+		return logsToIndex != 0;
     } else {
-		return(NO);
+		return NO;
     }
 }
 
@@ -556,7 +556,7 @@ this problem is along the lines of:
 //Path of log index file
 - (NSString *)_logIndexPath
 {
-    return([[adium cachesPath] stringByAppendingPathComponent:LOG_INDEX_NAME]);
+    return [[adium cachesPath] stringByAppendingPathComponent:LOG_INDEX_NAME];
 }
 
 
@@ -595,7 +595,7 @@ this problem is along the lines of:
 //Path of the dirty log array file
 - (NSString *)_dirtyLogArrayPath
 {
-    return([[adium cachesPath] stringByAppendingPathComponent:DIRTY_LOG_ARRAY_NAME]);
+    return [[adium cachesPath] stringByAppendingPathComponent:DIRTY_LOG_ARRAY_NAME];
 }
 
 
@@ -782,7 +782,7 @@ this problem is along the lines of:
 
 - (NSLock *)logAccessLock
 {
-	return(logAccessLock);
+	return logAccessLock;
 }
 
 @end

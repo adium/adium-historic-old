@@ -99,7 +99,7 @@
 		}
 	}
 	
-    return(filteredMessage ? filteredMessage : inAttributedString);
+    return filteredMessage ? filteredMessage : inAttributedString;
 }
 
 - (float)filterPriority

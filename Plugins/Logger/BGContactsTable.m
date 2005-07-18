@@ -80,17 +80,17 @@
 		NSImage	*image = [AIServiceIcons serviceIconForServiceID:[serviceArray objectAtIndex:row]
 															type:AIServiceIconSmall
 													   direction:AIIconNormal];
-		return(image ? image : blankImage);
+		return image ? image : blankImage;
 		
     } else if ([[tableColumn identifier] isEqual:@"name"]) {
 		if (showingContacts) {
-			return([self displayNameForContactAtToIndex:row]);
+			return [self displayNameForContactAtToIndex:row];
 		} else {
-			return([[controller_LogViewer fromArray] objectAtIndex:row]);
+			return [[controller_LogViewer fromArray] objectAtIndex:row];
 		}
 		
 	} else {
-		return(@"");
+		return @"";
 	}
 }
 
@@ -215,7 +215,7 @@
 		}
 	}
 
-	return([_displayNameArray objectAtIndex:index]);
+	return [_displayNameArray objectAtIndex:index];
 }
 
 - (void)logViewerDidCreateLogArrays:(NSNotification *)aNotification

@@ -112,7 +112,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 
     [sharedLogViewerInstance showWindow:nil];
     
-	return(sharedLogViewerInstance);
+	return sharedLogViewerInstance;
 }
 
 //Open the log viewer window to a specific contact's logs
@@ -132,13 +132,13 @@ static NSString                             *filterForContactName = nil;	//Conta
 		[sharedLogViewerInstance filterForContactName:contactName];
 	}
 	
-    return(sharedLogViewerInstance);
+    return sharedLogViewerInstance;
 }
 
 //Returns the window controller if one exists
 + (id)existingWindowController
 {
-    return(sharedLogViewerInstance);
+    return sharedLogViewerInstance;
 }
 
 //Close the log viewer window
@@ -182,7 +182,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 
     [super initWithWindowNibName:windowNibName];
 	
-    return(self);
+    return self;
 }
 
 //dealloc
@@ -310,7 +310,7 @@ static NSString                             *filterForContactName = nil;	//Conta
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_LOG_VIEWER_WINDOW_FRAME);
+	return KEY_LOG_VIEWER_WINDOW_FRAME;
 }
 
 //Setup the window before it is displayed
@@ -876,7 +876,7 @@ static NSString                             *filterForContactName = nil;	//Conta
         location = NSMaxRange(foundRange);
     }
     
-    return([outString autorelease]);
+    return [outString autorelease];
 }
 
 
@@ -930,25 +930,25 @@ int _sortStringWithKey(id objectA, id objectB, void *key) {
     NSString	*stringA = [objectA objectForKey:key];
     NSString	*stringB = [objectB objectForKey:key];
     
-    return([stringA compare:stringB]);
+    return [stringA compare:stringB];
 }
 int _sortStringWithKeyBackwards(id objectA, id objectB, void *key) {
     NSString	*stringA = [objectA objectForKey:key];
     NSString	*stringB = [objectB objectForKey:key];
     
-    return([stringB compare:stringA]);
+    return [stringB compare:stringA];
 }
 int _sortDateWithKey(id objectA, id objectB, void *key) {
     NSDate	*stringA = [objectA objectForKey:key];
     NSDate	*stringB = [objectB objectForKey:key];
     
-    return([stringB compare:stringA]);
+    return [stringB compare:stringA];
 }
 int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
     NSDate	*stringA = [objectA objectForKey:key];
     NSDate	*stringB = [objectB objectForKey:key];
     
-    return([stringA compare:stringB]);
+    return [stringA compare:stringB];
 }
 
 
@@ -1184,7 +1184,7 @@ int _sortDateWithKeyBackwards(id objectA, id objectB, void *key) {
     [menuItem setTag:mode];
     [menuItem setState:(mode == searchMode ? NSOnState : NSOffState)];
     
-    return([menuItem autorelease]);
+    return [menuItem autorelease];
 }
 
 
@@ -1361,7 +1361,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		NSString		*toPath = [path stringByDeletingLastPathComponent];
 		AILogToGroup	*toGroup = [logToGroupDict objectForKey:toPath];
 
-		return([[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame);
+		return [[toGroup to] caseInsensitiveCompare:filterForContactName] == NSOrderedSame;
 
 	} else if (filterForAccountName) {
 		//Searching for a specific account
@@ -1370,10 +1370,10 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 		NSString		*fromPath = [toPath stringByDeletingLastPathComponent];
 		AILogFromGroup	*fromGroup = [logFromGroupDict objectForKey:fromPath];
 
-		return([[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame);
+		return [[fromGroup fromUID] caseInsensitiveCompare:filterForAccountName] == NSOrderedSame;
 
 	} else {
-		return(true); //Boolean, not BOOL
+		return true; //Boolean, not BOOL
 	}
 }
 
@@ -1478,7 +1478,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
     count = [selectedLogArray count];
     [resultsLock unlock];
     
-    return(count);
+    return count;
 }
 
 
@@ -1532,7 +1532,7 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
     }
     [resultsLock unlock];
     
-    return(value);
+    return value;
 }
 
 //
@@ -1679,12 +1679,12 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)itemIdentifier willBeInsertedIntoToolbar:(BOOL)flag
 {
-    return([AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier]);
+    return [AIToolbarUtilities toolbarItemFromDictionary:toolbarItems withIdentifier:itemIdentifier];
 }
 
 - (NSArray *)toolbarDefaultItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"deleteall", @"toggledrawer", nil]);
+    return [NSArray arrayWithObjects:@"delete", @"toggleemoticons", NSToolbarFlexibleSpaceItemIdentifier, @"search", NSToolbarSeparatorItemIdentifier, @"deleteall", @"toggledrawer", nil];
 }
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar

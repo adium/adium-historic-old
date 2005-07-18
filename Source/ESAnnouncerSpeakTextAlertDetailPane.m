@@ -28,7 +28,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"AnnouncerSpeakTextContactAlert");    
+    return @"AnnouncerSpeakTextContactAlert";    
 }
 
 /*!
@@ -67,7 +67,7 @@
 						  forKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 	}
 
-	return([self actionDetailsFromDict:actionDetails]);
+	return [self actionDetailsFromDict:actionDetails];
 }
 	
 /*!

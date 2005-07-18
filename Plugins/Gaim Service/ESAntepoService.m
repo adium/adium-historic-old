@@ -22,38 +22,38 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimAntepoAccount class]);
+	return [ESGaimAntepoAccount class];
 }
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimAntepoAccountViewController accountViewController]);
+    return [ESGaimAntepoAccountViewController accountViewController];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Antepo");
+	return @"libgaim-Antepo";
 }
 - (NSString *)serviceID{
-	return(@"Antepo");
+	return @"Antepo";
 }
 - (NSString *)serviceClass{
-	return(@"Antepo");
+	return @"Antepo";
 }
 - (NSString *)shortDescription{
-	return(@"Antepo");
+	return @"Antepo";
 }
 - (NSString *)longDescription{
-	return(@"Antepo OPN");
+	return @"Antepo OPN";
 }
 
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceUnsupported);
+	return AIServiceUnsupported;
 }
 - (BOOL)canRegisterNewAccounts{
-	return(NO);
+	return NO;
 }
 
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"Username",nil)); //Antepo Username
+    return AILocalizedString(@"Username",nil); //Antepo Username
 }
 
 @end

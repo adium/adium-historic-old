@@ -87,7 +87,7 @@
 //Create a new message view
 + (AISMViewController *)messageViewControllerForChat:(AIChat *)inChat
 {
-    return([[[self alloc] initForChat:inChat] autorelease]);
+    return [[[self alloc] initForChat:inChat] autorelease];
 }
 
 //Init
@@ -387,18 +387,18 @@
 //Return our message view to be inserted into a message window
 - (NSView *)messageView
 {
-    return(scrollView_messages);
+    return scrollView_messages;
 }
 //Return our scroll view, which is the same as our message view
 - (NSView *)messageScrollView
 {
-    return(scrollView_messages);	
+    return scrollView_messages;	
 }
 
 //Return our chat
 - (AIChat *)chat
 {
-    return(chat);
+    return chat;
 }
 
 //Add a new content object
@@ -649,7 +649,7 @@
         [cell setDrawBottom:YES];
     }
     
-    return(row);
+    return row;
 }
 
 
@@ -661,7 +661,7 @@
     AIFlexibleTableCell	*statusCell = [self _statusCellForContent:content];
     AIFlexibleTableRow *row = [AIFlexibleTableRow rowWithCells:[NSArray arrayWithObject:statusCell] representedObject:content];
     previousRow = row;
-    return(row);
+    return row;
 }
 
 //Returns a message prefix row for a content object
@@ -678,7 +678,7 @@
 	
     row = [AIFlexibleTableRow rowWithCells:cellArray representedObject:nil];
     [row setHeadIndent:headIndent];
-    return(row);
+    return row;
 }
 
 //Create a bubbled message row for a content object
@@ -734,7 +734,7 @@
 	//set the headIndent
     [row setHeadIndent:headIndent];
     
-	return(row);
+	return row;
 }
 
 
@@ -763,7 +763,7 @@
     [statusCell setPaddingLeft:1 top:0 right:1 bottom:0];
     [statusCell setVariableWidth:YES];
 	
-    return(statusCell);
+    return statusCell;
 }
 
 #pragma mark User icon
@@ -863,7 +863,7 @@
     [imageCell setBackgroundColor:[NSColor whiteColor]];
     [imageCell setDesiredFrameSize:NSMakeSize(ICON_SIZE,ICON_SIZE)];
 	
-    return(imageCell);
+    return imageCell;
 }
 
 //Span cell with the last image cell as it's master
@@ -880,10 +880,10 @@
 		[masterCell setRowSpan:[masterCell rowSpan] + 1];
 		
 		//Create our span cell as one of it's children
-		return([AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1]);
+		return [AIFlexibleTableSpanCell spanCellFor:masterCell spannedIndex:[masterCell rowSpan]-1];
 		
     } else {
-		return(nil);	
+		return nil;	
     }    
 }
 
@@ -926,7 +926,7 @@
     [prefixCell setPaddingLeft:(showUserIcons ? 1 : 4) top:3 right:1 bottom:0];
     [prefixCell setVariableWidth:YES];
     
-    return(prefixCell);
+    return prefixCell;
 }
 
 //Time stamp cell
@@ -942,7 +942,7 @@
                                                alignment:NSLeftTextAlignment];
     [timeCell setPaddingLeft:1 top:4 right:4 bottom:0];
     
-    return(timeCell);
+    return timeCell;
 }
 
 //Message cell (As prefix to filter message to include prefix information)
@@ -1011,7 +1011,7 @@
 		}
     }
     
-    return(messageCell);
+    return messageCell;
 }
 
 
@@ -1064,12 +1064,12 @@
             [prefixString addAttribute:NSParagraphStyleAttributeName value:paragraphStyleForRest range:NSMakeRange(firstLineRange.length, [prefixString length] - firstLineRange.length)];
         }
         
-        return(prefixString);
+        return prefixString;
         
     } else {
         //Doesn't contain the message. There is no headIndent.
         headIndent = 0;
-        return([self _prefixWithFormat:prefixFormat forContent:content]);
+        return [self _prefixWithFormat:prefixFormat forContent:content];
 		
     }    
 }
@@ -1093,7 +1093,7 @@
         prefixFont, NSFontAttributeName,
         nil];
     
-    return([[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease]);
+    return [[[NSAttributedString alloc] initWithString:string attributes:attributes] autorelease];
 }
 
 //Expand the keywords (and filter out any conditional text) in a prefix format NSString for the given content message
@@ -1169,7 +1169,7 @@
 		}
     }
     
-    return(string);
+    return string;
 }
 
 
@@ -1183,7 +1183,7 @@
     [mutableTemp removeAttribute:NSForegroundColorAttributeName range:range];
     [mutableTemp removeAttribute:NSBackgroundColorAttributeName range:range];
 	[mutableTemp removeAttribute:NSFontAttributeName range:range];
-    return(mutableTemp);
+    return mutableTemp;
 }
 
 //Lighten a string's text color if it is to be displayed as context
@@ -1198,7 +1198,7 @@
 	
 	// Then make the string gray
 	[mutableTemp addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor] range:range];
-	return(mutableTemp);
+	return mutableTemp;
 
 }
 
@@ -1211,7 +1211,7 @@
     //adjust foreground colors for the incoming message background
     [mutableTemp adjustColorsToShowOnBackgroundRelativeToOriginalBackground:inColor];
     
-    return(mutableTemp);
+    return mutableTemp;
 }
 
 //Context menu
@@ -1241,7 +1241,7 @@
 		return([[adium menuController] contextualMenuWithLocations:locations
 													 forListObject:selectedObject]);
     } else {
-		return(nil);
+		return nil;
 	}
 }
 

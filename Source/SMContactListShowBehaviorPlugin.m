@@ -48,7 +48,7 @@
  */
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(SHOW_CONTACT_LIST_BEHAVIOR_ALERT_SHORT);
+	return SHOW_CONTACT_LIST_BEHAVIOR_ALERT_SHORT;
 }
 
 /*!
@@ -58,7 +58,7 @@
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
 	double seconds = [[details objectForKey:KEY_SECONDS_TO_SHOW_LIST] doubleValue];
-	return([NSString stringWithFormat:SHOW_CONTACT_LIST_BEHAVIOR_ALERT_LONG, seconds]);
+	return [NSString stringWithFormat:SHOW_CONTACT_LIST_BEHAVIOR_ALERT_LONG, seconds];
 }
 
 /*!
@@ -66,7 +66,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"pref-contactList" forClass:[self class]]);
+	return [NSImage imageNamed:@"pref-contactList" forClass:[self class]];
 }
 
 /*!
@@ -75,7 +75,7 @@
  */
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return([SMContactListShowDetailsPane actionDetailsPane]);
+	return [SMContactListShowDetailsPane actionDetailsPane];
 }
 
 /*!
@@ -139,7 +139,7 @@
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 @end

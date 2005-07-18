@@ -336,7 +336,7 @@ AIChat* chatLookupFromConv(GaimConversation *conv)
 
 AIChat* existingChatLookupFromConv(GaimConversation *conv)
 {
-	return((conv ? conv->ui_data : nil));
+	return (conv ? conv->ui_data : nil);
 }
 
 AIChat* imChatLookupFromConv(GaimConversation *conv)
@@ -560,7 +560,7 @@ NSMutableDictionary* get_chatDict(void)
 	NSString *description = nil;
 	
 	if (primaryString && ([primaryString rangeOfString:@"Already there"].location != NSNotFound)) {
-		return(adium_gaim_get_handle());
+		return adium_gaim_get_handle();
 	}
 	
 	//Suppress notification warnings we have no interest in seeing
@@ -572,7 +572,7 @@ NSMutableDictionary* get_chatDict(void)
 			([secondaryString rangeOfString:@"Not supported by host"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Not logged in"].location != NSNotFound) ||
 			([secondaryString rangeOfString:@"Passport not verified"].location != NSNotFound)) {
-			return(adium_gaim_get_handle());
+			return adium_gaim_get_handle();
 		}
 	}
 	
@@ -626,7 +626,7 @@ NSMutableDictionary* get_chatDict(void)
 										  withObject:([description length] ? description : ([secondaryString length] ? secondaryString : @"") )
 										  withObject:titleString];
 	
-	return(adium_gaim_get_handle());
+	return adium_gaim_get_handle();
 }
 
 /* XXX ugly */
@@ -671,7 +671,7 @@ NSMutableDictionary* get_chatDict(void)
 										  withObject:(description ? description : @"")
 										  withObject:(titleString ? titleString : @"")];
 
-	return(adium_gaim_get_handle());
+	return adium_gaim_get_handle();
 }
 
 
@@ -815,7 +815,7 @@ NSMutableDictionary* get_chatDict(void)
 			break;
 	}		
 	
-	return(sendMessage);
+	return sendMessage;
 }
 	
 - (oneway void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
@@ -880,7 +880,7 @@ NSMutableDictionary* get_chatDict(void)
 											withFlags:flags];
 	}
 	
-	return(sendMessage);
+	return sendMessage;
 }
 
 - (oneway void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat

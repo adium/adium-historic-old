@@ -33,7 +33,7 @@
  */
 - (NSString *)label
 { 
-	return(@"");
+	return @"";
 }
 
 /*!
@@ -41,7 +41,7 @@
  */
 - (NSString *)nibName
 {
-	return(@"GrowlAlert");
+	return @"GrowlAlert";
 }
 
 /*!
@@ -67,8 +67,8 @@
  */
 - (NSDictionary *)actionDetails
 {
-	return([NSDictionary dictionaryWithObject:[NSNumber numberWithBool:([checkBox_sticky state] == NSOnState)]
-									   forKey:KEY_GROWL_ALERT_STICKY]);
+	return [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:([checkBox_sticky state] == NSOnState)]
+									   forKey:KEY_GROWL_ALERT_STICKY];
 }
 
 /*!

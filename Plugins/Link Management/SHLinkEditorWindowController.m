@@ -62,7 +62,7 @@
 	textView = [inTextView retain];
 	target = [inTarget retain];
 	
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -304,18 +304,18 @@
 {
     if (aSelector == @selector(insertNewline:)) {
             [self acceptURL:nil];
-            return(YES);
+            return YES;
 
     } else if (aSelector == @selector(insertTab:)) {
 		[[textView_URL window] selectNextKeyView:self];
-		return(YES);
+		return YES;
 		
 	} else if (aSelector == @selector(insertBacktab:)) {
 		[[textView_URL window] selectPreviousKeyView:self];
-		return(YES);
+		return YES;
 	}
 	
-    return(NO);
+    return NO;
 }
 
 @end

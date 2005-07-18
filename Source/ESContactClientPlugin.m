@@ -40,7 +40,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Client",nil));
+    return AILocalizedString(@"Client",nil);
 }
 
 /*!
@@ -61,7 +61,7 @@
 		entry = [[NSAttributedString alloc] initWithString:client];
     }
 	
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 

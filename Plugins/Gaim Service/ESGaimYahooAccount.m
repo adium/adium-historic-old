@@ -461,14 +461,14 @@ gboolean gaim_init_yahoo_plugin(void);
 {
 	if (strcmp(label, "Add Buddy") == 0) {
 		//We handle Add Buddy ourselves
-		return(nil);
+		return nil;
 	} else if (strcmp(label, "Join in Chat") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]];
 	} else if (strcmp(label, "Initiate Conference") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]];
 	}
 
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 #pragma mark Account Action Menu Items
@@ -476,7 +476,7 @@ gboolean gaim_init_yahoo_plugin(void);
 {
 	/* The Yahoo actions are "Activate ID" (or perhaps "Active ID," depending on where in the code you look)
 	 * and "Join User in Chat...".  These are dumb. Additionally, Join User in Chat doesn't work as of gaim 1.1.4. */
-	return(nil);
+	return nil;
 }
 
 @end

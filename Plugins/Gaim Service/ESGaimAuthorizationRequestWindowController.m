@@ -40,7 +40,7 @@
 			[window center];
 	}
 	
-    return(self);
+    return self;
 }
 
 - (void)dealloc

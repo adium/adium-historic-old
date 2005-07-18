@@ -43,7 +43,7 @@ static int nextChatNumber = 0;
 
 + (id)chatForAccount:(AIAccount *)inAccount
 {
-    return([[[self alloc] initForAccount:inAccount] autorelease]);
+    return [[[self alloc] initForAccount:inAccount] autorelease];
 }
 
 - (id)initForAccount:(AIAccount *)inAccount
@@ -95,7 +95,7 @@ static int nextChatNumber = 0;
 		if (!image) image = [AIServiceIcons serviceIconForObject:listObject type:AIServiceIconLarge direction:AIIconNormal];
 	}
 
-	return(image);
+	return image;
 }
 
 //lil image
@@ -108,7 +108,7 @@ static int nextChatNumber = 0;
 		chatMenuImage = [AIUserIcons menuUserIconForObject:listObject];
 	}
 
-	return(chatMenuImage);
+	return chatMenuImage;
 }
 
 
@@ -116,7 +116,7 @@ static int nextChatNumber = 0;
 #pragma mark Associated Account
 - (AIAccount *)account
 {
-    return(account);
+    return account;
 }
 
 - (void)setAccount:(AIAccount *)inAccount
@@ -135,7 +135,7 @@ static int nextChatNumber = 0;
 #pragma mark Date Opened
 - (NSDate *)dateOpened
 {
-	return(dateOpened);
+	return dateOpened;
 }
 
 - (void)setDateOpened:(NSDate *)inDate
@@ -200,17 +200,17 @@ static int nextChatNumber = 0;
 }
 - (NSDictionary *)securityDetails
 {
-	return([self statusObjectForKey:@"SecurityDetails"]);
+	return [self statusObjectForKey:@"SecurityDetails"];
 }
 
 - (BOOL)isSecure
 {
-	return([self securityDetails] != nil);
+	return [self securityDetails] != nil;
 }
 
 - (BOOL)supportsSecureMessagingToggling
 {
-	return((BOOL)[account allowSecureMessagingTogglingForChat:self]);
+	return (BOOL)[account allowSecureMessagingTogglingForChat:self];
 }
 
 //Name  ----------------------------------------------------------------------------------------------------------------
@@ -227,14 +227,14 @@ static int nextChatNumber = 0;
 - (NSString *)displayName
 {
     NSString	*outName = [self displayArrayObjectForKey:@"Display Name"];
-    return(outName ? outName : (name ? name : [[self listObject] displayName]));
+    return outName ? outName : (name ? name : [[self listObject] displayName]);
 }
 
 //Participating ListObjects --------------------------------------------------------------------------------------------
 #pragma mark Participating ListObjects
 - (NSArray *)participatingListObjects
 {
-    return(participatingListObjects);
+    return participatingListObjects;
 }
 
 - (void)addParticipatingListObject:(AIListContact *)inObject
@@ -274,9 +274,9 @@ static int nextChatNumber = 0;
 - (AIListContact *)listObject
 {
     if (([participatingListObjects count] == 1) && ![self name]) {
-        return([participatingListObjects objectAtIndex:0]);
+        return [participatingListObjects objectAtIndex:0];
     } else {
-        return(nil);
+        return nil;
     }
 }
 - (void)setListObject:(AIListContact *)inListObject
@@ -367,7 +367,7 @@ static int nextChatNumber = 0;
 
 - (BOOL)canSendImages
 {
-	return([[self account] canSendImagesForChat:self]);
+	return [[self account] canSendImagesForChat:self];
 }
 
 - (int)unviewedContentCount
@@ -447,27 +447,27 @@ static int nextChatNumber = 0;
 //AIContainingObject protocol
 - (NSArray *)containedObjects
 {
-	return([self participatingListObjects]);
+	return [self participatingListObjects];
 }
 
 - (unsigned)containedObjectsCount
 {
-	return([[self containedObjects] count]);
+	return [[self containedObjects] count];
 }
 
 - (BOOL)containsObject:(AIListObject *)inObject
 {
-	return([[self containedObjects] containsObjectIdenticalTo:inObject]);
+	return [[self containedObjects] containsObjectIdenticalTo:inObject];
 }
 
 - (id)objectAtIndex:(unsigned)index
 {
-	return([[self containedObjects] objectAtIndex:index]);
+	return [[self containedObjects] objectAtIndex:index];
 }
 
 - (int)indexOfObject:(AIListObject *)inObject
 {
-    return([[self containedObjects] indexOfObject:inObject]);
+    return [[self containedObjects] indexOfObject:inObject];
 }
 
 //Retrieve a specific object by service and UID
@@ -480,23 +480,23 @@ static int nextChatNumber = 0;
 		if ([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	
-	return(object);
+	return object;
 }
 //Enumerator of -[containedObjects]
 - (NSEnumerator *)objectEnumerator
 {
-	return([[self containedObjects] objectEnumerator]);
+	return [[self containedObjects] objectEnumerator];
 }
 
 - (NSArray *)listContacts
 {
-	return([self containedObjects]);
+	return [self containedObjects];
 }
 
 //Should list each list contact only once (for chats, this is the same as the objectEnumerator)
 - (NSEnumerator *)listContactsEnumerator
 {
-	return([self objectEnumerator]);
+	return [self objectEnumerator];
 }
 
 - (BOOL)addObject:(AIListObject *)inObject
@@ -530,12 +530,12 @@ static int nextChatNumber = 0;
 
 - (unsigned)visibleCount
 {
-	return([self containedObjectsCount]);
+	return [self containedObjectsCount];
 }
 
 //Not used
-- (float)smallestOrder { return(0); }
-- (float)largestOrder { return(1E10); }
+- (float)smallestOrder { return 0; }
+- (float)largestOrder { return 1E10; }
 - (void)listObject:(AIListObject *)listObject didSetOrderIndex:(float)inOrderIndex {};
 
 

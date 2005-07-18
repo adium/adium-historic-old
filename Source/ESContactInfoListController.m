@@ -30,22 +30,22 @@
     if (item == nil) {
 		if (hideRoot) {
 			if ([contactList isKindOfClass:[AIMetaContact class]]) {
-				return((index >= 0 && index < [(AIMetaContact *)contactList uniqueContainedObjectsCount]) ?
+				return (index >= 0 && index < [(AIMetaContact *)contactList uniqueContainedObjectsCount] ?
 					   [(AIMetaContact *)contactList uniqueObjectAtIndex:index] : 
 					   nil);
 			} else {
-				return((index >= 0 && index < [(AIListGroup *)contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil);
+				return (index >= 0 && index < [(AIListGroup *)contactList containedObjectsCount]) ? [contactList objectAtIndex:index] : nil;
 			}
 		} else {
 			return contactList;
 		}
     } else {
 		if ([item isKindOfClass:[AIMetaContact class]]) {
-			return((index >= 0 && index < [(AIMetaContact *)item uniqueContainedObjectsCount]) ? 
+			return (index >= 0 && index < [(AIMetaContact *)item uniqueContainedObjectsCount] ? 
 				   [(AIMetaContact *)item uniqueObjectAtIndex:index] : 
 				   nil);
 		} else {
-			return((index >= 0 && index < [(AIListGroup *)item containedObjectsCount]) ? [item objectAtIndex:index] : nil);
+			return (index >= 0 && index < [(AIListGroup *)item containedObjectsCount]) ? [item objectAtIndex:index] : nil;
 		}
     }
 }
@@ -56,18 +56,18 @@
     if (item == nil) {
 		if (hideRoot) {
 			if ([contactList isKindOfClass:[AIMetaContact class]]) {
-				return([(AIMetaContact *)contactList uniqueContainedObjectsCount]);
+				return [(AIMetaContact *)contactList uniqueContainedObjectsCount];
 			} else {
-				return([(AIListGroup *)contactList containedObjectsCount]);
+				return [(AIListGroup *)contactList containedObjectsCount];
 			}
 		} else {
-			return(1);
+			return 1;
 		}
     } else {
 		if ([item isKindOfClass:[AIMetaContact class]]) {
-			return([(AIMetaContact *)item uniqueContainedObjectsCount]);
+			return [(AIMetaContact *)item uniqueContainedObjectsCount];
 		} else {
-			return([(AIListGroup *)item containedObjectsCount]);
+			return [(AIListGroup *)item containedObjectsCount];
 		}
     }
 }
@@ -76,9 +76,9 @@
 - (BOOL)outlineView:(NSOutlineView *)outlineView isItemExpandable:(id)item
 {
     if ([item isKindOfClass:[AIMetaContact class]] || [item isKindOfClass:[AIListGroup class]]) {
-        return(YES);
+        return YES;
     } else {
-        return(NO);
+        return NO;
     }
 }
 
@@ -146,7 +146,7 @@
 
 		if ([primaryDragItem isKindOfClass:[AIListGroup class]]) {
 			//Disallow dragging groups into the contact info window
-			return(NSDragOperationNone);
+			return NSDragOperationNone;
 			
 		} else {
 			//Disallow dragging contacts into anything besides the contact list
@@ -158,7 +158,7 @@
 		}
 	}
 	
-	return(NSDragOperationPrivate);
+	return NSDragOperationPrivate;
 }
 
 //
@@ -228,7 +228,7 @@
 	}
 
 	//Call super and return its value
-    return([super outlineView:outlineView acceptDrop:info item:item childIndex:index]);
+    return [super outlineView:outlineView acceptDrop:info item:item childIndex:index];
 }
 
 //Due to a bug in NSDrawer, convertPoint:fromView reports a point too low by the trailingOffset 
@@ -241,7 +241,7 @@
 	
 	AIListObject	*hoveredObject = [contactListView itemAtRow:[contactListView rowAtPoint:viewPoint]];
 	
-	return(hoveredObject);
+	return hoveredObject;
 }
 
 //We want to just show UIDs whereever possible

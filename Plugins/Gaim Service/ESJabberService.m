@@ -24,15 +24,15 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimJabberAccount class]);
+	return [ESGaimJabberAccount class];
 }
 
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimJabberAccountViewController accountViewController]);
+    return [ESGaimJabberAccountViewController accountViewController];
 }
 
 - (DCJoinChatViewController *)joinChatView{
-	return([DCGaimJabberJoinChatViewController joinChatView]);
+	return [DCGaimJabberJoinChatViewController joinChatView];
 }
 
 - (BOOL)canCreateGroupChats{
@@ -41,19 +41,19 @@
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-Jabber");
+	return @"libgaim-Jabber";
 }
 - (NSString *)serviceID{
-	return(@"Jabber");
+	return @"Jabber";
 }
 - (NSString *)serviceClass{
-	return(@"Jabber");
+	return @"Jabber";
 }
 - (NSString *)shortDescription{
-	return(@"Jabber");
+	return @"Jabber";
 }
 - (NSString *)longDescription{
-	return(@"Jabber");
+	return @"Jabber";
 }
 
 /*!
@@ -69,7 +69,7 @@
 
 	[allowedCharacters addCharactersInString:@"._@-()[]%|"];
 	
-	return([allowedCharacters autorelease]);
+	return [allowedCharacters autorelease];
 }
 
 /*!
@@ -82,29 +82,29 @@
 	
 	[allowedCharacters addCharactersInString:@"._@-()[]%|/"];
 	
-	return([allowedCharacters autorelease]);
+	return [allowedCharacters autorelease];
 }
 
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@""]);
+	return [NSCharacterSet characterSetWithCharactersInString:@""];
 }
 - (int)allowedLength{
-	return(129);
+	return 129;
 }
 
 //Generally, Jabber is NOT case sensitive, but handles in group chats are case sensitive, so return YES
 //and do custom handling as needed in the account code
 - (BOOL)caseSensitive{
-	return(YES);
+	return YES;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServicePrimary);
+	return AIServicePrimary;
 }
 - (BOOL)canRegisterNewAccounts{
-	return(YES);
+	return YES;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"Jabber ID",nil)); //Jabber ID
+    return AILocalizedString(@"Jabber ID",nil); //Jabber ID
 }
 
 - (void)registerStatuses{

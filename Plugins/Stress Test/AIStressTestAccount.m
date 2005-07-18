@@ -64,23 +64,23 @@
 //Return the default properties for this account
 - (NSDictionary *)defaultProperties
 {
-    return([NSDictionary dictionary]);
+    return [NSDictionary dictionary];
 }
 
 // Return a unique ID specific to THIS account plugin, and the user's account name
 - (NSString *)accountID{
-    return([self internalObjectID]);
+    return [self internalObjectID];
 }
 
 //The user's account name
 - (NSString *)UID{
-    return(@"TEST");
+    return @"TEST";
 }
 
 //The service ID (shared by any account code accessing this service)
 - (NSString *)displayName
 {
-    return(@"Stress Test");
+    return @"Stress Test";
 }
 
 //Stress Test certainly doesn't need to receive connect/disconnect requests based on network reachability
@@ -241,7 +241,7 @@
         }
     }
 	
-    return(YES);
+    return YES;
 }
 
 - (void)timer_online:(NSTimer *)inTimer
@@ -387,9 +387,9 @@
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact
 {
 	if ([inType isEqualToString:CONTENT_MESSAGE_TYPE]) {
-		return(YES);
+		return YES;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 
@@ -404,14 +404,14 @@
 
 	[chatDict setObject:chat forKey:[chat uniqueChatID]];
 
-    return(YES);
+    return YES;
 }
 
 //Close a chat instance
 - (BOOL)closeChat:(AIChat *)chat
 {
     [chatDict removeObjectForKey:[chat uniqueChatID]];
-    return(YES); //Success
+    return YES; //Success
 }
 
 

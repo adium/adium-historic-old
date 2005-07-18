@@ -156,7 +156,7 @@
 		modifiedAttributes = [NSSet setWithObject:@"ExtendedStatus"];
 	}
 	
-   return(modifiedAttributes);
+   return modifiedAttributes;
 }
 
 
@@ -181,7 +181,7 @@
 		idleString = [NSString stringWithFormat:@"%i",seconds];
 	}
 	
-	return(idleString);
+	return idleString;
 }
 
 @end

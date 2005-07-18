@@ -60,7 +60,7 @@
 		menuItems = [[self buildMenuItems] retain];
 	}
 	
-	return(menuItems);
+	return menuItems;
 }
 
 /*!
@@ -82,7 +82,7 @@
 		[menu setMenuChangedMessagesEnabled:YES];
 	}
 	
-	return(menu);
+	return menu;
 }
 
 /*!
@@ -97,10 +97,10 @@
 	NSMenuItem		*menuItem;
 	
 	while((menuItem = [enumerator nextObject])){    
-		if([menuItem representedObject] == object) return(menuItem);
+		if([menuItem representedObject] == object) return menuItem;
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -130,7 +130,7 @@
  */
 - (NSArray *)buildMenuItems
 {
-	return([NSArray array]);
+	return [NSArray array];
 }
 
 /*!
@@ -160,7 +160,7 @@
 	[serviceIcon drawInRect:compositeRect atSize:[serviceIcon size] position:IMAGE_POSITION_RIGHT fraction:1.0];
 	[composite unlockFocus];
 	
-	return([composite autorelease]);
+	return [composite autorelease];
 }
 
 @end

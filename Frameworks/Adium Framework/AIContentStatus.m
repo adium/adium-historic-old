@@ -61,7 +61,7 @@
     //Store source and dest
 	statusType = [inStatus retain];
 	
-    return(self);
+    return self;
 }
 
 //Dealloc
@@ -75,13 +75,13 @@
 //Content Identifier
 - (NSString *)type
 {
-    return(CONTENT_STATUS_TYPE);
+    return CONTENT_STATUS_TYPE;
 }
 
 //The type of status change this is
 - (NSString *)status
 {
-	return(statusType);
+	return statusType;
 }
 
 @end

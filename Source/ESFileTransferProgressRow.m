@@ -39,7 +39,7 @@
 
 + (ESFileTransferProgressRow *)rowForFileTransfer:(ESFileTransfer *)inFileTransfer withOwner:(id)inOwner
 {
-	return([[[ESFileTransferProgressRow alloc] initForFileTransfer:inFileTransfer withOwner:inOwner] autorelease]);
+	return [[[ESFileTransferProgressRow alloc] initForFileTransfer:inFileTransfer withOwner:inOwner] autorelease];
 }
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer withOwner:(id)inOwner
@@ -56,7 +56,7 @@
 		[NSBundle loadNibNamed:@"ESFileTransferProgressView" owner:self];
 	}
 	
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -72,12 +72,12 @@
 
 - (ESFileTransfer *)fileTransfer
 {
-	return(fileTransfer);
+	return fileTransfer;
 }
 
 - (ESFileTransferProgressView *)view
 {	
-	return(view);
+	return view;
 }
 
 - (void)awakeFromNib
@@ -116,7 +116,7 @@
 
 - (FileTransferType)type
 {
-	return([fileTransfer type]);
+	return [fileTransfer type];
 }
 
 - (void)fileTransfer:(ESFileTransfer *)inFileTransfer didSetSize:(unsigned long long)inSize
@@ -357,7 +357,7 @@
 		[contextualMenu addItem:menuItem];
 	}	
 	
-	return([contextualMenu autorelease]);
+	return [contextualMenu autorelease];
 }
 
 //Pass height change information on to our owner
@@ -404,7 +404,7 @@
 		}
 	}
 	
-	return(retval);
+	return retval;
 }
 
 @end

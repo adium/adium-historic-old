@@ -47,7 +47,7 @@
 //CBGaimOscarAccount does complex things here, but ICQ can just perform a normal encodedAttributedString:forListObject
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject contentMessage:(AIContentMessage *)contentMessage
 {	
-	return([self encodedAttributedString:inAttributedString forListObject:inListObject]);
+	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
 /*!
@@ -55,7 +55,7 @@
  */
 - (BOOL)shouldSetAliasesServerside
 {
-	return(NO);
+	return NO;
 }
 
 #pragma mark Contact updates
@@ -207,10 +207,10 @@
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if (strcmp(label, "Re-request Authorization") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
 	}
 	
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 @end

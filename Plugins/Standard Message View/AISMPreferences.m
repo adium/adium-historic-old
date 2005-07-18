@@ -44,13 +44,13 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Messages);
+    return AIPref_Messages;
 }
 - (NSString *)label{
-    return(@"Message Display");
+    return @"Message Display";
 }
 - (NSString *)nibName{
-    return(@"AISMPrefView");
+    return @"AISMPrefView";
 }
 
 //Configure the preference view
@@ -482,11 +482,11 @@
     
     //Return the correct view
     if (preferencePane == prefixesPane) {
-        return(view_prefixes);
+        return view_prefixes;
     } else if (preferencePane == timeStampsPane) {
-        return(view_timeStamps);
+        return view_timeStamps;
     } else { //if (preferencePane == griddingPane) {
-        return(view_gridding);
+        return view_gridding;
     }
 }
 

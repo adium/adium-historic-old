@@ -90,7 +90,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -120,7 +120,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -155,7 +155,7 @@
 		description = @"";	
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -194,7 +194,7 @@
 		name = AILocalizedString(@"a contact",nil);
 	}
 
-	return([NSString stringWithFormat:format,name]);
+	return [NSString stringWithFormat:format,name];
 }
 
 /*!
@@ -257,7 +257,7 @@
 		}
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID
@@ -373,7 +373,7 @@
 		}
 	}
 
-	return(nil);	
+	return nil;	
 }
 
 /*!
@@ -399,9 +399,9 @@
 		} else {
 			[cache removeObjectForKey:[inObject internalObjectID]];
 		}
-		return(YES);
+		return YES;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 

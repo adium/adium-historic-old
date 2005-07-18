@@ -202,7 +202,7 @@
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys 
 																								 forKey:@"Keys"] : nil)];
 	
-	return(attrChange);
+	return attrChange;
 }
 
 //Chats -------------------------------------------------------------------------------------------------
@@ -218,7 +218,7 @@
 
 	if (chat) [[adium interfaceController] openChat:chat]; 
 
-	return(chat);	
+	return chat;	
 }
 
 /*!
@@ -300,7 +300,7 @@
 		}
 	}
 
-	return(chat);
+	return chat;
 }
 
 /*!
@@ -339,7 +339,7 @@
 		if ([chat listObject] == targetContact) break;
 	}
 	
-	return(chat);
+	return chat;
 }
 
 /*!
@@ -380,7 +380,7 @@
 			chat = nil;
 		}
 	}
-	return(chat);
+	return chat;
 }
 
 /*!
@@ -572,7 +572,7 @@
 		}
 	}
 	
-    return(foundChats);
+    return foundChats;
 }
 
 /*!
@@ -620,7 +620,7 @@
 	int count = 0;
 	NSEnumerator * enu = [[self openChats] objectEnumerator];
 	AIChat * chat;
-	while(chat = [enu nextObject])
+	while((chat = [enu nextObject]))
 	{
 		count += [chat unviewedContentCount];
 	}

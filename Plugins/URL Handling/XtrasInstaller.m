@@ -33,7 +33,7 @@
 //XtrasInstaller does not autorelease because it will release itself when closed
 + (XtrasInstaller *)installer
 {
-	return([[XtrasInstaller alloc] init]);
+	return [[XtrasInstaller alloc] init];
 }
 
 - (id)init
@@ -43,7 +43,7 @@
 		window = nil;
 	}
 
-	return(self);
+	return self;
 }
 
 - (void)dealloc
@@ -128,7 +128,7 @@
 }
 
 - (BOOL)download:(NSURLDownload *)download shouldDecodeSourceDataOfMIMEType:(NSString *)encodingType {
-    return(NO);
+    return NO;
 }
 
 - (void)download:(NSURLDownload *)inDownload didFailWithError:(NSError *)error {

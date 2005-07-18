@@ -120,7 +120,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 //
 - (NSString *)adiumFrameAutosaveName
 {
-	return(KEY_INFO_WINDOW_FRAME);
+	return KEY_INFO_WINDOW_FRAME;
 }
 
 //Setup the window before it is displayed
@@ -221,7 +221,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 - (NSImage *)tabView:(NSTabView *)tabView imageForTabViewItem:(NSTabViewItem *)tabViewItem
 {
 	if (tabView == tabView_category) {
-		return([NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]]);
+		return [NSImage imageNamed:[NSString stringWithFormat:@"info%@",[tabViewItem identifier]] forClass:[self class]];
 	}
 
 	return nil;
@@ -280,7 +280,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 	//Alphabetize them
 	[paneArray sortUsingSelector:@selector(compare:)];
 
-	return(paneArray);
+	return paneArray;
 }
 
 //When the contact list selection changes, then configure the window for the new contact
@@ -487,7 +487,7 @@ static AIContactInfoWindowController *sharedContactInfoInstance = nil;
 
 - (float)drawerTrailingOffset
 {
-	return([drawer_metaContact trailingOffset]);
+	return [drawer_metaContact trailingOffset];
 }
 
 - (void)performDefaultActionOnSelectedObject:(AIListObject *)listObject sender:(NSOutlineView *)sender

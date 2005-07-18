@@ -43,14 +43,14 @@
 {
     [super initWithCoder:aDecoder];
     [self _initFlexibleTableView];
-    return(self);
+    return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
     [self _initFlexibleTableView];
-    return(self);
+    return self;
 }
 
 - (id)init
@@ -117,7 +117,7 @@
     delegate = inDelegate;
 }
 - (id)delegate{
-    return(delegate);
+    return delegate;
 }
 
 //
@@ -221,7 +221,7 @@
         }
     }
     
-    return(menu);   
+    return menu;   
 }
 
 
@@ -420,18 +420,18 @@
 //Misc --------------------------------------------------------------------------------
 - (BOOL)needsPanelToBecomeKey
 {
-    return(YES);
+    return YES;
 }
 
 //YES, we accept first responder
 - (BOOL)acceptsFirstResponder
 {
-    return(YES);
+    return YES;
 }
 
 //Return yes so our view's origin is in the top left
 - (BOOL)isFlipped{
-    return(YES);
+    return YES;
 }
 
 //
@@ -690,19 +690,19 @@
     rowEnumerator = [rowArray objectEnumerator];
     while ((row = [rowEnumerator nextObject])) {
         (*outOrigin).y -= [row height];
-        if (inPoint.y > (*outOrigin).y) return(row);
+        if (inPoint.y > (*outOrigin).y) return row;
     }
 
-    return(nil);
+    return nil;
 }
 
 //Returns a row by index
 - (AIFlexibleTableRow *)rowAtIndex:(int)index
 {
     if (index >= 0 && index < [rowArray count]) {
-        return([rowArray objectAtIndex:index]);
+        return [rowArray objectAtIndex:index];
     } else {
-        return(nil);
+        return nil;
     }
 }
 
@@ -788,7 +788,7 @@
 	height += [row height];
     }while (++rowIndex < [rowArray count] && ![row spansRows]);
     
-    return(height);
+    return height;
 }
 
 
@@ -822,7 +822,7 @@
     int length = [[selectedString string] length];
     [selectedString deleteCharactersInRange:NSMakeRange(length-1,1)];
     
-    return(selectedString);
+    return selectedString;
 }
 
 

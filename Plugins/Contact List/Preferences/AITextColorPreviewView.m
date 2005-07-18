@@ -29,14 +29,14 @@
 {
     [super initWithCoder:aDecoder];
     [self _initTextColorPreviewView];
-    return(self);
+    return self;
 }
 
 - (id)initWithFrame:(NSRect)frameRect
 {
     [super initWithFrame:frameRect];
     [self _initTextColorPreviewView];
-    return(self);
+    return self;
 }
 
 - (void)_initTextColorPreviewView

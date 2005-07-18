@@ -35,7 +35,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"DockBehaviorContactAlert");    
+    return @"DockBehaviorContactAlert";    
 }
 
 /*!
@@ -69,9 +69,9 @@
 	NSString	*behavior = [[popUp_actionDetails selectedItem] representedObject];
 	
 	if (behavior) {
-		return([NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE]);
+		return [NSDictionary dictionaryWithObject:behavior forKey:KEY_DOCK_BEHAVIOR_TYPE];
 	} else {
-		return(nil);
+		return nil;
 	}	
 }
 
@@ -98,7 +98,7 @@
     
     [behaviorMenu setAutoenablesItems:NO];
     
-    return(behaviorMenu);
+    return behaviorMenu;
 }
 
 /*!
@@ -114,7 +114,7 @@
 															  keyEquivalent:@""] autorelease];
     [menuItem setRepresentedObject:[NSNumber numberWithInt:behavior]];
     
-    return(menuItem);
+    return menuItem;
 }
 
 

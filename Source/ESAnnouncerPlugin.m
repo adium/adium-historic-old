@@ -65,9 +65,9 @@
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
-		return(ANNOUNCER_ALERT_SHORT);
+		return ANNOUNCER_ALERT_SHORT;
 	} else { /*Speak Event*/
-		return(ANNOUNCER_EVENT_ALERT_SHORT);
+		return ANNOUNCER_EVENT_ALERT_SHORT;
 	}
 }
 
@@ -81,12 +81,12 @@
 		NSString *textToSpeak = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
 		
 		if (textToSpeak && [textToSpeak length]) {
-			return([NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak]);
+			return [NSString stringWithFormat:ANNOUNCER_ALERT_LONG, textToSpeak];
 		} else {
-			return(ANNOUNCER_ALERT_SHORT);
+			return ANNOUNCER_ALERT_SHORT;
 		}
 	} else { /*Speak Event*/
-		return(ANNOUNCER_EVENT_ALERT_LONG);
+		return ANNOUNCER_EVENT_ALERT_LONG;
 	}
 }
 
@@ -95,7 +95,7 @@
  */
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"AnnouncerAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"AnnouncerAlert" forClass:[self class]];
 }
 
 /*!
@@ -105,9 +105,9 @@
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
-		return([ESAnnouncerSpeakTextAlertDetailPane actionDetailsPane]);
+		return [ESAnnouncerSpeakTextAlertDetailPane actionDetailsPane];
 	} else { /*Speak Event*/
-		return([ESAnnouncerSpeakEventAlertDetailPane actionDetailsPane]);
+		return [ESAnnouncerSpeakEventAlertDetailPane actionDetailsPane];
 	}
 }
 
@@ -263,7 +263,7 @@ context:(id)filterContext
  */
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 @end

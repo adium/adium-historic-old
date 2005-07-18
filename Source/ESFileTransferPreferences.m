@@ -30,13 +30,13 @@
 @implementation ESFileTransferPreferences
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_FileTransfer);
+    return AIPref_FileTransfer;
 }
 - (NSString *)label{
-    return(@"a");
+    return @"a";
 }
 - (NSString *)nibName{
-    return(@"FileTransferPrefs");
+    return @"FileTransferPrefs";
 }
 
 //Called in response to all preference controls, applies new settings
@@ -162,7 +162,7 @@
 	[menuItem setRepresentedObject:userPreferredDownloadFolder];
 	[menu addItem:menuItem];
 	
-	return(menu);
+	return menu;
 }
 
 - (void)selectOtherDownloadFolder:(id)sender

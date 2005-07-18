@@ -54,7 +54,7 @@
 		}
 	}
 	
-	return([contextualMenu autorelease]);
+	return [contextualMenu autorelease];
 }
 
 - (void)textDidChange:(NSNotification *)notification

@@ -37,22 +37,22 @@
 #pragma mark Play Sound Alert
 - (NSString *)shortDescriptionForActionID:(NSString *)actionID
 {
-	return(OPEN_MESSAGE_ALERT_SHORT);
+	return OPEN_MESSAGE_ALERT_SHORT;
 }
 
 - (NSString *)longDescriptionForActionID:(NSString *)actionID withDetails:(NSDictionary *)details
 {
-	return(OPEN_MESSAGE_ALERT_LONG);
+	return OPEN_MESSAGE_ALERT_LONG;
 }
 
 - (NSImage *)imageForActionID:(NSString *)actionID
 {
-	return([NSImage imageNamed:@"WindowAlert" forClass:[self class]]);
+	return [NSImage imageNamed:@"WindowAlert" forClass:[self class]];
 }
 
 - (AIModularPane *)detailsPaneForActionID:(NSString *)actionID
 {
-	return(nil);
+	return nil;
 }
 
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
@@ -65,7 +65,7 @@
 
 - (BOOL)allowMultipleActionsWithID:(NSString *)actionID
 {
-	return(NO);
+	return NO;
 }
 
 @end

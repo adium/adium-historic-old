@@ -67,12 +67,12 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 //
 - (NSString *)to
 {
-    return(to);
+    return to;
 }
 
 - (NSString *)path
 {
-	return(path);
+	return path;
 }
 
 //Returns an enumerator for all of our logs
@@ -113,7 +113,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 		}
     }
 	
-    return(logDict);
+    return logDict;
 }
 
 - (AIChatLog *)_logAtRelativeLogPath:(NSString *)relativeLogPath fileName:(NSString *)fileName
@@ -126,7 +126,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 	//If we are given a filename and it's invalid, abort
 	if (fileName && (([fileName characterAtIndex:0] == '.') ||
 					!([[fileAttributes fileType] isEqualToString:NSFileTypeRegular]))) {
-		return(nil);
+		return nil;
 	}
 	
 	//Temprary Code.  This can be removed once everyone who ran the alpha has opened their log viewer :)
@@ -178,7 +178,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 											 date:date] autorelease];
 	}
 	
-	return(theLog);
+	return theLog;
 }
 
 - (AIChatLog *)logAtPath:(NSString *)inPath
@@ -201,7 +201,7 @@ static BOOL scandate(const char *sample, unsigned long *outyear,
 		}
 	}
 
-	return(theLog);
+	return theLog;
 }
 
 //Given an Adium log file name, return an NSCalendarDate with year, month, and day specified

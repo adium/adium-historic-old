@@ -63,19 +63,19 @@
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Events);
+    return AIPref_Events;
 }
 /*!
  * @brief Label
  */
 - (NSString *)label{
-    return(EVENTS_TITLE);
+    return EVENTS_TITLE;
 }
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"GlobalEventsPreferences");
+    return @"GlobalEventsPreferences";
 }
 
 /*!
@@ -233,7 +233,7 @@
 															  keyEquivalent:@""] autorelease];
 	[eventPresetsMenu addItem:menuItem];
 		
-	return([eventPresetsMenu autorelease]);
+	return [eventPresetsMenu autorelease];
 }
 
 - (void)selectActiveEventInPopUp
@@ -512,7 +512,7 @@
 	//Ensure this set doesn't claim to be built in.
 	[currentEventSetForSaving removeObjectForKey:@"Built In"];
 	
-	return(currentEventSetForSaving);
+	return currentEventSetForSaving;
 }
 
 #pragma mark Preset saving
@@ -660,7 +660,7 @@
 					 representedObject:soundSet];
     }
 
-    return([soundSetMenu autorelease]);
+    return [soundSetMenu autorelease];
 }
 
 #pragma mark Common menu methods

@@ -47,7 +47,7 @@
 // return an instance of AILoginController
 + (AILoginWindowController *)loginWindowControllerWithOwner:(id)inOwner
 {
-    return([[[self alloc] initWithOwner:inOwner windowNibName:LOGIN_WINDOW_NIB] autorelease]);
+    return [[[self alloc] initWithOwner:inOwner windowNibName:LOGIN_WINDOW_NIB] autorelease];
 }
 
 
@@ -78,11 +78,11 @@
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
     if (tableView == tableView_userList) {
-        return([userArray count]);
+        return [userArray count];
     } else if (tableView == tableView_editableUserList) {
-        return([userArray count]);
+        return [userArray count];
     } else {
-        return(0);
+        return 0;
     }
 }
 
@@ -90,11 +90,11 @@
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
     if (tableView == tableView_userList) {
-        return([userArray objectAtIndex:row]);
+        return [userArray objectAtIndex:row];
     } else if (tableView == tableView_editableUserList) {
-        return([userArray objectAtIndex:row]);
+        return [userArray objectAtIndex:row];
     } else {
-        return(nil);
+        return nil;
     }
 
 }

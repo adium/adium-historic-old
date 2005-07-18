@@ -36,16 +36,16 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Messages",nil));
+    return AILocalizedString(@"Messages",nil);
 }
 - (NSString *)nibName{
-    return(@"DualWindowMessageAdvanced");
+    return @"DualWindowMessageAdvanced";
 }
 - (NSImage *)image{
-	return([NSImage imageNamed:@"pref-messages" forClass:[AIPreferenceWindowController class]]);
+	return [NSImage imageNamed:@"pref-messages" forClass:[AIPreferenceWindowController class]];
 }
 
 //Called in response to all preference controls, applies new settings
@@ -163,7 +163,7 @@
 	[self _addTimeStampChoice:secondsNoAMPM toMenu:menu];
 	if (!noAMPM) [self _addTimeStampChoice:secondsAMPM toMenu:menu];
 	
-	return(menu);
+	return menu;
 }
 - (void)_addTimeStampChoice:(NSDateFormatter *)formatter toMenu:(NSMenu *)menu
 {	

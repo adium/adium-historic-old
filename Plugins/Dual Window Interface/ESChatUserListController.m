@@ -28,7 +28,7 @@
 
 //We don't want to change text colors based on the user's status or state
 - (BOOL)shouldUseContactTextColors{
-	return(NO);
+	return NO;
 }
 
 /*

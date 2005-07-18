@@ -35,7 +35,7 @@
 	//Configure defaults as necessary
 	[newStatus setAutoReplyIsStatusMessage:YES];
 
-	return(newStatus);
+	return newStatus;
 }
 
 /*!
@@ -49,7 +49,7 @@
 	AIStatus	*status = [self status];
 	[status->statusDict addEntriesFromDictionary:inDictionary];
 
-	return(status); 
+	return status; 
 }
 
 /*!
@@ -69,7 +69,7 @@
 		[status setHasAutoReply:YES];
 	}
 	
-	return(status);
+	return status;
 }
 
 /*!
@@ -198,7 +198,7 @@
  */
 - (NSString *)statusMessageString
 {
-	return([[self statusMessage] string]);
+	return [[self statusMessage] string];
 }
 
 /*!
@@ -262,7 +262,7 @@
  */
 - (BOOL)hasAutoReply
 {
-	return([[statusDict objectForKey:STATUS_HAS_AUTO_REPLY] boolValue]);
+	return [[statusDict objectForKey:STATUS_HAS_AUTO_REPLY] boolValue];
 }
 
 /*!
@@ -279,7 +279,7 @@
  */
 - (BOOL)autoReplyIsStatusMessage
 {
-	return([[statusDict objectForKey:STATUS_AUTO_REPLY_IS_STATUS_MESSAGE] boolValue]);
+	return [[statusDict objectForKey:STATUS_AUTO_REPLY_IS_STATUS_MESSAGE] boolValue];
 }
 
 /*!
@@ -356,7 +356,7 @@
 		title = [title substringWithRange:linebreakRange];  
 	}
 	
-	return(title);
+	return title;
 }
 
 /*!
@@ -379,7 +379,7 @@
  */
 - (AIStatusType)statusType
 {
-	return([[statusDict objectForKey:STATUS_STATUS_TYPE] intValue]);
+	return [[statusDict objectForKey:STATUS_STATUS_TYPE] intValue];
 }
 
 /*!
@@ -402,7 +402,7 @@
  */
 - (NSString *)statusName
 {
-	return([statusDict objectForKey:STATUS_STATUS_NAME]);
+	return [statusDict objectForKey:STATUS_STATUS_NAME];
 }
 
 /*!
@@ -428,7 +428,7 @@
  */
 - (BOOL)shouldForceInitialIdleTime
 {
-	return([[statusDict objectForKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME] boolValue]);	
+	return [[statusDict objectForKey:STATUS_SHOULD_FORCE_INITIAL_IDLE_TIME] boolValue];	
 }
 
 /*!
@@ -448,7 +448,7 @@
  */
 - (double)forcedInitialIdleTime
 {
-	return([[statusDict objectForKey:STATUS_FORCED_INITIAL_IDLE_TIME] doubleValue]);
+	return [[statusDict objectForKey:STATUS_FORCED_INITIAL_IDLE_TIME] doubleValue];
 }
 
 /*!
@@ -472,7 +472,7 @@
  */
 - (AIStatusMutabilityType)mutabilityType
 {
-	return([[statusDict objectForKey:STATUS_MUTABILITY_TYPE] intValue]);
+	return [[statusDict objectForKey:STATUS_MUTABILITY_TYPE] intValue];
 }
 
 /*!
@@ -509,7 +509,7 @@
 {
 	NSNumber	*uniqueStatusID = [statusDict objectForKey:STATUS_UNIQUE_ID];
 
-	return(uniqueStatusID ? [uniqueStatusID intValue] : -1);
+	return uniqueStatusID ? [uniqueStatusID intValue] : -1;
 }
 
 - (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID

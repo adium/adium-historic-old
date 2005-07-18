@@ -144,7 +144,7 @@
 		}
 	}
 	
-	return(nil);
+	return nil;
 }
 
 #pragma mark Event descriptions
@@ -164,7 +164,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSString *)globalShortDescriptionForEventID:(NSString *)eventID
@@ -183,7 +183,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 //Evan: This exists because old X(tras) relied upon matching the description of event IDs, and I don't feel like making
@@ -204,7 +204,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
@@ -247,7 +247,7 @@
 		}
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSString *)naturalLanguageDescriptionForEventID:(NSString *)eventID
@@ -290,7 +290,7 @@
 		description = messageText;
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID

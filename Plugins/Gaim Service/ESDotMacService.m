@@ -22,37 +22,37 @@
 
 //Account Creation
 - (Class)accountClass{
-	return([ESGaimDotMacAccount class]);
+	return [ESGaimDotMacAccount class];
 }
 
 //
 - (AIAccountViewController *)accountViewController{
-    return([ESGaimDotMacAccountViewController accountViewController]);
+    return [ESGaimDotMacAccountViewController accountViewController];
 }
 
 //Service Description
 - (NSString *)serviceCodeUniqueID{
-	return(@"libgaim-oscar-Mac");
+	return @"libgaim-oscar-Mac";
 }
 - (NSString *)serviceID{
-	return(@"Mac");
+	return @"Mac";
 }
 - (NSString *)shortDescription{
-	return(@".Mac");
+	return @".Mac";
 }
 - (NSString *)longDescription{
-	return(@".Mac");
+	return @".Mac";
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return([NSCharacterSet characterSetWithCharactersInString:@" "]);
+	return [NSCharacterSet characterSetWithCharactersInString:@" "];
 }
 - (BOOL)caseSensitive{
-	return(NO);
+	return NO;
 }
 - (AIServiceImportance)serviceImportance{
-	return(AIServiceSecondary);
+	return AIServiceSecondary;
 }
 - (NSString *)userNameLabel{
-    return(AILocalizedString(@"Member Name",nil)); //.Mac Member Name
+    return AILocalizedString(@"Member Name",nil); //.Mac Member Name
 }
 @end

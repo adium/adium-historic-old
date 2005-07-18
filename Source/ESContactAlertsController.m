@@ -107,7 +107,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 //Return all event IDs for groups/contacts
 - (NSArray *)allEventIDs
 {
-	return([[eventHandlers allKeys] arrayByAddingObjectsFromArray:[globalOnlyEventHandlers allKeys]]);
+	return [[eventHandlers allKeys] arrayByAddingObjectsFromArray:[globalOnlyEventHandlers allKeys]];
 }
 
 - (NSString *)longDescriptionForEventID:(NSString *)eventID forListObject:(AIListObject *)listObject
@@ -117,7 +117,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 	handler = [eventHandlers objectForKey:eventID];
 	if (!handler) handler = [globalOnlyEventHandlers objectForKey:eventID];
 	
-	return([handler longDescriptionForEventID:eventID forListObject:listObject]);
+	return [handler longDescriptionForEventID:eventID forListObject:listObject];
 }
 
 //Returns a menu of all events
@@ -179,7 +179,7 @@ static	NSMutableDictionary		*globalOnlyEventHandlersByGroup[EVENT_HANDLER_GROUP_
 		}
 	}
 	
-	return(menuItemArray);
+	return menuItemArray;
 }	
 
 - (void)addMenuItemsForEventHandlers:(NSDictionary *)inEventHandlers toArray:(NSMutableArray *)menuItemArray withTarget:(id)target forGlobalMenu:(BOOL)global
@@ -245,7 +245,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 
 - (NSArray *)sortedArrayOfEventIDsFromArray:(NSArray *)inArray
 {
-	return([inArray sortedArrayUsingFunction:eventIDSort context:NULL]);
+	return [inArray sortedArrayUsingFunction:eventIDSort context:NULL];
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID
@@ -255,7 +255,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	eventHandler = [eventHandlers objectForKey:eventID];		
 	if (!eventHandler) eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
 
-	return([eventHandler imageForEventID:eventID]);
+	return [eventHandler imageForEventID:eventID];
 }
 
 /*
@@ -348,7 +348,7 @@ int eventIDSort(id objectA, id objectB, void *context) {
 									 toArray:events];
 	}
 
-	return(events);
+	return events;
 }
 
 - (NSString *)defaultEventID
@@ -435,7 +435,7 @@ int eventMenuItemSort(id menuItemA, id menuItemB, void *context) {
 //Return all available actions
 - (NSDictionary *)actionHandlers
 {
-	return(actionHandlers);
+	return actionHandlers;
 }
 
 //Returns a menu of all actions
@@ -504,7 +504,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 //Returns an array of all the alerts of a given list object
 - (NSArray *)alertsForListObject:(AIListObject *)listObject
 {
-	return([self alertsForListObject:listObject withEventID:nil actionID:nil]);
+	return [self alertsForListObject:listObject withEventID:nil actionID:nil];
 }
 
 - (NSArray *)alertsForListObject:(AIListObject *)listObject withEventID:(NSString *)eventID actionID:(NSString *)actionID
@@ -549,7 +549,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 		}	
 	}
 	
-	return(alertArray);	
+	return alertArray;	
 }
 
 //Add an alert (passed as a dictionary) to a list object
@@ -756,7 +756,7 @@ int actionMenuItemSort(id menuItemA, id menuItemB, void *context) {
 #pragma mark -
 - (BOOL)isMessageEvent:(NSString *)eventID
 {
-	return(([eventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil) ||
+	return ([eventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil ||
 		   ([globalOnlyEventHandlersByGroup[AIMessageEventHandlerGroup] objectForKey:eventID] != nil));
 }
 

@@ -23,7 +23,7 @@
 @implementation AIModularPaneCategoryView
 
 - (BOOL)isFlipped{
-	return(YES);
+	return YES;
 }
 
 
@@ -34,7 +34,7 @@
     desiredHeight = inHeight;
 }
 - (int)desiredHeight{
-    return(desiredHeight);
+    return desiredHeight;
 }
 
 
@@ -71,7 +71,7 @@
 //Returns YES if we contain no panes
 - (BOOL)isEmpty
 {
-	return(!containsPanes);
+	return !containsPanes;
 }
 
 //Pass this a tab view containing module pane category views.  It will return the height of the tallest modular pane
@@ -98,7 +98,7 @@
         }
     }
 	
-	return(maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET);
+	return maxHeight + TAB_PADDING_OFFSET + FRAME_PADDING_OFFSET;
 }
 
 @end

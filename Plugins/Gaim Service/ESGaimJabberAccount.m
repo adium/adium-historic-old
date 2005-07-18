@@ -189,7 +189,7 @@ gboolean gaim_init_jabber_plugin(void);
  */
 - (BOOL)shouldSetAliasesServerside
 {
-	return(YES);
+	return YES;
 }
 
 #pragma mark Status
@@ -223,7 +223,7 @@ gboolean gaim_init_jabber_plugin(void);
 		properUID = [NSString stringWithFormat:@"%@@%@",objectUID,[self host]];
 	}
 	
-	return([properUID lowercaseString]);
+	return [properUID lowercaseString];
 }
 
 - (NSString *)unknownGroupName {
@@ -415,16 +415,16 @@ gboolean gaim_init_jabber_plugin(void);
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
 	if (strcmp(label, "Un-hide From") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Un-hide From %@",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Un-hide From %@",nil),[inContact formattedUID]];
 	}if (strcmp(label, "Temporarily Hide From") == 0) {
-			return([NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]]);
+			return [NSString stringWithFormat:AILocalizedString(@"Temporarily Hide From %@",nil),[inContact formattedUID]];
 	} else if (strcmp(label, "Unsubscribe") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Unsubscribe %@",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Unsubscribe %@",nil),[inContact formattedUID]];
 	} else if (strcmp(label, "(Re-)Request authorization") == 0) {
-		return([NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]]);
+		return [NSString stringWithFormat:AILocalizedString(@"Re-request Authorization from %@",nil),[inContact formattedUID]];
 	}
 	
-	return([super titleForContactMenuLabel:label forContact:inContact]);
+	return [super titleForContactMenuLabel:label forContact:inContact];
 }
 
 #pragma mark Multiuser chat
@@ -524,7 +524,7 @@ gboolean gaim_init_jabber_plugin(void);
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {
 	/* XXX All Jabber account actions depend upon adiumGaimRequestFields */
-	return(nil);
+	return nil;
 }
 
 @end

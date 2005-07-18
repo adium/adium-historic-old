@@ -38,7 +38,7 @@
 		_defaultAttributes = nil;
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!

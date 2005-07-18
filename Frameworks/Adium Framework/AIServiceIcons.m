@@ -43,7 +43,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 //Retrive the correct service icon for a contact
 + (NSImage *)serviceIconForObject:(AIListObject *)inObject type:(AIServiceIconType)iconType direction:(AIIconDirection)iconDirection
 {
-	return([self serviceIconForService:[inObject service] type:iconType direction:iconDirection]);
+	return [self serviceIconForService:[inObject service] type:iconType direction:iconDirection];
 }
 
 //Retrieve the correct service icon for a service
@@ -51,7 +51,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 {
 	NSImage	*serviceIcon = [self serviceIconForServiceID:[service serviceID] type:iconType direction:iconDirection];
 
-	return(serviceIcon ? serviceIcon : [service defaultServiceIcon]);
+	return serviceIcon ? serviceIcon : [service defaultServiceIcon];
 }
 
 //Retrieve the correct service icon for a service by ID
@@ -78,7 +78,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 		}
 	}
 
-	return(serviceIcon);
+	return serviceIcon;
 }
 
 //Set the active service icon pack
@@ -173,7 +173,7 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 		[image unlockFocus];
 	}
 
-	return([image autorelease]);
+	return [image autorelease];
 }
 
 @end

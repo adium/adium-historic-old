@@ -35,7 +35,7 @@
 	newCell->_gradient = [_gradient retain];
 	drawsGradientEdges = NO;
 	
-	return(newCell);
+	return newCell;
 }
 
 //Init
@@ -75,7 +75,7 @@
 	}
 }
 - (NSColor *)shadowColor{
-	return(shadowColor);
+	return shadowColor;
 }
 
 //
@@ -112,16 +112,16 @@
 #pragma mark Sizing & Padding
 //Padding.  Gives our cell a bit of extra padding for the group name and flippy triangle
 - (int)topPadding{
-	return([super topPadding] + 1);
+	return [super topPadding] + 1;
 }
 - (int)bottomPadding{
-	return([super bottomPadding] + 1);
+	return [super bottomPadding] + 1;
 }
 - (int)leftPadding{
-	return([super leftPadding] + 2);
+	return [super leftPadding] + 2;
 }
 - (int)rightPadding{
-	return([super rightPadding] + 4);
+	return [super rightPadding] + 4;
 }
 
 //Cell height and width
@@ -129,7 +129,7 @@
 {
 	NSSize	size = [super cellSize];
 
-	return(NSMakeSize(0, [[self font] defaultLineHeightForFont] + size.height));
+	return NSMakeSize(0, [[self font] defaultLineHeightForFont] + size.height);
 }
 - (int)cellWidth
 {
@@ -141,7 +141,7 @@
 	nameSize = [displayName size];
 	[displayName release];
 		
-	return([super cellWidth] + [self flippyIndent] + nameSize.width + 1);
+	return [super cellWidth] + [self flippyIndent] + nameSize.width + 1;
 }
 
 //Calculates the distance from left margin to our display name.  This is the indent caused by group nesting.
@@ -149,9 +149,9 @@
 {
 //	if ([self textAlignment] != NSCenterTextAlignment) {
 		NSSize size = [self cellSize];
-		return(size.height*.4 + size.height*.2 + FLIPPY_TEXT_PADDING);
+		return size.height*.4 + size.height*.2 + FLIPPY_TEXT_PADDING;
 /*	} else {
-		return(0);
+		return 0;
 	}
 */
 }
@@ -203,7 +203,7 @@
 //Color of our flippy triangle.  By default we use the cell's text color.
 - (NSColor *)flippyColor
 {
-	return([self textColor]);
+	return [self textColor];
 }
 
 //Add a simple shadow to our text attributes
@@ -238,7 +238,7 @@
 		[_gradient unlockFocus];
 	}
 	
-	return(_gradient);
+	return _gradient;
 }
 
 //Draw our background gradient

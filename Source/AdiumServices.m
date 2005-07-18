@@ -30,7 +30,7 @@
 		services = [[NSMutableDictionary alloc] init];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -59,7 +59,7 @@
  */
 - (NSArray *)services
 {
-	return([[services allValues] sortedArrayUsingSelector:@selector(compareLongDescription:)]);
+	return [[services allValues] sortedArrayUsingSelector:@selector(compareLongDescription:)];
 }
 
 /*!
@@ -105,7 +105,7 @@
  */
 - (AIService *)serviceWithUniqueID:(NSString *)uniqueID
 {
-    return([services objectForKey:uniqueID]);
+    return [services objectForKey:uniqueID];
 }
 
 
@@ -119,7 +119,7 @@
 		if ([[service serviceID] isEqualToString:serviceID]) break;
 	}
 	
-	return(service);
+	return service;
 }
 
 @end

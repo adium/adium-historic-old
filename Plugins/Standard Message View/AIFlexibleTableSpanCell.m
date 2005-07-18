@@ -24,7 +24,7 @@
 //Create a new span cell
 + (id)spanCellFor:(AIFlexibleTableCell *)inCell spannedIndex:(int)inIndex
 {
-    return([[[self alloc] initForCell:inCell spannedIndex:inIndex] autorelease]);
+    return [[[self alloc] initForCell:inCell spannedIndex:inIndex] autorelease];
 }
 
 //Init
@@ -53,13 +53,13 @@
 //This cell is spanned into
 - (BOOL)isSpannedInto
 {
-    return(YES);
+    return YES;
 }
 
 //The index we are within the spanned cells
 - (int)spannedIndex
 {
-    return(spannedIndex);    
+    return spannedIndex;    
 }
 
 //Assert if someone tries to span a span cell
@@ -71,7 +71,7 @@
 //Access to our master cell
 - (AIFlexibleTableCell *)masterCell
 {
-    return(masterCell);
+    return masterCell;
 }
 
 @end

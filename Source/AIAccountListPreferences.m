@@ -47,13 +47,13 @@
 * @brief Preference pane properties
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Accounts);
+    return AIPref_Accounts;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Accounts","Accounts preferences label"));
+    return AILocalizedString(@"Accounts","Accounts preferences label");
 }
 - (NSString *)nibName{
-    return(@"AccountListPreferences");
+    return @"AccountListPreferences";
 }
 
 /*!
@@ -116,7 +116,7 @@
 		}
 	}
     
-    return(nil);
+    return nil;
 }
 
 //Actions --------------------------------------------------------------------------------------------------------------
@@ -347,7 +347,7 @@
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([accountArray count]);
+	return [accountArray count];
 }
 
 /*!
@@ -359,7 +359,7 @@
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
 	if ([identifier isEqualToString:@"icon"]) {
-		return([[account userIcon] imageByScalingToSize:NSMakeSize(28,28)]);
+		return [[account userIcon] imageByScalingToSize:NSMakeSize(28,28)];
 
 	} else if ([identifier isEqualToString:@"service"]) {
 		return([[AIServiceIcons serviceIconForObject:account
@@ -367,7 +367,7 @@
 										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)]);
 
 	} else if ([identifier isEqualToString:@"name"]) {
-		return([[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT);
+		return [[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT;
 		
 	} else if ([identifier isEqualToString:@"status"]) {
 		NSString	*title;
@@ -382,17 +382,17 @@
 			title = STATUS_DESCRIPTION_OFFLINE;
 		}
 
-		return(title);
+		return title;
 		
 	} else if ([identifier isEqualToString:@"statusicon"]) {
 
-		return([AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal]);
+		return [AIStatusIcons statusIconForListObject:account type:AIStatusIconList direction:AIIconNormal];
 		
 	} else if ([identifier isEqualToString:@"enabled"]) {
-		return(nil);
+		return nil;
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -437,7 +437,7 @@
     [pboard declareTypes:[NSArray arrayWithObject:ACCOUNT_DRAG_TYPE] owner:self];
     [pboard setString:@"Account" forType:ACCOUNT_DRAG_TYPE];
     
-    return(YES);
+    return YES;
 }
 
 /*!
@@ -446,9 +446,9 @@
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if (op == NSTableViewDropAbove && row != -1) {
-        return(NSDragOperationPrivate);
+        return NSDragOperationPrivate;
     } else {
-        return(NSDragOperationNone);
+        return NSDragOperationNone;
     }
 }
 
@@ -463,9 +463,9 @@
         int newIndex = [[adium accountController] moveAccount:tempDragAccount toIndex:row];
         [tableView_accountList selectRow:newIndex byExtendingSelection:NO];
 		
-        return(YES);
+        return YES;
     } else {
-        return(NO);
+        return NO;
     }
 }
 

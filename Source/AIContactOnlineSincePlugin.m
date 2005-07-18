@@ -35,7 +35,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Online Since", "This tooltip identifier will followed by a date"));
+    return AILocalizedString(@"Online Since", "This tooltip identifier will followed by a date");
 }
 
 /*!
@@ -78,7 +78,7 @@
         }
     }
 
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 @end

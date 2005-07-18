@@ -61,7 +61,7 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 	 */
 	if (idleTime >= 18446744000.0) idleTime = 0.0; //18446744073.0 is the lowest I've seen on my MDD -ai		
 	
-    return(idleTime);
+    return idleTime;
 }
 
 /*!

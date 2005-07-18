@@ -42,7 +42,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Warning Level",nil));
+    return AILocalizedString(@"Warning Level",nil);
 }
 
 /*!
@@ -60,7 +60,7 @@
 		entry = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%d%%", warningLevel]];
     }
 
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 

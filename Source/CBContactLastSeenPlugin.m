@@ -118,7 +118,7 @@
  */
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
-    return(AILocalizedString(@"Last Seen","A time interval such as '4 days ago' will be shown after this tooltip identifier"));
+    return AILocalizedString(@"Last Seen","A time interval such as '4 days ago' will be shown after this tooltip identifier");
 }
 
 /*!

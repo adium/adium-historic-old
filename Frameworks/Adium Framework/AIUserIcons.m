@@ -56,7 +56,7 @@ static NSSize				menuIconCacheSize;
 		if (userIcon && cache) [iconCache setObject:userIcon forKey:[inContact internalObjectID]];
 	}
 	
-	return(userIcon/* ? userIcon : defaultUserIcon*/);
+	return userIcon/* ? userIcon : defaultUserIcon*/;
 }
 
 //Retrieve a user icon sized for a menu, returning the appropriate service icon if no user icon is found

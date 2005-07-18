@@ -116,7 +116,7 @@
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	return([[[adium interfaceController] openChats] count] != 0);
+	return [[[adium interfaceController] openChats] count] != 0;
 }
 
 /*!

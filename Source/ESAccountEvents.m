@@ -74,7 +74,7 @@
 		description = @"";	
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -99,7 +99,7 @@
 		description = @"";	
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -119,7 +119,7 @@
 		description = @"";
 	}
 	
-	return(description);
+	return description;
 }
 
 /*!
@@ -161,7 +161,7 @@
 		}
 	}
 	
-	return(description);
+	return description;
 }
 
 - (NSImage *)imageForEventID:(NSString *)eventID
@@ -206,7 +206,7 @@
 		}
 	}
 	
-	return(nil);	
+	return nil;	
 }
 
 /*!

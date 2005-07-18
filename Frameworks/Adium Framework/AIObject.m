@@ -30,7 +30,7 @@ static AIAdium *_sharedAdium = nil;
 + (AIAdium *)sharedAdiumInstance
 {
     NSParameterAssert(_sharedAdium != nil);
-    return(_sharedAdium);
+    return _sharedAdium;
 }
 
 //

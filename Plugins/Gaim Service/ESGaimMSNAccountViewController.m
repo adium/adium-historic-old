@@ -21,7 +21,7 @@
 @implementation ESGaimMSNAccountViewController
 
 - (NSString *)nibName{
-    return(@"ESGaimMSNAccountView");
+    return @"ESGaimMSNAccountView";
 }
 
 //Configure controls

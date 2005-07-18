@@ -147,7 +147,7 @@
  */
 - (NSEnumerator	*)statusKeyEnumerator
 {
-	return([statusDictionary keyEnumerator]);
+	return [statusDictionary keyEnumerator];
 }
 
 /*
@@ -155,7 +155,7 @@
  */
 - (id)statusObjectForKey:(NSString *)key
 {
-    return([statusDictionary objectForKey:key]);
+    return [statusDictionary objectForKey:key];
 }
 
 /*
@@ -166,7 +166,7 @@
 - (int)integerStatusObjectForKey:(NSString *)key
 {
 	NSNumber *number = [statusDictionary objectForKey:key];
-    return(number ? [number intValue] : 0);
+    return number ? [number intValue] : 0;
 }
 
 /*
@@ -212,19 +212,19 @@
 //General status object
 - (id)statusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self statusObjectForKey:key]);
+	return [self statusObjectForKey:key];
 }
 
 //NSDate
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self earliestDateStatusObjectForKey:key]);
+	return [self earliestDateStatusObjectForKey:key];
 }
 
 //NSNumber
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self numberStatusObjectForKey:key]);
+	return [self numberStatusObjectForKey:key];
 }
 
 //Integer (uses numberStatusObjectForKey:)
@@ -232,13 +232,13 @@
 {
 	NSNumber *returnValue = [self numberStatusObjectForKey:key];
 	
-    return(returnValue ? [returnValue intValue] : 0);
+    return returnValue ? [returnValue intValue] : 0;
 }
 
 //String from attributed string (uses statusObjectForKey:)
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self stringFromAttributedStringStatusObjectForKey:key]);
+	return [self stringFromAttributedStringStatusObjectForKey:key];
 }
 
 //For Subclasses -------------------------------------------------------------------------------------------------------
@@ -285,7 +285,7 @@
         [array release];
     }
 	
-    return(array);
+    return array;
 }
 
 //With create:YES, this is identical to displayArrayForKey:

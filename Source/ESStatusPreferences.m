@@ -31,20 +31,20 @@
  * @brief Category
  */
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Status);
+    return AIPref_Status;
 }
 /*!
  * @brief Label
  */
 - (NSString *)label{
-    return(AILocalizedString(@"Status",nil));
+    return AILocalizedString(@"Status",nil);
 }
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"StatusPreferences");
+    return @"StatusPreferences";
 }
 
 /*!
@@ -247,7 +247,7 @@
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([stateArray count]);
+	return [stateArray count];
 }
 
 /*!
@@ -259,14 +259,14 @@
 	AIStatus		*statusState = [stateArray objectAtIndex:row];
 	
 	if ([identifier isEqualToString:@"icon"]) {
-		return([statusState icon]);
+		return [statusState icon];
 		
 	} else if ([identifier isEqualToString:@"name"]) {
-		return([statusState title]); 
+		return [statusState title]; 
 		
 	}
 	
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -295,7 +295,7 @@
     [pboard declareTypes:[NSArray arrayWithObject:STATE_DRAG_TYPE] owner:self];
     [pboard setString:@"State" forType:STATE_DRAG_TYPE]; //Arbitrary state
     
-    return(YES);
+    return YES;
 }
 
 /*!
@@ -304,9 +304,9 @@
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if (op == NSTableViewDropAbove && row != -1) {
-        return(NSDragOperationPrivate);
+        return NSDragOperationPrivate;
     } else {
-        return(NSDragOperationNone);
+        return NSDragOperationNone;
     }
 }
 
@@ -324,9 +324,9 @@
         newIndex = [[adium statusController] moveStatusState:tempDragState toIndex:row];
         [tableView_stateList selectRow:newIndex byExtendingSelection:NO];
 		
-        return(YES);
+        return YES;
     } else {
-        return(NO);
+        return NO;
     }
 }
 

@@ -64,7 +64,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 		chat = nil;
 	}
 	
-    return(self);
+    return self;
 }
 
 

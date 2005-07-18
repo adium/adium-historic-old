@@ -64,7 +64,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	largestOrder = 1.0;
 	smallestOrder = 1.0;
 		
-	return(self);
+	return self;
 }
 
 //dealloc
@@ -86,7 +86,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	if (!internalObjectID) {
 		internalObjectID = [[AIMetaContact internalObjectIDFromObjectID:objectID] retain];
 	}
-	return(internalObjectID);
+	return internalObjectID;
 }
 
 + (NSString *)internalObjectIDFromObjectID:(NSNumber *)inObjectID
@@ -97,19 +97,19 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //A metaContact's internalObjectID is completely unique to it, so return that for interalUniqueObjectID
 - (NSString *)internalUniqueObjectID
 {
-	return([self internalObjectID]);
+	return [self internalObjectID];
 }
 
 //Return the account of this metaContact, which we may treat as the preferredContact's account
 - (AIAccount *)account
 {
-	return([[self preferredContact] account]);
+	return [[self preferredContact] account];
 }
 
 //Return the service of our preferred contact, so we will display the service icon of our preferred contact on the list
 - (AIService *)service
 {
-	return([[self preferredContact] service]);
+	return [[self preferredContact] service];
 }
 
 //When called, cache the internalObjectID of the new group so we can restore it immediately next time.
@@ -163,7 +163,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //A metaContact should never be a stranger
 - (BOOL)isStranger
 {
-	return(NO);
+	return NO;
 }
 
 //Object Storage -------------------------------------------------------------------------------------------------------
@@ -427,7 +427,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if (![services containsObject:[listObject service]]) [services addObject:[listObject service]];
 	}
 	
-	return([services autorelease]);
+	return [services autorelease];
 }
 
 
@@ -573,23 +573,23 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 
 - (id)statusObjectForKey:(NSString *)key
 {
-	return([self statusObjectForKey:key fromAnyContainedObject:YES]);
+	return [self statusObjectForKey:key fromAnyContainedObject:YES];
 }
 - (int)integerStatusObjectForKey:(NSString *)key
 {
-	return([self integerStatusObjectForKey:key fromAnyContainedObject:YES]);
+	return [self integerStatusObjectForKey:key fromAnyContainedObject:YES];
 }
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key
 {
-	return([self earliestDateStatusObjectForKey:key fromAnyContainedObject:YES]);
+	return [self earliestDateStatusObjectForKey:key fromAnyContainedObject:YES];
 }
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key
 {
-	return([self numberStatusObjectForKey:key fromAnyContainedObject:YES]);
+	return [self numberStatusObjectForKey:key fromAnyContainedObject:YES];
 }
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key
 {
-	return([self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:YES]);
+	return [self stringFromAttributedStringStatusObjectForKey:key fromAnyContainedObject:YES];
 }
 
 //---- fromAnyContainedObject status object behavior ----
@@ -605,13 +605,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //NSDate
 - (NSDate *)earliestDateStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)]);
+	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(date) : nil)];
 }
 
 //NSNumber
 - (NSNumber *)numberStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)]);
+	return [self _statusObjectForKey:key containedObjectSelector:(fromAnyContainedObject ? @selector(numberValue) : nil)];
 }
 
 //Integer (uses numberStatusObjectForKey:)
@@ -619,13 +619,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 {
 	NSNumber *returnValue = [self numberStatusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject];
 	
-    return(returnValue ? [returnValue intValue] : 0);
+    return returnValue ? [returnValue intValue] : 0;
 }
 
 //String from attributed string (uses statusObjectForKey:)
 - (NSString *)stringFromAttributedStringStatusObjectForKey:(NSString *)key fromAnyContainedObject:(BOOL)fromAnyContainedObject
 {
-	return([[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string]);
+	return [[self statusObjectForKey:key fromAnyContainedObject:fromAnyContainedObject] string];
 }
 
 //Returns the status object from our object.
@@ -724,7 +724,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	
 	[previousObjectValue release];
 	
-	return(changed);
+	return changed;
 }
 
 
@@ -812,7 +812,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		}
 	}
 
-	return(userIcon);
+	return userIcon;
 }
 
 /* @brief Return a medium-priority or better user icon from this specific meta contact's display array
@@ -841,7 +841,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		displayName = [[self preferredContact] ownDisplayName];
 	}
 
-	return(displayName);
+	return displayName;
 }
 
 - (NSString *)phoneticName
@@ -852,14 +852,14 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		phoneticName = [[self preferredContact] ownPhoneticName];
 	}
 	
-	return(phoneticName);
+	return phoneticName;
 }
 
 //FormattedUID will return nil if we have multiple different UIDs contained within us
 - (NSString *)formattedUID
 {
 	if (containsOnlyOneUniqueContact) {
-		return([[self preferredContact] formattedUID]);
+		return [[self preferredContact] formattedUID];
 	} else {
 		return nil;
 	}
@@ -873,8 +873,8 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		longDisplayName = [[self preferredContact] longDisplayName];
 	}
 
-	//    return([longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]]);
-	return(longDisplayName);
+	//    return [longDisplayName stringByAppendingString:[NSString stringWithFormat:@"-Meta-%i",[self containedObjectsCount]]];
+	return longDisplayName;
 }
 
 #pragma mark Status
@@ -932,42 +932,42 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		[containedObjects sortUsingFunction:containedContactSort context:nil];
 	}
 	
-	return(containedObjects);
+	return containedObjects;
 }
 
 //Number of containd objects
 - (unsigned)containedObjectsCount
 {
-    return([containedObjects count]);
+    return [containedObjects count];
 }
 
 //Test for the presence of an object in our group
 - (BOOL)containsObject:(AIListObject *)inObject
 {
-	return([containedObjects containsObject:inObject]);
+	return [containedObjects containsObject:inObject];
 }
 
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {
-    return([[self containedObjects] objectAtIndex:index]);
+    return [[self containedObjects] objectAtIndex:index];
 }
 
 //Retrieve the index of an object
 - (int)indexOfObject:(AIListObject *)inObject
 {
-    return([[self containedObjects] indexOfObject:inObject]);
+    return [[self containedObjects] indexOfObject:inObject];
 }
 
 //Return an enumerator of our content
 - (NSEnumerator *)objectEnumerator
 {
-    return([[self containedObjects] objectEnumerator]);
+    return [[self containedObjects] objectEnumerator];
 }
 
 - (NSEnumerator *)listContactsEnumerator
 {
-	return([[self listContacts] objectEnumerator]);
+	return [[self listContacts] objectEnumerator];
 }
 
 //Remove all the objects from this group (PRIVATE: For contact controller only)
@@ -988,7 +988,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		if ([inUID isEqualToString:[object UID]] && [object service] == inService) break;
 	}
 	
-	return(object);
+	return object;
 }
 
 //Expanded State -------------------------------------------------------------------------------------------------------
@@ -1001,7 +1001,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Returns the current expanded/collapsed state of this group
 - (BOOL)isExpanded
 {
-    return(expanded);
+    return expanded;
 }
 
 //Order index
@@ -1051,13 +1051,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	float orderIndexA = [objectA orderIndex];
 	float orderIndexB = [objectB orderIndex];
 	if (orderIndexA > orderIndexB) {
-		return(NSOrderedDescending);
+		return NSOrderedDescending;
 		
 	} else if (orderIndexA < orderIndexB) {
-		return(NSOrderedAscending);
+		return NSOrderedAscending;
 		
 	} else {
-		return([[objectA internalUniqueObjectID] caseInsensitiveCompare:[objectB internalUniqueObjectID]]);
+		return [[objectA internalUniqueObjectID] caseInsensitiveCompare:[objectB internalUniqueObjectID]];
 	}
 }
 
@@ -1068,7 +1068,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  */
 - (unsigned)visibleCount
 {
-    return([[self listContacts] count]);
+    return [[self listContacts] count];
 }
 
 @end

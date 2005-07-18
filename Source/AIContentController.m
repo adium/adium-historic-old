@@ -314,7 +314,7 @@
 	//Let the chat know we finished sending
 	[chat finishedSendingContentObject:inObject];
 	
-//    return(sent);
+//    return sent;
 }
 
 //Display a content object
@@ -521,7 +521,7 @@
 //Returns YES if the account/chat is available for sending content
 - (BOOL)availableForSendingContentType:(NSString *)inType toContact:(AIListContact *)inContact onAccount:(AIAccount *)inAccount 
 {
-	return([inAccount availableForSendingContentType:inType toContact:inContact]);
+	return [inAccount availableForSendingContentType:inType toContact:inContact];
 }
 
 /*! 

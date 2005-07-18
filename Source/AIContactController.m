@@ -300,7 +300,7 @@
 				nil]];
 	}
 
-	return(array);
+	return array;
 }
 
 
@@ -594,7 +594,7 @@
 		group = (remoteGroup ? [self groupWithUID:remoteGroup] : nil);
 	}
 
-	return(group);
+	return group;
 }
 
 //Post a list grouping changed notification for the object and group
@@ -611,7 +611,7 @@
 
 - (BOOL)useContactListGroups
 {
-	return(useContactListGroups);
+	return useContactListGroups;
 }
 
 - (void)setUseContactListGroups:(BOOL)inFlag
@@ -1111,7 +1111,7 @@
 		}
 	}
 
-	return(metaContact);
+	return metaContact;
 }
 
 /* @brief Group an NSArray of AIListContacts, returning the meta contact into which they are added.
@@ -1148,7 +1148,7 @@
 		[self addListObject:listContact toMetaContact:metaContact];
 	}
 	
-	return(metaContact);
+	return metaContact;
 }
 
 - (void)breakdownAndRemoveMetaContact:(AIMetaContact *)metaContact
@@ -1229,7 +1229,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
 	}
 
-	return(listObject);
+	return listObject;
 }
 //Contact Info --------------------------------------------------------------------------------
 #pragma mark Contact Info
@@ -1342,10 +1342,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if ((menuItem == menuItem_getInfo) || (menuItem == menuItem_getInfoAlternate)) {
-		return([self selectedListObject] != nil);
+		return [self selectedListObject] != nil;
 
 	} else if ((menuItem == menuItem_getInfoContextualContact) || (menuItem == menuItem_getInfoContextualGroup)) {
-		return([[adium menuController] currentContextMenuObject] != nil);
+		return [[adium menuController] currentContextMenuObject] != nil;
 
 	}
 
@@ -1355,7 +1355,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //
 - (NSArray *)contactInfoPanes
 {
-	return(contactInfoPanes);
+	return contactInfoPanes;
 }
 
 - (void)contactListDidBecomeMain:(NSNotification *)notification
@@ -1396,11 +1396,11 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 - (AIListObject *)selectedListObjectInContactList
 {
-	return([self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)]);
+	return [self _performSelectorOnFirstAvailableResponder:@selector(listObject) conformingToProtocol:@protocol(ContactListOutlineView)];
 }
 - (NSArray *)arrayOfSelectedListObjectsInContactList
 {
-	return([self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)]);
+	return [self _performSelectorOnFirstAvailableResponder:@selector(arrayOfListObjects) conformingToProtocol:@protocol(ContactListOutlineView)];
 }
 
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector
@@ -1408,40 +1408,40 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     NSResponder	*responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
     //Check the first responder
     if ([responder respondsToSelector:selector]) {
-        return([responder performSelector:selector]);
+        return [responder performSelector:selector];
     }
 
     //Search the responder chain
     do{
         responder = [responder nextResponder];
         if ([responder respondsToSelector:selector]) {
-            return([responder performSelector:selector]);
+            return [responder performSelector:selector];
         }
 
     } while (responder != nil);
 
     //None found, return nil
-    return(nil);
+    return nil;
 }
 - (id)_performSelectorOnFirstAvailableResponder:(SEL)selector conformingToProtocol:(Protocol *)protocol
 {
 	NSResponder *responder = [[[NSApplication sharedApplication] mainWindow] firstResponder];
 	//Check the first responder
 	if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
-		return([responder performSelector:selector]);
+		return [responder performSelector:selector];
 	}
 
     //Search the responder chain
     do{
         responder = [responder nextResponder];
         if ([responder conformsToProtocol:protocol] && [responder respondsToSelector:selector]) {
-            return([responder performSelector:selector]);
+            return [responder performSelector:selector];
         }
 
     } while (responder != nil);
 
     //None found, return nil
-    return(nil);
+    return nil;
 }
 
 //Contact Sorting --------------------------------------------------------------------------------
@@ -1453,7 +1453,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 - (NSArray *)sortControllerArray
 {
-    return(sortControllerArray);
+    return sortControllerArray;
 }
 
 //Set and get the active sort controller
@@ -1471,7 +1471,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 }
 - (AISortController *)activeSortController
 {
-    return(activeSortController);
+    return activeSortController;
 }
 
 //Sort the entire contact list
@@ -1583,7 +1583,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 											userInfo:(modifiedKeys ? [NSDictionary dictionaryWithObject:modifiedKeys
 																								 forKey:@"Keys"] : nil)];
 
-	return(attrChange);
+	return attrChange;
 }
 
 //Command all observers to apply their attributes to an object
@@ -1608,7 +1608,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Returns the main contact list group
 - (AIListGroup *)contactList
 {
-    return(contactList);
+    return contactList;
 }
 
 //Return a flat array of all the objects in a group on an account (and all subgroups, if desired)
@@ -1636,7 +1636,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
 	}
 
-	return(contactArray);
+	return contactArray;
 }
 
 //Contact List Menus- --------------------------------------------------------------------------------------------------
@@ -1687,7 +1687,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //- Selector called on contact selection is selectContact:
 //- The menu item's represented object is the contact it represents
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inObject withTarget:(id)target{
-	return([self menuOfAllContactsInContainingObject:inObject withTarget:target firstLevel:YES]);
+	return [self menuOfAllContactsInContainingObject:inObject withTarget:target firstLevel:YES];
 }
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inObject withTarget:(id)target firstLevel:(BOOL)firstLevel
 {
@@ -1786,7 +1786,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
 	}
 
-	return(contact);
+	return contact;
 }
 
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
@@ -1796,7 +1796,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 																				 account:inAccount
 																					 UID:inUID]]);
 	} else {
-		return(nil);
+		return nil;
 	}
 }
 
@@ -1825,22 +1825,22 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	//Contact
 	enumerator = [contactDict objectEnumerator];
 	while ((listObject = [enumerator nextObject])) {
-		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
+		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return listObject;
 	}
 
 	//Group
 	enumerator = [groupDict objectEnumerator];
 	while ((listObject = [enumerator nextObject])) {
-		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
+		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return listObject;
 	}
 
 	//Metacontact
 	enumerator = [metaContactDict objectEnumerator];
 	while ((listObject = [enumerator nextObject])) {
-		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return(listObject);
+		if ([[listObject internalObjectID] isEqualToString:uniqueID]) return listObject;
 	}
 
-	return(nil);
+	return nil;
 }
 
 - (AIListContact *)preferredContactForContentType:(NSString *)inType forListContact:(AIListContact *)inContact
@@ -1890,7 +1890,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
  	}
 
-	return(returnContact);
+	return returnContact;
 }
 
 //Retrieve a list contact matching the UID and serviceID of the passed contact but on the specified account.
@@ -1898,9 +1898,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListContact *)contactOnAccount:(AIAccount *)account fromListContact:(AIListContact *)inContact
 {
 	if (account && ([inContact account] != account)) {
-		return([self contactWithService:[inContact service] account:account UID:[inContact UID]]);
+		return [self contactWithService:[inContact service] account:account UID:[inContact UID]];
 	} else {
-		return(inContact);
+		return inContact;
 	}
 }
 
@@ -1915,7 +1915,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 																				 includeOffline:YES];
 	[tempListContact release];
 
-	return([self contactWithService:theService account:account UID:inUID]);
+	return [self contactWithService:theService account:account UID:inUID];
 }
 
 
@@ -1982,7 +1982,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		}
 	}
 
-	return(group);
+	return group;
 }
 
 //Contact list editing -------------------------------------------------------------------------------------------------

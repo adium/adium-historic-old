@@ -196,11 +196,11 @@ alertGenerationSelector:@selector(speechAlertFromDictionary:)];
     enumerator = [presetArray objectEnumerator];
     while ((set = [enumerator nextObject])) {
         if ([presetName isEqualToString:[set objectForKey:@"Name"]]) {
-            return([set objectForKey:@"Behavior"]);
+            return [set objectForKey:@"Behavior"];
         }
     }
     
-    return(nil);
+    return nil;
 }
 
 - (void)_activateSet:(NSArray *)setArray withActionID:(NSString *)actionID alertGenerationSelector:(SEL)selector
@@ -324,11 +324,11 @@ int eventPresetsSort(id eventPresetA, id eventPresetB, void *context)
 	float orderIndexB = [[eventPresetB objectForKey:KEY_ORDER_INDEX] floatValue];
 	
 	if (orderIndexA > orderIndexB) {
-		return(NSOrderedDescending);
+		return NSOrderedDescending;
 	} else if (orderIndexA < orderIndexB) {
-		return(NSOrderedAscending);
+		return NSOrderedAscending;
 	} else {
-		return([[eventPresetA objectForKey:KEY_EVENT_SET_NAME] caseInsensitiveCompare:[eventPresetB objectForKey:KEY_EVENT_SET_NAME]]);
+		return [[eventPresetA objectForKey:KEY_EVENT_SET_NAME] caseInsensitiveCompare:[eventPresetB objectForKey:KEY_EVENT_SET_NAME]];
 	}
 }
 

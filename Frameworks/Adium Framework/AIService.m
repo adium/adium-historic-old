@@ -38,7 +38,7 @@
 		[self registerStatuses];
 	}
 	
-	return(self);
+	return self;
 }
 
 
@@ -68,7 +68,7 @@
  */
 - (Class)accountClass
 {
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -80,7 +80,7 @@
  */
 - (AIAccountViewController *)accountViewController
 {
-	return(nil);
+	return nil;
 }
 
 /*!
@@ -92,7 +92,7 @@
  */
 - (DCJoinChatViewController *)joinChatView
 {
-	return(nil);
+	return nil;
 }
 
 
@@ -107,7 +107,7 @@
  * @return NSString unique ID
  */
 - (NSString *)serviceCodeUniqueID{
-    return(@"");
+    return @"";
 }
 
 /*!
@@ -119,7 +119,7 @@
  * @return NSString service ID
  */
 - (NSString *)serviceID{
-    return(@"");
+    return @"";
 }
 
 /*!
@@ -133,7 +133,7 @@
  * @return NSString service class
  */
 - (NSString *)serviceClass{
-	return(@"");
+	return @"";
 }
 
 /*!
@@ -145,7 +145,7 @@
  * @return NSString short description
  */
 - (NSString *)shortDescription{
-    return(@"");
+    return @"";
 }
 
 /*!
@@ -158,7 +158,7 @@
  * @return NSString long description
  */
 - (NSString *)longDescription{
-    return(@"");
+    return @"";
 }
 
 /*!
@@ -170,7 +170,7 @@
  */
 - (NSString *)userNameLabel
 {
-    return(nil);    
+    return nil;    
 }
 
 /*!
@@ -182,7 +182,7 @@
  */
 - (AIServiceImportance)serviceImportance
 {
-	return(AIServiceUnsupported);
+	return AIServiceUnsupported;
 }
 
 /*!
@@ -197,7 +197,7 @@
  */
 - (NSImage *)defaultServiceIcon
 {
-	return(nil);
+	return nil;
 }
 
 //Service Properties ---------------------------------------------------------------------------------------------------
@@ -211,7 +211,7 @@
  */
 - (NSCharacterSet *)allowedCharacters
 {
-    return(nil);
+    return nil;
 }
 
 /*!
@@ -237,7 +237,7 @@
  */
 - (NSCharacterSet *)allowedCharactersForUIDs
 {
-	return([self allowedCharacters]);
+	return [self allowedCharacters];
 }
 
 /*!
@@ -250,7 +250,7 @@
  */
 - (NSCharacterSet *)ignoredCharacters
 {
-    return(nil);
+    return nil;
 }
 
 /*!
@@ -261,7 +261,7 @@
  */
 - (int)allowedLength
 {
-    return(INT_MAX);
+    return INT_MAX;
 }
 
 /*!
@@ -274,7 +274,7 @@
  */
 - (int)allowedLengthForAccountName
 {
-	return([self allowedLength]);
+	return [self allowedLength];
 }
 
 /*!
@@ -287,7 +287,7 @@
  */
 - (int)allowedLengthForUIDs
 {
-	return([self allowedLength]);
+	return [self allowedLength];
 }
 
 /*!
@@ -298,7 +298,7 @@
  */
 - (BOOL)caseSensitive
 {
-    return(NO);
+    return NO;
 }
 
 /*!
@@ -383,7 +383,7 @@
     NSString *filteredString = [NSString stringWithCharacters:dest length:destLength];
 	free(dest);
 
-	return(filteredString);
+	return filteredString;
 }
 
 /*!
@@ -391,7 +391,7 @@
  */
 - (NSComparisonResult)compareLongDescription:(AIService *)inService
 {
-	return([[self longDescription] compare:[inService longDescription]]);
+	return [[self longDescription] compare:[inService longDescription]];
 }
 
 @end

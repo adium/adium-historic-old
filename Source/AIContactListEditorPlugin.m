@@ -157,23 +157,23 @@
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
 	if (menuItem == menuItem_delete) {
-		return([[adium contactController] selectedListObjectInContactList] != nil);
+		return [[adium contactController] selectedListObjectInContactList] != nil;
 		
 	} else if (menuItem == menuItem_tabAddContact) {
-		return([[adium menuController] currentContextMenuObject] != nil);
+		return [[adium menuController] currentContextMenuObject] != nil;
 	
 	} else if (menuItem == menuItem_addGroup || menuItem == menuItem_addContact || menuItem == menuItem_addContactContext) {
 		NSEnumerator	*enumerator = [[[adium accountController] accounts] objectEnumerator];
 		AIAccount		*account;
 		
 		while ((account = [enumerator nextObject])) {	
-			if ([account contactListEditable]) return(YES);
+			if ([account contactListEditable]) return YES;
 		}
 		
-		return(NO);
+		return NO;
 	}
 	
-	return(YES);
+	return YES;
 }
 
 //Called by a context menu

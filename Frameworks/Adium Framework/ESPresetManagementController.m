@@ -66,7 +66,7 @@
 		delegate = [inDelegate retain];
 	}
 	
-	return(self);	
+	return self;	
 }
 
 /*!
@@ -238,7 +238,7 @@
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([presets count]);
+	return [presets count];
 }
 
 /*!
@@ -255,7 +255,7 @@
 		return preset;
 	}
 	
-	return(@"");
+	return @"";
 }
 
 - (void)tableView:(NSTableView *)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn *)aTableColumn row:(int)row
@@ -318,9 +318,9 @@
 		[pboard declareTypes:[NSArray arrayWithObject:PRESET_DRAG_TYPE] owner:self];
 		[pboard setString:@"Preset" forType:PRESET_DRAG_TYPE]; //Arbitrary state
 		
-		return(YES);
+		return YES;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 
@@ -330,9 +330,9 @@
 - (NSDragOperation)tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     if (op == NSTableViewDropAbove && row != -1) {
-        return(NSDragOperationPrivate);
+        return NSDragOperationPrivate;
     } else {
-        return(NSDragOperationNone);
+        return NSDragOperationNone;
     }
 }
 

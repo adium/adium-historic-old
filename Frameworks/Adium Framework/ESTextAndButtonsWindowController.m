@@ -111,7 +111,7 @@
 
 	self = [super initWithWindowNibName:windowNibName];
 	
-    return(self);
+    return self;
 }
 
 /*!
@@ -138,11 +138,11 @@
 		}else{
 			//Don't allow the close
 			NSBeep();
-			return(NO);
+			return NO;
 		}
 	}
 	
-	return(YES);
+	return YES;
 }
 
 /*!

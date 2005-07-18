@@ -266,7 +266,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		[candidateEmoticonTextEquivalents release];
     }
 
-    return(newMessage ? [newMessage autorelease] : inMessage);
+    return newMessage ? [newMessage autorelease] : inMessage;
 }
 
 - (AIEmoticon *) _bestReplacementFromEmoticons:(NSArray *)candidateEmoticons
@@ -339,14 +339,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     }
 	
     //
-    return(_activeEmoticons);
+    return _activeEmoticons;
 }
 
 //Returns all active emoticons, categoriezed by starting character, using a dictionary, with each value containing an array of characters
 - (NSDictionary *)emoticonIndex
 {
     if (!_emoticonIndexDict) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonIndexDict);
+    return _emoticonIndexDict;
 }
 
 
@@ -387,7 +387,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
     NSDictionary    *packDict = [[adium preferenceController] preferenceForKey:[self _keyForPack:inPack]
 																		 group:PREF_GROUP_EMOTICONS];
     
-    return([packDict objectForKey:KEY_EMOTICON_DISABLED]);
+    return [packDict objectForKey:KEY_EMOTICON_DISABLED];
 }
 
 
@@ -421,7 +421,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		[self _sortArrayOfEmoticonPacks:_activeEmoticonPacks];
     }
 
-    return(_activeEmoticonPacks);
+    return _activeEmoticonPacks;
 }
 
 - (void)setEmoticonPack:(AIEmoticonPack *)inPack enabled:(BOOL)enabled
@@ -487,7 +487,7 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 		[self activeEmoticonPacks];
     }
     
-    return(_availableEmoticonPacks);
+    return _availableEmoticonPacks;
 }
 
 //Returns the emoticon pack by name
@@ -498,10 +498,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	
     enumerator = [[self availableEmoticonPacks] objectEnumerator];
     while ((emoticonPack = [enumerator nextObject])) {
-        if ([[emoticonPack name] isEqualToString:inName]) return(emoticonPack);
+        if ([[emoticonPack name] isEqualToString:inName]) return emoticonPack;
     }
 	
-    return(nil);
+    return nil;
 }
 
 - (void)xtrasChanged:(NSNotification *)notification
@@ -584,10 +584,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 		return (NSOrderedAscending);
 		
 	} else if (packAIndex > packBIndex) {
-		return(NSOrderedDescending);
+		return NSOrderedDescending;
 		
 	} else {
-		return(NSOrderedAscending);
+		return NSOrderedAscending;
 		
 	}
 }
@@ -599,14 +599,14 @@ int packSortFunction(id packA, id packB, void *packOrderingArray)
 - (NSCharacterSet *)emoticonHintCharacterSet
 {
     if (!_emoticonHintCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonHintCharacterSet);
+    return _emoticonHintCharacterSet;
 }
 
 //Returns a characterset containing all the characters that may start an emoticon
 - (NSCharacterSet *)emoticonStartCharacterSet
 {
     if (!_emoticonStartCharacterSet) [self _buildCharacterSetsAndIndexEmoticons];
-    return(_emoticonStartCharacterSet);
+    return _emoticonStartCharacterSet;
 }
 
 //For optimization, we build a list of characters that could possibly be an emoticon and will require additional scanning.

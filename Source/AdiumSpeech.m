@@ -71,7 +71,7 @@
 							  object:nil];
 	}
 	
-	return(self);
+	return self;
 }
 
 /*!
@@ -278,7 +278,7 @@
 		speaker = [self defaultVoice];
 	}
 	
-	return(speaker);
+	return speaker;
 }
 
 

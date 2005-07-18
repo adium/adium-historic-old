@@ -25,7 +25,7 @@
 
 + (id)typingContentInChat:(AIChat *)inChat withSource:(id)inSource destination:(id)inDest typingState:(AITypingState)inTypingState
 {
-    return([[[self alloc] initWithChat:inChat source:inSource destination:inDest typingState:inTypingState] autorelease]);
+    return [[[self alloc] initWithChat:inChat source:inSource destination:inDest typingState:inTypingState] autorelease];
 }
 
 - (id)initWithChat:(AIChat *)inChat source:(id)inSource destination:(id)inDest typingState:(AITypingState)inTypingState
@@ -40,7 +40,7 @@
 	//Store typing state
     typingState = inTypingState;
     
-    return(self);
+    return self;
 }
 
 - (void)dealloc
@@ -51,7 +51,7 @@
 //Content Identifier
 - (NSString *)type
 {
-    return(CONTENT_TYPING_TYPE);
+    return CONTENT_TYPING_TYPE;
 }
 
 //YES if typing, NO if not typing
@@ -59,7 +59,7 @@
 	typingState = inTypingState;
 }
 - (AITypingState)typingState{
-    return(typingState);
+    return typingState;
 }
 
 @end

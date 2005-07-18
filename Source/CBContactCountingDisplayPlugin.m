@@ -192,7 +192,7 @@
 		}
 	}
 	
-	return(modifiedAttributes);
+	return modifiedAttributes;
 }
 
 /*!

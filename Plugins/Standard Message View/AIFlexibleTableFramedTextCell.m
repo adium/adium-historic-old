@@ -42,7 +42,7 @@
 //Create a new framed cell
 + (AIFlexibleTableFramedTextCell *)cellWithAttributedString:(NSAttributedString *)inString
 {
-    return([[[self alloc] initWithAttributedString:inString] autorelease]);
+    return [[[self alloc] initWithAttributedString:inString] autorelease];
 }
 
 //init
@@ -183,7 +183,7 @@
         newHeight = (FRAME_RADIUS * 2);
     }
     
-    return([super sizeContentForWidth:inWidth] + (framePadTop + framePadBottom));
+    return [super sizeContentForWidth:inWidth] + (framePadTop + framePadBottom);
 }
 
 //Adjust for our padding
@@ -192,7 +192,7 @@
     offset.x += framePadLeft;
     offset.y += framePadBottom;
 
-    return([super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView]);
+    return [super resetCursorRectsAtOffset:offset visibleRect:visibleRect inView:controlView];
 }
 
 //Adjust for our padding
@@ -203,7 +203,7 @@
     inOffset.x += framePadLeft;
     inOffset.y += framePadBottom;
 
-    return([super handleMouseDownEvent:theEvent atPoint:inPoint offset:inOffset]);
+    return [super handleMouseDownEvent:theEvent atPoint:inPoint offset:inOffset];
 }
 
 //Adjust for our padding
@@ -214,7 +214,7 @@
     inOffset.x += framePadLeft;
     inOffset.y += framePadBottom;
     
-    return([super menuItemsForEvent:theEvent atPoint:inPoint offset:inOffset]);
+    return [super menuItemsForEvent:theEvent atPoint:inPoint offset:inOffset];
 }
 
 //Adjust for our padding
@@ -225,7 +225,7 @@
     inOffset.x += framePadLeft;
     inOffset.y += framePadBottom;
 
-    return([super pointIsSelected:inPoint offset:inOffset]);
+    return [super pointIsSelected:inPoint offset:inOffset];
 }
 
 //Change this cell's selection

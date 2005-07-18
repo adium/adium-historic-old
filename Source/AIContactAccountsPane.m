@@ -46,14 +46,14 @@
  * @brief Category
  */
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
-    return(AIInfo_Accounts);
+    return AIInfo_Accounts;
 }
 
 /*!
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ContactAccounts");
+    return @"ContactAccounts";
 }
 
 /*!
@@ -164,7 +164,7 @@
  */
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return([accounts count]);
+	return [accounts count];
 }
 
 /*!
@@ -179,18 +179,18 @@
 		NSString	*accountFormattedUID = [account formattedUID];
 		
 		if ([account integerStatusObjectForKey:@"Online"]) {
-			return(accountFormattedUID);
+			return accountFormattedUID;
 			
 		} else {
 			//Gray the names of offline accounts
 			NSDictionary		*attributes = [NSDictionary dictionaryWithObject:[NSColor grayColor] forKey:NSForegroundColorAttributeName];
 			NSAttributedString	*string = [[NSAttributedString alloc] initWithString:accountFormattedUID attributes:attributes];
-			return([string autorelease]);
+			return [string autorelease];
 		}
 		
 	}
 	
-	return(@"");
+	return @"";
 }
 
 /*!

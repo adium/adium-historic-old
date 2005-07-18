@@ -238,7 +238,7 @@
 		}
 	}
 	
-	return([NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil]);
+	return [NSMutableDictionary dictionaryWithObjectsAndKeys:[iconPackDict objectForKey:@"Description"], @"Description", iconStateDict, @"State", nil];
 }
 
 - (AIIconState *)previewStateForIconPackAtPath:(NSString *)folderPath
@@ -487,7 +487,7 @@
         dockScale = 0.3;
     }
 
-    return(dockScale);
+    return dockScale;
 }
 
 /*
@@ -549,7 +549,7 @@
         default: desc=@""; break;
     }    
 
-	return(desc);
+	return desc;
 }
 
 //Start a delayed bounce

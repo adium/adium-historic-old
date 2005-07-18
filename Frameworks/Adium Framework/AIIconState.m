@@ -88,7 +88,7 @@
 		}
 
 		//Abort if no base state image is found
-		if (!baseIconState) return(self);
+		if (!baseIconState) return self;
 
 		//We prefer to have an animated state that isn't an overly, but if we didn't find one we'll take the overlay
 		//animating state if that was found
@@ -158,7 +158,7 @@
 
 - (int)currentFrame
 {
-    return(currentFrame);
+    return currentFrame;
 }
 
 - (void)nextFrame
@@ -198,31 +198,31 @@
 }
 
 - (BOOL)animated{
-    return(animated);
+    return animated;
 }
 
 - (float)animationDelay{
-    return(delay);
+    return delay;
 }
 
 - (int)numberOfFrames{
-    return(numberOfFrames);
+    return numberOfFrames;
 }
 
 - (BOOL)looping{
-    return(looping);
+    return looping;
 }
 
 - (BOOL)overlay{
-    return(overlay);
+    return overlay;
 }
 
 - (NSArray *)imageArray{
-    return(imageArray);
+    return imageArray;
 }
 
 - (NSImage *)image{
-    return(image);
+    return image;
 }
 
 - (NSImage *)_compositeStates:(NSArray *)iconStateArray withBaseState:(AIIconState *)baseState animatingState:(AIIconState *)animatingState forFrame:(int)frame
@@ -272,7 +272,7 @@
         }
     }
 	
-    return([workingImage autorelease]);
+    return [workingImage autorelease];
 }
 
 @end

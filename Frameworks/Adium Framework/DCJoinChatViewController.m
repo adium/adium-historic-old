@@ -63,11 +63,11 @@
 
 - (NSView *)view
 {
-	return(view);
+	return view;
 }
 
 //Stubs for subclasses
-- (NSString *)nibName { return(nil); };
+- (NSString *)nibName { return nil; };
 - (void)joinChatWithAccount:(AIAccount *)inAccount { };
 - (void)configureForAccount:(AIAccount *)inAccount { account = inAccount; }
 
@@ -184,7 +184,7 @@
 		}
 	}
 	
-	return(contactsArray);
+	return contactsArray;
 }
 
 #pragma mark Drag delegate convenience

@@ -21,10 +21,10 @@
 
 //Pane Details
 - (NSString *)label{
-	return(@"");
+	return @"";
 }
 - (NSString *)nibName{
-    return(@"AlertMessageContactAlert");    
+    return @"AlertMessageContactAlert";    
 }
 
 //Configure for the action
@@ -39,9 +39,9 @@
 - (NSDictionary *)actionDetails
 {
 	if ([view_alertText string]) {
-		return([NSDictionary dictionaryWithObject:[view_alertText string] forKey:KEY_ALERT_TEXT]);
+		return [NSDictionary dictionaryWithObject:[view_alertText string] forKey:KEY_ALERT_TEXT];
 	} else {
-		return(nil);
+		return nil;
 	}
 }
 

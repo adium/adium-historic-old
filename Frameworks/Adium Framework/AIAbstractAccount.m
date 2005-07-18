@@ -84,7 +84,7 @@
 		[self initAccount];
     }
 	
-    return(self);
+    return self;
 }
 
 /*!
@@ -115,7 +115,7 @@
  */
 - (NSString *)internalObjectID
 {
-	return(internalObjectID);
+	return internalObjectID;
 }
 
 /*!
@@ -123,7 +123,7 @@
  */
 - (NSString *)description
 {
-	return([NSString stringWithFormat:@"%@:%@",[super description],[self UID]]);
+	return [NSString stringWithFormat:@"%@:%@",[super description],[self UID]];
 }
 
 /*!
@@ -133,7 +133,7 @@
  */
 - (NSString *)pathToPreferences
 {
-    return(ACCOUNT_PREFS_PATH);
+    return ACCOUNT_PREFS_PATH;
 }
 
 /*!
@@ -144,7 +144,7 @@
  */
 - (NSData *)userIconData
 {
-	return([self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS]);	
+	return [self preferenceForKey:KEY_USER_ICON group:GROUP_ACCOUNT_STATUS];	
 }
 
 /*!
@@ -167,7 +167,7 @@
  */
 - (NSString *)host
 {
-	return([self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS]);
+	return [self preferenceForKey:KEY_CONNECT_HOST group:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -177,7 +177,7 @@
  */
 - (int)port
 {
-	return([[self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS] intValue]);
+	return [[self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS] intValue];
 }
 
 /*!
@@ -475,9 +475,9 @@
 			[self setStatusStateAndRemainOffline:statusState];		
 		}
 		
-		return(statusState);
+		return statusState;
 	} else {
-		return([[adium statusController] offlineStatusState]);
+		return [[adium statusController] offlineStatusState];
 	}
 }
 
@@ -491,17 +491,17 @@
 
 - (NSString *)statusName
 {
-	return([[self statusState] statusName]);
+	return [[self statusState] statusName];
 }
 
 - (AIStatusType)statusType
 {
-	return([[self statusState] statusType]);
+	return [[self statusState] statusType];
 }
 
 - (NSAttributedString *)statusMessage
 {
-	return([[self statusState] statusMessage]);
+	return [[self statusState] statusMessage];
 }
 
 

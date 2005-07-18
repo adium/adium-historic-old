@@ -47,7 +47,7 @@
 - (NSString *)labelForObject:(AIListObject *)inObject
 {
 	if ([inObject isKindOfClass:[AIMetaContact class]]) {
-		return(AILocalizedString(@"Contacts",nil));
+		return AILocalizedString(@"Contacts",nil);
 	}
 	
 	return nil;
@@ -121,7 +121,7 @@
 		}
 	}
     
-    return([entry autorelease]);
+    return [entry autorelease];
 }
 
 @end

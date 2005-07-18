@@ -31,10 +31,10 @@
 
 //Preference pane properties
 - (CONTACT_INFO_CATEGORY)contactInfoCategory{
-    return(AIInfo_Settings);
+    return AIInfo_Settings;
 }
 - (NSString *)nibName{
-    return(@"ContactSettingsPane");
+    return @"ContactSettingsPane";
 }
 
 //Configure the preference view

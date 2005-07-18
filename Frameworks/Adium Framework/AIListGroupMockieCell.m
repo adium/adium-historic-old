@@ -31,7 +31,7 @@
 		newCell->_mockieGradient[i] = [_mockieGradient[i] retain];
 	}
 	
-	return(newCell);
+	return newCell;
 }
 
 //Init
@@ -100,7 +100,7 @@
 		[_mockieGradient[state] unlockFocus];
 	}
 	
-	return(_mockieGradient[state]);
+	return _mockieGradient[state];
 }
 
 //Remake of flushGradientCache, supporting 2 gradients depending on group state
@@ -128,7 +128,7 @@
 //the outline view know we'll be drawing the grid ourself
 - (BOOL)drawGridBehindCell
 {
-	return(NO);
+	return NO;
 }
 
 @end

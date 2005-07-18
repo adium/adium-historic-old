@@ -104,7 +104,7 @@ static NSDictionary* details_for_context(ConnContext *context)
 		[NSString stringWithUTF8String:((dir == SESS_DIR_HIGH) ? sess1 : sess2)], @"Outgoing SessionID",
 		nil];
 	
-	return(securityDetailsDict);
+	return securityDetailsDict;
 }
 
 #pragma mark Dialogs

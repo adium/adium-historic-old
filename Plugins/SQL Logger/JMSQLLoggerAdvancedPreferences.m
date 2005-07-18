@@ -26,14 +26,14 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 
 - (NSString *)label{
-    return(@"SQL Logging");
+    return @"SQL Logging";
 }
 - (NSString *)nibName{
-    return(@"SQL_Logger_Prefs");
+    return @"SQL_Logger_Prefs";
 }
 
 //Configure the preference view

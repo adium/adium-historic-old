@@ -170,7 +170,7 @@
 		[menu_chatMenu setMenuChangedMessagesEnabled:YES];
 	}
 	
-	return(menu_chatMenu);
+	return menu_chatMenu;
 }
 
 // Dummy target so that we get validateMenuItem calls

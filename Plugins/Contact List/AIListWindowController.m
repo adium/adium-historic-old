@@ -350,7 +350,7 @@
 //		return([[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_WINDOW_TRANSPARENCY
 //														 group:PREF_GROUP_LIST_LAYOUT] floatValue]);
 //	} else {
-//		return(0.0);
+//		return 0.0;
 //	}
 //}
 //

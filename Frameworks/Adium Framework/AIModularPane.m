@@ -21,20 +21,20 @@
 //Return a new modular pane
 + (AIModularPane *)modularPane
 {
-    return([[[self alloc] init] autorelease]);
+    return [[[self alloc] init] autorelease];
 }
 
 //Return a new modular pane, passing plugin
 + (AIModularPane *)modularPaneForPlugin:(id)inPlugin
 {
-    return([[[self alloc] initForPlugin:inPlugin] autorelease]);
+    return [[[self alloc] initForPlugin:inPlugin] autorelease];
 }
 
 //Init, passing plugin
 - (id)initForPlugin:(id)inPlugin
 {
     plugin = inPlugin;
-    return([self init]);
+    return [self init];
 }
 
 //Init
@@ -51,7 +51,7 @@
 //Compare to another category view (for sorting on the preference window)
 - (NSComparisonResult)compare:(AIModularPane *)inPane
 {
-    return([[self label] caseInsensitiveCompare:[inPane label]]);
+    return [[self label] caseInsensitiveCompare:[inPane label]];
 }
 
 //Returns our view
@@ -64,7 +64,7 @@
 		if (![self resizable]) [view setAutoresizingMask:(NSViewMaxYMargin)];
     }
     
-    return(view);
+    return view;
 }
 
 //Close our view
@@ -81,13 +81,13 @@
 //Pane label
 - (NSString *)label
 {
-	return(@"");
+	return @"";
 }
 
 //Nib to load
 - (NSString *)nibName
 {
-    return(@"");    
+    return @"";    
 }
 
 //Configure the preference view
@@ -117,7 +117,7 @@
 //Resizable
 - (BOOL)resizable
 {
-	return(NO);
+	return NO;
 }
 
 

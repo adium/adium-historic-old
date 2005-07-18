@@ -30,7 +30,7 @@
  * @brief Nib name
  */
 - (NSString *)nibName{
-    return(@"ESGaimYahooAccountView");
+    return @"ESGaimYahooAccountView";
 }
 
 /*!
@@ -67,7 +67,7 @@
 
 int menuItemSort(id menuItemA, id menuItemB, void *context)
 {
-	return([[menuItemA title] caseInsensitiveCompare:[menuItemB title]]);
+	return [[menuItemA title] caseInsensitiveCompare:[menuItemB title]];
 }
 
 - (NSMenu *)chatServerMenu
@@ -127,7 +127,7 @@ int menuItemSort(id menuItemA, id menuItemB, void *context)
 		[chatServerMenu addItem:menuItem];
 	}
 
-	return([chatServerMenu autorelease]);
+	return [chatServerMenu autorelease];
 }
 
 @end
