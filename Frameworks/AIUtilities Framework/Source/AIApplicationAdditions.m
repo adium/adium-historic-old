@@ -17,12 +17,12 @@
 
 + (BOOL)isOnTigerOrBetter
 {
-	return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
+	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
 }
 
 - (BOOL)isOnTigerOrBetter
 {
-	return(floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
+	return (floor(NSAppKitVersionNumber) > NSAppKitVersionNumber10_3);
 }
 
 - (BOOL)isWebKitAvailable
@@ -46,7 +46,7 @@
 
 - (NSString *)applicationVersion
 {
-	return([[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey]);
+	return [[[NSBundle mainBundle] infoDictionary] objectForKey:(NSString *)kCFBundleVersionKey];
 }
 
 @end

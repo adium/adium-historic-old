@@ -563,7 +563,7 @@
 			  shouldAcceptNewName:(NSString *)newName
 						 userInfo:(id)userInfo
 {
-	return(![[[plugin builtInEventPresets] allKeys] containsObject:newName] &&
+	return (![[[plugin builtInEventPresets] allKeys] containsObject:newName] &&
 		   ![[[plugin storedEventPresets] allKeys] containsObject:newName]);
 }
 	

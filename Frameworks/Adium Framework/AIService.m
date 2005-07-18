@@ -55,9 +55,9 @@
  */
 - (id)accountWithUID:(NSString *)inUID internalObjectID:(NSString *)inInternalObjectID
 {
-	return([[[[self accountClass] alloc] initWithUID:[self filterUID:inUID removeIgnoredCharacters:YES]
+	return [[[[self accountClass] alloc] initWithUID:[self filterUID:inUID removeIgnoredCharacters:YES]
 									internalObjectID:inInternalObjectID
-											 service:self] autorelease]);
+											 service:self] autorelease] ;
 }
 
 /*!

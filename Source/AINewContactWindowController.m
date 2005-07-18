@@ -385,7 +385,7 @@
 	NSString	*identifier = [tableColumn identifier];
 	
 	if ([identifier isEqualToString:@"check"]) {
-		return([[accounts objectAtIndex:row] contactListEditable] ?
+		return ([[accounts objectAtIndex:row] contactListEditable] ?
 			   [[accounts objectAtIndex:row] preferenceForKey:KEY_ADD_CONTACT_TO group:PREF_GROUP_ADD_CONTACT] :
 			   [NSNumber numberWithBool:NO]);
 	

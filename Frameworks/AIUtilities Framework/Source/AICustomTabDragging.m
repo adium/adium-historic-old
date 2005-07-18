@@ -23,7 +23,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 + (AICustomTabDragging *)sharedInstance
 {
 	if (!sharedTabDragInstance) sharedTabDragInstance = [[self alloc] init];
-	return(sharedTabDragInstance);
+	return sharedTabDragInstance;
 }
 
 - (id)init
@@ -60,13 +60,13 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Set the currently hovered destination tab view
 - (AICustomTabsView *)destinationTabView
 {
-	return(destTabBar);
+	return destTabBar;
 }
 
 //Set the currently active source tab view
 - (AICustomTabsView *)sourceTabView
 {
-	return(sourceTabBar);
+	return sourceTabBar;
 }
 
 //Set the currently hovered screen point
@@ -78,7 +78,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Size of the cell being dragged
 - (NSSize)sizeOfDraggedCell
 {
-	return([dragTabCell frame].size);
+	return [dragTabCell frame].size;
 }
 
 
@@ -227,7 +227,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 //Prevent dragging of tabs to another application
 - (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
-    return(isLocal ? NSDragOperationEvery : NSDragOperationNone);
+    return (isLocal ? NSDragOperationEvery : NSDragOperationNone);
 }
 
 //Clean up drag variables
@@ -240,7 +240,7 @@ static AICustomTabDragging *sharedTabDragInstance = nil;
 
 - (NSTabViewItem *)draggedTabViewItem
 {
-	return([dragTabCell tabViewItem]);
+	return [dragTabCell tabViewItem];
 }
 
 @end

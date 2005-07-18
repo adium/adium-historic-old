@@ -22,7 +22,7 @@
     NSMutableParagraphStyle    *paragraphStyle = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
     [paragraphStyle setAlignment:alignment];
 	
-    return([paragraphStyle autorelease]);
+    return [paragraphStyle autorelease];
 }
 
 + (NSMutableParagraphStyle *)styleWithAlignment:(NSTextAlignment)alignment lineBreakMode:(NSLineBreakMode)mode
@@ -31,7 +31,7 @@
     [paragraphStyle setAlignment:alignment];
     [paragraphStyle setLineBreakMode:mode];
     
-    return([paragraphStyle autorelease]);
+    return [paragraphStyle autorelease];
 }
 
 @end

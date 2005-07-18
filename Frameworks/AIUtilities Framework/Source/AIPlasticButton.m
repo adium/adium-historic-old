@@ -39,7 +39,7 @@
 	[newButton->plasticDefaultCaps retain];
 	[newButton->plasticDefaultMiddle retain];
 
-	return(newButton);
+	return newButton;
 }
 
 - (id)initWithFrame:(NSRect)frameRect

@@ -46,8 +46,8 @@
 		[NSNumber numberWithInt:Context_Contact_NegativeAction],
 		[NSNumber numberWithInt:Context_Contact_Additions], nil];
 	
-    return([[adium menuController] contextualMenuWithLocations:locationsArray
+    return [[adium menuController] contextualMenuWithLocations:locationsArray
 												 forListObject:listObject
-														inChat:[[self delegate] chat]]);
+														inChat:[[self delegate] chat]];
 }
 @end

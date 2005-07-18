@@ -35,7 +35,7 @@
 	AIGenericViewCell *newCell = [super copyWithZone:zone];
 	newCell->embeddedView = [embeddedView retain];
 
-	return(newCell);
+	return newCell;
 }
 
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
@@ -102,7 +102,7 @@
 
 - (BOOL)drawGridBehindCell
 {
-	return(YES);
+	return YES;
 }
 
 @end

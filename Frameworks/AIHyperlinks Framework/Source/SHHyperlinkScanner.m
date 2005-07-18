@@ -204,7 +204,7 @@ static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
 											  withValidationStatus:validStatus
 													  parentString:inString
 														  andRange:urlRange];
-            return([markedLink autorelease]);
+            return [markedLink autorelease];
         }
 		
         //step location after scanning a string
@@ -214,7 +214,7 @@ static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
     // if we're here, then NSScanner hit the end of the string
     // set SHStringOffset to the string length here so we avoid potential infinite looping with many trailing spaces.
     SHStringOffset = [inString length];
-    return(nil);
+    return nil;
 }
 
 #pragma mark string and textview handleing
@@ -234,7 +234,7 @@ static NSCharacterSet			*hostnameComponentSeparatorSet = nil;
         }
     }
     
-	return(rangeArray);
+	return rangeArray;
 }
 
 // fetch all the URL's form a text view

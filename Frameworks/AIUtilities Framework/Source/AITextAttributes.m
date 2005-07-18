@@ -34,12 +34,12 @@
 //Creates a new instance of AITextAttributes
 + (id)textAttributesWithFontFamily:(NSString *)inFamilyName traits:(NSFontTraitMask)inTraits size:(int)inSize
 {
-    return([[[self alloc] initWithFontFamily:inFamilyName traits:inTraits size:inSize] autorelease]);
+    return [[[self alloc] initWithFontFamily:inFamilyName traits:inTraits size:inSize] autorelease];
 }
 
 + (id)textAttributesWithDictionary:(NSDictionary *)inAttributes
 {
-	return([[[self alloc] initWithDictionary:inAttributes] autorelease]);
+	return [[[self alloc] initWithDictionary:inAttributes] autorelease];
 }
 
 //init
@@ -107,7 +107,7 @@
 	newTextAttributes->fontTraitsMask = fontTraitsMask;
 	newTextAttributes->fontSize = fontSize;
 
-	return(newTextAttributes);
+	return newTextAttributes;
 }
 
 //Set the font family (name)
@@ -123,7 +123,7 @@
 
 - (NSString *)fontFamily
 {
-	return(fontFamilyName);
+	return fontFamilyName;
 }
 
 //Set the font size
@@ -242,7 +242,7 @@
 
 - (id)languageValue
 {
-	return([dictionary objectForKey:@"LanguageValue"]);
+	return [dictionary objectForKey:@"LanguageValue"];
 }
 
 //Returns a dictinary of attributes
@@ -251,7 +251,7 @@
 	//If the dictionary doesn't specify a font, it means our font has changed since the last call here. Update now.
 	if (![dictionary objectForKey:NSFontAttributeName]) [self updateFont];
 
-    return(dictionary);
+    return dictionary;
 }
 
 - (void)resetFontAttributes

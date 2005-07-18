@@ -25,7 +25,7 @@
 
     [self addItem:theMenuItem];
     
-    return([theMenuItem autorelease]);
+    return [theMenuItem autorelease];
 }
 
 - (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode tag:(int)tag
@@ -36,7 +36,7 @@
 	
     [self addItem:theMenuItem];
     
-    return([theMenuItem autorelease]);
+    return [theMenuItem autorelease];
 }
 
 - (id <NSMenuItem>)addItemWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
@@ -47,7 +47,7 @@
 
     [self addItem:theMenuItem];
     
-    return([theMenuItem autorelease]);
+    return [theMenuItem autorelease];
 }
 
 
@@ -80,7 +80,7 @@
 
     [self setTarget:target];
     
-    return(self);
+    return self;
 }
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode representedObject:(id)object
@@ -91,7 +91,7 @@
     [self setTarget:target];
     [self setRepresentedObject:object];
 	
-    return(self);
+    return self;
 }
 
 - (id)initWithTitle:(NSString *)aString target:(id)target action:(SEL)aSelector keyEquivalent:(NSString *)charCode keyMask:(unsigned int)keyMask
@@ -205,10 +205,10 @@ extern MenuRef _NSGetCarbonMenu(NSMenu *);
 	NSMenuItem		*menuItem;
 	
 	while ((menuItem = [enumerator nextObject])) {
-		if ([menuItem isEnabled]) return(menuItem);
+		if ([menuItem isEnabled]) return menuItem;
 	}
 	
-	return(nil);
+	return nil;
 }
 
 //Swap two menu items

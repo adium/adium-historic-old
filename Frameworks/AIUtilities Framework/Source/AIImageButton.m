@@ -18,7 +18,7 @@
 		imageFloater = nil;
 	}
 
-	return(self);
+	return self;
 }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -27,7 +27,7 @@
 
 	newButton->imageFloater = [imageFloater retain];
 
-	return(newButton);
+	return newButton;
 }
 
 - (void)dealloc

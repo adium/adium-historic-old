@@ -894,11 +894,11 @@
 - (float)splitView:(NSSplitView *)sender constrainMaxCoordinate:(float)proposedMax ofSubviewAt:(int)offset
 {
 	if (sender == splitView_textEntryHorizontal) {
-		return([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
+		return ([sender frame].size.height - ([self _textEntryViewProperHeightIgnoringUserMininum:YES] +
 											 [sender dividerThickness]));
 
 	} else /*if (sender == splitView_messages)*/ {
-		return([sender frame].size.width - ([self _userListViewProperWidthIgnoringUserMininum:YES] +
+		return ([sender frame].size.width - ([self _userListViewProperWidthIgnoringUserMininum:YES] +
 											[sender dividerThickness]));
 		
 	}

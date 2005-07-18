@@ -39,7 +39,7 @@
 
 - (BOOL)isOpaque
 {
-    return(NO);
+    return NO;
 }
 
 - (void)setColor:(NSColor *)inColor

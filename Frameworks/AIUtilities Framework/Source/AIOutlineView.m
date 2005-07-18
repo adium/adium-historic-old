@@ -51,9 +51,9 @@
 - (NSMenu *)menuForEvent:(NSEvent *)theEvent
 {
     if ([[self delegate] respondsToSelector:@selector(outlineView:menuForEvent:)]) {
-        return([[self delegate] outlineView:self menuForEvent:theEvent]);
+        return [[self delegate] outlineView:self menuForEvent:theEvent];
     } else {
-        return(nil);
+        return nil;
     }
 }
 
@@ -226,7 +226,7 @@
 //Prevent dragging of items to another application
 - (unsigned int)draggingSourceOperationMaskForLocal:(BOOL)isLocal
 {
-    return(isLocal ? NSDragOperationEvery : NSDragOperationNone);
+    return (isLocal ? NSDragOperationEvery : NSDragOperationNone);
 }
 
 @end

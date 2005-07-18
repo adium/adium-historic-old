@@ -73,7 +73,7 @@ static  NSImage			*tabDivider = nil;
 //Create a new custom tab view
 + (id)customTabViewWithFrame:(NSRect)frameRect
 {
-    return([[[self alloc] initWithFrame:frameRect] autorelease]);
+    return [[[self alloc] initWithFrame:frameRect] autorelease];
 }
 
 //init
@@ -106,13 +106,13 @@ static  NSImage			*tabDivider = nil;
 //Allow tab switching from the background
 - (BOOL)acceptsFirstMouse:(NSEvent *)theEvent
 {
-    return(YES);
+    return YES;
 }
 
 //Prevent dragging on metal windows
 - (BOOL)mouseDownCanMoveWindow
 {
-    return(NO);
+    return NO;
 }
 
 
@@ -129,7 +129,7 @@ static  NSImage			*tabDivider = nil;
 }
 - (id)delegate
 {
-    return(delegate);
+    return delegate;
 }
 
 //Does removing the last tab of a window cause that window to hide?
@@ -139,7 +139,7 @@ static  NSImage			*tabDivider = nil;
 }
 - (BOOL)removingLastTabHidesWindow
 {
-    return(removingLastTabHidesWindow);
+    return removingLastTabHidesWindow;
 }
 
 //Can the user close inactive tabs?
@@ -159,7 +159,7 @@ static  NSImage			*tabDivider = nil;
 }
 - (BOOL)allowsInactiveTabClosing
 {
-    return(allowsInactiveTabClosing);
+    return allowsInactiveTabClosing;
 }
 
 //Is the user allowed to rearrange tabs within the window?
@@ -169,7 +169,7 @@ static  NSImage			*tabDivider = nil;
 }
 - (BOOL)allowsTabRearranging
 {
-	return(allowsTabRearranging);
+	return allowsTabRearranging;
 }
 
 
@@ -196,7 +196,7 @@ static  NSImage			*tabDivider = nil;
 //Returns number of tab view items
 - (int)numberOfTabViewItems
 {
-	return([tabView numberOfTabViewItems]);
+	return [tabView numberOfTabViewItems];
 }
 
 
@@ -274,7 +274,7 @@ static  NSImage			*tabDivider = nil;
 		if (tabCell != dragCell && NSPointInRect(clickLocation, [tabCell frame])) break;
     }
 	
-    return(tabCell);
+    return tabCell;
 }
 
 //Returns the total width of our tabs
@@ -288,7 +288,7 @@ static  NSImage			*tabDivider = nil;
 		if (tabCell != dragCell) totalWidth += [tabCell size].width + CUSTOM_TABS_GAP;
     }
     
-    return(totalWidth);
+    return totalWidth;
 }
 
 //Change our selection to match the current selected tabViewItem
@@ -382,7 +382,7 @@ static  NSImage			*tabDivider = nil;
 	
 	while ((tabCell = [enumerator nextObject]) && [tabCell tabViewItem] != tabViewItem);
 	
-	return(tabCell);
+	return tabCell;
 }
 
 
@@ -518,7 +518,7 @@ static  NSImage			*tabDivider = nil;
 	if (finished) [self resetCursorTracking];
 	
     [self setNeedsDisplay:YES];
-    return(finished);
+    return finished;
 }
 
 
@@ -590,7 +590,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		rect.size.width -= NSMaxX(rect) - right;
 	}
 	
-	return(rect);
+	return rect;
 } 
 
 //Draw our background strip
@@ -634,9 +634,9 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 	
     //Pass this on to our delegate
     if (tabCell && [delegate respondsToSelector:@selector(customTabView:menuForTabViewItem:)]) {
-        return([delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]]);
+        return [delegate customTabView:self menuForTabViewItem:[tabCell tabViewItem]];
     }
-    return(nil);
+    return nil;
 }
 
 
@@ -706,13 +706,13 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         types = [delegate customTabViewAcceptableDragTypes:self];
     }
     
-    return(types ? [types arrayByAddingObject:TAB_CELL_IDENTIFIER] : [NSArray arrayWithObject:TAB_CELL_IDENTIFIER]);
+    return (types ? [types arrayByAddingObject:TAB_CELL_IDENTIFIER] : [NSArray arrayWithObject:TAB_CELL_IDENTIFIER]);
 }
 
 //Return YES to accept drags
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-    return(YES);
+    return YES;
 }
 
 //Perform a drag operation (switching around the tabs)
@@ -745,7 +745,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         }
     }
 	
-    return(success);
+    return success;
 }
 
 //Called when a drag enters this toolbar
@@ -767,7 +767,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		[[[self window] windowController] draggingEntered:sender];
 	}
     
-    return(operation);
+    return operation;
 }
 
 //Called continuously as the drag is over our tab bar
@@ -800,7 +800,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
         }
     }
     
-    return(operation);
+    return operation;
 }
 
 //Called when the drag exits this tab bar
@@ -847,7 +847,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		if (hoverIndex >= [tabCellArray count]) hoverIndex = [tabCellArray count];
 		
 		if (outIndex) *outIndex = hoverIndex;
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]]);
+		return [[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(lastLocation,0) toView:nil]];
 
 	} else {
 		NSTabViewItem		*tabViewItem = [[AICustomTabDragging sharedInstance] draggedTabViewItem];
@@ -865,7 +865,7 @@ NSRect AIConstrainRectWidth(NSRect rect, float left, float right)
 		} else {
 			hover = NSMaxX([[tabCellArray objectAtIndex:desiredIndex-1] frame]) + CUSTOM_TABS_GAP;
 		}
-		return([[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]]);
+		return [[self window] convertBaseToScreen:[self convertPoint:NSMakePoint(hover,0) toView:nil]];
 	}
 }
 

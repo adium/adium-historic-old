@@ -36,7 +36,7 @@
     self = [super initWithFrame:frameRect];
 	[self _initSendingTextView];
 
-	return(self);
+	return self;
 }
 
 - (id)initWithCoder:(NSCoder *)coder
@@ -44,7 +44,7 @@
 	self = [super initWithCoder:coder];
 	[self _initSendingTextView];
 	
-	return(self);
+	return self;
 }
 
 - (void)_initSendingTextView
@@ -74,7 +74,7 @@
 }
 - (BOOL)isSendingEnabled
 {
-    return(sendingEnabled);
+    return sendingEnabled;
 }
 
 //Configure the send keys
@@ -98,9 +98,9 @@
 	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
     if ([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r') {
 		if (sendingEnabled) [self sendContent:nil];
-		return(YES);
+		return YES;
 	} else {
-		return(NO);
+		return NO;
 	}
 }
 

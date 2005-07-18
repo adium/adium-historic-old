@@ -73,7 +73,7 @@
     [self setNeedsDisplay:YES];
 }
 - (BOOL)drawsAlternatingRows{
-	return(drawsAlternatingRows);
+	return drawsAlternatingRows;
 }
 
 //Set the alternating row color
@@ -86,7 +86,7 @@
     }
 }
 - (NSColor *)alternatingRowColor{
-	return(alternatingRowColor);
+	return alternatingRowColor;
 }
 
 //Toggle drawing of our background (Including the alternating grid)
@@ -97,13 +97,13 @@
     [self setNeedsDisplay:YES];
 }
 - (BOOL)drawsBackground{
-	return(drawsBackground);
+	return drawsBackground;
 }
 
 //Returns the color which will be drawn behind the specified row
 - (NSColor *)backgroundColorForRow:(int)row
 {
-	return((row % 2) ? [self backgroundColor] : [self alternatingRowColor]);
+	return ((row % 2) ? [self backgroundColor] : [self alternatingRowColor]);
 }
 
 

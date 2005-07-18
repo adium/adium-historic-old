@@ -15,9 +15,9 @@
     int selectedRow = [self selectedRow];
 	
     if (selectedRow >= 0 && selectedRow < [self numberOfRows]) {
-        return([self itemAtRow:selectedRow]);
+        return [self itemAtRow:selectedRow];
     } else {
-        return(nil);
+        return nil;
     }
 }
 
@@ -57,7 +57,7 @@
 
 	free(buf);
 
-	return(itemArray);
+	return itemArray;
 }
 
 //

@@ -55,7 +55,7 @@
 		[[panel contentView] addSubview:[staticView autorelease]];
 	}
 
-	return(self);
+	return self;
 }
 
 //

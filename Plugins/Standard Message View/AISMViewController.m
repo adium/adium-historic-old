@@ -1238,8 +1238,8 @@
 				[NSNumber numberWithInt:Context_Contact_Additions], nil];
 		}
 		
-		return([[adium menuController] contextualMenuWithLocations:locations
-													 forListObject:selectedObject]);
+		return [[adium menuController] contextualMenuWithLocations:locations
+													 forListObject:selectedObject];
     } else {
 		return nil;
 	}

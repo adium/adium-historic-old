@@ -273,9 +273,9 @@
 //Group background gradient
 - (AIGradient *)backgroundGradient
 {
-	return([AIGradient gradientWithFirstColor:backgroundColor
+	return [AIGradient gradientWithFirstColor:backgroundColor
 								  secondColor:gradientColor
-									direction:AIVertical]);
+									direction:AIVertical];
 }
 
 //Reset gradient cache

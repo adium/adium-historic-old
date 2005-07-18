@@ -31,7 +31,7 @@
 
 + (AISmoothTooltipTracker *)smoothTooltipTrackerForView:(NSView *)inView withDelegate:(id <AISmoothTooltipTrackerDelegate>)inDelegate
 {
-	return([[[self alloc] initForView:inView withDelegate:inDelegate] autorelease]);	
+	return [[[self alloc] initForView:inView withDelegate:inDelegate] autorelease];
 }
 
 - (AISmoothTooltipTracker *)initForView:(NSView *)inView withDelegate:(id)inDelegate
@@ -50,7 +50,7 @@
 		[self installCursorRect];
 	}
 	
-	return(self);
+	return self;
 }
 
 - (void)dealloc

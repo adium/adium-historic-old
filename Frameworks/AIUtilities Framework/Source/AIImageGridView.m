@@ -83,7 +83,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self reloadData];
 }
 - (id)delegate{
-    return(delegate);
+    return delegate;
 }
 
 //Called when delegate data changes
@@ -99,7 +99,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	[self _updateGrid];
 }
 - (NSSize)imageSize{
-	return(imageSize);
+	return imageSize;
 }
 
 //Set the frame of our view
@@ -125,10 +125,10 @@ Adium, Copyright 2001-2005, Adam Iser
 	int row = index / columns;
 	int column = index % columns;
 
-	return(NSMakeRect(column * (imageSize.width + padding.width) + padding.width,
+	return NSMakeRect(column * (imageSize.width + padding.width) + padding.width,
 					  row * (imageSize.height + padding.height) + padding.height,
 					  imageSize.width,
-					  imageSize.height));
+					  imageSize.height);
 }
 
 //Returns the image index at the specified point in our grid
@@ -140,11 +140,11 @@ Adium, Copyright 2001-2005, Adam Iser
 	//Determine which image was clicked
 	for (i = 0; i < numberOfImages; i++) {
 		if (NSPointInRect(point, [self rectForImageAtIndex:i])) {
-			return(i);
+			return i;
 		}
 	}
 
-	return(-1);
+	return -1;
 }
 
 //Draw
@@ -171,7 +171,7 @@ Adium, Copyright 2001-2005, Adam Iser
 //This view is flipped since we intend for it to be within a scrollview
 - (BOOL)isFlipped
 {
-	return(YES);
+	return YES;
 }
 
 //Update our frame height, number of columns, and padding
@@ -245,7 +245,7 @@ Adium, Copyright 2001-2005, Adam Iser
 	}
 }
 - (int)selectedIndex{
-	return(selectedIndex);
+	return selectedIndex;
 }
 
 //Selection changing via mouse
@@ -256,7 +256,7 @@ Adium, Copyright 2001-2005, Adam Iser
 
 //We need to accept first responder to get keyboard input
 - (BOOL)acceptsFirstResponder{
-	return(YES);
+	return YES;
 }
 
 //Selection changing via keyboard

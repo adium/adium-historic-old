@@ -54,7 +54,7 @@ static NSSize		rightCapSize;
 //Create a new custom tab
 + (id)customTabForTabViewItem:(NSTabViewItem<AICustomTabViewItem> *)inTabViewItem customTabsView:(AICustomTabsView *)inView
 {
-    return([[[self alloc] initForTabViewItem:inTabViewItem customTabsView:inView] autorelease]);
+    return [[[self alloc] initForTabViewItem:inTabViewItem customTabsView:inView] autorelease];
 }
 
 //init
@@ -110,7 +110,7 @@ static NSSize		rightCapSize;
 	int width = leftCapSize.width + [[self attributedLabel] size].width + rightCapSize.width +
 	(TAB_CLOSE_LEFTPAD + [[tabViewItem icon] size].width + TAB_CLOSE_RIGHTPAD) + TAB_RIGHT_PAD;
 	
-    return( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), leftCapSize.height) );
+    return ( NSMakeSize((width > TAB_MIN_WIDTH ? width : TAB_MIN_WIDTH), leftCapSize.height) );
 }
 
 //Compare the width of this tab to another
@@ -120,13 +120,13 @@ static NSSize		rightCapSize;
     int	ourWidth = [self size].width;
 	
     if (tabWidth > ourWidth) {
-        return(NSOrderedAscending);
+        return NSOrderedAscending;
         
     } else if (tabWidth < ourWidth) {
-        return(NSOrderedDescending);
+        return NSOrderedDescending;
         
     } else {
-        return(NSOrderedSame);
+        return NSOrderedSame;
         
     }
 }
@@ -134,7 +134,7 @@ static NSSize		rightCapSize;
 //Return the tab view item this tab is representing
 - (NSTabViewItem<AICustomTabViewItem> *)tabViewItem
 {
-    return(tabViewItem);
+    return tabViewItem;
 }
 
 //Frame of our close button
@@ -144,10 +144,10 @@ static NSSize		rightCapSize;
 	NSSize	closeSize = [tabCloseFront size];
     int 	centerY = (frame.size.height - [tabCloseFront size].height) / 2.0;
 
-    return(NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
+    return NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD + ((iconSize.width - closeSize.width) / 2.0),
 					  frame.origin.y + centerY + TAB_CLOSE_Y_OFFSET + 1,
 					  [tabCloseFront size].width,
-					  [tabCloseFront size].height));
+					  [tabCloseFront size].height);
 }
 
 //Frame of our tab icon
@@ -156,10 +156,10 @@ static NSSize		rightCapSize;
 	NSSize	imageSize = [[tabViewItem icon] size];
 	int		centerY = (frame.size.height - imageSize.height) / 2.0;
 	
-	return(NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD,
+	return NSMakeRect(frame.origin.x + leftCapSize.width + TAB_CLOSE_LEFTPAD,
 					  frame.origin.y + centerY + TAB_CLOSE_Y_OFFSET,
 					  imageSize.width,
-					  imageSize.height));
+					  imageSize.height);
 }
 
 
@@ -171,7 +171,7 @@ static NSSize		rightCapSize;
     allowsInactiveTabClosing = inValue;
 }
 - (BOOL)allowsInactiveTabClosing{
-	return(allowsInactiveTabClosing);
+	return allowsInactiveTabClosing;
 }
 
 //The selected tab draws differently and has special close button behavior
@@ -180,7 +180,7 @@ static NSSize		rightCapSize;
     selected = inSelected;
 }
 - (BOOL)isSelected{
-    return(selected);
+    return selected;
 }
 
 //When a tab is hovered it should be highlighted.  Highlighted tabs draw differently.
@@ -192,7 +192,7 @@ static NSSize		rightCapSize;
 	}
 }
 - (BOOL)isHighlighted{
-    return(highlighted);
+    return highlighted;
 }
 
 //Set whether the close button is currently hovered
@@ -210,7 +210,7 @@ static NSSize		rightCapSize;
     frame = inFrame;
 }
 - (NSRect)frame{
-    return(frame);
+    return frame;
 }
 
 
@@ -313,7 +313,7 @@ static NSSize		rightCapSize;
 				nil]];
 	}
 	
-	return(attributedLabel);
+	return attributedLabel;
 }
 
 
@@ -380,10 +380,10 @@ static NSSize		rightCapSize;
 	   NSPointInRect([controlView convertPoint:[theEvent locationInWindow] fromView:nil], [self _closeButtonRect])) {
 		
         [self trackMouse:theEvent inRect:[self _closeButtonRect] ofView:controlView untilMouseUp:YES];
-        return(YES);
+        return YES;
 		
     } else {
-        return(NO);
+        return NO;
 		
     }
 }
@@ -395,7 +395,7 @@ static NSSize		rightCapSize;
     hoveringClose = YES;
     [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
 	
-    return(YES);
+    return YES;
 }
 
 //
@@ -408,7 +408,7 @@ static NSSize		rightCapSize;
         [controlView setNeedsDisplayInRect:[self _closeButtonRect]];
     }
     
-    return(YES);
+    return YES;
 }
 
 //

@@ -24,19 +24,19 @@
 //There seems to be a bug in OS X which causes cocoa calls for the current modifier key to fail during application launch, so we use the carbon calls.
 #ifdef MAC_OS_X_VERSION_10_0
 + (BOOL)cmdKey{
-    return(((GetCurrentKeyModifiers() & (cmdKey)) != 0) ? YES : NO);
+    return (((GetCurrentKeyModifiers() & (cmdKey)) != 0) ? YES : NO);
 }
 
 + (BOOL)shiftKey{
-    return(((GetCurrentKeyModifiers() & (shiftKey | rightShiftKey)) != 0) ? YES : NO);
+    return (((GetCurrentKeyModifiers() & (shiftKey | rightShiftKey)) != 0) ? YES : NO);
 }
 
 + (BOOL)optionKey{
-    return(((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0) ? YES : NO);
+    return (((GetCurrentKeyModifiers() & (optionKey | rightOptionKey)) != 0) ? YES : NO);
 }
 
 + (BOOL)controlKey{
-    return(((GetCurrentKeyModifiers() & (controlKey | rightControlKey)) != 0) ? YES : NO);
+    return (((GetCurrentKeyModifiers() & (controlKey | rightControlKey)) != 0) ? YES : NO);
 }
 //Here are the cocoa calls, though, for cross-compatibility.
 #else

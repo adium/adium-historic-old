@@ -1792,9 +1792,9 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (AIListContact *)existingContactWithService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID
 {
 	if (inService && [inUID length]) {
-		return([contactDict objectForKey:[AIListContact internalUniqueObjectIDForService:inService
+		return [contactDict objectForKey:[AIListContact internalUniqueObjectIDForService:inService
 																				 account:inAccount
-																					 UID:inUID]]);
+																					 UID:inUID]];
 	} else {
 		return nil;
 	}

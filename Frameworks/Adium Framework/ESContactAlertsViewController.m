@@ -571,8 +571,8 @@ int actionSort(id objectA, id objectB, void *context)
 			NSString				*actionID = [alert objectForKey:KEY_ACTION_ID];
 			id <AIActionHandler>	actionHandler = [[[adium contactAlertsController] actionHandlers] objectForKey:actionID];
 
-			return([actionHandler longDescriptionForActionID:actionID
-												 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]]);
+			return [actionHandler longDescriptionForActionID:actionID
+												 withDetails:[alert objectForKey:KEY_ACTION_DETAILS]];
 		} else if ([identifier isEqualToString:@"action"]) {
 			return @"";
 			

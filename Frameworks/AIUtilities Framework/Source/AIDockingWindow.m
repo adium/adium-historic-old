@@ -150,7 +150,7 @@
 		windowFrame.origin.y -= NSMaxY(windowFrame) - NSMaxY(screenFrame);
 	}
 	
-	return(windowFrame);
+	return windowFrame;
 }
 
 - (void)toggleToolbarShown:(id)sender

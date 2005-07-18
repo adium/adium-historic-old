@@ -97,12 +97,12 @@
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
-	return([NSDictionary dictionaryWithObjectsAndKeys:
+	return [NSDictionary dictionaryWithObjectsAndKeys:
 		[toContact internalObjectID], KEY_MESSAGE_SEND_TO,
 		[[[popUp_messageFrom selectedItem] representedObject] internalObjectID], KEY_MESSAGE_SEND_FROM,
 		[NSNumber numberWithBool:[button_useAnotherAccount state]], KEY_MESSAGE_OTHER_ACCOUNT,
 		[[textView_message textStorage] dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
-		nil]);
+		nil];
 }
 
 //Destination contact was selected from menu

@@ -58,7 +58,7 @@
  */
 - (NSColor *)color
 {
-    return([self objectValue]);
+    return [self objectValue];
 }
 
 /*!
@@ -95,7 +95,7 @@
  */
 - (BOOL)value:(id)valueA isEqualTo:(id)valueB
 {
-	return([valueA equalToRGBColor:valueB]);
+	return [valueA equalToRGBColor:valueB];
 }
 
 /*!

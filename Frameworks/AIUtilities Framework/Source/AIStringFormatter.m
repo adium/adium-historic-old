@@ -26,7 +26,7 @@
 
 + (id)stringFormatterAllowingCharacters:(NSCharacterSet *)inCharacters length:(int)inLength caseSensitive:(BOOL)inCaseSensitive errorMessage:(NSString *)inErrorMessage
 {
-    return([[[self alloc] initAllowingCharacters:inCharacters length:inLength caseSensitive:inCaseSensitive errorMessage:inErrorMessage] autorelease]);
+    return [[[self alloc] initAllowingCharacters:inCharacters length:inLength caseSensitive:inCaseSensitive errorMessage:inErrorMessage] autorelease];
 }
 
 - (id)initAllowingCharacters:(NSCharacterSet *)inCharacters length:(int)inLength caseSensitive:(BOOL)inCaseSensitive errorMessage:(NSString *)inErrorMessage
@@ -39,22 +39,22 @@
 		errorCount = 0;
 	}
 
-	return(self);
+	return self;
 }
 
 - (NSString *)stringForObjectValue:(id)obj
 {
     if (![obj isKindOfClass:[NSString class]]) {
-        return(nil);
+        return nil;
     }
 
-    return(obj);
+    return obj;
 }
 
 - (BOOL)getObjectValue:(id *)obj forString:(NSString *)string errorDescription:(NSString **)error
 {
     *obj = string;
-    return(YES);
+    return YES;
 }
 
 - (BOOL)isPartialStringValid:(NSString **)partialStringPtr proposedSelectedRange:(NSRangePointer)proposedSelRangePtr originalString:(NSString *)origString originalSelectedRange:(NSRange)origSelRange errorDescription:(NSString **)error
@@ -120,7 +120,7 @@
 		}
 	}
 	
-	return(valid);
+	return valid;
 }
 
 - (void)dealloc

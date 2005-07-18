@@ -21,13 +21,13 @@
 
 + (id)messageEntryTextViewForHandle:(AIContactHandle *)inHandle owner:(id)inOwner
 {
-    return([[[self alloc] initForHandle:inHandle owner:inOwner] autorelease]);
+    return [[[self alloc] initForHandle:inHandle owner:inOwner] autorelease];
 }
 
 // Required protocol methods ---
 - (NSAttributedString *)attributedString
 {
-    return([self textStorage]);
+    return [self textStorage];
 }
 
 - (void)setAttributedString:(NSAttributedString *)inAttributedString
@@ -40,13 +40,13 @@
     [super setSelectedRange:inRange];
 }
 - (NSRange)selectedRange{
-    return([super selectedRange]);
+    return [super selectedRange];
 }
 - (void)setSelectedTextAttributes:(NSDictionary *)attributeDictionary{
     [super setSelectedTextAttributes:attributeDictionary];
 }
 - (NSDictionary *)selectedTextAttributes{
-    return([super selectedTextAttributes]);
+    return [super selectedTextAttributes];
 }
 
 
@@ -68,7 +68,7 @@
     //Register for notifications
     [[[owner interfaceController] interfaceNotificationCenter] addObserver:self selector:@selector(didSendEnteredMessage:) name:Interface_DidSendEnteredMessage object:handle];
 
-    return(self);
+    return self;
 }
 
 //Send the entered message

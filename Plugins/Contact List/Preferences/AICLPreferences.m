@@ -45,13 +45,13 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced);
+    return AIPref_Advanced;
 }
 - (NSString *)label{
-    return(@"General Appearance");
+    return @"General Appearance";
 }
 - (NSString *)nibName{
-    return(@"AICLPrefView");
+    return @"AICLPrefView";
 }
 
 //Configures our view for the current preferences
@@ -290,9 +290,9 @@
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
 	if(tableView == tableView_layout){
-		return([layoutArray count]);
+		return [layoutArray count];
 	}else{
-		return([themeArray count]);
+		return [themeArray count];
 	}
 }
 
@@ -304,23 +304,23 @@
 		NSDictionary	*layoutDict = [layoutArray objectAtIndex:row];
 		
 		if([column isEqualToString:@"name"]){
-			return([layoutDict objectForKey:@"name"]);
+			return [layoutDict objectForKey:@"name"];
 		}else if([column isEqualToString:@"preview"]){
-			return(@"-");
+			return @"-";
 		}
 	}else if(tableView == tableView_theme){
 		NSDictionary	*themeDict = [themeArray objectAtIndex:row];
 		
 		if([column isEqualToString:@"type"]){
-			return(@"-");
+			return @"-";
 		}else if([column isEqualToString:@"name"]){
-			return([themeDict objectForKey:@"name"]);
+			return [themeDict objectForKey:@"name"];
 		}else if([column isEqualToString:@"preview"]){
-			return(@"-");
+			return @"-";
 		}
 	}
 
-	return(@"-");
+	return @"-";
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
@@ -341,7 +341,7 @@
 	
 	[self updateSelectedLayoutAndTheme];
 	
-	return(YES);
+	return YES;
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row

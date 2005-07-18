@@ -97,7 +97,7 @@
 //Returns the identifier
 - (NSString *)identifier
 {
-    return(identifier);
+    return identifier;
 }
 
 //Configure this toolbar for the specified objects
@@ -122,7 +122,7 @@
     }
 }
 - (NSDictionary *)configurationObjects{
-    return(representedObjects);
+    return representedObjects;
 }
 
 //Add an item to this toolbar
@@ -183,7 +183,7 @@
 - (NSMenu *)menuForEvent:(NSEvent *)event
 {
     [NSBundle loadNibNamed:MINI_TOOLBAR_MENU_NIB owner:self];
-    return([menu_contextualMenu autorelease]);
+    return [menu_contextualMenu autorelease];
 }
 
 //Notifications ----------------------------------------------------------------------
@@ -325,7 +325,7 @@
     //Save the new array and clean up
     [itemArray release]; itemArray = [newItemArray retain];
     
-    return(createdItemArray);
+    return createdItemArray;
 }
 
 //Starts a smooth animation to put the views in their correct places
@@ -451,7 +451,7 @@
     //    [self setKeyboardFocusRingNeedsDisplayInRect:[self frame]];
     //}
 
-    return(finished);
+    return finished;
 }
 
 //Set whether we're focused for a drag or not
@@ -480,7 +480,7 @@
         [self setFocusedForDrag:YES];
     }
 
-    return(NSDragOperationNone);
+    return NSDragOperationNone;
 }
 
 //Called when the drag moves within this toolbar
@@ -524,7 +524,7 @@
         }
     }
 
-    return(dragOperation);
+    return dragOperation;
 }
 
 //Called when the drag exits this toolbar, restore items to their normal positions
@@ -647,7 +647,7 @@
 //Return YES for acceptance
 - (BOOL)prepareForDragOperation:(id <NSDraggingInfo>)sender
 {
-    return(YES);
+    return YES;
 }
 
 //Add the dragged item to this toolbar
@@ -679,9 +679,9 @@
 
         [self setFocusedForDrag:NO];
 
-        return(YES);
+        return YES;
     }else{
-        return(NO);
+        return NO;
     }
 }
 

@@ -33,7 +33,7 @@
 //Create a new mini toolbar button
 + (AIMiniToolbarButton *)miniToolbarButtonWithImage:(NSImage *)inImage
 {
-    return([[[self alloc] initWithImage:inImage] autorelease]);
+    return [[[self alloc] initWithImage:inImage] autorelease];
 }
 
 //Private --------------------------------------------------------------------------------
@@ -41,9 +41,9 @@
 - (NSMenu *)menuForEvent:(NSEvent *)event
 {
     if(toolbar){
-        return([toolbar menuForEvent:event]);
+        return [toolbar menuForEvent:event];
     }else{
-        return([super menuForEvent:event]);
+        return [super menuForEvent:event];
     }
 }
 
@@ -99,7 +99,7 @@
     toolbarItem = inToolbarItem;
 }
 - (AIMiniToolbarItem *)toolbarItem{
-    return(toolbarItem);
+    return toolbarItem;
 }
 
 - (id)copyWithZone:(NSZone *)zone
@@ -112,7 +112,7 @@
     [newItem setImagePosition:[self imagePosition]];
     [newItem setBordered:[self isBordered]];
 
-    return(newItem);
+    return newItem;
 }
 
 - (IBAction)click:(id)sender

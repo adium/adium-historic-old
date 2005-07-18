@@ -44,11 +44,11 @@ int bringToFront(id itemA, id itemB, void *target);
 int bringToFront(id itemA, id itemB, void *target)
 {
     if (itemA == target) {
-        return(NSOrderedDescending);
+        return NSOrderedDescending;
     } else if (itemB == target) {
-        return(NSOrderedAscending);
+        return NSOrderedAscending;
     } else {
-        return(NSOrderedSame);
+        return NSOrderedSame;
     }
 }
 

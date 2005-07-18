@@ -110,7 +110,7 @@
 	}
 
 
-	return(systemProxySettingsDictionary);
+	return systemProxySettingsDictionary;
 }
 
 @end

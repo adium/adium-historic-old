@@ -248,15 +248,15 @@ end:
     NSColor	*convertedA = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     NSColor	*convertedB = [inColor colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     
-    return(([convertedA redComponent]   == [convertedB redComponent])   &&
-           ([convertedA blueComponent]  == [convertedB blueComponent])  &&
-           ([convertedA greenComponent] == [convertedB greenComponent]));
+    return (([convertedA redComponent]   == [convertedB redComponent])   &&
+            ([convertedA blueComponent]  == [convertedB blueComponent])  &&
+            ([convertedA greenComponent] == [convertedB greenComponent]));
 }
 
 //Returns YES if this color is dark
 - (BOOL)colorIsDark
 {
-    return([[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] brightnessComponent] < 0.5);
+    return ([[self colorUsingColorSpaceName:NSCalibratedRGBColorSpace] brightnessComponent] < 0.5);
 }
 
 //Percent should be -1.0 to 1.0 (negatives will make the color brighter)
@@ -264,20 +264,20 @@ end:
 {
     NSColor	*convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     
-    return([NSColor colorWithCalibratedHue:[convertedColor hueComponent]
+    return [NSColor colorWithCalibratedHue:[convertedColor hueComponent]
                                 saturation:[convertedColor saturationComponent]
                                 brightness:([convertedColor brightnessComponent] - amount)
-                                     alpha:[convertedColor alphaComponent]]);
+                                     alpha:[convertedColor alphaComponent]];
 }
 
 - (NSColor *)darkenAndAdjustSaturationBy:(float)amount
 {
     NSColor	*convertedColor = [self colorUsingColorSpaceName:NSCalibratedRGBColorSpace];
     
-    return([NSColor colorWithCalibratedHue:[convertedColor hueComponent]
+    return [NSColor colorWithCalibratedHue:[convertedColor hueComponent]
                                 saturation:(([convertedColor saturationComponent] == 0.0) ? [convertedColor saturationComponent] : ([convertedColor saturationComponent] + amount))
                                 brightness:([convertedColor brightnessComponent] - amount)
-                                     alpha:[convertedColor alphaComponent]]);
+                                     alpha:[convertedColor alphaComponent]];
 }
 
 //Linearly adjust a color
@@ -294,7 +294,7 @@ end:
     brit += dBrit;
     cap(brit);
     
-    return([NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha]);
+    return [NSColor colorWithCalibratedHue:hue saturation:sat brightness:brit alpha:alpha];
 }
 
 
@@ -310,7 +310,7 @@ end:
     l = 1.0 - l;
 
     //Return the new color
-    return([NSColor colorWithCalibratedHue:h luminance:l saturation:s alpha:1.0]);
+    return [NSColor colorWithCalibratedHue:h luminance:l saturation:s alpha:1.0];
 }
 
 - (void)getHue:(float *)hue luminance:(float *)luminance saturation:(float *)saturation
@@ -396,7 +396,7 @@ end:
         b = _v(m1, m2, hue - ONE_THIRD);
     }
 
-    return([NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha]);
+    return [NSColor colorWithCalibratedRed:r green:g blue:b alpha:alpha];
 }
 
 //??
@@ -406,10 +406,10 @@ float _v(float m1, float m2, float hue) {
     while (hue < 0.0) hue += 1.0;
     while (hue > 1.0) hue -= 1.0;
     
-    if     (hue < ONE_SIXTH) return( m1 + (m2 - m1) *              hue  * 6.0);
-    else if (hue < 0.5)       return( m2 );
-    else if (hue < TWO_THIRD) return( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
-    else                     return( m1 );
+    if     (hue < ONE_SIXTH) return ( m1 + (m2 - m1) *              hue  * 6.0);
+    else if (hue < 0.5)       return ( m2 );
+    else if (hue < TWO_THIRD) return ( m1 + (m2 - m1) * (TWO_THIRD - hue) * 6.0);
+    else                     return ( m1 );
 }
 
 - (NSString *)hexString
@@ -435,20 +435,17 @@ float _v(float m1, float m2, float hue) {
     hexString[5] = intToHex((blue * 255) - (tempNum * 16));
     hexString[6] = '\0';
     
-    return([NSString stringWithUTF8String:hexString]);
+    return [NSString stringWithUTF8String:hexString];
 }
 
 - (NSString *)stringRepresentation
 {
     NSColor	*tempColor = [self colorUsingColorSpaceName:@"NSCalibratedRGBColorSpace"];
 
-    return(
-	[NSString stringWithFormat:@"%d,%d,%d",
+    return [NSString stringWithFormat:@"%d,%d,%d",
 				    (int)([tempColor redComponent] * 255.0),
 				    (int)([tempColor greenComponent] * 255.0),
-				    (int)([tempColor blueComponent] * 255.0)
-	]
-    );
+				    (int)([tempColor blueComponent] * 255.0)];
 }
 
 + (id)colorWithHTMLString:(NSString *)str
@@ -534,29 +531,29 @@ float _v(float m1, float m2, float hue) {
 
 //Returns the min of 3 values
 static float min(float a, float b, float c) {
-    if (a < b && a < c) return(a);
-    if (b < a && b < c) return(b);
-    return(c);
+    if (a < b && a < c) return a;
+    if (b < a && b < c) return b;
+    return c;
 }
 
 //Returns the max of 3 values
 static float max(float a, float b, float c) {
-    if (a > b && a > c) return(a);
-    if (b > a && b > c) return(b);
-    return(c);
+    if (a > b && a > c) return a;
+    if (b > a && b > c) return b;
+    return c;
 }
 
 //Convert hex to an int
 int hexToInt(char hex)
 {
     if (hex >= '0' && hex <= '9') {
-        return(hex - '0');
+        return (hex - '0');
     } else if (hex >= 'a' && hex <= 'f') {
-        return(hex - 'a' + 10);
+        return (hex - 'a' + 10);
     } else if (hex >= 'A' && hex <= 'F') {
-        return(hex - 'A' + 10);
+        return (hex - 'A' + 10);
     } else {
-        return(0);
+        return 0;
     }
 }
 
@@ -564,8 +561,8 @@ int hexToInt(char hex)
 char intToHex(int digit)
 {
     if (digit > 9) {
-        return('a' + digit - 10);
+        return ('a' + digit - 10);
     } else {
-        return('0' + digit);
+        return ('0' + digit);
     }
 }

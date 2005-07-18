@@ -33,12 +33,12 @@
 		float	columnOriginX = columnRect.origin.x + round((intercellSpacing.width)/2);
 		
 		[self updateRowHeightCache];
-		return(NSMakeRect(columnOriginX,
+		return NSMakeRect(columnOriginX,
 						  rowOriginCache[row],
 						  frame.size.width - columnOriginX - floor((intercellSpacing.width)/2),
-						  rowHeightCache[row]));
+						  rowHeightCache[row]);
 	} else {
-		return([super frameOfCellAtColumn:column row:row]);
+		return [super frameOfCellAtColumn:column row:row];
 	}
 }
 

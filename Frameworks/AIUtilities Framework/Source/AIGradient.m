@@ -100,7 +100,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	}
 }
 - (NSColor*)firstColor{
-	return(color1);
+	return color1;
 }
 
 //Gradient end color
@@ -112,7 +112,7 @@ CGPathRef CreateCGPathWithNSBezierPath(const CGAffineTransform *transform, NSBez
 	}
 }
 - (NSColor*)secondColor{
-	return(color2);
+	return color2;
 }
 
 //Gradient Direction

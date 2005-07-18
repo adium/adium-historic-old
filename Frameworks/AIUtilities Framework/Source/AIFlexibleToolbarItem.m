@@ -16,7 +16,7 @@
 		validationDelegate = nil;
 	}
 
-	return(self);
+	return self;
 }
 
 - (void)setValidationDelegate:(id)inDelegate

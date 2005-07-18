@@ -411,10 +411,10 @@ int eventIDSort(id objectA, id objectB, void *context) {
 	if (!eventHandler) eventHandler = [globalOnlyEventHandlers objectForKey:eventID];
 
 	if (eventHandler) {
-		return([eventHandler naturalLanguageDescriptionForEventID:eventID
+		return [eventHandler naturalLanguageDescriptionForEventID:eventID
 													   listObject:listObject
 														 userInfo:userInfo
-												   includeSubject:includeSubject]);
+												   includeSubject:includeSubject];
 	}
 
 	return @"";

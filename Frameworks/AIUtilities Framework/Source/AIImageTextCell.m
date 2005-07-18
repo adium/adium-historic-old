@@ -66,7 +66,7 @@
 	
 	[newCell setMaxImageWidth:maxImageWidth];
 
-	return(newCell);
+	return newCell;
 }
 
 /*
@@ -91,7 +91,7 @@
 }
 - (NSFont *)font
 {
-    return(font);
+    return font;
 }
 
 
@@ -195,7 +195,7 @@
 		}
 	}
 	
-	return(cellSize);
+	return cellSize;
 }
 
 //Draw

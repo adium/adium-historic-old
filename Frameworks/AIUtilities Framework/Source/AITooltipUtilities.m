@@ -393,7 +393,7 @@ static	NSColor					*titleAndBodyMarginLineColor = nil;
             tooltipOrigin.y = (screenRect.origin.y + screenRect.size.height) - tooltipSize.height;
     }
     
-    return(tooltipOrigin);
+    return tooltipOrigin;
 }
 
 @end

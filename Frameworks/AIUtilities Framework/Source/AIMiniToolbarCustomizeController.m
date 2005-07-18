@@ -31,7 +31,7 @@
 
 + (AIMiniToolbarCustomizeController *)customizationWindowControllerForToolbar:(AIMiniToolbar *)inToolbar
 {
-	return([[[self alloc] initWithWindowNibName:MINI_TOOLBAR_CUSTOMIZE_NIB forToolbar:inToolbar] autorelease]);
+	return [[[self alloc] initWithWindowNibName:MINI_TOOLBAR_CUSTOMIZE_NIB forToolbar:inToolbar] autorelease];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forToolbar:(AIMiniToolbar *)inToolbar
@@ -96,7 +96,7 @@
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-    return([itemArray count]);
+    return [itemArray count];
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
@@ -104,20 +104,20 @@
     NSString	*identifier = [tableColumn identifier];
 
     if([identifier isEqualToString:@"icon"]){
-        return([itemImageArray objectAtIndex:row]);
+        return [itemImageArray objectAtIndex:row];
 		
     }else if([identifier isEqualToString:@"label"]){
-        return([[itemArray objectAtIndex:row] paletteLabel]);
+        return [[itemArray objectAtIndex:row] paletteLabel];
 		
     }else{
-        return([itemArray objectAtIndex:row]);
+        return [itemArray objectAtIndex:row];
 		
     }
 }
 
 - (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
 {
-    return(NO);
+    return NO;
 }
 
 - (void)dragItemAtRow:(int)dragRow fromPoint:(NSPoint)inLocation withEvent:(NSEvent *)inEvent
@@ -153,7 +153,7 @@
 
 - (BOOL)shouldCascadeWindows
 {
-    return(NO);
+	return NO;
 }
 
 - (BOOL)windowShouldClose:(id)sender
@@ -163,7 +163,7 @@
 
     [[AIMiniToolbarCenter defaultCenter] customizationDidEnd:toolbar];
 
-    return(YES);
+    return YES;
 }
 
 @end

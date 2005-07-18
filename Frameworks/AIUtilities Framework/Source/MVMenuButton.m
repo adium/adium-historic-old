@@ -39,7 +39,7 @@
 	//Copy super's config
 	[newButton setMenu:[[[self menu] copy] autorelease]];
 	
-	return(newButton);
+	return newButton;
 }
 
 //
@@ -92,7 +92,7 @@
 }
 - (NSControlSize)controlSize
 {
-	return(controlSize);
+	return controlSize;
 }
 
 //Big Image (This is the one that should be called to configure this button)
@@ -108,7 +108,7 @@
 }
 - (NSImage *)image
 {
-	return(bigImage);
+	return bigImage;
 }
 
 //Containing toolbar Item
@@ -118,7 +118,7 @@
 }
 - (NSToolbarItem *)toolbarItem
 {
-	return(toolbarItem);
+	return toolbarItem;
 }
 
 //Popup arrow Drawing
@@ -128,7 +128,7 @@
 }
 - (BOOL)drawsArrow
 {
-	return(drawsArrow);
+	return drawsArrow;
 }
 
 
@@ -166,7 +166,7 @@
 		[arrowPath closePath];
 	}
 
-	return(arrowPath);
+	return arrowPath;
 }
 
 

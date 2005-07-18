@@ -36,7 +36,7 @@
 }
 
 - (NSRect)trackingRect{
-    return(trackingRect);
+    return trackingRect;
 }
 
 - (void)setTrackingTag:(NSTrackingRectTag)inTrackingTag
@@ -45,15 +45,15 @@
 }
 
 - (NSTrackingRectTag)trackingTag{
-    return(trackingTag);
+    return trackingTag;
 }
 
 - (NSString *)url{
-    return(url);
+    return url;
 }
 
 - (NSString *)title{
-	return(title);
+	return title;
 }
 
 @end

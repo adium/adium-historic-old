@@ -105,9 +105,9 @@
 	}
 	
 	//If the previous attempts failed, or we weren't passed a contact, use the first appropraite account
-	return([self firstAccountAvailableForSendingContentType:inType
+	return [self firstAccountAvailableForSendingContentType:inType
 												  toContact:inContact
-											 includeOffline:includeOffline]);
+											 includeOffline:includeOffline];
 }
 
 //XXX - This seems awfully complex for code that is only run the first time we talk to a contact

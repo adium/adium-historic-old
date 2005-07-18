@@ -31,7 +31,7 @@
 	[newCell setDrawsGradientHighlight:drawsGradient];
 	[newCell setIgnoresFocus:ignoresFocus];
 
-	return(newCell);
+	return newCell;
 }
 
 //Draw Gradient
@@ -39,7 +39,7 @@
 	drawsGradient = inDrawsGradient;
 }
 - (BOOL)drawsGradientHighlight{
-	return(drawsGradient);
+	return drawsGradient;
 }
 
 //Ignore focus (Draw as active regardless of focus)
@@ -47,7 +47,7 @@
 	ignoresFocus = inIgnoresFocus;
 }
 - (BOOL)ignoresFocus{
-	return(ignoresFocus);
+	return ignoresFocus;
 }
 
 //Draw with the selected-control colours.

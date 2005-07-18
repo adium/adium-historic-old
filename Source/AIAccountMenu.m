@@ -51,9 +51,9 @@
 				  submenuType:(AIAccountSubmenuType)inSubmenuType
 			   showTitleVerbs:(BOOL)inShowTitleVerbs
 {
-	return([[[self alloc] initWithDelegate:inDelegate
+	return [[[self alloc] initWithDelegate:inDelegate
 							   submenuType:inSubmenuType
-							showTitleVerbs:inShowTitleVerbs] autorelease]);
+							showTitleVerbs:inShowTitleVerbs] autorelease];
 }
 
 /*!

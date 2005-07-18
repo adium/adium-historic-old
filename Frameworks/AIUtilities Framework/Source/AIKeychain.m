@@ -1092,7 +1092,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 	//Cleanup
 	if (itemRef) CFRelease(itemRef);
 	
-	return(success);
+	return success;
 }
 
 // Removes a password from the keychain
@@ -1109,7 +1109,7 @@ OSStatus GetPasswordKeychain(const char *service,const char *account,void **pass
 	
 	//Cleanup
 	if (itemRef) CFRelease(itemRef);
-	return(ret == noErr);
+	return ret == noErr;
 }
 
 //Next two functions are from the http-mail project.

@@ -29,7 +29,7 @@
     arrayPath = [ownerBundle pathForResource:name ofType:@"plist"];    
     array = [[NSArray alloc] initWithContentsOfFile:arrayPath];
     
-    return([array autorelease]);
+    return [array autorelease];
 }
 
 @end

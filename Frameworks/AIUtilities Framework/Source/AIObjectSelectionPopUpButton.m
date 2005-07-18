@@ -99,7 +99,7 @@
  */
 - (id)objectValue
 {
-    return([[self selectedItem] representedObject]);
+    return [[self selectedItem] representedObject];
 }
 
 /*!
@@ -138,7 +138,7 @@
  */
 - (id)customValue
 {
-	return(customValue);
+	return customValue;
 }
 
 /*!
@@ -190,7 +190,7 @@
  */
 - (BOOL)value:(id)valueA isEqualTo:(id)valueB
 {
-	return([valueA isEqualTo:valueB]);
+	return [valueA isEqualTo:valueB];
 }
 
 /*!

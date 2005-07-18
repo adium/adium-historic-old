@@ -61,7 +61,7 @@
  */
 - (NSFont *)font
 {
-	return([self objectValue]);
+	return [self objectValue];
 }
 
 /*!

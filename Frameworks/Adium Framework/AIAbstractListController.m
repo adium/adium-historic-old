@@ -518,8 +518,8 @@
 		[NSNumber numberWithInt:Context_Contact_NegativeAction],
 		[NSNumber numberWithInt:Context_Contact_Additions], nil];
 
-    return([[adium menuController] contextualMenuWithLocations:locationsArray
-												 forListObject:listObject]);
+    return [[adium menuController] contextualMenuWithLocations:locationsArray
+												 forListObject:listObject];
 }
 
 //

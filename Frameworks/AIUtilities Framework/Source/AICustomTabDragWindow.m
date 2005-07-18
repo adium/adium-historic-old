@@ -25,7 +25,7 @@
 @implementation AICustomTabDragWindow
 + (AICustomTabDragWindow *)dragWindowForCustomTabView:(AICustomTabsView *)inTabView cell:(AICustomTabCell *)inTabCell transparent:(BOOL)transparent
 {
-	return([[[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent] autorelease]);
+	return [[[self alloc] initForCustomTabView:inTabView cell:inTabCell transparent:transparent] autorelease];
 }
 
 //init
@@ -103,7 +103,7 @@
         [customTabsView unlockFocus];    
     }
 	
-    return(dragTabImage);
+    return dragTabImage;
 }
 
 //Returns a drag window image for the passed window/bar/cell
@@ -145,7 +145,7 @@
         [dragWindowImage unlockFocus];
     }
     
-    return(dragWindowImage);
+    return dragWindowImage;
 }
 
 //Returns the drag image for a drag system call.  In 10.3 we return a blank image to keep the system drag code happy
@@ -154,9 +154,9 @@
 - (NSImage *)dragImage
 {
 	if (useFancyAnimations) {
-		return([[[NSImage alloc] initWithSize:[floaterTabImage size]] autorelease]);
+		return [[[NSImage alloc] initWithSize:[floaterTabImage size]] autorelease];
 	} else {
-		return(floaterTabImage);
+		return floaterTabImage;
 	}
 }
 

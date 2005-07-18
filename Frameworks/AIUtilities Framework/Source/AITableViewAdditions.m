@@ -26,11 +26,11 @@
 
     enumerator = [[self tableColumns] objectEnumerator];
     while ((column = [enumerator nextObject])) {
-        if (column == inColumn) return(index);
+        if (column == inColumn) return index;
         index++;
     }
 
-    return(NSNotFound);
+    return NSNotFound;
 }
 
 
@@ -60,7 +60,7 @@
 
 	free(buf);
 
-	return(itemArray);
+	return itemArray;
 }
 
 - (int)indexOfTableColumnWithIdentifier:(id)inIdentifier
@@ -71,11 +71,11 @@
     
     enumerator = [[self tableColumns] objectEnumerator];
     while ((column = [enumerator nextObject])) {
-        if ([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return(index);
+        if ([column identifier] == inIdentifier/*[(NSString *)[column identifier] compare:inIdentifier] == 0*/) return index;
         index++;
     }
 
-    return(NSNotFound);
+    return NSNotFound;
 }  
 
 @end

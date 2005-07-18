@@ -196,7 +196,7 @@ gboolean gaim_init_jabber_plugin(void);
 
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forListObject:(AIListObject *)inListObject
 {
-	return([AIHTMLDecoder encodeHTML:inAttributedString
+	return [AIHTMLDecoder encodeHTML:inAttributedString
 							 headers:YES
 							fontTags:YES
 				  includingColorTags:YES
@@ -209,7 +209,7 @@ gboolean gaim_init_jabber_plugin(void);
 				   attachmentsAsText:YES
 	  attachmentImagesOnlyForSending:YES
 					  simpleTagsOnly:NO
-					  bodyBackground:NO]);
+					  bodyBackground:NO];
 }
 
 - (NSString *)_UIDForAddingObject:(AIListContact *)object

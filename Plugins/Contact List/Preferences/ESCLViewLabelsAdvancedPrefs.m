@@ -14,13 +14,13 @@
 
 //Preference pane properties
 - (PREFERENCE_CATEGORY)category{
-    return(AIPref_Advanced_ContactList);
+    return AIPref_Advanced_ContactList;
 }
 - (NSString *)label{
-    return(AILocalizedString(@"Labels","Contact list labels"));
+    return AILocalizedString(@"Labels","Contact list labels");
 }
 - (NSString *)nibName{
-    return(@"CLViewLabelsAdvancedPrefs");
+    return @"CLViewLabelsAdvancedPrefs";
 }
 
 - (NSDictionary *)restorablePreferences
@@ -37,7 +37,7 @@
 		nil];
 	
 	NSDictionary *defaultsDict = [NSDictionary dictionaryWithObject:defaultsTemp forKey:PREF_GROUP_CONTACT_LIST_DISPLAY];
-	return(defaultsDict);
+	return defaultsDict;
 }
 
 

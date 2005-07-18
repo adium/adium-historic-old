@@ -33,19 +33,19 @@ static AIMiniToolbarCenter *defaultCenter = nil;
         defaultCenter = [[self alloc] init];
     }
     
-    return(defaultCenter);
+    return defaultCenter;
 }
 
 //Return the 'AIMiniToolbarItem's for the specified toolbar
 - (NSArray *)itemsForToolbar:(NSString *)inType
 {
-    return([toolbarDict objectForKey:inType]);
+    return [toolbarDict objectForKey:inType];
 }
 
 //Returns all the available toolbar items
 - (NSArray *)allItems
 {
-    return([itemDict allValues]);
+    return [itemDict allValues];
 }
 
 //Set the toolbar item identifiers associated with a toolbar
@@ -67,7 +67,7 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 //Returns a new instance of the specifed toolbar item
 - (AIMiniToolbarItem *)itemWithIdentifier:(NSString *)inIdentifier
 {
-    return([[[itemDict objectForKey:inIdentifier] copy] autorelease]);
+    return [[[itemDict objectForKey:inIdentifier] copy] autorelease];
 }
 
 //Show the customization palette
@@ -98,9 +98,9 @@ static AIMiniToolbarCenter *defaultCenter = nil;
 - (BOOL)customizing:(AIMiniToolbar *)toolbar
 {
     if(customizeIdentifier && (toolbar == nil || [customizeIdentifier isEqualToString:[toolbar identifier]])){
-        return(YES);
+        return YES;
     }else{
-        return(NO);
+        return NO;
     }
 }
 

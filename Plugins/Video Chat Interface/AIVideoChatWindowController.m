@@ -14,7 +14,7 @@
 
 + (id)windowForVideoChat:(AIVideoChat *)inVideoChat
 {
-	return([[[self alloc] initWithWindowNibName:VIDEO_CHAT_NIB videoChat:inVideoChat] autorelease]);
+	return [[[self alloc] initWithWindowNibName:VIDEO_CHAT_NIB videoChat:inVideoChat] autorelease];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName videoChat:(AIVideoChat *)inVideoChat
@@ -26,7 +26,7 @@
 	//Observe frames for this video chat
 	[[adium videoChatController] registerVideoChatObserver:self];
 	
-	return(self);
+	return self;
 }
 
 //Setup the window before it is displayed

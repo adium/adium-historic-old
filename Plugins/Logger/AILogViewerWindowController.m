@@ -1689,11 +1689,11 @@ Boolean ContentResultsFilter (SKIndexRef     inIndex,
 
 - (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
-    return([[toolbarItems allKeys] arrayByAddingObjectsFromArray:
+    return [[toolbarItems allKeys] arrayByAddingObjectsFromArray:
 		[NSArray arrayWithObjects:NSToolbarSeparatorItemIdentifier,
 			NSToolbarSpaceItemIdentifier,
 			NSToolbarFlexibleSpaceItemIdentifier,
-			NSToolbarCustomizeToolbarItemIdentifier, nil]]);
+			NSToolbarCustomizeToolbarItemIdentifier, nil]];
 }
 
 @end

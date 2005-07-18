@@ -50,11 +50,11 @@ for the actions of others, following only the true, Aqua path to peace, justice,
 	}
 
 	//Otherwise, proceed as normal.
-	return([super initWithContentRect:contentRect
+	return [super initWithContentRect:contentRect
 					 styleMask:styleMask
 					   backing:backingType
 						 defer:flag
-						screen:aScreen]);
+						screen:aScreen];
 }
 
 @end

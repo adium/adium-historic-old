@@ -33,7 +33,7 @@
     imagePath = [ownerBundle pathForImageResource:name];    
     image = [[NSImage alloc] initWithContentsOfFile:imagePath];
 	
-    return([image autorelease]);
+    return [image autorelease];
 }
 
 //Create and return an opaque bitmap image rep, replacing transparency with [NSColor whiteColor]
@@ -72,7 +72,7 @@
 		imageRep = [NSBitmapImageRep imageRepWithData:[tempImage TIFFRepresentation]];
     }
 	
-	return((NSBitmapImageRep *)imageRep);
+	return (NSBitmapImageRep *)imageRep;
 }
 
 - (NSData *)JPEGRepresentation
@@ -175,12 +175,12 @@
 
 - (NSImage *)imageByFadingToFraction:(float)delta
 {
-	return([self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO]);
+	return [self imageByScalingToSize:[self size] fraction:delta flipImage:NO proportionally:NO];
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta
 {
-	return([self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES]);
+	return [self imageByScalingToSize:size fraction:delta flipImage:NO proportionally:YES];
 }
 
 - (NSImage *)imageByScalingToSize:(NSSize)size fraction:(float)delta flipImage:(BOOL)flipImage proportionally:(BOOL)proportionally
@@ -189,7 +189,7 @@
 	
 	//Proceed only if size or delta are changing
 	if ((NSEqualSizes(originalSize, size)) && (delta == 1.0) && !flipImage) {
-		return([[self copy] autorelease]);
+		return [[self copy] autorelease];
 		
 	} else {
 		NSImage *newImage;
@@ -230,7 +230,7 @@
 			[newImage unlockFocus];
 		}
 
-		return([newImage autorelease]);	
+		return [newImage autorelease];
 	}
 }
 
@@ -354,7 +354,7 @@
 		CloseResFile(refNum);
     }
     
-    return(closeImage);
+    return closeImage;
 }
 
 //Returns the system check mark
@@ -392,7 +392,7 @@
 		CloseResFile(refNum);
     }
     
-    return(closeImage);
+    return closeImage;
 }
 
 //Fun drawing toys
@@ -431,7 +431,7 @@
 	if (position == IMAGE_POSITION_LEFT) rect.origin.x += size.width;
 	rect.size.width -= size.width;
 
-	return(rect);
+	return rect;
 }
 
 - (NSRect)rectForDrawingInRect:(NSRect)rect atSize:(NSSize)size position:(IMAGE_POSITION)position
@@ -469,7 +469,7 @@
 		break;
 	}
 	
-	return(drawRect);
+	return drawRect;
 }
 
 
