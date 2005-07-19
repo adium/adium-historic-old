@@ -156,4 +156,16 @@ gboolean gaim_init_gg_plugin(void);
 	return gaimStatusType;
 }
 
+- (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError
+{
+	BOOL shouldAttemptReconnect = YES;
+	
+	if (disconnectionError && *disconnectionError) {
+		if ([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
+		}
+	}
+	
+	return shouldAttemptReconnect;
+}		
 @end
