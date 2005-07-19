@@ -70,7 +70,7 @@
 - (void)setStatus:(FileTransferStatus)inStatus;
 - (FileTransferStatus)status;
 
-- (void)setPercentDone:(float)inPercent bytesSent:(int)inBytesSent;
+- (void)setPercentDone:(float)inPercent bytesSent:(long long unsigned int)inBytesSent;
 - (float)percentDone;
 - (unsigned long long)bytesSent;
 
