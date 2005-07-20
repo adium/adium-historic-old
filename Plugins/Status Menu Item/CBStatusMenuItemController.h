@@ -29,6 +29,7 @@ typedef enum {
 {
 	NSStatusItem            *statusItem;
 	NSMenu                  *theMenu;
+	AIAccountMenu           *accountMenu;
 
 	NSMutableArray          *accountMenuItemsArray;
 	NSMutableArray          *stateMenuItemsArray;
