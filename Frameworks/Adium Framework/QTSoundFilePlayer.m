@@ -483,32 +483,30 @@ errorReturn:
 
 - (BOOL)openFileAsMovie;
 {
-    NSURL *fileURL;
-    FSRef fsRef;
-    FSSpec fsSpec;
-    OSErr err;
-    short fileRefNum;
+	OSErr err;
+	Handle dataRef = NULL;
+	OSType dataRefType = kUnknownType;
     short resID = 0;
-    Boolean wasChanged;
     Track track;
 
-    // Convert our file name to an FSSpec
-    fileURL = [NSURL fileURLWithPath:fileName];
-    if (!CFURLGetFSRef((CFURLRef)fileURL, &fsRef))
-        return NO;
-    if (FSGetCatalogInfo(&fsRef, kFSCatInfoNone, NULL, NULL, &fsSpec, NULL) != noErr)
-        return NO;
+	// Convert our file name to a data reference
+    err = QTNewDataReferenceFromFullPathCFString((CFStringRef)fileName,
+                                                 kQTPOSIXPathStyle,
+                                                 /*flags*/ 0,
+                                                 &dataRef,
+                                                 &dataRefType);
+	if (err != noErr)
+		return NO;
 
-    // Open the movie file
-    err = OpenMovieFile(&fsSpec, &fileRefNum, fsRdPerm);
-    if (err != noErr)
-        return NO;
-
-    // Instantiate the movie and close the file
-    err = NewMovieFromFile(&movie, fileRefNum, &resID, NULL, newMovieActive, &wasChanged);
-    CloseMovieFile(fileRefNum);
-    if (err != noErr)
-        return NO;
+	// Instantiate the movie
+	err = NewMovieFromDataRef(&movie,
+	                          newMovieActive,
+	                          &resID,
+	                          dataRef,
+	                          dataRefType);
+	DisposeHandle(dataRef);
+	if (err != noErr)
+		return NO;
 
     // Get the first sound track
     track = GetMovieIndTrackType(movie, 1, SoundMediaType, movieTrackMediaType);
