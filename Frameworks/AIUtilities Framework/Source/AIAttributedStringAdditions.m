@@ -334,28 +334,37 @@
 {
 	NSAttributedString	*returnValue = nil;
 	
-	if (inData && [inData length]) {
-		//If inData (which must bt non-nil) is not valid archived data, this returns nil.
-		NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
-		
-		if (unarchiver) {
-			//NSUnarchiver's decodeObject returns an object which is retained by the unarchiver and released
-			//when the unarchiver is deallocated.  We could rely upon autoreleasing the unarchiver, but it
-			//is cleaner to make the NSAttributedString autorelease itself.
-			returnValue = (NSAttributedString *)[[[unarchiver decodeObject] retain] autorelease];
+	/* We use an exception handler here because NSUnarchiver can throw an NSInvalidArgumentException with a reason:
+	 *		-[NSPlaceholderDictionary initWithObjects_ex:forKeys:count:]: attempt to insert nil value
+	 * if we feed it invalid data.
+	 */
+	NS_DURING
+		if (inData && [inData length]) {
+			//If inData (which must bt non-nil) is not valid archived data, this returns nil.
+			NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
 			
-		} else {
-			//For reading previously stored NSData objects - we used to store them as RTF data, but that
-			//method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
-			//here isn't a speed problem.  We previously used AIHTMLDecoder to handle Jaguar old-data unarchiving...
-			//but that's in Adium.framework and the cross over most certainly isn't worth it.
-			returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
-												 documentAttributes:nil] autorelease]);
+			if (unarchiver) {
+				/* NSUnarchiver's decodeObject returns an object which is retained by the unarchiver and released
+				 * when the unarchiver is deallocated.  We could rely upon autoreleasing the unarchiver, but it
+				 * is cleaner to make the NSAttributedString autorelease itself.
+				 */
+				returnValue = (NSAttributedString *)[[[unarchiver decodeObject] retain] autorelease];
+				
+			} else {
+				/* For reading previously stored NSData objects - we used to store them as RTF data, but that
+				 * method is both slower and buggier. Any modern storage will use NSUnarchiver, so leaving this
+				 * here isn't a speed problem.  We previously used AIHTMLDecoder to handle Jaguar old-data unarchiving...
+				 * but that's in Adium.framework and the cross over most certainly isn't worth it.
+				 */
+				returnValue = ([[[NSAttributedString alloc] initWithRTF:inData
+													 documentAttributes:nil] autorelease]);
+			}
+			
+			[unarchiver release];
 		}
-		
-		[unarchiver release];
-	}
-	
+	NS_HANDLER
+	NS_ENDHANDLER
+			
 	return returnValue;
 }
 
