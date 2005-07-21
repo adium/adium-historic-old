@@ -627,7 +627,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	output = [standardOuptut fileHandleForReading];
 	scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
 										 encoding:NSUTF8StringEncoding];
-
 	//If the script fails, eat the keyword
 	if (!scriptResult) scriptResult = [@"" retain];
 	
@@ -647,6 +646,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 
 	//Invalidate the timeout timer
 	[scriptTimeoutTimer invalidate];
+
+	/* Remove the observer. NSTask objects appear to be reused internally once released, so this will be called multiple
+	 * times for future NSTask objects, since there is already an observer for the object, according to -[NSTask isEqual:]
+	 * if we don't.
+	 */
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:NSTaskDidTerminateNotification
+												  object:scriptTask];
 
 	//Cleanup
 	[scriptResult release];
