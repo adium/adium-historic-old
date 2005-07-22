@@ -647,9 +647,9 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	//Invalidate the timeout timer
 	[scriptTimeoutTimer invalidate];
 
-	/* Remove the observer. NSTask objects appear to be reused internally once released, so this will be called multiple
-	 * times for future NSTask objects, since there is already an observer for the object, according to -[NSTask isEqual:]
-	 * if we don't.
+	/* Remove the observer. If we don't, and another NSTask is allocated with the same id as scriptTask, we'll get two
+	 * -scriptDidFinish: callbacks when that task terminates. Because this method releases the task, that would be a
+	 * double-release error, resulting in a crash.
 	 */
 	[[NSNotificationCenter defaultCenter] removeObserver:self
 													name:NSTaskDidTerminateNotification
