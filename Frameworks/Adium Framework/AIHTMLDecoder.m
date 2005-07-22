@@ -893,6 +893,10 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					} else if ([chunkString caseInsensitiveCompare:CloseIMG] == NSOrderedSame) {
 						//just ignore </img> if we find it
 
+					//Horizontal Rule
+					} else if ([chunkString caseInsensitiveCompare:@"HR"] == NSOrderedSame) {
+						[attrString appendString:@"\n------\n" withAttributes:nil];
+						
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
 							   [chunkString caseInsensitiveCompare:CloseP] == NSOrderedSame) {
