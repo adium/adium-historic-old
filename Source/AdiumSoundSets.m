@@ -25,13 +25,6 @@
 #define SOUND_NAMES						@"Sounds"
 #define SOUND_SET_PATH_EXTENSION		@"AdiumSoundSet"
 
-
-#define SOUNDSET_LOCATION
-#define SOUNDSET_LOCATION
-#define SOUNDSET_LOCATION
-#define SOUNDSET_LOCATION
-#define SOUNDSET_LOCATION
-
 @interface AdiumSoundSets (PRIVATE)
 - (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
 - (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
