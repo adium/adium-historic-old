@@ -440,6 +440,11 @@
 
 		userInfo = [NSDictionary dictionaryWithObjectsAndKeys:chat, @"AIChat", inObject, @"AIContentObject", nil];
 
+		//Notify: Content Object Added
+		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
+												  object:chat
+												userInfo:userInfo];		
+		
 		if (shouldPostContentReceivedEvents) {
 			NSSet			*previouslyPerformedActionIDs = nil;
 			AIListObject	*listObject = [chat listObject];
@@ -464,12 +469,7 @@
 											 forListObject:listObject
 												  userInfo:userInfo
 							  previouslyPerformedActionIDs:previouslyPerformedActionIDs];
-		}
-		
-		//Notify: Content Object Added
-		[[adium notificationCenter] postNotificationName:Content_ContentObjectAdded
-												  object:chat
-												userInfo:userInfo];		
+		}		
     }
 
 	//We are no longer in the process of receiving this object
