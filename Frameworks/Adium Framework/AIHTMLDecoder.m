@@ -895,7 +895,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 					//Horizontal Rule
 					} else if ([chunkString caseInsensitiveCompare:@"HR"] == NSOrderedSame) {
-						[attrString appendString:@"\n------\n" withAttributes:nil];
+						enum {
+							HORIZONTAL_BAR = 0x2015, //we use six of these.
+							separatorLength = 8,
+						};
+						static const unichar separatorUTF16[separatorLength] = {
+							'\n', HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
+							HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, '\n'
+						};
+						NSString *separator = [NSString stringWithCharacters:separatorUTF16 length:separatorLength];
+						[attrString appendString:separator withAttributes:nil];
 						
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
