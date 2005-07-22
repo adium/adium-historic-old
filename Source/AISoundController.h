@@ -19,8 +19,6 @@
 #define PREF_GROUP_SOUNDS					@"Sounds"
 
 //Sound Controller
-#define	KEY_SOUND_SET						@"Set"
-#define	KEY_SOUND_SET_CONTENTS				@"Sounds"
 #define KEY_SOUND_CUSTOM_VOLUME_LEVEL		@"Custom Volume Level"
 #define KEY_SOUND_SOUND_DEVICE_TYPE			@"Sound Device Type"
 
