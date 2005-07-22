@@ -25,13 +25,6 @@
 #define SOUND_NAMES						@"Sounds"
 #define SOUND_SET_PATH_EXTENSION		@"AdiumSoundSet"
 
-@interface AdiumSoundSets (PRIVATE)
-- (void)_scanSoundSetsFromPath:(NSString *)soundFolderPath intoArray:(NSMutableArray *)soundSetArray;
-- (void)_addSet:(NSString *)inSet withSounds:(NSArray *)inSounds toArray:(NSMutableArray *)inArray;
-- (void)addSoundsIndicatedByDictionary:(NSDictionary *)infoDict toArray:(NSMutableArray *)soundSetContents;
-
-@end
-
 @implementation AdiumSoundSets
 
 /*!
@@ -44,14 +37,6 @@
 	}
 	
 	return self;
-}
-
-/*!
- * @brief Close
- */
-- (void)dealloc {
-	
-	[super dealloc];
 }
 
 /*!
