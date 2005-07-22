@@ -36,6 +36,8 @@
 
 @implementation AISoundSet
 
+#pragma mark Birth and death
+
 /*!
  * @brief Create a new soundset object from the specified path
  */
@@ -76,6 +78,8 @@
 	[super dealloc];
 }
 
+#pragma mark Accessors
+
 /*!
  * @brief Returns the name of this soundSet
  */
@@ -113,6 +117,8 @@
 {
 	return sourcePath;
 }
+
+#pragma mark Private methods
 
 /*!
  * @brief Initialize this object from a soundset at the given path
@@ -340,7 +346,7 @@
 	return success;
 }
 
-#pragma mark Equality
+#pragma mark Dictionary storage
 
 /*
  * @brief Two sound sets are considered equal if they are pointing to the same .AdiumSoundset bundle
