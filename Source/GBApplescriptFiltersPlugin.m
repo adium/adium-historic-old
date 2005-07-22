@@ -616,7 +616,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSTask						*scriptTask = [aNotification object];
 	NSDictionary				*environment = [scriptTask environment];
-	NSPipe						*standardOuptut = [scriptTask standardOutput];
+	NSPipe						*standardOutput = [scriptTask standardOutput];
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
 	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
@@ -624,7 +624,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSFileHandle				*output;
 	NSString					*scriptResult;
 
-	output = [standardOuptut fileHandleForReading];
+	output = [standardOutput fileHandleForReading];
 	scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
 										 encoding:NSUTF8StringEncoding];
 	//If the script fails, eat the keyword
