@@ -21,6 +21,7 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <Adium/AISoundSet.h>
 #import <Adium/AILocalizationTextField.h>
 
 #define PLAY_A_SOUND			AILocalizedString(@"Play a sound",nil)
@@ -126,19 +127,25 @@
 {
 	NSMenu			*soundMenu = [[NSMenu alloc] init];
 	NSEnumerator	*enumerator;
-	NSDictionary	*soundSetDict;
+	AISoundSet		*soundSet;
 	NSMenuItem		*menuItem;
 	
 	//Add all soundsets to our menu
 	enumerator = [[[adium soundController] soundSets] objectEnumerator];
-	while ((soundSetDict = [enumerator nextObject])) {
+	while ((soundSet = [enumerator nextObject])) {
+		NSString        *soundSetName = nil;
+		NSArray         *soundSetContents = nil;
 		NSEnumerator    *soundEnumerator;
 		NSString        *soundPath;
-		NSArray         *soundSetContents = [soundSetDict objectForKey:KEY_SOUND_SET_CONTENTS];
+
+		soundSetName = [soundSet name];
+		soundSetContents = [[soundSet sounds] allValues];
+
+		NSAssert1(soundSetName != nil, @"Sound set does not have a name: %@", soundSet);
 		
 		if (soundSetContents && [soundSetContents count]) {
 			//Add an item for the set
-			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:[[soundSetDict objectForKey:KEY_SOUND_SET] lastPathComponent]
+			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:soundSetName
 																			 target:nil
 																			 action:nil
 																	  keyEquivalent:@""] autorelease];
