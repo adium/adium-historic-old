@@ -231,7 +231,8 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 				} else if (([messageString rangeOfString:@"Message could not be sent"].location != NSNotFound) ||
 						 ([messageString rangeOfString:@"Message may have not been sent"].location != NSNotFound)) {
 					/* Message could not be sent = MSN errors */
-					if ([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound) {
+					if (([messageString rangeOfString:@"because a time out occurred"].location != NSNotFound) ||
+						([messageString rangeOfString:@"because a timeout occurred"].location != NSNotFound)) {
 						errorType = AIChatMessageSendingTimeOutOccurred;
 
 					} else if ([messageString rangeOfString:@"because the user is offline"].location != NSNotFound) {
