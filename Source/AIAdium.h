@@ -16,7 +16,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define	BETA_RELEASE TRUE
+#define	BETA_RELEASE FALSE
 
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AICorePluginLoader, AIPreferenceController, AIMenuController, AILoginWindowController,
