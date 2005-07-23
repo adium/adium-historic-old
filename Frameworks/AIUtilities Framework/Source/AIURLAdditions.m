@@ -24,7 +24,7 @@
         NSArray *keyAndValue = [obj componentsSeparatedByString:@"="];
 
         if (([keyAndValue count] >= 2) &&
-		   ([[keyAndValue objectAtIndex:0] isEqualToString:key])) {
+		   ([[keyAndValue objectAtIndex:0] caseInsensitiveCompare:key] == NSOrderedSame)) {
 			return [keyAndValue objectAtIndex:1];
 		}
     }
