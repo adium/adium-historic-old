@@ -289,12 +289,14 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	}
 
 	if ([unviewedObjectsArray count] == 0) {
+		//If there are no more contacts with unviewed content, set our icon to normal.
 		if (iconState == UNVIEWED) {
 			//We're still online (else it would be OFFLINE, in which case it should not change),
 			//	but we no longer have any unviewed messages.
 			[self setIconState:ONLINE];
 		}
 	} else {
+		//If this is the first contact with unviewed content, set our icon to unviewed content.
 		if (iconState != UNVIEWED) {
 			[self setIconState:UNVIEWED];
 		}
