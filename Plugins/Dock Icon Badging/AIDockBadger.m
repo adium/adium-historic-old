@@ -44,11 +44,10 @@
  */
 - (void)installPlugin
 {
-	overlayObjectsArray = [[NSMutableArray alloc] init];
     overlayState = nil;
 	
 	//Register as a chat observer (for unviewed content)
-//	[[adium chatController] registerChatObserver:self];
+	[[adium chatController] registerChatObserver:self];
 #define BadgerBadgerBadger
 #ifndef BadgerBadgerBadger
 	
@@ -67,7 +66,7 @@
 //	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
 
-- (NSSet *) chatStatusChanged:(AIChat *)chat modifiedStatusKeys:(NSSet *)keys silent:(BOOL)silent
+- (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	[self performSelector:@selector(_setOverlay)
 			   withObject:nil
@@ -90,11 +89,7 @@
 }
 
 - (void)chatClosed:(NSNotification *)notification
-{
-	AIChat	*chat = [notification object];
-	
-	[overlayObjectsArray removeObjectIdenticalTo:chat];
-	
+{	
 	[self performSelector:@selector(_setOverlay)
 			   withObject:nil
 			   afterDelay:0];
