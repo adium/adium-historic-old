@@ -202,55 +202,58 @@
  */
 - (IBAction)changePreference:(id)sender
 {
-	NSString	*style = [[popUp_styles selectedItem] representedObject];
-
-    if (sender == checkBox_showUserIcons) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_WEBKIT_SHOW_USER_ICONS
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-    } else if (sender == checkBox_showHeader) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_WEBKIT_SHOW_HEADER
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
-    } else if (sender == checkBox_showMessageColors) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-    } else if (sender == checkBox_showMessageFonts) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-    } else if (sender == checkBox_useCustomBackground) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
-                                             forKey:[plugin styleSpecificKey:@"UseCustomBackground" forStyle:style]
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-
-	} else if (sender == colorWell_customBackgroundColor) {
-		[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
-                                             forKey:[plugin styleSpecificKey:@"BackgroundColor" forStyle:style]
-                                              group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-	} else if (sender == popUp_backgroundImageType) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
-											 forKey:[plugin styleSpecificKey:@"BackgroundType" forStyle:style]
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
-
-	} else if (sender == popUp_styles) {
-		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
-											 forKey:KEY_WEBKIT_STYLE
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-	} else if (sender == popUp_variants) {
-		NSString *activeStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
-																		 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
-		
-		[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
-											 forKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]
-											  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+	if (viewIsOpen) {
+		if (sender == checkBox_showUserIcons) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+												 forKey:KEY_WEBKIT_SHOW_USER_ICONS
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == checkBox_showHeader) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+												 forKey:KEY_WEBKIT_SHOW_HEADER
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == checkBox_showMessageColors) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+												 forKey:KEY_WEBKIT_SHOW_MESSAGE_COLORS
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == checkBox_showMessageFonts) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+												 forKey:KEY_WEBKIT_SHOW_MESSAGE_FONTS
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == checkBox_useCustomBackground) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+												 forKey:[plugin styleSpecificKey:@"UseCustomBackground" 
+																		forStyle:[[popUp_styles selectedItem] representedObject]]
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == colorWell_customBackgroundColor) {
+			[[adium preferenceController] setPreference:[[colorWell_customBackgroundColor color] stringRepresentation]
+												 forKey:[plugin styleSpecificKey:@"BackgroundColor"
+																		forStyle:[[popUp_styles selectedItem] representedObject]]
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == popUp_backgroundImageType) {
+			[[adium preferenceController] setPreference:[NSNumber numberWithInt:[[popUp_backgroundImageType selectedItem] tag]]
+												 forKey:[plugin styleSpecificKey:@"BackgroundType"
+																		forStyle:[[popUp_styles selectedItem] representedObject]]
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];	
+			
+		} else if (sender == popUp_styles) {
+			[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
+												 forKey:KEY_WEBKIT_STYLE
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+		} else if (sender == popUp_variants) {
+			NSString *activeStyle = [[adium preferenceController] preferenceForKey:KEY_WEBKIT_STYLE
+																			 group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+			
+			[[adium preferenceController] setPreference:[[sender selectedItem] representedObject]
+												 forKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]
+												  group:PREF_GROUP_WEBKIT_MESSAGE_DISPLAY];
+		}
 	}
 }
 
