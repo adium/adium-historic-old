@@ -108,8 +108,8 @@
 	NSImage * badge = nil;
 	if(!badgeOne)
 	{
-		badgeOne = [[NSImage imageNamed:@"newContentOne"]retain];
-		badgeTwo = [[NSImage imageNamed:@"newContentTwo"]retain];
+		badgeOne = [[NSImage imageNamed:@"newContentTwoDigits"] retain];
+		badgeTwo = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
 	}
 
 	if(count < 10)
