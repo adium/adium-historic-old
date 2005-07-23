@@ -20,6 +20,7 @@
 #import "AIMessageTabViewItem.h"
 #import "AIMessageViewController.h"
 #import "AIMessageWindowController.h"
+#import "AIDockController.h"
 #import "AIPreferenceController.h"
 #import "AIToolbarController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
