@@ -2325,6 +2325,17 @@
 		34C6A3BB077A8CB500EB423C /* AppearanceDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = AppearanceDefaults.plist; path = Resources/AppearanceDefaults.plist; sourceTree = "<group>"; };
 		34C6A4C9077AB3A900EB423C /* AIImageCellAnimationFix.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIImageCellAnimationFix.h; path = "Frameworks/Adium Framework/AIImageCellAnimationFix.h"; sourceTree = "<group>"; };
 		34C6A4CA077AB3AA00EB423C /* AIImageCellAnimationFix.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIImageCellAnimationFix.m; path = "Frameworks/Adium Framework/AIImageCellAnimationFix.m"; sourceTree = "<group>"; };
+		34C898C2089297B00046AD38 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Japanese; path = "Resources/Japanese.lproj/Shared Dock Icon Images"; sourceTree = "<group>"; };
+		34C898D8089297D30046AD38 /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C898E8089297E30046AD38 /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C898F8089297F00046AD38 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8990A089297F90046AD38 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8991A089298050046AD38 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8992A0892980F0046AD38 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8993C0892981D0046AD38 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/Gaim Service/Japanese.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8994C089298300046AD38 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8995C0892983E0046AD38 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
+		34C8996E089298470046AD38 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = "Plugins/Gaim Service/French.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.plist; name = BuiltInEventPresets.plist; path = Resources/BuiltInEventPresets.plist; sourceTree = "<group>"; };
 		34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimMeanwhileContactAdditionController.h; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.h"; sourceTree = "<group>"; };
 		34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimMeanwhileContactAdditionController.m; path = "Plugins/Gaim Service/ESGaimMeanwhileContactAdditionController.m"; sourceTree = "<group>"; };
@@ -2466,7 +2477,7 @@
 		34F142A705E95B4D00B32FD7 /* ESTrepiaService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESTrepiaService.h; path = "Plugins/Gaim Service/ESTrepiaService.h"; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
-		34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIHTMLDecoder.m; path = "Frameworks/Adium Framework/AIHTMLDecoder.m"; sourceTree = "<group>"; };
+		34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHTMLDecoder.m; path = "Frameworks/Adium Framework/AIHTMLDecoder.m"; sourceTree = "<group>"; };
 		34F2E81007C2CD5E007EAAAB /* AIHTMLDecoder.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIHTMLDecoder.h; path = "Frameworks/Adium Framework/AIHTMLDecoder.h"; sourceTree = "<group>"; };
 		34F2E81807C2CD6B007EAAAB /* AITextAttachmentExtension.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextAttachmentExtension.h; path = "Frameworks/Adium Framework/AITextAttachmentExtension.h"; sourceTree = "<group>"; };
 		34F2E81907C2CD6C007EAAAB /* AITextAttachmentExtension.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextAttachmentExtension.m; path = "Frameworks/Adium Framework/AITextAttachmentExtension.m"; sourceTree = "<group>"; };
@@ -8080,6 +8091,7 @@
 				071C56320827933000399C0F /* English */,
 				071C563E0827936500399C0F /* French */,
 				071C56420827937400399C0F /* German */,
+				34C898C2089297B00046AD38 /* Japanese */,
 			);
 			name = "Shared Dock Icon Images";
 			sourceTree = "<group>";
@@ -8239,6 +8251,16 @@
 			isa = PBXVariantGroup;
 			children = (
 				3411E2470832EB75003C8270 /* English */,
+				34C898D8089297D30046AD38 /* zh_TW */,
+				34C898E8089297E30046AD38 /* zh_CN */,
+				34C898F8089297F00046AD38 /* is */,
+				34C8990A089297F90046AD38 /* cs */,
+				34C8991A089298050046AD38 /* Swedish */,
+				34C8992A0892980F0046AD38 /* Russian */,
+				34C8993C0892981D0046AD38 /* Japanese */,
+				34C8994C089298300046AD38 /* Italian */,
+				34C8995C0892983E0046AD38 /* German */,
+				34C8996E089298470046AD38 /* French */,
 			);
 			name = OTRPrefs.nib;
 			sourceTree = "<group>";
