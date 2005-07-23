@@ -45,8 +45,8 @@
  */
 - (void)installPlugin
 {
-    overlayState = nil;
-	currentCount = -1;
+	overlayState = nil;
+
 	//Register as a chat observer (for unviewed content)
 	[[adium chatController] registerChatObserver:self];
 #define BadgerBadgerBadger
@@ -63,7 +63,7 @@
 									 object:nil];
 	
 #endif
-    //Prefs
+	//Prefs
 //	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
 
@@ -140,28 +140,31 @@
 	
 	[badge unlockFocus];
 		
-	currentCount = count;
 	return badge;
 }
 
 //
 - (void)_setOverlay
 {
-    //Remove & release the current overlay state
-    if (overlayState) {
-        [[adium dockController] removeIconStateNamed:@"UnviewedContentCount"];
-        [overlayState release]; overlayState = nil;
-    }
-	
 	int contentCount = [[adium chatController] unviewedContentCount];
 
-    //Create & set the new overlay state
-    if (contentCount > 0) {
-        //Set the state
-        overlayState = [[AIIconState alloc] initWithImage:[self numberedBadge:contentCount] 
-												  overlay:YES];
-        [[adium dockController] setIconState:overlayState named:@"UnviewedContentCount"];
-    }   
+	if (contentCount != lastUnviewedContentCount) {
+		//Remove & release the current overlay state
+		if (overlayState) {
+			[[adium dockController] removeIconStateNamed:@"UnviewedContentCount"];
+			[overlayState release]; overlayState = nil;
+		}
+
+		//Create & set the new overlay state
+		if (contentCount > 0) {
+			//Set the state
+			overlayState = [[AIIconState alloc] initWithImage:[self numberedBadge:contentCount] 
+													  overlay:YES];
+			[[adium dockController] setIconState:overlayState named:@"UnviewedContentCount"];
+		}
+
+		lastUnviewedContentCount = contentCount;
+	}
 }
 
 @end

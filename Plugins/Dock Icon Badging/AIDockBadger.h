@@ -24,7 +24,7 @@
 @interface AIDockBadger : AIPlugin <AIChatObserver> {
 	AIIconState					*overlayState;
 	NSImage						*badgeOne, *badgeTwo;
-	int							currentCount;
+	int							lastUnviewedContentCount;
 }
 
 @end
