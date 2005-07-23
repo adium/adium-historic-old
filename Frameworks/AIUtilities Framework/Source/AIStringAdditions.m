@@ -47,7 +47,7 @@
 		while (remaining--) {
 			buf[remaining] = alphanumeric[random() % sizeof(alphanumeric)];
 		}
-		string = [[[NSString alloc] initWithBytes:buf length:inLength encoding:NSASCIIStringEncoding] autorelease];
+		string = [NSString stringWithBytes:buf length:inLength encoding:NSASCIIStringEncoding];
 		free(buf);
 	}
 
