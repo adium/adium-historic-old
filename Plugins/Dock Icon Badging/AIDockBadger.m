@@ -39,6 +39,8 @@
 
 @implementation AIDockBadger
 
+#pragma mark Birth and death
+
 /*!
 * @brief Install
  */
@@ -66,6 +68,15 @@
 //	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
 
+- (void)uninstallPlugin
+{
+	[[adium chatController] unregisterChatObserver:self];
+	[[adium notificationCenter] removeObserver:self];
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+}
+
+#pragma mark Signals to update
+
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	[self performSelector:@selector(_setOverlay)
@@ -81,19 +92,14 @@
 			   afterDelay:0];
 }
 
-- (void)uninstallPlugin
-{
-	[[adium chatController] unregisterChatObserver:self];
-	[[adium notificationCenter] removeObserver:self];
-	[[adium preferenceController] unregisterPreferenceObserver:self];
-}
-
 - (void)chatClosed:(NSNotification *)notification
 {	
 	[self performSelector:@selector(_setOverlay)
 			   withObject:nil
 			   afterDelay:0];
 }
+
+#pragma mark Work methods
 
 - (NSImage *)numberedBadge:(int)count
 {
