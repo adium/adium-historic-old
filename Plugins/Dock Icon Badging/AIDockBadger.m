@@ -102,38 +102,39 @@
 
 - (NSImage *)numberedBadge:(int)count
 {
-	static int currentCount = -1;
 	static NSImage * badgeOne;
 	static NSImage * badgeTwo;
-	NSImage * badge = nil;
-	if(!badgeOne)
-	{
+	if(!badgeOne) {
 		badgeOne = [[NSImage imageNamed:@"newContentTwoDigits"] retain];
 		badgeTwo = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
 	}
 
-	if(count < 10)
-	{
-		badge = [[NSImage alloc] initWithSize:[badgeOne size]];
-		[badge setFlipped:YES];
-		[badge lockFocus];
-		[badgeOne compositeToPoint:NSMakePoint(0, [badge size].height) operation:NSCompositeSourceOver];
-	}
-	else if(count < 100) //99 unread messages should be enough for anyone
-	{
-		badge = [[NSImage alloc] initWithSize:[badgeTwo size]];
-		[badge setFlipped:YES];
-		[badge lockFocus];
-		[badgeTwo compositeToPoint:NSMakePoint(0, [badge size].height) operation:NSCompositeSourceOver];
+	NSImage * badge = nil, * badgeToComposite = nil;
+	static int currentCount = -1;
+
+	if(count < 10) {
+		badgeToComposite = badgeOne;
+	} else if(count < 100) {
+		//99 unread messages should be enough for anyone
+		badgeToComposite = badgeTwo;
 	}
 	
-	NSRect rect = {NSZeroPoint, [badge size]};
-	NSDictionary * atts = [NSDictionary dictionaryWithObjectsAndKeys:[NSColor whiteColor], NSForegroundColorAttributeName, [NSFont boldSystemFontOfSize:24], NSFontAttributeName, nil];
+	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
+	NSDictionary * atts = [NSDictionary dictionaryWithObjectsAndKeys:
+		[NSColor whiteColor], NSForegroundColorAttributeName,
+		[NSFont boldSystemFontOfSize:24], NSFontAttributeName,
+		nil];
 	
 	NSString * numString = [[NSNumber numberWithInt:count] description];
 	NSSize numSize = [numString sizeWithAttributes:atts];
 	rect.origin.x = (rect.size.width / 2) - (numSize.width / 2);
 	rect.origin.y = (rect.size.height / 2) - (numSize.height / 2);
+
+	badge = [[NSImage alloc] initWithSize:[badgeToComposite size]];
+	[badge setFlipped:YES];
+	[badge lockFocus];
+	[badgeToComposite compositeToPoint:NSMakePoint(0, rect.size.height) operation:NSCompositeSourceOver];
+
 	[numString drawInRect:rect
 		   withAttributes:atts];
 	
