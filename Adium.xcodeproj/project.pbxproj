@@ -1057,6 +1057,10 @@
 		4BFE2EA807E61FB200C07EBE /* NewAlertNoEvents.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */; };
 		4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */ = {isa = PBXBuildFile; fileRef = 342DC49C05783BE8000E1D83 /* ESSendMessageAlertDetailPane.m */; };
 		4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC49B05783BE8000E1D83 /* ESSendMessageAlertDetailPane.h */; };
+		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
+		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
+		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
+		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		6CF42679057763E200F27FAA /* ESContactAlertsController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6CF42677057763E100F27FAA /* ESContactAlertsController.h */; };
 		6CF4267A057763E200F27FAA /* ESContactAlertsController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6CF42678057763E200F27FAA /* ESContactAlertsController.m */; };
@@ -2833,6 +2837,10 @@
 		4BFC5407043E509A00A8010A /* AIContentStatus.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIContentStatus.h; path = "Frameworks/Adium Framework/AIContentStatus.h"; sourceTree = "<group>"; };
 		4BFC5408043E509A00A8010A /* AIContentStatus.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIContentStatus.m; path = "Frameworks/Adium Framework/AIContentStatus.m"; sourceTree = "<group>"; };
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
+		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
+		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
+		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
+		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
 		6C5C3C2605F6532600490341 /* SQL Logger.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "SQL Logger.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		6C644D3605776BC600D79723 /* AILogFromGroup.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILogFromGroup.h; path = Plugins/Logger/AILogFromGroup.h; sourceTree = "<group>"; };
@@ -5079,6 +5087,7 @@
 		4BD672C706001B560049CAF7 /* Other */ = {
 			isa = PBXGroup;
 			children = (
+				636AB7EC087E2A2E00A87670 /* Dock Icon Badging */,
 				B782F088058BB60B00AF4BBA /* LaTeX Plugin */,
 				B7AE664D0465778E0051E914 /* SQL Logger */,
 			);
@@ -5252,6 +5261,18 @@
 				9E124DF507D34CF500AA91C5 /* Growl-WithInstaller.framework */,
 			);
 			name = Growl;
+			sourceTree = "<group>";
+		};
+		636AB7EC087E2A2E00A87670 /* Dock Icon Badging */ = {
+			isa = PBXGroup;
+			children = (
+				636AB7F1087E2B6700A87670 /* AIDockBadger.h */,
+				636AB7F2087E2B6700A87670 /* AIDockBadger.m */,
+				63093C2D0892143500F118D3 /* newContentThreeDigits.png */,
+				63093C2E0892143500F118D3 /* newContentTwoDigits.png */,
+			);
+			name = "Dock Icon Badging";
+			path = "Plugins/Dock Icon Badging";
 			sourceTree = "<group>";
 		};
 		6E4D961006B73991005235E9 /* Join Chat Panel */ = {
@@ -6122,6 +6143,7 @@
 				110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */,
 				110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */,
 				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
+				636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7236,6 +7258,8 @@
 				071C56330827933100399C0F /* Shared Dock Icon Images in Resources */,
 				4BB9972F083D1A74006ACD6F /* ContactListShowBehavior.nib in Resources */,
 				110763FA08676D05005987A5 /* BlockEditorWindow.nib in Resources */,
+				63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */,
+				63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7717,6 +7741,7 @@
 				110763F808676CC9005987A5 /* RAFBlockEditorWindowController.m in Sources */,
 				346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */,
 				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
+				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
