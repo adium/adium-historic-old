@@ -2331,7 +2331,6 @@
 		34C898F8089297F00046AD38 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C8990A089297F90046AD38 /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C8991A089298050046AD38 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
-		34C8992A0892980F0046AD38 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C8993C0892981D0046AD38 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = "Plugins/Gaim Service/Japanese.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C8994C089298300046AD38 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = "Plugins/Gaim Service/Italian.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
 		34C8995C0892983E0046AD38 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = "Plugins/Gaim Service/German.lproj/OTRPrefs.nib"; sourceTree = "<group>"; };
@@ -8256,7 +8255,6 @@
 				34C898F8089297F00046AD38 /* is */,
 				34C8990A089297F90046AD38 /* cs */,
 				34C8991A089298050046AD38 /* Swedish */,
-				34C8992A0892980F0046AD38 /* Russian */,
 				34C8993C0892981D0046AD38 /* Japanese */,
 				34C8994C089298300046AD38 /* Italian */,
 				34C8995C0892983E0046AD38 /* German */,
