@@ -47,7 +47,7 @@
 - (void)installPlugin
 {
     overlayState = nil;
-	
+	currentCount = -1;
 	//Register as a chat observer (for unviewed content)
 	[[adium chatController] registerChatObserver:self];
 #define BadgerBadgerBadger
@@ -103,8 +103,6 @@
 
 - (NSImage *)numberedBadge:(int)count
 {
-	static NSImage * badgeOne;
-	static NSImage * badgeTwo;
 	if(!badgeOne) {
 		badgeOne = [[NSImage imageNamed:@"newContentTwoDigits"] retain];
 		badgeTwo = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
@@ -112,7 +110,6 @@
 
 	NSImage * badge = nil, * badgeToComposite = nil;
 	NSString * numString = nil;
-	static int currentCount = -1;
 
 	if(count < 100) {
 		NSImage *badges[] = { badgeOne, badgeTwo };

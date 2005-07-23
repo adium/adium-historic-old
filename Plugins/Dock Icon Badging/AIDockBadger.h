@@ -22,12 +22,10 @@
 @protocol AIChatObserver;
 
 @interface AIDockBadger : AIPlugin <AIChatObserver> {
-//	NSMutableArray				*overlayObjectsArray;
 	AIIconState					*overlayState;
-
-	BOOL	showStatus;
-	BOOL	showContent;
-	BOOL	overlayPosition;
+	NSImage						*badgeOne;
+	NSImage						*badgeTwo;
+	int							currentCount;
 }
 
 @end
