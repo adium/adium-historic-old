@@ -1,6 +1,5 @@
-
 /* 
-* Adium is the legal property of its developers, whose names are listed in the copyright file included
+ * Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -42,7 +41,7 @@
 #pragma mark Birth and death
 
 /*!
-* @brief Install
+ * @brief Install
  */
 - (void)installPlugin
 {
@@ -108,8 +107,8 @@
 		badgeTwo = [[NSImage imageNamed:@"newContentThreeDigits"] retain];
 	}
 
-	NSImage * badge = nil, * badgeToComposite = nil;
-	NSString * numString = nil;
+	NSImage *badge = nil, *badgeToComposite = nil;
+	NSString *numString = nil;
 
 	if(count < 1000) {
 		NSImage *badges[] = { badgeOne, badgeTwo };
@@ -122,7 +121,7 @@
 	}
 	
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
-	NSDictionary * atts = [NSDictionary dictionaryWithObjectsAndKeys:
+	NSDictionary *atts = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSColor whiteColor], NSForegroundColorAttributeName,
 		[NSFont boldSystemFontOfSize:24], NSFontAttributeName,
 		nil];
