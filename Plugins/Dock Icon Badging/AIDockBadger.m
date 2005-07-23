@@ -114,7 +114,7 @@
 	static int currentCount = -1;
 
 	if(count < 100) {
-		NSImage *badges[] = { badgeOne, badgeTwo }
+		NSImage *badges[] = { badgeOne, badgeTwo };
 		badgeToComposite = badges[(count >= 10)];
 		numString = [[NSNumber numberWithInt:count] description];
 	} else {
@@ -132,7 +132,7 @@
 	rect.origin.x = (rect.size.width / 2) - (numSize.width / 2);
 	rect.origin.y = (rect.size.height / 2) - (numSize.height / 2);
 
-	badge = [[NSImage alloc] initWithSize:[badgeToComposite size]];
+	badge = [[[NSImage alloc] initWithSize:[badgeToComposite size]] autorelease];
 	[badge setFlipped:YES];
 	[badge lockFocus];
 	[badgeToComposite compositeToPoint:NSMakePoint(0, rect.size.height) operation:NSCompositeSourceOver];
@@ -156,9 +156,9 @@
     }
 	
 	int contentCount = [[adium chatController] unviewedContentCount];
-	
+
     //Create & set the new overlay state
-    if (contentCount > 0 && contentCount < 100) {
+    if (contentCount > 0) {
         //Set the state
         overlayState = [[AIIconState alloc] initWithImage:[self numberedBadge:contentCount] 
 												  overlay:YES];
