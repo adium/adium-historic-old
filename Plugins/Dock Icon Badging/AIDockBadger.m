@@ -110,13 +110,16 @@
 	}
 
 	NSImage * badge = nil, * badgeToComposite = nil;
+	NSString * numString = nil;
 	static int currentCount = -1;
 
-	if(count < 10) {
-		badgeToComposite = badgeOne;
-	} else if(count < 100) {
+	if(count < 100) {
+		NSImage *badges[] = { badgeOne, badgeTwo }
+		badgeToComposite = badges[(count >= 10)];
+		numString = [[NSNumber numberWithInt:count] description];
+	} else {
 		//99 unread messages should be enough for anyone
-		badgeToComposite = badgeTwo;
+		numString = AILocalizedString(@"Too many unread messages", /*comment*/ nil);
 	}
 	
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
@@ -125,7 +128,6 @@
 		[NSFont boldSystemFontOfSize:24], NSFontAttributeName,
 		nil];
 	
-	NSString * numString = [[NSNumber numberWithInt:count] description];
 	NSSize numSize = [numString sizeWithAttributes:atts];
 	rect.origin.x = (rect.size.width / 2) - (numSize.width / 2);
 	rect.origin.y = (rect.size.height / 2) - (numSize.height / 2);
