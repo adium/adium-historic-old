@@ -111,12 +111,12 @@
 	NSImage * badge = nil, * badgeToComposite = nil;
 	NSString * numString = nil;
 
-	if(count < 100) {
+	if(count < 1000) {
 		NSImage *badges[] = { badgeOne, badgeTwo };
 		badgeToComposite = badges[(count >= 10)];
 		numString = [[NSNumber numberWithInt:count] description];
 	} else {
-		//99 unread messages should be enough for anyone
+		//999 unread messages should be enough for anyone
 		numString = AILocalizedString(@"Too many unread messages", /*comment*/ nil);
 	}
 	
