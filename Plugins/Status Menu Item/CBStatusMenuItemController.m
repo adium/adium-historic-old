@@ -275,11 +275,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 				[unviewedObjectsArray addObject:inChat];
 				//We need to update our menu
 				needsUpdate = YES;
-				//If this is the first contact with unviewed content, set our icon to unviewed content
-				if (iconState != UNVIEWED) {
-					//Set our state
-					[self setIconState:UNVIEWED];
-				}
 			}
 		//If they've viewed the content
 		} else {
@@ -289,12 +284,19 @@ static	NSImage						*adiumRedHighlightImage = nil;
 				[unviewedObjectsArray removeObjectIdenticalTo:inChat];
 				//We need to update our menu
 				needsUpdate = YES;
-				//If there are no more contacts with unviewed content, set our icon to normal
-				if ([unviewedObjectsArray count] == 0 && iconState == UNVIEWED) {
-					//Set our state
-					[self setIconState:ONLINE];
-				}
 			}
+		}
+	}
+
+	if ([unviewedObjectsArray count] == 0) {
+		if (iconState == UNVIEWED) {
+			//We're still online (else it would be OFFLINE, in which case it should not change),
+			//	but we no longer have any unviewed messages.
+			[self setIconState:ONLINE];
+		}
+	} else {
+		if (iconState != UNVIEWED) {
+			[self setIconState:UNVIEWED];
 		}
 	}
 
