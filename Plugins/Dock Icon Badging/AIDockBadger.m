@@ -118,7 +118,7 @@
 	} else {
 		//999 unread messages should be enough for anyone
 		badgeToComposite = badgeTwo;
-		numString = AILocalizedString(@"Too many unread messages", /*comment*/ nil);
+		numString = AILocalizedString(@">= 1000 unread messages", /*comment*/ @"Used by AIDockBadger.");
 	}
 	
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
