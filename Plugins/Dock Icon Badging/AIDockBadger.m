@@ -54,13 +54,13 @@
 #ifndef BadgerBadgerBadger
 	
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(chatClosed:)
-									   name:Chat_WillClose
+								   selector:@selector(contentAdded:)
+									   name:Content_WillReceiveContent
 									 object:nil];
 	
 	[[adium notificationCenter] addObserver:self
-								   selector:@selector(contentAdded:)
-									   name:Content_WillReceiveContent
+								   selector:@selector(chatClosed:)
+									   name:Chat_WillClose
 									 object:nil];
 	
 #endif
