@@ -117,6 +117,7 @@
 		numString = [[NSNumber numberWithInt:count] description];
 	} else {
 		//999 unread messages should be enough for anyone
+		badgeToComposite = badgeTwo;
 		numString = AILocalizedString(@"Too many unread messages", /*comment*/ nil);
 	}
 	
@@ -130,7 +131,7 @@
 	rect.origin.x = (rect.size.width / 2) - (numSize.width / 2);
 	rect.origin.y = (rect.size.height / 2) - (numSize.height / 2);
 
-	badge = [[[NSImage alloc] initWithSize:[badgeToComposite size]] autorelease];
+	badge = [[[NSImage alloc] initWithSize:rect.size] autorelease];
 	[badge setFlipped:YES];
 	[badge lockFocus];
 	[badgeToComposite compositeToPoint:NSMakePoint(0, rect.size.height) operation:NSCompositeSourceOver];
