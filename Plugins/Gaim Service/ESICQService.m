@@ -44,10 +44,10 @@
 	return @"ICQ";
 }
 - (NSCharacterSet *)allowedCharacters{
-	return [NSCharacterSet characterSetWithCharactersInString:@"0123456789"];
+	return [NSCharacterSet characterSetWithCharactersInString:@"0123456789-"];
 }
 - (NSCharacterSet *)ignoredCharacters{
-	return [NSCharacterSet characterSetWithCharactersInString:@""];
+	return [NSCharacterSet characterSetWithCharactersInString:@"-"];
 }
 - (int)allowedLength{
 	return 16;
