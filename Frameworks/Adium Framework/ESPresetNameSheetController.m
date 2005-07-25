@@ -93,7 +93,7 @@
 	} else {
 		NSString	*nameInUseText;
 		
-		nameInUseText = [NSString stringWithFormat:AILocalizedString(@"\"%@\" is already in use.",nil), newName];
+		nameInUseText = [NSString stringWithFormat:AILocalizedStringFromTable(@"\"%@\" is already in use.", @"AdiumFramework", nil), newName];
 		[self configureExplanatoryTextWithString:[NSString stringWithFormat:@"%@\n\n%@", explanatoryText, nameInUseText]];
 
 		NSBeep();

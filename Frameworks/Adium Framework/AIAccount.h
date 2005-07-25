@@ -25,8 +25,6 @@
 #define KEY_CONNECT_PORT 			@"Connect Port"
 #define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
 
-#define NEW_ACCOUNT_DISPLAY_TEXT	AILocalizedString(@"<New Account>",nil)
-
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
 typedef enum {

@@ -216,7 +216,7 @@ static NSColor	*cachedWhiteColor = nil;
 		[undoManager registerUndoWithTarget:self
 								   selector:@selector(setAttributedString:)
 									 object:[[[self textStorage] copy] autorelease]];
-		[undoManager setActionName:AILocalizedString(@"Clear",nil)];
+		[undoManager setActionName:AILocalizedStringFromTable(@"Clear", @"AdiumFramework", nil)];
 
 		[self setString:@""];
 	}
