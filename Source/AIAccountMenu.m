@@ -22,11 +22,13 @@
 #import <Adium/AIAccount.h>
 
 //Menu titles
-#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedString(@"Connect: %@","Connect account prefix")
-#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedString(@"Disconnect: %@","Disconnect account prefix")
-#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedString(@"Cancel: %@","Cancel current account activity prefix")
+#define	ACCOUNT_CONNECT_MENU_TITLE			AILocalizedStringFromTable(@"Connect: %@", @"AdiumFramework", "Connect account prefix")
+#define	ACCOUNT_DISCONNECT_MENU_TITLE		AILocalizedStringFromTable(@"Disconnect: %@", @"AdiumFramework", "Disconnect account prefix")
+#define	ACCOUNT_CONNECTING_MENU_TITLE		AILocalizedStringFromTable(@"Cancel: %@", @"AdiumFramework", "Cancel current account activity prefix")
 #define	ACCOUNT_DISCONNECTING_MENU_TITLE	ACCOUNT_CONNECTING_MENU_TITLE
-#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedString(@"Auto-Connect on Launch",nil)
+#define	ACCOUNT_AUTO_CONNECT_MENU_TITLE		AILocalizedStringFromTable(@"Auto-Connect on Launch", @"AdiumFramework", nil)
+
+#define NEW_ACCOUNT_DISPLAY_TEXT			AILocalizedStringFromTable(@"<New Account>", @"AdiumFramework", "Placeholder displayed as the name of a new account")
 
 @interface AIAccountMenu (PRIVATE)
 - (id)initWithDelegate:(id)inDelegate
