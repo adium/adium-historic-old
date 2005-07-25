@@ -191,7 +191,21 @@ typedef enum {
 				}
 				[slider_horizontalWidth setEnabled:YES];
 			}
-			
+		
+			//Group bubbles and contact bubbles always autoresize vertically
+			if (windowMode == WINDOW_STYLE_MOCKIE ||
+				windowMode == WINDOW_STYLE_PILLOWS ||
+				windowMode == WINDOW_STYLE_PILLOWS_FITTED) {
+				[checkBox_verticalAutosizing setState:NSOnState];
+				[checkBox_verticalAutosizing setEnabled:NO];
+
+			} else {
+				BOOL autoresizeVertically = [[[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_VERTICAL_AUTOSIZE
+																					  group:PREF_GROUP_APPEARANCE] boolValue];
+
+				[checkBox_verticalAutosizing setState:autoresizeVertically];
+				[checkBox_verticalAutosizing setEnabled:YES];
+			}
 		}
 
 		//Selected menu items
