@@ -183,7 +183,7 @@
 		NSString 	*userNameLabel = [[account service] userNameLabel];
 		[textField_accountUIDLabel setStringValue:[(userNameLabel ?
 													userNameLabel :
-													AILocalizedString(@"User Name", nil)) stringByAppendingString:@":"]];
+													AILocalizedStringFromTable(@"User Name", @"AdiumFramework", nil)) stringByAppendingString:@":"]];
 		
 		//UID
 		NSString	*formattedUID = [account formattedUID];
@@ -192,7 +192,7 @@
 			[AIStringFormatter stringFormatterAllowingCharacters:[[account service] allowedCharactersForAccountName]
 														  length:[[account service] allowedLengthForAccountName]
 												   caseSensitive:[[account service] caseSensitive]
-													errorMessage:AILocalizedString(@"The characters you're entering are not valid for an account name on this service.",nil)]];
+													errorMessage:AILocalizedStringFromTable(@"The characters you're entering are not valid for an account name on this service.", @"AdiumFramework", nil)]];
 		[[textField_accountUID cell] setPlaceholderString:[self UIDPlaceholder]];
 
 		//Can't change the UID while the account is online
@@ -316,10 +316,10 @@
 #pragma mark Localization
 - (void)localizeStrings
 {
-	[label_password setLocalizedString:AILocalizedString(@"Password:","Label for the password field in the account preferences")];
-	[label_typing setLocalizedString:AILocalizedString(@"Typing:","Label beside the 'let others know when you are typing' checkbox in the account preferences")];
-	[checkBox_sendTyping setLocalizedString:AILocalizedString(@"Let others know when you are typing","Text of the typing preference checkbox in the account preferneces")];
-	[label_encryption setLocalizedString:AILocalizedString(@"Encryption:","Label besides the encryption preference menu")];
+	[label_password setLocalizedString:AILocalizedStringFromTable(@"Password:", @"AdiumFramework", "Label for the password field in the account preferences")];
+	[label_typing setLocalizedString:AILocalizedStringFromTable(@"Typing:", @"AdiumFramework", "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
+	[checkBox_sendTyping setLocalizedString:AILocalizedStringFromTable(@"Let others know when you are typing", @"AdiumFramework", "Text of the typing preference checkbox in the account preferneces")];
+	[label_encryption setLocalizedString:AILocalizedStringFromTable(@"Encryption:", @"AdiumFramework", "Label besides the encryption preference menu")];
 }
 
 @end
