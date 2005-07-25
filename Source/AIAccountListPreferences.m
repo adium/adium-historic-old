@@ -30,7 +30,9 @@
 #import <Adium/AIStatusIcons.h>
 #import "KFTypeSelectTableView.h"
 
-#define	ACCOUNT_DRAG_TYPE					@"AIAccount"	    			//ID for an account drag
+#define	ACCOUNT_DRAG_TYPE				@"AIAccount"	    			//ID for an account drag
+
+#define NEW_ACCOUNT_DISPLAY_TEXT		AILocalizedString(@"<New Account>", "Placeholder displayed as the name of a new account")
 
 @interface AIAccountListPreferences (PRIVATE)
 - (void)configureAccountList;
