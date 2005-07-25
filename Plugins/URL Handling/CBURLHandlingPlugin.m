@@ -23,11 +23,14 @@
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
+#import <Adium/AIAccount.h>
 #import <Adium/AIContentMessage.h>
+#import <Adium/AIService.h>
 
 @interface CBURLHandlingPlugin(PRIVATE)
 - (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
 - (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
+- (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange;
 @end
 
 @implementation CBURLHandlingPlugin
@@ -99,7 +102,7 @@
 
 	if (url) {
 		NSString	*scheme, *newScheme;
-		NSString	*service;
+		NSString	*serviceID;
 
 		//make sure we have the // in ://, as it simplifies later processing.
 		if (![[url resourceSpecifier] hasPrefix:@"//"]) {
@@ -135,25 +138,38 @@
 				nil];
 		}
 		
-		if ((service = [schemeToServiceDict objectForKey:scheme])) {
+		if ((serviceID = [schemeToServiceDict objectForKey:scheme])) {
 			NSString *host = [url host];
 			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
-				// aim://goim?screenname=tekjew
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
 
 				if (name) {
 					[self _openChatToContactWithName:name
-										   onService:service 
+										   onService:serviceID 
 										 withMessage:[[url queryArgumentForKey:@"message"] stringByDecodingURLEscapes]];
 				}
 
 			} else if ([host caseInsensitiveCompare:@"addbuddy"] == NSOrderedSame) {
 				// aim://addbuddy?screenname=tekjew
+				// aim://addbuddy?listofscreennames=screen+name1,screen+name+2&groupname=buddies
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
-
+				AIService	*service = [[adium accountController] firstServiceWithServiceID:serviceID];
+				
 				if (name) {
 					[[adium contactController] requestAddContactWithUID:name
-																service:[[adium accountController] firstServiceWithServiceID:service]];
+																service:service];
+					
+				} else {
+					NSString		*listOfNames = [url queryArgumentForKey:@"listofscreennames"];
+					NSArray			*names = [listOfNames componentsSeparatedByString:@","];
+					NSEnumerator	*enumerator;
+					
+					enumerator = [names objectEnumerator];
+					while ((name = [enumerator nextObject])) {
+						NSString	*decodedName = [[name stringByDecodingURLEscapes] compactedString];
+						[[adium contactController] requestAddContactWithUID:decodedName
+																	service:service];
+					}
 				}
 
 			} else if ([host caseInsensitiveCompare:@"sendim"] == NSOrderedSame) {
@@ -162,17 +178,30 @@
 				
 				if (name) {
 					[self _openChatToContactWithName:name
-										   onService:service
+										   onService:serviceID
 										 withMessage:nil];
 				}
 				
+			} else if ([host caseInsensitiveCompare:@"gochat"]) {
+				// aim://gochat?RoomName=AdiumRocks
+				NSString	*roomname = [[url queryArgumentForKey:@"roomname"] stringByDecodingURLEscapes];
+				NSString	*exchangeString = [url queryArgumentForKey:@"exchange"];
+				if (roomname) {
+					int exchange = 0;
+					if (exchangeString) {
+						exchange = [exchangeString intValue];	
+					}
+					
+					[self _openAIMGroupChat:roomname onExchange:(exchange ? exchange : 4)];
+				}
+
 			} else if ([url queryArgumentForKey:@"openChatToScreenName"]) {
 				// aim://openChatToScreenname?tekjew  [?]
 				NSString *name = [[[url queryArgumentForKey:@"openChatToScreenname"] stringByDecodingURLEscapes] compactedString];
 				
 				if (name) {
 					[self _openChatToContactWithName:name
-										   onService:service
+										   onService:serviceID
 										 withMessage:nil];
 				}
 			} else {
@@ -191,7 +220,7 @@
 				}
 				
 				[self _openChatToContactWithName:[name compactedString]
-									   onService:service
+									   onService:serviceID
 									 withMessage:nil];
 			}
 			
@@ -220,7 +249,37 @@
 		if (message && [responder isKindOfClass:[NSTextView class]] && [(NSTextView *)responder isEditable]) {
 			[responder insertText:message];
 		}
+
+	} else {
+		NSBeep();
 	}
 }
+
+- (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange
+{
+	AIAccount		*account;
+	NSEnumerator	*enumerator;
+	
+	//Find an AIM-compatible online account which can create group chats
+	enumerator = [[[adium accountController] accounts] objectEnumerator];
+	while ((account = [enumerator nextObject])) {
+		if ([account online] &&
+			[[account serviceClass] isEqualToString:@"AIM-compatible"] &&
+			[[account service] canCreateGroupChats]) {
+			break;
+		}
+	}
+	
+	if (roomname && account) {
+		[[adium chatController] chatWithName:roomname
+								   onAccount:account
+							chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+								roomname, @"room",
+								[NSNumber numberWithInt:exchange], @"exchange",
+								nil]];
+	} else {
+		NSBeep();
+	}
+}	
 
 @end
