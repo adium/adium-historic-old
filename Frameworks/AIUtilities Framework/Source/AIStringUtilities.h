@@ -1,5 +1,15 @@
 //Localization
 #ifndef AILocalizedString
-#	define AILocalizedString(key, comment) NSLocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:[self class]], comment)
-#	define AILocalizedStringFromTable(key, table, comment) NSLocalizedStringFromTableInBundle(key, table, [NSBundle bundleForClass:[self class]], comment)
+
+	//Note that while NSLocalizedString() uses the main bundle, AILocalizedString() uses [self class]'s bundle
+	#define AILocalizedString(key, comment) \
+		AILocalizedStringFromTableInBundle(key, nil, [NSBundle bundleForClass:[self class]], comment)
+
+	//Like NSLocalizedString(), AILocalizedString() looks to the main bundle
+	#define AILocalizedStringFromTable(key, table, comment) \
+		AILocalizedStringFromTableInBundle(key, nil, [NSBundle mainBundle], comment)
+
+	#define AILocalizedStringFromTableInBundle(key, table, bundle, comment) \
+		NSLocalizedStringFromTableInBundle(key, table, bundle, comment)
+
 #endif
