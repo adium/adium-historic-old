@@ -108,7 +108,7 @@
 	
 	if (![[chat account] suppressTypingNotificationChangesAfterSend]) {
 		[self _clearUserTypingForChat:chat];
-	}else{
+	} else {
 		//Some protocols implicitly clear typing when a message is sent.  For these protocols we'll just update our
 		//typing state locally.  There is no need to send out a typing notification and doing so may actually cause
 		//undesirable behavior.
