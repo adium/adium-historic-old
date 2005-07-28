@@ -221,7 +221,7 @@
 			[self performSelector:@selector(speakNext)
 					   withObject:nil
 					   afterDelay:1.0];
-		}else{
+		} else {
 			//Speak the next entry in our queue
 			NSMutableDictionary *dict = [speechArray objectAtIndex:0];
 			NSString 			*text = [dict objectForKey:TEXT_TO_SPEAK];

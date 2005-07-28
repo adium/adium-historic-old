@@ -45,14 +45,16 @@
 /*!
  * @brief Category
  */
-- (CONTACT_INFO_CATEGORY)contactInfoCategory{
+- (CONTACT_INFO_CATEGORY)contactInfoCategory
+{
     return AIInfo_Accounts;
 }
 
 /*!
  * @brief Nib name
  */
-- (NSString *)nibName{
+- (NSString *)nibName
+{
     return @"ContactAccounts";
 }
 
