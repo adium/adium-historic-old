@@ -36,7 +36,7 @@
  */
 - (id)initWithDelegate:(id)inDelegate forContactsInObject:(AIListObject *)inContainingObject
 {
-	if((self = [super init])){
+	if ((self = [super init])) {
 		[self setDelegate:inDelegate];
 		containingObject = [inContainingObject retain];
 
@@ -106,7 +106,7 @@
  */
 - (void)selectContactMenuItem:(NSMenuItem *)menuItem
 {
-	if(delegateRespondsToDidSelectContact){
+	if (delegateRespondsToDidSelectContact) {
 		[delegate contactMenu:self didSelectContact:[menuItem representedObject]];
 	}
 }
@@ -150,7 +150,7 @@
 {
 	AIListObject	*listObject = [menuItem representedObject];
 	
-	if(listObject){
+	if (listObject) {
 		[[menuItem menu] setMenuChangedMessagesEnabled:NO];
 		[menuItem setTitle:[listObject UID]];
 		[menuItem setImage:[self imageForListObject:listObject]];		
@@ -163,21 +163,21 @@
  */
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
-	if([inObject isKindOfClass:[AIListContact class]]){
+	if ([inObject isKindOfClass:[AIListContact class]]) {
 		NSMenuItem	*menuItem = [self menuItemForContact:(AIListContact *)inObject];
 		
 		//Update menu items to reflect status changes
-		if([inModifiedKeys containsObject:@"Online"] ||
+		if ([inModifiedKeys containsObject:@"Online"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusType"]){
+		   [inModifiedKeys containsObject:@"StatusType"]) {
 			
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
-			if(delegateRespondsToShouldIncludeContact &&
-			   ([delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject] != (menuItem == nil))){
+			if (delegateRespondsToShouldIncludeContact &&
+			   ([delegate contactMenu:self shouldIncludeContact:(AIListContact *)inObject] != (menuItem == nil))) {
 				[self rebuildMenu];
-			}else{
+			} else {
 				[self _updateMenuItem:menuItem];
 			}
 		}

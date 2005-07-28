@@ -239,24 +239,24 @@
 		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
 		
 		//Append the account actions menu for online accounts
-		if(menuItem && submenuType == AIAccountOptionsSubmenu){
-			if([inModifiedKeys containsObject:@"Online"]){
+		if (menuItem && submenuType == AIAccountOptionsSubmenu) {
+			if ([inModifiedKeys containsObject:@"Online"]) {
 				[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
 			}
 		}
 		
 		//Update menu items to reflect status changes
-		if([inModifiedKeys containsObject:@"Online"] ||
+		if ([inModifiedKeys containsObject:@"Online"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]){
+		   [inModifiedKeys containsObject:@"StatusState"]) {
 			
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
-			if(delegateRespondsToShouldIncludeAccount &&
-			   ([delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject] != (menuItem == nil))){
+			if (delegateRespondsToShouldIncludeAccount &&
+			   ([delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject] != (menuItem == nil))) {
 				[self rebuildMenu];
-			}else{
+			} else {
 				[self _updateMenuItem:menuItem];
 			}
 		}
