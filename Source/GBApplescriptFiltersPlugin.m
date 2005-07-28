@@ -25,6 +25,9 @@
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
+#include <sys/errno.h>
+#include <string.h>
+
 #define TITLE_INSERT_SCRIPT		AILocalizedString(@"Insert Script",nil)
 #define SCRIPT_BUNDLE_EXTENSION	@"AdiumScripts"
 #define SCRIPTS_PATH_NAME		@"Scripts"
@@ -591,7 +594,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	[scriptTask setLaunchPath:applescriptRunnerPath];
 	[scriptTask setArguments:applescriptRunnerArguments];
-	[scriptTask setStandardOutput:[NSPipe pipe]];
+	NSPipe *pipe = [NSPipe pipe];
+	if (!pipe) {
+		enum { bufsize = 256 };
+		char *buf = alloca(bufsize);
+		strerror_r(errno, buf, bufsize);
+		NSLog(@"could not create pipe: %s", buf);
+	}
+	[scriptTask setStandardOutput:pipe];
 	[scriptTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
 		attributedString, @"Mutable Attributed String",
 		NSStringFromRange(keywordRange), @"Range",
