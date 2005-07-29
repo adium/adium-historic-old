@@ -1174,6 +1174,10 @@
 		DA4B5CDF080FCC080017BF17 /* CoreComponents.plist in Resources */ = {isa = PBXBuildFile; fileRef = DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */; };
 		DA9CF85C080F97F3000C5249 /* AIPathUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = DA9CF855080F9784000C5249 /* AIPathUtilities.m */; };
 		DA9CF85D080F97F8000C5249 /* AIPathUtilities.h in Headers */ = {isa = PBXBuildFile; fileRef = DA9CF854080F9784000C5249 /* AIPathUtilities.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EE147A6D0896B18800A21377 /* ABSearch.png in Resources */ = {isa = PBXBuildFile; fileRef = EE147A6C0896B18700A21377 /* ABSearch.png */; };
+		EE147A790896B32400A21377 /* ABSearch.nib in Resources */ = {isa = PBXBuildFile; fileRef = EE147A780896B32400A21377 /* ABSearch.nib */; };
+		EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */; };
+		EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildStyle section */
@@ -2983,6 +2987,10 @@
 		DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = CoreComponents.plist; path = Resources/CoreComponents.plist; sourceTree = "<group>"; };
 		DA9CF854080F9784000C5249 /* AIPathUtilities.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIPathUtilities.h; path = "Frameworks/Adium Framework/AIPathUtilities.h"; sourceTree = "<group>"; };
 		DA9CF855080F9784000C5249 /* AIPathUtilities.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIPathUtilities.m; path = "Frameworks/Adium Framework/AIPathUtilities.m"; sourceTree = "<group>"; };
+		EE147A6C0896B18700A21377 /* ABSearch.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ABSearch.png; path = Resources/ABSearch.png; sourceTree = "<group>"; };
+		EE147A780896B32400A21377 /* ABSearch.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = ABSearch.nib; path = Resources/ABSearch.nib; sourceTree = "<group>"; };
+		EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWABSearchWindowController.m; path = Source/OWABSearchWindowController.m; sourceTree = "<group>"; };
+		EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWABSearchWindowController.h; path = Source/OWABSearchWindowController.h; sourceTree = "<group>"; };
 		F11B9621051CDB3B0000000E /* AIMessageAliasPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIMessageAliasPlugin.h; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.h"; sourceTree = "<group>"; };
 		F11B9622051CDB3B0000000E /* AIMessageAliasPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIMessageAliasPlugin.m; path = "Plugins/Message Alias Support/AIMessageAliasPlugin.m"; sourceTree = "<group>"; };
 		F531836F019E40BB01A80165 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
@@ -5641,6 +5649,9 @@
 				347E785207CA96E200350507 /* AINewContactWindowController.m */,
 				347E785F07CA970500350507 /* AINewGroupWindowController.h */,
 				347E785E07CA970500350507 /* AINewGroupWindowController.m */,
+				EE147A7F0896B33400A21377 /* OWABSearchWindowController.h */,
+				EE147A7E0896B33400A21377 /* OWABSearchWindowController.m */,
+				EE147A780896B32400A21377 /* ABSearch.nib */,
 				347E786907CA972100350507 /* AddContact.nib */,
 				347E786A07CA972100350507 /* AddGroup.nib */,
 				F5361E3103058E2A01A8010A /* Images */,
@@ -5706,6 +5717,7 @@
 		F5361E3103058E2A01A8010A /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				EE147A6C0896B18700A21377 /* ABSearch.png */,
 				347E787207CA975900350507 /* AddContact.png */,
 				347E787307CA975900350507 /* addGroup.png */,
 				347E787607CA975900350507 /* importContacts.png */,
@@ -6149,6 +6161,7 @@
 				110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */,
 				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
 				636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */,
+				EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7266,6 +7279,8 @@
 				63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */,
 				63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */,
 				346798F008947FB800F68A98 /* AdiumFramework.strings in Resources */,
+				EE147A6D0896B18800A21377 /* ABSearch.png in Resources */,
+				EE147A790896B32400A21377 /* ABSearch.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7746,6 +7761,7 @@
 				346CFDC7087B7836009711C8 /* AdiumIdleManager.m in Sources */,
 				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
 				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
+				EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

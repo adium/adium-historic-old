@@ -22,7 +22,7 @@
             SUPERCLASS = NSTextField; 
         }, 
         {
-            ACTIONS = {addContact = id; cancel = id; }; 
+            ACTIONS = {addContact = id; cancel = id; searchInAB = id; }; 
             CLASS = AINewContactWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
@@ -38,6 +38,7 @@
                 "textField_contactName" = NSTextField; 
                 "textField_contactNameLabel" = NSTextField; 
                 "textField_inGroup" = AILocalizationTextField; 
+                "textField_searchInAB" = AILocalizationTextField; 
                 "textField_type" = AILocalizationTextField; 
             }; 
             SUPERCLASS = AIWindowController; 

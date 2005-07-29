@@ -17,6 +17,7 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AINewContactWindowController.h"
+#import "OWABSearchWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
@@ -111,6 +112,7 @@
 	[textField_alias setLocalizedString:AILocalizedString(@"Alias:",nil)];
 	[textField_inGroup setLocalizedString:AILocalizedString(@"In Group:",nil)];
 	[textField_addToAccounts setLocalizedString:AILocalizedString(@"On Accounts:",nil)];
+	[textField_searchInAB setLocalizedString:AILocalizedString(@"Search In Address Book",nil)];
 	[button_add setLocalizedString:AILocalizedString(@"Add",nil)];
 	[button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 
@@ -196,6 +198,38 @@
 	[[adium contactController] addContacts:contactArray toGroup:group];
 
 	[self closeWindow:nil];
+}
+
+/*!
+ * @brief Display a sheet for searching a person within the AB database.
+ */
+- (IBAction)searchInAB:(id)sender
+{
+	OWABSearchWindowController *abSearchWindow;
+	abSearchWindow = [[OWABSearchWindowController promptForNewPersonSearchOnWindow:[self window]] retain];
+	[abSearchWindow setDelegate:self];
+}
+
+/*!
+ * @brief Callback from OWABSearchWindowController
+ */
+- (void)absearchWindowControllerDidSelectPerson:(OWABSearchWindowController *)controller
+{
+	NSString *selectedScreenName = [controller selectedScreenName];
+	NSString *selectedName = [controller selectedName];
+	AIService *selectedService = [controller selectedService];
+	
+	if (selectedScreenName)
+		[textField_contactName setStringValue:[service filterUID:selectedScreenName removeIgnoredCharacters:YES]];
+	
+	if (selectedName)
+		[textField_contactAlias setStringValue:selectedName];
+	
+	if (selectedService)
+		[popUp_contactType selectItemWithTitle:[selectedService shortDescription]];
+	
+	//Clean up
+	[controller release];
 }
 
 
