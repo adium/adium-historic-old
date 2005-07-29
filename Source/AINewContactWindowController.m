@@ -38,6 +38,7 @@
 - (void)ensureValidContactTypeSelection;
 - (void)updateAccountList;
 - (void)_setServiceType:(AIService *)inService;
+- (void)selectServiceType:(id)sender;
 @end
 
 /*!
@@ -225,8 +226,10 @@
 	if (selectedName)
 		[textField_contactAlias setStringValue:selectedName];
 	
-	if (selectedService)
+	if (selectedService) {
 		[popUp_contactType selectItemWithTitle:[selectedService shortDescription]];
+		[self selectServiceType:nil];
+	}
 	
 	//Clean up
 	[controller release];
