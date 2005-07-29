@@ -119,7 +119,7 @@
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if (delegate && returnCode == NSOKButton)
-		[delegate OWABSearchWindowControllerDidSelectPerson:self];
+		[delegate absearchWindowControllerDidSelectPerson:self];
 	
 	[sheet orderOut:nil];
 }
