@@ -17,6 +17,8 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 
 @interface AdiumIdleManager (PRIVATE)
 - (void)_setMachineIsIdle:(BOOL)inIdle;
+- (void)screenSaverDidStart;
+- (void)screenSaverDidStop;
 @end
 
 /*
@@ -37,6 +39,14 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 {
 	if ((self = [super init])) {
 		[self _setMachineIsIdle:NO];
+		[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+															selector:@selector(screenSaverDidStart)
+																name:@"com.apple.screensaver.didstart"
+															  object:nil];
+		[[NSDistributedNotificationCenter defaultCenter] addObserver:self
+															selector:@selector(screenSaverDidStop)
+																name:@"com.apple.screensaver.didstop"
+															  object:nil];
 	}
 	
 	return self;
@@ -46,8 +56,9 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 * @brief Returns the current machine idle time
  *
  * Returns the current number of seconds the machine has been idle.  The machine is idle when there are no input
- * events from the user (such as mouse movement or keyboard input).  In addition to this method, the status controller
- * sends out notifications when the machine becomes idle, stays idle, and returns to an active state.
+ * events from the user (such as mouse movement or keyboard input) or when the screen saver is active.
+ * In addition to this method, the status controller sends out notifications when the machine becomes idle,
+ * stays idle, and returns to an active state.
  */
 - (CFTimeInterval)currentMachineIdle
 {
@@ -129,6 +140,26 @@ extern CFTimeInterval CGSSecondsSinceLastInputEvent(unsigned long evType);
 												selector:@selector(_idleCheckTimer:)
 												userInfo:nil
 												 repeats:YES] retain];
+}
+
+/*!
+ * @brief Called by the screen saver when it starts
+ *
+ * When the screen saver starts, we set ourself to idle.
+ */
+- (void)screenSaverDidStart
+{
+	[self _setMachineIsIdle:YES];
+}
+
+/*!
+* @brief Called by the screen saver when it starts
+ *
+ * When the screen saver stops, we set ourself to active.
+ */
+- (void)screenSaverDidStop
+{
+	[self _setMachineIsIdle:NO];
 }
 
 

@@ -38,6 +38,8 @@
 	IBOutlet	AILocalizationTextField		*textField_inGroup;
 	IBOutlet	AILocalizationTextField		*textField_addToAccounts;
 	IBOutlet	NSTextField					*textField_contactNameLabel;
+	
+	IBOutlet	AILocalizationTextField		*textField_searchInAB;
 
 	NSArray							*accounts;
 	NSString						*contactName;
@@ -47,5 +49,6 @@
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addContact:(id)sender;
+- (IBAction)searchInAB:(id)sender;
 
 @end
