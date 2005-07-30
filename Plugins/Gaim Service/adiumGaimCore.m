@@ -104,8 +104,12 @@ static void adiumGaimCoreUiInit(void)
 	/* Why use Gaim's accounts and blist list when we have the information locally?
 		*		- Faster account connection: Gaim doesn't have to recreate the local list
 		*		- Privacy/blocking support depends on the accounts and blist files existing
+		*
+		*	Another possible advantage:
 		*		- Using Gaim's own buddy icon caching (which depends on both files) allows us to avoid
 		*			re-requesting icons we already have locally on some protocols such as AIM.
+		*   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
+		*   so we'll just ignore this gain and turn off caching. 
 		*/
 	//Load the accounts list
 	gaim_accounts_load();
@@ -113,12 +117,15 @@ static void adiumGaimCoreUiInit(void)
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
 
+	//Turn off buddy icon caching
+	gaim_buddy_icons_set_caching(FALSE);
+		
 	//Clear the local blist and icons on first launch of .83... temporary code.
 	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.83:Cleared blist.xml on first run"];
+	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.83-2:Cleared blist.xml on first run"];
 	if (!clearedBlist || ![clearedBlist boolValue]) {
 		[userDefaults setObject:[NSNumber numberWithBool:YES]
-						 forKey:@"Adium 0.83:Cleared blist.xml on first run"];
+						 forKey:@"Adium 0.83-2:Cleared blist.xml on first run"];
 
 		char *user_dir = gaim_user_dir();
 		[[NSFileManager defaultManager] trashFileAtPath:
