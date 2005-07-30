@@ -259,13 +259,6 @@
 			}
 		}
 		
-		//Group bubbles and contact bubbles always autoresize vertically
-		if (windowStyle == WINDOW_STYLE_MOCKIE ||
-			windowStyle == WINDOW_STYLE_PILLOWS ||
-			windowStyle == WINDOW_STYLE_PILLOWS_FITTED) {
-			autoResizeVertically = YES;	
-		}
-		
 		//Show the resize indicator if either or both of the autoresizing options is NO
 		[[self window] setShowsResizeIndicator:!(autoResizeVertically && autoResizeHorizontally)];
 		
