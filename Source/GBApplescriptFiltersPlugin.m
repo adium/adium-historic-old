@@ -568,6 +568,7 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSTask			*scriptTask;
 	NSMutableArray	*applescriptRunnerArguments = [NSMutableArray arrayWithObject:[infoDict objectForKey:@"Path"]];
 	NSTimer			*scriptTimeoutTimer;
+	NSPipe			*outputPipe;
 	
 	static NSString	*applescriptRunnerPath = nil;
 	if (!applescriptRunnerPath) {
@@ -585,35 +586,38 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	}
 
 	scriptTask = [[NSTask alloc] init];
-	
-	scriptTimeoutTimer = [NSTimer scheduledTimerWithTimeInterval:SCRIPT_TIMEOUT
-														  target:self
-														selector:@selector(scriptTimeout:)
-														userInfo:scriptTask
-														 repeats:NO];
-	
+
+	//Set up a time out after which the scriptTask will terminate itself
+	[scriptTask performSelector:@selector(terminate)
+					 withObject:nil
+					 afterDelay:SCRIPT_TIMEOUT];
+
 	[scriptTask setLaunchPath:applescriptRunnerPath];
 	[scriptTask setArguments:applescriptRunnerArguments];
-	NSPipe *pipe = [NSPipe pipe];
-	if (!pipe) {
+
+	outputPipe = [[NSPipe alloc] init];
+		
+	if (outputPipe) {
+		[scriptTask setStandardOutput:outputPipe];
+		[outputPipe release];
+
+	} else {
 		enum { bufsize = 256 };
 		char *buf = alloca(bufsize);
 		strerror_r(errno, buf, bufsize);
 		NSLog(@"could not create pipe: %s", buf);
 	}
-	[scriptTask setStandardOutput:pipe];
+
 	[scriptTask setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
 		attributedString, @"Mutable Attributed String",
 		NSStringFromRange(keywordRange), @"Range",
 		[NSNumber numberWithUnsignedLongLong:uniqueID], @"uniqueID",
-		scriptTimeoutTimer, @"Script Timeout Timer",
 		nil]];
 
 	[[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(scriptDidFinish:)
 												 name:NSTaskDidTerminateNotification
 											   object:scriptTask];
-
 	[scriptTask launch];
 }
 
@@ -630,13 +634,14 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
 	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
-	NSTimer						*scriptTimeoutTimer = [environment objectForKey:@"Script Timeout Timer"];
 	NSFileHandle				*output;
-	NSString					*scriptResult;
+	NSString					*scriptResult = nil;
+			
+	if ((output = [standardOutput fileHandleForReading])) {
+		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
+											 encoding:NSUTF8StringEncoding];
+	}
 
-	output = [standardOutput fileHandleForReading];
-	scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
-										 encoding:NSUTF8StringEncoding];
 	//If the script fails, eat the keyword
 	if (!scriptResult) scriptResult = [@"" retain];
 	
@@ -654,8 +659,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 										withString:scriptResult];
 	}
 
-	//Invalidate the timeout timer
-	[scriptTimeoutTimer invalidate];
+	//Remove the delayed perform request for termination (which would have been used if the script timed out)
+	[NSObject cancelPreviousPerformRequestsWithTarget:scriptTask
+											 selector:@selector(terminate)
+											   object:nil];
 
 	/* Remove the observer. If we don't, and another NSTask is allocated with the same id as scriptTask, we'll get two
 	 * -scriptDidFinish: callbacks when that task terminates. Because this method releases the task, that would be a
@@ -671,19 +678,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	
 	//Inform the content controller that we're done
 	[[adium contentController] delayedFilterDidFinish:attributedString uniqueID:[uniqueID unsignedLongLongValue]];
-}
-
-/*
- * @brief Script execution timed out after SCRIPT_TIMEOUT
- *
- * @param inTimer A timer whose userInfo is the NSTask which has timed out
- */
-- (void)scriptTimeout:(NSTimer *)inTimer
-{
-	NSTask	*scriptTask = [inTimer userInfo];
-
-	//This will trigger NSTaskDidTerminateNotification for the NSTask, triggering -[self scriptDidFinish:] above
-	[scriptTask terminate];
 }
 
 /*!
