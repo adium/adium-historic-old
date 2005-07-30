@@ -49,8 +49,6 @@
 
 	//Register as a chat observer (for unviewed content)
 	[[adium chatController] registerChatObserver:self];
-#define BadgerBadgerBadger
-#ifndef BadgerBadgerBadger
 	
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(contentAdded:)
@@ -61,8 +59,6 @@
 								   selector:@selector(chatClosed:)
 									   name:Chat_WillClose
 									 object:nil];
-	
-#endif
 	//Prefs
 //	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_LIST_THEME];
 }
@@ -123,7 +119,7 @@
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
 	NSDictionary *atts = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSColor whiteColor], NSForegroundColorAttributeName,
-		[NSFont boldSystemFontOfSize:24], NSFontAttributeName,
+		[NSFont fontWithName:@"Helvetica" size:24], NSFontAttributeName,
 		nil];
 	
 	NSSize numSize = [numString sizeWithAttributes:atts];
