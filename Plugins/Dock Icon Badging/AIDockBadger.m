@@ -119,7 +119,7 @@
 	NSRect rect = { NSZeroPoint, [badgeToComposite size] };
 	NSDictionary *atts = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSColor whiteColor], NSForegroundColorAttributeName,
-		[NSFont fontWithName:@"Helvetica" size:24], NSFontAttributeName,
+		[NSFont fontWithName:@"Helvetica-Bold" size:24], NSFontAttributeName,
 		nil];
 	
 	NSSize numSize = [numString sizeWithAttributes:atts];
