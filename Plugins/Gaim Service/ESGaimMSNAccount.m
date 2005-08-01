@@ -247,8 +247,11 @@ gboolean gaim_init_msn_plugin(void);
 }
 
 /*
- gaim_connection_get_display_name(gc) will get the current display name... which is stored serverside so
- reflects changes made on other clients or other systems.  do we want to use this somehow?
+ * @brief Set our serverside 'friendly name'
+ *
+ * There is a rate limit on how quickly we can set our friendly name.
+ *
+ * @param attributedFriendlyName The new friendly name.  This is used as plaintext; it is an NSAttributedString for generic useage with the autoupdating filtering system.
  */
 -(void)_setFriendlyNameTo:(NSAttributedString *)attributedFriendlyName
 {
@@ -265,6 +268,12 @@ gboolean gaim_init_msn_plugin(void);
 			
 			[[self displayArrayForKey:@"Display Name"] setObject:friendlyName
 													   withOwner:self];
+
+			//Keep track of the friendly name so we can avoid doing duplicate sets on the same name
+			[self setStatusObject:friendlyName
+						   forKey:@"AccountServerDisplayName"
+						   notify:NotifyNever];
+			
 			//notify
 			[[adium contactController] listObjectAttributesChanged:self
 													  modifiedKeys:[NSSet setWithObject:@"Display Name"]];			
