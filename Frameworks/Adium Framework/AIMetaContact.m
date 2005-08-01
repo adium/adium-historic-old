@@ -821,13 +821,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
  * supplied icon with the "prefer address book icon images" preference, return it.  Otherwise, return nil, indicating
  * that contained contacts should be queried for a better, more preferred icon.
  *
- * @result An <tt>NSImage</tt> of medium priority or higher
+ * @result An <tt>NSImage</tt> of medium priority or higher (note that a lower float value is a higher priority)
  */
 - (NSImage *)displayUserIcon
 {
 	AIMutableOwnerArray	*userIconArray = [self displayArrayForKey:KEY_USER_ICON create:NO];
 	NSImage	*displayUserIcon = [userIconArray objectValue];
-	if ([userIconArray priorityOfObject:displayUserIcon] > Medium_Priority)
+	if ([userIconArray priorityOfObject:displayUserIcon] < Medium_Priority)
 		return displayUserIcon;
 	else
 		return nil;
