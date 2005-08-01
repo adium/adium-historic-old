@@ -441,15 +441,8 @@
 }
 - (void)setDisplayUserIcon:(NSImage *)inImage withOwner:(id)inOwner priorityLevel:(float)inPriorityLevel
 {
-	AIMutableOwnerArray *userIconDisplayArray;
-	NSImage				*oldImage;
-	
-	//If inImage is nil, we don't want to create the display array if it doesn't already exist
-	userIconDisplayArray = (inImage ?
-							[self displayArrayForKey:KEY_USER_ICON] :
-							[self displayArrayForKey:KEY_USER_ICON create:NO]);
-	oldImage = [self displayUserIcon];
-	
+	NSImage				*oldImage = [self displayUserIcon];
+
 	[[self displayArrayForKey:KEY_USER_ICON] setObject:inImage
 											 withOwner:inOwner
 										 priorityLevel:inPriorityLevel];
@@ -458,7 +451,7 @@
 	if (oldImage != [self displayUserIcon]) {
 		AIListObject	*myContainingObject = [self containingObject];
 		NSSet			*modifiedKeys = [NSSet setWithObject:KEY_USER_ICON];
-		
+	
 		[AIUserIcons flushCacheForContact:(AIListContact *)self];
 
 		//Notify
