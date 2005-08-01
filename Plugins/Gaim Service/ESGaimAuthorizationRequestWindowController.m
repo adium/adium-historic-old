@@ -99,7 +99,7 @@
 										  withObject:[[[infoDict objectForKey:@"authorizeCB"] retain] autorelease]
 										  withObject:[[[infoDict objectForKey:@"userData"] retain] autorelease]
 										  withObject:[NSNumber numberWithInt:0]];
-
+	AILog(@"Authorize: (%i) %@",[checkBox_addToList state],infoDict);
 	if ([checkBox_addToList state] == NSOnState) {
 		/* Add the contact to all appropriate accounts. Gaim doesn't tell us which account this auth request was on,
 		 * and I'm not in a mood to fix Gaim silliness so we'll just hack around it for now, adding on all accounts which match
