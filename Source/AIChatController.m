@@ -210,7 +210,7 @@
 /*!
  * @brief Opens a chat for communication with the contact, creating if necessary.
  *
- * The interface controller will then be asked to make the new chat active.
+ * The interface controller will then be asked to open the UI for the new chat.
  */
 - (AIChat *)openChatWithContact:(AIListContact *)inContact
 {
