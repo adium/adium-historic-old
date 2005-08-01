@@ -23,22 +23,42 @@
 #define PROXY_PASSWORD_PROMPT_NIB		@"ProxyPasswordPrompt"
 #define	PROXY_PASSWORD_REQUIRED			AILocalizedString(@"Accessing Proxy","Proxy password prompt window title")
 
+#define	NONE							AILocalizedString(@"<None>", "Placeholder shown when no information is available")
+
 @interface ESProxyPasswordPromptController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
 
 @implementation ESProxyPasswordPromptController
 
+static NSMutableDictionary	*proxyPasswordPromptControllerDict = nil;
+
 + (void)showPasswordPromptForProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
-	ESProxyPasswordPromptController  *controller = [[[self alloc] initWithWindowNibName:PROXY_PASSWORD_PROMPT_NIB
-																		 forProxyServer:inServer
-																			   userName:inUserName
-																		notifyingTarget:inTarget
-																			   selector:inSelector
-																				context:inContext] autorelease];
-	//bring the window front
+	ESProxyPasswordPromptController		*controller = nil;
+	NSString							*identifier = [NSString stringWithFormat:@"%@.%@.%x",inServer,inUserName,inTarget];
+	
+	if (!proxyPasswordPromptControllerDict) proxyPasswordPromptControllerDict = [[NSMutableDictionary alloc] init];
+	
+	if ((controller = [proxyPasswordPromptControllerDict objectForKey:identifier])) {
+		//Update the existing controller for this account to have the new target, selector, and context
+		[controller setTarget:inTarget selector:inSelector context:inContext];
+		
+	} else {
+		if ((controller = [[self alloc] initWithWindowNibName:PROXY_PASSWORD_PROMPT_NIB
+											   forProxyServer:inServer
+													 userName:inUserName
+											  notifyingTarget:inTarget
+													 selector:inSelector
+													  context:inContext])) {
+			[proxyPasswordPromptControllerDict setObject:controller
+												  forKey:identifier];
+		}
+	}
+	
+    //bring the window front
 	[controller showWindow:nil];
+	[[controller window] makeKeyAndOrderFront:nil];	
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forProxyServer:(NSString *)inServer userName:(NSString *)inUserName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
@@ -46,7 +66,6 @@
 	if ((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
 		server   = [inServer   retain];
 		userName = [inUserName retain];
-		[self retain];
 	}
 
 	return self;
@@ -60,22 +79,44 @@
 	[super dealloc];
 }
 
+/*
+ * @brief Our window will close
+ *
+ * Remove this controller from our dictionary of controllers
+ */
+- (void)windowWillClose:(id)sender
+{
+	NSString	*identifier = [NSString stringWithFormat:@"%@.%@.%x",server,userName,target];
+
+	[proxyPasswordPromptControllerDict removeObjectForKey:identifier];
+	
+	[super windowWillClose:sender];
+}
+
 - (void)windowDidLoad
 {
 	[[self window] setTitle:PROXY_PASSWORD_REQUIRED];
 
-	[textField_server setStringValue:([server length] ? server : @"<None>")];
-	[textField_userName setStringValue:([userName length] ? userName : @"<None>")];
+	[textField_server setStringValue:([server length] ? server : NONE)];
+	[textField_userName setStringValue:([userName length] ? userName : NONE)];
 	
 	[super windowDidLoad];
 }
 
+/*
+ * @brief Not actually used... do we need this?
+ */
 - (NSString *)savedPasswordKey
 {
 	return @"SavedProxyPassword";
 }
 
-//Save a password; pass nil to forget the password
+/*
+ * @brief Save a password; pass nil to forget the password
+ *
+ * Called with nil when Save Password becomes unchecked, or called with the password when it is checked as the window
+ * closes after the user presses Okay.
+ */
 - (void)savePassword:(NSString *)password
 {
 	[[adium accountController] setPassword:password forProxyServer:server userName:userName];

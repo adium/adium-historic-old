@@ -27,14 +27,27 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     if ((self = [super initWithWindowNibName:windowNibName])) {
-		target = [inTarget retain];
-		selector = inSelector;
-
-		context = [inContext retain];
+		[self setTarget:inTarget selector:inSelector context:inContext];
 	}
 
     return self;
 }
+
+- (void)setTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
+{
+	if (inTarget != target) {
+		[target release];
+		target = [inTarget retain];
+	}
+	
+	selector = inSelector;
+	
+	if (inContext != context) {
+		[context release];
+		context = [inContext retain];
+	}
+}
+
 
 - (void)dealloc
 {
@@ -47,7 +60,6 @@
 - (void)windowDidLoad
 {
 	[[self window] center];
-	[[self window] makeKeyAndOrderFront:nil];
 	
 	[super windowDidLoad];
 }

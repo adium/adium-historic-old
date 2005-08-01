@@ -27,25 +27,51 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
 
+/*
+ * @class ESAccountPasswordPromptController
+ * @brief Account password prompt window controller
+ * 
+ * This AIPasswordPromptController subclass is responsible for requesting an account's password from the user when it
+ * attempts to connect and the password isn't saved.  The user has the option of saving the password for future use.
+ *
+ * Only one password prompt window per account is shown; an attempt to show a prompt for an account which already has
+ * an open account results in the existing account becoming key and front.
+ */
 @implementation ESAccountPasswordPromptController
 
+static NSMutableDictionary	*passwordPromptControllerDict = nil;
+
 + (void)showPasswordPromptForAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
-{
-	ESAccountPasswordPromptController *controller = [[[self alloc] initWithWindowNibName:ACCOUNT_PASSWORD_PROMPT_NIB 
-																			  forAccount:inAccount 
-																		 notifyingTarget:inTarget
-																				selector:inSelector
-																				 context:inContext] autorelease];
+{	
+	ESAccountPasswordPromptController	*controller = nil;
+	NSString							*identifier = [inAccount internalObjectID];
+	
+	if (!passwordPromptControllerDict) passwordPromptControllerDict = [[NSMutableDictionary alloc] init];
+	
+	if ((controller = [passwordPromptControllerDict objectForKey:identifier])) {
+		//Update the existing controller for this account to have the new target, selector, and context
+		[controller setTarget:inTarget selector:inSelector context:inContext];
+
+	} else {
+		if ((controller = [[self alloc] initWithWindowNibName:ACCOUNT_PASSWORD_PROMPT_NIB 
+												   forAccount:inAccount 
+											  notifyingTarget:inTarget
+													 selector:inSelector
+													  context:inContext])) {
+			[passwordPromptControllerDict setObject:controller
+											 forKey:identifier];
+		}
+	}
 	
     //bring the window front
-    [controller showWindow:nil];
+	[controller showWindow:nil];
+	[[controller window] makeKeyAndOrderFront:nil];
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName forAccount:(AIAccount *)inAccount notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext
 {
     if ((self = [super initWithWindowNibName:windowNibName notifyingTarget:inTarget selector:inSelector context:inContext])) {
 		account = [inAccount retain];
-		[self retain];
 	}
 
     return self;
@@ -58,6 +84,25 @@
 	[super dealloc];
 }
 
+/*
+ * @brief Our window will close
+ *
+ * Remove this controller from our dictionary of controllers
+ */
+- (void)windowWillClose:(id)sender
+{
+	NSString	*identifier = [account internalObjectID];
+
+	[passwordPromptControllerDict removeObjectForKey:identifier];
+
+	[super windowWillClose:sender];
+}
+
+/*
+ * @brief Window laoded
+ *
+ * Perform initial configuration
+ */
 - (void)windowDidLoad
 {
 	[[self window] setTitle:ACCOUNT_PASSWORD_REQUIRED];
@@ -66,13 +111,16 @@
 	[imageView_service setImage:[AIServiceIcons serviceIconForService:[account service]
 																 type:AIServiceIconLarge
 															direction:AIIconNormal]];
-
-    [checkBox_savePassword setState:[[account preferenceForKey:[self savedPasswordKey] 
-														 group:GROUP_ACCOUNT_STATUS] boolValue]];
 	
+	[checkBox_savePassword setState:[[account preferenceForKey:[self savedPasswordKey] 
+														 group:GROUP_ACCOUNT_STATUS] boolValue]];
+
 	[super windowDidLoad];
 }
 
+/*
+ * @brief The key 
+ */
 - (NSString *)savedPasswordKey
 {
 	return @"SavedPassword";

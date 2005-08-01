@@ -29,11 +29,15 @@
 }
 
 - (id)initWithWindowNibName:(NSString *)windowNibName notifyingTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
-- (void)windowDidLoad;
 - (IBAction)cancel:(id)sender;
 - (IBAction)okay:(id)sender;
 - (IBAction)togglePasswordSaved:(id)sender;
-- (NSString *)savedPasswordKey;
-- (void)savePassword:(NSString *)password;
 
+@end
+
+@interface AIPasswordPromptController (PRIVATE_and_Subclasses)
+- (NSString *)savedPasswordKey;
+- (void)windowDidLoad;
+- (void)savePassword:(NSString *)password;
+- (void)setTarget:(id)inTarget selector:(SEL)inSelector context:(id)inContext;
 @end
