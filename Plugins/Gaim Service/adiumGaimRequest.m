@@ -111,37 +111,56 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		va_arg(actions, char *);
 		denyCB = va_arg(actions, GCallback);
 
-		/* "The user %s wants to as %s to" where the first is the remote contact and the second is the account name.
+		AILog(@"Authorization request: %@",primaryString);
+	
+		/* "The user %s wants to add %s to" where the first is the remote contact and the second is the account name.
 		 * MSN, Jabber: "The user %s wants to add %s to his or her buddy list."
 		 * OSCAR: The user %s wants to add %s to their buddy list for the following reason:\n%s
 		 *		The reason may be passed as "No reason given."
 		 */
+		NSRange	remoteNameRange;
 		wantsToAddRange = [primaryString rangeOfString:@" wants to add "];
 		remoteNameStartingLocation = [@"The user " length];
-		remoteName = [primaryString substringWithRange:NSMakeRange(remoteNameStartingLocation,
-																   (wantsToAddRange.location - remoteNameStartingLocation))];
-		
-		secondSearchRange = [primaryString rangeOfString:@"to his or her buddy list."];
+		remoteNameRange = NSMakeRange(remoteNameStartingLocation,
+									  (wantsToAddRange.location - remoteNameStartingLocation));
+		remoteName = [primaryString substringWithRange:remoteNameRange];
+		AILog(@"Authorization request: Remote name is %@ (Range was %@)",remoteName, NSStringFromRange(remoteNameRange));
+
+		secondSearchRange = [primaryString rangeOfString:@" to his or her buddy list."];
 		if (secondSearchRange.location == NSNotFound) {
-			secondSearchRange = [primaryString rangeOfString:@"to their buddy list for the following reason:\n"];
-			//The OSCAR version may have the alias in parenthesis after the ICQ number
-			if (secondSearchRange.location != NSNotFound) {
-				NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
-				if (aliasBeginRange.location != NSNotFound) {
-					remoteName = [remoteName substringToIndex:aliasBeginRange.location];
-				}
-			}
+			secondSearchRange = [primaryString rangeOfString:@" to their buddy list for the following reason:\n"];
 		}
 
+		//ICQ and MSN may have the friendly name or alias after the name; we want just the screen name
+		NSRange	aliasBeginRange = [remoteName rangeOfString:@" ("];
+		if (aliasBeginRange.location != NSNotFound) {
+			remoteName = [remoteName substringToIndex:aliasBeginRange.location];
+		}
+		AILog(@"Authorization request: After postprocessing, remote name is %@",remoteName);
+
 		//Extract the account name
-		accountNameStartingLocation = NSMaxRange(wantsToAddRange);
-		accountName = [primaryString substringWithRange:NSMakeRange(accountNameStartingLocation,
-																	secondSearchRange.location - accountNameStartingLocation + 1)];
-		
-		//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
-		if ([accountName rangeOfString:@"@"].location != NSNotFound &&
-		   [accountName rangeOfString:@"/"].location != NSNotFound) {
-			accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
+		{
+			NSRange accountNameRange;
+			
+			//Start after the space after the 'wants to add' phrase (the max of wantsToAddRange)
+			accountNameStartingLocation = NSMaxRange(wantsToAddRange);
+			
+			//Stop before the space before the second search range
+			accountNameRange = NSMakeRange(accountNameStartingLocation,
+										   secondSearchRange.location - accountNameStartingLocation);
+			if (NSMaxRange(accountNameRange) <= [primaryString length]) {
+				accountName = [primaryString substringWithRange:accountNameRange];
+			} else {
+				accountName = nil;
+				AILog(@"Authorization request: Could not find account name within %@",primaryString);
+			}
+			
+			//Remove jabber resource if necessary.  Check for the @ symbol, which is present in all Jabber names, then truncate to the /
+			if ([accountName rangeOfString:@"@"].location != NSNotFound &&
+				[accountName rangeOfString:@"/"].location != NSNotFound) {
+				accountName = [accountName substringToIndex:[accountName rangeOfString:@"/"].location];
+			}
+			AILog(@"Authorization request: Account name is %@",accountName);
 		}
 		
 		if ((NSMaxRange(secondSearchRange) < [primaryString length]) &&
@@ -162,6 +181,12 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		[ESGaimAuthorizationRequestWindowController performSelectorOnMainThread:@selector(showAuthorizationRequestWithDict:)
 																	 withObject:infoDict
 																  waitUntilDone:YES];
+	} else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
+		/* This is the Jabber doing inelegantly what we elegantly handle in the authorization request window for all
+		 * services, asking if the user wants to add a contact which just added him.  We just ignore this request, as
+		 * the authorization window let the user do this if he wanted.
+		 */
+
 	} else {
 		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
 			(primary ? primary : ""),
