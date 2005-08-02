@@ -312,31 +312,20 @@
 {
 	NSEnumerator	*enumerator;
 	AIChat			*chat = nil;
-	AIListContact	*targetContact = inContact;
-	
-	/*
-	 If we're dealing with a meta contact, open a chat with the preferred contact for this meta contact
-	 It's a good idea for the caller to pick the preferred contact for us, since they know the content type
-	 being sent and more information - but we'll do it here as well just to be safe.
-	 */
+
 	if ([inContact isKindOfClass:[AIMetaContact class]]) {
-		targetContact = [[adium contactController] preferredContactForContentType:CONTENT_MESSAGE_TYPE
-															   forListContact:inContact];
-		
-		/* If we have no accounts online, preferredContactForContentType:forListContact will return nil.
-		 * We'd rather open up the chat window on a useless contact than do nothing, so just pick the 
-		 * preferredContact from the metaContact.
-		 */
-		if (!targetContact) {
-			targetContact = [(AIMetaContact *)inContact preferredContact];
+		//Search for a chat with any contact within this AIMetaContact
+		enumerator = [openChats objectEnumerator];
+		while ((chat = [enumerator nextObject])) {
+			if ([[(AIMetaContact *)inContact containedObjects] containsObjectIdenticalTo:[chat listObject]]) break;
 		}
-	}
-	
-	//Search for an existing chat
-	enumerator = [openChats objectEnumerator];
-	while ((chat = [enumerator nextObject])) {
-		//If a chat for this object already exists
-		if ([chat listObject] == targetContact) break;
+
+	} else {
+		//Search for a chat with this AIListContact
+		enumerator = [openChats objectEnumerator];
+		while ((chat = [enumerator nextObject])) {
+			if ([chat listObject] == inContact) break;
+		}
 	}
 	
 	return chat;
