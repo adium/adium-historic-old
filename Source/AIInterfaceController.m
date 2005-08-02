@@ -470,6 +470,11 @@
 																				 forKey:@"NSWindow"]];
 }
 
+/*
+ * @brief Find the window currently displaying a chat
+ *
+ * If the chat is not in any window, or is not visible in any window, returns nil
+ */
 - (NSWindow *)windowForChat:(AIChat *)inChat
 {
 	return [interfacePlugin windowForChat:inChat];
