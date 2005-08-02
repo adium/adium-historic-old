@@ -215,9 +215,18 @@
 	return [[containers objectForKey:containerID] containedChats];
 }
 
+/*
+ * @brief Find the window currently displaying a chat
+ *
+ * If the chat is not in any window, or is not visible in any window, returns nil
+ */
 - (NSWindow *)windowForChat:(AIChat *)chat
 {
-	return [[[chat statusObjectForKey:@"MessageTabViewItem"] container] window];
+	AIMessageWindowController	*windowController = [[chat statusObjectForKey:@"MessageTabViewItem"] container];
+	
+	return (([windowController activeChat] == chat) ?
+			[windowController window] :
+			nil);
 }
 
 //Containers -----------------------------------------------------------------------------------------------------------
