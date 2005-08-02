@@ -43,6 +43,7 @@
 - (void)registerToolbarItem;
 
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
+- (void)updateToolbarItemForObject:(AIListObject *)inObject;
 @end
 
 /*!
@@ -133,6 +134,8 @@
 
 			[[adium contactController] listObjectAttributesChanged:inObject
 													  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
+			
+			[self updateToolbarItemForObject:inObject];
 		}
 	}
 
@@ -149,25 +152,20 @@
 	AIListObject	*inObject = [notification object];
 	NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 
-	if ([keys containsObject:KEY_USER_ICON]) {
+	if (inObject && [keys containsObject:KEY_USER_ICON]) {
 		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
 		NSImage *userIcon = [userIconDisplayArray objectValue];
 		NSImage *ownedUserIcon = [userIconDisplayArray objectWithOwner:self];
 
-		//If the new user icon is not the same as the one we set in updateListObject:
-		//(either cached or not), update the cache
+		/* If the new user icon is not the same as the one we own, we should update our cache
+		 * and our toolbar item. If we get here from -[self updateListObject:keys:silent:] doing a
+		 * listObjectAttributesChanged call, then the userIcon will be the same as ownedUserIcon, and we won't do anything
+		 * since it was already done previously.
+		 */
 		if (userIcon != ownedUserIcon) {
-			AIChat	*chat;
-
 			[self _cacheUserIconData:[userIcon TIFFRepresentation] forObject:inObject];
-
-			//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
-			if (([toolbarItems count] > 0) &&
-			   [inObject isKindOfClass:[AIListContact class]] &&
-			   (chat = [[adium chatController] existingChatWithContact:(AIListContact *)inObject])) {
-				[self _updateToolbarIconOfChat:chat
-									  inWindow:[[adium interfaceController] windowForChat:chat]];
-			}
+			
+			[self updateToolbarItemForObject:inObject];
 		}
 	}
 }
@@ -205,9 +203,12 @@
 		NSImage	*image;
 
 		image = [[NSImage alloc] initWithData:imageData];
+
 		[inObject setDisplayUserIcon:image
 						   withOwner:self
 					   priorityLevel:Highest_Priority];
+		[self updateToolbarItemForObject:inObject];
+
 		[image release];
 
 		return YES;
@@ -218,33 +219,12 @@
 			[inObject setDisplayUserIcon:nil
 							   withOwner:self
 						   priorityLevel:Highest_Priority];
+			[self updateToolbarItemForObject:inObject];
 		}
 	}
 
 	return NO;
 }
-
-/*
- - (BOOL)_cacheUserIcon:(NSImage *)inImage forObject:(AIListObject *)inObject
- {
-	 BOOL		success = NO;
-	 NSString	*cachedImagePath = [self _cachedImagePathForObject:inObject];
-
-	 NSBitmapImageRep* imageRep = [[inImage representations] objectAtIndex:0];
-	 unsigned char *imageBytes = [imageRep bitmapData];
-	 NSData  *imageData = [NSData dataWithBytes:imageBytes
-										 length:[imageRep bytesPerRow] * [imageRep pixelsHigh]];
-	 success = ([imageData writeToFile:cachedImagePath
-							atomically:YES]);
-	 if (success) {
-		 [inObject setStatusObject:cachedImagePath
-							forKey:@"UserIconPath"
-							notify:YES];
-	 }
-
-	 return success;
- }
- */
 
 /*!
  * @brief Cache user icon data for an object
@@ -420,6 +400,21 @@
 						  inWindow:[[notification userInfo] objectForKey:@"NSWindow"]];
 }
 
+- (void)updateToolbarItemForObject:(AIListObject *)inObject
+{
+	AIChat		*chat;
+	NSWindow	*window;
+
+	//Update the icon in the toolbar for this contact if a chat is open and we have any toolbar items
+	if (([toolbarItems count] > 0) &&
+		[inObject isKindOfClass:[AIListContact class]] &&
+		(chat = [[adium chatController] existingChatWithContact:(AIListContact *)inObject]) &&
+		(window = [[adium interfaceController] windowForChat:chat])) {
+		[self _updateToolbarIconOfChat:chat
+							  inWindow:window];
+	}
+}
+
 /*!
  * @brief Update the user image toolbar icon in a chat
  *
@@ -437,7 +432,7 @@
 			AIListContact	*listContact;
 			NSImage			*image;
 
-			if ((listContact = [chat listObject]) && ![chat name]) {
+			if ((listContact = [[chat listObject] parentContact]) && ![chat name]) {
 				image = [listContact userIcon];
 
 				//Use the serviceIcon if no image can be found
