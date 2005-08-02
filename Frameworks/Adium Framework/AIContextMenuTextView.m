@@ -17,8 +17,35 @@
 #import "AIContextMenuTextView.h"
 #import "AIMenuController.h"
 #import "AIObject.h"
+#import <AIUtilities/AITextAttributes.h>
 
 @implementation AIContextMenuTextView
+
+- (void)_configureContextMenuTextView
+{
+	[self setDrawsBackground:YES];
+
+	if ([self respondsToSelector:@selector(setAllowsUndo:)]) {
+		[self setAllowsUndo:YES];
+	}
+	if ([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
+		[self setAllowsDocumentBackgroundColorChange:YES];
+	}			
+}
+
+- (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer
+{
+	if ((self = [super initWithFrame:frameRect textContainer:aTextContainer])) {
+		[self _configureContextMenuTextView];
+	}
+
+	return self;
+}
+
+- (void)awakeFromNib
+{
+	[self _configureContextMenuTextView];
+}
 
 + (NSMenu *)defaultMenu
 {
@@ -57,6 +84,28 @@
 	return [contextualMenu autorelease];
 }
 
+//Set our string, preserving the selected range
+- (void)setAttributedString:(NSAttributedString *)inAttributedString
+{
+    int			length = [inAttributedString length];
+    NSRange 	oldRange = [self selectedRange];
+	
+    //Change our string
+    [[self textStorage] setAttributedString:inAttributedString];
+	
+    //Restore the old selected range
+    if (oldRange.location < length) {
+        if (oldRange.location + oldRange.length <= length) {
+            [self setSelectedRange:oldRange];
+        } else {
+            [self setSelectedRange:NSMakeRange(oldRange.location, length - oldRange.location)];       
+        }
+    }
+	
+    //Notify everyone that our text changed
+    [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+}
+
 - (void)textDidChange:(NSNotification *)notification
 {
     if (([self selectedRange].location == 0) && ([self selectedRange].length == 0)) { //remove attributes if we're changing text at (0,0)
@@ -76,6 +125,80 @@
 			[textAttribs release];
         }
     }
+}
+
+//Paste as rich text without altering our typing attributes
+- (void)pasteAsRichText:(id)sender
+{
+	NSDictionary	*attributes = [[self typingAttributes] copy];
+	
+	[super pasteAsRichText:sender];
+	
+	if (attributes) {
+		[self setTypingAttributes:attributes];
+	}
+	
+	[attributes release];
+}
+
+- (void)deleteBackward:(id)sender
+{
+	//Perform the delete
+	[super deleteBackward:sender];
+	
+	//If we are now an empty string, and we still have a link active, clear the link
+	if ([[self textStorage] length] == 0) {
+		NSDictionary *typingAttributes = [self typingAttributes];
+		if ([typingAttributes objectForKey:NSLinkAttributeName]) {
+			
+			NSMutableDictionary *newTypingAttributes = [typingAttributes mutableCopy];
+			
+			[newTypingAttributes removeObjectForKey:NSLinkAttributeName];
+			[self setTypingAttributes:newTypingAttributes];
+			
+			[newTypingAttributes release];
+		}
+	}
+}
+
+//Set our typing format
+- (void)setTypingAttributes:(NSDictionary *)attrs
+{
+	NSColor	*backgroundColor;
+	[super setTypingAttributes:attrs];
+
+	//Correctly set our background color
+	if ((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])) {
+		[self setBackgroundColor:backgroundColor];
+	} else {
+		static NSColor	*cachedWhiteColor = nil;
+
+		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
+		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
+
+		[self setBackgroundColor:cachedWhiteColor];
+	}
+}
+
+#pragma mark Font Panel color-selection (10.3 and later only)
+//Apple Supported Background Color Change from NSFontPanel in Panther and later!
+- (void)changeDocumentBackgroundColor:(id)sender
+{
+	NSColor						*newColor = [sender color];
+	NSMutableAttributedString	*attrStorageString = [[[self textStorage] mutableCopy] autorelease];
+	NSMutableDictionary			*textAttrDict;
+
+	[self setBackgroundColor:newColor];
+
+	textAttrDict = [[self typingAttributes] mutableCopy];
+	[textAttrDict setValue:newColor forKey:AIBodyColorAttributeName];
+	[self setTypingAttributes:textAttrDict];
+	if ([[attrStorageString string] length] > 0) {
+		[attrStorageString setAttributes:textAttrDict range:NSMakeRange(0, [[attrStorageString string] length])];	
+	}
+	[textAttrDict release];
+
+	[self setAttributedString:attrStorageString];
 }
 
 @end
