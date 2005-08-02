@@ -556,35 +556,6 @@
 			</dict>
 		</dict>
 		
-		<key>AIStatus</key>
-		<dict>
-			<key>AppleEventCode</key>
-			<string>AISt</string>
-			<key>Superclass</key>
-			<string>NSCoreSuite.AbstractObject</string>
-			<key>Attributes</key>
-			<dict>
-			     <key>icon</key>
-			     <dict>
-			     	<key>AppleEventCode</key>
-					<string>AISi</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSData&lt;Image&gt;</string>
-				</dict>
-				<key>statusMessageString</key>
-				<dict>
-			     	<key>AppleEventCode</key>
-					<string>ASms</string>
-					<key>ReadOnly</key>
-					<string>YES</string>
-					<key>Type</key>
-					<string>NSData&lt;Image&gt;</string>
-                </dict>				    
-			</dict>
-        </dict>
-        
 	</dict>
 	
 	<? ************************************ Commands  ************************************ ?>
