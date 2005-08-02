@@ -42,12 +42,11 @@
 @implementation AIMessageEntryTextView
 
 static NSImage	*pushIndicatorImage = nil;
-static NSColor	*cachedWhiteColor = nil;
 
 //Init the text view
-- (id)initWithFrame:(NSRect)frameRect
+- (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer
 {
-	if ((self = [super initWithFrame:frameRect])) {
+	if ((self = [super initWithFrame:frameRect textContainer:aTextContainer])) {
 		adium = [AIObject sharedAdiumInstance];
 		associatedView = nil;
 		chat = nil;
@@ -59,10 +58,7 @@ static NSColor	*cachedWhiteColor = nil;
 		historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
 		pushArray = [[NSMutableArray alloc] init];
 		currentHistoryLocation = 0;
-		
-		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
-		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
-		
+
 		[self setDrawsBackground:YES];
 		_desiredSizeCached = NSMakeSize(0,0);
 		
@@ -301,6 +297,11 @@ static NSColor	*cachedWhiteColor = nil;
 	if ((backgroundColor = [attrs objectForKey:AIBodyColorAttributeName])) {
 		[self setBackgroundColor:backgroundColor];
 	} else {
+		static NSColor	*cachedWhiteColor = nil;
+
+		//Create cachedWhiteColor first time we're called; we'll need it later, repeatedly
+		if (!cachedWhiteColor) cachedWhiteColor = [[NSColor whiteColor] retain];
+
 		[self setBackgroundColor:cachedWhiteColor];
 	}
 }
@@ -753,22 +754,25 @@ static NSColor	*cachedWhiteColor = nil;
 	NSColor						*newColor = [sender color];
 	NSMutableAttributedString	*attrStorageString = [[[self textStorage] mutableCopy] autorelease];
 	NSMutableDictionary			*textAttrDict;
-	
+
 	[self setBackgroundColor:newColor];
 	
-	textAttrDict = [[[self typingAttributes] mutableCopy] autorelease];
+	textAttrDict = [[self typingAttributes] mutableCopy];
 	[textAttrDict setValue:newColor forKey:AIBodyColorAttributeName];
 	[self setTypingAttributes:textAttrDict];
-	if ([[attrStorageString string] length] > 0)
-	{
+	if ([[attrStorageString string] length] > 0) {
 		[attrStorageString setAttributes:textAttrDict range:NSMakeRange(0, [[attrStorageString string] length])];	
 	}
+	[textAttrDict release];
+
 	[self setAttributedString:attrStorageString];
 	
 	//XXX - not this part
+	/*
 	[[adium preferenceController] setPreference:[newColor stringRepresentation]
 										 forKey:KEY_FORMATTING_BACKGROUND_COLOR
 										  group:PREF_GROUP_FORMATTING];
+	 */
 }
 
 //Apple's dumb. I'm using the setTextAttributes: to save the font color until Tiger gets a larger adoption base. See there.
