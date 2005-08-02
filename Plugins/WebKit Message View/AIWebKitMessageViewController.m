@@ -94,7 +94,6 @@ static NSArray *draggedTypes = nil;
 									   selector:@selector(participatingListObjectsChanged:)
 										   name:Chat_ParticipatingListObjectsChanged 
 										 object:inChat];
-		[self participatingListObjectsChanged:nil];
 
 		//Observe source/destination changes
 		[[adium notificationCenter] addObserver:self 
@@ -873,24 +872,25 @@ static NSArray *draggedTypes = nil;
 - (void)participatingListObjectsChanged:(NSNotification *)notification
 {
 	NSArray			*participatingListObjects = [chat participatingListObjects];
-	NSEnumerator	*enumerator = [participatingListObjects objectEnumerator];
-	AIListObject	*object;
+	NSEnumerator	*enumerator;
+	AIListContact	*listContact;
 	
 	[[adium notificationCenter] removeObserver:self
 										  name:ListObject_AttributesChanged
 										object:nil];
 	
-	while ((object = [enumerator nextObject])) {
+	enumerator = [participatingListObjects objectEnumerator];
+	while ((listContact = [enumerator nextObject])) {
 		//Update the mask for any user which just entered the chat
-		if (![objectsWithUserIconsArray containsObjectIdenticalTo:object]) {
-			[self _updateUserIconForObject:object];
+		if (![objectsWithUserIconsArray containsObjectIdenticalTo:listContact]) {
+			[self _updateUserIconForObject:listContact];
 		}
 		
-		//In the future, watch for changes
+		//In the future, watch for changes on the parent object, since that's the icon we display
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(listObjectAttributesChanged:) 
 										   name:ListObject_AttributesChanged
-										 object:object];
+										 object:[listContact parentContact]];
 	}
 	
 	//Also observe our account
@@ -909,27 +909,8 @@ static NSArray *draggedTypes = nil;
  */
 - (void)sourceOrDestinationChanged:(NSNotification *)notification
 {
-	NSEnumerator	*enumerator = [[chat participatingListObjects] objectEnumerator];
-	AIListObject	*object;
-	
-	//Remove all observers
-	[[adium notificationCenter] removeObserver:self
-										  name:ListObject_AttributesChanged
-										object:nil];
-	
-	while ((object = [enumerator nextObject])) {
-		//In the future, watch for changes
-		[[adium notificationCenter] addObserver:self
-									   selector:@selector(listObjectAttributesChanged:) 
-										   name:ListObject_AttributesChanged
-										 object:object];
-	}
-	
-	//Also observe our account
-	[[adium notificationCenter] addObserver:self
-								   selector:@selector(listObjectAttributesChanged:) 
-									   name:ListObject_AttributesChanged
-									 object:[chat account]];
+	[objectsWithUserIconsArray release]; objectsWithUserIconsArray = nil;
+	[self participatingListObjectsChanged:nil];
 	
 	[self _updateUserIconForObject:[chat account]];
 }
@@ -943,11 +924,32 @@ static NSArray *draggedTypes = nil;
     NSSet			*keys = [[notification userInfo] objectForKey:@"Keys"];
 	
 	if (inObject &&
-	   ([keys containsObject:KEY_USER_ICON]) &&
-	   (([[chat participatingListObjects] indexOfObject:inObject] != NSNotFound) ||
-		([chat account] == inObject))) { /* The account is not on the participating list objects list */
+		([keys containsObject:KEY_USER_ICON])) {
+		AIListObject	*actualObject = nil;
 		
-		[self _updateUserIconForObject:inObject];
+		if ([chat account] == inObject) {
+			//The account is the object actually in the chat
+			actualObject = inObject;
+		} else {
+			/*
+			 * We are notified of a change to the metacontact's icon. Find the contact inside the chat which we will
+			 * be displaying as changed.
+			 */
+			NSEnumerator	*enumerator;
+			AIListContact	*participatingListObject;
+			
+			enumerator = [[chat participatingListObjects] objectEnumerator];
+			while ((participatingListObject = [enumerator nextObject])) {
+				if ([participatingListObject parentContact] == inObject) {
+					actualObject = participatingListObject;
+					break;
+				}
+			}
+		}
+		
+		if (actualObject) {
+			[self _updateUserIconForObject:actualObject];
+		}
 	}
 }
 
@@ -956,20 +958,25 @@ static NSArray *draggedTypes = nil;
  */
 - (void)_updateUserIconForObject:(AIListObject *)inObject
 {
-	//We probably already have a userIcon waiting for us, the active display icon; use that
-	//rather than loading one from disk
-	NSImage				*userIcon = [inObject userIcon];
+	AIListObject		*iconSourceObject = ([inObject isKindOfClass:[AIListContact class]] ?
+											 [(AIListContact *)inObject parentContact] :
+											 inObject);
+	NSImage				*userIcon;
 	NSString			*webKitUserIconPath;
 	NSImage				*webKitUserIcon;
 	
-	//If that's not the case, try using the UserIconPath
-	if (!userIcon) {
-		userIcon = [[[NSImage alloc] initWithContentsOfFile:[inObject statusObjectForKey:@"UserIconPath"]] autorelease];
+	/*
+	 * We probably already have a userIcon waiting for us, the active display icon; use that
+	 * rather than loading one from disk.
+	 */
+	if (!(userIcon = [iconSourceObject userIcon])) {
+		//If that's not the case, try using the UserIconPath
+		userIcon = [[[NSImage alloc] initWithContentsOfFile:[iconSourceObject statusObjectForKey:@"UserIconPath"]] autorelease];
 	}
 	
-	//Apply the mask
 	if (userIcon) {
 		if ([messageStyle userIconMask]) {
+			//Apply the mask is the style has one
 			webKitUserIcon = [[[messageStyle userIconMask] copy] autorelease];
 			[webKitUserIcon lockFocus];
 			[userIcon drawInRect:NSMakeRect(0,0,[webKitUserIcon size].width,[webKitUserIcon size].height)
@@ -978,9 +985,14 @@ static NSArray *draggedTypes = nil;
 						fraction:1.0];
 			[webKitUserIcon unlockFocus];
 		} else {
+			//Otherwise, just use the icon as-is
 			webKitUserIcon = userIcon;
 		}
 		
+		/*
+		 * Writing the icon out is necessary for webkit to be able to use it; it also guarantees that there won't be
+		 * any animation, which is good since animation in the messagae view is slow and annoying.
+		 */
 		webKitUserIconPath = [self _webKitUserIconPathForObject:inObject];
 		if ([[webKitUserIcon TIFFRepresentation] writeToFile:webKitUserIconPath
 												  atomically:YES]) {
