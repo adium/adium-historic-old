@@ -20,7 +20,7 @@ struct oscar_direct_im {
 	gboolean donttryagain;
 };
 
-@interface ESGaimAIMAccount : CBGaimOscarAccount <AIAccount_Files> {
+@interface ESGaimAIMAccount : CBGaimOscarAccount {
 	NSTimer			*delayedSignonUpdateTimer;
 	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 	

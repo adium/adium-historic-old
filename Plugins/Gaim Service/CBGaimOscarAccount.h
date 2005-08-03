@@ -86,7 +86,7 @@ struct buddyinfo {
 
 @class AIHTMLDecoder;
 
-@interface CBGaimOscarAccount : CBGaimAccount {
+@interface CBGaimOscarAccount : CBGaimAccount  <AIAccount_Files> {
 	AIHTMLDecoder	*oscarGaimThreadHTMLDecoder;
 }
 
