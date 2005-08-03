@@ -482,27 +482,28 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	
 	while ((participant = [enumerator nextObject])) {
 		NSString		*UID, *alias, *userIconName;
-		AIListObject	*listObject;
+		AIListContact	*listContact;
 		
 		//Create object
 		UID = [participant objectForKey:@"UID"];
-		listObject = [[[AIListObject alloc] initWithUID:UID service:aimService] autorelease];
+		listContact = [[AIListContact alloc] initWithUID:UID service:aimService];
 		
 		//Display name
 		if ((alias = [participant objectForKey:@"Display Name"])) {
 			[[adium notificationCenter] postNotificationName:Contact_ApplyDisplayName
-													  object:listObject
+													  object:listContact
 													userInfo:[NSDictionary dictionaryWithObject:alias forKey:@"Alias"]];
 		}
 		
 		//User icon
 		if ((userIconName = [participant objectForKey:@"UserIcon Name"])) {
-			[listObject setStatusObject:[previewPath stringByAppendingPathComponent:[participant objectForKey:@"UserIcon Name"]]
-								 forKey:@"UserIconPath"
-								 notify:YES];
+			[listContact setStatusObject:[previewPath stringByAppendingPathComponent:userIconName]
+								  forKey:@"UserIconPath"
+								  notify:YES];
 		}
 		
-		[listObjectDict setObject:listObject forKey:UID];
+		[listObjectDict setObject:listContact forKey:UID];
+		[listContact release];
 	}
 	
 	return listObjectDict;
