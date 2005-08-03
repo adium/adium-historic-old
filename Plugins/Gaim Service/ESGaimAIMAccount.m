@@ -373,48 +373,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 }
 
-#pragma mark File transfer
-
-/*!
- * @brief Allow a file transfer with an object?
- *
- * Only return YES if the user's capabilities include AIM_CAPS_SENDFILE indicating support for file transfer
- */
-- (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject
-{
-	OscarData			*od;
-	aim_userinfo_t		*userinfo;
-	
-	if ((gaim_account_is_connected(account)) &&
-		(od = account->gc->proto_data) &&
-		(userinfo = aim_locate_finduserinfo(od->sess, [[inListObject UID] UTF8String]))) {
-		
-		return (userinfo->capabilities & AIM_CAPS_SENDFILE);
-	}
-	
-	return NO;
-}
-
-- (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer
-{
-    [super acceptFileTransferRequest:fileTransfer];    
-}
-
-- (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	[super _beginSendOfFileTransfer:fileTransfer];
-}
-
-- (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
-{
-    [super rejectFileReceiveRequest:fileTransfer];    
-}
-
-- (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
-{
-	[super cancelFileTransfer:fileTransfer];
-}
-
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
