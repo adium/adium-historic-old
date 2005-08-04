@@ -630,14 +630,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 {
 	NSTask						*scriptTask = [aNotification object];
 	NSDictionary				*environment = [scriptTask environment];
-	NSPipe						*standardOutput = [scriptTask standardOutput];
+	id							standardOutput = [scriptTask standardOutput];
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
 	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
 	NSFileHandle				*output;
 	NSString					*scriptResult = nil;
 			
-	if ((output = [standardOutput fileHandleForReading])) {
+	if ([standardOutput isKindOfClass:[NSPipe class]] &&
+		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
 		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
 											 encoding:NSUTF8StringEncoding];
 	}
