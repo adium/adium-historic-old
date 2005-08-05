@@ -1022,7 +1022,16 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)addStatusState:(AIStatus *)statusState
 {
-	[stateArray addObject:statusState];
+	if ([statusState statusType] == AILockedStatusState) {
+		//If we are adding a locked status, add it to the built-in statuses
+		[(NSMutableArray *)[self builtInStateArray] addObject:statusState];
+
+	} else {
+		//Otherwise, add it to the user-created statuses
+		[stateArray addObject:statusState];
+	}
+
+	//Either way, save any changes and notify observers that the status states changed
 	[self _saveStateArrayAndNotifyOfChanges];
 }
 
