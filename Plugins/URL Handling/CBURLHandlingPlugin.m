@@ -182,7 +182,7 @@
 										 withMessage:nil];
 				}
 				
-			} else if ([host caseInsensitiveCompare:@"gochat"]) {
+			} else if ([host caseInsensitiveCompare:@"gochat"]  == NSOrderedSame) {
 				// aim://gochat?RoomName=AdiumRocks
 				NSString	*roomname = [[url queryArgumentForKey:@"roomname"] stringByDecodingURLEscapes];
 				NSString	*exchangeString = [url queryArgumentForKey:@"exchange"];
