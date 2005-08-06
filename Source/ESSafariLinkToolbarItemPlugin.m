@@ -27,10 +27,6 @@
 #define SAFARI_LINK_IDENTIFER	@"SafariLink"
 #define SAFARI_LINK_SCRIPT_PATH	[[NSBundle bundleForClass:[self class]] pathForResource:@"Safari.scpt" ofType:nil]
 
-@interface ESSafariLinkToolbarItemPlugin (PRIVATE)
-- (NSString *)_executeSafariLinkScript;
-@end
-
 /*!
  * @class ESSafariLinkToolbarItemPlugin
  * @brief Component to add a toolbar item which inserts a link to the active Safari web page
@@ -42,8 +38,6 @@
  */
 - (void)installPlugin
 {
-	safariLinkScript = nil;
-
 	//SafariLink
 	NSToolbarItem	*toolbarItem;
 	toolbarItem = [AIToolbarUtilities toolbarItemWithIdentifier:SAFARI_LINK_IDENTIFER
@@ -59,15 +53,6 @@
 }
 
 /*!
- * @brief Deallocate
- */
-- (void)dealloc
-{
-	[safariLinkScript release]; safariLinkScript = nil;
-	[super dealloc];
-}
-
-/*!
  * @brief Insert a link to the active Safari page into the first responder if it is an NSTextView
  */
 - (IBAction)insertSafariLink:(id)sender
@@ -76,11 +61,11 @@
 	NSTextView	*earliestTextView = (NSTextView *)[keyWindow earliestResponderOfClass:[NSTextView class]];
 	
 	if (earliestTextView) {
-		NSTask			*scriptTask;
-		NSMutableArray	*applescriptRunnerArguments = [NSArray arrayWithObjects:SAFARI_LINK_SCRIPT_PATH, @"substitute", nil];
-		NSString		*applescriptRunnerPath;
-		NSPipe			*standardOuptut = [NSPipe pipe];
-		NSString		*scriptResult;
+		NSTask		*scriptTask;
+		NSArray		*applescriptRunnerArguments;
+		NSString	*applescriptRunnerPath;
+		NSPipe		*standardOutput;
+		NSString	*scriptResult = nil;
 
 		//Find the path to the ApplescriptRunner application
 		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
@@ -89,34 +74,83 @@
 		//Set up our task
 		scriptTask = [[NSTask alloc] init];
 		[scriptTask setLaunchPath:applescriptRunnerPath];
+		
+		applescriptRunnerArguments = [NSArray arrayWithObjects:
+			SAFARI_LINK_SCRIPT_PATH,
+			@"substitute",
+			AILocalizedString(@"Multiple browsers are open. Please select one link:", "Prompt when more than one web browser is available when inserting a link from the active browser."),
+			nil];
 		[scriptTask setArguments:applescriptRunnerArguments];
-		[scriptTask setStandardOutput:standardOuptut];
-
-		//Launch, then block until it's finished
-		[scriptTask launch];
-		[scriptTask waitUntilExit];
-
-		//Retrieve the HTML returned by the script via standardOutput
-		scriptResult = [[NSString alloc] initWithData:[[standardOuptut fileHandleForReading] readDataToEndOfFile]
-											 encoding:NSUTF8StringEncoding];
-
-		//If the script returns nil or fails, do nothing
-		if (scriptResult && [scriptResult length]) {
-			//Insert the script result - it should have returned an HTML link, so process it first
-			NSAttributedString	*attributedScriptResult;
-			NSDictionary		*attributes;
-
-			attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
-
-			attributes = [[earliestTextView typingAttributes] copy];
-			[earliestTextView insertText:attributedScriptResult];
-			if (attributes) [earliestTextView setTypingAttributes:attributes];
-			[attributes release];
+		
+		standardOutput = [[NSPipe alloc] init];
+		if (standardOutput) {
+			//NSPipe can return nil if an error occurs; don't assume success.
+			[scriptTask setStandardOutput:standardOutput];
+			[scriptTask setEnvironment:[NSDictionary dictionaryWithObject:earliestTextView
+																   forKey:@"Text View"]];			
+			[[NSNotificationCenter defaultCenter] addObserver:self
+													 selector:@selector(scriptDidFinish:)
+														 name:NSTaskDidTerminateNotification
+													   object:scriptTask];
+			[scriptTask launch];
+			
+		} else {
+			[scriptTask release];
+			NSBeep();
 		}
-
-		[scriptResult release];
-		[scriptTask release];
+		[standardOutput release];
 	}
+}
+
+/*
+ * @brief A script finished executing
+ *
+ * @param aNotification The notification, whose object is the NSTask which terminated
+ */
+- (void)scriptDidFinish:(NSNotification *)aNotification
+{
+	NSTask				*scriptTask = [aNotification object];
+	NSDictionary		*environment = [scriptTask environment];
+	id					standardOutput = [scriptTask standardOutput];
+	NSTextView			*earliestTextView = [environment objectForKey:@"Text View"];
+	NSFileHandle		*output;
+	NSString			*scriptResult = nil;
+	
+	if ([standardOutput isKindOfClass:[NSPipe class]] &&
+		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
+		//Retrieve the HTML returned by the script via standardOutput
+		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
+											 encoding:NSUTF8StringEncoding];
+	}
+	
+	//If the script returns nil or fails, do nothing
+	if (scriptResult && [scriptResult length]) {
+		//Insert the script result - it should have returned an HTML link, so process it first
+		NSAttributedString	*attributedScriptResult;
+		NSDictionary		*attributes;
+		
+		attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult];
+		
+		attributes = [[earliestTextView typingAttributes] copy];
+		[earliestTextView insertText:attributedScriptResult];
+		if (attributes) [earliestTextView setTypingAttributes:attributes];
+		[attributes release];
+		
+	} else {
+		NSBeep();
+		
+	}
+	
+	/* Remove the observer. If we don't, and another NSTask is allocated with the same id as scriptTask, we'll get two
+	 * -scriptDidFinish: callbacks when that task terminates. Because this method releases the task, that would be a
+	 * double-release error, resulting in a crash.
+	 */
+	[[NSNotificationCenter defaultCenter] removeObserver:self
+													name:NSTaskDidTerminateNotification
+												  object:scriptTask];
+	
+	[scriptResult release];
+	[scriptTask release];
 }
 
 @end
