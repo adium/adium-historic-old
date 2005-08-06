@@ -17,7 +17,7 @@
 #import <Adium/AIPlugin.h>
 
 @interface ESSafariLinkToolbarItemPlugin : AIPlugin {
-	NSAppleScript	*safariLinkScript;
+
 }
 
 @end
