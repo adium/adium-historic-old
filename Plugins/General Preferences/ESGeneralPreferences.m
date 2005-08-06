@@ -199,13 +199,21 @@
 	[checkBox_arrangeByGroup setEnabled:[checkBox_messagesInTabs state]];
 }
 
-//New value selected on the volume slider
+//New value selected on the volume slider or chosen by clicking a volume icon
 - (IBAction)selectVolume:(id)sender
 {
     NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
     float			volume, oldVolume;
-
-	volume = [slider_volume floatValue];
+	
+	if (sender == slider_volume) {
+		volume = [slider_volume floatValue];
+	} else if (sender == button_maxvolume) {
+		volume = [slider_volume maxValue];
+		[slider_volume setDoubleValue:volume];
+	} else if (sender == button_minvolume) {
+		volume = [slider_volume minValue];
+		[slider_volume setDoubleValue:volume];
+	}
 	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
 
     //Volume

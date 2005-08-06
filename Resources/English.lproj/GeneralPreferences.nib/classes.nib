@@ -51,6 +51,8 @@
             CLASS = ESGeneralPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_maxvolume" = NSButton; 
+                "button_minvolume" = NSButton; 
                 "checkBox_arrangeByGroup" = NSButton; 
                 "checkBox_enableLogging" = NSButton; 
                 "checkBox_enableMenuItem" = NSButton; 
