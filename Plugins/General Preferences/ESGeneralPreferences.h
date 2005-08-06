@@ -28,6 +28,8 @@
 	IBOutlet	NSPopUpButton	*popUp_sendKeys;
 
 	IBOutlet	NSSlider		*slider_volume;
+	IBOutlet	NSButton		*button_minvolume;
+	IBOutlet	NSButton		*button_maxvolume;
 	IBOutlet	NSPopUpButton   *popUp_outputDevice; 	
 	
 	IBOutlet	NSButton		*checkBox_enableMenuItem;
