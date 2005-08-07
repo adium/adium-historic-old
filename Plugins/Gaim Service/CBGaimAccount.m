@@ -1860,14 +1860,18 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	NSImage	*image =  (originalData ? [[[NSImage alloc] initWithData:originalData] autorelease] : nil);
 
 	if (account) {
+		NSSize		imageSize = [image size];
+		
 		//Clear the existing icon first
 		[gaimThread setBuddyIcon:nil onAccount:self];
 		
-		//Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
-		//image to one, and then pass libgaim the path.
-		if (image) {
+		/* Now pass libgaim the new icon.  Libgaim takes icons as a file, so we save our
+		 * image to one, and then pass libgaim the path. Check to be sure our image doesn't have an NSZeroSize size,
+		 * which would indicate currupt data */
+		if (image && !NSEqualSizes(NSZeroSize, imageSize)) {
 			GaimPluginProtocolInfo  *prpl_info = GAIM_PLUGIN_PROTOCOL_INFO(gaim_find_prpl(account->protocol_id));
-			GaimDebug(@"Original image of size %f %f",[image size].width,[image size].height);
+			GaimDebug(@"Original image of size %f %f",imageSize.width,imageSize.height);
+			
 			
 			if (prpl_info && (prpl_info->icon_spec.format)) {
 				NSString	*buddyIconFilename = [self _userIconCachePath];
