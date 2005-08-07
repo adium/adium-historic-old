@@ -1047,7 +1047,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 - (void)setPrivacyOptions:(PRIVACY_OPTION)option
 {
-	if (account) {
+	if (account && gaim_account_get_connection(account)) {
 		GaimPrivacyType privacyType;
 
 		switch (option) {
@@ -1071,6 +1071,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		}
 		account->perm_deny = privacyType;
 		serv_set_permit_deny(gaim_account_get_connection(account));
+	} else {
+		AILog(@"Couldn't set privacy options for %@ (%x %x)",self,account,gaim_account_get_connection(account));
 	}
 }
 
@@ -1327,8 +1329,11 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	 XXX: This is a hack for 0.8. Since we don't have a full privacy UI yet, we automatically set our privacy setting to
 	 the best one to use.
 	*/
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-	serv_set_permit_deny(gaim_account_get_connection(account));
+#warning Should we still be doing this in 0.9?
+	if (account && gaim_account_get_connection(account)) {
+		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+		serv_set_permit_deny(gaim_account_get_connection(account));
+	}
 	
 	//E-mail checking
 	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
