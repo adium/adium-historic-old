@@ -14,11 +14,14 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-@interface AIExceptionController : NSException {
+@interface AIExceptionController : NSObject {
 
 }
 
 + (void)enableExceptionCatching;
-- (NSString *)decodedExceptionStackTrace;
 
+@end
+
+@interface NSException (AIExceptionControllerAdditions)
+- (NSString *)decodedExceptionStackTrace;
 @end

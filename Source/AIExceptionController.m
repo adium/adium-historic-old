@@ -39,9 +39,15 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 + (void)enableExceptionCatching
 {
     //Log and Handle all exceptions
-    [[NSExceptionHandler defaultExceptionHandler] setExceptionHandlingMask:NSLogAndHandleEveryExceptionMask];
+	NSExceptionHandler *exceptionHandler = [NSExceptionHandler defaultExceptionHandler];
+    [exceptionHandler setExceptionHandlingMask:(NSHandleUncaughtExceptionMask |
+												NSHandleUncaughtSystemExceptionMask | 
+												NSHandleUncaughtRuntimeErrorMask |
+												NSHandleTopLevelExceptionMask |
+												NSHandleOtherExceptionMask)];
+	[exceptionHandler setDelegate:self];
+
 	catchExceptions = YES;
-    [self poseAsClass:[NSException class]];
 
 	//Remove any existing exception logs
     [[NSFileManager defaultManager] trashFileAtPath:EXCEPTIONS_PATH];
@@ -74,25 +80,16 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	}
 }
 
-//Raise an exception.  This gets called once with no stack trace, then a second time after the stack trace is
-//added by the ExceptionHandling framework.  We therefore just do [super raise] if there is no stack trace, awaiting
-//its addition to write the exception log, load the crash reporter, and exit.
-- (void)raise
+// mask is NSHandle<exception type>Mask, exception's userInfo has stack trace for key NSStackTraceKey
++ (BOOL)exceptionHandler:(NSExceptionHandler *)sender shouldHandleException:(NSException *)exception mask:(unsigned int)aMask
 {
-	if (!catchExceptions) {
-		NSString	*theName   = [self name];
-		NSString	*theReason = [self reason];
-
-		NSLog(@"Exception catching off: Did not catch %@ - %@",theName,theReason);
-		[super raise];
-	} else {
-		NSString	*theReason = [self reason];
-		NSString	*theName   = [self name];
-		NSString	*backtrace = [self decodedExceptionStackTrace];
+	BOOL		shouldLaunchCrashReporter = YES;
+	if (catchExceptions) {
+		NSString	*theReason = [exception reason];
+		NSString	*theName   = [exception name];
+		NSString	*backtrace = [exception decodedExceptionStackTrace];
 
 		NSLog(@"Caught exception: %@ - %@",theName,theReason);
-
-		BOOL		shouldLaunchCrashReporter = YES;
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
@@ -147,12 +144,15 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 				  theName,
 				  theReason,
 				  (backtrace ? backtrace : @"(Unavailable)"));
-
-			[super raise];
 		}
 	}
+
+	return shouldLaunchCrashReporter;
 }
 
+@end
+
+@implementation NSException (AIExceptionControllerAdditions)
 //Decode the stack trace within [self userInfo] and return it
 - (NSString *)decodedExceptionStackTrace
 {
@@ -216,4 +216,3 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 }
 
 @end
-
