@@ -22,6 +22,8 @@
 #import "AITextAttributes.h"
 #import "AIApplicationAdditions.h"
 
+#import "AIExceptionHandlingUtilities.h"
+
 @implementation NSMutableAttributedString (AIAttributedStringAdditions)
 
 //Append a plain string, adding the specified attributes
@@ -338,7 +340,7 @@
 	 *		-[NSPlaceholderDictionary initWithObjects_ex:forKeys:count:]: attempt to insert nil value
 	 * if we feed it invalid data.
 	 */
-	NS_DURING
+	AI_DURING
 		if (inData && [inData length]) {
 			//If inData (which must bt non-nil) is not valid archived data, this returns nil.
 			NSUnarchiver		*unarchiver = [[NSUnarchiver alloc] initForReadingWithData:inData];
@@ -362,8 +364,8 @@
 			
 			[unarchiver release];
 		}
-	NS_HANDLER
-	NS_ENDHANDLER
+	AI_HANDLER
+	AI_ENDHANDLER
 			
 	return returnValue;
 }
