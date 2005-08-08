@@ -8,6 +8,8 @@
 #import "AIImageAdditions.h"
 #import "pxmLib.h"
 
+#import "AIExceptionHandlingUtilities.h"
+
 #define RESOURCE_ID_CLOSE_BUTTON_AQUA       201
 #define RESOURCE_ID_CLOSE_BUTTON_GRAPHITE   10191
 #define RESOURCE_TYPE_CLOSE_BUTTON			'pxm#'
@@ -126,12 +128,12 @@
 		
 		if (size.width > 0 && size.height > 0) {
 			
-			NS_DURING
+			AI_DURING
 				GIFRepresentation = [bm representationUsingType:NSGIFFileType
 													 properties:properties];
-			NS_HANDLER
+			AI_HANDLER
 				GIFRepresentation = nil;	// must have failed
-			NS_ENDHANDLER
+			AI_ENDHANDLER
 		}
 	}
 
@@ -504,7 +506,7 @@
 	[self prepareCache:tiffCache];	
 	
 	// if something should happen, NS_DURING/NS_HANDLER protects us!
-	NS_DURING
+	AI_DURING
 		[tiffCache lockFocusOnRepresentation:rep];
 		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
 		
@@ -514,10 +516,10 @@
 			bm = [NSBitmapImageRep imageRepWithData: [tiffCache TIFFRepresentation]];
 
 		[tiffCache unlockFocus];
-	NS_HANDLER
-		
-	NS_ENDHANDLER
-	
+	AI_HANDLER
+		bm = nil;
+	AI_ENDHANDLER
+
 	if (bm == nil)
 		NSLog(@"in getBitMap : no NSBitmapImageRep of the right depth found");
 
