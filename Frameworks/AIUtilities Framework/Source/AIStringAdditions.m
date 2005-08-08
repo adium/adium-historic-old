@@ -475,6 +475,8 @@
 		if (ch == '%') {
 			destPtr[destIndex] = ( hexToInt(UTF8[sourceIndex]) * 0x10 ) + hexToInt(UTF8[sourceIndex+1]);
 			sourceIndex += 2;
+		} else if (ch == '+') {
+			destPtr[destIndex] = ' ';
 		} else {
 			destPtr[destIndex] = translationTable[ch];
 		}
