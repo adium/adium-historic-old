@@ -9,16 +9,16 @@
 #import "AIApplicationAdditions.h"
 #import "AIStringUtilities.h"
 
-#define ONE_WEEK AILocalizedString(@"1 week", nil)
-#define MULTIPLE_WEEKS AILocalizedString(@"%i weeks", nil)
-#define ONE_DAY AILocalizedString(@"1 day", nil)
-#define MULTIPLE_DAYS AILocalizedString(@"%i days", nil)
-#define ONE_HOUR AILocalizedString(@"1 hour", nil)
-#define MULTIPLE_HOURS AILocalizedString(@"%i hours", nil)
-#define ONE_MINUTE AILocalizedString(@"1 minute", nil)
-#define MULTIPLE_MINUTES AILocalizedString(@"%i minutes", nil)
-#define ONE_SECOND AILocalizedString(@"1 second", nil)
-#define MULTIPLE_SECONDS AILocalizedString(@"%1.0lf seconds", nil)
+#define ONE_WEEK AILocalizedStringFromTableInBundle(@"1 week", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define MULTIPLE_WEEKS AILocalizedStringFromTableInBundle(@"%i weeks", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define ONE_DAY AILocalizedStringFromTableInBundle(@"1 day", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define MULTIPLE_DAYS AILocalizedStringFromTableInBundle(@"%i days", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define ONE_HOUR AILocalizedStringFromTableInBundle(@"1 hour", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define MULTIPLE_HOURS AILocalizedStringFromTableInBundle(@"%i hours", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define ONE_MINUTE AILocalizedStringFromTableInBundle(@"1 minute", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define MULTIPLE_MINUTES AILocalizedStringFromTableInBundle(@"%i minutes", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define ONE_SECOND AILocalizedStringFromTableInBundle(@"1 second", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
+#define MULTIPLE_SECONDS AILocalizedStringFromTableInBundle(@"%1.0lf seconds", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
 
 typedef enum {
     NONE,

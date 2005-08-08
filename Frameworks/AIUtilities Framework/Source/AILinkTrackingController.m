@@ -28,7 +28,7 @@
 #import "AIStringUtilities.h"
 #import "AIMenuAdditions.h"
 
-#define COPY_LINK   AILocalizedString(@"Copy Link","Copy the link to the clipboard")
+#define COPY_LINK   AILocalizedStringFromTableInBundle(@"Copy Link", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], "Copy the link to the clipboard")
 
 @interface AILinkTrackingController (PRIVATE)
 - (id)initForView:(NSView *)inControlView withTextStorage:(NSTextStorage *)inTextStorage layoutManager:(NSLayoutManager *)inLayoutManager textContainer:(NSTextContainer *)inTextContainer;
