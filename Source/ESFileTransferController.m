@@ -29,6 +29,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
@@ -277,13 +278,13 @@ static ESFileTransferPreferences *preferences;
 			[zipTask setArguments:arguments];
 			[zipTask setCurrentDirectoryPath:[inPath stringByDeletingLastPathComponent]];
 			
-			NS_DURING
+			AI_DURING
 				[zipTask launch];
 				[zipTask waitUntilExit];
 				success = ([zipTask terminationStatus] == 0);
-			NS_HANDLER
+			AI_HANDLER
 				/* No exception handler needed */
-			NS_ENDHANDLER
+			AI_ENDHANDLER
 			[zipTask release];
 				
 			if (!success) pathToArchive = nil;

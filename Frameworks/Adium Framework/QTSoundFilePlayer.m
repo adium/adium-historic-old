@@ -34,6 +34,8 @@
 
 #import "VirtualRingBuffer.h"
 
+//Adium only: use AI_(DURING|HANDLER|ENDHANDLER) instead of NS_\1
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 
 //
 // Theory of operation:
@@ -881,7 +883,8 @@ UnsignedFixed ConvertFloat64ToUnsignedFixed(Float64 float64Value)
 
     [self setThreadPolicy];
     
-    NS_DURING {
+	//Adium only: use AI_(DURING|HANDLER|ENDHANDLER) instead of NS_\1
+    AI_DURING {
         mach_timespec_t timeout = { 2, 0 };	// 2 seconds, 0 nanoseconds
 
         // While there is still data to be read from the file, fill as much of the ring buffer as is practical.
@@ -905,9 +908,9 @@ UnsignedFixed ConvertFloat64ToUnsignedFixed(Float64 float64Value)
         [signalFinishPortMessage sendBeforeDate:[NSDate distantFuture]];
 #endif
         
-    } NS_HANDLER {
+    } AI_HANDLER {
         NSLog(@"QTSoundFilePlayer: exception raised in fillRingBufferInThread: %@", localException);
-    } NS_ENDHANDLER;
+    } AI_ENDHANDLER;
 
     [pool release];
 }

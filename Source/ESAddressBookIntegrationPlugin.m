@@ -22,6 +22,7 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/OWAddressBookAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
 #import <Adium/AIMetaContact.h>
@@ -703,7 +704,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon
 {
-	NS_DURING 
+	AI_DURING 
         //Begin loading image data for the "me" address book entry, if one exists
         ABPerson *me;
         if ((me = [sharedAddressBook me])) {
@@ -761,9 +762,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 				}
 			}
         }
-	NS_HANDLER
+	AI_HANDLER
 		NSLog(@"ABIntegration: Caught %@: %@", [localException name], [localException reason]);
-	NS_ENDHANDLER
+	AI_ENDHANDLER
 }
 
 #pragma mark Address book caching
