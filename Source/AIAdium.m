@@ -45,11 +45,11 @@
 #ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
 #   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"]
 #   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium X"
-#   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium X"
+#   define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium X"]
 #else
 #   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
 #   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
-#   define ADIUM_SUBFOLDER_OF_LIBRARY			@"Application Support/Adium 2.0"
+#   define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
 #endif
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
