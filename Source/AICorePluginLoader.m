@@ -25,6 +25,7 @@
 #import "AICorePluginLoader.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIPlugin.h>
 
 #define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
@@ -128,7 +129,7 @@
 		NSBundle		*pluginBundle;
 		id <AIPlugin>	plugin = nil;
 
-		NS_DURING
+		AI_DURING
 		if ((pluginBundle = [NSBundle bundleWithPath:pluginPath])) {
 			Class principalClass = [pluginBundle principalClass];
 			if (principalClass) {
@@ -151,7 +152,7 @@
 			NSLog(@"Failed to open Plugin \"%@\"!",[pluginPath lastPathComponent]);
 		}
 		
-		NS_HANDLER	
+		AI_HANDLER	
 		if (confirmLoading) {
 			//The plugin encountered an exception while it was loading.  There is no reason to leave this old
 			//or poorly coded plugin enabled so that it can cause more problems, so disable it and inform
@@ -164,7 +165,7 @@
 									nil);
 			[NSApp terminate:nil];					
 		}
-		NS_ENDHANDLER
+		AI_ENDHANDLER
 	}
 }
 
