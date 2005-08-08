@@ -481,7 +481,7 @@
 		NSOpenPanel *openPanel;
 		
 		openPanel = [NSOpenPanel openPanel];
-		[openPanel setTitle:[NSString stringWithFormat:AILocalizedString(@"Select Image",nil)]];
+		[openPanel setTitle:[NSString stringWithFormat:AILocalizedStringFromTableInBundle(@"Select Image", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)]];
 		
 		if ([openPanel runModalForDirectory:nil file:nil types:[NSImage imageFileTypes]] == NSOKButton) {
 			NSData	*imageData;
@@ -585,7 +585,7 @@
  */
 - (NSString *)displayTitleInPicker: junk
 {
-	return (title ? title : AILocalizedString(@"Image Picker",nil));
+	return (title ? title : AILocalizedStringFromTableInBundle(@"Image Picker", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil));
 }
 
 
