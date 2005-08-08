@@ -11,7 +11,7 @@
 #import "AIMenuAdditions.h"
 #import "AIParagraphStyleAdditions.h"
 
-#define FONT_CUSTOM_TITLE		AILocalizedString(@"Custom...", nil)
+#define FONT_CUSTOM_TITLE		AILocalizedStringFromTableInBundle(@"Custom...", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
 #define FONT_SAMPLE_WIDTH		60
 #define FONT_SAMPLE_HEIGHT		16
 

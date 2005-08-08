@@ -8,7 +8,7 @@
 
 #import <Cocoa/Cocoa.h>
 
-#define OBJECT_SELECTION_CUSTOM_TITLE		AILocalizedString(@"Custom...", nil)
+#define OBJECT_SELECTION_CUSTOM_TITLE		AILocalizedStringFromTableInBundle(@"Custom...", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], nil)
 
 @interface AIObjectSelectionPopUpButton : NSPopUpButton {
 	NSArray		*availableValues;
