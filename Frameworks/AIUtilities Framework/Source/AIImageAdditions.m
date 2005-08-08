@@ -505,7 +505,7 @@
 	[tiffCache addRepresentation:rep];
 	[self prepareCache:tiffCache];	
 	
-	// if something should happen, NS_DURING/NS_HANDLER protects us!
+	// if something should happen, AI_DURING/AI_HANDLER protects us!
 	AI_DURING
 		[tiffCache lockFocusOnRepresentation:rep];
 		[self compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
