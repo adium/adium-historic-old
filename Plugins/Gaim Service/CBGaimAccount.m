@@ -1110,6 +1110,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 /* File transfer / AIAccount_Files inherited methods */
 /*****************************************************/
 #pragma mark File Transfer
+- (BOOL)canSendFolders
+{
+	return NO;
+}
 
 //Create a protocol-specific xfer object, set it up as requested, and begin sending
 - (void)_beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
