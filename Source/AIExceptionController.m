@@ -25,8 +25,8 @@
  * @class AIExceptionController
  * @brief Catches application exceptions and forwards them to the crash reporter application
  *
- * Once configured, poses as NSException to decode the stack traces generated via NSExceptionHandler,
- * write them to a file, and launch the crash reporter.
+ * Once configured, sets itself as the NSExceptionHandler delegate to decode the stack traces
+ * generated via NSExceptionHandler, write them to a file, and launch the crash reporter.
  */
 @implementation AIExceptionController
 
