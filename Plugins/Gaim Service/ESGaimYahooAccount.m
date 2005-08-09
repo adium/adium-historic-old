@@ -114,6 +114,11 @@ gboolean gaim_init_yahoo_plugin(void);
 }
 
 #pragma mark File transfer
+- (BOOL)canSendFolders
+{
+	return NO;
+}
+
 - (void)beginSendOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	[super _beginSendOfFileTransfer:fileTransfer];

@@ -50,6 +50,9 @@ typedef enum {
 
 //Support for file transfer
 @protocol AIAccount_Files
+	//can the account send entire folders on its own?
+	- (BOOL)canSendFolders;
+
     //Instructs the account to accept a file transfer request
     - (void)acceptFileTransferRequest:(ESFileTransfer *)fileTransfer;
 
