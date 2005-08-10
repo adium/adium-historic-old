@@ -11,19 +11,52 @@
 @class AILocalizationButton, ABPeoplePickerView, AIService, ABPerson;
 
 @interface OWABSearchWindowController : AIWindowController {
-	IBOutlet ABPeoplePickerView		*peoplePicker;
+	//Search View
+	IBOutlet ABPeoplePickerView			*peoplePicker;
 	
-	IBOutlet AILocalizationButton	*selectButton;
-	IBOutlet AILocalizationButton	*cancelButton;
-	IBOutlet AILocalizationButton	*newPersonButton;
+	IBOutlet AILocalizationButton		*selectButton;
+	IBOutlet AILocalizationButton		*cancelButton;
+	IBOutlet AILocalizationButton		*newPersonButton;
 	
-	id	delegate;
+	//New Contact View
+	IBOutlet NSPanel					*newContactPanel;
+	IBOutlet NSPopUpButton				*popUp_contactType;
+	
+	IBOutlet NSTextField				*textField_contactID;
+	IBOutlet NSTextField				*textField_firstName;
+	IBOutlet NSTextField				*textField_lastName;
+	IBOutlet NSTextField				*textField_nickname;
+	IBOutlet NSTextField				*textField_email;
+	
+	IBOutlet NSImageView				*imageView_contactIcon;
+	
+	IBOutlet AILocalizationTextField	*label_mainTitle;
+	IBOutlet AILocalizationTextField	*label_contactType;
+	IBOutlet AILocalizationTextField	*label_contactID;
+	IBOutlet AILocalizationTextField	*label_secondaryTitle;
+	IBOutlet AILocalizationTextField	*label_firstName;
+	IBOutlet AILocalizationTextField	*label_lastName;
+	IBOutlet AILocalizationTextField	*label_nickname;
+	IBOutlet AILocalizationTextField	*label_email;
+	IBOutlet AILocalizationTextField	*label_contactIcon;
+	
+	IBOutlet AILocalizationButton		*addContactButton;
+	IBOutlet AILocalizationButton		*addContactCancelButton;
+	
+	//Other variables
+	NSWindow		*carryingWindow;
+	id				delegate;
+	ABPerson		*person;
+	NSString		*screenName;
+	AIService		*service;
+	NSData			*contactImage;
 }
 
 + (id)promptForNewPersonSearchOnWindow:(NSWindow *)parentWindow;
 - (IBAction)select:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)createNewPerson:(id)sender;
+- (IBAction)addPerson:(id)sender;
 
 - (id)delegate;
 - (void)setDelegate:(id)newDelegate;

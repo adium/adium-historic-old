@@ -18,6 +18,7 @@
 #import "AIContactController.h"
 #import "AINewContactWindowController.h"
 #import "OWABSearchWindowController.h"
+#import "ESAddressBookIntegrationPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <Adium/AIAccount.h>
@@ -27,6 +28,7 @@
 #import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIServiceMenu.h>
+#import <AddressBook/ABPerson.h>
 
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
 
@@ -84,6 +86,7 @@
 
 	service = [inService retain];
 	contactName = [inName retain];
+	uniqueID = nil;
 	
 	return self;
 }
@@ -96,6 +99,7 @@
 	[accounts release];
 	[contactName release];
 	[service release];
+	[uniqueID release];
 	
     [super dealloc];
 }
@@ -186,6 +190,10 @@
 			if (contact) {
 				if (alias && [alias length]) [contact setDisplayName:alias];
 				[contactArray addObject:contact];
+				
+				//Remember the ABPerson's unique ID associated with this contact
+				if (uniqueID)
+					[contact setPreference:uniqueID forKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
 
 				//Force this contact to show up on the user's list for a little bit, even if it is offline
 				//Otherwise they have no good feedback that a contact was added at all.
@@ -216,19 +224,25 @@
  */
 - (void)absearchWindowControllerDidSelectPerson:(OWABSearchWindowController *)controller
 {
-	NSString *selectedScreenName = [controller selectedScreenName];
-	NSString *selectedName = [controller selectedName];
-	AIService *selectedService = [controller selectedService];
+	ABPerson *selectedPerson = [controller selectedPerson];
 	
-	if (selectedScreenName)
-		[textField_contactName setStringValue:[service filterUID:selectedScreenName removeIgnoredCharacters:YES]];
-	
-	if (selectedName)
-		[textField_contactAlias setStringValue:selectedName];
-	
-	if (selectedService) {
-		[popUp_contactType selectItemWithTitle:[selectedService shortDescription]];
-		[self selectServiceType:nil];
+	if (selectedPerson) {
+		NSString *selectedScreenName = [controller selectedScreenName];
+		NSString *selectedName = [controller selectedName];
+		AIService *selectedService = [controller selectedService];
+		
+		if (selectedScreenName)
+			[textField_contactName setStringValue:[service filterUID:selectedScreenName removeIgnoredCharacters:YES]];
+		
+		if (selectedName)
+			[textField_contactAlias setStringValue:selectedName];
+		
+		if (selectedService) {
+			[popUp_contactType selectItemWithTitle:[selectedService shortDescription]];
+			[self selectServiceType:nil];
+		}
+		
+		uniqueID = [[selectedPerson uniqueId] retain];
 	}
 	
 	//Clean up
@@ -244,7 +258,7 @@
 - (void)buildContactTypeMenu
 {
 	//Rebuild the menu
-	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self 
+	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
 													activeServicesOnly:YES
 													   longDescription:NO
 																format:nil]];

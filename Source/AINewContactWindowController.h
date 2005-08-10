@@ -44,6 +44,7 @@
 	NSArray							*accounts;
 	NSString						*contactName;
 	AIService						*service;
+	NSString						*uniqueID;
 }
 
 + (void)promptForNewContactOnWindow:(NSWindow *)parentWindow name:(NSString *)contact service:(AIService *)inService;

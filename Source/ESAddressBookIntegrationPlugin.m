@@ -563,30 +563,40 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (ABPerson *)searchForObject:(AIListObject *)inObject
 {
-	ABPerson		*person = nil;
-	if ([inObject isKindOfClass:[AIMetaContact class]]) {
-		NSEnumerator	*enumerator;
-		AIListContact	*listContact;
-		
-		//Search for an ABPerson for each listContact within the metaContact; first one we find is
-		//the lucky winner.
-		enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
-		while ((listContact = [enumerator nextObject]) && (person == nil)) {
-			person = [self searchForObject:listContact];
-		}
-
+	ABPerson	*person = nil;
+	NSString	*uniqueID = [inObject preferenceForKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
+	ABRecord	*record = nil;
+	
+	if (uniqueID)
+		record = [sharedAddressBook recordForUniqueId:uniqueID];
+	
+	if (record) {
+		person = (ABPerson *)record;
 	} else {
-		NSString		*UID = [inObject UID];
-		NSString		*serviceID = [[inObject service] serviceID];
-		
-		person = [self _searchForUID:UID serviceID:serviceID];
-
-		//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
-		if (!person) {
-			if ([serviceID isEqualToString:@"AIM"]) {
-				person = [self _searchForUID:UID serviceID:@"ICQ"];
-			} else if ([serviceID isEqualToString:@"ICQ"]) {
-				person = [self _searchForUID:UID serviceID:@"AIM"];
+		if ([inObject isKindOfClass:[AIMetaContact class]]) {
+			NSEnumerator	*enumerator;
+			AIListContact	*listContact;
+			
+			//Search for an ABPerson for each listContact within the metaContact; first one we find is
+			//the lucky winner.
+			enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
+			while ((listContact = [enumerator nextObject]) && (person == nil)) {
+				person = [self searchForObject:listContact];
+			}
+			
+		} else {
+			NSString		*UID = [inObject UID];
+			NSString		*serviceID = [[inObject service] serviceID];
+			
+			person = [self _searchForUID:UID serviceID:serviceID];
+			
+			//If we don't find anything yet and inObject is an AIM account, try again using the ICQ property; ICQ, try again using AIM
+			if (!person) {
+				if ([serviceID isEqualToString:@"AIM"]) {
+					person = [self _searchForUID:UID serviceID:@"ICQ"];
+				} else if ([serviceID isEqualToString:@"ICQ"]) {
+					person = [self _searchForUID:UID serviceID:@"AIM"];
+				}
 			}
 		}
 	}
