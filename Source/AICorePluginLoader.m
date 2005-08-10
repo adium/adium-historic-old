@@ -28,13 +28,11 @@
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIPlugin.h>
 
-#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns"	//Path to the internal plugins
+#define DIRECTORY_INTERNAL_PLUGINS		[@"Contents" stringByAppendingPathComponent:@"PlugIns"]	//Path to the internal plugins
 #define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins
 #define EXTERNAL_DISABLED_PLUGIN_FOLDER	@"PlugIns (Disabled)"	//Folder name for disabled external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
-#define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
-#define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
 #define CONFIRMED_PLUGINS_VERSION		@"Confirmed Plugin Version"
 
