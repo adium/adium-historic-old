@@ -9,6 +9,10 @@
 #import "OWABSearchWindowController.h"
 #import <Adium/AIAccountController.h>
 #import <Adium/AIService.h>
+#import <Adium/AIServiceMenu.h>
+#import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIImageViewWithImagePicker.h>
 #import <AddressBook/AddressBook.h>
 #import <AddressBook/ABPeoplePickerView.h>
 #import <AddressBook/ABPerson.h>
@@ -24,20 +28,30 @@
 
 @interface OWABSearchWindowController (private)
 - (void)_configurePeoplePicker;
+- (void)_setCarryingWindow:(NSWindow *)inWindow;
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
 - (AIService *)serviceFromProperty:(NSString *)property;
 - (NSString *)propertyFromService:(AIService *)service;
+- (void)buildContactTypeMenu;
+- (void)ensureValidContactTypeSelection;
+- (void)configureForCurrentServiceType;
+- (void)selectServiceType:(id)sender;
+- (void)_setService:(AIService *)inService;
+- (void)_setPerson:(ABPerson *)inPerson;
+- (void)_setScreenName:(NSString *)inName;
 @end
 
 
 /*!
-* @class OWABSearchWindowController
+ * @class OWABSearchWindowController
  * @brief Window controller for searching people in the Address Book database.
  */
 @implementation OWABSearchWindowController
 
+static	ABAddressBook	*sharedAddressBook = nil;
+
 /*!
-* @brief Prompt for searching a person within the AB database.
+ * @brief Prompt for searching a person within the AB database.
  *
  * @param parentWindow Window on which to show the prompt as a sheet. Pass nil for a panel prompt.
  */
@@ -53,6 +67,7 @@
 			modalDelegate:newABSearchWindow
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
+		[newABSearchWindow _setCarryingWindow:parentWindow];
 	} else {
 		[newABSearchWindow showWindow:nil];
 	}
@@ -61,11 +76,37 @@
 }
 
 /*!
+ * @brief Initialize
+ */
+- (id)initWithWindowNibName:(NSString *)windowNibName {
+	self = [super initWithWindowNibName:windowNibName];
+	
+	if (self) {
+		delegate = nil;
+		person = nil;
+		screenName = nil;
+		service = nil;
+		carryingWindow = nil;
+		contactImage = nil;
+		if (!sharedAddressBook)
+			sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
+	}
+	
+	return self;
+}
+
+/*!
  * @brief Deallocate
  */
 - (void)dealloc
 {
 	[self setDelegate:nil];
+	[person release];
+	[screenName release];
+	[service release];
+	[carryingWindow release];
+	[contactImage release];
+	[sharedAddressBook release]; sharedAddressBook = nil;
 	[super dealloc];
 }
 
@@ -75,6 +116,26 @@
 - (void)windowDidLoad
 {
 	[[self window] center];
+	
+	//Localized strings
+	//Search window
+	[[self window] setTitle:AILocalizedString(@"Search In Address Book", nil)];
+	[selectButton setLocalizedString:AILocalizedString(@"Select Buddy", nil)];
+	[cancelButton setLocalizedString:AILocalizedString(@"Cancel", nil)];
+	[newPersonButton setLocalizedString:AILocalizedString(@"New Person", nil)];
+	//New contact window
+	[newContactPanel setTitle:AILocalizedString(@"Create New Person", nil)];
+	[label_mainTitle setLocalizedString:AILocalizedString(@"Enter the contact's type and screen name/number:", nil)];
+	[label_contactType setLocalizedString:AILocalizedString(@"Contact Type:", "Contact type service dropdown label in Add Contact")];
+	[label_secondaryTitle setLocalizedString:AILocalizedString(@"Address Book Information (optional):", nil)];
+	[label_firstName setLocalizedString:AILocalizedString(@"First Name:", nil)];
+	[label_lastName setLocalizedString:AILocalizedString(@"Last Name:", nil)];
+	[label_nickname setLocalizedString:AILocalizedString(@"Nickname:", nil)];
+	[label_email setLocalizedString:AILocalizedString(@"Email:", nil)];
+	[label_contactIcon setLocalizedString:AILocalizedString(@"Contact Icon", "Contact icon label in create new AB person")];
+	[addContactButton setLocalizedString:AILocalizedString(@"Add Contact", nil)];
+	[addContactCancelButton setLocalizedString:AILocalizedString(@"Cancel", nil)];
+	
 	[self _configurePeoplePicker];
 }
 
@@ -85,7 +146,7 @@
 {
 	NSTextField		*accessoryView = [[[NSTextField alloc] init] autorelease];
 	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
-	AIService		*service;
+	AIService		*aService;
 	
 	//Create a small explanation text
 	[accessoryView setStringValue:AILocalizedString(@"Select an entry from your address book, or add a new person.",
@@ -106,8 +167,8 @@
 	[peoplePicker setNameDoubleAction:@selector(select:)];
 	
 	//We show only the active services
-	while ((service = [servicesEnumerator nextObject])) {
-		NSString *property = [self propertyFromService:service];
+	while ((aService = [servicesEnumerator nextObject])) {
+		NSString *property = [self propertyFromService:aService];
 		if (property && ![[peoplePicker properties] containsObject:property])
 			[peoplePicker addProperty:property];
 	}
@@ -143,18 +204,136 @@
  */
 - (IBAction)select:(id)sender
 {
+	NSArray *selectedValues = [peoplePicker selectedValues];
+	
+	//Set the selected screen name
+	if ([selectedValues count] > 0)
+		[self _setScreenName:[selectedValues objectAtIndex:0]];
+	//Set the selected service
+	[self _setService:[self serviceFromProperty:[peoplePicker displayedProperty]]];
+	//Set the selected person
+	[self _setPerson:[[peoplePicker selectedRecords] objectAtIndex:0]];
+	
+	//Close our window
 	if ([self windowShouldClose:nil]) {
 		if ([[self window] isSheet]) {
 			[NSApp endSheet:[self window] returnCode:NSOKButton];
 		} else {
 			[[self window] close];
+			if (delegate)
+				[delegate absearchWindowControllerDidSelectPerson:self];
 		}
 	}
 }
 
+/*!
+ * @brief Close the people search sheet, and display the create new person sheet
+ */
 - (IBAction)createNewPerson:(id)sender
 {
-	//To be implemented...
+	//Close the first sheet
+	[self cancel:nil];
+	
+	//Setup our new window,
+	[self setWindow:newContactPanel];
+	[newContactPanel setDelegate:self];
+	
+	//and show it
+	if (carryingWindow) {
+		[NSApp beginSheet:newContactPanel
+		   modalForWindow:carryingWindow
+			modalDelegate:self
+		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
+			  contextInfo:nil];
+	} else {
+		[self showWindow:nil];
+		[[self window] center];
+	}
+	
+	//Configure the views of our new window
+	[self buildContactTypeMenu];
+	[self configureForCurrentServiceType];
+}
+
+/*!
+ * @brief Create a new person and add it to the address book database
+ */
+- (IBAction)addPerson:(id)sender
+{
+	ABPerson		*newPerson = [[[ABPerson alloc] init] autorelease];
+	NSString		*contactID = [[textField_contactID stringValue] stringByTrimmingCharactersInSet:
+									[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	
+	//Create the new contact
+	if (![contactID isEqualToString:@""]) {
+		ABMutableMultiValue		*value = [[ABMutableMultiValue alloc] init];
+		NSString				*identifier = nil;
+		NSString				*serviceIndentifier = [self propertyFromService:service];
+		
+		identifier = [value addValue:contactID withLabel:serviceIndentifier];
+		if (identifier) {
+			NSString *email = [[textField_email stringValue] stringByTrimmingCharactersInSet:
+								[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+			
+			//Set the person's IM id
+			[newPerson setValue:value
+					forProperty:serviceIndentifier];
+			
+			//Clean our multi value
+			[value removeValueAndLabelAtIndex:[value indexForIdentifier:identifier]];
+			
+			//Set the person's email address
+			if (![email isEqualToString:@""]) {
+				identifier = [value addValue:[textField_email stringValue] withLabel:kABEmailProperty];
+				
+				if (identifier) {
+					[newPerson setValue:value
+							forProperty:kABEmailProperty];
+				}
+			}
+			
+			//Set the person's first name
+			[newPerson setValue:[textField_firstName stringValue]
+					forProperty:kABFirstNameProperty];
+			//Set the person's last name
+			[newPerson setValue:[textField_lastName stringValue]
+					forProperty:kABLastNameProperty];
+			//Set the person's nickname
+			[newPerson setValue:[textField_nickname stringValue]
+					forProperty:kABNicknameProperty];
+			//Set the person's image
+			if (contactImage)
+				[newPerson setImageData:contactImage];
+			
+			//Add our newly created person to the AB database
+			if ([sharedAddressBook addRecord:newPerson] && [sharedAddressBook save]) {
+				[self _setPerson:newPerson];
+				[self _setScreenName:contactID];
+				
+				//Close our window
+				if ([self windowShouldClose:nil]) {
+					if ([[self window] isSheet]) {
+						[NSApp endSheet:[self window] returnCode:NSOKButton];
+					} else {
+						[[self window] close];
+						if (delegate)
+							[delegate absearchWindowControllerDidSelectPerson:self];
+					}
+				}
+			} else {
+				//Cancel if we can't add our person to the AB database.
+				[self cancel:nil];
+			}
+		}
+		
+		//Clean up
+		[value release];
+		
+	} else {
+		//We didn't get a contact id.
+		//This is equal to pressing the cancel button.
+		[self cancel:nil];
+	}
 }
 
 /*!
@@ -177,7 +356,8 @@
 				 object:self];
 	}
 	
-	delegate = newDelegate;
+	[delegate release];
+	delegate = [newDelegate retain];
 }
 
 /*!
@@ -195,7 +375,7 @@
  */
 - (ABPerson *)selectedPerson
 {
-	return [[peoplePicker selectedRecords] objectAtIndex:0];
+	return person;
 }
 
 /*!
@@ -203,13 +383,7 @@
  */
 - (NSString *)selectedScreenName
 {
-	NSString *result = nil;
-	NSArray *selectedValues = [peoplePicker selectedValues];
-	
-	if ([selectedValues count] > 0)
-		result = [selectedValues objectAtIndex:0];
-
-	return result;
+	return screenName;
 }
 
 /*!
@@ -217,14 +391,13 @@
  */
 - (NSString *)selectedName
 {
-	ABPerson *selectedPerson = [self selectedPerson];
 	NSString *result = nil;
-	NSString *firstName = [selectedPerson valueForProperty:kABFirstNameProperty];
-	NSString *lastName = [selectedPerson valueForProperty:kABLastNameProperty];
+	NSString *firstName = [person valueForProperty:kABFirstNameProperty];
+	NSString *lastName = [person valueForProperty:kABLastNameProperty];
 	
 	//Make sure we don't get "(null)" in our result
 	if (firstName && lastName) {
-		if ([[ABAddressBook sharedAddressBook] defaultNameOrdering] == kABFirstNameFirst)
+		if ([sharedAddressBook defaultNameOrdering] == kABFirstNameFirst)
 			result = [firstName stringByAppendingFormat:@" %@", lastName];
 		else
 			result = [lastName stringByAppendingFormat:@" %@", firstName];
@@ -242,7 +415,7 @@
  */
 - (NSString *)selectedAlias
 {
-	return [[self selectedPerson] valueForProperty:kABNicknameProperty];
+	return [person valueForProperty:kABNicknameProperty];
 }
 
 /*!
@@ -250,7 +423,7 @@
  */
 - (AIService *)selectedService
 {
-	return [self serviceFromProperty:[peoplePicker displayedProperty]];
+	return service;
 }
 
 #pragma mark -
@@ -282,24 +455,142 @@
 /*!
  * @brief Returns the appropriate property for the service.
  */
-- (NSString *)propertyFromService:(AIService *)service
+- (NSString *)propertyFromService:(AIService *)inService
 {
 	NSString *result = nil;
+	NSString *serviceCodeUniqueID = [inService serviceCodeUniqueID];
 	
-	if ([[service serviceCodeUniqueID] isEqualToString:AIMServiceUniqueID])
+	if ([serviceCodeUniqueID isEqualToString:AIMServiceUniqueID])
 		result = kABAIMInstantProperty;
-	else if ([[service serviceCodeUniqueID] isEqualToString:ICQServiceUniqueID])
+	else if ([serviceCodeUniqueID isEqualToString:ICQServiceUniqueID])
 		result = kABICQInstantProperty;
-	else if ([[service serviceCodeUniqueID] isEqualToString:MSNServiceUniqueID])
+	else if ([serviceCodeUniqueID isEqualToString:MSNServiceUniqueID])
 		result = kABMSNInstantProperty;
-	else if ([[service serviceCodeUniqueID] isEqualToString:DotMacServiceUniqueID])
+	else if ([serviceCodeUniqueID isEqualToString:DotMacServiceUniqueID])
 		result = kABAIMInstantProperty;
-	else if ([[service serviceCodeUniqueID] isEqualToString:JabberServiceUniqueID])
+	else if ([serviceCodeUniqueID isEqualToString:JabberServiceUniqueID])
 		result = kABJabberInstantProperty;
-	else if ([[service serviceCodeUniqueID] isEqualToString:YahooServiceUniqueID])
+	else if ([serviceCodeUniqueID isEqualToString:YahooServiceUniqueID])
 		result = kABYahooInstantProperty;
 	
 	return result;
+}
+
+/*!
+ * @brief Build and configure the menu of contact service types
+ */
+- (void)buildContactTypeMenu
+{
+	//Rebuild the menu
+	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
+													activeServicesOnly:YES
+													   longDescription:NO
+																format:nil]];
+	//Ensure our selection is still valid
+	[self ensureValidContactTypeSelection];
+}
+
+/*!
+ * @breif Ensures that the selected contact type is valid, selecting another if it isn't
+ */
+- (void)ensureValidContactTypeSelection
+{
+	int			serviceIndex;
+	
+	//Force our menu to update.. it needs to be correctly validated for the code below to work
+	[[popUp_contactType menu] update];
+	
+	//Find the menu item for our current service
+	if (service) serviceIndex = [popUp_contactType indexOfItemWithRepresentedObject:service];		
+	
+	//If our service is not available we'll have to pick another one
+	if (service && (serviceIndex == -1 || ![[popUp_contactType itemAtIndex:serviceIndex] isEnabled])) {
+		[self _setService:nil];
+	}
+	
+	//If we don't have a service, pick the first availbale one
+	if (!service) {
+		[self _setService:[[[popUp_contactType menu] firstEnabledMenuItem] representedObject]];
+	}
+	
+	//Update our menu and window for the current service
+	[popUp_contactType selectItemWithRepresentedObject:service];
+	[self configureForCurrentServiceType];
+}
+
+/*!
+ * @brief Configure any service-dependent controls in our window for the current service
+ */
+- (void)configureForCurrentServiceType
+{
+	NSString	*userNameLabel = [service userNameLabel];
+	
+	[label_contactID setStringValue:[(userNameLabel ? userNameLabel :
+									  AILocalizedString(@"Contact ID",nil)) stringByAppendingString:@":"]];
+}
+
+/*!
+ * @brief User selected a new service type
+ */
+- (void)selectServiceType:(id)sender
+{	
+	[self _setService:[[popUp_contactType selectedItem] representedObject]];
+	[self configureForCurrentServiceType];
+}
+
+/*!
+ * @brief Set the current service
+ */
+- (void)_setService:(AIService *)inService
+{
+	if (inService != service) {
+		[service release];
+		service = [inService retain];
+	}
+}
+
+/*!
+ * @brief Set the current person
+ */
+- (void)_setPerson:(ABPerson *)inPerson
+{
+	if (inPerson != person) {
+		[person release];
+		person = [inPerson retain];
+	}
+}
+
+/*!
+ * @brief Set the screen name/id
+ */
+- (void)_setScreenName:(NSString *)inName
+{
+	if (inName != screenName) {
+		[screenName release];
+		screenName = [inName retain];
+	}
+}
+
+/*!
+ * @brief Set the carrying window. This is the window that our sheet is attached to.
+ */
+- (void)_setCarryingWindow:(NSWindow *)inWindow
+{
+	[carryingWindow release];
+	carryingWindow = [inWindow retain];
+}
+
+// AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
+#pragma mark AIImageViewWithImagePicker Delegate
+- (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
+{
+	[contactImage release];
+	contactImage = [imageData retain];
+}
+
+- (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
+{
+	[contactImage release]; contactImage = nil;
 }
 
 @end
