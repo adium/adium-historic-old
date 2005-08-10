@@ -181,7 +181,7 @@
 {
 	if ([urlString rangeOfString:[NSString stringWithUTF8String:g_get_tmp_dir()]].location != NSNotFound) {
 		//Local HTML file
-		CFURLRef	appURL;
+		CFURLRef	appURL = NULL;
 		OSStatus	err;
 		
 		//Obtain the default http:// handler
@@ -192,11 +192,21 @@
 		
 		//Use it to open the specified file (if we just told NSWorkspace to open it, it might be opened instead
 		//by an HTML editor or other program
-		[[NSWorkspace sharedWorkspace] openFile:[urlString stringByExpandingTildeInPath]
-								withApplication:[(NSURL *)appURL path]];
+		if (err == noErr) {
+			[[NSWorkspace sharedWorkspace] openFile:[urlString stringByExpandingTildeInPath]
+									withApplication:[(NSURL *)appURL path]];			
+		} else {
+			NSURL		*url;
+			
+			//Web address
+			url = [NSURL URLWithString:urlString];
+			[[NSWorkspace sharedWorkspace] openURL:url];
+		}
 		
-		//LSGetApplicationForURL() requires us to release the appURL when we are done with it
-		CFRelease(appURL);
+		if (appURL) {
+			//LSGetApplicationForURL() requires us to release the appURL when we are done with it
+			CFRelease(appURL);
+		}
 		
 	} else {
 		NSURL		*emailURL;
