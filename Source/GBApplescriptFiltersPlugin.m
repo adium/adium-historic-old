@@ -22,6 +22,7 @@
 #import <AIUtilities/AIToolbarUtilities.h>
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/MVMenuButton.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIContentObject.h>
 #import <Adium/AIHTMLDecoder.h>
 
@@ -57,6 +58,8 @@
 - (void)_sortScriptsByTitle:(NSMutableArray *)sortArray;
 
 - (void)registerToolbarItem;
+
+- (void)scriptDidFinish:(NSNotification *)aNotification;
 @end
 
 int _scriptTitleSort(id scriptA, id scriptB, void *context);
@@ -565,10 +568,10 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 				keywordRange:(NSRange)keywordRange
 					uniqueID:(unsigned long long)uniqueID
 {
-	NSTask			*scriptTask;
-	NSMutableArray	*applescriptRunnerArguments = [NSMutableArray arrayWithObject:[infoDict objectForKey:@"Path"]];
-	NSTimer			*scriptTimeoutTimer;
-	NSPipe			*outputPipe;
+	NSAutoreleasePool	*autoreleasePool = [[NSAutoreleasePool alloc] init];
+	NSTask				*scriptTask;
+	NSMutableArray		*applescriptRunnerArguments = [NSMutableArray arrayWithObject:[infoDict objectForKey:@"Path"]];
+	NSPipe				*outputPipe;
 	
 	static NSString	*applescriptRunnerPath = nil;
 	if (!applescriptRunnerPath) {
@@ -618,7 +621,17 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 											 selector:@selector(scriptDidFinish:)
 												 name:NSTaskDidTerminateNotification
 											   object:scriptTask];
-	[scriptTask launch];
+	AI_DURING
+		[scriptTask launch];
+	AI_HANDLER
+		//If the task fails to launch, send the termination notification
+		NSNotification	*notification = [NSNotification notificationWithName:NSTaskDidTerminateNotification
+																	  object:scriptTask];
+		NSLog(@"Couldn't launch (%@)",localException);
+		[self scriptDidFinish:notification];
+	AI_ENDHANDLER
+		
+	[autoreleasePool release];
 }
 
 /*
@@ -628,36 +641,41 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
  */
 - (void)scriptDidFinish:(NSNotification *)aNotification
 {
+	NSAutoreleasePool			*autoreleasePool = [[NSAutoreleasePool alloc] init];
 	NSTask						*scriptTask = [aNotification object];
 	NSDictionary				*environment = [scriptTask environment];
 	id							standardOutput = [scriptTask standardOutput];
 	NSMutableAttributedString	*attributedString = [environment objectForKey:@"Mutable Attributed String"];
 	NSRange						keywordRange = NSRangeFromString([environment objectForKey:@"Range"]);
 	NSNumber					*uniqueID = [environment objectForKey:@"uniqueID"];
-	NSFileHandle				*output;
+	NSFileHandle				*output = nil;
 	NSString					*scriptResult = nil;
 			
 	if ([standardOutput isKindOfClass:[NSPipe class]] &&
 		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
 		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
 											 encoding:NSUTF8StringEncoding];
+		//The NSFileHandle will be closed automatically when the NSPipe is deallocated... but let's do it immediately
+		[output closeFile];
 	}
 
 	//If the script fails, eat the keyword
 	if (!scriptResult) scriptResult = [@"" retain];
-	
-	//Replace the substring with script result
-	if (([scriptResult hasPrefix:@"<HTML>"])) {
-		//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
-		NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
-														 withDefaultAttributes:[attributedString attributesAtIndex:keywordRange.location
-																									effectiveRange:nil]];
-		[attributedString replaceCharactersInRange:keywordRange
-							  withAttributedString:attributedScriptResult];
 
-	} else {
-		[attributedString replaceCharactersInRange:keywordRange
-										withString:scriptResult];
+	//Replace the substring with script result
+	if (NSMaxRange(keywordRange) <= [attributedString length]) {
+		if (([scriptResult hasPrefix:@"<HTML>"])) {
+			//Obtain the attributed string version of the HTML, passing our current attributes as the default ones
+			NSAttributedString *attributedScriptResult = [AIHTMLDecoder decodeHTML:scriptResult
+															 withDefaultAttributes:[attributedString attributesAtIndex:keywordRange.location
+																										effectiveRange:nil]];
+			[attributedString replaceCharactersInRange:keywordRange
+								  withAttributedString:attributedScriptResult];
+			
+		} else {
+			[attributedString replaceCharactersInRange:keywordRange
+											withString:scriptResult];
+		}
 	}
 
 	//Remove the delayed perform request for termination (which would have been used if the script timed out)
@@ -676,7 +694,12 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	//Cleanup
 	[scriptResult release];
 	[scriptTask release];
-	
+	[autoreleasePool release];
+
+	if (NSIsFreedObject(scriptTask) || NSIsFreedObject(output)) {
+		NSLog(@"FAILED! ScriptTask: %i output: %i",NSIsFreedObject(scriptTask),NSIsFreedObject(output));
+	}
+
 	//Inform the content controller that we're done
 	[[adium contentController] delayedFilterDidFinish:attributedString uniqueID:[uniqueID unsignedLongLongValue]];
 }
