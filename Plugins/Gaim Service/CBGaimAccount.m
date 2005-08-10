@@ -1790,6 +1790,8 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			}
 			break;
 		case AIOfflineStatusType:
+			//I'm really unsure how we actually get here with AIOfflineStatusType, but ensure this function doesn't return NULL
+			gaimStatusType = "";
 			break;
 	}
 	
