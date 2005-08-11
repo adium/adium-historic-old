@@ -1310,8 +1310,13 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 - (oneway void)gaimThreadXferCancel:(NSValue *)xferValue
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
-	gaim_xfer_cancel_local(xfer);	
+	if ((gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_NOT_STARTED) ||
+		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_STARTED) ||
+		(gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_ACCEPTED)) {
+		gaim_xfer_cancel_local(xfer);
+	}
 }
+
 - (oneway void)xferCancel:(GaimXfer *)xfer
 {
 	[gaimThreadProxy gaimThreadXferCancel:[NSValue valueWithPointer:xfer]];
