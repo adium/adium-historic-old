@@ -430,36 +430,46 @@
 
 - (NSAttributedString *)attributedStringByConvertingLinksToStrings
 {
-	NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];	
-	NSRange						searchRange = NSMakeRange(0,0);
+	NSMutableAttributedString	*newAttributedString = nil;
 	unsigned					length = [self length];
 
-	while (searchRange.location < length) {
-		NSURL			*URL = [newAttributedString attribute:NSLinkAttributeName
-													  atIndex:searchRange.location
-											   effectiveRange:&searchRange];
+	if (length) {
+		NSRange						searchRange = NSMakeRange(0,0);
+		NSAttributedString			*currentAttributedString = self;
 
-		if (URL) {
-			NSString	*replacementString = [URL absoluteString];
+		while (searchRange.location < length) {
+			NSURL			*URL = [currentAttributedString attribute:NSLinkAttributeName
+														  atIndex:searchRange.location
+												   effectiveRange:&searchRange];
 			
-			//Replace the URL with the NSString of where it was pointing
-            [newAttributedString replaceCharactersInRange:searchRange 
-											   withString:replacementString];
+			if (URL) {
+				NSString	*replacementString = [URL absoluteString];
+				
+				if (!newAttributedString) {
+					newAttributedString = [[self mutableCopy] autorelease];
+					currentAttributedString = newAttributedString;
+				}
 
-			/*The attributed string may have changed length; modify our 
-			 *	searchRange and cached length to reflect the string we just
-			 *	inserted.
-			 */
-			searchRange.length = [replacementString length];
-			length = [newAttributedString length];
+				//Replace the URL with the NSString of where it was pointing
+				[newAttributedString replaceCharactersInRange:searchRange 
+												   withString:replacementString];
+				
+				/*The attributed string may have changed length; modify our 
+					*	searchRange and cached length to reflect the string we just
+					*	inserted.
+					*/
+				searchRange.length = [replacementString length];
+				length = [newAttributedString length];
+				
+				//Now remove the URL
+				[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
+			}
 
-			//Now remove the URL
-			[newAttributedString removeAttribute:NSLinkAttributeName range:searchRange];
+			searchRange.location += searchRange.length;
 		}
-		searchRange.location += searchRange.length;
 	}
 
-	return newAttributedString;
+	return (newAttributedString ? newAttributedString : [[self copy] autorelease]);
 }
 
 - (NSAttributedString *)stringByAddingFormattingForLinks
