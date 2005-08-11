@@ -7,7 +7,7 @@
 
 	//Like NSLocalizedString(), AILocalizedString() looks to the main bundle
 	#define AILocalizedStringFromTable(key, table, comment) \
-		AILocalizedStringFromTableInBundle(key, nil, [NSBundle mainBundle], comment)
+		AILocalizedStringFromTableInBundle(key, table, [NSBundle mainBundle], comment)
 
 	#define AILocalizedStringFromTableInBundle(key, table, bundle, comment) \
 		NSLocalizedStringFromTableInBundle(key, table, bundle, comment)
