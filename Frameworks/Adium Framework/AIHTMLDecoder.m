@@ -283,8 +283,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
 		//Font (If the color, font, or size has changed)
-		if ((thingsToInclude.fontTags && (pointSize != currentSize || ![familyName isEqualToString:currentFamily])) ||
-		   ((color && ![color isEqualToString:currentColor]) || (!color && currentColor))) {
+		//Font (If the color, font, or size has changed)
+		BOOL changedSize = (pointSize != currentSize);
+		BOOL changedColor = (thingsToInclude.colorTags &&
+							 ((color && ![color isEqualToString:currentColor]) || (!color && currentColor)));
+		if((thingsToInclude.fontTags && (changedSize || ![familyName isEqualToString:currentFamily])) ||
+		   changedColor) {
 
 			//Close any existing font tags, and open a new one
 			if (thingsToInclude.closingFontTags && openFontTag) {
@@ -314,20 +318,20 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 
 			//Size
-			if (thingsToInclude.fontTags && (pointSize != currentSize) && !thingsToInclude.simpleTagsOnly) {
+			if (thingsToInclude.fontTags && !thingsToInclude.simpleTagsOnly) {
 				[string appendString:[NSString stringWithFormat:SizeTag, (int)pointSize, HTMLEquivalentForFontSize((int)pointSize)]];
 				currentSize = pointSize;
 			}
 
 			//Color
-			if (thingsToInclude.colorTags && (([color compare:currentColor] || (currentColor && !color)) || thingsToInclude.closingFontTags)) {
-				if (color) {
-					if (thingsToInclude.simpleTagsOnly) {
-						[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
-					} else {
-						[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
-					}
+			if (color) {
+				if (thingsToInclude.simpleTagsOnly) {
+					[string appendString:[NSString stringWithFormat:@"<FONT COLOR=\"#%@\">",color]];	
+				} else {
+					[string appendString:[NSString stringWithFormat:@" COLOR=\"#%@\"",color]];
 				}
+			}
+			if (color != currentColor) {
 				[currentColor release]; currentColor = [color retain];
 			}
 
