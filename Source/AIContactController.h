@@ -88,7 +88,7 @@ typedef enum {
 	NSMenuItem				*showGroupsMenuItem;
 	
 	//Status and Attribute updates
-    NSMutableArray			*contactObserverArray;
+    NSMutableSet			*contactObservers;
     NSTimer					*delayedUpdateTimer;
     int						delayedStatusChanges;
 	NSMutableSet			*delayedModifiedStatusKeys;

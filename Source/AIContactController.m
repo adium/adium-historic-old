@@ -129,7 +129,7 @@
 {
 	if ((self = [super init])) {
 		//
-		contactObserverArray = [[NSMutableArray alloc] init];
+		contactObservers = [[NSMutableSet alloc] init];
 		sortControllerArray = [[NSMutableArray alloc] init];
 		activeSortController = nil;
 		delayedStatusChanges = 0;
@@ -186,7 +186,7 @@
 - (void)dealloc
 {
     [contactList release];
-    [contactObserverArray release]; contactObserverArray = nil;
+    [contactObservers release]; contactObservers = nil;
 
     [super dealloc];
 }
@@ -1503,7 +1503,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver
 {
 	//Add the observer
-    [contactObserverArray addObject:[NSValue valueWithNonretainedObject:inObserver]];
+    [contactObservers addObject:[NSValue valueWithNonretainedObject:inObserver]];
 
     //Let the new observer process all existing objects
 	[self updateAllListObjectsForObserver:inObserver];
@@ -1511,7 +1511,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 - (void)unregisterListObjectObserver:(id)inObserver
 {
-    [contactObserverArray removeObject:[NSValue valueWithNonretainedObject:inObserver]];
+    [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
 //Instructs a controller to update all available list objects
@@ -1565,7 +1565,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	NSValue			*observerValue;
 	
 	//Let our observers know
-	enumerator = [contactObserverArray objectEnumerator];
+	enumerator = [contactObservers objectEnumerator];
 	while ((observerValue = [enumerator nextObject])) {
 		id <AIListObjectObserver>	observer;
 		NSSet						*newKeys;
@@ -1589,7 +1589,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 //Command all observers to apply their attributes to an object
 - (void)_updateAllAttributesOfObject:(AIListObject *)inObject
 {
-	NSEnumerator	*enumerator = [contactObserverArray objectEnumerator];
+	NSEnumerator	*enumerator = [contactObservers objectEnumerator];
 	NSValue			*observerValue;
 
 	while ((observerValue = [enumerator nextObject])) {
