@@ -20,6 +20,7 @@
  \------------------------------------------------------------------------------------------------------ */
 
 #import "AIBezierPathAdditions.h"
+#include <c.h>
 
 @implementation NSBezierPath (AIBezierPathAdditions)
 
@@ -32,7 +33,7 @@
 
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)bounds
 {
-	return [self bezierPathWithRoundedRect:bounds radius:bounds.size.height / 2.0];
+	return [self bezierPathWithRoundedRect:bounds radius:MIN(bounds.size.width, bounds.size.height) / 2.0];
 }
 
 + (NSBezierPath *)bezierPathWithRoundedRect:(NSRect)rect radius:(float)radius
