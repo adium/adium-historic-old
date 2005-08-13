@@ -185,7 +185,7 @@
 		OSStatus	err;
 		
 		//Obtain the default http:// handler
-		err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:@"http://www.google.com"],
+		err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:urlString],
 									 kLSRolesAll,
 									 NULL,
 									 &appURL);
