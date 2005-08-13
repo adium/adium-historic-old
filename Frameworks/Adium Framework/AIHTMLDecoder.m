@@ -283,7 +283,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		NSMutableString	*chunk = [[inMessageString substringWithRange:searchRange] mutableCopy];
 
 		//Font (If the color, font, or size has changed)
-		//Font (If the color, font, or size has changed)
 		BOOL changedSize = (pointSize != currentSize);
 		BOOL changedColor = (thingsToInclude.colorTags &&
 							 ((color && ![color isEqualToString:currentColor]) || (!color && currentColor)));
