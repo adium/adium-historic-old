@@ -44,7 +44,7 @@ static NSColor	*drawColor = nil;
 		if (!drawColor) drawColor = [[[NSColor alternateSelectedControlColor] darkenAndAdjustSaturationBy:0.2] retain];
 
 		[drawColor set];
-		[[NSBezierPath bezierPathWithRoundedRect:cellFrame radius:0] fill];
+		[[NSBezierPath bezierPathWithRect:cellFrame] fill];
 	}
 }
 
