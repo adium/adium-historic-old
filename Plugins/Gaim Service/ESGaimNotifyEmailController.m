@@ -186,8 +186,8 @@
 		
 		//Obtain the default http:// handler
 		err = LSGetApplicationForURL((CFURLRef)[NSURL URLWithString:urlString],
-									 kLSRolesAll,
-									 NULL,
+									 kLSRolesViewer,
+									 /*outAppRef*/ NULL,
 									 &appURL);
 		
 		//Use it to open the specified file (if we just told NSWorkspace to open it, it might be opened instead
