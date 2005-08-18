@@ -41,6 +41,9 @@ struct message
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector;
 @end
 
+@interface NDRunLoopMessengerForwardingProxyFromNoRunLoop : NDRunLoopMessengerForwardingProxy {}
+@end
+
 /*
  * interface NDRunLoopMessenger
  */
@@ -449,6 +452,11 @@ struct message
 	return [[[NDRunLoopMessengerForwardingProxy alloc] _initWithTarget:aTarget withOwner:self withResult:aResultFlag] autorelease];
 }
 
+- (id)targetFromNoRunLoop:(id)aTarget;
+{
+	return [[[NDRunLoopMessengerForwardingProxyFromNoRunLoop alloc] _initWithTarget:aTarget withOwner:self withResult:NO] autorelease];
+}
+
 /*
  * handlePortMessage:
   */
@@ -500,8 +508,8 @@ struct message
 			if (!queuedPortMessageArray) {
 				queuedPortMessageArray = [[NSMutableArray alloc] init];
 			}
-			
 			[queuedPortMessageArray addObject:thePortMessage];
+
 		} else {
 			NSDate	* sendBeforeDate = (messageRetryTimeout ? 
 										[NSDate dateWithTimeIntervalSinceNow:messageRetryTimeout] :
@@ -607,6 +615,21 @@ struct message
 - (NSMethodSignature *)methodSignatureForSelector:(SEL)aSelector
 {
 	return [[targetObject class] instanceMethodSignatureForSelector:aSelector];
+}
+
+@end
+
+/*
+ * class NDRunLoopMessengerForwardingProxy
+ */
+@implementation NDRunLoopMessengerForwardingProxyFromNoRunLoop
+/*
+ * forwardInvocation:
+ */
+- (void)forwardInvocation:(NSInvocation *)anInvocation
+{
+	[super forwardInvocation:anInvocation];
+	if (![[NSRunLoop currentRunLoop] currentMode]) [[NSRunLoop currentRunLoop] run];
 }
 
 @end

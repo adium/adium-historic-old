@@ -204,6 +204,8 @@ extern NSString		* kConnectionDoesNotExistsException;
    */
 - (id)target:(id)target withResult:(BOOL)resultFlag;
 
+- (id)targetFromNoRunLoop:(id)aTarget;
+
 - (void)setMessageRetryTimeout:(NSTimeInterval)inMessageRetryTimeout;
 - (void)setMessageRetry:(NSTimeInterval)inMessageRetry;
 
