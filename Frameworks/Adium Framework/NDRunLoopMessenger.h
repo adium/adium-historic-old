@@ -35,6 +35,7 @@ extern NSString		* kConnectionDoesNotExistsException;
 	NSPort			* port;
 	NSMutableArray  * queuedPortMessageArray;
 	NSTimer			* queuedPortMessageTimer;
+	NSRunLoop		* targetRunLoop;
 	BOOL			insideMessageInvocation;
 	
 	NSTimeInterval  messageRetryTimeout;
@@ -208,5 +209,7 @@ extern NSString		* kConnectionDoesNotExistsException;
 
 - (void)setMessageRetryTimeout:(NSTimeInterval)inMessageRetryTimeout;
 - (void)setMessageRetry:(NSTimeInterval)inMessageRetry;
+
+- (NSRunLoop *)targetRunLoop;
 
 @end
