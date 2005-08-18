@@ -20,6 +20,11 @@
 #import "ESDebugWindowController.h"
 #import <AIUtilities/AIMenuAdditions.h>
 
+#include <fcntl.h>  //open(2)
+#include <unistd.h> //close(2)
+#include <errno.h>  //errno
+#include <string.h> //strerror(3)
+
 #define	CACHED_DEBUG_LOGS		100		//Number of logs to keep at any given time
 #define	KEY_DEBUG_WINDOW_OPEN	@"Debug Window Open"
 #define	GROUP_DEBUG				@"Debug Group"
@@ -35,9 +40,48 @@ static ESDebugController	*sharedDebugController = nil;
 	if (sharedDebugController) return sharedDebugController;
 
 	if ((self = [super init])) {
+		NSFileManager *mgr = [NSFileManager defaultManager];
+		NSCalendarDate *date = [NSCalendarDate calendarDate];
+		NSString *folder, *dateString, *filename, *pathname;
+		unsigned counter = 0;
+		int fd;
+
 		sharedDebugController = self;
 
 		debugLogArray = [[NSMutableArray alloc] init];
+
+		//make sure the containing folder for debug logs exists.
+		folder = [NSSearchPathForDirectoriesInDomains(NSLibraryDirectory, NSUserDomainMask, /*expandTilde*/ YES) objectAtIndex:0];
+		folder = [folder stringByAppendingPathComponent:@"Logs"];
+		folder = [folder stringByAppendingPathComponent:@"Adium Debug"];
+		BOOL success = [mgr createDirectoryAtPath:folder attributes:nil];
+		if((!success) && (errno != EEXIST)) {
+			/*raise an exception if the folder could not be created,
+			 *	but not if that was because it already exists.
+			 */
+			NSAssert2(success, @"Could not create folder %@: %s", folder, strerror(errno));
+		}
+
+		/*get today's date, for the filename.
+		 *the date is in YYYY-MM-DD format. duplicates are disambiguated with
+		 *' 1', ' 2', ' 3', etc. appendages.
+		 */
+		filename = dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d"];
+		while([mgr fileExistsAtPath:(pathname = [folder stringByAppendingPathComponent:[filename stringByAppendingPathExtension:@"log"]])]) {
+			filename = [dateString stringByAppendingFormat:@" %u", ++counter];
+		}
+
+		//create (if necessary) and open the file as writable, in append mode.
+		fd = open([pathname fileSystemRepresentation], O_CREAT | O_WRONLY | O_APPEND, 0644);
+		NSAssert2(fd > -1, @"could not create %@ nor open it for writing: %s", pathname, strerror(errno));
+
+		//note: the file handle takes ownership of fd.
+		debugLogFile = [[NSFileHandle alloc] initWithFileDescriptor:fd];
+		if(!debugLogFile) close(fd);
+		NSAssert1(debugLogFile != nil, @"could not create file handle for %@", pathname);
+
+		//write header (separates this session from previous sessions).
+		[debugLogFile writeData:[[NSString stringWithFormat:@"Opened debug log at %@\n", date] dataUsingEncoding:NSUTF8StringEncoding]];
 	}
 	
 	return self;
@@ -79,7 +123,11 @@ static ESDebugController	*sharedDebugController = nil;
 - (void)dealloc
 {
 	[debugLogArray release];
+	[debugLogFile closeFile];
+	[debugLogFile release];
+
 	sharedDebugController = nil;
+
 	[super dealloc];
 }
 
@@ -92,7 +140,8 @@ static ESDebugController	*sharedDebugController = nil;
 - (void)addMessage:(NSString *)actualMessage
 {
 	[debugLogArray addObject:actualMessage];
-	
+	[debugLogFile writeData:[[actualMessage stringByAppendingString:@"\n"] dataUsingEncoding:NSUTF8StringEncoding]];
+
 	//Keep debugLogArray to a reasonable size
 	if ([debugLogArray count] > CACHED_DEBUG_LOGS) [debugLogArray removeObjectAtIndex:0];
 	
@@ -102,6 +151,11 @@ static ESDebugController	*sharedDebugController = nil;
 - (NSArray *)debugLogArray
 {
 	return debugLogArray;
+}
+
+- (NSFileHandle *)debugLogFile
+{
+	return debugLogFile;
 }
 
 #else
