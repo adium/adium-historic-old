@@ -32,6 +32,8 @@ static ESDebugController	*sharedDebugController = nil;
 
 - (id)init
 {
+	if (sharedDebugController) return sharedDebugController;
+
 	if ((self = [super init])) {
 		sharedDebugController = self;
 
