@@ -20,11 +20,13 @@
 
 @interface ESDebugController : AIObject <AIController> {
 	NSMutableArray			*debugLogArray;
+	NSFileHandle			*debugLogFile;
 }
 
 #ifdef DEBUG_BUILD
 	+ (ESDebugController *)sharedDebugController;
 	- (NSArray *)debugLogArray;
+	- (NSFileHandle *)debugLogFile;
 #endif
 
 @end
