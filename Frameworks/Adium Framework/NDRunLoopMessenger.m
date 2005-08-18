@@ -104,8 +104,9 @@ struct message
 		{
 			queuedPortMessageArray = nil;
 			queuedPortMessageTimer = nil;
+			targetRunLoop = [[NSRunLoop currentRunLoop] retain];
 			
-			[self createPortForRunLoop:[NSRunLoop currentRunLoop]];
+			[self createPortForRunLoop:targetRunLoop];
 			[theThreadDictionary setObject:self forKey:kThreadDictionaryKey];
 			[self registerNotificationObservers];
 		}
@@ -128,6 +129,7 @@ struct message
   */
 - (void)dealloc
 {
+	[targetRunLoop release]; targetRunLoop = nil;
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
 	[[[NSThread currentThread] threadDictionary] removeObjectForKey:kThreadDictionaryKey];
 	[port removeFromRunLoop:[NSRunLoop currentRunLoop] forMode:NSDefaultRunLoopMode];
@@ -561,6 +563,10 @@ struct message
 	}
 }
 
+- (NSRunLoop *)targetRunLoop
+{
+	return targetRunLoop;
+}
 
 @end
 
@@ -628,8 +634,14 @@ struct message
  */
 - (void)forwardInvocation:(NSInvocation *)anInvocation
 {
-	[super forwardInvocation:anInvocation];
-	if (![[NSRunLoop currentRunLoop] currentMode]) [[NSRunLoop currentRunLoop] run];
+	if ([owner targetRunLoop] != [NSRunLoop currentRunLoop]) {
+		[super forwardInvocation:anInvocation];
+		if (![[NSRunLoop currentRunLoop] currentMode]) [[NSRunLoop currentRunLoop] run];
+
+	} else {
+		[anInvocation setTarget:targetObject];
+		[anInvocation invoke];
+	}
 }
 
 @end
