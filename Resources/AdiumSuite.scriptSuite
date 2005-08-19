@@ -70,20 +70,11 @@
 				<key>myStatus</key>
 				<dict>
 					<key>AppleEventCode</key>
-					<string>Amst</string>
+					<string>AmSt</string>
 					<key>ReadOnly</key>
 					<string>NO</string>
 					<key>Type</key>
-					<string>NSNumber&lt;AIStatusSummary&gt;</string>
-				</dict>
-				<key>myStatusMessage</key>
-				<dict>
-					<key>AppleEventCode</key>
-					<string>Amms</string>
-					<key>ReadOnly</key>
-					<string>NO</string>
-					<key>Type</key>
-					<string>NSString</string>
+					<string>AIStatus</string>
 				</dict>
 			</dict>
 			<key>ToManyRelationships</key>
@@ -556,6 +547,117 @@
 			</dict>
 		</dict>
 		
+		<key>AIStatus</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>AISt</string>
+			<key>Superclass</key>
+			<string>NSCoreSuite.AbstractObject</string>
+			<key>Attributes</key>
+			<dict>
+			     <key>icon</key>
+			     <dict>
+			     	<key>AppleEventCode</key>
+					<string>AISi</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSData&lt;Image&gt;</string>
+				</dict>
+				<key>statusMessageString</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASms</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>	    
+				<key>autoReplyString</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>AARs</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>
+				<key>hasAutoReply</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>AhAR</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+                </dict>
+				<key>autoReplyIsStatusMessage</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>AAiS</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+                </dict>
+                <key>title</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASti</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>   
+                <key>statusTypeApplescript</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASSy</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;AIStatusType&gt;</string>
+                </dict>
+				<key>statusName</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASSn</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>
+                <key>shouldForceInitialIdleTime</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASFi</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Bool&gt;</string>
+                </dict>
+                <key>forcedInitialIdleTime</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASFt</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;Double&gt;</string>
+                </dict>
+                <key>uniqueStatusID</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>ASID</string>
+					<key>ReadOnly</key>
+					<string>YES</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>
+                
+			</dict>
+        </dict>
+        
 	</dict>
 	
 	<? ************************************ Commands  ************************************ ?>
@@ -717,6 +819,22 @@
 				<string>offL</string>
 				<key>Unknown</key>
 				<string>unkN</string>
+			</dict>
+		</dict>
+		<key>AIStatusType</key>
+		<dict>
+			<key>AppleEventCode</key>
+			<string>AsSt</string>
+			<key>Enumerators</key>
+			<dict>
+				<key>Available</key>
+				<string>avaL</string>
+				<key>Away</key>
+				<string>awaY</string>
+				<key>Invisible</key>
+				<string>aSaI</string>
+				<key>Offline</key>
+				<string>offL</string>
 			</dict>
 		</dict>
 		<key>ConnectionStatus</key>
