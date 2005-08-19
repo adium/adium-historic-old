@@ -45,8 +45,6 @@
     NSView              *associatedView;
 }
 
-- (id)initWithFrame:(NSRect)frameRect;
-
 //Configure
 - (void)setClearOnEscape:(BOOL)inBool;
 - (void)setHomeToStartOfLine:(BOOL)inBool;
