@@ -23,6 +23,7 @@
 
 @interface ESGaimRequestWindowController (PRIVATE)
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
+- (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
 @end
 
 @implementation ESGaimRequestWindowController
@@ -43,8 +44,10 @@
 //Init
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {
-    self = [super initWithWindowNibName:windowNibName];
-	[self showWindowWithDict:infoDict multiline:multiline];
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		[self showWindowWithDict:[self translatedInfoDict:infoDict]
+					   multiline:multiline];
+	}
 	
     return self;
 }
@@ -75,16 +78,13 @@
 	{
 		//Use the supplied OK text, then shift the button left so that the right side remains in the old location in the window
 		NSString *okText = [infoDict objectForKey:@"OK Text"];
-		if ([okText isEqualToString:@"OK"]) {
-			okText = AILocalizedString(@"OK",nil);
-		}
 		
-		[button_okay setTitle:okText];
+		[button_okay setTitle:(okText ? okText : AILocalizedString(@"OK",nil))];
 		
 		//Use the supplied Cancel text, then shift the button left
 		NSString	*cancelText = [infoDict objectForKey:@"Cancel Text"];
 		
-		[button_cancel setTitle:cancelText];
+		[button_cancel setTitle:(cancelText ? cancelText : AILocalizedString(@"Cancel",nil))];
 	}
 	
 	//Window Title
@@ -220,4 +220,45 @@
 	}
 }
 
+/*
+ * @brief Translate the strings in the info dictionary
+ *
+ * The following declarations let genstrings know about what translations we want
+ * AILocalizedString(@"Set your friendly name.","Title for the MSN display name setting dialogue box")
+ * AILocalizedString(@"This is the name that other MSN buddies will see you as.", "Description for the MSN display name setting dialogue.")
+ * AILocalizedString(@"Set your home phone number.", "Title for the dialogue prompting for your home phone number")
+ * AILocalizedString(@"Set your work phone number.", "Title for the dialogue prompting for your work phone number")
+ * AILocalizedString(@"Set your mobile phone number.", "Title for the dialogue prompting for your mobile phone number")
+ */
+- (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
+{
+	NSMutableDictionary	*translatedDict = [inDict mutableCopy];
+	
+	NSString	*primary = [inDict objectForKey:@"Primary Text"];
+	NSString	*secondary = [inDict objectForKey:@"Secondary Text"];
+	NSString	*okText = [inDict objectForKey:@"OK Text"];
+	NSString	*cancelText = [inDict objectForKey:@"Cancel Text"];
+
+	NSBundle *thisBundle = [NSBundle bundleForClass:[self class]];
+
+	//Replace each string with a translated version if possible
+	[translatedDict setObject:[thisBundle localizedStringForKey:primary
+														  value:primary
+														  table:nil]
+					   forKey:@"Primary Text"];
+	[translatedDict setObject:[thisBundle localizedStringForKey:secondary
+														  value:secondary
+														  table:nil]
+					   forKey:@"Secondary Text"];
+	[translatedDict setObject:[thisBundle localizedStringForKey:okText
+														  value:okText
+														  table:nil]
+					   forKey:@"OK Text"];
+	[translatedDict setObject:[thisBundle localizedStringForKey:cancelText
+														  value:cancelText
+														  table:nil]
+					   forKey:@"Cancel Text"];
+	
+	return [translatedDict autorelease];
+}
 @end

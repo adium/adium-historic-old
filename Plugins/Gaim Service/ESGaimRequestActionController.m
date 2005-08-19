@@ -21,6 +21,10 @@
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
 
+@interface ESGaimRequestActionController (PRIVATE)
++ (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
+@end
+
 @implementation ESGaimRequestActionController
 
 + (void)showActionWindowWithDict:(NSDictionary *)infoDict
@@ -32,6 +36,8 @@
 	NSString			*title, *message;
 	NSString			*defaultButton, *alternateButton = nil, *otherButton = nil;
 	unsigned			buttonNamesArrayCount;
+	
+	infoDict = [self translatedInfoDict:infoDict];
 
 	title = [infoDict objectForKey:@"TitleString"];
 	
@@ -117,6 +123,49 @@
 	if (callBack) {
 		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
 	}
+}
+
+/*
+ * @brief Translate the strings in the info dictionary
+ *
+ * The following declarations let genstrings know about what translations we want
+ * AILocalizedString(@"Allow MSN Mobile pages?", nil)
+ * AILocalizedString(@"Do you want to allow or disallow people on your buddy list to send you MSN Mobile pages to your cell phone or other mobile device?", nil)
+ * AILocalizedString(@"Allow","Button title to allow an action")
+ * AILocalizedString(@"Disallow", "Button title to prevent an action")
+ * AILocalizedString(@"Cancel", nil)
+ */
++ (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
+{
+	NSMutableDictionary	*translatedDict = [inDict mutableCopy];
+	
+	NSString		*title = [inDict objectForKey:@"TitleString"];
+	NSString		*message = [inDict objectForKey:@"Message"];
+	NSMutableArray	*buttonNamesArray = [NSMutableArray array];
+	NSBundle		*thisBundle = [NSBundle bundleForClass:[self class]];
+	NSString		*buttonName;
+	NSEnumerator	*enumerator;
+
+	//Replace each string with a translated version if possible
+	[translatedDict setObject:[thisBundle localizedStringForKey:title
+														  value:title
+														  table:nil]
+					   forKey:@"TitleString"];
+	[translatedDict setObject:[thisBundle localizedStringForKey:message
+														  value:message
+														  table:nil]
+					   forKey:@"Message"];
+	
+	enumerator = [[inDict objectForKey:@"Button Names"] objectEnumerator];
+	while ((buttonName = [enumerator nextObject])) {
+		[buttonNamesArray addObject:[thisBundle localizedStringForKey:buttonName
+																value:buttonName
+																table:nil]];
+	}
+	[translatedDict setObject:buttonNamesArray
+					   forKey:@"Button Names"];
+
+	return [translatedDict autorelease];
 }
 
 @end
