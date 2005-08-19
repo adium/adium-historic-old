@@ -550,4 +550,38 @@
 		[[self title] stringWithEllipsisByTruncatingToLength:20]];
 }
 
+#pragma mark Applescript
+- (AIStatusTypeApplescript)statusTypeApplescript
+{
+	AIStatusType			statusType = [self statusType];
+	AIStatusTypeApplescript statusTypeApplescript;
+	
+	switch (statusType) {
+		case AIAvailableStatusType: statusTypeApplescript = AIAvailableStatusTypeAS; break;
+		case AIAwayStatusType: statusTypeApplescript = AIAwayStatusTypeAS; break;
+		case AIInvisibleStatusType: statusTypeApplescript = AIInvisibleStatusTypeAS; break;
+		case AIOfflineStatusType:
+		default:
+			statusTypeApplescript = AIOfflineStatusTypeAS; break;
+	}
+	
+	return statusTypeApplescript;
+}
+
+- (void)setStatusTypeApplescript:(AIStatusTypeApplescript)statusTypeApplescript
+{
+	AIStatusType			statusType;
+	
+	switch (statusTypeApplescript) {
+		case AIAvailableStatusTypeAS: statusType = AIAvailableStatusType; break;
+		case AIAwayStatusTypeAS: statusType = AIAwayStatusType; break;
+		case AIInvisibleStatusTypeAS: statusType = AIInvisibleStatusType; break;
+		case AIOfflineStatusTypeAS:
+		default:
+			statusType = AIOfflineStatusType; break;
+	}
+	
+	[self setStatusType:statusType];
+}
+
 @end
