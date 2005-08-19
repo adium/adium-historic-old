@@ -245,6 +245,14 @@
 }
 
 /*!
+ * @brief Autoreply as a string
+ */
+- (NSString *)autoReplyString
+{
+	return [[self autoReplyString] string];
+}
+
+/*!
  * @brief Set the autoReply
  */
 - (void)setAutoReply:(NSAttributedString *)autoReply
@@ -255,6 +263,16 @@
 	} else {
 		[statusDict removeObjectForKey:STATUS_AUTO_REPLY_MESSAGE];
 	}
+}
+
+/*
+ * @brief Set the autoreply as a string
+ *
+ * @param autoReplyString The autoreply as a string; HTML may be passed if desired
+ */
+- (void)setAutoReplyString:(NSString *)autoReplyString
+{
+	[self setAutoReply:[AIHTMLDecoder decodeHTML:autoReplyString]];
 }
 
 /*!
