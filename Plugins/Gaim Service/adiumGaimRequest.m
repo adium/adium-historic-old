@@ -182,10 +182,37 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 																	 withObject:infoDict
 																  waitUntilDone:YES];
 	} else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
-		/* This is the Jabber doing inelegantly what we elegantly handle in the authorization request window for all
+		/* This is Jabber doing inelegantly what we elegantly handle in the authorization request window for all
 		 * services, asking if the user wants to add a contact which just added him.  We just ignore this request, as
 		 * the authorization window let the user do this if he wanted.
 		 */
+
+	} else if (primaryString && ([primaryString rangeOfString:@"Create New Room"].location != NSNotFound)) {
+		/* Jabber's Create New Room dialog has a default option of accepting default values and another option
+		 * of configuration of the room... unfortunately, configuring the room requires a gaim_request_fields
+		 * implementation, which we don't have yet, so the dialog is just confusing.  Accept the defaults.
+		 */
+		// XXX remove when gaim_request_fields is implemented
+		GCallback		*callBacks = g_new0(GCallback, actionCount);
+
+		for (i = 0; i < actionCount; i += 1) {
+			GCallback	tempCallBack;
+			char		*buttonName;
+			
+			//Get the name
+			buttonName = va_arg(actions, char *);
+			
+			//Get the callback for that name
+			tempCallBack = va_arg(actions, GCallback);
+			
+			//Perform the default action
+			if (i == default_action) {
+				GaimRequestActionCb callBack = (GaimRequestActionCb)tempCallBack;
+				callBack(userData, default_action);
+				
+				break;
+			}
+		}
 
 	} else {
 		NSString	    *msg = [NSString stringWithFormat:@"%s%s%s",
@@ -200,7 +227,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		for (i = 0; i < actionCount; i += 1) {
 			char *buttonName;
 			
-			//Get the name - XXX evands:need to localize!
+			//Get the name
 			buttonName = va_arg(actions, char *);
 			[buttonNamesArray addObject:[NSString stringWithUTF8String:buttonName]];
 			
