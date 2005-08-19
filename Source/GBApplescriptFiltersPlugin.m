@@ -696,10 +696,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 	[scriptTask release];
 	[autoreleasePool release];
 
-	if (NSIsFreedObject(scriptTask) || NSIsFreedObject(output)) {
-		NSLog(@"FAILED! ScriptTask: %i output: %i",NSIsFreedObject(scriptTask),NSIsFreedObject(output));
-	}
-
 	//Inform the content controller that we're done
 	[[adium contentController] delayedFilterDidFinish:attributedString uniqueID:[uniqueID unsignedLongLongValue]];
 }
