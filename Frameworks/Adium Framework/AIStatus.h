@@ -46,6 +46,13 @@ typedef enum {
 } AIStatusType;
 #define STATUS_TYPES_COUNT 4
 
+typedef enum {
+	AIAvailableStatusTypeAS = 'avaL',
+	AIAwayStatusTypeAS = 'awaY',
+	AIInvisibleStatusTypeAS = 'aSaI',
+	AIOfflineStatusTypeAS = 'offL'
+} AIStatusTypeApplescript;
+
 @interface AIStatus : AIObject<NSCoding> {
 	NSMutableDictionary	*statusDict;
 }
