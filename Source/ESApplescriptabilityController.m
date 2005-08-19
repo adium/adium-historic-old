@@ -82,74 +82,15 @@
 										  group:GROUP_ACCOUNT_STATUS];	
 }
 
-- (AIStatusSummary)myStatus
+- (AIStatus *)myStatus
 {
-	if ([[adium accountController] oneOrMoreConnectedAccounts]) {
-		AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
-		
-		if ([activeStatusState statusType] != AIAvailableStatus) {
-			if ([self myIdleTime]) {
-				return AIAwayAndIdleStatus;
-			} else {
-				return AIAwayStatus;
-			}
-			
-		} else if ([self myIdleTime]) {
-			return AIIdleStatus;
-		} else {
-			return AIAvailableStatus;
-		}
-		
-	} else {
-		return AIOfflineStatus;	
-	}
-}
+	return [[adium statusController] activeStatusState];
+>
 
 //Incomplete - make AIStatus scriptable, pass that in
-- (void)setMyStatus:(AIStatusSummary)newStatus
+- (void)setMyStatus:(AIStatus *)newStatus
 {
-	AIStatus	*activeStatusState = [[[adium statusController] activeStatusState] mutableCopy];
-	
-	switch (newStatus) {
-		case AIAvailableStatus:
-			[activeStatusState setStatusType:AIAvailableStatusType];
-			break;
-			
-		case AIAwayStatus:
-			[activeStatusState setStatusType:AIAwayStatusType];
-			break;
-
-		case AIIdleStatus:
-		case AIAwayAndIdleStatus:
-		case AIOfflineStatus:
-			break;
-			
-		case AIUnknownStatus:
-			break;
-	}
-	
-	[[adium statusController] setActiveStatusState:activeStatusState];
-	
-	[activeStatusState release];
-}
-
-- (NSString *)myStatusMessage
-{
-	AIStatus	*activeStatusState = [[adium statusController] activeStatusState];
-	
-	return [[activeStatusState statusMessage] string];
-}
-
-- (void)setMyStatusMessage:(NSString *)statusMessage
-{
-	AIStatus	*activeStatusState = [[[adium statusController] activeStatusState] mutableCopy];
-
-	//Take the string and turn it into an attributed string (in case we were passed HTML)
-	[activeStatusState setStatusMessage:[AIHTMLDecoder decodeHTML:statusMessage]];
-		
-	[[adium statusController] setActiveStatusState:activeStatusState];
-	
-	[activeStatusState release];	
+	[[adium statusController] setActiveStatusState:newStatus];
 }
 
 #pragma mark Controller convenience
