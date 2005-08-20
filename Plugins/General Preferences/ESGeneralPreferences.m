@@ -213,6 +213,8 @@
 	} else if (sender == button_minvolume) {
 		volume = [slider_volume minValue];
 		[slider_volume setDoubleValue:volume];
+	} else {
+		volume = 0;
 	}
 	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
 
