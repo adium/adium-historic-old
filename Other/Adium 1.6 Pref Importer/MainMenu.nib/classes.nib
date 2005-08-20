@@ -1,5 +1,8 @@
 {
     IBClasses = (
+        {CLASS = AIPlasticButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = AIPlasticMinusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
+        {CLASS = AIPlasticPlusButton; LANGUAGE = ObjC; SUPERCLASS = AIPlasticButton; }, 
         {
             CLASS = BDImportController; 
             LANGUAGE = ObjC; 
@@ -15,6 +18,10 @@
             }; 
             SUPERCLASS = NSObject; 
         }, 
+        {CLASS = BDMatteButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
+        {CLASS = BDMatteMinusButton; LANGUAGE = ObjC; SUPERCLASS = BDMatteButton; }, 
+        {CLASS = BDMattePlusButton; LANGUAGE = ObjC; SUPERCLASS = BDMatteButton; }, 
+        {CLASS = BDMattePopupButton; LANGUAGE = ObjC; SUPERCLASS = NSButton; }, 
         {
             ACTIONS = {
                 changeClientSelection = id; 

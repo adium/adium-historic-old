@@ -19,11 +19,12 @@
 @interface BDImporter : NSObject {
 
 	NSImage *clientIcon;
-	
+        NSString * applicationMessage;
 }
 
 - (NSImage *)iconAtSize:(int)iconSize;
 - (NSString *)versionForApplication:(NSString *)applicationName;
+
 
 
 

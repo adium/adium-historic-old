@@ -25,15 +25,15 @@
     IBOutlet NSImageView	*image_clientImage;
     IBOutlet NSTableView	*table_proteusAccounts;
     IBOutlet NSTabView		*tabView_ClientTab;
-	IBOutlet NSPanel		*panel_importPanel;
+    IBOutlet NSPanel		*panel_importPanel;
 	
-	BDProteusImporter		*proteus;
-	BDFireImporter			*fire;
-	BDiChatImporter			*iChat;
-	BDGaimImporter			*gaim;
-	BDAdiumImporter			*adium;
+    BDProteusImporter		*proteus;
+    BDFireImporter		*fire;
+    BDiChatImporter		*iChat;
+    BDGaimImporter		*gaim;
+    BDAdiumImporter		*adium;
 
-	NSMutableArray			*accountList;
+    NSMutableArray		*accountList;
 }
 
 #pragma mark -
