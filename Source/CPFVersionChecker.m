@@ -148,35 +148,13 @@
 {
 	NSString	*number = [versionDict objectForKey:VERSION_PLIST_KEY];
 	NSDate		*newestDate = nil;
+	BOOL		displayedBetaUpdateWindow = NO;
 
 	//Get the newest version date from the passed version dict
 	if (versionDict && number) {
 		newestDate = [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
 	}
-		
-	//Load relevant dates which we weren't passed
-	NSDate	*thisDate = [self dateOfThisBuild];
-	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
-																				group:PREF_GROUP_UPDATING];
-	
-	//If the user has already been informed of this update previously, don't bother them
-	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
-		if (!newestDate) {
-			//Display connection error message
-			if (checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
-		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
-			//Display the 'up to date' message if the user checked for updates manually
-			if (checkingManually) [ESVersionCheckerWindowController showUpToDateWindow];
-		} else {
-			//Display 'update' message always
-			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:newestDate];
-			
-			//Remember that the user has been prompted for this version so we don't bug them about it again
-			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED 
-												  group:PREF_GROUP_UPDATING];
-		}
-	}
-	
+
 	//Beta Expiration (Designed to be annoying)
 	//Beta expiration checking is performed in addition to regular version checking
 	if (BETA_RELEASE) {
@@ -188,6 +166,32 @@
 			[ESVersionCheckerWindowController showCannotConnectWindow];
 		} else if (![thisDate isEqualToDate:betaDate] && ![thisDate isEqualToDate:[thisDate laterDate:betaDate]]) {
 			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:betaDate];
+			displayedBetaUpdateWindow = YES;
+		}
+	}
+	
+	//Load relevant dates which we weren't passed
+	NSDate	*thisDate = [self dateOfThisBuild];
+	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
+																				group:PREF_GROUP_UPDATING];
+	
+	//If the user has already been informed of this update previously, don't bother them
+	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
+		if (!newestDate) {
+			//Display connection error message
+			if (checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
+		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
+			/* Display the 'up to date' message if the user checked for updates manually
+			 * Note that we get here if there is a beta update but no release update... don't display in that case.
+			 */
+			if (checkingManually && !displayedBetaUpdateWindow) [ESVersionCheckerWindowController showUpToDateWindow];
+		} else {
+			//Display 'update' message always
+			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:newestDate];
+			
+			//Remember that the user has been prompted for this version so we don't bug them about it again
+			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED 
+												  group:PREF_GROUP_UPDATING];
 		}
 	}
 
