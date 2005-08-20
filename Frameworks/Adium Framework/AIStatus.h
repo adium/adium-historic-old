@@ -34,7 +34,8 @@
 typedef enum {
 	AIEditableStatusState = 0, /* A user created state which can be modified -- the default, should be 0 */
 	AILockedStatusState, /* A state which is built into Adium and can not be modified */
-	AITemporaryEditableStatusState /* A user created state which is not part of the permanent stored state array */
+	AITemporaryEditableStatusState, /* A user created state which is not part of the permanent stored state array */
+	AISecondaryLockedStatusState /* A state which is managed by Adium and grouped separately from other states of the same type */
 } AIStatusMutabilityType;
 
 //General status types
