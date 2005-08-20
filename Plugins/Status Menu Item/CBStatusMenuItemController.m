@@ -150,7 +150,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 
 	//Release our objects
 	[[statusItem statusBar] removeStatusItem:statusItem];
-#warning cant release this because it causes a crash on quit. rdar://4160625 and #743. --boredzo
+#warning cant release this because it causes a crash on quit. rdar://4139755, rdar://4160625, and #743. --boredzo
 //	[statusItem release];
 	[theMenu release];
 	[unviewedObjectsArray release];
