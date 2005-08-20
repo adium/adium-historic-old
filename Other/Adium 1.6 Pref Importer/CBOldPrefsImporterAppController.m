@@ -379,7 +379,7 @@
 				// Bust endless loops
 				if ([listAccount isEqualToString:importingFromAccount]) {
 					//Alert
-					NSBeginAlertSheet(@"Shared buddy list problem", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"An unforseen problem with buddy lists endlessly sharing each other has occurred.  If you do not know the cause, please contact an Adium developer.");
+					NSBeginAlertSheet(@"Shared buddy list problem", @"OK", nil, nil, window_main, nil, nil, nil, nil, @"An unforseen problem with buddy lists endlessly sharing each other has occurred. If you do not know the cause, please contact an Adium developer.");
 					[currentTask setStringValue:@"Alias import failed."];
 					
 					listAccount = nil;
