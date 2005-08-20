@@ -1199,7 +1199,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
 
 	[menuItemArray addObjectsFromArray:addedMenuItems];
-	[stateMenuItemsNeedingUpdating  addObjectsFromArray:addedMenuItems];
+	[stateMenuItemsNeedingUpdating addObjectsFromArray:addedMenuItems];
 }
 
 /*
