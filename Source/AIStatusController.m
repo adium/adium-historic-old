@@ -723,8 +723,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	} else if (statusTypeB > statusTypeA) {
 		return NSOrderedAscending;
 	} else {
-		BOOL isLockedMutabilityTypeA = ([objectA mutabilityType] == AILockedStatusState);
-		BOOL isLockedMutabilityTypeB = ([objectB mutabilityType] == AILockedStatusState);
+		AIStatusMutabilityType	mutabilityTypeA = [objectA mutabilityType];
+		AIStatusMutabilityType	mutabilityTypeB = [objectB mutabilityType];
+		BOOL					isLockedMutabilityTypeA = (mutabilityTypeA == AILockedStatusState);
+		BOOL					isLockedMutabilityTypeB = (mutabilityTypeB == AILockedStatusState);
 
 		//Put locked (built in) statuses at the top
 		if (isLockedMutabilityTypeA && !isLockedMutabilityTypeB) {
@@ -747,16 +749,28 @@ int _statusArraySort(id objectA, id objectB, void *context)
 				return NSOrderedDescending;
 				
 			} else {
-				NSArray	*originalArray = (NSArray *)context;
-				
-				//Return them in the same relative order as the original array if they are of the same type
-				int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
-				int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
-				
-				if (indexA > indexB) {
+				BOOL	isSecondaryMutabilityTypeA = (mutabilityTypeA == AISecondaryLockedStatusState);
+				BOOL	isSecondaryMutabilityTypeB = (mutabilityTypeB == AISecondaryLockedStatusState);
+
+				//Put secondary locked statuses at the bottom
+				if (isSecondaryMutabilityTypeA && !isSecondaryMutabilityTypeB) {
 					return NSOrderedDescending;
-				} else {
+					
+				} else if (!isSecondaryMutabilityTypeA && isSecondaryMutabilityTypeB) {
 					return NSOrderedAscending;
+
+				} else {
+					NSArray	*originalArray = (NSArray *)context;
+					
+					//Return them in the same relative order as the original array if they are of the same type
+					int indexA = [originalArray indexOfObjectIdenticalTo:objectA];
+					int indexB = [originalArray indexOfObjectIdenticalTo:objectB];
+					
+					if (indexA > indexB) {
+						return NSOrderedDescending;
+					} else {
+						return NSOrderedAscending;
+					}
 				}
 			}
 		}
@@ -1022,7 +1036,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
  */
 - (void)addStatusState:(AIStatus *)statusState
 {
-	if ([statusState statusType] == AILockedStatusState) {
+	AIStatusMutabilityType mutabilityType = [statusState mutabilityType];
+	
+	if ((mutabilityType == AILockedStatusState) ||
+		(mutabilityType == AISecondaryLockedStatusState)) {
 		//If we are adding a locked status, add it to the built-in statuses
 		[(NSMutableArray *)[self builtInStateArray] addObject:statusState];
 
@@ -1185,6 +1202,28 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	[stateMenuItemsNeedingUpdating  addObjectsFromArray:addedMenuItems];
 }
 
+/*
+ * @brief Generate the custom menu item for a status type
+ */
+- (NSMenuItem *)customMenuItemForStatusType:(AIStatusType)statusType
+{
+	NSMenuItem *menuItem;
+	
+	menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
+										  target:self
+										  action:@selector(selectCustomState:)
+								   keyEquivalent:@""];
+				
+	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
+													 statusType:statusType
+													   iconType:AIStatusIconList
+													  direction:AIIconNormal] copy] autorelease]];
+	[menuItem setTag:statusType];
+	
+	return [menuItem autorelease];
+				
+}
+
 /*!
  * @brief Add state menu items
  *
@@ -1198,7 +1237,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	NSEnumerator	*enumerator;
 	NSMenuItem		*menuItem;
 	AIStatus		*statusState;
-	AIStatusType	currentStatusType = AIAvailableStatusType;
+	AIStatusType			currentStatusType = AIAvailableStatusType;
+	AIStatusMutabilityType	currentStatusMutabilityType = AILockedStatusState;
 
 	/* Create a menu item for each state.  States must first be sorted such that states of the same AIStatusType
 	 * are grouped together.
@@ -1206,26 +1246,31 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	enumerator = [[self sortedFullStateArray] objectEnumerator];
 	while ((statusState = [enumerator nextObject])) {
 		AIStatusType thisStatusType = [statusState statusType];
+		AIStatusType thisStatusMutabilityType = [statusState mutabilityType];
 
+		if ((currentStatusMutabilityType != AISecondaryLockedStatusState) &&
+			(thisStatusMutabilityType == AISecondaryLockedStatusState)) {
+			//Add the custom item, as we are ending this group
+			[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
+
+			//Add a divider when we switch to a secondary locked group
+			[menuItemArray addObject:[NSMenuItem separatorItem]];
+		}
+		
 		//We treat Invisible statuses as being the same as Away for purposes of the menu
 		if (thisStatusType == AIInvisibleStatusType) thisStatusType = AIAwayStatusType;
 
-		//Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
+		/* Add the "Custom..." state option and a separatorItem before beginning to add items for a new statusType
+		 * Sorting the menu items before enumerating means that we know our statuses are sorted first by statusType
+		 */
 		if ((currentStatusType != thisStatusType) &&
 		   (currentStatusType != AIOfflineStatusType)) {
-			menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
-												  target:self
-												  action:@selector(selectCustomState:)
-										   keyEquivalent:@""];
-
-			[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-															 statusType:currentStatusType
-															   iconType:AIStatusIconList
-															  direction:AIIconNormal] copy] autorelease]];
-			[menuItem setTag:currentStatusType];
-			[menuItemArray addObject:menuItem];
-			[menuItem release];
-
+			
+			//Don't include a Custom item after the secondary locked group, as it was already included
+			if ((currentStatusMutabilityType != AISecondaryLockedStatusState)) {
+				[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
+			}
+			
 			//Add a divider
 			[menuItemArray addObject:[NSMenuItem separatorItem]];
 
@@ -1247,6 +1292,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 																   forKey:@"AIStatus"]];
 		[menuItemArray addObject:menuItem];
 		[menuItem release];
+		
+		currentStatusMutabilityType = thisStatusMutabilityType;
 	}
 
 	if (currentStatusType != AIOfflineStatusType) {
