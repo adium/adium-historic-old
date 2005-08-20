@@ -16,7 +16,7 @@
 
 #import "AIContentController.h"
 #import "CBOldPrefsImporterAppController.h"
-#import <AIUtilities/AIUtilities.h>
+//#import <AIUtilities/AIUtilities.h>
 #include <unistd.h>
 
 #define ADIUM_1X_LOGS_PATH	@"~/Library/Application Support/Adium/Users"
