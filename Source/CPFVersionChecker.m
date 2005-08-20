@@ -150,6 +150,11 @@
 	NSDate		*newestDate = nil;
 	BOOL		displayedBetaUpdateWindow = NO;
 
+	//Load relevant dates which we weren't passed
+	NSDate		*thisDate = [self dateOfThisBuild];
+	NSDate		*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
+																					group:PREF_GROUP_UPDATING];
+
 	//Get the newest version date from the passed version dict
 	if (versionDict && number) {
 		newestDate = [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
@@ -169,11 +174,6 @@
 			displayedBetaUpdateWindow = YES;
 		}
 	}
-	
-	//Load relevant dates which we weren't passed
-	NSDate	*thisDate = [self dateOfThisBuild];
-	NSDate	*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
-																				group:PREF_GROUP_UPDATING];
 	
 	//If the user has already been informed of this update previously, don't bother them
 	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
