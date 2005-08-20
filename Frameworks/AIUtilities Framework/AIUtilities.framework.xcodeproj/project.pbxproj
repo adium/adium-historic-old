@@ -23,11 +23,11 @@
 		07BB5A0E07C48340008996A0 /* AIWiredData.m in Sources */ = {isa = PBXBuildFile; fileRef = 078DF8AF07C2948200831ABF /* AIWiredData.m */; };
 		07C52D4707BD2F97006BE37C /* AIHostReachabilityMonitor.h in Headers */ = {isa = PBXBuildFile; fileRef = 07C52D4507BD2F97006BE37C /* AIHostReachabilityMonitor.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		07C52D4807BD2F97006BE37C /* AIHostReachabilityMonitor.m in Sources */ = {isa = PBXBuildFile; fileRef = 07C52D4607BD2F97006BE37C /* AIHostReachabilityMonitor.m */; };
-		3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */; };
-		34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */; };
+		3402D33107CB043F0044F818 /* AIUtilities.framework_Prefix.pch in Headers */ = {isa = PBXBuildFile; fileRef = 3402D33007CB043F0044F818 /* AIUtilities.framework_Prefix.pch */; settings = {ATTRIBUTES = (); }; };
+		34057BD6087DF73F00664D64 /* AIFlexibleToolbarItem.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057BD4087DF73F00664D64 /* AIFlexibleToolbarItem.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057BD5087DF73F00664D64 /* AIFlexibleToolbarItem.m */; };
 		34057F27087E032400664D64 /* AIFontManagerAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F25087E032400664D64 /* AIFontManagerAdditions.m */; };
-		34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F26087E032400664D64 /* AIFontManagerAdditions.h */; };
+		34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F26087E032400664D64 /* AIFontManagerAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3433564D0793699400C84B15 /* AIKeychainOld.m in Sources */ = {isa = PBXBuildFile; fileRef = 3433564B0793699400C84B15 /* AIKeychainOld.m */; };
 		3433564E0793699400C84B15 /* AIKeychainOld.h in Headers */ = {isa = PBXBuildFile; fileRef = 3433564C0793699400C84B15 /* AIKeychainOld.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34486C3806D1DF0400DA778C /* AIAlternatingRowOutlineView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B3806D1DF0300DA778C /* AIAlternatingRowOutlineView.h */; settings = {ATTRIBUTES = (Public, ); }; };
