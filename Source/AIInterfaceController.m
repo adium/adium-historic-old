@@ -66,6 +66,8 @@
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 
+- (void)enableAlphaInColorPanels;
+
 - (AIChat *)mostRecentActiveChat;
 @end
 
@@ -173,7 +175,12 @@
 
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
-									   name:CONTENT_MESSAGE_RECEIVED object:nil];	
+									   name:CONTENT_MESSAGE_RECEIVED object:nil];
+
+	//Enable alpha selection in color panels (e.g. in Preferences)
+	[self performSelector:@selector(enableAlphaInColorPanels)
+			   withObject:nil
+			   afterDelay:0.1];
 }
 
 - (void)controllerWillClose
@@ -268,7 +275,10 @@
 	//We handled the reopen; return NO so NSApp does nothing.
     return NO; 
 }
-		
+
+- (void)enableAlphaInColorPanels {
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+}
 
 //Contact List ---------------------------------------------------------------------------------------------------------
 #pragma mark Contact list
@@ -1172,6 +1182,8 @@
 #pragma mark Preferences Display
 - (IBAction)showPreferenceWindow:(id)sender
 {
+	[self enableAlphaInColorPanels];
+
 	[[adium preferenceController] showPreferenceWindow:sender];
 }
 
