@@ -320,6 +320,9 @@
 	[label_typing setLocalizedString:AILocalizedStringFromTable(@"Typing:", @"AdiumFramework", "Label beside the 'let others know when you are typing' checkbox in the account preferences")];
 	[checkBox_sendTyping setLocalizedString:AILocalizedStringFromTable(@"Let others know when you are typing", @"AdiumFramework", "Text of the typing preference checkbox in the account preferneces")];
 	[label_encryption setLocalizedString:AILocalizedStringFromTable(@"Encryption:", @"AdiumFramework", "Label besides the encryption preference menu")];
+	
+	//Already present in the main bundle from the Contact Info window
+	[label_alias setLocalizedString:AILocalizedStringFromTable(@"Alias:", nil, nil)];
 }
 
 @end
