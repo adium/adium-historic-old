@@ -364,14 +364,14 @@
 					<key>Description</key>
 					<string>This status's status message; when setting, HTML may optionally be passed.</string>
 					<key>Name</key>
-					<string>status message</string>
+					<string>status message string</string>
 				</dict>
 				<key>autoReplyString</key>
 				<dict>
 					<key>Description</key>
 					<string>This status's auto reply; when setting, HTML may be optionally passed.</string>
 					<key>Name</key>
-					<string>autoreply</string>
+					<string>autoreply string</string>
 				</dict>
 				<key>hasAutoReply</key>
 				<dict>
@@ -465,9 +465,23 @@
 				<key>myStatus</key>
 				<dict>
 					<key>Description</key>
-					<string>My status on all online accounts.  If online accounts do not all have the same status, this will return the status which a simple majority of accounts are using.</string>
+					<string>My status on all online accounts.  If online accounts do not all have the same status, this will return the status which a simple majority of accounts are using. This doesn't work quite properly yet for setting new information...</string>
 					<key>Name</key>
 					<string>my status</string>
+				</dict>
+				<key>myStatusMessageString</key>
+				<dict>
+					<key>Description</key>
+					<string>My status message on all online accounts.</string>
+					<key>Name</key>
+					<string>my status message</string>
+				</dict>
+				<key>myStatusTypeApplescript</key>
+				<dict>
+					<key>Description</key>
+					<string>My status type on all online accounts.</string>
+					<key>Name</key>
+					<string>my status type</string>
 				</dict>
 			</dict>
 			<key>Description</key>

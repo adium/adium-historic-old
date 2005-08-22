@@ -93,6 +93,37 @@
 	[[adium statusController] setActiveStatusState:newStatus];
 }
 
+- (AIStatusTypeApplescript)myStatusTypeApplescript
+{
+	return [[self myStatus] statusTypeApplescript];
+	
+}
+
+- (void)setMyStatusTypeApplescript:(AIStatusTypeApplescript)newStatusType
+{
+	AIStatus *newStatus = [[self myStatus] mutableCopy];
+	
+	[newStatus setStatusTypeApplescript:newStatusType];
+	[self setMyStatus:newStatus];
+	
+	[newStatus release];
+}
+
+- (NSString *)myStatusMessageString
+{
+	return [[self myStatus] statusMessageString];
+}
+
+- (void)setMyStatusMessageString:(NSString *)inString
+{
+	AIStatus *newStatus = [[self myStatus] mutableCopy];
+	
+	[newStatus setStatusMessageString:inString];
+	[self setMyStatus:newStatus];
+	
+	[newStatus release];	
+}
+
 #pragma mark Controller convenience
 - (AIInterfaceController *)interfaceController{
     return [adium interfaceController];
