@@ -39,6 +39,7 @@
 	IBOutlet	NSTextField		*textField_connectHost;			//Connect host
 	IBOutlet	NSTextField		*textField_connectPort;			//Connect port
 	IBOutlet	NSTextField		*textField_alias;				//User alias (or display name)
+	IBOutlet	NSTextField		*label_alias;					//Label for the alias field
 	IBOutlet	NSButton		*checkBox_checkMail;			//Check for new mail
 	
 	IBOutlet	NSTextField		*label_typing;					//Label for the typing rpeference
