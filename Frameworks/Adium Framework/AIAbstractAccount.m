@@ -73,12 +73,13 @@
 		delayedUpdateStatusTarget = nil;
 		silenceAllContactUpdatesTimer = nil;
 		disconnectedByFastUserSwitch = NO;
-		
+
+		//Register to be notified of dynamic content updates
 		[[adium notificationCenter] addObserver:self
 									   selector:@selector(requestImmediateDynamicContentUpdate:)
 										   name:Adium_RequestImmediateDynamicContentUpdate
-										 object:nil];
-		
+										 object:nil];	
+
 		//Init the account
 		[self initFUSDisconnecting];
 		[self initAccount];
@@ -685,11 +686,19 @@
  * @brief Stop auto-refreshing a status key
  *
  * Stops an account status string from auto-refreshing
+ *
+ * @param key The key to stop auto-refreshing, or nil to stop all keys
  */
 - (void)stopAutoRefreshingStatusKey:(NSString *)key
 {
-	[dynamicKeys removeObject:key];
-	[autoRefreshingKeys removeObject:key];
+	if (key) {
+		[dynamicKeys removeObject:key];
+		[autoRefreshingKeys removeObject:key];
+
+	} else {
+		[dynamicKeys removeAllObjects];
+		[autoRefreshingKeys removeAllObjects];
+	}
 
 	if ([autoRefreshingKeys count] == 0) [self _stopAttributedRefreshTimer];
 }
@@ -934,6 +943,9 @@
     [self setStatusObject:nil forKey:@"Disconnecting" notify:NO];
     [self setStatusObject:nil forKey:@"Connecting" notify:NO];
     [self setStatusObject:nil forKey:@"Online" notify:NO];
+	
+	//Stop all autorefreshing keys
+	[self stopAutoRefreshingStatusKey:nil];
 	
 	//Apply any changes
     [self notifyOfChangedStatusSilently:NO];
