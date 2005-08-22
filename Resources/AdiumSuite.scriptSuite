@@ -76,6 +76,24 @@
 					<key>Type</key>
 					<string>AIStatus</string>
 				</dict>
+				<key>myStatusMessageString</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>Amms</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSString</string>
+                </dict>	   
+				<key>myStatusTypeApplescript</key>
+				<dict>
+			     	<key>AppleEventCode</key>
+					<string>AmSy</string>
+					<key>ReadOnly</key>
+					<string>NO</string>
+					<key>Type</key>
+					<string>NSNumber&lt;AIStatusType&gt;</string>
+                </dict>
 			</dict>
 			<key>ToManyRelationships</key>
 			<dict>
