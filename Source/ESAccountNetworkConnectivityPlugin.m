@@ -127,8 +127,8 @@
 			}  else if ([[account supportedPropertyKeys] containsObject:@"Online"]
 						&& [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]) {
 				/* This account does not connect based on network reachability, but can go online
-				* and should autoconnect.  Connect it immediately.
-				*/
+				 * and should autoconnect.  Connect it immediately.
+				 */
 				[account setPreference:[NSNumber numberWithBool:YES] 
 								forKey:@"Online"
 								 group:GROUP_ACCOUNT_STATUS];					
