@@ -99,4 +99,8 @@ typedef enum {
 - (int)preexistingUniqueStatusID;
 - (void)setUniqueStatusID:(NSNumber *)inUniqueStatusID;
 
+#pragma mark Applescript
+- (AIStatusTypeApplescript)statusTypeApplescript;
+- (void)setStatusTypeApplescript:(AIStatusTypeApplescript)statusTypeApplescript;
+
 @end
