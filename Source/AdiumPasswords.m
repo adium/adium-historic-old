@@ -53,7 +53,14 @@
 															 error:&error];
 	if (error) {
 		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't ignore it if we're trying to set the password, though (because that would be strange).
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (inPassword || (err != errSecItemNotFound)) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 }
 
@@ -72,7 +79,13 @@
 										error:&error];
 	if (error) {
 		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not delete password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (err != errSecItemNotFound) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not delete password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 }
 
@@ -91,8 +104,14 @@
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		OSStatus err = [error code];
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (err != errSecItemNotFound) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 	return password;
 }
@@ -114,8 +133,14 @@
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		OSStatus err = [error code];
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (err != errSecItemNotFound) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not retrieve password for account %@: %@ returned %i (%@)", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 	
 	if (password && [password length] != 0) {
@@ -153,7 +178,14 @@
 															 error:&error];
 	if (error) {
 		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not %@ password for proxy server %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForProxyServer:server userName:userName], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], [error code], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't ignore it if we're trying to set the password, though (because that would be strange).
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (inPassword || (err != errSecItemNotFound)) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 }
 
@@ -174,13 +206,19 @@
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
-			  [self _accountNameForProxyServer:server
-									  userName:userName],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
-			  [error code],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		OSStatus err = [error code];
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (err != errSecItemNotFound) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
+				  [self _accountNameForProxyServer:server
+				                          userName:userName],
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
+				  err,
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 	return password;
 }
@@ -204,13 +242,19 @@
 													   protocol:FOUR_CHAR_CODE('AdIM')
 														  error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
-		NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
-			  [self _accountNameForProxyServer:server
-									  userName:userName],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
-			  [error code],
-			  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		OSStatus err = [error code];
+		/*errSecItemNotFound: no entry in the keychain. a harmless error.
+		 *we don't get here at all for noErr (error will be nil).
+		 */
+		if (err != errSecItemNotFound) {
+			NSDictionary *userInfo = [error userInfo];
+			NSLog(@"could not retrieve password for proxy server %@: %@ returned %i (%@)",
+				  [self _accountNameForProxyServer:server
+				                          userName:userName],
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
+				  err,
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+		}
 	}
 	
 	if (password && [password length] != 0) {
