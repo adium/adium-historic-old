@@ -34,8 +34,6 @@
 
 //#define GROWL_DEBUG 1
 
-#define PREF_GROUP_EVENT_BEZEL              @"Event Bezel"
-#define KEY_EVENT_BEZEL_SHOW_AWAY           @"Show While Away"
 #define GROWL_ALERT							AILocalizedString(@"Display a Growl notification",nil)
 #define GROWL_STICKY_ALERT					AILocalizedString(@"Display a sticky Growl notification",nil)
 
@@ -109,7 +107,6 @@
 
 	//Install our contact alert
 	[[adium contactAlertsController] registerActionID:GROWL_EVENT_ALERT_IDENTIFIER withHandler:self];
-	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_EVENT_BEZEL];	
 	
 #ifdef GROWL_DEBUG
 	[GrowlApplicationBridge notifyWithTitle:@"We have found a witch."
