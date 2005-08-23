@@ -18,7 +18,6 @@
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-#import "AIPreferenceController.h"
 #import "ESContactAlertsController.h"
 #import "ESContactAlertsController.h"
 #import "NEHGrowlPlugin.h"
@@ -81,8 +80,6 @@
  */
 - (void)dealloc
 {
-	[[adium preferenceController] unregisterPreferenceObserver:self];
-	
 	[super dealloc];
 }
 
@@ -126,17 +123,6 @@
 								   CONTENT_MESSAGE_RECEIVED, @"eventID",
 								   nil]];
 #endif
-}
-
-/*!
- * @brief Called when preferences changes
- *
- * Used to get the value of the Show While Away preference. 
- */
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	showWhileAway = [[prefDict objectForKey:KEY_EVENT_BEZEL_SHOW_AWAY] boolValue];
 }
 
 #pragma mark AIActionHandler
@@ -183,10 +169,6 @@
  */
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
-	//XXX - bleh
-	if ([[adium preferenceController] preferenceForKey:@"AwayMessage" group:GROUP_ACCOUNT_STATUS] && ! showWhileAway)
-		return;
-	
 	NSString			*title, *description;
 	NSDictionary		*clickContext = nil;
 	NSData				*iconData = nil;
