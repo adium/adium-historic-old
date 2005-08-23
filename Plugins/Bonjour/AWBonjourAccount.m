@@ -78,6 +78,12 @@ static	NSAutoreleasePool	*currentAutoreleasePool = nil;
 	return YES;
 }
 
+//Bonjour should just ignore network reachability
+- (BOOL)connectivityBasedOnNetworkReachability
+{
+	return NO;
+}
+
 //No need for a password for Bonjour accounts
 - (BOOL)requiresPassword
 {
