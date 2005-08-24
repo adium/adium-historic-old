@@ -52,7 +52,7 @@
 														  protocol:FOUR_CHAR_CODE('AdIM')
 															 error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
+		OSStatus err = [error code];
 		/*errSecItemNotFound: no entry in the keychain. a harmless error.
 		 *we don't ignore it if we're trying to set the password, though (because that would be strange).
 		 *we don't get here at all for noErr (error will be nil).
@@ -74,11 +74,11 @@
 	NSError		*error    = nil;
 	AIKeychain	*keychain = [AIKeychain defaultKeychain_error:&error];
 	[keychain deleteInternetPasswordForServer:[self _passKeyForAccount:inAccount]
-									  account:[self _accountNameForAccount:inAccount]
-									 protocol:FOUR_CHAR_CODE('AdIM')
-										error:&error];
+		account:[self _accountNameForAccount:inAccount]
+		protocol:FOUR_CHAR_CODE('AdIM')
+		error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
+		OSStatus err = [error code];
 		/*errSecItemNotFound: no entry in the keychain. a harmless error.
 		 *we don't get here at all for noErr (error will be nil).
 		 */
@@ -177,14 +177,20 @@
 														  protocol:FOUR_CHAR_CODE('AdIM')
 															 error:&error];
 	if (error) {
-		NSDictionary *userInfo = [error userInfo];
+		OSStatus err = [error code];
 		/*errSecItemNotFound: no entry in the keychain. a harmless error.
 		 *we don't ignore it if we're trying to set the password, though (because that would be strange).
 		 *we don't get here at all for noErr (error will be nil).
 		 */
 		if (inPassword || (err != errSecItemNotFound)) {
 			NSDictionary *userInfo = [error userInfo];
-			NSLog(@"could not %@ password for account %@: %@ returned %i (%@)", inPassword ? @"set" : @"remove", [self _accountNameForAccount:inAccount], [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME], err, [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
+			NSLog(@"could not %@ password for proxy server %@: %@ returned %i (%@)",
+			      inPassword ? @"set" : @"remove",
+			      [self _accountNameForProxyServer:server
+				                          userName:userName],
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_SECURITYFUNCTIONNAME],
+				  err,
+				  [userInfo objectForKey:AIKEYCHAIN_ERROR_USERINFO_ERRORDESCRIPTION]);
 		}
 	}
 }
