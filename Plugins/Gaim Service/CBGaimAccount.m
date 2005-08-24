@@ -1334,10 +1334,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	 the best one to use.
 	*/
 #warning Should we still be doing this in 0.9?
-	if (account && gaim_account_get_connection(account)) {
-		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-		serv_set_permit_deny(gaim_account_get_connection(account));
-	}
+	[gaimThread setDefaultPermitDenyForAccount:self];
 	
 	//E-mail checking
 	gaim_account_set_check_mail(account, [[self shouldCheckMail] boolValue]);
@@ -1568,7 +1565,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (oneway void)accountConnectionReportDisconnect:(NSString *)text
 {
 	//Retain the error message locally for use in -[CBGaimAccount accountConnectionDisconnected]
-	[lastDisconnectionError autorelease]; lastDisconnectionError = [text retain];
+	if (lastDisconnectionError != text) {
+		[lastDisconnectionError release];
+		lastDisconnectionError = [text retain];
+	}
 
 	//We are disconnecting
     [self setStatusObject:[NSNumber numberWithBool:YES] forKey:@"Disconnecting" notify:NotifyNow];
