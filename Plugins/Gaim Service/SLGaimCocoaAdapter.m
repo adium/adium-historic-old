@@ -369,12 +369,21 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 		// Need to start a new chat, associating with the GaimConversation
 		chat = [accountLookup(account) mainThreadChatWithContact:sourceContact];
 
-		NSCAssert5(chat != nil, @"conv %x: Got nil chat in lookup for sourceContact %@ (%x) on adiumAccount %@ (%x)",
-				   conv,
-				   sourceContact,
-				   buddy,
-				   accountLookup(account),
-				   account);
+		if (!chat) {
+			NSString	*errorString;
+
+			errorString = [NSString stringWithFormat:@"conv %x: Got nil chat in lookup for sourceContact %@ (%x ; \"%s\" ; \"%s\") on adiumAccount %@ (%x ; \"%s\")",
+				conv,
+				sourceContact,
+				buddy,
+				(buddy ? buddy->name : ""),
+				((buddy && buddy->account && buddy->name) ? gaim_normalize(buddy->account, buddy->name) : ""),
+				accountLookup(account),
+				account,
+				(account ? account->name : ""));
+
+			NSCAssert(chat != nil, errorString);
+		}
 
 		//Associate the GaimConversation with the AIChat
 		[chatDict setObject:[NSValue valueWithPointer:conv] forKey:[chat uniqueChatID]];
@@ -1336,6 +1345,21 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 	[gaimThreadProxy gaimThreadSetCheckMail:checkMail
 								 forAccount:adiumAccount];
 }
+
+- (oneway void)gaimThreadSetDefaultPermitDenyForAccount:(id)adiumAccount
+{
+	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
+
+	if (account && gaim_account_get_connection(account)) {
+		account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+		serv_set_permit_deny(gaim_account_get_connection(account));
+	}	
+}
+- (oneway void)setDefaultPermitDenyForAccount:(id)adiumAccount
+{
+	[gaimThreadProxy gaimThreadSetDefaultPermitDenyForAccount:adiumAccount];
+}
+
 
 #pragma mark Protocol specific accessors
 - (oneway void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
