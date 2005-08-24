@@ -29,7 +29,8 @@
 #import <Adium/AIService.h>
 
 #define IMAGE_LOOKUP_INTERVAL   0.01
-#define CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
+#define SHOW_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
+#define EDIT_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
 
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
@@ -41,6 +42,7 @@
 - (void)rebuildAddressBookDict;
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
 - (void)showInAddressBook;
+- (void)editInAddressBook;
 - (void)addToAddressBookDict:(NSArray *)people;
 - (void)removeFromAddressBookDict:(NSArray *)UIDs;
 @end
@@ -92,12 +94,21 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	//Shared Address Book
 	[sharedAddressBook release]; sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	
-	//Create our contextual menu and install it
-	contextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:CONTEXTUAL_AB_MENU_TITLE
+	//Create our contextual menus and install them
+	showInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_IN_AB_CONTEXTUAL_AB_MENU_TITLE
 																			   action:@selector(showInAddressBook)
 																		keyEquivalent:@""] autorelease];
-	[contextualMenuItem setTarget:self];
-	[[adium menuController] addContextualMenuItem:contextualMenuItem toLocation:Context_Contact_Action];
+	[showInABContextualMenuItem setTarget:self];
+	
+	editInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_IN_AB_CONTEXTUAL_AB_MENU_TITLE
+																					   action:@selector(editInAddressBook)
+																				keyEquivalent:@""] autorelease];
+	[editInABContextualMenuItem setTarget:self];
+	[editInABContextualMenuItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
+	[editInABContextualMenuItem setAlternate:YES];
+	
+	[[adium menuController] addContextualMenuItem:showInABContextualMenuItem toLocation:Context_Contact_Action];
+	[[adium menuController] addContextualMenuItem:editInABContextualMenuItem toLocation:Context_Contact_Action];
 	
 	//Wait for Adium to finish launching before we build the address book so the contact list will be ready
 	[[adium notificationCenter] addObserver:self
@@ -961,6 +972,16 @@ static	ABAddressBook	*sharedAddressBook = nil;
 {
 	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@", [selectedPerson uniqueId]];
+	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
+}
+
+/*!
+ * @brief Edits the selected contact in Address Book
+ */
+- (void)editInAddressBook
+{
+	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
+	NSString *url = [NSString stringWithFormat:@"addressbook://%@?edit", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }
 
