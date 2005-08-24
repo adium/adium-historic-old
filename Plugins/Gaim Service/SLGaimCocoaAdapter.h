@@ -73,6 +73,7 @@
 - (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
 
 - (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount;
+- (oneway void)setDefaultPermitDenyForAccount:(id)adiumAccount;
 
 - (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
 - (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount;
