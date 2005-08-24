@@ -163,12 +163,11 @@
 	//Update selection in contact menu
 	[popUp_contacts selectItemWithRepresentedObject:[chat listObject]];
 	
+	[self _destroyAccountMenu];
 	//Rebuild 'From' account menu
 	if([self choicesAvailableForAccount]){
 		[self _createAccountMenu];
 		[popUp_accounts selectItemWithRepresentedObject:[chat listObject]];
-	}else{
-		[self _destroyAccountMenu];
 	}
 	
 	//Reposition our menus and resize as necessary
@@ -317,7 +316,7 @@
 	[popUp_contacts setMenu:[inContactMenu menu]];
 }
 - (void)contactMenu:(AIContactMenu *)inContactMenu didSelectContact:(AIListContact *)inContact {
-	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:NO];
+	[[adium chatController] switchChat:chat toListContact:inContact usingContactAccount:YES];
 }
 
 /*
