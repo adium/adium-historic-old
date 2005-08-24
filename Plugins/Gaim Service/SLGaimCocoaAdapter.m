@@ -380,7 +380,7 @@ AIChat* imChatLookupFromConv(GaimConversation *conv)
 				((buddy && buddy->account && buddy->name) ? gaim_normalize(buddy->account, buddy->name) : ""),
 				accountLookup(account),
 				account,
-				(account ? account->name : ""));
+				(account ? account->username : "")];
 
 			NSCAssert(chat != nil, errorString);
 		}
