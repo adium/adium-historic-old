@@ -1590,7 +1590,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  */
 - (oneway void)accountConnectionDisconnected
 {
-	BOOL			connectionIsSuicidal = (account->gc ? account->gc->wants_to_die : NO);
+	BOOL			connectionIsSuicidal = ((account && account->gc) ? account->gc->wants_to_die : NO);
 
 	//Clear status objects which don't make sense for a disconnected account
 	[self setStatusObject:nil forKey:@"TextProfile" notify:NO];
