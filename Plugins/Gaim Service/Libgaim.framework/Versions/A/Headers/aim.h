@@ -686,6 +686,31 @@ struct aim_chat_roominfo {
 	fu16_t instance;
 };
 
+/* Message types */
+#define AIM_MSGTYPES_PLAIN      0x01
+#define AIM_MSGTYPES_CHAT       0x02
+#define AIM_MSGTYPES_FILEREQ    0x03
+#define AIM_MSGTYPES_URL        0x04
+#define AIM_MSGTYPES_AUTHREQ    0x06
+#define AIM_MSGTYPES_AUTHDENY   0x07
+#define AIM_MSGTYPES_AUTHOK     0x08
+#define AIM_MSGTYPES_SERVER     0x09
+#define AIM_MSGTYPES_ADDED      0x0c
+#define AIM_MSGTYPES_WWP        0x0d
+#define AIM_MSGTYPES_EEXPRESS   0x0e
+#define AIM_MSGTYPES_CONTACTS   0x13
+#define AIM_MSGTYPES_PLUGIN     0x1a
+#define AIM_MSGTYPES_AUTO_AWAY  0xe8
+#define AIM_MSGTYPES_AUTO_BUSY  0xe9
+#define AIM_MSGTYPES_AUTO_NA    0xea
+#define AIM_MSGTYPES_AUTO_DND   0xeb
+#define AIM_MSGTYPES_AUTO_FFC   0xec
+
+/* Message flags */
+#define AIM_MSGFLAGS_NORMAL     0x01
+#define AIM_MSGFLAGS_AUTO       0x03
+#define AIM_MSGFLAGS_MULTI      0x80
+
 #define AIM_IMFLAGS_AWAY				0x0001 /* mark as an autoreply */
 #define AIM_IMFLAGS_ACK					0x0002 /* request a receipt notice */
 #define AIM_IMFLAGS_BUDDYREQ			0x0010 /* buddy icon requested */
@@ -837,11 +862,10 @@ struct aim_incomingim_ch2_args {
 			struct aim_chat_roominfo roominfo;
 		} chat;
 		struct {
-			fu16_t msgtype;
-			fu32_t fgcolor;
-			fu32_t bgcolor;
-			const char *rtfmsg;
-		} rtfmsg;
+                    fu16_t seqnr;
+                    fu8_t msgtype;
+                    fu8_t msgflag;
+                } relay;
 		struct {
 			fu16_t subtype;
 			fu16_t totfiles;
@@ -883,7 +907,7 @@ struct aim_incomingim_ch4_args {
 /* 0x000b */ faim_export int aim_im_denytransfer(aim_session_t *sess, const char *sender, const char *cookie, fu16_t code);
 /* 0x0014 */ faim_export int aim_im_sendmtn(aim_session_t *sess, fu16_t type1, const char *sn, fu16_t type2);
 
-
+faim_export int aim_im_sendch2_autoresp(aim_session_t *sess, fu8_t *cookie, char *destsn, fu16_t seqnr, fu8_t msgtype, fu8_t msgflag, const char *msg);
 
 /* ft.c */
 struct aim_fileheader_t {
@@ -930,6 +954,7 @@ struct aim_oft_info {
 	fu16_t port;
 	aim_conn_t *conn;
 	aim_session_t *sess;
+	int success; /* Was the connection successful? Used for timing out the transfer. */
 	struct aim_fileheader_t fh;
 	struct aim_oft_info *next;
 };
