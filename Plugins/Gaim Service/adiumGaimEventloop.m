@@ -19,6 +19,7 @@
 
 static guint				sourceId = nil;		//The next source key; continuously incrementing
 static NSMutableDictionary	*sourceInfoDict = nil;
+static CFRunLoopRef			gaimRunLoop = nil;
 
 static void socketCallback(CFSocketRef s,
                            CFSocketCallBackType callbackType,
@@ -115,7 +116,7 @@ guint adium_timeout_add(guint interval, GSourceFunc function, gpointer data)
 	info->rls = NULL;
 	info->user_data = data;
 
-	CFRunLoopAddTimer(CFRunLoopGetCurrent(), runLoopTimer, kCFRunLoopCommonModes);
+	CFRunLoopAddTimer(gaimRunLoop, runLoopTimer, kCFRunLoopCommonModes);
 
 	NSNumber	*key = [NSNumber numberWithUnsignedInt:sourceId];
 	//Make sure we end up with a valid source id
@@ -157,7 +158,7 @@ guint adium_input_add(int fd, GaimInputCondition condition,
     // Add it to our run loop
     CFRunLoopSourceRef rls = CFSocketCreateRunLoopSource(NULL, socket, 0);
 	
-	CFRunLoopAddSource(CFRunLoopGetCurrent(), rls, kCFRunLoopCommonModes);
+	CFRunLoopAddSource(gaimRunLoop, rls, kCFRunLoopCommonModes);
 	
 	sourceId++;
 	
@@ -221,5 +222,8 @@ GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
 {
 	if (!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
 
+	//Determine our run loop
+	gaimRunLoop = CFRetain(CFRunLoopGetCurrent());
+	
 	return &adiumEventLoopUiOps;
 }
