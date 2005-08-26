@@ -731,7 +731,7 @@ NSMutableDictionary* get_chatDict(void)
 
 //Called on the gaim thread, actually performs the specified command (it should have already been tested by 
 //attemptGaimCommandOnMessage:... above.
-- (oneway void)gaimThreadDoCommand:(NSString *)originalMessage
+- (void)gaimThreadDoCommand:(NSString *)originalMessage
 					   fromAccount:(id)sourceAccount
 							inChat:(AIChat *)chat
 {
@@ -827,7 +827,7 @@ NSMutableDictionary* get_chatDict(void)
 	return sendMessage;
 }
 	
-- (oneway void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
+- (void)gaimThreadSendEncodedMessage:(NSString *)encodedMessage
 							originalMessage:(NSString *)originalMessage
 								fromAccount:(id)sourceAccount
 									 inChat:(AIChat *)chat
@@ -892,7 +892,7 @@ NSMutableDictionary* get_chatDict(void)
 	return sendMessage;
 }
 
-- (oneway void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat
+- (void)gaimThreadSendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
 	GaimConversation *conv = convLookupFromChat(chat,nil);
 	if (conv) {
@@ -918,13 +918,13 @@ NSMutableDictionary* get_chatDict(void)
 						 gaimTypingState);
 	}	
 }
-- (oneway void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
+- (void)sendTyping:(AITypingState)typingState inChat:(AIChat *)chat
 {
 	[gaimThreadProxy gaimThreadSendTyping:typingState
 								   inChat:chat];
 }
 
-- (oneway void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)gaimThreadAddUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	const char	*groupUTF8String, *buddyUTF8String;
@@ -952,14 +952,14 @@ NSMutableDictionary* get_chatDict(void)
 	serv_add_buddy(gaim_account_get_connection(account), buddy);
 }
 
-- (oneway void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	[gaimThreadProxy gaimThreadAddUID:objectUID
 							onAccount:adiumAccount
 							  toGroup:groupName];
 }
 
-- (oneway void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
+- (void)gaimThreadRemoveUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	GaimBuddy 	*buddy;
@@ -981,14 +981,14 @@ NSMutableDictionary* get_chatDict(void)
 	}
 }
 
-- (oneway void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
+- (void)removeUID:(NSString *)objectUID onAccount:(id)adiumAccount fromGroup:(NSString *)groupName
 {
 	[gaimThreadProxy gaimThreadRemoveUID:objectUID
 							   onAccount:adiumAccount
 							   fromGroup:groupName];
 }
 
-- (oneway void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)gaimThreadMoveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	GaimAccount *account;
 	GaimGroup 	*group;
@@ -1024,14 +1024,14 @@ NSMutableDictionary* get_chatDict(void)
 	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
 	if (needToAddServerside) serv_add_buddy(gaim_account_get_connection(account), buddy);
 }
-- (oneway void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
+- (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
 	[gaimThreadProxy gaimThreadMoveUID:objectUID
 							 onAccount:adiumAccount
 							   toGroup:groupName];
 }
 
-- (oneway void)gaimThreadRenameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
+- (void)gaimThreadRenameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {
     GaimGroup *group = gaim_find_group([oldGroupName UTF8String]);
 	
@@ -1041,14 +1041,14 @@ NSMutableDictionary* get_chatDict(void)
 		gaim_blist_rename_group(group, [newGroupName UTF8String]);
 	}
 }
-- (oneway void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
+- (void)renameGroup:(NSString *)oldGroupName onAccount:(id)adiumAccount to:(NSString *)newGroupName
 {	
 	[gaimThreadProxy gaimThreadRenameGroup:oldGroupName
 								 onAccount:adiumAccount
 										to:newGroupName];
 }
 
-- (oneway void)gaimThreadDeleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
+- (void)gaimThreadDeleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
 {
 	GaimGroup *group = gaim_find_group([groupName UTF8String]);
 	
@@ -1056,14 +1056,14 @@ NSMutableDictionary* get_chatDict(void)
 		gaim_blist_remove_group(group);
 	}
 }
-- (oneway void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
+- (void)deleteGroup:(NSString *)groupName onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadDeleteGroup:groupName
 								 onAccount:adiumAccount];
 }
 
 #pragma mark Alias
-- (oneway void)gaimThreadSetAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
+- (void)gaimThreadSetAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1091,7 +1091,7 @@ NSMutableDictionary* get_chatDict(void)
 		}
 	}
 }
-- (oneway void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
+- (void)setAlias:(NSString *)alias forUID:(NSString *)UID onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetAlias:alias
 								 forUID:UID
@@ -1099,19 +1099,19 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Chats
-- (oneway void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
+- (void)gaimThreadOpenChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
 	//Looking up the conv from the chat will create the GaimConversation gaimside, joining the chat, opening the server
 	//connection, or whatever else is done when a chat is opened.
 	convLookupFromChat(chat,adiumAccount);
 }
-- (oneway void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
+- (void)openChat:(AIChat *)chat onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadOpenChat:chat
 							  onAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueID
+- (void)gaimThreadCloseGaimConversation:(NSValue *)convValue withChatID:(NSString *)chatUniqueID
 {
 	GaimConversation *conv = [convValue pointerValue];
 
@@ -1129,7 +1129,7 @@ NSMutableDictionary* get_chatDict(void)
 		gaim_conversation_destroy(conv);
 	}	
 }
-- (oneway void)closeChat:(AIChat *)chat
+- (void)closeChat:(AIChat *)chat
 {
 	//We look up the conv and the chat's uniqueChatID now since threading may make them change before
 	//the gaimThread actually utilizes them
@@ -1137,7 +1137,7 @@ NSMutableDictionary* get_chatDict(void)
 										  withChatID:[chat uniqueChatID]];
 }
 
-- (oneway void)gaimThreadInviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
+- (void)gaimThreadInviteContact:(AIListContact *)listContact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage
 {
 	GaimConversation	*conv;
 	GaimAccount			*account;
@@ -1160,14 +1160,14 @@ NSMutableDictionary* get_chatDict(void)
 		
 	}
 }
-- (oneway void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
+- (void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 {
 	[gaimThreadProxy gaimThreadInviteContact:contact
 									  toChat:chat
 								 withMessage:inviteMessage];
 }
 
-- (oneway void)gaimThreadCreateNewChat:(AIChat *)chat withListContact:(AIListContact *)contact
+- (void)gaimThreadCreateNewChat:(AIChat *)chat withListContact:(AIListContact *)contact
 {
 	//Create the chat
 	convLookupFromChat(chat, [chat account]);
@@ -1182,7 +1182,7 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Account Status
-- (oneway void)gaimThreadSetGaimStatusType:(const char *)gaimStatusType
+- (void)gaimThreadSetGaimStatusType:(const char *)gaimStatusType
 							   withMessage:(NSString *)message
 								 onAccount:(id)adiumAccount
 {
@@ -1193,7 +1193,7 @@ NSMutableDictionary* get_chatDict(void)
 	}
 }
 
-- (oneway void)setGaimStatusType:(const char *)gaimStatusType withMessage:(NSString *)message onAccount:(id)adiumAccount
+- (void)setGaimStatusType:(const char *)gaimStatusType withMessage:(NSString *)message onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetGaimStatusType:gaimStatusType
 									 withMessage:message
@@ -1202,7 +1202,7 @@ NSMutableDictionary* get_chatDict(void)
 
 
 //Set invisible. This will clear any other status.
-- (oneway void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
+- (void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1210,13 +1210,13 @@ NSMutableDictionary* get_chatDict(void)
 	}	
 }
 
-- (oneway void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
+- (void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetInvisible:isInvisible
 								  onAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
+- (void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
 	GaimAccount 	*account = accountLookupFromAdiumAccount(adiumAccount);
 	const char *profileHTMLUTF8 = [profileHTML UTF8String];
@@ -1227,26 +1227,26 @@ NSMutableDictionary* get_chatDict(void)
 		serv_set_info(account->gc, profileHTMLUTF8);
 	}
 }
-- (oneway void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
+- (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetInfo:profileHTML
 							 onAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+- (void)gaimThreadSetBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (account) {
 		gaim_account_set_buddy_icon(account, [buddyImageFilename UTF8String]);
 	}
 }
-- (oneway void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
+- (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetBuddyIcon:buddyImageFilename
 								  onAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadSetIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
+- (void)gaimThreadSetIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1262,13 +1262,13 @@ NSMutableDictionary* get_chatDict(void)
 		}
 	}
 }
-- (oneway void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
+- (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetIdleSinceTo:idleSince onAccount:adiumAccount];
 }
 
 #pragma mark Get Info
-- (oneway void)gaimThreadGetInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)gaimThreadGetInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1276,47 +1276,47 @@ NSMutableDictionary* get_chatDict(void)
 		serv_get_info(account->gc, [inUID UTF8String]);
 	}
 }
-- (oneway void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadGetInfoFor:inUID
 								onAccount:adiumAccount];
 }
 
 #pragma mark Xfer
-- (oneway void)gaimThreadXferRequest:(NSValue *)xferValue
+- (void)gaimThreadXferRequest:(NSValue *)xferValue
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	gaim_xfer_request(xfer);
 }
-- (oneway void)xferRequest:(GaimXfer *)xfer
+- (void)xferRequest:(GaimXfer *)xfer
 {
 	[gaimThreadProxy gaimThreadXferRequest:[NSValue valueWithPointer:xfer]];
 }
 
 //this is in Libgaim.framework, though it isn't in the headers.
 void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
-- (oneway void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
+- (void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	gaim_xfer_choose_file_ok_cb(xfer, [xferFileName UTF8String]);
 }
-- (oneway void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
+- (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
 {
 	[gaimThreadProxy gaimThreadXferRequestAccepted:[NSValue valueWithPointer:xfer]
 									  withFileName:xferFileName];
 }
 
-- (oneway void)gaimThreadXferRequestRejected:(NSValue *)xferValue
+- (void)gaimThreadXferRequestRejected:(NSValue *)xferValue
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	gaim_xfer_request_denied(xfer);
 }
-- (oneway void)xferRequestRejected:(GaimXfer *)xfer
+- (void)xferRequestRejected:(GaimXfer *)xfer
 {
 	[gaimThreadProxy gaimThreadXferRequestRejected:[NSValue valueWithPointer:xfer]];
 }
 
-- (oneway void)gaimThreadXferCancel:(NSValue *)xferValue
+- (void)gaimThreadXferCancel:(NSValue *)xferValue
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
 	if ((gaim_xfer_get_status(xfer) == GAIM_XFER_STATUS_UNKNOWN) ||
@@ -1327,26 +1327,26 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 	}
 }
 
-- (oneway void)xferCancel:(GaimXfer *)xfer
+- (void)xferCancel:(GaimXfer *)xfer
 {
 	[gaimThreadProxy gaimThreadXferCancel:[NSValue valueWithPointer:xfer]];
 }
 
 #pragma mark Account settings
-- (oneway void)gaimThreadSetCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
+- (void)gaimThreadSetCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	BOOL		shouldCheckMail = [checkMail boolValue];
 
 	gaim_account_set_check_mail(account, shouldCheckMail);
 }
-- (oneway void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
+- (void)setCheckMail:(NSNumber *)checkMail forAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetCheckMail:checkMail
 								 forAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadSetDefaultPermitDenyForAccount:(id)adiumAccount
+- (void)gaimThreadSetDefaultPermitDenyForAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
@@ -1355,14 +1355,14 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 		serv_set_permit_deny(gaim_account_get_connection(account));
 	}	
 }
-- (oneway void)setDefaultPermitDenyForAccount:(id)adiumAccount
+- (void)setDefaultPermitDenyForAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadSetDefaultPermitDenyForAccount:adiumAccount];
 }
 
 
 #pragma mark Protocol specific accessors
-- (oneway void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)gaimThreadOSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
@@ -1379,14 +1379,14 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 		}
 	}
 }
-- (oneway void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
+- (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadOSCAREditComment:comment
 										 forUID:inUID
 									  onAccount:adiumAccount];
 }
 
-- (oneway void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
+- (void)gaimThreadOSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 
@@ -1398,7 +1398,7 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
 	}
 }
-- (oneway void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
+- (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadOSCARSetFormatTo:inFormattedUID
 									  onAccount:adiumAccount];
@@ -1409,7 +1409,7 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
  *
  * @param availablePlaintext A plain text available message (not HTML)
  */
-- (oneway void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
+- (void)gaimThreadOSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
 {
 	GaimAccount		*account;
 	GaimConnection	*gc;
@@ -1424,7 +1424,7 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 }
 
 //Only for OSCAR
-- (oneway void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
+- (void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadOSCARSetAvailableMessageTo:availablePlaintext
 												onAccount:adiumAccount];	
@@ -1432,7 +1432,7 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 
 #pragma mark Request callbacks
 
-- (oneway void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
+- (void)gaimThreadPerformContactMenuActionFromDict:(NSDictionary *)dict
 {
 	GaimBlistNodeAction *act = [[dict objectForKey:@"GaimBlistNodeAction"] pointerValue];
 	GaimBuddy			*buddy = [[dict objectForKey:@"GaimBuddy"] pointerValue];
@@ -1441,13 +1441,13 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 	if (act->callback)
 		act->callback((GaimBlistNode *)buddy, act->data);
 }
-- (oneway void)performContactMenuActionFromDict:(NSDictionary *)dict 
+- (void)performContactMenuActionFromDict:(NSDictionary *)dict 
 {
 	[gaimThreadProxy gaimThreadPerformContactMenuActionFromDict:dict];
 }
 
 
-- (oneway void)gaimThreadPerformAccountMenuActionFromDict:(NSDictionary *)dict
+- (void)gaimThreadPerformAccountMenuActionFromDict:(NSDictionary *)dict
 {
 	GaimPluginAction	*pam = [[dict objectForKey:@"GaimPluginAction"] pointerValue];
 
@@ -1455,14 +1455,14 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 		pam->callback(pam);
 }
 
-- (oneway void)performAccountMenuActionFromDict:(NSDictionary *)dict
+- (void)performAccountMenuActionFromDict:(NSDictionary *)dict
 {
 	[gaimThreadProxy gaimThreadPerformAccountMenuActionFromDict:dict];
 }
 
 
 #pragma mark Secure messaging
-- (oneway void)gaimThreadRequestSecureMessaging:(BOOL)inSecureMessaging
+- (void)gaimThreadRequestSecureMessaging:(BOOL)inSecureMessaging
 										 inChat:(AIChat *)inChat
 {
 	GaimConversation	*conv;
@@ -1476,7 +1476,7 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 	}
 }
 
-- (oneway void)requestSecureMessaging:(BOOL)inSecureMessaging
+- (void)requestSecureMessaging:(BOOL)inSecureMessaging
 							   inChat:(AIChat *)inChat
 {
 	[gaimThreadProxy gaimThreadRequestSecureMessaging:inSecureMessaging
