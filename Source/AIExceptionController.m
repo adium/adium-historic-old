@@ -87,15 +87,13 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 	if (catchExceptions) {
 		NSString	*theReason = [exception reason];
 		NSString	*theName   = [exception name];
-		NSString	*backtrace = nil;
+		NSString	*backtrace = [exception decodedExceptionStackTrace];
 
 		NSLog(@"Caught exception: %@ - %@",theName,theReason);
 		
 		//Ignore various known harmless or unavoidable exceptions (From the system or system hacks)
 		if ((!theReason) || //Harmless
-		   (!theName) || //Harmless
 		   [safeExceptionReasons containsObject:theReason] || 
-		   [safeExceptionNames containsObject:theName] || 
 		   [theReason rangeOfString:@"NSRunStorage, _NSBlockNumberForIndex()"].location != NSNotFound || //NSLayoutManager throws this for fun in a purely-AppKit stack trace
 		   [theReason rangeOfString:@"Broken pipe"].location != NSNotFound || //libezv throws broken pipes as NSFileHandleOperationException with this in the reason; I'd rather we watched for "broken pipe" than ignore all file handle errors
 		   [theReason rangeOfString:@"incomprehensible archive"].location != NSNotFound || //NSKeyedUnarchiver can get confused and throw this; it's out of our control
@@ -105,25 +103,23 @@ static NSSet *safeExceptionReasons = nil, *safeExceptionNames = nil;
 		   [theReason rangeOfString:@"-patternImage not defined"].location != NSNotFound || //Painters Color Picker throws an exception during the normal course of operation.  Don't you hate that?
 		   [theReason rangeOfString:@"Failed to set font"].location != NSNotFound || //Corrupt fonts
 		   [theReason rangeOfString:@"Delete invalid attribute range"].location != NSNotFound || //NSAttributedString's initWithCoder can throw this
-		   [theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound) //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
+		   [theReason rangeOfString:@"NSMutableRLEArray objectAtIndex:effectiveRange:: Out of bounds"].location != NSNotFound || //-[NSLayoutManager textContainerForGlyphAtIndex:effectiveRange:] as of 10.4 can throw this
+		   (!theName) || //Harmless
+		   [safeExceptionNames containsObject:theName])
 		{
 			shouldLaunchCrashReporter = NO;
 		}
-
-		if (shouldLaunchCrashReporter) {
-			backtrace = [exception decodedExceptionStackTrace];
-
-			//Check the stack trace for a third set of known offenders
-			if (!backtrace ||
-			   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
-			   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
-			   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
-			   )
-			{
-				   shouldLaunchCrashReporter = NO;
-			}
+		
+		//Check the stack trace for a third set of known offenders
+		if (!backtrace ||
+		   [backtrace rangeOfString:@"-[NSFontPanel setPanelFont:isMultiple:] (in AppKit)"].location != NSNotFound || //NSFontPanel likes to create exceptions
+		   [backtrace rangeOfString:@"-[NSScrollView(NSScrollViewAccessibility) accessibilityChildrenAttribute]"].location != NSNotFound || //Perhaps we aren't implementing an accessibility method properly? No idea what though :(
+		   [backtrace rangeOfString:@"-[WebBridge objectLoadedFromCacheWithURL:response:data:]"].location != NSNotFound //WebBridge throws this randomly it seems
+		   )
+		{
+			   shouldLaunchCrashReporter = NO;
 		}
-
+			   
 		if (shouldLaunchCrashReporter) {
 			NSString	*bundlePath = [[NSBundle mainBundle] bundlePath];
 			NSString	*crashReporterPath = [bundlePath stringByAppendingPathComponent:RELATIVE_PATH_TO_CRASH_REPORTER];
