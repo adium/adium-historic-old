@@ -966,8 +966,8 @@
 		
         [titleString appendString:[NSString stringWithFormat:@"   %@",displayServiceID]
                    withAttributes:[NSDictionary dictionaryWithObjectsAndKeys:
-                       [fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
-                                    toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
+		[fontManager convertFont:[NSFont toolTipsFontOfSize:9] 
+					 toHaveTrait:NSBoldFontMask],NSFontAttributeName, nil]];
     }
     
     if ([object isKindOfClass:[AIListGroup class]]) {
