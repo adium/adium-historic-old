@@ -1298,7 +1298,11 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 - (void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
-	gaim_xfer_choose_file_ok_cb(xfer, [xferFileName UTF8String]);
+	//Only start the file transfer if it's still not marked as canceled and therefore can be begun.
+	if ((gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_LOCAL) &&
+		(gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_REMOTE)) {
+		gaim_xfer_choose_file_ok_cb(xfer, [xferFileName UTF8String]);
+	}
 }
 - (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
 {
