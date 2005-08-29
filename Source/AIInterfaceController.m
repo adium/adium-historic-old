@@ -837,10 +837,10 @@
             //If there is an image, set the title tab and indentation settings independently
             if (tooltipImage) {
                 //Set a right-align tab at the maximum label width and a left-align just past it
-                tabArray = [[NSArray alloc] initWithObjects:[[NSTextTab alloc] initWithType:NSRightTabStopType 
-                                                                                   location:maxLabelWidth]
-                                                            ,[[NSTextTab alloc] initWithType:NSLeftTabStopType 
-                                                                                   location:maxLabelWidth + LABEL_ENTRY_SPACING]
+                tabArray = [[NSArray alloc] initWithObjects:[[[NSTextTab alloc] initWithType:NSRightTabStopType 
+																					location:maxLabelWidth] autorelease]
+                                                            ,[[[NSTextTab alloc] initWithType:NSLeftTabStopType 
+                                                                                   location:maxLabelWidth + LABEL_ENTRY_SPACING] autorelease]
                                                             ,nil];
                 
                 [paragraphStyleTitle setTabStops:tabArray];
