@@ -920,7 +920,6 @@
     float                               labelWidth;
     BOOL                                isFirst = YES;
     
-    NSString                            *displayName = [object displayName];
     NSString                            *formattedUID = [object formattedUID];
     
     //Configure fonts and attributes
@@ -933,13 +932,23 @@
     NSMutableDictionary                 *labelEndLineDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:[NSFont toolTipsFontOfSize:2] , NSFontAttributeName, nil];
     NSMutableDictionary                 *entryDict =[NSMutableDictionary dictionaryWithObjectsAndKeys:
         toolTipsFont, NSFontAttributeName, nil];
-    
-    //"<DisplayName>" (or) "<DisplayName> (<UID>)"
-    if (!formattedUID || ([[displayName compactedString] isEqualToString:[formattedUID compactedString]])) {
-        [titleString appendString:[NSString stringWithFormat:@"%@", displayName] withAttributes:titleDict];
-    } else {
-        [titleString appendString:[NSString stringWithFormat:@"%@ (%@)", displayName, formattedUID] withAttributes:titleDict];
-    }
+	
+	//Get the user's display name as an attributed string
+    NSAttributedString                  *displayName = [[NSAttributedString alloc] initWithString:[object displayName]
+																					   attributes:titleDict];
+	NSAttributedString					*filtedDisplayName = [[adium contentController] filterAttributedString:displayName
+																							   usingFilterType:AIFilterDisplay
+																									 direction:AIFilterIncoming
+																									   context:nil];
+	
+	//Append the user's display name
+	[titleString appendAttributedString:filtedDisplayName];
+	
+	//Append the user's formatted UID if there is one that's different to the display name
+	if (formattedUID && (!([[[displayName string] compactedString] isEqualToString:[formattedUID compactedString]]))) {
+		[titleString appendString:[NSString stringWithFormat:@" (%@)", formattedUID] withAttributes:titleDict];
+	}
+	[displayName release];
     
     if ([object isKindOfClass:[AIListContact class]]) {
 		
