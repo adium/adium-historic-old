@@ -171,9 +171,9 @@ static ESFileTransferPreferences *preferences;
 //Sent by an account when it gets a request for us to receive a file; prompt the user for a save location
 - (NSWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	AIListContact							*listContact = [fileTransfer contact];
-	NSString								*localFilename = nil;
-	ESFileTransferRequestPromptController	*promptController = nil;
+	AIListContact		*listContact = [fileTransfer contact];
+	NSString			*localFilename = nil;
+	NSWindowController	*promptController = nil;
 
 	[fileTransfer setType:Incoming_FileTransfer];
 
