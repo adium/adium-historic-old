@@ -377,10 +377,10 @@ static NSString                             *filterForContactName = nil;	//Conta
 - (IBAction)deleteAllLogs:(id)sender
 {
 	NSAlert * alert = [[NSAlert alloc] init];
-	[alert setMessageText:@"Delete Logs?"];
-	[alert setInformativeText:@"Warning: Are you sure you want to delete your logs? This operation cannot be undone."];
-	[alert addButtonWithTitle:@"Delete"]; 
-	[alert addButtonWithTitle:@"Cancel"];
+	[alert setMessageText:AILocalizedString(@"Delete Logs?",nil)];
+	[alert setInformativeText:AILocalizedString(@"Warning: Are you sure you want to delete the selected logs? This operation cannot be undone.",nil)];
+	[alert addButtonWithTitle:DELETE]; 
+	[alert addButtonWithTitle:AILocalizedString(@"Cancel",nil)];
 	if ([alert runModal] == NSAlertFirstButtonReturn)
 	{
 		int row = [[tableView_results dataSource] numberOfRowsInTableView:tableView_results];

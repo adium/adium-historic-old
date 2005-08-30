@@ -36,8 +36,14 @@
 	_displayNameArray = nil;
 	
 	// Build the popup filter menu
-	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Contacts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:0];
-	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Accounts",nil) target:self action:@selector(switchTable:) keyEquivalent:@""] setTag:1];
+	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Contacts",nil) 
+										target:self
+										action:@selector(switchTable:)
+								 keyEquivalent:@""] setTag:0];
+	[[[popup_filterType menu] addItemWithTitle:AILocalizedString(@"Accounts",nil)
+										target:self
+										action:@selector(switchTable:)
+								 keyEquivalent:@""] setTag:1];
 	// Need to remove the minimal menuitem needed in IB
 	[[popup_filterType menu] removeItemAtIndex:0];
 	
@@ -126,9 +132,14 @@
 	
 	if (row != -1) {
 		NSString	*name = [[[[controller_LogViewer toArray] objectAtIndex:row] copy] autorelease];
-		NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+		NSBeginAlertSheet([NSString stringWithFormat:AILocalizedString(@"Delete %@'s Logs", nil), name],
+						  AILocalizedString(@"Delete",nil),
+						  AILocalizedString(@"Cancel",nil),
+						  @"",
+						  [controller_LogViewer window],
+						  self,
 						  @selector(trashContactConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-						  @"Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.",name,name);
+						  AILocalizedString(@"Are you sure you want to delete any logs of past conversations with %@? These items will be moved to the Trash.", nil), name);
 	} else {
 		NSBeep();
 	}
@@ -161,9 +172,14 @@
 
 	if (row != -1) {
 		NSString	*name = [[[[controller_LogViewer fromArray] objectAtIndex:row] copy] autorelease];
-		NSBeginAlertSheet([NSString stringWithFormat:@"Delete %@'s Logs", name],@"Delete",@"Cancel",@"",[controller_LogViewer window], self, 
+		NSBeginAlertSheet([NSString stringWithFormat:AILocalizedString(@"Delete %@'s Logs", nil), name],
+						  AILocalizedString(@"Delete",nil),
+						  AILocalizedString(@"Cancel",nil),
+						  @"",
+						  [controller_LogViewer window],
+						  self, 
 						  @selector(trashAccountConfirmSheetDidEnd:returnCode:contextInfo:), nil, nil, 
-						  @"Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.", name);
+						  AILocalizedString(@"Are you sure you want to delete your %@ account's folder and all prior conversations with all contacts? This will be moved to the Trash.", nil), name);
 	} else {
 		NSBeep();
 	}
