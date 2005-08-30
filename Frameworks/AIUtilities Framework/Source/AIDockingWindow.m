@@ -173,4 +173,51 @@
 	}
 }
 
+#pragma mark Accessibility
+
+- (id)accessibilityAttributeValue:(NSString *)attribute
+{
+	return [super accessibilityAttributeValue:attribute];
+}
+
+- (id)accessibilityAttributeValue:(NSString *)attribute forParameter:(id)parameter
+{
+	return [super accessibilityAttributeValue:attribute forParameter:parameter];
+}
+
+- (id)accessibilityFocusedUIElement
+{
+	return [super accessibilityFocusedUIElement];
+}
+
+- (BOOL)accessibilityIsAttributeSettable:(NSString *)attribute
+{
+	return [super accessibilityIsAttributeSettable:attribute];
+}
+
+- (void)accessibilitySetValue:(id)value forAttribute:(NSString *)attribute
+{
+	[super accessibilitySetValue:value forAttribute:attribute];
+}
+
+- (void)accessibilityPerformAction:(NSString *)action
+{
+	[super accessibilityPerformAction:action];
+}
+
+- (NSArray *)accessibilityActionNames
+{
+	return [super accessibilityActionNames];
+}
+
+- (NSArray *)accessibilityAttributeNames
+{
+	return [super accessibilityAttributeNames];
+}
+
+- (NSString *)accessibilityActionDescription:(NSString *)action
+{
+	return [super accessibilityActionDescription:action];
+}
+
 @end
