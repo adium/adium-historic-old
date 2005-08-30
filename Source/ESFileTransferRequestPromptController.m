@@ -32,13 +32,13 @@
 
 @implementation ESFileTransferRequestPromptController
 
-+ (void)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
-					 notifyingTarget:(id)inTarget
-							selector:(SEL)inSelector
++ (id)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
+                   notifyingTarget:(id)inTarget
+                          selector:(SEL)inSelector
 {
-	[[self alloc] initForFileTransfer:inFileTransfer
-					  notifyingTarget:inTarget
-							 selector:inSelector];
+	return [[self alloc] initForFileTransfer:inFileTransfer
+	                         notifyingTarget:inTarget
+	                                selector:inSelector];
 }
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
