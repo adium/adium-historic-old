@@ -391,7 +391,7 @@
 	nextContentInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/NextContent.html"]] retain];
 	contentOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/Content.html"]] retain];
 	nextContentOutHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Outgoing/NextContent.html"]] retain];
-
+		  
 	//Context (Fall back on content if not present)
 	contextInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/Context.html"]] retain];
 	nextContextInHTML = [[NSString stringWithContentsOfUTF8File:[stylePath stringByAppendingPathComponent:@"Incoming/NextContext.html"]] retain];
@@ -585,14 +585,14 @@
 	}
 	
 	//Replacements applicable to any AIContentObject
-	//	if (date) {
 	do{
 		range = [inString rangeOfString:@"%time%"];
 		if (range.location != NSNotFound) {
-			if (date)
+			if (date) {
 				[inString replaceCharactersInRange:range withString:[timeStampFormatter stringForObjectValue:date]];
-			else
+			} else {
 				[inString deleteCharactersInRange:range];
+			}
 		}
 	} while (range.location != NSNotFound);
 	
@@ -605,7 +605,6 @@
 			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
 				if (date) {
 					NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-					
 					NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
 																			allowNaturalLanguage:NO];
 					[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
@@ -619,7 +618,6 @@
 			}
 		}
 	} while (range.location != NSNotFound);
-	//	}
 	
 	//message stuff
 	if ([content isKindOfClass:[AIContentMessage class]]) {
@@ -932,14 +930,15 @@
 		if (range.location != NSNotFound) {
 			NSRange endRange;
 			endRange = [inString rangeOfString:@"}%"];
-			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {
-				
-				NSString *timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
-				NSDateFormatter	*dateFormatter = [[[NSDateFormatter alloc] initWithDateFormat:timeFormat 
-																		 allowNaturalLanguage:NO] autorelease];
-				
+
+			if (endRange.location != NSNotFound && endRange.location > NSMaxRange(range)) {				
+				NSString		*timeFormat = [inString substringWithRange:NSMakeRange(NSMaxRange(range), (endRange.location - NSMaxRange(range)))];
+				NSDateFormatter	*dateFormatter = [[NSDateFormatter alloc] initWithDateFormat:timeFormat 
+																		allowNaturalLanguage:NO];
+
 				[inString replaceCharactersInRange:NSUnionRange(range, endRange) 
 										withString:[dateFormatter stringForObjectValue:[chat dateOpened]]];
+				[dateFormatter release];
 				
 			}
 		}
