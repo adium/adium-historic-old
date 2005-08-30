@@ -27,6 +27,7 @@
 #import "AITooltipUtilities.h"
 #import "AIStringUtilities.h"
 #import "AIMenuAdditions.h"
+#import "AIApplicationAdditions.h"
 
 #define COPY_LINK   AILocalizedStringFromTableInBundle(@"Copy Link", nil, [NSBundle bundleWithIdentifier:AIUTILITIES_BUNDLE_ID], "Copy the link to the clipboard")
 
@@ -389,43 +390,46 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
 
 - (NSArray *)menuItemsForEvent:(NSEvent *)theEvent withOffset:(NSPoint)offset
 {
-    NSURL		*linkURL = nil;
-    NSPoint		mouseLoc;
-    unsigned int	glyphIndex;
-    unsigned int	charIndex;
-    
-    NSMutableArray      *menuItemsArray = nil;
-    
-    //Find clicked char index
-    mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
-    mouseLoc.x -= offset.x;
-    mouseLoc.y -= offset.y;
+	NSMutableArray	*menuItemsArray = nil;
+    NSURL			*linkURL = nil;
+	
+	//Tiger adds a Copy Link item for us to links, so we don't need to.
+	if (![NSApp isOnTigerOrBetter]) {
+		NSPoint			mouseLoc;
+		unsigned int	glyphIndex;
+		unsigned int	charIndex;
 
-    glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
-    charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
+		//Find clicked char index
+		mouseLoc = [controlView convertPoint:[theEvent locationInWindow] fromView:nil];
+		mouseLoc.x -= offset.x;
+		mouseLoc.y -= offset.y;
 
-    if (charIndex >= 0 && charIndex < [textStorage length]) {
-        NSString	*linkString;
-        NSRange		linkRange;
-    
-        //Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
-        linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
+		glyphIndex = [layoutManager glyphIndexForPoint:mouseLoc inTextContainer:textContainer fractionOfDistanceThroughGlyph:nil];
+		charIndex = [layoutManager characterIndexForGlyphAtIndex:glyphIndex];
 
-		// The string might already have been filtered (i.e. in Context objects)
-		if ( [linkString isKindOfClass:[NSURL class]] ) {
-			linkString = [(NSURL *)linkString absoluteString];
+		if (charIndex >= 0 && charIndex < [textStorage length]) {
+			NSString	*linkString;
+			NSRange		linkRange;
+
+			//Check if click is in valid link attributed range, and is inside the bounds of that style range, else fall back to default handler
+			linkString = [textStorage attribute:NSLinkAttributeName atIndex:charIndex effectiveRange:&linkRange];
+
+			// The string might already have been filtered (i.e. in Context objects)
+			if ( [linkString isKindOfClass:[NSURL class]] ) {
+				linkString = [(NSURL *)linkString absoluteString];
+			}
+
+			if (linkString != nil && [linkString length] != 0) {
+				//add http:// to the link string if a protocol wasn't specified
+				if ([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound) {
+					linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
+				} else {
+					linkURL = [NSURL URLWithString:linkString];
+				}
+			}
 		}
-		
-		if (linkString != nil && [linkString length] != 0) {
-            //add http:// to the link string if a protocol wasn't specified
-            if ([linkString rangeOfString:@"://"].location == NSNotFound && [linkString rangeOfString:@"mailto:"].location == NSNotFound) {
-                linkURL = [NSURL URLWithString:[NSString stringWithFormat:@"http://%@",linkString]];
-            } else {
-                linkURL = [NSURL URLWithString:linkString];
-            }
-        }
-    }
-    
+	}
+
     //If a linKURL was created, add menu items for it to the menuItemsArray
     if (linkURL) {
         NSMenuItem  *menuItem;
@@ -438,6 +442,7 @@ NSRectArray _copyRectArray(NSRectArray someRects, int arraySize)
         [menuItem setRepresentedObject:linkURL];
         [menuItemsArray addObject:menuItem];
     }
+
     return menuItemsArray;
 }
 
