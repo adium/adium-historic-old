@@ -22,7 +22,7 @@
 
 /*!
  * @class CBActionSupportPlugin
- * @brief Simple outgoing content filter to turn "/me blah" into "*blah*"
+ * @brief Simple content filter to turn "/me blah" into "*blah*"
  */
 @implementation CBActionSupportPlugin
 
@@ -31,7 +31,7 @@
  */
 - (void)installPlugin
 {
-	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterDisplay];
 }
 
 #pragma mark -
