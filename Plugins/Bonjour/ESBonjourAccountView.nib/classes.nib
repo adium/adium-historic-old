@@ -7,6 +7,10 @@
             OUTLETS = {
                 "checkBox_checkMail" = NSButton; 
                 "checkBox_sendTyping" = NSButton; 
+                "label_alias" = NSTextField; 
+                "label_encryption" = NSTextField; 
+                "label_password" = NSTextField; 
+                "label_typing" = NSTextField; 
                 "popUp_encryption" = NSPopUpButton; 
                 "textField_accountUID" = NSTextField; 
                 "textField_accountUIDLabel" = NSTextField; 
@@ -22,18 +26,37 @@
             }; 
             SUPERCLASS = AIObject; 
         }, 
+        {
+            CLASS = AILocalizationButton; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSButton; 
+        }, 
+        {
+            CLASS = AILocalizationTextField; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                "view_anchorToLeftSide" = NSView; 
+                "view_anchorToRightSide" = NSView; 
+                "window_anchorOnLeftSide" = NSWindow; 
+                "window_anchorOnRightSide" = NSWindow; 
+            }; 
+            SUPERCLASS = NSTextField; 
+        }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            CLASS = ESGaimNovellAccountViewController; 
+            CLASS = ESBonjourAccountViewController; 
             LANGUAGE = ObjC; 
             SUPERCLASS = AIAccountViewController; 
         }, 
-        {
-            CLASS = ESRendezvousAccountViewController; 
-            LANGUAGE = ObjC; 
-            SUPERCLASS = AIAccountViewController; 
-        }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
+        {CLASS = NSTextField; LANGUAGE = ObjC; SUPERCLASS = NSControl; }
     ); 
     IBVersion = 1; 
 }
