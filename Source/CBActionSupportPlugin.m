@@ -31,7 +31,8 @@
  */
 - (void)installPlugin
 {
-	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterDisplay];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
+	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterIncoming];
 }
 
 #pragma mark -
