@@ -32,13 +32,16 @@
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = SHAutoValidatingTextView; LANGUAGE = ObjC; SUPERCLASS = NSTextView; }, 
         {
-            ACTIONS = {acceptURL = id; cancel = id; closeWindow = id; removeURL = id; }; 
+            ACTIONS = {acceptURL = id; cancel = id; removeURL = id; }; 
             CLASS = SHLinkEditorWindowController; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                "button_Cancel" = NSButton; 
-                "button_OK" = NSButton; 
+                "button_cancel" = NSButton; 
+                "button_insert" = NSButton; 
+                "button_removeLink" = NSButton; 
                 "imageView_invalidURLAlert" = NSImageView; 
+                "label_URL" = NSTextField; 
+                "label_linkText" = NSTextField; 
                 "scrollView_URL" = AIAutoScrollView; 
                 target = id; 
                 "textField_linkText" = NSTextField; 
