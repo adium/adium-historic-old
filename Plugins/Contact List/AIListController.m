@@ -537,7 +537,7 @@ typedef enum {
 										   @selector(mergeContactSheetDidEnd:returnCode:contextInfo:),
 										   nil,
 										   [context retain], //we're responsible for retaining the content object
-										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\r\rYou may un-combine these contacts by getting info on them.","Explanation of metacontact creation"));
+										   AILocalizedString(@"Once combined, Adium will treat these contacts as a single individual both on your contact list and when sending messages.\n\nYou may un-combine these contacts by getting info on the combined contact.","Explanation of metacontact creation"));
 		}
 	}
 	
