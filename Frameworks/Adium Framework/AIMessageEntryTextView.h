@@ -28,6 +28,7 @@
     BOOL                 clearOnEscape;
     BOOL                 pushPopEnabled;
 	BOOL				 homeToStartOfLine;
+	BOOL				 enableTypingNotifications;
 
     NSMutableArray		*historyArray;
     int                  currentHistoryLocation;
@@ -40,7 +41,7 @@
 	
     NSSize               lastPostedSize;
     NSSize               _desiredSizeCached;
-	BOOL				resizing;
+	BOOL				 resizing;
     
     NSView              *associatedView;
 }

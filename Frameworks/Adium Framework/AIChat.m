@@ -29,8 +29,6 @@
 
 #import <AIUtilities/AIArrayAdditions.h>
 
-#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
-
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
 - (void)clearUniqueChatID;

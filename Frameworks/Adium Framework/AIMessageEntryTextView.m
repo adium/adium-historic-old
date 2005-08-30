@@ -16,6 +16,7 @@
 
 #import "AIObject.h"
 #import "AIChat.h"
+#import "AIAccount.h"
 #import "AIMenuController.h"
 #import "AIMessageEntryTextView.h"
 #import "AIPreferenceController.h"
@@ -32,6 +33,8 @@
 
 #define MAX_HISTORY					25		//Number of messages to remember in history
 #define ENTRY_TEXTVIEW_PADDING		6		//Padding for auto-sizing
+
+#define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
@@ -55,6 +58,7 @@ static NSImage	*pushIndicatorImage = nil;
 		clearOnEscape = NO;
 		homeToStartOfLine = YES;
 		resizing = NO;
+		enableTypingNotifications = NO;
 		historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
 		pushArray = [[NSMutableArray alloc] init];
 		currentHistoryLocation = 0;
@@ -91,7 +95,8 @@ static NSImage	*pushIndicatorImage = nil;
 - (void)dealloc
 {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
-	
+	[[adium preferenceController] unregisterPreferenceObserver:self];
+
     [chat release];
     [associatedView release];
     [historyArray release]; historyArray = nil;
@@ -198,8 +203,10 @@ static NSImage	*pushIndicatorImage = nil;
 - (void)textDidChange:(NSNotification *)notification
 {
 	//Update typing status
-	[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
-	
+	if (enableTypingNotifications) {
+		[[adium contentController] userIsTypingContentForChat:chat hasEnteredText:[[self textStorage] length] > 0];
+	}
+
     //Reset cache and resize
 	[self _resetCacheAndPostSizeChanged];
 }
@@ -245,6 +252,15 @@ static NSImage	*pushIndicatorImage = nil;
 	return associatedView;
 }
 
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	if((!object || (object == [chat account])) &&
+	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])){
+		enableTypingNotifications = ![[[chat account] preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
+																 group:GROUP_ACCOUNT_STATUS] boolValue];
+	}
+}
 
 //Adium Text Entry -----------------------------------------------------------------------------------------------------
 #pragma mark Adium Text Entry
@@ -348,6 +364,9 @@ static NSImage	*pushIndicatorImage = nil;
     if (chat != inChat) {
         [chat release];
         chat = [inChat retain];
+		
+		//Observe preferences changes for typing enable/disable
+		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
     }
 }
 - (AIChat *)chat{
