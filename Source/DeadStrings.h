@@ -7,6 +7,8 @@
 AILocalizedString(@"Sorry, but Adium Message Styles are not supported in OS X 10.2 (Jaguar).", nil)
 AILocalizedString(@"Sort tabs with the current sort options",nil)
 AILocalizedString(@"Remove %@",nil)
+AILocalizedString(@"Remove %@ from your list?",nil)
+AILocalizedString(@"Be careful. You cannot undo this action.",nil)
 AILocalizedString(@"Order the contact list:",nil)
 AILocalizedString(@"Hide while Adium is in the background",nil)
 AILocalizedString(@"Add to Accounts:",nil)
