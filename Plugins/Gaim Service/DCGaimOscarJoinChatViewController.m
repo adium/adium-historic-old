@@ -48,13 +48,12 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
+	[super configureForAccount:inAccount];
 	
 	[textField_inviteUsers setMinStringLength:2];
 	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
 	[self _configureTextField];
 
-	[super configureForAccount:inAccount];
-	
 	[[view window] makeFirstResponder:textField_roomName];
 	[self validateEnteredText];
 }

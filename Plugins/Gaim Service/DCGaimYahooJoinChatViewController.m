@@ -41,15 +41,14 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	account = inAccount;
-	
+	[super configureForAccount:inAccount];
+
 	[textField_inviteUsers setMinStringLength:2];
 	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
 	[self _configureTextField];
 	
-	[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_roomName stringValue] length] > 0)];
+	[self validateEnteredText];
 	[[view window] makeFirstResponder:textField_roomName];
-	[super configureForAccount:inAccount];
 }
 
 - (void)joinChatWithAccount:(AIAccount *)inAccount
@@ -92,12 +91,13 @@
 	NSString *roomName = [textField_roomName stringValue];
 	BOOL enabled = NO;
 	
-	if ( roomName && [roomName length] ) {
+	if (roomName && [roomName length]) {
 		enabled = YES;
 	}
 	
-	if ( delegate )
+	if (delegate) {
 		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:enabled];
+	}
 }
 
 - (NSString *)impliedCompletion:(NSString *)aString
