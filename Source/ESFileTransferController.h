@@ -72,7 +72,7 @@ typedef enum {
 - (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 - (NSArray *)fileTransferArray;
 
-- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (NSWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status;
 

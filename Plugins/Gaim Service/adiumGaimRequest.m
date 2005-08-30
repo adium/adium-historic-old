@@ -38,39 +38,38 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	 Masked means we want to use an NSSecureTextField sort of thing.
 	 We may receive any combination of primary and secondary text (either, both, or neither).
 	 */
-	
-	NSString			*okButtonText = [NSString stringWithUTF8String:okText];
-	NSString			*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+	id					requestController = nil;
 	NSString			*primaryString = (primary ? [NSString stringWithUTF8String:primary] : nil);
-	NSMutableDictionary *infoDict;
 	
 	//Ignore gaim trying to get an account's password; we'll feed it the password and reconnect if it gets here, somehow.
-	if ([primaryString rangeOfString:@"Enter password for "].location != NSNotFound) {
-		return adium_gaim_get_handle();
+	if ([primaryString rangeOfString:@"Enter password for "].location == NSNotFound) {
+		NSMutableDictionary *infoDict;
+		NSString			*okButtonText = [NSString stringWithUTF8String:okText];
+		NSString			*cancelButtonText = [NSString stringWithUTF8String:cancelText];
+
+		infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
+			cancelButtonText,@"Cancel Text",
+			[NSValue valueWithPointer:okCb],@"OK Callback",
+			[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
+			[NSValue valueWithPointer:userData],@"userData",nil];
+		
+		
+		if (primaryString) [infoDict setObject:primaryString forKey:@"Primary Text"];
+		if (title) [infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
+		if (defaultValue) [infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
+		if (secondary) [infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
+		
+		[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
+		[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
+		
+		GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
+		
+		requestController = [ESGaimRequestWindowController mainPerformSelector:@selector(showInputWindowWithDict:)
+																	withObject:infoDict
+																   returnValue:YES];
 	}
 	
-	infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:okButtonText,@"OK Text",
-		cancelButtonText,@"Cancel Text",
-		[NSValue valueWithPointer:okCb],@"OK Callback",
-		[NSValue valueWithPointer:cancelCb],@"Cancel Callback",
-		[NSValue valueWithPointer:userData],@"userData",nil];
-	
-	
-	if (primaryString) [infoDict setObject:primaryString forKey:@"Primary Text"];
-	if (title) [infoDict setObject:[NSString stringWithUTF8String:title] forKey:@"Title"];	
-	if (defaultValue) [infoDict setObject:[NSString stringWithUTF8String:defaultValue] forKey:@"Default Value"];
-	if (secondary) [infoDict setObject:[NSString stringWithUTF8String:secondary] forKey:@"Secondary Text"];
-	
-	[infoDict setObject:[NSNumber numberWithBool:multiline] forKey:@"Multiline"];
-	[infoDict setObject:[NSNumber numberWithBool:masked] forKey:@"Masked"];
-	
-	GaimDebug (@"adiumGaimRequestInput: %@",infoDict);
-	
-	[ESGaimRequestWindowController performSelectorOnMainThread:@selector(showInputWindowWithDict:)
-													withObject:infoDict
-												 waitUntilDone:YES];
-	
-    return adium_gaim_get_handle();
+	return (requestController ? requestController : [NSNull null]);
 }
 
 static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
@@ -80,16 +79,16 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
 
-    return adium_gaim_get_handle();
+    return [NSNull null];
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
 static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action,void *userData, size_t actionCount, va_list actions)
 {
-    int		    i;
-	
-    NSString	    *titleString = (title ? [NSString stringWithUTF8String:title] : @"");
-	NSString		*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
+    NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
+	NSString			*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
+	id					requestController = nil;
+	int					i;
 	
 	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
@@ -178,9 +177,10 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 
 		if (reason && [reason length]) [infoDict setObject:reason forKey:@"Reason"];
 
-		[ESGaimAuthorizationRequestWindowController performSelectorOnMainThread:@selector(showAuthorizationRequestWithDict:)
-																	 withObject:infoDict
-																  waitUntilDone:YES];
+		requestController = [ESGaimAuthorizationRequestWindowController mainPerformSelector:@selector(showAuthorizationRequestWithDict:)
+																				 withObject:infoDict
+																				returnValue:YES];
+
 	} else if (primaryString && ([primaryString rangeOfString:@"Add buddy to your list?"].location != NSNotFound)) {
 		/* This is Jabber doing inelegantly what we elegantly handle in the authorization request window for all
 		 * services, asking if the user wants to add a contact which just added him.  We just ignore this request, as
@@ -193,8 +193,6 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 		 * implementation, which we don't have yet, so the dialog is just confusing.  Accept the defaults.
 		 */
 		// XXX remove when gaim_request_fields is implemented
-		GCallback		*callBacks = g_new0(GCallback, actionCount);
-
 		for (i = 0; i < actionCount; i += 1) {
 			GCallback	tempCallBack;
 			char		*buttonName;
@@ -251,17 +249,19 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 			titleString,@"Title String",
 			msg,@"Message",nil];
 		
-		[ESGaimRequestActionController performSelectorOnMainThread:@selector(showActionWindowWithDict:)
-														withObject:infoDict
-													 waitUntilDone:YES];
+		requestController = [ESGaimRequestActionController mainPerformSelector:@selector(showActionWindowWithDict:)
+																	withObject:infoDict
+																   returnValue:YES];
 	}
 
-    return adium_gaim_get_handle();
+	//Return the requestController if we have one; otherwise return our generic UI handle
+	return (requestController ? requestController : [NSNull null]);
 }
 
 static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
 {
-	NSString *titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
+	id					requestController = nil;
+	NSString			*titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
 
     if (titleString && 
 		[titleString rangeOfString:@"new jabber"].location != NSNotFound) {
@@ -375,9 +375,9 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 			originalName, @"Original Name",
 			nil];
 
-		[ESGaimMeanwhileContactAdditionController performSelectorOnMainThread:@selector(showContactAdditionListWithDict:)
-																   withObject:infoDict
-																waitUntilDone:YES];
+		requestController = [ESGaimMeanwhileContactAdditionController mainPerformSelector:@selector(showContactAdditionListWithDict:)
+																			   withObject:infoDict
+																			  returnValue:YES];
 	} else {		
 		GaimDebug (@"adiumGaimRequestFields: %s\n%s\n%s ",
 				   (title ? title : ""),
@@ -430,12 +430,15 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 //		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
     
-	return adium_gaim_get_handle();
+	//Return the requestController if we have one; otherwise return our generic UI handle
+	return (requestController ? requestController : [NSNull null]);
 }
 
 static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
 {
-	NSString	*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
+	id					requestController = nil;
+	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
+
 	if (titleString &&
 	   ([titleString rangeOfString:@"Sametime"].location != NSNotFound)) {
 		   if ([titleString rangeOfString:@"Export"].location != NSNotFound) {
@@ -451,11 +454,12 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 				   ((GaimRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
 			   }
 		   }		   
-		   
+
 	   } else {
 		   GaimXfer *xfer = (GaimXfer *)user_data;
-		   GaimXferType xferType = gaim_xfer_get_type(xfer);
 		   if (xfer) {
+			   GaimXferType xferType = gaim_xfer_get_type(xfer);
+
 			   if (xferType == GAIM_XFER_RECEIVE) {
 				   GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
 				   
@@ -473,8 +477,9 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 				   xfer->ui_data = [fileTransfer retain];
 				   
 				   //Tell the account that we are ready to request the reception
-				   [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
-														  withObject:fileTransfer];
+				   requestController = [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
+																			  withObject:fileTransfer
+																			 returnValue:YES];
 				   
 			   } else if (xferType == GAIM_XFER_SEND) {
 				   if (xfer->local_filename != NULL && xfer->filename != NULL) {
@@ -487,12 +492,33 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 		   }
 	   }
 	   
-	return adium_gaim_get_handle();
+	//Return the requestController if we have one; otherwise return our generic UI handle
+	return (requestController ? requestController : [NSNull null]);
 }
 
-static void adiumGaimRequestClose(GaimRequestType type,void *uiHandle)
+/*
+ * @brief Gaim requests that we close a request window
+ *
+ * This is not sent after user interaction with the window.  Instead, it is sent when the window is no longer valid;
+ * for example, a chat invite window after the relevant account disconnects.  We should immediately close the window.
+ *
+ * @param type The request type
+ * @param uiHandle must be an id; it should either be NSNull or an object which can respond to close, such as NSWindowController.
+ */
+static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 {
+	NSObject	*ourHandle = (NSObject *)uiHandle;
 	
+	if ([ourHandle respondsToSelector:@selector(close)]) {
+		NSWindow	*window = [(id)ourHandle mainPerformSelector:@selector(window)
+													 returnValue:YES];
+		[window performSelectorOnMainThread:@selector(orderOut:)
+								 withObject:nil
+							  waitUntilDone:YES];
+		[window performSelectorOnMainThread:@selector(close)
+								 withObject:nil
+							  waitUntilDone:NO];		
+	}
 }
 
 static GaimRequestUiOps adiumGaimRequestOps = {

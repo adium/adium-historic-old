@@ -19,15 +19,17 @@
 
 @implementation ESGaimAuthorizationRequestWindowController
 
-+ (void)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict
++ (ESGaimAuthorizationRequestWindowController *)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict
 {
 	ESGaimAuthorizationRequestWindowController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:@"GaimAuthorizationRequestWindow"
-											withDict:inInfoDict];
+	if ((controller = [[self alloc] initWithWindowNibName:@"GaimAuthorizationRequestWindow"
+												 withDict:inInfoDict])) {
+		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+	}
 	
-	[controller showWindow:nil];
-	[[controller window] makeKeyAndOrderFront:nil];	
+	return controller;
 }
 
 //Init

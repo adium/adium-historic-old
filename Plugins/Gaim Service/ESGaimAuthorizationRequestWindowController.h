@@ -19,6 +19,7 @@
 	NSDictionary				*infoDict;
 }
 
++ (ESGaimAuthorizationRequestWindowController *)showAuthorizationRequestWithDict:(NSDictionary *)inInfoDict;
 - (IBAction)authorize:(id)sender;
 
 @end
