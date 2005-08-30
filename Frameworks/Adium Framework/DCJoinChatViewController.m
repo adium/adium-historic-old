@@ -57,7 +57,8 @@
 - (void)dealloc
 {
 	[view release]; view = nil;
-	
+	[account release];
+
 	[super dealloc];
 }
 
@@ -69,7 +70,14 @@
 //Stubs for subclasses
 - (NSString *)nibName { return nil; };
 - (void)joinChatWithAccount:(AIAccount *)inAccount { };
-- (void)configureForAccount:(AIAccount *)inAccount { account = inAccount; }
+
+- (void)configureForAccount:(AIAccount *)inAccount
+{ 
+	if (inAccount != account) {
+		[account release];
+		account = [inAccount retain]; 
+	}
+}
 
 - (NSString *)impliedCompletion:(NSString *)aString {return aString;}
 

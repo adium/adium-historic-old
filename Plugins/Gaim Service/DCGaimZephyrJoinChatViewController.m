@@ -31,10 +31,8 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	if (delegate) {
-		[(DCJoinChatWindowController *)delegate setJoinChatEnabled:([[textField_class stringValue] length] > 0)];
-	}
-	
+	[self validateEnteredText];
+
 	[[view window] makeFirstResponder:textField_class];
 	
 	[super configureForAccount:inAccount];

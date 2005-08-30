@@ -21,7 +21,7 @@
 #import <AIUtilities/AICompletingTextField.h>
 #import <Adium/AIListContact.h>
 
-#define DEFAULT_CONFERENCE_SERVER [NSString stringWithFormat:@"conference.%@",[(CBGaimAccount *)inAccount host]]
+#define	KEY_DEFAULT_CONFERENCE_SERVER	@"DefaultConferenceServer"
 
 @interface DCGaimJabberJoinChatViewController (PRIVATE)
 - (void)validateEnteredText;
@@ -41,21 +41,54 @@
 	return self;
 }
 
+/*
+ * @brief Find the default conference server
+ *
+ * Assumption: The account ivar is non-nil
+ *
+ * @result The server specified by KEY_DEFAULT_CONFERENCE_SERVER, or conference.[account host].
+ */
+- (NSString *)defaultConferenceServer
+{
+	NSString *defaultConferenceServer;
+	
+	if (!(defaultConferenceServer = [account preferenceForKey:KEY_DEFAULT_CONFERENCE_SERVER group:GROUP_ACCOUNT_STATUS])) {
+		defaultConferenceServer = [NSString stringWithFormat:@"conference.%@",[account host]];
+	}
+	
+	return defaultConferenceServer;
+}
+
+/*
+ * @brief Store a nwe default conference server
+ */
+- (void)setDefaultConferenceServer:(NSString *)inDefaultConferenceServer
+{
+	[account setPreference:inDefaultConferenceServer
+					forKey:KEY_DEFAULT_CONFERENCE_SERVER
+					 group:GROUP_ACCOUNT_STATUS];
+}
+
 - (void)configureForAccount:(AIAccount *)inAccount
 {
-	account = inAccount;
+	NSString	*defaultConferenceServer;
+	
+	[super configureForAccount:inAccount];
+	
+	defaultConferenceServer = [self defaultConferenceServer];
 
 	[delegate setJoinChatEnabled:NO];
 	[[view window] makeFirstResponder:textField_roomName];
 
-	if ([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)])
-		[[textField_server cell] setPlaceholderString:DEFAULT_CONFERENCE_SERVER];
+	if ([[textField_server cell] respondsToSelector:@selector(setPlaceholderString:)]) {
+		[[textField_server cell] setPlaceholderString:[self defaultConferenceServer]];
+	} else {
+		[textField_server setStringValue:defaultConferenceServer];
+	}
 		
 	[textField_inviteUsers setMinStringLength:2];
 	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
 	[self _configureTextField];
-
-	[super configureForAccount:inAccount];
 }
 
 - (void)joinChatWithAccount:(AIAccount *)inAccount
@@ -66,15 +99,24 @@
 	NSString		*password = [textField_password stringValue];
 	NSDictionary	*chatCreationInfo;
 			
-	if ( !handle || ![handle length] )
+	if (!handle || ![handle length])
 		handle = [inAccount UID];
 	
-	if ( !password || ![password length] )
+#warning What is going on with the @"temp" password?
+	if (!password || ![password length])
 		password = @"temp";
 	
-	if ( !server || ![server length] )
-		server = DEFAULT_CONFERENCE_SERVER;
-			
+	if (!server || ![server length]) {
+		//If no server is specified, use the default, which may be visible to the user as a placeholder string
+		server = [self defaultConferenceServer];
+
+	} else {
+		//If the user specified a server, make it the new default if it isn't already the default
+		if (![server isEqualToString:[self defaultConferenceServer]]) {
+			[self setDefaultConferenceServer:server];
+		}
+	}
+	
 	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
 
 	[self doJoinChatWithName:[NSString stringWithFormat:@"%@@%@",room,server]

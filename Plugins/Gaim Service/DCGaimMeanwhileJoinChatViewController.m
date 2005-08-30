@@ -46,13 +46,11 @@
 
 - (void)configureForAccount:(AIAccount *)inAccount
 {			
-	account = inAccount;
+	[super configureForAccount:inAccount];
 
 	[textField_inviteUsers setMinStringLength:2];
 	[textField_inviteUsers setCompletesOnlyAfterSeparator:YES];
 	[self _configureTextField];
-	
-	[super configureForAccount:inAccount];
 
 	[self validateEnteredText];
 	[[view window] makeFirstResponder:textField_topic];
