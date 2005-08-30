@@ -493,8 +493,13 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 {
 	if ([self shouldSlideWindowOnScreen])
 		[self slideWindowOnScreen];
-	else if ([self shouldSlideWindowOffScreen])
-		[self slideWindowOffScreenEdges:[self slidableEdgesAdjacentToWindow]];
+	else if([self shouldSlideWindowOffScreen]) {
+		AIRectEdgeMask adjacentEdges = [self slidableEdgesAdjacentToWindow];
+        if (adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))
+            [self slideWindowOffScreenEdges:(adjacentEdges & (AIMinXEdgeMask | AIMaxXEdgeMask))];
+        else
+            [self slideWindowOffScreenEdges:adjacentEdges];
+	}
 }
 
 - (BOOL)shouldSlideWindowOnScreen
@@ -515,13 +520,21 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 - (BOOL)shouldSlideWindowOffScreen
 {
 	BOOL shouldSlide = NO;
-	
-	if (!preventHiding) {
-		if (permitSlidingInForeground || (![NSApp isActive] && !windowShouldBeVisibleInBackground && [[self window] isVisible])) {
-			shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
-		}
-	}
-	
+    
+    if (preventHiding) {
+        shouldSlide = NO;
+    }
+    else if (windowSlidOffScreenEdgeMask != 0) {
+        // window is already slid off screen in some direction
+        shouldSlide = NO;
+    }
+    else if (permitSlidingInForeground) {
+        shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+    } 
+    else if (!windowShouldBeVisibleInBackground && ![NSApp isActive] && [[self window] isVisible]) {
+        shouldSlide = [self shouldSlideWindowOffScreen_mousePositionStrategy];
+    }
+
 	return shouldSlide;
 }
 
@@ -555,11 +568,54 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	return shouldSlideOffScreen;
 }
 
-// sliding onscreen
-// slide the window onscreen if the mouse is against all edges of the screen where we previously slid the window
+// note: may be inaccurate when mouse is up against an edge 
+- (NSScreen *)ScreenForPoint:(NSPoint)point
+{
+	NSScreen *pointScreen = nil;
+	
+	NSEnumerator *screenEnumerator = [[NSScreen screens] objectEnumerator];
+	NSScreen *screen;
+	while ((screen = [screenEnumerator nextObject]) != nil) {
+		if (NSPointInRect(point, NSInsetRect([screen frame], -1, -1))) {
+			pointScreen = screen;
+			break;
+		}		
+	}
+	
+	return pointScreen;
+}	
+
+- (NSRect)SquareRectWithCenter:(NSPoint)point sideLength:(float)sideLength
+{
+	return NSMakeRect(point.x - sideLength*0.5f, point.y - sideLength*0.5f, sideLength, sideLength);
+}
+
+- (BOOL)PointIsInScreenCorner:(NSPoint)point
+{
+	BOOL inCorner = NO;
+	NSScreen *menubarScreen = [[NSScreen screens] objectAtIndex:0];
+	float menubarHeight = NSMaxY([menubarScreen frame]) - NSMaxY([menubarScreen visibleFrame]); // breaks if the dock is at the top of the screen (i.e. if the user is insane)
+	
+	NSRect screenFrame = [[self ScreenForPoint:point] frame];
+	NSPoint lowerLeft  = screenFrame.origin;
+	NSPoint upperRight = NSMakePoint(NSMaxX(screenFrame), NSMaxY(screenFrame));
+	NSPoint lowerRight = NSMakePoint(upperRight.x, lowerLeft.y);
+	NSPoint upperLeft  = NSMakePoint(lowerLeft.x, upperRight.y);
+	
+	float sideLength = menubarHeight * 2.0f;
+	inCorner = (NSPointInRect(point, [self SquareRectWithCenter:lowerLeft sideLength:sideLength])
+				|| NSPointInRect(point, [self SquareRectWithCenter:lowerRight sideLength:sideLength])
+				|| NSPointInRect(point, [self SquareRectWithCenter:upperLeft sideLength:sideLength])
+				|| NSPointInRect(point, [self SquareRectWithCenter:upperRight sideLength:sideLength]));
+	
+	return inCorner;
+}
+
+// YES if the mouse is against all edges of the screen where we previously slid the window and not in a corner.
+// This means that this method will never return YES of the cl is slid into a corner. 
 - (BOOL)shouldSlideWindowOnScreen_mousePositionStrategy
 {
-	BOOL shouldSlideOnScreen = (windowSlidOffScreenEdgeMask != 0);
+	BOOL mouseNearSlideOffEdges = (windowSlidOffScreenEdgeMask != 0);
 	
 	NSPoint mouseLocation = [NSEvent mouseLocation];
 	
@@ -567,13 +623,13 @@ static NSRect screenSlideBoundaryRect = { {0.0f, 0.0f}, {0.0f, 0.0f} };
 	for (screenEdge = 0; screenEdge < 4; screenEdge++) {
 		if (windowSlidOffScreenEdgeMask & (1 << screenEdge)) {
 			float mouseOutsideSlideBoundaryRectDistance = AISignedExteriorDistanceRect_edge_toPoint_(screenSlideBoundaryRect, screenEdge, mouseLocation);
-			if (mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
-				shouldSlideOnScreen = NO;
+			if(mouseOutsideSlideBoundaryRectDistance < -MOUSE_EDGE_SLIDE_ON_DISTANCE) {
+				mouseNearSlideOffEdges = NO;
 			}
 		}
 	}
 	
-	return shouldSlideOnScreen;
+	return mouseNearSlideOffEdges && ![self PointIsInScreenCorner:mouseLocation];
 }
 
 // ----------------------------------
