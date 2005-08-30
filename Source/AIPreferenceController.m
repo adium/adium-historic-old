@@ -179,13 +179,13 @@
  */
 - (void)registerPreferenceObserver:(id)observer forGroup:(NSString *)group
 {
-	NSMutableArray	*groupObservers;
+	NSMutableSet	*groupObservers;
 	
 	NSParameterAssert([observer respondsToSelector:@selector(preferencesChangedForGroup:key:object:preferenceDict:firstTime:)]);
 	
 	//Fetch the observers for this group
 	if (!(groupObservers = [observers objectForKey:group])) {
-		groupObservers = [[NSMutableArray alloc] init];
+		groupObservers = [[NSMutableSet alloc] init];
 		[observers setObject:groupObservers forKey:group];
 		[groupObservers release];
 	}
