@@ -28,17 +28,32 @@
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
 		  notifyingTarget:(id)inTarget
 				 selector:(SEL)inSelector;
+- (ESTextAndButtonsWindowController *)windowController;
 @end
 
 @implementation ESFileTransferRequestPromptController
 
-+ (id)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
-                   notifyingTarget:(id)inTarget
-                          selector:(SEL)inSelector
+/*
+ * @brief Display a prompt for a file transfer to save, save as, or cancel
+ *
+ * @param inFileTransfer The file transfer
+ * @param inSelector A selector, which must accept two arguments. The first will be inFileTransfer. The second will be the filename to save to, or nil to cancel.
+ * @result The NSWindowController for the displayed prompt
+ */
++ (NSWindowController *)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
+									 notifyingTarget:(id)inTarget
+											selector:(SEL)inSelector
 {
-	return [[self alloc] initForFileTransfer:inFileTransfer
-	                         notifyingTarget:inTarget
-	                                selector:inSelector];
+	ESFileTransferRequestPromptController	*promptController;
+	NSWindowController						*windowController = nil;
+	
+	if ((promptController = [[self alloc] initForFileTransfer:inFileTransfer
+											  notifyingTarget:inTarget
+													 selector:inSelector])) {
+		windowController = [promptController windowController];
+	}
+	
+	return windowController;
 }
 
 - (id)initForFileTransfer:(ESFileTransfer *)inFileTransfer
@@ -92,6 +107,11 @@
 	[windowController release];
 
 	[super dealloc];
+}
+
+- (ESTextAndButtonsWindowController *)windowController
+{
+	return windowController;
 }
 
 /*!
