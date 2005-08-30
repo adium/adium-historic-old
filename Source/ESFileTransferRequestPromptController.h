@@ -26,8 +26,8 @@
 	SEL	selector;
 }
 
-+ (void)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
-					 notifyingTarget:(id)inTarget
-							selector:(SEL)inSelector;
++ (id)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
+                   notifyingTarget:(id)inTarget
+                          selector:(SEL)inSelector;
 
 @end
