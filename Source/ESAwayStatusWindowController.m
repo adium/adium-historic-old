@@ -26,6 +26,7 @@
 #define	KEY_AWAY_STATUS_WINDOW_FRAME			@"Away Status Window Frame"
 
 @interface ESAwayStatusWindowController (PRIVATE)
+- (void)localizeButtons;
 - (void)configureStatusWindow;
 - (void)configureMuteWhileAway;
 - (NSAttributedString *)attributedStatusTitleForStatus:(AIStatus *)statusState withIcon:(NSImage *)statusIcon;
@@ -92,6 +93,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	[textView_singleStatus setMinSize:NSZeroSize];
     [scrollView_singleStatus setDrawsBackground:NO];
 
+	[self localizeButtons];
 	[self setupMultistatusTable];
 	[self configureMuteWhileAway];
 
@@ -367,6 +369,12 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 	[[adium preferenceController] setPreference:shouldMuteWhileWindowIsOpen
 										 forKey:KEY_SOUND_MUTE
 										  group:PREF_GROUP_SOUNDS];	
+}
+
+- (void)localizeButtons
+{
+	[button_return setLocalizedString:AILocalizedString(@"Return", "Button to return from away in the away status window")];
+	[button_muteWhileAway setLocalizedString:AILocalizedString("Mute While Away", "Mute sounds while away. Found in the away status window.")];
 }
 
 @end
