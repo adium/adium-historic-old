@@ -176,6 +176,9 @@ static ESVersionCheckerWindowController *sharedVersionCheckerInstance = nil;
  */
 - (void)localizeUpToDateWindow
 {
+	//Make sure the window loads before attempting to localize
+	[self window];
+	
 	[textField_isUpToDateTitle setStringValue:AILocalizedString(@"Your Adium is up to date",nil)];
 	[textField_isUpToDateExplanation setStringValue:AILocalizedString(@"No updates are available.  Please try again later.",nil)];
 	[button_okay setLocalizedString:AILocalizedString(@"OK",nil)];
