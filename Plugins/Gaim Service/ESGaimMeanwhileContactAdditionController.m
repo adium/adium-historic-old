@@ -23,15 +23,18 @@ struct resolved_id {
 
 @implementation ESGaimMeanwhileContactAdditionController
 
-+ (void)showContactAdditionListWithDict:(NSDictionary *)inInfoDict
++ (ESGaimMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict
 {
 	ESGaimMeanwhileContactAdditionController	*controller;
 	
-	controller = [[self alloc] initWithWindowNibName:@"GaimMeanwhileContactAdditionWindow"
-											withDict:inInfoDict];
+	if ((controller = [[self alloc] initWithWindowNibName:@"GaimMeanwhileContactAdditionWindow"
+												 withDict:inInfoDict])) {
+		
+		[controller showWindow:nil];
+		[[controller window] makeKeyAndOrderFront:nil];
+	}
 	
-	[controller showWindow:nil];
-	[[controller window] makeKeyAndOrderFront:nil];	
+	return controller;
 }
 
 //Init

@@ -31,7 +31,8 @@
 	NSValue			*userDataValue;
 }
 
-+ (void)showInputWindowWithDict:(NSDictionary *)infoDict;
++ (ESGaimRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict;
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)infoDict multiline:(BOOL)multiline;
 - (IBAction)pressedButton:(id)sender;
+
 @end

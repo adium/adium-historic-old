@@ -27,7 +27,13 @@
 
 @implementation ESGaimRequestActionController
 
-+ (void)showActionWindowWithDict:(NSDictionary *)infoDict
+/*
+ * @brief Show an action request window
+ *
+ * @param infoDict Dictionary of information to display, including callbacks for the buttons
+ * @result The NSWindowController for the displayed window
+ */
++ (NSWindowController *)showActionWindowWithDict:(NSDictionary *)infoDict
 {
 	ESTextAndButtonsWindowController	*controller;
 
@@ -72,6 +78,8 @@
 																			  target:self
 																			userInfo:infoDict];
 	[controller setAllowsCloseWithoutResponse:NO];
+	
+	return controller;
 }
 
 + (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo

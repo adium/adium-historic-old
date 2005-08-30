@@ -22,6 +22,7 @@
 	NSDictionary			*infoDict;
 }
 
++ (ESGaimMeanwhileContactAdditionController *)showContactAdditionListWithDict:(NSDictionary *)inInfoDict;
 - (IBAction)pressedButton:(id)sender;
 
 @end

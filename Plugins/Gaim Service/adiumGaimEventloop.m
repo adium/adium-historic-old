@@ -223,7 +223,8 @@ GaimEventLoopUiOps *adium_gaim_eventloop_get_ui_ops(void)
 	if (!sourceInfoDict) sourceInfoDict = [[NSMutableDictionary alloc] init];
 
 	//Determine our run loop
-	gaimRunLoop = CFRetain(CFRunLoopGetCurrent());
+	gaimRunLoop = CFRunLoopGetCurrent();
+	CFRetain(gaimRunLoop);
 	
 	return &adiumEventLoopUiOps;
 }

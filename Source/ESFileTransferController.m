@@ -169,10 +169,11 @@ static ESFileTransferPreferences *preferences;
 
 #pragma mark Sending and receiving
 //Sent by an account when it gets a request for us to receive a file; prompt the user for a save location
-- (void)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
+- (NSWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
-	AIListContact	*listContact = [fileTransfer contact];
-	NSString		*localFilename = nil;
+	AIListContact							*listContact = [fileTransfer contact];
+	NSString								*localFilename = nil;
+	ESFileTransferRequestPromptController	*promptController = nil;
 
 	[fileTransfer setType:Incoming_FileTransfer];
 
@@ -194,10 +195,12 @@ static ESFileTransferPreferences *preferences;
 			
 	} else {
 		//Prompt to accept/deny
-		[ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
-															notifyingTarget:self
-																   selector:@selector(_finishReceiveRequestForFileTransfer:localFilename:)];
+		promptController = [ESFileTransferRequestPromptController displayPromptForFileTransfer:fileTransfer
+																			   notifyingTarget:self
+																					  selector:@selector(_finishReceiveRequestForFileTransfer:localFilename:)];
 	}
+	
+	return promptController;
 }
 
 /*!

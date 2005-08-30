@@ -20,6 +20,6 @@
 
 }
 
-+ (void)showActionWindowWithDict:(NSDictionary *)infoDict;
++ (NSWindowController *)showActionWindowWithDict:(NSDictionary *)infoDict;
 
 @end

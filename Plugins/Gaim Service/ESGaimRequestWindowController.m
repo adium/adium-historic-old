@@ -28,17 +28,19 @@
 
 @implementation ESGaimRequestWindowController
  
-+ (void)showInputWindowWithDict:(NSDictionary *)infoDict
++ (ESGaimRequestWindowController *)showInputWindowWithDict:(NSDictionary *)infoDict
 {
 	ESGaimRequestWindowController	*requestWindowController;
 	BOOL							multiline = [[infoDict objectForKey:@"Multiline"] boolValue];
 	
-	requestWindowController = [[self alloc] initWithWindowNibName:(multiline ? MULTILINE_WINDOW_NIB : SINGLELINE_WINDOW_NIB)
+	if ((requestWindowController = [[self alloc] initWithWindowNibName:(multiline ? MULTILINE_WINDOW_NIB : SINGLELINE_WINDOW_NIB)
 														 withDict:infoDict
-														multiline:multiline];
+															 multiline:multiline])) {
+		[requestWindowController showWindow:nil];
+		[[requestWindowController window] makeKeyAndOrderFront:nil];
+	}
 	
-	[requestWindowController showWindow:nil];
-	[[requestWindowController window] makeKeyAndOrderFront:nil];
+	return requestWindowController;
 }
 
 //Init
@@ -261,4 +263,5 @@
 	
 	return [translatedDict autorelease];
 }
+
 @end
