@@ -171,15 +171,26 @@ gboolean gaim_init_jabber_plugin(void);
  *
  * Rather than having a separate server field, Jabber uses the servername after the user name.
  * username@server.org
+ *
+ * The connect server, stored in KEY_JABBER_CONNECT_SERVER, overrides this to provide the connect host. It will
+ * not be set in most cases.
  */
 - (NSString *)host
 {
-	int location = [UID rangeOfString:@"@"].location;
-	if ((location != NSNotFound) && (location + 1 < [UID length])) {
-		return [UID substringFromIndex:(location + 1)];
-	} else {
-		return DEFAULT_JABBER_HOST;
+	NSString	*host;
+	
+	if (!(host = [self preferenceForKey:KEY_JABBER_CONNECT_SERVER group:GROUP_ACCOUNT_STATUS])) {
+		int location = [UID rangeOfString:@"@"].location;
+
+		if ((location != NSNotFound) && (location + 1 < [UID length])) {
+			host = [UID substringFromIndex:(location + 1)];
+
+		} else {
+			host = DEFAULT_JABBER_HOST;
+		}
 	}
+	
+	return host;
 }
 
 /*!
