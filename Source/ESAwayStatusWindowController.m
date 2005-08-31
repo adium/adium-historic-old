@@ -374,7 +374,7 @@ static ESAwayStatusWindowController	*sharedInstance = nil;
 - (void)localizeButtons
 {
 	[button_return setLocalizedString:AILocalizedString(@"Return", "Button to return from away in the away status window")];
-	[button_muteWhileAway setLocalizedString:AILocalizedString("Mute While Away", "Mute sounds while away. Found in the away status window.")];
+	[button_muteWhileAway setLocalizedString:AILocalizedString(@"Mute While Away", "Mute sounds while away. Found in the away status window.")];
 }
 
 @end
