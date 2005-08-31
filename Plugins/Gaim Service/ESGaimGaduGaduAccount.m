@@ -17,6 +17,7 @@
 #import "ESGaimGaduGaduAccountViewController.h"
 #import "ESGaimGaduGaduAccount.h"
 #import "AIStatusController.h"
+#import "AIAccountController.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 
