@@ -141,6 +141,7 @@
  * AILocalizedString(@"Do you want to allow or disallow people on your buddy list to send you MSN Mobile pages to your cell phone or other mobile device?", nil)
  * AILocalizedString(@"Allow","Button title to allow an action")
  * AILocalizedString(@"Disallow", "Button title to prevent an action")
+ * AILocalizedString(@"Connect",nil)
  * AILocalizedString(@"Cancel", nil)
  */
 + (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
