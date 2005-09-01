@@ -116,7 +116,8 @@
 		ConnContext		*context;
 		Fingerprint		*fingerprint;
 		OtrlUserState	otrg_plugin_userstate = otrg_get_userstate();
-		
+		NSBundle		*thisBundle = [NSBundle bundleForClass:[self class]];
+
 		[fingerprintDictArray release];
 		fingerprintDictArray = [[NSMutableArray alloc] init];
 		
@@ -141,6 +142,14 @@
 					state = AILocalizedString(@"Unused",nil);
 				} else {
 					state = [NSString stringWithUTF8String:otrl_context_statestr[context->state]];
+					
+					/* Translate it. Possible values, shown here for genstrings:
+					 * AILocalizedString(@"Not private",nil)
+					 * AILocalizedString(@"Private",nil) 
+					 */
+					state = [thisBundle localizedStringForKey:state
+														value:state
+														table:nil];
 				}
 				
 				otrl_privkey_hash_to_human(hash, fingerprint->fingerprint);
