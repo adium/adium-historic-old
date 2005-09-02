@@ -96,8 +96,12 @@
 	[delayedUpdateStatusTarget release];
 	[delayedUpdateStatusTimer invalidate]; [delayedUpdateStatusTimer release];
 	[reconnectTimer invalidate]; [reconnectTimer release];
-	[internalObjectID release];
-	
+
+	/* Our superclass releases internalObjectID in its dealloc, so we should set it to nil when do.
+	 * We could just depend upon its implementation, but this is more robust.
+	 */
+	[internalObjectID release]; internalObjectID = nil; 
+
 	[self _stopAttributedRefreshTimer];
 	[autoRefreshingKeys release]; autoRefreshingKeys = nil;
 	
