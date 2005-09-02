@@ -5,8 +5,10 @@
 @interface AIBorderlessWindow : NSWindow
 {
 	BOOL	docked;
+	
     //This point is used in dragging to mark the initial click location
-    NSPoint previousLocation;
+    NSPoint originalMouseLocation;
+	BOOL	inLeftMouseEvent;
 }
 
 @end

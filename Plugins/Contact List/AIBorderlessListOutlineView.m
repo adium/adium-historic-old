@@ -56,4 +56,13 @@
 	}
 }
 
+- (void)mouseUp:(NSEvent *)theEvent
+{
+    if (![theEvent cmdKey]) {
+        [[self window] mouseUp:theEvent];   
+	} else {
+		[super mouseUp:theEvent];
+	}	
+}
+
 @end
