@@ -17,17 +17,19 @@ static	NSRect	windowFrame;
 
     //Call NSWindow's version of this function, but pass in the all-important value of NSBorderlessWindowMask
     //for the styleMask so that the window doesn't have a title bar
-    NSWindow *window = [super initWithContentRect:contentRect 
-                                        styleMask:NSBorderlessWindowMask
-                                          backing:NSBackingStoreBuffered 
-                                            defer:flag];
-
-    //Set the background color to clear so that we can see through the parts
-    //of the window into which we're not drawing 
-    [window setBackgroundColor:[NSColor clearColor]];
-    //[window setOpaque:NO];
+   if ((self = [super initWithContentRect:contentRect 
+							styleMask:NSBorderlessWindowMask
+							  backing:NSBackingStoreBuffered 
+									defer:flag])) {
+	   
+	   //Set the background color to clear so that we can see through the parts
+	   //of the window into which we're not drawing 
+	   [self setBackgroundColor:[NSColor clearColor]];
+	   //[self setOpaque:NO];
+	   inLeftMouseEvent = NO;
+   }
 	
-    return window;
+    return self;
 }
 
 // Custom windows that use the NSBorderlessWindowMask can't become key by default.  Therefore, controls in such windows
@@ -62,15 +64,28 @@ static	NSRect	windowFrame;
 - (void)mouseDragged:(NSEvent *)theEvent
 {
     if (![theEvent cmdKey]) {
-        NSPoint		currentLocation;
-		NSScreen	*currentScreen = [self screen];
-        NSPoint		newOrigin = windowFrame.origin;
-        NSRect		newWindowFrame = windowFrame;
+		NSScreen	*currentScreen;
+        NSPoint		currentLocation, newOrigin;
+        NSRect		newWindowFrame;
+
+		/* If we get here and aren't yet in a left mouse event, which can happen if the user began dragging while
+		 * a contextual menu is showing, start off from the right position by getting our originalMouseLocation.
+		 */		
+		if (!inLeftMouseEvent) {
+			//grab the mouse location in global coordinates
+			originalMouseLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
+			windowFrame = [self frame];
+			inLeftMouseEvent = YES;		
+		}
+		
+		currentScreen = [self screen];
+		newOrigin = windowFrame.origin;
+		newWindowFrame = windowFrame;
 		
         //Grab the current mouse location to compare with the location of the mouse when the drag started (stored in mouseDown:)
         currentLocation = [NSEvent mouseLocation];
-        newOrigin.x += (currentLocation.x - previousLocation.x);
-        newOrigin.y += currentLocation.y - previousLocation.y;
+        newOrigin.x += (currentLocation.x - originalMouseLocation.x);
+        newOrigin.y += currentLocation.y - originalMouseLocation.y;
 			
 		//Keep the window from going under the menu bar (on the main screen)
 		NSRect  screenFrame = [currentScreen visibleFrame];
@@ -109,14 +124,24 @@ static	NSRect	windowFrame;
 //to establish the initial location.
 - (void)mouseDown:(NSEvent *)theEvent
 {    
-    if (![theEvent cmdKey]) {
+    if (![theEvent cmdKey] && ([theEvent type] == NSLeftMouseDown)) {
         //grab the mouse location in global coordinates
-        previousLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
+        originalMouseLocation = [self convertBaseToScreen:[theEvent locationInWindow]];
 		windowFrame = [self frame];
+		inLeftMouseEvent = YES;
 		
     } else {
+		inLeftMouseEvent = NO;
+
         [super mouseDown:theEvent];
     }
+}
+
+- (void)mouseUp:(NSEvent *)theEvent
+{
+	inLeftMouseEvent = NO;
+	
+	[super mouseUp:theEvent];
 }
 
 //Dock the passed window frame if it's close enough to the screen edges
