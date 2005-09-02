@@ -98,19 +98,19 @@
 					 target:(id)inTarget
 				   userInfo:(id)inUserInfo
 {
-	title = [inTitle retain];
-	defaultButton = [inDefaultButton retain];
-	alternateButton = [inAlternateButton retain];
-	otherButton = [inOtherButton retain];
-	messageHeader = [inMessageHeader retain];
-	message = [inMessage retain];
-	target = [inTarget retain];
-	userInfo = [inUserInfo retain];
-	userClickedButton = NO;
-	allowsCloseWithoutResponse = YES;
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		title = [inTitle retain];
+		defaultButton = [inDefaultButton retain];
+		alternateButton = ([inAlternateButton length] ? [inAlternateButton retain] : nil);
+		otherButton = ([inOtherButton length] ? [inOtherButton retain] : nil);
+		messageHeader = ([inMessageHeader length] ? [inMessageHeader retain] : nil);
+		message = [inMessage retain];
+		target = [inTarget retain];
+		userInfo = [inUserInfo retain];
+		userClickedButton = NO;
+		allowsCloseWithoutResponse = YES;
+	}
 
-	self = [super initWithWindowNibName:windowNibName];
-	
     return self;
 }
 
@@ -129,13 +129,13 @@
  */
 - (BOOL)windowShouldClose:(id)sender
 {
-	if(!userClickedButton){
-		if(allowsCloseWithoutResponse){
+	if (!userClickedButton) {
+		if (allowsCloseWithoutResponse) {
 			//Notify the target that the window closed with no response
 			[target textAndButtonsWindowDidEnd:[self window]
 									returnCode:AITextAndButtonsClosedWithoutResponse
 									  userInfo:userInfo];
-		}else{
+		} else {
 			//Don't allow the close
 			NSBeep();
 			return NO;
@@ -178,44 +178,63 @@
  */
 - (void)windowDidLoad
 {
-	NSWindow	*window = [self window];
-
 	[super windowDidLoad];
+
+	NSWindow	*window = [self window];
+	int			heightChange = 0;
+	NSRect		frame = [window frame];
 
 	//Hide the toolbar and zoom buttons
 	[[window standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
 	[[window standardWindowButton:NSWindowZoomButton]    setFrame:NSZeroRect];
 	
 	//Title
-	if(title){
+	if (title) {
 		[window setTitle:title];
-	}else{
+	} else {
 		[window setExcludedFromWindowsMenu:YES];
 	}
 
 	//Message header
-	float	headerHeightChange, heightChange = 0;
-	NSRect  frame = [window frame];
-	
-	[textView_messageHeader setVerticallyResizable:YES];
-	[textView_messageHeader setHorizontallyResizable:NO];
-	[textView_messageHeader setDrawsBackground:NO];
-	[scrollView_messageHeader setDrawsBackground:NO];
-	
-	[textView_messageHeader setString:(messageHeader ? messageHeader : @"")];
-	
-	//Resize the window frame to fit the error title
-	[textView_messageHeader sizeToFit];
-	headerHeightChange = [textView_messageHeader frame].size.height - [scrollView_messageHeader documentVisibleRect].size.height;
-	heightChange += headerHeightChange;
-	
-	frame.size.height += heightChange;
-	frame.origin.y -= heightChange;
+	if (messageHeader) {
+		//Resize the window frame to fit the error title
+		[textView_messageHeader setVerticallyResizable:YES];
+		[textView_messageHeader setDrawsBackground:NO];
+		[scrollView_messageHeader setDrawsBackground:NO];
+		[textView_messageHeader setString:messageHeader];
+		
+		[textView_messageHeader sizeToFit];
+		heightChange += [textView_messageHeader frame].size.height - [scrollView_messageHeader documentVisibleRect].size.height;
+		
+		frame.size.height += heightChange;
+		frame.origin.y -= heightChange;
+
+	} else {
+		NSRect messageHeaderFrame = [scrollView_messageHeader frame];
+		NSRect scrollFrame = [scrollView_message frame];
+		
+		//Remove the header area
+		if ([scrollView_messageHeader respondsToSelector:@selector(setHidden:)]) {
+			[scrollView_messageHeader setHidden:YES];
+		} else {
+			[scrollView_messageHeader setFrame:NSZeroRect];	
+		}
+		
+		//verticalChange is how far we can move our message area up since we don't have a messageHeader
+		int verticalChange = (messageHeaderFrame.size.height +
+							  (messageHeaderFrame.origin.y - (scrollFrame.origin.y+scrollFrame.size.height)));
+		
+		scrollFrame.size.height += verticalChange;
+		
+		[scrollView_message setFrame:scrollFrame];
+		
+		/* We expanded the message scrollview to take up the space previously used by the header; the window frame
+		 * does not need to be modified. */
+	}
 
 	//Set the message, then change the window size accordingly
 	{
 		[textView_message setVerticallyResizable:YES];
-		[textView_message setHorizontallyResizable:NO];
 		[textView_message setDrawsBackground:NO];
 		[scrollView_message setDrawsBackground:NO];
 		
@@ -225,31 +244,7 @@
 		
 		frame.size.height += heightChange;
 		frame.origin.y -= heightChange;
-
-		//Adjust the message's scrollView's frame to account for the movement of the header
-		NSRect	infoFrame = [scrollView_message frame];
-		infoFrame.origin.y -= headerHeightChange;
-		[scrollView_message setFrame:infoFrame];
 		
-		if(!messageHeader){
-			if([scrollView_messageHeader respondsToSelector:@selector(setHidden:)]){
-				[scrollView_messageHeader setHidden:YES];
-			}else{
-				[scrollView_messageHeader setFrame:NSZeroRect];	
-			}
-			
-			NSRect messageHeaderFrame = [scrollView_messageHeader frame];
-			NSRect scrollFrame = [scrollView_message frame];
-			
-			//verticalChange is how far we can move our message area up since we don't have a messageHeader
-			int verticalChange = (messageHeaderFrame.size.height +
-								  (messageHeaderFrame.origin.y - NSMaxY(scrollFrame)));
-
-			scrollFrame.origin.y += verticalChange;
-			
-			[scrollView_message setFrame:scrollFrame];
-		}
-
 		[scrollView_message setNeedsDisplay:YES];
 		
 		//Resize the window to fit the message
@@ -260,26 +255,20 @@
 	[button_default setLocalizedString:(defaultButton ? defaultButton : AILocalizedString(@"OK",nil))];
 
 	//Set the alternate button if we were provided one, otherwise hide it
-	if(alternateButton){
+	if (alternateButton) {
 		[button_alternate setLocalizedString:alternateButton];
 
 		//Set the other button if we were provided one, otherwise hide it
-		if(otherButton){
+		if (otherButton) {
 			[button_other setLocalizedString:otherButton];
 
-		}else{
-			if([button_other respondsToSelector:@selector(setHidden:)]){
-				[button_other setHidden:YES];
-			}else{
-				[button_other setFrame:NSZeroRect];
-			}			
+		} else {
+			[button_other setHidden:YES];
 		}
-	}else{
-		if([button_alternate respondsToSelector:@selector(setHidden:)]){
-			[button_alternate setHidden:YES];
-		}else{
-			[button_alternate setFrame:NSZeroRect];
-		}
+		
+	} else {
+		[button_alternate setHidden:YES];
+		[button_other setHidden:YES];
 	}
 
     //Center the window (if we're not a sheet)
@@ -302,9 +291,9 @@
 		returnCode = AITextAndButtonsClosedWithoutResponse;
 
 	//Notify the target
-	if([target textAndButtonsWindowDidEnd:[self window]
+	if ([target textAndButtonsWindowDidEnd:[self window]
 							   returnCode:returnCode
-								 userInfo:userInfo]){
+								 userInfo:userInfo]) {
 		
 		//Close the window if the target returns YES
 		[[self window] close];
