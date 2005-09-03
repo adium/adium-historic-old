@@ -58,6 +58,7 @@ typedef enum {
 - (BOOL)canRegisterNewAccounts;
 - (BOOL)supportsProxySettings;
 - (void)registerStatuses;
+- (NSString *)defaultUserName;
 
 //Utilities
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored;

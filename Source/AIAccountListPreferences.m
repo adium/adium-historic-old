@@ -130,9 +130,10 @@
  */
 - (IBAction)selectServiceType:(id)sender
 {
-	AIAccount	*account = [[adium accountController] createAccountWithService:[sender representedObject]
-																		   UID:@""];
-	
+	AIService	*service = [sender representedObject];
+	AIAccount	*account = [[adium accountController] createAccountWithService:service
+																		   UID:[service defaultUserName]];
+
 	[AIEditAccountWindowController editAccount:account
 									  onWindow:[[self view] window]
 							   notifyingTarget:self];

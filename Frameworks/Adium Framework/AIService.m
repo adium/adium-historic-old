@@ -342,6 +342,20 @@
  */
 - (void)registerStatuses{};
 
+/*!
+ * @brief Default user name 
+ * 
+ * The default user name for a service is set for all new accounts. As it's not 
+ * possible to guess the user name for most service types (AIM, MSN, etc.), the 
+ * base class returns @"".
+ *
+ * @return The default user name for this service, or @"" for no default 
+ */ 
+- (NSString *)defaultUserName 
+{ 
+	return @""; 
+} 	
+
 //Utilities ------------------------------------------------------------------------------------------------------------
 #pragma mark Utilities
 /*!
