@@ -24,11 +24,13 @@
 #import "AIPreferenceController.h"
 #import "AIStandardListWindowController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
 #import <AIUtilities/AIFontAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AITooltipUtilities.h>
 #import <AIUtilities/AIWindowAdditions.h>
+#import <AIUtilities/AITextAttributes.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -1194,6 +1196,48 @@
 	[self enableAlphaInColorPanels];
 
 	[[adium preferenceController] showPreferenceWindow:sender];
+}
+
+#pragma mark Font Panel
+- (IBAction)showFontPanel:(id)sender
+{
+	NSFontPanel	*fontPanel = [NSFontPanel sharedFontPanel];
+	
+	if (!fontPanelAccessoryView) {
+		[NSBundle loadNibNamed:@"FontPanelAccessoryView" owner:self];
+		[fontPanel setAccessoryView:fontPanelAccessoryView];
+	}
+
+	[fontPanel orderFront:self]; 
+}
+
+- (IBAction)setFontPanelSettingsAsDefaultFont:(id)sender
+{
+	NSFont	*selectedFont = [[NSFontManager sharedFontManager] selectedFont];
+
+	[[adium preferenceController] setPreference:[selectedFont stringRepresentation]
+										 forKey:KEY_FORMATTING_FONT
+										  group:PREF_GROUP_FORMATTING];
+	
+	//We can't get foreground/background color from the font panel so far as I can tell... so we do the best we can.
+	NSWindow	*keyWindow = [[NSApplication sharedApplication] keyWindow];
+	NSResponder *responder = [keyWindow firstResponder]; 
+	if ([responder isKindOfClass:[NSTextView class]]) {
+		NSDictionary	*typingAttributes = [(NSTextView *)responder typingAttributes];
+		NSColor			*foregroundColor, *backgroundColor;
+		NSLog(@"Typing attributes are %@",typingAttributes);
+		if ((foregroundColor = [typingAttributes objectForKey:NSForegroundColorAttributeName])) {
+			[[adium preferenceController] setPreference:[foregroundColor stringRepresentation]
+												 forKey:KEY_FORMATTING_TEXT_COLOR
+												  group:PREF_GROUP_FORMATTING];
+		}
+
+		if ((backgroundColor = [typingAttributes objectForKey:AIBodyColorAttributeName])) {
+			[[adium preferenceController] setPreference:[backgroundColor stringRepresentation]
+												 forKey:KEY_FORMATTING_BACKGROUND_COLOR
+												  group:PREF_GROUP_FORMATTING];
+		}
+	}
 }
 
 //Custom Dimming menu items --------------------------------------------------------------------------------------------
