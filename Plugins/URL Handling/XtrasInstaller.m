@@ -254,7 +254,8 @@
 		dest = [[dest stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
 		
 		//Open the file so Adium can install it and then delete it
-		[[NSWorkspace sharedWorkspace] openTempFile:dest withApplication:@"Adium"];
+		[[NSWorkspace sharedWorkspace] openFile:dest withApplication:@"Adium"];
+		[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
 	} else {
 		NSLog(@"Installation Error: %@",dest);
 	}
