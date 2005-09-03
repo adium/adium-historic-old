@@ -30,9 +30,11 @@
                 pasteFormatted = id; 
                 previousMessage = id; 
                 runToolbarCustomizationPalette = id; 
+                setFontPanelSettingsAsDefaultFont = id; 
                 showChatWindow = id; 
                 showContactList = id; 
                 showContactListAndBringToFront = id; 
+                showFontPanel = id; 
                 showPreferenceWindow = id; 
                 toggleContactList = id; 
                 toggleFontTrait = id; 
@@ -42,7 +44,9 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 adium = AIAdium; 
+                "button_fontPanelSetAsDefault" = NSButton; 
                 contactListPlugin = id; 
+                fontPanelAccessoryView = NSView; 
                 interfacePlugin = id; 
                 menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 

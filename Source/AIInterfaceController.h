@@ -157,22 +157,24 @@ typedef enum {
     NSString					*errorTitle;
     NSString					*errorDesc;
 	
+	BOOL						closeMenuConfiguredForChat;
 	
-	BOOL			closeMenuConfiguredForChat;
+	NSArray						*_cachedOpenChats;
 	
-	NSArray		*_cachedOpenChats;
+	NSMutableArray				*windowMenuArray;
 	
-	NSMutableArray	*windowMenuArray;
+	AIChat						*activeChat;
+	AIChat						*mostRecentActiveChat;
 	
-	AIChat	*activeChat;
-	AIChat	*mostRecentActiveChat;
+	BOOL						tabbedChatting;
 	
-	BOOL	tabbedChatting;
-	
-	id <AIInterfaceController> interfacePlugin;
+	id <AIInterfaceController>	interfacePlugin;
 	id <AIContactListController> contactListPlugin;
 		
-	BOOL	groupChatsByContactGroup;
+	BOOL						groupChatsByContactGroup;
+	
+	IBOutlet NSView				*fontPanelAccessoryView;
+	IBOutlet NSButton			*button_fontPanelSetAsDefault;
 }
 
 - (void)registerInterfaceController:(id <AIInterfaceController>)inController;
@@ -240,6 +242,10 @@ typedef enum {
 
 //Custom printing
 - (IBAction)adiumPrint:(id)sender;
+
+//Font panel
+- (IBAction)showFontPanel:(id)sender;
+- (IBAction)setFontPanelSettingsAsDefaultFont:(id)sender;
 
 //Custom Dimming menu items
 - (IBAction)toggleFontTrait:(id)sender;
