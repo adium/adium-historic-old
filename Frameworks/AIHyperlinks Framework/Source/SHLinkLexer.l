@@ -67,6 +67,7 @@ hydra:\/\/		|
 itms:\/\/		|
 see:\/\/		|
 afp:\/\/		|
+adiumxtra:\/\/	|
 svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
