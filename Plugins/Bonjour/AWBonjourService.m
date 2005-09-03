@@ -53,7 +53,7 @@
 	return 999;
 }
 - (BOOL)caseSensitive{
-	return NO;
+	return YES;
 }
 - (AIServiceImportance)serviceImportance{
 	return AIServiceSecondary;
@@ -72,5 +72,7 @@
 									  ofType:AIAwayStatusType
 								  forService:self];
 }
-
+- (NSString *)defaultUserName { 
+	return NSFullUserName(); 
+}
 @end
