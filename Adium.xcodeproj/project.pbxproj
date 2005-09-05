@@ -1143,6 +1143,73 @@
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9EA125E9055B630900ECF349 /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
 		9EA125EF055B633000ECF349 /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; };
+		B023557108CBE854008CDDDA /* SMContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552908CBE84F008CDDDA /* SMContactsTable.h */; };
+		B023557208CBE854008CDDDA /* SMContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552A08CBE84F008CDDDA /* SMContactsTable.m */; };
+		B023557308CBE854008CDDDA /* SMLoggerContact.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552B08CBE84F008CDDDA /* SMLoggerContact.h */; };
+		B023557408CBE854008CDDDA /* SMLoggerContact.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552C08CBE84F008CDDDA /* SMLoggerContact.m */; };
+		B023557508CBE854008CDDDA /* SMLoggerConversation.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552D08CBE84F008CDDDA /* SMLoggerConversation.h */; };
+		B023557608CBE854008CDDDA /* SMLoggerConversation.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */; };
+		B023557708CBE854008CDDDA /* SMSQLiteDatabase.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */; };
+		B023557808CBE854008CDDDA /* SMSQLiteDatabase.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */; };
+		B023557908CBE854008CDDDA /* SMSQLiteLoggerPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */; };
+		B023557A08CBE854008CDDDA /* SMSQLiteLoggerPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */; };
+		B023557B08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553308CBE850008CDDDA /* SMSQLiteLogViewerWindowController.h */; };
+		B023557C08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = B023553408CBE850008CDDDA /* SMSQLiteLogViewerWindowController.m */; };
+		B023557D08CBE854008CDDDA /* alter.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553608CBE850008CDDDA /* alter.c */; };
+		B023557E08CBE854008CDDDA /* analyze.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553708CBE850008CDDDA /* analyze.c */; };
+		B023557F08CBE854008CDDDA /* attach.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553808CBE850008CDDDA /* attach.c */; };
+		B023558008CBE854008CDDDA /* auth.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553908CBE850008CDDDA /* auth.c */; };
+		B023558108CBE854008CDDDA /* btree.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553A08CBE850008CDDDA /* btree.c */; };
+		B023558208CBE854008CDDDA /* btree.h in Headers */ = {isa = PBXBuildFile; fileRef = B023553B08CBE850008CDDDA /* btree.h */; };
+		B023558308CBE854008CDDDA /* build.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553C08CBE850008CDDDA /* build.c */; };
+		B023558408CBE854008CDDDA /* callback.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553D08CBE850008CDDDA /* callback.c */; };
+		B023558508CBE854008CDDDA /* complete.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553E08CBE850008CDDDA /* complete.c */; };
+		B023558608CBE854008CDDDA /* date.c in Sources */ = {isa = PBXBuildFile; fileRef = B023553F08CBE850008CDDDA /* date.c */; };
+		B023558708CBE854008CDDDA /* delete.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554008CBE850008CDDDA /* delete.c */; };
+		B023558808CBE854008CDDDA /* expr.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554108CBE851008CDDDA /* expr.c */; };
+		B023558908CBE854008CDDDA /* func.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554208CBE851008CDDDA /* func.c */; };
+		B023558A08CBE854008CDDDA /* hash.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554308CBE851008CDDDA /* hash.c */; };
+		B023558B08CBE854008CDDDA /* hash.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554408CBE851008CDDDA /* hash.h */; };
+		B023558C08CBE854008CDDDA /* insert.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554508CBE851008CDDDA /* insert.c */; };
+		B023558D08CBE854008CDDDA /* keywordhash.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554608CBE851008CDDDA /* keywordhash.h */; };
+		B023558E08CBE854008CDDDA /* legacy.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554708CBE851008CDDDA /* legacy.c */; };
+		B023558F08CBE854008CDDDA /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554808CBE851008CDDDA /* main.c */; };
+		B023559008CBE854008CDDDA /* opcodes.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554908CBE851008CDDDA /* opcodes.c */; };
+		B023559108CBE854008CDDDA /* opcodes.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554A08CBE851008CDDDA /* opcodes.h */; };
+		B023559208CBE854008CDDDA /* os.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554B08CBE851008CDDDA /* os.h */; };
+		B023559308CBE854008CDDDA /* os_common.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554C08CBE851008CDDDA /* os_common.h */; };
+		B023559408CBE854008CDDDA /* os_unix.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554D08CBE851008CDDDA /* os_unix.c */; };
+		B023559508CBE854008CDDDA /* os_unix.h in Headers */ = {isa = PBXBuildFile; fileRef = B023554E08CBE851008CDDDA /* os_unix.h */; };
+		B023559608CBE854008CDDDA /* os_win.c in Sources */ = {isa = PBXBuildFile; fileRef = B023554F08CBE851008CDDDA /* os_win.c */; };
+		B023559708CBE854008CDDDA /* os_win.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555008CBE851008CDDDA /* os_win.h */; };
+		B023559808CBE854008CDDDA /* pager.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555108CBE852008CDDDA /* pager.c */; };
+		B023559908CBE854008CDDDA /* pager.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555208CBE852008CDDDA /* pager.h */; };
+		B023559A08CBE854008CDDDA /* parse.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555308CBE852008CDDDA /* parse.c */; };
+		B023559B08CBE854008CDDDA /* parse.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555408CBE852008CDDDA /* parse.h */; };
+		B023559D08CBE854008CDDDA /* pragma.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555608CBE852008CDDDA /* pragma.c */; };
+		B023559E08CBE854008CDDDA /* prepare.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555708CBE852008CDDDA /* prepare.c */; };
+		B023559F08CBE854008CDDDA /* printf.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555808CBE852008CDDDA /* printf.c */; };
+		B02355A008CBE854008CDDDA /* random.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555908CBE852008CDDDA /* random.c */; };
+		B02355A108CBE854008CDDDA /* select.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555A08CBE852008CDDDA /* select.c */; };
+		B02355A408CBE854008CDDDA /* sqlite3.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555D08CBE852008CDDDA /* sqlite3.h */; };
+		B02355A508CBE854008CDDDA /* sqliteInt.h in Headers */ = {isa = PBXBuildFile; fileRef = B023555E08CBE852008CDDDA /* sqliteInt.h */; };
+		B02355A608CBE854008CDDDA /* table.c in Sources */ = {isa = PBXBuildFile; fileRef = B023555F08CBE852008CDDDA /* table.c */; };
+		B02355A708CBE854008CDDDA /* tclsqlite.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556008CBE852008CDDDA /* tclsqlite.c */; };
+		B02355A808CBE854008CDDDA /* tokenize.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556108CBE853008CDDDA /* tokenize.c */; };
+		B02355A908CBE854008CDDDA /* trigger.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556208CBE853008CDDDA /* trigger.c */; };
+		B02355AA08CBE854008CDDDA /* update.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556308CBE853008CDDDA /* update.c */; };
+		B02355AB08CBE854008CDDDA /* utf.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556408CBE853008CDDDA /* utf.c */; };
+		B02355AC08CBE854008CDDDA /* util.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556508CBE853008CDDDA /* util.c */; };
+		B02355AD08CBE854008CDDDA /* vacuum.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556608CBE853008CDDDA /* vacuum.c */; };
+		B02355AE08CBE854008CDDDA /* vdbe.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556708CBE853008CDDDA /* vdbe.c */; };
+		B02355AF08CBE854008CDDDA /* vdbe.h in Headers */ = {isa = PBXBuildFile; fileRef = B023556808CBE853008CDDDA /* vdbe.h */; };
+		B02355B008CBE854008CDDDA /* vdbeapi.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556908CBE853008CDDDA /* vdbeapi.c */; };
+		B02355B108CBE854008CDDDA /* vdbeaux.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556A08CBE853008CDDDA /* vdbeaux.c */; };
+		B02355B208CBE854008CDDDA /* vdbefifo.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556B08CBE853008CDDDA /* vdbefifo.c */; };
+		B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */ = {isa = PBXBuildFile; fileRef = B023556C08CBE853008CDDDA /* vdbeInt.h */; };
+		B02355B408CBE854008CDDDA /* vdbemem.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556D08CBE853008CDDDA /* vdbemem.c */; };
+		B02355B508CBE854008CDDDA /* where.c in Sources */ = {isa = PBXBuildFile; fileRef = B023556E08CBE853008CDDDA /* where.c */; };
+		B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */ = {isa = PBXBuildFile; fileRef = B023556F08CBE853008CDDDA /* SQLiteLogViewer.nib */; };
 		B72537C4058C45EF004BA969 /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
 		B73E464307DB5F9200D9129E /* AIUtilities.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34D834D207CBE7B2006466F2 /* AIUtilities.framework */; };
 		B747E986058D144C00A9F037 /* AILaTeXPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = B747E984058D144C00A9F037 /* AILaTeXPlugin.h */; };
@@ -1301,14 +1368,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			remoteInfo = Adium.Framework;
 		};
 		34BD992B0531467C000AB133 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = F53B9A0E02CCED8B01A8010A;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
 			remoteInfo = Adium.Framework;
 		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
@@ -2957,6 +3024,76 @@
 		9EB3C52E04F94F24001D1F74 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainMenu.nib; sourceTree = "<group>"; };
 		9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBOldPrefsImporterAppController.h; sourceTree = "<group>"; };
 		9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBOldPrefsImporterAppController.m; sourceTree = "<group>"; };
+		B023552908CBE84F008CDDDA /* SMContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMContactsTable.h; sourceTree = "<group>"; };
+		B023552A08CBE84F008CDDDA /* SMContactsTable.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMContactsTable.m; sourceTree = "<group>"; };
+		B023552B08CBE84F008CDDDA /* SMLoggerContact.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMLoggerContact.h; sourceTree = "<group>"; };
+		B023552C08CBE84F008CDDDA /* SMLoggerContact.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMLoggerContact.m; sourceTree = "<group>"; };
+		B023552D08CBE84F008CDDDA /* SMLoggerConversation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMLoggerConversation.h; sourceTree = "<group>"; };
+		B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMLoggerConversation.m; sourceTree = "<group>"; };
+		B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteDatabase.h; sourceTree = "<group>"; };
+		B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteDatabase.m; sourceTree = "<group>"; };
+		B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteLoggerPlugin.h; sourceTree = "<group>"; };
+		B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteLoggerPlugin.m; sourceTree = "<group>"; };
+		B023553308CBE850008CDDDA /* SMSQLiteLogViewerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMSQLiteLogViewerWindowController.h; sourceTree = "<group>"; };
+		B023553408CBE850008CDDDA /* SMSQLiteLogViewerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMSQLiteLogViewerWindowController.m; sourceTree = "<group>"; };
+		B023553608CBE850008CDDDA /* alter.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = alter.c; sourceTree = "<group>"; };
+		B023553708CBE850008CDDDA /* analyze.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = analyze.c; sourceTree = "<group>"; };
+		B023553808CBE850008CDDDA /* attach.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = attach.c; sourceTree = "<group>"; };
+		B023553908CBE850008CDDDA /* auth.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = auth.c; sourceTree = "<group>"; };
+		B023553A08CBE850008CDDDA /* btree.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = btree.c; sourceTree = "<group>"; };
+		B023553B08CBE850008CDDDA /* btree.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = btree.h; sourceTree = "<group>"; };
+		B023553C08CBE850008CDDDA /* build.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = build.c; sourceTree = "<group>"; };
+		B023553D08CBE850008CDDDA /* callback.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = callback.c; sourceTree = "<group>"; };
+		B023553E08CBE850008CDDDA /* complete.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = complete.c; sourceTree = "<group>"; };
+		B023553F08CBE850008CDDDA /* date.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = date.c; sourceTree = "<group>"; };
+		B023554008CBE850008CDDDA /* delete.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = delete.c; sourceTree = "<group>"; };
+		B023554108CBE851008CDDDA /* expr.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = expr.c; sourceTree = "<group>"; };
+		B023554208CBE851008CDDDA /* func.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = func.c; sourceTree = "<group>"; };
+		B023554308CBE851008CDDDA /* hash.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = hash.c; sourceTree = "<group>"; };
+		B023554408CBE851008CDDDA /* hash.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = hash.h; sourceTree = "<group>"; };
+		B023554508CBE851008CDDDA /* insert.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = insert.c; sourceTree = "<group>"; };
+		B023554608CBE851008CDDDA /* keywordhash.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = keywordhash.h; sourceTree = "<group>"; };
+		B023554708CBE851008CDDDA /* legacy.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = legacy.c; sourceTree = "<group>"; };
+		B023554808CBE851008CDDDA /* main.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
+		B023554908CBE851008CDDDA /* opcodes.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = opcodes.c; sourceTree = "<group>"; };
+		B023554A08CBE851008CDDDA /* opcodes.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = opcodes.h; sourceTree = "<group>"; };
+		B023554B08CBE851008CDDDA /* os.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = os.h; sourceTree = "<group>"; };
+		B023554C08CBE851008CDDDA /* os_common.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = os_common.h; sourceTree = "<group>"; };
+		B023554D08CBE851008CDDDA /* os_unix.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = os_unix.c; sourceTree = "<group>"; };
+		B023554E08CBE851008CDDDA /* os_unix.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = os_unix.h; sourceTree = "<group>"; };
+		B023554F08CBE851008CDDDA /* os_win.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = os_win.c; sourceTree = "<group>"; };
+		B023555008CBE851008CDDDA /* os_win.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = os_win.h; sourceTree = "<group>"; };
+		B023555108CBE852008CDDDA /* pager.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = pager.c; sourceTree = "<group>"; };
+		B023555208CBE852008CDDDA /* pager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = pager.h; sourceTree = "<group>"; };
+		B023555308CBE852008CDDDA /* parse.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = parse.c; sourceTree = "<group>"; };
+		B023555408CBE852008CDDDA /* parse.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = parse.h; sourceTree = "<group>"; };
+		B023555508CBE852008CDDDA /* parse.y */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.yacc; path = parse.y; sourceTree = "<group>"; };
+		B023555608CBE852008CDDDA /* pragma.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = pragma.c; sourceTree = "<group>"; };
+		B023555708CBE852008CDDDA /* prepare.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = prepare.c; sourceTree = "<group>"; };
+		B023555808CBE852008CDDDA /* printf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = printf.c; sourceTree = "<group>"; };
+		B023555908CBE852008CDDDA /* random.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = random.c; sourceTree = "<group>"; };
+		B023555A08CBE852008CDDDA /* select.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = select.c; sourceTree = "<group>"; };
+		B023555B08CBE852008CDDDA /* shell.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = shell.c; sourceTree = "<group>"; };
+		B023555C08CBE852008CDDDA /* sqlite.h.in */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = sqlite.h.in; sourceTree = "<group>"; };
+		B023555D08CBE852008CDDDA /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
+		B023555E08CBE852008CDDDA /* sqliteInt.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = sqliteInt.h; sourceTree = "<group>"; };
+		B023555F08CBE852008CDDDA /* table.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = table.c; sourceTree = "<group>"; };
+		B023556008CBE852008CDDDA /* tclsqlite.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = tclsqlite.c; sourceTree = "<group>"; };
+		B023556108CBE853008CDDDA /* tokenize.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = tokenize.c; sourceTree = "<group>"; };
+		B023556208CBE853008CDDDA /* trigger.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = trigger.c; sourceTree = "<group>"; };
+		B023556308CBE853008CDDDA /* update.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = update.c; sourceTree = "<group>"; };
+		B023556408CBE853008CDDDA /* utf.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = utf.c; sourceTree = "<group>"; };
+		B023556508CBE853008CDDDA /* util.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = util.c; sourceTree = "<group>"; };
+		B023556608CBE853008CDDDA /* vacuum.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vacuum.c; sourceTree = "<group>"; };
+		B023556708CBE853008CDDDA /* vdbe.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vdbe.c; sourceTree = "<group>"; };
+		B023556808CBE853008CDDDA /* vdbe.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = vdbe.h; sourceTree = "<group>"; };
+		B023556908CBE853008CDDDA /* vdbeapi.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vdbeapi.c; sourceTree = "<group>"; };
+		B023556A08CBE853008CDDDA /* vdbeaux.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vdbeaux.c; sourceTree = "<group>"; };
+		B023556B08CBE853008CDDDA /* vdbefifo.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vdbefifo.c; sourceTree = "<group>"; };
+		B023556C08CBE853008CDDDA /* vdbeInt.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = vdbeInt.h; sourceTree = "<group>"; };
+		B023556D08CBE853008CDDDA /* vdbemem.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = vdbemem.c; sourceTree = "<group>"; };
+		B023556E08CBE853008CDDDA /* where.c */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.c; path = where.c; sourceTree = "<group>"; };
+		B023556F08CBE853008CDDDA /* SQLiteLogViewer.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = SQLiteLogViewer.nib; sourceTree = "<group>"; };
 		B747E984058D144C00A9F037 /* AILaTeXPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILaTeXPlugin.h; path = "Plugins/LaTeX Plugin/AILaTeXPlugin.h"; sourceTree = "<group>"; };
 		B747E985058D144C00A9F037 /* AILaTeXPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILaTeXPlugin.m; path = "Plugins/LaTeX Plugin/AILaTeXPlugin.m"; sourceTree = "<group>"; };
 		B799BC8005793C1200338E54 /* JMSQLLoggerAdvancedPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = JMSQLLoggerAdvancedPreferences.m; sourceTree = "<group>"; };
@@ -4551,6 +4688,7 @@
 				3429BAF70703789D00EED705 /* File Transfer Messages */,
 				7E824CCD06387FAF00813072 /* Link Management */,
 				9C8C7FA303CBA17B00267226 /* Logger */,
+				B023552808CBE84F008CDDDA /* SQLite Logger */,
 				F1D0C631051AC2380000000E /* Message Alias Support */,
 				6E5A43DC0611604B0078C342 /* Message History */,
 				34DFF46607A5EAC800B92233 /* Secure Messaging */,
@@ -5505,6 +5643,100 @@
 			name = "Dock Behavior Contact Alert";
 			sourceTree = "<group>";
 		};
+		B023552808CBE84F008CDDDA /* SQLite Logger */ = {
+			isa = PBXGroup;
+			children = (
+				B02355B908CBE8A0008CDDDA /* Log Viewer */,
+				B023552B08CBE84F008CDDDA /* SMLoggerContact.h */,
+				B023552C08CBE84F008CDDDA /* SMLoggerContact.m */,
+				B023552D08CBE84F008CDDDA /* SMLoggerConversation.h */,
+				B023552E08CBE84F008CDDDA /* SMLoggerConversation.m */,
+				B023552F08CBE84F008CDDDA /* SMSQLiteDatabase.h */,
+				B023553008CBE84F008CDDDA /* SMSQLiteDatabase.m */,
+				B023553108CBE850008CDDDA /* SMSQLiteLoggerPlugin.h */,
+				B023553208CBE850008CDDDA /* SMSQLiteLoggerPlugin.m */,
+				B023553508CBE850008CDDDA /* sqlite_source */,
+			);
+			name = "SQLite Logger";
+			path = "Plugins/SQLite Logger";
+			sourceTree = "<group>";
+		};
+		B023553508CBE850008CDDDA /* sqlite_source */ = {
+			isa = PBXGroup;
+			children = (
+				B023553608CBE850008CDDDA /* alter.c */,
+				B023553708CBE850008CDDDA /* analyze.c */,
+				B023553808CBE850008CDDDA /* attach.c */,
+				B023553908CBE850008CDDDA /* auth.c */,
+				B023553A08CBE850008CDDDA /* btree.c */,
+				B023553B08CBE850008CDDDA /* btree.h */,
+				B023553C08CBE850008CDDDA /* build.c */,
+				B023553D08CBE850008CDDDA /* callback.c */,
+				B023553E08CBE850008CDDDA /* complete.c */,
+				B023553F08CBE850008CDDDA /* date.c */,
+				B023554008CBE850008CDDDA /* delete.c */,
+				B023554108CBE851008CDDDA /* expr.c */,
+				B023554208CBE851008CDDDA /* func.c */,
+				B023554308CBE851008CDDDA /* hash.c */,
+				B023554408CBE851008CDDDA /* hash.h */,
+				B023554508CBE851008CDDDA /* insert.c */,
+				B023554608CBE851008CDDDA /* keywordhash.h */,
+				B023554708CBE851008CDDDA /* legacy.c */,
+				B023554808CBE851008CDDDA /* main.c */,
+				B023554908CBE851008CDDDA /* opcodes.c */,
+				B023554A08CBE851008CDDDA /* opcodes.h */,
+				B023554B08CBE851008CDDDA /* os.h */,
+				B023554C08CBE851008CDDDA /* os_common.h */,
+				B023554D08CBE851008CDDDA /* os_unix.c */,
+				B023554E08CBE851008CDDDA /* os_unix.h */,
+				B023554F08CBE851008CDDDA /* os_win.c */,
+				B023555008CBE851008CDDDA /* os_win.h */,
+				B023555108CBE852008CDDDA /* pager.c */,
+				B023555208CBE852008CDDDA /* pager.h */,
+				B023555308CBE852008CDDDA /* parse.c */,
+				B023555408CBE852008CDDDA /* parse.h */,
+				B023555508CBE852008CDDDA /* parse.y */,
+				B023555608CBE852008CDDDA /* pragma.c */,
+				B023555708CBE852008CDDDA /* prepare.c */,
+				B023555808CBE852008CDDDA /* printf.c */,
+				B023555908CBE852008CDDDA /* random.c */,
+				B023555A08CBE852008CDDDA /* select.c */,
+				B023555B08CBE852008CDDDA /* shell.c */,
+				B023555C08CBE852008CDDDA /* sqlite.h.in */,
+				B023555D08CBE852008CDDDA /* sqlite3.h */,
+				B023555E08CBE852008CDDDA /* sqliteInt.h */,
+				B023555F08CBE852008CDDDA /* table.c */,
+				B023556008CBE852008CDDDA /* tclsqlite.c */,
+				B023556108CBE853008CDDDA /* tokenize.c */,
+				B023556208CBE853008CDDDA /* trigger.c */,
+				B023556308CBE853008CDDDA /* update.c */,
+				B023556408CBE853008CDDDA /* utf.c */,
+				B023556508CBE853008CDDDA /* util.c */,
+				B023556608CBE853008CDDDA /* vacuum.c */,
+				B023556708CBE853008CDDDA /* vdbe.c */,
+				B023556808CBE853008CDDDA /* vdbe.h */,
+				B023556908CBE853008CDDDA /* vdbeapi.c */,
+				B023556A08CBE853008CDDDA /* vdbeaux.c */,
+				B023556B08CBE853008CDDDA /* vdbefifo.c */,
+				B023556C08CBE853008CDDDA /* vdbeInt.h */,
+				B023556D08CBE853008CDDDA /* vdbemem.c */,
+				B023556E08CBE853008CDDDA /* where.c */,
+			);
+			path = sqlite_source;
+			sourceTree = "<group>";
+		};
+		B02355B908CBE8A0008CDDDA /* Log Viewer */ = {
+			isa = PBXGroup;
+			children = (
+				B023552908CBE84F008CDDDA /* SMContactsTable.h */,
+				B023552A08CBE84F008CDDDA /* SMContactsTable.m */,
+				B023553308CBE850008CDDDA /* SMSQLiteLogViewerWindowController.h */,
+				B023553408CBE850008CDDDA /* SMSQLiteLogViewerWindowController.m */,
+				B023556F08CBE853008CDDDA /* SQLiteLogViewer.nib */,
+			);
+			name = "Log Viewer";
+			sourceTree = "<group>";
+		};
 		B079F761082808790058B452 /* Show Behavior */ = {
 			isa = PBXGroup;
 			children = (
@@ -6176,6 +6408,26 @@
 				11B648DF087C62C5008F528B /* RAFDragArrayController.h in Headers */,
 				636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */,
 				EE147A810896B33400A21377 /* OWABSearchWindowController.h in Headers */,
+				B023557108CBE854008CDDDA /* SMContactsTable.h in Headers */,
+				B023557308CBE854008CDDDA /* SMLoggerContact.h in Headers */,
+				B023557508CBE854008CDDDA /* SMLoggerConversation.h in Headers */,
+				B023557708CBE854008CDDDA /* SMSQLiteDatabase.h in Headers */,
+				B023557908CBE854008CDDDA /* SMSQLiteLoggerPlugin.h in Headers */,
+				B023557B08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.h in Headers */,
+				B023558208CBE854008CDDDA /* btree.h in Headers */,
+				B023558B08CBE854008CDDDA /* hash.h in Headers */,
+				B023558D08CBE854008CDDDA /* keywordhash.h in Headers */,
+				B023559108CBE854008CDDDA /* opcodes.h in Headers */,
+				B023559208CBE854008CDDDA /* os.h in Headers */,
+				B023559308CBE854008CDDDA /* os_common.h in Headers */,
+				B023559508CBE854008CDDDA /* os_unix.h in Headers */,
+				B023559708CBE854008CDDDA /* os_win.h in Headers */,
+				B023559908CBE854008CDDDA /* pager.h in Headers */,
+				B023559B08CBE854008CDDDA /* parse.h in Headers */,
+				B02355A408CBE854008CDDDA /* sqlite3.h in Headers */,
+				B02355A508CBE854008CDDDA /* sqliteInt.h in Headers */,
+				B02355AF08CBE854008CDDDA /* vdbe.h in Headers */,
+				B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7297,6 +7549,7 @@
 				346798F008947FB800F68A98 /* AdiumFramework.strings in Resources */,
 				EE147A6D0896B18800A21377 /* ABSearch.png in Resources */,
 				EE147A790896B32400A21377 /* ABSearch.nib in Resources */,
+				B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7779,6 +8032,52 @@
 				11B648E0087C62C5008F528B /* RAFDragArrayController.m in Sources */,
 				63FBAA480887779D00026246 /* AIDockBadger.m in Sources */,
 				EE147A800896B33400A21377 /* OWABSearchWindowController.m in Sources */,
+				B023557208CBE854008CDDDA /* SMContactsTable.m in Sources */,
+				B023557408CBE854008CDDDA /* SMLoggerContact.m in Sources */,
+				B023557608CBE854008CDDDA /* SMLoggerConversation.m in Sources */,
+				B023557808CBE854008CDDDA /* SMSQLiteDatabase.m in Sources */,
+				B023557A08CBE854008CDDDA /* SMSQLiteLoggerPlugin.m in Sources */,
+				B023557C08CBE854008CDDDA /* SMSQLiteLogViewerWindowController.m in Sources */,
+				B023557D08CBE854008CDDDA /* alter.c in Sources */,
+				B023557E08CBE854008CDDDA /* analyze.c in Sources */,
+				B023557F08CBE854008CDDDA /* attach.c in Sources */,
+				B023558008CBE854008CDDDA /* auth.c in Sources */,
+				B023558108CBE854008CDDDA /* btree.c in Sources */,
+				B023558308CBE854008CDDDA /* build.c in Sources */,
+				B023558408CBE854008CDDDA /* callback.c in Sources */,
+				B023558508CBE854008CDDDA /* complete.c in Sources */,
+				B023558608CBE854008CDDDA /* date.c in Sources */,
+				B023558708CBE854008CDDDA /* delete.c in Sources */,
+				B023558808CBE854008CDDDA /* expr.c in Sources */,
+				B023558908CBE854008CDDDA /* func.c in Sources */,
+				B023558A08CBE854008CDDDA /* hash.c in Sources */,
+				B023558C08CBE854008CDDDA /* insert.c in Sources */,
+				B023558E08CBE854008CDDDA /* legacy.c in Sources */,
+				B023558F08CBE854008CDDDA /* main.c in Sources */,
+				B023559008CBE854008CDDDA /* opcodes.c in Sources */,
+				B023559408CBE854008CDDDA /* os_unix.c in Sources */,
+				B023559608CBE854008CDDDA /* os_win.c in Sources */,
+				B023559808CBE854008CDDDA /* pager.c in Sources */,
+				B023559A08CBE854008CDDDA /* parse.c in Sources */,
+				B023559D08CBE854008CDDDA /* pragma.c in Sources */,
+				B023559E08CBE854008CDDDA /* prepare.c in Sources */,
+				B023559F08CBE854008CDDDA /* printf.c in Sources */,
+				B02355A008CBE854008CDDDA /* random.c in Sources */,
+				B02355A108CBE854008CDDDA /* select.c in Sources */,
+				B02355A608CBE854008CDDDA /* table.c in Sources */,
+				B02355A708CBE854008CDDDA /* tclsqlite.c in Sources */,
+				B02355A808CBE854008CDDDA /* tokenize.c in Sources */,
+				B02355A908CBE854008CDDDA /* trigger.c in Sources */,
+				B02355AA08CBE854008CDDDA /* update.c in Sources */,
+				B02355AB08CBE854008CDDDA /* utf.c in Sources */,
+				B02355AC08CBE854008CDDDA /* util.c in Sources */,
+				B02355AD08CBE854008CDDDA /* vacuum.c in Sources */,
+				B02355AE08CBE854008CDDDA /* vdbe.c in Sources */,
+				B02355B008CBE854008CDDDA /* vdbeapi.c in Sources */,
+				B02355B108CBE854008CDDDA /* vdbeaux.c in Sources */,
+				B02355B208CBE854008CDDDA /* vdbefifo.c in Sources */,
+				B02355B408CBE854008CDDDA /* vdbemem.c in Sources */,
+				B02355B508CBE854008CDDDA /* where.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
