@@ -520,7 +520,7 @@ select distinct date(m.date) as day, m.account_id as account_id, m.other_id as o
 		[logHTMLText appendString:[NSString stringWithUTF8String:results[i]]];
 		[logHTMLText appendString:@"\n"];
 	}
-	[database free:results];
+	[database freeData:results];
 	logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logHTMLText]] autorelease];
 	logText = [logText stringByAddingFormattingForLinks];
 	logText = [[adium contentController] filterAttributedString:logText
@@ -571,7 +571,7 @@ select distinct date(m.date) as day, m.account_id as account_id, m.other_id as o
     AIContentContext *currentContext;
     NSMutableArray *context;
     
-    dbError = [database query:[NSString stringWithFormat:@"select datetime(date), message, outgoing, autoreply from messages where status = 0 AND other_id = (select id from others where name = '%@' and service = '%@') order by date desc limit %d;", [other UID], [other service], count] rows:&rows cols:&cols data:&results];
+    dbError = [database query:[NSString stringWithFormat:@"select datetime(date), message, outgoing, autoreply from messages where status = 0 AND other_id = (select id from others where name = '%@' and service = '%@') order by date desc limit %d;", [other UID], [[other service] serviceID], count] rows:&rows cols:&cols data:&results];
     if (dbError) return [NSArray array];
     context = [NSMutableArray arrayWithCapacity:rows];
     for (i = 1; i <= rows; i++) {
