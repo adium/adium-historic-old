@@ -30,6 +30,8 @@
 #import "AIChat.h"
 #import "AIListContact.h"
 #import "AIService.h"
+#import "AIContentContext.h"
+#import "AIAccount.h"
 #import "AILoginController.h"
 #import "AIMenuController.h"
 #import "SMLoggerContact.h"
@@ -518,7 +520,7 @@ select distinct date(m.date) as day, m.account_id as account_id, m.other_id as o
 		[logHTMLText appendString:[NSString stringWithUTF8String:results[i]]];
 		[logHTMLText appendString:@"\n"];
 	}
-	
+	[database free:results];
 	logText = [[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:logHTMLText]] autorelease];
 	logText = [logText stringByAddingFormattingForLinks];
 	logText = [[adium contentController] filterAttributedString:logText
@@ -553,5 +555,37 @@ select distinct date(m.date) as day, m.account_id as account_id, m.other_id as o
 
 - (void)showLogViewer:(id)sender {
 	[logViewerWindow showWindow:nil];
+}
+
+- (NSArray *)context:(int)count inChat:(AIChat *)chat {
+    AIAccount *account = [chat account];
+    AIListObject *other = [chat listObject];
+    
+    char        **results;
+    int         rows, cols;
+    int         i;
+    BOOL        dbError;
+    
+    BOOL outgoing;
+    
+    AIContentContext *currentContext;
+    NSMutableArray *context;
+    
+    dbError = [database query:[NSString stringWithFormat:@"select datetime(date), message, outgoing, autoreply from messages where status = 0 AND other_id = (select id from others where name = '%@' and service = '%@') order by date desc limit %d;", [other UID], [other service], count] rows:&rows cols:&cols data:&results];
+    if (dbError) return [NSArray array];
+    context = [NSMutableArray arrayWithCapacity:rows];
+    for (i = 1; i <= rows; i++) {
+        outgoing = (results[4*i + 2][0] == '1');
+        currentContext = [AIContentContext messageInChat:chat
+                                              withSource:(outgoing ? account : other) 
+                                             destination:(outgoing ? other : account)
+                                                    date:[NSCalendarDate dateWithString:[NSString stringWithUTF8String:results[4*i]] calendarFormat:@"%Y-%m-%d %H:%M:%S"]
+                                                 message:[[[NSAttributedString alloc] initWithAttributedString:[AIHTMLDecoder decodeHTML:[NSString stringWithUTF8String:results[4*i + 1]]]] autorelease]
+                                               autoreply:(results[4*i + 3][0] == '1')];
+        [context addObject:currentContext];
+    }
+    [database freeData:results];
+    
+    return context;
 }
 @end

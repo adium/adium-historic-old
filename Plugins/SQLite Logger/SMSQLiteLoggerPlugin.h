@@ -28,7 +28,7 @@
 
 #import "sqlite3.h"
 
-@class SMSQLiteDatabase, SMLoggerContact, SMLoggerConversation;
+@class SMSQLiteDatabase, SMLoggerContact, SMLoggerConversation, AIChat;
 
 @interface SMSQLiteLoggerPlugin : AIPlugin {
 	bool								observingContent;
@@ -53,4 +53,6 @@
 - (void)filterForContact:(SMLoggerContact *)contact;
 - (void)filterForAccount:(SMLoggerContact *)account;
 - (void)filterForNothing;
+
+- (NSArray *)context:(int)count inChat:(AIChat *)chat;
 @end

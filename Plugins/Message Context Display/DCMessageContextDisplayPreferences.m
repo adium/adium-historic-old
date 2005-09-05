@@ -27,7 +27,7 @@ typedef enum {
 	AIMessageHistory_Always = 0,
 	AIMessageHistory_HaveTalkedInInterval,
 	AIMessageHistory_HaveNotTalkedInInterval
-} AIMessageHistoryDispalyPref;
+} AIMessageHistoryDisplayPref;
 
 @interface DCMessageContextDisplayPreferences (PRIVATE)
 - (NSMenu *)intervalUnitsMenu;
@@ -57,7 +57,6 @@ typedef enum {
     
     // Set the values of the controls and fields
     [checkBox_showContext setState:[[preferenceDict objectForKey:KEY_DISPLAY_CONTEXT] boolValue]];
-	[checkBox_doNotDim setState:(![[preferenceDict objectForKey:KEY_DIM_RECENT_CONTEXT] boolValue])];
 	[textField_linesToDisplay setIntValue:[[preferenceDict objectForKey:KEY_DISPLAY_LINES] intValue]];
 	[textField_haveTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_TALKED_DAYS] intValue]];
 	[textField_haveNotTalkedDays setIntValue:[[preferenceDict objectForKey:KEY_HAVE_NOT_TALKED_DAYS] intValue]];
@@ -80,11 +79,6 @@ typedef enum {
 											 forKey:KEY_DISPLAY_CONTEXT
 											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		[self configureControlDimming];
-		
-	} else if ( sender == checkBox_doNotDim ) {
-		[[adium preferenceController] setPreference:[NSNumber numberWithBool:(![sender state])]
-											 forKey:KEY_DIM_RECENT_CONTEXT
-											  group:PREF_GROUP_CONTEXT_DISPLAY];
 		
 	} else if ( sender == textField_linesToDisplay ) {
 		
@@ -120,9 +114,7 @@ typedef enum {
 {
 	int		selectedRow = [matrix_radioButtons selectedRow];
 	BOOL	contextEnabled =[checkBox_showContext state];
-	
-	[checkBox_doNotDim setEnabled:contextEnabled];
-	
+		
 	[textField_linesToDisplay setEnabled:contextEnabled];
 	[stepper_linesToDisplay setEnabled:contextEnabled];
 	

@@ -41,9 +41,10 @@
 #define UNIT_DAYS					0
 #define UNIT_HOURS					1
 
-@class DCMessageContextDisplayPreferences;
+@class DCMessageContextDisplayPreferences, SMSQLiteLoggerPlugin;
 
 @interface DCMessageContextDisplayPlugin : AIPlugin {
+	SMSQLiteLoggerPlugin			*logger;
 	
 	BOOL							isObserving;
 	BOOL							shouldDisplay;
