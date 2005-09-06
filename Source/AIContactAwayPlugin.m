@@ -19,11 +19,9 @@
 #import <Adium/AIListObject.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 
-#define	AWAY_LABEL			AILocalizedString(@"Away",nil)
+#define	AWAY				AILocalizedString(@"Away",nil)
 #define	AWAY_MESSAGE_LABEL	AILocalizedString(@"Away Message",nil)
 #define	STATUS_LABEL		AILocalizedString(@"Status",nil)
-
-#define AWAY_YES			AILocalizedString(@"Yes",nil)
 
 /*!
  * @class AIContactAwayPlugin
@@ -57,27 +55,30 @@
     statusMessage = [inObject statusMessage];
     
     //Return the correct string
-    if (statusMessage != nil && [statusMessage length] != 0) {
+    if(statusMessage != nil && [statusMessage length] != 0){
 		if (away) {
+			/* Away with a status message */
 			
 			//Check to make sure we're not duplicating server display name information
 			NSString	*serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
 			
 			//Return the correct string
 			if ([serverDisplayName isEqualToString:[statusMessage string]]) {
-				label = AWAY_LABEL;
+				label = STATUS_LABEL;
 			} else {
 				label = AWAY_MESSAGE_LABEL;
 			}
 			
 		} else {
+			/* Available with a status message */
 			label = STATUS_LABEL;
 		}
     } else if (away) {
-		label = AWAY_LABEL;
+		/* Away without a status message */
+		label = STATUS_LABEL;
     }
     
-    return label;
+    return(label);
 }
 
 /*!
@@ -96,17 +97,18 @@
     
     //Get the status message
     statusMessage = [inObject statusMessage];
-
+	
 	//Check to make sure we're not duplicating server display name information
 	serverDisplayName = [inObject statusObjectForKey:@"Server Display Name"];
-
+	
     //Return the correct string
 	if ([serverDisplayName isEqualToString:[statusMessage string]]) {
 		//If the status and server display name are the same, just display YES for away since we'll display the
 		//server display name itself in the proper place.
 		if (away) {
-			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
+			entry = [[[NSAttributedString alloc] initWithString:AWAY] autorelease];
 		}
+
 	} else {
 		if (statusMessage != nil && [statusMessage length] != 0) {
 			if ([[statusMessage string] rangeOfString:@"\t" options:NSLiteralSearch].location == NSNotFound) {
@@ -114,7 +116,7 @@
 				
 			} else {
 				/* We don't display tabs well in the tooltips because we use them for alignment, so
-				 * turn them into 4 spaces. */
+				* turn them into 4 spaces. */
 				NSMutableAttributedString	*mutableStatusMessage = [[statusMessage mutableCopy] autorelease];
 				[mutableStatusMessage replaceOccurrencesOfString:@"\t"
 													  withString:@"    "
@@ -126,11 +128,11 @@
 			
 			
 		} else if (away) {
-			entry = [[[NSAttributedString alloc] initWithString:AWAY_YES] autorelease];
+			entry = [[[NSAttributedString alloc] initWithString:AWAY] autorelease];
 		}
 	}
 	
-    return entry;
+    return(entry);
 }
 
 @end
