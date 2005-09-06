@@ -1368,14 +1368,14 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
 		34BD992B0531467C000AB133 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 34BD9DAF05314751000AB133 /* Adium.Framework */;
+			remoteGlobalIDString = 34BD9DAF05314751000AB133;
 			remoteInfo = Adium.Framework;
 		};
 		34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */ = {
@@ -9917,7 +9917,7 @@
 					"-g3",
 				);
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = Development;
@@ -9938,7 +9938,7 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				OTHER_CFLAGS = "-DCRASH_REPORTER";
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = Deployment;
@@ -9962,7 +9962,7 @@
 					"-DDEBUG_BUILD",
 				);
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 			};
 			name = "Deployment-Debug";
@@ -9981,7 +9981,7 @@
 				INFOPLIST_FILE = Plists/Adium_2.plist;
 				INSTALL_PATH = /;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
-				OTHER_LDFLAGS = "";
+				OTHER_LDFLAGS = "-ltcl";
 				PRODUCT_NAME = Adium;
 				SECTORDER_FLAGS = "";
 				ZERO_LINK = YES;
