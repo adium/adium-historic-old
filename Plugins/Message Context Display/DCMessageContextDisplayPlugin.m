@@ -91,7 +91,6 @@
 		logger = (SMSQLiteLoggerPlugin *)[[[AIObject sharedAdiumInstance] componentLoader] pluginWithClassName:@"SMSQLiteLoggerPlugin"];
 	
 	NSArray	* context = [[logger context:linesToDisplay inChat:chat]retain];
-	NSLog(@"%@, %d", context, [context count]);
 	
 	if (context && [context count] > 0 && shouldDisplay) {
 		
