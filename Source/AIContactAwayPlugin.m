@@ -78,7 +78,7 @@
 		label = STATUS_LABEL;
     }
     
-    return(label);
+    return label;
 }
 
 /*!
@@ -132,7 +132,7 @@
 		}
 	}
 	
-    return(entry);
+    return entry;
 }
 
 @end
