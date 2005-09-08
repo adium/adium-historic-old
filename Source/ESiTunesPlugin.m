@@ -502,7 +502,7 @@
 									  representedObject:TRACK_TRIGGER
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
 	
-	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"Store URL","Insert Current iTunes track name toolbar menu item.") 
+	[insertTrackSubmenu addItem:[self menuItemWithTitle:AILocalizedString(@"iTunes Music Store Link","Insert Current iTunes track store link toolbar menu item.") 
 												 action:@selector(insertiTMSLink)
 									  representedObject:nil
 												   kind:ENABLED_IF_ITUNES_PLAYING]];
