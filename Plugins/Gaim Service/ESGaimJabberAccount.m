@@ -297,8 +297,12 @@ gboolean gaim_init_jabber_plugin(void);
 
 		} else if ([*disconnectionError rangeOfString:@"Stream Error"].location != NSNotFound) {
 			shouldReconnect = NO;
+
 		} else if ([*disconnectionError rangeOfString:@"requires plaintext authentication over an unencrypted stream"].location != NSNotFound) {
-			shouldReconnect = NO;			
+			shouldReconnect = NO;
+
+		} else if ([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) {
+			[[adium accountController] forgetPasswordForAccount:self];
 		}
 	}
 	
