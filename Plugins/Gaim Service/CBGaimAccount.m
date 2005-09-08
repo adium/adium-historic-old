@@ -123,12 +123,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 // Contacts ------------------------------------------------------------------------------------------------
 #pragma mark Contacts
-- (oneway void)newContact:(AIListContact *)theContact withName:(NSString *)inName
+- (void)newContact:(AIListContact *)theContact withName:(NSString *)inName
 {
 
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
+- (void)updateContact:(AIListContact *)theContact toGroupName:(NSString *)groupName contactName:(NSString *)contactName
 {
 	//A quick sign on/sign off can leave these messages in the threaded messaging queue... we most definitely don't want
 	//to put the contact back into a remote group after signing off, as a ghost will appear. Spooky!
@@ -162,7 +162,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
+- (void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
 	if (![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
 		//Store this alias as the serverside display name so long as it isn't identical when unformatted to the UID
@@ -188,13 +188,13 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	return NO;
 }
 
-- (oneway void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
+- (void)updateContact:(AIListContact *)theContact forEvent:(NSNumber *)event
 {
 }		
 
 
 //Signed online
-- (oneway void)updateSignon:(AIListContact *)theContact withData:(void *)data
+- (void)updateSignon:(AIListContact *)theContact withData:(void *)data
 {
 	[theContact setOnline:YES
 				   notify:NotifyLater
@@ -204,7 +204,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 //Signed offline
-- (oneway void)updateSignoff:(AIListContact *)theContact withData:(void *)data
+- (void)updateSignoff:(AIListContact *)theContact withData:(void *)data
 {
 	[theContact setOnline:NO
 				   notify:NotifyLater
@@ -214,7 +214,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 //Signon Time
-- (oneway void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
+- (void)updateSignonTime:(AIListContact *)theContact withData:(NSDate *)signonDate
 {	
 	[theContact setSignonDate:signonDate
 					   notify:NotifyLater];
@@ -279,7 +279,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 	
 //Evil level (warning level)
-- (oneway void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber
+- (void)updateEvil:(AIListContact *)theContact withData:(NSNumber *)evilNumber
 {
 	[theContact setWarningLevel:[evilNumber intValue]
 						 notify:NotifyLater];
@@ -289,7 +289,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }   
 
 //Buddy Icon
-- (oneway void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
+- (void)updateIcon:(AIListContact *)theContact withData:(NSData *)userIconData
 {
 	[theContact setServersideIconData:userIconData
 							   notify:NotifyLater];
@@ -298,7 +298,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[theContact notifyOfChangedStatusSilently:silentAndDelayed];
 }
 
-- (oneway void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
+- (void)updateUserInfo:(AIListContact *)theContact withData:(NSString *)userInfoString
 {
 	[theContact setProfile:[AIHTMLDecoder decodeHTML:userInfoString]
 					notify:NotifyLater];
@@ -318,7 +318,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * We need not take any action; we'll be notified of changes by Gaim as necessary.
  */
-- (oneway void)removeContact:(AIListContact *)theContact
+- (void)removeContact:(AIListContact *)theContact
 {
 
 }
@@ -354,7 +354,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 //    }
 }
 
-- (oneway void)requestAddContactWithUID:(NSString *)contactUID
+- (void)requestAddContactWithUID:(NSString *)contactUID
 {
 	[[adium contactController] requestAddContactWithUID:contactUID
 												service:[self _serviceForUID:contactUID]];
@@ -477,7 +477,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * This will ultimately call -[CBGaimAccount openChat:] below if the chat was not previously open.
  */
-- (oneway void)addChat:(AIChat *)chat
+- (void)addChat:(AIChat *)chat
 {
 	//Open the chat
 	[[adium interfaceController] openChat:chat]; 
@@ -552,28 +552,28 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 //Typing update in an IM
-- (oneway void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typingState
+- (void)typingUpdateForIMChat:(AIChat *)chat typing:(NSNumber *)typingState
 {
 	[self setTypingFlagOfChat:chat
 						   to:typingState];
 }
 
 //Multiuser chat update
-- (oneway void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type
+- (void)convUpdateForChat:(AIChat *)chat type:(NSNumber *)type
 {
 
 }
-- (oneway void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat
+- (void)updateTopic:(NSString *)inTopic forChat:(AIChat *)chat
 {
 	
 }
-- (oneway void)updateTitle:(NSString *)inTitle forChat:(AIChat *)chat
+- (void)updateTitle:(NSString *)inTitle forChat:(AIChat *)chat
 {
 	[[chat displayArrayForKey:@"Display Name"] setObject:inTitle
 											   withOwner:self];
 }
 
-- (oneway void)updateForChat:(AIChat *)chat type:(NSNumber *)type
+- (void)updateForChat:(AIChat *)chat type:(NSNumber *)type
 {
 	AIChatUpdateType	updateType = [type intValue];
 	NSString			*key = nil;
@@ -598,13 +598,13 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)errorForChat:(AIChat *)chat type:(NSNumber *)type
+- (void)errorForChat:(AIChat *)chat type:(NSNumber *)type
 {
 	[chat setStatusObject:type forKey:KEY_CHAT_ERROR notify:NotifyNow];
 	[chat setStatusObject:nil forKey:KEY_CHAT_ERROR notify:NotifyNever];
 }
 
-- (oneway void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+- (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
 	NSAttributedString		*attributedMessage;
@@ -633,7 +633,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
+- (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat
 {	
 	GaimMessageFlags		flags = [[messageDict objectForKey:@"GaimMessageFlags"] intValue];
 	NSAttributedString		*attributedMessage;
@@ -910,7 +910,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	GaimDebug(@"%@: addContact:%@ toChat:%@",self,listContact,chat);
 }
 
-- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat
 {
 	AIListContact *listContact;
 
@@ -925,7 +925,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
+- (void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
@@ -934,7 +934,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
+- (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat
 {
 	AIListContact	*contact;
 
@@ -947,7 +947,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}	
 }
 
-- (oneway void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat
+- (void)removeUsersArray:(NSArray *)usersArray fromChat:(AIChat *)chat
 {
 	NSEnumerator	*enumerator = [usersArray objectEnumerator];
 	NSString		*contactName;
@@ -995,12 +995,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	return [idArray autorelease];
 }
 
-- (oneway void)privacyPermitListAdded:(NSString *)sourceUID
+- (void)privacyPermitListAdded:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_PERMIT added:sourceUID];
 }
 
-- (oneway void)privacyDenyListAdded:(NSString *)sourceUID
+- (void)privacyDenyListAdded:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_DENY added:sourceUID];
 }
@@ -1016,12 +1016,12 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
-- (oneway void)privacyPermitListRemoved:(NSString *)sourceUID
+- (void)privacyPermitListRemoved:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_PERMIT removed:sourceUID];
 }
 
-- (oneway void)privacyDenyListRemoved:(NSString *)sourceUID
+- (void)privacyDenyListRemoved:(NSString *)sourceUID
 {
 	[self accountPrivacyList:PRIVACY_DENY removed:sourceUID];
 }
@@ -1144,12 +1144,17 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	return nil;
 }
 
-//The account requested that we received a file.
-//Set up the ESFileTransfer and query the fileTransferController for a save location
-- (oneway void)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
+/* 
+ * @brief The account requested that we received a file.
+ *
+ * Set up the ESFileTransfer and query the fileTransferController for a save location.
+ * 
+ * @result The window controller for the window prompting the user to take action, or nil if no prompt was shown
+ */
+- (NSWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimDebug(@"File transfer request received: %@",fileTransfer);
-    [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
+	return [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];
 }
 
 //Create an ESFileTransfer object from an xfer
@@ -1179,25 +1184,25 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 //Update an ESFileTransfer object progress
-- (oneway void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
+- (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer percent:(NSNumber *)percent bytesSent:(NSNumber *)bytesSent
 {
 	float percentDone = [percent floatValue];
     [fileTransfer setPercentDone:percentDone bytesSent:[bytesSent unsignedLongValue]];
 }
 
 //The local side canceled the transfer.  We probably already have this status set, but set it just in case.
-- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
 {
 	[fileTransfer setStatus:Canceled_Local_FileTransfer];
 }
 
 //The remote side canceled the transfer, the fool. Update our status.
-- (oneway void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
+- (void)fileTransferCanceledRemotely:(ESFileTransfer *)fileTransfer
 {
 	[fileTransfer setStatus:Canceled_Remote_FileTransfer];
 }
 
-- (oneway void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
+- (void)destroyFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimDebug(@"Destroy file transfer %@",fileTransfer);
 	[fileTransfer release];
@@ -1233,7 +1238,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 //User refused a receive request.  Tell gaim; we don't release the ESFileTransfer object
 //since that will happen when the xfer is destroyed.  This will end up calling back on
-//- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+//- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
 - (void)rejectFileReceiveRequest:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
@@ -1244,7 +1249,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 
 //Cancel a file transfer in progress.  Tell gaim; we don't release the ESFileTransfer object
 //since that will happen when the xfer is destroyed.  This will end up calling back on
-//- (oneway void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
+//- (void)fileTransferCanceledLocally:(ESFileTransfer *)fileTransfer
 - (void)cancelFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimXfer	*xfer = [[fileTransfer accountData] pointerValue];
@@ -1493,7 +1498,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (NSString *)connectionStringForStep:(int)step { return nil; };
 
 //Our account has connected
-- (oneway void)accountConnectionConnected
+- (void)accountConnectionConnected
 {
 	AILog(@"************ %@ CONNECTED ***********",[self UID]);
 	
@@ -1510,7 +1515,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	[lastDisconnectionError release]; lastDisconnectionError = nil;
 }
 
-- (oneway void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
+- (void)accountConnectionProgressStep:(NSNumber *)step percentDone:(NSNumber *)connectionProgressPrecent
 {
 	NSString	*connectionProgressString = [self connectionStringForStep:[step intValue]];
 
@@ -1562,7 +1567,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 /*!
  * @brief Our account was unexpectedly disconnected with an error message
  */
-- (oneway void)accountConnectionReportDisconnect:(NSString *)text
+- (void)accountConnectionReportDisconnect:(NSString *)text
 {
 	//Retain the error message locally for use in -[CBGaimAccount accountConnectionDisconnected]
 	if (lastDisconnectionError != text) {
@@ -1576,7 +1581,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	GaimDebug(@"%@ reported disconnecting: %@",[self UID],lastDisconnectionError);
 }
 
-- (oneway void)accountConnectionNotice:(NSString *)connectionNotice
+- (void)accountConnectionNotice:(NSString *)connectionNotice
 {
     [[adium interfaceController] handleErrorMessage:[NSString stringWithFormat:AILocalizedString(@"%@ (%@) : Connection Notice",nil),[self formattedUID],[service description]]
                                     withDescription:connectionNotice];
@@ -1588,7 +1593,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  *
  * This is called after the accoutn disconnects for any reason
  */
-- (oneway void)accountConnectionDisconnected
+- (void)accountConnectionDisconnected
 {
 	BOOL			connectionIsSuicidal = ((account && account->gc) ? account->gc->wants_to_die : NO);
 
