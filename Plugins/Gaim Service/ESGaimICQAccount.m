@@ -177,7 +177,9 @@
 			else if (([statusName isEqualToString:STATUS_NAME_OCCUPIED]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_OCCUPIED] == NSOrderedSame))
 				gaimStatusType = "Occupied";
-			
+			else
+				gaimStatusType = "Away";
+
 			break;
 		}
 			
