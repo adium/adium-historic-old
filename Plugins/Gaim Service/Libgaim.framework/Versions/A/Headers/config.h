@@ -1,8 +1,8 @@
 /* Version number of package */
-#define VERSION "1.2.0"
+#define VERSION "1.5.0"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libgaim 1.2.0"
+#define PACKAGE_STRING "libgaim 1.5.0"
 
 /* OTR version */
 #define GAIM_OTR_VERSION "2.0.1"
