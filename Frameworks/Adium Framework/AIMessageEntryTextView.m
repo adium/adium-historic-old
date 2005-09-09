@@ -36,6 +36,9 @@
 
 #define KEY_DISABLE_TYPING_NOTIFICATIONS		@"Disable Typing Notifications"
 
+#define KEY_SPELL_CHECKING						@"Spell Checking Enabled"
+#define	PREF_GROUP_DUAL_WINDOW_INTERFACE		@"Dual Window Interface"
+
 @interface AIMessageEntryTextView (PRIVATE)
 - (void)_setPushIndicatorVisible:(BOOL)visible;
 - (void)_positionIndicator:(NSNotification *)notification;
@@ -46,50 +49,66 @@
 
 static NSImage	*pushIndicatorImage = nil;
 
+- (void)_initMessageEntryTextView
+{
+	adium = [AIObject sharedAdiumInstance];
+	associatedView = nil;
+	chat = nil;
+	indicator = nil;
+	pushPopEnabled = YES;
+	clearOnEscape = NO;
+	homeToStartOfLine = YES;
+	resizing = NO;
+	enableTypingNotifications = NO;
+	historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
+	pushArray = [[NSMutableArray alloc] init];
+	currentHistoryLocation = 0;
+	
+	[self setDrawsBackground:YES];
+	_desiredSizeCached = NSMakeSize(0,0);
+	
+	if ([self respondsToSelector:@selector(setAllowsUndo:)]) {
+		[self setAllowsUndo:YES];
+	}
+	if ([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
+		[self setAllowsDocumentBackgroundColorChange:YES];
+	}
+	
+	[self setImportsGraphics:YES];
+	
+	//
+	if (!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
+	
+	//
+	[[NSNotificationCenter defaultCenter] addObserver:self 
+											 selector:@selector(textDidChange:)
+												 name:NSTextDidChangeNotification 
+											   object:self];
+	[[NSNotificationCenter defaultCenter] addObserver:self
+											 selector:@selector(frameDidChange:) 
+												 name:NSViewFrameDidChangeNotification 
+											   object:self];
+	
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_DUAL_WINDOW_INTERFACE];	
+}
+
 //Init the text view
 - (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer
 {
 	if ((self = [super initWithFrame:frameRect textContainer:aTextContainer])) {
-		adium = [AIObject sharedAdiumInstance];
-		associatedView = nil;
-		chat = nil;
-		indicator = nil;
-		pushPopEnabled = YES;
-		clearOnEscape = NO;
-		homeToStartOfLine = YES;
-		resizing = NO;
-		enableTypingNotifications = NO;
-		historyArray = [[NSMutableArray alloc] initWithObjects:@"",nil];
-		pushArray = [[NSMutableArray alloc] init];
-		currentHistoryLocation = 0;
-
-		[self setDrawsBackground:YES];
-		_desiredSizeCached = NSMakeSize(0,0);
-		
-		if ([self respondsToSelector:@selector(setAllowsUndo:)]) {
-			[self setAllowsUndo:YES];
-		}
-		if ([self respondsToSelector:@selector(setAllowsDocumentBackgroundColorChange:)]) {
-			[self setAllowsDocumentBackgroundColorChange:YES];
-		}
-		
-		[self setImportsGraphics:YES];
-		
-		//
-		if (!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
-		
-		//
-		[[NSNotificationCenter defaultCenter] addObserver:self 
-												 selector:@selector(textDidChange:)
-													 name:NSTextDidChangeNotification 
-												   object:self];
-		[[NSNotificationCenter defaultCenter] addObserver:self
-												 selector:@selector(frameDidChange:) 
-													 name:NSViewFrameDidChangeNotification 
-												   object:self];
+		[self _initMessageEntryTextView];
 	}
 	
     return self;
+}
+
+- (id)initWithCoder:(NSCoder *)coder
+{
+	if ((self = [super initWithCoder:coder])) {
+		[self _initMessageEntryTextView];
+	}
+	
+	return self;
 }
 
 - (void)dealloc
@@ -211,7 +230,7 @@ static NSImage	*pushIndicatorImage = nil;
 	[self _resetCacheAndPostSizeChanged];
 }
 
-//10.3 only, called when the user presses escape - we'll clear our text view in response
+//10.3+ only, called when the user presses escape - we'll clear our text view in response
 - (void)cancelOperation:(id)sender
 {
 	if (clearOnEscape) {
@@ -255,10 +274,17 @@ static NSImage	*pushIndicatorImage = nil;
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	if((!object || (object == [chat account])) &&
-	   (!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])){
+	if ((!object || (object == [chat account])) &&
+		[group isEqualToString:GROUP_ACCOUNT_STATUS] &&
+		(!key || [key isEqualToString:KEY_DISABLE_TYPING_NOTIFICATIONS])) {
 		enableTypingNotifications = ![[[chat account] preferenceForKey:KEY_DISABLE_TYPING_NOTIFICATIONS
 																 group:GROUP_ACCOUNT_STATUS] boolValue];
+	}
+	
+	if (!object &&
+		[group isEqualToString:PREF_GROUP_DUAL_WINDOW_INTERFACE] &&
+		(!key || [key isEqualToString:KEY_SPELL_CHECKING])) {
+		[self setContinuousSpellCheckingEnabled:[[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
 	}
 }
 
@@ -798,11 +824,19 @@ static NSImage	*pushIndicatorImage = nil;
 
 
 #pragma mark Spell Checking
-//Post a notification when spell checking is toggled
+
+/*!
+ * @brief Spell checking was toggled
+ *
+ * Set our preference, as we toggle spell checking globally when it is changed locally
+ */
 - (void)toggleContinuousSpellChecking:(id)sender
 {
 	[super toggleContinuousSpellChecking:sender];
-	[[NSNotificationCenter defaultCenter] postNotificationName:AIContinuousSpellCheckingWasToggledNotification object:self];
+
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[self isContinuousSpellCheckingEnabled]]
+										 forKey:KEY_SPELL_CHECKING
+										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 }
 
 @end

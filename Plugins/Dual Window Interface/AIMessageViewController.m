@@ -53,7 +53,6 @@
 #define	USERLIST_LAYOUT						@"UserList Layout"		//File name of the user list layout
 #define	KEY_ENTRY_TEXTVIEW_MIN_HEIGHT		@"Minimum Text Height"	//Preference key for text entry height
 #define	KEY_ENTRY_USER_LIST_MIN_WIDTH		@"UserList Width"		//Preference key for user list width
-#define KEY_SPELL_CHECKING					@"Spell Checking Enabled"
 
 
 @interface AIMessageViewController (PRIVATE)
@@ -202,12 +201,6 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	[[adium preferenceController] setPreference:[NSNumber numberWithInt:userListMinWidth]
 										 forKey:KEY_ENTRY_USER_LIST_MIN_WIDTH
-										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
-
-	//Remember continuous spell checking
-	BOOL	spellCheckingEnabled = [textView_outgoing isContinuousSpellCheckingEnabled];
-	[[adium preferenceController] setPreference:[NSNumber numberWithBool:spellCheckingEnabled]
-										 forKey:KEY_SPELL_CHECKING
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	
 #warning Wrong as per the third XXX above, but a crash fix for now.
@@ -526,15 +519,6 @@
 //Text Entry -----------------------------------------------------------------------------------------------------------
 #pragma mark Text Entry
 /*!
- * @brief Spell checking was toggled in one of our message windows, update this one to match
- */
-- (void)continuousSpellCheckingWasToggled:(NSNotification *)notification
-{
-	BOOL	spellCheckingEnabled = [[notification object] isContinuousSpellCheckingEnabled];
-	[textView_outgoing setContinuousSpellCheckingEnabled:spellCheckingEnabled];
-}
-
-/*!
  * @brief Preferences changed, update sending keys
  */
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
@@ -572,20 +556,12 @@
 	//Associate the text entry view with our chat and inform Adium that it exists.
 	//This is necessary for text entry filters to work correctly.
 	[textView_outgoing setChat:chat];
-
-	//Configure spell checking
-	[textView_outgoing setContinuousSpellCheckingEnabled:[[prefDict objectForKey:KEY_SPELL_CHECKING] boolValue]];
 	
     //Observe text entry view size changes so we can dynamically resize as the user enters text
     [[NSNotificationCenter defaultCenter] addObserver:self
 											 selector:@selector(outgoingTextViewDesiredSizeDidChange:)
 												 name:AIViewDesiredSizeDidChangeNotification 
 											   object:textView_outgoing];
-	[[NSNotificationCenter defaultCenter] addObserver:self
-											 selector:@selector(continuousSpellCheckingWasToggled:)
-												 name:AIContinuousSpellCheckingWasToggledNotification
-											   object:nil];
-	
 }
 
 /*!
