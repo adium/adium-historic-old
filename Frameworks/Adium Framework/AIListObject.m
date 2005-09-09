@@ -521,11 +521,29 @@
 
 #pragma mark Status states
 
+/*
+ * @brief The name for the specific status of this object
+ *
+ * The statusName provides further detail after the statusType.  It may be a string such as @"Busy" or @"BRB".
+ * Possible values are determined by installed services; many default possibilities are listed in AIStatusController.h.
+ *
+ * The statusName may be nil if no additional status information is available for the contact. For example, an AIM
+ * contact will never have a statusName value, as the possibilities enumerated by AIStatusType -- and therefore returned
+ * by -[AIListObject statusType] -- cover all possibilities.  An ICQ contact, on the other hand, might have a statusType
+ * of AIAwayStatusType and then a statusName of @"Not Available" or @"DND".
+ *
+ * @result The statusName, or nil none exists
+ */
 - (NSString *)statusName
 {
 	return [self statusObjectForKey:@"StatusName"];
 }
 
+/*
+ * @brief The general type of this object's status
+ *
+ * @result The AIStatusType for this object, indicating if it is available, away, invisible, offline, etc.
+ */
 - (AIStatusType)statusType
 {
 	NSNumber		*statusTypeNumber = [self statusObjectForKey:@"StatusType"];
@@ -536,6 +554,14 @@
 	return statusType;
 }
 
+/*
+ * @brief Store the status name and type for this object
+ *
+ * This is used by account code to let the object know its name and status type
+ * @param statusName The statusName, which further specifies the statusType, or nil if none is available
+ * @param statusType The AIStatusType describing this object's status
+ * @param notify The NotifyTiming for this operation
+ */
 - (void)setStatusWithName:(NSString *)statusName statusType:(AIStatusType)statusType notify:(NotifyTiming)notify
 {
 	AIStatusType	currentStatusType = [self statusType];
@@ -552,6 +578,14 @@
 	if (notify) [self notifyOfChangedStatusSilently:NO];
 }
 
+/*
+ * @brief Return the status message for this object
+ *
+ * The statusMessage may supplement the statusType and statusName with a message describing the object's status; in AIM,
+ * for example, both available and away statuses can have an associated, user-set message.
+ *
+ * @result The NSAttributedString statusMessagae, or nil if none is set
+ */
 - (NSAttributedString *)statusMessage
 {
 	return [self statusObjectForKey:@"StatusMessage"];
