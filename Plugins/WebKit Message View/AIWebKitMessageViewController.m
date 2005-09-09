@@ -369,6 +369,7 @@ static NSArray *draggedTypes = nil;
 	activeStyle = [[prefDict objectForKey:KEY_WEBKIT_STYLE] retain];
 	styleBundle = [plugin messageStyleBundleWithIdentifier:activeStyle];
 	messageStyle = [[AIWebkitMessageViewStyle messageViewStyleFromBundle:styleBundle] retain];
+	[webView setPreferencesIdentifier:activeStyle];
 
 	//Get the prefered variant (or the default if a prefered is not available)
 	activeVariant = [[prefDict objectForKey:[plugin styleSpecificKey:@"Variant" forStyle:activeStyle]] retain];
