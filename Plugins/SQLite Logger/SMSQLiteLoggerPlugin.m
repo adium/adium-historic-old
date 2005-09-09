@@ -19,6 +19,7 @@
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIMenuAdditions.h>
+#import <AIUtilities/AIQueue.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIHTMLDecoder.h>
 #import <AIUtilities/AIAttributedStringAdditions.h>
@@ -43,6 +44,7 @@
 - (void)_addMessage:(NSAttributedString *)message dest:(NSString *)destName source:(NSString *)sourceName sendDisplay:(NSString *)sendDisp destDisplay:(NSString *)destDisp sendServe:(NSString *)s_service recServe:(NSString *)r_service isOutgoing:(BOOL)isOutgoing date:(NSDate *)messageDate isAutoreply:(BOOL)isAutoreply isStatus:(BOOL)isStatus;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSMutableSet *)wordsInString:(NSString *)string;
+- (void)adiumSentOrReceivedContentObject:(AIContentMessage *)content;
 @end
 
 @implementation SMSQLiteLoggerPlugin
@@ -56,6 +58,8 @@
 	conversationListCurrent = NO;
 	filteringForNothing = YES;
 	filteringForAccount = NO;
+	
+	pendingMessages = [[AIQueue alloc] init];
 	
 	short	tablesCreated = 0;
 	
@@ -131,6 +135,8 @@
 		}
 	}
 	
+	[NSThread detachNewThreadSelector:@selector(messageAddingThread) toTarget:self withObject:nil];
+	
 	NSMenuItem *logViewerMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:LOG_VIEWER
 																						  target:self
 																						  action:@selector(showLogViewer:)
@@ -146,6 +152,7 @@
 	[others release];
 	[accounts release];
 	[conversationList release];
+	[pendingMessages release];
 }
 
 
@@ -169,14 +176,29 @@
 	}
 }
 
-//Content was sent or recieved
+- (void)addMessages:(NSTimer *)timer {
+	AIContentMessage *content;
+	while ((content = [pendingMessages dequeue])) {
+		[self adiumSentOrReceivedContentObject:content];
+	}
+	[autoreleasePool release];
+	autoreleasePool = [[NSAutoreleasePool alloc] init];
+	
+}
+
+//Content was sent or recieved (add to queue)
 - (void)adiumSentOrReceivedContent:(NSNotification *)notification
 {
 	AIContentMessage 	*content = [[notification userInfo] objectForKey:@"AIContentObject"];
-	
+	[pendingMessages enqueue:content];
+}
+
+//Content was sent or recieved (do work now)
+- (void)adiumSentOrReceivedContentObject:(AIContentMessage *)content;
+{
     //Message Content
     if ([content postProcessContent]) {
-        AIChat		*chat = [notification object];
+        AIChat		*chat = [content chat];
         AIListObject	*source = [content source];
         AIListObject	*destination = [content destination];
         AIAccount	*account = [chat account];
@@ -372,6 +394,22 @@
 		}
 	}
 	[database query:@"COMMIT;"];
+}
+
+- (void)messageAddingThread {
+	NSTimer *messageAddingTimer;
+	
+	autoreleasePool = [[NSAutoreleasePool alloc] init];
+	messageAddingTimer = [[NSTimer scheduledTimerWithTimeInterval:5 // once every five seconds
+												  target:self
+												selector:@selector(addMessages:)
+												userInfo:nil
+												 repeats:YES] retain];
+	
+	CFRunLoopRun();
+	
+	[messageAddingTimer invalidate]; [messageAddingTimer release];
+	[autoreleasePool release];
 }
 
 - (NSArray *)accounts {

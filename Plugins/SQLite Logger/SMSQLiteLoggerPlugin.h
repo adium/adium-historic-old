@@ -28,7 +28,7 @@
 
 #import "sqlite3.h"
 
-@class SMSQLiteDatabase, SMLoggerContact, SMLoggerConversation, AIChat;
+@class SMSQLiteDatabase, SMLoggerContact, SMLoggerConversation, AIChat, AIQueue;
 
 @interface SMSQLiteLoggerPlugin : AIPlugin {
 	bool								observingContent;
@@ -42,6 +42,9 @@
 	BOOL								filteringForNothing, filteringForAccount;
 	SMLoggerContact						*filterItem;
 	NSMutableArray						*conversationList;
+	
+	AIQueue								*pendingMessages;
+	NSAutoreleasePool					*autoreleasePool;
 }
 
 - (NSArray *)accounts;
