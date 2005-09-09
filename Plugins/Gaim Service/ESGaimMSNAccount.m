@@ -529,7 +529,8 @@ gboolean gaim_init_msn_plugin(void);
 - (NSString *)titleForAccountActionMenuLabel:(const char *)label
 {	
 	if (strcmp(label, "Set Friendly Name") == 0) {
-		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
+//		return [AILocalizedString(@"Set Display Name","Action menu item for setting the display name") stringByAppendingEllipsis];
+		return nil;
 
 	} else if (strcmp(label, "Set Home Phone Number") == 0) {
 		return AILocalizedString(@"Set Home Phone Number",nil);
