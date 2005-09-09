@@ -31,18 +31,20 @@
 
 @implementation AISendingTextView
 //Init the text view
-- (id)initWithFrame:(NSRect)frameRect
+- (id)initWithFrame:(NSRect)frameRect textContainer:(NSTextContainer *)aTextContainer
 {
-    self = [super initWithFrame:frameRect];
-	[self _initSendingTextView];
+	if ((self = [super initWithFrame:frameRect textContainer:aTextContainer])) {
+		[self _initSendingTextView];
+	}
 
 	return self;
 }
 
 - (id)initWithCoder:(NSCoder *)coder
 {
-	self = [super initWithCoder:coder];
-	[self _initSendingTextView];
+	if ((self = [super initWithCoder:coder])) {
+		[self _initSendingTextView];
+	}
 	
 	return self;
 }
