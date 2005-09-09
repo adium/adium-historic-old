@@ -17,6 +17,7 @@
 #import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIAutoScrollView.h>
 #import <Adium/AIAccount.h>
 
 @implementation AIGaimOscarAccountViewController
@@ -26,6 +27,16 @@
  */
 - (NSString *)nibName{
     return @"ESGaimOscarAccountView";
+}
+
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	NSScrollView	*scrollView = [textView_textProfile enclosingScrollView];
+	if (scrollView && [scrollView isKindOfClass:[AIAutoScrollView class]]) {
+		[(AIAutoScrollView *)scrollView setAlwaysDrawFocusRingIfFocused:YES];
+	}
 }
 
 /*!
