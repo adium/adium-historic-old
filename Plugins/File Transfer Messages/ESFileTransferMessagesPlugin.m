@@ -69,33 +69,40 @@
 {
 	ESFileTransfer	*fileTransfer = (ESFileTransfer *)[notification userInfo];
 	AIListContact	*listContact = [notification object];
-	NSString		*message = nil;
-	NSString		*type = nil;
 	NSString		*notificationName = [notification name];
-	NSString		*filename = [[fileTransfer localFilename] lastPathComponent];
-	
-	if ([notificationName isEqualToString:FILE_TRANSFER_CANCELED]) {
-		type = @"file_transfer_canceled";
-		message = [NSString stringWithFormat:AILocalizedString(@"%@ canceled the transfer of %@",nil),[listContact formattedUID],filename];
-		
-	} else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
-		type = @"file_transfer_complete";
-		if ([fileTransfer type] == Incoming_FileTransfer) {
-			message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];
-		} else {
-			message = [NSString stringWithFormat:AILocalizedString(@"Successfully sent %@",nil),filename];			
-		}
-		
-	} else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]) {
-		type = @"file_transfer_began";
-		if ([fileTransfer type] == Incoming_FileTransfer) {
-			message = [NSString stringWithFormat:AILocalizedString(@"Began receiving %@",nil),filename];
-		} else {
-			message = [NSString stringWithFormat:AILocalizedString(@"Began sending %@",nil),filename];			
-		}
+	NSString		*filename;
+
+	if (!(filename = [[fileTransfer localFilename] lastPathComponent])) {
+		filename = [[fileTransfer remoteFilename] lastPathComponent];
 	}
-	
-	[self statusMessage:message forContact:listContact withType:type];
+
+	if (filename) {
+		NSString		*message = nil;
+		NSString		*type = nil;
+
+		if ([notificationName isEqualToString:FILE_TRANSFER_CANCELED]) {
+			type = @"file_transfer_canceled";
+			message = [NSString stringWithFormat:AILocalizedString(@"%@ canceled the transfer of %@",nil),[listContact formattedUID],filename];
+
+		} else if ([notificationName isEqualToString:FILE_TRANSFER_COMPLETE]) {
+			type = @"file_transfer_complete";
+			if ([fileTransfer type] == Incoming_FileTransfer) {
+				message = [NSString stringWithFormat:AILocalizedString(@"Successfully received %@",nil),filename];
+			} else {
+				message = [NSString stringWithFormat:AILocalizedString(@"Successfully sent %@",nil),filename];			
+			}
+
+		} else if ([notificationName isEqualToString:FILE_TRANSFER_BEGAN]) {
+			type = @"file_transfer_began";
+			if ([fileTransfer type] == Incoming_FileTransfer) {
+				message = [NSString stringWithFormat:AILocalizedString(@"Began receiving %@",nil),filename];
+			} else {
+				message = [NSString stringWithFormat:AILocalizedString(@"Began sending %@",nil),filename];			
+			}
+		}
+
+		[self statusMessage:message forContact:listContact withType:type];
+	}
 }
 
 /*!
