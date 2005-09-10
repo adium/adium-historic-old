@@ -249,15 +249,15 @@
 		4BD1F5D106D28D2E00B3975E /* AIColoredBoxView.h in Headers */ = {isa = PBXBuildFile; fileRef = 34486B4C06D1DF0300DA778C /* AIColoredBoxView.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD1F5D206D28D2E00B3975E /* AIColoredBoxView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34486B4D06D1DF0300DA778C /* AIColoredBoxView.m */; };
 		4BFDF29707D2D36E008E4B91 /* Aqua_Tab_Background.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */; };
+		636D3D6B08D267F500EFFD69 /* AILinkedList.h in Headers */ = {isa = PBXBuildFile; fileRef = 636D3D6508D267F500EFFD69 /* AILinkedList.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		636D3D6C08D267F500EFFD69 /* AILinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D3D6608D267F500EFFD69 /* AILinkedList.m */; };
+		636D3D6D08D267F500EFFD69 /* AILinkedListObject.h in Headers */ = {isa = PBXBuildFile; fileRef = 636D3D6708D267F500EFFD69 /* AILinkedListObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		636D3D6E08D267F500EFFD69 /* AILinkedListObject.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D3D6808D267F500EFFD69 /* AILinkedListObject.m */; };
+		636D3D6F08D267F500EFFD69 /* AIQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = 636D3D6908D267F500EFFD69 /* AIQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		636D3D7008D267F500EFFD69 /* AIQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 636D3D6A08D267F500EFFD69 /* AIQueue.m */; };
 		6E03C8D307C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h in Headers */ = {isa = PBXBuildFile; fileRef = 6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6E03C8D407C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */; };
 		8DC2EF570486A6940098B216 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7B1FEA5585E11CA2CBB /* Cocoa.framework */; };
-		B023585908CE6F5A008CDDDA /* AILinkedList.h in Headers */ = {isa = PBXBuildFile; fileRef = B023585708CE6F5A008CDDDA /* AILinkedList.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B023585A08CE6F5A008CDDDA /* AILinkedList.m in Sources */ = {isa = PBXBuildFile; fileRef = B023585808CE6F5A008CDDDA /* AILinkedList.m */; };
-		B023589D08CE7B7D008CDDDA /* AILinkedListObject.h in Headers */ = {isa = PBXBuildFile; fileRef = B023589B08CE7B7D008CDDDA /* AILinkedListObject.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B023589E08CE7B7D008CDDDA /* AILinkedListObject.m in Sources */ = {isa = PBXBuildFile; fileRef = B023589C08CE7B7D008CDDDA /* AILinkedListObject.m */; };
-		B0687B8308CF88D300AE92D6 /* AIQueue.h in Headers */ = {isa = PBXBuildFile; fileRef = B0687B8108CF88D300AE92D6 /* AIQueue.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		B0687B8408CF88D300AE92D6 /* AIQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = B0687B8208CF88D300AE92D6 /* AIQueue.m */; };
 		EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */; };
 		EEB11DD50887E67300D0C340 /* AddressBook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EEB11DD40887E67200D0C340 /* AddressBook.framework */; };
@@ -550,15 +550,15 @@
 		4BD1F3D606D27F3100B3975E /* AIScaledImageCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIScaledImageCell.h; path = Source/AIScaledImageCell.h; sourceTree = "<group>"; };
 		4BD1F3D706D27F3100B3975E /* AIScaledImageCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIScaledImageCell.m; path = Source/AIScaledImageCell.m; sourceTree = "<group>"; };
 		4BFDF29607D2D36E008E4B91 /* Aqua_Tab_Background.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Aqua_Tab_Background.png; path = Resources/Aqua_Tab_Background.png; sourceTree = "<group>"; };
+		636D3D6508D267F500EFFD69 /* AILinkedList.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILinkedList.h; path = Source/AILinkedList.h; sourceTree = "<group>"; };
+		636D3D6608D267F500EFFD69 /* AILinkedList.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILinkedList.m; path = Source/AILinkedList.m; sourceTree = "<group>"; };
+		636D3D6708D267F500EFFD69 /* AILinkedListObject.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AILinkedListObject.h; path = Source/AILinkedListObject.h; sourceTree = "<group>"; };
+		636D3D6808D267F500EFFD69 /* AILinkedListObject.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AILinkedListObject.m; path = Source/AILinkedListObject.m; sourceTree = "<group>"; };
+		636D3D6908D267F500EFFD69 /* AIQueue.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIQueue.h; path = Source/AIQueue.h; sourceTree = "<group>"; };
+		636D3D6A08D267F500EFFD69 /* AIQueue.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIQueue.m; path = Source/AIQueue.m; sourceTree = "<group>"; };
 		6E03C8D107C68A5800EAA71E /* AITextFieldWithDraggingDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextFieldWithDraggingDelegate.h; path = Source/AITextFieldWithDraggingDelegate.h; sourceTree = "<group>"; };
 		6E03C8D207C68A5800EAA71E /* AITextFieldWithDraggingDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextFieldWithDraggingDelegate.m; path = Source/AITextFieldWithDraggingDelegate.m; sourceTree = "<group>"; };
 		8DC2EF5B0486A6940098B216 /* AIUtilities.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = AIUtilities.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		B023585708CE6F5A008CDDDA /* AILinkedList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AILinkedList.h; sourceTree = "<group>"; };
-		B023585808CE6F5A008CDDDA /* AILinkedList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AILinkedList.m; sourceTree = "<group>"; };
-		B023589B08CE7B7D008CDDDA /* AILinkedListObject.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AILinkedListObject.h; sourceTree = "<group>"; };
-		B023589C08CE7B7D008CDDDA /* AILinkedListObject.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AILinkedListObject.m; sourceTree = "<group>"; };
-		B0687B8108CF88D300AE92D6 /* AIQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIQueue.h; sourceTree = "<group>"; };
-		B0687B8208CF88D300AE92D6 /* AIQueue.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIQueue.m; sourceTree = "<group>"; };
 		EEB11D570887E5B200D0C340 /* OWAddressBookAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = OWAddressBookAdditions.h; path = Source/OWAddressBookAdditions.h; sourceTree = "<group>"; };
 		EEB11D580887E5B200D0C340 /* OWAddressBookAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = OWAddressBookAdditions.m; path = Source/OWAddressBookAdditions.m; sourceTree = "<group>"; };
 		EEB11DD40887E67200D0C340 /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
@@ -1418,12 +1418,12 @@
 		B023585208CE6F1F008CDDDA /* Base Classes */ = {
 			isa = PBXGroup;
 			children = (
-				B0687B8108CF88D300AE92D6 /* AIQueue.h */,
-				B0687B8208CF88D300AE92D6 /* AIQueue.m */,
-				B023585708CE6F5A008CDDDA /* AILinkedList.h */,
-				B023585808CE6F5A008CDDDA /* AILinkedList.m */,
-				B023589B08CE7B7D008CDDDA /* AILinkedListObject.h */,
-				B023589C08CE7B7D008CDDDA /* AILinkedListObject.m */,
+				636D3D6508D267F500EFFD69 /* AILinkedList.h */,
+				636D3D6608D267F500EFFD69 /* AILinkedList.m */,
+				636D3D6708D267F500EFFD69 /* AILinkedListObject.h */,
+				636D3D6808D267F500EFFD69 /* AILinkedListObject.m */,
+				636D3D6908D267F500EFFD69 /* AIQueue.h */,
+				636D3D6A08D267F500EFFD69 /* AIQueue.m */,
 			);
 			name = "Base Classes";
 			sourceTree = "<group>";
@@ -1435,9 +1435,6 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B023589D08CE7B7D008CDDDA /* AILinkedListObject.h in Headers */,
-				B0687B8308CF88D300AE92D6 /* AIQueue.h in Headers */,
-				B023585908CE6F5A008CDDDA /* AILinkedList.h in Headers */,
 				076CAD6F0785B64000250504 /* AIFunctions.h in Headers */,
 				34486C3806D1DF0400DA778C /* AIAlternatingRowOutlineView.h in Headers */,
 				34486C3A06D1DF0400DA778C /* AIAlternatingRowTableView.h in Headers */,
@@ -1545,6 +1542,9 @@
 				34057F28087E032400664D64 /* AIFontManagerAdditions.h in Headers */,
 				EEB11D590887E5B200D0C340 /* OWAddressBookAdditions.h in Headers */,
 				34DCE28A08A68E180073319F /* AIExceptionHandlingUtilities.h in Headers */,
+				636D3D6B08D267F500EFFD69 /* AILinkedList.h in Headers */,
+				636D3D6D08D267F500EFFD69 /* AILinkedListObject.h in Headers */,
+				636D3D6F08D267F500EFFD69 /* AIQueue.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1785,9 +1785,9 @@
 				34057BD7087DF73F00664D64 /* AIFlexibleToolbarItem.m in Sources */,
 				34057F27087E032400664D64 /* AIFontManagerAdditions.m in Sources */,
 				EEB11D5A0887E5B200D0C340 /* OWAddressBookAdditions.m in Sources */,
-				B023585A08CE6F5A008CDDDA /* AILinkedList.m in Sources */,
-				B023589E08CE7B7D008CDDDA /* AILinkedListObject.m in Sources */,
-				B0687B8408CF88D300AE92D6 /* AIQueue.m in Sources */,
+				636D3D6C08D267F500EFFD69 /* AILinkedList.m in Sources */,
+				636D3D6E08D267F500EFFD69 /* AILinkedListObject.m in Sources */,
+				636D3D7008D267F500EFFD69 /* AIQueue.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
