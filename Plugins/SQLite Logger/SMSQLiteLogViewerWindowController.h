@@ -29,4 +29,5 @@
 - (id)initWithPlugin:(id)inPlugin;
 - (id)plugin;
 - (void)updateConversations;
+- (void)installToolbar;
 @end

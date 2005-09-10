@@ -112,7 +112,6 @@
 - (void)installToolbar
 {	
     NSToolbar 		*toolbar = [[[NSToolbar alloc] initWithIdentifier:TOOLBAR_SQLITE_LOG_VIEWER] autorelease];
-    NSToolbarItem	*toolbarItem;
 	
     [toolbar setDelegate:self];
     [toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
