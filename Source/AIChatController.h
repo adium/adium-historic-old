@@ -7,7 +7,7 @@
 
 #import <Adium/AIObject.h>
 
-@class AIChat, AIListContact, AIAccount;
+@class AIChat, AIListContact, AIAccount, AdiumChatEvents;
 @protocol AIController;
 
 //Observer which receives notifications of changes in chat status
@@ -22,6 +22,8 @@
     AIChat					*mostRecentChat;	
 	
 	NSMenuItem				*menuItem_ignore;
+	
+	AdiumChatEvents			*adiumChatEvents;
 }
 
 //Chats

@@ -235,13 +235,18 @@ static int nextChatNumber = 0;
     return participatingListObjects;
 }
 
-- (void)addParticipatingListObject:(AIListContact *)inObject
+- (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify
 {
 	if (![participatingListObjects containsObjectIdenticalTo:inObject]) {
-		[participatingListObjects addObject:inObject]; //Add
-		[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
-	}
+		//Add
+		[participatingListObjects addObject:inObject];
 
+		[[adium chatController] chat:self addedListContact:inObject notify:notify];
+	}
+}
+- (void)addParticipatingListObject:(AIListContact *)inObject
+{
+	[self addParticipatingListObject:inObject notify:YES];
 }
 
 // Invite a list object to join the chat. Returns YES if the chat joins, NO otherwise
@@ -253,9 +258,12 @@ static int nextChatNumber = 0;
 //
 - (void)removeParticipatingListObject:(AIListContact *)inObject
 {
-    [participatingListObjects removeObject:inObject]; //Remove	
-	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged object:self]; //Notify
-
+	if ([participatingListObjects containsObjectIdenticalTo:inObject]) {
+		//Remove
+		[participatingListObjects removeObject:inObject];
+		
+		[[adium chatController] chat:self removedListContact:inObject];
+	}
 }
 
 - (void)setPreferredListObject:(AIListContact *)inObject

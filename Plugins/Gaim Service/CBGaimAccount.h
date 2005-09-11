@@ -129,8 +129,6 @@
 - (void)updateForChat:(AIChat *)chat type:(NSNumber *)type;
 - (void)receivedIMChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
 - (void)receivedMultiChatMessage:(NSDictionary *)messageDict inChat:(AIChat *)chat;
-- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat;
-- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat;
 - (void)removeUser:(NSString *)contactName fromChat:(AIChat *)chat;
 
 - (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
