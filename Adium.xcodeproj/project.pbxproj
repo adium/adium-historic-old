@@ -453,6 +453,8 @@
 		34BBE1BB07A2F4C500663CC9 /* adiumGaimSignals.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */; };
 		34BBE55607A342AF00663CC9 /* adiumGaimOTR.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */; };
 		34BBE55707A342AF00663CC9 /* adiumGaimOTR.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */; };
+		34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */; };
+		34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */; };
 		34BD9D11053146CC000AB133 /* AIPreferenceController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938ED033E745F01A8010A /* AIPreferenceController.h */; };
 		34BD9D12053146CC000AB133 /* AIAccountController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938EF033E745F01A8010A /* AIAccountController.h */; };
 		34BD9D13053146CC000AB133 /* AIPreferenceWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = F57938F0033E745F01A8010A /* AIPreferenceWindowController.h */; };
@@ -1705,8 +1707,8 @@
 		342910CB07AE228600C815F6 /* AIEmoticonPackPreviewTableView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEmoticonPackPreviewTableView.m; path = Plugins/Emoticons/AIEmoticonPackPreviewTableView.m; sourceTree = "<group>"; };
 		342928080628BB4200BB9217 /* ESGaimYahooAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimYahooAccountViewController.h; path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.h"; sourceTree = "<group>"; };
 		342928090628BB4200BB9217 /* ESGaimYahooAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimYahooAccountViewController.m; path = "Plugins/Gaim Service/ESGaimYahooAccountViewController.m"; sourceTree = "<group>"; };
-		3429BB03070378F700EED705 /* ESFileTransferMessagesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferMessagesPlugin.h; path = "Plugins/File Transfer Messages/ESFileTransferMessagesPlugin.h"; sourceTree = "<group>"; };
-		3429BB04070378F700EED705 /* ESFileTransferMessagesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferMessagesPlugin.m; path = "Plugins/File Transfer Messages/ESFileTransferMessagesPlugin.m"; sourceTree = "<group>"; };
+		3429BB03070378F700EED705 /* ESFileTransferMessagesPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferMessagesPlugin.h; path = Source/ESFileTransferMessagesPlugin.h; sourceTree = "<group>"; };
+		3429BB04070378F700EED705 /* ESFileTransferMessagesPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferMessagesPlugin.m; path = Source/ESFileTransferMessagesPlugin.m; sourceTree = "<group>"; };
 		342CE12B085A089D00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
 		342CE12C085A089E00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		342CE12D085A089E00005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/DCGaimJabberJoinChatView.nib"; sourceTree = "<group>"; };
@@ -2329,6 +2331,8 @@
 		34BBE1B907A2F4C500663CC9 /* adiumGaimSignals.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimSignals.m; path = "Plugins/Gaim Service/adiumGaimSignals.m"; sourceTree = "<group>"; };
 		34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimOTR.h; path = "Plugins/Gaim Service/adiumGaimOTR.h"; sourceTree = "<group>"; };
 		34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimOTR.m; path = "Plugins/Gaim Service/adiumGaimOTR.m"; sourceTree = "<group>"; };
+		34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumChatEvents.h; path = Source/AdiumChatEvents.h; sourceTree = "<group>"; };
+		34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumChatEvents.m; path = Source/AdiumChatEvents.m; sourceTree = "<group>"; };
 		34BD9DA9053146CC000AB133 /* Adium.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Adium.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9DE105314751000AB133 /* Adium.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Adium.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		34BD9EF10531476E000AB133 /* Stress Test.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Stress Test.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5176,6 +5180,8 @@
 				4BDAB9920861C661009FB73B /* AdiumTyping.m */,
 				34B82C89085A87B000864531 /* AdiumMessageEvents.h */,
 				34B82C8A085A87B000864531 /* AdiumMessageEvents.m */,
+				34BD0DB308D31479000BE2C0 /* AdiumChatEvents.h */,
+				34BD0DB408D31479000BE2C0 /* AdiumChatEvents.m */,
 			);
 			name = Content;
 			sourceTree = "<group>";
@@ -6428,6 +6434,7 @@
 				B02355A508CBE854008CDDDA /* sqliteInt.h in Headers */,
 				B02355AF08CBE854008CDDDA /* vdbe.h in Headers */,
 				B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */,
+				34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8078,6 +8085,7 @@
 				B02355B208CBE854008CDDDA /* vdbefifo.c in Sources */,
 				B02355B408CBE854008CDDDA /* vdbemem.c in Sources */,
 				B02355B508CBE854008CDDDA /* where.c in Sources */,
+				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
