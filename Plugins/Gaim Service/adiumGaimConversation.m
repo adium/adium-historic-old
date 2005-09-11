@@ -306,9 +306,10 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
 		//We pass the name as given, not normalized, so we can use its formatting as a formattedUID.
 		//The account is responsible for normalization if needed.
-		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:)
+		[accountLookup(conv->account) mainPerformSelector:@selector(addUser:toChat:newArrival:)
 											   withObject:[NSString stringWithUTF8String:user]
-											   withObject:existingChatLookupFromConv(conv)];
+											   withObject:existingChatLookupFromConv(conv)
+											   withObject:[NSNumber numberWithBool:new_arrival]];
 	} else {
 		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}

@@ -450,18 +450,17 @@ gboolean gaim_init_jabber_plugin(void);
 #pragma mark Multiuser chat
 
 //Multiuser chats come in with just the contact's name as contactName, but we want to actually do it right.
-- (oneway void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat newArrival:(NSNumber *)newArrival
 {
 	if (chat) {
-		NSString	*chatNameWithServer = [chat name];
-		NSString	*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
+		NSString		*chatNameWithServer = [chat name];
+		NSString		*chatParticipantName = [NSString stringWithFormat:@"%@/%@",chatNameWithServer,contactName];
+		AIListContact	*listContact = [self contactWithUID:chatParticipantName];
 
-		AIListContact *contact = [self contactWithUID:chatParticipantName];
+		[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
+		
+		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];
 
-		[contact setStatusObject:contactName forKey:@"FormattedUID" notify:YES];
-		
-		[chat addParticipatingListObject:contact];
-		
 		GaimDebug (@"Jabber: added user %@ to chat %@",chatParticipantName,chatNameWithServer);
 	}	
 }

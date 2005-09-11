@@ -111,6 +111,7 @@ typedef enum {
 - (void)clearUnviewedContentCount;
 
 - (NSArray *)participatingListObjects;
+- (void)addParticipatingListObject:(AIListContact *)inObject notify:(BOOL)notify;
 - (void)addParticipatingListObject:(AIListContact *)inObject;
 - (void)removeParticipatingListObject:(AIListContact *)inObject;
 - (AIListContact *)listObject;

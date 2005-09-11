@@ -94,8 +94,10 @@ gboolean gaim_init_oscar_plugin(void);
 	BOOL shouldAttemptReconnect = YES;
 
 	if (disconnectionError && *disconnectionError) {
-		if ([*disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) {
+		if (([*disconnectionError rangeOfString:@"Incorrect nickname or password."].location != NSNotFound) ||
+			([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound)){
 			[[adium accountController] forgetPasswordForAccount:self];
+
 		} else if ([*disconnectionError rangeOfString:@"signed on with this screen name at another location"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		} else if ([*disconnectionError rangeOfString:@"too frequently"].location != NSNotFound) {

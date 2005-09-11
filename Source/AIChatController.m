@@ -10,6 +10,7 @@
 #import "AIContactController.h"
 #import "AIInterfaceController.h"
 #import "AIMenuController.h"
+#import "AdiumChatEvents.h"
 #import <Adium/AIAccount.h>
 #import <Adium/AIChat.h>
 #import <Adium/AIContentObject.h>
@@ -40,7 +41,8 @@
 	if ((self = [super init])) {
 		mostRecentChat = nil;
 		chatObserverArray = [[NSMutableArray alloc] init];
-		
+		adiumChatEvents = [[AdiumChatEvents alloc] init];
+
 		//Chat tracking
 		openChats = [[NSMutableSet alloc] init];
 	}
@@ -71,6 +73,8 @@
 																		   action:@selector(toggleIgnoreOfContact:)
 																	keyEquivalent:@""];
 	[[adium menuController] addContextualMenuItem:menuItem_ignore toLocation:Context_Contact_ChatAction];
+	
+	[adiumChatEvents controllerDidLoad];	
 }
 
 
@@ -550,9 +554,11 @@
 		}
 		
 	} else {
-		NSEnumerator	*chatEnumerator = [openChats objectEnumerator];
+		NSEnumerator	*enumerator;
 		AIChat			*chat;
-		while ((chat = [chatEnumerator nextObject])) {
+		
+		enumerator = [openChats objectEnumerator];
+		while ((chat = [enumerator nextObject])) {
 			if (![chat name] &&
 				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]) {
 				if (!foundChats) foundChats = [NSMutableSet set];
@@ -606,11 +612,12 @@
  */
 - (int) unviewedContentCount
 {
-	int count = 0;
-	NSEnumerator * enu = [[self openChats] objectEnumerator];
-	AIChat * chat;
-	while((chat = [enu nextObject]))
-	{
+	int				count = 0;
+	AIChat			*chat;
+	NSEnumerator	*enumerator;
+
+	enumerator = [[self openChats] objectEnumerator];
+	while ((chat = [enumerator nextObject])) {
 		count += [chat unviewedContentCount];
 	}
 	return count;
@@ -698,6 +705,56 @@
 	}
 	
 	return YES;
+}
+
+#pragma mark Event handling
+
+/*!
+ * @brief A chat added a listContact to its participatants list
+ *
+ * @param chat The chat
+ * @param inContact The contact
+ * @param notify If YES, trigger the contact joined event if this is a group chat.  Ignored if this is not a group chat.
+ */
+- (void)chat:(AIChat *)chat addedListContact:(AIListContact *)inContact notify:(BOOL)notify
+{
+	if (notify && [chat name]) {
+		/* Prevent triggering of the event when we are informed that the chat's own account entered the chat
+		 * If the UID of a contact in a chat differs from a normal UID, such as is the case with Jabber where a chat
+		 * contact has the form "roomname@conferenceserver/handle" this will fail, but it's better than nothing.
+		 */
+		if (![[[inContact account] UID] isEqualToString:[inContact UID]]) {
+			[adiumChatEvents chat:chat addedListContact:inContact];
+
+			[[adium contentController] displayStatusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ joined the chat",nil),[inContact displayName]]
+													 ofType:@"contact_joined"
+													 inChat:chat];
+		}
+	}
+
+	//Always notify Adium that the list changed so it can be updated, caches can be modified, etc.
+	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged
+											  object:chat];
+}
+
+/*!
+ * @brief A chat removed a listContact from its participants list
+ *
+ * @param chat The chat
+ * @param inContact The contact
+ */
+- (void)chat:(AIChat *)chat removedListContact:(AIListContact *)inContact
+{
+	if ([chat name]) {
+		[adiumChatEvents chat:chat removedListContact:inContact];
+		
+		[[adium contentController] displayStatusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ left the chat.",nil),[inContact displayName]]
+												 ofType:@"contact_left"
+												 inChat:chat];		
+	}
+
+	[[adium notificationCenter] postNotificationName:Chat_ParticipatingListObjectsChanged
+											  object:chat];
 }
 
 @end

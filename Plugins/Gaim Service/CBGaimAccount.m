@@ -903,17 +903,10 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 #pragma mark GaimConversation User Lists
-- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat
-{
-	[chat addParticipatingListObject:listContact];
-	
-	GaimDebug(@"%@: addContact:%@ toChat:%@",self,listContact,chat);
-}
-
-- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat
+- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat newArrival:(NSNumber *)newArrival
 {
 	AIListContact *listContact;
-
+	
 	if ((chat) &&
 		(listContact = [self contactWithUID:contactName])) {
 
@@ -921,16 +914,20 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
 		}
 
-		[self addContact:listContact toChat:chat];
+		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];
 	}
 }
 
 - (void)addUsersArray:(NSArray *)usersArray toChat:(AIChat *)chat
 {
-	NSEnumerator	*enumerator = [usersArray objectEnumerator];
+	NSEnumerator	*enumerator;
 	NSString		*contactName;
+	
+	GaimDebug(@"*** %@: addUsersArray:%@ toChat:%@",self,usersArray,chat);
+
+	enumerator = [usersArray objectEnumerator];
 	while ((contactName = [enumerator nextObject])) {
-		[self addUser:contactName toChat:chat];
+		[self addUser:contactName toChat:chat newArrival:nil];
 	}
 }
 
