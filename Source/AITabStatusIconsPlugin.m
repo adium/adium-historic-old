@@ -127,7 +127,6 @@
 		modifiedAttributes = [NSSet setWithObject:@"Tab State Icon"];
 
 		//Also apply the state icon to our contact if this is a one-on-one chat
-#warning Verify that parentContact is proper here
 		if ((listContact = [[inChat listObject] parentContact])) {
 			NSImage	*listStateIcon;
 			
