@@ -707,7 +707,7 @@
 	return YES;
 }
 
-#pragma mark Event handling
+#pragma mark Chat contact addition and removal
 
 /*!
  * @brief A chat added a listContact to its participatants list
