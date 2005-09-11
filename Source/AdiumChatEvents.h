@@ -3,7 +3,6 @@
 //  Adium
 //
 //  Created by Evan Schoenberg on 9/10/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
 #import <Adium/AIObject.h>
