@@ -26,7 +26,8 @@
 	IBOutlet	AILocalizationButton	*button_cancel;
 }
 
-+ (void)promptForNewGroupOnWindow:(NSWindow *)parentWindow;
++ (AINewGroupWindowController *)promptForNewGroupOnWindow:(NSWindow *)parentWindow;
+- (NSString *)newGroupUID;
 - (IBAction)cancel:(id)sender;
 - (IBAction)addGroup:(id)sender;
 

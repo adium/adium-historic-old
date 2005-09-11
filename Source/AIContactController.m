@@ -1958,30 +1958,34 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 		group = contactList;
 	} else {
 		if (!(group = [groupDict objectForKey:groupUID])) {
-			//NSArray		*groupNest = [groupUID componentsSeparatedByString:@":"];
-			//NSString	*groupName = [groupNest lastObject];
-			//AIListGroup *targetGroup;
-
 			//Create
 			group = [[AIListGroup alloc] initWithUID:groupUID];
-			//[group setStatusObject:groupName forKey:@"FormattedUID" notify:YES];
 
-			//add
+			//Add
 			[self _updateAllAttributesOfObject:group];
 			[groupDict setObject:group forKey:groupUID];
 
-			//Add to target group
-			//if ([groupNest count] == 1) {
-			//	targetGroup = contactList;
-			//} else {
-			//	targetGroup = [self groupWithUID:[groupUID substringToIndex:[groupUID length] - ([groupName length] + 1)]];
-			//}
-			[/*targetGroup*/contactList addObject:group];
-			[self _listChangedGroup:/*targetGroup*/contactList object:group];
+			//Add to the contact list
+			[contactList addObject:group];
+			[self _listChangedGroup:contactList object:group];
 			[group release];
 		}
 	}
 
+	return group;
+}
+
+- (AIListGroup *)existingGroupWithUID:(NSString *)groupUID
+{
+	AIListGroup		*group;
+
+	if (!groupUID || ![groupUID length] || [groupUID isEqualToString:ADIUM_ROOT_GROUP_NAME]) {
+		//Return our root group if it is requested
+		group = contactList;
+	} else {
+		group = [groupDict objectForKey:groupUID];
+	}
+	
 	return group;
 }
 

@@ -31,22 +31,23 @@
  *
  * @param parentWindow Window on which to show as a sheet. Pass nil for a panel prompt.
  */
-+ (void)promptForNewGroupOnWindow:(NSWindow *)parentWindow
++ (AINewGroupWindowController *)promptForNewGroupOnWindow:(NSWindow *)parentWindow
 {
-	AINewGroupWindowController	*newGroupWindow;
+	AINewGroupWindowController	*newGroupWindowController;
 	
-	newGroupWindow = [[self alloc] initWithWindowNibName:ADD_GROUP_PROMPT_NIB];
+	newGroupWindowController = [[self alloc] initWithWindowNibName:ADD_GROUP_PROMPT_NIB];
 	
 	if (parentWindow) {
-		[NSApp beginSheet:[newGroupWindow window]
+		[NSApp beginSheet:[newGroupWindowController window]
 		   modalForWindow:parentWindow
-			modalDelegate:newGroupWindow
+			modalDelegate:newGroupWindowController
 		   didEndSelector:@selector(sheetDidEnd:returnCode:contextInfo:)
 			  contextInfo:nil];
 	} else {
-		[newGroupWindow showWindow:nil];
+		[newGroupWindowController showWindow:nil];
 	}
 	
+	return newGroupWindowController;
 }
 
 /*!
@@ -70,6 +71,8 @@
  */
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
+	[[adium notificationCenter] postNotificationName:@"NewGroupWindowControllerDidEnd"
+											  object:sheet];
     [sheet orderOut:nil];
 }
 
@@ -81,12 +84,20 @@
 	[self closeWindow:nil];
 }
 
+/*
+ * @brief UID of the new group
+ */
+- (NSString *)newGroupUID
+{
+	return [[[textField_groupName stringValue] copy] autorelease];
+}
+
 /*!
  * @brief Add the group
  */
 - (IBAction)addGroup:(id)sender
 {
-	AIListGroup *group = [[adium contactController] groupWithUID:[textField_groupName stringValue]];
+	AIListGroup *group = [[adium contactController] groupWithUID:[self newGroupUID]];
 	
 	//Force this new group to be visible.  Obviously the user created it for a reason, so let's keep
 	//it visible and give them time to stick something inside.

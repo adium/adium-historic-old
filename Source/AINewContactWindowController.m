@@ -17,10 +17,12 @@
 #import "AIAccountController.h"
 #import "AIContactController.h"
 #import "AINewContactWindowController.h"
+#import "AINewGroupWindowController.h"
 #import "OWABSearchWindowController.h"
 #import "ESAddressBookIntegrationPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIListGroup.h>
@@ -31,6 +33,7 @@
 #import <AddressBook/ABPerson.h>
 
 #define ADD_CONTACT_PROMPT_NIB	@"AddContact"
+#define DEFAULT_GROUP_NAME		AILocalizedString(@"Contacts",nil)
 
 @interface AINewContactWindowController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName contactName:(NSString *)inName service:(AIService *)inService;
@@ -101,6 +104,8 @@
 	[service release];
 	[uniqueID release];
 	
+	[[NSNotificationCenter defaultCenter] removeObserver:self];
+
     [super dealloc];
 }
 
@@ -177,6 +182,8 @@
 	group = ([popUp_targetGroup numberOfItems] ?
 			[[popUp_targetGroup selectedItem] representedObject] : 
 			nil);
+	
+	if (!group) group = [[adium contactController] groupWithUID:DEFAULT_GROUP_NAME];
 	
 	//Add contact to our accounts
 	enumerator = [accounts objectEnumerator];
@@ -375,24 +382,87 @@
 - (void)buildGroupMenu
 {
 	AIListObject	*selectedObject;
-	
+	NSMenu			*menu;
 	//Rebuild the menu
-	[popUp_targetGroup setMenu:[[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self]];
+	menu = [[adium contactController] menuOfAllGroupsInGroup:nil withTarget:self];
 
+	//Add a default group name to the menu if there are no groups listed
+	if ([menu numberOfItems] == 0) {
+		[menu addItemWithTitle:DEFAULT_GROUP_NAME
+						target:self
+						action:@selector(selectGroup:)
+				 keyEquivalent:@""];
+	}
+	
+	[menu addItem:[NSMenuItem separatorItem]];
+	[menu addItemWithTitle:[AILocalizedString(@"New Group",nil) stringByAppendingEllipsis]
+					target:self
+					action:@selector(newGroup:)
+			 keyEquivalent:@""];
+	
 	//Select the group of the currently selected object on the contact list
 	selectedObject = [[adium contactController] selectedListObject];
 	while (selectedObject && ![selectedObject isKindOfClass:[AIListGroup class]]) {
-		selectedObject = [(AIListGroup *)selectedObject containingObject];
+		selectedObject = [selectedObject containingObject];
 	}
+
+	[popUp_targetGroup setMenu:menu];
 
 	//If there was no selected group, just select the first item
 	if (selectedObject) {
-		[popUp_targetGroup selectItemWithRepresentedObject:selectedObject];			
-	} else if ([popUp_targetGroup numberOfItems] > 0) {
+		if (![popUp_targetGroup selectItemWithRepresentedObject:selectedObject]) {
+			[popUp_targetGroup selectItemAtIndex:0];			
+		}
+
+	} else {
 		[popUp_targetGroup selectItemAtIndex:0];
 	}
 }
 
+/*
+ * @brief Prompt the user to add a new group immediately
+ */
+- (void)newGroup:(id)sender
+{
+	AINewGroupWindowController	*newGroupWindowController;
+	
+	newGroupWindowController = [AINewGroupWindowController promptForNewGroupOnWindow:[self window]];
+
+	//Observe for the New Group window to close
+	[[adium notificationCenter] addObserver:self
+								   selector:@selector(newGroupDidEnd:) 
+									   name:@"NewGroupWindowControllerDidEnd"
+									 object:[newGroupWindowController window]];	
+}
+
+- (void)newGroupDidEnd:(NSNotification *)inNotification
+{
+	NSWindow	*window = [inNotification object];
+
+	if ([[window windowController] isKindOfClass:[AINewGroupWindowController class]]) {
+		NSString	*newGroupUID = [[window windowController] newGroupUID];
+		AIListGroup *group = [[adium contactController] existingGroupWithUID:newGroupUID];
+
+		//Rebuild the group menu
+		[self buildGroupMenu];
+		
+		/* Select the new group if it exists; otherwise select the first group (so we don't still have New Group... selected).
+		 * If the user canceled, group will be nil since the group doesn't exist.
+		 */
+		if (![popUp_targetGroup selectItemWithRepresentedObject:group]) {
+			[popUp_targetGroup selectItemAtIndex:0];			
+		}
+		
+		[[self window] performSelector:@selector(makeKeyAndOrderFront:)
+							withObject:self
+							afterDelay:0];
+	}
+
+	//Stop observing
+	[[adium notificationCenter] removeObserver:self
+										  name:@"NewGroupWindowControllerDidEnd" 
+										object:window];
+}
 
 //Add to Accounts ------------------------------------------------------------------------------------------------------
 #pragma mark Add to Accounts
