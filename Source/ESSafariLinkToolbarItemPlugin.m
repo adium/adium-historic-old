@@ -65,7 +65,6 @@
 		NSArray		*applescriptRunnerArguments;
 		NSString	*applescriptRunnerPath;
 		NSPipe		*standardOutput;
-		NSString	*scriptResult = nil;
 
 		//Find the path to the ApplescriptRunner application
 		applescriptRunnerPath = [[NSBundle mainBundle] pathForResource:@"AdiumApplescriptRunner"
