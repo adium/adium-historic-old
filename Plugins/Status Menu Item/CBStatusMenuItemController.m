@@ -408,8 +408,8 @@ static	NSImage						*adiumRedHighlightImage = nil;
 		                action:@selector(activateAdium:)
 		         keyEquivalent:@""];
 		[menu addItemWithTitle:AILocalizedString(@"Quit Adium",nil)
-		                target:self
-		                action:@selector(quitAdium:)
+		                target:NSApp
+		                action:@selector(terminate:)
 		         keyEquivalent:@""];
 
 		//Only update next time if we need to
@@ -433,11 +433,6 @@ static	NSImage						*adiumRedHighlightImage = nil;
 {
 	[NSApp activateIgnoringOtherApps:YES];
 	[NSApp arrangeInFront:nil];
-}
-
-- (void)quitAdium:(id)sender
-{
-	[NSApp terminate:nil];
 }
 
 //Offline Icon Control --------------------------------------------------------
