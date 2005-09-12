@@ -60,7 +60,7 @@ static	NSImage						*adiumRedHighlightImage = nil;
 	if (!sharedStatusMenuInstance) {
 		sharedStatusMenuInstance = [[self alloc] init];
 	}
-	return (sharedStatusMenuInstance);
+	return sharedStatusMenuInstance;
 }
 
 - (id)init
