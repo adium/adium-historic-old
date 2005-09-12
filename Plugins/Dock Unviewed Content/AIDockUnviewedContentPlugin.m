@@ -21,8 +21,15 @@
 #import <AIUtilities/AIArrayAdditions.h>
 #import <Adium/AIChat.h>
 
+/*
+ * @class AIDockUnviewedContentPlugin
+ * @brief Component responsible for triggering and removing the Alert dock icon state for unviewed content
+ */
 @implementation AIDockUnviewedContentPlugin
 
+/*
+ * @brief Install
+ */
 - (void)installPlugin
 {
     //init
@@ -37,12 +44,23 @@
 									   name:Chat_WillClose object:nil];
 }
 
+/*
+ * @brief Uninstall
+ */
 - (void)uninstallPlugin
 {
 	[[adium chatController] unregisterChatObserver:self];
 	[[adium notificationCenter] removeObserver:self];
 }
 
+/*
+ * @brief Chat was updated
+ *
+ * Check for whether inModifiedKeys contains a change to unviewed content. If so, put the dock in the Alert state
+ * if it isn't already and there is unviewed content, or take it out of the Alert state if it is and there is none.
+ *
+ * The alert state, in the default dock icon set, is the Adium duck flapping its wings.
+ */
 - (NSSet *)updateChat:(AIChat *)inChat keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
     if ([inModifiedKeys containsObject:KEY_UNVIEWED_CONTENT]) {
@@ -73,12 +91,9 @@
 }
 
 /*!
-* @brief Respond to a chat closing
+ * @brief Respond to a chat closing
  *
- * Once a chat is closed we forget about whether it has received an auto-response.  If the chat is re-opened, it will
- * receive our auto-response again.  This behavior is not necessarily desired, but is a side effect of basing our
- * already-received list on chats and not contacts.  However, many users have come to expect this behavior and it's
- * presence is neither strongly negative or positive.
+ * Ensure that when a chat closes we remove the Alert state if necessary.
  */
 - (void)chatWillClose:(NSNotification *)notification
 {
