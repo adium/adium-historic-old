@@ -34,10 +34,6 @@
 	hyperlinkScanner = [[SHHyperlinkScanner alloc] initWithStrictChecking:NO];
 
 	[[adium contentController] registerContentFilter:self ofType:AIFilterDisplay direction:AIFilterIncoming];
-	
-	//Filter as content when outgoing so other content filters can know about the presence of links
-	[[adium contentController] registerContentFilter:self ofType:AIFilterContent direction:AIFilterOutgoing];
-
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterIncoming];
 	[[adium contentController] registerContentFilter:self ofType:AIFilterMessageDisplay direction:AIFilterOutgoing];
 }
