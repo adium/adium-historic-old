@@ -198,16 +198,15 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 						
 						arguments = [[scriptDict objectForKey:@"Arguments"] componentsSeparatedByString:@","];
 						
-						//Assume "Prefix Only" is NO unless told otherwise
+						//Assume "Prefix Only" is NO unless told otherwise or the keyword starts with '/'
 						prefixOnlyNumber = [scriptDict objectForKey:@"Prefix Only"];
-						if (!prefixOnlyNumber) prefixOnlyNumber = [NSNumber numberWithBool:NO];
-						
-						requiresUserInteractionNumber = [scriptDict objectForKey:@"Requires User Interaction"];
-						if (!requiresUserInteractionNumber) requiresUserInteractionNumber = [NSNumber numberWithBool:NO];
-						
+						if (!prefixOnlyNumber) {
+							prefixOnlyNumber = [NSNumber numberWithBool:([keyword characterAtIndex:0] == '/')];
+						}
+
 						infoDict = [NSMutableDictionary dictionaryWithObjectsAndKeys:
 							scriptFilePath, @"Path", keyword, @"Keyword", title, @"Title", 
-							prefixOnlyNumber, @"PrefixOnly", requiresUserInteractionNumber, @"RequiresUserInteraction",nil];
+							prefixOnlyNumber, @"PrefixOnly", nil];
 						
 						//The bundle may not be part of (or for defining) a set of scripts
 						if (scriptsSetName) {
