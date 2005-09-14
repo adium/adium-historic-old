@@ -27,6 +27,7 @@
 #define YahooServiceUniqueID	@"libgaim-Yahoo!"
 
 @interface OWABSearchWindowController (private)
+- (id)initWithWindowNibName:(NSString *)windowNibName initialService:(AIService *)inService;
 - (void)_configurePeoplePicker;
 - (void)_setCarryingWindow:(NSWindow *)inWindow;
 - (void)sheetDidEnd:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo;
@@ -55,11 +56,11 @@ static	ABAddressBook	*sharedAddressBook = nil;
  *
  * @param parentWindow Window on which to show the prompt as a sheet. Pass nil for a panel prompt.
  */
-+ (id)promptForNewPersonSearchOnWindow:(NSWindow *)parentWindow
++ (id)promptForNewPersonSearchOnWindow:(NSWindow *)parentWindow initialService:(AIService *)inService
 {
 	OWABSearchWindowController *newABSearchWindow;
 	
-	newABSearchWindow = [[self alloc] initWithWindowNibName:AB_SEARCH_NIB];
+	newABSearchWindow = [[self alloc] initWithWindowNibName:AB_SEARCH_NIB initialService:inService];
 	
 	if (parentWindow) {
 		[NSApp beginSheet:[newABSearchWindow window]
@@ -78,16 +79,18 @@ static	ABAddressBook	*sharedAddressBook = nil;
 /*!
  * @brief Initialize
  */
-- (id)initWithWindowNibName:(NSString *)windowNibName {
+- (id)initWithWindowNibName:(NSString *)windowNibName initialService:(AIService *)inService
+{
 	self = [super initWithWindowNibName:windowNibName];
 	
 	if (self) {
 		delegate = nil;
 		person = nil;
 		screenName = nil;
-		service = nil;
 		carryingWindow = nil;
 		contactImage = nil;
+		service = [inService retain];
+
 		if (!sharedAddressBook)
 			sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	}
@@ -145,7 +148,8 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (void)_configurePeoplePicker
 {
 	NSTextField		*accessoryView = [[[NSTextField alloc] init] autorelease];
-	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
+	NSEnumerator	*servicesEnumerator;
+	NSString		*property;
 	AIService		*aService;
 	
 	//Create a small explanation text
@@ -167,10 +171,19 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[peoplePicker setNameDoubleAction:@selector(select:)];
 	
 	//We show only the active services
+	servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
 	while ((aService = [servicesEnumerator nextObject])) {
-		NSString *property = [self propertyFromService:aService];
+		property = [self propertyFromService:aService];
 		if (property && ![[peoplePicker properties] containsObject:property])
 			[peoplePicker addProperty:property];
+	}
+
+	//Display our initial service if we were passed one
+	if (service) {
+		property = [self propertyFromService:service];
+		if (property && [[peoplePicker properties] containsObject:property]) {
+			[peoplePicker setDisplayedProperty:property];
+		}
 	}
 }
 
@@ -576,16 +589,20 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)_setCarryingWindow:(NSWindow *)inWindow
 {
-	[carryingWindow release];
-	carryingWindow = [inWindow retain];
+	if (carryingWindow != inWindow) {
+		[carryingWindow release];
+		carryingWindow = [inWindow retain];
+	}
 }
 
 // AIImageViewWithImagePicker Delegate ---------------------------------------------------------------------
 #pragma mark AIImageViewWithImagePicker Delegate
 - (void)imageViewWithImagePicker:(AIImageViewWithImagePicker *)sender didChangeToImageData:(NSData *)imageData
 {
-	[contactImage release];
-	contactImage = [imageData retain];
+	if (contactImage != imageData) {
+		[contactImage release];
+		contactImage = [imageData retain];
+	}
 }
 
 - (void)deleteInImageViewWithImagePicker:(AIImageViewWithImagePicker *)sender
