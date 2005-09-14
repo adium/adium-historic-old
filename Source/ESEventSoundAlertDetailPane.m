@@ -84,15 +84,20 @@
 
 	//If the user has a custom sound selected, we need to create an entry in the menu for it
 	selectedSound = [inDetails objectForKey:KEY_ALERT_SOUND_PATH];
-	if ([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == -1) {
-		[self addSound:selectedSound toMenu:[popUp_actionDetails menu]];
-	}
-	
-    //Set the menu to its previous setting if the stored event matches
-	soundIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_ALERT_SOUND_PATH]];
-	if (soundIndex >= 0 && soundIndex < [popUp_actionDetails numberOfItems]) {
-		[popUp_actionDetails selectItemAtIndex:soundIndex];        
-	}
+	if (selectedSound) {
+		if ([[popUp_actionDetails menu] indexOfItemWithRepresentedObject:selectedSound] == -1) {
+			[self addSound:selectedSound toMenu:[popUp_actionDetails menu]];
+		}
+		
+		//Set the menu to its previous setting if the stored event matches
+		soundIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:[inDetails objectForKey:KEY_ALERT_SOUND_PATH]];
+		if (soundIndex >= 0 && soundIndex < [popUp_actionDetails numberOfItems]) {
+			[popUp_actionDetails selectItemAtIndex:soundIndex];        
+		}
+		
+	} else {
+		[popUp_actionDetails selectItemAtIndex:-1];
+	}	
 }
 
 /*!
@@ -144,25 +149,30 @@
 		NSAssert1(soundSetName != nil, @"Sound set does not have a name: %@", soundSet);
 		
 		if (soundSetContents && [soundSetContents count]) {
+			NSMenu	*soundsetMenu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
+
 			//Add an item for the set
 			menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:soundSetName
 																			 target:nil
 																			 action:nil
 																	  keyEquivalent:@""] autorelease];
-			[menuItem setEnabled:NO];
-			[soundMenu addItem:menuItem];
 			
 			//Add an item for each sound
 			soundEnumerator = [soundSetContents objectEnumerator];
 			while ((soundPath = [soundEnumerator nextObject])) {
-				[self addSound:soundPath toMenu:soundMenu];
+				[self addSound:soundPath toMenu:soundsetMenu];
 			}
 			
-			//Add a divider between sets
-			[soundMenu addItem:[NSMenuItem separatorItem]];
+			[menuItem setSubmenu:soundsetMenu];
+			[soundsetMenu release];
+
+			[soundMenu addItem:menuItem];
 		}
 	}
-	
+
+	//Add a divider between the sets and Other...
+	[soundMenu addItem:[NSMenuItem separatorItem]];
+
 	//Add the "Other..." item
 	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:OTHER_ELLIPSIS
 																	 target:self
@@ -200,8 +210,12 @@
     NSString	*soundPath = [sender representedObject];
     
     if (soundPath != nil && [soundPath length] != 0) {
-        [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
+        [[adium soundController] playSoundAtPath:[soundPath  stringByExpandingBundlePath]]; //Play the sound
 		
+		//Update the menu and and the selection
+		[self addSound:soundPath toMenu:[popUp_actionDetails menu]];
+        [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
+
 		[self detailsForHeaderChanged];
     } else { //selected "Other..."
         NSOpenPanel *openPanel = [NSOpenPanel openPanel];
