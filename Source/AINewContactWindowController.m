@@ -222,7 +222,8 @@
 - (IBAction)searchInAB:(id)sender
 {
 	OWABSearchWindowController *abSearchWindow;
-	abSearchWindow = [[OWABSearchWindowController promptForNewPersonSearchOnWindow:[self window]] retain];
+	abSearchWindow = [[OWABSearchWindowController promptForNewPersonSearchOnWindow:[self window]
+																	initialService:service] retain];
 	[abSearchWindow setDelegate:self];
 }
 

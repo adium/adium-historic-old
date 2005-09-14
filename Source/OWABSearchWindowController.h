@@ -52,7 +52,7 @@
 	NSData			*contactImage;
 }
 
-+ (id)promptForNewPersonSearchOnWindow:(NSWindow *)parentWindow;
++ (id)promptForNewPersonSearchOnWindow:(NSWindow *)parentWindow initialService:(AIService *)inService;
 - (IBAction)select:(id)sender;
 - (IBAction)cancel:(id)sender;
 - (IBAction)createNewPerson:(id)sender;
