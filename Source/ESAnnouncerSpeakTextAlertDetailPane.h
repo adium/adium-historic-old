@@ -22,6 +22,9 @@
 	IBOutlet	NSTextView				*textView_textToSpeak;
 	
 	IBOutlet	AILocalizationTextField	*textView_textToSpeakLabel;
+
+	IBOutlet	AILocalizationTextField	*textView_substitutions;
+	IBOutlet	NSBox					*box_substitutions;
 }
 
 @end

@@ -27,8 +27,8 @@
 	IBOutlet	NSSlider				*slider_rate;
 	
 	IBOutlet	NSTextField				*label_voice;
-	IBOutlet	NSTextField				*label_pitch;
-	IBOutlet	NSTextField				*label_rate;
+	IBOutlet	NSButton				*checkBox_customPitch;
+	IBOutlet	NSButton				*checkBox_customRate;
 }
 
 - (NSDictionary *)actionDetailsFromDict:(NSMutableDictionary *)actionDetails;

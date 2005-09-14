@@ -39,6 +39,8 @@
 	[super viewDidLoad];
 	
 	[textView_textToSpeakLabel setLocalizedString:AILocalizedString(@"Text To Speak:",nil)];
+	[box_substitutions setTitle:AILocalizedString(@"Substitutions:",nil)];
+	[textView_substitutions setStringValue:AILocalizedString(@"\%n - User name\n\%a - User alias\n\%m - Message\n\%t - Time",nil)];
 }
 
 /*!

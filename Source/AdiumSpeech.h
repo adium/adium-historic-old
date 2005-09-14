@@ -33,7 +33,7 @@
 
 - (void)speakText:(NSString *)text;
 - (void)speakText:(NSString *)text withVoice:(NSString *)voiceString pitch:(float)pitch rate:(float)rate;
-- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate;
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(float)rate;
 
 - (NSArray *)voices;
 - (float)defaultRate;

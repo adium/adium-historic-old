@@ -137,7 +137,7 @@
  * @param pitch Speaking pitch
  * @param rate Speaking rate
  */
-- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(float)rate
 {
 	if(workspaceSessionIsActive){
 		int			voiceIndex;
