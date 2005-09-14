@@ -68,6 +68,7 @@ itms:\/\/		|
 see:\/\/		|
 afp:\/\/		|
 adiumxtra:\/\/	|
+webcal:\/\/		|
 svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
 
