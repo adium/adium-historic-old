@@ -25,6 +25,7 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIListObject.h>
+#import <Adium/AIService.h>
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIServiceMenu.h>
 #import <Adium/AIStatusIcons.h>
