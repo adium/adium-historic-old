@@ -184,7 +184,6 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context);
 				NSString		*scriptFileName, *scriptFilePath, *keyword, *title;
 				NSArray			*arguments;
 				NSNumber		*prefixOnlyNumber;
-				NSNumber		*requiresUserInteractionNumber;
 				
 				if ((scriptFileName = [scriptDict objectForKey:@"File"]) &&
 					(scriptFilePath = [scriptBundle pathForResource:scriptFileName
