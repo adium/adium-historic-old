@@ -145,6 +145,7 @@
 							   remoteFilename:(NSString *)remoteFilename;
 
 - (BOOL)allowFileTransferWithListObject:(AIListObject *)inListObject;
+- (BOOL)canSendFolders;
 
 - (AIListContact *)mainThreadContactWithUID:(NSString *)inUID;
 - (AIChat *)mainThreadChatWithContact:(AIListContact *)contact;

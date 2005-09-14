@@ -201,6 +201,11 @@ gboolean gaim_init_oscar_plugin(void);
 	[super cancelFileTransfer:fileTransfer];
 }
 
+- (BOOL)canSendFolders
+{
+	return [super canSendFolders];
+}
+
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {
