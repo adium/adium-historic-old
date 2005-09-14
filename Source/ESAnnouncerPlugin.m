@@ -123,40 +123,75 @@
 - (void)performActionID:(NSString *)actionID forListObject:(AIListObject *)listObject withDetails:(NSDictionary *)details triggeringEventID:(NSString *)eventID userInfo:(id)userInfo
 {
 	NSString			*textToSpeak = nil;
-	NSString			*timeFormat;
-
-	BOOL				speakTime = [[details objectForKey:KEY_ANNOUNCER_TIME] boolValue];
-	BOOL				speakSender = [[details objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
-	
-	timeFormat = (speakTime ?
-				  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
-				  nil);
 	
 	if ([actionID isEqualToString:SPEAK_TEXT_ALERT_IDENTIFIER]) {
-		NSString	*userText = [details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK];
-
-		/*
-		[[adium contentController] filterAttributedString:(NSAttributedString *)attributedString
-usingFilterType:(AIFilterType)type
-direction:(AIFilterDirection)direction
-context:(id)filterContext
-		*/	
+		NSMutableString	*userText = [[[details objectForKey:KEY_ANNOUNCER_TEXT_TO_SPEAK] mutableCopy] autorelease];
 		
-		if (timeFormat) {
-			NSString	*timeString;
+		if ([userText rangeOfString:@"%n"].location != NSNotFound) {
+			NSString	*replacementText = [listObject formattedUID];
 			
-			timeString = [NSString stringWithFormat:@"%@... ",[[NSDate date] descriptionWithCalendarFormat:timeFormat
-																								  timeZone:nil
-																									locale:nil]];
-			textToSpeak = (userText ? [timeString stringByAppendingString:userText] : textToSpeak);
-		} else {
-			textToSpeak = userText;
+			[userText replaceOccurrencesOfString:@"%n"
+									  withString:(replacementText ? replacementText : @"")
+										 options:NSLiteralSearch 
+										   range:NSMakeRange(0,[userText length])];
 		}
-
-		//Clear out the lastSenderString so the next speech event will get tagged with the sender's name
+		
+		if ([userText rangeOfString:@"%a"].location != NSNotFound) {
+			NSString	*replacementText = [listObject phoneticName];
+			
+			[userText replaceOccurrencesOfString:@"%a"
+									  withString:(replacementText ? replacementText : @"")
+										 options:NSLiteralSearch 
+										   range:NSMakeRange(0,[userText length])];
+			
+		}
+		
+		if ([userText rangeOfString:@"%t"].location != NSNotFound) {
+			NSString	*timeFormat = [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO];
+			
+			[userText replaceOccurrencesOfString:@"%t"
+									  withString:[[NSDate date] descriptionWithCalendarFormat:timeFormat
+																					 timeZone:nil
+																					   locale:nil]
+										 options:NSLiteralSearch 
+										   range:NSMakeRange(0,[userText length])];
+			
+		}
+		
+		
+		if ([userText rangeOfString:@"%m"].location != NSNotFound) {
+			NSString			*message;
+			
+			if ([[adium contactAlertsController] isMessageEvent:eventID]) {
+				AIContentMessage	*content = [userInfo objectForKey:@"AIContentObject"];
+				message = [[[content message] attributedStringByConvertingAttachmentsToStrings] string];
+				
+			} else {
+				message = [[adium contactAlertsController] naturalLanguageDescriptionForEventID:eventID
+																					 listObject:listObject
+																					   userInfo:userInfo
+																				 includeSubject:NO];
+			}
+			
+			[userText replaceOccurrencesOfString:@"%m"
+									  withString:(message ? message : @"")
+										 options:NSLiteralSearch 
+										   range:NSMakeRange(0,[userText length])];				
+		}
+		
+		textToSpeak = userText;
+		
+		//Clear out the lastSenderString so the next Speak Event action will get tagged with the sender's name
 		[lastSenderString release]; lastSenderString = nil;
 		
 	} else { /*Speak Event*/	
+		BOOL			speakSender = [[details objectForKey:KEY_ANNOUNCER_SENDER] boolValue];
+		BOOL			speakTime = [[details objectForKey:KEY_ANNOUNCER_TIME] boolValue];
+		NSString		*timeFormat;
+
+		timeFormat = (speakTime ?
+					  [NSDateFormatter localizedDateFormatStringShowingSeconds:YES showingAMorPM:NO] :
+					  nil);
 		
 		//Handle messages in a custom manner
 		if ([[adium contactAlertsController] isMessageEvent:eventID]) {
@@ -172,7 +207,7 @@ context:(id)filterContext
 				
 				//Get the sender string
 				senderString = [source phoneticName];
-			
+				
 				//Don't repeat the same sender string for messages twice in a row
 				if (!lastSenderString || ![senderString isEqualToString:lastSenderString]) {
 					NSMutableString		*senderStringToSpeak;
@@ -182,12 +217,12 @@ context:(id)filterContext
 					
 					senderStringToSpeak = [senderString mutableCopy];
 					
-					 //deemphasize all words after first in sender's name, approximating human name pronunciation better
+					//deemphasize all words after first in sender's name, approximating human name pronunciation better
 					[senderStringToSpeak replaceOccurrencesOfString:@" " 
 														 withString:@" [[emph -]] " 
 															options:NSCaseInsensitiveSearch
 															  range:NSMakeRange(0, [senderStringToSpeak length])];
-					 //emphasize first word in sender's name
+					//emphasize first word in sender's name
 					[theMessage appendFormat:@"[[emph +]] %@...",senderStringToSpeak];
 					newParagraph = YES;
 					
@@ -203,14 +238,14 @@ context:(id)filterContext
 			}
 			
 			if (newParagraph) [theMessage appendFormat:@" [[pmod +1; pbas +1]]"];
-
+			
 			//Finally, append the actual message
 			[theMessage appendFormat:@" %@",message];
 			
 			//theMessage is now the final string which will be passed to the speech engine
 			textToSpeak = theMessage;
-
-		} else {
+			
+		}else{
 			//All non-message events use the normal naturalLanguageDescription methods, optionally prepending
 			//the time
 			NSString	*eventDescription;
@@ -238,18 +273,23 @@ context:(id)filterContext
 	
 	//Do the speech, with custom voice/pitch/rate as desired
 	if (textToSpeak) {
-		NSString	*voice = nil;
-		NSNumber	*pitchNumber = [details objectForKey:KEY_PITCH];
-		NSNumber	*floatNumber = [details objectForKey:KEY_RATE];
-
-		float		pitch = 0;
-		int			rate = 0;
+		NSNumber	*pitchNumber = nil, *rateNumber = nil;
+		NSNumber	*customPitch, *customRate;
 		
-		voice =  [details objectForKey:KEY_VOICE_STRING];			
-		pitch = (pitchNumber ? [pitchNumber floatValue] : 0.0);
-		rate  = (floatNumber ? [floatNumber floatValue] : 0.0);
-
-		[[adium soundController] speakText:textToSpeak withVoice:voice pitch:pitch rate:rate];
+		if ((customPitch = [details objectForKey:KEY_PITCH_CUSTOM]) &&
+			([customPitch boolValue])) {
+			pitchNumber = [details objectForKey:KEY_PITCH];
+		}
+		
+		if ((customRate = [details objectForKey:KEY_RATE_CUSTOM]) &&
+			([customRate boolValue])) {
+			rateNumber = [details objectForKey:KEY_RATE];
+		}
+		
+		[[adium soundController] speakText:textToSpeak
+								 withVoice:[details objectForKey:KEY_VOICE_STRING]
+									 pitch:(pitchNumber ? [pitchNumber floatValue] : 0.0)
+									  rate:(rateNumber ? [rateNumber floatValue] : 0.0)];
 	}
 }
 

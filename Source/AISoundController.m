@@ -52,7 +52,7 @@
 - (NSArray *)voices{
 	return [adiumSpeech voices];
 }
-- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(int)rate{
+- (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(float)rate{
 	[adiumSpeech speakDemoTextForVoice:voiceString withPitch:pitch andRate:rate];
 }
 - (float)defaultRate{

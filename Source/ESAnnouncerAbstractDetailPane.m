@@ -41,6 +41,9 @@
 	
 	[checkBox_speakEventTime setTitle:SPEAK_EVENT_TIME];
 	[checkBox_speakContactName setLocalizedString:AILocalizedString(@"Speak Name",nil)];
+	[checkBox_customPitch setLocalizedString:AILocalizedString(@"Use custom pitch:",nil)];
+	[checkBox_customRate setLocalizedString:AILocalizedString(@"Use custom rate:",nil)];
+
 	[popUp_voices setMenu:[self voicesMenu]];
 }
 
@@ -71,14 +74,28 @@
 		[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
     }
 	
+	[checkBox_customPitch setState:[[inDetails objectForKey:KEY_PITCH_CUSTOM] boolValue]];
+	
     if ((rateNumber = [inDetails objectForKey:KEY_RATE])) {
-		[slider_rate setIntValue:[rateNumber intValue]];
+		[slider_rate setFloatValue:[rateNumber floatValue]];
     } else {
-		[slider_rate setIntValue:[[adium soundController] defaultRate]];
+		[slider_rate setFloatValue:[[adium soundController] defaultRate]];
     }
+
+	[checkBox_customRate setState:[[inDetails objectForKey:KEY_RATE_CUSTOM] boolValue]];
 
 	[checkBox_speakEventTime setState:speakTime];
 	[checkBox_speakContactName setState:speakContactName];
+	
+	[self configureControlDimming];
+}
+
+- (void)configureControlDimming
+{
+	[super configureControlDimming];
+	
+	[slider_rate setEnabled:[checkBox_customRate state]];
+	[slider_pitch setEnabled:[checkBox_customPitch state]];
 }
 
 /*!
@@ -129,7 +146,7 @@
 
 	voice = [[popUp_voices selectedItem] representedObject];	
 	pitch = [NSNumber numberWithFloat:[slider_pitch floatValue]];
-	rate = [NSNumber numberWithInt:[slider_rate intValue]];
+	rate = [NSNumber numberWithFloat:[slider_rate floatValue]];
 	
 	if (voice) {
 		[actionDetails setObject:voice
@@ -141,10 +158,15 @@
 						  forKey:KEY_PITCH];
 	}
 	
-	if ([rate intValue] != [[adium soundController] defaultRate]) {
+	if ([rate floatValue] != [[adium soundController] defaultRate]) {
 		[actionDetails setObject:rate
 						  forKey:KEY_RATE];
 	}
+	[actionDetails setObject:[NSNumber numberWithBool:[checkBox_customRate state]]
+					  forKey:KEY_RATE_CUSTOM];
+	[actionDetails setObject:[NSNumber numberWithBool:[checkBox_customPitch state]]
+					  forKey:KEY_PITCH_CUSTOM];
+	
 	[actionDetails setObject:speakTime
 					  forKey:KEY_ANNOUNCER_TIME];
 	[actionDetails setObject:speakContactName
@@ -174,7 +196,7 @@
 	NSEnumerator	*enumerator;
 	NSString		*voice;
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Default",nil)
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Use System Default",nil)
 																	 target:nil
 																	 action:nil
 															  keyEquivalent:@""] autorelease];
@@ -204,7 +226,7 @@
 	if (sender == popUp_voices) {
 		if (![[popUp_voices selectedItem] representedObject]) {
 			[slider_pitch setFloatValue:[[adium soundController] defaultPitch]];
-			[slider_rate setIntValue:[[adium soundController] defaultRate]];
+			[slider_rate setFloatValue:[[adium soundController] defaultRate]];
 		}
 	}
 
@@ -213,7 +235,7 @@
 	   sender == slider_rate) {
 		[[adium soundController] speakDemoTextForVoice:[[popUp_voices selectedItem] representedObject]
 											 withPitch:[slider_pitch floatValue]
-											   andRate:[slider_rate intValue]];
+											   andRate:[slider_rate floatValue]];
 	}
 	
 	[super changePreference:sender];
