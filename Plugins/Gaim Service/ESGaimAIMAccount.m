@@ -748,23 +748,34 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Group chat
 
-- (void)addContact:(AIListContact *)listContact toChat:(AIChat *)chat
+- (void)addUser:(NSString *)contactName toChat:(AIChat *)chat newArrival:(NSNumber *)newArrival
 {
-	/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
-	 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
-	 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
-	 */	
-	if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]) {
-		[listContact setIsMobile:NO notify:NotifyLater];
-
-		[listContact setStatusObject:nil
-							  forKey:@"Client"
-							  notify:NotifyLater];
-
-		[listContact notifyOfChangedStatusSilently:NO];
-	}
+	AIListContact *listContact;
 	
-	[super addContact:listContact toChat:chat];
+	if ((chat) &&
+		(listContact = [self contactWithUID:contactName])) {
+		
+		if (!namesAreCaseSensitive) {
+			[listContact setStatusObject:contactName forKey:@"FormattedUID" notify:NotifyNow];
+		}
+		
+		/* Gaim incorrectly flags group chat participants as being on a mobile device... we're just going
+		 * to assume that a contact in a group chat is by definition not on their cell phone. This assumption
+		 * could become wrong in the future... we can deal with it more properly at that time. :P -eds
+		 */	
+		if ([[listContact statusObjectForKey:@"Client"] isEqualToString:AOL_MOBILE_DEVICE]) {
+			[listContact setIsMobile:NO notify:NotifyLater];
+			
+			[listContact setStatusObject:nil
+								  forKey:@"Client"
+								  notify:NotifyLater];
+			
+			[listContact notifyOfChangedStatusSilently:NO];
+		}
+		
+		[chat addParticipatingListObject:listContact notify:(newArrival && [newArrival boolValue])];
+	}
 }
+
 
 @end
