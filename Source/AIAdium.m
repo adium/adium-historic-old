@@ -99,6 +99,24 @@ static NSString	*prefsCategory;
 	return _preferencesFolderPath;
 }
 
+/*!
+ * @brief Returns the identifier of this build
+ */
++ (NSString *)buildIdentifier
+{
+	return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildIdentifier"];
+}
+
+/*!
+ * @brief Returns the date of this build
+ */
++ (NSDate *)buildDate
+{
+	NSTimeInterval date = [[[NSBundle mainBundle] objectForInfoDictionaryKey:@"AIBuildDate"] doubleValue];
+	
+	return [NSDate dateWithTimeIntervalSince1970:date];
+}
+
 
 //Core Controllers -----------------------------------------------------------------------------------------------------
 #pragma mark Core Controllers

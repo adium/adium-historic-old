@@ -63,6 +63,9 @@
 	NSString									*advancedPrefsName;	
 }
 
++ (NSString *)buildIdentifier;
++ (NSDate *)buildDate;
+
 + (NSString *)applicationSupportDirectory;
 - (AIAccountController *)accountController;
 - (AIChatController *)chatController;
