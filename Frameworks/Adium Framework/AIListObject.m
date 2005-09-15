@@ -549,8 +549,8 @@
 	NSNumber		*statusTypeNumber = [self statusObjectForKey:@"StatusType"];
 	AIStatusType	statusType = (statusTypeNumber ?
 								  [statusTypeNumber intValue] :
-								  AIAvailableStatusType);
-	
+								  ([self online] ? AIAvailableStatusType : AIOfflineStatusType));
+
 	return statusType;
 }
 
