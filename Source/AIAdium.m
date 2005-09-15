@@ -39,18 +39,10 @@
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 
-//#define NEW_APPLICATION_SUPPORT_DIRECTORY
-
 //Path to Adium's application support preferences
-#ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
-#   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium X"]
-#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium X"
-#   define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium X"]
-#else
-#   define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
-#   define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
-#   define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
-#endif
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
+#define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
+#define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localize only if a translated version exists.")
@@ -193,9 +185,6 @@ static NSString	*prefsCategory;
 	advancedPrefsName = nil;
 	prefsCategory = nil;
 
-#ifdef NEW_APPLICATION_SUPPORT_DIRECTORY
-	[self upgradePreferenceFolderFromAdium2ToAdium];
-#endif
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
