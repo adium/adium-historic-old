@@ -28,7 +28,6 @@
     IBOutlet	NSTextView	*textView_credits;
 
 	//Version and duck clicking
-    NSString 				*buildNumber, *buildDate;
     int						numberOfDuckClicks, numberOfBuildFieldClicks;
     
 	//Scrolling

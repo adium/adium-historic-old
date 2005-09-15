@@ -34,7 +34,7 @@
 @interface LNAboutBoxController (PRIVATE)
 - (id)initWithWindowNibName:(NSString *)windowNibName;
 - (NSString *)_applicationVersion;
-- (void)_loadBuildInformation;
+- (NSString *)_applicationDate;
 @end
 
 @implementation LNAboutBoxController
@@ -62,9 +62,6 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 //Dealloc
 - (void)dealloc
 {    
-    [buildNumber release];
-    [buildDate release];
-    
     [super dealloc];
 }
 
@@ -73,9 +70,6 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 {
     NSAttributedString		*creditsString;
     
-    //Load our build information and avatar list
-    [self _loadBuildInformation];
-
     //Credits
     creditsString = [[[NSAttributedString alloc] initWithPath:[[NSBundle mainBundle] pathForResource:@"Credits.rtf" ofType:nil] documentAttributes:nil] autorelease];
     [[textView_credits textStorage] setAttributedString:creditsString];
@@ -99,7 +93,7 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     [[NSRunLoop currentRunLoop] addTimer:eventLoopScrollTimer forMode:NSEventTrackingRunLoopMode];
 	
     //Setup the build date / version
-    [button_buildButton setTitle:buildDate];
+    [button_buildButton setTitle:[self _applicationDate]];
     [textField_version setStringValue:[self _applicationVersion]];
     
 	//Set the localized values
@@ -159,9 +153,9 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
 - (IBAction)buildFieldClicked:(id)sender
 {
     if ((++numberOfBuildFieldClicks) % 2 == 0) {
-        [button_buildButton setTitle:buildDate];
+        [button_buildButton setTitle:[self _applicationDate]];
     } else {
-		[button_buildButton setTitle:buildNumber];
+		[button_buildButton setTitle:[AIAdium buildIdentifier]];
     }
 }
 
@@ -172,34 +166,10 @@ LNAboutBoxController *sharedAboutBoxInstance = nil;
     return [NSString stringWithFormat:@"Adium X %@",(version ? version : @"")];
 }
 
-//Load the current build date and our cryptic, non-sequential build number ;)
-- (void)_loadBuildInformation
+//Returns the formatted build date of Adium
+- (NSString *)_applicationDate
 {
-    //Grab the info from our buildnum script
-    char *path, unixDate[256], num[256], whoami[256];
-    if ((path = (char *)[[[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil] fileSystemRepresentation]))
-    {
-        FILE *f = fopen(path, "r");
-        fscanf(f, "%s | %s | %s", num, unixDate, whoami);
-        fclose(f);
-		
-        if (*num) {
-            buildNumber = [[NSString stringWithFormat:@"%s", num] retain];
-		}
-		
-		if (*unixDate) {
-			NSDateFormatter *dateFormatter = [NSDateFormatter localizedDateFormatter];
-
-			NSDate	    *date;
-			
-			date = [NSDate dateWithTimeIntervalSince1970:[[NSString stringWithCString:unixDate] doubleValue]];
-            buildDate = [[dateFormatter stringForObjectValue:date] retain];
-		}
-    }
-	
-    //Default to empty strings if something goes wrong
-    if (!buildDate) buildDate = [@"" retain];
-    if (!buildNumber) buildNumber = [@"" retain];
+	return [[NSDateFormatter localizedDateFormatter] stringForObjectValue:[AIAdium buildDate]];
 }
 
 
