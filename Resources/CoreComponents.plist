@@ -9,7 +9,6 @@
 	<string>AIAutoIdlePlugin</string>
 	<string>AIAutoLinkingPlugin</string>
 	<string>AIAutoReplyPlugin</string>
-	<string>AIBookmarksImporterPlugin</string>
 	<string>AIChatConsolidationPlugin</string>
 	<string>AIChatCyclingPlugin</string>
 	<string>AIContactAwayPlugin</string>

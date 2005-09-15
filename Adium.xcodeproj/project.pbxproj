@@ -30,7 +30,6 @@
 			dependencies = (
 				4B8E0BD8086A16D4009A7A4D /* PBXTargetDependency */,
 				4B8E0BDA086A16D4009A7A4D /* PBXTargetDependency */,
-				4B8E0BDC086A16D4009A7A4D /* PBXTargetDependency */,
 			);
 			name = "External Frameworks";
 			productName = "External Frameworks";
@@ -45,9 +44,6 @@
 		078C5CD2079EFF88004C75A4 /* AILocalizationButtonCell.h in Headers */ = {isa = PBXBuildFile; fileRef = 078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		078C5CD3079EFF88004C75A4 /* AILocalizationButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */; };
 		07AF3C5A07D4897300409BC8 /* pref-messagehistory.png in Resources */ = {isa = PBXBuildFile; fileRef = 07AF3C5907D4897200409BC8 /* pref-messagehistory.png */; };
-		07FC98320827D33C006C56D6 /* AIBookmarksImport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */; };
-		07FC987B0827D73F006C56D6 /* AIBookmarksImporterPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 348EF1B4080B2F3D0015E0FC /* AIBookmarksImporterPlugin.m */; };
-		07FC987C0827D747006C56D6 /* AIBookmarksImporterPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 348EF1B3080B2F3D0015E0FC /* AIBookmarksImporterPlugin.h */; };
 		110763F508676CC9005987A5 /* RAFBlockEditorPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */; };
 		110763F608676CC9005987A5 /* RAFBlockEditorPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */; };
 		110763F708676CC9005987A5 /* RAFBlockEditorWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */; };
@@ -1387,13 +1383,6 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		34FD94910828255100040AC6 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
-			remoteInfo = AIBookmarksImport;
-		};
 		34FF932C06DE3D2800C1D683 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 4947F5E90655E90C00B791E5 /* libezv.xcode */;
@@ -1442,13 +1431,6 @@
 			proxyType = 1;
 			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
 			remoteInfo = AIHyperlinks.framework;
-		};
-		4B8E0BDB086A16D4009A7A4D /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 8DC2EF4F0486A6940098B216;
-			remoteInfo = AIBookmarksImport;
 		};
 		6C3E0151054445C000A4AE2E /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -1552,8 +1534,6 @@
 		078C5CD0079EFF87004C75A4 /* AILocalizationButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationButtonCell.h; path = "Frameworks/Adium Framework/AILocalizationButtonCell.h"; sourceTree = "<group>"; };
 		078C5CD1079EFF87004C75A4 /* AILocalizationButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AILocalizationButtonCell.m; path = "Frameworks/Adium Framework/AILocalizationButtonCell.m"; sourceTree = "<group>"; };
 		07AF3C5907D4897200409BC8 /* pref-messagehistory.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "pref-messagehistory.png"; path = "Resources/pref-messagehistory.png"; sourceTree = "<group>"; };
-		07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; name = AIBookmarksImport.framework; path = ../../adium/build/Development/AIBookmarksImport.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = AIBookmarksImport.framework.xcodeproj; path = "Frameworks/AIBookmarksImport Framework/AIBookmarksImport.framework.xcodeproj"; sourceTree = "<group>"; };
 		110763F108676CC9005987A5 /* RAFBlockEditorPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorPlugin.h; path = Source/RAFBlockEditorPlugin.h; sourceTree = "<group>"; };
 		110763F208676CC9005987A5 /* RAFBlockEditorPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RAFBlockEditorPlugin.m; path = Source/RAFBlockEditorPlugin.m; sourceTree = "<group>"; };
 		110763F308676CC9005987A5 /* RAFBlockEditorWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RAFBlockEditorWindowController.h; path = Source/RAFBlockEditorWindowController.h; sourceTree = "<group>"; };
@@ -2171,8 +2151,6 @@
 		348D8D2706CC07BD00449EBB /* DCGaimZephyrJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimZephyrJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimZephyrJoinChatViewController.h"; sourceTree = "<group>"; };
 		348D8D2806CC07BD00449EBB /* ESGaimZephyrAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimZephyrAccount.h; path = "Plugins/Gaim Service/ESGaimZephyrAccount.h"; sourceTree = "<group>"; };
 		348E5ACA06D2A74C004C051C /* AddressBook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AddressBook.framework; path = /System/Library/Frameworks/AddressBook.framework; sourceTree = "<absolute>"; };
-		348EF1B3080B2F3D0015E0FC /* AIBookmarksImporterPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIBookmarksImporterPlugin.h; path = Source/AIBookmarksImporterPlugin.h; sourceTree = "<group>"; };
-		348EF1B4080B2F3D0015E0FC /* AIBookmarksImporterPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIBookmarksImporterPlugin.m; path = Source/AIBookmarksImporterPlugin.m; sourceTree = "<group>"; };
 		34943DEE07BAD918000F2A03 /* AccountPrivacy.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountPrivacy.nib; path = "Frameworks/Adium Framework/AccountPrivacy.nib"; sourceTree = "<group>"; };
 		349448C207BB29B2000F2A03 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3496A8BF07CE6B3D0055BBAB /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = Resources/English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -3246,7 +3224,6 @@
 				34C18B0D06CAC95400FF5FF9 /* SystemConfiguration.framework in Frameworks */,
 				348E5ACB06D2A74C004C051C /* AddressBook.framework in Frameworks */,
 				9E124DF607D34CF500AA91C5 /* Growl-WithInstaller.framework in Frameworks */,
-				07FC98320827D33C006C56D6 /* AIBookmarksImport.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -3333,14 +3310,6 @@
 			name = Localized;
 			sourceTree = "<group>";
 		};
-		07FC98340827D355006C56D6 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				34FD94300828253E00040AC6 /* AIBookmarksImport.framework */,
-			);
-			name = Products;
-			sourceTree = "<group>";
-		};
 		11C157D504A88DE0008E0C76 /* Emoticons */ = {
 			isa = PBXGroup;
 			children = (
@@ -3407,7 +3376,6 @@
 			children = (
 				34D8379307CC3222006466F2 /* AIUtilities.framework */,
 				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
-				07FC98310827D33C006C56D6 /* AIBookmarksImport.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
 				F5819CE9032124CE01A8010A /* AppKit.framework */,
 				34D8370007CBF97A006466F2 /* AudioToolbox.framework */,
@@ -3939,15 +3907,6 @@
 			children = (
 			);
 			name = "File changed notifications";
-			sourceTree = "<group>";
-		};
-		348EF197080B2F230015E0FC /* Bookmarks Importing */ = {
-			isa = PBXGroup;
-			children = (
-				348EF1B3080B2F3D0015E0FC /* AIBookmarksImporterPlugin.h */,
-				348EF1B4080B2F3D0015E0FC /* AIBookmarksImporterPlugin.m */,
-			);
-			name = "Bookmarks Importing";
 			sourceTree = "<group>";
 		};
 		3496A8E807CE6CA30055BBAB /* Products */ = {
@@ -4704,7 +4663,6 @@
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
 				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
-				07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -5199,7 +5157,6 @@
 		4BCAC53407B59F9C006641B9 /* Other */ = {
 			isa = PBXGroup;
 			children = (
-				348EF197080B2F230015E0FC /* Bookmarks Importing */,
 				83DB8F21061145C400A5C28C /* Version Checker */,
 			);
 			name = Other;
@@ -6389,7 +6346,6 @@
 				347C6948080C8F3B00E69674 /* ESAwayStatusWindowController.h in Headers */,
 				34F46786080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.h in Headers */,
 				4B8C3C990825EAF9004B9F45 /* AIAccountListPreferences.h in Headers */,
-				07FC987C0827D747006C56D6 /* AIBookmarksImporterPlugin.h in Headers */,
 				34B27295083ACA900092A5A0 /* DeadStrings.h in Headers */,
 				4BB9972A083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.h in Headers */,
 				4BB9972C083D1A5F006ACD6F /* SMContactListShowDetailsPane.h in Headers */,
@@ -7257,10 +7213,6 @@
 					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
 					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 				},
-				{
-					ProductGroup = 07FC98340827D355006C56D6 /* Products */;
-					ProjectRef = 07FC98330827D355006C56D6 /* AIBookmarksImport.framework.xcodeproj */;
-				},
 			);
 			targets = (
 				34BD9CD1053146CC000AB133 /* Adium */,
@@ -7292,13 +7244,6 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34FD94300828253E00040AC6 /* AIBookmarksImport.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = AIBookmarksImport.framework;
-			remoteRef = 34FD94910828255100040AC6 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		34FF8DA106DE3D1E00C1D683 /* libexpat.a */ = {
@@ -7749,7 +7694,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIBookmarksImport.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\" \"$FRAMEWORKS_DIR\"\n";
+			shellScript = "#!/bin/sh\n\necho \"Copying external frameworks into Adium.app\"\n\nPBXCP=\"/System/Library/PrivateFrameworks/DevToolsCore.framework/Resources/pbxcp -exclude .DS_Store -exclude CVS -exclude .svn -resolve-src-symlinks\"\nFRAMEWORKS_DIR=\"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Frameworks\"\n\nif ( ! [ -e \"$FRAMEWORKS_DIR\" ]); then\n\tmkdir \"$FRAMEWORKS_DIR\"\nfi\n\n#Copy AIUtilities.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" \"$FRAMEWORKS_DIR\"\n\n#Copy AIHyperlinks.framework\n$PBXCP \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" \"$FRAMEWORKS_DIR\"\n";
 		};
 		34E9DCF2078FC79900662E8E /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7801,7 +7746,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" ] ); then\n\t\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\n\tfi\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" ] ); then\n\t\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\n\tfi\nfi\n\nAIBOOKMARKSIMPORT_FRAMEWORK=\"$SRCROOT/Frameworks/AIBookmarksImport Framework/build/$CONFIGURATION/AIBookmarksImport.framework\"\nif ( [ -d \"$AIBOOKMARKSIMPORT_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\" ] ); then\n\t\tln -fs \"$AIBOOKMARKSIMPORT_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIBookmarksImport.framework\"\n\tfi\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\" ] ); then\n\t\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\n\tfi\nfi\n";
+			shellScript = "#!/bin/sh\n\necho Symlinking generated frameworks...\n\nif ( ! [ -e \"$BUILT_PRODUCTS_DIR\" ] ); then\n\tmkdir -p \"$BUILT_PRODUCTS_DIR\"\nfi\n\nAIUTILITIES_FRAMEWORK=\"$SRCROOT/Frameworks/AIUtilities Framework/build/$CONFIGURATION/AIUtilities.framework\"\n\nif ( [ -d \"$AIUTILITIES_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\" ] ); then\n\t\tln -fs \"$AIUTILITIES_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIUtilities.framework\"\n\tfi\nfi\n\nAIHYPERLINKS_FRAMEWORK=\"$SRCROOT/Frameworks/AIHyperlinks Framework/build/$CONFIGURATION/AIHyperlinks.framework\"\nif ( [ -d \"$AIHYPERLINKS_FRAMEWORK\" ] ); then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\" ] ); then\n\t\tln -fs \"$AIHYPERLINKS_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/AIHyperlinks.framework\"\n\tfi\nfi\n\nGROWLWITHINSTALLER_FRAMEWORK=\"$SRCROOT/Frameworks/Growl-WithInstaller.Framework\"\nif ( [ -d \"$GROWLWITHINSTALLER_FRAMEWORK\" ] ;) then\n\tif ( ! [ -e \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\" ] ); then\n\t\tln -fs \"$GROWLWITHINSTALLER_FRAMEWORK\" \"$BUILT_PRODUCTS_DIR/Growl-WithInstaller.framework\"\n\tfi\nfi\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -8015,7 +7960,6 @@
 				347C6949080C8F3B00E69674 /* ESAwayStatusWindowController.m in Sources */,
 				34F46785080F7FFB007800AB /* ESSafariLinkToolbarItemPlugin.m in Sources */,
 				4B8C3C9A0825EAF9004B9F45 /* AIAccountListPreferences.m in Sources */,
-				07FC987B0827D73F006C56D6 /* AIBookmarksImporterPlugin.m in Sources */,
 				4BB9972B083D1A5F006ACD6F /* SMContactListShowBehaviorPlugin.m in Sources */,
 				4BB9972D083D1A5F006ACD6F /* SMContactListShowDetailsPane.m in Sources */,
 				4B8741D40840D25700738987 /* AdiumServices.m in Sources */,
@@ -8387,11 +8331,6 @@
 			isa = PBXTargetDependency;
 			name = AIHyperlinks.framework;
 			targetProxy = 4B8E0BD9086A16D4009A7A4D /* PBXContainerItemProxy */;
-		};
-		4B8E0BDC086A16D4009A7A4D /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = AIBookmarksImport;
-			targetProxy = 4B8E0BDB086A16D4009A7A4D /* PBXContainerItemProxy */;
 		};
 		6C3E0152054445C000A4AE2E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
