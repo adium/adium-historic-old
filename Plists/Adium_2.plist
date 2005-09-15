@@ -284,5 +284,9 @@
 	<string>NSApplication</string>
 	<key>AppleDockIconEnabled</key>
 	<string>YES</string>
+	<key>AIBuildIdentifier</key>
+	<string>%%BUILD_IDENTIFIER%%</string>
+	<key>AIBuildDate</key>
+	<string>%%BUILD_DATE%%</string>
 </dict>
 </plist>
