@@ -2683,7 +2683,6 @@
 		4B191D880611C10800E8A4E7 /* License.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = License.txt; sourceTree = "<group>"; };
 		4B191D890611C10800E8A4E7 /* ReadMe.rtf */ = {isa = PBXFileReference; lastKnownFileType = text.rtf; path = ReadMe.rtf; sourceTree = "<group>"; };
 		4B191D8C0611C11000E8A4E7 /* Changes.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = Changes.txt; sourceTree = "<group>"; };
-		4B191D8E0611C11400E8A4E7 /* ToDoList.txt */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text; path = ToDoList.txt; sourceTree = "<group>"; };
 		4B215DBD0598A71400305B3C /* crashDuck.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = crashDuck.icns; path = "Adium Crash Reporter/crashDuck.icns"; sourceTree = "<group>"; };
 		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = Source/AIAbstractListObjectMenu.h; sourceTree = "<group>"; };
 		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = Source/AIAbstractListObjectMenu.m; sourceTree = "<group>"; };
@@ -3378,7 +3377,6 @@
 			children = (
 				34057EF3087E024400664D64 /* Keeping 0.8x and 0.90 translation in sync */,
 				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
-				4B191D8E0611C11400E8A4E7 /* ToDoList.txt */,
 				3474DFFC08254F3500BF30F0 /* Copyright.txt */,
 				4BE9FFE7055981AB00359B15 /* Adium.pch */,
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
