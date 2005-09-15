@@ -17,27 +17,33 @@
 #import "AIMenuController.h"
 #import "AIPreferenceController.h"
 #import "CPFVersionChecker.h"
-#import "ESVersionCheckerWindowController.h"
+#import <AIUtilities/AIDateFormatterAdditions.h>
 #import <AIUtilities/AIDictionaryAdditions.h>
-#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIHostReachabilityMonitor.h>
+#import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
-#define VERSION_CHECKER_TITLE		[AILocalizedString(@"Check for Updates",nil) stringByAppendingEllipsis]
-#define VERSION_PLIST_URL			@"http://www.adiumx.com/version.plist"
-#define VERSION_PLIST_HOST			@"www.adiumx.com"
-#define VERSION_PLIST_KEY			@"adium-version"
-#define VERSION_BETA_PLIST_KEY		@"adium-beta-version"
+#define VERSION_CHECKER_TITLE			[AILocalizedString(@"Check for Updates",nil) stringByAppendingEllipsis]
+#define VERSION_PLIST_URL				@"http://www.adiumx.com/version-test.plist"
+#define VERSION_PLIST_HOST				@"www.adiumx.com"
 
-#define VERSION_CHECK_INTERVAL		24		//24 hours
-#define BETA_VERSION_CHECK_INTERVAL	4		//4 hours - Beta releases have a nice annoying refresh >:D
+//These strings of these keys are confusing to maintain support for legacy clients
+#define KEY_ADIUM_DATE					@"adium-version"
+#define KEY_ADIUM_VERSION				@"adium-version-num"
+#define KEY_ADIUM_BETA_DATE				@"adium-beta-version"
+#define KEY_ADIUM_BETA_VERSION			@"adium-beta-version-num"
 
-#define VERSION_CHECKER_DEFAULTS	@"VersionChecker Defaults"
+#define ADIUM_UPDATE_URL				@"http://download.adiumx.com/"
+#define ADIUM_UPDATE_BETA_URL			@"http://beta.adiumx.com/"
+
+#define VERSION_CHECK_INTERVAL			24		//24 hours
+#define BETA_VERSION_CHECK_INTERVAL 	4		//4 hours - Beta releases have a nice annoying refresh >:D
+
+#define VERSION_CHECKER_DEFAULTS		@"VersionChecker Defaults"
 
 @interface CPFVersionChecker (PRIVATE)
-- (void)_requestVersionDict;
+- (void)_checkForNewVersion;
 - (void)_versionReceived:(NSDictionary *)versionDict;
-- (NSDate *)dateOfThisBuild;
 @end
 
 /*!
@@ -85,26 +91,31 @@
 	[[AIHostReachabilityMonitor defaultMonitor] removeObserver:self forHost:VERSION_PLIST_HOST];
 }
 
-//AIHostReachabilityObserver conformance -------------------------------------------------------------------------------------------------
-#pragma mark AIHostReachabilityObserver conformance
 
-- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host {
+//AIHostReachabilityObserver conformance -------------------------------------------------------------------------------
+#pragma mark AIHostReachabilityObserver conformance
+- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host
+{
 	if (!timer) {
 		//Check for an update now
 		[self automaticCheckForNewVersion:nil];
 
 		//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
-		timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ? BETA_VERSION_CHECK_INTERVAL : VERSION_CHECK_INTERVAL))
+		timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ?
+																	   BETA_VERSION_CHECK_INTERVAL :
+																	   VERSION_CHECK_INTERVAL))
 												  target:self
 												selector:@selector(automaticCheckForNewVersion:)
 												userInfo:nil
 												 repeats:YES] retain];
 	}
 }
-- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsNotReachable:(NSString *)host {
+- (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsNotReachable:(NSString *)host
+{
 	[timer invalidate];
 	[timer release]; timer = nil;
 }
+
 
 //New version checking -------------------------------------------------------------------------------------------------
 #pragma mark New version checking
@@ -116,8 +127,8 @@
  */
 - (void)manualCheckForNewVersion:(id)sender
 {
-	[self _requestVersionDict];
 	checkingManually = YES;
+	[self _checkForNewVersion];
 }
 
 /*!
@@ -132,131 +143,15 @@
 																		 group:PREF_GROUP_UPDATING] boolValue];
 
 	if (BETA_RELEASE || updateAutomatically) {
-		[self _requestVersionDict];
 		checkingManually = NO;
+		[self _checkForNewVersion];
 	}
 }
 
 /*!
- * @brief Invoked when version information is received
- *
- * Parse the version dictionary and notify the user (if necessary) of a new release or that their current
- * version is the newest.
- * @param versionDict Dictionary from the web containing version numbers of the most recent releases
+ * @brief Begin checking for a new Adium version (contacts adiumx.com asynchronously)
  */
-- (void)_versionReceived:(NSDictionary *)versionDict
-{
-	NSString	*number = [versionDict objectForKey:VERSION_PLIST_KEY];
-	NSDate		*newestDate = nil;
-	BOOL		displayedBetaUpdateWindow = NO;
-
-	//Load relevant dates which we weren't passed
-	NSDate		*thisDate = [self dateOfThisBuild];
-	NSDate		*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
-																					group:PREF_GROUP_UPDATING];
-
-	//Get the newest version date from the passed version dict
-	if (versionDict && number) {
-		newestDate = [NSDate dateWithTimeIntervalSince1970:[number doubleValue]];
-	}
-
-	//Beta Expiration (Designed to be annoying)
-	//Beta expiration checking is performed in addition to regular version checking
-	if (BETA_RELEASE) {
-		NSString	*betaNumber = [versionDict objectForKey:VERSION_BETA_PLIST_KEY];
-		NSDate		*betaDate = nil;
-		
-		if (versionDict && number) betaDate = [NSDate dateWithTimeIntervalSince1970:[betaNumber doubleValue]];
-		if (!betaDate) {
-			[ESVersionCheckerWindowController showCannotConnectWindow];
-		} else if (![thisDate isEqualToDate:betaDate] && ![thisDate isEqualToDate:[thisDate laterDate:betaDate]]) {
-			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:betaDate];
-			displayedBetaUpdateWindow = YES;
-		}
-	}
-	
-	//If the user has already been informed of this update previously, don't bother them
-	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
-		if (!newestDate) {
-			//Display connection error message
-			if (checkingManually) [ESVersionCheckerWindowController showCannotConnectWindow];
-		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
-			/* Display the 'up to date' message if the user checked for updates manually
-			 * Note that we get here if there is a beta update but no release update... don't display in that case.
-			 */
-			if (checkingManually && !displayedBetaUpdateWindow) [ESVersionCheckerWindowController showUpToDateWindow];
-		} else {
-			//Display 'update' message always
-			[ESVersionCheckerWindowController showUpdateWindowFromBuild:thisDate toBuild:newestDate];
-			
-			//Remember that the user has been prompted for this version so we don't bug them about it again
-			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED 
-												  group:PREF_GROUP_UPDATING];
-		}
-	}
-
-	checking = NO;
-}
-
-
-//Build Dates ----------------------------------------------------------------------------------------------------------
-#pragma mark Build Dates
-/*!
- * @brief Returns the date of this build
- */
-- (NSDate *)dateOfThisBuild
-{
-	NSDate *date = nil;
-
-	NSString *path = [[NSBundle mainBundle] pathForResource:@"buildnum" ofType:nil];
-	NSMutableData *data = [NSMutableData dataWithContentsOfFile:path];
-	if (data) {
-		[data increaseLengthBy:1]; //nul-terminates.
-
-		const char *ptr = [data bytes];
-		char *nextptr;
-		unsigned len    = [data length];
-		unsigned i      = 0;
-
-		//first character: 'r'. skip it.
-		++i;
-		if (i >= len) goto end;
-
-		//grab the build number.
-		unsigned long buildnum = strtoul(ptr+i, &nextptr, 10);
-#		pragma unused(buildnum)
-		i = nextptr - ptr;
-
-		//skip the '|' (with a space on each side of it).
-		i += 3;
-		if (i >= len) goto end;
-
-		//grab the date number. this is a UNIX date (seconds since 1970-1-1).
-		NSTimeInterval unixDate = strtod(ptr+i, &nextptr);
-		date = [NSDate dateWithTimeIntervalSince1970:unixDate];
-
-		/*we actually don't need any more information here. if we did, here's what we'd do...
-		i = nextptr - ptr;
-
-		//skip the '|'.
-		i += 3;
-		if (i >= len) goto end;
-
-		//grab the author.
-		NSRange range = { i, len - i };
-		[data replaceBytesInRange:NSMakeRange(0, i) withBytes:NULL length:0];
-		NSString *username = [NSString stringWithData:data encoding:NSUTF8StringEncoding];
-		 */
-	}
-
-end:
-	return date;
-}
-
-/*!
- * @brief Returns the date of the most recent Adium build (contacts adiumx.com asynchronously)
- */
-- (void)_requestVersionDict
+- (void)_checkForNewVersion
 {
 	if (!checking) {
 		checking = YES;
@@ -271,17 +166,13 @@ end:
  */
 - (void)URLResourceDidFinishLoading:(NSURL *)sender
 {
-	NSData			*data = [sender resourceDataUsingCache:YES];
+	NSData	*data = [sender resourceDataUsingCache:YES];
 	
 	if (data) {
-		NSDictionary	*versionDict;
-
-		versionDict = [NSPropertyListSerialization propertyListFromData:data
-													   mutabilityOption:NSPropertyListImmutable
-																 format:nil
-													   errorDescription:nil];
-		
-		[self _versionReceived:versionDict];
+		[self _versionReceived:[NSPropertyListSerialization propertyListFromData:data
+																mutabilityOption:NSPropertyListImmutable
+																		  format:nil
+																errorDescription:nil]];
 	}
 }
 
@@ -292,4 +183,87 @@ end:
 {
 	[self _versionReceived:nil];
 }
+
+/*!
+ * @brief Invoked when version information is received
+ *
+ * Parse the version dictionary and notify the user (if necessary) of a new release or that their current
+ * version is the newest.
+ * @param versionDict Dictionary from the web containing version numbers of the most recent releases
+ */
+- (void)_versionReceived:(NSDictionary *)versionDict
+{
+	NSDate		*thisDate = [AIAdium buildDate];
+	NSDate		*lastDateDisplayedToUser = [[adium preferenceController] preferenceForKey:KEY_LAST_UPDATE_ASKED
+																					group:PREF_GROUP_UPDATING];
+	NSDate		*newestDate = nil;
+	NSString	*newestURL = nil;
+	NSString	*newestVersion = nil;
+	
+	if (versionDict) {
+		NSString	*dateNumber;
+
+		//Get the newest release version
+		if ((dateNumber = [versionDict objectForKey:KEY_ADIUM_DATE])) {
+			newestDate = [NSDate dateWithTimeIntervalSince1970:[dateNumber doubleValue]];
+			newestURL = ADIUM_UPDATE_URL;
+			newestVersion = [versionDict objectForKey:KEY_ADIUM_VERSION];
+		}
+		
+		//Get the newest beta version
+		if (BETA_RELEASE) {
+			if ((dateNumber = [versionDict objectForKey:KEY_ADIUM_BETA_DATE])) {
+				NSDate	*betaDate = [NSDate dateWithTimeIntervalSince1970:[dateNumber doubleValue]];
+				if ([betaDate compare:newestDate] == NSOrderedDescending){
+					newestDate = betaDate;
+					newestURL = ADIUM_UPDATE_BETA_URL;
+					newestVersion = [versionDict objectForKey:KEY_ADIUM_BETA_VERSION];
+				}
+			}
+			lastDateDisplayedToUser = nil; //Ignore previous display of this version
+		}
+	}
+
+	//If the user has already been informed of this update previously, don't bother them
+	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
+		if (!newestDate) {
+			if (checkingManually) {
+				//Display connection error message
+				NSRunAlertPanel(AILocalizedString(@"Unable to check version",nil),
+								AILocalizedString(@"Please check your network settings or try again later.",nil),
+								AILocalizedString(@"OK",nil),
+								nil,
+								nil);
+			}
+
+		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
+			if (checkingManually) {
+				//Display the 'up to date' message if the user checked for updates manually
+				NSRunInformationalAlertPanel(AILocalizedString(@"Up to Date",nil),
+											 AILocalizedString(@"No Adium updates are available at this time.",nil),
+											 AILocalizedString(@"OK",nil),
+											 nil,
+											 nil);
+			}
+			
+		} else {
+			//Display 'update' message always
+			if (NSRunInformationalAlertPanel(AILocalizedString(@"Update Available",nil),
+											 [NSString stringWithFormat:AILocalizedString(@"Adium version %@ is available for download.  Would you like more information on this update?", nil),
+												 newestVersion],
+											 [AILocalizedString(@"More Information",nil) stringByAppendingEllipsis],
+											 (BETA_RELEASE ? nil : AILocalizedString(@"No Thanks",nil)),
+											 nil) == NSAlertDefaultReturn) {
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:newestURL]];
+			}
+
+			//Remember that the user has been prompted for this version so we don't bug them about it again
+			[[adium preferenceController] setPreference:newestDate forKey:KEY_LAST_UPDATE_ASKED 
+												  group:PREF_GROUP_UPDATING];
+		}
+	}
+
+	checking = NO;
+}
+
 @end
