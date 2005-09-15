@@ -951,14 +951,7 @@
 		4BCAC56D07B5A31A006641B9 /* Sounds in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC56C07B5A31A006641B9 /* Sounds */; };
 		4BCAC70707B5A4FB006641B9 /* CPFVersionChecker.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */; };
 		4BCAC70807B5A4FB006641B9 /* CPFVersionChecker.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */; };
-		4BCAC70907B5A4FB006641B9 /* ESVersionCheckerWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BCAC70507B5A4FA006641B9 /* ESVersionCheckerWindowController.h */; };
-		4BCAC70A07B5A4FB006641B9 /* ESVersionCheckerWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BCAC70607B5A4FB006641B9 /* ESVersionCheckerWindowController.m */; };
-		4BCAC71407B5A50F006641B9 /* agent.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC70E07B5A50F006641B9 /* agent.png */; };
-		4BCAC71507B5A50F006641B9 /* archer.png in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC70F07B5A50F006641B9 /* archer.png */; };
-		4BCAC71607B5A50F006641B9 /* VersionAvailable.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71007B5A50F006641B9 /* VersionAvailable.nib */; };
-		4BCAC71707B5A50F006641B9 /* VersionCannotConnect.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71107B5A50F006641B9 /* VersionCannotConnect.nib */; };
 		4BCAC71807B5A50F006641B9 /* VersionChecker Defaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */; };
-		4BCAC71907B5A50F006641B9 /* VersionUpToDate.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BCAC71307B5A50F006641B9 /* VersionUpToDate.nib */; };
 		4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD548AE086086B5008DF3CB /* AISoundSet.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */ = {isa = PBXBuildFile; fileRef = 4BD548AF086086B5008DF3CB /* AISoundSet.m */; };
 		4BD62D8007CE8F240099EBA2 /* AIWebkitMessageViewStyle.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BD62D7E07CE8F240099EBA2 /* AIWebkitMessageViewStyle.h */; };
@@ -2849,14 +2842,7 @@
 		4BCAC56C07B5A31A006641B9 /* Sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Sounds; path = Resources/Sounds; sourceTree = "<group>"; };
 		4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CPFVersionChecker.h; path = Source/CPFVersionChecker.h; sourceTree = "<group>"; };
 		4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CPFVersionChecker.m; path = Source/CPFVersionChecker.m; sourceTree = "<group>"; };
-		4BCAC70507B5A4FA006641B9 /* ESVersionCheckerWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESVersionCheckerWindowController.h; path = Source/ESVersionCheckerWindowController.h; sourceTree = "<group>"; };
-		4BCAC70607B5A4FB006641B9 /* ESVersionCheckerWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESVersionCheckerWindowController.m; path = Source/ESVersionCheckerWindowController.m; sourceTree = "<group>"; };
-		4BCAC70E07B5A50F006641B9 /* agent.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = agent.png; path = Resources/agent.png; sourceTree = "<group>"; };
-		4BCAC70F07B5A50F006641B9 /* archer.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = archer.png; path = Resources/archer.png; sourceTree = "<group>"; };
-		4BCAC71007B5A50F006641B9 /* VersionAvailable.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = VersionAvailable.nib; path = Resources/VersionAvailable.nib; sourceTree = "<group>"; };
-		4BCAC71107B5A50F006641B9 /* VersionCannotConnect.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = VersionCannotConnect.nib; path = Resources/VersionCannotConnect.nib; sourceTree = "<group>"; };
 		4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "VersionChecker Defaults.plist"; path = "Resources/VersionChecker Defaults.plist"; sourceTree = "<group>"; };
-		4BCAC71307B5A50F006641B9 /* VersionUpToDate.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = VersionUpToDate.nib; path = Resources/VersionUpToDate.nib; sourceTree = "<group>"; };
 		4BCFEF4C03F59F2800A8010A /* AccountSelectionView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSelectionView.nib; path = "Plugins/Dual Window Interface/AccountSelectionView.nib"; sourceTree = "<group>"; };
 		4BD548AE086086B5008DF3CB /* AISoundSet.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AISoundSet.h; path = "Frameworks/Adium Framework/AISoundSet.h"; sourceTree = "<group>"; };
 		4BD548AF086086B5008DF3CB /* AISoundSet.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AISoundSet.m; path = "Frameworks/Adium Framework/AISoundSet.m"; sourceTree = "<group>"; };
@@ -5456,14 +5442,7 @@
 			children = (
 				4BCAC70307B5A4FA006641B9 /* CPFVersionChecker.h */,
 				4BCAC70407B5A4FA006641B9 /* CPFVersionChecker.m */,
-				4BCAC70507B5A4FA006641B9 /* ESVersionCheckerWindowController.h */,
-				4BCAC70607B5A4FB006641B9 /* ESVersionCheckerWindowController.m */,
-				4BCAC71007B5A50F006641B9 /* VersionAvailable.nib */,
-				4BCAC71107B5A50F006641B9 /* VersionCannotConnect.nib */,
-				4BCAC71307B5A50F006641B9 /* VersionUpToDate.nib */,
 				4BCAC71207B5A50F006641B9 /* VersionChecker Defaults.plist */,
-				4BCAC70E07B5A50F006641B9 /* agent.png */,
-				4BCAC70F07B5A50F006641B9 /* archer.png */,
 			);
 			name = "Version Checker";
 			sourceTree = "<group>";
@@ -6286,7 +6265,6 @@
 				34E2A2F407B018B2006735BC /* ESAddressBookIntegrationPlugin.h in Headers */,
 				34E2A3E907B08CCB006735BC /* AIAliasSupportPlugin.h in Headers */,
 				4BCAC70707B5A4FB006641B9 /* CPFVersionChecker.h in Headers */,
-				4BCAC70907B5A4FB006641B9 /* ESVersionCheckerWindowController.h in Headers */,
 				349C6E4A07C96D45005EB896 /* CBContactCountingDisplayPlugin.h in Headers */,
 				349C6E8D07C972B2005EB896 /* AIExtendedStatusPlugin.h in Headers */,
 				349C6F6507C99ACF005EB896 /* ESContactListAdvancedPreferences.h in Headers */,
@@ -7431,12 +7409,7 @@
 				4BCAC4E607B59B65006641B9 /* Alias Defaults.plist in Resources */,
 				4BCAC4E707B59B65006641B9 /* Display Format Defaults.plist in Resources */,
 				4BCAC56D07B5A31A006641B9 /* Sounds in Resources */,
-				4BCAC71407B5A50F006641B9 /* agent.png in Resources */,
-				4BCAC71507B5A50F006641B9 /* archer.png in Resources */,
-				4BCAC71607B5A50F006641B9 /* VersionAvailable.nib in Resources */,
-				4BCAC71707B5A50F006641B9 /* VersionCannotConnect.nib in Resources */,
 				4BCAC71807B5A50F006641B9 /* VersionChecker Defaults.plist in Resources */,
-				4BCAC71907B5A50F006641B9 /* VersionUpToDate.nib in Resources */,
 				3496A8C207CE6B880055BBAB /* InfoPlist.strings in Resources */,
 				4BAE6C1F07CF9389007E2820 /* AnnouncerAlert.png in Resources */,
 				4BAE6C2007CF9389007E2820 /* AnnouncerDefaults.plist in Resources */,
@@ -7668,7 +7641,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\ncp \"Plists/Adium_2.plist\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_IDENTIFIER%%/$buildid/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_DATE%%/$builddate/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$BUILT_PRODUCTS_DIR/version.plist\"\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
+			shellScript = "PATH=$PATH:/usr/local/bin:/usr/bin:/sw/bin:/opt/local/bin\nbuildid=\"r`svn info | grep -F Revision | sed \"s/^.*: \\(.*\\)$/\\1/\"`\"\nbuilddate=`date +%s`\ncp \"Plists/Adium_2.plist\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_IDENTIFIER%%/$buildid/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nperl -pi -e \"s/%%BUILD_DATE%%/$builddate/\" \"$BUILT_PRODUCTS_DIR/Adium.app/Contents/Info.plist\"\nbuildver=`defaults read $TARGET_BUILD_DIR/Adium.app/Contents/Info \"CFBundleShortVersionString\"`\necho \\<\\?xml version=\\\"1.0\\\" encoding=\\\"UTF-8\\\"\\?\\>\\<!DOCTYPE plist PUBLIC \\\"-//Apple Computer//DTD PLIST 1.0//EN\\\" \\\"http://www.apple.com/DTDs/PropertyList-1.0.dtd\\\"\\>\\<plist version=\\\"1.0\\\"\\>\\<dict\\>\\<key\\>adium-version\\</key\\>\\<real\\>$builddate\\</real\\>\\<key\\>adium-version-num\\</key\\>\\<string\\>$buildver\\</string\\>\\<key\\>adium-beta-version-num\\</key\\>\\<string\\>$buildver\\</string\\>\\<key\\>adium-beta-version\\</key\\>\\<real\\>$builddate\\</real\\>\\</dict\\>\\</plist\\> > \"$BUILT_PRODUCTS_DIR/version.plist\"\necho \"Generated a buildnum of\" $buildnum \"on\" $builddate\".\"";
 		};
 		34CF9EEF085B98D400D87E37 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -7899,7 +7872,6 @@
 				34E2A2F507B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m in Sources */,
 				34E2A3E807B08CCB006735BC /* AIAliasSupportPlugin.m in Sources */,
 				4BCAC70807B5A4FB006641B9 /* CPFVersionChecker.m in Sources */,
-				4BCAC70A07B5A4FB006641B9 /* ESVersionCheckerWindowController.m in Sources */,
 				349C6E4907C96D45005EB896 /* CBContactCountingDisplayPlugin.m in Sources */,
 				349C6E8E07C972B2005EB896 /* AIExtendedStatusPlugin.m in Sources */,
 				349C6F6607C99ACF005EB896 /* ESContactListAdvancedPreferences.m in Sources */,
