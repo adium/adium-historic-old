@@ -23,7 +23,11 @@
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
 
+//
 #define VERSION_CHECKER_TITLE			[AILocalizedString(@"Check for Updates",nil) stringByAppendingEllipsis]
+#define VERSION_CHECKER_DEFAULTS		@"VersionChecker Defaults"
+
+//Host and location of version information file
 #define VERSION_PLIST_URL				@"http://www.adiumx.com/version.plist"
 #define VERSION_PLIST_HOST				@"www.adiumx.com"
 
@@ -33,16 +37,16 @@
 #define KEY_ADIUM_BETA_DATE				@"adium-beta-version"
 #define KEY_ADIUM_BETA_VERSION			@"adium-beta-version-num"
 
+//"More Information" sites for regular and beta releases
 #define ADIUM_UPDATE_URL				@"http://download.adiumx.com/"
 #define ADIUM_UPDATE_BETA_URL			@"http://beta.adiumx.com/"
 
+//Intervals to re-check for updates after a successful check
 #define VERSION_CHECK_INTERVAL			24		//24 hours
 #define BETA_VERSION_CHECK_INTERVAL 	1		//1 hours - Beta releases have a nice annoying refresh >:D
 
-#define VERSION_CHECKER_DEFAULTS		@"VersionChecker Defaults"
-
 @interface CPFVersionChecker (PRIVATE)
-- (void)_checkForNewVersion;
+- (void)_checkForNewVersionNotifyingUserOnFailure:(BOOL)notify;
 - (void)_versionReceived:(NSDictionary *)versionDict;
 @end
 
@@ -76,8 +80,19 @@
 																			keyEquivalent:@""] autorelease];
     [[adium menuController] addMenuItem:versionCheckerMenuItem toLocation:LOC_Adium_About];
 	
-	//Observe connectivity changes
+	//Check for updates as soon as we have a network connection
+	networkIsAvailable = NO;
+	checkWhenNetworkBecomesAvailable = YES;
 	[[AIHostReachabilityMonitor defaultMonitor] addObserver:self forHost:VERSION_PLIST_HOST];
+
+	//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
+	timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ?
+																 BETA_VERSION_CHECK_INTERVAL :
+																 VERSION_CHECK_INTERVAL))
+											  target:self
+											selector:@selector(automaticCheckForNewVersion:)
+											userInfo:nil
+											 repeats:YES] retain];
 }
 
 /*!
@@ -94,26 +109,24 @@
 
 //AIHostReachabilityObserver conformance -------------------------------------------------------------------------------
 #pragma mark AIHostReachabilityObserver conformance
+/*!
+ * @brief When our update host becomes available, check for updates if necessary
+ */
 - (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsReachable:(NSString *)host
 {
-	if (!timer) {
-		//Check for an update now
+	networkIsAvailable = YES;
+	
+	if (checkWhenNetworkBecomesAvailable) {
 		[self automaticCheckForNewVersion:nil];
-
-		//Check for updates again every X hours (60 seconds * 60 minutes * X hours)
-		timer = [[NSTimer scheduledTimerWithTimeInterval:(60 * 60 * (BETA_RELEASE ?
-																	   BETA_VERSION_CHECK_INTERVAL :
-																	   VERSION_CHECK_INTERVAL))
-												  target:self
-												selector:@selector(automaticCheckForNewVersion:)
-												userInfo:nil
-												 repeats:YES] retain];
 	}
 }
+
+/*!
+ * @brief Update host is unavailable
+ */
 - (void)hostReachabilityMonitor:(AIHostReachabilityMonitor *)monitor hostIsNotReachable:(NSString *)host
 {
-	[timer invalidate];
-	[timer release]; timer = nil;
+	networkIsAvailable = NO;
 }
 
 
@@ -127,34 +140,43 @@
  */
 - (void)manualCheckForNewVersion:(id)sender
 {
-	checkingManually = YES;
-	[self _checkForNewVersion];
+	[self _checkForNewVersionNotifyingUserOnFailure:YES];
 }
 
 /*!
  * @brief Check for a new release of Adium (Silent on failure)
  *
- * Check for a new release of Adium without notifying the user on a false result.
- * Call this method when the user has not explicitly requested the version check.
+ * Check for a new release of Adium without notifying the user on a false result.  Call this method when the user has
+ * not explicitly requested the version check.
+ *
+ * If a network connection is not available, the check will be performed when one becomes available.
  */
 - (void)automaticCheckForNewVersion:(id)sender
 {
-	BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
-																		 group:PREF_GROUP_UPDATING] boolValue];
+	if (networkIsAvailable) {
+		BOOL updateAutomatically = [[[adium preferenceController] preferenceForKey:KEY_CHECK_AUTOMATICALLY
+																			 group:PREF_GROUP_UPDATING] boolValue];
 
-	if (BETA_RELEASE || updateAutomatically) {
-		checkingManually = NO;
-		[self _checkForNewVersion];
+		if (BETA_RELEASE || updateAutomatically) {
+			[self _checkForNewVersionNotifyingUserOnFailure:NO];
+		}
+		
+		checkWhenNetworkBecomesAvailable = NO;
+	} else {
+		checkWhenNetworkBecomesAvailable = YES;
 	}
 }
 
 /*!
  * @brief Begin checking for a new Adium version (contacts adiumx.com asynchronously)
+ *
+ * @param notify YES if the user should be notified in the case of no updates or a connection error
  */
-- (void)_checkForNewVersion
+- (void)_checkForNewVersionNotifyingUserOnFailure:(BOOL)notify
 {
 	if (!checking) {
 		checking = YES;
+		notifyUserOnFailure = notify;
 		[[NSURL URLWithString:VERSION_PLIST_URL] loadResourceDataNotifyingClient:self usingCache:NO];
 	}
 }
@@ -225,9 +247,9 @@
 	}
 
 	//If the user has already been informed of this update previously, don't bother them
-	if (checkingManually || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
+	if (notifyUserOnFailure || !lastDateDisplayedToUser || (![lastDateDisplayedToUser isEqualToDate:newestDate])) {
 		if (!newestDate) {
-			if (checkingManually) {
+			if (notifyUserOnFailure) {
 				//Display connection error message
 				NSRunAlertPanel(AILocalizedString(@"Unable to check version",nil),
 								AILocalizedString(@"Please check your network settings or try again later.",nil),
@@ -237,7 +259,7 @@
 			}
 
 		} else if ([thisDate isEqualToDate:newestDate] || [thisDate isEqualToDate:[thisDate laterDate:newestDate]]) {
-			if (checkingManually) {
+			if (notifyUserOnFailure) {
 				//Display the 'up to date' message if the user checked for updates manually
 				NSRunInformationalAlertPanel(AILocalizedString(@"Up to Date",nil),
 											 AILocalizedString(@"No Adium updates are available at this time.",nil),
@@ -247,10 +269,18 @@
 			}
 			
 		} else {
+			NSString	*updateMessage;
+			
+			//Update message varies for beta releases
+			if (BETA_RELEASE) {
+				updateMessage = AILocalizedString(@"Adium version %@ is available for download.  Please update your beta release of Adium as soon as possible.", nil);
+			} else {
+				updateMessage = AILocalizedString(@"Adium version %@ is available for download.  Would you like more information on this update?", nil);
+			}
+			
 			//Display 'update' message always
 			if (NSRunInformationalAlertPanel(AILocalizedString(@"Update Available",nil),
-											 [NSString stringWithFormat:AILocalizedString(@"Adium version %@ is available for download.  Would you like more information on this update?", nil),
-												 newestVersion],
+											 [NSString stringWithFormat:updateMessage, newestVersion],
 											 [AILocalizedString(@"More Information",nil) stringByAppendingEllipsis],
 											 (BETA_RELEASE ? nil : AILocalizedString(@"No Thanks",nil)),
 											 nil) == NSAlertDefaultReturn) {
