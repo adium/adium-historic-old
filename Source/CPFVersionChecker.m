@@ -27,7 +27,7 @@
 #define VERSION_PLIST_URL				@"http://www.adiumx.com/version.plist"
 #define VERSION_PLIST_HOST				@"www.adiumx.com"
 
-//These strings of these keys are confusing to maintain support for legacy clients
+//The strings of these keys are confusing to maintain support for legacy clients
 #define KEY_ADIUM_DATE					@"adium-version"
 #define KEY_ADIUM_VERSION				@"adium-version-num"
 #define KEY_ADIUM_BETA_DATE				@"adium-beta-version"
