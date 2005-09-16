@@ -37,7 +37,7 @@
 #define ADIUM_UPDATE_BETA_URL			@"http://beta.adiumx.com/"
 
 #define VERSION_CHECK_INTERVAL			24		//24 hours
-#define BETA_VERSION_CHECK_INTERVAL 	4		//4 hours - Beta releases have a nice annoying refresh >:D
+#define BETA_VERSION_CHECK_INTERVAL 	1		//1 hours - Beta releases have a nice annoying refresh >:D
 
 #define VERSION_CHECKER_DEFAULTS		@"VersionChecker Defaults"
 
