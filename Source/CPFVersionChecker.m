@@ -24,7 +24,7 @@
 #import <AIUtilities/AIStringAdditions.h>
 
 #define VERSION_CHECKER_TITLE			[AILocalizedString(@"Check for Updates",nil) stringByAppendingEllipsis]
-#define VERSION_PLIST_URL				@"http://www.adiumx.com/version-test.plist"
+#define VERSION_PLIST_URL				@"http://www.adiumx.com/version.plist"
 #define VERSION_PLIST_HOST				@"www.adiumx.com"
 
 //These strings of these keys are confusing to maintain support for legacy clients
