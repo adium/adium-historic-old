@@ -25,7 +25,12 @@
 @interface CPFVersionChecker : AIPlugin <AIHostReachabilityObserver> {
     NSMenuItem 	*versionCheckerMenuItem;
 	NSTimer		*timer;
-	BOOL		checking, checkingManually;
+	
+	BOOL		checkWhenNetworkBecomesAvailable;
+	BOOL		networkIsAvailable;
+
+	BOOL		checking;
+	BOOL		notifyUserOnFailure;
 }
 
 - (void)manualCheckForNewVersion:(id)sender;
