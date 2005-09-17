@@ -162,6 +162,28 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	}
 }
 
+/*
+ * @brief Change the UID of a contact
+ *
+ * If we're just passed a formatted version of the current UID, don't change the UID but instead use the information
+ * as the FormattedUID.  For example, we get sent this when an AIM contact's name formatting changes; we always want
+ * to use a lowercase and space-free version for the UID, however.
+ */
+- (void)renameContact:(AIListContact *)theContact toUID:(NSString *)newUID
+{
+	//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
+	//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
+	NSString	*filteredUID = [[self service] filterUID:newUID removeIgnoredCharacters:YES];
+	
+	if ([filteredUID isEqualToString:[theContact UID]]) {
+		[theContact setStatusObject:newUID
+							 forKey:@"FormattedUID"
+							 notify:NotifyLater];		
+	} else {
+		[theContact setUID:newUID];		
+	}
+}
+
 - (void)updateContact:(AIListContact *)theContact toAlias:(NSString *)gaimAlias
 {
 	if (![[gaimAlias compactedString] isEqualToString:[[theContact UID] compactedString]]) {
