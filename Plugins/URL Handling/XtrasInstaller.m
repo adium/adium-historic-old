@@ -213,6 +213,7 @@
 		NSEnumerator * fileEnumerator = [fileNames objectEnumerator];
 		NSString * xtraPath;
 		NSString * nextFile;
+		NSString * adiumName = [[[NSBundle mainBundle] bundlePath] lastPathComponent]; //in case someone renamed Adium
 		while((nextFile = [fileEnumerator nextObject]))
 		{
 			xtraPath = [dest stringByAppendingPathComponent:nextFile];
@@ -222,7 +223,7 @@
 			[workspace getInfoForFile:xtraPath 
 						  application:&appName 
 								 type:&type];
-			if([[appName lastPathComponent] isEqualToString:@"Adium.app"])
+			if([[appName lastPathComponent] isEqualToString:adiumName])
 			   [workspace openTempFile:xtraPath];
 		}
 		
