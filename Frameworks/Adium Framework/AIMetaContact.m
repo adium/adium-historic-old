@@ -153,8 +153,24 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 			[[adium contactController] _moveContactLocally:self
 												   toGroup:(AIListGroup *)oldContainingObject];
 		} else {
-			//Let the remote grouping mechanism handle the restoration if no grouping is saved
-			[[adium contactController] listObjectRemoteGroupingChanged:self];	
+			/* This metaContact doesn't have a group assigned to it... if any contained object has a group,
+			 * use that group as a best-guess for the proper destination.
+			 */
+			NSString		*bestGuessRemoteGroup = nil;
+			AIListContact	*containedContact;
+			NSEnumerator	*enumerator;
+			
+			enumerator = [[self listContacts] objectEnumerator];
+			
+			//Find the first contact with a group
+			while ((containedContact = [enumerator nextObject]) &&
+				   (bestGuessRemoteGroup = [containedContact remoteGroupName]));
+
+			//Put this metacontact in that group
+			if (bestGuessRemoteGroup) {
+				[[adium contactController] _moveContactLocally:self
+													   toGroup:[[adium contactController] groupWithUID:bestGuessRemoteGroup]];
+			}
 		}
 	}
 	
