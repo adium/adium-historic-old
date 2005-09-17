@@ -231,11 +231,11 @@
 	}
 
 	if (sender == popUp_voices ||
-	   sender == slider_pitch ||
-	   sender == slider_rate) {
+	   (sender == slider_pitch || sender == checkBox_customPitch) ||
+	   (sender == slider_rate ||  sender == checkBox_customRate)) {
 		[[adium soundController] speakDemoTextForVoice:[[popUp_voices selectedItem] representedObject]
-											 withPitch:[slider_pitch floatValue]
-											   andRate:[slider_rate floatValue]];
+											 withPitch:([checkBox_customPitch state] ? [slider_pitch floatValue] : 0.0)
+											   andRate:([checkBox_customRate state] ? [slider_rate floatValue] : 0.0)];
 	}
 	
 	[super changePreference:sender];
