@@ -34,6 +34,7 @@
 - (void)controllerDidLoad
 {
 	[adiumSound controllerDidLoad];
+	[adiumSpeech controllerDidLoad];
 }
 
 - (void)controllerWillClose
@@ -52,6 +53,13 @@
 - (NSArray *)voices{
 	return [adiumSpeech voices];
 }
+
+/*
+ * @brief Speak the demonstration text for a voice
+ *
+ * @param pitch The pitch to use, or 0.0 to use the default pitch
+ * @param rate The rate to use, 0.0 to use the default rate
+ */
 - (void)speakDemoTextForVoice:(NSString *)voiceString withPitch:(float)pitch andRate:(float)rate{
 	[adiumSpeech speakDemoTextForVoice:voiceString withPitch:pitch andRate:rate];
 }

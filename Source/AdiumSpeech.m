@@ -15,7 +15,10 @@
  */
 
 #import "AdiumSpeech.h"
+#import "AISoundController.h"
+#import "AIPreferenceController.h"
 #import <Adium/SUSpeaker.h>
+#import <Adium/AIListObject.h>
 
 #define TEXT_TO_SPEAK			@"Text"
 #define VOICE					@"Voice"
@@ -34,6 +37,7 @@
 - (void)_speakNext;
 - (void)_stopSpeaking;
 - (SUSpeaker *)_speakerForVoice:(NSString *)voiceString index:(int *)voiceIndex;
+- (void)_setVolumeOfVoicesTo:(float)newVolume;
 @end
 
 @implementation AdiumSpeech
@@ -88,6 +92,45 @@
 	
 	[super dealloc];
 }
+
+/*!
+* @brief Finish Initing
+ *
+ * Requires:
+ * 1) Preference controller is ready
+ */
+- (void)controllerDidLoad
+{
+	//Observe changes
+	[[adium preferenceController] registerPreferenceObserver:self forGroup:PREF_GROUP_SOUNDS];	
+}
+
+#pragma mark Preferences
+
+/*!
+* @brief Preferences changed, adjust to the new values
+ */
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	float newVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
+	
+	//If sound volume has changed, we must update all existing sounds to the new volume
+	if (customVolume != newVolume) {
+		[self _setVolumeOfVoicesTo:newVolume];
+	}
+	
+	//Load the new preferences
+	customVolume = newVolume;
+}
+
+- (void)_setVolumeOfVoicesTo:(float)newVolume
+{
+	if (_defaultVoice) [_defaultVoice setVolume:newVolume];
+	if (_variableVoice) [_variableVoice setVolume:newVolume]; 
+}
+
+#pragma mark Speech
 
 /*!
  * @brief Speak text with the default values
@@ -190,6 +233,7 @@
     if (!_defaultVoice) {
 		_defaultVoice = [[SUSpeaker alloc] init];
 		[_defaultVoice setDelegate:self];
+		[_defaultVoice setVolume:customVolume];
     }
 	return _defaultVoice;
 }
@@ -202,6 +246,7 @@
     if (!_variableVoice) {
 		_variableVoice = [[SUSpeaker alloc] init];
 		[_variableVoice setDelegate:self];
+		[_variableVoice setVolume:customVolume];
     }
 	return _variableVoice;
 }
@@ -231,6 +276,8 @@
 			
 			[theSpeaker setPitch:(pitchNumber ? [pitchNumber floatValue] : [self defaultPitch])];
 			[theSpeaker setRate:  (rateNumber ?  [rateNumber floatValue] : [self defaultRate])];
+			NSLog(@"Set volume to %f",customVolume);
+			[theSpeaker setVolume:customVolume];
 			
 			[theSpeaker speakText:text];
 			[speechArray removeObjectAtIndex:0];
@@ -273,7 +320,7 @@
 	//Configure and return the voice
 	if (theIndex != NSNotFound) {
 		speaker = [self variableVoice];
-		[speaker setVoice:theIndex];		
+		[speaker setVoiceUsingIndex:theIndex];		
 	} else {
 		speaker = [self defaultVoice];
 	}
