@@ -18,7 +18,8 @@
     SpeechChannel _speechChannel;
     id _delegate;
     NSPort *_port;
-    
+	NSData *currentSpeechMacRomanData;
+
     BOOL _usePort;
     unsigned int _reserved1;
     unsigned int _reserved2;
@@ -33,8 +34,11 @@
 //rate is in words per minute.
 - (void) setRate:(float)rate;
 - (float) rate;
+
+-(void)setVolume:(float)vol;
+
 //voice is an index into +voiceNames. pass -1 for the default voice.
-- (void) setVoice:(int)index;
+- (void) setVoiceUsingIndex:(int)index;
 
 - (void) speakText:(NSString*)text;
 - (void) stopSpeaking;
