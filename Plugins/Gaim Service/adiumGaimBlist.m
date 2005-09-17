@@ -62,6 +62,11 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		   !(groupName) ||
 		   !([oldGroupName isEqualToString:groupName])) {
 
+			/* We pass in buddy->name directly (without filtering or normalizing it) as it may indicate a 
+			 * formatted version of the UID.  We have a signal for when a rename occurs, but passing here lets us get
+			 * formatted names which are originally formatted in a way which differs from the results of normalization.
+			 * For example, TekJew will normalize to tekjew in AIM; we want to use tekjew internally but display TekJew.
+			 */
 			NSString	*contactName;
 			contactName = [NSString stringWithUTF8String:buddy->name];
 
@@ -83,7 +88,7 @@ static void adiumGaimBlistUpdate(GaimBuddyList *list, GaimBlistNode *node)
 		 * we get any update, but we do want to pass on a changed alias.  We therefore use the static
 		 * aliasDict NSMutableDictionary to track what alias was last used for each buddy.  The first invocation,
 		 * and subsequent invocations for the same alias, are passed back to the main thread for processing. */
-		const char	*alias = gaim_buddy_get_alias(buddy);
+		const char	*alias = gaim_buddy_get_alias_only(buddy);
 		if (alias) {
 			NSString	*aliasString = [NSString stringWithUTF8String:alias];
 			NSString	*oldAliasString;
