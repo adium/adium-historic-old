@@ -46,7 +46,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 		} else {
 			_usePort = NO;
 		}
-		
+
 		NewSpeechChannel(NULL, &_speechChannel); // NULL voice is default voice
 		[self setCallbacks];
 	}
@@ -59,9 +59,11 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 
     [_port release];
     if (_speechChannel != NULL) {
+		[self stopSpeaking];
         DisposeSpeechChannel(_speechChannel);
     }
-    
+    [currentSpeechMacRomanData release]; currentSpeechMacRomanData = nil;
+
     [super dealloc];
 }
 
@@ -107,9 +109,17 @@ Note that extreme value can make your app crash..."  */
 	return FixedToFloat(fixedRate);
 }
 
+//---Volume
+-(void)setVolume:(float)vol
+{
+	Fixed	fixedVolume = FloatToFixed(vol);
+    if(_speechChannel != NULL)
+        SetSpeechInfo(_speechChannel, soVolume, &fixedVolume);
+}
+
 //---Voice
 //set index=-1 for default voice
--(void)setVoice:(int)index
+-(void)setVoiceUsingIndex:(int)index
 {
 	VoiceSpec voice;
 	OSErr error = noErr;
@@ -117,7 +127,16 @@ Note that extreme value can make your app crash..."  */
 	if (index >= 0) {
 		error = GetIndVoice(index+1, &voice);
 		if (error == noErr) {
-			if (_speechChannel) SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
+			if (_speechChannel) {
+				//If we're currently speaking, stop.
+				if (currentSpeechMacRomanData) {
+					[self stopSpeaking];
+				}
+				SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
+			} else {
+				NewSpeechChannel(&voice, &_speechChannel);
+				[self setCallbacks];
+			}
 		}
 	}
 }
@@ -169,14 +188,20 @@ Note that extreme value can make your app crash..."  */
 -(void)speakText:(NSString*)text
 {
     if (_speechChannel && text) {
-		NSData *MacRomanData = [text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES];
-		SpeakText(_speechChannel, [MacRomanData bytes], [MacRomanData length]);
+		//If we're currently speaking, stop
+		if (currentSpeechMacRomanData) {
+			[self stopSpeaking];
+		}
+		currentSpeechMacRomanData = [[text dataUsingEncoding:NSMacOSRomanStringEncoding allowLossyConversion:YES] retain];
+		SpeakText(_speechChannel, [currentSpeechMacRomanData bytes], [currentSpeechMacRomanData length]);
     }
 }
 -(void)stopSpeaking
 {
     if (_speechChannel) {
         StopSpeech(_speechChannel);
+		[currentSpeechMacRomanData autorelease];
+        currentSpeechMacRomanData = nil;
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
         }
@@ -201,7 +226,9 @@ Note that extreme value can make your app crash..."  */
 
 	
 	if (error == noErr) {
-		demoText = [[[NSString alloc] initWithBytes:(const char *)&(voiceDescription.comment[1]) length:voiceDescription.comment[0] encoding:NSMacOSRomanStringEncoding] autorelease];
+		demoText = [[[NSString alloc] initWithBytes:(const char *)&(voiceDescription.comment[1]) 
+											 length:voiceDescription.comment[0]
+										   encoding:NSMacOSRomanStringEncoding] autorelease];
 	}
 	
 	return demoText;
@@ -253,6 +280,11 @@ Note that extreme value can make your app crash..."  */
                 [_delegate willSpeakWord:self at:0 length:0];
         }
     } else if (msgid == 8) {
+		//First, clear currentSpeechMacRomanData since we are no longer speaking
+		[currentSpeechMacRomanData release];
+		currentSpeechMacRomanData = nil;
+
+		//Next, notify our delegate that we finished
         if ([_delegate respondsToSelector:@selector(didFinishSpeaking:)]) {
             [_delegate didFinishSpeaking:self];
         }
