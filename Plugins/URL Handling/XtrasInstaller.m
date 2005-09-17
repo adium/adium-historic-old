@@ -56,14 +56,13 @@
 
 - (IBAction)cancel:(id)sender;
 {
-	[download cancel];
+	if (download) [download cancel];
+	[self closeInstaller];
 }
 
 - (void)sheetDidDismiss:(NSWindow *)sheet returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
-	if (download) [download cancel];
-
-	[self closeInstaller];
+	[self cancel:nil];
 }
 
 - (void)closeInstaller
