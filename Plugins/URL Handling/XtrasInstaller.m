@@ -16,6 +16,7 @@
 
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIApplicationAdditions.h>
+#import "NSString_UUID.h"
 
 //Should only be YES for testing
 #define	ALLOW_UNTRUSTED_XTRAS	NO
@@ -112,7 +113,9 @@
 
 - (void)download:(NSURLDownload *)connection decideDestinationWithSuggestedFilename:(NSString *)filename
 {
-	dest = [NSTemporaryDirectory() stringByAppendingPathComponent:filename];
+	NSString * downloadDir = [NSTemporaryDirectory() stringByAppendingPathComponent:[NSString uuid]];
+	[[NSFileManager defaultManager] createDirectoryAtPath:downloadDir attributes:nil];
+	dest = [downloadDir stringByAppendingPathComponent:filename];
 	[download setDestination:dest allowOverwrite:YES];
 }
 
@@ -141,9 +144,7 @@
 }
 
 - (void)downloadDidFinish:(NSURLDownload *)download {
-	NSPipe			*outputPipe = [NSPipe pipe];
-	NSFileHandle	*output;
-	NSString		*fileName = nil;
+	NSArray			*fileNames = nil;
 	
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
@@ -170,17 +171,12 @@
 		untar = [[NSTask alloc] init];
 		[untar setLaunchPath:@"/usr/bin/tar"];
 		[untar setArguments:[NSArray arrayWithObjects:@"-xvf", [dest lastPathComponent], nil]];
-		[untar setStandardOutput:outputPipe];
 		[untar setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 		
 		[untar launch];
 		[untar waitUntilExit];
 		[untar release];
-
-		//get the name of the untared file, which will be output on the first line
-		output = [outputPipe fileHandleForReading];
-		fileName = [[[[[NSString alloc] initWithData:[output readDataToEndOfFile]
-											encoding:NSASCIIStringEncoding] autorelease] componentsSeparatedByString:@"\n"] objectAtIndex:0];		
+		
 	} else if ([pathExtension isEqualToString:@"zip"]) {
 		NSTask	*unzip;
 		
@@ -199,67 +195,43 @@
 		[unzip launch];
 		[unzip waitUntilExit];
 		[unzip release];
-		
-		//Now get the name of the unzipped file/directory, which will be output in a format like this:
-		/*
-		 Archive:  Get Info Window Layout.ListLayout.zip
-		 Length     Date   Time    Name
-		 --------    ----   ----    ----
-		 1414  08-30-04 22:48   Get Info Window Layout.ListLayout
-		 --------                   -------
-		 1414                   1 file
-		 */
-		unzip = [[NSTask alloc] init];
-		outputPipe = [NSPipe pipe];
-
-		[unzip setLaunchPath:@"/usr/bin/unzip"];
-		[unzip setArguments:[NSArray arrayWithObjects:
-			@"-l",  /* list files */
-			dest, /* source zip file */
-			nil]];
-		[unzip setStandardOutput:outputPipe];
-		
-		[unzip launch];
-		output = [outputPipe fileHandleForReading];
-		NSString	*outputString = [[[NSString alloc] initWithData:[output readDataToEndOfFile]
-														   encoding:NSASCIIStringEncoding] autorelease];
-		[unzip waitUntilExit];
-		[unzip release];
-
-		NSString	*outputLine = [[outputString componentsSeparatedByString:@"\n"] objectAtIndex:3];
-
-		NSArray		*outputComponents = [outputLine componentsSeparatedByString:@" "];
-		unsigned	count = [outputComponents count];
-		unsigned	i = 0;
-		unsigned	validComponentsFound = 0;
-		
-		//Loop past the length, date, and time components to get to the name, the 4th valid component
-		for (i = 0; i < count; i++) {
-			if ([(NSString *)[outputComponents objectAtIndex:i] length]) {
-				validComponentsFound++;
-				
-				if (validComponentsFound == 4) {
-					break;
-				}
-			}
-		}
-		
-		//From the beginning of the file name onward, rejoin to get the original fileName
-		fileName = [[outputComponents subarrayWithRange:NSMakeRange(i, count-i)] componentsJoinedByString:@" "];
 	}
 	
-	if (fileName) {
-		[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
+	NSFileManager * fileManager = [NSFileManager defaultManager];
+	//Delete the compressed xtra, now that we've decompressed it
+	[fileManager removeFileAtPath:dest handler:nil];
+	
+	dest = [dest stringByDeletingLastPathComponent];
+	
+	//the remaining files in the directory should be the contents of the xtra
+	fileNames = [fileManager directoryContentsAtPath:dest];
+	
+	if (fileNames) {
+	
+		NSWorkspace * workspace = [NSWorkspace sharedWorkspace];
 		
-		dest = [[dest stringByDeletingLastPathComponent] stringByAppendingPathComponent:fileName];
+		NSEnumerator * fileEnumerator = [fileNames objectEnumerator];
+		NSString * xtraPath;
+		NSString * nextFile;
+		while((nextFile = [fileEnumerator nextObject]))
+		{
+			xtraPath = [dest stringByAppendingPathComponent:nextFile];
+			//This bundle of code checks if something called "Adium" would be used to open the file, and opens it if this is true.
+			NSString * appName;
+			NSString * type;
+			[workspace getInfoForFile:xtraPath 
+						  application:&appName 
+								 type:&type];
+			if([[appName lastPathComponent] isEqualToString:@"Adium.app"])
+			   [workspace openTempFile:xtraPath];
+		}
 		
-		//Open the file so Adium can install it and then delete it
-		[[NSWorkspace sharedWorkspace] openTempFile:dest];
-		//[[NSWorkspace sharedWorkspace] openFile:dest withApplication:@"Adium"];
-		//[[NSFileManager defaultManager] removeFileAtPath:dest handler:nil];
 	} else {
 		NSLog(@"Installation Error: %@",dest);
 	}
+	
+	//delete our temporary directory, and any files remaining in it
+	[fileManager removeFileAtPath:[dest stringByDeletingLastPathComponent] handler:nil];
 	
 	[self closeInstaller];
 }
