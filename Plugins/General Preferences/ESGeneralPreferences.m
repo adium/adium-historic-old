@@ -85,8 +85,6 @@
 
 	//Sounds
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-	[popUp_outputDevice setMenu:[self outputDeviceMenu]];
-	[popUp_outputDevice compatibleSelectItemWithTag:[[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue]];
 	[slider_volume setFloatValue:[[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
 	
 	//Logging
@@ -124,7 +122,6 @@
 	[label_messagesTabs setLocalizedString:AILocalizedString(@"Message tabs:",nil)];
 	[label_menuItem setLocalizedString:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
 	[label_switchTabsWith setLocalizedString:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
-	[label_sound setLocalizedString:AILocalizedString(@"Sound:",nil)];
 }
 
 //Called in response to all preference controls, applies new settings
