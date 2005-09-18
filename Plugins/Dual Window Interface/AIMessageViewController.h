@@ -57,7 +57,7 @@
 //- (void)setAccount:(AIAccount *)inAccount;
 //- (AIAccount *)account;
 //- (void)setListObject:(AIListContact *)listContact;
-//- (AIListContact *)listObject;
+- (AIListContact *)listObject;
 - (AIListObject *)preferredListObject;
 
 //Message Display

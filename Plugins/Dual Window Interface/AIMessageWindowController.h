@@ -52,6 +52,7 @@
 - (IBAction)closeWindow:(id)sender;
 - (NSString *)containerID;
 - (NSString *)name;
+- (AIChat *)activeChat;
 
 //Contained Chats
 - (void)addTabViewItem:(AIMessageTabViewItem *)inTabViewItem;
