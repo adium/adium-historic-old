@@ -22,7 +22,6 @@
     NSMutableArray		*soundCacheArray;
 	NSTimer				*soundCacheCleanupTimer;
 
-	SoundDeviceType		soundDeviceType;
     float				customVolume;
 	
 	BOOL				workspaceSessionIsActive;

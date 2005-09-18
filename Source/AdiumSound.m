@@ -41,7 +41,6 @@
 		soundCacheDict = [[NSMutableDictionary alloc] init];
 		soundCacheArray = [[NSMutableArray alloc] init];
 		soundCacheCleanupTimer = nil;
-		soundDeviceType = 0;
 		workspaceSessionIsActive = YES;
 
 		//Observe workspace activity changes so we can mute sounds as necessary
@@ -110,14 +109,8 @@
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
 							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
 {
-	int newDevice = [[prefDict objectForKey:KEY_SOUND_SOUND_DEVICE_TYPE] intValue];
 	float newVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
 
-	//If output device is changing, we must flush any cached sound players
-	if (soundDeviceType != newDevice){
-		[self _stopAndReleaseAllSounds];
-	}
-	
 	//If sound volume has changed, we must update all existing sounds to the new volume
 	if (customVolume != newVolume) {
 		[self _setVolumeOfAllSoundsTo:newVolume];
@@ -125,7 +118,6 @@
 
 	//Load the new preferences
 	customVolume = newVolume;
-	soundDeviceType = newDevice;
 }
 
 /*!
@@ -169,7 +161,7 @@
 		
 		//Load and cache the sound
 		existingPlayer = [[QTSoundFilePlayer alloc] initWithContentsOfFile:inPath
-													usingSystemAlertDevice:(soundDeviceType == SOUND_SYTEM_ALERT_DEVICE)];
+													usingSystemAlertDevice:YES];
 		if (existingPlayer) {
 			//Insert the player at the front of our cache
 			[soundCacheArray insertObject:inPath atIndex:0];
