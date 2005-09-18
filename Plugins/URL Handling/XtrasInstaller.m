@@ -16,6 +16,7 @@
 
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIBundleAdditions.h>
 #import "NSString_UUID.h"
 
 //Should only be YES for testing
@@ -144,7 +145,6 @@
 
 - (void)downloadDidFinish:(NSURLDownload *)download {
 	NSArray			*fileNames = nil;
-	
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
 
@@ -204,26 +204,43 @@
 	
 	//the remaining files in the directory should be the contents of the xtra
 	fileNames = [fileManager directoryContentsAtPath:dest];
-	
+	AILog(@"Downloaded to %@. fileNames: %@",dest,fileNames);
+
 	if (fileNames) {
-	
-		NSWorkspace * workspace = [NSWorkspace sharedWorkspace];
-		
-		NSEnumerator * fileEnumerator = [fileNames objectEnumerator];
-		NSString * xtraPath;
-		NSString * nextFile;
-		NSString * adiumName = [[[NSBundle mainBundle] bundlePath] lastPathComponent]; //in case someone renamed Adium
+		NSEnumerator	*fileEnumerator;
+		NSString		*xtraPath;
+		NSString		*nextFile;
+		NSSet			*supportedDocumentExtensions = [[NSBundle mainBundle] supportedDocumentExtensions];
+
+		fileEnumerator = [fileNames objectEnumerator];
 		while((nextFile = [fileEnumerator nextObject]))
 		{
-			xtraPath = [dest stringByAppendingPathComponent:nextFile];
-			//This bundle of code checks if something called "Adium" would be used to open the file, and opens it if this is true.
-			NSString * appName;
-			NSString * type;
-			[workspace getInfoForFile:xtraPath 
-						  application:&appName 
-								 type:&type];
-			if([[appName lastPathComponent] isEqualToString:adiumName])
-			   [workspace openTempFile:xtraPath];
+			NSString		*fileExtension = [nextFile pathExtension];
+			NSEnumerator	*supportedDocumentExtensionsEnumerator;
+			NSString		*extension;
+			BOOL			isSupported = NO;
+			
+			//We want to do a case-insensitive path extension comparison
+			supportedDocumentExtensionsEnumerator = [supportedDocumentExtensions objectEnumerator];
+			while (!isSupported &&
+				   (extension = [supportedDocumentExtensionsEnumerator nextObject])) {
+				isSupported = ([fileExtension caseInsensitiveCompare:extension] == NSOrderedSame);
+			}
+			
+			if (isSupported) {
+				BOOL	success;
+				
+				xtraPath = [dest stringByAppendingPathComponent:nextFile];
+
+				//Open the file directly
+				AILog(@"Installing %@",xtraPath);
+				success = [[NSApp delegate] application:NSApp
+										   openTempFile:xtraPath];
+				
+				if (!success) {
+					NSLog(@"Installation Error: %@",xtraPath);
+				}
+			}
 		}
 		
 	} else {

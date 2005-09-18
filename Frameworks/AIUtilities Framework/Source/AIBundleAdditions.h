@@ -9,5 +9,6 @@
 @interface NSBundle (AIBundleAdditions)
 
 - (NSString *)name;
+- (NSSet *)supportedDocumentExtensions;
 
 @end
