@@ -39,7 +39,7 @@
 		[(AIAutoScrollView *)scrollView setAlwaysDrawFocusRingIfFocused:YES];
 	}
 	
-	if ([textView_textProfile isKindOfClass[AIMessageEntryTextView class]]) {
+	if ([textView_textProfile isKindOfClass:[AIMessageEntryTextView class]]) {
 		/* We use the AIMessageEntryTextView to get nifty features for our text view, but we don't want to attempt
 		 * to 'send' to a target on Enter or Return.
 		 */
