@@ -19,6 +19,7 @@
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <Adium/AIAccount.h>
+#import <Adium/AIMessageEntryTextView.h>
 
 @implementation AIGaimOscarAccountViewController
 
