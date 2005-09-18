@@ -164,13 +164,6 @@
 		[[adium preferenceController] setPreference:[NSNumber numberWithInt:sendOnReturn]
 											 forKey:SEND_ON_RETURN
                                               group:PREF_GROUP_GENERAL];
-		
-    } else if (sender == popUp_outputDevice) {
-		SoundDeviceType soundType = [[popUp_outputDevice selectedItem] tag];
-		[[adium preferenceController] setPreference:[NSNumber numberWithInt:soundType]
-											 forKey:KEY_SOUND_SOUND_DEVICE_TYPE
-											  group:PREF_GROUP_SOUNDS];
-
 	} else if (sender == checkBox_enableMenuItem) {
 		[[adium preferenceController] setPreference:[NSNumber numberWithBool:[checkBox_enableMenuItem state]] 
 											 forKey:KEY_STATUS_MENU_ITEM_ENABLED
@@ -227,28 +220,6 @@
 		//Play a sample sound
         [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
     }
-}
-
-/*!
- * @brief Construct our menu by hand for easy localization
- */
-- (NSMenu *)outputDeviceMenu
-{
-	NSMenu		*menu = [[NSMenu allocWithZone:[NSMenu menuZone]] init];
-	
-	[menu addItemWithTitle:AILocalizedString(@"Play through default device",nil)
-					target:nil
-					action:nil
-			 keyEquivalent:@""
-					   tag:SOUND_SYTEM_OUTPUT_DEVICE];
-
-	[menu addItemWithTitle:AILocalizedString(@"Play through alert device",nil)
-					target:nil
-					action:nil
-			 keyEquivalent:@""
-					   tag:SOUND_SYTEM_ALERT_DEVICE];
-
-	return [menu autorelease];
 }
 
 /*!

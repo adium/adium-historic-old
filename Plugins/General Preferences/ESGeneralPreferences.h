@@ -30,7 +30,6 @@
 	IBOutlet	NSSlider		*slider_volume;
 	IBOutlet	NSButton		*button_minvolume;
 	IBOutlet	NSButton		*button_maxvolume;
-	IBOutlet	NSPopUpButton   *popUp_outputDevice; 	
 	
 	IBOutlet	NSButton		*checkBox_enableMenuItem;
 	
@@ -39,7 +38,6 @@
 	IBOutlet	NSTextField		*label_messagesTabs;
 	IBOutlet	NSTextField		*label_menuItem;
 	IBOutlet	NSTextField		*label_switchTabsWith;
-	IBOutlet	NSTextField		*label_sound;
 	
 	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_text;
 	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_background;
