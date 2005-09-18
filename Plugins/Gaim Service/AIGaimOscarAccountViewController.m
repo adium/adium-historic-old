@@ -43,7 +43,7 @@
 		/* We use the AIMessageEntryTextView to get nifty features for our text view, but we don't want to attempt
 		 * to 'send' to a target on Enter or Return.
 		 */
-		[textView_textProfile sendingEnabled:NO];
+		[(AIMessageEntryTextView *)textView_textProfile setSendingEnabled:NO];
 	}
 }
 
