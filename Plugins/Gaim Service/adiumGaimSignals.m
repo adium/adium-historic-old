@@ -102,8 +102,16 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				}
 				break;
 			}
+			case GAIM_BUDDY_NAME: {
+				updateSelector = @selector(renameContact:toUID:);
+
+				data = [NSString stringWithUTF8String:buddy->name];
+				AILog(@"Renaming %@ to %@",theContact,data);
+				break;
+			}
 			default: {
 				data = [NSNumber numberWithInt:event];
+				break;
 			}
 		}
 		
@@ -188,4 +196,8 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-direct-im-disconnected",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_DIRECTIM_DISCONNECTED));
+
+	gaim_signal_connect(blist_handle, "buddy-renamed",
+						handle, GAIM_CALLBACK(buddy_event_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_NAME));
 }
