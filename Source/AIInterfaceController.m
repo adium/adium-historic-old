@@ -321,20 +321,18 @@
 - (void)openChat:(AIChat *)inChat
 {
 	NSArray		*containers = [interfacePlugin openContainersAndChats];
-	NSString	*containerID;
+	NSString	*containerID = nil;
 	
 	//Determine the correct container for this chat
 	if (groupChatsByContactGroup) {
 		AIListObject	*group = [[[inChat listObject] parentContact] containingObject];
-		containerID = (group ? [group displayName] : @"Chat"); 
-	} else {
-		//Open new chats into the first container (if not available, create a new one)
-		if ([containers count] > 0) {
-			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
-		} else {
-			containerID = @"Messages";
+
+		//If the contact is in the contact list root, we don't have a group
+		if (group && (group != [[adium contactController] contactList])) {
+			containerID = [group displayName];
 		}
-	}
+
+	} 
 	
 	//XXX - Temporary setup for multiple windows
 	if (!tabbedChatting) {
@@ -344,8 +342,16 @@
 			containerID = [inChat name];
 		}
 	}
-
 	
+	if (!containerID) {
+		//Open new chats into the first container (if not available, create a new one)
+		if ([containers count] > 0) {
+			containerID = [[containers objectAtIndex:0] objectForKey:@"ID"];
+		} else {
+			containerID = AILocalizedString(@"Messages",nil);
+		}
+	}
+
 	//Determine the correct placement for this chat within the container
 	[interfacePlugin openChat:inChat inContainerWithID:containerID atIndex:-1];
 	if (![inChat isOpen]) {
