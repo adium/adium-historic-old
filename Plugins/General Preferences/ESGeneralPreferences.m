@@ -111,17 +111,6 @@
 	[fontPopUp_text setFont:[[prefDict objectForKey:KEY_FORMATTING_FONT] representedFont]];
 	
     [self configureControlDimming];
-
-	[checkBox_messagesInTabs setLocalizedString:AILocalizedString(@"Create new messages in tabs",nil)];
-    [checkBox_arrangeByGroup setLocalizedString:AILocalizedString(@"Organize tabs into new windows by group",nil)];
-	[checkBox_enableLogging setLocalizedString:AILocalizedString(@"Log messages",nil)];
-	[checkBox_enableMenuItem setLocalizedString:AILocalizedString(@"Show Adium status in menu bar",nil)];
-	
-	[label_logging setLocalizedString:AILocalizedString(@"Messages:",nil)];
-	[label_messagesSendOn setLocalizedString:AILocalizedString(@"Send messages with:",nil)];
-	[label_messagesTabs setLocalizedString:AILocalizedString(@"Message tabs:",nil)];
-	[label_menuItem setLocalizedString:AILocalizedString(@"Menu item:","The option '[ ] Show Adium status in menu bar' follows")];
-	[label_switchTabsWith setLocalizedString:AILocalizedString(@"Switch tabs with:","Selections for what keys to use to switch message tabs will follow")];
 }
 
 //Called in response to all preference controls, applies new settings
