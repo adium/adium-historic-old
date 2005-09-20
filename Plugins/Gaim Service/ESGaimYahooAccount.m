@@ -469,8 +469,12 @@ gboolean gaim_init_yahoo_plugin(void);
 		return nil;
 	} else if (strcmp(label, "Join in Chat") == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Join %@'s Chat",nil),[inContact formattedUID]];
+
 	} else if (strcmp(label, "Initiate Conference") == 0) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]];
+
+	}  else if (strcmp(label, "View Webcam") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"View %@'s Webcam",nil), [inContact formattedUID]];		
 	}
 
 	return [super titleForContactMenuLabel:label forContact:inContact];
