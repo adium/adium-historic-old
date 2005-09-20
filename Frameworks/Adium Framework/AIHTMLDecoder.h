@@ -35,6 +35,12 @@
 		
 		unsigned allowAIMsubprofileLinks: 1;
 	} thingsToInclude;
+	
+	//For the horribly ghetto span and div tags used by the HTML logs
+	BOOL send;
+	BOOL receive;
+	BOOL inDiv;
+	BOOL inLogSpan;	
 }
 
 #pragma mark Creation
