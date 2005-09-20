@@ -1134,6 +1134,13 @@
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9EA125E9055B630900ECF349 /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
 		9EA125EF055B633000ECF349 /* CBGaimOscarAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 9EA125EE055B633000ECF349 /* CBGaimOscarAccount.h */; };
+		A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */ = {isa = PBXBuildFile; fileRef = A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */; };
+		A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */; };
+		A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */; };
+		A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431D08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h */; };
+		A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */; };
+		A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */ = {isa = PBXBuildFile; fileRef = A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */; };
+		A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */ = {isa = PBXBuildFile; fileRef = A3C0432008D74D3100B48CE1 /* AIGTalkService.m */; };
 		B023557108CBE854008CDDDA /* SMContactsTable.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552908CBE84F008CDDDA /* SMContactsTable.h */; };
 		B023557208CBE854008CDDDA /* SMContactsTable.m in Sources */ = {isa = PBXBuildFile; fileRef = B023552A08CBE84F008CDDDA /* SMContactsTable.m */; };
 		B023557308CBE854008CDDDA /* SMLoggerContact.h in Headers */ = {isa = PBXBuildFile; fileRef = B023552B08CBE84F008CDDDA /* SMLoggerContact.h */; };
@@ -3025,6 +3032,13 @@
 		9EB3C52E04F94F24001D1F74 /* MainMenu.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = MainMenu.nib; sourceTree = "<group>"; };
 		9EB3C53304F94FAE001D1F74 /* CBOldPrefsImporterAppController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CBOldPrefsImporterAppController.h; sourceTree = "<group>"; };
 		9EB3C53404F94FAE001D1F74 /* CBOldPrefsImporterAppController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CBOldPrefsImporterAppController.m; sourceTree = "<group>"; };
+		A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsGTalk.plist; path = "Plugins/Gaim Service/GaimDefaultsGTalk.plist"; sourceTree = "<group>"; };
+		A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimGTalkAccount.h; path = "Plugins/Gaim Service/AIGaimGTalkAccount.h"; sourceTree = "<group>"; };
+		A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimGTalkAccount.m; path = "Plugins/Gaim Service/AIGaimGTalkAccount.m"; sourceTree = "<group>"; };
+		A3C0431D08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGaimGTalkAccountViewController.h; path = "Plugins/Gaim Service/AIGaimGTalkAccountViewController.h"; sourceTree = "<group>"; };
+		A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGaimGTalkAccountViewController.m; path = "Plugins/Gaim Service/AIGaimGTalkAccountViewController.m"; sourceTree = "<group>"; };
+		A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIGTalkService.h; path = "Plugins/Gaim Service/AIGTalkService.h"; sourceTree = "<group>"; };
+		A3C0432008D74D3100B48CE1 /* AIGTalkService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIGTalkService.m; path = "Plugins/Gaim Service/AIGTalkService.m"; sourceTree = "<group>"; };
 		B023552908CBE84F008CDDDA /* SMContactsTable.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMContactsTable.h; sourceTree = "<group>"; };
 		B023552A08CBE84F008CDDDA /* SMContactsTable.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = SMContactsTable.m; sourceTree = "<group>"; };
 		B023552B08CBE84F008CDDDA /* SMLoggerContact.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = SMLoggerContact.h; sourceTree = "<group>"; };
@@ -3655,6 +3669,7 @@
 				343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */,
 				4BB19298079EE90900DAA523 /* GaimDefaultsJabber.plist */,
 				349FF9FF0750752100E36B3B /* Antepo */,
+				A3C0405808D744B200B48CE1 /* Google Talk */,
 			);
 			name = Jabber;
 			sourceTree = "<group>";
@@ -5617,6 +5632,20 @@
 			name = "Dock Behavior Contact Alert";
 			sourceTree = "<group>";
 		};
+		A3C0405808D744B200B48CE1 /* Google Talk */ = {
+			isa = PBXGroup;
+			children = (
+				A3C0431B08D74D3100B48CE1 /* AIGaimGTalkAccount.h */,
+				A3C0431C08D74D3100B48CE1 /* AIGaimGTalkAccount.m */,
+				A3C0431D08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h */,
+				A3C0431E08D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m */,
+				A3C0431F08D74D3100B48CE1 /* AIGTalkService.h */,
+				A3C0432008D74D3100B48CE1 /* AIGTalkService.m */,
+				A3C042D108D7483100B48CE1 /* GaimDefaultsGTalk.plist */,
+			);
+			name = "Google Talk";
+			sourceTree = "<group>";
+		};
 		B023552808CBE84F008CDDDA /* SQLite Logger */ = {
 			isa = PBXGroup;
 			children = (
@@ -6637,6 +6666,9 @@
 				3411E13A0832E3B9003C8270 /* ESGaimOTRPreferences.h in Headers */,
 				3411E2910832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h in Headers */,
 				34B2740C083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h in Headers */,
+				A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */,
+				A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */,
+				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7610,6 +7642,7 @@
 				34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */,
 				3411E2980832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib in Resources */,
 				34B27416083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib in Resources */,
+				A3C042D208D7483100B48CE1 /* GaimDefaultsGTalk.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8255,6 +8288,9 @@
 				3411E13B0832E3B9003C8270 /* ESGaimOTRPreferences.m in Sources */,
 				3411E2920832FC4A003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m in Sources */,
 				34B2740D083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m in Sources */,
+				A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */,
+				A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */,
+				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
