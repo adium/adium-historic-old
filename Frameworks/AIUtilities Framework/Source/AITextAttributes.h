@@ -178,4 +178,6 @@
  */
 - (id)languageValue;
 
+- (void)setWritingDirection:(NSWritingDirection)inDirection;
+
 @end

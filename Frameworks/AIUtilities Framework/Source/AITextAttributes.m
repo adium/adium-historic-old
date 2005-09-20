@@ -292,4 +292,18 @@
     }
 }
 
+- (void)setWritingDirection:(NSWritingDirection)inDirection
+{
+	NSParagraphStyle			*paragraphStyle;
+	NSMutableParagraphStyle		*newParagraphStyle;
+	
+	if (!(paragraphStyle = [dictionary objectForKey:NSParagraphStyleAttributeName])) {
+		paragraphStyle = [NSParagraphStyle defaultParagraphStyle];
+	}
+	
+	newParagraphStyle = [paragraphStyle mutableCopy];
+	[newParagraphStyle setBaseWritingDirection:inDirection];
+	[dictionary setObject:newParagraphStyle forKey:NSParagraphStyleAttributeName];
+}
+
 @end
