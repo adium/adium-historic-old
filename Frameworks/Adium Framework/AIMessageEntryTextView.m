@@ -47,8 +47,6 @@
 
 @implementation AIMessageEntryTextView
 
-static NSImage	*pushIndicatorImage = nil;
-
 - (void)_initMessageEntryTextView
 {
 	adium = [AIObject sharedAdiumInstance];
@@ -76,9 +74,6 @@ static NSImage	*pushIndicatorImage = nil;
 	}
 	
 	[self setImportsGraphics:YES];
-	
-	//
-	if (!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
 	
 	//
 	[[NSNotificationCenter defaultCenter] addObserver:self 
@@ -591,6 +586,11 @@ static NSImage	*pushIndicatorImage = nil;
 //Push indicator
 - (void)_setPushIndicatorVisible:(BOOL)visible
 {
+	static NSImage	*pushIndicatorImage = nil;
+	
+	//
+	if (!pushIndicatorImage) pushIndicatorImage = [[NSImage imageNamed:@"stackImage" forClass:[self class]] retain];
+
     if (visible && !pushIndicatorVisible) {
         pushIndicatorVisible = visible;
 		
