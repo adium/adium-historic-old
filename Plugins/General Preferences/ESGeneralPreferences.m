@@ -27,7 +27,12 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
-#define VOLUME_SOUND_PATH   @"/System/Library/LoginPlugins/BezelServices.loginPlugin/Contents/Resources/volume.aiff"
+#define VOLUME_SOUND_PATH   [NSString pathWithComponents:[NSArray arrayWithObjects: \
+	@"/", @"System", @"Library", @"LoginPlugins", \
+	[@"BezelServices" stringByAppendingPathExtension:@"loginPlugin"], \
+	@"Contents", @"Resources", \
+	[@"volume" stringByAppendingPathExtension:@"aiff"], \
+	nil]];
 
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)outputDeviceMenu;
