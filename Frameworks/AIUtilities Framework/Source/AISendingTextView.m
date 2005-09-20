@@ -98,8 +98,9 @@
 - (BOOL)performKeyEquivalent:(NSEvent *)theEvent
 {
 	NSString *charactersIgnoringModifiers = [theEvent charactersIgnoringModifiers];
-    if ([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r') {
-		if (sendingEnabled) [self sendContent:nil];
+    if (([charactersIgnoringModifiers length] && [charactersIgnoringModifiers characterAtIndex:0] == '\r') &&
+		sendingEnabled) {
+		[self sendContent:nil];
 		return YES;
 	} else {
 		return NO;
@@ -118,26 +119,25 @@
         theString = [aString string];
     }
 	
-	if ([theString hasSuffix:@"\n"] && !optionPressedWithNext) {
-		if ((nextIsReturn && sendOnReturn) || (nextIsEnter && sendOnEnter)) {
-			
-			//Make sure we insert any applicable text first
-			if ([theString length] > 1) {
-				
-				NSRange range = NSMakeRange(0,[theString length]-1);
-				if ([aString isKindOfClass:[NSString class]]) {
-					[super insertText:[aString substringWithRange:range]];
-				} else if ([aString isKindOfClass:[NSAttributedString class]]) {
-					[super insertText:[aString attributedSubstringFromRange:range]];
-				}
+	if ((sendingEnabled) &&
+		((nextIsReturn && sendOnReturn) || (nextIsEnter && sendOnEnter)) &&
+		([theString hasSuffix:@"\n"] && !optionPressedWithNext)) {
+		
+		//Make sure we insert any applicable text first
+		if ([theString length] > 1) {
+			NSRange range = NSMakeRange(0, [theString length]-1);
+			if ([aString isKindOfClass:[NSString class]]) {
+				[super insertText:[aString substringWithRange:range]];
+			} else if ([aString isKindOfClass:[NSAttributedString class]]) {
+				[super insertText:[aString attributedSubstringFromRange:range]];
 			}
-			
-			//Now send
-			if (sendingEnabled) [self sendContent:nil]; //Send the content
-			insertText = NO;
 		}
+		
+		//Now send
+		[self sendContent:nil]; //Send the content
+		insertText = NO;
 	}
-	
+
 	if (insertText) [super insertText:aString];
 }
 
