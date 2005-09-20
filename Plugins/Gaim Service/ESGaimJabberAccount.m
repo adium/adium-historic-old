@@ -30,7 +30,7 @@
 #include <Libgaim/presence.h>
 #include <Libgaim/si.h>
 
-#define DEFAULT_JABBER_HOST @"jabber.org"
+#define DEFAULT_JABBER_HOST @"@jabber.org"
 
 @implementation ESGaimJabberAccount
 
@@ -70,7 +70,7 @@
 			
 		} else {
 			//Append @jabber.org to a Jabber account with no server
-			correctUID = [NSString stringWithFormat:@"%@@jabber.org",proposedUID];			
+			correctUID = [proposedUID stringByAppendingString:[self serverSuffix]];
 		}
 	} else {
 		correctUID = proposedUID;
@@ -131,6 +131,12 @@ gboolean gaim_init_jabber_plugin(void);
 	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
 }
 
+- (NSString *) serverSuffix
+{
+	AILog(@"using jabber");
+	return DEFAULT_JABBER_HOST;
+}
+
 - (void)createNewGaimAccount
 {
 	NSString	*resource, *userNameWithHost = nil, *completeUserName = nil;
@@ -149,7 +155,7 @@ gboolean gaim_init_jabber_plugin(void);
 	if (serverAppendedToUID) {
 		userNameWithHost = UID;
 	} else {
-		userNameWithHost = [NSString stringWithFormat:@"%@@jabber.org",UID];
+		userNameWithHost = [UID stringByAppendingString:[self serverSuffix]];
 	}
 
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
@@ -186,7 +192,7 @@ gboolean gaim_init_jabber_plugin(void);
 			host = [UID substringFromIndex:(location + 1)];
 
 		} else {
-			host = DEFAULT_JABBER_HOST;
+			host = [self serverSuffix];
 		}
 	}
 	

@@ -14,17 +14,45 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "ESAIMService.h"
-#import "ESAntepoService.h"
-#import "ESICQService.h"
-#import "ESDotMacService.h"
-#import "ESGaduGaduService.h"
 #import "AIGTalkService.h"
-#import "ESJabberService.h"
-#import "ESMeanwhileService.h"
-#import "ESNovellService.h"
-#import "ESTrepiaService.h"
-#import "ESMSNService.h"
-#import "ESYahooService.h"
-#import "ESYahooJapanService.h"
-#import "ESZephyrService.h"
+#import "AIGaimGTalkAccount.h"
+#import "AIGaimGTalkAccountViewController.h"
+
+@implementation AIGTalkService
+
+//Account Creation
+- (Class)accountClass{
+	return [AIGaimGTalkAccount class];
+}
+
+//
+- (AIAccountViewController *)accountViewController{
+    return [AIGaimGTalkAccountViewController accountViewController];
+}
+
+//Service Description
+- (NSString *)serviceCodeUniqueID{
+	return @"libgaim-jabber-gtalk";
+}
+- (NSString *)serviceID{
+	return @"GTalk";
+}
+- (NSString *)shortDescription{
+	return @"GTalk";
+}
+- (NSString *)longDescription{
+	return @"Google Talk";
+}
+- (NSCharacterSet *)ignoredCharacters{
+	return [NSCharacterSet characterSetWithCharactersInString:@" "];
+}
+- (BOOL)caseSensitive{
+	return NO;
+}
+- (AIServiceImportance)serviceImportance{
+	return AIServiceSecondary;
+}
+- (NSString *)userNameLabel{
+    return AILocalizedString(@"Username",nil); //GMail Name
+}
+@end

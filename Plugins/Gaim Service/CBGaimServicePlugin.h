@@ -22,6 +22,7 @@
     id  ICQService;
     id  DotMacService;
 	id  GaduGaduService;
+	id  GTalkService;
     id  JabberService;
 	id  MeanwhileService;
 	id  MSNService;

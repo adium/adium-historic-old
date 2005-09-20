@@ -14,18 +14,17 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import "CBGaimAccount.h"
+#import "AIGaimGTalkAccountViewController.h"
 
-#define KEY_JABBER_CONNECT_SERVER   @"Jabber:Connect Server"
-#define KEY_JABBER_RESOURCE			@"Jabber:Resource"
-#define KEY_JABBER_USE_TLS			@"Jabber:Use TLS"
-#define KEY_JABBER_FORCE_OLD_SSL	@"Jabber:Force Old SSL"
-#define KEY_JABBER_ALLOW_PLAINTEXT  @"Jabber:Allow Plaintext Authentication"
 
-@interface ESGaimJabberAccount : CBGaimAccount <AIAccount_Files> {
+@implementation AIGaimGTalkAccountViewController
 
+/*!
+ * @brief Placeholder string for the UID field
+ */
+- (NSString *)UIDPlaceholder
+{
+	return AILocalizedString(@"username@gmail.com","Sample name and server for new gmail accounts");
 }
-
-- (NSString *) serverSuffix;
 
 @end
