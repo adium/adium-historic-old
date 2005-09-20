@@ -520,6 +520,8 @@ gboolean gaim_init_msn_plugin(void);
 {
 	if ((strcmp(label, "Initiate Chat") == 0) || (strcmp(label, "Initiate _Chat") == 0)) {
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Multiuser Chat with %@",nil),[inContact formattedUID]];
+	} else (strcmp(label, "Send to Mobile") == 0) {
+		return [NSString stringWithFormat:AILocalizedString(@"Send to Mobile (%@)",nil),[inContact formattedUID]];
 	}
 	
 	return [super titleForContactMenuLabel:label forContact:inContact];
