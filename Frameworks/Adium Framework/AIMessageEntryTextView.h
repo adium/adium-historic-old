@@ -26,6 +26,7 @@
     AIChat              *chat;
     
     BOOL                 clearOnEscape;
+	BOOL				 historyEnabled;
     BOOL                 pushPopEnabled;
 	BOOL				 homeToStartOfLine;
 	BOOL				 enableTypingNotifications;
@@ -69,6 +70,7 @@
 - (void)scrollPageDown:(id)sender;
 
 //History
+- (void)setHistoryEnabled:(BOOL)inHistoryEnabled;
 - (void)historyUp;
 - (void)historyDown;
 

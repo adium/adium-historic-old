@@ -56,6 +56,7 @@ static NSImage	*pushIndicatorImage = nil;
 	chat = nil;
 	indicator = nil;
 	pushPopEnabled = YES;
+	historyEnabled = YES;
 	clearOnEscape = NO;
 	homeToStartOfLine = YES;
 	resizing = NO;
@@ -134,7 +135,8 @@ static NSImage	*pushIndicatorImage = nil;
 		unsigned int flags = [inEvent modifierFlags];
 		
 		//We have to test ctrl before option, because otherwise we'd miss ctrl-option-* events
-		if ((flags & NSControlKeyMask) && !(flags & NSShiftKeyMask)) {
+		if (pushPopEnabled &&
+			(flags & NSControlKeyMask) && !(flags & NSShiftKeyMask)) {
 			if (inChar == NSUpArrowFunctionKey) {
 				[self popContent];
 			} else if (inChar == NSDownArrowFunctionKey) {
@@ -145,7 +147,8 @@ static NSImage	*pushIndicatorImage = nil;
 				[super keyDown:inEvent];
 			}
 			
-		} else if ((flags & NSAlternateKeyMask) && !(flags & NSShiftKeyMask)) {
+		} else if (historyEnabled && 
+				   (flags & NSAlternateKeyMask) && !(flags & NSShiftKeyMask)) {
 			if (inChar == NSUpArrowFunctionKey) {
 				[self historyUp];
 			} else if (inChar == NSDownArrowFunctionKey) {
@@ -480,6 +483,11 @@ static NSImage	*pushIndicatorImage = nil;
 
 //History --------------------------------------------------------------------------------------------------------------
 #pragma mark History
+- (void)setHistoryEnabled:(BOOL)inHistoryEnabled
+{
+	historyEnabled = inHistoryEnabled;
+}
+
 //Move up through the history
 - (void)historyUp
 {
@@ -837,6 +845,13 @@ static NSImage	*pushIndicatorImage = nil;
 	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[self isContinuousSpellCheckingEnabled]]
 										 forKey:KEY_SPELL_CHECKING
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
+}
+
+- (void)toggleBaseWritingDirection:(id)sender
+{
+	[super toggleBaseWritingDirection:sender];
+	
+//	NSLog(@"Toggling (%@)",sender);
 }
 
 @end
