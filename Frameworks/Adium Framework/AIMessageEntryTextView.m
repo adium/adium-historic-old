@@ -124,7 +124,6 @@
 - (void)keyDown:(NSEvent *)inEvent
 {
 	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
-	NSLog(@"%i %i Key down: %@",pushPopEnabled,historyEnabled,inEvent);
 
 	if ([charactersIgnoringModifiers length]) {
 		unichar		 inChar = [charactersIgnoringModifiers characterAtIndex:0];
