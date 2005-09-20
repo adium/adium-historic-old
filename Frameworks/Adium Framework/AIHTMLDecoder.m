@@ -95,6 +95,8 @@ static AITextAttributes *_defaultTextDecodingAttributes = nil;
 - (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processLinkTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
+- (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (NSAttributedString *)processImgTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (BOOL)appendImage:(NSImage *)attachmentImage toString:(NSMutableString *)string withName:(NSString *)fileSafeChunk  altString:(NSString *)attachmentString imagesPath:(NSString *)imagesPath;
 - (void)appendFileTransferReferenceFromPath:(NSString *)path toString:(NSMutableString *)string;
@@ -224,14 +226,28 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSColor			*pageColor = nil;
 	BOOL			 openFontTag = NO;
 
-	//Setup the destination HTML string
-	NSMutableString *string = [NSMutableString string];
-	if (thingsToInclude.headers) [string appendString:@"<HTML>"];
-
 	//Setup the incoming message as a regular string, and get its length
 	NSString		*inMessageString = [inMessage string];
 	unsigned		 messageLength = [inMessageString length];
-		
+	
+	//Setup the destination HTML string
+	NSMutableString *string = [NSMutableString string];
+	if (thingsToInclude.headers) {
+			[string appendString:@"<HTML>"];
+	}
+
+	//If the text is right-to-left, enclose all our HTML in an rtl DIV tag
+	BOOL	rightToLeft = NO;
+	if (!thingsToInclude.simpleTagsOnly) {
+		if ((messageLength > 0) &&
+			([[inMessage attribute:NSParagraphStyleAttributeName
+						   atIndex:0
+					effectiveRange:nil] baseWritingDirection] == NSWritingDirectionRightToLeft)) {
+			[string appendString:@"<DIV dir=\"rtl\">"];
+			rightToLeft = YES;
+		}
+	}	
+	
 	//Setup the default attributes
 	NSString		*currentFamily = [@"Helvetica" retain];
 	NSString		*currentColor = nil;
@@ -618,6 +634,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	}
 	
 	if (thingsToInclude.fontTags && thingsToInclude.closingFontTags && openFontTag) [string appendString:CloseFontTag]; //Close any open font tag
+	if (rightToLeft) {
+		[string appendString:@"</DIV>"];
+	}
 	if (thingsToInclude.headers && pageColor) [string appendString:@"</BODY>"]; //Close the body tag
 	if (thingsToInclude.headers) [string appendString:@"</HTML>"]; //Close the HTML
 	
@@ -649,7 +668,12 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	NSString					*chunkString, *tagOpen;
 	NSMutableAttributedString	*attrString;
 	AITextAttributes			*textAttributes;
-	BOOL						send = NO, receive = NO, inDiv = NO, inLogSpan = NO;
+	
+	//Reset the div and span ivars
+	send = NO;
+	receive = NO;
+	inDiv = NO;
+	inLogSpan = NO;
 	
     //set up
 	if (inDefaultAttributes) {
@@ -718,8 +742,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 				if (validTag) { 
 					//HTML
 					if ([chunkString caseInsensitiveCompare:HTML] == NSOrderedSame) {
-						//We ignore stuff inside the HTML tag, but don't want to see the end of it
+						//We ignore most stuff inside the HTML tag, but don't want to see the end of it.
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
+	
 					} else if ([chunkString caseInsensitiveCompare:CloseHTML] == NSOrderedSame) {
 						//We are done
 						break;
@@ -731,22 +756,18 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						[scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString];
 
 						[textAttributes setTextColor:[NSColor blackColor]];
+
 					//DIV
 					} else if ([chunkString caseInsensitiveCompare:@"DIV"] == NSOrderedSame) {
-						[scanner scanUpToCharactersFromSet:absoluteTagEnd
-												intoString:&chunkString];
-						inDiv = YES;
-						if ([chunkString caseInsensitiveCompare:@" class=\"send\""] == NSOrderedSame) {
-							send = YES;
-							receive = NO;
-						} else if ([chunkString caseInsensitiveCompare:@" class=\"receive\""] == NSOrderedSame) {
-							receive = YES;
-							send = NO;
-						} else if ([chunkString caseInsensitiveCompare:@" class=\"status\""] == NSOrderedSame) {
-							[textAttributes setTextColor:[NSColor grayColor]];
+						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd
+													intoString:&chunkString]) {
+							[self processDivTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
+						inDiv = YES;
+
 					} else if ([chunkString caseInsensitiveCompare:@"/DIV"] == NSOrderedSame) {
 						inDiv = NO;
+
 					//LINK
 					} else if ([chunkString caseInsensitiveCompare:@"A"] == NSOrderedSame) {
 						//[textAttributes setUnderline:YES];
@@ -770,16 +791,6 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					//Font
 					} else if ([chunkString caseInsensitiveCompare:Font] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-
-							//Process the font tag if it's in a log
-							if ([chunkString caseInsensitiveCompare:@" class=\"sender\""] == NSOrderedSame) {
-								if (inDiv && send) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
-								} else if (inDiv && receive) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
-								}
-							}
-
 							//Process the font tag's contents
 							[self processFontTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
@@ -790,29 +801,9 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 					//span
 					} else if ([chunkString caseInsensitiveCompare:Span] == NSOrderedSame) {
 						if ([scanner scanUpToCharactersFromSet:absoluteTagEnd intoString:&chunkString]) {
-
-							//Process the span tag if it's in a log
-							if ([chunkString caseInsensitiveCompare:@" class=\"sender\""] == NSOrderedSame) {
-								if (inDiv && send) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 
-																						   green:0.5
-																							blue:0.0 
-																						   alpha:1.0]];
-									inLogSpan = YES;
-								} else if (inDiv && receive) {
-									[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0
-																						   green:0.0
-																							blue:0.5 
-																						   alpha:1.0]];
-									inLogSpan = YES;
-								}
-							} else if ([chunkString caseInsensitiveCompare:@" class=\"timestamp\""] == NSOrderedSame) {
-								[textAttributes setTextColor:[NSColor grayColor]];
-								inLogSpan = YES;
-							}
-							
-							//XXX Jabber can send a tag like so: <span style='font-family: Helvetica; font-size: small; '>
+							[self processSpanTagArgs:[self parseArguments:chunkString] attributes:textAttributes];
 						}
+
 					} else if ([chunkString caseInsensitiveCompare:CloseSpan] == NSOrderedSame) {
 						if (inLogSpan) {
 							[textAttributes setTextColor:[NSColor blackColor]];
@@ -911,8 +902,8 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
-							   [chunkString caseInsensitiveCompare:CloseP] == NSOrderedSame) {
-
+							   ([chunkString caseInsensitiveCompare:CloseP] == NSOrderedSame)) {
+						
 					//Invalid
 					} else {
 						validTag = NO;
@@ -1058,7 +1049,16 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 		} else if ([arg caseInsensitiveCompare:@"LANG"] == NSOrderedSame) {
 			[textAttributes setLanguageValue:[inArgs objectForKey:arg]];
+
+		}  else if ([arg caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
+			//Ghetto HTML log processing
+			if (inDiv && send) {
+				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.5 blue:0.0 alpha:1.0]];
+			} else if (inDiv && receive) {
+				[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 green:0.0 blue:0.5 alpha:1.0]];
+			}
 		}
+		
 	}
 }
 
@@ -1071,7 +1071,45 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 	while ((arg = [enumerator nextObject])) {
 		if ([arg caseInsensitiveCompare:@"BGCOLOR"] == NSOrderedSame) {
 			[textAttributes setBackgroundColor:[NSColor colorWithHTMLString:[inArgs objectForKey:arg] defaultColor:[NSColor whiteColor]]];
+
+		}	
+	}
+}
+
+- (void)processSpanTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+	NSEnumerator 	*enumerator;
+	NSString		*arg;
+	
+	enumerator = [[inArgs allKeys] objectEnumerator];
+	while ((arg = [enumerator nextObject])) {
+		if ([arg caseInsensitiveCompare:@"class"] == NSOrderedSame) {
+			//Process the span tag if it's in a log
+			NSString	*class = [inArgs objectForKey:arg];
+
+			if ([class caseInsensitiveCompare:@"sender"] == NSOrderedSame) {
+				if (inDiv && send) {
+					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0 
+																		   green:0.5
+																			blue:0.0 
+																		   alpha:1.0]];
+					inLogSpan = YES;
+				} else if (inDiv && receive) {
+					[textAttributes setTextColor:[NSColor colorWithCalibratedRed:0.0
+																		   green:0.0
+																			blue:0.5 
+																		   alpha:1.0]];
+					inLogSpan = YES;
+				}
+
+			} else if ([class caseInsensitiveCompare:@"timestamp"] == NSOrderedSame) {
+				[textAttributes setTextColor:[NSColor grayColor]];
+				inLogSpan = YES;
+			}
 		}
+		
+		//XXX Jabber can send a tag like so: <span style='font-family: Helvetica; font-size: small; '>
+		
 	}
 }
 
@@ -1100,6 +1138,39 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 			}
 
 			[textAttributes setLinkURL:[NSURL URLWithString:linkString]];
+		}
+	}
+}
+
+- (void)processDivTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes
+{
+	NSEnumerator 	*enumerator;
+	NSString		*arg;
+	
+	enumerator = [[inArgs allKeys] objectEnumerator];
+	while ((arg = [enumerator nextObject])) {
+		if ([arg caseInsensitiveCompare:@"dir"] == NSOrderedSame) {
+			//Right to left, left to right handling
+			NSString	*direction = [inArgs objectForKey:arg];
+			
+			if ([direction caseInsensitiveCompare:@"rtl"] == NSOrderedSame) {
+				[textAttributes setWritingDirection:NSWritingDirectionRightToLeft];
+				
+			} else if ([direction caseInsensitiveCompare:@"ltr"] == NSOrderedSame) {
+				[textAttributes setWritingDirection:NSWritingDirectionLeftToRight];
+			}
+			
+		} else if ([arg caseInsensitiveCompare:@"class"] == NSOrderedSame) {
+			NSString	*class = [inArgs objectForKey:arg];
+			if ([class caseInsensitiveCompare:@"send"] == NSOrderedSame) {
+				send = YES;
+				receive = NO;
+			} else if ([class caseInsensitiveCompare:@"receive"] == NSOrderedSame) {
+				receive = YES;
+				send = NO;
+			} else if ([class caseInsensitiveCompare:@"status"] == NSOrderedSame) {
+				[textAttributes setTextColor:[NSColor grayColor]];
+			}
 		}
 	}
 }
