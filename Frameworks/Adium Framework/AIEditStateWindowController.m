@@ -180,6 +180,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	if ([textView_statusMessage isKindOfClass:[AIMessageEntryTextView class]]) {
 		[(AIMessageEntryTextView *)textView_statusMessage setClearOnEscape:NO];
 		[(AIMessageEntryTextView *)textView_statusMessage setPushPopEnabled:NO];
+		[(AIMessageEntryTextView *)textView_statusMessage setHistoryEnabled:NO];
 	}
 	
 	[scrollView_autoReply setAutoHideScrollBar:YES];
@@ -196,6 +197,7 @@ static	NSMutableDictionary	*controllerDict = nil;
 	if ([textView_autoReply isKindOfClass:[AIMessageEntryTextView class]]) {
 		[(AIMessageEntryTextView *)textView_autoReply setClearOnEscape:NO];
 		[(AIMessageEntryTextView *)textView_autoReply setPushPopEnabled:NO];
+		[(AIMessageEntryTextView *)textView_autoReply setHistoryEnabled:NO];
 	}
 	
 	[self configureForAccountAndWorkingStatusState];
