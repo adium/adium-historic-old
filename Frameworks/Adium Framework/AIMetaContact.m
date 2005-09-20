@@ -1087,4 +1087,20 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
     return [[self listContacts] count];
 }
 
+#pragma mark Debugging
+- (NSString *)description
+{
+	NSMutableArray *subobjectDescs = [[NSMutableArray alloc] initWithCapacity:[containedObjects count]];
+
+	NSEnumerator *containedObjectsEnum = [containedObjects objectEnumerator];
+	AIListObject *subobject;
+	while((subobject = [containedObjectsEnum nextObject]))
+		[subobjectDescs addObject:[subobject description]];
+
+	NSString *subobjectDescsDesc = [subobjectDescs description];
+	[subobjectDescs release];
+
+	return [NSString stringWithFormat:@"%@:%@:%@", [super description], [self internalObjectID], subobjectDescsDesc];
+}
+
 @end
