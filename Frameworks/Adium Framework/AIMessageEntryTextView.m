@@ -124,7 +124,8 @@
 - (void)keyDown:(NSEvent *)inEvent
 {
 	NSString *charactersIgnoringModifiers = [inEvent charactersIgnoringModifiers];
-	
+	NSLog(@"%i %i Key down: %@",pushPopEnabled,historyEnabled,inEvent);
+
 	if ([charactersIgnoringModifiers length]) {
 		unichar		 inChar = [charactersIgnoringModifiers characterAtIndex:0];
 		unsigned int flags = [inEvent modifierFlags];
@@ -152,7 +153,8 @@
 				[super keyDown:inEvent];
 			}
 			
-		} else if ((flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)) {
+		} else if (associatedView &&
+				   (flags & NSCommandKeyMask) && !(flags & NSShiftKeyMask)) {
 			if ((inChar == NSUpArrowFunctionKey || inChar == NSDownArrowFunctionKey) ||
 			   (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) ||
 			   (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey)) {
@@ -171,7 +173,8 @@
 				[super keyDown:inEvent];
 			}
 			
-		} else if (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey) {
+		} else if (associatedView &&
+				   (inChar == NSPageUpFunctionKey || inChar == NSPageDownFunctionKey)) {
 			[associatedView keyDown:inEvent];
 			
 		} else if (inChar == NSHomeFunctionKey || inChar == NSEndFunctionKey) {
@@ -200,17 +203,24 @@
 
 			} else {
 				//If !homeToStartOfLine, pass the keypress to our associated view.
-				[associatedView keyDown:inEvent];
+				if (associatedView) {
+					[associatedView keyDown:inEvent];
+				} else {
+					[super keyDown:inEvent];					
+				}
 			}
+
 		} else if ([charactersIgnoringModifiers isEqualToString:@"\r"] == YES || inChar == NSEnterCharacter) {
 			if (flags & NSShiftKeyMask) {
 				[self insertText:@"\n"];
 			} else {
 				[super keyDown:inEvent];
 			}
+
 		} else {
 			[super keyDown:inEvent];
 		}
+
 	} else {
 		[super keyDown:inEvent];
 	}
@@ -464,15 +474,19 @@
 //Page up or down in the message view
 - (void)scrollPageUp:(id)sender
 {
-    if ([associatedView respondsToSelector:@selector(pageUp:)]) {
+    if (associatedView && [associatedView respondsToSelector:@selector(pageUp:)]) {
 		[associatedView pageUp:nil];
-    }
+    } else {
+		[super scrollPageUp:sender];
+	}
 }
 - (void)scrollPageDown:(id)sender
 {
-    if ([associatedView respondsToSelector:@selector(pageDown:)]) {
+    if (associatedView && [associatedView respondsToSelector:@selector(pageDown:)]) {
 		[associatedView pageDown:nil];
-    }
+    } else {
+		[super scrollPageDown:sender];
+	}
 }
 
 
