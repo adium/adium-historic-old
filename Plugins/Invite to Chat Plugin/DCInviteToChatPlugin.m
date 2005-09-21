@@ -139,7 +139,7 @@
 				if ( [[[[chat account] service] serviceClass] isEqualToString:serviceClass] ) {
 					
 					// Is this a group chat?
-					if ([ chat isGroupChat]) {
+					if ([chat isGroupChat]) {
 						if (!menu_chatMenu) {
 							menu_chatMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] initWithTitle:@""] autorelease];
 						}

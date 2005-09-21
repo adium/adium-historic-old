@@ -310,7 +310,7 @@
 		AIListObject				*listObject = [chat listObject];
 		
 		if (!sendMessagesToOfflineContact &&
-		   ![chat name] &&
+		   ![chat isGroupChat] &&
 		   ![listObject online] &&
 		   ![listObject isStranger]) {
 			
