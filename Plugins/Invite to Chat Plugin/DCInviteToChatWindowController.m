@@ -90,7 +90,7 @@ static DCInviteToChatWindowController *sharedInviteToChatInstance = nil;
 	if ( contact && [contact isKindOfClass:[AIListContact class]] && chat ) {
 		
 		// Sanity check: is it a group chat?
-		if ( [chat name]) {
+		if ([chat isGroupChat]) {
 			[chat inviteListContact:(AIListContact *)contact withMessage:[textField_message stringValue]];
 		} else {
 			//NSLog(@"#### Inviting %@ to a one-on-one chat?",contact);

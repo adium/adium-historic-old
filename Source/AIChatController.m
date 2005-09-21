@@ -718,7 +718,7 @@
  */
 - (void)chat:(AIChat *)chat addedListContact:(AIListContact *)inContact notify:(BOOL)notify
 {
-	if (notify && [chat name]) {
+	if (notify && [chat isGroupChat]) {
 		/* Prevent triggering of the event when we are informed that the chat's own account entered the chat
 		 * If the UID of a contact in a chat differs from a normal UID, such as is the case with Jabber where a chat
 		 * contact has the form "roomname@conferenceserver/handle" this will fail, but it's better than nothing.
@@ -745,7 +745,7 @@
  */
 - (void)chat:(AIChat *)chat removedListContact:(AIListContact *)inContact
 {
-	if ([chat name]) {
+	if ([chat isGroupChat]) {
 		[adiumChatEvents chat:chat removedListContact:inContact];
 		
 		[[adium contentController] displayStatusMessage:[NSString stringWithFormat:AILocalizedString(@"%@ left the chat.",nil),[inContact displayName]]
