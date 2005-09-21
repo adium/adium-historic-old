@@ -144,4 +144,6 @@ typedef enum {
 - (BOOL)isListContactIgnored:(AIListObject *)inContact;
 - (void)setListContact:(AIListContact *)inContact isIgnored:(BOOL)isIgnored;
 
+- (BOOL)isGroupChat;
+
 @end
