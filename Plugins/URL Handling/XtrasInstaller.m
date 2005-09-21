@@ -17,6 +17,7 @@
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <AIUtilities/AIBundleAdditions.h>
+#import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import "NSString_UUID.h"
 
 //Should only be YES for testing
@@ -137,9 +138,9 @@
 - (void)download:(NSURLDownload *)inDownload didFailWithError:(NSError *)error {
 	NSString	*errorMsg;
 
-	errorMsg = [NSString stringWithFormat:@"An error occurred while downloading this Xtra: %@.",[error localizedDescription]];
+	errorMsg = [NSString stringWithFormat:AILocalizedString(@"An error occurred while downloading this Xtra: %@.",nil),[error localizedDescription]];
 	
-	NSBeginAlertSheet(@"Xtra Downloading Error", @"Cancel", nil, nil, window, self,
+	NSBeginAlertSheet(AILocalizedString(@"Xtra Downloading Error",nil), AILocalizedString(@"Cancel",nil), nil, nil, window, self,
 					 NULL, @selector(sheetDidDismiss:returnCode:contextInfo:), nil, errorMsg);
 }
 
@@ -147,7 +148,8 @@
 	NSArray			*fileNames = nil;
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
-
+	BOOL			decompressionSuccess = YES;
+	
 	if ([pathExtension isEqualToString:@"tgz"] || [lastPathComponent hasSuffix:@".tar.gz"]) {
 		NSTask			*uncompress, *untar;
 
@@ -156,25 +158,44 @@
 		[uncompress setArguments:[NSArray arrayWithObjects:@"-df" , [dest lastPathComponent] ,  nil]];
 		[uncompress setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 		
+		AI_DURING
+		{
 		[uncompress launch];
 		[uncompress waitUntilExit];
+		}
+		AI_HANDLER
+		{
+			decompressionSuccess = NO;	
+		}
+		AI_ENDHANDLER
+			
 		[uncompress release];
 		
-		if ([pathExtension isEqualToString:@"tgz"]) {
-			dest = [[dest stringByDeletingPathExtension] stringByAppendingPathExtension:@"tar"];
-		} else {
-			//hasSuffix .tar.gz
-			dest = [dest substringToIndex:[dest length] - 3];//remove the .gz, leaving us with .tar
+		if (decompressionSuccess) {
+			if ([pathExtension isEqualToString:@"tgz"]) {
+				dest = [[dest stringByDeletingPathExtension] stringByAppendingPathExtension:@"tar"];
+			} else {
+				//hasSuffix .tar.gz
+				dest = [dest substringToIndex:[dest length] - 3];//remove the .gz, leaving us with .tar
+			}
+			
+			untar = [[NSTask alloc] init];
+			[untar setLaunchPath:@"/usr/bin/tar"];
+			[untar setArguments:[NSArray arrayWithObjects:@"-xvf", [dest lastPathComponent], nil]];
+			[untar setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
+			
+			AI_DURING
+			{
+			[untar launch];
+			[untar waitUntilExit];
+			}
+			AI_HANDLER
+			{
+				decompressionSuccess = NO;
+			}
+			AI_ENDHANDLER
+			[untar release];
 		}
-		
-		untar = [[NSTask alloc] init];
-		[untar setLaunchPath:@"/usr/bin/tar"];
-		[untar setArguments:[NSArray arrayWithObjects:@"-xvf", [dest lastPathComponent], nil]];
-		[untar setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
-		
-		[untar launch];
-		[untar waitUntilExit];
-		[untar release];
 		
 	} else if ([pathExtension isEqualToString:@"zip"]) {
 		NSTask	*unzip;
@@ -191,9 +212,20 @@
 
 		[unzip setCurrentDirectoryPath:[dest stringByDeletingLastPathComponent]];
 
-		[unzip launch];
-		[unzip waitUntilExit];
+		AI_DURING
+		{
+			[unzip launch];
+			[unzip waitUntilExit];
+		}
+		AI_HANDLER
+		{
+			decompressionSuccess = NO;			
+		}
+		AI_ENDHANDLER
 		[unzip release];
+
+	} else {
+		decompressionSuccess = NO;
 	}
 	
 	NSFileManager * fileManager = [NSFileManager defaultManager];
@@ -206,7 +238,7 @@
 	fileNames = [fileManager directoryContentsAtPath:dest];
 	AILog(@"Downloaded to %@. fileNames: %@",dest,fileNames);
 
-	if (fileNames) {
+	if (decompressionSuccess && fileNames) {
 		NSEnumerator	*fileEnumerator;
 		NSString		*xtraPath;
 		NSString		*nextFile;
@@ -244,7 +276,7 @@
 		}
 		
 	} else {
-		NSLog(@"Installation Error: %@",dest);
+		NSLog(@"Installation Error: %@ (%@)",dest, (decompressionSuccess ? @"Decompressed succesfully" : @"Failed to decompress"));
 	}
 	
 	//delete our temporary directory, and any files remaining in it
