@@ -421,7 +421,7 @@ int menuTitleSort(id objectA, id objectB, void *context)
 	
 	//Create our fake chat and message controller for the live preview
 	previewChat = [[AIChat chatForAccount:nil] retain];
-	[previewChat setName:@"Sample Conversation"];
+	[previewChat setDisplayName:AILocalizedString(@"Sample Conversation", "Title for the sample conversation")];
 	previewController = [[AIWebKitMessageViewController messageViewControllerForChat:previewChat
 																		  withPlugin:plugin] retain];
 	
