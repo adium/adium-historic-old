@@ -8,5 +8,7 @@
 	<string>talk.google.com</string>
 	<key>Jabber:Resource</key>
 	<string>Adium</string>
+	<key>Jabber:Use TLS</key>
+	<true/>
 </dict>
 </plist>
