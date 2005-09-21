@@ -17,7 +17,7 @@
 #import <Adium/AIWindowController.h>
 
 @interface ESGaimRequestWindowController : AIWindowController {	
-	IBOutlet		NSTextField		*textField_primary;
+	IBOutlet		NSTextView		*textView_primary;
 
 	IBOutlet		NSTextView		*textView_secondary;
 	IBOutlet		NSScrollView	*scrollView_secondary;

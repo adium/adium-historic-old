@@ -56,11 +56,11 @@
 
 - (void)showWindowWithDict:(NSDictionary *)infoDict multiline:(BOOL)multiline
 {	
-	NSRect		oldFrame, newFrame;
 	NSRect		windowFrame;
 	NSWindow	*window;
-	float		changeInTextHeight = 0;
 	
+	int			heightChange = 0;
+
 	//Ensure the window is loaded
 	window = [self window];
 	windowFrame = [window frame];
@@ -97,33 +97,42 @@
 	
 	//Primary text field
 	{
-		float		heightDifference;
-
-		NSString	*primary = [infoDict objectForKey:@"Primary Text"];
+		NSScrollView	*scrollView_primary = [textView_primary enclosingScrollView];
+		NSString		*primary = [infoDict objectForKey:@"Primary Text"];
+		NSRect			primaryFrame = [scrollView_primary frame];
 		
-		oldFrame = [textField_primary frame];
-		[textField_primary setStringValue:(primary ? primary : @"")];
-		if ([primary length]) {
-			[textField_primary setStringValue:primary];
-			[textField_primary sizeToFit];
-		} else {
-			[textField_primary setStringValue:@""];
-			[textField_primary setFrame:NSMakeRect(0,0,0,0)];
-		}
+		[textView_primary setVerticallyResizable:YES];
+		[textView_primary setHorizontallyResizable:NO];
+		[textView_primary setDrawsBackground:NO];
+		[textView_primary setTextContainerInset:NSZeroSize];
+		[scrollView_primary setDrawsBackground:NO];
 		
-		newFrame = [textField_primary frame];
-		heightDifference = (newFrame.size.height - oldFrame.size.height);
-		changeInTextHeight += heightDifference;
+		[textView_primary setString:(primary ? primary : @"")];
 		
-		newFrame.origin.y = oldFrame.origin.y - heightDifference;
-		[textField_primary setFrame:newFrame];
+		//Resize the window frame to fit the error title
+		[textView_primary sizeToFit];
+		heightChange = [textView_primary frame].size.height - [scrollView_primary documentVisibleRect].size.height;
+		
+		primaryFrame.size.height += heightChange;
+		primaryFrame.origin.y -= heightChange;
+		
+		[scrollView_primary setFrame:primaryFrame];
+		
+		windowFrame.size.height += heightChange;
+		windowFrame.origin.y -= heightChange;
+		
+		//Resize the window to fit the message
+		//[window setFrame:windowFrame display:YES animate:NO];
 	}
 	
 	//Secondary text field
 	{
 		NSString	*secondary = [infoDict objectForKey:@"Secondary Text"];
-		float		secondaryHeightChange;
 
+		NSRect	originalFrame = [scrollView_secondary frame];
+		originalFrame.origin.y -= heightChange;
+		[scrollView_secondary setFrame:originalFrame];
+		
 		[textView_secondary setVerticallyResizable:YES];
 		[textView_secondary setHorizontallyResizable:NO];
 		[textView_secondary setDrawsBackground:NO];
@@ -134,38 +143,22 @@
 		
 		//Resize the window frame to fit the error title
 		[textView_secondary sizeToFit];
-		secondaryHeightChange = [textView_secondary frame].size.height - [scrollView_secondary documentVisibleRect].size.height;
-		changeInTextHeight += secondaryHeightChange;
+		heightChange = [textView_secondary frame].size.height - [scrollView_secondary documentVisibleRect].size.height;
 
-//		changeInTextHeight += (newFrame.size.height - oldFrame.size.height);
-
-//		newFrame.origin.y = oldFrame.origin.y - changeInTextHeight;
-//		[textField_secondary setFrame:newFrame];
-		
-		windowFrame.size.height += changeInTextHeight;
-		windowFrame.origin.y -= changeInTextHeight;
-
-		//Resize the window to fit the message
-		[window setFrame:windowFrame display:YES animate:NO];
+		windowFrame.size.height += heightChange;
+		windowFrame.origin.y -= heightChange;
 	}
-	
+
+	//Resize the window to fit the message
+	[window setFrame:windowFrame display:YES animate:NO];
+
 	//Default value
 	{
 		NSString *defaultValue = [infoDict objectForKey:@"Default Value"];
 		[textField_input setStringValue:(defaultValue ? defaultValue : @"")];
 		[textField_input selectText:nil];
 	}
-	
-	//Text input frame size
-	{
-		if (multiline) {
-			newFrame = [textField_input frame];
-			newFrame.size.height = newFrame.size.height - changeInTextHeight;
-			
-			[textField_input setFrame:newFrame];
-		}
-	}
-	
+
 	okayCallbackValue = [[infoDict objectForKey:@"OK Callback"] retain];
 	cancelCallbackValue = [[infoDict objectForKey:@"Cancel Callback"] retain];
 	userDataValue = [[infoDict objectForKey:@"userData"] retain];
