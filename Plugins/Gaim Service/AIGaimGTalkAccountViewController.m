@@ -27,4 +27,12 @@
 	return AILocalizedString(@"username@gmail.com","Sample name and server for new gmail accounts");
 }
 
+- (void)awakeFromNib
+{
+	[super awakeFromNib];
+	
+	//GTalk forces the use of TLS
+	[checkBox_useTLS setEnabled:NO];
+}
+
 @end
