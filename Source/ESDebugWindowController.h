@@ -21,7 +21,9 @@
 @interface ESDebugWindowController : AIWindowController {
 	IBOutlet	NSTextView			*textView_debug;
 	IBOutlet	AIAutoScrollView	*scrollView_debug;
-	NSMutableString			*mutableDebugString;
+	NSMutableString					*mutableDebugString;
+	
+	IBOutlet	NSButton			*checkBox_logWriting;
 }
 
 #ifdef DEBUG_BUILD
@@ -29,6 +31,9 @@
 + (void)closeDebugWindow;
 + (BOOL)debugWindowIsOpen;
 + (void)addedDebugMessage:(NSString *)message;
+- (IBAction)toggleLogWriting:(id)sender;
+- (IBAction)clearLog:(id)sender;
 #endif
+
 
 @end

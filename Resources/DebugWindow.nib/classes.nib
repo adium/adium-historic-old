@@ -35,9 +35,14 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            ACTIONS = {clearLog = id; toggleLogWriting = id; }; 
             CLASS = ESDebugWindowController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {"scrollView_debug" = AIAutoScrollView; "textView_debug" = NSTextView; }; 
+            OUTLETS = {
+                "checkBox_logWriting" = NSButton; 
+                "scrollView_debug" = AIAutoScrollView; 
+                "textView_debug" = NSTextView; 
+            }; 
             SUPERCLASS = AIWindowController; 
         }, 
         {

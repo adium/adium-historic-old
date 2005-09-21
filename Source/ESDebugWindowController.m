@@ -16,6 +16,7 @@
 
 #import "ESDebugController.h"
 #import "ESDebugWindowController.h"
+#import "AIPreferenceController.h"
 #import <AIUtilities/AIAutoScrollView.h>
 
 #define	KEY_DEBUG_WINDOW_FRAME	@"Debug Window Frame"
@@ -48,9 +49,6 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 - (void)addedDebugMessage:(NSString *)aDebugString
 {
 	[mutableDebugString appendString:aDebugString];
-	if ((![aDebugString hasSuffix:@"\n"]) && (![aDebugString hasSuffix:@"\r"])) {
-		[mutableDebugString appendString:@"\n"];
-	}
 }
 + (void)addedDebugMessage:(NSString *)aDebugString
 {
@@ -90,6 +88,9 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	[scrollView_debug performSelector:@selector(scrollToBottom)
 						   withObject:nil
 						   afterDelay:0.001];
+	
+	[checkBox_logWriting setState:[[[adium preferenceController] preferenceForKey:KEY_DEBUG_WRITE_LOG
+																			group:GROUP_DEBUG] boolValue]];
 }
 
 //Close the debug window
@@ -108,6 +109,21 @@ static ESDebugWindowController *sharedDebugWindowInstance = nil;
 	//Close down
 	[mutableDebugString release]; mutableDebugString = nil;
     [self autorelease]; sharedDebugWindowInstance = nil;
+}
+
+- (IBAction)toggleLogWriting:(id)sender
+{
+	[[adium preferenceController] setPreference:[NSNumber numberWithBool:[sender state]]
+										 forKey:KEY_DEBUG_WRITE_LOG
+										  group:GROUP_DEBUG];
+}
+
+- (IBAction)clearLog:(id)sender
+{
+	[mutableDebugString setString:@""];
+	[[adium debugController] clearDebugLogArray];
+	
+	[scrollView_debug scrollToTop];
 }
 
 #endif
