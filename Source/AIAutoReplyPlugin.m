@@ -105,8 +105,7 @@
     AIChat				*chat = [contentObject chat];
 	
 	//We will not respond to the received message if it is an auto-reply, over a chat where we have already responded,
-	//or over a chat with a name.
-	//XXX - Using the presence of a name on the chat to determine if it's multi-user or not is not clean -ai
+	//or over a group chat.
 	if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
 	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
