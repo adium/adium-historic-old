@@ -69,7 +69,7 @@
 											afterDelay:0];
 			
 		} else {
-			//Append @jabber.org to a Jabber account with no server
+			//Append [self serverSuffix] (e.g. @jabber.org) to a Jabber account with no server
 			correctUID = [proposedUID stringByAppendingString:[self serverSuffix]];
 		}
 	} else {

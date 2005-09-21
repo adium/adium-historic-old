@@ -26,6 +26,6 @@
 
 }
 
-- (NSString *) serverSuffix;
+- (NSString *)serverSuffix;
 
 @end
