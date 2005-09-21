@@ -4098,10 +4098,10 @@
 			children = (
 				3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */,
 				3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */,
-				341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */,
-				341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */,
 				34C2CF85063340540018E5D2 /* GaimMultilineRequestWindow.nib */,
 				34C2CF86063340540018E5D2 /* GaimSinglelineRequestWindow.nib */,
+				341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */,
+				341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */,
 				34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */,
 				34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */,
 				34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */,
