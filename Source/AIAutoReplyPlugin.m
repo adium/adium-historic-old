@@ -110,7 +110,7 @@
 	if ([[contentObject type] isEqualToString:CONTENT_MESSAGE_TYPE] &&
 	   ![(AIContentMessage *)contentObject isAutoreply] &&
 	   ![receivedAutoReply containsObjectIdenticalTo:chat] &&
-	   [chat name] == nil) {
+	   ![chat isGroupChat]) {
 		
 		[self sendAutoReplyFromAccount:[contentObject destination]
 							 toContact:[contentObject source]
