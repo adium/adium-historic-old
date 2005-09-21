@@ -197,6 +197,8 @@
 
 	//Message header
 	if (messageHeader) {
+		NSRect messageHeaderFrame = [scrollView_messageHeader frame];
+
 		//Resize the window frame to fit the error title
 		[textView_messageHeader setVerticallyResizable:YES];
 		[textView_messageHeader setDrawsBackground:NO];
@@ -205,9 +207,10 @@
 		
 		[textView_messageHeader sizeToFit];
 		heightChange += [textView_messageHeader frame].size.height - [scrollView_messageHeader documentVisibleRect].size.height;
+		messageHeaderFrame.size.height += heightChange;
+		messageHeaderFrame.origin.y -= heightChange;
 		
-		frame.size.height += heightChange;
-		frame.origin.y -= heightChange;
+		[scrollView_messageHeader setFrame:messageHeaderFrame];
 
 	} else {
 		NSRect messageHeaderFrame = [scrollView_messageHeader frame];
@@ -234,6 +237,10 @@
 
 	//Set the message, then change the window size accordingly
 	{
+		NSRect	originalFrame = [scrollView_message frame];
+		originalFrame.origin.y -= heightChange;
+		[scrollView_message setFrame:originalFrame];
+
 		[textView_message setVerticallyResizable:YES];
 		[textView_message setDrawsBackground:NO];
 		[scrollView_message setDrawsBackground:NO];
@@ -242,9 +249,15 @@
 		[textView_message sizeToFit];
 		heightChange += [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
 		
-		frame.size.height += heightChange;
-		frame.origin.y -= heightChange;
-		
+		/* 24 pixels from the original bottom of scrollView_message to the proper positioning above the buttons;
+		 * after that, the window needs to expand.
+		 */
+		if (heightChange > 24) {
+			heightChange -= 24;
+			frame.size.height += heightChange;
+			frame.origin.y -= heightChange;
+		}
+
 		[scrollView_message setNeedsDisplay:YES];
 		
 		//Resize the window to fit the message
