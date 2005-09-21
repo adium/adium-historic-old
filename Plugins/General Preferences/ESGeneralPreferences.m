@@ -32,7 +32,7 @@
 	[@"BezelServices" stringByAppendingPathExtension:@"loginPlugin"], \
 	@"Contents", @"Resources", \
 	[@"volume" stringByAppendingPathExtension:@"aiff"], \
-	nil]];
+	nil]]
 
 @interface ESGeneralPreferences (PRIVATE)
 - (NSMenu *)outputDeviceMenu;
