@@ -880,7 +880,28 @@
 			
 		}
 	} while (range.location != NSNotFound);
-	
+
+	do{
+		range = [inString rangeOfString:@"%sourceName%"];
+		if(range.location != NSNotFound){
+			[inString replaceCharactersInRange:range
+									withString:[[[chat account] displayName] stringByEscapingForHTML]];
+			
+		}
+	} while(range.location != NSNotFound);
+
+	do{
+		range = [inString rangeOfString:@"%destinationName%"];
+		if(range.location != NSNotFound){
+			NSString *destinationName = [[chat listObject] displayName];
+			if (!destinationName) destinationName = [chat displayName];
+			
+			[inString replaceCharactersInRange:range
+									withString:[destinationName stringByEscapingForHTML]];
+			
+		}
+	} while(range.location != NSNotFound);	
+
 	do{
 		range = [inString rangeOfString:@"%incomingIconPath%"];
 		if (range.location != NSNotFound) {
