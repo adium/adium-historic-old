@@ -559,7 +559,7 @@
 		
 		enumerator = [openChats objectEnumerator];
 		while ((chat = [enumerator nextObject])) {
-			if (![chat name] &&
+			if (![chat isGroupChat] &&
 				[[[chat listObject] internalObjectID] isEqualToString:[inContact internalObjectID]]) {
 				if (!foundChats) foundChats = [NSMutableSet set];
 				[foundChats addObject:chat];
@@ -635,7 +635,7 @@
 	BOOL			contactIsInGroupChat = NO;
 	
 	while ((chat = [chatEnumerator nextObject])) {
-		if ([chat name] &&
+		if ([chat isGroupChat] &&
 			[[chat participatingListObjects] containsObjectIdenticalTo:listContact]) {
 			
 			contactIsInGroupChat = YES;
