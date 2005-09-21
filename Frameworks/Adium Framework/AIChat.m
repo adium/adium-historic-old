@@ -597,4 +597,12 @@ static int nextChatNumber = 0;
 		(uniqueChatID ? uniqueChatID : @"<new>")];
 }
 
+#pragma mark Group Chat
+
+- (BOOL)isGroupChat
+{
+#warning This is how the check is done elsewhere, but the plan is to transition to a non-stupid way of checking
+	return ([self name] != nil);
+}
+
 @end
