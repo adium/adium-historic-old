@@ -2185,7 +2185,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (BOOL)allowSecureMessagingTogglingForChat:(AIChat *)inChat
 {
 	//Allow secure messaging via OTR for one-on-one chats
-	return [inChat name] == nil;
+	return ![inChat isGroupChat];
 }
 
 - (NSString *)aboutEncryption
