@@ -122,7 +122,7 @@ gboolean gaim_init_jabber_plugin(void);
 	forceOldSSL = [[self preferenceForKey:KEY_JABBER_FORCE_OLD_SSL group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "old_ssl", forceOldSSL);
 
-	//Allow TLS useage? (on by default)
+	//Allow TLS usage? (on by default)
 	useTLS = [[self preferenceForKey:KEY_JABBER_USE_TLS group:GROUP_ACCOUNT_STATUS] boolValue];
 	gaim_account_set_bool(account, "use_tls", useTLS);
 
