@@ -171,18 +171,18 @@
 	   [inModifiedKeys containsObject:@"VisibleObjectCount"]) {
 
 		if ([inObject isKindOfClass:[AIListContact class]]) {
-			BOOL	online = [inObject online];
-			BOOL	justSignedOff = [inObject integerStatusObjectForKey:@"Signed Off"];
-			BOOL	newObject = [inObject integerStatusObjectForKey:@"New Object"];
+			BOOL	visible = (showOfflineContacts || 
+							   [inObject online] ||
+							   [inObject integerStatusObjectForKey:@"Signed Off"] ||
+							   [inObject integerStatusObjectForKey:@"New Object"]);
 
 			if ([inObject isKindOfClass:[AIMetaContact class]]) {
-				[inObject setVisible:((online) || 
-									  (justSignedOff) || 
-									  (newObject) ||
-									  (showOfflineContacts && ([(AIMetaContact *)inObject visibleCount] > 0)))];
+				//A metaContact must meet the criteria for a contact to be visible and also have at least 1 contained contact
+				[inObject setVisible:(visible &&
+									  ([(AIMetaContact *)inObject visibleCount] > 0))];
 				
 			} else {
-				[inObject setVisible:(showOfflineContacts || online || justSignedOff || newObject)];
+				[inObject setVisible:visible];
 			}
 
 		} else if ([inObject isKindOfClass:[AIListGroup class]]) {
