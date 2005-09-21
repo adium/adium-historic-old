@@ -331,7 +331,6 @@
 		if (group && (group != [[adium contactController] contactList])) {
 			containerID = [group displayName];
 		}
-
 	} 
 	
 	//XXX - Temporary setup for multiple windows
