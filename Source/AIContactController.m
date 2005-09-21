@@ -2002,18 +2002,19 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 			//If the metaContact only has one listContact, we will remove that contact from all accounts
 			if ([[(AIMetaContact *)listObject listContacts] count] == 1) {
-				objectsToRemove = [[(AIMetaContact *)listObject containedObjects] copy];
+				AIListContact	*listContact = [[(AIMetaContact *)listObject listContacts] objectAtIndex:0];
+				
+				objectsToRemove = [self allContactsWithService:[listContact service]
+														   UID:[listContact UID]];
 			}
-
-			//Now break the metaContact down, taking out all contacts and putting them back in the main list
-			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];
 
 			//And actually remove the single contact if applicable
 			if (objectsToRemove) {
 				[self removeListObjects:objectsToRemove];
-				
-				[objectsToRemove release];
 			}
+			
+			//Now break the metaContact down, taking out all contacts and putting them back in the main list
+			[self breakdownAndRemoveMetaContact:(AIMetaContact *)listObject];				
 
 		} else if ([listObject isKindOfClass:[AIListGroup class]]) {
 			AIListObject	*containingObject = [listObject containingObject];
@@ -2039,7 +2040,10 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 			[listObject release];
 
 		} else {
-			[[(AIListContact *)listObject account] removeContacts:[NSArray arrayWithObject:listObject]];
+			AIAccount	*account = [(AIListContact *)listObject account];
+			if ([account online]) {
+				[account removeContacts:[NSArray arrayWithObject:listObject]];
+			}
 		}
 	}
 }
