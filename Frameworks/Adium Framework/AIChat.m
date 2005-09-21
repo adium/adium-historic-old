@@ -228,6 +228,12 @@ static int nextChatNumber = 0;
     return outName ? outName : (name ? name : [[self listObject] displayName]);
 }
 
+- (void)setDisplayName:(NSString *)inDisplayName
+{
+	[[self displayArrayForKey:@"Display Name"] setObject:inDisplayName
+											   withOwner:self];
+}
+
 //Participating ListObjects --------------------------------------------------------------------------------------------
 #pragma mark Participating ListObjects
 - (NSArray *)participatingListObjects
