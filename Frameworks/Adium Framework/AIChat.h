@@ -80,6 +80,7 @@ typedef enum {
     AIAccount			*account;
 	NSDate				*dateOpened;
 	BOOL				isOpen;
+	BOOL				isGroupChat;
 
 	NSMutableArray		*pendingOutgoingContentObjects;
 
