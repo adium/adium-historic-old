@@ -28,6 +28,7 @@
 #import "AIPreferenceController.h"
 
 #import <AIUtilities/AIArrayAdditions.h>
+#import <AIUtilities/AIMutableOwnerArray.h>
 
 @interface AIChat (PRIVATE)
 - (id)initForAccount:(AIAccount *)inAccount;
