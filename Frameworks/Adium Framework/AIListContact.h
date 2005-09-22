@@ -28,6 +28,7 @@
 - (id)initWithUID:(NSString *)inUID service:(AIService *)inService;
 - (void)setRemoteGroupName:(NSString *)inName;
 - (NSString *)remoteGroupName;
+- (void)setUID:(NSString *)inUID;
 - (AIAccount *)account;
 - (NSString *)internalUniqueObjectID;
 + (NSString *)internalUniqueObjectIDForService:(AIService *)inService account:(AIAccount *)inAccount UID:(NSString *)inUID;
