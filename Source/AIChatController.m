@@ -353,6 +353,7 @@
 		//Create a new chat
 		chat = [AIChat chatForAccount:account];
 		[chat setName:inName];
+		[chat setIsGroupChat:YES];
 		[openChats addObject:chat];
 		AILog(@"chatWithName:%@ onAccount:%@ added <<%@>> [%@]",inName,account,chat,openChats);
 		
