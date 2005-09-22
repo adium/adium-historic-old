@@ -56,6 +56,7 @@ static int nextChatNumber = 0;
 		uniqueChatID = nil;
 		ignoredListContacts = nil;
 		isOpen = NO;
+		isGroupChat = NO;
 		expanded = YES;
 
 		pendingOutgoingContentObjects = [[NSMutableArray alloc] init];
