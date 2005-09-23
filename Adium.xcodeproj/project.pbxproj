@@ -408,6 +408,10 @@
 		34A6FEBC07D7E2E500972830 /* KFTypeSelectTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 34A6FE7807D7E06A00972830 /* KFTypeSelectTableView.m */; };
 		34AC36BB07B5C51500145239 /* AIStatus.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AC36B907B5C51400145239 /* AIStatus.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34AC36BC07B5C51500145239 /* AIStatus.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AC36BA07B5C51400145239 /* AIStatus.m */; };
+		34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */; };
+		34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */; };
+		34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */; };
+		34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */; };
 		34B27295083ACA900092A5A0 /* DeadStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B27293083ACA900092A5A0 /* DeadStrings.h */; };
 		34B2740C083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B2740A083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h */; };
 		34B2740D083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B2740B083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m */; };
@@ -2265,6 +2269,10 @@
 		34A6FE7907D7E06A00972830 /* KFTypeSelectTableView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = KFTypeSelectTableView.h; path = "Frameworks/Adium Framework/KFTypeSelectTableView.h"; sourceTree = "<group>"; };
 		34AC36B907B5C51400145239 /* AIStatus.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIStatus.h; path = "Frameworks/Adium Framework/AIStatus.h"; sourceTree = "<group>"; };
 		34AC36BA07B5C51400145239 /* AIStatus.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIStatus.m; path = "Frameworks/Adium Framework/AIStatus.m"; sourceTree = "<group>"; };
+		34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimFileReceiveRequestController.h; path = "Plugins/Gaim Service/ESGaimFileReceiveRequestController.h"; sourceTree = "<group>"; };
+		34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimFileReceiveRequestController.m; path = "Plugins/Gaim Service/ESGaimFileReceiveRequestController.m"; sourceTree = "<group>"; };
+		34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestAbstractWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestAbstractWindowController.h"; sourceTree = "<group>"; };
+		34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestAbstractWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestAbstractWindowController.m"; sourceTree = "<group>"; };
 		34B271EB0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		34B271EC0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/is.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		34B271ED0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
@@ -4096,18 +4104,22 @@
 		34C2CF8F0633405C0018E5D2 /* Request UI */ = {
 			isa = PBXGroup;
 			children = (
+				34AEE7E808E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h */,
+				34AEE7E908E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m */,
 				3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */,
 				3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */,
 				34C2CF85063340540018E5D2 /* GaimMultilineRequestWindow.nib */,
 				34C2CF86063340540018E5D2 /* GaimSinglelineRequestWindow.nib */,
-				341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */,
-				341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */,
 				34C9A6360822930D004F912C /* ESGaimMeanwhileContactAdditionController.h */,
 				34C9A6370822930D004F912C /* ESGaimMeanwhileContactAdditionController.m */,
 				34C9A64408229348004F912C /* GaimMeanwhileContactAdditionWindow.nib */,
 				34B2740A083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.h */,
 				34B2740B083C0AB90092A5A0 /* ESGaimAuthorizationRequestWindowController.m */,
 				34B27415083C0B900092A5A0 /* GaimAuthorizationRequestWindow.nib */,
+				34AEE7DC08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.h */,
+				34AEE7DD08E3546F00AE1C78 /* ESGaimFileReceiveRequestController.m */,
+				341E88680648FF1B00E0C828 /* ESGaimRequestActionController.h */,
+				341E88690648FF1B00E0C828 /* ESGaimRequestActionController.m */,
 			);
 			name = "Request UI";
 			sourceTree = "<group>";
@@ -6669,6 +6681,8 @@
 				A3C0432108D74D3100B48CE1 /* AIGaimGTalkAccount.h in Headers */,
 				A3C0432308D74D3100B48CE1 /* AIGaimGTalkAccountViewController.h in Headers */,
 				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
+				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
+				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8291,6 +8305,8 @@
 				A3C0432208D74D3100B48CE1 /* AIGaimGTalkAccount.m in Sources */,
 				A3C0432408D74D3100B48CE1 /* AIGaimGTalkAccountViewController.m in Sources */,
 				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
+				34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */,
+				34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
