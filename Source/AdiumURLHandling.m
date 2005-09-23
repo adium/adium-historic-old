@@ -81,6 +81,7 @@
 		
 	NSString *string = [[event descriptorAtIndex:1] stringValue];
 	NSURL *url = [NSURL URLWithString:string];
+	AIAdium *sharedAdium = [AIObject sharedAdiumInstance];
 
 	if (url) {
 		NSString	*scheme, *newScheme;
@@ -136,10 +137,10 @@
 				// aim://addbuddy?screenname=tekjew
 				// aim://addbuddy?listofscreennames=screen+name1,screen+name+2&groupname=buddies
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
-				AIService	*service = [[adium accountController] firstServiceWithServiceID:serviceID];
+				AIService	*service = [[sharedAdium accountController] firstServiceWithServiceID:serviceID];
 				
 				if (name) {
-					[[adium contactController] requestAddContactWithUID:name
+					[[sharedAdium contactController] requestAddContactWithUID:name
 																service:service];
 					
 				} else {
@@ -150,7 +151,7 @@
 					enumerator = [names objectEnumerator];
 					while ((name = [enumerator nextObject])) {
 						NSString	*decodedName = [[name stringByDecodingURLEscapes] compactedString];
-						[[adium contactController] requestAddContactWithUID:decodedName
+						[[sharedAdium contactController] requestAddContactWithUID:decodedName
 																	service:service];
 					}
 				}
@@ -241,13 +242,14 @@
 + (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
 	AIListContact   *contact;
+	AIAdium			*sharedAdium = [AIObject sharedAdiumInstance];
 	
-	contact = [[adium contactController] preferredContactWithUID:UID
-													andServiceID:serviceID 
-										   forSendingContentType:CONTENT_MESSAGE_TYPE];
+	contact = [[sharedAdium contactController] preferredContactWithUID:UID
+																			 andServiceID:serviceID 
+																	forSendingContentType:CONTENT_MESSAGE_TYPE];
 	if (contact) {
 		//Open the chat and set it as active
-		[[adium interfaceController] setActiveChat:[[adium chatController] openChatWithContact:contact]];
+		[[sharedAdium interfaceController] setActiveChat:[[sharedAdium chatController] openChatWithContact:contact]];
 		
 		//Insert the message text as if the user had typed it after opening the chat
 		NSResponder *responder = [[[NSApplication sharedApplication] keyWindow] firstResponder];
@@ -266,7 +268,7 @@
 	NSEnumerator	*enumerator;
 	
 	//Find an AIM-compatible online account which can create group chats
-	enumerator = [[[adium accountController] accounts] objectEnumerator];
+	enumerator = [[[[AIObject sharedAdiumInstance] accountController] accounts] objectEnumerator];
 	while ((account = [enumerator nextObject])) {
 		if ([account online] &&
 			[[account serviceClass] isEqualToString:@"AIM-compatible"] &&
@@ -276,12 +278,12 @@
 	}
 	
 	if (roomname && account) {
-		[[adium chatController] chatWithName:roomname
-								   onAccount:account
-							chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
-								roomname, @"room",
-								[NSNumber numberWithInt:exchange], @"exchange",
-								nil]];
+		[[[AIObject sharedAdiumInstance] chatController] chatWithName:roomname
+															onAccount:account
+													 chatCreationInfo:[NSDictionary dictionaryWithObjectsAndKeys:
+																		roomname, @"room",
+																		[NSNumber numberWithInt:exchange], @"exchange",
+																		nil]];
 	} else {
 		NSBeep();
 	}
