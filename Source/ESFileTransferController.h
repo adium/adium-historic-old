@@ -47,7 +47,7 @@ typedef enum {
     AutoAccept_FromContactList,
 } FTAutoAcceptType;
 
-@class ESFileTransfer, AIListContact, AIAccount;
+@class AIWindowController, ESFileTransfer, AIListContact, AIAccount;
 
 @protocol AIController, AIEventHandler;
 
@@ -72,7 +72,7 @@ typedef enum {
 - (ESFileTransfer *)newFileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount;
 - (NSArray *)fileTransferArray;
 
-- (NSWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
+- (AIWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer;
 
 - (void)fileTransfer:(ESFileTransfer *)fileTransfer didSetStatus:(FileTransferStatus)status;
 

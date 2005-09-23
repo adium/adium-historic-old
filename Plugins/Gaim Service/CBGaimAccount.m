@@ -43,6 +43,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIWindowController.h>
 
 #define NO_GROUP						@"__NoGroup__"
 
@@ -1170,7 +1171,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  * 
  * @result The window controller for the window prompting the user to take action, or nil if no prompt was shown
  */
-- (NSWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
+- (AIWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	GaimDebug(@"File transfer request received: %@",fileTransfer);
 	return [[adium fileTransferController] receiveRequestForFileTransfer:fileTransfer];

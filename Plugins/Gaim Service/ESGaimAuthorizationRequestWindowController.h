@@ -6,9 +6,9 @@
 //  Copyright 2005 The Adium Team. All rights reserved.
 //
 
-#import <Adium/AIWindowController.h>
+#import "ESGaimRequestAbstractWindowController.h"
 
-@interface ESGaimAuthorizationRequestWindowController : AIWindowController {
+@interface ESGaimAuthorizationRequestWindowController : ESGaimRequestAbstractWindowController {
 	IBOutlet	NSTextField		*textField_header;
 	IBOutlet	NSTextField		*textField_message;
 

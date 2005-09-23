@@ -6,9 +6,9 @@
 //  Copyright 2005 The Adium Team. All rights reserved.
 //
 
-#import <Adium/AIWindowController.h>
+#import "ESGaimRequestAbstractWindowController.h"
 
-@interface ESGaimMeanwhileContactAdditionController : AIWindowController {
+@interface ESGaimMeanwhileContactAdditionController : ESGaimRequestAbstractWindowController {
 	IBOutlet	NSImageView	*imageView_meanwhile;
 	
 	IBOutlet	NSTextField	*textField_header;

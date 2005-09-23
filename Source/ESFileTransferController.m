@@ -34,6 +34,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIListObject.h>
 #import <Adium/ESFileTransfer.h>
+#import <Adium/AIWindowController.h>
 
 #define SEND_FILE					AILocalizedString(@"Send File",nil)
 #define SEND_FILE_WITH_ELLIPSIS		[SEND_FILE stringByAppendingEllipsis]
@@ -169,7 +170,7 @@ static ESFileTransferPreferences *preferences;
 
 #pragma mark Sending and receiving
 //Sent by an account when it gets a request for us to receive a file; prompt the user for a save location
-- (NSWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
+- (AIWindowController *)receiveRequestForFileTransfer:(ESFileTransfer *)fileTransfer
 {
 	AIListContact		*listContact = [fileTransfer contact];
 	NSString			*localFilename = nil;

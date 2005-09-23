@@ -155,10 +155,8 @@ struct resolved_id {
 	}	
 }
 
-- (void)windowWillClose:(id)sender
+- (void)doWindowWillClose
 {
-	[super windowWillClose:sender];
-	
 	if (infoDict) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestFieldsCbValue:withUserDataValue:fieldsValue:)
@@ -166,9 +164,6 @@ struct resolved_id {
 											  withObject:[infoDict objectForKey:@"userData"]
 											  withObject:[infoDict objectForKey:@"fieldsValue"]];
 	}
-	
-	[self autorelease];
 }
-
 
 @end

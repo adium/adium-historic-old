@@ -18,10 +18,20 @@
 #import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimAuthorizationRequestWindowController.h"
+#import "ESGaimFileReceiveRequestController.h"
 #import "ESGaimMeanwhileContactAdditionController.h"
+#import <Adium/NDRunLoopMessenger.h>
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/ESFileTransfer.h>
 
+/*
+ * Gaim requires us to return a handle from each of the request functions.  This handle is passed back to use in 
+ * adiumGaimRequestClose() if the request window is no longer valid -- for example, a chat invitation window is open,
+ * and then the account disconnects.  All window controllers created from adiumGaimRequest.m should return non-autoreleased
+ * instances of themselves.  They then release themselves when their window closes.  Rather than calling
+ * [[self window] close], they should use gaim_request_close_with_handle(self) to ensure proper bookkeeping gaimside.
+ */
+ 
 //Jabber registration
 #include <Libgaim/jabber.h>
 
@@ -68,7 +78,7 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 																	withObject:infoDict
 																   returnValue:YES];
 	}
-	
+
 	return (requestController ? requestController : [NSNull null]);
 }
 
@@ -78,8 +88,8 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 			   (title ? title : ""),
 			   (primary ? primary : ""),
 			   (secondary ? secondary : ""));
-
-    return [NSNull null];
+	
+	return [NSNull null];
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
@@ -254,7 +264,6 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 																   returnValue:YES];
 	}
 
-	//Return the requestController if we have one; otherwise return our generic UI handle
 	return (requestController ? requestController : [NSNull null]);
 }
 
@@ -430,7 +439,6 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 //		((GaimRequestFieldsCb)okCb)(userData, fields);
 	}
     
-	//Return the requestController if we have one; otherwise return our generic UI handle
 	return (requestController ? requestController : [NSNull null]);
 }
 
@@ -438,61 +446,67 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 {
 	id					requestController = nil;
 	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);
-
+	
 	if (titleString &&
-	   ([titleString rangeOfString:@"Sametime"].location != NSNotFound)) {
-		   if ([titleString rangeOfString:@"Export"].location != NSNotFound) {
-			   NSSavePanel *savePanel = [NSSavePanel savePanel];
-			   
-			   if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
-				   ((GaimRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
-			   }
-		   } else if ([titleString rangeOfString:@"Import"].location != NSNotFound) {
-			   NSOpenPanel *openPanel = [NSOpenPanel openPanel];
-			   
-			   if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
-				   ((GaimRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
-			   }
-		   }		   
-
-	   } else {
-		   GaimXfer *xfer = (GaimXfer *)user_data;
-		   if (xfer) {
-			   GaimXferType xferType = gaim_xfer_get_type(xfer);
-
-			   if (xferType == GAIM_XFER_RECEIVE) {
-				   GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
-				   
-				   ESFileTransfer  *fileTransfer;
-				   NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
-				   
-				   //Ask the account for an ESFileTransfer* object
-				   fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
-																					 size:gaim_xfer_get_size(xfer)
-																		   remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
-				   
-				   //Configure the new object for the transfer
-				   [fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
-				   
-				   xfer->ui_data = [fileTransfer retain];
-				   
-				   //Tell the account that we are ready to request the reception
-				   requestController = [accountLookup(xfer->account) mainPerformSelector:@selector(requestReceiveOfFileTransfer:)
-																			  withObject:fileTransfer
-																			 returnValue:YES];
-				   
-			   } else if (xferType == GAIM_XFER_SEND) {
-				   if (xfer->local_filename != NULL && xfer->filename != NULL) {
-					   gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
-				   } else {
-					   gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
-					   [[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
-				   }
-			   }
-		   }
-	   }
-	   
-	//Return the requestController if we have one; otherwise return our generic UI handle
+		([titleString rangeOfString:@"Sametime"].location != NSNotFound)) {
+		if ([titleString rangeOfString:@"Export"].location != NSNotFound) {
+			NSSavePanel *savePanel = [NSSavePanel savePanel];
+			
+			if ([savePanel runModalForDirectory:nil file:nil] == NSOKButton) {
+				((GaimRequestFileCb)ok_cb)(user_data, [[savePanel filename] UTF8String]);
+			}
+		} else if ([titleString rangeOfString:@"Import"].location != NSNotFound) {
+			NSOpenPanel *openPanel = [NSOpenPanel openPanel];
+			
+			if ([openPanel runModalForDirectory:nil file:nil types:nil] == NSOKButton) {
+				((GaimRequestFileCb)ok_cb)(user_data, [[openPanel filename] UTF8String]);
+			}
+		}
+	} else {
+		GaimXfer *xfer = (GaimXfer *)user_data;
+		if (xfer) {
+			GaimXferType xferType = gaim_xfer_get_type(xfer);
+			
+			if (xferType == GAIM_XFER_RECEIVE) {
+				GaimDebug (@"File request: %s from %s on IP %s",xfer->filename,xfer->who,gaim_xfer_get_remote_ip(xfer));
+				
+				ESFileTransfer  *fileTransfer;
+				NSString		*destinationUID = [NSString stringWithUTF8String:gaim_normalize(xfer->account,xfer->who)];
+				
+				//Ask the account for an ESFileTransfer* object
+				fileTransfer = [accountLookup(xfer->account) newFileTransferObjectWith:destinationUID
+																				  size:gaim_xfer_get_size(xfer)
+																		remoteFilename:[NSString stringWithUTF8String:(xfer->filename)]];
+				
+				//Configure the new object for the transfer
+				[fileTransfer setAccountData:[NSValue valueWithPointer:xfer]];
+				
+				xfer->ui_data = [fileTransfer retain];
+				
+				//Tell the account that we are ready to request the reception
+				NSDictionary	*infoDict;
+				
+				infoDict = [NSDictionary dictionaryWithObjectsAndKeys:
+					accountLookup(xfer->account), @"CBGaimAccount",
+					fileTransfer, @"ESFileTransfer",
+					nil];
+				requestController = [ESGaimFileReceiveRequestController mainPerformSelector:@selector(showFileReceiveWindowWithDict:)
+																				 withObject:infoDict
+																				returnValue:YES];
+				AILog(@"GAIM_XFER_RECEIVE: Request controller for %x is %@",xfer,requestController);
+			} else if (xferType == GAIM_XFER_SEND) {
+				if (xfer->local_filename != NULL && xfer->filename != NULL) {
+					AILog(@"GAIM_XFER_SEND: %x (%s)",xfer,xfer->local_filename);
+					gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
+				} else {
+					gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
+					[[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
+				}
+			}
+		}
+	}
+	
+	AILog(@"adiumGaimRequestFile() returning %@",(requestController ? requestController : [NSNull null]));
 	return (requestController ? requestController : [NSNull null]);
 }
 
@@ -507,17 +521,10 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
  */
 static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 {
-	NSObject	*ourHandle = (NSObject *)uiHandle;
-	
-	if ([ourHandle respondsToSelector:@selector(close)]) {
-		NSWindow	*window = [(id)ourHandle mainPerformSelector:@selector(window)
-													 returnValue:YES];
-		[window performSelectorOnMainThread:@selector(orderOut:)
-								 withObject:nil
-							  waitUntilDone:YES];
-		[window performSelectorOnMainThread:@selector(close)
-								 withObject:nil
-							  waitUntilDone:NO];		
+	id	ourHandle = (id)uiHandle;
+	AILog(@"adiumGaimRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
+	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
+		[(id<GaimRequestController>)ourHandle mainPerformSelector:@selector(gaimRequestClose)];
 	}
 }
 
@@ -534,3 +541,20 @@ GaimRequestUiOps *adium_gaim_request_get_ui_ops()
 {
 	return &adiumGaimRequestOps;
 }
+
+@implementation ESGaimRequestAdapter
+
++ (void)gaimThreadRequestCloseWithHandle:(id)handle
+{
+	AILog(@"gaimThreadRequestCloseWithHandle: %@",handle);
+	gaim_request_close_with_handle(handle);
+}
+
++ (void)requestCloseWithHandle:(id)handle
+{
+	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self 
+									 performSelector:@selector(gaimThreadRequestCloseWithHandle:)
+										  withObject:handle];
+}
+
+@end

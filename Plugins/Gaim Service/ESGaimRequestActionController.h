@@ -16,10 +16,12 @@
 
 #import "CBGaimServicePlugin.h"
 
-@interface ESGaimRequestActionController : AIObject {
+@class ESTextAndButtonsWindowController;
 
+@interface ESGaimRequestActionController : AIObject {
+	ESTextAndButtonsWindowController	*requestController;
 }
 
-+ (NSWindowController *)showActionWindowWithDict:(NSDictionary *)infoDict;
++ (ESGaimRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict;
 
 @end

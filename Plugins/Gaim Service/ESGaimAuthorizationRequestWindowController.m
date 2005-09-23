@@ -36,10 +36,13 @@
 - (id)initWithWindowNibName:(NSString *)windowNibName withDict:(NSDictionary *)inInfoDict
 {
     if ((self = [super initWithWindowNibName:windowNibName])) {
+		NSWindow	*window;
+
 		infoDict = [inInfoDict retain];
-		NSWindow *window = [self window];
-		if(![window setFrameUsingName:[self windowFrameAutosaveName]])
+		window = [self window];
+		if (![window setFrameUsingName:[self windowFrameAutosaveName]]) {
 			[window center];
+		}		
 	}
 	
     return self;
@@ -96,11 +99,14 @@
 
 - (IBAction)authorize:(id)sender
 {
+	//Do the authorization serverside
 	[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 									 performSelector:@selector(gaimThreadDoAuthRequestCbValue:withUserDataValue:callBackIndexNumber:)
 										  withObject:[[[infoDict objectForKey:@"authorizeCB"] retain] autorelease]
 										  withObject:[[[infoDict objectForKey:@"userData"] retain] autorelease]
 										  withObject:[NSNumber numberWithInt:0]];
+
+	//Now handle the Add To Contact List checkbox
 	AILog(@"Authorize: (%i) %@",[checkBox_addToList state],infoDict);
 	if ([checkBox_addToList state] == NSOnState) {
 		/* Add the contact to all appropriate accounts. Gaim doesn't tell us which account this auth request was on,
@@ -132,10 +138,8 @@
 	[self closeWindow:nil];
 }
 
-- (void)windowWillClose:(id)sender
+- (void)doWindowWillClose
 {
-	[super windowWillClose:sender];
-	
 	if (infoDict) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoAuthRequestCbValue:withUserDataValue:callBackIndexNumber:)
@@ -143,8 +147,6 @@
 											  withObject:[infoDict objectForKey:@"userData"]
 											  withObject:[NSNumber numberWithInt:1]];
 	}
-	
-	[self autorelease];
 }
 
 @end

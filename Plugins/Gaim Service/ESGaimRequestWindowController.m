@@ -202,10 +202,8 @@
 	[super dealloc];
 }
 
-- (void)windowWillClose:(id)sender
+- (void)doWindowWillClose
 {
-	[super windowWillClose:sender];
-	
 	if (cancelCallbackValue) {
 		[[SLGaimCocoaAdapter gaimThreadMessenger] target:self
 										 performSelector:@selector(gaimThreadDoRequestInputCbValue:withUserDataValue:inputString:)

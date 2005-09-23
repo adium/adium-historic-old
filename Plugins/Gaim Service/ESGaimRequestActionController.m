@@ -16,13 +16,15 @@
 
 #import "ESGaimRequestActionController.h"
 #import "GaimCommon.h"
+#import "adiumGaimRequest.h"
 #import "SLGaimCocoaAdapter.h"
 #import "ESTextAndButtonsWindowController.h"
 #import <Adium/AIHTMLDecoder.h>
 #import <Adium/NDRunLoopMessenger.h>
 
 @interface ESGaimRequestActionController (PRIVATE)
-+ (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
+- (id)initWithDict:(NSDictionary *)infoDict;
+- (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict;
 @end
 
 @implementation ESGaimRequestActionController
@@ -31,58 +33,70 @@
  * @brief Show an action request window
  *
  * @param infoDict Dictionary of information to display, including callbacks for the buttons
- * @result The NSWindowController for the displayed window
+ * @result The ESGaimRequestActionController for the displayed window
  */
-+ (NSWindowController *)showActionWindowWithDict:(NSDictionary *)infoDict
++ (ESGaimRequestActionController *)showActionWindowWithDict:(NSDictionary *)infoDict
 {
-	ESTextAndButtonsWindowController	*controller;
-
-	NSAttributedString	*attributedMessage;
-	NSArray				*buttonNamesArray;
-	NSString			*title, *message;
-	NSString			*defaultButton, *alternateButton = nil, *otherButton = nil;
-	unsigned			buttonNamesArrayCount;
-	
-	infoDict = [self translatedInfoDict:infoDict];
-
-	title = [infoDict objectForKey:@"TitleString"];
-	
-	//message may be in HTML. If it's plain text, we'll just be getting an attributed string out of this.
-	message = [infoDict objectForKey:@"Message"];
-	attributedMessage = (message ? [AIHTMLDecoder decodeHTML:message] : nil);
-
-	buttonNamesArray = [infoDict objectForKey:@"Button Names"];
-	buttonNamesArrayCount = [buttonNamesArray count];
-
-	//The last object in the buttons array is the default; alternate is second to last; otherButton is last
-	defaultButton = [buttonNamesArray lastObject];
-	if (buttonNamesArrayCount > 1) {
-		alternateButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-2)];
-		
-		if (buttonNamesArrayCount > 2) {
-			otherButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-3)];			
-		}
-	}
-
-	/*
-	 * If we have an attribMsg and a titleString, use the titleString as the window title.
-	 * If we just have the titleString (and no attribMsg), it is our message, and the window has no title.
-	 */
-	controller = [ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:(attributedMessage ? title : nil)
-																	   defaultButton:defaultButton
-																	 alternateButton:alternateButton
-																		 otherButton:otherButton
-																			onWindow:nil
-																   withMessageHeader:(!attributedMessage ? title : nil)
-																		  andMessage:attributedMessage
-																			  target:self
-																			userInfo:infoDict];
-	[controller setAllowsCloseWithoutResponse:NO];
-	
-	return controller;
+	return [[self alloc] initWithDict:infoDict];
 }
 
-+ (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
+- (id)initWithDict:(NSDictionary *)infoDict
+{
+	if ((self = [super init])) {
+		NSAttributedString	*attributedMessage;
+		NSArray				*buttonNamesArray;
+		NSString			*title, *message;
+		NSString			*defaultButton, *alternateButton = nil, *otherButton = nil;
+		unsigned			buttonNamesArrayCount;
+		
+		infoDict = [self translatedInfoDict:infoDict];
+		
+		title = [infoDict objectForKey:@"TitleString"];
+		
+		//message may be in HTML. If it's plain text, we'll just be getting an attributed string out of this.
+		message = [infoDict objectForKey:@"Message"];
+		attributedMessage = (message ? [AIHTMLDecoder decodeHTML:message] : nil);
+		
+		buttonNamesArray = [infoDict objectForKey:@"Button Names"];
+		buttonNamesArrayCount = [buttonNamesArray count];
+		
+		//The last object in the buttons array is the default; alternate is second to last; otherButton is last
+		defaultButton = [buttonNamesArray lastObject];
+		if (buttonNamesArrayCount > 1) {
+			alternateButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-2)];
+			
+			if (buttonNamesArrayCount > 2) {
+				otherButton = [buttonNamesArray objectAtIndex:(buttonNamesArrayCount-3)];			
+			}
+		}
+		
+		/*
+		 * If we have an attribMsg and a titleString, use the titleString as the window title.
+		 * If we just have the titleString (and no attribMsg), it is our message, and the window has no title.
+		 */
+		requestController = [[ESTextAndButtonsWindowController showTextAndButtonsWindowWithTitle:(attributedMessage ? title : nil)
+																				   defaultButton:defaultButton
+																				 alternateButton:alternateButton
+																					 otherButton:otherButton
+																						onWindow:nil
+																			   withMessageHeader:(!attributedMessage ? title : nil)
+																					  andMessage:attributedMessage
+																						  target:self
+																						userInfo:infoDict] retain];
+		[requestController setAllowsCloseWithoutResponse:NO];
+	}
+	
+	return self;
+}
+
+- (void)dealloc
+{
+	[requestController release]; requestController = nil;
+	
+	[super dealloc];
+}
+
+- (BOOL)textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo
 {
 	GCallback		*theCallBacks;
 	unsigned int	actionCount;
@@ -120,10 +134,16 @@
 		NSLog(@"Failure.");
 	}
 	
+	//We won't need to try to close it ourselves later
+	[requestController release]; requestController = nil;
+	
+	//Inform libgaim that the request window closed
+	[ESGaimRequestAdapter requestCloseWithHandle:self];	
+
 	return YES;
 }
 
-+ (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
+- (oneway void)gaimThreadDoRequestActionCbValue:(NSValue *)callBackValue
 							  withUserDataValue:(NSValue *)userDataValue 
 								  callBackIndex:(NSNumber *)callBackIndexNumber
 {
@@ -131,6 +151,21 @@
 	if (callBack) {
 		callBack([userDataValue pointerValue],[callBackIndexNumber intValue]);
 	}
+}
+
+/*
+ * @brief libgaim has been made aware we closed or has informed us we should close
+ *
+ * Close our requestController's window if it's open; then release (we returned without autoreleasing initially).
+ */
+- (void)gaimRequestClose
+{
+	if (requestController) {
+		[[requestController window] orderOut:self];
+		[requestController close];
+	}
+	
+	[self release];
 }
 
 /*
@@ -144,7 +179,7 @@
  * AILocalizedString(@"Connect",nil)
  * AILocalizedString(@"Cancel", nil)
  */
-+ (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
+- (NSDictionary *)translatedInfoDict:(NSDictionary *)inDict
 {
 	NSMutableDictionary	*translatedDict = [inDict mutableCopy];
 	
