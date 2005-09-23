@@ -14,9 +14,9 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-#import <Adium/AIWindowController.h>
+#import "ESGaimRequestAbstractWindowController.h"
 
-@interface ESGaimRequestWindowController : AIWindowController {	
+@interface ESGaimRequestWindowController : ESGaimRequestAbstractWindowController {	
 	IBOutlet		NSTextView		*textView_primary;
 
 	IBOutlet		NSTextView		*textView_secondary;

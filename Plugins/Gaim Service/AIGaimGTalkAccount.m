@@ -34,9 +34,8 @@
 	gaim_account_set_username(account, [userNameWithGmailDotCom UTF8String]);
 }
 
-- (NSString *) serverSuffix
+- (NSString *)serverSuffix
 {
-	AILog(@"using gmail");
 	return @"@gmail.com";
 }
 

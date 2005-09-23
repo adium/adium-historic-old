@@ -17,3 +17,14 @@
 #import "SLGaimCocoaAdapter.h"
 
 GaimRequestUiOps *adium_gaim_request_get_ui_ops();
+
+@protocol GaimRequestController
+- (void)gaimRequestClose;
+@end;
+
+@interface ESGaimRequestAdapter : NSObject {
+	
+}
++ (void)requestCloseWithHandle:(id)handle;
+
+@end

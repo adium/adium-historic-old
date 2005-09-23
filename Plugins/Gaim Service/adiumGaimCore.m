@@ -136,6 +136,10 @@ static void adiumGaimCoreUiInit(void)
 		[userDefaults synchronize];
 	}
 
+	//Kill the Gaim blist file each launch; it just causes trouble
+	[[NSFileManager defaultManager] trashFileAtPath:
+		[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]];
+
 	gaim_blist_load();
 	
 	//Configure signals for receiving gaim events
