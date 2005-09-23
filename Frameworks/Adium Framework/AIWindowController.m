@@ -33,8 +33,11 @@
  */
 - (id)initWithWindowNibName:(NSString *)windowNibName
 {
-    adium = [AIObject sharedAdiumInstance];
-    return [super initWithWindowNibName:windowNibName];
+	if ((self = [super initWithWindowNibName:windowNibName])) {
+		adium = [AIObject sharedAdiumInstance];
+	}
+	
+    return self;
 }
 
 /*!
