@@ -43,7 +43,6 @@
 	<string>CBContactCountingDisplayPlugin</string>
 	<string>CBContactLastSeenPlugin</string>
 	<string>CBStatusMenuItemPlugin</string>
-	<string>CBURLHandlingPlugin</string>
 	<string>CPFVersionChecker</string>
 	<string>DCInviteToChatPlugin</string>
 	<string>DCJoinChatPanelPlugin</string>
