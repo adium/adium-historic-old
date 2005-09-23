@@ -182,6 +182,7 @@
 
 	NSWindow	*window = [self window];
 	int			heightChange = 0;
+	int			distanceFromBottomOfMessageToButtons = 36;
 	NSRect		frame = [window frame];
 
 	//Hide the toolbar and zoom buttons
@@ -226,20 +227,23 @@
 		//verticalChange is how far we can move our message area up since we don't have a messageHeader
 		int verticalChange = (messageHeaderFrame.size.height +
 							  (messageHeaderFrame.origin.y - (scrollFrame.origin.y+scrollFrame.size.height)));
-		
+
 		scrollFrame.size.height += verticalChange;
-		
+
 		[scrollView_message setFrame:scrollFrame];
-		
 		/* We expanded the message scrollview to take up the space previously used by the header; the window frame
-		 * does not need to be modified. */
+		 * does not need to be modified. However, it is now further from the message to where it will need to be
+		 * resized (if the message is large enough). 
+		 */
+		distanceFromBottomOfMessageToButtons += verticalChange;
 	}
 
 	//Set the message, then change the window size accordingly
 	{
-		NSRect	originalFrame = [scrollView_message frame];
-		originalFrame.origin.y -= heightChange;
-		[scrollView_message setFrame:originalFrame];
+		int		messageHeightChange;
+		NSRect	messageFrame = [scrollView_message frame];
+		
+		messageFrame.origin.y -= heightChange;
 
 		[textView_message setVerticallyResizable:YES];
 		[textView_message setDrawsBackground:NO];
@@ -247,17 +251,31 @@
 		
 		[[textView_message textStorage] setAttributedString:message];
 		[textView_message sizeToFit];
-		heightChange += [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
+		messageHeightChange = [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
+		heightChange += messageHeightChange;
 		
-		/* 24 pixels from the original bottom of scrollView_message to the proper positioning above the buttons;
-		 * after that, the window needs to expand.
+		/* distanceFromBottomOfMessageToButtons pixels from the original bottom of scrollView_message to the
+		 * proper positioning above the buttons; after that, the window needs to expand.
 		 */
-		if (heightChange > 24) {
-			heightChange -= 24;
+		if (heightChange > distanceFromBottomOfMessageToButtons) {
+			heightChange -= distanceFromBottomOfMessageToButtons;
 			frame.size.height += heightChange;
 			frame.origin.y -= heightChange;
+			
+			messageHeightChange -= distanceFromBottomOfMessageToButtons;
+			if (messageHeightChange > 0) {
+				messageFrame.origin.y -= messageHeightChange;
+				messageFrame.size.height += messageHeightChange;
+			}
+
+		} else {
+			if (messageHeightChange >= heightChange) {
+				messageFrame.origin.y -= messageHeightChange;
+				messageFrame.size.height += messageHeightChange;
+			}
 		}
 
+		[scrollView_message setFrame:messageFrame];
 		[scrollView_message setNeedsDisplay:YES];
 		
 		//Resize the window to fit the message
