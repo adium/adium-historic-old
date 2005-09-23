@@ -23,9 +23,9 @@
 #endif
 
 #if GAIM_DEBUG
-	#define GaimDebug AILog
+	#define GaimDebug(...) AILog(__VA_ARGS__)
 #else
-	#define GaimDebug //
+	#define GaimDebug(...) /**/
 #endif
 
 #define TREPIA_NOT_AVAILABLE
