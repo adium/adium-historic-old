@@ -14,6 +14,7 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#import "AdiumURLHandling.h"
 #import "AIAccountController.h"
 #import "AIChatController.h"
 #import "AIContactController.h"
@@ -45,7 +46,7 @@
 #define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
-#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localize only if a translated version exists.")
+#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
@@ -202,7 +203,8 @@ static NSString	*prefsCategory;
     completedApplicationLoad = NO;
 	advancedPrefsName = nil;
 	prefsCategory = nil;
-
+	queuedURLEvents = nil;
+	
 	//Load the crash reporter
 #ifdef CRASH_REPORTER
 #warning Crash reporter enabled.
@@ -212,6 +214,25 @@ static NSString	*prefsCategory;
     //Ignore SIGPIPE, which is a harmless error signal
     //sent when write() or similar function calls fail due to a broken pipe in the network connection
     signal(SIGPIPE, SIG_IGN);
+	
+	[AdiumURLHandling registerURLTypes];
+	
+	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
+												   andSelector:@selector(handleURLEvent:withReplyEvent:)
+												 forEventClass:kInternetEventClass
+													andEventID:kAEGetURL];
+}
+
+- (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
+{
+	if (!completedApplicationLoad) {
+		if (!queuedURLEvents) {
+			queuedURLEvents = [[NSMutableArray alloc] init];
+		}
+		[queuedURLEvents addObject:event];
+	} else {
+		[AdiumURLHandling handleURLEvent:event];
+	}
 }
 
 //Adium has finished launching
@@ -289,6 +310,16 @@ static NSString	*prefsCategory;
 		[preferenceController openPreferencesToCategoryWithIdentifier:@"accounts"];
 	}
 
+	//Process any delayed URL events 
+	if (queuedURLEvents) {
+		NSAppleEventDescriptor *event = nil;
+		NSEnumerator *e  = [queuedURLEvents objectEnumerator];
+		while ((event = [e nextObject])) {
+			[AdiumURLHandling handleURLEvent:event];
+		}
+		[queuedURLEvents release];
+	}
+	
 	completedApplicationLoad = YES;
 
 	[[self notificationCenter] postNotificationName:Adium_CompletedApplicationLoad object:nil];

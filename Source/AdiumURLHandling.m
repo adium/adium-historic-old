@@ -19,7 +19,7 @@
 #import "AIContactController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
-#import "CBURLHandlingPlugin.h"
+#import "AdiumURLHandling.h"
 #import "XtrasInstaller.h"
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIURLAdditions.h>
@@ -27,76 +27,58 @@
 #import <Adium/AIContentMessage.h>
 #import <Adium/AIService.h>
 
-@interface CBURLHandlingPlugin(PRIVATE)
-- (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
-- (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
-- (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange;
+@interface AdiumURLHandling(PRIVATE)
++ (void)_setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst;
++ (void)_openChatToContactWithName:(NSString *)name onService:(NSString *)serviceIdentifier withMessage:(NSString *)body;
++ (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange;
 @end
 
-@implementation CBURLHandlingPlugin
+@implementation AdiumURLHandling
 
-- (void)installPlugin
++ (void)registerURLTypes
 {
 	/* TODO:
 	 * Prompt the user to change Adium to be the protocol handler for aim:// and/or yahoo:// if we aren't already. Give them the option to agree, disagree, or disagree and never be asked again. 
 	 */
 	ICInstance ICInst;
-	OSErr Err;
+	OSErr Err = noErr;
 
 	//Start Internet Config, passing it Adium's creator code
 	Err = ICStart(&ICInst, 'AdiM');
-	
-	//Bracket multiple calls with ICBegin() for efficiency as per documentation
-	ICBegin(ICInst, icReadWritePerm);
+	if (Err == noErr) {
+		//Bracket multiple calls with ICBegin() for efficiency as per documentation
+		ICBegin(ICInst, icReadWritePerm);
 
-	//Configure the protocols we want.
-	[self setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
-	[self setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
-	[self setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
-	[self setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
-	[self setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
-	[self setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
-	[self setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
- 
-	//Adium xtras
-	[self setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
+		//Configure the protocols we want.
+		[self _setHelperAppForKey:(kICHelper "aim") withInstance:ICInst]; //AIM, official
+		[self _setHelperAppForKey:(kICHelper "ymsgr") withInstance:ICInst]; //Yahoo!, official
+		[self _setHelperAppForKey:(kICHelper "yahoo") withInstance:ICInst]; //Yahoo!, unofficial
+		[self _setHelperAppForKey:(kICHelper "xmpp") withInstance:ICInst]; //Jabber, official
+		[self _setHelperAppForKey:(kICHelper "jabber") withInstance:ICInst]; //Jabber, unofficial
+		[self _setHelperAppForKey:(kICHelper "icq") withInstance:ICInst]; //ICQ, unofficial
+		[self _setHelperAppForKey:(kICHelper "msn") withInstance:ICInst]; //MSN, unofficial
+	 
+		//Adium xtras
+		[self _setHelperAppForKey:(kICHelper "adiumxtra") withInstance:ICInst];
 
-	//End whatever it was that ICBegin() began
-	ICEnd(ICInst);
+		//End whatever it was that ICBegin() began
+		ICEnd(ICInst);
 
-	//We're done with Internet Config, so stop it
-	Err = ICStop(ICInst);
-
-	[[NSAppleEventManager sharedAppleEventManager] setEventHandler:self 
-	                                                   andSelector:@selector(handleURLEvent:withReplyEvent:)
-	                                                 forEventClass:kInternetEventClass
-	                                                    andEventID:kAEGetURL];
-}
-
-- (void)setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
-{
-	OSErr		Err;
-	ICAppSpec	Spec;
-	ICAttr		Junk;
-	long		TheSize;
-
-	TheSize = sizeof(Spec);
-
-	// Get the current aim helper app, to fill the Spec and TheSize variables
-	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
-
-	//Set the name and creator codes
-	if (Spec.fCreator != 'AdIM') {
-		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
-		Spec.fCreator = 'AdIM';
-
-		//Set the helper app to Adium
-		Err = ICSetPref(ICInst, key, kICAttrNoChange, &Spec, TheSize);
+		//We're done with Internet Config, so stop it
+		Err = ICStop(ICInst);
+		
+		//How there could be an error stopping Internet Config, I don't know.
+		if (Err != noErr) {
+			NSLog(@"Error stopping InternetConfig. Error code: %d", Err);
+		}
+	} else {
+		NSLog(@"Error starting InternetConfig. Error code: %d", Err);
 	}
 }
 
-- (void)handleURLEvent:(NSAppleEventDescriptor *)event withReplyEvent:(NSAppleEventDescriptor *)replyEvent
++ (void)handleURLEvent:(NSAppleEventDescriptor *)event
 {
+		
 	NSString *string = [[event descriptorAtIndex:1] stringValue];
 	NSURL *url = [NSURL URLWithString:string];
 
@@ -141,6 +123,7 @@
 		if ((serviceID = [schemeToServiceDict objectForKey:scheme])) {
 			NSString *host = [url host];
 			if ([host caseInsensitiveCompare:@"goim"] == NSOrderedSame) {
+				// aim://goim?screenname=tekjew
 				NSString	*name = [[[url queryArgumentForKey:@"screenname"] stringByDecodingURLEscapes] compactedString];
 
 				if (name) {
@@ -233,7 +216,29 @@
 	}
 }
 
-- (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
++ (void)_setHelperAppForKey:(ConstStr255Param)key withInstance:(ICInstance)ICInst
+{
+	OSErr		Err;
+	ICAppSpec	Spec;
+	ICAttr		Junk;
+	long		TheSize;
+
+	TheSize = sizeof(Spec);
+
+	// Get the current aim helper app, to fill the Spec and TheSize variables
+	Err = ICGetPref(ICInst, key, &Junk, &Spec, &TheSize);
+
+	//Set the name and creator codes
+	if (Spec.fCreator != 'AdIM') {
+		Spec.name[0] = sprintf((char *) &Spec.name[1], "Adium.app");
+		Spec.fCreator = 'AdIM';
+
+		//Set the helper app to Adium
+		Err = ICSetPref(ICInst, key, kICAttrNoChange, &Spec, TheSize);
+	}
+}
+
++ (void)_openChatToContactWithName:(NSString *)UID onService:(NSString *)serviceID withMessage:(NSString *)message
 {
 	AIListContact   *contact;
 	
@@ -255,7 +260,7 @@
 	}
 }
 
-- (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange
++ (void)_openAIMGroupChat:(NSString *)roomname onExchange:(int)exchange
 {
 	AIAccount		*account;
 	NSEnumerator	*enumerator;

@@ -58,7 +58,9 @@
 
 	//pathnames to the different Application Support folders.
     NSArray										*appSupportPaths;
-
+	
+	NSMutableArray								*queuedURLEvents;
+	
     BOOL										completedApplicationLoad;
 	NSString									*advancedPrefsName;	
 }

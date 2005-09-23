@@ -1132,8 +1132,8 @@
 		9E217B7B06A74CA8002A3F27 /* StatusMenuItemDefaultPrefs.plist in Resources */ = {isa = PBXBuildFile; fileRef = 9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */; };
 		9E28FDE706ADB30D0041553E /* adiumRed.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE506ADB30D0041553E /* adiumRed.png */; };
 		9E28FDE806ADB30D0041553E /* adiumRedHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */; };
-		9E6417070613C55D006AF387 /* CBURLHandlingPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E6417050613C55C006AF387 /* CBURLHandlingPlugin.h */; };
-		9E6417080613C55D006AF387 /* CBURLHandlingPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E6417060613C55C006AF387 /* CBURLHandlingPlugin.m */; };
+		9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */ = {isa = PBXBuildFile; fileRef = 9E44248608E11F380015D4DD /* AdiumURLHandling.h */; };
+		9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */ = {isa = PBXBuildFile; fileRef = 9E44248708E11F380015D4DD /* AdiumURLHandling.m */; };
 		9E6A9BF70732CB500032C9F6 /* adiumOfflineHighlight.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */; };
 		9E6A9BF80732CB500032C9F6 /* adiumOffline.png in Resources */ = {isa = PBXBuildFile; fileRef = 9E6A9BF60732CB500032C9F6 /* adiumOffline.png */; };
 		9EA125E9055B630900ECF349 /* CBGaimOscarAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 9EA125E8055B630900ECF349 /* CBGaimOscarAccount.m */; };
@@ -3023,8 +3023,8 @@
 		9E217B7706A74CA7002A3F27 /* StatusMenuItemDefaultPrefs.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = StatusMenuItemDefaultPrefs.plist; path = "Plugins/Status Menu Item/StatusMenuItemDefaultPrefs.plist"; sourceTree = "<group>"; };
 		9E28FDE506ADB30D0041553E /* adiumRed.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRed.png; path = "Plugins/Status Menu Item/adiumRed.png"; sourceTree = "<group>"; };
 		9E28FDE606ADB30D0041553E /* adiumRedHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumRedHighlight.png; path = "Plugins/Status Menu Item/adiumRedHighlight.png"; sourceTree = "<group>"; };
-		9E6417050613C55C006AF387 /* CBURLHandlingPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBURLHandlingPlugin.h; path = "Plugins/URL Handling/CBURLHandlingPlugin.h"; sourceTree = "<group>"; };
-		9E6417060613C55C006AF387 /* CBURLHandlingPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBURLHandlingPlugin.m; path = "Plugins/URL Handling/CBURLHandlingPlugin.m"; sourceTree = "<group>"; };
+		9E44248608E11F380015D4DD /* AdiumURLHandling.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AdiumURLHandling.h; path = Source/AdiumURLHandling.h; sourceTree = "<group>"; };
+		9E44248708E11F380015D4DD /* AdiumURLHandling.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumURLHandling.m; path = Source/AdiumURLHandling.m; sourceTree = "<group>"; };
 		9E6A9BF50732CB500032C9F6 /* adiumOfflineHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOfflineHighlight.png; path = "Plugins/Status Menu Item/adiumOfflineHighlight.png"; sourceTree = "<group>"; };
 		9E6A9BF60732CB500032C9F6 /* adiumOffline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumOffline.png; path = "Plugins/Status Menu Item/adiumOffline.png"; sourceTree = "<group>"; };
 		9E791D9405768B7A00547562 /* CBStatusMenuItemPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CBStatusMenuItemPlugin.h; path = "Plugins/Status Menu Item/CBStatusMenuItemPlugin.h"; sourceTree = "<group>"; };
@@ -3792,6 +3792,8 @@
 			children = (
 				346CFDC4087B7836009711C8 /* AdiumIdleManager.h */,
 				346CFDC5087B7836009711C8 /* AdiumIdleManager.m */,
+				9E44248608E11F380015D4DD /* AdiumURLHandling.h */,
+				9E44248708E11F380015D4DD /* AdiumURLHandling.m */,
 			);
 			name = "System (Idle, Connectivity, etc.)";
 			sourceTree = "<group>";
@@ -5581,8 +5583,6 @@
 		9E6417090613C564006AF387 /* URL Handling */ = {
 			isa = PBXGroup;
 			children = (
-				9E6417050613C55C006AF387 /* CBURLHandlingPlugin.h */,
-				9E6417060613C55C006AF387 /* CBURLHandlingPlugin.m */,
 				34F1023A073449D500890D3B /* XtrasInstaller.h */,
 				34F10239073449D500890D3B /* XtrasInstaller.m */,
 				34F1022D0734499700890D3B /* NSString_UUID.h */,
@@ -6269,7 +6269,6 @@
 				6E5A43DF061160C60078C342 /* DCMessageContextDisplayPlugin.h in Headers */,
 				3420E6600611D80100AE67E3 /* ESAccountPasswordPromptController.h in Headers */,
 				3420E6620611D80100AE67E3 /* ESProxyPasswordPromptController.h in Headers */,
-				9E6417070613C55D006AF387 /* CBURLHandlingPlugin.h in Headers */,
 				6E7C19BC0623BF80008A1C99 /* DCMessageContextDisplayPreferences.h in Headers */,
 				4BAA1B540632EF0000D8B92C /* ESPanelAlertDetailPane.h in Headers */,
 				4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */,
@@ -6442,6 +6441,7 @@
 				B02355AF08CBE854008CDDDA /* vdbe.h in Headers */,
 				B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */,
 				34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */,
+				9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7883,7 +7883,6 @@
 				6E5A43E0061160C60078C342 /* DCMessageContextDisplayPlugin.m in Sources */,
 				3420E6610611D80100AE67E3 /* ESAccountPasswordPromptController.m in Sources */,
 				3420E6630611D80100AE67E3 /* ESProxyPasswordPromptController.m in Sources */,
-				9E6417080613C55D006AF387 /* CBURLHandlingPlugin.m in Sources */,
 				6E7C19BD0623BF80008A1C99 /* DCMessageContextDisplayPreferences.m in Sources */,
 				4BAA1B550632EF0000D8B92C /* ESPanelAlertDetailPane.m in Sources */,
 				4BFF665B063693FA00308A3B /* ESSendMessageAlertDetailPane.m in Sources */,
@@ -8081,6 +8080,7 @@
 				B02355B408CBE854008CDDDA /* vdbemem.c in Sources */,
 				B02355B508CBE854008CDDDA /* where.c in Sources */,
 				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
+				9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
