@@ -24,6 +24,10 @@ static NSMutableDictionary	*serviceIcons[NUMBER_OF_SERVICE_ICON_TYPES][NUMBER_OF
 static NSString				*serviceIconBasePath = nil;
 static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 
+@interface AIServiceIcons (PRIVATE)
++ (NSImage *)defaultServiceIconForType:(AIServiceIconType)type serviceID:(NSString *)serviceID;
+@end
+
 @implementation AIServiceIcons
 
 + (void)initialize
@@ -72,6 +76,14 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 			if (serviceIcon) {
 				if (iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
 				[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:serviceID];
+			} else {
+				//Attempt to load the default service icon
+				serviceIcon = [self defaultServiceIconForType:iconType serviceID:serviceID];
+				if (serviceIcon) {
+					//Cache the default service icon (until the pack is changed) so we have it immediately next time
+					if (iconDirection == AIIconFlipped) [serviceIcon setFlipped:YES];
+					[serviceIcons[iconType][iconDirection] setObject:serviceIcon forKey:serviceID];
+				}
 			}
 
 			[serviceIcon release];
@@ -174,6 +186,57 @@ static NSDictionary			*serviceIconNames[NUMBER_OF_SERVICE_ICON_TYPES];
 	}
 
 	return [image autorelease];
+}
+
+#pragma mark Default loading
+
+#define PREF_GROUP_APPEARANCE		@"Appearance"
+#define	KEY_SERVICE_ICON_PACK		@"Service Icon Pack"
+
++ (NSImage *)defaultServiceIconForType:(AIServiceIconType)type serviceID:(NSString *)serviceID
+{
+	AIAdium			*adium = [AIObject sharedAdiumInstance];
+	NSString		*defaultName, *defaultPath;
+	NSDictionary	*serviceIconDict;
+	NSImage			*defaultServiceIcon = nil;
+	
+	defaultName = [[adium preferenceController] defaultPreferenceForKey:KEY_SERVICE_ICON_PACK
+																   group:PREF_GROUP_APPEARANCE
+																  object:nil];
+	defaultPath = [adium pathOfPackWithName:defaultName
+								  extension:@"AdiumServiceIcons"
+						 resourceFolderName:@"Service Icons"];
+	
+	serviceIconDict = [NSDictionary dictionaryWithContentsOfFile:[defaultPath stringByAppendingPathComponent:@"Icons.plist"]];
+	if (serviceIconDict && [[serviceIconDict objectForKey:@"AdiumSetVersion"] intValue] == 1) {
+		NSString	*nameKey = nil;
+
+		switch (type) {
+			case AIServiceIconSmall:
+				nameKey = @"Interface-Small";
+				break;
+			case AIServiceIconLarge:
+				nameKey = @"Interface-Large";
+				break;
+			case AIServiceIconList:
+				nameKey = @"List";
+				break;
+		}
+		
+		if (nameKey) {
+			NSDictionary	*defaultServiceIconNames;
+			NSString		*thisServiceIconImageName;
+	
+			defaultServiceIconNames = [serviceIconDict objectForKey:nameKey];
+			if ((thisServiceIconImageName = [defaultServiceIconNames objectForKey:serviceID])) {
+				NSString		*iconPath = [defaultPath stringByAppendingPathComponent:thisServiceIconImageName];
+				
+				defaultServiceIcon = [[NSImage alloc] initWithContentsOfFile:iconPath];
+			}
+		}
+	}
+	
+	return defaultServiceIcon;
 }
 
 @end
