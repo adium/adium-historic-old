@@ -81,7 +81,7 @@
     [button_cancel setLocalizedString:AILocalizedString(@"Cancel",nil)];
 	[button_removeLink setLocalizedString:AILocalizedString(@"Remove Link",nil)];	
 	[label_linkText setLocalizedString:AILocalizedString(@"Link Text:","Label for the text entry area for the name when creating a link")];
-	[label_URL setLocalizedString:AILocalizedString(@"URL",nil)];
+	[label_URL setLocalizedString:AILocalizedString(@"URL:",nil)];
 
 	if (textView) {
 		NSRange 	selectedRange = [textView selectedRange];
