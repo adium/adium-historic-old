@@ -76,11 +76,10 @@
 	}
 }
 
-+ (void)handleURLEvent:(NSAppleEventDescriptor *)event
++ (void)handleURLEvent:(NSString *)eventString
 {
-		
-	NSString *string = [[event descriptorAtIndex:1] stringValue];
-	NSURL *url = [NSURL URLWithString:string];
+	NSString *string = nil;
+	NSURL *url = [NSURL URLWithString:eventString];
 	AIAdium *sharedAdium = [AIObject sharedAdiumInstance];
 
 	if (url) {

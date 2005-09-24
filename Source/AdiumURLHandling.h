@@ -21,6 +21,6 @@
 }
 
 + (void)registerURLTypes;
-+ (void)handleURLEvent:(NSAppleEventDescriptor *)event;
++ (void)handleURLEvent:(NSString *)eventString;
 
 @end
