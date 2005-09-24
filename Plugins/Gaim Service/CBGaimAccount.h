@@ -18,7 +18,7 @@
 #import <Adium/AIAccount.h>
 
 @protocol AIAccount_Privacy;
-@class SLGaimCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus;
+@class SLGaimCocoaAdapter, ESFileTransfer, AIService, AIContentMessage, AIStatus, AIWindowController;
 
 @interface CBGaimAccount : AIAccount <AIAccount_Privacy>
 {   	
