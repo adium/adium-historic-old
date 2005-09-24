@@ -201,6 +201,29 @@
 }
 
 /*!
+ * @brief Add a soundPath to the menu root if it is not yet present, then select it
+ *
+ * @param The soundPath, which should have a collapsed bundle path (to match menuItem represented objects)
+ */
+- (void)addAndSelectSoundPath:(NSString *)soundPath
+{
+	NSMenu	*rootMenu = [popUp_actionDetails menu];
+	int		menuIndex;
+	
+	//Check for it currently being present in the root menu
+	menuIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:soundPath];
+	if (menuIndex == -1) {
+		//Add it if it wasn't found
+		[self addSound:soundPath toMenu:rootMenu];
+		menuIndex = [popUp_actionDetails indexOfItemWithRepresentedObject:soundPath];			
+	}
+	
+	if (menuIndex != -1) {
+		[popUp_actionDetails selectItemAtIndex:menuIndex];
+	}
+}
+
+/*!
  * @brief A sound was selected from a sound popUp menu
  *
  * Update our header and play the sound.  If "Other..." is selected, allow selection of a file.
@@ -210,11 +233,10 @@
     NSString	*soundPath = [sender representedObject];
     
     if (soundPath != nil && [soundPath length] != 0) {
-        [[adium soundController] playSoundAtPath:[soundPath  stringByExpandingBundlePath]]; //Play the sound
-		
+        [[adium soundController] playSoundAtPath:[soundPath stringByExpandingBundlePath]]; //Play the sound
+
 		//Update the menu and and the selection
-		[self addSound:soundPath toMenu:[popUp_actionDetails menu]];
-        [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
+		[self addAndSelectSoundPath:soundPath];
 
 		[self detailsForHeaderChanged];
     } else { //selected "Other..."
@@ -245,9 +267,8 @@
         [[adium soundController] playSoundAtPath:soundPath]; //Play the sound
 
         //Update the menu and and the selection
-		[self addSound:soundPath toMenu:[popUp_actionDetails menu]];
-        [popUp_actionDetails selectItemAtIndex:[popUp_actionDetails indexOfItemWithRepresentedObject:soundPath]];
-		
+		[self addAndSelectSoundPath:soundPath];
+
 		[self detailsForHeaderChanged];
     }
 }
