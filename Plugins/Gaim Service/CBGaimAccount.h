@@ -134,7 +134,7 @@
 - (void)accountPrivacyList:(PRIVACY_TYPE)type added:(NSString *)sourceUID;
 - (void)accountPrivacyList:(PRIVACY_TYPE)type removed:(NSString *)sourceUID;
 
-- (NSWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
+- (AIWindowController *)requestReceiveOfFileTransfer:(ESFileTransfer *)fileTransfer;
 - (void)updateProgressForFileTransfer:(ESFileTransfer *)fileTransfer 
 									 percent:(NSNumber *)percent
 								   bytesSent:(NSNumber *)bytesSent;
