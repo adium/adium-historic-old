@@ -78,8 +78,7 @@
 
 + (void)handleURLEvent:(NSString *)eventString
 {
-	NSString *string = nil;
-	NSURL *url = [NSURL URLWithString:eventString];
+	NSURL	*url = [NSURL URLWithString:eventString];
 	AIAdium *sharedAdium = [AIObject sharedAdiumInstance];
 
 	if (url) {
@@ -88,7 +87,7 @@
 
 		//make sure we have the // in ://, as it simplifies later processing.
 		if (![[url resourceSpecifier] hasPrefix:@"//"]) {
-			string = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
+			eventString = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
 			url = [NSURL URLWithString:string];
 		}
 
@@ -105,8 +104,8 @@
 		newScheme = [schemeMappingDict objectForKey:scheme];
 		if (newScheme && ![newScheme isEqualToString:scheme]) {
 			scheme = newScheme;
-			string = [NSString stringWithFormat:@"%@:%@", scheme, [url resourceSpecifier]];
-			url = [NSURL URLWithString:string];
+			eventString = [NSString stringWithFormat:@"%@:%@", scheme, [url resourceSpecifier]];
+			url = [NSURL URLWithString:eventString];
 		}
 
 		static NSDictionary	*schemeToServiceDict = nil;
