@@ -88,7 +88,7 @@
 		//make sure we have the // in ://, as it simplifies later processing.
 		if (![[url resourceSpecifier] hasPrefix:@"//"]) {
 			eventString = [NSString stringWithFormat:@"%@://%@", [url scheme], [url resourceSpecifier]];
-			url = [NSURL URLWithString:string];
+			url = [NSURL URLWithString:eventString];
 		}
 
 		scheme = [url scheme];
