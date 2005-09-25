@@ -179,26 +179,4 @@
 		[self setBackgroundColor:cachedWhiteColor];
 	}
 }
-
-#pragma mark Font Panel color-selection (10.3 and later only)
-//Apple Supported Background Color Change from NSFontPanel in Panther and later!
-- (void)changeDocumentBackgroundColor:(id)sender
-{
-	NSColor						*newColor = [sender color];
-	NSMutableAttributedString	*attrStorageString = [[[self textStorage] mutableCopy] autorelease];
-	NSMutableDictionary			*textAttrDict;
-
-	[self setBackgroundColor:newColor];
-
-	textAttrDict = [[self typingAttributes] mutableCopy];
-	[textAttrDict setValue:newColor forKey:AIBodyColorAttributeName];
-	[self setTypingAttributes:textAttrDict];
-	if ([[attrStorageString string] length] > 0) {
-		[attrStorageString setAttributes:textAttrDict range:NSMakeRange(0, [[attrStorageString string] length])];	
-	}
-	[textAttrDict release];
-
-	[self setAttributedString:attrStorageString];
-}
-
 @end
