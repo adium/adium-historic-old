@@ -178,11 +178,6 @@
     //Observe content so we can open chats as necessary
     [[adium notificationCenter] addObserver:self selector:@selector(didReceiveContent:) 
 									   name:CONTENT_MESSAGE_RECEIVED object:nil];
-
-	//Enable alpha selection in color panels (e.g. in Preferences)
-	[self performSelector:@selector(enableAlphaInColorPanels)
-			   withObject:nil
-			   afterDelay:0.1];
 }
 
 - (void)controllerWillClose
@@ -278,7 +273,8 @@
     return NO; 
 }
 
-- (void)enableAlphaInColorPanels {
+- (void)enableAlphaInColorPanels
+{
 	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
@@ -1198,6 +1194,9 @@
 #pragma mark Preferences Display
 - (IBAction)showPreferenceWindow:(id)sender
 {
+	/* Alpha will now be enabled in color panels for the rest of this Adium session... really, it'd be better to have it
+	 * just enabled in reasonable places.
+	 */
 	[self enableAlphaInColorPanels];
 
 	[[adium preferenceController] showPreferenceWindow:sender];
