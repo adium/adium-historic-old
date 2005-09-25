@@ -2033,6 +2033,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 		buddy = gaim_find_buddy(account, gaim_normalize(account, [[inContact UID] UTF8String]));
 		
 		if (prpl_info && prpl_info->blist_node_menu && buddy) {
+			NSImage	*serviceIcon = [AIServiceIcons serviceIconForService:[self service]
+																	type:AIServiceIconSmall
+															   direction:AIIconNormal];
 			
 			//Add a NSMenuItem for each node action specified by the prpl
 			for (l = ll = prpl_info->blist_node_menu((GaimBlistNode *)buddy); l; l = l->next) {
@@ -2043,15 +2046,14 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 				
 				//If titleForContactMenuLabel:forContact: returns nil, we don't add the menuItem
 				if (act &&
+					act->label &&
 					(title = [self titleForContactMenuLabel:act->label
 												 forContact:inContact])) { 
 					menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																					 target:self
 																					 action:@selector(performContactMenuAction:)
 																			  keyEquivalent:@""] autorelease];
-					[menuItem setImage:[AIServiceIcons serviceIconForService:[self service]
-																		type:AIServiceIconSmall
-																   direction:AIIconNormal]];
+					[menuItem setImage:serviceIcon];
 					dict = [NSDictionary dictionaryWithObjectsAndKeys:
 						[NSValue valueWithPointer:act],@"GaimBlistNodeAction",
 						[NSValue valueWithPointer:buddy],@"GaimBuddy",
@@ -2103,7 +2105,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			
 			//Avoid adding separators between nonexistant items (i.e. items which Gaim shows but we don't)
 			BOOL	addedAnAction = NO;
-			
+			NSImage	*serviceIcon = [AIServiceIcons serviceIconForService:[self service]
+																	type:AIServiceIconSmall
+															   direction:AIIconNormal];
 			for (l = ll = GAIM_PLUGIN_ACTIONS(plugin, account->gc); l; l = l->next) {
 				
 				if (l->data) {
@@ -2113,19 +2117,20 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 					NSString			*title;
 					
 					action = (GaimPluginAction *) l->data;
-					action->plugin = plugin;
-					action->context = account->gc;
 					
 					//If titleForAccountActionMenuLabel: returns nil, we don't add the menuItem
 					if (action &&
-						(title = [self titleForAccountActionMenuLabel:action->label])) { 
+						action->label &&
+						(title = [self titleForAccountActionMenuLabel:action->label])) {
+
+						action->plugin = plugin;
+						action->context = account->gc;
+
 						menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:title
 																						 target:self
 																						 action:@selector(performAccountMenuAction:)
 																				  keyEquivalent:@""] autorelease];
-						[menuItem setImage:[AIServiceIcons serviceIconForService:[self service]
-																			type:AIServiceIconSmall
-																	   direction:AIIconNormal]];
+						[menuItem setImage:serviceIcon];
 						dict = [NSDictionary dictionaryWithObject:[NSValue valueWithPointer:action]
 														   forKey:@"GaimPluginAction"];
 						
