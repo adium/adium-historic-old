@@ -68,8 +68,6 @@
 - (NSAttributedString *)_tooltipBodyForObject:(AIListObject *)object;
 - (void)_pasteWithPreferredSelector:(SEL)preferredSelector sender:(id)sender;
 
-- (void)enableAlphaInColorPanels;
-
 - (AIChat *)mostRecentActiveChat;
 @end
 
@@ -271,11 +269,6 @@
 	
 	//We handled the reopen; return NO so NSApp does nothing.
     return NO; 
-}
-
-- (void)enableAlphaInColorPanels
-{
-	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
 }
 
 //Contact List ---------------------------------------------------------------------------------------------------------
@@ -1194,11 +1187,6 @@
 #pragma mark Preferences Display
 - (IBAction)showPreferenceWindow:(id)sender
 {
-	/* Alpha will now be enabled in color panels for the rest of this Adium session... really, it'd be better to have it
-	 * just enabled in reasonable places.
-	 */
-	[self enableAlphaInColorPanels];
-
 	[[adium preferenceController] showPreferenceWindow:sender];
 }
 
