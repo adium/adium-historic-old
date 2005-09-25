@@ -372,7 +372,7 @@
 
 - (NSAttributedString *)attributedStringByConvertingAttachmentsToStrings
 {
-    if ([self containsAttachments]) {
+    if ([self length] && [self containsAttachments]) {
         NSMutableAttributedString	*newAttributedString = [[self mutableCopy] autorelease];
         int							currentLocation = 0;
         NSRange						attachmentRange;
