@@ -18,17 +18,16 @@
 	NSRange						selectedText = [self selectedRange];
 	
 	if (selectedText.length > 0) {
-		[attrStorageString addAttribute:NSBackgroundColorAttributeName value:newColor range:[self selectedRange]];
+		[[self textStorage] addAttribute:NSBackgroundColorAttributeName value:newColor range:[self selectedRange]];
 	} else {
 		[self setBackgroundColor:newColor];
-		[attrStorageString addAttribute:AIBodyColorAttributeName value:newColor range:NSMakeRange(0, [[attrStorageString string] length])];;			
+		[[self textStorage] addAttribute:AIBodyColorAttributeName value:newColor range:NSMakeRange(0, [[[self textStorage] string] length])];;			
 	}
-	
-	[[self textStorage] setAttributedString:attrStorageString];
+
 	if(selectedText.length > 0)
 	{
 		[self setSelectedRange:selectedText];
 	}
-	[[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification object:self];
+	[self didChangeText];
 }
 @end
