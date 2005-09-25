@@ -102,7 +102,7 @@
 	if (!handle || ![handle length])
 		handle = [inAccount UID];
 	
-#warning What is going on with the @"temp" password?
+#warning What is going on with the @"temp" password? It was committed in http://trac.adiumx.com/changeset/7131
 	if (!password || ![password length])
 		password = @"temp";
 	
