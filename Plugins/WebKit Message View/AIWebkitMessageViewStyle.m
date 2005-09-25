@@ -842,7 +842,7 @@
 				messageString = [AIHTMLDecoder encodeHTML:[content message]
 												  headers:NO 
 												 fontTags:NO
-									   includingColorTags:YES
+									   includingColorTags:NO
 											closeFontTags:YES
 												styleTags:NO
 							   closeStyleTagsOnFontChange:YES
