@@ -102,9 +102,8 @@
 	if (!handle || ![handle length])
 		handle = [inAccount UID];
 	
-#warning What is going on with the @"temp" password? It was committed in http://trac.adiumx.com/changeset/7131
 	if (!password || ![password length])
-		password = @"temp";
+		password = @"temp"; //we can't use an empty password if they don't enter one, but it doesn't matter what is used.
 	
 	if (!server || ![server length]) {
 		//If no server is specified, use the default, which may be visible to the user as a placeholder string
