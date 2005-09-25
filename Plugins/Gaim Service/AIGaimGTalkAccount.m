@@ -21,14 +21,18 @@
 - (void)createNewGaimAccount
 {
 	[super createNewGaimAccount];
-	
+
 	NSString	 *userNameWithGmailDotCom = nil;
 
+	//Append @gmail.com is neither @gmail.com nor @googlemail.com are found at the end
 	if (([UID rangeOfString:@"@gmail.com"
-					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location != NSNotFound)) {
-		userNameWithGmailDotCom = UID;
-	} else {
+					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location == NSNotFound) &&
+		([UID rangeOfString:@"@googlemail.com"
+					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location == NSNotFound)) {
 		userNameWithGmailDotCom = [UID stringByAppendingString:@"@gmail.com"];
+
+	} else {
+		userNameWithGmailDotCom = UID;
 	}
 
 	gaim_account_set_username(account, [userNameWithGmailDotCom UTF8String]);
