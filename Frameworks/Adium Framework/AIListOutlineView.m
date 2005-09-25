@@ -171,7 +171,7 @@
 		if (backgroundImage && enclosingScrollView) {
 			NSRect	visRect = [enclosingScrollView documentVisibleRect];
 			NSSize	imageSize = [backgroundImage size];
-			NSRect	imageRect = { NSZeroPoint, imageSize };
+			NSRect	imageRect = NSMakeRect(0.0, 0.0, imageSize.width, imageSize.height);
 
 			switch (backgroundStyle) {
 				
@@ -211,14 +211,14 @@
 					//Tiling
 					NSPoint	currentOrigin;
 					currentOrigin = visRect.origin;
-					
+
 					//We'll repeat this vertical process as long as necessary
-					while (currentOrigin.y < visRect.size.height) {				
+					while (currentOrigin.y < (visRect.origin.y + visRect.size.height)) {
 						//Reset the x axis to draw a series of images horizontally at this height
 						currentOrigin.x = visRect.origin.x;
 						
 						//Draw as long as our origin is within the visible rect
-						while (currentOrigin.x < visRect.size.width) {
+						while (currentOrigin.x < (visRect.origin.x + visRect.size.width)) {
 							//Draw at the current x and y at least once with the original size
 							[backgroundImage drawInRect:NSMakeRect(currentOrigin.x, currentOrigin.y, imageSize.width, imageSize.height)
 											   fromRect:imageRect
@@ -261,7 +261,6 @@
 - (void)setBackgroundStyle:(AIBackgroundStyle)inBackgroundStyle
 {
 	backgroundStyle = inBackgroundStyle;
-
 	[self setNeedsDisplay:YES];
 }
 
