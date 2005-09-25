@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */ = {isa = PBXBuildFile; fileRef = 013F80C208E685B8000F31B2 /* AITextViewAdditions.h */; };
+		013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 013F80C308E685B8000F31B2 /* AITextViewAdditions.m */; };
 		070959860798F1ED00B140BD /* AITag.h in Headers */ = {isa = PBXBuildFile; fileRef = 070959840798F1ED00B140BD /* AITag.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		070959870798F1ED00B140BD /* AITag.m in Sources */ = {isa = PBXBuildFile; fileRef = 070959850798F1ED00B140BD /* AITag.m */; };
 		076CAD6D0785B62900250504 /* AIFunctions.m in Sources */ = {isa = PBXBuildFile; fileRef = 076CAD6C0785B62900250504 /* AIFunctions.m */; };
@@ -289,6 +291,8 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
+		013F80C208E685B8000F31B2 /* AITextViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AITextViewAdditions.h; path = Source/AITextViewAdditions.h; sourceTree = "<group>"; };
+		013F80C308E685B8000F31B2 /* AITextViewAdditions.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AITextViewAdditions.m; path = Source/AITextViewAdditions.m; sourceTree = "<group>"; };
 		070959840798F1ED00B140BD /* AITag.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AITag.h; path = Source/AITag.h; sourceTree = "<group>"; };
 		070959850798F1ED00B140BD /* AITag.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AITag.m; path = Source/AITag.m; sourceTree = "<group>"; };
 		076CAD6C0785B62900250504 /* AIFunctions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIFunctions.m; path = Source/AIFunctions.m; sourceTree = "<group>"; };
@@ -916,6 +920,8 @@
 				34486BBA06D1DF0400DA778C /* AITabViewAdditions.m */,
 				34486BC106D1DF0400DA778C /* AITextFieldAdditions.h */,
 				34486BC206D1DF0400DA778C /* AITextFieldAdditions.m */,
+				013F80C208E685B8000F31B2 /* AITextViewAdditions.h */,
+				013F80C308E685B8000F31B2 /* AITextViewAdditions.m */,
 				34FFB28D087DF1300000A517 /* AIURLAdditions.h */,
 				34FFB292087DF1300000A517 /* AIURLAdditions.m */,
 				34486BCC06D1DF0400DA778C /* AIViewAdditions.h */,
@@ -1546,6 +1552,7 @@
 				636D3D6B08D267F500EFFD69 /* AILinkedList.h in Headers */,
 				636D3D6D08D267F500EFFD69 /* AILinkedListObject.h in Headers */,
 				636D3D6F08D267F500EFFD69 /* AIQueue.h in Headers */,
+				013F80C408E685B8000F31B2 /* AITextViewAdditions.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1790,6 +1797,7 @@
 				636D3D6C08D267F500EFFD69 /* AILinkedList.m in Sources */,
 				636D3D6E08D267F500EFFD69 /* AILinkedListObject.m in Sources */,
 				636D3D7008D267F500EFFD69 /* AIQueue.m in Sources */,
+				013F80C508E685B8000F31B2 /* AITextViewAdditions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
