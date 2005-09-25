@@ -630,6 +630,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	
 	if ([serviceID isEqualToString:@"Mac"]) {
 		dict = [addressBookDict objectForKey:@"AIM"];
+
+	} else if ([serviceID isEqualToString:@"GTalk"]) {
+		dict = [addressBookDict objectForKey:@"Jabber"];
+
 	} else {
 		dict = [addressBookDict objectForKey:serviceID];
 	} 
@@ -872,7 +876,8 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			
 			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
 											   [serviceID isEqualToString:@"ICQ"]);
-			
+			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+
 			if (!(dict = [addressBookDict objectForKey:serviceID])) {
 				dict = [[[NSMutableDictionary alloc] init] autorelease];
 				[addressBookDict setObject:dict forKey:serviceID];
@@ -891,8 +896,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					
 					[UIDsArray addObject:UID];
 					
-					//If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
 					if (isOSCAR) {
+						/* If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
+						 * because we may have a .Mac, an ICQ, or an AIM name in the field
+						 */
 						const char	firstCharacter = [UID characterAtIndex:0];
 						
 						//Determine service based on UID
@@ -902,6 +909,15 @@ static	ABAddressBook	*sharedAddressBook = nil;
 							serviceID = @"ICQ";
 						} else {
 							serviceID = @"AIM";
+						}
+					} else if (isJabber) {
+						/* If we are on the Jabber server, we need to distinguish between Google Talk (GTalk) and the
+						 * rest of the Jabber world. serviceID is already Jabber, so we only need to change if we
+						 * have a GTalk UID.
+						 */
+						if ([UID hasSuffix:@"@gmail.com"] ||
+							[UID hasSuffix:@"@googlemail.com"]) {
+							serviceID = @"GTalk";
 						}
 					}
 					
