@@ -21,6 +21,7 @@
 #import "AIPreferenceController.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
 #import <AIUtilities/AIAutoScrollView.h>
+#import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIWindowAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 #import <Adium/AIMessageEntryTextView.h>
@@ -173,6 +174,9 @@ static	NSMutableDictionary	*controllerDict = nil;
 	[scrollView_statusMessage setAutoHideScrollBar:YES];
 	[scrollView_statusMessage setAlwaysDrawFocusRingIfFocused:YES];
 	[textView_statusMessage setTarget:self action:@selector(okay:)];
+	
+	[textView_statusMessage setAllowsDocumentBackgroundColorChange:YES];
+	[textView_autoReply setAllowsDocumentBackgroundColorChange:YES];
 
 	[textView_statusMessage setSendOnReturn:NO];
 	[textView_statusMessage setSendOnEnter:sendOnEnter];
@@ -522,7 +526,16 @@ static	NSMutableDictionary	*controllerDict = nil;
 
 	if (!autoReply) autoReply = blankString;
 	[[textView_autoReply textStorage] setAttributedString:autoReply];
-
+	
+	//Set Background Colors
+	if([autoReply attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]) {
+			[textView_autoReply setBackgroundColor:[autoReply attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]];
+	}
+	
+	if([statusMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]) {
+			[textView_statusMessage setBackgroundColor:[statusMessage attribute:AIBodyColorAttributeName atIndex:0 effectiveRange:nil]];
+	}
+	
 	//Idle start
 	double	idleStart = [statusState forcedInitialIdleTime];
 	[textField_idleMinutes setIntValue:(int)((((int)idleStart)%3600)/60)];
