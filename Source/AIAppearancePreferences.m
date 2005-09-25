@@ -462,6 +462,9 @@ typedef enum {
 {
 	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_THEME_NAME group:PREF_GROUP_APPEARANCE];	
 	
+	//Allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];
+
 	[AIListThemeWindowController editListThemeWithName:theme
 											  onWindow:[[self view] window]
 									   notifyingTarget:self];
@@ -493,6 +496,10 @@ typedef enum {
 								 inFolder:LIST_THEME_FOLDER
 						toPreferenceGroup:PREF_GROUP_LIST_THEME];
 	}
+
+
+	//No longer allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 }
 
 /*!
@@ -531,6 +538,9 @@ typedef enum {
 {
 	NSString *theme = [[adium preferenceController] preferenceForKey:KEY_LIST_LAYOUT_NAME group:PREF_GROUP_APPEARANCE];	
 	
+	//Allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:YES];	
+
 	[AIListLayoutWindowController editListLayoutWithName:theme
 											  onWindow:[[self view] window]
 									   notifyingTarget:self];
@@ -562,6 +572,9 @@ typedef enum {
 								 inFolder:LIST_LAYOUT_FOLDER
 						toPreferenceGroup:PREF_GROUP_LIST_LAYOUT];
 	}
+
+	//No longer allow alpha in our color pickers
+	[[NSColorPanel sharedColorPanel] setShowsAlpha:NO];
 }
 
 /*!
