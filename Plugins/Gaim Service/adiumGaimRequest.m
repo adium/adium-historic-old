@@ -524,7 +524,7 @@ static void adiumGaimRequestClose(GaimRequestType type, void *uiHandle)
 	id	ourHandle = (id)uiHandle;
 	AILog(@"adiumGaimRequestClose %@ (%i)",uiHandle,[ourHandle respondsToSelector:@selector(gaimRequestClose)]);
 	if ([ourHandle respondsToSelector:@selector(gaimRequestClose)]) {
-		[(id<GaimRequestController>)ourHandle mainPerformSelector:@selector(gaimRequestClose)];
+		[ourHandle mainPerformSelector:@selector(gaimRequestClose)];
 	}
 }
 
