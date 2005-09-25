@@ -585,6 +585,8 @@
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D2E8690758BB0C0054C56D /* ESFileTransferPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */; };
 		34D2E86A0758BB0C0054C56D /* ESFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */; };
+		34D369EF08E7544D00E15E40 /* AIColorPickerSliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */; };
+		34D369F008E7544D00E15E40 /* AIColorPickerSliders.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */; };
 		34D8325407CBD53B006466F2 /* FTProgressRevealRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */; };
 		34D8325507CBD53B006466F2 /* FTProgressRevealRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */; };
 		34D8325607CBD53B006466F2 /* FTProgressStopRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */; };
@@ -2451,6 +2453,8 @@
 		34D189B1076131850075A380 /* AILocalizationAssistance.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AILocalizationAssistance.h; path = "Frameworks/Adium Framework/AILocalizationAssistance.h"; sourceTree = "<group>"; };
 		34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESFileTransferPreferences.h; path = Source/ESFileTransferPreferences.h; sourceTree = "<group>"; };
 		34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferPreferences.m; path = Source/ESFileTransferPreferences.m; sourceTree = "<group>"; };
+		34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIColorPickerSliders.h; path = "Frameworks/Adium Framework/AIColorPickerSliders.h"; sourceTree = "<group>"; };
+		34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIColorPickerSliders.m; path = "Frameworks/Adium Framework/AIColorPickerSliders.m"; sourceTree = "<group>"; };
 		34D43504051ADC10003B2F21 /* DualWindowDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = DualWindowDefaults.plist; path = "Plugins/Dual Window Interface/DualWindowDefaults.plist"; sourceTree = "<group>"; };
 		34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover.tif; path = Resources/FTProgressRevealRollover.tif; sourceTree = "<group>"; };
 		34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; name = FTProgressRevealRollover_Selected.tif; path = Resources/FTProgressRevealRollover_Selected.tif; sourceTree = "<group>"; };
@@ -3717,6 +3721,8 @@
 			children = (
 				34E6D38E0727354600A2643A /* AIToolbar.h */,
 				34E6D38F0727354600A2643A /* AIToolbar.m */,
+				34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */,
+				34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */,
 			);
 			name = "Working Around System Bugs";
 			sourceTree = "<group>";
@@ -6683,6 +6689,7 @@
 				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
 				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
 				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
+				34D369EF08E7544D00E15E40 /* AIColorPickerSliders.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8307,6 +8314,7 @@
 				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
 				34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */,
 				34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */,
+				34D369F008E7544D00E15E40 /* AIColorPickerSliders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
