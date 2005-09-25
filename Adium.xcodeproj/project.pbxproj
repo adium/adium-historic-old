@@ -585,8 +585,8 @@
 		34D189B2076131850075A380 /* AILocalizationAssistance.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D189B1076131850075A380 /* AILocalizationAssistance.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D2E8690758BB0C0054C56D /* ESFileTransferPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */; };
 		34D2E86A0758BB0C0054C56D /* ESFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */; };
-		34D369EF08E7544D00E15E40 /* AIColorPickerSliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */; };
-		34D369F008E7544D00E15E40 /* AIColorPickerSliders.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */; };
+		34D36DBA08E75F7500E15E40 /* AIColorPickerSliders.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */; };
+		34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */; };
 		34D8325407CBD53B006466F2 /* FTProgressRevealRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */; };
 		34D8325507CBD53B006466F2 /* FTProgressRevealRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */; };
 		34D8325607CBD53B006466F2 /* FTProgressStopRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */; };
@@ -6536,6 +6536,7 @@
 				4B22E162085CAE2F001864DE /* AIContactMenu.h in Headers */,
 				4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */,
 				34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */,
+				34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6689,7 +6690,6 @@
 				A3C0432508D74D3100B48CE1 /* AIGTalkService.h in Headers */,
 				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
 				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
-				34D369EF08E7544D00E15E40 /* AIColorPickerSliders.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8174,6 +8174,7 @@
 				4B22E163085CAE2F001864DE /* AIContactMenu.m in Sources */,
 				4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */,
 				34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */,
+				34D36DBA08E75F7500E15E40 /* AIColorPickerSliders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8314,7 +8315,6 @@
 				A3C0432608D74D3100B48CE1 /* AIGTalkService.m in Sources */,
 				34AEE7DF08E3547000AE1C78 /* ESGaimFileReceiveRequestController.m in Sources */,
 				34AEE7EB08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.m in Sources */,
-				34D369F008E7544D00E15E40 /* AIColorPickerSliders.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
