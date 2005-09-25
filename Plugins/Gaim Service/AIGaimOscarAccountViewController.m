@@ -17,6 +17,8 @@
 #import "AIGaimOscarAccountViewController.h"
 #import "CBGaimAccount.h"
 #import <AIUtilities/AIAttributedStringAdditions.h>
+#import <AIUtilities/AIColorAdditions.h>
+#import <AIUtilities/AITextAttributes.h>
 #import <AIUtilities/AIAutoScrollView.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIMessageEntryTextView.h>
@@ -53,6 +55,7 @@
 - (void)configureForAccount:(AIAccount *)inAccount
 {
     [super configureForAccount:inAccount];
+	[[NSFontPanel sharedFontPanel] setDelegate: textView_textProfile];
     
     //Profile
     NSData				*profileData = [account preferenceForKey:@"TextProfile" group:GROUP_ACCOUNT_STATUS];
