@@ -40,12 +40,12 @@
  * @param inSelector A selector, which must accept two arguments. The first will be inFileTransfer. The second will be the filename to save to, or nil to cancel.
  * @result The NSWindowController for the displayed prompt
  */
-+ (NSWindowController *)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
++ (AIWindowController *)displayPromptForFileTransfer:(ESFileTransfer *)inFileTransfer
 									 notifyingTarget:(id)inTarget
 											selector:(SEL)inSelector
 {
 	ESFileTransferRequestPromptController	*promptController;
-	NSWindowController						*windowController = nil;
+	AIWindowController						*windowController = nil;
 	
 	if ((promptController = [[self alloc] initForFileTransfer:inFileTransfer
 											  notifyingTarget:inTarget

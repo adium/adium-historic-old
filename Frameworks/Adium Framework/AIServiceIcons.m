@@ -18,6 +18,7 @@
 #import "AIObject.h"
 #import "AIService.h"
 #import "AIServiceIcons.h"
+#import "AIPreferenceController.h"
 
 static NSMutableDictionary	*serviceIcons[NUMBER_OF_SERVICE_ICON_TYPES][NUMBER_OF_ICON_DIRECTIONS];
 

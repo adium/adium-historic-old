@@ -20,6 +20,7 @@ GaimRequestUiOps *adium_gaim_request_get_ui_ops();
 
 @protocol GaimRequestController
 - (void)gaimRequestClose;
+- (void)mainPerformSelector:(SEL)aSelector;//this is declared in AIObjectAdditions.h, but for some reason it wasn't being noticed, so this fixes a warning.
 @end;
 
 @interface ESGaimRequestAdapter : NSObject {
