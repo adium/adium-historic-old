@@ -174,7 +174,7 @@ static ESFileTransferPreferences *preferences;
 {
 	AIListContact		*listContact = [fileTransfer contact];
 	NSString			*localFilename = nil;
-	NSWindowController	*promptController = nil;
+	AIWindowController	*promptController = nil;
 
 	[fileTransfer setType:Incoming_FileTransfer];
 
