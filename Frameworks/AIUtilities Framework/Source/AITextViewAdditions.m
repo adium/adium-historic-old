@@ -14,7 +14,6 @@
 - (void)changeDocumentBackgroundColor:(id)sender
 {
 	NSColor						*newColor = [sender color];
-	NSMutableAttributedString	*attrStorageString = [[[self textStorage] mutableCopy] autorelease];
 	NSRange						selectedText = [self selectedRange];
 	
 	if (selectedText.length > 0) {
