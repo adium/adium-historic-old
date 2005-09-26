@@ -290,4 +290,14 @@
 	return postProcessContent;
 }
 
+#pragma mark Debug
+- (NSString *)description
+{
+	return  [NSString stringWithFormat:@"{%@ :<Source=%@> <Destination=%@> <Message=%@>}",
+		[super description],
+		[self source],
+		[self destination],
+		[self message]];
+}
+
 @end
