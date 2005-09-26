@@ -145,7 +145,6 @@
 }
 
 - (void)downloadDidFinish:(NSURLDownload *)download {
-	NSArray			*fileNames = nil;
 	NSString		*lastPathComponent = [[dest lowercaseString] lastPathComponent];
 	NSString		*pathExtension = [lastPathComponent pathExtension];
 	BOOL			decompressionSuccess = YES;
@@ -228,25 +227,24 @@
 		decompressionSuccess = NO;
 	}
 	
-	NSFileManager * fileManager = [NSFileManager defaultManager];
+	NSFileManager	*fileManager = [NSFileManager defaultManager];
+	NSEnumerator	*fileEnumerator;
+
 	//Delete the compressed xtra, now that we've decompressed it
 	[fileManager removeFileAtPath:dest handler:nil];
 	
 	dest = [dest stringByDeletingLastPathComponent];
 	
 	//the remaining files in the directory should be the contents of the xtra
-	fileNames = [fileManager directoryContentsAtPath:dest];
-	AILog(@"Downloaded to %@. fileNames: %@",dest,fileNames);
+	fileEnumerator = [fileManager enumeratorAtPath:dest];
+	AILog(@"Downloaded to %@. fileEnumerator: %@",dest,fileEnumerator);
 
-	if (decompressionSuccess && fileNames) {
-		NSEnumerator	*fileEnumerator;
+	if (decompressionSuccess && fileEnumerator) {
 		NSString		*xtraPath;
 		NSString		*nextFile;
 		NSSet			*supportedDocumentExtensions = [[NSBundle mainBundle] supportedDocumentExtensions];
 
-		fileEnumerator = [fileNames objectEnumerator];
-		while((nextFile = [fileEnumerator nextObject]))
-		{
+		while((nextFile = [fileEnumerator nextObject])) {
 			NSString		*fileExtension = [nextFile pathExtension];
 			NSEnumerator	*supportedDocumentExtensionsEnumerator;
 			NSString		*extension;
