@@ -15,7 +15,7 @@
  */
 
 #import "ESTextAndButtonsWindowController.h"
-#import "AIDockController.h"
+//#import "AIDockController.h"
 
 #define TEXT_AND_BUTTONS_WINDOW_NIB   @"TextAndButtonsWindow"
 
@@ -182,7 +182,7 @@
 
 	NSWindow	*window = [self window];
 	int			heightChange = 0;
-	int			distanceFromBottomOfMessageToButtons = 36;
+	int			distanceFromBottomOfMessageToButtons = 24;
 	NSRect		frame = [window frame];
 
 	//Hide the toolbar and zoom buttons
@@ -231,19 +231,11 @@
 		scrollFrame.size.height += verticalChange;
 
 		[scrollView_message setFrame:scrollFrame];
-		/* We expanded the message scrollview to take up the space previously used by the header; the window frame
-		 * does not need to be modified. However, it is now further from the message to where it will need to be
-		 * resized (if the message is large enough). 
-		 */
-		distanceFromBottomOfMessageToButtons += verticalChange;
 	}
 
 	//Set the message, then change the window size accordingly
 	{
 		int		messageHeightChange;
-		NSRect	messageFrame = [scrollView_message frame];
-		
-		messageFrame.origin.y -= heightChange;
 
 		[textView_message setVerticallyResizable:YES];
 		[textView_message setDrawsBackground:NO];
@@ -253,28 +245,21 @@
 		[textView_message sizeToFit];
 		messageHeightChange = [textView_message frame].size.height - [scrollView_message documentVisibleRect].size.height;
 		heightChange += messageHeightChange;
-		
+
 		/* distanceFromBottomOfMessageToButtons pixels from the original bottom of scrollView_message to the
 		 * proper positioning above the buttons; after that, the window needs to expand.
 		 */
 		if (heightChange > distanceFromBottomOfMessageToButtons) {
-			heightChange -= distanceFromBottomOfMessageToButtons;
-			frame.size.height += heightChange;
-			frame.origin.y -= heightChange;
-			
-			messageHeightChange -= distanceFromBottomOfMessageToButtons;
-			if (messageHeightChange > 0) {
-				messageFrame.origin.y -= messageHeightChange;
-				messageFrame.size.height += messageHeightChange;
-			}
+			frame.size.height += (heightChange - distanceFromBottomOfMessageToButtons);
+			frame.origin.y -= (heightChange - distanceFromBottomOfMessageToButtons);
+		}			
 
-		} else {
-			if (messageHeightChange >= heightChange) {
-				messageFrame.origin.y -= messageHeightChange;
-				messageFrame.size.height += messageHeightChange;
-			}
+		NSRect	messageFrame = [scrollView_message frame];
+		messageFrame.origin.y -= heightChange;
+		if (messageHeightChange > 0) {
+			messageFrame.size.height += messageHeightChange;
 		}
-
+		
 		[scrollView_message setFrame:messageFrame];
 		[scrollView_message setNeedsDisplay:YES];
 		
