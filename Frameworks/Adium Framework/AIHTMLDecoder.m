@@ -89,8 +89,6 @@
 
 int HTMLEquivalentForFontSize(int fontSize);
 
-static AITextAttributes *_defaultTextDecodingAttributes = nil;
-
 @interface AIHTMLDecoder (PRIVATE)
 - (void)processFontTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
 - (void)processBodyTagArgs:(NSDictionary *)inArgs attributes:(AITextAttributes *)textAttributes;
@@ -104,11 +102,26 @@ static AITextAttributes *_defaultTextDecodingAttributes = nil;
 
 @implementation AIHTMLDecoder
 
+static AITextAttributes *_defaultTextDecodingAttributes = nil;
+static NSString			*horizontalRule = nil;
+
 + (void)initialize
 {
 	if (!_defaultTextDecodingAttributes) {
 		_defaultTextDecodingAttributes = [[AITextAttributes textAttributesWithFontFamily:@"Helvetica" traits:0 size:12] retain];
 	}
+
+	//Set up the horizontal rule which will be search for when encoding and inserted when decoding
+	if (!horizontalRule) {
+#define HORIZONTAL_BAR			0x2013
+#define HORIZONTAL_RULE_LENGTH	12
+
+		const unichar separatorUTF16[HORIZONTAL_RULE_LENGTH] = {
+			'\n', HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
+			HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, '\n'
+		};
+		horizontalRule = [[NSString alloc] initWithCharacters:separatorUTF16 length:HORIZONTAL_RULE_LENGTH];
+	}	
 }
 
 + (AIHTMLDecoder *)decoder
@@ -143,6 +156,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		
 		thingsToInclude.allowAIMsubprofileLinks			= NO;
 	}
+
 	return self;
 }
 
@@ -536,33 +550,59 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 		}
 
 		if (chunk) {
-			//Escape special HTML characters.
-			[chunk replaceOccurrencesOfString:Ampersand withString:AmpersandHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			[chunk replaceOccurrencesOfString:LessThan withString:LessThanHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
-			[chunk replaceOccurrencesOfString:GreaterThan withString:GreaterThanHTML
-									  options:NSLiteralSearch range:NSMakeRange(0, [chunk length])];
+			NSRange	fullRange;
+			unsigned int replacements;
 
-			if (thingsToInclude.allSpaces) {
-				// Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
-				// so subsequent tab formatting is preserved.
-				[chunk replaceOccurrencesOfString:Tab withString:TabHTML
-										  options:NSLiteralSearch
-											range:NSMakeRange(0, [chunk length])];
-				// Check to make sure chunk exists before checking the characterAtIndex and then replace the leading ' ' with "&nbsp;" to preserve formatting.
-				if ([chunk length] > 0 && [chunk characterAtIndex:0] == ' ') {
-					[chunk replaceOccurrencesOfString:LeadSpace withString:LeadSpaceHTML
-											  options:NSLiteralSearch
-												range:NSMakeRange(0, 1)];
-				}
-				// Replace all remaining blocks of "  " (<space><space>) with " &nbsp;" (<space><&nbsp;>) so that formatting of large blocks of spaces
-				// in the middle of a line is preserved, and so WebKit properly line-wraps.
-				[chunk replaceOccurrencesOfString:Space withString:SpaceHTML
-										  options:NSLiteralSearch
-											range:NSMakeRange(0, [chunk length])];
+			//Escape special HTML characters.
+			fullRange = NSMakeRange(0, [chunk length]);
+			
+			replacements = [chunk replaceOccurrencesOfString:@"&" withString:@"&amp;"
+													 options:NSLiteralSearch range:fullRange];
+			fullRange.length += (replacements * 4);
+				
+			replacements = [chunk replaceOccurrencesOfString:@"<" withString:@"&lt;"
+									  options:NSLiteralSearch range:fullRange];
+			fullRange.length += (replacements * 3);
+			
+			replacements = [chunk replaceOccurrencesOfString:@">" withString:@"&gt;"
+													 options:NSLiteralSearch range:fullRange];
+			fullRange.length += (replacements * 3);
+
+			//Horizontal rule
+			replacements = [chunk replaceOccurrencesOfString:horizontalRule withString:@"<HR>"
+													 options:NSLiteralSearch range:fullRange];
+			if (replacements) {
+				fullRange.length = [chunk length];
 			}
 
+			if (thingsToInclude.allSpaces) {
+				/* Replace the tabs first, if they exist, so that it creates a leading " " when the tab is the initial character, and 
+				 * so subsequent tab formatting is preserved.
+				 */
+				replacements = [chunk replaceOccurrencesOfString:@"\t" 
+													  withString:@" &nbsp;&nbsp;&nbsp;"
+														 options:NSLiteralSearch
+														   range:fullRange];
+				fullRange.length += (replacements * 18);
+
+				//If the first character is a space, replace that leading ' ' with "&nbsp;" to preserve formatting.
+				if ([chunk length] > 0 && [chunk characterAtIndex:0] == ' ') {
+					[chunk replaceCharactersInRange:NSMakeRange(0, 1)
+										 withString:@"&nbsp;"];
+					fullRange.length += 5;
+				}
+	
+				/* Replace all remaining blocks of "  " (<space><space>) with " &nbsp;" (<space><&nbsp;>) so that
+				 * formatting of large blocks of spaces in the middle of a line is preserved,
+				 * and so WebKit properly line-wraps.
+				 */
+				[chunk replaceOccurrencesOfString:@"  "
+									   withString:@" &nbsp;"
+										  options:NSLiteralSearch
+											range:fullRange];
+			}
+
+			
 			/* If we need to encode non-ASCII to HTML, append string character by
 			 * character, replacing any non-ascii characters with the designated SGML escape sequence.
 			 */
@@ -592,19 +632,26 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 						i += composedCharRange.length - 1;
 					}
 				}
+
 			} else {
-				[chunk replaceOccurrencesOfString:@"\r\n"
-									   withString:BRTag
+				replacements = [chunk replaceOccurrencesOfString:@"\r\n"
+									   withString:@"<BR>"
 										  options:NSLiteralSearch 
-											range:NSMakeRange(0, [chunk length])];
-				[chunk replaceOccurrencesOfString:Return
-									   withString:BRTag
+											range:fullRange];
+				fullRange.length += (replacements * 2);
+
+				replacements = [chunk replaceOccurrencesOfString:@"\r"
+									   withString:@"<BR>"
 										  options:NSLiteralSearch 
-											range:NSMakeRange(0, [chunk length])];
-				[chunk replaceOccurrencesOfString:Newline
-									   withString:BRTag
+											range:fullRange];
+				fullRange.length += (replacements * 3);
+
+				replacements = [chunk replaceOccurrencesOfString:@"\n"
+									   withString:@"<BR>"
 										  options:NSLiteralSearch
-											range:NSMakeRange(0, [chunk length])];
+											range:fullRange];
+//				fullRange.length += (replacements * 3);
+
 				[string appendString:chunk];
 			}
 
@@ -889,16 +936,7 @@ attachmentImagesOnlyForSending:(BOOL)attachmentImagesOnlyForSending
 
 					//Horizontal Rule
 					} else if ([chunkString caseInsensitiveCompare:@"HR"] == NSOrderedSame) {
-						enum {
-							HORIZONTAL_BAR = 0x2015, //we use six of these.
-							separatorLength = 8,
-						};
-						static const unichar separatorUTF16[separatorLength] = {
-							'\n', HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR,
-							HORIZONTAL_BAR, HORIZONTAL_BAR, HORIZONTAL_BAR, '\n'
-						};
-						NSString *separator = [NSString stringWithCharacters:separatorUTF16 length:separatorLength];
-						[attrString appendString:separator withAttributes:nil];
+						[attrString appendString:horizontalRule withAttributes:nil];
 						
 					// Ignore <p> for those wacky AIM express users
 					} else if ([chunkString caseInsensitiveCompare:P] == NSOrderedSame ||
