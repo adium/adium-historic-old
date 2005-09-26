@@ -168,7 +168,10 @@ int packSortFunction(id packA, id packB, void *packOrderingArray);
 	//Determine our service class context
 	if ([context isKindOfClass:[AIContentObject class]]) {
 		serviceClassContext = [[[(AIContentObject *)context destination] service] serviceClass];
-		
+		//If there's no destination, try to use the source for context
+		if (!serviceClassContext) {
+			serviceClassContext = [[[(AIContentObject *)context source] service] serviceClass];
+		}			
 	} else if ([context isKindOfClass:[AIListContact class]]) {
 		serviceClassContext = [[[[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																					   toContact:(AIListContact *)context] service] serviceClass];
