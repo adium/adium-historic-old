@@ -18,6 +18,19 @@
 
 #define	BETA_RELEASE FALSE
 
+//Path to Adium's application support preferences
+#define ADIUM_APPLICATION_SUPPORT_DIRECTORY	[[[NSHomeDirectory() stringByAppendingPathComponent:@"Library"] stringByAppendingPathComponent:@"Application Support"] stringByAppendingPathComponent:@"Adium 2.0"]
+#define ADIUM_SUBFOLDER_OF_APP_SUPPORT		@"Adium 2.0"
+#define ADIUM_SUBFOLDER_OF_LIBRARY			[@"Application Support" stringByAppendingPathComponent:@"Adium 2.0"]
+
+#define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
+#define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
+#define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
+#define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
+
+//Portable Adium prefs key
+#define PORTABLE_ADIUM_KEY					@"Preference Folder Location"
+
 @class  AISortController, AILoginController, AIAccountController, AIInterfaceController, AIContactController, 
 		AICorePluginLoader, AIPreferenceController, AIMenuController, AILoginWindowController,
 		AICoreComponentLoader, AIContentController, AIToolbarController, AIContactInfoViewController, 
