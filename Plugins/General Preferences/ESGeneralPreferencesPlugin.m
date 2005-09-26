@@ -21,7 +21,6 @@
 	- Message tabs (create in tabs, organize tabs by group, sort tabs)
 	- Tab switching keys
 	- Sound:
-		- Output device (System default vs. system alert)
 		- Volume
 	- Status icon packs
  
