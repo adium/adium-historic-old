@@ -521,7 +521,8 @@ int actionSort(id objectA, id objectB, void *context)
 							/* We are on the second or later action. */
 							NSString	*conjunctionIfNeeded;
 							NSString	*commaAndSpaceIfNeeded;
-							
+							NSString	*fullStop;
+
 							//If we have more than 2 actions, we'll be combining them with commas
 							if (count > 2) {
 								commaAndSpaceIfNeeded = @",";
@@ -550,6 +551,12 @@ int actionSort(id objectA, id objectB, void *context)
 							*/
 							[actionDescription appendString:thisDescription];
 							appended = YES;
+						}
+						
+						if (i == (count - 1)) {
+							[actionDescription appendString:AILocalizedStringFromTable(@".",
+																					   @"AdiumFramework",
+																					   "period at the end of the Events pane sentence describing actions taken for an event")];
 						}
 					}
 				}
