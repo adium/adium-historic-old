@@ -55,4 +55,22 @@
 - (NSString *)userNameLabel{
     return AILocalizedString(@"Member Name",nil); //.Mac Member Name
 }
+
+/*!
+ * @brief Filter a UID
+ *
+ * Add @mac.com to the end of a dotMac contact if it's not already present.  super's implementation will make the UID
+ * lowercase, since [self caseSensitive] returns NO, so we can use -[NSString hasSuffix:] to check for the string.
+ */
+- (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
+{
+	NSString	*filteredUID = [super filterUID:inUID removeIgnoredCharacters:removeIgnored];
+	
+	if (![filteredUID hasSuffix:@"@mac.com"]) {
+		filteredUID = [filteredUID stringByAppendingString:@"@mac.com"];
+	}
+	
+	return filteredUID;
+}
+
 @end
