@@ -102,8 +102,8 @@
 	if (!handle || ![handle length])
 		handle = [inAccount UID];
 	
-	if (!password || ![password length])
-		password = @"temp"; //we can't use an empty password if they don't enter one, but it doesn't matter what is used.
+	if (![password length])
+		password = nil;
 	
 	if (!server || ![server length]) {
 		//If no server is specified, use the default, which may be visible to the user as a placeholder string
@@ -116,7 +116,19 @@
 		}
 	}
 	
-	chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:room,@"room",server,@"server",handle,@"handle",password,@"password",nil];
+	if (password) {
+		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+			room, @"room",
+			server, @"server",
+			handle, @"handle",
+			password, @"password",nil];
+
+	} else {
+		chatCreationInfo = [NSDictionary dictionaryWithObjectsAndKeys:
+			room, @"room",
+			server, @"server",
+			handle, @"handle",nil];
+	}
 
 	[self doJoinChatWithName:[NSString stringWithFormat:@"%@@%@",room,server]
 				   onAccount:inAccount
