@@ -209,6 +209,10 @@
 		3448769806D1EF5900DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
+		3449485708E9FCCD0054FF57 /* AIContactMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3449485508E9FCCD0054FF57 /* AIContactMenu.m */; };
+		3449485808E9FCCD0054FF57 /* AIContactMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485608E9FCCD0054FF57 /* AIContactMenu.h */; };
+		3449485C08E9FCD60054FF57 /* AIAccountMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3449485A08E9FCD60054FF57 /* AIAccountMenu.m */; };
+		3449485D08E9FCD60054FF57 /* AIAccountMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485B08E9FCD60054FF57 /* AIAccountMenu.h */; };
 		344C0D5006B6D63800DA7200 /* ESApplescriptabilityController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */; };
 		344C0D5106B6D63800DA7200 /* ESApplescriptabilityController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
@@ -804,8 +808,6 @@
 		4B215DBE0598A71400305B3C /* crashDuck.icns in Resources */ = {isa = PBXBuildFile; fileRef = 4B215DBD0598A71400305B3C /* crashDuck.icns */; };
 		4B22E160085CAE2F001864DE /* AIAbstractListObjectMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B22E161085CAE2F001864DE /* AIAbstractListObjectMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */; };
-		4B22E162085CAE2F001864DE /* AIContactMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B22E15E085CAE2F001864DE /* AIContactMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B22E163085CAE2F001864DE /* AIContactMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B22E15F085CAE2F001864DE /* AIContactMenu.m */; };
 		4B28DDAD0599FED300343093 /* AIAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B28DDAB0599FED200343093 /* AIAccountViewController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		4B28DDAE0599FED300343093 /* AIAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B28DDAC0599FED200343093 /* AIAccountViewController.m */; };
 		4B292D3207A9C8E100C5F882 /* AIStatusController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B292D3007A9C8E100C5F882 /* AIStatusController.h */; };
@@ -855,8 +857,6 @@
 		4B8741D40840D25700738987 /* AdiumServices.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8741D20840D25600738987 /* AdiumServices.m */; };
 		4B87424A0840E3D800738987 /* AdiumPasswords.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B8742480840E3D800738987 /* AdiumPasswords.h */; };
 		4B87424B0840E3D800738987 /* AdiumPasswords.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8742490840E3D800738987 /* AdiumPasswords.m */; };
-		4B8743260841046600738987 /* AIAccountMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B8743240841046600738987 /* AIAccountMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		4B8743270841046600738987 /* AIAccountMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8743250841046600738987 /* AIAccountMenu.m */; };
 		4B8C3C990825EAF9004B9F45 /* AIAccountListPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B8C3C970825EAF9004B9F45 /* AIAccountListPreferences.h */; };
 		4B8C3C9A0825EAF9004B9F45 /* AIAccountListPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */; };
 		4B8C3CE90825F60B004B9F45 /* AccountListPreferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */; };
@@ -1833,6 +1833,10 @@
 		3448054F07AC5151006A7F7B /* ESDebugAILog.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESDebugAILog.h; path = "Frameworks/Adium Framework/ESDebugAILog.h"; sourceTree = "<group>"; };
 		3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */ = {isa = PBXFileReference; explicitFileType = "wrapper.pb-project"; name = AIUtilities.framework.xcodeproj; path = "Frameworks/AIUtilities Framework/AIUtilities.framework.xcodeproj"; sourceTree = "<group>"; };
 		3448758D06D1EBDF00DA778C /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
+		3449485508E9FCCD0054FF57 /* AIContactMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactMenu.m; path = "Frameworks/Adium Framework/AIContactMenu.m"; sourceTree = "<group>"; };
+		3449485608E9FCCD0054FF57 /* AIContactMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactMenu.h; path = "Frameworks/Adium Framework/AIContactMenu.h"; sourceTree = "<group>"; };
+		3449485A08E9FCD60054FF57 /* AIAccountMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenu.m; path = "Frameworks/Adium Framework/AIAccountMenu.m"; sourceTree = "<group>"; };
+		3449485B08E9FCD60054FF57 /* AIAccountMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountMenu.h; path = "Frameworks/Adium Framework/AIAccountMenu.h"; sourceTree = "<group>"; };
 		344AB2C30579136900384CEE /* ESOpenMessageWindowContactAlertPlugin.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESOpenMessageWindowContactAlertPlugin.h; path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.h"; sourceTree = "<group>"; };
 		344AB2C40579136900384CEE /* ESOpenMessageWindowContactAlertPlugin.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESOpenMessageWindowContactAlertPlugin.m; path = "Plugins/Open Message Window Contact Alert/ESOpenMessageWindowContactAlertPlugin.m"; sourceTree = "<group>"; };
 		344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESApplescriptabilityController.m; path = Source/ESApplescriptabilityController.m; sourceTree = "<group>"; };
@@ -2710,8 +2714,6 @@
 		4B215DBD0598A71400305B3C /* crashDuck.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = crashDuck.icns; path = "Adium Crash Reporter/crashDuck.icns"; sourceTree = "<group>"; };
 		4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAbstractListObjectMenu.h; path = Source/AIAbstractListObjectMenu.h; sourceTree = "<group>"; };
 		4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAbstractListObjectMenu.m; path = Source/AIAbstractListObjectMenu.m; sourceTree = "<group>"; };
-		4B22E15E085CAE2F001864DE /* AIContactMenu.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIContactMenu.h; path = Source/AIContactMenu.h; sourceTree = "<group>"; };
-		4B22E15F085CAE2F001864DE /* AIContactMenu.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIContactMenu.m; path = Source/AIContactMenu.m; sourceTree = "<group>"; };
 		4B25494603F6A32700A8010A /* AIAccountSelectionView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountSelectionView.h; path = "Plugins/Dual Window Interface/AIAccountSelectionView.h"; sourceTree = "<group>"; };
 		4B25494703F6A32700A8010A /* AIAccountSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountSelectionView.m; path = "Plugins/Dual Window Interface/AIAccountSelectionView.m"; sourceTree = "<group>"; };
 		4B28DDAB0599FED200343093 /* AIAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountViewController.h; path = "Frameworks/Adium Framework/AIAccountViewController.h"; sourceTree = "<group>"; };
@@ -2781,8 +2783,6 @@
 		4B8741D20840D25600738987 /* AdiumServices.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AdiumServices.m; path = Source/AdiumServices.m; sourceTree = "<group>"; };
 		4B8742480840E3D800738987 /* AdiumPasswords.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPasswords.h; path = Source/AdiumPasswords.h; sourceTree = "<group>"; };
 		4B8742490840E3D800738987 /* AdiumPasswords.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPasswords.m; path = Source/AdiumPasswords.m; sourceTree = "<group>"; };
-		4B8743240841046600738987 /* AIAccountMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIAccountMenu.h; path = Source/AIAccountMenu.h; sourceTree = "<group>"; };
-		4B8743250841046600738987 /* AIAccountMenu.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIAccountMenu.m; path = Source/AIAccountMenu.m; sourceTree = "<group>"; };
 		4B8C3C970825EAF9004B9F45 /* AIAccountListPreferences.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountListPreferences.h; path = Source/AIAccountListPreferences.h; sourceTree = "<group>"; };
 		4B8C3C980825EAF9004B9F45 /* AIAccountListPreferences.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIAccountListPreferences.m; path = Source/AIAccountListPreferences.m; sourceTree = "<group>"; };
 		4B8C3CE80825F60B004B9F45 /* AccountListPreferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountListPreferences.nib; path = Resources/AccountListPreferences.nib; sourceTree = "<group>"; };
@@ -5279,12 +5279,12 @@
 			children = (
 				4B22E15C085CAE2E001864DE /* AIAbstractListObjectMenu.h */,
 				4B22E15D085CAE2F001864DE /* AIAbstractListObjectMenu.m */,
-				4B22E15E085CAE2F001864DE /* AIContactMenu.h */,
-				4B22E15F085CAE2F001864DE /* AIContactMenu.m */,
+				3449485608E9FCCD0054FF57 /* AIContactMenu.h */,
+				3449485508E9FCCD0054FF57 /* AIContactMenu.m */,
 				4BAF8CFC083D9A2A0067CF6F /* AIServiceMenu.h */,
 				4BAF8CFD083D9A2A0067CF6F /* AIServiceMenu.m */,
-				4B8743240841046600738987 /* AIAccountMenu.h */,
-				4B8743250841046600738987 /* AIAccountMenu.m */,
+				3449485B08E9FCD60054FF57 /* AIAccountMenu.h */,
+				3449485A08E9FCD60054FF57 /* AIAccountMenu.m */,
 				34E00F7107B92AD0000DF265 /* Text and Buttons Window */,
 				4BFC3412058D48A8008F7FA2 /* AIWindowController.h */,
 				4BFC3413058D48A8008F7FA2 /* AIWindowController.m */,
@@ -6531,12 +6531,12 @@
 				34BFDB2E07E7710C00AD984D /* ESPresetNameSheetController.h in Headers */,
 				DA9CF85D080F97F8000C5249 /* AIPathUtilities.h in Headers */,
 				4BAF8CFE083D9A2A0067CF6F /* AIServiceMenu.h in Headers */,
-				4B8743260841046600738987 /* AIAccountMenu.h in Headers */,
 				4B22E160085CAE2F001864DE /* AIAbstractListObjectMenu.h in Headers */,
-				4B22E162085CAE2F001864DE /* AIContactMenu.h in Headers */,
 				4BD548B0086086B5008DF3CB /* AISoundSet.h in Headers */,
 				34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */,
 				34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */,
+				3449485808E9FCCD0054FF57 /* AIContactMenu.h in Headers */,
+				3449485D08E9FCD60054FF57 /* AIAccountMenu.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8169,12 +8169,12 @@
 				34BFDB2F07E7710C00AD984D /* ESPresetNameSheetController.m in Sources */,
 				DA9CF85C080F97F3000C5249 /* AIPathUtilities.m in Sources */,
 				4BAF8CFF083D9A2A0067CF6F /* AIServiceMenu.m in Sources */,
-				4B8743270841046600738987 /* AIAccountMenu.m in Sources */,
 				4B22E161085CAE2F001864DE /* AIAbstractListObjectMenu.m in Sources */,
-				4B22E163085CAE2F001864DE /* AIContactMenu.m in Sources */,
 				4BD548B1086086B5008DF3CB /* AISoundSet.m in Sources */,
 				34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */,
 				34D36DBA08E75F7500E15E40 /* AIColorPickerSliders.m in Sources */,
+				3449485708E9FCCD0054FF57 /* AIContactMenu.m in Sources */,
+				3449485C08E9FCD60054FF57 /* AIAccountMenu.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
