@@ -109,7 +109,7 @@ adium_app_name="Adium"
 ###############################################################################
 #			      Stop Editing Here!! 			      #
 #-----------------------------------------------------------------------------#
-#	 If this were a standardized test, we would take your pencil away.     #
+#	 If this were a standardized test, we would take your pencil away.    #
 ###############################################################################
 
 # ensure the log directory exists
