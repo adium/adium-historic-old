@@ -54,7 +54,7 @@ rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 file:\/\/\/.*		    {SHStringOffset += SHleng; return SH_FILE_VALID;}
 
 https?:\/\/		|
-ftp:\/\/		|
+s?ftp:\/\/		|
 feed:\/\/		|
 ssh:\/\/		|
 telnet:\/\/		|
@@ -67,7 +67,7 @@ hydra:\/\/		|
 itms:\/\/		|
 see:\/\/		|
 afp:\/\/		|
-adiumxtra:\/\/	|
+adiumxtra:\/\/		|
 webcal:\/\/		|
 svn(\+ssh)?:\/\/	|
 gopher:\/\/		    {SHStringOffset += SHleng; SHValidShift = SHleng; BEGIN CANONICAL;}
