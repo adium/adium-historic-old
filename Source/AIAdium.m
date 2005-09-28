@@ -37,7 +37,6 @@
 #import "ESDebugController.h"
 #import "ESFileTransferController.h"
 #import "LNAboutBoxController.h"
-#import "AIXtrasManager.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 
