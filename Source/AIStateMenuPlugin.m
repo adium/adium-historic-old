@@ -20,7 +20,7 @@
 #import "AIMenuController.h"
 #import "AIStatusController.h"
 #import <AIUtilities/AIMenuAdditions.h>
-#import "AIAccountMenu.h"
+#import <Adium/AIAccountMenu.h>
 
 @interface AIStateMenuPlugin (PRIVATE)
 - (void)updateKeyEquivalents;
