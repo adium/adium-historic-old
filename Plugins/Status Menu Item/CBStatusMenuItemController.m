@@ -25,7 +25,7 @@
 #import <Adium/AIChat.h>
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatusIcons.h>
-#import <Adium/AIAccountMenu.h>
+#import "AIAccountMenu.h"
 
 @interface CBStatusMenuItemController (PRIVATE)
 - (void)activateAdium:(id)sender;
