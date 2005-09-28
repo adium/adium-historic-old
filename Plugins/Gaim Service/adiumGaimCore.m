@@ -119,26 +119,11 @@ static void adiumGaimCoreUiInit(void)
 
 	//Turn off buddy icon caching
 	gaim_buddy_icons_set_caching(FALSE);
-		
-	//Clear the local blist and icons on first launch of .83... temporary code.
-	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
-	NSNumber		*clearedBlist = [userDefaults objectForKey:@"Adium 0.83-2:Cleared blist.xml on first run"];
-	if (!clearedBlist || ![clearedBlist boolValue]) {
-		[userDefaults setObject:[NSNumber numberWithBool:YES]
-						 forKey:@"Adium 0.83-2:Cleared blist.xml on first run"];
-
-		char *user_dir = gaim_user_dir();
-		[[NSFileManager defaultManager] trashFileAtPath:
-			[[[NSString stringWithUTF8String:user_dir] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]];
-		[[NSFileManager defaultManager] trashFileAtPath:
-			[[NSString stringWithUTF8String:user_dir] stringByAppendingPathComponent:@"icons"]];
-
-		[userDefaults synchronize];
-	}
 
 	//Kill the Gaim blist file each launch; it just causes trouble
-	[[NSFileManager defaultManager] trashFileAtPath:
-		[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]];
+	[[NSFileManager defaultManager] removeFileAtPath:
+		[[[NSString stringWithUTF8String:gaim_user_dir()] stringByAppendingPathComponent:@"blist"] stringByAppendingPathExtension:@"xml"]
+											 handler:nil];
 
 	gaim_blist_load();
 	
