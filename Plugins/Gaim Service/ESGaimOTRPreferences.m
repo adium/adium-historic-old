@@ -18,7 +18,7 @@
 #import "AIAccountController.h"
 #import <AIUtilities/AIImageAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
-#import "AIAccountMenu.h"
+#import <Adium/AIAccountMenu.h>
 #import "SLGaimCocoaAdapter.h"
 
 /* libotr headers */

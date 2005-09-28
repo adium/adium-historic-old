@@ -62,7 +62,7 @@
 		3402E07607CB0FAA0044F818 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 3402E07507CB0FAA0044F818 /* Localizable.strings */; };
 		34048AC70617CB4C004D0B7E /* SLGaimCocoaAdapter.h in Headers */ = {isa = PBXBuildFile; fileRef = 34048AC50617CB4C004D0B7E /* SLGaimCocoaAdapter.h */; };
 		34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 34048AC60617CB4C004D0B7E /* SLGaimCocoaAdapter.m */; };
-		34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */; };
+		34057F0D087E027800664D64 /* ESImageViewWithImagePicker.h in Headers */ = {isa = PBXBuildFile; fileRef = 34057F0B087E027800664D64 /* ESImageViewWithImagePicker.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34057F0E087E027800664D64 /* ESImageViewWithImagePicker.m in Sources */ = {isa = PBXBuildFile; fileRef = 34057F0C087E027800664D64 /* ESImageViewWithImagePicker.m */; };
 		34057FAD087EEBE500664D64 /* OTRPrefs.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34057FAC087EEBE500664D64 /* OTRPrefs.nib */; };
 		34082675075B079800703011 /* Dock Icons in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3408254D075B078B00703011 /* Dock Icons */; };
@@ -210,9 +210,9 @@
 		3448769906D1EF6100DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3448769A06D1EF7300DA778C /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3448758D06D1EBDF00DA778C /* Cocoa.framework */; };
 		3449485708E9FCCD0054FF57 /* AIContactMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3449485508E9FCCD0054FF57 /* AIContactMenu.m */; };
-		3449485808E9FCCD0054FF57 /* AIContactMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485608E9FCCD0054FF57 /* AIContactMenu.h */; };
+		3449485808E9FCCD0054FF57 /* AIContactMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485608E9FCCD0054FF57 /* AIContactMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		3449485C08E9FCD60054FF57 /* AIAccountMenu.m in Sources */ = {isa = PBXBuildFile; fileRef = 3449485A08E9FCD60054FF57 /* AIAccountMenu.m */; };
-		3449485D08E9FCD60054FF57 /* AIAccountMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485B08E9FCD60054FF57 /* AIAccountMenu.h */; };
+		3449485D08E9FCD60054FF57 /* AIAccountMenu.h in Headers */ = {isa = PBXBuildFile; fileRef = 3449485B08E9FCD60054FF57 /* AIAccountMenu.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		344C0D5006B6D63800DA7200 /* ESApplescriptabilityController.m in Sources */ = {isa = PBXBuildFile; fileRef = 344C0D4E06B6D63800DA7200 /* ESApplescriptabilityController.m */; };
 		344C0D5106B6D63800DA7200 /* ESApplescriptabilityController.h in Headers */ = {isa = PBXBuildFile; fileRef = 344C0D4F06B6D63800DA7200 /* ESApplescriptabilityController.h */; };
 		344C0F0D06B709AC00DA7200 /* Bonjour.AdiumPlugin in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4947F5CB0655E85200B791E5 /* Bonjour.AdiumPlugin */; };
@@ -590,7 +590,7 @@
 		34D2E8690758BB0C0054C56D /* ESFileTransferPreferences.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D2E8670758BB0B0054C56D /* ESFileTransferPreferences.h */; };
 		34D2E86A0758BB0C0054C56D /* ESFileTransferPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D2E8680758BB0B0054C56D /* ESFileTransferPreferences.m */; };
 		34D36DBA08E75F7500E15E40 /* AIColorPickerSliders.m in Sources */ = {isa = PBXBuildFile; fileRef = 34D369EE08E7544D00E15E40 /* AIColorPickerSliders.m */; };
-		34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */; };
+		34D36DBB08E75F7600E15E40 /* AIColorPickerSliders.h in Headers */ = {isa = PBXBuildFile; fileRef = 34D369ED08E7544D00E15E40 /* AIColorPickerSliders.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34D8325407CBD53B006466F2 /* FTProgressRevealRollover.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324807CBD53A006466F2 /* FTProgressRevealRollover.tif */; };
 		34D8325507CBD53B006466F2 /* FTProgressRevealRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324907CBD53A006466F2 /* FTProgressRevealRollover_Selected.tif */; };
 		34D8325607CBD53B006466F2 /* FTProgressStopRollover_Selected.tif in Resources */ = {isa = PBXBuildFile; fileRef = 34D8324A07CBD53A006466F2 /* FTProgressStopRollover_Selected.tif */; };

@@ -17,7 +17,7 @@
 #import "AIAccountController.h"
 #import "AIAccountMenuAccessPlugin.h"
 #import "AIMenuController.h"
-#import "AIAccountMenu.h"
+#import <Adium/AIAccountMenu.h>
 
 /*!
  * @class AIAccountMenuAccessPlugin

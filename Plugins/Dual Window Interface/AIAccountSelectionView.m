@@ -25,8 +25,8 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
-#import "AIAccountMenu.h"
-#import "AIContactMenu.h"
+#import <Adium/AIAccountMenu.h>
+#import <Adium/AIContactMenu.h>
 #import <Adium/AIChat.h>
 
 #define ACCOUNT_SELECTION_NIB	@"AccountSelectionView"
