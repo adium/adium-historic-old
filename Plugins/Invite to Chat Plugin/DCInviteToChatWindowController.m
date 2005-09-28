@@ -22,7 +22,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIService.h>
-#import <Adium/AIContactMenu.h>
+#import "AIContactMenu.h"
 
 #define INVITE_NIB_NAME		@"InviteToChatWindow"
 
