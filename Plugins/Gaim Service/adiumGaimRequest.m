@@ -15,6 +15,7 @@
  */
 
 #import "adiumGaimRequest.h"
+#import "UndeclaredLibgaimFunctions.h"
 #import "ESGaimRequestActionController.h"
 #import "ESGaimRequestWindowController.h"
 #import "ESGaimAuthorizationRequestWindowController.h"
@@ -102,7 +103,7 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 	
 	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
-		gaim_xfer_choose_file((GaimXfer *)userData);
+		gaim_xfer_choose_file(userData);
 		
     } else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)) {
 		NSString	*remoteName;

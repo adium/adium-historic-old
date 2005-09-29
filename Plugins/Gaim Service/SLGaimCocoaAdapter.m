@@ -24,6 +24,7 @@
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
 #import "adiumGaimOTR.h"
+#import "UndeclaredLibgaimFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
 #import <Adium/AIAccount.h>
 #import <Adium/AIService.h>
@@ -1293,8 +1294,6 @@ NSMutableDictionary* get_chatDict(void)
 	[gaimThreadProxy gaimThreadXferRequest:[NSValue valueWithPointer:xfer]];
 }
 
-//this is in Libgaim.framework, though it isn't in the headers.
-void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 - (void)gaimThreadXferRequestAccepted:(NSValue *)xferValue withFileName:(NSString *)xferFileName
 {
 	GaimXfer	*xfer = [xferValue pointerValue];
