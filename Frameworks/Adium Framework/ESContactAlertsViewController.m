@@ -521,7 +521,6 @@ int actionSort(id objectA, id objectB, void *context)
 							/* We are on the second or later action. */
 							NSString	*conjunctionIfNeeded;
 							NSString	*commaAndSpaceIfNeeded;
-							NSString	*fullStop;
 
 							//If we have more than 2 actions, we'll be combining them with commas
 							if (count > 2) {
