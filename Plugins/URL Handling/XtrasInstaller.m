@@ -245,30 +245,32 @@
 		NSSet			*supportedDocumentExtensions = [[NSBundle mainBundle] supportedDocumentExtensions];
 
 		while((nextFile = [fileEnumerator nextObject])) {
-			NSString		*fileExtension = [nextFile pathExtension];
-			NSEnumerator	*supportedDocumentExtensionsEnumerator;
-			NSString		*extension;
-			BOOL			isSupported = NO;
-			
-			//We want to do a case-insensitive path extension comparison
-			supportedDocumentExtensionsEnumerator = [supportedDocumentExtensions objectEnumerator];
-			while (!isSupported &&
-				   (extension = [supportedDocumentExtensionsEnumerator nextObject])) {
-				isSupported = ([fileExtension caseInsensitiveCompare:extension] == NSOrderedSame);
-			}
-			
-			if (isSupported) {
-				BOOL	success;
-				
-				xtraPath = [dest stringByAppendingPathComponent:nextFile];
+			if (![nextFile hasPrefix:@"."]) {
+				NSString		*fileExtension = [nextFile pathExtension];
+				NSEnumerator	*supportedDocumentExtensionsEnumerator;
+				NSString		*extension;
+				BOOL			isSupported = NO;
 
-				//Open the file directly
-				AILog(@"Installing %@",xtraPath);
-				success = [[NSApp delegate] application:NSApp
-										   openTempFile:xtraPath];
-				
-				if (!success) {
-					NSLog(@"Installation Error: %@",xtraPath);
+				//We want to do a case-insensitive path extension comparison
+				supportedDocumentExtensionsEnumerator = [supportedDocumentExtensions objectEnumerator];
+				while (!isSupported &&
+					   (extension = [supportedDocumentExtensionsEnumerator nextObject])) {
+					isSupported = ([fileExtension caseInsensitiveCompare:extension] == NSOrderedSame);
+				}
+
+				if (isSupported) {
+					BOOL	success;
+
+					xtraPath = [dest stringByAppendingPathComponent:nextFile];
+
+					//Open the file directly
+					AILog(@"Installing %@",xtraPath);
+					success = [[NSApp delegate] application:NSApp
+											   openTempFile:xtraPath];
+
+					if (!success) {
+						NSLog(@"Installation Error: %@",xtraPath);
+					}
 				}
 			}
 		}
