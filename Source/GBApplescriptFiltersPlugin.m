@@ -651,8 +651,13 @@ int _scriptKeywordLengthSort(id scriptA, id scriptB, void *context)
 			
 	if ([standardOutput isKindOfClass:[NSPipe class]] &&
 		(output = [(NSPipe *)standardOutput fileHandleForReading])) {
-		scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
-											 encoding:NSUTF8StringEncoding];
+		AI_DURING
+			scriptResult = [[NSString alloc] initWithData:[output readDataToEndOfFile]
+												 encoding:NSUTF8StringEncoding];
+		AI_HANDLER
+			scriptResult = nil;
+		AI_ENDHANDLER
+
 		//The NSFileHandle will be closed automatically when the NSPipe is deallocated... but let's do it immediately
 		[output closeFile];
 	}
