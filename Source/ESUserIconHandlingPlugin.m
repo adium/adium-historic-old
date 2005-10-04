@@ -117,25 +117,29 @@
 		//The status UserIcon object is set by account code; apply this to the display array and cache it if necesssary
 		NSImage				*userIcon;
 		NSImage				*statusUserIcon = [inObject statusObjectForKey:KEY_USER_ICON];
+		AIMutableOwnerArray *userIconDisplayArray = [inObject displayArrayForKey:KEY_USER_ICON];
 
-		//Apply the image at medium priority
-		[inObject setDisplayUserIcon:statusUserIcon
-						   withOwner:self
-					   priorityLevel:Medium_Priority];
-
-		//If the new objectValue is what we just set, notify and cache
-		userIcon = [inObject displayUserIcon];
-
-		if (userIcon == statusUserIcon) {
-			//Cache using the raw data if possible, otherwise create a TIFF representation to cache
-			//Note: TIFF supports transparency but not animation
-			NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
-			[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
-
-			[[adium contactController] listObjectAttributesChanged:inObject
-													  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
+		//Apply the image at medium priority if  we don't already have a higher priority (lower float value) icon set
+		if (![userIconDisplayArray objectWithOwner:self] ||
+			[userIconDisplayArray priorityOfObjectWithOwner:self] >= Medium_Priority) {
+			[inObject setDisplayUserIcon:statusUserIcon
+							   withOwner:self
+						   priorityLevel:Medium_Priority];
 			
-			[self updateToolbarItemForObject:inObject];
+			//If the new objectValue is what we just set, notify and cache
+			userIcon = [inObject displayUserIcon];
+			
+			if (userIcon == statusUserIcon) {
+				//Cache using the raw data if possible, otherwise create a TIFF representation to cache
+				//Note: TIFF supports transparency but not animation
+				NSData  *userIconData = [inObject statusObjectForKey:@"UserIconData"];
+				[self _cacheUserIconData:(userIconData ? userIconData : [userIcon TIFFRepresentation]) forObject:inObject];
+				
+				[[adium contactController] listObjectAttributesChanged:inObject
+														  modifiedKeys:[NSSet setWithObject:KEY_USER_ICON]];
+				
+				[self updateToolbarItemForObject:inObject];
+			}
 		}
 	}
 
@@ -219,6 +223,12 @@
 			[inObject setDisplayUserIcon:nil
 							   withOwner:self
 						   priorityLevel:Highest_Priority];
+			
+			//Update the list object to grab the serverside icon as the one we're using, if necessary
+			[self updateListObject:inObject
+							  keys:[NSSet setWithObject:KEY_USER_ICON]
+							silent:NO];
+			
 			[self updateToolbarItemForObject:inObject];
 		}
 	}
