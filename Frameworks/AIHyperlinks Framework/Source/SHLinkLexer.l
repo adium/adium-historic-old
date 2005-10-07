@@ -37,6 +37,7 @@ ipURL		([0-9]{1,3}\.){3}[0-9]{1,3}(:[0-9]+)?(\/.*)?
 mailSpecifier	[^:\/]+\@.+\.{domains}
 jabberSpec      xmpp:.*\@.+\.{domains}(\/.*)?
 aolIMSpec       aim:goim\?screenname=[^\ \t\n&]+(&message=.+)?
+aolChatSpec	aim:gochat\?roomname=[^\ \t\n&]+
 yahooIMSpec	ymsgr:sendim\?.+
 rdarSpec	rdar:\/\/(problems?\/)?[0-9]+(&[0-9]+)*
 
@@ -80,6 +81,7 @@ mailto:{mailSpecifier}      {SHStringOffset += SHleng; return SH_MAILTO_VALID;}
 {urlSpecifier}		    {SHStringOffset += SHleng; return SH_URL_DEGENERATE;}
 
 {aolIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
+{aolChatSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {yahooIMSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 {rdarSpec}		    {SHStringOffset += SHleng; return SH_URL_VALID;}
 
