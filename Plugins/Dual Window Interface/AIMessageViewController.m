@@ -577,8 +577,11 @@
  */
 - (void)clearTextEntryView
 {
+	NSWritingDirection writingDirection = [textView_outgoing baseWritingDirection];
+	
 	[textView_outgoing setString:@""];
 	[textView_outgoing setTypingAttributes:[[adium contentController] defaultFormattingAttributes]];
+	[textView_outgoing setBaseWritingDirection:writingDirection];	//Preserve the writing diraction
 	
     [[NSNotificationCenter defaultCenter] postNotificationName:NSTextDidChangeNotification
 														object:textView_outgoing];
