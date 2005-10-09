@@ -1,0 +1,24 @@
+{
+    IBClasses = (
+        {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = AIXtraInfo; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {
+            ACTIONS = {
+                browseXtras = id; 
+                checkForUpdates = id; 
+                deleteXtra = id; 
+                setSelectedCategory = id; 
+            }; 
+            CLASS = AIXtrasManager; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {
+                categoryController = NSArrayController; 
+                categoryPopup = NSPopUpButton; 
+                window = NSWindow; 
+            }; 
+            SUPERCLASS = AIObject; 
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+    ); 
+    IBVersion = 1; 
+}
