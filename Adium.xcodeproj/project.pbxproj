@@ -1060,6 +1060,11 @@
 		4BFF665C063693FB00308A3B /* ESSendMessageAlertDetailPane.h in Headers */ = {isa = PBXBuildFile; fileRef = 342DC49B05783BE8000E1D83 /* ESSendMessageAlertDetailPane.h */; };
 		63093C2F0892143500F118D3 /* newContentThreeDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2D0892143500F118D3 /* newContentThreeDigits.png */; };
 		63093C300892143500F118D3 /* newContentTwoDigits.png in Resources */ = {isa = PBXBuildFile; fileRef = 63093C2E0892143500F118D3 /* newContentTwoDigits.png */; };
+		632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */ = {isa = PBXBuildFile; fileRef = 632D801608E7E0A40032C187 /* XtrasManager.nib */; };
+		633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175608F905A700C76383 /* AIXtraInfo.h */; };
+		633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175708F905A700C76383 /* AIXtraInfo.m */; };
+		633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */ = {isa = PBXBuildFile; fileRef = 633F175808F905A700C76383 /* AIXtrasManager.h */; };
+		633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 633F175908F905A700C76383 /* AIXtrasManager.m */; };
 		636AB7F3087E2B6700A87670 /* AIDockBadger.h in Headers */ = {isa = PBXBuildFile; fileRef = 636AB7F1087E2B6700A87670 /* AIDockBadger.h */; };
 		63FBAA480887779D00026246 /* AIDockBadger.m in Sources */ = {isa = PBXBuildFile; fileRef = 636AB7F2087E2B6700A87670 /* AIDockBadger.m */; };
 		6C3E0730054471CD00A4AE2E /* Adium.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 34BD9DE105314751000AB133 /* Adium.framework */; };
@@ -2949,6 +2954,11 @@
 		4BFE2E9F07E61A4E00C07EBE /* NewAlertNoEvents.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = NewAlertNoEvents.nib; path = "Frameworks/Adium Framework/NewAlertNoEvents.nib"; sourceTree = "<group>"; };
 		63093C2D0892143500F118D3 /* newContentThreeDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentThreeDigits.png; sourceTree = "<group>"; };
 		63093C2E0892143500F118D3 /* newContentTwoDigits.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = newContentTwoDigits.png; sourceTree = "<group>"; };
+		632D801608E7E0A40032C187 /* XtrasManager.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = XtrasManager.nib; path = Resources/XtrasManager.nib; sourceTree = "<group>"; };
+		633F175608F905A700C76383 /* AIXtraInfo.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtraInfo.h; path = Source/AIXtraInfo.h; sourceTree = "<group>"; };
+		633F175708F905A700C76383 /* AIXtraInfo.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtraInfo.m; path = Source/AIXtraInfo.m; sourceTree = "<group>"; };
+		633F175808F905A700C76383 /* AIXtrasManager.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIXtrasManager.h; path = Source/AIXtrasManager.h; sourceTree = "<group>"; };
+		633F175908F905A700C76383 /* AIXtrasManager.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIXtrasManager.m; path = Source/AIXtrasManager.m; sourceTree = "<group>"; };
 		636AB7F1087E2B6700A87670 /* AIDockBadger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AIDockBadger.h; sourceTree = "<group>"; };
 		636AB7F2087E2B6700A87670 /* AIDockBadger.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AIDockBadger.m; sourceTree = "<group>"; };
 		6C0FD8C20578D47B00D70FEB /* adiumHighlight.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = adiumHighlight.png; path = "Plugins/Status Menu Item/adiumHighlight.png"; sourceTree = "<group>"; };
@@ -4678,6 +4688,7 @@
 		4B4F5B23042D636700A8010A /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				632D800908E7DE2C0032C187 /* Xtras Management */,
 				34C68B1C0778F9C200EB423C /* General Preferences */,
 				4BD388C306B5899E000A346A /* Contact List */,
 				4B0E342E04C4677700A8010A /* Contact Status Coloring */,
@@ -4689,14 +4700,6 @@
 				4BC5A5C90764F70E0080ECF7 /* Video Chat Interface */,
 			);
 			name = Interface;
-			sourceTree = "<group>";
-		};
-		4B4F5B29042D63DC00A8010A /* Other */ = {
-			isa = PBXGroup;
-			children = (
-				9E6417090613C564006AF387 /* URL Handling */,
-			);
-			name = Other;
 			sourceTree = "<group>";
 		};
 		4B4F5B2A042D63E200A8010A /* Messaging */ = {
@@ -4818,7 +4821,6 @@
 				34306FE3076F53F60025102A /* Events and Contact Alerts */,
 				4B4F5B2A042D63E200A8010A /* Messaging */,
 				4B4F5B23042D636700A8010A /* Interface */,
-				4B4F5B29042D63DC00A8010A /* Other */,
 			);
 			name = "Sad Components";
 			sourceTree = "<group>";
@@ -5446,6 +5448,23 @@
 			name = Growl;
 			sourceTree = "<group>";
 		};
+		632D800908E7DE2C0032C187 /* Xtras Management */ = {
+			isa = PBXGroup;
+			children = (
+				633F175608F905A700C76383 /* AIXtraInfo.h */,
+				633F175708F905A700C76383 /* AIXtraInfo.m */,
+				633F175808F905A700C76383 /* AIXtrasManager.h */,
+				633F175908F905A700C76383 /* AIXtrasManager.m */,
+				632D801608E7E0A40032C187 /* XtrasManager.nib */,
+				34F1023A073449D500890D3B /* XtrasInstaller.h */,
+				34F10239073449D500890D3B /* XtrasInstaller.m */,
+				34F1022D0734499700890D3B /* NSString_UUID.h */,
+				34F102290734499600890D3B /* NSString_UUID.m */,
+				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
+			);
+			name = "Xtras Management";
+			sourceTree = "<group>";
+		};
 		636AB7EC087E2A2E00A87670 /* Dock Icon Badging */ = {
 			isa = PBXGroup;
 			children = (
@@ -5587,18 +5606,6 @@
 				34D8332A07CBD72A006466F2 /* ContactCountingDisplayDefaults.plist */,
 			);
 			name = "Contact Counting Display";
-			sourceTree = "<group>";
-		};
-		9E6417090613C564006AF387 /* URL Handling */ = {
-			isa = PBXGroup;
-			children = (
-				34F1023A073449D500890D3B /* XtrasInstaller.h */,
-				34F10239073449D500890D3B /* XtrasInstaller.m */,
-				34F1022D0734499700890D3B /* NSString_UUID.h */,
-				34F102290734499600890D3B /* NSString_UUID.m */,
-				34F1022A0734499600890D3B /* XtraProgressWindow.nib */,
-			);
-			name = "URL Handling";
 			sourceTree = "<group>";
 		};
 		9E791D8505768A3000547562 /* Status Menu Item */ = {
@@ -6451,6 +6458,8 @@
 				B02355B308CBE854008CDDDA /* vdbeInt.h in Headers */,
 				34BD0DB508D31479000BE2C0 /* AdiumChatEvents.h in Headers */,
 				9E44248808E11F380015D4DD /* AdiumURLHandling.h in Headers */,
+				633F175A08F905A700C76383 /* AIXtraInfo.h in Headers */,
+				633F175C08F905A700C76383 /* AIXtrasManager.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7564,6 +7573,7 @@
 				EE147A6D0896B18800A21377 /* ABSearch.png in Resources */,
 				EE147A790896B32400A21377 /* ABSearch.nib in Resources */,
 				B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */,
+				632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8092,6 +8102,8 @@
 				B02355B508CBE854008CDDDA /* where.c in Sources */,
 				34BD0DB608D31479000BE2C0 /* AdiumChatEvents.m in Sources */,
 				9E44248908E11F380015D4DD /* AdiumURLHandling.m in Sources */,
+				633F175B08F905A700C76383 /* AIXtraInfo.m in Sources */,
+				633F175D08F905A800C76383 /* AIXtrasManager.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
