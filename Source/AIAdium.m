@@ -37,6 +37,7 @@
 #import "ESDebugController.h"
 #import "ESFileTransferController.h"
 #import "LNAboutBoxController.h"
+#import "AIXtrasManager.h"
 #import <AIUtilities/AIFileManagerAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
 
@@ -47,7 +48,6 @@
 
 #define ADIUM_TRAC_PAGE						@"http://trac.adiumx.com/"
 #define ADIUM_FORUM_PAGE					AILocalizedString(@"http://forum.adiumx.com/","Adium forums page. Localized only if a translated version exists.")
-#define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 #define ADIUM_FEEDBACK_PAGE					@"mailto:feedback@adiumx.com"
 
 //Portable Adium prefs key
@@ -386,7 +386,7 @@ static NSString	*prefsCategory;
     [[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_FORUM_PAGE]];
 }
 - (IBAction)showXtras:(id)sender{
-	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:ADIUM_XTRAS_PAGE]];
+	[[AIXtrasManager sharedManager] showXtras];
 }
 
 //Last call to perform actions before the app shuffles off its mortal coil and joins the bleeding choir invisible
