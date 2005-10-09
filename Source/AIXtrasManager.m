@@ -49,6 +49,7 @@
 
 - (void) loadXtras
 {
+	if(xtrasCategories) [xtrasCategories release];
 	xtrasCategories = [[NSMutableDictionary alloc] init];
 	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)] forKey:@"Contact List Styles"];
 	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)] forKey:@"Message View Styles"];
