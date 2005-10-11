@@ -18,17 +18,21 @@
 
 @interface AIXtrasManager : AIObject {
 	NSMutableDictionary				*disabledXtras;
-	NSMutableDictionary				*xtrasCategories;
+	NSMutableArray					*categoryNames;
+	NSMutableArray					*xtrasCategories;
+	int								selectionIndex;
 	IBOutlet NSPopUpButton			*categoryPopup;
 	IBOutlet NSArrayController		*categoryController;
+	IBOutlet NSArrayController		*nameController;
 	IBOutlet NSWindow				*window;
 }
 
 + (AIXtrasManager *) sharedManager;
 - (void) showXtras;
 - (void) loadXtras;
-- (NSArray *)categoryNames;
-- (IBAction) setSelectedCategory:(id)sender;
+- (NSArray *) categoryNames;
+- (NSIndexSet *) selectedCategoryIndex;
+- (IBAction) setSelectedCategoryIndex:(NSIndexSet *)index;
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths;
 - (IBAction) browseXtras:(id)sender;
 

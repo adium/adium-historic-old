@@ -38,8 +38,10 @@
 																name:Adium_Xtras_Changed
 															  object:nil];
 	[self loadXtras];
+	selectionIndex = 0;
 	[NSBundle loadNibNamed:@"XtrasManager" owner:self];
-	[self setSelectedCategory:categoryPopup];
+	[nameController setContent:categoryNames];
+	[self setSelectedCategoryIndex:[NSIndexSet indexSetWithIndex:0]];
 }
 
 - (void) xtrasChanged:(NSNotification *)not
@@ -49,15 +51,34 @@
 
 - (void) loadXtras
 {
-	if(xtrasCategories) [xtrasCategories release];
-	xtrasCategories = [[NSMutableDictionary alloc] init];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)] forKey:@"Contact List Styles"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)] forKey:@"Message View Styles"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)] forKey:@"Status Icons"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)] forKey:@"Sounds"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)] forKey:@"Dock Icons"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, AIAllDomainsMask, YES)] forKey:@"Emoticons"];
-	[xtrasCategories setObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIScriptsDirectory, AIAllDomainsMask, YES)] forKey:@"Scripts"];
+	if(xtrasCategories)
+	{
+		[xtrasCategories release];
+		[categoryNames release];
+	}
+	xtrasCategories = [[NSMutableArray alloc] init];
+	categoryNames = [[NSMutableArray alloc] init];
+	
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Contact List Themes"];
+	
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Message Styles"];
+
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Status Icons"];
+
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Sounds Sets"];
+
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Dock Icons"];
+
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Emoticons"];
+
+	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIScriptsDirectory, AIAllDomainsMask, YES)]];
+	[categoryNames addObject:@"Scripts"];
 }
 
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths
@@ -82,17 +103,27 @@
 - (void) dealloc
 {
 	[xtrasCategories release];
+	[categoryNames release];
 	[super dealloc];
 }
 
-- (IBAction) setSelectedCategory:(id)sender
+- (NSIndexSet *)selectedCategoryIndex
 {
-	[categoryController setContent:[xtrasCategories objectForKey:[sender titleOfSelectedItem]]];
+	return [NSIndexSet indexSetWithIndex:selectionIndex];
+}
+
+- (void) setSelectedCategoryIndex:(NSIndexSet *)index
+{
+	if([index count] > 0)
+	{
+		selectionIndex = [index firstIndex];
+		[categoryController setContent:[xtrasCategories objectAtIndex:selectionIndex]];
+	}
 }
 
 - (NSArray *)categoryNames
 {
-	return [xtrasCategories allKeys];
+	return categoryNames;
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo

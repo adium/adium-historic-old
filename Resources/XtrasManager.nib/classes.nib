@@ -7,13 +7,14 @@
                 browseXtras = id; 
                 checkForUpdates = id; 
                 deleteXtra = id; 
-                setSelectedCategory = id; 
+                setSelectedCategoryIndex = id; 
             }; 
             CLASS = AIXtrasManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 categoryController = NSArrayController; 
                 categoryPopup = NSPopUpButton; 
+                nameController = NSArrayController; 
                 window = NSWindow; 
             }; 
             SUPERCLASS = AIObject; 
