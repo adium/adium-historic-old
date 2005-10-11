@@ -69,7 +69,7 @@
 	[categoryNames addObject:@"Status Icons"];
 
 	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)]];
-	[categoryNames addObject:@"Sounds Sets"];
+	[categoryNames addObject:@"Sound Sets"];
 
 	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Dock Icons"];
