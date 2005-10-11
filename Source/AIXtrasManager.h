@@ -21,7 +21,6 @@
 	NSMutableArray					*categoryNames;
 	NSMutableArray					*xtrasCategories;
 	int								selectionIndex;
-	IBOutlet NSPopUpButton			*categoryPopup;
 	IBOutlet NSArrayController		*categoryController;
 	IBOutlet NSArrayController		*nameController;
 	IBOutlet NSWindow				*window;
