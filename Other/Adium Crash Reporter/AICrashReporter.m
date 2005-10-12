@@ -209,7 +209,7 @@
 	//Hide the button, even on 10.2
 	[button_close setFrame:NSZeroRect];
 	
-	//Dipslay immediately since we need it for this run loop.
+	//Display immediately since we need it for this run loop.
 	[[button_close superview] display];
 	
 	if ([progress_sending respondsToSelector:@selector(setHidden:)]) {
