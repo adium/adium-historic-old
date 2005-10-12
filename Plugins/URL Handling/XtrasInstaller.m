@@ -280,7 +280,7 @@
 	}
 	
 	//delete our temporary directory, and any files remaining in it
-	[fileManager removeFileAtPath:[dest stringByDeletingLastPathComponent] handler:nil];
+	[fileManager removeFileAtPath:dest handler:nil];
 	
 	[self closeInstaller];
 }
