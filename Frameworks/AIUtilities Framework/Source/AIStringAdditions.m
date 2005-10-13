@@ -720,6 +720,8 @@ static enum characterNatureMask characterNature[USHRT_MAX+1] = {
 		characterNature['`']  = shellUnsafeNature;
 		characterNature['!']  = shellUnsafeNature;
 		characterNature['$']  = shellUnsafeNature;
+		characterNature['&']  = shellUnsafeNature;
+		characterNature['|']  = shellUnsafeNature;
 	}
 
 	unsigned myLength = [self length];
