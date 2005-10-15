@@ -172,7 +172,7 @@ static NSString     *logBasePath = nil;     //The base directory of all logs
 //Returns the file name for the log
 + (NSString *)fileNameForLogWithObject:(NSString *)object onDate:(NSDate *)date plainText:(BOOL)plainText
 {
-	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y|%m|%d" timeZone:nil locale:nil];
+	NSString	*dateString = [date descriptionWithCalendarFormat:@"%Y-%m-%d" timeZone:nil locale:nil];
 	NSString	*extension = (plainText ? @"adiumLog" : @"html");
 	
 	return [NSString stringWithFormat:@"%@ (%@).%@", object, dateString, extension];
