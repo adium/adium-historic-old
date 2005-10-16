@@ -290,14 +290,19 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (NSString *)nameForPerson:(ABPerson *)person phonetic:(NSString **)phonetic
 {
-	NSString *firstName, *lastName, *phoneticFirstName, *phoneticLastName;	
+	NSString *firstName, *middleName, *lastName, *phoneticFirstName, *phoneticLastName;	
 	NSString *nickName;
 	NSString *displayName = nil;
 	
 	firstName = [person valueForProperty:kABFirstNameProperty];
+	middleName = [person valueForProperty:kABMiddleNameProperty];
 	lastName = [person valueForProperty:kABLastNameProperty];
 	phoneticFirstName = [person valueForProperty:kABFirstNamePhoneticProperty];
 	phoneticLastName = [person valueForProperty:kABLastNamePhoneticProperty];
+	
+	//
+	if (useMiddleName && middleName)
+		firstName = [NSString stringWithFormat:@"%@ %@", firstName, middleName];
 
 	if (useNickName && (nickName = [person valueForProperty:kABNicknameProperty])) {
 		displayName = nickName;
@@ -370,6 +375,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
         displayFormat = [[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue];
         automaticSync = [[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue];
         useNickName = [[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue];
+		useMiddleName = [[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue];
 		preferAddressBookImages = [[prefDict objectForKey:KEY_AB_PREFER_ADDRESS_BOOK_IMAGES] boolValue];
 		useABImages = [[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue];
 

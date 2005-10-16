@@ -24,8 +24,11 @@
     IBOutlet	NSButton                *checkBox_useABImages;
     IBOutlet	NSButton				*checkBox_preferABImages;
 	
-    IBOutlet    NSButton                *checkBox_useNickName;
+    
     IBOutlet	NSButton                *checkBox_enableImport;
+	IBOutlet    NSButton                *checkBox_useNickName;
+	IBOutlet	NSButton				*checkBox_useMiddleName;
+		
     IBOutlet    NSButton                *checkBox_enableNoteSync;
 	
 	IBOutlet	NSButton				*checkBox_metaContacts;
