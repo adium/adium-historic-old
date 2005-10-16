@@ -25,6 +25,7 @@
 #define KEY_AB_NOTE_SYNC						@"AB Note Sync"
 #define KEY_AB_USE_IMAGES						@"AB Use AB Images"
 #define KEY_AB_USE_NICKNAME						@"AB Use NickName"
+#define KEY_AB_USE_MIDDLE						@"AB Use Middle Name"
 #define KEY_AB_PREFER_ADDRESS_BOOK_IMAGES		@"AB Prefer AB Images"
 #define	KEY_AB_CREATE_METACONTACTS				@"AB Create MetaContacts"
 #define KEY_AB_UNIQUE_ID						@"AB Unique ID"
@@ -34,9 +35,9 @@
 @protocol AIListObjectObserver, ABImageClient;
 
 typedef enum {
-    FirstLast,
     First,
-    LastFirst,
+	FirstLast,
+	LastFirst,
 	LastFirstNoComma
 } NameStyle;
 
@@ -62,6 +63,7 @@ typedef enum {
     int                 displayFormat;
     BOOL                enableImport;
     BOOL                useNickName;
+	BOOL				useMiddleName;
     BOOL                automaticSync;
     BOOL                preferAddressBookImages;
     BOOL                useABImages;

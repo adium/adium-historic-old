@@ -22,10 +22,14 @@
 #import <AIUtilities/AIImageAdditions.h>
 #import <Adium/AILocalizationTextField.h>
 
-#define ADDRESS_BOOK_FIRST_LAST_OPTION			AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg")
-#define ADDRESS_BOOK_FIRST_OPTION				AILocalizedString(@"First","Name display style, e.g. Evan")
-#define ADDRESS_BOOK_LAST_FIRST_OPTION			AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg, Evan")
-#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION	AILocalizedString(@"Last First","Name display style, e.g. Schoenberg Evan")
+#define ADDRESS_BOOK_FIRST_OPTION					AILocalizedString(@"First","Name display style, e.g. Evan")
+#define ADDRESS_BOOK_FIRST_LAST_OPTION				AILocalizedString(@"First Last","Name display style, e.g. Evan Schoenberg")
+#define ADDRESS_BOOK_LAST_FIRST_OPTION				AILocalizedString(@"Last, First","Name display style, e.g. Schoenberg, Evan")
+#define ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION		AILocalizedString(@"Last First", "Name display style, e.g. Schoenberg Evan")
+#define ADDRESS_BOOK_FIRST_MIDDLE_OPTION			AILocalizedString(@"First Middle", "Name display style, e.g. Evan Dreskin")
+#define ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION		AILocalizedString(@"First Middle Last", "Name display style, e.g. Evan Dreskin Schoenberg")
+#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION		AILocalizedString(@"Last, First Middle", "Name display style, e.g. Schoenberg, Evan Dreskin")
+#define ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION	AILocalizedString(@"Last First Middle", "Name display style, e.g. Schoenberg Evan Dreskin")
 
 @interface ESAddressBookIntegrationAdvancedPreferences (PRIVATE)
 - (void)preferencesChanged:(NSNotification *)notification;
@@ -78,6 +82,7 @@
 	
 	[checkBox_enableImport setLocalizedString:AILocalizedString(@"Import my contacts' names from the Address Book",nil)];
 	[checkBox_useNickName setLocalizedString:AILocalizedString(@"Use nickname if available",nil)];
+	[checkBox_useMiddleName setLocalizedString:AILocalizedString(@"Use middle name if available",nil)];
 	[checkBox_useABImages setLocalizedString:AILocalizedString(@"Use Address Book images as contacts' icons",nil)];
 	[checkBox_preferABImages setLocalizedString:AILocalizedString(@"Even if the contact already has a contact icon",nil)];
 	[checkBox_syncAutomatic setLocalizedString:AILocalizedString(@"Overwrite Address Book images with contacts' icons",nil)];
@@ -88,6 +93,7 @@
 	[checkBox_enableImport setState:[[prefDict objectForKey:KEY_AB_ENABLE_IMPORT] boolValue]];	
 	[popUp_formatMenu selectItemAtIndex:[popUp_formatMenu indexOfItemWithTag:[[prefDict objectForKey:KEY_AB_DISPLAYFORMAT] intValue]]];
 	[checkBox_useNickName setState:[[prefDict objectForKey:KEY_AB_USE_NICKNAME] boolValue]];
+	[checkBox_useMiddleName setState:[[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue]];
 	[checkBox_syncAutomatic setState:[[prefDict objectForKey:KEY_AB_IMAGE_SYNC] boolValue]];
 	[checkBox_useABImages setState:[[prefDict objectForKey:KEY_AB_USE_IMAGES] boolValue]];
 	[checkBox_enableNoteSync setState:[[prefDict objectForKey:KEY_AB_NOTE_SYNC] boolValue]];
@@ -118,6 +124,7 @@
 	//Use Nick Name and the format menu are irrelevent if importing of names is not enabled
 	[checkBox_useNickName setEnabled:enableImport];	
 	[popUp_formatMenu setEnabled:enableImport];
+	[checkBox_useMiddleName setEnabled:enableImport];
 
 	//We will not allow image syncing if AB images are preferred
 	//so disable the control and uncheck the box to indicate this to the user
@@ -135,42 +142,62 @@
  */
 - (void)configureFormatMenu
 {
-    NSMenu		*choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
+    NSMenu			*choicesMenu = [[[NSMenu allocWithZone:[NSMenu menuZone]] init] autorelease];
     NSMenuItem		*menuItem;
-    
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_FIRST_LAST_OPTION
+    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_ADDRESSBOOK];
+	NSString		*firstTitle, *firstLastTitle, *lastFirstTitle, *lastFirstNoCommaTitle;
+	
+	BOOL			useMiddleName = [[prefDict objectForKey:KEY_AB_USE_MIDDLE] boolValue];
+	
+	//If the use middle name preference is set, we use the menu titles that include a middle name
+	if (useMiddleName) {
+		firstTitle = ADDRESS_BOOK_FIRST_MIDDLE_OPTION;
+		firstLastTitle = ADDRESS_BOOK_FIRST_MIDDLE_LAST_OPTION;
+		lastFirstTitle = ADDRESS_BOOK_LAST_FIRST_MIDDLE_OPTION;
+		lastFirstNoCommaTitle = ADDRESS_BOOK_LAST_FIRST_MIDDLE_NO_COMMA_OPTION;
+		
+	//Otherwise we use the standard menu titles
+	} else {
+		firstTitle = ADDRESS_BOOK_FIRST_OPTION;
+		firstLastTitle = ADDRESS_BOOK_FIRST_LAST_OPTION;
+		lastFirstTitle = ADDRESS_BOOK_LAST_FIRST_OPTION;
+		lastFirstNoCommaTitle = ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION;
+		
+	}
+	
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:firstTitle
+																	 target:self
+																	 action:@selector(changeFormat:)
+															  keyEquivalent:@""] autorelease];
+    [menuItem setTag:First];
+    [choicesMenu addItem:menuItem];
+	
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:firstLastTitle
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
     [menuItem setTag:FirstLast];
     [choicesMenu addItem:menuItem];
     
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_FIRST_OPTION
-																	 target:self
-																	 action:@selector(changeFormat:)
-															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:First];
-    [choicesMenu addItem:menuItem];
-    
-    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_LAST_FIRST_OPTION
+    menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:lastFirstTitle
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
     [menuItem setTag:LastFirst];
     [choicesMenu addItem:menuItem];
 	
-	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADDRESS_BOOK_LAST_FIRST_NO_COMMA_OPTION
+	menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:lastFirstNoCommaTitle
 																	 target:self
 																	 action:@selector(changeFormat:)
 															  keyEquivalent:@""] autorelease];
-    [menuItem setTag:LastFirstNoComma];
-    [choicesMenu addItem:menuItem];
+	[menuItem setTag:LastFirstNoComma];
+	[choicesMenu addItem:menuItem];
 	
     [popUp_formatMenu setMenu:choicesMenu];
 	
     NSRect oldFrame = [popUp_formatMenu frame];
-    [popUp_formatMenu sizeToFit];
     [popUp_formatMenu setFrameOrigin:oldFrame.origin];
+	[[self view] setNeedsDisplay:YES];
 }
 
 /*!
@@ -202,6 +229,13 @@
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state]==NSOnState)]
                                              forKey:KEY_AB_USE_NICKNAME
                                               group:PREF_GROUP_ADDRESSBOOK];
+		
+	} else if (sender == checkBox_useMiddleName) {
+		[[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
+											 forKey:KEY_AB_USE_MIDDLE
+											  group:PREF_GROUP_ADDRESSBOOK];
+		//Update the format menu to reflect the use of middle names
+		[self configureFormatMenu];
 		
     } else if (sender == checkBox_enableImport) {
         [[adium preferenceController] setPreference:[NSNumber numberWithBool:([sender state] == NSOnState)]
