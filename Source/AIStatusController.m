@@ -1787,7 +1787,12 @@ int _statusArraySort(id objectA, id objectB, void *context)
 {
 	NSString	*title = [statusState title];
 
-	if ([title length] > STATE_TITLE_MENU_LENGTH) {
+	/* Why plus 3? Say STATE_TITLE_MENU_LENGTH was 7, and the title is @"ABCDEFGHIJ".
+	 * The shortened title will be @"ABCDEFG..." which looks to be just as long - even
+	 * if the ellipsis is an ellipsis character and therefore technically two characters
+	 * shorter. Better to just use the full string, which appears as being the same length.
+	 */
+	if ([title length] > STATE_TITLE_MENU_LENGTH+3) {
 		title = [title stringWithEllipsisByTruncatingToLength:STATE_TITLE_MENU_LENGTH];
 	}
 
