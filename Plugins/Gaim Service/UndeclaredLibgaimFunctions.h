@@ -22,3 +22,10 @@ void gaim_xfer_choose_file_ok_cb(void *user_data, const char *filename);
 void gaim_xfer_choose_file_cancel_cb(void *user_data, const char *filename);
 
 int gaim_xfer_choose_file(GaimXfer *xfer);
+
+/* those aren't actually void * pointers, but it doesn't
+ * really matter because in the end all we need is to
+ * make gcc STFU about the function def over in the meanwhile stuff.
+ * -RAF
+ */
+char * mwServiceAware_getText(void *, void *);

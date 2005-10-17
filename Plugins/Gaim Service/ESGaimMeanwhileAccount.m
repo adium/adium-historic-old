@@ -17,6 +17,7 @@
 #import "ESGaimMeanwhileAccount.h"
 #import "AIAccountController.h"
 #import "AIStatusController.h"
+#import "UndeclaredLibgaimFunctions.h"
 #import <Adium/AIListContact.h>
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
