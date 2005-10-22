@@ -35,8 +35,8 @@
 @protocol AIListObjectObserver, ABImageClient;
 
 typedef enum {
+	FirstLast = 0,
     First,
-	FirstLast,
 	LastFirst,
 	LastFirstNoComma
 } NameStyle;
