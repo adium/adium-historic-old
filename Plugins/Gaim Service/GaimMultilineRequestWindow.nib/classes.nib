@@ -18,6 +18,11 @@
             SUPERCLASS = NSWindowController; 
         }, 
         {
+            CLASS = ESGaimRequestAbstractWindowController; 
+            LANGUAGE = ObjC; 
+            SUPERCLASS = AIWindowController; 
+        }, 
+        {
             ACTIONS = {pressedButton = id; }; 
             CLASS = ESGaimRequestWindowController; 
             LANGUAGE = ObjC; 
@@ -29,7 +34,7 @@
                 "textView_primary" = NSTextView; 
                 "textView_secondary" = NSTextView; 
             }; 
-            SUPERCLASS = AIWindowController; 
+            SUPERCLASS = ESGaimRequestAbstractWindowController; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = "java.lang.Object"; LANGUAGE = Java; }
