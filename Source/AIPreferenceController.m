@@ -661,7 +661,26 @@
 		userPreferredDownloadFolder = @"~/Desktop";
 	}
 
-	return [userPreferredDownloadFolder stringByExpandingTildeInPath];
+	userPreferredDownloadFolder = [userPreferredDownloadFolder stringByExpandingTildeInPath];
+	
+	/* If we can't write to the specified folder, fall back to the desktop and then to the home directory;
+	 * if neither are writable the user has worse problems then an IM download to worry about.
+	 */
+	if (![[NSFileManager defaultManager] isWritableFileAtPath:userPreferredDownloadFolder]) {
+		NSString *originalFolder = userPreferredDownloadFolder;
+
+		userPreferredDownloadFolder = [@"~/Desktop" stringByExpandingTildeInPath];
+
+		if (![[NSFileManager defaultManager] isWritableFileAtPath:userPreferredDownloadFolder]) {
+			userPreferredDownloadFolder = NSHomeDirectory();
+		}
+
+		NSLog(@"Could not obtain write access for %@; defaulting to %@",
+			  originalFolder,
+			  userPreferredDownloadFolder);
+	}
+
+	return userPreferredDownloadFolder;
 }
 
 /*!
