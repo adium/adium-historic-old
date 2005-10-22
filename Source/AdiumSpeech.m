@@ -165,7 +165,7 @@
 		if (voiceString) [dict setObject:voiceString forKey:VOICE];			
 		if (pitch > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:pitch] forKey:PITCH];
 		if (rate  > FLT_EPSILON) [dict setObject:[NSNumber numberWithFloat:rate]  forKey:RATE];
-		
+		AILog(@"AdiumSpeech: %@",dict);
 		[speechArray addObject:dict];
 		[dict release];
 		
@@ -276,7 +276,6 @@
 			
 			[theSpeaker setPitch:(pitchNumber ? [pitchNumber floatValue] : [self defaultPitch])];
 			[theSpeaker setRate:  (rateNumber ?  [rateNumber floatValue] : [self defaultRate])];
-			NSLog(@"Set volume to %f",customVolume);
 			[theSpeaker setVolume:customVolume];
 			
 			[theSpeaker speakText:text];
