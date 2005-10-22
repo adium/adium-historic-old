@@ -35,10 +35,10 @@
             CLASS = ESAnnouncerAbstractDetailPane; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "checkBox_customPitch" = NSButton; 
+                "checkBox_customRate" = NSButton; 
                 "checkBox_speakContactName" = AILocalizationButton; 
                 "checkBox_speakEventTime" = AILocalizationButton; 
-                "label_pitch" = NSTextField; 
-                "label_rate" = NSTextField; 
                 "label_voice" = NSTextField; 
                 "popUp_voices" = NSPopUpButton; 
                 "slider_pitch" = NSSlider; 
