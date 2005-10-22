@@ -59,17 +59,33 @@
 /*!
  * @brief Filter a UID
  *
- * Add @mac.com to the end of a dotMac contact if it's not already present.  super's implementation will make the UID
+ * Add @mac.com to the end of a dotMac contact if it's not already present but should be.  super's implementation will make the UID
  * lowercase, since [self caseSensitive] returns NO, so we can use -[NSString hasSuffix:] to check for the string.
  */
 - (NSString *)filterUID:(NSString *)inUID removeIgnoredCharacters:(BOOL)removeIgnored
 {
 	NSString	*filteredUID = [super filterUID:inUID removeIgnoredCharacters:removeIgnored];
+
+#warning Right now, this code would mean that the New Message prompt for a .Mac account can only message .Mac users
+//XXX ToDo: Rewrite the New Message prompt to be service-oriented rather than account-oriented such that this isn't a problem
+#if 0
+	char		firstCharacter;
 	
-	if (![filteredUID hasSuffix:@"@mac.com"]) {
-		filteredUID = [filteredUID stringByAppendingString:@"@mac.com"];
+	if ([filteredUID length]) {
+		/* Add @mac.com to the end if:
+		 *		1. It is not yet present AND
+		 *		2. The first character is neither a number nor a '+' (which would indicate a mobile contact)
+		 */
+		if ((![filteredUID hasSuffix:@"@mac.com"]) &&
+			!((firstCharacter = [filteredUID characterAtIndex:0]) && 
+			  ((firstCharacter >= '0' && firstCharacter <= '9') || (firstCharacter == '+'))))
+		{
+			AILog(@"ESDotMacService: Filtered %@ to %@@mac.com",filteredUID,filteredUID);
+			filteredUID = [filteredUID stringByAppendingString:@"@mac.com"];
+		}
 	}
-	
+#endif
+
 	return filteredUID;
 }
 
