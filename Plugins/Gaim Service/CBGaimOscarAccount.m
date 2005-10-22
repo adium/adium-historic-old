@@ -206,6 +206,18 @@ gboolean gaim_init_oscar_plugin(void);
 	return [super canSendFolders];
 }
 
+#pragma mark Contacts
+/*!
+ * @brief Should set aliases serverside?
+ *
+ * AIM and ICQ support serverside aliases.
+ */
+- (BOOL)shouldSetAliasesServerside
+{
+	return YES;
+}
+
+
 #pragma mark Contact List Menu Items
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact
 {

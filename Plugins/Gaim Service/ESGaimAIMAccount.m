@@ -114,16 +114,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	[super dealloc];
 }
 
-/*!
-* @brief Should set aliases serverside?
- *
- * AIM supports serverside aliases.
- */
-- (BOOL)shouldSetAliasesServerside
-{
-	return YES;
-}
-
 #pragma mark Connectivity
 
 /*!
