@@ -159,8 +159,8 @@
 		
 		AI_DURING
 		{
-		[uncompress launch];
-		[uncompress waitUntilExit];
+			[uncompress launch];
+			[uncompress waitUntilExit];
 		}
 		AI_HANDLER
 		{
@@ -185,8 +185,8 @@
 			
 			AI_DURING
 			{
-			[untar launch];
-			[untar waitUntilExit];
+				[untar launch];
+				[untar waitUntilExit];
 			}
 			AI_HANDLER
 			{
@@ -245,7 +245,11 @@
 		NSSet			*supportedDocumentExtensions = [[NSBundle mainBundle] supportedDocumentExtensions];
 
 		while((nextFile = [fileEnumerator nextObject])) {
-			if (![nextFile hasPrefix:@"."]) {
+			/* Ignore hidden files and the __MACOSX folder which some compression engines stick into the archive but
+			 * /usr/bin/unzip doesn't handle properly.
+			 */
+			if ((![nextFile hasPrefix:@"."]) &&
+				(![[[nextFile stringByDeletingLastPathComponent] lastPathComponent] isEqualToString:@"__MACOSX"])) {
 				NSString		*fileExtension = [nextFile pathExtension];
 				NSEnumerator	*supportedDocumentExtensionsEnumerator;
 				NSString		*extension;
