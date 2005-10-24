@@ -18,6 +18,11 @@
 #import "AIListContact.h"
 #import "ESFileTransfer.h"
 
+
+#define UPLOAD_ARROW		[NSString stringWithFormat:@"%C", 0x2B06]
+#define DOWNLOAD_ARROW		[NSString stringWithFormat:@"%C", 0x2B07]
+
+
 @implementation ESFileTransfer
 //Init
 + (id)fileTransferWithContact:(AIListContact *)inContact forAccount:(AIAccount *)inAccount
@@ -275,10 +280,76 @@
 	//Fall back on the remote filename if necessary
 	if (!extension) extension = [[self remoteFilename] pathExtension]; 
 	
-	if (extension && [extension length]) {
+	if (extension && [extension length]) {		
+		NSImage		*systemIcon = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
+		NSString	*badgeArrow = nil; 
 
-		//XXX - Test for file transfer type, overlay a light up arrow or down arrow?
-		iconImage = [[NSWorkspace sharedWorkspace] iconForFileType:extension];
+		switch (type) {
+			case Incoming_FileTransfer:
+				badgeArrow = DOWNLOAD_ARROW;
+				break;
+			case Outgoing_FileTransfer:
+				badgeArrow = UPLOAD_ARROW;			
+				break;
+			case Unknown_FileTransfer:
+			default:
+				break;
+		}
+		
+		if (!badgeArrow)
+			return systemIcon;
+		
+		// If type is Incoming (*down*load) or Outgoing (*up*load), overlay an arrow in a circle.
+		iconImage = [[NSImage alloc] initWithSize:[systemIcon size]];
+		
+		NSRect	rect = { NSZeroPoint, [iconImage size] };
+		NSRect	bottomRight = NSMakeRect(NSMidX(rect), ([iconImage isFlipped] ? NSMidY(rect) : NSMinY(rect)), (NSWidth(rect)/2.0), (NSHeight(rect)/2.0));		
+
+		NSMutableDictionary *atts = [(NSMutableDictionary *)[[NSDictionary dictionaryWithObjectsAndKeys:
+			[NSColor alternateSelectedControlColor], NSForegroundColorAttributeName,
+			[NSFont fontWithName:@"AppleGothic" size:24], NSFontAttributeName, // AppleGothic has our arrow glyphs
+			nil] mutableCopy] autorelease];
+		
+		NSSize arrowSize = [badgeArrow sizeWithAttributes:atts];
+		while (arrowSize.height > NSHeight(bottomRight)*0.9) { // shrink arrow to fit
+			NSFont *tempFont = (NSFont *)[atts objectForKey:NSFontAttributeName];
+			[atts setObject:[NSFont fontWithName:[tempFont fontName] size:[tempFont pointSize]*0.99] forKey:NSFontAttributeName];
+			arrowSize = [badgeArrow sizeWithAttributes:atts];
+		}
+		
+		[iconImage lockFocus];
+		
+		[systemIcon compositeToPoint:NSMakePoint(0.0,0.0) operation:NSCompositeSourceOver];
+		
+		float line = ((NSWidth(bottomRight) / 15) + ((NSHeight(bottomRight) / 15) / 2));
+		NSRect	circleRect = NSMakeRect(NSMinX(bottomRight),
+										NSMinY(bottomRight) + (line),
+										NSWidth(bottomRight) - (line),
+										NSHeight(bottomRight) - (line));
+		NSPoint	arrowPoint = NSMakePoint(circleRect.origin.x + ((circleRect.size.width) / 2) - (arrowSize.width / 2),
+										 circleRect.origin.y + ((circleRect.size.height) / 2) - (arrowSize.height / 2));
+
+		NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:circleRect];
+		[circle setLineWidth:line];
+		[[[NSColor alternateSelectedControlColor] colorWithAlphaComponent:0.75] setStroke];
+		[[[NSColor alternateSelectedControlTextColor] colorWithAlphaComponent:0.75] setFill];
+		[circle fill];
+		[circle stroke];
+		
+		NSMutableParagraphStyle *mps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[mps setAlignment:NSCenterTextAlignment];
+		float lineheight = NSHeight(circleRect) * 0.99;
+		[mps setMaximumLineHeight:lineheight];
+		[mps setMinimumLineHeight:lineheight];
+		[mps setLineHeightMultiple:lineheight];
+		[atts setObject:mps forKey:NSParagraphStyleAttributeName];
+		[mps release];
+
+		[badgeArrow drawInRect:circleRect withAttributes:atts];
+		
+		[iconImage unlockFocus];
+		[iconImage autorelease];
+		
 	}
 
 	return iconImage;
