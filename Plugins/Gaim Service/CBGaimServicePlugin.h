@@ -27,7 +27,6 @@
 	id  MeanwhileService;
 	id  MSNService;
 	id  NovellService;
-	id  TrepiaService;
     id  YahooService;
 	id  YahooJapanService;
 	id	ZephyrService;
