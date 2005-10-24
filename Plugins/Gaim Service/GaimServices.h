@@ -23,7 +23,6 @@
 #import "ESJabberService.h"
 #import "ESMeanwhileService.h"
 #import "ESNovellService.h"
-#import "ESTrepiaService.h"
 #import "ESMSNService.h"
 #import "ESYahooService.h"
 #import "ESYahooJapanService.h"

@@ -40,7 +40,6 @@
 	
     //Install the services
 	AIMService			= [[ESAIMService alloc] init];
-//	AntepoService		= [[ESAntepoService alloc] init];
 	ICQService			= [[ESICQService alloc] init];
 	DotMacService		= [[ESDotMacService alloc] init];
 	GaduGaduService		= [[ESGaduGaduService alloc] init];
@@ -51,11 +50,7 @@
 	YahooService		= [[ESYahooService alloc] init];
 	YahooJapanService	= [[ESYahooJapanService alloc] init];	
 	ZephyrService		= [[ESZephyrService alloc] init];
-	
-#ifndef TREPIA_NOT_AVAILABLE
-	TrepiaService		= [[ESTrepiaService alloc] init];
-#endif
-	
+
 #ifndef MEANWHILE_NOT_AVAILABLE
 	MeanwhileService	= [[ESMeanwhileService alloc] init];
 #endif
@@ -76,10 +71,6 @@
 	[NovellService release]; NovellService = nil;
 	[ZephyrService release]; ZephyrService = nil;
 
-#ifndef TREPIA_NOT_AVAILABLE
-	[TrepiaService release]; TrepiaService = nil;
-#endif
-	
 #ifndef MEANWHILE_NOT_AVAILABLE
 	[MeanwhileService release]; MeanwhileService = nil;
 #endif

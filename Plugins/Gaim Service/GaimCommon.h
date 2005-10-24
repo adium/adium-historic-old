@@ -28,7 +28,6 @@
 	#define GaimDebug(...) /**/
 #endif
 
-#define TREPIA_NOT_AVAILABLE
 //#define MEANWHILE_NOT_AVAILABLE
 
 //Gaim includes
