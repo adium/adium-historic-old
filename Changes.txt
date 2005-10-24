@@ -1,6 +1,104 @@
 				Adium X Version History
 				-----------------------
-Version 0.82 (6/17/2005)
+Version 0.85
+ * Added a Google Talk service type [#1306]
+ * Added "contact joined" and "contact left" group chat status messages as well as corresponding Events [#654]
+ * Added %n (username), %a (alias), %m (message), and %t (time) substitution support to the Speak Text action [#142]
+ * Updated libgaim to obtain [http://gaim.sourceforge.net/summerofcode/jonathan/blog AIM file transfer Summer of Code improvements] and other fixes
+ * Speech actions now use the Adium volume level specified in the General Preferences [#1607]
+ * Improved automatic [http://www.adiumxtras.com AdiumXtras] installation
+ * Implemented auto-saving of the Jabber conference server [#802]
+ * Improved message view display of right-to-left text for bi-directional languages [#651]
+ * Improved interface for the Play Sound action [#762]
+ * Fixed long-standing problem with the Color Picker stealing command-1 through command-4
+ * Fixed a crash in many situations including when the remote side canceled a file transfer
+ * Fixed a window resizing issue introduced in 0.85b1
+ * Fixed handling of URLs which cause Adium to be launched [#1570]
+ * Fixed duplication of entries in the Play Sound sound selection menu [#1679]
+ * Fixed autosizing of the Link Editor window [#1669]
+ * Fixed display of tiled background images [#1603]
+ * Fixed issues with erroneous linkification of text [#249] [#1580] [#783]
+ * Fixed issues with autoconnection of Jabber accounts [#898]
+ * Fixed issues with metaContacts created while groups are hidden [#1398] [#773]
+ * Fixed a crash when accepting group chat invitations in some situations [#140] [#1405]
+ * Fixed a crash when accepting a canceled filetransfer [#140]
+ * Fixed autocompletion of names in the Join Group Chat window
+ * Fixed the generic Away state being reported as N/A in ICQ
+ * Fixed resetting of the font when sending a blank IM
+ * Fixed status messages when canceling file transfers in certain situations
+ * Fixed issues with incorrect updating of existing message windows when changing message preferences [#550] 
+ * Fixed problems in the Add Contact window when no groups exist [#1551]
+ * Fixed issues with speech having an initial rate or pitch of 0 [#672]
+ * Fixed issues with newly-added Sametime contacts [#624]
+ * Fixed text navigation issues in the Custom Status window [#255]
+ * Fixed display of the Yahoo authorization request window [#1421]
+ * Fixed issue with deletion of contacts in certain situations
+ * Fixed an alignment issue in the General Preferences [#349]
+ * Fixed issues with 'organize tabs into new windows by group' with no groups
+ * Fixed dragging a borderless contact list starting with a contextual menu open [#1467]
+ * Fixed positioning of text in certain windows in 10.2 [#138]
+ * Fixed a leak when displaying contact tooltips
+ * Removed duplicate Copy Link contextual menu item in 10.4 [#1132]
+ * Added a "New Group..." item to the Groups menu in the Add contact window [#1552]
+ * Applescripts whose keywords begin with {{{/}}} now only work at the beginning of a line. AdiumXtras authors should update such scripts to have keywords beginning with {{{%_}}}
+ * Improved <HR> tag handling
+ * We now fallback on the default service icon to look for a service icon if the current pack does not provide one [#1660]
+ * Added Spanish translation
+ * Updated all other translations
+
+Version 0.83 (23 August 2005)
+ * Fixed a crash when canceling a file transfer after the remote side has already canceled [#140]
+ * Fixed message display on Hebrew and Arabic systems in 10.3.9 and later [#782]
+ * Fixed handling of aim:gochat links
+ * Fixed handling of ICQ away messages [#824]
+ * Fixed "Add to my contact list" in the authorization request window for MSN [#1023]
+ * Fixed updating of metacontact icons [#733] [#988] [#366] [#991]
+ * Fixed updating of the user icon toolbar button [#133] [#230]
+ * Fixed issues with the Status Menu Item (EMD) becoming stuck in the unviewed content state
+ * Fixed a crash when changing colors in the color picker opened by the message preferences after the preferences are closed
+ * Fixed reporting of MSN timeout errors
+ * Fixed crashes when using .AdiumScripts
+ * Fixed shadow 'ghosting' for transparent contact lists [#813]
+ * Fixed (null) showing up in certain message styles
+ * Fixed issues with reconnecting when waking from sleep in certain network environments [#597]
+ * Fixed issues with and improved speed when autoconnecting accounts at launch
+ * Fixed issues with messaging Novell !GroupWise contacts with spaces [#687]
+ * Fixed account reconnection after sleep and improved network connectivity detection [#597]
+ * Fixed display of blank buddy icons for certain AOL contacts
+ * Fixed sending of animated buddy icons smaller than 48x48 over AIM
+ * Fixed selection of the appropriate chat with unviewed messages when clicking the dock icon to switch to Adium [#753]
+ * Fixed detection of invalid password attempts when connecting to MSN [#794]
+ * Fixed pasting and inserting links into the message text entry area when the message view itself has focus [#148]
+ * Fixed Get Info on Novell !GroupWise contacts with spaces [#687]
+ * Fixed display of emoticons in the contact list [#575]
+ * Fixed display of invalid items in the message window contextual menu [#126]
+ * Fixed issues with disabling automatic metacontact creation [#250]
+ * Fixed a crash related to setting of an invalid or corrupt buddy icon
+ * Fixed a crash related to invalid stored message history
+ * Fixed the Open Message Window action not to grab focus unnecesarrily [#1032]
+ * Fixed a crash when using the Log Viewer in Swedish
+ * Enabled ICQ file sending [#1076]
+ * Improved updating of serverside buddy icons
+ * Improved updating of the icon shown by message styles
+ * Improved password prompt windows [#184] [#966]
+ * Improved Jabber account preferences [#722]
+ * Improved some Applescript support [#681] [#574] [#593]
+ * Improved detection of Yahoo mobile contacts
+ * Improved performance when connecting multiple accounts simultaneously
+ * Improved appearance of buddy icons and status/service icons in the contact list when selected. [#702]
+ * Improved handling of invalid .!AdiumStatusIcons xtras
+ * Removed the character limit for Yahoo account names [#731]
+ * Allow and ignore hyphens in ICQ names [#859]
+ * HR tags are now decoded
+ * Gadu-Gadu now recognizes invalid password attempts
+ * Added support for an Invisible state for .!AdiumIcon xtras [#482]
+ * Catalan, Czech, French, German, Icelandic, Italian, Japanese, Norwegian, Simplified Chinese, Swedish, and Traditional Chinese translation updates
+ * Added Russian translation
+ * Updated to meanwhile 0.4.2, gaim-meanwhile 1.2.4
+ * Updated to [http://growl.info/beta Growl 0.7.2]
+ * Updated to [http://gaim.sourceforge.net/ChangeLog libgaim 1.5.0]
+
+Version 0.82 (17 June 2005)
  * Added OTR Encryption advanced preferences pane for fingerprint management [#5]
  * Added Ignore / Un-ignore support for all group chats
  * Added support for spaces and the plus character in Yahoo! names
@@ -72,7 +170,6 @@ Version 0.81 (06 May 2005)
  * Updated Danish, Dutch, French, Italian, and Traditional Chinese translations
 
 Version 0.80 (02 May 2005)
-
  * Complete Status system rewrite, with support for all status states on all protocols (including Available messages and Invisible status)
  * Improved the Events system, with new triggering events, new actions, and per-contact and per-group control over voice and pitch for speech
      * Events system now includes support for the Growl popup notification system, with optional automatic Growl installation
