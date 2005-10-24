@@ -365,10 +365,6 @@
 		349FE306074D01D300E36B3B /* ESFileTransferProgressView.h in Headers */ = {isa = PBXBuildFile; fileRef = 349FE2FF074D01D300E36B3B /* ESFileTransferProgressView.h */; };
 		349FE307074D01D300E36B3B /* ESFileTransferProgressRow.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */; };
 		349FE308074D01D300E36B3B /* ESFileTransferProgressRow.h in Headers */ = {isa = PBXBuildFile; fileRef = 349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */; };
-		349FF9FB0750751500E36B3B /* ESGaimAntepoAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 349FF9F90750751500E36B3B /* ESGaimAntepoAccount.h */; };
-		349FF9FC0750751600E36B3B /* ESGaimAntepoAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FF9FA0750751500E36B3B /* ESGaimAntepoAccount.m */; };
-		349FFA040750755200E36B3B /* ESAntepoService.h in Headers */ = {isa = PBXBuildFile; fileRef = 349FFA020750755100E36B3B /* ESAntepoService.h */; };
-		349FFA050750755200E36B3B /* ESAntepoService.m in Sources */ = {isa = PBXBuildFile; fileRef = 349FFA030750755200E36B3B /* ESAntepoService.m */; };
 		34A250B607E0F822009854E1 /* StatusDefaults.plist in Resources */ = {isa = PBXBuildFile; fileRef = 34A250B507E0F822009854E1 /* StatusDefaults.plist */; };
 		34A29DB706ED68C000E1366C /* Contact List in CopyFiles */ = {isa = PBXBuildFile; fileRef = 34A29D9406ED68BF00E1366C /* Contact List */; };
 		34A30ECA08D8EFE700697644 /* ESGaimYahooJapanAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */; };
@@ -697,8 +693,6 @@
 		34E2A2F507B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A2EF07B018B2006735BC /* ESAddressBookIntegrationAdvancedPreferences.m */; };
 		34E2A3E807B08CCB006735BC /* AIAliasSupportPlugin.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E2A3E507B08CC9006735BC /* AIAliasSupportPlugin.m */; };
 		34E2A3E907B08CCB006735BC /* AIAliasSupportPlugin.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E2A3E607B08CC9006735BC /* AIAliasSupportPlugin.h */; };
-		34E4516E07555B76004C3A42 /* ESGaimAntepoAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E4516C07555B76004C3A42 /* ESGaimAntepoAccountViewController.h */; };
-		34E4516F07555B76004C3A42 /* ESGaimAntepoAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E4516D07555B76004C3A42 /* ESGaimAntepoAccountViewController.m */; };
 		34E6D3900727354600A2643A /* AIToolbar.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E6D38E0727354600A2643A /* AIToolbar.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		34E6D3910727354600A2643A /* AIToolbar.m in Sources */ = {isa = PBXBuildFile; fileRef = 34E6D38F0727354600A2643A /* AIToolbar.m */; };
 		34E829840766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34E829820766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -711,12 +705,6 @@
 		34F102320734499700890D3B /* NSString_UUID.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1022D0734499700890D3B /* NSString_UUID.h */; };
 		34F1023B073449D500890D3B /* XtrasInstaller.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F10239073449D500890D3B /* XtrasInstaller.m */; };
 		34F1023C073449D500890D3B /* XtrasInstaller.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1023A073449D500890D3B /* XtrasInstaller.h */; };
-		34F142A205E95B0F00B32FD7 /* ESGaimTrepiaAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1429E05E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.h */; };
-		34F142A305E95B0F00B32FD7 /* ESGaimTrepiaAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F1429F05E95B0E00B32FD7 /* ESGaimTrepiaAccount.h */; };
-		34F142A405E95B0F00B32FD7 /* ESGaimTrepiaAccountViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F142A005E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.m */; };
-		34F142A505E95B0F00B32FD7 /* ESGaimTrepiaAccount.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F142A105E95B0E00B32FD7 /* ESGaimTrepiaAccount.m */; };
-		34F142A805E95B4D00B32FD7 /* ESTrepiaService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F142A605E95B4C00B32FD7 /* ESTrepiaService.m */; };
-		34F142A905E95B4D00B32FD7 /* ESTrepiaService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F142A705E95B4D00B32FD7 /* ESTrepiaService.h */; };
 		34F2BD25059CF8070005B238 /* c++filt in Resources */ = {isa = PBXBuildFile; fileRef = 34F2BD24059CF8070005B238 /* c++filt */; };
 		34F2E81107C2CD5E007EAAAB /* AIHTMLDecoder.m in Sources */ = {isa = PBXBuildFile; fileRef = 34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */; };
 		34F2E81207C2CD5E007EAAAB /* AIHTMLDecoder.h in Headers */ = {isa = PBXBuildFile; fileRef = 34F2E81007C2CD5E007EAAAB /* AIHTMLDecoder.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -843,7 +831,6 @@
 		4B76474007A07B630021CCD7 /* GaimDefaultsGadu-Gadu.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76473F07A07B620021CCD7 /* GaimDefaultsGadu-Gadu.plist */; };
 		4B76474D07A07B900021CCD7 /* GaimDefaultsSametime.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76474C07A07B900021CCD7 /* GaimDefaultsSametime.plist */; };
 		4B76476107A07BC90021CCD7 /* GaimDefaultsGroupWise.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76476007A07BC90021CCD7 /* GaimDefaultsGroupWise.plist */; };
-		4B76479607A07C720021CCD7 /* GaimDefaultsTrepia.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4B76479507A07C720021CCD7 /* GaimDefaultsTrepia.plist */; };
 		4B7A567A07A1754400BDC540 /* AIEditAccountWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7A567707A1754400BDC540 /* AIEditAccountWindowController.h */; };
 		4B7A567B07A1754400BDC540 /* AIEditAccountWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */; };
 		4B7F278B05440C8D00CDFC90 /* CBGaimAccount.h in Headers */ = {isa = PBXBuildFile; fileRef = 4B7F278705440C8D00CDFC90 /* CBGaimAccount.h */; };
@@ -1029,7 +1016,6 @@
 		4BDD81EA07A0B6D30057DB2C /* AccountOptions.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E707A0B6D30057DB2C /* AccountOptions.nib */; };
 		4BDD81EB07A0B6D30057DB2C /* AccountProfile.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E807A0B6D30057DB2C /* AccountProfile.nib */; };
 		4BDD81EC07A0B6D30057DB2C /* AccountSetup.nib in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */; };
-		4BDD822207A0BAE00057DB2C /* GaimDefaultsAntepo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 4BDD822107A0BAE00057DB2C /* GaimDefaultsAntepo.plist */; };
 		4BDF2C92061E376C00EA75C5 /* Libgaim.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		4BDF2CA5061E378400EA75C5 /* Libgaim.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 4BDF2C91061E376C00EA75C5 /* Libgaim.framework */; };
 		4BE3AD1E085F3EDD005919E7 /* AdiumPreferredAccounts.h in Headers */ = {isa = PBXBuildFile; fileRef = 4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */; };
@@ -1096,9 +1082,6 @@
 		6EA3688506B73E7D009CA81A /* DCGaimNovellJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */; };
 		6EA3688606B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */; };
 		6EA3688706B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */; };
-		6EA3688B06B73F28009CA81A /* DCGaimTrepiaJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3688806B73F27009CA81A /* DCGaimTrepiaJoinChatView.nib */; };
-		6EA3688C06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688906B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.h */; };
-		6EA3688D06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3688A06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.m */; };
 		6EA3689206B73F67009CA81A /* DCGaimYahooJoinChatViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 6EA3688F06B73F67009CA81A /* DCGaimYahooJoinChatViewController.h */; };
 		6EA3689306B73F67009CA81A /* DCGaimYahooJoinChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA3689006B73F67009CA81A /* DCGaimYahooJoinChatViewController.m */; };
 		6EA3689706B73FE5009CA81A /* DCStressTestJoinChatView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6EA3689406B73FE5009CA81A /* DCStressTestJoinChatView.nib */; };
@@ -1395,33 +1378,12 @@
 			remoteGlobalIDString = 8DC2EF5B0486A6940098B216;
 			remoteInfo = AIUtilities;
 		};
-		34FF932C06DE3D2800C1D683 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4947F5E90655E90C00B791E5 /* libezv.xcode */;
-			proxyType = 2;
-			remoteGlobalIDString = 49D2A86C05C62BC1000207CB;
-			remoteInfo = expat;
-		};
-		34FF932D06DE3D2800C1D683 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4947F5E90655E90C00B791E5 /* libezv.xcode */;
-			proxyType = 2;
-			remoteGlobalIDString = 496F57B805CE4DD800B6A0F5;
-			remoteInfo = "libezv (Static)";
-		};
 		4B215DAF059896B000305B3C /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 29B97313FDCFA39411CA2CEA /* Project object */;
 			proxyType = 1;
 			remoteGlobalIDString = 4B7F78B40597F42400162728;
 			remoteInfo = "Adium Crash Reporter";
-		};
-		4B57CD7806848F26003FF229 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 4947F5E90655E90C00B791E5 /* libezv.xcode */;
-			proxyType = 2;
-			remoteGlobalIDString = D2AAC0C705546C1D00DB518D;
-			remoteInfo = libezv;
 		};
 		4B7845EB059B50820048A8BA /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -2585,12 +2547,6 @@
 		34F1022D0734499700890D3B /* NSString_UUID.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = NSString_UUID.h; path = "Plugins/URL Handling/NSString_UUID.h"; sourceTree = "<group>"; };
 		34F10239073449D500890D3B /* XtrasInstaller.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = XtrasInstaller.m; path = "Plugins/URL Handling/XtrasInstaller.m"; sourceTree = "<group>"; };
 		34F1023A073449D500890D3B /* XtrasInstaller.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = XtrasInstaller.h; path = "Plugins/URL Handling/XtrasInstaller.h"; sourceTree = "<group>"; };
-		34F1429E05E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimTrepiaAccountViewController.h; path = "Plugins/Gaim Service/ESGaimTrepiaAccountViewController.h"; sourceTree = "<group>"; };
-		34F1429F05E95B0E00B32FD7 /* ESGaimTrepiaAccount.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimTrepiaAccount.h; path = "Plugins/Gaim Service/ESGaimTrepiaAccount.h"; sourceTree = "<group>"; };
-		34F142A005E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimTrepiaAccountViewController.m; path = "Plugins/Gaim Service/ESGaimTrepiaAccountViewController.m"; sourceTree = "<group>"; };
-		34F142A105E95B0E00B32FD7 /* ESGaimTrepiaAccount.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimTrepiaAccount.m; path = "Plugins/Gaim Service/ESGaimTrepiaAccount.m"; sourceTree = "<group>"; };
-		34F142A605E95B4C00B32FD7 /* ESTrepiaService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESTrepiaService.m; path = "Plugins/Gaim Service/ESTrepiaService.m"; sourceTree = "<group>"; };
-		34F142A705E95B4D00B32FD7 /* ESTrepiaService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESTrepiaService.h; path = "Plugins/Gaim Service/ESTrepiaService.h"; sourceTree = "<group>"; };
 		34F1529405E9FDDB00B32FD7 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34F2BD24059CF8070005B238 /* c++filt */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = "c++filt"; sourceTree = "<group>"; };
 		34F2E80F07C2CD5E007EAAAB /* AIHTMLDecoder.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIHTMLDecoder.m; path = "Frameworks/Adium Framework/AIHTMLDecoder.m"; sourceTree = "<group>"; };
@@ -2671,7 +2627,6 @@
 		4947F5E60655E90C00B791E5 /* xmltok.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok.h; sourceTree = "<group>"; };
 		4947F5E70655E90C00B791E5 /* xmltok_impl.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = xmltok_impl.c; sourceTree = "<group>"; };
 		4947F5E80655E90C00B791E5 /* xmltok_impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltok_impl.h; sourceTree = "<group>"; };
-		4947F5E90655E90C00B791E5 /* libezv.xcode */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = libezv.xcode; sourceTree = "<group>"; };
 		4947F5EB0655E90C00B791E5 /* LICENSE */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = LICENSE; sourceTree = "<group>"; };
 		4947F5ED0655E90C00B791E5 /* AWEzvDefines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWEzvDefines.h; sourceTree = "<group>"; };
 		4947F5EE0655E90C00B791E5 /* AWEzvSupportRoutines.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AWEzvSupportRoutines.h; sourceTree = "<group>"; };
@@ -2768,7 +2723,6 @@
 		4B76474C07A07B900021CCD7 /* GaimDefaultsSametime.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsSametime.plist; path = "Plugins/Gaim Service/GaimDefaultsSametime.plist"; sourceTree = "<group>"; };
 		4B76476007A07BC90021CCD7 /* GaimDefaultsGroupWise.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsGroupWise.plist; path = "Plugins/Gaim Service/GaimDefaultsGroupWise.plist"; sourceTree = "<group>"; };
 		4B76478507A07C440021CCD7 /* GaimDefaultsYahoo! Japan.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = "GaimDefaultsYahoo! Japan.plist"; path = "Plugins/Gaim Service/GaimDefaultsYahoo! Japan.plist"; sourceTree = "<group>"; };
-		4B76479507A07C720021CCD7 /* GaimDefaultsTrepia.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsTrepia.plist; path = "Plugins/Gaim Service/GaimDefaultsTrepia.plist"; sourceTree = "<group>"; };
 		4B7A565A07A1742900BDC540 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
 		4B7A567707A1754400BDC540 /* AIEditAccountWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEditAccountWindowController.h; path = Source/AIEditAccountWindowController.h; sourceTree = "<group>"; };
 		4B7A567807A1754400BDC540 /* AIEditAccountWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEditAccountWindowController.m; path = Source/AIEditAccountWindowController.m; sourceTree = "<group>"; };
@@ -2998,9 +2952,6 @@
 		6EA3688206B73E7D009CA81A /* DCGaimNovellJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimNovellJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimNovellJoinChatView.nib"; sourceTree = "<group>"; };
 		6EA3688306B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimNovellJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.h"; sourceTree = "<group>"; };
 		6EA3688406B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimNovellJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimNovellJoinChatViewController.m"; sourceTree = "<group>"; };
-		6EA3688806B73F27009CA81A /* DCGaimTrepiaJoinChatView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = DCGaimTrepiaJoinChatView.nib; path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatView.nib"; sourceTree = "<group>"; };
-		6EA3688906B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimTrepiaJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatViewController.h"; sourceTree = "<group>"; };
-		6EA3688A06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimTrepiaJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimTrepiaJoinChatViewController.m"; sourceTree = "<group>"; };
 		6EA3688E06B73F67009CA81A /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		6EA3688F06B73F67009CA81A /* DCGaimYahooJoinChatViewController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = DCGaimYahooJoinChatViewController.h; path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.h"; sourceTree = "<group>"; };
 		6EA3689006B73F67009CA81A /* DCGaimYahooJoinChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = DCGaimYahooJoinChatViewController.m; path = "Plugins/Gaim Service/DCGaimYahooJoinChatViewController.m"; sourceTree = "<group>"; };
@@ -3403,8 +3354,6 @@
 			isa = PBXGroup;
 			children = (
 				34057EF3087E024400664D64 /* Keeping 0.8x and 0.90 translation in sync */,
-				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
-				3474DFFC08254F3500BF30F0 /* Copyright.txt */,
 				4BE9FFE7055981AB00359B15 /* Adium.pch */,
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
 				F59DB3D7033EA9CD01A8010A /* AIAdium.m */,
@@ -3412,14 +3361,12 @@
 				4BC291F3083D9ED90075F57D /* New Hierarchy */,
 				344C0D4306B6D5E300DA7200 /* Applescriptability */,
 				344458F3070B5BF500D8E932 /* Debugging */,
-				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
 				F5BF8A6002C7D2F401A8010A /* Core Controllers */,
-				4B4F5B2C042D642500A8010A /* Frameworks */,
-				F5B53FBB0333AB5C01A8010A /* Components */,
 				4BD6720906001B2C0049CAF7 /* Plugins */,
 				4B7F78BA0597F42D00162728 /* Crash Reporter */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
 				F50A325A03B5798301A8010A /* Resources */,
+				34D8342B07CBE6A4006466F2 /* External Sources */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
 				349C2F310867ACF7000BF883 /* ApplescriptRunner */,
 				4B3717000510D19400A8010A /* (Old Code, Disabled, etc) */,
@@ -3432,6 +3379,8 @@
 		29B97323FDCFA39411CA2CEA /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
+				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
 				34D8379307CC3222006466F2 /* AIUtilities.framework */,
 				3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */,
 				348E5ACA06D2A74C004C051C /* AddressBook.framework */,
@@ -4365,23 +4314,6 @@
 			name = "Account Events";
 			sourceTree = "<group>";
 		};
-		34F1429D05E95AFF00B32FD7 /* Trepia */ = {
-			isa = PBXGroup;
-			children = (
-				34F142A705E95B4D00B32FD7 /* ESTrepiaService.h */,
-				34F142A605E95B4C00B32FD7 /* ESTrepiaService.m */,
-				34F1429F05E95B0E00B32FD7 /* ESGaimTrepiaAccount.h */,
-				34F142A105E95B0E00B32FD7 /* ESGaimTrepiaAccount.m */,
-				6EA3688906B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.h */,
-				6EA3688A06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.m */,
-				6EA3688806B73F27009CA81A /* DCGaimTrepiaJoinChatView.nib */,
-				34F1429E05E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.h */,
-				34F142A005E95B0E00B32FD7 /* ESGaimTrepiaAccountViewController.m */,
-				4B76479507A07C720021CCD7 /* GaimDefaultsTrepia.plist */,
-			);
-			name = Trepia;
-			sourceTree = "<group>";
-		};
 		34F2BD2E059CF8E70005B238 /* UNIX tools */ = {
 			isa = PBXGroup;
 			children = (
@@ -4464,7 +4396,6 @@
 			children = (
 				4947F5D10655E90C00B791E5 /* Classes */,
 				4947F5D60655E90C00B791E5 /* expat */,
-				4947F5E90655E90C00B791E5 /* libezv.xcode */,
 				4947F5EB0655E90C00B791E5 /* LICENSE */,
 				4947F5EC0655E90C00B791E5 /* Other Sources */,
 				4947F5F10655E90D00B791E5 /* Private Classes */,
@@ -4513,16 +4444,6 @@
 				4947F5E80655E90C00B791E5 /* xmltok_impl.h */,
 			);
 			path = lib;
-			sourceTree = "<group>";
-		};
-		4947F5EA0655E90C00B791E5 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				4B57CCA106848F05003FF229 /* libezv.dylib */,
-				34FF8DA106DE3D1E00C1D683 /* libexpat.a */,
-				34FF8DA206DE3D1E00C1D683 /* libezv.a */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		4947F5EC0655E90C00B791E5 /* Other Sources */ = {
@@ -4718,16 +4639,6 @@
 			name = Messaging;
 			sourceTree = "<group>";
 		};
-		4B4F5B2C042D642500A8010A /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				34D8342B07CBE6A4006466F2 /* External Sources */,
-				3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */,
-				3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		4B4F5B2D042D645F00A8010A /* Accounts & Services */ = {
 			isa = PBXGroup;
 			children = (
@@ -4798,21 +4709,6 @@
 				4BB7670C05B31DBA00E89FA2 /* crashDuck.png */,
 			);
 			name = "Crash Reporter Application";
-			sourceTree = "<group>";
-		};
-		4B587C0507ABFC87001832A9 /* Happy Components */ = {
-			isa = PBXGroup;
-			children = (
-				34E29FCE07AF091C006735BC /* Accounts */,
-				34E2A2FD07B0193B006735BC /* Contacts */,
-				349C6E8207C9728B005EB896 /* Contact List */,
-				347E77A907CA909E00350507 /* Events and Actions */,
-				34E0EA1507CC541A00A82198 /* Interface */,
-				347E778507CA825F00350507 /* Messaging */,
-				4B587C3707ABFCA8001832A9 /* State & Status */,
-				4BCAC53407B59F9C006641B9 /* Other */,
-			);
-			name = "Happy Components";
 			sourceTree = "<group>";
 		};
 		4B587C0807ABFC8E001832A9 /* Sad Components */ = {
@@ -4945,14 +4841,6 @@
 			name = "Yahoo! Japan";
 			sourceTree = "<group>";
 		};
-		4B76476C07A07BEC0021CCD7 /* Services (Disabled) */ = {
-			isa = PBXGroup;
-			children = (
-				34F1429D05E95AFF00B32FD7 /* Trepia */,
-			);
-			name = "Services (Disabled)";
-			sourceTree = "<group>";
-		};
 		4B7F278605440C6200CDFC90 /* Gaim */ = {
 			isa = PBXGroup;
 			children = (
@@ -4962,7 +4850,6 @@
 				34327BD6060D2FE6003D7AD9 /* GaimServiceDefaults.plist */,
 				3402E04D07CB0EB00044F818 /* Localizable.strings */,
 				34415880059F8F050019246B /* Services */,
-				4B76476C07A07BEC0021CCD7 /* Services (Disabled) */,
 				34F59B760667A33900F01E8C /* Notify UI */,
 				34C2CF8F0633405C0018E5D2 /* Request UI */,
 				34C2CFE6063340780018E5D2 /* Libgaim */,
@@ -5140,6 +5027,18 @@
 		4BC291FC083D9EDD0075F57D /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */,
+				4B0149050733D3A4001A4C57 /* AICoreComponentLoader.h */,
+				4B0149060733D3A5001A4C57 /* AICoreComponentLoader.m */,
+				4B587C0807ABFC8E001832A9 /* Sad Components */,
+				34E29FCE07AF091C006735BC /* Accounts */,
+				34E2A2FD07B0193B006735BC /* Contacts */,
+				349C6E8207C9728B005EB896 /* Contact List */,
+				347E77A907CA909E00350507 /* Events and Actions */,
+				34E0EA1507CC541A00A82198 /* Interface */,
+				347E778507CA825F00350507 /* Messaging */,
+				4B587C3707ABFCA8001832A9 /* State & Status */,
+				4BCAC53407B59F9C006641B9 /* Other */,
 			);
 			name = Components;
 			sourceTree = "<group>";
@@ -5891,6 +5790,9 @@
 		F50A325A03B5798301A8010A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
+				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
+				3474DFFC08254F3500BF30F0 /* Copyright.txt */,
 				346798EF08947FB800F68A98 /* AdiumFramework.strings */,
 				3402E04107CB0E4D0044F818 /* Localizable.strings */,
 				3496A8C107CE6B880055BBAB /* InfoPlist.strings */,
@@ -6083,18 +5985,6 @@
 				34A6FB2C07D6F98600972830 /* SoundFileIcon.png */,
 			);
 			name = Sound;
-			sourceTree = "<group>";
-		};
-		F5B53FBB0333AB5C01A8010A /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				DA4B5CDE080FCC080017BF17 /* CoreComponents.plist */,
-				4B0149050733D3A4001A4C57 /* AICoreComponentLoader.h */,
-				4B0149060733D3A5001A4C57 /* AICoreComponentLoader.m */,
-				4B587C0507ABFC87001832A9 /* Happy Components */,
-				4B587C0807ABFC8E001832A9 /* Sad Components */,
-			);
-			name = Components;
 			sourceTree = "<group>";
 		};
 		F5B53FBF0333ABA701A8010A /* Accounts Preferences */ = {
@@ -6636,9 +6526,6 @@
 				34416173059FC55A0019246B /* ESJabberService.h in Headers */,
 				344161C5059FC72E0019246B /* GaimServices.h in Headers */,
 				340915F205C0A5DF00CDE3DD /* GaimCommon.h in Headers */,
-				34F142A205E95B0F00B32FD7 /* ESGaimTrepiaAccountViewController.h in Headers */,
-				34F142A305E95B0F00B32FD7 /* ESGaimTrepiaAccount.h in Headers */,
-				34F142A905E95B4D00B32FD7 /* ESTrepiaService.h in Headers */,
 				34048AC70617CB4C004D0B7E /* SLGaimCocoaAdapter.h in Headers */,
 				3429280A0628BB4200BB9217 /* ESGaimYahooAccountViewController.h in Headers */,
 				34B9194D062DEC29004F1223 /* AIGaimOscarAccountViewController.h in Headers */,
@@ -6659,7 +6546,6 @@
 				6E4D962B06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.h in Headers */,
 				6E4D963106B73C4D005235E9 /* DCGaimMSNJoinChatViewController.h in Headers */,
 				6EA3688606B73E7D009CA81A /* DCGaimNovellJoinChatViewController.h in Headers */,
-				6EA3688C06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.h in Headers */,
 				6EA3689206B73F67009CA81A /* DCGaimYahooJoinChatViewController.h in Headers */,
 				348D8D1D06CC079F00449EBB /* ESZephyrService.h in Headers */,
 				348D8D2B06CC07BE00449EBB /* ESGaimZephyrAccountViewController.h in Headers */,
@@ -6673,9 +6559,6 @@
 				4B387EB907199FE5004DE713 /* ESGaimDotMacAccountViewController.h in Headers */,
 				4B388E0F0719C376004DE713 /* AIMSNServicePreferences.h in Headers */,
 				34F101E707342B5A00890D3B /* ESGaimDotMacAccount.h in Headers */,
-				349FF9FB0750751500E36B3B /* ESGaimAntepoAccount.h in Headers */,
-				349FFA040750755200E36B3B /* ESAntepoService.h in Headers */,
-				34E4516E07555B76004C3A42 /* ESGaimAntepoAccountViewController.h in Headers */,
 				34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */,
 				34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */,
 				34BBE11207A2EED600663CC9 /* adiumGaimFt.h in Headers */,
@@ -7280,10 +7163,6 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 4947F5EA0655E90C00B791E5 /* Products */;
-					ProjectRef = 4947F5E90655E90C00B791E5 /* libezv.xcode */;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
@@ -7322,27 +7201,6 @@
 			fileType = wrapper.framework;
 			path = AIUtilities.framework;
 			remoteRef = 34D834DC07CBE7BB006466F2 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34FF8DA106DE3D1E00C1D683 /* libexpat.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libexpat.a;
-			remoteRef = 34FF932C06DE3D2800C1D683 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		34FF8DA206DE3D1E00C1D683 /* libezv.a */ = {
-			isa = PBXReferenceProxy;
-			fileType = archive.ar;
-			path = libezv.a;
-			remoteRef = 34FF932D06DE3D2800C1D683 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-		4B57CCA106848F05003FF229 /* libezv.dylib */ = {
-			isa = PBXReferenceProxy;
-			fileType = "compiled.mach-o.dylib";
-			path = libezv.dylib;
-			remoteRef = 4B57CD7806848F26003FF229 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */
@@ -7650,7 +7508,6 @@
 				343EB41508086D9100E27095 /* DCGaimMeanwhileJoinChatView.nib in Resources */,
 				6E4D963006B73C4D005235E9 /* DCGaimMSNJoinChatView.nib in Resources */,
 				6EA3688506B73E7D009CA81A /* DCGaimNovellJoinChatView.nib in Resources */,
-				6EA3688B06B73F28009CA81A /* DCGaimTrepiaJoinChatView.nib in Resources */,
 				343EB40F08086D9100E27095 /* DCGaimYahooJoinChatView.nib in Resources */,
 				343EB41308086D9100E27095 /* ESGaimZephyrAccountView.nib in Resources */,
 				343EB41B08086D9100E27095 /* ESGaimICQAccountView.nib in Resources */,
@@ -7667,8 +7524,6 @@
 				4B76474D07A07B900021CCD7 /* GaimDefaultsSametime.plist in Resources */,
 				4B76476107A07BC90021CCD7 /* GaimDefaultsGroupWise.plist in Resources */,
 				34A30EDD08D8EFFB00697644 /* GaimDefaultsYahoo! Japan.plist in Resources */,
-				4B76479607A07C720021CCD7 /* GaimDefaultsTrepia.plist in Resources */,
-				4BDD822207A0BAE00057DB2C /* GaimDefaultsAntepo.plist in Resources */,
 				343EB40008086D9000E27095 /* ESGaimNovellAccountView.nib in Resources */,
 				343EB40408086D9000E27095 /* ESGaimGaduGaduAccountView.nib in Resources */,
 				3402E04E07CB0EB00044F818 /* Localizable.strings in Resources */,
@@ -8265,9 +8120,6 @@
 				344160C6059FC3090019246B /* ESGaimJabberAccount.m in Sources */,
 				3441615C059FC5340019246B /* ESGaduGaduService.m in Sources */,
 				34416174059FC55A0019246B /* ESJabberService.m in Sources */,
-				34F142A405E95B0F00B32FD7 /* ESGaimTrepiaAccountViewController.m in Sources */,
-				34F142A505E95B0F00B32FD7 /* ESGaimTrepiaAccount.m in Sources */,
-				34F142A805E95B4D00B32FD7 /* ESTrepiaService.m in Sources */,
 				34048AC80617CB4C004D0B7E /* SLGaimCocoaAdapter.m in Sources */,
 				3429280B0628BB4200BB9217 /* ESGaimYahooAccountViewController.m in Sources */,
 				34B9194C062DEC29004F1223 /* AIGaimOscarAccountViewController.m in Sources */,
@@ -8288,7 +8140,6 @@
 				6E4D962C06B73C18005235E9 /* DCGaimMeanwhileJoinChatViewController.m in Sources */,
 				6E4D963206B73C4D005235E9 /* DCGaimMSNJoinChatViewController.m in Sources */,
 				6EA3688706B73E7D009CA81A /* DCGaimNovellJoinChatViewController.m in Sources */,
-				6EA3688D06B73F28009CA81A /* DCGaimTrepiaJoinChatViewController.m in Sources */,
 				6EA3689306B73F67009CA81A /* DCGaimYahooJoinChatViewController.m in Sources */,
 				348D8D1C06CC079F00449EBB /* ESZephyrService.m in Sources */,
 				348D8D2906CC07BE00449EBB /* ESGaimZephyrAccountViewController.m in Sources */,
@@ -8302,9 +8153,6 @@
 				4B387EBA07199FE5004DE713 /* ESGaimDotMacAccountViewController.m in Sources */,
 				4B388E100719C376004DE713 /* AIMSNServicePreferences.m in Sources */,
 				34F101E807342B5B00890D3B /* ESGaimDotMacAccount.m in Sources */,
-				349FF9FC0750751600E36B3B /* ESGaimAntepoAccount.m in Sources */,
-				349FFA050750755200E36B3B /* ESAntepoService.m in Sources */,
-				34E4516F07555B76004C3A42 /* ESGaimAntepoAccountViewController.m in Sources */,
 				34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */,
 				34BBE10C07A2EE3800663CC9 /* adiumGaimBlist.m in Sources */,
 				34BBE11307A2EED600663CC9 /* adiumGaimFt.m in Sources */,
