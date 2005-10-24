@@ -3,10 +3,7 @@
 //
 //  Created by raf on Sun Jan 28 2001.
 //  Based on SpeechUtilities framework by Raphael Sebbe.
-//  Revised by Evan Schoenberg on Tue Sep 30 2003.
 //  Optimized and expanded by Evan Schoenberg.
-//  $Id$
-
 
 #import "SUSpeaker.h"
 #include <unistd.h>
@@ -17,7 +14,7 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
     UInt16 wordLen);
 
 @interface SUSpeaker (Private)
--(void)setCallbacks;
+-(void)createNewSpeechChannelForVoice:(VoiceSpec *)voice;
 -(NSPort*) port;
 -(void)setReserved1:(unsigned int)r;
 -(void)setReserved2:(unsigned int)r;
@@ -47,8 +44,10 @@ void MySpeechWordCallback (SpeechChannel chan, SInt32 refCon, UInt32 wordPos,
 			_usePort = NO;
 		}
 
-		NewSpeechChannel(NULL, &_speechChannel); // NULL voice is default voice
-		[self setCallbacks];
+		_speechChannel = NULL;
+		
+		// NULL voice is default voice
+		[self createNewSpeechChannelForVoice:NULL];
 	}
 
 	return self;
@@ -132,10 +131,16 @@ Note that extreme value can make your app crash..."  */
 				if (currentSpeechMacRomanData) {
 					[self stopSpeaking];
 				}
-				SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
+				error = SetSpeechInfo(_speechChannel, soCurrentVoice, &voice);
+				/* If SetSpeechInfo() returns incompatibleVoice, we need to use a new speech channel, as the
+				 * synthesizer must have changed
+				 */
+				if (error == incompatibleVoice) {
+					[self createNewSpeechChannelForVoice:&voice];
+				}
+
 			} else {
-				NewSpeechChannel(&voice, &_speechChannel);
-				[self setCallbacks];
+				[self createNewSpeechChannelForVoice:&voice];
 			}
 		}
 	}
@@ -246,14 +251,24 @@ Note that extreme value can make your app crash..."  */
 
 
 //--- Private ---
--(void)setCallbacks
+-(void)createNewSpeechChannelForVoice:(VoiceSpec *)voice
 {
-    if (_speechChannel != NULL) {
-        SetSpeechInfo(_speechChannel, soSpeechDoneCallBack, &MySpeechDoneCallback);
-        SetSpeechInfo(_speechChannel, soWordCallBack, &MySpeechWordCallback);
-        SetSpeechInfo(_speechChannel, soRefCon, (const void*)self);
-    }
+	OSErr error;
+
+	if (_speechChannel) {
+		DisposeSpeechChannel(_speechChannel);
+		_speechChannel = NULL;
+	}
+
+	error = NewSpeechChannel(voice, &_speechChannel);
+
+	if (error == noErr) {
+		SetSpeechInfo(_speechChannel, soSpeechDoneCallBack, &MySpeechDoneCallback);
+		SetSpeechInfo(_speechChannel, soWordCallBack, &MySpeechWordCallback);
+		SetSpeechInfo(_speechChannel, soRefCon, (const void*)self);
+	}
 }
+
 -(void)setReserved1:(unsigned int)r
 {
     _reserved1 = r;
