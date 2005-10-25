@@ -43,15 +43,10 @@
 		path = [[url path] retain];
 		name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
 		NSBundle * xtraBundle = [[NSBundle alloc] initWithPath:path];
-		if(xtraBundle)//These two if()s check for a new-style xtra
+		if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
 		{
-			if([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])
-			{
-				readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"]retain];
-				NSString * iconPath = [xtraBundle pathForResource:@"Icon" ofType:@"icns"];
-				if(iconPath)
-					icon = [[NSImage alloc] initByReferencingFile:iconPath];
-			}
+			readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"]retain];
+			icon = [[NSImage alloc] initByReferencingFile:[xtraBundle pathForResource:@"Icon" ofType:@"icns"]];
 		}
 		if(!icon)
 			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
