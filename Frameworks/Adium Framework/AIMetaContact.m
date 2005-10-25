@@ -663,7 +663,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		}
 	}
 	
-	return (returnValue);
+	return returnValue;
 }
 //Sorting --------------------------------------------------------------------------------------------------------------
 #pragma mark Sorting
@@ -927,12 +927,11 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	AIListContact		*listContact;
 
 	enumerator = [[self listContacts] objectEnumerator];
-	while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
-		contactListStatusMessage = [self statusObjectForKey:@"ContactListStatusMessage"];
-		if (!contactListStatusMessage) {
-			contactListStatusMessage = [self statusMessage];
-		}
-	}
+	while (!contactListStatusMessage && (listContact = [enumerator nextObject]))
+		contactListStatusMessage = [listContact contactListStatusMessage];
+	if (!contactListStatusMessage)
+		contactListStatusMessage = [self statusMessage];
+	NSLog(@"Stage 3: %@",contactListStatusMessage);
 	
 	return contactListStatusMessage;
 }
