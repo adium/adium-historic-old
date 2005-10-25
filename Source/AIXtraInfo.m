@@ -42,15 +42,19 @@
 		name = [info objectForKey:@"Name"];*/
 		path = [[url path] retain];
 		name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
-		icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
 		NSBundle * xtraBundle = [[NSBundle alloc] initWithPath:path];
 		if(xtraBundle)//These two if()s check for a new-style xtra
 		{
 			if([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])
 			{
 				readMePath = [[xtraBundle pathForResource:@"ReadMe" ofType:@"rtf"]retain];
+				NSString * iconPath = [xtraBundle pathForResource:@"Icon" ofType:@"icns"];
+				if(iconPath)
+					icon = [[NSImage alloc] initByReferencingFile:iconPath];
 			}
 		}
+		if(!icon)
+			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
 	}
 	return self;
 }
