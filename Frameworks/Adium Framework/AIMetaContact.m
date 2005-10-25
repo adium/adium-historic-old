@@ -912,12 +912,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 /*!
  * @brief Determine the status message to be displayed in the contact list
  *
- * A contact may have a @"ContactListStatusMessage" statusObject or may have a statusState statusMessage.
- * The @"ContactListStatusMessage" is preferred for a given object, but we do not want our metaContact to ignore
- * status states of contained objects if any object has a @"ContactListStatusMessage".  We therefore check each
- * AIListContact in [self listContacts], looking first for @"ContactListStatusMessage" and then for the statusMessage,
- * breaking when one or the other is found.
- *
  * @result <tt>NSAttributedString</tt> which will be the message for this contact in the contact list, after modifications
  */
 - (NSAttributedString *)contactListStatusMessage
@@ -927,8 +921,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	AIListContact		*listContact;
 
 	enumerator = [[self listContacts] objectEnumerator];
-	while (!contactListStatusMessage && (listContact = [enumerator nextObject]))
+	while (!contactListStatusMessage && (listContact = [enumerator nextObject])) {
 		contactListStatusMessage = [listContact contactListStatusMessage];
+		if (!contactListStatusMessage)
+			contactListStatusMessage = [listContact statusMessage];
+#warning NSLog to remove
+		NSLog(@"%@", [contactListStatusMessage string]);
+	}
 	if (!contactListStatusMessage)
 		contactListStatusMessage = [self statusMessage];
 	
