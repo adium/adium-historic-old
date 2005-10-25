@@ -931,7 +931,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		contactListStatusMessage = [listContact contactListStatusMessage];
 	if (!contactListStatusMessage)
 		contactListStatusMessage = [self statusMessage];
-	NSLog(@"Stage 3: %@",contactListStatusMessage);
 	
 	return contactListStatusMessage;
 }
