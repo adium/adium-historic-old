@@ -135,7 +135,18 @@
  */
 - (NSArray *)availableDockIconPacks
 {
-	return ([adium allResourcesForName:FOLDER_DOCK_ICONS withExtensions:@"AdiumIcon"]);
+	NSEnumerator * folderPathEnumerator = [[adium allResourcesForName:FOLDER_DOCK_ICONS withExtensions:@"AdiumIcon"] objectEnumerator];
+	NSMutableArray * iconPackPaths = [NSMutableArray array]; //this will be the folder path for old packs, and the bundle resource path for new
+	NSString * path;
+	NSBundle * xtraBundle;
+	while((path = [folderPathEnumerator nextObject]))
+	{
+		xtraBundle = [NSBundle bundleWithPath:path];
+		if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
+			path = [xtraBundle resourcePath];
+		[iconPackPaths addObject:path];
+	}
+	return iconPackPaths;
 }
 
 
