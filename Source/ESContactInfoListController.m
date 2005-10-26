@@ -215,8 +215,9 @@
 			while ((aDragItem = [enumerator nextObject])) {
 				if ([aDragItem isMemberOfClass:[AIListContact class]]) {
 					//For listContacts, add all contacts with the same service and UID (on all accounts)
-					[realDragItems addObjectsFromArray:[[adium contactController] allContactsWithService:[aDragItem service] 
-																									 UID:[aDragItem UID]]];
+					[realDragItems addObjectsFromArray:[[[adium contactController] allContactsWithService:[aDragItem service] 
+																									  UID:[aDragItem UID]
+																							 existingOnly:YES] allObjects]];
 				} else {
 					[realDragItems addObject:aDragItem];
 				}
