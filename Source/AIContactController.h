@@ -123,7 +123,7 @@ typedef enum {
 - (NSMutableArray *)allContactsInGroup:(AIListGroup *)inGroup subgroups:(BOOL)subGroups onAccount:(AIAccount *)inAccount;
 - (NSMenu *)menuOfAllContactsInContainingObject:(AIListObject<AIContainingObject> *)inGroup withTarget:(id)target;
 - (NSMenu *)menuOfAllGroupsInGroup:(AIListGroup *)inGroup withTarget:(id)target;
-- (NSArray *)allContactsWithService:(AIService *)service UID:(NSString *)inUID;
+- (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly;
 
 - (AIMetaContact *)groupUIDs:(NSArray *)UIDsArray forServices:(NSArray *)servicesArray;
 - (AIMetaContact *)groupListContacts:(NSArray *)contactsToGroupArray;
@@ -135,6 +135,7 @@ typedef enum {
 - (void)registerListObjectObserver:(id <AIListObjectObserver>)inObserver;
 - (void)unregisterListObjectObserver:(id)inObserver;
 - (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver;
+- (void)updateContacts:(NSSet *)contacts forObserver:(id <AIListObjectObserver>)inObserver;
 
 //
 - (void)delayListObjectNotifications;
