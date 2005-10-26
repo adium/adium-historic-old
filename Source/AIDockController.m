@@ -141,7 +141,7 @@
 	NSBundle * xtraBundle;
 	while ((path = [folderPathEnumerator nextObject])) {
 		xtraBundle = [NSBundle bundleWithPath:path];
-		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion] intValue == 1))//This checks for a new-style xtra
+		if (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1))//This checks for a new-style xtra
 			path = [xtraBundle resourcePath];
 		[iconPackPaths addObject:path];
 	}
