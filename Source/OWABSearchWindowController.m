@@ -10,6 +10,8 @@
 #import <Adium/AIAccountController.h>
 #import <Adium/AIService.h>
 #import <Adium/AIServiceMenu.h>
+#import <Adium/AIServiceIcons.h>
+#import "ESAddressBookIntegrationPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
 #import <AIUtilities/AIPopUpButtonAdditions.h>
 #import <AIUtilities/AIImageViewWithImagePicker.h>
@@ -18,13 +20,6 @@
 #import <AddressBook/ABPerson.h>
 
 #define AB_SEARCH_NIB	@"ABSearch"
-
-#define AIMServiceUniqueID		@"libgaim-oscar-AIM"
-#define ICQServiceUniqueID		@"libgaim-oscar-ICQ"
-#define MSNServiceUniqueID		@"libgaim-MSN"
-#define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
-#define JabberServiceUniqueID	@"libgaim-Jabber"
-#define YahooServiceUniqueID	@"libgaim-Yahoo!"
 
 @interface OWABSearchWindowController (private)
 - (id)initWithWindowNibName:(NSString *)windowNibName initialService:(AIService *)inService;
@@ -173,14 +168,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	//We show only the active services
 	servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
 	while ((aService = [servicesEnumerator nextObject])) {
-		property = [self propertyFromService:aService];
+		property = [ESAddressBookIntegrationPlugin propertyFromService:aService];
 		if (property && ![[peoplePicker properties] containsObject:property])
 			[peoplePicker addProperty:property];
 	}
 
 	//Display our initial service if we were passed one
 	if (service) {
-		property = [self propertyFromService:service];
+		property = [ESAddressBookIntegrationPlugin propertyFromService:service];
 		if (property && [[peoplePicker properties] containsObject:property]) {
 			[peoplePicker setDisplayedProperty:property];
 		}
@@ -281,7 +276,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	if (![contactID isEqualToString:@""]) {
 		ABMutableMultiValue		*value = [[ABMutableMultiValue alloc] init];
 		NSString				*identifier = nil;
-		NSString				*serviceIndentifier = [self propertyFromService:service];
+		NSString				*serviceIndentifier = [ESAddressBookIntegrationPlugin propertyFromService:service];
 		
 		identifier = [value addValue:contactID withLabel:serviceIndentifier];
 		if (identifier) {
@@ -443,62 +438,36 @@ static	ABAddressBook	*sharedAddressBook = nil;
 #pragma mark Private
 
 /*!
- * @brief Returns the appropriate service for the property.
- *
- * @param property - an ABPerson property.
- */
-- (AIService *)serviceFromProperty:(NSString *)property
-{
-	AIService *result = nil;
-	
-	if ([property isEqualToString:kABAIMInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:AIMServiceUniqueID];
-	else if ([property isEqualToString:kABICQInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:ICQServiceUniqueID];
-	else if ([property isEqualToString:kABMSNInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:MSNServiceUniqueID];
-	else if ([property isEqualToString:kABJabberInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:JabberServiceUniqueID];
-	else if ([property isEqualToString:kABYahooInstantProperty])
-		result = [[adium accountController] serviceWithUniqueID:YahooServiceUniqueID];
-	
-	return result;
-}
-
-/*!
- * @brief Returns the appropriate property for the service.
- */
-- (NSString *)propertyFromService:(AIService *)inService
-{
-	NSString *result = nil;
-	NSString *serviceCodeUniqueID = [inService serviceCodeUniqueID];
-	
-	if ([serviceCodeUniqueID isEqualToString:AIMServiceUniqueID])
-		result = kABAIMInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:ICQServiceUniqueID])
-		result = kABICQInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:MSNServiceUniqueID])
-		result = kABMSNInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:DotMacServiceUniqueID])
-		result = kABAIMInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:JabberServiceUniqueID])
-		result = kABJabberInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:YahooServiceUniqueID])
-		result = kABYahooInstantProperty;
-	
-	return result;
-}
-
-/*!
  * @brief Build and configure the menu of contact service types
  */
 - (void)buildContactTypeMenu
 {
 	//Rebuild the menu
-	[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
+	/*[popUp_contactType setMenu:[AIServiceMenu menuOfServicesWithTarget:self
 													activeServicesOnly:YES
 													   longDescription:NO
-																format:nil]];
+																format:nil]];*/
+	
+	[popUp_contactType removeAllItems];
+	//We show only the active services
+	NSEnumerator	*servicesEnumerator = [[[adium accountController] activeServices] objectEnumerator];
+	unsigned int	i = 0;
+	
+	while ((service = [servicesEnumerator nextObject])) {
+		if ([ESAddressBookIntegrationPlugin propertyFromService:service]) {
+			NSMenuItem	*menu;
+			
+			[popUp_contactType addItemWithTitle:[service shortDescription]];
+			
+			menu = [popUp_contactType itemAtIndex:i];
+			[menu setRepresentedObject:service];
+			[menu setImage:[AIServiceIcons serviceIconForService:service
+															type:AIServiceIconSmall
+													   direction:AIIconNormal]];
+			i++;
+		}
+	}
+	
 	//Ensure our selection is still valid
 	[self ensureValidContactTypeSelection];
 }

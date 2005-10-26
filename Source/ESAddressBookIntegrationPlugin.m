@@ -32,6 +32,13 @@
 #define SHOW_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
 #define EDIT_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
 
+#define AIMServiceUniqueID		@"libgaim-oscar-AIM"
+#define ICQServiceUniqueID		@"libgaim-oscar-ICQ"
+#define MSNServiceUniqueID		@"libgaim-MSN"
+#define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
+#define JabberServiceUniqueID	@"libgaim-Jabber"
+#define YahooServiceUniqueID	@"libgaim-Yahoo!"
+
 @interface ESAddressBookIntegrationPlugin(PRIVATE)
 - (void)updateAllContacts;
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon;
@@ -427,6 +434,54 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			[person setImageData:imageData];
 		}
 	}
+}
+
+/*!
+ * @brief Returns the appropriate service for the property.
+ *
+ * @param property - an ABPerson property.
+ */
++ (AIService *)serviceFromProperty:(NSString *)property
+{
+	AIService	*result = nil;
+	AIAdium		*adium = [AIObject sharedAdiumInstance];
+	
+	if ([property isEqualToString:kABAIMInstantProperty])
+		result = [[adium accountController] serviceWithUniqueID:AIMServiceUniqueID];
+	else if ([property isEqualToString:kABICQInstantProperty])
+		result = [[adium accountController] serviceWithUniqueID:ICQServiceUniqueID];
+	else if ([property isEqualToString:kABMSNInstantProperty])
+		result = [[adium accountController] serviceWithUniqueID:MSNServiceUniqueID];
+	else if ([property isEqualToString:kABJabberInstantProperty])
+		result = [[adium accountController] serviceWithUniqueID:JabberServiceUniqueID];
+	else if ([property isEqualToString:kABYahooInstantProperty])
+		result = [[adium accountController] serviceWithUniqueID:YahooServiceUniqueID];
+	
+	return result;
+}
+
+/*!
+ * @brief Returns the appropriate property for the service.
+ */
++ (NSString *)propertyFromService:(AIService *)inService
+{
+	NSString *result = nil;
+	NSString *serviceCodeUniqueID = [inService serviceCodeUniqueID];
+	
+	if ([serviceCodeUniqueID isEqualToString:AIMServiceUniqueID])
+		result = kABAIMInstantProperty;
+	else if ([serviceCodeUniqueID isEqualToString:ICQServiceUniqueID])
+		result = kABICQInstantProperty;
+	else if ([serviceCodeUniqueID isEqualToString:MSNServiceUniqueID])
+		result = kABMSNInstantProperty;
+	else if ([serviceCodeUniqueID isEqualToString:DotMacServiceUniqueID])
+		result = kABAIMInstantProperty;
+	else if ([serviceCodeUniqueID isEqualToString:JabberServiceUniqueID])
+		result = kABJabberInstantProperty;
+	else if ([serviceCodeUniqueID isEqualToString:YahooServiceUniqueID])
+		result = kABYahooInstantProperty;
+	
+	return result;
 }
 
 #pragma mark Image data
