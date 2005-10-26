@@ -34,12 +34,15 @@
 #define ADD_TO_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Add To Address Book", "Add To Address Book Contextual Menu")
 
 #define CONTACT_ADDED_SUCCESS_TITLE		AILocalizedString(@"Success", nil)
-#define CONTACT_ADDED_SUCCESS_Message	AILocalizedString(@"%@ had been successfully added to the Address Book database.\nWould you like to edit it now?", nil)
+#define CONTACT_ADDED_SUCCESS_Message	AILocalizedString(@"%@ had been successfully added to the Address Book.\nWould you like to edit the card now?", nil)
 #define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
-#define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book database.", nil)
+#define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book.", nil)
 
+#warning The use of these uniqueServiceIDs will fail if joscar is our OSCAR implementation
 #define AIMServiceUniqueID		@"libgaim-oscar-AIM"
 #define ICQServiceUniqueID		@"libgaim-oscar-ICQ"
+#define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
+
 #define MSNServiceUniqueID		@"libgaim-MSN"
 #define DotMacServiceUniqueID	@"libgaim-oscar-Mac"
 #define JabberServiceUniqueID	@"libgaim-Jabber"
@@ -50,7 +53,7 @@
 - (void)updateSelfIncludingIcon:(BOOL)includeIcon;
 - (void)preferencesChanged:(NSNotification *)notification;
 - (NSString *)nameForPerson:(ABPerson *)person phonetic:(NSString **)phonetic;
-- (ABPerson *)searchForObject:(AIListObject *)inObject;
+- (ABPerson *)personForListObject:(AIListObject *)inObject;
 - (ABPerson *)_searchForUID:(NSString *)UID serviceID:(NSString *)serviceID;
 - (void)rebuildAddressBookDict;
 - (void)queueDelayedFetchOfImageForPerson:(ABPerson *)person object:(AIListObject *)inObject;
@@ -71,6 +74,10 @@
 @implementation ESAddressBookIntegrationPlugin
 
 static	ABAddressBook	*sharedAddressBook = nil;
+static	NSDictionary	*serviceDict = nil;
+
+NSString* serviceIDForOscarUID(NSString *UID);
+NSString* serviceIDForJabberUID(NSString *UID);
 
 /*!
  * @brief Install plugin
@@ -206,11 +213,9 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	NSSet		*modifiedAttributes = nil;
 	
     if (inModifiedKeys == nil) { //Only perform this when updating for all list objects
-        
-        ABPerson *person = [self searchForObject:inObject];
+        ABPerson *person = [self personForListObject:inObject];
 		
 		if (person) {
-
 			[self queueDelayedFetchOfImageForPerson:person object:inObject];
 
 			if (enableImport) {
@@ -284,7 +289,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		//Only update when the serverside icon changes if there is no Adium preference overriding it
 		if (![inObject preferenceForKey:KEY_USER_ICON group:PREF_GROUP_USERICONS ignoreInheritedValues:YES]) {
 			//Find the person
-			ABPerson *person = [self searchForObject:inObject];
+			ABPerson *person = [self personForListObject:inObject];
 			
 			if (person) {
 				//Set the person's image to the inObject's serverside User Icon.
@@ -412,7 +417,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		    [self updateSelfIncludingIcon:YES];	
 			
 		} else {
-			/* We have a notification (so this isn't the first time through): */
+			//This isn't the first time through
 
 			//If we weren't creating meta contacts before but we are now
 			if (!oldCreateMetaContacts && createMetaContacts) {
@@ -431,7 +436,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 
     } else if (automaticSync && ([group isEqualToString:PREF_GROUP_USERICONS]) && object) {
 		//Find the person
-		ABPerson *person = [self searchForObject:object];
+		ABPerson *person = [self personForListObject:object];
 		
 		if (person) {
 			//Set the person's image to the inObject's serverside User Icon.
@@ -469,7 +474,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		result = [[adium accountController] serviceWithUniqueID:JabberServiceUniqueID];
 	else if ([property isEqualToString:kABYahooInstantProperty])
 		result = [[adium accountController] serviceWithUniqueID:YahooServiceUniqueID];
-	
+
 	return result;
 }
 
@@ -478,21 +483,19 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 + (NSString *)propertyFromService:(AIService *)inService
 {
-	NSString *result = nil;
-	NSString *serviceCodeUniqueID = [inService serviceCodeUniqueID];
-	
-	if ([serviceCodeUniqueID isEqualToString:AIMServiceUniqueID])
-		result = kABAIMInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:ICQServiceUniqueID])
-		result = kABICQInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:MSNServiceUniqueID])
-		result = kABMSNInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:DotMacServiceUniqueID])
-		result = kABAIMInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:JabberServiceUniqueID])
-		result = kABJabberInstantProperty;
-	else if ([serviceCodeUniqueID isEqualToString:YahooServiceUniqueID])
-		result = kABYahooInstantProperty;
+	NSString *result;
+	NSString *serviceID = [inService serviceID];
+
+	result = [serviceDict objectForKey:serviceID];
+
+	//Check for some special cases
+	if (!result) {
+		if ([serviceID isEqualToString:@"GTalk"]) {
+			result = kABJabberInstantProperty;
+		} else if ([serviceID isEqualToString:@"Mac"]) {
+			result = kABAIMInstantProperty;
+		}
+	}
 	
 	return result;
 }
@@ -646,7 +649,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
  * @param inObject The object for which it search
  * @result An ABPerson is one is found, or nil if none is found
  */
-- (ABPerson *)searchForObject:(AIListObject *)inObject
+- (ABPerson *)personForListObject:(AIListObject *)inObject
 {
 	ABPerson	*person = nil;
 	NSString	*uniqueID = [inObject preferenceForKey:KEY_AB_UNIQUE_ID group:PREF_GROUP_ADDRESSBOOK];
@@ -655,7 +658,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	if (uniqueID)
 		record = [sharedAddressBook recordForUniqueId:uniqueID];
 	
-	if (record) {
+	if (record && [record isKindOfClass:[ABPerson class]]) {
 		person = (ABPerson *)record;
 	} else {
 		if ([inObject isKindOfClass:[AIMetaContact class]]) {
@@ -666,7 +669,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			//the lucky winner.
 			enumerator = [[(AIMetaContact *)inObject listContacts] objectEnumerator];
 			while ((listContact = [enumerator nextObject]) && (person == nil)) {
-				person = [self searchForObject:listContact];
+				person = [self personForListObject:listContact];
 			}
 			
 		} else {
@@ -722,6 +725,77 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	return person;
 }
 
+- (NSSet *)contactsForPerson:(ABPerson *)person
+{
+	NSArray			*allServiceKeys = [serviceDict allKeys];
+	NSString		*serviceID;
+	NSMutableSet	*contactSet = [NSMutableSet set];
+	NSEnumerator	*servicesEnumerator;
+	ABMultiValue	*emails;
+	int				i, emailsCount;
+
+	//An ABPerson may have multiple emails; iterate through them looking for @mac.com addresses
+	{
+		emails = [person valueForProperty:kABEmailProperty];
+		emailsCount = [emails count];
+		
+		for (i = 0; i < emailsCount ; i++) {
+			NSString	*email;
+			
+			email = [emails valueAtIndex:i];
+			if ([email hasSuffix:@"@mac.com"]) {
+				//Retrieve all appropriate contacts
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] serviceWithUniqueID:DotMacServiceUniqueID]
+																				  UID:email
+																		 existingOnly:YES];
+
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
+		}
+	}
+	
+	//Now go through the instant messaging keys
+	servicesEnumerator = [allServiceKeys objectEnumerator];
+	while ((serviceID = [servicesEnumerator nextObject])) {
+		NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
+		ABMultiValue	*names;
+		int				nameCount;
+
+		//An ABPerson may have multiple names; iterate through them
+		names = [person valueForProperty:addressBookKey];
+		nameCount = [names count];
+		
+		//Continue to the next serviceID immediately if no names are found
+		if (nameCount == 0) continue;
+		
+		BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+										   [serviceID isEqualToString:@"ICQ"]);
+		BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+		
+		for (i = 0 ; i < nameCount ; i++) {
+			NSString	*UID = [[names valueAtIndex:i] compactedString];
+			if ([UID length]) {
+				if (isOSCAR) {
+					serviceID = serviceIDForOscarUID(UID);
+					
+				} else if (isJabber) {
+					serviceID = serviceIDForJabberUID(UID);
+				}
+				
+				NSSet	*contacts = [[adium contactController] allContactsWithService:[[adium accountController] firstServiceWithServiceID:serviceID]
+																				  UID:UID
+																		 existingOnly:YES];
+				
+				//Add them to our set
+				[contactSet unionSet:contacts];
+			}
+		}
+	}
+
+	return contactSet;
+}
+
 #pragma mark Address book changed
 /*!
  * @brief Address book changed externally
@@ -730,53 +804,86 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)addressBookChanged:(NSNotification *)notification
 {
-	id addedPeopleUIDs = nil;
-	id modifiedPeopleUIDs = nil;
-	id deletedPeopleUIDs = nil;
-	
+	/* In case of a single person, these will be NSStrings.
+	 * In case of more then one, they are will be NSArrays containing NSStrings.
+	 */	
+	id				addedPeopleUniqueIDs, modifiedPeopleUniqueIDs, deletedPeopleUniqueIDs;
+	NSMutableSet	*allModifiedPeople = [[NSMutableSet alloc] init];
+	ABPerson		*me = [sharedAddressBook me];
+	BOOL			modifiedMe = NO;;
+
 	//Delay listObjectNotifications to speed up metaContact creation
 	[[adium contactController] delayListObjectNotifications];
-	
-	//In case of a single person, these are NSStrings, and in case of more then one, they are
-	//Arrays containing NSStrings.
-	addedPeopleUIDs = [[notification userInfo] objectForKey:kABInsertedRecords];
-	modifiedPeopleUIDs = [[notification userInfo] objectForKey:kABUpdatedRecords];
-	deletedPeopleUIDs = [[notification userInfo] objectForKey:kABDeletedRecords];
-	
-	if (addedPeopleUIDs) {
-		if ([addedPeopleUIDs isKindOfClass:[NSArray class]])
+
+	//Addition of new records
+	if ((addedPeopleUniqueIDs = [[notification userInfo] objectForKey:kABInsertedRecords])) {
+		NSArray	*peopleToAdd;
+
+		if ([addedPeopleUniqueIDs isKindOfClass:[NSArray class]]) {
 			//We are dealing with multiple records
-			[self addToAddressBookDict:[sharedAddressBook peopleFromUniqueIDs:addedPeopleUIDs]];
-		else
-			//We have only one record
-			[self addToAddressBookDict:[NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:addedPeopleUIDs]]];
-	}
-	
-	if (modifiedPeopleUIDs) {
-		if ([modifiedPeopleUIDs isKindOfClass:[NSArray class]]) {
-			//We are dealing with multiple records
-			[self removeFromAddressBookDict:modifiedPeopleUIDs];
-			[self addToAddressBookDict:[sharedAddressBook peopleFromUniqueIDs:modifiedPeopleUIDs]];
+			peopleToAdd = [sharedAddressBook peopleFromUniqueIDs:(NSArray *)addedPeopleUniqueIDs];
 		} else {
 			//We have only one record
-			[self removeFromAddressBookDict:[NSArray arrayWithObject:modifiedPeopleUIDs]];
-			[self addToAddressBookDict:[NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:modifiedPeopleUIDs]]];
+			peopleToAdd = [NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:addedPeopleUniqueIDs]];
 		}
+
+		[allModifiedPeople addObjectsFromArray:peopleToAdd];
+		[self addToAddressBookDict:peopleToAdd];
 	}
 	
-	if (deletedPeopleUIDs) {
-		if ([deletedPeopleUIDs isKindOfClass:[NSArray class]])
+	//Modification of existing records
+	if ((modifiedPeopleUniqueIDs = [[notification userInfo] objectForKey:kABUpdatedRecords])) {
+		NSArray	*peopleToAdd;
+
+		if ([modifiedPeopleUniqueIDs isKindOfClass:[NSArray class]]) {
 			//We are dealing with multiple records
-			[self removeFromAddressBookDict:deletedPeopleUIDs];
-		else
+			[self removeFromAddressBookDict:modifiedPeopleUniqueIDs];
+			peopleToAdd = [sharedAddressBook peopleFromUniqueIDs:modifiedPeopleUniqueIDs];
+		} else {
 			//We have only one record
-			[self removeFromAddressBookDict:[NSArray arrayWithObject:deletedPeopleUIDs]];
+			[self removeFromAddressBookDict:[NSArray arrayWithObject:modifiedPeopleUniqueIDs]];
+			peopleToAdd = [NSArray arrayWithObject:(ABPerson *)[sharedAddressBook recordForUniqueId:modifiedPeopleUniqueIDs]];
+		}
+		
+		[allModifiedPeople addObjectsFromArray:peopleToAdd];
+		[self addToAddressBookDict:peopleToAdd];
+	}
+	
+	//Deletion of existing records
+	if ((deletedPeopleUniqueIDs = [[notification userInfo] objectForKey:kABDeletedRecords])) {
+		if ([deletedPeopleUniqueIDs isKindOfClass:[NSArray class]]) {
+			//We are dealing with multiple records
+			[self removeFromAddressBookDict:deletedPeopleUniqueIDs];
+		} else {
+			//We have only one record
+			[self removeFromAddressBookDict:[NSArray arrayWithObject:deletedPeopleUniqueIDs]];
+		}
+		
+		//Note: We have no way of retrieving the records of people who were removed, so we really can't do much here.
+	}
+	
+	NSEnumerator	*peopleEnumerator;
+	ABPerson		*person;
+	
+	//Do appropriate updates for each updated ABPerson
+	peopleEnumerator = [allModifiedPeople objectEnumerator];
+	while ((person = [peopleEnumerator nextObject])) {
+		if (person == me) {
+			modifiedMe = YES;
+		}
+
+		//It's tempting to not do this if (person == me), but the 'me' contact may also be in the contact list
+		[[adium contactController] updateContacts:[self contactsForPerson:person]
+									  forObserver:self];
+	}
+
+	//Update us if appropriate
+	if (modifiedMe) {
+		[self updateSelfIncludingIcon:YES];
 	}
 	
 	//Stop delaying list object notifications since we are done
 	[[adium contactController] endListObjectNotificationsDelay];
-	
-    [self updateAllContacts];
 }
 
 /*!
@@ -816,13 +923,14 @@ static	ABAddressBook	*sharedAddressBook = nil;
 			
 			//Set account display names
 			if (enableImport) {
-				NSEnumerator	*servicesEnumerator = [[serviceDict allKeys] objectEnumerator];
+				NSEnumerator	*servicesEnumerator;
 				NSString		*serviceID;
 				NSString		*myDisplayName, *myPhonetic = nil;
 				
 				myDisplayName = [self nameForPerson:me phonetic:&myPhonetic];
 				
 				//Check for each service the address book supports
+				servicesEnumerator = [[serviceDict allKeys] objectEnumerator];				
 				while ((serviceID = [servicesEnumerator nextObject])) {
 					NSString		*addressBookKey = [serviceDict objectForKey:serviceID];
 					ABMultiValue	*names = [me valueForProperty:addressBookKey];
@@ -883,6 +991,54 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	[[adium contactController] endListObjectNotificationsDelay];
 }
 
+
+/*
+ * @brief Service ID for an OSCAR UID
+ *
+ * If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
+ * because we may have a .Mac, an ICQ, or an AIM name in the field
+ */
+NSString* serviceIDForOscarUID(NSString *UID)
+{
+	NSString	*serviceID;
+
+	const char	firstCharacter = [UID characterAtIndex:0];
+	
+	//Determine service based on UID
+	if ([UID hasSuffix:@"@mac.com"]) {
+		serviceID = @"Mac";
+	} else if (firstCharacter >= '0' && firstCharacter <= '9') {
+		serviceID = @"ICQ";
+	} else {
+		serviceID = @"AIM";
+	}
+	
+	return serviceID;
+}
+
+/*!
+ * @brief Service ID for a Jabber UID
+ *
+ * If we are on the Jabber server, we need to distinguish between Google Talk (GTalk) and the
+ * rest of the Jabber world. serviceID is already Jabber, so we only need to change if we
+ * have a GTalk UID.
+ */
+NSString* serviceIDForJabberUID(NSString *UID)
+{
+	NSString	*serviceID;
+
+	if ([UID hasSuffix:@"@gmail.com"] ||
+		[UID hasSuffix:@"@googlemail.com"]) {
+		serviceID = @"GTalk";
+
+	} else {
+		serviceID = @"Jabber";
+	}
+	
+	return serviceID;
+}
+
+
 /*!
  * @brief add people to our address book lookup dictionary
  *
@@ -898,15 +1054,12 @@ static	ABAddressBook	*sharedAddressBook = nil;
 - (void)addToAddressBookDict:(NSArray *)people
 {
 	NSEnumerator		*peopleEnumerator;
-	NSArray				*allServiceKeys;
+	NSArray				*allServiceKeys = [serviceDict allKeys];
 	ABPerson			*person;
-	
-	allServiceKeys = [serviceDict allKeys];
 	
 	peopleEnumerator = [people objectEnumerator];
 	while ((person = [peopleEnumerator nextObject])) {
-		
-		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
+		NSEnumerator		*servicesEnumerator;
 		NSString			*serviceID;
 		
 		NSMutableArray		*UIDsArray = [NSMutableArray array];
@@ -943,26 +1096,30 @@ static	ABAddressBook	*sharedAddressBook = nil;
 		}
 		
 		//Now go through the instant messaging keys
+		servicesEnumerator = [allServiceKeys objectEnumerator];
 		while ((serviceID = [servicesEnumerator nextObject])) {
-			NSString				*addressBookKey;
-			ABMultiValue			*names;
-			int						nameCount;
-			
-			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
-											   [serviceID isEqualToString:@"ICQ"]);
-			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+			NSString			*addressBookKey = [serviceDict objectForKey:serviceID];
+			ABMultiValue		*names;
+			int					nameCount;
 
-			if (!(dict = [addressBookDict objectForKey:serviceID])) {
-				dict = [[[NSMutableDictionary alloc] init] autorelease];
-				[addressBookDict setObject:dict forKey:serviceID];
-			}
-			
-			addressBookKey = [serviceDict objectForKey:serviceID];
-			
 			//An ABPerson may have multiple names; iterate through them
 			names = [person valueForProperty:addressBookKey];
 			nameCount = [names count];
 			
+			//Continue to the next serviceID immediately if no names are found
+			if (nameCount == 0) continue;
+			
+			//One or more names were found, so we'll need a dictionary
+			if (!(dict = [addressBookDict objectForKey:serviceID])) {
+				dict = [[NSMutableDictionary alloc] init];
+				[addressBookDict setObject:dict forKey:serviceID];
+				[dict release];
+			}
+
+			BOOL					isOSCAR = ([serviceID isEqualToString:@"AIM"] || 
+											   [serviceID isEqualToString:@"ICQ"]);
+			BOOL					isJabber = [serviceID isEqualToString:@"Jabber"];
+
 			for (i = 0 ; i < nameCount ; i++) {
 				NSString	*UID = [[names valueAtIndex:i] compactedString];
 				if ([UID length]) {
@@ -971,28 +1128,10 @@ static	ABAddressBook	*sharedAddressBook = nil;
 					[UIDsArray addObject:UID];
 					
 					if (isOSCAR) {
-						/* If we are on an OSCAR service we need to resolve our serviceID into the appropriate string
-						 * because we may have a .Mac, an ICQ, or an AIM name in the field
-						 */
-						const char	firstCharacter = [UID characterAtIndex:0];
+						serviceID = serviceIDForOscarUID(UID);
 						
-						//Determine service based on UID
-						if ([UID hasSuffix:@"@mac.com"]) {
-							serviceID = @"Mac";
-						} else if (firstCharacter >= '0' && firstCharacter <= '9') {
-							serviceID = @"ICQ";
-						} else {
-							serviceID = @"AIM";
-						}
 					} else if (isJabber) {
-						/* If we are on the Jabber server, we need to distinguish between Google Talk (GTalk) and the
-						 * rest of the Jabber world. serviceID is already Jabber, so we only need to change if we
-						 * have a GTalk UID.
-						 */
-						if ([UID hasSuffix:@"@gmail.com"] ||
-							[UID hasSuffix:@"@googlemail.com"]) {
-							serviceID = @"GTalk";
-						}
+						serviceID = serviceIDForJabberUID(UID);
 					}
 					
 					[servicesArray addObject:serviceID];
@@ -1011,29 +1150,27 @@ static	ABAddressBook	*sharedAddressBook = nil;
 /*!
  * @brief remove people from our address book lookup dictionary
  */
-- (void)removeFromAddressBookDict:(NSArray *)UIDs
+- (void)removeFromAddressBookDict:(NSArray *)uniqueIDs
 {
-	NSEnumerator		*UIDsEnumerator;
-	NSArray				*allServiceKeys;
-	NSString			*UID;
+	NSEnumerator		*enumerator;
+	NSArray				*allServiceKeys = [serviceDict allKeys];
+	NSString			*uniqueID;
 	
-	allServiceKeys = [serviceDict allKeys];
-	
-	UIDsEnumerator = [UIDs objectEnumerator];
-	while ((UID = [UIDsEnumerator nextObject])) {
-		
-		NSEnumerator		*servicesEnumerator = [allServiceKeys objectEnumerator];
+	enumerator = [uniqueIDs objectEnumerator];
+	while ((uniqueID = [enumerator nextObject])) {
+		NSEnumerator		*servicesEnumerator;
 		NSString			*serviceID;
 		NSMutableDictionary	*dict;
 		
 		//The same person may have multiple services; iterate through them and remove each one.
+		servicesEnumerator = [allServiceKeys objectEnumerator];
 		while ((serviceID = [servicesEnumerator nextObject])) {
 			NSEnumerator *keysEnumerator;
 			NSString *key;
 			
 			dict = [addressBookDict objectForKey:serviceID];
 			
-			keysEnumerator = [[dict allKeysForObject:UID] objectEnumerator];
+			keysEnumerator = [[dict allKeysForObject:uniqueID] objectEnumerator];
 			
 			//The same person may have multiple accounts from the same service; we should remove them all.
 			while ((key = [keysEnumerator nextObject])) {
@@ -1049,7 +1186,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	BOOL	hasABEntry = ([self searchForObject:[[adium menuController] currentContextMenuObject]] != nil);
+	BOOL	hasABEntry = ([self personForListObject:[[adium menuController] currentContextMenuObject]] != nil);
 	BOOL	result = NO;
 	
 	if ([menuItem isEqual:showInABContextualMenuItem] || [menuItem isEqual:editInABContextualMenuItem])
@@ -1065,7 +1202,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)showInAddressBook
 {
-	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
+	ABPerson *selectedPerson = [self personForListObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }
@@ -1075,7 +1212,7 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (void)editInAddressBook
 {
-	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
+	ABPerson *selectedPerson = [self personForListObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@?edit", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
 }

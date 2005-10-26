@@ -47,7 +47,6 @@ typedef enum {
 
     ESAddressBookIntegrationAdvancedPreferences *advancedPreferences;
     
-    NSDictionary        *serviceDict;
 	NSMutableDictionary	*addressBookDict;
 	
 	NSMutableArray		*listObjectArrayForImageData;
