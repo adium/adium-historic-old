@@ -182,6 +182,10 @@ NSString *defaultNameForStatusType(AIStatusType statusType)
 //Set the active status icon pack
 + (BOOL)setActiveStatusIconsFromPath:(NSString *)inPath
 {
+	NSBundle * xtraBundle = [NSBundle bundleWithPath:inPath];
+	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
+		inPath = [xtraBundle resourcePath];
+	
 	if (!statusIconBasePath || ![statusIconBasePath isEqualToString:inPath]) {
 		NSDictionary	*statusIconDict = [NSDictionary dictionaryWithContentsOfFile:[inPath stringByAppendingPathComponent:@"Icons.plist"]];
 		
@@ -294,6 +298,10 @@ static AIStatusType statusTypeForListObject(AIListObject *listObject)
 
 + (NSImage *)previewMenuImageForIconPackAtPath:(NSString *)inPath
 {
+	NSBundle * xtraBundle = [NSBundle bundleWithPath:inPath];
+	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
+		inPath = [xtraBundle resourcePath];
+	
 	NSImage			*image;
 	NSDictionary	*iconDict;
 	
