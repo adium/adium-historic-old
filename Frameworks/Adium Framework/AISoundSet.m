@@ -133,7 +133,7 @@
 	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
 	{
 		inPath = [xtraBundle resourcePath];
-		name = [xtraBundle objectForInfoDictionaryKey:@"CFBundleName"];
+		name = [[xtraBundle objectForInfoDictionaryKey:@"CFBundleName"]retain];
 	}
 	
 	//If we don't have a Sound.plist, assume this is an old format soundset and attempt to upgrade it
