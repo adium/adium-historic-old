@@ -129,6 +129,12 @@
 - (BOOL)_loadSoundSetFromPath:(NSString *)inPath
 {
 	BOOL	success = YES;
+	NSBundle * xtraBundle = [NSBundle bundleWithPath:inPath];
+	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
+	{
+		inPath = [xtraBundle resourcePath];
+		name = [xtraBundle objectForInfoDictionaryKey:@"CFBundleName"];
+	}
 	
 	//If we don't have a Sound.plist, assume this is an old format soundset and attempt to upgrade it
 	NSString *soundPlistPath = [inPath stringByAppendingPathComponent:SOUNDSET_PLIST_FILENAME];
@@ -167,7 +173,8 @@
 			NSDictionary	*localSounds;
 			
 			//Retrieve the set name and information
-			name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
+			if(!name) //this will have been set from info.plist if it's a new-format xtra
+				name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
 			info = [[soundSet objectForKey:SOUNDSET_INFO] retain];
 			
 			//Search locations.  If none are provided, search within the soundset folder.
