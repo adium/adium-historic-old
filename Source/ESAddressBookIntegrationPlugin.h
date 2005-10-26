@@ -70,4 +70,8 @@ typedef enum {
 	BOOL				createMetaContacts;
 }
 
++ (AIService *)serviceFromProperty:(NSString *)property;
+
++ (NSString *)propertyFromService:(AIService *)service;
+
 @end
