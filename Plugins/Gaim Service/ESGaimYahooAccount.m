@@ -474,7 +474,8 @@ gboolean gaim_init_yahoo_plugin(void);
 		return [NSString stringWithFormat:AILocalizedString(@"Initiate Conference with %@",nil), [inContact formattedUID]];
 
 	}  else if (strcmp(label, "View Webcam") == 0) {
-		return [NSString stringWithFormat:AILocalizedString(@"View %@'s Webcam",nil), [inContact formattedUID]];		
+		//return [NSString stringWithFormat:AILocalizedString(@"View %@'s Webcam",nil), [inContact formattedUID]];		
+		return nil;
 	}
 
 	return [super titleForContactMenuLabel:label forContact:inContact];
