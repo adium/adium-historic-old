@@ -492,7 +492,6 @@
 		 * use inContact's remote grouping as the metaContact's grouping.
 		 */
 		if (![containingObject containingObject] && [remoteGroupName length]) {
-#warning meta contacts created while hiding groups will disappear
 			//If no similar objects exist, we add this contact directly to the list
 			AIListGroup *targetGroup;
 
@@ -974,7 +973,8 @@
 	AIListObject	*theObject;
 	
 	enumerator = [[self allContactsWithService:[listObject service]
-										   UID:[listObject UID]] objectEnumerator];
+										   UID:[listObject UID]
+								  existingOnly:YES] objectEnumerator];
 
 	//Remove from the contactToMetaContactLookupDict first so we don't try to reinsert into this metaContact
 	[contactToMetaContactLookupDict removeObjectForKey:[listObject internalObjectID]];
@@ -1514,6 +1514,39 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
     [contactObservers removeObject:[NSValue valueWithNonretainedObject:inObserver]];
 }
 
+
+/*
+ * @brief Update all contacts for an observer, notifying the observer of each one in turn
+ *
+ * @param contacts The contacts to update, or nil to update all contacts
+ * @param inObserver The observer
+ */
+- (void)updateContacts:(NSSet *)contacts forObserver:(id <AIListObjectObserver>)inObserver
+{
+	NSEnumerator	*enumerator;
+	AIListObject	*listObject;
+
+	[self delayListObjectNotifications];
+	
+	enumerator = (contacts ? [contacts objectEnumerator] : [contactDict objectEnumerator]);
+	while ((listObject = [enumerator nextObject])) {
+		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
+		if (attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
+		
+		//If this contact is within a meta contact, update the meta contact too
+		AIListObject	*containingObject = [listObject containingObject];
+		if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
+			NSSet	*attributes = [inObserver updateListObject:containingObject
+														  keys:nil
+														silent:YES];
+			if (attributes) [self listObjectAttributesChanged:containingObject
+												 modifiedKeys:attributes];
+		}
+	}
+	
+	[self endListObjectNotificationsDelay];
+}
+
 //Instructs a controller to update all available list objects
 - (void)updateAllListObjectsForObserver:(id <AIListObjectObserver>)inObserver
 {
@@ -1522,22 +1555,8 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	[self delayListObjectNotifications];
 
-    //Reset all contacts
-	enumerator = [contactDict objectEnumerator];
-	while ((listObject = [enumerator nextObject])) {
-		NSSet	*attributes = [inObserver updateListObject:listObject keys:nil silent:YES];
-		if (attributes) [self listObjectAttributesChanged:listObject modifiedKeys:attributes];
-
-		//If this contact is within a meta contact, update the meta contact too
-		AIListObject	*containingObject = [listObject containingObject];
-		if (containingObject && [containingObject isKindOfClass:[AIMetaContact class]]) {
-			NSSet	*attributes = [inObserver updateListObject:containingObject
-														  keys:nil
-														silent:YES];
-			if (attributes) [self listObjectAttributesChanged:containingObject
-												modifiedKeys:attributes];
-		}
-	}
+	//All contacts
+	[self updateContacts:nil forObserver:inObserver];
 
     //Reset all groups
 	enumerator = [groupDict objectEnumerator];
@@ -1556,6 +1575,7 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	//
 	[self endListObjectNotificationsDelay];
 }
+
 
 //Notify observers of a status change.  Returns the modified attribute keys
 - (NSSet *)_informObserversOfObjectStatusChange:(AIListObject *)inObject withKeys:(NSSet *)modifiedKeys silent:(BOOL)silent
@@ -1800,21 +1820,41 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 	}
 }
 
-- (NSArray *)allContactsWithService:(AIService *)service UID:(NSString *)inUID
+/*
+ * @brief Return a set of all contacts with a specified UID and service
+ *
+ * @param service The AIService in question
+ * @param inUID The UID, which should be normalized (lower case, no spaces, etc.) as appropriate for the service
+ * @param existingOnly If YES, only pre-existing contacts. If NO, an AIListContact is guaranteed to be returned
+ *					   on each compatible account, even if one did not previously exist.
+ */
+- (NSSet *)allContactsWithService:(AIService *)service UID:(NSString *)inUID existingOnly:(BOOL)existingOnly
 {
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
-	NSMutableArray  *returnContactArray = [NSMutableArray array];
+	NSMutableSet	*returnContactSet = [NSMutableSet set];
 
 	enumerator = [[[adium accountController] accountsCompatibleWithService:service] objectEnumerator];
 
 	while ((account = [enumerator nextObject])) {
-		[returnContactArray addObject:[self contactWithService:service
-													   account:account
-														   UID:inUID]];
+		AIListContact	*listContact;
+		
+		if (existingOnly) {
+			listContact = [self existingContactWithService:service
+												   account:account
+													   UID:inUID];
+		} else {
+			listContact = [self contactWithService:service
+										   account:account
+											   UID:inUID];
+		}
+
+		if (listContact) {
+			[returnContactSet addObject:listContact];
+		}
 	}
 
-	return (returnContactArray);
+	return returnContactSet;
 }
 
 - (AIListObject *)existingListObjectWithUniqueID:(NSString *)uniqueID
@@ -1998,19 +2038,20 @@ int contactDisplayNameSort(AIListObject *objectA, AIListObject *objectB, void *c
 
 	while ((listObject = [enumerator nextObject])) {
 		if ([listObject isKindOfClass:[AIMetaContact class]]) {
-			NSArray	*objectsToRemove = nil;
+			NSSet	*objectsToRemove = nil;
 
 			//If the metaContact only has one listContact, we will remove that contact from all accounts
 			if ([[(AIMetaContact *)listObject listContacts] count] == 1) {
 				AIListContact	*listContact = [[(AIMetaContact *)listObject listContacts] objectAtIndex:0];
 				
 				objectsToRemove = [self allContactsWithService:[listContact service]
-														   UID:[listContact UID]];
+														   UID:[listContact UID]
+												  existingOnly:YES];
 			}
 
 			//And actually remove the single contact if applicable
 			if (objectsToRemove) {
-				[self removeListObjects:objectsToRemove];
+				[self removeListObjects:[objectsToRemove allObjects]];
 			}
 			
 			//Now break the metaContact down, taking out all contacts and putting them back in the main list
