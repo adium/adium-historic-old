@@ -57,12 +57,11 @@
 //Init
 - (AIEmoticonPack *)initFromPath:(NSString *)inPath
 {
-    if ((self = [super init]))
-	{
+    if ((self = [super init])) {
 		path = [inPath retain];
 		name = [[[inPath lastPathComponent] stringByDeletingPathExtension] retain];
 		NSBundle * xtraBundle = [NSBundle bundleWithPath:path];
-		if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]]) {//This checks for a new-style xtra
+		if (xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]]) {//This checks for a new-style xtra
 			path = [xtraBundle resourcePath]; //new style xtras store the same info, but it's in Contents/Resources/ so that we can have an info.plist file and use NSBundle
 		}
 		emoticonArray = nil;
