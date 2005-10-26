@@ -130,8 +130,7 @@
 {
 	BOOL	success = YES;
 	NSBundle * xtraBundle = [NSBundle bundleWithPath:inPath];
-	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]])//This checks for a new-style xtra
-	{
+	if(xtraBundle && [[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] isEqualToNumber:[NSNumber numberWithInt:1]]) {
 		inPath = [xtraBundle resourcePath];
 		name = [[xtraBundle objectForInfoDictionaryKey:@"CFBundleName"]retain];
 	}
