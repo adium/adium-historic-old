@@ -29,8 +29,14 @@
 #import <Adium/AIService.h>
 
 #define IMAGE_LOOKUP_INTERVAL   0.01
-#define SHOW_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
-#define EDIT_IN_AB_CONTEXTUAL_AB_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
+#define SHOW_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Show In Address Book", "Show In Address Book Contextual Menu")
+#define EDIT_IN_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Edit In Address Book", "Edit In Address Book Contextual Menu")
+#define ADD_TO_AB_CONTEXTUAL_MENU_TITLE AILocalizedString(@"Add To Address Book", "Add To Address Book Contextual Menu")
+
+#define CONTACT_ADDED_SUCCESS_TITLE		AILocalizedString(@"Success", nil)
+#define CONTACT_ADDED_SUCCESS_Message	AILocalizedString(@"%@ had been successfully added to the Address Book database.\nWould you like to edit it now?", nil)
+#define CONTACT_ADDED_ERROR_TITLE		AILocalizedString(@"Error", nil)
+#define CONTACT_ADDED_ERROR_Message		AILocalizedString(@"An error had occurred while adding %@ to the Address Book database.", nil)
 
 #define AIMServiceUniqueID		@"libgaim-oscar-AIM"
 #define ICQServiceUniqueID		@"libgaim-oscar-ICQ"
@@ -101,19 +107,26 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	//Shared Address Book
 	[sharedAddressBook release]; sharedAddressBook = [[ABAddressBook sharedAddressBook] retain];
 	
-	//Create our contextual menus and install them
-	showInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_IN_AB_CONTEXTUAL_AB_MENU_TITLE
+	//Create our contextual menus
+	showInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:SHOW_IN_AB_CONTEXTUAL_MENU_TITLE
 																			   action:@selector(showInAddressBook)
 																		keyEquivalent:@""] autorelease];
 	[showInABContextualMenuItem setTarget:self];
 	
-	editInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_IN_AB_CONTEXTUAL_AB_MENU_TITLE
+	editInABContextualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:EDIT_IN_AB_CONTEXTUAL_MENU_TITLE
 																					   action:@selector(editInAddressBook)
 																				keyEquivalent:@""] autorelease];
 	[editInABContextualMenuItem setTarget:self];
 	[editInABContextualMenuItem setKeyEquivalentModifierMask:NSAlternateKeyMask];
 	[editInABContextualMenuItem setAlternate:YES];
 	
+	addToABContexualMenuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:ADD_TO_AB_CONTEXTUAL_MENU_TITLE
+																					 action:@selector(addToAddressBook)
+																			  keyEquivalent:@""] autorelease];
+	[addToABContexualMenuItem setTarget:self];
+	
+	//Install our menues
+	[[adium menuController] addContextualMenuItem:addToABContexualMenuItem toLocation:Context_Contact_Action];
 	[[adium menuController] addContextualMenuItem:showInABContextualMenuItem toLocation:Context_Contact_Action];
 	[[adium menuController] addContextualMenuItem:editInABContextualMenuItem toLocation:Context_Contact_Action];
 	
@@ -1036,10 +1049,15 @@ static	ABAddressBook	*sharedAddressBook = nil;
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
-	if ([self searchForObject:[[adium menuController] currentContextMenuObject]])
-		return YES;
-	else
-		return NO;
+	BOOL	hasABEntry = ([self searchForObject:[[adium menuController] currentContextMenuObject]] != nil);
+	BOOL	result = NO;
+	
+	if ([menuItem isEqual:showInABContextualMenuItem] || [menuItem isEqual:editInABContextualMenuItem])
+		result = hasABEntry;
+	else if ([menuItem isEqual:addToABContexualMenuItem])
+		result = !hasABEntry;
+	
+	return result;
 }
 
 /*!
@@ -1060,6 +1078,58 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	ABPerson *selectedPerson = [self searchForObject:[[adium menuController] currentContextMenuObject]];
 	NSString *url = [NSString stringWithFormat:@"addressbook://%@?edit", [selectedPerson uniqueId]];
 	[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
+}
+
+- (void)addToAddressBook
+{
+	AIListObject			*contact = [[adium menuController] currentContextMenuObject];
+	NSString				*serviceProperty = [ESAddressBookIntegrationPlugin propertyFromService:[contact service]];
+	
+	if (serviceProperty) {
+		ABPerson				*person = [[ABPerson alloc] init];
+		ABMutableMultiValue		*multiValue = [[ABMutableMultiValue alloc] init];
+		NSString				*UID = [contact formattedUID];
+		
+		//Set the name
+		[person setValue:[contact displayName] forKey:kABFirstNameProperty];
+		[person setValue:[contact phoneticName] forKey:kABFirstNamePhoneticProperty];
+		
+		//Set the IM property
+		[multiValue addValue:UID withLabel:serviceProperty];
+		[person setValue:multiValue forKey:serviceProperty];
+		
+		//Set the image
+		[person setImageData:[contact userIconData]];
+		
+		//Set the notes
+		[person setValue:[contact notes] forKey:kABNoteProperty];
+		
+		//Add our newly created person to the AB database
+		if ([sharedAddressBook addRecord:person] && [sharedAddressBook save]) {
+			//Save the uid of the new person
+			[contact setPreference:[person uniqueId]
+							forKey:KEY_AB_UNIQUE_ID
+							 group:PREF_GROUP_ADDRESSBOOK];
+			
+			//Ask the user whether it would like to edit the new contact
+			int result = NSRunAlertPanel(CONTACT_ADDED_SUCCESS_TITLE,
+										 CONTACT_ADDED_SUCCESS_Message,
+										 AILocalizedString(@"Yes", nil),
+										 AILocalizedString(@"No", nil), nil, UID);
+			
+			if (result == NSOKButton) {
+				NSString *url = [[NSString alloc] initWithFormat:@"addressbook://%@?edit", [person uniqueId]];
+				[[NSWorkspace sharedWorkspace] openURL:[NSURL URLWithString:url]];
+				[url release];
+			}
+		} else {
+			NSRunAlertPanel(CONTACT_ADDED_ERROR_TITLE, CONTACT_ADDED_ERROR_Message, nil, nil, nil);
+		}
+		
+		//Clean up
+		[multiValue release];
+		[person release];
+	}
 }
 
 @end

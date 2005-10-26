@@ -34,6 +34,8 @@
 
 @protocol AIListObjectObserver, ABImageClient;
 
+@class AIService;
+
 typedef enum {
 	FirstLast = 0,
     First,
@@ -57,6 +59,7 @@ typedef enum {
 	
 	NSMenuItem			*showInABContextualMenuItem;
 	NSMenuItem			*editInABContextualMenuItem;
+	NSMenuItem			*addToABContexualMenuItem;
 
     int                 meTag;
     
