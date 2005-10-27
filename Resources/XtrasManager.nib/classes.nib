@@ -5,18 +5,14 @@
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIXtraInfo; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {
-                browseXtras = id; 
-                checkForUpdates = id; 
-                deleteXtra = id; 
-                setSelectedCategoryIndex = id; 
-            }; 
+            ACTIONS = {browseXtras = id; checkForUpdates = id; deleteXtra = id; }; 
             CLASS = AIXtrasManager; 
             LANGUAGE = ObjC; 
             OUTLETS = {
-                categoryController = NSArrayController; 
+                infoView = NSTextView; 
                 sidebar = NSTableView; 
                 window = NSWindow; 
+                xtraList = NSTableView; 
             }; 
             SUPERCLASS = AIObject; 
         }, 
