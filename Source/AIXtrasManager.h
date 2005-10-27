@@ -30,8 +30,6 @@
 + (AIXtrasManager *) sharedManager;
 - (void) showXtras;
 - (void) loadXtras;
-- (NSArray *) categoryNames;
-- (NSArray *)categoryImages;
 - (NSIndexSet *) selectedCategoryIndex;
 - (IBAction) setSelectedCategoryIndex:(NSIndexSet *)index;
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths;

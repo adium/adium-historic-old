@@ -164,16 +164,6 @@ static NSImage * scriptImage;
 	}
 }
 
-- (NSArray *)categoryNames
-{
-	return categoryNames;
-}
-
-- (NSArray *)categoryImages
-{
-	return categoryImages;
-}
-
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
 {
 	if(returnCode == NSAlertDefaultReturn)
