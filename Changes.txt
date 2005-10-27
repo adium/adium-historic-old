@@ -1,6 +1,19 @@
 				Adium X Version History
 				-----------------------
-Version 0.85
+Version 0.86 (10/27/2005)
+ * Resolved rate limiting error with the AIM protocol [#1780]
+ * Fixed issues when the default download folder does not exist or is not writable [#1823]
+ * Fixed duplicate install messages when installing a zipped xtra which contained a __MACOSX folder
+ * Fixed incompatibilities when using multiple text-to-speech synthesizers [#1929]
+ * Added indication to the File Transfer Progress Window of upload vs. download [#1987]
+ * Middle names can be imported from the Address Book. [#1118]
+ * New log files can now be opened with Firefox. [#706]
+ * .Mac: We no longer add '@mac.com' to ICQ and mobile screen-names [#1832]
+ * ICQ: Aliases are now saved to the server [#466]
+ * Resolved some truncating issues in the status menu. [#1782]
+ * Catalan, Russian, Simplified Chinese, Spanish, and Swedish translation updates
+
+Version 0.85 (10/12/2005)
  * Added a Google Talk service type [#1306]
  * Added "contact joined" and "contact left" group chat status messages as well as corresponding Events [#654]
  * Added %n (username), %a (alias), %m (message), and %t (time) substitution support to the Speak Text action [#142]
