@@ -326,8 +326,6 @@
 										NSMinY(bottomRight) + (line),
 										NSWidth(bottomRight) - (line),
 										NSHeight(bottomRight) - (line));
-		NSPoint	arrowPoint = NSMakePoint(circleRect.origin.x + ((circleRect.size.width) / 2) - (arrowSize.width / 2),
-										 circleRect.origin.y + ((circleRect.size.height) / 2) - (arrowSize.height / 2));
 
 		NSBezierPath *circle = [NSBezierPath bezierPathWithOvalInRect:circleRect];
 		[circle setLineWidth:line];
