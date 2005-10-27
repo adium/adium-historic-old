@@ -198,33 +198,46 @@ gboolean gaim_init_msn_plugin(void);
 	const char *displayName = gaim_connection_get_display_name(gaim_account_get_connection(account));
 	BOOL		invokedFilter = NO;
 	
-	if (displayName &&
-	   strcmp(displayName, [[self UID] UTF8String]) &&
-	   strcmp(displayName, [[self formattedUID] UTF8String])) {
-		/* There is a serverside display name, and it's not the same as our UID. */
-		NSAttributedString	*ourPreference = [[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString];
-		const char			*ourPreferenceUTF8String = [[ourPreference string] UTF8String];
+	//If the friendly name changed since the last time we connected, set it serverside and clear the flag
+	if ([[self preferenceForKey:KEY_MSN_DISPLAY_NAMED_CHANGED
+						  group:GROUP_ACCOUNT_STATUS] boolValue]) {
+		[self updateStatusForKey:@"FullNameAttr"];
+		[self setPreference:nil
+					 forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
+					  group:GROUP_ACCOUNT_STATUS];
 
-		if (!ourPreferenceUTF8String ||
-		   strcmp(ourPreferenceUTF8String, displayName)) {
-			/* The display name is different from our preference. Check if our preference is static. */
-			[[adium contentController] filterAttributedString:ourPreference
-											  usingFilterType:AIFilterContent
-													direction:AIFilterOutgoing
-												filterContext:self
-											  notifyingTarget:self
-													 selector:@selector(gotFilteredFriendlyName:context:)
-													  context:[NSDictionary dictionaryWithObjectsAndKeys:
-														  ourPreference, @"ourPreference",
-														  [NSString stringWithUTF8String:displayName], @"displayName",
-														  nil]];
-			invokedFilter = YES;
+	} else {
+		/* If our locally set friendly name didn't change since the last time we connected, we want to update
+		 * to the serverside settings as appropriate.
+		 */
+		if (displayName &&
+			strcmp(displayName, [[self UID] UTF8String]) &&
+			strcmp(displayName, [[self formattedUID] UTF8String])) {
+			/* There is a serverside display name, and it's not the same as our UID. */
+			NSAttributedString	*ourPreference = [[self preferenceForKey:@"FullNameAttr" group:GROUP_ACCOUNT_STATUS] attributedString];
+			const char			*ourPreferenceUTF8String = [[ourPreference string] UTF8String];
+			
+			if (!ourPreferenceUTF8String ||
+				strcmp(ourPreferenceUTF8String, displayName)) {
+				/* The display name is different from our preference. Check if our preference is static. */
+				[[adium contentController] filterAttributedString:ourPreference
+												  usingFilterType:AIFilterContent
+														direction:AIFilterOutgoing
+													filterContext:self
+												  notifyingTarget:self
+														 selector:@selector(gotFilteredFriendlyName:context:)
+														  context:[NSDictionary dictionaryWithObjectsAndKeys:
+															  ourPreference, @"ourPreference",
+															  [NSString stringWithUTF8String:displayName], @"displayName",
+															  nil]];
+				invokedFilter = YES;
+			}
 		}
-	}
-	
-	if (!invokedFilter) {
-		[self gotFilteredFriendlyName:nil
-							  context:nil];
+		
+		if (!invokedFilter) {
+			[self gotFilteredFriendlyName:nil
+								  context:nil];
+		}
 	}
 }
 

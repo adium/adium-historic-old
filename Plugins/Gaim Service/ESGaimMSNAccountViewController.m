@@ -17,6 +17,7 @@
 #import "ESGaimMSNAccountViewController.h"
 #import "ESGaimMSNAccount.h"
 #import <Adium/AIAccount.h>
+#ipmort <AIUtilities/AIStringAdditions.h>
 
 @implementation ESGaimMSNAccountViewController
 
@@ -35,9 +36,19 @@
 //Save controls
 - (void)saveConfiguration
 {
-    [super saveConfiguration];
 	[account setPreference:[NSNumber numberWithBool:[checkBox_HTTPConnectMethod state]] 
 					forKey:KEY_MSN_HTTP_CONNECT_METHOD group:GROUP_ACCOUNT_STATUS];
+	
+	//Alias
+	if (![account online] &&
+		![[textField_alias stringValue] isEqualToString:[NSAttributedString stringWithData:[account preferenceForKey:@"FullNameAttr"
+																											   group:GROUP_ACCOUNT_STATUS]]]) {
+		[account setPreference:[NSNumber numberWithBool:YES]
+						forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
+						 group:GROUP_ACCOUNT_STATUS];
+	}
+
+	[super saveConfiguration];
 }
 
 @end
