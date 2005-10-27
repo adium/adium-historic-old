@@ -20,16 +20,18 @@
 	NSMutableDictionary				*disabledXtras;
 	NSMutableArray					*categoryNames;
 	NSMutableArray					*xtrasCategories;
+	NSMutableArray					*categoryImages;
 	int								selectionIndex;
 	IBOutlet NSArrayController		*categoryController;
-	IBOutlet NSArrayController		*nameController;
 	IBOutlet NSWindow				*window;
+	IBOutlet NSTableView			*sidebar;
 }
 
 + (AIXtrasManager *) sharedManager;
 - (void) showXtras;
 - (void) loadXtras;
 - (NSArray *) categoryNames;
+- (NSArray *)categoryImages;
 - (NSIndexSet *) selectedCategoryIndex;
 - (IBAction) setSelectedCategoryIndex:(NSIndexSet *)index;
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths;
@@ -39,4 +41,8 @@
 - (IBAction) checkForUpdates:(id)sender;
 
 + (void) createXtraBundleAtPath:(NSString *)path;
+
+- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
+- (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
+- (int)numberOfRowsInTableView:(NSTableView *)tableView;
 @end
