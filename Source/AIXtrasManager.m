@@ -168,7 +168,7 @@
 + (void) createXtraBundleAtPath:(NSString *)path 
 {
 	NSFileManager * manager = [NSFileManager defaultManager];
-	NSString * name = [path lastPathComponent];
+	NSString * name = [[path lastPathComponent] stringByDeletingPathExtension];
 	if(![manager fileExistsAtPath:path])
 	{
 		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
@@ -185,12 +185,6 @@
 		path = [path stringByAppendingPathComponent:@"Resources"];
 		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
 	}
-}
-
-+ (BOOL) isXtraAtPath:(NSString *)path
-{
-	NSBundle * xtraBundle = [NSBundle bundleWithPath:path];
-	return (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1));
 }
 
 @end
