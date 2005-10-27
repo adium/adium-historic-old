@@ -17,7 +17,7 @@
 #import "ESGaimMSNAccountViewController.h"
 #import "ESGaimMSNAccount.h"
 #import <Adium/AIAccount.h>
-#ipmort <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIStringAdditions.h>
 
 @implementation ESGaimMSNAccountViewController
 
