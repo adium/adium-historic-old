@@ -140,7 +140,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 			[self silenceAllContactUpdatesForInterval:2.0];
 			[[adium contactController] delayListObjectNotificationsUntilInactivity];		
 		}
-		
+
 		//If the name we were passed differs from the current formatted UID of the contact, it's itself a formatted UID
 		//This is important since we may get an alias ("Evan Schoenberg") from the server but also want the formatted name
 		if (![contactName isEqualToString:[theContact formattedUID]] && ![contactName isEqualToString:[theContact UID]]) {
@@ -193,7 +193,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 					   asStatusMessage:[self useDisplayNameAsStatusMessage]
 							  silently:silentAndDelayed];
 
-	} else {				
+	} else {
 		//If it's the same characters as the UID, apply it as a formatted UID
 		if (![gaimAlias isEqualToString:[theContact formattedUID]] && 
 			![gaimAlias isEqualToString:[theContact UID]]) {
