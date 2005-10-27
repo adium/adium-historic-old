@@ -13,28 +13,30 @@
  * You should have received a copy of the GNU General Public License along with this program; if not,
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-#import <Adium/AIObject.h>
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
+
+@class AIXtraInfo;
 
 @interface AIXtrasManager : AIObject {
 	NSMutableDictionary				*disabledXtras;
 	NSMutableArray					*categoryNames;
-	NSMutableArray					*xtrasCategories;
+	NSMutableArray					*categories;
 	NSMutableArray					*categoryImages;
-	int								selectionIndex;
-	IBOutlet NSArrayController		*categoryController;
+	NSMutableArray					*selectedCategory;
 	IBOutlet NSWindow				*window;
 	IBOutlet NSTableView			*sidebar;
+	IBOutlet NSTableView			*xtraList;
+	IBOutlet NSTextView				*infoView;
+	NSString						*infoPath;
 }
 
 + (AIXtrasManager *) sharedManager;
 - (void) showXtras;
 - (void) loadXtras;
-- (NSIndexSet *) selectedCategoryIndex;
-- (IBAction) setSelectedCategoryIndex:(NSIndexSet *)index;
+- (IBAction) setCategory:(id)sender;
 - (NSArray *) arrayOfXtrasAtPaths:(NSArray *)paths;
 - (IBAction) browseXtras:(id)sender;
-
 - (IBAction) deleteXtra:(id)sender;
 - (IBAction) checkForUpdates:(id)sender;
 

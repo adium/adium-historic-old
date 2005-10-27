@@ -21,6 +21,7 @@
 #import <AIUtilities/AIImageTextCell.h>
 #import <AIUtilities/AIGradientCell.h>
 #import <AIUtilities/AIImageAdditions.h>
+#import <AIUtilities/AIArrayAdditions.h>
 
 #define ADIUM_XTRAS_PAGE					AILocalizedString(@"http://www.adiumxtras.com/","Adium xtras page. Localized only if a translated version exists.")
 
@@ -41,7 +42,6 @@
 																name:Adium_Xtras_Changed
 															  object:nil];
 	[self loadXtras];
-	selectionIndex = 0;
 	[NSBundle loadNibNamed:@"XtrasManager" owner:self];
 	
 	AIImageTextCell			*cell;
@@ -52,7 +52,13 @@
 	[[sidebar tableColumnWithIdentifier:@"name"] setDataCell:cell];
 	[cell release];
 	
-	[self setSelectedCategoryIndex:[NSIndexSet indexSetWithIndex:0]];
+	cell = [[AIImageTextCell alloc] init];
+	[cell setFont:[NSFont systemFontOfSize:12]];
+	[cell setDrawsGradientHighlight:YES];
+	[[xtraList tableColumnWithIdentifier:@"xtras"] setDataCell:cell];
+	[cell release];
+	
+	[self setCategory:nil];
 	
 	[window makeKeyAndOrderFront:nil];
 }
@@ -81,40 +87,40 @@ static NSImage * scriptImage;
 		emoticonSetImage = [NSImage imageNamed:@"AdiumEmoticonset"];
 		scriptImage = [NSImage imageNamed:@"AdiumScripts"];
 	}
-	if (xtrasCategories) {
-		[xtrasCategories autorelease];
+	if (categories) {
+		[categories autorelease];
 		[categoryNames autorelease];
 		[categoryImages autorelease];
 	}
-	xtrasCategories = [[NSMutableArray alloc] init];
+	categories = [[NSMutableArray alloc] init];
 	categoryNames = [[NSMutableArray alloc] init];
 	categoryImages = [[NSMutableArray alloc] init];
 	
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIContactListDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Contact List Themes"];
 	[categoryImages addObject:listThemeImage];
 	
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIMessageStylesDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Message Styles"];
 	[categoryImages addObject:messageStyleImage];
 
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIStatusIconsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Status Icons"];
 	[categoryImages addObject:statusIconImage];
 
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AISoundsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Sound Sets"];
 	[categoryImages addObject:soundSetImage];
 
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIDockIconsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Dock Icons"];
 	[categoryImages addObject:dockIconImage];
 
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIEmoticonsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Emoticons"];
 	[categoryImages addObject:emoticonSetImage];
 
-	[xtrasCategories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIScriptsDirectory, AIAllDomainsMask, YES)]];
+	[categories addObject:[self arrayOfXtrasAtPaths:AISearchPathForDirectoriesInDomains(AIScriptsDirectory, AIAllDomainsMask, YES)]];
 	[categoryNames addObject:@"Scripts"];
 	[categoryImages addObject:scriptImage];
 }
@@ -140,28 +146,16 @@ static NSImage * scriptImage;
 
 - (void) dealloc
 {
-	[xtrasCategories release];
+	[categories release];
 	[categoryNames release];
 	[super dealloc];
 }
 
-- (NSIndexSet *)selectedCategoryIndex
-{
-	return [NSIndexSet indexSetWithIndex:selectionIndex];
-}
-
 - (IBAction) setCategory:(id)sender
 {
-	[self setSelectedCategoryIndex:[sidebar selectedRowIndexes]];
-}
-
-- (void) setSelectedCategoryIndex:(NSIndexSet *)index
-{
-	if([index count] > 0)
-	{
-		selectionIndex = [index firstIndex];
-		[categoryController setContent:[xtrasCategories objectAtIndex:selectionIndex]];
-	}
+	selectedCategory = [categories objectAtIndex:[sidebar selectedRow]];
+	[xtraList selectRow:0 byExtendingSelection:NO];
+	[xtraList reloadData];
 }
 
 - (void)deleteXtrasAlertDidEnd:(NSAlert *)alert returnCode:(int)returnCode contextInfo:(void *)contextInfo
@@ -169,16 +163,19 @@ static NSImage * scriptImage;
 	if(returnCode == NSAlertDefaultReturn)
 	{
 		NSFileManager * manager = [NSFileManager defaultManager];
-		NSEnumerator * selectionEnu = [[categoryController selectedObjects] objectEnumerator];
-		AIXtraInfo * xtra;
-		while((xtra = [selectionEnu nextObject]))
+		NSIndexSet * indices = [xtraList selectedRowIndexes];
+		int i;
+		for (i = [indices lastIndex]; i >= 0; i--)
 		{
-			[manager removeFileAtPath:[xtra path] handler:nil];
+			if ([indices containsIndex:i]) {
+				[manager removeFileAtPath:[[selectedCategory objectAtIndex:i] path] handler:nil];
+			}
 		}
-		[categoryController remove:nil];
+		[selectedCategory removeObjectsAtIndexes:indices];
+		[xtraList selectRow:0 byExtendingSelection:NO];
+		[xtraList reloadData];
 	}
 }
-
 
 - (IBAction) deleteXtra:(id)sender
 {
@@ -227,27 +224,55 @@ static NSImage * scriptImage;
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	[cell setImage:[categoryImages objectAtIndex:row]];
-	[cell setSubString:nil];
+	if (tableView == sidebar) {
+		[cell setImage:[categoryImages objectAtIndex:row]];
+		[cell setSubString:nil];
+	}
+	else {
+		[cell setImage:[[selectedCategory objectAtIndex:row] icon]];
+		[cell setSubString:nil];
+	}
 }
 
 - (int)numberOfRowsInTableView:(NSTableView *)tableView
 {
-	return [categoryNames count];
+	if (tableView == sidebar) {
+		return [categoryNames count];
+	}
+	else {
+		return [selectedCategory count];
+	}
 }
 
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
-	return [categoryNames objectAtIndex:row];
+	if (tableView == sidebar) {
+		return [categoryNames objectAtIndex:row];
+	}
+	else {
+		return [[selectedCategory objectAtIndex:row] name];
+	}
 }
 
-- (BOOL)tableView:(NSTableView *)tableView shouldSelectRow:(int)row
+- (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
-	if (row >= 0 && row < [categoryNames count]) {		
-		[self setSelectedCategoryIndex:[NSIndexSet indexSetWithIndex:row]];
-		return YES;
-    } else
-		return NO;
+	if ([aNotification object] == xtraList) {
+		NSString * newPath;
+		if ([[xtraList selectedRowIndexes] count] > 1) { //more than one xtra selected
+			newPath = [[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"];
+		}
+		else {
+			newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] readMePath];
+		}
+		if (![newPath isEqualToString:infoPath]) {
+			[infoPath autorelease];
+			infoPath = [newPath retain];
+			[infoView readRTFDFromFile:infoPath];
+		}
+	}
+	else if ([aNotification object] == sidebar) {
+		[self setCategory:nil];
+	}
 }
 
 @end
