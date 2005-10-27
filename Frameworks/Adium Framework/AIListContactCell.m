@@ -110,10 +110,11 @@
 	int		width = [super cellWidth];
 	
 	//Name
-	NSAttributedString	*displayName = [[[NSAttributedString alloc] initWithString:[self labelString]
-																		attributes:[self labelAttributes]] autorelease];
+	NSAttributedString	*displayName = [[NSAttributedString alloc] initWithString:[self labelString]
+																	   attributes:[self labelAttributes]];
 	width += [displayName size].width;
-	
+	[displayName release];
+
 	//User icon
 	if (userIconVisible) {
 		width += userIconSize.width;
@@ -143,14 +144,17 @@
 //Font used to display status text
 - (void)setStatusFont:(NSFont *)inFont
 {
-	[statusFont autorelease];
-	statusFont = [inFont retain];
-	
-	//Calculate and cache the height of this font
-	statusFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self statusFont] forKey:NSFontAttributeName]];
-	
-	//Flush the status attributes cache
-	[_statusAttributes release]; _statusAttributes = nil;
+	if (statusFont != inFont) {
+		[statusFont release];
+		statusFont = [inFont retain];
+		
+		//Calculate and cache the height of this font
+		statusFontHeight = [NSAttributedString stringHeightForAttributes:[NSDictionary dictionaryWithObject:[self statusFont]
+																									 forKey:NSFontAttributeName]];
+		
+		//Flush the status attributes cache
+		[_statusAttributes release]; _statusAttributes = nil;
+	}
 }
 - (NSFont *)statusFont{
 	return statusFont;
