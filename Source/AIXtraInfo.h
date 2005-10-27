@@ -15,9 +15,9 @@
  */
 
 #import <Cocoa/Cocoa.h>
+#import <Adium/AIObject.h>
 
-
-@interface AIXtraInfo : NSObject {
+@interface AIXtraInfo : AIObject {
 	NSString		*name;
 	NSString		*path;
 	NSImage			*icon;
