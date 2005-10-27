@@ -366,8 +366,8 @@
  * - When changing ownership of a contact, a filter is not necessary, since all the accounts should have the same service
  *   types and requirements.
  * - When account code retrieves contacts from the contact list, filtering is NOT done.  It is up to the account to
- *   ensure it passes UID's in the proper format for its service type.
- * - Filter UIDs only when the user has entered or mucked with them in some way... UD's TO and FROM account code
+ *   ensure it passes UIDs in the proper format for its service type.
+ * - Filter UIDs only when the user has entered or mucked with them in some way... UID's TO and FROM account code
  *   SHOULD ALWAYS BE VALID.
  * @return NSString filtered UID
  */
