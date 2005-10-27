@@ -17,4 +17,5 @@
 - (void)addObjectsFromArrayIgnoringDuplicates:(NSArray *)inArray;
 - (void)moveObject:(id)object toIndex:(unsigned)newIndex;
 - (void)setObject:(id)object atIndex:(unsigned)index;
+- (void)removeObjectsAtIndexes:(NSIndexSet *)indexes;//XXX 10.3 compatibility, this is implemented in 10.4
 @end
