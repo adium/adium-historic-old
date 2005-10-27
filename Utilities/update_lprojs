@@ -51,9 +51,20 @@ Resources \
 
     if [ -d $lang.lproj ] ; then
     	cd $lang.lproj
+    	
+    	# Death to backup nibs
     	rm -rf *~.nib
+
+    	####
+    	# Copy all files from the nib which are listed in nib.bom.
+    	# nib.bom is a BOM file listing classes.nib, keyedobjects.nib, and objects.nib
+    	# We do this to avoid copying the .svn folder
+    	####
     	find . '(' -name "*.nib" ')' -prune \
-    	   -execdir ditto "{}" "$1/$resources/$lang.lproj/{}" ';'
+    	   -execdir ditto -bom "$MYDIR/nib.bom" \
+    	   "{}" "$1/$resources/$lang.lproj/{}" ';'
+    	   
+        # Copy the strings files
     	cp *.strings "$1/$resources/$lang.lproj"
 
     	cd ..
