@@ -47,9 +47,7 @@
 		}
 		else {
 			name = [[[path lastPathComponent] stringByDeletingPathExtension]retain];
-		}
-		if(!readMePath)
-			readMePath = [[[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"]retain];	
+		}	
 		if(!icon)
 			icon = [[[NSWorkspace sharedWorkspace] iconForFile:path]retain];
 	}
