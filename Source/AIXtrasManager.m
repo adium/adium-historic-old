@@ -257,13 +257,9 @@ static NSImage * scriptImage;
 - (void)tableViewSelectionDidChange:(NSNotification *)aNotification
 {
 	if ([aNotification object] == xtraList) {
-		NSString * newPath;
-		if ([[xtraList selectedRowIndexes] count] > 1) { //more than one xtra selected
+		NSString * 	newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] readMePath];
+		if ([[xtraList selectedRowIndexes] count] > 1 || !newPath) //more than one xtra selected or no desc provided
 			newPath = [[NSBundle mainBundle] pathForResource:@"DefaultXtraReadme" ofType:@"rtf"];
-		}
-		else {
-			newPath = [[selectedCategory objectAtIndex:[xtraList selectedRow]] readMePath];
-		}
 		if (![newPath isEqualToString:infoPath]) {
 			[infoPath autorelease];
 			infoPath = [newPath retain];
