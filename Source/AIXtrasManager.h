@@ -37,4 +37,7 @@
 
 - (IBAction) deleteXtra:(id)sender;
 - (IBAction) checkForUpdates:(id)sender;
+
++ (void) createXtraBundleAtPath:(NSString *)path;
++ (BOOL) isXtraAtPath:(NSString *)path;
 @end

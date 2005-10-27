@@ -165,4 +165,32 @@
 	
 }
 
++ (void) createXtraBundleAtPath:(NSString *)path 
+{
+	NSFileManager * manager = [NSFileManager defaultManager];
+	NSString * name = [path lastPathComponent];
+	if(![manager fileExistsAtPath:path])
+	{
+		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+		path = [path stringByAppendingPathComponent:@"Contents"];
+		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+		[[NSDictionary dictionaryWithObjectsAndKeys:
+			@"English", kCFBundleDevelopmentRegionKey,
+			name, kCFBundleNameKey,
+			@"AdIM", @"CFBundlePackageType",
+			[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
+			[NSNumber numberWithInt:1], @"XtraBundleVersion",
+			@"1.0", kCFBundleInfoDictionaryVersionKey,
+			nil] writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
+		path = [path stringByAppendingPathComponent:@"Resources"];
+		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+	}
+}
+
++ (BOOL) isXtraAtPath:(NSString *)path
+{
+	NSBundle * xtraBundle = [NSBundle bundleWithPath:path];
+	return (xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1));
+}
+
 @end
