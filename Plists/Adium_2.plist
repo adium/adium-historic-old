@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>AIBuildDate</key>
+	<string>%%BUILD_DATE%%</string>
+	<key>AIBuildIdentifier</key>
+	<string>%%BUILD_IDENTIFIER%%</string>
+	<key>AppleDockIconEnabled</key>
+	<string>YES</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>English</string>
 	<key>CFBundleDocumentTypes</key>
@@ -123,6 +129,22 @@
 			<string>AdiumListLayout.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium List Layout</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ListLayout</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumListLayout.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium List Layout</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AdIM</string>
@@ -131,6 +153,22 @@
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
 			<false/>
+		</dict>
+		<dict>
+			<key>CFBundleTypeExtensions</key>
+			<array>
+				<string>ListTheme</string>
+			</array>
+			<key>CFBundleTypeIconFile</key>
+			<string>AdiumListTheme.icns</string>
+			<key>CFBundleTypeName</key>
+			<string>Adium List Theme</string>
+			<key>CFBundleTypeRole</key>
+			<string>Viewer</string>
+			<key>LSTypeIsPackage</key>
+			<true/>
+			<key>NSPersistentStoreTypeKey</key>
+			<string>Binary</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -282,11 +320,5 @@
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>AppleDockIconEnabled</key>
-	<string>YES</string>
-	<key>AIBuildIdentifier</key>
-	<string>%%BUILD_IDENTIFIER%%</string>
-	<key>AIBuildDate</key>
-	<string>%%BUILD_DATE%%</string>
 </dict>
 </plist>

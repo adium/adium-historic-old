@@ -23,6 +23,7 @@
 #import "ESContactListAdvancedPreferences.h"
 #import <AIUtilities/AIDictionaryAdditions.h>
 #import <AIUtilities/AIStringAdditions.h>
+#import "AIXtrasManager.h"
 
 #warning crosslink
 #import "AIAppearancePreferencesPlugin.h"
@@ -200,13 +201,14 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 //Create a layout or theme set
 + (BOOL)createSetFromPreferenceGroup:(NSString *)preferenceGroup withName:(NSString *)setName extension:(NSString *)extension inFolder:(NSString *)folder
 {
-	NSString		*path, *destFolder;
+	NSString		*path;
 	NSString		*fileName = [[setName safeFilenameString] stringByAppendingPathExtension:extension];
 	AIAdium			*sharedAdiumInstance = [AIObject sharedAdiumInstance];
 
-	//If we don't find one, create a path to the application support directory
-	destFolder = [[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder];
-	path = [destFolder stringByAppendingPathComponent:fileName];
+	//If we don't find one, create a path to a bundle in the application support directory
+	path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
+	[AIXtrasManager createXtraBundleAtPath:path];
+	path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
 	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
 		
@@ -298,14 +300,17 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 	NSMutableArray	*setArray = [NSMutableArray array];
 	NSEnumerator	*enumerator = [[[AIObject sharedAdiumInstance] allResourcesForName:folder withExtensions:extension] objectEnumerator];
 	NSMutableArray	*alreadyAddedArray = [NSMutableArray array];
-	NSString		*filePath;
+	NSString		*filePath, *name;
+	NSBundle		*xtraBundle;
 	
     while ((filePath = [enumerator nextObject])) {
+		name = [[filePath lastPathComponent] stringByDeletingPathExtension];
+		xtraBundle = [NSBundle bundleWithPath:filePath];
+		if(xtraBundle && ([[xtraBundle objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1))
+			filePath = [[xtraBundle resourcePath] stringByAppendingPathComponent:@"Data.plist"];
 		NSDictionary 	*themeDict = [NSDictionary dictionaryWithContentsOfFile:filePath];
 		
-		if (themeDict) {
-			NSString	*name = [[filePath lastPathComponent] stringByDeletingPathExtension];
-			
+		if (themeDict) {			
 			//The Adium resource path is last in our resourcePaths array; by only adding sets we haven't
 			//already added, we allow precedence to occur rather than conflict.
 			if ([alreadyAddedArray indexOfObject:name] == NSNotFound) {
