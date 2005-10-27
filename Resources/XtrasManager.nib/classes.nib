@@ -1,5 +1,7 @@
 {
     IBClasses = (
+        {CLASS = AIGradientCell; LANGUAGE = ObjC; SUPERCLASS = NSCell; }, 
+        {CLASS = AIImageTextCell; LANGUAGE = ObjC; SUPERCLASS = AIGradientCell; }, 
         {CLASS = AIObject; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {CLASS = AIXtraInfo; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
@@ -13,7 +15,7 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 categoryController = NSArrayController; 
-                nameController = NSArrayController; 
+                sidebar = NSTableView; 
                 window = NSWindow; 
             }; 
             SUPERCLASS = AIObject; 
