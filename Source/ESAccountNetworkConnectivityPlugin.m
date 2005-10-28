@@ -24,7 +24,6 @@
 #import <Adium/AIListObject.h>
 
 @interface ESAccountNetworkConnectivityPlugin (PRIVATE)
-- (void)autoConnectAccounts;
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable;
 - (BOOL)_accountsAreOnlineOrDisconnecting;
 @end
@@ -34,7 +33,7 @@
  * @brief Handle account connection and disconnection
  *
  * Accounts are automatically connected and disconnected based on:
- *	- Per-account autoconnect preferences (at Adium launch if the network is available)
+ *	- If the account is enabled (at Adium launch if the network is available)
  *  - Network connectivity (disconnect when the Internet is not available and connect when it is available again)
  *  - System sleep (disconnect when the system sleeps and connect when it wakes up)
  *
@@ -47,7 +46,7 @@
  */
 - (void)installPlugin
 {
-	//Wait for Adium to finish launching to handle autoconnecting accounts
+	//Wait for Adium to finish launching to handle autoconnecting enabled accounts
 	[[adium notificationCenter] addObserver:self
 								   selector:@selector(adiumFinishedLaunching:)
 									   name:Adium_CompletedApplicationLoad
@@ -87,6 +86,21 @@
 	[super dealloc];
 }
 
+- (BOOL)shouldAutoconnectAllEnabled
+{
+	NSUserDefaults	*userDefaults = [NSUserDefaults standardUserDefaults];
+	NSNumber		*didAutoconnectAll = [userDefaults objectForKey:@"Adium 1.0 First Time:Autoconnected All"];
+	BOOL			shouldAutoconnectAllEnabled = NO;
+	
+	if (!didAutoconnectAll) {
+		[userDefaults setObject:[NSNumber numberWithBool:YES] forKey:@"Adium 1.0 First Time:Autoconnected All"];
+		[userDefaults synchronize];
+		shouldAutoconnectAllEnabled = YES;
+	}
+	
+	return shouldAutoconnectAllEnabled;
+}
+
 /*!
  * @brief Adium finished launching
  *
@@ -95,19 +109,22 @@
 - (void)adiumFinishedLaunching:(NSNotification *)notification
 {
 	if (![NSEvent shiftKey]) {
-		AIHostReachabilityMonitor *monitor = [AIHostReachabilityMonitor defaultMonitor];
+		NSArray						*accounts = [[adium accountController] accounts];
+		AIHostReachabilityMonitor	*monitor = [AIHostReachabilityMonitor defaultMonitor];
+		BOOL						shouldAutoconnectAll = [self shouldAutoconnectAllEnabled];
 
-		NSArray *accounts = [[adium accountController] accounts];
-
-		//start off forbidding all accounts from auto-connecting.
+		//Start off forbidding all accounts from auto-connecting.
 		accountsToConnect    = [[NSMutableSet alloc] initWithArray:accounts];
 		accountsToNotConnect = [accountsToConnect mutableCopy];
 		knownHosts			 = [[NSMutableSet alloc] init];
-			
-		//add ourselves to the default host-reachability monitor as an observer for each account's host.
-		//at the same time, weed accounts that are to be auto-connected out of the accountsToNotConnect set.
-		NSEnumerator *accountsEnum = [accounts objectEnumerator];
-		AIAccount *account;
+		
+		/* Add ourselves to the default host-reachability monitor as an observer for each account's host.
+		 * At the same time, weed accounts that are to be auto-connected out of the accountsToNotConnect set.
+		 */
+		NSEnumerator	*accountsEnum;
+		AIAccount		*account;
+		
+		accountsEnum = [accounts objectEnumerator];
 		while ((account = [accountsEnum nextObject])) {
 			if ([account connectivityBasedOnNetworkReachability]) {
 				NSString *host = [account host];
@@ -117,26 +134,25 @@
 				}
 
 				//if this is an account we should auto-connect, remove it from accountsToNotConnect so that we auto-connect it.
-				if ([[account supportedPropertyKeys] containsObject:@"Online"]
-				&& [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue])
-				{
+				if ([account enabled] &&
+					([account shouldBeOnline] ||
+					 shouldAutoconnectAll)) {
 					[accountsToNotConnect removeObject:account];
 					continue; //prevent the account from being removed from accountsToConnect.
 				}
 
 			}  else if ([[account supportedPropertyKeys] containsObject:@"Online"]
-						&& [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]) {
+						&& [account enabled]) {
 				/* This account does not connect based on network reachability, but can go online
 				 * and should autoconnect.  Connect it immediately.
 				 */
-				[account setPreference:[NSNumber numberWithBool:YES] 
-								forKey:@"Online"
-								 group:GROUP_ACCOUNT_STATUS];					
+				[account setShouldBeOnline:YES];
 			}
 
 			[accountsToConnect removeObject:account];
 		}
-
+		
+		[knownHosts release];
 	}
 }
 
@@ -187,61 +203,28 @@
  */
 - (void)handleConnectivityForAccount:(AIAccount *)account reachable:(BOOL)reachable
 {
+	AILog(@"handleConnectivityForAccount: %@ reachable: %i",account,reachable);
+
 	if (reachable) {
 		//If we are now online and are waiting to connect this account, do it if the account hasn't already
 		//been taken care of.
 		if ([accountsToConnect containsObject:account]) {
-			if (![account integerStatusObjectForKey:@"Online"] &&
-			   ![account integerStatusObjectForKey:@"Connecting"] &&
-			   ![[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-				[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
+			if (![account online] &&
+				![account integerStatusObjectForKey:@"Connecting"]) {
+				[account setShouldBeOnline:YES];
 				[accountsToConnect removeObject:account];
 			}
 		}
 	} else {
 		//If we are no longer online and this account is connected, disconnect it.
-		if (([account integerStatusObjectForKey:@"Online"] ||
+		if (([account online] ||
 			 [account integerStatusObjectForKey:@"Connecting"]) &&
-			![account integerStatusObjectForKey:@"Disconnecting"] &&
-			[[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-			[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+			![account integerStatusObjectForKey:@"Disconnecting"]) {
+			[account disconnect];
 			[accountsToConnect addObject:account];
 		}
 	}
 }
-
-#if 0
-//Autoconnecting Accounts (at startup) ---------------------------------------------------------------------------------
-#pragma mark Autoconnecting Accounts (at startup)
-/*!
- * @brief Auto connect accounts
- *
- * Automatically connect to accounts flagged with an auto connect property as soon as a network connection is available
- */
-- (void)autoConnectAccounts
-{
-    NSEnumerator	*enumerator;
-    AIAccount		*account;
-	
-	//Determine the accounts which want to be autoconnected
-	enumerator = [[[adium accountController] accounts] objectEnumerator];
-	while ((account = [enumerator nextObject])) {
-		if ([[account supportedPropertyKeys] containsObject:@"Online"] &&
-		   [[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-
-			//If basing connectivity on the network, add it to our array of accounts to connect;
-			//otherwise, sign it on immediately
-			if ([account connectivityBasedOnNetworkReachability]) {
-				[accountsToConnect addObject:account];
-			} else {
-				[account setPreference:[NSNumber numberWithBool:YES] 
-								forKey:@"Online"
-								 group:GROUP_ACCOUNT_STATUS];
-			}
-		}
-	}
-}
-#endif //0
 
 //Disconnect / Reconnect on sleep --------------------------------------------------------------------------------------
 #pragma mark Disconnect/Reconnect On Sleep
@@ -256,10 +239,9 @@
 		AIAccount		*account;
 		
 		while ((account = [enumerator nextObject])) {
-			if ([[account supportedPropertyKeys] containsObject:@"Online"] &&
-			   [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
+			if ([account online]) {
 				//Disconnect the account and add it to our list to reconnect
-				[account setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+				[account disconnect];
 				[accountsToConnect addObject:account];
 			}
 		}
@@ -300,7 +282,7 @@
 	AIAccount		*account;
     
 	while ((account = [enumerator nextObject])) {
-		if ([[account statusObjectForKey:@"Online"] boolValue] ||
+		if ([account online] ||
 		   [[account statusObjectForKey:@"Disconnecting"] boolValue]) {
 			return YES;
 		}
@@ -321,7 +303,7 @@
 	enumerator = [[[adium accountController] accounts] objectEnumerator];	
 	while ((account = [enumerator nextObject])) {
 		if (![account connectivityBasedOnNetworkReachability] && [accountsToConnect containsObject:account]) {
-			[account setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+			[account setShouldBeOnline:YES];
 			[accountsToConnect removeObject:account];
 		}
 	}
