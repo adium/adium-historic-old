@@ -169,7 +169,8 @@
 	
 	//Add a menuitem for each account the delegate allows (or all accounts if it doesn't specify)
 	while ((account = [enumerator nextObject])) {
-		if (!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account]) {
+		if ([account enabled] &&
+			(!delegateRespondsToShouldIncludeAccount || [delegate accountMenu:self shouldIncludeAccount:account])) {
 			NSMenuItem *menuItem = [[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:@""
 																						target:self
 																						action:@selector(selectAccountMenuItem:)
@@ -237,27 +238,40 @@
 {
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
+		BOOL		rebuilt = NO;
 		
-		//Append the account actions menu for online accounts
-		if (menuItem && submenuType == AIAccountOptionsSubmenu) {
-			if ([inModifiedKeys containsObject:@"Online"]) {
-				[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
-			}
-		}
-		
-		//Update menu items to reflect status changes
-		if ([inModifiedKeys containsObject:@"Online"] ||
-		   [inModifiedKeys containsObject:@"Connecting"] ||
-		   [inModifiedKeys containsObject:@"Disconnecting"] ||
-		   [inModifiedKeys containsObject:@"IdleSince"] ||
-		   [inModifiedKeys containsObject:@"StatusState"]) {
-			
+		if ([inModifiedKeys containsObject:@"Enabled"]) {
+			//Rebuild the menu when the enabled state changes
+			[self rebuildMenu];
+			rebuilt = YES;
+
+		} else if ([inModifiedKeys containsObject:@"Online"] ||
+				   [inModifiedKeys containsObject:@"Connecting"] ||
+				   [inModifiedKeys containsObject:@"Disconnecting"] ||
+				   [inModifiedKeys containsObject:@"IdleSince"] ||
+				   [inModifiedKeys containsObject:@"StatusState"]) {
+			//Update menu items to reflect status changes
+
 			//Update the changed menu item (or rebuild the entire menu if this item should be removed or added)
 			if (delegateRespondsToShouldIncludeAccount &&
 			   ([delegate accountMenu:self shouldIncludeAccount:(AIAccount *)inObject] != (menuItem == nil))) {
 				[self rebuildMenu];
+				rebuilt = YES;
+
 			} else {
 				[self _updateMenuItem:menuItem];
+			}
+		}
+
+		if (submenuType == AIAccountOptionsSubmenu) {
+			if (rebuilt) menuItem = [self menuItemForAccount:(AIAccount *)inObject];
+
+			//Append the account actions menu for online accounts
+			if (menuItem) {
+				NSLog(@"%i %@ %@ online:%i",rebuilt,menuItem,inModifiedKeys,[inObject online]);
+				if ([inModifiedKeys containsObject:@"Online"]) {
+					[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
+				}
 			}
 		}
 	}
