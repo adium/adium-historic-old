@@ -101,10 +101,11 @@
 {
 	if ([inObject isKindOfClass:[AIAccount class]]) {
 		if ([inModifiedKeys containsObject:@"Online"] ||
+			[inModifiedKeys containsObject:@"Enabled"] ||
 		   [inModifiedKeys containsObject:@"Connecting"] ||
 		   [inModifiedKeys containsObject:@"Disconnecting"] ||
-		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
-		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
+//		   [inModifiedKeys containsObject:@"ConnectionProgressString"] ||
+//		   [inModifiedKeys containsObject:@"ConnectionProgressPercent"] ||
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusState"]) {
 
@@ -362,13 +363,13 @@
 	NSString 	*identifier = [tableColumn identifier];
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
-	if ([identifier isEqualToString:@"icon"]) {
-		return [[account userIcon] imageByScalingToSize:NSMakeSize(28,28)];
-
-	} else if ([identifier isEqualToString:@"service"]) {
+	if ([identifier isEqualToString:@"service"]) {
 		return [[AIServiceIcons serviceIconForObject:account
 												type:AIServiceIconLarge
-										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)];
+										   direction:AIIconNormal] imageByScalingToSize:NSMakeSize(24,24)
+																			   fraction:([account enabled] ?
+																						 1.0 :
+																						 0.75)];
 
 	} else if ([identifier isEqualToString:@"name"]) {
 		return [[account formattedUID] length] ? [account formattedUID] : NEW_ACCOUNT_DISPLAY_TEXT;
@@ -376,14 +377,19 @@
 	} else if ([identifier isEqualToString:@"status"]) {
 		NSString	*title;
 		
-		if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
-			title = AILocalizedString(@"Connecting",nil);
-		} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
-			title = AILocalizedString(@"Disconnecting",nil);
-		} else if ([[account statusObjectForKey:@"Online"] boolValue]) {
-			title = AILocalizedString(@"Online",nil);
+		if ([account enabled]) {
+			if ([[account statusObjectForKey:@"Connecting"] boolValue]) {
+				title = AILocalizedString(@"Connecting",nil);
+			} else if ([[account statusObjectForKey:@"Disconnecting"] boolValue]) {
+				title = AILocalizedString(@"Disconnecting",nil);
+			} else if ([[account statusObjectForKey:@"Online"] boolValue]) {
+				title = AILocalizedString(@"Online",nil);
+			} else {
+				title = STATUS_DESCRIPTION_OFFLINE;
+			}
+
 		} else {
-			title = STATUS_DESCRIPTION_OFFLINE;
+			title = AILocalizedString(@"Disabled",nil);
 		}
 
 		return title;
@@ -394,8 +400,12 @@
 		
 	} else if ([identifier isEqualToString:@"enabled"]) {
 		return nil;
+
+	} else if ([identifier isEqualToString:@"icon"]) {
+		return [[account userIcon] imageByScalingToSize:NSMakeSize(28,28)];
+		
 	}
-	
+
 	return nil;
 }
 
@@ -408,8 +418,10 @@
 	AIAccount	*account = [accountArray objectAtIndex:row];
 	
 	if ([identifier isEqualToString:@"enabled"]) {
-		BOOL online = [[account preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
-		[cell setState:(online ? NSOnState : NSOffState)];
+		[cell setState:([account enabled] ? NSOnState : NSOffState)];
+
+	} else if ([identifier isEqualToString:@"name"]) {
+		[cell setEnabled:[account enabled]];
 
 	} else if ([identifier isEqualToString:@"status"]) {
 		[cell setEnabled:([[account statusObjectForKey:@"Connecting"] boolValue] ||
@@ -427,7 +439,7 @@
 - (void)tableView:(NSTableView *)tableView setObjectValue:(id)object forTableColumn:(NSTableColumn *)tableColumn row:(int)row
 {
 	if ([[tableColumn identifier] isEqualToString:@"enabled"]) {
-		[[accountArray objectAtIndex:row] setPreference:object forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		[[accountArray objectAtIndex:row] setEnabled:[(NSNumber *)object boolValue]];
 	}
 }
 
