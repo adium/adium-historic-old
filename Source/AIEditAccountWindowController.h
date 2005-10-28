@@ -25,7 +25,6 @@
 	IBOutlet	NSTextField					*textField_serviceName;
 	IBOutlet	AIImageViewWithImagePicker  *imageView_userIcon;
     IBOutlet	NSTabView					*tabView_auxiliary;
-	IBOutlet	NSButton					*checkBox_autoConnect;
 	IBOutlet	NSButton					*button_cancel;
 	IBOutlet	NSButton					*button_OK;
 	
