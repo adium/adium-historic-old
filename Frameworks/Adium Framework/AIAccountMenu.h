@@ -15,8 +15,10 @@
  */
 
 #import <Adium/AIAbstractListObjectMenu.h>
+#import "AIStateMenuPlugin.h"
 
 @protocol AIListObjectObserver;
+@class AIAccount;
 
 typedef enum {
 	AIAccountNoSubmenu = 0,
