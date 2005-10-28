@@ -191,6 +191,7 @@
 			@"Display Name",
 			@"StatusState",
 			KEY_USER_ICON,
+			@"Enabled",
 			nil];
 	}
 
