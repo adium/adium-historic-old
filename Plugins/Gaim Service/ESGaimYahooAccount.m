@@ -81,7 +81,7 @@ gboolean gaim_init_yahoo_plugin(void);
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Incorrect password"].location != NSNotFound) {
-			[[adium accountController] forgetPasswordForAccount:self];
+			[self serverReportedInvalidPassword];
 		} else if ([*disconnectionError rangeOfString:@"logged in on a different machine or device"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
