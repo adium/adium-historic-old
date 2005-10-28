@@ -24,6 +24,7 @@
 #define KEY_CONNECT_HOST 			@"Connect Host"
 #define KEY_CONNECT_PORT 			@"Connect Port"
 #define KEY_ACCOUNT_CHECK_MAIL		@"Check Mail"
+#define KEY_ENABLED					@"Enabled"
 
 #define	Adium_RequestImmediateDynamicContentUpdate	@"Adium_RequestImmediateDynamicContentUpdate"
 
