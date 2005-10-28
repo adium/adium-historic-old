@@ -163,7 +163,7 @@ gboolean gaim_init_gg_plugin(void);
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Authentication failed"].location != NSNotFound) {
-			[[adium accountController] forgetPasswordForAccount:self];
+			[self serverReportedInvalidPassword];
 		}
 	}
 	

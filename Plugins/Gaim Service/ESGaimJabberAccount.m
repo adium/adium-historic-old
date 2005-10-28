@@ -308,7 +308,7 @@ gboolean gaim_init_jabber_plugin(void);
 			shouldReconnect = NO;
 
 		} else if ([*disconnectionError rangeOfString:@"Authentication Failure"].location != NSNotFound) {
-			[[adium accountController] forgetPasswordForAccount:self];
+			[self serverReportedInvalidPassword];
 		}
 	}
 	
@@ -325,7 +325,7 @@ gboolean gaim_init_jabber_plugin(void);
 			break;
 
 		default:
-			[[adium accountController] forgetPasswordForAccount:self];
+			[self serverReportedInvalidPassword];
 			break;
 	}
 	

@@ -37,7 +37,7 @@ gboolean gaim_init_novell_plugin(void);
 	
 	if (disconnectionError && *disconnectionError) {
 		if ([*disconnectionError rangeOfString:@"Invalid username or password"].location != NSNotFound) {
-			[[adium accountController] forgetPasswordForAccount:self];
+			[self serverReportedInvalidPassword];
 		} else if ([*disconnectionError rangeOfString:@"you logged in at another workstation"].location != NSNotFound) {
 			shouldAttemptReconnect = NO;
 		}
