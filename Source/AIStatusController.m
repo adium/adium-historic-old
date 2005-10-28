@@ -101,8 +101,10 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  */
 - (void)controllerDidLoad
 {
-	NSNotificationCenter *adiumNotificationCenter = [adium notificationCenter];
-	
+	NSNotificationCenter	*adiumNotificationCenter = [adium notificationCenter];
+	NSEnumerator			*enumerator;
+	AIAccount				*account;
+
 	//Update our state menus when the state array or status icon set changes
 	[adiumNotificationCenter addObserver:self
 								selector:@selector(rebuildAllStateMenus)
@@ -113,38 +115,9 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 									name:AIStatusIconSetDidChangeNotification
 								  object:nil];
 	[[adium contactController] registerListObjectObserver:self];
-	
-	//Watch account status preference changes for our accountsToConnect set
- 	[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
-	
+
 	[self buildBuiltInStatusTypes];
 
-	/* Load our array of accounts which were connected when we quit; these will be the accounts to connect if an online
-	 * status is selected with no accounts online.
-	 */
-	NSArray	*savedAccountsToConnect = [[adium preferenceController] preferenceForKey:@"SavedAccountsToConnect"
-																			   group:GROUP_ACCOUNT_STATUS];
-	NSEnumerator	*enumerator;
-	AIAccount		*account;
-
-	if (savedAccountsToConnect) {
-		NSString		*internalObjectID;
-
-		enumerator = [savedAccountsToConnect objectEnumerator];
-		while ((internalObjectID = [enumerator nextObject])) {
-			AIAccount	*account = [[adium accountController] accountWithInternalObjectID:internalObjectID];
-			if (account) [accountsToConnect addObject:account];
-		}
-	} else {
-		/* First launch situation.  Use auto connect if possible to avoid signing on all accounts. */
-		enumerator = [[[adium accountController] accounts] objectEnumerator];
-		while ((account = [enumerator nextObject])) {
-			if ([[account preferenceForKey:@"AutoConnect" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-				[accountsToConnect addObject:account];
-			}
-		}
-	}
-	
 	//Put each account into the status it was in last time we quit.
 	BOOL		needToRebuildMenus = NO;
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
@@ -195,24 +168,14 @@ static 	NSMutableSet			*temporaryStateArray = nil;
  * Save the online accounts; they will be the accounts connected by a global status change
  *
  * Also save the current status state of each account so it can be restored on next launch.
- *
- * Note: accountsToConnect is not the same as online accounts. It may, for example, have a single entry which is
- * the last account to have been connected (if no accounts are currently online).
  */
 - (void)controllerWillClose
 {
-	NSMutableArray	*savedAccountsToConnect = [NSMutableArray array];
 	NSEnumerator	*enumerator;
 	AIAccount		*account;
 
 	enumerator = [[[adium accountController] accounts] objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		
-		//If this account is online, we'll want to save its internalObjectID.
-		if ([account online]) {
-			[savedAccountsToConnect addObject:[account internalObjectID]];
-		}
-		
 		/* Store the current status state for use on next launch.
 		 *
 		 * We use the statusObjectForKey:@"StatusState" accessor rather than [account statusState]
@@ -227,10 +190,6 @@ static 	NSMutableSet			*temporaryStateArray = nil;
 						forKey:@"LastStatus"
 						 group:GROUP_ACCOUNT_STATUS];
 	}
-
-	[[adium preferenceController] setPreference:savedAccountsToConnect
-										 forKey:@"SavedAccountsToConnect"
-										  group:GROUP_ACCOUNT_STATUS];
 	
 	[[adium preferenceController] setPreference:[NSKeyedArchiver archivedDataWithRootObject:[self stateArray]]
 										 forKey:KEY_SAVED_STATUS
@@ -595,32 +554,20 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 	AIAccount		*account;
 	AIStatus		*aStatusState;
 	BOOL			shouldRebuild = NO;
-	BOOL			noConnectedAccounts = ![[adium accountController] oneOrMoreConnectedAccounts];
-
-	//We should connect all accounts if our accounts to connect array is empty and there are no connected accounts
-	BOOL			shouldConnectAllAccounts = (([accountsToConnect count] == 0) &&
-												noConnectedAccounts);
 
 	isProcessingGlobalChange = YES;
 	[self setDelayStateMenuUpdates:YES];
 	
 	enumerator = [accountArray objectEnumerator];
 	while ((account = [enumerator nextObject])) {
-		if ([account online] ||
-		   (noConnectedAccounts && [accountsToConnect containsObject:account]) || 
-		   (shouldConnectAllAccounts)) {
-			/* If this account is online, or no accounts are online and this is an account to connect,
-			 * or we should be connecting all accounts, set the status completely.
-			 */
+		if ([account enabled]) {
 			[account setStatusState:statusState];
+
 		} else {
-			/* If this account should not have its state set now, perform internal bookkeeping so a future sign-on
-			 * will be to the most appropriate state
-			 */
-			[account setStatusStateAndRemainOffline:statusState];
+			[account setStatusStateAndRemainOffline:statusState];			
 		}
 	}
-	
+
 	//Any objects in the temporary state array which aren't the state we just set should now be removed.
 	enumerator = [[[temporaryStateArray copy] autorelease] objectEnumerator];
 	while ((aStatusState = [enumerator nextObject])) {
@@ -909,7 +856,8 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		AIAccount			*account;
 
 		while ((account = [enumerator nextObject])) {
-			if ([account online] || [account integerStatusObjectForKey:@"Connecting"]) {
+			if ([account enabled] &&
+				([account online] || [account integerStatusObjectForKey:@"Connecting"])) {
 				[_allActiveStatusStates addObject:[account statusState]];
 			}
 		}
@@ -1213,11 +1161,11 @@ int _statusArraySort(id objectA, id objectB, void *context)
 										  target:self
 										  action:@selector(selectCustomState:)
 								   keyEquivalent:@""];
-				
-	[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-													 statusType:statusType
-													   iconType:AIStatusIconList
-													  direction:AIIconNormal] copy] autorelease]];
+
+	[menuItem setImage:[AIStatusIcons statusIconForStatusName:nil
+												   statusType:statusType
+													 iconType:AIStatusIconList
+													direction:AIIconNormal]];
 	[menuItem setTag:statusType];
 	
 	return [menuItem autorelease];
@@ -1282,10 +1230,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 											  action:@selector(selectState:)
 									   keyEquivalent:@""];
 
-		/* NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
-		 * shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
-		 */
-		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setImage:[statusState icon]];
 		[menuItem setTag:currentStatusType];
 		[menuItem setToolTip:[statusState statusMessageString]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
@@ -1301,17 +1246,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		 * which didn't get a "Custom..." item yet.  At present, our last status type should always be
 		 * our AIOfflineStatusType, so this will never be executed and just exists for completeness.
 		 */
-		menuItem = [[NSMenuItem alloc] initWithTitle:STATUS_TITLE_CUSTOM
-											  target:self
-											  action:@selector(selectCustomState:)
-									   keyEquivalent:@""];
-		[menuItem setImage:[[[AIStatusIcons statusIconForStatusName:nil
-														 statusType:currentStatusType
-														   iconType:AIStatusIconList
-														  direction:AIIconNormal] copy] autorelease]];
-		[menuItem setTag:currentStatusType];
-		[menuItemArray addObject:menuItem];
-		[menuItem release];
+		[menuItemArray addObject:[self customMenuItemForStatusType:currentStatusType]];
 	}
 
 	//Now that we are done creating the menu items, tell the plugin about them
@@ -1439,52 +1374,14 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		   [inModifiedKeys containsObject:@"IdleSince"] ||
 		   [inModifiedKeys containsObject:@"StatusState"]) {
 
+			[self _resetActiveStatusState];
+
 			//Don't update the state menus if we are currently delaying
 			if (stateMenuUpdateDelays == 0) [self updateAllStateMenuSelections];
-
-			//We can get here without the preferencesChanged: notification if the account is automatically connected.
-			if ([inModifiedKeys containsObject:@"Online"]) {
-				if ([inObject online]) [accountsToConnect addObject:inObject];
-			}
 		}
 	}
 
     return nil;
-}
-
-/*!
- * @brief Preferences changed; update our accountsToConnect tracking set
- *
- * We use the preferences changed notifications rather than the statusObject notifications because the statusObject
- * may not change immediately upon requesting a connect or disconnect, since the account may wait to receive confirmation
- * before reporting itself as online or offline.  With the preferences changed notification, we can distinguish a user
- * disconnect from selecting the global Offline menu item.
- */
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	if ([key isEqualToString:@"Online"]) {
-		/* Track the accounts we should connect when setting to an online state.  Our goal is to be able to reconnect
-		* the most recently connected account if accounts are disconnected one-by-one.  If accounts are disconnected
-		* all at once via the global Offline menu item, we want to restore all of the previously connected accounts when
-		* reconnecting, so we check to see if we are disconnecting via that menu item with the
-		* isProcessingGlobalChange BOOL.
-		*/
-		if (!isProcessingGlobalChange) {
-			if ([[object preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
-				[accountsToConnect addObject:object];
-			} else {
-				if ([accountsToConnect count] > 1) {
-					[accountsToConnect removeObject:object];
-				}
-			}
-		}
-
-		/* Clear these caches now. Observers which get called before we do when an account actually connects
-		 * will want to get a fresh value.
-		 */
-		[self _resetActiveStatusState];
-	}
 }
 
 /*!
@@ -1854,10 +1751,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 											  action:nil
 									   keyEquivalent:@""];
 
-		/* NSMenuItem will call setFlipped: on the image we pass it, causing flipped drawing elsewhere if we pass it the
-		 * shared status icon.  So we pass it a copy of the shared icon that it's free to manipulate.
-		 */
-		[menuItem setImage:[[[statusState icon] copy] autorelease]];
+		[menuItem setImage:[statusState icon]];
 		[menuItem setTag:[statusState statusType]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
