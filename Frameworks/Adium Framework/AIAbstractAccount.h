@@ -24,6 +24,8 @@
 - (NSString *)host;
 - (int)port;
 - (void)filterAndSetUID:(NSString *)inUID;
+- (BOOL)enabled;
+- (void)setEnabled:(BOOL)inEnabled;
 
 //Status
 - (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key object:(AIListObject *)object
@@ -54,11 +56,14 @@
 - (void)removeStatusObjectsFromContact:(AIListContact *)listContact silently:(BOOL)silent;
 
 //Connectivity
+- (BOOL)shouldBeOnline;
+- (void)setShouldBeOnline:(BOOL)inShouldBeOnline;
 - (void)didConnect;
 - (NSSet *)contactStatusObjectKeys;
 - (void)didDisconnect;
 - (void)connectScriptCommand:(NSScriptCommand *)command;
 - (void)disconnectScriptCommand:(NSScriptCommand *)command;
+- (void)serverReportedInvalidPassword;
 
 //FUS Disconnecting
 - (void)autoReconnectAfterDelay:(int)delay;

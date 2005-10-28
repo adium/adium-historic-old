@@ -27,8 +27,11 @@
 #import <AIUtilities/AIMutableOwnerArray.h>
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIApplicationAdditions.h>
+#import <AIUtilities/AIDictionaryAdditions.h>
 
 #define FILTERED_STRING_REFRESH    30.0    //delay in seconds between refresh of our attributed string statuses when needed
+
+#define	ACCOUNT_DEFAULTS			@"AccountDefaults"
 
 /*!
  * @class AIAbstractAccount
@@ -59,9 +62,18 @@
 		
 		//Handle the preference changed monitoring (for account status) for our subclass
 		[[adium preferenceController] registerPreferenceObserver:self forGroup:GROUP_ACCOUNT_STATUS];
-		
-		//Clear the online state.  'Auto-Connect' values are used, not the previous online state.
-		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+
+		//Register the defaults
+		static NSDictionary	*defaults = nil;
+
+		if (!defaults) {
+			defaults = [[NSDictionary dictionaryNamed:ACCOUNT_DEFAULTS
+											 forClass:[AIAccount class]] retain];
+		}
+
+		[[adium preferenceController] registerDefaults:defaults
+											  forGroup:GROUP_ACCOUNT_STATUS
+												object:self];
 		[self updateStatusForKey:@"FullNameAttr"];
 		[self updateStatusForKey:@"FormattedUID"];
 		
@@ -183,6 +195,24 @@
 - (int)port
 {
 	return [[self preferenceForKey:KEY_CONNECT_PORT group:GROUP_ACCOUNT_STATUS] intValue];
+}
+
+/*!
+ * @brief Is this account enabled?
+ */
+- (BOOL)enabled
+{
+	return [[self preferenceForKey:KEY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];	
+}
+
+/*!
+ * @brief Set if this account is enabled
+ */
+- (void)setEnabled:(BOOL)inEnabled
+{
+	[self setPreference:[NSNumber numberWithBool:inEnabled]
+				 forKey:KEY_ENABLED
+				  group:GROUP_ACCOUNT_STATUS];
 }
 
 /*!
@@ -315,16 +345,19 @@
     //Online status changed
     //Call connect or disconnect as appropriate
     if ([key isEqualToString:@"Online"]) {
-        if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue]) {
+        if ([self shouldBeOnline] &&
+			[self enabled]) {
             if (!areOnline && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-				if ([self requiresPassword]) {
+				if ([self requiresPassword] && !password) {
 					//Retrieve the user's password and then call connect
 					[[adium accountController] passwordForAccount:self 
 												  notifyingTarget:self
 														 selector:@selector(passwordReturnedForConnect:context:)
 														  context:nil];
 				} else {
-					//Connect immediately without retrieving a password
+					/* Connect immediately without retrieving a password because we either don't need one or
+					 * already have one.
+					 */
 					[self connect];
 				}
 				
@@ -347,9 +380,7 @@
 		} else {
 			//XXX behavior for setting a status when account is currently offline:
 			//Check if account is 'enabled' in the accounts preferences.  If so, bring it online in the specified state.
-			[self setPreference:[NSNumber numberWithBool:YES]
-						 forKey:@"Online"
-						  group:GROUP_ACCOUNT_STATUS];
+			[self setShouldBeOnline:YES];
 		}
 		
 	} else if ([key isEqualToString:@"FullNameAttr"]) {
@@ -367,9 +398,19 @@
 		//Transfer formatted UID to status dictionary
 		[self setStatusObject:[self preferenceForKey:@"FormattedUID" group:GROUP_ACCOUNT_STATUS]
 					   forKey:@"FormattedUID"
-					   notify:YES];
+					   notify:NotifyNow];
 		
-	} 
+	} else if ([key isEqualToString:@"Enabled"]) {
+		BOOL	enabled = [self enabled];
+		
+		//We are now enabled so should go online, or we are now disabled so should disconnect
+		[self setShouldBeOnline:enabled];
+		
+		//Set a status object so observers are notified
+		[self setStatusObject:[NSNumber numberWithBool:enabled]
+					   forKey:@"Enabled"
+					   notify:NotifyNow];
+	}
 }
 
 #pragma mark Status States
@@ -382,9 +423,7 @@
 - (void)setStatusState:(AIStatus *)statusState
 {
 	if ([statusState statusType] == AIOfflineStatusType) {
-		[self setPreference:[NSNumber numberWithBool:NO] 
-					 forKey:@"Online"
-					  group:GROUP_ACCOUNT_STATUS];
+		[self setShouldBeOnline:NO];
 		
 	} else {
 		//Store the status state as a status object so it can be easily used elsewhere
@@ -534,12 +573,15 @@
 		}
 
     } else {
-		[self setPreference:nil
-					 forKey:@"Online"
-					  group:GROUP_ACCOUNT_STATUS];
+		[self setShouldBeOnline:NO];
 	}
 }
 
+- (void)serverReportedInvalidPassword
+{
+	[[adium accountController] forgetPasswordForAccount:self];
+	[password release]; password = nil;
+}
 
 //Auto-Refreshing Status String ----------------------------------------------------------------------------------------
 #pragma mark Auto-Refreshing Status String
@@ -827,6 +869,32 @@
 #pragma mark Connectivity
 
 /*!
+ * @brief Should the account be online?
+ *
+ * This indicates whether the user desires the account to be online, not the actual online state.
+ */
+- (BOOL)shouldBeOnline
+{
+	return [[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue];
+}
+
+/*!
+ * @brief Set if this account should be online
+ *
+ * This is how the account should be informed that the user's desired online/offline status for the account
+ * changed; this may be called as a result of a status change, for example.
+ *
+ * If shouldBeOnline is YES, the account will be brought online in the status state it was in last.
+ * If shouldBeOnline is NO, the account will be disconnected.
+ */
+- (void)setShouldBeOnline:(BOOL)shouldBeOnline
+{
+	[self setPreference:[NSNumber numberWithBool:shouldBeOnline]
+				 forKey:@"Online"
+				  group:GROUP_ACCOUNT_STATUS];	
+}
+
+/*!
  * @brief The account did connect
  *
  * Subclasses should call this on self after connecting
@@ -866,11 +934,9 @@
 - (void)_autoReconnectTimer:(NSTimer *)inTimer
 {
 	//If we still want to be online, and we're not yet online, continue with the reconnect
-    if ([[self preferenceForKey:@"Online" group:GROUP_ACCOUNT_STATUS] boolValue] &&
-	   ![[self statusObjectForKey:@"Online"] boolValue] && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
-		[self setPreference:[NSNumber numberWithBool:YES] 
-					 forKey:@"Online" 
-					  group:GROUP_ACCOUNT_STATUS];
+    if ([self shouldBeOnline] &&
+	   ![self online] && ![[self statusObjectForKey:@"Connecting"] boolValue]) {
+		[self updateStatusForKey:@"Online"];
     }
 	
 	//Clean up the timer
@@ -962,7 +1028,7 @@
  */
 - (void)connectScriptCommand:(NSScriptCommand *)command
 {
-	[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
+	[self setShouldBeOnline:YES];
 }
 
 /*!
@@ -972,7 +1038,7 @@
  */
 - (void)disconnectScriptCommand:(NSScriptCommand *)command
 {
-	[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];	
+	[self setShouldBeOnline:NO];
 }
 
 //Fast user switch disconnecting ---------------------------------------------------------------------------------------
@@ -1004,7 +1070,7 @@
 - (void)fastUserSwitchLeave:(NSNotification *)notification
 {
 	if ([self online]) {
-		[self setPreference:[NSNumber numberWithBool:NO] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		[self setShouldBeOnline:NO];
 		disconnectedByFastUserSwitch = YES;
 	}
 }
@@ -1017,7 +1083,7 @@
 - (void)fastUserSwitchReturn:(NSNotification *)notification
 {
 	if (disconnectedByFastUserSwitch) {
-		[self setPreference:[NSNumber numberWithBool:YES] forKey:@"Online" group:GROUP_ACCOUNT_STATUS];
+		[self setShouldBeOnline:YES];
 		disconnectedByFastUserSwitch = NO;
 	}
 }
