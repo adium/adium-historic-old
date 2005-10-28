@@ -16,6 +16,8 @@
 
 #import <Adium/AIActionDetailsPane.h>
 
+@class AIAccountMenu, AIListContact;
+
 @interface ESSendMessageAlertDetailPane : AIActionDetailsPane {
 	IBOutlet	NSPopUpButton   	*popUp_messageFrom;
 	IBOutlet	NSPopUpButton   	*popUp_messageTo;
@@ -27,6 +29,7 @@
 	IBOutlet	NSTextField			*label_Message;
 	
 	AIListContact					*toContact;
+	AIAccountMenu					*accountMenu;
 }
 
 @end

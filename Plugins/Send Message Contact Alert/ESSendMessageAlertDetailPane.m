@@ -25,6 +25,7 @@
 #import <Adium/AIListContact.h>
 #import <Adium/AIMetaContact.h>
 #import <Adium/AIUserIcons.h>
+#import <Adium/AIAccountMenu.h>
 
 @interface ESSendMessageAlertDetailPane (PRIVATE)
 - (void)setDestinationContact:(AIListContact *)inContact;
@@ -50,12 +51,19 @@
 	[label_Message setLocalizedString:AILocalizedString(@"Message:",nil)];
 
 	[button_useAnotherAccount setLocalizedString:AILocalizedString(@"Use another account if necessary",nil)];
+	
+	accountMenu = [[AIAccountMenu accountMenuWithDelegate:self
+							   submenuType:AIAccountNoSubmenu
+										   showTitleVerbs:NO] retain];
+	//Update 'from' menu
+	[popUp_messageFrom setMenu:[accountMenu menu]];
 }
 
 //
 - (void)viewWillClose
 {
 	[toContact release]; toContact = nil;
+	[accountMenu release]; accountMenu = nil;
 }
 
 //Configure for the action
@@ -97,12 +105,21 @@
 //Return our current configuration
 - (NSDictionary *)actionDetails
 {
-	return [NSDictionary dictionaryWithObjectsAndKeys:
-		[toContact internalObjectID], KEY_MESSAGE_SEND_TO,
-		[[[popUp_messageFrom selectedItem] representedObject] internalObjectID], KEY_MESSAGE_SEND_FROM,
-		[NSNumber numberWithBool:[button_useAnotherAccount state]], KEY_MESSAGE_OTHER_ACCOUNT,
-		[[textView_message textStorage] dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
-		nil];
+	NSDictionary	*actionDetails;
+
+	if (toContact &&
+		[popUp_messageFrom numberOfItems] && [popUp_messageFrom selectedItem]) {
+		actionDetails = [NSDictionary dictionaryWithObjectsAndKeys:
+			[toContact internalObjectID], KEY_MESSAGE_SEND_TO,
+			[[[popUp_messageFrom selectedItem] representedObject] internalObjectID], KEY_MESSAGE_SEND_FROM,
+			[NSNumber numberWithBool:[button_useAnotherAccount state]], KEY_MESSAGE_OTHER_ACCOUNT,
+			[[textView_message textStorage] dataRepresentation], KEY_MESSAGE_SEND_MESSAGE,
+			nil];
+	} else {
+		actionDetails = nil;
+	}
+	
+	return actionDetails;
 }
 
 //Destination contact was selected from menu
@@ -137,25 +154,42 @@
 		[firstMenuItem setImage:[AIUserIcons menuUserIconForObject:toContact]];
 		[popUp_messageTo selectItemAtIndex:0];
 		
-		//Update 'from' menu
-#warning Broken
-		[popUp_messageFrom setMenu:[[adium accountController] menuOfAccountsForSendingContentType:CONTENT_MESSAGE_TYPE
-																					 toListObject:toContact
-																					   withTarget:self
-																				   includeOffline:YES]];
-
 		//Select preferred account
 		preferredAccount = [[adium accountController] preferredAccountForSendingContentType:CONTENT_MESSAGE_TYPE
 																							   toContact:toContact];
 		if (preferredAccount) [popUp_messageFrom selectItemWithRepresentedObject:preferredAccount];
 
+		//Rebuild the account menu to be appropriate
+		[accountMenu rebuildMenu];
 	}
 }
 
-//Source account was selected from menu
-- (void)selectAccount:(id)sender
+- (void)accountMenu:(AIAccountMenu *)inAccountMenu didRebuildMenuItems:(NSArray *)menuItems
 {
-	//Empty
+	[popUp_messageFrom setMenu:[accountMenu menu]];
+
+	[popUp_messageFrom synchronizeTitleAndSelectedItem];
+}
+
+- (BOOL)accountMenu:(AIAccountMenu *)inAccountMenu shouldIncludeAccount:(AIAccount *)inAccount
+{
+	BOOL		shouldInclude = NO;
+	NSString	*accountServiceClass = [[inAccount service] serviceClass];
+
+	if ([toContact isKindOfClass:[AIMetaContact class]]) {
+		NSEnumerator	*enumerator;
+		AIListContact	*listContact;
+		
+		enumerator = [[(AIMetaContact *)toContact listContacts] objectEnumerator];
+		while ((listContact = [enumerator nextObject]) && !shouldInclude) {
+			shouldInclude = [accountServiceClass isEqualToString:[[toContact service] serviceClass]];
+		}
+
+	} else {
+		shouldInclude = [accountServiceClass isEqualToString:[[toContact service] serviceClass]];
+	}
+	
+	return shouldInclude;
 }
 
 @end
