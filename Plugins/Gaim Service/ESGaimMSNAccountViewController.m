@@ -17,7 +17,7 @@
 #import "ESGaimMSNAccountViewController.h"
 #import "ESGaimMSNAccount.h"
 #import <Adium/AIAccount.h>
-#import <AIUtilities/AIStringAdditions.h>
+#import <AIUtilities/AIAttributedStringAdditions.h>
 
 @implementation ESGaimMSNAccountViewController
 
@@ -41,8 +41,8 @@
 	
 	//Alias
 	if (![account online] &&
-		![[textField_alias stringValue] isEqualToString:[NSAttributedString stringWithData:[account preferenceForKey:@"FullNameAttr"
-																											   group:GROUP_ACCOUNT_STATUS]]]) {
+		![[textField_alias stringValue] isEqualToString:[[NSAttributedString stringWithData:[account preferenceForKey:@"FullNameAttr"
+																											   group:GROUP_ACCOUNT_STATUS]] string]]) {
 		[account setPreference:[NSNumber numberWithBool:YES]
 						forKey:KEY_MSN_DISPLAY_NAMED_CHANGED
 						 group:GROUP_ACCOUNT_STATUS];
