@@ -20,6 +20,13 @@
 
 @implementation NSFileManager (AIFileManagerAdditions)
 
+- (BOOL)isFileVaultEnabled
+{
+	NSString *homeFolder = NSHomeDirectory();
+	NSString *homeFolderVolume = [homeFolder volumePath];
+	return [homeFolder isEqualToString:homeFolderVolume];
+}
+
 //Move the target file to the trash
 - (BOOL)trashFileAtPath:(NSString *)sourcePath
 {
