@@ -22,8 +22,13 @@
 	IBOutlet NSTextField * versionField;
 	IBOutlet NSPopUpButton * typePopup;
 	id<ViewController> controller;
+	IBOutlet NSTextView * readmeView;
+	NSString * iconPath;
 }
 
 - (IBAction) addFiles:(id)sender;
+- (IBAction) setIcon:(id)sender;
+- (void) setIconPath:(NSString *)path;
+- (NSString *) iconPath;
 - (IBAction) setXtraType:(id)sender;
 @end

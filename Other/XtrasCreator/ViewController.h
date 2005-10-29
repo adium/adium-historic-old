@@ -6,10 +6,9 @@
  *  Copyright 2005 __MyCompanyName__. All rights reserved.
  *
  */
+#import <Cocoa/Cocoa.h>
 
-@class NSView, NSString;
-
-@protocol ViewController
+@protocol ViewController <NSObject>
 - (NSView *) view;
 - (void) writeCustomFilesToPath:(NSString *)path;
 + (id<ViewController>) controller;
