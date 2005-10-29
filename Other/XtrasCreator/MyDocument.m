@@ -76,6 +76,13 @@
 			[manager copyPath:resourcePath 
 					   toPath:[path stringByAppendingPathComponent:[resourcePath lastPathComponent]]												  handler:nil];
 		}
+		if(!iconPath && ![[iconPath pathExtension] isEqualToString:@"icns"]) {
+			//TODO: error handling
+			NSLog(@"OMGWTF, not a .icns file");
+		}
+		[manager copyPath:iconPath
+				   toPath:[path stringByAppendingPathComponent:@"Icon.icns"]																	  handler:nil];
+		[[readmeView RTFFromRange: NSMakeRange(0, [[readmeView string] length])] writeToFile:[path stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
 		[controller writeCustomFilesToPath:path];
 		return YES;
 	}	
@@ -85,7 +92,6 @@
 
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
 {
-	
     return YES;
 }
 
@@ -98,6 +104,25 @@
 	[p runModal];
 	[resources addObjectsFromArray:[p filenames]];
 	[fileView setString:[[resources allObjects] componentsJoinedByString:@"\n"]];
+}
+
+- (IBAction) setIcon:(id)sender
+{
+	NSOpenPanel * p = [NSOpenPanel openPanel];
+	[p setAllowsMultipleSelection:YES];
+	[p runModal];
+	[self setIconPath: [[p filenames] objectAtIndex:0]];
+}
+
+- (void) setIconPath:(NSString *)inPath
+{
+	[iconPath autorelease];
+	iconPath = [inPath retain];
+}
+
+- (NSString *) iconPath
+{
+	return iconPath;
 }
 
 - (IBAction) setXtraType:(id)sender

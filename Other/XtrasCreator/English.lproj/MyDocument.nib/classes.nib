@@ -2,13 +2,15 @@
     IBClasses = (
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
-            ACTIONS = {addFiles = id; setXtraType = id; }; 
+            ACTIONS = {addFiles = id; setIcon = id; setXtraType = id; }; 
             CLASS = MyDocument; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 authorField = NSTextField; 
+                controller = id; 
                 fileView = NSTextView; 
                 nameField = NSTextField; 
+                readmeView = NSTextView; 
                 tabs = NSTabView; 
                 typePopup = NSPopUpButton; 
                 versionField = NSTextField; 
