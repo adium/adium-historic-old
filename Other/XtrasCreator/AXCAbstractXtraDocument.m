@@ -53,10 +53,12 @@
 	NSString * name = [nameField stringValue];
 	if(![manager fileExistsAtPath:path])
 	{
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+		[manager createDirectoryAtPath:path attributes:nil];
+
 		path = [path stringByAppendingPathComponent:@"Contents"];
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
-		[[NSDictionary dictionaryWithObjectsAndKeys:
+		[manager createDirectoryAtPath:path attributes:nil];
+
+		NSDictionary *infoPlist = [NSDictionary dictionaryWithObjectsAndKeys:
 			@"English", kCFBundleDevelopmentRegionKey,
 			name, kCFBundleNameKey,
 			@"AdIM", @"CFBundlePackageType",
@@ -66,9 +68,12 @@
 			[versionField stringValue], @"XtraVersion",
 			[authorField stringValue], @"XtraAuthors",
 			xtraType, @"XtraType",
-			nil] writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
+			nil];
+		[infoPlist writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
+
 		path = [path stringByAppendingPathComponent:@"Resources"];
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+		[manager createDirectoryAtPath:path attributes:nil];
+
 		NSEnumerator * resourceEnu = [resources objectEnumerator];
 		NSString * resourcePath;
 		while ((resourcePath = [resourceEnu nextObject]))
@@ -76,13 +81,18 @@
 			[manager copyPath:resourcePath 
 					   toPath:[path stringByAppendingPathComponent:[resourcePath lastPathComponent]]												  handler:nil];
 		}
-		if(!iconPath && ![[iconPath pathExtension] isEqualToString:@"icns"]) {
+
+		NSString *iconPathExtension = [iconPath pathExtension];
+		if(iconPath || !([iconPathExtension isEqualToString:@"icns"] || [iconPathExtension isEqualToString:@"tiff"] || [iconPathExtension isEqualToString:@"tif"])) {
 			//TODO: error handling
-			NSLog(@"OMGWTF, not a .icns file");
+			NSLog(@"OMGWTF, not an IconFamily or TIFF file");
 		}
 		[manager copyPath:iconPath
-				   toPath:[path stringByAppendingPathComponent:@"Icon.icns"]																	  handler:nil];
+				   toPath:[path stringByAppendingPathComponent:[@"Icon." stringByAppendingPathExtension:extension]]
+				  handler:nil];
+
 		[[readmeView RTFFromRange: NSMakeRange(0, [[readmeView string] length])] writeToFile:[path stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
+
 		[controller writeCustomFilesToPath:path];
 		return YES;
 	}	
