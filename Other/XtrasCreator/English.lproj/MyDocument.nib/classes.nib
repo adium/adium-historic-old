@@ -1,14 +1,13 @@
 {
     IBClasses = (
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
         {
             ACTIONS = {addFiles = id; setIcon = id; setXtraType = id; }; 
-            CLASS = MyDocument; 
+            CLASS = AXCAbstractXtraDocument; 
             LANGUAGE = ObjC; 
             OUTLETS = {
                 authorField = NSTextField; 
                 controller = id; 
-                fileView = NSTextView; 
+                fileView = NSTableView; 
                 nameField = NSTextField; 
                 readmeView = NSTextView; 
                 tabs = NSTabView; 
@@ -16,7 +15,8 @@
                 versionField = NSTextField; 
             }; 
             SUPERCLASS = NSDocument; 
-        }
+        }, 
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
 }

@@ -17,6 +17,8 @@
 		076D84F80914AD6500D6D22C /* AdiumServiceIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84EE0914AD6500D6D22C /* AdiumServiceIcons.icns */; };
 		076D84F90914AD6500D6D22C /* AdiumSoundset.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84EF0914AD6500D6D22C /* AdiumSoundset.icns */; };
 		076D84FA0914AD6500D6D22C /* AdiumStatusIcons.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84F00914AD6500D6D22C /* AdiumStatusIcons.icns */; };
+		076D85770914D8DA00D6D22C /* AXCFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 076D85760914D8DA00D6D22C /* AXCFileCell.m */; };
+		076D85F40914E56200D6D22C /* AXCStatusIconPackDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 076D85F30914E56200D6D22C /* AXCStatusIconPackDocument.m */; };
 		6354959F0911F01300F1EB0A /* MessageStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354959E0911F01300F1EB0A /* MessageStyleViewController.m */; };
 		635495A30911F19900F1EB0A /* MessageStyleView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 635495A20911F19900F1EB0A /* MessageStyleView.nib */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -66,6 +68,10 @@
 		076D84EE0914AD6500D6D22C /* AdiumServiceIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumServiceIcons.icns; path = ../../Resources/AdiumServiceIcons.icns; sourceTree = SOURCE_ROOT; };
 		076D84EF0914AD6500D6D22C /* AdiumSoundset.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumSoundset.icns; path = ../../Resources/AdiumSoundset.icns; sourceTree = SOURCE_ROOT; };
 		076D84F00914AD6500D6D22C /* AdiumStatusIcons.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumStatusIcons.icns; path = ../../Resources/AdiumStatusIcons.icns; sourceTree = SOURCE_ROOT; };
+		076D85750914D8DA00D6D22C /* AXCFileCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCFileCell.h; sourceTree = "<group>"; };
+		076D85760914D8DA00D6D22C /* AXCFileCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCFileCell.m; sourceTree = "<group>"; };
+		076D85F20914E56200D6D22C /* AXCStatusIconPackDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCStatusIconPackDocument.h; sourceTree = "<group>"; };
+		076D85F30914E56200D6D22C /* AXCStatusIconPackDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCStatusIconPackDocument.m; sourceTree = "<group>"; };
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -115,6 +121,15 @@
 			name = "Xtra icons";
 			sourceTree = "<group>";
 		};
+		076D85B60914E12000D6D22C /* Generic */ = {
+			isa = PBXGroup;
+			children = (
+				076D85750914D8DA00D6D22C /* AXCFileCell.h */,
+				076D85760914D8DA00D6D22C /* AXCFileCell.m */,
+			);
+			name = Generic;
+			sourceTree = "<group>";
+		};
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -156,11 +171,14 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				076D85B60914E12000D6D22C /* Generic */,
 				2A37F4AEFDCFA73011CA2CEA /* AXCAbstractXtraDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* AXCAbstractXtraDocument.m */,
 				635495FC0911FD5000F1EB0A /* ViewController.h */,
 				6354959D0911F01300F1EB0A /* MessageStyleViewController.h */,
 				6354959E0911F01300F1EB0A /* MessageStyleViewController.m */,
+				076D85F20914E56200D6D22C /* AXCStatusIconPackDocument.h */,
+				076D85F30914E56200D6D22C /* AXCStatusIconPackDocument.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -283,6 +301,8 @@
 				8D15AC310486D014006FF6A4 /* AXCAbstractXtraDocument.m in Sources */,
 				8D15AC320486D014006FF6A4 /* main.m in Sources */,
 				6354959F0911F01300F1EB0A /* MessageStyleViewController.m in Sources */,
+				076D85770914D8DA00D6D22C /* AXCFileCell.m in Sources */,
+				076D85F40914E56200D6D22C /* AXCStatusIconPackDocument.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

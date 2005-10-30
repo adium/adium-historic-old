@@ -13,22 +13,38 @@
 
 @interface AXCAbstractXtraDocument : NSDocument
 {
-	NSMutableSet * resources;
-	NSString * xtraType;
+	NSMutableArray * resources;
+	NSMutableSet * resourcesSet;
+	NSString * iconPath;
+	NSString * xtraType; //XXX might be axed
+
 	IBOutlet NSTabView * tabs;
-	IBOutlet NSTextView * fileView;
+	IBOutlet NSTableView * fileView;
 	IBOutlet NSTextField * authorField;
 	IBOutlet NSTextField * nameField;
 	IBOutlet NSTextField * versionField;
-	IBOutlet NSPopUpButton * typePopup;
+	IBOutlet NSPopUpButton * typePopup; //XXX will be axed
 	id<ViewController> controller;
 	IBOutlet NSTextView * readmeView;
-	NSString * iconPath;
 }
 
+#pragma mark Actions
+
 - (IBAction) addFiles:(id)sender;
-- (IBAction) setIcon:(id)sender;
+
+#pragma mark Accessors
+
 - (void) setIconPath:(NSString *)path;
 - (NSString *) iconPath;
-- (IBAction) setXtraType:(id)sender;
+
+#pragma mark For subclasses
+
+//all three of these are used for new documents. for an existing document, these will not be called.
+- (NSString *) OSType;
+- (NSString *) pathExtension;
+- (NSString *) uniformTypeIdentifier;
+
+//added to the tab view.
+- (NSArray *) tabViewItems;
+
 @end
