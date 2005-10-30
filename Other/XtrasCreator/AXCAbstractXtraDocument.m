@@ -1,15 +1,15 @@
 //
-//  MyDocument.m
+//  AXCAbstractXtraDocument.m
 //  XtrasCreator
 //
 //  Created by David Smith on 10/27/05.
 //  Copyright 2005 Adium Team. All rights reserved.
 //
 
-#import "MyDocument.h"
+#import "AXCAbstractXtraDocument.h"
 #import "MessageStyleViewController.h"
 
-@implementation MyDocument
+@implementation AXCAbstractXtraDocument
 
 - (id)init
 {
