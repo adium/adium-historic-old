@@ -6,6 +6,10 @@
 //  Copyright 2005 Adium Team. All rights reserved.
 //
 
+/*the string/object values to an AXCFileCell are paths. they will be drawn as
+ *	an icon and filename.
+ */
+
 @interface AXCFileCell : NSCell {
 }
 
