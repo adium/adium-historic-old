@@ -11,6 +11,15 @@
 
 @implementation AXCFileCell
 
+- (void)setObjectValue:(id <NSCopying>)newObj {
+	NSString *path = newObj;
+
+	if (![path isAbsolutePath])
+		path = [[[NSFileManager defaultManager] currentDirectoryPath] stringByAppendingPathComponent:path];
+
+	[super setObjectValue:path];
+}
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)view {
 	NSString *path = [self stringValue];
 
