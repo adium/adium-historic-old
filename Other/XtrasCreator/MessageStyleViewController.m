@@ -11,7 +11,7 @@
 
 @implementation MessageStyleViewController
 
-+ (id)controller
++ (id <ViewController>)controller
 {
 	MessageStyleViewController * c = [[MessageStyleViewController alloc] init];
 	[NSBundle loadNibNamed:@"MessageStyleView" owner:c];
