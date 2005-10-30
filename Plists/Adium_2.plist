@@ -41,7 +41,7 @@
 			<string>Adium Dock Icon</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AIDk</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -59,7 +59,7 @@
 			<string>Adium Sound Set</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AISd</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -77,7 +77,7 @@
 			<string>Adium Emoticon Set</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AIEm</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -95,7 +95,7 @@
 			<string>Adium Message Style</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AIWK</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -113,28 +113,12 @@
 			<string>Adium Scripts</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AIAS</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
 			<true/>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListLayout</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListLayout.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Layout</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
 		</dict>
 		<dict>
 			<key>CFBundleTypeExtensions</key>
@@ -147,7 +131,7 @@
 			<string>Adium List Layout</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AILL</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -163,25 +147,9 @@
 			<string>AdiumListTheme.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>Adium List Theme</string>
-			<key>CFBundleTypeRole</key>
-			<string>Viewer</string>
-			<key>LSTypeIsPackage</key>
-			<true/>
-			<key>NSPersistentStoreTypeKey</key>
-			<string>Binary</string>
-		</dict>
-		<dict>
-			<key>CFBundleTypeExtensions</key>
-			<array>
-				<string>ListTheme</string>
-			</array>
-			<key>CFBundleTypeIconFile</key>
-			<string>AdiumListTheme.icns</string>
-			<key>CFBundleTypeName</key>
-			<string>Adium List Theme</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AILT</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -199,7 +167,7 @@
 			<string>Adium Status Icons</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AISt</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -217,7 +185,7 @@
 			<string>Adium Service Icons</string>
 			<key>CFBundleTypeOSTypes</key>
 			<array>
-				<string>AdIM</string>
+				<string>AISr</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
