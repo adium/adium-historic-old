@@ -255,7 +255,7 @@
 				<string>AdIM</string>
 			</array>
 			<key>CFBundleTypeRole</key>
-			<string>Editor</string>
+			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
 			<true/>
 		</dict>
