@@ -1,5 +1,5 @@
 //
-//  MyDocument.h
+//  AXCAbstractXtraDocument.h
 //  XtrasCreator
 //
 //  Created by David Smith on 10/27/05.
@@ -11,7 +11,7 @@
 
 @protocol ViewController;
 
-@interface MyDocument : NSDocument
+@interface AXCAbstractXtraDocument : NSDocument
 {
 	NSMutableSet * resources;
 	NSString * xtraType;
