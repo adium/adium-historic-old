@@ -3,7 +3,7 @@
 //  XtrasCreator
 //
 //  Created by David Smith on 10/27/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 Adium Team. All rights reserved.
 //
 
 #import "MessageStyleViewController.h"
