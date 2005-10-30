@@ -31,6 +31,29 @@
 		</dict>
 		<dict>
 			<key>UTTypeIdentifier</key>
+			<string>com.adiumx.plugin</string>
+			<key>UTTypeReferenceURL</key>
+			<string>http://xtras.adiumx.com</string>
+			<key>UTTypeDescription</key>
+			<string>Adium X plug-in</string>
+			<key>UTTypeIconFile</key>
+			<string>AdiumPlugin.icns</string>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>com.adiumx.xtra</string>
+			</array>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>com.apple.ostype</key>
+				<string>AdIM</string>
+				<key>public.filename-extension</key>
+				<array>
+					<string>AdiumPlugin</string>
+				</array>
+			</dict>
+		</dict>
+		<dict>
+			<key>UTTypeIdentifier</key>
 			<string>com.adiumx.messagestyle</string>
 			<key>UTTypeReferenceURL</key>
 			<string>http://xtras.adiumx.com</string>
@@ -254,6 +277,10 @@
 			<array>
 				<string>AdIM</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.plugin</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -271,6 +298,10 @@
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AIDk</string>
+			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.dockicon</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -290,6 +321,10 @@
 			<array>
 				<string>AISd</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.soundset</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -307,6 +342,10 @@
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AIEm</string>
+			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.emoticonset</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -326,6 +365,10 @@
 			<array>
 				<string>AIWK</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.messagestyle</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -343,6 +386,10 @@
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AIAS</string>
+			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.script</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
@@ -363,6 +410,10 @@
 			<array>
 				<string>AILL</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.contactlistlayout</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>
@@ -382,6 +433,10 @@
 			<array>
 				<string>AILT</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.contactlisttheme</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSTypeIsPackage</key>
@@ -400,6 +455,10 @@
 			<array>
 				<string>AISt</string>
 			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.statusicons</string>
+			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
 			<key>LSTypeIsPackage</key>
@@ -417,6 +476,10 @@
 			<key>CFBundleTypeOSTypes</key>
 			<array>
 				<string>AISr</string>
+			</array>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>com.adiumx.serviceicons</string>
 			</array>
 			<key>CFBundleTypeRole</key>
 			<string>Viewer</string>
