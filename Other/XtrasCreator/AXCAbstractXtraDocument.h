@@ -15,7 +15,7 @@
 {
 	NSMutableArray * resources;
 	NSMutableSet * resourcesSet;
-	NSString * iconPath;
+	NSImage * icon;
 	NSString * xtraType; //XXX might be axed
 
 	IBOutlet NSTabView * tabs;
@@ -31,11 +31,12 @@
 #pragma mark Actions
 
 - (IBAction) addFiles:(id)sender;
+- (IBAction) runChooseIconPanel:(id)sender;
 
 #pragma mark Accessors
 
-- (void) setIconPath:(NSString *)path;
-- (NSString *) iconPath;
+- (void) setIcon:(NSImage *)icon;
+- (NSImage *) icon;
 
 #pragma mark For subclasses
 
