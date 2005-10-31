@@ -6,9 +6,9 @@
 //  Copyright 2005 Adium Team. All rights reserved.
 //
 
-#import "AXCAbstractXtraDocument.h"
+#import "AXCIconPackDocument.h"
 
-@interface AXCServiceIconPackDocument : AXCAbstractXtraDocument {
+@interface AXCServiceIconPackDocument : AXCIconPackDocument {
 
 }
 
