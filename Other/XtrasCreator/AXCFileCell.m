@@ -71,7 +71,7 @@
 		};
 
 		NSColor *textColor;
-		if([self isHighlighted]) {
+		if([NSGraphicsContext currentContextDrawingToScreen] && [self isHighlighted]) {
 			//credit to Ken Ferry for coming up with this test.
 			if([[self highlightColorWithFrame:cellFrame inView:view] isEqual:[NSColor alternateSelectedControlColor]])
 				textColor = [NSColor alternateSelectedControlTextColor];
