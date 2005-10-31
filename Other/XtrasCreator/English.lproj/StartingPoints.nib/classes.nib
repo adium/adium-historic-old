@@ -3,11 +3,10 @@
         {
             CLASS = AXCStartingPointsController; 
             LANGUAGE = ObjC; 
-            OUTLETS = {}; 
+            OUTLETS = {startingPointsTableView = NSTableView; startingPointsWindow = NSPanel; }; 
             SUPERCLASS = NSObject; 
         }, 
-        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = LMXAppDelegate; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 
 }
