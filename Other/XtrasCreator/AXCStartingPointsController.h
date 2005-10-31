@@ -15,5 +15,7 @@
 }
 
 - (NSArray *) documentTypes;
+- (IBAction) displayStartingPoints:(id)sender;
+- (IBAction) makeNewDocumentOfSelectedType:(id)sender;
 
 @end

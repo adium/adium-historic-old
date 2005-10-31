@@ -65,6 +65,11 @@
 	int selection = [sender selectedRow];
 	if (selection >= 0)
 		[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
+	[startingPointsWindow performClose:nil];
+}
+
+- (IBAction) displayStartingPoints:(id)sender {
+	[startingPointsWindow makeKeyAndOrderFront:nil];
 }
 
 #pragma mark -
