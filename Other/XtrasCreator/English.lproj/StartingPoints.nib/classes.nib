@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {displayStartingPoints = id; makeNewDocumentOfSelectedType = id; }; 
             CLASS = AXCStartingPointsController; 
             LANGUAGE = ObjC; 
             OUTLETS = {startingPointsTableView = NSTableView; startingPointsWindow = NSPanel; }; 
