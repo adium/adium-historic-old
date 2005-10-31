@@ -48,8 +48,5 @@ static inline NSComparisonResult compareObjectsWithSelector(id a, id b, SEL cmd)
 @end
 
 static inline NSComparisonResult compareObjectsWithSelector(id a, id b, SEL cmd) {
-	NSComparisonResult comparison;
-	//comparison = [a cmd:b]
-	objc_msgSend_stret((void *)&comparison, a, cmd, b);
-	return comparison;
+	return (NSComparisonResult)objc_msgSend(a, cmd, b);
 }
