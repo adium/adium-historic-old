@@ -127,7 +127,8 @@
     return YES;
 }
 
-- (void) printShowingPrintPanel:(BOOL)flag {
+- (void) printShowingPrintPanel:(BOOL)flag
+{
 	//XXX TEMP - should make a new view that grabs all the information from this document, and displays it linearly
 	NSPrintOperation *op = [NSPrintOperation printOperationWithView:fileView];
 	[op setShowsPrintPanel:flag];
@@ -167,6 +168,8 @@
 	[self setIconPath: [[p filenames] objectAtIndex:0]];
 }
 
+#pragma mark -
+
 - (void) setIconPath:(NSString *)inPath
 {
 	[iconPath autorelease];
@@ -180,18 +183,22 @@
 
 #pragma mark -
 
-- (NSString *) OSType {
+- (NSString *) OSType
+{
 	return @"AdIM";
 }
-- (NSString *) pathExtension {
+- (NSString *) pathExtension
+{
 	return nil;
 }
-- (NSString *) uniformTypeIdentifier {
+- (NSString *) uniformTypeIdentifier
+{
 	return @"com.adiumx.xtra";
 }
 
 //added to the tab view.
-- (NSArray *) tabViewItems {
+- (NSArray *) tabViewItems
+{
 	return [NSArray array];
 }
 
