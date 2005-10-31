@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		07484CB8091624B500D1A683 /* NSFileManager+BundleBit.m in Sources */ = {isa = PBXBuildFile; fileRef = 07484CB7091624B500D1A683 /* NSFileManager+BundleBit.m */; };
+		07484CBE0916254100D1A683 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07484CBD0916254100D1A683 /* Carbon.framework */; };
 		076D84F10914AD6500D6D22C /* AdiumEmoticonset.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84E70914AD6500D6D22C /* AdiumEmoticonset.icns */; };
 		076D84F20914AD6500D6D22C /* AdiumIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84E80914AD6500D6D22C /* AdiumIcon.icns */; };
 		076D84F30914AD6500D6D22C /* AdiumListLayout.icns in Resources */ = {isa = PBXBuildFile; fileRef = 076D84E90914AD6500D6D22C /* AdiumListLayout.icns */; };
@@ -67,6 +69,9 @@
 /* End PBXBuildStyle section */
 
 /* Begin PBXFileReference section */
+		07484CB6091624B500D1A683 /* NSFileManager+BundleBit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSFileManager+BundleBit.h"; sourceTree = "<group>"; };
+		07484CB7091624B500D1A683 /* NSFileManager+BundleBit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSFileManager+BundleBit.m"; sourceTree = "<group>"; };
+		07484CBD0916254100D1A683 /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = /System/Library/Frameworks/Carbon.framework; sourceTree = "<absolute>"; };
 		076D84E70914AD6500D6D22C /* AdiumEmoticonset.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumEmoticonset.icns; path = ../../Resources/AdiumEmoticonset.icns; sourceTree = SOURCE_ROOT; };
 		076D84E80914AD6500D6D22C /* AdiumIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumIcon.icns; path = ../../Resources/AdiumIcon.icns; sourceTree = SOURCE_ROOT; };
 		076D84E90914AD6500D6D22C /* AdiumListLayout.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = AdiumListLayout.icns; path = ../../Resources/AdiumListLayout.icns; sourceTree = SOURCE_ROOT; };
@@ -124,6 +129,7 @@
 			files = (
 				8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */,
 				07E002780915AE6B003FE813 /* ExceptionHandling.framework in Frameworks */,
+				07484CBE0916254100D1A683 /* Carbon.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -180,6 +186,8 @@
 				63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */,
 				07E0018809158940003FE813 /* NSMutableArrayAdditions.h */,
 				07E0018909158940003FE813 /* NSMutableArrayAdditions.m */,
+				07484CB6091624B500D1A683 /* NSFileManager+BundleBit.h */,
+				07484CB7091624B500D1A683 /* NSFileManager+BundleBit.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -187,8 +195,9 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				07E002770915AE6B003FE813 /* ExceptionHandling.framework */,
+				07484CBD0916254100D1A683 /* Carbon.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
+				07E002770915AE6B003FE813 /* ExceptionHandling.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -369,6 +378,7 @@
 				07E002740915AE07003FE813 /* LMXAppDelegate.m in Sources */,
 				63D96247091616FD0041DF83 /* IconFamily.m in Sources */,
 				63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */,
+				07484CB8091624B500D1A683 /* NSFileManager+BundleBit.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

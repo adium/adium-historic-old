@@ -10,7 +10,7 @@
 #import "MessageStyleViewController.h"
 #import "AXCFileCell.h"
 #import "IconFamily.h"
-#import "NSString+CarbonFSSpecCreation.h"
+#import "NSFileManager+BundleBit.h"
 
 @implementation AXCAbstractXtraDocument
 
@@ -112,10 +112,18 @@
 		[[readmeView RTFFromRange: NSMakeRange(0, [[readmeView string] length])] writeToFile:[path stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
 
 		[controller writeCustomFilesToPath:path];
+
+		//all Xtras are bundles
+		[manager setBundleBitOfFile:path toBool:YES];
+
 		return YES;
 	}	
 	else
 		return NO;
+}
+- (BOOL)writeToURL:(NSURL *)URL ofType:(NSString *)typeName error:(NSError **)outError {
+	NSString * path = [URL path];
+	return [self writeToFile:path ofType:typeName];
 }
 
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
