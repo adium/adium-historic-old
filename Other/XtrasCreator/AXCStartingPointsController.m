@@ -17,6 +17,9 @@
 		if(![startingPointsWindow setFrameUsingName:[startingPointsWindow frameAutosaveName]])
 			[startingPointsWindow center];
 		[startingPointsWindow makeKeyAndOrderFront:nil];
+
+		[startingPointsTableView setDoubleAction:@selector(makeNewDocumentOfSelectedType:)];
+		[startingPointsTableView setTarget:self];
 	}
 }
 
@@ -52,14 +55,22 @@
 		[temp release];
 	}
 
-	NSLog(@"returning %@", documentTypes);
 	return documentTypes;
+}
+
+#pragma mark -
+#pragma mark Actions
+
+- (IBAction) makeNewDocumentOfSelectedType:(id)sender {
+	int selection = [sender selectedRow];
+	if (selection >= 0)
+		[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
 }
 
 #pragma mark -
 #pragma mark NSTableView delegate conformance
 
-- (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)col row:(int)row {
+- (void) tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)col row:(int)row {
 	//if this is a valid type (has a class we can instantiate), enable it. else, disable it.
 	[cell setEnabled:[usableDocTypes containsObject:[documentTypes objectAtIndex:row]]];
 }
