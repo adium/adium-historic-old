@@ -154,6 +154,8 @@
 				076D85760914D8DA00D6D22C /* AXCFileCell.m */,
 				07E001B109159255003FE813 /* AXCIconPackEntry.h */,
 				07E001B209159255003FE813 /* AXCIconPackEntry.m */,
+				63D96243091616FD0041DF83 /* IconFamily.h */,
+				63D96244091616FD0041DF83 /* IconFamily.m */,
 			);
 			name = Generic;
 			sourceTree = "<group>";
@@ -174,8 +176,6 @@
 		07E0017E0915891A003FE813 /* Additions */ = {
 			isa = PBXGroup;
 			children = (
-				63D96243091616FD0041DF83 /* IconFamily.h */,
-				63D96244091616FD0041DF83 /* IconFamily.m */,
 				63D96245091616FD0041DF83 /* NSString+CarbonFSSpecCreation.h */,
 				63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */,
 				07E0018809158940003FE813 /* NSMutableArrayAdditions.h */,
