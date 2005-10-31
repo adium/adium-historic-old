@@ -28,6 +28,8 @@
 		07E002870915AF7A003FE813 /* IconPack_IconPlistView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 07E002850915AF7A003FE813 /* IconPack_IconPlistView.nib */; };
 		6354959F0911F01300F1EB0A /* MessageStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354959E0911F01300F1EB0A /* MessageStyleViewController.m */; };
 		635495A30911F19900F1EB0A /* MessageStyleView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 635495A20911F19900F1EB0A /* MessageStyleView.nib */; };
+		63D96247091616FD0041DF83 /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D96244091616FD0041DF83 /* IconFamily.m */; };
+		63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
 		8D15AC2D0486D014006FF6A4 /* MainMenu.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B6FDCFA73011CA2CEA /* MainMenu.nib */; };
 		8D15AC2E0486D014006FF6A4 /* MyDocument.nib in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B4FDCFA73011CA2CEA /* MyDocument.nib */; };
@@ -107,6 +109,10 @@
 		6354959E0911F01300F1EB0A /* MessageStyleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageStyleViewController.m; sourceTree = "<group>"; };
 		635495A20911F19900F1EB0A /* MessageStyleView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessageStyleView.nib; path = English.lproj/MessageStyleView.nib; sourceTree = "<group>"; };
 		635495FC0911FD5000F1EB0A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		63D96243091616FD0041DF83 /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IconFamily.h; sourceTree = "<group>"; };
+		63D96244091616FD0041DF83 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = IconFamily.m; sourceTree = "<group>"; };
+		63D96245091616FD0041DF83 /* NSString+CarbonFSSpecCreation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSString+CarbonFSSpecCreation.h"; sourceTree = "<group>"; };
+		63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = "NSString+CarbonFSSpecCreation.m"; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* XtrasCreator.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = XtrasCreator.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -168,6 +174,10 @@
 		07E0017E0915891A003FE813 /* Additions */ = {
 			isa = PBXGroup;
 			children = (
+				63D96243091616FD0041DF83 /* IconFamily.h */,
+				63D96244091616FD0041DF83 /* IconFamily.m */,
+				63D96245091616FD0041DF83 /* NSString+CarbonFSSpecCreation.h */,
+				63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */,
 				07E0018809158940003FE813 /* NSMutableArrayAdditions.h */,
 				07E0018909158940003FE813 /* NSMutableArrayAdditions.m */,
 			);
@@ -357,6 +367,8 @@
 				07E0018A09158940003FE813 /* NSMutableArrayAdditions.m in Sources */,
 				07E001B309159255003FE813 /* AXCIconPackEntry.m in Sources */,
 				07E002740915AE07003FE813 /* LMXAppDelegate.m in Sources */,
+				63D96247091616FD0041DF83 /* IconFamily.m in Sources */,
+				63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

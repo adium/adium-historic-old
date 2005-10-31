@@ -1,7 +1,7 @@
 {
     IBClasses = (
         {
-            ACTIONS = {addFiles = id; setIcon = id; setXtraType = id; }; 
+            ACTIONS = {addFiles = id; runChooseIconPanel = id; }; 
             CLASS = AXCAbstractXtraDocument; 
             LANGUAGE = ObjC; 
             OUTLETS = {

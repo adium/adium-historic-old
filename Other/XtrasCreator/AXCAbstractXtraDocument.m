@@ -9,6 +9,8 @@
 #import "AXCAbstractXtraDocument.h"
 #import "MessageStyleViewController.h"
 #import "AXCFileCell.h"
+#import "IconFamily.h"
+#import "NSString+CarbonFSSpecCreation.h"
 
 @implementation AXCAbstractXtraDocument
 
@@ -101,17 +103,11 @@
 		while ((resourcePath = [resourceEnu nextObject]))
 		{
 			[manager copyPath:resourcePath 
-					   toPath:[path stringByAppendingPathComponent:[resourcePath lastPathComponent]]												  handler:nil];
+					   toPath:[path stringByAppendingPathComponent:[resourcePath lastPathComponent]]							  handler:nil];
 		}
 
-		NSString *iconPathExtension = [iconPath pathExtension];
-		if(iconPath || !([iconPathExtension isEqualToString:@"icns"] || [iconPathExtension isEqualToString:@"tiff"] || [iconPathExtension isEqualToString:@"tif"])) {
-			//TODO: error handling
-			NSLog(@"OMGWTF, not an IconFamily or TIFF file");
-		}
-		[manager copyPath:iconPath
-				   toPath:[path stringByAppendingPathComponent:[@"Icon." stringByAppendingPathExtension:iconPathExtension]]
-				  handler:nil];
+		IconFamily* iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:icon]; //check on error handling for this
+		[iconFamily setAsCustomIconForFile:fileName];
 
 		[[readmeView RTFFromRange: NSMakeRange(0, [[readmeView string] length])] writeToFile:[path stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
 
@@ -160,25 +156,25 @@
 	}
 }
 
-- (IBAction) setIcon:(id)sender
+- (IBAction) runChooseIconPanel:(id)sender
 {
 	NSOpenPanel * p = [NSOpenPanel openPanel];
 	[p setAllowsMultipleSelection:YES];
 	[p runModal];
-	[self setIconPath: [[p filenames] objectAtIndex:0]];
+	[self setIcon:[[[NSImage alloc] initByReferencingFile:[[p filenames] objectAtIndex:0]]autorelease]];
 }
 
 #pragma mark -
 
-- (void) setIconPath:(NSString *)inPath
+- (void) setIcon:(NSImage *)inImage
 {
-	[iconPath autorelease];
-	iconPath = [inPath retain];
+	[icon autorelease];
+	icon = [inImage retain];
 }
 
-- (NSString *) iconPath
+- (NSImage *) icon
 {
-	return iconPath;
+	return icon;
 }
 
 #pragma mark -
