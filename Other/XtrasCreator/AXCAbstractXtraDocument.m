@@ -127,6 +127,13 @@
     return YES;
 }
 
+- (void) printShowingPrintPanel:(BOOL)flag {
+	//XXX TEMP - should make a new view that grabs all the information from this document, and displays it linearly
+	NSPrintOperation *op = [NSPrintOperation printOperationWithView:fileView];
+	[op setShowsPrintPanel:flag];
+	[op runOperation];
+}
+
 - (IBAction) addFiles:(id)sender
 {
 	NSOpenPanel * p = [NSOpenPanel openPanel];
