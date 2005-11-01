@@ -26,9 +26,10 @@
 //Status icon type
 typedef enum {
 	AIStatusIconTab = 0,		//Tabs
-	AIStatusIconList			//Contact List
+	AIStatusIconList,			//Contact List
+	AIStatusIconMenu
 } AIStatusIconType;
-#define NUMBER_OF_STATUS_ICON_TYPES 	2
+#define NUMBER_OF_STATUS_ICON_TYPES 	3
 
 @interface AIStatusIcons : NSObject {
 
