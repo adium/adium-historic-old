@@ -51,6 +51,8 @@
 				[usableDocTypes addObject:name];
 		}
 
+		[temp sortUsingSelector:@selector(caseInsensitiveCompare:)];
+
 		documentTypes = [temp copy];
 		[temp release];
 	}
@@ -76,6 +78,9 @@
 	if (selection >= 0)
 		[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
 }
+- (IBAction) makeNewDocumentWithTypeBeingTitleOfMenuItem:(NSMenuItem *)sender {
+	[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[sender title] display:YES];
+}
 
 - (IBAction) displayStartingPoints:(id)sender {
 	[self setStartingPointsVisible:YES];
@@ -87,6 +92,21 @@
 - (void) tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)col row:(int)row {
 	//if this is a valid type (has a class we can instantiate), enable it. else, disable it.
 	[cell setEnabled:[usableDocTypes containsObject:[documentTypes objectAtIndex:row]]];
+}
+
+#pragma mark -
+#pragma mark NSMenu delegate conformance
+
+- (int) numberOfItemsInMenu:(NSMenu *)menu {
+	return [[self documentTypes] count];
+}
+- (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel {
+	[item setTitle:[[self documentTypes] objectAtIndex:index]];
+
+	[item setAction:@selector(makeNewDocumentWithTypeBeingTitleOfMenuItem:)];
+	[item setTarget:self];
+
+	return !shouldCancel;
 }
 
 @end
