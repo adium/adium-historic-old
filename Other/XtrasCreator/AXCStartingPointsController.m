@@ -13,7 +13,8 @@
 
 @implementation AXCStartingPointsController
 
-- (void) awakeFromNib {
+- (void) awakeFromNib
+{
 	if (!startingPointsWindow) {
 		[NSBundle loadNibNamed:@"StartingPoints" owner:self];
 		if(![startingPointsWindow setFrameUsingName:[startingPointsWindow frameAutosaveName]])
@@ -25,7 +26,8 @@
 	}
 }
 
-- (void) dealloc {
+- (void) dealloc
+{
 	[documentTypes release];
 	[usableDocTypes release];
 	[startingPointsWindow release];
@@ -35,7 +37,8 @@
 
 #pragma mark -
 
-- (NSArray *) documentTypes {
+- (NSArray *) documentTypes
+{
 	if (!documentTypes) {
 		NSDictionary *typeDicts = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDocumentTypes"];
 		unsigned numTypes = [typeDicts count];
@@ -62,36 +65,42 @@
 	return documentTypes;
 }
 
-- (void) setStartingPointsVisible:(BOOL)flag {
+- (void) setStartingPointsVisible:(BOOL)flag
+{
 	if (flag)
 		[startingPointsWindow makeKeyAndOrderFront:nil];
 	else
 		[startingPointsWindow orderOut:nil];
 }
-- (BOOL) isStartingPointsVisible {
+- (BOOL) isStartingPointsVisible
+{
 	return [startingPointsWindow isVisible];
 }
 
 #pragma mark -
 #pragma mark Actions
 
-- (IBAction) makeNewDocumentOfSelectedType:(id)sender {
+- (IBAction) makeNewDocumentOfSelectedType:(id)sender
+{
 	int selection = [sender selectedRow];
 	if (selection >= 0)
 		[[AXCDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
 }
-- (IBAction) makeNewDocumentWithTypeBeingTitleOfMenuItem:(NSMenuItem *)sender {
+- (IBAction) makeNewDocumentWithTypeBeingTitleOfMenuItem:(NSMenuItem *)sender
+{
 	[[AXCDocumentController sharedDocumentController] openUntitledDocumentOfType:[sender title] display:YES];
 }
 
-- (IBAction) displayStartingPoints:(id)sender {
+- (IBAction) displayStartingPoints:(id)sender
+{
 	[self setStartingPointsVisible:YES];
 }
 
 #pragma mark -
 #pragma mark NSTableView delegate conformance
 
-- (void) tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)col row:(int)row {
+- (void) tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)col row:(int)row
+{
 	//if this is a valid type (has a class we can instantiate), enable it. else, disable it.
 	[cell setEnabled:[usableDocTypes containsObject:[documentTypes objectAtIndex:row]]];
 }
@@ -99,10 +108,12 @@
 #pragma mark -
 #pragma mark NSMenu delegate conformance
 
-- (int) numberOfItemsInMenu:(NSMenu *)menu {
+- (int) numberOfItemsInMenu:(NSMenu *)menu
+{
 	return [[self documentTypes] count];
 }
-- (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel {
+- (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
+{
 	[item setTitle:[[self documentTypes] objectAtIndex:index]];
 
 	[item setAction:@selector(makeNewDocumentWithTypeBeingTitleOfMenuItem:)];
@@ -114,7 +125,8 @@
 #pragma mark -
 #pragma mark NSMenuItem validation
 
-- (BOOL)validateMenuItem:(id <NSMenuItem>)item {
+- (BOOL)validateMenuItem:(id <NSMenuItem>)item
+{
 	return ([[AXCDocumentController sharedDocumentController] documentClassForType:[item title]] != Nil);
 }
 
