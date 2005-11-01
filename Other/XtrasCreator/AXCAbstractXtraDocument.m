@@ -143,7 +143,7 @@
 	[op runOperation];
 }
 
-- (IBAction) addFiles:(id)sender
+- (IBAction) runAddFilesPanel:(id)sender
 {
 	NSOpenPanel * p = [NSOpenPanel openPanel];
 	[p setAllowsMultipleSelection:YES];

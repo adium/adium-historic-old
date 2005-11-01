@@ -33,7 +33,7 @@
 
 #pragma mark Actions
 
-- (IBAction) addFiles:(id)sender;
+- (IBAction) runAddFilesPanel:(id)sender;
 - (IBAction) runChooseIconPanel:(id)sender;
 
 #pragma mark Accessors
