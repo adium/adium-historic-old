@@ -10,7 +10,9 @@
 #import "NSMutableArrayAdditions.h"
 #import "AXCIconPackEntry.h"
 
+//columns of the icon keys outline view.
 #define KEY_COLUMN_NAME @"key"
+#define RESOURCE_COLUMN_NAME @"file"
 
 @implementation AXCIconPackDocument
 
@@ -97,11 +99,15 @@
 	if (categoryIndex != NSNotFound)
 		return isKeyColumn ? item : [NSNumber numberWithInt:-1];
 	else
-		return isKeyColumn ? (NSObject *)[item key] : (NSObject *)[NSNumber numberWithUnsignedInt:[resources indexOfObject:[item path]] + 1];
+		return isKeyColumn ? (NSObject *)[item key] : (NSObject *)[NSNumber numberWithUnsignedInt:[resources indexOfObject:[item path]]];
 }
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)newValue forTableColumn:(NSTableColumn *)col byItem:(id)item
 {
-	[(AXCIconPackEntry *)item setPath:[resources objectAtIndex:[(NSNumber *)newValue intValue]]];
+	int index = [(NSNumber *)newValue intValue];
+	if (index > -1)
+		[(AXCIconPackEntry *)item setPath:[resources objectAtIndex:index]];
+	else
+		[(AXCIconPackEntry *)item setPath:nil];
 }
 
 - (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
@@ -152,7 +158,9 @@
 }
 - (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
-	[item setTitle:[[resources objectAtIndex:index] lastPathComponent]];
+	NSString *path = [resources objectAtIndex:index];
+	[item setTitle:[displayNames  objectForKey:path]];
+	[item setImage:[imagePreviews objectForKey:path]];
 	return !shouldCancel;
 }
 

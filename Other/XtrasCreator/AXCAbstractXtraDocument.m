@@ -7,10 +7,14 @@
 //
 
 #import "AXCAbstractXtraDocument.h"
+
 #import "MessageStyleViewController.h"
 #import "AXCFileCell.h"
 #import "IconFamily.h"
 #import "NSFileManager+BundleBit.h"
+#include <c.h>
+
+#define THUMBNAIL_SIZE 16.0
 
 @implementation AXCAbstractXtraDocument
 
@@ -153,7 +157,7 @@
 	[newFilesSet minusSet:temp];
 	[temp release];
 
-	if([newFilesSet count]) {
+	if ([newFilesSet count]) {
 		newFiles = [newFilesSet allObjects];
 		[resourcesSet addObjectsFromArray:newFiles];
 
@@ -161,6 +165,45 @@
 		[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndexes forKey:@"resources"];
 		[resources addObjectsFromArray:newFiles];
 		[self  didChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndexes forKey:@"resources"];
+
+		//add the files to the imagePreviews and displayNames dictionaries.
+		NSEnumerator *newFilesEnum = [newFiles objectEnumerator];
+		NSString *path;
+		while ((path = [newFilesEnum nextObject])) {
+			NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
+			NSSize size = [image size]; //note: only used if image != nil
+			if (image) {
+				if (!imagePreviews)
+					imagePreviews = [[NSMutableDictionary alloc] init];
+
+				NSSize previewSize = size;
+				float maxDimension = MAX(size.width, size.height);
+				if (maxDimension > THUMBNAIL_SIZE) {
+					//scale proportionally to Wx16 or 16xH.
+					float scale = maxDimension / THUMBNAIL_SIZE;
+					previewSize.width  /= scale;
+					previewSize.height /= scale;
+					[image setScalesWhenResized:YES];
+					[image setSize:previewSize];
+				}
+				[image setName:[@"Preview of " stringByAppendingString:path]];
+
+				[imagePreviews setObject:image forKey:path];
+			}
+
+			/*now store the display name as well*/ {
+				if (!displayNames)
+					displayNames = [[NSMutableDictionary alloc] init];
+
+				NSString *name = [[NSFileManager defaultManager] displayNameAtPath:path];
+				if (image) {
+					enum { MULTIPLICATION_SIGN = 0x00d7 };
+					name = [NSString stringWithFormat:@"%@ (%u%C%u)", name, (unsigned)size.width, MULTIPLICATION_SIGN, (unsigned)size.height];
+				}
+
+				[displayNames setObject:name forKey:path];
+			}
+		}
 	}
 }
 

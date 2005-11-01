@@ -18,6 +18,9 @@
 	NSImage * icon;
 	NSString * xtraType; //XXX might be axed
 
+	NSMutableDictionary *imagePreviews; //keys: paths to image files; values: NSImages
+	NSMutableDictionary *displayNames; //keys: paths to files; values: display names (for an image, includes ' (WxH)' suffix)
+
 	IBOutlet NSTabView * tabs;
 	IBOutlet NSTableView * fileView;
 	IBOutlet NSTextField * authorField;
