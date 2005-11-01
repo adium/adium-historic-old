@@ -237,7 +237,7 @@
 - (NSSet *)updateListObject:(AIListObject *)inObject keys:(NSSet *)inModifiedKeys silent:(BOOL)silent
 {
 	if ([inObject isKindOfClass:[AIAccount class]]) {
-		NSMenuItem	*menuItem = [self menuItemForAccount:(AIAccount *)inObject];
+		NSMenuItem	*menuItem = [[self menuItemForAccount:(AIAccount *)inObject] retain];
 		BOOL		rebuilt = NO;
 		
 		if ([inModifiedKeys containsObject:@"Enabled"]) {
@@ -268,7 +268,6 @@
 
 			//Append the account actions menu for online accounts
 			if (menuItem) {
-				NSLog(@"%i %@ %@ online:%i",rebuilt,menuItem,inModifiedKeys,[inObject online]);
 				if ([inModifiedKeys containsObject:@"Online"]) {
 					[menuItem setSubmenu:([inObject online] ? [self actionsMenuForAccount:(AIAccount *)inObject] : nil)];
 				}
@@ -298,7 +297,9 @@
 		NSEnumerator	*enumerator = [accountActionMenuItems objectEnumerator];
 		NSMenuItem		*menuItem;
 		while ((menuItem = [enumerator nextObject])) {
-			[actionsSubmenu addItem:[menuItem copy]];
+			NSMenuItem	*newMenuItem = [menuItem copy];
+			[actionsSubmenu addItem:newMenuItem];
+			[newMenuItem release];
 		}
 	}
 	
@@ -313,19 +314,22 @@
  */
 - (void)addStateMenuItems:(NSArray *)menuItemArray
 {
-	NSEnumerator		*enumerator;
-	NSMenuItem			*accountMenuItem;
+	NSMutableArray		*newMenuItems = [NSMutableArray array];
+	NSArray				*accountMenuItems = [self menuItems];
+	unsigned int		accountMenuItemsCount = [accountMenuItems count];
+	unsigned int		index;
+	
+	//Add status items only if we have more than one account
+	if (accountMenuItemsCount <= 1) return;
 
-	//We'll need to add these menu items items to each of our accounts
-	enumerator = [[self menuItems] objectEnumerator];
-	while ((accountMenuItem = [enumerator nextObject])) {    		
-		AIAccount	*account = [accountMenuItem representedObject];
-		NSMenu		*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
-		
-		//Add status items if we have more than one account
-		NSEnumerator	*menuItemEnumerator = [menuItemArray objectEnumerator];
-		NSMenuItem		*statusMenuItem;
-		
+	for (index = 0; index < accountMenuItemsCount; index++) {
+		NSMenuItem			*accountMenuItem  = [accountMenuItems objectAtIndex:index];
+		AIAccount			*account = [accountMenuItem representedObject];
+		NSMenu				*accountSubmenu = [[[NSMenu allocWithZone:[NSMenu zone]] init] autorelease];
+		NSEnumerator		*menuItemEnumerator = [menuItemArray objectEnumerator];
+		NSMenuItem			*statusMenuItem;
+		BOOL				lastTime = (index == (accountMenuItemsCount - 1));
+
 		[accountSubmenu setMenuChangedMessagesEnabled:NO];
 		
 		//Enumerate all the menu items we were originally passed
@@ -340,22 +344,40 @@
 					account, @"AIAccount",
 					nil];
 			} else {
+				//Custom status items don't have an associated AIStatus.
 				newRepresentedObject = [NSDictionary dictionaryWithObject:account
 																   forKey:@"AIAccount"];
 			}
 			
-			//Create a copy of the item for this account and add it to our status menu
-			NSMenuItem *newItem = [statusMenuItem copy];
-			[newItem setRepresentedObject:newRepresentedObject];
-			[accountSubmenu addItem:newItem];
-			[newItem release];
+			if (lastTime) {
+				//The last time, we can use the original menu item rather than creating a copy
+				[statusMenuItem setRepresentedObject:newRepresentedObject];
+				[accountSubmenu addItem:statusMenuItem];
+
+			} else {
+				//Create a copy of the item for this account and add it to our status menu
+				NSMenuItem *newItem = [statusMenuItem copy];
+				[newItem setRepresentedObject:newRepresentedObject];
+				[accountSubmenu addItem:newItem];
+				[newItem release];				
+			}
 		}
 		
 		[accountSubmenu setMenuChangedMessagesEnabled:YES];
+
+		if (!lastTime) {
+			[newMenuItems addObjectsFromArray:[accountSubmenu itemArray]];
+		}
 		
 		//Add the status menu to our account menu item
 		[accountMenuItem setSubmenu:accountSubmenu];		
 	}
+	
+	/* Let the status controller know about the menuItems we created based on the menuItemArray
+	 * we were passed. This will allow the status controller to manage the proper checkboxes.
+	 */
+	 [[adium statusController] plugin:self
+					 didAddMenuItems:newMenuItems];
 }
 
 /*!
@@ -367,7 +389,7 @@
 	NSMenuItem		*menuItem;
 
 	//We'll need to add these menu items items to each of our accounts
-	while ((menuItem = [enumerator nextObject])) {    		
+	while ((menuItem = [enumerator nextObject])) {
 		[menuItem setSubmenu:nil];
 	}
 }
