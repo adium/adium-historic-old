@@ -111,4 +111,11 @@
 	return !shouldCancel;
 }
 
+#pragma mark -
+#pragma mark NSMenuItem validation
+
+- (BOOL)validateMenuItem:(id <NSMenuItem>)item {
+	return ([[AXCDocumentController sharedDocumentController] documentClassForType:[item title]] != Nil);
+}
+
 @end
