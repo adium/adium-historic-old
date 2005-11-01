@@ -7,6 +7,8 @@
 //
 
 #import "AXCStartingPointsController.h"
+
+#import "AXCDocumentController.h"
 #import "NSMutableArrayAdditions.h"
 
 @implementation AXCStartingPointsController
@@ -76,10 +78,10 @@
 - (IBAction) makeNewDocumentOfSelectedType:(id)sender {
 	int selection = [sender selectedRow];
 	if (selection >= 0)
-		[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
+		[[AXCDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
 }
 - (IBAction) makeNewDocumentWithTypeBeingTitleOfMenuItem:(NSMenuItem *)sender {
-	[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[sender title] display:YES];
+	[[AXCDocumentController sharedDocumentController] openUntitledDocumentOfType:[sender title] display:YES];
 }
 
 - (IBAction) displayStartingPoints:(id)sender {
