@@ -402,10 +402,10 @@ int statusMenuItemSort(id menuItemA, id menuItemB, void *context)
 																			action:@selector(selectStatus:)
 																	 keyEquivalent:@""];
 
-			image = [[[AIStatusIcons statusIconForStatusName:[statusDict objectForKey:KEY_STATUS_NAME]
+			image = [AIStatusIcons statusIconForStatusName:[statusDict objectForKey:KEY_STATUS_NAME]
 												  statusType:type
-													iconType:AIStatusIconList
-												   direction:AIIconNormal] copy] autorelease];
+													iconType:AIStatusIconMenu
+												   direction:AIIconNormal];
 
 			[menuItem setRepresentedObject:statusDict];
 			[menuItem setImage:image];
@@ -1134,7 +1134,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	NSNumber		*identifier = [NSNumber numberWithInt:[stateMenuPlugin hash]];
 	NSMutableArray  *menuItemArray = [stateMenuItemArraysDict objectForKey:identifier];
 
-	//Clear the array
+	//Remove the menu items from needing update
+	[stateMenuItemsNeedingUpdating minusSet:[NSSet setWithArray:menuItemArray]];
+
+	//Clear the array itself
 	[menuItemArray removeAllObjects];
 }
 
@@ -1164,7 +1167,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 
 	[menuItem setImage:[AIStatusIcons statusIconForStatusName:nil
 												   statusType:statusType
-													 iconType:AIStatusIconList
+													 iconType:AIStatusIconMenu
 													direction:AIIconNormal]];
 	[menuItem setTag:statusType];
 	
@@ -1230,7 +1233,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 											  action:@selector(selectState:)
 									   keyEquivalent:@""];
 
-		[menuItem setImage:[statusState icon]];
+		[menuItem setImage:[statusState menuIcon]];
 		[menuItem setTag:currentStatusType];
 		[menuItem setToolTip:[statusState statusMessageString]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
@@ -1270,6 +1273,9 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	//Inform the plugin that we are removing the items in this array
 	[stateMenuPlugin removeStateMenuItems:menuItemArray];
 
+	//Remove the menu items from needing update
+	[stateMenuItemsNeedingUpdating minusSet:[NSSet setWithArray:menuItemArray]];
+
 	//Now clear the array
 	[menuItemArray removeAllObjects];
 }
@@ -1287,10 +1293,10 @@ int _statusArraySort(id objectA, id objectB, void *context)
 	[self _resetActiveStatusState];
 
 	NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-	NSValue					*stateMenuPluginContainer;
+	NSValue					*stateMenuPluginValue;
 
-	while ((stateMenuPluginContainer = [enumerator nextObject])) {
-		id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginContainer nonretainedObjectValue];
+	while ((stateMenuPluginValue = [enumerator nextObject])) {
+		id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginValue nonretainedObjectValue];
 
 		[self _removeStateMenuItemsForPlugin:stateMenuPlugin];
 		[self _addStateMenuItemsForPlugin:stateMenuPlugin];
@@ -1313,14 +1319,15 @@ int _statusArraySort(id objectA, id objectB, void *context)
 {
 	if (stateMenuUpdateDelays == 0) {
 		NSEnumerator			*enumerator = [stateMenuPluginsArray objectEnumerator];
-		id <StateMenuPlugin>	stateMenuPlugin;
+		NSValue					*stateMenuPluginValue;
 
-		while ((stateMenuPlugin = [enumerator nextObject])) {
+		[self _resetActiveStatusState];
+
+		while ((stateMenuPluginValue = [enumerator nextObject])) {
+			id <StateMenuPlugin> stateMenuPlugin = [stateMenuPluginValue nonretainedObjectValue];
 			[self updateStateMenuSelectionForPlugin:stateMenuPlugin];
 		}
-		
-		[self _resetActiveStatusState];
-		
+
 		/* Let any relevant plugins respond to the to-be-changed state menu selection. Technically we
 		 * haven't changed it yet, since we'll do that in validateMenuItem:, but the fact that we will now
 		 * need to change it is useful if, for example, key equivalents change in a menu alongside selection
@@ -1390,6 +1397,9 @@ int _statusArraySort(id objectA, id objectB, void *context)
  * Our state menu items should always be active, so always return YES for validation.
  *
  * Here we lazily set the state of our menu items if our stateMenuItemsNeedingUpdating set indicates it is needed.
+ *
+ * Random note: stateMenuItemsNeedingUpdating will almost never have a count of 0 because separatorItems
+ * get included but never get validated.
  */
 - (BOOL)validateMenuItem:(id <NSMenuItem>)menuItem
 {
@@ -1408,7 +1418,6 @@ int _statusArraySort(id objectA, id objectB, void *context)
 		} else {
 			shouldSelectOffline = noAccountsAreOnline;
 		}
-
 		menuItemStatusState = [dict objectForKey:@"AIStatus"];
 
 		if (shouldSelectOffline) {
@@ -1751,7 +1760,7 @@ int _statusArraySort(id objectA, id objectB, void *context)
 											  action:nil
 									   keyEquivalent:@""];
 
-		[menuItem setImage:[statusState icon]];
+		[menuItem setImage:[statusState menuIcon]];
 		[menuItem setTag:[statusState statusType]];
 		[menuItem setRepresentedObject:[NSDictionary dictionaryWithObject:statusState
 																   forKey:@"AIStatus"]];
