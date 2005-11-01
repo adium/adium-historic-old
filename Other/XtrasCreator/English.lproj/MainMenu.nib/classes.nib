@@ -1,6 +1,18 @@
 {
     IBClasses = (
         {
+            CLASS = AXCAppDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {startingPointsController = AXCStartingPointsController; }; 
+            SUPERCLASS = NSObject; 
+        }, 
+        {
+            CLASS = AXCDocumentController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {startingPointsController = AXCStartingPointsController; }; 
+            SUPERCLASS = NSDocumentController; 
+        }, 
+        {
             ACTIONS = {displayStartingPoints = id; makeNewDocumentOfSelectedType = id; }; 
             CLASS = AXCStartingPointsController; 
             LANGUAGE = ObjC; 
@@ -8,7 +20,12 @@
             SUPERCLASS = NSObject; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
-        {CLASS = LMXAppDelegate; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
+        {
+            CLASS = LMXAppDelegate; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {startingPointsController = AXCStartingPointsController; }; 
+            SUPERCLASS = NSObject; 
+        }
     ); 
     IBVersion = 1; 
 }

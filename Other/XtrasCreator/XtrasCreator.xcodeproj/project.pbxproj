@@ -27,11 +27,11 @@
 		07E000E50915700B003FE813 /* AXCIconPackDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E000E40915700B003FE813 /* AXCIconPackDocument.m */; };
 		07E0018A09158940003FE813 /* NSMutableArrayAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E0018909158940003FE813 /* NSMutableArrayAdditions.m */; };
 		07E001B309159255003FE813 /* AXCIconPackEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E001B209159255003FE813 /* AXCIconPackEntry.m */; };
-		07E002740915AE07003FE813 /* LMXAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E002730915AE07003FE813 /* LMXAppDelegate.m */; };
 		07E002780915AE6B003FE813 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E002770915AE6B003FE813 /* ExceptionHandling.framework */; };
 		07E002870915AF7A003FE813 /* IconPack_IconPlistView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 07E002850915AF7A003FE813 /* IconPack_IconPlistView.nib */; };
 		6354959F0911F01300F1EB0A /* MessageStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354959E0911F01300F1EB0A /* MessageStyleViewController.m */; };
 		635495A30911F19900F1EB0A /* MessageStyleView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 635495A20911F19900F1EB0A /* MessageStyleView.nib */; };
+		63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */; };
 		63D96247091616FD0041DF83 /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D96244091616FD0041DF83 /* IconFamily.m */; };
 		63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D96246091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m */; };
 		8D15AC2C0486D014006FF6A4 /* Credits.rtf in Resources */ = {isa = PBXBuildFile; fileRef = 2A37F4B9FDCFA73011CA2CEA /* Credits.rtf */; };
@@ -99,8 +99,6 @@
 		07E0018909158940003FE813 /* NSMutableArrayAdditions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSMutableArrayAdditions.m; sourceTree = "<group>"; };
 		07E001B109159255003FE813 /* AXCIconPackEntry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCIconPackEntry.h; sourceTree = "<group>"; };
 		07E001B209159255003FE813 /* AXCIconPackEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCIconPackEntry.m; sourceTree = "<group>"; };
-		07E002720915AE07003FE813 /* LMXAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LMXAppDelegate.h; sourceTree = "<group>"; };
-		07E002730915AE07003FE813 /* LMXAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LMXAppDelegate.m; sourceTree = "<group>"; };
 		07E002770915AE6B003FE813 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		07E002860915AF7A003FE813 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/IconPack_IconPlistView.nib; sourceTree = "<group>"; };
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -119,6 +117,8 @@
 		6354959E0911F01300F1EB0A /* MessageStyleViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageStyleViewController.m; sourceTree = "<group>"; };
 		635495A20911F19900F1EB0A /* MessageStyleView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessageStyleView.nib; path = English.lproj/MessageStyleView.nib; sourceTree = "<group>"; };
 		635495FC0911FD5000F1EB0A /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
+		63B88C2C0916EFDF00B2803B /* AXCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AXCAppDelegate.h; sourceTree = "<group>"; };
+		63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AXCAppDelegate.m; sourceTree = "<group>"; };
 		63D96243091616FD0041DF83 /* IconFamily.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = IconFamily.h; sourceTree = "<group>"; };
 		63D96244091616FD0041DF83 /* IconFamily.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = IconFamily.m; sourceTree = "<group>"; };
 		63D96245091616FD0041DF83 /* NSString+CarbonFSSpecCreation.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = "NSString+CarbonFSSpecCreation.h"; sourceTree = "<group>"; };
@@ -241,8 +241,8 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
-				07E002720915AE07003FE813 /* LMXAppDelegate.h */,
-				07E002730915AE07003FE813 /* LMXAppDelegate.m */,
+				63B88C2C0916EFDF00B2803B /* AXCAppDelegate.h */,
+				63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */,
 				076D85B60914E12000D6D22C /* Generic */,
 				2A37F4AEFDCFA73011CA2CEA /* AXCAbstractXtraDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* AXCAbstractXtraDocument.m */,
@@ -384,11 +384,11 @@
 				07E000E50915700B003FE813 /* AXCIconPackDocument.m in Sources */,
 				07E0018A09158940003FE813 /* NSMutableArrayAdditions.m in Sources */,
 				07E001B309159255003FE813 /* AXCIconPackEntry.m in Sources */,
-				07E002740915AE07003FE813 /* LMXAppDelegate.m in Sources */,
 				63D96247091616FD0041DF83 /* IconFamily.m in Sources */,
 				63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */,
 				07484CB8091624B500D1A683 /* NSFileManager+BundleBit.m in Sources */,
 				07484D0B09162D7700D1A683 /* AXCStartingPointsController.m in Sources */,
+				63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

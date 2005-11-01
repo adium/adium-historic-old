@@ -7,9 +7,10 @@
 //
 
 //ganked from LMX.
+@class AXCStartingPointsController;
 
-@interface LMXAppDelegate : NSObject {
-
+@interface AXCAppDelegate : NSObject {
+	IBOutlet AXCStartingPointsController * startingPointsController;
 }
 
 @end
