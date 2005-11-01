@@ -27,7 +27,11 @@
 	static const float visualSeparation = 8.0;
 
 	/*draw the icon*/ {
-		NSImage *icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		//first try to get a preview (AXCAbstractXtraDocument creates these).
+		NSImage *icon = [NSImage imageNamed:[@"Preview of " stringByAppendingString:path]];
+		//if there isn't one, just get the file's icon.
+		if (!icon)
+			icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
 		[icon setFlipped:YES];
 
 		//get the largest size that will fit entirely within the frame.
