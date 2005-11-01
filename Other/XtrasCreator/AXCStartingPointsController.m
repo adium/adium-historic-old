@@ -127,7 +127,11 @@
 
 - (BOOL)validateMenuItem:(id <NSMenuItem>)item
 {
-	return ([[AXCDocumentController sharedDocumentController] documentClassForType:[item title]] != Nil);
+	//the Starting Points command has a tag of 1. all the menu items in the New submenu have a tag of 0.
+	if ([item tag])
+		return ![self isStartingPointsVisible];
+	else
+		return ([[AXCDocumentController sharedDocumentController] documentClassForType:[item title]] != Nil);
 }
 
 @end
