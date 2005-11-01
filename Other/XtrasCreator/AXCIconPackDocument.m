@@ -97,11 +97,11 @@
 	if (categoryIndex != NSNotFound)
 		return isKeyColumn ? item : [NSNumber numberWithInt:-1];
 	else
-		return isKeyColumn ? [item key] : [item path];
+		return isKeyColumn ? (NSObject *)[item key] : (NSObject *)[NSNumber numberWithUnsignedInt:[resources indexOfObject:[item path]] + 1];
 }
 - (void) outlineView:(NSOutlineView *)outlineView setObjectValue:(id)newValue forTableColumn:(NSTableColumn *)col byItem:(id)item
 {
-	//XXX
+	[(AXCIconPackEntry *)item setPath:[resources objectAtIndex:[(NSNumber *)newValue intValue]]];
 }
 
 - (NSDragOperation)outlineView:(NSOutlineView *)outlineView validateDrop:(id <NSDraggingInfo>)info proposedItem:(id)item proposedChildIndex:(int)index
@@ -125,14 +125,23 @@
 #pragma mark NSOutlineView delegate conformance
 
 - (void)outlineView:(NSOutlineView *)outlineView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn item:(id)item {
-	NSMenu *menu = [cell menu];
-	if ([categoryNames containsObject:item]) {
-		[menu setDelegate:nil];
-		unsigned count = [menu numberOfItems];
-		while(count--)
-			[menu removeItemAtIndex:0];
-	} else
-		[menu setDelegate:self];
+	if ([cell isKindOfClass:[NSPopUpButtonCell class]]) {
+		if ([categoryNames containsObject:item]) {
+			[cell setMenu:emptyMenu];
+			[cell setArrowPosition:NSPopUpNoArrow]; //hide arrow for categories
+		} else {
+			[cell setMenu:menuWithResourceFiles];
+			[cell setArrowPosition:NSPopUpArrowAtBottom]; //show arrow for item pairs
+
+			//we have to do this because of an NSMenu bug.
+			//http://www.corbinstreehouse.com/blog/archives/2005/07/dynamically_pop.html
+			[[cell menu] setDelegate:self];
+
+			//this is lame but necessary too.
+			if (![item path])
+				[cell selectItemAtIndex:-1];
+		}
+	}
 }
 
 #pragma mark NSMenu delegate conformance
@@ -143,7 +152,7 @@
 }
 - (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
-	[item setTitle:[resources objectAtIndex:index]];
+	[item setTitle:[[resources objectAtIndex:index] lastPathComponent]];
 	return !shouldCancel;
 }
 

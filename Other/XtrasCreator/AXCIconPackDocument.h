@@ -12,11 +12,12 @@
 
 @interface AXCIconPackDocument : AXCAbstractXtraDocument {
 	NSArray *categoryNames;
-	NSDictionary *categoryStorage; //keys: category names; values: NSArrays of icon keys
+	NSDictionary *categoryStorage; //keys: category names; values: NSArrays of AXCIconPackEntry objects
 
 	NSArray *tabViewItems;
 	IBOutlet NSView *topLevelView; //evil
 	IBOutlet NSOutlineView *iconPlistView;
+	IBOutlet NSMenu *emptyMenu, *menuWithResourceFiles;
 }
 
 #pragma mark For subclasses

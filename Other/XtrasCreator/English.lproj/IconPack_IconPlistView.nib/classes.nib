@@ -19,7 +19,12 @@
         {
             CLASS = AXCIconPackDocument; 
             LANGUAGE = ObjC; 
-            OUTLETS = {iconPlistView = NSOutlineView; topLevelView = NSView; }; 
+            OUTLETS = {
+                emptyMenu = NSMenu; 
+                iconPlistView = NSOutlineView; 
+                menuWithResourceFiles = NSMenu; 
+                topLevelView = NSView; 
+            }; 
             SUPERCLASS = AXCAbstractXtraDocument; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
