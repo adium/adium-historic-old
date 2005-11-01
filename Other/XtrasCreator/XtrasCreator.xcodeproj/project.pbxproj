@@ -29,6 +29,7 @@
 		07E001B309159255003FE813 /* AXCIconPackEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E001B209159255003FE813 /* AXCIconPackEntry.m */; };
 		07E002780915AE6B003FE813 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E002770915AE6B003FE813 /* ExceptionHandling.framework */; };
 		07E002870915AF7A003FE813 /* IconPack_IconPlistView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 07E002850915AF7A003FE813 /* IconPack_IconPlistView.nib */; };
+		07EE8605091731A500D6FB38 /* AXCDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07EE8604091731A500D6FB38 /* AXCDocumentController.m */; };
 		6354959F0911F01300F1EB0A /* MessageStyleViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6354959E0911F01300F1EB0A /* MessageStyleViewController.m */; };
 		635495A30911F19900F1EB0A /* MessageStyleView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 635495A20911F19900F1EB0A /* MessageStyleView.nib */; };
 		63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */; };
@@ -101,6 +102,8 @@
 		07E001B209159255003FE813 /* AXCIconPackEntry.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCIconPackEntry.m; sourceTree = "<group>"; };
 		07E002770915AE6B003FE813 /* ExceptionHandling.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ExceptionHandling.framework; path = /System/Library/Frameworks/ExceptionHandling.framework; sourceTree = "<absolute>"; };
 		07E002860915AF7A003FE813 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = English.lproj/IconPack_IconPlistView.nib; sourceTree = "<group>"; };
+		07EE8603091731A500D6FB38 /* AXCDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCDocumentController.h; sourceTree = "<group>"; };
+		07EE8604091731A500D6FB38 /* AXCDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCDocumentController.m; sourceTree = "<group>"; };
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 10; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		13E42FBA07B3F13500E4EEF1 /* CoreData.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreData.framework; path = /System/Library/Frameworks/CoreData.framework; sourceTree = "<absolute>"; };
@@ -243,6 +246,10 @@
 			children = (
 				63B88C2C0916EFDF00B2803B /* AXCAppDelegate.h */,
 				63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */,
+				07EE8603091731A500D6FB38 /* AXCDocumentController.h */,
+				07EE8604091731A500D6FB38 /* AXCDocumentController.m */,
+				07484D0909162D7700D1A683 /* AXCStartingPointsController.h */,
+				07484D0A09162D7700D1A683 /* AXCStartingPointsController.m */,
 				076D85B60914E12000D6D22C /* Generic */,
 				2A37F4AEFDCFA73011CA2CEA /* AXCAbstractXtraDocument.h */,
 				2A37F4ACFDCFA73011CA2CEA /* AXCAbstractXtraDocument.m */,
@@ -250,8 +257,6 @@
 				6354959D0911F01300F1EB0A /* MessageStyleViewController.h */,
 				6354959E0911F01300F1EB0A /* MessageStyleViewController.m */,
 				07E000E209156F99003FE813 /* Service and Status icons */,
-				07484D0909162D7700D1A683 /* AXCStartingPointsController.h */,
-				07484D0A09162D7700D1A683 /* AXCStartingPointsController.m */,
 			);
 			name = Classes;
 			sourceTree = "<group>";
@@ -389,6 +394,7 @@
 				07484CB8091624B500D1A683 /* NSFileManager+BundleBit.m in Sources */,
 				07484D0B09162D7700D1A683 /* AXCStartingPointsController.m in Sources */,
 				63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */,
+				07EE8605091731A500D6FB38 /* AXCDocumentController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -58,6 +58,16 @@
 	return documentTypes;
 }
 
+- (void) setStartingPointsVisible:(BOOL)flag {
+	if (flag)
+		[startingPointsWindow makeKeyAndOrderFront:nil];
+	else
+		[startingPointsWindow orderOut:nil];
+}
+- (BOOL) isStartingPointsVisible {
+	return [startingPointsWindow isVisible];
+}
+
 #pragma mark -
 #pragma mark Actions
 
@@ -65,11 +75,10 @@
 	int selection = [sender selectedRow];
 	if (selection >= 0)
 		[[NSDocumentController sharedDocumentController] openUntitledDocumentOfType:[documentTypes objectAtIndex:selection] display:YES];
-	[startingPointsWindow performClose:nil];
 }
 
 - (IBAction) displayStartingPoints:(id)sender {
-	[startingPointsWindow makeKeyAndOrderFront:nil];
+	[self setStartingPointsVisible:YES];
 }
 
 #pragma mark -
