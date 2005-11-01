@@ -48,6 +48,10 @@
 - (NSString *) pathExtension;
 - (NSString *) uniformTypeIdentifier;
 
+//types of files that can be added as resources via the 'Add Files...' button, or via drag-and-drop.
+//if nil, all types are valid.
+- (NSArray *) validResourceTypes;
+
 //added to the tab view.
 - (NSArray *) tabViewItems;
 

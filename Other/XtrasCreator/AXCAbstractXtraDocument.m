@@ -147,7 +147,19 @@
 {
 	NSOpenPanel * p = [NSOpenPanel openPanel];
 	[p setAllowsMultipleSelection:YES];
-	[p runModal];
+	[p beginSheetForDirectory:nil
+						 file:nil
+						types:[self validResourceTypes]
+			   modalForWindow:[self windowForSheet]
+				modalDelegate:self
+			   didEndSelector:@selector(didEndAddFilesPanel:returnCode:contextInfo:)
+				  contextInfo:NULL];
+}
+
+- (void) didEndAddFilesPanel:(NSOpenPanel *)p returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode != NSOKButton)
+		return;
 
 	NSArray *newFiles = [p filenames];
 	NSMutableSet *newFilesSet = [NSMutableSet setWithArray:newFiles];
@@ -241,6 +253,11 @@
 - (NSString *) uniformTypeIdentifier
 {
 	return @"com.adiumx.xtra";
+}
+
+- (NSArray *) validResourceTypes
+{
+	return nil;
 }
 
 //added to the tab view.
