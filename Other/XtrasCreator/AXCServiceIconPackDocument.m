@@ -28,7 +28,6 @@
 }
 
 - (NSArray *) entriesForNewDocumentInCategory:(NSString *)categoryName {
-#warning XXX FIXME
 	return [NSArray arrayWithObjects:
 		[AXCIconPackEntry entryWithKey:@"AIM"          path:nil],
 		[AXCIconPackEntry entryWithKey:@"Bonjour"      path:nil],
