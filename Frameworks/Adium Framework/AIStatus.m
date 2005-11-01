@@ -156,9 +156,10 @@
  *
  * This method will generate an appropriate status icon based on the state's content.
  *
+ * @param iconType The AIStatusIconType to use
  * @result An <tt>NSImage</tt>
- */ 
-- (NSImage *)icon
+ */
+- (NSImage *)iconOfType:(AIStatusIconType)iconType
 {
 	NSString		*statusName;
 	AIStatusType	statusType;
@@ -170,11 +171,28 @@
 		statusName = [self statusName];
 		statusType = [self statusType];
 	}
-
+	
 	return [AIStatusIcons statusIconForStatusName:statusName
 									   statusType:statusType
-										 iconType:AIStatusIconList
+										 iconType:iconType
 										direction:AIIconNormal];
+}
+
+/*!
+ * @brief Returns an appropriate icon for this state
+ *
+ * This method will generate an appropriate status icon based on the state's content.
+ *
+ * @result An <tt>NSImage</tt>
+ */ 
+- (NSImage *)icon
+{
+	return [self iconOfType:AIStatusIconList];
+}
+
+- (NSImage *)menuIcon
+{
+	return [self iconOfType:AIStatusIconMenu];	
 }
 
 /*!
