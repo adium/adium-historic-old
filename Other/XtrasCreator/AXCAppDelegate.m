@@ -15,14 +15,20 @@
 
 @implementation AXCAppDelegate
 
+- (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
+{
+	[startingPointsController displayStartingPoints:nil];
+	return YES;
+}
+
+#pragma mark Ganked from LMXAppDelegate (in LMX)
+
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
 #pragma unused(notification)
 	NSExceptionHandler *excHandler = [NSExceptionHandler defaultExceptionHandler];
 	[excHandler setExceptionHandlingMask:NSLogUncaughtExceptionMask | NSLogUncaughtSystemExceptionMask | NSLogUncaughtRuntimeErrorMask | NSLogTopLevelExceptionMask | NSLogOtherExceptionMask];
 	[excHandler setDelegate:self];
 }
-
-#pragma mark -
 
 - (BOOL)exceptionHandler:(NSExceptionHandler *)sender shouldLogException:(NSException *)exception mask:(unsigned int)aMask {
 	NSMutableArray *symbols = [[[[exception userInfo] objectForKey:NSStackTraceKey] componentsSeparatedByString:@"  "] mutableCopy];
@@ -46,12 +52,6 @@
 	NSLog(@"got %@ with reason %@; stack trace follows\n%@", [exception name], [exception reason], stackTrace);
 
 	return NO; //because we just did
-}
-
-- (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
-{
-	[startingPointsController displayStartingPoints:nil];
-	return YES;
 }
 
 @end
