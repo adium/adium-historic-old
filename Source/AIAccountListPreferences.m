@@ -68,12 +68,27 @@
 	[self configureAccountList];
 	[self updateAccountOverview];
 	
-	//Build the 'add account' menu
+	//Build the 'add account' menu of each available service
 	NSMenu	*serviceMenu = [AIServiceMenu menuOfServicesWithTarget:self 
 												activeServicesOnly:NO
 												   longDescription:YES
 															format:AILocalizedString(@"%@",nil)];
 	[serviceMenu setAutoenablesItems:YES];
+	
+	//Indent each item in the service menu one level
+	NSEnumerator	*enumerator = [[serviceMenu itemArray] objectEnumerator];
+	NSMenuItem		*menuItem;
+	while ((menuItem = [enumerator nextObject])) {
+		[menuItem setIndentationLevel:[menuItem indentationLevel]+1];
+	}
+
+	//Add a label to the top of the menu to clarify why we're showing this list of services
+	[serviceMenu insertItemWithTitle:AILocalizedString(@"Add an account for:",nil)
+							  action:NULL
+					   keyEquivalent:@""
+							 atIndex:0];
+	
+	//Assign the menu
 	[button_newAccount setMenu:serviceMenu];
 
 	//Observe status icon pack changes
