@@ -57,6 +57,7 @@
 - (NSDictionary *)storedEventPresets;
 - (NSArray *)storedEventPresetsArray;
 
++ (NSDictionary *)soundAlertForKey:(NSString *)key inSoundsDict:(NSDictionary *)sounds;
 - (void)applySoundSet:(AISoundSet *)soundSet;
 
 - (float)nextOrderIndex;
