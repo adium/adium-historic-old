@@ -166,6 +166,11 @@
 
 #pragma mark Implementation of Xtra-document methods
 
+- (NSArray *) validResourceTypes
+{
+	return [NSImage imageFileTypes];
+}
+
 - (NSArray *) tabViewItems
 {
 	if (!tabViewItems) {
