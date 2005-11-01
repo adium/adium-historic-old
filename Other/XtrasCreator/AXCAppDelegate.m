@@ -6,13 +6,14 @@
 //  Copyright 2005 Mac-arena the Bored Zo. All rights reserved.
 //
 
-#import "LMXAppDelegate.h"
+#import "AXCAppDelegate.h"
 
 #include <sys/types.h>
 #include <unistd.h>
 #import <ExceptionHandling/NSExceptionHandler.h>
+#import "AXCStartingPointsController.h"
 
-@implementation LMXAppDelegate
+@implementation AXCAppDelegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
 #pragma unused(notification)
@@ -45,6 +46,12 @@
 	NSLog(@"got %@ with reason %@; stack trace follows\n%@", [exception name], [exception reason], stackTrace);
 
 	return NO; //because we just did
+}
+
+- (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
+{
+	[startingPointsController displayStartingPoints:nil];
+	return YES;
 }
 
 @end
