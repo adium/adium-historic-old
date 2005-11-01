@@ -15,6 +15,10 @@
 }
 
 - (NSArray *) documentTypes;
+
+- (void) setStartingPointsVisible:(BOOL)flag;
+- (BOOL) isStartingPointsVisible;
+
 - (IBAction) displayStartingPoints:(id)sender;
 - (IBAction) makeNewDocumentOfSelectedType:(id)sender;
 
