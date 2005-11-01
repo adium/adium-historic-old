@@ -133,6 +133,22 @@
 }
 
 #pragma mark Sound Sets
++ (NSDictionary *)soundAlertForKey:(NSString *)key inSoundsDict:(NSDictionary *)sounds
+{
+	NSDictionary	*soundAlert = nil;
+	NSString		*event;
+
+	if (key &&
+		(event = [[[AIObject sharedAdiumInstance] contactAlertsController] eventIDForEnglishDisplayName:key])) {
+		soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:event, KEY_EVENT_ID,
+			SOUND_ALERT_IDENTIFIER, KEY_ACTION_ID, 
+			[NSDictionary dictionaryWithObject:[sounds objectForKey:key] forKey: KEY_ALERT_SOUND_PATH], KEY_ACTION_DETAILS,
+			nil];
+	}
+	
+	return soundAlert;
+}
+
 /*!
 * @brief Apply a sound set
  */
@@ -150,13 +166,9 @@
 	//        
 	enumerator = [sounds keyEnumerator];
 	while ((key = [enumerator nextObject])) {
-		NSString	*event = [[adium contactAlertsController] eventIDForEnglishDisplayName:key];
-		
-		if(event){
-			NSDictionary	*soundAlert = [NSDictionary dictionaryWithObjectsAndKeys:event, KEY_EVENT_ID,
-				SOUND_ALERT_IDENTIFIER, KEY_ACTION_ID, 
-				[NSDictionary dictionaryWithObject:[sounds objectForKey:key] forKey: KEY_ALERT_SOUND_PATH], KEY_ACTION_DETAILS,nil];
-			
+		NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key
+																		inSoundsDict:sounds];
+		if (soundAlert) {
 			[[adium contactAlertsController] addGlobalAlert:soundAlert];
 		}
 	}

@@ -427,26 +427,41 @@
  */
 - (void)contactAlertsDidChangeForActionID:(NSString *)actionID
 {
-	if ([actionID isEqualToString:SOUND_ALERT_IDENTIFIER]) {
+	if (!actionID ||
+		[actionID isEqualToString:SOUND_ALERT_IDENTIFIER]) {
 		
 		NSArray			*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
 																				withEventID:nil
 																				   actionID:SOUND_ALERT_IDENTIFIER];
-		NSMenuItem		*soundMenuItem = nil;
-	
-		//We can select "None" if there are no sounds
+		NSMenuItem		*soundMenuItem;
+		
 		if (![alertsArray count]) {
+			//We can select "None" if there are no sounds
 			soundMenuItem = (NSMenuItem *)[popUp_soundSet itemWithTitle:@"None"];
+
+		} else {
+			/* Otherwise, check to see if we remain in our proper soundset.
+			 * Note that this won't detect if we return to a soundset, but that'd be an expensive search.
+			 */
+			soundMenuItem = (NSMenuItem *)[popUp_soundSet selectedItem];
+
+			AISoundSet		*soundSet = [soundMenuItem representedObject];
+			NSEnumerator	*enumerator;
+			NSDictionary	*key;
+			NSDictionary	*sounds = [soundSet sounds];
+
+			enumerator = [sounds keyEnumerator];
+			while ((key = [enumerator nextObject])) {
+				NSDictionary *soundAlert = [ESGlobalEventsPreferencesPlugin soundAlertForKey:key
+																				inSoundsDict:sounds];
+				if (![alertsArray containsObject:soundAlert]) {
+					soundMenuItem = nil;
+					break;
+				}
+			}
 		}
 
-		/* Sounds changed.  Could check all sounds to determine if we are on a soundset or are now 'custom',
-		 * but that would probably be very expensive.
-		 *
-		 * For now, if sounds change, we no longer show as being in a set, even if we really are.
-		 * 
-		 * Simulate the user having selected the appropriate menu item.
-		 */
-		[self selectSoundSet:soundMenuItem];
+		[self selectSoundSet:([soundMenuItem representedObject] ? soundMenuItem : nil)];
 
 	} else {
 		[self saveCurrentEventPreset];
@@ -462,7 +477,9 @@
 - (IBAction)selectSoundSet:(id)sender
 {
 	//Apply the sound set so its events are in the current alerts.
-	[plugin applySoundSet:[sender representedObject]];
+	if (sender) {
+		[plugin applySoundSet:[sender representedObject]];
+	}
 
 	/* Update the selection, which will select Custom as appropriate.  This must be done before saving the event
 	 * preset so the menu is on the correct sound set to save.
@@ -500,8 +517,13 @@
 	NSMutableDictionary	*currentEventSetForSaving = [[eventPreset mutableCopy] autorelease];
 	
 	//Set the sound set, which is just stored here for ease of preference pane display
-	[currentEventSetForSaving setObject:[[[popUp_soundSet selectedItem] representedObject] name]
-								 forKey:KEY_EVENT_SOUND_SET];
+	NSString			*soundSetName = [[[popUp_soundSet selectedItem] representedObject] name];
+	if (soundSetName) {
+		[currentEventSetForSaving setObject:soundSetName
+									 forKey:KEY_EVENT_SOUND_SET];
+	} else {
+		[currentEventSetForSaving removeObjectForKey:KEY_EVENT_SOUND_SET];
+	}
 	
 	//Get and store the alerts array
 	NSArray				*alertsArray = [[adium contactAlertsController] alertsForListObject:nil
