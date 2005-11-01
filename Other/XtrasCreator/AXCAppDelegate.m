@@ -17,7 +17,7 @@
 
 - (BOOL)applicationOpenUntitledFile:(NSApplication *)theApplication
 {
-	[startingPointsController displayStartingPoints:nil];
+	[startingPointsController setStartingPointsVisible:YES];
 	return YES;
 }
 
