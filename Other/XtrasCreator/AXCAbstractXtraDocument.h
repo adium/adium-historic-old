@@ -13,6 +13,7 @@
 
 @interface AXCAbstractXtraDocument : NSDocument
 {
+	NSString *name, *author, *version;
 	NSMutableArray * resources;
 	NSMutableSet * resourcesSet;
 	NSImage * icon;
@@ -22,9 +23,6 @@
 
 	IBOutlet NSTabView * tabs;
 	IBOutlet NSTableView * fileView;
-	IBOutlet NSTextField * authorField;
-	IBOutlet NSTextField * nameField;
-	IBOutlet NSTextField * versionField;
 	id<ViewController> controller;
 	IBOutlet NSTextView * readmeView;
 }
@@ -35,6 +33,15 @@
 - (IBAction) runChooseIconPanel:(id)sender;
 
 #pragma mark Accessors
+
+- (void) setName:(NSString *)newName;
+- (NSString *) name;
+
+- (void) setAuthor:(NSString *)newAuthor;
+- (NSString *) author;
+
+- (void) setVersion:(NSString *)newVersion;
+- (NSString *) version;
 
 - (void) setIcon:(NSImage *)icon;
 - (NSImage *) icon;
