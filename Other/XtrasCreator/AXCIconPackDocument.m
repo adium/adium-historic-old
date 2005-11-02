@@ -48,13 +48,13 @@
 
 - (BOOL) writeToFile:(NSString *)fileName ofType:(NSString *)docType
 {
-#warning XXX pickle Info.plist here
+#warning XXX pickle Icons.plist here
 	return NO;
 }
 
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
 {
-#warning XXX unpickle Info.plist here
+#warning XXX unpickle Icons.plist here
 	return NO;
 }
 
