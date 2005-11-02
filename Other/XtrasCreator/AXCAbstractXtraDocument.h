@@ -25,7 +25,6 @@
 	IBOutlet NSTextField * authorField;
 	IBOutlet NSTextField * nameField;
 	IBOutlet NSTextField * versionField;
-	IBOutlet NSPopUpButton * typePopup; //XXX will be axed
 	id<ViewController> controller;
 	IBOutlet NSTextView * readmeView;
 }
