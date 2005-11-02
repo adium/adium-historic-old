@@ -16,7 +16,6 @@
 	NSMutableArray * resources;
 	NSMutableSet * resourcesSet;
 	NSImage * icon;
-	NSString * xtraType; //XXX might be axed
 
 	NSMutableDictionary *imagePreviews; //keys: paths to image files; values: NSImages
 	NSMutableDictionary *displayNames; //keys: paths to files; values: display names (for an image, includes ' (WxH)' suffix)
