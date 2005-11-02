@@ -27,6 +27,11 @@
 }
 
 - (void)dealloc {
+	[name release];
+	[author release];
+	[version release];
+	[icon release];
+	
 	[resources release];
 	[resourcesSet release];
 
@@ -62,7 +67,6 @@
 {
 	NSString * path = fileName;
 	NSFileManager * manager = [NSFileManager defaultManager];
-	NSString * name = [nameField stringValue];
 	if(![manager fileExistsAtPath:path])
 	{
 		[manager createDirectoryAtPath:path attributes:nil];
@@ -77,8 +81,8 @@
 			[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
 			[NSNumber numberWithInt:1], @"XtraBundleVersion",
 			@"1.0", kCFBundleInfoDictionaryVersionKey,
-			[versionField stringValue], @"XtraVersion",
-			[authorField stringValue], @"XtraAuthors",
+			version, @"XtraVersion",
+			author, @"XtraAuthors",
 			nil];
 		[infoPlist writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
 
@@ -190,13 +194,13 @@
 				if (!displayNames)
 					displayNames = [[NSMutableDictionary alloc] init];
 
-				NSString *name = [[NSFileManager defaultManager] displayNameAtPath:path];
+				NSString *displayName = [[NSFileManager defaultManager] displayNameAtPath:path];
 				if (image) {
 					enum { MULTIPLICATION_SIGN = 0x00d7 };
-					name = [NSString stringWithFormat:@"%@ (%u%C%u)", name, (unsigned)size.width, MULTIPLICATION_SIGN, (unsigned)size.height];
+					displayName = [NSString stringWithFormat:@"%@ (%u%C%u)", displayName, (unsigned)size.width, MULTIPLICATION_SIGN, (unsigned)size.height];
 				}
 
-				[displayNames setObject:name forKey:path];
+				[displayNames setObject:displayName forKey:path];
 			}
 		}
 	}
@@ -211,6 +215,30 @@
 }
 
 #pragma mark -
+
+- (void) setName:(NSString *)newName {
+	[name release];
+	name = [newName copy];
+}
+- (NSString *) name {
+	return name;
+}
+
+- (void) setAuthor:(NSString *)newAuthor {
+	[author release];
+	author = [newAuthor copy];
+}
+- (NSString *) author {
+	return author;
+}
+
+- (void) setVersion:(NSString *)newVersion {
+	[version release];
+	version = [newVersion copy];
+}
+- (NSString *) version {
+	return version;
+}
 
 - (void) setIcon:(NSImage *)inImage
 {
