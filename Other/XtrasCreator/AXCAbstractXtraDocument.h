@@ -13,7 +13,7 @@
 
 @interface AXCAbstractXtraDocument : NSDocument
 {
-	NSString *name, *author, *version;
+	NSString *name, *author, *version, *bundleID;
 	NSMutableArray * resources;
 	NSMutableSet * resourcesSet;
 	NSImage * icon;
@@ -42,6 +42,9 @@
 
 - (void) setVersion:(NSString *)newVersion;
 - (NSString *) version;
+
+- (void) setBundleID:(NSString *)newBundleID;
+- (NSString *) bundleID;
 
 - (void) setIcon:(NSImage *)icon;
 - (NSImage *) icon;
