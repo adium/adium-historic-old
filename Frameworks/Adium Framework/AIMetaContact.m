@@ -963,13 +963,13 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 //Retrieve an object by index
 - (id)objectAtIndex:(unsigned)index
 {
-    return [[self containedObjects] objectAtIndex:index];
+    return [[self listContacts] objectAtIndex:index];
 }
 
 //Retrieve the index of an object
 - (int)indexOfObject:(AIListObject *)inObject
 {
-    return [[self containedObjects] indexOfObject:inObject];
+    return [[self listContacts] indexOfObject:inObject];
 }
 
 //Return an enumerator of our content
@@ -1025,7 +1025,7 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 	} else if (inOrderIndex < smallestOrder) {
 		smallestOrder = inOrderIndex;
 	}
-	
+
 	//We're no longer positive of our preferredContact, so clear the cache
 	containedObjectsNeedsSort = YES;
 	_preferredContact = nil;
