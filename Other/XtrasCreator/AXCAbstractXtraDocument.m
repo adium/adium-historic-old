@@ -95,7 +95,6 @@
 			@"1.0", kCFBundleInfoDictionaryVersionKey,
 			[versionField stringValue], @"XtraVersion",
 			[authorField stringValue], @"XtraAuthors",
-			xtraType, @"XtraType",
 			nil];
 		[infoPlist writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
 
