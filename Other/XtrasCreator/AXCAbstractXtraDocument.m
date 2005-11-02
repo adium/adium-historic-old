@@ -231,6 +231,16 @@
 	return version;
 }
 
+- (void) setBundleID:(NSString *)newBundleID
+{
+	[bundleID release];
+	bundleID = [newBundleID copy];
+}
+- (NSString *) bundleID
+{
+	return bundleID;
+}
+
 - (void) setIcon:(NSImage *)inImage
 {
 	[icon autorelease];
@@ -268,7 +278,7 @@
 		@"English", kCFBundleDevelopmentRegionKey,
 		name, kCFBundleNameKey,
 		[self OSType], @"CFBundlePackageType",
-		[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
+		bundleID, kCFBundleIdentifierKey,
 		[NSNumber numberWithInt:1], @"XtraBundleVersion",
 		@"1.0", kCFBundleInfoDictionaryVersionKey,
 		version, @"XtraVersion",
