@@ -45,21 +45,6 @@
 {
     [super windowControllerDidLoadNib:aController];
 
-	/*fill in typePopUp*/ {
-		//XXX typePopup will be axed
-		[typePopup setAutoenablesItems:NO];
-		NSMenuItem * item = [[[NSMenuItem alloc] initWithTitle:@"Message View Style" 
-														action:@selector(setXtraType:) 
-												 keyEquivalent:@""]autorelease];
-		[item setEnabled:YES];
-		[[typePopup menu] addItem:item];
-		item = [[[NSMenuItem alloc] initWithTitle:@"Status Icons" 
-										   action:@selector(setXtraType:) 
-									keyEquivalent:@""]autorelease];
-		[item setEnabled:YES];
-		[[typePopup menu] addItem:item];
-	}
-
 	/*set up cell in table view*/ {
 		AXCFileCell *cell = [[AXCFileCell alloc] initTextCell:@""];
 		[[[fileView tableColumns] objectAtIndex:0U] setDataCell:cell];
