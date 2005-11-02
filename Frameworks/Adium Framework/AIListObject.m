@@ -196,25 +196,12 @@
     if (containingObject != inGroup) {
 	   [containingObject release];
 	   containingObject = [inGroup retain];
-	}
-#if 0
-	BOOL hadContainingObject = (containingObject != nil);
 
-	if (!hadContainingObject) {
-		//When we get our first containing object, our ordering information is appropriate
-		[containingObject listObject:self didSetOrderIndex:orderIndex];
-	} else {
-		//Otherwise, clear it pending getting new ordering information, putting us the bottom of
-		//the containing object for now (but not saving that data)
-		orderIndex = ([containingObject largestOrder] + 1.0);
-
-		[containingObject listObject:self didSetOrderIndex:orderIndex];
+	   //Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
+	   //disconnect/reconnect cycle?
+	   [(AIListObject<AIContainingObject> *)containingObject listObject:self 
+													   didSetOrderIndex:[self orderIndex]];
 	}
-#else
-	//Always set the current orderIndex in the containingObject.  The above block may be clearing data after a 
-	//disconnect/reconnect cycle?
-	[(AIListObject<AIContainingObject> *)containingObject listObject:self didSetOrderIndex:orderIndex];
-#endif
 }
 	
 //Returns our desired placement within a group
