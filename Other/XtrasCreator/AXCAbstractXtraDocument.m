@@ -74,16 +74,7 @@
 		path = [path stringByAppendingPathComponent:@"Contents"];
 		[manager createDirectoryAtPath:path attributes:nil];
 
-		NSDictionary *infoPlist = [NSDictionary dictionaryWithObjectsAndKeys:
-			@"English", kCFBundleDevelopmentRegionKey,
-			name, kCFBundleNameKey,
-			[self OSType], @"CFBundlePackageType",
-			[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
-			[NSNumber numberWithInt:1], @"XtraBundleVersion",
-			@"1.0", kCFBundleInfoDictionaryVersionKey,
-			version, @"XtraVersion",
-			author, @"XtraAuthors",
-			nil];
+		NSDictionary *infoPlist = [self infoPlistDictionary];
 		[infoPlist writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
 
 		path = [path stringByAppendingPathComponent:@"Resources"];
@@ -269,6 +260,20 @@
 - (NSArray *) validResourceTypes
 {
 	return nil;
+}
+
+- (NSDictionary *) infoPlistDictionary
+{
+	return [NSDictionary dictionaryWithObjectsAndKeys:
+		@"English", kCFBundleDevelopmentRegionKey,
+		name, kCFBundleNameKey,
+		[self OSType], @"CFBundlePackageType",
+		[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
+		[NSNumber numberWithInt:1], @"XtraBundleVersion",
+		@"1.0", kCFBundleInfoDictionaryVersionKey,
+		version, @"XtraVersion",
+		author, @"XtraAuthors",
+		nil];
 }
 
 //added to the tab view.

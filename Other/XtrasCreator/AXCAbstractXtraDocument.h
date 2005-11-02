@@ -57,6 +57,13 @@
 //if nil, all types are valid.
 - (NSArray *) validResourceTypes;
 
+/*override this method if you want to add items to the dictionary that will be written out to Info.plist
+ *when the document is saved.
+ *
+ *you need to call [super infoPlistDictionary], and work from the return value of that.
+ */
+- (NSDictionary *) infoPlistDictionary;
+
 //added to the tab view.
 - (NSArray *) tabViewItems;
 
