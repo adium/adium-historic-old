@@ -102,8 +102,14 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 	int					i;
 	
 	if (primaryString && ([primaryString rangeOfString:@"wants to send you"].location != NSNotFound)) {
+		GCallback ok_cb;
+		
+		//Get the callback for OK, skipping over the title
+		va_arg(actions, char *);
+		ok_cb = va_arg(actions, GCallback);
+		
 		//Redirect a "wants to send you" action request to our file choosing method so we handle it as a normal file transfer
-		gaim_xfer_choose_file(userData);
+		((GaimRequestActionCb)ok_cb)(userData, default_action);
 		
     } else if (primaryString && ([primaryString rangeOfString:@"wants to add"].location != NSNotFound)) {
 		NSString	*remoteName;
@@ -498,9 +504,9 @@ static void *adiumGaimRequestFile(const char *title, const char *filename, gbool
 			} else if (xferType == GAIM_XFER_SEND) {
 				if (xfer->local_filename != NULL && xfer->filename != NULL) {
 					AILog(@"GAIM_XFER_SEND: %x (%s)",xfer,xfer->local_filename);
-					gaim_xfer_choose_file_ok_cb(xfer, xfer->local_filename);
+					((GaimRequestFileCb)ok_cb)(user_data, xfer->local_filename);
 				} else {
-					gaim_xfer_choose_file_cancel_cb(xfer, xfer->local_filename);
+					((GaimRequestFileCb)cancel_cb)(user_data, xfer->local_filename);
 					[[SLGaimCocoaAdapter sharedInstance] displayFileSendError];
 				}
 			}

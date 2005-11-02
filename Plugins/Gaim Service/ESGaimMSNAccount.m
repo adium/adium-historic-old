@@ -299,19 +299,6 @@ gboolean gaim_init_msn_plugin(void);
 	return displayNamesAsStatus;
 }
 
-- (BOOL)displayConversationClosed
-{
-	return displayConversationClosed;
-}
-
-- (BOOL)displayConversationTimedOut
-{
-	return NO;
-	/*
-	return displayConversationTimedOut;
-	 */
-}
-
 #pragma mark File transfer
 - (BOOL)canSendFolders
 {
@@ -356,8 +343,6 @@ gboolean gaim_init_msn_plugin(void);
 	
 	if ([group isEqualToString:PREF_GROUP_MSN_SERVICE]) {
 		displayNamesAsStatus = [[prefDict objectForKey:KEY_MSN_DISPLAY_NAMES_AS_STATUS] boolValue];
-		displayConversationClosed = [[prefDict objectForKey:KEY_MSN_CONVERSATION_CLOSED] boolValue];
-		displayConversationTimedOut = [[prefDict objectForKey:KEY_MSN_CONVERSATION_TIMED_OUT] boolValue];
 	}
 }
 

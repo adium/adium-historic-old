@@ -601,17 +601,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	AIChatUpdateType	updateType = [type intValue];
 	NSString			*key = nil;
 	switch (updateType) {
-		case AIChatTimedOut:
-			if ([self displayConversationTimedOut]) {
-				key = KEY_CHAT_TIMED_OUT;
-			}
-			break;
-			
-		case AIChatClosedWindow:
-			if ([self displayConversationClosed]) {
-				key = KEY_CHAT_CLOSED_WINDOW;
-			}
-			break;
+
 	}
 	
 	if (key) {
@@ -2361,16 +2351,6 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (NSNumber *)shouldCheckMail
 {
 	return [self preferenceForKey:KEY_ACCOUNT_CHECK_MAIL group:GROUP_ACCOUNT_STATUS];
-}
-
-- (BOOL)displayConversationClosed
-{
-	return NO;
-}
-
-- (BOOL)displayConversationTimedOut
-{
-	return NO;
 }
 
 - (BOOL)shouldSetAliasesServerside
