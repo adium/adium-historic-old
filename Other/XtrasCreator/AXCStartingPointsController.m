@@ -10,24 +10,28 @@
 
 #import "AXCDocumentController.h"
 #import "NSMutableArrayAdditions.h"
+#import "AXCPreferenceController.h"
 
 @implementation AXCStartingPointsController
 
 - (void) awakeFromNib
 {
-	if (!startingPointsWindow)
-		[NSBundle loadNibNamed:@"StartingPoints" owner:self];
-	else {
-		[startingPointsTableView setDoubleAction:@selector(makeNewDocumentOfSelectedType:)];
-		[startingPointsTableView setTarget:self];
+	NSString * startupAction = [[NSUserDefaults standardUserDefaults] objectForKey:STARTUP_ACTION_KEY];
+	if ([startupAction isEqualToString:STARTING_POINTS_STARTUP_ACTION]) {
+		if (!startingPointsWindow)
+			[NSBundle loadNibNamed:@"StartingPoints" owner:self];
+		else {
+			[startingPointsTableView setDoubleAction:@selector(makeNewDocumentOfSelectedType:)];
+			[startingPointsTableView setTarget:self];
 
-		//question for the ages: would it be possible to extend the selection to an empty selection?
-		[startingPointsTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
+			//question for the ages: would it be possible to extend the selection to an empty selection?
+			[startingPointsTableView selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 
-		//set the window's frame appropriately, then show it.
-		if(![startingPointsWindow setFrameUsingName:[startingPointsWindow frameAutosaveName]])
-			[startingPointsWindow center];
-		[startingPointsWindow makeKeyAndOrderFront:nil];
+			//set the window's frame appropriately, then show it.
+			if(![startingPointsWindow setFrameUsingName:[startingPointsWindow frameAutosaveName]])
+				[startingPointsWindow center];
+			[startingPointsWindow makeKeyAndOrderFront:nil];
+		}
 	}
 }
 

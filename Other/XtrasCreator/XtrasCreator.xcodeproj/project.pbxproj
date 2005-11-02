@@ -30,6 +30,8 @@
 		07E002780915AE6B003FE813 /* ExceptionHandling.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 07E002770915AE6B003FE813 /* ExceptionHandling.framework */; };
 		07E002870915AF7A003FE813 /* IconPack_IconPlistView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 07E002850915AF7A003FE813 /* IconPack_IconPlistView.nib */; };
 		07EE8605091731A500D6FB38 /* AXCDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 07EE8604091731A500D6FB38 /* AXCDocumentController.m */; };
+		6330D78B0918A2F200DCEFDD /* AXCPreferenceController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6330D78A0918A2F200DCEFDD /* AXCPreferenceController.m */; };
+		6330D82F0918AB6000DCEFDD /* Preferences.nib in Resources */ = {isa = PBXBuildFile; fileRef = 6330D82E0918AB6000DCEFDD /* Preferences.nib */; };
 		635495A30911F19900F1EB0A /* MessageStyleView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 635495A20911F19900F1EB0A /* MessageStyleView.nib */; };
 		63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */; };
 		63D96247091616FD0041DF83 /* IconFamily.m in Sources */ = {isa = PBXBuildFile; fileRef = 63D96244091616FD0041DF83 /* IconFamily.m */; };
@@ -115,6 +117,9 @@
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
 		32DBCF750370BD2300C91783 /* XtrasCreator_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = XtrasCreator_Prefix.pch; sourceTree = "<group>"; };
+		6330D7890918A2F200DCEFDD /* AXCPreferenceController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCPreferenceController.h; sourceTree = "<group>"; };
+		6330D78A0918A2F200DCEFDD /* AXCPreferenceController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCPreferenceController.m; sourceTree = "<group>"; };
+		6330D82E0918AB6000DCEFDD /* Preferences.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; path = Preferences.nib; sourceTree = "<group>"; };
 		635495A20911F19900F1EB0A /* MessageStyleView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = MessageStyleView.nib; path = English.lproj/MessageStyleView.nib; sourceTree = "<group>"; };
 		63B88C2C0916EFDF00B2803B /* AXCAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; path = AXCAppDelegate.h; sourceTree = "<group>"; };
 		63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; path = AXCAppDelegate.m; sourceTree = "<group>"; };
@@ -240,6 +245,8 @@
 		2A37F4ABFDCFA73011CA2CEA /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				6330D7890918A2F200DCEFDD /* AXCPreferenceController.h */,
+				6330D78A0918A2F200DCEFDD /* AXCPreferenceController.m */,
 				63B88C2C0916EFDF00B2803B /* AXCAppDelegate.h */,
 				63B88C2D0916EFDF00B2803B /* AXCAppDelegate.m */,
 				07EE8603091731A500D6FB38 /* AXCDocumentController.h */,
@@ -273,6 +280,7 @@
 				2A37F4B4FDCFA73011CA2CEA /* MyDocument.nib */,
 				07E002850915AF7A003FE813 /* IconPack_IconPlistView.nib */,
 				635495A20911F19900F1EB0A /* MessageStyleView.nib */,
+				6330D82E0918AB6000DCEFDD /* Preferences.nib */,
 				8D15AC360486D014006FF6A4 /* Info.plist */,
 				089C165FFE840EACC02AAC07 /* InfoPlist.strings */,
 			);
@@ -363,6 +371,7 @@
 				076D84FA0914AD6500D6D22C /* AdiumStatusIcons.icns in Resources */,
 				07E002870915AF7A003FE813 /* IconPack_IconPlistView.nib in Resources */,
 				07484D1909162F8E00D1A683 /* StartingPoints.nib in Resources */,
+				6330D82F0918AB6000DCEFDD /* Preferences.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +396,7 @@
 				07484D0B09162D7700D1A683 /* AXCStartingPointsController.m in Sources */,
 				63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */,
 				07EE8605091731A500D6FB38 /* AXCDocumentController.m in Sources */,
+				6330D78B0918A2F200DCEFDD /* AXCPreferenceController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

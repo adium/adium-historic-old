@@ -1,6 +1,7 @@
 {
     IBClasses = (
         {
+            ACTIONS = {showPrefs = id; }; 
             CLASS = AXCAppDelegate; 
             LANGUAGE = ObjC; 
             OUTLETS = {startingPointsController = AXCStartingPointsController; }; 
@@ -11,6 +12,13 @@
             LANGUAGE = ObjC; 
             OUTLETS = {startingPointsController = AXCStartingPointsController; }; 
             SUPERCLASS = NSDocumentController; 
+        }, 
+        {
+            ACTIONS = {showPrefs = id; }; 
+            CLASS = AXCPreferenceController; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {startupActionPopup = NSPopUpButton; userDefaults = NSUserDefaultsController; }; 
+            SUPERCLASS = NSObject; 
         }, 
         {
             ACTIONS = {displayStartingPoints = id; makeNewDocumentOfSelectedType = id; }; 

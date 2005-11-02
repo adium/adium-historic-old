@@ -8,7 +8,6 @@
 
 #import "AXCAbstractXtraDocument.h"
 
-#import "MessageStyleViewController.h"
 #import "AXCFileCell.h"
 #import "IconFamily.h"
 #import "NSFileManager+BundleBit.h"
