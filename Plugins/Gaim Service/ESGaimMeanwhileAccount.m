@@ -47,7 +47,7 @@ gboolean gaim_init_meanwhile_plugin(void);
 	
 	int contactListChoice = [[self preferenceForKey:KEY_MEANWHILE_CONTACTLIST group:GROUP_ACCOUNT_STATUS] intValue];
 
-	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, contactListChoice);
+	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
 }
 
 #pragma mark Status Messages
