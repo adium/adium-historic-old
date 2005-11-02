@@ -17,8 +17,7 @@
 #include "AIAccountViewController.h"
 
 @interface ESGaimMeanwhileAccountViewController : AIAccountViewController {
-	IBOutlet	NSPopUpButton	*popUp_contactList;
-	IBOutlet	NSTextField		*textField_contactListWarning;
+
 }
 
 @end
