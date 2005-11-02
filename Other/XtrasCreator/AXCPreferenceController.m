@@ -44,6 +44,10 @@
 - (BOOL)menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
 	[item setTitle:[[self startupActions] objectAtIndex:index]];
+	if ([[item title] isEqualToString:[[NSUserDefaults standardUserDefaults] stringForKey:STARTUP_ACTION_KEY]])
+		[item setState:NSOnState];
+	else
+		[item setState:NSOffState];
 	return YES;
 }
 
