@@ -60,20 +60,18 @@
             SUPERCLASS = AIObject; 
         }, 
         {
-            ACTIONS = {
-                configureSelectedEvent = id; 
-                selectShowSummary = id; 
-                selectedNameForPresetCopy = id; 
-            }; 
+            ACTIONS = {selectVolume = id; selectedNameForPresetCopy = id; }; 
             CLASS = ESGlobalEventsPreferences; 
             LANGUAGE = ObjC; 
             OUTLETS = {
+                "button_maxvolume" = NSButton; 
+                "button_minvolume" = NSButton; 
                 contactAlertsViewController = ESContactAlertsViewController; 
                 "label_eventPreset" = NSTextField; 
                 "label_soundSet" = NSTextField; 
-                "outlineView_summary" = AIVariableHeightOutlineView; 
                 "popUp_eventPreset" = NSPopUpButton; 
                 "popUp_soundSet" = NSPopUpButton; 
+                "slider_volume" = NSSlider; 
             }; 
             SUPERCLASS = AIPreferencePane; 
         }, 

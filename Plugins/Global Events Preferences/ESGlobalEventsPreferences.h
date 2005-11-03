@@ -30,8 +30,14 @@
 		
 	IBOutlet	NSTextField		*label_eventPreset;
 	IBOutlet	NSTextField		*label_soundSet;
+	
+	IBOutlet	NSSlider		*slider_volume;
+	IBOutlet	NSButton		*button_minvolume;
+	IBOutlet	NSButton		*button_maxvolume;	
 }
 
 - (IBAction)selectedNameForPresetCopy:(id)sender;
+- (IBAction)selectVolume:(id)sender;
+
 
 @end

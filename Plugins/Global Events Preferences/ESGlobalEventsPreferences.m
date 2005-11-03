@@ -36,6 +36,13 @@
 #define PREF_GROUP_EVENT_PRESETS			@"Event Presets"
 #define CUSTOM_TITLE						AILocalizedString(@"Custom",nil)
 
+#define VOLUME_SOUND_PATH   [NSString pathWithComponents:[NSArray arrayWithObjects: \
+	@"/", @"System", @"Library", @"LoginPlugins", \
+	[@"BezelServices" stringByAppendingPathExtension:@"loginPlugin"], \
+	@"Contents", @"Resources", \
+	[@"volume" stringByAppendingPathExtension:@"aiff"], \
+	nil]]
+
 @interface ESGlobalEventsPreferences (PRIVATE)
 - (void)popUp:(NSPopUpButton *)inPopUp shouldShowCustom:(BOOL)showCustom;
 - (void)xtrasChanged:(NSNotification *)notification;
@@ -108,6 +115,10 @@
 
 	//Ensure the correct sound set is selected
 	[self updateSoundSetSelection];
+	
+	//Volume
+	[slider_volume setFloatValue:[[[adium preferenceController] preferenceForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
+																		   group:PREF_GROUP_SOUNDS] floatValue]];	
 }
 
 /*!
@@ -535,6 +546,37 @@
 	[currentEventSetForSaving removeObjectForKey:@"Built In"];
 	
 	return currentEventSetForSaving;
+}
+
+#pragma mark Volume
+//New value selected on the volume slider or chosen by clicking a volume icon
+- (IBAction)selectVolume:(id)sender
+{
+    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
+    float			volume, oldVolume;
+	
+	if (sender == slider_volume) {
+		volume = [slider_volume floatValue];
+	} else if (sender == button_maxvolume) {
+		volume = [slider_volume maxValue];
+		[slider_volume setDoubleValue:volume];
+	} else if (sender == button_minvolume) {
+		volume = [slider_volume minValue];
+		[slider_volume setDoubleValue:volume];
+	} else {
+		volume = 0;
+	}
+	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
+	
+    //Volume
+    if (volume != oldVolume) {
+        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:volume]
+                                             forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
+                                              group:PREF_GROUP_SOUNDS];
+		
+		//Play a sample sound
+        [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
+    }
 }
 
 #pragma mark Preset saving
