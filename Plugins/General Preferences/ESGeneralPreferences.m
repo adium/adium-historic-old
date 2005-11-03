@@ -27,15 +27,7 @@
 #import <Adium/AIServiceIcons.h>
 #import <Adium/AIStatusIcons.h>
 
-#define VOLUME_SOUND_PATH   [NSString pathWithComponents:[NSArray arrayWithObjects: \
-	@"/", @"System", @"Library", @"LoginPlugins", \
-	[@"BezelServices" stringByAppendingPathExtension:@"loginPlugin"], \
-	@"Contents", @"Resources", \
-	[@"volume" stringByAppendingPathExtension:@"aiff"], \
-	nil]]
-
 @interface ESGeneralPreferences (PRIVATE)
-- (NSMenu *)outputDeviceMenu;
 - (NSMenu *)tabKeysMenu;
 - (NSMenu *)sendKeysMenu;
 
@@ -88,10 +80,6 @@
 		[popUp_sendKeys compatibleSelectItemWithTag:AISendOnReturn];
 	}
 
-	//Sounds
-	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-	[slider_volume setFloatValue:[[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue]];
-	
 	//Logging
 	prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_LOGGING];
 	[checkBox_enableLogging setState:[[prefDict objectForKey:KEY_LOGGER_ENABLE] boolValue]];
@@ -181,36 +169,6 @@
 - (void)configureControlDimming
 {
 	[checkBox_arrangeByGroup setEnabled:[checkBox_messagesInTabs state]];
-}
-
-//New value selected on the volume slider or chosen by clicking a volume icon
-- (IBAction)selectVolume:(id)sender
-{
-    NSDictionary	*prefDict = [[adium preferenceController] preferencesForGroup:PREF_GROUP_SOUNDS];
-    float			volume, oldVolume;
-	
-	if (sender == slider_volume) {
-		volume = [slider_volume floatValue];
-	} else if (sender == button_maxvolume) {
-		volume = [slider_volume maxValue];
-		[slider_volume setDoubleValue:volume];
-	} else if (sender == button_minvolume) {
-		volume = [slider_volume minValue];
-		[slider_volume setDoubleValue:volume];
-	} else {
-		volume = 0;
-	}
-	oldVolume = [[prefDict objectForKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL] floatValue];
-
-    //Volume
-    if (volume != oldVolume) {
-        [[adium preferenceController] setPreference:[NSNumber numberWithFloat:volume]
-                                             forKey:KEY_SOUND_CUSTOM_VOLUME_LEVEL
-                                              group:PREF_GROUP_SOUNDS];
-
-		//Play a sample sound
-        [[adium soundController] playSoundAtPath:VOLUME_SOUND_PATH];
-    }
 }
 
 /*!

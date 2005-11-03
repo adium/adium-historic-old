@@ -26,10 +26,6 @@
 	
 	IBOutlet	NSPopUpButton	*popUp_tabKeys;
 	IBOutlet	NSPopUpButton	*popUp_sendKeys;
-
-	IBOutlet	NSSlider		*slider_volume;
-	IBOutlet	NSButton		*button_minvolume;
-	IBOutlet	NSButton		*button_maxvolume;
 	
 	IBOutlet	NSButton		*checkBox_enableMenuItem;
 	
@@ -43,7 +39,5 @@
 	IBOutlet	AIColorSelectionPopUpButton		*colorPopUp_background;
 	IBOutlet	AIFontSelectionPopUpButton		*fontPopUp_text;
 }
-
-- (IBAction)selectVolume:(id)sender;
 
 @end
