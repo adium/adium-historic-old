@@ -65,38 +65,40 @@
 
 - (BOOL)writeToFile:(NSString *)fileName ofType:(NSString *)docType
 {
-	NSString * path = fileName;
+	NSString * bundlePath = fileName;
 	NSFileManager * manager = [NSFileManager defaultManager];
-	if(![manager fileExistsAtPath:path])
+	if(![manager fileExistsAtPath:bundlePath])
 	{
-		[manager createDirectoryAtPath:path attributes:nil];
+		[manager createDirectoryAtPath:bundlePath attributes:nil];
 
-		path = [path stringByAppendingPathComponent:@"Contents"];
-		[manager createDirectoryAtPath:path attributes:nil];
+		NSString *contentsPath = [bundlePath stringByAppendingPathComponent:@"Contents"];
+		[manager createDirectoryAtPath:contentsPath attributes:nil];
 
 		NSDictionary *infoPlist = [self infoPlistDictionary];
-		[infoPlist writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
+		[infoPlist writeToFile:[contentsPath stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
 
-		path = [path stringByAppendingPathComponent:@"Resources"];
-		[manager createDirectoryAtPath:path attributes:nil];
+		NSString *resourcesPath = [contentsPath stringByAppendingPathComponent:@"Resources"];
+		[manager createDirectoryAtPath:resourcesPath attributes:nil];
 
 		NSEnumerator * resourceEnu = [resources objectEnumerator];
 		NSString * resourcePath;
 		while ((resourcePath = [resourceEnu nextObject]))
 		{
 			[manager copyPath:resourcePath 
-					   toPath:[path stringByAppendingPathComponent:[resourcePath lastPathComponent]]							  handler:nil];
+					   toPath:[resourcesPath stringByAppendingPathComponent:[resourcePath lastPathComponent]]							  handler:nil];
 		}
 
 		IconFamily* iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:icon]; //check on error handling for this
 		[iconFamily setAsCustomIconForFile:fileName];
 
-		[[readmeView RTFFromRange: NSMakeRange(0, [[readmeView string] length])] writeToFile:[path stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
-
-		[controller writeCustomFilesToPath:path];
+		NSRange readmeRange = { 0, [[readmeView textStorage] length] };
+		if ([readmeView isRichText])
+			[[readmeView RTFFromRange:readmeRange] writeToFile:[resourcesPath stringByAppendingPathComponent:@"ReadMe.rtf"] atomically:YES];
+		else
+			[[[readmeView string] dataUsingEncoding:NSUTF8StringEncoding] writeToFile:[resourcesPath stringByAppendingPathComponent:@"ReadMe.txt"] atomically:YES];
 
 		//all Xtras are bundles
-		[manager setBundleBitOfFile:path toBool:YES];
+		[manager setBundleBitOfFile:bundlePath toBool:YES];
 
 		return YES;
 	}	
@@ -110,7 +112,62 @@
 
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
 {
-    return YES;
+	NSBundle *bundleAtPath = [NSBundle bundleWithPath:path];
+	if (bundleAtPath) {
+		NSString *bundleName = [bundleAtPath objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
+		NSString *bundleAuthor = [bundleAtPath objectForInfoDictionaryKey:@"XtraAuthors"];
+		if (bundleName && bundleAuthor) {
+			[bundle release];
+			bundle = [bundleAtPath retain];
+
+			[self setName:bundleName];
+			[self setAuthor:bundleAuthor];
+			[self setVersion:[bundle objectForInfoDictionaryKey:@"XtraVersion"]];
+			[self setBundleID:[bundle objectForInfoDictionaryKey:(NSString *)kCFBundleIdentifierKey]];
+
+			[self willChangeValueForKey:@"resources"];
+			[resources release];
+			resources = [[[NSFileManager defaultManager] directoryContentsAtPath:[path stringByAppendingPathComponent:@"Contents/Resources"]] mutableCopy];
+			//XXX need to update imagePreviews and displayNames too (make methods for this)
+			[self  didChangeValueForKey:@"resources"];
+
+			[resourcesSet release];
+			resourcesSet = [[NSMutableSet alloc] initWithArray:resources];
+
+			BOOL isRichText = YES;
+			NSString *readmePath = [bundle pathForResource:@"ReadMe" ofType:@"rtf"];
+			if (!readmePath) {
+				readmePath = [bundle pathForResource:@"ReadMe" ofType:@"rtfd"];
+				if (!readmePath) {
+					readmePath = [bundle pathForResource:@"ReadMe" ofType:@"txt"];
+					isRichText = NO;
+				}
+			}
+			if (readmePath) {
+				NSAttributedString *readmeTemp;
+				if (isRichText) {
+					readmeTemp = [[NSAttributedString alloc] initWithPath:readmePath documentAttributes:nil];
+				} else {
+					NSData *plainTextData = [[NSData alloc] initWithContentsOfFile:readmePath];
+					NSString *plainText = [[NSString alloc] initWithData:plainTextData encoding:NSUTF8StringEncoding];
+					readmeTemp = [[NSAttributedString alloc] initWithString:plainText];
+					[plainText release];
+					[plainTextData release];
+				}
+
+				[self willChangeValueForKey:@"readme"];
+				readme = readmeTemp;
+				[self  didChangeValueForKey:@"readme"];
+
+				NSString *filename = [readmePath lastPathComponent];
+				[resources    removeObject:filename];
+				[resourcesSet removeObject:filename];
+			}
+
+			return YES;
+		}
+	}
+    return NO;
 }
 
 - (void) printShowingPrintPanel:(BOOL)flag
@@ -239,6 +296,16 @@
 - (NSString *) bundleID
 {
 	return bundleID;
+}
+
+- (void) setReadme:(NSAttributedString *)newReadme
+{
+	[readme release];
+	readme = [newReadme copy];
+}
+- (NSAttributedString *) readme
+{
+	return readme;
 }
 
 - (void) setIcon:(NSImage *)inImage

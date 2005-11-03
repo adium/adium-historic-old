@@ -46,16 +46,75 @@
 
 #pragma mark Document nature
 
-- (BOOL) writeToFile:(NSString *)fileName ofType:(NSString *)docType
+- (BOOL) writeToFile:(NSString *)path ofType:(NSString *)docType
 {
-#warning XXX pickle Icons.plist here
-	return NO;
+	BOOL success = [super writeToFile:path ofType:docType];
+	if (success) {
+		NSMutableDictionary *iconsPlist = [NSMutableDictionary dictionaryWithCapacity:[categoryStorage count]];
+
+		NSEnumerator *categoryNamesEnum = [categoryStorage keyEnumerator];
+		NSString *categoryName;
+		while ((categoryName = [categoryNamesEnum nextObject])) {
+			NSArray *categoryArray = [categoryStorage objectForKey:categoryName];
+
+			NSMutableDictionary *categoryPlist = [NSMutableDictionary dictionaryWithCapacity:[categoryArray count]];
+
+			NSEnumerator *categoryEnum = [categoryArray objectEnumerator];
+			AXCIconPackEntry *entry;
+			while ((entry = [categoryEnum nextObject])) {
+				NSString *resourcePath = [[entry path] lastPathComponent];
+				if (resourcePath)
+					[categoryPlist setObject:resourcePath forKey:[entry key]];
+			}
+
+			[iconsPlist setObject:categoryPlist forKey:categoryName];
+		}
+
+		NSString *iconsPlistPath = [[[path stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Resources"] stringByAppendingPathComponent:@"Icons.plist"];
+		success = [iconsPlist writeToFile:iconsPlistPath atomically:NO];
+	}
+	return success;
 }
 
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
 {
-#warning XXX unpickle Icons.plist here
-	return NO;
+	BOOL success = [super readFromFile:path ofType:type];
+	if (success) {
+		//XXX make a method out of this
+		[resources    removeObject:@"Icons.plist"];
+		[resourcesSet removeObject:@"Icons.plist"];
+
+		NSDictionary *iconsPlist = [NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Icons" ofType:@"plist"]];
+		categoryNames = [[iconsPlist allKeys] retain];
+
+		NSString *resourcesPath = [bundle resourcePath];
+
+		NSMutableDictionary *storage = [[NSMutableDictionary alloc] initWithCapacity:[categoryNames count]];
+
+		NSEnumerator *categoryNamesEnum = [categoryNames objectEnumerator];
+		NSString *categoryName;
+		while ((categoryName = [categoryNamesEnum nextObject])) {
+			NSDictionary *category = [iconsPlist objectForKey:categoryName];
+
+			NSMutableArray *entries = [[NSMutableArray alloc] initWithCapacity:[category count]];
+
+			NSEnumerator *categoryKeysEnum = [category keyEnumerator];
+			NSString *key;
+			while ((key = [categoryKeysEnum nextObject])) {
+				NSString *iconPath = [category objectForKey:key];
+				if ([resourcesSet containsObject:iconPath]) {
+					AXCIconPackEntry *entry = [[AXCIconPackEntry alloc] initWithKey:key path:[resourcesPath stringByAppendingPathComponent:iconPath]];
+					[entries addObject:entry];
+					[entry release];
+				} else {
+					NSLog(@"Error while loading %@: Icons.plist contains a key (%@) in category %@ whose resource path (%@) does not exist in this bundle", path, key, categoryName, iconPath);
+				}
+			}
+
+			[storage setObject:entries forKey:categoryName];
+		}
+	}
+	return success;
 }
 
 #pragma mark Bindings
