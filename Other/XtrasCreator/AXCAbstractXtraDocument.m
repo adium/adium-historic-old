@@ -113,7 +113,7 @@
 - (BOOL) readFromFile:(NSString *)path ofType:(NSString *)type
 {
 	NSBundle *bundleAtPath = [NSBundle bundleWithPath:path];
-	if (bundleAtPath) {
+	if (bundleAtPath && ([[bundleAtPath objectForInfoDictionaryKey:@"XtraBundleVersion"] intValue] == 1)) {
 		NSString *bundleName = [bundleAtPath objectForInfoDictionaryKey:(NSString *)kCFBundleNameKey];
 		NSString *bundleAuthor = [bundleAtPath objectForInfoDictionaryKey:@"XtraAuthors"];
 		if (bundleName && bundleAuthor) {
@@ -166,6 +166,9 @@
 
 			return YES;
 		}
+	}
+	else {
+		//XXX This code will be hit if they open an old-format xtra, so it'd be cool if we could offer to upgrade it.
 	}
     return NO;
 }
