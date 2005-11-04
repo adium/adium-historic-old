@@ -323,21 +323,41 @@
  */
 - (void)updateAccountOverview
 {
-	if ([accountArray count] == 0) {
-		[textField_overview setStringValue:AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present")];
+	NSString	*accountOverview;
+	int			accountArrayCount = [accountArray count];
+
+	if (accountArrayCount == 0) {
+		accountOverview = AILocalizedString(@"Click the + to add a new account","Instructions on how to add an account when none are present");
 
 	} else {
 		NSEnumerator	*enumerator = [accountArray objectEnumerator];
 		AIAccount		*account;
-		int				online = 0;
+		int				online = 0, enabled = 0;
 		
 		//Count online accounts
 		while ((account = [enumerator nextObject])) {
-			if ([[account statusObjectForKey:@"Online"] boolValue]) online++;
+			if ([account online]) online++;
+			if ([account enabled]) enabled++;
 		}
 		
-		[textField_overview setStringValue:[NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online","Overview of total and online accounts"), [accountArray count], online]];
+		if (enabled) {
+			if ((accountArrayCount == enabled) ||
+				(online == enabled)){
+				accountOverview = [NSString stringWithFormat:AILocalizedString(@"%i accounts, %i online","Overview of total and online accounts"),
+					accountArrayCount,
+					online];
+			} else {
+				accountOverview = [NSString stringWithFormat:AILocalizedString(@"%i accounts, %i enabled, %i online","Overview of total, enabled, and online accounts"),
+					accountArrayCount,
+					enabled,
+					online];			
+			}
+		} else {
+			accountOverview = AILocalizedString(@"Check the box to enable an account","Instructions for enabling an account");
+		}
 	}
+	
+	[textField_overview setStringValue:accountOverview];
 }
 
 /*!
