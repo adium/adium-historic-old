@@ -45,6 +45,7 @@
                 "checkBox_preferABImages" = NSButton; 
                 "checkBox_syncAutomatic" = NSButton; 
                 "checkBox_useABImages" = NSButton; 
+                "checkBox_useMiddleName" = NSButton; 
                 "checkBox_useNickName" = NSButton; 
                 "label_contacts" = AILocalizationTextField; 
                 "label_formatNamesAs" = AILocalizationTextField; 
@@ -55,6 +56,7 @@
             SUPERCLASS = AIPreferencePane; 
         }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }, 
+        {CLASS = NSButton; LANGUAGE = ObjC; SUPERCLASS = NSControl; }, 
         {CLASS = NSObject; LANGUAGE = ObjC; }
     ); 
     IBVersion = 1; 
