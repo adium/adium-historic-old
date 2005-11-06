@@ -58,6 +58,14 @@
 	return NO;
 }
 
+/*!
+ * @brief ICQ supports offline messaging
+ */
+- (BOOL)supportsOfflineMessaging
+{
+	return YES;
+}
+
 #pragma mark Contact updates
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
