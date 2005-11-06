@@ -39,6 +39,140 @@
 	[super dealloc];
 }
 
+#pragma mark -
+
+- (NSString *) absolutePathForFile:(NSString *)path
+{
+	if ([path isAbsolutePath])
+		return path;
+	else
+		return [[bundle resourcePath] stringByAppendingPathComponent:path];
+}
+
+- (NSImage *) previewForFile:(NSString *)path
+{
+	NSImage *image = [imagePreviews objectForKey:path];
+	if (!image) {
+		image = [[[NSImage alloc] initWithContentsOfFile:[self absolutePathForFile:path]] autorelease];
+		NSSize size = [image size]; //note: only used if image != nil
+		if (image) {
+			if (!imagePreviews)
+				imagePreviews = [[NSMutableDictionary alloc] init];
+			
+			NSSize previewSize = size;
+			float maxDimension = MAX(size.width, size.height);
+			if (maxDimension > THUMBNAIL_SIZE) {
+				//scale proportionally to Wx16 or 16xH.
+				float scale = maxDimension / THUMBNAIL_SIZE;
+				previewSize.width  /= scale;
+				previewSize.height /= scale;
+				[image setScalesWhenResized:YES];
+				[image setSize:previewSize];
+			}
+			[image setFlipped:YES];
+			[image setName:[@"Preview of " stringByAppendingString:path]];
+			
+			[imagePreviews setObject:image forKey:path];
+		}
+	}	
+	return image;
+}
+
+#pragma mark -
+
+- (void) addResource:(NSString *)path
+{
+	[self willChangeValueForKey:@"resources"];
+
+	[resources    addObject:path];
+	[resourcesSet addObject:path];
+
+	if ([imagePreviews objectForKey:path])
+		[imagePreviews removeObjectForKey:path];
+	[displayNames setObject:[[NSFileManager defaultManager] displayNameAtPath:[self absolutePathForFile:path]] forKey:path];
+
+	[self didChangeValueForKey:@"resources"];
+}
+- (void) addResources:(NSArray *)paths
+{
+	NSIndexSet *newIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([resources count], [paths count])];
+	[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndexes forKey:@"resources"];
+
+	[resources    addObjectsFromArray:paths];
+	[resourcesSet addObjectsFromArray:paths];
+	
+	//add the files to the imagePreviews and displayNames dictionaries.
+	NSEnumerator *pathsEnum = [paths objectEnumerator];
+	NSString *path;
+	while ((path = [pathsEnum nextObject])) {
+		//first the image preview
+		NSImage *image = [self previewForFile:path];
+
+		/*now store the display name as well*/ {
+			if (!displayNames)
+				displayNames = [[NSMutableDictionary alloc] init];
+
+			NSString *displayName = [[NSFileManager defaultManager] displayNameAtPath:[self absolutePathForFile:path]];
+			if (image) {
+				enum { MULTIPLICATION_SIGN = 0x00d7 };
+				NSSize size = [image size];
+				displayName = [NSString stringWithFormat:@"%@ (%u%C%u)", displayName, (unsigned)size.width, MULTIPLICATION_SIGN, (unsigned)size.height];
+			}
+
+			[displayNames setObject:displayName forKey:path];
+		}
+	}
+	
+	[self didChangeValueForKey:@"resources"];
+}
+
+- (void) removeResource:(NSString *)path
+{
+	NSIndexSet *indexSet = [NSIndexSet indexSetWithIndex:[resources indexOfObject:path]];
+	[self willChange:NSKeyValueChangeRemoval valuesAtIndexes:indexSet forKey:@"resources"];
+
+	[resources    removeObject:path];
+	[resourcesSet removeObject:path];
+
+	if ([imagePreviews objectForKey:path])
+		[imagePreviews removeObjectForKey:path];
+	[displayNames removeObjectForKey:path];
+
+	[self didChange:NSKeyValueChangeRemoval valuesAtIndexes:indexSet forKey:@"resources"];
+}
+- (void) removeResources:(NSArray *)paths
+{
+	//XXX should look at using NSKeyValueChangeRemoval here
+	[self willChangeValueForKey:@"resources"];
+	[resources removeObjectsInArray:paths];
+
+	NSSet *temp = [[NSSet alloc] initWithArray:paths];
+	[resourcesSet minusSet:temp];
+	[temp release];
+
+	[imagePreviews removeObjectsForKeys:paths];
+	[displayNames  removeObjectsForKeys:paths];
+
+	[self didChangeValueForKey:@"resources"];
+}
+
+- (void) setResources:(NSArray *)newResources
+{
+	NSSet *temp = [[NSSet alloc] initWithArray:newResources];
+	
+	NSMutableSet *resourcesBeingAdded = [temp mutableCopy];
+	[resourcesBeingAdded minusSet:resourcesSet];
+	NSMutableSet *resourcesBeingRemoved = [resourcesSet mutableCopy];
+	[resourcesBeingRemoved minusSet:temp];
+	
+	[temp release];
+	
+	[self removeResources:[resourcesBeingRemoved allObjects]];
+	[self    addResources:[resourcesBeingAdded   allObjects]];
+}
+
+#pragma mark -
+
 - (NSString *)windowNibName
 {
 	// Override returning the nib file name of the document
@@ -127,14 +261,7 @@
 			[self setVersion:[bundle objectForInfoDictionaryKey:@"XtraVersion"]];
 			[self setBundleID:[bundle objectForInfoDictionaryKey:(NSString *)kCFBundleIdentifierKey]];
 
-			[self willChangeValueForKey:@"resources"];
-			[resources release];
-			resources = [[[NSFileManager defaultManager] directoryContentsAtPath:[path stringByAppendingPathComponent:@"Contents/Resources"]] mutableCopy];
-			//XXX need to update imagePreviews and displayNames too (make methods for this)
-			[self  didChangeValueForKey:@"resources"];
-
-			[resourcesSet release];
-			resourcesSet = [[NSMutableSet alloc] initWithArray:resources];
+			[self setResources:[[NSFileManager defaultManager] directoryContentsAtPath:[bundle resourcePath]]];
 
 			BOOL isRichText = YES;
 			NSString *readmePath = [bundle pathForResource:@"ReadMe" ofType:@"rtf"];
@@ -161,9 +288,7 @@
 				readme = readmeTemp;
 				[self  didChangeValueForKey:@"readme"];
 
-				NSString *filename = [readmePath lastPathComponent];
-				[resources    removeObject:filename];
-				[resourcesSet removeObject:filename];
+				[self removeResource:[readmePath lastPathComponent]];
 			}
 
 			return YES;
@@ -211,51 +336,8 @@
 
 	if ([newFilesSet count]) {
 		newFiles = [newFilesSet allObjects];
-		[resourcesSet addObjectsFromArray:newFiles];
 
-		NSIndexSet *newIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange([resources count], [newFiles count])];
-		[self willChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndexes forKey:@"resources"];
-		[resources addObjectsFromArray:newFiles];
-		[self  didChange:NSKeyValueChangeInsertion valuesAtIndexes:newIndexes forKey:@"resources"];
-
-		//add the files to the imagePreviews and displayNames dictionaries.
-		NSEnumerator *newFilesEnum = [newFiles objectEnumerator];
-		NSString *path;
-		while ((path = [newFilesEnum nextObject])) {
-			NSImage *image = [[NSImage alloc] initWithContentsOfFile:path];
-			NSSize size = [image size]; //note: only used if image != nil
-			if (image) {
-				if (!imagePreviews)
-					imagePreviews = [[NSMutableDictionary alloc] init];
-
-				NSSize previewSize = size;
-				float maxDimension = MAX(size.width, size.height);
-				if (maxDimension > THUMBNAIL_SIZE) {
-					//scale proportionally to Wx16 or 16xH.
-					float scale = maxDimension / THUMBNAIL_SIZE;
-					previewSize.width  /= scale;
-					previewSize.height /= scale;
-					[image setScalesWhenResized:YES];
-					[image setSize:previewSize];
-				}
-				[image setName:[@"Preview of " stringByAppendingString:path]];
-
-				[imagePreviews setObject:image forKey:path];
-			}
-
-			/*now store the display name as well*/ {
-				if (!displayNames)
-					displayNames = [[NSMutableDictionary alloc] init];
-
-				NSString *displayName = [[NSFileManager defaultManager] displayNameAtPath:path];
-				if (image) {
-					enum { MULTIPLICATION_SIGN = 0x00d7 };
-					displayName = [NSString stringWithFormat:@"%@ (%u%C%u)", displayName, (unsigned)size.width, MULTIPLICATION_SIGN, (unsigned)size.height];
-				}
-
-				[displayNames setObject:displayName forKey:path];
-			}
-		}
+		[self addResources:newFiles];
 	}
 }
 

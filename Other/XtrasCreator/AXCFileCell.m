@@ -11,6 +11,13 @@
 
 @implementation AXCFileCell
 
+- (id)initTextCell:(NSString *)str {
+	if((self = [super initTextCell:str])) {
+		[self setIconSourceMask:AXCFileCellIconSourceAll];
+	}
+	return self;
+}
+
 - (void)setObjectValue:(id <NSCopying>)newObj {
 	NSString *path = newObj;
 
@@ -20,6 +27,17 @@
 	[super setObjectValue:path];
 }
 
+#pragma mark -
+
+- (enum AXCFileCellIconSourceMask)iconSourceMask {
+	return iconSource.iconSourceMask;
+}
+- (void)setIconSourceMask:(enum AXCFileCellIconSourceMask)mask {
+	iconSource.iconSourceMask = mask;
+}
+
+#pragma mark -
+
 - (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)view {
 	NSString *path = [self stringValue];
 
@@ -28,11 +46,22 @@
 
 	/*draw the icon*/ {
 		//first try to get a preview (AXCAbstractXtraDocument creates these).
-		NSImage *icon = [NSImage imageNamed:[@"Preview of " stringByAppendingString:path]];
-		//if there isn't one, just get the file's icon.
-		if (!icon)
+		NSImage *icon = nil;
+		if (iconSource.iconSourceBitfield.getPreviewsByFullPath)
+			icon = [NSImage imageNamed:[@"Preview of " stringByAppendingString:path]];
+		//if there's no preview for the absolute path, try the filename.
+		if (iconSource.iconSourceBitfield.getPreviewsByFilename && (!icon) && [path isAbsolutePath])
+			icon = [NSImage imageNamed:[@"Preview of " stringByAppendingString:[path lastPathComponent]]];
+		//if there isn't a preview for either path, just get the file's icon.
+		if (iconSource.iconSourceBitfield.getPreviewsFromFileIcons && !icon) {
 			icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-		[icon setFlipped:YES];
+			[icon setFlipped:YES];
+		}
+		//fallback on generic file icon.
+		if (!icon) {
+			icon = [[NSWorkspace sharedWorkspace] iconForFileType:@"'docu'"];
+			[icon setFlipped:YES];
+		}
 
 		//get the largest size that will fit entirely within the frame.
 		float cellDimension = MIN(cellFrame.size.width, cellFrame.size.height);

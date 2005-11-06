@@ -10,7 +10,27 @@
  *	an icon and filename.
  */
 
+enum AXCFileCellIconSourceMask {
+	AXCFileCellIconSourcePreviewByFullPathMask = 0x01,
+	AXCFileCellIconSourcePreviewByFilenameMask = 0x02,
+	AXCFileCellIconSourceLookupByFileIconMask  = 0x04,
+	AXCFileCellIconSourceAll = 0xffffFFFF,
+};
+
 @interface AXCFileCell : NSCell {
+	union {
+		enum AXCFileCellIconSourceMask iconSourceMask;
+		struct {
+			//note: these variables need to be in the reverse order of the order of the enumeration above.
+			unsigned reserved: 29;
+			unsigned getPreviewsFromFileIcons: 1;
+			unsigned getPreviewsByFilename: 1;
+			unsigned getPreviewsByFullPath: 1;
+		} iconSourceBitfield;
+	} iconSource;
 }
+
+- (enum AXCFileCellIconSourceMask)iconSourceMask;
+- (void)setIconSourceMask:(enum AXCFileCellIconSourceMask)mask;
 
 @end
