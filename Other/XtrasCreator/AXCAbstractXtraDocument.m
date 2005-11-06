@@ -26,7 +26,8 @@
 	return self;
 }
 
-- (void)dealloc {
+- (void)dealloc
+{
 	[name release];
 	[author release];
 	[version release];
@@ -105,7 +106,8 @@
 	else
 		return NO;
 }
-- (BOOL)writeToURL:(NSURL *)URL ofType:(NSString *)typeName error:(NSError **)outError {
+- (BOOL)writeToURL:(NSURL *)URL ofType:(NSString *)typeName error:(NSError **)outError
+{
 	NSString * path = [URL path];
 	return [self writeToFile:path ofType:typeName];
 }
@@ -267,27 +269,33 @@
 
 #pragma mark -
 
-- (void) setName:(NSString *)newName {
+- (void) setName:(NSString *)newName
+{
 	[name release];
 	name = [newName copy];
 }
-- (NSString *) name {
+- (NSString *) name
+{
 	return name;
 }
 
-- (void) setAuthor:(NSString *)newAuthor {
+- (void) setAuthor:(NSString *)newAuthor
+{
 	[author release];
 	author = [newAuthor copy];
 }
-- (NSString *) author {
+- (NSString *) author
+{
 	return author;
 }
 
-- (void) setVersion:(NSString *)newVersion {
+- (void) setVersion:(NSString *)newVersion
+{
 	[version release];
 	version = [newVersion copy];
 }
-- (NSString *) version {
+- (NSString *) version
+{
 	return version;
 }
 
