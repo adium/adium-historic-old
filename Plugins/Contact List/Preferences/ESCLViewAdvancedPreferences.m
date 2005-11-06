@@ -25,7 +25,7 @@
 
 - (NSDictionary *)restorablePreferences
 {
-
+	NSLog(SCL_DEFAULT_PREFS);
 	NSDictionary *defaultPrefs = [NSDictionary dictionaryNamed:SCL_DEFAULT_PREFS forClass:[self class]];
 	NSDictionary *defaultsTemp = [NSDictionary dictionaryWithObjectsAndKeys:
 		[defaultPrefs objectForKey:KEY_SCL_BORDERLESS],KEY_SCL_BORDERLESS,
