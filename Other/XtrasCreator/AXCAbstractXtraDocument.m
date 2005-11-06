@@ -345,7 +345,20 @@
 {
 	NSOpenPanel * p = [NSOpenPanel openPanel];
 	[p setAllowsMultipleSelection:YES];
-	[p runModal];
+	[p beginSheetForDirectory:nil
+						 file:nil
+						types:[NSImage imageFileTypes]
+			   modalForWindow:[self windowForSheet]
+				modalDelegate:self
+			   didEndSelector:@selector(didEndChooseIconPanel:returnCode:contextInfo:)
+				  contextInfo:NULL];
+}
+
+- (void) didEndChooseIconPanel:(NSOpenPanel *)p returnCode:(int)returnCode contextInfo:(void *)contextInfo
+{
+	if (returnCode != NSOKButton)
+		return;
+
 	[self setIcon:[[[NSImage alloc] initByReferencingFile:[[p filenames] objectAtIndex:0]]autorelease]];
 }
 
