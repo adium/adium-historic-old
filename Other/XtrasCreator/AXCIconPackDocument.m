@@ -80,9 +80,7 @@
 {
 	BOOL success = [super readFromFile:path ofType:type];
 	if (success) {
-		//XXX make a method out of this
-		[resources    removeObject:@"Icons.plist"];
-		[resourcesSet removeObject:@"Icons.plist"];
+		[self removeResource:@"Icons.plist"];
 
 		NSDictionary *iconsPlist = [NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Icons" ofType:@"plist"]];
 		categoryNames = [[iconsPlist allKeys] retain];

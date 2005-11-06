@@ -34,6 +34,15 @@
 - (IBAction) runAddFilesPanel:(id)sender;
 - (IBAction) runChooseIconPanel:(id)sender;
 
+#pragma mark Resources
+
+//mainly intended for subclasses.
+- (void) addResource:(NSString *)path;
+- (void) addResources:(NSArray *)paths;
+- (void) removeResource:(NSString *)path;
+- (void) removeResources:(NSArray *)paths;
+- (void) setResources:(NSArray *)newResources;
+
 #pragma mark Accessors
 
 - (void) setName:(NSString *)newName;
