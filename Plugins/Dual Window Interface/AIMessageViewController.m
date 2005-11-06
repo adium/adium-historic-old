@@ -94,7 +94,7 @@
 		chat = [inChat retain];
 		view_accountSelection = nil;
 		userListController = nil;
-		sendMessagesToOfflineContact = NO;
+		sendMessagesToOfflineContact = [[chat account] supportsOfflineMessaging];
 		retainingScrollViewUserList = NO;
 		
 		//Load the view containing our controls

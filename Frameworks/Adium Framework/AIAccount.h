@@ -127,6 +127,7 @@ typedef enum {
 - (BOOL)disconnectOnFastUserSwitch;
 - (BOOL)connectivityBasedOnNetworkReachability;
 - (BOOL)suppressTypingNotificationChangesAfterSend;
+- (BOOL)supportsOfflineMessaging;
 
 //Status
 - (NSSet *)supportedPropertyKeys;

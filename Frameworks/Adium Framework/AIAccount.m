@@ -169,6 +169,17 @@
 	return NO;
 }
 
+/*!
+ * @brief Support server-side storing of messages to offline users
+ *
+ * Some protocols store messages to offline contacts on the server. Subclasses may return YES if their service supports 
+ * this. Adium will not store the message as an Event, and will just send it along to the server. This may cause a Gaim
+ * error on Jabber if the Jabber server they are using is down.
+ */
+- (BOOL)supportsOfflineMessaging
+{
+	return NO;
+}
 
 //Status ---------------------------------------------------------------------------------------------------------------
 #pragma mark Status

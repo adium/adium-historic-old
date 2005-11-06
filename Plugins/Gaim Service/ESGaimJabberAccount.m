@@ -131,7 +131,7 @@ gboolean gaim_init_jabber_plugin(void);
 	gaim_account_set_bool(account, "auth_plain_in_clear", allowPlaintext);
 }
 
-- (NSString *) serverSuffix
+- (NSString *)serverSuffix
 {
 	AILog(@"using jabber");
 	return DEFAULT_JABBER_HOST;
@@ -205,6 +205,16 @@ gboolean gaim_init_jabber_plugin(void);
  * Jabber supports serverside aliases.
  */
 - (BOOL)shouldSetAliasesServerside
+{
+	return YES;
+}
+
+/*!
+ * @brief Supports offline messaging?
+ *
+ * Jabber supports offline messaging.
+ */
+- (BOOL)supportsOfflineMessaging
 {
 	return YES;
 }
