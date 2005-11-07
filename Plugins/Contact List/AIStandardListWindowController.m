@@ -89,6 +89,14 @@
 }
 
 /*!
+ * @brief Window closing
+ */
+- (void)windowWillClose:(id)sender
+{
+	[[adium statusController] unregisterStateMenuPlugin:self];
+}
+
+/*!
  * @brief Add state menu items to our location
  *
  * Implemented as required by the StateMenuPlugin protocol.
