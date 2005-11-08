@@ -180,7 +180,7 @@
 	return @"MyDocument";
 }
 
-- (void)windowControllerDidLoadNib:(NSWindowController *) aController
+- (void)windowControllerDidLoadNib:(NSWindowController *)controller
 {
     [super windowControllerDidLoadNib:aController];
 
