@@ -24,6 +24,7 @@
 		076D85770914D8DA00D6D22C /* AXCFileCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 076D85760914D8DA00D6D22C /* AXCFileCell.m */; };
 		076D85F40914E56200D6D22C /* AXCStatusIconPackDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 076D85F30914E56200D6D22C /* AXCStatusIconPackDocument.m */; };
 		076D86D209150D2000D6D22C /* AXCServiceIconPackDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 076D86D109150D2000D6D22C /* AXCServiceIconPackDocument.m */; };
+		0774A7FF0920BD1000CE742F /* NSMenu+ImmediatePopulation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0774A7FE0920BD1000CE742F /* NSMenu+ImmediatePopulation.m */; };
 		07E000E50915700B003FE813 /* AXCIconPackDocument.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E000E40915700B003FE813 /* AXCIconPackDocument.m */; };
 		07E0018A09158940003FE813 /* NSMutableArrayAdditions.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E0018909158940003FE813 /* NSMutableArrayAdditions.m */; };
 		07E001B309159255003FE813 /* AXCIconPackEntry.m in Sources */ = {isa = PBXBuildFile; fileRef = 07E001B209159255003FE813 /* AXCIconPackEntry.m */; };
@@ -95,6 +96,8 @@
 		076D85F30914E56200D6D22C /* AXCStatusIconPackDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCStatusIconPackDocument.m; sourceTree = "<group>"; };
 		076D86D009150D2000D6D22C /* AXCServiceIconPackDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCServiceIconPackDocument.h; sourceTree = "<group>"; };
 		076D86D109150D2000D6D22C /* AXCServiceIconPackDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCServiceIconPackDocument.m; sourceTree = "<group>"; };
+		0774A7FD0920BD1000CE742F /* NSMenu+ImmediatePopulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMenu+ImmediatePopulation.h"; sourceTree = "<group>"; };
+		0774A7FE0920BD1000CE742F /* NSMenu+ImmediatePopulation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMenu+ImmediatePopulation.m"; sourceTree = "<group>"; };
 		07E000E30915700B003FE813 /* AXCIconPackDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AXCIconPackDocument.h; sourceTree = "<group>"; };
 		07E000E40915700B003FE813 /* AXCIconPackDocument.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AXCIconPackDocument.m; sourceTree = "<group>"; };
 		07E0018809158940003FE813 /* NSMutableArrayAdditions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSMutableArrayAdditions.h; sourceTree = "<group>"; };
@@ -197,6 +200,8 @@
 				07E0018909158940003FE813 /* NSMutableArrayAdditions.m */,
 				07484CB6091624B500D1A683 /* NSFileManager+BundleBit.h */,
 				07484CB7091624B500D1A683 /* NSFileManager+BundleBit.m */,
+				0774A7FD0920BD1000CE742F /* NSMenu+ImmediatePopulation.h */,
+				0774A7FE0920BD1000CE742F /* NSMenu+ImmediatePopulation.m */,
 			);
 			name = Additions;
 			sourceTree = "<group>";
@@ -386,6 +391,7 @@
 				07E0018A09158940003FE813 /* NSMutableArrayAdditions.m in Sources */,
 				63D96248091616FD0041DF83 /* NSString+CarbonFSSpecCreation.m in Sources */,
 				07484CB8091624B500D1A683 /* NSFileManager+BundleBit.m in Sources */,
+				0774A7FF0920BD1000CE742F /* NSMenu+ImmediatePopulation.m in Sources */,
 				63D96247091616FD0041DF83 /* IconFamily.m in Sources */,
 				076D85770914D8DA00D6D22C /* AXCFileCell.m in Sources */,
 				63B88C2E0916EFDF00B2803B /* AXCAppDelegate.m in Sources */,
@@ -512,18 +518,21 @@
 		635495490911DD6200F1EB0A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
 			};
 			name = Debug;
 		};
 		6354954A0911DD6200F1EB0A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
 			};
 			name = Release;
 		};
 		6354954B0911DD6200F1EB0A /* Default */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				GCC_C_LANGUAGE_STANDARD = c99;
 			};
 			name = Default;
 		};

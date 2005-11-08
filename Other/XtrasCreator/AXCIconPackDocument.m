@@ -7,7 +7,9 @@
 //
 
 #import "AXCIconPackDocument.h"
+
 #import "NSMutableArrayAdditions.h"
+#import "NSMenu+ImmediatePopulation.h"
 #import "AXCIconPackEntry.h"
 
 //columns of the icon keys outline view.
@@ -45,6 +47,13 @@
 }
 
 #pragma mark Document nature
+
+- (void)windowControllerDidLoadNib:(NSWindowController *)controller
+{
+	[super windowControllerDidLoadNib:controller];
+
+	[[[[iconPlistView tableColumnWithIdentifier:RESOURCE_COLUMN_NAME] dataCell] menu] populateFromDelegate];
+}
 
 - (BOOL) writeToFile:(NSString *)path ofType:(NSString *)docType
 {
@@ -85,8 +94,6 @@
 		NSDictionary *iconsPlist = [NSDictionary dictionaryWithContentsOfFile:[bundle pathForResource:@"Icons" ofType:@"plist"]];
 		categoryNames = [[iconsPlist allKeys] retain];
 
-		NSString *resourcesPath = [bundle resourcePath];
-
 		NSMutableDictionary *storage = [[NSMutableDictionary alloc] initWithCapacity:[categoryNames count]];
 
 		NSEnumerator *categoryNamesEnum = [categoryNames objectEnumerator];
@@ -101,7 +108,7 @@
 			while ((key = [categoryKeysEnum nextObject])) {
 				NSString *iconPath = [category objectForKey:key];
 				if ([resourcesSet containsObject:iconPath]) {
-					AXCIconPackEntry *entry = [[AXCIconPackEntry alloc] initWithKey:key path:[resourcesPath stringByAppendingPathComponent:iconPath]];
+					AXCIconPackEntry *entry = [[AXCIconPackEntry alloc] initWithKey:key path:iconPath];
 					[entries addObject:entry];
 					[entry release];
 				} else {
@@ -110,7 +117,11 @@
 			}
 
 			[storage setObject:entries forKey:categoryName];
+			[entries release];
 		}
+
+		[categoryStorage release];
+		 categoryStorage = [storage retain];
 	}
 	return success;
 }
@@ -216,8 +227,14 @@
 - (BOOL) menu:(NSMenu *)menu updateItem:(NSMenuItem *)item atIndex:(int)index shouldCancel:(BOOL)shouldCancel
 {
 	NSString *path = [resources objectAtIndex:index];
+
 	[item setTitle:[displayNames  objectForKey:path]];
-	[item setImage:[imagePreviews objectForKey:path]];
+
+	NSImage *image = [[imagePreviews objectForKey:path] copy];
+	[image setFlipped:NO];
+	[item setImage:image];
+	[image release];
+
 	return !shouldCancel;
 }
 
