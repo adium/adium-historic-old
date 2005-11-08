@@ -182,7 +182,7 @@
 
 - (void)windowControllerDidLoadNib:(NSWindowController *)controller
 {
-    [super windowControllerDidLoadNib:aController];
+    [super windowControllerDidLoadNib:controller];
 
 	/*set up cell in table view*/ {
 		AXCFileCell *cell = [[AXCFileCell alloc] initTextCell:@""];

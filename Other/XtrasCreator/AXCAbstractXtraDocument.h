@@ -25,7 +25,6 @@
 
 	IBOutlet NSTabView * tabs;
 	IBOutlet NSTableView * fileView;
-	id<ViewController> controller;
 	IBOutlet NSTextView * readmeView;
 }
 
