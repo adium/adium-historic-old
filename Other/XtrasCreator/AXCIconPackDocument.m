@@ -209,11 +209,15 @@
 
 			//we have to do this because of an NSMenu bug.
 			//http://www.corbinstreehouse.com/blog/archives/2005/07/dynamically_pop.html
-			[[cell menu] setDelegate:self];
+			NSMenu *menu = [cell menu];
+			[menu setDelegate:self];
+			[menu populateFromDelegate];
 
 			//this is lame but necessary too.
 			if (![item path])
 				[cell selectItemAtIndex:-1];
+			else //because we just changed the menu of the cell...
+				[cell selectItemAtIndex:[resources indexOfObject:[item path]]];
 		}
 	}
 }
