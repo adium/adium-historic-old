@@ -18,11 +18,9 @@
 
 @implementation ESGaimDotMacAccount
 
-- (void)createNewGaimAccount
+- (char *)gaimAccountName
 {
-	[super createNewGaimAccount];
-	
-	NSString	 *userNameWithMacDotCom = nil;
+	NSString	 *userNameWithMacDotCom;
 
 	if (([UID rangeOfString:@"@mac.com"
 					options:(NSCaseInsensitiveSearch | NSBackwardsSearch | NSAnchoredSearch)].location != NSNotFound)) {
@@ -30,8 +28,8 @@
 	} else {
 		userNameWithMacDotCom = [UID stringByAppendingString:@"@mac.com"];
 	}
-
-	gaim_account_set_username(account, [userNameWithMacDotCom UTF8String]);
+	
+	return [userNameWithMacDotCom UTF8String];
 }
 
 /*!

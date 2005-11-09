@@ -39,7 +39,6 @@
 - (void)initAccount;
 - (void)initSSL;
 - (void)createNewGaimAccount;   //This can be sublcassed to change settings for the gaim account, which is recreated with each connect cycle
-- (void)finishCreateNewGaimAccount;
 
 - (void)dealloc;
 - (NSSet *)supportedPropertyKeys;
