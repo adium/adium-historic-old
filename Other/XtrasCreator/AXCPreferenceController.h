@@ -6,8 +6,6 @@
 //  Copyright 2005 __MyCompanyName__. All rights reserved.
 //
 
-#import <Cocoa/Cocoa.h>
-
 #define STARTUP_ACTION_KEY @"AXCStartupAction"
 
 #define STARTING_POINTS_STARTUP_ACTION @"Display Starting Points"
