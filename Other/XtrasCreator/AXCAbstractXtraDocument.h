@@ -6,9 +6,6 @@
 //  Copyright 2005 Adium Team. All rights reserved.
 //
 
-
-#import <Cocoa/Cocoa.h>
-
 @protocol ViewController;
 
 @interface AXCAbstractXtraDocument : NSDocument
