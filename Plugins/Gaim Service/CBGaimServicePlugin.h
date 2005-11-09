@@ -18,7 +18,6 @@
 
 @interface CBGaimServicePlugin : AIPlugin{
     id  AIMService;
-	id	AntepoService;
     id  ICQService;
     id  DotMacService;
 	id  GaduGaduService;
