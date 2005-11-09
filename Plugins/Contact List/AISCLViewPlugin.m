@@ -207,8 +207,8 @@ int availableSetSort(NSDictionary *objectA, NSDictionary *objectB, void *context
 
 	//If we don't find one, create a path to a bundle in the application support directory
 	path = [[[AIAdium applicationSupportDirectory] stringByAppendingPathComponent:folder] stringByAppendingPathComponent:fileName];
-	[AIXtrasManager createXtraBundleAtPath:path];
-	path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
+	if ([AIXtrasManager createXtraBundleAtPath:path])
+		path = [path stringByAppendingPathComponent:@"Contents/Resources/Data.plist"];
 	
 	if ([[[sharedAdiumInstance preferenceController] preferencesForGroup:preferenceGroup] writeToFile:path atomically:NO]) {
 		

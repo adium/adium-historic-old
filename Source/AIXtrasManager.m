@@ -200,15 +200,20 @@ static NSImage * scriptImage;
 	
 }
 
-+ (void) createXtraBundleAtPath:(NSString *)path 
++ (BOOL) createXtraBundleAtPath:(NSString *)path 
 {
+	NSString *contentsPath  = [path stringByAppendingPathComponent:@"Contents"];
+	NSString *resourcesPath = [contentsPath stringByAppendingPathComponent:@"Resources"];
+	NSString *infoPlistPath = [contentsPath stringByAppendingPathComponent:@"Info.plist"];
+
 	NSFileManager * manager = [NSFileManager defaultManager];
 	NSString * name = [[path lastPathComponent] stringByDeletingPathExtension];
 	if(![manager fileExistsAtPath:path])
 	{
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
-		path = [path stringByAppendingPathComponent:@"Contents"];
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+		[manager createDirectoryAtPath:path attributes:nil];
+		[manager createDirectoryAtPath:contentsPath attributes:nil];
+
+		//Info.plist
 		[[NSDictionary dictionaryWithObjectsAndKeys:
 			@"English", kCFBundleDevelopmentRegionKey,
 			name, kCFBundleNameKey,
@@ -216,10 +221,17 @@ static NSImage * scriptImage;
 			[@"com.adiumx." stringByAppendingString:name], kCFBundleIdentifierKey,
 			[NSNumber numberWithInt:1], @"XtraBundleVersion",
 			@"1.0", kCFBundleInfoDictionaryVersionKey,
-			nil] writeToFile:[path stringByAppendingPathComponent:@"Info.plist"] atomically:YES];
-		path = [path stringByAppendingPathComponent:@"Resources"];
-		[manager createDirectoryAtPath:path attributes:[NSDictionary dictionary]];
+			nil] writeToFile:infoPlistPath atomically:YES];
+
+		//Resources
+		[manager createDirectoryAtPath:resourcesPath attributes:nil];
 	}
+
+	BOOL isDir = NO, success;
+	success = [manager fileExistsAtPath:resourcesPath isDirectory:&isDir] && isDir;
+	if (success)
+		success = [manager fileExistsAtPath:infoPlistPath isDirectory:&isDir] && !isDir;
+	return success;
 }
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row
