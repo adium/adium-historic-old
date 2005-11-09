@@ -51,6 +51,8 @@
 	NSData *data = [fh readDataToEndOfFile];
 	NSString *stackTrace = [[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding] autorelease];
 
+	[task release];
+
 	NSLog(@"got %@ with reason %@; stack trace follows\n%@", [exception name], [exception reason], stackTrace);
 
 	return NO; //because we just did
