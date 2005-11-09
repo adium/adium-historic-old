@@ -1538,21 +1538,27 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	AILog(@"************ %@ --step-- %i",[self UID],[step intValue]);
 }
 
-- (void)createNewGaimAccount
+/*
+ * @brief Name to use when creating a GaimAccount for this CBGaimAccount
+ *
+ * By default, we just use the formattedUID.  Subclasses can override this to provide other handling,
+ * such as appending @mac.com if necessary for dotMac accounts.
+ */
+- (char *)gaimAccountName
 {
-	//Create a fresh version of the account
-    account = gaim_account_new([[self formattedUID] UTF8String], [self protocolPlugin]);
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-
-	[self finishCreateNewGaimAccount];
+	return [[self formattedUID] UTF8String];
 }
 
-- (void)finishCreateNewGaimAccount
+- (void)createNewGaimAccount
 {
 	if (!gaimThread) {
 		gaimThread = [[SLGaimCocoaAdapter sharedInstance] retain];	
 	}	
-	
+
+	//Create a fresh version of the account
+    account = gaim_account_new([self gaimAccountName], [self protocolPlugin]);
+	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
+
 	[gaimThread addAdiumAccount:self];
 }
 

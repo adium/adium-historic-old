@@ -18,10 +18,8 @@
 
 @implementation AIGaimGTalkAccount
 
-- (void)createNewGaimAccount
+- (char *)gaimAccountName
 {
-	[super createNewGaimAccount];
-
 	NSString	 *userNameWithGmailDotCom = nil;
 
 	//Append @gmail.com is neither @gmail.com nor @googlemail.com are found at the end
@@ -35,7 +33,7 @@
 		userNameWithGmailDotCom = UID;
 	}
 
-	gaim_account_set_username(account, [userNameWithGmailDotCom UTF8String]);
+	reutrn [userNameWithGmailDotCom UTF8String];
 }
 
 - (NSString *)serverSuffix
