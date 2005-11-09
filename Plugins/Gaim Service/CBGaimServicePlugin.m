@@ -59,7 +59,6 @@
 - (void)uninstallPlugin
 {
 	[AIMService release]; AIMService = nil;
-//	[AntepoService release]; AntepoService = nil;
 	[ICQService release]; ICQService = nil;
 	[DotMacService release]; DotMacService = nil;
 	[GaduGaduService release]; GaduGaduService = nil;
