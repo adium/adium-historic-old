@@ -6,12 +6,10 @@
             LANGUAGE = ObjC; 
             OUTLETS = {
                 authorField = NSTextField; 
-                controller = id; 
                 fileView = NSTableView; 
                 nameField = NSTextField; 
                 readmeView = NSTextView; 
                 tabs = NSTabView; 
-                typePopup = NSPopUpButton; 
                 versionField = NSTextField; 
             }; 
             SUPERCLASS = NSDocument; 
