@@ -2167,10 +2167,6 @@
 		349FE2FF074D01D300E36B3B /* ESFileTransferProgressView.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressView.h; path = Source/ESFileTransferProgressView.h; sourceTree = "<group>"; };
 		349FE300074D01D300E36B3B /* ESFileTransferProgressRow.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESFileTransferProgressRow.m; path = Source/ESFileTransferProgressRow.m; sourceTree = "<group>"; };
 		349FE301074D01D300E36B3B /* ESFileTransferProgressRow.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESFileTransferProgressRow.h; path = Source/ESFileTransferProgressRow.h; sourceTree = "<group>"; };
-		349FF9F90750751500E36B3B /* ESGaimAntepoAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimAntepoAccount.h; path = "Plugins/Gaim Service/ESGaimAntepoAccount.h"; sourceTree = "<group>"; };
-		349FF9FA0750751500E36B3B /* ESGaimAntepoAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimAntepoAccount.m; path = "Plugins/Gaim Service/ESGaimAntepoAccount.m"; sourceTree = "<group>"; };
-		349FFA020750755100E36B3B /* ESAntepoService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESAntepoService.h; path = "Plugins/Gaim Service/ESAntepoService.h"; sourceTree = "<group>"; };
-		349FFA030750755200E36B3B /* ESAntepoService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESAntepoService.m; path = "Plugins/Gaim Service/ESAntepoService.m"; sourceTree = "<group>"; };
 		34A250B507E0F822009854E1 /* StatusDefaults.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist; name = StatusDefaults.plist; path = Resources/StatusDefaults.plist; sourceTree = "<group>"; };
 		34A29D9406ED68BF00E1366C /* Contact List */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; name = "Contact List"; path = "Resources/Contact List"; sourceTree = "<group>"; };
 		34A30E7508D8EE7800697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
@@ -2537,8 +2533,6 @@
 		34E3C8880638D40500AA3EF7 /* ESYahooJapanService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESYahooJapanService.m; path = "Plugins/Gaim Service/ESYahooJapanService.m"; sourceTree = "<group>"; };
 		34E3C8A50638D50F00AA3EF7 /* ESGaimYahooJapanAccount.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimYahooJapanAccount.h; path = "Plugins/Gaim Service/ESGaimYahooJapanAccount.h"; sourceTree = "<group>"; };
 		34E3C8A60638D50F00AA3EF7 /* ESGaimYahooJapanAccount.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimYahooJapanAccount.m; path = "Plugins/Gaim Service/ESGaimYahooJapanAccount.m"; sourceTree = "<group>"; };
-		34E4516C07555B76004C3A42 /* ESGaimAntepoAccountViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ESGaimAntepoAccountViewController.h; path = "Plugins/Gaim Service/ESGaimAntepoAccountViewController.h"; sourceTree = "<group>"; };
-		34E4516D07555B76004C3A42 /* ESGaimAntepoAccountViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ESGaimAntepoAccountViewController.m; path = "Plugins/Gaim Service/ESGaimAntepoAccountViewController.m"; sourceTree = "<group>"; };
 		34E6D38E0727354600A2643A /* AIToolbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AIToolbar.h; path = "Frameworks/Adium Framework/AIToolbar.h"; sourceTree = "<group>"; };
 		34E6D38F0727354600A2643A /* AIToolbar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AIToolbar.m; path = "Frameworks/Adium Framework/AIToolbar.m"; sourceTree = "<group>"; };
 		34E829820766B0FE00EFB3BC /* AIAccountPlusFieldPromptController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIAccountPlusFieldPromptController.h; path = "Frameworks/Adium Framework/AIAccountPlusFieldPromptController.h"; sourceTree = "<group>"; };
@@ -2876,7 +2870,6 @@
 		4BDD81E707A0B6D30057DB2C /* AccountOptions.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountOptions.nib; path = "Frameworks/Adium Framework/AccountOptions.nib"; sourceTree = "<group>"; };
 		4BDD81E807A0B6D30057DB2C /* AccountProfile.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountProfile.nib; path = "Frameworks/Adium Framework/AccountProfile.nib"; sourceTree = "<group>"; };
 		4BDD81E907A0B6D30057DB2C /* AccountSetup.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = AccountSetup.nib; path = "Frameworks/Adium Framework/AccountSetup.nib"; sourceTree = "<group>"; };
-		4BDD822107A0BAE00057DB2C /* GaimDefaultsAntepo.plist */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = text.xml; name = GaimDefaultsAntepo.plist; path = "Plugins/Gaim Service/GaimDefaultsAntepo.plist"; sourceTree = "<group>"; };
 		4BDF2C91061E376C00EA75C5 /* Libgaim.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Libgaim.framework; path = "Plugins/Gaim Service/Libgaim.framework"; sourceTree = "<group>"; };
 		4BE3AD1C085F3EDD005919E7 /* AdiumPreferredAccounts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AdiumPreferredAccounts.h; path = Source/AdiumPreferredAccounts.h; sourceTree = "<group>"; };
 		4BE3AD1D085F3EDD005919E7 /* AdiumPreferredAccounts.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AdiumPreferredAccounts.m; path = Source/AdiumPreferredAccounts.m; sourceTree = "<group>"; };
@@ -3645,7 +3638,6 @@
 				344160B5059FC2F50019246B /* ESGaimJabberAccountViewController.m */,
 				343EB42208086D9200E27095 /* ESGaimJabberAccountView.nib */,
 				4BB19298079EE90900DAA523 /* GaimDefaultsJabber.plist */,
-				349FF9FF0750752100E36B3B /* Antepo */,
 				A3C0405808D744B200B48CE1 /* Google Talk */,
 			);
 			name = Jabber;
@@ -3745,6 +3737,8 @@
 				4BA5325D050FC5E800A8010A /* EventSoundDefaults.plist */,
 				4B68D3880463330600A8010A /* DockBehaviorDefaults.plist */,
 				34C899AB07E51B18009357F6 /* BuiltInEventPresets.plist */,
+				34BFDF1607E8977D00AD984D /* SoundHigh.png */,
+				34BFDF1707E8977D00AD984D /* SoundLow.png */,
 				346BA3630774C35400628F06 /* GlobalEventsPreferences.nib */,
 			);
 			name = "Global Events Preferences";
@@ -3991,20 +3985,6 @@
 			name = "File Transfer";
 			sourceTree = "<group>";
 		};
-		349FF9FF0750752100E36B3B /* Antepo */ = {
-			isa = PBXGroup;
-			children = (
-				349FFA020750755100E36B3B /* ESAntepoService.h */,
-				349FFA030750755200E36B3B /* ESAntepoService.m */,
-				349FF9F90750751500E36B3B /* ESGaimAntepoAccount.h */,
-				349FF9FA0750751500E36B3B /* ESGaimAntepoAccount.m */,
-				34E4516C07555B76004C3A42 /* ESGaimAntepoAccountViewController.h */,
-				34E4516D07555B76004C3A42 /* ESGaimAntepoAccountViewController.m */,
-				4BDD822107A0BAE00057DB2C /* GaimDefaultsAntepo.plist */,
-			);
-			name = Antepo;
-			sourceTree = "<group>";
-		};
 		34A65AF606A5A0C400898470 /* Safari Link Toolbar Item */ = {
 			isa = PBXGroup;
 			children = (
@@ -4175,8 +4155,6 @@
 				34C68B290778FA5C00EB423C /* ESGeneralPreferences.h */,
 				34C68B2A0778FA5C00EB423C /* ESGeneralPreferences.m */,
 				34A6F68407D65D6200972830 /* GeneralPreferences.nib */,
-				34BFDF1607E8977D00AD984D /* SoundHigh.png */,
-				34BFDF1707E8977D00AD984D /* SoundLow.png */,
 				34BFDF1E07E8978900AD984D /* SendingKeyDefaults.plist */,
 				34BFDF1F07E8978900AD984D /* TabDefaults.plist */,
 			);
