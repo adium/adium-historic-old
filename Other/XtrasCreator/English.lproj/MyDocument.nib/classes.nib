@@ -16,6 +16,12 @@
             }; 
             SUPERCLASS = NSDocument; 
         }, 
+        {
+            CLASS = AXCArrayControllerWithDragAndDrop; 
+            LANGUAGE = ObjC; 
+            OUTLETS = {dragValidator = id; }; 
+            SUPERCLASS = NSArrayController; 
+        }, 
         {CLASS = FirstResponder; LANGUAGE = ObjC; SUPERCLASS = NSObject; }
     ); 
     IBVersion = 1; 

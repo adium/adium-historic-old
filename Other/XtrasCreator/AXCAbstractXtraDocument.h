@@ -26,6 +26,9 @@
 	IBOutlet NSTabView * tabs;
 	IBOutlet NSTableView * fileView;
 	IBOutlet NSTextView * readmeView;
+
+	int lastDrag;
+	NSDragOperation lastDragOperation;
 }
 
 #pragma mark Actions
