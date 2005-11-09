@@ -11,6 +11,7 @@
 #import "AXCFileCell.h"
 #import "IconFamily.h"
 #import "NSFileManager+BundleBit.h"
+#import "NSMutableArrayAdditions.h"
 #include <c.h>
 
 #define THUMBNAIL_SIZE 16.0
@@ -188,6 +189,10 @@
 		AXCFileCell *cell = [[AXCFileCell alloc] initTextCell:@""];
 		[[[fileView tableColumns] objectAtIndex:0U] setDataCell:cell];
 		[cell release];
+	}
+
+	/*set up table view the drag types*/ {
+		[fileView registerForDraggedTypes:[NSArray arrayWithObject:NSFilenamesPboardType]];
 	}
 
 	/*fill in tab view*/ {
@@ -463,6 +468,72 @@
 - (NSArray *) tabViewItems
 {
 	return [NSArray array];
+}
+
+#pragma mark -
+#pragma mark Table-view drag validation (for resources)
+
+- (NSDragOperation) validateDragWithInfo:(id <NSDraggingInfo>)info operation:(NSTableViewDropOperation)operation
+{
+	NSArray *filenames = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+	if (filenames) {
+		NSSet *validTypes = [NSSet setWithArray:[self validResourceTypes]];
+		if (validTypes) {
+			//iterate on the array until we find an invalid type. if we do, this drag fails.
+			NSEnumerator *filenamesEnum = [filenames objectEnumerator];
+			NSString *path;
+			while ((path = [filenamesEnum nextObject])) {
+				if (![validTypes containsObject:[path pathExtension]])
+					goto fail;
+				//XXX OSTypes
+			}
+
+			//no failure: all the files are valid to be dropped.
+			return NSDragOperationCopy;
+		}
+	}
+
+fail:
+	return NSDragOperationNone;
+}
+- (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
+{
+	int thisDrag = [info draggingSequenceNumber];
+	if (lastDrag != thisDrag) {
+		//this is a new drag. validate it.
+		lastDragOperation = [self validateDragWithInfo:info operation:operation];
+		lastDrag = thisDrag;
+	}
+
+	if ((lastDragOperation != NSDragOperationNone) && (operation == NSTableViewDropOn)) {
+		NSArray *filenames = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+		if ([filenames count] == 1)
+			row = [resources indexForInsortingObject:[filenames objectAtIndex:0U] usingSelector:@selector(caseInsensitiveCompare:)];
+		else {
+			//retarget to either above or below.
+			NSPoint location = [info draggingLocation];
+			NSRect rowRect = [tableView rectOfRow:row];
+			
+			//make this relative to the row rect. (we don't care about x.)
+			location.y -= rowRect.origin.y;
+			//compare the y-coord to the height of the row. if below the middle, drop below the row; else, drop above it.
+			if (location.y > (rowRect.size.height / 2.0))
+				++row;
+		}	
+		
+		[tableView setDropRow:row dropOperation:NSTableViewDropAbove];
+	}
+	
+	return lastDragOperation;
+}
+- (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
+{
+	NSArray *filenames = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
+
+	//XXX insort
+	[self addResources:filenames];
+
+	return YES;
 }
 
 @end
