@@ -10,6 +10,7 @@
  *  @brief Forwards table-view data-source methods for drag-and-drop validation
  *   acceptance to another object (the drag validator).
  *  @discussion Set an object as the drag validator, and this array controller
+ *   as the table view's data source, and this array controller
  *   will forward any requests from the table view for drag validation
  *   information to that object, and also carry the results back.
  */
