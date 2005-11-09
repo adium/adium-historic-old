@@ -224,8 +224,23 @@
 		NSString * resourcePath;
 		while ((resourcePath = [resourceEnu nextObject]))
 		{
-			[manager copyPath:resourcePath 
-					   toPath:[resourcesPath stringByAppendingPathComponent:[resourcePath lastPathComponent]]							  handler:nil];
+			NSString *resourceSrcPath = nil;
+			if ([manager fileExistsAtPath:resourcePath])
+				resourceSrcPath = resourcePath;
+			else {
+				NSString *resourceFilename = [resourcePath lastPathComponent];
+				resourceSrcPath = [bundle pathForResource:[resourceFilename stringByDeletingPathExtension] ofType:[resourceFilename pathExtension]];
+			}
+			resourceSrcPath = [resourceSrcPath stringByStandardizingPath];
+
+			NSString *resourceDestPath = [resourcesPath stringByAppendingPathComponent:[resourcePath lastPathComponent]];
+
+			//if these are not the same file...
+			if (![resourceSrcPath isEqualToString:resourceDestPath]) {
+				[manager copyPath:resourceSrcPath 
+						   toPath:resourceDestPath
+						  handler:nil];
+			}
 		}
 
 		IconFamily* iconFamily = [IconFamily iconFamilyWithThumbnailsOfImage:icon]; //check on error handling for this
