@@ -33,7 +33,7 @@
 		userNameWithGmailDotCom = UID;
 	}
 
-	reutrn [userNameWithGmailDotCom UTF8String];
+	return (char *)[userNameWithGmailDotCom UTF8String];
 }
 
 - (NSString *)serverSuffix
