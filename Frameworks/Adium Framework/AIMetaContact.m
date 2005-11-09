@@ -925,8 +925,6 @@ int containedContactSort(AIListContact *objectA, AIListContact *objectB, void *c
 		contactListStatusMessage = [listContact contactListStatusMessage];
 		if (!contactListStatusMessage)
 			contactListStatusMessage = [listContact statusMessage];
-#warning NSLog to remove
-		NSLog(@"%@", [contactListStatusMessage string]);
 	}
 	if (!contactListStatusMessage)
 		contactListStatusMessage = [self statusMessage];
