@@ -222,6 +222,24 @@
 	}
 }
 
+/*keep the outline view from changing the width of the Key column (thereby
+ *	 hiding the pop-up menu arrows and showing a scroll-bar) whenever the user expands or collapses a category.
+ */
+- (void) restoreKeyColumnMaxWidth
+{
+	[[iconPlistView tableColumnWithIdentifier:KEY_COLUMN_NAME] setMaxWidth:previousColumnMaxWidth];
+}
+- (void) outlineViewItemWillExpand:(NSNotification *)notification
+{
+	NSTableColumn *col = [iconPlistView tableColumnWithIdentifier:KEY_COLUMN_NAME];
+	previousColumnMaxWidth = [col maxWidth];
+	[col setMaxWidth:[col width]];
+}
+- (void) outlineViewItemDidExpand:(NSNotification *)notification
+{
+	[self performSelector:@selector(restoreKeyColumnMaxWidth) withObject:nil afterDelay:0.05];
+}
+
 #pragma mark NSMenu delegate conformance
 
 - (int) numberOfItemsInMenu:(NSMenu *)menu
