@@ -285,9 +285,23 @@
 		if (success) {
 	
 			//Extract the set's contents
-			oldSetString = [NSString stringWithContentsOfFile:[NSString stringWithFormat:@"%@/%@.txt", tempSetPath, setName]];
+			oldSetString = [NSString stringWithContentsOfFile:[tempSetPath stringByAppendingPathComponent:[setName stringByAppendingPathExtension:@"txt"]]];
 			success = NO;
 			
+			if (!oldSetString || ![oldSetString length]) {
+				//If we can't find a txt file with the correct name, try to use any text file
+				NSEnumerator	*enumerator = [[mgr directoryContentsAtPath:tempSetPath] objectEnumerator];
+				NSString		*filename;
+				
+				oldSetString = nil;
+				
+				while ((filename = [enumerator nextObject]) && !oldSetString) {
+					if ([[filename pathExtension] caseInsensitiveCompare:@"txt"] == NSOrderedSame) {
+						oldSetString = [NSString stringWithContentsOfFile:[tempSetPath stringByAppendingPathComponent:filename]];
+					}
+				}
+			}
+
 			if (oldSetString && [oldSetString length] != 0) {
 				NSScanner	*scanner;
 				
