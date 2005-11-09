@@ -40,7 +40,7 @@
 - (IBAction) deleteXtra:(id)sender;
 - (IBAction) checkForUpdates:(id)sender;
 
-+ (void) createXtraBundleAtPath:(NSString *)path;
++ (BOOL) createXtraBundleAtPath:(NSString *)path;
 
 - (void)tableView:(NSTableView *)tableView willDisplayCell:(id)cell forTableColumn:(NSTableColumn *)tableColumn row:(int)row;
 - (id)tableView:(NSTableView *)tableView objectValueForTableColumn:(NSTableColumn *)tableColumn row:(int)row;
