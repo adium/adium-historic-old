@@ -75,7 +75,12 @@
 			contentHeight =  32.0;
 		else
 			contentHeight =  16.0;
-		NSSize imageSize = { contentHeight, contentHeight };
+		NSSize imageSize = [icon size];
+		if (imageSize.height > contentHeight) {
+			const float scale = imageSize.height / contentHeight;
+			imageSize.width  /= scale;
+			imageSize.height /= scale;
+		}
 		[icon setSize:imageSize];
 
 		gutter = (cellDimension - contentHeight) / 2.0;
