@@ -496,6 +496,7 @@
 fail:
 	return NSDragOperationNone;
 }
+
 - (NSDragOperation) tableView:(NSTableView *)tableView validateDrop:(id <NSDraggingInfo>)info proposedRow:(int)row proposedDropOperation:(NSTableViewDropOperation)operation
 {
 	int thisDrag = [info draggingSequenceNumber];
@@ -526,6 +527,7 @@ fail:
 	
 	return lastDragOperation;
 }
+
 - (BOOL) tableView:(NSTableView *)tableView acceptDrop:(id <NSDraggingInfo>)info row:(int)row dropOperation:(NSTableViewDropOperation)operation
 {
 	NSArray *filenames = [[info draggingPasteboard] propertyListForType:NSFilenamesPboardType];
