@@ -18,6 +18,9 @@
 	IBOutlet NSView *topLevelView; //evil
 	IBOutlet NSOutlineView *iconPlistView;
 	IBOutlet NSMenu *emptyMenu, *menuWithResourceFiles;
+
+	//used to keep the outline view from resizing the Key column in response to expanding/collapsing a category.
+	float previousColumnMaxWidth;
 }
 
 #pragma mark For subclasses
