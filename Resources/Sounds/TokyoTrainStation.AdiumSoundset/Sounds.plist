@@ -5,27 +5,25 @@
 	<key>AdiumSetVersion</key>
 	<integer>1</integer>
 	<key>Info</key>
-	<string>Created by Adam Iser
+	<string>Created by Zeethrogise
 
-The original Adium sounds.
+Version 3.0 of the popular Adium Soundset
 
-Adam Iser (adamiser@mac.com)
+________________
 http://www.adiumx.com
 </string>
 	<key>Sounds</key>
 	<dict>
 		<key>Contact Signed Off</key>
-		<string>Deflate.aif</string>
+		<string>Contact_Off.aif</string>
 		<key>Contact Signed On</key>
-		<string>Inflate.aif</string>
+		<string>Contact_On.aif</string>
 		<key>Message Received</key>
-		<string>Inhale.aif</string>
+		<string>Message_Received.aif</string>
 		<key>Message Received (New)</key>
-		<string>Quack.aif</string>
-		<key>Message Received (Stranger)</key>
-		<string>Feather Ruffle.aif</string>
+		<string>New_Message.aif</string>
 		<key>Message Sent</key>
-		<string>Exhale.aif</string>
+		<string>Message_Sent.aif</string>
 	</dict>
 </dict>
 </plist>
