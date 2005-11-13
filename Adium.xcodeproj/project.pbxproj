@@ -7147,12 +7147,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
-					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
 					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
+					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
 			);
 			targets = (
@@ -10222,6 +10222,7 @@
 				349C2F260867ACA9000BF883 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
 		};
 		DACF3EDE085574F6006BFB18 /* Build configuration list for PBXAggregateTarget "External Frameworks" */ = {
 			isa = XCConfigurationList;
@@ -10232,6 +10233,7 @@
 				DACF3EE2085574F6006BFB18 /* Default */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Default;
 		};
 		DADE8DFF085507450062B664 /* Build configuration list for PBXNativeTarget "Adium.Framework" */ = {
 			isa = XCConfigurationList;
