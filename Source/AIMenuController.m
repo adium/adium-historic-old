@@ -329,6 +329,7 @@
 	//File menu
 	[menuItem_close setTitle:AILocalizedString(@"Close",nil)];
 	[menuItem_closeChat setTitle:AILocalizedString(@"Close Chat",nil)];
+	[menuItem_closeAllChats setTitle:AILocalizedString(@"Close All Chats",nil)];
 	[menuItem_saveAs setTitle:[AILocalizedString(@"Save As",nil) stringByAppendingEllipsis]];
 	[menuItem_pageSetup setTitle:[AILocalizedString(@"Page Setup",nil) stringByAppendingEllipsis]];
 	[menuItem_print setTitle:[AILocalizedString(@"Print",nil) stringByAppendingEllipsis]];

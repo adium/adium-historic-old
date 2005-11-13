@@ -127,6 +127,7 @@ typedef enum {
 	
     IBOutlet	NSMenuItem		*menuItem_close;
     IBOutlet	NSMenuItem		*menuItem_closeChat;
+	IBOutlet	NSMenuItem		*menuItem_closeAllChats;
 
     IBOutlet	NSMenuItem		*menuItem_paste;
     IBOutlet	NSMenuItem		*menuItem_pasteFormatted;
@@ -207,6 +208,7 @@ typedef enum {
 //Chat close menus
 - (IBAction)closeMenu:(id)sender;
 - (IBAction)closeChatMenu:(id)sender;
+- (IBAction)closeAllChats:(id)sender;
 - (void)updateCloseMenuKeys;
 
 //Window Menu
