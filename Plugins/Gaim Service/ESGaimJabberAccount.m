@@ -137,7 +137,7 @@ gboolean gaim_init_jabber_plugin(void);
 	return DEFAULT_JABBER_HOST;
 }
 
-- (void)createNewGaimAccount
+- (const char *)gaimAccountName
 {
 	NSString	*resource, *userNameWithHost = nil, *completeUserName = nil;
 	BOOL		serverAppendedToUID;
@@ -161,13 +161,8 @@ gboolean gaim_init_jabber_plugin(void);
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 
-	//Create a fresh version of the account
-    account = gaim_account_new([completeUserName UTF8String], [self protocolPlugin]);
-	account->perm_deny = GAIM_PRIVACY_DENY_USERS;
-
-	[self finishCreateNewGaimAccount];
-
 	AILog(@"%x: Jabber user name: \"%@\"",account, completeUserName);
+	return [completeUserName UTF8String];
 }
 
 /*!

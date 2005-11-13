@@ -18,7 +18,7 @@
 
 @implementation ESGaimDotMacAccount
 
-- (char *)gaimAccountName
+- (const char *)gaimAccountName
 {
 	NSString	 *userNameWithMacDotCom;
 
