@@ -44,6 +44,7 @@
 
 #define CLOSE_CHAT_MENU_TITLE			AILocalizedString(@"Close Chat","Title for the close chat menu item")
 #define CLOSE_MENU_TITLE				AILocalizedString(@"Close","Title for the close menu item")
+#define CLOSE_ALL_TABS_MENU_TITLE		AILocalizedString(@"Close All Chats","Title for the close all chats menu item")
 
 #define ERROR_MESSAGE_WINDOW_TITLE		AILocalizedString(@"Adium : Error","Error message window title")
 #define LABEL_ENTRY_SPACING				4.0
@@ -534,6 +535,17 @@
 - (IBAction)closeChatMenu:(id)sender
 {
 	if (activeChat) [self closeChat:activeChat];
+}
+
+//Loop through open chats and close them
+- (IBAction)closeAllChats:(id)sender
+{
+	NSEnumerator	*containerEnumerator = [[[[interfacePlugin openChats] copy] autorelease] objectEnumerator];
+	AIChat			*chatToClose;
+
+	while ((chatToClose = [containerEnumerator nextObject])) {
+		[self closeChat:chatToClose];
+	}
 }
 
 //Updates the key equivalents on 'close' and 'close chat' (dynamically changed to make cmd-w less destructive)
@@ -1288,6 +1300,9 @@
 	} else if (menuItem == menuItem_closeChat) {
 		return activeChat != nil;
 		
+	} else if( menuItem == menuItem_closeAllChats) {
+		return [[self openChats] count] > 0;
+
 	} else if (menuItem == menuItem_print) {
 		return [[keyWindow windowController] respondsToSelector:@selector(adiumPrint:)];
 		

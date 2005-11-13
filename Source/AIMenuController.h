@@ -100,6 +100,7 @@ typedef enum {
 	//File menu
 	IBOutlet	NSMenuItem	*menuItem_close;
 	IBOutlet	NSMenuItem	*menuItem_closeChat;
+	IBOutlet	NSMenuItem  *menuItem_closeAllChats;
 	IBOutlet	NSMenuItem	*menuItem_saveAs;
 	IBOutlet	NSMenuItem	*menuItem_pageSetup;
 	IBOutlet	NSMenuItem	*menuItem_print;

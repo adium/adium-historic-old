@@ -22,6 +22,7 @@
         {
             ACTIONS = {
                 adiumPrint = id; 
+                closeAllChats = id; 
                 closeChatMenu = id; 
                 closeContactList = id; 
                 closeMenu = id; 
@@ -51,6 +52,7 @@
                 menuController = AIMenuController; 
                 "menuItem_bold" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
+                "menuItem_closeAllChats" = id; 
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_customizeToolbar" = NSMenuItem; 
                 "menuItem_italic" = NSMenuItem; 
@@ -75,6 +77,7 @@
                 "menuItem_bringAllToFront" = NSMenuItem; 
                 "menuItem_clear" = NSMenuItem; 
                 "menuItem_close" = NSMenuItem; 
+                "menuItem_closeAllChats" = id; 
                 "menuItem_closeChat" = NSMenuItem; 
                 "menuItem_contact" = NSMenuItem; 
                 "menuItem_copy" = NSMenuItem; 
