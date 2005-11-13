@@ -1544,7 +1544,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  * By default, we just use the formattedUID.  Subclasses can override this to provide other handling,
  * such as appending @mac.com if necessary for dotMac accounts.
  */
-- (char *)gaimAccountName
+- (const char *)gaimAccountName
 {
 	return [[self formattedUID] UTF8String];
 }

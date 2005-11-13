@@ -18,7 +18,7 @@
 
 @implementation AIGaimGTalkAccount
 
-- (char *)gaimAccountName
+- (const char *)gaimAccountName
 {
 	NSString	 *userNameWithGmailDotCom = nil;
 
@@ -33,7 +33,7 @@
 		userNameWithGmailDotCom = UID;
 	}
 
-	return (char *)[userNameWithGmailDotCom UTF8String];
+	return [userNameWithGmailDotCom UTF8String];
 }
 
 - (NSString *)serverSuffix
