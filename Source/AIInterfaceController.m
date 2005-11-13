@@ -54,8 +54,8 @@
 
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
 
-#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/PlugIns/"	//Path to the internal plugins
-#define DIRECTORY_EXTERNAL_PLUGINS		@"/PlugIns"				//Path to the external plugins
+#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins/"	//Path to the internal plugins
+#define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins"				//Path to the external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
