@@ -28,9 +28,9 @@
 #import <AIUtilities/AIExceptionHandlingUtilities.h>
 #import <Adium/AIPlugin.h>
 
-#define DIRECTORY_INTERNAL_PLUGINS		[@"Contents" stringByAppendingPathComponent:@"PlugIns"]	//Path to the internal plugins
-#define EXTERNAL_PLUGIN_FOLDER			@"PlugIns"				//Folder name of external plugins
-#define EXTERNAL_DISABLED_PLUGIN_FOLDER	@"PlugIns (Disabled)"	//Folder name for disabled external plugins
+#define DIRECTORY_INTERNAL_PLUGINS		[@"Contents" stringByAppendingPathComponent:@"Plugins"]	//Path to the internal plugins
+#define EXTERNAL_PLUGIN_FOLDER			@"Plugins"				//Folder name of external plugins
+#define EXTERNAL_DISABLED_PLUGIN_FOLDER	@"Plugins (Disabled)"	//Folder name for disabled external plugins
 #define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
 
 #define CONFIRMED_PLUGINS				@"Confirmed Plugins"
