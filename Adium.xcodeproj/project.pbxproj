@@ -435,6 +435,7 @@
 		34B9194D062DEC29004F1223 /* AIGaimOscarAccountViewController.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B9194B062DEC29004F1223 /* AIGaimOscarAccountViewController.h */; };
 		34B919CB062DEF15004F1223 /* CBOscarService.h in Headers */ = {isa = PBXBuildFile; fileRef = 34B919C9062DEF15004F1223 /* CBOscarService.h */; };
 		34B919CC062DEF15004F1223 /* CBOscarService.m in Sources */ = {isa = PBXBuildFile; fileRef = 34B919CA062DEF15004F1223 /* CBOscarService.m */; };
+		34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */ = {isa = PBXBuildFile; fileRef = 34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */; };
 		34BBE0EB07A2ECD000663CC9 /* adiumGaimConnection.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */; };
 		34BBE0EC07A2ECD000663CC9 /* adiumGaimConnection.m in Sources */ = {isa = PBXBuildFile; fileRef = 34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */; };
 		34BBE10B07A2EE3800663CC9 /* adiumGaimBlist.h in Headers */ = {isa = PBXBuildFile; fileRef = 34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */; };
@@ -2300,6 +2301,7 @@
 		34B9197F062DEC99004F1223 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = "Plugins/Gaim Service/English.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		34B919C9062DEF15004F1223 /* CBOscarService.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = CBOscarService.h; path = "Plugins/Gaim Service/CBOscarService.h"; sourceTree = "<group>"; };
 		34B919CA062DEF15004F1223 /* CBOscarService.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = CBOscarService.m; path = "Plugins/Gaim Service/CBOscarService.m"; sourceTree = "<group>"; };
+		34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = FontPanelAccessoryView.nib; path = Resources/FontPanelAccessoryView.nib; sourceTree = "<group>"; };
 		34BBE0E907A2ECCF00663CC9 /* adiumGaimConnection.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimConnection.h; path = "Plugins/Gaim Service/adiumGaimConnection.h"; sourceTree = "<group>"; };
 		34BBE0EA07A2ECD000663CC9 /* adiumGaimConnection.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = adiumGaimConnection.m; path = "Plugins/Gaim Service/adiumGaimConnection.m"; sourceTree = "<group>"; };
 		34BBE10907A2EE3700663CC9 /* adiumGaimBlist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = adiumGaimBlist.h; path = "Plugins/Gaim Service/adiumGaimBlist.h"; sourceTree = "<group>"; };
@@ -3355,13 +3357,13 @@
 				F59DB3D6033EA9CD01A8010A /* AIAdium.h */,
 				F59DB3D7033EA9CD01A8010A /* AIAdium.m */,
 				4BC291F6083D9EDB0075F57D /* Adium Core */,
-				4BC291F3083D9ED90075F57D /* New Hierarchy */,
-				344C0D4306B6D5E300DA7200 /* Applescriptability */,
-				344458F3070B5BF500D8E932 /* Debugging */,
 				F5BF8A6002C7D2F401A8010A /* Core Controllers */,
 				4BD6720906001B2C0049CAF7 /* Plugins */,
 				4B7F78BA0597F42D00162728 /* Crash Reporter */,
 				4BF2E6BE067CB72400743318 /* Xtras (Built In) */,
+				344C0D4306B6D5E300DA7200 /* Applescriptability */,
+				344458F3070B5BF500D8E932 /* Debugging */,
+				4BC291F3083D9ED90075F57D /* New Hierarchy */,
 				F50A325A03B5798301A8010A /* Resources */,
 				34D8342B07CBE6A4006466F2 /* External Sources */,
 				9EB3C52304F94DB7001D1F74 /* Migration Assistant */,
@@ -4256,9 +4258,14 @@
 		34E0EA1507CC541A00A82198 /* Interface */ = {
 			isa = PBXGroup;
 			children = (
+				D3B4A920052DE51000A8010B /* About Box */,
 				4BAE6D3707CFA09F007E2820 /* Appearance Preferences */,
 				4B9A683D06AEB41C0010BF69 /* Chat Consolidation */,
+				F5CDCE460350758501A8010A /* Contact Info Window */,
+				F51DEC0D03262FB501A8010A /* Login Window */,
 				4B60991906A447D400EC8D78 /* New Message Panel */,
+				F5A3C2DD039A516E01A8010A /* Password Prompt */,
+				F5D746FA0338D79801A8010A /* Preference Window */,
 				F501BB0D03882A0201A8010A /* Standard Toolbar Items */,
 				4BF303160687466D000DCA65 /* Tab Status Icons */,
 			);
@@ -5773,6 +5780,17 @@
 		F50A325A03B5798301A8010A /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				34D8326307CBD598006466F2 /* sendfile.png */,
+				34D8326507CBD598006466F2 /* info.png */,
+				34D8326707CBD598006466F2 /* DefaultIcon.png */,
+				345F58F108199727001F733C /* togglegroups_transparent.png */,
+				345F58F208199727001F733C /* togglegroups.png */,
+				34D8326107CBD598006466F2 /* AccountPrefs.plist */,
+				34D8326207CBD598006466F2 /* DockPrefs.plist */,
+				34D8326607CBD598006466F2 /* ContactPrefs.plist */,
+				34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */,
+				34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */,
+				34B995D9092A832700E31E91 /* FontPanelAccessoryView.nib */,
 				63C120740910A0DD00C9DB57 /* DefaultXtraReadme.rtf */,
 				34575E3807CBA88E004A4FFF /* MainMenu.nib */,
 				4B191D8C0611C11000E8A4E7 /* Changes.txt */,
@@ -6030,21 +6048,6 @@
 				4B292D3107A9C8E100C5F882 /* AIStatusController.m */,
 				F570A60703704E9701A8010A /* AIToolbarController.h */,
 				F570A60803704E9701A8010A /* AIToolbarController.m */,
-				34D8326307CBD598006466F2 /* sendfile.png */,
-				34D8326507CBD598006466F2 /* info.png */,
-				34D8326707CBD598006466F2 /* DefaultIcon.png */,
-				345F58F108199727001F733C /* togglegroups_transparent.png */,
-				345F58F208199727001F733C /* togglegroups.png */,
-				34D8326107CBD598006466F2 /* AccountPrefs.plist */,
-				34D8326207CBD598006466F2 /* DockPrefs.plist */,
-				34D8326607CBD598006466F2 /* ContactPrefs.plist */,
-				34D8327507CBD5B3006466F2 /* BuiltInStatusStates.plist */,
-				34D8327607CBD5B3006466F2 /* ToolbarPrefs.plist */,
-				D3B4A920052DE51000A8010B /* About Box */,
-				F5A3C2DD039A516E01A8010A /* Password Prompt */,
-				F5CDCE460350758501A8010A /* Contact Info Window */,
-				F5D746FA0338D79801A8010A /* Preference Window */,
-				F51DEC0D03262FB501A8010A /* Login Window */,
 			);
 			name = "Core Controllers";
 			sourceTree = "<group>";
@@ -7147,12 +7150,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
-					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
-				},
-				{
 					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
 					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
+				},
+				{
+					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
+					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
 				},
 			);
 			targets = (
@@ -7417,6 +7420,7 @@
 				B02355B608CBE854008CDDDA /* SQLiteLogViewer.nib in Resources */,
 				632D801708E7E0A40032C187 /* XtrasManager.nib in Resources */,
 				63C120750910A0DD00C9DB57 /* DefaultXtraReadme.rtf in Resources */,
+				34B995DA092A832700E31E91 /* FontPanelAccessoryView.nib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -10176,6 +10180,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
 				ZERO_LINK = YES;
@@ -10187,6 +10193,8 @@
 			buildSettings = {
 				DEAD_CODE_STRIPPING = YES;
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -10196,6 +10204,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
 			};
@@ -10205,6 +10215,8 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				FRAMEWORK_SEARCH_PATHS = "$(BUILT_PRODUCTS_DIR)";
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.3;
 				PRECOMP_DESTINATION_DIR = "/Library/Caches/com.apple.Xcode.$(UID)/PrefixHeaders";
 				WARNING_CFLAGS = "-Wall";
 			};
