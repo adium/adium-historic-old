@@ -55,13 +55,6 @@
 
 #define MESSAGES_WINDOW_MENU_TITLE		AILocalizedString(@"Messages","Title for the messages window menu item")
 
-#define DIRECTORY_INTERNAL_PLUGINS		@"/Contents/Plugins/"	//Path to the internal plugins
-#define DIRECTORY_EXTERNAL_PLUGINS		@"/Plugins"				//Path to the external plugins
-#define EXTENSION_ADIUM_PLUGIN			@"AdiumPlugin"			//File extension of a plugin
-
-#define WEBKIT_PLUGIN					@"Webkit Message View.AdiumPlugin"
-#define SMV_PLUGIN						@"Standard Message View.AdiumPlugin"
-
 @interface AIInterfaceController (PRIVATE)
 - (void)_resetOpenChatsCache;
 - (void)_addItemToMainMenuAndDock:(NSMenuItem *)item;
