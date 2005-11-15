@@ -455,15 +455,15 @@ static	ABAddressBook	*sharedAddressBook = nil;
 	
 	while ((service = [servicesEnumerator nextObject])) {
 		if ([ESAddressBookIntegrationPlugin propertyFromService:service]) {
-			NSMenuItem	*menu;
+			NSMenuItem	*menuItem;
 			
 			[popUp_contactType addItemWithTitle:[service shortDescription]];
 			
-			menu = [popUp_contactType itemAtIndex:i];
-			[menu setRepresentedObject:service];
-			[menu setImage:[AIServiceIcons serviceIconForService:service
-															type:AIServiceIconSmall
-													   direction:AIIconNormal]];
+			menuItem = (NSMenuItem *)[popUp_contactType itemAtIndex:i];
+			[menuItem setRepresentedObject:service];
+			[menuItem setImage:[AIServiceIcons serviceIconForService:service
+																type:AIServiceIconSmall
+														   direction:AIIconNormal]];
 			i++;
 		}
 	}
