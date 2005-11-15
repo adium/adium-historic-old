@@ -458,7 +458,7 @@
 
 			AISoundSet		*soundSet = [soundMenuItem representedObject];
 			NSEnumerator	*enumerator;
-			NSDictionary	*key;
+			NSString		*key;
 			NSDictionary	*sounds = [soundSet sounds];
 
 			enumerator = [sounds keyEnumerator];
