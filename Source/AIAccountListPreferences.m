@@ -353,10 +353,10 @@
 					online];			
 			}
 		} else {
-			accountOverview = AILocalizedString(@"Check the box to enable an account","Instructions for enabling an account");
+			accountOverview = AILocalizedString(@"Check a box to enable an account","Instructions for enabling an account");
 		}
 	}
-	
+
 	[textField_overview setStringValue:accountOverview];
 }
 
