@@ -34,7 +34,7 @@ static NSMutableDictionary	*otrPolicyCache = nil;
 #define CLOSED_CONNECTION_MESSAGE "has closed his private connection to you"
 
 /* OTRL_POLICY_MANUAL doesn't let us respond to other users' automatic attempts at encryption.
- * If either user has OTR set to Automatic, an OTR session should be begun; without this modified,
+ * If either user has OTR set to Automatic, an OTR session should be begun; without this modified
  * mask, both users would have to be on automatic for OTR to begin automatically, even though one user
  * _manually_ attempting OTR will _automatically_ bring the other into OTR even if the setting is Manual.
  */
