@@ -1851,6 +1851,7 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = (
@@ -1886,6 +1887,7 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = (
@@ -1919,6 +1921,7 @@
 				INFOPLIST_FILE = Resources/AIUtilities_Framework.plist;
 				INSTALL_PATH = "@executable_path/../Frameworks";
 				LIBRARY_STYLE = DYNAMIC;
+				MACH_O_TYPE = mh_dylib;
 				MACOSX_DEPLOYMENT_TARGET = 10.2;
 				OTHER_CPLUSPLUSFLAGS = " -fconstant-cfstrings";
 				OTHER_LDFLAGS = (

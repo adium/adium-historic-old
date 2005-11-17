@@ -3,7 +3,7 @@
 //  AIUtilities.framework
 //
 //  Created by Sam McCandlish on 9/6/05.
-//  Copyright 2005 __MyCompanyName__. All rights reserved.
+//  Copyright 2005 the Adium Team. All rights reserved.
 //
 
 #import "AILinkedList.h"
