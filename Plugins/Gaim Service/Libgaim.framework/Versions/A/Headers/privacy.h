@@ -107,6 +107,17 @@ gboolean gaim_privacy_deny_add(GaimAccount *account, const char *name,
 gboolean gaim_privacy_deny_remove(GaimAccount *account, const char *name,
 								  gboolean local_only);
 
+
+/**
+ * Check the privacy-setting for a user.
+ *
+ * @param account	The account.
+ * @param who		The name of the user.
+ *
+ * @return @c FALSE if the specified account's privacy settings block the user or @c TRUE otherwise. The meaning of "block" is protocol-dependent and generally relates to status and/or sending of messages.
+ */
+gboolean gaim_privacy_check(GaimAccount *account, const char *who);
+
 /**
  * Sets the UI operations structure for the privacy subsystem.
  *

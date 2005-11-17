@@ -55,6 +55,8 @@ struct _OscarData {
 	gboolean icq;
 	guint icontimer;
 	guint getblisttimer;
+	guint getinfotimer;
+	gint timeoffset;
 	
 	struct {
 		guint maxwatchers; /* max users who can watch you */
@@ -84,10 +86,24 @@ struct buddyinfo {
 	gboolean ico_sent;
 };
 
+//From oscar.c
+#define OSCAR_STATUS_ID_INVISIBLE	"invisible"
+#define OSCAR_STATUS_ID_OFFLINE		"offline"
+#define OSCAR_STATUS_ID_AVAILABLE	"available"
+#define OSCAR_STATUS_ID_AWAY		"away"
+#define OSCAR_STATUS_ID_DND			"dnd"
+#define OSCAR_STATUS_ID_NA			"na"
+#define OSCAR_STATUS_ID_OCCUPIED	"occupied"
+#define OSCAR_STATUS_ID_FREE4CHAT	"free4chat"
+#define OSCAR_STATUS_ID_CUSTOM		"custom"
+
 @class AIHTMLDecoder;
 
 @interface CBGaimOscarAccount : CBGaimAccount  <AIAccount_Files> {
 	AIHTMLDecoder	*oscarGaimThreadHTMLDecoder;
+	
+	NSTimer			*delayedSignonUpdateTimer;
+	NSMutableArray  *arrayOfContactsForDelayedUpdates;
 }
 
 @end

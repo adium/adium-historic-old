@@ -20,8 +20,10 @@
  * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
-//**Adium
-#include "ft.h"
+/**
+ * Process ymsg events, particular IMViroments like Doodle
+ */
+void yahoo_process_p2pfilexfer( GaimConnection *gc, struct yahoo_packet *pkt );
 
 /**
  * Process ymsg file receive invites.
@@ -36,6 +38,3 @@ void yahoo_process_filetransfer(GaimConnection *gc, struct yahoo_packet *pkt);
  * @param file What file? If NULL, user will choose after this call.
  */
 void yahoo_send_file(GaimConnection *gc, const char *who, const char *file);
-
-// **Adium
-GaimXfer *yahoo_xfer_new(GaimConnection *gc, const char *who);

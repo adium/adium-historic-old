@@ -64,12 +64,14 @@ typedef enum
 	GAIM_SUBTYPE_BLIST_BUDDY,
 	GAIM_SUBTYPE_BLIST_GROUP,
 	GAIM_SUBTYPE_BLIST_CHAT,
+	GAIM_SUBTYPE_BUDDY_ICON,
 	GAIM_SUBTYPE_CONNECTION,
 	GAIM_SUBTYPE_CONVERSATION,
 	GAIM_SUBTYPE_CONV_WINDOW,
 	GAIM_SUBTYPE_PLUGIN,
 	GAIM_SUBTYPE_BLIST_NODE,
-	GAIM_SUBTYPE_BUDDY_ICON
+	GAIM_SUBTYPE_CIPHER,
+	GAIM_SUBTYPE_STATUS
 
 } GaimSubType;
 
@@ -121,7 +123,7 @@ extern "C" {
  * This function takes a type and, depending on that type, a sub-type
  * or specific type.
  *
- * If @a type is GAIM_TYPE_POINTER, the next parameter must be a
+ * If @a type is GAIM_TYPE_BOXED, the next parameter must be a
  * string representing the specific type.
  *
  * If @a type is GAIM_TYPE_SUBTYPE, the next parameter must be a
@@ -137,12 +139,13 @@ extern "C" {
 GaimValue *gaim_value_new(GaimType type, ...);
 
 /**
- * Creates a new outgoing GaimValue.
+ * Creates a new outgoing GaimValue.  If a value is an "outgoing" value
+ * it means the value can be modified by plugins and scripts.
  *
  * This function takes a type and, depending on that type, a sub-type
  * or specific type.
  *
- * If @a type is GAIM_TYPE_POINTER, the next parameter must be a
+ * If @a type is GAIM_TYPE_BOXED, the next parameter must be a
  * string representing the specific type.
  *
  * If @a type is GAIM_TYPE_SUBTYPE, the next parameter must be a
@@ -176,6 +179,8 @@ GaimValue *gaim_value_dup(const GaimValue *value);
 /**
  * Returns a value's type.
  *
+ * @param value The value whose type you want.
+ *
  * @return The value's type.
  */
 GaimType gaim_value_get_type(const GaimValue *value);
@@ -186,6 +191,8 @@ GaimType gaim_value_get_type(const GaimValue *value);
  * If the value's type is not GAIM_TYPE_SUBTYPE, this will return 0.
  * Subtypes should never have a subtype of 0.
  *
+ * @param value The value whose subtype you want.
+ *
  * @return The value's subtype, or 0 if @a type is not GAIM_TYPE_SUBTYPE.
  */
 unsigned int gaim_value_get_subtype(const GaimValue *value);
@@ -194,6 +201,8 @@ unsigned int gaim_value_get_subtype(const GaimValue *value);
  * Returns a value's specific type.
  *
  * If the value's type is not GAIM_TYPE_BOXED, this will return @c NULL.
+ *
+ * @param value The value whose specific type you want.
  *
  * @return The value's specific type, or @a NULL if not GAIM_TYPE_BOXED.
  */

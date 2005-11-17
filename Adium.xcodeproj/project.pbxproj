@@ -348,6 +348,7 @@
 		3496A8F407CE6D050055BBAB /* AIHyperlinks.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3496A8F207CE6CFB0055BBAB /* AIHyperlinks.framework */; };
 		3499F4A806309AF60035B468 /* ESGaimRequestWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */; };
 		3499F4A906309AF60035B468 /* ESGaimRequestWindowController.h in Headers */ = {isa = PBXBuildFile; fileRef = 3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */; };
+		349C2DB1092BCF58002998E1 /* gaimOTRCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */; };
 		349C2F470867AD16000BF883 /* ApplescriptRunner.m in Sources */ = {isa = PBXBuildFile; fileRef = 349C2F460867AD16000BF883 /* ApplescriptRunner.m */; };
 		349C2FE40867AD49000BF883 /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F531836F019E40BB01A80165 /* Carbon.framework */; };
 		349C2FF00867AD65000BF883 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 349C2FEF0867AD65000BF883 /* Foundation.framework */; };
@@ -2148,6 +2149,7 @@
 		3499F45006309AC80035B468 /* WebKit Message View.AdiumPlugin */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "WebKit Message View.AdiumPlugin"; sourceTree = BUILT_PRODUCTS_DIR; };
 		3499F4A606309AF60035B468 /* ESGaimRequestWindowController.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ESGaimRequestWindowController.m; path = "Plugins/Gaim Service/ESGaimRequestWindowController.m"; sourceTree = "<group>"; };
 		3499F4A706309AF60035B468 /* ESGaimRequestWindowController.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESGaimRequestWindowController.h; path = "Plugins/Gaim Service/ESGaimRequestWindowController.h"; sourceTree = "<group>"; };
+		349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = gaimOTRCommon.h; path = "Plugins/Gaim Service/gaimOTRCommon.h"; sourceTree = "<group>"; };
 		349C2EFA0867AC97000BF883 /* AdiumApplescriptRunner */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = AdiumApplescriptRunner; sourceTree = BUILT_PRODUCTS_DIR; };
 		349C2F460867AD16000BF883 /* ApplescriptRunner.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = ApplescriptRunner.m; path = Source/ApplescriptRunner.m; sourceTree = "<group>"; };
 		349C2FEF0867AD65000BF883 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
@@ -3523,19 +3525,20 @@
 		3440938407D9151F00321BB3 /* OTR */ = {
 			isa = PBXGroup;
 			children = (
+				34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */,
+				34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */,
 				34E0110C07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.h */,
 				34E0110D07B9E30B000DF265 /* ESGaimOTRUnknownFingerprintController.m */,
 				344092CC07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.h */,
 				344092CD07D8FF8F00321BB3 /* ESGaimOTRPrivateKeyGenerationWindowController.m */,
 				3440931D07D914F400321BB3 /* GaimOTRPrivateKeyGenerationWindow.nib */,
-				34BBE55407A342AF00663CC9 /* adiumGaimOTR.h */,
-				34BBE55507A342AF00663CC9 /* adiumGaimOTR.m */,
 				3411E1380832E3B9003C8270 /* ESGaimOTRPreferences.h */,
 				3411E1390832E3B9003C8270 /* ESGaimOTRPreferences.m */,
 				34057FAC087EEBE500664D64 /* OTRPrefs.nib */,
 				3411E28F0832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.h */,
 				3411E2900832FC49003C8270 /* ESGaimOTRFingerprintDetailsWindowController.m */,
 				3411E2970832FCA0003C8270 /* GaimOTRFingerprintDetailsWindow.nib */,
+				349C2DB0092BCF58002998E1 /* gaimOTRCommon.h */,
 			);
 			name = OTR;
 			sourceTree = "<group>";
@@ -6573,6 +6576,7 @@
 				34AEE7DE08E3547000AE1C78 /* ESGaimFileReceiveRequestController.h in Headers */,
 				34AEE7EA08E35A5800AE1C78 /* ESGaimRequestAbstractWindowController.h in Headers */,
 				07F1795008EBC5B400A9C392 /* UndeclaredLibgaimFunctions.h in Headers */,
+				349C2DB1092BCF58002998E1 /* gaimOTRCommon.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -7150,12 +7154,12 @@
 			projectDirPath = "";
 			projectReferences = (
 				{
-					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
-					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
-				},
-				{
 					ProductGroup = 3496A8E807CE6CA30055BBAB /* Products */;
 					ProjectRef = 3496A8E707CE6CA30055BBAB /* AIHyperlinks.framework.xcodeproj */;
+				},
+				{
+					ProductGroup = 34D834D107CBE7B2006466F2 /* Products */;
+					ProjectRef = 3448717006D1E57700DA778C /* AIUtilities.framework.xcodeproj */;
 				},
 			);
 			targets = (

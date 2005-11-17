@@ -24,9 +24,9 @@
 
 #include "conversation.h"
 
-/**************************************************************************
- * @name Structures
- **************************************************************************/
+/**************************************************************************/
+/** @name Structures                                                      */
+/**************************************************************************/
 /*@{*/
 
 typedef enum _GaimCmdPriority GaimCmdPriority;
@@ -80,9 +80,9 @@ enum _GaimCmdFlag {
 extern "C" {
 #endif
 
-/**************************************************************************
- * @name Commands API
- **************************************************************************/
+/**************************************************************************/
+/** @name Commands API                                                    */
+/**************************************************************************/
 /*@{*/
 
 /**
@@ -120,7 +120,7 @@ extern "C" {
  *                before the command name.
  * @param data User defined data to pass to the GaimCmdFunc
  * @return A GaimCmdId. This is only used for calling gaim_cmd_unregister.
- *         Returns @c NULL on failure.
+ *         Returns 0 on failure.
  */
 GaimCmdId gaim_cmd_register(const gchar *cmd, const gchar *args, GaimCmdPriority p, GaimCmdFlag f,
                              const gchar *prpl_id, GaimCmdFunc func, const gchar *helpstr, void *data);
@@ -184,10 +184,6 @@ GList *gaim_cmd_list(GaimConversation *conv);
  */
 GList *gaim_cmd_help(GaimConversation *conv, const gchar *cmd);
 
-//*** Adium
-/* Check a command for possibly being approrpiate for a conv */
-GaimCmdStatus gaim_cmd_check_command(GaimConversation *conv, const gchar *cmdline,
-									 const gchar *markup, gchar **error);
 /*@}*/
 
 #ifdef __cplusplus

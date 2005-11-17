@@ -186,7 +186,8 @@ void gaim_account_option_set_default_string(GaimAccountOption *option,
  * @param option The account option.
  * @param masked  The masking.
  */
-void gaim_account_option_set_masked(GaimAccountOption *option, gboolean masked);
+void
+gaim_account_option_set_masked(GaimAccountOption *option, gboolean masked);
 
 /**
  * Sets the list values for an account option.
@@ -274,7 +275,8 @@ const char *gaim_account_option_get_default_string(
  *
  * @return The masking.
  */
-gboolean gaim_account_option_get_masked(const GaimAccountOption *option);
+gboolean
+gaim_account_option_get_masked(const GaimAccountOption *option);
 
 /**
  * Returns the list values for an account option.

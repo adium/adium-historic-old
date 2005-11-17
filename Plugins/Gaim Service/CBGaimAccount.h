@@ -36,9 +36,8 @@
 - (const char*)protocolPlugin;
 - (GaimAccount*)gaimAccount;
 
-- (void)initAccount;
 - (void)initSSL;
-- (void)createNewGaimAccount;   //This can be sublcassed to change settings for the gaim account, which is recreated with each connect cycle
+- (void)createNewGaimAccount;
 
 - (void)dealloc;
 - (NSSet *)supportedPropertyKeys;
@@ -47,8 +46,6 @@
 - (NSString *)unknownGroupName;
 - (BOOL)shouldAttemptReconnectAfterDisconnectionError:(NSString **)disconnectionError;
 - (BOOL)useDisplayNameAsStatusMessage;
-- (BOOL)displayConversationClosed;
-- (BOOL)displayConversationTimedOut;
 - (AIService *)_serviceForUID:(NSString *)contactUID;
 
 /* CBGaimAccount odes not implement AIAccount_Files; however, all subclasses which do use the same code.
@@ -82,12 +79,9 @@
 - (void)setAccountUserImageData:(NSData *)originalData;
 - (void)setAccountIdleSinceTo:(NSDate *)idleSince;
 
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage;
-- (void)setStatusState:(AIStatus *)statusState
-	withGaimStatusType:(const char *)gaimStatusType 
-			andMessage:(NSString *)statusMessage;
-
+- (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments;
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments;
 
 - (void)setAccountProfileTo:(NSAttributedString *)profile;
 
@@ -156,8 +150,8 @@
 - (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString 
 						forListObject:(AIListObject *)inListObject
 					   contentMessage:(AIContentMessage *)contentMessage;
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString
-					forGaimStatusType:(const char *)gaimStatusType;
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString 
+					   forStatusState:(AIStatus *)statusState;
 - (BOOL)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 - (NSString *)titleForContactMenuLabel:(const char *)label forContact:(AIListContact *)inContact;

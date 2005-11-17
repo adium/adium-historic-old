@@ -90,8 +90,6 @@
 
 @implementation CBGaimAccount
 
-static BOOL didInitSSL = NO;
-
 static SLGaimCocoaAdapter *gaimThread = nil;
 
 // The GaimAccount currently associated with this Adium account
@@ -114,8 +112,16 @@ static SLGaimCocoaAdapter *gaimThread = nil;
 gboolean gaim_init_ssl_openssl_plugin(void);
 - (void)initSSL
 {
+	static BOOL didInitSSL = NO;
+
 	if (!didInitSSL) {
 		didInitSSL = gaim_init_ssl_openssl_plugin();
+		if (!didInitSSL) {
+			NSLog(@"*** Unabled to initialize openssl ***");
+			GaimDebug(@"*** Unabled to initialize openssl ***");
+		} else {
+			GaimDebug(@"+++ Initialized OpenSSL (%x).",gaim_ssl_get_ops());
+		}
 	}
 }
 
@@ -371,10 +377,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (void)delayedUpdateContactStatus:(AIListContact *)inContact
 {
     //Request profile
-	AILog(@"%@: Update %@ : %i %i",self,inContact,[inContact online],[inContact isStranger]);
-//    if ([inContact online] || [inContact isStranger]) {
-		[gaimThread getInfoFor:[inContact UID] onAccount:self];
-//    }
+	[gaimThread getInfoFor:[inContact UID] onAccount:self];
 }
 
 - (void)requestAddContactWithUID:(NSString *)contactUID
@@ -601,7 +604,9 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	AIChatUpdateType	updateType = [type intValue];
 	NSString			*key = nil;
 	switch (updateType) {
-
+		case AIChatTimedOut:
+		case AIChatClosedWindow:
+			break;
 	}
 	
 	if (key) {
@@ -705,7 +710,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 /* AIAccount_Content */
 /*********************/
 #pragma mark Content
-- (BOOL)sendContentObject:(AIContentObject*)object
+- (BOOL)sendContentObject:(AIContentObject *)object
 {
     BOOL            sent = NO;
 	
@@ -1296,11 +1301,17 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	//Set password and connect
 	gaim_account_set_password(account, [password UTF8String]);
 
-	GaimDebug(@"Adium: Connect: %@ initiating connection.",[self UID]);
+	//Set our current status state after filtering its statusMessage as appropriate. This will take us online in the process.
+	AIStatus	*statusState = [self statusObjectForKey:@"StatusState"];
+	if (!statusState) {
+		statusState = [[adium statusController] defaultInitialStatusState];
+	}
 
-	[gaimThread connectAccount:self];
+	GaimDebug(@"Adium: Connect: %@ initiating connection using status state %@.",[self UID],statusState);
 
-	GaimDebug(@"Adium: Connect: %@ done initiating connection %x.",[self UID], account->gc);
+	[self autoRefreshingOutgoingContentForStatusKey:@"StatusState"
+										   selector:@selector(gotFilteredStatusMessage:forStatusState:)
+											context:statusState];
 }
 
 
@@ -1362,7 +1373,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 - (void)configureAccountProxyNotifyingTarget:(id)target selector:(SEL)selector
 {
 	GaimProxyInfo		*proxy_info;
-	GaimProxyType		gaimAccountProxyType;
+	GaimProxyType		gaimAccountProxyType = GAIM_PROXY_NONE;
 	
 	NSNumber			*proxyPref = [self preferenceForKey:KEY_ACCOUNT_PROXY_TYPE group:GROUP_ACCOUNT_STATUS];
 	BOOL				proxyEnabled = [[self preferenceForKey:KEY_ACCOUNT_PROXY_ENABLED group:GROUP_ACCOUNT_STATUS] boolValue];
@@ -1747,6 +1758,47 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 }
 
 /*!
+ * @brief Return the gaim status type to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
+ *
+ * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
+ * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
+ * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
+ * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
+ * [statusState statusType] for a general idea of the status's type.
+ *
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
+ *
+ * @result The gaim status ID
+ */
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
+{
+	char	*statusID = NULL;
+	
+	switch ([statusState statusType]) {
+		case AIAvailableStatusType:
+			statusID = "available";
+			break;
+		case AIAwayStatusType:
+			statusID = "away";
+			break;
+			
+		case AIInvisibleStatusType:
+			statusID = "invisible";
+			break;
+			
+		case AIOfflineStatusType:
+			statusID = "offline";
+			break;
+	}
+	
+	return statusID;
+}
+
+/*!
  * @brief Perform the setting of a status state
  *
  * Sets the account to a passed status state.  The account should set itself to best possible status given the return
@@ -1758,83 +1810,58 @@ gboolean gaim_init_ssl_openssl_plugin(void);
  */
 - (void)setStatusState:(AIStatus *)statusState usingStatusMessage:(NSAttributedString *)statusMessage
 {
-	if ([self online]) {
-		char				*gaimStatusType;
-		NSString			*encodedStatusMessage;
-		
-		//Get the gaim status type from this class or subclasses, which may also potentially modify or nullify our statusMessage
-		gaimStatusType = [self gaimStatusTypeForStatus:statusState
-											   message:&statusMessage];
-		
-		//Encode the status message if we still have one
-		encodedStatusMessage = (statusMessage ? 
-								[self encodedAttributedString:statusMessage
-											forGaimStatusType:gaimStatusType]  :
-								nil);
+	NSString			*encodedStatusMessage;
+	NSMutableDictionary	*arguments = [[NSMutableDictionary alloc] init];
 
-		[self setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:encodedStatusMessage];		
+	//Get the gaim status type from this class or subclasses, which may also potentially modify or nullify our statusMessage
+	const char *statusID = [self gaimStatusIDForStatus:statusState
+											 arguments:arguments];
+
+	if (!statusMessage && ([statusState statusType] == AIAwayStatusType)) {
+		/* If we don't have a status message, and  the status type is away, get a default description of this away state
+		 * This allows, for example, an AIM user to set  the "Do Not Disturb" type provided by her ICQ account and have the
+		 * away message be set appropriately.
+		 */
+		statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
 	}
+
+	//Encode the status message if we have one
+	encodedStatusMessage = (statusMessage ? 
+							[self encodedAttributedString:statusMessage
+										   forStatusState:statusState]  :
+							nil);
+
+	if (encodedStatusMessage) {
+		[arguments setObject:encodedStatusMessage
+					  forKey:@"message"];
+	}
+
+	[self setStatusState:statusState
+				statusID:statusID
+				isActive:[NSNumber numberWithBool:YES] /* We're only using exclusive states for now... I hope.  */
+			   arguments:arguments];
+	
+	[arguments release];
 }
 
 /*!
- * @brief Return the gaim status type to be used for a status
- *
- * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
- * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
- * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
- * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
- * [statusState statusType] for a general idea of the status's type.
- *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
- *
- * @result The gaim status equivalent
- */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
-{
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
-	
-	/* CBGaimAccount just handles available and away in the most simple way possible; 
-	 * we don't even care what the statusName is. */
-	switch (statusType) {
-		case AIAvailableStatusType:
-			gaimStatusType = "Available";
-			break;
-		case AIAwayStatusType:
-		case AIInvisibleStatusType: /* Invisible defaults to just being an away status */
-			gaimStatusType = GAIM_AWAY_CUSTOM;
-			//If we make it here, and we don't have a status message, generate one from the status controller's description.
-			if ((*statusMessage == nil) || ([*statusMessage length] == 0)) {
-				*statusMessage = [NSAttributedString stringWithString:[[adium statusController] descriptionForStateOfStatus:statusState]];
-			}
-			break;
-		case AIOfflineStatusType:
-			//I'm really unsure how we actually get here with AIOfflineStatusType, but ensure this function doesn't return NULL
-			gaimStatusType = "";
-			break;
-	}
-	
-	return gaimStatusType;
-}
-
-/*!
- * @brief Perform the actual setting a state
+ * @brief Perform the actual setting of a state
  *
  * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
  * name, which are called for by the setting of the state; most of the processing has already been done, however, so
  * most subclasses will not need to implement this.
  *
  * @param statusState The AIStatus which is being set
- * @param gaimStatusType The status type which will be passed to Gaim, or NULL if Gaim's status will not be set for this account
- * @param statusMessage A properly encoded message which will be associated with the status if possible.
+ * @param statusID The Gaim-sepcific statusID we are setting
+ * @param isActive An NSNumber with a bool YES if we are activating (going to) the passed state, NO if we are deactivating (going away from) the passed state.
+ * @param arguments Gaim-specific arguments specified by the account. It must contain only NSString objects and keys.
  */
-- (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
+- (void)setStatusState:(AIStatus *)statusState statusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments
 {
-	[gaimThread setGaimStatusType:gaimStatusType 
-					  withMessage:statusMessage
-						onAccount:self];
+	[gaimThread setStatusID:statusID
+				   isActive:isActive
+				  arguments:arguments
+				  onAccount:self];
 }
 
 //Set our idle (Pass nil for no idle)
@@ -2271,7 +2298,7 @@ gboolean gaim_init_ssl_openssl_plugin(void);
 	return [self encodedAttributedString:inAttributedString forListObject:inListObject];
 }
 
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
 {
 	return [self encodedAttributedString:inAttributedString forListObject:nil];	
 }

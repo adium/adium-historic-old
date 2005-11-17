@@ -31,6 +31,7 @@
 #include <stdio.h>
 
 #include "account.h"
+#include "xmlnode.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,28 +43,34 @@ extern "C" {
 /*@{*/
 
 /**
- * Converts a string to its base-16 equivalent.
+ * Converts a chunk of binary data to its base-16 equivalent.
  *
- * @param str The string to convert.
- * @param len The length of the string.
+ * @param data The data to convert.
+ * @param len  The length of the data.
  *
- * @return The base-16 string.
+ * @return The base-16 string in the ASCII encoding.  Must be
+ *         g_free'd when no longer needed.
  *
  * @see gaim_base16_decode()
  */
-unsigned char *gaim_base16_encode(const unsigned char *str, int len);
+gchar *gaim_base16_encode(const guchar *data, gsize len);
 
 /**
- * Converts a string back from its base-16 equivalent.
+ * Converts an ASCII string of base-16 encoded data to
+ * the binary equivalent.
  *
- * @param str     The string to convert back.
- * @param ret_str The returned, non-base-16 string.
+ * @param str     The base-16 string to convert to raw data.
+ * @param ret_len The length of the returned data.  You can
+ *                pass in NULL if you're sure that you know
+ *                the length of the decoded data, or if you
+ *                know you'll be able to use strlen to
+ *                determine the length, etc.
  *
- * @return The length of the returned string.
+ * @return The raw data.  Must be g_free'd when no longer needed.
  *
  * @see gaim_base16_encode()
  */
-int gaim_base16_decode(const char *str, unsigned char **ret_str);
+guchar *gaim_base16_decode(const char *str, gsize *ret_len);
 
 /*@}*/
 
@@ -74,27 +81,34 @@ int gaim_base16_decode(const char *str, unsigned char **ret_str);
 /*@{*/
 
 /**
- * Converts a string to its base-64 equivalent.
+ * Converts a chunk of binary data to its base-64 equivalent.
  *
- * @param buf The data to convert.
- * @param len The length of the data.
+ * @param data The data to convert.
+ * @param len  The length of the data.
  *
- * @return The base-64 version of @a str.
+ * @return The base-64 string in the ASCII encoding.  Must be
+ *         g_free'd when no longer needed.
  *
  * @see gaim_base64_decode()
  */
-unsigned char *gaim_base64_encode(const unsigned char *buf, size_t len);
+gchar *gaim_base64_encode(const guchar *data, gsize len);
 
 /**
- * Converts a string back from its base-64 equivalent.
+ * Converts an ASCII string of base-64 encoded data to
+ * the binary equivalent.
  *
- * @param str     The string to convert back.
- * @param ret_str The returned, non-base-64 string.
- * @param ret_len The returned string length.
+ * @param str     The base-64 string to convert to raw data.
+ * @param ret_len The length of the returned data.  You can
+ *                pass in NULL if you're sure that you know
+ *                the length of the decoded data, or if you
+ *                know you'll be able to use strlen to
+ *                determine the length, etc.
+ *
+ * @return The raw data.  Must be g_free'd when no longer needed.
  *
  * @see gaim_base64_encode()
  */
-void gaim_base64_decode(const char *str, char **ret_str, int *ret_len);
+guchar *gaim_base64_decode(const char *str, gsize *ret_len);
 
 /*@}*/
 
@@ -105,12 +119,17 @@ void gaim_base64_decode(const char *str, char **ret_str, int *ret_len);
 
 /**
  * Converts a quoted printable string back to its readable equivalent.
+ * What is a quoted printable string, you ask?  It's an encoding used
+ * to transmit binary data as ASCII.  It's intended purpose is to send
+ * e-mails containing non-ASCII characters.  Wikipedia has a pretty good
+ * explanation.  Also see RFC 2045.
  *
- * @param str     The string to convert back.
- * @param ret_str The returned, readable string.
- * @param ret_len The returned string length.
+ * @param str     The quoted printable ASCII string to convert to raw data.
+ * @param ret_len The length of the returned data.
+ *
+ * @return The readable string.  Must be g_free'd when no longer needed.
  */
-void gaim_quotedp_decode (const char *str, char **ret_str, int *ret_len);
+guchar *gaim_quotedp_decode(const char *str, gsize *ret_len);
 
 /*@}*/
 
@@ -126,15 +145,19 @@ void gaim_quotedp_decode (const char *str, char **ret_str, int *ret_len);
  * of an encoded word is =?ISO-8859-1?Q?Keld_J=F8rn_Simonsen?=
  * =? designates the beginning of the encoded-word
  * ?= designates the end of the encoded-word
- * ? segments the encoded word into three pieces.  The first piece is
- *   the character set, the second piece is the encoding, and the
- *   third piece is the encoded text.
  *
- * @param str The string to convert back.
+ * An encoded word is segmented into three pieces by the use of a
+ * question mark.  The first piece is the character set, the second
+ * piece is the encoding, and the third piece is the encoded text.
  *
- * @return The readable string.
+ * @param str The ASCII string, possibly containing any number of
+ *            encoded-word sections.
+ *
+ * @return The string, with any encoded-word sections decoded and
+ *         converted to UTF-8.  Must be g_free'd when no longer
+ *         needed.
  */
-char *gaim_mime_decode_field (const char *str);
+char *gaim_mime_decode_field(const char *str);
 
 /*@}*/
 
@@ -193,6 +216,17 @@ time_t gaim_time_build(int year, int month, int day, int hour,
  */
 time_t gaim_str_to_time(const char *timestamp, gboolean utc);
 
+/**
+ * Creates a string according to a time and format string
+ *
+ * This function just calls strftime. The only advantage to using it
+ * is that gcc won't give a warning if you use %c
+ *
+ * TODO: The warning is gone in gcc4, and this function can
+ *       eventually be removed.
+ */
+size_t gaim_strftime(char *s, size_t max, const char *format, const struct tm *tm);
+
 /*@}*/
 
 
@@ -202,7 +236,7 @@ time_t gaim_str_to_time(const char *timestamp, gboolean utc);
 /*@{*/
 
 /**
- * Finds a HTML tag matching the given name.
+ * Finds an HTML tag matching the given name.
  *
  * This locates an HTML tag's start and end, and stores its attributes
  * in a GData hash table. The names of the attributes are lower-cased
@@ -277,16 +311,6 @@ char *gaim_markup_strip_html(const char *str);
 char *gaim_markup_linkify(const char *str);
 
 /**
- * Escapes HTML special characters to be displayed literally.
- * For example '&' is replaced by "&amp;" and so on
- *
- * @param html The string in which to escape any HTML special characters
- *
- * @return the text with HTML special characters escaped
- */
-char *gaim_escape_html(const char *html);
-
-/**
  * Unescapes HTML entities to their literal characters.
  * For example "&amp;" is replaced by '&' and so on.
  * Actually only "&amp;", "&quot;", "&lt;" and "&gt;" are currently
@@ -351,18 +375,19 @@ const gchar *gaim_home_dir(void);
 
 /**
  * Returns the gaim settings directory in the user's home directory.
+ * This is usually ~/.gaim
  *
  * @return The gaim settings directory.
  *
  * @see gaim_home_dir()
  */
-char *gaim_user_dir(void);
+const char *gaim_user_dir(void);
 
 /**
  * Define a custom gaim settings directory, overriding the default (user's home directory/.gaim)
  * @param dir The custom settings directory
  */
-void set_gaim_user_dir(const char *dir);
+void gaim_util_set_user_dir(const char *dir);
 
 /**
  * Builds a complete path from the root, making any directories along
@@ -377,6 +402,41 @@ void set_gaim_user_dir(const char *dir);
 int gaim_build_dir(const char *path, int mode);
 
 /**
+ * Write a string of data to a file of the given name in the Gaim
+ * user directory ($HOME/.gaim by default).  The data is typically
+ * a serialized version of one of Gaim's config files, such as
+ * prefs.xml, accounts.xml, etc.  And the string is typically
+ * obtained using xmlnode_to_formatted_str.  However, this function
+ * should work fine for saving binary files as well.
+ *
+ * @param filename The basename of the file to write in the gaim_user_dir.
+ * @param data     A null-terminated string of data to write.
+ * @param size     The size of the data to save.  If data is
+ *                 null-terminated you can pass in -1.
+ *
+ * @return TRUE if the file was written successfully.  FALSE otherwise.
+ */
+gboolean gaim_util_write_data_to_file(const char *filename, const char *data,
+									  size_t size);
+
+/**
+ * Read the contents of a given file and parse the results into an
+ * xmlnode tree structure.  This is intended to be used to read
+ * Gaim's configuration xml files (prefs.xml, pounces.xml, etc.)
+ *
+ * @param filename    The basename of the file to open in the gaim_user_dir.
+ * @param description A very short description of the contents of this
+ *                    file.  This is used in error messages shown to the
+ *                    user when the file can not be opened.  For example,
+ *                    "preferences," or "buddy pounces."
+ *
+ * @return An xmlnode tree of the contents of the given file.  Or NULL, if
+ *         the file does not exist or there was an error reading the file.
+ */
+xmlnode *gaim_util_read_xml_from_file(const char *filename,
+									  const char *description);
+
+/**
  * Creates a temporary file and returns a file pointer to it.
  *
  * This is like mkstemp(), but returns a file pointer and uses a
@@ -387,11 +447,12 @@ int gaim_build_dir(const char *path, int mode);
  * done, as well as freeing the space pointed to by @a path with
  * g_free().
  *
- * @param path The returned path to the temp file.
+ * @param path   The returned path to the temp file.
+ * @param binary Text or binary, for platforms where it matters.
  *
  * @return A file pointer to the temporary file, or @c NULL on failure.
  */
-FILE *gaim_mkstemp(char **path);
+FILE *gaim_mkstemp(char **path, gboolean binary);
 
 /**
  * Checks if the given program name is valid and executable.
@@ -401,6 +462,13 @@ FILE *gaim_mkstemp(char **path);
  * @return True if the program is runable.
  */
 gboolean gaim_program_is_valid(const char *program);
+
+/**
+ * Check if running Gnome.
+ *
+ * @return TRUE if running Gnome, FALSE otherwise.
+ */
+gboolean gaim_running_gnome(void);
 
 /**
  * Returns the IP address from a socket file descriptor.
@@ -427,7 +495,11 @@ char *gaim_fd_get_ip(int fd);
  * g_strdup() it. Also, calling normalize() twice in the same line
  * will lead to problems.
  *
- * @param account  The account the string belongs to.
+ * @param account  The account the string belongs to, or NULL if you do
+ *                 not know the account.  If you use NULL, the string
+ *                 will still be normalized, but if the PRPL uses a
+ *                 custom normalization function then the string may
+ *                 not be normalized correctly.
  * @param str      The string to normalize.
  *
  * @return A pointer to the normalized version stored in a static buffer.
@@ -502,11 +574,30 @@ gchar *gaim_strdup_withhtml(const gchar *src);
 char *gaim_str_add_cr(const char *str);
 
 /**
- * Strips all carriage returns from a string.
+ * Strips all instances of the given character from the
+ * given string.  The string is modified in place.  This
+ * is useful for stripping new line characters, for example.
  *
- * @param str The string to strip carriage returns from.
+ * Example usage:
+ * gaim_str_strip_char(my_dumb_string, '\n');
+ *
+ * @param str     The string to strip characters from.
+ * @param thechar The character to strip from the given string.
  */
-void gaim_str_strip_cr(char *str);
+void gaim_str_strip_char(char *str, char thechar);
+
+/**
+ * Given a string, this replaces all instances of one character
+ * with another.  This happens inline (the original string IS
+ * modified).
+ *
+ * @param string The string from which to replace stuff.
+ * @param delimiter The character you want replaced.
+ * @param replacement The character you want inserted in place
+ *        of the delimiting character.
+ */
+void gaim_util_chrreplace(char *string, char delimiter,
+						  char replacement);
 
 /**
  * Given a string, this replaces one substring with another
@@ -665,27 +756,29 @@ const char *gaim_url_encode(const char *str);
 gboolean gaim_email_is_valid(const char *address);
 
 /**
- * This function extracts a list of URIs from the a "text/uri-list" string
- * It was "borrowed" from gnome_uri_list_extract_uris
- * 
- * @param uri_list an uri-list in the standard format.
+ * This function extracts a list of URIs from the a "text/uri-list"
+ * string.  It was "borrowed" from gnome_uri_list_extract_uris
  *
- * @return a GList containing strings allocated with g_malloc that have been 
- *	splitted from uri-list.
+ * @param uri_list An uri-list in the standard format.
+ *
+ * @return A GList containing strings allocated with g_malloc
+ *         that have been splitted from uri-list.
  */
-GList* gaim_uri_list_extract_uris (const gchar* uri_list);
+GList *gaim_uri_list_extract_uris(const gchar *uri_list);
 
 /**
- * This function extracts a list of filenames from the a "text/uri-list" string
- * It was "borrowed" from gnome_uri_list_extract_filenames
- * 
- * @param uri_list an uri-list in the standard format.
+ * This function extracts a list of filenames from a
+ * "text/uri-list" string.  It was "borrowed" from
+ * gnome_uri_list_extract_filenames
  *
- * @return a GList containing strings allocated with g_malloc that contain the 
- * 	filenames in the uri-list. Note that unlike gaim_uri_list_extract_uris() 
- * 	function, this will discard any non-file uri from the result value.
+ * @param uri_list A uri-list in the standard format.
+ *
+ * @return A GList containing strings allocated with g_malloc that
+ *         contain the filenames in the uri-list. Note that unlike
+ *         gaim_uri_list_extract_uris() function, this will discard
+ *         any non-file uri from the result value.
  */
-GList* gaim_uri_list_extract_filenames (const gchar* uri_list);
+GList *gaim_uri_list_extract_filenames(const gchar *uri_list);
 
 /*@}*/
 
@@ -727,6 +820,18 @@ gchar *gaim_utf8_salvage(const char *str);
  *          1 if @a is greater than @a b.
  */
 int gaim_utf8_strcasecmp(const char *a, const char *b);
+
+/**
+ * Case insensitive search for a word in a string. The needle string
+ * must be contained in the haystack string and not be immediately
+ * preceded or immediately followed by another alpha-numeric character.
+ *
+ * @param haystack The string to search in.
+ * @param needle   The substring to find.
+ *
+ * @return TRUE if haystack has the word, otherwise FALSE
+ */
+gboolean gaim_utf8_has_word(const char *haystack, const char *needle);
 
 /**
  * Checks for messages starting with "/me "

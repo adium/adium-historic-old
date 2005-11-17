@@ -17,4 +17,5 @@
 #include "Libgaim/sslconn.h"
 #include "Libgaim/sound.h"
 #include "Libgaim/util.h"
-#include "Libgaim/webcam.h"
+//#include "Libgaim/webcam.h"
+#include "Libgaim/whiteboard.h"

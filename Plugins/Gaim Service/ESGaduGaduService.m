@@ -77,34 +77,22 @@
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY]
 									  ofType:AIAwayStatusType
 								  forService:self];
-	
-	/*
-#define AGG_STATUS_AVAIL              _("Available")
-#define AGG_STATUS_AVAIL_FRIENDS      _("Available for friends only")
-#define AGG_STATUS_BUSY               _("Away")
-#define AGG_STATUS_BUSY_FRIENDS       _("Away for friends only")
-#define AGG_STATUS_INVISIBLE          _("Invisible")
-#define AGG_STATUS_INVISIBLE_FRIENDS  _("Invisible for friends only")
-#define AGG_STATUS_NOT_AVAIL          _("Unavailable")
-	*/
 
-	[[adium statusController] registerStatus:STATUS_NAME_AVAILABLE_FRIENDS_ONLY
-							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AVAILABLE_FRIENDS_ONLY]
-									  ofType:AIAvailableStatusType
-								  forService:self];
-	
-	[[adium statusController] registerStatus:STATUS_NAME_AWAY_FRIENDS_ONLY
-							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_AWAY_FRIENDS_ONLY]
-									  ofType:AIAwayStatusType
-								  forService:self];
-	
+	/*
 	[[adium statusController] registerStatus:STATUS_NAME_NOT_AVAILABLE
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_NOT_AVAILABLE]
 									  ofType:AIAwayStatusType
 								  forService:self];
+	*/
 	
 	[[adium statusController] registerStatus:STATUS_NAME_INVISIBLE
 							 withDescription:[[adium statusController] localizedDescriptionForCoreStatusName:STATUS_NAME_INVISIBLE]
+									  ofType:AIInvisibleStatusType
+								  forService:self];
+
+	//What does a Blocked invisible status mean, anyways?
+	[[adium statusController] registerStatus:@"blocked"
+							 withDescription:AILocalizedString(@"Blocked", nil)
 									  ofType:AIInvisibleStatusType
 								  forService:self];
 }

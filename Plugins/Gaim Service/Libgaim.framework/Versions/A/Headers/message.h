@@ -26,17 +26,6 @@ typedef enum {
     OTRL_NOTIFY_INFO
 } OtrlNotifyLevel;
 
-typedef enum {
-    OTRL_POLICY_OPPORTUNISTIC,
-    OTRL_POLICY_NEVER,
-    OTRL_POLICY_MANUAL,
-    OTRL_POLICY_ALWAYS
-} OtrlPolicy;
-
-#define OTRL_POLICY_DEFAULT OTRL_POLICY_OPPORTUNISTIC
-
-typedef struct s_OTRConfirmResponse OTRConfirmResponse;
-
 typedef struct s_OtrlMessageAppOps {
     /* Return the OTR policy for the given context. */
     OtrlPolicy (*policy)(void *opdata, ConnContext *context);
@@ -71,7 +60,8 @@ typedef struct s_OtrlMessageAppOps {
      * protocol / username conversation.  Return 0 if you are able to
      * successfully display it.  If you return non-0 (or if this
      * function is NULL), the control message will be displayed inline,
-     * as a received message. */
+     * as a received message, or else by using the above notify()
+     * callback. */
     int (*display_otr_message)(void *opdata, const char *accountname,
 	    const char *protocol, const char *username, const char *msg);
 
@@ -86,20 +76,10 @@ typedef struct s_OtrlMessageAppOps {
     /* Deallocate a string allocated by protocol_name */
     void (*protocol_name_free)(void *opdata, const char *protocol_name);
 
-    /* Ask the user of the given accountname to confirm an unknown
-     * fingerprint (contained in kem) for the given username of the
-     * given protocol.  When the user has decided, call
-     * response_cb(us, ops, opdata, response_data, resp) where resp is 1
-     * to accept the fingerprint, 0 to reject it, and -1 if the user
-     * didn't make a choice (say, by destroying the dialog window).
-     * BE SURE to call response_cb no matter what happens. */
-    void (*confirm_fingerprint)(OtrlUserState us, void *opdata,
+    /* A new fingerprint for the given user has been received. */
+    void (*new_fingerprint)(void *opdata, OtrlUserState us,
 	    const char *accountname, const char *protocol,
-	    const char *username, OTRKeyExchangeMsg kem,
-	    void (*response_cb)(OtrlUserState us,
-		struct s_OtrlMessageAppOps *ops, void *opdata,
-		OTRConfirmResponse *response_data, int resp),
-	    OTRConfirmResponse *response_data);
+	    const char *username, unsigned char fingerprint[20]);
 
     /* The list of known fingerprints has changed.  Write them to disk. */
     void (*write_fingerprints)(void *opdata);
@@ -110,9 +90,8 @@ typedef struct s_OtrlMessageAppOps {
     /* A ConnContext has left a secure state. */
     void (*gone_insecure)(void *opdata, ConnContext *context);
 
-    /* A ConnContext has received a Key Exchange Message, which is the
-     * same as the one we already knew.  is_reply indicates whether the
-     * Key Exchange Message is a reply to one that we sent to them. */
+    /* We have completed an authentication, using the D-H keys we
+     * already knew.  is_reply indicates whether we initiated the AKE. */
     void (*still_secure)(void *opdata, ConnContext *context, int is_reply);
 
     /* Log a message.  The passed message will end in "\n". */
@@ -143,8 +122,9 @@ void otrl_message_free(char *message);
  * should replace your message with the contents of *messagep, and
  * send that instead.  Call otrl_message_free(*messagep) when you're
  * done with it. */
-gcry_error_t otrl_message_sending(OtrlUserState us, OtrlMessageAppOps
-	*ops, void *opdata, const char *accountname, const char *protocol,
+gcry_error_t otrl_message_sending(OtrlUserState us,
+	const OtrlMessageAppOps *ops,
+	void *opdata, const char *accountname, const char *protocol,
 	const char *recipient, const char *message, OtrlTLV *tlvs,
 	char **messagep,
 	void (*add_appdata)(void *data, ConnContext *context),
@@ -174,17 +154,17 @@ gcry_error_t otrl_message_sending(OtrlUserState us, OtrlMessageAppOps
  * If otrl_message_receiving returns 0 and *messagep is NULL, then this
  * was an ordinary, non-OTR message, which should just be delivered to
  * the user without modification. */
-int otrl_message_receiving(OtrlUserState us, OtrlMessageAppOps *ops,
+int otrl_message_receiving(OtrlUserState us, const OtrlMessageAppOps *ops,
 	void *opdata, const char *accountname, const char *protocol,
 	const char *sender, const char *message, char **newmessagep,
 	OtrlTLV **tlvsp,
 	void (*add_appdata)(void *data, ConnContext *context),
 	void *data);
 
-/* Put a connection into the DISCONNECTED state, first sending the
- * other side a notice that we're doing so if we're currently CONNECTED,
+/* Put a connection into the PLAINTEXT state, first sending the
+ * other side a notice that we're doing so if we're currently ENCRYPTED,
  * and we think he's logged in. */
-void otrl_message_disconnect(OtrlUserState us, OtrlMessageAppOps *ops,
+void otrl_message_disconnect(OtrlUserState us, const OtrlMessageAppOps *ops,
 	void *opdata, const char *accountname, const char *protocol,
 	const char *username);
 

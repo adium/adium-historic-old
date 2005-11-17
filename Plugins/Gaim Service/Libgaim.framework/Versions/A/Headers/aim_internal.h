@@ -77,17 +77,19 @@ faim_internal fu32_t aimbs_get32(aim_bstream_t *bs);
 faim_internal fu8_t aimbs_getle8(aim_bstream_t *bs);
 faim_internal fu16_t aimbs_getle16(aim_bstream_t *bs);
 faim_internal fu32_t aimbs_getle32(aim_bstream_t *bs);
+faim_internal int aimbs_getrawbuf(aim_bstream_t *bs, fu8_t *buf, int len);
+faim_internal fu8_t *aimbs_getraw(aim_bstream_t *bs, int len);
+faim_internal char *aimbs_getstr(aim_bstream_t *bs, int len);
 faim_internal int aimbs_put8(aim_bstream_t *bs, fu8_t v);
 faim_internal int aimbs_put16(aim_bstream_t *bs, fu16_t v);
 faim_internal int aimbs_put32(aim_bstream_t *bs, fu32_t v);
 faim_internal int aimbs_putle8(aim_bstream_t *bs, fu8_t v);
 faim_internal int aimbs_putle16(aim_bstream_t *bs, fu16_t v);
 faim_internal int aimbs_putle32(aim_bstream_t *bs, fu32_t v);
-faim_internal int aimbs_getrawbuf(aim_bstream_t *bs, fu8_t *buf, int len);
-faim_internal fu8_t *aimbs_getraw(aim_bstream_t *bs, int len);
-faim_internal char *aimbs_getstr(aim_bstream_t *bs, int len);
 faim_internal int aimbs_putraw(aim_bstream_t *bs, const fu8_t *v, int len);
+faim_internal int aimbs_putstr(aim_bstream_t *bs, const char *str);
 faim_internal int aimbs_putbs(aim_bstream_t *bs, aim_bstream_t *srcbs, int len);
+faim_internal int aimbs_putcaps(aim_bstream_t *bs, fu32_t caps);
 
 /* conn.c */
 faim_internal aim_conn_t *aim_cloneconn(aim_session_t *sess, aim_conn_t *src);
@@ -140,7 +142,7 @@ struct chatsnacinfo {
 	fu16_t instance;
 };
 
-/* 
+/*
  * In SNACland, the terms 'family' and 'group' are synonymous -- the former
  * is my term, the latter is AOL's.
  */
@@ -174,9 +176,9 @@ struct rateclass {
 /*
  * This is inside every connection.  But it is a void * to anything
  * outside of libfaim.  It should remain that way.  It's called data
- * abstraction.  Maybe you've heard of it.  (Probably not if you're a 
+ * abstraction.  Maybe you've heard of it.  (Probably not if you're a
  * libfaim user.)
- * 
+ *
  */
 typedef struct aim_conn_inside_s {
 	struct snacgroup *groups;
@@ -197,7 +199,6 @@ faim_internal int aim_cookie_free(aim_session_t *sess, aim_msgcookie_t *cookie);
 faim_internal void aim_locate_requestuserinfo(aim_session_t *sess, const char *sn);
 faim_internal fu32_t aim_locate_getcaps(aim_session_t *sess, aim_bstream_t *bs, int len);
 faim_internal fu32_t aim_locate_getcaps_short(aim_session_t *sess, aim_bstream_t *bs, int len);
-faim_internal int aim_putcap(aim_bstream_t *bs, fu32_t caps);
 faim_internal void aim_info_free(aim_userinfo_t *);
 faim_internal int aim_info_extract(aim_session_t *sess, aim_bstream_t *bs, aim_userinfo_t *);
 faim_internal int aim_putuserinfo(aim_bstream_t *bs, aim_userinfo_t *info);
@@ -211,15 +212,6 @@ faim_internal int aim_setversions(aim_session_t *sess, aim_conn_t *conn);
 faim_internal int aim_reqrates(aim_session_t *, aim_conn_t *);
 faim_internal int aim_rates_addparam(aim_session_t *, aim_conn_t *);
 faim_internal int aim_rates_delparam(aim_session_t *, aim_conn_t *);
-
-faim_internal void faimdprintf(aim_session_t *sess, int dlevel, const char *format, ...);
-
-#ifndef FAIM_INTERNAL_INSANE
-#undef printf
-#define printf() printf called inside libfaim
-#undef sprintf
-#define sprintf() unbounded sprintf used inside libfaim
-#endif
 
 #endif /* __AIM_INTERNAL_H__ */
 #endif /* FAIM_INTERNAL */

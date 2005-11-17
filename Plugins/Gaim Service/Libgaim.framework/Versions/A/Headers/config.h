@@ -1,8 +1,8 @@
 /* Version number of package */
-#define VERSION "1.5.0"
+#define VERSION "2.0.0"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "libgaim 1.5.0"
+#define PACKAGE_STRING "libgaim 2.0.0"
 
 /* OTR version */
 #define GAIM_OTR_VERSION "2.0.1"
@@ -51,6 +51,20 @@
 #define CONFDIR "~"
 
 #define SYSCONFDIR "~/Library/Application Support/Adium 2.0/"
+
+
+/* Define to 1 if your processor stores words with the most significant byte
+first (like Motorola and SPARC, unlike Intel and VAX). */
+//If compiling for 10.4, we're little endian since we are Intel. < 10.4, we are Mac. 
+#if MAC_OS_X_VERSION_MIN_REQUIRED < MAC_OS_X_VERSION_10_4
+	#define WORDS_BIGENDIAN 1
+
+	/* socklen_t size */
+	#ifndef socklen_t
+		#define socklen_t int
+		#define SOCKLEN_T
+	#endif
+#endif
 
 /* Define to one of `_getb67', `GETB67', `getb67' for Cray-2 and Cray-YMP
    systems. This function is required for `alloca.c' support on those systems.
@@ -538,10 +552,6 @@ specified by Unix98. */
 /* Define if we're using X Session Management. */
 /* #undef USE_SM */
 
-/* Define to 1 if your processor stores words with the most significant byte
-   first (like Motorola and SPARC, unlike Intel and VAX). */
-#define WORDS_BIGENDIAN 1
-
 /* Define to 1 if the X Window System is missing or not being used. */
 #define X_DISPLAY_MISSING 1
 
@@ -559,11 +569,6 @@ specified by Unix98. */
 
 /* Define to `unsigned' if <sys/types.h> does not define. */
 /* #undef size_t */
-
-/* socklen_t size */
-#ifndef socklen_t
-#define socklen_t int
-#endif
 
 /* For glib */
 #define	SIZEOF_CHAR	1

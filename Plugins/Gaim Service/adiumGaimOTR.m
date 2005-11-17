@@ -1,5 +1,5 @@
 /* 
- * Adium is the legal property of its developers, whose names are listed in the copyright file included
+* Adium is the legal property of its developers, whose names are listed in the copyright file included
  * with this source distribution.
  * 
  * This program is free software; you can redistribute it and/or modify it under the terms of the GNU
@@ -21,15 +21,7 @@
 #import <Adium/AIListContact.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
-/* libotr headers */
-#import <libotr/proto.h>
-#import <libotr/context.h>
-#import <libotr/message.h>
-
-/* gaim-otr headers */
-#import <Libgaim/ui.h>
-#import <Libgaim/dialogs.h>
-#import <Libgaim/otr-plugin.h>
+#import "gaimOTRCommon.h"
 
 /* Adium OTR headers */
 #import "ESGaimOTRUnknownFingerprintController.h"
@@ -39,7 +31,10 @@
 static ESGaimOTRAdapter		*otrAdapter = nil;
 static NSMutableDictionary	*otrPolicyCache = nil;
 
+#define CLOSED_CONNECTION_MESSAGE "has closed his private connection to you"
+
 @interface ESGaimOTRAdapter (PRIVATE)
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username;
 - (void)prefsShouldUpdatePrivateKeyList;
 - (void)prefsShouldUpdateFingerprintsList;
 @end
@@ -55,19 +50,19 @@ static ConnContext* context_for_conv(GaimConversation *conv)
     ConnContext *context;
 	
     /* Do nothing if this isn't an IM conversation */
-    if (gaim_conversation_get_type(conv) != GAIM_CONV_IM) return nil;
+    if (gaim_conversation_get_type(conv) != GAIM_CONV_TYPE_IM) return nil;
 	
     account = gaim_conversation_get_account(conv);
     accountname = gaim_account_get_username(account);
     proto = gaim_account_get_protocol_id(account);
     username = g_strdup(
 						gaim_normalize(account, gaim_conversation_get_name(conv)));
-
+	
     context = otrl_context_find(otrg_plugin_userstate,
 								username, accountname, proto, 0, NULL,
 								NULL, NULL);
 	g_free(username);
-
+	
 	return context;
 }
 
@@ -80,28 +75,41 @@ static ConnContext* context_for_conv(GaimConversation *conv)
 static NSDictionary* details_for_context(ConnContext *context)
 {
 	NSDictionary		*securityDetailsDict;
+	if (context == NULL /*|| context->msgstate != OTRL_MSGSTATE_ENCRYPTED*/) {
+		NSLog(@"Ack! (%x)",context);
+		return nil;
+	}
 	
-    char fingerprint[45];
-    unsigned char *sessionid;
-    char sess1[21], sess2[21];
-    int i;
-    SessionDirection dir = context->sesskeys[1][0].dir;
+	Fingerprint *fprint = context->active_fingerprint;
 	
-    /* Make a human-readable version of the fingerprint */
-    otrl_privkey_hash_to_human(fingerprint,
-							   context->active_fingerprint->fingerprint);
-
-    /* Make a human-readable version of the sessionid (in two parts) */
-    sessionid = context->sesskeys[1][0].sessionid;
-    for (i=0;i<10;++i) sprintf(sess1+(2*i), "%02x", sessionid[i]);
-    sess1[20] = '\0';
-    for (i=0;i<10;++i) sprintf(sess2+(2*i), "%02x", sessionid[i+10]);
-    sess2[20] = '\0';
-
+	unsigned char *fingerprint;
+	char our_hash[45], their_hash[45];
+	char *trust;
+	
+    if (fprint == NULL) return nil;
+    if (fprint->fingerprint == NULL) return nil;
+    context = fprint->context;
+    if (context == NULL) return nil;
+	
+	fingerprint = fprint->fingerprint;
+	trust = fprint->trust;
+	
+    otrl_privkey_fingerprint(otrg_plugin_userstate, our_hash,
+							 context->accountname, context->protocol);
+	
+    otrl_privkey_hash_to_human(their_hash, fprint->fingerprint);
+	
+	char hash[45];
+    otrl_privkey_hash_to_human(hash, fingerprint);
+	
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSString stringWithUTF8String:fingerprint], @"Fingerprint",
-		[NSString stringWithUTF8String:((dir == SESS_DIR_LOW) ? sess1 : sess2)], @"Incoming SessionID",
-		[NSString stringWithUTF8String:((dir == SESS_DIR_HIGH) ? sess1 : sess2)], @"Outgoing SessionID",
+		[NSString stringWithUTF8String:hash], @"Fingerprint",
+		[NSString stringWithUTF8String:(trust ? trust : "")], @"Trust",
+		[NSString stringWithUTF8String:context->accountname], @"accountname",
+		[NSString stringWithUTF8String:context->username], @"who",
+		((context->protocol) ? [NSString stringWithUTF8String:context->protocol] : @""), @"protocol",
+		[NSString stringWithUTF8String:our_hash], @"Outgoing SessionID",
+		[NSString stringWithUTF8String:their_hash], @"Incoming SessionID",
 		nil];
 	
 	return securityDetailsDict;
@@ -110,21 +118,21 @@ static NSDictionary* details_for_context(ConnContext *context)
 #pragma mark Dialogs
 
 /* This is just like gaim_notify_message, except: (a) it doesn't grab
- * keyboard focus, (b) the button is "OK" instead of "Close", and (c)
- * the labels aren't limited to 2K. */
+* keyboard focus, (b) the button is "OK" instead of "Close", and (c)
+* the labels aren't limited to 2K. */
 static void otrg_adium_dialog_notify_message(GaimNotifyMsgType type, 
 											 const char *accountname, const char *protocol, const char *username,
 											 const char *title, const char *primary, const char *secondary)
 {
-//	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
+	//	GaimAccount	*account = gaim_accounts_find(accountname, protocol);
 	
 	AILog(@"otrg_adium_dialog_notify_message: %s ; %s",primary, secondary);
-
+	
 	//XXX todo: search on ops->notify in message.c in libotr and handle the error messages
-//	if (!(gaim_conv_present_error(username, account, msg))) {
-		//Just pass it to gaim_notify_message()
-		gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);		
-//	}
+	//	if (!(gaim_conv_present_error(username, account, msg))) {
+	//Just pass it to gaim_notify_message()
+	gaim_notify_message(adium_gaim_get_handle(), type, title, primary, secondary, NULL, NULL);		
+	//	}
 }
 
 //Return 0 if we handled dislaying the message; non-0 if it should be displayed as a normal message
@@ -136,15 +144,15 @@ static int otrg_adium_dialog_display_otr_message(const char *accountname, const 
 	AIChat				*chat;
 	NSString			*message;
 	NSString			*localizedMessage;
-
+	
 	//Find the GaimAccount and existing conversation which was just connected
 	account = gaim_accounts_find(accountname, protocol);
-	conv = gaim_find_conversation_with_account(username, account);
+	conv = gaim_find_conversation_with_account(GAIM_CONV_TYPE_IM, username, account);
 	chat = existingChatLookupFromConv(conv);
 	message = [NSString stringWithUTF8String:msg];
-
-	if ((localizedMessage = [[SLGaimCocoaAdapter sharedInstance] localizedOTRMessage:message
-																		withUsername:username])) {
+	
+	if ((localizedMessage = [otrAdapter localizedOTRMessage:message
+											   withUsername:username])) {
 		
 		[[[AIObject sharedAdiumInstance] contentController] mainPerformSelector:@selector(displayStatusMessage:ofType:inChat:)
 																	 withObject:localizedMessage
@@ -163,22 +171,22 @@ struct s_OtrgDialogWait {
 };
 
 /* Began generating a private key.
- * Return a handle that will be passed to otrg_adium_dialog_private_key_wait_done(). */
+* Return a handle that will be passed to otrg_adium_dialog_private_key_wait_done(). */
 static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char *account,
-																   const char *protocol)
+																	 const char *protocol)
 {
 	GaimPlugin *p;
     const char *protocol_print;
 	
 	p = gaim_find_prpl(protocol);
     protocol_print = (p ? p->info->name : "Unknown");
-
+	
 	NSString				*identifier;
     OtrgDialogWaitHandle	handle = malloc(sizeof(struct s_OtrgDialogWait));
-
+	
 	identifier = [NSString stringWithFormat:@"%s (%s)",account, protocol_print];
     handle->identifier = [identifier retain];
-
+	
 	[ESGaimOTRPrivateKeyGenerationWindowController startedGeneratingForIdentifier:identifier];
 	
     return handle;
@@ -188,90 +196,59 @@ static OtrgDialogWaitHandle otrg_adium_dialog_private_key_wait_start(const char 
 static void otrg_adium_dialog_private_key_wait_done(OtrgDialogWaitHandle handle)
 {
 	NSString	*identifier = handle->identifier;
-
+	
 	[ESGaimOTRPrivateKeyGenerationWindowController finishedGeneratingForIdentifier:identifier];
-
+	
 	[identifier release];
 	handle->identifier = NULL;
 }
 
 /* Show a dialog informing the user that a correspondent (who) has sent
- * us a Key Exchange Message (kem) that contains an unknown fingerprint.
- * Ask the user whether to accept the fingerprint or not.  If yes, call
- * response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
- * set resp = 0.  If the user destroys the dialog without answering, set
- * resp = -1. */
+* us a Key Exchange Message (kem) that contains an unknown fingerprint.
+* Ask the user whether to accept the fingerprint or not.  If yes, call
+* response_cb(ops, opdata, response_data, resp) with resp = 1.  If no,
+* set resp = 0.  If the user destroys the dialog without answering, set
+* resp = -1. */
 static void otrg_adium_dialog_unknown_fingerprint(OtrlUserState us, const char *accountname,
-												const char *protocol, const char *who, OTRKeyExchangeMsg kem,
-												void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
-																	void *opdata, OTRConfirmResponse *response_data, int resp),
-												OtrlMessageAppOps *ops, void *opdata,
-												OTRConfirmResponse *response_data)
+												  const char *protocol, const char *who,
+												  unsigned char fingerprint[20])
+
 {
-    GaimPlugin			*p = gaim_find_prpl(protocol);
-	NSDictionary		*responseInfo;
-    char				hash[45];
-
-	/*
-	GaimAccount			*account;
-	GaimConversation	*conv;
-	AIChat				*chat;	
-	//Find the AIChat which has an unknown fingerprint
-	account = gaim_accounts_find(accountname, protocol);
-	conv = gaim_find_conversation_with_account(username, account);
-	chat = chatLookupFromConv(conv);
-	 */
-
-	//Get the human readable fingerprint hash
-    otrl_privkey_hash_to_human(hash, kem->key_fingerprint);
+	ConnContext			*context;
 	
-	responseInfo = [NSDictionary dictionaryWithObjectsAndKeys:
-		[NSString stringWithUTF8String:hash], @"hash",
-		[NSString stringWithUTF8String:who], @"who",
-		((p && p->info->name) ? [NSString stringWithUTF8String:p->info->name] : @""), @"protocol",
-		[NSValue valueWithPointer:response_cb], @"response_cb",
-		[NSValue valueWithPointer:us], @"OtrlUserState",
-		[NSValue valueWithPointer:ops], @"OtrlMessageAppOps",
-		[NSValue valueWithPointer:opdata], @"opdata",
-		[NSValue valueWithPointer:response_data], @"OTRConfirmResponse",
-		nil];
-
-	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptWithResponseInfo:)
-													withObject:responseInfo];
+	context = otrl_context_find(us, who, accountname,
+								protocol, 0, NULL, NULL, NULL);
+	
+	if (context == NULL/* || context->msgstate != OTRL_MSGSTATE_ENCRYPTED*/) {
+		NSLog(@"otrg_adium_dialog_unknown_fingerprint: Ack!");
+		return;
+	}
+	
+	[otrAdapter performSelector:@selector(verifyUnknownFingerprint:)
+					 withObject:[NSValue valueWithPointer:context]
+					 afterDelay:0];	
 }
 
-/*!
- * @brief Send the fingerprint response to OTR
- *
- * Called on the gaim thread by SLGaimCocoaAdapter.
- */
-void otrg_adium_unknown_fingerprint_response(NSDictionary *responseInfo, BOOL accepted)
+static void otrg_adium_dialog_verify_fingerprint(Fingerprint *fprint)
 {
-	OtrlUserState us = [[responseInfo objectForKey:@"OtrlUserState"] pointerValue];
-	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
-						void *opdata, OTRConfirmResponse *response_data, int resp) = [[responseInfo objectForKey:@"response_cb"] pointerValue];
-	OtrlMessageAppOps *ops = [[responseInfo objectForKey:@"OtrlMessageAppOps"] pointerValue];
-	void *opdata = [[responseInfo objectForKey:@"opdata"] pointerValue];
-	OTRConfirmResponse *response_data = [[responseInfo objectForKey:@"OTRConfirmResponse"] pointerValue];
-
-	response_cb(us, ops, opdata, response_data, (accepted ? 1 : 0));
+	AILog(@"Should verify %x",fprint);
 }
 
 /* Call this when a context transitions from (a state other than
- * CONN_CONNECTED) to CONN_CONNECTED. */
+* CONN_CONNECTED) to CONN_CONNECTED. */
 static void otrg_adium_dialog_connected(ConnContext *context)
 {
 	NSDictionary		*securityDetailsDict;
 	GaimAccount			*account;
 	GaimConversation	*conv;
-
+	
 	//Find the GaimAccount and existing conversation which was just connected
 	account = gaim_accounts_find(context->accountname, context->protocol);
-	conv = gaim_find_conversation_with_account(context->username, account);
+	conv = gaim_find_conversation_with_account(GAIM_CONV_TYPE_IM, context->username, account);
 	
 	//If there is no existing conversation, make one
 	if (!conv) {
-		conv = gaim_conversation_new(GAIM_CONV_IM, account, context->username);	
+		conv = gaim_conversation_new(GAIM_CONV_TYPE_IM, account, context->username);	
 	}
 	
 	if (conv) {
@@ -287,8 +264,9 @@ static void otrg_adium_dialog_connected(ConnContext *context)
 static void otrg_adium_dialog_disconnected(ConnContext *context)
 {
 	GaimConversation	*conv;
-
-	conv = gaim_find_conversation_with_account(context->username,
+	
+	conv = gaim_find_conversation_with_account(GAIM_CONV_TYPE_IM,
+											   context->username,
 											   gaim_accounts_find(context->accountname, context->protocol));
 	if (conv) {
 		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
@@ -304,32 +282,40 @@ static void otrg_adium_dialog_stillconnected(ConnContext *context)
 	GaimAccount			*account;
 	
 	account = gaim_accounts_find(context->accountname, context->protocol);
-	conv = gaim_find_conversation_with_account(context->username,
+	conv = gaim_find_conversation_with_account(GAIM_CONV_TYPE_IM,
+											   context->username,
 											   account);
 	[[SLGaimCocoaAdapter sharedInstance] refreshedSecurityOfGaimConversation:conv];
+}
+
+static void otrg_adium_dialog_finished(const char *accountname,
+									   const char *protocol, const char *username)
+{
+	otrg_adium_dialog_display_otr_message(accountname, protocol, username, CLOSED_CONNECTION_MESSAGE);
 }
 
 /* Set all OTR buttons to "sensitive" or "insensitive" as appropriate.
 * Call this when accounts are logged in or out. */
 static void otrg_adium_dialog_resensitize_all(void)
 {
-
+	
 }
 
 /* When a conversation is created, check to see if it is already connected */
 static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 {
 	ConnContext		*context;
-	ConnectionState state;
-
+	TrustLevel		trustLevel;
+	
 	context = context_for_conv(conv);
-    state = context ? context->state : CONN_UNCONNECTED;
-
-	if (state == CONN_CONNECTED) {
+	trustLevel = otrg_plugin_context_to_trust(context);
+	
+#warning Need to set actual state
+	if (trustLevel != TRUST_NOT_PRIVATE) {
 		NSDictionary	*securityDetailsDict;
-
+		
 		securityDetailsDict = details_for_context(context);
-
+		
 		[[SLGaimCocoaAdapter sharedInstance] gaimConversation:conv
 										   setSecurityDetails:securityDetailsDict];
 	}
@@ -338,7 +324,7 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 /* Called before Gaim destroys a conversation */
 static void otrg_adium_dialog_remove_conv(GaimConversation *conv)
 {
-
+	
 }
 
 static OtrgDialogUiOps otrg_adium_dialog_ui_ops = {
@@ -347,9 +333,11 @@ static OtrgDialogUiOps otrg_adium_dialog_ui_ops = {
     otrg_adium_dialog_private_key_wait_start,
     otrg_adium_dialog_private_key_wait_done,
     otrg_adium_dialog_unknown_fingerprint,
+	otrg_adium_dialog_verify_fingerprint,
     otrg_adium_dialog_connected,
     otrg_adium_dialog_disconnected,
     otrg_adium_dialog_stillconnected,
+	otrg_adium_dialog_finished,
     otrg_adium_dialog_resensitize_all,
     otrg_adium_dialog_new_conv,
     otrg_adium_dialog_remove_conv
@@ -369,6 +357,7 @@ OtrgDialogUiOps *otrg_adium_dialog_get_ui_ops(void)
  */
 static void otrg_adium_ui_update_fingerprint(void)
 {
+	AILog(@"OTR: Should update fingerprint");
 	[otrAdapter prefsShouldUpdatePrivateKeyList];
 }
 
@@ -385,7 +374,7 @@ static void otrg_adium_ui_update_keylist(void)
 static void otrg_adium_ui_config_buddy(GaimBuddy *buddy)
 {
 	/* This is for displaying the buddy-specific OTR configuration.  We don't need it as the Adium Get Info window
-	 * handles the relevant preferences. */
+	* handles the relevant preferences. */
 }
 
 static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *name)
@@ -393,7 +382,7 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 	GaimBuddy					*buddy = gaim_find_buddy(account, name);
 	AIListContact				*contact = contactLookupFromBuddy(buddy);
 	NSNumber					*policyNumber;
-
+	
 	//First try to use our cache
 	policyNumber = [otrPolicyCache objectForKey:[contact internalObjectID]];
 	if (!policyNumber) {
@@ -402,7 +391,7 @@ static OtrlPolicy otrg_adium_ui_find_policy(GaimAccount *account, const char *na
 											withObject:contact
 										   returnValue:YES];
 	}
-
+	
 	return [policyNumber intValue];
 }
 
@@ -423,7 +412,7 @@ OtrgUiUiOps *otrg_adium_ui_get_ui_ops(void)
 void adium_gaim_otr_connect_conv(GaimConversation *conv)
 {
 	/* Do nothing if this isn't an IM conversation */
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) { 
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) { 
 		otrg_plugin_send_default_query_conv(conv);
 	}
 }
@@ -431,11 +420,11 @@ void adium_gaim_otr_connect_conv(GaimConversation *conv)
 void adium_gaim_otr_disconnect_conv(GaimConversation *conv)
 {
 	ConnContext	*context;
-
+	
 	/* Do nothing if this isn't an IM conversation */
-	if ((gaim_conversation_get_type(conv) == GAIM_CONV_IM) &&
-	   (context = context_for_conv(conv))) {
-		   otrg_ui_disconnect_connection(context);
+	if ((gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) &&
+		(context = context_for_conv(conv))) {
+		otrg_ui_disconnect_connection(context);
 	}
 }
 
@@ -447,14 +436,14 @@ void initGaimOTRSupprt(void)
 	gaim_init_otr_plugin();
 	
 	/* Create the OTR adapter on the main thread, since it registers as a preference observer and 
-	 * creates a preference pane, and the Adium core does not waste cycles thread safing these processes.
-	 */
+	* creates a preference pane, and the Adium core does not waste cycles thread safing these processes.
+	*/
 	otrAdapter = [[ESGaimOTRAdapter alloc] mainPerformSelector:@selector(init)
 												   returnValue:YES];
-
+	
 	//Set the UI Ops
 	otrg_ui_set_ui_ops(otrg_adium_ui_get_ui_ops());
-
+	
     otrg_dialog_set_ui_ops(otrg_adium_dialog_get_ui_ops());
 }
 
@@ -468,7 +457,7 @@ void initGaimOTRSupprt(void)
 		
 		OTRPrefs = [[ESGaimOTRPreferences preferencePane] retain];
 	}
-
+	
 	return self;
 }
 
@@ -476,12 +465,22 @@ void initGaimOTRSupprt(void)
 {
 	[[adium preferenceController] unregisterPreferenceObserver:self];
 	[OTRPrefs release];
-
+	
 	[super dealloc];
 }
 
+- (void)verifyUnknownFingerprint:(NSValue *)contextValue
+{
+	NSDictionary		*responseInfo;
+	
+	responseInfo = details_for_context([contextValue pointerValue]);
+	
+	[ESGaimOTRUnknownFingerprintController mainPerformSelector:@selector(showUnknownFingerprintPromptWithResponseInfo:)
+													withObject:responseInfo];	
+}
+
 /*!
- * @brief Preferences changed
+* @brief Preferences changed
  *
  * Clear our policy cache.
  */
@@ -494,7 +493,7 @@ void initGaimOTRSupprt(void)
 }
 
 /*!
- * @brief Return the OtrlPolicy for a contact as the intValue of an NSNumber
+* @brief Return the OtrlPolicy for a contact as the intValue of an NSNumber
  *
  * Look to the contact's preference, then to its account's preference, then fall back on OPPORTUNISTIC as a default.
  * Cache the result in our otrPolicyCache NSMutableDictionary.
@@ -508,11 +507,11 @@ void initGaimOTRSupprt(void)
 	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
 	if ([[contact UID] characterAtIndex:0] == '+') {
 		policy = OTRL_POLICY_MANUAL;
-
+		
 	} else {
 		NSNumber					*prefNumber;
 		AIEncryptedChatPreference	pref;
-
+		
 		//Get the contact's preference (or its containing group, or so on)
 		prefNumber = [contact preferenceForKey:KEY_ENCRYPTED_CHAT_PREFERENCE
 										 group:GROUP_ENCRYPTION];
@@ -544,7 +543,7 @@ void initGaimOTRSupprt(void)
 			policy = OTRL_POLICY_MANUAL;
 		}
 	}
-
+	
 	policyNumber = [NSNumber numberWithInt:policy];
 	
 	if ((contactInternalObjectID = [contact internalObjectID])) {
@@ -578,5 +577,24 @@ void initGaimOTRSupprt(void)
 							   withObject:nil
 							waitUntilDone:NO];
 }
+
+- (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username
+{
+	NSString	*localizedOTRMessage = nil;
+	
+	if (([message rangeOfString:@"You sent unencrypted data to"].location != NSNotFound) &&
+		([message rangeOfString:@"who was expecting encrypted messages"].location != NSNotFound)) {
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"You sent an unencrypted message, but %s was expecting encryption.", "Message when sending unencrypted messages to a contact expecting encrypted ones. %s will be a name."),
+			username];
+	} else if ([message rangeOfString:@CLOSED_CONNECTION_MESSAGE].location != NSNotFound) {
+		localizedOTRMessage = [NSString stringWithFormat:
+			AILocalizedString(@"%s is no longer using encryption; you should cancel encryption on your side.", "Message when the remote contact cancels his half of an encrypted conversation. %s will be a name."),
+			username];
+	}
+	
+	return localizedOTRMessage;
+}
+
 
 @end

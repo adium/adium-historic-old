@@ -93,11 +93,10 @@ static void adiumGaimCoreDebugInit(void)
 /* The core is ready... finish configuring libgaim and its plugins */
 static void adiumGaimCoreUiInit(void)
 {
+	GaimDebug (@"adiumGaimCoreUiInit");
 	//Initialize the core UI ops
-	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
     gaim_blist_set_ui_ops(adium_gaim_blist_get_ui_ops());
     gaim_connections_set_ui_ops(adium_gaim_connection_get_ui_ops());
-    gaim_conversations_set_win_ui_ops(adium_gaim_conversation_get_win_ui_ops());
     gaim_privacy_set_ui_ops (adium_gaim_privacy_get_ui_ops());	
 	initGaimOTRSupprt();
 
@@ -110,10 +109,7 @@ static void adiumGaimCoreUiInit(void)
 		*			re-requesting icons we already have locally on some protocols such as AIM.
 		*   However, we seem to end up with out of date icons when we rely on Gaim's caching, particularly over MSN,
 		*   so we'll just ignore this gain and turn off caching. 
-		*/
-	//Load the accounts list
-	gaim_accounts_load();
-	
+		*/	
 	//Setup the buddy list; then load the blist.
 	gaim_set_blist(gaim_blist_new());
 
@@ -135,6 +131,7 @@ static void adiumGaimCoreUiInit(void)
     gaim_notify_set_ui_ops(adium_gaim_notify_get_ui_ops());
     gaim_request_set_ui_ops(adium_gaim_request_get_ui_ops());
 	gaim_xfers_set_ui_ops(adium_gaim_xfers_get_ui_ops());
+	gaim_conversations_set_ui_ops(adium_gaim_conversation_get_ui_ops());
 
 #if	ENABLE_WEBCAM
 	initGaimWebcamSupport();

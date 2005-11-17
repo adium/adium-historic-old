@@ -29,6 +29,7 @@ typedef struct _GaimBuddyIcon GaimBuddyIcon;
 
 #include "account.h"
 #include "blist.h"
+#include "prpl.h"
 
 struct _GaimBuddyIcon
 {
@@ -162,7 +163,7 @@ const char *gaim_buddy_icon_get_username(const GaimBuddyIcon *icon);
  *
  * @return The icon data.
  */
-const void *gaim_buddy_icon_get_data(const GaimBuddyIcon *icon, size_t *len);
+const guchar *gaim_buddy_icon_get_data(const GaimBuddyIcon *icon, size_t *len);
 
 /**
  * Returns an extension corresponding to the buddy icon's file type.
@@ -238,6 +239,18 @@ void gaim_buddy_icons_set_cache_dir(const char *cache_dir);
 const char *gaim_buddy_icons_get_cache_dir(void);
 
 /**
+ * Takes a buddy icon and returns a full path.
+ *
+ * If @a icon is a full path to an existing file, a copy of
+ * @a icon is returned. Otherwise, a newly allocated string
+ * consiting of gaim_buddy_icons_get_cache_dir() + @a icon is
+ * returned.
+ *
+ * @return The full path for an icon.
+ */
+char *gaim_buddy_icons_get_full_path(const char *icon);
+
+/**
  * Returns the buddy icon subsystem handle.
  *
  * @return The subsystem handle.
@@ -253,6 +266,18 @@ void gaim_buddy_icons_init();
  * Uninitializes the buddy icon subsystem.
  */
 void gaim_buddy_icons_uninit();
+
+/*@}*/
+
+/**************************************************************************/
+/** @name Buddy Icon Helper API                                           */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Gets display size for a buddy icon
+ */
+void gaim_buddy_icon_get_scale_size(GaimBuddyIconSpec *spec, int *width, int *height);
 
 /*@}*/
 

@@ -61,7 +61,9 @@ gboolean gaim_init_zephyr_plugin(void);
 }
 
 /*!
-* @brief Return the gaim status type to be used for a status
+ * @brief Return the gaim status ID to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
@@ -69,32 +71,31 @@ gboolean gaim_init_zephyr_plugin(void);
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
+	char			*statusID = NULL;
 	
-	switch (statusType) {
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
-			gaimStatusType = "Online";
 			break;
 		case AIInvisibleStatusType:
-			gaimStatusType = "Hidden";
+			statusID = "hidden";
 			break;
 		case AIAwayStatusType:
 		case AIOfflineStatusType:
 			break;
 	}
 
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
-	return gaimStatusType;
+	return statusID;
 }
+
 @end

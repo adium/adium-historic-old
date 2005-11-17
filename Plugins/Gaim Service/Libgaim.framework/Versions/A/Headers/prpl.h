@@ -29,28 +29,11 @@
 #ifndef _GAIM_PRPL_H_
 #define _GAIM_PRPL_H_
 
-struct _GaimWebcam;
-typedef struct _GaimPrplWebcam GaimPrplWebcam;
 typedef struct _GaimPluginProtocolInfo GaimPluginProtocolInfo;
 
 /**************************************************************************/
 /** @name Basic Protocol Information                                      */
 /**************************************************************************/
-/*@{*/
-
-/** Default protocol plugin description */
-#define GAIM_PRPL_DESC(x) \
-		"Allows gaim to use the " (x) " protocol.\n\n"      \
-		"Now that you have loaded this protocol, use the "  \
-		"Account Editor to add an account that uses this "  \
-		"protocol. You can access the Account Editor from " \
-		"the \"Accounts\" button on the login window or "   \
-		"in the \"Tools\" menu in the buddy list window."
-
-/** Default protocol */
-#define GAIM_PROTO_DEFAULT "prpl-oscar"
-
-/*@}*/
 
 /**
  * Flags applicable to outgoing/incoming IMs from prpls.
@@ -64,8 +47,8 @@ typedef enum
 typedef enum
 {
 	GAIM_CONV_CHAT_WHISPER = 0x0001,    /**< Whispered message.*/
-	GAIM_CONV_CHAT_DELAYED = 0x0002     /**< Delayed message.  */
-
+	GAIM_CONV_CHAT_DELAYED = 0x0002,    /**< Delayed message.  */
+	GAIM_CONV_CHAT_ALERT   = 0x0004     /**< Alert message.    */
 } GaimConvChatFlags;
 
 typedef enum {
@@ -90,16 +73,24 @@ typedef struct {
 	GaimIconScaleRules scale_rules;		/**< How to stretch this icon */
 } GaimBuddyIconSpec;
 
-/* This #define exists just to make it easier to fill out the buddy icon field in he prpl info struct for protocols that couldn't care less. */
+/**
+ * This \#define exists just to make it easier to fill out the buddy icon
+ * field in the prpl info struct for protocols that couldn't care less.
+ */
 #define NO_BUDDY_ICONS {NULL, 0, 0, 0, 0, 0}
 
 #include "blist.h"
 #include "proxy.h"
 #include "plugin.h"
+#include "media.h"
+#include "roomlist.h"
+#include "status.h"
+#include "whiteboard.h"
 
 struct proto_chat_entry {
 	char *label;
 	char *identifier;
+	gboolean required;
 	gboolean is_int;
 	int min;
 	int max;
@@ -132,8 +123,8 @@ typedef enum
 	/**
 	 * Don't require passwords for sign-in.
 	 *
-	 * Zephyr doesn't require passwords, so there's no need for
-	 * a password prompt.
+	 * Zephyr doesn't require passwords, so there's no
+	 * need for a password prompt.
 	 */
 	OPT_PROTO_NO_PASSWORD = 0x00000010,
 
@@ -145,21 +136,11 @@ typedef enum
 	OPT_PROTO_MAIL_CHECK = 0x00000020,
 
 	/**
-	 * Buddy icon support.
-	 *
-	 * Oscar and Jabber have buddy icons.
-	 *
-	 * *We'll do this a bit more sophisticated like, now.
-	 *
-	 * OPT_PROTO_BUDDY_ICON = 0x00000040,
-	 */
-
-	/**
 	 * Images in IMs.
 	 *
 	 * Oscar lets you send images in direct IMs.
 	 */
-	OPT_PROTO_IM_IMAGE = 0x00000080,
+	OPT_PROTO_IM_IMAGE = 0x00000040,
 
 	/**
 	 * Allow passwords to be optional.
@@ -167,36 +148,30 @@ typedef enum
 	 * Passwords in IRC are optional, and are needed for certain
 	 * functionality.
 	 */
-	OPT_PROTO_PASSWORD_OPTIONAL = 0x00000100,
+	OPT_PROTO_PASSWORD_OPTIONAL = 0x00000080,
 
 	/**
 	 * Allows font size to be specified in sane point size
 	 *
 	 * Probably just Jabber and Y!M
 	 */
-	OPT_PROTO_USE_POINTSIZE = 0x00000200,
+	OPT_PROTO_USE_POINTSIZE = 0x00000100,
 
 	/**
-	 * Don't normalize buddy names for conversations
+	 * Set the Register button active when screenname is not given.
 	 *
-	 * Probably just Jabber (so resources don't get stripped)
+	 * Gadu-Gadu doesn't need a screenname to register new account.
 	 */
-	OPT_PROTO_NO_NORMALIZE_CONV = 0x00000400
+	OPT_PROTO_REGISTER_NOSCREENNAME = 0x00000200,
 
 } GaimProtocolOptions;
-
-/** Custom away message. */
-#define GAIM_AWAY_CUSTOM _("Custom")
-
-/** Some structs defined in roomlist.h */
-struct _GaimRoomlist;
-struct _GaimRoomlistRoom;
 
 /**
  * A protocol plugin information structure.
  *
  * Every protocol plugin initializes this structure. It is the gateway
- * between gaim and the protocol plugin.
+ * between gaim and the protocol plugin.  Many of this callbacks can be
+ * NULL.  If a callback must be implemented, it has a comment indicating so.
  */
 struct _GaimPluginProtocolInfo
 {
@@ -204,12 +179,13 @@ struct _GaimPluginProtocolInfo
 
 	GList *user_splits;      /* A GList of GaimAccountUserSplit */
 	GList *protocol_options; /* A GList of GaimAccountOption    */
-	
+
 	GaimBuddyIconSpec icon_spec; /* The icon spec. */
-	
+
 	/**
 	 * Returns the base icon name for the given buddy and account.
-	 * If buddy is NULL, it will return the name to use for the account's icon
+	 * If buddy is NULL, it will return the name to use for the account's
+	 * icon.  This must be implemented.
 	 */
 	const char *(*list_icon)(GaimAccount *account, GaimBuddy *buddy);
 
@@ -217,8 +193,8 @@ struct _GaimPluginProtocolInfo
 	 * Fills the four char**'s with string identifiers for "emblems"
 	 * that the UI will interpret and display as relevant
 	 */
-	void (*list_emblems)(GaimBuddy *buddy, char **se, char **sw,
-						  char **nw, char **ne);
+	void (*list_emblems)(GaimBuddy *buddy, const char **se, const char **sw,
+						  const char **nw, const char **ne);
 
 	/**
 	 * Gets a short string representing this buddy's status.  This will
@@ -231,22 +207,42 @@ struct _GaimPluginProtocolInfo
 	 */
 	char *(*tooltip_text)(GaimBuddy *buddy);
 
-	GList *(*away_states)(GaimConnection *gc);
+	/**
+	 * This must be implemented, and must add at least the offline
+	 * and online states.
+	 */
+	GList *(*status_types)(GaimAccount *account);
 
 	GList *(*blist_node_menu)(GaimBlistNode *node);
 	GList *(*chat_info)(GaimConnection *);
 	GHashTable *(*chat_info_defaults)(GaimConnection *, const char *chat_name);
 
 	/* All the server-related functions */
+
+	/** This must be implemented. */
 	void (*login)(GaimAccount *);
+
+	/** This must be implemented. */
 	void (*close)(GaimConnection *);
+
+	/**
+	 * This PRPL function should return a positive value on success.
+	 * If the message is too big to be sent, return -E2BIG.  If
+	 * the account is not connected, return -ENOTCONN.  If the
+	 * PRPL is unable to send the message for another reason, return
+	 * some other negative value.  You can use one of the valid
+	 * errno values, or just big something.  If the message should
+	 * not be echoed to the conversation window, return 0.
+	 */
 	int  (*send_im)(GaimConnection *, const char *who,
 					const char *message,
 					GaimConvImFlags flags);
+
 	void (*set_info)(GaimConnection *, const char *info);
 	int  (*send_typing)(GaimConnection *, const char *name, int typing);
 	void (*get_info)(GaimConnection *, const char *who);
-	void (*set_away)(GaimConnection *, const char *state, const char *message);
+	void (*set_status)(GaimAccount *account, GaimStatus *status);
+
 	void (*set_idle)(GaimConnection *, int idletime);
 	void (*change_passwd)(GaimConnection *, const char *old_pass,
 						  const char *new_pass);
@@ -259,7 +255,6 @@ struct _GaimPluginProtocolInfo
 	void (*rem_permit)(GaimConnection *, const char *name);
 	void (*rem_deny)(GaimConnection *, const char *name);
 	void (*set_permit_deny)(GaimConnection *);
-	void (*warn)(GaimConnection *, const char *who, gboolean anonymous);
 	void (*join_chat)(GaimConnection *, GHashTable *components);
 	void (*reject_chat)(GaimConnection *, GHashTable *components);
 	char *(*get_chat_name)(GHashTable *components);
@@ -307,22 +302,16 @@ struct _GaimPluginProtocolInfo
 	GaimChat *(*find_blist_chat)(GaimAccount *account, const char *name);
 
 	/* room listing prpl callbacks */
-	struct _GaimRoomlist *(*roomlist_get_list)(GaimConnection *gc);
-	void (*roomlist_cancel)(struct _GaimRoomlist *list);
-	void (*roomlist_expand_category)(struct _GaimRoomlist *list, struct _GaimRoomlistRoom *category);
+	GaimRoomlist *(*roomlist_get_list)(GaimConnection *gc);
+	void (*roomlist_cancel)(GaimRoomlist *list);
+	void (*roomlist_expand_category)(GaimRoomlist *list, GaimRoomlistRoom *category);
 
 	/* file transfer callbacks */
 	gboolean (*can_receive_file)(GaimConnection *, const char *who);
 	void (*send_file)(GaimConnection *, const char *who, const char *filename);
-
-	GaimPrplWebcam *webcam;
-};
-
-struct _GaimPrplWebcam {
-	void (*get_feed)(GaimConnection *gc, const char *who);
-	void (*close_feed)(struct _GaimWebcam *gwc);
-	void (*invite_accepted)(GaimConnection *gc, const gchar *who);
-	void (*invite_declined)(GaimConnection *gc, const gchar *who);
+	
+	GaimWhiteboardPrplOps *whiteboard_prpl_ops;
+	GaimMediaPrplOps *media_prpl_ops;
 };
 
 #define GAIM_IS_PROTOCOL_PLUGIN(plugin) \
@@ -335,12 +324,125 @@ struct _GaimPrplWebcam {
 extern "C" {
 #endif
 
+/**************************************************************************/
+/** @name Protocol Plugin API                                             */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Notifies Gaim that an account's idle state and time have changed.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account   The account.
+ * @param idle      The user's idle state.
+ * @param idle_time The user's idle time.
+ */
+void gaim_prpl_got_account_idle(GaimAccount *account, gboolean idle,
+								time_t idle_time);
+
+/**
+ * Notifies Gaim of an account's log-in time.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account    The account the user is on.
+ * @param login_time The user's log-in time.
+ */
+void gaim_prpl_got_account_login_time(GaimAccount *account, time_t login_time);
+
+/**
+ * Notifies Gaim that an account's status has changed.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account   The account the user is on.
+ * @param status_id The status ID.
+ * @param attr_id   The first attribute ID, or NULL for no attribute updates.
+ * @param ...       A NULL-terminated list of attribute IDs and values,
+ *                  beginning with the value for @a attr_id.
+ */
+void gaim_prpl_got_account_status(GaimAccount *account,
+								  const char *status_id, const char *attr_id,
+								  ...);
+/**
+ * Notifies Gaim that a user's idle state and time have changed.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account   The account the user is on.
+ * @param name      The screen name of the user.
+ * @param idle      The user's idle state.
+ * @param idle_time The user's idle time.  This is the time at
+ *                  which the user became idle, in seconds since
+ *                  the epoch.
+ */
+void gaim_prpl_got_user_idle(GaimAccount *account, const char *name,
+							 gboolean idle, time_t idle_time);
+
+/**
+ * Notifies Gaim of a user's log-in time.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account    The account the user is on.
+ * @param name       The screen name of the user.
+ * @param login_time The user's log-in time.
+ */
+void gaim_prpl_got_user_login_time(GaimAccount *account, const char *name,
+								   time_t login_time);
+
+/**
+ * Notifies Gaim that a user's status has changed.
+ *
+ * This is meant to be called from protocol plugins.
+ *
+ * @param account   The account the user is on.
+ * @param name      The screen name of the user.
+ * @param status_id The status ID.
+ * @param attr_id   The first attribute ID, or NULL for no attribute updates.
+ * @param ...       A NULL-terminated list of attribute IDs and values,
+ *                  beginning with the value for @a attr_id.
+ */
+void gaim_prpl_got_user_status(GaimAccount *account, const char *name,
+							   const char *status_id, const char *attr_id, ...);
+/**
+ * Informs the server that an account's status changed.
+ *
+ * @param account    The account the user is on.
+ * @param old_status The previous status.
+ * @param new_status The status that was activated, or deactivated
+ *                   (in the case of independent statuses).
+ */
+void gaim_prpl_change_account_status(GaimAccount *account,
+									 GaimStatus *old_status,
+									 GaimStatus *new_status);
+
+/**
+ * Retrieves the list of stock status types from a prpl.
+ *
+ * @param account The account the user is on.
+ * @param presence The presence for which we're going to get statuses
+ *
+ * @return List of statuses
+ */
+GList *gaim_prpl_get_statuses(GaimAccount *account, GaimPresence *presence);
+
+/*@}*/
+
+/**************************************************************************/
+/** @name Protocol Plugin Subsystem API                                   */
+/**************************************************************************/
+/*@{*/
+
 /**
  * Finds a protocol plugin structure of the specified type.
  *
  * @param id The protocol plugin;
  */
 GaimPlugin *gaim_find_prpl(const char *id);
+
+/*@}*/
 
 #ifdef __cplusplus
 }

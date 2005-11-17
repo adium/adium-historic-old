@@ -91,6 +91,18 @@ static NSString* _processGaimImages(NSString* inString, CBGaimAccount* adiumAcco
 }
 
 #pragma mark Conversations
+static void adiumGaimConvCreate(GaimConversation *conv)
+{
+	//Pass chats along to the account
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
+		
+		AIChat *chat = chatLookupFromConv(conv);
+		
+		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
+											   withObject:chat];
+	}
+}
+
 static void adiumGaimConvDestroy(GaimConversation *conv)
 {
 	//Gaim is telling us a conv was destroyed.  We've probably already cleaned up, but be sure in case gaim calls this
@@ -113,7 +125,9 @@ static void adiumGaimConvDestroy(GaimConversation *conv)
 	}
 }
 
-static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
+static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who,
+								   const char *message, GaimMessageFlags flags,
+								   time_t mtime)
 {
 	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
 	if ((flags & GAIM_MESSAGE_SEND) == 0) {
@@ -152,7 +166,9 @@ static void adiumGaimConvWriteChat(GaimConversation *conv, const char *who, cons
 	}
 }
 
-static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
+static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who,
+								 const char *message, GaimMessageFlags flags,
+								 time_t mtime)
 {
 	//We only care about this if it does not have the GAIM_MESSAGE_SEND flag, which is set if Gaim is sending a sent message back to us
 	if ((flags & GAIM_MESSAGE_SEND) == 0) {
@@ -164,7 +180,7 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 		messageString = [NSString stringWithUTF8String:message];
 		chat = imChatLookupFromConv(conv);
 
-		GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@",messageString,[[chat listObject] UID]);
+		GaimDebug (@"adiumGaimConvWriteIm: Received %@ from %@", messageString, [[chat listObject] UID]);
 
 		//Process any gaim imgstore references into real HTML tags pointing to real images
 		if ([messageString rangeOfString:@"<IMG ID=\"" options:NSCaseInsensitiveSearch].location != NSNotFound) {
@@ -181,12 +197,16 @@ static void adiumGaimConvWriteIm(GaimConversation *conv, const char *who, const 
 	}
 }
 
-static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *message, GaimMessageFlags flags, time_t mtime)
+static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, const char *alias,
+								   const char *message, GaimMessageFlags flags,
+								   time_t mtime)
 {
+	GaimDebug (@"adiumGaimConvWriteConv: Received %s from %s [%i]",message,who,flags);
+
 	AIChat	*chat = nil;
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		chat = existingChatLookupFromConv(conv);
-	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
+	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
 		chat = imChatLookupFromConv(conv);
 	}
 
@@ -300,9 +320,12 @@ static void adiumGaimConvWriteConv(GaimConversation *conv, const char *who, cons
 	}
 }
 
+#warning Currently not using flags/aliases
+
+#if 0
 static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, gboolean new_arrival)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		GaimDebug (@"adiumGaimConvChatAddUser: CHAT: add %s",user);
 		//We pass the name as given, not normalized, so we can use its formatting as a formattedUID.
 		//The account is responsible for normalization if needed.
@@ -313,12 +336,13 @@ static void adiumGaimConvChatAddUser(GaimConversation *conv, const char *user, g
 	} else {
 		GaimDebug (@"adiumGaimConvChatAddUser: IM: add %s",user);
 	}
-
+	
 }
+#endif
 
-static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
+static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users, GList *flags, GList *aliases)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
 
 		GList *l;
@@ -335,14 +359,17 @@ static void adiumGaimConvChatAddUsers(GaimConversation *conv, GList *users)
 	}
 }
 
-static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName, const char *newName)
+static void adiumGaimConvChatRenameUser(GaimConversation *conv, const char *oldName,
+										const char *newName, const char *newAlias)
 {
-	GaimDebug (@"adiumGaimConvChatRenameUser");
+	GaimDebug (@"adiumGaimConvChatRenameUser: %s: oldName %s, newName %s, newAlias %s",
+			   gaim_conversation_get_name(conv),
+			   oldName, newName, newAlias);
 }
 
 static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user)
 {
- 	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+ 	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		[accountLookup(conv->account) mainPerformSelector:@selector(removeUser:fromChat:)
 											   withObject:[NSString stringWithUTF8String:gaim_normalize(conv->account, user)]
 											   withObject:existingChatLookupFromConv(conv)];
@@ -354,7 +381,7 @@ static void adiumGaimConvChatRemoveUser(GaimConversation *conv, const char *user
 
 static void adiumGaimConvChatRemoveUsers(GaimConversation *conv, GList *users)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		NSMutableArray	*usersArray = [NSMutableArray array];
 
 		GList *l;
@@ -376,11 +403,6 @@ static void adiumGaimConvUpdateUser(GaimConversation *conv, const char *user)
 	GaimDebug (@"adiumGaimConvUpdateUser: %s",user);
 }
 
-static void adiumGaimConvUpdateProgress(GaimConversation *conv, float percent)
-{
-    GaimDebug (@"adiumGaimConvUpdateProgress %f",percent);
-}
-
 //This isn't a function we want Gaim doing anything with, I don't think
 static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 {
@@ -389,7 +411,7 @@ static gboolean adiumGaimConvHasFocus(GaimConversation *conv)
 
 static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type)
 {
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
+	if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_CHAT) {
 		GaimConvChat  *chat = gaim_conversation_get_chat_data(conv);
 		
 		switch(type) {
@@ -421,7 +443,7 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 											   withObject:existingChatLookupFromConv(conv)
 											   withObject:[NSNumber numberWithInt:type]];
 
-	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
+	} else if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
 		GaimConvIm  *im = gaim_conversation_get_im_data(conv);
 		switch (type) {
 			case GAIM_CONV_UPDATE_TYPING: {
@@ -461,19 +483,42 @@ static void adiumGaimConvUpdated(GaimConversation *conv, GaimConvUpdateType type
 	}
 }
 
+#pragma mark Custom smileys
+gboolean adiumGaimConvCustomSmileyAdd(GaimConversation *conv, const char *smile)
+{
+	GaimDebug (@"%s: Added %s",gaim_conversation_get_name(conv),smile);
+
+	return TRUE;
+}
+void adiumGaimConvCustomSmileyWrite(GaimConversation *conv, const char *smile,
+									const guchar *data, gsize size)
+{
+	GaimDebug (@"%s: Write %s (%x %i)",gaim_conversation_get_name(conv),smile,data,size);	
+}
+void adiumGaimConvCustomSmileyClose(GaimConversation *conv, const char *smile)
+{
+	GaimDebug (@"%s: Close %s",gaim_conversation_get_name(conv),smile);
+}
+
 static GaimConversationUiOps adiumGaimConversationOps = {
+	adiumGaimConvCreate,
     adiumGaimConvDestroy,
     adiumGaimConvWriteChat,
     adiumGaimConvWriteIm,
     adiumGaimConvWriteConv,
-    adiumGaimConvChatAddUser,
     adiumGaimConvChatAddUsers,
     adiumGaimConvChatRenameUser,
     adiumGaimConvChatRemoveUser,
     adiumGaimConvChatRemoveUsers,
 	adiumGaimConvUpdateUser,
-    adiumGaimConvUpdateProgress,
 	adiumGaimConvHasFocus,
+
+	/* Custom Smileys */
+	adiumGaimConvCustomSmileyAdd,
+	adiumGaimConvCustomSmileyWrite,
+	adiumGaimConvCustomSmileyClose,
+	
+	/* Events */
     adiumGaimConvUpdated
 };
 
@@ -481,94 +526,3 @@ GaimConversationUiOps *adium_gaim_conversation_get_ui_ops(void)
 {
 	return &adiumGaimConversationOps;
 }
-
-#pragma mark Conversation Window
-// Conversation Window ---------------------------------------------------------------------------------------------
-static GaimConversationUiOps *adiumGaimConvWindowGetConvUiOps()
-{
-    return adium_gaim_conversation_get_ui_ops();
-}
-
-static void adiumGaimConvWindowNew(GaimConvWindow *win)
-{
-    //We can put anything we want in win's ui_data
-}
-
-static void adiumGaimConvWindowDestroy(GaimConvWindow *win)
-{
-    //Clean up what we placed in win's ui_data earlier
-}
-
-static void adiumGaimConvWindowShow(GaimConvWindow *win)
-{
-	GaimDebug (@"adiumGaimConvWindowShow");
-}
-
-static void adiumGaimConvWindowHide(GaimConvWindow *win)
-{
-    GaimDebug (@"adiumGaimConvWindowHide");
-}
-
-static void adiumGaimConvWindowRaise(GaimConvWindow *win)
-{
-	GaimDebug (@"adiumGaimConvWindowRaise");
-}
-
-static void adiumGaimConvWindowFlash(GaimConvWindow *win)
-{
-}
-
-static void adiumGaimConvWindowSwitchConv(GaimConvWindow *win, unsigned int index)
-{
-    GaimDebug (@"adiumGaimConvWindowSwitchConv");
-}
-
-static void adiumGaimConvWindowAddConv(GaimConvWindow *win, GaimConversation *conv)
-{
-	GaimDebug (@"adiumGaimConvWindowAddConv");
-
-	//Pass chats along to the account
-	if (gaim_conversation_get_type(conv) == GAIM_CONV_CHAT) {
-
-		AIChat *chat = chatLookupFromConv(conv);
-
-		[accountLookup(conv->account) mainPerformSelector:@selector(addChat:)
-											   withObject:chat];
-	}
-}
-
-static void adiumGaimConvWindowRemoveConv(GaimConvWindow *win, GaimConversation *conv)
-{
-	GaimDebug (@"adiumGaimConvWindowRemoveConv");
-}
-
-static void adiumGaimConvWindowMoveConv(GaimConvWindow *win, GaimConversation *conv, unsigned int newIndex)
-{
-    GaimDebug (@"adiumGaimConvWindowMoveConv");
-}
-
-static int adiumGaimConvWindowGetActiveIndex(const GaimConvWindow *win)
-{
-    return 0;
-}
-
-static GaimConvWindowUiOps adiumGaimWindowOps = {
-    adiumGaimConvWindowGetConvUiOps,
-    adiumGaimConvWindowNew,
-    adiumGaimConvWindowDestroy,
-    adiumGaimConvWindowShow,
-    adiumGaimConvWindowHide,
-    adiumGaimConvWindowRaise,
-    adiumGaimConvWindowFlash,
-    adiumGaimConvWindowSwitchConv,
-    adiumGaimConvWindowAddConv,
-    adiumGaimConvWindowRemoveConv,
-    adiumGaimConvWindowMoveConv,
-    adiumGaimConvWindowGetActiveIndex
-};
-
-GaimConvWindowUiOps *adium_gaim_conversation_get_win_ui_ops(void)
-{
-	return &adiumGaimWindowOps;
-}
-

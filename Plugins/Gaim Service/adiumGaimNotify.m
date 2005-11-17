@@ -69,7 +69,24 @@ static void *adiumGaimNotifyFormatted(const char *title, const char *primary, co
 																		   text:text]);	
 }
 
-static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who, const char *title, const char *primary, const char *secondary, const char *text, GCallback cb,void *userData)
+static void *adiumGaimNotifySearchResults(GaimConnection *gc, const char *title,
+										  const char *primary, const char *secondary,
+										  GaimNotifySearchResults *results, GCallback cb,
+										  void *user_data)
+{
+	return adium_gaim_get_handle();
+}
+
+static void adiumGaimNotifySearchResultsNewRows(GaimConnection *gc,
+												 GaimNotifySearchResults *results,
+												 void *data, void *user_data)
+{
+
+}
+
+static void *adiumGaimNotifyUserinfo(GaimConnection *gc, const char *who,
+									 const char *text,
+									 GCallback cb, void *userData)
 {
 	NSString	*textString = [NSString stringWithUTF8String:text];
 	
@@ -107,6 +124,8 @@ static GaimNotifyUiOps adiumGaimNotifyOps = {
     adiumGaimNotifyEmail,
     adiumGaimNotifyEmails,
     adiumGaimNotifyFormatted,
+	adiumGaimNotifySearchResults,
+	adiumGaimNotifySearchResultsNewRows,
 	adiumGaimNotifyUserinfo,
     adiumGaimNotifyUri,
     adiumGaimNotifyClose

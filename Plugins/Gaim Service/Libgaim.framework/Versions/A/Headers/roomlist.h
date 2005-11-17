@@ -26,21 +26,40 @@
 #ifndef _GAIM_ROOMLIST_H_
 #define _GAIM_ROOMLIST_H_
 
+typedef struct _GaimRoomlist GaimRoomlist;
+typedef struct _GaimRoomlistRoom GaimRoomlistRoom;
+typedef struct _GaimRoomlistField GaimRoomlistField;
+typedef struct _GaimRoomlistUiOps GaimRoomlistUiOps;
 
-#include <glib/glist.h>
+/**
+ * The types of rooms.
+ *
+ * These are ORable flags.
+ */
+typedef enum
+{
+	GAIM_ROOMLIST_ROOMTYPE_CATEGORY = 0x01, /**< It's a category, but not a room you can join. */
+	GAIM_ROOMLIST_ROOMTYPE_ROOM = 0x02      /**< It's a room, like the kind you can join. */
+
+} GaimRoomlistRoomType;
+
+/**
+ * The types of fields.
+ */
+typedef enum
+{
+	GAIM_ROOMLIST_FIELD_BOOL,
+	GAIM_ROOMLIST_FIELD_INT,
+	GAIM_ROOMLIST_FIELD_STRING /**< We do a g_strdup on the passed value if it's this type. */
+
+} GaimRoomlistFieldType;
+
 #include "account.h"
-
+#include "glib.h"
 
 /**************************************************************************/
 /** Data Structures                                                       */
 /**************************************************************************/
-
-typedef struct _GaimRoomlist GaimRoomlist;
-typedef struct _GaimRoomlistRoom GaimRoomlistRoom;
-typedef enum _GaimRoomlistRoomType GaimRoomlistRoomType;
-typedef struct _GaimRoomlistField GaimRoomlistField;
-typedef enum _GaimRoomlistFieldType GaimRoomlistFieldType;
-typedef struct _GaimRoomlistUiOps GaimRoomlistUiOps;
 
 /**
  * Represents a list of rooms for a given connection on a given protocol.
@@ -56,16 +75,6 @@ struct _GaimRoomlist {
 };
 
 /**
- * The types of rooms.
- *
- * These are ORable flags.
- */
-enum _GaimRoomlistRoomType {
-	GAIM_ROOMLIST_ROOMTYPE_CATEGORY = 0x01, /**< It's a category, but not a room you can join. */
-	GAIM_ROOMLIST_ROOMTYPE_ROOM = 0x02,     /**< It's a room, like the kind you can join. */
-};
-
-/**
  * Represents a room.
  */
 struct _GaimRoomlistRoom {
@@ -74,15 +83,6 @@ struct _GaimRoomlistRoom {
 	GList *fields; /**< Other fields. */
 	GaimRoomlistRoom *parent; /**< The parent room, or NULL. */
 	gboolean expanded_once; /**< A flag the UI uses to avoid multiple expand prpl cbs. */
-};
-
-/**
- * The types of fields.
- */
-enum _GaimRoomlistFieldType {
-	GAIM_ROOMLIST_FIELD_BOOL,
-	GAIM_ROOMLIST_FIELD_INT,
-	GAIM_ROOMLIST_FIELD_STRING, /**< We do a g_strdup on the passed value if it's this type. */
 };
 
 /**
@@ -100,7 +100,7 @@ struct _GaimRoomlistField {
  */
 struct _GaimRoomlistUiOps {
 	void (*show_with_account)(GaimAccount *account); /**< Force the ui to pop up a dialog and get the list */
-	void (*new)(GaimRoomlist *list); /**< A new list was created. */
+	void (*create)(GaimRoomlist *list); /**< A new list was created. */
 	void (*set_fields)(GaimRoomlist *list, GList *fields); /**< Sets the columns. */
 	void (*add_room)(GaimRoomlist *list, GaimRoomlistRoom *room); /**< Add a room to the list. */
 	void (*in_progress)(GaimRoomlist *list, gboolean flag); /**< Are we fetching stuff still? */

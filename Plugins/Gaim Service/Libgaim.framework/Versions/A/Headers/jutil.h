@@ -39,8 +39,6 @@ void jabber_id_free(JabberID *jid);
 char *jabber_get_resource(const char *jid);
 char *jabber_get_bare_jid(const char *jid);
 
-const char *jabber_get_state_string(int state);
-
 const char *jabber_normalize(const GaimAccount *account, const char *in);
 
 gboolean jabber_nodeprep_validate(const char *);
@@ -48,8 +46,5 @@ gboolean jabber_nameprep_validate(const char *);
 gboolean jabber_resourceprep_validate(const char *);
 
 GaimConversation *jabber_find_unnormalized_conv(const char *name, GaimAccount *account);
-
-//**Adium -- return a JabberID* using the account's settings rather than parsing the user name
-JabberID* jabber_id_new_full_from_account(const GaimAccount *account);
 
 #endif /* _GAIM_JABBER_JUTIL_H_ */

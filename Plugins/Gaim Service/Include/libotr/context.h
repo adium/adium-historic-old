@@ -20,34 +20,63 @@
 #ifndef __CONTEXT_H__
 #define __CONTEXT_H__
 
-#include "gcrypt.h"
+#include <gcrypt.h>
+
 #include "dh.h"
+#include "auth.h"
 
 typedef enum {
-    CONN_UNCONNECTED,
-    CONN_SETUP,
-    CONN_CONNECTED
-} ConnectionState;
+    OTRL_MSGSTATE_PLAINTEXT,           /* Not yet started an encrypted
+					  conversation */
+    OTRL_MSGSTATE_ENCRYPTED,           /* Currently in an encrypted
+					  conversation */
+    OTRL_MSGSTATE_FINISHED             /* The remote side has sent us a
+					  notification that he has ended
+					  his end of the encrypted
+					  conversation; prevent any
+					  further messages from being
+					  sent to him. */
+} OtrlMessageState;
 
 typedef struct fingerprint {
-    unsigned char *fingerprint;        /* The fingerprint, or NULL */
-    struct context *context;           /* The context to which we belong */
     struct fingerprint *next;          /* The next fingerprint in the list */
     struct fingerprint **tous;         /* A pointer to the pointer to us */
+    unsigned char *fingerprint;        /* The fingerprint, or NULL */
+    struct context *context;           /* The context to which we belong */
+    char *trust;                       /* The trust level of the fingerprint */
 } Fingerprint;
 
 typedef struct context {
+    struct context * next;             /* Linked list pointer */
+    struct context ** tous;            /* A pointer to the pointer to us */
+
     char * username;                   /* The user this context is for */
     char * accountname;                /* The username is relative to
 					  this account... */
     char * protocol;                   /* ... and this protocol */
-    ConnectionState state;             /* The state of our connection to this
-					  user */
+
+    char *fragment;                    /* The part of the fragmented message
+					  we've seen so far */
+    size_t fragment_len;               /* The length of fragment */
+    unsigned short fragment_n;         /* The total number of fragments
+					  in this message */
+    unsigned short fragment_k;         /* The highest fragment number
+					  we've seen so far for this
+					  message */
+
+    OtrlMessageState msgstate;         /* The state of message disposition
+					  with this user */
+    OtrlAuthInfo auth;                 /* The state of ongoing
+					  authentication with this user */
+
     Fingerprint fingerprint_root;      /* The root of a linked list of
 					  Fingerprints entries */
     Fingerprint *active_fingerprint;   /* Which fingerprint is in use now?
                                           A pointer into the above list */
-    unsigned int their_keyid;          /* current keyid used by other side */
+    unsigned int their_keyid;          /* current keyid used by other side;
+                                          this is set to 0 if we get a
+					  OTRL_TLV_DISCONNECTED message from
+					  them. */
     gcry_mpi_t their_y;                /* Y[their_keyid] (their DH pubkey) */
     gcry_mpi_t their_old_y;            /* Y[their_keyid-1] (their prev DH
 					  pubkey) */
@@ -58,6 +87,17 @@ typedef struct context {
     DH_sesskeys sesskeys[2][2];        /* sesskeys[i][j] are the session keys
 					  derived from DH key[our_keyid-i]
 					  and mpi Y[their_keyid-j] */
+
+    unsigned char sessionid[20];       /* The sessionid and bold half */
+    size_t sessionid_len;              /* determined when this private */
+    OtrlSessionIdHalf sessionid_half;  /* connection was established. */
+
+    unsigned int protocol_version;     /* The version of OTR in use */
+
+    unsigned char *preshared_secret;   /* A secret you share with this
+					  user, in order to do
+					  authentication. */
+    size_t preshared_secret_len;       /* The length of the above secret. */
 
     /* saved mac keys to be revealed later */
     unsigned int numsavedkeys;
@@ -84,15 +124,9 @@ typedef struct context {
     void *app_data;
     /* A function to free the above data when we forget this context */
     void (*app_data_free)(void *);
-
-    struct context * next;             /* Linked list pointer */
-    struct context ** tous;            /* A pointer to the pointer to us */
 } ConnContext;
 
 #include "userstate.h"
-
-/* Strings describing the connection states */
-extern const char *otrl_context_statestr[];
 
 /* Look up a connection context by name/account/protocol from the given
  * OtrlUserState.  If add_if_missing is true, allocate and return a new
@@ -109,26 +143,33 @@ ConnContext * otrl_context_find(OtrlUserState us, const char *user,
 Fingerprint *otrl_context_find_fingerprint(ConnContext *context,
 	unsigned char fingerprint[20], int add_if_missing, int *addedp);
 
-/* Force a context into the CONN_SETUP state (so that it only has local
- * DH keys). */
-void otrl_context_force_setup(ConnContext *context);
+/* Set the trust level for a given fingerprint */
+void otrl_context_set_trust(Fingerprint *fprint, const char *trust);
 
-/* Force a context into the CONN_UNCONNECTED state. */
-void otrl_context_force_disconnect(ConnContext *context);
+/* Set the preshared secret for a given fingerprint.  Note that this
+ * currently only stores the secret in the ConnContext structure, but
+ * doesn't yet do anything with it. */
+void otrl_context_set_preshared_secret(ConnContext *context,
+	const unsigned char *secret, size_t secret_len);
+
+/* Force a context into the OTRL_MSGSTATE_FINISHED state. */
+void otrl_context_force_finished(ConnContext *context);
+
+/* Force a context into the OTRL_MSGSTATE_PLAINTEXT state. */
+void otrl_context_force_plaintext(ConnContext *context);
 
 /* Forget a fingerprint (so long as it's not the active one.  If it's a
  * fingerprint_root, forget the whole context (as long as
- * and_maybe_context is set, and it's UNCONNECTED).  Also, if it's not
+ * and_maybe_context is set, and it's PLAINTEXT).  Also, if it's not
  * the fingerprint_root, but it's the only fingerprint, and we're
- * UNCONNECTED, forget the whole context if and_maybe_context is set. */
+ * PLAINTEXT, forget the whole context if and_maybe_context is set. */
 void otrl_context_forget_fingerprint(Fingerprint *fprint,
 	int and_maybe_context);
 
-/* Forget a whole context, so long as it's UNCONNECTED. */
+/* Forget a whole context, so long as it's PLAINTEXT. */
 void otrl_context_forget(ConnContext *context);
 
-/* Forget all the contexts in a given OtrlUserState, forcing them to
- * UNCONNECTED. */
+/* Forget all the contexts in a given OtrlUserState. */
 void otrl_context_forget_all(OtrlUserState us);
 
 #endif

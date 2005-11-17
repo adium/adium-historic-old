@@ -45,9 +45,8 @@ struct _MsnUser
 	char *store_name;       /**< The name stored in the server. */
 	char *friendly_name;    /**< The friendly name.             */
 
-	gboolean online;        /**< The User is online.            */
-	int status;             /**< The state of the user.         */
-	int idle;               /**< The idle state of the user.    */
+	const char *status;     /**< The state of the user.         */
+	gboolean idle;          /**< The idle state of the user.    */
 
 	struct
 	{

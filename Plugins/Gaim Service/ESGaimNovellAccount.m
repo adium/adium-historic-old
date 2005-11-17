@@ -48,7 +48,9 @@ gboolean gaim_init_novell_plugin(void);
 
 #pragma mark Status
 /*!
- * @brief Return the gaim status type to be used for a status
+ * @brief Return the gaim status ID to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
@@ -56,63 +58,40 @@ gboolean gaim_init_novell_plugin(void);
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
+	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
+	NSString		*statusMessageString = [statusState statusMessageString];
 	
-	switch (statusType) {
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
-		{
-			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE]) {
-				gaimStatusType = "Available";
-
-				//Don't use a status message for an available state, as Novell would go Away
-				*statusMessage = nil;
-			}
 			break;
-		}
 			
 		case AIAwayStatusType:
-		{
-			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
-
-			if ([statusName isEqualToString:STATUS_NAME_AWAY])
-				gaimStatusType = "Away";
-			else if ([statusName isEqualToString:STATUS_NAME_BUSY])
-				gaimStatusType = "Busy";
-			
-			//With a status message of "Busy" we should ensure we actually go to the Busy state, not the generic away
-			//with a message of Busy.
-			if ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame) {
-				gaimStatusType = "Busy";
-				*statusMessage = nil;
-			}
-			
+			if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
+				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
+				statusID = "busy";
 			break;
-		}
-			
+
 		case AIInvisibleStatusType:
-			gaimStatusType = "Appear Offline";
-		
+			statusID = "appearoffline";
+			break;
+
 		case AIOfflineStatusType:
 			break;
 	}
-	
-	/* XXX Novell supports status messages along with Away and Busy, so let our message stay 
-	 * Note that "Busy" will actually become a generic away if we have a message, but that's probably desired. */
 
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
-	return gaimStatusType;
+	return statusID;
 }
 
 @end

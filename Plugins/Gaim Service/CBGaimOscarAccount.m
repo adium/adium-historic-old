@@ -28,6 +28,8 @@
 #import <Adium/AIStatus.h>
 #import <Adium/ESFileTransfer.h>
 
+#define DELAYED_UPDATE_INTERVAL			1.0
+
 @implementation CBGaimOscarAccount
 
 gboolean gaim_init_oscar_plugin(void);
@@ -148,6 +150,127 @@ gboolean gaim_init_oscar_plugin(void);
 	}
 }
 
+#pragma mark Account status
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
+{
+	char	*statusID = NULL;
+
+	switch ([statusState statusType]) {
+		case AIAvailableStatusType:
+			statusID = OSCAR_STATUS_ID_AVAILABLE;
+			break;
+		case AIAwayStatusType:
+			statusID = OSCAR_STATUS_ID_AWAY;
+			break;
+
+		case AIInvisibleStatusType:
+			statusID = OSCAR_STATUS_ID_INVISIBLE;
+			break;
+			
+		case AIOfflineStatusType:
+			statusID = OSCAR_STATUS_ID_OFFLINE;
+			break;
+	}
+	
+	return statusID;
+}
+
+
+#pragma mark Contact notes
+-(NSString *)serversideCommentForContact:(AIListContact *)theContact
+{	
+	NSString *serversideComment = nil;
+	
+	if (gaim_account_is_connected(account)) {
+		const char  *uidUTF8String = [[theContact UID] UTF8String];
+		GaimBuddy   *buddy;
+		
+		if ((buddy = gaim_find_buddy(account, uidUTF8String))) {
+			GaimGroup   *g;
+			char		*comment;
+			OscarData   *od;
+			
+			if ((g = gaim_find_buddys_group(buddy)) &&
+				(od = account->gc->proto_data) &&
+				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))) {
+				gchar		*comment_utf8;
+				
+				comment_utf8 = gaim_utf8_try_convert(comment);
+				serversideComment = [NSString stringWithUTF8String:comment_utf8];
+				g_free(comment_utf8);
+				
+				free(comment);
+			}
+		}
+	}
+	
+	return serversideComment;
+}
+
+- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
+							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
+{
+	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
+	
+	if ([group isEqualToString:PREF_GROUP_NOTES]) {
+		//If the notification object is a listContact belonging to this account, update the serverside information
+		if (account &&
+			[object isKindOfClass:[AIListContact class]] && 
+			[(AIListContact *)object account] == self) {
+			
+			if ([key isEqualToString:@"Notes"]) {
+				NSString  *comment = [object preferenceForKey:@"Notes" 
+														group:PREF_GROUP_NOTES
+										ignoreInheritedValues:YES];
+				
+				[[super gaimThread] OSCAREditComment:comment forUID:[object UID] onAccount:self];
+			}			
+		}
+	}
+}
+
+
+#pragma mark Delayed updates
+
+- (void)gotGroupForContact:(AIListContact *)theContact
+{
+	if (theContact) {
+		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray alloc] init];
+		[arrayOfContactsForDelayedUpdates addObject:theContact];
+		
+		if (!delayedSignonUpdateTimer) {
+			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
+																		 target:self
+																	   selector:@selector(_performDelayedUpdates:) 
+																	   userInfo:nil 
+																		repeats:YES] retain];
+		}
+	}
+}
+
+- (void)_performDelayedUpdates:(NSTimer *)timer
+{
+	if ([arrayOfContactsForDelayedUpdates count]) {
+		AIListContact *theContact = [arrayOfContactsForDelayedUpdates objectAtIndex:0];
+		
+		[theContact setStatusObject:[self serversideCommentForContact:theContact]
+							 forKey:@"Notes"
+							 notify:YES];
+
+		//Request ICQ contacts' info to get the nickname
+		if (aim_sn_is_icq([[theContact UID] UTF8String])) {
+			[self delayedUpdateContactStatus:theContact];
+		}
+
+		[arrayOfContactsForDelayedUpdates removeObjectAtIndex:0];
+		
+	} else {
+		[arrayOfContactsForDelayedUpdates release]; arrayOfContactsForDelayedUpdates = nil;
+		[delayedSignonUpdateTimer invalidate]; [delayedSignonUpdateTimer release]; delayedSignonUpdateTimer = nil;
+	}
+}
+
 #pragma mark File transfer
 
 - (GaimXfer *)newOutgoingXferForFileTransfer:(ESFileTransfer *)fileTransfer
@@ -155,7 +278,8 @@ gboolean gaim_init_oscar_plugin(void);
 	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
 
-		return oscar_xfer_new(account->gc,destsn);
+#warning xxx
+//		return oscar_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;
@@ -270,6 +394,7 @@ gboolean gaim_init_oscar_plugin(void);
 	return [[[NSString alloc] initWithBytes:bytes length:length encoding:desiredEncoding] autorelease];
 }
 
+#pragma mark Buddy status
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
 	NSString			*statusMessage = nil;
@@ -315,6 +440,36 @@ gboolean gaim_init_oscar_plugin(void);
 	} else {
 		return nil;
 	}
+}
+
+- (NSString *)statusNameForGaimBuddy:(GaimBuddy *)buddy
+{
+	NSString		*statusName = nil;
+	
+	if (aim_sn_is_icq(buddy->name)) {
+		GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+		GaimStatus *status = gaim_presence_get_active_status(presence);
+		const char *gaimStatusName = gaim_status_get_name(status);
+
+		if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_INVISIBLE)) {
+			statusName = STATUS_NAME_INVISIBLE;
+
+		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_OCCUPIED)) {
+			statusName = STATUS_NAME_OCCUPIED;
+
+		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_NA)) {
+			statusName = STATUS_NAME_NOT_AVAILABLE;
+
+		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_DND)) {
+			statusName = STATUS_NAME_DND;
+
+		} else if (!strcmp(gaimStatusName, OSCAR_STATUS_ID_FREE4CHAT)) {
+			statusName = STATUS_NAME_FREE_FOR_CHAT;
+
+		}
+	}
+
+	return statusName;
 }
 
 @end
