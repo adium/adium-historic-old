@@ -42,6 +42,7 @@
  * @param parentWindow Window on which to display as a sheet.  Displayed as a normal window if nil.
  * @param inMessageHeader A plain <tt>NSString</tt> which will be displayed as a bolded header for the message.  Hidden if nil.
  * @param inMessage The <tt>NSAttributedString</tt> which is the body of text for the window.
+ * @param inImage The NSImage to display; if nil, the default application icon will be shown
  * @param target The target to send the selector <tt>textAndButtonsWindowDidEnd:(NSWindow *)window returnCode:(AITextAndButtonsReturnCode)returnCode userInfo:(id)userInfo</tt> when the sheet ends.
  *
  * @see AITextAndButtonsReturnCode
@@ -55,6 +56,7 @@
 							   onWindow:(NSWindow *)parentWindow
 					  withMessageHeader:(NSString *)inMessageHeader
 							 andMessage:(NSAttributedString *)inMessage
+								  image:(NSImage *)inImage
 								 target:(id)inTarget
 							   userInfo:(id)inUserInfo
 {
@@ -85,6 +87,28 @@
 	return controller;
 }
 
++ (id)showTextAndButtonsWindowWithTitle:(NSString *)inTitle
+						  defaultButton:(NSString *)inDefaultButton
+						alternateButton:(NSString *)inAlternateButton
+							otherButton:(NSString *)inOtherButton
+							   onWindow:(NSWindow *)parentWindow
+					  withMessageHeader:(NSString *)inMessageHeader
+							 andMessage:(NSAttributedString *)inMessage
+								 target:(id)inTarget
+							   userInfo:(id)inUserInfo
+{
+	return [self showTextAndButtonsWindowWithTitle:inTitle
+									 defaultButton:inDefaultButton
+								   alternateButton:inAlternateButton
+									   otherButton:inOtherButton
+										  onWindow:parentWindow
+								 withMessageHeader:inMessageHeader
+										andMessage:inMessage
+											 image:nil
+											target:inTarget
+										  userInfo:inUserInfo];
+}
+
 /*!
  * @bref Initialize
  */
@@ -95,6 +119,7 @@
 				otherButton:(NSString *)inOtherButton
 		  withMessageHeader:(NSString *)inMessageHeader
 				 andMessage:(NSAttributedString *)inMessage
+					  image:(NSImage *)inImage
 					 target:(id)inTarget
 				   userInfo:(id)inUserInfo
 {
@@ -107,6 +132,8 @@
 		message = [inMessage retain];
 		target = [inTarget retain];
 		userInfo = [inUserInfo retain];
+		image = [inImage retain];
+
 		userClickedButton = NO;
 		allowsCloseWithoutResponse = YES;
 	}
@@ -122,6 +149,14 @@
 	allowsCloseWithoutResponse = inAllowsCloseWithoutResponse;
 	
 	[[[self window] standardWindowButton:NSWindowCloseButton] setEnabled:allowsCloseWithoutResponse];
+}
+
+/*!
+ * @brief Set the image
+ */
+- (void)setImage:(NSImage *)image;
+{
+	[imageView setImage:image];
 }
 
 /*!
@@ -184,6 +219,11 @@
 	int			heightChange = 0;
 	int			distanceFromBottomOfMessageToButtons = 24;
 	NSRect		frame = [window frame];
+
+	//Set the image if we have one
+	if (image) {
+		[imageView setImage:image];
+	}
 
 	//Hide the toolbar and zoom buttons
 	[[window standardWindowButton:NSWindowToolbarButton] setFrame:NSZeroRect];
@@ -328,7 +368,8 @@
 	[messageHeader release];
 	[message release];
 	[userInfo release];
-	
+	[image release];
+
 	[super dealloc];
 }
 

@@ -33,18 +33,32 @@ typedef enum {
 	IBOutlet	NSButton		*button_alternate;
 	IBOutlet	NSButton		*button_other;
 
+	IBOutlet	NSImageView		*imageView;
+
 	NSString			*title;
 	NSString			*defaultButton;
 	NSString			*alternateButton;
 	NSString			*otherButton;
 	NSString			*messageHeader;
 	NSAttributedString	*message;
+	NSImage				*image;
 	id					target;
 	id					userInfo;
 	
 	BOOL				userClickedButton; //Did the user click a button to begin closing the window?
 	BOOL				allowsCloseWithoutResponse; //Is it okay to close without clicking a button?
 }
+
++ (id)showTextAndButtonsWindowWithTitle:(NSString *)inTitle
+						  defaultButton:(NSString *)inDefaultButton
+						alternateButton:(NSString *)inAlternateButton
+							otherButton:(NSString *)inOtherButton
+							   onWindow:(NSWindow *)parentWindow
+					  withMessageHeader:(NSString *)inMessageHeader
+							 andMessage:(NSAttributedString *)inMessage
+								  image:(NSImage *)inImage
+								 target:(id)inTarget
+							   userInfo:(id)inUserInfo;
 
 + (id)showTextAndButtonsWindowWithTitle:(NSString *)inTitle
 						  defaultButton:(NSString *)inDefaultButton
@@ -69,6 +83,7 @@ typedef enum {
 - (IBAction)pressedButton:(id)sender;
 
 - (void)setAllowsCloseWithoutResponse:(BOOL)inAllowsCloseWithoutResponse;
+- (void)setImage:(NSImage *)image;
 
 @end
 

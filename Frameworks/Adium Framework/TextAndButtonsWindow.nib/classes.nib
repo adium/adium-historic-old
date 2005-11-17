@@ -24,6 +24,7 @@
                 "button_alternate" = NSButton; 
                 "button_default" = NSButton; 
                 "button_other" = NSButton; 
+                imageView = NSImageView; 
                 "scrollView_message" = NSScrollView; 
                 "scrollView_messageHeader" = NSScrollView; 
                 target = id; 
