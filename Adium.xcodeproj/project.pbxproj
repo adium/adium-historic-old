@@ -1553,7 +1553,6 @@
 		3405809E087EEFA100664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		3405809F087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		340580A0087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = "Plugins/Gaim Service/Russian.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		340580A1087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		340580A2087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		340580A3087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Russian; path = Resources/Russian.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		340580A4087EEFA200664D64 /* Russian */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Russian; path = Resources/Russian.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1609,8 +1608,6 @@
 		341DE03607FE106B00EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		341DE03707FE107300EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		341DE03807FE107900EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
-		341DE03907FE108C00EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
-		341DE03A07FE109400EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		341DE03B07FE10B600EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = German; path = Resources/German.lproj/Localizable.strings; sourceTree = "<group>"; };
 		341DE09A07FE111100EB7B06 /* German */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = German; path = Resources/German.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		341DE09B07FE111500EB7B06 /* Japanese */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Japanese; path = Resources/Japanese.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
@@ -1687,7 +1684,6 @@
 		342CE13B085A08A000005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		342CE13C085A08A000005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		342CE13D085A08A000005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = "Plugins/Gaim Service/Swedish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		342CE13E085A08A000005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		342CE13F085A08A000005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		342CE140085A08A100005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Swedish; path = Resources/Swedish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		342CE141085A08A100005C63 /* Swedish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Swedish; path = Resources/Swedish.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1718,7 +1714,6 @@
 		342CE169085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		342CE16A085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		342CE16B085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = "Plugins/Gaim Service/Catalan.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		342CE16C085A08C600005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		342CE16D085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		342CE16E085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Catalan; path = Resources/Catalan.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		342CE16F085A08C700005C63 /* Catalan */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Catalan; path = "Plugins/WebKit Message View/Catalan.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -1868,7 +1863,6 @@
 		3458BA91082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		3458BA92082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
 		3458BA93082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimOscarJoinChatView.nib"; sourceTree = "<group>"; };
-		3458BA94082178420005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		3458BA95082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
 		3458BA96082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = "Plugins/Gaim Service/Danish.lproj/ESGaimMeanwhileAccountView.nib"; sourceTree = "<group>"; };
 		3458BA97082178430005BCF6 /* Danish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Danish; path = Resources/Danish.lproj/AccountProxy.nib; sourceTree = "<group>"; };
@@ -1915,7 +1909,6 @@
 		345F5BA5081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		345F5BA6081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		345F5BA7081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = "Plugins/Gaim Service/zh_TW.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		345F5BA8081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		345F5BA9081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		345F5BAA081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_TW; path = Resources/zh_TW.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		345F5BAB081AC4F2001F733C /* zh_TW */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = zh_TW; path = Resources/zh_TW.lproj/Localizable.strings; sourceTree = "<group>"; };
@@ -1936,7 +1929,6 @@
 		3465229108371921009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimJabberAccountView.nib"; sourceTree = "<group>"; };
 		3465229208371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimGaduGaduAccountView.nib"; sourceTree = "<group>"; };
 		3465229308371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/DCGaimYahooJoinChatView.nib"; sourceTree = "<group>"; };
-		3465229408371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		3465229508371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = Resources/zh_CN.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		3465229608371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/DCGaimMeanwhileJoinChatView.nib"; sourceTree = "<group>"; };
 		3465229708371922009565FE /* zh_CN */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = zh_CN; path = "Plugins/Gaim Service/zh_CN.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
@@ -1975,7 +1967,6 @@
 		346522C808371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/WebKit Message View/cs.lproj/WebKitPreferencesView.nib"; sourceTree = "<group>"; };
 		346522C908371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Plugins/Gaim Service/cs.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		346522CA08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
-		346522CB08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		346522CC08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		346522CD08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = "Frameworks/Adium Framework/cs.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		346522CE08371998009565FE /* cs */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = cs; path = Resources/cs.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
@@ -2002,7 +1993,6 @@
 		34652304083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/AppearancePrefs.nib; sourceTree = "<group>"; };
 		34652305083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
 		34652306083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimNovellAccountView.nib"; sourceTree = "<group>"; };
-		34652307083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34652308083719EE009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34652309083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = Resources/Norwegian.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		3465230A083719EF009565FE /* Norwegian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Norwegian; path = "Plugins/Gaim Service/Norwegian.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
@@ -2192,7 +2182,6 @@
 		34A30E8608D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
 		34A30E8708D8EE7900697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimYahooAccountView.nib"; sourceTree = "<group>"; };
 		34A30E8E08D8EE7A00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/ESGaimZephyrAccountView.nib"; sourceTree = "<group>"; };
-		34A30E9808D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34A30E9908D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		34A30E9A08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Spanish; path = Resources/Spanish.lproj/ListThemeSheet.nib; sourceTree = "<group>"; };
 		34A30E9B08D8EE7B00697644 /* Spanish */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = Spanish; path = "Plugins/Gaim Service/Spanish.lproj/Localizable.strings"; sourceTree = "<group>"; };
@@ -2234,7 +2223,6 @@
 		34A6E9B807D6365000972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34A6E9BA07D6365A00972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
 		34A6F68207D65D5B00972830 /* English */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = English; path = Resources/English.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
-		34A6F68607D65D6E00972830 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34A6FAD407D6F3A600972830 /* ESEventSoundAlertDetailPane.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESEventSoundAlertDetailPane.h; path = Source/ESEventSoundAlertDetailPane.h; sourceTree = "<group>"; };
 		34A6FAD507D6F3A600972830 /* AIEventSoundsPlugin.m */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.objc; name = AIEventSoundsPlugin.m; path = Source/AIEventSoundsPlugin.m; sourceTree = "<group>"; };
 		34A6FAD607D6F3A600972830 /* AIEventSoundsPlugin.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = AIEventSoundsPlugin.h; path = Source/AIEventSoundsPlugin.h; sourceTree = "<group>"; };
@@ -2255,7 +2243,6 @@
 		34B271EC0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Frameworks/Adium Framework/is.lproj/EditStateSheet.nib"; sourceTree = "<group>"; };
 		34B271ED0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/ListLayoutSheet.nib; sourceTree = "<group>"; };
 		34B271EE0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/StatusSortConfiguration.nib; sourceTree = "<group>"; };
-		34B271EF0839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34B271F00839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = Resources/is.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34B271F10839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimMSNAccountView.nib"; sourceTree = "<group>"; };
 		34B271F20839E8E30092A5A0 /* is */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = is; path = "Plugins/Gaim Service/is.lproj/ESGaimOscarAccountView.nib"; sourceTree = "<group>"; };
@@ -2593,7 +2580,6 @@
 		34FB54DE05FEC73A00F0D7D7 /* ESWebFrameViewAdditions.h */ = {isa = PBXFileReference; fileEncoding = 30; lastKnownFileType = sourcecode.c.h; name = ESWebFrameViewAdditions.h; path = "Plugins/WebKit Message View/ESWebFrameViewAdditions.h"; sourceTree = "<group>"; };
 		34FD5BB007F1F85B00687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
 		34FD5BBA07F1F87400687C70 /* French */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = French; path = Resources/French.lproj/ESFileTransferProgressView.nib; sourceTree = "<group>"; };
-		34FD5BC707F1F89400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/GeneralPreferences.nib; sourceTree = "<group>"; };
 		34FD5BD407F1F8B700687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/MessageContextDisplayPrefs.nib; sourceTree = "<group>"; };
 		34FD5BE307F1F90400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/PasswordPrompt.nib; sourceTree = "<group>"; };
 		34FD5BE407F1F91400687C70 /* Italian */ = {isa = PBXFileReference; lastKnownFileType = wrapper.nib; name = Italian; path = Resources/Italian.lproj/ProxyPasswordPrompt.nib; sourceTree = "<group>"; };
@@ -9037,20 +9023,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				34A6F68207D65D5B00972830 /* English */,
-				34A6F68607D65D6E00972830 /* French */,
-				34FD5BC707F1F89400687C70 /* Italian */,
-				341DE03907FE108C00EB7B06 /* German */,
-				341DE03A07FE109400EB7B06 /* Japanese */,
-				345F5BA8081AC4F2001F733C /* zh_TW */,
-				3458BA94082178420005BCF6 /* Danish */,
-				3465229408371922009565FE /* zh_CN */,
-				346522CB08371998009565FE /* cs */,
-				34652307083719EE009565FE /* Norwegian */,
-				34B271EF0839E8E30092A5A0 /* is */,
-				342CE13E085A08A000005C63 /* Swedish */,
-				342CE16C085A08C600005C63 /* Catalan */,
-				340580A1087EEFA200664D64 /* Russian */,
-				34A30E9808D8EE7B00697644 /* Spanish */,
 			);
 			name = GeneralPreferences.nib;
 			sourceTree = "<group>";
