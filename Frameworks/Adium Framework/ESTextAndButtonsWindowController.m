@@ -21,6 +21,16 @@
 
 @interface ESTextAndButtonsWindowController (PRIVATE)
 - (void)showWindowWithDict:(NSDictionary *)infoDict;
+- (id)initWithWindowNibName:(NSString *)windowNibName
+				  withTitle:(NSString *)inTitle
+			  defaultButton:(NSString *)inDefaultButton
+			alternateButton:(NSString *)inAlternateButton
+				otherButton:(NSString *)inOtherButton
+		  withMessageHeader:(NSString *)inMessageHeader
+				 andMessage:(NSAttributedString *)inMessage
+					  image:(NSImage *)inImage
+					 target:(id)inTarget
+				   userInfo:(id)inUserInfo;
 @end
 
 @implementation ESTextAndButtonsWindowController
@@ -154,9 +164,13 @@
 /*!
  * @brief Set the image
  */
-- (void)setImage:(NSImage *)image;
+- (void)setImage:(NSImage *)inImage;
 {
-	[imageView setImage:image];
+	if (inImage != image) {
+		[image release];
+		image = [inImage retain];
+		[imageView setImage:image];
+	}
 }
 
 /*!
