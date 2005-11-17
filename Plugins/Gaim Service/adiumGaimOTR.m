@@ -33,6 +33,14 @@ static NSMutableDictionary	*otrPolicyCache = nil;
 
 #define CLOSED_CONNECTION_MESSAGE "has closed his private connection to you"
 
+/* OTRL_POLICY_MANUAL doesn't let us respond to other users' automatic attempts at encryption.
+ * If either user has OTR set to Automatic, an OTR session should be begun; without this modified,
+ * mask, both users would have to be on automatic for OTR to begin automatically, even though one user
+ * _manually_ attempting OTR will _automatically_ bring the other into OTR even if the setting is Manual.
+ */
+#define OTRL_POLICY_MANUAL_AND_REPOND_TO_WHITESPACE	( OTRL_POLICY_MANUAL | \
+													  OTRL_POLICY_WHITESPACE_START_AKE | \
+													  OTRL_POLICY_ERROR_START_AKE )
 @interface ESGaimOTRAdapter (PRIVATE)
 - (NSString *)localizedOTRMessage:(NSString *)message withUsername:(const char *)username;
 - (void)prefsShouldUpdatePrivateKeyList;
@@ -500,13 +508,13 @@ void initGaimOTRSupprt(void)
  */
 - (NSNumber *)determinePolicyForContact:(AIListContact *)contact
 {
-	OtrlPolicy	policy = OTRL_POLICY_MANUAL;
+	OtrlPolicy	policy = OTRL_POLICY_MANUAL_AND_REPOND_TO_WHITESPACE;
 	NSNumber	*policyNumber;
 	NSString	*contactInternalObjectID;
 	
 	//Force OTRL_POLICY_MANUAL when interacting with mobile numbers
 	if ([[contact UID] characterAtIndex:0] == '+') {
-		policy = OTRL_POLICY_MANUAL;
+		policy = OTRL_POLICY_MANUAL_AND_REPOND_TO_WHITESPACE;
 		
 	} else {
 		NSNumber					*prefNumber;
@@ -530,7 +538,7 @@ void initGaimOTRSupprt(void)
 					break;
 				case EncryptedChat_Manually:
 				case EncryptedChat_Default:
-					policy = OTRL_POLICY_MANUAL;
+					policy = OTRL_POLICY_MANUAL_AND_REPOND_TO_WHITESPACE;
 					break;
 				case EncryptedChat_Automatically:
 					policy = OTRL_POLICY_OPPORTUNISTIC;
@@ -540,7 +548,7 @@ void initGaimOTRSupprt(void)
 					break;
 			}
 		} else {
-			policy = OTRL_POLICY_MANUAL;
+			policy = OTRL_POLICY_MANUAL_AND_REPOND_TO_WHITESPACE;
 		}
 	}
 	
