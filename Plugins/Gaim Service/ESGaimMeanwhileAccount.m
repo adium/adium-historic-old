@@ -31,22 +31,20 @@
 
 #ifndef MEANWHILE_NOT_AVAILABLE
 
-gboolean gaim_init_meanwhile_plugin(void);
+gboolean gaim_init_sametime_plugin(void);
 - (const char*)protocolPlugin
 {
-	static gboolean didInitMeanwhile = NO;
+	static gboolean didInitSametime = NO;
 	
 	[self initSSL];
-	if (!didInitMeanwhile) didInitMeanwhile = gaim_init_meanwhile_plugin(); 
-    return "prpl-meanwhile";
+	if (!didInitSametime) didInitSametime = gaim_init_sametime_plugin(); 
+    return "prpl-sametime";
 }
 
 - (void)configureGaimAccount
 {
 	[super configureGaimAccount];
 	
-	int contactListChoice = [[self preferenceForKey:KEY_MEANWHILE_CONTACTLIST group:GROUP_ACCOUNT_STATUS] intValue];
-
 	gaim_prefs_set_int(MW_PRPL_OPT_BLIST_ACTION, Meanwhile_CL_Load_And_Save);
 }
 
@@ -86,7 +84,9 @@ gboolean gaim_init_meanwhile_plugin(void);
 
 #pragma mark Status
 /*!
- * @brief Return the gaim status type to be used for a status
+ * @brief Return the gaim status ID to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
@@ -94,35 +94,27 @@ gboolean gaim_init_meanwhile_plugin(void);
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
+	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
+	NSString		*statusMessageString = [statusState statusMessageString];
 	
-	switch (statusType) {
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
-		{
-			if ([statusName isEqualToString:STATUS_NAME_AVAILABLE])
-				gaimStatusType = "Active";
 			break;
-		}
 
 		case AIAwayStatusType:
 		{
-			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
-
-			if ([statusName isEqualToString:STATUS_NAME_AWAY])
-				gaimStatusType = "Away";
-			else if (([statusName isEqualToString:STATUS_NAME_DND]) ||
-					([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
-				gaimStatusType = "Do Not Disturb";
+			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
+				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
+				statusID = "busy";
 			
 			break;
 		}
@@ -132,12 +124,10 @@ gboolean gaim_init_meanwhile_plugin(void);
 			break;
 	}
 	
-	/* XXX (?) Meanwhile supports status messages along with the status types, so let our message stay */
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-	
-	return gaimStatusType;
+	return statusID;
 }
 
 #pragma mark Account Action Menu Items
@@ -174,8 +164,8 @@ gboolean gaim_init_meanwhile_plugin(void);
 {
 	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-		
-		return mwgaim_xfer_new(account->gc,destsn);
+#warning xxx ft
+//		return mwgaim_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;

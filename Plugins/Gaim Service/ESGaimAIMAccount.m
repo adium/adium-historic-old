@@ -20,13 +20,11 @@
 #import <AIUtilities/AIStringAdditions.h>
 #import <AIUtilities/AIObjectAdditions.h>
 
-#define DELAYED_UPDATE_INTERVAL			1.0
 #define MAX_AVAILABLE_MESSAGE_LENGTH	58
 
 #define AOL_MOBILE_DEVICE AILocalizedString(@"AOL Mobile Device", "Phrase to describe the client through which a contact is connected mobilely; cell phones, for example, may be AOL Mobile Devices.")
 
 @interface ESGaimAIMAccount (PRIVATE)
-- (NSString *)serversideCommentForContact:(AIListContact *)theContact;
 - (NSString *)stringWithBytes:(const char *)bytes length:(int)length encoding:(const char *)encoding;
 - (NSString *)stringByProcessingImgTagsForDirectIM:(NSString *)inString;
 - (void)setFormattedUID;
@@ -191,6 +189,7 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 			return ([[inAttributedString attributedStringByConvertingLinksToStrings] string]);
 			
 		} else {
+#if 0
 			if (GAIM_DEBUG) {
 				//We have a list object and are sending both to and from an AIM account; encode to HTML and look for outgoing images
 				NSString	*returnString;
@@ -242,6 +241,10 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 												 imagesPath:nil];
 				
 			}
+#endif /* 0 */
+			//XXX - DirectIM is not ready for prime time.  Temporary.
+			return [encoderAttachmentsAsText encodeHTML:inAttributedString
+											 imagesPath:nil];
 		}
 		
 	} else { //Send HTML when signed in as an AIM account and we don't know what sort of user we are sending to (most likely multiuser chat)
@@ -264,8 +267,9 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 		const char				*who = [[[inChat listObject] UID] UTF8String];
 
 		if (account && account->gc && who) {
-			dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
-			
+			//dim = (struct oscar_direct_im  *)oscar_find_direct_im(account->gc, who);
+			dim = NULL;
+
 			if (dim) {
 				return YES;
 			}
@@ -273,94 +277,6 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 	}
 	
 	return NO;
-}
-
-#pragma mark Delayed updates
-
-- (void)gotGroupForContact:(AIListContact *)theContact
-{
-	if (theContact) {
-		if (!arrayOfContactsForDelayedUpdates) arrayOfContactsForDelayedUpdates = [[NSMutableArray alloc] init];
-		[arrayOfContactsForDelayedUpdates addObject:theContact];
-		
-		if (!delayedSignonUpdateTimer) {
-			delayedSignonUpdateTimer = [[NSTimer scheduledTimerWithTimeInterval:DELAYED_UPDATE_INTERVAL 
-																		 target:self
-																	   selector:@selector(_performDelayedUpdates:) 
-																	   userInfo:nil 
-																		repeats:YES] retain];
-		}
-	}
-}
-
-- (void)_performDelayedUpdates:(NSTimer *)timer
-{
-	if ([arrayOfContactsForDelayedUpdates count]) {
-		AIListContact *theContact = [arrayOfContactsForDelayedUpdates objectAtIndex:0];
-		
-		[theContact setStatusObject:[self serversideCommentForContact:theContact]
-							 forKey:@"Notes"
-							 notify:YES];
-		
-		[arrayOfContactsForDelayedUpdates removeObjectAtIndex:0];
-		
-	} else {
-		[arrayOfContactsForDelayedUpdates release]; arrayOfContactsForDelayedUpdates = nil;
-		[delayedSignonUpdateTimer invalidate]; [delayedSignonUpdateTimer release]; delayedSignonUpdateTimer = nil;
-	}
-}
-
-#pragma mark Contact notes
--(NSString *)serversideCommentForContact:(AIListContact *)theContact
-{	
-	NSString *serversideComment = nil;
-	
-	if (gaim_account_is_connected(account)) {
-		const char  *uidUTF8String = [[theContact UID] UTF8String];
-		GaimBuddy   *buddy;
-		
-		if ((buddy = gaim_find_buddy(account, uidUTF8String))) {
-			GaimGroup   *g;
-			char		*comment;
-			OscarData   *od;
-			
-			if ((g = gaim_find_buddys_group(buddy)) &&
-				(od = account->gc->proto_data) &&
-				(comment = aim_ssi_getcomment(od->sess->ssi.local, g->name, buddy->name))) {
-				gchar		*comment_utf8;
-				
-				comment_utf8 = gaim_utf8_try_convert(comment);
-				serversideComment = [NSString stringWithUTF8String:comment_utf8];
-				g_free(comment_utf8);
-				
-				free(comment);
-			}
-		}
-	}
-	
-	return serversideComment;
-}
-
-- (void)preferencesChangedForGroup:(NSString *)group key:(NSString *)key
-							object:(AIListObject *)object preferenceDict:(NSDictionary *)prefDict firstTime:(BOOL)firstTime
-{
-	[super preferencesChangedForGroup:group key:key object:object preferenceDict:prefDict firstTime:firstTime];
-	
-	if ([group isEqualToString:PREF_GROUP_NOTES]) {
-		//If the notification object is a listContact belonging to this account, update the serverside information
-		if (account &&
-			[object isKindOfClass:[AIListContact class]] && 
-			[(AIListContact *)object account] == self) {
-			
-			if ([key isEqualToString:@"Notes"]) {
-				NSString  *comment = [object preferenceForKey:@"Notes" 
-														group:PREF_GROUP_NOTES
-										ignoreInheritedValues:YES];
-				
-				[[super gaimThread] OSCAREditComment:comment forUID:[object UID] onAccount:self];
-			}			
-		}
-	}
 }
 
 #pragma mark Contact List Menu Items
@@ -635,74 +551,17 @@ static AIHTMLDecoder	*encoderGroupChat = nil;
 
 #pragma mark Status
 /*!
-* @brief Perform the actual setting a state
- *
- * This is called by setStatusState.  It allows subclasses to perform any other behaviors, such as modifying a display
- * name, which are called for by the setting of the state; most of the processing has already been done, however, so
- * most subclasses will not need to implement this.
- *
- * @param statusState The AIStatus which is being set
- * @param gaimStatusType The status type which will be passed to Gaim, or NULL if Gaim's status will not be set for this account
- * @param statusMessage A properly encoded message which will be associated with the status if possible.
- */
-- (void)setStatusState:(AIStatus *)statusState withGaimStatusType:(const char *)gaimStatusType andMessage:(NSString *)statusMessage
-{
-	[super setStatusState:statusState withGaimStatusType:gaimStatusType andMessage:statusMessage];
-
-	if (gaimStatusType && !strcmp(gaimStatusType, "Available")) {
-		/*
-		 * As of gaim 1.x, setting/changing an available message in OSCAR requires a special, additional call */
-		
-		//Set the available message, or clear it.
-		[[self gaimThread] OSCARSetAvailableMessageTo:statusMessage onAccount:self];
-	}
-}
-
-/*!
-* @brief Return the gaim status type to be used for a status
- *
- * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
- * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
- * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
- * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
- * [statusState statusType] for a general idea of the status's type.
- *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
- *
- * @result The gaim status equivalent
- */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
-{
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
-	
-	//Only special case we need is for invisibility.
-	if (statusType == AIInvisibleStatusType)
-		gaimStatusType = "Invisible";
-	
-	//If we are setting one of our custom statuses, don't use a status message
-	if (gaimStatusType != NULL) 	*statusMessage = nil;
-	
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-	
-	return gaimStatusType;
-}
-
-/*!
 * @brief Encode an attributed string for a status type
  *
  * Away messages are HTML encoded.  Available messages are plaintext.
  */
-- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forGaimStatusType:(const char *)gaimStatusType
+- (NSString *)encodedAttributedString:(NSAttributedString *)inAttributedString forStatusState:(AIStatus *)statusState
 {
-	if (gaimStatusType && !strcmp(gaimStatusType, "Available")) {
+	if (statusState && ([statusState statusType] == AIAvailableStatusType)) {
 		NSString	*messageString = [[inAttributedString attributedStringByConvertingLinksToStrings] string];
 		return [messageString stringWithEllipsisByTruncatingToLength:MAX_AVAILABLE_MESSAGE_LENGTH];
 	} else {
-		return [super encodedAttributedString:inAttributedString forGaimStatusType:gaimStatusType];
+		return [super encodedAttributedString:inAttributedString forStatusState:statusState];
 	}
 }
 

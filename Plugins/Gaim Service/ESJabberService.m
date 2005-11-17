@@ -67,7 +67,7 @@
 - (NSCharacterSet *)allowedCharacters{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 
-	[allowedCharacters addCharactersInString:@"._@-()[]%|"];
+	[allowedCharacters addCharactersInString:@"._@-()[]%|\\"];
 	
 	return [allowedCharacters autorelease];
 }
@@ -77,10 +77,10 @@
  *
  * Same as allowedCharacters, but also allow / for specifying a resource.
  */
-- (NSCharacterSet *)allowedCharactersForUIDs{ 
+- (NSCharacterSet *)allowedCharactersForUIDs{
 	NSMutableCharacterSet	*allowedCharacters = [[NSCharacterSet alphanumericCharacterSet] mutableCopy];
 	
-	[allowedCharacters addCharactersInString:@"._@-()[]%|/+"];
+	[allowedCharacters addCharactersInString:@"._@-()[]%|\\/+"];
 	
 	return [allowedCharacters autorelease];
 }

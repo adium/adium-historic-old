@@ -108,7 +108,8 @@ void gaim_signal_get_values(void *instance, const char *signal,
  * @param handle   The handle of the receiver.
  * @param func     The callback function.
  * @param data     The data to pass to the callback function.
- * @param priority The order in which the signal should be added to the list
+ * @param priority The priority with which the handler should be called. Signal handlers are called
+ *                 in order from GAIM_SIGNAL_PRIORITY_LOWEST to GAIM_SIGNAL_PRIORITY_HIGHEST.
  *
  * @return The signal handler ID.
  *
@@ -226,23 +227,29 @@ void gaim_signal_emit(void *instance, const char *signal, ...);
 void gaim_signal_emit_vargs(void *instance, const char *signal, va_list args);
 
 /**
- * Emits a signal and returns the return value from the last handler.
+ * Emits a signal and returns the first non-NULL return value.
+ *
+ * Further signal handlers are NOT called after a handler returns
+ * something other than NULL.
  *
  * @param instance The instance emitting the signal.
  * @param signal   The signal being emitted.
  *
- * @return The return value from the last handler.
+ * @return The first non-NULL return value
  */
 void *gaim_signal_emit_return_1(void *instance, const char *signal, ...);
 
 /**
- * Emits a signal and returns the return value from the last handler.
+ * Emits a signal and returns the first non-NULL return value.
+ *
+ * Further signal handlers are NOT called after a handler returns
+ * something other than NULL.
  *
  * @param instance The instance emitting the signal.
  * @param signal   The signal being emitted.
  * @param args     The arguments list.
  *
- * @return The return value from the last handler.
+ * @return The first non-NULL return value
  */
 void *gaim_signal_emit_vargs_return_1(void *instance, const char *signal,
 									  va_list args);
@@ -274,6 +281,8 @@ void gaim_marshal_VOID__POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_VOID__POINTER_UINT(
 		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_INT_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_VOID__POINTER_POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_VOID__POINTER_POINTER_UINT(
@@ -288,12 +297,16 @@ void gaim_marshal_VOID__POINTER_POINTER_POINTER_POINTER_POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_VOID__POINTER_POINTER_POINTER_UINT(
 		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_VOID__POINTER_POINTER_POINTER_POINTER_UINT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_VOID__POINTER_POINTER_POINTER_UINT_UINT(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 
 void gaim_marshal_INT__INT(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 void gaim_marshal_INT__INT_INT(
+		GaimCallback cb, va_list args, void *data, void **return_val);
+void gaim_marshal_INT__POINTER_POINTER_POINTER_POINTER_POINTER(
 		GaimCallback cb, va_list args, void *data, void **return_val);
 
 void gaim_marshal_BOOLEAN__POINTER(

@@ -27,9 +27,6 @@
 #ifndef _GAIM_CONNECTION_H_
 #define _GAIM_CONNECTION_H_
 
-#include <stdlib.h>
-#include <time.h>
-
 typedef struct _GaimConnection GaimConnection;
 
 /**
@@ -44,8 +41,9 @@ typedef enum
 	GAIM_CONNECTION_FORMATTING_WBFO = 0x0008, /**< The text buffer must be formatted as a whole */
 	GAIM_CONNECTION_NO_NEWLINES = 0x0010, /**< No new lines are allowed in outgoing messages */
 	GAIM_CONNECTION_NO_FONTSIZE = 0x0020, /**< Connection does not send/receive font sizes */
-	GAIM_CONNECTION_NO_URLDESC = 0x0040,  /**< Connection does not support descriptions with links */
+	GAIM_CONNECTION_NO_URLDESC = 0x0040,  /**< Connection does not support descriptions with links */ 
 	GAIM_CONNECTION_NO_IMAGES = 0x0080,  /**< Connection does not support sending of images */
+
 } GaimConnectionFlags;
 
 typedef enum
@@ -56,8 +54,11 @@ typedef enum
 
 } GaimConnectionState;
 
+#include <time.h>
+
 #include "account.h"
 #include "plugin.h"
+#include "status.h"
 
 typedef struct
 {
@@ -78,29 +79,22 @@ struct _GaimConnection
 	GaimConnectionState state;   /**< The connection state.              */
 
 	GaimAccount *account;        /**< The account being connected to.    */
+	char *password;              /**< The password used.                 */
 	int inpa;                    /**< The input watcher.                 */
 
 	GSList *buddy_chats;         /**< A list of active chats.            */
 	void *proto_data;            /**< Protocol-specific data.            */
 
 	char *display_name;          /**< The name displayed.                */
-	guint keep_alive;            /**< Keep-alive.                        */
+	guint keepalive;             /**< Keep-alive.                        */
 
 	guint idle_timer;            /**< The idle timer.                    */
-	time_t login_time;           /**< Time of login.                     */
-	time_t login_time_official;  /**< Official time of login.            */
 	time_t last_sent_time;       /**< The time something was last sent.  */
-	int is_idle;                 /**< Idle state of the connection.      */
 
-	char *away;                  /**< The current away message, or NULL  */
-	char *away_state;            /**< The last away type.                */
 	gboolean is_auto_away;       /**< Whether or not it's auto-away.     */
 
-	int evil;                    /**< Warning level for AIM (why is
-	                                  this here?)                        */
-
 	gboolean wants_to_die;	     /**< Wants to Die state.  This is set
-	                                  when the user chooses to sign off,
+	                                  when the user chooses to log out,
 	                                  or when the protocol is
 	                                  disconnected and should not be
 	                                  automatically reconnected
@@ -118,48 +112,42 @@ extern "C" {
 /*@{*/
 
 /**
- * Creates a connection to the specified account.
+ * This function should only be called by gaim_account_connect()
+ * in account.c.  If you're trying to sign on an account, use that
+ * function instead.
  *
- * @param account The account the connection should be connecting to.
+ * Creates a connection to the specified account and either connects
+ * or attempts to register a new account.  If you are logging in,
+ * the connection uses the current active status for this account.
+ * So if you want to sign on as "away," for example, you need to
+ * have called gaim_account_set_status(account, "away").
+ * (And this will call gaim_account_connect() automatically).
  *
- * @return The gaim connection.
+ * @param account  The account the connection should be connecting to.
+ * @param regist   Whether we are registering a new account or just
+ *                 trying to do a normal signon.
+ * @param password The password to use.
  */
-GaimConnection *gaim_connection_new(GaimAccount *account);
+void gaim_connection_new(GaimAccount *account, gboolean regist,
+									const char *password);
 
 /**
- * Destroys and closes a gaim connection.
+ * This function should only be called by gaim_account_disconnect()
+ * in account.c.  If you're trying to sign on an account, use that
+ * function instead.
+ *
+ * Disconnects and destroys a GaimConnection.
  *
  * @param gc The gaim connection to destroy.
  */
 void gaim_connection_destroy(GaimConnection *gc);
 
 /**
- * Signs a connection on.
- *
- * @param gc The connection to sign on.
- *
- * @see gaim_connection_disconnect()
- */
-void gaim_connection_connect(GaimConnection *gc);
-
-/**
- * Registers a connection.
- *
- * @param gc The connection to register.
- */
-void gaim_connection_register(GaimConnection *gc);
-
-/**
- * Signs a connection off.
- *
- * @param gc The connection to sign off.
- *
- * @see gaim_connection_connect()
- */
-void gaim_connection_disconnect(GaimConnection *gc);
-
-/**
- * Sets the connection state.
+ * Sets the connection state.  PRPLs should call this and pass in
+ * the state "GAIM_CONNECTED" when the account is completely
+ * signed on.  What does it mean to be completely signed on?  If
+ * the core can call prpl->set_status, and it successfully changes
+ * your status, then the account is online.
  *
  * @param gc    The connection.
  * @param state The connection state.
@@ -207,6 +195,15 @@ GaimConnectionState gaim_connection_get_state(const GaimConnection *gc);
  * @return The connection's account.
  */
 GaimAccount *gaim_connection_get_account(const GaimConnection *gc);
+
+/**
+ * Returns the connection's password.
+ *
+ * @param gc The connection.
+ *
+ * @return The connection's password.
+ */
+const char *gaim_connection_get_password(const GaimConnection *gc);
 
 /**
  * Returns the connection's displayed name.
@@ -257,7 +254,8 @@ void gaim_connection_error(GaimConnection *gc, const char *reason);
 void gaim_connections_disconnect_all(void);
 
 /**
- * Returns a list of all active connections.
+ * Returns a list of all active connections.  This does not
+ * include connections that are in the process of connecting.
  *
  * @return A list of all active connections.
  */

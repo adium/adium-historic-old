@@ -32,6 +32,9 @@
 /* #define MSN_DEBUG_SLP_VERBOSE 1 */
 /* #define MSN_DEBUG_SLP_FILES 1 */
 
+/* #define MSN_DEBUG_NS 1 */
+/* #define MSN_DEBUG_SB 1 */
+
 #include "internal.h"
 
 #include "account.h"
@@ -40,14 +43,13 @@
 #include "connection.h"
 #include "conversation.h"
 #include "debug.h"
-#include "md5.h"
+#include "cipher.h"
 #include "notify.h"
 #include "privacy.h"
 #include "proxy.h"
 #include "prpl.h"
 #include "request.h"
 #include "servconn.h"
-#include "sha.h"
 #include "sslconn.h"
 #include "util.h"
 
@@ -89,29 +91,33 @@ typedef enum
 
 typedef enum
 {
-	MSN_CLIENT_CAP_WIN_MOBILE = 0x001,
-	MSN_CLIENT_CAP_UNKNOWN_1  = 0x002,
-	MSN_CLIENT_CAP_VIEW_INK   = 0x004,
-	MSN_CLIENT_CAP_SEND_INK   = 0x008,
-	MSN_CLIENT_CAP_VIDEO_CHAT = 0x010,
-	MSN_CLIENT_CAP_BASE       = 0x020,
-	MSN_CLIENT_CAP_MSNMOBILE  = 0x040,
-	MSN_CLIENT_CAP_MSNDIRECT  = 0x080,
-	MSN_CLIENT_CAP_WEBMSGR    = 0x100
+	MSN_CLIENT_CAP_WIN_MOBILE = 0x00001,
+	MSN_CLIENT_CAP_UNKNOWN_1  = 0x00002,
+	MSN_CLIENT_CAP_INK_GIF    = 0x00004,
+	MSN_CLIENT_CAP_INK_ISF    = 0x00008,
+	MSN_CLIENT_CAP_VIDEO_CHAT = 0x00010,
+	MSN_CLIENT_CAP_BASE       = 0x00020,
+	MSN_CLIENT_CAP_MSNMOBILE  = 0x00040,
+	MSN_CLIENT_CAP_MSNDIRECT  = 0x00080,
+	MSN_CLIENT_CAP_WEBMSGR    = 0x00100,
+	MSN_CLIENT_CAP_DIRECTIM   = 0x04000,
+	MSN_CLIENT_CAP_WINKS      = 0x08000,
+	MSN_CLIENT_CAP_SEARCH     = 0x10000
 
 } MsnClientCaps;
 
 typedef enum
 {
 	MSN_CLIENT_VER_5_0 = 0x00,
-	MSN_CLIENT_VER_6_0 = 0x10,
-	MSN_CLIENT_VER_6_1 = 0x20,
-	MSN_CLIENT_VER_6_2 = 0x30,
-	MSN_CLIENT_VER_7_0 = 0x40
+	MSN_CLIENT_VER_6_0 = 0x10,	/* MSNC1 */
+	MSN_CLIENT_VER_6_1 = 0x20,	/* MSNC2 */
+	MSN_CLIENT_VER_6_2 = 0x30,	/* MSNC3 */
+	MSN_CLIENT_VER_7_0 = 0x40,	/* MSNC4 */
+	MSN_CLIENT_VER_7_5 = 0x50	/* MSNC5 */
 
 } MsnClientVerId;
 
-#define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_6_0
+#define MSN_CLIENT_ID_VERSION      MSN_CLIENT_VER_7_0
 #define MSN_CLIENT_ID_RESERVED_1   0x00
 #define MSN_CLIENT_ID_RESERVED_2   0x00
 #define MSN_CLIENT_ID_CAPABILITIES MSN_CLIENT_CAP_BASE
@@ -121,8 +127,5 @@ typedef enum
 	 (MSN_CLIENT_ID_RESERVED_1 << 16) | \
 	 (MSN_CLIENT_ID_RESERVED_2 <<  8) | \
 	 (MSN_CLIENT_ID_CAPABILITIES))
-
-//Adium
-#include "msn-adium.h"
 
 #endif /* _MSN_H_ */

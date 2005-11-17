@@ -25,18 +25,4 @@
 
 #define XPATCH BAD /* Because Kalla Said So */
 
-#include "connection.h"
-
-/* Globals in main.c */
-extern int opt_away;
-extern char *opt_away_arg;
-extern int opt_debug;
-
-extern GSList *message_queue;
-extern GSList *unread_message_queue;
-extern GSList *away_time_queue;
-
-/* Functions in idle.c */
-extern gint check_idle(gpointer);
-
 #endif /* _GAIM_H_ */

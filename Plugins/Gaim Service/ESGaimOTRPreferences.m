@@ -21,16 +21,7 @@
 #import <Adium/AIAccountMenu.h>
 #import "SLGaimCocoaAdapter.h"
 
-/* libotr headers */
-#import <libotr/proto.h>
-#import <libotr/context.h>
-#import <libotr/message.h>
-
-/* gaim-otr headers */
-#import <Libgaim/ui.h>
-#import <Libgaim/dialogs.h>
-#import <Libgaim/otr-plugin.h>
-#import <Libgaim/otr-adium.h>
+#import "gaimOTRCommon.h"
 
 /* Adium OTR headers */
 #import "ESGaimOTRFingerprintDetailsWindowController.h"
@@ -116,7 +107,6 @@
 		ConnContext		*context;
 		Fingerprint		*fingerprint;
 		OtrlUserState	otrg_plugin_userstate = otrg_get_userstate();
-		NSBundle		*thisBundle = [NSBundle bundleForClass:[self class]];
 
 		[fingerprintDictArray release];
 		fingerprintDictArray = [[NSMutableArray alloc] init];
@@ -137,19 +127,29 @@
 
 				UID = [NSString stringWithUTF8String:context->username];
 				
-				if (context->state == CONN_CONNECTED &&
+				if (context->msgstate == OTRL_MSGSTATE_ENCRYPTED &&
 					context->active_fingerprint != fingerprint) {
 					state = AILocalizedString(@"Unused",nil);
 				} else {
-					state = [NSString stringWithUTF8String:otrl_context_statestr[context->state]];
+					TrustLevel trustLevel = otrg_plugin_context_to_trust(context);
 					
-					/* Translate it. Possible values, shown here for genstrings:
-					 * AILocalizedString(@"Not private",nil)
-					 * AILocalizedString(@"Private",nil) 
-					 */
-					state = [thisBundle localizedStringForKey:state
-														value:state
-														table:nil];
+					switch (trustLevel) {
+						case TRUST_NOT_PRIVATE:
+							state = AILocalizedString(@"Not private",nil);
+							break;
+						case TRUST_UNVERIFIED:
+							state = AILocalizedString(@"Unverified",nil);
+							break;
+						case TRUST_PRIVATE:
+							state = AILocalizedString(@"Private",nil);
+							break;
+						case TRUST_FINISHED:
+							state = AILocalizedString(@"Finished",nil);
+							break;
+						default:
+							state = @"";
+							break;
+					}
 				}
 				
 				otrl_privkey_hash_to_human(hash, fingerprint->fingerprint);

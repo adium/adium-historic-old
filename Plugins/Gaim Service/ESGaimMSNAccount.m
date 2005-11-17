@@ -274,8 +274,9 @@ gboolean gaim_init_msn_plugin(void);
 		
 		if (gaim_account_is_connected(account)) {
 			GaimDebug (@"Updating FullNameAttr to %@",friendlyName);
-			
-			msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
+
+#warning XXX - friendly name setting is broken
+			//msn_set_friendly_name(account->gc, [friendlyName UTF8String]);
 
 			if ([friendlyName length] == 0) friendlyName = nil;
 			
@@ -314,8 +315,9 @@ gboolean gaim_init_msn_plugin(void);
 {
 	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-		
-		return msn_xfer_new(account->gc,destsn);
+
+#warning xfer
+//		return msn_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;
@@ -350,6 +352,8 @@ gboolean gaim_init_msn_plugin(void);
 - (NSAttributedString *)statusMessageForGaimBuddy:(GaimBuddy *)b
 {
 	NSAttributedString  *statusMessage = nil;
+
+	/*
 	NSString			*statusMessageString = nil;
 	
 	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
@@ -385,13 +389,14 @@ gboolean gaim_init_msn_plugin(void);
 		statusMessage = [[[NSAttributedString alloc] initWithString:statusMessageString
 														 attributes:nil] autorelease];
 	}
-	
+	*/
 	return (statusMessage);
 }
 
 - (NSString *)statusNameForGaimBuddy:(GaimBuddy *)b
 {
 	NSString			*statusName = nil;
+	/*
 	
 	MsnAwayType		gaimMsnAwayType = MSN_AWAY_TYPE(b->uc);
 	
@@ -421,24 +426,26 @@ gboolean gaim_init_msn_plugin(void);
 		case MSN_OFFLINE:
 			break;
 	}
-	
+	*/
 	return (statusName);
 }
+
 
 /*!
  * @brief Update the status message and away state of the contact
  */
 - (void)updateStatusForContact:(AIListContact *)theContact toStatusType:(NSNumber *)statusTypeNumber statusName:(NSString *)statusName statusMessage:(NSAttributedString *)statusMessage
 {
-	const char  *uidUTF8String = [[theContact UID] UTF8String];
-	GaimBuddy   *buddy;
+//	const char  *uidUTF8String = [[theContact UID] UTF8String];
+//	GaimBuddy   *buddy;
 	BOOL		shouldUpdateAway = YES;
-	
+
+	/*
 	if ((buddy = gaim_find_buddy(account, uidUTF8String)) &&
 		(MSN_AWAY_TYPE(buddy->uc) == MSN_IDLE)) {
 		shouldUpdateAway = NO;
 	}
-	
+	*/
 	if (shouldUpdateAway) {
 		[super updateStatusForContact:theContact
 						 toStatusType:statusTypeNumber
@@ -447,9 +454,10 @@ gboolean gaim_init_msn_plugin(void);
 	}	
 }
 
-
 /*!
- * @brief Return the gaim status type to be used for a status
+ * @brief Return the gaim status ID to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
@@ -457,60 +465,47 @@ gboolean gaim_init_msn_plugin(void);
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
+	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
-	
-	switch (statusType) {
+	NSString		*statusMessageString = [statusState statusMessageString];
+
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
-			gaimStatusType = "Available";
 			break;
 
 		case AIAwayStatusType:
-		{
-			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
-
 			if (([statusName isEqualToString:STATUS_NAME_BRB]) ||
-					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
-				gaimStatusType = "Be Right Back";
+				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
+				statusID = "brb";
 			else if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
-				gaimStatusType = "Busy";
+				statusID = "busy";
 			else if (([statusName isEqualToString:STATUS_NAME_PHONE]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_PHONE] == NSOrderedSame))
-				gaimStatusType = "On The Phone";
+				statusID = "phone";
 			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
-				gaimStatusType = "Out To Lunch";
-			else if ([statusName isEqualToString:STATUS_NAME_AWAY]) /* Check last so statusMessageString has been properly checked. */
-				gaimStatusType = "Away From Computer";
+				statusID = "lunch";
 
 			break;
-		}
 			
 		case AIInvisibleStatusType:
-			gaimStatusType = "Hidden";
-			break;
-		
 		case AIOfflineStatusType:
 			break;
 	}
 	
-	//If we are setting one of our custom statuses, don't use a status message
-	if (gaimStatusType != NULL) 	*statusMessage = nil;
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-
-	return gaimStatusType;
+	return statusID;
 }
 
 #pragma mark Contact List Menu Items

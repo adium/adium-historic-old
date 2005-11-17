@@ -58,6 +58,13 @@ extern "C" {
 /*@{*/
 
 /**
+ * Returns the prefs subsystem handle.
+ *
+ * @return The prefs subsystem handle.
+ */
+void *gaim_prefs_get_handle(void);
+
+/**
  * Initialize core prefs
  */
 void gaim_prefs_init();
@@ -215,7 +222,7 @@ int gaim_prefs_get_int(const char *name);
 const char *gaim_prefs_get_string(const char *name);
 
 /**
- * Get string pref value
+ * Get string list pref value
  *
  * @param name The name of the pref
  * @return The value of the pref
@@ -225,13 +232,18 @@ GList *gaim_prefs_get_string_list(const char *name);
 /**
  * Add a callback to a pref (and its children)
  */
-guint gaim_prefs_connect_callback(const char *name, GaimPrefCallback cb,
+guint gaim_prefs_connect_callback(void *handle, const char *name, GaimPrefCallback cb,
 		gpointer data);
 
 /**
  * Remove a callback to a pref
  */
 void gaim_prefs_disconnect_callback(guint callback_id);
+
+/**
+ * Remove all pref callbacks by handle
+ */
+void gaim_prefs_disconnect_by_handle(void *handle);
 
 /**
  * Trigger callbacks as if the pref changed
@@ -242,11 +254,6 @@ void gaim_prefs_trigger_callback(const char *name);
  * Read preferences
  */
 gboolean gaim_prefs_load();
-
-/**
- * Force an immediate write of preferences
- */
-void gaim_prefs_sync();
 
 /**
  * Rename legacy prefs and delete some that no longer exist.

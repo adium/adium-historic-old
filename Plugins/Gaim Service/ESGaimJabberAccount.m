@@ -144,24 +144,22 @@ gboolean gaim_init_jabber_plugin(void);
 	
 	/*
 	 * Gaim stores the username in the format username@server/resource.  We need to pass it a username in this format
-	 * createNewGaimAccount gets called on every connect, so we need to make sure we don't append the information more
-	 * than once.
+	 *
 	 * The user should put the username in username@server format, which is common for Jabber. If the user does
 	 * not specify the server, use jabber.org.
 	 */
-
+	
 	serverAppendedToUID = ([UID rangeOfString:@"@"].location != NSNotFound);
-
+	
 	if (serverAppendedToUID) {
 		userNameWithHost = UID;
 	} else {
 		userNameWithHost = [UID stringByAppendingString:[self serverSuffix]];
 	}
-
+	
 	resource = [self preferenceForKey:KEY_JABBER_RESOURCE group:GROUP_ACCOUNT_STATUS];
 	completeUserName = [NSString stringWithFormat:@"%@/%@",userNameWithHost,resource];
 
-	AILog(@"%x: Jabber user name: \"%@\"",account, completeUserName);
 	return [completeUserName UTF8String];
 }
 
@@ -352,8 +350,9 @@ gboolean gaim_init_jabber_plugin(void);
 {
 	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-		
-		return jabber_outgoing_xfer_new(account->gc,destsn);
+
+#warning xfer
+//		return jabber_outgoing_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;
@@ -392,6 +391,8 @@ gboolean gaim_init_jabber_plugin(void);
 				statusMessageString = [NSString stringWithUTF8String:msg];
 				
 			} else {
+				//XXX
+				/*
 				//If no custom status message, use the preset possibilities
 				switch (b->uc) {
 					case JABBER_STATE_CHAT:
@@ -407,6 +408,7 @@ gboolean gaim_init_jabber_plugin(void);
 						break;
 						
 				}
+				 */
 			}
 			
 			if (statusMessageString && [statusMessageString length]) {
@@ -426,6 +428,8 @@ gboolean gaim_init_jabber_plugin(void);
 	NSString		*statusName = nil;
 	
 	//If no custom status message, use the preset possibilities
+	//XXX
+	/*
 	switch (b->uc) {
 		case JABBER_STATE_CHAT:
 			statusName = STATUS_NAME_FREE_FOR_CHAT;
@@ -438,7 +442,7 @@ gboolean gaim_init_jabber_plugin(void);
 			statusName = STATUS_NAME_DND;
 			break;
 	}
-	
+	*/
 	return statusName;
 }
 
@@ -494,31 +498,32 @@ gboolean gaim_init_jabber_plugin(void);
 /*!
  * @brief Return the gaim status type to be used for a status
  *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
+ *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
  * defined in  AIStatusController.h (which will correspond to the services handled by Adium by default).
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
+	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
-	NSString		*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
+	NSString		*statusMessageString = [statusState statusMessageString];
 	
-	switch (statusType) {
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
 		{
 			if (([statusName isEqualToString:STATUS_NAME_FREE_FOR_CHAT]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_FREE_FOR_CHAT] == NSOrderedSame))
-				gaimStatusType = "Chatty";
+				statusID = "chat";
 			break;
 		}
 			
@@ -526,28 +531,32 @@ gboolean gaim_init_jabber_plugin(void);
 		{
 			if (([statusName isEqualToString:STATUS_NAME_DND]) ||
 			   ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_DND] == NSOrderedSame))
-				gaimStatusType = "Do Not Disturb";
+				statusID = "dnd";
 			else if (([statusName isEqualToString:STATUS_NAME_EXTENDED_AWAY]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_EXTENDED_AWAY] == NSOrderedSame))
-				gaimStatusType = "Extended Away";
+				statusID = "xa";
 			
 			break;
 		}
 			
 		case AIInvisibleStatusType:
-			gaimStatusType = "Invisible";
+			NSLog(@"Warning: Invisibility is not yet supported in libgaim 2.0.0 jabber");
+//			gaimStatusType = "Invisible";
 			break;
 			
 		case AIOfflineStatusType:
 			break;
 	}
+
+	//Set our priority, which is actually set along with the status... Default is 0.
+#warning We can now set priority here. Add UI to the account preferences or perhaps status dialogue.
+	[arguments setObject:[NSNumber numberWithInt:0]
+				  forKey:@"priority"];
+
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
-	/* Jabber supports status messages along with the status types, so let our message stay */
-	
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
-	
-	return gaimStatusType;
+	return statusID;
 }
 
 #pragma mark Account Action Menu Items

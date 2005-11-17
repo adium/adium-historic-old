@@ -25,6 +25,8 @@
 #ifndef _GAIM_SOUND_H_
 #define _GAIM_SOUND_H_
 
+#include "account.h"
+
 /**************************************************************************/
 /** Data Structures                                                       */
 /**************************************************************************/
@@ -54,7 +56,7 @@ typedef enum _GaimSoundEventID
 typedef struct _GaimSoundUiOps
 {
 	void (*init)(void);
-	void (*shutdown)(void);
+	void (*uninit)(void);
 	void (*play_file)(const char *filename);
 	void (*play_event)(GaimSoundEventID event);
 
@@ -68,6 +70,28 @@ extern "C" {
 /** @name Sound API                                                       */
 /**************************************************************************/
 /*@{*/
+
+/**
+ * Plays the specified sound file.
+ *
+ * @param filename The file to play.
+ * @param account The account that this sound is associated with, or
+ *        NULL if the sound is not associated with any specific
+ *        account.  This is needed for the "sounds while away?"
+ *        preference to work correctly.
+ */
+void gaim_sound_play_file(const char *filename, const GaimAccount *account);
+
+/**
+ * Plays the sound associated with the specified event.
+ *
+ * @param event The event.
+ * @param account The account that this sound is associated with, or
+ *        NULL if the sound is not associated with any specific
+ *        account.  This is needed for the "sounds while away?"
+ *        preference to work correctly.
+ */
+void gaim_sound_play_event(GaimSoundEventID event, const GaimAccount *account);
 
 /**
  * Sets the UI sound operations
@@ -91,21 +115,7 @@ void gaim_sound_init(void);
 /**
  * Shuts down the sound subsystem
  */
-void gaim_sound_shutdown(void);
-
-/**
- * Plays the specified sound file.
- *
- * @param filename The file to play.
- */
-void gaim_sound_play_file(const char *filename);
-
-/**
- * Plays the sound associated with the specified event.
- *
- * @param event The event.
- */
-void gaim_sound_play_event(GaimSoundEventID event);
+void gaim_sound_uninit(void);
 
 /*@}*/
 

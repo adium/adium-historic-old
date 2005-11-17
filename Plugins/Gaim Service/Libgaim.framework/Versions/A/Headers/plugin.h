@@ -30,6 +30,18 @@
 #include "signals.h"
 #include "value.h"
 
+#define GAIM_PLUGIN_EXT_WIN32 ".dll"
+#define GAIM_PLUGIN_EXT_HPUX ".sl"
+#define GAIM_PLUGIN_EXT_UNIX ".so"
+
+#ifdef _WIN32
+# define GAIM_PLUGIN_EXT GAIM_PLUGIN_EXT_WIN32
+#elif __hpux
+# define GAIM_PLUGIN_EXT GAIM_PLUGIN_EXT_HPUX
+#else
+# define GAIM_PLUGIN_EXT GAIM_PLUGIN_EXT_UNIX
+#endif
+
 typedef struct _GaimPlugin           GaimPlugin;
 typedef struct _GaimPluginInfo       GaimPluginInfo;
 typedef struct _GaimPluginUiInfo     GaimPluginUiInfo;
@@ -59,7 +71,7 @@ typedef enum
 
 #define GAIM_PLUGIN_FLAG_INVISIBLE 0x01
 
-#define GAIM_PLUGIN_MAGIC 5 /* once we hit 6.0.0, I think we can remove this */
+#define GAIM_PLUGIN_MAGIC 5 /* once we hit 6.0.0 I think we can remove this */
 
 /**
  * Detailed information about a plugin.
@@ -85,13 +97,17 @@ struct _GaimPluginInfo
 	char *author;
 	char *homepage;
 
+	/**
+	 * If a plugin defines a 'load' function, and it returns FALSE,
+	 * then the plugin will not be loaded.
+	 */
 	gboolean (*load)(GaimPlugin *plugin);
 	gboolean (*unload)(GaimPlugin *plugin);
 	void (*destroy)(GaimPlugin *plugin);
 
-	void *ui_info;
+	void *ui_info; /**< Used only by UI-specific plugins to build a preference screen with a custom UI */
 	void *extra_info;
-	GaimPluginUiInfo *prefs_info;
+	GaimPluginUiInfo *prefs_info; /**< Used by any plugin to display preferences.  If #ui_info has been specified, this will be ignored. */
 	GList *(*actions)(GaimPlugin *plugin, gpointer context);
 };
 
@@ -129,7 +145,7 @@ struct _GaimPlugin
 struct _GaimPluginUiInfo {
 	GaimPluginPrefFrame *(*get_plugin_pref_frame)(GaimPlugin *plugin);
 
-	void *iter;                                           /**< Reserved */
+	int page_num;                                         /**< Reserved */
 	GaimPluginPrefFrame *frame;                           /**< Reserved */
 };
 
@@ -189,10 +205,6 @@ struct _GaimPluginAction {
 extern "C" {
 #endif
 
-
-void *gaim_plugins_get_handle(void);
-
-
 /**************************************************************************/
 /** @name Plugin API                                                      */
 /**************************************************************************/
@@ -225,8 +237,14 @@ GaimPlugin *gaim_plugin_probe(const char *filename);
  * Registers a plugin and prepares it for loading.
  *
  * This shouldn't be called by anything but the internal module code.
+ * Plugins should use the GAIM_INIT_PLUGIN() macro to register themselves
+ * with the core.
  *
  * @param plugin The plugin to register.
+ *
+ * @return @c TRUE if the plugin was registered successfully.  Otherwise
+ *         @c FALSE is returned (this happens if the plugin does not contain
+ *         the necessary information).
  */
 gboolean gaim_plugin_register(GaimPlugin *plugin);
 
@@ -281,6 +299,69 @@ void gaim_plugin_destroy(GaimPlugin *plugin);
  * @return TRUE if loaded, or FALSE otherwise.
  */
 gboolean gaim_plugin_is_loaded(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's id.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's id.
+ */
+const gchar *gaim_plugin_get_id(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's name.
+ *
+ * @param plugin The plugin.
+ * 
+ * @return THe name of the plugin, or @c NULL.
+ */
+const gchar *gaim_plugin_get_name(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's version.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's version or @c NULL.
+ */
+const gchar *gaim_plugin_get_version(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's summary.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's summary.
+ */
+const gchar *gaim_plugin_get_summary(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's description.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's description.
+ */
+const gchar *gaim_plugin_get_description(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's author.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's author.
+ */
+const gchar *gaim_plugin_get_author(const GaimPlugin *plugin);
+
+/**
+ * Returns a plugin's homepage.
+ *
+ * @param plugin The plugin.
+ *
+ * @return The plugin's homepage.
+ */
+const gchar *gaim_plugin_get_homepage(const GaimPlugin *plugin);
 
 /*@}*/
 
@@ -360,12 +441,11 @@ void *gaim_plugin_ipc_call(GaimPlugin *plugin, const char *command,
 /*@{*/
 
 /**
- * Sets the search paths for plugins.
+ * Add a new directory to search for plugins
  *
- * @param count The number of search paths.
- * @param paths The search paths.
+ * @param path The new search path.
  */
-void gaim_plugins_set_search_paths(size_t count, char **paths);
+void gaim_plugins_add_search_path(const char *path);
 
 /**
  * Unloads all loaded plugins.
@@ -493,7 +573,10 @@ GaimPlugin *gaim_plugins_find_with_id(const char *id);
 GList *gaim_plugins_get_loaded(void);
 
 /**
- * Returns a list of all protocol plugins.
+ * Returns a list of all valid protocol plugins.  A protocol
+ * plugin is considered invalid if it does not contain the call
+ * to the GAIM_INIT_PLUGIN() macro, or if it was compiled
+ * against an incompatable API version.
  *
  * @return A list of all protocol plugins.
  */
@@ -508,6 +591,29 @@ GList *gaim_plugins_get_all(void);
 
 /*@}*/
 
+/**************************************************************************/
+/** @name Plugins SubSytem API                                            */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Returns the plugin subsystem handle.
+ *
+ * @return The plugin sybsystem handle.
+ */
+void *gaim_plugins_get_handle(void);
+
+/**
+ * Initializes the plugin subsystem
+ */
+void gaim_plugins_init(void);
+
+/**
+ * Uninitializes the plugin subsystem
+ */
+void gaim_plugins_uninit(void);
+
+/*@}*/
 
 /**
  * Allocates and returns a new GaimPluginAction.

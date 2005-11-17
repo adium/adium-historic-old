@@ -23,6 +23,7 @@
 #import "ESGaimAIMAccount.h"
 #import "CBGaimServicePlugin.h"
 #import "adiumGaimCore.h"
+#import "adiumGaimEventloop.h"
 #import "adiumGaimOTR.h"
 #import "UndeclaredLibgaimFunctions.h"
 #import <AIUtilities/AIObjectAdditions.h>
@@ -44,13 +45,8 @@
 //#include <libgaim/userlist.h>
 //#include <libgaim/user.h>
 
-
-
 //Gaim slash command interface
 #include <Libgaim/cmds.h>
-
-//Webcam
-#include <Libgaim/webcam.h>
 
 @interface SLGaimCocoaAdapter (PRIVATE)
 - (void)initLibGaim;
@@ -140,8 +136,11 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 //Register the account gaimside in the gaim thread to avoid a conflict on the g_hash_table containing accounts
 - (void)gaimThreadAddGaimAccount:(GaimAccount *)account
 {
-    gaim_accounts_add(account);	
+    gaim_accounts_add(account);
+	gaim_account_set_ui_bool(account, "Adium", "auto-login", TRUE);
+	gaim_account_set_status_list(account, "offline", YES, NULL);
 }
+
 - (void)addAdiumAccount:(CBGaimAccount *)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
@@ -198,8 +197,10 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 														   userInfo:nil
 															repeats:YES] retain];
 
-		//We're ready now, so unlock the creation lock which is being waited upon in the main thread
-		[gaimThreadCreationLock unlock];
+		//We're ready now, so unlock the creation lock on the next run loop  which is being waited upon in the main thread
+		[gaimThreadCreationLock performSelector:@selector(unlock)
+									 withObject:nil
+									 afterDelay:0];
 
 		CFRunLoopRun();
 
@@ -226,10 +227,27 @@ static NSAutoreleasePool *currentAutoreleasePool = nil;
 {	
 	//Set the gaim user directory to be within this user's directory
 	NSString	*gaimUserDir = [[[adium loginController] userDirectory] stringByAppendingPathComponent:@"libgaim"];
-	set_gaim_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
+	gaim_util_set_user_dir([[gaimUserDir stringByExpandingTildeInPath] UTF8String]);
+
+	/* Remove the accounts.xml before the core inits; if accounts init before the core, all sorts of stuff (status registration for example)
+	 * gets messed up because of static prpls.
+	 */
+	[[NSFileManager defaultManager] removeFileAtPath:
+		[[gaimUserDir stringByAppendingPathComponent:@"accounts"] stringByAppendingPathExtension:@"xml"]
+											 handler:nil];
 	
-	//Register ourself as libgaim's UI handler; this will call back on a function in which we finish configuring libgaim
+	/* Set plugin search directories */
+/*
+	NSString	*gaimBundlePath = [[NSBundle bundleForClass:[SLGaimCocoaAdapter class]] bundlePath];
+	NSString	*frameworksPath = [[gaimBundlePath stringByAppendingPathComponent:@"Contents"] stringByAppendingPathComponent:@"Frameworks"];
+	NSString	*pluginsPath = [[[frameworksPath stringByAppendingPathComponent:@"Libgaim.framework"] stringByAppendingPathComponent:@"Resources"] stringByAppendingPathComponent:@"Plugins"];
+	gaim_plugins_add_search_path([pluginsPath UTF8String]);
+*/
+
 	gaim_core_set_ui_ops(adium_gaim_core_get_ops());
+	gaim_eventloop_set_ui_ops(adium_gaim_eventloop_get_ui_ops());
+
+	//Initialize the libgaim core; this will call back on the function specified in our core UI ops for us to finish configuring libgaim
 	if (!gaim_core_init("Adium")) {
 		NSLog(@"*** FATAL ***: Failed to initialize gaim core");
 		GaimDebug (@"*** FATAL ***: Failed to initialize gaim core");
@@ -408,7 +426,7 @@ GaimConversation* convLookupFromChat(AIChat *chat, id adiumAccount)
 			
 			destination = g_strdup(gaim_normalize(account, [[listObject UID] UTF8String]));
 			
-			conv = gaim_conversation_new(GAIM_CONV_IM,account, destination);
+			conv = gaim_conversation_new(GAIM_CONV_TYPE_IM, account, destination);
 			
 			//associate the AIChat with the gaim conv
 			if (conv) imChatLookupFromConv(conv);
@@ -695,27 +713,13 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Thread accessors
-- (void)gaimThreadConnectAccount:(id)adiumAccount
-{
-	GaimAccount		*account = accountLookupFromAdiumAccount(adiumAccount); 
-	GaimConnection	*gc;
-	GaimDebug(@"Gaim thread: %@ lookup gave account %x",adiumAccount,account);
-	gc = gaim_account_connect(account);
-	GaimDebug(@"Gaim thread: gaim_account_connect(%x) gave %x [%x]",account,gc,account->gc);
-}
-- (void)connectAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadConnectAccount:adiumAccount];
-}
-
 - (void)gaimThreadDisconnectAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	
-	if (gaim_account_is_connected(account)) {
-		gaim_account_disconnect(account);
-	}
+	gaim_account_set_status_list(account, "offline", YES, NULL);
 }
+
 - (void)disconnectAccount:(id)adiumAccount
 {
 	[gaimThreadProxy gaimThreadDisconnectAccount:adiumAccount];
@@ -744,7 +748,7 @@ NSMutableDictionary* get_chatDict(void)
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
-	markup = gaim_escape_html(cmd+1);
+	markup = g_markup_escape_text(cmd+1, -1);
 	status = gaim_cmd_do_command(conv, cmd+1, markup, &error);
 	
 	//The only error status which is possible now is either 
@@ -780,12 +784,15 @@ NSMutableDictionary* get_chatDict(void)
 	char				*markup, *error;
 	const char			*cmd;
 	BOOL				sendMessage = YES;
-	
+
 	cmd = [originalMessage UTF8String];
 	
 	//cmd+1 will be the cmd without the leading character, which should be "/"
-	markup = gaim_escape_html(cmd+1);
-	status = gaim_cmd_check_command(conv, cmd+1, markup, &error);
+	markup = g_markup_escape_text(cmd+1, -1);
+#warning command
+	return sendMessage;
+
+//	status = gaim_cmd_check_command(conv, cmd+1, markup, &error);
 	AILog(@"Command status is %i",status);
 	g_free(markup);
 	
@@ -810,7 +817,7 @@ NSMutableDictionary* get_chatDict(void)
 		{
 			//XXX Do we want to error on this or pretend there was no command?
 			sendMessage = NO;
-			if (gaim_conversation_get_type(conv) == GAIM_CONV_IM) {
+			if (gaim_conversation_get_type(conv) == GAIM_CONV_TYPE_IM) {
 				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use Chat command in IM",cmd,NULL);
 			} else {
 				gaim_notify_error(gaim_account_get_connection(conv->account),"Attempted to use IM command in Chat",cmd,NULL);
@@ -840,20 +847,24 @@ NSMutableDictionary* get_chatDict(void)
 		GaimConversation	*conv = convLookupFromChat(chat,sourceAccount);
 
 		switch (gaim_conversation_get_type(conv)) {				
-			case GAIM_CONV_IM: {
+			case GAIM_CONV_TYPE_IM: {
 				GaimConvIm			*im = gaim_conversation_get_im_data(conv);
 				gaim_conv_im_send_with_flags(im, encodedMessageUTF8String, flags);
 				break;
 			}
 
-			case GAIM_CONV_CHAT: {
+			case GAIM_CONV_TYPE_CHAT: {
 				GaimConvChat	*gaimChat = gaim_conversation_get_chat_data(conv);
 				gaim_conv_chat_send(gaimChat, encodedMessageUTF8String);
 				break;
 			}
 			
-			case GAIM_CONV_MISC:
-			case GAIM_CONV_UNKNOWN:
+			case GAIM_CONV_TYPE_ANY:
+				GaimDebug (@"What in the world? Got GAIM_CONV_TYPE_ANY.");
+				break;
+
+			case GAIM_CONV_TYPE_MISC:
+			case GAIM_CONV_TYPE_UNKNOWN:
 				break;
 		}
 	} else {
@@ -950,7 +961,7 @@ NSMutableDictionary* get_chatDict(void)
 	 * We're working with a new contact, hopefully, so we want to call serv_add_buddy() after modifying the gaim list.
 	 * This is the order done in add_buddy_cb() in gtkblist.c */
 	gaim_blist_add_buddy(buddy, NULL, group, NULL);
-	serv_add_buddy(gaim_account_get_connection(account), buddy);
+	gaim_account_add_buddy(account, buddy);
 }
 
 - (void)addUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
@@ -976,7 +987,7 @@ NSMutableDictionary* get_chatDict(void)
 			 *
 			 * Gaim has a commented XXX as to whether this order or the reverse (blist, then serv) is correct.
 			 * We'll use the order which gaim uses as of gaim 1.1.4. */
-			serv_remove_buddy(gaim_account_get_connection(account), buddy, group);
+			gaim_account_remove_buddy(account, buddy, group);
 			gaim_blist_remove_buddy(buddy);
 		}
 	}
@@ -1023,7 +1034,7 @@ NSMutableDictionary* get_chatDict(void)
 	gaim_blist_add_buddy(buddy, NULL, group, NULL);
 
 	/* gaim_blist_add_buddy() won't perform a serverside add, however.  Add if necessary. */
-	if (needToAddServerside) serv_add_buddy(gaim_account_get_connection(account), buddy);
+	if (needToAddServerside) gaim_account_add_buddy(account, buddy);
 }
 - (void)moveUID:(NSString *)objectUID onAccount:(id)adiumAccount toGroup:(NSString *)groupName
 {
@@ -1183,38 +1194,48 @@ NSMutableDictionary* get_chatDict(void)
 }
 
 #pragma mark Account Status
-- (void)gaimThreadSetGaimStatusType:(const char *)gaimStatusType
-							   withMessage:(NSString *)message
-								 onAccount:(id)adiumAccount
+- (void)gaimThreadSetStatusID:(const char *)statusID 
+					 isActive:(NSNumber *)isActive
+					arguments:(NSMutableDictionary *)arguments
+					onAccount:(id)adiumAccount
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
+	GList		*attrs = NULL;
+
+	//Generate a GList of attrs from arguments
+	if ([arguments count]) {
+		NSEnumerator	*enumerator;
+		NSString		*key;
 		
-		serv_set_away(account->gc, gaimStatusType, [message UTF8String]);
+		enumerator = [arguments keyEnumerator];
+		while ((key = [enumerator nextObject])) {
+			//Append the key
+			attrs = g_list_append(attrs, (char *)[key UTF8String]);
+			//Now append the value
+			attrs = g_list_append(attrs, (char *)[[arguments objectForKey:key] UTF8String]);			
+		}
 	}
+	
+	const GList *l;
+
+	for (l = gaim_account_get_status_types(account); l != NULL; l = l->next)
+	{
+		GaimStatusType *status_type = (GaimStatusType *)l->data;
+		
+		AILog(@"%x: Possible status id: %s",account, gaim_status_type_get_id(status_type));
+	}
+
+	AILog(@"Setting status on %x (%s): ID %s, isActive %i, attributes %@",account, gaim_account_get_username(account),
+		  statusID, [isActive boolValue], arguments);
+	gaim_account_set_status_list(account, statusID, [isActive boolValue], attrs);
 }
 
-- (void)setGaimStatusType:(const char *)gaimStatusType withMessage:(NSString *)message onAccount:(id)adiumAccount
+- (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount
 {
-	[gaimThreadProxy gaimThreadSetGaimStatusType:gaimStatusType
-									 withMessage:message
-										 onAccount:adiumAccount];
-}
-
-
-//Set invisible. This will clear any other status.
-- (void)gaimThreadSetInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
-{
-	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
-	if (gaim_account_is_connected(account)) {
-		serv_set_away(account->gc, (isInvisible ? "Invisible" : "Visible"), NULL);
-	}	
-}
-
-- (void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount
-{
-	[gaimThreadProxy gaimThreadSetInvisible:isInvisible
-								  onAccount:adiumAccount];
+	[gaimThreadProxy gaimThreadSetStatusID:statusID
+								  isActive:isActive 
+								 arguments:arguments 
+								 onAccount:adiumAccount];
 }
 
 - (void)gaimThreadSetInfo:(NSString *)profileHTML onAccount:(id)adiumAccount
@@ -1251,16 +1272,12 @@ NSMutableDictionary* get_chatDict(void)
 {
 	GaimAccount *account = accountLookupFromAdiumAccount(adiumAccount);
 	if (gaim_account_is_connected(account)) {
-		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSinceNow] : nil);
-		
-		if (idle) {
-			//Go to a 0 idle on the server first to ensure other clients see our change (to support arbitrary Set Custom Idle time changes)
-			serv_set_idle(account->gc, 0);
-			serv_set_idle(account->gc, idle);
-			account->gc->is_idle = TRUE;
-		} else {
-			serv_touch_idle(account->gc);	
-		}
+		NSTimeInterval idle = (idleSince != nil ? -[idleSince timeIntervalSince1970] : 0);
+		GaimPresence *presence;
+
+		presence = gaim_account_get_presence(account);
+
+		gaim_presence_set_idle(presence, (idle > 0), idle);
 	}
 }
 - (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount
@@ -1300,7 +1317,8 @@ NSMutableDictionary* get_chatDict(void)
 	//Only start the file transfer if it's still not marked as canceled and therefore can be begun.
 	if ((gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_LOCAL) &&
 		(gaim_xfer_get_status(xfer) != GAIM_XFER_STATUS_CANCEL_REMOTE)) {
-		gaim_xfer_choose_file_ok_cb(xfer, [xferFileName UTF8String]);
+		//XXX should do further error checking as done by gaim_xfer_choose_file_ok_cb() in gaim's ft.c
+		gaim_xfer_request_accepted(xfer, [xferFileName UTF8String]);
 	}
 }
 - (void)xferRequestAccepted:(GaimXfer *)xfer withFileName:(NSString *)xferFileName
@@ -1398,7 +1416,8 @@ NSMutableDictionary* get_chatDict(void)
 	   gaim_account_is_connected(account) &&
 	   [inFormattedUID length]) {
 		
-		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
+#warning Set format
+//		oscar_set_format_screenname(account->gc, [inFormattedUID UTF8String]);
 	}
 }
 - (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount

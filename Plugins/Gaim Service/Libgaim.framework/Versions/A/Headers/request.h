@@ -58,6 +58,7 @@ typedef enum
 	GAIM_REQUEST_FIELD_CHOICE,
 	GAIM_REQUEST_FIELD_LIST,
 	GAIM_REQUEST_FIELD_LABEL,
+	GAIM_REQUEST_FIELD_IMAGE,
 	GAIM_REQUEST_FIELD_ACCOUNT
 
 } GaimRequestFieldType;
@@ -161,6 +162,14 @@ typedef struct
 
 		} account;
 
+		struct
+		{
+			unsigned int scale_x;
+			unsigned int scale_y;
+			const char *buffer;
+			gsize size;
+		} image;
+
 	} u;
 
 	void *ui_data;
@@ -182,8 +191,7 @@ typedef struct
 							const char *secondary, unsigned int default_value,
 							const char *ok_text, GCallback ok_cb,
 							const char *cancel_text, GCallback cancel_cb,
-							void *user_data, size_t choice_count,
-							va_list choices);
+							void *user_data, va_list choices);
 	void *(*request_action)(const char *title, const char *primary,
 							const char *secondary, unsigned int default_action,
 							void *user_data, size_t action_count,
@@ -201,6 +209,7 @@ typedef struct
 
 typedef void (*GaimRequestInputCb)(void *, const char *);
 typedef void (*GaimRequestActionCb)(void *, int);
+typedef void (*GaimRequestChoiceCb)(void *, int);
 typedef void (*GaimRequestFieldsCb)(void *, GaimRequestFields *fields);
 typedef void (*GaimRequestFileCb)(void *, const char *filename);
 
@@ -450,7 +459,7 @@ void gaim_request_field_set_visible(GaimRequestField *field, gboolean visible);
  * Sets the type hint for the field.
  *
  * This is optionally used by the UIs to provide such features as
- * auto-completion for type hints like "screenname."
+ * auto-completion for type hints like "account" and "screenname".
  *
  * @param field     The field.
  * @param type_hint The type hint.
@@ -952,6 +961,62 @@ GaimRequestField *gaim_request_field_label_new(const char *id,
 /*@}*/
 
 /**************************************************************************/
+/** @name Image Field API                                                 */
+/**************************************************************************/
+/*@{*/
+
+/**
+ * Creates an image field.
+ *
+ * @param id   The field ID.
+ * @param text The label of the field.
+ * @param buf  The image data.
+ * @param size The size of the data in @a buffer.
+ *
+ * @return The new field.
+ */
+GaimRequestField *gaim_request_field_image_new(const char *id, const char *text,
+											   const char *buf, gsize size);
+
+/**
+ * Returns pointer to the image.
+ *
+ * @param field The image field.
+ *
+ * @return Pointer to the image.
+ */
+const char *gaim_request_field_image_get_buffer(GaimRequestField *field);
+
+/**
+ * Returns size (in bytes) of the image.
+ *
+ * @param field The image field.
+ *
+ * @return Size of the image.
+ */
+gsize gaim_request_field_image_get_size(GaimRequestField *field);
+
+/**
+ * Returns X scale coefficient of the image.
+ *
+ * @param field The image field.
+ *
+ * @return X scale coefficient of the image.
+ */
+unsigned int gaim_request_field_image_get_scale_x(GaimRequestField *field);
+
+/**
+ * Returns Y scale coefficient of the image.
+ *
+ * @param field The image field.
+ *
+ * @return Y scale coefficient of the image.
+ */
+unsigned int gaim_request_field_image_get_scale_y(GaimRequestField *field);
+
+/*@}*/
+
+/**************************************************************************/
 /** @name Account Field API                                               */
 /**************************************************************************/
 /*@{*/
@@ -1068,7 +1133,19 @@ GaimFilterAccountFunc gaim_request_field_account_get_filter(
 /**
  * Prompts the user for text input.
  *
- * @param handle        The plugin or connection handle.
+ * @param handle        The plugin or connection handle.  For some
+ *                      things this is EXTREMELY important.  The
+ *                      handle is used to programmatically close
+ *                      the request dialog when it is no longer
+ *                      needed.  For PRPLs this is often a pointer
+ *                      to the GaimConnection instance.  For plugins
+ *                      this should be a similar, unique memory
+ *                      location.  This value is important because
+ *                      it allows a request to be closed, say, when
+ *                      you sign offline.  If the request is NOT
+ *                      closed it is VERY likely to cause a crash
+ *                      whenever the callback handler functions are
+ *                      triggered.
  * @param title         The title of the message.
  * @param primary       The main point of the message.
  * @param secondary     The secondary information.
@@ -1097,7 +1174,9 @@ void *gaim_request_input(void *handle, const char *title,
 /**
  * Prompts the user for multiple-choice input.
  *
- * @param handle        The plugin or connection handle.
+ * @param handle        The plugin or connection handle.  For some
+ *                      things this is EXTREMELY important.  See
+ *                      the comments on gaim_request_input.
  * @param title         The title of the message.
  * @param primary       The main point of the message.
  * @param secondary     The secondary information.
@@ -1107,8 +1186,8 @@ void *gaim_request_input(void *handle, const char *title,
  * @param cancel_text   The text for the cancel button.
  * @param cancel_cb     The callback for the cancel button.
  * @param user_data     The data to pass to the callback.
- * @param choice_count  The number of choices.
- * @param ...           The choices.
+ * @param ...           The choices.  This argument list should be
+ *                      terminated with a NULL parameter.
  *
  * @return A UI-specific handle.
  */
@@ -1117,12 +1196,14 @@ void *gaim_request_choice(void *handle, const char *title,
 						  unsigned int default_value,
 						  const char *ok_text, GCallback ok_cb,
 						  const char *cancel_text, GCallback cancel_cb,
-						  void *user_data, size_t choice_count, ...);
+						  void *user_data, ...);
 
 /**
  * Prompts the user for multiple-choice input.
  *
- * @param handle        The plugin or connection handle.
+ * @param handle        The plugin or connection handle.  For some
+ *                      things this is EXTREMELY important.  See
+ *                      the comments on gaim_request_input.
  * @param title         The title of the message.
  * @param primary       The main point of the message.
  * @param secondary     The secondary information.
@@ -1132,8 +1213,8 @@ void *gaim_request_choice(void *handle, const char *title,
  * @param cancel_text   The text for the cancel button.
  * @param cancel_cb     The callback for the cancel button.
  * @param user_data     The data to pass to the callback.
- * @param choice_count  The number of choices.
- * @param choices       The choices.
+ * @param choices       The choices.  This argument list should be
+ *                      terminated with a NULL parameter.
  *
  * @return A UI-specific handle.
  */
@@ -1142,15 +1223,16 @@ void *gaim_request_choice_varg(void *handle, const char *title,
 							   unsigned int default_value,
 							   const char *ok_text, GCallback ok_cb,
 							   const char *cancel_text, GCallback cancel_cb,
-							   void *user_data, size_t choice_count,
-							   va_list choices);
+							   void *user_data, va_list choices);
 
 /**
  * Prompts the user for an action.
  *
  * This is often represented as a dialog with a button for each action.
  *
- * @param handle         The plugin or connection handle.
+ * @param handle         The plugin or connection handle.  For some
+ *                       things this is EXTREMELY important.  See
+ *                       the comments on gaim_request_input.
  * @param title          The title of the message.
  * @param primary        The main point of the message.
  * @param secondary      The secondary information.
@@ -1171,7 +1253,9 @@ void *gaim_request_action(void *handle, const char *title,
  *
  * This is often represented as a dialog with a button for each action.
  *
- * @param handle         The plugin or connection handle.
+ * @param handle         The plugin or connection handle.  For some
+ *                       things this is EXTREMELY important.  See
+ *                       the comments on gaim_request_input.
  * @param title          The title of the message.
  * @param primary        The main point of the message.
  * @param secondary      The secondary information.
@@ -1191,7 +1275,9 @@ void *gaim_request_action_varg(void *handle, const char *title,
 /**
  * Displays groups of fields for the user to fill in.
  *
- * @param handle      The plugin or connection handle.
+ * @param handle      The plugin or connection handle.  For some
+ *                    things this is EXTREMELY important.  See
+ *                    the comments on gaim_request_input.
  * @param title       The title of the message.
  * @param primary     The main point of the message.
  * @param secondary   The secondary information.
@@ -1258,7 +1344,9 @@ void gaim_request_close_with_handle(void *handle);
  * Displays a file selector request dialog.  Returns the selected filename into
  * the callback.  Can be used for either opening a file or saving a file.
  *
- * @param handle      The plugin or connection handle.
+ * @param handle      The plugin or connection handle.  For some
+ *                    things this is EXTREMELY important.  See
+ *                    the comments on gaim_request_input.
  * @param title       The title for the dialog (may be NULL)
  * @param filename    The default filename (may be NULL)
  * @param savedialog  True if this dialog is being used to save a file.
@@ -1277,7 +1365,7 @@ void *gaim_request_file(void *handle, const char *title, const char *filename,
 /*@}*/
 
 /**************************************************************************/
-/** @name UI Operations API                                               */
+/** @name UI Registration Functions                                       */
 /**************************************************************************/
 /*@{*/
 

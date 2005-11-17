@@ -8,6 +8,7 @@
 #import "ESGaimFileReceiveRequestController.h"
 #import "adiumGaimRequest.h"
 #import "CBGaimAccount.h"
+#import <Adium/AIWindowController.h>
 #import <Adium/ESFileTransfer.h>
 
 @interface ESGaimFileReceiveRequestController (PRIVATE)

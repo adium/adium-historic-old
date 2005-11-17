@@ -31,8 +31,7 @@
 /** Data Structures                                                       */
 /**************************************************************************/
 
-typedef struct _GaimConvWindowUiOps   GaimConvWindowUiOps;
-typedef struct _GaimConvWindow        GaimConvWindow;
+
 typedef struct _GaimConversationUiOps GaimConversationUiOps;
 typedef struct _GaimConversation      GaimConversation;
 typedef struct _GaimConvIm            GaimConvIm;
@@ -44,24 +43,13 @@ typedef struct _GaimConvChatBuddy     GaimConvChatBuddy;
  */
 typedef enum
 {
-	GAIM_CONV_UNKNOWN = 0, /**< Unknown conversation type. */
-	GAIM_CONV_IM,          /**< Instant Message.           */
-	GAIM_CONV_CHAT,        /**< Chat room.                 */
-	GAIM_CONV_MISC         /**< A misc. conversation.      */
+	GAIM_CONV_TYPE_UNKNOWN = 0, /**< Unknown conversation type. */
+	GAIM_CONV_TYPE_IM,          /**< Instant Message.           */
+	GAIM_CONV_TYPE_CHAT,        /**< Chat room.                 */
+	GAIM_CONV_TYPE_MISC,        /**< A misc. conversation.      */
+	GAIM_CONV_TYPE_ANY          /**< Any type of conversation.  */
 
 } GaimConversationType;
-
-/**
- * Unseen text states.
- */
-typedef enum
-{
-	GAIM_UNSEEN_NONE = 0,  /**< No unseen text in the conversation. */
-	GAIM_UNSEEN_TEXT,      /**< Unseen text in the conversation.    */
-	GAIM_UNSEEN_NICK,      /**< Unseen text and the nick was said.  */
-	GAIM_UNSEEN_EVENT      /**< Unseen events in the conversation.  */
-
-} GaimUnseenState;
 
 /**
  * Conversation update type.
@@ -118,7 +106,9 @@ typedef enum
 	GAIM_MESSAGE_NO_LOG    = 0x0040, /**< Do not log.              */
 	GAIM_MESSAGE_WHISPER   = 0x0080, /**< Whispered message.       */
 	GAIM_MESSAGE_ERROR     = 0x0200, /**< Error message.           */
-	GAIM_MESSAGE_DELAYED   = 0x0400  /**< Delayed message.         */
+	GAIM_MESSAGE_DELAYED   = 0x0400, /**< Delayed message.         */
+	GAIM_MESSAGE_RAW       = 0x0800  /**< "Raw" message - don't apply formatting */
+
 } GaimMessageFlags;
 
 /**
@@ -130,44 +120,16 @@ typedef enum
 	GAIM_CBFLAGS_VOICE         = 0x0001, /**< Voiced user or "Participant" */
 	GAIM_CBFLAGS_HALFOP        = 0x0002, /**< Half-op                      */
 	GAIM_CBFLAGS_OP            = 0x0004, /**< Channel Op or Moderator      */
-	GAIM_CBFLAGS_FOUNDER       = 0x0008  /**< Channel Founder              */
+	GAIM_CBFLAGS_FOUNDER       = 0x0008, /**< Channel Founder              */
+	GAIM_CBFLAGS_TYPING        = 0x0010, /**< Currently typing             */
+
+
 } GaimConvChatBuddyFlags;
 
 #include "account.h"
 #include "buddyicon.h"
 #include "log.h"
 #include "server.h"
-
-//**Adium
-#include "prpl.h"
-
-/**
- * Conversation window operations.
- *
- * Any UI representing a window must assign a filled-out gaim_conv_window_ops
- * structure to the GaimConvWindow.
- */
-struct _GaimConvWindowUiOps
-{
-	GaimConversationUiOps *(*get_conversation_ui_ops)(void);
-
-	void (*new_window)(GaimConvWindow *win);
-	void (*destroy_window)(GaimConvWindow *win);
-
-	void (*show)(GaimConvWindow *win);
-	void (*hide)(GaimConvWindow *win);
-	void (*raise)(GaimConvWindow *win);
-	void (*flash)(GaimConvWindow *win);
-
-	void (*switch_conversation)(GaimConvWindow *win, unsigned int index);
-	void (*add_conversation)(GaimConvWindow *win, GaimConversation *conv);
-	void (*remove_conversation)(GaimConvWindow *win, GaimConversation *conv);
-	void (*move_conversation)(GaimConvWindow *win, GaimConversation *conv,
-	                          unsigned int newIndex);
-
-	int (*get_active_index)(const GaimConvWindow *win);
-	gboolean (*has_focus)(GaimConvWindow *win);
-};
 
 /**
  * Conversation operations and events.
@@ -177,6 +139,7 @@ struct _GaimConvWindowUiOps
  */
 struct _GaimConversationUiOps
 {
+	void (*create_conversation)(GaimConversation *conv);
 	void (*destroy_conversation)(GaimConversation *conv);
 	void (*write_chat)(GaimConversation *conv, const char *who,
 	                   const char *message, GaimMessageFlags flags,
@@ -184,38 +147,29 @@ struct _GaimConversationUiOps
 	void (*write_im)(GaimConversation *conv, const char *who,
 	                 const char *message, GaimMessageFlags flags,
 	                 time_t mtime);
-	void (*write_conv)(GaimConversation *conv, const char *who,
+	void (*write_conv)(GaimConversation *conv, const char *name, const char *alias,
 	                   const char *message, GaimMessageFlags flags,
 	                   time_t mtime);
 
-	void (*chat_add_user)(GaimConversation *conv, const char *user, gboolean new_arrival);
-	void (*chat_add_users)(GaimConversation *conv, GList *users);
-	void (*chat_rename_user)(GaimConversation *conv,
-	                         const char *old_name, const char *new_name);
+	void (*chat_add_users)(GaimConversation *conv, GList *users, GList *flags, GList *aliases);
+	void (*chat_rename_user)(GaimConversation *conv, const char *old_name,
+	                         const char *new_name, const char *new_alias);
 	void (*chat_remove_user)(GaimConversation *conv, const char *user);
 	void (*chat_remove_users)(GaimConversation *conv, GList *users);
 	void (*chat_update_user)(GaimConversation *conv, const char *user);
 
-	void (*update_progress)(GaimConversation *conv, float percent);
 
 	gboolean (*has_focus)(GaimConversation *conv);
+
+	/* Custom Smileys */
+	gboolean (*custom_smiley_add)(GaimConversation *conv, const char *smile);
+	void (*custom_smiley_write)(GaimConversation *conv, const char *smile,
+	                            const guchar *data, gsize size);
+	void (*custom_smiley_close)(GaimConversation *conv, const char *smile);
 
 	/* Events */
 	void (*updated)(GaimConversation *conv, GaimConvUpdateType type);
 
-};
-
-/**
- * A core representation of a graphical window containing one or more
- * conversations.
- */
-struct _GaimConvWindow
-{
-	GList *conversations;              /**< The conversations in the window. */
-	size_t conversation_count;         /**< The number of conversations.     */
-
-	GaimConvWindowUiOps *ui_ops;       /**< UI-specific window operations.   */
-	void *ui_data;                     /**< UI-specific data.                */
 };
 
 /**
@@ -262,29 +216,23 @@ struct _GaimConvChatBuddy
 /**
  * A core representation of a conversation between two or more people.
  *
- * The conversation can be an IM or a chat. Each conversation is kept
- * in a GaimConvWindow and has a UI representation.
+ * The conversation can be an IM or a chat.
  */
 struct _GaimConversation
 {
 	GaimConversationType type;  /**< The type of conversation.          */
 
 	GaimAccount *account;       /**< The user using this conversation.  */
-	GaimConvWindow *window;     /**< The parent window.                 */
 
-	int conversation_pos;       /**< The position in the window's list. */
 
 	char *name;                 /**< The name of the conversation.      */
 	char *title;                /**< The window title.                  */
 
 	gboolean logging;           /**< The status of logging.             */
 
-	GaimLog *log;               /**< This conversation's log            */
+	GList *logs;                /**< This conversation's logs           */
 
 	GList *send_history;        /**< The send history.                  */
-	GString *history;           /**< The conversation history.          */
-
-	GaimUnseenState unseen;     /**< The unseen tab state.              */
 
 	union
 	{
@@ -298,209 +246,14 @@ struct _GaimConversation
 	void *ui_data;                           /**< UI-specific data.       */
 
 	GHashTable *data;                        /**< Plugin-specific data.   */
-  
+
 	GaimConnectionFlags features; /**< The supported features */
 
 };
 
-typedef void (*GaimConvPlacementFunc)(GaimConversation *);
-
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**************************************************************************/
-/** @name Conversation Window API                                         */
-/**************************************************************************/
-/*@{*/
-
-/**
- * Creates a new conversation window.
- *
- * This window is added to the list of windows, but is not shown until
- * gaim_conv_window_show() is called.
- *
- * @return The new conversation window.
- */
-GaimConvWindow *gaim_conv_window_new(void);
-
-/**
- * Destroys the specified conversation window and all conversations in it.
- *
- * @param win The window to destroy.
- */
-void gaim_conv_window_destroy(GaimConvWindow *win);
-
-/**
- * Shows the specified conversation window.
- *
- * @param win The window.
- */
-void gaim_conv_window_show(GaimConvWindow *win);
-
-/**
- * Hides the specified conversation window.
- *
- * @param win The window.
- */
-void gaim_conv_window_hide(GaimConvWindow *win);
-
-/**
- * Raises the specified conversation window.
- *
- * @param win The window.
- */
-void gaim_conv_window_raise(GaimConvWindow *win);
-
-/**
- * Causes the window to flash for IM notification, if the UI supports this.
- *
- * @param win The window.
- */
-void gaim_conv_window_flash(GaimConvWindow *win);
-
-/**
- * Sets the specified window's UI window operations structure.
- *
- * @param win The window.
- * @param ops The UI window operations structure.
- */
-void gaim_conv_window_set_ui_ops(GaimConvWindow *win,
-								 GaimConvWindowUiOps *ops);
-
-/**
- * Returns the specified window's UI window operations structure.
- *
- * @param win The window.
- *
- * @return The UI window operations structure.
- */
-GaimConvWindowUiOps *gaim_conv_window_get_ui_ops(const GaimConvWindow *win);
-
-/**
- * Adds a conversation to this window.
- *
- * If the conversation already has a parent window, this will do nothing.
- *
- * @param win  The window.
- * @param conv The conversation.
- *
- * @return The new index of the conversation in the window.
- */
-int gaim_conv_window_add_conversation(GaimConvWindow *win,
-									  GaimConversation *conv);
-
-/**
- * Removes the conversation at the specified index from the window.
- *
- * If there is no conversation at this index, this will do nothing.
- *
- * @param win   The window.
- * @param index The index of the conversation.
- *
- * @return The conversation removed.
- */
-GaimConversation *gaim_conv_window_remove_conversation(GaimConvWindow *win,
-													   unsigned int index);
-
-/**
- * Moves the conversation at the specified index in a window to a new index.
- *
- * @param win      The window.
- * @param index     The index of the conversation to move.
- * @param new_index The new index.
- */
-void gaim_conv_window_move_conversation(GaimConvWindow *win,
-										unsigned int index,
-										unsigned int new_index);
-
-/**
- * Returns the conversation in the window at the specified index.
- *
- * If the index is out of range, this returns @c NULL.
- *
- * @param win   The window.
- * @param index The index containing a conversation.
- *
- * @return The conversation at the specified index.
- */
-GaimConversation *gaim_conv_window_get_conversation_at(
-		const GaimConvWindow *win, unsigned int index);
-
-/**
- * Returns the number of conversations in the window.
- *
- * @param win The window.
- *
- * @return The number of conversations.
- */
-size_t gaim_conv_window_get_conversation_count(const GaimConvWindow *win);
-
-/**
- * Switches the active conversation to the one at the specified index.
- *
- * If @a index is out of range, this does nothing.
- *
- * @param win   The window.
- * @param index The new index.
- */
-void gaim_conv_window_switch_conversation(GaimConvWindow *win,
-										  unsigned int index);
-
-/**
- * Returns the active conversation in the window.
- *
- * @param win The window.
- *
- * @return The active conversation.
- */
-GaimConversation *gaim_conv_window_get_active_conversation(
-		const GaimConvWindow *win);
-
-/**
- * Determines if a conversation window has focus
- *
- * @param win The window.
- *
- * @return @c TRUE if the conversation window has focus, @c FALSE if
- * it does not or the UI does not have a concept of window focus
- */
-gboolean gaim_conv_window_has_focus(GaimConvWindow *win);
-
-/**
- * Returns the list of conversations in the specified window.
- *
- * @param win The window.
- *
- * @return The list of conversations.
- */
-GList *gaim_conv_window_get_conversations(const GaimConvWindow *win);
-
-/**
- * Returns a list of all windows.
- *
- * @return A list of windows.
- */
-GList *gaim_get_windows(void);
-
-/**
- * Returns the first window containing a conversation of the specified type.
- *
- * @param type The conversation type.
- *
- * @return The window if found, or @c NULL if not found.
- */
-GaimConvWindow *gaim_get_first_window_with_type(GaimConversationType type);
-/**
- * Returns the last window containing a conversation of the specified type.
- *
- * @param type The conversation type.
- *
- * @return The window if found, or @c NULL if not found.
- */
-GaimConvWindow *gaim_get_last_window_with_type(GaimConversationType type);
-
-/*@}*/
 
 /**************************************************************************/
 /** @name Conversation API                                                */
@@ -551,6 +304,13 @@ void gaim_conversation_set_ui_ops(GaimConversation *conv,
 								  GaimConversationUiOps *ops);
 
 /**
+ * Sets the default conversation UI operations structure.
+ *
+ * @param ops  The UI conversation operations structure.
+ */
+void gaim_conversations_set_ui_ops(GaimConversationUiOps *ops);
+
+/**
  * Returns the specified conversation's UI operations structure.
  *
  * @param conv The conversation.
@@ -570,7 +330,7 @@ GaimConversationUiOps *gaim_conversation_get_ui_ops(
  * @param account The gaim_account.
  */
 void gaim_conversation_set_account(GaimConversation *conv,
-								   GaimAccount *account);
+                                   GaimAccount *account);
 
 /**
  * Returns the specified conversation's gaim_account.
@@ -623,33 +383,6 @@ const char *gaim_conversation_get_title(const GaimConversation *conv);
 void gaim_conversation_autoset_title(GaimConversation *conv);
 
 /**
- * Returns the specified conversation's index in the parent window.
- *
- * @param conv The conversation.
- *
- * @return The current index in the parent window.
- */
-int gaim_conversation_get_index(const GaimConversation *conv);
-
-/**
- * Sets the conversation's unseen state.
- *
- * @param conv  The conversation.
- * @param state The new unseen state.
- */
-void gaim_conversation_set_unseen(GaimConversation *conv,
-								  GaimUnseenState state);
-
-/**
- * Returns the conversation's unseen state.
- *
- * @param conv The conversation.
- *
- * @return The conversation's unseen state.
- */
-GaimUnseenState gaim_conversation_get_unseen(const GaimConversation *conv);
-
-/**
  * Sets the specified conversation's name.
  *
  * @param conv The conversation.
@@ -684,6 +417,17 @@ void gaim_conversation_set_logging(GaimConversation *conv, gboolean log);
 gboolean gaim_conversation_is_logging(const GaimConversation *conv);
 
 /**
+ * Closes any open logs for this conversation.
+ *
+ * Note that new logs will be opened as necessary (e.g. upon receipt of a
+ * message, if the conversation has logging enabled. To disable logging for
+ * the remainder of the conversation, use gaim_conversation_set_logging().
+ *
+ * @param conv The conversation.
+ */
+void gaim_conversation_close_logs(GaimConversation *conv);
+
+/**
  * Returns the specified conversation's send history.
  *
  * @param conv The conversation.
@@ -693,35 +437,9 @@ gboolean gaim_conversation_is_logging(const GaimConversation *conv);
 GList *gaim_conversation_get_send_history(const GaimConversation *conv);
 
 /**
- * Sets the specified conversation's history.
- *
- * @param conv    The conversation.
- * @param history The history.
- */
-void gaim_conversation_set_history(GaimConversation *conv, GString *history);
-
-/**
- * Returns the specified conversation's history.
- *
- * @param conv The conversation.
- *
- * @return The conversation's history.
- */
-GString *gaim_conversation_get_history(const GaimConversation *conv);
-
-/**
- * Returns the specified conversation's parent window.
- *
- * @param conv The conversation.
- *
- * @return The conversation's parent window.
- */
-GaimConvWindow *gaim_conversation_get_window(const GaimConversation *conv);
-
-/**
  * Returns the specified conversation's IM-specific data.
  *
- * If the conversation type is not GAIM_CONV_IM, this will return @c NULL.
+ * If the conversation type is not GAIM_CONV_TYPE_IM, this will return @c NULL.
  *
  * @param conv The conversation.
  *
@@ -734,7 +452,7 @@ GaimConvIm *gaim_conversation_get_im_data(const GaimConversation *conv);
 /**
  * Returns the specified conversation's chat-specific data.
  *
- * If the conversation type is not GAIM_CONV_CHAT, this will return @c NULL.
+ * If the conversation type is not GAIM_CONV_TYPE_CHAT, this will return @c NULL.
  *
  * @param conv The conversation.
  *
@@ -788,24 +506,17 @@ GList *gaim_get_ims(void);
 GList *gaim_get_chats(void);
 
 /**
- * Finds the conversation with the specified name.
+ * Finds a conversation with the specified type, name, and Gaim account.
  *
- * @param name The name of the conversation.
- *
- * @return The conversation if found, or @c NULL otherwise.
- */
-GaimConversation *gaim_find_conversation(const char *name);
-
-/**
- * Finds a conversation with the specified name and user.
- *
+ * @param type The type of the conversation.
  * @param name The name of the conversation.
  * @param account The gaim_account associated with the conversation.
  *
  * @return The conversation if found, or @c NULL otherwise.
  */
 GaimConversation *gaim_find_conversation_with_account(
-		const char *name, const GaimAccount *account);
+		GaimConversationType type, const char *name,
+		const GaimAccount *account);
 
 /**
  * Writes to a conversation window.
@@ -845,19 +556,7 @@ void gaim_conversation_set_features(GaimConversation *conv,
 	Get the features supported by the given conversation.
 	@param conv  The conversation
 */
-GaimConnectionFlags gaim_conversation_get_features(GaimConversation *conv);		    
-
-
-/**
- * Updates the progress bar on a conversation window
- * (if one exists in the UI).
- *
- * This is used for loading images typically.
- *
- * @param conv    The conversation.
- * @param percent The percentage.
- */
-void gaim_conversation_update_progress(GaimConversation *conv, float percent);
+GaimConnectionFlags gaim_conversation_get_features(GaimConversation *conv);
 
 /**
  * Determines if a conversation has focus
@@ -1026,7 +725,7 @@ void gaim_conv_im_write(GaimConvIm *im, const char *who,
 
 /**
  * Presents an IM-error to the user
- * 
+ *
  * This is a helper function to find a conversation, write an error to it, and
  * raise the window.  If a conversation with this user doesn't already exist,
  * the function will return FALSE and the calling function can attempt to present
@@ -1047,7 +746,61 @@ gboolean gaim_conv_present_error(const char *who, GaimAccount *account, const ch
  */
 void gaim_conv_im_send(GaimConvIm *im, const char *message);
 
-void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimConvImFlags flags);
+/**
+ * Sends a message to this IM conversation with specified flags.
+ *
+ * @param im      The IM.
+ * @param message The message to send.
+ * @param flags   The GaimMessageFlags flags to use in addition to GAIM_MESSAGE_SEND.
+ */
+void gaim_conv_im_send_with_flags(GaimConvIm *im, const char *message, GaimMessageFlags flags);
+
+/**
+ * Adds a smiley to the conversation's smiley tree. If this returns
+ * @c TRUE you should call gaim_conv_custom_smiley_write() one or more
+ * times, and then gaim_conv_custom_smiley_close(). If this returns
+ * @c FALSE, either the conv or smile were invalid, or the icon was
+ * found in the cache. In either case, calling write or close would
+ * be an error.
+ *
+ * @param conv The conversation to associate the smiley with.
+ * @param smile The text associated with the smiley
+ * @param cksum_type The type of checksum.
+ * @param chksum The checksum, as a NUL terminated base64 string.
+ * @return      @c TRUE if an icon is expected, else FALSE. Note that
+ *              it is an error to never call gaim_conv_custom_smiley_close if
+ *              this function returns @c TRUE, but an error to call it if
+ *              @c FALSE is returned.
+ */
+
+gboolean gaim_conv_custom_smiley_add(GaimConversation *conv, const char *smile,
+                                      const char *cksum_type, const char *chksum);
+
+
+/**
+ * Updates the image associated with the current smiley.
+ *
+ * @param conv The conversation associated with the smiley.
+ * @param smile The text associated with the smiley.
+ * @param data The actual image data.
+ * @param size The length of the data.
+ */
+
+void gaim_conv_custom_smiley_write(GaimConversation *conv,
+                                   const char *smile,
+                                   const guchar *data,
+                                   gsize size);
+
+/**
+ * Close the custom smiley, all data has been written with
+ * gaim_conv_custom_smiley_write, and it is no longer valid
+ * to call that function on that smiley.
+ *
+ * @param conv The gaim conversation associated with the smiley.
+ * @param smile The text associated with the smiley
+ */
+
+void gaim_conv_custom_smiley_close(GaimConversation *conv, const char *smile);
 
 /*@}*/
 
@@ -1210,6 +963,15 @@ void gaim_conv_chat_write(GaimConvChat *chat, const char *who,
 void gaim_conv_chat_send(GaimConvChat *chat, const char *message);
 
 /**
+ * Sends a message to this chat conversation with specified flags.
+ *
+ * @param chat    The chat.
+ * @param message The message to send.
+ * @param flags   The GaimMessageFlags flags to use.
+ */
+void gaim_conv_chat_send_with_flags(GaimConvChat *chat, const char *message, GaimMessageFlags flags);
+
+/**
  * Adds a user to a chat.
  *
  * @param chat        The chat.
@@ -1225,14 +987,22 @@ void gaim_conv_chat_add_user(GaimConvChat *chat, const char *user,
 /**
  * Adds a list of users to a chat.
  *
- * The data is copied from @a users, so it is up to the developer to
- * free this list after calling this function.
+ * The data is copied from @a users, @a extra_msgs, and @a flags, so it is up to
+ * the caller to free this list after calling this function.
  *
- * @param chat      The chat.
- * @param users     The list of users to add.
- * @param flags     The list of flags for each user.
+ * @param chat         The chat.
+ * @param users        The list of users to add.
+ * @param extra_msgs   An extra message to display with the join message for each
+ *                     user.  This list may be shorter than @a users, in which
+ *                     case, the users after the end of extra_msgs will not have
+ *                     an extra message.  By extension, this means that extra_msgs
+ *                     can simply be @c NULL and none of the users will have an
+ *                     extra message.
+ * @param flags        The list of flags for each user.
+ * @param new_arrivals Decides whether or not to show join notices.
  */
-void gaim_conv_chat_add_users(GaimConvChat *chat, GList *users, GList *flags);
+void gaim_conv_chat_add_users(GaimConvChat *chat, GList *users, GList *extra_msgs,
+							  GList *flags, gboolean new_arrivals);
 
 /**
  * Renames a user in a chat.
@@ -1383,107 +1153,6 @@ const char *gaim_conv_chat_cb_get_name(GaimConvChatBuddy *cb);
  * @param cb The chat buddy to destroy
  */
 void gaim_conv_chat_cb_destroy(GaimConvChatBuddy *cb);
-
-/*@}*/
-
-/**************************************************************************/
-/** @name Conversation Placement API                                      */
-/**************************************************************************/
-/*@{*/
-
-/**
- * Returns a GList containing the IDs and Names of the registered placement
- * functions.
- *
- * @return The list of IDs and names.
- */
-GList *gaim_conv_placement_get_options(void);
-
-/**
- * Adds a conversation placement function to the list of possible functions.
- *
- * @param id   The unique ID of the placement function.
- * @param name The name of the function.
- * @param fnc  A pointer to the function.
- */
-void gaim_conv_placement_add_fnc(const char *id, const char *name,
-								 GaimConvPlacementFunc fnc);
-
-/**
- * Removes a conversation placement function from the list of possible
- * functions.
- *
- * @param id The id of the function.
- */
-void gaim_conv_placement_remove_fnc(const char *id);
-
-/**
- * Returns the name of the conversation placement function at the
- * specified id.
- *
- * @param id The id.
- *
- * @return The name of the function, or @c NULL if this id is invalid.
- */
-const char *gaim_conv_placement_get_name(const char *id);
-
-/**
- * Returns a pointer to the conversation placement function at the
- * specified id.
- *
- * @param id The id.
- *
- * @return A pointer to the function.
- */
-GaimConvPlacementFunc gaim_conv_placement_get_fnc(const char *id);
-
-/**
- * Sets the current conversation placement function.
- *
- * @param func The new conversation placement function.
- */
-void gaim_conv_placement_set_current_func(GaimConvPlacementFunc func);
-
-/**
- * Returns the current conversation placement function.
- *
- * @return The current conversation placement function.
- */
-GaimConvPlacementFunc gaim_conv_placement_get_current_func(void);
-
-/**
- * Returns the id of the specified conversation placement function.
- *
- * @param fnc A pointer to the registered function.
- *
- * @return The id of the conversation, or NULL if the function is not
- *         registered.
- */
-const char *gaim_conv_placement_get_fnc_id(GaimConvPlacementFunc fnc);
-
-/*@}*/
-
-/**************************************************************************/
-/** @name UI Registration Functions                                       */
-/**************************************************************************/
-/*@{*/
-
-/**
- * Sets the UI operations structure to be used in all gaim conversation
- * windows.
- *
- * @param ops The UI operations structure.
- */
-void gaim_conversations_set_win_ui_ops(GaimConvWindowUiOps *ops);
-
-/**
- * Returns the gaim window UI operations structure to be used in
- * new windows.
- *
- * @return A filled-out GaimConvWindowUiOps structure.
- */
-GaimConvWindowUiOps *gaim_conversations_get_win_ui_ops(void);
-
 
 /*@}*/
 

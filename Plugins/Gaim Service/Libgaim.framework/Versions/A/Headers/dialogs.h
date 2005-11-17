@@ -27,6 +27,13 @@
 #include <libotr/proto.h>
 #include <libotr/message.h>
 
+/* The various help URLs */
+#define BASE_HELPURL "http://otr-help.cypherpunks.ca/"
+#define FINGERPRINT_HELPURL   BASE_HELPURL "fingerprint.php"
+#define SESSIONID_HELPURL     BASE_HELPURL "sessionid.php"
+#define UNVERIFIED_HELPURL    BASE_HELPURL "unverified.php"
+#define BUTTON_HELPURL        BASE_HELPURL "buttonhelp.php"
+
 typedef struct s_OtrgDialogWait *OtrgDialogWaitHandle;
 
 typedef struct {
@@ -43,17 +50,18 @@ typedef struct {
     void (*private_key_wait_done)(OtrgDialogWaitHandle handle);
 
     void (*unknown_fingerprint)(OtrlUserState us, const char *accountname,
-	const char *protocol, const char *who, OTRKeyExchangeMsg kem,
-	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
-	    void *opdata, OTRConfirmResponse *response_data, int resp),
-	OtrlMessageAppOps *ops, void *opdata,
-	OTRConfirmResponse *response_data);
+	const char *protocol, const char *who, unsigned char fingerprint[20]);
+
+    void (*verify_fingerprint)(Fingerprint *fprint);
 
     void (*connected)(ConnContext *context);
 
     void (*disconnected)(ConnContext *context);
 
     void (*stillconnected)(ConnContext *context);
+
+    void (*finished)(const char *accountname, const char *protocol,
+	    const char *username);
 
     void (*resensitize_all)(void);
 
@@ -106,29 +114,27 @@ OtrgDialogWaitHandle otrg_dialog_private_key_wait_start(const char *account,
 void otrg_dialog_private_key_wait_done(OtrgDialogWaitHandle handle);
 
 /* Show a dialog informing the user that a correspondent (who) has sent
- * us a Key Exchange Message (kem) that contains an unknown fingerprint.
- * Ask the user whether to accept the fingerprint or not.  If yes, call
- * response_cb(us, ops, opdata, response_data, resp) with resp = 1.  If no,
- * set resp = 0.  If the user destroys the dialog without answering, set
- * resp = -1. */
+ * us a Key Exchange Message (kem) that contains an unknown fingerprint. */
 void otrg_dialog_unknown_fingerprint(OtrlUserState us, const char *accountname,
-	const char *protocol, const char *who, OTRKeyExchangeMsg kem,
-	void (*response_cb)(OtrlUserState us, OtrlMessageAppOps *ops,
-	    void *opdata, OTRConfirmResponse *response_data, int resp),
-	OtrlMessageAppOps *ops, void *opdata,
-	OTRConfirmResponse *response_data);
+	const char *protocol, const char *who, unsigned char fingerprint[20]);
 
-/* Call this when a context transitions from (a state other than
- * CONN_CONNECTED) to CONN_CONNECTED. */
+/* Show a dialog asking the user to verify the given fingerprint. */
+void otrg_dialog_verify_fingerprint(Fingerprint *fprint);
+
+/* Call this when a context transitions to ENCRYPTED. */
 void otrg_dialog_connected(ConnContext *context);
 
-/* Call this when a context transitions from CONN_CONNECTED to
- * (a state other than CONN_CONNECTED). */
+/* Call this when a context transitions to PLAINTEXT. */
 void otrg_dialog_disconnected(ConnContext *context);
 
 /* Call this when we receive a Key Exchange message that doesn't cause
  * our state to change (because it was just the keys we knew already). */
 void otrg_dialog_stillconnected(ConnContext *context);
+
+/* Call this if the remote user terminates his end of an ENCRYPTED
+ * connection, and lets us know. */
+void otrg_dialog_finished(const char *accountname, const char *protocol,
+	const char *username);
 
 /* Set all OTR buttons to "sensitive" or "insensitive" as appropriate.
  * Call this when accounts are logged in or out. */

@@ -16,4 +16,4 @@
 
 #import "SLGaimCocoaAdapter.h"
 
-GaimConvWindowUiOps *adium_gaim_conversation_get_win_ui_ops(void);
+GaimConversationUiOps *adium_gaim_conversation_get_ui_ops(void);

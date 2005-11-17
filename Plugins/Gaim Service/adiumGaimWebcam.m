@@ -14,6 +14,8 @@
  * write to the Free Software Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+#if	ENABLE_WEBCAM
+
 #import "adiumGaimWebcam.h"
 
 #pragma mark Webcam
@@ -198,3 +200,5 @@ void initGaimWebcamSupport(void)
 	//Set the UI Ops
 	gaim_webcam_set_ui_ops(adium_gaim_webcam_get_ui_ops());
 }
+
+#endif

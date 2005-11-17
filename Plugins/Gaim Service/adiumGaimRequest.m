@@ -42,7 +42,13 @@ struct resolved_id {
 	char *name;
 };
 
-static void *adiumGaimRequestInput(const char *title, const char *primary, const char *secondary, const char *defaultValue, gboolean multiline, gboolean masked, gchar *hint,const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
+static void *adiumGaimRequestInput(
+								   const char *title, const char *primary,
+								   const char *secondary, const char *defaultValue,
+								   gboolean multiline, gboolean masked, gchar *hint,
+								   const char *okText, GCallback okCb, 
+								   const char *cancelText, GCallback cancelCb,
+								   void *userData)
 {
 	/*
 	 Multiline should be a paragraph-sized box; otherwise, a single line will suffice.
@@ -83,7 +89,11 @@ static void *adiumGaimRequestInput(const char *title, const char *primary, const
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestChoice(const char *title, const char *primary, const char *secondary, unsigned int defaultValue, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData, size_t choiceCount, va_list choices)
+static void *adiumGaimRequestChoice(const char *title, const char *primary,
+									const char *secondary, unsigned int defaultValue,
+									const char *okText, GCallback okCb,
+									const char *cancelText, GCallback cancelCb,
+									void *userData, va_list choices)
 {
 	GaimDebug (@"adiumGaimRequestChoice: %s\n%s\n%s ",
 			   (title ? title : ""),
@@ -94,7 +104,9 @@ static void *adiumGaimRequestChoice(const char *title, const char *primary, cons
 }
 
 //Gaim requests the user take an action such as accept or deny a buddy's attempt to add us to her list 
-static void *adiumGaimRequestAction(const char *title, const char *primary, const char *secondary, unsigned int default_action,void *userData, size_t actionCount, va_list actions)
+static void *adiumGaimRequestAction(const char *title, const char *primary,
+									const char *secondary, unsigned int default_action,
+									void *userData, size_t actionCount, va_list actions)
 {
     NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : @"");
 	NSString			*primaryString = (primary ?  [NSString stringWithUTF8String:primary] : nil);
@@ -274,7 +286,11 @@ static void *adiumGaimRequestAction(const char *title, const char *primary, cons
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestFields(const char *title, const char *primary, const char *secondary, GaimRequestFields *fields, const char *okText, GCallback okCb, const char *cancelText, GCallback cancelCb,void *userData)
+static void *adiumGaimRequestFields(const char *title, const char *primary,
+									const char *secondary, GaimRequestFields *fields,
+									const char *okText, GCallback okCb,
+									const char *cancelText, GCallback cancelCb,
+									void *userData)
 {
 	id					requestController = nil;
 	NSString			*titleString = (title ?  [[NSString stringWithUTF8String:title] lowercaseString] : nil);
@@ -449,7 +465,9 @@ static void *adiumGaimRequestFields(const char *title, const char *primary, cons
 	return (requestController ? requestController : [NSNull null]);
 }
 
-static void *adiumGaimRequestFile(const char *title, const char *filename, gboolean savedialog, GCallback ok_cb, GCallback cancel_cb,void *user_data)
+static void *adiumGaimRequestFile(const char *title, const char *filename,
+								  gboolean savedialog, GCallback ok_cb,
+								  GCallback cancel_cb,void *user_data)
 {
 	id					requestController = nil;
 	NSString			*titleString = (title ? [NSString stringWithUTF8String:title] : nil);

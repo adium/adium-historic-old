@@ -30,9 +30,6 @@
 #include "jutil.h"
 #include "xmlnode.h"
 
-//Adium
-#include "account.h"
-
 typedef enum {
 	JABBER_CAP_NONE           = 0,
 	JABBER_CAP_XHTML          = 1 << 0,
@@ -41,6 +38,9 @@ typedef enum {
 	JABBER_CAP_SI_FILE_XFER   = 1 << 3,
 	JABBER_CAP_BYTESTREAMS    = 1 << 4,
 	JABBER_CAP_IBB            = 1 << 5,
+	JABBER_CAP_CHAT_STATES    = 1 << 6,
+	JABBER_CAP_IQ_SEARCH      = 1 << 7,
+	JABBER_CAP_IQ_REGISTER    = 1 << 8,
 	JABBER_CAP_RETRIEVED      = 1 << 31
 } JabberCapabilities;
 
@@ -82,6 +82,7 @@ typedef struct _JabberStream
 	GHashTable *chats;
 	GList *chat_servers;
 	GaimRoomlist *roomlist;
+	GList *user_directories;
 
 	GHashTable *iq_callbacks;
 	GHashTable *disco_callbacks;
@@ -98,6 +99,9 @@ typedef struct _JabberStream
 	GaimSslConnection *gsc;
 
 	gboolean registration;
+
+	char *avatar_hash;
+	GSList *pending_avatar_requests;
 } JabberStream;
 
 void jabber_process_packet(JabberStream *js, xmlnode *packet);

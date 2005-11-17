@@ -21,9 +21,6 @@ struct oscar_direct_im {
 };
 
 @interface ESGaimAIMAccount : CBGaimOscarAccount {
-	NSTimer			*delayedSignonUpdateTimer;
-	NSMutableArray  *arrayOfContactsForDelayedUpdates;
-	
 	NSMutableDictionary	*directIMQueue;
 }
 

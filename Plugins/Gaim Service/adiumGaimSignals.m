@@ -36,53 +36,23 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				break;
 			}
 			case GAIM_BUDDY_SIGNON_TIME: {
-				updateSelector = @selector(updateSignonTime:withData:);
-				if (buddy->signon) {
-					data = [NSDate dateWithTimeIntervalSince1970:buddy->signon];
-				}
-				break;
-			}
-			case GAIM_BUDDY_AWAY:
-			case GAIM_BUDDY_AWAY_RETURN: 
-			case GAIM_BUDDY_STATUS_MESSAGE: {
-				NSNumber			*statusTypeNumber;
-				NSString			*statusName;
-				NSAttributedString	*statusMessage;
-
-				statusTypeNumber = [NSNumber numberWithInt:((buddy->uc & UC_UNAVAILABLE) ? 
-															AIAwayStatusType : 
-															AIAvailableStatusType)];
-				statusName = [account statusNameForGaimBuddy:buddy];
-				statusMessage = [account statusMessageForGaimBuddy:buddy];
-
-				[account mainPerformSelector:@selector(updateStatusForContact:toStatusType:statusName:statusMessage:)
-								  withObject:theContact
-								  withObject:statusTypeNumber
-								  withObject:statusName
-								  withObject:statusMessage];
+				GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+				time_t			loginTime = gaim_presence_get_login_time(presence);;
 				
-				letAccountHandleUpdate = NO;
+				updateSelector = @selector(updateSignonTime:withData:);
+				data = (loginTime ? [NSDate dateWithTimeIntervalSince1970:loginTime] : nil);
+
 				break;
 			}
 
-			case GAIM_BUDDY_IDLE:
-			case GAIM_BUDDY_IDLE_RETURN: {
-				if (buddy->idle != 0) {
-					updateSelector = @selector(updateWentIdle:withData:);
-					
-					if (buddy->idle != -1) {
-						data = [NSDate dateWithTimeIntervalSince1970:buddy->idle];
-					}
-				} else {
-					updateSelector = @selector(updateIdleReturn:withData:);	
-				}
-				break;
-			}
 			case GAIM_BUDDY_EVIL: {
 				updateSelector = @selector(updateEvil:withData:);
+				//XXX EVIL?
+				/*
 				if (buddy->evil) {
 					data = [NSNumber numberWithInt:buddy->evil];
 				}
+				 */
 				break;
 			}
 			case GAIM_BUDDY_ICON: {
@@ -90,7 +60,7 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 				updateSelector = @selector(updateIcon:withData:);
 				
 				if (buddyIcon) {
-					const char  *iconData;
+					const guchar  *iconData;
 					size_t		len;
 					
 					iconData = gaim_buddy_icon_get_data(buddyIcon, &len);
@@ -129,32 +99,75 @@ static void buddy_event_cb(GaimBuddy *buddy, GaimBuddyEvent event)
 	}
 }
 
+static void buddy_status_changed_cb(GaimBuddy *buddy, GaimStatus *oldstatus, GaimStatus *status, GaimBuddyEvent event)
+{
+	CBGaimAccount		*account = accountLookup(buddy->account);
+	AIListContact		*theContact = contactLookupFromBuddy(buddy);
+	NSNumber			*statusTypeNumber;
+	NSString			*statusName;
+	NSAttributedString	*statusMessage;	
+	BOOL				isAvailable;
+
+	GaimDebug(@"buddy_status_changed_cb: %@ (%i): name %s, message %s",
+			  theContact,
+			  gaim_status_type_get_primitive(gaim_status_get_type(status)),
+			  gaim_status_get_name(status),
+			  gaim_status_get_attr_string(status, "message"));
+
+	isAvailable = ((gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_AVAILABLE) ||
+				   (gaim_status_type_get_primitive(gaim_status_get_type(status)) == GAIM_STATUS_OFFLINE));
+
+	statusTypeNumber = [NSNumber numberWithInt:(isAvailable ? 
+												AIAvailableStatusType : 
+												AIAwayStatusType)];
+	
+	statusName = [account statusNameForGaimBuddy:buddy];
+	statusMessage = [account statusMessageForGaimBuddy:buddy];
+
+	[account mainPerformSelector:@selector(updateStatusForContact:toStatusType:statusName:statusMessage:)
+					  withObject:theContact
+					  withObject:statusTypeNumber
+					  withObject:statusName
+					  withObject:statusMessage];
+}
+
+static void buddy_idle_changed_cb(GaimBuddy *buddy, gboolean old_idle, gboolean idle, GaimBuddyEvent event)
+{
+	CBGaimAccount	*account = accountLookup(buddy->account);
+	AIListContact	*theContact = contactLookupFromBuddy(buddy);
+	GaimPresence	*presence = gaim_buddy_get_presence(buddy);
+				
+	if (idle) {
+		time_t		idleTime = gaim_presence_get_idle_time(presence);
+
+		[account mainPerformSelector:@selector(updateWentIdle:withData:)
+						  withObject:theContact
+						  withObject:(idleTime ?
+									  [NSDate dateWithTimeIntervalSince1970:idleTime] :
+									  nil)];
+	} else {
+		[account mainPerformSelector:@selector(updateIdleReturn:withData:)
+						  withObject:theContact
+						  withObject:nil];
+	}
+				
+	AILog(@"buddy_event_cb: %@ is %@ [old_idle %i, idle %i]",theContact,(idle ? @"idle" : @"not idle"),old_idle,idle);
+}
+
 void configureAdiumGaimSignals(void)
 {
 	void *blist_handle = gaim_blist_get_handle();
 	void *handle       = adium_gaim_get_handle();
 	
 	//Idle
-	gaim_signal_connect(blist_handle, "buddy-idle",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
-	gaim_signal_connect(blist_handle, "buddy-idle-updated",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE));
-	gaim_signal_connect(blist_handle, "buddy-unidle",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_IDLE_RETURN));
+	gaim_signal_connect(blist_handle, "buddy-idle-changed",
+						handle, GAIM_CALLBACK(buddy_idle_changed_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_IDLE_CHANGED));
 	
 	//Status
-	gaim_signal_connect(blist_handle, "buddy-away",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_AWAY));
-	gaim_signal_connect(blist_handle, "buddy-back",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_AWAY_RETURN));
-	gaim_signal_connect(blist_handle, "buddy-status-message",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_STATUS_MESSAGE));
+	gaim_signal_connect(blist_handle, "buddy-status-changed",
+						handle, GAIM_CALLBACK(buddy_status_changed_cb),
+						GINT_TO_POINTER(GAIM_BUDDY_STATUS_CHANGED));
 	
 	//Info updated
 	gaim_signal_connect(blist_handle, "buddy-info",
@@ -162,7 +175,7 @@ void configureAdiumGaimSignals(void)
 						GINT_TO_POINTER(GAIM_BUDDY_INFO_UPDATED));
 	
 	//Icon
-	gaim_signal_connect(blist_handle, "buddy-icon",
+	gaim_signal_connect(blist_handle, "buddy-icon-changed",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_ICON));
 	
@@ -181,9 +194,6 @@ void configureAdiumGaimSignals(void)
 	gaim_signal_connect(blist_handle, "buddy-signed-on",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNON));
-	gaim_signal_connect(blist_handle, "buddy-signon",
-						handle, GAIM_CALLBACK(buddy_event_cb),
-						GINT_TO_POINTER(GAIM_BUDDY_SIGNON_TIME));
 	gaim_signal_connect(blist_handle, "buddy-signed-off",
 						handle, GAIM_CALLBACK(buddy_event_cb),
 						GINT_TO_POINTER(GAIM_BUDDY_SIGNOFF));

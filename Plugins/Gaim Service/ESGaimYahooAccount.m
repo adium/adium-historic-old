@@ -128,8 +128,9 @@ gboolean gaim_init_yahoo_plugin(void);
 {
 	if (gaim_account_is_connected(account)) {
 		char *destsn = (char *)[[[fileTransfer contact] UID] UTF8String];
-		
-		return yahoo_xfer_new(account->gc,destsn);
+
+#warning xfer
+//		return yahoo_xfer_new(account->gc,destsn);
 	}
 	
 	return nil;
@@ -379,7 +380,9 @@ gboolean gaim_init_yahoo_plugin(void);
 */
 
 /*!
- * @brief Return the gaim status type to be used for a status
+ * @brief Return the gaim status ID to be used for a status
+ *
+ * Most subclasses should override this method; these generic values may be appropriate for others.
  *
  * Active services provided nonlocalized status names.  An AIStatus is passed to this method along with a pointer
  * to the status message.  This method should handle any status whose statusNname this service set as well as any statusName
@@ -387,78 +390,73 @@ gboolean gaim_init_yahoo_plugin(void);
  * It should also handle a status name not specified in either of these places with a sane default, most likely by loooking at
  * [statusState statusType] for a general idea of the status's type.
  *
- * @param statusState The status for which to find the gaim status equivalent
- * @param statusMessage A pointer to the statusMessage.  Set *statusMessage to nil if it should not be used directly for this status.
+ * @param statusState The status for which to find the gaim status ID
+ * @param arguments Prpl-specific arguments which will be passed with the state. Message is handled automatically.
  *
- * @result The gaim status equivalent
+ * @result The gaim status ID
  */
-- (char *)gaimStatusTypeForStatus:(AIStatus *)statusState
-						  message:(NSAttributedString **)statusMessage
+- (char *)gaimStatusIDForStatus:(AIStatus *)statusState
+							arguments:(NSMutableDictionary *)arguments
 {
+	char			*statusID = NULL;
 	NSString		*statusName = [statusState statusName];
-	AIStatusType	statusType = [statusState statusType];
-	char			*gaimStatusType = NULL;
-	
-	switch (statusType) {
+	NSString		*statusMessageString = [statusState statusMessageString];
+
+	switch ([statusState statusType]) {
 		case AIAvailableStatusType:
-		{
-			gaimStatusType = "Available";
+			statusID = YAHOO_STATUS_TYPE_AVAILABLE;
 			break;
-		}
 
 		case AIAwayStatusType:
 		{
-			NSString	*statusMessageString = (*statusMessage ? [*statusMessage string] : @"");
-
 			if (([statusName isEqualToString:STATUS_NAME_BRB]) ||
 				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BRB] == NSOrderedSame))
-				gaimStatusType = "Be Right Back";
+				statusID = YAHOO_STATUS_TYPE_BRB;
+
 			else if (([statusName isEqualToString:STATUS_NAME_BUSY]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_BUSY] == NSOrderedSame))
-				gaimStatusType = "Busy";
+				statusID = YAHOO_STATUS_TYPE_BUSY;
+
 			else if (([statusName isEqualToString:STATUS_NAME_NOT_AT_HOME]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AT_HOME] == NSOrderedSame))
-				gaimStatusType = "Not At Home";
+				statusID = YAHOO_STATUS_TYPE_NOTATHOME;
+
 			else if (([statusName isEqualToString:STATUS_NAME_NOT_AT_DESK]) ||
 				([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_NOT_AT_DESK] == NSOrderedSame))
-				gaimStatusType = "Not At Desk";
+				statusID = YAHOO_STATUS_TYPE_NOTATDESK;
+			
 			else if (([statusName isEqualToString:STATUS_NAME_PHONE]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_PHONE] == NSOrderedSame))
-				gaimStatusType = "On The Phone";
+				statusID = YAHOO_STATUS_TYPE_ONPHONE;
+			
 			else if (([statusName isEqualToString:STATUS_NAME_VACATION]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_VACATION] == NSOrderedSame))
-				gaimStatusType = "On Vacation";
+				statusID = YAHOO_STATUS_TYPE_ONVACATION;
+			
 			else if (([statusName isEqualToString:STATUS_NAME_LUNCH]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_LUNCH] == NSOrderedSame))
-				gaimStatusType = "Out To Lunch";
+				statusID = YAHOO_STATUS_TYPE_OUTTOLUNCH;
+			
 			else if (([statusName isEqualToString:STATUS_NAME_STEPPED_OUT]) ||
 					 ([statusMessageString caseInsensitiveCompare:STATUS_DESCRIPTION_STEPPED_OUT] == NSOrderedSame))
-				gaimStatusType = "Stepped Out";
-
+				statusID = YAHOO_STATUS_TYPE_STEPPEDOUT;
+			
+			
 			break;
 		}
 			
 		case AIInvisibleStatusType:
-		{
-			gaimStatusType = "Invisible";
-			
-			//We must clear the status message to enter an invisible state
-			*statusMessage = nil;
-			
+			statusID = YAHOO_STATUS_TYPE_INVISIBLE;
 			break;
-		}
 		
 		case AIOfflineStatusType:
 			break;
 	}
 	
-	//If we are setting one of our custom statuses, clear a @"" statusMessage to nil
-	if ((gaimStatusType != NULL) && ([*statusMessage length] == 0)) *statusMessage = nil;
-
-	//If we didn't get a gaim status type, request one from super
-	if (gaimStatusType == NULL) gaimStatusType = [super gaimStatusTypeForStatus:statusState message:statusMessage];
+	//If we didn't get a gaim status ID, request one from super
+	if (statusID == NULL) statusID = [super gaimStatusIDForStatus:statusState arguments:arguments];
 	
-	return gaimStatusType;
+	return statusID;
 }
 
 #pragma mark Contact List Menu Items

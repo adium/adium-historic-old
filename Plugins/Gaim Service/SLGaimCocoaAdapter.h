@@ -19,7 +19,7 @@
 #import "GaimCommon.h"
 #import "CBGaimAccount.h"
 
-#define	ENABLE_WEBCAM	TRUE
+#define	ENABLE_WEBCAM	FALSE
 
 @class AIChat, AIListContact, CBGaimAccount, NDRunLoopMessenger;
 
@@ -57,7 +57,6 @@
 - (void)inviteContact:(AIListContact *)contact toChat:(AIChat *)chat withMessage:(NSString *)inviteMessage;
 
 - (void)closeChat:(AIChat *)chat;
-- (void)connectAccount:(id)adiumAccount;
 - (void)disconnectAccount:(id)adiumAccount;
 - (void)registerAccount:(id)adiumAccount;
 - (void)xferRequest:(GaimXfer *)xfer;
@@ -66,8 +65,7 @@
 - (void)xferCancel:(GaimXfer *)xfer;
 - (void)getInfoFor:(NSString *)inUID onAccount:(id)adiumAccount;
 
-- (void)setGaimStatusType:(const char *)gaimStatusType withMessage:(NSString *)message onAccount:(id)adiumAccount;
-- (void)setInvisible:(BOOL)isInvisible onAccount:(id)adiumAccount;
+- (void)setStatusID:(const char *)statusID isActive:(NSNumber *)isActive arguments:(NSMutableDictionary *)arguments onAccount:(id)adiumAccount;
 - (void)setInfo:(NSString *)profileHTML onAccount:(id)adiumAccount;
 - (void)setBuddyIcon:(NSString *)buddyImageFilename onAccount:(id)adiumAccount;
 - (void)setIdleSinceTo:(NSDate *)idleSince onAccount:(id)adiumAccount;
@@ -77,7 +75,6 @@
 
 - (void)OSCAREditComment:(NSString *)comment forUID:(NSString *)inUID onAccount:(id)adiumAccount;
 - (void)OSCARSetFormatTo:(NSString *)inFormattedUID onAccount:(id)adiumAccount;
-- (void)OSCARSetAvailableMessageTo:(NSString *)availablePlaintext onAccount:(id)adiumAccount;
 
 - (void)displayFileSendError;
 - (void *)handleNotifyMessageOfType:(GaimNotifyType)type withTitle:(const char *)title primary:(const char *)primary secondary:(const char *)secondary;
