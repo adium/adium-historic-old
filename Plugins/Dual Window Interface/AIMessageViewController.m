@@ -204,6 +204,7 @@
 										  group:PREF_GROUP_DUAL_WINDOW_INTERFACE];
 	
 #warning Wrong as per the third XXX above, but a crash fix for now.
+	AILog(@"-[%@ tabViewItemWillClose]: entryMinHeight %i; userListMinWidth %i",self,entryMinHeight,userListMinWidth);
 	[userListController contactListWillBeRemoved];
 }
 
