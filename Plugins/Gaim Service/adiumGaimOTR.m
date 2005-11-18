@@ -83,7 +83,7 @@ static ConnContext* context_for_conv(GaimConversation *conv)
 static NSDictionary* details_for_context(ConnContext *context)
 {
 	NSDictionary		*securityDetailsDict;
-	if (context == NULL /*|| context->msgstate != OTRL_MSGSTATE_ENCRYPTED*/) {
+	if (context == NULL) {
 		NSLog(@"Ack! (%x)",context);
 		return nil;
 	}
@@ -100,7 +100,24 @@ static NSDictionary* details_for_context(ConnContext *context)
     if (context == NULL) return nil;
 	
 	fingerprint = fprint->fingerprint;
-	trust = fprint->trust;
+
+    TrustLevel			level = otrg_plugin_context_to_trust(context);
+	AIEncryptionStatus	encryptionStatus;
+
+	switch (level) {
+	    case TRUST_NOT_PRIVATE:
+			encryptionStatus = EncryptionStatus_None;
+			break;
+		case TRUST_UNVERIFIED:
+			encryptionStatus = EncryptionStatus_Unverified;
+			break;
+		case TRUST_PRIVATE:
+			encryptionStatus = EncryptionStatus_Verified;
+			break;
+		case TRUST_FINISHED:
+			encryptionStatus = EncryptionStatus_Finished;
+			break;
+	}
 	
     otrl_privkey_fingerprint(otrg_plugin_userstate, our_hash,
 							 context->accountname, context->protocol);
@@ -112,7 +129,7 @@ static NSDictionary* details_for_context(ConnContext *context)
 	
 	securityDetailsDict = [NSDictionary dictionaryWithObjectsAndKeys:
 		[NSString stringWithUTF8String:hash], @"Fingerprint",
-		[NSString stringWithUTF8String:(trust ? trust : "")], @"Trust",
+		[NSNumber numberWithInt:encryptionStatus], @"EncryptionStatus",
 		[NSString stringWithUTF8String:context->accountname], @"accountname",
 		[NSString stringWithUTF8String:context->username], @"who",
 		((context->protocol) ? [NSString stringWithUTF8String:context->protocol] : @""), @"protocol",
@@ -318,7 +335,6 @@ static void otrg_adium_dialog_new_conv(GaimConversation *conv)
 	context = context_for_conv(conv);
 	trustLevel = otrg_plugin_context_to_trust(context);
 	
-#warning Need to set actual state
 	if (trustLevel != TRUST_NOT_PRIVATE) {
 		NSDictionary	*securityDetailsDict;
 		

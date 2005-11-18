@@ -17,6 +17,7 @@
 #import "AIChatController.h"
 #import "AIContentController.h"
 #import "AIInterfaceController.h"
+#import "AIMenuController.h"
 #import "AIToolbarController.h"
 #import "ESSecureMessagingPlugin.h"
 #import <AIUtilities/AIMenuAdditions.h>
@@ -37,10 +38,12 @@
 
 #define TITLE_ENCRYPTION		AILocalizedString(@"Encryption",nil)
 
-#define CHAT_NOW_SECURE			AILocalizedString(@"Encrypted OTR chat initiated.", nil)
-#define CHAT_NO_LONGER_SECURE	AILocalizedString(@"Ended encrypted OTR chat.", nil)
+#define CHAT_NOW_SECURE				AILocalizedString(@"Encrypted OTR chat initiated.", nil)
+#define CHAT_NOW_SECURE_UNVERIFIED	AILocalizedString(@"Encrypted OTR chat initiated. %@'s identity not verified.", nil)
+#define CHAT_NO_LONGER_SECURE		AILocalizedString(@"Ended encrypted OTR chat.", nil)
 
 @interface ESSecureMessagingPlugin (PRIVATE)
+- (void)configureMenuItems;
 - (void)registerToolbarItem;
 - (NSMenu *)_secureMessagingMenu;
 - (void)_updateToolbarIconOfChat:(AIChat *)inChat inWindow:(NSWindow *)window;
@@ -60,7 +63,8 @@
 	 */
 	
 	[self registerToolbarItem];
-	
+	[self configureMenuItems];
+
 	[[adium chatController] registerChatObserver:self];
 }
 
@@ -68,6 +72,26 @@
 {
 	[[adium chatController] unregisterChatObserver:self];
 	[[NSNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)configureMenuItems
+{
+	NSMenu		*menu = [self _secureMessagingMenu];
+	
+	//Add menu to toolbar item (for text mode)
+	NSMenuItem	*menuItem = [[[NSMenuItem allocWithZone:[NSMenu menuZone]] initWithTitle:AILocalizedString(@"Encryption", nil)
+																				  target:self
+																				  action:@selector(dummyAction:) 
+																		   keyEquivalent:@""] autorelease];
+	[menuItem setSubmenu:menu];
+	[menuItem setTag:AISecureMessagingMenu_Root];
+
+	[[adium menuController] addMenuItem:menuItem 
+							 toLocation:LOC_Contact_Additions];
+
+	menuItem = [[menuItem copy] autorelease];
+	[[adium menuController] addContextualMenuItem:menuItem
+									   toLocation:Context_Contact_ChatAction];
 }
 
 - (void)registerToolbarItem
@@ -171,19 +195,34 @@
 		BOOL		chatIsSecure = [inChat isSecure];
 		if (!lastEncryptedNumber || (chatIsSecure != [lastEncryptedNumber boolValue])) {
 			NSString	*message;
-			
+
 			[inChat setStatusObject:[NSNumber numberWithBool:chatIsSecure]
 							 forKey:@"secureMessagingLastEncryptedState"
 							 notify:NotifyNever];
-			
-			message = (chatIsSecure ? CHAT_NOW_SECURE : CHAT_NO_LONGER_SECURE);
-			
+
+			if (chatIsSecure) {
+				if ([inChat encryptionStatus] == EncryptionStatus_Unverified) {
+					AIListObject	*listObject = [inChat listObject];
+					NSString		*displayName = (listObject ?
+													[listObject formattedUID] :
+													[inChat displayName]);
+
+					message = [NSString stringWithFormat:CHAT_NOW_SECURE_UNVERIFIED, displayName];
+
+				} else {
+					message = CHAT_NOW_SECURE;
+				}
+
+			} else {
+				message = CHAT_NO_LONGER_SECURE;
+			}
+
 			[[adium contentController] displayStatusMessage:message
 													 ofType:@"encryption"
 													 inChat:inChat];
 		}
 	}
-	
+
 	return nil;
 }
 
@@ -256,6 +295,8 @@
 {
 	AIChat					*chat = [[adium interfaceController] activeChat];
 
+	if (!chat) return NO;
+
 	if ([[[menuItem menu] title] isEqualToString:ENCRYPTION_MENU_TITLE]) {
 		/* Options submenu */
 		AIEncryptedChatPreference tag = [menuItem tag];
@@ -294,6 +335,10 @@
 		AISecureMessagingMenuTag tag = [menuItem tag];
 		
 		switch (tag) {
+			case AISecureMessagingMenu_Root:
+				return  [chat supportsSecureMessagingToggling];
+				break;
+
 			case AISecureMessagingMenu_Toggle:
 				//The menu item should indicate what will happen if it is selected.. the opposite of our secure state
 				[menuItem setTitle:([chat isSecure] ? TITLE_MAKE_INSECURE : TITLE_MAKE_SECURE)];
@@ -313,10 +358,9 @@
 			case AISecureMessagingMenu_ShowAbout:
 				return [chat supportsSecureMessagingToggling];
 				break;
-				
-				
 		}
 	}
+
 	return YES;
 }
 
@@ -363,5 +407,7 @@
 	
 	return [[_secureMessagingMenu copy] autorelease];
 }
+
+- (void)dummyAction:(id)sender {};
 
 @end
